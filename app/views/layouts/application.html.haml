@@ -1,0 +1,30 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title Admi-Facile
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  %body
+    %div
+      %div.navbar
+        = image_tag('marianne_small.png', class: 'logo')
+        %a{href: '/', class:'btn btn-lg'}
+          ='Admi-Facile'
+
+        -if user_signed_in?
+          %div{style: 'decorate:none; box-shadow:none; float:right; margin-top:8px'}
+            = current_user.email
+            = link_to "Déconnexion", '/logout', method: :delete, :class => 'btn btn-md'
+
+      #flash_message.center
+      - if flash.notice
+        .alert.alert-success
+          = flash.notice
+      - if flash.alert
+        .alert.alert-danger
+          = flash.alert
+
+      %div{:style => 'margin-left:10%; margin-right:10%;'}
+        = yield

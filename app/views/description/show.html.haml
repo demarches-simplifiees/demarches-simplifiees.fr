@@ -1,0 +1,71 @@
+%h2 Description de votre projet
+%br
+
+= form_tag(url_for({controller: :description, action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
+  %input{type: 'hidden', value: request.parameters[:back_url], name: 'back_url', id: 'back_url'}
+
+  %div{style:'margin-left:3%;'}
+
+    %h4 Nom de votre projet*
+    %div{style:'margin-top:1.5rem; margin-left:2%; margin-right:2%;'}
+      %input{class: 'form-control', style: 'width:100%', type: 'text', id: 'nom_projet', name: 'nom_projet', placeholder: 'Nom du projet', value: @dossier.nom_projet}
+
+    %br
+    %h4 Description de votre projet*
+    %div{style:'text-align:center; margin-left:2%; margin-right:2%'}
+      %textarea{id:'description', name:'description', class:'form-control', rows: '6', style:'width: 100%', placeholder: 'Description du projet'}
+        =@dossier.description
+    %br
+    %div{class:'row'}
+      %div{class:'col-lg-6 col-md-6'}
+        %h4 Montant du projet*
+        %div{style:'margin-left:4%; margin-top:1.5rem'}
+          %input{class: 'form-control', type: 'number', id: 'montant_projet', name: 'montant_projet', placeholder: 'Montant du projet', value: @dossier.montant_projet}
+          !='&euro;'
+
+      %div{class:'col-lg-6 col-md-6'}
+        %h4 Montant des aides que vous sollicitez*
+        %div{style:'margin-left:4%; margin-top:1.5rem'}
+          %input{class: 'form-control', type: 'number', id: 'montant_aide_demande', name: 'montant_aide_demande', placeholder: 'Montant des aides', value: @dossier.montant_aide_demande}
+          !='&euro;'
+    %br
+    %div{class:'row'}
+      %div{class:'col-lg-6 col-md-6'}
+        %h4 Date prévisionnelle du début de votre projet*
+        %div{style:'margin-left:4%; margin-top:1.5rem'}
+          %input{class: 'form-control', type: 'text', id: 'date_previsionnelle', name: 'date_previsionnelle', placeholder: 'Date prévisionnelle', value: @dossier.date_previsionnelle, 'data-provide' => 'datepicker', 'data-date-format' => 'dd/mm/yyyy'}
+
+      %div{class:'col-lg-6 col-md-6'}
+        %h4 Mail de contact*
+        %div{style:'margin-left:4%; margin-top:1.5rem'}
+          %input{class: 'form-control', style:'width:60%', type: 'email', id: 'mail_contact', name: 'mail_contact', placeholder: 'Mail de contact', value: @dossier.mail_contact}
+
+  %br
+  %h3 Documents administratifs
+
+  %br
+  %table{class:'table', style:'width:50%; margin-left:5%'}
+    %tr
+      %th{class:'col-lg-4'} Charger votre dossier (.pdf)
+      %td{class:'col-lg-6'}
+        %input{type: 'file',name:'dossier_pdf', id:'dossier_pdf', accept: ".pdf"}
+
+  %br
+  %p
+    ='Afin de facilité votre démarche, nous avons récupéré pour vous :'
+    %ul
+      %li
+        ='Votre déclaration sociale'
+      %li
+        ='Votre déclaration fiscale'
+
+  %div{style: 'text-align:right'}
+    %h6 Tous les champs portant un * sont obligatoires.
+
+  -if request.parameters[:back_url] == 'recapitulatif'
+    =render partial: '/layouts/modifications_terminees'
+  -else
+    = submit_tag 'Terminer la procédure', id: 'suivant', class: %w(btn btn btn-success), style: 'float:right', data: { disable_with: 'Terminé la procédure', submit: true}
+
+  %br
+  %br

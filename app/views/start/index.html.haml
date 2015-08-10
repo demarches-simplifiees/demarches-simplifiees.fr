@@ -1,0 +1,16 @@
+%div{:style => "text-align:center;;"}
+  %h1.cover-heading Admi-Facile
+
+  .row{style:'margin-top:10%'}
+    -if !user_signed_in?
+      .col-lg-6.col-md-6
+        =render partial: '/start/pro'
+
+    -if !user_signed_in?
+      .col-lg-6.col-md-6
+        %div{style: 'border-left: 1px solid grey'}
+          =render partial: '/start/admin'
+    -else
+      .col-lg-12.col-md-12
+        %div
+          =render partial: '/start/admin'

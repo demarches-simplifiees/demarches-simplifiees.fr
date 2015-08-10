@@ -1,0 +1,25 @@
+%h1#dossier_id{:class => 'text-info', :style => 'text-align:right'}
+  = "Dossier n°#{@dossier.id}"
+
+%script{type: 'text/javascript'}
+  ="url_carte = '#{@dossier.id}/'"
+  ="ref_dossier = '#{@dossier.ref_dossier}'"
+
+= render partial: '/dossiers/infos_entreprise'
+%br
+= render partial: '/dossiers/infos_dossier'
+%br
+%br
+
+.content{class: 'row'}
+  #map_qp{style: 'height:500px', class: 'col-lg-6 col-md-6'}
+  %object{ data: "#{@dossier_pdf.ref_dossier_pdf.url}", type: "application/pdf", title:"Dossier PDF", class: 'col-lg-6 col-md-6', style: 'height:500px'}
+
+= render partial: '/carte/carte_sources_CSS'
+= render partial: '/carte/carte_sources_JS_backend'
+%br
+
+= render partial: '/recapitulatif/commentaires_flux'
+%br
+%br
+

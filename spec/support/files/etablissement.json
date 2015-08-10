@@ -1,0 +1,27 @@
+{
+  "etablissement": {
+    "siege_social": true,
+    "siret": "41816609600051",
+    "naf": "6202A",
+    "libelle_naf": "Conseil en systèmes et logiciels informatiques",
+    "etat_administratif_etablissement": {
+      "value": "Actif",
+      "date_mise_a_jour": 1108594800
+    },
+    "adresse": {
+      "l1": "OCTO-TECHNOLOGY",
+      "l2": "50 AV DES CHAMPS ELYSEES",
+      "l3": "75008 PARIS 8",
+      "l4": "ligne 4",
+      "l5": "ligne 5",
+      "numero_voie": "50",
+      "type_voie": "AV",
+      "nom_voie": "DES CHAMPS ELYSEES",
+      "complement_adresse": "complement_adresse",
+      "code_postal": "75008",
+      "localite": "PARIS 8",
+      "code_insee_localite": "75108"
+    }
+  },
+  "gateway_error": false
+}

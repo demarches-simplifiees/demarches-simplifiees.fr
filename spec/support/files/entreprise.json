@@ -1,0 +1,110 @@
+{
+  "entreprise": {
+    "siren": "418166096",
+    "capital_social": 372795,
+    "numero_tva_intracommunautaire": "FR16418166096",
+    "forme_juridique": "SA à directoire (s.a.i.)",
+    "forme_juridique_code": "5699",
+    "nombre_etablissements_actifs": 1,
+    "nom_commercial": "OCTO-TECHNOLOGY",
+    "procedure_collective": false,
+    "raison_sociale": "OCTO-TECHNOLOGY",
+    "siret_siege_social": "41816609600051",
+    "code_effectif_entreprise": "22",
+    "date_creation": 891381600,
+    "nom": "test_nom",
+    "prenom": "test_prenom",
+    "etat_administratif": {
+      "value": "Actif",
+      "date_mise_a_jour": 891381600
+    },
+    "date_radiation": null,
+    "exercices": [
+      {
+        "chiffre_affaires": null,
+        "date_fin": null,
+        "date_debut": null,
+        "date_fin_exercice_timestamp": null
+      },
+      {
+        "chiffre_affaires": null,
+        "date_fin": null,
+        "date_debut": null,
+        "date_fin_exercice_timestamp": null
+      },
+      {
+        "chiffre_affaires": null,
+        "date_fin": null,
+        "date_debut": null,
+        "date_fin_exercice_timestamp": null
+      }
+    ],
+    "mandataires_sociaux": [
+      {
+        "nom": "HISQUIN",
+        "prenom": "FRANCOIS",
+        "fonction": "PRESIDENT DU DIRECTOIRE",
+        "dirigeant": true,
+        "date_naissance": "1965-01-27",
+        "date_naissance_timestamp": -155523600
+      },
+      {
+        "nom": "BONTE",
+        "prenom": "NICOLAS",
+        "fonction": "PRESIDENT DU CONSEIL DE SURVEILLANCE",
+        "dirigeant": true,
+        "date_naissance": "1965-01-21",
+        "date_naissance_timestamp": -156042000
+      },
+      {
+        "nom": "BOSQUE",
+        "prenom": "WILLIAM",
+        "fonction": "VICE PRESIDENT ET MEMBRE DU CONSEIL DE SURVEILLANCE",
+        "dirigeant": true,
+        "date_naissance": "1970-12-31",
+        "date_naissance_timestamp": 31446000
+      },
+      {
+        "nom": "CINQUIN",
+        "prenom": "LUDOVIC",
+        "fonction": "MEMBRE DU DIRECTOIRE",
+        "dirigeant": true,
+        "date_naissance": "1972-01-25",
+        "date_naissance_timestamp": 65142000
+      },
+      {
+        "nom": "LUCAS",
+        "prenom": "JACQUES",
+        "fonction": "MEMBRE DU CONSEIL DE SURVEILLANCE",
+        "dirigeant": true,
+        "date_naissance": "1964-12-02",
+        "date_naissance_timestamp": -160362000
+      },
+      {
+        "nom": "DEGONSE",
+        "prenom": "GERARD",
+        "fonction": "MEMBRE DU CONSEIL DE SURVEILLANCE",
+        "dirigeant": true,
+        "date_naissance": "1947-07-03",
+        "date_naissance_timestamp": -710038800
+      },
+      {
+        "nom": "PLANTIN",
+        "prenom": "JEAN-FRANCOIS",
+        "fonction": "COMMISSAIRE AUX COMPTES TITULAIRE",
+        "dirigeant": true,
+        "date_naissance": "1959-01-27",
+        "date_naissance_timestamp": -344912400
+      },
+      {
+        "nom": "",
+        "prenom": "",
+        "fonction": "COMMISSAIRE AUX COMPTES SUPPLEANT",
+        "dirigeant": true,
+        "date_naissance": "",
+        "date_naissance_timestamp": 0
+      }
+    ]
+  },
+  "gateway_error": false
+}

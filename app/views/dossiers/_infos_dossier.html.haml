@@ -1,0 +1,47 @@
+=javascript_include_tag "http://code.highcharts.com/highcharts.js", "chartkick"
+.row{id: 'infos_dossier'}
+  .col-md-6
+    %h4.text-info= @dossier.nom_projet
+    %div{style: 'margin-left:10px; padding-top:5px'}
+      .description
+        - begin
+          - @dossier.description.split(/(?:\n\r?|\r\n?')/).each do |line|
+            = line
+            %br
+        - rescue
+          =''
+      %br
+      .col-lg-6.col-md-6
+        %h4
+          ='Montant total '
+
+        %div{style: 'margin-left:10px'}
+          =number_to_currency(@dossier.montant_projet.to_f, :unit => " ", :separator => ",", :delimiter => " ")
+          !='&euro;'
+
+      .col-lg-6.col-md-6
+        %h4
+          = 'Début du projet souhaité '
+
+        %div{style: 'margin-left:10px'}
+          =@dossier.date_fr
+
+      .col-lg-6.col-md-6
+        %br
+        %h4
+          ='Contact'
+
+        %a{href: "mailto:#{@dossier.mail_contact}", style: 'margin-left:10px'}
+          =@dossier.mail_contact
+
+      -if !request.url.include?('admin')
+        .col-lg-6.col-md-6
+          %br
+          %br
+          %a#modif_carte{href: "/dossiers/#{@dossier.id}/carte?back_url=recapitulatif"} Modifier la localisation
+          %br
+          %a#modif_description{href: "/dossiers/#{@dossier.id}/description?back_url=recapitulatif"} Modifier la description
+
+  .col-md-6
+    = pie_chart({"Montant à charge #{(100 - @dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => (@dossier.montant_projet.to_f - @dossier.montant_aide_demande.to_f), "Montant souhaité #{(@dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => @dossier.montant_aide_demande})
+
