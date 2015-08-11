@@ -6,8 +6,4 @@ class DossierDecorator < Draper::Decorator
   rescue
     'dd/mm/YYYY'
   end
-
-  def date_en
-    date_previsionnelle.to_date.strftime("%Y-%m-%d")
-  end
 end

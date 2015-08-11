@@ -24,13 +24,13 @@ RSpec.describe DossiersController, type: :controller do
   describe 'POST #create' do
     before do
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{bad_siret}?token=#{SIADETOKEN}").
-          to_return(:status => 404, :body => 'fake body', :headers => {})
+          to_return(:status => 404, :body => 'fake body')
 
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}").
-          to_return(:status => 200, :body => File.read('spec/support/files/etablissement.json'), :headers => {})
+          to_return(:status => 200, :body => File.read('spec/support/files/etablissement.json'))
 
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/entreprises/#{siren}?token=#{SIADETOKEN}").
-          to_return(:status => 200, :body => File.read('spec/support/files/entreprise.json'), :headers => {})
+          to_return(:status => 200, :body => File.read('spec/support/files/entreprise.json'))
     end
 
     context 'Le SIRET est correct' do

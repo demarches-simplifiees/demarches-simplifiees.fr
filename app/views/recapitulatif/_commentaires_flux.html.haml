@@ -16,7 +16,7 @@
     %h4{style: 'margin-bottom:2%'} Nouveau
     = form_tag(url_for({controller: '/commentaires', action: :create}), class: 'form-inline', method: 'POST') do
       %input.form-control{:type => 'text', style: 'width: 30%; margin-bottom:2%', :id => 'email_commentaire', :name => 'email_commentaire', :value => @commentaire_email}
-      %textarea.form-control{:id => 'texte_commentaire', :name => 'texte_commentaire', style: 'width: 100%; margin-bottom:2%', rows: '5'}
+      %textarea.form-control{:id => 'texte_commentaire', :name => 'texte_commentaire', style: 'width: 100%; margin-bottom:2%', rows: '5', maxlength: '255'}
       %br
       %input.form-control.btn.btn-success{:type => 'submit', :value => 'Poster', style: 'float:right'}
 %br

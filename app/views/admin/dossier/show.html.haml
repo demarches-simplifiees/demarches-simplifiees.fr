@@ -13,8 +13,6 @@
 
 .content{class: 'row'}
   #map_qp{style: 'height:500px', class: 'col-lg-6 col-md-6'}
-  %object{ data: "#{@dossier_pdf.ref_dossier_pdf.url}", type: "application/pdf", title:"Dossier PDF", class: 'col-lg-6 col-md-6', style: 'height:500px'}
-
 = render partial: '/carte/carte_sources_CSS'
 = render partial: '/carte/carte_sources_JS_backend'
 %br

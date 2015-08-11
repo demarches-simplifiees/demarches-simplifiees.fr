@@ -3,6 +3,7 @@ class RecapitulatifController < ApplicationController
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate
 
+    #mettre dans le modèle
     @commentaires = @dossier.commentaires.order(created_at: :desc)
     @commentaires = @commentaires.all.decorate
     @commentaire_email = @dossier.mail_contact

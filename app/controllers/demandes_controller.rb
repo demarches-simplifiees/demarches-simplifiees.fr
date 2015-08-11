@@ -1,14 +1,13 @@
 class DemandesController < ApplicationController
   def show
     @dossier = Dossier.find(params[:dossier_id])
-    @evenement_vie = EvenementVie.where(use_admi_facile: true)
+    @evenement_vie = EvenementVie.for_admi_facile
   end
 
   def choice
     @dossier = Dossier.find(params[:dossier_id])
-    @dossier.ref_formulaire = params[:ref_formulaire]
-    @dossier.save
+    @dossier.update_attributes(ref_formulaire: params[:ref_formulaire])
 
-    redirect_to url_for({controller: :carte, action: :show, :dossier_id => params[:dossier_id]})
+    redirect_to url_for( { controller: :carte, action: :show, :dossier_id => params[:dossier_id] } )
   end
 end

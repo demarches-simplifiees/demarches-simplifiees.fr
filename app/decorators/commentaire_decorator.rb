@@ -6,5 +6,4 @@ class CommentaireDecorator < Draper::Decorator
   rescue
     'dd/mm/YYYY - HH:MM'
   end
-
 end

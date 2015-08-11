@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe CommentairesController, type: :controller do
+describe CommentairesController, type: :controller do
   let (:dossier_id){10000}
   let (:email_commentaire){'test@test.com'}
   let (:texte_commentaire){'Commentaire de test'}

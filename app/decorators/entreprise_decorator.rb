@@ -5,10 +5,6 @@ class EntrepriseDecorator < Draper::Decorator
     raison_sociale.nil? ? nom + '' + prenom : raison_sociale
   end
 
-  def siege_social_true_false
-    siege_social? ? 'Cet établissement est le siège social' : 'Cet établissement n\'est pas le siège social'
-  end
-
   def code_effectif_entreprise_libelle
 
     case code_effectif_entreprise.to_s

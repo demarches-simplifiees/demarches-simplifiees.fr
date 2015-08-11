@@ -63,4 +63,18 @@ class DossiersController < ApplicationController
     flash.now.alert = 'Les conditions sont obligatoires.'
     render 'show'
   end
+
+  private
+
+  def dossier_id_is_present?
+
+  end
+
+  def siret
+    params[:siret]
+  end
+
+  def siren
+    siret[0..8]
+  end
 end
