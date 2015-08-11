@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150806162353) do
+ActiveRecord::Schema.define(version: 20150810130957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,7 +29,10 @@ ActiveRecord::Schema.define(version: 20150806162353) do
   create_table "dossier_pdfs", force: :cascade do |t|
     t.string  "ref_dossier_pdf"
     t.integer "dossier_id"
+    t.integer "ref_pieces_jointes_id"
   end
+
+  add_index "dossier_pdfs", ["ref_pieces_jointes_id"], name: "index_dossier_pdfs_on_ref_pieces_jointes_id", using: :btree
 
   create_table "dossiers", force: :cascade do |t|
     t.string  "description"
