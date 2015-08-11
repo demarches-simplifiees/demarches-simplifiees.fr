@@ -38,6 +38,9 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.8)
     arel (6.0.2)
+    ast (2.0.0)
+    astrolabe (1.3.0)
+      parser (>= 2.2.0.pre.3, < 3.0)
     autoprefixer-rails (5.2.1)
       execjs
       json
@@ -142,12 +145,15 @@ GEM
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     orm_adapter (0.5.0)
+    parser (2.2.2.2)
+      ast (>= 1.1, < 3.0)
     pg (0.18.2)
     poltergeist (1.6.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
+    powerpack (0.1.0)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -175,6 +181,7 @@ GEM
       activesupport (= 4.2.0)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
+    rainbow (2.0.0)
     rake (10.4.2)
     rdoc (4.2.0)
       json (~> 1.4)
@@ -205,6 +212,13 @@ GEM
       rspec-mocks (~> 3.2.0)
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
+    rubocop (0.30.1)
+      astrolabe (~> 1.3)
+      parser (>= 2.2.2.1, < 3.0)
+      powerpack (~> 0.1)
+      rainbow (>= 1.99.1, < 3.0)
+      ruby-progressbar (~> 1.4)
+    ruby-progressbar (1.7.5)
     ruby_parser (3.7.0)
       sexp_processor (~> 4.1)
     rubyzip (1.1.7)
@@ -297,6 +311,7 @@ DEPENDENCIES
   rest-client
   rgeo-geojson
   rspec-rails (~> 3.0)
+  rubocop
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   selenium-webdriver
