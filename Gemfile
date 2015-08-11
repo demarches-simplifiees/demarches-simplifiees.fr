@@ -63,7 +63,6 @@ group :test do
   gem 'database_cleaner'
   gem 'selenium-webdriver'
   gem 'webmock'
-  gem 'database_cleaner'
   gem 'shoulda-matchers', require: false
   gem 'simplecov', require: false
   gem 'poltergeist'
