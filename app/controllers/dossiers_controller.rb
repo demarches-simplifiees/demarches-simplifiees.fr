@@ -2,7 +2,7 @@ class DossiersController < ApplicationController
   def show
     @dossier = Dossier.find(params[:id])
 
-    @etablissement =  @dossier.etablissement.decorate
+    @etablissement =  @dossier.etablissement
     @entreprise =  @dossier.entreprise.decorate
   rescue
     redirect_to url_for({controller: :start, action: :error_dossier})
@@ -51,7 +51,7 @@ class DossiersController < ApplicationController
     if @dossier.autorisation_donnees
       redirect_to url_for({controller: :demandes, action: :show, dossier_id: @dossier.id})
     else
-      @etablissement =  @dossier.etablissement.decorate
+      @etablissement =  @dossier.etablissement
       @entreprise =  @dossier.entreprise.decorate
 
       self.error

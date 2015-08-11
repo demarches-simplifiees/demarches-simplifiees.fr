@@ -28,5 +28,4 @@ User.create({
 @entreprise = Entreprise.create({id: 10000, siren: 431449040, date_creation: 1437665347, dossier: @dossier, raison_sociale: 'Coucou', code_effectif_entreprise: '00'})
 @etablissement = Etablissement.create({id: 10000, siret: 43144904000028, siege_social: true, adresse: '50 avenue des champs élysées Paris 75008', entreprise: @entreprise, dossier: @dossier})
 
-
 Commentaire.create({email: 'test@test.com', body: 'Commentaire de test', dossier: @dossier})

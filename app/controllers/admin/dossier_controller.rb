@@ -4,7 +4,7 @@ class Admin::DossierController < ApplicationController
   def show
     @dossier = Dossier.find(params[:dossier_id])
     @entreprise = @dossier.entreprise.decorate
-    @etablissement = @dossier.etablissement.decorate
+    @etablissement = @dossier.etablissement
     @dossier_pdf = @dossier.dossier_pdf
 
     @commentaires = @dossier.commentaires.order(created_at: :desc)
