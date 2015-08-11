@@ -15,3 +15,12 @@
 /log/*
 !/log/.keep
 /tmp
+
+
+
+# Ignore Intellij files
+.idea/
+*.iml
+*.iws
+
+public/uploads
