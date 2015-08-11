@@ -2,6 +2,14 @@ class DescriptionController < ApplicationController
   def show
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate
+
+    @array_id_pj_valides = Array.new
+
+    DossierPdf.where(dossier_id: @dossier.id).each do |pj_valide|
+      @array_id_pj_valides << pj_valide.ref_pieces_jointes_id
+    end
+
+    @liste_pieces_jointes = get_liste_piece_jointe
   rescue
     redirect_to url_for({controller: :start, action: :error_dossier})
   end
@@ -14,23 +22,28 @@ class DescriptionController < ApplicationController
 
   def create
     @dossier = Dossier.find(params[:dossier_id])
+    @dossier.update_attributes(create_params)
 
-    @dossier.nom_projet = params[:nom_projet]
-    @dossier.description = params[:description]
-    @dossier.montant_projet = params[:montant_projet]
-    @dossier.montant_aide_demande = params[:montant_aide_demande]
-    @dossier.date_previsionnelle = params[:date_previsionnelle]
-    @dossier.lien_plus_infos = params[:lien_plus_infos]
-    @dossier.mail_contact = params[:mail_contact]
+    if params[:cerfa_pdf] != nil
+      DossierPdf.destroy_all(dossier_id: @dossier.id, ref_pieces_jointes_id: 0)
+      @dossier_pdf = DossierPdf.new
+      @dossier_pdf.ref_dossier_pdf = params[:cerfa_pdf]
+      @dossier_pdf.ref_pieces_jointes_id = 0
+      @dossier_pdf.dossier = @dossier
+      @dossier_pdf.save
+    end
 
-    @dossier.save
+    get_liste_piece_jointe.each do |pj|
+      if params["piece_jointe_#{pj.id}"] != nil
+        DossierPdf.destroy_all(dossier_id: @dossier.id, ref_pieces_jointes_id: pj.id)
 
-    #upload dossier pdf
-
-    @dossier_pdf = DossierPdf.new
-    @dossier_pdf.ref_dossier_pdf = params[:dossier_pdf]
-    @dossier_pdf.dossier = @dossier
-    @dossier_pdf.save!
+        @dossier_pdf = DossierPdf.new
+        @dossier_pdf.ref_dossier_pdf = params["piece_jointe_#{pj.id}"]
+        @dossier_pdf.ref_pieces_jointes_id = pj.id
+        @dossier_pdf.dossier = @dossier
+        @dossier_pdf.save
+      end
+    end
 
     if check_missing_attributes(params)||check_format_email(@dossier.mail_contact) == nil
       redirect_to url_for({controller: :description, action: :error})
@@ -49,11 +62,22 @@ class DescriptionController < ApplicationController
 
   private
 
+  def create_params
+    params.permit(:nom_projet, :description, :montant_projet, :montant_aide_demande, :date_previsionnelle, :lien_plus_infos, :mail_contact)
+  end
+
+  #TODO dans un validateur, dans le model
   def check_missing_attributes params
     params[:nom_projet].strip == '' || params[:description].strip == '' || params[:montant_projet].strip == '' || params[:montant_aide_demande].strip == '' || params[:date_previsionnelle].strip == '' || params[:mail_contact].strip == ''
   end
 
+  #TODO dans un validateur, dans le model
   def check_format_email email
     /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/.match(email)
+  end
+
+  def get_liste_piece_jointe
+    @formulaire = RefFormulaire.find(@dossier.ref_formulaire)
+    RefPiecesJointe.where ("\"CERFA\" = '#{@formulaire.ref_demarche}'")
   end
 end

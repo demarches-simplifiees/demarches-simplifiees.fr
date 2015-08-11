@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe DescriptionController, type: :controller do
+describe DescriptionController, type: :controller do
   let (:dossier_id){10000}
   let (:bad_dossier_id){1000}
 
@@ -24,22 +24,31 @@ RSpec.describe DescriptionController, type: :controller do
     let(:montant_aide_demande){3000}
     let(:date_previsionnelle){'20/01/2016'}
     let(:mail_contact){'test@test.com'}
-    let(:dossier_pdf) {''}
-    
+
+    let(:name_dossier_pdf){'dossierPDF.pdf'}
+    let(:name_piece_jointe_103){'piece_jointe_103.pdf'}
+    let(:name_piece_jointe_692){'piece_jointe_692.pdf'}
+
+    let(:cerfa_pdf) {Rack::Test::UploadedFile.new("./spec/support/files/#{name_dossier_pdf}", 'application/pdf')}
+    let(:piece_jointe_103) {Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_jointe_103}", 'application/pdf')}
+    let(:piece_jointe_692) {Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_jointe_692}", 'application/pdf')}
+
+
     context 'Tous les attributs sont bons' do
+      #TODO separer en deux tests : check donnees et check redirect
       it 'Premier enregistrement des données' do
         post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact
         expect(response).to redirect_to("/dossiers/#{dossier_id}/recapitulatif")
       end
 
+      #TODO changer les valeurs des champs et check in bdd
       context 'En train de modifier les données de description du projet' do
         before do
           post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact, :back_url => 'recapitulatif'
-          @last_commentaire_id = ActiveRecord::Base.connection.execute("SELECT currval('commentaires_id_seq')").getvalue(0,0)
         end
 
         context 'Enregistrement d\'un commentaire informant la modification' do
-          subject{Commentaire.find(@last_commentaire_id)}
+          subject{Commentaire.last}
 
           it 'champs email' do
             expect(subject.email).to eq('Modification détails')
@@ -96,6 +105,67 @@ RSpec.describe DescriptionController, type: :controller do
       it 'mail_contact n\'est un format d\'email' do
         post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => 'test.com'
         expect(response).to redirect_to("/dossiers/#{dossier_id}/description/error")
+      end
+    end
+
+    context 'Sauvegarde du CERFA PDF' do
+      before do
+        post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact, :cerfa_pdf => cerfa_pdf
+      end
+
+      context 'un CERFA PDF est envoyé' do
+        subject{DossierPdf.last}
+        it 'ref_dossier_pdf' do
+          expect(subject['ref_dossier_pdf']).to eq(name_dossier_pdf)
+        end
+
+        it 'dossier_id' do
+          expect(subject.dossier_id).to eq(dossier_id)
+        end
+
+        it 'ref_pieces_jointes_id' do
+          expect(subject.ref_pieces_jointes_id).to eq(0)
+        end
+      end
+
+      context 'les anciens CERFA PDF sont écrasées à chaque fois' do
+        it 'il n\'y a qu\'un CERFA PDF par dossier' do
+          post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact, :cerfa_pdf => cerfa_pdf
+          cerfa = DossierPdf.where(ref_pieces_jointes_id: '0', dossier_id: dossier_id)
+          expect(cerfa.many?).to eq(false)
+        end
+      end
+
+      context 'pas de CERFA PDF' do
+        #TODO à écrire
+      end
+    end
+
+    context 'Sauvegarde des pièces jointes' do
+      before do
+        post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact, :piece_jointe_692 => piece_jointe_692, :piece_jointe_103 => piece_jointe_103
+      end
+
+      context 'sauvegarde de 2 pieces jointes' do
+        it 'les deux pièces sont présentes en base' do
+          piece_jointe_1 = DossierPdf.where(ref_pieces_jointes_id: '103', dossier_id: dossier_id)
+          piece_jointe_2 = DossierPdf.where(ref_pieces_jointes_id: '692', dossier_id: dossier_id)
+
+          expect(piece_jointe_1.first['ref_dossier_pdf']).to eq(name_piece_jointe_103)
+          expect(piece_jointe_2.first['ref_dossier_pdf']).to eq(name_piece_jointe_692)
+        end
+
+        context  'les pièces sont ecrasées à chaque fois' do
+          it 'il n\'y a qu\'une pièce jointe par type par dossier' do
+            post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact, :piece_jointe_692 => piece_jointe_692, :piece_jointe_103 => piece_jointe_103
+
+            piece_jointe_1 = DossierPdf.where(ref_pieces_jointes_id: '103', dossier_id: dossier_id)
+            piece_jointe_2 = DossierPdf.where(ref_pieces_jointes_id: '692', dossier_id: dossier_id)
+
+            expect(piece_jointe_1.many?).to eq(false)
+            expect(piece_jointe_2.many?).to eq(false)
+          end
+        end
       end
     end
   end

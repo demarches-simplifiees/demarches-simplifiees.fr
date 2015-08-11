@@ -52,12 +52,12 @@ feature 'Description#Show Page' do
       expect(page).to have_selector('input[type=email][id=mail_contact]')
     end
 
-    scenario 'Charger un dossier pdf' do
-      expect(page).to have_selector('input[id=dossier_pdf][name=dossier_pdf]')
+    scenario 'Charger votre CERFA (PDF)' do
+      expect(page).to have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]')
     end
 
-    scenario 'Charger un dossier pdf est de type file' do
-      expect(page).to have_selector('input[type=file][id=dossier_pdf]')
+    scenario 'Lien CERFA' do
+      expect(page).to have_selector('#lien_cerfa')
     end
   end
 
@@ -119,6 +119,40 @@ feature 'Description#Show Page' do
 
     scenario 'Mail de contact' do
       expect(page).to have_selector("input[id=mail_contact][value='#{mail_contact}']")
+    end
+  end
+
+  context 'Pièces jointes' do
+    context 'la liste des pièces jointes a envoyé est affichée' do
+      it 'Attestation RDI' do
+        expect(page).to have_selector('input[type=file][name=piece_jointe_103][id=piece_jointe_103]')
+      end
+
+      it 'Devis' do
+        expect(page).to have_selector('input[type=file][name=piece_jointe_388][id=piece_jointe_388]')
+      end
+
+      it 'Pièce d\'identité' do
+        expect(page).to have_selector('input[type=file][name=piece_jointe_692][id=piece_jointe_692]')
+      end
+
+      it 'Plan de transmission du capital social' do
+        expect(page).to have_selector('input[type=file][name=piece_jointe_764][id=piece_jointe_764]')
+      end
+
+      it 'RIB ou RIP' do
+        expect(page).to have_selector('input[type=file][name=piece_jointe_849][id=piece_jointe_849]')
+      end
+    end
+
+    context 'la liste des pièces récupérées automatiquement est signaliée' do
+      it 'Attestation MSA' do
+        expect(page.find_by_id('piece_jointe_93')).to have_content('Nous l\'avons récupéré pour vous.')
+      end
+
+      it 'KBIS' do
+        expect(page.find_by_id('piece_jointe_571')).to have_content('Nous l\'avons récupéré pour vous.')
+      end
     end
   end
 end

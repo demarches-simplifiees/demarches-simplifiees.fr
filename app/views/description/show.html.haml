@@ -44,20 +44,42 @@
   %h3 Documents administratifs
 
   %br
-  %table{class:'table', style:'width:50%; margin-left:5%'}
+  //TODO a refactorer DO
+  %table{class:'table', style:'width:55%; margin-left:5%'}
     %tr
-      %th{class:'col-lg-4'} Charger votre dossier (.pdf)
-      %td{class:'col-lg-6'}
-        %input{type: 'file',name:'dossier_pdf', id:'dossier_pdf', accept: ".pdf"}
+      %th{class:'col-lg-6'}
+        ='Charger votre  CERFA (.pdf)'
 
-  %br
-  %p
-    ='Afin de facilité votre démarche, nous avons récupéré pour vous :'
-    %ul
-      %li
-        ='Votre déclaration sociale'
-      %li
-        ='Votre déclaration fiscale'
+        -if @formulaire.lien_demarche != nil
+          %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@formulaire.lien_demarche}", :target => '_blank'} Lien CERFA
+
+      %td{class:'col-lg-5'}
+        -if @array_id_pj_valides.include?(0)
+          %span.btn.btn-sm.btn-file.btn-success
+            ="Modifier"
+            %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: ".pdf"}
+        -else
+          %span.btn.btn-sm.btn-file.btn-info
+            ="Choisir"
+            %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: ".pdf"}
+
+    -@liste_pieces_jointes.each do |pj|
+      %tr
+        %th{class:'col-lg-6'}
+          =pj.libelle
+        %td{class:'col-lg-5'}
+          -if pj.api_entreprise
+            %span.text-success{id: "piece_jointe_#{pj.id}"} Nous l'avons récupéré pour vous.
+          -else
+            -if @array_id_pj_valides.include?(pj.id)
+              %span.btn.btn-sm.btn-file.btn-success
+                ="Modifier"
+                %input{type: 'file', name:"piece_jointe_#{pj.id}", id:"piece_jointe_#{pj.id}", accept: ".pdf"}
+            -else
+              %span.btn.btn-sm.btn-file.btn-info
+                ="Choisir"
+                %input{type: 'file', name:"piece_jointe_#{pj.id}", id:"piece_jointe_#{pj.id}", accept: ".pdf"}
+  //END
 
   %div{style: 'text-align:right'}
     %h6 Tous les champs portant un * sont obligatoires.

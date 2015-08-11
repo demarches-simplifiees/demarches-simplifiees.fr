@@ -74,7 +74,7 @@
     <SUITE FILE_PATH="coverage/admi_facile@Run_spec__description_controller_spec___admi_facile.coverage" NAME="Run spec 'description_controller_spec': admi_facile Coverage Results" MODIFIED="1438953113949" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="admi_facile" />
     <SUITE FILE_PATH="coverage/admi_facile@GET__show_returns_http_success__admi_facile__1_.coverage" NAME="GET #show returns http success: admi_facile (1) Coverage Results" MODIFIED="1437726983925" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="admi_facile" />
     <SUITE FILE_PATH="coverage/admi_facile@POST__create_Sauvegarde_des_pièces_jointes_sauvegarde_de_2_pieces_jointes__admi_facile.coverage" NAME="POST #create Sauvegarde des pièces jointes sauvegarde de 2 pieces jointes: admi_facile Coverage Results" MODIFIED="1439297870317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="admi_facile" />
-    <SUITE FILE_PATH="coverage/admi_facile@ALL_tests.coverage" NAME="ALL tests Coverage Results" MODIFIED="1439299014888" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="admi_facile" />
+    <SUITE FILE_PATH="coverage/admi_facile@ALL_tests.coverage" NAME="ALL tests Coverage Results" MODIFIED="1439300251111" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="admi_facile" />
     <SUITE FILE_PATH="coverage/admi_facile@GET__index_error_on_SIRET_returns_http_success__admi_facile.coverage" NAME="GET #index error on SIRET returns http success: admi_facile Coverage Results" MODIFIED="1437643609860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="admi_facile" />
     <SUITE FILE_PATH="coverage/admi_facile@PUT__update_Checkbox_checked__admi_facile.coverage" NAME="PUT #update Checkbox checked: admi_facile Coverage Results" MODIFIED="1437727058747" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="admi_facile" />
     <SUITE FILE_PATH="coverage/admi_facile@GET__index_error_SIRET__admi_facile.coverage" NAME="GET #index error SIRET: admi_facile Coverage Results" MODIFIED="1437641710227" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="admi_facile" />
@@ -137,21 +137,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="commentaires_controller.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/controllers/commentaires_controller.rb">
+      <file leaf-file-name="dossiers_controller.rb" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/controllers/dossiers_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="2" column="34" selection-start-line="2" selection-start-column="34" selection-end-line="2" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="demandes_controller.rb" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/controllers/demandes_controller.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4037267">
-              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.124223605">
+              <caret line="4" column="44" selection-start-line="4" selection-start-column="44" selection-end-line="4" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -189,7 +179,6 @@
         <option value="$PROJECT_DIR$/app/views/recapitulatif/show.html.haml" />
         <option value="$PROJECT_DIR$/spec/features/start_page/index_page_spec.rb" />
         <option value="$PROJECT_DIR$/spec/controllers/demandes_controller_spec.rb" />
-        <option value="$PROJECT_DIR$/app/controllers/admin/dossier_controller.rb" />
         <option value="$PROJECT_DIR$/spec/support/controller_helpers.rb" />
         <option value="$PROJECT_DIR$/spec/controllers/admin/dossier_controller_spec.rb" />
         <option value="$PROJECT_DIR$/spec/features/recapitulatif_page/show_page_spec.rb" />
@@ -211,8 +200,6 @@
         <option value="$PROJECT_DIR$/app/controllers/carte_controller.rb" />
         <option value="$PROJECT_DIR$/app/views/description/show.html.haml" />
         <option value="$PROJECT_DIR$/spec/features/description_page/show_page_spec.rb" />
-        <option value="$PROJECT_DIR$/db/seeds.rb" />
-        <option value="$PROJECT_DIR$/app/controllers/dossiers_controller.rb" />
         <option value="$PROJECT_DIR$/spec/controllers/dossiers_controller_spec.rb" />
         <option value="$PROJECT_DIR$/app/controllers/recapitulatif_controller.rb" />
         <option value="$PROJECT_DIR$/app/controllers/start_controller.rb" />
@@ -224,8 +211,11 @@
         <option value="$PROJECT_DIR$/app/views/recapitulatif/_commentaires_flux.html.haml" />
         <option value="$PROJECT_DIR$/.ruby-version" />
         <option value="$PROJECT_DIR$/app/controllers/description_controller.rb" />
-        <option value="$PROJECT_DIR$/spec/controllers/description_controller_spec.rb" />
         <option value="$PROJECT_DIR$/app/controllers/commentaires_controller.rb" />
+        <option value="$PROJECT_DIR$/db/seeds.rb" />
+        <option value="$PROJECT_DIR$/spec/controllers/description_controller_spec.rb" />
+        <option value="$PROJECT_DIR$/app/controllers/admin/dossier_controller.rb" />
+        <option value="$PROJECT_DIR$/app/controllers/dossiers_controller.rb" />
       </list>
     </option>
   </component>
@@ -768,7 +758,7 @@
     <property name="FullScreen" value="true" />
     <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="SearchEverywhereHistoryKey" value="start&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/start_controller_spec.rb&#10;recapi&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/controllers/recapitulatif_controller.rb&#10;dossiers_contr&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/dossiers_controller_spec.rb&#10;dossiers&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/admin/dossier_controller_spec.rb&#10;dossier_contr&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/admin/dossier_controller_spec.rb&#10;dossier&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/controllers/dossiers_controller.rb&#10;see&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/db/seeds.rb&#10;seed&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/db/seeds.rb&#10;desc&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/description_controller_spec.rb&#10;descr&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/controllers/description_controller.rb&#10;demande&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/demandes_controller_spec.rb&#10;commentaire&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/commentaires_controller_spec.rb&#10;carte&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/carte_controller_spec.rb&#10;car&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/carte_controller_spec.rb&#10;seeds&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/db/seeds.rb&#10;modi&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/layouts/_modifications_terminees.html.haml&#10;infos&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/dossiers/_infos_dossier.html.haml&#10;_info&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/features/dossiers_page/_infos_dossier_spec.rb&#10;show&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/recapitulatif/show.html.haml&#10;rec&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/recapitulatif_controller_spec.rb&#10;route&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/routes.rb&#10;token&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/initializers/token.rb&#10;appli&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/assets/stylesheets/application.scss&#10;admi&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/start/_admin.html.haml&#10;ap&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/assets/stylesheets/application.scss&#10;gem&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/Gemfile&#10;spec_&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/spec_helper.rb&#10;spec&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/spec_helper.rb&#10;feat&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/support/feature_helpers.rb&#10;rout&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/routes.rb&#10;rou&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/routes.rb&#10;ro&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/routes.rb&#10;applica&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/assets/stylesheets/application.scss&#10;sho&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/features/description_page/show_page_spec.rb&#10;info&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/dossiers/_infos_dossier.html.haml&#10;Dossier&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/uploaders/dossier_pdf_uploader.rb&#10;ge&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/Gemfile&#10;gemf&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/Gemfile&#10;recap&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/recapitulatif_controller_spec.rb&#10;qp&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/assets/javascripts/api_carto/qp.js&#10;etape&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/layouts/_etape_suivante.html.haml&#10;description&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/description_controller_spec.rb&#10;de&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/demandes_controller_spec.rb&#10;deman&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/demandes_controller_spec.rb&#10;et&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/layouts/_etape_suivante.html.haml&#10;etap&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/layouts/_etape_suivante.html.haml&#10;sh&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/carte/show.html.haml&#10;toke&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/initializers/token.rb&#10;rails_&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/rails_helper.rb" />
+    <property name="SearchEverywhereHistoryKey" value="seeds&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/db/seeds.rb&#10;start&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/start_controller_spec.rb&#10;recapi&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/controllers/recapitulatif_controller.rb&#10;dossiers_contr&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/dossiers_controller_spec.rb&#10;dossiers&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/admin/dossier_controller_spec.rb&#10;dossier_contr&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/admin/dossier_controller_spec.rb&#10;dossier&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/controllers/dossiers_controller.rb&#10;see&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/db/seeds.rb&#10;seed&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/db/seeds.rb&#10;desc&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/description_controller_spec.rb&#10;descr&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/controllers/description_controller.rb&#10;demande&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/demandes_controller_spec.rb&#10;commentaire&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/commentaires_controller_spec.rb&#10;carte&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/carte_controller_spec.rb&#10;car&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/carte_controller_spec.rb&#10;modi&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/layouts/_modifications_terminees.html.haml&#10;infos&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/dossiers/_infos_dossier.html.haml&#10;_info&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/features/dossiers_page/_infos_dossier_spec.rb&#10;show&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/recapitulatif/show.html.haml&#10;rec&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/recapitulatif_controller_spec.rb&#10;route&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/routes.rb&#10;token&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/initializers/token.rb&#10;appli&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/assets/stylesheets/application.scss&#10;admi&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/start/_admin.html.haml&#10;ap&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/assets/stylesheets/application.scss&#10;gem&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/Gemfile&#10;spec_&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/spec_helper.rb&#10;spec&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/spec_helper.rb&#10;feat&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/support/feature_helpers.rb&#10;rout&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/routes.rb&#10;rou&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/routes.rb&#10;ro&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/routes.rb&#10;applica&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/assets/stylesheets/application.scss&#10;sho&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/features/description_page/show_page_spec.rb&#10;info&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/dossiers/_infos_dossier.html.haml&#10;Dossier&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/uploaders/dossier_pdf_uploader.rb&#10;ge&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/Gemfile&#10;gemf&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/Gemfile&#10;recap&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/recapitulatif_controller_spec.rb&#10;qp&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/assets/javascripts/api_carto/qp.js&#10;etape&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/layouts/_etape_suivante.html.haml&#10;description&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/description_controller_spec.rb&#10;de&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/demandes_controller_spec.rb&#10;deman&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/controllers/demandes_controller_spec.rb&#10;et&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/layouts/_etape_suivante.html.haml&#10;etap&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/layouts/_etape_suivante.html.haml&#10;sh&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/app/views/carte/show.html.haml&#10;toke&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/config/initializers/token.rb&#10;rails_&#9;FILE&#9;file:///Users/xavierjulien/SGMAP/admi_facile/spec/rails_helper.rb" />
     <property name="Ruby.ViewRefParam.DefaultExtension" value="html.erb" />
   </component>
   <component name="RecentsManager">
@@ -1526,12 +1516,12 @@
       <workItem from="1439223409031" duration="298000" />
       <workItem from="1439223770410" duration="159000" />
       <workItem from="1439223968969" duration="662000" />
-      <workItem from="1439278771949" duration="13009000" />
+      <workItem from="1439278771949" duration="13999000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="234371000" />
+    <option name="totallyTimeSpent" value="235361000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1555,7 +1545,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297568" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Routes" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26609442" sideWeight="0.5" order="4" side_tool="false" content_ui="combo" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36757424" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36757424" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42945546" sideWeight="0.49713877" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24964234" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1740,22 +1730,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spec/controllers/dossiers_controller_spec.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5">
-          <caret line="64" column="39" selection-start-line="64" selection-start-column="39" selection-end-line="64" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/dossiers_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.59615386">
-          <caret line="56" column="16" selection-start-line="56" selection-start-column="16" selection-end-line="56" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/recapitulatif_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.115384616">
@@ -1828,14 +1802,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/admin/dossier/show.html.haml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2777778">
-          <caret line="14" column="60" selection-start-line="14" selection-start-column="60" selection-end-line="14" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/views/carte/_carte_sources_CSS.html.haml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.09920635">
@@ -1886,30 +1852,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spec/features/admin/dossier_page/show_page_spec.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5">
-          <caret line="26" column="28" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spec/features/admin/dossier_page/_commentaires_flux_spec.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db/seeds.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5576923">
-          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/views/recapitulatif/_commentaires_flux.html.haml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.35714287">
@@ -1948,20 +1890,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spec/controllers/description_controller_spec.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.378882">
-          <caret line="164" column="53" selection-start-line="164" selection-start-column="53" selection-end-line="164" selection-end-column="53" />
-          <folding>
-            <element signature="e#157#477#0" expanded="false" />
-            <element signature="e#5428#5846#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/commentaires_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.062111802">
           <caret line="2" column="34" selection-start-line="2" selection-start-column="34" selection-end-line="2" selection-end-column="34" />
           <folding />
         </state>
@@ -1971,6 +1902,73 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4037267">
           <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/features/admin/dossier_page/_commentaires_flux_spec.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.47204968">
+          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/controllers/dossiers_controller_spec.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4099379">
+          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/features/admin/dossier_page/show_page_spec.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334">
+          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db/seeds.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8447205">
+          <caret line="30" column="80" selection-start-line="30" selection-start-column="73" selection-end-line="30" selection-end-column="80" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/controllers/description_controller_spec.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.39544514">
+          <caret line="140" column="8" selection-start-line="140" selection-start-column="8" selection-end-line="140" selection-end-column="8" />
+          <folding>
+            <element signature="e#157#477#0" expanded="false" />
+            <element signature="e#5428#5846#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/admin/dossier/show.html.haml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.45751634">
+          <caret line="14" column="60" selection-start-line="14" selection-start-column="60" selection-end-line="14" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/admin/dossier_controller.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.46583852">
+          <caret line="15" column="2" selection-start-line="14" selection-start-column="2" selection-end-line="15" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/dossiers_controller.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.124223605">
+          <caret line="4" column="44" selection-start-line="4" selection-start-column="44" selection-end-line="4" selection-end-column="44" />
           <folding />
         </state>
       </provider>
