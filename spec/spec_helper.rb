@@ -54,6 +54,8 @@ class ActiveRecord::Base
   end
 end
 
+SIADETOKEN = :valid_token
+
 include Warden::Test::Helpers
 
 RSpec.configure do |config|
