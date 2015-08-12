@@ -70,6 +70,7 @@ GEM
     childprocess (0.5.5)
       ffi (~> 1.0, >= 1.0.11)
     cliver (0.3.2)
+    coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -137,6 +138,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    method_source (0.8.2)
     mime-types (2.6.1)
     mini_portile (0.6.2)
     minitest (5.7.0)
@@ -154,6 +156,13 @@ GEM
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
     powerpack (0.1.0)
+    pry (0.10.1)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    pry-byebug (3.2.0)
+      byebug (~> 5.0)
+      pry (~> 0.10)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -246,6 +255,7 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
+    slop (3.6.0)
     spring (1.3.6)
     sprockets (3.2.0)
       rack (~> 1.0)
@@ -306,6 +316,7 @@ DEPENDENCIES
   leaflet-rails
   pg
   poltergeist
+  pry-byebug
   rails (= 4.2.0)
   rest-client
   rgeo-geojson
@@ -321,3 +332,6 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
   webmock
+
+BUNDLED WITH
+   1.10.4

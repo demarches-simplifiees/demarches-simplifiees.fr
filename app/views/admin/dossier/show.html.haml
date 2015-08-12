@@ -12,8 +12,24 @@
 %br
 
 .content{class: 'row'}
-  #map_qp{style: 'height:500px', class: 'col-lg-6 col-md-6'}
-= render partial: '/carte/carte_sources_CSS'
+  #map_qp.col-lg-6.col-md-6{style: 'height:500px'}
+  #pieces_jointes.col-lg-6.col-md-6
+    %h3.text-info Liste des pièces jointes
+    %br
+    %table.table
+      -@liste_pieces_jointes.each do |pj|
+        %tr{id: "piece_jointe_#{pj.id}"}
+          %th{class:'col-lg-6'}
+            =pj.libelle
+          %td.col-lg-4.col-md-4
+            - if pj.api_entreprise
+              %a{ href: '' } Récupérer
+            - elsif @array_id_pj_valides.include?(pj.id)
+              %a{ href: "#{@dossier.get_pj(pj.id).ref_dossier_pdf}", target: '_blank' } Consulter
+            - else
+              = 'Pièce non fournie'
+
+  = render partial: '/carte/carte_sources_CSS'
 = render partial: '/carte/carte_sources_JS_backend'
 %br
 

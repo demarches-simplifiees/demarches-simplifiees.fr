@@ -3,11 +3,7 @@ class DescriptionController < ApplicationController
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate
 
-    @array_id_pj_valides = Array.new
-
-    DossierPdf.where(dossier_id: @dossier.id).each do |pj_valide|
-      @array_id_pj_valides << pj_valide.ref_pieces_jointes_id
-    end
+    @array_id_pj_valides = DossierPdf.get_array_id_pj_valid_for_dossier @dossier.id
 
     @liste_pieces_jointes = get_liste_piece_jointe
   rescue

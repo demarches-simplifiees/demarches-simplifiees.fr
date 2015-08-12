@@ -32,6 +32,51 @@ feature 'Admin/Dossier#Show Page' do
       end
     end
 
+    context 'la liste des pièces jointes est présente' do
+      context 'Attestation MSA' do
+        let(:id_piece_jointe){93}
+
+        scenario 'la ligne de la pièce jointe est présente' do
+          expect(page).to have_selector("tr[id=piece_jointe_#{id_piece_jointe}]")
+        end
+
+        scenario 'le bouton "Récupérer" est présent' do
+          expect(page.find("tr[id=piece_jointe_#{id_piece_jointe}]")).to have_selector("a[href='']")
+          expect(page.find("tr[id=piece_jointe_#{id_piece_jointe}]")).to have_content('Récupérer')
+        end
+      end
+
+      context 'Attestation RDI' do
+        let(:id_piece_jointe){103}
+
+        scenario 'la ligne de la pièce jointe est présente' do
+          expect(page).to have_selector("tr[id=piece_jointe_#{id_piece_jointe}]")
+        end
+
+        scenario 'le libelle "Pièce manquante" est présent' do
+          expect(page.find("tr[id=piece_jointe_#{id_piece_jointe}]")).to have_content('Pièce non fournie')
+        end
+      end
+
+      context 'Devis' do
+        let(:id_piece_jointe){388}
+        let(:piece_jointe_388) {File.open('./spec/support/files/piece_jointe_388.pdf')}
+
+        before do
+          DossierPdf.create(dossier_id: dossier_id, ref_pieces_jointes_id: id_piece_jointe, ref_dossier_pdf: piece_jointe_388)
+        end
+
+        scenario 'la ligne de la pièce jointe est présente' do
+          expect(page).to have_selector("tr[id=piece_jointe_#{id_piece_jointe}]")
+        end
+
+        scenario 'le libelle "Consulter" est présent' do
+          expect(page.find("tr[id=piece_jointe_#{id_piece_jointe}] a")[:href]).to have_content("piece_jointe_388.pdf")
+          expect(page.find("tr[id=piece_jointe_#{id_piece_jointe}]")).to have_content('Consulter')
+        end
+      end
+    end
+
     scenario 'la carte est bien présente' do
       expect(page).to have_selector('#map_qp');
     end
