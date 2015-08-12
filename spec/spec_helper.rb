@@ -54,7 +54,9 @@ class ActiveRecord::Base
   end
 end
 
-SIADETOKEN = :valid_token
+if !(defined? SIADETOKEN)
+  SIADETOKEN = :valid_token
+end
 
 include Warden::Test::Helpers
 

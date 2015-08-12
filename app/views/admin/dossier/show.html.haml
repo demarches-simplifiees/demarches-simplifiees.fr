@@ -17,6 +17,16 @@
     %h3.text-info Liste des pièces jointes
     %br
     %table.table
+      -if @formulaire.lien_demarche != nil
+        %tr{id: "piece_jointe_0"}
+          %th{class:'col-lg-6'}
+            ='CERFA'
+          %td.col-lg-4.col-md-4
+            - if @array_id_pj_valides.include?(0)
+              %a{ href: "#{@dossier.get_pj(0).ref_dossier_pdf}", target: '_blank' } Consulter
+            - else
+              = 'Pièce non fournie'
+
       -@liste_pieces_jointes.each do |pj|
         %tr{id: "piece_jointe_#{pj.id}"}
           %th{class:'col-lg-6'}

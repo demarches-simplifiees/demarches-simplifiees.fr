@@ -10,6 +10,7 @@ class Admin::DossierController < ApplicationController
     @commentaires = @commentaires.all.decorate
     @commentaire_email = current_user.email
 
+    @formulaire = RefFormulaire.find(@dossier.ref_formulaire)
     @liste_pieces_jointes = RefPiecesJointe.get_liste_piece_jointe @dossier.ref_formulaire
     @array_id_pj_valides = DossierPdf.get_array_id_pj_valid_for_dossier @dossier.id
 

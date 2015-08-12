@@ -26,7 +26,7 @@ function get_ref_dossier (){
 }
 
 function submit_check_draw(e) {
-    if (window.featureCollection.features.length == 0) {
+    if (window.location.href.indexOf('carte') > -1 && window.featureCollection.features.length == 0) {
         $("#flash_message").html('<div class="alert alert-danger">Un dessin est obligatoire.</div>');
         e.preventDefault();
         return false;
