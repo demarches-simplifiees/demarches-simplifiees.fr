@@ -5,6 +5,8 @@ RSpec.describe CarteController, type: :controller do
   let(:bad_dossier_id){1000}
   let(:ref_dossier){'IATRQPQY'}
   let(:adresse){'50 avenue des champs élysées Paris 75008'}
+  let(:bad_adresse){'babouba'}
+
 
   describe "GET #show" do
     it "returns http success" do
@@ -54,15 +56,31 @@ RSpec.describe CarteController, type: :controller do
   end
 
   describe '#get_position' do
-    before do
-      stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{adresse}").
-          to_return(:status => 200, :body => '{"query": "50 avenue des champs \u00e9lys\u00e9es Paris 75008", "version": "draft", "licence": "ODbL 1.0", "features": [{"geometry": {"coordinates": [2.306888, 48.870374], "type": "Point"}, "type": "Feature", "properties": {"city": "Paris", "label": "50 Avenue des Champs \u00c9lys\u00e9es 75008 Paris", "housenumber": "50", "id": "ADRNIVX_0000000270748251", "postcode": "75008", "name": "50 Avenue des Champs \u00c9lys\u00e9es", "citycode": "75108", "context": "75, \u00cele-de-France", "score": 0.9054545454545454, "type": "housenumber"}}], "type": "FeatureCollection", "attribution": "BAN"}', :headers => {})
-      get :get_position, :dossier_id => dossier_id
+    context 'Geocodeur renvoie des positions nil' do
+      before do
+        stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{bad_adresse}").
+            to_return(:status => 200, :body => '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', :headers => {})
+
+        @tmp_dossier = Dossier.create()
+        Etablissement.create(adresse: bad_adresse, dossier: @tmp_dossier)
+        get :get_position, :dossier_id => @tmp_dossier.id
+      end
+
+      subject{Dossier.find(@tmp_dossier.id)}
+
+      it 'on enregistre des coordonnées lat et lon à 0' do
+        expect(subject.position_lat).to eq('0')
+        expect(subject.position_lon).to eq('0')
+      end
     end
 
-    #TODO Test carto geocodeur ne revoit rien / nil
-
     context 'retour d\'un fichier JSON avec 3 attributs' do
+      before do
+        stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{adresse}").
+            to_return(:status => 200, :body => '{"query": "50 avenue des champs \u00e9lys\u00e9es Paris 75008", "version": "draft", "licence": "ODbL 1.0", "features": [{"geometry": {"coordinates": [2.306888, 48.870374], "type": "Point"}, "type": "Feature", "properties": {"city": "Paris", "label": "50 Avenue des Champs \u00c9lys\u00e9es 75008 Paris", "housenumber": "50", "id": "ADRNIVX_0000000270748251", "postcode": "75008", "name": "50 Avenue des Champs \u00c9lys\u00e9es", "citycode": "75108", "context": "75, \u00cele-de-France", "score": 0.9054545454545454, "type": "housenumber"}}], "type": "FeatureCollection", "attribution": "BAN"}', :headers => {})
+
+        get :get_position, :dossier_id => dossier_id
+      end
       subject {JSON.parse(response.body)}
 
       it 'format JSON valide' do

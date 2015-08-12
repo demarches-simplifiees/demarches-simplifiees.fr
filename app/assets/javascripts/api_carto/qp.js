@@ -47,10 +47,17 @@
     });
 
     position = get_position();
+    position_zoom = 13;
+
+    if (position.lat == '0' && position.lon == '0'){
+        position.lon = '2.428462';
+        position.lat = '46.538192';
+        position_zoom = 6;
+    }
 
     map = L.map(mapId, {
         center: new L.LatLng(position.lat, position.lon),
-        zoom: 13,
+        zoom: position_zoom,
         layers: [OSM],
         photonControl: true,
         photonControlOptions: photonControlOptions,
