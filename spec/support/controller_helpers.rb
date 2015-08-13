@@ -5,7 +5,7 @@ module ControllerHelpers
       allow(controller).to receive(:current_user).and_return(nil)
     else
       allow(request.env['warden']).to receive(:authenticate!).and_return(user)
-      allow(controller).to receive(:current_user).and_return({:email => 'test@localhost.com'})
+      allow(controller).to receive(:current_user).and_return(create(:user))
     end
   end
 end

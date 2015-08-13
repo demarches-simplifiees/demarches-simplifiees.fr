@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 feature 'Dossier#Show Page' do
-  let (:dossier_id){10000}
+  let(:dossier) { create(:dossier, :with_entreprise) }
+
+  let(:dossier_id) { dossier.id }
 
   before do
     visit "/dossiers/#{dossier_id}"
@@ -21,7 +23,7 @@ feature 'Dossier#Show Page' do
     end
 
     scenario 'le texte d\'information des droits est correct' do
-      expect(page).to have_content ("J’autorise les organismes publics à vérifier les informations de mon entreprise auprès des administrations concernées. Ces informations resteront strictement confidentielles.")
+      expect(page).to have_content ("J'autorise les organismes publics à vérifier les informations de mon entreprise auprès des administrations concernées. Ces informations resteront strictement confidentielles.")
     end
 
     scenario 'les informations de l\'entreprise sont présents' do

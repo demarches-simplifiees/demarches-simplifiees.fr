@@ -1,6 +1,6 @@
 module FeatureHelpers
   def login_admin
-    user = User.first
+    user = create :user
     login_as user, scope: :user
     user
   end

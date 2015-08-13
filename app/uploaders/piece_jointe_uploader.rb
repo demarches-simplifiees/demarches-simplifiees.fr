@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class DossierPdfUploader < CarrierWave::Uploader::Base
+class PieceJointeUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick

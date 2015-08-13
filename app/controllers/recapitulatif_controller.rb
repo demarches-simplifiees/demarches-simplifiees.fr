@@ -5,9 +5,12 @@ class RecapitulatifController < ApplicationController
 
     #mettre dans le modèle
     @commentaires = @dossier.commentaires.order(created_at: :desc)
+
     @commentaires = @commentaires.all.decorate
+
     @commentaire_email = @dossier.mail_contact
-  rescue
+  rescue => e
+
      redirect_to url_for({controller: :start, action: :error_dossier})
   end
 end

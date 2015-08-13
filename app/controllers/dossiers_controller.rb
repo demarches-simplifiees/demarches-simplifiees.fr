@@ -4,7 +4,7 @@ class DossiersController < ApplicationController
 
     @etablissement =  @dossier.etablissement
     @entreprise =  @dossier.entreprise.decorate
-  rescue
+  rescue ActiveRecord::RecordNotFound
     redirect_to url_for({controller: :start, action: :error_dossier})
   end
 
@@ -39,14 +39,16 @@ class DossiersController < ApplicationController
 
       redirect_to url_for({controller: :dossiers, action: :show, id: @dossier.id})
     end
+    # TODO: Remove rescue
   rescue
     redirect_to url_for({controller: :start, action: @rescue_redirect})
   end
 
   def update
+
     @dossier = Dossier.find(params[:id])
-    @dossier.autorisation_donnees = (params[:autorisation_donnees] == 'on')
-    @dossier.save
+    return error if update_params[:autorisation_donnees] == '0'
+    @dossier.update_attributes(update_params)
 
     if @dossier.autorisation_donnees
       redirect_to url_for({controller: :demandes, action: :show, dossier_id: @dossier.id})
@@ -65,6 +67,10 @@ class DossiersController < ApplicationController
   end
 
   private
+
+  def update_params
+    params.require(:dossier).permit(:autorisation_donnees)
+  end
 
   def dossier_id_is_present?
 

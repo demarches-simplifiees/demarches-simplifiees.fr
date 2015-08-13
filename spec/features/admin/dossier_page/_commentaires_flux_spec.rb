@@ -2,10 +2,12 @@ require 'spec_helper'
 
 feature '_Commentaires_Flux Admin/Dossier#Show Page' do
 
-  let(:dossier_id){10000}
-  let(:email_pre_rempli){'test@localhost.com'}
-  let(:email_commentaire){'test@test.com'}
-  let(:body){'Commentaire de test'}
+  let(:dossier) { create(:dossier, :with_entreprise) }
+  let(:dossier_id) { dossier.id }
+  let!(:commentaire) { create(:commentaire, dossier: dossier, email: 'toto@toto.com')}
+  let(:email_commentaire) { 'test@test.com' }
+  let(:email_pre_rempli) { 'toto@sgmap.fr' }
+  let(:body) { 'Commentaire de test' }
 
   before do
     login_admin

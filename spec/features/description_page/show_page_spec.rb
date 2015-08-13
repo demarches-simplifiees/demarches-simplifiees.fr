@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 feature 'Description#Show Page' do
-  let (:dossier_id){10000}
+  let(:dossier) { create(:dossier) }
+  let(:dossier_id) { dossier.id }
 
   before do
     visit "/dossiers/#{dossier_id}/description"
@@ -90,35 +91,38 @@ feature 'Description#Show Page' do
   end
 
   context 'les valeurs sont réaffichées si elles sont présentes dans la BDD' do
-    let(:nom_projet){'Projet de test'}
-    let(:description){'Description de test.'}
-    let(:montant_projet){12000}
-    let(:montant_aide_demande){3000}
-    let(:date_previsionnelle){'20/01/2016'}
-    let(:mail_contact){'test@test.com'}
+    let(:dossier) do
+      create(:dossier,
+             nom_projet: 'Projet de test',
+             description: 'Description de test',
+             montant_projet: 12_000,
+             montant_aide_demande: 3000,
+             date_previsionnelle: '20/01/2016',
+             mail_contact: 'test@test.com')
+    end
 
     scenario 'Nom du projet' do
-      expect(page).to have_selector("input[id=nom_projet][value='#{nom_projet}']")
+      expect(page).to have_selector("input[id=nom_projet][value='#{dossier.nom_projet}']")
     end
 
     scenario 'Description du projet' do
-      expect(page).to have_content("#{description}")
+      expect(page).to have_content("#{dossier.description}")
     end
 
     scenario 'Montant du projet' do
-      expect(page).to have_selector("input[id=montant_projet][value='#{montant_projet}']")
+      expect(page).to have_selector("input[id=montant_projet][value='#{dossier.montant_projet}']")
     end
 
     scenario 'Montant des aides du projet' do
-      expect(page).to have_selector("input[id=montant_aide_demande][value='#{montant_aide_demande}']")
+      expect(page).to have_selector("input[id=montant_aide_demande][value='#{dossier.montant_aide_demande}']")
     end
 
     scenario 'Date prévisionnelle du projet' do
-      expect(page).to have_selector("input[id=date_previsionnelle][value='#{date_previsionnelle}']")
+      expect(page).to have_selector("input[id=date_previsionnelle][value='#{dossier.date_previsionnelle}']")
     end
 
     scenario 'Mail de contact' do
-      expect(page).to have_selector("input[id=mail_contact][value='#{mail_contact}']")
+      expect(page).to have_selector("input[id=mail_contact][value='#{dossier.mail_contact}']")
     end
   end
 

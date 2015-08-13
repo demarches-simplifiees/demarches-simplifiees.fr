@@ -24,3 +24,5 @@
 *.iws
 
 public/uploads
+bin/*
+config/initializers/token.rb

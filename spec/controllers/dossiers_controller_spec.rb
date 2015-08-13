@@ -1,12 +1,13 @@
 require 'spec_helper'
 
 RSpec.describe DossiersController, type: :controller do
-  let (:dossier_id){10000}
-  let (:bad_dossier_id){1000}
-  let (:autorisation_donnees){'on'}
+  let(:dossier) { create(:dossier, :with_entreprise) }
+  let (:dossier_id) { dossier.id }
+  let (:bad_dossier_id) { Dossier.count + 10 }
+  # let (:autorisation_donnees){'on'}
 
-  let (:siren){431449040}
-  let (:siret){43144904000028}
+  let (:siren) { dossier.siren }
+  let (:siret) { dossier.siret }
   let (:bad_siret){1}
 
   describe 'GET #show' do
@@ -62,22 +63,29 @@ RSpec.describe DossiersController, type: :controller do
   end
 
   describe 'PUT #update' do
-    it 'Checkbox conditions validée' do
-      put :update, :id => dossier_id, :autorisation_donnees => autorisation_donnees
-      expect(response).to redirect_to("/dossiers/#{dossier_id}/demande")
+    context 'when Checkbox is checked' do
+      it 'redirects to demande' do
+        put :update, :id => dossier_id, dossier: { autorisation_donnees: '1' }
+        expect(response).to redirect_to("/dossiers/#{dossier_id}/demande")
+      end
+
+      it 'update dossier' do
+        put :update, :id => dossier_id, dossier: { autorisation_donnees: '1' }
+        dossier = Dossier.find(dossier_id)
+        expect(dossier.autorisation_donnees).to be_truthy
+      end
     end
 
-    context 'Checkbox conditions non validée' do
-      before do
-        put :update, :id => dossier_id
-      end
-
-      it 'affichage alert' do
-        expect(flash[:alert]).to be_present
-      end
-
-      it 'Affichage message d\'erreur condition non validé' do
+    context 'when Checkbox is not checked' do
+      it 'uses flash alert to display message' do
+        put :update, :id => dossier_id, dossier: { autorisation_donnees: '0' }
         expect(flash[:alert]).to have_content('Les conditions sont obligatoires.')
+      end
+
+      it "doesn't update dossier autorisation_donnees" do
+        put :update, :id => dossier_id, dossier: { autorisation_donnees: '0' }
+        dossier = Dossier.find(dossier_id)
+        expect(dossier.autorisation_donnees).to be_falsy
       end
     end
   end

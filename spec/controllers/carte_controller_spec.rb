@@ -1,11 +1,17 @@
 require 'spec_helper'
 
 RSpec.describe CarteController, type: :controller do
-  let(:dossier_id){10000}
-  let(:bad_dossier_id){1000}
-  let(:ref_dossier){'IATRQPQY'}
-  let(:adresse){'50 avenue des champs élysées Paris 75008'}
+
   let(:bad_adresse){'babouba'}
+
+
+  let(:dossier) { create(:dossier) }
+  let!(:entreprise) { create(:entreprise, dossier: dossier) }
+  let!(:etablissement) { create(:etablissement, dossier: dossier) }
+  let(:dossier_id) { dossier.id }
+  let(:bad_dossier_id) { Dossier.count + 10 }
+  let(:ref_dossier) { 'IATRQPQY' }
+  let(:adresse) { etablissement.adresse }
 
 
   describe "GET #show" do
@@ -96,7 +102,7 @@ RSpec.describe CarteController, type: :controller do
       end
 
       it 'dossier_id' do
-        expect(subject['dossier_id']).to eq('10000')
+        expect(subject['dossier_id']).to eq(dossier.id.to_s)
       end
     end
   end

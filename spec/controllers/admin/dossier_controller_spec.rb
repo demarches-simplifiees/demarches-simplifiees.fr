@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Admin::DossierController, type: :controller do
-  let (:dossier_id){10000}
-  let (:bad_dossier_id){10}
+  let(:dossier) { create(:dossier, :with_entreprise) }
+  let (:dossier_id) { dossier.id }
+  let (:bad_dossier_id) { Dossier.count + 10 }
 
   describe "GET #show" do
     context 'l\'utilisateur est connecté' do
@@ -12,7 +13,7 @@ RSpec.describe Admin::DossierController, type: :controller do
 
       it "returns http success" do
         get :show, :dossier_id => dossier_id
-        expect(response).to have_http_status(302)
+        expect(response).to have_http_status(200)
       end
 
       it 'le numéro de dossier n\'existe pas' do
@@ -30,6 +31,7 @@ RSpec.describe Admin::DossierController, type: :controller do
   end
 
   describe "GET #index" do
+    let(:user) { create(:user) }
     before do
       sign_in
     end

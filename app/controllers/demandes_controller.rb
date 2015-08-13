@@ -6,7 +6,7 @@ class DemandesController < ApplicationController
 
   def choice
     @dossier = Dossier.find(params[:dossier_id])
-    @dossier.update_attributes(ref_formulaire: params[:ref_formulaire])
+    @dossier.update_attributes(ref_formulaire_id: params[:ref_formulaire])
 
     redirect_to url_for( { controller: :carte, action: :show, :dossier_id => params[:dossier_id] } )
   end

@@ -23,7 +23,7 @@
             ='CERFA'
           %td.col-lg-4.col-md-4
             - if @array_id_pj_valides.include?(0)
-              %a{ href: "#{@dossier.get_pj(0).ref_dossier_pdf}", target: '_blank' } Consulter
+              %a{ href: "#{@dossier.get_pj(0).content}", target: '_blank' } Consulter
             - else
               = 'Pièce non fournie'
 
@@ -35,7 +35,7 @@
             - if pj.api_entreprise
               %a{ href: '' } Récupérer
             - elsif @array_id_pj_valides.include?(pj.id)
-              %a{ href: "#{@dossier.get_pj(pj.id).ref_dossier_pdf}", target: '_blank' } Consulter
+              %a{ href: "#{@dossier.get_pj(pj.id).content}", target: '_blank' } Consulter
             - else
               = 'Pièce non fournie'
 

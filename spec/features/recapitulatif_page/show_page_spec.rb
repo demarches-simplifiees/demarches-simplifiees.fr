@@ -2,7 +2,8 @@ require 'spec_helper'
 
 
 feature 'Recapitulatif#Show Page' do
-  let(:dossier_id){10000}
+  let(:dossier) { create(:dossier) }
+  let(:dossier_id) { dossier.id }
 
   before do
     Capybara.current_session.driver.header('Referer', '/description')

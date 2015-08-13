@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150810130957) do
+ActiveRecord::Schema.define(version: 20150813095939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,14 +26,6 @@ ActiveRecord::Schema.define(version: 20150810130957) do
 
   add_index "commentaires", ["dossier_id"], name: "index_commentaires_on_dossier_id", using: :btree
 
-  create_table "dossier_pdfs", force: :cascade do |t|
-    t.string  "ref_dossier_pdf"
-    t.integer "dossier_id"
-    t.integer "ref_pieces_jointes_id"
-  end
-
-  add_index "dossier_pdfs", ["ref_pieces_jointes_id"], name: "index_dossier_pdfs_on_ref_pieces_jointes_id", using: :btree
-
   create_table "dossiers", force: :cascade do |t|
     t.string  "description"
     t.boolean "autorisation_donnees"
@@ -47,8 +39,10 @@ ActiveRecord::Schema.define(version: 20150810130957) do
     t.string  "lien_plus_infos"
     t.string  "mail_contact"
     t.boolean "dossier_termine"
-    t.string  "ref_formulaire"
+    t.integer "ref_formulaire_id"
   end
+
+  add_index "dossiers", ["ref_formulaire_id"], name: "index_dossiers_on_ref_formulaire_id", using: :btree
 
   create_table "entreprises", force: :cascade do |t|
     t.string  "siren"
@@ -89,6 +83,14 @@ ActiveRecord::Schema.define(version: 20150810130957) do
     t.datetime "updated_at",      null: false
     t.boolean  "use_admi_facile"
   end
+
+  create_table "pieces_jointes", force: :cascade do |t|
+    t.string  "content"
+    t.integer "dossier_id"
+    t.integer "ref_pieces_jointes_id"
+  end
+
+  add_index "pieces_jointes", ["ref_pieces_jointes_id"], name: "index_pieces_jointes_on_ref_pieces_jointes_id", using: :btree
 
   create_table "pros", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

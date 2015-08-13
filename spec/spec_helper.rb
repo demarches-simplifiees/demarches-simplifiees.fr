@@ -45,14 +45,8 @@ Dir[Rails.root.join("spec/factories/**/*.rb")].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
-class ActiveRecord::Base
-  mattr_accessor :shared_connection
-  @@shared_connection = nil
+DatabaseCleaner.strategy = :truncation, {:except => %w[evenement_vies ref_formulaires ref_pieces_jointes]}
 
-  def self.connection
-    @@shared_connection || retrieve_connection
-  end
-end
 
 if !(defined? SIADETOKEN)
   SIADETOKEN = :valid_token

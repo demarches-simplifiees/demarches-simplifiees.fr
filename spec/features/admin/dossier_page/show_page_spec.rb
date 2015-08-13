@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 feature 'Admin/Dossier#Show Page' do
-  let(:dossier_id){10000}
+  let(:dossier) { create(:dossier, :with_entreprise) }
+  let(:dossier_id) { dossier.id }
 
   before do
     login_admin
@@ -61,9 +62,10 @@ feature 'Admin/Dossier#Show Page' do
       context 'Devis' do
         let(:id_piece_jointe){388}
         let(:piece_jointe_388) {File.open('./spec/support/files/piece_jointe_388.pdf')}
+        let!(:piece_jointe) { create(:piece_jointe, dossier: dossier, ref_pieces_jointes_id: id_piece_jointe, content: piece_jointe_388) }
 
         before do
-          DossierPdf.create(dossier_id: dossier_id, ref_pieces_jointes_id: id_piece_jointe, ref_dossier_pdf: piece_jointe_388)
+          visit "/admin/dossier/#{dossier_id}"
         end
 
         scenario 'la ligne de la pièce jointe est présente' do

@@ -3,7 +3,7 @@ class DescriptionController < ApplicationController
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate
 
-    @array_id_pj_valides = DossierPdf.get_array_id_pj_valid_for_dossier @dossier.id
+    @array_id_pj_valides = PieceJointe.get_array_id_pj_valid_for_dossier @dossier.id
 
     @liste_pieces_jointes = get_liste_piece_jointe
   rescue
@@ -21,23 +21,23 @@ class DescriptionController < ApplicationController
     @dossier.update_attributes(create_params)
 
     if params[:cerfa_pdf] != nil
-      DossierPdf.destroy_all(dossier_id: @dossier.id, ref_pieces_jointes_id: 0)
-      @dossier_pdf = DossierPdf.new
-      @dossier_pdf.ref_dossier_pdf = params[:cerfa_pdf]
-      @dossier_pdf.ref_pieces_jointes_id = 0
-      @dossier_pdf.dossier = @dossier
-      @dossier_pdf.save
+      PieceJointe.destroy_all(dossier_id: @dossier.id, ref_pieces_jointes_id: 0)
+      @piece_jointe = PieceJointe.new
+      @piece_jointe.content = params[:cerfa_pdf]
+      @piece_jointe.ref_pieces_jointes_id = 0
+      @piece_jointe.dossier = @dossier
+      @piece_jointe.save
     end
 
     get_liste_piece_jointe.each do |pj|
       if params["piece_jointe_#{pj.id}"] != nil
-        DossierPdf.destroy_all(dossier_id: @dossier.id, ref_pieces_jointes_id: pj.id)
+        PieceJointe.destroy_all(dossier_id: @dossier.id, ref_pieces_jointes_id: pj.id)
 
-        @dossier_pdf = DossierPdf.new
-        @dossier_pdf.ref_dossier_pdf = params["piece_jointe_#{pj.id}"]
-        @dossier_pdf.ref_pieces_jointes_id = pj.id
-        @dossier_pdf.dossier = @dossier
-        @dossier_pdf.save
+        @piece_jointe = PieceJointe.new
+        @piece_jointe.content = params["piece_jointe_#{pj.id}"]
+        @piece_jointe.ref_pieces_jointes_id = pj.id
+        @piece_jointe.dossier = @dossier
+        @piece_jointe.save
       end
     end
 
@@ -73,7 +73,7 @@ class DescriptionController < ApplicationController
   end
 
   def get_liste_piece_jointe
-    @formulaire = RefFormulaire.find(@dossier.ref_formulaire)
+    @formulaire = @dossier.ref_formulaire
     RefPiecesJointe.where ("\"CERFA\" = '#{@formulaire.ref_demarche}'")
   end
 end

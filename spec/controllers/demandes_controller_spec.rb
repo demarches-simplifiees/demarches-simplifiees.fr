@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe DemandesController, type: :controller do
-
-  let (:dossier_id){10000}
+  let(:dossier) { create(:dossier) }
+  let (:dossier_id) { dossier.id }
 
   describe "GET #show" do
     it "returns http success" do
