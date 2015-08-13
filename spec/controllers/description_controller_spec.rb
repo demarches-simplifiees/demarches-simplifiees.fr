@@ -148,12 +148,10 @@ describe DescriptionController, type: :controller do
       end
 
       context 'sauvegarde de 2 pieces jointes' do
+        subject { dossier.pieces_jointes.pluck(:ref_pieces_jointes_id) }
         it 'les deux pièces sont présentes en base' do
-          piece_jointe_1 = PieceJointe.where(ref_pieces_jointes_id: '103', dossier_id: dossier_id)
-          piece_jointe_2 = PieceJointe.where(ref_pieces_jointes_id: '692', dossier_id: dossier_id)
-
-          expect(piece_jointe_1.first['content']).to eq(name_piece_jointe_103)
-          expect(piece_jointe_2.first['content']).to eq(name_piece_jointe_692)
+          expect(subject).to include(103)
+          expect(subject).to include(692)
         end
 
         # TODO: refactor
