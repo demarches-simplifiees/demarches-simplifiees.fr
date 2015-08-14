@@ -9,6 +9,10 @@ class Dossier < ActiveRecord::Base
   delegate :siret, to: :etablissement
 
   def get_pj piece_jointe_id
-    pieces_jointes.where(ref_pieces_jointes_id: piece_jointe_id).last
+    pieces_jointes.where(type_piece_jointe_id: piece_jointe_id).last
+  end
+
+  def liste_piece_justificative
+    ref_formulaire.liste_piece_justificative
   end
 end

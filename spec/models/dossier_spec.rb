@@ -19,4 +19,12 @@ describe Dossier do
       expect(subject.siret).to eq(etablissement.siret)
     end
   end
+
+  describe '#liste_piece_justificative' do
+    subject { dossier.liste_piece_justificative }
+    it 'returns list of required piece justificative' do
+      expect(subject.size).to eq(7)
+      expect(subject).to include(23)
+    end
+  end
 end

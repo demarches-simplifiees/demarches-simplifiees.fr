@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150813095939) do
+ActiveRecord::Schema.define(version: 20150814090717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,10 +87,10 @@ ActiveRecord::Schema.define(version: 20150813095939) do
   create_table "pieces_jointes", force: :cascade do |t|
     t.string  "content"
     t.integer "dossier_id"
-    t.integer "ref_pieces_jointes_id"
+    t.integer "type_piece_jointe_id"
   end
 
-  add_index "pieces_jointes", ["ref_pieces_jointes_id"], name: "index_pieces_jointes_on_ref_pieces_jointes_id", using: :btree
+  add_index "pieces_jointes", ["type_piece_jointe_id"], name: "index_pieces_jointes_on_type_piece_jointe_id", using: :btree
 
   create_table "pros", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -129,7 +129,7 @@ ActiveRecord::Schema.define(version: 20150813095939) do
     t.boolean  "use_admi_facile"
   end
 
-  create_table "ref_pieces_jointes", force: :cascade do |t|
+  create_table "types_piece_jointe", force: :cascade do |t|
     t.string   "CERFA"
     t.string   "nature"
     t.string   "libelle_complet"

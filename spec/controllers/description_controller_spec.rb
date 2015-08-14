@@ -124,15 +124,15 @@ describe DescriptionController, type: :controller do
           expect(subject.dossier_id).to eq(dossier_id)
         end
 
-        it 'ref_pieces_jointes_id' do
-          expect(subject.ref_pieces_jointes_id).to eq(0)
+        it 'type_piece_jointe_id' do
+          expect(subject.type_piece_jointe_id).to eq(0)
         end
       end
 
       context 'les anciens CERFA PDF sont écrasées à chaque fois' do
         it 'il n\'y a qu\'un CERFA PDF par dossier' do
           post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact, :cerfa_pdf => cerfa_pdf
-          cerfa = PieceJointe.where(ref_pieces_jointes_id: '0', dossier_id: dossier_id)
+          cerfa = PieceJointe.where(type_piece_jointe_id: '0', dossier_id: dossier_id)
           expect(cerfa.many?).to eq(false)
         end
       end
@@ -148,7 +148,7 @@ describe DescriptionController, type: :controller do
       end
 
       context 'sauvegarde de 2 pieces jointes' do
-        subject { dossier.pieces_jointes.pluck(:ref_pieces_jointes_id) }
+        subject { dossier.pieces_jointes.pluck(:type_piece_jointe_id) }
         it 'les deux pièces sont présentes en base' do
           expect(subject).to include(103)
           expect(subject).to include(692)
@@ -159,8 +159,8 @@ describe DescriptionController, type: :controller do
           it 'il n\'y a qu\'une pièce jointe par type par dossier' do
             post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact, :piece_jointe_692 => piece_jointe_692, :piece_jointe_103 => piece_jointe_103
 
-            piece_jointe_1 = PieceJointe.where(ref_pieces_jointes_id: '103', dossier_id: dossier_id)
-            piece_jointe_2 = PieceJointe.where(ref_pieces_jointes_id: '692', dossier_id: dossier_id)
+            piece_jointe_1 = PieceJointe.where(type_piece_jointe_id: '103', dossier_id: dossier_id)
+            piece_jointe_2 = PieceJointe.where(type_piece_jointe_id: '692', dossier_id: dossier_id)
 
             expect(piece_jointe_1.many?).to eq(false)
             expect(piece_jointe_2.many?).to eq(false)

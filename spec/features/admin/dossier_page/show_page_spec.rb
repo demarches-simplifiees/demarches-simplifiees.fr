@@ -62,7 +62,7 @@ feature 'Admin/Dossier#Show Page' do
       context 'Devis' do
         let(:id_piece_jointe){388}
         let(:piece_jointe_388) {File.open('./spec/support/files/piece_jointe_388.pdf')}
-        let!(:piece_jointe) { create(:piece_jointe, dossier: dossier, ref_pieces_jointes_id: id_piece_jointe, content: piece_jointe_388) }
+        let!(:piece_jointe) { create(:piece_jointe, dossier: dossier, type_piece_jointe_id: id_piece_jointe, content: piece_jointe_388) }
 
         before do
           visit "/admin/dossier/#{dossier_id}"
