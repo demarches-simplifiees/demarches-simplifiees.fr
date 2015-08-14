@@ -3,8 +3,7 @@ require 'spec_helper'
 RSpec.describe DossiersController, type: :controller do
   let(:dossier) { create(:dossier, :with_entreprise) }
   let (:dossier_id) { dossier.id }
-  let (:bad_dossier_id) { Dossier.count + 10 }
-  # let (:autorisation_donnees){'on'}
+  let (:bad_dossier_id) { 999999999999 }
 
   let (:siren) { dossier.siren }
   let (:siret) { dossier.siret }

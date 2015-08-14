@@ -1,38 +1,32 @@
-%h4
-  =@entreprise.raison_sociale_or_name
+.col-md-12
+  %h4
+    = @entreprise.raison_sociale_or_name
 
-%div{class:'row', id: 'infos_entreprise'}
-  %div{class:'col-lg-6 col-md-6', style:'margin-left:2%'}
-    %h5
-      ='SIRET : '
-      %span.text-success
-        =@etablissement.siret
+#infos_entreprise
+  .col-lg-6.col-md-6
+    %dl.dl-horizontal
 
-    %h5
-      =@entreprise.forme_juridique
+      %dt Siret :
+      %dd.text-success= @etablissement.siret
 
-    %h5
-      =@etablissement.libelle_naf
+      %dt Forme juridique :
+      %dd= @entreprise.forme_juridique
 
-    %h5
-      ='Date création : '
-      %span
-        =Time.at(@entreprise.date_creation).strftime "%d-%m-%Y"
+      %dt libelle naf :
+      %dd= @etablissement.libelle_naf
 
-    %br
-    %h5
-      ='Code effectif entreprise : '
-      %span
-        =@entreprise.code_effectif_entreprise_libelle
+      %dt Date de création :
+      %dd= Time.at(@entreprise.date_creation).strftime "%d-%m-%Y"
 
-    %h5
-      ='Capital social : '
-      %span
-        =number_to_currency(@entreprise.capital_social, delimiter: ' ', unit: '€', format: "%n %u")
+      %dt Effectife entreprise :
+      %dd= @entreprise.effectif
 
+      %dt Capital social :
+      %dd= @entreprise.pretty_capital_social
 
   %div.col-lg-6.col-md-6{style:'margin-left:-2%'}
-    %h5
-      ='Adresse : '
-    %div{style:'margin-left:2%'}
-      =@etablissement.adresse.gsub(/[\n]/, '<br>').html_safe
+    %dl.dl-horizontal
+      %dt
+        Adresse :
+      %dd
+        %address= @etablissement.adresse.gsub(/[\n]/, '<br>').html_safe

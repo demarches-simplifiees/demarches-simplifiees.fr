@@ -1,23 +1,12 @@
-%h2{style:'margin-bottom:16px'}
-  ='Récapitulatif de vos informations'
+.container
+  %h2 Récapitulatif de vos informations
 
-%div{class:'row', style:'margin-left:5%'}
-  = render partial: 'infos_entreprise'
-
-= form_for @dossier do |f|
-  %label{ style:'font-weight:normal' }
-    = f.check_box :autorisation_donnees
-    J'autorise les organismes publics à vérifier les informations de mon entreprise auprès des administrations concernées. Ces informations resteront strictement confidentielles.
+  %div.row
+    = render partial: 'infos_entreprise'
   %br
-  = f.submit 'Etape suivante', class: "btn btn btn-info", style: 'float:right'
-
-= form_tag(url_for({controller: :dossiers, action: :update, id: @dossier.id}), class: 'form-inline', method: 'PUT') do
-  %br
-  %div
+  = form_for @dossier do |f|
     %label{ style:'font-weight:normal' }
-      %input{type:'checkbox', name: 'autorisation_donnees', id: 'autorisation_donnees'}
-        = "J'autorise les organismes publics à vérifier les informations de mon entreprise auprès des administrations concernées. Ces informations resteront strictement confidentielles."
+      = f.check_box :autorisation_donnees
+      J'autorise les organismes publics à vérifier les informations de mon entreprise auprès des administrations concernées. Ces informations resteront strictement confidentielles.
     %br
-    %br
-
-  = render partial: 'layouts/etape_suivante'
+    = f.submit 'Etape suivante', class: "btn btn btn-info", style: 'float:right', id: 'etape_suivante'

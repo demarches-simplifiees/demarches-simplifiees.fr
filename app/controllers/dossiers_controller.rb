@@ -10,7 +10,6 @@ class DossiersController < ApplicationController
 
   def create
     @rescue_redirect = 'error_siret'
-
     @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(params[:siret]).to_params)
     @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(params[:siret][0..-6]).to_params)
 
