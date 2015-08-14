@@ -72,7 +72,7 @@ class DescriptionController < ApplicationController
   end
 
   def get_liste_piece_jointe
-    @formulaire = @dossier.ref_formulaire
+    @formulaire = @dossier.formulaire
     TypePieceJointe.where ("\"CERFA\" = '#{@formulaire.ref_demarche}'")
   end
 end

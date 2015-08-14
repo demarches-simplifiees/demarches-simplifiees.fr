@@ -14,7 +14,7 @@ feature 'Demandes#Show Page' do
     end
 
     scenario 'la liste des demandes possibles est présente' do
-      expect(page).to have_selector ('select[id=ref_formulaire][name=ref_formulaire]');
+      expect(page).to have_selector ('select[id=formulaire][name=formulaire]');
     end
 
     scenario 'le bouton "Etape suivante" est présent' do

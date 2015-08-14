@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150814090717) do
+ActiveRecord::Schema.define(version: 20150814101012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,10 +39,10 @@ ActiveRecord::Schema.define(version: 20150814090717) do
     t.string  "lien_plus_infos"
     t.string  "mail_contact"
     t.boolean "dossier_termine"
-    t.integer "ref_formulaire_id"
+    t.integer "formulaire_id"
   end
 
-  add_index "dossiers", ["ref_formulaire_id"], name: "index_dossiers_on_ref_formulaire_id", using: :btree
+  add_index "dossiers", ["formulaire_id"], name: "index_dossiers_on_formulaire_id", using: :btree
 
   create_table "entreprises", force: :cascade do |t|
     t.string  "siren"
@@ -84,6 +84,25 @@ ActiveRecord::Schema.define(version: 20150814090717) do
     t.boolean  "use_admi_facile"
   end
 
+  create_table "formulaires", force: :cascade do |t|
+    t.string   "ref_demarche"
+    t.string   "nom"
+    t.string   "objet"
+    t.string   "ministere"
+    t.string   "cigle_ministere"
+    t.string   "direction"
+    t.string   "evenement_vie"
+    t.string   "publics"
+    t.string   "lien_demarche"
+    t.string   "lien_fiche_signaletique"
+    t.string   "lien_notice"
+    t.string   "categorie"
+    t.boolean  "mail_pj"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.boolean  "use_admi_facile"
+  end
+
   create_table "pieces_jointes", force: :cascade do |t|
     t.string  "content"
     t.integer "dossier_id"
@@ -109,25 +128,6 @@ ActiveRecord::Schema.define(version: 20150814090717) do
 
   add_index "pros", ["email"], name: "index_pros_on_email", unique: true, using: :btree
   add_index "pros", ["reset_password_token"], name: "index_pros_on_reset_password_token", unique: true, using: :btree
-
-  create_table "ref_formulaires", force: :cascade do |t|
-    t.string   "ref_demarche"
-    t.string   "nom"
-    t.string   "objet"
-    t.string   "ministere"
-    t.string   "cigle_ministere"
-    t.string   "direction"
-    t.string   "evenement_vie"
-    t.string   "publics"
-    t.string   "lien_demarche"
-    t.string   "lien_fiche_signaletique"
-    t.string   "lien_notice"
-    t.string   "categorie"
-    t.boolean  "mail_pj"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.boolean  "use_admi_facile"
-  end
 
   create_table "types_piece_jointe", force: :cascade do |t|
     t.string   "CERFA"

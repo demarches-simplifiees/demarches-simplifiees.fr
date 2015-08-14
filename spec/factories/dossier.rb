@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :dossier do
-    ref_formulaire_id 12
+    formulaire_id 12
 
     trait :with_entreprise do
       after(:build) do |dossier, evaluator|

@@ -5,10 +5,10 @@
 = form_tag(url_for({controller: :demandes, action: :choice}), class: 'form-inline', method: 'POST') do
 
   %div{style:'text-align:center'}
-    %select{name:'ref_formulaire', id: 'ref_formulaire', class:'form-control'}
+    %select{name:'formulaire', id: 'formulaire', class:'form-control'}
       -@evenement_vie.each do |ev|
         %optgroup{:label => ev.nom}
-        -RefFormulaire.where(evenement_vie: ev.id, use_admi_facile: true).each do |form|
+        - Formulaire.where(evenement_vie: ev.id, use_admi_facile: true).each do |form|
           %option{value: form.id}
             &nbsp;&nbsp;
             =form.nom

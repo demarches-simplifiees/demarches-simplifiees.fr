@@ -10,8 +10,8 @@ class Admin::DossierController < ApplicationController
     @commentaires = @commentaires.all.decorate
     @commentaire_email = current_user.email
 
-    @formulaire = @dossier.ref_formulaire
-    @liste_pieces_jointes = TypePieceJointe.get_liste_piece_jointe @dossier.ref_formulaire
+    @formulaire = @dossier.formulaire
+    @liste_pieces_jointes = TypePieceJointe.get_liste_piece_jointe @dossier.formulaire
     @array_id_pj_valides = PieceJointe.get_array_id_pj_valid_for_dossier @dossier.id
     @dossier = @dossier.decorate
   rescue ActiveRecord::RecordNotFound

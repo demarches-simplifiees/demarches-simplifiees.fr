@@ -2,7 +2,7 @@ class Dossier < ActiveRecord::Base
   has_one :etablissement
   has_one :entreprise
   has_many :pieces_jointes
-  belongs_to :ref_formulaire
+  belongs_to :formulaire
   has_many :commentaires
 
   delegate :siren, to: :entreprise
@@ -13,6 +13,6 @@ class Dossier < ActiveRecord::Base
   end
 
   def liste_piece_justificative
-    ref_formulaire.liste_piece_justificative
+    formulaire.liste_piece_justificative
   end
 end
