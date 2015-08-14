@@ -7,12 +7,11 @@ class Dossier < ActiveRecord::Base
 
   delegate :siren, to: :entreprise
   delegate :siret, to: :etablissement
+  delegate :types_piece_jointe, to: :formulaire
 
   def get_pj piece_jointe_id
     pieces_jointes.where(type_piece_jointe_id: piece_jointe_id).last
   end
 
-  def liste_piece_justificative
-    formulaire.liste_piece_justificative
-  end
+
 end

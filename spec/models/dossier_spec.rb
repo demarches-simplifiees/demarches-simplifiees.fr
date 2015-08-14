@@ -21,10 +21,10 @@ describe Dossier do
   end
 
   describe '#liste_piece_justificative' do
-    subject { dossier.liste_piece_justificative }
+    subject { dossier.types_piece_jointe }
     it 'returns list of required piece justificative' do
       expect(subject.size).to eq(7)
-      expect(subject).to include(23)
+      expect(subject).to include(TypePieceJointe.find(103))
     end
   end
 end

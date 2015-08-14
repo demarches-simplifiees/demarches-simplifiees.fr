@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150814101012) do
+ActiveRecord::Schema.define(version: 20150814124735) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,13 +85,13 @@ ActiveRecord::Schema.define(version: 20150814101012) do
   end
 
   create_table "formulaires", force: :cascade do |t|
-    t.string   "ref_demarche"
+    t.string   "demarche_id"
     t.string   "nom"
     t.string   "objet"
     t.string   "ministere"
     t.string   "cigle_ministere"
     t.string   "direction"
-    t.string   "evenement_vie"
+    t.string   "evenement_vie_id"
     t.string   "publics"
     t.string   "lien_demarche"
     t.string   "lien_fiche_signaletique"
@@ -141,6 +141,7 @@ ActiveRecord::Schema.define(version: 20150814101012) do
     t.boolean  "api_entreprise"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.integer  "formulaire_id"
   end
 
   create_table "users", force: :cascade do |t|
