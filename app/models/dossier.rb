@@ -12,6 +12,4 @@ class Dossier < ActiveRecord::Base
   def get_pj piece_jointe_id
     pieces_jointes.where(type_piece_jointe_id: piece_jointe_id).last
   end
-
-
 end
