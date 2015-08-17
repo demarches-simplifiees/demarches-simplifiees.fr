@@ -23,4 +23,11 @@ describe Formulaire do
     it { is_expected.to have_db_column(:mail_pj) }
     it { is_expected.to have_db_column(:use_admi_facile) }
   end
+
+  describe '.for_admi_facile' do
+    it 'retruns Formulaire where use_admi_facile is true' do
+      expect(Formulaire.for_admi_facile.size).to eq(Formulaire.where(use_admi_facile: true).count)
+      expect(Formulaire.for_admi_facile).to include(Formulaire.where(use_admi_facile: true).first)
+    end
+  end
 end

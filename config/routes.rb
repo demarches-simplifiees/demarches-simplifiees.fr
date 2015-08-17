@@ -26,7 +26,8 @@ Rails.application.routes.draw do
 
   resources :dossiers do
     get '/demande' => 'demandes#show'
-    post '/demande' => 'demandes#choice'
+    post '/demande' => 'demandes#update'
+
 
     get '/carte/position' => 'carte#get_position'
     get '/carte' => 'carte#show'

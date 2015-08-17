@@ -14,8 +14,8 @@ RSpec.describe DemandesController, type: :controller do
   describe 'POST #choice' do
     context 'dans tous les cas on affiche la carte' do
       it {
-        post :choice, :dossier_id => dossier_id, :type_demande => '1'
-        expect(response).to redirect_to("/dossiers/#{dossier_id}/carte")
+        post :update, :dossier_id => dossier_id, :type_demande => '1'
+        expect(response).to redirect_to(controller: :carte, action: :show, dossier_id: dossier_id)
       }
     end
   end
