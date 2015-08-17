@@ -1,4 +1,4 @@
-class SIADE::Api
+class SIADE::API
 
   class << self
     attr_accessor :token
@@ -25,8 +25,6 @@ class SIADE::Api
       url,
       verify_ssl: verify_ssl_mode
     ).get(params: { token: SIADETOKEN })
-  rescue
-    nil
   end
 
   def self.base_url

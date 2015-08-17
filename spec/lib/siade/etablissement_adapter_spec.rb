@@ -70,8 +70,8 @@ describe SIADE::EtablissementAdapter do
     end
   end
 
-  context 'SIRET Inconnu' do
-    let(:bad_siret){1}
+  context 'when siret is not found' do
+    let(:bad_siret){ 11111111111111 }
     subject { SIADE::EtablissementAdapter.new(bad_siret).to_params }
 
     before do
@@ -79,8 +79,8 @@ describe SIADE::EtablissementAdapter do
       .to_return(body: 'Fake body', status: 404)
     end
 
-    it 'retour de nil' do
-      expect{subject}.to raise_error ('SIRET Non reconnu')
+    it 'raises exception RestClient::ResourceNotFound' do
+      expect{subject}.to raise_error (RestClient::ResourceNotFound)
     end
   end
 end

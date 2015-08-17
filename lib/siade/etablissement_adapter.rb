@@ -5,9 +5,7 @@ class SIADE::EtablissementAdapter
   end
 
   def data_source
-    @data_source ||= JSON.parse(SIADE::Api.etablissement(@siret), symbolize_names: true)
-  rescue
-    @data_source = nil
+    @data_source ||= JSON.parse(SIADE::API.etablissement(@siret), symbolize_names: true)
   end
 
   def to_params
@@ -25,8 +23,6 @@ class SIADE::EtablissementAdapter
       end
     end
     params
-  rescue
-    raise "SIRET Non reconnu"
   end
 
   def attr_to_fetch

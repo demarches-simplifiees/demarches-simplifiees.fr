@@ -9,24 +9,23 @@ class DossiersController < ApplicationController
   end
 
   def create
-    @rescue_redirect = 'error_siret'
-    @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(params[:siret]).to_params)
-    @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(params[:siret][0..-6]).to_params)
 
     @dossier_id = params[:pro_dossier_id].strip
 
     if @dossier_id != ""
-      @rescue_redirect = 'error_dossier'
 
       @dossier = Dossier.find(@dossier_id)
-      @etablissement = @dossier.etablissement
 
-      if @etablissement.siret == params[:siret]
+      if @dossier.siret == params[:siret]
         redirect_to url_for({controller: :recapitulatif, action: :show, dossier_id: @dossier_id})
       else
-        raise 'Combinaison Dossier_ID / SIRET non valide'
+        redirect_to url_for({controller: :start, action: :error_dossier})
       end
     else
+
+
+      @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(params[:siret]).to_params)
+      @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(params[:siret][0..-6]).to_params)
       @dossier = Dossier.create
 
       @entreprise.dossier = @dossier
@@ -38,9 +37,11 @@ class DossiersController < ApplicationController
 
       redirect_to url_for({controller: :dossiers, action: :show, id: @dossier.id})
     end
-    # TODO: Remove rescue
-  rescue
-    redirect_to url_for({controller: :start, action: @rescue_redirect})
+
+  rescue RestClient::ResourceNotFound
+    redirect_to url_for({ controller: :start, action: :error_siret })
+  rescue ActiveRecord::RecordNotFound
+    redirect_to url_for({controller: :start, action: :error_dossier})
   end
 
   def update

@@ -8,6 +8,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   # inflect.singular /^(ox)en/i, '\1'
   # inflect.irregular 'person', 'people'
   # inflect.uncountable %w( fish sheep )
+  inflect.acronym 'API'
   inflect.irregular 'piece_jointe', 'pieces_jointes'
   inflect.irregular 'type_piece_jointe', 'types_piece_jointe'
 end

@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe DossiersController, type: :controller do
   let(:dossier) { create(:dossier, :with_entreprise) }
   let (:dossier_id) { dossier.id }
-  let (:bad_dossier_id) { 999999999999 }
+  let (:siret_not_found) { 999999999999 }
 
   let (:siren) { dossier.siren }
   let (:siret) { dossier.siret }
@@ -16,14 +16,14 @@ RSpec.describe DossiersController, type: :controller do
     end
 
     it 'redirection vers start si mauvais dossier ID' do
-      get :show, :id => bad_dossier_id
+      get :show, :id => siret_not_found
       expect(response).to redirect_to('/start/error_dossier')
     end
   end
 
   describe 'POST #create' do
     before do
-      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{bad_siret}?token=#{SIADETOKEN}").
+      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret_not_found}?token=#{SIADETOKEN}").
           to_return(:status => 404, :body => 'fake body')
 
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}").
@@ -33,30 +33,74 @@ RSpec.describe DossiersController, type: :controller do
           to_return(:status => 200, :body => File.read('spec/support/files/entreprise.json'))
     end
 
-    context 'Le SIRET est correct' do
-      it {
-        post :create, :siret => siret, :pro_dossier_id => ''
-        @last_dossier = ActiveRecord::Base.connection.execute("SELECT currval('dossiers_id_seq')")
-        expect(response).to redirect_to("/dossiers/#{@last_dossier.getvalue(0,0)}")
-      }
-    end
+    describe 'professionnel fills form' do
+      context 'when pro_dossier_id is empty' do
+        context 'with valid siret ' do
+          before do
+            post :create, siret: siret, pro_dossier_id: ''
+          end
 
-    context 'Le SIRET n\'est pas correct' do
-      it {
-        post :create, :siret => bad_siret
-        expect(response).to redirect_to('/start/error_siret')
-      }
-    end
+          it 'create a dossier' do
+            expect{ post :create, siret: siret, pro_dossier_id: '' }.to change{ Dossier.count }.by(1)
+          end
 
-    context 'Un numéro de dossier est envoyé avec le SIRET' do
-      it 'La combinaison SIRET / dossier_id est valide' do
-        post :create, :siret => siret, :pro_dossier_id => dossier_id
-        expect(response).to redirect_to("/dossiers/#{dossier_id}/recapitulatif")
+          it 'creates entreprise' do
+            expect{ post :create, siret: siret, pro_dossier_id: '' }.to change{ Entreprise.count }.by(1)
+          end
+
+          it 'links entreprise to dossier' do
+            expect(Entreprise.last.dossier).to eq(Dossier.last)
+          end
+
+          it 'creates etablissement for dossier' do
+            expect{ post :create, siret: siret, pro_dossier_id: '' }.to change{ Etablissement.count }.by(1)
+          end
+
+          it 'links etablissement to dossier' do
+            expect(Etablissement.last.dossier).to eq(Dossier.last)
+          end
+
+          it 'links etablissement to entreprise' do
+            expect(Etablissement.last.entreprise).to eq(Entreprise.last)
+          end
+        end
+
+        context 'with non existant siret' do
+          let(:siret_not_found) { '11111111111111' }
+          subject { post :create, siret: siret_not_found, pro_dossier_id: '' }
+          it 'does not create new dossier' do
+            expect{ subject }.not_to change{ Dossier.count }
+          end
+
+          it 'redirects to show' do
+            expect(subject).to redirect_to(controller: :start, action: :error_siret)
+          end
+        end
       end
+      context 'when pro_dossier_id is not empty' do
+        let!(:dossier) { create(:dossier, :with_entreprise) }
+        subject { post :create, siret: dossier.siret ,pro_dossier_id: 99999999999}
 
-      it 'La combinaison SIRET (ok) et dossier_id (nok) n\'est pas valide' do
-        post :create, :siret => siret, :pro_dossier_id => bad_dossier_id
-        expect(response).to redirect_to("/start/error_dossier")
+        context 'when dossier not found' do
+          it 'redirects to start with error_dossier' do
+            expect(subject).to redirect_to(controller: :start, action: :error_dossier)
+          end
+        end
+        context 'when dossier found' do
+          context 'when siret match' do
+            subject { post :create, siret: dossier.siret ,pro_dossier_id: dossier.id}
+            it 'redirects to controller recapitulatif' do
+              expect(subject).to redirect_to(controller: :recapitulatif, action: :show, dossier_id: dossier.id)
+            end
+
+          end
+          context 'when siret does not match' do
+            subject { post :create, siret: '11111111111111' ,pro_dossier_id: dossier.id}
+            it 'redirects to start with action error_dossier' do
+              expect(subject).to redirect_to(controller: :start, action: :error_dossier)
+            end
+          end
+        end
       end
     end
   end
