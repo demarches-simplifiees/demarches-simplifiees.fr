@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Formulaire do
   describe 'assocations' do
     it { is_expected.to have_many(:types_piece_jointe) }
+    it { is_expected.to have_many(:dossiers) }
     it { is_expected.to belong_to(:evenement_vie) }
   end
 
