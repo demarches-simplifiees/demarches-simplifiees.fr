@@ -106,28 +106,29 @@ RSpec.describe DossiersController, type: :controller do
   end
 
   describe 'PUT #update' do
+    before do
+      put :update, :id => dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
+    end
     context 'when Checkbox is checked' do
+      let(:autorisation_donnees) { '1' }
       it 'redirects to demande' do
-        put :update, :id => dossier_id, dossier: { autorisation_donnees: '1' }
-        expect(response).to redirect_to("/dossiers/#{dossier_id}/demande")
+        expect(response).to redirect_to(controller: :demandes, action: :show, dossier_id: dossier.id)
       end
 
       it 'update dossier' do
-        put :update, :id => dossier_id, dossier: { autorisation_donnees: '1' }
-        dossier = Dossier.find(dossier_id)
+        dossier.reload
         expect(dossier.autorisation_donnees).to be_truthy
       end
     end
 
     context 'when Checkbox is not checked' do
+      let(:autorisation_donnees) { '0' }
       it 'uses flash alert to display message' do
-        put :update, :id => dossier_id, dossier: { autorisation_donnees: '0' }
         expect(flash[:alert]).to have_content('Les conditions sont obligatoires.')
       end
 
       it "doesn't update dossier autorisation_donnees" do
-        put :update, :id => dossier_id, dossier: { autorisation_donnees: '0' }
-        dossier = Dossier.find(dossier_id)
+        dossier.reload
         expect(dossier.autorisation_donnees).to be_falsy
       end
     end
