@@ -4,7 +4,8 @@ class DescriptionController < ApplicationController
     @dossier = @dossier.decorate
 
     @array_id_pj_valides = PieceJointe.get_array_id_pj_valid_for_dossier @dossier.id
-    @liste_pieces_jointes = get_liste_piece_jointe
+    @formulaire = @dossier.formulaire
+    @liste_pieces_jointes = @dossier.types_piece_jointe
   rescue
     redirect_to url_for({controller: :start, action: :error_dossier})
   end
@@ -28,7 +29,8 @@ class DescriptionController < ApplicationController
       @piece_jointe.save
     end
 
-    get_liste_piece_jointe.each do |pj|
+
+    @dossier.types_piece_jointe.each do |pj|
       if params["piece_jointe_#{pj.id}"] != nil
         PieceJointe.destroy_all(dossier_id: @dossier.id, type_piece_jointe_id: pj.id)
 
@@ -69,10 +71,5 @@ class DescriptionController < ApplicationController
   #TODO dans un validateur, dans le model
   def check_format_email email
     /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/.match(email)
-  end
-
-  def get_liste_piece_jointe
-    @formulaire = @dossier.formulaire
-    TypePieceJointe.where ("\"CERFA\" = '#{@formulaire.demarche_id}'")
   end
 end
