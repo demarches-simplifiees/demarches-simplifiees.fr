@@ -6,8 +6,8 @@ class DescriptionController < ApplicationController
     @array_id_pj_valides = PieceJointe.get_array_id_pj_valid_for_dossier @dossier.id
     @formulaire = @dossier.formulaire
     @liste_pieces_jointes = @dossier.types_piece_jointe
-  rescue
-    redirect_to url_for({controller: :start, action: :error_dossier})
+  rescue ActiveRecord::RecordNotFound
+    redirect_to url_for(controller: :start, action: :error_dossier)
   end
 
   def error

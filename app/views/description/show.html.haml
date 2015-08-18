@@ -1,93 +1,90 @@
-%h2 Description de votre projet
-%br
-
-= form_tag(url_for({controller: :description, action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
-  %input{type: 'hidden', value: request.parameters[:back_url], name: 'back_url', id: 'back_url'}
-
-  %div{style:'margin-left:3%;'}
-
-    %h4 Nom de votre projet*
-    %div{style:'margin-top:1.5rem; margin-left:2%; margin-right:2%;'}
-      %input{class: 'form-control', style: 'width:100%', type: 'text', id: 'nom_projet', name: 'nom_projet', placeholder: 'Nom du projet', value: @dossier.nom_projet}
-
-    %br
-    %h4 Description de votre projet*
-    %div{style:'text-align:center; margin-left:2%; margin-right:2%'}
-      %textarea{id:'description', name:'description', class:'form-control', rows: '6', style:'width: 100%', placeholder: 'Description du projet'}
-        =@dossier.description
-    %br
-    %div{class:'row'}
-      %div{class:'col-lg-6 col-md-6'}
-        %h4 Montant du projet*
-        %div{style:'margin-left:4%; margin-top:1.5rem'}
-          %input{class: 'form-control', type: 'number', id: 'montant_projet', name: 'montant_projet', placeholder: 'Montant du projet', value: @dossier.montant_projet}
-          !='&euro;'
-
-      %div{class:'col-lg-6 col-md-6'}
-        %h4 Montant des aides que vous sollicitez*
-        %div{style:'margin-left:4%; margin-top:1.5rem'}
-          %input{class: 'form-control', type: 'number', id: 'montant_aide_demande', name: 'montant_aide_demande', placeholder: 'Montant des aides', value: @dossier.montant_aide_demande}
-          !='&euro;'
-    %br
-    %div{class:'row'}
-      %div{class:'col-lg-6 col-md-6'}
-        %h4 Date prévisionnelle du début de votre projet*
-        %div{style:'margin-left:4%; margin-top:1.5rem'}
-          %input{class: 'form-control', type: 'text', id: 'date_previsionnelle', name: 'date_previsionnelle', placeholder: 'Date prévisionnelle', value: @dossier.date_previsionnelle, 'data-provide' => 'datepicker', 'data-date-format' => 'dd/mm/yyyy'}
-
-      %div{class:'col-lg-6 col-md-6'}
-        %h4 Mail de contact*
-        %div{style:'margin-left:4%; margin-top:1.5rem'}
-          %input{class: 'form-control', style:'width:60%', type: 'email', id: 'mail_contact', name: 'mail_contact', placeholder: 'Mail de contact', value: @dossier.mail_contact}
-
+.container
+  %h2 Description de votre projet
   %br
-  %h3 Documents administratifs
 
-  %br
-  //TODO a refactorer DO
-  %table{class:'table', style:'width:55%; margin-left:5%'}
-    %tr
-      %th{class:'col-lg-6'}
-        ='Charger votre  CERFA (.pdf)'
+  = form_tag(url_for({controller: :description, action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
+    %input{type: 'hidden', value: request.parameters[:back_url], name: 'back_url', id: 'back_url'}
 
-        -if @formulaire.lien_demarche != nil
-          %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@formulaire.lien_demarche}", :target => '_blank'} Lien CERFA
 
-      %td{class:'col-lg-5'}
-        -if @array_id_pj_valides.include?(0)
-          %span.btn.btn-sm.btn-file.btn-success
-            ="Modifier"
-            %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: ".pdf"}
-        -else
-          %span.btn.btn-sm.btn-file.btn-info
-            ="Choisir"
-            %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: ".pdf"}
+    %div
+      .row
+        .col-md-12
+          %h4 Nom de votre projet *
+          = text_field_tag :nom_projet, @dossier.nom_projet, placeholder: 'Nom du projet', class: 'form-control'
+      %br
+      .row
+        .col-md-12
+          %h4 Description de votre projet *
+          = text_area_tag :description, @dossier.description, rows: '6', placeholder: 'Description du projet', class: 'form-control'
+      %br
+      .row
+        .col-lg-6.col-md-6
+          %h4 Montant du projet *
+          = number_field_tag :montant_projet, @dossier.montant_projet, class: 'form-control', placeholder: 'Montant du projet'
+          != '&euro;'
 
-    -@liste_pieces_jointes.each do |pj|
+        .col-lg-6.col-md-6
+          %h4 Montant des aides que vous sollicitez *
+          = number_field_tag :montant_aide_demande, @dossier.montant_aide_demande, class: 'form-control', placeholder: 'Montant des aides'
+          !='&euro;'
+      %br
+      .row
+        .col-lg-6.col-md-6
+          %h4 Date prévisionnelle du début de votre projet *
+          = text_field_tag :date_previsionnelle, @dossier.date_previsionnelle, placeholder: 'Date prévisionnelle', class: 'form-control', 'data-provide' => 'datepicker', 'data-date-format' => 'dd/mm/yyyy'
+
+        .col-lg-6.col-md-6
+          %h4 Mail de contact *
+          = email_field_tag :mail_contact, @dossier.mail_contact, placeholder: 'Mail de contact', class: 'form-control'
+
+    %br
+    %h3 Documents administratifs
+
+    %br
+    //TODO a refactorer DO
+    %table{class:'table', style:'width:55%; margin-left:5%'}
       %tr
         %th{class:'col-lg-6'}
-          =pj.libelle
+          ='Charger votre  CERFA (.pdf)'
+
+          -if @formulaire.lien_demarche != nil
+            %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@formulaire.lien_demarche}", :target => '_blank'} Lien CERFA
+
         %td{class:'col-lg-5'}
-          -if pj.api_entreprise
-            %span.text-success{id: "piece_jointe_#{pj.id}"} Nous l'avons récupéré pour vous.
+          -if @array_id_pj_valides.include?(0)
+            %span.btn.btn-sm.btn-file.btn-success
+              ="Modifier"
+              %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: ".pdf"}
           -else
-            -if @array_id_pj_valides.include?(pj.id)
-              %span.btn.btn-sm.btn-file.btn-success
-                ="Modifier"
-                %input{type: 'file', name:"piece_jointe_#{pj.id}", id:"piece_jointe_#{pj.id}", accept: ".pdf"}
+            %span.btn.btn-sm.btn-file.btn-info
+              ="Choisir"
+              %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: ".pdf"}
+
+      -@liste_pieces_jointes.each do |pj|
+        %tr
+          %th{class:'col-lg-6'}
+            =pj.libelle
+          %td{class:'col-lg-5'}
+            -if pj.api_entreprise
+              %span.text-success{id: "piece_jointe_#{pj.id}"} Nous l'avons récupéré pour vous.
             -else
-              %span.btn.btn-sm.btn-file.btn-info
-                ="Choisir"
-                %input{type: 'file', name:"piece_jointe_#{pj.id}", id:"piece_jointe_#{pj.id}", accept: ".pdf"}
-  //END
+              -if @array_id_pj_valides.include?(pj.id)
+                %span.btn.btn-sm.btn-file.btn-success
+                  ="Modifier"
+                  %input{type: 'file', name:"piece_jointe_#{pj.id}", id:"piece_jointe_#{pj.id}", accept: ".pdf"}
+              -else
+                %span.btn.btn-sm.btn-file.btn-info
+                  ="Choisir"
+                  %input{type: 'file', name:"piece_jointe_#{pj.id}", id:"piece_jointe_#{pj.id}", accept: ".pdf"}
+    //END
 
-  %div{style: 'text-align:right'}
-    %h6 Tous les champs portant un * sont obligatoires.
+    %div{style: 'text-align:right'}
+      %h6 Tous les champs portant un * sont obligatoires.
 
-  -if request.parameters[:back_url] == 'recapitulatif'
-    =render partial: '/layouts/modifications_terminees'
-  -else
-    = submit_tag 'Terminer la procédure', id: 'suivant', class: %w(btn btn btn-success), style: 'float:right', data: { disable_with: 'Terminé la procédure', submit: true}
+    -if request.parameters[:back_url] == 'recapitulatif'
+      =render partial: '/layouts/modifications_terminees'
+    -else
+      = submit_tag 'Terminer la procédure', id: 'suivant', class: %w(btn btn btn-success), style: 'float:right', data: { disable_with: 'Terminé la procédure', submit: true}
 
-  %br
-  %br
+    %br
+    %br

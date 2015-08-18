@@ -7,13 +7,13 @@ describe DescriptionController, type: :controller do
 
   describe "GET #show" do
     it "returns http success" do
-      get :show, :dossier_id => dossier_id
+      get :show, dossier_id: dossier_id
       expect(response).to have_http_status(:success)
     end
 
     it 'redirection vers start si mauvais dossier ID' do
-      get :show, :dossier_id => bad_dossier_id
-      expect(response).to redirect_to('/start/error_dossier')
+      get :show, dossier_id: bad_dossier_id
+      expect(response).to redirect_to(controller: :start, action: :error_dossier)
     end
   end
 
