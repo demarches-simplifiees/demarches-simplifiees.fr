@@ -4,24 +4,25 @@ class CarteController < ApplicationController
 
   def show
     @dossier = current_dossier
-  rescue
-    redirect_to url_for({controller: :start, action: :error_dossier})
+  rescue ActiveRecord::RecordNotFound
+    redirect_to url_for(controller: :start, action: :error_dossier)
   end
 
   def save_ref_api_carto
     dossier = current_dossier
-    dossier.update_attributes(ref_dossier: params[:ref_dossier])
-
-    if params[:back_url] == 'recapitulatif'
-      commentaire = Commentaire.new
-      commentaire.email = 'Modification localisation'
-      commentaire.body = 'La localisation de la demande a été modifiée. Merci de le prendre en compte.'
-      commentaire.dossier = dossier
-      commentaire.save
-
-      redirect_to url_for({controller: :recapitulatif, action: :show, :dossier_id => params[:dossier_id]})
-    else
+    if dossier.ref_dossier.blank?
+      dossier.update_attributes(ref_dossier: params[:ref_dossier])
       redirect_to url_for({controller: :description, action: :show, :dossier_id => params[:dossier_id]})
+    else
+      commentaire_params = {
+        email: 'Modification localisation',
+        body: 'La localisation de la demande a été modifiée. Merci de le prendre en compte.',
+        dossier_id: dossier.id
+      }
+      commentaire = Commentaire.new commentaire_params
+      commentaire.save
+      redirect_to url_for({controller: :recapitulatif, action: :show, :dossier_id => params[:dossier_id]})
+
     end
   end
 

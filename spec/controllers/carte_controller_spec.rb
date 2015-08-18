@@ -22,7 +22,7 @@ RSpec.describe CarteController, type: :controller do
 
     it 'redirection vers start si mauvais dossier ID' do
       get :show, dossier_id: bad_dossier_id
-      expect(response).to redirect_to('/start/error_dossier')
+      expect(response).to redirect_to(controller: :start, action: :error_dossier)
     end
   end
 
@@ -35,12 +35,13 @@ RSpec.describe CarteController, type: :controller do
     end
 
     context 'En train de modifier la localisation' do
+      let(:dossier) { create(:dossier, ref_dossier: ref_dossier)}
       before do
-        post :save_ref_api_carto, :dossier_id => dossier_id, :ref_dossier => ref_dossier, :back_url => 'recapitulatif'
+        post :save_ref_api_carto, :dossier_id => dossier_id, :ref_dossier => ref_dossier
       end
 
       context 'Enregistrement d\'un commentaire informant la modification' do
-        subject { Commentaire.last }
+        subject { dossier.commentaires.last }
 
         it 'champs email' do
           expect(subject.email).to eq('Modification localisation')
@@ -63,16 +64,15 @@ RSpec.describe CarteController, type: :controller do
 
   describe '#get_position' do
     context 'Geocodeur renvoie des positions nil' do
+      let(:etablissement) { create(:etablissement, adresse: bad_adresse)}
+      let(:dossier) {create(:dossier, etablissement: etablissement)}
       before do
         stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{bad_adresse}").
             to_return(:status => 200, :body => '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', :headers => {})
-
-        @tmp_dossier = Dossier.create()
-        Etablissement.create(adresse: bad_adresse, dossier: @tmp_dossier)
-        get :get_position, :dossier_id => @tmp_dossier.id
+        get :get_position, :dossier_id => dossier.id
       end
 
-      subject{Dossier.find(@tmp_dossier.id)}
+      subject { dossier.reload }
 
       it 'on enregistre des coordonnées lat et lon à 0' do
         expect(subject.position_lat).to eq('0')
