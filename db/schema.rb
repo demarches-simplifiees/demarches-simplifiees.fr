@@ -11,10 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150814124735) do
+ActiveRecord::Schema.define(version: 20150818113123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cerfas", force: :cascade do |t|
+    t.string  "content"
+    t.integer "dossier_id"
+  end
+
+  add_index "cerfas", ["dossier_id"], name: "index_cerfas_on_dossier_id", using: :btree
 
   create_table "commentaires", force: :cascade do |t|
     t.string   "email"
@@ -162,5 +169,6 @@ ActiveRecord::Schema.define(version: 20150814124735) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "cerfas", "dossiers"
   add_foreign_key "commentaires", "dossiers"
 end

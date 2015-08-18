@@ -1,6 +1,7 @@
 class Dossier < ActiveRecord::Base
   has_one :etablissement
   has_one :entreprise
+  has_one :cerfa
   has_many :pieces_jointes
   belongs_to :formulaire
   has_many :commentaires
