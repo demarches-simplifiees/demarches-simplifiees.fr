@@ -16,6 +16,12 @@ class Dossier < ActiveRecord::Base
     pieces_jointes.where(type_piece_jointe_id: piece_jointe_id).last
   end
 
+  def build_default_pieces_jointes
+    formulaire.types_piece_jointe.each do |type_piece_jointe|
+      PieceJointe.create(type_piece_jointe_id: type_piece_jointe.id, dossier_id: id)
+    end
+  end
+
   private
 
   def build_default_cerfa

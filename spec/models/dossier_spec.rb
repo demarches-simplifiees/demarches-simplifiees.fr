@@ -63,4 +63,16 @@ describe Dossier do
       expect(dossier.cerfa).to eq(Cerfa.last)
     end
   end
+
+  describe '#build_default_pieces_jointes' do
+    context 'when dossier is linked to a formualire' do
+      let(:dossier) { create(:dossier) }
+      before do
+        dossier.build_default_pieces_jointes
+      end
+      it 'build all pieces jointes needed' do
+        expect(dossier.pieces_jointes.count).to eq(7)
+      end
+    end
+  end
 end
