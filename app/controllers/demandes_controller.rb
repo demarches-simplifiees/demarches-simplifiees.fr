@@ -7,6 +7,7 @@ class DemandesController < ApplicationController
   def update
     dossier = Dossier.find(params[:dossier_id])
     if !dossier.formulaire.nil?
+      # TODO: redirect to start with an error message
       raise "La modification du formulaire n'est pas possible"
     end
     dossier.update_attributes(formulaire_id: params[:formulaire])
