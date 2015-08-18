@@ -52,4 +52,15 @@ describe Dossier do
       expect(subject).to include(TypePieceJointe.find(103))
     end
   end
+
+  describe 'creation' do
+    it 'create default cerfa' do
+      expect{Dossier.create}.to change{ Cerfa.count }.by(1)
+    end
+
+    it 'link cerfa to dossier' do
+      dossier = Dossier.create
+      expect(dossier.cerfa).to eq(Cerfa.last)
+    end
+  end
 end

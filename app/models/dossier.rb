@@ -10,7 +10,16 @@ class Dossier < ActiveRecord::Base
   delegate :siret, to: :etablissement
   delegate :types_piece_jointe, to: :formulaire
 
+  before_create :build_default_cerfa
+
   def get_pj piece_jointe_id
     pieces_jointes.where(type_piece_jointe_id: piece_jointe_id).last
+  end
+
+  private
+
+  def build_default_cerfa
+    build_cerfa
+    true
   end
 end
