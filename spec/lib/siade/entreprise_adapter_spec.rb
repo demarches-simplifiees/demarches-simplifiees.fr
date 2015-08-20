@@ -9,7 +9,7 @@ describe SIADE::EntrepriseAdapter do
   end
 
   it '#to_params class est une Hash ?' do
-    expect(subject.class).to eq (Hash)
+    expect(subject).to be_an_instance_of(Hash)
   end
 
   context 'Attributs Entreprises' do
