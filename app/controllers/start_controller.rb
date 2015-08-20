@@ -1,6 +1,5 @@
 class StartController < ApplicationController
   def index
-
   end
 
   def error_siret
