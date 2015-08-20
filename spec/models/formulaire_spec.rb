@@ -26,8 +26,8 @@ describe Formulaire do
 
   describe '.for_admi_facile' do
     it 'retruns Formulaire where use_admi_facile is true' do
-      expect(Formulaire.for_admi_facile.size).to eq(Formulaire.where(use_admi_facile: true).count)
-      expect(Formulaire.for_admi_facile).to include(Formulaire.where(use_admi_facile: true).first)
+      expect(described_class.for_admi_facile.size).to eq(described_class.where(use_admi_facile: true).count)
+      expect(described_class.for_admi_facile).to include(described_class.where(use_admi_facile: true).first)
     end
   end
 end

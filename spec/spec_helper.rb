@@ -17,9 +17,9 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-ENV["RAILS_ENV"] ||= 'test'
+ENV['RAILS_ENV'] ||= 'test'
 
-require File.expand_path("../../config/environment", __FILE__)
+require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'capybara/rspec'
 require 'database_cleaner'
@@ -31,26 +31,23 @@ require 'factory_girl'
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, {js_errors:true, port:44678+ENV['TEST_ENV_NUMBER'].to_i, phantomjs_options:['--proxy-type=none'], timeout:180})
+  Capybara::Poltergeist::Driver.new(app, js_errors: true, port: 44_678 + ENV['TEST_ENV_NUMBER'].to_i, phantomjs_options: ['--proxy-type=none'], timeout: 180)
 end
 
 Capybara.default_wait_time = 1
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
-Dir[Rails.root.join("spec/factories/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/factories/**/*.rb')].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
-DatabaseCleaner.strategy = :truncation, {:except => %w[evenement_vies formulaires types_piece_jointe]}
+DatabaseCleaner.strategy = :truncation, { except: %w(evenement_vies formulaires types_piece_jointe) }
 
-
-if !(defined? SIADETOKEN)
-  SIADETOKEN = :valid_token
-end
+SIADETOKEN = :valid_token unless defined? SIADETOKEN
 
 include Warden::Test::Helpers
 
@@ -64,9 +61,9 @@ RSpec.configure do |config|
 
   config.infer_base_class_for_anonymous_controllers = false
 
-  config.order = "random"
+  config.order = 'random'
 
-  config.include Devise::TestHelpers, :type => :controller
+  config.include Devise::TestHelpers, type: :controller
 
   config.include FactoryGirl::Syntax::Methods
 end

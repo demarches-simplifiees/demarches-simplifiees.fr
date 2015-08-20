@@ -13,9 +13,9 @@ describe EvenementVie do
   end
 
   describe '.for_admi_facile' do
-    let(:evenement_for_admi_facile) { EvenementVie.where(use_admi_facile: true).first }
-    let(:evenement_not_for_admi_facile) { EvenementVie.where(use_admi_facile: false).first }
-    subject { EvenementVie.for_admi_facile }
+    let(:evenement_for_admi_facile) { described_class.where(use_admi_facile: true).first }
+    let(:evenement_not_for_admi_facile) { described_class.where(use_admi_facile: false).first }
+    subject { described_class.for_admi_facile }
     it 'returns elements where use_admi_facile is true' do
       expect(subject).to include(evenement_for_admi_facile)
     end

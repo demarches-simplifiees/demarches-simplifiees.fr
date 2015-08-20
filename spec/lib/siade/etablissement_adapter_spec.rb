@@ -1,14 +1,13 @@
 require 'spec_helper'
 
 describe SIADE::EtablissementAdapter do
-
   context 'SIRET valide' do
-    let(:siret){41816609600051}
-    subject { SIADE::EtablissementAdapter.new(siret).to_params }
+    let(:siret) { 41_816_609_600_051 }
+    subject { described_class.new(siret).to_params }
 
     before do
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}")
-      .to_return(body: File.read('spec/support/files/etablissement.json', status: 200))
+        .to_return(body: File.read('spec/support/files/etablissement.json', status: 200))
     end
 
     it '#to_params class est une Hash ?' do
@@ -16,7 +15,6 @@ describe SIADE::EtablissementAdapter do
     end
 
     context 'Attributs Etablissements' do
-
       it 'L\'entreprise contient bien un siret' do
         expect(subject[:siret]).to eq('41816609600051')
       end
@@ -71,16 +69,16 @@ describe SIADE::EtablissementAdapter do
   end
 
   context 'when siret is not found' do
-    let(:bad_siret){ 11111111111111 }
-    subject { SIADE::EtablissementAdapter.new(bad_siret).to_params }
+    let(:bad_siret) { 11_111_111_111_111 }
+    subject { described_class.new(bad_siret).to_params }
 
     before do
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{bad_siret}?token=#{SIADETOKEN}")
-      .to_return(body: 'Fake body', status: 404)
+        .to_return(body: 'Fake body', status: 404)
     end
 
     it 'raises exception RestClient::ResourceNotFound' do
-      expect{subject}.to raise_error(RestClient::ResourceNotFound)
+      expect { subject }.to raise_error(RestClient::ResourceNotFound)
     end
   end
 end

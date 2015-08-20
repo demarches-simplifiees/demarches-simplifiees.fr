@@ -5,7 +5,7 @@ describe EntrepriseDecorator do
   let(:raison_sociale) { 'GRTGaz' }
   let(:nom) { 'mon nom' }
   let(:prenom) { 'mon prenom' }
-  let(:entreprise_params) {
+  let(:entreprise_params) do
     {
       capital_social: 123_000,
       code_effectif_entreprise: code_effectif,
@@ -14,11 +14,11 @@ describe EntrepriseDecorator do
       prenom: prenom
 
     }
-  }
+  end
   let(:entreprise) { create(:entreprise, entreprise_params) }
   subject { entreprise.decorate }
   describe '#raison_sociale_or_name' do
-    subject { super().raison_sociale_or_name}
+    subject { super().raison_sociale_or_name }
     context 'when raison_sociale exist' do
       let(:raison_sociale) { 'ma super raison_sociale' }
       it 'display raison_sociale' do

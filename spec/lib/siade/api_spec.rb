@@ -1,12 +1,11 @@
 require 'spec_helper'
 
 describe SIADE::API do
-
   describe '.entreprise' do
-    subject { SIADE::API.entreprise(siren) }
+    subject { described_class.entreprise(siren) }
     before do
-      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/entreprises/#{siren}?token=#{SIADETOKEN}").
-          to_return(:status => status, :body => body)
+      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/entreprises/#{siren}?token=#{SIADETOKEN}")
+        .to_return(status: status, body: body)
     end
     context 'when siren does not exist' do
       let(:siren) { '111111111' }
@@ -14,7 +13,7 @@ describe SIADE::API do
       let(:body) { '' }
 
       it 'raises RestClient::ResourceNotFound' do
-        expect{ subject }.to raise_error(RestClient::ResourceNotFound)
+        expect { subject }.to raise_error(RestClient::ResourceNotFound)
       end
     end
     context 'when siret exist' do
@@ -29,10 +28,10 @@ describe SIADE::API do
   end
 
   describe '.etablissement' do
-    subject { SIADE::API.etablissement(siret) }
+    subject { described_class.etablissement(siret) }
     before do
-      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}").
-          to_return(:status => status, :body => body)
+      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}")
+        .to_return(status: status, body: body)
     end
 
     context 'when siret does not exist' do
@@ -41,7 +40,7 @@ describe SIADE::API do
       let(:body) { '' }
 
       it 'raises RestClient::ResourceNotFound' do
-        expect{ subject }.to raise_error(RestClient::ResourceNotFound)
+        expect { subject }.to raise_error(RestClient::ResourceNotFound)
       end
     end
 

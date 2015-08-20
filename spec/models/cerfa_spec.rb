@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Cerfa do
   describe 'database columns' do
-    it { is_expected.to have_db_column(:content)}
+    it { is_expected.to have_db_column(:content) }
   end
 
   describe 'associations' do
@@ -10,7 +10,7 @@ describe Cerfa do
   end
 
   describe 'empty?' do
-    subject { create(:cerfa, content: content)}
+    subject { create(:cerfa, content: content) }
     context 'when content exist' do
       let(:content) { File.open('./spec/support/files/piece_jointe_388.pdf') }
       it { expect(subject).not_to be_empty }

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Dossier do
-
   describe 'database columns' do
     it { is_expected.to have_db_column(:description) }
     it { is_expected.to have_db_column(:autorisation_donnees) }
@@ -26,7 +25,7 @@ describe Dossier do
     it { is_expected.to have_one(:entreprise) }
   end
 
-  describe "delegation" do
+  describe 'delegation' do
     it { is_expected.to delegate_method(:siren).to(:entreprise) }
     it { is_expected.to delegate_method(:siret).to(:etablissement) }
     it { is_expected.to delegate_method(:types_piece_jointe).to(:formulaire) }
@@ -49,11 +48,11 @@ describe Dossier do
 
   describe 'creation' do
     it 'create default cerfa' do
-      expect{Dossier.create}.to change{ Cerfa.count }.by(1)
+      expect { described_class.create }.to change { Cerfa.count }.by(1)
     end
 
     it 'link cerfa to dossier' do
-      dossier = Dossier.create
+      dossier = described_class.create
       expect(dossier.cerfa).to eq(Cerfa.last)
     end
   end

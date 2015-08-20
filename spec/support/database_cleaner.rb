@@ -1,6 +1,6 @@
 RSpec.configure do |config|
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation, {:except => %w[evenement_vies formulaires types_piece_jointe]})
+    DatabaseCleaner.clean_with(:truncation, except: %w(evenement_vies formulaires types_piece_jointe))
   end
 
   config.before(:each) do

@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe SIADE::EntrepriseAdapter do
-  subject { SIADE::EntrepriseAdapter.new('418166096').to_params }
+  subject { described_class.new('418166096').to_params }
 
   before do
     stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/entreprises/418166096?token=#{SIADETOKEN}")
-    .to_return(body: File.read('spec/support/files/entreprise.json', status: 200))
+      .to_return(body: File.read('spec/support/files/entreprise.json', status: 200))
   end
 
   it '#to_params class est une Hash ?' do
@@ -18,7 +18,7 @@ describe SIADE::EntrepriseAdapter do
     end
 
     it 'L\'entreprise contient bien un capital_social' do
-      expect(subject[:capital_social]).to eq(372795)
+      expect(subject[:capital_social]).to eq(372_795)
     end
 
     it 'L\'entreprise contient bien un numero_tva_intracommunautaire' do
@@ -50,7 +50,7 @@ describe SIADE::EntrepriseAdapter do
     end
 
     it 'L\'entreprise contient bien une date_creation' do
-      expect(subject[:date_creation]).to eq(891381600)
+      expect(subject[:date_creation]).to eq(891_381_600)
     end
 
     it 'L\'entreprise contient bien un nom' do
