@@ -1,7 +1,6 @@
 class EntrepriseDecorator < Draper::Decorator
   delegate_all
 
-
   def raison_sociale_or_name
     raison_sociale.nil? ? nom + ' ' + prenom : raison_sociale
   end
@@ -28,7 +27,7 @@ class EntrepriseDecorator < Draper::Decorator
   end
 
   def pretty_capital_social
-    h.number_to_currency(capital_social, delimiter: ' ', unit: '€', format: "%n %u")
+    h.number_to_currency(capital_social, delimiter: ' ', unit: '€', format: '%n %u')
   end
 
   def pretty_date_creation
