@@ -1,20 +1,20 @@
 Rails.application.routes.draw do
   devise_for :pros, controllers: {
-      sessions: 'sessions'
-  }, :skip => [ :password] #:registrations,
+    sessions: 'sessions'
+  }, skip: [:password] #:registrations,
 
   devise_for :users, controllers: {
-      sessions: 'sessions'
-  }, :skip => [:registrations, :password]
+    sessions: 'sessions'
+  }, skip: [:registrations, :password]
 
   devise_scope :user do
-    post "login", to: "user/sessions#create"
-    delete "logout", to: "user/sessions#destroy"
+    post 'login', to: 'user/sessions#create'
+    delete 'logout', to: 'user/sessions#destroy'
   end
 
   devise_scope :pro do
-    post "login_pro", to: "pros/sessions#create"
-    delete "logout_pro", to: "pros/sessions#destroy"
+    post 'login_pro', to: 'pros/sessions#create'
+    delete 'logout_pro', to: 'pros/sessions#destroy'
   end
 
   root 'start#index'
@@ -27,7 +27,6 @@ Rails.application.routes.draw do
   resources :dossiers do
     get '/demande' => 'demandes#show'
     post '/demande' => 'demandes#update'
-
 
     get '/carte/position' => 'carte#get_position'
     get '/carte' => 'carte#show'

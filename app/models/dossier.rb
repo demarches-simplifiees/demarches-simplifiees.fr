@@ -12,7 +12,7 @@ class Dossier < ActiveRecord::Base
 
   before_create :build_default_cerfa
 
-  def retrieve_piece_jointe_by_type type
+  def retrieve_piece_jointe_by_type(type)
     pieces_jointes.where(type_piece_jointe_id: type).last
   end
 
