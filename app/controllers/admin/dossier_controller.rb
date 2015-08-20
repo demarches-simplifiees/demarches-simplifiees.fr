@@ -11,8 +11,8 @@ class Admin::DossierController < ApplicationController
     @commentaire_email = current_user.email
 
     @formulaire = @dossier.formulaire
-    @liste_pieces_jointes = @dossier.types_piece_jointe
-    @array_id_pj_valides = PieceJointe.get_array_id_pj_valid_for_dossier @dossier.id
+
+
     @dossier = @dossier.decorate
   rescue ActiveRecord::RecordNotFound
     redirect_start

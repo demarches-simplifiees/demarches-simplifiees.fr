@@ -5,6 +5,7 @@ feature 'Admin/Dossier#Show Page' do
   let(:dossier_id) { dossier.id }
 
   before do
+    dossier.build_default_pieces_jointes
     login_admin
     visit "/admin/dossier/#{dossier_id}"
   end
@@ -61,10 +62,12 @@ feature 'Admin/Dossier#Show Page' do
 
       context 'Devis' do
         let(:id_piece_jointe){388}
-        let(:piece_jointe_388) {File.open('./spec/support/files/piece_jointe_388.pdf')}
-        let!(:piece_jointe) { create(:piece_jointe, dossier: dossier, type_piece_jointe_id: id_piece_jointe, content: piece_jointe_388) }
+        let(:content) {File.open('./spec/support/files/piece_jointe_388.pdf')}
 
         before do
+          piece_jointe = dossier.pieces_jointes.where(type_piece_jointe_id: 388).first
+          piece_jointe.content = content
+          piece_jointe.save!
           visit "/admin/dossier/#{dossier_id}"
         end
 

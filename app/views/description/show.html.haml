@@ -41,7 +41,7 @@
     %h3 Documents administratifs
 
     %br
-    //TODO a refactorer DO
+    //TODO a refactorer
     %table{class:'table', style:'width:55%; margin-left:5%'}
       %tr
         %th{class:'col-lg-6'}
@@ -51,31 +51,31 @@
             %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@formulaire.lien_demarche}", :target => '_blank'} Lien CERFA
 
         %td{class:'col-lg-5'}
-          -if @array_id_pj_valides.include?(0)
+          -if !@dossier.cerfa.empty?
             %span.btn.btn-sm.btn-file.btn-success
-              ="Modifier"
+              Modifier
               %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: ".pdf"}
           -else
             %span.btn.btn-sm.btn-file.btn-info
-              ="Choisir"
+              Choisir
               %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: ".pdf"}
 
-      -@liste_pieces_jointes.each do |pj|
+      - @dossier.pieces_jointes.each do |piece_jointe|
         %tr
-          %th{class:'col-lg-6'}
-            =pj.libelle
-          %td{class:'col-lg-5'}
-            -if pj.api_entreprise
-              %span.text-success{id: "piece_jointe_#{pj.id}"} Nous l'avons récupéré pour vous.
+          %th.col-lg-6
+            = piece_jointe.libelle
+          %td.col-lg-5
+            -if piece_jointe.api_entreprise
+              %span.text-success{ id: "piece_jointe_#{piece_jointe.type}" } Nous l'avons récupéré pour vous.
             -else
-              -if @array_id_pj_valides.include?(pj.id)
-                %span.btn.btn-sm.btn-file.btn-success
-                  ="Modifier"
-                  %input{type: 'file', name:"piece_jointe_#{pj.id}", id:"piece_jointe_#{pj.id}", accept: ".pdf"}
-              -else
+              -if piece_jointe.empty?
                 %span.btn.btn-sm.btn-file.btn-info
-                  ="Choisir"
-                  %input{type: 'file', name:"piece_jointe_#{pj.id}", id:"piece_jointe_#{pj.id}", accept: ".pdf"}
+                  Choisir
+                  = file_field_tag "piece_jointe_#{piece_jointe.type}", accept: '.pdf'
+              -else
+                %span.btn.btn-sm.btn-file.btn-success
+                  Modifier
+                  = file_field_tag "piece_jointe_#{piece_jointe.type}", accept: '.pdf'
     //END
 
     %div{style: 'text-align:right'}

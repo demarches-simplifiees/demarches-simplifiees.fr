@@ -12,11 +12,11 @@ RSpec.describe DemandesController, type: :controller do
   end
 
   describe 'POST #upated' do
-    context 'dans tous les cas on affiche la carte' do
-      it {
+    context 'when dossier is not linked to formulaire' do
+      it 'redirect to carte controller' do
         post :update, :dossier_id => dossier_id, :formulaire => '1'
         expect(response).to redirect_to(controller: :carte, action: :show, dossier_id: dossier_id)
-      }
+      end
     end
     context 'when dossier is already linked to formaulaire' do
       let(:dossier) { create(:dossier) }

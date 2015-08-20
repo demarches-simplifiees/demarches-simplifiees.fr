@@ -5,6 +5,7 @@ feature 'Description#Show Page' do
   let(:dossier_id) { dossier.id }
 
   before do
+    dossier.build_default_pieces_jointes
     visit "/dossiers/#{dossier_id}/description"
   end
 

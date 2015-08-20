@@ -3,9 +3,9 @@ class DescriptionController < ApplicationController
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate
 
-    @array_id_pj_valides = PieceJointe.get_array_id_pj_valid_for_dossier @dossier.id
+
     @formulaire = @dossier.formulaire
-    @liste_pieces_jointes = @dossier.types_piece_jointe
+
   rescue ActiveRecord::RecordNotFound
     redirect_to url_for(controller: :start, action: :error_dossier)
   end
