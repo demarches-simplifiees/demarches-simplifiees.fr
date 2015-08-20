@@ -27,3 +27,4 @@ public/uploads
 bin/*
 config/initializers/token.rb
 doc/*.svg
+rubocop.html
