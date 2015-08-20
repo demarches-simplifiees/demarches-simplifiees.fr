@@ -65,7 +65,7 @@ feature 'Description#Show Page' do
 
   context 'si la page précédente n\'est pas recapitulatif' do
     scenario 'le bouton "Terminer" est présent' do
-      expect(page).to have_selector('#suivant');
+      expect(page).to have_selector('#suivant')
     end
   end
 
@@ -75,7 +75,7 @@ feature 'Description#Show Page' do
     end
 
     scenario 'le bouton "Terminer" n\'est pas présent' do
-      expect(page).to_not have_selector('#suivant');
+      expect(page).to_not have_selector('#suivant')
     end
 
     scenario 'input hidden back_url a pour valeur le params GET' do
@@ -83,7 +83,7 @@ feature 'Description#Show Page' do
     end
 
     scenario 'le bouton "Modification terminé" est présent' do
-      expect(page).to have_selector('#modification_terminee');
+      expect(page).to have_selector('#modification_terminee')
     end
 
     scenario 'le lien de retour au récapitulatif est présent' do

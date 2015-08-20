@@ -5,7 +5,7 @@ feature '_Commentaires_Flux Recapitulatif#Show Page' do
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'mon_mail_de_commentaire@test.com' }
   let!(:commentaire) { create(:commentaire, dossier: dossier, email: email_commentaire, body: 'ma super description') }
-  let(:body){'Commentaire de test'}
+  let(:body) { 'Commentaire de test' }
 
   before do
     visit "/dossiers/#{dossier_id}/recapitulatif"
@@ -13,17 +13,16 @@ feature '_Commentaires_Flux Recapitulatif#Show Page' do
 
   context 'Affichage du flux de commentaire' do
     scenario 'l\'email du contact est présent' do
-      expect(page).to have_selector("span[id=email_contact]")
+      expect(page).to have_selector('span[id=email_contact]')
     end
 
     scenario 'la date du commentaire est présent' do
-      expect(page).to have_selector("span[id=created_at]")
+      expect(page).to have_selector('span[id=created_at]')
     end
 
     scenario 'le corps du commentaire est présent' do
-      expect(page).to have_selector("div[class=description][id=body]")
+      expect(page).to have_selector('div[class=description][id=body]')
     end
-
   end
 
   context 'Affichage du formulaire de commentaire' do

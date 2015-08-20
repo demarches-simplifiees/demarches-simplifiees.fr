@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 feature 'Recapitulatif#Show Page' do
   let(:dossier) { create(:dossier) }
   let(:dossier_id) { dossier.id }

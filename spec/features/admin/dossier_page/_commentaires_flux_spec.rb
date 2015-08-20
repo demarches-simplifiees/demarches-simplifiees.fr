@@ -1,10 +1,9 @@
 require 'spec_helper'
 
 feature '_Commentaires_Flux Admin/Dossier#Show Page' do
-
   let(:dossier) { create(:dossier, :with_entreprise) }
   let(:dossier_id) { dossier.id }
-  let!(:commentaire) { create(:commentaire, dossier: dossier, email: 'toto@toto.com')}
+  let!(:commentaire) { create(:commentaire, dossier: dossier, email: 'toto@toto.com') }
   let(:email_commentaire) { 'test@test.com' }
   let(:email_pre_rempli) { 'toto@sgmap.fr' }
   let(:body) { 'Commentaire de test' }
@@ -17,17 +16,16 @@ feature '_Commentaires_Flux Admin/Dossier#Show Page' do
 
   context 'Affichage du flux de commentaire' do
     scenario 'l\'email du contact est présent' do
-      expect(page).to have_selector("span[id=email_contact]")
+      expect(page).to have_selector('span[id=email_contact]')
     end
 
     scenario 'la date du commentaire est présent' do
-      expect(page).to have_selector("span[id=created_at]")
+      expect(page).to have_selector('span[id=created_at]')
     end
 
     scenario 'le corps du commentaire est présent' do
-      expect(page).to have_selector("div[class=description][id=body]")
+      expect(page).to have_selector('div[class=description][id=body]')
     end
-
   end
 
   context 'Affichage du formulaire de commentaire' do

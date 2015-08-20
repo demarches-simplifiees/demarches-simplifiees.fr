@@ -22,7 +22,7 @@ feature 'Carte#Show Page' do
     end
 
     scenario 'la carte est bien présente' do
-      expect(page).to have_selector('#map_qp');
+      expect(page).to have_selector('#map_qp')
     end
 
     context 'présence des inputs hidden' do
@@ -37,7 +37,7 @@ feature 'Carte#Show Page' do
 
     context 'si la page précédente n\'est pas recapitulatif' do
       scenario 'le bouton "Etape suivante" est présent' do
-        expect(page).to have_selector('#etape_suivante');
+        expect(page).to have_selector('#etape_suivante')
       end
 
       scenario 'le bouton Etape suivante possède un onclick correct' do
@@ -51,7 +51,7 @@ feature 'Carte#Show Page' do
       end
 
       scenario 'le bouton "Etape suivante" n\'est pas présent' do
-        expect(page).to_not have_selector('#etape_suivante');
+        expect(page).to_not have_selector('#etape_suivante')
       end
 
       scenario 'input hidden back_url a pour valeur le params GET' do
@@ -59,7 +59,7 @@ feature 'Carte#Show Page' do
       end
 
       scenario 'le bouton "Modification terminé" est présent' do
-        expect(page).to have_selector('#modification_terminee');
+        expect(page).to have_selector('#modification_terminee')
       end
 
       scenario 'le bouton Etape suivante possède un onclick correct' do

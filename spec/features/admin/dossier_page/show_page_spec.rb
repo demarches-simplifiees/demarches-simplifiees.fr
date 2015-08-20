@@ -36,7 +36,7 @@ feature 'Admin/Dossier#Show Page' do
 
     context 'la liste des pièces jointes est présente' do
       context 'Attestation MSA' do
-        let(:id_piece_jointe){93}
+        let(:id_piece_jointe) { 93 }
 
         scenario 'la ligne de la pièce jointe est présente' do
           expect(page).to have_selector("tr[id=piece_jointe_#{id_piece_jointe}]")
@@ -49,7 +49,7 @@ feature 'Admin/Dossier#Show Page' do
       end
 
       context 'Attestation RDI' do
-        let(:id_piece_jointe){103}
+        let(:id_piece_jointe) { 103 }
 
         scenario 'la ligne de la pièce jointe est présente' do
           expect(page).to have_selector("tr[id=piece_jointe_#{id_piece_jointe}]")
@@ -61,8 +61,8 @@ feature 'Admin/Dossier#Show Page' do
       end
 
       context 'Devis' do
-        let(:id_piece_jointe){388}
-        let(:content) {File.open('./spec/support/files/piece_jointe_388.pdf')}
+        let(:id_piece_jointe) { 388 }
+        let(:content) { File.open('./spec/support/files/piece_jointe_388.pdf') }
 
         before do
           piece_jointe = dossier.pieces_jointes.where(type_piece_jointe_id: 388).first
@@ -76,14 +76,14 @@ feature 'Admin/Dossier#Show Page' do
         end
 
         scenario 'le libelle "Consulter" est présent' do
-          expect(page.find("tr[id=piece_jointe_#{id_piece_jointe}] a")[:href]).to have_content("piece_jointe_388.pdf")
+          expect(page.find("tr[id=piece_jointe_#{id_piece_jointe}] a")[:href]).to have_content('piece_jointe_388.pdf')
           expect(page.find("tr[id=piece_jointe_#{id_piece_jointe}]")).to have_content('Consulter')
         end
       end
     end
 
     scenario 'la carte est bien présente' do
-      expect(page).to have_selector('#map_qp');
+      expect(page).to have_selector('#map_qp')
     end
 
     scenario 'la page des sources CSS de l\'API cart est chargée' do
