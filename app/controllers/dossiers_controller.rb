@@ -9,7 +9,6 @@ class DossiersController < ApplicationController
   end
 
   def create
-
     @dossier_id = params[:pro_dossier_id].strip
 
     if dossier_id_is_present?
@@ -44,11 +43,10 @@ class DossiersController < ApplicationController
   end
 
   def update
-
     @dossier = Dossier.find(params[:id])
     if checked_autorisation_donnees?
       @dossier.update_attributes(update_params)
-      redirect_to url_for({controller: :demandes, action: :show, dossier_id: @dossier.id})
+      redirect_to url_for(controller: :demandes, action: :show, dossier_id: @dossier.id)
     else
       @etablissement =  @dossier.etablissement
       @entreprise =  @dossier.entreprise.decorate
@@ -64,7 +62,7 @@ class DossiersController < ApplicationController
   end
 
   def dossier_id_is_present?
-    @dossier_id != ""
+    @dossier_id != ''
   end
 
   def checked_autorisation_donnees?
