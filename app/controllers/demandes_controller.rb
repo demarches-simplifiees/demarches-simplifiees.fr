@@ -6,13 +6,12 @@ class DemandesController < ApplicationController
 
   def update
     dossier = Dossier.find(params[:dossier_id])
-    if !dossier.formulaire.nil?
+    unless dossier.formulaire.nil?
       # TODO: redirect to start with an error message
-      raise "La modification du formulaire n'est pas possible"
+      fail "La modification du formulaire n'est pas possible"
     end
     dossier.update_attributes(formulaire_id: params[:formulaire])
     dossier.build_default_pieces_jointes
     redirect_to url_for(controller: :carte, action: :show, dossier_id: params[:dossier_id])
   end
-
 end
