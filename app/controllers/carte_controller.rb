@@ -11,7 +11,7 @@ class CarteController < ApplicationController
     dossier = current_dossier
     if dossier.ref_dossier.blank?
       dossier.update_attributes(ref_dossier: params[:ref_dossier])
-      redirect_to url_for({controller: :description, action: :show, :dossier_id => params[:dossier_id]})
+      redirect_to url_for(controller: :description, action: :show, dossier_id: params[:dossier_id])
     else
       commentaire_params = {
         email: 'Modification localisation',
@@ -20,7 +20,7 @@ class CarteController < ApplicationController
       }
       commentaire = Commentaire.new commentaire_params
       commentaire.save
-      redirect_to url_for({controller: :recapitulatif, action: :show, :dossier_id => params[:dossier_id]})
+      redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params[:dossier_id])
 
     end
   end
@@ -28,10 +28,10 @@ class CarteController < ApplicationController
   def get_position
     dossier = current_dossier
 
-    if dossier.position_lat == nil
+    if dossier.position_lat.nil?
       tmp_position = Carto::Geocodeur.convert_adresse_to_point(dossier.etablissement.adresse.gsub("\r\n", ' '))
 
-      if tmp_position.point == nil
+      if tmp_position.point.nil?
         dossier.update_attributes(position_lat: '0', position_lon: '0')
       else
         dossier.update_attributes(position_lat: tmp_position.point.y, position_lon: tmp_position.point.x)
