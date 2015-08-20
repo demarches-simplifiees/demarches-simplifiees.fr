@@ -58,6 +58,18 @@ describe Dossier do
     end
   end
 
+  describe '#retrieve_piece_jointe_by_type' do
+    let(:type) { 93 }
+    subject { dossier.retrieve_piece_jointe_by_type type }
+    before do
+      dossier.build_default_pieces_jointes
+    end
+
+    it 'returns piece jointe with given type' do
+      expect(subject.type).to eq(93)
+    end
+  end
+
   describe '#build_default_pieces_jointes' do
     context 'when dossier is linked to a formualire' do
       let(:dossier) { create(:dossier) }

@@ -12,8 +12,8 @@ class Dossier < ActiveRecord::Base
 
   before_create :build_default_cerfa
 
-  def get_pj piece_jointe_id
-    pieces_jointes.where(type_piece_jointe_id: piece_jointe_id).last
+  def retrieve_piece_jointe_by_type type
+    pieces_jointes.where(type_piece_jointe_id: type).last
   end
 
   def build_default_pieces_jointes

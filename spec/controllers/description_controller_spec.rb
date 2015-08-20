@@ -111,21 +111,26 @@ describe DescriptionController, type: :controller do
 
     context 'Sauvegarde du CERFA PDF' do
       before do
-        post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact, :cerfa_pdf => cerfa_pdf
+        dossier.build_default_pieces_jointes
+        post :create, :dossier_id => dossier_id,
+                      :nom_projet => nom_projet,
+                      :description => description,
+                      :montant_projet => montant_projet,
+                      :montant_aide_demande => montant_aide_demande,
+                      :date_previsionnelle => date_previsionnelle,
+                      :mail_contact => mail_contact,
+                      :cerfa_pdf => cerfa_pdf
+        dossier.reload
       end
 
       context 'un CERFA PDF est envoyé' do
-        subject{PieceJointe.last}
+        subject{ dossier.cerfa }
         it 'content' do
           expect(subject['content']).to eq(name_piece_jointe)
         end
 
         it 'dossier_id' do
           expect(subject.dossier_id).to eq(dossier_id)
-        end
-
-        it 'type_piece_jointe_id' do
-          expect(subject.type_piece_jointe_id).to eq(0)
         end
       end
 
@@ -144,28 +149,26 @@ describe DescriptionController, type: :controller do
 
     context 'Sauvegarde des pièces jointes' do
       before do
-        post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact, :piece_jointe_692 => piece_jointe_692, :piece_jointe_103 => piece_jointe_103
+        dossier.build_default_pieces_jointes
+        post :create, :dossier_id => dossier_id,
+                      :nom_projet => nom_projet,
+                      :description => description,
+                      :montant_projet => montant_projet,
+                      :montant_aide_demande => montant_aide_demande,
+                      :date_previsionnelle => date_previsionnelle,
+                      :mail_contact => mail_contact,
+                      :piece_jointe_692 => piece_jointe_692,
+                      :piece_jointe_103 => piece_jointe_103
+        dossier.reload
       end
 
-      context 'sauvegarde de 2 pieces jointes' do
-        subject { dossier.pieces_jointes.pluck(:type_piece_jointe_id) }
-        it 'les deux pièces sont présentes en base' do
-          expect(subject).to include(103)
-          expect(subject).to include(692)
-        end
-
-        # TODO: refactor
-        context  'les pièces sont ecrasées à chaque fois' do
-          it 'il n\'y a qu\'une pièce jointe par type par dossier' do
-            post :create, :dossier_id => dossier_id, :nom_projet => nom_projet, :description => description, :montant_projet => montant_projet, :montant_aide_demande => montant_aide_demande, :date_previsionnelle => date_previsionnelle, :mail_contact => mail_contact, :piece_jointe_692 => piece_jointe_692, :piece_jointe_103 => piece_jointe_103
-
-            piece_jointe_1 = PieceJointe.where(type_piece_jointe_id: '103', dossier_id: dossier_id)
-            piece_jointe_2 = PieceJointe.where(type_piece_jointe_id: '692', dossier_id: dossier_id)
-
-            expect(piece_jointe_1.many?).to eq(false)
-            expect(piece_jointe_2.many?).to eq(false)
-          end
-        end
+      context 'for piece 692' do
+        subject { dossier.retrieve_piece_jointe_by_type 692 }
+        it { expect(subject.content).not_to be_nil }
+      end
+      context 'for piece 103' do
+        subject { dossier.retrieve_piece_jointe_by_type 103 }
+        it { expect(subject.content).not_to be_nil }
       end
     end
   end

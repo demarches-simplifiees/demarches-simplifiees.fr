@@ -19,26 +19,17 @@ class DescriptionController < ApplicationController
   def create
     @dossier = Dossier.find(params[:dossier_id])
     @dossier.update_attributes(create_params)
-
-    if params[:cerfa_pdf] != nil
-      PieceJointe.destroy_all(dossier_id: @dossier.id, type_piece_jointe_id: 0)
-      @piece_jointe = PieceJointe.new
-      @piece_jointe.content = params[:cerfa_pdf]
-      @piece_jointe.type_piece_jointe_id = 0
-      @piece_jointe.dossier = @dossier
-      @piece_jointe.save
+    if !params[:cerfa_pdf].nil?
+      cerfa = @dossier.cerfa
+      cerfa.content = params[:cerfa_pdf]
+      cerfa.save
     end
 
 
-    @dossier.types_piece_jointe.each do |pj|
-      if params["piece_jointe_#{pj.id}"] != nil
-        PieceJointe.destroy_all(dossier_id: @dossier.id, type_piece_jointe_id: pj.id)
-
-        @piece_jointe = PieceJointe.new
-        @piece_jointe.content = params["piece_jointe_#{pj.id}"]
-        @piece_jointe.type_piece_jointe_id = pj.id
-        @piece_jointe.dossier = @dossier
-        @piece_jointe.save
+    @dossier.pieces_jointes.each do |piece_jointe|
+      if params["piece_jointe_#{piece_jointe.type}"] != nil
+        piece_jointe.content = params["piece_jointe_#{piece_jointe.id}"]
+        piece_jointe.save
       end
     end
 
