@@ -1,8 +1,9 @@
-=javascript_include_tag "http://code.highcharts.com/highcharts.js", "chartkick"
-.row{id: 'infos_dossier'}
+= javascript_include_tag "http://code.highcharts.com/highcharts.js", "chartkick"
+.row#infos_dossier
   .col-md-6
-    %h4.text-info= @dossier.nom_projet
-    %div{style: 'margin-left:10px; padding-top:5px'}
+    %h4.text-info
+      = @dossier.nom_projet
+    %div
       .description
         - begin
           - @dossier.description.split(/(?:\n\r?|\r\n?')/).each do |line|
@@ -12,27 +13,23 @@
           =''
       %br
       .col-lg-6.col-md-6
-        %h4
-          ='Montant total '
+        %h4 Montant total
 
-        %div{style: 'margin-left:10px'}
+        %p
           =number_to_currency(@dossier.montant_projet.to_f, :unit => " ", :separator => ",", :delimiter => " ")
           !='&euro;'
 
       .col-lg-6.col-md-6
-        %h4
-          = 'Début du projet souhaité '
-
-        %div{style: 'margin-left:10px'}
-          =@dossier.date_fr
+        %h4 Début du projet souhaité
+        %p
+          = @dossier.date_fr
 
       .col-lg-6.col-md-6
         %br
-        %h4
-          ='Contact'
+        %h4 Contact
 
-        %a{href: "mailto:#{@dossier.mail_contact}", style: 'margin-left:10px'}
-          =@dossier.mail_contact
+        %a{ href: "mailto:#{@dossier.mail_contact}" }
+          = @dossier.mail_contact
 
       -if !request.url.include?('admin')
         .col-lg-6.col-md-6

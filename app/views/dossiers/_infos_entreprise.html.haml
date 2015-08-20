@@ -2,7 +2,7 @@
   %h4
     = @entreprise.raison_sociale_or_name
 
-#infos_entreprise
+.row#infos_entreprise
   .col-lg-6.col-md-6
     %dl.dl-horizontal
 
@@ -24,9 +24,12 @@
       %dt Capital social :
       %dd= @entreprise.pretty_capital_social
 
-  %div.col-lg-6.col-md-6{style:'margin-left:-2%'}
+  .col-lg-6.col-md-6
     %dl.dl-horizontal
-      %dt
-        Adresse :
+      %dt Adresse :
       %dd
-        %address= @etablissement.adresse.gsub(/[\n]/, '<br>').html_safe
+        %address
+          - @etablissement.adresse.split("\n").each do |line|
+            = line
+            %br
+
