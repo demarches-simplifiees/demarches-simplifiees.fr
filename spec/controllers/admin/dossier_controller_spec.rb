@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Admin::DossierController, type: :controller do
   let(:dossier) { create(:dossier, :with_entreprise) }
-  let (:dossier_id) { dossier.id }
-  let (:bad_dossier_id) { Dossier.count + 10 }
+  let(:dossier_id) { dossier.id }
+  let(:bad_dossier_id) { Dossier.count + 10 }
 
   describe "GET #show" do
     context 'l\'utilisateur est connecté' do

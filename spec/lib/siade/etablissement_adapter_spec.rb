@@ -12,7 +12,7 @@ describe SIADE::EtablissementAdapter do
     end
 
     it '#to_params class est une Hash ?' do
-      expect(subject.class).to eq (Hash)
+      expect(subject).to be_a_instance_of(Hash)
     end
 
     context 'Attributs Etablissements' do
@@ -80,7 +80,7 @@ describe SIADE::EtablissementAdapter do
     end
 
     it 'raises exception RestClient::ResourceNotFound' do
-      expect{subject}.to raise_error (RestClient::ResourceNotFound)
+      expect{subject}.to raise_error(RestClient::ResourceNotFound)
     end
   end
 end

@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe RecapitulatifController, type: :controller do
   let(:dossier) { create(:dossier) }
 
-  let (:bad_dossier_id) { Dossier.count + 10 }
+  let(:bad_dossier_id) { Dossier.count + 10 }
 
   describe "GET #show" do
     it "returns http success" do
