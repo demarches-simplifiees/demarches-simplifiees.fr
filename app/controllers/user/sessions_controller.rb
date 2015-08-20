@@ -1,9 +1,9 @@
 class User::SessionsController < Devise::SessionsController
-# before_filter :configure_sign_in_params, only: [:create]
+  # before_filter :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
   def new
-    redirect_to url_for({controller: '/start', action: :error_login})
+    redirect_to url_for(controller: '/start', action: :error_login)
   end
 
   # POST /resource/sign_in
