@@ -3,12 +3,12 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_filter :store_location
+  before_action :store_location
 
   def store_location
-    unless params[:controller] == "devise/sessions"
+    unless params[:controller] == 'devise/sessions'
       url = "/admin/dossier/#{params[:dossier_id]}"
-          session[:user_return_to] = url
+      session[:user_return_to] = url
     end
   end
 
