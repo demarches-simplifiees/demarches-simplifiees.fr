@@ -7,7 +7,7 @@ feature 'Admin/Dossier#Show Page' do
   before do
     dossier.build_default_pieces_jointes
     login_admin
-    visit "/admin/dossier/#{dossier_id}"
+    visit "/admin/dossiers/#{dossier_id}"
   end
 
   context 'sur la page admin du dossier' do
@@ -68,7 +68,7 @@ feature 'Admin/Dossier#Show Page' do
           piece_jointe = dossier.pieces_jointes.where(type_piece_jointe_id: 388).first
           piece_jointe.content = content
           piece_jointe.save!
-          visit "/admin/dossier/#{dossier_id}"
+          visit "/admin/dossiers/#{dossier_id}"
         end
 
         scenario 'la ligne de la pièce jointe est présente' do

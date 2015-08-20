@@ -38,7 +38,7 @@ RSpec.describe Admin::DossierController, type: :controller do
 
     it 'le numéro de dossier est correct' do
       get :index, :dossier_id => dossier_id
-      expect(response).to redirect_to("/admin/dossier/#{dossier_id}")
+      expect(response).to redirect_to("/admin/dossiers/#{dossier_id}")
     end
 
     it 'il n\' y a pas de numéro de dossier' do

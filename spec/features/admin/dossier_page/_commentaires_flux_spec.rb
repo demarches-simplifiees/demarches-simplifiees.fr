@@ -12,7 +12,7 @@ feature '_Commentaires_Flux Admin/Dossier#Show Page' do
   before do
     dossier.build_default_pieces_jointes
     login_admin
-    visit "/admin/dossier/#{dossier_id}"
+    visit "/admin/dossiers/#{dossier_id}"
   end
 
   context 'Affichage du flux de commentaire' do

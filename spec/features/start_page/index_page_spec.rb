@@ -77,8 +77,8 @@ feature 'Start#Index Page' do
     end
 
     context 'dans la section admninistration' do
-      scenario 'le formulaire envoie vers /admin/dossier en #GET' do
-        expect(page).to have_selector("form[action='/admin/dossier'][method=get]")
+      scenario 'le formulaire envoie vers /admin/dossiers en #GET' do
+        expect(page).to have_selector("form[action='/admin/dossiers'][method=get]")
       end
 
       scenario ' le champs "Identifiant" n\'est pas présent' do

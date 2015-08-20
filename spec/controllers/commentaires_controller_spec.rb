@@ -15,9 +15,9 @@ describe CommentairesController, type: :controller do
       end
 
       it 'depuis la page admin' do
-        request.env["HTTP_REFERER"] = "/admin/dossier"
+        request.env["HTTP_REFERER"] = "/admin/dossiers"
         post :create, :dossier_id => dossier_id, :email_commentaire => email_commentaire, :texte_commentaire => texte_commentaire
-        expect(response).to redirect_to("/admin/dossier/#{dossier_id}")
+        expect(response).to redirect_to("/admin/dossiers/#{dossier_id}")
       end
     end
   end

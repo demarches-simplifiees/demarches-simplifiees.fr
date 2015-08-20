@@ -43,8 +43,8 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    get '/dossier/:dossier_id' => 'dossier#show'
-    get '/dossier' => 'dossier#index'
+    get '/dossiers/:dossier_id' => 'dossier#show'
+    get '/dossiers' => 'dossier#index'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
