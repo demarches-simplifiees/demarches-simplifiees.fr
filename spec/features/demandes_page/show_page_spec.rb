@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'Demandes#Show Page' do
   let(:dossier) { create(:dossier)}
-  let (:dossier_id) { dossier.id }
+  let(:dossier_id) { dossier.id }
 
   before do
     visit "/dossiers/#{dossier_id}/demande"
@@ -14,11 +14,11 @@ feature 'Demandes#Show Page' do
     end
 
     scenario 'la liste des demandes possibles est présente' do
-      expect(page).to have_selector ('select[id=formulaire][name=formulaire]');
+      expect(page).to have_selector('select[id=formulaire][name=formulaire]');
     end
 
     scenario 'le bouton "Etape suivante" est présent' do
-      expect(page).to have_selector ('#etape_suivante');
+      expect(page).to have_selector('#etape_suivante');
     end
   end
 end

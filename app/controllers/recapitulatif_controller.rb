@@ -9,8 +9,7 @@ class RecapitulatifController < ApplicationController
     @commentaires = @commentaires.all.decorate
 
     @commentaire_email = @dossier.mail_contact
-  rescue => e
-
+  rescue
      redirect_to url_for({controller: :start, action: :error_dossier})
   end
 end

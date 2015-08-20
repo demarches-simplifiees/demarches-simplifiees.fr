@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe DemandesController, type: :controller do
   let(:dossier) { create(:dossier, formulaire_id: '') }
-  let (:dossier_id) { dossier.id }
+  let(:dossier_id) { dossier.id }
 
   describe "GET #show" do
     it "returns http success" do

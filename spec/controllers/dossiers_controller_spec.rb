@@ -2,12 +2,12 @@ require 'spec_helper'
 
 RSpec.describe DossiersController, type: :controller do
   let(:dossier) { create(:dossier, :with_entreprise) }
-  let (:dossier_id) { dossier.id }
-  let (:siret_not_found) { 999999999999 }
+  let(:dossier_id) { dossier.id }
+  let(:siret_not_found) { 999999999999 }
 
-  let (:siren) { dossier.siren }
-  let (:siret) { dossier.siret }
-  let (:bad_siret){1}
+  let(:siren) { dossier.siren }
+  let(:siret) { dossier.siret }
+  let(:bad_siret){1}
 
   describe 'GET #show' do
     it "returns http success with dossier_id valid" do

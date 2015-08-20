@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe DescriptionController, type: :controller do
   let(:dossier) { create(:dossier) }
-  let (:dossier_id) { dossier.id }
-  let (:bad_dossier_id) { Dossier.count + 10 }
+  let(:dossier_id) { dossier.id }
+  let(:bad_dossier_id) { Dossier.count + 10 }
 
   describe "GET #show" do
     it "returns http success" do
