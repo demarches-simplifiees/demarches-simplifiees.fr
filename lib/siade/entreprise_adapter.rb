@@ -1,5 +1,4 @@
 class SIADE::EntrepriseAdapter
-
   def initialize(siren)
     @siren = siren
   end
@@ -13,10 +12,8 @@ class SIADE::EntrepriseAdapter
   def to_params
     params = {}
 
-    data_source[:entreprise].each do |k,v|
-      if attr_to_fetch.include?(k)
-        params[k] = v
-      end
+    data_source[:entreprise].each do |k, v|
+      params[k] = v if attr_to_fetch.include?(k)
     end
     params
   rescue

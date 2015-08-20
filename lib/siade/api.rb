@@ -1,11 +1,9 @@
 class SIADE::API
-
   class << self
     attr_accessor :token
   end
 
   def initialize
-
   end
 
   def self.entreprise(siren)
