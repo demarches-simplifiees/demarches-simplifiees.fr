@@ -1,6 +1,5 @@
 class CarteController < ApplicationController
   include DossierConcern
-  centre_de_la_France = 'Vesdun'
 
   def show
     @dossier = current_dossier
