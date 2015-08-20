@@ -73,8 +73,6 @@ group :development, :test do
   gem 'byebug'
   gem 'pry-byebug'
 
-  gem 'rubocop'
-
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
 
@@ -84,5 +82,9 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
 
   gem 'railroady'
+
+  gem 'rubocop', require: false
+  gem 'rubocop-checkstyle_formatter', require: false
+  gem 'rubocop-rspec', require: false
 end
 
