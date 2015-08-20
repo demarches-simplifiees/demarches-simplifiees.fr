@@ -1,6 +1,6 @@
 class User::CustomFailure < Devise::FailureApp
   def redirect_url
-    url_for({controller: '/start', action: :index})
+    url_for(controller: '/start', action: :index)
   end
 
   # You need to override respond to eliminate recall
