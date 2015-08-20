@@ -26,24 +26,18 @@ describe Dossier do
     it { is_expected.to have_one(:entreprise) }
   end
 
+  describe "delegation" do
+    it { is_expected.to delegate_method(:siren).to(:entreprise) }
+    it { is_expected.to delegate_method(:siret).to(:etablissement) }
+    it { is_expected.to delegate_method(:types_piece_jointe).to(:formulaire) }
+  end
+
   let(:dossier) { create(:dossier, :with_entreprise) }
 
   let(:entreprise) { dossier.entreprise }
   let(:etablissement) { dossier.etablissement }
 
   subject { dossier }
-
-  describe '#siren' do
-    it 'returns entreprise siren' do
-      expect(subject.siren).to eq(entreprise.siren)
-    end
-  end
-
-  describe '#siret' do
-    it 'returns etablissement siret' do
-      expect(subject.siret).to eq(etablissement.siret)
-    end
-  end
 
   describe '#types_piece_jointe' do
     subject { dossier.types_piece_jointe }
