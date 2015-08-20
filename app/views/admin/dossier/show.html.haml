@@ -27,10 +27,10 @@
             - else
               = 'Pièce non fournie'
 
-      -@dossier.pieces_jointes.each do |piece_jointe|
-        %tr{id: "piece_jointe_#{piece_jointe.type}"}
-          %th{class:'col-lg-6'}
-            =piece_jointe.libelle
+      - @dossier.pieces_jointes.each do |piece_jointe|
+        %tr{ id: "piece_jointe_#{piece_jointe.type}" }
+          %th.col-lg-6
+            = piece_jointe.libelle
           %td.col-lg-4.col-md-4
             - if piece_jointe.api_entreprise
               %a{ href: '' } Récupérer
