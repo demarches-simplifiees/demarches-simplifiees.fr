@@ -12,7 +12,6 @@ class Admin::DossierController < ApplicationController
 
     @formulaire = @dossier.formulaire
 
-
     @dossier = @dossier.decorate
   rescue ActiveRecord::RecordNotFound
     redirect_start
@@ -20,7 +19,7 @@ class Admin::DossierController < ApplicationController
 
   def index
     @dossier = Dossier.find(params[:dossier_id])
-    redirect_to url_for({controller: 'admin/dossier', action: :show, :dossier_id => @dossier.id})
+    redirect_to url_for(controller: 'admin/dossier', action: :show, dossier_id: @dossier.id)
   rescue
     redirect_start
   end
@@ -28,6 +27,6 @@ class Admin::DossierController < ApplicationController
   private
 
   def redirect_start
-    redirect_to url_for({controller: '/start', action: :error_dossier})
+    redirect_to url_for(controller: '/start', action: :error_dossier)
   end
 end
