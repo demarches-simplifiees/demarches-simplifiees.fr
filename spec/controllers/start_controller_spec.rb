@@ -1,19 +1,19 @@
 require 'spec_helper'
 
 RSpec.describe StartController, type: :controller do
-  describe "GET #index" do
-    it "returns http success" do
+  describe 'GET #index' do
+    it 'returns http success' do
       get :index
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET #index with bad SIRET" do
+  describe 'GET #index with bad SIRET' do
     before do
       get :error_siret
     end
 
-    it "returns http success and flash alert is present" do
+    it 'returns http success and flash alert is present' do
       expect(response).to have_http_status(:success)
     end
     it 'la flash alert est présente' do
@@ -24,12 +24,12 @@ RSpec.describe StartController, type: :controller do
     end
   end
 
-  describe "GET #index with bad LOGIN" do
+  describe 'GET #index with bad LOGIN' do
     before do
       get :error_login
     end
 
-    it "returns http success and flash alert is present" do
+    it 'returns http success and flash alert is present' do
       expect(response).to have_http_status(:success)
     end
     it 'la flash alert est présente' do
@@ -40,12 +40,12 @@ RSpec.describe StartController, type: :controller do
     end
   end
 
-  describe "GET #index with bad DOSSIER" do
+  describe 'GET #index with bad DOSSIER' do
     before do
       get :error_dossier
     end
 
-    it "returns http success and flash alert is present" do
+    it 'returns http success and flash alert is present' do
       expect(response).to have_http_status(:success)
     end
     it 'la flash alert est présente' do

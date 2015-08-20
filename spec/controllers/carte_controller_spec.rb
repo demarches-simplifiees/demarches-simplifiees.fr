@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe CarteController, type: :controller do
-
-  let(:bad_adresse){'babouba'}
-
+  let(:bad_adresse) { 'babouba' }
 
   let(:dossier) { create(:dossier) }
   let!(:entreprise) { create(:entreprise, dossier: dossier) }
@@ -13,9 +11,8 @@ RSpec.describe CarteController, type: :controller do
   let(:ref_dossier) { 'IATRQPQY' }
   let(:adresse) { etablissement.adresse }
 
-
-  describe "GET #show" do
-    it "returns http success" do
+  describe 'GET #show' do
+    it 'returns http success' do
       get :show, dossier_id: dossier_id
       expect(response).to have_http_status(:success)
     end
@@ -28,16 +25,16 @@ RSpec.describe CarteController, type: :controller do
 
   describe 'POST #save_ref_api_carto' do
     context 'Aucune localisation n\'a jamais été enregistrée' do
-      it {
-        post :save_ref_api_carto, :dossier_id => dossier_id, :ref_dossier => ref_dossier, :back_url => ''
+      it do
+        post :save_ref_api_carto, dossier_id: dossier_id, ref_dossier: ref_dossier, back_url: ''
         expect(response).to redirect_to("/dossiers/#{dossier_id}/description")
-      }
+      end
     end
 
     context 'En train de modifier la localisation' do
-      let(:dossier) { create(:dossier, ref_dossier: ref_dossier)}
+      let(:dossier) { create(:dossier, ref_dossier: ref_dossier) }
       before do
-        post :save_ref_api_carto, :dossier_id => dossier_id, :ref_dossier => ref_dossier
+        post :save_ref_api_carto, dossier_id: dossier_id, ref_dossier: ref_dossier
       end
 
       context 'Enregistrement d\'un commentaire informant la modification' do
@@ -64,12 +61,12 @@ RSpec.describe CarteController, type: :controller do
 
   describe '#get_position' do
     context 'Geocodeur renvoie des positions nil' do
-      let(:etablissement) { create(:etablissement, adresse: bad_adresse)}
-      let(:dossier) {create(:dossier, etablissement: etablissement)}
+      let(:etablissement) { create(:etablissement, adresse: bad_adresse) }
+      let(:dossier) { create(:dossier, etablissement: etablissement) }
       before do
-        stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{bad_adresse}").
-            to_return(:status => 200, :body => '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', :headers => {})
-        get :get_position, :dossier_id => dossier.id
+        stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{bad_adresse}")
+          .to_return(status: 200, body: '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
+        get :get_position, dossier_id: dossier.id
       end
 
       subject { dossier.reload }
@@ -82,12 +79,12 @@ RSpec.describe CarteController, type: :controller do
 
     context 'retour d\'un fichier JSON avec 3 attributs' do
       before do
-        stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{adresse}").
-            to_return(:status => 200, :body => '{"query": "50 avenue des champs \u00e9lys\u00e9es Paris 75008", "version": "draft", "licence": "ODbL 1.0", "features": [{"geometry": {"coordinates": [2.306888, 48.870374], "type": "Point"}, "type": "Feature", "properties": {"city": "Paris", "label": "50 Avenue des Champs \u00c9lys\u00e9es 75008 Paris", "housenumber": "50", "id": "ADRNIVX_0000000270748251", "postcode": "75008", "name": "50 Avenue des Champs \u00c9lys\u00e9es", "citycode": "75108", "context": "75, \u00cele-de-France", "score": 0.9054545454545454, "type": "housenumber"}}], "type": "FeatureCollection", "attribution": "BAN"}', :headers => {})
+        stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{adresse}")
+          .to_return(status: 200, body: '{"query": "50 avenue des champs \u00e9lys\u00e9es Paris 75008", "version": "draft", "licence": "ODbL 1.0", "features": [{"geometry": {"coordinates": [2.306888, 48.870374], "type": "Point"}, "type": "Feature", "properties": {"city": "Paris", "label": "50 Avenue des Champs \u00c9lys\u00e9es 75008 Paris", "housenumber": "50", "id": "ADRNIVX_0000000270748251", "postcode": "75008", "name": "50 Avenue des Champs \u00c9lys\u00e9es", "citycode": "75108", "context": "75, \u00cele-de-France", "score": 0.9054545454545454, "type": "housenumber"}}], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
 
-        get :get_position, :dossier_id => dossier_id
+        get :get_position, dossier_id: dossier_id
       end
-      subject {JSON.parse(response.body)}
+      subject { JSON.parse(response.body) }
 
       it 'format JSON valide' do
         expect(response.content_type).to eq('application/json')

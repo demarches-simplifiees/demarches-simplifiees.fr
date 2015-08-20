@@ -3,34 +3,34 @@ require 'spec_helper'
 RSpec.describe DossiersController, type: :controller do
   let(:dossier) { create(:dossier, :with_entreprise) }
   let(:dossier_id) { dossier.id }
-  let(:siret_not_found) { 999999999999 }
+  let(:siret_not_found) { 999_999_999_999 }
 
   let(:siren) { dossier.siren }
   let(:siret) { dossier.siret }
-  let(:bad_siret){1}
+  let(:bad_siret) { 1 }
 
   describe 'GET #show' do
-    it "returns http success with dossier_id valid" do
-      get :show, :id => dossier_id
+    it 'returns http success with dossier_id valid' do
+      get :show, id: dossier_id
       expect(response).to have_http_status(:success)
     end
 
     it 'redirection vers start si mauvais dossier ID' do
-      get :show, :id => siret_not_found
+      get :show, id: siret_not_found
       expect(response).to redirect_to('/start/error_dossier')
     end
   end
 
   describe 'POST #create' do
     before do
-      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret_not_found}?token=#{SIADETOKEN}").
-          to_return(:status => 404, :body => 'fake body')
+      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret_not_found}?token=#{SIADETOKEN}")
+        .to_return(status: 404, body: 'fake body')
 
-      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}").
-          to_return(:status => 200, :body => File.read('spec/support/files/etablissement.json'))
+      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}")
+        .to_return(status: 200, body: File.read('spec/support/files/etablissement.json'))
 
-      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/entreprises/#{siren}?token=#{SIADETOKEN}").
-          to_return(:status => 200, :body => File.read('spec/support/files/entreprise.json'))
+      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/entreprises/#{siren}?token=#{SIADETOKEN}")
+        .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
     end
 
     describe 'professionnel fills form' do
@@ -41,11 +41,11 @@ RSpec.describe DossiersController, type: :controller do
           end
 
           it 'create a dossier' do
-            expect{ post :create, siret: siret, pro_dossier_id: '' }.to change{ Dossier.count }.by(1)
+            expect { post :create, siret: siret, pro_dossier_id: '' }.to change { Dossier.count }.by(1)
           end
 
           it 'creates entreprise' do
-            expect{ post :create, siret: siret, pro_dossier_id: '' }.to change{ Entreprise.count }.by(1)
+            expect { post :create, siret: siret, pro_dossier_id: '' }.to change { Entreprise.count }.by(1)
           end
 
           it 'links entreprise to dossier' do
@@ -53,7 +53,7 @@ RSpec.describe DossiersController, type: :controller do
           end
 
           it 'creates etablissement for dossier' do
-            expect{ post :create, siret: siret, pro_dossier_id: '' }.to change{ Etablissement.count }.by(1)
+            expect { post :create, siret: siret, pro_dossier_id: '' }.to change { Etablissement.count }.by(1)
           end
 
           it 'links etablissement to dossier' do
@@ -69,7 +69,7 @@ RSpec.describe DossiersController, type: :controller do
           let(:siret_not_found) { '11111111111111' }
           subject { post :create, siret: siret_not_found, pro_dossier_id: '' }
           it 'does not create new dossier' do
-            expect{ subject }.not_to change{ Dossier.count }
+            expect { subject }.not_to change { Dossier.count }
           end
 
           it 'redirects to show' do
@@ -79,7 +79,7 @@ RSpec.describe DossiersController, type: :controller do
       end
       context 'when pro_dossier_id is not empty' do
         let!(:dossier) { create(:dossier, :with_entreprise) }
-        subject { post :create, siret: dossier.siret ,pro_dossier_id: 99999999999}
+        subject { post :create, siret: dossier.siret, pro_dossier_id: 99_999_999_999 }
 
         context 'when dossier not found' do
           it 'redirects to start with error_dossier' do
@@ -88,14 +88,13 @@ RSpec.describe DossiersController, type: :controller do
         end
         context 'when dossier found' do
           context 'when siret match' do
-            subject { post :create, siret: dossier.siret ,pro_dossier_id: dossier.id}
+            subject { post :create, siret: dossier.siret, pro_dossier_id: dossier.id }
             it 'redirects to controller recapitulatif' do
               expect(subject).to redirect_to(controller: :recapitulatif, action: :show, dossier_id: dossier.id)
             end
-
           end
           context 'when siret does not match' do
-            subject { post :create, siret: '11111111111111' ,pro_dossier_id: dossier.id}
+            subject { post :create, siret: '11111111111111', pro_dossier_id: dossier.id }
             it 'redirects to start with action error_dossier' do
               expect(subject).to redirect_to(controller: :start, action: :error_dossier)
             end
@@ -107,7 +106,7 @@ RSpec.describe DossiersController, type: :controller do
 
   describe 'PUT #update' do
     before do
-      put :update, :id => dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
+      put :update, id: dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
     end
     context 'when Checkbox is checked' do
       let(:autorisation_donnees) { '1' }

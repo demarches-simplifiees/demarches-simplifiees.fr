@@ -5,8 +5,8 @@ RSpec.describe RecapitulatifController, type: :controller do
 
   let(:bad_dossier_id) { Dossier.count + 10 }
 
-  describe "GET #show" do
-    it "returns http success" do
+  describe 'GET #show' do
+    it 'returns http success' do
       get :show, dossier_id: dossier.id
       expect(response).to have_http_status(:success)
     end

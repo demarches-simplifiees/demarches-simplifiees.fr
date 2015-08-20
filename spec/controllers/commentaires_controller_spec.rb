@@ -9,14 +9,14 @@ describe CommentairesController, type: :controller do
   describe '#POST create' do
     context 'création correct d\'un commentaire' do
       it 'depuis la page récapitulatif' do
-        request.env["HTTP_REFERER"] = "/recapitulatif"
-        post :create, :dossier_id => dossier_id, :email_commentaire => email_commentaire, :texte_commentaire => texte_commentaire
+        request.env['HTTP_REFERER'] = '/recapitulatif'
+        post :create, dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire
         expect(response).to redirect_to("/dossiers/#{dossier_id}/recapitulatif")
       end
 
       it 'depuis la page admin' do
-        request.env["HTTP_REFERER"] = "/admin/dossiers"
-        post :create, :dossier_id => dossier_id, :email_commentaire => email_commentaire, :texte_commentaire => texte_commentaire
+        request.env['HTTP_REFERER'] = '/admin/dossiers'
+        post :create, dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire
         expect(response).to redirect_to("/admin/dossiers/#{dossier_id}")
       end
     end
