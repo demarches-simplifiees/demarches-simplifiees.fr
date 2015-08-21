@@ -1,0 +1,13 @@
+fr:
+  activerecord:
+    models:
+      dossier: 'Dossier'
+    attributes:
+      dossier:
+        mail_contact: 'le mail de contact'
+    errors:
+      models:
+        dossier:
+          attributes:
+            mail_contact:
+              invalid: 'est incorrect'

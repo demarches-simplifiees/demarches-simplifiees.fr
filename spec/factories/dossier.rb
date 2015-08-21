@@ -10,5 +10,11 @@ FactoryGirl.define do
         dossier.etablissement = etablissement
       end
     end
+
+    trait :with_pieces_jointes do
+      after(:build) do |dossier, _evaluator|
+        dossier.build_default_pieces_jointes
+      end
+    end
   end
 end
