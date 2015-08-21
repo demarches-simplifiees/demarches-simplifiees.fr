@@ -97,7 +97,8 @@ describe DescriptionController, type: :controller do
 
       it 'mail_contact manquant' do
         post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, mail_contact: ''
-        expect(response).to redirect_to("/dossiers/#{dossier_id}/description/error")
+        expect(response).to render_template('show')
+        expect(flash[:alert]).to be_present
       end
     end
 
