@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150818113123) do
+ActiveRecord::Schema.define(version: 20150824134012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,11 +42,11 @@ ActiveRecord::Schema.define(version: 20150818113123) do
     t.string  "nom_projet"
     t.string  "montant_projet"
     t.string  "montant_aide_demande"
-    t.string  "date_previsionnelle"
     t.string  "lien_plus_infos"
     t.string  "mail_contact"
     t.boolean "dossier_termine"
     t.integer "formulaire_id"
+    t.date    "date_previsionnelle"
   end
 
   add_index "dossiers", ["formulaire_id"], name: "index_dossiers_on_formulaire_id", using: :btree
