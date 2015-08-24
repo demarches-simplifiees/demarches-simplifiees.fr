@@ -51,6 +51,8 @@ SIADETOKEN = :valid_token unless defined? SIADETOKEN
 
 include Warden::Test::Helpers
 
+WebMock.disable_net_connect!(allow_localhost: true)
+
 RSpec.configure do |config|
   config.filter_run_excluding disable: true
   config.color = true
