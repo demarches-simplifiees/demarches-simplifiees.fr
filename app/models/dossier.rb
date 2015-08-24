@@ -12,6 +12,8 @@ class Dossier < ActiveRecord::Base
 
   before_create :build_default_cerfa
 
+  after_save :build_default_pieces_jointes, if: Proc.new { formulaire_id_changed? }
+
   validates :mail_contact, format: { with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/ }, unless: 'mail_contact.nil?'
 
   def retrieve_piece_jointe_by_type(type)

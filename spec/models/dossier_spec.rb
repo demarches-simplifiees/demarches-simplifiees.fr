@@ -76,13 +76,26 @@ describe Dossier do
     end
 
     describe '#build_default_pieces_jointes' do
-      context 'when dossier is linked to a formualire' do
+      context 'when dossier is linked to a formulaire' do
         let(:dossier) { create(:dossier) }
-        before do
-          dossier.build_default_pieces_jointes
-        end
         it 'build all pieces jointes needed' do
           expect(dossier.pieces_jointes.count).to eq(7)
+        end
+      end
+    end
+
+    describe '#save' do
+      subject { create(:dossier, formulaire_id: nil) }
+      context 'when is linked to a formulaire' do
+        it 'creates default pieces jointes' do
+          expect(subject).to receive(:build_default_pieces_jointes)
+          subject.update_attributes(formulaire_id: 1)
+        end
+      end
+      context 'when is not linked to a formulaire' do
+        it 'does not create default pieces jointes' do
+          expect(subject).not_to receive(:build_default_pieces_jointes)
+          subject.update_attributes(description: 'plop')
         end
       end
     end

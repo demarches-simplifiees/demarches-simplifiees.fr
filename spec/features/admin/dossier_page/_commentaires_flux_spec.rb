@@ -9,7 +9,6 @@ feature '_Commentaires_Flux Admin/Dossier#Show Page' do
   let(:body) { 'Commentaire de test' }
 
   before do
-    dossier.build_default_pieces_jointes
     login_admin
     visit "/admin/dossiers/#{dossier_id}"
   end

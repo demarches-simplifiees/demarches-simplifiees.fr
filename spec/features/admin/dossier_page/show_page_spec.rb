@@ -1,11 +1,10 @@
 require 'spec_helper'
 
 feature 'Admin/Dossier#Show Page' do
-  let(:dossier) { create(:dossier, :with_entreprise) }
+  let!(:dossier) { create(:dossier, :with_entreprise) }
   let(:dossier_id) { dossier.id }
 
   before do
-    dossier.build_default_pieces_jointes
     login_admin
     visit "/admin/dossiers/#{dossier_id}"
   end

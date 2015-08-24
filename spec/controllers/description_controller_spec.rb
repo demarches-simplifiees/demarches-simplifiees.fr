@@ -112,7 +112,6 @@ describe DescriptionController, type: :controller do
 
     context 'Sauvegarde du CERFA PDF' do
       before do
-        dossier.build_default_pieces_jointes
         post :create, dossier_id: dossier_id,
                       nom_projet: nom_projet,
                       description: description,
@@ -150,7 +149,6 @@ describe DescriptionController, type: :controller do
 
     context 'Sauvegarde des pièces jointes' do
       before do
-        dossier.build_default_pieces_jointes
         post :create, dossier_id: dossier_id,
                       nom_projet: nom_projet,
                       description: description,
