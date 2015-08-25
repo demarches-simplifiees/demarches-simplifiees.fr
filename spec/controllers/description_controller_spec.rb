@@ -70,29 +70,46 @@ describe DescriptionController, type: :controller do
     end
 
     context 'Attribut(s) manquant(s)' do
-      it 'nom_projet manquant' do
-        post :create, dossier_id: dossier_id, nom_projet: '', description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, mail_contact: mail_contact
-        expect(response).to redirect_to("/dossiers/#{dossier_id}/description/error")
+      subject {
+        post :create,
+            dossier_id: dossier_id,
+            nom_projet: nom_projet,
+            description: description,
+            montant_projet: montant_projet,
+            montant_aide_demande: montant_aide_demande,
+            date_previsionnelle: date_previsionnelle,
+            mail_contact: mail_contact
+      }
+      before { subject }
+
+      context 'nom_projet empty' do
+        let(:nom_projet) { '' }
+        it { is_expected.to render_template(:show) }
+        it { expect(flash[:alert]).to be_present }
       end
 
-      it 'description manquante' do
-        post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: '', montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, mail_contact: mail_contact
-        expect(response).to redirect_to("/dossiers/#{dossier_id}/description/error")
+      context 'description empty' do
+        let(:description) { '' }
+        it { is_expected.to render_template(:show) }
+        it { expect(flash[:alert]).to be_present }
       end
 
-      it 'montant_projet manquant' do
-        post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: '', montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, mail_contact: mail_contact
-        expect(response).to redirect_to("/dossiers/#{dossier_id}/description/error")
+      context 'montant_projet empty' do
+        let(:montant_projet) { '' }
+        it { is_expected.to render_template(:show) }
+        it { expect(flash[:alert]).to be_present }
       end
 
-      it 'montant_aide_demande manquant' do
-        post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: '', date_previsionnelle: date_previsionnelle, mail_contact: mail_contact
-        expect(response).to redirect_to("/dossiers/#{dossier_id}/description/error")
+      context 'montant_aide_demande empty' do
+        let(:montant_aide_demande) { '' }
+        it { is_expected.to render_template(:show) }
+        it { expect(flash[:alert]).to be_present }
       end
 
-      it 'date_previsionnelle manquante' do
-        post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: '', mail_contact: mail_contact
-        expect(response).to redirect_to("/dossiers/#{dossier_id}/description/error")
+      context 'date_previsionnelle empty' do
+        let(:date_previsionnelle) { '' }
+        it { is_expected.to render_template(:show) }
+        it { expect(flash[:alert]).to be_present }
       end
 
       it 'mail_contact manquant' do

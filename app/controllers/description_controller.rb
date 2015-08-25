@@ -37,9 +37,6 @@ class DescriptionController < ApplicationController
       end
     end
 
-    if check_missing_attributes(params)
-      redirect_to url_for(controller: :description, action: :error)
-    else
       if params[:back_url] == 'recapitulatif'
         commentaire = Commentaire.create
         commentaire.email = 'Modification détails'
@@ -49,17 +46,12 @@ class DescriptionController < ApplicationController
       end
 
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
-    end
+
   end
 
   private
 
   def create_params
     params.permit(:nom_projet, :description, :montant_projet, :montant_aide_demande, :date_previsionnelle, :lien_plus_infos, :mail_contact)
-  end
-
-  # TODO dans un validateur, dans le model
-  def check_missing_attributes(params)
-    params[:nom_projet].strip == '' || params[:description].strip == '' || params[:montant_projet].strip == '' || params[:montant_aide_demande].strip == '' || params[:date_previsionnelle].strip == '' || params[:mail_contact].strip == ''
   end
 end

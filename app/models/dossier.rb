@@ -15,6 +15,12 @@ class Dossier < ActiveRecord::Base
   after_save :build_default_pieces_jointes, if: Proc.new { formulaire_id_changed? }
 
   validates :mail_contact, format: { with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/ }, unless: 'mail_contact.nil?'
+  validates :nom_projet, presence: true, allow_blank: false, allow_nil: true
+  validates :description, presence: true, allow_blank: false, allow_nil: true
+  validates :montant_projet, presence: true, allow_blank: false, allow_nil: true
+  validates :montant_aide_demande, presence: true, allow_blank: false, allow_nil: true
+  validates :date_previsionnelle, presence: true, allow_blank: false,  unless: Proc.new { description.nil? }
+
 
   def retrieve_piece_jointe_by_type(type)
     pieces_jointes.where(type_piece_jointe_id: type).last

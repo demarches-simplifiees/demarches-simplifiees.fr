@@ -32,8 +32,30 @@ describe Dossier do
   end
 
   describe 'validation' do
-    it { is_expected.to allow_value('tanguy@plop.com').for(:mail_contact) }
-    it { is_expected.not_to allow_value('tanguyplop.com').for(:mail_contact) }
+    context 'mail_contact' do
+      it { is_expected.to allow_value('tanguy@plop.com').for(:mail_contact) }
+      it { is_expected.not_to allow_value('tanguyplop.com').for(:mail_contact) }
+    end
+    context 'nom_projet' do
+      it { is_expected.to allow_value(nil).for(:nom_projet) }
+      it { is_expected.not_to allow_value('').for(:nom_projet) }
+      it { is_expected.to allow_value('mon super projet').for(:nom_projet) }
+    end
+    context 'description' do
+      it { is_expected.to allow_value(nil).for(:description) }
+      it { is_expected.not_to allow_value('').for(:description) }
+      it { is_expected.to allow_value('ma superbe description').for(:description) }
+    end
+    context 'montant_projet' do
+      it { is_expected.to allow_value(nil).for(:montant_projet) }
+      it { is_expected.not_to allow_value('').for(:montant_projet) }
+      it { is_expected.to allow_value(124324).for(:montant_projet) }
+    end
+    context 'montant_aide_demande' do
+      it { is_expected.to allow_value(nil).for(:montant_aide_demande) }
+      it { is_expected.not_to allow_value('').for(:montant_aide_demande) }
+      it { is_expected.to allow_value(124324).for(:montant_aide_demande) }
+    end
   end
 
   describe 'methods' do

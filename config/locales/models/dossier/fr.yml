@@ -4,10 +4,27 @@ fr:
       dossier: 'Dossier'
     attributes:
       dossier:
-        mail_contact: 'le mail de contact'
+        mail_contact: 'Le mail de contact'
+        nom_projet: 'Le nom du projet'
+        description: 'La description'
+        montant_projet: 'Le montant du projet'
+        montant_aide_demande: "Le montant d'aide demandée"
+        date_previsionnelle: "La date de début prévisionnelle"
     errors:
       models:
         dossier:
           attributes:
             mail_contact:
+              blank: 'doit être rempli'
               invalid: 'est incorrect'
+            nom_projet:
+              blank: 'doit être rempli'
+            description:
+              blank: 'doit être remplie'
+            montant_projet:
+              blank: 'doit être rempli'
+            montant_aide_demande:
+              blank: 'doit être rempli'
+            date_previsionnelle:
+              blank: 'doit être remplie'
+
