@@ -22,6 +22,7 @@ describe Formulaire do
     it { is_expected.to have_db_column(:categorie) }
     it { is_expected.to have_db_column(:mail_pj) }
     it { is_expected.to have_db_column(:use_admi_facile) }
+    it { is_expected.to have_db_column(:email_contact) }
   end
 
   describe '.for_admi_facile' do
