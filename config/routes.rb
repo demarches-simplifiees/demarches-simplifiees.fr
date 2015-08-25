@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get '/dossiers/:dossier_id' => 'dossier#show'
     get '/dossiers' => 'dossier#index'
+    post '/commentaire' => 'commentaires#create'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -32,10 +32,15 @@ class Dossier < ActiveRecord::Base
     end
   end
 
+  def mailto
+    "mailto:#{formulaire.email_contact}?subject=Demande%20de%20contact&body=Bonjour,%0A%0AJe%20vous%20informe%20que%20j'ai%20rempli%20le%20dossier%20sur%20admi_facile.%20Vous%20pouvez%20y%20acc%C3%A9der%20en%20suivant%20le%20lien%20suivant%20:%20%0Ahttps://admi_facile.apientreprise.fr/admin/dossiers/#{id}%20%0A%20Le%20num%C3%A9ro%20de%20mon%20dossier%20est%20le%20#{id}"
+  end
+
   private
 
   def build_default_cerfa
     build_cerfa
     true
   end
+
 end
