@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   def store_location
     unless params[:controller] == 'devise/sessions'
-      url = "/admin/dossier/#{params[:dossier_id]}"
+      url = "/admin/dossiers/#{params[:dossier_id]}"
       session[:user_return_to] = url
     end
   end
