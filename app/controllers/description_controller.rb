@@ -32,7 +32,7 @@ class DescriptionController < ApplicationController
 
     @dossier.pieces_jointes.each do |piece_jointe|
       unless params["piece_jointe_#{piece_jointe.type}"].nil?
-        piece_jointe.content = params["piece_jointe_#{piece_jointe.id}"]
+        piece_jointe.content = params["piece_jointe_#{piece_jointe.type}"]
         piece_jointe.save
       end
     end
