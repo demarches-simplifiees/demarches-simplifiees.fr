@@ -2,7 +2,7 @@
 %html
   %head
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %title Admi-Facile
+    %title TPS - Téléprocédures simplifiées
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
@@ -11,7 +11,7 @@
       %div.navbar
         = image_tag('marianne_small.png', class: 'logo')
         %a{href: '/', class:'btn btn-lg'}
-          ='Admi-Facile'
+          ='TPS'
 
         -if user_signed_in?
           %div{style: 'decorate:none; box-shadow:none; float:right; margin-top:8px'}
