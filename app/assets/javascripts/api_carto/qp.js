@@ -1,4 +1,4 @@
-if (typeof L != 'undefined') {
+function onDocumentReady() { if (typeof L != 'undefined') {
     (function () {
 
         API_URL = '//api-adresse.data.gouv.fr';
@@ -267,3 +267,8 @@ if (typeof L != 'undefined') {
 
     }).call(this);
 }
+}
+
+
+$(document).ready(onDocumentReady);
+$(document).on('page:load', onDocumentReady);
