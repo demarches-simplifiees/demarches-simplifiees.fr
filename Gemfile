@@ -95,3 +95,7 @@ group :development, :test do
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git'
 end
 
+group :production, :staging do
+  gem 'sentry-raven'
+end
+
