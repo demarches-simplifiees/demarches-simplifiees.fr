@@ -2,20 +2,20 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: admi_facile_development
+  database: TPS_development
   host: localhost
   pool: 5
-  username: admi_facile
+  username: TPS
   password: lol
 
 
 test:
   adapter: postgresql
   encoding: unicode
-  database: admi_facile_test
+  database: TPS_test
   host: localhost
   pool: 5
-  username: admi_facile
+  username: TPS
   password: lol
 
 
