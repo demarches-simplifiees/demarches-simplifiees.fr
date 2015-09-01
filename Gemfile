@@ -90,5 +90,8 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'rubocop-checkstyle_formatter', require: false
   gem 'rubocop-rspec', require: false
+
+  # Deploy
+  gem 'mina', git: 'https://github.com/mina-deploy/mina.git'
 end
 
