@@ -1,3 +1,5 @@
+//= depend_on_asset "layers.png"
+//= depend_on_asset "layers-2x.png"
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
@@ -13,6 +15,7 @@
  *= require_tree .
  *= require_self
  *= require bootstrap-datepicker3
+ *= require leaflet
  */
 @import "bootstrap-sprockets";
 @import "bootstrap";

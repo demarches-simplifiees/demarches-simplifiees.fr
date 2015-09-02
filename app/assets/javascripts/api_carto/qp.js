@@ -1,4 +1,4 @@
-function onDocumentReady() { if (typeof L != 'undefined') {
+function onDocumentReady() { if (typeof L != 'undefined' && typeof L.drawLocal != 'undefined') {
     (function () {
 
         API_URL = '//api-adresse.data.gouv.fr';
