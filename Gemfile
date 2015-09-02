@@ -57,8 +57,6 @@ gem 'bootstrap-datepicker-rails'
 
 gem 'chartkick'
 
-gem 'leaflet-rails'
-
 gem 'logstasher'
 
 group :test do
