@@ -8,9 +8,9 @@
 
 Dir[File.join(Rails.root, 'db', 'seeds', '*.rb')].sort.each { |seed| load seed }
 
-puts "create links"
-TypePieceJointe.find_each do |type_piece_jointe|
-  forms = Formulaire.find_by_demarche_id(type_piece_jointe.CERFA)
-  type_piece_jointe.update_attributes(formulaire_id: forms.id) unless forms.nil?
-end
-puts "end links creation"
+# puts "create links"
+# TypePieceJointe.find_each do |type_piece_jointe|
+#   forms = Formulaire.find_by_demarche_id(type_piece_jointe.CERFA)
+#   type_piece_jointe.update_attributes(formulaire_id: forms.id) unless forms.nil?
+# end
+# puts "end links creation"

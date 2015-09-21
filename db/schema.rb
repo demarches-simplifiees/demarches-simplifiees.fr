@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150825083550) do
+ActiveRecord::Schema.define(version: 20150921092536) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,40 +84,24 @@ ActiveRecord::Schema.define(version: 20150825083550) do
     t.integer "entreprise_id"
   end
 
-  create_table "evenement_vies", force: :cascade do |t|
-    t.string   "nom"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.boolean  "use_admi_facile"
-  end
-
-  create_table "formulaires", force: :cascade do |t|
-    t.string   "demarche_id"
-    t.string   "nom"
-    t.string   "objet"
-    t.string   "ministere"
-    t.string   "cigle_ministere"
-    t.string   "direction"
-    t.string   "evenement_vie_id"
-    t.string   "publics"
-    t.string   "lien_demarche"
-    t.string   "lien_fiche_signaletique"
-    t.string   "lien_notice"
-    t.string   "categorie"
-    t.boolean  "mail_pj"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.boolean  "use_admi_facile"
-    t.string   "email_contact"
-  end
-
-  create_table "pieces_jointes", force: :cascade do |t|
+  create_table "pieces_justificatives", force: :cascade do |t|
     t.string  "content"
     t.integer "dossier_id"
     t.integer "type_piece_jointe_id"
   end
 
-  add_index "pieces_jointes", ["type_piece_jointe_id"], name: "index_pieces_jointes_on_type_piece_jointe_id", using: :btree
+  add_index "pieces_justificatives", ["type_piece_jointe_id"], name: "index_pieces_justificatives_on_type_piece_jointe_id", using: :btree
+
+  create_table "procedures", force: :cascade do |t|
+    t.string   "libelle"
+    t.string   "description"
+    t.string   "organisation"
+    t.string   "direction"
+    t.string   "lien_demarche"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.boolean  "test"
+  end
 
   create_table "pros", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -137,19 +121,13 @@ ActiveRecord::Schema.define(version: 20150825083550) do
   add_index "pros", ["email"], name: "index_pros_on_email", unique: true, using: :btree
   add_index "pros", ["reset_password_token"], name: "index_pros_on_reset_password_token", unique: true, using: :btree
 
-  create_table "types_piece_jointe", force: :cascade do |t|
-    t.string   "CERFA"
-    t.string   "nature"
-    t.string   "libelle_complet"
-    t.string   "etablissement"
+  create_table "types_de_piece_justificative", force: :cascade do |t|
     t.string   "libelle"
     t.string   "description"
-    t.string   "demarche"
-    t.string   "administration_emetrice"
     t.boolean  "api_entreprise"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.integer  "formulaire_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "procedure_id"
   end
 
   create_table "users", force: :cascade do |t|
