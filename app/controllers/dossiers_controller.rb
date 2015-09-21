@@ -9,32 +9,19 @@ class DossiersController < ApplicationController
   end
 
   def create
-    @dossier_id = params[:pro_dossier_id].strip
 
-    if dossier_id_is_present?
+    @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(siret).to_params)
+    @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
+    @dossier = Dossier.create
 
-      @dossier = Dossier.find(@dossier_id)
+    @entreprise.dossier = @dossier
+    @entreprise.save
 
-      if @dossier.siret == params[:siret]
-        redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier_id)
-      else
-        redirect_to url_for(controller: :start, action: :error_dossier)
-      end
-    else
+    @etablissement.dossier = @dossier
+    @etablissement.entreprise = @entreprise
+    @etablissement.save
 
-      @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(siret).to_params)
-      @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
-      @dossier = Dossier.create
-
-      @entreprise.dossier = @dossier
-      @entreprise.save
-
-      @etablissement.dossier = @dossier
-      @etablissement.entreprise = @entreprise
-      @etablissement.save
-
-      redirect_to url_for(controller: :dossiers, action: :show, id: @dossier.id)
-    end
+    redirect_to url_for(controller: :dossiers, action: :show, id: @dossier.id)
 
   rescue RestClient::ResourceNotFound
     redirect_to url_for(controller: :start, action: :error_siret)
@@ -46,7 +33,7 @@ class DossiersController < ApplicationController
     @dossier = Dossier.find(params[:id])
     if checked_autorisation_donnees?
       @dossier.update_attributes(update_params)
-      redirect_to url_for(controller: :demandes, action: :show, dossier_id: @dossier.id)
+      redirect_to url_for(controller: :description, action: :show, dossier_id: @dossier.id)
     else
       @etablissement =  @dossier.etablissement
       @entreprise =  @dossier.entreprise.decorate

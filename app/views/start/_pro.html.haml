@@ -1,12 +1,9 @@
 %p.lead{id: 'pro_section'}
-  %span{class:'text-info', style:'font-weight:bold'}
-    ='Si vous êtes un professionnel, '
-  %p.lead
-  = form_tag(url_for({controller: :dossiers, action: :create}), class: 'form-inline', style: 'margin-top:10%', method: 'POST') do |f|
+  %h2#titre_procedure.text-info
+    Demande de subvention
+  %br
+  = form_tag(url_for({controller: :dossiers, action: :create}), class: 'form-inline', method: 'POST') do |f|
     .form-group.form-group-lg
       = text_field_tag :siret, nil, :class => "form-control", :placeholder => "Entrez votre Siret", :id => "siret", :name => "siret", :maxlength => 14, :style => 'margin-bottom:10px'
-      %br
-      = number_field_tag :siret, nil, :class => "form-control", :placeholder => "Entrez n° de dossier", :id => "pro_dossier_id", :name => "pro_dossier_id", :style => 'display:none'
-      %a{:href => '#', :style => 'margin-top:10px', :id => 'btn_show_dossier_id_input', :onclick => 'show_dossier_id_input()'} J'ai un numéro de dossier
       %br
       = submit_tag "Commencer", class: %w(btn btn-lg btn-success), style: 'margin-top:20px;', data: { disable_with: "Commencer", submit: true}

@@ -77,30 +77,30 @@ RSpec.describe DossiersController, type: :controller do
           end
         end
       end
-      context 'when pro_dossier_id is not empty' do
-        let!(:dossier) { create(:dossier, :with_entreprise) }
-        subject { post :create, siret: dossier.siret, pro_dossier_id: 99_999_999_999 }
-
-        context 'when dossier not found' do
-          it 'redirects to start with error_dossier' do
-            expect(subject).to redirect_to(controller: :start, action: :error_dossier)
-          end
-        end
-        context 'when dossier found' do
-          context 'when siret match' do
-            subject { post :create, siret: dossier.siret, pro_dossier_id: dossier.id }
-            it 'redirects to controller recapitulatif' do
-              expect(subject).to redirect_to(controller: :recapitulatif, action: :show, dossier_id: dossier.id)
-            end
-          end
-          context 'when siret does not match' do
-            subject { post :create, siret: '11111111111111', pro_dossier_id: dossier.id }
-            it 'redirects to start with action error_dossier' do
-              expect(subject).to redirect_to(controller: :start, action: :error_dossier)
-            end
-          end
-        end
-      end
+      # context 'when pro_dossier_id is not empty' do
+      #   let!(:dossier) { create(:dossier, :with_entreprise) }
+      #   subject { post :create, siret: dossier.siret, pro_dossier_id: 99_999_999_999 }
+      #
+      #   context 'when dossier not found' do
+      #     it 'redirects to start with error_dossier' do
+      #       expect(subject).to redirect_to(controller: :start, action: :error_dossier)
+      #     end
+      #   end
+      #   context 'when dossier found' do
+      #     context 'when siret match' do
+      #       subject { post :create, siret: dossier.siret, pro_dossier_id: dossier.id }
+      #       it 'redirects to controller recapitulatif' do
+      #         expect(subject).to redirect_to(controller: :recapitulatif, action: :show, dossier_id: dossier.id)
+      #       end
+      #     end
+      #     context 'when siret does not match' do
+      #       subject { post :create, siret: '11111111111111', pro_dossier_id: dossier.id }
+      #       it 'redirects to start with action error_dossier' do
+      #         expect(subject).to redirect_to(controller: :start, action: :error_dossier)
+      #       end
+      #     end
+      #   end
+      # end
     end
   end
 
@@ -111,7 +111,7 @@ RSpec.describe DossiersController, type: :controller do
     context 'when Checkbox is checked' do
       let(:autorisation_donnees) { '1' }
       it 'redirects to demande' do
-        expect(response).to redirect_to(controller: :demandes, action: :show, dossier_id: dossier.id)
+        expect(response).to redirect_to(controller: :description, action: :show, dossier_id: dossier.id)
       end
 
       it 'update dossier' do
