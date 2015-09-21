@@ -13,12 +13,12 @@
 
 .content.row
   #map_qp.col-lg-6.col-md-6{style: 'height:500px'}
-  #pieces_jointes.col-lg-6.col-md-6
-    %h3.text-info Liste des pièces jointes
+  #pieces_justificatives.col-lg-6.col-md-6
+    %h3.text-info Liste des pièces justificatives
     %br
     %table.table
-      -if @formulaire.lien_demarche != nil
-        %tr{id: "piece_jointe_0"}
+      -if @procedure.lien_demarche != nil
+        %tr{id: "piece_justificative_0"}
           %th{class:'col-lg-6'}
             ='CERFA'
           %td.col-lg-4.col-md-4
@@ -27,15 +27,15 @@
             - else
               = 'Pièce non fournie'
 
-      - @dossier.pieces_jointes.each do |piece_jointe|
-        %tr{ id: "piece_jointe_#{piece_jointe.type}" }
+      - @dossier.pieces_justificatives.each do |piece_justificative|
+        %tr{ id: "piece_justificative_#{piece_justificative.type}" }
           %th.col-lg-6
-            = piece_jointe.libelle
+            = piece_justificative.libelle
           %td.col-lg-4.col-md-4
-            - if piece_jointe.api_entreprise
+            - if piece_justificative.api_entreprise
               %a{ href: '' } Récupérer
-            - elsif !piece_jointe.empty?
-              %a{ href: "#{piece_jointe.content}", target: '_blank' } Consulter
+            - elsif !piece_justificative.empty?
+              %a{ href: "#{piece_justificative.content}", target: '_blank' } Consulter
             - else
               = 'Pièce non fournie'
 

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DescriptionController, type: :controller do
-  let(:dossier) { create(:dossier) }
+  let(:dossier) { create(:dossier, :with_procedure) }
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10 }
 
@@ -26,13 +26,13 @@ describe DescriptionController, type: :controller do
     let(:date_previsionnelle) { '20/01/2016' }
     let(:mail_contact) { 'test@test.com' }
 
-    let(:name_piece_jointe) { 'dossierPDF.pdf' }
-    let(:name_piece_jointe_103) { 'piece_jointe_103.pdf' }
-    let(:name_piece_jointe_692) { 'piece_jointe_692.pdf' }
+    let(:name_piece_justificative) { 'dossierPDF.pdf' }
+    let(:name_piece_justificative_0) { 'piece_justificative_0.pdf' }
+    let(:name_piece_justificative_1) { 'piece_justificative_1.pdf' }
 
-    let(:cerfa_pdf) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_jointe}", 'application/pdf') }
-    let(:piece_jointe_103) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_jointe_103}", 'application/pdf') }
-    let(:piece_jointe_692) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_jointe_692}", 'application/pdf') }
+    let(:cerfa_pdf) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative}", 'application/pdf') }
+    let(:piece_justificative_0) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative_0}", 'application/pdf') }
+    let(:piece_justificative_1) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative_1}", 'application/pdf') }
 
     context 'Tous les attributs sont bons' do
       # TODO separer en deux tests : check donnees et check redirect
@@ -143,7 +143,7 @@ describe DescriptionController, type: :controller do
       context 'un CERFA PDF est envoyé' do
         subject { dossier.cerfa }
         it 'content' do
-          expect(subject['content']).to eq(name_piece_jointe)
+          expect(subject['content']).to eq(name_piece_justificative)
         end
 
         it 'dossier_id' do
@@ -154,7 +154,7 @@ describe DescriptionController, type: :controller do
       context 'les anciens CERFA PDF sont écrasées à chaque fois' do
         it 'il n\'y a qu\'un CERFA PDF par dossier' do
           post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, mail_contact: mail_contact, cerfa_pdf: cerfa_pdf
-          cerfa = PieceJointe.where(type_piece_jointe_id: '0', dossier_id: dossier_id)
+          cerfa = PieceJustificative.where(type_de_piece_justificative_id: '0', dossier_id: dossier_id)
           expect(cerfa.many?).to eq(false)
         end
       end
@@ -164,26 +164,27 @@ describe DescriptionController, type: :controller do
       end
     end
 
-    context 'Sauvegarde des pièces jointes' do
+    context 'Sauvegarde des pièces justificatives' do
+      let(:all_pj_type){ dossier.procedure.type_de_piece_justificative_ids }
       before do
-        post :create, dossier_id: dossier_id,
+        post :create, {dossier_id: dossier_id,
                       nom_projet: nom_projet,
                       description: description,
                       montant_projet: montant_projet,
                       montant_aide_demande: montant_aide_demande,
                       date_previsionnelle: date_previsionnelle,
                       mail_contact: mail_contact,
-                      piece_jointe_692: piece_jointe_692,
-                      piece_jointe_103: piece_jointe_103
+                      'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
+                      'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
         dossier.reload
       end
 
-      context 'for piece 692' do
-        subject { dossier.retrieve_piece_jointe_by_type 692 }
+      context 'for piece 0' do
+        subject { dossier.retrieve_piece_justificative_by_type all_pj_type[0].to_s }
         it { expect(subject.content).not_to be_nil }
       end
-      context 'for piece 103' do
-        subject { dossier.retrieve_piece_jointe_by_type 103 }
+      context 'for piece 1' do
+        subject { dossier.retrieve_piece_justificative_by_type all_pj_type[1].to_s }
         it { expect(subject.content).not_to be_nil }
       end
     end

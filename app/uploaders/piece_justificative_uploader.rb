@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class PieceJointeUploader < CarrierWave::Uploader::Base
+class PieceJustificativeUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick

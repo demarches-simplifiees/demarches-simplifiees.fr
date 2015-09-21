@@ -3,7 +3,7 @@ class DescriptionController < ApplicationController
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate
 
-    @formulaire = @dossier.formulaire
+    @procedure = @dossier.procedure
 
   rescue ActiveRecord::RecordNotFound
     redirect_to url_for(controller: :start, action: :error_dossier)
@@ -19,7 +19,7 @@ class DescriptionController < ApplicationController
     @dossier = Dossier.find(params[:dossier_id])
     unless  @dossier.update_attributes(create_params)
       @dossier = @dossier.decorate
-      @formulaire = @dossier.formulaire
+      @procedure = @dossier.procedure
 
       flash.now.alert = @dossier.errors.full_messages.join('<br />').html_safe
       return render 'show'
@@ -30,10 +30,10 @@ class DescriptionController < ApplicationController
       cerfa.save
     end
 
-    @dossier.pieces_jointes.each do |piece_jointe|
-      unless params["piece_jointe_#{piece_jointe.type}"].nil?
-        piece_jointe.content = params["piece_jointe_#{piece_jointe.type}"]
-        piece_jointe.save
+    @dossier.pieces_justificatives.each do |piece_justificative|
+      unless params["piece_justificative_#{piece_justificative.type}"].nil?
+        piece_justificative.content = params["piece_justificative_#{piece_justificative.type}"]
+        piece_justificative.save
       end
     end
 

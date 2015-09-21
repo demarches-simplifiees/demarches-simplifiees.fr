@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150921092536) do
+ActiveRecord::Schema.define(version: 20150921101240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,11 +45,11 @@ ActiveRecord::Schema.define(version: 20150921092536) do
     t.string  "lien_plus_infos"
     t.string  "mail_contact"
     t.boolean "dossier_termine"
-    t.integer "formulaire_id"
+    t.integer "procedure_id"
     t.date    "date_previsionnelle"
   end
 
-  add_index "dossiers", ["formulaire_id"], name: "index_dossiers_on_formulaire_id", using: :btree
+  add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
 
   create_table "entreprises", force: :cascade do |t|
     t.string  "siren"
@@ -90,7 +90,7 @@ ActiveRecord::Schema.define(version: 20150921092536) do
     t.integer "type_piece_jointe_id"
   end
 
-  add_index "pieces_justificatives", ["type_piece_jointe_id"], name: "index_pieces_justificatives_on_type_piece_jointe_id", using: :btree
+  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_piece_jointe_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"

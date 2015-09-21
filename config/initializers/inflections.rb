@@ -9,8 +9,8 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   # inflect.irregular 'person', 'people'
   # inflect.uncountable %w( fish sheep )
   inflect.acronym 'API'
-  inflect.irregular 'piece_jointe', 'pieces_jointes'
-  inflect.irregular 'type_piece_jointe', 'types_piece_jointe'
+  inflect.irregular 'piece_justificative', 'pieces_justificatives'
+  inflect.irregular 'type_de_piece_justificative', 'types_de_piece_justificative'
 end
 
 # These inflection rules are supported but not enabled by default:

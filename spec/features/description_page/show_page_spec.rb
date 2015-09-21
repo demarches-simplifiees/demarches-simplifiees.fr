@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'Description#Show Page' do
-  let(:dossier) { create(:dossier) }
+  let(:dossier) { create(:dossier, :with_procedure) }
   let(:dossier_id) { dossier.id }
 
   before do
@@ -91,8 +91,8 @@ feature 'Description#Show Page' do
   end
 
   context 'les valeurs sont réaffichées si elles sont présentes dans la BDD' do
-    let(:dossier) do
-      create(:dossier,
+    let!(:dossier) do
+      create(:dossier, :with_procedure,
              nom_projet: 'Projet de test',
              description: 'Description de test',
              montant_projet: 12_000,
@@ -126,37 +126,25 @@ feature 'Description#Show Page' do
     end
   end
 
-  context 'Pièces jointes' do
-    context 'la liste des pièces jointes a envoyé est affichée' do
-      it 'Attestation RDI' do
-        expect(page).to have_selector('input[type=file][name=piece_jointe_103][id=piece_jointe_103]')
-      end
-
-      it 'Devis' do
-        expect(page).to have_selector('input[type=file][name=piece_jointe_388][id=piece_jointe_388]')
-      end
-
-      it 'Pièce d\'identité' do
-        expect(page).to have_selector('input[type=file][name=piece_jointe_692][id=piece_jointe_692]')
-      end
-
-      it 'Plan de transmission du capital social' do
-        expect(page).to have_selector('input[type=file][name=piece_jointe_764][id=piece_jointe_764]')
-      end
-
-      it 'RIB ou RIP' do
-        expect(page).to have_selector('input[type=file][name=piece_jointe_849][id=piece_jointe_849]')
-      end
-    end
-
-    context 'la liste des pièces récupérées automatiquement est signaliée' do
-      it 'Attestation MSA' do
-        expect(page.find_by_id('piece_jointe_93')).to have_content('Nous l\'avons récupéré pour vous.')
-      end
-
-      it 'KBIS' do
-        expect(page.find_by_id('piece_jointe_571')).to have_content('Nous l\'avons récupéré pour vous.')
-      end
-    end
-  end
+  # context 'Pièces justificatives' do
+  #   context 'la liste des pièces justificatives a envoyé est affichée' do
+  #     it 'Contrat' do
+  #       expect(page).to have_selector('input[type=file][name=piece_justificative_764][id=piece_justificative_764]')
+  #     end
+  #
+  #     it 'RIB' do
+  #       expect(page).to have_selector('input[type=file][name=piece_justificative_849][id=piece_justificative_849]')
+  #     end
+  #   end
+  #
+  #   context 'la liste des pièces récupérées automatiquement est signaliée' do
+  #     it 'Attestation MSA' do
+  #       expect(page.find_by_id('piece_justificative_93')).to have_content('Nous l\'avons récupéré pour vous.')
+  #     end
+  #
+  #     it 'KBIS' do
+  #       expect(page.find_by_id('piece_justificative_571')).to have_content('Nous l\'avons récupéré pour vous.')
+  #     end
+  #   end
+  # end
 end

@@ -5,12 +5,12 @@ class Admin::DossierController < ApplicationController
     @dossier = Dossier.find(params[:dossier_id])
     @entreprise = @dossier.entreprise.decorate
     @etablissement = @dossier.etablissement
-    @pieces_jointes = @dossier.pieces_jointes
+    @pieces_justificatives = @dossier.pieces_justificatives
     @commentaires = @dossier.commentaires.order(created_at: :desc)
     @commentaires = @commentaires.all.decorate
     @commentaire_email = current_user.email
 
-    @formulaire = @dossier.formulaire
+    @procedure = @dossier.procedure
 
     @dossier = @dossier.decorate
   rescue ActiveRecord::RecordNotFound

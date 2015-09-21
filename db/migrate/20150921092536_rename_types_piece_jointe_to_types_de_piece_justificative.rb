@@ -10,5 +10,7 @@ class RenameTypesPieceJointeToTypesDePieceJustificative < ActiveRecord::Migratio
     rename_column :types_piece_jointe, :formulaire_id, :procedure_id
 
     rename_table :types_piece_jointe, :types_de_piece_justificative
+
+    rename_column :pieces_justificatives, :type_piece_jointe_id, :type_de_piece_justificative_id
   end
 end

@@ -45,7 +45,7 @@ Dir[Rails.root.join('spec/factories/**/*.rb')].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
-DatabaseCleaner.strategy = :truncation, { except: %w(evenement_vies formulaires types_piece_jointe) }
+DatabaseCleaner.strategy = :truncation
 
 SIADETOKEN = :valid_token unless defined? SIADETOKEN
 

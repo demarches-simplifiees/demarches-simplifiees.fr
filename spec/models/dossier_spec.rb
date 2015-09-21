@@ -17,8 +17,8 @@ describe Dossier do
   end
 
   describe 'associations' do
-    it { is_expected.to belong_to(:formulaire) }
-    it { is_expected.to have_many(:pieces_jointes) }
+    it { is_expected.to belong_to(:procedure) }
+    it { is_expected.to have_many(:pieces_justificatives) }
     it { is_expected.to have_many(:commentaires) }
     it { is_expected.to have_one(:cerfa) }
     it { is_expected.to have_one(:etablissement) }
@@ -28,7 +28,7 @@ describe Dossier do
   describe 'delegation' do
     it { is_expected.to delegate_method(:siren).to(:entreprise) }
     it { is_expected.to delegate_method(:siret).to(:etablissement) }
-    it { is_expected.to delegate_method(:types_piece_jointe).to(:formulaire) }
+    it { is_expected.to delegate_method(:types_de_piece_justificative).to(:procedure) }
   end
 
   describe 'validation' do
@@ -59,18 +59,18 @@ describe Dossier do
   end
 
   describe 'methods' do
-    let(:dossier) { create(:dossier, :with_entreprise) }
+    let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
 
     let(:entreprise) { dossier.entreprise }
     let(:etablissement) { dossier.etablissement }
 
     subject { dossier }
 
-    describe '#types_piece_jointe' do
-      subject { dossier.types_piece_jointe }
+    describe '#types_de_piece_justificative' do
+      subject { dossier.types_de_piece_justificative }
       it 'returns list of required piece justificative' do
-        expect(subject.size).to eq(7)
-        expect(subject).to include(TypePieceJointe.find(103))
+        expect(subject.size).to eq(2)
+        expect(subject).to include(TypeDePieceJustificative.find(TypeDePieceJustificative.first.id))
       end
     end
 
@@ -85,48 +85,41 @@ describe Dossier do
       end
     end
 
-    describe '#retrieve_piece_jointe_by_type' do
-      let(:type) { 93 }
-      subject { dossier.retrieve_piece_jointe_by_type type }
+    describe '#retrieve_piece_justificative_by_type' do
+      let(:all_dossier_pj_id){dossier.procedure.types_de_piece_justificative}
+      subject { dossier.retrieve_piece_justificative_by_type all_dossier_pj_id.first }
       before do
-        dossier.build_default_pieces_jointes
+        dossier.build_default_pieces_justificatives
       end
 
-      it 'returns piece jointe with given type' do
-        expect(subject.type).to eq(93)
+      it 'returns piece justificative with given type' do
+        expect(subject.type).to eq(all_dossier_pj_id.first.id)
       end
     end
 
-    describe '#build_default_pieces_jointes' do
-      context 'when dossier is linked to a formulaire' do
-        let(:dossier) { create(:dossier) }
-        it 'build all pieces jointes needed' do
-          expect(dossier.pieces_jointes.count).to eq(7)
+    describe '#build_default_pieces_justificatives' do
+      context 'when dossier is linked to a procedure' do
+        let(:dossier) { create(:dossier, :with_procedure) }
+        it 'build all pieces justificatives needed' do
+          expect(dossier.pieces_justificatives.count).to eq(2)
         end
       end
     end
 
     describe '#save' do
-      subject { create(:dossier, formulaire_id: nil) }
-      context 'when is linked to a formulaire' do
-        it 'creates default pieces jointes' do
-          expect(subject).to receive(:build_default_pieces_jointes)
-          subject.update_attributes(formulaire_id: 1)
+      subject { create(:dossier, procedure_id: nil) }
+      context 'when is linked to a procedure' do
+        it 'creates default pieces justificatives' do
+          expect(subject).to receive(:build_default_pieces_justificatives)
+          subject.update_attributes(procedure_id: 1)
         end
       end
-      context 'when is not linked to a formulaire' do
-        it 'does not create default pieces jointes' do
-          expect(subject).not_to receive(:build_default_pieces_jointes)
+      context 'when is not linked to a procedure' do
+        it 'does not create default pieces justificatives' do
+          expect(subject).not_to receive(:build_default_pieces_justificatives)
           subject.update_attributes(description: 'plop')
         end
       end
-    end
-
-    describe '#mailto' do
-      let(:dossier) { create(:dossier) }
-      let(:email_contact) { dossier.formulaire.email_contact }
-      subject { dossier.mailto }
-      it { is_expected.to eq("mailto:#{email_contact}?subject=Demande%20de%20contact&body=Bonjour,%0A%0AJe%20vous%20informe%20que%20j'ai%20rempli%20le%20dossier%20sur%20TPS.%20Vous%20pouvez%20y%20acc%C3%A9der%20en%20suivant%20le%20lien%20suivant%20:%20%0Ahttps://tps-dev.apientreprise.fr/admin/dossiers/#{dossier.id}%20%0A%20Le%20num%C3%A9ro%20de%20mon%20dossier%20est%20le%20#{dossier.id}")}
     end
   end
 end

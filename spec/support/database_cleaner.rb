@@ -1,6 +1,6 @@
 RSpec.configure do |config|
 
-  expect_list = %w(evenement_vies formulaires types_piece_jointe)
+  expect_list = %w()
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation, except: expect_list)
