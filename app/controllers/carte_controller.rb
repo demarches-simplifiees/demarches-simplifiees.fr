@@ -9,8 +9,8 @@ class CarteController < ApplicationController
 
   def save_ref_api_carto
     dossier = current_dossier
-    if dossier.ref_dossier.blank?
-      dossier.update_attributes(ref_dossier: params[:ref_dossier])
+    if dossier.ref_dossier_carto.blank?
+      dossier.update_attributes(ref_dossier_carto: params[:ref_dossier])
       redirect_to url_for(controller: :description, action: :show, dossier_id: params[:dossier_id])
     else
       commentaire_params = {

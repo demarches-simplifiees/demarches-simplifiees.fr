@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150922110719) do
+ActiveRecord::Schema.define(version: 20150922113504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,17 +38,15 @@ ActiveRecord::Schema.define(version: 20150922110719) do
     t.boolean  "autorisation_donnees"
     t.string   "position_lat"
     t.string   "position_lon"
-    t.string   "ref_dossier"
+    t.string   "ref_dossier_carto"
     t.string   "nom_projet"
     t.string   "montant_projet"
     t.string   "montant_aide_demande"
-    t.string   "lien_plus_infos"
-    t.string   "mail_contact"
     t.boolean  "dossier_termine"
     t.integer  "procedure_id"
     t.date     "date_previsionnelle"
-    t.datetime "created_at",           default: '2015-09-22 09:25:29'
-    t.datetime "updated_at",           default: '2015-09-22 09:25:29'
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree

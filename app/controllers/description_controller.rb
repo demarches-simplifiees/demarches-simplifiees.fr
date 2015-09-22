@@ -52,6 +52,6 @@ class DescriptionController < ApplicationController
   private
 
   def create_params
-    params.permit(:nom_projet, :description, :montant_projet, :montant_aide_demande, :date_previsionnelle, :lien_plus_infos, :mail_contact)
+    params.permit(:nom_projet, :description, :montant_projet, :montant_aide_demande, :date_previsionnelle)
   end
 end

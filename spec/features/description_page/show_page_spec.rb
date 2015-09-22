@@ -45,14 +45,6 @@ feature 'Description#Show Page' do
       expect(page).to have_selector('input[type=text][id=date_previsionnelle][data-provide=datepicker]')
     end
 
-    scenario 'Mail de contact' do
-      expect(page).to have_selector('input[id=mail_contact][name=mail_contact]')
-    end
-
-    scenario 'Mail de contact est de type mail' do
-      expect(page).to have_selector('input[type=email][id=mail_contact]')
-    end
-
     scenario 'Charger votre CERFA (PDF)' do
       expect(page).to have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]')
     end
@@ -97,8 +89,7 @@ feature 'Description#Show Page' do
              description: 'Description de test',
              montant_projet: 12_000,
              montant_aide_demande: 3000,
-             date_previsionnelle: '20/01/2016',
-             mail_contact: 'test@test.com')
+             date_previsionnelle: '20/01/2016')
     end
 
     scenario 'Nom du projet' do
@@ -119,10 +110,6 @@ feature 'Description#Show Page' do
 
     scenario 'Date prévisionnelle du projet' do
       expect(page).to have_selector("input[id=date_previsionnelle][value='#{dossier.date_previsionnelle}']")
-    end
-
-    scenario 'Mail de contact' do
-      expect(page).to have_selector("input[id=mail_contact][value='#{dossier.mail_contact}']")
     end
   end
 

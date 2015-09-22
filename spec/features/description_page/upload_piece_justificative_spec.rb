@@ -14,7 +14,6 @@ feature 'user is on description page' do
       find_by_id('montant_projet').set 10_000
       find_by_id('montant_aide_demande').set 100
       find_by_id('date_previsionnelle').set '10/10/2010'
-      find_by_id('mail_contact').set 'plop@plop.com'
     end
     context 'before submit' do
       it 'dossier cerfa is empty' do

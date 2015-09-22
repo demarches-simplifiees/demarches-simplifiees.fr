@@ -24,7 +24,6 @@ describe DescriptionController, type: :controller do
     let(:montant_projet) { 12_000 }
     let(:montant_aide_demande) { 3000 }
     let(:date_previsionnelle) { '20/01/2016' }
-    let(:mail_contact) { 'test@test.com' }
 
     let(:name_piece_justificative) { 'dossierPDF.pdf' }
     let(:name_piece_justificative_0) { 'piece_justificative_0.pdf' }
@@ -37,14 +36,14 @@ describe DescriptionController, type: :controller do
     context 'Tous les attributs sont bons' do
       # TODO separer en deux tests : check donnees et check redirect
       it 'Premier enregistrement des données' do
-        post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, mail_contact: mail_contact
+        post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle
         expect(response).to redirect_to("/dossiers/#{dossier_id}/recapitulatif")
       end
 
       # TODO changer les valeurs des champs et check in bdd
       context 'En train de modifier les données de description du projet' do
         before do
-          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, mail_contact: mail_contact, back_url: 'recapitulatif'
+          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, back_url: 'recapitulatif'
         end
 
         context 'Enregistrement d\'un commentaire informant la modification' do
@@ -77,8 +76,7 @@ describe DescriptionController, type: :controller do
             description: description,
             montant_projet: montant_projet,
             montant_aide_demande: montant_aide_demande,
-            date_previsionnelle: date_previsionnelle,
-            mail_contact: mail_contact
+            date_previsionnelle: date_previsionnelle
       }
       before { subject }
 
@@ -111,20 +109,6 @@ describe DescriptionController, type: :controller do
         it { is_expected.to render_template(:show) }
         it { expect(flash[:alert]).to be_present }
       end
-
-      it 'mail_contact manquant' do
-        post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, mail_contact: ''
-        expect(response).to render_template('show')
-        expect(flash[:alert]).to be_present
-      end
-    end
-
-    context 'Mauvais format(s)' do
-      it 'mail_contact n\'est un format d\'email' do
-        post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, mail_contact: 'test.com'
-        expect(response).to render_template('show')
-        expect(flash[:alert]).to be_present
-      end
     end
 
     context 'Sauvegarde du CERFA PDF' do
@@ -135,7 +119,6 @@ describe DescriptionController, type: :controller do
                       montant_projet: montant_projet,
                       montant_aide_demande: montant_aide_demande,
                       date_previsionnelle: date_previsionnelle,
-                      mail_contact: mail_contact,
                       cerfa_pdf: cerfa_pdf
         dossier.reload
       end
@@ -153,7 +136,7 @@ describe DescriptionController, type: :controller do
 
       context 'les anciens CERFA PDF sont écrasées à chaque fois' do
         it 'il n\'y a qu\'un CERFA PDF par dossier' do
-          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, mail_contact: mail_contact, cerfa_pdf: cerfa_pdf
+          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, cerfa_pdf: cerfa_pdf
           cerfa = PieceJustificative.where(type_de_piece_justificative_id: '0', dossier_id: dossier_id)
           expect(cerfa.many?).to eq(false)
         end
@@ -173,7 +156,6 @@ describe DescriptionController, type: :controller do
                       montant_projet: montant_projet,
                       montant_aide_demande: montant_aide_demande,
                       date_previsionnelle: date_previsionnelle,
-                      mail_contact: mail_contact,
                       'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
                       'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
         dossier.reload

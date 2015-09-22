@@ -24,13 +24,6 @@
         %p
           = @dossier.date_fr
 
-      .col-lg-6.col-md-6
-        %br
-        %h4 Contact
-
-        %a{ href: "mailto:#{@dossier.mail_contact}" }
-          = @dossier.mail_contact
-
       -if !request.url.include?('admin')
         .col-lg-6.col-md-6
           %br
