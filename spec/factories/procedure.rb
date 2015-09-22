@@ -1,5 +1,7 @@
 FactoryGirl.define do
   factory :procedure do
+    libelle 'Demande de subvention'
+    description 'Description demande de subvention'
     lien_demarche 'http://localhost'
     libelle 'Demande de subvention'
     description "Demande de subvention à l'intention des associations"

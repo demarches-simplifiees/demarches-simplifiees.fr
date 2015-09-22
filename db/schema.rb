@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 20150922085811) do
     t.integer "type_de_piece_justificative_id"
   end
 
-  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
+  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_piece_jointe_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"
