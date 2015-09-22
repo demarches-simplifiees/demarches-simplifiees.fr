@@ -14,6 +14,8 @@ describe Dossier do
     it { is_expected.to have_db_column(:lien_plus_infos) }
     it { is_expected.to have_db_column(:mail_contact) }
     it { is_expected.to have_db_column(:dossier_termine) }
+    it { is_expected.to have_db_column(:created_at) }
+    it { is_expected.to have_db_column(:updated_at) }
   end
 
   describe 'associations' do
