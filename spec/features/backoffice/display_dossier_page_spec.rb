@@ -6,7 +6,7 @@ feature 'Admin/Dossier#Show Page' do
 
   before do
     login_gestionnaire
-    visit "/admin/dossiers/#{dossier_id}"
+    visit "/backoffice/dossiers/#{dossier_id}"
   end
 
   context 'sur la page admin du dossier' do

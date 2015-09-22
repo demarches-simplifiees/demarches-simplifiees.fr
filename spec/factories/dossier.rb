@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :dossier do
+    nom_projet "Demande de subvention dans le cadre d'accompagnement d'enfant à l'étranger"
     trait :with_entreprise do
       after(:build) do |dossier, _evaluator|
         etablissement = create(:etablissement)

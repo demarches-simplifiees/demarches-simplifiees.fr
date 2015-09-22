@@ -36,7 +36,7 @@ feature 'Recapitulatif#Show Page' do
 
       context 'lien description' do
         scenario 'le lien vers description est présent' do
-          expect(page).to have_selector('a[id=modif_description]')
+          expect(page).to have_css('#modif_description')
         end
 
         scenario 'le lien vers description est correct' do

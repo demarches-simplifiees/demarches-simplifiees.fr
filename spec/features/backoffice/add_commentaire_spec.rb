@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature '_Commentaires_Flux Admin/Dossier#Show Page' do
+feature 'add commentaire on backoffice' do
   let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
   let(:dossier_id) { dossier.id }
   let!(:commentaire) { create(:commentaire, dossier: dossier, email: 'toto@toto.com') }
@@ -11,7 +11,7 @@ feature '_Commentaires_Flux Admin/Dossier#Show Page' do
 
   before do
     login_as gestionnaire, scope: :gestionnaire
-    visit "/admin/dossiers/#{dossier_id}"
+    visit backoffice_dossier_path(dossier)
   end
 
   context 'Affichage du flux de commentaire' do
@@ -30,7 +30,7 @@ feature '_Commentaires_Flux Admin/Dossier#Show Page' do
 
   context 'Affichage du formulaire de commentaire' do
     scenario 'Le formulaire envoie vers /dossiers/:dossier_id/commentaire en #POST' do
-      expect(page).to have_selector("form[action='/admin/commentaire?dossier_id=#{dossier_id}'][method=post]")
+      expect(page).to have_selector("form[action='/backoffice/commentaires?dossier_id=#{dossier_id}'][method=post]")
     end
 
     scenario 'Champs de texte' do

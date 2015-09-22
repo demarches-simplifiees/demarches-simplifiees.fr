@@ -1,8 +1,8 @@
-class Admin::DossierController < ApplicationController
+class Backoffice::DossiersController < ApplicationController
   before_action :authenticate_gestionnaire!
 
   def show
-    @dossier = Dossier.find(params[:dossier_id])
+    @dossier = Dossier.find(params[:id])
     @entreprise = @dossier.entreprise.decorate
     @etablissement = @dossier.etablissement
     @pieces_justificatives = @dossier.pieces_justificatives
@@ -14,13 +14,6 @@ class Admin::DossierController < ApplicationController
 
     @dossier = @dossier.decorate
   rescue ActiveRecord::RecordNotFound
-    redirect_start
-  end
-
-  def index
-    @dossier = Dossier.find(params[:dossier_id])
-    redirect_to url_for(controller: 'admin/dossier', action: :show, dossier_id: @dossier.id)
-  rescue
     redirect_start
   end
 

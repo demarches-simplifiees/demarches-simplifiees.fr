@@ -7,10 +7,14 @@ class CommentairesController < ApplicationController
 
     @commentaire.save
 
-    if request.referer.include? '/recapitulatif'
-      redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params['dossier_id'])
+    if is_gestionnaire?
+      redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
     else
-      redirect_to url_for(controller: 'admin/dossier', action: :show, dossier_id: params['dossier_id'])
+      redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params['dossier_id'])
     end
+  end
+
+  def is_gestionnaire?
+    false
   end
 end

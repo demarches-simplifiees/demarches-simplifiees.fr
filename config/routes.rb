@@ -29,18 +29,13 @@ Rails.application.routes.draw do
     post '/commentaire' => 'commentaires#create'
   end
 
-  namespace :admin do
-    get '/dossiers/:dossier_id' => 'dossier#show'
-    get '/dossiers' => 'dossier#index'
-    post '/commentaire' => 'commentaires#create'
-  end
-
-
 
   get 'backoffice' => 'backoffice#index'
 
 namespace :backoffice do
   get 'sign_in' => '/gestionnaires/sessions#new'
+  resources :dossiers, only: [:show]
+  resources :commentaires, only: [:create]
 end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

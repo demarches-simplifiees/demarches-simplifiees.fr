@@ -10,6 +10,7 @@
     - @dossiers.each do |dossier|
       %tr
         %td= dossier.procedure.libelle
-        %td= dossier.nom_projet
+        %td
+          = link_to(dossier.nom_projet, "/backoffice/dossiers/#{dossier.id}")
         %td Mise à jour
         %td= dossier.last_update
