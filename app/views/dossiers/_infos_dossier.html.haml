@@ -24,20 +24,13 @@
         %p
           = @dossier.date_fr
 
-      .col-lg-6.col-md-6
-        %br
-        %h4 Contact
-
-        %a{ href: "mailto:#{@dossier.mail_contact}" }
-          = @dossier.mail_contact
 
       / -if !request.url.include?('admin')
       .col-lg-6.col-md-6
         %br
         %br
-        %a#modif_carte{href: "/dossiers/#{@dossier.id}/carte?back_url=recapitulatif"} Modifier la localisation
-        %br
         %a#modif_description{href: "/dossiers/#{@dossier.id}/description?back_url=recapitulatif"} Modifier la description
+
 
   .col-md-6
     = pie_chart({"Montant à charge #{(100 - @dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => (@dossier.montant_projet.to_f - @dossier.montant_aide_demande.to_f), "Montant souhaité #{(@dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => @dossier.montant_aide_demande})

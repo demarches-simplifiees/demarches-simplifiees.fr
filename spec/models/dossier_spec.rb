@@ -6,13 +6,10 @@ describe Dossier do
     it { is_expected.to have_db_column(:autorisation_donnees) }
     it { is_expected.to have_db_column(:position_lat) }
     it { is_expected.to have_db_column(:position_lon) }
-    it { is_expected.to have_db_column(:ref_dossier) }
     it { is_expected.to have_db_column(:nom_projet) }
     it { is_expected.to have_db_column(:montant_projet) }
     it { is_expected.to have_db_column(:montant_aide_demande) }
     it { is_expected.to have_db_column(:date_previsionnelle).of_type(:date) }
-    it { is_expected.to have_db_column(:lien_plus_infos) }
-    it { is_expected.to have_db_column(:mail_contact) }
     it { is_expected.to have_db_column(:dossier_termine) }
     it { is_expected.to have_db_column(:created_at) }
     it { is_expected.to have_db_column(:updated_at) }
@@ -34,10 +31,6 @@ describe Dossier do
   end
 
   describe 'validation' do
-    context 'mail_contact' do
-      it { is_expected.to allow_value('tanguy@plop.com').for(:mail_contact) }
-      it { is_expected.not_to allow_value('tanguyplop.com').for(:mail_contact) }
-    end
     context 'nom_projet' do
       it { is_expected.to allow_value(nil).for(:nom_projet) }
       it { is_expected.not_to allow_value('').for(:nom_projet) }

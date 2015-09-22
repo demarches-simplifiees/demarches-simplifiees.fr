@@ -33,10 +33,6 @@
           %h4 Date prévisionnelle du début de votre projet *
           = text_field_tag :date_previsionnelle, @dossier.date_previsionnelle, placeholder: 'Date prévisionnelle', class: 'form-control', 'data-provide' => 'datepicker', 'data-date-format' => 'dd/mm/yyyy'
 
-        .col-lg-6.col-md-6
-          %h4 Mail de contact *
-          = email_field_tag :mail_contact, @dossier.mail_contact, placeholder: 'Mail de contact', class: 'form-control'
-
     %br
     %h3 Documents administratifs
 

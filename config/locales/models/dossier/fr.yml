@@ -4,7 +4,6 @@ fr:
       dossier: 'Dossier'
     attributes:
       dossier:
-        mail_contact: 'Le mail de contact'
         nom_projet: 'Le nom du projet'
         description: 'La description'
         montant_projet: 'Le montant du projet'

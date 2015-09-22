@@ -45,14 +45,6 @@ feature 'Description#Show Page' do
       expect(page).to have_selector('input[type=text][id=date_previsionnelle][data-provide=datepicker]')
     end
 
-    scenario 'Mail de contact' do
-      expect(page).to have_selector('input[id=mail_contact][name=mail_contact]')
-    end
-
-    scenario 'Mail de contact est de type mail' do
-      expect(page).to have_selector('input[type=email][id=mail_contact]')
-    end
-
     scenario 'Charger votre CERFA (PDF)' do
       expect(page).to have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]')
     end
@@ -97,8 +89,7 @@ feature 'Description#Show Page' do
              description: 'Description de test',
              montant_projet: 12_000,
              montant_aide_demande: 3000,
-             date_previsionnelle: '20/01/2016',
-             mail_contact: 'test@test.com')
+             date_previsionnelle: '20/01/2016')
     end
 
     scenario 'Nom du projet' do
@@ -120,31 +111,21 @@ feature 'Description#Show Page' do
     scenario 'Date prévisionnelle du projet' do
       expect(page).to have_selector("input[id=date_previsionnelle][value='#{dossier.date_previsionnelle}']")
     end
-
-    scenario 'Mail de contact' do
-      expect(page).to have_selector("input[id=mail_contact][value='#{dossier.mail_contact}']")
-    end
   end
 
-  # context 'Pièces justificatives' do
-  #   context 'la liste des pièces justificatives a envoyé est affichée' do
-  #     it 'Contrat' do
-  #       expect(page).to have_selector('input[type=file][name=piece_justificative_764][id=piece_justificative_764]')
-  #     end
-  #
-  #     it 'RIB' do
-  #       expect(page).to have_selector('input[type=file][name=piece_justificative_849][id=piece_justificative_849]')
-  #     end
-  #   end
-  #
-  #   context 'la liste des pièces récupérées automatiquement est signaliée' do
-  #     it 'Attestation MSA' do
-  #       expect(page.find_by_id('piece_justificative_93')).to have_content('Nous l\'avons récupéré pour vous.')
-  #     end
-  #
-  #     it 'KBIS' do
-  #       expect(page.find_by_id('piece_justificative_571')).to have_content('Nous l\'avons récupéré pour vous.')
-  #     end
-  #   end
-  # end
+  context 'Pièces justificatives' do
+    let(:all_type_pj_procedure_id) { dossier.procedure.type_de_piece_justificative_ids }
+
+    context 'la liste des pièces justificatives a envoyé est affichée' do
+      it 'RIB' do
+        expect(page).to have_selector("input[type=file][name=piece_justificative_#{all_type_pj_procedure_id[0]}][id=piece_justificative_#{all_type_pj_procedure_id[0]}]")
+      end
+    end
+
+    context 'la liste des pièces récupérées automatiquement est signaliée' do
+      it 'Attestation MSA' do
+        expect(page.find_by_id("piece_justificative_#{all_type_pj_procedure_id[1]}")).to have_content('Nous l\'avons récupéré pour vous.')
+      end
+    end
+  end
 end

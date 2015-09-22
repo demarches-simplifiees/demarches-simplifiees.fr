@@ -33,6 +33,7 @@ feature 'Admin/Dossier#Show Page' do
       end
     end
 
+    #TODO réactiver
     # context 'la liste des pièces justificatives est présente' do
     #   context 'Attestation MSA' do
     #     let(:id_piece_justificative) { 93 }
