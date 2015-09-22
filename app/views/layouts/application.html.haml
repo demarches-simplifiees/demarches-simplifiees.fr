@@ -13,10 +13,10 @@
         %a{href: '/', class:'btn btn-lg'}
           ='TPS'
 
-        -if user_signed_in?
+        -if gestionnaire_signed_in?
           %div{style: 'decorate:none; box-shadow:none; float:right; margin-top:8px'}
-            = current_user.email
-            = link_to "Déconnexion", '/logout', method: :delete, :class => 'btn btn-md'
+            = current_gestionnaire.email
+            = link_to "Déconnexion", '/gestionnaires/sign_out', method: :delete, :class => 'btn btn-md'
 
       #flash_message.center
       - if flash.notice

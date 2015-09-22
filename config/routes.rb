@@ -1,21 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :pros, controllers: {
-    sessions: 'sessions'
-  }, skip: [:password] #:registrations,
+  devise_for :gestionnaires, controllers: {
+    sessions: 'gestionnaires/sessions'
 
-  devise_for :users, controllers: {
-    sessions: 'sessions'
-  }, skip: [:registrations, :password]
+  }, skip: [:password, :registrations]
 
-  devise_scope :user do
-    post 'login', to: 'user/sessions#create'
-    delete 'logout', to: 'user/sessions#destroy'
-  end
-
-  devise_scope :pro do
-    post 'login_pro', to: 'pros/sessions#create'
-    delete 'logout_pro', to: 'pros/sessions#destroy'
-  end
 
   root 'start#index'
 
@@ -47,6 +35,13 @@ Rails.application.routes.draw do
     post '/commentaire' => 'commentaires#create'
   end
 
+
+
+  get 'backoffice' => 'backoffice#index'
+
+namespace :backoffice do
+  get 'sign_in' => '/gestionnaires/sessions#new'
+end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

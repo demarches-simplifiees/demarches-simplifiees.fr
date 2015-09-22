@@ -5,11 +5,12 @@ feature '_Commentaires_Flux Admin/Dossier#Show Page' do
   let(:dossier_id) { dossier.id }
   let!(:commentaire) { create(:commentaire, dossier: dossier, email: 'toto@toto.com') }
   let(:email_commentaire) { 'test@test.com' }
+  let(:gestionnaire) { create(:gestionnaire) }
   let(:email_pre_rempli) { 'toto@sgmap.fr' }
   let(:body) { 'Commentaire de test' }
 
   before do
-    login_admin
+    login_as gestionnaire, scope: :gestionnaire
     visit "/admin/dossiers/#{dossier_id}"
   end
 
@@ -41,7 +42,7 @@ feature '_Commentaires_Flux Admin/Dossier#Show Page' do
     end
 
     scenario 'Champs email est prérempli' do
-      expect(page).to have_selector("input[id=email_commentaire][value='#{email_pre_rempli}']")
+      expect(page).to have_selector("input[id=email_commentaire][value='#{gestionnaire.email}']")
     end
   end
 end
