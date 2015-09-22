@@ -2,9 +2,27 @@ require 'spec_helper'
 
 RSpec.describe StartController, type: :controller do
   describe 'GET #index' do
-    it 'returns http success' do
-      get :index
-      expect(response).to have_http_status(:success)
+    let!(:procedure) { create(:procedure) }
+    before do
+      get :index, procedure_id: procedure
+    end
+
+    context 'when params procedure_id is present' do
+      context 'when procedure_id is valid' do
+        it { expect(response).to have_http_status(:success) }
+      end
+
+      context 'when procedure_id is not valid' do
+        let(:procedure) { '' }
+        it { expect(response).to have_http_status(404) }
+      end
+    end
+
+    context 'when params procedure_id is not present' do
+      before do
+        get :index
+      end
+      it { expect(response).to have_http_status(404) }
     end
   end
 

@@ -1,5 +1,17 @@
 class StartController < ApplicationController
   def index
+    @procedure_id = params['procedure_id']
+    @procedure = Procedure.find(@procedure_id)
+
+    if @procedure.nil?
+      error_procedure
+    end
+  rescue ActiveRecord::RecordNotFound
+    error_procedure
+  end
+
+  def error_procedure
+    render :file => "#{Rails.root}/public/404.html",  :status => 404
   end
 
   def error_siret
