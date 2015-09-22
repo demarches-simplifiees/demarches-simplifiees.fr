@@ -7,8 +7,9 @@
       %th Dossier
       %th etat
       %th Date de mise à jour
-    %row
-      %td Demande de subventions
-      %td dossier n°34 Demande de subvention
-      %td Mise à jour
-      %td 24/12/2015
+    - @dossiers.each do |dossier|
+      %tr
+        %td= dossier.procedure.libelle
+        %td= dossier.nom_projet
+        %td Mise à jour
+        %td= dossier.last_update

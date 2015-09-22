@@ -1,6 +1,8 @@
 FactoryGirl.define do
   factory :procedure do
     lien_demarche 'http://localhost'
+    libelle 'Demande de subvention'
+    description "Demande de subvention à l'intention des associations"
 
     trait :with_two_type_de_piece_justificative do
       after(:build) do |procedure, _evaluator|

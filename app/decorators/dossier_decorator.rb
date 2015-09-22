@@ -6,4 +6,8 @@ class DossierDecorator < Draper::Decorator
   rescue
     'dd/mm/YYYY'
   end
+
+  def last_update
+    updated_at.localtime.strftime('%d/%m/%Y %H:%M')
+  end
 end
