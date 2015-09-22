@@ -84,13 +84,31 @@ ActiveRecord::Schema.define(version: 20150921101240) do
     t.integer "entreprise_id"
   end
 
+  create_table "gestionnaires", force: :cascade do |t|
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet     "current_sign_in_ip"
+    t.inet     "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gestionnaires", ["email"], name: "index_gestionnaires_on_email", unique: true, using: :btree
+  add_index "gestionnaires", ["reset_password_token"], name: "index_gestionnaires_on_reset_password_token", unique: true, using: :btree
+
   create_table "pieces_justificatives", force: :cascade do |t|
     t.string  "content"
     t.integer "dossier_id"
-    t.integer "type_piece_jointe_id"
+    t.integer "type_de_piece_justificative_id"
   end
 
-  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_piece_jointe_id", using: :btree
+  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"

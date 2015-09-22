@@ -5,6 +5,11 @@ module FeatureHelpers
     user
   end
 
+  def login_gestionnaire
+    gestionnaire = create(:gestionnaire)
+    login_as gestionnaire, scope: :gestionnaire
+  end
+
   def create_dossier
     dossier = FactoryGirl.create(:dossier)
     dossier

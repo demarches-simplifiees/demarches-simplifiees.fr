@@ -1,24 +1,24 @@
-%p.lead{id: 'admin_section'}
-  %span{class:'text-info', style:'font-weight:bold'}
-    -if user_signed_in?
-      ='Vous êtes identifié comme une administration'
-    -else
-      ='Si vous êtes une administration, '
+/ %p.lead{id: 'admin_section'}
+/   %span{class:'text-info', style:'font-weight:bold'}
+/     -if user_signed_in?
+/       ='Vous êtes identifié comme une administration'
+/     -else
+/       ='Si vous êtes une administration, '
 
-  %p.lead
-  -if user_signed_in?
-    = form_tag(url_for({controller: 'admin/dossier', action: :index}), class: 'form-inline', method: 'GET') do
-      .form-group.form-group-lg
-        = text_field_tag :siret, nil, :class => "form-control", :style => 'margin-bottom:10px', :placeholder => "N° de dossier", :id => "dossier_id", :name => "dossier_id"
-        %br
-        = submit_tag "Accéder", class: %w(btn btn-lg btn-success), style: 'margin-top:20px;', data: { disable_with: "Accéder", submit: true}
-  -else
-    = form_tag(url_for({controller: 'user/sessions', action: :create}), class: 'form-inline', method: 'POST') do
-      .form-group.form-group-lg
-        = text_field_tag :siret, nil, :class => "form-control", :style => 'margin-bottom:10px', :placeholder => "Identifiant", :id => "user_email", :name => "user[email]"
-        %br
-        = password_field_tag :siret, nil, :class => "form-control", :style => 'margin-bottom:10px', :placeholder => "Mot de passe", :id => "user_password", :name => "user[password]"
-        %br
-        = text_field_tag :siret, nil, :class => "form-control", :style => 'margin-bottom:10px', :placeholder => "N° de dossier", :id => "dossier_id", :name => "dossier_id"
-        %br
-        = submit_tag "Accéder", class: %w(btn btn-lg btn-success), style: 'margin-top:20px;', data: { disable_with: "Accéder", submit: true}
+/   %p.lead
+/   -if user_signed_in?
+/     = form_tag(url_for({controller: 'admin/dossier', action: :index}), class: 'form-inline', method: 'GET') do
+/       .form-group.form-group-lg
+/         = text_field_tag :siret, nil, :class => "form-control", :style => 'margin-bottom:10px', :placeholder => "N° de dossier", :id => "dossier_id", :name => "dossier_id"
+/         %br
+/         = submit_tag "Accéder", class: %w(btn btn-lg btn-success), style: 'margin-top:20px;', data: { disable_with: "Accéder", submit: true}
+/   -else
+/     = form_tag(url_for({controller: 'user/sessions', action: :create}), class: 'form-inline', method: 'POST') do
+/       .form-group.form-group-lg
+/         = text_field_tag :siret, nil, :class => "form-control", :style => 'margin-bottom:10px', :placeholder => "Identifiant", :id => "user_email", :name => "user[email]"
+/         %br
+/         = password_field_tag :siret, nil, :class => "form-control", :style => 'margin-bottom:10px', :placeholder => "Mot de passe", :id => "user_password", :name => "user[password]"
+/         %br
+/         = text_field_tag :siret, nil, :class => "form-control", :style => 'margin-bottom:10px', :placeholder => "N° de dossier", :id => "dossier_id", :name => "dossier_id"
+/         %br
+/         = submit_tag "Accéder", class: %w(btn btn-lg btn-success), style: 'margin-top:20px;', data: { disable_with: "Accéder", submit: true}

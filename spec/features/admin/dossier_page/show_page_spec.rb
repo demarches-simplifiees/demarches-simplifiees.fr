@@ -5,7 +5,7 @@ feature 'Admin/Dossier#Show Page' do
   let(:dossier_id) { dossier.id }
 
   before do
-    login_admin
+    login_gestionnaire
     visit "/admin/dossiers/#{dossier_id}"
   end
 
