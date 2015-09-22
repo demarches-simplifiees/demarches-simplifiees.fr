@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe DossiersController, type: :controller do
-  let(:dossier) { create(:dossier, :with_entreprise) }
+  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
   let(:dossier_id) { dossier.id }
   let(:siret_not_found) { 999_999_999_999 }
 
@@ -37,7 +37,7 @@ RSpec.describe DossiersController, type: :controller do
       context 'when pro_dossier_id is empty' do
         context 'with valid siret ' do
           before do
-            post :create, siret: siret, pro_dossier_id: ''
+            post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last
           end
 
           it 'create a dossier' do
@@ -45,7 +45,7 @@ RSpec.describe DossiersController, type: :controller do
           end
 
           it 'creates entreprise' do
-            expect { post :create, siret: siret, pro_dossier_id: '' }.to change { Entreprise.count }.by(1)
+            expect { post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last }.to change { Entreprise.count }.by(1)
           end
 
           it 'links entreprise to dossier' do
@@ -53,7 +53,7 @@ RSpec.describe DossiersController, type: :controller do
           end
 
           it 'creates etablissement for dossier' do
-            expect { post :create, siret: siret, pro_dossier_id: '' }.to change { Etablissement.count }.by(1)
+            expect { post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last }.to change { Etablissement.count }.by(1)
           end
 
           it 'links etablissement to dossier' do
@@ -62,6 +62,10 @@ RSpec.describe DossiersController, type: :controller do
 
           it 'links etablissement to entreprise' do
             expect(Etablissement.last.entreprise).to eq(Entreprise.last)
+          end
+
+          it 'links procedure to dossier' do
+            expect(Dossier.last.procedure).to eq(Procedure.last)
           end
         end
 
@@ -77,30 +81,6 @@ RSpec.describe DossiersController, type: :controller do
           end
         end
       end
-      # context 'when pro_dossier_id is not empty' do
-      #   let!(:dossier) { create(:dossier, :with_entreprise) }
-      #   subject { post :create, siret: dossier.siret, pro_dossier_id: 99_999_999_999 }
-      #
-      #   context 'when dossier not found' do
-      #     it 'redirects to start with error_dossier' do
-      #       expect(subject).to redirect_to(controller: :start, action: :error_dossier)
-      #     end
-      #   end
-      #   context 'when dossier found' do
-      #     context 'when siret match' do
-      #       subject { post :create, siret: dossier.siret, pro_dossier_id: dossier.id }
-      #       it 'redirects to controller recapitulatif' do
-      #         expect(subject).to redirect_to(controller: :recapitulatif, action: :show, dossier_id: dossier.id)
-      #       end
-      #     end
-      #     context 'when siret does not match' do
-      #       subject { post :create, siret: '11111111111111', pro_dossier_id: dossier.id }
-      #       it 'redirects to start with action error_dossier' do
-      #         expect(subject).to redirect_to(controller: :start, action: :error_dossier)
-      #       end
-      #     end
-      #   end
-      # end
     end
   end
 

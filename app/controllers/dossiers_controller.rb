@@ -14,7 +14,8 @@ class DossiersController < ApplicationController
     @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
     @dossier = Dossier.create
 
-    @dossier.procedure_id
+    @dossier.procedure = Procedure.find(params['procedure_id'])
+    @dossier.save
 
     @entreprise.dossier = @dossier
     @entreprise.save
