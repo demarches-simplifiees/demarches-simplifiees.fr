@@ -11,7 +11,7 @@ class StartController < ApplicationController
   end
 
   def error_procedure
-    render :file => "#{Rails.root}/public/404.html",  :status => 404
+    render :file => "#{Rails.root}/public/404_procedure_not_found.html",  :status => 404
   end
 
   def error_siret
