@@ -68,6 +68,7 @@ group :test do
   gem 'shoulda-matchers', require: false
   gem 'simplecov', require: false
   gem 'poltergeist'
+  gem 'timecop'
 end
 
 group :development, :test do

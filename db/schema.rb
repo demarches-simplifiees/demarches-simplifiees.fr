@@ -47,8 +47,8 @@ ActiveRecord::Schema.define(version: 20150922110719) do
     t.boolean  "dossier_termine"
     t.integer  "procedure_id"
     t.date     "date_previsionnelle"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",           default: '2015-09-22 09:25:29'
+    t.datetime "updated_at",           default: '2015-09-22 09:25:29'
   end
 
   add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
