@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(version: 20150922113504) do
     t.boolean  "dossier_termine"
     t.integer  "procedure_id"
     t.date     "date_previsionnelle"
-    t.datetime "created_at",           default: '2015-09-22 09:25:29'
-    t.datetime "updated_at",           default: '2015-09-22 09:25:29'
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 20150922113504) do
     t.integer "type_de_piece_justificative_id"
   end
 
-  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
+  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_piece_jointe_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"

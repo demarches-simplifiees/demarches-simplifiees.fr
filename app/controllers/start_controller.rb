@@ -1,7 +1,6 @@
 class StartController < ApplicationController
   def index
-    @procedure_id = params['procedure_id']
-    @procedure = Procedure.find(@procedure_id)
+    get_procedure_infos
 
     if @procedure.nil?
       error_procedure
@@ -15,6 +14,7 @@ class StartController < ApplicationController
   end
 
   def error_siret
+    get_procedure_infos
     flash.now.alert = 'Ce SIRET n\'est pas valide'
     render 'index'
   end
@@ -27,5 +27,11 @@ class StartController < ApplicationController
   def error_dossier
     flash.now.alert = 'Ce dossier n\'existe pas'
     render 'index'
+  end
+
+  private
+
+  def get_procedure_infos
+    @procedure = Procedure.find(params['procedure_id'])
   end
 end

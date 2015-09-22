@@ -27,7 +27,7 @@ class DossiersController < ApplicationController
     redirect_to url_for(controller: :dossiers, action: :show, id: @dossier.id)
 
   rescue RestClient::ResourceNotFound
-    redirect_to url_for(controller: :start, action: :error_siret)
+    redirect_to url_for(controller: :start, action: :error_siret, procedure_id: params['procedure_id'])
   rescue ActiveRecord::RecordNotFound
     redirect_to url_for(controller: :start, action: :error_dossier)
   end

@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe StartController, type: :controller do
+  let!(:procedure) { create(:procedure) }
+
   describe 'GET #index' do
-    let!(:procedure) { create(:procedure) }
     before do
       get :index, procedure_id: procedure
     end
@@ -28,7 +29,7 @@ RSpec.describe StartController, type: :controller do
 
   describe 'GET #index with bad SIRET' do
     before do
-      get :error_siret
+      get :error_siret, procedure_id: procedure
     end
 
     it 'returns http success and flash alert is present' do
