@@ -1,9 +1,11 @@
 %p.lead{id: 'pro_section'}
   %h2#titre_procedure.text-info
-    Demande de subvention
+    =@procedure.libelle
+
   %br
   = form_tag(url_for({controller: :dossiers, action: :create}), class: 'form-inline', method: 'POST') do |f|
     .form-group.form-group-lg
       = text_field_tag :siret, nil, :class => "form-control", :placeholder => "Entrez votre Siret", :id => "siret", :name => "siret", :maxlength => 14, :style => 'margin-bottom:10px'
       %br
       = submit_tag "Commencer", class: %w(btn btn-lg btn-success), style: 'margin-top:20px;', data: { disable_with: "Commencer", submit: true}
+      %input{type: 'hidden', value: "#{@procedure.id}", name: 'procedure_id', id: 'procedure_id'}
