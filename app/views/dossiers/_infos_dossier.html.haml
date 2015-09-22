@@ -26,10 +26,11 @@
 
 
       / -if !request.url.include?('admin')
-      .col-lg-6.col-md-6
-        %br
-        %br
-        %a#modif_description{href: "/dossiers/#{@dossier.id}/description?back_url=recapitulatif"} Modifier la description
+      - unless gestionnaire_signed_in?
+        .col-lg-6.col-md-6
+          %br
+          %br
+          %a#modif_description{href: "/dossiers/#{@dossier.id}/description?back_url=recapitulatif"} Modifier la description
 
 
   .col-md-6
