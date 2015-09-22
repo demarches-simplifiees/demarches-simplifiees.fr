@@ -9,10 +9,10 @@ class DossiersController < ApplicationController
   end
 
   def create
-
     @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(siret).to_params)
     @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
     @dossier = Dossier.create
+    @dossier.draft!
 
     @dossier.procedure = Procedure.find(params['procedure_id'])
     @dossier.save

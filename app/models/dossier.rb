@@ -1,4 +1,12 @@
 class Dossier < ActiveRecord::Base
+  enum state: { draft: 'draft',
+                submitted: 'submitted',
+                reply: 'reply',
+                updated: 'updated',
+                confirmed: 'confirmed',
+                filed: 'filed',
+                processed: 'processed' }
+
   has_one :etablissement
   has_one :entreprise
   has_one :cerfa
@@ -45,5 +53,4 @@ class Dossier < ActiveRecord::Base
     build_cerfa
     true
   end
-
 end
