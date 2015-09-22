@@ -24,16 +24,6 @@ feature 'Recapitulatif#Show Page' do
     end
 
     context 'les liens de modifications' do
-      context 'lien carte' do
-        scenario 'le lien vers carte est présent' do
-          expect(page).to have_selector('a[id=modif_carte]')
-        end
-
-        scenario 'le lien vers carte est correct' do
-          expect(page).to have_selector("a[id=modif_carte][href='/dossiers/#{dossier_id}/carte?back_url=recapitulatif']")
-        end
-      end
-
       context 'lien description' do
         scenario 'le lien vers description est présent' do
           expect(page).to have_selector('a[id=modif_description]')
