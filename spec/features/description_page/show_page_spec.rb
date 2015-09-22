@@ -126,25 +126,19 @@ feature 'Description#Show Page' do
     end
   end
 
-  # context 'Pièces justificatives' do
-  #   context 'la liste des pièces justificatives a envoyé est affichée' do
-  #     it 'Contrat' do
-  #       expect(page).to have_selector('input[type=file][name=piece_justificative_764][id=piece_justificative_764]')
-  #     end
-  #
-  #     it 'RIB' do
-  #       expect(page).to have_selector('input[type=file][name=piece_justificative_849][id=piece_justificative_849]')
-  #     end
-  #   end
-  #
-  #   context 'la liste des pièces récupérées automatiquement est signaliée' do
-  #     it 'Attestation MSA' do
-  #       expect(page.find_by_id('piece_justificative_93')).to have_content('Nous l\'avons récupéré pour vous.')
-  #     end
-  #
-  #     it 'KBIS' do
-  #       expect(page.find_by_id('piece_justificative_571')).to have_content('Nous l\'avons récupéré pour vous.')
-  #     end
-  #   end
-  # end
+  context 'Pièces justificatives' do
+    let(:all_type_pj_procedure_id) { dossier.procedure.type_de_piece_justificative_ids }
+
+    context 'la liste des pièces justificatives a envoyé est affichée' do
+      it 'RIB' do
+        expect(page).to have_selector("input[type=file][name=piece_justificative_#{all_type_pj_procedure_id[0]}][id=piece_justificative_#{all_type_pj_procedure_id[0]}]")
+      end
+    end
+
+    context 'la liste des pièces récupérées automatiquement est signaliée' do
+      it 'Attestation MSA' do
+        expect(page.find_by_id("piece_justificative_#{all_type_pj_procedure_id[1]}")).to have_content('Nous l\'avons récupéré pour vous.')
+      end
+    end
+  end
 end
