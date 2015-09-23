@@ -13,10 +13,7 @@ Rails.application.routes.draw do
   root 'users/dossiers#index'
 
   get 'siret' => 'siret#index'
-  # get 'start/index'
-  # get 'start/error_siret'
-  # get 'start/error_login'
-  # get 'start/error_dossier'
+
 
   resources :dossiers do
     get '/demande' => 'demandes#show'
