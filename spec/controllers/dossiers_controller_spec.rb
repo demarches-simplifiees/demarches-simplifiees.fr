@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe DossiersController, type: :controller do
+describe DossiersController, type: :controller do
   let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
   let(:dossier_id) { dossier.id }
   let(:siret_not_found) { 999_999_999_999 }

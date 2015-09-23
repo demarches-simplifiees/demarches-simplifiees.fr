@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   }, skip: [:password, :registrations]
 
 
-  root 'welcome#index'
+  # root 'welcome#index'
+  root 'users/dossiers#index'
 
   get 'start' => 'start#index'
   get 'start/index'
