@@ -12,11 +12,11 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   root 'users/dossiers#index'
 
-  get 'start' => 'start#index'
-  get 'start/index'
-  get 'start/error_siret'
-  get 'start/error_login'
-  get 'start/error_dossier'
+  get 'siret' => 'siret#index'
+  # get 'start/index'
+  # get 'start/error_siret'
+  # get 'start/error_login'
+  # get 'start/error_dossier'
 
   resources :dossiers do
     get '/demande' => 'demandes#show'

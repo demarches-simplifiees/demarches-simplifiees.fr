@@ -11,6 +11,7 @@ class RecapitulatifController < ApplicationController
     #TODO load user email
     @commentaire_email = 'user@email'
   rescue ActiveRecord::RecordNotFound
-    redirect_to url_for(controller: :start, action: :error_dossier)
+    flash.alert = t('errors.messages.dossier_not_found')
+    redirect_to url_for(controller: :siret)
   end
 end

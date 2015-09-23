@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'start/index.html.haml', type: :view do
+describe 'siret/index.html.haml', type: :view do
   let(:procedure) { create(:procedure, libelle: 'Demande de subvention') }
   before do
     assign(:procedure, procedure)

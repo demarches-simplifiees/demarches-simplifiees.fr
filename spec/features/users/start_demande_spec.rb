@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-feature 'user arrive on start page' do
+feature 'user arrive on siret page' do
   let(:procedure) { create(:procedure) }
   let(:user) { create(:user) }
   let(:siret) { '42149333900020' }
   let(:siren) { siret[0...9] }
   context 'when user is not logged in' do
     before do
-      visit start_path(procedure_id: procedure.id)
+      visit siret_path(procedure_id: procedure.id)
     end
     scenario 'he is redirected to login page' do
       expect(page).to have_css('#login_user')
@@ -18,7 +18,7 @@ feature 'user arrive on start page' do
         page.find_by_id('user_password').set user.password
         page.click_on 'Se connecter'
       end
-      scenario 'he is redirected to start page to enter a siret' do
+      scenario 'he is redirected to siret page to enter a siret' do
         expect(page).to have_css('#pro_section')
       end
       context 'when enter a siret' do

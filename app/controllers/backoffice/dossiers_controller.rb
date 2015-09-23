@@ -14,12 +14,8 @@ class Backoffice::DossiersController < ApplicationController
 
     @dossier = @dossier.decorate
   rescue ActiveRecord::RecordNotFound
-    redirect_start
+    flash.alert = t('errors.messages.dossier_not_found')
+    redirect_to url_for(controller: '/backoffice')
   end
 
-  private
-
-  def redirect_start
-    redirect_to url_for(controller: '/start', action: :error_dossier)
-  end
 end

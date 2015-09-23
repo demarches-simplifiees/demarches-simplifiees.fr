@@ -5,16 +5,18 @@ class DossiersController < ApplicationController
     @etablissement =  @dossier.etablissement
     @entreprise =  @dossier.entreprise.decorate
   rescue ActiveRecord::RecordNotFound
-    redirect_to url_for(controller: :start, action: :error_dossier)
+    flash.alert = t('errors.messages.dossier_not_found')
+    redirect_to url_for(controller: :siret)
   end
 
   def create
+    procedure = Procedure.find(params['procedure_id'])
     @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(siret).to_params)
     @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
     @dossier = Dossier.create
     @dossier.draft!
 
-    @dossier.procedure = Procedure.find(params['procedure_id'])
+    @dossier.procedure = procedure
     @dossier.save
 
     @entreprise.dossier = @dossier
@@ -27,9 +29,11 @@ class DossiersController < ApplicationController
     redirect_to url_for(controller: :dossiers, action: :show, id: @dossier.id)
 
   rescue RestClient::ResourceNotFound
-    redirect_to url_for(controller: :start, action: :error_siret, procedure_id: params['procedure_id'])
+    flash.alert = t('errors.messages.invalid_siret')
+    redirect_to url_for(controller: :siret, procedure_id: params['procedure_id'])
   rescue ActiveRecord::RecordNotFound
-    redirect_to url_for(controller: :start, action: :error_dossier)
+    flash.alert = t('errors.messages.dossier_not_found')
+    redirect_to url_for(controller: :siret)
   end
 
   def update

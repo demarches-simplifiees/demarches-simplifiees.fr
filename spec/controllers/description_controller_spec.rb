@@ -13,7 +13,7 @@ describe DescriptionController, type: :controller do
 
     it 'redirection vers start si mauvais dossier ID' do
       get :show, dossier_id: bad_dossier_id
-      expect(response).to redirect_to(controller: :start, action: :error_dossier)
+      expect(response).to redirect_to(controller: :siret)
     end
   end
 

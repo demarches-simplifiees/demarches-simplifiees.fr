@@ -11,9 +11,9 @@ RSpec.describe RecapitulatifController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    it 'redirection vers start si mauvais dossier ID' do
+    it 'redirection vers siret si mauvais dossier ID' do
       get :show, dossier_id: bad_dossier_id
-      expect(response).to redirect_to('/start/error_dossier')
+      expect(response).to redirect_to('/siret')
     end
   end
 end

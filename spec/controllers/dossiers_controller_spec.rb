@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe DossiersController, type: :controller do
   let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
+  let(:procedure) { create(:procedure) }
   let(:dossier_id) { dossier.id }
   let(:siret_not_found) { 999_999_999_999 }
 
@@ -15,9 +16,9 @@ describe DossiersController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    it 'redirection vers start si mauvais dossier ID' do
+    it 'redirection vers siret si mauvais dossier ID' do
       get :show, id: siret_not_found
-      expect(response).to redirect_to('/start/error_dossier')
+      expect(response).to redirect_to('/siret')
     end
   end
 
@@ -36,16 +37,16 @@ describe DossiersController, type: :controller do
     describe 'professionnel fills form' do
       context 'when pro_dossier_id is empty' do
         context 'with valid siret ' do
-          before do
-            post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last
-          end
+
+          subject  { post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last }
+
 
           it 'create a dossier' do
-            expect { post :create, siret: siret, pro_dossier_id: '' }.to change { Dossier.count }.by(1)
+            expect { subject }.to change { Dossier.count }.by(1)
           end
 
           it 'creates entreprise' do
-            expect { post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last }.to change { Entreprise.count }.by(1)
+            expect { subject }.to change { Entreprise.count }.by(1)
           end
 
           it 'links entreprise to dossier' do
@@ -53,35 +54,39 @@ describe DossiersController, type: :controller do
           end
 
           it 'creates etablissement for dossier' do
-            expect { post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last }.to change { Etablissement.count }.by(1)
+            expect { subject }.to change { Etablissement.count }.by(1)
           end
 
           it 'links etablissement to dossier' do
+            subject
             expect(Etablissement.last.dossier).to eq(Dossier.last)
           end
 
           it 'links etablissement to entreprise' do
+            subject
             expect(Etablissement.last.entreprise).to eq(Entreprise.last)
           end
 
           it 'links procedure to dossier' do
+            subject
             expect(Dossier.last.procedure).to eq(Procedure.last)
           end
 
           it 'state of dossier is draft' do
+            subject
             expect(Dossier.last.state).to eq('draft')
           end
         end
 
         context 'with non existant siret' do
           let(:siret_not_found) { '11111111111111' }
-          subject { post :create, siret: siret_not_found, pro_dossier_id: '' }
+          subject { post :create, siret: siret_not_found, pro_dossier_id: '', procedure_id: procedure.id }
           it 'does not create new dossier' do
             expect { subject }.not_to change { Dossier.count }
           end
 
           it 'redirects to show' do
-            expect(subject).to redirect_to(controller: :start, action: :error_siret)
+            expect(subject).to redirect_to(controller: :siret, procedure_id: procedure.id)
           end
         end
       end
