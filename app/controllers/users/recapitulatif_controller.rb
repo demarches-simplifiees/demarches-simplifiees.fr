@@ -1,5 +1,6 @@
-class RecapitulatifController < ApplicationController
+class Users::RecapitulatifController < UsersController
   def show
+
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate
 

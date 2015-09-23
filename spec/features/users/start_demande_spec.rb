@@ -7,7 +7,7 @@ feature 'user arrive on siret page' do
   let(:siren) { siret[0...9] }
   context 'when user is not logged in' do
     before do
-      visit siret_path(procedure_id: procedure.id)
+      visit users_siret_path(procedure_id: procedure.id)
     end
     scenario 'he is redirected to login page' do
       expect(page).to have_css('#login_user')

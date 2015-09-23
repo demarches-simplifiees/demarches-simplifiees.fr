@@ -1,12 +1,13 @@
 require 'spec_helper'
 
 feature 'Recapitulatif#Show Page' do
-  let(:dossier) { create(:dossier) }
+  let(:dossier) { create(:dossier, :with_user) }
   let(:dossier_id) { dossier.id }
 
   before do
     Capybara.current_session.driver.header('Referer', '/description')
-    visit "/dossiers/#{dossier_id}/recapitulatif"
+    login_as(dossier.user, :scope => :user)
+    visit "/users/dossiers/#{dossier_id}/recapitulatif"
   end
 
   context 'sur la page recapitulative' do
@@ -42,14 +43,14 @@ feature 'Recapitulatif#Show Page' do
 
       scenario 'N\'est pas affiché quand l\'on vient d\'une autre la page que description' do
         Capybara.current_session.driver.header('Referer', '/')
-        visit "/dossiers/#{dossier_id}/recapitulatif"
+        visit "/users/dossiers/#{dossier_id}/recapitulatif"
 
         expect(page).to_not have_content('Félicitation')
       end
 
       scenario 'N\'est pas affiché quand l\'on vient de la page description en modification' do
         Capybara.current_session.driver.header('Referer', '/description?back_url=recapitulatif')
-        visit "/dossiers/#{dossier_id}/recapitulatif"
+        visit "/users/dossiers/#{dossier_id}/recapitulatif"
 
         expect(page).to_not have_content('Félicitation')
       end

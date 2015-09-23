@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SiretController, type: :controller do
+describe Users::SiretController, type: :controller do
   let!(:procedure) { create(:procedure) }
 
   describe 'GET #index' do

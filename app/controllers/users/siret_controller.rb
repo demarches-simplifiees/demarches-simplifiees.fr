@@ -1,5 +1,4 @@
-class SiretController < ApplicationController
-  before_action :authenticate_user!
+class Users::SiretController < UsersController
   def index
     @procedure = Procedure.find(params['procedure_id'])
   rescue ActiveRecord::RecordNotFound
@@ -9,5 +8,4 @@ class SiretController < ApplicationController
   def error_procedure
     render :file => "#{Rails.root}/public/404_procedure_not_found.html",  :status => 404
   end
-
 end

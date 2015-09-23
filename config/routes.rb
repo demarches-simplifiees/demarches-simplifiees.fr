@@ -12,25 +12,37 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   root 'users/dossiers#index'
 
-  get 'siret' => 'siret#index'
+  namespace :users do
+    get 'siret' => 'siret#index'
+    resources :dossiers do
+      get '/description' => 'description#show'
+      get '/description/error' => 'description#error'
+      post 'description' => 'description#create'
+      get '/recapitulatif' => 'recapitulatif#show'
+      get '/demande' => 'demandes#show'
+      post '/demande' => 'demandes#update'
+      post '/commentaire' => 'commentaires#create'
+    end
+    resource :dossiers
 
-
-  resources :dossiers do
-    get '/demande' => 'demandes#show'
-    post '/demande' => 'demandes#update'
-
-    get '/carte/position' => 'carte#get_position'
-    get '/carte' => 'carte#show'
-    post '/carte' => 'carte#save_ref_api_carto'
-
-    get '/description' => 'description#show'
-    get '/description/error' => 'description#error'
-    post 'description' => 'description#create'
-
-    get '/recapitulatif' => 'recapitulatif#show'
-
-    post '/commentaire' => 'commentaires#create'
   end
+
+
+  # resources :dossiers do
+
+
+  #   # get '/carte/position' => 'carte#get_position'
+  #   # get '/carte' => 'carte#show'
+  #   # post '/carte' => 'carte#save_ref_api_carto'
+
+  #   # get '/description' => 'description#show'
+  #   # get '/description/error' => 'description#error'
+  #   # post 'description' => 'description#create'
+
+
+  #   post '/commentaire' => 'commentaires#create'
+
+  # end
 
 
   get 'backoffice' => 'backoffice#index'

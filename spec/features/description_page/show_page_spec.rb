@@ -5,12 +5,12 @@ feature 'Description#Show Page' do
   let(:dossier_id) { dossier.id }
 
   before do
-    visit "/dossiers/#{dossier_id}/description"
+    visit users_dossier_description_path(dossier_id: dossier_id)
   end
 
   context 'tous les attributs sont présents sur la page' do
-    scenario 'Le formulaire envoie vers /dossiers/:dossier_id/description en #POST' do
-      expect(page).to have_selector("form[action='/dossiers/#{dossier_id}/description'][method=post]")
+    scenario 'Le formulaire envoie vers /users/dossiers/:dossier_id/description en #POST' do
+      expect(page).to have_selector("form[action='/users/dossiers/#{dossier_id}/description'][method=post]")
     end
 
     scenario 'Nom du projet' do
@@ -62,7 +62,7 @@ feature 'Description#Show Page' do
 
   context 'si la page précédente est recapitularif' do
     before do
-      visit "/dossiers/#{dossier_id}/description?back_url=recapitulatif"
+      visit "/users/dossiers/#{dossier_id}/description?back_url=recapitulatif"
     end
 
     scenario 'le bouton "Terminer" n\'est pas présent' do
