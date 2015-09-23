@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150922141232) do
+ActiveRecord::Schema.define(version: 20150923101000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,12 +44,14 @@ ActiveRecord::Schema.define(version: 20150922141232) do
     t.string   "montant_aide_demande"
     t.integer  "procedure_id"
     t.date     "date_previsionnelle"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",           default: '2015-09-22 09:25:29'
+    t.datetime "updated_at",           default: '2015-09-22 09:25:29'
     t.string   "state"
+    t.integer  "user_id"
   end
 
   add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
+  add_index "dossiers", ["user_id"], name: "index_dossiers_on_user_id", using: :btree
 
   create_table "entreprises", force: :cascade do |t|
     t.string  "siren"
@@ -150,4 +152,5 @@ ActiveRecord::Schema.define(version: 20150922141232) do
 
   add_foreign_key "cerfas", "dossiers"
   add_foreign_key "commentaires", "dossiers"
+  add_foreign_key "dossiers", "users"
 end

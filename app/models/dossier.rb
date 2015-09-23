@@ -12,6 +12,7 @@ class Dossier < ActiveRecord::Base
   has_one :cerfa
   has_many :pieces_justificatives
   belongs_to :procedure
+  belongs_to :user
   has_many :commentaires
 
   delegate :siren, to: :entreprise
