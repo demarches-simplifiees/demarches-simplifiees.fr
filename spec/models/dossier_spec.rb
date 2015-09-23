@@ -10,7 +10,6 @@ describe Dossier do
     it { is_expected.to have_db_column(:montant_projet) }
     it { is_expected.to have_db_column(:montant_aide_demande) }
     it { is_expected.to have_db_column(:date_previsionnelle).of_type(:date) }
-    it { is_expected.to have_db_column(:dossier_termine) }
     it { is_expected.to have_db_column(:created_at) }
     it { is_expected.to have_db_column(:updated_at) }
   end

@@ -67,6 +67,10 @@ RSpec.describe DossiersController, type: :controller do
           it 'links procedure to dossier' do
             expect(Dossier.last.procedure).to eq(Procedure.last)
           end
+
+          it 'state of dossier is draft' do
+            expect(Dossier.last.state).to eq('draft')
+          end
         end
 
         context 'with non existant siret' do
