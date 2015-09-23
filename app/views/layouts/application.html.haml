@@ -17,6 +17,11 @@
           %div{style: 'decorate:none; box-shadow:none; float:right; margin-top:8px'}
             = current_gestionnaire.email
             = link_to "Déconnexion", '/gestionnaires/sign_out', method: :delete, :class => 'btn btn-md'
+        - elsif user_signed_in?
+          %div.user{style: 'decorate:none; box-shadow:none; float:right; margin-top:8px'}
+            %i.fa.fa-user
+            = current_user.email
+            = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
 
       #flash_message.center
       - if flash.notice

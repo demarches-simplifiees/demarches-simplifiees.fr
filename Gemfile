@@ -59,6 +59,8 @@ gem 'chartkick'
 
 gem 'logstasher'
 
+gem "font-awesome-rails"
+
 group :test do
   gem 'capybara'
   gem 'factory_girl'

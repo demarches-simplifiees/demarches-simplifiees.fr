@@ -1,12 +1,17 @@
 Rails.application.routes.draw do
+
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'
+  }
+
   devise_for :gestionnaires, controllers: {
     sessions: 'gestionnaires/sessions'
-
   }, skip: [:password, :registrations]
 
 
-  root 'start#index'
+  root 'welcome#index'
 
+  get 'start' => 'start#index'
   get 'start/index'
   get 'start/error_siret'
   get 'start/error_login'

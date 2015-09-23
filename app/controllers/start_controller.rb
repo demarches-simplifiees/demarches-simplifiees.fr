@@ -1,4 +1,5 @@
 class StartController < ApplicationController
+  before_action :authenticate_user!
   def index
     get_procedure_infos
 
