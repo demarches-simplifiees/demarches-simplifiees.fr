@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature '_Commentaires_Flux Recapitulatif#Show Page' do
-  let(:dossier) { create(:dossier, :with_user) }
+  let(:dossier) { create(:dossier, :with_user, :with_procedure) }
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'mon_mail_de_commentaire@test.com' }
   let!(:commentaire) { create(:commentaire, dossier: dossier, email: email_commentaire, body: 'ma super description') }
@@ -33,14 +33,6 @@ feature '_Commentaires_Flux Recapitulatif#Show Page' do
 
     scenario 'Champs de texte' do
       expect(page).to have_selector('textarea[id=texte_commentaire][name=texte_commentaire]')
-    end
-
-    scenario 'Champs email' do
-      expect(page).to have_selector('input[id=email_commentaire][name=email_commentaire]')
-    end
-
-    scenario 'Champs email est prérempli' do
-      expect(page).to have_content(email_commentaire)
     end
   end
 end

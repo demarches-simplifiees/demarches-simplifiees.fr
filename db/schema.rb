@@ -44,8 +44,8 @@ ActiveRecord::Schema.define(version: 20150923101000) do
     t.string   "montant_aide_demande"
     t.integer  "procedure_id"
     t.date     "date_previsionnelle"
-    t.datetime "created_at",           default: '2015-09-22 09:25:29'
-    t.datetime "updated_at",           default: '2015-09-22 09:25:29'
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "state"
     t.integer  "user_id"
   end
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 20150923101000) do
     t.integer "type_de_piece_justificative_id"
   end
 
-  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
+  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_piece_jointe_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"

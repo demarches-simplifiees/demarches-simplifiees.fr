@@ -82,17 +82,17 @@ feature 'Admin/Dossier#Show Page' do
     #     end
     #   end
     # end
-
-    scenario 'la carte est bien présente' do
-      expect(page).to have_selector('#map_qp')
-    end
-
-    scenario 'la page des sources CSS de l\'API cart est chargée' do
-      expect(page).to have_selector('#sources_CSS_api_carto')
-    end
-
-    scenario 'la page des sources JS backend de l\'API cart est chargée' do
-      expect(page).to have_selector('#sources_JS_api_carto_backend')
-    end
+    #
+    # scenario 'la carte est bien présente' do
+    #   expect(page).to have_selector('#map_qp')
+    # end
+    #
+    # scenario 'la page des sources CSS de l\'API cart est chargée' do
+    #   expect(page).to have_selector('#sources_CSS_api_carto')
+    # end
+    #
+    # scenario 'la page des sources JS backend de l\'API cart est chargée' do
+    #   expect(page).to have_selector('#sources_JS_api_carto_backend')
+    # end
   end
 end

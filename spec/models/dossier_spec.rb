@@ -117,5 +117,258 @@ describe Dossier do
         end
       end
     end
+
+    #TODO revoir le nommage
+    describe '#next_step' do
+      let(:dossier) { create(:dossier) }
+      let(:role) { 'user' }
+      let(:action) { 'propose' }
+
+      subject { dossier.next_step! role, action }
+
+      context 'when action is not valid' do
+        let(:action) { 'test' }
+        it { expect{ subject }.to raise_error('action is not valid') }
+      end
+
+      context 'when role is not valid' do
+        let(:role) { 'test' }
+        it { expect{ subject }.to raise_error('role is not valid') }
+      end
+
+      context 'when dossier is at state draft' do
+        before do
+          dossier.draft!
+        end
+
+        context 'when user is connected' do
+          let(:role) { 'user' }
+
+          context 'when he updates dossier informations' do
+            let(:action) {'update'}
+
+            it { is_expected.to eq('draft') }
+          end
+
+          context 'when he posts a comment' do
+            let(:action) {'comment'}
+
+            it { is_expected.to eq('draft') }
+          end
+
+          context 'when he proposes a dossier' do
+            let(:action) { 'propose' }
+
+            it { is_expected.to eq('proposed') }
+          end
+        end
+      end
+
+      context 'when dossier is at state proposed' do
+        before do
+          dossier.proposed!
+        end
+
+        context 'when user is connect' do
+          let(:role) { 'user' }
+
+          context 'when is update dossier informations' do
+            let(:action) { 'update' }
+
+            it {is_expected.to eq('proposed')}
+          end
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it {is_expected.to eq('proposed')}
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('reply')}
+          end
+
+          context 'when is confirmed the dossier' do
+            let(:action) { 'confirme' }
+
+            it {is_expected.to eq('confirmed')}
+          end
+        end
+      end
+
+      context 'when dossier is at state reply' do
+        before do
+          dossier.reply!
+        end
+
+        context 'when user is connect' do
+          let(:role) { 'user' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('updated') }
+          end
+
+          context 'when is updated dossier informations' do
+            let(:action) { 'update' }
+
+            it {
+
+              is_expected.to eq('updated')
+            }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('reply')}
+          end
+
+          context 'when is confirmed the dossier' do
+            let(:action) { 'confirme' }
+
+            it {is_expected.to eq('confirmed')}
+          end
+        end
+      end
+
+      context 'when dossier is at state updated' do
+        before do
+          dossier.updated!
+        end
+
+        context 'when user is connect' do
+          let(:role) { 'user' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('updated')}
+          end
+
+          context 'when is updated dossier informations' do
+            let(:action) { 'update' }
+
+            it { is_expected.to eq('updated')}
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('reply')}
+          end
+
+          context 'when is confirmed the dossier' do
+            let(:action) { 'confirme' }
+
+            it {is_expected.to eq('confirmed')}
+          end
+        end
+      end
+
+      context 'when dossier is at state confirmed' do
+        before do
+          dossier.confirmed!
+        end
+
+        context 'when user is connect' do
+          let(:role) { 'user' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+            it { is_expected.to eq('confirmed') }
+          end
+
+          context 'when is deposed the dossier' do
+            let(:action) { 'depose' }
+
+            it { is_expected.to eq('deposited') }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('confirmed')}
+          end
+        end
+      end
+
+      context 'when dossier is at state deposited' do
+        before do
+          dossier.deposited!
+        end
+
+        context 'when user is connect' do
+          let(:role) { 'user' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('deposited') }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it {is_expected.to eq('deposited')}
+          end
+
+          context 'when is processed the dossier' do
+            let(:action) { 'process' }
+
+            it {is_expected.to eq('processed')}
+          end
+        end
+      end
+
+      context 'when dossier is at state processed' do
+        before do
+          dossier.processed!
+        end
+
+        context 'when user is connect' do
+          let(:role) { 'user' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('processed')}
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when is post a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('processed')}
+          end
+        end
+      end
+    end
   end
 end

@@ -36,13 +36,5 @@ feature 'add commentaire on backoffice' do
     scenario 'Champs de texte' do
       expect(page).to have_selector('textarea[id=texte_commentaire][name=texte_commentaire]')
     end
-
-    scenario 'Champs email' do
-      expect(page).to have_selector('input[id=email_commentaire][name=email_commentaire]')
-    end
-
-    scenario 'Champs email est prérempli' do
-      expect(page).to have_selector("input[id=email_commentaire][value='#{gestionnaire.email}']")
-    end
   end
 end

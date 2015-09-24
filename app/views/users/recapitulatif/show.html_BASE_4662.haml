@@ -1,0 +1,24 @@
+%h2
+  ='Récapitulatif'
+
+%div{style: 'text-align:center'}
+  -if request.referer != nil
+    -if (request.referer.include?'/description') && !(request.referer.include?'back_url=recapitulatif')
+      %h4.text-success Félicitation, votre demande a bien été enregistrée.
+
+      %h3{style: 'text-align:center; line-height:1.5em'}
+        ='Votre dossier est le '
+        %br
+        %span{id: 'dossier_id', style: 'font-weight:bold;', class: 'text-success'}
+          ="n°#{@dossier.id}"
+    -else
+      %h2#dossier_id{:class => 'text-info', :style => 'text-align:right'}
+        = "Dossier n°#{@dossier.id}"
+  -else
+    %h2#dossier_id{:class => 'text-info', :style => 'text-align:right'}
+      = "Dossier n°#{@dossier.id}"
+
+= render partial: '/dossiers/infos_dossier'
+%br
+
+= render partial: 'commentaires_flux'

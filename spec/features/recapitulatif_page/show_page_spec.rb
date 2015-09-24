@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'Recapitulatif#Show Page' do
-  let(:dossier) { create(:dossier, :with_user) }
+  let(:dossier) { create(:dossier, :with_user, :with_procedure) }
   let(:dossier_id) { dossier.id }
 
   before do
@@ -27,11 +27,11 @@ feature 'Recapitulatif#Show Page' do
     context 'les liens de modifications' do
       context 'lien description' do
         scenario 'le lien vers description est présent' do
-          expect(page).to have_css('#modif_description')
+          expect(page).to have_css('#maj_infos')
         end
 
         scenario 'le lien vers description est correct' do
-          expect(page).to have_selector("a[id=modif_description][href='/dossiers/#{dossier_id}/description?back_url=recapitulatif']")
+          expect(page).to have_selector("a[id=maj_infos][href='/dossiers/#{dossier_id}/description?back_url=recapitulatif']")
         end
       end
     end
