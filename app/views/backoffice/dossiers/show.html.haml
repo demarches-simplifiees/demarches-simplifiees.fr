@@ -1,50 +1,21 @@
 #backoffice_dossier_show
-%h1#dossier_id.text-info{ :style => 'text-align:right'}
-  = "Dossier n°#{@dossier.id}"
+  %h1#dossier_id.text-info{ :style => 'text-align:right'}
+    = "Dossier n°#{@dossier.id}"
 
-%script{type: 'text/javascript'}
-  ="url_carte = '#{@dossier.id}/'"
-  ="ref_dossier = '#{@dossier.ref_dossier_carto}'"
+  %h3{:class => 'text-success', :style => 'text-align:right'}
+    = @dossier.state_fr
 
-= render partial: '/dossiers/infos_entreprise'
-%br
-= render partial: '/dossiers/infos_dossier'
-%br
-%br
 
-.content.row
-  #map_qp.col-lg-6.col-md-6{style: 'height:500px'}
-  #pieces_justificatives.col-lg-6.col-md-6
-    %h3.text-info Liste des pièces justificatives
-    %br
-    %table.table
-      -if @procedure.lien_demarche != nil
-        %tr{id: "piece_justificative_0"}
-          %th{class:'col-lg-6'}
-            ='CERFA'
-          %td.col-lg-4.col-md-4
-            - if !@dossier.cerfa.empty?
-              %a{ href: "#{@dossier.cerfa.content}", target: '_blank' } Consulter
-            - else
-              = 'Pièce non fournie'
+  = render partial: '/dossiers/infos_entreprise'
+  %br
+  = render partial: '/dossiers/infos_dossier'
+  %br
+  %br
 
-      - @dossier.pieces_justificatives.each do |piece_justificative|
-        %tr{ id: "piece_justificative_#{piece_justificative.type}" }
-          %th.col-lg-6
-            = piece_justificative.libelle
-          %td.col-lg-4.col-md-4
-            - if piece_justificative.api_entreprise
-              %a{ href: '' } Récupérer
-            - elsif !piece_justificative.empty?
-              %a{ href: "#{piece_justificative.content}", target: '_blank' } Consulter
-            - else
-              = 'Pièce non fournie'
+  = render partial: '/users/recapitulatif/commentaires_flux'
+  %br
+  %br
 
-  = render partial: '/carte/carte_sources_CSS'
-= render partial: '/carte/carte_sources_JS_backend'
-%br
-
-= render partial: '/recapitulatif/commentaires_flux'
-%br
-%br
-
+-#%script{type: 'text/javascript'}
+-#  ="url_carte = '#{@dossier.id}/'"
+-#  ="ref_dossier = '#{@dossier.ref_dossier_carto}'"

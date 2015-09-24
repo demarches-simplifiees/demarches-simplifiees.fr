@@ -16,6 +16,7 @@
  *= require_self
  *= require bootstrap-datepicker3
  *= require leaflet
+ *= require font-awesome
  */
 @import "bootstrap-sprockets";
 @import "bootstrap";
@@ -46,13 +47,7 @@ body {
 }
 
 .description {
-  border-color: rgba(200, 200, 200, 0.6);
-  border-style: solid;
-  border-radius: 5px;
-  border-width: 1px;
   padding: 10px;
-  background-color: rgb(245, 245, 245);
-  margin-top: 10px;
 }
 
 .btn-file {

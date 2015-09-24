@@ -1,16 +1,17 @@
 require 'spec_helper'
 
 feature 'Description#Show Page' do
-  let(:dossier) { create(:dossier, :with_procedure) }
+  let(:user) { create(:user) }
+  let(:dossier) { create(:dossier, :with_procedure, user: user) }
   let(:dossier_id) { dossier.id }
 
   before do
-    visit "/dossiers/#{dossier_id}/description"
+    visit users_dossier_description_path(dossier_id: dossier_id)
   end
 
   context 'tous les attributs sont présents sur la page' do
-    scenario 'Le formulaire envoie vers /dossiers/:dossier_id/description en #POST' do
-      expect(page).to have_selector("form[action='/dossiers/#{dossier_id}/description'][method=post]")
+    scenario 'Le formulaire envoie vers /users/dossiers/:dossier_id/description en #POST' do
+      expect(page).to have_selector("form[action='/users/dossiers/#{dossier_id}/description'][method=post]")
     end
 
     scenario 'Nom du projet' do
@@ -62,7 +63,7 @@ feature 'Description#Show Page' do
 
   context 'si la page précédente est recapitularif' do
     before do
-      visit "/dossiers/#{dossier_id}/description?back_url=recapitulatif"
+      visit "/users/dossiers/#{dossier_id}/description?back_url=recapitulatif"
     end
 
     scenario 'le bouton "Terminer" n\'est pas présent' do
@@ -78,7 +79,7 @@ feature 'Description#Show Page' do
     end
 
     scenario 'le lien de retour au récapitulatif est présent' do
-      expect(page).to have_selector("a[href='/dossiers/#{dossier_id}/recapitulatif']")
+      expect(page).to have_selector("a[href='/users/dossiers/#{dossier_id}/recapitulatif']")
     end
   end
 
@@ -89,7 +90,8 @@ feature 'Description#Show Page' do
              description: 'Description de test',
              montant_projet: 12_000,
              montant_aide_demande: 3000,
-             date_previsionnelle: '20/01/2016')
+             date_previsionnelle: '20/01/2016',
+             user: user)
     end
 
     scenario 'Nom du projet' do

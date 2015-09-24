@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'add commentaire on backoffice' do
-  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
+  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, :with_user) }
   let(:dossier_id) { dossier.id }
   let!(:commentaire) { create(:commentaire, dossier: dossier, email: 'toto@toto.com') }
   let(:email_commentaire) { 'test@test.com' }
@@ -35,14 +35,6 @@ feature 'add commentaire on backoffice' do
 
     scenario 'Champs de texte' do
       expect(page).to have_selector('textarea[id=texte_commentaire][name=texte_commentaire]')
-    end
-
-    scenario 'Champs email' do
-      expect(page).to have_selector('input[id=email_commentaire][name=email_commentaire]')
-    end
-
-    scenario 'Champs email est prérempli' do
-      expect(page).to have_selector("input[id=email_commentaire][value='#{gestionnaire.email}']")
     end
   end
 end

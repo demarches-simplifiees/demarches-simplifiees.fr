@@ -1,7 +1,8 @@
 require 'spec_helper'
 
-describe DescriptionController, type: :controller do
-  let(:dossier) { create(:dossier, :with_procedure) }
+describe Users::DescriptionController, type: :controller do
+  let(:user) { create(:user) }
+  let(:dossier) { create(:dossier, :with_procedure, user: user) }
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10 }
 
@@ -13,7 +14,7 @@ describe DescriptionController, type: :controller do
 
     it 'redirection vers start si mauvais dossier ID' do
       get :show, dossier_id: bad_dossier_id
-      expect(response).to redirect_to(controller: :start, action: :error_dossier)
+      expect(response).to redirect_to(controller: :siret)
     end
   end
 
@@ -37,7 +38,7 @@ describe DescriptionController, type: :controller do
       # TODO separer en deux tests : check donnees et check redirect
       it 'Premier enregistrement des données' do
         post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle
-        expect(response).to redirect_to("/dossiers/#{dossier_id}/recapitulatif")
+        expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
       end
 
       # TODO changer les valeurs des champs et check in bdd
@@ -63,7 +64,7 @@ describe DescriptionController, type: :controller do
         end
 
         it 'Redirection vers la page récapitulatif' do
-          expect(response).to redirect_to("/dossiers/#{dossier_id}/recapitulatif")
+          expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
         end
       end
     end

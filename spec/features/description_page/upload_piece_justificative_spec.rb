@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 feature 'user is on description page' do
-  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
+  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, :with_user) }
   before do
-    visit dossier_description_path dossier
+    visit users_dossier_description_path dossier
   end
   it { expect(page).to have_css('#description_page') }
 
