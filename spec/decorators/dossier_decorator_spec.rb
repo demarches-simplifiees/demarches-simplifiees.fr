@@ -19,7 +19,7 @@ describe DossierDecorator do
 
     it 'proposed is propose' do
       dossier.proposed!
-      expect(subject).to eq('Proposé')
+      expect(subject).to eq('Soumis')
     end
 
     it 'reply is repondu' do

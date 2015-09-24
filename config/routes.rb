@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       post 'description' => 'description#create'
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/propose' => 'recapitulatif#propose'
-      post '/recapitulatif/depose' => 'recapitulatif#propose'
+      post '/recapitulatif/depose' => 'recapitulatif#depose'
       get '/demande' => 'demandes#show'
       post '/demande' => 'demandes#update'
       post '/commentaire' => 'commentaires#create'
