@@ -35,13 +35,5 @@ describe 'recapitulatif/_commentaires_flux.html.haml', type: :view do
     it 'Champs de texte' do
       expect(rendered).to have_selector('textarea[id=texte_commentaire][name=texte_commentaire]')
     end
-
-    it 'Champs email' do
-      expect(rendered).to have_selector('input[id=email_commentaire][name=email_commentaire]')
-    end
-
-    it 'Champs email est prérempli' do
-      expect(rendered).to have_content(email_commentaire)
-    end
   end
 end
