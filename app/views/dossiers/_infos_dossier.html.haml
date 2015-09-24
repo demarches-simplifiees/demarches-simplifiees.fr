@@ -1,9 +1,30 @@
 = javascript_include_tag "https://code.highcharts.com/highcharts.js", "chartkick"
-.row#infos_dossier
-  .col-md-6
-    %h4.text-info
-      = @dossier.nom_projet
-    %div
+
+#infos_dossier
+  %div.row
+    .col-lg-6.col-md-6
+      %h3.text-info
+        = @dossier.nom_projet
+
+      %br
+      %div.row
+        .col-lg-6.col-md-6
+          %h4 Montant total
+          %p{style:'margin-left:5%'}
+            =number_to_currency(@dossier.montant_projet.to_f, :unit => " ", :separator => ",", :delimiter => " ")
+            !='&euro;'
+
+        .col-lg-6.col-md-6
+          %h4 Début du projet souhaité
+          %p{style:'margin-left:5%'}
+            = @dossier.date_fr
+      %div.row
+        .col-lg-6.col-md-6
+          %h4 Montant souhaité
+          %p{style:'margin-left:5%'}
+            =number_to_currency(@dossier.montant_aide_demande.to_f, :unit => " ", :separator => ",", :delimiter => " ")
+            !='&euro;'
+      %br
       .description
         - begin
           - @dossier.description.split(/(?:\n\r?|\r\n?')/).each do |line|
@@ -11,28 +32,11 @@
             %br
         - rescue
           =''
-      %br
-      .col-lg-6.col-md-6
-        %h4 Montant total
 
-        %p
-          =number_to_currency(@dossier.montant_projet.to_f, :unit => " ", :separator => ",", :delimiter => " ")
-          !='&euro;'
+    .col-lg-6.col-md-6
+      =render partial: '/dossiers/pieces_justificatives'
+      -#= pie_chart({"Montant à charge #{(100 - @dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => (@dossier.montant_projet.to_f - @dossier.montant_aide_demande.to_f), "Montant souhaité #{(@dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => @dossier.montant_aide_demande})
 
-      .col-lg-6.col-md-6
-        %h4 Début du projet souhaité
-        %p
-          = @dossier.date_fr
-
-
-      / -if !request.url.include?('admin')
-      - unless gestionnaire_signed_in?
-        .col-lg-6.col-md-6
-          %br
-          %br
-          %a#modif_description{href: "/dossiers/#{@dossier.id}/description?back_url=recapitulatif"} Modifier la description
-
-
-  .col-md-6
-    = pie_chart({"Montant à charge #{(100 - @dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => (@dossier.montant_projet.to_f - @dossier.montant_aide_demande.to_f), "Montant souhaité #{(@dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => @dossier.montant_aide_demande})
-
+  %div.row{style: 'text-align:right'}
+    %a#maj_infos.btn.btn-info{href: "/dossiers/#{@dossier.id}/description?back_url=recapitulatif"}
+      = 'Editer mon dossier'

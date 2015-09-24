@@ -2,6 +2,7 @@ class RecapitulatifController < ApplicationController
   def show
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate
+    @procedure = @dossier.procedure
 
     # mettre dans le modele
     @commentaires = @dossier.commentaires.order(created_at: :desc)
