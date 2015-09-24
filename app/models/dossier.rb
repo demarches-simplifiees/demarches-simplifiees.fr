@@ -1,10 +1,10 @@
 class Dossier < ActiveRecord::Base
   enum state: { draft: 'draft',
-                submitted: 'submitted',
+                proposed: 'proposed',
                 reply: 'reply',
                 updated: 'updated',
                 confirmed: 'confirmed',
-                filed: 'filed',
+                deposited: 'deposited',
                 processed: 'processed' }
 
   has_one :etablissement
@@ -45,6 +45,59 @@ class Dossier < ActiveRecord::Base
     else
       'tps-dev'
     end
+  end
+
+  def next_step! role, action
+    unless ['propose', 'reply', 'update', 'comment', 'confirme', 'depose', 'process'].include?(action)
+      fail 'action is not valid'
+    end
+
+    unless ['user', 'gestionnaire'].include?(role)
+      fail 'role is not valid'
+    end
+
+    if role == 'user'
+      case action
+        when 'propose'
+          if draft?
+            proposed!
+          end
+        when 'depose'
+          if confirmed?
+            deposited!
+          end
+        when 'update'
+          if reply?
+            updated!
+          end
+        when 'comment'
+          if reply?
+            updated!
+          end
+      end
+    elsif role == 'gestionnaire'
+      case action
+        when 'comment'
+          if updated?
+            reply!
+          elsif proposed?
+            reply!
+          end
+        when 'confirme'
+          if updated?
+            confirmed!
+          elsif reply?
+            confirmed!
+          elsif proposed?
+            confirmed!
+          end
+        when 'process'
+          if deposited?
+            processed!
+          end
+      end
+    end
+    state
   end
 
   private
