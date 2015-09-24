@@ -8,11 +8,19 @@
   %div.col-md-2.col-lg-2
     %h2#dossier_id{:class => 'text-info', :style => 'text-align:right; margin-bottom:15px'}
       = "Dossier n°#{@dossier.id}"
-    -#%h3{:class => 'text-success', :style => 'text-align:right'}
-    -#  = @dossier.state_fr
+
     - unless gestionnaire_signed_in?
-      %button#action_button.btn.btn-success
-        = 'Soumettre mon dossier'
+      -if @dossier.draft?
+        = form_tag(url_for({controller: :recapitulatif, action: :propose, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+          %button#action_button.btn.btn-success
+            = 'Soumettre mon dossier'
+      -elsif @dossier.confirmed?
+        = form_tag(url_for({controller: :recapitulatif, action: :depose, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+          %button#action_button.btn.btn-success
+            = 'Déposer mon dossier'
+      -else
+        %h3{:class => 'text-success', :style => 'text-align:right'}
+          = @dossier.state_fr
 
 %br
 

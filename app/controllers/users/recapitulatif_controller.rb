@@ -1,6 +1,5 @@
 class Users::RecapitulatifController < UsersController
   def show
-
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate
     @procedure = @dossier.procedure
@@ -15,5 +14,23 @@ class Users::RecapitulatifController < UsersController
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(controller: :siret)
+  end
+
+  def propose
+    show
+
+    @dossier.next_step! 'user', 'propose'
+    flash.notice = 'Dossier soumis avec succès.'
+
+    render 'show'
+  end
+
+  def depose
+    show
+
+    @dossier.next_step! 'user', 'depose'
+    flash.notice = 'Dossier déposé avec succès.'
+
+    render 'show'
   end
 end

@@ -28,4 +28,20 @@ describe Backoffice::DossiersController, type: :controller do
       it { is_expected.to redirect_to('/gestionnaires/sign_in') }
     end
   end
+
+  describe 'POST #confirme' do
+    context 'le gestionnaire valide un dossier' do
+      before do
+        dossier.proposed!
+        sign_in gestionnaire
+      end
+
+      it 'dossier change is state for confirmed' do
+        post :confirme, dossier_id: dossier_id
+
+        dossier.reload
+        expect(dossier.state).to eq('confirmed')
+      end
+    end
+  end
 end

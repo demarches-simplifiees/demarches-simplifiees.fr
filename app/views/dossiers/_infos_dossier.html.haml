@@ -38,5 +38,14 @@
       -#= pie_chart({"Montant à charge #{(100 - @dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => (@dossier.montant_projet.to_f - @dossier.montant_aide_demande.to_f), "Montant souhaité #{(@dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => @dossier.montant_aide_demande})
 
   %div.row{style: 'text-align:right'}
-    %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@dossier.id}/description?back_url=recapitulatif"}
-      = 'Editer mon dossier'
+    -unless gestionnaire_signed_in?
+      -if !@dossier.confirmed? && !@dossier.deposited? && !@dossier.processed?
+        %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@dossier.id}/description?back_url=recapitulatif"}
+          = 'Editer mon dossier'
+
+    -unless user_signed_in?
+      -if !@dossier.confirmed? && !@dossier.deposited? && !@dossier.processed?
+        = form_tag(url_for({controller: 'backoffice/dossiers', action: :confirme, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+          %button#action_button.btn.btn-success
+            = 'Valider le dossier'
+

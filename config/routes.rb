@@ -19,6 +19,8 @@ Rails.application.routes.draw do
       get '/description/error' => 'description#error'
       post 'description' => 'description#create'
       get '/recapitulatif' => 'recapitulatif#show'
+      post '/recapitulatif/propose' => 'recapitulatif#propose'
+      post '/recapitulatif/depose' => 'recapitulatif#propose'
       get '/demande' => 'demandes#show'
       post '/demande' => 'demandes#update'
       post '/commentaire' => 'commentaires#create'
@@ -49,7 +51,9 @@ Rails.application.routes.draw do
 
 namespace :backoffice do
   get 'sign_in' => '/gestionnaires/sessions#new'
-  resources :dossiers, only: [:show]
+  resources :dossiers do
+    post 'confirme' => 'dossiers#confirme'
+  end
   resources :commentaires, only: [:create]
 end
   # The priority is based upon order of creation: first created -> highest priority.
