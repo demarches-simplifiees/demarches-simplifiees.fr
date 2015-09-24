@@ -14,20 +14,20 @@ describe 'dossiers/show.html.haml', type: :view do
     expect(rendered).to have_css('#dossier_autorisation_donnees')
   end
 
-  context 'sur la page d\'information d\'un SIRET' do
-    it 'Le formulaire envoie vers /dossiers/:dossier_id en #POST' do
-      expect(rendered).to have_selector("form[action='/dossiers/#{dossier.id}'][method=post]")
+  context "sur la page d'information d'un SIRET" do
+    it 'Le formulaire envoie vers /users/dossiers/:dossier_id en #POST' do
+      expect(rendered).to have_selector("form[action='/users/dossiers'][method=post]")
     end
 
-    it 'la checkbox d\'information est présente' do
+    it "la checkbox d'information est présente" do
       expect(rendered).to have_css('#dossier_autorisation_donnees')
     end
 
-    it 'le texte d\'information des droits est correct' do
+    it "le texte d'information des droits est correct" do
       expect(rendered).to have_content("J'autorise les organismes publics à vérifier les informations de mon entreprise auprès des administrations concernées. Ces informations resteront strictement confidentielles.")
     end
 
-    it 'les informations de l\'entreprise sont présents' do
+    it "les informations de l'entreprise sont présents" do
       expect(rendered).to have_content('Siret')
     end
 

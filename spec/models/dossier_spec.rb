@@ -21,6 +21,7 @@ describe Dossier do
     it { is_expected.to have_one(:cerfa) }
     it { is_expected.to have_one(:etablissement) }
     it { is_expected.to have_one(:entreprise) }
+    it { is_expected.to belong_to(:user) }
   end
 
   describe 'delegation' do

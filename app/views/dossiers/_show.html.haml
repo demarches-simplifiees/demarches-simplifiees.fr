@@ -1,0 +1,13 @@
+.container#recap_info_entreprise
+  %h2 Récapitulatif de vos informations <em id="insee_infogreffe" class='small'>(récupérées auprès de l'INSEE et d'INFOGREFFE)</em>
+  %br
+
+  %div.row
+    = render partial: '/dossiers/infos_entreprise'
+  %br
+  = form_for @dossier, url: { controller: '/users/dossiers', action: :update } do |f|
+    %label{ style:'font-weight:normal' }
+      = f.check_box :autorisation_donnees
+      J'autorise les organismes publics à vérifier les informations de mon entreprise auprès des administrations concernées. Ces informations resteront strictement confidentielles.
+    %br
+    = f.submit 'Etape suivante', class: "btn btn btn-info", style: 'float:right', id: 'etape_suivante'

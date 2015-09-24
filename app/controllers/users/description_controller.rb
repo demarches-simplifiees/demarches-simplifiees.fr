@@ -1,4 +1,4 @@
-class DescriptionController < ApplicationController
+class Users::DescriptionController < ApplicationController
   def show
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate
@@ -6,7 +6,8 @@ class DescriptionController < ApplicationController
     @procedure = @dossier.procedure
 
   rescue ActiveRecord::RecordNotFound
-    redirect_to url_for(controller: :start, action: :error_dossier)
+    flash.alert = t('errors.messages.dossier_not_found')
+    redirect_to url_for(controller: :siret)
   end
 
   def error

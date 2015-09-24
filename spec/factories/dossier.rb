@@ -17,5 +17,11 @@ FactoryGirl.define do
         dossier.procedure = procedure
       end
     end
+
+    trait :with_user do
+      after(:build) do |dossier, _evaluator|
+        dossier.user = create(:user)
+      end
+    end
   end
 end

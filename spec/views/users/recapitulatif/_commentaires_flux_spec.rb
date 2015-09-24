@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe 'recapitulatif/_commentaires_flux.html.haml', type: :view do
-  let(:dossier) { create(:dossier) }
+describe 'users/recapitulatif/_commentaires_flux.html.haml', type: :view do
+  let(:dossier) { create(:dossier, :with_procedure) }
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'mon_mail_de_commentaire@test.com' }
   let!(:commentaire) { create(:commentaire, dossier: dossier, email: email_commentaire, body: 'ma super description') }
@@ -29,7 +29,7 @@ describe 'recapitulatif/_commentaires_flux.html.haml', type: :view do
 
   context 'Affichage du formulaire de commentaire' do
     it 'Le formulaire envoie vers /dossiers/:dossier_id/commentaire en #POST' do
-      expect(rendered).to have_selector("form[action='/dossiers/#{dossier_id}/commentaire'][method=post]")
+      expect(rendered).to have_selector("form[action='/users/dossiers/#{dossier_id}/commentaire'][method=post]")
     end
 
     it 'Champs de texte' do

@@ -4,7 +4,7 @@ class CarteController < ApplicationController
   def show
     @dossier = current_dossier
   rescue ActiveRecord::RecordNotFound
-    redirect_to url_for(controller: :start, action: :error_dossier)
+    redirect_to url_for(controller: :siret, action: :error_dossier)
   end
 
   def save_ref_api_carto

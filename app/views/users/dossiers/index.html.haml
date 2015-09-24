@@ -1,0 +1,10 @@
+%h1 Vos dossiers :
+
+%table.table
+  %thead
+    %th Nom du Projet
+    %th Mise à jour
+  - @dossiers.each do |dossier|
+    %tr
+      %td= dossier.nom_projet
+      %td= dossier.last_update

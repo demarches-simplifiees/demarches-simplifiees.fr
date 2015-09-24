@@ -1,33 +1,48 @@
 Rails.application.routes.draw do
+
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'
+  }
+
   devise_for :gestionnaires, controllers: {
     sessions: 'gestionnaires/sessions'
-
   }, skip: [:password, :registrations]
 
 
-  root 'start#index'
+  # root 'welcome#index'
+  root 'users/dossiers#index'
 
-  get 'start/index'
-  get 'start/error_siret'
-  get 'start/error_login'
-  get 'start/error_dossier'
+  namespace :users do
+    get 'siret' => 'siret#index'
+    resources :dossiers do
+      get '/description' => 'description#show'
+      get '/description/error' => 'description#error'
+      post 'description' => 'description#create'
+      get '/recapitulatif' => 'recapitulatif#show'
+      get '/demande' => 'demandes#show'
+      post '/demande' => 'demandes#update'
+      post '/commentaire' => 'commentaires#create'
+    end
+    resource :dossiers
 
-  resources :dossiers do
-    get '/demande' => 'demandes#show'
-    post '/demande' => 'demandes#update'
-
-    get '/carte/position' => 'carte#get_position'
-    get '/carte' => 'carte#show'
-    post '/carte' => 'carte#save_ref_api_carto'
-
-    get '/description' => 'description#show'
-    get '/description/error' => 'description#error'
-    post 'description' => 'description#create'
-
-    get '/recapitulatif' => 'recapitulatif#show'
-
-    post '/commentaire' => 'commentaires#create'
   end
+
+
+  # resources :dossiers do
+
+
+  #   # get '/carte/position' => 'carte#get_position'
+  #   # get '/carte' => 'carte#show'
+  #   # post '/carte' => 'carte#save_ref_api_carto'
+
+  #   # get '/description' => 'description#show'
+  #   # get '/description/error' => 'description#error'
+  #   # post 'description' => 'description#create'
+
+
+  #   post '/commentaire' => 'commentaires#create'
+
+  # end
 
 
   get 'backoffice' => 'backoffice#index'

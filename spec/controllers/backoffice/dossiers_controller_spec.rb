@@ -19,7 +19,7 @@ describe Backoffice::DossiersController, type: :controller do
 
       it "le numéro de dossier n'existe pas" do
         get :show, id: bad_dossier_id
-        expect(response).to redirect_to('/start/error_dossier')
+        expect(response).to redirect_to('/backoffice')
       end
     end
 

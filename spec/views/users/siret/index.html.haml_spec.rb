@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'start/index.html.haml', type: :view do
+describe 'users/siret/index.html.haml', type: :view do
   let(:procedure) { create(:procedure, libelle: 'Demande de subvention') }
   before do
     assign(:procedure, procedure)
@@ -13,7 +13,7 @@ describe 'start/index.html.haml', type: :view do
 
   context 'dans la section professionnel' do
     it 'le formulaire envoie vers /dossiers en #POST' do
-      expect(rendered).to have_selector("form[action='/dossiers'][method=post]")
+      expect(rendered).to have_selector("form[action='/users/dossiers'][method=post]")
     end
 
     it 'le champs "Numéro SIRET" est présent' do
