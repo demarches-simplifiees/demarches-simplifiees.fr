@@ -38,5 +38,5 @@
       -#= pie_chart({"Montant à charge #{(100 - @dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => (@dossier.montant_projet.to_f - @dossier.montant_aide_demande.to_f), "Montant souhaité #{(@dossier.montant_aide_demande.to_f/@dossier.montant_projet.to_f*100).round(2)}%" => @dossier.montant_aide_demande})
 
   %div.row{style: 'text-align:right'}
-    %a#maj_infos.btn.btn-info{href: "/dossiers/#{@dossier.id}/description?back_url=recapitulatif"}
+    %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@dossier.id}/description?back_url=recapitulatif"}
       = 'Editer mon dossier'
