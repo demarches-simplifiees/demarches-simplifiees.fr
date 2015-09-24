@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'user is on description page' do
-  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
+  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, :with_user) }
   before do
     visit users_dossier_description_path dossier
   end

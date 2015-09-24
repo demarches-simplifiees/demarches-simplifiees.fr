@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Dossier do
+  let(:user) { create(:user) }
   describe 'database columns' do
     it { is_expected.to have_db_column(:description) }
     it { is_expected.to have_db_column(:autorisation_donnees) }
@@ -54,7 +55,7 @@ describe Dossier do
   end
 
   describe 'methods' do
-    let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
+    let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, user: user) }
 
     let(:entreprise) { dossier.entreprise }
     let(:etablissement) { dossier.etablissement }
@@ -71,7 +72,7 @@ describe Dossier do
 
     describe 'creation' do
       it 'create default cerfa' do
-        expect { described_class.create }.to change { Cerfa.count }.by(1)
+        expect { described_class.create(user: user) }.to change { Cerfa.count }.by(1)
       end
 
       it 'link cerfa to dossier' do
@@ -94,7 +95,7 @@ describe Dossier do
 
     describe '#build_default_pieces_justificatives' do
       context 'when dossier is linked to a procedure' do
-        let(:dossier) { create(:dossier, :with_procedure) }
+        let(:dossier) { create(:dossier, :with_procedure, user: user) }
         it 'build all pieces justificatives needed' do
           expect(dossier.pieces_justificatives.count).to eq(2)
         end
@@ -102,7 +103,7 @@ describe Dossier do
     end
 
     describe '#save' do
-      subject { create(:dossier, procedure_id: nil) }
+      subject { create(:dossier, procedure_id: nil, user: user) }
       context 'when is linked to a procedure' do
         it 'creates default pieces justificatives' do
           expect(subject).to receive(:build_default_pieces_justificatives)

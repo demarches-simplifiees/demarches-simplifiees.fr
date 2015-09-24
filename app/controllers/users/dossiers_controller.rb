@@ -18,7 +18,7 @@ class Users::DossiersController < UsersController
     procedure = Procedure.find(params['procedure_id'])
     @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(siret).to_params)
     @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
-    @dossier = Dossier.create
+    @dossier = Dossier.create(user: current_user)
     @dossier.draft!
 
     @dossier.procedure = procedure

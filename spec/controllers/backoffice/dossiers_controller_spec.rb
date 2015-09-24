@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Backoffice::DossiersController, type: :controller do
-  let(:dossier) { create(:dossier, :with_entreprise) }
+  let(:dossier) { create(:dossier, :with_entreprise, :with_user) }
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10 }
   let(:gestionnaire) { create(:gestionnaire) }

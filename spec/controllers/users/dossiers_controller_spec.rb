@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Users::DossiersController, type: :controller do
+  let(:user) { create(:user) }
   describe '.index' do
     subject { get :index }
     context 'when user is not logged in' do
@@ -14,7 +15,7 @@ describe Users::DossiersController, type: :controller do
       it { is_expected.to have_http_status(:success) }
     end
   end
-    let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
+  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, user: user) }
   let(:procedure) { create(:procedure) }
   let(:dossier_id) { dossier.id }
   let(:siret_not_found) { 999_999_999_999 }
@@ -51,10 +52,11 @@ describe Users::DossiersController, type: :controller do
     end
 
     describe 'professionnel fills form' do
+      let(:user) { create(:user) }
       context 'when pro_dossier_id is empty' do
         context 'with valid siret ' do
           before do
-            sign_in create(:user)
+            sign_in user
           end
 
           subject  { post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last }
@@ -69,7 +71,13 @@ describe Users::DossiersController, type: :controller do
           end
 
           it 'links entreprise to dossier' do
+            subject
             expect(Entreprise.last.dossier).to eq(Dossier.last)
+          end
+
+          it "links dossier to user" do
+            subject
+            expect(Dossier.last.user).to eq(user)
           end
 
           it 'creates etablissement for dossier' do

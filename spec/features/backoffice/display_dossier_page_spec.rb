@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 feature 'Admin/Dossier#Show Page' do
-  let!(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
+  let(:user) { create(:user) }
+  let!(:dossier) { create(:dossier, :with_entreprise, :with_procedure, user: user) }
   let(:dossier_id) { dossier.id }
 
   before do

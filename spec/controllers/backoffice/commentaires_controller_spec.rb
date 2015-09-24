@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Backoffice::CommentairesController, type: :controller do
-  let(:dossier) { create(:dossier) }
+  let(:dossier) { create(:dossier, :with_user) }
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'test@test.com' }
   let(:texte_commentaire) { 'Commentaire de test' }

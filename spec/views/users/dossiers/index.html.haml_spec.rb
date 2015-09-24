@@ -3,8 +3,8 @@ require 'spec_helper'
 describe 'users/dossiers/index.html.haml', type: :view do
 
   describe 'list dossiers' do
-    let(:dossier1) { create(:dossier).decorate }
-    let(:dossier2) { create(:dossier).decorate }
+    let(:dossier1) { create(:dossier, :with_user).decorate }
+    let(:dossier2) { create(:dossier, :with_user).decorate }
     before do
       assign(:dossiers, [dossier1, dossier2])
       render

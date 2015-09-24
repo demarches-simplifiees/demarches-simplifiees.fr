@@ -28,7 +28,7 @@ class Dossier < ActiveRecord::Base
   validates :montant_projet, presence: true, allow_blank: false, allow_nil: true
   validates :montant_aide_demande, presence: true, allow_blank: false, allow_nil: true
   validates :date_previsionnelle, presence: true, allow_blank: false,  unless: Proc.new { description.nil? }
-
+  validates :user, presence: true
 
   def retrieve_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last

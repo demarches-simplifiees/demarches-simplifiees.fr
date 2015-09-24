@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'backoffice/index.html.haml', type: :view do
   let!(:procedure) { create(:procedure) }
-  let!(:decorated_dossier) { create(:dossier, procedure: procedure).decorate }
+  let!(:decorated_dossier) { create(:dossier, :with_user, procedure: procedure).decorate }
   before do
     assign(:dossiers, [decorated_dossier])
     render

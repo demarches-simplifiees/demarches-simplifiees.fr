@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 feature 'Description#Show Page' do
-  let(:dossier) { create(:dossier, :with_procedure) }
+  let(:user) { create(:user) }
+  let(:dossier) { create(:dossier, :with_procedure, user: user) }
   let(:dossier_id) { dossier.id }
 
   before do
@@ -89,7 +90,8 @@ feature 'Description#Show Page' do
              description: 'Description de test',
              montant_projet: 12_000,
              montant_aide_demande: 3000,
-             date_previsionnelle: '20/01/2016')
+             date_previsionnelle: '20/01/2016',
+             user: user)
     end
 
     scenario 'Nom du projet' do

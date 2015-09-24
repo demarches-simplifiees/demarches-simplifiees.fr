@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe Users::DescriptionController, type: :controller do
-  let(:dossier) { create(:dossier, :with_procedure) }
+  let(:user) { create(:user) }
+  let(:dossier) { create(:dossier, :with_procedure, user: user) }
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10 }
 

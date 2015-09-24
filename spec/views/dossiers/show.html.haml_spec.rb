@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe 'dossiers/show.html.haml', type: :view do
-  let(:dossier) { create(:dossier, :with_entreprise) }
+  let(:user) { create(:user) }
+  let(:dossier) { create(:dossier, :with_entreprise, user: user) }
 
   before do
     assign(:dossier, dossier)
