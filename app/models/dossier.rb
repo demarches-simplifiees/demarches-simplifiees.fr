@@ -7,13 +7,13 @@ class Dossier < ActiveRecord::Base
       deposited: 'deposited',
       processed: 'processed' }
 
-  has_one :etablissement
-  has_one :entreprise
-  has_one :cerfa
-  has_many :pieces_justificatives
+  has_one :etablissement, dependent: :destroy
+  has_one :entreprise, dependent: :destroy
+  has_one :cerfa, dependent: :destroy
+  has_many :pieces_justificatives, dependent: :destroy
   belongs_to :procedure
   belongs_to :user
-  has_many :commentaires
+  has_many :commentaires, dependent: :destroy
 
   delegate :siren, to: :entreprise
   delegate :siret, to: :etablissement
