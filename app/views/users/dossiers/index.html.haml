@@ -6,5 +6,6 @@
     %th Mise à jour
   - @dossiers.each do |dossier|
     %tr
-      %td= dossier.nom_projet
+      %td
+        = link_to(dossier.nom_projet, users_dossier_recapitulatif_path(dossier))
       %td= dossier.last_update
