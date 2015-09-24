@@ -120,7 +120,7 @@ describe Dossier do
 
     #TODO revoir le nommage
     describe '#next_step' do
-      let(:dossier) { create(:dossier) }
+      let(:dossier) { create(:dossier, :with_user) }
       let(:role) { 'user' }
       let(:action) { 'propose' }
 
