@@ -1,7 +1,7 @@
 class Users::DossiersController < UsersController
   before_action :authenticate_user!
   def index
-    @dossiers = Dossier.all.decorate
+    @dossiers = current_user.dossiers.decorate
   end
   def show
 
