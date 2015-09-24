@@ -1,11 +1,11 @@
 class Dossier < ActiveRecord::Base
   enum state: { draft: 'draft',
-                submitted: 'submitted',
-                reply: 'reply',
-                updated: 'updated',
-                confirmed: 'confirmed',
-                filed: 'filed',
-                processed: 'processed' }
+      proposed: 'proposed',
+      reply: 'reply',
+      updated: 'updated',
+      confirmed: 'confirmed',
+      deposited: 'deposited',
+      processed: 'processed' }
 
   has_one :etablissement
   has_one :entreprise
@@ -29,28 +29,81 @@ class Dossier < ActiveRecord::Base
   validates :date_previsionnelle, presence: true, allow_blank: false,  unless: Proc.new { description.nil? }
 
 
-  def retrieve_piece_justificative_by_type(type)
-    pieces_justificatives.where(type_de_piece_justificative_id: type).last
-  end
+   def retrieve_piece_justificative_by_type(type)
+     pieces_justificatives.where(type_de_piece_justificative_id: type).last
+   end
 
-  def build_default_pieces_justificatives
-    procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
-      PieceJustificative.create(type_de_piece_justificative_id: type_de_piece_justificative.id, dossier_id: id)
-    end
-  end
+   def build_default_pieces_justificatives
+     procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
+       PieceJustificative.create(type_de_piece_justificative_id: type_de_piece_justificative.id, dossier_id: id)
+     end
+   end
 
-  def sous_domaine
-    if Rails.env.production?
-      'tps'
-    else
-      'tps-dev'
-    end
-  end
+   def sous_domaine
+     if Rails.env.production?
+       'tps'
+     else
+       'tps-dev'
+     end
+   end
 
-  private
+   def next_step! role, action
+     unless ['propose', 'reply', 'update', 'comment', 'confirme', 'depose', 'process'].include?(action)
+       fail 'action is not valid'
+     end
 
-  def build_default_cerfa
-    build_cerfa
-    true
-  end
+     unless ['user', 'gestionnaire'].include?(role)
+       fail 'role is not valid'
+     end
+
+     if role == 'user'
+       case action
+         when 'propose'
+           if draft?
+             proposed!
+           end
+         when 'depose'
+           if confirmed?
+             deposited!
+           end
+         when 'update'
+           if reply?
+             updated!
+           end
+         when 'comment'
+           if reply?
+             updated!
+           end
+       end
+     elsif role == 'gestionnaire'
+       case action
+         when 'comment'
+           if updated?
+             reply!
+           elsif proposed?
+             reply!
+           end
+         when 'confirme'
+           if updated?
+             confirmed!
+           elsif reply?
+             confirmed!
+           elsif proposed?
+             confirmed!
+           end
+         when 'process'
+           if deposited?
+             processed!
+           end
+       end
+     end
+     state
+   end
+
+   private
+
+   def build_default_cerfa
+     build_cerfa
+     true
+   end
 end
