@@ -79,7 +79,7 @@ feature 'Description#Show Page' do
     end
 
     scenario 'le lien de retour au récapitulatif est présent' do
-      expect(page).to have_selector("a[href='/dossiers/#{dossier_id}/recapitulatif']")
+      expect(page).to have_selector("a[href='/users/dossiers/#{dossier_id}/recapitulatif']")
     end
   end
 

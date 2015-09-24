@@ -14,10 +14,6 @@
       %button#action_button.btn.btn-success
         = 'Soumettre mon dossier'
 
-%div{style: 'text-align:center'}
-  -if (request.referer != nil) && (request.referer.include?'/description') && !(request.referer.include?'back_url=recapitulatif')
-    %h3.text-success Félicitation, votre demande a bien été enregistrée.
-
 %br
 
 = render partial: '/dossiers/infos_dossier'
