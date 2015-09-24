@@ -370,5 +370,34 @@ describe Dossier do
         end
       end
     end
+
+    context 'gestionnaire backoffice methods' do
+      let!(:dossier1) { create(:dossier, :with_user, :with_procedure, state: 'draft')}
+      let!(:dossier2) { create(:dossier, :with_user, :with_procedure, state: 'proposed')}
+      let!(:dossier3) { create(:dossier, :with_user, :with_procedure, state: 'proposed')}
+      let!(:dossier4) { create(:dossier, :with_user, :with_procedure, state: 'reply')}
+      let!(:dossier5) { create(:dossier, :with_user, :with_procedure, state: 'updated')}
+      let!(:dossier6) { create(:dossier, :with_user, :with_procedure, state: 'confirmed')}
+      let!(:dossier7) { create(:dossier, :with_user, :with_procedure, state: 'deposited')}
+      let!(:dossier8) { create(:dossier, :with_user, :with_procedure, state: 'processed')}
+
+      describe '#a_traiter' do
+        subject { described_class.a_traiter }
+
+        it { expect(subject.size).to eq(4) }
+      end
+
+      describe '#en_attente' do
+        subject { described_class.en_attente }
+
+        it { expect(subject.size).to eq(2) }
+      end
+
+      describe '#termine' do
+        subject { described_class.termine }
+
+        it { expect(subject.size).to eq(1) }
+      end
+    end
   end
 end
