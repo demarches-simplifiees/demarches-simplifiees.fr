@@ -16,5 +16,23 @@ describe Backoffice::CommentairesController, type: :controller do
         expect(response).to redirect_to("/backoffice/dossiers/#{dossier_id}")
       end
     end
+
+    describe 'change dossier state after post a comment' do
+      context 'gestionnaire is connected' do
+        context 'when dossier is at state updated' do
+          before do
+            sign_in create(:gestionnaire)
+            dossier.updated!
+
+            post :create, dossier_id: dossier_id, texte_commentaire: texte_commentaire
+            dossier.reload
+          end
+
+          subject { dossier.state }
+
+          it {is_expected.to eq('reply')}
+        end
+      end
+    end
   end
 end
