@@ -1,10 +1,17 @@
 class CommentairesController < ApplicationController
   def create
     @commentaire = Commentaire.new
-    @commentaire.email = params['email_commentaire']
-    @commentaire.body = params['texte_commentaire']
     @commentaire.dossier = Dossier.find(params['dossier_id'])
 
+    if is_gestionnaire?
+      @commentaire.email = current_gestionnaire.email
+      @commentaire.dossier.next_step! 'gestionnaire', 'comment'
+    else #is_user
+      @commentaire.email = current_user.email
+      @commentaire.dossier.next_step! 'user', 'comment'
+    end
+
+    @commentaire.body = params['texte_commentaire']
     @commentaire.save
 
     if is_gestionnaire?
