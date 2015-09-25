@@ -22,6 +22,10 @@ feature 'user access to the list of his dossier' do
     expect(page.body).to match(/#{last_updated_dossier.nom_projet}.*#{dossier1.nom_projet}/m)
   end
 
+  scenario 'the state of dossier is displayed' do
+    expect(page).to have_css("#dossier_#{dossier1.id}_state")
+  end
+
   context 'when user clicks on a projet in list' do
     before do
       page.click_on dossier1.nom_projet

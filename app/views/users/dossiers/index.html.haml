@@ -3,9 +3,11 @@
 %table.table
   %thead
     %th Nom du Projet
+    %th Etat
     %th Mise à jour
   - @dossiers.each do |dossier|
     %tr
       %td
         = link_to(dossier.nom_projet, users_dossier_recapitulatif_path(dossier))
+      %td{id: "dossier_#{dossier.id}_state"}= dossier.state_fr
       %td= dossier.last_update
