@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Users::DossiersController, type: :controller do
   let(:user) { create(:user) }
   describe '.index' do
+    let!(:dossier) { create(:dossier, :with_entreprise, :with_procedure, user: user) }
     subject { get :index }
     context 'when user is not logged in' do
       it { is_expected.to redirect_to('/users/sign_in') }
