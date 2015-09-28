@@ -16,8 +16,11 @@ describe Users::DossiersController, type: :controller do
       it { is_expected.to have_http_status(:success) }
     end
   end
-  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, user: user) }
-  let(:procedure) { create(:procedure) }
+
+
+  let(:use_api_carto) { false }
+  let(:procedure) { create(:procedure, use_api_carto: use_api_carto) }
+  let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
   let(:dossier_id) { dossier.id }
   let(:siret_not_found) { 999_999_999_999 }
 
@@ -132,8 +135,23 @@ describe Users::DossiersController, type: :controller do
     end
     context 'when Checkbox is checked' do
       let(:autorisation_donnees) { '1' }
-      it 'redirects to demande' do
-        expect(response).to redirect_to(controller: :description, action: :show, dossier_id: dossier.id)
+
+      context 'procedure not use api carto' do
+        it 'redirects to demande' do
+          expect(response).to redirect_to(controller: :description, action: :show, dossier_id: dossier.id)
+        end
+      end
+
+      context 'procedure use api carto' do
+        let(:use_api_carto) { true }
+
+        before do
+          put :update, id: dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
+          p dossier.procedure.use_api_carto
+        end
+        it 'redirects to carte' do
+          expect(response).to redirect_to(controller: :carte, action: :show, dossier_id: dossier.id)
+        end
       end
 
       it 'update dossier' do

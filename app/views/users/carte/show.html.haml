@@ -1,0 +1,19 @@
+%h2
+  ='Localisation de votre demande'
+%br
+
+=render partial: 'carte_sources_CSS'
+
+.content
+  #map_qp{style: 'height:600px; width: 100%;'}
+
+= form_tag(url_for({controller: :carte, action: :save_ref_api_carto, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+  %br
+  %input{type: 'hidden', value: '', name: 'ref_dossier', id: 'ref_dossier'}
+
+  -if @dossier.draft?
+    =render partial: '/layouts/etape_suivante'
+  -else
+    =render partial: '/layouts/modifications_terminees'
+
+=render partial: 'carte_sources_JS'

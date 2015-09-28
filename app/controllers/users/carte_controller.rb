@@ -1,15 +1,16 @@
-class CarteController < ApplicationController
+class Users::CarteController < ApplicationController
   include DossierConcern
 
   def show
     @dossier = current_dossier
   rescue ActiveRecord::RecordNotFound
-    redirect_to url_for(controller: :siret, action: :error_dossier)
+    redirect_to url_for(controller: :dossiers, action: :index)
   end
 
   def save_ref_api_carto
     dossier = current_dossier
-    if dossier.ref_dossier_carto.blank?
+
+    if dossier.draft?
       dossier.update_attributes(ref_dossier_carto: params[:ref_dossier])
       redirect_to url_for(controller: :description, action: :show, dossier_id: params[:dossier_id])
     else
