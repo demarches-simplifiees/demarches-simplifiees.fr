@@ -147,7 +147,6 @@ describe Users::DossiersController, type: :controller do
 
         before do
           put :update, id: dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
-          p dossier.procedure.use_api_carto
         end
         it 'redirects to carte' do
           expect(response).to redirect_to(controller: :carte, action: :show, dossier_id: dossier.id)
