@@ -38,16 +38,18 @@ class Users::DescriptionController < ApplicationController
       end
     end
 
-      if params[:back_url] == 'recapitulatif'
-        commentaire = Commentaire.create
-        commentaire.email = 'Modification détails'
-        commentaire.body = 'Les informations détaillées de la demande ont été modifiées. Merci de le prendre en compte.'
-        commentaire.dossier = @dossier
-        commentaire.save
-      end
+    if !@dossier.draft?
+      commentaire = Commentaire.create
+      commentaire.email = 'Modification détails'
+      commentaire.body = 'Les informations détaillées de la demande ont été modifiées. Merci de le prendre en compte.'
+      commentaire.dossier = @dossier
+      commentaire.save
+    else
+      @dossier.proposed!
+    end
 
-      flash.notice = 'Félicitation, votre demande a bien été enregistrée.'
-      redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
+    flash.notice = 'Félicitation, votre demande a bien été enregistrée.'
+    redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
 
   end
 
