@@ -28,7 +28,7 @@ feature 'user is on description page' do
     context 'he adds cerfa' do
       before do
         attach_file('cerfa_pdf', File.path('spec/support/files/dossierPDF.pdf'))
-        click_on("Terminer la procédure")
+        click_on("Soumettre mon dossier")
         dossier.reload
       end
       it 'fills dossier cerfa' do
@@ -39,7 +39,7 @@ feature 'user is on description page' do
       before do
         file_input_id = 'piece_justificative_' + dossier.pieces_justificatives.first.type.to_s
         attach_file(file_input_id, File.path('spec/support/files/dossierPDF.pdf'))
-        click_on('Terminer la procédure')
+        click_on('Soumettre mon dossier')
         dossier.reload
       end
       scenario 'fills the given piece_justificative' do

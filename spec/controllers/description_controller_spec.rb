@@ -36,15 +36,28 @@ describe Users::DescriptionController, type: :controller do
 
     context 'Tous les attributs sont bons' do
       # TODO separer en deux tests : check donnees et check redirect
-      it 'Premier enregistrement des données' do
-        post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle
-        expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
+      describe 'Premier enregistrement des données' do
+        before do
+          dossier.draft!
+          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle
+          dossier.reload
+        end
+
+        it "redirection vers la page recapitulative" do
+          expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
+        end
+
+        it 'etat du dossier est soumis' do
+          expect(dossier.state).to eq('proposed')
+        end
       end
 
       # TODO changer les valeurs des champs et check in bdd
-      context 'En train de modifier les données de description du projet' do
+      context 'En train de manipuler un dossier non brouillon' do
         before do
-          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, back_url: 'recapitulatif'
+          dossier.proposed!
+          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle
+          dossier.reload
         end
 
         context 'Enregistrement d\'un commentaire informant la modification' do
@@ -65,6 +78,10 @@ describe Users::DescriptionController, type: :controller do
 
         it 'Redirection vers la page récapitulatif' do
           expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
+        end
+
+        it 'etat du dossier n\'est pas soumis' do
+          expect(dossier.state).not_to eq('draft')
         end
       end
     end
