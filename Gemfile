@@ -42,6 +42,7 @@ gem 'draper'
 
 #Gestion des comptes utilisateurs
 gem 'devise'
+gem 'openid_connect'
 gem 'rest-client'
 
 gem 'carrierwave'
@@ -60,6 +61,8 @@ gem 'chartkick'
 gem 'logstasher'
 
 gem "font-awesome-rails"
+
+gem 'hashie'
 
 group :test do
   gem 'capybara'

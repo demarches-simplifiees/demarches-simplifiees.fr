@@ -49,11 +49,11 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action
-    unless ['propose', 'reply', 'update', 'comment', 'confirme', 'depose', 'process'].include?(action)
+    unless %w(propose reply update comment confirme depose process).include?(action)
       fail 'action is not valid'
     end
 
-    unless ['user', 'gestionnaire'].include?(role)
+    unless %w(user gestionnaire).include?(role)
       fail 'role is not valid'
     end
 

@@ -9,8 +9,11 @@ Rails.application.routes.draw do
   }, skip: [:password, :registrations]
 
 
-  # root 'welcome#index'
-  root 'users/dossiers#index'
+
+  # root 'users/dossiers#index'
+  root 'test_open_id#show'
+  get '/fc' => 'fc#index'
+
 
   namespace :users do
     get 'siret' => 'siret#index'
