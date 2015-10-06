@@ -27,6 +27,7 @@ class FranceConnectController < ApplicationController
     end
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
+    flash.alert = 'Erreur lors de la connexion à France Connect.'
     redirect_to(new_user_session_path)
   end
 end

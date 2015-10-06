@@ -32,15 +32,15 @@ describe FranceConnectController, type: :controller do
       context 'wen code is not correct' do
         before do
           allow(FranceConnectService).to receive(:retrieve_user_informations) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
+          get :callback, code: code
         end
 
         it 'redirect to login page' do
-          get :callback, code: code
           expect(response).to redirect_to(new_user_session_path)
         end
 
-        it 'flash message error connexion with France Connect' do
-
+        it 'display error message' do
+          expect(flash[:alert]).to be_present
         end
       end
     end
