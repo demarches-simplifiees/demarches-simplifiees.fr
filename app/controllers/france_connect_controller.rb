@@ -14,6 +14,8 @@ class FranceConnectController < ApplicationController
   end
 
   def callback
+    return redirect_to new_user_session_path unless params.has_key?(:code)
+
     user_infos = FranceConnectService.retrieve_user_informations(params[:code])
 
     unless user_infos.nil?
