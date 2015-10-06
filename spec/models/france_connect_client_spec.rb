@@ -9,7 +9,7 @@ describe FranceConnectClient do
       let(:code) { 'plop' }
       subject { described_class.new(code: code) }
       it 'set authorisation code' do
-        expect_any_instance_of(described_class).to receive(:authorization_code=)
+        expect_any_instance_of(described_class).to receive(:authorization_code=).with(code)
         described_class.new(code: code)
       end
     end

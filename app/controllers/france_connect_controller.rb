@@ -14,7 +14,7 @@ class FranceConnectController < ApplicationController
   end
 
   def callback
-    user_infos = FranceConnectService.retrive_user(params[:code])
+    user_infos = FranceConnectService.retrieve_user_informations(params[:code])
 
     unless user_infos.nil?
       @user = User.find_for_france_connect(user_infos.email)
