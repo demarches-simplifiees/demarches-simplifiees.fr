@@ -80,5 +80,7 @@ fr:
         other: "%{count} erreurs ont empêché ce(tte) %{resource} d'être sauvegardé(e) :"
       dossier_not_found: "Le dossier n'existe pas"
       invalid_siret: "Le siret est incorrect"
+      france_connect:
+       connexion: "Erreur lors de la connexion à France Connect."
 
 
