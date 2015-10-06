@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   # root 'users/france_connect_callbacks#login'
 
 
-    get 'france_connect' => 'france_connect#index'
+    get 'france_connect' => 'france_connect#login'
     get 'france_connect/callback' => 'france_connect#callback'
 
 

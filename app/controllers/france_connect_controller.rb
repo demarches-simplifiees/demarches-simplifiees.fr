@@ -1,5 +1,5 @@
 class FranceConnectController < ApplicationController
-  def index
+  def login
     client = FranceConnectClient.new
 
     session[:state] = SecureRandom.hex(16)
