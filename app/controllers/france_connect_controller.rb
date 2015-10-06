@@ -25,5 +25,8 @@ class FranceConnectController < ApplicationController
 
       redirect_to(controller: 'users/dossiers', action: :index)
     end
+  rescue Rack::OAuth2::Client::Error => e
+    Rails.logger.error e.message
+    redirect_to(new_user_session_path)
   end
 end
