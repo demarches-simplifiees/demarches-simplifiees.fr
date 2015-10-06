@@ -5,18 +5,21 @@ Rails.application.routes.draw do
   }
 
   devise_for :gestionnaires, controllers: {
-    sessions: 'gestionnaires/sessions'
-  }, skip: [:password, :registrations]
+                               sessions: 'gestionnaires/sessions'
+                           }, skip: [:password, :registrations]
 
 
+  root 'users/dossiers#index'
+  # root 'users/france_connect_callbacks#login'
 
-  # root 'users/dossiers#index'
-  root 'test_open_id#show'
-  get '/fc' => 'fc#index'
+
+    get 'france_connect' => 'france_connect#index'
+    get 'france_connect/callback' => 'france_connect#callback'
 
 
   namespace :users do
     get 'siret' => 'siret#index'
+
     resources :dossiers do
       get '/description' => 'description#show'
       get '/description/error' => 'description#error'
@@ -29,7 +32,6 @@ Rails.application.routes.draw do
       post '/commentaire' => 'commentaires#create'
     end
     resource :dossiers
-
   end
 
 
@@ -52,13 +54,13 @@ Rails.application.routes.draw do
 
   get 'backoffice' => 'backoffice#index'
 
-namespace :backoffice do
-  get 'sign_in' => '/gestionnaires/sessions#new'
-  resources :dossiers do
-    post 'confirme' => 'dossiers#confirme'
+  namespace :backoffice do
+    get 'sign_in' => '/gestionnaires/sessions#new'
+    resources :dossiers do
+      post 'confirme' => 'dossiers#confirme'
+    end
+    resources :commentaires, only: [:create]
   end
-  resources :commentaires, only: [:create]
-end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
