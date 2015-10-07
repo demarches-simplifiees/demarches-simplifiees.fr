@@ -6,11 +6,13 @@ class User < ActiveRecord::Base
 
   has_many :dossiers
 
-  def self.find_for_france_connect email
+  def self.find_for_france_connect email, siret
     user = User.find_by_email(email)
-
-    return user unless user.nil?
-
-    User.create(email: email, password: Devise.friendly_token[0,20])
+    if user.nil?
+      return User.create(email: email, password: Devise.friendly_token[0,20], siret: siret)
+    else
+      user.update_attributes(siret: siret)
+      user
+    end
   end
 end

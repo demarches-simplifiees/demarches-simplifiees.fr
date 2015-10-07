@@ -19,7 +19,7 @@ class FranceConnectController < ApplicationController
     user_infos = FranceConnectService.retrieve_user_informations(params[:code])
 
     unless user_infos.nil?
-      @user = User.find_for_france_connect(user_infos.email)
+      @user = User.find_for_france_connect(user_infos.email, user_infos.siret)
 
       sign_in @user
 
