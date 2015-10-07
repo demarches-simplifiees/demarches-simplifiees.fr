@@ -10,14 +10,26 @@ class Users::SessionsController < Devise::SessionsController
   def create
     super
 
-    current_user.login_with_france_connect = false
-    current_user.save
+    current_user.update_attributes(login_with_france_connect: false)
   end
 
   # DELETE /resource/sign_out
-  # def destroy
-  #   super
-  # end
+  def destroy
+    connected_with_france_connect = current_user.login_with_france_connect
+    current_user.update_attributes(login_with_france_connect: false)
+
+
+    signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+    set_flash_message :notice, :signed_out if signed_out && is_flashing_format?
+    yield if block_given?
+
+
+    if connected_with_france_connect
+      redirect_to FRANCE_CONNECT.logout_endpoint
+    else
+      respond_to_on_destroy
+    end
+  end
 
   # protected
 
