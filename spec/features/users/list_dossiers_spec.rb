@@ -9,9 +9,11 @@ feature 'user access to the list of his dossier' do
   before do
     last_updated_dossier.update_attributes(nom_projet: 'salut la compagnie')
     visit root_path
-    page.find_by_id('user_email').set user.email
-    page.find_by_id('user_password').set user.password
-    page.click_on 'Se connecter'
+    within('#new_user') do
+      page.find_by_id('user_email').set user.email
+      page.find_by_id('user_password').set user.password
+      page.click_on 'Se connecter'
+    end
   end
   scenario 'the list of dossier is displayed' do
     expect(page).to have_content(dossier1.nom_projet)

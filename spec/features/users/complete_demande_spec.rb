@@ -16,9 +16,11 @@ feature 'user path for dossier creation' do
 
     context 'user sign_in' do
       before do
-        page.find_by_id('user_email').set user.email
-        page.find_by_id('user_password').set user.password
-        page.click_on 'Se connecter'
+        within('#new_user') do
+          page.find_by_id('user_email').set user.email
+          page.find_by_id('user_password').set user.password
+          page.click_on 'Se connecter'
+        end
       end
       scenario 'redirects to siret page' do
         expect(page).to have_css('#siret')

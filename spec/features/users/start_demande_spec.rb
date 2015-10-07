@@ -14,9 +14,11 @@ feature 'user arrive on siret page' do
     end
     context 'when he enter login information' do
       before do
-        page.find_by_id('user_email').set user.email
-        page.find_by_id('user_password').set user.password
-        page.click_on 'Se connecter'
+        within('#new_user') do
+          page.find_by_id('user_email').set user.email
+          page.find_by_id('user_password').set user.password
+          page.click_on 'Se connecter'
+        end
       end
       scenario 'he is redirected to siret page to enter a siret' do
         expect(page).to have_css('#pro_section')

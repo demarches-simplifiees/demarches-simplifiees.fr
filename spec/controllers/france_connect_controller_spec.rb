@@ -18,10 +18,13 @@ describe FranceConnectController, type: :controller do
     end
     context 'when params code is present' do
       let(:code) { 'plop' }
-
+      let(:email) { 'patator@cake.com' }
+      let(:siret) { '41123069100049' }
+      let(:user_info) { Hashie::Mash.new(email: email, siret: siret) }
       context 'when code is correct' do
         before do
-          allow(FranceConnectService).to receive(:retrieve_user_informations).and_return(Hashie::Mash.new(email: 'patator@cake.com'))
+
+          allow(FranceConnectService).to receive(:retrieve_user_informations).and_return(user_info)
         end
         it 'redirect to dossiers list' do
           get :callback, code: code
