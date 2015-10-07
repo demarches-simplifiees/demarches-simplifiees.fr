@@ -44,8 +44,8 @@ ActiveRecord::Schema.define(version: 20151007085022) do
     t.string   "montant_aide_demande"
     t.integer  "procedure_id"
     t.date     "date_previsionnelle"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",           default: '2015-09-22 09:25:29'
+    t.datetime "updated_at",           default: '2015-09-22 09:25:29'
     t.string   "state"
     t.integer  "user_id"
   end

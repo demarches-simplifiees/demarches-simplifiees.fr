@@ -44,4 +44,35 @@ feature 'France Connect Connexion' do
       end
     end
   end
+
+
+  feature 'redirection' do
+    before do
+      visit initial_path
+    end
+    context 'when he use france connect' do
+      let(:code) { 'my_code' }
+      let(:email) { 'plop@plop.com' }
+      let(:siret) { '00000000000000' }
+      let(:user_infos) { Hashie::Mash.new(email: email, siret: siret) }
+      before do
+        allow_any_instance_of(FranceConnectClient).to receive(:authorization_uri).and_return(france_connect_callback_path(code: code))
+        allow(FranceConnectService).to receive(:retrieve_user_informations).and_return(user_infos)
+        page.find_by_id('france_connect').click
+      end
+      context 'when starting page is dossiers list' do
+        let(:initial_path) { users_dossiers_path }
+        scenario 'he is redirected to dossier list' do
+          expect(page).to have_css('#users_dossiers_index')
+        end
+      end
+      context 'when starting page is procedure' do
+        let(:procedure) { create(:procedure) }
+        let(:initial_path) { users_siret_path(procedure_id: procedure.id ) }
+        scenario 'he is redirected to siret page' do
+          expect(page).to have_css('#users_siret_index')
+        end
+      end
+    end
+  end
 end

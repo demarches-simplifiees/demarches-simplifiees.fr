@@ -33,14 +33,15 @@ describe FranceConnectController, type: :controller do
         it 'login_with_france_connect user attribut is true' do
           expect(current_user.login_with_france_connect).to be_truthy
         end
-
-        it 'redirect to dossiers list' do
+        let(:stored_location) { '/plip/plop' }
+        it 'redirect to stored location' do
+          subject.store_location_for(:user, stored_location)
           get :callback, code: code
-          expect(response).to redirect_to(controller: 'users/dossiers', action: :index)
+          expect(response).to redirect_to(stored_location)
         end
       end
 
-      context 'wen code is not correct' do
+      context 'when code is not correct' do
         before do
           allow(FranceConnectService).to receive(:retrieve_user_informations) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
           get :callback, code: code

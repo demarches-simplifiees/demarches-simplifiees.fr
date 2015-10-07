@@ -28,7 +28,8 @@ class FranceConnectController < ApplicationController
         @user.save
       end
 
-      redirect_to(controller: 'users/dossiers', action: :index)
+      redirect_to stored_location_for(current_user) || signed_in_root_path(current_user)
+
     end
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
