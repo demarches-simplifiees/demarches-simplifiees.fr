@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006155256) do
+ActiveRecord::Schema.define(version: 20151007085022) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,8 +44,8 @@ ActiveRecord::Schema.define(version: 20151006155256) do
     t.string   "montant_aide_demande"
     t.integer  "procedure_id"
     t.date     "date_previsionnelle"
-    t.datetime "created_at",           default: '2015-09-22 09:25:29'
-    t.datetime "updated_at",           default: '2015-09-22 09:25:29'
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "state"
     t.integer  "user_id"
   end
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 20151006155256) do
     t.integer "type_de_piece_justificative_id"
   end
 
-  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
+  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_piece_jointe_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"
@@ -118,9 +118,10 @@ ActiveRecord::Schema.define(version: 20151006155256) do
     t.string   "organisation"
     t.string   "direction"
     t.string   "lien_demarche"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.boolean  "test"
+    t.boolean  "use_api_carto", default: false
   end
 
   create_table "types_de_piece_justificative", force: :cascade do |t|
@@ -133,18 +134,19 @@ ActiveRecord::Schema.define(version: 20151006155256) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                     default: "",    null: false
+    t.string   "encrypted_password",        default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",             default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "login_with_france_connect", default: false
     t.string   "siret"
   end
 

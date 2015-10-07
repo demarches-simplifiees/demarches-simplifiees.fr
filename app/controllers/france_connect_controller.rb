@@ -23,6 +23,11 @@ class FranceConnectController < ApplicationController
 
       sign_in @user
 
+      if current_user == @user
+        @user.login_with_france_connect = true
+        @user.save
+      end
+
       redirect_to(controller: 'users/dossiers', action: :index)
     end
   rescue Rack::OAuth2::Client::Error => e
