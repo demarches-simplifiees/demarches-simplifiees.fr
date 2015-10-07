@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 20151007085022) do
     t.integer "type_de_piece_justificative_id"
   end
 
-  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_piece_jointe_id", using: :btree
+  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"
@@ -118,10 +118,9 @@ ActiveRecord::Schema.define(version: 20151007085022) do
     t.string   "organisation"
     t.string   "direction"
     t.string   "lien_demarche"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.boolean  "test"
-    t.boolean  "use_api_carto", default: false
   end
 
   create_table "types_de_piece_justificative", force: :cascade do |t|
@@ -146,8 +145,8 @@ ActiveRecord::Schema.define(version: 20151007085022) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "login_with_france_connect", default: false
     t.string   "siret"
+    t.boolean  "login_with_france_connect", default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
