@@ -22,10 +22,18 @@ describe FranceConnectController, type: :controller do
       let(:siret) { '41123069100049' }
       let(:user_info) { Hashie::Mash.new(email: email, siret: siret) }
       context 'when code is correct' do
-        before do
+        let(:email) { 'patator@cake.com' }
+        let(:current_user) { User.find_by_email(email) }
 
+        before do
           allow(FranceConnectService).to receive(:retrieve_user_informations).and_return(user_info)
+          get :callback, code: code
         end
+
+        it 'login_with_france_connect user attribut is true' do
+          expect(current_user.login_with_france_connect).to be_truthy
+        end
+
         it 'redirect to dossiers list' do
           get :callback, code: code
           expect(response).to redirect_to(controller: 'users/dossiers', action: :index)
