@@ -6,10 +6,13 @@ class Users::SessionsController < Devise::SessionsController
   #   super
   # end
 
-  # POST /resource/sign_in
-  # def create
-  #   super
-  # end
+  #POST /resource/sign_in
+  def create
+    super
+
+    current_user.login_with_france_connect = false
+    current_user.save
+  end
 
   # DELETE /resource/sign_out
   # def destroy

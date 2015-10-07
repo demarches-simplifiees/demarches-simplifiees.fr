@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe FranceConnectService do
-
   describe '.retrieve_user_informations' do
 
     let(:code) { 'plop' }

@@ -35,7 +35,6 @@ describe FranceConnectController, type: :controller do
         end
 
         it 'redirect to dossiers list' do
-          get :callback, code: code
           expect(response).to redirect_to(controller: 'users/dossiers', action: :index)
         end
       end

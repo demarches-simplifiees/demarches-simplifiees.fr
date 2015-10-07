@@ -1,21 +1,17 @@
 Rails.application.routes.draw do
 
   devise_for :users, controllers: {
-    sessions: 'users/sessions'
-  }
+                       sessions: 'users/sessions'
+                   }
 
   devise_for :gestionnaires, controllers: {
                                sessions: 'gestionnaires/sessions'
                            }, skip: [:password, :registrations]
 
-
   root 'users/dossiers#index'
-  # root 'users/france_connect_callbacks#login'
 
-
-    get 'france_connect' => 'france_connect#login'
-    get 'france_connect/callback' => 'france_connect#callback'
-
+  get 'france_connect' => 'france_connect#login'
+  get 'france_connect/callback' => 'france_connect#callback'
 
   namespace :users do
     get 'siret' => 'siret#index'
