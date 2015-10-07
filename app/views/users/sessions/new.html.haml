@@ -1,30 +1,36 @@
-%div{style:'text-align:center'}
-  %h2#login_user Connexion
+#form_login
+  %h1#login_user Connexion
   %br
-  %div#form_login.row
-    %div.col-md-6.col-lg-6
-      = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-        %h4
-          = f.label :email
-          = f.email_field :email, autofocus: true, class: 'form-control'
-        %br
-        %h4
-          = f.label :password
-          = f.password_field :password, autocomplete: "off", class: 'form-control'
-        %br
-        / - if devise_mapping.rememberable?
-        /   .field
-        /     = f.check_box :remember_me
-        /     = f.label :remember_me
-        .actions
-          = f.submit "Se connecter", class:'btn btn-primary btn-lg'
-        %br
+  %br
+  %a.btn.btn-default.btn-lg.btn-primary#btn_fc{href: '/france_connect'}
+    %div{style:'margin-left:35px'}
+      S'identifier avec
+      France Connect
 
-      = render "users/shared/links"
 
-    %div.col-md-6.col-lg-6.border-left
-      %img#logo_fc{src: '/assets/logo_FC_03.png', style:'max-height:180px'}
-      %br
-      %button.btn.btn-info.btn-lg
-        = link_to "Connexion", '/france_connect', id: 'france_connect', style:'color:white; text-decoration: none'
+  %hr
+
+  = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+    %h4
+      = f.label :email
+    .input-group
+      .input-group-addon
+        %span.glyphicon.glyphicon-user
+      = f.email_field :email, class: 'form-control'
+    %br
+    %h4
+      = f.label :password
+    .input-group
+      .input-group-addon
+        %span.glyphicon.glyphicon-asterisk
+      = f.password_field :password, autocomplete: "off", class: 'form-control'
+    %br
+    %br
+    .actions
+      = f.submit "Se connecter", class:'btn btn-primary'
+    %br
+
+  = render "users/shared/links"
+
+
 
