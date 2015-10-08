@@ -68,6 +68,13 @@
                 %span.btn.btn-sm.btn-file.btn-success
                   Modifier
                   = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: '.pdf'
+
+      - if current_user.loged_in_with_france_connect
+        %tr
+          %th.col-lg-6
+            Attestation fiscale
+          %td.col-lg-6.col-md-6
+            %a{ href: "/attestation_fiscale_octo.pdf", target: '_blank'} Nous l'avons récupéré pour vous.
     //END
 
     %div{style: 'text-align:right'}
