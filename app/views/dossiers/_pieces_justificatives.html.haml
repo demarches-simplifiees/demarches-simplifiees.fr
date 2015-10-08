@@ -28,7 +28,7 @@
             %a{ href: "#{piece_justificative.content}", target: '_blank' } Consulter
           - else
             = 'Pièce non fournie'
-    - if current_user.loged_in_with_france_connect
+    - if  gestionnaire_signed_in? || (user_signed_in? && current_user.loged_in_with_france_connect)
       %tr
         %th.col-lg-6
           Attestation fiscale

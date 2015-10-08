@@ -69,7 +69,7 @@
                   Modifier
                   = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: '.pdf'
 
-      - if current_user.loged_in_with_france_connect
+      - if (user_signed_in? && current_user.loged_in_with_france_connect) || gestionnaire_signed_in?
         %tr
           %th.col-lg-6
             Attestation fiscale
