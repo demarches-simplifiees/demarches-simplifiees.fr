@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe DossierDecorator do
-  let(:dossier) { create(:dossier, :with_user) }
+  let(:dossier) { create(:dossier, :with_user, updated_at: Time.new(2015, 12, 24, 14, 10)) }
   subject { dossier.decorate }
 
   describe 'last_update' do
-    subject { Timecop.freeze(Time.new(2015, 12, 24, 14, 10)) { super().last_update } }
+    subject { super().last_update }
     it { is_expected.to eq('24/12/2015 14:10') }
   end
 

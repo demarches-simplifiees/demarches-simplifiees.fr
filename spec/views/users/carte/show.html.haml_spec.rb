@@ -40,9 +40,9 @@ describe 'users/carte/show.html.haml', type: :view do
         expect(rendered).to have_selector('#etape_suivante')
       end
   
-      it 'le bouton Etape suivante possède un onclick correct' do
-        expect(rendered).to have_selector('input[type=submit][id=etape_suivante][onclick=\'submit_check_draw(event)\']')
-      end
+      # it 'le bouton Etape suivante possède un onclick correct' do
+      #   expect(rendered).to have_selector('input[type=submit][id=etape_suivante][onclick=\'submit_check_draw(event)\']')
+      # end
     end
   
     context 'si la page précédente est recapitularif' do
@@ -56,9 +56,9 @@ describe 'users/carte/show.html.haml', type: :view do
         expect(rendered).to have_selector('#modification_terminee')
       end
   
-      it 'le bouton "Modification terminé" possède un onclick correct' do
-        expect(rendered).to have_selector('input[type=submit][id=modification_terminee][onclick=\'submit_check_draw(event)\']')
-      end
+      # it 'le bouton "Modification terminé" possède un onclick correct' do
+      #   expect(rendered).to have_selector('input[type=submit][id=modification_terminee][onclick=\'submit_check_draw(event)\']')
+      # end
   
       it 'le lien de retour au récapitulatif est présent' do
         expect(rendered).to have_selector("a[href='/users/dossiers/#{dossier_id}/recapitulatif']")
