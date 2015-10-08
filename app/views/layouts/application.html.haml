@@ -20,7 +20,7 @@
         - elsif user_signed_in?
           %div.user{style: 'decorate:none; box-shadow:none; float:right; margin-top:8px'}
             -if current_user.loged_in_with_france_connect
-              %img.logo_fc_small{src: '/assets/logo_FC_02_small.png'}
+              = image_tag('logo_FC_02_small.png', class: 'logo_fc_small')
             -else
               %i.fa.fa-user
             = current_user.email

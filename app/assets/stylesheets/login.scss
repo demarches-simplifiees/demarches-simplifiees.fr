@@ -8,7 +8,7 @@
   padding: 20px;
 
   #btn_fc {
-    background-image: url('/assets/logo_FC_02.png');
+    background-image: image-url('logo_FC_02.png');
     background-repeat: no-repeat;
     background-size: 38px;
     background-position-x: 5px;
@@ -21,7 +21,7 @@
     margin-left:auto;
     margin-right:auto;
   }
-  
+
   hr {
     margin-top: 50px;
     margin-bottom: 40px;
