@@ -1,6 +1,7 @@
 class Users::SiretController < UsersController
   def index
     @procedure = Procedure.find(params['procedure_id'])
+    @siret = current_user.siret
   rescue ActiveRecord::RecordNotFound
     error_procedure
   end
