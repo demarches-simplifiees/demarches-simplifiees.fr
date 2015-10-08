@@ -10,13 +10,13 @@ class Users::SessionsController < Devise::SessionsController
   def create
     super
 
-    current_user.update_attributes(login_with_france_connect: false)
+    current_user.update_attributes(loged_in_with_france_connect: false)
   end
 
   # DELETE /resource/sign_out
   def destroy
-    connected_with_france_connect = current_user.login_with_france_connect
-    current_user.update_attributes(login_with_france_connect: false)
+    connected_with_france_connect = current_user.loged_in_with_france_connect
+    current_user.update_attributes(loged_in_with_france_connect: false)
 
 
     signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))

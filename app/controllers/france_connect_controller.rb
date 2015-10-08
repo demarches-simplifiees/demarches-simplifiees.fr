@@ -23,13 +23,10 @@ class FranceConnectController < ApplicationController
 
       sign_in @user
 
-      if current_user == @user
-        @user.login_with_france_connect = true
-        @user.save
-      end
+      @user.loged_in_with_france_connect = true
+      @user.save
 
       redirect_to stored_location_for(current_user) || signed_in_root_path(current_user)
-
     end
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message

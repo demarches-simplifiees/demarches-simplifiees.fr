@@ -30,8 +30,8 @@ describe FranceConnectController, type: :controller do
           get :callback, code: code
         end
 
-        it 'login_with_france_connect user attribut is true' do
-          expect(current_user.login_with_france_connect).to be_truthy
+        it 'current user have attribut loged_in_with_france_connect at true' do
+          expect(current_user.loged_in_with_france_connect).to be_truthy
         end
         let(:stored_location) { '/plip/plop' }
         it 'redirect to stored location' do
