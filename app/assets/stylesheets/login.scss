@@ -1,14 +1,36 @@
 #form_login{
-  h4{
-    margin-top:11px;
+  text-align: center;
+  max-width:500px;
+
+  margin-left:auto;
+  margin-right:auto;
+
+  padding: 20px;
+
+  #btn_fc {
+    background-image: url('/assets/logo_FC_02.png');
+    background-repeat: no-repeat;
+    background-size: 38px;
+    background-position-x: 5px;
+    background-position-y: 1px;
   }
-  input {
-    max-width:50%;
-    margin-top:5px;
+
+
+  #new_user{
+    width: 80%;
     margin-left:auto;
     margin-right:auto;
   }
-  #logo_fc {
-    margin-bottom:36px;
+  
+  hr {
+    margin-top: 50px;
+    margin-bottom: 40px;
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(100, 100, 100, 0), rgba(100, 100, 100, 0.75), rgba(100, 100, 100, 0));
+  }
+
+  h4 {
+    text-align: left;
   }
 }
