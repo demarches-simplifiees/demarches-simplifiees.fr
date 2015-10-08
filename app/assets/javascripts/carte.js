@@ -4,7 +4,7 @@ function get_position(){
     var position;
 
     $.ajax({
-        url: '/dossiers/'+dossier_id+'/carte/position',
+        url: '/users/dossiers/'+dossier_id+'/carte/position',
         dataType: 'json',
         async: false
     }).done(function (data) {

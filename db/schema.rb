@@ -118,9 +118,10 @@ ActiveRecord::Schema.define(version: 20151008090835) do
     t.string   "organisation"
     t.string   "direction"
     t.string   "lien_demarche"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.boolean  "test"
+    t.boolean  "use_api_carto", default: false
   end
 
   create_table "types_de_piece_justificative", force: :cascade do |t|

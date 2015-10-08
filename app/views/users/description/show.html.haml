@@ -3,8 +3,6 @@
   %br
 
   = form_tag(url_for({controller: :description, action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
-    %input{type: 'hidden', value: request.parameters[:back_url], name: 'back_url', id: 'back_url'}
-
 
     %div
       .row
@@ -80,10 +78,10 @@
     %div{style: 'text-align:right'}
       %h6 Tous les champs portant un * sont obligatoires.
 
-    -if request.parameters[:back_url] == 'recapitulatif'
+    -if !@dossier.draft?
       =render partial: '/layouts/modifications_terminees'
     -else
-      = submit_tag 'Terminer la procédure', id: 'suivant', class: %w(btn btn btn-success), style: 'float:right', data: { disable_with: 'Terminé la procédure', submit: true}
+      = submit_tag 'Soumettre mon dossier', id: 'suivant', class: %w(btn btn btn-success), style: 'float:right', data: { disable_with: 'Soumettre votre dossier', submit: true}
 
     %br
     %br

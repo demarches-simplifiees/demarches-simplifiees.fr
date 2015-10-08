@@ -46,7 +46,12 @@ class Users::DossiersController < UsersController
     @dossier = Dossier.find(params[:id])
     if checked_autorisation_donnees?
       @dossier.update_attributes(update_params)
-      redirect_to url_for(controller: :description, action: :show, dossier_id: @dossier.id)
+
+      if @dossier.procedure.use_api_carto
+        redirect_to url_for(controller: :carte, action: :show, dossier_id: @dossier.id)
+      else
+        redirect_to url_for(controller: :description, action: :show, dossier_id: @dossier.id)
+      end
     else
       @etablissement =  @dossier.etablissement
       @entreprise =  @dossier.entreprise.decorate

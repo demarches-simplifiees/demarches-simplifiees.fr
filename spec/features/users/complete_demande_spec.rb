@@ -52,7 +52,7 @@ feature 'user path for dossier creation' do
               page.find_by_id('montant_projet').set 10_000
               page.find_by_id('montant_aide_demande').set 1_000
               page.find_by_id('date_previsionnelle').set '09/09/2015'
-              page.click_on 'Terminer la procédure'
+              page.click_on 'Soumettre mon dossier'
             end
             scenario 'user is on recap page' do
               expect(page).to have_css('#recap_dossier')

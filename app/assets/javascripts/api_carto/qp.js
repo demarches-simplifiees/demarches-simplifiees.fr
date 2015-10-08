@@ -155,13 +155,13 @@ function onDocumentReady() { if (typeof L != 'undefined' && typeof L.drawLocal !
             }
           });**/
         });
-        map.spin(true);
-        $.ajax({
-            url: 'http://apicarto.coremaps.com/zoneville/api/beta/qp/mapservice',
-            datatype: 'json',
-            jsonCallback: 'getJson',
-            success: loadGeoJson
-        });
+        //map.spin(true);
+        //$.ajax({
+        //    url: 'http://apicarto.coremaps.com/zoneville/api/beta/qp/mapservice',
+        //    datatype: 'json',
+        //    jsonCallback: 'getJson',
+        //    success: loadGeoJson
+        //});
         window.geom_inter = {index: []};
 
         function style(feature) {
