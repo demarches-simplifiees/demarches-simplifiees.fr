@@ -19,7 +19,10 @@
             = link_to "Déconnexion", '/gestionnaires/sign_out', method: :delete, :class => 'btn btn-md'
         - elsif user_signed_in?
           %div.user{style: 'decorate:none; box-shadow:none; float:right; margin-top:8px'}
-            %i.fa.fa-user
+            -if current_user.loged_in_with_france_connect
+              %img.logo_fc_small{src: '/assets/logo_FC_02_small.png'}
+            -else
+              %i.fa.fa-user
             = current_user.email
             = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
 
