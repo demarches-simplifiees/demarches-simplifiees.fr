@@ -23,8 +23,8 @@ Rails.application.routes.draw do
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/propose' => 'recapitulatif#propose'
       post '/recapitulatif/depose' => 'recapitulatif#depose'
-      get '/demande' => 'demandes#show'
-      post '/demande' => 'demandes#update'
+      # get '/demande' => 'demandes#show'
+      # post '/demande' => 'demandes#update'
       post '/commentaire' => 'commentaires#create'
 
       get '/carte/position' => 'carte#get_position'

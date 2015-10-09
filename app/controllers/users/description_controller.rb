@@ -1,4 +1,4 @@
-class Users::DescriptionController < ApplicationController
+class Users::DescriptionController < UsersController
   def show
     @dossier = Dossier.find(params[:dossier_id])
     @dossier = @dossier.decorate

@@ -11,7 +11,23 @@ RSpec.describe Users::CarteController, type: :controller do
   let(:ref_dossier_carto) { 'IATRQPQY' }
   let(:adresse) { etablissement.adresse }
 
+  before do
+    sign_in dossier.user
+  end
+
   describe 'GET #show' do
+
+    context 'user is not connected' do
+      before do
+        sign_out dossier.user
+      end
+
+      it 'redirect to users/sign_in' do
+        get :show, dossier_id: dossier_id
+        expect(response).to redirect_to('/users/sign_in')
+      end
+    end
+
     it 'returns http success' do
       get :show, dossier_id: dossier_id
       expect(response).to have_http_status(:success)

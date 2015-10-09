@@ -1,4 +1,4 @@
-class Users::CarteController < ApplicationController
+class Users::CarteController < UsersController
   include DossierConcern
 
   def show
