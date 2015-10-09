@@ -111,8 +111,12 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Déposé') }
 
+      it 'button Traiter le dossier est present' do
+        expect(rendered).to have_css('#action_button')
+        expect(rendered).to have_content('Traiter le dossier')
+      end
+
       it 'button Valider le dossier n\'est pas present' do
-        expect(rendered).not_to have_css('#action_button')
         expect(rendered).not_to have_content('Valider le dossier')
       end
     end

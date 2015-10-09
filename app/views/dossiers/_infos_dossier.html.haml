@@ -48,4 +48,8 @@
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :confirme, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Valider le dossier'
+      -elsif @dossier.deposited?
+        = form_tag(url_for({controller: 'backoffice/dossiers', action: :process_end, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+          %button#action_button.btn.btn-success
+            = 'Traiter le dossier'
 

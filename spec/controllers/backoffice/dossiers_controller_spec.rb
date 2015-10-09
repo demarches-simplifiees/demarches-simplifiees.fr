@@ -44,4 +44,20 @@ describe Backoffice::DossiersController, type: :controller do
       end
     end
   end
+
+  describe 'POST #process_end' do
+    context 'le gestionnaire taite un dossier' do
+      before do
+        dossier.deposited!
+        sign_in gestionnaire
+      end
+
+      it 'dossier change is state for processed' do
+        post :process_end, dossier_id: dossier_id
+
+        dossier.reload
+        expect(dossier.state).to eq('processed')
+      end
+    end
+  end
 end

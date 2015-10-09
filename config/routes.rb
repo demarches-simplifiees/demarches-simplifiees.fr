@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     get 'sign_in' => '/gestionnaires/sessions#new'
     resources :dossiers do
       post 'confirme' => 'dossiers#confirme'
+      post 'process' => 'dossiers#process_end'
     end
     resources :commentaires, only: [:create]
   end
