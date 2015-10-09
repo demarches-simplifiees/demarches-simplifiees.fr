@@ -1,13 +1,13 @@
 class Users::DescriptionController < UsersController
   def show
-    @dossier = Dossier.find(params[:dossier_id])
+    @dossier = current_user_dossier
     @dossier = @dossier.decorate
 
     @procedure = @dossier.procedure
 
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: :siret)
+    redirect_to url_for(root_path)
   end
 
   def error
@@ -17,7 +17,7 @@ class Users::DescriptionController < UsersController
   end
 
   def create
-    @dossier = Dossier.find(params[:dossier_id])
+    @dossier = current_user_dossier
     unless  @dossier.update_attributes(create_params)
       @dossier = @dossier.decorate
       @procedure = @dossier.procedure

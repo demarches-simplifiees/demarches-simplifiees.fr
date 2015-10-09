@@ -2,13 +2,14 @@ class Users::CarteController < UsersController
   include DossierConcern
 
   def show
-    @dossier = current_dossier
+    @dossier = current_user_dossier
   rescue ActiveRecord::RecordNotFound
+    flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(controller: :dossiers, action: :index)
   end
 
   def save_ref_api_carto
-    dossier = current_dossier
+    dossier = current_user_dossier
 
     if dossier.draft?
       dossier.update_attributes(ref_dossier_carto: params[:ref_dossier])
@@ -27,7 +28,7 @@ class Users::CarteController < UsersController
   end
 
   def get_position
-    dossier = current_dossier
+    dossier = current_user_dossier
 
     if dossier.position_lat.nil?
       tmp_position = Carto::Geocodeur.convert_adresse_to_point(dossier.etablissement.adresse.gsub("\r\n", ' '))

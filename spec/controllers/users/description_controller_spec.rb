@@ -11,7 +11,6 @@ describe Users::DescriptionController, type: :controller do
   end
 
   describe 'GET #show' do
-
     context 'user is not connected' do
       before do
         sign_out dossier.user
@@ -30,8 +29,10 @@ describe Users::DescriptionController, type: :controller do
 
     it 'redirection vers start si mauvais dossier ID' do
       get :show, dossier_id: bad_dossier_id
-      expect(response).to redirect_to(controller: :siret)
+      expect(response).to redirect_to(root_path)
     end
+
+    it_behaves_like "not owner of dossier", :show
   end
 
   describe 'POST #create' do

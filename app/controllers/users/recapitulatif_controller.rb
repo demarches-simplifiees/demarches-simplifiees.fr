@@ -1,6 +1,6 @@
 class Users::RecapitulatifController < UsersController
   def show
-    @dossier = Dossier.find(params[:dossier_id])
+    @dossier = current_user_dossier
     @dossier = @dossier.decorate
     @procedure = @dossier.procedure
 
@@ -13,7 +13,7 @@ class Users::RecapitulatifController < UsersController
     @commentaire_email = 'user@email'
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: :siret)
+    redirect_to url_for(root_path)
   end
 
   def propose

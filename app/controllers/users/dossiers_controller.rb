@@ -5,7 +5,7 @@ class Users::DossiersController < UsersController
   end
   def show
 
-    @dossier = Dossier.find(params[:id])
+    @dossier = current_user_dossier params[:id]
 
     @etablissement =  @dossier.etablissement
     @entreprise =  @dossier.entreprise.decorate
@@ -43,7 +43,7 @@ class Users::DossiersController < UsersController
 
   def update
 
-    @dossier = Dossier.find(params[:id])
+    @dossier = current_user_dossier params[:id]
     if checked_autorisation_donnees?
       @dossier.update_attributes(update_params)
 

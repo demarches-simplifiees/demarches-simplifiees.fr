@@ -16,8 +16,11 @@ describe Users::RecapitulatifController, type: :controller do
 
     it 'redirection vers siret si mauvais dossier ID' do
       get :show, dossier_id: bad_dossier_id
-      expect(response).to redirect_to('/users/siret')
+      expect(response).to redirect_to('/')
     end
+
+    it_behaves_like "not owner of dossier", :show
+
   end
 
   describe 'POST #propose' do

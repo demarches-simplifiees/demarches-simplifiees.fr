@@ -30,7 +30,7 @@ describe Users::DossiersController, type: :controller do
 
   describe 'GET #show' do
     before do
-        sign_in create(:user)
+        sign_in dossier.user
     end
     it 'returns http success with dossier_id valid' do
       get :show, id: dossier_id
@@ -130,7 +130,7 @@ describe Users::DossiersController, type: :controller do
 
   describe 'PUT #update' do
     before do
-      sign_in create(:user)
+      sign_in dossier.user
       put :update, id: dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
     end
     context 'when Checkbox is checked' do

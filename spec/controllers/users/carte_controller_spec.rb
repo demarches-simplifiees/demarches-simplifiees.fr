@@ -37,6 +37,8 @@ RSpec.describe Users::CarteController, type: :controller do
       get :show, dossier_id: bad_dossier_id
       expect(response).to redirect_to(controller: :dossiers, action: :index)
     end
+
+    it_behaves_like "not owner of dossier", :show
   end
 
   describe 'POST #save_ref_api_carto' do
