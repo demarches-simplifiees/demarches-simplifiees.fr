@@ -1,7 +1,7 @@
-%h1 Bienvenue sur TPS - Gestionnaire
+%h1 Bienvenue sur TPS - Administration
 %br
 #gestionnaire_login
-  = form_for @gestionnaire, url: {controller: 'gestionnaires/sessions', action: :create } do |f|
+  = form_for @administrateur, url: {controller: 'administrateurs/sessions', action: :create } do |f|
     .form-group-lg
       .form-group
         = f.text_field :email, class: 'form-control', placeholder: 'Email'

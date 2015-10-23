@@ -1,12 +1,16 @@
 Rails.application.routes.draw do
 
-  devise_for :users, controllers: {
-                       sessions: 'users/sessions'
-                   }
+  devise_for :administrateurs, controllers: {
+                                 sessions: 'administrateurs/sessions'
+                             }, skip: [:password, :registrations]
 
   devise_for :gestionnaires, controllers: {
                                sessions: 'gestionnaires/sessions'
                            }, skip: [:password, :registrations]
+
+  devise_for :users, controllers: {
+                       sessions: 'users/sessions'
+                   }
 
   root 'users/dossiers#index'
 
@@ -35,23 +39,11 @@ Rails.application.routes.draw do
     resource :dossiers
   end
 
+  get 'admin' => 'admin#index'
 
-  # resources :dossiers do
-
-
-  #   # get '/carte/position' => 'carte#get_position'
-  #   # get '/carte' => 'carte#show'
-  #   # post '/carte' => 'carte#save_ref_api_carto'
-
-  #   # get '/description' => 'description#show'
-  #   # get '/description/error' => 'description#error'
-  #   # post 'description' => 'description#create'
-
-
-  #   post '/commentaire' => 'commentaires#create'
-
-  # end
-
+  namespace :admin do
+    get 'sign_in' => '/administrateurs/sessions#new'
+  end
 
   get 'backoffice' => 'backoffice#index'
 
@@ -63,6 +55,7 @@ Rails.application.routes.draw do
     end
     resources :commentaires, only: [:create]
   end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
