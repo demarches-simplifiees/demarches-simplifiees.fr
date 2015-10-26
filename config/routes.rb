@@ -12,7 +12,8 @@ Rails.application.routes.draw do
                        sessions: 'users/sessions'
                    }
 
-  root 'users/dossiers#index'
+  #root 'users/dossiers#index'
+  root 'root#index'
 
   get 'france_connect' => 'france_connect#login'
   get 'france_connect/callback' => 'france_connect#callback'
