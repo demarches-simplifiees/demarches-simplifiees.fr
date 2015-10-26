@@ -1,0 +1,36 @@
+%br
+.form-group{class: ('has-error' if @procedure.errors.messages[:libelle])}
+  %h4 Libellé*
+  =f.text_field :libelle, class: 'form-control', placeholder: 'Libellé'
+
+.form-group{class: ('has-error' if @procedure.errors.messages[:description])}
+  %h4 Description*
+  =f.text_area :description, class: 'form-control', placeholder: 'Description'
+
+.form-group{class: ('has-error' if @procedure.errors.messages[:lien_demarche])}
+  %h4 Lien Démarche*
+  =f.text_field :lien_demarche, class: 'form-control', placeholder: 'Lien Démarche'
+
+.form-group{class: ('has-error' if @procedure.errors.messages[:organisation])}
+  %h4 Organisation
+  =f.text_field :organisation, class: 'form-control', placeholder: 'Organisation'
+
+.form-group{class: ('has-error' if @procedure.errors.messages[:direction])}
+  %h4 Direction
+  =f.text_field :direction, class: 'form-control', placeholder: 'Direction'
+
+%br
+
+%label{ style:'font-weight:normal' }
+  =f.check_box :use_api_carto
+  Utilisation de l'API Carto
+
+%br
+%br
+%h4
+  Liste des champs à remplir pour un dossier
+
+%br
+%br
+%h4
+  Liste des pièces justificatives à fournir pour un dossier

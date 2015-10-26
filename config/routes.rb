@@ -43,12 +43,16 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get 'sign_in' => '/administrateurs/sessions#new'
+    resources :procedures do
+
+    end
   end
 
   get 'backoffice' => 'backoffice#index'
 
   namespace :backoffice do
     get 'sign_in' => '/gestionnaires/sessions#new'
+
     resources :dossiers do
       post 'confirme' => 'dossiers#confirme'
       post 'process' => 'dossiers#process_end'

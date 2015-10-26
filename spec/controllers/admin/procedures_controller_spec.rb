@@ -1,0 +1,161 @@
+require 'spec_helper'
+
+describe Admin::ProceduresController, type: :controller do
+  let(:admin) { create(:administrateur) }
+
+  let(:bad_procedure_id) { 100000 }
+
+  let(:libelle) { 'Procédure de test' }
+  let(:description) { 'Description de test' }
+  let(:organisation) { 'Organisation de test' }
+  let(:direction) { 'Direction de test' }
+  let(:lien_demarche) { 'http://localhost.com' }
+  let(:use_api_carto) { '1' }
+
+  let(:procedure_params) {
+    {
+        libelle: libelle,
+        description: description,
+        organisation: organisation,
+        direction: direction,
+        lien_demarche: lien_demarche,
+        use_api_carto: use_api_carto
+    }
+  }
+
+  before do
+    sign_in admin
+  end
+
+  describe 'GET #show' do
+    let(:procedure) { create(:procedure) }
+
+    subject { get :show, id: procedure.id }
+
+    context 'when user is not connected' do
+      before do
+        sign_out admin
+      end
+
+      it { expect(subject).to redirect_to new_administrateur_session_path }
+    end
+
+    context 'when user is connected' do
+      context 'when procedure exist' do
+        it { expect(subject).to have_http_status(:success) }
+      end
+
+      context "when procedure doesn't exist" do
+        before do
+          procedure.id = bad_procedure_id
+        end
+
+        it { expect(subject).to redirect_to admin_procedures_path }
+        it { expect(flash[:alert]).to be_present }
+      end
+    end
+  end
+
+  describe 'POST #create' do
+    context 'when all attributs are informed' do
+      describe 'new procedure in database' do
+        subject { post :create, procedure: procedure_params }
+
+        it { expect { subject }.to change { Procedure.count }.by(1) }
+      end
+
+      context 'when procedure is correctly save' do
+        before do
+          post :create, procedure: procedure_params
+        end
+
+        describe 'procedure attributs in database' do
+          subject { Procedure.last }
+
+          it { expect(subject.libelle).to eq(libelle) }
+          it { expect(subject.description).to eq(description) }
+          it { expect(subject.organisation).to eq(organisation) }
+          it { expect(subject.direction).to eq(direction) }
+          it { expect(subject.lien_demarche).to eq(lien_demarche) }
+          it { expect(subject.use_api_carto).to be_truthy }
+        end
+
+        it { expect(subject).to redirect_to(admin_procedures_path) }
+
+        it { expect(flash[:notice]).to be_present }
+      end
+    end
+
+    context 'when many attributs are not valid' do
+      let(:libelle) { '' }
+      let(:description) { '' }
+
+      describe 'no new procedure in database' do
+        subject { post :create, procedure: procedure_params }
+
+        it { expect { subject }.to change { Procedure.count }.by(0) }
+      end
+
+      describe 'flash message is present' do
+        before do
+          post :create, procedure: procedure_params
+        end
+
+        it { expect(flash[:alert]).to be_present }
+      end
+    end
+  end
+
+  describe 'PUT #update' do
+    let!(:procedure) { create(:procedure) }
+
+    context 'when administrateur is not connected' do
+      before do
+        sign_out admin
+      end
+
+      subject { put :update, id: procedure.id }
+
+      it { expect(subject).to redirect_to new_administrateur_session_path }
+    end
+
+    context 'when administrateur is connected' do
+      before do
+        put :update, id: procedure.id, procedure: procedure_params
+        procedure.reload
+      end
+
+      context 'when all attributs are informated' do
+        let(:libelle) { 'Blable' }
+        let(:description) { 'blabla' }
+        let(:organisation) { 'plop' }
+        let(:direction) { 'plap' }
+        let(:lien_demarche) { 'http://plip.com' }
+        let(:use_api_carto) { '0' }
+
+        describe 'procedure attributs in database' do
+          subject { procedure }
+
+          it { expect(subject.libelle).to eq(libelle) }
+          it { expect(subject.description).to eq(description) }
+          it { expect(subject.organisation).to eq(organisation) }
+          it { expect(subject.direction).to eq(direction) }
+          it { expect(subject.lien_demarche).to eq(lien_demarche) }
+          it { expect(subject.use_api_carto).to be_falsey }
+        end
+
+        it { expect(subject).to redirect_to(admin_procedures_path) }
+        it { expect(flash[:notice]).to be_present }
+      end
+
+      context 'when many attributs are not valid' do
+        let(:libelle) { '' }
+        let(:description) { '' }
+
+        describe 'flash message is present' do
+          it { expect(flash[:alert]).to be_present }
+        end
+      end
+    end
+  end
+end

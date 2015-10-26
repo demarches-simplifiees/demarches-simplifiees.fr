@@ -1,0 +1,17 @@
+= link_to("Nouvelle procédure", "/admin/procedures/new", class: 'btn btn-success', style: 'float:right')
+%h2 Gestion des procédures
+%br
+%br
+%table.table
+  %thead.row
+    %th.col-md-4.col-lg-1 ID
+    %th.col-md-4.col-lg-4 Libellé
+    %th.col-md-2.col-lg-4 Organisation
+    %th.col-md-2.col-lg-3 Direction
+  - @procedures.each do |procedure|
+    %tr
+      %td= procedure.id
+      %td
+        = link_to(procedure.libelle, "/admin/procedures/#{procedure.id}")
+      %td= procedure.organisation
+      %td= procedure.direction
