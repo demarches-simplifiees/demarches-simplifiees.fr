@@ -4,6 +4,7 @@ describe Admin::ProceduresController, type: :controller do
   let(:admin) { create(:administrateur) }
 
   let(:bad_procedure_id) { 100000 }
+  let(:procedure_id) { 1 }
 
   let(:libelle) { 'Procédure de test' }
   let(:description) { 'Description de test' }
@@ -30,7 +31,7 @@ describe Admin::ProceduresController, type: :controller do
   describe 'GET #show' do
     let(:procedure) { create(:procedure) }
 
-    subject { get :show, id: procedure.id }
+    subject { get :show, id: procedure_id }
 
     context 'when user is not connected' do
       before do
@@ -42,16 +43,14 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when user is connected' do
       context 'when procedure exist' do
+        let(:procedure_id) { procedure.id }
         it { expect(subject).to have_http_status(:success) }
       end
 
       context "when procedure doesn't exist" do
-        before do
-          procedure.id = bad_procedure_id
-        end
+        let(:procedure_id) { bad_procedure_id }
 
         it { expect(subject).to redirect_to admin_procedures_path }
-        it { expect(flash[:alert]).to be_present }
       end
     end
   end

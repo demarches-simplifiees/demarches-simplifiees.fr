@@ -29,8 +29,8 @@ describe Procedure do
     end
 
     context 'lien_demarche' do
-      it { is_expected.not_to allow_value(nil).for(:lien_demarche) }
-      it { is_expected.not_to allow_value('').for(:lien_demarche) }
+      it { is_expected.to allow_value(nil).for(:lien_demarche) }
+      it { is_expected.to allow_value('').for(:lien_demarche) }
       it { is_expected.to allow_value('http://localhost').for(:lien_demarche) }
     end
   end

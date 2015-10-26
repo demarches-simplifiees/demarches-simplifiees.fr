@@ -5,7 +5,7 @@ class Users::CarteController < UsersController
     @dossier = current_user_dossier
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: :dossiers, action: :index)
+    redirect_to url_for(root_path)
   end
 
   def save_ref_api_carto

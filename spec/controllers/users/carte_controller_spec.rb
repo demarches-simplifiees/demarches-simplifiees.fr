@@ -16,7 +16,6 @@ RSpec.describe Users::CarteController, type: :controller do
   end
 
   describe 'GET #show' do
-
     context 'user is not connected' do
       before do
         sign_out dossier.user
@@ -35,7 +34,7 @@ RSpec.describe Users::CarteController, type: :controller do
 
     it 'redirection vers la liste des dossiers du user si dossier ID n\'existe pas' do
       get :show, dossier_id: bad_dossier_id
-      expect(response).to redirect_to(controller: :dossiers, action: :index)
+      expect(response).to redirect_to(root_path)
     end
 
     it_behaves_like "not owner of dossier", :show
