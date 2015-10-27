@@ -1,0 +1,29 @@
+.form-inline{id:"type_de_champs_#{index}", style: 'padding-bottom:8px'}
+  .form-group{ style: 'padding-right: 2%' }
+    %h4 Libellé
+    %input.form-control#libelle{ type: 'text', placeholder: 'Libelle', name:"type_de_champs[#{index}][libelle]", size: 40, value: ("#{ type_de_champs.libelle }" unless type_de_champs.nil? )  }
+
+  .form-group{ style: 'padding-right: 2%' }
+    %h4 Type
+    %select.form-control#type_champs{ name: "type_de_champs[#{index}][type]" }
+      %option{ value: 'text', selected: (type_de_champs.type_champs == 'text' unless type_de_champs.nil?)}
+        Simple texte
+      %option{ value: 'textarea', selected: (type_de_champs.type_champs == 'textarea' unless type_de_champs.nil?)}
+        Texte multi-lignes
+      %option{ value: 'datetime', selected: (type_de_champs.type_champs == 'datetime' unless type_de_champs.nil?)}
+        Date
+      %option{ value: 'number', selected: (type_de_champs.type_champs == 'number' unless type_de_champs.nil?)}
+        Valeur numérique
+
+  .form-group{ style: 'padding-right: 2%' }
+    %h4
+      Description
+    %textarea.form-control#description{cols: 60, placeholder: 'Description', name: "type_de_champs[#{index}][description]"}
+      =("#{ type_de_champs.description }" unless type_de_champs.nil? )
+
+  %input#order_place{type: 'hidden', name: "type_de_champs[#{index}][order_place]", value: (("#{ type_de_champs.order_place}" unless type_de_champs.nil?) || index+1)}
+
+  -if type_de_champs.nil?
+    .form-group#add_type_de_champs_button
+      %br &nbsp;
+      %button.form-control.btn.btn-success#add_type_de_champs_procedure Ajouter
