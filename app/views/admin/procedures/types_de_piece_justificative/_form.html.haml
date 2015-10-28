@@ -1,0 +1,18 @@
+.form-inline{id:"type_de_piece_justificative_#{index}", style: 'padding-bottom:8px'}
+  .form-group{ style: 'padding-right: 2%' }
+    %h4 Libellé
+    %input.form-control#libelle{ type: 'text', placeholder: 'Libelle', name:"type_de_piece_justificative[#{index}][libelle]", size: 40, value: ("#{ type_de_piece_justificative.libelle }" unless type_de_piece_justificative.nil? )  }
+
+  .form-group{ style: 'padding-right: 2%' }
+    %h4
+      Description
+    %textarea.form-control#description{cols: 60, placeholder: 'Description', name: "type_de_piece_justificative[#{index}][description]"}
+      =("#{ type_de_piece_justificative.description }" unless type_de_piece_justificative.nil? )
+
+  %input#id_type_de_piece_justificative{type: 'hidden', name: "type_de_piece_justificative[#{index}][id_type_de_piece_justificative]", value: (("#{ type_de_piece_justificative.id}" unless type_de_piece_justificative.nil?))}
+  %input#delete{type: 'hidden', name: "type_de_piece_justificative[#{index}][delete]", value: 'false'}
+
+  -if type_de_piece_justificative.nil?
+    .form-group#add_type_de_piece_justificative_button
+      %br &nbsp;
+      %button.form-control.btn.btn-success#add_type_de_piece_justificative_procedure Ajouter

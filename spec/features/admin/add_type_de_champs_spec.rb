@@ -28,7 +28,7 @@ feature 'add a new type de champs', js: true do
       before do
         page.find_by_id('type_de_champs_0').find_by_id('libelle').set 'Libelle de test'
         page.find_by_id('type_de_champs_0').find_by_id('description').set 'Description de test'
-        page.click_on 'Ajouter'
+        page.click_on 'add_type_de_champs_procedure'
       end
 
       scenario 'a new champs type line is appeared with increment index id' do
