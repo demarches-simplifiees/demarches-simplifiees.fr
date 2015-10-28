@@ -32,6 +32,7 @@ class Admin::ProceduresController < ApplicationController
     end
 
     save_types_de_champs_params
+    save_types_de_piece_justificative_params
 
     flash.notice = 'Procédure enregistrée'
 
@@ -47,6 +48,7 @@ class Admin::ProceduresController < ApplicationController
     end
 
     save_types_de_champs_params
+    save_types_de_piece_justificative_params
 
     flash.notice = 'Préocédure modifiée'
     redirect_to admin_procedures_path
@@ -75,6 +77,25 @@ class Admin::ProceduresController < ApplicationController
         type_de_champs_tmp.procedure = @procedure
 
         type_de_champs_tmp.save
+      end
+    end
+  end
+
+  def save_types_de_piece_justificative_params
+    unless params[:type_de_piece_justificative].nil? || params[:type_de_piece_justificative].size == 0
+      params[:type_de_piece_justificative].each do |index, type_de_piece_justificative|
+
+        if type_de_piece_justificative[:id_type_de_piece_justificative].nil? || type_de_piece_justificative[:id_type_de_piece_justificative] == ''
+          type_de_piece_justificative_tmp = TypeDePieceJustificative.new
+        else
+          type_de_piece_justificative_tmp = TypeDePieceJustificative.find(type_de_piece_justificative[:id_type_de_piece_justificative])
+        end
+
+        type_de_piece_justificative_tmp.libelle = type_de_piece_justificative[:libelle]
+        type_de_piece_justificative_tmp.description = type_de_piece_justificative[:description]
+        type_de_piece_justificative_tmp.procedure = @procedure
+
+        type_de_piece_justificative_tmp.save
       end
     end
   end

@@ -52,12 +52,32 @@ describe Admin::ProceduresController, type: :controller do
     }
   }
 
+  let(:types_de_piece_justificative_params_errors) {
+    {'0' =>
+         {libelle: '',
+          description: 'Description de test'},
+     '1' =>
+         {libelle: 'Champs de test 2',
+          description: 'Description de test 2'}
+    }
+  }
+
+  let(:types_de_piece_justificative_params) {
+    {'0' =>
+         {libelle: 'PJ de test',
+          description: 'Description de test'},
+     '1' =>
+         {libelle: 'PJ de test 2',
+          description: 'Description de test 2'}
+    }
+  }
+
   before do
     sign_in admin
   end
 
   describe 'GET #show' do
-    let(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, :with_type_de_champs, :with_two_type_de_piece_justificative) }
 
     subject { get :show, id: procedure_id }
 
@@ -168,10 +188,43 @@ describe Admin::ProceduresController, type: :controller do
         it { expect(subject.types_de_champs.size).to eq(1) }
       end
     end
+
+    describe 'type_de_piece_justificative processing' do
+      before do
+        post :create, procedure: procedure_params, type_de_piece_justificative: types_de_piece_justificative_params
+      end
+
+      subject { Procedure.last }
+
+      context 'when no type de piece justificative is informed' do
+        let(:types_de_piece_justificative_params) { {} }
+        it { expect(subject.types_de_piece_justificative.size).to eq(0) }
+      end
+
+      context 'when two types de piece justificative are informed' do
+        it { expect(subject.types_de_piece_justificative.size).to eq(2) }
+
+        describe ' check types de piece justificative attributs present into database' do
+          subject { TypeDePieceJustificative.all }
+
+          it { expect(subject[0].libelle).to eq(types_de_piece_justificative_params['0'][:libelle]) }
+          it { expect(subject[0].description).to eq(types_de_piece_justificative_params['0'][:description]) }
+
+          it { expect(subject[1].libelle).to eq(types_de_piece_justificative_params['1'][:libelle]) }
+          it { expect(subject[1].description).to eq(types_de_piece_justificative_params['1'][:description]) }
+        end
+      end
+
+      context 'when one of two types de piece justificative have not a libelle' do
+        let(:types_de_piece_justificative_params) { types_de_piece_justificative_params_errors }
+
+        it { expect(subject.types_de_piece_justificative.size).to eq(1) }
+      end
+    end
   end
 
   describe 'PUT #update' do
-    let!(:procedure) { create(:procedure, :with_type_de_champs) }
+    let!(:procedure) { create(:procedure, :with_type_de_champs, :with_two_type_de_piece_justificative) }
 
     context 'when administrateur is not connected' do
       before do
@@ -185,7 +238,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when administrateur is connected' do
       before do
-        put :update, id: procedure.id, procedure: procedure_params, type_de_champs: types_de_champs_params
+        put :update, id: procedure.id, procedure: procedure_params, type_de_champs: types_de_champs_params, type_de_piece_justificative: types_de_piece_justificative_params
         procedure.reload
       end
 
@@ -274,6 +327,56 @@ describe Admin::ProceduresController, type: :controller do
             it { expect(subject.description).to eq(types_de_champs_params['0'][:description]) }
             it { expect(subject.order_place).to eq(types_de_champs_params['0'][:order_place]) }
 
+          end
+        end
+      end
+
+      describe 'type_de_piece_justificative processing' do
+        subject { procedure }
+
+        context 'when no type de piece justificative is informed' do
+          let(:types_de_piece_justificative_params) { {} }
+          it { expect(subject.types_de_piece_justificative.size).to eq(2) }
+        end
+
+        context 'when two types de piece justificative are informed' do
+          it { expect(subject.types_de_piece_justificative.size).to eq(4) }
+
+          describe ' check types de piece justificative attributs added into database' do
+            subject { procedure.types_de_piece_justificative }
+
+            it { expect(subject[2].libelle).to eq(types_de_piece_justificative_params['0'][:libelle]) }
+            it { expect(subject[2].description).to eq(types_de_piece_justificative_params['0'][:description]) }
+
+            it { expect(subject[3].libelle).to eq(types_de_piece_justificative_params['1'][:libelle]) }
+            it { expect(subject[3].description).to eq(types_de_piece_justificative_params['1'][:description]) }
+          end
+        end
+
+        context 'when one of two types de piece justificative have not a libelle' do
+          let(:types_de_piece_justificative_params) { types_de_piece_justificative_params_errors }
+
+          it { expect(subject.types_de_piece_justificative.size).to eq(3) }
+        end
+
+        context 'when one types de piece justificative is edit' do
+          let(:types_de_piece_justificative_params) {
+            {'0' =>
+                 {libelle: 'PJ de test editée',
+                  type: 'number',
+                  description: 'Description de test editée',
+                  order_place: 1,
+                  id_type_de_piece_justificative: procedure.types_de_piece_justificative.first.id}
+            }
+          }
+
+          it { expect(subject.types_de_piece_justificative.size).to eq(2) }
+
+          describe ' check types de piece justificative attributs updated into database' do
+            subject { procedure.types_de_piece_justificative.first }
+
+            it { expect(subject.libelle).to eq(types_de_piece_justificative_params['0'][:libelle]) }
+            it { expect(subject.description).to eq(types_de_piece_justificative_params['0'][:description]) }
           end
         end
       end
