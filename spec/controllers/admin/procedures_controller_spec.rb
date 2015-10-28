@@ -24,6 +24,34 @@ describe Admin::ProceduresController, type: :controller do
     }
   }
 
+  let(:types_de_champs_params) {
+    {'0' =>
+         {libelle: 'Champs de test',
+          type: 'number',
+          description: 'Description de test',
+          order_place: 1},
+     '1' =>
+         {libelle: 'Champs de test 2',
+          type: 'text',
+          description: 'Description de test 2',
+          order_place: 2}
+    }
+  }
+
+  let(:types_de_champs_params_errors) {
+    {'0' =>
+         {libelle: '',
+          type: 'number',
+          description: 'Description de test',
+          order_place: 1},
+     '1' =>
+         {libelle: 'Champs de test 2',
+          type: 'text',
+          description: 'Description de test 2',
+          order_place: 2}
+    }
+  }
+
   before do
     sign_in admin
   end
@@ -103,10 +131,47 @@ describe Admin::ProceduresController, type: :controller do
         it { expect(flash[:alert]).to be_present }
       end
     end
+
+    describe 'type_de_champs processing' do
+      before do
+        post :create, procedure: procedure_params, type_de_champs: types_de_champs_params
+      end
+
+      subject { Procedure.last }
+
+      context 'when no type de champs is informed' do
+        let(:types_de_champs_params) { {} }
+        it { expect(subject.types_de_champs.size).to eq(0) }
+      end
+
+      context 'when two types de champs are informed' do
+        it { expect(subject.types_de_champs.size).to eq(2) }
+
+        describe ' check types de champs attributs present into database' do
+          subject { TypeDeChamps.all }
+
+          it { expect(subject[0].libelle).to eq(types_de_champs_params['0'][:libelle]) }
+          it { expect(subject[0].type_champs).to eq(types_de_champs_params['0'][:type]) }
+          it { expect(subject[0].description).to eq(types_de_champs_params['0'][:description]) }
+          it { expect(subject[0].order_place).to eq(types_de_champs_params['0'][:order_place]) }
+
+          it { expect(subject[1].libelle).to eq(types_de_champs_params['1'][:libelle]) }
+          it { expect(subject[1].type_champs).to eq(types_de_champs_params['1'][:type]) }
+          it { expect(subject[1].description).to eq(types_de_champs_params['1'][:description]) }
+          it { expect(subject[1].order_place).to eq(types_de_champs_params['1'][:order_place]) }
+        end
+      end
+
+      context 'when one of two types de champs have not a libelle' do
+        let(:types_de_champs_params) { types_de_champs_params_errors }
+
+        it { expect(subject.types_de_champs.size).to eq(1) }
+      end
+    end
   end
 
   describe 'PUT #update' do
-    let!(:procedure) { create(:procedure) }
+    let!(:procedure) { create(:procedure, :with_type_de_champs) }
 
     context 'when administrateur is not connected' do
       before do
@@ -120,7 +185,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when administrateur is connected' do
       before do
-        put :update, id: procedure.id, procedure: procedure_params
+        put :update, id: procedure.id, procedure: procedure_params, type_de_champs: types_de_champs_params
         procedure.reload
       end
 
@@ -153,6 +218,39 @@ describe Admin::ProceduresController, type: :controller do
 
         describe 'flash message is present' do
           it { expect(flash[:alert]).to be_present }
+        end
+      end
+
+      describe 'type_de_champs processing' do
+        subject { procedure }
+
+        context 'when no type de champs is informed' do
+          let(:types_de_champs_params) { {} }
+          it { expect(subject.types_de_champs.size).to eq(0) }
+        end
+
+        context 'when two types de champs are informed' do
+          it { expect(subject.types_de_champs.size).to eq(2) }
+
+          describe ' check types de champs attributs present into database' do
+            subject { procedure.types_de_champs }
+
+            it { expect(subject[0].libelle).to eq(types_de_champs_params['0'][:libelle]) }
+            it { expect(subject[0].type_champs).to eq(types_de_champs_params['0'][:type]) }
+            it { expect(subject[0].description).to eq(types_de_champs_params['0'][:description]) }
+            it { expect(subject[0].order_place).to eq(types_de_champs_params['0'][:order_place]) }
+
+            it { expect(subject[1].libelle).to eq(types_de_champs_params['1'][:libelle]) }
+            it { expect(subject[1].type_champs).to eq(types_de_champs_params['1'][:type]) }
+            it { expect(subject[1].description).to eq(types_de_champs_params['1'][:description]) }
+            it { expect(subject[1].order_place).to eq(types_de_champs_params['1'][:order_place]) }
+          end
+        end
+
+        context 'when one of two types de champs have not a libelle' do
+          let(:types_de_champs_params) { types_de_champs_params_errors }
+
+          it { expect(subject.types_de_champs.size).to eq(1) }
         end
       end
     end

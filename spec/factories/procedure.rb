@@ -8,7 +8,7 @@ FactoryGirl.define do
       after(:build) do |procedure, _evaluator|
         type_de_champs = create(:type_de_champs)
 
-        procedure.type_de_champs << type_de_champs
+        procedure.types_de_champs << type_de_champs
       end
     end
 

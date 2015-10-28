@@ -31,6 +31,8 @@ class Admin::ProceduresController < ApplicationController
       return render 'new'
     end
 
+    save_types_de_champs_params
+
     flash.notice = 'Procédure enregistrée'
 
     redirect_to admin_procedures_path
@@ -44,6 +46,8 @@ class Admin::ProceduresController < ApplicationController
       return render 'show'
     end
 
+    save_types_de_champs_params
+
     flash.notice = 'Préocédure modifiée'
     redirect_to admin_procedures_path
 
@@ -53,6 +57,24 @@ class Admin::ProceduresController < ApplicationController
   end
 
   private
+
+  def save_types_de_champs_params
+    TypeDeChamps.destroy_all(procedure: @procedure)
+
+    unless params[:type_de_champs].nil? || params[:type_de_champs].size == 0
+      params[:type_de_champs].each do |index, type_de_champs|
+        type_de_champs_tmp = TypeDeChamps.new
+
+        type_de_champs_tmp.libelle = type_de_champs[:libelle]
+        type_de_champs_tmp.type_champs = type_de_champs[:type]
+        type_de_champs_tmp.description = type_de_champs[:description]
+        type_de_champs_tmp.order_place = type_de_champs[:order_place]
+        type_de_champs_tmp.procedure = @procedure
+
+        type_de_champs_tmp.save
+      end
+    end
+  end
 
   def create_params
     params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_demarche, :use_api_carto)
