@@ -22,6 +22,8 @@
       =("#{ type_de_champs.description }" unless type_de_champs.nil? )
 
   %input#order_place{type: 'hidden', name: "type_de_champs[#{index}][order_place]", value: (("#{ type_de_champs.order_place}" unless type_de_champs.nil?) || index+1)}
+  %input#id_type_de_champs{type: 'hidden', name: "type_de_champs[#{index}][id_type_de_champs]", value: (("#{ type_de_champs.id}" unless type_de_champs.nil?))}
+  %input#delete{type: 'hidden', name: "type_de_champs[#{index}][delete]", value: 'false'}
 
   -if type_de_champs.nil?
     .form-group#add_type_de_champs_button

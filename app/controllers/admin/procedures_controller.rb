@@ -59,11 +59,14 @@ class Admin::ProceduresController < ApplicationController
   private
 
   def save_types_de_champs_params
-    TypeDeChamps.destroy_all(procedure: @procedure)
-
     unless params[:type_de_champs].nil? || params[:type_de_champs].size == 0
       params[:type_de_champs].each do |index, type_de_champs|
-        type_de_champs_tmp = TypeDeChamps.new
+        
+        if type_de_champs[:id_type_de_champs].nil? || type_de_champs[:id_type_de_champs] == ''
+          type_de_champs_tmp = TypeDeChamps.new
+        else
+          type_de_champs_tmp = TypeDeChamps.find(type_de_champs[:id_type_de_champs])
+        end
 
         type_de_champs_tmp.libelle = type_de_champs[:libelle]
         type_de_champs_tmp.type_champs = type_de_champs[:type]

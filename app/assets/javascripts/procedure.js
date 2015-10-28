@@ -32,6 +32,12 @@ function add_new_type_de_champs() {
     $("#new_type_de_champs #order_place").attr('name', 'type_de_champs[' + types_de_champs_index + '][order_place]');
     $("#new_type_de_champs #order_place").val(types_de_champs_index+1);
 
+    $("#new_type_de_champs #id_type_de_champs").attr('name', 'type_de_champs[' + types_de_champs_index + '][id_type_de_champs]');
+    $("#new_type_de_champs #id_type_de_champs").val('')
+
+    $("#new_type_de_champs #delete").attr('name', 'type_de_champs[' + types_de_champs_index + '][delete]');
+    $("#new_type_de_champs #delete").val('false')
+
     $("#new_type_de_champs #add_type_de_champs_button").remove();
     $("#new_type_de_champs .form-inline").append($("#add_type_de_champs_button"))
 }
