@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'add a new type de champs', js: true do
+feature 'add a new type de piece justificative', js: true do
   let(:administrateur) { create(:administrateur) }
 
   before do
@@ -12,7 +12,7 @@ feature 'add a new type de champs', js: true do
       visit new_admin_procedure_path
     end
 
-    scenario 'page have form to created new type de champs' do
+    scenario 'page have form to created new type de piece justificative' do
       expect(page).to have_css('#type_de_piece_justificative_0')
       expect(page).to have_css('input[name="type_de_piece_justificative[0][libelle]"]')
       expect(page).to have_css('textarea[name="type_de_piece_justificative[0][description]"]')
@@ -22,14 +22,14 @@ feature 'add a new type de champs', js: true do
       expect(page).to have_css('#new_type_de_piece_justificative #add_type_de_piece_justificative_button')
     end
 
-    context 'when user add a new champs type' do
+    context 'when user add a new piece justificative type' do
       before do
         page.find_by_id('type_de_piece_justificative_0').find_by_id('libelle').set 'Libelle de test'
         page.find_by_id('type_de_piece_justificative_0').find_by_id('description').set 'Description de test'
         page.click_on 'add_type_de_piece_justificative_procedure'
       end
 
-      scenario 'a new champs type line is appeared with increment index id' do
+      scenario 'a new piece justificative type line is appeared with increment index id' do
         expect(page).to have_css('#type_de_piece_justificative_1')
         expect(page).to have_css('input[name="type_de_piece_justificative[1][libelle]"]')
         expect(page).to have_css('textarea[name="type_de_piece_justificative[1][description]"]')

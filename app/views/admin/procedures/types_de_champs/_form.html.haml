@@ -29,3 +29,7 @@
     .form-group#add_type_de_champs_button
       %br &nbsp;
       %button.form-control.btn.btn-success#add_type_de_champs_procedure Ajouter
+
+  .form-group{id: "delete_type_de_champs_#{index}_button", style: ("display:none" if type_de_champs.nil?)}
+    %br &nbsp;
+    %button.form-control.btn.btn-danger{id: "delete_type_de_champs_#{index}_procedure"} X

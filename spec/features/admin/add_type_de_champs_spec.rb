@@ -47,6 +47,11 @@ feature 'add a new type de champs', js: true do
         expect(page.find_by_id('type_de_champs_0').find_by_id('order_place', visible: false).value).to eq('1')
       end
 
+      scenario 'the first line have new button delete' do
+        expect(page).to have_css('#delete_type_de_champs_0_button')
+        expect(page).to have_css('#delete_type_de_champs_0_procedure')
+      end
+
       scenario 'the new line is empty' do
         expect(page.find_by_id('type_de_champs_1').find_by_id('libelle').value).to eq('')
         expect(page.find_by_id('type_de_champs_1').find_by_id('description').value).to eq('')

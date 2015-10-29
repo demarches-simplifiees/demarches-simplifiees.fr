@@ -329,6 +329,43 @@ describe Admin::ProceduresController, type: :controller do
 
           end
         end
+
+        context 'when delete a type de champs' do
+          let(:types_de_champs_params) {
+            {'0' =>
+                 {libelle: 'Champs de test editée',
+                  type: 'number',
+                  description: 'Description de test editée',
+                  order_place: 1,
+                  delete: 'true',
+                  id_type_de_champs: procedure.types_de_champs.first.id}
+            }
+          }
+
+          it { expect(subject.types_de_champs.size).to eq(0) }
+        end
+
+        context 'when delete a type de champs present in database and a type champ not present in database' do
+          let(:types_de_champs_params) {
+            {'0' =>
+                 {libelle: 'Champs de test editée',
+                  type: 'number',
+                  description: 'Description de test editée',
+                  order_place: 1,
+                  delete: 'true',
+                  id_type_de_champs: procedure.types_de_champs.first.id},
+             '1' =>
+                 {libelle: 'Champs de test editée',
+                  type: 'number',
+                  description: 'Description de test editée',
+                  order_place: 1,
+                  delete: 'true',
+                  id_type_de_champs: ''}
+            }
+          }
+
+          it { expect(subject.types_de_champs.size).to eq(0) }
+        end
       end
 
       describe 'type_de_piece_justificative processing' do
@@ -379,6 +416,44 @@ describe Admin::ProceduresController, type: :controller do
             it { expect(subject.description).to eq(types_de_piece_justificative_params['0'][:description]) }
           end
         end
+
+        context 'when delete a type de piece justificative' do
+          let(:types_de_piece_justificative_params) {
+            {'0' =>
+                 {libelle: 'PJ de test editée',
+                  type: 'number',
+                  description: 'Description de test editée',
+                  order_place: 1,
+                  delete: 'true',
+                  id_type_de_piece_justificative: procedure.types_de_piece_justificative.first.id}
+            }
+          }
+
+          it { expect(subject.types_de_piece_justificative.size).to eq(1) }
+        end
+
+        context 'when delete a type de piece justificative present in database and a type piece justificative not present in database' do
+          let(:types_de_piece_justificative_params) {
+            {'0' =>
+                 {libelle: 'PJ de test editée',
+                  type: 'number',
+                  description: 'Description de test editée',
+                  order_place: 1,
+                  delete: 'true',
+                  id_type_de_piece_justificative: procedure.types_de_piece_justificative.first.id},
+             '1' =>
+                 {libelle: 'PJ de test editée',
+                  type: 'number',
+                  description: 'Description de test editée',
+                  order_place: 1,
+                  delete: 'true',
+                  id_type_de_piece_justificative: ''}
+            }
+          }
+
+          it { expect(subject.types_de_piece_justificative.size).to eq(1) }
+        end
+
       end
     end
   end
