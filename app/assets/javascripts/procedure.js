@@ -1,21 +1,19 @@
 var ready = function () {
     $("#add_type_de_champs_procedure").on('click', function (e) {
         add_new_type_de('champs');
-
         return stop_event(e);
     });
 
     $("#add_type_de_piece_justificative_procedure").on('click', function (e) {
         add_new_type_de('piece_justificative');
-
         return stop_event(e);
     });
 
-    add_delete_type_de_champs_listener_on_click("#liste_champs .btn-danger");
-    add_delete_type_de_champs_listener_on_click("#new_type_de_champs .btn-danger");
+    add_delete_listener_on_click_for_type_de("champs", "#liste_champs .btn-danger");
+    add_delete_listener_on_click_for_type_de("champs", "#new_type_de_champs .btn-danger");
 
-    add_delete_type_de_piece_justificative_listener_on_click("#liste_piece_justificative .btn-danger");
-    add_delete_type_de_piece_justificative_listener_on_click("#new_type_de_piece_justificative .btn-danger");
+    add_delete_listener_on_click_for_type_de("piece_justificative", "#liste_piece_justificative .btn-danger");
+    add_delete_listener_on_click_for_type_de("piece_justificative", "#new_type_de_piece_justificative .btn-danger");
 };
 
 $(document).ready(ready);
@@ -27,29 +25,20 @@ function stop_event(e) {
     return false;
 }
 
-function add_delete_type_de_champs_listener_on_click(node_id) {
+function add_delete_listener_on_click_for_type_de(type_libelle, node_id) {
     $(node_id).on('click', function (e) {
-        var index_type_de_champs = (e.target.id).replace('delete_type_de_champs_', '').replace('_procedure', '')
+        var index = (e.target.id).replace('delete_type_de_' + type_libelle + '_', '').replace('_procedure', '');
 
-        delete_type_de_champs(index_type_de_champs);
+        delete_type_de(type_libelle, index);
 
         return stop_event(e);
     });
 }
-
-function add_delete_type_de_piece_justificative_listener_on_click(node_id) {
-    $(node_id).on('click', function (e) {
-        var index_type_de_piece_justificative = (e.target.id).replace('delete_type_de_piece_justificative_', '').replace('_procedure', '')
-
-        delete_type_de_piece_justificative(index_type_de_piece_justificative);
-
-        return stop_event(e);
-    });
-}
-
 
 function add_new_type_de(type_libelle) {
-    var CHAMPS = 0, PJ = 1, ERROR = -1;
+    var CHAMPS = 0,
+        PJ = 1,
+        ERROR = -1;
 
     if (is_champs_or_pj() == ERROR) return false;
 
@@ -89,9 +78,9 @@ function add_new_type_de(type_libelle) {
     $("#new_type_de_" + type_libelle + " #delete_type_de_" + type_libelle + "_" + (which_index() - 1) + "_procedure").attr('id', "delete_type_de_" + type_libelle + "_" + which_index() + "_procedure");
 
     if (is_champs_or_pj() == CHAMPS)
-        add_delete_type_de_champs_listener_on_click("#delete_type_de_champs_" + which_index() + "_procedure");
+        add_delete_listener_on_click_for_type_de("champs", "#delete_type_de_champs_" + which_index() + "_procedure");
     else if (is_champs_or_pj() == PJ)
-        add_delete_type_de_piece_justificative_listener_on_click("#delete_type_de_piece_justificative_" + which_index() + "_procedure");
+        add_delete_listener_on_click_for_type_de("piece_justificative", "#delete_type_de_piece_justificative_" + which_index() + "_procedure");
 
     $("#new_type_de_" + type_libelle + " #add_type_de_" + type_libelle + "_button").remove();
     $("#new_type_de_" + type_libelle + " .form-inline").append($("#add_type_de_" + type_libelle + "_button"))
@@ -118,13 +107,7 @@ function add_new_type_de_piece_justificative_params() {
     $("#new_type_de_piece_justificative #description").val('');
 }
 
-
-function delete_type_de_champs(index) {
-    $("#type_de_champs_" + index).hide();
-    $("#type_de_champs_" + index + " #delete").val('true');
-}
-
-function delete_type_de_piece_justificative(index) {
-    $("#type_de_piece_justificative_" + index).hide();
-    $("#type_de_piece_justificative_" + index + " #delete").val('true');
+function delete_type_de(type_libelle, index) {
+    $("#type_de_" + type_libelle + "_" + index).hide();
+    $("#type_de_" + type_libelle + "_" + index + " #delete").val('true');
 }
