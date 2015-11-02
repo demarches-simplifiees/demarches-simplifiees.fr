@@ -16,10 +16,10 @@ class Users::RecapitulatifController < UsersController
     redirect_to url_for(root_path)
   end
 
-  def submit
+  def initiate
     show
 
-    @dossier.next_step! 'user', 'submit'
+    @dossier.next_step! 'user', 'initiate'
     flash.notice = 'Dossier soumis avec succès.'
 
     render 'show'

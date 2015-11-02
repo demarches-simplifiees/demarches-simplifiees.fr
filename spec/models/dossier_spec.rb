@@ -122,7 +122,7 @@ describe Dossier do
     describe '#next_step' do
       let(:dossier) { create(:dossier, :with_user) }
       let(:role) { 'user' }
-      let(:action) { 'submit' }
+      let(:action) { 'initiate' }
 
       subject { dossier.next_step! role, action }
 
@@ -156,17 +156,17 @@ describe Dossier do
             it { is_expected.to eq('draft') }
           end
 
-          context 'when he submit a dossier' do
-            let(:action) { 'submit' }
+          context 'when he initiate a dossier' do
+            let(:action) { 'initiate' }
 
-            it { is_expected.to eq('submitted') }
+            it { is_expected.to eq('initiated') }
           end
         end
       end
 
-      context 'when dossier is at state submitted' do
+      context 'when dossier is at state initiated' do
         before do
-          dossier.submitted!
+          dossier.initiated!
         end
 
         context 'when user is connect' do
@@ -175,13 +175,13 @@ describe Dossier do
           context 'when is update dossier informations' do
             let(:action) { 'update' }
 
-            it {is_expected.to eq('submitted')}
+            it {is_expected.to eq('initiated')}
           end
 
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it {is_expected.to eq('submitted')}
+            it {is_expected.to eq('initiated')}
           end
         end
 
@@ -373,8 +373,8 @@ describe Dossier do
 
     context 'gestionnaire backoffice methods' do
       let!(:dossier1) { create(:dossier, :with_user, :with_procedure, state: 'draft')}
-      let!(:dossier2) { create(:dossier, :with_user, :with_procedure, state: 'submitted')}
-      let!(:dossier3) { create(:dossier, :with_user, :with_procedure, state: 'submitted')}
+      let!(:dossier2) { create(:dossier, :with_user, :with_procedure, state: 'initiated')}
+      let!(:dossier3) { create(:dossier, :with_user, :with_procedure, state: 'initiated')}
       let!(:dossier4) { create(:dossier, :with_user, :with_procedure, state: 'replied')}
       let!(:dossier5) { create(:dossier, :with_user, :with_procedure, state: 'updated')}
       let!(:dossier6) { create(:dossier, :with_user, :with_procedure, state: 'validated')}

@@ -17,8 +17,8 @@ describe DossierDecorator do
       expect(subject).to eq('Brouillon')
     end
 
-    it 'submitted is submit' do
-      dossier.submitted!
+    it 'initiated is initiate' do
+      dossier.initiated!
       expect(subject).to eq('Soumis')
     end
 

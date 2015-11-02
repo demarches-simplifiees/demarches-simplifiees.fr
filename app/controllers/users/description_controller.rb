@@ -45,7 +45,7 @@ class Users::DescriptionController < UsersController
       commentaire.dossier = @dossier
       commentaire.save
     else
-      @dossier.submitted!
+      @dossier.initiated!
     end
 
     flash.notice = 'Félicitation, votre demande a bien été enregistrée.'

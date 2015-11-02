@@ -55,9 +55,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         end
       end
 
-      context 'when dossier state is submitted' do
+      context 'when dossier state is initiated' do
         before do
-          dossier.submitted!
+          dossier.initiated!
           render
         end
 

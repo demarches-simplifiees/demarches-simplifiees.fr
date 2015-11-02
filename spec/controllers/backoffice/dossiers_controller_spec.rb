@@ -32,7 +32,7 @@ describe Backoffice::DossiersController, type: :controller do
   describe 'POST #valid' do
     context 'le gestionnaire valide un dossier' do
       before do
-        dossier.submitted!
+        dossier.initiated!
         sign_in gestionnaire
       end
 

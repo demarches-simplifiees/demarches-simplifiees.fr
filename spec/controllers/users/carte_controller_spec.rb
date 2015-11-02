@@ -49,7 +49,7 @@ RSpec.describe Users::CarteController, type: :controller do
     end
 
     context 'En train de modifier la localisation' do
-      let(:dossier) { create(:dossier, :with_procedure, :with_user, ref_dossier_carto: ref_dossier_carto, state: 'submitted') }
+      let(:dossier) { create(:dossier, :with_procedure, :with_user, ref_dossier_carto: ref_dossier_carto, state: 'initiated') }
       before do
         post :save_ref_api_carto, dossier_id: dossier_id, ref_dossier_carto: ref_dossier_carto
       end

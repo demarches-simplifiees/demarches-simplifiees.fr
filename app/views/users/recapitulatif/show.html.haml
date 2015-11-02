@@ -11,7 +11,7 @@
 
     - unless gestionnaire_signed_in?
       -if @dossier.draft?
-        = form_tag(url_for({controller: :recapitulatif, action: :submit, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+        = form_tag(url_for({controller: :recapitulatif, action: :initiate, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Soumettre mon dossier'
       -elsif @dossier.validated?

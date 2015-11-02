@@ -23,18 +23,18 @@ describe Users::RecapitulatifController, type: :controller do
 
   end
 
-  describe 'POST #submit' do
-    context 'when an user submit his dossier' do
+  describe 'POST #initiate' do
+    context 'when an user initiate his dossier' do
       before do
-        post :submit, dossier_id: dossier.id
+        post :initiate, dossier_id: dossier.id
       end
 
       it 'dossier change his state for closed' do
         dossier.reload
-        expect(dossier.state).to eq('submitted')
+        expect(dossier.state).to eq('initiated')
       end
 
-      it 'a message informe user what his dossier is submitted' do
+      it 'a message informe user what his dossier is initiated' do
         expect(flash[:notice]).to include('Dossier soumis avec succès.')
       end
     end
@@ -52,7 +52,7 @@ describe Users::RecapitulatifController, type: :controller do
         expect(dossier.state).to eq('submit_validated')
       end
 
-      it 'a message informe user what his dossier is submitted' do
+      it 'a message informe user what his dossier is initiated' do
         expect(flash[:notice]).to include('Dossier déposé avec succès.')
       end
     end
