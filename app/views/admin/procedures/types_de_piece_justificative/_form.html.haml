@@ -15,8 +15,8 @@
   -if type_de_piece_justificative.nil?
     .form-group#add_type_de_piece_justificative_button
       %br &nbsp;
-      %button.form-control.btn.btn-success#add_type_de_piece_justificative_procedure Ajouter
+      %button.form-control.btn.btn-success#add_type_de_piece_justificative_procedure{type: 'button'} Ajouter
 
   .form-group{id: "delete_type_de_piece_justificative_#{index}_button", style: ("display:none" if type_de_piece_justificative.nil?)}
     %br &nbsp;
-    %button.form-control.btn.btn-danger{id: "delete_type_de_piece_justificative_#{index}_procedure"} X
+    %button.form-control.btn.btn-danger.fa.fa-trash-o{type: 'button', id: "delete_type_de_piece_justificative_#{index}_procedure"}

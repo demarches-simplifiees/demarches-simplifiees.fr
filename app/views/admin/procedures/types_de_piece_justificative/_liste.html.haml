@@ -3,6 +3,8 @@
     - @procedure.types_de_piece_justificative.order(:libelle).each_with_index do |type_de_piece_justificative, index|
       =render partial: 'admin/procedures/types_de_piece_justificative/form', locals:{ type_de_piece_justificative: type_de_piece_justificative, index: index }
 
+#liste_delete_piece_justificative
+
 #new_type_de_piece_justificative
   =render partial: 'admin/procedures/types_de_piece_justificative/form', locals:{ type_de_piece_justificative: nil, index: @procedure.types_de_piece_justificative.size }
 

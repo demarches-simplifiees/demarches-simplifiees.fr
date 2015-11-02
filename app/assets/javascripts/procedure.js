@@ -1,12 +1,10 @@
 var ready = function () {
     $("#add_type_de_champs_procedure").on('click', function (e) {
         add_new_type_de('champs');
-        return stop_event(e);
     });
 
     $("#add_type_de_piece_justificative_procedure").on('click', function (e) {
         add_new_type_de('piece_justificative');
-        return stop_event(e);
     });
 
     add_delete_listener_on_click_for_type_de("champs", "#liste_champs .btn-danger");
@@ -14,24 +12,21 @@ var ready = function () {
 
     add_delete_listener_on_click_for_type_de("piece_justificative", "#liste_piece_justificative .btn-danger");
     add_delete_listener_on_click_for_type_de("piece_justificative", "#new_type_de_piece_justificative .btn-danger");
+
+    config_up_and_down_button();
+
+    add_action_listener_on_click_for_button_up(".button_up");
+    add_action_listener_on_click_for_button_down(".button_down");
 };
 
 $(document).ready(ready);
 $(document).on('page:load', ready);
-
-function stop_event(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
-}
 
 function add_delete_listener_on_click_for_type_de(type_libelle, node_id) {
     $(node_id).on('click', function (e) {
         var index = (e.target.id).replace('delete_type_de_' + type_libelle + '_', '').replace('_procedure', '');
 
         delete_type_de(type_libelle, index);
-
-        return stop_event(e);
     });
 }
 
@@ -84,6 +79,11 @@ function add_new_type_de(type_libelle) {
 
     $("#new_type_de_" + type_libelle + " #add_type_de_" + type_libelle + "_button").remove();
     $("#new_type_de_" + type_libelle + " .form-inline").append($("#add_type_de_" + type_libelle + "_button"))
+
+    add_action_listener_on_click_for_button_up("#new_type_de_" + type_libelle + " .button_up")
+    add_action_listener_on_click_for_button_down("#new_type_de_" + type_libelle + " .button_down")
+
+    config_up_and_down_button();
 }
 
 function add_new_type_de_champs_params() {
@@ -95,8 +95,12 @@ function add_new_type_de_champs_params() {
 
     $("#new_type_de_champs #type_champs").attr('name', 'type_de_champs[' + types_de_champs_index + '][type]');
 
-    $("#new_type_de_champs #order_place").attr('name', 'type_de_champs[' + types_de_champs_index + '][order_place]');
-    $("#new_type_de_champs #order_place").val(types_de_champs_index + 1);
+    $("#new_type_de_champs .order_place").attr('name', 'type_de_champs[' + types_de_champs_index + '][order_place]');
+    $("#new_type_de_champs .order_place").val(parseInt($("#liste_champs .order_place").last().val()) + 1);
+
+    $("#new_type_de_champs .order_type_de_champs_button").attr('id', 'order_type_de_champs_' + types_de_champs_index + '_button')
+    $("#new_type_de_champs .order_type_de_champs_button .button_up").attr('id', 'order_type_de_champs_' + types_de_champs_index + '_up_procedure')
+    $("#new_type_de_champs .order_type_de_champs_button .button_down").attr('id', 'order_type_de_champs_' + types_de_champs_index + '_down_procedure')
 }
 
 function add_new_type_de_piece_justificative_params() {
@@ -108,6 +112,83 @@ function add_new_type_de_piece_justificative_params() {
 }
 
 function delete_type_de(type_libelle, index) {
-    $("#type_de_" + type_libelle + "_" + index).hide();
+    var delete_node = $("#type_de_" + type_libelle + "_" + index).hide();
+
+    $("#liste_delete_" + type_libelle).append(delete_node);
     $("#type_de_" + type_libelle + "_" + index + " #delete").val('true');
+
+    if (type_libelle == 'champs') {
+        var next_order_place = parseInt($("#type_de_" + type_libelle + "_" + index + " .order_place").val());
+        var type_de_champs_to_change_order_place = $("#liste_champs .order_place");
+
+        type_de_champs_to_change_order_place.each(function () {
+            if ($(this).val() > next_order_place) {
+                $(this).val(next_order_place++);
+            }
+        });
+        $("#new_type_de_champs .order_place").val(next_order_place);
+
+        config_up_and_down_button();
+    }
+}
+
+function config_up_and_down_button() {
+    if ($("#liste_champs .order_place").size() > 0) {
+        var first_index = $("#liste_champs .order_place").first()
+            .attr('name')
+            .replace('type_de_champs[', '')
+            .replace('][order_place]', '');
+
+        var last_index = $("#liste_champs .order_place").last()
+            .attr('name')
+            .replace('type_de_champs[', '')
+            .replace('][order_place]', '');
+
+        $(".button_up").show();
+        $(".button_down").show();
+        $("#liste_champs .order_type_de_champs_button").show();
+
+        $("#order_type_de_champs_" + first_index + "_up_procedure").hide();
+        $("#order_type_de_champs_" + last_index + "_down_procedure").hide();
+    }
+}
+
+function add_action_listener_on_click_for_button_up(node_id) {
+    $(node_id).on('click', function (e) {
+        var index = (e.target.id).replace('order_type_de_champs_', '').replace('_up_procedure', '');
+        var order_place = parseInt($("#type_de_champs_" + index + " .order_place").val());
+        var order_place_before = order_place - 1;
+
+        var node_before = $("input[class='order_place'][value='" + order_place_before + "']").parent();
+
+        var index_before = (node_before.attr('id')).replace('type_de_champs_', '');
+
+        $("#type_de_champs_" + index).insertBefore("#type_de_champs_" + index_before);
+        $("#type_de_champs_" + index_before);
+
+        $("#type_de_champs_" + index_before + " .order_place").val(order_place);
+        $("#type_de_champs_" + index + " .order_place").val(order_place_before);
+
+        config_up_and_down_button();
+    });
+}
+
+function add_action_listener_on_click_for_button_down(node_id) {
+    $(node_id).on('click', function (e) {
+        var index = (e.target.id).replace('order_type_de_champs_', '').replace('_down_procedure', '');
+        var order_place = parseInt($("#type_de_champs_" + index + " .order_place").val());
+        var order_place_after = order_place + 1;
+
+        var node_after = $("input[class='order_place'][value='" + order_place_after + "']").parent();
+
+        var index_after = (node_after.attr('id')).replace('type_de_champs_', '');
+
+        $("#type_de_champs_" + index).insertAfter("#type_de_champs_" + index_after);
+        $("#type_de_champs_" + index_after);
+
+        $("#type_de_champs_" + index_after + " .order_place").val(order_place);
+        $("#type_de_champs_" + index + " .order_place").val(order_place_after);
+
+        config_up_and_down_button();
+    });
 }

@@ -21,6 +21,10 @@ feature 'add a new type de champs', js: true do
       expect(page).to have_css('input[name="type_de_champs[0][id_type_de_champs]"]', visible: false)
       expect(page).to have_css('input[name="type_de_champs[0][delete]"]', visible: false)
 
+      expect(page).to have_css('#order_type_de_champs_0_button', visible: false);
+      expect(page).to have_css('#order_type_de_champs_0_up_procedure', visible: false);
+      expect(page).to have_css('#order_type_de_champs_0_down_procedure', visible: false);
+
       expect(page).to have_css('#new_type_de_champs #add_type_de_champs_button')
     end
 
@@ -39,12 +43,16 @@ feature 'add a new type de champs', js: true do
         expect(page).to have_css('input[name="type_de_champs[1][order_place]"]', visible: false)
         expect(page).to have_css('input[name="type_de_champs[1][id_type_de_champs]"]', visible: false)
         expect(page).to have_css('input[name="type_de_champs[1][delete]"]', visible: false)
+
+        expect(page).to have_css('#order_type_de_champs_1_button', visible: false);
+        expect(page).to have_css('#order_type_de_champs_1_up_procedure', visible: false);
+        expect(page).to have_css('#order_type_de_champs_1_down_procedure', visible: false);
       end
 
       scenario 'the first line is filled' do
         expect(page.find_by_id('type_de_champs_0').find_by_id('libelle').value).to eq('Libelle de test')
         expect(page.find_by_id('type_de_champs_0').find_by_id('description').value).to eq('Description de test')
-        expect(page.find_by_id('type_de_champs_0').find_by_id('order_place', visible: false).value).to eq('1')
+        expect(page.find_by_id('type_de_champs_0').find('input[class="order_place"]', visible: false).value).to eq('1')
       end
 
       scenario 'the first line have new button delete' do
@@ -55,7 +63,7 @@ feature 'add a new type de champs', js: true do
       scenario 'the new line is empty' do
         expect(page.find_by_id('type_de_champs_1').find_by_id('libelle').value).to eq('')
         expect(page.find_by_id('type_de_champs_1').find_by_id('description').value).to eq('')
-        expect(page.find_by_id('type_de_champs_1').find_by_id('order_place', visible: false).value).to eq('2')
+        expect(page.find_by_id('type_de_champs_1').find('input[class="order_place"]', visible: false).value).to eq('2')
         expect(page.find_by_id('type_de_champs_1').find_by_id('id_type_de_champs', visible: false).value).to eq('')
         expect(page.find_by_id('type_de_champs_1').find_by_id('delete', visible: false).value).to eq('false')
       end

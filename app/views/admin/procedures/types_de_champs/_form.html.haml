@@ -21,15 +21,20 @@
     %textarea.form-control#description{cols: 60, placeholder: 'Description', name: "type_de_champs[#{index}][description]"}
       =("#{ type_de_champs.description }" unless type_de_champs.nil? )
 
-  %input#order_place{type: 'hidden', name: "type_de_champs[#{index}][order_place]", value: (("#{ type_de_champs.order_place}" unless type_de_champs.nil?) || index+1)}
+  %input.order_place{type: 'hidden', name: "type_de_champs[#{index}][order_place]", value: (("#{ type_de_champs.order_place }" unless type_de_champs.nil?) || index+1)}
   %input#id_type_de_champs{type: 'hidden', name: "type_de_champs[#{index}][id_type_de_champs]", value: (("#{ type_de_champs.id}" unless type_de_champs.nil?))}
   %input#delete{type: 'hidden', name: "type_de_champs[#{index}][delete]", value: 'false'}
 
   -if type_de_champs.nil?
     .form-group#add_type_de_champs_button
       %br &nbsp;
-      %button.form-control.btn.btn-success#add_type_de_champs_procedure Ajouter
+      %button.form-control.btn.btn-success#add_type_de_champs_procedure{type: 'button'} Ajouter
+
+  .form-group.order_type_de_champs_button{id: "order_type_de_champs_#{index}_button", style: ("display:none" if type_de_champs.nil?)}
+    %br &nbsp;
+    %button.form-control.btn.btn-default.button_up.fa.fa-chevron-up{type: 'button', id: "order_type_de_champs_#{index}_up_procedure"}
+    %button.form-control.btn.btn-default.button_down.fa.fa-chevron-down{type: 'button', id: "order_type_de_champs_#{index}_down_procedure"}
 
   .form-group{id: "delete_type_de_champs_#{index}_button", style: ("display:none" if type_de_champs.nil?)}
     %br &nbsp;
-    %button.form-control.btn.btn-danger{id: "delete_type_de_champs_#{index}_procedure"} X
+    %button.form-control.btn.btn-danger.fa.fa-trash-o{type: 'button', id: "delete_type_de_champs_#{index}_procedure"}
