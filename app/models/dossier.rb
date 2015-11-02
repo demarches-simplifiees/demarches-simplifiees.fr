@@ -3,8 +3,8 @@ class Dossier < ActiveRecord::Base
                submitted: 'submitted',
                replied: 'replied',
                updated: 'updated',
-               validated: 'validated', #-confirmed
-               deposited: 'deposited', #submit_validated
+               validated: 'validated',
+               submit_validated: 'submit_validated', #deposited
                processed: 'processed'} #closed
 
   has_one :etablissement, dependent: :destroy
@@ -49,7 +49,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action
-    unless %w(submit replied update comment valid depose process).include?(action)
+    unless %w(submit replied update comment valid submit_validate process).include?(action)
       fail 'action is not valid'
     end
 
@@ -63,9 +63,9 @@ class Dossier < ActiveRecord::Base
           if draft?
             submitted!
           end
-        when 'depose'
+        when 'submit_validate'
           if validated?
-            deposited!
+            submit_validated!
           end
         when 'update'
           if replied?
@@ -93,7 +93,7 @@ class Dossier < ActiveRecord::Base
             validated!
           end
         when 'process'
-          if deposited?
+          if submit_validated?
             processed!
           end
       end
@@ -102,7 +102,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.a_traiter
-    Dossier.where("state='submitted' OR state='updated' OR state='deposited'").order('updated_at ASC')
+    Dossier.where("state='submitted' OR state='updated' OR state='submit_validated'").order('updated_at ASC')
   end
 
   def self.en_attente

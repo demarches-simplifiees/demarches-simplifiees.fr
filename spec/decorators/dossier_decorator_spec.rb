@@ -37,8 +37,8 @@ describe DossierDecorator do
       expect(subject).to eq('Validé')
     end
 
-    it 'deposited is dépose' do
-      dossier.deposited!
+    it 'submit_validated is dépose' do
+      dossier.submit_validated!
       expect(subject).to eq('Déposé')
     end
 

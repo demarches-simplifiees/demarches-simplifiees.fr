@@ -48,7 +48,7 @@ describe Backoffice::DossiersController, type: :controller do
   describe 'POST #process_end' do
     context 'le gestionnaire taite un dossier' do
       before do
-        dossier.deposited!
+        dossier.submit_validated!
         sign_in gestionnaire
       end
 

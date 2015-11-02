@@ -100,9 +100,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         end
       end
 
-      context 'when dossier state is deposited' do
+      context 'when dossier state is submit_validated' do
         before do
-          dossier.deposited!
+          dossier.submit_validated!
           render
         end
 

@@ -25,10 +25,10 @@ class Users::RecapitulatifController < UsersController
     render 'show'
   end
 
-  def depose
+  def submit_validate
     show
 
-    @dossier.next_step! 'user', 'depose'
+    @dossier.next_step! 'user', 'submit_validate'
     flash.notice = 'Dossier déposé avec succès.'
 
     render 'show'
