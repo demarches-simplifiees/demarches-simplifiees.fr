@@ -42,8 +42,8 @@ describe DossierDecorator do
       expect(subject).to eq('Déposé')
     end
 
-    it 'processed is traité' do
-      dossier.processed!
+    it 'closed is traité' do
+      dossier.closed!
       expect(subject).to eq('Traité')
     end
   end

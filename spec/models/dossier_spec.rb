@@ -336,17 +336,17 @@ describe Dossier do
             it {is_expected.to eq('submit_validated')}
           end
 
-          context 'when is processed the dossier' do
-            let(:action) { 'process' }
+          context 'when is closed the dossier' do
+            let(:action) { 'close' }
 
-            it {is_expected.to eq('processed')}
+            it {is_expected.to eq('closed')}
           end
         end
       end
 
-      context 'when dossier is at state processed' do
+      context 'when dossier is at state closed' do
         before do
-          dossier.processed!
+          dossier.closed!
         end
 
         context 'when user is connect' do
@@ -355,7 +355,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('processed')}
+            it { is_expected.to eq('closed')}
           end
         end
 
@@ -365,7 +365,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('processed')}
+            it { is_expected.to eq('closed')}
           end
         end
       end
@@ -379,7 +379,7 @@ describe Dossier do
       let!(:dossier5) { create(:dossier, :with_user, :with_procedure, state: 'updated')}
       let!(:dossier6) { create(:dossier, :with_user, :with_procedure, state: 'validated')}
       let!(:dossier7) { create(:dossier, :with_user, :with_procedure, state: 'submit_validated')}
-      let!(:dossier8) { create(:dossier, :with_user, :with_procedure, state: 'processed')}
+      let!(:dossier8) { create(:dossier, :with_user, :with_procedure, state: 'closed')}
 
       describe '#a_traiter' do
         subject { described_class.a_traiter }

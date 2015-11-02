@@ -116,7 +116,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
       context 'when dossier state is traité' do
         before do
-          dossier.processed!
+          dossier.closed!
           render
         end
         it { expect(rendered).to have_content('Traité') }

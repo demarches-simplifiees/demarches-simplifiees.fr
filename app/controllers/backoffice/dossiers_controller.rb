@@ -28,12 +28,12 @@ class Backoffice::DossiersController < ApplicationController
     render 'show'
   end
 
-  def process_end
+  def close
     params[:id] = params[:dossier_id]
 
     show
 
-    @dossier.next_step! 'gestionnaire', 'process'
+    @dossier.next_step! 'gestionnaire', 'close'
     flash.notice = 'Dossier traité avec succès.'
 
     render 'show'

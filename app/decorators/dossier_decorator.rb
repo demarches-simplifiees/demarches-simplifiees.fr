@@ -25,7 +25,7 @@ class DossierDecorator < Draper::Decorator
         'Validé'
       when 'submit_validated'
         'Déposé'
-      when 'processed'
+      when 'closed'
         'Traité'
       else
         fail 'State not valid'

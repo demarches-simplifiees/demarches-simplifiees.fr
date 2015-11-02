@@ -45,18 +45,18 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
-  describe 'POST #process_end' do
+  describe 'POST #close' do
     context 'le gestionnaire taite un dossier' do
       before do
         dossier.submit_validated!
         sign_in gestionnaire
       end
 
-      it 'dossier change is state for processed' do
-        post :process_end, dossier_id: dossier_id
+      it 'dossier change is state for closed' do
+        post :close, dossier_id: dossier_id
 
         dossier.reload
-        expect(dossier.state).to eq('processed')
+        expect(dossier.state).to eq('closed')
       end
     end
   end

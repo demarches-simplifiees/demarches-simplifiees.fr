@@ -56,7 +56,7 @@ Rails.application.routes.draw do
 
     resources :dossiers do
       post 'valid' => 'dossiers#valid'
-      post 'process' => 'dossiers#process_end'
+      post 'close' => 'dossiers#close'
     end
     resources :commentaires, only: [:create]
   end

@@ -29,7 +29,7 @@ describe Users::RecapitulatifController, type: :controller do
         post :submit, dossier_id: dossier.id
       end
 
-      it 'dossier change his state for processed' do
+      it 'dossier change his state for closed' do
         dossier.reload
         expect(dossier.state).to eq('submitted')
       end

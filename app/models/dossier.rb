@@ -4,8 +4,8 @@ class Dossier < ActiveRecord::Base
                replied: 'replied',
                updated: 'updated',
                validated: 'validated',
-               submit_validated: 'submit_validated', #deposited
-               processed: 'processed'} #closed
+               submit_validated: 'submit_validated',
+               closed: 'closed'} #-processed
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
@@ -49,7 +49,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action
-    unless %w(submit replied update comment valid submit_validate process).include?(action)
+    unless %w(submit replied update comment valid submit_validate close).include?(action)
       fail 'action is not valid'
     end
 
@@ -92,9 +92,9 @@ class Dossier < ActiveRecord::Base
           elsif submitted?
             validated!
           end
-        when 'process'
+        when 'close'
           if submit_validated?
-            processed!
+            closed!
           end
       end
     end
@@ -110,7 +110,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.termine
-    Dossier.where("state='processed'").order('updated_at ASC')
+    Dossier.where("state='closed'").order('updated_at ASC')
   end
 
   private

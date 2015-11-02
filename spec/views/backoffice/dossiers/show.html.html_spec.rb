@@ -121,9 +121,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       end
     end
 
-    context 'when dossier have state processed' do
+    context 'when dossier have state closed' do
       before do
-        dossier.processed!
+        dossier.closed!
         render
       end
 
