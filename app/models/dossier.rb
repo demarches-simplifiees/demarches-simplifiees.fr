@@ -1,7 +1,7 @@
 class Dossier < ActiveRecord::Base
   enum state: {draft: 'draft',
-               submitted: 'submitted', #-proposed
-               reply: 'reply', #replied
+               submitted: 'submitted',
+               replied: 'replied', #replied
                updated: 'updated',
                confirmed: 'confirmed', #validated
                deposited: 'deposited', #submit_confirmed
@@ -49,7 +49,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action
-    unless %w(submit reply update comment confirme depose process).include?(action)
+    unless %w(submit replied update comment confirme depose process).include?(action)
       fail 'action is not valid'
     end
 
@@ -68,11 +68,11 @@ class Dossier < ActiveRecord::Base
             deposited!
           end
         when 'update'
-          if reply?
+          if replied?
             updated!
           end
         when 'comment'
-          if reply?
+          if replied?
             updated!
           end
       end
@@ -80,14 +80,14 @@ class Dossier < ActiveRecord::Base
       case action
         when 'comment'
           if updated?
-            reply!
+            replied!
           elsif submitted?
-            reply!
+            replied!
           end
         when 'confirme'
           if updated?
             confirmed!
-          elsif reply?
+          elsif replied?
             confirmed!
           elsif submitted?
             confirmed!
@@ -106,7 +106,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.en_attente
-    Dossier.where("state='reply' OR state='confirmed'").order('updated_at ASC')
+    Dossier.where("state='replied' OR state='confirmed'").order('updated_at ASC')
   end
 
   def self.termine

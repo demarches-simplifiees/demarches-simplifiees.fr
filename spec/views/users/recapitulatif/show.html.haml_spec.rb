@@ -64,9 +64,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         it { expect(rendered).to have_content('Soumis') }
       end
 
-      context 'when dossier state is reply' do
+      context 'when dossier state is replied' do
         before do
-          dossier.reply!
+          dossier.replied!
           render
         end
 

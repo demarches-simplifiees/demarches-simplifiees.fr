@@ -61,9 +61,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       end
     end
 
-    context 'when dossier have state reply' do
+    context 'when dossier have state replied' do
       before do
-        dossier.reply!
+        dossier.replied!
         render
       end
 

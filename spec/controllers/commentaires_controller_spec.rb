@@ -17,10 +17,10 @@ describe Users::CommentairesController, type: :controller do
 
     describe 'change dossier state after post a comment' do
       context 'when user is connected' do
-        context 'when dossier is at state reply' do
+        context 'when dossier is at state replied' do
           before do
             sign_in dossier.user
-            dossier.reply!
+            dossier.replied!
 
             post :create, dossier_id: dossier_id, texte_commentaire: texte_commentaire
             dossier.reload

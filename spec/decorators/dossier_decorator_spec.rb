@@ -22,8 +22,8 @@ describe DossierDecorator do
       expect(subject).to eq('Soumis')
     end
 
-    it 'reply is repondu' do
-      dossier.reply!
+    it 'replied is repondu' do
+      dossier.replied!
       expect(subject).to eq('Répondu')
     end
 

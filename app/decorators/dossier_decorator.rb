@@ -17,7 +17,7 @@ class DossierDecorator < Draper::Decorator
         'Brouillon'
       when 'submitted'
         'Soumis'
-      when 'reply'
+      when 'replied'
         'Répondu'
       when 'updated'
         'Mis à jour'

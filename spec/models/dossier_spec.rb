@@ -191,7 +191,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('reply')}
+            it { is_expected.to eq('replied')}
           end
 
           context 'when is confirmed the dossier' do
@@ -202,9 +202,9 @@ describe Dossier do
         end
       end
 
-      context 'when dossier is at state reply' do
+      context 'when dossier is at state replied' do
         before do
-          dossier.reply!
+          dossier.replied!
         end
 
         context 'when user is connect' do
@@ -232,7 +232,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('reply')}
+            it { is_expected.to eq('replied')}
           end
 
           context 'when is confirmed the dossier' do
@@ -270,7 +270,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('reply')}
+            it { is_expected.to eq('replied')}
           end
 
           context 'when is confirmed the dossier' do
@@ -375,7 +375,7 @@ describe Dossier do
       let!(:dossier1) { create(:dossier, :with_user, :with_procedure, state: 'draft')}
       let!(:dossier2) { create(:dossier, :with_user, :with_procedure, state: 'submitted')}
       let!(:dossier3) { create(:dossier, :with_user, :with_procedure, state: 'submitted')}
-      let!(:dossier4) { create(:dossier, :with_user, :with_procedure, state: 'reply')}
+      let!(:dossier4) { create(:dossier, :with_user, :with_procedure, state: 'replied')}
       let!(:dossier5) { create(:dossier, :with_user, :with_procedure, state: 'updated')}
       let!(:dossier6) { create(:dossier, :with_user, :with_procedure, state: 'confirmed')}
       let!(:dossier7) { create(:dossier, :with_user, :with_procedure, state: 'deposited')}
