@@ -23,7 +23,7 @@ class DossierDecorator < Draper::Decorator
         'Mis à jour'
       when 'validated'
         'Validé'
-      when 'submit_validated'
+      when 'submitted'
         'Déposé'
       when 'closed'
         'Traité'

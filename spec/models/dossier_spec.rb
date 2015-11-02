@@ -294,10 +294,10 @@ describe Dossier do
             it { is_expected.to eq('validated') }
           end
 
-          context 'when is submit_validated the dossier' do
-            let(:action) { 'submit_validate' }
+          context 'when is submitted the dossier' do
+            let(:action) { 'submit' }
 
-            it { is_expected.to eq('submit_validated') }
+            it { is_expected.to eq('submitted') }
           end
         end
 
@@ -312,9 +312,9 @@ describe Dossier do
         end
       end
 
-      context 'when dossier is at state submit_validated' do
+      context 'when dossier is at state submitted' do
         before do
-          dossier.submit_validated!
+          dossier.submitted!
         end
 
         context 'when user is connect' do
@@ -323,7 +323,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('submit_validated') }
+            it { is_expected.to eq('submitted') }
           end
         end
 
@@ -333,7 +333,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it {is_expected.to eq('submit_validated')}
+            it {is_expected.to eq('submitted')}
           end
 
           context 'when is closed the dossier' do
@@ -378,7 +378,7 @@ describe Dossier do
       let!(:dossier4) { create(:dossier, :with_user, :with_procedure, state: 'replied')}
       let!(:dossier5) { create(:dossier, :with_user, :with_procedure, state: 'updated')}
       let!(:dossier6) { create(:dossier, :with_user, :with_procedure, state: 'validated')}
-      let!(:dossier7) { create(:dossier, :with_user, :with_procedure, state: 'submit_validated')}
+      let!(:dossier7) { create(:dossier, :with_user, :with_procedure, state: 'submitted')}
       let!(:dossier8) { create(:dossier, :with_user, :with_procedure, state: 'closed')}
 
       describe '#a_traiter' do

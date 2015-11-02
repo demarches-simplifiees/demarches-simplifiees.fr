@@ -103,9 +103,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       end
     end
 
-    context 'when dossier have state submit_validated' do
+    context 'when dossier have state submitted' do
       before do
-        dossier.submit_validated!
+        dossier.submitted!
         render
       end
 

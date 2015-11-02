@@ -1,10 +1,10 @@
 class Dossier < ActiveRecord::Base
   enum state: {draft: 'draft',
-               initiated: 'initiated', #-submitted
+               initiated: 'initiated',
                replied: 'replied',
                updated: 'updated',
                validated: 'validated',
-               submit_validated: 'submit_validated', #initiated
+               submitted: 'submitted', #-submit_validated
                closed: 'closed'} #-processed
 
   has_one :etablissement, dependent: :destroy
@@ -49,7 +49,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action
-    unless %w(initiate replied update comment valid submit_validate close).include?(action)
+    unless %w(initiate update comment valid submit close).include?(action)
       fail 'action is not valid'
     end
 
@@ -63,9 +63,9 @@ class Dossier < ActiveRecord::Base
           if draft?
             initiated!
           end
-        when 'submit_validate'
+        when 'submit'
           if validated?
-            submit_validated!
+            submitted!
           end
         when 'update'
           if replied?
@@ -93,7 +93,7 @@ class Dossier < ActiveRecord::Base
             validated!
           end
         when 'close'
-          if submit_validated?
+          if submitted?
             closed!
           end
       end
@@ -102,7 +102,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.a_traiter
-    Dossier.where("state='initiated' OR state='updated' OR state='submit_validated'").order('updated_at ASC')
+    Dossier.where("state='initiated' OR state='updated' OR state='submitted'").order('updated_at ASC')
   end
 
   def self.en_attente

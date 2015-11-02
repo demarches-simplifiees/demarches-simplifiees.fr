@@ -40,16 +40,16 @@ describe Users::RecapitulatifController, type: :controller do
     end
   end
 
-  describe 'POST #submit_validate' do
+  describe 'POST #submit' do
     context 'when an user depose his dossier' do
       before do
         dossier.validated!
-        post :submit_validate, dossier_id: dossier.id
+        post :submit, dossier_id: dossier.id
       end
 
-      it 'dossier change his state for submit_validated' do
+      it 'dossier change his state for submitted' do
         dossier.reload
-        expect(dossier.state).to eq('submit_validated')
+        expect(dossier.state).to eq('submitted')
       end
 
       it 'a message informe user what his dossier is initiated' do

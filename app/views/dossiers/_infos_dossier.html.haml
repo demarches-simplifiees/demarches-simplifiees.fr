@@ -39,16 +39,16 @@
 
   %div.row{style: 'text-align:right'}
     -unless gestionnaire_signed_in?
-      -if !@dossier.validated? && !@dossier.submit_validated? && !@dossier.closed?
+      -if !@dossier.validated? && !@dossier.submitted? && !@dossier.closed?
         %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@dossier.id}/description?back_url=recapitulatif"}
           = 'Editer mon dossier'
 
     -unless user_signed_in?
-      -if !@dossier.validated? && !@dossier.submit_validated? && !@dossier.closed?
+      -if !@dossier.validated? && !@dossier.submitted? && !@dossier.closed?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Valider le dossier'
-      -elsif @dossier.submit_validated?
+      -elsif @dossier.submitted?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Traiter le dossier'
