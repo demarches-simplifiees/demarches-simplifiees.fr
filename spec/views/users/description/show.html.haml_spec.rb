@@ -26,30 +26,6 @@ describe 'users/description/show.html.haml', type: :view do
       expect(rendered).to have_selector('textarea[id=description][name=description]')
     end
 
-    it 'Montant du projet' do
-      expect(rendered).to have_selector('input[id=montant_projet][name=montant_projet]')
-    end
-
-    it 'Montant du projet est de type number' do
-      expect(rendered).to have_selector('input[type=number][id=montant_projet]')
-    end
-
-    it 'Montant des aides du projet' do
-      expect(rendered).to have_selector('input[id=montant_aide_demande][name=montant_aide_demande]')
-    end
-
-    it 'Montant des aides du projet est de type number' do
-      expect(rendered).to have_selector('input[type=number][id=montant_aide_demande]')
-    end
-
-    it 'Date prévisionnelle du projet' do
-      expect(rendered).to have_selector('input[id=date_previsionnelle][name=date_previsionnelle]')
-    end
-
-    it 'Date prévisionnelle du projet est de type text avec un data-provide=datepicker' do
-      expect(rendered).to have_selector('input[type=text][id=date_previsionnelle][data-provide=datepicker]')
-    end
-
     it 'Charger votre CERFA (PDF)' do
       expect(rendered).to have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]')
     end
@@ -93,9 +69,6 @@ describe 'users/description/show.html.haml', type: :view do
       create(:dossier, :with_procedure,
              nom_projet: 'Projet de test',
              description: 'Description de test',
-             montant_projet: 12_000,
-             montant_aide_demande: 3000,
-             date_previsionnelle: '20/01/2016',
              user: user)
     end
 
@@ -103,25 +76,12 @@ describe 'users/description/show.html.haml', type: :view do
       render
     end
 
-
     it 'Nom du projet' do
       expect(rendered).to have_selector("input[id=nom_projet][value='#{dossier.nom_projet}']")
     end
 
     it 'Description du projet' do
       expect(rendered).to have_content("#{dossier.description}")
-    end
-
-    it 'Montant du projet' do
-      expect(rendered).to have_selector("input[id=montant_projet][value='#{dossier.montant_projet}']")
-    end
-
-    it 'Montant des aides du projet' do
-      expect(rendered).to have_selector("input[id=montant_aide_demande][value='#{dossier.montant_aide_demande}']")
-    end
-
-    it 'Date prévisionnelle du projet' do
-      expect(rendered).to have_selector("#date_previsionnelle", dossier.date_previsionnelle)
     end
   end
 
@@ -140,7 +100,7 @@ describe 'users/description/show.html.haml', type: :view do
 
     context 'la liste des pièces récupérées automatiquement est signaliée' do
       it 'Attestation MSA' do
-        expect(rendered).to have_selector("#piece_justificative_#{all_type_pj_procedure_id[1]}","Nous l'avons récupéré pour vous.")
+        expect(rendered).to have_selector("#piece_justificative_#{all_type_pj_procedure_id[1]}", "Nous l'avons récupéré pour vous.")
       end
     end
   end

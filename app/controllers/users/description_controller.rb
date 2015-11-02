@@ -56,6 +56,6 @@ class Users::DescriptionController < UsersController
   private
 
   def create_params
-    params.permit(:nom_projet, :description, :montant_projet, :montant_aide_demande, :date_previsionnelle)
+    params.permit(:nom_projet, :description)
   end
 end

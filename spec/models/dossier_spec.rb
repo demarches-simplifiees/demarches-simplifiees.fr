@@ -5,14 +5,12 @@ describe Dossier do
   describe 'database columns' do
     it { is_expected.to have_db_column(:description) }
     it { is_expected.to have_db_column(:autorisation_donnees) }
-    it { is_expected.to have_db_column(:position_lat) }
-    it { is_expected.to have_db_column(:position_lon) }
     it { is_expected.to have_db_column(:nom_projet) }
-    it { is_expected.to have_db_column(:montant_projet) }
-    it { is_expected.to have_db_column(:montant_aide_demande) }
-    it { is_expected.to have_db_column(:date_previsionnelle).of_type(:date) }
     it { is_expected.to have_db_column(:created_at) }
     it { is_expected.to have_db_column(:updated_at) }
+    it { is_expected.to have_db_column(:state) }
+    it { is_expected.to have_db_column(:procedure_id) }
+    it { is_expected.to have_db_column(:user_id) }
   end
 
   describe 'associations' do
@@ -41,16 +39,6 @@ describe Dossier do
       it { is_expected.to allow_value(nil).for(:description) }
       it { is_expected.not_to allow_value('').for(:description) }
       it { is_expected.to allow_value('ma superbe description').for(:description) }
-    end
-    context 'montant_projet' do
-      it { is_expected.to allow_value(nil).for(:montant_projet) }
-      it { is_expected.not_to allow_value('').for(:montant_projet) }
-      it { is_expected.to allow_value(124324).for(:montant_projet) }
-    end
-    context 'montant_aide_demande' do
-      it { is_expected.to allow_value(nil).for(:montant_aide_demande) }
-      it { is_expected.not_to allow_value('').for(:montant_aide_demande) }
-      it { is_expected.to allow_value(124324).for(:montant_aide_demande) }
     end
   end
 
@@ -118,7 +106,6 @@ describe Dossier do
       end
     end
 
-    #TODO revoir le nommage
     describe '#next_step' do
       let(:dossier) { create(:dossier, :with_user) }
       let(:role) { 'user' }

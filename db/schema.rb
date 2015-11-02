@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151102143908) do
+ActiveRecord::Schema.define(version: 20151102163051) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,14 +54,8 @@ ActiveRecord::Schema.define(version: 20151102143908) do
   create_table "dossiers", force: :cascade do |t|
     t.string   "description"
     t.boolean  "autorisation_donnees"
-    t.string   "position_lat"
-    t.string   "position_lon"
-    t.string   "ref_dossier_carto"
     t.string   "nom_projet"
-    t.string   "montant_projet"
-    t.string   "montant_aide_demande"
     t.integer  "procedure_id"
-    t.date     "date_previsionnelle"
     t.datetime "created_at",           default: '2015-09-22 09:25:29'
     t.datetime "updated_at",           default: '2015-09-22 09:25:29'
     t.string   "state"

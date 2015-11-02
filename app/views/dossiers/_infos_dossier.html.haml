@@ -7,24 +7,6 @@
         = @dossier.nom_projet
 
       %br
-      %div.row
-        .col-lg-6.col-md-6
-          %h4 Montant total
-          %p{style:'margin-left:5%'}
-            =number_to_currency(@dossier.montant_projet.to_f, :unit => " ", :separator => ",", :delimiter => " ")
-            !='&euro;'
-
-        .col-lg-6.col-md-6
-          %h4 Début du projet souhaité
-          %p{style:'margin-left:5%'}
-            = @dossier.date_fr
-      %div.row
-        .col-lg-6.col-md-6
-          %h4 Montant souhaité
-          %p{style:'margin-left:5%'}
-            =number_to_currency(@dossier.montant_aide_demande.to_f, :unit => " ", :separator => ",", :delimiter => " ")
-            !='&euro;'
-      %br
       .description
         - begin
           - @dossier.description.split(/(?:\n\r?|\r\n?')/).each do |line|

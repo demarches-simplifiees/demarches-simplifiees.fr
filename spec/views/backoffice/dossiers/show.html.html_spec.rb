@@ -136,53 +136,53 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
     end
   end
 
-    #TODO réactiver
-    # context 'la liste des pièces justificatives est présente' do
-    #   context 'Attestation MSA' do
-    #     let(:id_piece_justificative) { 93 }
-    #
-    #     it 'la ligne de la pièce justificative est présente' do
-    #       expect(rendered).to have_selector("tr[id=piece_justificative_#{id_piece_justificative}]")
-    #     end
-    #
-    #     it 'le bouton "Récupérer" est présent' do
-    #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_selector("a[href='']")
-    #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_content('Récupérer')
-    #     end
-    #   end
-    #
-    #   context 'Attestation RDI' do
-    #     let(:id_piece_justificative) { 103 }
-    #
-    #     it 'la ligne de la pièce justificative est présente' do
-    #       expect(rendered).to have_selector("tr[id=piece_justificative_#{id_piece_justificative}]")
-    #     end
-    #
-    #     it 'le libelle "Pièce manquante" est présent' do
-    #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_content('Pièce non fournie')
-    #     end
-    #   end
-    #
-    #   context 'Devis' do
-    #     let(:id_piece_justificative) { 388 }
-    #     let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
-    #
-    #     before do
-    #       piece_justificative = dossier.pieces_justificatives.where(type_de_piece_justificative_id: 388).first
-    #       piece_justificative.content = content
-    #       piece_justificative.save!
-    #       visit "/admin/dossiers/#{dossier_id}"
-    #     end
-    #
-    #     it 'la ligne de la pièce justificative est présente' do
-    #       expect(rendered).to have_selector("tr[id=piece_justificative_#{id_piece_justificative}]")
-    #     end
-    #
-    #     it 'le libelle "Consulter" est présent' do
-    #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}] a")[:href]).to have_content('piece_justificative_388.pdf')
-    #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_content('Consulter')
-    #     end
-    #   end
-    # end
-    #
+  #TODO réactiver
+  # context 'la liste des pièces justificatives est présente' do
+  #   context 'Attestation MSA' do
+  #     let(:id_piece_justificative) { 93 }
+  #
+  #     it 'la ligne de la pièce justificative est présente' do
+  #       expect(rendered).to have_selector("tr[id=piece_justificative_#{id_piece_justificative}]")
+  #     end
+  #
+  #     it 'le bouton "Récupérer" est présent' do
+  #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_selector("a[href='']")
+  #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_content('Récupérer')
+  #     end
+  #   end
+  #
+  #   context 'Attestation RDI' do
+  #     let(:id_piece_justificative) { 103 }
+  #
+  #     it 'la ligne de la pièce justificative est présente' do
+  #       expect(rendered).to have_selector("tr[id=piece_justificative_#{id_piece_justificative}]")
+  #     end
+  #
+  #     it 'le libelle "Pièce manquante" est présent' do
+  #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_content('Pièce non fournie')
+  #     end
+  #   end
+  #
+  #   context 'Devis' do
+  #     let(:id_piece_justificative) { 388 }
+  #     let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
+  #
+  #     before do
+  #       piece_justificative = dossier.pieces_justificatives.where(type_de_piece_justificative_id: 388).first
+  #       piece_justificative.content = content
+  #       piece_justificative.save!
+  #       visit "/admin/dossiers/#{dossier_id}"
+  #     end
+  #
+  #     it 'la ligne de la pièce justificative est présente' do
+  #       expect(rendered).to have_selector("tr[id=piece_justificative_#{id_piece_justificative}]")
+  #     end
+  #
+  #     it 'le libelle "Consulter" est présent' do
+  #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}] a")[:href]).to have_content('piece_justificative_388.pdf')
+  #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_content('Consulter')
+  #     end
+  #   end
+  # end
+  #
 end

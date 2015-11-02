@@ -39,9 +39,6 @@ describe Users::DescriptionController, type: :controller do
     let(:timestamp) { Time.now }
     let(:nom_projet) { 'Projet de test' }
     let(:description) { 'Description de test Coucou, je suis un saut à la ligne Je suis un double saut  la ligne.' }
-    let(:montant_projet) { 12_000 }
-    let(:montant_aide_demande) { 3000 }
-    let(:date_previsionnelle) { '20/01/2016' }
 
     let(:name_piece_justificative) { 'dossierPDF.pdf' }
     let(:name_piece_justificative_0) { 'piece_justificative_0.pdf' }
@@ -56,7 +53,7 @@ describe Users::DescriptionController, type: :controller do
       describe 'Premier enregistrement des données' do
         before do
           dossier.draft!
-          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle
+          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description
           dossier.reload
         end
 
@@ -73,7 +70,7 @@ describe Users::DescriptionController, type: :controller do
       context 'En train de manipuler un dossier non brouillon' do
         before do
           dossier.initiated!
-          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle
+          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description
           dossier.reload
         end
 
@@ -108,10 +105,7 @@ describe Users::DescriptionController, type: :controller do
         post :create,
             dossier_id: dossier_id,
             nom_projet: nom_projet,
-            description: description,
-            montant_projet: montant_projet,
-            montant_aide_demande: montant_aide_demande,
-            date_previsionnelle: date_previsionnelle
+            description: description
       }
       before { subject }
 
@@ -126,34 +120,13 @@ describe Users::DescriptionController, type: :controller do
         it { is_expected.to render_template(:show) }
         it { expect(flash[:alert]).to be_present }
       end
-
-      context 'montant_projet empty' do
-        let(:montant_projet) { '' }
-        it { is_expected.to render_template(:show) }
-        it { expect(flash[:alert]).to be_present }
-      end
-
-      context 'montant_aide_demande empty' do
-        let(:montant_aide_demande) { '' }
-        it { is_expected.to render_template(:show) }
-        it { expect(flash[:alert]).to be_present }
-      end
-
-      context 'date_previsionnelle empty' do
-        let(:date_previsionnelle) { '' }
-        it { is_expected.to render_template(:show) }
-        it { expect(flash[:alert]).to be_present }
-      end
-    end
+   end
 
     context 'Sauvegarde du CERFA PDF' do
       before do
         post :create, dossier_id: dossier_id,
                       nom_projet: nom_projet,
                       description: description,
-                      montant_projet: montant_projet,
-                      montant_aide_demande: montant_aide_demande,
-                      date_previsionnelle: date_previsionnelle,
                       cerfa_pdf: cerfa_pdf
         dossier.reload
       end
@@ -171,7 +144,7 @@ describe Users::DescriptionController, type: :controller do
 
       context 'les anciens CERFA PDF sont écrasées à chaque fois' do
         it 'il n\'y a qu\'un CERFA PDF par dossier' do
-          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle, cerfa_pdf: cerfa_pdf
+          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, cerfa_pdf: cerfa_pdf
           cerfa = PieceJustificative.where(type_de_piece_justificative_id: '0', dossier_id: dossier_id)
           expect(cerfa.many?).to eq(false)
         end
@@ -188,9 +161,6 @@ describe Users::DescriptionController, type: :controller do
         post :create, {dossier_id: dossier_id,
                       nom_projet: nom_projet,
                       description: description,
-                      montant_projet: montant_projet,
-                      montant_aide_demande: montant_aide_demande,
-                      date_previsionnelle: date_previsionnelle,
                       'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
                       'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
         dossier.reload
