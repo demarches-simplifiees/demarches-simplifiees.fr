@@ -65,14 +65,14 @@ describe Users::DescriptionController, type: :controller do
         end
 
         it 'etat du dossier est soumis' do
-          expect(dossier.state).to eq('proposed')
+          expect(dossier.state).to eq('submitted')
         end
       end
 
       # TODO changer les valeurs des champs et check in bdd
       context 'En train de manipuler un dossier non brouillon' do
         before do
-          dossier.proposed!
+          dossier.submitted!
           post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, montant_projet: montant_projet, montant_aide_demande: montant_aide_demande, date_previsionnelle: date_previsionnelle
           dossier.reload
         end

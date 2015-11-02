@@ -15,7 +15,7 @@ class DossierDecorator < Draper::Decorator
     case state
       when 'draft'
         'Brouillon'
-      when 'proposed'
+      when 'submitted'
         'Soumis'
       when 'reply'
         'Répondu'

@@ -26,7 +26,7 @@ Rails.application.routes.draw do
       get '/description/error' => 'description#error'
       post 'description' => 'description#create'
       get '/recapitulatif' => 'recapitulatif#show'
-      post '/recapitulatif/propose' => 'recapitulatif#propose'
+      post '/recapitulatif/submit' => 'recapitulatif#submit'
       post '/recapitulatif/depose' => 'recapitulatif#depose'
       # get '/demande' => 'demandes#show'
       # post '/demande' => 'demandes#update'

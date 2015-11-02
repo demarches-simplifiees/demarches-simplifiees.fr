@@ -1,11 +1,11 @@
 class Dossier < ActiveRecord::Base
-  enum state: { draft: 'draft',
-      proposed: 'proposed',
-      reply: 'reply',
-      updated: 'updated',
-      confirmed: 'confirmed',
-      deposited: 'deposited',
-      processed: 'processed' }
+  enum state: {draft: 'draft',
+               submitted: 'submitted', #-proposed
+               reply: 'reply', #replied
+               updated: 'updated',
+               confirmed: 'confirmed', #validated
+               deposited: 'deposited', #submit_confirmed
+               processed: 'processed'} #closed
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
@@ -49,7 +49,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action
-    unless %w(propose reply update comment confirme depose process).include?(action)
+    unless %w(submit reply update comment confirme depose process).include?(action)
       fail 'action is not valid'
     end
 
@@ -59,9 +59,9 @@ class Dossier < ActiveRecord::Base
 
     if role == 'user'
       case action
-        when 'propose'
+        when 'submit'
           if draft?
-            proposed!
+            submitted!
           end
         when 'depose'
           if confirmed?
@@ -81,7 +81,7 @@ class Dossier < ActiveRecord::Base
         when 'comment'
           if updated?
             reply!
-          elsif proposed?
+          elsif submitted?
             reply!
           end
         when 'confirme'
@@ -89,7 +89,7 @@ class Dossier < ActiveRecord::Base
             confirmed!
           elsif reply?
             confirmed!
-          elsif proposed?
+          elsif submitted?
             confirmed!
           end
         when 'process'
@@ -102,7 +102,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.a_traiter
-    Dossier.where("state='proposed' OR state='updated' OR state='deposited'").order('updated_at ASC')
+    Dossier.where("state='submitted' OR state='updated' OR state='deposited'").order('updated_at ASC')
   end
 
   def self.en_attente

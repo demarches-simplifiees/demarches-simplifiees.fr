@@ -23,18 +23,18 @@ describe Users::RecapitulatifController, type: :controller do
 
   end
 
-  describe 'POST #propose' do
-    context 'when an user propose his dossier' do
+  describe 'POST #submit' do
+    context 'when an user submit his dossier' do
       before do
-        post :propose, dossier_id: dossier.id
+        post :submit, dossier_id: dossier.id
       end
 
       it 'dossier change his state for processed' do
         dossier.reload
-        expect(dossier.state).to eq('proposed')
+        expect(dossier.state).to eq('submitted')
       end
 
-      it 'a message informe user what his dossier is proposed' do
+      it 'a message informe user what his dossier is submitted' do
         expect(flash[:notice]).to include('Dossier soumis avec succès.')
       end
     end
@@ -52,7 +52,7 @@ describe Users::RecapitulatifController, type: :controller do
         expect(dossier.state).to eq('deposited')
       end
 
-      it 'a message informe user what his dossier is proposed' do
+      it 'a message informe user what his dossier is submitted' do
         expect(flash[:notice]).to include('Dossier déposé avec succès.')
       end
     end

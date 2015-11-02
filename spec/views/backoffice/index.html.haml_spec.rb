@@ -8,7 +8,7 @@ describe 'backoffice/index.html.haml', type: :view do
     assign(:dossiers_en_attente, Dossier.en_attente.decorate)
     assign(:dossiers_termine, Dossier.termine.decorate)
 
-    decorate_dossier.proposed!
+    decorate_dossier.submitted!
     render
   end
   subject { rendered }

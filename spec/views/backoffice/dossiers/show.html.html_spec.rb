@@ -47,9 +47,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
   end
 
   context 'gestion des etats du dossier' do
-    context 'when dossier have state proposed' do
+    context 'when dossier have state submitted' do
       before do
-        dossier.proposed!
+        dossier.submitted!
         render
       end
 
