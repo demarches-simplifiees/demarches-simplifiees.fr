@@ -8,10 +8,7 @@ RSpec.shared_examples 'not owner of dossier' do |controller, redirect|
   end
 
   it 'redirect to home page' do
-    redirect_page = '/'
-    redirect_page = redirect unless redirect.nil?
-
-    expect(response).to redirect_to(redirect_page)
+    expect(response).to redirect_to(redirect || '/')
   end
 
   it 'show a flash message error' do

@@ -21,7 +21,7 @@ RSpec.describe Users::CarteController, type: :controller do
         sign_out dossier.user
       end
 
-      it 'redirect to users/sign_in' do
+      it 'redirects to users/sign_in' do
         get :show, dossier_id: dossier_id
         expect(response).to redirect_to('/users/sign_in')
       end

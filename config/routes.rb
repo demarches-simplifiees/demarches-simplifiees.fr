@@ -11,8 +11,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
                        sessions: 'users/sessions'
                    }
-
-  #root 'users/dossiers#index'
+  
   root 'root#index'
 
   get 'france_connect' => 'france_connect#login'
@@ -28,8 +27,6 @@ Rails.application.routes.draw do
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/initiate' => 'recapitulatif#initiate'
       post '/recapitulatif/submit' => 'recapitulatif#submit'
-      # get '/demande' => 'demandes#show'
-      # post '/demande' => 'demandes#update'
       post '/commentaire' => 'commentaires#create'
 
       get '/carte/position' => 'carte#get_position'

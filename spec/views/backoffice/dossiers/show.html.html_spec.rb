@@ -14,39 +14,39 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
     assign(:commentaires, dossier.commentaires)
   end
 
-  context 'sur la rendered admin du dossier' do
+  context 'on the dossier admin page' do
     before do
       render
     end
-    it 'la section infos entreprise est présente' do
+    it 'enterprise informations are present' do
       expect(rendered).to have_selector('#infos_entreprise')
     end
 
-    it 'la section infos dossier est présente' do
+    it 'dossier informations are present' do
       expect(rendered).to have_selector('#infos_dossier')
     end
 
-    it 'le numéro de dossier est présent sur la rendered' do
+    it 'dossier number is present' do
       expect(rendered).to have_selector('#dossier_id')
       expect(rendered).to have_content(dossier_id)
     end
 
-    context 'les liens de modifications sont non présent' do
-      it 'le lien vers carte' do
+    context 'edit link are present' do
+      it 'edit carto' do
         expect(rendered).to_not have_selector('a[id=modif_carte]')
       end
 
-      it 'le lien vers description' do
+      it 'edit description' do
         expect(rendered).to_not have_selector('a[id=modif_description]')
       end
 
-      it 'le bouton Editer mon dossier n\'est pas present' do
+      it 'Editer mon dossier button doesnt present' do
         expect(rendered).to_not have_css('#maj_infos')
       end
     end
   end
 
-  context 'gestion des etats du dossier' do
+  context 'dossier state changements' do
     context 'when dossier have state initiated' do
       before do
         dossier.initiated!
@@ -55,7 +55,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Soumis') }
 
-      it 'button Valider le dossier est present' do
+      it 'button Valider le dossier is present' do
         expect(rendered).to have_css('#action_button')
         expect(rendered).to have_content('Valider le dossier')
       end
@@ -69,7 +69,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Répondu') }
 
-      it 'button Valider le dossier est present' do
+      it 'button Valider le dossier is present' do
         expect(rendered).to have_css('#action_button')
         expect(rendered).to have_content('Valider le dossier')
       end
@@ -83,7 +83,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Mis à jour') }
 
-      it 'button Valider le dossier est present' do
+      it 'button Valider le dossier is present' do
         expect(rendered).to have_css('#action_button')
         expect(rendered).to have_content('Valider le dossier')
       end
@@ -97,7 +97,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Validé') }
 
-      it 'button Valider le dossier n\'est pas present' do
+      it 'button Valider le dossier  is not present' do
         expect(rendered).not_to have_css('#action_button')
         expect(rendered).not_to have_content('Valider le dossier')
       end
@@ -111,12 +111,12 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Déposé') }
 
-      it 'button Traiter le dossier est present' do
+      it 'button Traiter le dossier is present' do
         expect(rendered).to have_css('#action_button')
         expect(rendered).to have_content('Traiter le dossier')
       end
 
-      it 'button Valider le dossier n\'est pas present' do
+      it 'button Valider le dossier is not present' do
         expect(rendered).not_to have_content('Valider le dossier')
       end
     end
@@ -129,7 +129,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Traité') }
 
-      it 'button Valider le dossier n\'est pas present' do
+      it 'button Valider le dossier is not present' do
         expect(rendered).not_to have_css('#action_button')
         expect(rendered).not_to have_content('Valider le dossier')
       end
