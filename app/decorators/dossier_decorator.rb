@@ -21,7 +21,7 @@ class DossierDecorator < Draper::Decorator
         'Répondu'
       when 'updated'
         'Mis à jour'
-      when 'confirmed'
+      when 'validated'
         'Validé'
       when 'deposited'
         'Déposé'

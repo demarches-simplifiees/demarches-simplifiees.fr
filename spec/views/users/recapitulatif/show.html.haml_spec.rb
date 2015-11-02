@@ -83,9 +83,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         it { expect(rendered).to have_content('Mis à jour') }
       end
 
-      context 'when dossier state is confirmed' do
+      context 'when dossier state is validated' do
         before do
-          dossier.confirmed!
+          dossier.validated!
           render
         end
 

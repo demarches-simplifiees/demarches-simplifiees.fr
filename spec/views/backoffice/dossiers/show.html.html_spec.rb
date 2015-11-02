@@ -89,9 +89,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       end
     end
 
-    context 'when dossier have state confirmed' do
+    context 'when dossier have state validated' do
       before do
-        dossier.confirmed!
+        dossier.validated!
         render
       end
 

@@ -14,7 +14,7 @@
         = form_tag(url_for({controller: :recapitulatif, action: :submit, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Soumettre mon dossier'
-      -elsif @dossier.confirmed?
+      -elsif @dossier.validated?
         = form_tag(url_for({controller: :recapitulatif, action: :depose, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Déposer mon dossier'

@@ -194,10 +194,10 @@ describe Dossier do
             it { is_expected.to eq('replied')}
           end
 
-          context 'when is confirmed the dossier' do
-            let(:action) { 'confirme' }
+          context 'when is validated the dossier' do
+            let(:action) { 'valid' }
 
-            it {is_expected.to eq('confirmed')}
+            it {is_expected.to eq('validated')}
           end
         end
       end
@@ -235,10 +235,10 @@ describe Dossier do
             it { is_expected.to eq('replied')}
           end
 
-          context 'when is confirmed the dossier' do
-            let(:action) { 'confirme' }
+          context 'when is validated the dossier' do
+            let(:action) { 'valid' }
 
-            it {is_expected.to eq('confirmed')}
+            it {is_expected.to eq('validated')}
           end
         end
       end
@@ -273,17 +273,17 @@ describe Dossier do
             it { is_expected.to eq('replied')}
           end
 
-          context 'when is confirmed the dossier' do
-            let(:action) { 'confirme' }
+          context 'when is validated the dossier' do
+            let(:action) { 'valid' }
 
-            it {is_expected.to eq('confirmed')}
+            it {is_expected.to eq('validated')}
           end
         end
       end
 
-      context 'when dossier is at state confirmed' do
+      context 'when dossier is at state validated' do
         before do
-          dossier.confirmed!
+          dossier.validated!
         end
 
         context 'when user is connect' do
@@ -291,7 +291,7 @@ describe Dossier do
 
           context 'when is post a comment' do
             let(:action) { 'comment' }
-            it { is_expected.to eq('confirmed') }
+            it { is_expected.to eq('validated') }
           end
 
           context 'when is deposed the dossier' do
@@ -307,7 +307,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('confirmed')}
+            it { is_expected.to eq('validated')}
           end
         end
       end
@@ -377,7 +377,7 @@ describe Dossier do
       let!(:dossier3) { create(:dossier, :with_user, :with_procedure, state: 'submitted')}
       let!(:dossier4) { create(:dossier, :with_user, :with_procedure, state: 'replied')}
       let!(:dossier5) { create(:dossier, :with_user, :with_procedure, state: 'updated')}
-      let!(:dossier6) { create(:dossier, :with_user, :with_procedure, state: 'confirmed')}
+      let!(:dossier6) { create(:dossier, :with_user, :with_procedure, state: 'validated')}
       let!(:dossier7) { create(:dossier, :with_user, :with_procedure, state: 'deposited')}
       let!(:dossier8) { create(:dossier, :with_user, :with_procedure, state: 'processed')}
 

@@ -29,18 +29,18 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
-  describe 'POST #confirme' do
+  describe 'POST #valid' do
     context 'le gestionnaire valide un dossier' do
       before do
         dossier.submitted!
         sign_in gestionnaire
       end
 
-      it 'dossier change is state for confirmed' do
-        post :confirme, dossier_id: dossier_id
+      it 'dossier change is state for validated' do
+        post :valid, dossier_id: dossier_id
 
         dossier.reload
-        expect(dossier.state).to eq('confirmed')
+        expect(dossier.state).to eq('validated')
       end
     end
   end

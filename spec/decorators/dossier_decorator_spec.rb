@@ -32,8 +32,8 @@ describe DossierDecorator do
       expect(subject).to eq('Mis à jour')
     end
 
-    it 'confirmed is valide' do
-      dossier.confirmed!
+    it 'validated is valide' do
+      dossier.validated!
       expect(subject).to eq('Validé')
     end
 

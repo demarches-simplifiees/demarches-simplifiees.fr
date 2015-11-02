@@ -43,7 +43,7 @@ describe Users::RecapitulatifController, type: :controller do
   describe 'POST #depose' do
     context 'when an user depose his dossier' do
       before do
-        dossier.confirmed!
+        dossier.validated!
         post :depose, dossier_id: dossier.id
       end
 

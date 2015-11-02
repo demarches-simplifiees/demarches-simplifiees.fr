@@ -18,11 +18,11 @@ class Backoffice::DossiersController < ApplicationController
     redirect_to url_for(controller: '/backoffice')
   end
 
-  def confirme
+  def valid
     params[:id] = params[:dossier_id]
     show
 
-    @dossier.next_step! 'gestionnaire', 'confirme'
+    @dossier.next_step! 'gestionnaire', 'valid'
     flash.notice = 'Dossier confirmé avec succès.'
 
     render 'show'
