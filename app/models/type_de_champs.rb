@@ -6,6 +6,7 @@ class TypeDeChamps < ActiveRecord::Base
        }
 
   belongs_to :procedure
+  has_many :champs
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champs, presence: true, allow_blank: false, allow_nil: false

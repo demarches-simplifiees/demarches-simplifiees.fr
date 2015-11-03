@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151102163051) do
+ActiveRecord::Schema.define(version: 20151103091603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,12 @@ ActiveRecord::Schema.define(version: 20151102163051) do
   end
 
   add_index "cerfas", ["dossier_id"], name: "index_cerfas_on_dossier_id", using: :btree
+
+  create_table "champs", force: :cascade do |t|
+    t.string  "value"
+    t.integer "type_de_champs_id"
+    t.integer "dossier_id"
+  end
 
   create_table "commentaires", force: :cascade do |t|
     t.string   "email"

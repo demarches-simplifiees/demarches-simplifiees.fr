@@ -11,6 +11,7 @@ class Dossier < ActiveRecord::Base
   has_one :entreprise, dependent: :destroy
   has_one :cerfa, dependent: :destroy
   has_many :pieces_justificatives, dependent: :destroy
+  has_many :champs, dependent: :destroy
   belongs_to :procedure
   belongs_to :user
   has_many :commentaires, dependent: :destroy
