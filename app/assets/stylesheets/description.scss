@@ -1,0 +1,44 @@
+@import "bootstrap";
+@import "bootstrap-datepicker3";
+
+#description_page #liste_champs{
+  h4{
+    padding-top: 10px;
+  }
+}
+
+.type_champs-text {
+  @extend .col-md-6;
+  @extend .col-lg-6;
+
+  input[type='text'] {
+    width: 100%;
+  }
+}
+
+.type_champs-textarea {
+  @extend .col-md-9;
+  @extend .col-lg-9;
+
+  textarea.form-control {
+    width:100%;
+  }
+}
+
+.type_champs-number {
+  @extend .col-md-3;
+  @extend .col-lg-3;
+
+  input[type='number']{
+    width: 100%;
+  }
+}
+
+.type_champs-datetime {
+  @extend .col-md-2;
+  @extend .col-lg-2;
+
+  input[type='number']{
+    width: 100%;
+  }
+}

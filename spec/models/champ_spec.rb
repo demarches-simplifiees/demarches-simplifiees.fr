@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Champs do
+describe Champ do
   describe 'database columns' do
     it { is_expected.to have_db_column(:value) }
   end

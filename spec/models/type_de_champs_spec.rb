@@ -10,7 +10,7 @@ describe TypeDeChamps do
 
   describe 'associations' do
     it { is_expected.to belong_to(:procedure) }
-    it { is_expected.to have_many(:champs) }
+    it { is_expected.to have_many(:champ) }
   end
 
   describe 'validation' do

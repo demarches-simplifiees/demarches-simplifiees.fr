@@ -28,6 +28,7 @@ describe Dossier do
     it { is_expected.to delegate_method(:siren).to(:entreprise) }
     it { is_expected.to delegate_method(:siret).to(:etablissement) }
     it { is_expected.to delegate_method(:types_de_piece_justificative).to(:procedure) }
+    it { is_expected.to delegate_method(:types_de_champs).to(:procedure) }
   end
 
   describe 'validation' do
@@ -91,17 +92,37 @@ describe Dossier do
       end
     end
 
+    describe '#build_default_champs' do
+      context 'when dossier is linked to a procedure' do
+        let(:dossier) { create(:dossier, :with_procedure, user: user) }
+        it 'build all champs needed' do
+          expect(dossier.champs.count).to eq(1)
+        end
+      end
+    end
+
     describe '#save' do
       subject { create(:dossier, procedure_id: nil, user: user) }
+      let!(:procedure) { create(:procedure) }
       context 'when is linked to a procedure' do
         it 'creates default pieces justificatives' do
           expect(subject).to receive(:build_default_pieces_justificatives)
-          subject.update_attributes(procedure_id: 1)
+          subject.update_attributes(procedure_id: procedure.id)
+        end
+
+        it 'creates default champs' do
+          expect(subject).to receive(:build_default_champs)
+          subject.update_attributes(procedure_id: procedure.id)
         end
       end
       context 'when is not linked to a procedure' do
         it 'does not create default pieces justificatives' do
           expect(subject).not_to receive(:build_default_pieces_justificatives)
+          subject.update_attributes(description: 'plop')
+        end
+
+        it 'does not create default champss' do
+          expect(subject).not_to receive(:build_default_champs)
           subject.update_attributes(description: 'plop')
         end
       end

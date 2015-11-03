@@ -50,7 +50,6 @@ class Users::DescriptionController < UsersController
 
     flash.notice = 'Félicitation, votre demande a bien été enregistrée.'
     redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
-
   end
 
   private

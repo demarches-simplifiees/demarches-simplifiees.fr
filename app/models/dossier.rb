@@ -19,10 +19,12 @@ class Dossier < ActiveRecord::Base
   delegate :siren, to: :entreprise
   delegate :siret, to: :etablissement
   delegate :types_de_piece_justificative, to: :procedure
+  delegate :types_de_champs, to: :procedure
 
   before_create :build_default_cerfa
 
   after_save :build_default_pieces_justificatives, if: Proc.new { procedure_id_changed? }
+  after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 
   validates :nom_projet, presence: true, allow_blank: false, allow_nil: true
   validates :description, presence: true, allow_blank: false, allow_nil: true
@@ -33,8 +35,15 @@ class Dossier < ActiveRecord::Base
   end
 
   def build_default_pieces_justificatives
+
     procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
       PieceJustificative.create(type_de_piece_justificative_id: type_de_piece_justificative.id, dossier_id: id)
+    end
+  end
+
+  def build_default_champs
+    procedure.types_de_champs.each do |type_de_champs|
+      Champ.create(type_de_champs_id: type_de_champs.id, dossier_id: id)
     end
   end
 
