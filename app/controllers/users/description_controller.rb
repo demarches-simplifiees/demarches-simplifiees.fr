@@ -4,6 +4,7 @@ class Users::DescriptionController < UsersController
     @dossier = @dossier.decorate
 
     @procedure = @dossier.procedure
+    @champs = @dossier.champs.joins(', types_de_champs').where('champs.type_de_champs_id = types_de_champs.id').order('order_place')
 
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
@@ -18,7 +19,7 @@ class Users::DescriptionController < UsersController
 
   def create
     @dossier = current_user_dossier
-    unless  @dossier.update_attributes(create_params)
+    unless @dossier.update_attributes(create_params)
       @dossier = @dossier.decorate
       @procedure = @dossier.procedure
 
@@ -31,9 +32,11 @@ class Users::DescriptionController < UsersController
       cerfa.save
     end
 
-    @dossier.champs.each do |champ|
-      champ.value = params[:champs]["'#{champ.id}'"]
-      champ.save
+    unless params[:champs].nil?
+      @dossier.champs.each do |champ|
+        champ.value = params[:champs]["'#{champ.id}'"]
+        champ.save
+      end
     end
 
     @dossier.pieces_justificatives.each do |piece_justificative|
