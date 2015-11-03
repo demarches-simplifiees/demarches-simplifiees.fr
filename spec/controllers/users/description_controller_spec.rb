@@ -155,6 +155,29 @@ describe Users::DescriptionController, type: :controller do
       end
     end
 
+    context 'Sauvegarde des champs' do
+      let(:champs_dossier) { dossier.champs }
+      let(:dossier_champs_first) { 'test value' }
+      before do
+        post :create, {dossier_id: dossier_id,
+                       nom_projet: nom_projet,
+                       description: description,
+                       champs: {
+                           "'#{dossier.champs.first.id}'" => dossier_champs_first
+                       }
+                    }
+        dossier.reload
+      end
+
+      it { expect(dossier.champs.first.value).to eq(dossier_champs_first) }
+
+      context 'when champs value is empty' do
+        let(:dossier_champs_first) { 'test value' }
+
+        it { expect(dossier.champs.first.value).to eq(dossier_champs_first) }
+      end
+    end
+
     context 'Sauvegarde des pièces justificatives' do
       let(:all_pj_type){ dossier.procedure.type_de_piece_justificative_ids }
       before do

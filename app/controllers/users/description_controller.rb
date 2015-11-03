@@ -31,6 +31,11 @@ class Users::DescriptionController < UsersController
       cerfa.save
     end
 
+    @dossier.champs.each do |champ|
+      champ.value = params[:champs]["'#{champ.id}'"]
+      champ.save
+    end
+
     @dossier.pieces_justificatives.each do |piece_justificative|
       unless params["piece_justificative_#{piece_justificative.type}"].nil?
         piece_justificative.content = params["piece_justificative_#{piece_justificative.type}"]

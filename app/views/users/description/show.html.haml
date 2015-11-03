@@ -22,7 +22,7 @@
             = champ.libelle
 
           -if champ.type_champs == 'textarea'
-            %textarea.form-control{name:"champs[#{champ.id}]",
+            %textarea.form-control{name:"champs['#{champ.id}']",
             placeholder: champ.libelle,
             id: "champs_#{champ.id}"}
               =champ.value
