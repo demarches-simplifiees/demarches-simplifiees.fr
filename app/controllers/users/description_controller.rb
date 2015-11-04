@@ -4,7 +4,7 @@ class Users::DescriptionController < UsersController
     @dossier = @dossier.decorate
 
     @procedure = @dossier.procedure
-    @champs = @dossier.champs.joins(', types_de_champs').where('champs.type_de_champs_id = types_de_champs.id').order('order_place')
+    @champs = @dossier.ordered_champs
 
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')

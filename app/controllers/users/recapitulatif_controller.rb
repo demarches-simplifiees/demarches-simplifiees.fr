@@ -3,14 +3,12 @@ class Users::RecapitulatifController < UsersController
     @dossier = current_user_dossier
     @dossier = @dossier.decorate
     @procedure = @dossier.procedure
+    @champs = @dossier.ordered_champs
 
-    # mettre dans le modele
-    @commentaires = @dossier.commentaires.order(created_at: :desc)
-
+    @commentaires = @dossier.ordered_commentaires
     @commentaires = @commentaires.all.decorate
 
-    #TODO load user email
-    @commentaire_email = 'user@email'
+    @commentaire_email = current_user.email
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(root_path)

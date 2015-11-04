@@ -8,6 +8,7 @@ describe 'users/description/show.html.haml', type: :view do
   before do
     assign(:dossier, dossier)
     assign(:procedure, dossier.procedure)
+    assign(:champs, dossier.ordered_champs)
   end
 
   context 'tous les attributs sont présents sur la page' do
@@ -82,6 +83,26 @@ describe 'users/description/show.html.haml', type: :view do
 
     it 'Description du projet' do
       expect(rendered).to have_content("#{dossier.description}")
+    end
+  end
+
+  context 'Champs' do
+    let(:champs) { dossier.champs }
+
+    before do
+      render
+    end
+
+    describe 'first champs' do
+      subject { dossier.champs.first }
+      it { expect(rendered).to have_css(".type_champs-#{subject.type_champs}") }
+      it { expect(rendered).to have_css("#champs_#{subject.id}") }
+    end
+
+    describe 'last champs' do
+      subject { dossier.champs.last }
+      it { expect(rendered).to have_css(".type_champs-#{subject.type_champs}") }
+      it { expect(rendered).to have_css("#champs_#{subject.id}") }
     end
   end
 

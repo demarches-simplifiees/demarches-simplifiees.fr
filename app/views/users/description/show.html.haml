@@ -2,6 +2,7 @@
   %h2 Description de votre projet
   %br
 
+  -#TODO use form_for
   = form_tag(url_for({controller: :description, action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
     %div
       .row
@@ -14,26 +15,27 @@
           %h4 Description de votre projet *
           = text_area_tag :description, @dossier.description, rows: '6', placeholder: 'Description du projet', class: 'form-control'
 
-    #liste_champs.row
+    #liste_champs
       -unless @champs.nil?
         -@champs.each do |champ|
-          %div{class: "type_champs-#{champ.type_champs}"}
-            %h4
-              = champ.libelle
+          .row
+            %div{class: "type_champs-#{champ.type_champs}"}
+              %h4
+                = champ.libelle
 
-            -if champ.type_champs == 'textarea'
-              %textarea.form-control{name:"champs['#{champ.id}']",
-              placeholder: champ.libelle,
-              id: "champs_#{champ.id}"}
-                =champ.value
-            -else
-              %input.form-control{name:"champs['#{champ.id}']",
-              value: champ.value,
-              placeholder: champ.libelle,
-              id: "champs_#{champ.id}",
-              type:"#{champ.type_champs}",
-              'data-provide' => ('datepicker' if champ.type_champs == 'datetime'),
-              'data-date-format' => ('dd/mm/yyyy' if champ.type_champs == 'datetime')}
+              -if champ.type_champs == 'textarea'
+                %textarea.form-control{name:"champs['#{champ.id}']",
+                placeholder: champ.libelle,
+                id: "champs_#{champ.id}"}
+                  =champ.value
+              -else
+                %input.form-control{name:"champs['#{champ.id}']",
+                placeholder: champ.libelle,
+                id: "champs_#{champ.id}",
+                value: champ.value,
+                type:"#{champ.type_champs}",
+                'data-provide' => ('datepicker' if champ.type_champs == 'datetime'),
+                'data-date-format' => ('dd/mm/yyyy' if champ.type_champs == 'datetime')}
 
     %br
     %h3 Documents administratifs

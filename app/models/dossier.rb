@@ -47,6 +47,14 @@ class Dossier < ActiveRecord::Base
     end
   end
 
+  def ordered_champs
+    champs.joins(', types_de_champs').where('champs.type_de_champs_id = types_de_champs.id').order('order_place')
+  end
+
+  def ordered_commentaires
+    commentaires.order(created_at: :desc)
+  end
+
   def sous_domaine
     if Rails.env.production?
       'tps'
