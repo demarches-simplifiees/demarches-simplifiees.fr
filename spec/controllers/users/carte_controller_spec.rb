@@ -8,10 +8,24 @@ RSpec.describe Users::CarteController, type: :controller do
   let!(:etablissement) { create(:etablissement, dossier: dossier) }
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 1000 }
-  let(:ref_dossier_carto) { 'IATRQPQY' }
   let(:adresse) { etablissement.adresse }
 
+  before do
+    sign_in dossier.user
+  end
+
   describe 'GET #show' do
+    context 'user is not connected' do
+      before do
+        sign_out dossier.user
+      end
+
+      it 'redirects to users/sign_in' do
+        get :show, dossier_id: dossier_id
+        expect(response).to redirect_to('/users/sign_in')
+      end
+    end
+
     it 'returns http success' do
       get :show, dossier_id: dossier_id
       expect(response).to have_http_status(:success)
@@ -19,22 +33,24 @@ RSpec.describe Users::CarteController, type: :controller do
 
     it 'redirection vers la liste des dossiers du user si dossier ID n\'existe pas' do
       get :show, dossier_id: bad_dossier_id
-      expect(response).to redirect_to(controller: :dossiers, action: :index)
+      expect(response).to redirect_to(root_path)
     end
+
+    it_behaves_like "not owner of dossier", :show
   end
 
   describe 'POST #save_ref_api_carto' do
     context 'Aucune localisation n\'a jamais été enregistrée' do
       it do
-        post :save_ref_api_carto, dossier_id: dossier_id, ref_dossier_carto: ref_dossier_carto
+        post :save_ref_api_carto, dossier_id: dossier_id
         expect(response).to redirect_to("/users/dossiers/#{dossier_id}/description")
       end
     end
 
     context 'En train de modifier la localisation' do
-      let(:dossier) { create(:dossier, :with_procedure, :with_user, ref_dossier_carto: ref_dossier_carto, state: 'proposed') }
+      let(:dossier) { create(:dossier, :with_procedure, :with_user, state: 'initiated') }
       before do
-        post :save_ref_api_carto, dossier_id: dossier_id, ref_dossier_carto: ref_dossier_carto
+        post :save_ref_api_carto, dossier_id: dossier_id
       end
 
       context 'Enregistrement d\'un commentaire informant la modification' do
@@ -69,11 +85,11 @@ RSpec.describe Users::CarteController, type: :controller do
         get :get_position, dossier_id: dossier.id
       end
 
-      subject { dossier.reload }
+      subject { JSON.parse(response.body) }
 
       it 'on enregistre des coordonnées lat et lon à 0' do
-        expect(subject.position_lat).to eq('0')
-        expect(subject.position_lon).to eq('0')
+        expect(subject['lat']).to eq('0')
+        expect(subject['lon']).to eq('0')
       end
     end
 

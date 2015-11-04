@@ -5,7 +5,6 @@ class PieceJustificative < ActiveRecord::Base
   alias_attribute :type, :type_de_piece_justificative_id
   mount_uploader :content, PieceJustificativeUploader
 
-
   def empty?
     content.blank?
   end

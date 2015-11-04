@@ -17,13 +17,13 @@ describe DossierDecorator do
       expect(subject).to eq('Brouillon')
     end
 
-    it 'proposed is propose' do
-      dossier.proposed!
+    it 'initiated is initiate' do
+      dossier.initiated!
       expect(subject).to eq('Soumis')
     end
 
-    it 'reply is repondu' do
-      dossier.reply!
+    it 'replied is repondu' do
+      dossier.replied!
       expect(subject).to eq('Répondu')
     end
 
@@ -32,18 +32,18 @@ describe DossierDecorator do
       expect(subject).to eq('Mis à jour')
     end
 
-    it 'confirmed is valide' do
-      dossier.confirmed!
+    it 'validated is valide' do
+      dossier.validated!
       expect(subject).to eq('Validé')
     end
 
-    it 'deposited is dépose' do
-      dossier.deposited!
+    it 'submitted is dépose' do
+      dossier.submitted!
       expect(subject).to eq('Déposé')
     end
 
-    it 'processed is traité' do
-      dossier.processed!
+    it 'closed is traité' do
+      dossier.closed!
       expect(subject).to eq('Traité')
     end
   end

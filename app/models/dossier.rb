@@ -1,16 +1,17 @@
 class Dossier < ActiveRecord::Base
-  enum state: { draft: 'draft',
-      proposed: 'proposed',
-      reply: 'reply',
-      updated: 'updated',
-      confirmed: 'confirmed',
-      deposited: 'deposited',
-      processed: 'processed' }
+  enum state: {draft: 'draft',
+               initiated: 'initiated',
+               replied: 'replied',
+               updated: 'updated',
+               validated: 'validated',
+               submitted: 'submitted', #-submit_validated
+               closed: 'closed'} #-processed
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
   has_one :cerfa, dependent: :destroy
   has_many :pieces_justificatives, dependent: :destroy
+  has_many :champs, dependent: :destroy
   belongs_to :procedure
   belongs_to :user
   has_many :commentaires, dependent: :destroy
@@ -18,16 +19,15 @@ class Dossier < ActiveRecord::Base
   delegate :siren, to: :entreprise
   delegate :siret, to: :etablissement
   delegate :types_de_piece_justificative, to: :procedure
+  delegate :types_de_champs, to: :procedure
 
   before_create :build_default_cerfa
 
   after_save :build_default_pieces_justificatives, if: Proc.new { procedure_id_changed? }
+  after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 
   validates :nom_projet, presence: true, allow_blank: false, allow_nil: true
   validates :description, presence: true, allow_blank: false, allow_nil: true
-  validates :montant_projet, presence: true, allow_blank: false, allow_nil: true
-  validates :montant_aide_demande, presence: true, allow_blank: false, allow_nil: true
-  validates :date_previsionnelle, presence: true, allow_blank: false,  unless: Proc.new { description.nil? }
   validates :user, presence: true
 
   def retrieve_piece_justificative_by_type(type)
@@ -35,9 +35,24 @@ class Dossier < ActiveRecord::Base
   end
 
   def build_default_pieces_justificatives
+
     procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
       PieceJustificative.create(type_de_piece_justificative_id: type_de_piece_justificative.id, dossier_id: id)
     end
+  end
+
+  def build_default_champs
+    procedure.types_de_champs.each do |type_de_champs|
+      Champ.create(type_de_champs_id: type_de_champs.id, dossier_id: id)
+    end
+  end
+
+  def ordered_champs
+    champs.joins(', types_de_champs').where('champs.type_de_champs_id = types_de_champs.id').order('order_place')
+  end
+
+  def ordered_commentaires
+    commentaires.order(created_at: :desc)
   end
 
   def sous_domaine
@@ -49,7 +64,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action
-    unless %w(propose reply update comment confirme depose process).include?(action)
+    unless %w(initiate update comment valid submit close).include?(action)
       fail 'action is not valid'
     end
 
@@ -59,20 +74,20 @@ class Dossier < ActiveRecord::Base
 
     if role == 'user'
       case action
-        when 'propose'
+        when 'initiate'
           if draft?
-            proposed!
+            initiated!
           end
-        when 'depose'
-          if confirmed?
-            deposited!
+        when 'submit'
+          if validated?
+            submitted!
           end
         when 'update'
-          if reply?
+          if replied?
             updated!
           end
         when 'comment'
-          if reply?
+          if replied?
             updated!
           end
       end
@@ -80,21 +95,21 @@ class Dossier < ActiveRecord::Base
       case action
         when 'comment'
           if updated?
-            reply!
-          elsif proposed?
-            reply!
+            replied!
+          elsif initiated?
+            replied!
           end
-        when 'confirme'
+        when 'valid'
           if updated?
-            confirmed!
-          elsif reply?
-            confirmed!
-          elsif proposed?
-            confirmed!
+            validated!
+          elsif replied?
+            validated!
+          elsif initiated?
+            validated!
           end
-        when 'process'
-          if deposited?
-            processed!
+        when 'close'
+          if submitted?
+            closed!
           end
       end
     end
@@ -102,15 +117,15 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.a_traiter
-    Dossier.where("state='proposed' OR state='updated' OR state='deposited'").order('updated_at ASC')
+    Dossier.where("state='initiated' OR state='updated' OR state='submitted'").order('updated_at ASC')
   end
 
   def self.en_attente
-    Dossier.where("state='reply' OR state='confirmed'").order('updated_at ASC')
+    Dossier.where("state='replied' OR state='validated'").order('updated_at ASC')
   end
 
   def self.termine
-    Dossier.where("state='processed'").order('updated_at ASC')
+    Dossier.where("state='closed'").order('updated_at ASC')
   end
 
   private

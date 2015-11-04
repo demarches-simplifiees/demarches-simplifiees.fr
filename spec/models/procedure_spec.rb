@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Procedure do
   describe 'assocations' do
     it { is_expected.to have_many(:types_de_piece_justificative) }
+    it { is_expected.to have_many(:types_de_champs) }
     it { is_expected.to have_many(:dossiers) }
   end
 
@@ -28,8 +29,8 @@ describe Procedure do
     end
 
     context 'lien_demarche' do
-      it { is_expected.not_to allow_value(nil).for(:lien_demarche) }
-      it { is_expected.not_to allow_value('').for(:lien_demarche) }
+      it { is_expected.to allow_value(nil).for(:lien_demarche) }
+      it { is_expected.to allow_value('').for(:lien_demarche) }
       it { is_expected.to allow_value('http://localhost').for(:lien_demarche) }
     end
   end

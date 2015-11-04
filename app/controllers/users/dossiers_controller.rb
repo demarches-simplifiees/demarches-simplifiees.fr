@@ -1,11 +1,12 @@
 class Users::DossiersController < UsersController
   before_action :authenticate_user!
+
   def index
     @dossiers = current_user.dossiers.order(updated_at: 'DESC').decorate
   end
   def show
 
-    @dossier = Dossier.find(params[:id])
+    @dossier = current_user_dossier params[:id]
 
     @etablissement =  @dossier.etablissement
     @entreprise =  @dossier.entreprise.decorate
@@ -43,7 +44,7 @@ class Users::DossiersController < UsersController
 
   def update
 
-    @dossier = Dossier.find(params[:id])
+    @dossier = current_user_dossier params[:id]
     if checked_autorisation_donnees?
       @dossier.update_attributes(update_params)
 

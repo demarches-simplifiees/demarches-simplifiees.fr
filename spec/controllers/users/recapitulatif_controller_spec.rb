@@ -16,40 +16,43 @@ describe Users::RecapitulatifController, type: :controller do
 
     it 'redirection vers siret si mauvais dossier ID' do
       get :show, dossier_id: bad_dossier_id
-      expect(response).to redirect_to('/users/siret')
+      expect(response).to redirect_to('/')
     end
+
+    it_behaves_like "not owner of dossier", :show
+
   end
 
-  describe 'POST #propose' do
-    context 'when an user propose his dossier' do
+  describe 'POST #initiate' do
+    context 'when an user initiate his dossier' do
       before do
-        post :propose, dossier_id: dossier.id
+        post :initiate, dossier_id: dossier.id
       end
 
-      it 'dossier change his state for processed' do
+      it 'dossier change his state for closed' do
         dossier.reload
-        expect(dossier.state).to eq('proposed')
+        expect(dossier.state).to eq('initiated')
       end
 
-      it 'a message informe user what his dossier is proposed' do
+      it 'a message informe user what his dossier is initiated' do
         expect(flash[:notice]).to include('Dossier soumis avec succès.')
       end
     end
   end
 
-  describe 'POST #depose' do
+  describe 'POST #submit' do
     context 'when an user depose his dossier' do
       before do
-        dossier.confirmed!
-        post :depose, dossier_id: dossier.id
+        dossier.validated!
+        post :submit, dossier_id: dossier.id
       end
 
-      it 'dossier change his state for deposed' do
+      it 'dossier change his state for submitted' do
         dossier.reload
-        expect(dossier.state).to eq('deposited')
+        expect(dossier.state).to eq('submitted')
       end
 
-      it 'a message informe user what his dossier is proposed' do
+      it 'a message informe user what his dossier is initiated' do
         expect(flash[:notice]).to include('Dossier déposé avec succès.')
       end
     end

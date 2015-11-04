@@ -1,21 +1,21 @@
-%div.row#recap_dossier
-  %div.col-md-2.col-lg-2
+.row#recap_dossier
+  .col-md-2.col-lg-2
     %h2
       ='Récapitulatif'
 
-  %div.col-md-8.col-lg-8
+  .col-md-7.col-lg-7
 
-  %div.col-md-2.col-lg-2
+  .col-md-3.col-lg-3
     %h2#dossier_id{:class => 'text-info', :style => 'text-align:right; margin-bottom:15px'}
       = "Dossier n°#{@dossier.id}"
 
     - unless gestionnaire_signed_in?
       -if @dossier.draft?
-        = form_tag(url_for({controller: :recapitulatif, action: :propose, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+        = form_tag(url_for({controller: :recapitulatif, action: :initiate, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Soumettre mon dossier'
-      -elsif @dossier.confirmed?
-        = form_tag(url_for({controller: :recapitulatif, action: :depose, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+      -elsif @dossier.validated?
+        = form_tag(url_for({controller: :recapitulatif, action: :submit, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Déposer mon dossier'
       -else

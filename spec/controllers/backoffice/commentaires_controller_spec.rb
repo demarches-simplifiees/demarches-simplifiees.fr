@@ -30,7 +30,7 @@ describe Backoffice::CommentairesController, type: :controller do
 
           subject { dossier.state }
 
-          it {is_expected.to eq('reply')}
+          it {is_expected.to eq('replied')}
         end
       end
     end

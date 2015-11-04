@@ -49,9 +49,6 @@ feature 'user path for dossier creation' do
             before do
               page.find_by_id('nom_projet').set 'Mon super projet'
               page.find_by_id('description').set 'Ma super description'
-              page.find_by_id('montant_projet').set 10_000
-              page.find_by_id('montant_aide_demande').set 1_000
-              page.find_by_id('date_previsionnelle').set '09/09/2015'
               page.click_on 'Soumettre mon dossier'
             end
             scenario 'user is on recap page' do

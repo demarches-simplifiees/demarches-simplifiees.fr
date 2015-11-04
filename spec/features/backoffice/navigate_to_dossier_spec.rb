@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'on backoffice page' do
   let(:procedure) { create(:procedure) }
-  let!(:dossier) { create(:dossier, :with_user, :with_entreprise, procedure: procedure, state: 'reply') }
+  let!(:dossier) { create(:dossier, :with_user, :with_entreprise, procedure: procedure, state: 'replied') }
   before do
     visit backoffice_path
   end

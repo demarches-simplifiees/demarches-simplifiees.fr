@@ -11,10 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151008090835) do
+ActiveRecord::Schema.define(version: 20151103091603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "administrateurs", force: :cascade do |t|
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet     "current_sign_in_ip"
+    t.inet     "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "administrateurs", ["email"], name: "index_administrateurs_on_email", unique: true, using: :btree
+  add_index "administrateurs", ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true, using: :btree
 
   create_table "cerfas", force: :cascade do |t|
     t.string  "content"
@@ -22,6 +40,12 @@ ActiveRecord::Schema.define(version: 20151008090835) do
   end
 
   add_index "cerfas", ["dossier_id"], name: "index_cerfas_on_dossier_id", using: :btree
+
+  create_table "champs", force: :cascade do |t|
+    t.string  "value"
+    t.integer "type_de_champs_id"
+    t.integer "dossier_id"
+  end
 
   create_table "commentaires", force: :cascade do |t|
     t.string   "email"
@@ -36,14 +60,8 @@ ActiveRecord::Schema.define(version: 20151008090835) do
   create_table "dossiers", force: :cascade do |t|
     t.string   "description"
     t.boolean  "autorisation_donnees"
-    t.string   "position_lat"
-    t.string   "position_lon"
-    t.string   "ref_dossier_carto"
     t.string   "nom_projet"
-    t.string   "montant_projet"
-    t.string   "montant_aide_demande"
     t.integer  "procedure_id"
-    t.date     "date_previsionnelle"
     t.datetime "created_at",           default: '2015-09-22 09:25:29'
     t.datetime "updated_at",           default: '2015-09-22 09:25:29'
     t.string   "state"
@@ -122,6 +140,14 @@ ActiveRecord::Schema.define(version: 20151008090835) do
     t.datetime "updated_at",                    null: false
     t.boolean  "test"
     t.boolean  "use_api_carto", default: false
+  end
+
+  create_table "types_de_champs", force: :cascade do |t|
+    t.string  "libelle"
+    t.string  "type_champs"
+    t.integer "order_place"
+    t.integer "procedure_id"
+    t.text    "description"
   end
 
   create_table "types_de_piece_justificative", force: :cascade do |t|

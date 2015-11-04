@@ -5,19 +5,18 @@ describe Dossier do
   describe 'database columns' do
     it { is_expected.to have_db_column(:description) }
     it { is_expected.to have_db_column(:autorisation_donnees) }
-    it { is_expected.to have_db_column(:position_lat) }
-    it { is_expected.to have_db_column(:position_lon) }
     it { is_expected.to have_db_column(:nom_projet) }
-    it { is_expected.to have_db_column(:montant_projet) }
-    it { is_expected.to have_db_column(:montant_aide_demande) }
-    it { is_expected.to have_db_column(:date_previsionnelle).of_type(:date) }
     it { is_expected.to have_db_column(:created_at) }
     it { is_expected.to have_db_column(:updated_at) }
+    it { is_expected.to have_db_column(:state) }
+    it { is_expected.to have_db_column(:procedure_id) }
+    it { is_expected.to have_db_column(:user_id) }
   end
 
   describe 'associations' do
     it { is_expected.to belong_to(:procedure) }
     it { is_expected.to have_many(:pieces_justificatives) }
+    it { is_expected.to have_many(:champs) }
     it { is_expected.to have_many(:commentaires) }
     it { is_expected.to have_one(:cerfa) }
     it { is_expected.to have_one(:etablissement) }
@@ -29,6 +28,7 @@ describe Dossier do
     it { is_expected.to delegate_method(:siren).to(:entreprise) }
     it { is_expected.to delegate_method(:siret).to(:etablissement) }
     it { is_expected.to delegate_method(:types_de_piece_justificative).to(:procedure) }
+    it { is_expected.to delegate_method(:types_de_champs).to(:procedure) }
   end
 
   describe 'validation' do
@@ -41,16 +41,6 @@ describe Dossier do
       it { is_expected.to allow_value(nil).for(:description) }
       it { is_expected.not_to allow_value('').for(:description) }
       it { is_expected.to allow_value('ma superbe description').for(:description) }
-    end
-    context 'montant_projet' do
-      it { is_expected.to allow_value(nil).for(:montant_projet) }
-      it { is_expected.not_to allow_value('').for(:montant_projet) }
-      it { is_expected.to allow_value(124324).for(:montant_projet) }
-    end
-    context 'montant_aide_demande' do
-      it { is_expected.to allow_value(nil).for(:montant_aide_demande) }
-      it { is_expected.not_to allow_value('').for(:montant_aide_demande) }
-      it { is_expected.to allow_value(124324).for(:montant_aide_demande) }
     end
   end
 
@@ -102,12 +92,27 @@ describe Dossier do
       end
     end
 
+    describe '#build_default_champs' do
+      context 'when dossier is linked to a procedure' do
+        let(:dossier) { create(:dossier, :with_procedure, user: user) }
+        it 'build all champs needed' do
+          expect(dossier.champs.count).to eq(1)
+        end
+      end
+    end
+
     describe '#save' do
       subject { create(:dossier, procedure_id: nil, user: user) }
+      let!(:procedure) { create(:procedure) }
       context 'when is linked to a procedure' do
         it 'creates default pieces justificatives' do
           expect(subject).to receive(:build_default_pieces_justificatives)
-          subject.update_attributes(procedure_id: 1)
+          subject.update_attributes(procedure_id: procedure.id)
+        end
+
+        it 'creates default champs' do
+          expect(subject).to receive(:build_default_champs)
+          subject.update_attributes(procedure_id: procedure.id)
         end
       end
       context 'when is not linked to a procedure' do
@@ -115,14 +120,18 @@ describe Dossier do
           expect(subject).not_to receive(:build_default_pieces_justificatives)
           subject.update_attributes(description: 'plop')
         end
+
+        it 'does not create default champs' do
+          expect(subject).not_to receive(:build_default_champs)
+          subject.update_attributes(description: 'plop')
+        end
       end
     end
 
-    #TODO revoir le nommage
     describe '#next_step' do
       let(:dossier) { create(:dossier, :with_user) }
       let(:role) { 'user' }
-      let(:action) { 'propose' }
+      let(:action) { 'initiate' }
 
       subject { dossier.next_step! role, action }
 
@@ -156,17 +165,17 @@ describe Dossier do
             it { is_expected.to eq('draft') }
           end
 
-          context 'when he proposes a dossier' do
-            let(:action) { 'propose' }
+          context 'when he initiate a dossier' do
+            let(:action) { 'initiate' }
 
-            it { is_expected.to eq('proposed') }
+            it { is_expected.to eq('initiated') }
           end
         end
       end
 
-      context 'when dossier is at state proposed' do
+      context 'when dossier is at state initiated' do
         before do
-          dossier.proposed!
+          dossier.initiated!
         end
 
         context 'when user is connect' do
@@ -175,13 +184,13 @@ describe Dossier do
           context 'when is update dossier informations' do
             let(:action) { 'update' }
 
-            it {is_expected.to eq('proposed')}
+            it {is_expected.to eq('initiated')}
           end
 
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it {is_expected.to eq('proposed')}
+            it {is_expected.to eq('initiated')}
           end
         end
 
@@ -191,20 +200,20 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('reply')}
+            it { is_expected.to eq('replied')}
           end
 
-          context 'when is confirmed the dossier' do
-            let(:action) { 'confirme' }
+          context 'when is validated the dossier' do
+            let(:action) { 'valid' }
 
-            it {is_expected.to eq('confirmed')}
+            it {is_expected.to eq('validated')}
           end
         end
       end
 
-      context 'when dossier is at state reply' do
+      context 'when dossier is at state replied' do
         before do
-          dossier.reply!
+          dossier.replied!
         end
 
         context 'when user is connect' do
@@ -232,13 +241,13 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('reply')}
+            it { is_expected.to eq('replied')}
           end
 
-          context 'when is confirmed the dossier' do
-            let(:action) { 'confirme' }
+          context 'when is validated the dossier' do
+            let(:action) { 'valid' }
 
-            it {is_expected.to eq('confirmed')}
+            it {is_expected.to eq('validated')}
           end
         end
       end
@@ -270,20 +279,20 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('reply')}
+            it { is_expected.to eq('replied')}
           end
 
-          context 'when is confirmed the dossier' do
-            let(:action) { 'confirme' }
+          context 'when is validated the dossier' do
+            let(:action) { 'valid' }
 
-            it {is_expected.to eq('confirmed')}
+            it {is_expected.to eq('validated')}
           end
         end
       end
 
-      context 'when dossier is at state confirmed' do
+      context 'when dossier is at state validated' do
         before do
-          dossier.confirmed!
+          dossier.validated!
         end
 
         context 'when user is connect' do
@@ -291,13 +300,13 @@ describe Dossier do
 
           context 'when is post a comment' do
             let(:action) { 'comment' }
-            it { is_expected.to eq('confirmed') }
+            it { is_expected.to eq('validated') }
           end
 
-          context 'when is deposed the dossier' do
-            let(:action) { 'depose' }
+          context 'when is submitted the dossier' do
+            let(:action) { 'submit' }
 
-            it { is_expected.to eq('deposited') }
+            it { is_expected.to eq('submitted') }
           end
         end
 
@@ -307,14 +316,14 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('confirmed')}
+            it { is_expected.to eq('validated')}
           end
         end
       end
 
-      context 'when dossier is at state deposited' do
+      context 'when dossier is at state submitted' do
         before do
-          dossier.deposited!
+          dossier.submitted!
         end
 
         context 'when user is connect' do
@@ -323,7 +332,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('deposited') }
+            it { is_expected.to eq('submitted') }
           end
         end
 
@@ -333,20 +342,20 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it {is_expected.to eq('deposited')}
+            it {is_expected.to eq('submitted')}
           end
 
-          context 'when is processed the dossier' do
-            let(:action) { 'process' }
+          context 'when is closed the dossier' do
+            let(:action) { 'close' }
 
-            it {is_expected.to eq('processed')}
+            it {is_expected.to eq('closed')}
           end
         end
       end
 
-      context 'when dossier is at state processed' do
+      context 'when dossier is at state closed' do
         before do
-          dossier.processed!
+          dossier.closed!
         end
 
         context 'when user is connect' do
@@ -355,7 +364,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('processed')}
+            it { is_expected.to eq('closed')}
           end
         end
 
@@ -365,7 +374,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('processed')}
+            it { is_expected.to eq('closed')}
           end
         end
       end
@@ -373,13 +382,13 @@ describe Dossier do
 
     context 'gestionnaire backoffice methods' do
       let!(:dossier1) { create(:dossier, :with_user, :with_procedure, state: 'draft')}
-      let!(:dossier2) { create(:dossier, :with_user, :with_procedure, state: 'proposed')}
-      let!(:dossier3) { create(:dossier, :with_user, :with_procedure, state: 'proposed')}
-      let!(:dossier4) { create(:dossier, :with_user, :with_procedure, state: 'reply')}
+      let!(:dossier2) { create(:dossier, :with_user, :with_procedure, state: 'initiated')}
+      let!(:dossier3) { create(:dossier, :with_user, :with_procedure, state: 'initiated')}
+      let!(:dossier4) { create(:dossier, :with_user, :with_procedure, state: 'replied')}
       let!(:dossier5) { create(:dossier, :with_user, :with_procedure, state: 'updated')}
-      let!(:dossier6) { create(:dossier, :with_user, :with_procedure, state: 'confirmed')}
-      let!(:dossier7) { create(:dossier, :with_user, :with_procedure, state: 'deposited')}
-      let!(:dossier8) { create(:dossier, :with_user, :with_procedure, state: 'processed')}
+      let!(:dossier6) { create(:dossier, :with_user, :with_procedure, state: 'validated')}
+      let!(:dossier7) { create(:dossier, :with_user, :with_procedure, state: 'submitted')}
+      let!(:dossier8) { create(:dossier, :with_user, :with_procedure, state: 'closed')}
 
       describe '#a_traiter' do
         subject { described_class.a_traiter }

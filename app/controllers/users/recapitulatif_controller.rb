@@ -1,34 +1,32 @@
 class Users::RecapitulatifController < UsersController
   def show
-    @dossier = Dossier.find(params[:dossier_id])
+    @dossier = current_user_dossier
     @dossier = @dossier.decorate
     @procedure = @dossier.procedure
+    @champs = @dossier.ordered_champs
 
-    # mettre dans le modele
-    @commentaires = @dossier.commentaires.order(created_at: :desc)
-
+    @commentaires = @dossier.ordered_commentaires
     @commentaires = @commentaires.all.decorate
 
-    #TODO load user email
-    @commentaire_email = 'user@email'
+    @commentaire_email = current_user.email
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: :siret)
+    redirect_to url_for(root_path)
   end
 
-  def propose
+  def initiate
     show
 
-    @dossier.next_step! 'user', 'propose'
+    @dossier.next_step! 'user', 'initiate'
     flash.notice = 'Dossier soumis avec succès.'
 
     render 'show'
   end
 
-  def depose
+  def submit
     show
 
-    @dossier.next_step! 'user', 'depose'
+    @dossier.next_step! 'user', 'submit'
     flash.notice = 'Dossier déposé avec succès.'
 
     render 'show'

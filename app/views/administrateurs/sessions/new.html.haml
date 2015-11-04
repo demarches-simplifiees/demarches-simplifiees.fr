@@ -1,0 +1,10 @@
+%h1 Bienvenue sur TPS - Administration
+%br
+#gestionnaire_login
+  = form_for @administrateur, url: {controller: 'administrateurs/sessions', action: :create } do |f|
+    .form-group-lg
+      .form-group
+        = f.text_field :email, class: 'form-control', placeholder: 'Email'
+      .form-group
+        = f.password_field :password, class: 'form-control', placeholder: 'Mot de passe'
+      = f.submit 'Se connecter', class: %w(btn btn-lg btn-success), data: { disable_with: 'Connexion', submit: true }

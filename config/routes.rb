@@ -1,14 +1,18 @@
 Rails.application.routes.draw do
 
-  devise_for :users, controllers: {
-                       sessions: 'users/sessions'
-                   }
+  devise_for :administrateurs, controllers: {
+                                 sessions: 'administrateurs/sessions'
+                             }, skip: [:password, :registrations]
 
   devise_for :gestionnaires, controllers: {
                                sessions: 'gestionnaires/sessions'
                            }, skip: [:password, :registrations]
 
-  root 'users/dossiers#index'
+  devise_for :users, controllers: {
+                       sessions: 'users/sessions'
+                   }
+  
+  root 'root#index'
 
   get 'france_connect' => 'france_connect#login'
   get 'france_connect/callback' => 'france_connect#callback'
@@ -21,10 +25,8 @@ Rails.application.routes.draw do
       get '/description/error' => 'description#error'
       post 'description' => 'description#create'
       get '/recapitulatif' => 'recapitulatif#show'
-      post '/recapitulatif/propose' => 'recapitulatif#propose'
-      post '/recapitulatif/depose' => 'recapitulatif#depose'
-      get '/demande' => 'demandes#show'
-      post '/demande' => 'demandes#update'
+      post '/recapitulatif/initiate' => 'recapitulatif#initiate'
+      post '/recapitulatif/submit' => 'recapitulatif#submit'
       post '/commentaire' => 'commentaires#create'
 
       get '/carte/position' => 'carte#get_position'
@@ -35,33 +37,27 @@ Rails.application.routes.draw do
     resource :dossiers
   end
 
+  get 'admin' => 'admin#index'
 
-  # resources :dossiers do
+  namespace :admin do
+    get 'sign_in' => '/administrateurs/sessions#new'
+    resources :procedures do
 
-
-  #   # get '/carte/position' => 'carte#get_position'
-  #   # get '/carte' => 'carte#show'
-  #   # post '/carte' => 'carte#save_ref_api_carto'
-
-  #   # get '/description' => 'description#show'
-  #   # get '/description/error' => 'description#error'
-  #   # post 'description' => 'description#create'
-
-
-  #   post '/commentaire' => 'commentaires#create'
-
-  # end
-
+    end
+  end
 
   get 'backoffice' => 'backoffice#index'
 
   namespace :backoffice do
     get 'sign_in' => '/gestionnaires/sessions#new'
+
     resources :dossiers do
-      post 'confirme' => 'dossiers#confirme'
+      post 'valid' => 'dossiers#valid'
+      post 'close' => 'dossiers#close'
     end
     resources :commentaires, only: [:create]
   end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

@@ -4,6 +4,13 @@ feature 'user is on description page' do
   let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, :with_user) }
   before do
     visit users_dossier_description_path dossier
+
+    within('#new_user') do
+      page.find_by_id('user_email').set dossier.user.email
+      page.find_by_id('user_password').set dossier.user.password
+      page.click_on 'Se connecter'
+    end
+
   end
   it { expect(page).to have_css('#description_page') }
 
@@ -11,9 +18,6 @@ feature 'user is on description page' do
     before do
       find_by_id('nom_projet').set 'mon nom'
       find_by_id('description').set 'ma description'
-      find_by_id('montant_projet').set 10_000
-      find_by_id('montant_aide_demande').set 100
-      find_by_id('date_previsionnelle').set '10/10/2010'
     end
     context 'before submit' do
       it 'dossier cerfa is empty' do

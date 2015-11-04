@@ -55,18 +55,18 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         end
       end
 
-      context 'when dossier state is proposed' do
+      context 'when dossier state is initiated' do
         before do
-          dossier.proposed!
+          dossier.initiated!
           render
         end
 
         it { expect(rendered).to have_content('Soumis') }
       end
 
-      context 'when dossier state is reply' do
+      context 'when dossier state is replied' do
         before do
-          dossier.reply!
+          dossier.replied!
           render
         end
 
@@ -83,9 +83,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         it { expect(rendered).to have_content('Mis à jour') }
       end
 
-      context 'when dossier state is confirmed' do
+      context 'when dossier state is validated' do
         before do
-          dossier.confirmed!
+          dossier.validated!
           render
         end
 
@@ -100,9 +100,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         end
       end
 
-      context 'when dossier state is deposited' do
+      context 'when dossier state is submitted' do
         before do
-          dossier.deposited!
+          dossier.submitted!
           render
         end
 
@@ -116,7 +116,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
       context 'when dossier state is traité' do
         before do
-          dossier.processed!
+          dossier.closed!
           render
         end
         it { expect(rendered).to have_content('Traité') }

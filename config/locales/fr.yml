@@ -78,7 +78,7 @@ fr:
       not_saved:
         one: "1 erreur a empêché ce(tte) %{resource} d'être sauvegardé(e) :"
         other: "%{count} erreurs ont empêché ce(tte) %{resource} d'être sauvegardé(e) :"
-      dossier_not_found: "Le dossier n'existe pas"
+      dossier_not_found: "Le dossier n'existe pas ou vous n'y avez pas accès."
       invalid_siret: "Le siret est incorrect"
       france_connect:
        connexion: "Erreur lors de la connexion à France Connect."
