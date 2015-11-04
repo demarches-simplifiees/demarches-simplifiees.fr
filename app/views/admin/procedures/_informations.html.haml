@@ -1,23 +1,10 @@
 %br
-.form-group{class: ('has-error' if @procedure.errors.messages[:libelle])}
-  %h4 Libellé*
-  =f.text_field :libelle, class: 'form-control', placeholder: 'Libellé'
 
-.form-group{class: ('has-error' if @procedure.errors.messages[:description])}
-  %h4 Description*
-  =f.text_area :description, class: 'form-control', placeholder: 'Description'
-
-.form-group{class: ('has-error' if @procedure.errors.messages[:lien_demarche])}
-  %h4 Lien Démarche
-  =f.text_field :lien_demarche, class: 'form-control', placeholder: 'Lien Démarche'
-
-.form-group{class: ('has-error' if @procedure.errors.messages[:organisation])}
-  %h4 Organisation
-  =f.text_field :organisation, class: 'form-control', placeholder: 'Organisation'
-
-.form-group{class: ('has-error' if @procedure.errors.messages[:direction])}
-  %h4 Direction
-  =f.text_field :direction, class: 'form-control', placeholder: 'Direction'
+-{libelle: 'Libellé*', description: 'Description*', lien_demarche: 'Lien démarche', organisation: 'Organisation', direction: 'Direction'}.each do |key, value|
+  .form-group{class: ('has-error' if @procedure.errors.messages[key])}
+    %h4
+      =value
+    =f.text_field key, class: 'form-control', placeholder: value
 
 %br
 

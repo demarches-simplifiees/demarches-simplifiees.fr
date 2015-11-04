@@ -17,14 +17,7 @@ class Admin::ProceduresController < ApplicationController
   end
 
   def create
-    @procedure = Procedure.new
-
-    @procedure.libelle = params[:procedure][:libelle]
-    @procedure.description = params[:procedure][:description]
-    @procedure.organisation = params[:procedure][:organisation]
-    @procedure.direction = params[:procedure][:direction]
-    @procedure.lien_demarche = params[:procedure][:lien_demarche]
-    @procedure.use_api_carto = params[:procedure][:use_api_carto]
+    @procedure = Procedure.new(create_procedure_params)
 
     unless @procedure.save
       flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
@@ -35,7 +28,6 @@ class Admin::ProceduresController < ApplicationController
     process_types_de_piece_justificative_params
 
     flash.notice = 'Procédure enregistrée'
-
     redirect_to admin_procedures_path
   end
 
@@ -52,10 +44,6 @@ class Admin::ProceduresController < ApplicationController
 
     flash.notice = 'Préocédure modifiée'
     redirect_to admin_procedures_path
-
-  # rescue ActiveRecord::RecordNotFound
-  #   flash.alert = 'Procédure inéxistante'
-  #   redirect_to admin_procedures_path
   end
 
   private

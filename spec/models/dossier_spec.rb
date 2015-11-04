@@ -121,7 +121,7 @@ describe Dossier do
           subject.update_attributes(description: 'plop')
         end
 
-        it 'does not create default champss' do
+        it 'does not create default champs' do
           expect(subject).not_to receive(:build_default_champs)
           subject.update_attributes(description: 'plop')
         end

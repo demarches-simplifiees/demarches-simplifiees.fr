@@ -1,6 +1,6 @@
-require 'rails_helper'
+require 'spec_helper'
 
-RSpec.describe Administrateur, type: :model do
+describe Administrateur, type: :model do
   describe 'database column' do
     it { is_expected.to have_db_column(:email) }
     it { is_expected.to have_db_column(:encrypted_password) }

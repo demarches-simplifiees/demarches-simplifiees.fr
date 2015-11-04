@@ -10,7 +10,7 @@ describe UsersController, type: :controller do
       sign_in user
     end
 
-    context 'when no dossier_id is informed' do
+    context 'when no dossier_id is filled' do
       it { expect{ subject.current_user_dossier }.to raise_error }
     end
 

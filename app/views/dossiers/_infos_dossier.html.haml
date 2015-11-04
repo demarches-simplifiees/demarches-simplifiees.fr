@@ -18,15 +18,13 @@
 
   %br
     -unless @champs.nil?
-      .row
-        .col-lg-12.col-md-12
-          %table.table#liste_champs
-            -@champs.each do |champ|
-              %tr
-                %th.col-md-3.col-lg-3
-                  =champ.libelle
-                %td
-                  =champ.value
+      %table.table#liste_champs
+        -@champs.each do |champ|
+          %tr
+            %th{ style: 'width:25%' }
+              =champ.libelle
+            %td
+              =champ.value
 
   %div.row{style: 'text-align:right'}
     -unless gestionnaire_signed_in?
