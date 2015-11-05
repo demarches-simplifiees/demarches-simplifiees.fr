@@ -1,0 +1,40 @@
+.form-inline{id:"type_de_champ_#{index}", style: 'padding-bottom:8px'}
+  .form-group{ style: 'padding-right: 2%' }
+    %h4 Libellé
+    %input.form-control#libelle{ type: 'text', placeholder: 'Libelle', name:"type_de_champ[#{index}][libelle]", size: 40, value: ("#{ type_de_champ.libelle }" unless type_de_champ.nil? )  }
+
+  .form-group{ style: 'padding-right: 2%' }
+    %h4 Type
+    %select.form-control#type_champs{ name: "type_de_champ[#{index}][type]" }
+      %option{ value: 'text', selected: (type_de_champ.type_champs == 'text' unless type_de_champ.nil?)}
+        Simple texte
+      %option{ value: 'textarea', selected: (type_de_champ.type_champs == 'textarea' unless type_de_champ.nil?)}
+        Texte multi-lignes
+      %option{ value: 'datetime', selected: (type_de_champ.type_champs == 'datetime' unless type_de_champ.nil?)}
+        Date
+      %option{ value: 'number', selected: (type_de_champ.type_champs == 'number' unless type_de_champ.nil?)}
+        Valeur numérique
+
+  .form-group{ style: 'padding-right: 2%' }
+    %h4
+      Description
+    %textarea.form-control#description{cols: 60, placeholder: 'Description', name: "type_de_champ[#{index}][description]"}
+      =("#{ type_de_champ.description }" unless type_de_champ.nil? )
+
+  %input.order_place{type: 'hidden', name: "type_de_champ[#{index}][order_place]", value: (("#{ type_de_champ.order_place }" unless type_de_champ.nil?) || index+1)}
+  %input#id_type_de_champ{type: 'hidden', name: "type_de_champ[#{index}][id_type_de_champ]", value: (("#{ type_de_champ.id}" unless type_de_champ.nil?))}
+  %input#delete{type: 'hidden', name: "type_de_champ[#{index}][delete]", value: 'false'}
+
+  -if type_de_champ.nil?
+    .form-group#add_type_de_champ_button
+      %br &nbsp;
+      %button.form-control.btn.btn-success#add_type_de_champ_procedure{type: 'button'} Ajouter
+
+  .form-group.order_type_de_champ_button{id: "order_type_de_champ_#{index}_button", style: ("display:none" if type_de_champ.nil?)}
+    %br &nbsp;
+    %button.form-control.btn.btn-default.button_up.fa.fa-chevron-up{type: 'button', id: "order_type_de_champ_#{index}_up_procedure"}
+    %button.form-control.btn.btn-default.button_down.fa.fa-chevron-down{type: 'button', id: "order_type_de_champ_#{index}_down_procedure"}
+
+  .form-group{id: "delete_type_de_champ_#{index}_button", style: ("display:none" if type_de_champ.nil?)}
+    %br &nbsp;
+    %button.form-control.btn.btn-danger.fa.fa-trash-o{type: 'button', id: "delete_type_de_champ_#{index}_procedure"}

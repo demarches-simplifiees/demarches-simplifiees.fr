@@ -11,7 +11,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'API'
   inflect.irregular 'piece_justificative', 'pieces_justificatives'
   inflect.irregular 'type_de_piece_justificative', 'types_de_piece_justificative'
-  inflect.irregular 'type_de_champs', 'types_de_champs'
+  inflect.irregular 'type_de_champ', 'types_de_champ'
 end
 
 # These inflection rules are supported but not enabled by default:

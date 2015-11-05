@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151103091603) do
+ActiveRecord::Schema.define(version: 20151105095431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20151103091603) do
 
   create_table "champs", force: :cascade do |t|
     t.string  "value"
-    t.integer "type_de_champs_id"
+    t.integer "type_de_champ_id"
     t.integer "dossier_id"
   end
 
@@ -142,7 +142,7 @@ ActiveRecord::Schema.define(version: 20151103091603) do
     t.boolean  "use_api_carto", default: false
   end
 
-  create_table "types_de_champs", force: :cascade do |t|
+  create_table "types_de_champ", force: :cascade do |t|
     t.string  "libelle"
     t.string  "type_champs"
     t.integer "order_place"

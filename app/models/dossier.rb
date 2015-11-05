@@ -19,7 +19,7 @@ class Dossier < ActiveRecord::Base
   delegate :siren, to: :entreprise
   delegate :siret, to: :etablissement
   delegate :types_de_piece_justificative, to: :procedure
-  delegate :types_de_champs, to: :procedure
+  delegate :types_de_champ, to: :procedure
 
   before_create :build_default_cerfa
 
@@ -42,13 +42,13 @@ class Dossier < ActiveRecord::Base
   end
 
   def build_default_champs
-    procedure.types_de_champs.each do |type_de_champs|
-      Champ.create(type_de_champs_id: type_de_champs.id, dossier_id: id)
+    procedure.types_de_champ.each do |type_de_champ|
+      Champ.create(type_de_champ_id: type_de_champ.id, dossier_id: id)
     end
   end
 
   def ordered_champs
-    champs.joins(', types_de_champs').where('champs.type_de_champs_id = types_de_champs.id').order('order_place')
+    champs.joins(', types_de_champ').where('champs.type_de_champ_id = types_de_champ.id').order('order_place')
   end
 
   def ordered_commentaires

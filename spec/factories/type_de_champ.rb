@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :type_de_champs do
+  factory :type_de_champ do
     libelle 'Libellé'
     description 'description de votre projet'
     type_champs 'textarea'

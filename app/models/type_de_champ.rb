@@ -1,4 +1,4 @@
-class TypeDeChamps < ActiveRecord::Base
+class TypeDeChamp < ActiveRecord::Base
   enum type_champs: {text: 'text',
                      textarea: 'textarea',
                      datetime: 'datetime',

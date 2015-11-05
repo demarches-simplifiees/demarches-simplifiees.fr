@@ -28,7 +28,7 @@ describe Dossier do
     it { is_expected.to delegate_method(:siren).to(:entreprise) }
     it { is_expected.to delegate_method(:siret).to(:etablissement) }
     it { is_expected.to delegate_method(:types_de_piece_justificative).to(:procedure) }
-    it { is_expected.to delegate_method(:types_de_champs).to(:procedure) }
+    it { is_expected.to delegate_method(:types_de_champ).to(:procedure) }
   end
 
   describe 'validation' do
