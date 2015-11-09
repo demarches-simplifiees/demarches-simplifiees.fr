@@ -18,15 +18,15 @@ feature 'delete a type de piece_justificative form', js: true do
       let(:type_de_piece_justificative) { procedure.types_de_piece_justificative.first }
 
       before do
-        page.click_on 'delete_type_de_piece_justificative_0_procedure'
+        page.click_on 'delete_type_de_piece_justificative_1_procedure'
       end
 
       scenario 'form is mask for the user' do
-        expect(page.find_by_id('type_de_piece_justificative_0', visible: false).visible?).to be_falsey
+        expect(page.find_by_id('type_de_piece_justificative_1', visible: false).visible?).to be_falsey
       end
 
       scenario 'delete attribut of type de piece_justificative is turn to true' do
-        expect(page.find_by_id('type_de_piece_justificative_0', visible: false).find_by_id('delete', visible: false).value).to eq('true')
+        expect(page.find_by_id('type_de_piece_justificative_1', visible: false).find('input[class="destroy"]', visible: false).value).to eq('true')
       end
     end
 
@@ -44,8 +44,8 @@ feature 'delete a type de piece_justificative form', js: true do
       end
 
       scenario 'delete attribut of type de piece_justificative is turn to true' do
-        expect(page.find_by_id('type_de_piece_justificative_2', visible: false).find_by_id('delete', visible: false).value).to eq('true')
-        expect(page.find_by_id('type_de_piece_justificative_3', visible: false).find_by_id('delete', visible: false).value).to eq('true')
+        expect(page.find_by_id('type_de_piece_justificative_2', visible: false).find('input[class="destroy"]', visible: false).value).to eq('true')
+        expect(page.find_by_id('type_de_piece_justificative_3', visible: false).find('input[class="destroy"]', visible: false).value).to eq('true')
       end
     end
   end

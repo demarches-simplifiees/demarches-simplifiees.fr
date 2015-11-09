@@ -1,12 +1,11 @@
 #liste_champ
-  -if @procedure.types_de_champ.size > 0
-    - @procedure.types_de_champ.order(:order_place).each_with_index do |type_de_champ, index|
-      =render partial: 'admin/procedures/types_de_champ/form', locals:{ type_de_champ: type_de_champ, index: index }
+  -unless @types_de_champ.nil?
+    =render partial: 'admin/procedures/types_de_champ/form', locals:{ types_de_champ: @types_de_champ, order_place: nil, f: f }
 
 #liste_delete_champ
 
 #new_type_de_champ
-  =render partial: 'admin/procedures/types_de_champ/form', locals:{ type_de_champ: nil, index: @procedure.types_de_champ.size }
+  =render partial: 'admin/procedures/types_de_champ/form', locals:{ types_de_champ: [TypeDeChamp.new], index: (@types_de_champ.nil? || @types_de_champ.last.nil? ? 0 : @procedure.types_de_champ.last.id+1), order_place: (@types_de_champ.nil? ? 1 : @types_de_champ.size+1), f: f }
 
 %script{ type:'text/javascript' }
-  ="var types_de_champ_index = #{@procedure.types_de_champ.size}"
+  ="var types_de_champ_index = #{(@types_de_champ.nil? || @types_de_champ.last.nil? ? 0 : @procedure.types_de_champ.last.id+1)}"

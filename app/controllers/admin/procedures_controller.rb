@@ -7,6 +7,9 @@ class Admin::ProceduresController < ApplicationController
 
   def show
     @procedure = Procedure.find(params[:id])
+    @types_de_champ = @procedure.types_de_champ.order(:order_place)
+    @types_de_piece_justificative = @procedure.types_de_piece_justificative.order(:libelle)
+
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inéxistante'
     redirect_to admin_procedures_path
@@ -24,14 +27,15 @@ class Admin::ProceduresController < ApplicationController
       return render 'new'
     end
 
-    process_types_de_champ_params
-    process_types_de_piece_justificative_params
+    process_new_types_de_champ_params
+    process_new_types_de_piece_justificative_params
 
     flash.notice = 'Procédure enregistrée'
     redirect_to admin_procedures_path
   end
 
   def update
+    # raise
     @procedure = Procedure.find(params[:id])
 
     unless @procedure.update_attributes(create_procedure_params)
@@ -39,8 +43,11 @@ class Admin::ProceduresController < ApplicationController
       return render 'show'
     end
 
-    process_types_de_champ_params
-    process_types_de_piece_justificative_params
+    process_new_types_de_champ_params
+    process_update_types_de_champ_params
+
+    process_new_types_de_piece_justificative_params
+    process_update_types_de_piece_justificative_params
 
     flash.notice = 'Préocédure modifiée'
     redirect_to admin_procedures_path
@@ -48,51 +55,65 @@ class Admin::ProceduresController < ApplicationController
 
   private
 
-  def process_types_de_champ_params
-    unless params[:type_de_champ].nil? || params[:type_de_champ].size == 0
-      params[:type_de_champ].each do |index, type_de_champ|
+  def process_new_types_de_champ_params
+    unless params[:procedure][:new_type_de_champ].nil?
+      params[:procedure][:new_type_de_champ].each do |new_type_de_champ|
+        type_de_champ = TypeDeChamp.new
 
-        if type_de_champ[:delete] == 'true'
-          unless type_de_champ[:id_type_de_champ].nil? || type_de_champ[:id_type_de_champ] == ''
-            TypeDeChamp.destroy(type_de_champ[:id_type_de_champ])
-          end
-        else
-          if type_de_champ[:id_type_de_champ].nil? || type_de_champ[:id_type_de_champ] == ''
-            bdd_object = TypeDeChamp.new
-          else
-            bdd_object = TypeDeChamp.find(type_de_champ[:id_type_de_champ])
-          end
-
-          save_type_de_champ bdd_object, type_de_champ
+        if new_type_de_champ[1]['_destroy'] == 'false'
+          save_new_type_de_champ type_de_champ, new_type_de_champ[1]
         end
       end
     end
   end
 
-  def process_types_de_piece_justificative_params
-    unless params[:type_de_piece_justificative].nil? || params[:type_de_piece_justificative].size == 0
-      params[:type_de_piece_justificative].each do |index, type_de_piece_justificative|
+  def process_update_types_de_champ_params
+    unless params[:procedure][:types_de_champ].nil?
+      params[:procedure][:types_de_champ].each do |type_de_champ|
+        tmp = TypeDeChamp.find(type_de_champ[0])
+        if type_de_champ[1]['_destroy'] == 'false'
+          save_new_type_de_champ tmp, type_de_champ[1]
 
-        if type_de_piece_justificative[:delete] == 'true'
-          unless type_de_piece_justificative[:id_type_de_piece_justificative].nil? || type_de_piece_justificative[:id_type_de_piece_justificative] == ''
-            TypeDePieceJustificative.destroy(type_de_piece_justificative[:id_type_de_piece_justificative])
-          end
-        else
-          if type_de_piece_justificative[:id_type_de_piece_justificative].nil? || type_de_piece_justificative[:id_type_de_piece_justificative] == ''
-            bdd_object = TypeDePieceJustificative.new
-          else
-            bdd_object = TypeDePieceJustificative.find(type_de_piece_justificative[:id_type_de_piece_justificative])
-          end
-
-          save_type_de_piece_justificative bdd_object, type_de_piece_justificative
+        elsif type_de_champ[1]['_destroy'] == 'true'
+          tmp.destroy
         end
       end
     end
   end
 
-  def save_type_de_champ database_object, source
+  def process_new_types_de_piece_justificative_params
+    unless params[:procedure][:new_type_de_piece_justificative].nil?
+      params[:procedure][:new_type_de_piece_justificative].each do |new_type_de_piece_justificative|
+        type_de_pj = TypeDePieceJustificative.new
+
+        if new_type_de_piece_justificative[1]['_destroy'] == 'false'
+          save_new_type_de_piece_justificative type_de_pj, new_type_de_piece_justificative[1]
+        end
+      end
+    end
+  end
+
+
+  def process_update_types_de_piece_justificative_params
+    unless params[:procedure][:types_de_piece_justificative].nil?
+      params[:procedure][:types_de_piece_justificative].each do |type_de_piece_justificative|
+        tmp = TypeDePieceJustificative.find(type_de_piece_justificative[0])
+
+        if type_de_piece_justificative[1]['_destroy'] == 'false'
+          save_new_type_de_piece_justificative tmp, type_de_piece_justificative[1]
+
+        elsif type_de_piece_justificative[1]['_destroy'] == 'true'
+          tmp.destroy
+        end
+      end
+    end
+  end
+
+
+
+  def save_new_type_de_champ database_object, source
     database_object.libelle = source[:libelle]
-    database_object.type_champs = source[:type]
+    database_object.type_champs = source[:type_champs]
     database_object.description = source[:description]
     database_object.order_place = source[:order_place]
     database_object.procedure = @procedure
@@ -100,7 +121,7 @@ class Admin::ProceduresController < ApplicationController
     database_object.save
   end
 
-  def save_type_de_piece_justificative database_object, source
+  def save_new_type_de_piece_justificative database_object, source
     database_object.libelle = source[:libelle]
     database_object.description = source[:description]
     database_object.procedure = @procedure
@@ -110,5 +131,7 @@ class Admin::ProceduresController < ApplicationController
 
   def create_procedure_params
     params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_demarche, :use_api_carto)
+
+    #params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_demarche, :use_api_carto, types_de_champ_attributes: [:libelle, :description, :order_place, :type_champs])
   end
 end

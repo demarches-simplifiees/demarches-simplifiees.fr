@@ -1,12 +1,11 @@
 #liste_piece_justificative
-  -if @procedure.types_de_piece_justificative.size > 0
-    - @procedure.types_de_piece_justificative.order(:libelle).each_with_index do |type_de_piece_justificative, index|
-      =render partial: 'admin/procedures/types_de_piece_justificative/form', locals:{ type_de_piece_justificative: type_de_piece_justificative, index: index }
+  -unless @types_de_piece_justificative.nil?
+    =render partial: 'admin/procedures/types_de_piece_justificative/form', locals:{ types_de_piece_justificative: @types_de_piece_justificative, f: f }
 
 #liste_delete_piece_justificative
 
 #new_type_de_piece_justificative
-  =render partial: 'admin/procedures/types_de_piece_justificative/form', locals:{ type_de_piece_justificative: nil, index: @procedure.types_de_piece_justificative.size }
+  =render partial: 'admin/procedures/types_de_piece_justificative/form', locals:{ types_de_piece_justificative: [TypeDePieceJustificative.new], index: (@types_de_piece_justificative.nil? || @types_de_piece_justificative.last.nil? ? 0 : @procedure.types_de_piece_justificative.last.id+1), f: f }
 
 %script{ type:'text/javascript' }
-  ="var types_de_piece_justificative_index = #{@procedure.types_de_piece_justificative.size}"
+  ="var types_de_piece_justificative_index = #{(@types_de_piece_justificative.nil? || @types_de_piece_justificative.last.nil? ? 0 : @procedure.types_de_piece_justificative.last.id+1)}"

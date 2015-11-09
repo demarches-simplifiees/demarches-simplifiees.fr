@@ -1,22 +1,25 @@
-.form-inline{id:"type_de_piece_justificative_#{index}", style: 'padding-bottom:8px'}
-  .form-group{ style: 'padding-right: 2%' }
-    %h4 Libellé
-    %input.form-control#libelle{ type: 'text', placeholder: 'Libelle', name:"type_de_piece_justificative[#{index}][libelle]", size: 40, value: ("#{ type_de_piece_justificative.libelle }" unless type_de_piece_justificative.nil? )  }
+- types_de_piece_justificative.each do |type_de_piece_justificative|
+  - type_de_piece_justificative.id.nil? ? object_for = "new_type_de_piece_justificative[#{index}]" : object_for = 'types_de_piece_justificative[]'
 
-  .form-group{ style: 'padding-right: 2%' }
-    %h4
-      Description
-    %textarea.form-control#description{cols: 60, placeholder: 'Description', name: "type_de_piece_justificative[#{index}][description]"}
-      =("#{ type_de_piece_justificative.description }" unless type_de_piece_justificative.nil? )
+  = f.fields_for object_for, type_de_piece_justificative do |ff|
+    .form-inline{id:"type_de_piece_justificative_#{type_de_piece_justificative.id || index}", class: 'type_de_piece_justificative', style: 'padding-bottom:8px'}
+      .form-group{ style: 'padding-right: 2%' }
+        %h4 Libellé
+        =ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
 
-  %input#id_type_de_piece_justificative{type: 'hidden', name: "type_de_piece_justificative[#{index}][id_type_de_piece_justificative]", value: (("#{ type_de_piece_justificative.id}" unless type_de_piece_justificative.nil?))}
-  %input#delete{type: 'hidden', name: "type_de_piece_justificative[#{index}][delete]", value: 'false'}
+      .form-group{ style: 'padding-right: 2%' }
+        %h4
+          Description
+        =ff.text_area :description, class: 'form-control description', placeholder: 'Description'
 
-  -if type_de_piece_justificative.nil?
-    .form-group#add_type_de_piece_justificative_button
-      %br &nbsp;
-      %button.form-control.btn.btn-success#add_type_de_piece_justificative_procedure{type: 'button'} Ajouter
+      =ff.hidden_field '_destroy', value: 'false', class: 'destroy'
 
-  .form-group{id: "delete_type_de_piece_justificative_#{index}_button", style: ("display:none" if type_de_piece_justificative.nil?)}
-    %br &nbsp;
-    %button.form-control.btn.btn-danger.fa.fa-trash-o{type: 'button', id: "delete_type_de_piece_justificative_#{index}_procedure"}
+      .form-group{ id: "delete_type_de_piece_justificative_#{type_de_piece_justificative.id || index}_button", style: ("display:none" if type_de_piece_justificative.id.nil?) }
+        %br &nbsp;
+        %button.form-control.btn.btn-danger.fa.fa-trash-o{type: 'button', id: "delete_type_de_piece_justificative_#{type_de_piece_justificative.id || index}_procedure"}
+
+      -if type_de_piece_justificative.id.nil?
+        .form-group#add_type_de_piece_justificative_button
+          %br &nbsp;
+          %button.form-control.btn.btn-success#add_type_de_piece_justificative_procedure{type: 'button'} Ajouter
+

@@ -22,47 +22,47 @@ feature 'move up and down button type de champs', js: true do
         page.click_on 'add_type_de_champ_procedure'
       end
   #
-      context 'when to click on up_button type_de_champ_1 and down_button type_de_champ_0' do
+      context 'when to click on up_button type_de_champ_2 and down_button type_de_champ_1' do
         before do
-          page.click_on 'order_type_de_champ_1_up_procedure'
-          page.click_on 'order_type_de_champ_0_down_procedure'
+          page.click_on 'order_type_de_champ_2_up_procedure'
+          page.click_on 'order_type_de_champ_1_down_procedure'
         end
 
-        scenario 'type_de_champ_0 is at order place 3 and type_de_champ_1 is at order place 1 ' do
-          expect(page.find_by_id('type_de_champ_1').find('input[class="order_place"]', visible: false).value).to eq('1');
-          expect(page.find_by_id('type_de_champ_2').find('input[class="order_place"]', visible: false).value).to eq('2');
-          expect(page.find_by_id('type_de_champ_0').find('input[class="order_place"]', visible: false).value).to eq('3');
-          expect(page.find_by_id('type_de_champ_3').find('input[class="order_place"]', visible: false).value).to eq('4');
-          expect(page.find_by_id('type_de_champ_4').find('input[class="order_place"]', visible: false).value).to eq('5');
+        scenario 'type_de_champ_1 is at order place 3 and type_de_champ_2 is at order place 1 ' do
+          expect(page.find_by_id('type_de_champ_2').find('input[class="order_place"]', visible: false).value).to eq('1');
+          expect(page.find_by_id('type_de_champ_3').find('input[class="order_place"]', visible: false).value).to eq('2');
+          expect(page.find_by_id('type_de_champ_1').find('input[class="order_place"]', visible: false).value).to eq('3');
+          expect(page.find_by_id('type_de_champ_4').find('input[class="order_place"]', visible: false).value).to eq('4');
+          expect(page.find_by_id('type_de_champ_5').find('input[class="order_place"]', visible: false).value).to eq('5');
         end
 
-        context 'when to click on down_button type_de_champ_3 and up_button type_de_champ_4' do
+        context 'when to click on down_button type_de_champ_4 and up_button type_de_champ_5' do
           before do
-            page.click_on 'order_type_de_champ_3_down_procedure'
-            page.click_on 'order_type_de_champ_4_up_procedure'
+            page.click_on 'order_type_de_champ_4_down_procedure'
+            page.click_on 'order_type_de_champ_5_up_procedure'
           end
 
           scenario 'type_de_champ_2 and type_de_champ_3 is reversed' do
-            expect(page.find_by_id('type_de_champ_1').find('input[class="order_place"]', visible: false).value).to eq('1');
-            expect(page.find_by_id('type_de_champ_2').find('input[class="order_place"]', visible: false).value).to eq('2');
-            expect(page.find_by_id('type_de_champ_4').find('input[class="order_place"]', visible: false).value).to eq('3');
-            expect(page.find_by_id('type_de_champ_0').find('input[class="order_place"]', visible: false).value).to eq('4');
-            expect(page.find_by_id('type_de_champ_3').find('input[class="order_place"]', visible: false).value).to eq('5');
+            expect(page.find_by_id('type_de_champ_2').find('input[class="order_place"]', visible: false).value).to eq('1');
+            expect(page.find_by_id('type_de_champ_3').find('input[class="order_place"]', visible: false).value).to eq('2');
+            expect(page.find_by_id('type_de_champ_5').find('input[class="order_place"]', visible: false).value).to eq('3');
+            expect(page.find_by_id('type_de_champ_1').find('input[class="order_place"]', visible: false).value).to eq('4');
+            expect(page.find_by_id('type_de_champ_4').find('input[class="order_place"]', visible: false).value).to eq('5');
           end
 
-          context 'when to click on up_button type_de_champ_2 and down_button type_de_champ_0 and up_button type_de_champ_4' do
+          context 'when to click on up_button type_de_champ_3 and down_button type_de_champ_1 and up_button type_de_champ_5' do
             before do
-              page.click_on 'order_type_de_champ_2_up_procedure'
-              page.click_on 'order_type_de_champ_0_down_procedure'
-              page.click_on 'order_type_de_champ_4_up_procedure'
+              page.click_on 'order_type_de_champ_3_up_procedure'
+              page.click_on 'order_type_de_champ_1_down_procedure'
+              page.click_on 'order_type_de_champ_5_up_procedure'
             end
 
             scenario 'type_de_champ_2 and type_de_champ_4 is reversed' do
-              expect(page.find_by_id('type_de_champ_2').find('input[class="order_place"]', visible: false).value).to eq('1');
-              expect(page.find_by_id('type_de_champ_4').find('input[class="order_place"]', visible: false).value).to eq('2');
-              expect(page.find_by_id('type_de_champ_1').find('input[class="order_place"]', visible: false).value).to eq('3');
-              expect(page.find_by_id('type_de_champ_3').find('input[class="order_place"]', visible: false).value).to eq('4');
-              expect(page.find_by_id('type_de_champ_0').find('input[class="order_place"]', visible: false).value).to eq('5');
+              expect(page.find_by_id('type_de_champ_3').find('input[class="order_place"]', visible: false).value).to eq('1');
+              expect(page.find_by_id('type_de_champ_5').find('input[class="order_place"]', visible: false).value).to eq('2');
+              expect(page.find_by_id('type_de_champ_2').find('input[class="order_place"]', visible: false).value).to eq('3');
+              expect(page.find_by_id('type_de_champ_4').find('input[class="order_place"]', visible: false).value).to eq('4');
+              expect(page.find_by_id('type_de_champ_1').find('input[class="order_place"]', visible: false).value).to eq('5');
             end
           end
         end

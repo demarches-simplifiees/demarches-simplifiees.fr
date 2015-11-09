@@ -11,6 +11,10 @@ describe Admin::ProceduresController, type: :controller do
   let(:direction) { 'Direction de test' }
   let(:lien_demarche) { 'http://localhost.com' }
   let(:use_api_carto) { '1' }
+  let(:new_type_de_champ) { {} }
+  let(:types_de_champ) { {} }
+  let(:new_type_de_piece_justificative) { {} }
+  let(:types_de_piece_justificative) { {} }
 
   let(:procedure_params) {
     {
@@ -19,55 +23,67 @@ describe Admin::ProceduresController, type: :controller do
         organisation: organisation,
         direction: direction,
         lien_demarche: lien_demarche,
-        use_api_carto: use_api_carto
+        use_api_carto: use_api_carto,
+        new_type_de_champ: new_type_de_champ,
+        types_de_champ: types_de_champ,
+        new_type_de_piece_justificative: new_type_de_piece_justificative,
+        types_de_piece_justificative: types_de_piece_justificative
     }
   }
 
-  let(:types_de_champ_params) {
+  let(:two_new_type_de_champ) {
     {'0' =>
          {libelle: 'Champs de test',
-          type: 'number',
+          type_champs: 'number',
           description: 'Description de test',
-          order_place: 1},
+          order_place: 1,
+          '_destroy' => 'false'},
      '1' =>
          {libelle: 'Champs de test 2',
-          type: 'text',
+          type_champs: 'text',
           description: 'Description de test 2',
-          order_place: 2}
+          order_place: 2,
+          '_destroy' => 'false'}
     }
   }
 
-  let(:types_de_champ_params_errors) {
-    {'0' =>
-         {libelle: '',
-          type: 'number',
-          description: 'Description de test',
-          order_place: 1},
-     '1' =>
-         {libelle: 'Champs de test 2',
-          type: 'text',
-          description: 'Description de test 2',
-          order_place: 2}
-    }
-  }
-
-  let(:types_de_piece_justificative_params_errors) {
-    {'0' =>
-         {libelle: '',
-          description: 'Description de test'},
-     '1' =>
-         {libelle: 'Champs de test 2',
-          description: 'Description de test 2'}
-    }
-  }
-
-  let(:types_de_piece_justificative_params) {
+  let(:two_new_types_de_piece_justificative) {
     {'0' =>
          {libelle: 'PJ de test',
-          description: 'Description de test'},
+          description: 'Description de test',
+          '_destroy' => 'false'},
      '1' =>
          {libelle: 'PJ de test 2',
-          description: 'Description de test 2'}
+          description: 'Description de test 2',
+          '_destroy' => 'false'}
+    }
+  }
+
+  let(:two_new_type_de_champ_one_errors) {
+    {'0' =>
+         {libelle: '',
+          type_champs: 'number',
+          description: 'Description de test',
+          order_place: 1,
+          '_destroy' => 'false'},
+     '1' =>
+         {libelle: 'Champs de test 2',
+          type_champs: 'text',
+          description: 'Description de test 2',
+          order_place: 2,
+          '_destroy' => 'false'}
+    }
+  }
+
+  let(:two_new_types_de_piece_justificative_one_errors) {
+    {'0' =>
+         {libelle: '',
+          description: 'Description de test',
+          '_destroy' => 'false'},
+     '1' =>
+         {libelle: 'Champs de test 2',
+          description: 'Description de test 2',
+          '_destroy' => 'false'}
     }
   }
 
@@ -153,37 +169,39 @@ describe Admin::ProceduresController, type: :controller do
     end
 
     describe 'type_de_champ processing' do
+
       before do
-        post :create, procedure: procedure_params, type_de_champ: types_de_champ_params
+        post :create, procedure: procedure_params
       end
 
       subject { Procedure.last }
 
       context 'when no type de champs is filled' do
-        let(:types_de_champ_params) { {} }
+        let(:new_type_de_champ) { {} }
         it { expect(subject.types_de_champ.size).to eq(0) }
       end
 
       context 'when two types de champs are filled' do
+        let(:new_type_de_champ) { two_new_type_de_champ }
         it { expect(subject.types_de_champ.size).to eq(2) }
 
         describe ' check types de champs attributs present into database' do
           subject { TypeDeChamp.all }
 
-          it { expect(subject[0].libelle).to eq(types_de_champ_params['0'][:libelle]) }
-          it { expect(subject[0].type_champs).to eq(types_de_champ_params['0'][:type]) }
-          it { expect(subject[0].description).to eq(types_de_champ_params['0'][:description]) }
-          it { expect(subject[0].order_place).to eq(types_de_champ_params['0'][:order_place]) }
+          it { expect(subject[0].libelle).to eq(two_new_type_de_champ['0'][:libelle]) }
+          it { expect(subject[0].type_champs).to eq(two_new_type_de_champ['0'][:type_champs]) }
+          it { expect(subject[0].description).to eq(two_new_type_de_champ['0'][:description]) }
+          it { expect(subject[0].order_place).to eq(two_new_type_de_champ['0'][:order_place]) }
 
-          it { expect(subject[1].libelle).to eq(types_de_champ_params['1'][:libelle]) }
-          it { expect(subject[1].type_champs).to eq(types_de_champ_params['1'][:type]) }
-          it { expect(subject[1].description).to eq(types_de_champ_params['1'][:description]) }
-          it { expect(subject[1].order_place).to eq(types_de_champ_params['1'][:order_place]) }
+          it { expect(subject[1].libelle).to eq(two_new_type_de_champ['1'][:libelle]) }
+          it { expect(subject[1].type_champs).to eq(two_new_type_de_champ['1'][:type_champs]) }
+          it { expect(subject[1].description).to eq(two_new_type_de_champ['1'][:description]) }
+          it { expect(subject[1].order_place).to eq(two_new_type_de_champ['1'][:order_place]) }
         end
       end
 
       context 'when one of two types de champs have not a libelle' do
-        let(:types_de_champ_params) { types_de_champ_params_errors }
+        let(:new_type_de_champ) { two_new_type_de_champ_one_errors }
 
         it { expect(subject.types_de_champ.size).to eq(1) }
       end
@@ -191,32 +209,34 @@ describe Admin::ProceduresController, type: :controller do
 
     describe 'type_de_piece_justificative processing' do
       before do
-        post :create, procedure: procedure_params, type_de_piece_justificative: types_de_piece_justificative_params
+        post :create, procedure: procedure_params
       end
 
       subject { Procedure.last }
 
       context 'when no type de piece justificative is filled' do
-        let(:types_de_piece_justificative_params) { {} }
+        let(:new_type_de_piece_justificative) { {} }
         it { expect(subject.types_de_piece_justificative.size).to eq(0) }
       end
 
       context 'when two types de piece justificative are filled' do
+        let(:new_type_de_piece_justificative) { two_new_types_de_piece_justificative }
+
         it { expect(subject.types_de_piece_justificative.size).to eq(2) }
 
         describe ' check types de piece justificative attributs present into database' do
           subject { TypeDePieceJustificative.all }
 
-          it { expect(subject[0].libelle).to eq(types_de_piece_justificative_params['0'][:libelle]) }
-          it { expect(subject[0].description).to eq(types_de_piece_justificative_params['0'][:description]) }
+          it { expect(subject[0].libelle).to eq(new_type_de_piece_justificative['0'][:libelle]) }
+          it { expect(subject[0].description).to eq(new_type_de_piece_justificative['0'][:description]) }
 
-          it { expect(subject[1].libelle).to eq(types_de_piece_justificative_params['1'][:libelle]) }
-          it { expect(subject[1].description).to eq(types_de_piece_justificative_params['1'][:description]) }
+          it { expect(subject[1].libelle).to eq(new_type_de_piece_justificative['1'][:libelle]) }
+          it { expect(subject[1].description).to eq(new_type_de_piece_justificative['1'][:description]) }
         end
       end
 
       context 'when one of two types de piece justificative have not a libelle' do
-        let(:types_de_piece_justificative_params) { types_de_piece_justificative_params_errors }
+        let(:new_type_de_piece_justificative) { two_new_types_de_piece_justificative_one_errors }
 
         it { expect(subject.types_de_piece_justificative.size).to eq(1) }
       end
@@ -238,7 +258,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when administrateur is connected' do
       before do
-        put :update, id: procedure.id, procedure: procedure_params, type_de_champ: types_de_champ_params, type_de_piece_justificative: types_de_piece_justificative_params
+        put :update, id: procedure.id, procedure: procedure_params
         procedure.reload
       end
 
@@ -278,43 +298,46 @@ describe Admin::ProceduresController, type: :controller do
         subject { procedure }
 
         context 'when no type de champs is filled' do
-          let(:types_de_champ_params) { {} }
+          let(:new_type_de_champ) { {} }
           it { expect(subject.types_de_champ.size).to eq(1) }
         end
 
         context 'when two types de champs are filled' do
+          let(:new_type_de_champ) { two_new_type_de_champ }
           it { expect(subject.types_de_champ.size).to eq(3) }
 
           describe ' check types de champs attributs added into database' do
             subject { procedure.types_de_champ }
 
-            it { expect(subject[1].libelle).to eq(types_de_champ_params['0'][:libelle]) }
-            it { expect(subject[1].type_champs).to eq(types_de_champ_params['0'][:type]) }
-            it { expect(subject[1].description).to eq(types_de_champ_params['0'][:description]) }
-            it { expect(subject[1].order_place).to eq(types_de_champ_params['0'][:order_place]) }
+            it { expect(subject[1].libelle).to eq(two_new_type_de_champ['0'][:libelle]) }
+            it { expect(subject[1].type_champs).to eq(two_new_type_de_champ['0'][:type_champs]) }
+            it { expect(subject[1].description).to eq(two_new_type_de_champ['0'][:description]) }
+            it { expect(subject[1].order_place).to eq(two_new_type_de_champ['0'][:order_place]) }
 
-            it { expect(subject[2].libelle).to eq(types_de_champ_params['1'][:libelle]) }
-            it { expect(subject[2].type_champs).to eq(types_de_champ_params['1'][:type]) }
-            it { expect(subject[2].description).to eq(types_de_champ_params['1'][:description]) }
-            it { expect(subject[2].order_place).to eq(types_de_champ_params['1'][:order_place]) }
+            it { expect(subject[2].libelle).to eq(two_new_type_de_champ['1'][:libelle]) }
+            it { expect(subject[2].type_champs).to eq(two_new_type_de_champ['1'][:type_champs]) }
+            it { expect(subject[2].description).to eq(two_new_type_de_champ['1'][:description]) }
+            it { expect(subject[2].order_place).to eq(two_new_type_de_champ['1'][:order_place]) }
           end
         end
 
         context 'when one of two types de champs have not a libelle' do
           let(:procedure) { create(:procedure) }
-          let(:types_de_champ_params) { types_de_champ_params_errors }
+          let(:new_type_de_champ) { two_new_type_de_champ_one_errors }
 
           it { expect(subject.types_de_champ.size).to eq(1) }
         end
 
         context 'when user edit the filed' do
-          let(:types_de_champ_params) {
-            {'0' =>
+          let(:type_de_champ_id) { procedure.types_de_champ.first.id }
+          let(:types_de_champ) {
+            {"#{type_de_champ_id}" =>
                  {libelle: 'Champs de test editée',
-                  type: 'number',
+                  type_champs: 'number',
                   description: 'Description de test editée',
                   order_place: 1,
-                  id_type_de_champ: procedure.types_de_champ.first.id}
+                  _destroy: 'false'
+                 }
             }
           }
 
@@ -323,22 +346,35 @@ describe Admin::ProceduresController, type: :controller do
           describe ' check types de champs attributs updated into database' do
             subject { procedure.types_de_champ.first }
 
-            it { expect(subject.libelle).to eq(types_de_champ_params['0'][:libelle]) }
-            it { expect(subject.type_champs).to eq(types_de_champ_params['0'][:type]) }
-            it { expect(subject.description).to eq(types_de_champ_params['0'][:description]) }
-            it { expect(subject.order_place).to eq(types_de_champ_params['0'][:order_place]) }
+            it { expect(subject.libelle).to eq(types_de_champ["#{type_de_champ_id}"][:libelle]) }
+            it { expect(subject.type_champs).to eq(types_de_champ["#{type_de_champ_id}"][:type_champs]) }
+            it { expect(subject.description).to eq(types_de_champ["#{type_de_champ_id}"][:description]) }
+            it { expect(subject.order_place).to eq(types_de_champ["#{type_de_champ_id}"][:order_place]) }
           end
         end
 
-        context 'when delete a type de champs' do
-          let(:types_de_champ_params) {
-            {'0' =>
+        context 'when no delete a type de champs' do
+          let(:types_de_champ) {
+            {"#{procedure.types_de_champ.first.id}" =>
                  {libelle: 'Champs de test editée',
-                  type: 'number',
+                  type_champs: 'number',
                   description: 'Description de test editée',
                   order_place: 1,
-                  delete: 'true',
-                  id_type_de_champ: procedure.types_de_champ.first.id}
+                  _destroy: 'false'}
+            }
+          }
+
+          it { expect(subject.types_de_champ.size).to eq(1) }
+        end
+
+        context 'when delete a type de champs' do
+          let(:types_de_champ) {
+            {"#{procedure.types_de_champ.first.id}" =>
+                 {libelle: 'Champs de test editée',
+                  type_champs: 'number',
+                  description: 'Description de test editée',
+                  order_place: 1,
+                  _destroy: 'true'}
             }
           }
 
@@ -346,21 +382,23 @@ describe Admin::ProceduresController, type: :controller do
         end
 
         context 'when delete a type de champs present in database and a type champ not present in database' do
-          let(:types_de_champ_params) {
-            {'0' =>
+          let(:types_de_champ) {
+            {"#{procedure.types_de_champ.first.id}" =>
                  {libelle: 'Champs de test editée',
-                  type: 'number',
+                  type_champs: 'number',
                   description: 'Description de test editée',
                   order_place: 1,
-                  delete: 'true',
-                  id_type_de_champ: procedure.types_de_champ.first.id},
-             '1' =>
+                  _destroy: 'true'}
+            }
+          }
+
+          let(:new_type_de_champ) {
+            {'1' =>
                  {libelle: 'Champs de test editée',
-                  type: 'number',
+                  type_champs: 'number',
                   description: 'Description de test editée',
-                  order_place: 1,
-                  delete: 'true',
-                  id_type_de_champ: ''}
+                  order_place: 2,
+                  _destroy: 'true'}
             }
           }
 
@@ -378,33 +416,32 @@ describe Admin::ProceduresController, type: :controller do
 
         context 'when two types de piece justificative are filled' do
           let(:procedure) { create(:procedure) }
+          let(:new_type_de_piece_justificative) { two_new_types_de_piece_justificative }
           it { expect(subject.types_de_piece_justificative.size).to eq(2) }
 
           describe ' check types de piece justificative attributs added into database' do
             subject { procedure.types_de_piece_justificative }
 
-            it { expect(subject[0].libelle).to eq(types_de_piece_justificative_params['0'][:libelle]) }
-            it { expect(subject[0].description).to eq(types_de_piece_justificative_params['0'][:description]) }
+            it { expect(subject[0].libelle).to eq(new_type_de_piece_justificative['0'][:libelle]) }
+            it { expect(subject[0].description).to eq(new_type_de_piece_justificative['0'][:description]) }
 
-            it { expect(subject[1].libelle).to eq(types_de_piece_justificative_params['1'][:libelle]) }
-            it { expect(subject[1].description).to eq(types_de_piece_justificative_params['1'][:description]) }
+            it { expect(subject[1].libelle).to eq(new_type_de_piece_justificative['1'][:libelle]) }
+            it { expect(subject[1].description).to eq(new_type_de_piece_justificative['1'][:description]) }
           end
         end
 
         context 'when one of two types de piece justificative have not a libelle' do
-          let(:types_de_piece_justificative_params) { types_de_piece_justificative_params_errors }
+          let(:new_type_de_piece_justificative) { two_new_types_de_piece_justificative_one_errors }
 
           it { expect(subject.types_de_piece_justificative.size).to eq(3) }
         end
 
         context 'when one types de piece justificative is edit' do
-          let(:types_de_piece_justificative_params) {
-            {'0' =>
+          let(:types_de_piece_justificative) {
+            {"#{procedure.types_de_piece_justificative.first.id}" =>
                  {libelle: 'PJ de test editée',
-                  type: 'number',
                   description: 'Description de test editée',
-                  order_place: 1,
-                  id_type_de_piece_justificative: procedure.types_de_piece_justificative.first.id}
+                  '_destroy' => 'false'}
             }
           }
 
@@ -413,20 +450,17 @@ describe Admin::ProceduresController, type: :controller do
           describe ' check types de piece justificative attributs updated into database' do
             subject { procedure.types_de_piece_justificative.first }
 
-            it { expect(subject.libelle).to eq(types_de_piece_justificative_params['0'][:libelle]) }
-            it { expect(subject.description).to eq(types_de_piece_justificative_params['0'][:description]) }
+            it { expect(subject.libelle).to eq(types_de_piece_justificative["#{procedure.types_de_piece_justificative.first.id}"][:libelle]) }
+            it { expect(subject.description).to eq(types_de_piece_justificative["#{procedure.types_de_piece_justificative.first.id}"][:description]) }
           end
         end
 
         context 'when delete a type de piece justificative' do
-          let(:types_de_piece_justificative_params) {
-            {'0' =>
+          let(:types_de_piece_justificative) {
+            {"#{procedure.types_de_piece_justificative.first.id}" =>
                  {libelle: 'PJ de test editée',
-                  type: 'number',
                   description: 'Description de test editée',
-                  order_place: 1,
-                  delete: 'true',
-                  id_type_de_piece_justificative: procedure.types_de_piece_justificative.first.id}
+                  '_destroy' => 'true'}
             }
           }
 
@@ -434,21 +468,19 @@ describe Admin::ProceduresController, type: :controller do
         end
 
         context 'when delete a type de piece justificative present in database and a type piece justificative not present in database' do
-          let(:types_de_piece_justificative_params) {
-            {'0' =>
+          let(:types_de_piece_justificative) {
+            {"#{procedure.types_de_piece_justificative.first.id}" =>
                  {libelle: 'PJ de test editée',
-                  type: 'number',
                   description: 'Description de test editée',
-                  order_place: 1,
-                  delete: 'true',
-                  id_type_de_piece_justificative: procedure.types_de_piece_justificative.first.id},
-             '1' =>
+                  '_destroy' => 'true'}
+            }
+          }
+
+          let(:new_type_de_piece_justificative) {
+            {'1' =>
                  {libelle: 'PJ de test editée',
-                  type: 'number',
                   description: 'Description de test editée',
-                  order_place: 1,
-                  delete: 'true',
-                  id_type_de_piece_justificative: ''}
+                  '_destroy' => 'true'}
             }
           }
 
