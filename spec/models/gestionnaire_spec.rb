@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe Gestionnaire, type: :model do
-
   describe 'database column' do
     it { is_expected.to have_db_column(:email) }
     it { is_expected.to have_db_column(:encrypted_password) }
@@ -15,5 +14,9 @@ describe Gestionnaire, type: :model do
     it { is_expected.to have_db_column(:last_sign_in_ip) }
     it { is_expected.to have_db_column(:created_at) }
     it { is_expected.to have_db_column(:updated_at) }
+  end
+
+  describe 'association' do
+    it { is_expected.to belong_to(:administrateur) }
   end
 end
