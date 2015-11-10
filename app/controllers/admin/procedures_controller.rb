@@ -2,7 +2,7 @@ class Admin::ProceduresController < ApplicationController
   before_action :authenticate_administrateur!
 
   def index
-    @procedures = Procedure.all
+    @procedures = current_administrateur.procedures
   end
 
   def show

@@ -381,29 +381,38 @@ describe Dossier do
     end
 
     context 'gestionnaire backoffice methods' do
-      let!(:dossier1) { create(:dossier, :with_user, :with_procedure, state: 'draft')}
-      let!(:dossier2) { create(:dossier, :with_user, :with_procedure, state: 'initiated')}
-      let!(:dossier3) { create(:dossier, :with_user, :with_procedure, state: 'initiated')}
-      let!(:dossier4) { create(:dossier, :with_user, :with_procedure, state: 'replied')}
-      let!(:dossier5) { create(:dossier, :with_user, :with_procedure, state: 'updated')}
-      let!(:dossier6) { create(:dossier, :with_user, :with_procedure, state: 'validated')}
-      let!(:dossier7) { create(:dossier, :with_user, :with_procedure, state: 'submitted')}
-      let!(:dossier8) { create(:dossier, :with_user, :with_procedure, state: 'closed')}
+      let(:admin) { create(:administrateur) }
+      let(:admin_2) { create(:administrateur) }
+
+      let(:gestionnaire) { create(:gestionnaire, administrateur: admin) }
+      let(:procedure_admin) { create(:procedure, administrateur: admin) }
+      let(:procedure_admin_2) { create(:procedure, administrateur: admin_2) }
+
+      let!(:dossier1) { create(:dossier, :with_user, procedure: procedure_admin, state: 'draft')}
+      let!(:dossier2) { create(:dossier, :with_user, procedure: procedure_admin, state: 'initiated')} #a_traiter
+      let!(:dossier3) { create(:dossier, :with_user, procedure: procedure_admin, state: 'initiated')} #a_traiter
+      let!(:dossier4) { create(:dossier, :with_user, procedure: procedure_admin, state: 'replied')} #en_attente
+      let!(:dossier5) { create(:dossier, :with_user, procedure: procedure_admin, state: 'updated')} #a_traiter
+      let!(:dossier6) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'validated')} #en_attente
+      let!(:dossier7) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'submitted')} #a_traiter
+      let!(:dossier8) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'closed')} #termine
+      let!(:dossier9) { create(:dossier, :with_user, procedure: procedure_admin, state: 'closed')} #termine
+
 
       describe '#a_traiter' do
-        subject { described_class.a_traiter }
+        subject { described_class.a_traiter gestionnaire }
 
-        it { expect(subject.size).to eq(4) }
+        it { expect(subject.size).to eq(3) }
       end
 
       describe '#en_attente' do
-        subject { described_class.en_attente }
+        subject { described_class.en_attente gestionnaire }
 
-        it { expect(subject.size).to eq(2) }
+        it { expect(subject.size).to eq(1) }
       end
 
       describe '#termine' do
-        subject { described_class.termine }
+        subject { described_class.termine gestionnaire }
 
         it { expect(subject.size).to eq(1) }
       end

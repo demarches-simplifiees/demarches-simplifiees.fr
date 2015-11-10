@@ -116,16 +116,16 @@ class Dossier < ActiveRecord::Base
     state
   end
 
-  def self.a_traiter
-    Dossier.where("state='initiated' OR state='updated' OR state='submitted'").order('updated_at ASC')
+  def self.a_traiter current_gestionnaire
+    Dossier.joins(:procedure).where("(state='initiated' OR state='updated' OR state='submitted') AND dossiers.procedure_id = procedures.id AND procedures.administrateur_id = #{current_gestionnaire.administrateur_id}").order('updated_at ASC')
   end
 
-  def self.en_attente
-    Dossier.where("state='replied' OR state='validated'").order('updated_at ASC')
+  def self.en_attente current_gestionnaire
+    Dossier.joins(:procedure).where("(state='replied' OR state='validated') AND dossiers.procedure_id = procedures.id AND procedures.administrateur_id = #{current_gestionnaire.administrateur_id}").order('updated_at ASC')
   end
 
-  def self.termine
-    Dossier.where("state='closed'").order('updated_at ASC')
+  def self.termine current_gestionnaire
+    Dossier.joins(:procedure).where("state='closed' AND dossiers.procedure_id = procedures.id AND procedures.administrateur_id = #{current_gestionnaire.administrateur_id}").order('updated_at ASC')
   end
 
   private
