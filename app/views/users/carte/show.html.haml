@@ -2,18 +2,26 @@
   ='Localisation de votre demande'
 %br
 
-=render partial: 'carte_sources_CSS'
+.content{style:'margin-bottom:60px'}
+  %button.btn.btn-sm.btn-success{type:'button', disabled: 'disabled'} Nouveau
+  \-
+  %button.btn.btn-sm.btn-info{type:'button', disabled: 'disabled'} Editer
+  \-
+  %button.btn.btn-sm.btn-danger{type:'button', disabled: 'disabled'} Supprimer
 
-.content
-  #map_qp{style: 'height:600px; width: 100%;'}
-
-= form_tag(url_for({controller: :carte, action: :save_ref_api_carto, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
   %br
-  %input{type: 'hidden', value: '', name: 'ref_dossier', id: 'ref_dossier'}
+  %br
+  #map{style: 'height:600px; width: 100%;'}
 
-  -if @dossier.draft?
-    =render partial: '/layouts/etape_suivante'
-  -else
-    =render partial: '/layouts/modifications_terminees'
+  = form_tag(url_for({controller: :carte, action: :save_ref_api_carto, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+    %br
+    %input{type: 'hidden', value: '', name: 'ref_dossier', id: 'ref_dossier'}
 
-=render partial: 'carte_sources_JS'
+    -if @dossier.draft?
+      =render partial: '/layouts/etape_suivante'
+    -else
+      =render partial: '/layouts/modifications_terminees'
+
+%script{type: 'text/javascript'}
+  ="var dossier_id =#{@dossier.id}"
+  initCarto();

@@ -1,10 +1,30 @@
 //récupération de la position de l'entreprise
 
-function get_position(){
+function initCarto() {
+    OSM = L.tileLayer("http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png", {
+        attribution: '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    });
+
+    position = get_position();
+
+    var map = L.map("map", {
+        center: new L.LatLng(position.lat, position.lon),
+        zoom: 13,
+        layers: [OSM]
+    });
+
+    freeDraw = new L.FreeDraw({
+        mode: L.FreeDraw.MODES.CREATE
+    });
+
+    map.addLayer(freeDraw);
+}
+
+function get_position() {
     var position;
 
     $.ajax({
-        url: '/users/dossiers/'+dossier_id+'/carte/position',
+        url: '/users/dossiers/' + dossier_id + '/carte/position',
         dataType: 'json',
         async: false
     }).done(function (data) {
@@ -14,7 +34,7 @@ function get_position(){
     return position;
 }
 
-function get_ref_dossier (){
+function get_ref_dossier() {
     $.post("http://apicarto.coremaps.com/api/v1/datastore", {
         contentType: "application/json",
         dataType: 'json',
