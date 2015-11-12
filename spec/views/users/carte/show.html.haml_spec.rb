@@ -22,8 +22,8 @@ describe 'users/carte/show.html.haml', type: :view do
     end
   
     context 'présence des inputs hidden' do
-      it 'stockage de la référence du dossie de l\'API carto' do
-        expect(rendered).to have_selector('input[type=hidden][id=ref_dossier][name=ref_dossier]')
+      it 'stockage du json des polygons dessinés' do
+        expect(rendered).to have_selector('input[type=hidden][id=json_latlngs][name=json_latlngs]')
       end
     end
   

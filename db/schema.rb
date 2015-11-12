@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110091451) do
+ActiveRecord::Schema.define(version: 20151112151918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 20151110091451) do
     t.datetime "updated_at",           default: '2015-09-22 09:25:29'
     t.string   "state"
     t.integer  "user_id"
+    t.text     "json_latlngs"
   end
 
   add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree

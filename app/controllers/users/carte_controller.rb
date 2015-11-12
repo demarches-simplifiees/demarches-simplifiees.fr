@@ -10,9 +10,9 @@ class Users::CarteController < UsersController
 
   def save_ref_api_carto
     dossier = current_user_dossier
+    dossier.update_attributes(json_latlngs: params[:json_latlngs])
 
     if dossier.draft?
-      #dossier.update_attributes(ref_dossier_carto: params[:ref_dossier])
       redirect_to url_for(controller: :description, action: :show, dossier_id: params[:dossier_id])
     else
       commentaire_params = {
@@ -23,7 +23,6 @@ class Users::CarteController < UsersController
       commentaire = Commentaire.new commentaire_params
       commentaire.save
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params[:dossier_id])
-
     end
   end
 
