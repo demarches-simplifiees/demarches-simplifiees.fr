@@ -29,3 +29,4 @@ config/initializers/token.rb
 doc/*.svg
 rubocop.html
 config/france_connect.yml
+vendor/**/*
