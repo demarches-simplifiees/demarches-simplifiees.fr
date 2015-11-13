@@ -1,0 +1,18 @@
+%h1 Gestion des dossiers
+%br
+
+%ul.nav.nav-tabs
+  %li{class: "#{'active' unless @dossiers_a_traiter.nil?  }"}
+    %a{:href => "#{url_for :backoffice_dossiers_a_traiter}"}
+      %strong.text-danger
+        = "À traiter (#{@dossiers_a_traiter_total})"
+  %li{class: "#{'active' unless @dossiers_en_attente.nil?  }"}
+    %a{:href => "#{url_for :backoffice_dossiers_en_attente}"}
+      %strong.text-info
+        ="En attente (#{@dossiers_en_attente_total})"
+  %li{class: "#{'active' unless @dossiers_termine.nil?  }"}
+    %a{:href => "#{url_for :backoffice_dossiers_termine}"}
+      %strong.text-success
+        = "Terminé (#{@dossiers_termine_total})"
+
+%br

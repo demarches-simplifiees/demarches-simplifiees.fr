@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
                        sessions: 'users/sessions'
                    }
-  
+
   root 'root#index'
 
   get 'france_connect' => 'france_connect#login'
@@ -50,6 +50,10 @@ Rails.application.routes.draw do
 
   namespace :backoffice do
     get 'sign_in' => '/gestionnaires/sessions#new'
+
+    get 'dossiers/a_traiter' => 'dossiers#a_traiter'
+    get 'dossiers/en_attente' => 'dossiers#en_attente'
+    get 'dossiers/termine' => 'dossiers#termine'
 
     resources :dossiers do
       post 'valid' => 'dossiers#valid'
