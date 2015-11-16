@@ -128,6 +128,29 @@ class Dossier < ActiveRecord::Base
     Dossier.joins(:procedure).where("state='closed' AND dossiers.procedure_id = procedures.id AND procedures.administrateur_id = #{current_gestionnaire.administrateur_id}").order('updated_at ASC')
   end
 
+  def self.search terms
+    return if terms.blank?
+    dossiers = Dossier.arel_table
+    users = User.arel_table
+    etablissements = Etablissement.arel_table
+    entreprises = Entreprise.arel_table
+    composed_scope = self.joins('LEFT OUTER JOIN users ON users.id = dossiers.user_id')
+                         .joins('LEFT OUTER JOIN entreprises ON entreprises.dossier_id = dossiers.id')
+                         .joins('LEFT OUTER JOIN etablissements ON etablissements.dossier_id = dossiers.id')
+    terms.split.each do |word|
+      query_string = "%#{word}%"
+      query_string_start_with = "#{word}%"
+      composed_scope = composed_scope.where(
+          dossiers[:nom_projet].matches(query_string).or\
+              users[:email].matches(query_string).or\
+              dossiers[:id].eq(word).or\
+              etablissements[:siret].matches(query_string_start_with).or\
+              entreprises[:raison_sociale].matches(query_string)
+      )
+    end
+    composed_scope
+  end
+
   private
 
   def build_default_cerfa
