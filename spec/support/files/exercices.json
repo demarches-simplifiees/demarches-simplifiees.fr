@@ -1,0 +1,19 @@
+{
+  "exercices":[
+    {
+      "ca":"21009417",
+      "dateFinExercice":"2013-12-31T00:00:00+01:00",
+      "date_fin_exercice_timestamp": 1388444400
+    },
+    {
+      "ca":"18968298",
+      "dateFinExercice":"2012-12-31T00:00:00+01:00",
+      "date_fin_exercice_timestamp": 1356908400
+    },
+    {
+      "ca":"17768838",
+      "dateFinExercice":"2011-12-31T00:00:00+01:00",
+      "date_fin_exercice_timestamp": 1325286000
+    }
+  ]
+}

@@ -53,6 +53,9 @@ describe Users::DossiersController, type: :controller do
 
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/entreprises/#{siren}?token=#{SIADETOKEN}")
         .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
+
+      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/exercices/#{siret}?token=#{SIADETOKEN}")
+          .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
     end
 
     describe 'professionnel fills form' do
@@ -96,6 +99,10 @@ describe Users::DossiersController, type: :controller do
           it 'links etablissement to entreprise' do
             subject
             expect(Etablissement.last.entreprise).to eq(Entreprise.last)
+          end
+
+          it 'creates exercices for dossier' do
+            expect { subject }.to change { Exercice.count }.by(3)
           end
 
           it 'links procedure to dossier' do
