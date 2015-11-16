@@ -1,7 +1,7 @@
 class Admin::ProceduresController < AdminController
 
   def index
-    @procedures = Procedure.all
+    @procedures = current_administrateur.procedures
   end
 
   def show
