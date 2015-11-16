@@ -26,9 +26,6 @@ class Admin::ProceduresController < AdminController
       return render 'new'
     end
 
-    process_new_types_de_champ_params
-    process_new_types_de_piece_justificative_params
-
     flash.notice = 'Procédure enregistrée'
     redirect_to admin_procedures_path
   end
@@ -41,13 +38,6 @@ class Admin::ProceduresController < AdminController
       flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
       return render 'show'
     end
-
-    process_new_types_de_champ_params
-    process_update_types_de_champ_params
-
-    process_new_types_de_piece_justificative_params
-    process_update_types_de_piece_justificative_params
-
     flash.notice = 'Préocédure modifiée'
     redirect_to admin_procedures_path
   end
