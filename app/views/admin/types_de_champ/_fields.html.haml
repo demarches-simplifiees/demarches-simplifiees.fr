@@ -1,0 +1,31 @@
+= f.fields_for :types_de_champ, types_de_champ, remote: true do |ff|
+  .form-inline
+    .form-group
+      %h4 Libellé
+      = ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
+    .form-group
+      %h4 Type
+      = ff.select :type_champs, TypeDeChamp.type_champs, {}, {class: 'form-control type_champs'}
+    .form-group
+      %h4 Description
+      = ff.text_area :description, class: 'form-control description', placeholder: 'Description'
+    .form-group
+      = ff.hidden_field :order_place
+      = ff.hidden_field :id
+
+    / .form-group.order_type_de_champ_button{id: "order_type_de_champ_#{type_de_champ.id || index}_button", style: ("display:none" if type_de_champ.id.nil?)}
+    / .form-group
+    /   %br &nbsp;
+    /   %button.form-control.btn.btn-default.button_up.fa.fa-chevron-up{type: 'button'}
+    /   , id: "order_type_de_champ_#{type_de_champ.id || index}_up_procedure"}
+    /   %button.form-control.btn.btn-default.button_down.fa.fa-chevron-down{type: 'button'}
+    /   , id: "order_type_de_champ_#{type_de_champ.id || index}_down_procedure"}
+
+    /   .form-group{ id: "delete_type_de_champ_#{type_de_champ.id || index}_button", style: ("display:none" if type_de_champ.id.nil?)}
+    - unless ff.object.id.nil?
+      .form-group
+        %br &nbsp;
+        = link_to("Delete", admin_procedure_type_de_champ_path(@procedure, ff.object.id), method: :delete, remote: true)
+      / %button.form-control.btn.btn-danger.fa.fa-trash-o{type: 'button'}
+    / , id: "delete_type_de_champ_#{type_de_champ.id || index}_procedure"}
+

@@ -1,3 +1,4 @@
+
 %br
 
 -{libelle: 'Libellé*', description: 'Description*', lien_demarche: 'Lien démarche', organisation: 'Organisation', direction: 'Direction'}.each do |key, value|
@@ -11,21 +12,3 @@
 %label{ style:'font-weight:normal' }
   =f.check_box :use_api_carto
   Utilisation de l'API Carto
-
-%br
-%br
-%h3.text-info
-  Liste des champs à remplir pour un dossier
-
-=render partial: 'admin/procedures/types_de_champ/liste', locals: {f: f}
-
-%br
-%br
-%h3.text-info
-  Liste des pièces justificatives à fournir pour un dossier
-
-=render partial: 'admin/procedures/types_de_piece_justificative/liste', locals: {f: f}
-
-%br
-  %div.small{style:'text-align:right'}
-    *Attributs obligatoires

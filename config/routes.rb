@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
                        sessions: 'users/sessions'
                    }
-  
+
   root 'root#index'
 
   get 'france_connect' => 'france_connect#login'
@@ -42,7 +42,9 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'sign_in' => '/administrateurs/sessions#new'
     resources :procedures do
-
+      resource :types_de_champ, only: [:edit, :update]
+      resources :types_de_champ, only: [:destroy]
+      resource :pieces_justificatives, only: [:edit, :update]
     end
   end
 

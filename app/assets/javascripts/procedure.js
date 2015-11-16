@@ -21,6 +21,12 @@ var ready = function () {
 
     add_action_listener_on_click_for_button_up(".button_up");
     add_action_listener_on_click_for_button_down(".button_down");
+
+    $("#liste_champ").on("ajax:success", "div", function(event, data, status, xhr) {
+      $(event.target).parents('.form-inline').fadeOut("slow", function() {
+        return $(this).remove();
+      });
+    });
 };
 
 $(document).ready(ready);

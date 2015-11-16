@@ -1,0 +1,20 @@
+%ul.nav.nav-tabs
+  %li
+    = link_to('Description', admin_procedure_path(@procedure))
+  %li
+    = link_to('Champs', edit_admin_procedure_types_de_champ_path(@procedure))
+  %li.active
+    = link_to('Pièces justificatives', edit_admin_procedure_pieces_justificatives_path(@procedure))
+
+= form_for [:admin, @procedure], remote: true do |f|
+  #liste_piece_justificative
+    -unless @types_de_piece_justificative.nil?
+      = render partial: 'form', locals:{ types_de_piece_justificative: @types_de_piece_justificative, f: f }
+
+  #liste_delete_piece_justificative
+
+  #new_type_de_piece_justificative
+    = render partial: 'form', locals:{ types_de_piece_justificative: [TypeDePieceJustificative.new], index: (@types_de_piece_justificative.nil? || @types_de_piece_justificative.last.nil? ? 0 : @procedure.types_de_piece_justificative.last.id+1), f: f }
+
+  %script{ type:'text/javascript' }
+    ="var types_de_piece_justificative_index = #{(@types_de_piece_justificative.nil? || @types_de_piece_justificative.last.nil? ? 0 : @procedure.types_de_piece_justificative.last.id+1)}"

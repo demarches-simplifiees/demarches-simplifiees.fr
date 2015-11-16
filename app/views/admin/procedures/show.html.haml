@@ -1,3 +1,13 @@
+%ul.nav.nav-tabs
+  %li.active
+    = link_to('Description', admin_procedure_path(@procedure))
+  %li
+    = link_to('Champs', edit_admin_procedure_types_de_champ_path(@procedure))
+  %li
+    = link_to('Pièces justificatives', edit_admin_procedure_pieces_justificatives_path(@procedure))
+
+
+
 %h2.text-info
   =@procedure.libelle
 

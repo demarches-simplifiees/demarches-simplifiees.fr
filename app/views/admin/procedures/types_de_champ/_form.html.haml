@@ -1,38 +1,76 @@
-- types_de_champ.each do |type_de_champ|
-  - type_de_champ.id.nil? ? object_for = "new_type_de_champ[#{index}]" : object_for = 'types_de_champ[]'
+/ - types_de_champ.each do |type_de_champ|
+= f.fields_for :types_de_champ, types_de_champ, remote: true do |ff|
+  .form-inline
+    .form-group
+      %h4 Libellé
+      = ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
+    .form-group
+      %h4 Type
+      = ff.select :type_champs, TypeDeChamp.type_champs, {}, {class: 'form-control type_champs'}
+    .form-group
+      %h4 Description
+      = ff.text_area :description, class: 'form-control description', placeholder: 'Description'
+    .form-group
+      = ff.hidden_field :order_place
+      = ff.hidden_field :id
 
-  = f.fields_for object_for, type_de_champ do |ff|
-    .form-inline{id:"type_de_champ_#{type_de_champ.id || index}", class: 'type_de_champ', style: 'padding-bottom:8px'}
-      .form-group{ style: 'padding-right: 2%' }
-        %h4 Libellé
-        =ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
+    / .form-group.order_type_de_champ_button{id: "order_type_de_champ_#{type_de_champ.id || index}_button", style: ("display:none" if type_de_champ.id.nil?)}
+    .form-group
+      %br &nbsp;
+      %button.form-control.btn.btn-default.button_up.fa.fa-chevron-up{type: 'button'}
+      / , id: "order_type_de_champ_#{type_de_champ.id || index}_up_procedure"}
+      %button.form-control.btn.btn-default.button_down.fa.fa-chevron-down{type: 'button'}
+      / , id: "order_type_de_champ_#{type_de_champ.id || index}_down_procedure"}
 
-      .form-group{ style: 'padding-right: 2%' }
-        %h4 Type
-        =ff.select :type_champs, TypeDeChamp.type_champs, {}, {class: 'form-control type_champs'}
-
-      .form-group{ style: 'padding-right: 2%' }
-        %h4
-          Description
-        =ff.text_area :description, class: 'form-control description', placeholder: 'Description'
-
-      -if order_place.nil?
-        =ff.hidden_field :order_place, class: 'order_place'
-      -else
-        =ff.hidden_field :order_place, value: order_place, class: 'order_place'
-      =ff.hidden_field '_destroy', value: 'false', class: 'destroy'
-
-      .form-group.order_type_de_champ_button{id: "order_type_de_champ_#{type_de_champ.id || index}_button", style: ("display:none" if type_de_champ.id.nil?)}
+      / .form-group{ id: "delete_type_de_champ_#{type_de_champ.id || index}_button", style: ("display:none" if type_de_champ.id.nil?)}
+    - unless ff.object.id.nil?
+      .form-group
         %br &nbsp;
-        %button.form-control.btn.btn-default.button_up.fa.fa-chevron-up{type: 'button', id: "order_type_de_champ_#{type_de_champ.id || index}_up_procedure"}
-        %button.form-control.btn.btn-default.button_down.fa.fa-chevron-down{type: 'button', id: "order_type_de_champ_#{type_de_champ.id || index}_down_procedure"}
+        = link_to("Delete", admin_procedure_type_de_champ_path(@procedure, ff.object.id), method: :delete, remote: true)
+      / %button.form-control.btn.btn-danger.fa.fa-trash-o{type: 'button'}
+    / , id: "delete_type_de_champ_#{type_de_champ.id || index}_procedure"}
 
-      .form-group{ id: "delete_type_de_champ_#{type_de_champ.id || index}_button", style: ("display:none" if type_de_champ.id.nil?)}
+    -if ff.object.id.nil?
+      .form-group#add_type_de_champ_button
         %br &nbsp;
-        %button.form-control.btn.btn-danger.fa.fa-trash-o{type: 'button', id: "delete_type_de_champ_#{type_de_champ.id || index}_procedure"}
+        = ff.submit('Ajouter', :'data-remote' => true)
+        %button.form-control.btn.btn-success#add_type_de_champ_procedure{type: 'button'} Ajouter
 
-      -if type_de_champ.id.nil?
-        .form-group#add_type_de_champ_button
-          %br &nbsp;
-          %button.form-control.btn.btn-success#add_type_de_champ_procedure{type: 'button'} Ajouter
+
+/ - types_de_champ.each do |type_de_champ|
+/   - type_de_champ.id.nil? ? object_for = "new_type_de_champ[#{index}]" : object_for = 'types_de_champ[]'
+
+/   = f.fields_for object_for, type_de_champ do |ff|
+/     .form-inline{id:"type_de_champ_#{type_de_champ.id || index}", class: 'type_de_champ', style: 'padding-bottom:8px'}
+/       .form-group{ style: 'padding-right: 2%' }
+/         %h4 Libellé
+/         =ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
+
+/       .form-group{ style: 'padding-right: 2%' }
+/         %h4 Type
+/         =ff.select :type_champs, TypeDeChamp.type_champs, {}, {class: 'form-control type_champs'}
+
+/       .form-group{ style: 'padding-right: 2%' }
+/         %h4 Description
+/         =ff.text_area :description, class: 'form-control description', placeholder: 'Description'
+
+/       -if order_place.nil?
+/         =ff.hidden_field :order_place, class: 'order_place'
+/       -else
+/         =ff.hidden_field :order_place, value: order_place, class: 'order_place'
+/       =ff.hidden_field '_destroy', value: 'false', class: 'destroy'
+
+/       .form-group.order_type_de_champ_button{id: "order_type_de_champ_#{type_de_champ.id || index}_button", style: ("display:none" if type_de_champ.id.nil?)}
+/         %br &nbsp;
+/         %button.form-control.btn.btn-default.button_up.fa.fa-chevron-up{type: 'button', id: "order_type_de_champ_#{type_de_champ.id || index}_up_procedure"}
+/         %button.form-control.btn.btn-default.button_down.fa.fa-chevron-down{type: 'button', id: "order_type_de_champ_#{type_de_champ.id || index}_down_procedure"}
+
+/       .form-group{ id: "delete_type_de_champ_#{type_de_champ.id || index}_button", style: ("display:none" if type_de_champ.id.nil?)}
+/         %br &nbsp;
+/         %button.form-control.btn.btn-danger.fa.fa-trash-o{type: 'button', id: "delete_type_de_champ_#{type_de_champ.id || index}_procedure"}
+
+/       -if type_de_champ.id.nil?
+/         .form-group#add_type_de_champ_button
+/           %br &nbsp;
+/           %button.form-control.btn.btn-success#add_type_de_champ_procedure{type: 'button'} Ajouter
 
