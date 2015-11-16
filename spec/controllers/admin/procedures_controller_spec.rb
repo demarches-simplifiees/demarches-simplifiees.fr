@@ -78,6 +78,8 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.direction).to eq(direction) }
           it { expect(subject.lien_demarche).to eq(lien_demarche) }
           it { expect(subject.use_api_carto).to be_truthy }
+          it { expect(subject.administrateur_id).to eq(admin.id) }
+
         end
 
         it { expect(subject).to redirect_to(admin_procedures_path) }
