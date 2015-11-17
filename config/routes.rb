@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   get 'france_connect' => 'france_connect#login'
   get 'france_connect/callback' => 'france_connect#callback'
 
+  get 'demo' => 'demo#index'
+
   namespace :users do
     get 'siret' => 'siret#index'
 
