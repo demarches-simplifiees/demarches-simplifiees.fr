@@ -35,6 +35,7 @@ feature 'add a new type de champs', js: true do
       expect(subject.libelle).to eq(libelle)
       expect(subject.type_champ).to eq(type_champ)
       expect(subject.description).to eq(description)
+      expect(subject.order_place).to eq(0)
     end
 
     context 'user fill another one' do
@@ -55,6 +56,7 @@ feature 'add a new type de champs', js: true do
         expect(subject.libelle).to eq(libelle)
         expect(subject.type_champ).to eq(type_champ)
         expect(subject.description).to eq(description)
+        expect(subject.order_place).to eq(1)
         expect(procedure.types_de_champ.count).to eq(2)
       end
 
