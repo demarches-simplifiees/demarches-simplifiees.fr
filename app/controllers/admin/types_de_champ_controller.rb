@@ -4,7 +4,7 @@ class Admin::TypesDeChampController < AdminController
 
   def destroy
     @procedure.types_de_champ.destroy(params[:id])
-    render json: { message: 'deleted' }, status: 200
+    render 'show', format: :js
   rescue ActiveRecord::RecordNotFound
     render json: { message: 'Champ not found' }, status: 404
   end
@@ -14,9 +14,7 @@ class Admin::TypesDeChampController < AdminController
 
   def update
     @procedure.update_attributes(update_params)
-    respond_to do |format|
-      format.js
-    end
+    render 'show', format: :js
   end
 
   def update_params

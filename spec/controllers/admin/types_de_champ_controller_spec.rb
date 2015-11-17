@@ -75,7 +75,7 @@ describe Admin::TypesDeChampController, type: :controller do
 
   describe '#destroy' do
     before do
-      delete :destroy, procedure_id: procedure.id, id: type_de_champ_id
+      delete :destroy, procedure_id: procedure.id, id: type_de_champ_id, format: :js
     end
     context 'when type de champs does not exist' do
       let(:type_de_champ_id) { 99999999 }
