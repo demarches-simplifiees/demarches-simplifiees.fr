@@ -2,4 +2,4 @@
   = render partial: 'fields', locals: { types_de_champ: @procedure.types_de_champ, f: f }
   #new_type_de_champ
     = render partial: 'fields', locals: { types_de_champ: TypeDeChamp.new, f: f }
-  = f.submit "Ajouter un champ", class: 'btn btn-success'
+  = f.submit "Ajouter un champ", class: 'btn btn-success', id: :add_type_de_champ

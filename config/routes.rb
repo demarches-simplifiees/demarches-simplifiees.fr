@@ -42,7 +42,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'sign_in' => '/administrateurs/sessions#new'
     resources :procedures do
-      resource :types_de_champ, only: [:edit, :update]
+      resource :types_de_champ, only: [:show, :update]
       resources :types_de_champ, only: [:destroy]
       resource :pieces_justificatives, only: [:edit, :update]
     end

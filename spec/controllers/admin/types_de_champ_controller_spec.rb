@@ -9,7 +9,7 @@ describe Admin::TypesDeChampController, type: :controller do
   describe '#update' do
     let(:procedure) { create(:procedure) }
     let(:libelle) { 'mon libelle' }
-    let(:type_champs) { 'text' }
+    let(:type_champ) { 'text' }
     let(:description) { 'titi' }
     let(:order_place) { '' }
     let(:types_de_champ_id) { '' }
@@ -19,7 +19,7 @@ describe Admin::TypesDeChampController, type: :controller do
         { '0' =>
           {
             libelle: libelle,
-            type_champs: type_champs,
+            type_champ: type_champ,
             description: description,
             order_place: order_place,
             id: types_de_champ_id
@@ -41,7 +41,7 @@ describe Admin::TypesDeChampController, type: :controller do
         subject { procedure.types_de_champ.first }
 
         it { expect(subject.libelle).to eq('mon libelle') }
-        it { expect(subject.type_champs).to eq('text') }
+        it { expect(subject.type_champ).to eq('text') }
         it { expect(subject.description).to eq('titi') }
         # it { expect(subject.order_place).to eq('0') }
       end
@@ -51,7 +51,7 @@ describe Admin::TypesDeChampController, type: :controller do
         let(:type_de_champ) { procedure.types_de_champ.first }
         let(:types_de_champ_id) { type_de_champ.id }
         let(:libelle) { 'toto' }
-        let(:type_champs) { 'text' }
+        let(:type_champ) { 'text' }
         let(:description) { 'citrouille' }
         let(:order_place) { '0' }
         before do
@@ -60,7 +60,7 @@ describe Admin::TypesDeChampController, type: :controller do
         end
         subject { procedure.types_de_champ.first }
         it { expect(subject.libelle).to eq('toto') }
-        it { expect(subject.type_champs).to eq('text') }
+        it { expect(subject.type_champ).to eq('text') }
         it { expect(subject.description).to eq('citrouille') }
         # it { expect(subject.order_place).to eq(0) }
       end

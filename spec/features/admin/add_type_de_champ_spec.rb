@@ -1,12 +1,43 @@
 require 'spec_helper'
 
-# feature 'add a new type de champs', js: true do
-#   let(:administrateur) { create(:administrateur) }
+feature 'add a new type de champs', js: true do
 
-#   before do
-#     login_as administrateur, scope: :administrateur
-#   end
+  let(:administrateur) { create(:administrateur) }
+  let(:procedure) { create(:procedure) }
 
+  before do
+    login_as administrateur, scope: :administrateur
+    visit admin_procedure_types_de_champ_path(procedure)
+  end
+
+  scenario 'displays a form for type de champs' do
+    expect(page).to have_css('#procedure_types_de_champ_attributes_0_libelle')
+    expect(page).to have_css('#procedure_types_de_champ_attributes_0_type_champ')
+    expect(page).to have_css('#procedure_types_de_champ_attributes_0_description')
+    expect(page).to have_css('#add_type_de_champ')
+  end
+
+  context 'user fill a new type de champ', js: true do
+    let(:libelle) { 'mon libelle' }
+    let(:type_champ) { 'text' }
+    let(:description) { 'ma super histoire' }
+    before do
+      page.find_by_id('procedure_types_de_champ_attributes_0_libelle').set libelle
+      page.find_by_id('procedure_types_de_champ_attributes_0_type_champ').set type_champ
+      page.find_by_id('procedure_types_de_champ_attributes_0_description').set description
+      click_button 'Ajouter un champ'
+      procedure.reload
+    end
+    subject { procedure.types_de_champ.first }
+    scenario 'creates the type de champ', js: true do
+      expect(page).to have_css('#procedure_types_de_champ_attributes_1_libelle')
+      expect(subject.libelle).to eq(libelle)
+      expect(subject.type_champ).to eq(type_champ)
+      expect(subject.description).to eq(description)
+    end
+  end
+
+end
 #   context 'when create a new procedure' do
 #     before do
 #       visit new_admin_procedure_path
@@ -15,7 +46,7 @@ require 'spec_helper'
 #     scenario 'page have form to created new type de champs' do
 #       expect(page).to have_css('#type_de_champ_0')
 #       expect(page).to have_css('input[name="procedure[new_type_de_champ[0]][libelle]"]')
-#       expect(page).to have_css('select[name="procedure[new_type_de_champ[0]][type_champs]"]')
+#       expect(page).to have_css('select[name="procedure[new_type_de_champ[0]][type_champ]"]')
 #       expect(page).to have_css('textarea[name="procedure[new_type_de_champ[0]][description]"]')
 #       expect(page).to have_css('input[name="procedure[new_type_de_champ[0]][order_place]"]', visible: false)
 #       expect(page).to have_css('input[name="procedure[new_type_de_champ[0]][_destroy]"]', visible: false)
@@ -37,7 +68,7 @@ require 'spec_helper'
 #       scenario 'a new champs type line is appeared with increment index id' do
 #         expect(page).to have_css('#type_de_champ_1')
 #         expect(page).to have_css('input[name="procedure[new_type_de_champ[1]][libelle]"]')
-#         expect(page).to have_css('select[name="procedure[new_type_de_champ[1]][type_champs]"]')
+#         expect(page).to have_css('select[name="procedure[new_type_de_champ[1]][type_champ]"]')
 #         expect(page).to have_css('textarea[name="procedure[new_type_de_champ[1]][description]"]')
 #         expect(page).to have_css('input[name="procedure[new_type_de_champ[1]][order_place]"]', visible: false)
 #         expect(page).to have_css('input[name="procedure[new_type_de_champ[1]][_destroy]"]', visible: false)

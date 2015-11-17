@@ -7,7 +7,7 @@
   }
 }
 
-.type_champs-text {
+.type_champ-text {
   @extend .col-md-6;
   @extend .col-lg-6;
 
@@ -16,7 +16,7 @@
   }
 }
 
-.type_champs-textarea {
+.type_champ-textarea {
   @extend .col-md-8;
   @extend .col-lg-8;
 
@@ -26,7 +26,7 @@
   }
 }
 
-.type_champs-number {
+.type_champ-number {
   @extend .col-md-3;
   @extend .col-lg-3;
 
@@ -35,7 +35,7 @@
   }
 }
 
-.type_champs-datetime {
+.type_champ-datetime {
   @extend .col-md-2;
   @extend .col-lg-2;
 

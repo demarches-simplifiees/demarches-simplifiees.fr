@@ -12,7 +12,7 @@ describe Champ do
 
   describe 'delegation' do
     it { is_expected.to delegate_method(:libelle).to(:type_de_champ) }
-    it { is_expected.to delegate_method(:type_champs).to(:type_de_champ) }
+    it { is_expected.to delegate_method(:type_champ).to(:type_de_champ) }
     it { is_expected.to delegate_method(:order_place).to(:type_de_champ) }
   end
 end

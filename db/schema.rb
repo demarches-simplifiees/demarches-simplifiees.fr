@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110091451) do
+ActiveRecord::Schema.define(version: 20151116175817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,7 +146,7 @@ ActiveRecord::Schema.define(version: 20151110091451) do
 
   create_table "types_de_champ", force: :cascade do |t|
     t.string  "libelle"
-    t.string  "type_champs"
+    t.string  "type_champ"
     t.integer "order_place"
     t.integer "procedure_id"
     t.text    "description"

@@ -5,7 +5,7 @@
       = ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
     .form-group
       %h4 Type
-      = ff.select :type_champs, TypeDeChamp.type_champs, {}, {class: 'form-control type_champs'}
+      = ff.select :type_champ, TypeDeChamp.type_champs, {}, {class: 'form-control type_champ'}
     .form-group
       %h4 Description
       = ff.text_area :description, class: 'form-control description', placeholder: 'Description'

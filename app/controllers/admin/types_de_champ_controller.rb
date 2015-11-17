@@ -9,7 +9,7 @@ class Admin::TypesDeChampController < AdminController
     render json: { message: 'Champ not found' }, status: 404
   end
 
-  def edit
+  def show
   end
 
   def update
@@ -20,7 +20,7 @@ class Admin::TypesDeChampController < AdminController
   end
 
   def update_params
-    params.require(:procedure).permit(types_de_champ_attributes: [:libelle, :description, :order_place, :type_champs, :id])
+    params.require(:procedure).permit(types_de_champ_attributes: [:libelle, :description, :order_place, :type_champ, :id])
   end
 
   private

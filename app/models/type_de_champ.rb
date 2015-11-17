@@ -9,6 +9,6 @@ class TypeDeChamp < ActiveRecord::Base
   has_many :champ
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
-  validates :type_champs, presence: true, allow_blank: false, allow_nil: false
+  validates :type_champ, presence: true, allow_blank: false, allow_nil: false
   # validates :order_place, presence: true, allow_blank: false, allow_nil: false
 end

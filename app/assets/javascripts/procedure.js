@@ -88,8 +88,8 @@ function add_new_type_de_champ_params() {
     $("#new_type_de_champ .description").attr('id', 'procedure_new_type_de_champ_'+types_de_champ_index+'__description');
     $("#new_type_de_champ .description").val('');
 
-    $("#new_type_de_champ .type_champs").attr('name', 'procedure[new_type_de_champ[' + types_de_champ_index + ']][type_champs]');
-    $("#new_type_de_champ .type_champs").attr('id', 'procedure_new_type_de_champ_'+types_de_champ_index+'__type_champs');
+    $("#new_type_de_champ .type_champ").attr('name', 'procedure[new_type_de_champ[' + types_de_champ_index + ']][type_champ]');
+    $("#new_type_de_champ .type_champ").attr('id', 'procedure_new_type_de_champ_'+types_de_champ_index+'__type_champ');
 
     $("#new_type_de_champ .order_place").attr('name', 'procedure[new_type_de_champ[' + types_de_champ_index + ']][order_place]');
     $("#new_type_de_champ .order_place").attr('id', 'procedure_new_type_de_champ_'+types_de_champ_index+'__order_place');

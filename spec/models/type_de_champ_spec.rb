@@ -3,7 +3,7 @@ require 'spec_helper'
 describe TypeDeChamp do
   describe 'database columns' do
     it { is_expected.to have_db_column(:libelle) }
-    it { is_expected.to have_db_column(:type_champs) }
+    it { is_expected.to have_db_column(:type_champ) }
     it { is_expected.to have_db_column(:order_place) }
     it { is_expected.to have_db_column(:description) }
   end
@@ -21,13 +21,13 @@ describe TypeDeChamp do
     end
 
     context 'type' do
-      it { is_expected.not_to allow_value(nil).for(:type_champs) }
-      it { is_expected.not_to allow_value('').for(:type_champs) }
+      it { is_expected.not_to allow_value(nil).for(:type_champ) }
+      it { is_expected.not_to allow_value('').for(:type_champ) }
 
-      it { is_expected.to allow_value('text').for(:type_champs) }
-      it { is_expected.to allow_value('textarea').for(:type_champs) }
-      it { is_expected.to allow_value('datetime').for(:type_champs) }
-      it { is_expected.to allow_value('number').for(:type_champs) }
+      it { is_expected.to allow_value('text').for(:type_champ) }
+      it { is_expected.to allow_value('textarea').for(:type_champ) }
+      it { is_expected.to allow_value('datetime').for(:type_champ) }
+      it { is_expected.to allow_value('number').for(:type_champ) }
     end
 
     context 'order_place' do
