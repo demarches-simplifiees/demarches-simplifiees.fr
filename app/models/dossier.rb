@@ -128,27 +128,43 @@ class Dossier < ActiveRecord::Base
     Dossier.joins(:procedure).where("state='closed' AND dossiers.procedure_id = procedures.id AND procedures.administrateur_id = #{current_gestionnaire.administrateur_id}").order('updated_at ASC')
   end
 
-  def self.search terms
-    return if terms.blank?
+  def self.search current_gestionnaire, terms
+    return [], nil if terms.blank?
+
     dossiers = Dossier.arel_table
     users = User.arel_table
     etablissements = Etablissement.arel_table
     entreprises = Entreprise.arel_table
+
     composed_scope = self.joins('LEFT OUTER JOIN users ON users.id = dossiers.user_id')
                          .joins('LEFT OUTER JOIN entreprises ON entreprises.dossier_id = dossiers.id')
                          .joins('LEFT OUTER JOIN etablissements ON etablissements.dossier_id = dossiers.id')
+
     terms.split.each do |word|
       query_string = "%#{word}%"
       query_string_start_with = "#{word}%"
+
       composed_scope = composed_scope.where(
           dossiers[:nom_projet].matches(query_string).or\
-              users[:email].matches(query_string).or\
-              dossiers[:id].eq(word).or\
-              etablissements[:siret].matches(query_string_start_with).or\
-              entreprises[:raison_sociale].matches(query_string)
-      )
+          users[:email].matches(query_string).or\
+          etablissements[:siret].matches(query_string_start_with).or\
+          entreprises[:raison_sociale].matches(query_string))
     end
-    composed_scope
+
+    #TODO refactor
+    composed_scope = composed_scope.where(
+        dossiers[:id].eq_any(current_gestionnaire.dossiers.ids).and\
+        dossiers[:state].does_not_match('draft'))
+
+    begin
+      if Float(terms) && terms.to_i <= 2147483647 && current_gestionnaire.dossiers.ids.include?(terms.to_i)
+        dossier = Dossier.where("state != 'draft'").find(terms.to_i)
+      end
+    rescue ArgumentError, ActiveRecord::RecordNotFound
+      dossier = nil
+    end
+
+    return composed_scope, dossier
   end
 
   private

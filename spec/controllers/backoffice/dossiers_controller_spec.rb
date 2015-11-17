@@ -68,6 +68,18 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
+  describe 'POST #search' do
+    before do
+      sign_in gestionnaire
+    end
+
+    it 'returns http success' do
+      post :search, search_terms: 'test'
+      expect(response).to have_http_status(200)
+    end
+
+  end
+
   describe 'POST #valid' do
     before do
       dossier.initiated!

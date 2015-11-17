@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     get 'dossiers/a_traiter' => 'dossiers#a_traiter'
     get 'dossiers/en_attente' => 'dossiers#en_attente'
     get 'dossiers/termine' => 'dossiers#termine'
+    post 'dossiers/search' => 'dossiers#search'
 
     resources :dossiers do
       post 'valid' => 'dossiers#valid'

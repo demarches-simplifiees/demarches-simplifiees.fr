@@ -20,6 +20,18 @@ class Backoffice::DossiersController < ApplicationController
     total_dossiers_per_state
   end
 
+  def search
+    @search_terms = params[:search_terms]
+
+    @dossiers_search, @dossier = Dossier.search(current_gestionnaire, @search_terms)
+    @dossiers_search = @dossiers_search.decorate unless @dossiers_search.empty?
+    @dossier = @dossier.decorate unless @dossier.nil?
+
+    total_dossiers_per_state
+  rescue RuntimeError
+    @dossiers_search = []
+  end
+
   def valid
     initialize_instance_params params[:dossier_id]
 

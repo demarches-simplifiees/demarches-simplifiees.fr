@@ -1,0 +1,32 @@
+#backoffice_search {
+  .table {
+    tr th {
+      border-top: none
+    }
+  }
+
+  ul {
+    li {
+      margin-top: 11px;
+      a {
+        height: 45px;
+        h5 {
+          margin-top: 4px;
+        }
+      }
+    }
+
+    #search {
+      margin-top: 0;
+      a {
+        height: auto;
+      }
+      a:hover {
+        height: 56px;
+        background-color: transparent;
+        border: none;
+        padding: 11px 16px;
+      }
+    }
+  }
+}

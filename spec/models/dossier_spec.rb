@@ -419,11 +419,24 @@ describe Dossier do
     end
 
     describe '.search' do
-      subject { described_class.search(terms) }
+      subject { liste_dossiers }
 
-      let!(:dossier_1) { create(:dossier, nom_projet: 'Projet de test', user: create(:user, email: 'contact@test.com')) }
-      let!(:dossier_2) { create(:dossier, nom_projet: 'Lili et Marcel', user: create(:user, email: 'plop@gmail.com')) }
-      let!(:dossier_3) { create(:dossier, nom_projet: 'Construction projet marcel', user: create(:user, email: 'peace@clap.fr')) }
+      let(:liste_dossiers) { described_class.search(gestionnaire_1, terms)[0] }
+      let(:dossier) { described_class.search(gestionnaire_1, terms)[1] }
+
+      let(:administrateur_1) { create(:administrateur) }
+      let(:administrateur_2) { create(:administrateur) }
+
+      let(:gestionnaire_1) { create(:gestionnaire, administrateur: administrateur_1) }
+      let(:gestionnaire_2) { create(:gestionnaire, administrateur: administrateur_2) }
+
+      let(:procedure_1) { create(:procedure, administrateur: administrateur_1) }
+      let(:procedure_2) { create(:procedure, administrateur: administrateur_2) }
+
+      let!(:dossier_0) { create(:dossier, nom_projet: 'je suis un brouillon', state: 'draft', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
+      let!(:dossier_1) { create(:dossier, nom_projet: 'Projet de test', state: 'initiated', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
+      let!(:dossier_2) { create(:dossier, nom_projet: 'Lili et Marcel', state: 'initiated', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
+      let!(:dossier_3) { create(:dossier, nom_projet: 'Construction projet marcel', state: 'initiated', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
 
       let!(:etablissement_1) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'OCTO Academy', dossier: dossier_1), dossier: dossier_1, siret: '41636169600051') }
       let!(:etablissement_2) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'Plop octo', dossier: dossier_2), dossier: dossier_2, siret: '41816602300012') }
@@ -432,42 +445,55 @@ describe Dossier do
       describe 'search is empty' do
         let(:terms) { '' }
 
-        it { expect(subject).to eq(nil) }
+        it { expect(subject.size).to eq(0) }
+      end
+
+      describe 'search draft file' do
+        let(:terms) { 'brouillon' }
+
+        it { expect(subject.size).to eq(0) }
       end
 
       describe 'search on file title' do
         let(:terms) { 'Marcel' }
 
-        it { expect(subject.size).to eq(2) }
+        it { expect(subject.size).to eq(1) }
       end
 
       describe 'search on contact email' do
         let(:terms) { 'clap' }
 
-        it { expect(subject.size).to eq(1) }
+        it { expect(subject.size).to eq(0) }
       end
 
       describe 'search on ID dossier' do
         let(:terms) { "#{dossier_2.id}" }
 
-        it { expect(subject.size).to eq(1) }
+        it { expect(dossier.id).to eq(dossier_2.id) }
       end
 
       describe 'search on SIRET' do
+        context 'when is part of SIRET' do
+          let(:terms) { '4181' }
 
-        let(:terms) { '4181' }
+          it { expect(subject.size).to eq(1) }
+        end
 
-        it { expect(subject.size).to eq(2) }
+        context 'when is a complet SIRET' do
+          let(:terms) { '41816602300012' }
+
+          it { expect(subject.size).to eq(1) }
+        end
       end
 
       describe 'search on raison social' do
         let(:terms) { 'OCTO' }
 
-        it { expect(subject.size).to eq(3) }
+        it { expect(subject.size).to eq(2) }
       end
 
       describe 'search on multiple fields' do
-        let(:terms) { 'octo peace' }
+        let(:terms) { 'octo test' }
 
         it { expect(subject.size).to eq(1) }
       end
