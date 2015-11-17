@@ -36,4 +36,13 @@ describe Procedure do
       it { is_expected.to allow_value('http://localhost').for(:lien_demarche) }
     end
   end
+
+  describe '#types_de_champ_ordered' do
+    let(:procedure) { create(:procedure) }
+    let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 1) }
+    let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 0) }
+    subject { procedure.types_de_champ_ordered }
+    it { expect(subject.first).to eq(type_de_champ_1) }
+    it { expect(subject.last).to eq(type_de_champ_0) }
+  end
 end

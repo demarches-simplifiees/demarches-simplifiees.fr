@@ -8,4 +8,8 @@ class Procedure < ActiveRecord::Base
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+
+  def types_de_champ_ordered
+    types_de_champ.order(:order_place)
+  end
 end
