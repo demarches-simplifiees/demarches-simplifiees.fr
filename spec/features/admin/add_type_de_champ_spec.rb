@@ -25,7 +25,7 @@ feature 'add a new type de champs', js: true do
       page.find_by_id('procedure_types_de_champ_attributes_0_libelle').set libelle
       page.find_by_id('procedure_types_de_champ_attributes_0_type_champ').set type_champ
       page.find_by_id('procedure_types_de_champ_attributes_0_description').set description
-      click_button 'Ajouter un champ'
+      click_button 'Ajouter le champ'
       wait_for_ajax
       procedure.reload
     end
@@ -46,7 +46,7 @@ feature 'add a new type de champs', js: true do
         page.find_by_id('procedure_types_de_champ_attributes_1_libelle').set libelle
         select(type_champ, from: 'procedure_types_de_champ_attributes_1_type_champ')
         page.find_by_id('procedure_types_de_champ_attributes_1_description').set description
-        click_button 'Ajouter un champ'
+        click_button 'Ajouter le champ'
         wait_for_ajax
         procedure.reload
       end

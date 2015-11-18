@@ -18,10 +18,12 @@
         = ff.object.button_up(index: ff.index)
         = ff.object.button_down(index: ff.index)
 
-    - unless ff.object.id.nil?
-      .form-group
-        %br &nbsp;
-        = link_to("", admin_procedure_type_de_champ_path(@procedure, ff.object.id), method: :delete, remote: true, id: "delete_type_de_champ_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
 
+    .form-group
+      %br &nbsp;
+      - if ff.object.id.nil?
+        = f.submit "Ajouter le champ", class: 'btn btn-success', id: :add_type_de_champ
+      - else
+        = link_to("", admin_procedure_type_de_champ_path(@procedure, ff.object.id), method: :delete, remote: true, id: "delete_type_de_champ_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
 
 
