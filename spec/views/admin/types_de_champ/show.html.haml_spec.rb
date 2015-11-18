@@ -25,15 +25,23 @@ describe 'admin/types_de_champ/show.html.haml', type: :view do
       render
       rendered
     end
-    context 'when there is only one field' do
+    context 'when there is no field in database' do
       it { expect(subject).not_to have_css('.fa-chevron-down') }
       it { expect(subject).not_to have_css('.fa-chevron-up') }
     end
-    context 'when two fields' do
+    context 'when there is only one field in database' do
       let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
-      it { expect(subject).to have_css('#btn_down_0.fa-chevron-down') }
+      it { expect(subject).not_to have_css('#btn_down_0') }
+      it { expect(subject).not_to have_css('#btn_up_0')   }
+      it { expect(subject).not_to have_css('#btn_up_1')   }
+      it { expect(subject).not_to have_css('#btn_down_1') }
+    end
+    context 'when there are 2 fields in database' do
+      let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
+      let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
+      it { expect(subject).to have_css('#btn_down_0') }
       it { expect(subject).not_to have_css('#btn_up_0') }
-      it { expect(subject).to have_css('#btn_up_1.fa-chevron-up') }
+      it { expect(subject).to have_css('#btn_up_1')   }
       it { expect(subject).not_to have_css('#btn_down_1') }
     end
   end

@@ -12,10 +12,11 @@
     .form-group
       = ff.hidden_field :order_place, value: ff.index
       = ff.hidden_field :id
-    .form-group
-      %br &nbsp;
-      = ff.object.button_up(ff.index)
-      = ff.object.button_down(ff.index)
+    - unless ff.object.id.nil?
+      .form-group
+        %br &nbsp;
+        = ff.object.button_up(index: ff.index)
+        = ff.object.button_down(index: ff.index)
 
     - unless ff.object.id.nil?
       .form-group
