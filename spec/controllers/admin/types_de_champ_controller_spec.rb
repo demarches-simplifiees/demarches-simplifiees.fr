@@ -98,4 +98,44 @@ describe Admin::TypesDeChampController, type: :controller do
       it { expect(subject.status).to eq(404) }
     end
   end
+
+  describe 'POST #move_up' do
+    subject { post :move_up, procedure_id: procedure.id, index: index, format: :js }
+    context 'when procedure have no type de champ' do
+      let(:index) { 0 }
+      let(:procedure) { create(:procedure) }
+      it { expect(subject.status).to eq(400) }
+    end
+    context 'when procedure have only one type de champ' do
+      let(:index) { 1 }
+      let(:procedure) { create(:procedure) }
+      let!(:type_de_champ) { create(:type_de_champ, procedure: procedure) }
+      it { expect(subject.status).to eq(400) }
+    end
+    context 'when procedure have tow type de champs' do
+      context 'when index == 0' do
+        let(:index) { 0 }
+        let(:procedure) { create(:procedure) }
+        let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure) }
+        let!(:type_de_champ_2) { create(:type_de_champ, procedure: procedure) }
+        it { expect(subject.status).to eq(400) }
+      end
+      context 'when index > 0' do
+        let(:index) { 1 }
+        let(:procedure) { create(:procedure) }
+        let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
+        let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
+
+        it { expect(subject.status).to eq(200) }
+        it { expect(subject).to render_template('show') }
+        it 'changes order places' do
+          post :move_up, procedure_id: procedure.id, index: index, format: :js
+          type_de_champ_0.reload
+          type_de_champ_1.reload
+          expect(type_de_champ_0.order_place).to eq(1)
+          expect(type_de_champ_1.order_place).to eq(0)
+        end
+      end
+    end
+  end
 end

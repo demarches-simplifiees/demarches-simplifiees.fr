@@ -21,6 +21,20 @@ class Admin::TypesDeChampController < AdminController
     params.require(:procedure).permit(types_de_champ_attributes: [:libelle, :description, :order_place, :type_champ, :id])
   end
 
+  def move_up
+    index = params[:index].to_i
+    if @procedure.types_de_champ.count < 2 || index < 1
+      render json: {}, status: 400
+    else
+      types_de_champ_to_move_down = @procedure.types_de_champ_ordered[index - 1]
+      types_de_champ_to_move_up = @procedure.types_de_champ_ordered[index]
+      types_de_champ_to_move_down.update_attributes(order_place: index)
+      types_de_champ_to_move_up.update_attributes(order_place: index - 1)
+
+      render 'show', format: :js
+    end
+  end
+
   private
 
   def retrieve_procedure
