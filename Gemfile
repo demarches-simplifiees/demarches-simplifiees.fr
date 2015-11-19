@@ -49,8 +49,6 @@ gem 'carrierwave'
 
 gem 'pg'
 
-gem "bower-rails", "~> 0.10.0"
-
 gem 'rgeo-geojson'
 gem 'leaflet-rails'
 gem 'leaflet-markercluster-rails', '~> 0.7.0'

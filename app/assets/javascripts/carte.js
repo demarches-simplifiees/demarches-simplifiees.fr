@@ -27,7 +27,8 @@ function initCarto() {
         $.each($.parseJSON($("#json_latlngs").val()), function (i, val) {
             freeDraw.createPolygon(val);
         });
-        map.setView(freeDraw.polygons[0].getBounds().getCenter(), position.zoom);
+
+        map.fitBounds(freeDraw.polygons[0].getBounds());
     }
     else if (position.lat == LAT && position.lon == LON)
         map.setView(new L.LatLng(position.lat, position.lon), 5);

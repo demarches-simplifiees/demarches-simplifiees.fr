@@ -18,9 +18,10 @@
 //= require bootstrap-sprockets
 //= require bootstrap-datepicker/core
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.fr.js
-//= require leaflet
-//= require d3
-//= require evispa-timo-jsclipper
-//= require concavehull
-//= require graham_scan
-//= require wildhoney_leaflet_freedraw
+
+//= require leaflet.js
+//= require d3.min
+//= require clipper
+//= require concavehull.min
+//= require graham_scan.min
+//= require leaflet.freedraw
