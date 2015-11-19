@@ -5,6 +5,33 @@ class Backoffice::DossiersController < ApplicationController
     initialize_instance_params params[:id]
   end
 
+  def a_traiter
+    @dossiers_a_traiter = Dossier.a_traiter(current_gestionnaire).decorate
+    total_dossiers_per_state
+  end
+
+  def en_attente
+    @dossiers_en_attente = Dossier.en_attente(current_gestionnaire).decorate
+    total_dossiers_per_state
+  end
+
+  def termine
+    @dossiers_termine = Dossier.termine(current_gestionnaire).decorate
+    total_dossiers_per_state
+  end
+
+  def search
+    @search_terms = params[:search_terms]
+
+    @dossiers_search, @dossier = Dossier.search(current_gestionnaire, @search_terms)
+    @dossiers_search = @dossiers_search.decorate unless @dossiers_search.empty?
+    @dossier = @dossier.decorate unless @dossier.nil?
+
+    total_dossiers_per_state
+  rescue RuntimeError
+    @dossiers_search = []
+  end
+
   def valid
     initialize_instance_params params[:dossier_id]
 
@@ -24,6 +51,12 @@ class Backoffice::DossiersController < ApplicationController
   end
 
   private
+
+  def total_dossiers_per_state
+    @dossiers_a_traiter_total = !@dossiers_a_traiter.nil? ? @dossiers_a_traiter.size : Dossier.a_traiter(current_gestionnaire).size
+    @dossiers_en_attente_total = !@dossiers_en_attente.nil? ? @dossiers_en_attente.size : Dossier.en_attente(current_gestionnaire).size
+    @dossiers_termine_total = !@dossiers_termine.nil? ? @dossiers_termine.size : Dossier.termine(current_gestionnaire).size
+  end
 
   def initialize_instance_params dossier_id
     @dossier = Dossier.find(dossier_id)

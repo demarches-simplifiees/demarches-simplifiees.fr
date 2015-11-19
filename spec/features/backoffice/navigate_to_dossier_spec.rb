@@ -5,7 +5,7 @@ feature 'on backoffice page' do
   let(:gestionnaire) { create(:gestionnaire, administrateur: administrateur) }
   let(:procedure) { create(:procedure, administrateur: administrateur) }
 
-  let!(:dossier) { create(:dossier, :with_user, :with_entreprise, procedure: procedure, state: 'replied') }
+  let!(:dossier) { create(:dossier, :with_user, :with_entreprise, procedure: procedure, state: 'initiated') }
   before do
     visit backoffice_path
   end

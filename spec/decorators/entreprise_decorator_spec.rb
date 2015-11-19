@@ -7,11 +7,11 @@ describe EntrepriseDecorator do
   let(:prenom) { 'mon prenom' }
   let(:entreprise_params) do
     {
-      capital_social: 123_000,
-      code_effectif_entreprise: code_effectif,
-      raison_sociale: raison_sociale,
-      nom: nom,
-      prenom: prenom
+        capital_social: 123_000,
+        code_effectif_entreprise: code_effectif,
+        raison_sociale: raison_sociale,
+        nom: nom,
+        prenom: prenom
 
     }
   end
@@ -47,7 +47,7 @@ describe EntrepriseDecorator do
 
   describe '#pretty_capital_social' do
     it 'pretty display capital_social' do
-      expect(subject.pretty_capital_social).to eq('123 000.00 €')
+      expect(subject.pretty_capital_social).to eq('123 000,00 €')
     end
   end
 
