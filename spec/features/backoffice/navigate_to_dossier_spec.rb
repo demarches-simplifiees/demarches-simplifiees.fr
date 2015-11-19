@@ -1,16 +1,18 @@
 require 'spec_helper'
 
 feature 'on backoffice page' do
-  let(:procedure) { create(:procedure) }
-  let!(:dossier) { create(:dossier, :with_user, :with_entreprise, procedure: procedure, state: 'replied') }
+  let(:administrateur) { create(:administrateur) }
+  let(:gestionnaire) { create(:gestionnaire, administrateur: administrateur) }
+  let(:procedure) { create(:procedure, administrateur: administrateur) }
+
+  let!(:dossier) { create(:dossier, :with_user, :with_entreprise, procedure: procedure, state: 'initiated') }
   before do
     visit backoffice_path
   end
   context 'when gestionnaire is logged in' do
-    let(:gestionnaire) { create(:gestionnaire) }
     before do
-      page.find_by_id(:gestionnaire_email).set  gestionnaire.email
-      page.find_by_id(:gestionnaire_password).set  gestionnaire.password
+      page.find_by_id(:gestionnaire_email).set gestionnaire.email
+      page.find_by_id(:gestionnaire_password).set gestionnaire.password
       page.click_on 'Se connecter'
     end
     context 'when he click on first dossier' do

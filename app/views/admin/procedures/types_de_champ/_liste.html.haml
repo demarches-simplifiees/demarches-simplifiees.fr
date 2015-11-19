@@ -1,0 +1,12 @@
+#liste_champ
+  -if @procedure.types_de_champ.size > 0
+    - @procedure.types_de_champ.order(:order_place).each_with_index do |type_de_champ, index|
+      =render partial: 'admin/procedures/types_de_champ/form', locals:{ type_de_champ: type_de_champ, index: index }
+
+#liste_delete_champ
+
+#new_type_de_champ
+  =render partial: 'admin/procedures/types_de_champ/form', locals:{ type_de_champ: nil, index: @procedure.types_de_champ.size }
+
+%script{ type:'text/javascript' }
+  ="var types_de_champ_index = #{@procedure.types_de_champ.size}"

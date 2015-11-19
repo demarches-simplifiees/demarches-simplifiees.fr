@@ -1,0 +1,17 @@
+#backoffice_termine
+  = render partial: 'onglets'
+
+  -#%h3.text-success Terminé
+  %table.table
+    %thead
+      %th.col-md-4.col-lg-4 Procédure
+      %th.col-md-4.col-lg-4 Dossier
+      %th.col-md-2.col-lg-2 État
+      %th.col-md-2.col-lg-2 Date de mise à jour
+    - @dossiers_termine.each do |dossier|
+      %tr
+        %td= dossier.procedure.libelle
+        %td
+          = link_to(dossier.nom_projet, "/backoffice/dossiers/#{dossier.id}")
+        %td= dossier.state_fr
+        %td= dossier.last_update

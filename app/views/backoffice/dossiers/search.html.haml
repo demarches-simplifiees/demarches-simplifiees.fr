@@ -1,0 +1,47 @@
+#backoffice_search
+  = render partial: 'onglets'
+
+  - unless @dossier.nil?
+    %table.table{style:'background-color: rgba(248, 248, 255, 0.8)'}
+      %tr
+        %th{colspan:2}
+          %h4
+            = "Dossier N°#{@dossier.id}"
+      %tr
+        %td.col-md-2.col-lg-1
+          = @dossier.id
+        %td.col-md-4.col-lg-3
+          = link_to(@dossier.nom_projet, "/backoffice/dossiers/#{@dossier.id}")
+        %td.col-md-2.col-lg-3
+          = @dossier.entreprise.raison_sociale
+        %td.col-md-4.col-lg-2
+          = @dossier.user.email
+        %td.col-md-2.col-lg-2
+          = @dossier.etablissement.siret
+        %td.col-md-1.col-lg-1
+          = @dossier.state_fr
+    %br
+
+  - if @dossiers_search.empty? && @dossier.nil?
+    %div{style: 'text-align:center'}
+      %h4 Aucun dossier trouvé
+
+  - elsif !@dossiers_search.empty?
+    %table.table
+      %tr
+        %th.col-md-2.col-lg-1 ID dossier
+        %th.col-md-4.col-lg-3 Dossier
+        %th.col-md-2.col-lg-3 Raison Sociale
+        %th.col-md-4.col-lg-2 Email contact
+        %th.col-md-2.col-lg-2 SIRET
+        %th.col-md-1.col-lg-1 État
+
+      - @dossiers_search.each do |dossier|
+        %tr
+          %td= dossier.id
+          %td
+            = link_to(dossier.nom_projet, "/backoffice/dossiers/#{dossier.id}")
+          %td= dossier.entreprise.raison_sociale
+          %td= dossier.user.email
+          %td= dossier.etablissement.siret
+          %td{class: dossier.state_color_class}= dossier.state_fr

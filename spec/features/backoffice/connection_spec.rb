@@ -20,14 +20,16 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
     end
   end
   context 'when user enter good credentials' do
-    let(:gestionnaire) { create(:gestionnaire) }
+    let(:administrateur) { create(:administrateur) }
+    let(:gestionnaire) { create(:gestionnaire, administrateur: administrateur) }
+
     before do
       page.find_by_id(:gestionnaire_email).set  gestionnaire.email
       page.find_by_id(:gestionnaire_password).set  gestionnaire.password
       page.click_on 'Se connecter'
     end
     scenario 'he is redirected to /backoffice' do
-      expect(page).to have_css('#backoffice')
+      expect(page).to have_css('#backoffice_a_traiter')
     end
   end
 end

@@ -5,6 +5,88 @@
 table {
   font-size: 13;
 }
+
+#map{
+  height:600px;
+  width: 100%;
+}
+
+#map.mini{
+  height:300px;
+}
+
+#map section.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  box-shadow: inset -100px 0 100px -100px rgba(0, 0, 0, .25);
+  width: 100%;
+  height: 100%;
+  z-index: 2001;
+}
+
+#map.mode-create {
+  cursor: crosshair !important;
+}
+
+#map g path {
+  transition: all 0.25s;
+  stroke-width: 4px;
+  stroke-opacity: 1;
+  stroke: #D7217E;
+  position: absolute;
+  z-index: 1001;
+  fill: #D7217E;
+  fill-opacity: .75;
+  -webkit-filter: none;
+}
+
+#map.mode-delete path {
+  cursor: no-drop !important;
+}
+
+#map.mode-delete path:hover {
+  fill: #4d4d4d !important;
+}
+
+#map div.polygon-elbow {
+  -webkit-transition: opacity .25s;
+  box-shadow: 0 0 0 2px white, 0 0 10px rgba(0, 0, 0, .35);
+  border: 5px solid #D7217E;
+  border-radius: 10px;
+  transition: opacity 0.25s;
+  cursor: move;
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+#map div.polygon-elbow.non-polygon {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  border: 5px solid darkgray;
+}
+
+#map.mode-edit div.polygon-elbow {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#map svg.tracer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2001;
+  pointer-events: none;
+}
+
+
+
 .info {
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;

@@ -14,7 +14,7 @@ FactoryGirl.define do
 
     trait :with_procedure do
       after(:build) do |dossier, _evaluator|
-        procedure = create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champs)
+        procedure = create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ)
         dossier.procedure = procedure
       end
     end

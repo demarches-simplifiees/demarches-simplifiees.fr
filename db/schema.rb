@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151103091603) do
+ActiveRecord::Schema.define(version: 20151113171605) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20151103091603) do
 
   create_table "champs", force: :cascade do |t|
     t.string  "value"
-    t.integer "type_de_champs_id"
+    t.integer "type_de_champ_id"
     t.integer "dossier_id"
   end
 
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 20151103091603) do
     t.datetime "updated_at",           default: '2015-09-22 09:25:29'
     t.string   "state"
     t.integer  "user_id"
+    t.text     "json_latlngs"
   end
 
   add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
@@ -104,6 +105,13 @@ ActiveRecord::Schema.define(version: 20151103091603) do
     t.integer "entreprise_id"
   end
 
+  create_table "exercices", force: :cascade do |t|
+    t.string   "ca"
+    t.datetime "dateFinExercice"
+    t.integer  "date_fin_exercice_timestamp"
+    t.integer  "etablissement_id"
+  end
+
   create_table "gestionnaires", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -117,6 +125,7 @@ ActiveRecord::Schema.define(version: 20151103091603) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "administrateur_id"
   end
 
   add_index "gestionnaires", ["email"], name: "index_gestionnaires_on_email", unique: true, using: :btree
@@ -136,13 +145,14 @@ ActiveRecord::Schema.define(version: 20151103091603) do
     t.string   "organisation"
     t.string   "direction"
     t.string   "lien_demarche"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.boolean  "test"
-    t.boolean  "use_api_carto", default: false
+    t.boolean  "use_api_carto",     default: false
+    t.integer  "administrateur_id"
   end
 
-  create_table "types_de_champs", force: :cascade do |t|
+  create_table "types_de_champ", force: :cascade do |t|
     t.string  "libelle"
     t.string  "type_champs"
     t.integer "order_place"

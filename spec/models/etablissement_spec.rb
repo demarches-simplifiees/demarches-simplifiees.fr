@@ -19,5 +19,6 @@ describe Etablissement do
   describe 'associations' do
     it { is_expected.to belong_to(:dossier) }
     it { is_expected.to belong_to(:entreprise) }
+    it { is_expected.to have_many(:exercices) }
   end
 end

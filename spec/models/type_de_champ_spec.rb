@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TypeDeChamps do
+describe TypeDeChamp do
   describe 'database columns' do
     it { is_expected.to have_db_column(:libelle) }
     it { is_expected.to have_db_column(:type_champs) }

@@ -3,4 +3,7 @@ class Administrateur < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  has_many :gestionnaires
+  has_many :procedures
 end

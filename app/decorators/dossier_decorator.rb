@@ -31,4 +31,10 @@ class DossierDecorator < Draper::Decorator
         fail 'State not valid'
     end
   end
+
+  def state_color_class
+    return 'text-danger' if a_traiter?
+    return 'text-info' if en_attente?
+    return 'text-success' if termine?
+  end
 end

@@ -2,7 +2,7 @@ class Admin::ProceduresController < ApplicationController
   before_action :authenticate_administrateur!
 
   def index
-    @procedures = Procedure.all
+    @procedures = current_administrateur.procedures
   end
 
   def show
@@ -24,7 +24,7 @@ class Admin::ProceduresController < ApplicationController
       return render 'new'
     end
 
-    process_types_de_champs_params
+    process_types_de_champ_params
     process_types_de_piece_justificative_params
 
     flash.notice = 'Procédure enregistrée'
@@ -39,7 +39,7 @@ class Admin::ProceduresController < ApplicationController
       return render 'show'
     end
 
-    process_types_de_champs_params
+    process_types_de_champ_params
     process_types_de_piece_justificative_params
 
     flash.notice = 'Préocédure modifiée'
@@ -48,22 +48,22 @@ class Admin::ProceduresController < ApplicationController
 
   private
 
-  def process_types_de_champs_params
-    unless params[:type_de_champs].nil? || params[:type_de_champs].size == 0
-      params[:type_de_champs].each do |index, type_de_champs|
+  def process_types_de_champ_params
+    unless params[:type_de_champ].nil? || params[:type_de_champ].size == 0
+      params[:type_de_champ].each do |index, type_de_champ|
 
-        if type_de_champs[:delete] == 'true'
-          unless type_de_champs[:id_type_de_champs].nil? || type_de_champs[:id_type_de_champs] == ''
-            TypeDeChamps.destroy(type_de_champs[:id_type_de_champs])
+        if type_de_champ[:delete] == 'true'
+          unless type_de_champ[:id_type_de_champ].nil? || type_de_champ[:id_type_de_champ] == ''
+            TypeDeChamp.destroy(type_de_champ[:id_type_de_champ])
           end
         else
-          if type_de_champs[:id_type_de_champs].nil? || type_de_champs[:id_type_de_champs] == ''
-            bdd_object = TypeDeChamps.new
+          if type_de_champ[:id_type_de_champ].nil? || type_de_champ[:id_type_de_champ] == ''
+            bdd_object = TypeDeChamp.new
           else
-            bdd_object = TypeDeChamps.find(type_de_champs[:id_type_de_champs])
+            bdd_object = TypeDeChamp.find(type_de_champ[:id_type_de_champ])
           end
 
-          save_type_de_champs bdd_object, type_de_champs
+          save_type_de_champ bdd_object, type_de_champ
         end
       end
     end
@@ -90,7 +90,7 @@ class Admin::ProceduresController < ApplicationController
     end
   end
 
-  def save_type_de_champs database_object, source
+  def save_type_de_champ database_object, source
     database_object.libelle = source[:libelle]
     database_object.type_champs = source[:type]
     database_object.description = source[:description]

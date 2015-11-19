@@ -15,4 +15,10 @@ describe Administrateur, type: :model do
     it { is_expected.to have_db_column(:created_at) }
     it { is_expected.to have_db_column(:updated_at) }
   end
+
+  describe 'assocations' do
+    it { is_expected.to have_many(:gestionnaires) }
+    it { is_expected.to have_many(:procedures) }
+  end
+
 end
