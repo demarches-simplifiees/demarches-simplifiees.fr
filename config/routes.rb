@@ -44,6 +44,7 @@ Rails.application.routes.draw do
     resources :procedures do
       resource :types_de_champ, only: [:show, :update] do
         post '/:index/move_up' => 'types_de_champ#move_up'
+        post '/:index/move_down' => 'types_de_champ#move_down'
       end
       resources :types_de_champ, only: [:destroy]
       resource :pieces_justificatives, only: [:edit, :update]

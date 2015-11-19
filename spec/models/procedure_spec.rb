@@ -44,4 +44,32 @@ describe Procedure do
     it { expect(subject.first).to eq(type_de_champ_1) }
     it { expect(subject.last).to eq(type_de_champ_0) }
   end
+
+  describe '#switch_types_de_champ' do
+    let(:procedure) { create(:procedure) }
+    let(:index) { 0 }
+    subject { procedure.switch_types_de_champ index}
+
+    context 'when procedure have no types_de_champ' do
+      it { expect(subject).to eq(false) }
+    end
+    context 'when procedure have 2 types de champ' do
+      let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
+      let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
+      context 'when index is not the last element' do
+        it { expect(subject).to eq(true) }
+        it 'switch order place' do
+          procedure.switch_types_de_champ index
+          type_de_champ_0.reload
+          type_de_champ_1.reload
+          expect(type_de_champ_0.order_place).to eq(1)
+          expect(type_de_champ_1.order_place).to eq(0)
+        end
+      end
+      context 'when index is the last element' do
+        let(:index) { 1 }
+        it { expect(subject).to eq(false) }
+      end
+    end
+   end
 end

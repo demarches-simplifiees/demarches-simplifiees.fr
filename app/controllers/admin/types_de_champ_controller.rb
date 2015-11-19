@@ -22,16 +22,19 @@ class Admin::TypesDeChampController < AdminController
   end
 
   def move_up
-    index = params[:index].to_i
-    if @procedure.types_de_champ.count < 2 || index < 1
-      render json: {}, status: 400
-    else
-      types_de_champ_to_move_down = @procedure.types_de_champ_ordered[index - 1]
-      types_de_champ_to_move_up = @procedure.types_de_champ_ordered[index]
-      types_de_champ_to_move_down.update_attributes(order_place: index)
-      types_de_champ_to_move_up.update_attributes(order_place: index - 1)
-
+    index = params[:index].to_i - 1
+    if @procedure.switch_types_de_champ index
       render 'show', format: :js
+    else
+      render json: {}, status: 400
+    end
+  end
+
+  def move_down
+    if @procedure.switch_types_de_champ params[:index].to_i
+      render 'show', format: :js
+    else
+      render json: {}, status: 400
     end
   end
 

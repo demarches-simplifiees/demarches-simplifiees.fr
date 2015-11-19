@@ -138,4 +138,38 @@ describe Admin::TypesDeChampController, type: :controller do
       end
     end
   end
+
+  describe 'POST #move_down' do
+    let(:request) { post :move_down, procedure_id: procedure.id, index: index, format: :js }
+    subject { request }
+    let(:index) { 0 }
+    let(:procedure) { create(:procedure) }
+    context 'when procedure have no type de champ' do
+      it { expect(subject.status).to eq(400) }
+    end
+    context 'when procedure have only one type de champ' do
+      let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure) }
+      it { expect(subject.status).to eq(400) }
+    end
+    context 'when procedure have 2 type de champ' do
+      let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
+      let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
+      context 'when index represent last type_de_champ' do
+        let(:index) { 1 }
+        it { expect(subject.status).to eq(400) }
+      end
+      context 'when index does not represent last type_de_champ' do
+        let(:index) { 0 }
+        it { expect(subject.status).to eq(200) }
+        it { expect(subject).to render_template('show') }
+        it 'changes order place' do
+          request
+          type_de_champ_0.reload
+          type_de_champ_1.reload
+          expect(type_de_champ_0.order_place).to eq(1)
+          expect(type_de_champ_1.order_place).to eq(0)
+        end
+      end
+    end
+  end
 end

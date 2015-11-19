@@ -12,4 +12,15 @@ class Procedure < ActiveRecord::Base
   def types_de_champ_ordered
     types_de_champ.order(:order_place)
   end
+
+  def switch_types_de_champ index_of_first_element
+    return false if index_of_first_element < 0
+    types_de_champ_tmp = types_de_champ_ordered
+    nb_types_de_champ = types_de_champ_tmp.count
+    return false if index_of_first_element == nb_types_de_champ - 1
+    return false if types_de_champ_ordered.count < 1
+    types_de_champ_tmp[index_of_first_element].update_attributes(order_place: index_of_first_element + 1)
+    types_de_champ_tmp[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
+    true
+  end
 end
