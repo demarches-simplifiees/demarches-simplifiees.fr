@@ -44,4 +44,4 @@
           %td= dossier.entreprise.raison_sociale
           %td= dossier.user.email
           %td= dossier.etablissement.siret
-          %td= dossier.state_fr
+          %td{class: dossier.state_color_class}= dossier.state_fr

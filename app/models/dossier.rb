@@ -4,8 +4,8 @@ class Dossier < ActiveRecord::Base
                replied: 'replied',
                updated: 'updated',
                validated: 'validated',
-               submitted: 'submitted', #-submit_validated
-               closed: 'closed'} #-processed
+               submitted: 'submitted',
+               closed: 'closed'}
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
@@ -29,6 +29,10 @@ class Dossier < ActiveRecord::Base
   validates :nom_projet, presence: true, allow_blank: false, allow_nil: true
   validates :description, presence: true, allow_blank: false, allow_nil: true
   validates :user, presence: true
+
+  A_TRAITER = %w(initiated updated submitted)
+  EN_ATTENTE = %w(replied validated)
+  TERMINE = %w(closed)
 
   def retrieve_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
@@ -116,16 +120,28 @@ class Dossier < ActiveRecord::Base
     state
   end
 
+  def a_traiter?
+    A_TRAITER.include?(state)
+  end
+
+  def en_attente?
+    EN_ATTENTE.include?(state)
+  end
+
+  def termine?
+    TERMINE.include?(state)
+  end
+
   def self.a_traiter current_gestionnaire
-    Dossier.joins(:procedure).where("(state='initiated' OR state='updated' OR state='submitted') AND dossiers.procedure_id = procedures.id AND procedures.administrateur_id = #{current_gestionnaire.administrateur_id}").order('updated_at ASC')
+    current_gestionnaire.dossiers.where(state: A_TRAITER).order('updated_at ASC')
   end
 
   def self.en_attente current_gestionnaire
-    Dossier.joins(:procedure).where("(state='replied' OR state='validated') AND dossiers.procedure_id = procedures.id AND procedures.administrateur_id = #{current_gestionnaire.administrateur_id}").order('updated_at ASC')
+    current_gestionnaire.dossiers.where(state: EN_ATTENTE).order('updated_at ASC')
   end
 
   def self.termine current_gestionnaire
-    Dossier.joins(:procedure).where("state='closed' AND dossiers.procedure_id = procedures.id AND procedures.administrateur_id = #{current_gestionnaire.administrateur_id}").order('updated_at ASC')
+    current_gestionnaire.dossiers.where(state: TERMINE).order('updated_at ASC')
   end
 
   def self.search current_gestionnaire, terms
