@@ -43,8 +43,8 @@ Rails.application.routes.draw do
     get 'sign_in' => '/administrateurs/sessions#new'
     resources :procedures do
       resource :types_de_champ, only: [:show, :update] do
-        post '/:index/move_up' => 'types_de_champ#move_up'
-        post '/:index/move_down' => 'types_de_champ#move_down'
+        post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
+        post '/:index/move_down' => 'types_de_champ#move_down', as: :move_down
       end
       resources :types_de_champ, only: [:destroy]
       resource :pieces_justificatives, only: [:edit, :update]

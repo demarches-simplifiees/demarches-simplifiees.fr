@@ -15,8 +15,8 @@
     - unless ff.object.id.nil?
       .form-group
         %br &nbsp;
-        = ff.object.button_up(index: ff.index)
-        = ff.object.button_down(index: ff.index)
+        = ff.object.button_up(index: ff.index, url: move_up_admin_procedure_types_de_champ_path(@procedure, ff.index))
+        = ff.object.button_down(index: ff.index, url: move_down_admin_procedure_types_de_champ_path(@procedure, ff.index))
 
 
     .form-group

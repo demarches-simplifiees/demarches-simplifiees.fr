@@ -1,80 +1,29 @@
 require 'spec_helper'
 
-# feature 'move up button type de champs', js: true do
+feature 'move up button type de champs', js: true do
+  let(:administrateur) { create(:administrateur) }
 
-#   let(:administrateur) { create(:administrateur) }
+  before do
+    login_as administrateur, scope: :administrateur
+  end
 
-#   before do
-#     login_as administrateur, scope: :administrateur
-#   end
+  let(:procedure) { create(:procedure) }
+  let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
+  let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
+  let!(:type_de_champ_2) { create(:type_de_champ, procedure: procedure, order_place: 2) }
+  let!(:type_de_champ_3) { create(:type_de_champ, procedure: procedure, order_place: 3) }
 
-#   context 'when click on move up type de champs button' do
-#     let!(:procedure) { create(:procedure, :with_type_de_champ) }
-#     let!(:type_de_champ) { create(:type_de_champ, procedure: procedure, order_place: 2) }
-
-#     before do
-#       visit admin_procedure_path id: procedure.id
-#     end
-
-#     context 'when procedure have two type de champs' do
-#       before do
-#         page.click_on 'order_type_de_champ_2_up_procedure'
-#       end
-
-#       scenario 'it inverse the twice type de champs' do
-#         expect(page.find_by_id('type_de_champ_1').find('input[class="order_place"]', visible: false).value).to eq('2');
-#         expect(page.find_by_id('type_de_champ_2').find('input[class="order_place"]', visible: false).value).to eq('1');
-#       end
-#     end
-
-#     context 'when procedure have two type de champs in database and 3 type de champs add on the page' do
-#       before do
-#         page.click_on 'add_type_de_champ_procedure'
-#         page.click_on 'add_type_de_champ_procedure'
-#         page.click_on 'add_type_de_champ_procedure'
-#       end
-
-#       context 'when to click on up_button type_de_champ_2' do
-#         before do
-#           page.click_on 'order_type_de_champ_2_up_procedure'
-#         end
-
-#         scenario 'type_de_champ_1 and type_de_champ_2 is reversed' do
-#           expect(page.find_by_id('type_de_champ_2').find('input[class="order_place"]', visible: false).value).to eq('1');
-#           expect(page.find_by_id('type_de_champ_1').find('input[class="order_place"]', visible: false).value).to eq('2');
-#           expect(page.find_by_id('type_de_champ_3').find('input[class="order_place"]', visible: false).value).to eq('3');
-#           expect(page.find_by_id('type_de_champ_4').find('input[class="order_place"]', visible: false).value).to eq('4');
-#           expect(page.find_by_id('type_de_champ_5').find('input[class="order_place"]', visible: false).value).to eq('5');
-#         end
-
-#         context 'when to click on up_button type_de_champ_4' do
-#           before do
-#             page.click_on 'order_type_de_champ_4_up_procedure'
-#           end
-
-#           scenario 'type_de_champ_3 and type_de_champ_4 is reversed' do
-#             expect(page.find_by_id('type_de_champ_2').find('input[class="order_place"]', visible: false).value).to eq('1');
-#             expect(page.find_by_id('type_de_champ_1').find('input[class="order_place"]', visible: false).value).to eq('2');
-#             expect(page.find_by_id('type_de_champ_4').find('input[class="order_place"]', visible: false).value).to eq('3');
-#             expect(page.find_by_id('type_de_champ_3').find('input[class="order_place"]', visible: false).value).to eq('4');
-#             expect(page.find_by_id('type_de_champ_5').find('input[class="order_place"]', visible: false).value).to eq('5');
-#           end
-
-#           context 'when to click on up_button type_de_champ_5' do
-#             before do
-#               page.click_on 'order_type_de_champ_5_up_procedure'
-#             end
-
-#             scenario 'type_de_champ_3 and type_de_champ_5 is reversed' do
-#               expect(page.find_by_id('type_de_champ_2').find('input[class="order_place"]', visible: false).value).to eq('1');
-#               expect(page.find_by_id('type_de_champ_1').find('input[class="order_place"]', visible: false).value).to eq('2');
-#               expect(page.find_by_id('type_de_champ_4').find('input[class="order_place"]', visible: false).value).to eq('3');
-#               expect(page.find_by_id('type_de_champ_5').find('input[class="order_place"]', visible: false).value).to eq('4');
-#               expect(page.find_by_id('type_de_champ_3').find('input[class="order_place"]', visible: false).value).to eq('5');
-#             end
-#           end
-#         end
-#       end
-#     end
-#   end
-# end
+  context 'when clicking on move down for type de champ 1' do
+    before do
+      visit admin_procedure_types_de_champ_path procedure.id
+      page.find_by_id('btn_up_1').click
+      wait_for_ajax
+      type_de_champ_0.reload
+      type_de_champ_1.reload
+    end
+    scenario 'it switches type_de_champ 1 and 2 place ' do
+      expect(type_de_champ_0.order_place).to eq(1)
+      expect(type_de_champ_1.order_place).to eq(0)
+    end
+  end
+end
