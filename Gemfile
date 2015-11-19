@@ -74,6 +74,8 @@ group :test do
   gem 'simplecov', require: false
   gem 'poltergeist'
   gem 'timecop'
+  gem 'guard'
+  gem 'guard-rspec', require: false
 end
 
 group :development, :test do
