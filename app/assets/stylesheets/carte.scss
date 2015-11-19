@@ -6,6 +6,14 @@ table {
   font-size: 13;
 }
 
+#map{
+  height:600px;
+  width: 100%;
+}
+
+#map.mini{
+  height:300px;
+}
 
 #map section.overlay {
   position: absolute;

@@ -8,6 +8,7 @@ class Users::CarteController < UsersController
     redirect_to url_for(root_path)
   end
 
+  #TODO change name funtion
   def save_ref_api_carto
     dossier = current_user_dossier
     dossier.update_attributes(json_latlngs: params[:json_latlngs])

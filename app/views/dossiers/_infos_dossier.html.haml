@@ -13,23 +13,36 @@
             %br
         - rescue
           =''
-    .col-lg-6.col-md-6
-      =render partial: '/dossiers/pieces_justificatives'
+    - if @dossier.procedure.use_api_carto
+      .col-lg-6.col-md-6
+        #map.mini
+        %input{id: 'json_latlngs', type:'hidden', value: "#{@dossier.json_latlngs}"}
+        %script{type: 'text/javascript'}
+          = "var dossier_id =#{@dossier.id}"
+          initCarto();
 
   %br
-    -unless @champs.nil?
-      %table.table#liste_champs
-        -@champs.each do |champ|
-          %tr
-            %th{ style: 'width:25%' }
-              =champ.libelle
-            %td
-              =champ.value
+  -unless @champs.nil?
+    .row
+      .col-lg-6.col-md-6
+        %table.table#liste_champs
+          -@champs.each do |champ|
+            %tr
+              %th{ style: 'width:25%' }
+                =champ.libelle
+              %td
+                =champ.value
+      .col-lg-6.col-md-6
+        =render partial: '/dossiers/pieces_justificatives'
+  %br
 
   %div.row{style: 'text-align:right'}
     -unless gestionnaire_signed_in?
       -if !@dossier.validated? && !@dossier.submitted? && !@dossier.closed?
-        %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@dossier.id}/description?back_url=recapitulatif"}
+        -if @dossier.procedure.use_api_carto
+          %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@dossier.id}/carte"}
+            = 'Editer ma carte'
+        %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@dossier.id}/description"}
           = 'Editer mon dossier'
 
     -unless user_signed_in?
