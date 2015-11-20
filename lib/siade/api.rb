@@ -16,13 +16,20 @@ class SIADE::API
     call(base_url + endpoint)
   end
 
-  def self.call(url)
+  def self.exercices(siret)
+    endpoint = "/api/v1/etablissements/exercices/#{siret}"
+    call(base_url + endpoint)
+  end
+
+  def self.call(url, params = {})
+    params.merge!(token: SIADETOKEN)
+
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
     RestClient::Resource.new(
       url,
       verify_ssl: verify_ssl_mode
-    ).get(params: { token: SIADETOKEN })
+    ).get(params: params)
   end
 
   def self.base_url

@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   get 'france_connect' => 'france_connect#login'
   get 'france_connect/callback' => 'france_connect#callback'
 
+  get 'demo' => 'demo#index'
+
   namespace :users do
     get 'siret' => 'siret#index'
 
@@ -56,6 +58,11 @@ Rails.application.routes.draw do
 
   namespace :backoffice do
     get 'sign_in' => '/gestionnaires/sessions#new'
+
+    get 'dossiers/a_traiter' => 'dossiers#a_traiter'
+    get 'dossiers/en_attente' => 'dossiers#en_attente'
+    get 'dossiers/termine' => 'dossiers#termine'
+    post 'dossiers/search' => 'dossiers#search'
 
     resources :dossiers do
       post 'valid' => 'dossiers#valid'

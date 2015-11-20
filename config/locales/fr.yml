@@ -20,6 +20,14 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 fr:
+  number:
+      currency:
+        format:
+          unit: '€'
+          delimiter: ' '
+          separator: ','
+          precision: 2
+          format: '%n %u'
   devise:
     confirmations:
       confirmed: 'Votre compte a été confirmé avec succès.'

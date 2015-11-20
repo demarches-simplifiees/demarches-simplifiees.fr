@@ -2,7 +2,7 @@
   %div#commentaire_new{style: 'width:80%; margin-left:auto; margin-right:auto'}
     = form_tag(url_for({ controller: :commentaires, action: :create, dossier_id: @dossier.id }), class: 'form-inline', method: 'POST') do
       %textarea.form-control{id: 'texte_commentaire', name: 'texte_commentaire', style: 'width: 100%; margin-bottom:2%', rows: '5', maxlength: '255', placeholder:"Dialoguer avec votre interlocuteur privilégié en charge de votre dossier."}
-      %input.form-control.btn.btn-primary{:type => 'submit', :value => 'Poster', style: 'float:right'}
+      %input.form-control.btn.btn-success{:type => 'submit', :value => 'Poster', style: 'float:right'}
   %br
   %br
 

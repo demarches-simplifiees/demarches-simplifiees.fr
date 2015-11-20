@@ -18,5 +18,7 @@ describe Gestionnaire, type: :model do
 
   describe 'association' do
     it { is_expected.to belong_to(:administrateur) }
+    it { is_expected.to have_many(:procedures) }
+    it { is_expected.to have_many(:dossiers) }
   end
 end

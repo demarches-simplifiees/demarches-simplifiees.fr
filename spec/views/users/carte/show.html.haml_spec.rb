@@ -16,22 +16,14 @@ describe 'users/carte/show.html.haml', type: :view do
     it 'le formulaire envoie vers /users/dossiers/:dossier_id/carte en #POST' do
       expect(rendered).to have_selector("form[action='/users/dossiers/#{dossier_id}/carte'][method=post]")
     end
-  
-    it 'la page des sources CSS de l\'API carto est chargée' do
-      expect(rendered).to have_selector('#sources_CSS_api_carto')
-    end
-  
-    it 'la page des sources JS de l\'API carto est chargée' do
-      expect(rendered).to have_selector('#sources_JS_api_carto')
-    end
-  
+
     it 'la carte est bien présente' do
-      expect(rendered).to have_selector('#map_qp')
+      expect(rendered).to have_selector('#map')
     end
   
     context 'présence des inputs hidden' do
-      it 'stockage de la référence du dossie de l\'API carto' do
-        expect(rendered).to have_selector('input[type=hidden][id=ref_dossier][name=ref_dossier]')
+      it 'stockage du json des polygons dessinés' do
+        expect(rendered).to have_selector('input[type=hidden][id=json_latlngs][name=json_latlngs]')
       end
     end
   

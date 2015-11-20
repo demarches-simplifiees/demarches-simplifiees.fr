@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/recapitulatif/show.html.haml', type: :view do
-  let(:dossier) { create(:dossier, :with_user, :with_entreprise, :with_procedure) }
+  let(:dossier) { create(:dossier, :with_user, :with_entreprise, procedure: create(:procedure, :with_api_carto)) }
   let(:dossier_id) { dossier.id }
 
   before do
@@ -36,7 +36,17 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           end
 
           it 'le lien vers description est correct' do
-            expect(rendered).to have_selector("a[id=maj_infos][href='/users/dossiers/#{dossier_id}/description?back_url=recapitulatif']")
+            expect(rendered).to have_selector("a[id=maj_infos][href='/users/dossiers/#{dossier_id}/description']")
+          end
+        end
+
+        context 'lien carte' do
+          it 'le lien vers carte est présent' do
+            expect(rendered).to have_css('#maj_carte')
+          end
+
+          it 'le lien vers description est correct' do
+            expect(rendered).to have_selector("a[id=maj_carte][href='/users/dossiers/#{dossier_id}/carte']")
           end
         end
       end

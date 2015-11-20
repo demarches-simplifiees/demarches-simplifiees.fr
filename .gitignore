@@ -16,8 +16,6 @@
 !/log/.keep
 /tmp
 
-
-
 # Ignore Intellij files
 .idea/
 *.iml

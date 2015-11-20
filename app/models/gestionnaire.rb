@@ -5,4 +5,7 @@ class Gestionnaire < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   belongs_to :administrateur
+
+  has_many :procedures, through: :administrateur
+  has_many :dossiers, through: :procedures
 end

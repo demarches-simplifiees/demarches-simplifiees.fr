@@ -72,7 +72,7 @@ describe Dossier do
     end
 
     describe '#retrieve_piece_justificative_by_type' do
-      let(:all_dossier_pj_id){dossier.procedure.types_de_piece_justificative}
+      let(:all_dossier_pj_id) { dossier.procedure.types_de_piece_justificative }
       subject { dossier.retrieve_piece_justificative_by_type all_dossier_pj_id.first }
       before do
         dossier.build_default_pieces_justificatives
@@ -137,12 +137,12 @@ describe Dossier do
 
       context 'when action is not valid' do
         let(:action) { 'test' }
-        it { expect{ subject }.to raise_error('action is not valid') }
+        it { expect { subject }.to raise_error('action is not valid') }
       end
 
       context 'when role is not valid' do
         let(:role) { 'test' }
-        it { expect{ subject }.to raise_error('role is not valid') }
+        it { expect { subject }.to raise_error('role is not valid') }
       end
 
       context 'when dossier is at state draft' do
@@ -154,13 +154,13 @@ describe Dossier do
           let(:role) { 'user' }
 
           context 'when he updates dossier informations' do
-            let(:action) {'update'}
+            let(:action) { 'update' }
 
             it { is_expected.to eq('draft') }
           end
 
           context 'when he posts a comment' do
-            let(:action) {'comment'}
+            let(:action) { 'comment' }
 
             it { is_expected.to eq('draft') }
           end
@@ -184,13 +184,13 @@ describe Dossier do
           context 'when is update dossier informations' do
             let(:action) { 'update' }
 
-            it {is_expected.to eq('initiated')}
+            it { is_expected.to eq('initiated') }
           end
 
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it {is_expected.to eq('initiated')}
+            it { is_expected.to eq('initiated') }
           end
         end
 
@@ -200,13 +200,13 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('replied')}
+            it { is_expected.to eq('replied') }
           end
 
           context 'when is validated the dossier' do
             let(:action) { 'valid' }
 
-            it {is_expected.to eq('validated')}
+            it { is_expected.to eq('validated') }
           end
         end
       end
@@ -241,13 +241,13 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('replied')}
+            it { is_expected.to eq('replied') }
           end
 
           context 'when is validated the dossier' do
             let(:action) { 'valid' }
 
-            it {is_expected.to eq('validated')}
+            it { is_expected.to eq('validated') }
           end
         end
       end
@@ -263,13 +263,13 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('updated')}
+            it { is_expected.to eq('updated') }
           end
 
           context 'when is updated dossier informations' do
             let(:action) { 'update' }
 
-            it { is_expected.to eq('updated')}
+            it { is_expected.to eq('updated') }
           end
         end
 
@@ -279,13 +279,13 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('replied')}
+            it { is_expected.to eq('replied') }
           end
 
           context 'when is validated the dossier' do
             let(:action) { 'valid' }
 
-            it {is_expected.to eq('validated')}
+            it { is_expected.to eq('validated') }
           end
         end
       end
@@ -316,7 +316,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('validated')}
+            it { is_expected.to eq('validated') }
           end
         end
       end
@@ -342,13 +342,13 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it {is_expected.to eq('submitted')}
+            it { is_expected.to eq('submitted') }
           end
 
           context 'when is closed the dossier' do
             let(:action) { 'close' }
 
-            it {is_expected.to eq('closed')}
+            it { is_expected.to eq('closed') }
           end
         end
       end
@@ -364,7 +364,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('closed')}
+            it { is_expected.to eq('closed') }
           end
         end
 
@@ -374,7 +374,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('closed')}
+            it { is_expected.to eq('closed') }
           end
         end
       end
@@ -388,15 +388,15 @@ describe Dossier do
       let(:procedure_admin) { create(:procedure, administrateur: admin) }
       let(:procedure_admin_2) { create(:procedure, administrateur: admin_2) }
 
-      let!(:dossier1) { create(:dossier, :with_user, procedure: procedure_admin, state: 'draft')}
-      let!(:dossier2) { create(:dossier, :with_user, procedure: procedure_admin, state: 'initiated')} #a_traiter
-      let!(:dossier3) { create(:dossier, :with_user, procedure: procedure_admin, state: 'initiated')} #a_traiter
-      let!(:dossier4) { create(:dossier, :with_user, procedure: procedure_admin, state: 'replied')} #en_attente
-      let!(:dossier5) { create(:dossier, :with_user, procedure: procedure_admin, state: 'updated')} #a_traiter
-      let!(:dossier6) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'validated')} #en_attente
-      let!(:dossier7) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'submitted')} #a_traiter
-      let!(:dossier8) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'closed')} #termine
-      let!(:dossier9) { create(:dossier, :with_user, procedure: procedure_admin, state: 'closed')} #termine
+      let!(:dossier1) { create(:dossier, :with_user, procedure: procedure_admin, state: 'draft') }
+      let!(:dossier2) { create(:dossier, :with_user, procedure: procedure_admin, state: 'initiated') } #a_traiter
+      let!(:dossier3) { create(:dossier, :with_user, procedure: procedure_admin, state: 'initiated') } #a_traiter
+      let!(:dossier4) { create(:dossier, :with_user, procedure: procedure_admin, state: 'replied') } #en_attente
+      let!(:dossier5) { create(:dossier, :with_user, procedure: procedure_admin, state: 'updated') } #a_traiter
+      let!(:dossier6) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'validated') } #en_attente
+      let!(:dossier7) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'submitted') } #a_traiter
+      let!(:dossier8) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'closed') } #termine
+      let!(:dossier9) { create(:dossier, :with_user, procedure: procedure_admin, state: 'closed') } #termine
 
 
       describe '#a_traiter' do
@@ -413,6 +413,87 @@ describe Dossier do
 
       describe '#termine' do
         subject { described_class.termine gestionnaire }
+
+        it { expect(subject.size).to eq(1) }
+      end
+    end
+
+    describe '.search' do
+      subject { liste_dossiers }
+
+      let(:liste_dossiers) { described_class.search(gestionnaire_1, terms)[0] }
+      let(:dossier) { described_class.search(gestionnaire_1, terms)[1] }
+
+      let(:administrateur_1) { create(:administrateur) }
+      let(:administrateur_2) { create(:administrateur) }
+
+      let(:gestionnaire_1) { create(:gestionnaire, administrateur: administrateur_1) }
+      let(:gestionnaire_2) { create(:gestionnaire, administrateur: administrateur_2) }
+
+      let(:procedure_1) { create(:procedure, administrateur: administrateur_1) }
+      let(:procedure_2) { create(:procedure, administrateur: administrateur_2) }
+
+      let!(:dossier_0) { create(:dossier, nom_projet: 'je suis un brouillon', state: 'draft', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
+      let!(:dossier_1) { create(:dossier, nom_projet: 'Projet de test', state: 'initiated', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
+      let!(:dossier_2) { create(:dossier, nom_projet: 'Lili et Marcel', state: 'initiated', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
+      let!(:dossier_3) { create(:dossier, nom_projet: 'Construction projet marcel', state: 'initiated', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
+
+      let!(:etablissement_1) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'OCTO Academy', dossier: dossier_1), dossier: dossier_1, siret: '41636169600051') }
+      let!(:etablissement_2) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'Plop octo', dossier: dossier_2), dossier: dossier_2, siret: '41816602300012') }
+      let!(:etablissement_3) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'OCTO Technology', dossier: dossier_3), dossier: dossier_3, siret: '41816609600051') }
+
+      describe 'search is empty' do
+        let(:terms) { '' }
+
+        it { expect(subject.size).to eq(0) }
+      end
+
+      describe 'search draft file' do
+        let(:terms) { 'brouillon' }
+
+        it { expect(subject.size).to eq(0) }
+      end
+
+      describe 'search on file title' do
+        let(:terms) { 'Marcel' }
+
+        it { expect(subject.size).to eq(1) }
+      end
+
+      describe 'search on contact email' do
+        let(:terms) { 'clap' }
+
+        it { expect(subject.size).to eq(0) }
+      end
+
+      describe 'search on ID dossier' do
+        let(:terms) { "#{dossier_2.id}" }
+
+        it { expect(dossier.id).to eq(dossier_2.id) }
+      end
+
+      describe 'search on SIRET' do
+        context 'when is part of SIRET' do
+          let(:terms) { '4181' }
+
+          it { expect(subject.size).to eq(1) }
+        end
+
+        context 'when is a complet SIRET' do
+          let(:terms) { '41816602300012' }
+
+          it { expect(subject.size).to eq(1) }
+        end
+      end
+
+      describe 'search on raison social' do
+        let(:terms) { 'OCTO' }
+
+        it { expect(subject.size).to eq(2) }
+      end
+
+      describe 'search on multiple fields' do
+        let(:terms) { 'octo test' }
 
         it { expect(subject.size).to eq(1) }
       end
