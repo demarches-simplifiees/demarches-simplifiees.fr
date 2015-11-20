@@ -1,6 +1,12 @@
 %p.lead{id: 'pro_section'}
+
+  = image_tag('logo-tps.png')
+  %br
   %h2#titre_procedure.text-info
     = @procedure.libelle
+
+  %p
+    = @procedure.description
 
   %br
   = form_tag(url_for({controller: :dossiers, action: :create}), class: 'form-inline', method: 'POST') do |f|
