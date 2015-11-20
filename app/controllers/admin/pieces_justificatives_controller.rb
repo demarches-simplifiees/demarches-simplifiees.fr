@@ -9,6 +9,14 @@ class Admin::PiecesJustificativesController < AdminController
     render 'show', format: :js
   end
 
+  def destroy
+    @procedure.types_de_piece_justificative.find(params[:id]).destroy
+
+    render 'show', format: :js
+  rescue ActiveRecord::RecordNotFound
+    render json: { message: 'Type de piece justificative not found' }, status: 404
+  end
+
   def update_params
     params
       .require(:procedure)

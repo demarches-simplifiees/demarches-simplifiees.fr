@@ -43,6 +43,20 @@ feature 'add a new type de piece justificative', js: true do
           expect(page).to have_css('#procedure_types_de_piece_justificative_attributes_1_libelle')
         end
       end
+      context 'when user delete pj' do
+        before do
+          pj = procedure.types_de_piece_justificative.first
+          page.find_by_id("delete_type_de_piece_justificative_#{pj.id}").click
+          wait_for_ajax
+        end
+        scenario 'removes pj from page' do
+          within '#liste_piece_justificative' do
+            expect(page).not_to have_css('#procedure_types_de_piece_justificative_attributes_0_libelle')
+            expect(page.body).not_to match(libelle)
+            expect(page.body).not_to match(description)
+          end
+        end
+      end
     end
   end
 end

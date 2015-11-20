@@ -48,6 +48,7 @@ Rails.application.routes.draw do
       end
       resources :types_de_champ, only: [:destroy]
       resource :pieces_justificatives, only: [:show, :update]
+      resources :pieces_justificatives, only: :destroy
     end
   end
 

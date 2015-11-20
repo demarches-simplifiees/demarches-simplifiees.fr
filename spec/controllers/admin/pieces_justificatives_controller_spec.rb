@@ -21,7 +21,7 @@ describe Admin::PiecesJustificativesController, type: :controller  do
     end
   end
 
-  describe 'POST #update' do
+  describe 'PUT #update' do
     let(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure_id) { procedure.id }
     let(:libelle) { 'RIB' }
@@ -60,6 +60,33 @@ describe Admin::PiecesJustificativesController, type: :controller  do
     context 'when libelle is blank' do
       let(:libelle) { '' }
       it { expect{ subject }.not_to change(TypeDePieceJustificative, :count) }
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+    let!(:pj) { create(:type_de_piece_justificative, procedure: procedure) }
+    let(:procedure_id) { procedure.id }
+    let(:pj_id) { pj.id }
+    let(:request) { delete :destroy, procedure_id: procedure_id, id: pj_id }
+    subject { request }
+    context 'when procedure is not found' do
+      let(:procedure_id) { 9_999_999 }
+      it { expect(subject.status).to eq(404) }
+    end
+    context 'when pj id does not exist' do
+      let(:pj_id) { 9_999_999 }
+      it { expect(subject.status).to eq(404) }
+    end
+    context 'when pj id exist but is not linked to procedure' do
+      let(:procedure_1) { create(:procedure, administrateur: admin) }
+      let!(:pj_1) { create(:type_de_piece_justificative, procedure: procedure_1) }
+      let(:pj_id) { pj_1 }
+      it { expect(subject.status).to eq(404) }
+    end
+    context 'when pj is found' do
+      it { expect(subject.status).to eq(200) }
+      it { expect{ subject }.to change(TypeDePieceJustificative, :count).by(-1) }
     end
   end
 end
