@@ -22,11 +22,5 @@ describe TypeDePieceJustificative do
       it { is_expected.not_to allow_value('').for(:libelle) }
       it { is_expected.to allow_value('RIB').for(:libelle) }
     end
-
-    context 'description' do
-      it { is_expected.not_to allow_value(nil).for(:description) }
-      it { is_expected.not_to allow_value('').for(:description) }
-      it { is_expected.to allow_value('Releve identité bancaire').for(:description) }
-    end
   end
 end

@@ -9,10 +9,11 @@
       %h4 Description
       =ff.text_area :description, class: 'form-control description', placeholder: 'Description'
 
-    - if ff.object.id.nil?
-      .form-group#add_type_de_piece_justificative_button
-        %br &nbsp;
-        = f.submit('Ajouter la pièce')
-    - else
-      = link_to("", admin_procedure_piece_justificative_path(@procedure, ff.object.id), method: :delete, remote: true, id: "delete_type_de_piece_justificative_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
+
+    .form-group
+      %br &nbsp;
+      - if ff.object.id.nil?
+        = f.submit('Ajouter la pièce', class: 'btn btn-success')
+      - else
+        = link_to("", admin_procedure_piece_justificative_path(@procedure, ff.object.id), method: :delete, remote: true, id: "delete_type_de_piece_justificative_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
 
