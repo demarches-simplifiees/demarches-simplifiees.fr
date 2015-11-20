@@ -1,10 +1,7 @@
-class Users::SiretController < UsersController
+class Users::ProcedureController < UsersController
   def index
-    @procedure = Procedure.find(params['procedure_id'])
+    @procedure = Procedure.find(params[:procedure_id])
     @siret = params[:siret] || current_user.siret
-
-    redirect_to(users_path(procedure_id: @procedure, siret: @siret))
-
   rescue ActiveRecord::RecordNotFound
     error_procedure
   end
