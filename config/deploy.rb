@@ -20,7 +20,7 @@ print "Deploy to #{ENV['to']} environment branch #{branch}\n"
 
 # set :domain, '5.135.190.60'
 set :domain, ENV['domain']
-set :repository, 'ssh://git@github.com:sgmap/tps.git'
+set :repository,'https://github.com/sgmap/tps.git'
 set :port, 2200
 
 set :deploy_to, '/var/www/tps_dev'
