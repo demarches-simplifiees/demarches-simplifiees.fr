@@ -1,0 +1,16 @@
+
+= f.fields_for :types_de_piece_justificative, types_de_piece_justificative do |ff|
+  .form-inline
+    .form-group
+      %h4 Libellé
+      =ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
+
+    .form-group
+      %h4 Description
+      =ff.text_area :description, class: 'form-control description', placeholder: 'Description'
+
+    -if ff.object.id.nil?
+      .form-group#add_type_de_piece_justificative_button
+        %br &nbsp;
+        = f.submit('Ajouter la pièce')
+
