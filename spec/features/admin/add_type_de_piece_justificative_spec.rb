@@ -57,6 +57,18 @@ feature 'add a new type de piece justificative', js: true do
           end
         end
       end
+      context 'when user change existing type de pj' do
+        let(:new_libelle) { 'mon nouveau libelle' }
+        before do
+          page.find_by_id('procedure_types_de_piece_justificative_attributes_0_libelle').set(new_libelle)
+          page.find_by_id('save').click
+          wait_for_ajax
+        end
+        scenario 'saves change in database' do
+          pj = procedure.types_de_piece_justificative.first
+          expect(pj.libelle).to eq(new_libelle)
+        end
+      end
     end
   end
 end

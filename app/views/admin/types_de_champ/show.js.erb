@@ -1,1 +1,4 @@
+<% flash.each do |type, message| %>
+$("#flash_message").html("<div class=\"alert alert-success move_up\" style=\"display: block:\"> <%= message.html_safe %></div>").children().fadeOut(5000)
+<%  end %>
 $('#liste_champ').html("<%= escape_javascript(render partial: 'form', locals: { procedure: @procedure, types_de_champ: @types_de_champ } ) %>");

@@ -6,6 +6,7 @@ class Admin::PiecesJustificativesController < AdminController
 
   def update
     @procedure.update_attributes(update_params)
+    flash.now.notice = 'Modifications sauvegardées'
     render 'show', format: :js
   end
 

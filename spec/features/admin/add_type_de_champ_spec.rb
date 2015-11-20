@@ -71,6 +71,19 @@ feature 'add a new type de champs', js: true do
           expect(procedure.types_de_champ.count).to eq(1)
         end
       end
+      context 'user modifies the first one' do
+        let(:new_libelle) { 'my new field' }
+        before do
+          page.find_by_id('procedure_types_de_champ_attributes_0_libelle').set(new_libelle)
+          page.find_by_id('save').click
+          wait_for_ajax
+          procedure.reload
+        end
+        scenario 'saves changes in database' do
+          type_de_champ = procedure.types_de_champ.first
+          expect(type_de_champ.libelle).to eq(new_libelle)
+        end
+      end
     end
   end
 end

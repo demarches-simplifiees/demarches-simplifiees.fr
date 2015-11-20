@@ -88,3 +88,14 @@ input#nom_projet {
 .logo_fc_small {
   max-width: 27px;
 }
+
+
+.alert.alert-success.move_up {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  height: 52px;
+  width: 100%;
+  margin-top: 0px;
+
+}
