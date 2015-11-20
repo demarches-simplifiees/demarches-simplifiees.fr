@@ -82,7 +82,7 @@ describe Admin::ProceduresController, type: :controller do
 
         end
 
-        it { expect(subject).to redirect_to(admin_procedures_path) }
+        it { expect(subject).to redirect_to(admin_procedure_types_de_champ_path(procedure_id:  Procedure.last.id)) }
 
         it { expect(flash[:notice]).to be_present }
       end
