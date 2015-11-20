@@ -1,10 +1,27 @@
-%h1 Bienvenue sur TPS - Gestionnaire
-%br
-#gestionnaire_login
-  = form_for @gestionnaire, url: {controller: 'gestionnaires/sessions', action: :create } do |f|
-    .form-group-lg
-      .form-group
-        = f.text_field :email, class: 'form-control', placeholder: 'Email'
-      .form-group
-        = f.password_field :password, class: 'form-control', placeholder: 'Mot de passe'
-      = f.submit 'Se connecter', class: %w(btn btn-lg btn-success), data: { disable_with: 'Connexion', submit: true }
+#form_login
+  = image_tag('logo-tps.png')
+  %br
+  %h2#gestionnaire_login Gestionnaire
+
+  %br
+  %br
+  #new_user
+    = form_for @gestionnaire, url: {controller: 'gestionnaires/sessions', action: :create } do |f|
+      %h4
+        = f.label :email
+      .input-group
+        .input-group-addon
+          %span.glyphicon.glyphicon-user
+        = f.email_field :email, class: 'form-control'
+      %br
+      %h4
+        = f.label :password
+      .input-group
+        .input-group-addon
+          %span.glyphicon.glyphicon-asterisk
+        = f.password_field :password, autocomplete: "off", class: 'form-control'
+      %br
+      %br
+      .actions
+        = f.submit "Se connecter", class:'btn btn-primary'
+      %br
