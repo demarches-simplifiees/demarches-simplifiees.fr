@@ -3,9 +3,10 @@ require 'spec_helper'
 feature 'user access to the list of his dossier' do
 
   let(:user) { create(:user) }
-  let!(:last_updated_dossier) { create(:dossier, :with_procedure, user: user)}
-  let!(:dossier1) { create(:dossier, :with_procedure, user: user, nom_projet: 'mon permier dossier') }
+  let!(:last_updated_dossier) { create(:dossier, :with_procedure, user: user, state: 'initiated')}
+  let!(:dossier1) { create(:dossier, :with_procedure, user: user, nom_projet: 'mon permier dossier', state: 'initiated') }
   let!(:dossier2) { create(:dossier, :with_user, nom_projet: 'mon deuxième dossier') }
+
   before do
     last_updated_dossier.update_attributes(nom_projet: 'salut la compagnie')
     visit root_path
