@@ -1,0 +1,30 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                6.2136923480551,
+                49.1342109827851
+              ],
+              [
+                6.21416055031881,
+                49.1338823553928
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "code": "QP057019",
+        "nom": "Hauts De Vallières",
+        "commune": "Metz"
+      }
+    }
+  ]
+}
