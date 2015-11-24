@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151116175817) do
+ActiveRecord::Schema.define(version: 20151124085333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 20151116175817) do
   create_table "exercices", force: :cascade do |t|
     t.string   "ca"
     t.datetime "dateFinExercice"
-    t.integer  "date_fin_exercice_timestamp"
+    t.datetime "date_fin_exercice_timestamp"
     t.integer  "etablissement_id"
   end
 
@@ -150,6 +150,14 @@ ActiveRecord::Schema.define(version: 20151116175817) do
     t.boolean  "test"
     t.boolean  "use_api_carto",     default: false
     t.integer  "administrateur_id"
+  end
+
+  create_table "quartier_prioritaires", force: :cascade do |t|
+    t.string  "code"
+    t.string  "nom"
+    t.string  "commune"
+    t.text    "geometry"
+    t.integer "dossier_id"
   end
 
   create_table "types_de_champ", force: :cascade do |t|
