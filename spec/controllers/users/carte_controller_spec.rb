@@ -6,7 +6,6 @@ RSpec.describe Users::CarteController, type: :controller do
   let(:dossier) { create(:dossier, :with_user, :with_procedure) }
   let!(:entreprise) { create(:entreprise, dossier: dossier) }
   let!(:etablissement) { create(:etablissement, dossier: dossier) }
-  let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 1000 }
   let(:adresse) { etablissement.adresse }
 
@@ -21,13 +20,13 @@ RSpec.describe Users::CarteController, type: :controller do
       end
 
       it 'redirects to users/sign_in' do
-        get :show, dossier_id: dossier_id
+        get :show, dossier_id: dossier.id
         expect(response).to redirect_to('/users/sign_in')
       end
     end
 
     it 'returns http success' do
-      get :show, dossier_id: dossier_id
+      get :show, dossier_id: dossier.id
       expect(response).to have_http_status(:success)
     end
 
@@ -39,18 +38,18 @@ RSpec.describe Users::CarteController, type: :controller do
     it_behaves_like "not owner of dossier", :show
   end
 
-  describe 'POST #save_ref_api_carto' do
+  describe 'POST #save' do
     context 'Aucune localisation n\'a jamais été enregistrée' do
       it do
-        post :save_ref_api_carto, dossier_id: dossier_id
-        expect(response).to redirect_to("/users/dossiers/#{dossier_id}/description")
+        post :save, dossier_id: dossier.id, json_latlngs: ''
+        expect(response).to redirect_to("/users/dossiers/#{dossier.id}/description")
       end
     end
 
     context 'En train de modifier la localisation' do
       let(:dossier) { create(:dossier, :with_procedure, :with_user, state: 'initiated') }
       before do
-        post :save_ref_api_carto, dossier_id: dossier_id
+        post :save, dossier_id: dossier.id, json_latlngs: ''
       end
 
       context 'Enregistrement d\'un commentaire informant la modification' do
@@ -65,12 +64,61 @@ RSpec.describe Users::CarteController, type: :controller do
         end
 
         it 'champs dossier' do
-          expect(subject.dossier.id).to eq(dossier_id)
+          expect(subject.dossier.id).to eq(dossier.id)
         end
       end
 
       it 'Redirection vers la page récapitulatif' do
-        expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
+        expect(response).to redirect_to("/users/dossiers/#{dossier.id}/recapitulatif")
+      end
+    end
+
+    describe 'Save quartier prioritaire' do
+      before do
+        allow_any_instance_of(CARTO::SGMAP::QuartierPrioritaireAdapter).
+            to receive(:to_params).
+                   and_return({"QPCODE1234" => {:code => "QPCODE1234", :nom => "QP de test", :commune => "Paris", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
+
+        post :save, dossier_id: dossier.id, json_latlngs: json_latlngs
+      end
+
+      context 'when json_latlngs params is empty' do
+        context 'when dossier have quartier prioritaire in database' do
+          let!(:dossier) { create(:dossier, :with_user, :with_procedure, :with_two_quartier_prioritaires) }
+
+          before do
+            dossier.reload
+          end
+
+          context 'when value is empty' do
+            let(:json_latlngs) { '' }
+            it { expect(dossier.quartier_prioritaires.size).to eq(0) }
+          end
+
+          context 'when value is empty array' do
+            let(:json_latlngs) { '[]' }
+            it { expect(dossier.quartier_prioritaires.size).to eq(0) }
+          end
+        end
+      end
+
+      context 'when json_latlngs params is informed' do
+        let(:json_latlngs) { '[[{"lat":48.87442541960633,"lng":2.3859214782714844},{"lat":48.87273183590832,"lng":2.3850631713867183},{"lat":48.87081237174292,"lng":2.3809432983398438},{"lat":48.8712640169951,"lng":2.377510070800781},{"lat":48.87510283703279,"lng":2.3778533935546875},{"lat":48.87544154230615,"lng":2.382831573486328},{"lat":48.87442541960633,"lng":2.3859214782714844}]]' }
+
+        before do
+          dossier.reload
+        end
+
+        it { expect(dossier.quartier_prioritaires.size).to eq(1) }
+
+        describe 'Quartier Prioritaire' do
+          subject { QuartierPrioritaire.last }
+
+          it { expect(subject.code).to eq('QPCODE1234') }
+          it { expect(subject.commune).to eq('Paris') }
+          it { expect(subject.nom).to eq('QP de test') }
+          it { expect(subject.dossier_id).to eq(dossier.id) }
+        end
       end
     end
   end
@@ -98,7 +146,7 @@ RSpec.describe Users::CarteController, type: :controller do
         stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{adresse}")
             .to_return(status: 200, body: '{"query": "50 avenue des champs u00e9lysu00e9es Paris 75008", "version": "draft", "licence": "ODbL 1.0", "features": [{"geometry": {"coordinates": [2.306888, 48.870374], "type": "Point"}, "type": "Feature", "properties": {"city": "Paris", "label": "50 Avenue des Champs u00c9lysu00e9es 75008 Paris", "housenumber": "50", "id": "ADRNIVX_0000000270748251", "postcode": "75008", "name": "50 Avenue des Champs u00c9lysu00e9es", "citycode": "75108", "context": "75, u00cele-de-France", "score": 0.9054545454545454, "type": "housenumber"}}], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
 
-        get :get_position, dossier_id: dossier_id
+        get :get_position, dossier_id: dossier.id
       end
       subject { JSON.parse(response.body) }
 
@@ -124,9 +172,9 @@ RSpec.describe Users::CarteController, type: :controller do
     before do
       allow_any_instance_of(CARTO::SGMAP::QuartierPrioritaireAdapter).
           to receive(:to_params).
-                 and_return({"QPCODE1234" => { :code => "QPCODE1234", :geometry => { :type=>"MultiPolygon", :coordinates=>[[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] }}})
+                 and_return({"QPCODE1234" => {:code => "QPCODE1234", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
 
-      post :get_qp, dossier_id: dossier_id, coordinates: coordinates
+      post :get_qp, dossier_id: dossier.id, coordinates: coordinates
     end
 
     context 'when coordinates are empty' do

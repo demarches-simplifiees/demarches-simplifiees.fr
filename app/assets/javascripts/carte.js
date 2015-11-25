@@ -17,8 +17,6 @@ function initCarto() {
         layers: [OSM]
     });
 
-    display_qp([]);
-
     freeDraw = new L.FreeDraw({
         //mode: L.FreeDraw.MODES.CREATE
     });
@@ -36,6 +34,8 @@ function initCarto() {
         map.setView(new L.LatLng(position.lat, position.lon), 5);
 
     add_event_freeDraw();
+
+    display_qp(JSON.parse($("#quartier_prioritaires").val()));
 }
 
 function add_event_freeDraw() {
@@ -94,10 +94,13 @@ function display_qp(qp_list) {
 
     new_qpLayer();
 
+    console.log(qp_list);
+
     if (qp_array.length > 0) {
         qp_array.forEach(function (qp) {
             $("#qp_list ul").append('<li>' + qp.commune + ' : ' + qp.nom + '</li>');
-            qpItems.addData(qp.geometry)
+
+            qpItems.addData(qp.geometry);
         });
     }
     else

@@ -24,5 +24,16 @@ FactoryGirl.define do
         dossier.user = create(:user)
       end
     end
+
+    trait :with_two_quartier_prioritaires do
+      after(:build) do |dossier, _evaluator|
+
+        qp1 = create(:quartier_prioritaire)
+        qp2 = create(:quartier_prioritaire)
+
+        dossier.quartier_prioritaires << qp1
+        dossier.quartier_prioritaires << qp2
+      end
+    end
   end
 end

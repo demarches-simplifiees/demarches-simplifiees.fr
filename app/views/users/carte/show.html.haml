@@ -17,9 +17,10 @@
       %h3 Quartiers prioritaites
       %ul
 
-  = form_tag(url_for({controller: :carte, action: :save_ref_api_carto, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+  = form_tag(url_for({controller: :carte, action: :save, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
     %br
     %input{type: 'hidden', value: "#{@dossier.json_latlngs}", name: 'json_latlngs', id: 'json_latlngs'}
+    %input{id: 'quartier_prioritaires', type:'hidden', value: "#{@dossier.quartier_prioritaires.to_json}"}
 
     -if @dossier.draft?
       =render partial: '/layouts/etape_suivante'

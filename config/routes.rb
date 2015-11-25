@@ -35,7 +35,7 @@ Rails.application.routes.draw do
       get '/carte/position' => 'carte#get_position'
       post '/carte/qp' => 'carte#get_qp'
       get '/carte' => 'carte#show'
-      post '/carte' => 'carte#save_ref_api_carto'
+      post '/carte' => 'carte#save'
 
     end
     resource :dossiers
@@ -70,6 +70,7 @@ Rails.application.routes.draw do
       post 'valid' => 'dossiers#valid'
       post 'close' => 'dossiers#close'
     end
+
     resources :commentaires, only: [:create]
   end
 

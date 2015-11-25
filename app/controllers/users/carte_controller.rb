@@ -8,9 +8,21 @@ class Users::CarteController < UsersController
     redirect_to url_for(root_path)
   end
 
-  #TODO change name funtion
-  def save_ref_api_carto
+  def save
     dossier = current_user_dossier
+
+    dossier.quartier_prioritaires.all.map(&:destroy)
+
+    unless params[:json_latlngs] == '' || params[:json_latlngs] == '[]'
+      qp_list = generate_qp JSON.parse(params[:json_latlngs]);
+
+      qp_list.each do |key, qp|
+        qp.merge!({dossier_id: dossier.id})
+        qp[:geometry] = qp[:geometry].to_json
+        QuartierPrioritaire.new(qp).save
+      end
+    end
+
     dossier.update_attributes(json_latlngs: params[:json_latlngs])
 
     if dossier.draft?
@@ -38,9 +50,7 @@ class Users::CarteController < UsersController
   end
 
   def get_qp
-    coordinates = JSON.parse(params[:coordinates])
-
-    qp = generate_qp coordinates
+    qp = generate_qp JSON.parse(params[:coordinates])
 
     render json: {quartier_prioritaires: qp}
   end
