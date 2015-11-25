@@ -81,7 +81,7 @@ RSpec.describe Users::CarteController, type: :controller do
       let(:dossier) { create(:dossier, :with_procedure, :with_user, etablissement: etablissement) }
       before do
         stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{bad_adresse}")
-          .to_return(status: 200, body: '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
+            .to_return(status: 200, body: '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
         get :get_position, dossier_id: dossier.id
       end
 
@@ -96,7 +96,7 @@ RSpec.describe Users::CarteController, type: :controller do
     context 'retour d\'un fichier JSON avec 3 attributs' do
       before do
         stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{adresse}")
-          .to_return(status: 200, body: '{"query": "50 avenue des champs \u00e9lys\u00e9es Paris 75008", "version": "draft", "licence": "ODbL 1.0", "features": [{"geometry": {"coordinates": [2.306888, 48.870374], "type": "Point"}, "type": "Feature", "properties": {"city": "Paris", "label": "50 Avenue des Champs \u00c9lys\u00e9es 75008 Paris", "housenumber": "50", "id": "ADRNIVX_0000000270748251", "postcode": "75008", "name": "50 Avenue des Champs \u00c9lys\u00e9es", "citycode": "75108", "context": "75, \u00cele-de-France", "score": 0.9054545454545454, "type": "housenumber"}}], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
+            .to_return(status: 200, body: '{"query": "50 avenue des champs u00e9lysu00e9es Paris 75008", "version": "draft", "licence": "ODbL 1.0", "features": [{"geometry": {"coordinates": [2.306888, 48.870374], "type": "Point"}, "type": "Feature", "properties": {"city": "Paris", "label": "50 Avenue des Champs u00c9lysu00e9es 75008 Paris", "housenumber": "50", "id": "ADRNIVX_0000000270748251", "postcode": "75008", "name": "50 Avenue des Champs u00c9lysu00e9es", "citycode": "75108", "context": "75, u00cele-de-France", "score": 0.9054545454545454, "type": "housenumber"}}], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
 
         get :get_position, dossier_id: dossier_id
       end
@@ -117,6 +117,30 @@ RSpec.describe Users::CarteController, type: :controller do
       it 'dossier_id' do
         expect(subject['dossier_id']).to eq(dossier.id.to_s)
       end
+    end
+  end
+
+  describe 'POST #get_qp' do
+    before do
+      allow_any_instance_of(CARTO::SGMAP::QuartierPrioritaireAdapter).
+          to receive(:to_params).
+                 and_return({"QPCODE1234" => { :code => "QPCODE1234", :geometry => { :type=>"MultiPolygon", :coordinates=>[[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] }}})
+
+      post :get_qp, dossier_id: dossier_id, coordinates: coordinates
+    end
+
+    context 'when coordinates are empty' do
+      let(:coordinates) { '[]' }
+
+      subject { JSON.parse(response.body) }
+      it { expect(subject['quartier_prioritaires']).to eq({}) }
+    end
+
+    context 'when coordinates are informed' do
+      let(:coordinates) { '[[{"lat":48.87442541960633,"lng":2.3859214782714844},{"lat":48.87273183590832,"lng":2.3850631713867183},{"lat":48.87081237174292,"lng":2.3809432983398438},{"lat":48.8712640169951,"lng":2.377510070800781},{"lat":48.87510283703279,"lng":2.3778533935546875},{"lat":48.87544154230615,"lng":2.382831573486328},{"lat":48.87442541960633,"lng":2.3859214782714844}]]' }
+
+      subject { JSON.parse(response.body) }
+      it { expect(subject['quartier_prioritaires']).not_to be_nil }
     end
   end
 end

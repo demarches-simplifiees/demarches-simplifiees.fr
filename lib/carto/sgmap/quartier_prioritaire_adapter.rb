@@ -1,6 +1,6 @@
 class CARTO::SGMAP::QuartierPrioritaireAdapter
   def initialize(coordinates)
-    @coordinates = GeojsonService.to_polygon(coordinates)
+    @coordinates = GeojsonService.to_json_polygon(coordinates)
   end
 
   def data_source
@@ -11,8 +11,10 @@ class CARTO::SGMAP::QuartierPrioritaireAdapter
     params = {}
 
     data_source[:features].each_with_index do |feature, index|
-      params[index] = feature[:properties]
-      params[index][:geometry] = feature[:geometry].to_s
+      qp_code = feature[:properties][:code]
+
+      params[qp_code] = feature[:properties]
+      params[qp_code][:geometry] = feature[:geometry]
     end
 
     params

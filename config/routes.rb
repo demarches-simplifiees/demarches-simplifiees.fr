@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       post '/commentaire' => 'commentaires#create'
 
       get '/carte/position' => 'carte#get_position'
+      post '/carte/qp' => 'carte#get_qp'
       get '/carte' => 'carte#show'
       post '/carte' => 'carte#save_ref_api_carto'
 

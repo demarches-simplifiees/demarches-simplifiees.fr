@@ -11,13 +11,15 @@ function initCarto() {
     if (typeof position.zoom == 'undefined')
         position.zoom = 13;
 
-    var map = L.map("map", {
+    map = L.map("map", {
         center: new L.LatLng(position.lat, position.lon),
         zoom: position.zoom,
         layers: [OSM]
     });
 
-    var freeDraw = new L.FreeDraw({
+    display_qp([]);
+
+    freeDraw = new L.FreeDraw({
         //mode: L.FreeDraw.MODES.CREATE
     });
 
@@ -33,12 +35,13 @@ function initCarto() {
     else if (position.lat == LAT && position.lon == LON)
         map.setView(new L.LatLng(position.lat, position.lon), 5);
 
-    add_event_freeDraw(freeDraw);
+    add_event_freeDraw();
 }
 
-function add_event_freeDraw(freeDraw) {
+function add_event_freeDraw() {
     freeDraw.on('markers', function (e) {
         $("#json_latlngs").val(JSON.stringify(e.latLngs));
+        display_qp(get_qp(e.latLngs)['quartier_prioritaires']);
     });
 
     $("#new").on('click', function (e) {
@@ -66,4 +69,51 @@ function get_position() {
     });
 
     return position;
+}
+
+function get_qp(coordinates) {
+    var qp;
+
+    $.ajax({
+        method: 'post',
+        url: '/users/dossiers/' + dossier_id + '/carte/qp',
+        data: {coordinates: JSON.stringify(coordinates)},
+        dataType: 'json',
+        async: false
+    }).done(function (data) {
+        qp = data
+    });
+
+    return qp;
+}
+
+function display_qp(qp_list) {
+    qp_array = jsObject_to_array(qp_list);
+
+    $("#qp_list ul").html('');
+
+    new_qpLayer();
+
+    if (qp_array.length > 0) {
+        qp_array.forEach(function (qp) {
+            $("#qp_list ul").append('<li>' + qp.commune + ' : ' + qp.nom + '</li>');
+            qpItems.addData(qp.geometry)
+        });
+    }
+    else
+        $("#qp_list ul").html('<li>AUCUN</li>');
+}
+
+function new_qpLayer() {
+    if (typeof qpItems != 'undefined')
+        map.removeLayer(qpItems);
+
+    qpItems = new L.GeoJSON();
+    qpItems.addTo(map);
+}
+
+function jsObject_to_array(qp_list) {
+    return Object.keys(qp_list).map(function (v) {
+        return qp_list[v];
+    });
 }

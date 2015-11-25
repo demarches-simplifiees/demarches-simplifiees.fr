@@ -36,4 +36,25 @@ class Users::CarteController < UsersController
       render json: {lon: '0', lat: '0', dossier_id: params[:dossier_id]}
     end
   end
+
+  def get_qp
+    coordinates = JSON.parse(params[:coordinates])
+
+    qp = generate_qp coordinates
+
+    render json: {quartier_prioritaires: qp}
+  end
+
+  private
+
+  def generate_qp coordinates
+    qp = {}
+
+    coordinates.each_with_index do |coordinate, index|
+      coordinate = coordinates[index].map { |latlng| [latlng['lng'], latlng['lat']] }
+      qp = qp.merge CARTO::SGMAP::QuartierPrioritaireAdapter.new(coordinate).to_params
+    end
+
+    qp
+  end
 end

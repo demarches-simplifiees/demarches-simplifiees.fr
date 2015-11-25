@@ -1,18 +1,40 @@
 // Place all the styles related to the carte controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@import "bootstrap";
 
 table {
-  font-size: 13;
+  font-size: 13px;
 }
 
 #map{
+  @extend .col-md-12;
+  @extend .col-lg-12;
+
   height:600px;
-  width: 100%;
+}
+
+#map.qp {
+  @extend .col-md-9;
+  @extend .col-lg-9;
+}
+
+#qp_list {
+  @extend .col-md-3;
+  @extend .col-lg-3;
+
+  h3 {
+    margin-top:0px;
+  }
+
+  ul li {
+    margin-bottom:10px;
+  }
 }
 
 #map.mini{
   height:300px;
+  width:100%;
 }
 
 #map section.overlay {
@@ -30,7 +52,7 @@ table {
   cursor: crosshair !important;
 }
 
-#map g path {
+#map g path.tracer {
   transition: all 0.25s;
   stroke-width: 4px;
   stroke-opacity: 1;

@@ -18,11 +18,12 @@ describe CARTO::SGMAP::QuartierPrioritaireAdapter do
     it { expect(subject).to be_a_instance_of(Hash) }
 
     context 'Attributs' do
-      it { expect(subject[0][:code]).to eq('QP057019') }
-      it { expect(subject[0][:nom]).to eq('Hauts De Vallières') }
-      it { expect(subject[0][:commune]).to eq('Metz') }
+      let(:qp_code) { 'QP057019' }
+      it { expect(subject[qp_code][:code]).to eq(qp_code) }
+      it { expect(subject[qp_code][:nom]).to eq('Hauts De Vallières') }
+      it { expect(subject[qp_code][:commune]).to eq('Metz') }
 
-      it { expect(subject[0][:geometry]).to eq('{:type=>"MultiPolygon", :coordinates=>[[[[6.2136923480551, 49.1342109827851], [6.21416055031881, 49.1338823553928]]]]}') }
+      it { expect(subject[qp_code][:geometry]).to eq({:type=>"MultiPolygon", :coordinates=>[[[[6.2136923480551, 49.1342109827851], [6.21416055031881, 49.1338823553928]]]]}) }
     end
   end
 

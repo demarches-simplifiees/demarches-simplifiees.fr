@@ -11,7 +11,11 @@
 
   %br
   %br
-  #map{style: 'height:600px; width: 100%;'}
+  .row
+    #map.qp
+    #qp_list
+      %h3 Quartiers prioritaites
+      %ul
 
   = form_tag(url_for({controller: :carte, action: :save_ref_api_carto, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
     %br

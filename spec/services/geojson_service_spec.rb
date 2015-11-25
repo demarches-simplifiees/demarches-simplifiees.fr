@@ -9,10 +9,10 @@ describe GeojsonService do
               type: "Polygon",
               coordinates: [coordinates]
           }
-      }
+      }.to_json
     }
 
-    subject { described_class.to_polygon coordinates }
+    subject { described_class.to_json_polygon coordinates }
 
     describe 'coordinates are empty' do
       let(:coordinates) { '' }
