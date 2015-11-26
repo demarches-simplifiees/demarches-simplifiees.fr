@@ -14,7 +14,7 @@ feature 'search file on gestionnaire backoffice' do
 
       before do
         visit backoffice_dossiers_a_traiter_url
-        page.find_by_id(:search_terms).set terms
+        page.find_by_id(:q).set terms
         page.find_by_id(:search_button).click
       end
 
@@ -28,7 +28,7 @@ feature 'search file on gestionnaire backoffice' do
         let(:terms) { 'test' }
 
         it 'terms stay in input after search' do
-          expect(page.find_by_id('search_terms').value).to eq(terms)
+          expect(page.find_by_id('q').value).to eq(terms)
         end
 
         context 'when terms input does not return result' do

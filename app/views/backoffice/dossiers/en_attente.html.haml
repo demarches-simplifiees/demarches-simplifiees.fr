@@ -15,3 +15,6 @@
           = link_to(dossier.nom_projet, "/backoffice/dossiers/#{dossier.id}")
         %td= dossier.state_fr
         %td= dossier.last_update
+
+.pagination
+  = will_paginate @dossiers_en_attente, renderer: BootstrapPagination::Rails

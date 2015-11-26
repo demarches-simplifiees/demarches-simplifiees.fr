@@ -45,3 +45,6 @@
           %td= dossier.user.email
           %td= dossier.etablissement.siret
           %td{class: dossier.state_color_class}= dossier.state_fr
+
+    .pagination
+      = will_paginate @dossiers_search, renderer: BootstrapPagination::Rails

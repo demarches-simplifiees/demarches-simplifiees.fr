@@ -8,7 +8,7 @@ describe 'backoffice/dossiers/a_traiter.html.haml', type: :view do
   let!(:decorate_dossier) { create(:dossier, :with_user, state: 'initiated', procedure: procedure).decorate }
 
   before do
-    assign(:dossiers_a_traiter, Dossier.a_traiter(gestionnaire).decorate)
+    assign(:dossiers_a_traiter, Dossier.a_traiter(gestionnaire).paginate(:page => 1, :per_page => 12).decorate)
     render
   end
 

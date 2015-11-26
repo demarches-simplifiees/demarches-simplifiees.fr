@@ -8,7 +8,7 @@ describe 'backoffice/dossiers/en_attente.html.haml', type: :view do
   let!(:decorate_dossier) { create(:dossier, :with_user, procedure: procedure, state: 'replied').decorate }
 
   before do
-    assign(:dossiers_en_attente, Dossier.en_attente(gestionnaire).decorate)
+    assign(:dossiers_en_attente, Dossier.en_attente(gestionnaire).paginate(:page => 1, :per_page => 12).decorate)
     render
   end
 

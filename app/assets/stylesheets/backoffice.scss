@@ -4,25 +4,30 @@
       border-top: none
     }
   }
+}
 
+#onglets {
   ul {
-    li {
-      margin-top: 11px;
+    li, li.active {
       a {
+        margin-top: 12px;
         height: 45px;
+
         h5 {
-          margin-top: 4px;
+          margin-top: 5px;
         }
       }
     }
 
     #search {
-      margin-top: 0;
       a {
-        height: auto;
+        margin-top: 0px;
+        height: 57px;
       }
+    }
+
+    #search:not(.active) {
       a:hover {
-        height: 56px;
         background-color: transparent;
         border: none;
         padding: 11px 16px;

@@ -1,25 +1,26 @@
 %h1 Gestion des dossiers
 %br
 
-%ul.nav.nav-tabs
-  %li{class: "#{'active' unless @dossiers_a_traiter.nil?  }"}
-    %a{:href => "#{url_for :backoffice_dossiers_a_traiter}"}
-      %h5.text-danger
-        = "À traiter (#{@dossiers_a_traiter_total})"
-  %li{class: "#{'active' unless @dossiers_en_attente.nil?  }"}
-    %a{:href => "#{url_for :backoffice_dossiers_en_attente}"}
-      %h5.text-info
-        ="En attente (#{@dossiers_en_attente_total})"
-  %li{class: "#{'active' unless @dossiers_termine.nil?  }"}
-    %a{:href => "#{url_for :backoffice_dossiers_termine}"}
-      %h5.text-success
-        = "Terminé (#{@dossiers_termine_total})"
-  %li#search{class: "#{'active' unless @dossiers_search.nil?}", style:'float:right'}
-    %a
-      = form_tag(backoffice_dossiers_search_url, method: :post) do
-        .input-group{style:'width: 300px'}
-          = text_field_tag('search_terms', "#{@search_terms unless @search_terms.nil? }", id: 'search_terms', placeholder: "Rechercher un dossier ...", class:'form-control')
-          %span.input-group-btn
-            = button_tag('', id:'search_button', class:'btn btn-default') do
-              %i.fa.fa-search
+#onglets
+  %ul.nav.nav-tabs
+    %li{class: "#{'active' unless @dossiers_a_traiter.nil?  }"}
+      %a{:href => "#{url_for :backoffice_dossiers_a_traiter}"}
+        %h5.text-danger
+          = "À traiter (#{@dossiers_a_traiter_total})"
+    %li{class: "#{'active' unless @dossiers_en_attente.nil?  }"}
+      %a{:href => "#{url_for :backoffice_dossiers_en_attente}"}
+        %h5.text-info
+          ="En attente (#{@dossiers_en_attente_total})"
+    %li{class: "#{'active' unless @dossiers_termine.nil?  }"}
+      %a{:href => "#{url_for :backoffice_dossiers_termine}"}
+        %h5.text-success
+          = "Terminé (#{@dossiers_termine_total})"
+    %li#search{class: "#{'active' unless @dossiers_search.nil?}", style:'float:right'}
+      %a
+        = form_tag(backoffice_dossiers_search_url, method: :get) do
+          .input-group{style:'width: 300px'}
+            = text_field_tag('q', "#{@search_terms unless @search_terms.nil? }", id: 'q', placeholder: "Rechercher un dossier ...", class:'form-control')
+            %span.input-group-btn
+              %button.btn.btn-default{ id:'search_button' }
+                %i.fa.fa-search
 %br
