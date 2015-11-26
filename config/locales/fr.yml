@@ -20,6 +20,10 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 fr:
+  will_paginate:
+    next_label: 'Suivant'
+    previous_label: 'Précédent'
+
   number:
       currency:
         format:

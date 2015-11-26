@@ -12,3 +12,6 @@
         = link_to(dossier.nom_projet, users_dossier_recapitulatif_path(dossier))
       %td{id: "dossier_#{dossier.id}_state"}= dossier.state_fr
       %td= dossier.last_update
+
+.pagination
+  = will_paginate @dossiers, renderer: BootstrapPagination::Rails

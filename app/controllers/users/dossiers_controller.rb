@@ -2,10 +2,16 @@ class Users::DossiersController < UsersController
   before_action :authenticate_user!
 
   def index
-    @dossiers = current_user.dossiers.where("state NOT IN ('draft')").order(updated_at: 'DESC').decorate
-  end
-  def show
+    @dossiers = current_user.dossiers.where("state NOT IN ('draft')").order(updated_at: 'DESC')
 
+    if params[:page].nil?
+      params[:page] = 1
+    end
+
+    @dossiers = @dossiers.paginate(:page => params[:page], :per_page => 12).decorate
+  end
+
+  def show
     @dossier = current_user_dossier params[:id]
 
     @etablissement =  @dossier.etablissement
