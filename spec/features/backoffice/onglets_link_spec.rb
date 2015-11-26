@@ -12,7 +12,7 @@ feature 'on click on tabs button' do
     context 'when he click on tabs a traitee' do
       before do
         visit backoffice_dossiers_en_attente_url
-        page.click_on 'À traiter (0)'
+        page.click_on 'À traiter 0'
       end
 
       scenario 'it redirect to backoffice dossier termine' do
@@ -23,7 +23,7 @@ feature 'on click on tabs button' do
     context 'when he click on tabs en attente' do
       before do
         visit backoffice_dossiers_termine_url
-        page.click_on 'En attente (0)'
+        page.click_on 'En attente 0'
       end
 
       scenario 'it redirect to backoffice dossier en attente' do
@@ -34,7 +34,7 @@ feature 'on click on tabs button' do
     context 'when he click on tabs termine' do
       before do
         visit backoffice_dossiers_a_traiter_url
-        page.click_on 'Terminé (0)'
+        page.click_on 'Terminé 0'
       end
 
       scenario 'it redirect to backoffice dossier termine' do

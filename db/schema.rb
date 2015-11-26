@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151124085333) do
+ActiveRecord::Schema.define(version: 20151126153425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -150,6 +150,7 @@ ActiveRecord::Schema.define(version: 20151124085333) do
     t.boolean  "test"
     t.boolean  "use_api_carto",     default: false
     t.integer  "administrateur_id"
+    t.boolean  "archived",          default: false
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|

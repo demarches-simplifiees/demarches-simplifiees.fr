@@ -22,7 +22,7 @@
 @import "bootstrap";
 
 body {
-  background-color:rgb(255,255,255)
+  background-color: rgb(255, 255, 255)
 }
 
 .logo {
@@ -34,7 +34,7 @@ body {
 
 .alert.alert-success,
 .alert.alert-danger {
-  margin-top:-20px
+  margin-top: -20px
 }
 
 .navbar {
@@ -54,6 +54,7 @@ body {
   position: relative;
   overflow: hidden;
 }
+
 .btn-file input[type=file] {
   position: absolute;
   top: 0;
@@ -75,12 +76,13 @@ body {
 }
 
 .center {
-  text-align:center;
+  text-align: center;
 }
 
 textarea#description {
   width: 100%;
 }
+
 input#nom_projet {
   width: 100%;
 }
@@ -89,9 +91,9 @@ input#nom_projet {
   max-width: 27px;
 }
 
-div.pagination{
-  padding-top:20px;
-  display:block;
+div.pagination {
+  padding-top: 20px;
+  display: block;
   text-align: center;
 }
 
@@ -103,4 +105,43 @@ div.pagination{
   width: 100%;
   margin-top: 0px;
 
+}
+
+.archived {
+  float: right;
+  margin-top: 10px;
+
+  .confirm {
+    display: none;
+  }
+}
+
+.btn-nav {
+  background-color: transparent;
+  margin-top: 6px;
+  height: 36px;
+}
+
+.btn-nav:hover {
+  background-color: #eeeeee;
+  border-color: #eeeeee #eeeeee #ddd;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-nav.text-info:hover{
+  color: #23527c;
+}
+
+.btn-nav.text-success:hover{
+  color: #3c763d;
+}
+
+.btn-nav.text-danger:hover{
+  color: #a94442;
+}
+
+
+#confirm {
+  display:none;
 }

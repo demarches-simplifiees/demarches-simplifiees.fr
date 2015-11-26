@@ -45,11 +45,15 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get 'sign_in' => '/administrateurs/sessions#new'
+
     resources :procedures do
       resource :types_de_champ, only: [:show, :update] do
         post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
         post '/:index/move_down' => 'types_de_champ#move_down', as: :move_down
       end
+
+      put 'archive' => 'procedures#archive'
+
       resources :types_de_champ, only: [:destroy]
       resource :pieces_justificatives, only: [:show, :update]
       resources :pieces_justificatives, only: :destroy

@@ -28,7 +28,7 @@ class Admin::ProceduresController < AdminController
     end
 
     flash.notice = 'Procédure enregistrée'
-    redirect_to admin_procedure_types_de_champ_path(procedure_id:  @procedure.id)
+    redirect_to admin_procedure_types_de_champ_path(procedure_id: @procedure.id)
   end
 
   def update
@@ -40,6 +40,18 @@ class Admin::ProceduresController < AdminController
       return render 'show'
     end
     flash.notice = 'Préocédure modifiée'
+    redirect_to admin_procedures_path
+  end
+
+  def archive
+    @procedure = current_administrateur.procedures.find(params[:procedure_id])
+    @procedure.update_attributes({archived: true})
+
+    flash.notice = 'Procédure archivée'
+    redirect_to admin_procedures_path
+
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = 'Procédure inéxistante'
     redirect_to admin_procedures_path
   end
 

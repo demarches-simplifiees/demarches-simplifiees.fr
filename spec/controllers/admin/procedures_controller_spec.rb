@@ -166,4 +166,36 @@ describe Admin::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe 'PUT #archive' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+
+
+
+    context 'when admin is the owner of the procedure' do
+      before do
+        put :archive, procedure_id: procedure.id
+        procedure.reload
+      end
+
+      it { expect(procedure.archived).to be_truthy }
+      it { expect(response).to redirect_to :admin_procedures }
+      it { expect(flash[:notice]).to have_content 'Procédure archivée' }
+    end
+
+    context 'when admin is not the owner of the procedure' do
+      let(:admin_2) { create(:administrateur) }
+
+      before do
+        sign_out admin
+        sign_in admin_2
+
+        put :archive, procedure_id: procedure.id
+        procedure.reload
+      end
+
+      it { expect(response).to redirect_to :admin_procedures }
+      it { expect(flash[:alert]).to have_content 'Procédure inéxistante' }
+    end
+  end
 end
