@@ -6,15 +6,21 @@
     %li{class: "#{'active' unless @dossiers_a_traiter.nil?  }"}
       %a{:href => "#{url_for :backoffice_dossiers_a_traiter}"}
         %h5.text-danger
-          = "À traiter (#{@dossiers_a_traiter_total})"
+          = "À traiter "
+          .badge.progress-bar-danger
+            =@dossiers_a_traiter_total
     %li{class: "#{'active' unless @dossiers_en_attente.nil?  }"}
       %a{:href => "#{url_for :backoffice_dossiers_en_attente}"}
         %h5.text-info
-          ="En attente (#{@dossiers_en_attente_total})"
+          ="En attente "
+          .badge.progress-bar-info
+            =@dossiers_en_attente_total
     %li{class: "#{'active' unless @dossiers_termine.nil?  }"}
       %a{:href => "#{url_for :backoffice_dossiers_termine}"}
         %h5.text-success
-          = "Terminé (#{@dossiers_termine_total})"
+          = "Terminé"
+          .badge.progress-bar-success
+            =@dossiers_termine_total
     %li#search{class: "#{'active' unless @dossiers_search.nil?}", style:'float:right'}
       %a
         = form_tag(backoffice_dossiers_search_url, method: :get) do
