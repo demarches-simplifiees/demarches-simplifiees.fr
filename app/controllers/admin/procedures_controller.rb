@@ -2,6 +2,7 @@ class Admin::ProceduresController < AdminController
 
   def index
     @procedures = current_administrateur.procedures
+    @procedures = @procedures.paginate(:page => params[:page], :per_page => 2)
   end
 
   def show

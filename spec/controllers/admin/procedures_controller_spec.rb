@@ -28,6 +28,12 @@ describe Admin::ProceduresController, type: :controller do
     sign_in admin
   end
 
+  describe 'GET #index' do
+    subject { get :show }
+
+    it { expect(response.status).to eq(200) }
+  end
+
   describe 'GET #show' do
     let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative) }
     let(:procedure_id) { procedure.id }

@@ -15,3 +15,6 @@
         = link_to(procedure.libelle, "/admin/procedures/#{procedure.id}")
       %td= procedure.organisation
       %td= procedure.direction
+
+.pagination
+  = will_paginate @procedures, renderer: BootstrapPagination::Rails
