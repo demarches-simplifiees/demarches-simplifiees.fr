@@ -10,7 +10,7 @@
     %th#libelle Libellé
     %th#organisation Organisation
     %th#direction Direction
-  - @procedures.each do |procedure|
+  - @procedures_archived.each do |procedure|
     %tr
       %td= procedure.id
       %td
@@ -19,4 +19,4 @@
       %td= procedure.direction
 
 .pagination
-  = will_paginate @procedures, renderer: BootstrapPagination::Rails
+  = will_paginate @procedures_archived, renderer: BootstrapPagination::Rails

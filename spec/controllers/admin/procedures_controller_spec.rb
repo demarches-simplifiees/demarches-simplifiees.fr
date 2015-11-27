@@ -29,7 +29,13 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'GET #index' do
-    subject { get :show }
+    subject { get :index }
+
+    it { expect(response.status).to eq(200) }
+  end
+
+  describe 'GET #archived' do
+    subject { get :archived }
 
     it { expect(response.status).to eq(200) }
   end

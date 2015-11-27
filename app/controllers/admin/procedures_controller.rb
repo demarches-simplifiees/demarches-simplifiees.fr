@@ -5,6 +5,11 @@ class Admin::ProceduresController < AdminController
     @procedures = @procedures.paginate(:page => params[:page], :per_page => 12)
   end
 
+  def archived
+    @procedures_archived = current_administrateur.procedures.where(archived: true)
+    @procedures_archived = @procedures_archived.paginate(:page => params[:page], :per_page => 12)
+  end
+
   def show
     @procedure = current_administrateur.procedures.find(params[:id])
     @types_de_champ = @procedure.types_de_champ.order(:order_place)

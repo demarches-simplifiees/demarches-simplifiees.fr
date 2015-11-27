@@ -48,6 +48,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get 'sign_in' => '/administrateurs/sessions#new'
+    get 'procedures/archived' => 'procedures#archived'
 
     resources :procedures do
       resource :types_de_champ, only: [:show, :update] do
