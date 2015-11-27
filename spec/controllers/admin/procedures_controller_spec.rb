@@ -176,17 +176,15 @@ describe Admin::ProceduresController, type: :controller do
   describe 'PUT #archive' do
     let(:procedure) { create(:procedure, administrateur: admin) }
 
-
-
     context 'when admin is the owner of the procedure' do
       before do
-        put :archive, procedure_id: procedure.id
+        put :archive, procedure_id: procedure.id, archive: !procedure.archived
         procedure.reload
       end
 
       it { expect(procedure.archived).to be_truthy }
       it { expect(response).to redirect_to :admin_procedures }
-      it { expect(flash[:notice]).to have_content 'Procédure archivée' }
+      it { expect(flash[:notice]).to have_content 'Procédure éditée' }
     end
 
     context 'when admin is not the owner of the procedure' do

@@ -56,7 +56,7 @@ Rails.application.routes.draw do
         post '/:index/move_down' => 'types_de_champ#move_down', as: :move_down
       end
 
-      put 'archive' => 'procedures#archive'
+      put 'archive' => 'procedures#archive', as: :archive
 
       resources :types_de_champ, only: [:destroy]
       resource :pieces_justificatives, only: [:show, :update]

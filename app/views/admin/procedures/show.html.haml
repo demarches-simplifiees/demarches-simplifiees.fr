@@ -6,10 +6,13 @@
   %li
     = link_to('Pièces justificatives', admin_procedure_pieces_justificatives_path(@procedure))
   %li{style:'float:right'}
-    = form_tag "/admin/procedures/#{@procedure.id}/archive", action: :archive, method: :put, procedure_id: @procedure.id do
+    = form_tag admin_procedure_archive_path(procedure_id: @procedure.id, archive: !@procedure.archived?), method: :put do
       %button#archive.btn.btn-nav.text-info{type: :button}
         %i.fa.fa-eraser
-        Archiver
+        - if @procedure.archived
+          = 'Activer'
+        - else
+          = 'Archiver'
       #confirm
         %button#valid.btn.btn-nav.text-success{type: :submit}
           %i.fa.fa-check
@@ -22,8 +25,8 @@
   =@procedure.libelle
 
 #procedure_new.section.section-label
-  = form_for @procedure, url: {controller: 'admin/procedures', action: :update} do |f|
-    =render partial: 'informations', locals: {f: f}
-    =f.submit 'Editer', class: 'btn btn-success', style: 'float:right'
+  = form_for @procedure, url: url_for({controller: 'admin/procedures', action: :update, id: @procedure.id}) do |f|
+    = render partial: 'informations', locals: {f: f}
+    = f.submit 'Editer', class: 'btn btn-success', style: 'float:right'
 %br
 %br

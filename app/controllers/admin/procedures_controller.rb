@@ -37,7 +37,6 @@ class Admin::ProceduresController < AdminController
   end
 
   def update
-
     @procedure = current_administrateur.procedures.find(params[:id])
 
     unless @procedure.update_attributes(create_procedure_params)
@@ -50,9 +49,9 @@ class Admin::ProceduresController < AdminController
 
   def archive
     @procedure = current_administrateur.procedures.find(params[:procedure_id])
-    @procedure.update_attributes({archived: true})
+    @procedure.update_attributes({archived: params[:archive]})
 
-    flash.notice = 'Procédure archivée'
+    flash.notice = 'Procédure éditée'
     redirect_to admin_procedures_path
 
   rescue ActiveRecord::RecordNotFound
