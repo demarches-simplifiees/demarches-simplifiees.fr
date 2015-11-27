@@ -67,7 +67,7 @@ class Backoffice::DossiersController < ApplicationController
   end
 
   def initialize_instance_params dossier_id
-    @dossier = Dossier.find(dossier_id)
+    @dossier = Dossier.where(archived: false).find(dossier_id)
     @entreprise = @dossier.entreprise.decorate
     @etablissement = @dossier.etablissement
     @pieces_justificatives = @dossier.pieces_justificatives

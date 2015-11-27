@@ -2,6 +2,8 @@ require 'rails_helper'
 
 describe Backoffice::DossiersController, type: :controller do
   let(:dossier) { create(:dossier, :with_entreprise, :with_user) }
+  let(:dossier_archived) { create(:dossier, :with_entreprise, :with_user, archived: true) }
+
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10 }
   let(:gestionnaire) { create(:gestionnaire, administrateur: create(:administrateur)) }
@@ -15,6 +17,11 @@ describe Backoffice::DossiersController, type: :controller do
       it 'returns http success' do
         get :show, id: dossier_id
         expect(response).to have_http_status(200)
+      end
+
+      it 'dossier is archived' do
+        get :show, id: dossier_archived
+        expect(response).to redirect_to('/backoffice')
       end
 
       it 'dossier id doesnt exist' do
