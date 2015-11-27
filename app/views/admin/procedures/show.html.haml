@@ -1,3 +1,7 @@
+%h2.text-info
+  =@procedure.libelle
+%br
+
 %ul.nav.nav-tabs
   %li.active
     = link_to('Description', admin_procedure_path(@procedure))
@@ -10,7 +14,7 @@
       %button#archive.btn.btn-nav.text-info{type: :button}
         %i.fa.fa-eraser
         - if @procedure.archived
-          = 'Activer'
+          = 'Réactiver'
         - else
           = 'Archiver'
       #confirm
@@ -20,9 +24,6 @@
         %button#cancel.btn.btn-nav.text-danger{type: :button}
           %i.fa.fa-remove
           Annuler
-
-%h2.text-info
-  =@procedure.libelle
 
 #procedure_new.section.section-label
   = form_for @procedure, url: url_for({controller: 'admin/procedures', action: :update, id: @procedure.id}) do |f|
