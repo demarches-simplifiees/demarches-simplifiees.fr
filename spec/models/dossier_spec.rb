@@ -398,7 +398,9 @@ describe Dossier do
       let!(:dossier7) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'submitted') } #a_traiter
       let!(:dossier8) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'closed') } #termine
       let!(:dossier9) { create(:dossier, :with_user, procedure: procedure_admin, state: 'closed') } #termine
-
+      let!(:dossier10) { create(:dossier, :with_user, procedure: procedure_admin, state: 'initiated', archived: true) } #a_traiter #archived
+      let!(:dossier11) { create(:dossier, :with_user, procedure: procedure_admin, state: 'replied', archived: true) } #en_attente #archived
+      let!(:dossier12) { create(:dossier, :with_user, procedure: procedure_admin, state: 'closed', archived: true) } #termine #archived
 
       describe '#a_traiter' do
         subject { described_class.a_traiter gestionnaire }
@@ -438,6 +440,7 @@ describe Dossier do
       let!(:dossier_1) { create(:dossier, nom_projet: 'Projet de test', state: 'initiated', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
       let!(:dossier_2) { create(:dossier, nom_projet: 'Lili et Marcel', state: 'initiated', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
       let!(:dossier_3) { create(:dossier, nom_projet: 'Construction projet marcel', state: 'initiated', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
+      let!(:dossier_archived) { create(:dossier, nom_projet: 'je suis un Marcel archivé', state: 'initiated', procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
 
       let!(:etablissement_1) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'OCTO Academy', dossier: dossier_1), dossier: dossier_1, siret: '41636169600051') }
       let!(:etablissement_2) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'Plop octo', dossier: dossier_2), dossier: dossier_2, siret: '41816602300012') }

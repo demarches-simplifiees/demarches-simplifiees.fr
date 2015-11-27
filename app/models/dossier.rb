@@ -134,15 +134,15 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.a_traiter current_gestionnaire
-    current_gestionnaire.dossiers.where(state: A_TRAITER).order('updated_at ASC')
+    current_gestionnaire.dossiers.where(state: A_TRAITER, archived: false).order('updated_at ASC')
   end
 
   def self.en_attente current_gestionnaire
-    current_gestionnaire.dossiers.where(state: EN_ATTENTE).order('updated_at ASC')
+    current_gestionnaire.dossiers.where(state: EN_ATTENTE, archived: false).order('updated_at ASC')
   end
 
   def self.termine current_gestionnaire
-    current_gestionnaire.dossiers.where(state: TERMINE).order('updated_at ASC')
+    current_gestionnaire.dossiers.where(state: TERMINE, archived: false).order('updated_at ASC')
   end
 
   def self.search current_gestionnaire, terms
@@ -171,7 +171,8 @@ class Dossier < ActiveRecord::Base
     #TODO refactor
     composed_scope = composed_scope.where(
         dossiers[:id].eq_any(current_gestionnaire.dossiers.ids).and\
-        dossiers[:state].does_not_match('draft'))
+        dossiers[:state].does_not_match('draft').and\
+        dossiers[:archived].eq(false))
 
     begin
       if Float(terms) && terms.to_i <= 2147483647 && current_gestionnaire.dossiers.ids.include?(terms.to_i)
