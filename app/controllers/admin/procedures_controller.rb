@@ -1,12 +1,12 @@
 class Admin::ProceduresController < AdminController
 
   def index
-    @procedures = current_administrateur.procedures
+    @procedures = current_administrateur.procedures.where(archived: false)
     @procedures = @procedures.paginate(:page => params[:page], :per_page => 12)
   end
 
   def show
-    @procedure = Procedure.find(params[:id])
+    @procedure = current_administrateur.procedures.find(params[:id])
     @types_de_champ = @procedure.types_de_champ.order(:order_place)
     @types_de_piece_justificative = @procedure.types_de_piece_justificative.order(:libelle)
 
@@ -33,7 +33,7 @@ class Admin::ProceduresController < AdminController
 
   def update
 
-    @procedure = Procedure.find(params[:id])
+    @procedure = current_administrateur.procedures.find(params[:id])
 
     unless @procedure.update_attributes(create_procedure_params)
       flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe

@@ -35,7 +35,7 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'GET #show' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative) }
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
     let(:procedure_id) { procedure.id }
 
     subject { get :show, id: procedure_id }
@@ -115,7 +115,7 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'PUT #update' do
-    let!(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative) }
+    let!(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
 
     context 'when administrateur is not connected' do
       before do

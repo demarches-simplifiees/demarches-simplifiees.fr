@@ -1,30 +1,36 @@
 require 'spec_helper'
 
 describe Users::ProcedureController, type: :controller do
-  let!(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure) }
+  let(:procedure_id) { procedure.id }
 
   describe 'GET #index' do
-    before do
-      get :index, procedure_id: procedure
-    end
+
+    subject { get :index, procedure_id: procedure_id }
 
     context 'when params procedure_id is present' do
       context 'when procedure_id is valid' do
+
         context 'when user is logged in' do
           before do
             sign_in create(:user)
           end
 
-          subject { get :index, procedure_id: procedure }
-          it { expect(subject).to have_http_status(:success) }
+          it { is_expected.to have_http_status(:success) }
 
           context 'when procedure_id is not valid' do
-            let(:procedure) { '' }
+            let(:procedure_id) { 0 }
+            it { is_expected.to have_http_status(404) }
+          end
+
+          context 'when procedure is archived' do
+            let(:procedure) { create(:procedure, archived: 'true') }
+
             it { is_expected.to have_http_status(404) }
           end
         end
         context 'when user is not logged' do
-          it { expect(response).to have_http_status(302) }
+          it { is_expected.to have_http_status(302) }
         end
       end
     end

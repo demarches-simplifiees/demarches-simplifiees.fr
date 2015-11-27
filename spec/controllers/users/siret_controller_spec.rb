@@ -26,11 +26,11 @@ describe Users::SiretController, type: :controller do
 
           context 'when procedure_id is not valid' do
             let(:procedure) { '' }
-            it { is_expected.to have_http_status(404) }
+            it { is_expected.to have_http_status(302) }
           end
           context 'when params procedure_id is not present' do
             subject { get :index }
-            it { is_expected.to have_http_status(404) }
+            it { is_expected.to redirect_to new_user_session_path }
           end
         end
         context 'when user is not logged' do

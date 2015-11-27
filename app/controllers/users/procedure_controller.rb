@@ -1,6 +1,6 @@
 class Users::ProcedureController < UsersController
   def index
-    @procedure = Procedure.find(params[:procedure_id])
+    @procedure = Procedure.where(archived: false).find(params[:procedure_id])
     @siret = params[:siret] || current_user.siret
   rescue ActiveRecord::RecordNotFound
     error_procedure

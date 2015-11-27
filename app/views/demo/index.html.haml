@@ -6,7 +6,7 @@
     %td
     %th Titre
     %th Description
-  - Procedure.all.each do |procedure|
+  - Procedure.all.where(archived: false).each do |procedure|
     %tr
       %td.col-md-1.col-lg-1
       %td.col-md-4.col-lg-4
