@@ -94,8 +94,6 @@ function display_qp(qp_list) {
 
     new_qpLayer();
 
-    console.log(qp_list);
-
     if (qp_array.length > 0) {
         qp_array.forEach(function (qp) {
             $("#qp_list ul").append('<li>' + qp.commune + ' : ' + qp.nom + '</li>');
