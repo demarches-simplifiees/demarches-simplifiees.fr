@@ -9,7 +9,8 @@ Rails.application.routes.draw do
                            }, skip: [:password, :registrations]
 
   devise_for :users, controllers: {
-                       sessions: 'users/sessions'
+                       sessions: 'users/sessions',
+                       registrations: 'users/registrations'
                    }
 
   root 'root#index'
