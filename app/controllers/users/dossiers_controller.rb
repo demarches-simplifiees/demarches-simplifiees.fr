@@ -2,7 +2,7 @@ class Users::DossiersController < UsersController
   before_action :authenticate_user!
 
   def index
-    @dossiers = current_user.dossiers.where("state NOT IN ('draft')").order(updated_at: 'DESC')
+    @dossiers = current_user.dossiers.where.not(state: :draft).where(archived: false).order(updated_at: 'DESC')
 
     if params[:page].nil?
       params[:page] = 1
