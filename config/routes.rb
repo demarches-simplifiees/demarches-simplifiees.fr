@@ -37,6 +37,8 @@ Rails.application.routes.draw do
       get '/carte' => 'carte#show'
       post '/carte' => 'carte#save'
 
+      put '/archive' => 'dossiers#archive'
+
     end
     resource :dossiers
   end

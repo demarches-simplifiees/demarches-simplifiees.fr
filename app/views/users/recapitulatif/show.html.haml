@@ -1,22 +1,32 @@
 .row#recap_dossier
-  .col-md-2.col-lg-2
-    %h2
-      ='Récapitulatif'
+  .col-md-4.col-lg-4
+    .row
+      .col-md-6.col-lg-6
+        %h2 Récapitulatif
+      .col-md-6.col-lg-6
+        = form_tag "/users/dossiers/#{@dossier.id}/archive", style:'margin-top:21px', action: :archive, method: :put do
+          %button#archive.btn.btn-sm.btn-default.text-info{type: :button}
+            %i.fa.fa-eraser
+            Archiver
+          #confirm
+            %button#valid.btn.btn-sm.btn-success{type: :submit}
+              %i.fa.fa-check
+              Valider
+            %button#cancel.btn.btn-sm.btn-danger{type: :button}
+              %i.fa.fa-remove
+              Annuler
 
-  .col-md-7.col-lg-7
+  .col-md-5.col-lg-5
 
   .col-md-3.col-lg-3
     %h2#dossier_id{:class => 'text-info', :style => 'text-align:right; margin-bottom:15px'}
       = "Dossier n°#{@dossier.id}"
 
     - unless gestionnaire_signed_in?
-      -if @dossier.draft?
-        = form_tag(url_for({controller: :recapitulatif, action: :initiate, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
-          %button#action_button.btn.btn-success
-            = 'Soumettre mon dossier'
-      -elsif @dossier.validated?
-        = form_tag(url_for({controller: :recapitulatif, action: :submit, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
-          %button#action_button.btn.btn-success
+      -if @dossier.validated?
+        %br
+        = form_tag(url_for({controller: :recapitulatif, action: :submit, dossier_id: @dossier.id}), method: 'POST') do
+          %button#validate_button.btn.btn-success
             = 'Déposer mon dossier'
       -else
         %h3{:class => 'text-success', :style => 'text-align:right'}

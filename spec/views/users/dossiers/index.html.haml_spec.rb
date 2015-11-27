@@ -5,8 +5,8 @@ describe 'users/dossiers/index.html.haml', type: :view do
   describe 'list dossiers' do
     let(:user) { create(:user) }
 
-    let!(:dossier1) { create(:dossier, user: user, state: 'initiated') }
-    let!(:dossier2) { create(:dossier, user: user, state: 'initiated') }
+    let!(:dossier1) { create(:dossier, :with_procedure, user: user, state: 'initiated') }
+    let!(:dossier2) { create(:dossier, :with_procedure, user: user, state: 'initiated') }
     let(:dossiers) { user.dossiers.where("state NOT IN ('draft')").order(updated_at: 'DESC') }
 
 

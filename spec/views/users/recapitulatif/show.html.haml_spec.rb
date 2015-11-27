@@ -53,18 +53,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
     end
 
     context 'buttons to change dossier state' do
-      context 'when dossier state is draft' do
-        before do
-          dossier.draft!
-          render
-        end
-
-        it 'button Soumettre mon dossier est present' do
-          expect(rendered).to have_css('#action_button')
-          expect(rendered).to have_content('Soumettre mon dossier')
-        end
-      end
-
       context 'when dossier state is initiated' do
         before do
           dossier.initiated!
@@ -100,7 +88,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         end
 
         it 'button Déposer mon dossier est present' do
-          expect(rendered).to have_css('#action_button')
+          expect(rendered).to have_css('#validate_button')
           expect(rendered).to have_content('Déposer mon dossier')
         end
 

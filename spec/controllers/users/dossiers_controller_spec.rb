@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Users::DossiersController, type: :controller do
   let(:user) { create(:user) }
+
   describe '.index' do
     let!(:dossier) { create(:dossier, :with_entreprise, :with_procedure, user: user) }
     subject { get :index }
@@ -17,7 +18,6 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-
   let(:use_api_carto) { false }
   let(:procedure) { create(:procedure, use_api_carto: use_api_carto) }
   let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
@@ -30,7 +30,7 @@ describe Users::DossiersController, type: :controller do
 
   describe 'GET #show' do
     before do
-        sign_in dossier.user
+      sign_in dossier.user
     end
     it 'returns http success with dossier_id valid' do
       get :show, id: dossier_id
@@ -46,13 +46,13 @@ describe Users::DossiersController, type: :controller do
   describe 'POST #create' do
     before do
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret_not_found}?token=#{SIADETOKEN}")
-        .to_return(status: 404, body: 'fake body')
+          .to_return(status: 404, body: 'fake body')
 
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}")
-        .to_return(status: 200, body: File.read('spec/support/files/etablissement.json'))
+          .to_return(status: 200, body: File.read('spec/support/files/etablissement.json'))
 
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/entreprises/#{siren}?token=#{SIADETOKEN}")
-        .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
+          .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
 
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/exercices/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
@@ -66,7 +66,7 @@ describe Users::DossiersController, type: :controller do
             sign_in user
           end
 
-          subject  { post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last }
+          subject { post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last }
 
 
           it 'create a dossier' do
@@ -138,7 +138,7 @@ describe Users::DossiersController, type: :controller do
   describe 'PUT #update' do
     before do
       sign_in dossier.user
-      put :update, id: dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
+      put :update, id: dossier_id, dossier: {autorisation_donnees: autorisation_donnees}
     end
     context 'when Checkbox is checked' do
       let(:autorisation_donnees) { '1' }
@@ -153,7 +153,7 @@ describe Users::DossiersController, type: :controller do
         let(:use_api_carto) { true }
 
         before do
-          put :update, id: dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
+          put :update, id: dossier_id, dossier: {autorisation_donnees: autorisation_donnees}
         end
         it 'redirects to carte' do
           expect(response).to redirect_to(controller: :carte, action: :show, dossier_id: dossier.id)
@@ -176,6 +176,36 @@ describe Users::DossiersController, type: :controller do
         dossier.reload
         expect(dossier.autorisation_donnees).to be_falsy
       end
+    end
+  end
+
+  describe 'PUT #archive' do
+    let(:dossier) { create(:dossier, user: user) }
+
+    context 'when user is the owner of the file' do
+      before do
+        sign_in user
+        put :archive, dossier_id: dossier.id
+        dossier.reload
+      end
+
+      it { expect(dossier.archived).to be_truthy }
+      it { expect(response).to redirect_to :users_dossiers }
+      it { expect(flash[:notice]).to have_content 'Dossier archivé' }
+    end
+
+    context 'when user is not the owner of the file' do
+        let(:user_2) { create(:user) }
+
+        before do
+          sign_in user_2
+
+          put :archive, dossier_id: dossier.id
+          procedure.reload
+        end
+
+        it { expect(response).to redirect_to :users_dossiers }
+        it { expect(flash[:alert]).to have_content 'Dossier inéxistant' }
     end
   end
 end

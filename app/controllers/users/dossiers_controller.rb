@@ -78,6 +78,18 @@ class Users::DossiersController < UsersController
     end
   end
 
+  def archive
+    @dossier = current_user.dossiers.find(params[:dossier_id])
+    @dossier.update_attributes({archived: true})
+
+    flash.notice = 'Dossier archivé'
+    redirect_to users_dossiers_path
+
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = 'Dossier inéxistant'
+    redirect_to users_dossiers_path
+  end
+
   private
 
   def update_params
