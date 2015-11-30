@@ -402,20 +402,20 @@ describe Dossier do
       let!(:dossier11) { create(:dossier, :with_user, procedure: procedure_admin, state: 'replied', archived: true) } #en_attente #archived
       let!(:dossier12) { create(:dossier, :with_user, procedure: procedure_admin, state: 'closed', archived: true) } #termine #archived
 
-      describe '#a_traiter' do
-        subject { described_class.a_traiter gestionnaire }
+      describe '#waiting_for_gestionnaire' do
+        subject { gestionnaire.dossiers.waiting_for_gestionnaire }
 
         it { expect(subject.size).to eq(3) }
       end
 
-      describe '#en_attente' do
-        subject { described_class.en_attente gestionnaire }
+      describe '#waiting_for_user' do
+        subject { gestionnaire.dossiers.waiting_for_user }
 
         it { expect(subject.size).to eq(1) }
       end
 
       describe '#termine' do
-        subject { described_class.termine gestionnaire }
+        subject { gestionnaire.dossiers.termine }
 
         it { expect(subject.size).to eq(1) }
       end

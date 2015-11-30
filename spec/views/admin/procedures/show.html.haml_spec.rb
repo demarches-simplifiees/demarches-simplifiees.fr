@@ -17,7 +17,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
     context 'when procedure is archived' do
       let(:procedure) { create(:procedure, archived: true) }
 
-      it { expect(rendered).to have_content('Activer') }
+      it { expect(rendered).to have_content('Réactiver') }
     end
   end
 end

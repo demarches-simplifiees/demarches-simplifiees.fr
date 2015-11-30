@@ -3,23 +3,6 @@ require 'spec_helper'
 describe Users::DossiersController, type: :controller do
   let(:user) { create(:user) }
 
-  describe 'GET #index' do
-    let!(:dossier) { create(:dossier, :with_entreprise, :with_procedure, user: user) }
-    subject { get :index }
-
-    context 'when user is not logged in' do
-      it { is_expected.to redirect_to('/users/sign_in') }
-    end
-
-    context 'when user is logged in' do
-      before do
-        sign_in create(:user)
-      end
-      it { is_expected.to render_template('users/dossiers/index') }
-      it { is_expected.to have_http_status(:success) }
-    end
-  end
-
   let(:use_api_carto) { false }
   let(:procedure) { create(:procedure, use_api_carto: use_api_carto) }
   let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
@@ -208,6 +191,45 @@ describe Users::DossiersController, type: :controller do
 
         it { expect(response).to redirect_to :users_dossiers }
         it { expect(flash[:alert]).to have_content 'Dossier inéxistant' }
+    end
+  end
+
+  describe 'GET #a_traiter' do
+    context 'when user is connected' do
+      before do
+        sign_in user
+      end
+
+      it 'returns http success' do
+        get :a_traiter
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
+
+  describe 'GET #en_attente' do
+    context 'when user is connected' do
+      before do
+        sign_in user
+      end
+
+      it 'returns http success' do
+        get :en_attente
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
+
+  describe 'GET #termine' do
+    context 'when user is connected' do
+      before do
+        sign_in user
+      end
+
+      it 'returns http success' do
+        get :termine
+        expect(response).to have_http_status(200)
+      end
     end
   end
 end

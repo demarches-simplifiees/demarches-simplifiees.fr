@@ -34,8 +34,8 @@ class DossierDecorator < Draper::Decorator
   end
 
   def state_color_class
-    return 'text-danger' if a_traiter?
-    return 'text-info' if en_attente?
+    return 'text-danger' if waiting_for_gestionnaire?
+    return 'text-info' if waiting_for_user?
     return 'text-success' if termine?
   end
 end

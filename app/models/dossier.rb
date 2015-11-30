@@ -31,8 +31,8 @@ class Dossier < ActiveRecord::Base
   validates :description, presence: true, allow_blank: false, allow_nil: true
   validates :user, presence: true
 
-  A_TRAITER = %w(initiated updated submitted)
-  EN_ATTENTE = %w(replied validated)
+  WAITING_FOR_GESTIONNAIRE = %w(initiated updated submitted)
+  WAITING_FOR_USER = %w(replied validated)
   TERMINE = %w(closed)
 
   def retrieve_piece_justificative_by_type(type)
@@ -121,28 +121,28 @@ class Dossier < ActiveRecord::Base
     state
   end
 
-  def a_traiter?
-    A_TRAITER.include?(state)
+  def waiting_for_gestionnaire?
+    WAITING_FOR_GESTIONNAIRE.include?(state)
   end
 
-  def en_attente?
-    EN_ATTENTE.include?(state)
+  def waiting_for_user?
+    WAITING_FOR_USER.include?(state)
   end
 
   def termine?
     TERMINE.include?(state)
   end
 
-  def self.a_traiter current_gestionnaire
-    current_gestionnaire.dossiers.where(state: A_TRAITER, archived: false).order('updated_at ASC')
+  def self.waiting_for_gestionnaire
+    where(state: WAITING_FOR_GESTIONNAIRE, archived: false).order('updated_at ASC')
   end
 
-  def self.en_attente current_gestionnaire
-    current_gestionnaire.dossiers.where(state: EN_ATTENTE, archived: false).order('updated_at ASC')
+  def self.waiting_for_user
+    where(state: WAITING_FOR_USER, archived: false).order('updated_at ASC')
   end
 
-  def self.termine current_gestionnaire
-    current_gestionnaire.dossiers.where(state: TERMINE, archived: false).order('updated_at ASC')
+  def self.termine
+    where(state: TERMINE, archived: false).order('updated_at ASC')
   end
 
   def self.search current_gestionnaire, terms

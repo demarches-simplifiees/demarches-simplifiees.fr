@@ -1,0 +1,24 @@
+%h1 Mes dossiers
+%br
+
+#onglets
+  %ul.nav.nav-tabs
+    %li{class: "#{'active' unless @dossiers_a_traiter.nil?  }"}
+      %a{:href => "#{url_for :users_dossiers_a_traiter}"}
+        %h5.text-danger
+          = "À traiter "
+          .badge.progress-bar-danger
+            = @dossiers_a_traiter_total
+    %li{class: "#{'active' unless @dossiers_en_attente.nil?  }"}
+      %a{:href => "#{url_for :users_dossiers_en_attente}"}
+        %h5.text-info
+          ="En attente "
+          .badge.progress-bar-info
+            = @dossiers_en_attente_total
+    %li{class: "#{'active' unless @dossiers_termine.nil?  }"}
+      %a{:href => "#{url_for :users_dossiers_termine}"}
+        %h5.text-success
+          = "Terminé"
+          .badge.progress-bar-success
+            = @dossiers_termine_total
+%br

@@ -24,7 +24,12 @@ Rails.application.routes.draw do
     get 'siret' => 'siret#index'
     get 'procedure/:procedure_id' => 'procedure#index'
 
+    get 'dossiers/a_traiter' => 'dossiers#a_traiter'
+    get 'dossiers/en_attente' => 'dossiers#en_attente'
+    get 'dossiers/termine' => 'dossiers#termine'
+
     resources :dossiers do
+
       get '/description' => 'description#show'
       get '/description/error' => 'description#error'
       post 'description' => 'description#create'

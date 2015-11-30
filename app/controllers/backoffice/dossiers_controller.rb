@@ -6,20 +6,20 @@ class Backoffice::DossiersController < ApplicationController
   end
 
   def a_traiter
-    @dossiers_a_traiter = Dossier.a_traiter(current_gestionnaire)
+    @dossiers_a_traiter = current_gestionnaire.dossiers.waiting_for_gestionnaire()
     @dossiers_a_traiter = @dossiers_a_traiter.paginate(:page => params[:page], :per_page => 12).decorate
 
     total_dossiers_per_state
   end
 
   def en_attente
-    @dossiers_en_attente = Dossier.en_attente(current_gestionnaire)
+    @dossiers_en_attente = current_gestionnaire.dossiers.waiting_for_user()
     @dossiers_en_attente = @dossiers_en_attente.paginate(:page => params[:page], :per_page => 12).decorate
     total_dossiers_per_state
   end
 
   def termine
-    @dossiers_termine = Dossier.termine(current_gestionnaire)
+    @dossiers_termine = current_gestionnaire.dossiers.termine()
     @dossiers_termine = @dossiers_termine.paginate(:page => params[:page], :per_page => 12).decorate
     total_dossiers_per_state
   end
@@ -61,9 +61,9 @@ class Backoffice::DossiersController < ApplicationController
   private
 
   def total_dossiers_per_state
-    @dossiers_a_traiter_total = !@dossiers_a_traiter.nil? ? @dossiers_a_traiter.size : Dossier.a_traiter(current_gestionnaire).size
-    @dossiers_en_attente_total = !@dossiers_en_attente.nil? ? @dossiers_en_attente.size : Dossier.en_attente(current_gestionnaire).size
-    @dossiers_termine_total = !@dossiers_termine.nil? ? @dossiers_termine.size : Dossier.termine(current_gestionnaire).size
+    @dossiers_a_traiter_total = !@dossiers_a_traiter.nil? ? @dossiers_a_traiter.size : current_gestionnaire.dossiers.waiting_for_gestionnaire().size
+    @dossiers_en_attente_total = !@dossiers_en_attente.nil? ? @dossiers_en_attente.size : current_gestionnaire.dossiers.waiting_for_user().size
+    @dossiers_termine_total = !@dossiers_termine.nil? ? @dossiers_termine.size : current_gestionnaire.dossiers.termine().size
   end
 
   def initialize_instance_params dossier_id

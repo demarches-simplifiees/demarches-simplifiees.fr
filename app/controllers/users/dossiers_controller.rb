@@ -1,16 +1,6 @@
 class Users::DossiersController < UsersController
   before_action :authenticate_user!
 
-  def index
-    @dossiers = current_user.dossiers.where.not(state: :draft).where(archived: false).order(updated_at: 'DESC')
-
-    if params[:page].nil?
-      params[:page] = 1
-    end
-
-    @dossiers = @dossiers.paginate(:page => params[:page], :per_page => 12).decorate
-  end
-
   def show
     @dossier = current_user_dossier params[:id]
 
@@ -90,6 +80,36 @@ class Users::DossiersController < UsersController
     redirect_to users_dossiers_path
   end
 
+  def a_traiter
+    @dossiers_a_traiter = current_user.dossiers.waiting_for_user
+    @dossiers = @dossiers_a_traiter
+
+    params[:page] = 1 if params[:page].nil?
+
+    @dossiers = @dossiers.paginate(:page => params[:page], :per_page => 12).decorate
+    total_dossiers_per_state
+  end
+
+  def en_attente
+    @dossiers_en_attente = current_user.dossiers.waiting_for_gestionnaire
+    @dossiers = @dossiers_en_attente
+
+    params[:page] = 1 if params[:page].nil?
+
+    @dossiers = @dossiers.paginate(:page => params[:page], :per_page => 12).decorate
+    total_dossiers_per_state
+  end
+
+  def termine
+    @dossiers_termine = current_user.dossiers.termine
+    @dossiers = @dossiers_termine
+
+    params[:page] = 1 if params[:page].nil?
+
+    @dossiers = @dossiers.paginate(:page => params[:page], :per_page => 12).decorate
+    total_dossiers_per_state
+  end
+
   private
 
   def update_params
@@ -110,5 +130,11 @@ class Users::DossiersController < UsersController
 
   def siren
     siret[0..8]
+  end
+
+  def total_dossiers_per_state
+    @dossiers_a_traiter_total = !@dossiers_a_traiter.nil? ? @dossiers_a_traiter.size : current_user.dossiers.waiting_for_user().size
+    @dossiers_en_attente_total = !@dossiers_en_attente.nil? ? @dossiers_en_attente.size : current_user.dossiers.waiting_for_gestionnaire().size
+    @dossiers_termine_total = !@dossiers_termine.nil? ? @dossiers_termine.size : current_user.dossiers.termine().size
   end
 end

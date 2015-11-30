@@ -18,7 +18,7 @@
           = @dossier.user.email
         %td.col-md-2.col-lg-2
           = @dossier.etablissement.siret
-        %td.col-md-1.col-lg-1
+        %td.col-md-1.col-lg-1{class: @dossier.state_color_class}
           = @dossier.state_fr
     %br
 
