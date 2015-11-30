@@ -1,15 +1,20 @@
 %table.table
   %tr
-    %th{colspan: 3}
+    %th{colspan: 4}
       %h4 Lien vers les procédures TPS
   %tr
-    %td
+    %th ID
     %th Titre
     %th Description
-  - Procedure.all.where(archived: false).each do |procedure|
+    %th Organisation
+
+  - @procedures.each do |procedure|
     %tr
-      %td.col-md-1.col-lg-1
+      %td
+        = procedure.id
       %td.col-md-4.col-lg-4
         = link_to procedure.libelle, "/users/procedure/#{procedure.id}"
       %td
         = procedure.description
+      %td.col-md-3.col-lg-3
+        = procedure.organisation
