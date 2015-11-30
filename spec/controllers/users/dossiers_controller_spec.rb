@@ -88,6 +88,7 @@ describe Users::DossiersController, type: :controller do
 
           it 'creates exercices for dossier' do
             expect { subject }.to change { Exercice.count }.by(3)
+            expect(Exercice.last.etablissement).to eq(Dossier.last.etablissement)
           end
 
           it 'links procedure to dossier' do

@@ -23,7 +23,7 @@ describe CARTO::SGMAP::API do
     context 'when geojson exist' do
       let(:geojson) { File.read('spec/support/files/geojson/request.json') }
       let(:status) { 200 }
-      let(:body) { File.read('spec/support/files/geojson/response.json') }
+      let(:body) { 'toto' }
 
       it 'returns response body' do
         expect(subject).to eq(body)

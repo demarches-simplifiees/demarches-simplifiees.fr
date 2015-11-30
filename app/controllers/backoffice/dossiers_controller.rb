@@ -7,20 +7,20 @@ class Backoffice::DossiersController < ApplicationController
 
   def a_traiter
     @dossiers_a_traiter = current_gestionnaire.dossiers.waiting_for_gestionnaire()
-    @dossiers_a_traiter = @dossiers_a_traiter.paginate(:page => params[:page], :per_page => 12).decorate
+    @dossiers_a_traiter = @dossiers_a_traiter.paginate(:page => params[:page]).decorate
 
     total_dossiers_per_state
   end
 
   def en_attente
     @dossiers_en_attente = current_gestionnaire.dossiers.waiting_for_user()
-    @dossiers_en_attente = @dossiers_en_attente.paginate(:page => params[:page], :per_page => 12).decorate
+    @dossiers_en_attente = @dossiers_en_attente.paginate(:page => params[:page]).decorate
     total_dossiers_per_state
   end
 
   def termine
     @dossiers_termine = current_gestionnaire.dossiers.termine()
-    @dossiers_termine = @dossiers_termine.paginate(:page => params[:page], :per_page => 12).decorate
+    @dossiers_termine = @dossiers_termine.paginate(:page => params[:page]).decorate
     total_dossiers_per_state
   end
 
@@ -30,7 +30,7 @@ class Backoffice::DossiersController < ApplicationController
     @dossiers_search, @dossier = Dossier.search(current_gestionnaire, @search_terms)
 
     unless @dossiers_search.empty?
-      @dossiers_search = @dossiers_search.paginate(:page => params[:page], :per_page => 12).decorate
+      @dossiers_search = @dossiers_search.paginate(:page => params[:page]).decorate
     end
 
     @dossier = @dossier.decorate unless @dossier.nil?

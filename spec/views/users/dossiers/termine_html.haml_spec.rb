@@ -7,7 +7,7 @@ describe 'users/dossiers/termine.html.haml', type: :view do
   let!(:decorate_dossier_2) { create(:dossier, :with_procedure, user: user, state: 'replied', nom_projet: 'projet terminé').decorate }
   let!(:dossier_termine) { create(:dossier, :with_procedure, user: user, state: 'closed').decorate }
 
-  let(:dossiers_list) { user.dossiers.termine.paginate(:page => 1, :per_page => 12).decorate }
+  let(:dossiers_list) { user.dossiers.termine.paginate(:page => 1).decorate }
 
   before do
     assign(:dossiers, dossiers_list)

@@ -181,14 +181,20 @@ RSpec.describe Users::CarteController, type: :controller do
       let(:coordinates) { '[]' }
 
       subject { JSON.parse(response.body) }
-      it { expect(subject['quartier_prioritaires']).to eq({}) }
+
+      it 'Quartier Prioritaire Adapter does not call' do
+        expect(subject['quartier_prioritaires']).to eq({})
+      end
     end
 
     context 'when coordinates are informed' do
       let(:coordinates) { '[[{"lat":48.87442541960633,"lng":2.3859214782714844},{"lat":48.87273183590832,"lng":2.3850631713867183},{"lat":48.87081237174292,"lng":2.3809432983398438},{"lat":48.8712640169951,"lng":2.377510070800781},{"lat":48.87510283703279,"lng":2.3778533935546875},{"lat":48.87544154230615,"lng":2.382831573486328},{"lat":48.87442541960633,"lng":2.3859214782714844}]]' }
 
-      subject { JSON.parse(response.body) }
-      it { expect(subject['quartier_prioritaires']).not_to be_nil }
+      subject { JSON.parse(response.body)['quartier_prioritaires'] }
+      it { expect(subject).not_to be_nil }
+      it { expect(subject['QPCODE1234']['code']).to eq('QPCODE1234') }
+      it { expect(subject['QPCODE1234']['geometry']['type']).to eq('MultiPolygon') }
+      it { expect(subject['QPCODE1234']['geometry']['coordinates']).to eq([[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]) }
     end
   end
 end

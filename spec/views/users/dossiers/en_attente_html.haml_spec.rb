@@ -6,7 +6,7 @@ describe 'users/dossiers/en_attente.html.haml', type: :view do
   let!(:decorate_dossier) { create(:dossier, :with_procedure, user: user, state: 'initiated', nom_projet: 'projet de test').decorate }
   let!(:decorate_dossier_2) { create(:dossier, :with_procedure, user: user, state: 'replied').decorate }
 
-  let(:dossiers_list) { user.dossiers.waiting_for_gestionnaire.paginate(:page => 1, :per_page => 12).decorate }
+  let(:dossiers_list) { user.dossiers.waiting_for_gestionnaire.paginate(:page => 1).decorate }
 
   before do
     assign(:dossiers, dossiers_list)

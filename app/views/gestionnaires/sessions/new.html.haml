@@ -6,7 +6,7 @@
   %br
   %br
   #new_user
-    = form_for @gestionnaire, url: {controller: 'gestionnaires/sessions', action: :create } do |f|
+    = form_for @gestionnaire, url: gestionnaire_session_path, method: :post do |f|
       %h4
         = f.label :email
       .input-group

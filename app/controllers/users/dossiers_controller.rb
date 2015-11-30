@@ -16,7 +16,6 @@ class Users::DossiersController < UsersController
   end
 
   def create
-    procedure = Procedure.find(params['procedure_id'])
     @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(siret).to_params)
     @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
 
@@ -30,11 +29,7 @@ class Users::DossiersController < UsersController
       end
     end
 
-    @dossier = Dossier.create(user: current_user)
-    @dossier.draft!
-
-    @dossier.procedure = procedure
-    @dossier.save
+    @dossier = Dossier.create(user: current_user, state: 'draft', procedure_id: params['procedure_id'])
 
     @entreprise.dossier = @dossier
     @entreprise.save
@@ -90,7 +85,7 @@ class Users::DossiersController < UsersController
 
     params[:page] = 1 if params[:page].nil?
 
-    @dossiers = @dossiers.paginate(:page => params[:page], :per_page => 12).decorate
+    @dossiers = @dossiers.paginate(:page => params[:page]).decorate
     total_dossiers_per_state
   end
 
@@ -100,7 +95,7 @@ class Users::DossiersController < UsersController
 
     params[:page] = 1 if params[:page].nil?
 
-    @dossiers = @dossiers.paginate(:page => params[:page], :per_page => 12).decorate
+    @dossiers = @dossiers.paginate(:page => params[:page]).decorate
     total_dossiers_per_state
   end
 
@@ -110,7 +105,7 @@ class Users::DossiersController < UsersController
 
     params[:page] = 1 if params[:page].nil?
 
-    @dossiers = @dossiers.paginate(:page => params[:page], :per_page => 12).decorate
+    @dossiers = @dossiers.paginate(:page => params[:page]).decorate
     total_dossiers_per_state
   end
 

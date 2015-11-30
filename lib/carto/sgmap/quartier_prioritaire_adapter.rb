@@ -10,7 +10,7 @@ class CARTO::SGMAP::QuartierPrioritaireAdapter
   def to_params
     params = {}
 
-    data_source[:features].each_with_index do |feature, index|
+    data_source[:features].each do |feature|
       qp_code = feature[:properties][:code]
 
       params[qp_code] = feature[:properties]
@@ -18,11 +18,5 @@ class CARTO::SGMAP::QuartierPrioritaireAdapter
     end
 
     params
-  end
-
-  def properties_to_fetch
-    [:code,
-     :nom,
-     :commune]
   end
 end

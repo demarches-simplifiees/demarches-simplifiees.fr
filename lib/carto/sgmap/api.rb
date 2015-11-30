@@ -19,10 +19,6 @@ class CARTO::SGMAP::API
   end
 
   def self.base_url
-    if Rails.env.production?
-      'https://apicarto.sgmap.fr'
-    else
-      'https://apicarto.sgmap.fr'
-    end
+    'https://apicarto.sgmap.fr'
   end
 end

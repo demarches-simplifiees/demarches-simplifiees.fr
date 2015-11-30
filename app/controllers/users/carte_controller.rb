@@ -11,10 +11,10 @@ class Users::CarteController < UsersController
   def save
     dossier = current_user_dossier
 
-    dossier.quartier_prioritaires.all.map(&:destroy)
+    dossier.quartier_prioritaires.map(&:destroy)
 
-    unless params[:json_latlngs] == '' || params[:json_latlngs] == '[]'
-      qp_list = generate_qp JSON.parse(params[:json_latlngs]);
+    unless params[:json_latlngs].blank?
+      qp_list = generate_qp JSON.parse(params[:json_latlngs])
 
       qp_list.each do |key, qp|
         qp.merge!({dossier_id: dossier.id})
@@ -33,8 +33,7 @@ class Users::CarteController < UsersController
           body: 'La localisation de la demande a été modifiée. Merci de le prendre en compte.',
           dossier_id: dossier.id
       }
-      commentaire = Commentaire.new commentaire_params
-      commentaire.save
+      Commentaire.create commentaire_params
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params[:dossier_id])
     end
   end
