@@ -133,16 +133,16 @@ class Dossier < ActiveRecord::Base
     TERMINE.include?(state)
   end
 
-  def self.waiting_for_gestionnaire
-    where(state: WAITING_FOR_GESTIONNAIRE, archived: false).order('updated_at ASC')
+  def self.waiting_for_gestionnaire order = 'ASC'
+    where(state: WAITING_FOR_GESTIONNAIRE, archived: false).order("updated_at #{order}")
   end
 
-  def self.waiting_for_user
-    where(state: WAITING_FOR_USER, archived: false).order('updated_at ASC')
+  def self.waiting_for_user order = 'ASC'
+    where(state: WAITING_FOR_USER, archived: false).order("updated_at #{order}")
   end
 
-  def self.termine
-    where(state: TERMINE, archived: false).order('updated_at ASC')
+  def self.termine order = 'ASC'
+    where(state: TERMINE, archived: false).order("updated_at #{order}")
   end
 
   def self.search current_gestionnaire, terms

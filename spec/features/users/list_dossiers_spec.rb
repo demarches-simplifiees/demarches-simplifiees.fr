@@ -3,8 +3,8 @@ require 'spec_helper'
 feature 'user access to the list of his dossier' do
 
   let(:user) { create(:user) }
-  let!(:last_updated_dossier) { create(:dossier, :with_procedure, user: user, state: 'initiated')}
-  let!(:dossier1) { create(:dossier, :with_procedure, user: user, nom_projet: 'mon permier dossier', state: 'initiated') }
+  let!(:last_updated_dossier) { create(:dossier, :with_procedure, user: user, state: 'replied')}
+  let!(:dossier1) { create(:dossier, :with_procedure, user: user, nom_projet: 'mon permier dossier', state: 'replied') }
   let!(:dossier2) { create(:dossier, :with_user, nom_projet: 'mon deuxième dossier') }
 
   before do

@@ -23,7 +23,7 @@ feature 'France Connect Connexion' do
         end
 
         scenario 'he is redirected to france connect' do
-          expect(page).to have_content('Vos dossiers')
+          expect(page).to have_content('Mes dossiers')
         end
       end
 
@@ -63,7 +63,7 @@ feature 'France Connect Connexion' do
       context 'when starting page is dossiers list' do
         let(:initial_path) { users_dossiers_path }
         scenario 'he is redirected to dossier list' do
-          expect(page).to have_css('#users_dossiers_index')
+          expect(page).to have_css('#users_a_traiter')
         end
       end
       context 'when starting page is procedure' do
