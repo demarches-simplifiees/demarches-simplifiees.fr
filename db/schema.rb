@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 20151127103412) do
   create_table "exercices", force: :cascade do |t|
     t.string   "ca"
     t.datetime "dateFinExercice"
-    t.datetime "date_fin_exercice_timestamp"
+    t.integer  "date_fin_exercice_timestamp"
     t.integer  "etablissement_id"
   end
 
