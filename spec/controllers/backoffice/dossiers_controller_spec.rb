@@ -43,7 +43,7 @@ describe Backoffice::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :a_traiter
+        get :index, liste: :a_traiter
         expect(response).to have_http_status(200)
       end
     end
@@ -56,7 +56,7 @@ describe Backoffice::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :en_attente
+        get :index, liste: :en_attente
         expect(response).to have_http_status(200)
       end
     end
@@ -69,7 +69,7 @@ describe Backoffice::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :termine
+        get :index, liste: :termine
         expect(response).to have_http_status(200)
       end
     end

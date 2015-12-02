@@ -16,7 +16,7 @@ describe BackofficeController, type: :controller do
         get :index
       end
 
-      it { expect(response).to redirect_to :backoffice_dossiers_a_traiter }
+      it { expect(response).to redirect_to :backoffice_dossiers }
     end
   end
 end

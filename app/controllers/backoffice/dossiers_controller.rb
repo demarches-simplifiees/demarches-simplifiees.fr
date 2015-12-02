@@ -1,32 +1,33 @@
 class Backoffice::DossiersController < ApplicationController
   before_action :authenticate_gestionnaire!
 
+  def index
+    if params[:liste] == 'a_traiter' || params[:liste].nil?
+      @dossiers = current_gestionnaire.dossiers.waiting_for_gestionnaire
+      @dossiers_a_traiter = @dossiers
+
+      @liste = 'a_traiter'
+
+    elsif params[:liste] == 'en_attente'
+      @dossiers = current_gestionnaire.dossiers.waiting_for_user
+      @dossiers_en_attente = @dossiers
+
+      @liste = 'en_attente'
+
+    elsif params[:liste] == 'termine'
+
+      @dossiers = current_gestionnaire.dossiers.termine
+      @dossiers_termine = @dossiers
+
+      @liste = 'termine'
+    end
+
+    @dossiers = @dossiers.paginate(:page => (params[:page] || 1)).decorate
+    total_dossiers_per_state
+  end
+
   def show
     initialize_instance_params params[:id]
-  end
-
-  def a_traiter
-    @dossiers = current_gestionnaire.dossiers.waiting_for_gestionnaire
-                    .paginate(:page => params[:page]).decorate
-
-    @page = 'a_traiter'
-    total_dossiers_per_state
-  end
-
-  def en_attente
-    @dossiers = current_gestionnaire.dossiers.waiting_for_user()
-                    .paginate(:page => params[:page]).decorate
-
-    @page = 'en_attente'
-    total_dossiers_per_state
-  end
-
-  def termine
-    @dossiers = current_gestionnaire.dossiers.termine()
-                    .paginate(:page => params[:page]).decorate
-
-    @page = 'termine'
-    total_dossiers_per_state
   end
 
   def search

@@ -13,7 +13,7 @@ feature 'search file on gestionnaire backoffice' do
       let(:terms) { '' }
 
       before do
-        visit backoffice_dossiers_a_traiter_url
+        visit backoffice_dossiers_url
         page.find_by_id(:q).set terms
         page.find_by_id(:search_button).click
       end

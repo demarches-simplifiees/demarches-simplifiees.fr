@@ -17,7 +17,7 @@ describe RootController, type: :controller do
       sign_in create(:gestionnaire)
     end
 
-    it { expect(subject).to redirect_to(backoffice_path) }
+    it { expect(subject).to redirect_to(backoffice_dossiers_path) }
   end
 
   context 'when Administrateur is connected' do

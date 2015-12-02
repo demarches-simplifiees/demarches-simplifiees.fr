@@ -69,9 +69,6 @@ Rails.application.routes.draw do
   namespace :backoffice do
     get 'sign_in' => '/gestionnaires/sessions#new'
 
-    get 'dossiers/a_traiter' => 'dossiers#a_traiter'
-    get 'dossiers/en_attente' => 'dossiers#en_attente'
-    get 'dossiers/termine' => 'dossiers#termine'
     get 'dossiers/search' => 'dossiers#search'
 
     resources :dossiers do
