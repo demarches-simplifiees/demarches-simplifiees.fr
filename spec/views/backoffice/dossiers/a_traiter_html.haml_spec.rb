@@ -8,7 +8,8 @@ describe 'backoffice/dossiers/a_traiter.html.haml', type: :view do
   let!(:decorate_dossier) { create(:dossier, :with_user, state: 'initiated', procedure: procedure).decorate }
 
   before do
-    assign(:dossiers_a_traiter, gestionnaire.dossiers.waiting_for_gestionnaire.paginate(:page => 1).decorate)
+    assign(:dossiers, gestionnaire.dossiers.waiting_for_gestionnaire.paginate(:page => 1).decorate)
+    assign(:page, 'a_traiter')
     render
   end
 
@@ -18,4 +19,8 @@ describe 'backoffice/dossiers/a_traiter.html.haml', type: :view do
   it { is_expected.to have_content(decorate_dossier.nom_projet) }
   it { is_expected.to have_content(decorate_dossier.state_fr) }
   it { is_expected.to have_content(decorate_dossier.last_update) }
+
+  describe 'active tab' do
+    it { is_expected.to have_selector('.active .text-danger') }
+  end
 end

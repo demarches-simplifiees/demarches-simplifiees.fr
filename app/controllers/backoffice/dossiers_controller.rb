@@ -6,21 +6,26 @@ class Backoffice::DossiersController < ApplicationController
   end
 
   def a_traiter
-    @dossiers_a_traiter = current_gestionnaire.dossiers.waiting_for_gestionnaire()
-    @dossiers_a_traiter = @dossiers_a_traiter.paginate(:page => params[:page]).decorate
+    @dossiers = current_gestionnaire.dossiers.waiting_for_gestionnaire
+                    .paginate(:page => params[:page]).decorate
 
+    @page = 'a_traiter'
     total_dossiers_per_state
   end
 
   def en_attente
-    @dossiers_en_attente = current_gestionnaire.dossiers.waiting_for_user()
-    @dossiers_en_attente = @dossiers_en_attente.paginate(:page => params[:page]).decorate
+    @dossiers = current_gestionnaire.dossiers.waiting_for_user()
+                    .paginate(:page => params[:page]).decorate
+
+    @page = 'en_attente'
     total_dossiers_per_state
   end
 
   def termine
-    @dossiers_termine = current_gestionnaire.dossiers.termine()
-    @dossiers_termine = @dossiers_termine.paginate(:page => params[:page]).decorate
+    @dossiers = current_gestionnaire.dossiers.termine()
+                    .paginate(:page => params[:page]).decorate
+
+    @page = 'termine'
     total_dossiers_per_state
   end
 
@@ -61,9 +66,9 @@ class Backoffice::DossiersController < ApplicationController
   private
 
   def total_dossiers_per_state
-    @dossiers_a_traiter_total = !@dossiers_a_traiter.nil? ? @dossiers_a_traiter.size : current_gestionnaire.dossiers.waiting_for_gestionnaire().size
-    @dossiers_en_attente_total = !@dossiers_en_attente.nil? ? @dossiers_en_attente.size : current_gestionnaire.dossiers.waiting_for_user().size
-    @dossiers_termine_total = !@dossiers_termine.nil? ? @dossiers_termine.size : current_gestionnaire.dossiers.termine().size
+    @dossiers_a_traiter_total = !@dossiers_a_traiter.nil? ? @dossiers_a_traiter.size : current_gestionnaire.dossiers.waiting_for_gestionnaire.size
+    @dossiers_en_attente_total = !@dossiers_en_attente.nil? ? @dossiers_en_attente.size : current_gestionnaire.dossiers.waiting_for_user.size
+    @dossiers_termine_total = !@dossiers_termine.nil? ? @dossiers_termine.size : current_gestionnaire.dossiers.termine.size
   end
 
   def initialize_instance_params dossier_id
