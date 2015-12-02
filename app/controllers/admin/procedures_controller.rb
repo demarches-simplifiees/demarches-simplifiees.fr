@@ -2,12 +2,12 @@ class Admin::ProceduresController < AdminController
 
   def index
     @procedures = current_administrateur.procedures.where(archived: false)
-    @procedures = @procedures.paginate(:page => params[:page])
+                      .paginate(:page => params[:page])
   end
 
   def archived
     @procedures_archived = current_administrateur.procedures.where(archived: true)
-    @procedures_archived = @procedures_archived.paginate(:page => params[:page])
+                               .paginate(:page => params[:page])
   end
 
   def show

@@ -124,7 +124,7 @@ describe Users::DossiersController, type: :controller do
   describe 'PUT #update' do
     before do
       sign_in dossier.user
-      put :update, id: dossier_id, dossier: {autorisation_donnees: autorisation_donnees}
+      put :update, id: dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
     end
     context 'when Checkbox is checked' do
       let(:autorisation_donnees) { '1' }
@@ -139,7 +139,7 @@ describe Users::DossiersController, type: :controller do
         let(:use_api_carto) { true }
 
         before do
-          put :update, id: dossier_id, dossier: {autorisation_donnees: autorisation_donnees}
+          put :update, id: dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
         end
         it 'redirects to carte' do
           expect(response).to redirect_to(controller: :carte, action: :show, dossier_id: dossier.id)
@@ -181,17 +181,17 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when user is not the owner of the file' do
-        let(:user_2) { create(:user) }
+      let(:user_2) { create(:user) }
 
-        before do
-          sign_in user_2
+      before do
+        sign_in user_2
 
-          put :archive, dossier_id: dossier.id
-          procedure.reload
-        end
+        put :archive, dossier_id: dossier.id
+        procedure.reload
+      end
 
-        it { expect(response).to redirect_to :users_dossiers }
-        it { expect(flash[:alert]).to have_content 'Dossier inéxistant' }
+      it { expect(response).to redirect_to :users_dossiers }
+      it { expect(flash[:alert]).to have_content 'Dossier inéxistant' }
     end
   end
 
@@ -202,7 +202,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :a_traiter
+        get :index, liste: :a_traiter
         expect(response).to have_http_status(200)
       end
     end
@@ -215,7 +215,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :en_attente
+        get :index, liste: :en_attente
         expect(response).to have_http_status(200)
       end
     end
@@ -228,7 +228,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :termine
+        get :index, liste: :termine
         expect(response).to have_http_status(200)
       end
     end

@@ -63,7 +63,7 @@ feature 'France Connect Connexion' do
       context 'when starting page is dossiers list' do
         let(:initial_path) { users_dossiers_path }
         scenario 'he is redirected to dossier list' do
-          expect(page).to have_css('#users_a_traiter')
+          expect(page).to have_css('#users_index')
         end
       end
       context 'when starting page is procedure' do

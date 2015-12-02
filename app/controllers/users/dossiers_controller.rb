@@ -2,14 +2,37 @@ class Users::DossiersController < UsersController
   before_action :authenticate_user!
 
   def index
-    redirect_to users_dossiers_a_traiter_path
+    order = 'DESC'
+
+    if params[:liste] == 'a_traiter' || params[:liste].nil?
+      @dossiers = current_user.dossiers.waiting_for_user order
+      @dossiers_a_traiter = @dossiers
+
+      @liste = 'a_traiter'
+
+    elsif params[:liste] == 'en_attente'
+      @dossiers = current_user.dossiers.waiting_for_gestionnaire order
+      @dossiers_en_attente = @dossiers
+
+      @liste = 'en_attente'
+
+    elsif params[:liste] == 'termine'
+
+      @dossiers = current_user.dossiers.termine order
+      @dossiers_termine = @dossiers
+
+      @liste = 'termine'
+    end
+
+    @dossiers = @dossiers.paginate(:page => (params[:page] || 1)).decorate
+    total_dossiers_per_state
   end
 
   def show
     @dossier = current_user_dossier params[:id]
 
-    @etablissement =  @dossier.etablissement
-    @entreprise =  @dossier.entreprise.decorate
+    @etablissement = @dossier.etablissement
+    @entreprise = @dossier.entreprise.decorate
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(controller: :siret)
@@ -60,8 +83,8 @@ class Users::DossiersController < UsersController
         redirect_to url_for(controller: :description, action: :show, dossier_id: @dossier.id)
       end
     else
-      @etablissement =  @dossier.etablissement
-      @entreprise =  @dossier.entreprise.decorate
+      @etablissement = @dossier.etablissement
+      @entreprise = @dossier.entreprise.decorate
       flash.now.alert = 'Les conditions sont obligatoires.'
       render 'show'
     end
@@ -77,36 +100,6 @@ class Users::DossiersController < UsersController
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Dossier inéxistant'
     redirect_to users_dossiers_path
-  end
-
-  def a_traiter
-    @dossiers_a_traiter = current_user.dossiers.waiting_for_user 'DESC'
-    @dossiers = @dossiers_a_traiter
-
-    params[:page] = 1 if params[:page].nil?
-
-    @dossiers = @dossiers.paginate(:page => params[:page]).decorate
-    total_dossiers_per_state
-  end
-
-  def en_attente
-    @dossiers_en_attente = current_user.dossiers.waiting_for_gestionnaire 'DESC'
-    @dossiers = @dossiers_en_attente
-
-    params[:page] = 1 if params[:page].nil?
-
-    @dossiers = @dossiers.paginate(:page => params[:page]).decorate
-    total_dossiers_per_state
-  end
-
-  def termine
-    @dossiers_termine = current_user.dossiers.termine 'DESC'
-    @dossiers = @dossiers_termine
-
-    params[:page] = 1 if params[:page].nil?
-
-    @dossiers = @dossiers.paginate(:page => params[:page]).decorate
-    total_dossiers_per_state
   end
 
   private

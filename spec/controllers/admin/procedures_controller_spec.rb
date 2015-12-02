@@ -14,12 +14,12 @@ describe Admin::ProceduresController, type: :controller do
 
   let(:procedure_params) {
     {
-      libelle: libelle,
-      description: description,
-      organisation: organisation,
-      direction: direction,
-      lien_demarche: lien_demarche,
-      use_api_carto: use_api_carto
+        libelle: libelle,
+        description: description,
+        organisation: organisation,
+        direction: direction,
+        lien_demarche: lien_demarche,
+        use_api_carto: use_api_carto
     }
   }
 
@@ -94,7 +94,7 @@ describe Admin::ProceduresController, type: :controller do
 
         end
 
-        it { expect(subject).to redirect_to(admin_procedure_types_de_champ_path(procedure_id:  Procedure.last.id)) }
+        it { expect(subject).to redirect_to(admin_procedure_types_de_champ_path(procedure_id: Procedure.last.id)) }
 
         it { expect(flash[:notice]).to be_present }
       end
@@ -178,13 +178,27 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :archive, procedure_id: procedure.id, archive: !procedure.archived
+        put :archive, procedure_id: procedure.id, archive: archive
         procedure.reload
       end
 
-      it { expect(procedure.archived).to be_truthy }
-      it { expect(response).to redirect_to :admin_procedures }
-      it { expect(flash[:notice]).to have_content 'Procédure éditée' }
+      context 'when owner want archive procedure' do
+
+        let(:archive) { true }
+
+        it { expect(procedure.archived).to be_truthy }
+        it { expect(response).to redirect_to :admin_procedures }
+        it { expect(flash[:notice]).to have_content 'Procédure éditée' }
+      end
+
+      context 'when owner want reactive procedure' do
+
+        let(:archive) { false }
+
+        it { expect(procedure.archived).to be_falsey }
+        it { expect(response).to redirect_to :admin_procedures }
+        it { expect(flash[:notice]).to have_content 'Procédure éditée' }
+      end
     end
 
     context 'when admin is not the owner of the procedure' do
