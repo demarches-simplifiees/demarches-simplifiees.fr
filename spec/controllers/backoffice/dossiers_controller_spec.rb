@@ -19,19 +19,24 @@ describe Backoffice::DossiersController, type: :controller do
         expect(response).to have_http_status(200)
       end
 
-      it 'dossier is archived' do
-        get :show, id: dossier_archived
-        expect(response).to redirect_to('/backoffice')
+      context ' when dossier is archived' do
+        before do
+          get :show, id: dossier_archived.id
+        end
+        it { expect(response).to redirect_to('/backoffice') }
       end
 
-      it 'dossier id doesnt exist' do
-        get :show, id: bad_dossier_id
-        expect(response).to redirect_to('/backoffice')
+      context 'when dossier id does not exist' do
+        before do
+          get :show, id: bad_dossier_id
+        end
+        it { expect(response).to redirect_to('/backoffice') }
       end
     end
 
-    context 'gestionnaire doesnt connected but dossier id is correct' do
+    context 'gestionnaire does not connected but dossier id is correct' do
       subject { get :show, id: dossier_id }
+
       it { is_expected.to redirect_to('/gestionnaires/sign_in') }
     end
   end
@@ -93,7 +98,7 @@ describe Backoffice::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
-    it 'dossier change is state for validated' do
+    it 'change state to validated' do
       post :valid, dossier_id: dossier_id
 
       dossier.reload
@@ -107,7 +112,7 @@ describe Backoffice::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
-    it 'dossier change is state to closed' do
+    it 'change state to closed' do
       post :close, dossier_id: dossier_id
 
       dossier.reload
