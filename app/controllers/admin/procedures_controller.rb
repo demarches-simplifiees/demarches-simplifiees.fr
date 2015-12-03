@@ -2,16 +2,18 @@ class Admin::ProceduresController < AdminController
 
   def index
     @procedures = current_administrateur.procedures.where(archived: false)
-                      .paginate(:page => params[:page])
+                      .paginate(:page => params[:page]).decorate
+    @page = 'active'
   end
 
   def archived
-    @procedures_archived = current_administrateur.procedures.where(archived: true)
-                               .paginate(:page => params[:page])
+    @procedures = current_administrateur.procedures.where(archived: true)
+                     .paginate(:page => params[:page]).decorate
+    @page = 'archived'
   end
 
   def show
-    @procedure = current_administrateur.procedures.find(params[:id])
+    @procedure = current_administrateur.procedures.find(params[:id]).decorate
     @types_de_champ = @procedure.types_de_champ.order(:order_place)
     @types_de_piece_justificative = @procedure.types_de_piece_justificative.order(:libelle)
 

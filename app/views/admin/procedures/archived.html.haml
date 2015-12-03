@@ -4,19 +4,4 @@
 
 = render partial: 'onglets'
 
-%table.table
-  %thead
-    %th#id ID
-    %th#libelle Libellé
-    %th#organisation Organisation
-    %th#direction Direction
-  - @procedures_archived.each do |procedure|
-    %tr
-      %td= procedure.id
-      %td
-        = link_to(procedure.libelle, "/admin/procedures/#{procedure.id}")
-      %td= procedure.organisation
-      %td= procedure.direction
-
-.pagination
-  = will_paginate @procedures_archived, renderer: BootstrapPagination::Rails
+= render partial: 'list'

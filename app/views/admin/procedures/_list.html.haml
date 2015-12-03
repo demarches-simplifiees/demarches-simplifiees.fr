@@ -1,0 +1,14 @@
+%table.table
+  %thead
+    %th#id ID
+    %th#libelle Libellé
+    %th#lien Lien
+  - @procedures.each do |procedure|
+    %tr
+      %td.col-md-1.col-lg-1= procedure.id
+      %td.col-md-6.col-lg-6
+        = link_to(procedure.libelle, "/admin/procedures/#{procedure.id}")
+      %td= link_to procedure.lien, procedure.lien
+
+.pagination
+  = will_paginate @procedures, renderer: BootstrapPagination::Rails
