@@ -7,7 +7,7 @@ feature 'user path for dossier creation' do
   let(:siren) { siret[0...9] }
   context 'user arrives on siret page' do
     before do
-      visit users_siret_path(procedure_id: procedure.id)
+      visit new_users_dossiers_path(procedure_id: procedure.id)
     end
 
     scenario 'he is redirected on login page' do
@@ -23,7 +23,7 @@ feature 'user path for dossier creation' do
         end
       end
       scenario 'redirects to siret page' do
-        expect(page).to have_css('#siret')
+        expect(page).to have_css('#dossier_siret')
       end
       context 'sets siret' do
         before do
@@ -34,7 +34,7 @@ feature 'user path for dossier creation' do
 
           stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/exercices/#{siret}?token=#{SIADETOKEN}")
               .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
-          page.find_by_id('siret').set siret
+          page.find_by_id('dossier_siret').set siret
           page.click_on 'Commencer'
         end
         scenario 'user is on page recap info entreprise' do

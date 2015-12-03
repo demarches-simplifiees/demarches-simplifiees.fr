@@ -28,6 +28,16 @@ class Users::DossiersController < UsersController
     total_dossiers_per_state
   end
 
+  def new
+    procedure = Procedure.where(archived: false).find(params[:procedure_id])
+
+    @dossier = Dossier.new(procedure: procedure)
+    @siret = params[:siret] || current_user.siret
+
+  rescue ActiveRecord::RecordNotFound
+    error_procedure
+  end
+
   def show
     @dossier = current_user_dossier params[:id]
 
@@ -35,7 +45,7 @@ class Users::DossiersController < UsersController
     @entreprise = @dossier.entreprise.decorate
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: :siret)
+    redirect_to url_for users_dossiers_path
   end
 
   def create
@@ -52,7 +62,7 @@ class Users::DossiersController < UsersController
       end
     end
 
-    @dossier = Dossier.create(user: current_user, state: 'draft', procedure_id: params['procedure_id'])
+    @dossier = Dossier.create(user: current_user, state: 'draft', procedure_id: create_params[:procedure_id])
 
     @entreprise.dossier = @dossier
     @entreprise.save
@@ -65,7 +75,8 @@ class Users::DossiersController < UsersController
 
   rescue RestClient::ResourceNotFound
     flash.alert = t('errors.messages.invalid_siret')
-    redirect_to url_for(controller: :siret, procedure_id: params['procedure_id'])
+    redirect_to url_for new_users_dossiers_path(procedure_id: create_params[:procedure_id])
+
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(controller: :siret)
@@ -117,7 +128,7 @@ class Users::DossiersController < UsersController
   end
 
   def siret
-    params[:siret]
+    create_params[:siret]
   end
 
   def siren
@@ -128,5 +139,13 @@ class Users::DossiersController < UsersController
     @dossiers_a_traiter_total = !@dossiers_a_traiter.nil? ? @dossiers_a_traiter.size : current_user.dossiers.waiting_for_user.size
     @dossiers_en_attente_total = !@dossiers_en_attente.nil? ? @dossiers_en_attente.size : current_user.dossiers.waiting_for_gestionnaire.size
     @dossiers_termine_total = !@dossiers_termine.nil? ? @dossiers_termine.size : current_user.dossiers.termine.size
+  end
+
+  def create_params
+    params.require(:dossier).permit(:siret, :procedure_id)
+  end
+
+  def error_procedure
+    render :file => "#{Rails.root}/public/404_procedure_not_found.html",  :status => 404
   end
 end

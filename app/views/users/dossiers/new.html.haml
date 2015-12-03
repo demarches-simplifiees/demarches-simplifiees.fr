@@ -1,0 +1,19 @@
+.container.center#users_siret_index
+  .row
+    %p.lead{id: 'pro_section'}
+      %br
+      = image_tag('logo-tps.png')
+      %br
+      %h2#titre_procedure.text-info
+        = @dossier.procedure.libelle
+
+      %p
+        = @dossier.procedure.description
+
+      %br
+
+      = form_for @dossier, url: {controller: 'users/dossiers', action: :create}, method: :post do |f|
+        .form-group.form-group-lg
+          = f.text_field :siret, class: "form-control", placeholder: "Entrez votre Siret", value: @siret
+          = f.hidden_field :procedure_id
+          = f.submit 'Commencer', class: %w(btn btn-lg btn-success), style: 'margin-top:20px;'

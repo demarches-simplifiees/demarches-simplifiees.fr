@@ -18,7 +18,7 @@ class Dossier < ActiveRecord::Base
   has_many :commentaires, dependent: :destroy
 
   delegate :siren, to: :entreprise
-  delegate :siret, to: :etablissement
+  delegate :siret, to: :etablissement, allow_nil: true
   delegate :types_de_piece_justificative, to: :procedure
   delegate :types_de_champ, to: :procedure
 

@@ -68,13 +68,13 @@ feature 'France Connect Connexion' do
       end
       context 'when starting page is procedure' do
         let(:procedure) { create(:procedure) }
-        let(:initial_path) { users_siret_path(procedure_id: procedure.id ) }
+        let(:initial_path) { new_users_dossiers_path(procedure_id: procedure.id ) }
         scenario 'he is redirected to siret page' do
           expect(page).to have_css('#users_siret_index')
         end
 
         scenario 'the siret is already written in form' do
-          expect(page.find_by_id('siret').value).to have_content(siret)
+          expect(page.find_by_id('dossier_siret').value).to have_content(siret)
         end
       end
     end

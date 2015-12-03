@@ -7,7 +7,7 @@ feature 'user arrive on siret page' do
   let(:siren) { siret[0...9] }
   context 'when user is not logged in' do
     before do
-      visit users_siret_path(procedure_id: procedure.id)
+      visit new_users_dossiers_path(procedure_id: procedure.id)
     end
     scenario 'he is redirected to login page' do
       expect(page).to have_css('#login_user')
@@ -31,7 +31,7 @@ feature 'user arrive on siret page' do
               .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
           stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/exercices/#{siret}?token=#{SIADETOKEN}")
               .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
-          page.find_by_id('siret').set siret
+          page.find_by_id('dossier_siret').set siret
           page.click_on 'Commencer'
         end
         scenario 'he is redirected to recap info entreprise page' do

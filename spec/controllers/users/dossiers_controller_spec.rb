@@ -5,6 +5,7 @@ describe Users::DossiersController, type: :controller do
 
   let(:use_api_carto) { false }
   let(:procedure) { create(:procedure, use_api_carto: use_api_carto) }
+  let(:procedure_id) { procedure.id }
   let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
   let(:dossier_id) { dossier.id }
   let(:siret_not_found) { 999_999_999_999 }
@@ -22,9 +23,44 @@ describe Users::DossiersController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    it 'redirection vers siret si mauvais dossier ID' do
+    it 'redirection vers liste dossier si mauvais dossier ID' do
       get :show, id: siret_not_found
-      expect(response).to redirect_to('/users/siret')
+      expect(response).to redirect_to('/users/dossiers')
+    end
+  end
+
+  describe 'GET #new' do
+    subject { get :new, procedure_id: procedure_id }
+
+    context 'when params procedure_id is present' do
+      context 'when procedure_id is valid' do
+        context 'when user is logged in' do
+          before do
+            sign_in create(:user)
+          end
+
+          it { is_expected.to have_http_status(:success) }
+
+          context 'when procedure is archived' do
+            let(:procedure) { create(:procedure, archived: 'true') }
+
+            it { is_expected.to have_http_status(404) }
+          end
+        end
+        context 'when user is not logged' do
+          it { is_expected.to have_http_status(302) }
+        end
+      end
+
+      context 'when procedure_id is not valid' do
+        let(:procedure_id) { 0 }
+
+        before do
+          sign_in create(:user)
+        end
+
+        it { is_expected.to have_http_status(404) }
+      end
     end
   end
 
@@ -45,77 +81,75 @@ describe Users::DossiersController, type: :controller do
 
     describe 'professionnel fills form' do
       let(:user) { create(:user) }
-      context 'when pro_dossier_id is empty' do
-        context 'with valid siret ' do
-          before do
-            sign_in user
-          end
-
-          subject { post :create, siret: siret, pro_dossier_id: '', procedure_id: Procedure.last }
-
-
-          it 'create a dossier' do
-            expect { subject }.to change { Dossier.count }.by(1)
-          end
-
-          it 'creates entreprise' do
-            expect { subject }.to change { Entreprise.count }.by(1)
-          end
-
-          it 'links entreprise to dossier' do
-            subject
-            expect(Entreprise.last.dossier).to eq(Dossier.last)
-          end
-
-          it "links dossier to user" do
-            subject
-            expect(Dossier.last.user).to eq(user)
-          end
-
-          it 'creates etablissement for dossier' do
-            expect { subject }.to change { Etablissement.count }.by(1)
-          end
-
-          it 'links etablissement to dossier' do
-            subject
-            expect(Etablissement.last.dossier).to eq(Dossier.last)
-          end
-
-          it 'links etablissement to entreprise' do
-            subject
-            expect(Etablissement.last.entreprise).to eq(Entreprise.last)
-          end
-
-          it 'creates exercices for dossier' do
-            expect { subject }.to change { Exercice.count }.by(3)
-            expect(Exercice.last.etablissement).to eq(Dossier.last.etablissement)
-          end
-
-          it 'links procedure to dossier' do
-            subject
-            expect(Dossier.last.procedure).to eq(Procedure.last)
-          end
-
-          it 'state of dossier is draft' do
-            subject
-            expect(Dossier.last.state).to eq('draft')
-          end
+      context 'with valid siret ' do
+        before do
+          sign_in user
         end
 
-        context 'with non existant siret' do
-          before do
-            sign_in create(:user)
-          end
+        subject { post :create, dossier: {siret: siret, procedure_id: Procedure.last} }
 
-          let(:siret_not_found) { '11111111111111' }
-          subject { post :create, siret: siret_not_found, pro_dossier_id: '', procedure_id: procedure.id }
-          it 'does not create new dossier' do
-            expect { subject }.not_to change { Dossier.count }
-          end
 
-          it 'redirects to show' do
-            expect(subject).to redirect_to(controller: :siret, procedure_id: procedure.id)
-          end
+        it 'create a dossier' do
+          expect { subject }.to change { Dossier.count }.by(1)
+        end
+
+        it 'creates entreprise' do
+          expect { subject }.to change { Entreprise.count }.by(1)
+        end
+
+        it 'links entreprise to dossier' do
+          subject
+          expect(Entreprise.last.dossier).to eq(Dossier.last)
+        end
+
+        it "links dossier to user" do
+          subject
+          expect(Dossier.last.user).to eq(user)
+        end
+
+        it 'creates etablissement for dossier' do
+          expect { subject }.to change { Etablissement.count }.by(1)
+        end
+
+        it 'links etablissement to dossier' do
+          subject
+          expect(Etablissement.last.dossier).to eq(Dossier.last)
+        end
+
+        it 'links etablissement to entreprise' do
+          subject
+          expect(Etablissement.last.entreprise).to eq(Entreprise.last)
+        end
+
+        it 'creates exercices for dossier' do
+          expect { subject }.to change { Exercice.count }.by(3)
+          expect(Exercice.last.etablissement).to eq(Dossier.last.etablissement)
+        end
+
+        it 'links procedure to dossier' do
+          subject
+          expect(Dossier.last.procedure).to eq(Procedure.last)
+        end
+
+        it 'state of dossier is draft' do
+          subject
+          expect(Dossier.last.state).to eq('draft')
+        end
+      end
+
+      context 'with non existant siret' do
+        before do
+          sign_in create(:user)
+        end
+
+        let(:siret_not_found) { '11111111111111' }
+        subject { post :create, dossier: {siret: siret_not_found, procedure_id: procedure.id} }
+        it 'does not create new dossier' do
+          expect { subject }.not_to change { Dossier.count }
+        end
+
+        it 'redirects to show' do
+          expect(subject).to redirect_to new_users_dossiers_path(procedure_id: procedure_id)
         end
       end
     end
@@ -124,7 +158,7 @@ describe Users::DossiersController, type: :controller do
   describe 'PUT #update' do
     before do
       sign_in dossier.user
-      put :update, id: dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
+      put :update, id: dossier_id, dossier: {autorisation_donnees: autorisation_donnees}
     end
     context 'when Checkbox is checked' do
       let(:autorisation_donnees) { '1' }
@@ -139,7 +173,7 @@ describe Users::DossiersController, type: :controller do
         let(:use_api_carto) { true }
 
         before do
-          put :update, id: dossier_id, dossier: { autorisation_donnees: autorisation_donnees }
+          put :update, id: dossier_id, dossier: {autorisation_donnees: autorisation_donnees}
         end
         it 'redirects to carte' do
           expect(response).to redirect_to(controller: :carte, action: :show, dossier_id: dossier.id)

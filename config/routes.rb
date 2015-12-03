@@ -21,9 +21,6 @@ Rails.application.routes.draw do
   get 'demo' => 'demo#index'
 
   namespace :users do
-    get 'siret' => 'siret#index'
-    get 'procedure/:procedure_id' => 'procedure#index'
-
     resources :dossiers do
       get '/description' => 'description#show'
       get '/description/error' => 'description#error'
