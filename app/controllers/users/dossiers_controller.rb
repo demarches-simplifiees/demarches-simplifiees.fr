@@ -1,5 +1,6 @@
 class Users::DossiersController < UsersController
   before_action :authenticate_user!
+  before_action :check_siret, only: :create
 
   def index
     order = 'DESC'
@@ -74,8 +75,7 @@ class Users::DossiersController < UsersController
     redirect_to url_for(controller: :dossiers, action: :show, id: @dossier.id)
 
   rescue RestClient::ResourceNotFound
-    flash.alert = t('errors.messages.invalid_siret')
-    redirect_to url_for new_users_dossiers_path(procedure_id: create_params[:procedure_id])
+    errors_valid_siret
 
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
@@ -114,6 +114,15 @@ class Users::DossiersController < UsersController
   end
 
   private
+
+  def check_siret
+    errors_valid_siret unless Siret.new(siret: siret).valid?
+  end
+
+  def errors_valid_siret
+    flash.alert = t('errors.messages.invalid_siret')
+    redirect_to url_for new_users_dossiers_path(procedure_id: create_params[:procedure_id])
+  end
 
   def update_params
     params.require(:dossier).permit(:autorisation_donnees)

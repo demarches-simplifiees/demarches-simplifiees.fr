@@ -21,7 +21,7 @@ module TPS
     config.i18n.default_locale = :fr
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
 
-    config.autoload_paths += %W(#{config.root}/lib)
+    config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/validators)
     config.assets.paths << Rails.root.join('app', 'assets', 'javascript')
     config.assets.paths << Rails.root.join('app', 'assets', 'javascript', 'api_carto')
     config.assets.paths << Rails.root.join('app', 'assets', 'javascript', 'api_carto', 'lib')
