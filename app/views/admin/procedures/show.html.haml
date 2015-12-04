@@ -4,7 +4,9 @@
 
 %ul.nav.nav-tabs
   %li.active
-    = link_to('Description', admin_procedure_path(@procedure))
+    = link_to('Informations', admin_procedure_path(@procedure))
+  %li
+    = link_to('Description', edit_admin_procedure_path(@procedure))
   %li
     = link_to('Champs', admin_procedure_types_de_champ_path(@procedure))
   %li
@@ -25,9 +27,52 @@
           %i.fa.fa-remove
           Annuler
 
-#procedure_new.section.section-label
-  = form_for @procedure, url: url_for({controller: 'admin/procedures', action: :update, id: @procedure.id}) do |f|
-    = render partial: 'informations', locals: {f: f}
-    = f.submit 'Editer', class: 'btn btn-success', style: 'float:right'
+
 %br
+%div
+
+  %h3 Lien procédure
+  %div{style:'margin-left:3%'}
+    = @procedure.lien
+
 %br
+%h3 Dossiers
+
+.row
+  .col-md-6.col-lg-6{style:'margin-left:3%'}
+    %h4 Total
+    %div
+      = @facade.dossiers_total
+
+    %h4.text-danger Attente Gestionnaire
+    %div
+      = @facade.dossiers_waiting_gestionnaire_total
+
+    %h4.text-info Attente User
+    %div
+      = @facade.dossiers_waiting_user_total
+
+    %h4.text-success Terminé
+    %div
+      = @facade.dossiers_termine_total
+
+    %h4 Archivé
+
+    - unless @facade.dossiers_archived_total == 0
+      %ul
+        - @facade.dossiers_archived_by_state_total.each do |dossier|
+          %li
+            = dossier.state_fr
+            \:
+            = dossier.total
+    - else
+      %p
+        0
+
+  .col-md-5.col-lg-5
+    %h4 Non archivés
+    = javascript_include_tag "https://code.highcharts.com/highcharts.js", "chartkick"
+    - if @facade.dossiers_for_pie_highchart.blank?
+      Aucune statistique pour le moment
+    -else
+      =pie_chart @facade.dossiers_for_pie_highchart

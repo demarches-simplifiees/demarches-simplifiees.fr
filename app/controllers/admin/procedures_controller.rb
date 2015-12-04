@@ -8,18 +8,18 @@ class Admin::ProceduresController < AdminController
 
   def archived
     @procedures = current_administrateur.procedures.where(archived: true)
-                     .paginate(:page => params[:page]).decorate
+                      .paginate(:page => params[:page]).decorate
     @page = 'archived'
   end
 
   def show
-    @procedure = current_administrateur.procedures.find(params[:id]).decorate
-    @types_de_champ = @procedure.types_de_champ.order(:order_place)
-    @types_de_piece_justificative = @procedure.types_de_piece_justificative.order(:libelle)
+    informations
 
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
-    redirect_to admin_procedures_path
+    @facade = AdminProceduresShowFacades.new @procedure
+  end
+
+  def edit
+    informations
   end
 
   def new
@@ -43,7 +43,7 @@ class Admin::ProceduresController < AdminController
 
     unless @procedure.update_attributes(create_procedure_params)
       flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
-      return render 'show'
+      return render 'edit'
     end
     flash.notice = 'Préocédure modifiée'
     redirect_to admin_procedures_path
@@ -65,5 +65,13 @@ class Admin::ProceduresController < AdminController
 
   def create_procedure_params
     params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_demarche, :use_api_carto).merge(administrateur_id: current_administrateur.id)
+  end
+
+  def informations
+    @procedure = current_administrateur.procedures.find(params[:id]).decorate
+
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = 'Procédure inéxistante'
+    redirect_to admin_procedures_path
   end
 end

@@ -21,11 +21,8 @@ module TPS
     config.i18n.default_locale = :fr
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
 
-    config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/validators)
+    config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/validators #{config.root}/app/facades)
     config.assets.paths << Rails.root.join('app', 'assets', 'javascript')
-    config.assets.paths << Rails.root.join('app', 'assets', 'javascript', 'api_carto')
-    config.assets.paths << Rails.root.join('app', 'assets', 'javascript', 'api_carto', 'lib')
-    config.assets.paths << Rails.root.join('app', 'assets', 'javascript', 'api_carto', 'lib', 'images')
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true

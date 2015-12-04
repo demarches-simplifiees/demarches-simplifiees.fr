@@ -13,6 +13,16 @@ class DossierDecorator < Draper::Decorator
   end
 
   def state_fr
+    DossierDecorator.case_state_fr state
+  end
+
+  def state_color_class
+    return 'text-danger' if waiting_for_gestionnaire?
+    return 'text-info' if waiting_for_user?
+    return 'text-success' if termine?
+  end
+
+  def self.case_state_fr state=self.state
     case state
       when 'draft'
         'Brouillon'
@@ -31,11 +41,5 @@ class DossierDecorator < Draper::Decorator
       else
         fail 'State not valid'
     end
-  end
-
-  def state_color_class
-    return 'text-danger' if waiting_for_gestionnaire?
-    return 'text-info' if waiting_for_user?
-    return 'text-success' if termine?
   end
 end
