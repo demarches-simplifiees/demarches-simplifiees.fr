@@ -62,8 +62,8 @@ ActiveRecord::Schema.define(version: 20151127103412) do
     t.boolean  "autorisation_donnees"
     t.string   "nom_projet"
     t.integer  "procedure_id"
-    t.datetime "created_at",           default: '2015-09-22 09:25:29'
-    t.datetime "updated_at",           default: '2015-09-22 09:25:29'
+    t.datetime "created_at",           default: '2015-12-07 09:51:46'
+    t.datetime "updated_at",           default: '2015-12-07 09:51:46'
     t.string   "state"
     t.integer  "user_id"
     t.text     "json_latlngs"
