@@ -2,6 +2,7 @@ class Procedure < ActiveRecord::Base
   has_many :types_de_piece_justificative
   has_many :types_de_champ
   has_many :dossiers
+  has_many :module_api_cartos
   accepts_nested_attributes_for :types_de_champ,:reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :types_de_piece_justificative, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   belongs_to :administrateur
