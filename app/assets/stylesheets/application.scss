@@ -32,6 +32,31 @@ body {
   max-height: 100%;
 }
 
+#beta {
+  text-align: center;
+  text-transform: uppercase;
+  position: absolute;
+  top: 26px;
+  right: -35px;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  width: 150px;
+  background-color: #008cba;
+  color: #fff;
+  padding: 5px;
+  font-size: 15px;
+  font-weight: 700;
+  z-index: 10;
+}
+
+#sign_out {
+  decorate: none;
+  box-shadow: none;
+  float: right;
+  margin-top: 8px;
+  margin-right: 80px;
+}
+
 .alert.alert-success,
 .alert.alert-danger {
   margin-top: -20px
@@ -129,19 +154,18 @@ div.pagination {
   border-bottom-right-radius: 0;
 }
 
-.btn-nav.text-info:hover{
+.btn-nav.text-info:hover {
   color: #23527c;
 }
 
-.btn-nav.text-success:hover{
+.btn-nav.text-success:hover {
   color: #3c763d;
 }
 
-.btn-nav.text-danger:hover{
+.btn-nav.text-danger:hover {
   color: #a94442;
 }
 
-
 #confirm {
-  display:none;
+  display: none;
 }

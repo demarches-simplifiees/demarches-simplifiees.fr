@@ -8,29 +8,32 @@
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
   %body
+    #beta
+      Beta
     %div
       %div.navbar
         = image_tag('marianne_small.png', class: 'logo')
         %a{href: '/', class:'btn btn-lg'}
           ='TPS'
 
-        -if gestionnaire_signed_in?
-          %div{style: 'decorate:none; box-shadow:none; float:right; margin-top:8px'}
-            = current_gestionnaire.email
-            = link_to "Déconnexion", '/gestionnaires/sign_out', method: :delete, :class => 'btn btn-md'
-        -elsif administrateur_signed_in?
-          %div{style: 'decorate:none; box-shadow:none; float:right; margin-top:8px'}
-            = current_administrateur.email
-            = link_to "Déconnexion", '/administrateurs/sign_out', method: :delete, :class => 'btn btn-md'
+        #sign_out
+          -if gestionnaire_signed_in?
+            %div
+              = current_gestionnaire.email
+              = link_to "Déconnexion", '/gestionnaires/sign_out', method: :delete, :class => 'btn btn-md'
+          -elsif administrateur_signed_in?
+            %div
+              = current_administrateur.email
+              = link_to "Déconnexion", '/administrateurs/sign_out', method: :delete, :class => 'btn btn-md'
 
-        - elsif user_signed_in?
-          %div.user{style: 'decorate:none; box-shadow:none; float:right; margin-top:8px'}
-            -if current_user.loged_in_with_france_connect
-              = image_tag('logo_FC_02_small.png', class: 'logo_fc_small')
-            -else
-              %i.fa.fa-user
-            = current_user.email
-            = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
+          - elsif user_signed_in?
+            %div.user
+              -if current_user.loged_in_with_france_connect
+                = image_tag('logo_FC_02_small.png', class: 'logo_fc_small')
+              -else
+                %i.fa.fa-user
+              = current_user.email
+              = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
 
       #flash_message.center
       - if flash.notice
