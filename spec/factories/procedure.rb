@@ -4,8 +4,15 @@ FactoryGirl.define do
     libelle 'Demande de subvention'
     description "Demande de subvention à l'intention des associations"
 
+    after(:build) do |procedure, _evaluator|
+      module_api_carto = create(:module_api_carto)
+      procedure.module_api_carto = module_api_carto
+    end
+
     trait :with_api_carto do
-      use_api_carto true
+      after(:build) do |procedure, _evaluator|
+        procedure.module_api_carto.use_api_carto = true
+      end
     end
 
     trait :with_type_de_champ do

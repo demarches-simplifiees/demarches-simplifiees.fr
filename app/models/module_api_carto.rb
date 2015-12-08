@@ -1,7 +1,7 @@
 class ModuleAPICarto < ActiveRecord::Base
-  enum name: {'quartiers_prioritaires' => 'quartiers_prioritaires'}
-
   belongs_to :procedure
 
-  validates :name, presence: true, allow_blank: false, allow_nil: false
+  validates :use_api_carto, presence: true, allow_blank: true, allow_nil: false
+  validates :quartiers_prioritaires, presence: true, allow_blank: true, allow_nil: false
+  validates :cadastre, presence: true, allow_blank: true, allow_nil: false
 end

@@ -3,8 +3,7 @@ require 'spec_helper'
 describe Users::DossiersController, type: :controller do
   let(:user) { create(:user) }
 
-  let(:use_api_carto) { false }
-  let(:procedure) { create(:procedure, use_api_carto: use_api_carto) }
+  let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
   let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
   let(:dossier_id) { dossier.id }
@@ -170,7 +169,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       context 'procedure use api carto' do
-        let(:use_api_carto) { true }
+        let(:procedure) { create(:procedure, :with_api_carto) }
 
         before do
           put :update, id: dossier_id, dossier: {autorisation_donnees: autorisation_donnees}

@@ -88,7 +88,7 @@ class Users::DossiersController < UsersController
     if checked_autorisation_donnees?
       @dossier.update_attributes(update_params)
 
-      if @dossier.procedure.use_api_carto
+      if @dossier.procedure.module_api_carto.use_api_carto
         redirect_to url_for(controller: :carte, action: :show, dossier_id: @dossier.id)
       else
         redirect_to url_for(controller: :description, action: :show, dossier_id: @dossier.id)
