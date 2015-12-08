@@ -7,16 +7,25 @@ table {
   font-size: 13px;
 }
 
-#map{
-  @extend .col-md-12;
-  @extend .col-lg-12;
+#carte_page {
+  #map {
+    @extend .col-md-12;
+    @extend .col-lg-12;
 
-  height:600px;
+    height: 600px;
+  }
+
+  #map.qp {
+    @extend .col-md-9;
+    @extend .col-lg-9;
+  }
 }
 
-#map.qp {
-  @extend .col-md-9;
-  @extend .col-lg-9;
+#infos_dossier {
+  #map.mini {
+    height: 300px;
+    width: 100%;
+  }
 }
 
 #qp_list {
@@ -24,17 +33,12 @@ table {
   @extend .col-lg-3;
 
   h3 {
-    margin-top:0px;
+    margin-top: 0px;
   }
 
   ul li {
-    margin-bottom:10px;
+    margin-bottom: 10px;
   }
-}
-
-#map.mini{
-  height:300px;
-  width:100%;
 }
 
 #map section.overlay {
@@ -107,16 +111,15 @@ table {
   pointer-events: none;
 }
 
-
-
 .info {
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;
   background: white;
-  background: rgba(255,255,255,0.8);
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
 }
+
 .info h4 {
   margin: 0 0 5px;
   color: #777;

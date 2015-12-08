@@ -16,6 +16,10 @@ class DossierDecorator < Draper::Decorator
     DossierDecorator.case_state_fr state
   end
 
+  def class_qp_active
+    'qp' if procedure.module_api_carto.quartiers_prioritaires
+  end
+
   def state_color_class
     return 'text-danger' if waiting_for_gestionnaire?
     return 'text-info' if waiting_for_user?
