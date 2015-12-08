@@ -8,7 +8,7 @@ FactoryGirl.define do
       use_api_carto true
     end
 
-    trait :with_qp do
+    trait :with_quartiers_prioritaires do
       use_api_carto true
       quartiers_prioritaires true
     end

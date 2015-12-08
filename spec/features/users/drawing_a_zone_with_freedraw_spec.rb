@@ -2,7 +2,9 @@ require 'spec_helper'
 
 feature 'drawing a zone with freedraw' do
   let(:user) { create(:user) }
-  let(:dossier) { create(:dossier, :with_procedure, :with_entreprise, user: user) }
+  let(:module_api_carto) { create(:module_api_carto, :with_api_carto) }
+  let(:procedure) { create(:procedure, module_api_carto: module_api_carto) }
+  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, user: user) }
 
   context 'when user is not logged in' do
     before do
@@ -22,26 +24,48 @@ feature 'drawing a zone with freedraw' do
         end
       end
 
-      scenario 'he is redirected to carte page' do
-        expect(page).to have_css('.content #map')
+      context 'when procedure have api carto activated' do
+        scenario 'he is redirected to carte page' do
+          expect(page).to have_css('.content #map')
+        end
       end
 
-      context 'when draw a zone on #map', js: true  do
-        before do
-          allow_any_instance_of(Users::CarteController).
-              to receive(:generate_qp).
-                     and_return({"QPCODE1234" => { :code => "QPCODE1234", :nom => "Quartier de test", :commune => "Paris", :geometry => { :type=>"MultiPolygon", :coordinates=>[[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] }}})
+      context 'when procedure does not have api carto activated' do
+        let(:module_api_carto) { create(:module_api_carto) }
 
-          page.execute_script('freeDraw.fire("markers", {latLngs: []});')
-          wait_for_ajax
+        scenario 'he is redirect to user dossiers index' do
+          expect(page).to have_css('#users_index')
         end
 
-        scenario 'QP name is present on page' do
-          expect(page).to have_content('Quartier de test')
+        scenario 'alert message is present' do
+          expect(page).to have_content('Le dossier n\'a pas accès à la cartographie')
         end
+      end
 
-        scenario 'Commune is present on page' do
-          expect(page).to have_content('Paris')
+      context 'when draw a zone on #map', js: true do
+        context 'when module quartiers prioritaires is activated' do
+          let(:module_api_carto) { create(:module_api_carto, :with_quartiers_prioritaires) }
+
+          before do
+            allow_any_instance_of(Users::CarteController).
+                to receive(:generate_qp).
+                       and_return({"QPCODE1234" => {:code => "QPCODE1234", :nom => "Quartier de test", :commune => "Paris", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
+
+            page.execute_script('freeDraw.fire("markers", {latLngs: []});')
+            wait_for_ajax
+          end
+
+          scenario 'div #map .qp is present' do
+            expect(page).to have_css('.content #map.qp')
+          end
+
+          scenario 'QP name is present on page' do
+            expect(page).to have_content('Quartier de test')
+          end
+
+          scenario 'Commune is present on page' do
+            expect(page).to have_content('Paris')
+          end
         end
       end
     end

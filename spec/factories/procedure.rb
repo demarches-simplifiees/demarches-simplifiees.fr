@@ -5,8 +5,10 @@ FactoryGirl.define do
     description "Demande de subvention à l'intention des associations"
 
     after(:build) do |procedure, _evaluator|
-      module_api_carto = create(:module_api_carto)
-      procedure.module_api_carto = module_api_carto
+      if procedure.module_api_carto.nil?
+        module_api_carto = create(:module_api_carto)
+        procedure.module_api_carto = module_api_carto
+      end
     end
 
     trait :with_api_carto do

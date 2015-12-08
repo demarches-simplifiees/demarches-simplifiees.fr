@@ -3,6 +3,12 @@ class Users::CarteController < UsersController
 
   def show
     @dossier = current_user_dossier
+
+    unless @dossier.procedure.module_api_carto.use_api_carto
+      flash.alert = t('errors.messages.dossier_map_not_activated')
+      redirect_to url_for(root_path)
+    end
+
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(root_path)

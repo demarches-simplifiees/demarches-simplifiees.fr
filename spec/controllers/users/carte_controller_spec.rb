@@ -3,7 +3,10 @@ require 'spec_helper'
 RSpec.describe Users::CarteController, type: :controller do
   let(:bad_adresse) { 'babouba' }
 
-  let(:dossier) { create(:dossier, :with_user, :with_procedure) }
+  let(:procedure) { create(:procedure, :with_api_carto) }
+  let(:dossier) { create(:dossier, :with_user, procedure: procedure) }
+
+  let(:dossier_with_no_carto) { create(:dossier, :with_user, :with_procedure) }
   let!(:entreprise) { create(:entreprise, dossier: dossier) }
   let!(:etablissement) { create(:etablissement, dossier: dossier) }
   let(:bad_dossier_id) { Dossier.count + 1000 }
@@ -25,14 +28,23 @@ RSpec.describe Users::CarteController, type: :controller do
       end
     end
 
-    it 'returns http success' do
+    it 'returns http success if carto is activated' do
       get :show, dossier_id: dossier.id
       expect(response).to have_http_status(:success)
     end
 
-    it 'redirection vers la liste des dossiers du user si dossier ID n\'existe pas' do
-      get :show, dossier_id: bad_dossier_id
-      expect(response).to redirect_to(root_path)
+    context 'when procedure not have activate api carto' do
+      it 'redirection on user dossier list' do
+        get :show, dossier_id: dossier_with_no_carto.id
+        expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context 'when dossier id not exist' do
+      it 'redirection on user dossier list' do
+        get :show, dossier_id: bad_dossier_id
+        expect(response).to redirect_to(root_path)
+      end
     end
 
     it_behaves_like "not owner of dossier", :show
