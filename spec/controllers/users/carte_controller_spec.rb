@@ -87,7 +87,7 @@ RSpec.describe Users::CarteController, type: :controller do
 
     describe 'Save quartier prioritaire' do
       before do
-        allow_any_instance_of(CARTO::SGMAP::QuartierPrioritaireAdapter).
+        allow_any_instance_of(CARTO::SGMAP::QuartiersPrioritaires::Adapter).
             to receive(:to_params).
                    and_return({"QPCODE1234" => {:code => "QPCODE1234", :nom => "QP de test", :commune => "Paris", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
 
@@ -182,7 +182,7 @@ RSpec.describe Users::CarteController, type: :controller do
 
   describe 'POST #get_qp' do
     before do
-      allow_any_instance_of(CARTO::SGMAP::QuartierPrioritaireAdapter).
+      allow_any_instance_of(CARTO::SGMAP::QuartiersPrioritaires::Adapter).
           to receive(:to_params).
                  and_return({"QPCODE1234" => {:code => "QPCODE1234", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
 

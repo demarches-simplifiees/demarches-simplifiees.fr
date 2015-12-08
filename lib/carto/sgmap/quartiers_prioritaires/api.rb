@@ -1,4 +1,4 @@
-class CARTO::SGMAP::API
+class CARTO::SGMAP::QuartiersPrioritaires::API
   def initialize
   end
 

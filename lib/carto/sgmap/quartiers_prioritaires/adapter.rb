@@ -1,10 +1,10 @@
-class CARTO::SGMAP::QuartierPrioritaireAdapter
+class CARTO::SGMAP::QuartiersPrioritaires::Adapter
   def initialize(coordinates)
     @coordinates = GeojsonService.to_json_polygon(coordinates)
   end
 
   def data_source
-    @data_source ||= JSON.parse(CARTO::SGMAP::API.search_qp(@coordinates), symbolize_names: true)
+    @data_source ||= JSON.parse(CARTO::SGMAP::QuartiersPrioritaires::API.search_qp(@coordinates), symbolize_names: true)
   end
 
   def to_params

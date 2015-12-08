@@ -67,7 +67,7 @@ class Users::CarteController < UsersController
 
     coordinates.each_with_index do |coordinate, index|
       coordinate = coordinates[index].map { |latlng| [latlng['lng'], latlng['lat']] }
-      qp = qp.merge CARTO::SGMAP::QuartierPrioritaireAdapter.new(coordinate).to_params
+      qp = qp.merge CARTO::SGMAP::QuartiersPrioritaires::Adapter.new(coordinate).to_params
     end
 
     qp
