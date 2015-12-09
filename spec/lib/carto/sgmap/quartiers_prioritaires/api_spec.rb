@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CARTO::SGMAP::API do
+describe CARTO::SGMAP::QuartiersPrioritaires::API do
   describe '.search_qp' do
     subject { described_class.search_qp(geojson) }
 

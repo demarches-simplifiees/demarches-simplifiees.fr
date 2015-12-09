@@ -9,6 +9,22 @@
 
 %br
 
-%label{ style:'font-weight:normal' }
-  =f.check_box :use_api_carto
-  Utilisation de l'API Carto
+%h4 Cartographie
+
+= f.fields_for :module_api_carto, @procedure.module_api_carto do |ff|
+  %label
+    =ff.check_box :use_api_carto, {id: :procedure_module_api_carto_use_api_carto}
+    Utilisation de la cartographie
+
+  %ul#modules_api_carto
+    %li
+      %label
+        = ff.check_box :quartiers_prioritaires
+        Quartiers Prioritaires
+    %li
+      %label
+        = ff.check_box :cadastre, disabled: :disabled
+        Cadastre
+        %i
+          %strong
+            (bientôt disponible)

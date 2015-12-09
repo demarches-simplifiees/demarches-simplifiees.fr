@@ -11,11 +11,14 @@
 
   %br
   %br
-  .row
-    #map.qp
-    #qp_list
-      %h3 Quartiers prioritaites
-      %ul
+  #carte_page.row
+    - if @dossier.procedure.module_api_carto.quartiers_prioritaires
+      #map.qp
+      #qp_list
+        %h3 Quartiers prioritaites
+        %ul
+    -else
+      #map
 
   = form_tag(url_for({controller: :carte, action: :save, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
     %br

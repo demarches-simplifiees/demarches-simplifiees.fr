@@ -10,7 +10,9 @@ describe Admin::ProceduresController, type: :controller do
   let(:organisation) { 'Organisation de test' }
   let(:direction) { 'Direction de test' }
   let(:lien_demarche) { 'http://localhost.com' }
-  let(:use_api_carto) { '1' }
+  let(:use_api_carto) { '0' }
+  let(:quartiers_prioritaires) { '0' }
+  let(:cadastre) { '0' }
 
   let(:procedure_params) {
     {
@@ -19,7 +21,11 @@ describe Admin::ProceduresController, type: :controller do
         organisation: organisation,
         direction: direction,
         lien_demarche: lien_demarche,
-        use_api_carto: use_api_carto
+        module_api_carto_attributes: {
+            use_api_carto: use_api_carto,
+            quartiers_prioritaires: quartiers_prioritaires,
+            cadastre: cadastre
+        }
     }
   }
 
@@ -89,9 +95,20 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.organisation).to eq(organisation) }
           it { expect(subject.direction).to eq(direction) }
           it { expect(subject.lien_demarche).to eq(lien_demarche) }
-          it { expect(subject.use_api_carto).to be_truthy }
           it { expect(subject.administrateur_id).to eq(admin.id) }
 
+        end
+
+        describe 'procedure module api carto attributs in database' do
+          let(:procedure) { Procedure.last }
+          let(:use_api_carto) { '1' }
+          let(:quartiers_prioritaires) { '1' }
+
+          subject { ModuleAPICarto.last }
+
+          it { expect(subject.procedure).to eq(procedure) }
+          it { expect(subject.use_api_carto).to be_truthy }
+          it { expect(subject.quartiers_prioritaires).to be_truthy }
         end
 
         it { expect(subject).to redirect_to(admin_procedure_types_de_champ_path(procedure_id: Procedure.last.id)) }
@@ -108,6 +125,10 @@ describe Admin::ProceduresController, type: :controller do
         subject { post :create, procedure: procedure_params }
 
         it { expect { subject }.to change { Procedure.count }.by(0) }
+
+        describe 'no new module api carto in database' do
+          it { expect { subject }.to change { ModuleAPICarto.count }.by(0) }
+        end
       end
 
       describe 'flash message is present' do
@@ -145,7 +166,8 @@ describe Admin::ProceduresController, type: :controller do
         let(:organisation) { 'plop' }
         let(:direction) { 'plap' }
         let(:lien_demarche) { 'http://plip.com' }
-        let(:use_api_carto) { '0' }
+        let(:use_api_carto) { '1' }
+        let(:cadastre) { '1' }
 
         describe 'procedure attributs in database' do
           subject { procedure }
@@ -155,7 +177,14 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.organisation).to eq(organisation) }
           it { expect(subject.direction).to eq(direction) }
           it { expect(subject.lien_demarche).to eq(lien_demarche) }
-          it { expect(subject.use_api_carto).to be_falsey }
+        end
+
+        describe 'procedure module api carto attributs in database' do
+          subject { procedure.module_api_carto }
+
+          it { expect(subject.use_api_carto).to be_truthy }
+          it { expect(subject.quartiers_prioritaires).to be_falsey }
+          it { expect(subject.cadastre).to be_truthy }
         end
 
         it { expect(subject).to redirect_to(admin_procedures_path) }
@@ -168,6 +197,14 @@ describe Admin::ProceduresController, type: :controller do
 
         describe 'flash message is present' do
           it { expect(flash[:alert]).to be_present }
+        end
+
+        describe 'procedure module api carto attributs in database' do
+          subject { procedure.module_api_carto }
+
+          it { expect(subject.use_api_carto).to be_falsey }
+          it { expect(subject.quartiers_prioritaires).to be_falsey }
+          it { expect(subject.cadastre).to be_falsey }
         end
       end
     end

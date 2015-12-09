@@ -24,10 +24,12 @@ class Admin::ProceduresController < AdminController
 
   def new
     @procedure ||= Procedure.new
+    @procedure.module_api_carto ||= ModuleAPICarto.new
   end
 
   def create
     @procedure = Procedure.new(create_procedure_params)
+    @procedure.module_api_carto = ModuleAPICarto.new(create_module_api_carto_params) if @procedure.valid?
 
     unless @procedure.save
       flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
@@ -64,7 +66,11 @@ class Admin::ProceduresController < AdminController
   private
 
   def create_procedure_params
-    params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_demarche, :use_api_carto).merge(administrateur_id: current_administrateur.id)
+    params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_demarche, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
+  end
+
+  def create_module_api_carto_params
+    params.require(:procedure).require(:module_api_carto_attributes).permit(:id, :use_api_carto, :quartiers_prioritaires, :cadastre)
   end
 
   def informations

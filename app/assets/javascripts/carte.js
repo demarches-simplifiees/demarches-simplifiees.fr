@@ -17,10 +17,7 @@ function initCarto() {
         layers: [OSM]
     });
 
-    freeDraw = new L.FreeDraw({
-        //mode: L.FreeDraw.MODES.CREATE
-    });
-
+    freeDraw = new L.FreeDraw();
     map.addLayer(freeDraw);
 
     if ($("#json_latlngs").val() != '' && $("#json_latlngs").val() != '[]') {
@@ -35,13 +32,16 @@ function initCarto() {
 
     add_event_freeDraw();
 
-    display_qp(JSON.parse($("#quartier_prioritaires").val()));
+    if (qp_active())
+        display_qp(JSON.parse($("#quartier_prioritaires").val()));
 }
 
 function add_event_freeDraw() {
     freeDraw.on('markers', function (e) {
         $("#json_latlngs").val(JSON.stringify(e.latLngs));
-        display_qp(get_qp(e.latLngs)['quartier_prioritaires']);
+
+        if (qp_active())
+            display_qp(get_qp(e.latLngs));
     });
 
     $("#new").on('click', function (e) {
@@ -71,7 +71,14 @@ function get_position() {
     return position;
 }
 
+function qp_active() {
+    return $("#map.qp").length > 0
+}
+
 function get_qp(coordinates) {
+    if (!qp_active())
+        return;
+
     var qp;
 
     $.ajax({
@@ -84,10 +91,13 @@ function get_qp(coordinates) {
         qp = data
     });
 
-    return qp;
+    return qp['quartier_prioritaires'];
 }
 
 function display_qp(qp_list) {
+    if (!qp_active())
+        return;
+
     qp_array = jsObject_to_array(qp_list);
 
     $("#qp_list ul").html('');

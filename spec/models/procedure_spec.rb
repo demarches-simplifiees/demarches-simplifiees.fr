@@ -5,6 +5,7 @@ describe Procedure do
     it { is_expected.to have_many(:types_de_piece_justificative) }
     it { is_expected.to have_many(:types_de_champ) }
     it { is_expected.to have_many(:dossiers) }
+    it { is_expected.to have_one(:module_api_carto) }
     it { is_expected.to belong_to(:administrateur) }
   end
 
