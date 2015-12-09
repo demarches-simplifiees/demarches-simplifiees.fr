@@ -1,4 +1,4 @@
-class Administrateurs::SessionsController < Devise::SessionsController
+class Administrateurs::SessionsController < Sessions::SessionsController
 
   def new
     @administrateur = Administrateur.new

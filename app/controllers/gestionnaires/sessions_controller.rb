@@ -1,4 +1,4 @@
-class Gestionnaires::SessionsController < Devise::SessionsController
+class Gestionnaires::SessionsController < Sessions::SessionsController
 
 
   def new

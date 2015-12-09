@@ -9,14 +9,18 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '.create' do
-    before do
-      post :create, user: { email: user.email, password: user.password }
-      user.reload
+    it { expect(described_class).to be < Sessions::SessionsController }
+
+    describe 'France Connect attribut' do
+      before do
+        post :create, user: {email: user.email, password: user.password}
+        user.reload
+      end
+
+      subject { user.loged_in_with_france_connect }
+
+      it { is_expected.to be_falsey }
     end
-
-    subject { user.loged_in_with_france_connect }
-
-    it { is_expected.to be_falsey }
   end
 
   describe '.destroy' do
@@ -42,7 +46,7 @@ describe Users::SessionsController, type: :controller do
 
     context 'when user is not connect with france connect' do
       let(:loged_in_with_france_connect) { false }
-      
+
       it 'redirect to root page' do
         expect(response).to redirect_to(root_path)
       end
