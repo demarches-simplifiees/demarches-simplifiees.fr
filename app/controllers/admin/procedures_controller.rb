@@ -66,7 +66,7 @@ class Admin::ProceduresController < AdminController
   private
 
   def create_procedure_params
-    params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_demarche, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
+    params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_demarche, :euro_flag, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
   end
 
   def create_module_api_carto_params

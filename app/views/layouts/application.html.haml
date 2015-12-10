@@ -13,8 +13,8 @@
     %div
       %div.navbar
         = image_tag('marianne_small.png', class: 'logo')
-        %a{href: '/', class:'btn btn-lg'}
-          ='TPS'
+        %a{href: '/'}
+          = image_tag('logo-tps.png', class: 'logo')
 
         #sign_out
           -if gestionnaire_signed_in?

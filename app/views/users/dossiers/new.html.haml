@@ -2,14 +2,20 @@
   .row
     %p.lead{id: 'pro_section'}
       %br
-      = image_tag('logo-tps.png')
       %br
+
+      - if @dossier.procedure.euro_flag
+        #euro_flag.flag
+          =image_tag('drapeau_europe.png')
+
+      #logo_procedure.flag
+        =image_tag('logo-tps.png')
+
+
       %h2#titre_procedure.text-info
         = @dossier.procedure.libelle
-
       %p
         = @dossier.procedure.description
-
       %br
 
       = form_for @dossier, url: {controller: 'users/dossiers', action: :create}, method: :post do |f|
