@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151210134135) do
+ActiveRecord::Schema.define(version: 20151210150958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(version: 20151210134135) do
     t.integer  "administrateur_id"
     t.boolean  "archived",          default: false
     t.boolean  "euro_flag",         default: false
+    t.string   "logo"
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|

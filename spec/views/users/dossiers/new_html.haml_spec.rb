@@ -3,29 +3,47 @@ require 'spec_helper'
 describe 'users/dossiers/new.html.haml', type: :view do
   let(:user) { create(:user) }
   let(:euro_flag) { false }
-  let(:procedure) { create(:procedure, euro_flag: euro_flag) }
-  let!(:dossier) { create(:dossier, procedure: procedure, user: user,).decorate }
+  let(:logo) { '' }
+  let(:procedure) { create(:procedure, euro_flag: euro_flag, logo: logo) }
+  let!(:dossier) { create(:dossier, procedure: procedure, user: user).decorate }
+
+  before do
+    sign_in user
+
+    assign(:dossier, dossier.decorate)
+    render
+  end
+
+  subject { rendered }
+
+  it { is_expected.to have_css('#users_siret_index') }
 
   describe 'euro flag' do
-    before do
-      sign_in user
-
-      assign(:dossier, dossier.decorate)
-      render
-    end
-
-    subject { rendered }
-
-    it { is_expected.to have_css('#users_siret_index') }
-
     context 'euro flag is not present' do
       it { is_expected.not_to have_css('#euro_flag.flag') }
     end
 
     context 'euro flag is present' do
       let(:euro_flag) { true }
-
       it { is_expected.to have_css('#euro_flag.flag') }
+    end
+  end
+
+  describe 'logo procedure' do
+    context 'procedure have no logo' do
+      it 'MPS logo is present' do
+        is_expected.to have_css("img[src='/assets#{asset_path('logo-tps.png')}']")
+      end
+    end
+
+    context 'procedure have logo' do
+      let(:logo) { fixture_file_upload('app/assets/images/logo_FC_02.png', 'image/png') }
+
+      it 'Procedure logo is present' do
+        p subject
+
+        is_expected.to have_css("img[src='#{procedure.logo}']")
+      end
     end
   end
 end

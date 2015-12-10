@@ -7,12 +7,21 @@
       =value
     =f.text_field key, class: 'form-control', placeholder: value
 
-%h4 Drapeau européen
-%label
-  =f.check_box :euro_flag
-  Afficher le drapeau européen
+.row
+  .col-md-6.col-lg-6
+    %h4 Logo de la procédure
+    = f.file_field(:logo, accept: 'image/png, image/jpg,image/jpeg')
 
-%br
+    %div{style:'margin-top:5px'}
+      %i
+        Fichier accepté : JPG / JPEG / PNG
+  .col-md-6.col-lg-6
+    %h4 Drapeau européen
+    %label
+      =f.check_box :euro_flag
+    Afficher le drapeau européen
+
+
 %br
 
 %h4 Cartographie

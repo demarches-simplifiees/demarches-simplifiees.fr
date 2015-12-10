@@ -13,7 +13,7 @@
     = link_to('Pièces justificatives', admin_procedure_pieces_justificatives_path(@procedure))
 
 #procedure_new.section.section-label
-  = form_for @procedure, url: url_for({controller: 'admin/procedures', action: :update, id: @procedure.id}) do |f|
+  = form_for @procedure, url: url_for({controller: 'admin/procedures', action: :update, id: @procedure.id}), multipart: true do |f|
     = render partial: 'informations', locals: {f: f}
     = f.submit 'Editer', class: 'btn btn-success', style: 'float:right'
 %br

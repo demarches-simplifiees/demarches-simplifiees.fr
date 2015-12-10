@@ -8,6 +8,8 @@ class Procedure < ActiveRecord::Base
   accepts_nested_attributes_for :module_api_carto
   belongs_to :administrateur
 
+  mount_uploader :logo, ProcedureLogoUploader
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
 

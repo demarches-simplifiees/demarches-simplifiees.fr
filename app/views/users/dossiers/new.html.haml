@@ -9,8 +9,7 @@
           =image_tag('drapeau_europe.png')
 
       #logo_procedure.flag
-        =image_tag('logo-tps.png')
-
+        =image_tag( @dossier.procedure.decorate.logo_img )
 
       %h2#titre_procedure.text-info
         = @dossier.procedure.libelle
