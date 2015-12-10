@@ -1,12 +1,15 @@
+var LON = '2.428462';
+var LAT = '46.538192';
+
 function initCarto() {
     OSM = L.tileLayer("http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
 
-    var LON = '2.428462';
-    var LAT = '46.538192';
+    position = get_position() || default_position();
 
-    position = get_position() || {lon: LON, lat: LAT, zoom: 13};
+    if (position.lon == "0" && position.lat == "0")
+        position = default_position();
 
     if (typeof position.zoom == 'undefined')
         position.zoom = 13;
@@ -34,6 +37,10 @@ function initCarto() {
 
     if (qp_active())
         display_qp(JSON.parse($("#quartier_prioritaires").val()));
+}
+
+function default_position (){
+    return {lon: LON, lat: LAT, zoom: 13}
 }
 
 function add_event_freeDraw() {
