@@ -37,7 +37,8 @@ describe 'users/dossiers/new.html.haml', type: :view do
     end
 
     context 'procedure have logo' do
-      let(:logo) { fixture_file_upload('app/assets/images/logo_FC_02.png', 'image/png') }
+      # let(:logo) { fixture_file_upload('spec/support/files/logo_test_procedure.png', 'image/png') }
+      let(:logo) { File.new(File.join(::Rails.root.to_s, "/spec/support/files", "logo_test_procedure.png")) }
 
       it 'Procedure logo is present' do
         p subject

@@ -1,0 +1,30 @@
+{
+  "association": {
+    "id": "W595001988",
+    "titre": "UN SUR QUATRE",
+    "objet": "valoriser, transmettre et partager auprès des publics les plus larges possibles, les bienfaits de l'immigration, la richesse de la diversité et la curiosité de l'autre autrement",
+    "siret": null,
+    "date_creation": "2014-01-23",
+    "date_declaration": "2014-01-24",
+    "date_publication": "2014-02-08",
+    "date_dissolution": "0001-01-01",
+    "adresse_siege": {
+      "complement": "",
+      "numero_voie": "61",
+      "type_voie": "RUE",
+      "libelle_voie": "des Noyers",
+      "distribution": "_",
+      "code_insee": "93063",
+      "code_postal": "93230",
+      "commune": "Romainville"
+    },
+    "code_civilite_dirigeant": "PM",
+    "civilite_dirigeant": "Monsieur le Président",
+    "code_etat": "A",
+    "etat": "Active",
+    "code_groupement": "S",
+    "groupement": "simple",
+    "mise_a_jour": 1392295833
+  },
+  "date_extraction_donnees": 1427210585
+}

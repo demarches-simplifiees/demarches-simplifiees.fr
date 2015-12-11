@@ -21,6 +21,11 @@ class SIADE::API
     call(base_url + endpoint)
   end
 
+  def self.rna(siret)
+    endpoint = "/api/v1/associations/#{siret}"
+    call(base_url + endpoint)
+  end
+
   def self.call(url, params = {})
     params.merge!(token: SIADETOKEN)
 

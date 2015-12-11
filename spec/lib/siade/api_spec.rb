@@ -85,4 +85,33 @@ describe SIADE::API do
       end
     end
   end
+
+  describe '.rna' do
+    before do
+      stub_request(:get, /https:\/\/api-dev.apientreprise.fr\/api\/v1\/associations\/.*token=/)
+          .to_return(status: status, body: body)
+    end
+
+    subject { described_class.rna(siren) }
+
+    context 'when siren does not exist' do
+      let(:siren) { '111111111' }
+      let(:status) { 404 }
+      let(:body) { '' }
+
+      it 'raises RestClient::ResourceNotFound' do
+        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      end
+    end
+
+    context 'when siren exists' do
+      let(:siren) { '418166096' }
+      let(:status) { 200 }
+      let(:body) { File.read('spec/support/files/rna.json') }
+
+      it 'raises RestClient::Unauthorized' do
+        expect(subject).to eq(body)
+      end
+    end
+  end
 end

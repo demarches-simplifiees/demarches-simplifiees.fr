@@ -9,6 +9,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   # inflect.irregular 'person', 'people'
   # inflect.uncountable %w( fish sheep )
   inflect.acronym 'API'
+  inflect.acronym 'RNA'
   inflect.irregular 'piece_justificative', 'pieces_justificatives'
   inflect.irregular 'type_de_piece_justificative', 'types_de_piece_justificative'
   inflect.irregular 'type_de_champ', 'types_de_champ'
