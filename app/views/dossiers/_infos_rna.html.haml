@@ -1,0 +1,23 @@
+.row#infos_rna
+  .col-lg-6.col-md-6
+    %dl.dl-horizontal
+      %dt Association ID :
+      %dd.text-success= @entreprise.rna_information.association_id
+
+      %dt Titre :
+      %dd= @entreprise.rna_information.titre
+
+      %dt Objet :
+      %dd= @entreprise.rna_information.objet
+
+  .col-lg-6.col-md-6
+    %dl.dl-horizontal
+      %dt Date création :
+      %dd= @entreprise.rna_information.date_creation
+
+      %dt Capital publication :
+      %dd= @entreprise.rna_information.date_publication
+
+      %dt Capital déclaration :
+      %dd= @entreprise.rna_information.date_declaration
+

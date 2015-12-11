@@ -9,6 +9,9 @@ describe Users::DossiersController, type: :controller do
   let(:dossier_id) { dossier.id }
   let(:siret_not_found) { 999_999_999_999 }
 
+  let(:rna_status) { 404 }
+  let(:rna_body) { '' }
+
   let(:siren) { dossier.siren }
   let(:siret) { dossier.siret }
   let(:bad_siret) { 1 }
@@ -76,9 +79,12 @@ describe Users::DossiersController, type: :controller do
 
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/exercices/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
+
+      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/associations/#{siret}?token=#{SIADETOKEN}")
+          .to_return(status: rna_status, body: rna_body)
     end
 
-    describe 'professionnel fills form' do
+    describe 'dossier attributs' do
       let(:user) { create(:user) }
       context 'with valid siret ' do
         before do
@@ -86,7 +92,6 @@ describe Users::DossiersController, type: :controller do
         end
 
         subject { post :create, dossier: {siret: siret, procedure_id: Procedure.last} }
-
 
         it 'create a dossier' do
           expect { subject }.to change { Dossier.count }.by(1)
@@ -133,6 +138,31 @@ describe Users::DossiersController, type: :controller do
         it 'state of dossier is draft' do
           subject
           expect(Dossier.last.state).to eq('draft')
+        end
+
+        describe 'get rna informations' do
+          context 'when siren have not rna informations' do
+            let(:rna_status) { 404 }
+            let(:rna_body) { '' }
+
+            it 'not creates rna information for entreprise' do
+              expect { subject }.to change { RNAInformation.count }.by(0)
+            end
+          end
+
+          context 'when siren have rna informations' do
+            let(:rna_status) { 200 }
+            let(:rna_body) { File.read('spec/support/files/rna.json') }
+
+            it 'creates rna information for entreprise' do
+              expect { subject }.to change { RNAInformation.count }.by(1)
+            end
+
+            it 'links rna informations to entreprise' do
+              subject
+              expect(RNAInformation.last.entreprise).to eq(Entreprise.last)
+            end
+          end
         end
       end
 
