@@ -19,5 +19,6 @@ describe Entreprise do
   describe 'associations' do
     it { is_expected.to belong_to(:dossier) }
     it { is_expected.to have_one(:etablissement) }
+    it { is_expected.to have_one(:rna_information) }
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151210150958) do
+ActiveRecord::Schema.define(version: 20151211093833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -170,6 +170,16 @@ ActiveRecord::Schema.define(version: 20151210150958) do
     t.string  "commune"
     t.text    "geometry"
     t.integer "dossier_id"
+  end
+
+  create_table "rna_informations", force: :cascade do |t|
+    t.string  "association_id"
+    t.string  "titre"
+    t.text    "objet"
+    t.date    "date_creation"
+    t.date    "date_declaration"
+    t.date    "date_publication"
+    t.integer "entreprise_id"
   end
 
   create_table "types_de_champ", force: :cascade do |t|
