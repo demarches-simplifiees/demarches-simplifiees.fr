@@ -46,7 +46,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
-
+    get 'profile' => 'profile#show', as: :profile
     resources :procedures do
       resource :types_de_champ, only: [:show, :update] do
         post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
