@@ -22,10 +22,7 @@
               = current_gestionnaire.email
               = link_to "Déconnexion", '/gestionnaires/sign_out', method: :delete, :class => 'btn btn-md'
           -elsif administrateur_signed_in?
-            %div
-              = current_administrateur.email
-              = link_to "Déconnexion", '/administrateurs/sign_out', method: :delete, :class => 'btn btn-md'
-
+            = render partial: 'administrateurs/login_banner'
           - elsif user_signed_in?
             %div.user
               -if current_user.loged_in_with_france_connect
