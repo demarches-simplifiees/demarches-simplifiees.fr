@@ -34,6 +34,9 @@ feature 'user path for dossier creation' do
 
           stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/exercices/#{siret}?token=#{SIADETOKEN}")
               .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
+          stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/associations/#{siret}?token=#{SIADETOKEN}")
+              .to_return(status: 404, body: '')
+
           page.find_by_id('dossier_siret').set siret
           page.click_on 'Commencer'
         end

@@ -1,12 +1,21 @@
 require 'spec_helper'
 
 describe SIADE::RNAAdapter do
-  let(:siren) { '418166096' }
-  subject { described_class.new(siren).to_params }
+  let(:siret) { '50480511000013' }
+  let(:body) { File.read('spec/support/files/rna.json') }
+  let(:status) { 200 }
+  subject { described_class.new(siret).to_params }
 
   before do
     stub_request(:get, /https:\/\/api-dev.apientreprise.fr\/api\/v1\/associations\/.*token=/)
-        .to_return(body: File.read('spec/support/files/rna.json', status: 200))
+        .to_return(body: body, status: status)
+  end
+
+  context 'when siret is not valid' do
+    let(:siret) { '234567' }
+    let(:body) { '' }
+    let(:status) { '404' }
+    it { is_expected.to eq(nil) }
   end
 
   it '#to_params class est une Hash ?' do
@@ -15,7 +24,7 @@ describe SIADE::RNAAdapter do
 
   context 'Attributs Associations' do
     it 'L\'associations contient bien un id' do
-      expect(subject[:id]).to eq('W595001988')
+      expect(subject[:association_id]).to eq('W595001988')
     end
 
     it 'L\'associations contient bien un titre' do

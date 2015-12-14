@@ -53,6 +53,7 @@ class Users::DossiersController < UsersController
     @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(siret).to_params)
     @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
 
+    rna_information = SIADE::RNAAdapter.new(siret).to_params
     exercices = SIADE::ExercicesAdapter.new(siret).to_params
 
     unless exercices.nil?
@@ -67,6 +68,12 @@ class Users::DossiersController < UsersController
 
     @entreprise.dossier = @dossier
     @entreprise.save
+
+    unless rna_information.nil?
+      rna_information = RNAInformation.new(rna_information)
+      rna_information.entreprise = @entreprise
+      rna_information.save
+    end
 
     @etablissement.dossier = @dossier
     @etablissement.entreprise = @entreprise

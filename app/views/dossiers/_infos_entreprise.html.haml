@@ -54,3 +54,6 @@
               = "#{exercice.dateFinExercice.year} : "
             = number_to_currency(exercice.ca)
             %br
+
+- unless @entreprise.rna_information.nil?
+  = render partial: '/dossiers/infos_rna'
