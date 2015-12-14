@@ -194,6 +194,10 @@ GEM
     lumberjack (1.0.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    mailjet (1.1.0)
+      activesupport (>= 3.1.0)
+      rack (>= 1.4.0)
+      rest-client
     method_source (0.8.2)
     mime-types (2.6.1)
     mini_portile (0.6.2)
@@ -446,6 +450,7 @@ DEPENDENCIES
   leaflet-markercluster-rails (~> 0.7.0)
   leaflet-rails
   logstasher
+  mailjet
   mina!
   openid_connect
   pg
