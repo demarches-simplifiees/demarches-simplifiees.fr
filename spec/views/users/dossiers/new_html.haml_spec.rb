@@ -41,7 +41,6 @@ describe 'users/dossiers/new.html.haml', type: :view do
       let(:logo) { File.new(File.join(::Rails.root.to_s, "/spec/support/files", "logo_test_procedure.png")) }
 
       it 'Procedure logo is present' do
-        p subject
 
         is_expected.to have_css("img[src='#{procedure.logo}']")
       end
