@@ -15,6 +15,7 @@ class CommentairesController < ApplicationController
     @commentaire.save
 
     if is_gestionnaire?
+      NotificationMailer.new_answer(@commentaire.dossier).deliver_now!
       redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
     else
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params['dossier_id'])

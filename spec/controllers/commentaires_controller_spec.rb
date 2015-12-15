@@ -8,10 +8,21 @@ describe Users::CommentairesController, type: :controller do
 
   describe '#POST create' do
     context 'création correct d\'un commentaire' do
-      it 'depuis la page récapitulatif' do
+      subject do
         sign_in dossier.user
         post :create, dossier_id: dossier_id, texte_commentaire: texte_commentaire
+      end
+
+      it 'depuis la page récapitulatif' do
+        subject
         expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
+      end
+
+      it 'Notification email is not send' do
+        expect(NotificationMailer).not_to receive(:new_answer)
+        expect(WelcomeMailer).not_to receive(:deliver_now!)
+
+        subject
       end
     end
 

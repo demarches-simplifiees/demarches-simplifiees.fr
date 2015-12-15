@@ -2,7 +2,7 @@ Bonjour <%= @user.email %>!
 
 Votre dossier N°<%=@dossier.id%> a été validé par votre gestionnaire.
 
-Afin de finaliser son dépot, merci de vous rendre sur <%=users_dossiers_url(id: @dossier.id)%>
+Afin de finaliser son dépot, merci de vous rendre sur <%=users_dossier_recapitulatif_url(dossier_id: @dossier.id)%>
 
 Bonne journée
 
