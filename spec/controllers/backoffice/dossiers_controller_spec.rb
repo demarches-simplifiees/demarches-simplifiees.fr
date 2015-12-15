@@ -98,11 +98,20 @@ describe Backoffice::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
+    subject { post :valid, dossier_id: dossier_id }
+
     it 'change state to validated' do
-      post :valid, dossier_id: dossier_id
+      subject
 
       dossier.reload
       expect(dossier.state).to eq('validated')
+    end
+
+    it 'Notification email is send' do
+      expect(NotificationMailer).to receive(:dossier_validated).and_return(NotificationMailer)
+      expect(NotificationMailer).to receive(:deliver_now!)
+
+      subject
     end
   end
 

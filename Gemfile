@@ -67,6 +67,8 @@ gem "font-awesome-rails"
 
 gem 'hashie'
 
+gem 'mailjet'
+
 group :test do
   gem 'capybara'
   gem 'factory_girl'

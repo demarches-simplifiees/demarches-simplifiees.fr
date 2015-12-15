@@ -8,9 +8,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    retour = super
+    WelcomeMailer.welcome_email(User.last).deliver_now!
+    retour
+  end
 
   # GET /resource/edit
   # def edit

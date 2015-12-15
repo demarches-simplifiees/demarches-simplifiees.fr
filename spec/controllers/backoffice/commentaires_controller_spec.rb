@@ -31,6 +31,13 @@ describe Backoffice::CommentairesController, type: :controller do
           subject { dossier.state }
 
           it {is_expected.to eq('replied')}
+
+          it 'Notification email is send' do
+            expect(NotificationMailer).to receive(:new_answer).and_return(NotificationMailer)
+            expect(NotificationMailer).to receive(:deliver_now!)
+
+            post :create, dossier_id: dossier_id, texte_commentaire: texte_commentaire
+          end
         end
       end
     end
