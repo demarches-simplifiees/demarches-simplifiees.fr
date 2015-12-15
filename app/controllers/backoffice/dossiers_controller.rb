@@ -52,6 +52,8 @@ class Backoffice::DossiersController < ApplicationController
     @dossier.next_step! 'gestionnaire', 'valid'
     flash.notice = 'Dossier confirmé avec succès.'
 
+    NotificationMailer.dossier_validated(@dossier).deliver_now!
+
     render 'show'
   end
 
