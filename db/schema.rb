@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151211093833) do
+ActiveRecord::Schema.define(version: 20151214133426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20151211093833) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "api_token"
   end
 
   add_index "administrateurs", ["email"], name: "index_administrateurs_on_email", unique: true, using: :btree
@@ -62,8 +63,8 @@ ActiveRecord::Schema.define(version: 20151211093833) do
     t.boolean  "autorisation_donnees"
     t.string   "nom_projet"
     t.integer  "procedure_id"
-    t.datetime "created_at",           default: '2015-12-07 09:51:46'
-    t.datetime "updated_at",           default: '2015-12-07 09:51:46'
+    t.datetime "created_at",           default: '2015-09-22 09:25:29'
+    t.datetime "updated_at",           default: '2015-09-22 09:25:29'
     t.string   "state"
     t.integer  "user_id"
     t.text     "json_latlngs"
