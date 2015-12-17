@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::RecapitulatifController, type: :controller do
-  let(:dossier) { create(:dossier, :with_user) }
+  let(:dossier) { create(:dossier, :with_user, :with_procedure) }
   let(:bad_dossier_id) { Dossier.count + 100000 }
 
   before do
@@ -55,6 +55,15 @@ describe Users::RecapitulatifController, type: :controller do
       it 'a message informe user what his dossier is initiated' do
         expect(flash[:notice]).to include('Dossier déposé avec succès.')
       end
+
+      it 'Notification email is send' do
+        expect(NotificationMailer).to receive(:dossier_submitted).and_return(NotificationMailer)
+        expect(NotificationMailer).to receive(:deliver_now!)
+
+        dossier.validated!
+        post :submit, dossier_id: dossier.id
+      end
+
     end
   end
 

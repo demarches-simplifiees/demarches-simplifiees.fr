@@ -29,6 +29,8 @@ class Users::RecapitulatifController < UsersController
     @dossier.next_step! 'user', 'submit'
     flash.notice = 'Dossier déposé avec succès.'
 
+    NotificationMailer.dossier_submitted(@dossier).deliver_now!
+
     render 'show'
   end
 end
