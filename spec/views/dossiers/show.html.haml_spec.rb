@@ -25,7 +25,7 @@ describe 'dossiers/show.html.haml', type: :view do
     end
 
     it "le texte d'information des droits est correct" do
-      expect(rendered).to have_content("J'autorise les organismes publics à vérifier les informations de mon entreprise auprès des administrations concernées. Ces informations resteront strictement confidentielles.")
+      expect(rendered).to have_content("J'autorise les décideurs publics à vérifier les informations de mon organisation auprès des administrations concernées. Ces informations resteront strictement confidentielles.")
     end
 
     it "les informations de l'entreprise sont présents" do

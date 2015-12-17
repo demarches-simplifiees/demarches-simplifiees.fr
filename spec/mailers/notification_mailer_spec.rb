@@ -18,7 +18,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     subject(:subject) { described_class.dossier_validated(dossier) }
 
-    it { expect(subject.body).to match("Votre dossier N°#{dossier.id} a été validé par votre gestionnaire.") }
+    it { expect(subject.body).to match("Votre dossier N°#{dossier.id} a été validé par votre accompagnateur.") }
     it { expect(subject.body).to include("Afin de finaliser son dépot, merci de vous rendre sur #{users_dossier_recapitulatif_url(dossier_id: dossier.id)}") }
     it { expect(subject.subject).to eq("Votre dossier TPS N°#{dossier.id} a été validé") }
   end
