@@ -22,4 +22,16 @@ RSpec.describe NotificationMailer, type: :mailer do
     it { expect(subject.body).to include("Afin de finaliser son dépot, merci de vous rendre sur #{users_dossier_recapitulatif_url(dossier_id: dossier.id)}") }
     it { expect(subject.subject).to eq("Votre dossier TPS N°#{dossier.id} a été validé") }
   end
+
+  describe ".dossier_submitted" do
+    let(:user) { create(:user) }
+    let(:dossier) { create(:dossier, :with_procedure, user: user) }
+
+    subject(:subject) { described_class.dossier_submitted(dossier) }
+
+    it { expect(subject.body).to match("Nous vous confirmons que votre dossier N°#{dossier.id} a été déposé") }
+    it { expect(subject.body).to match("aurpès de #{dossier.procedure.organisation} avec succès") }
+    it { expect(subject.body).to match("ce jour à #{dossier.updated_at}.") }
+    it { expect(subject.subject).to eq("Votre dossier TPS N°#{dossier.id} a été déposé") }
+  end
 end
