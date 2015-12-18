@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FranceConnectClient do
+describe FranceConnectEntrepriseClient do
   describe '.initialize' do
     it 'create an openid client' do
       expect(described_class).to be < OpenIDConnect::Client

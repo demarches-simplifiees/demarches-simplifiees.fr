@@ -40,7 +40,7 @@ describe Users::SessionsController, type: :controller do
 
     context 'when user is connect with france connect' do
       it 'redirect to france connect logout page' do
-        expect(response).to redirect_to(FRANCE_CONNECT.logout_endpoint)
+        expect(response).to redirect_to(FRANCE_CONNECT.entreprise_logout_endpoint)
       end
     end
 
