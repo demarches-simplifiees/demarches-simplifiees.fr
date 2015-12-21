@@ -3,6 +3,8 @@ FactoryGirl.define do
     lien_demarche 'http://localhost'
     libelle 'Demande de subvention'
     description "Demande de subvention à l'intention des associations"
+    organisation "Orga SGMAP"
+    direction "direction SGMAP"
 
     after(:build) do |procedure, _evaluator|
       if procedure.module_api_carto.nil?
