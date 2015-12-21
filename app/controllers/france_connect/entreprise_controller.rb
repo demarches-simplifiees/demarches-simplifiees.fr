@@ -1,6 +1,6 @@
-class FranceConnectController < ApplicationController
+class FranceConnect::EntrepriseController < ApplicationController
   def login
-    client = FranceConnectClient.new
+    client = FranceConnectEntrepriseClient.new
 
     session[:state] = SecureRandom.hex(16)
     session[:nonce] = SecureRandom.hex(16)
@@ -16,7 +16,7 @@ class FranceConnectController < ApplicationController
   def callback
     return redirect_to new_user_session_path unless params.has_key?(:code)
 
-    user_infos = FranceConnectService.retrieve_user_informations(params[:code])
+    user_infos = FranceConnectService.retrieve_user_informations_entreprise(params[:code])
 
     unless user_infos.nil?
       @user = User.find_for_france_connect(user_infos.email, user_infos.siret)

@@ -66,10 +66,15 @@ describe Admin::ProceduresController, type: :controller do
         it { expect(subject).to have_http_status(:success) }
       end
 
+      context 'when procedure have at least a file' do
+        let!(:dossier) { create(:dossier, :with_user, procedure: procedure, state: :initiated) }
+        it { expect(subject.status).to eq(403) }
+      end
+
       context "when procedure doesn't exist" do
         let(:procedure_id) { bad_procedure_id }
 
-        it { expect(subject).to redirect_to admin_procedures_path }
+        it { expect(subject).to have_http_status(404) }
       end
     end
   end

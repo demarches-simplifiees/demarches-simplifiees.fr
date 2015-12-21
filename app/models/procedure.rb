@@ -27,4 +27,8 @@ class Procedure < ActiveRecord::Base
     types_de_champ_tmp[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
     true
   end
+
+  def locked?
+    dossiers.where.not(state: :draft).count > 0
+  end
 end

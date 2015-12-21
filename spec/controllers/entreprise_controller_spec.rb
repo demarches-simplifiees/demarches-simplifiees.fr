@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FranceConnectController, type: :controller do
+describe FranceConnect::EntrepriseController, type: :controller do
 
   describe '.login' do
     it 'redirect to france connect serveur' do
@@ -26,7 +26,7 @@ describe FranceConnectController, type: :controller do
         let(:current_user) { User.find_by_email(email) }
 
         before do
-          allow(FranceConnectService).to receive(:retrieve_user_informations).and_return(user_info)
+          allow(FranceConnectService).to receive(:retrieve_user_informations_entreprise).and_return(user_info)
           get :callback, code: code
         end
 
@@ -43,7 +43,7 @@ describe FranceConnectController, type: :controller do
 
       context 'when code is not correct' do
         before do
-          allow(FranceConnectService).to receive(:retrieve_user_informations) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
+          allow(FranceConnectService).to receive(:retrieve_user_informations_entreprise) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
           get :callback, code: code
         end
 

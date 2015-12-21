@@ -7,6 +7,10 @@ class NotificationMailer < ApplicationMailer
     send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été validé"
   end
 
+  def dossier_submitted dossier
+    send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été déposé"
+  end
+
   private
 
   def vars_mailer dossier

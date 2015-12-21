@@ -8,6 +8,6 @@
   = form_for @dossier, url: { controller: '/users/dossiers', action: :update } do |f|
     %label{ style:'font-weight:normal' }
       = f.check_box :autorisation_donnees
-      J'autorise les organismes publics à vérifier les informations de mon entreprise auprès des administrations concernées. Ces informations resteront strictement confidentielles.
+      J'autorise les décideurs publics à vérifier les informations de mon organisation auprès des administrations concernées. Ces informations resteront strictement confidentielles.
     %br
     = f.submit 'Etape suivante', class: "btn btn btn-info", style: 'float:right', id: 'etape_suivante'

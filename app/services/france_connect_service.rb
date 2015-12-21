@@ -1,6 +1,6 @@
 class FranceConnectService
-  def self.retrieve_user_informations code
-    client = FranceConnectClient.new code: code
+  def self.retrieve_user_informations_entreprise code
+    client = FranceConnectEntrepriseClient.new code: code
 
     access_token = client.access_token!(client_auth_method: :secret)
     user_info = access_token.userinfo!

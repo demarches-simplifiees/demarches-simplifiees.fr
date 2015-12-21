@@ -18,14 +18,12 @@ class Users::SessionsController < Sessions::SessionsController
     connected_with_france_connect = current_user.loged_in_with_france_connect
     current_user.update_attributes(loged_in_with_france_connect: false)
 
-
     signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
     set_flash_message :notice, :signed_out if signed_out && is_flashing_format?
     yield if block_given?
 
-
     if connected_with_france_connect
-      redirect_to FRANCE_CONNECT.logout_endpoint
+      redirect_to FRANCE_CONNECT.entreprise_logout_endpoint
     else
       respond_to_on_destroy
     end

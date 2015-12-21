@@ -7,7 +7,7 @@ feature 'move up button type de champs', js: true do
     login_as administrateur, scope: :administrateur
   end
 
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, administrateur: administrateur) }
   let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
   let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
   let!(:type_de_champ_2) { create(:type_de_champ, procedure: procedure, order_place: 2) }

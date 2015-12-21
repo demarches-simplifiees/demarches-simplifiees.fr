@@ -16,8 +16,8 @@ feature 'France Connect Connexion' do
   #
   #     context 'when authentification is ok' do
   #       before do
-  #         allow_any_instance_of(FranceConnectClient).to receive(:authorization_uri).and_return(france_connect_callback_path(code: code))
-  #         allow(FranceConnectService).to receive(:retrieve_user_informations).and_return(Hashie::Mash.new(email: 'patator@cake.com'))
+  #         allow_any_instance_of(FranceConnectEntrepriseClient).to receive(:authorization_uri).and_return(france_connect_callback_path(code: code))
+  #         allow(FranceConnectService).to receive(:retrieve_user_informations_entreprise).and_return(Hashie::Mash.new(email: 'patator@cake.com'))
   #         page.find_by_id('btn_fc').click
   #       end
   #
@@ -28,8 +28,8 @@ feature 'France Connect Connexion' do
   #
   #     context 'when authentification is not ok' do
   #       before do
-  #         allow_any_instance_of(FranceConnectClient).to receive(:authorization_uri).and_return(france_connect_callback_path(code: code))
-  #         allow(FranceConnectService).to receive(:retrieve_user_informations) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
+  #         allow_any_instance_of(FranceConnectEntrepriseClient).to receive(:authorization_uri).and_return(france_connect_callback_path(code: code))
+  #         allow(FranceConnectService).to receive(:retrieve_user_informations_entreprise) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
   #         page.find_by_id('btn_fc').click
   #       end
   #
@@ -55,8 +55,8 @@ feature 'France Connect Connexion' do
   #     let(:siret) { '00000000000000' }
   #     let(:user_infos) { Hashie::Mash.new(email: email, siret: siret) }
   #     before do
-  #       allow_any_instance_of(FranceConnectClient).to receive(:authorization_uri).and_return(france_connect_callback_path(code: code))
-  #       allow(FranceConnectService).to receive(:retrieve_user_informations).and_return(user_infos)
+  #       allow_any_instance_of(FranceConnectEntrepriseClient).to receive(:authorization_uri).and_return(france_connect_callback_path(code: code))
+  #       allow(FranceConnectService).to receive(:retrieve_user_informations_entreprise).and_return(user_infos)
   #       page.find_by_id('btn_fc').click
   #     end
   #     context 'when starting page is dossiers list' do
