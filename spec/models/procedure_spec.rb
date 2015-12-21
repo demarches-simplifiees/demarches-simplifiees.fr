@@ -51,7 +51,7 @@ describe Procedure do
   describe '#switch_types_de_champ' do
     let(:procedure) { create(:procedure) }
     let(:index) { 0 }
-    subject { procedure.switch_types_de_champ index}
+    subject { procedure.switch_types_de_champ index }
 
     context 'when procedure have no types_de_champ' do
       it { expect(subject).to eq(false) }
@@ -74,5 +74,31 @@ describe Procedure do
         it { expect(subject).to eq(false) }
       end
     end
-   end
+  end
+
+  describe 'locked?' do
+    let(:procedure) { create(:procedure) }
+
+    subject { procedure.locked? }
+
+    context 'when procedure does not have dossier' do
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when procedure have dossier with state draft' do
+      before do
+        create(:dossier, :with_user, procedure: procedure, state: :draft)
+      end
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when procedure have dossier with state initiated' do
+      before do
+        create(:dossier, :with_user, procedure: procedure, state: :initiated)
+      end
+
+      it { is_expected.to be_truthy }
+    end
+  end
 end

@@ -18,7 +18,7 @@ describe Admin::PiecesJustificativesController, type: :controller  do
     end
 
     context 'when procedure have at least a file' do
-      let!(:dossier) { create(:dossier, :with_user, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :with_user, procedure: procedure, state: :initiated) }
       it { expect(subject.status).to eq(403) }
     end
 

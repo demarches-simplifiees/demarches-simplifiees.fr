@@ -1,78 +1,89 @@
-%h2.text-info
-  =@procedure.libelle
-%br
+#procedure_show
+  %h2.text-info
+    =@procedure.libelle
+  %br
 
-%ul.nav.nav-tabs
-  %li.active
-    = link_to('Informations', admin_procedure_path(@procedure))
-  %li
-    = link_to('Description', edit_admin_procedure_path(@procedure))
-  %li
-    = link_to('Champs', admin_procedure_types_de_champ_path(@procedure))
-  %li
-    = link_to('Pièces justificatives', admin_procedure_pieces_justificatives_path(@procedure))
-  %li{style:'float:right'}
-    = form_tag admin_procedure_archive_path(procedure_id: @procedure.id, archive: !@procedure.archived?), method: :put do
-      %button#archive.btn.btn-nav.text-info{type: :button}
-        %i.fa.fa-eraser
-        - if @procedure.archived
-          = 'Réactiver'
-        - else
-          = 'Archiver'
-      #confirm
-        %button#valid.btn.btn-nav.text-success{type: :submit}
-          %i.fa.fa-check
-          Valider
-        %button#cancel.btn.btn-nav.text-danger{type: :button}
-          %i.fa.fa-remove
-          Annuler
+  %ul.nav.nav-tabs
+    %li.active
+      = link_to('Informations', admin_procedure_path(@procedure))
+
+    %li{ class: ('disabled' if @procedure.locked?) }
+      = link_to_unless(@procedure.locked?, 'Description', edit_admin_procedure_path(@procedure)) do
+        = link_to('Description', '#')
+
+    %li{ class: ('disabled' if @procedure.locked?) }
+      = link_to_unless(@procedure.locked?, 'Champs', admin_procedure_types_de_champ_path(@procedure)) do
+        = link_to('Champs', '#')
+
+    %li{ class: ('disabled' if @procedure.locked?) }
+      = link_to_unless(@procedure.locked?, 'Pièces justificatives', admin_procedure_pieces_justificatives_path(@procedure)) do
+        = link_to('Pièces justificatives', '#')
 
 
-%br
-%div
+    %li{style:'float:right'}
+      = form_tag admin_procedure_archive_path(procedure_id: @procedure.id, archive: !@procedure.archived?), method: :put do
+        %button#archive.btn.btn-nav.text-info{type: :button}
+          %i.fa.fa-eraser
+          - if @procedure.archived
+            = 'Réactiver'
+          - else
+            = 'Archiver'
+        #confirm
+          %button#valid.btn.btn-nav.text-success{type: :submit}
+            %i.fa.fa-check
+            Valider
+          %button#cancel.btn.btn-nav.text-danger{type: :button}
+            %i.fa.fa-remove
+            Annuler
 
-  %h3 Lien procédure
-  %div{style:'margin-left:3%'}
-    = @procedure.lien
+  - if @procedure.locked?
+    #procedure_locked.center
+      %h5
+        .label.label-info La procédure ne peut plus être modifiée car un usagé a déjà déposé un dossier
 
-%br
-%h3 Dossiers
+  %div
+    %h3 Lien procédure
+    %div{style:'margin-left:3%'}
+      = @procedure.lien
 
-.row
-  .col-md-6.col-lg-6{style:'margin-left:3%'}
-    %h4 Total
-    %div
-      = @facade.dossiers_total
+  %br
+  %h3 Dossiers
 
-    %h4.text-danger Attente Accompagnateur
-    %div
-      = @facade.dossiers_waiting_gestionnaire_total
+  .row
+    .col-md-6.col-lg-6{style:'margin-left:3%'}
+      %h4 Total
+      %div
+        = @facade.dossiers_total
 
-    %h4.text-info Attente Utilisateur
-    %div
-      = @facade.dossiers_waiting_user_total
+      %h4.text-danger Attente Accompagnateur
+      %div
+        = @facade.dossiers_waiting_gestionnaire_total
 
-    %h4.text-success Terminé
-    %div
-      = @facade.dossiers_termine_total
+      %h4.text-info Attente Utilisateur
+      %div
+        = @facade.dossiers_waiting_user_total
 
-    %h4 Archivé
+      %h4.text-success Terminé
+      %div
+        = @facade.dossiers_termine_total
 
-    - unless @facade.dossiers_archived_total == 0
-      %ul
-        - @facade.dossiers_archived_by_state_total.each do |dossier|
-          %li
-            = dossier.state_fr
-            \:
-            = dossier.total
-    - else
-      %p
-        0
+      %h4 Archivé
 
-  .col-md-5.col-lg-5
-    %h4 Non archivés
-    = javascript_include_tag "https://code.highcharts.com/highcharts.js", "chartkick"
-    - if @facade.dossiers_for_pie_highchart.blank?
-      Aucune statistique pour le moment
-    -else
-      =pie_chart @facade.dossiers_for_pie_highchart
+      - unless @facade.dossiers_archived_total == 0
+        %ul
+          - @facade.dossiers_archived_by_state_total.each do |dossier|
+            %li
+              = dossier.state_fr
+              \:
+              = dossier.total
+      - else
+        %p
+          0
+
+    .col-md-5.col-lg-5
+      %h4 Non archivés
+      = javascript_include_tag "https://code.highcharts.com/highcharts.js", "chartkick"
+      - if @facade.dossiers_for_pie_highchart.blank?
+        Aucune statistique pour le moment
+      -else
+        =pie_chart @facade.dossiers_for_pie_highchart

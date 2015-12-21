@@ -10,7 +10,7 @@ class AdminController < ApplicationController
 
     @procedure = current_administrateur.procedures.find(id)
 
-    unless @procedure.dossiers.count == 0
+    if @procedure.locked?
       render json: {message: 'Procedure locked'}, status: 403
     end
 
