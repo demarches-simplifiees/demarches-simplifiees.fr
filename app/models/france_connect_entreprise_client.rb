@@ -2,8 +2,8 @@ class FranceConnectEntrepriseClient < OpenIDConnect::Client
 
   def initialize params={}
     super(
-        identifier: FRANCE_CONNECT.identifier,
-        secret: FRANCE_CONNECT.secret,
+        identifier: FRANCE_CONNECT.entreprise_identifier,
+        secret: FRANCE_CONNECT.entreprise_secret,
 
         redirect_uri: FRANCE_CONNECT.entreprise_redirect_uri,
 
