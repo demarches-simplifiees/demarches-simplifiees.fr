@@ -12,7 +12,7 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  database: tps_test
+  database: tps_test<%= ENV['TEST_ENV_NUMBER'] %>
   host: localhost
   pool: 5
   username: tps
