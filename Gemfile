@@ -31,6 +31,9 @@ gem 'unicorn'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# serializer
+gem 'active_model_serializers'
+
 #haml
 gem 'haml-rails'
 
