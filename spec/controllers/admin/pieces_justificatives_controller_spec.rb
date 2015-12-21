@@ -9,11 +9,19 @@ describe Admin::PiecesJustificativesController, type: :controller  do
   describe 'GET #show' do
     let(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure_id) { procedure.id }
+
     subject { get :show, procedure_id: procedure_id }
+
     context 'when procedure is not found' do
       let(:procedure_id) { 9_999_999 }
       it { expect(subject.status).to eq(404) }
     end
+
+    context 'when procedure have at least a file' do
+      let!(:dossier) { create(:dossier, :with_user, procedure: procedure) }
+      it { expect(subject.status).to eq(403) }
+    end
+
     context 'when procedure does not belong to admin' do
       let(:admin_2) { create(:administrateur) }
       let(:procedure) { create(:procedure, administrateur: admin_2) }

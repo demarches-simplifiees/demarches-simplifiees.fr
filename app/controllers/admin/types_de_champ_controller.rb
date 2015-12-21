@@ -1,5 +1,4 @@
 class Admin::TypesDeChampController < AdminController
-
   before_action :retrieve_procedure
 
   def destroy
@@ -37,13 +36,5 @@ class Admin::TypesDeChampController < AdminController
     else
       render json: {}, status: 400
     end
-  end
-
-  private
-
-  def retrieve_procedure
-    @procedure = Procedure.find(params[:procedure_id])
-  rescue ActiveRecord::RecordNotFound
-    render json: { message: 'Procedure not found' }, status: 404
   end
 end

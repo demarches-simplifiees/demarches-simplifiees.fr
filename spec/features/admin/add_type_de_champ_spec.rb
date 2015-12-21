@@ -3,7 +3,7 @@ require 'spec_helper'
 feature 'add a new type de champs', js: true do
 
   let(:administrateur) { create(:administrateur) }
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, administrateur: administrateur) }
 
   before do
     login_as administrateur, scope: :administrateur

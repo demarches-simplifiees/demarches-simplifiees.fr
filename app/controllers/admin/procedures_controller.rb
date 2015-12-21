@@ -1,5 +1,7 @@
 class Admin::ProceduresController < AdminController
 
+  before_action :retrieve_procedure, only: :edit
+
   def index
     @procedures = current_administrateur.procedures.where(archived: false)
                       .paginate(:page => params[:page]).decorate
