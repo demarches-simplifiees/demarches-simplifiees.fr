@@ -5,9 +5,7 @@ describe 'dossiers/show.html.haml', type: :view do
   let(:dossier) { create(:dossier, :with_entreprise, user: user) }
 
   before do
-    assign(:dossier, dossier)
-    assign(:entreprise, dossier.entreprise.decorate)
-    assign(:etablissement, dossier.etablissement)
+    assign(:facade, DossierFacades.new(dossier.id, user.email))
 
     render
   end

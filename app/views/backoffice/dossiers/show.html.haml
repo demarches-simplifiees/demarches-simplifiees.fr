@@ -1,9 +1,9 @@
 #backoffice_dossier_show
   %h1#dossier_id.text-info{ :style => 'text-align:right'}
-    = "Dossier n°#{@dossier.id}"
+    = "Dossier n°#{@facade.dossier.id}"
 
   %h3{:class => 'text-success', :style => 'text-align:right'}
-    = @dossier.state_fr
+    = @facade.dossier.state_fr
 
 
   = render partial: '/dossiers/infos_entreprise'
@@ -17,5 +17,5 @@
   %br
 
 -#%script{type: 'text/javascript'}
--#  ="url_carte = '#{@dossier.id}/'"
--#  ="ref_dossier = '#{@dossier.ref_dossier_carto}'"
+-#  ="url_carte = '#{@facade.dossier.id}/'"
+-#  ="ref_dossier = '#{@facade.dossier.ref_dossier_carto}'"

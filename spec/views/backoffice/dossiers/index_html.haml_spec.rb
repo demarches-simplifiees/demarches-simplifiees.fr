@@ -9,11 +9,12 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   let!(:decorate_dossier_replied) { create(:dossier, :with_user, procedure: procedure, nom_projet: 'projet replied', state: 'replied').decorate }
   let!(:decorate_dossier_closed) { create(:dossier, :with_user, procedure: procedure, nom_projet: 'projet closed', state: 'closed').decorate }
 
-
   describe 'on tab a_traiter' do
     before do
       assign(:dossiers, gestionnaire.dossiers.waiting_for_gestionnaire.paginate(:page => 1).decorate)
       assign(:liste, 'a_traiter')
+      assign(:a_traiter_class, 'active')
+
       render
     end
 
@@ -37,6 +38,8 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     before do
       assign(:dossiers, gestionnaire.dossiers.waiting_for_user.paginate(:page => 1).decorate)
       assign(:liste, 'en_attente')
+      assign(:en_attente_class, 'active')
+
       render
     end
 
@@ -58,6 +61,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   describe 'on tab termine' do
     before do
       assign(:dossiers, gestionnaire.dossiers.termine.paginate(:page => 1).decorate)
+      assign(:termine_class, 'active')
       assign(:liste, 'termine')
       render
     end

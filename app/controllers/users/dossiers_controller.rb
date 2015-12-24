@@ -5,27 +5,9 @@ class Users::DossiersController < UsersController
   def index
     order = 'DESC'
 
-    if params[:liste] == 'a_traiter' || params[:liste].nil?
-      @dossiers = current_user.dossiers.waiting_for_user order
-      @dossiers_a_traiter = @dossiers
+    @liste = params[:liste] || 'a_traiter'
+    @dossiers = dossiers_to_display.paginate(page: params[:page]).decorate
 
-      @liste = 'a_traiter'
-
-    elsif params[:liste] == 'en_attente'
-      @dossiers = current_user.dossiers.waiting_for_gestionnaire order
-      @dossiers_en_attente = @dossiers
-
-      @liste = 'en_attente'
-
-    elsif params[:liste] == 'termine'
-
-      @dossiers = current_user.dossiers.termine order
-      @dossiers_termine = @dossiers
-
-      @liste = 'termine'
-    end
-
-    @dossiers = @dossiers.paginate(:page => (params[:page] || 1)).decorate
     total_dossiers_per_state
   end
 
@@ -40,46 +22,43 @@ class Users::DossiersController < UsersController
   end
 
   def show
-    @dossier = current_user_dossier params[:id]
+    @facade = DossierFacades.new params[:id], current_user.email
 
-    @etablissement = @dossier.etablissement
-    @entreprise = @dossier.entreprise.decorate
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for users_dossiers_path
   end
 
   def create
-    @etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(siret).to_params)
-    @entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
-
+    etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(siret).to_params)
+    entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
     rna_information = SIADE::RNAAdapter.new(siret).to_params
     exercices = SIADE::ExercicesAdapter.new(siret).to_params
 
     unless exercices.nil?
       exercices.each_value do |exercice|
         exercice = Exercice.new(exercice)
-        exercice.etablissement = @etablissement
+        exercice.etablissement = etablissement
         exercice.save
       end
     end
 
-    @dossier = Dossier.create(user: current_user, state: 'draft', procedure_id: create_params[:procedure_id])
+    dossier = Dossier.create(user: current_user, state: 'draft', procedure_id: create_params[:procedure_id])
 
-    @entreprise.dossier = @dossier
-    @entreprise.save
+    entreprise.dossier = dossier
+    entreprise.save
 
     unless rna_information.nil?
       rna_information = RNAInformation.new(rna_information)
-      rna_information.entreprise = @entreprise
+      rna_information.entreprise = entreprise
       rna_information.save
     end
 
-    @etablissement.dossier = @dossier
-    @etablissement.entreprise = @entreprise
-    @etablissement.save
+    etablissement.dossier = dossier
+    etablissement.entreprise = entreprise
+    etablissement.save
 
-    redirect_to url_for(controller: :dossiers, action: :show, id: @dossier.id)
+    redirect_to url_for(controller: :dossiers, action: :show, id: dossier.id)
 
   rescue RestClient::ResourceNotFound
     errors_valid_siret
@@ -90,27 +69,25 @@ class Users::DossiersController < UsersController
   end
 
   def update
+    @facade = DossierFacades.new params[:id], current_user.email
 
-    @dossier = current_user_dossier params[:id]
     if checked_autorisation_donnees?
-      @dossier.update_attributes(update_params)
+      @facade.dossier.update_attributes(update_params)
 
-      if @dossier.procedure.module_api_carto.use_api_carto
-        redirect_to url_for(controller: :carte, action: :show, dossier_id: @dossier.id)
+      if @facade.dossier.procedure.module_api_carto.use_api_carto
+        redirect_to url_for(controller: :carte, action: :show, dossier_id: @facade.dossier.id)
       else
-        redirect_to url_for(controller: :description, action: :show, dossier_id: @dossier.id)
+        redirect_to url_for(controller: :description, action: :show, dossier_id: @facade.dossier.id)
       end
     else
-      @etablissement = @dossier.etablissement
-      @entreprise = @dossier.entreprise.decorate
       flash.now.alert = 'Les conditions sont obligatoires.'
       render 'show'
     end
   end
 
   def archive
-    @dossier = current_user.dossiers.find(params[:dossier_id])
-    @dossier.update_attributes({archived: true})
+    dossier = current_user.dossiers.find(params[:dossier_id])
+    dossier.update_attributes({archived: true})
 
     flash.notice = 'Dossier archivé'
     redirect_to users_dossiers_path
@@ -121,6 +98,33 @@ class Users::DossiersController < UsersController
   end
 
   private
+
+  def dossiers_to_display
+    {'a_traiter' => waiting_for_user,
+     'en_attente' => waiting_for_gestionnaire,
+     'termine' => termine}[@liste]
+  end
+
+  def waiting_for_user
+    @en_attente_class = (@liste == 'a_traiter' ? 'active' : '')
+    @waiting_for_user ||= current_user.dossiers.waiting_for_user 'DESC'
+  end
+
+  def waiting_for_gestionnaire
+    @a_traiter_class = (@liste == 'en_attente' ? 'active' : '')
+    @waiting_for_gestionnaire ||= current_user.dossiers.waiting_for_gestionnaire 'DESC'
+  end
+
+  def termine
+    @termine_class = (@liste == 'termine' ? 'active' : '')
+    @termine ||= current_user.dossiers.termine 'DESC'
+  end
+
+  def total_dossiers_per_state
+    @dossiers_a_traiter_total = waiting_for_gestionnaire.count
+    @dossiers_en_attente_total = waiting_for_user.count
+    @dossiers_termine_total = termine.count
+  end
 
   def check_siret
     errors_valid_siret unless Siret.new(siret: siret).valid?
@@ -135,10 +139,6 @@ class Users::DossiersController < UsersController
     params.require(:dossier).permit(:autorisation_donnees)
   end
 
-  def dossier_id_is_present?
-    @dossier_id != ''
-  end
-
   def checked_autorisation_donnees?
     update_params[:autorisation_donnees] == '1'
   end
@@ -149,12 +149,6 @@ class Users::DossiersController < UsersController
 
   def siren
     siret[0..8]
-  end
-
-  def total_dossiers_per_state
-    @dossiers_a_traiter_total = !@dossiers_a_traiter.nil? ? @dossiers_a_traiter.size : current_user.dossiers.waiting_for_user.size
-    @dossiers_en_attente_total = !@dossiers_en_attente.nil? ? @dossiers_en_attente.size : current_user.dossiers.waiting_for_gestionnaire.size
-    @dossiers_termine_total = !@dossiers_termine.nil? ? @dossiers_termine.size : current_user.dossiers.termine.size
   end
 
   def create_params

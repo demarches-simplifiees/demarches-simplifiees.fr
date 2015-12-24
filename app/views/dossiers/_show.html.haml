@@ -5,7 +5,7 @@
   %div.row
     = render partial: '/dossiers/infos_entreprise'
   %br
-  = form_for @dossier, url: { controller: '/users/dossiers', action: :update } do |f|
+  = form_for @facade.dossier, url: { controller: '/users/dossiers', action: :update } do |f|
     %label{ style:'font-weight:normal' }
       = f.check_box :autorisation_donnees
       J'autorise les décideurs publics à vérifier les informations de mon organisation auprès des administrations concernées. Ces informations resteront strictement confidentielles.

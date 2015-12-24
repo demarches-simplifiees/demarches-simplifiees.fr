@@ -2,37 +2,18 @@ class Backoffice::DossiersController < ApplicationController
   before_action :authenticate_gestionnaire!
 
   def index
-    if params[:liste] == 'a_traiter' || params[:liste].nil?
-      @dossiers = current_gestionnaire.dossiers.waiting_for_gestionnaire
-      @dossiers_a_traiter = @dossiers
+    @liste = params[:liste] || 'a_traiter'
+    @dossiers = dossiers_to_display.paginate(page: params[:page]).decorate
 
-      @liste = 'a_traiter'
-
-    elsif params[:liste] == 'en_attente'
-      @dossiers = current_gestionnaire.dossiers.waiting_for_user
-      @dossiers_en_attente = @dossiers
-
-      @liste = 'en_attente'
-
-    elsif params[:liste] == 'termine'
-
-      @dossiers = current_gestionnaire.dossiers.termine
-      @dossiers_termine = @dossiers
-
-      @liste = 'termine'
-    end
-
-    @dossiers = @dossiers.paginate(:page => (params[:page] || 1)).decorate
     total_dossiers_per_state
   end
 
   def show
-    initialize_instance_params params[:id]
+    create_dossier_facade params[:id]
   end
 
   def search
     @search_terms = params[:q]
-
     @dossiers_search, @dossier = Dossier.search(current_gestionnaire, @search_terms)
 
     unless @dossiers_search.empty?
@@ -47,20 +28,20 @@ class Backoffice::DossiersController < ApplicationController
   end
 
   def valid
-    initialize_instance_params params[:dossier_id]
+    create_dossier_facade params[:dossier_id]
 
-    @dossier.next_step! 'gestionnaire', 'valid'
+    @facade.dossier.next_step! 'gestionnaire', 'valid'
     flash.notice = 'Dossier confirmé avec succès.'
 
-    NotificationMailer.dossier_validated(@dossier).deliver_now!
+    NotificationMailer.dossier_validated(@facade.dossier).deliver_now!
 
     render 'show'
   end
 
   def close
-    initialize_instance_params params[:dossier_id]
+    create_dossier_facade params[:dossier_id]
 
-    @dossier.next_step! 'gestionnaire', 'close'
+    @facade.dossier.next_step! 'gestionnaire', 'close'
     flash.notice = 'Dossier traité avec succès.'
 
     render 'show'
@@ -68,25 +49,36 @@ class Backoffice::DossiersController < ApplicationController
 
   private
 
-  def total_dossiers_per_state
-    @dossiers_a_traiter_total = !@dossiers_a_traiter.nil? ? @dossiers_a_traiter.size : current_gestionnaire.dossiers.waiting_for_gestionnaire.size
-    @dossiers_en_attente_total = !@dossiers_en_attente.nil? ? @dossiers_en_attente.size : current_gestionnaire.dossiers.waiting_for_user.size
-    @dossiers_termine_total = !@dossiers_termine.nil? ? @dossiers_termine.size : current_gestionnaire.dossiers.termine.size
+  def dossiers_to_display
+    {'a_traiter' => waiting_for_gestionnaire,
+     'en_attente' => waiting_for_user,
+     'termine' => termine}[@liste]
   end
 
-  def initialize_instance_params dossier_id
-    @dossier = Dossier.where(archived: false).find(dossier_id)
-    @entreprise = @dossier.entreprise.decorate
-    @etablissement = @dossier.etablissement
-    @pieces_justificatives = @dossier.pieces_justificatives
-    @commentaires = @dossier.ordered_commentaires
-    @commentaires = @commentaires.all.decorate
-    @commentaire_email = current_gestionnaire.email
+  def waiting_for_gestionnaire
+    @a_traiter_class = (@liste == 'a_traiter' ? 'active' : '')
+    @waiting_for_gestionnaire ||= current_gestionnaire.dossiers.waiting_for_gestionnaire
+  end
 
-    @procedure = @dossier.procedure
+  def waiting_for_user
+    @en_attente_class = (@liste == 'en_attente' ? 'active' : '')
+    @waiting_for_user ||= current_gestionnaire.dossiers.waiting_for_user
+  end
 
-    @dossier = @dossier.decorate
-    @champs = @dossier.ordered_champs
+  def termine
+    @termine_class = (@liste == 'termine' ? 'active' : '')
+    @termine ||= current_gestionnaire.dossiers.termine
+  end
+
+  def total_dossiers_per_state
+    @dossiers_a_traiter_total = waiting_for_gestionnaire.count
+    @dossiers_en_attente_total = waiting_for_user.count
+    @dossiers_termine_total = termine.count
+  end
+
+  def create_dossier_facade dossier_id
+    @facade = DossierFacades.new dossier_id, current_gestionnaire.email
+
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(controller: '/backoffice')

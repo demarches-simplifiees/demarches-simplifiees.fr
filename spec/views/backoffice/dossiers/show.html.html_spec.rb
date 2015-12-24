@@ -1,17 +1,14 @@
 require 'spec_helper'
 
 describe 'backoffice/dossiers/show.html.haml', type: :view do
-  let!(:dossier) { create(:dossier, :with_entreprise, :with_procedure, :with_user) }
+  let!(:dossier) { create(:dossier, :with_entreprise, :with_procedure, :with_user, state: state) }
+  let(:state) { 'draft' }
   let(:dossier_id) { dossier.id }
+  let(:gestionnaire) { create(:gestionnaire) }
 
   before do
-    sign_in create(:gestionnaire)
-
-    assign(:dossier, dossier.decorate)
-    assign(:entreprise, dossier.entreprise.decorate)
-    assign(:etablissement, dossier.etablissement)
-    assign(:procedure, dossier.procedure)
-    assign(:commentaires, dossier.commentaires)
+    sign_in gestionnaire
+    assign(:facade, (DossierFacades.new dossier.id, gestionnaire.email))
   end
 
   context 'on the dossier admin page' do
@@ -48,8 +45,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
   context 'dossier state changements' do
     context 'when dossier have state initiated' do
+      let(:state) { 'initiated' }
+
       before do
-        dossier.initiated!
         render
       end
 
@@ -62,8 +60,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
     end
 
     context 'when dossier have state replied' do
+      let(:state) { 'replied' }
+
       before do
-        dossier.replied!
         render
       end
 
@@ -76,8 +75,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
     end
 
     context 'when dossier have state update' do
+      let(:state) { 'updated' }
+
       before do
-        dossier.updated!
         render
       end
 
@@ -90,8 +90,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
     end
 
     context 'when dossier have state validated' do
+      let(:state) { 'validated' }
+
       before do
-        dossier.validated!
         render
       end
 
@@ -104,8 +105,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
     end
 
     context 'when dossier have state submitted' do
+      let(:state) { 'submitted' }
+
       before do
-        dossier.submitted!
         render
       end
 
@@ -122,8 +124,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
     end
 
     context 'when dossier have state closed' do
+      let(:state) { 'closed' }
+
       before do
-        dossier.closed!
         render
       end
 

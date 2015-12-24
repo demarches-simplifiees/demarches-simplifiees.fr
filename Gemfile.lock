@@ -378,6 +378,8 @@ GEM
       httpclient (>= 2.4)
       i18n
       json (>= 1.4.3)
+    terminal-notifier (1.6.3)
+    terminal-notifier-guard (1.6.4)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
@@ -482,6 +484,8 @@ DEPENDENCIES
   simplecov
   spring
   spring-commands-rspec
+  terminal-notifier
+  terminal-notifier-guard
   therubyracer
   timecop
   turbolinks

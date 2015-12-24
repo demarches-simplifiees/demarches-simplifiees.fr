@@ -1,12 +1,12 @@
 .content#commentaires_flux{style:'width:100%;'}
   %div#commentaire_new{style: 'width:80%; margin-left:auto; margin-right:auto'}
-    = form_tag(url_for({ controller: :commentaires, action: :create, dossier_id: @dossier.id }), class: 'form-inline', method: 'POST') do
+    = form_tag(url_for({ controller: :commentaires, action: :create, dossier_id: @facade.dossier.id }), class: 'form-inline', method: 'POST') do
       %textarea.form-control{id: 'texte_commentaire', name: 'texte_commentaire', style: 'width: 100%; margin-bottom:2%', rows: '5', maxlength: '255', placeholder:"Dialoguer avec votre interlocuteur privilégié en charge de votre dossier."}
       %input.form-control.btn.btn-success{:type => 'submit', :value => 'Poster', style: 'float:right'}
   %br
   %br
 
-  -@commentaires.each do |com|
+  -@facade.commentaires.each do |com|
     %span.text-info#email_contact{style: 'font-weight:bold'}
       =com.email
     %span#created_at
