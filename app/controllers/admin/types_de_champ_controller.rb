@@ -1,6 +1,7 @@
 class Admin::TypesDeChampController < AdminController
   before_action :retrieve_procedure
-
+  before_action :procedure_locked?
+  
   def destroy
     @procedure.types_de_champ.destroy(params[:id])
     render 'show', format: :js

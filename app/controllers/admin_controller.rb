@@ -6,15 +6,19 @@ class AdminController < ApplicationController
   end
 
   def retrieve_procedure
-    id = params[:procedure_id] || params[:id ]
+    id = params[:procedure_id] || params[:id]
 
     @procedure = current_administrateur.procedures.find(id)
 
-    if @procedure.locked?
-      render json: {message: 'Procedure locked'}, status: 403
-    end
-
   rescue ActiveRecord::RecordNotFound
-    render json: {message: 'Procedure not found'}, status: 404
+    flash.alert = 'Procédure inéxistante'
+    redirect_to admin_procedures_path, status: 404
+  end
+
+  def procedure_locked?
+    if @procedure.locked?
+      flash.alert = 'Procédure verrouillée'
+      redirect_to admin_procedure_path(id: @procedure.id)
+    end
   end
 end

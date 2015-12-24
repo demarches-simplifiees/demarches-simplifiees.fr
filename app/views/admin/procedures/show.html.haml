@@ -1,30 +1,30 @@
 #procedure_show
   %h2.text-info
-    =@procedure.libelle
+    =@facade.procedure.libelle
   %br
 
   %ul.nav.nav-tabs
     %li.active
-      = link_to('Informations', admin_procedure_path(@procedure))
+      = link_to('Informations', admin_procedure_path(@facade.procedure))
 
-    %li{ class: ('disabled' if @procedure.locked?) }
-      = link_to_unless(@procedure.locked?, 'Description', edit_admin_procedure_path(@procedure)) do
+    %li{ class: ('disabled' if @facade.procedure.locked?) }
+      = link_to_unless(@facade.procedure.locked?, 'Description', edit_admin_procedure_path(@facade.procedure)) do
         = link_to('Description', '#')
 
-    %li{ class: ('disabled' if @procedure.locked?) }
-      = link_to_unless(@procedure.locked?, 'Champs', admin_procedure_types_de_champ_path(@procedure)) do
+    %li{ class: ('disabled' if @facade.procedure.locked?) }
+      = link_to_unless(@facade.procedure.locked?, 'Champs', admin_procedure_types_de_champ_path(@facade.procedure)) do
         = link_to('Champs', '#')
 
-    %li{ class: ('disabled' if @procedure.locked?) }
-      = link_to_unless(@procedure.locked?, 'Pièces justificatives', admin_procedure_pieces_justificatives_path(@procedure)) do
+    %li{ class: ('disabled' if @facade.procedure.locked?) }
+      = link_to_unless(@facade.procedure.locked?, 'Pièces justificatives', admin_procedure_pieces_justificatives_path(@facade.procedure)) do
         = link_to('Pièces justificatives', '#')
 
 
     %li{style:'float:right'}
-      = form_tag admin_procedure_archive_path(procedure_id: @procedure.id, archive: !@procedure.archived?), method: :put do
+      = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put do
         %button#archive.btn.btn-nav.text-info{type: :button}
           %i.fa.fa-eraser
-          - if @procedure.archived
+          - if @facade.procedure.archived
             = 'Réactiver'
           - else
             = 'Archiver'
@@ -36,7 +36,7 @@
             %i.fa.fa-remove
             Annuler
 
-  - if @procedure.locked?
+  - if @facade.procedure.locked?
     #procedure_locked.center
       %h5
         .label.label-info La procédure ne peut plus être modifiée car un usagé a déjà déposé un dossier
@@ -44,7 +44,7 @@
   %div
     %h3 Lien procédure
     %div{style:'margin-left:3%'}
-      = @procedure.lien
+      = @facade.procedure.lien
 
   %br
   %h3 Dossiers

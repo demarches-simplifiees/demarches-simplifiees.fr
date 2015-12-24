@@ -1,5 +1,6 @@
 class Admin::PiecesJustificativesController < AdminController
   before_action :retrieve_procedure
+  before_action :procedure_locked?
 
   def show
   end

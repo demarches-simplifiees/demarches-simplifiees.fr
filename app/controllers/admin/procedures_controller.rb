@@ -1,6 +1,7 @@
 class Admin::ProceduresController < AdminController
 
-  before_action :retrieve_procedure, only: :edit
+  before_action :retrieve_procedure, only: [:show, :edit]
+  before_action :procedure_locked?, only: [:edit]
 
   def index
     @procedures = current_administrateur.procedures.where(archived: false)
@@ -15,13 +16,10 @@ class Admin::ProceduresController < AdminController
   end
 
   def show
-    informations
-
-    @facade = AdminProceduresShowFacades.new @procedure
+    @facade = AdminProceduresShowFacades.new @procedure.decorate
   end
 
   def edit
-    informations
   end
 
   def new
@@ -82,13 +80,5 @@ class Admin::ProceduresController < AdminController
 
   def create_module_api_carto_params
     params.require(:procedure).require(:module_api_carto_attributes).permit(:id, :use_api_carto, :quartiers_prioritaires, :cadastre)
-  end
-
-  def informations
-    @procedure = current_administrateur.procedures.find(params[:id]).decorate
-
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
-    redirect_to admin_procedures_path
   end
 end

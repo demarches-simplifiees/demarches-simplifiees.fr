@@ -21,7 +21,7 @@ describe Admin::TypesDeChampController, type: :controller do
 
     context 'when procedure have at least a file' do
       let!(:dossier) { create(:dossier, :with_user, procedure: procedure, state: :initiated) }
-      it { expect(subject.status).to eq(403) }
+      it { is_expected.to redirect_to admin_procedure_path id: procedure_id }
     end
 
     context 'when procedure does not belong to admin' do

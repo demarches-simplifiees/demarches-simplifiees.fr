@@ -4,8 +4,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
   let(:procedure) { create(:procedure) }
 
   before do
-    assign(:procedure, procedure.decorate)
-    assign(:facade, AdminProceduresShowFacades.new(procedure))
+    assign(:facade, AdminProceduresShowFacades.new(procedure.decorate))
 
     render
   end
