@@ -9,6 +9,15 @@ fr:
         montant_projet: 'Le montant du projet'
         montant_aide_demande: "Le montant d'aide demandée"
         date_previsionnelle: "La date de début prévisionnelle"
+        state:
+          draft: "Brouillon"
+          initiated: "Soumis"
+          replied: "Répondu"
+          updated: "Mis à jour"
+          validated: "Validé"
+          submitted: "Déposé"
+          closed: "Traité"
+
     errors:
       models:
         dossier:

@@ -2,7 +2,7 @@ class DossierDecorator < Draper::Decorator
   delegate :current_page, :per_page, :offset, :total_entries, :total_pages
   delegate_all
 
-  def date_fr
+  def display_date
     date_previsionnelle.to_date.strftime('%d/%m/%Y')
   rescue
     'dd/mm/YYYY'
@@ -12,7 +12,7 @@ class DossierDecorator < Draper::Decorator
     updated_at.localtime.strftime('%d/%m/%Y %H:%M')
   end
 
-  def state_fr
+  def display_state
     DossierDecorator.case_state_fr state
   end
 
@@ -27,23 +27,6 @@ class DossierDecorator < Draper::Decorator
   end
 
   def self.case_state_fr state=self.state
-    case state
-      when 'draft'
-        'Brouillon'
-      when 'initiated'
-        'Soumis'
-      when 'replied'
-        'Répondu'
-      when 'updated'
-        'Mis à jour'
-      when 'validated'
-        'Validé'
-      when 'submitted'
-        'Déposé'
-      when 'closed'
-        'Traité'
-      else
-        fail 'State not valid'
-    end
+    h.t("activerecord.attributes.dossier.state.#{state}")
   end
 end

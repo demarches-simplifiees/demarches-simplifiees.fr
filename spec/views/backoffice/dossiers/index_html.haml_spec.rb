@@ -22,7 +22,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     it { is_expected.to have_css('#backoffice_index') }
     it { is_expected.to have_content(procedure.libelle) }
     it { is_expected.to have_content(decorate_dossier_initiated.nom_projet) }
-    it { is_expected.to have_content(decorate_dossier_initiated.state_fr) }
+    it { is_expected.to have_content(decorate_dossier_initiated.display_state) }
     it { is_expected.to have_content(decorate_dossier_initiated.last_update) }
 
     it { is_expected.not_to have_content(decorate_dossier_replied.nom_projet) }
@@ -47,7 +47,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     it { is_expected.to have_css('#backoffice_index') }
     it { is_expected.to have_content(procedure.libelle) }
     it { is_expected.to have_content(decorate_dossier_replied.nom_projet) }
-    it { is_expected.to have_content(decorate_dossier_replied.state_fr) }
+    it { is_expected.to have_content(decorate_dossier_replied.display_state) }
     it { is_expected.to have_content(decorate_dossier_replied.last_update) }
 
     it { is_expected.not_to have_content(decorate_dossier_initiated.nom_projet) }
@@ -70,7 +70,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     it { is_expected.to have_css('#backoffice_index') }
     it { is_expected.to have_content(procedure.libelle) }
     it { is_expected.to have_content(decorate_dossier_closed.nom_projet) }
-    it { is_expected.to have_content(decorate_dossier_closed.state_fr) }
+    it { is_expected.to have_content(decorate_dossier_closed.display_state) }
     it { is_expected.to have_content(decorate_dossier_closed.last_update) }
 
     it { is_expected.not_to have_content(decorate_dossier_initiated.nom_projet) }

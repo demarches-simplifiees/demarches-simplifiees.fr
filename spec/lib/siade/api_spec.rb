@@ -109,9 +109,7 @@ describe SIADE::API do
       let(:status) { 200 }
       let(:body) { File.read('spec/support/files/rna.json') }
 
-      it 'raises RestClient::Unauthorized' do
-        expect(subject).to eq(body)
-      end
+      it{ expect(subject).to eq(body) }
     end
   end
 end

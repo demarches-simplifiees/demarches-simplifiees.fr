@@ -25,7 +25,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     describe 'dossier replied is present' do
       it { is_expected.to have_content(dossier_2.procedure.libelle) }
       it { is_expected.to have_content(dossier_2.nom_projet) }
-      it { is_expected.to have_content(dossier_2.state_fr) }
+      it { is_expected.to have_content(dossier_2.display_state) }
       it { is_expected.to have_content(dossier_2.last_update) }
     end
 
@@ -53,7 +53,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     describe 'dossier initiated is present' do
       it { is_expected.to have_content(dossier.procedure.libelle) }
       it { is_expected.to have_content(dossier.nom_projet) }
-      it { is_expected.to have_content(dossier.state_fr) }
+      it { is_expected.to have_content(dossier.display_state) }
       it { is_expected.to have_content(dossier.last_update) }
     end
 
@@ -81,7 +81,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     describe 'dossier termine is present' do
       it { is_expected.to have_content(dossier_termine.procedure.libelle) }
       it { is_expected.to have_content(dossier_termine.nom_projet) }
-      it { is_expected.to have_content(dossier_termine.state_fr) }
+      it { is_expected.to have_content(dossier_termine.display_state) }
       it { is_expected.to have_content(dossier_termine.last_update) }
     end
 

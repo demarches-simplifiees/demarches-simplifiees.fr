@@ -73,7 +73,7 @@
         %ul
           - @facade.dossiers_archived_by_state_total.each do |dossier|
             %li
-              = dossier.state_fr
+              = dossier.display_state
               \:
               = dossier.total
       - else

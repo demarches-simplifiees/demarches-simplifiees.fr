@@ -3,7 +3,7 @@
     = "Dossier n°#{@facade.dossier.id}"
 
   %h3{:class => 'text-success', :style => 'text-align:right'}
-    = @facade.dossier.state_fr
+    = @facade.dossier.display_state
 
 
   = render partial: '/dossiers/infos_entreprise'

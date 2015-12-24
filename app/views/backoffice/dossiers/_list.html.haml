@@ -9,7 +9,7 @@
       %td= dossier.procedure.libelle
       %td
         = link_to(dossier.nom_projet, "/backoffice/dossiers/#{dossier.id}")
-      %td= dossier.state_fr
+      %td= dossier.display_state
       %td= dossier.last_update
 
 .pagination

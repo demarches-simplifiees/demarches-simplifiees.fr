@@ -19,7 +19,7 @@
         %td.col-md-2.col-lg-2
           = @dossier.etablissement.siret
         %td.col-md-1.col-lg-1{class: @dossier.state_color_class}
-          = @dossier.state_fr
+          = @dossier.display_state
     %br
 
   - if @dossiers_search.empty? && @dossier.nil?
@@ -44,7 +44,7 @@
           %td= dossier.entreprise.raison_sociale
           %td= dossier.user.email
           %td= dossier.etablissement.siret
-          %td{class: dossier.state_color_class}= dossier.state_fr
+          %td{class: dossier.state_color_class}= dossier.display_state
 
     .pagination
       = will_paginate @dossiers_search, renderer: BootstrapPagination::Rails

@@ -10,7 +10,7 @@ describe DossierDecorator do
   end
 
   describe 'state_fr' do
-    subject{ super().state_fr }
+    subject{ super().display_state }
 
     it 'draft is brouillon' do
       dossier.draft!
