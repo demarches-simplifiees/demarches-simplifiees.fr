@@ -18,6 +18,12 @@ Rails.application.routes.draw do
   namespace :france_connect do
     get 'entreprise' => 'entreprise#login'
     get 'entreprise/callback' => 'entreprise#callback'
+
+    get 'particulier' => 'particulier#login'
+    get 'particulier/callback' => 'particulier#callback'
+
+    get 'particulier/new' => 'particulier#new'
+    post 'particulier/create' => 'particulier#create'
   end
 
   get 'demo' => 'demo#index'
