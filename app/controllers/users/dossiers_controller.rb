@@ -156,6 +156,8 @@ class Users::DossiersController < UsersController
   end
 
   def error_procedure
-    render :file => "#{Rails.root}/public/404_procedure_not_found.html",  :status => 404
+    flash.alert = t('errors.messages.procedure_not_found')
+
+    redirect_to url_for users_dossiers_path
   end
 end

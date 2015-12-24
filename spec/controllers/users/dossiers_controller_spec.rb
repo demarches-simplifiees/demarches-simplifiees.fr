@@ -46,7 +46,7 @@ describe Users::DossiersController, type: :controller do
           context 'when procedure is archived' do
             let(:procedure) { create(:procedure, archived: 'true') }
 
-            it { is_expected.to have_http_status(404) }
+            it { is_expected.to redirect_to users_dossiers_path }
           end
         end
         context 'when user is not logged' do
@@ -61,7 +61,7 @@ describe Users::DossiersController, type: :controller do
           sign_in create(:user)
         end
 
-        it { is_expected.to have_http_status(404) }
+        it { is_expected.to redirect_to users_dossiers_path }
       end
     end
   end
