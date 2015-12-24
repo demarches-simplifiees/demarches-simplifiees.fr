@@ -5,13 +5,13 @@ class Admin::ProceduresController < AdminController
   def index
     @procedures = current_administrateur.procedures.where(archived: false)
                       .paginate(:page => params[:page]).decorate
-    @page = 'active'
+    active_class
   end
 
   def archived
     @procedures = current_administrateur.procedures.where(archived: true)
                       .paginate(:page => params[:page]).decorate
-    @page = 'archived'
+    archived_class
   end
 
   def show
@@ -64,6 +64,14 @@ class Admin::ProceduresController < AdminController
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inéxistante'
     redirect_to admin_procedures_path
+  end
+
+  def active_class
+    @active_class = 'active' if @page == 'active'
+  end
+
+  def archived_class
+    @archive_class = 'active' if @page == 'archived'
   end
 
   private
