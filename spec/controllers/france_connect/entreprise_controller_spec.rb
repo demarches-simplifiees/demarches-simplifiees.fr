@@ -30,8 +30,8 @@ describe FranceConnect::EntrepriseController, type: :controller do
           get :callback, code: code
         end
 
-        it 'current user have attribut loged_in_with_france_connect at true' do
-          expect(current_user.loged_in_with_france_connect).to be_truthy
+        it 'current user have attribut loged_in_with_france_connect at enterprise' do
+          expect(current_user.loged_in_with_france_connect).to eq 'entreprise'
         end
         let(:stored_location) { '/plip/plop' }
         it 'redirect to stored location' do

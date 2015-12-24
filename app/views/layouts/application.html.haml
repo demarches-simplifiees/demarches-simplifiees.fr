@@ -25,7 +25,7 @@
             = render partial: 'administrateurs/login_banner'
           - elsif user_signed_in?
             %div.user
-              -if current_user.loged_in_with_france_connect
+              -if current_user.loged_in_with_france_connect?
                 = image_tag('logo_FC_02_small.png', class: 'logo_fc_small')
               -else
                 %i.fa.fa-user
