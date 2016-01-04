@@ -121,8 +121,8 @@ class Users::DossiersController < UsersController
   end
 
   def total_dossiers_per_state
-    @dossiers_a_traiter_total = waiting_for_gestionnaire.count
-    @dossiers_en_attente_total = waiting_for_user.count
+    @dossiers_a_traiter_total = waiting_for_user.count
+    @dossiers_en_attente_total = waiting_for_gestionnaire.count
     @dossiers_termine_total = termine.count
   end
 
