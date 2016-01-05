@@ -14,6 +14,8 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def new
+    return redirect_to root_path if france_connect_particulier_id_blank?
+
     @user = (User.new create_user_params).decorate
   end
 
@@ -28,6 +30,24 @@ class FranceConnect::ParticulierController < ApplicationController
 
     user.save
     connect_france_connect_particulier user
+  end
+
+  def check_email
+    return create if User.find_by_email(params[:user][:email]).nil?
+    return redirect_to root_path if france_connect_particulier_id_blank?
+
+    unless params[:user][:password].nil?
+      user = User.find_by_email(params[:user][:email])
+      valid_password = user.valid_password?(params[:user][:password])
+
+      if valid_password
+        user.update_attributes create_user_params
+        return connect_france_connect_particulier user
+      else
+        flash.now.alert = 'Mot de passe invalide'
+      end
+    end
+    @user = (User.new create_user_params).decorate
   end
 
   def callback
@@ -54,6 +74,10 @@ class FranceConnect::ParticulierController < ApplicationController
 
   def create_user_params
     params.require(:user).permit(:france_connect_particulier_id, :gender, :given_name, :family_name, :birthdate, :birthplace, :email)
+  end
+
+  def france_connect_particulier_id_blank?
+    redirect_to root_path if params[:user][:france_connect_particulier_id].blank?
   end
 
   def connect_france_connect_particulier user

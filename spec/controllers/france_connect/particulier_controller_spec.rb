@@ -9,8 +9,9 @@ describe FranceConnect::ParticulierController, type: :controller do
   let(:birthplace) { '1234' }
   let(:france_connect_particulier_id) { 'blabla' }
   let(:email) { '' }
+  let(:password) { '' }
 
-  let(:user_info) { Hashie::Mash.new(france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email: email) }
+  let(:user_info) { Hashie::Mash.new(france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email: email, password: password) }
 
   describe '.login' do
     it 'redirect to france connect serveur' do
@@ -102,6 +103,36 @@ describe FranceConnect::ParticulierController, type: :controller do
         subject
         expect(response).to redirect_to(france_connect_particulier_new_path(user: user_info))
       end
+    end
+  end
+
+  describe 'POST #check_email' do
+    let(:email) { 'plop@gmail.com' }
+    let(:password) { 'blabla141415' }
+
+    subject { post :check_email, user: user_info }
+
+    context 'when email is linked at an existant user' do
+      context 'when email and password couple is valid' do
+        let!(:user) { create(:user, email: email, password: password) }
+
+        it { expect { subject }.to change { user.reload.france_connect_particulier_id } }
+        it { is_expected.to redirect_to root_path }
+      end
+
+      context 'when email and password couple is not valid' do
+        let!(:user) { create(:user, email: email, password: 'plop12345678') }
+
+        before do
+          subject
+        end
+
+        it { expect(flash[:alert]).to be_present }
+      end
+    end
+
+    context 'when email is not used' do
+      it { expect { subject }.to change { User.count }.by(1) }
     end
   end
 end

@@ -24,6 +24,7 @@ Rails.application.routes.draw do
 
     get 'particulier/new' => 'particulier#new'
     post 'particulier/create' => 'particulier#create'
+    post 'particulier/check_email' => 'particulier#check_email'
   end
 
   get 'demo' => 'demo#index'
@@ -44,7 +45,6 @@ Rails.application.routes.draw do
       post '/carte' => 'carte#save'
 
       put '/archive' => 'dossiers#archive'
-
     end
     resource :dossiers
   end
