@@ -22,6 +22,7 @@
 *.iws
 
 public/uploads
+public/downloads
 bin/*
 config/initializers/token.rb
 doc/*.svg
