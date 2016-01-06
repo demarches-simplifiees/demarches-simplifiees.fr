@@ -47,6 +47,32 @@
       = @facade.procedure.lien
 
   %br
+  %h3 Détails
+
+  .row{style:'margin-right:3%; margin-left:3%;'}
+    .description.col-md-4.col-lg-4
+      %h4.text-info
+        = @facade.procedure.libelle
+
+      = @facade.procedure.description
+    .champs.col-md-4.col-lg-4
+      %h4.text-info
+        Champs
+        .badge.progress-bar-info
+          = @facade.procedure.types_de_champ.size
+      - @facade.procedure.types_de_champ.each do |champ|
+        = champ.libelle
+        %br
+
+    .pieces_justificatives.col-md-4.col-lg-4
+      %h4.text-info
+        Pièces justificatives
+        .badge.progress-bar-info
+          = @facade.procedure.types_de_piece_justificative.size
+      - @facade.procedure.types_de_piece_justificative.each do |piece_justificative|
+        = piece_justificative.libelle
+        %br
+  %br
   %h3 Dossiers
 
   .row
