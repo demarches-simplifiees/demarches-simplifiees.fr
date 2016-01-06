@@ -86,6 +86,7 @@ describe Users::DossiersController, type: :controller do
 
     describe 'dossier attributs' do
       let(:user) { create(:user) }
+
       context 'with valid siret ' do
         before do
           sign_in user
@@ -138,6 +139,30 @@ describe Users::DossiersController, type: :controller do
         it 'state of dossier is draft' do
           subject
           expect(Dossier.last.state).to eq('draft')
+        end
+
+        describe 'Mandataires Sociaux' do
+          let(:user) { create(:user, given_name: given_name, family_name: family_name, birthdate: birthdate, france_connect_particulier_id: '1234567') }
+
+          before do
+            subject
+          end
+
+          context 'when user is present in mandataires sociaux' do
+            let(:given_name) { 'GERARD' }
+            let(:family_name) { 'DEGONSE' }
+            let(:birthdate) { '1947-07-03' }
+
+            it { expect(Dossier.last.mandataire_social).to be_truthy }
+          end
+
+          context 'when user is not present in mandataires sociaux' do
+            let(:given_name) { 'plop' }
+            let(:family_name) { 'plip' }
+            let(:birthdate) { '1965-01-27' }
+
+            it { expect(Dossier.last.mandataire_social).to be_falsey }
+          end
         end
 
         describe 'get rna informations' do

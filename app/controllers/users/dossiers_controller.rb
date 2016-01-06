@@ -34,6 +34,7 @@ class Users::DossiersController < UsersController
     entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
     rna_information = SIADE::RNAAdapter.new(siret).to_params
     exercices = SIADE::ExercicesAdapter.new(siret).to_params
+    mandataires_sociaux = SIADE::MandatairesSociauxAdapter.new(siren).to_params
 
     unless exercices.nil?
       exercices.each_value do |exercice|
@@ -42,8 +43,17 @@ class Users::DossiersController < UsersController
         exercice.save
       end
     end
+    mandataire_social = false
 
-    dossier = Dossier.create(user: current_user, state: 'draft', procedure_id: create_params[:procedure_id])
+    mandataires_sociaux.each do |k, mandataire|
+      break mandataire_social = true if !current_user.france_connect_particulier_id.nil? &&
+          mandataire[:nom] == current_user.family_name &&
+          mandataire[:prenom] == current_user.given_name &&
+          mandataire[:date_naissance_timestamp] == current_user.birthdate.to_time.to_i
+
+    end
+
+    dossier = Dossier.create(user: current_user, state: 'draft', procedure_id: create_params[:procedure_id], mandataire_social: mandataire_social)
 
     entreprise.dossier = dossier
     entreprise.save
