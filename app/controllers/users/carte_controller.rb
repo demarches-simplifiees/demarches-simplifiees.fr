@@ -45,7 +45,7 @@ class Users::CarteController < UsersController
   end
 
   def get_position
-    tmp_position = Carto::Geocodeur.convert_adresse_to_point(current_user_dossier.etablissement.adresse.gsub("\r\n", ' '))
+    tmp_position = Carto::Geocodeur.convert_adresse_to_point(current_user_dossier.etablissement.geo_adresse)
 
     if !tmp_position.point.nil?
       render json: {lon: tmp_position.point.x.to_s, lat: tmp_position.point.y.to_s, dossier_id: params[:dossier_id]}
