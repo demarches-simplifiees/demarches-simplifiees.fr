@@ -6,6 +6,7 @@
         = @facade.dossier.nom_projet
       %h4
         = @facade.dossier.procedure.libelle
+
       .description
         - begin
           - @facade.dossier.description.split(/(?:\n\r?|\r\n?')/).each do |line|
@@ -13,6 +14,16 @@
             %br
         - rescue
           =''
+
+      - if @facade.dossier.mandataire_social
+        .mandataire_social.text-success.center
+          %br
+          %br
+          ="Il est probable que le soumissionnaire du dossier soit un des mandataire social de l'entreprise ("
+          %b
+            ="#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
+          =")"
+
     - if @facade.dossier.procedure.module_api_carto.use_api_carto
       .col-lg-6.col-md-6
 
