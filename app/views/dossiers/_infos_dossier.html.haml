@@ -15,9 +15,8 @@
         - rescue
           =''
 
-      - if @facade.dossier.mandataire_social
+      - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
         .mandataire_social.text-success.center
-          %br
           %br
           ="Il est probable que le soumissionnaire du dossier soit un des mandataire social de l'entreprise ("
           %b
