@@ -72,6 +72,8 @@ gem 'hashie'
 
 gem 'mailjet'
 
+gem "smart_listing"
+
 group :test do
   gem 'capybara'
   gem 'factory_girl'
