@@ -1,20 +1,30 @@
 class Admin::ProceduresController < AdminController
+  include SmartListing::Helper::ControllerExtensions
+  helper SmartListing::Helper
 
   before_action :retrieve_procedure, only: [:show, :edit]
   before_action :procedure_locked?, only: [:edit]
 
   def index
-    @procedures = current_administrateur.procedures.where(archived: false)
-                      .paginate(:page => params[:page]).decorate
+    @procedures = smart_listing_create :procedures,
+                         current_administrateur.procedures.where(archived: false),
+                         partial: "admin/procedures/list",
+                         array: true
+
     @page = 'active'
     active_class
   end
 
   def archived
-    @procedures = current_administrateur.procedures.where(archived: true)
-                      .paginate(:page => params[:page]).decorate
+    @procedures = smart_listing_create :procedures,
+                                       current_administrateur.procedures.where(archived: true),
+                                       partial: "admin/procedures/list",
+                                       array: true
+
     @page = 'archived'
     archived_class
+
+    render 'index'
   end
 
   def show
@@ -22,6 +32,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def edit
+
   end
 
   def new

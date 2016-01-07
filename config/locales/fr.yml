@@ -23,6 +23,12 @@ fr:
   will_paginate:
     next_label: 'Suivant'
     previous_label: 'Précédent'
+  views:
+    pagination:
+      next: Suivant
+      last: Dernier
+      previous: Précédent
+      first: Premier
 
   number:
       currency:
