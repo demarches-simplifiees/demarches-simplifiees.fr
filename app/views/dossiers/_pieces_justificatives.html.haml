@@ -6,9 +6,7 @@
     -if @facade.procedure.lien_demarche != nil
       %tr{id: "piece_justificative_0"}
         %th{class:'col-lg-6'}
-          ='CERFA'
-          -if @facade.procedure.lien_demarche != nil
-            %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@facade.procedure.lien_demarche}", :target => '_blank'} Lien CERFA
+          ='Formulaire'
         %td.col-lg-6.col-md-6
           - if !@facade.dossier.cerfa.empty?
             - if user_signed_in?
