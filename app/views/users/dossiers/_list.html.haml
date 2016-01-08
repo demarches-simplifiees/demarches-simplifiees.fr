@@ -1,17 +1,23 @@
-%table.table
-  %thead
-    %th Procédure
-    %th Nom du Projet
-    %th Etat
-    %th Mise à jour
-  - @dossiers.each do |dossier|
-    %tr
-      %td
-        = dossier.procedure.libelle
-      %td
-        = link_to(dossier.nom_projet, users_dossier_recapitulatif_path(dossier))
-      %td{id: "dossier_#{dossier.id}_state"}= dossier.display_state
-      %td= dossier.last_update
+- unless smart_listing.empty?
+  %table.table
+    %thead
+      %th.col-md-4.col-lg-4= smart_listing.sortable 'Procédure', 'procedure.libelle'
+      %th.col-md-4.col-lg-4= smart_listing.sortable 'Nom du Projet', 'nom_projet'
+      %th.col-md-2.col-lg-2= smart_listing.sortable 'État', 'state'
+      %th.col-md-2.col-lg-2= smart_listing.sortable 'Date de mise à jour', 'updated_at'
+    - @dossiers.each do |dossier|
+      - dossier = dossier.decorate
+      %tr
+        %td
+          = dossier.procedure.libelle
+        %td
+          = link_to(dossier.nom_projet, users_dossier_recapitulatif_path(dossier))
+        %td{id: "dossier_#{dossier.id}_state"}= dossier.display_state
+        %td= dossier.last_update
 
-.pagination
-  = will_paginate @dossiers, renderer: BootstrapPagination::Rails
+  = smart_listing.paginate
+  = smart_listing.pagination_per_page_links
+
+- else
+  %h4.center
+    Aucun dossier

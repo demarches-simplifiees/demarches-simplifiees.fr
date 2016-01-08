@@ -1,9 +1,16 @@
 class Backoffice::DossiersController < ApplicationController
+  include SmartListing::Helper::ControllerExtensions
+  helper SmartListing::Helper
+
   before_action :authenticate_gestionnaire!
 
   def index
     @liste = params[:liste] || 'a_traiter'
-    @dossiers = dossiers_to_display.paginate(page: params[:page]).decorate
+
+    @dossiers = smart_listing_create :dossiers,
+                                     dossiers_to_display,
+                                     partial: "backoffice/dossiers/list",
+                                     array: true
 
     total_dossiers_per_state
   end

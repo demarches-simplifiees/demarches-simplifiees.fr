@@ -1,4 +1,7 @@
 class Users::DossiersController < UsersController
+  include SmartListing::Helper::ControllerExtensions
+  helper SmartListing::Helper
+
   before_action :authenticate_user!
   before_action :check_siret, only: :create
 
@@ -6,7 +9,11 @@ class Users::DossiersController < UsersController
     order = 'DESC'
 
     @liste = params[:liste] || 'a_traiter'
-    @dossiers = dossiers_to_display.paginate(page: params[:page]).decorate
+
+    @dossiers = smart_listing_create :dossiers,
+                                     dossiers_to_display,
+                                     partial: "users/dossiers/list",
+                                     array: true
 
     total_dossiers_per_state
   end
@@ -116,12 +123,12 @@ class Users::DossiersController < UsersController
   end
 
   def waiting_for_user
-    @en_attente_class = (@liste == 'a_traiter' ? 'active' : '')
+    @a_traiter_class = (@liste == 'a_traiter' ? 'active' : '')
     @waiting_for_user ||= current_user.dossiers.waiting_for_user 'DESC'
   end
 
   def waiting_for_gestionnaire
-    @a_traiter_class = (@liste == 'en_attente' ? 'active' : '')
+    @en_attente_class = (@liste == 'en_attente' ? 'active' : '')
     @waiting_for_gestionnaire ||= current_user.dossiers.waiting_for_gestionnaire 'DESC'
   end
 
