@@ -3,20 +3,14 @@
   %br
   %h2#login_user Connexion
 
+  %a.btn_fc#btn_fcp{href: '/france_connect/particulier'}
+    = image_tag 'franceconnect_logo.png'
+
   %br
-  %h3.text-info
-    S'identifier grâce à
-    %strong
-      France Connect
+  %a.text-info{href: '#', target: '_blank'}
+    Qu’est-ce que FranceConnect ?
 
-  %a.btn.btn-default.btn-lg.btn-primary.btn_fc#btn_fcp{href: '/france_connect/particulier'}
-    %div{style:'margin-left:35px'}
-      Particulier
 
-    -#.col-md-6.col-lg-6
-    -#  %a.btn.btn-default.btn-lg.btn-danger.btn_fc#btn_fce{href: '/france_connect/entreprise'}
-    -#    %div{style:'margin-left:35px'}
-    -#      Entreprise
   %hr
   = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
     %h4
