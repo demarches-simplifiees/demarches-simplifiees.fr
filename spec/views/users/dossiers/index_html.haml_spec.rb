@@ -13,7 +13,10 @@ describe 'users/dossiers/index.html.haml', type: :view do
     before do
       sign_in user
 
-      assign(:dossiers, dossiers_list.paginate(:page => 1).decorate)
+      assign(:dossiers, (smart_listing_create :dossiers,
+                                              user.dossiers.waiting_for_user('DESC'),
+                                              partial: "users/dossiers/list",
+                                              array: true))
       assign(:liste, 'a_traiter')
       render
     end
@@ -41,7 +44,10 @@ describe 'users/dossiers/index.html.haml', type: :view do
     before do
       sign_in user
 
-      assign(:dossiers, dossiers_list.paginate(:page => 1).decorate)
+      assign(:dossiers, (smart_listing_create :dossiers,
+                                              user.dossiers.waiting_for_gestionnaire('DESC'),
+                                              partial: "users/dossiers/list",
+                                              array: true))
       assign(:liste, 'en_attente')
       render
     end
@@ -69,7 +75,10 @@ describe 'users/dossiers/index.html.haml', type: :view do
     before do
       sign_in user
 
-      assign(:dossiers, dossiers_list.paginate(:page => 1).decorate)
+      assign(:dossiers, (smart_listing_create :dossiers,
+                                              user.dossiers.termine('DESC'),
+                                              partial: "users/dossiers/list",
+                                              array: true))
       assign(:liste, 'termine')
       render
     end

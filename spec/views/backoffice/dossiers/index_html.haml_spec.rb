@@ -11,7 +11,10 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   describe 'on tab a_traiter' do
     before do
-      assign(:dossiers, gestionnaire.dossiers.waiting_for_gestionnaire.paginate(:page => 1).decorate)
+      assign(:dossiers, (smart_listing_create :dossiers,
+                                              gestionnaire.dossiers.waiting_for_gestionnaire,
+                                              partial: "backoffice/dossiers/list",
+                                              array: true))
       assign(:liste, 'a_traiter')
       assign(:a_traiter_class, 'active')
 
@@ -36,7 +39,10 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   describe 'on tab en_attente' do
     before do
-      assign(:dossiers, gestionnaire.dossiers.waiting_for_user.paginate(:page => 1).decorate)
+      assign(:dossiers, (smart_listing_create :dossiers,
+                                              gestionnaire.dossiers.waiting_for_user,
+                                              partial: "backoffice/dossiers/list",
+                                              array: true))
       assign(:liste, 'en_attente')
       assign(:en_attente_class, 'active')
 
@@ -60,13 +66,17 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   describe 'on tab termine' do
     before do
-      assign(:dossiers, gestionnaire.dossiers.termine.paginate(:page => 1).decorate)
+      assign(:dossiers, (smart_listing_create :dossiers,
+                                              gestionnaire.dossiers.termine,
+                                              partial: "backoffice/dossiers/list",
+                                              array: true))
       assign(:termine_class, 'active')
       assign(:liste, 'termine')
       render
     end
 
     subject { rendered }
+
     it { is_expected.to have_css('#backoffice_index') }
     it { is_expected.to have_content(procedure.libelle) }
     it { is_expected.to have_content(decorate_dossier_closed.nom_projet) }

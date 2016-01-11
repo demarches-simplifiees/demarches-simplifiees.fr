@@ -51,6 +51,17 @@ SIADETOKEN = :valid_token unless defined? SIADETOKEN
 
 include Warden::Test::Helpers
 
+include SmartListing::Helper
+include SmartListing::Helper::ControllerExtensions
+
+module SmartListing
+  module Helper
+    def view_context
+      'mock'
+    end
+  end
+end
+
 WebMock.disable_net_connect!(allow_localhost: true)
 
 RSpec.configure do |config|
