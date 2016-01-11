@@ -61,7 +61,7 @@ body {
   box-shadow: none;
   float: right;
   margin-top: 8px;
-  margin-right: 80px;
+  margin-right: 105px;
 }
 
 .alert.alert-success,
@@ -184,4 +184,21 @@ div.pagination {
 .fa {
   width: 15px;
   text-align: center;
+}
+
+.off-fc-link {
+  font-size: 17px !important;
+  margin-top: -5px;
+}
+
+#fconnect-profile {
+  padding-top: 3px;
+  display: inline-block;
+
+  a {
+    color: #3471A9 !important;
+    text-decoration: none;
+    margin-right: 0px !important;
+  }
+
 }

@@ -26,11 +26,17 @@
           - elsif user_signed_in?
             %div.user
               -if current_user.loged_in_with_france_connect?
-                = image_tag('logo_FC_02_small.png', class: 'logo_fc_small')
+                %div{ id: "fconnect-profile", "data-fc-logout-url" => '/users/sign_out" data-method="delete' }
+                  %a.text-info{ href: "#" }
+                    = "#{current_user.given_name} #{current_user.family_name}"
+
+                = link_to "", '/users/sign_out', method: :delete, :class => 'btn fa fa-power-off off-fc-link'
+
               -else
                 %i.fa.fa-user
-              = current_user.email
-              = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
+                = current_user.email
+
+                = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
 
       #flash_message.center
       - if flash.notice
@@ -42,3 +48,5 @@
 
       %div{:style => 'margin-left:10%; margin-right:10%;'}
         = yield
+
+    %script{ src: "http://fcp.integ01.dev-franceconnect.fr/js/franceconnect.js" }
