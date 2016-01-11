@@ -9,16 +9,14 @@
     %strong
       France Connect
 
-  .row
-    .col-md-6.col-lg-6
-      %a.btn.btn-default.btn-lg.btn-primary.btn_fc#btn_fcp{href: '/france_connect/particulier'}
-        %div{style:'margin-left:35px'}
-          Particulier
+  %a.btn.btn-default.btn-lg.btn-primary.btn_fc#btn_fcp{href: '/france_connect/particulier'}
+    %div{style:'margin-left:35px'}
+      Particulier
 
-    .col-md-6.col-lg-6
-      %a.btn.btn-default.btn-lg.btn-danger.btn_fc#btn_fce{href: '/france_connect/entreprise'}
-        %div{style:'margin-left:35px'}
-          Entreprise
+    -#.col-md-6.col-lg-6
+    -#  %a.btn.btn-default.btn-lg.btn-danger.btn_fc#btn_fce{href: '/france_connect/entreprise'}
+    -#    %div{style:'margin-left:35px'}
+    -#      Entreprise
   %hr
   = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
     %h4

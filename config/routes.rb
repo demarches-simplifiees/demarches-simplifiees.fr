@@ -16,8 +16,8 @@ Rails.application.routes.draw do
   root 'root#index'
 
   namespace :france_connect do
-    get 'entreprise' => 'entreprise#login'
-    get 'entreprise/callback' => 'entreprise#callback'
+    # get 'entreprise' => 'entreprise#login'
+    # get 'entreprise/callback' => 'entreprise#callback'
 
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
