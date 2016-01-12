@@ -1,23 +1,22 @@
 #pieces_justificatives
   -#%h3.text-info Liste des pièces justificatives
   -#%br
+
   %table.table
-    -if @procedure.lien_demarche != nil
+    -if @facade.procedure.lien_demarche != nil
       %tr{id: "piece_justificative_0"}
         %th{class:'col-lg-6'}
-          ='CERFA'
-          -if @procedure.lien_demarche != nil
-            %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@procedure.lien_demarche}", :target => '_blank'} Lien CERFA
+          ='Formulaire'
         %td.col-lg-6.col-md-6
-          - if !@dossier.cerfa.empty?
+          - if !@facade.dossier.cerfa.empty?
             - if user_signed_in?
               = 'Pièce fournie'
             - elsif gestionnaire_signed_in?
-              %a{ href: "#{@dossier.cerfa.content}", target: '_blank' } Consulter
+              %a{ href: "#{(Downloader.new @facade.dossier.cerfa.content, 'CERFA').url}", target: '_blank' } Consulter
           - else
             = 'Pièce non fournie'
 
-    - @dossier.pieces_justificatives.each do |piece_justificative|
+    - @facade.dossier.pieces_justificatives.each do |piece_justificative|
       %tr{ id: "piece_justificative_#{piece_justificative.type}" }
         %th.col-lg-6
           = piece_justificative.libelle
@@ -25,7 +24,10 @@
           - if piece_justificative.api_entreprise
             %span.text-success Nous l'avons récupéré pour vous.
           - elsif !piece_justificative.empty?
-            %a{ href: "#{piece_justificative.content}", target: '_blank' } Consulter
+            - if user_signed_in?
+              = 'Pièce fournie'
+            - elsif gestionnaire_signed_in?
+              %a{ href: "#{(Downloader.new piece_justificative.content, piece_justificative.type_de_piece_justificative.libelle).url}", target: '_blank' } Consulter
           - else
             = 'Pièce non fournie'
 

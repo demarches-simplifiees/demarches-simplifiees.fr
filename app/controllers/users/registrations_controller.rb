@@ -2,6 +2,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
 # before_filter :configure_sign_up_params, only: [:create]
 # before_filter :configure_account_update_params, only: [:update]
 
+  def after_sign_up_path_for(resource_or_scope)
+    WelcomeMailer.welcome_email(User.last).deliver_now!
+    super
+  end
+
   # GET /resource/sign_up
   # def new
   #   super
@@ -9,9 +14,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    retour = super
-    WelcomeMailer.welcome_email(User.last).deliver_now!
-    retour
+    super
   end
 
   # GET /resource/edit

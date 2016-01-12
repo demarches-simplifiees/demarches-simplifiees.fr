@@ -1,13 +1,12 @@
 require 'spec_helper'
 
 describe 'users/recapitulatif/show.html.haml', type: :view do
-  let(:dossier) { create(:dossier, :with_user, :with_entreprise, procedure: create(:procedure, :with_api_carto)) }
+  let(:dossier) { create(:dossier, :with_user, :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto)) }
   let(:dossier_id) { dossier.id }
+  let(:state) { 'draft' }
 
   before do
-    assign(:dossier, dossier.decorate)
-    assign(:procedure, dossier.procedure)
-    assign(:commentaires, dossier.commentaires)
+    assign(:facade, DossierFacades.new(dossier.id, dossier.user.email))
   end
 
   context 'sur la rendered recapitulative' do
@@ -54,8 +53,8 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
     context 'buttons to change dossier state' do
       context 'when dossier state is initiated' do
+        let(:state) { 'initiated' }
         before do
-          dossier.initiated!
           render
         end
 
@@ -63,18 +62,19 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
 
       context 'when dossier state is replied' do
+        let(:state) { 'replied' }
+
         before do
-          dossier.replied!
           render
         end
 
-        #TODO gestionnaire test
         it { expect(rendered).to have_content('Répondu') }
       end
 
       context 'when dossier state is updated' do
+        let(:state) { 'updated' }
+
         before do
-          dossier.updated!
           render
         end
 
@@ -82,8 +82,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
 
       context 'when dossier state is validated' do
+        let(:state) { 'validated' }
+
         before do
-          dossier.validated!
           render
         end
 
@@ -99,8 +100,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
 
       context 'when dossier state is submitted' do
+        let(:state) { 'submitted' }
+
         before do
-          dossier.submitted!
           render
         end
 
@@ -113,8 +115,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
 
       context 'when dossier state is traité' do
+        let(:state) { 'closed' }
+
         before do
-          dossier.closed!
           render
         end
         it { expect(rendered).to have_content('Traité') }

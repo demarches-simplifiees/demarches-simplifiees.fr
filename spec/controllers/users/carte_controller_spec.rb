@@ -10,7 +10,7 @@ RSpec.describe Users::CarteController, type: :controller do
   let!(:entreprise) { create(:entreprise, dossier: dossier) }
   let!(:etablissement) { create(:etablissement, dossier: dossier) }
   let(:bad_dossier_id) { Dossier.count + 1000 }
-  let(:adresse) { etablissement.adresse }
+  let(:adresse) { etablissement.geo_adresse }
 
   before do
     sign_in dossier.user
@@ -137,10 +137,10 @@ RSpec.describe Users::CarteController, type: :controller do
 
   describe '#get_position' do
     context 'Geocodeur renvoie des positions nil' do
-      let(:etablissement) { create(:etablissement, adresse: bad_adresse) }
+      let(:etablissement) { create(:etablissement, adresse: bad_adresse, numero_voie: 'dzj', type_voie: 'fzjfk', nom_voie: 'hdidjkz', complement_adresse: 'fjef', code_postal: 'fjeiefk', localite: 'zjfkfz') }
       let(:dossier) { create(:dossier, :with_procedure, :with_user, etablissement: etablissement) }
       before do
-        stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{bad_adresse}")
+        stub_request(:get, /http:\/\/api-adresse[.]data[.]gouv[.]fr\/search[?]limit=1&q=/)
             .to_return(status: 200, body: '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
         get :get_position, dossier_id: dossier.id
       end

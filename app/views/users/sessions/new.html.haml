@@ -3,14 +3,15 @@
   %br
   %h2#login_user Connexion
 
-  -#%a.btn.btn-default.btn-lg.btn-primary#btn_fc{href: '/france_connect'}
-  -#  %div{style:'margin-left:35px'}
-  -#    S'identifier avec
-  -#    France Connect
-  -#%hr
+  %a.btn_fc#btn_fcp{href: '/france_connect/particulier'}
+    = image_tag 'franceconnect_logo.png'
 
   %br
-  %br
+  %a.text-info{href: 'https://fcp.integ01.dev-franceconnect.fr/a-propos', target: '_blank'}
+    Qu’est-ce que FranceConnect ?
+
+
+  %hr
   = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
     %h4
       = f.label :email

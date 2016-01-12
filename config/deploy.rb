@@ -68,7 +68,8 @@ set :shared_paths, [
   "config/initializers/token.rb",
   "config/unicorn.rb",
   "config/initializers/raven.rb",
-  'config/france_connect.yml'
+  'config/france_connect.yml',
+  'config/initializers/mailjet.rb'
 ]
 
 

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::SessionsController, type: :controller do
-  let(:loged_in_with_france_connect) { true }
+  let(:loged_in_with_france_connect) { 'entreprise' }
   let(:user) { create(:user, loged_in_with_france_connect: loged_in_with_france_connect) }
 
   before do
@@ -17,7 +17,7 @@ describe Users::SessionsController, type: :controller do
         user.reload
       end
 
-      subject { user.loged_in_with_france_connect }
+      subject { user.loged_in_with_france_connect? }
 
       it { is_expected.to be_falsey }
     end
@@ -33,19 +33,27 @@ describe Users::SessionsController, type: :controller do
       expect(subject.current_user).to be_nil
     end
 
-    it 'loged_in_with_france_connect current_user attribut is false' do
+    it 'loged_in_with_france_connect current_user attribut is nil' do
       user.reload
-      expect(user.loged_in_with_france_connect).to be_falsey
+      expect(user.loged_in_with_france_connect?).to be_falsey
     end
 
-    context 'when user is connect with france connect' do
+    context 'when user is connect with france connect entreprise' do
       it 'redirect to france connect logout page' do
         expect(response).to redirect_to(FRANCE_CONNECT.entreprise_logout_endpoint)
       end
     end
 
+    context 'when user is connect with france connect entreprise' do
+      let(:loged_in_with_france_connect) { 'particulier' }
+
+      it 'redirect to france connect logout page' do
+        expect(response).to redirect_to(FRANCE_CONNECT.particulier_logout_endpoint)
+      end
+    end
+
     context 'when user is not connect with france connect' do
-      let(:loged_in_with_france_connect) { false }
+      let(:loged_in_with_france_connect) { '' }
 
       it 'redirect to root page' do
         expect(response).to redirect_to(root_path)

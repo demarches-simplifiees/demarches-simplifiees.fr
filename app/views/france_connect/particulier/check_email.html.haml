@@ -1,0 +1,28 @@
+%h2.text-info
+  = image_tag('logo_FC_02_small.png', style: 'height: 55px')
+  &nbsp;France Connect - Particulier
+
+%h3 Nouvelle connexion
+%h4.text-warning{style:'margin-left: 20px'} Email déjà utilisé
+
+%br
+%p
+  %h4.center Nous vous avons trouvé un compte qui utilise déjà cette adresse email.
+  %p.center
+    Afin d'associer ce compte à votre identifiant France Connect, merci de saisir votre mot de passe TPS.
+  %br
+.center
+  #france_connect_particulier_email
+    = form_for @user, url: {controller: 'france_connect/particulier', action: :check_email}, method: :post do |f|
+      .form-group.form-group-lg
+        = f.text_field :email, class: "form-control", placeholder: "Entrez votre email", readonly: 'readonly'
+        %br
+        = f.password_field :password, class: "form-control", placeholder: "Entrez votre mot de passe"
+        = f.hidden_field :email
+        = f.hidden_field :gender
+        = f.hidden_field :given_name
+        = f.hidden_field :family_name
+        = f.hidden_field :birthdate
+        = f.hidden_field :birthplace
+        = f.hidden_field :france_connect_particulier_id
+        = f.submit 'Terminer', class: %w(btn btn-lg btn-success), style: 'margin-top:20px;', id: 'valid_new_fcp'

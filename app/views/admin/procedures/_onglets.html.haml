@@ -1,11 +1,11 @@
 #onglets
   %ul.nav.nav-tabs
-    %li{class: "#{'active' if @page == 'active'  }"}
+    %li{class: @active_class}
       %a{:href => "#{url_for :admin_procedures}"}
         %h5.text-success
           = "Actives"
 
-    %li{class: "#{'active' if @page == 'archived'  }"}
+    %li{class: @archived_class}
       %a{:href => "#{url_for :admin_procedures_archived}"}
         %h5{style: 'color: black'}
           ="Archivées"

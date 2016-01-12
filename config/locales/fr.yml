@@ -23,6 +23,12 @@ fr:
   will_paginate:
     next_label: 'Suivant'
     previous_label: 'Précédent'
+  views:
+    pagination:
+      next: Suivant
+      last: Dernier
+      previous: Précédent
+      first: Premier
 
   number:
       currency:
@@ -32,6 +38,22 @@ fr:
           separator: ','
           precision: 2
           format: '%n %u'
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              invalid: invalide
+              taken: déjà utilisé
+              blank: est vide
+            password:
+              too_short: ': Le mot de passe est trop court'
+              blank: ': Le mot de passe est vide'
+            password_confirmation:
+              confirmation: ': Les deux mots de passe ne correspondent pas'
+
+
   devise:
     confirmations:
       confirmed: 'Votre compte a été confirmé avec succès.'
@@ -93,6 +115,7 @@ fr:
       dossier_not_found: "Le dossier n'existe pas ou vous n'y avez pas accès."
       dossier_map_not_activated: "Le dossier n'a pas accès à la cartographie."
       invalid_siret: "Le siret est incorrect"
+      procedure_not_found: "La procédure n'existe pas"
       france_connect:
        connexion: "Erreur lors de la connexion à France Connect."
 

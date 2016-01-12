@@ -5,6 +5,7 @@ feature 'user arrive on siret page' do
   let(:user) { create(:user) }
   let(:siret) { '42149333900020' }
   let(:siren) { siret[0...9] }
+
   context 'when user is not logged in' do
     before do
       visit new_users_dossiers_path(procedure_id: procedure.id)

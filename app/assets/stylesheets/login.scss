@@ -7,15 +7,12 @@
 
   padding: 20px;
 
-  #btn_fc {
-    margin-top:8%;
-    background-image: image-url('logo_FC_02.png');
-    background-repeat: no-repeat;
-    background-size: 38px;
-    background-position-x: 5px;
-    background-position-y: 1px;
-  }
+  .btn_fc {
 
+    img {
+      height: 100px;
+    }
+  }
 
   #new_user{
     width: 80%;
@@ -24,7 +21,6 @@
   }
 
   hr {
-    margin-top: 50px;
     margin-bottom: 40px;
     border: 0;
     height: 1px;

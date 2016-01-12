@@ -8,8 +8,7 @@ describe 'users/recapitulatif/_commentaires_flux.html.haml', type: :view do
   let(:body) { 'Commentaire de test' }
 
   before do
-    assign(:dossier, dossier.decorate)
-    assign(:commentaires, dossier.commentaires.all.decorate)
+    assign(:facade, DossierFacades.new(dossier.id, dossier.user.email))
     render
   end
 

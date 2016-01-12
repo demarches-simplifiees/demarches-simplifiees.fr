@@ -1,0 +1,36 @@
+%h2.text-info
+  = image_tag('logo_FC_02_small.png', style: 'height: 55px')
+  &nbsp;France Connect - Particulier
+
+%h3 Nouvelle connexion
+
+%br
+%p
+  Nous vous avons correctement identifié comme étant
+
+%h4.text-info.center
+  %strong
+    = @user.gender_fr
+    = @user.given_name
+    = @user.family_name
+  né le
+  %strong
+    = @user.birthdate_fr
+
+%br
+%h4
+  Afin de finaliser votre première connexion à TPS, merci de saisir un email valide :
+%br
+
+.center
+  #france_connect_particulier_email
+    = form_for @user, url: {controller: 'france_connect/particulier', action: :check_email}, method: :post do |f|
+      .form-group.form-group-lg
+        = f.text_field :email, class: "form-control", placeholder: "Entrez votre email"
+        = f.hidden_field :gender
+        = f.hidden_field :given_name
+        = f.hidden_field :family_name
+        = f.hidden_field :birthdate
+        = f.hidden_field :birthplace
+        = f.hidden_field :france_connect_particulier_id
+        = f.submit 'Terminer', class: %w(btn btn-lg btn-success), style: 'margin-top:20px;', id: 'valid_new_fcp'

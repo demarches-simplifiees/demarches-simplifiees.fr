@@ -3,24 +3,27 @@
 
 #onglets
   %ul.nav.nav-tabs
-    %li{ class: (@dossiers.active_class_a_traiter(@liste) unless @dossiers.nil?) }
+    %li{ class: (@a_traiter_class) }
       %a{:href => "#{url_for backoffice_dossiers_path(liste: 'a_traiter')}"}
         %h5.text-danger
           = "À traiter "
           .badge.progress-bar-danger
             =@dossiers_a_traiter_total
-    %li{ class: (@dossiers.active_class_en_attente(@liste) unless @dossiers.nil?) }
+
+    %li{ class: (@en_attente_class) }
       %a{:href => "#{url_for backoffice_dossiers_path(liste: 'en_attente')}"}
         %h5.text-info
           ="En attente "
           .badge.progress-bar-info
             =@dossiers_en_attente_total
-    %li{ class: (@dossiers.active_class_termine(@liste) unless @dossiers.nil?) }
+
+    %li{ class: (@termine_class) }
       %a{:href => "#{url_for backoffice_dossiers_path(liste: 'termine')}"}
         %h5.text-success
           = "Terminé"
           .badge.progress-bar-success
             =@dossiers_termine_total
+
     %li#search{class: "#{'active' unless @dossiers_search.nil?}", style:'float:right'}
       %a
         = form_tag(backoffice_dossiers_search_url, method: :get) do

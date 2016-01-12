@@ -40,15 +40,18 @@
     %br
     %h3 Documents administratifs
 
+    -if @procedure.lien_demarche != nil
+      %p
+        Formulaire / documentation de la démarche :
+        %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@procedure.lien_demarche}", :target => '_blank'} Accéder
+
+
     %br
     //TODO a refactorer
     %table{class:'table', style:'width:55%; margin-left:5%'}
       %tr
         %th{class:'col-lg-6'}
-          ='Charger votre  CERFA (.pdf)'
-
-          -if @procedure.lien_demarche != nil
-            %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@procedure.lien_demarche}", :target => '_blank'} Lien CERFA
+          ='Formulaire (.pdf / .doc)'
 
         %td{class:'col-lg-5'}
           -if !@dossier.cerfa.empty?

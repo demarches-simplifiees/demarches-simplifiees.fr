@@ -1,27 +1,38 @@
 class Admin::ProceduresController < AdminController
+  include SmartListing::Helper::ControllerExtensions
+  helper SmartListing::Helper
 
-  before_action :retrieve_procedure, only: :edit
+  before_action :retrieve_procedure, only: [:show, :edit]
+  before_action :procedure_locked?, only: [:edit]
 
   def index
-    @procedures = current_administrateur.procedures.where(archived: false)
-                      .paginate(:page => params[:page]).decorate
+    @procedures = smart_listing_create :procedures,
+                         current_administrateur.procedures.where(archived: false),
+                         partial: "admin/procedures/list",
+                         array: true
+
     @page = 'active'
+    active_class
   end
 
   def archived
-    @procedures = current_administrateur.procedures.where(archived: true)
-                      .paginate(:page => params[:page]).decorate
+    @procedures = smart_listing_create :procedures,
+                                       current_administrateur.procedures.where(archived: true),
+                                       partial: "admin/procedures/list",
+                                       array: true
+
     @page = 'archived'
+    archived_class
+
+    render 'index'
   end
 
   def show
-    informations
-
-    @facade = AdminProceduresShowFacades.new @procedure
+    @facade = AdminProceduresShowFacades.new @procedure.decorate
   end
 
   def edit
-    informations
+
   end
 
   def new
@@ -66,6 +77,14 @@ class Admin::ProceduresController < AdminController
     redirect_to admin_procedures_path
   end
 
+  def active_class
+    @active_class = 'active' if @page == 'active'
+  end
+
+  def archived_class
+    @archived_class = 'active' if @page == 'archived'
+  end
+
   private
 
   def create_procedure_params
@@ -74,13 +93,5 @@ class Admin::ProceduresController < AdminController
 
   def create_module_api_carto_params
     params.require(:procedure).require(:module_api_carto_attributes).permit(:id, :use_api_carto, :quartiers_prioritaires, :cadastre)
-  end
-
-  def informations
-    @procedure = current_administrateur.procedures.find(params[:id]).decorate
-
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
-    redirect_to admin_procedures_path
   end
 end

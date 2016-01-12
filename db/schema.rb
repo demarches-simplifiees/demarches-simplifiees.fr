@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151214133426) do
+ActiveRecord::Schema.define(version: 20160106100227) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 20151214133426) do
     t.integer  "user_id"
     t.text     "json_latlngs"
     t.boolean  "archived",             default: false
+    t.boolean  "mandataire_social",    default: false
   end
 
   add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
@@ -201,12 +202,12 @@ ActiveRecord::Schema.define(version: 20151214133426) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                        default: "",    null: false
-    t.string   "encrypted_password",           default: "",    null: false
+    t.string   "email",                         default: "",      null: false
+    t.string   "encrypted_password",            default: "",      null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                default: 0,     null: false
+    t.integer  "sign_in_count",                 default: 0,       null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
@@ -214,7 +215,13 @@ ActiveRecord::Schema.define(version: 20151214133426) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "siret"
-    t.boolean  "loged_in_with_france_connect", default: false
+    t.string   "loged_in_with_france_connect",  default: "false"
+    t.string   "gender"
+    t.string   "given_name"
+    t.string   "family_name"
+    t.date     "birthdate"
+    t.string   "birthplace"
+    t.string   "france_connect_particulier_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

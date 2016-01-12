@@ -3,33 +3,43 @@
   %div.row
     .col-lg-6.col-md-6
       %h3.text-info
-        = @dossier.nom_projet
+        = @facade.dossier.nom_projet
       %h4
-        = @dossier.procedure.libelle
+        = @facade.dossier.procedure.libelle
+
       .description
         - begin
-          - @dossier.description.split(/(?:\n\r?|\r\n?')/).each do |line|
+          - @facade.dossier.description.split(/(?:\n\r?|\r\n?')/).each do |line|
             = line
             %br
         - rescue
           =''
-    - if @dossier.procedure.module_api_carto.use_api_carto
+
+      - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
+        .mandataire_social.text-success.center
+          %br
+          ="Il est probable que le soumissionnaire du dossier soit un des mandataire social de l'entreprise ("
+          %b
+            ="#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
+          =")"
+
+    - if @facade.dossier.procedure.module_api_carto.use_api_carto
       .col-lg-6.col-md-6
 
-        #map.mini{class: @dossier.class_qp_active}
+        #map.mini{class: @facade.dossier.class_qp_active}
 
-        %input{id: 'json_latlngs', type:'hidden', value: "#{@dossier.json_latlngs}"}
-        %input{id: 'quartier_prioritaires', type:'hidden', value: "#{@dossier.quartier_prioritaires.to_json}"}
+        %input{id: 'json_latlngs', type:'hidden', value: "#{@facade.dossier.json_latlngs}"}
+        %input{id: 'quartier_prioritaires', type:'hidden', value: "#{@facade.dossier.quartier_prioritaires.to_json}"}
         %script{type: 'text/javascript'}
-          = "var dossier_id =#{@dossier.id}"
+          = "var dossier_id =#{@facade.dossier.id}"
           initCarto();
 
   %br
-  -unless @champs.nil?
+  -unless @facade.champs.nil?
     .row
       .col-lg-6.col-md-6
         %table.table#liste_champs
-          -@champs.each do |champ|
+          -@facade.champs.each do |champ|
             %tr
               %th{ style: 'width:25%' }
                 =champ.libelle
@@ -41,20 +51,20 @@
 
   %div.row{style: 'text-align:right'}
     -unless gestionnaire_signed_in?
-      -if !@dossier.validated? && !@dossier.submitted? && !@dossier.closed?
-        -if @dossier.procedure.module_api_carto.use_api_carto
-          %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@dossier.id}/carte"}
+      -if !@facade.dossier.validated? && !@facade.dossier.submitted? && !@facade.dossier.closed?
+        -if @facade.dossier.procedure.module_api_carto.use_api_carto
+          %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@facade.dossier.id}/carte"}
             = 'Editer ma carte'
-        %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@dossier.id}/description"}
+        %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@facade.dossier.id}/description"}
           = 'Editer mon dossier'
 
     -unless user_signed_in?
-      -if !@dossier.validated? && !@dossier.submitted? && !@dossier.closed?
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+      -if !@facade.dossier.validated? && !@facade.dossier.submitted? && !@facade.dossier.closed?
+        = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Valider le dossier'
-      -elsif @dossier.submitted?
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+      -elsif @facade.dossier.submitted?
+        = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Traiter le dossier'
 
