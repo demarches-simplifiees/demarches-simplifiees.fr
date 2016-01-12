@@ -1,0 +1,45 @@
+require 'spec_helper'
+
+describe CARTO::SGMAP::Cadastre::Adapter do
+  subject { described_class.new(coordinates).to_params }
+
+  before do
+    stub_request(:post, "https://apicarto.sgmap.fr/cadastre/geometrie").
+        with(:body => /.*/,
+             :headers => {'Content-Type' => 'application/json'}).
+        to_return(status: status, body: body)
+  end
+
+  context 'coordinates are filled' do
+    let(:coordinates) { '[[2.252728, 43.27151][2.323223, 32.835332]]' }
+    let(:status) { 200 }
+    let(:body) { File.read('spec/support/files/geojson/response_cadastre.json') }
+
+    it { expect(subject).to be_a_instance_of(Array) }
+    it { expect(subject.size).to eq 16 }
+
+    describe 'Attributes' do
+      subject { super().first }
+
+      it { expect(subject[:surface_intersection]).to eq('0.0202') }
+      it { expect(subject[:surface_parcelle]).to eq(220.0664659755941) }
+      it { expect(subject[:numero]).to eq('0082') }
+      it { expect(subject[:feuille]).to eq(1) }
+      it { expect(subject[:section]).to eq('0J') }
+      it { expect(subject[:code_dep]).to eq('94') }
+      it { expect(subject[:nom_com]).to eq('Maisons-Alfort') }
+      it { expect(subject[:code_com]).to eq('046') }
+      it { expect(subject[:code_arr]).to eq('000') }
+
+      it { expect(subject[:geometry]).to eq({type: "MultiPolygon", coordinates: [[[[2.4362443, 48.8092078], [2.436384, 48.8092043], [2.4363802, 48.8091414]]]] })}
+    end
+  end
+
+  context 'coordinates are empty' do
+    let(:coordinates) { '' }
+    let(:status) { 404 }
+    let(:body) { '' }
+
+    it { expect { subject }.to raise_error(RestClient::ResourceNotFound) }
+  end
+end

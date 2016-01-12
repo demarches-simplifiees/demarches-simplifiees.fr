@@ -1,9 +1,14 @@
-class CARTO::SGMAP::QuartiersPrioritaires::API
+class CARTO::SGMAP::API
   def initialize
   end
 
   def self.search_qp(geojson)
     endpoint = "/quartiers-prioritaires/search"
+    call(base_url + endpoint, {geojson: geojson.to_s})
+  end
+
+  def self.search_cadastre(geojson)
+    endpoint = "/cadastre/geometrie"
     call(base_url + endpoint, {geojson: geojson.to_s})
   end
 

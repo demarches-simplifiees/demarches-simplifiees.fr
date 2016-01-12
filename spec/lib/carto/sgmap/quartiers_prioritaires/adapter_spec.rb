@@ -13,7 +13,7 @@ describe CARTO::SGMAP::QuartiersPrioritaires::Adapter do
   context 'coordinates are filled' do
     let(:coordinates) { '[[2.252728, 43.27151][2.323223, 32.835332]]' }
     let(:status) { 200 }
-    let(:body) { File.read('spec/support/files/geojson/response.json') }
+    let(:body) { File.read('spec/support/files/geojson/response_qp.json') }
 
     it { expect(subject).to be_a_instance_of(Hash) }
 
