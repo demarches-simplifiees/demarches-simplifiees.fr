@@ -191,6 +191,19 @@ div.pagination {
   margin-top: -4px;
 }
 
+
+#fconnect-access {
+  right: 50px;
+}
+
+#fconnect-access:before {
+  left: 22.7% !important;
+}
+
+#fconnect-access:after {
+  left: 23% !important;
+}
+
 #fconnect-profile {
   margin-top: 5px;
   display: inline-block;
