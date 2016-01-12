@@ -38,6 +38,22 @@ fr:
           separator: ','
           precision: 2
           format: '%n %u'
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              invalid: invalide
+              taken: déjà utilisé
+              blank: est vide
+            password:
+              too_short: ': Le mot de passe est trop court'
+              blank: ': Le mot de passe est vide'
+            password_confirmation:
+              confirmation: ': Les deux mots de passe ne correspondent pas'
+
+
   devise:
     confirmations:
       confirmed: 'Votre compte a été confirmé avec succès.'
