@@ -4,7 +4,7 @@ class CARTO::SGMAP::QuartiersPrioritaires::Adapter
   end
 
   def data_source
-    @data_source ||= JSON.parse(CARTO::SGMAP::QuartiersPrioritaires::API.search_qp(@coordinates), symbolize_names: true)
+    @data_source ||= JSON.parse(CARTO::SGMAP::API.search_qp(@coordinates), symbolize_names: true)
   end
 
   def to_params
