@@ -25,4 +25,3 @@
 //= require graham_scan.min
 //= require leaflet.freedraw
 //= require smart_listing
-//= require franceconnect_kit
