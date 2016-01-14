@@ -18,16 +18,17 @@ describe API::V1::ProceduresController do
       subject { get :show, id: procedure, token: admin.api_token }
       it { expect(subject.status).to eq(200) }
       describe 'body' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
+        let(:module_api_carto) { create(:module_api_carto, use_api_carto: true, quartiers_prioritaires: true, cadastre: true)}
+        let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, module_api_carto: module_api_carto, administrateur: admin) }
         let(:response) { get :show, id: procedure.id, token: admin.api_token }
         subject { JSON.parse(response.body, symbolize_names: true)[:procedure] }
 
         it { expect(subject[:id]).to eq(procedure.id) }
-        it { expect(subject[:libelle]).to eq(procedure.libelle) }
+        it { expect(subject[:label]).to eq(procedure.libelle) }
         it { expect(subject[:description]).to eq(procedure.description) }
         it { expect(subject[:organisation]).to eq(procedure.organisation) }
         it { expect(subject[:direction]).to eq(procedure.direction) }
-        it { expect(subject[:lien_demarche]).to eq(procedure.lien_demarche) }
+        it { expect(subject[:link]).to eq(procedure.lien_demarche) }
         it { expect(subject[:archived]).to eq(procedure.archived) }
         it { is_expected.to have_key(:types_de_champ) }
         it { expect(subject[:types_de_champ]).to be_an(Array) }
@@ -49,6 +50,13 @@ describe API::V1::ProceduresController do
           it { expect(subject[:id]).to eq(pj.id) }
           it { expect(subject[:libelle]).to eq(pj.libelle) }
           it { expect(subject[:description]).to eq(pj.description) }
+        end
+        it { is_expected.to have_key(:geographic_information) }
+        describe 'geographic_information' do
+          subject { super()[:geographic_information] }
+          it { expect(subject[:use_api_carto]).to be_truthy }
+          it { expect(subject[:quartiers_prioritaires]).to be_truthy }
+          it { expect(subject[:cadastre]).to be_truthy }
         end
       end
     end

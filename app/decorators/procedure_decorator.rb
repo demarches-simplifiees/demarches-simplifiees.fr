@@ -9,4 +9,7 @@ class ProcedureDecorator < Draper::Decorator
     return 'logo-tps.png' if logo.blank?
     logo
   end
+  def geographic_information
+    module_api_carto
+  end
 end
