@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160106100227) do
+ActiveRecord::Schema.define(version: 20160115135025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,20 @@ ActiveRecord::Schema.define(version: 20160106100227) do
 
   add_index "administrateurs", ["email"], name: "index_administrateurs_on_email", unique: true, using: :btree
   add_index "administrateurs", ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true, using: :btree
+
+  create_table "cadastres", force: :cascade do |t|
+    t.string  "surface_intersection"
+    t.float   "surface_parcelle"
+    t.string  "numero"
+    t.integer "feuille"
+    t.string  "section"
+    t.string  "code_dep"
+    t.string  "nom_com"
+    t.string  "code_com"
+    t.string  "code_arr"
+    t.text    "geometry"
+    t.integer "dossier_id"
+  end
 
   create_table "cerfas", force: :cascade do |t|
     t.string  "content"
