@@ -42,7 +42,7 @@ describe GeojsonService do
 
       it { expect(subject['geom']['type']).to eq('Feature') }
       it { expect(subject['geom']['geometry']['type']).to eq('Polygon') }
-      it { expect(subject['geom']['geometry']['coordinates']).to eq([[coordinates]]) }
+      it { expect(subject['geom']['geometry']['coordinates']).to eq([coordinates]) }
     end
 
     describe 'coordinates are informed' do
@@ -50,7 +50,7 @@ describe GeojsonService do
 
       it { expect(subject['geom']['type']).to eq('Feature') }
       it { expect(subject['geom']['geometry']['type']).to eq('Polygon') }
-      it { expect(subject['geom']['geometry']['coordinates']).to eq([[coordinates]]) }
+      it { expect(subject['geom']['geometry']['coordinates']).to eq([coordinates]) }
     end
   end
 end
