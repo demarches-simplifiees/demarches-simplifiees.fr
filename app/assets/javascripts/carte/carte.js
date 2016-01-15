@@ -43,12 +43,20 @@ function default_position (){
     return {lon: LON, lat: LAT, zoom: 13}
 }
 
+function get_external_data (latLngs){
+
+    if (qp_active())
+        display_qp(get_qp(latLngs));
+
+    if (cadastre_active())
+        display_cadastre(get_cadastre(latLngs));
+}
+
 function add_event_freeDraw() {
     freeDraw.on('markers', function (e) {
         $("#json_latlngs").val(JSON.stringify(e.latLngs));
 
-        if (qp_active())
-            display_qp(get_qp(e.latLngs));
+        get_external_data(e.latLngs);
     });
 
     $("#new").on('click', function (e) {
@@ -76,58 +84,6 @@ function get_position() {
     });
 
     return position;
-}
-
-function qp_active() {
-    return $("#map.qp").length > 0
-}
-
-function get_qp(coordinates) {
-    if (!qp_active())
-        return;
-
-    var qp;
-
-    $.ajax({
-        method: 'post',
-        url: '/users/dossiers/' + dossier_id + '/carte/qp',
-        data: {coordinates: JSON.stringify(coordinates)},
-        dataType: 'json',
-        async: false
-    }).done(function (data) {
-        qp = data
-    });
-
-    return qp['quartier_prioritaires'];
-}
-
-function display_qp(qp_list) {
-    if (!qp_active())
-        return;
-
-    qp_array = jsObject_to_array(qp_list);
-
-    $("#qp_list ul").html('');
-
-    new_qpLayer();
-
-    if (qp_array.length > 0) {
-        qp_array.forEach(function (qp) {
-            $("#qp_list ul").append('<li>' + qp.commune + ' : ' + qp.nom + '</li>');
-
-            qpItems.addData(qp.geometry);
-        });
-    }
-    else
-        $("#qp_list ul").html('<li>AUCUN</li>');
-}
-
-function new_qpLayer() {
-    if (typeof qpItems != 'undefined')
-        map.removeLayer(qpItems);
-
-    qpItems = new L.GeoJSON();
-    qpItems.addTo(map);
 }
 
 function jsObject_to_array(qp_list) {

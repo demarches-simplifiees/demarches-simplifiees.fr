@@ -60,6 +60,12 @@ class Users::CarteController < UsersController
     render json: {quartier_prioritaires: qp}
   end
 
+  def get_cadastre
+    cadastres = generate_cadastre JSON.parse(params[:coordinates])
+
+    render json: {cadastres: cadastres}
+  end
+
   private
 
   def generate_qp coordinates
@@ -71,5 +77,16 @@ class Users::CarteController < UsersController
     end
 
     qp
+  end
+
+  def generate_cadastre coordinates
+    cadastre = []
+
+    coordinates.each_with_index do |coordinate, index |
+      coordinate = coordinates[index].map { |latlng| [latlng['lng'], latlng['lat']] }
+      cadastre << CARTO::SGMAP::Cadastre::Adapter.new(coordinate).to_params
+    end
+
+    cadastre.flatten
   end
 end

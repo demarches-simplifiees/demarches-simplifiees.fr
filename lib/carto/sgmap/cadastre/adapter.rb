@@ -1,6 +1,6 @@
 class CARTO::SGMAP::Cadastre::Adapter
   def initialize(coordinates)
-    @coordinates = GeojsonService.to_json_polygon(coordinates)
+    @coordinates = GeojsonService.to_json_polygon_for_cadastre(coordinates)
   end
 
   def data_source
