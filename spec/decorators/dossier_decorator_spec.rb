@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DossierDecorator do
-  let(:dossier) { create(:dossier, :with_user, updated_at: Time.new(2015, 12, 24, 14, 10)) }
+  let(:dossier) { create(:dossier,  updated_at: Time.new(2015, 12, 24, 14, 10)) }
   subject { dossier.decorate }
 
   describe 'last_update' do

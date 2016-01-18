@@ -3,13 +3,13 @@ require 'spec_helper'
 describe AdminProceduresShowFacades do
   let!(:procedure) { create(:procedure) }
 
-  let!(:dossier_0) { create(:dossier, :with_user, procedure: procedure, state: 'draft') }
-  let!(:dossier_1) { create(:dossier, :with_user, procedure: procedure, state: 'initiated') }
-  let!(:dossier_2) { create(:dossier, :with_user, procedure: procedure, state: 'validated') }
-  let!(:dossier_3) { create(:dossier, :with_user, procedure: procedure, state: 'validated') }
-  let!(:dossier_4) { create(:dossier, :with_user, procedure: procedure, archived: true, state: 'validated') }
-  let!(:dossier_5) { create(:dossier, :with_user, procedure: procedure, archived: true, state: 'validated') }
-  let!(:dossier_6) { create(:dossier, :with_user, procedure: procedure, archived: true, state: 'initiated') }
+  let!(:dossier_0) { create(:dossier,  procedure: procedure, state: 'draft') }
+  let!(:dossier_1) { create(:dossier,  procedure: procedure, state: 'initiated') }
+  let!(:dossier_2) { create(:dossier,  procedure: procedure, state: 'validated') }
+  let!(:dossier_3) { create(:dossier,  procedure: procedure, state: 'validated') }
+  let!(:dossier_4) { create(:dossier,  procedure: procedure, archived: true, state: 'validated') }
+  let!(:dossier_5) { create(:dossier,  procedure: procedure, archived: true, state: 'validated') }
+  let!(:dossier_6) { create(:dossier,  procedure: procedure, archived: true, state: 'initiated') }
 
   subject { AdminProceduresShowFacades.new procedure }
 

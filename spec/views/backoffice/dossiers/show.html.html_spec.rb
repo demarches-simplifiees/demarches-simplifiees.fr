@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'backoffice/dossiers/show.html.haml', type: :view do
-  let!(:dossier) { create(:dossier, :with_entreprise, :with_procedure, :with_user, state: state) }
+  let!(:dossier) { create(:dossier, :with_entreprise, :with_procedure,  state: state) }
   let(:state) { 'draft' }
   let(:dossier_id) { dossier.id }
   let(:gestionnaire) { create(:gestionnaire) }

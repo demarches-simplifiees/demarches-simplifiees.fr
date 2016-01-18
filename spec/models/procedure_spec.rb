@@ -87,7 +87,7 @@ describe Procedure do
 
     context 'when procedure have dossier with state draft' do
       before do
-        create(:dossier, :with_user, procedure: procedure, state: :draft)
+        create(:dossier,  procedure: procedure, state: :draft)
       end
 
       it { is_expected.to be_falsey }
@@ -95,7 +95,7 @@ describe Procedure do
 
     context 'when procedure have dossier with state initiated' do
       before do
-        create(:dossier, :with_user, procedure: procedure, state: :initiated)
+        create(:dossier,  procedure: procedure, state: :initiated)
       end
 
       it { is_expected.to be_truthy }

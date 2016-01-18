@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'users/carte/show.html.haml', type: :view do
   let(:state) { 'draft' }
-  let(:dossier) { create(:dossier, :with_procedure, :with_user, state: state) }
+  let(:dossier) { create(:dossier, :with_procedure,  state: state) }
   let(:dossier_id) { dossier.id }
   
   before do

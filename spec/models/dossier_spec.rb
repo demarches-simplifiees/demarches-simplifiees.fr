@@ -131,7 +131,7 @@ describe Dossier do
     end
 
     describe '#next_step' do
-      let(:dossier) { create(:dossier, :with_user) }
+      let(:dossier) { create(:dossier) }
       let(:role) { 'user' }
       let(:action) { 'initiate' }
 
@@ -390,18 +390,18 @@ describe Dossier do
       let(:procedure_admin) { create(:procedure, administrateur: admin) }
       let(:procedure_admin_2) { create(:procedure, administrateur: admin_2) }
 
-      let!(:dossier1) { create(:dossier, :with_user, procedure: procedure_admin, state: 'draft') }
-      let!(:dossier2) { create(:dossier, :with_user, procedure: procedure_admin, state: 'initiated') } #a_traiter
-      let!(:dossier3) { create(:dossier, :with_user, procedure: procedure_admin, state: 'initiated') } #a_traiter
-      let!(:dossier4) { create(:dossier, :with_user, procedure: procedure_admin, state: 'replied') } #en_attente
-      let!(:dossier5) { create(:dossier, :with_user, procedure: procedure_admin, state: 'updated') } #a_traiter
-      let!(:dossier6) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'validated') } #en_attente
-      let!(:dossier7) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'submitted') } #a_traiter
-      let!(:dossier8) { create(:dossier, :with_user, procedure: procedure_admin_2, state: 'closed') } #termine
-      let!(:dossier9) { create(:dossier, :with_user, procedure: procedure_admin, state: 'closed') } #termine
-      let!(:dossier10) { create(:dossier, :with_user, procedure: procedure_admin, state: 'initiated', archived: true) } #a_traiter #archived
-      let!(:dossier11) { create(:dossier, :with_user, procedure: procedure_admin, state: 'replied', archived: true) } #en_attente #archived
-      let!(:dossier12) { create(:dossier, :with_user, procedure: procedure_admin, state: 'closed', archived: true) } #termine #archived
+      let!(:dossier1) { create(:dossier,  procedure: procedure_admin, state: 'draft') }
+      let!(:dossier2) { create(:dossier,  procedure: procedure_admin, state: 'initiated') } #a_traiter
+      let!(:dossier3) { create(:dossier,  procedure: procedure_admin, state: 'initiated') } #a_traiter
+      let!(:dossier4) { create(:dossier,  procedure: procedure_admin, state: 'replied') } #en_attente
+      let!(:dossier5) { create(:dossier,  procedure: procedure_admin, state: 'updated') } #a_traiter
+      let!(:dossier6) { create(:dossier,  procedure: procedure_admin_2, state: 'validated') } #en_attente
+      let!(:dossier7) { create(:dossier,  procedure: procedure_admin_2, state: 'submitted') } #a_traiter
+      let!(:dossier8) { create(:dossier,  procedure: procedure_admin_2, state: 'closed') } #termine
+      let!(:dossier9) { create(:dossier,  procedure: procedure_admin, state: 'closed') } #termine
+      let!(:dossier10) { create(:dossier,  procedure: procedure_admin, state: 'initiated', archived: true) } #a_traiter #archived
+      let!(:dossier11) { create(:dossier,  procedure: procedure_admin, state: 'replied', archived: true) } #en_attente #archived
+      let!(:dossier12) { create(:dossier,  procedure: procedure_admin, state: 'closed', archived: true) } #termine #archived
 
       describe '#waiting_for_gestionnaire' do
         subject { gestionnaire.dossiers.waiting_for_gestionnaire }

@@ -37,8 +37,8 @@ feature 'search file on gestionnaire backoffice' do
 
         context 'when terms input does return result' do
           let!(:procedure) { create(:procedure, administrateur: administrateur) }
-          let!(:dossier) { create(:dossier, :with_entreprise, :with_user, procedure: procedure, state: 'initiated') }
-          let!(:dossier_2) { create(:dossier, :with_user, procedure: procedure, state: 'initiated', nom_projet: 'Projet de test') }
+          let!(:dossier) { create(:dossier, :with_entreprise,  procedure: procedure, state: 'initiated') }
+          let!(:dossier_2) { create(:dossier,  procedure: procedure, state: 'initiated', nom_projet: 'Projet de test') }
 
           let(:terms) { dossier.nom_projet }
 
