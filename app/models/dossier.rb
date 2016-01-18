@@ -13,6 +13,7 @@ class Dossier < ActiveRecord::Base
   has_many :pieces_justificatives, dependent: :destroy
   has_many :champs, dependent: :destroy
   has_many :quartier_prioritaires, dependent: :destroy
+  has_many :cadastres, dependent: :destroy
   belongs_to :procedure
   belongs_to :user
   has_many :commentaires, dependent: :destroy

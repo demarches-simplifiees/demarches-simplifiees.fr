@@ -19,6 +19,7 @@ describe Dossier do
     it { is_expected.to have_many(:champs) }
     it { is_expected.to have_many(:commentaires) }
     it { is_expected.to have_many(:quartier_prioritaires) }
+    it { is_expected.to have_many(:cadastres) }
     it { is_expected.to have_one(:cerfa) }
     it { is_expected.to have_one(:etablissement) }
     it { is_expected.to have_one(:entreprise) }
