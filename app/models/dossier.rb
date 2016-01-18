@@ -10,13 +10,15 @@ class Dossier < ActiveRecord::Base
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
   has_one :cerfa, dependent: :destroy
+
   has_many :pieces_justificatives, dependent: :destroy
   has_many :champs, dependent: :destroy
   has_many :quartier_prioritaires, dependent: :destroy
   has_many :cadastres, dependent: :destroy
+  has_many :commentaires, dependent: :destroy
+
   belongs_to :procedure
   belongs_to :user
-  has_many :commentaires, dependent: :destroy
 
   delegate :siren, to: :entreprise
   delegate :siret, to: :etablissement, allow_nil: true
