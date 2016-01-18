@@ -8,22 +8,27 @@ function initCarto() {
 
     position = get_position() || default_position();
 
-    if (position.lon == "0" && position.lat == "0")
-        position = default_position();
-
-    if (typeof position.zoom == 'undefined')
-        position.zoom = 13;
-
     map = L.map("map", {
         center: new L.LatLng(position.lat, position.lon),
         zoom: position.zoom,
         layers: [OSM]
     });
 
+    if (qp_active())
+        display_qp(JSON.parse($("#quartier_prioritaires").val()));
+
+    if (cadastre_active())
+        display_cadastre(JSON.parse($("#cadastres").val()));
+
     freeDraw = new L.FreeDraw();
+    freeDraw.options.setSmoothFactor(4);
+    freeDraw.options.simplifyPolygon = false;
+
     map.addLayer(freeDraw);
 
     if ($("#json_latlngs").val() != '' && $("#json_latlngs").val() != '[]') {
+        map.setZoom(18);
+
         $.each($.parseJSON($("#json_latlngs").val()), function (i, val) {
             freeDraw.createPolygon(val);
         });
@@ -34,9 +39,6 @@ function initCarto() {
         map.setView(new L.LatLng(position.lat, position.lon), 5);
 
     add_event_freeDraw();
-
-    if (qp_active())
-        display_qp(JSON.parse($("#quartier_prioritaires").val()));
 }
 
 function default_position (){
@@ -81,6 +83,7 @@ function get_position() {
         async: false
     }).done(function (data) {
         position = data
+        position.zoom = default_position().zoom
     });
 
     return position;
