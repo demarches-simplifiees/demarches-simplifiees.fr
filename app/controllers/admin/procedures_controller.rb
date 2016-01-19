@@ -11,7 +11,6 @@ class Admin::ProceduresController < AdminController
                          partial: "admin/procedures/list",
                          array: true
 
-    @page = 'active'
     active_class
   end
 
@@ -21,7 +20,6 @@ class Admin::ProceduresController < AdminController
                                        partial: "admin/procedures/list",
                                        array: true
 
-    @page = 'archived'
     archived_class
 
     render 'index'
@@ -78,11 +76,11 @@ class Admin::ProceduresController < AdminController
   end
 
   def active_class
-    @active_class = 'active' if @page == 'active'
+    @active_class = 'active'
   end
 
   def archived_class
-    @archived_class = 'active' if @page == 'archived'
+    @archived_class = 'active'
   end
 
   private

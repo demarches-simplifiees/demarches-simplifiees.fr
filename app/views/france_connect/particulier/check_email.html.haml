@@ -7,7 +7,7 @@
 
 %br
 %p
-  %h4.center Nous vous avons trouvé un compte qui utilise déjà cette adresse email.
+  %h4.center Nous avons trouvé un compte qui utilise déjà cette adresse email.
   %p.center
     Afin d'associer ce compte à votre identifiant France Connect, merci de saisir votre mot de passe TPS.
   %br
@@ -15,7 +15,7 @@
   #france_connect_particulier_email
     = form_for @user, url: {controller: 'france_connect/particulier', action: :check_email}, method: :post do |f|
       .form-group.form-group-lg
-        = f.text_field :email, class: "form-control", placeholder: "Entrez votre email", readonly: 'readonly'
+        = f.text_field :email, class: "form-control", readonly: 'readonly'
         %br
         = f.password_field :password, class: "form-control", placeholder: "Entrez votre mot de passe"
         = f.hidden_field :email
