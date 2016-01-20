@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160106100227) do
+ActiveRecord::Schema.define(version: 20160120141602) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,8 +63,8 @@ ActiveRecord::Schema.define(version: 20160106100227) do
     t.boolean  "autorisation_donnees"
     t.string   "nom_projet"
     t.integer  "procedure_id"
-    t.datetime "created_at",           default: '2015-12-07 09:51:23'
-    t.datetime "updated_at",           default: '2015-12-07 09:51:23'
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "state"
     t.integer  "user_id"
     t.text     "json_latlngs"
