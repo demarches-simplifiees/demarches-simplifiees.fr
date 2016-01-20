@@ -1,6 +1,6 @@
 class SIADE::RNAAdapter
-  def initialize(siren)
-    @siret = siren
+  def initialize(siret)
+    @siret = siret
   end
 
   def data_source

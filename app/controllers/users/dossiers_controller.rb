@@ -44,24 +44,14 @@ class Users::DossiersController < UsersController
                              procedure_id: create_params[:procedure_id],
                              mandataire_social: mandataire_social?(entreprise_adapter.mandataires_sociaux))
 
-    entreprise = Entreprise.create entreprise_adapter.to_params
-                                       .merge({dossier_id: dossier.id})
+    entreprise = dossier.create_entreprise(entreprise_adapter.to_params)
 
-    etablissement = Etablissement.create SIADE::EtablissementAdapter.new(siret).to_params
-                                             .merge({dossier_id: dossier.id,
-                                                     entreprise_id: entreprise.id})
+    entreprise.create_rna_information(SIADE::RNAAdapter.new(siret).to_params)
 
-    rna_information = SIADE::RNAAdapter.new(siret).to_params
-    unless rna_information.nil?
-      RNAInformation.create rna_information.merge({entreprise_id: entreprise.id})
-    end
+    etablissement = dossier.create_etablissement(SIADE::EtablissementAdapter.new(siret).to_params
+                                                     .merge({entreprise_id: entreprise.id}))
 
-    exercices = SIADE::ExercicesAdapter.new(siret).to_params
-    unless exercices.nil?
-      exercices.each_value do |exercice|
-        Exercice.create(exercice.merge({etablissement_id: etablissement.id}))
-      end
-    end
+    etablissement.exercices.create(SIADE::ExercicesAdapter.new(siret).to_params)
 
     redirect_to url_for(controller: :dossiers, action: :show, id: dossier.id)
 
@@ -167,15 +157,13 @@ class Users::DossiersController < UsersController
   end
 
   def mandataire_social? mandataires_list
-    mandataire_social = false
-
     mandataires_list.each do |mandataire|
-      break mandataire_social = true if !current_user.france_connect_particulier_id.nil? &&
+      return true if !current_user.france_connect_particulier_id.nil? &&
           mandataire[:nom].upcase == current_user.family_name.upcase &&
           mandataire[:prenom].upcase == current_user.given_name.upcase &&
           mandataire[:date_naissance_timestamp] == current_user.birthdate.to_time.to_i
     end
 
-    mandataire_social
+    false
   end
 end
