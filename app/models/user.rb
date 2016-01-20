@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  has_many :dossiers
+  has_many :dossiers, dependent: :destroy
 
   def self.find_for_france_connect_particulier user_info
 

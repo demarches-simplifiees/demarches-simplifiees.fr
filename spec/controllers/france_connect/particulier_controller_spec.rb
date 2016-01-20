@@ -81,28 +81,20 @@ describe FranceConnect::ParticulierController, type: :controller do
   end
 
   describe 'POST #create' do
-    let(:email) { 'plop@gmail.com' }
-
     subject { post :create, user: user_info }
 
     context 'when email is filled' do
-      it { expect { subject }.to change { User.count }.by(1) }
+      let(:email) { 'plop@gmail.com' }
 
-      it 'redirects user root page' do
-        subject
-        expect(response).to redirect_to(root_path)
-      end
+      it { expect { subject }.to change { User.count }.by(1) }
+      it { expect(subject).to redirect_to(root_path) }
     end
 
     context 'when email is incorrect' do
       let(:email) { '' }
 
       it { expect { subject }.to change { User.count }.by(0) }
-
-      it 'redirect to check email FC page' do
-        subject
-        expect(response).to redirect_to(france_connect_particulier_new_path(user: user_info))
-      end
+      it { expect(subject).to redirect_to(france_connect_particulier_new_path(user: user_info)) }
     end
   end
 

@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :dossier do
     nom_projet "Demande de subvention dans le cadre d'accompagnement d'enfant à l'étranger"
     state 'draft'
+    association :user, factory:[:user]
 
     trait :with_entreprise do
       after(:build) do |dossier, _evaluator|
@@ -19,12 +20,6 @@ FactoryGirl.define do
       end
     end
 
-    trait :with_user do
-      after(:build) do |dossier, _evaluator|
-        dossier.user = create(:user)
-      end
-    end
-
     trait :with_two_quartier_prioritaires do
       after(:build) do |dossier, _evaluator|
 
@@ -33,6 +28,17 @@ FactoryGirl.define do
 
         dossier.quartier_prioritaires << qp1
         dossier.quartier_prioritaires << qp2
+      end
+    end
+
+    trait :with_two_cadastres do
+      after(:build) do |dossier, _evaluator|
+
+        qp1 = create(:cadastre)
+        qp2 = create(:cadastre)
+
+        dossier.cadastres << qp1
+        dossier.cadastres << qp2
       end
     end
   end

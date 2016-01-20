@@ -1,12 +1,15 @@
 class Procedure < ActiveRecord::Base
-  has_many :types_de_piece_justificative
-  has_many :types_de_champ
-  has_many :dossiers
-  has_one :module_api_carto
+  has_many :types_de_piece_justificative, dependent: :destroy
+  has_many :types_de_champ, dependent: :destroy
+  has_many :dossiers, dependent: :destroy
+
+  has_one :module_api_carto, dependent: :destroy
+
+  belongs_to :administrateur
+
   accepts_nested_attributes_for :types_de_champ,:reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :types_de_piece_justificative, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :module_api_carto
-  belongs_to :administrateur
 
   mount_uploader :logo, ProcedureLogoUploader
 

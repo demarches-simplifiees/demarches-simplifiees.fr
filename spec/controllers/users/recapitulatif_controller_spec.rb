@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::RecapitulatifController, type: :controller do
-  let(:dossier) { create(:dossier, :with_user, :with_procedure) }
+  let(:dossier) { create(:dossier,  :with_procedure) }
   let(:bad_dossier_id) { Dossier.count + 100000 }
 
   before do

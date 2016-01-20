@@ -1,6 +1,6 @@
 class CARTO::SGMAP::Cadastre::Adapter
   def initialize(coordinates)
-    @coordinates = GeojsonService.to_json_polygon(coordinates)
+    @coordinates = GeojsonService.to_json_polygon_for_cadastre(coordinates)
   end
 
   def data_source
@@ -8,15 +8,25 @@ class CARTO::SGMAP::Cadastre::Adapter
   end
 
   def to_params
-    params = []
-
-    data_source[:features].each do |feature|
-      tmp = feature[:properties]
+    data_source[:features].inject([]) do |acc, feature|
+      tmp = filter_properties feature[:properties]
       tmp[:geometry] = feature[:geometry]
 
-      params << tmp
+      acc << tmp
     end
+  end
 
-    params
+  def filter_properties properties
+    {
+        surface_intersection: properties[:surface_intersection],
+        surface_parcelle:  properties[:surface_parcelle],
+        numero: properties[:numero],
+        feuille: properties[:feuille],
+        section: properties[:section],
+        code_dep: properties[:code_dep],
+        nom_com: properties[:nom_com],
+        code_com: properties[:code_com],
+        code_arr: properties[:code_arr]
+    }
   end
 end

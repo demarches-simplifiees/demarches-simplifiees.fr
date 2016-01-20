@@ -1,6 +1,6 @@
 class CARTO::SGMAP::QuartiersPrioritaires::Adapter
   def initialize(coordinates)
-    @coordinates = GeojsonService.to_json_polygon(coordinates)
+    @coordinates = GeojsonService.to_json_polygon_for_qp(coordinates)
   end
 
   def data_source

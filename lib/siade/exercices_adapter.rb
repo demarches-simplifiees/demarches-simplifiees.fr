@@ -10,16 +10,7 @@ class SIADE::ExercicesAdapter
   end
 
   def to_params
-    params = {}
-
-    data_source[:exercices].each_with_index do |values, i|
-      params[i] = {}
-
-      values.each do |index, value|
-        params[i][index] = value if attr_to_fetch.include?(index)
-      end
-    end
-    params
+    data_source[:exercices]
   rescue
     nil
   end

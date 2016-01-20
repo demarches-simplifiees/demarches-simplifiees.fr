@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/recapitulatif/show.html.haml', type: :view do
-  let(:dossier) { create(:dossier, :with_user, :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto)) }
+  let(:dossier) { create(:dossier,  :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto)) }
   let(:dossier_id) { dossier.id }
   let(:state) { 'draft' }
 

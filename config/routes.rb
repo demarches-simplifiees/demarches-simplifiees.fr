@@ -16,9 +16,6 @@ Rails.application.routes.draw do
   root 'root#index'
 
   namespace :france_connect do
-    # get 'entreprise' => 'entreprise#login'
-    # get 'entreprise/callback' => 'entreprise#callback'
-
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
 
@@ -41,6 +38,8 @@ Rails.application.routes.draw do
 
       get '/carte/position' => 'carte#get_position'
       post '/carte/qp' => 'carte#get_qp'
+      post '/carte/cadastre' => 'carte#get_cadastre'
+
       get '/carte' => 'carte#show'
       post '/carte' => 'carte#save'
 

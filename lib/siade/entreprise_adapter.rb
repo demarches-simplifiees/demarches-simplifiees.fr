@@ -34,4 +34,10 @@ class SIADE::EntrepriseAdapter
      :nom,
      :prenom]
   end
+
+  def mandataires_sociaux
+    data_source[:entreprise][:mandataires_sociaux]
+  rescue
+    nil
+  end
 end

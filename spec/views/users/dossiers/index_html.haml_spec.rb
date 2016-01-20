@@ -5,6 +5,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
 
   let!(:dossier) { create(:dossier, :with_procedure, user: user, state: 'initiated', nom_projet: 'projet de test').decorate }
   let!(:dossier_2) { create(:dossier, :with_procedure, user: user, state: 'replied', nom_projet: 'projet répondu').decorate }
+  let!(:dossier_3) { create(:dossier, :with_procedure, user: user, state: 'replied', nom_projet: 'projet répondu 2').decorate }
   let!(:dossier_termine) { create(:dossier, :with_procedure, user: user, state: 'closed').decorate }
 
   describe 'params liste is a_traiter' do
@@ -18,6 +19,10 @@ describe 'users/dossiers/index.html.haml', type: :view do
                                               partial: "users/dossiers/list",
                                               array: true))
       assign(:liste, 'a_traiter')
+      assign(:dossiers_a_traiter_total, '1')
+      assign(:dossiers_en_attente_total, '2')
+      assign(:dossiers_termine_total, '1')
+
       render
     end
 
@@ -35,6 +40,12 @@ describe 'users/dossiers/index.html.haml', type: :view do
     describe 'dossier initiated and closed are not present' do
       it { is_expected.not_to have_content(dossier.nom_projet) }
       it { is_expected.not_to have_content(dossier_termine.nom_projet) }
+    end
+
+    describe 'badges on tabs' do
+      it { is_expected.to have_content('À traiter 1') }
+      it { is_expected.to have_content('En attente 2') }
+      it { is_expected.to have_content('Terminé 1') }
     end
   end
 

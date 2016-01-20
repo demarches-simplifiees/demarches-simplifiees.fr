@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'dossiers/_infos_dossier.html.haml', type: :view do
-  let(:dossier) { create(:dossier, :with_entreprise, :with_user, procedure: create(:procedure, :with_api_carto, :with_type_de_champ)) }
+  let(:dossier) { create(:dossier, :with_entreprise,  procedure: create(:procedure, :with_api_carto, :with_type_de_champ)) }
 
   before do
     assign(:facade, DossierFacades.new(dossier.id, dossier.user.email))

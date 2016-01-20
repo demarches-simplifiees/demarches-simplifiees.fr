@@ -21,4 +21,13 @@ describe Etablissement do
     it { is_expected.to belong_to(:entreprise) }
     it { is_expected.to have_many(:exercices) }
   end
+
+  describe '#geo_adresse' do
+
+    let(:etablissement) { create(:etablissement) }
+
+    subject { etablissement.geo_adresse }
+
+    it { is_expected.to eq '6 RUE RAOUL NORDLING IMMEUBLE BORA 92270 BOIS COLOMBES' }
+  end
 end

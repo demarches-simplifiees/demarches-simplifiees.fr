@@ -10,7 +10,7 @@ describe SIADE::ExercicesAdapter do
   end
 
   it '#to_params class est une Hash ?' do
-    expect(subject).to be_an_instance_of(Hash)
+    expect(subject).to be_an_instance_of(Array)
   end
 
   it 'have 3 exercices' do

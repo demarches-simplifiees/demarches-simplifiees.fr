@@ -12,6 +12,9 @@ describe Users::DossiersController, type: :controller do
   let(:rna_status) { 404 }
   let(:rna_body) { '' }
 
+  let(:exercices_status) { 200 }
+  let(:exercices_body) { File.read('spec/support/files/exercices.json') }
+
   let(:siren) { dossier.siren }
   let(:siret) { dossier.siret }
   let(:bad_siret) { 1 }
@@ -78,7 +81,7 @@ describe Users::DossiersController, type: :controller do
           .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
 
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/exercices/#{siret}?token=#{SIADETOKEN}")
-          .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
+          .to_return(status: exercices_status, body: exercices_body)
 
       stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/associations/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: rna_status, body: rna_body)
@@ -129,6 +132,13 @@ describe Users::DossiersController, type: :controller do
         it 'creates exercices for dossier' do
           expect { subject }.to change { Exercice.count }.by(3)
           expect(Exercice.last.etablissement).to eq(Dossier.last.etablissement)
+        end
+
+        context 'when siret have no exercices' do
+          let(:exercices_status) { 404 }
+          let(:exercices_body) { '' }
+
+          it { expect { subject }.not_to change { Exercice.count } }
         end
 
         it 'links procedure to dossier' do

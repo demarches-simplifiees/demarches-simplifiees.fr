@@ -18,14 +18,27 @@ class Users::CarteController < UsersController
     dossier = current_user_dossier
 
     dossier.quartier_prioritaires.map(&:destroy)
+    dossier.cadastres.map(&:destroy)
 
     unless params[:json_latlngs].blank?
-      qp_list = generate_qp JSON.parse(params[:json_latlngs])
+      if dossier.procedure.module_api_carto.quartiers_prioritaires?
+        qp_list = generate_qp JSON.parse(params[:json_latlngs])
 
-      qp_list.each do |key, qp|
-        qp.merge!({dossier_id: dossier.id})
-        qp[:geometry] = qp[:geometry].to_json
-        QuartierPrioritaire.new(qp).save
+        qp_list.each do |key, qp|
+          qp.merge!({dossier_id: dossier.id})
+          qp[:geometry] = qp[:geometry].to_json
+          QuartierPrioritaire.create(qp)
+        end
+      end
+
+      if dossier.procedure.module_api_carto.cadastre?
+        cadastre_list = generate_cadastre JSON.parse(params[:json_latlngs])
+
+        cadastre_list.each do |cadastre|
+          cadastre.merge!({dossier_id: dossier.id})
+          cadastre[:geometry] = cadastre[:geometry].to_json
+          Cadastre.create(cadastre)
+        end
       end
     end
 
@@ -60,6 +73,12 @@ class Users::CarteController < UsersController
     render json: {quartier_prioritaires: qp}
   end
 
+  def get_cadastre
+    cadastres = generate_cadastre JSON.parse(params[:coordinates])
+
+    render json: {cadastres: cadastres}
+  end
+
   private
 
   def generate_qp coordinates
@@ -71,5 +90,16 @@ class Users::CarteController < UsersController
     end
 
     qp
+  end
+
+  def generate_cadastre coordinates
+    cadastre = []
+
+    coordinates.each_with_index do |coordinate, index|
+      coordinate = coordinates[index].map { |latlng| [latlng['lng'], latlng['lat']] }
+      cadastre << CARTO::SGMAP::Cadastre::Adapter.new(coordinate).to_params
+    end
+
+    cadastre.flatten
   end
 end

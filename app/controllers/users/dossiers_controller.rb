@@ -37,43 +37,21 @@ class Users::DossiersController < UsersController
   end
 
   def create
-    etablissement = Etablissement.new(SIADE::EtablissementAdapter.new(siret).to_params)
-    entreprise = Entreprise.new(SIADE::EntrepriseAdapter.new(siren).to_params)
-    rna_information = SIADE::RNAAdapter.new(siret).to_params
-    exercices = SIADE::ExercicesAdapter.new(siret).to_params
-    mandataires_sociaux = SIADE::MandatairesSociauxAdapter.new(siren).to_params
+    entreprise_adapter = SIADE::EntrepriseAdapter.new(siren)
 
-    unless exercices.nil?
-      exercices.each_value do |exercice|
-        exercice = Exercice.new(exercice)
-        exercice.etablissement = etablissement
-        exercice.save
-      end
-    end
-    mandataire_social = false
+    dossier = Dossier.create(user: current_user,
+                             state: 'draft',
+                             procedure_id: create_params[:procedure_id],
+                             mandataire_social: mandataire_social?(entreprise_adapter.mandataires_sociaux))
 
-    mandataires_sociaux.each do |k, mandataire|
-      break mandataire_social = true if !current_user.france_connect_particulier_id.nil? &&
-          mandataire[:nom] == current_user.family_name &&
-          mandataire[:prenom] == current_user.given_name &&
-          mandataire[:date_naissance_timestamp] == current_user.birthdate.to_time.to_i
+    entreprise = dossier.create_entreprise(entreprise_adapter.to_params)
 
-    end
+    entreprise.create_rna_information(SIADE::RNAAdapter.new(siret).to_params)
 
-    dossier = Dossier.create(user: current_user, state: 'draft', procedure_id: create_params[:procedure_id], mandataire_social: mandataire_social)
+    etablissement = dossier.create_etablissement(SIADE::EtablissementAdapter.new(siret).to_params
+                                                     .merge({entreprise_id: entreprise.id}))
 
-    entreprise.dossier = dossier
-    entreprise.save
-
-    unless rna_information.nil?
-      rna_information = RNAInformation.new(rna_information)
-      rna_information.entreprise = entreprise
-      rna_information.save
-    end
-
-    etablissement.dossier = dossier
-    etablissement.entreprise = entreprise
-    etablissement.save
+    etablissement.exercices.create(SIADE::ExercicesAdapter.new(siret).to_params)
 
     redirect_to url_for(controller: :dossiers, action: :show, id: dossier.id)
 
@@ -176,5 +154,16 @@ class Users::DossiersController < UsersController
     flash.alert = t('errors.messages.procedure_not_found')
 
     redirect_to url_for users_dossiers_path
+  end
+
+  def mandataire_social? mandataires_list
+    mandataires_list.each do |mandataire|
+      return true if !current_user.france_connect_particulier_id.nil? &&
+          mandataire[:nom].upcase == current_user.family_name.upcase &&
+          mandataire[:prenom].upcase == current_user.given_name.upcase &&
+          mandataire[:date_naissance_timestamp] == current_user.birthdate.to_time.to_i
+    end
+
+    false
   end
 end

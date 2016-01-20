@@ -5,6 +5,6 @@ class Etablissement < ActiveRecord::Base
   has_many :exercices
 
   def geo_adresse
-    numero_voie.to_s << ' ' << type_voie.to_s << ' ' << nom_voie.to_s << ' ' << complement_adresse.to_s << ' ' << code_postal.to_s << ' ' << localite.to_s
+    [numero_voie, type_voie, nom_voie, complement_adresse, code_postal, localite].join(' ')
   end
 end

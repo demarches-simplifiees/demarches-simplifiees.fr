@@ -12,7 +12,13 @@ feature 'France Connect Particulier  Connexion' do
   let(:know_france_connect_particulier_id) { 'blabla' }
   let(:unknow_france_connect_particulier_id) { 'titi' }
 
-  let(:user_info) { Hashie::Mash.new(france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email: email) }
+  let(:user_info) { Hashie::Mash.new(france_connect_particulier_id: france_connect_particulier_id,
+                                     given_name: given_name,
+                                     family_name: family_name,
+                                     birthdate: birthdate,
+                                     birthplace: birthplace,
+                                     gender: gender,
+                                     email: email) }
 
   context 'when user is on login page' do
 
@@ -28,7 +34,13 @@ feature 'France Connect Particulier  Connexion' do
       let(:code) { 'plop' }
 
       context 'when authentification is ok' do
-        let!(:user) { create(:user, france_connect_particulier_id: know_france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender) }
+        let!(:user) { create(:user,
+                             france_connect_particulier_id: know_france_connect_particulier_id,
+                             given_name: given_name,
+                             family_name: family_name,
+                             birthdate: birthdate,
+                             birthplace: birthplace,
+                             gender: gender) }
 
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))

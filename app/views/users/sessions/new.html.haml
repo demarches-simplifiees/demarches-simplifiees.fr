@@ -10,7 +10,6 @@
   %a.text-info{href: 'https://fcp.integ01.dev-franceconnect.fr/a-propos', target: '_blank'}
     Qu’est-ce que FranceConnect ?
 
-
   %hr
   = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
     %h4
@@ -43,6 +42,10 @@
     %a{href: '/administrateurs/sign_in'}
       = 'Administrateur'
 
-
+    %br
+    \-
+    %br
+    %a{href: 'https://github.com/sgmap/tps/releases', target: '_blank'}
+      = 'Nouveautés'
 
 

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.shared_examples 'not owner of dossier' do |controller, redirect|
-  let(:dossier_2) { create(:dossier, :with_user) }
+  let(:dossier_2) { create(:dossier) }
 
   before do
     get controller, dossier_id: dossier_2.id

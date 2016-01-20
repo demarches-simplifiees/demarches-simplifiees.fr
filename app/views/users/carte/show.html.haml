@@ -12,18 +12,24 @@
   %br
   %br
   #carte_page.row
+    #map{class: @dossier.procedure.module_api_carto.classes }
+
     - if @dossier.procedure.module_api_carto.quartiers_prioritaires
-      #map.qp
-      #qp_list
-        %h3 Quartiers prioritaites
+      #qp.list
+        %h3.text-info Quartiers prioritaites
         %ul
-    -else
-      #map
+
+    - if @dossier.procedure.module_api_carto.cadastre
+      #cadastre.list
+        %h3.text-warning Cadastres
+        %ul
+
 
   = form_tag(url_for({controller: :carte, action: :save, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
     %br
     %input{type: 'hidden', value: "#{@dossier.json_latlngs}", name: 'json_latlngs', id: 'json_latlngs'}
     %input{id: 'quartier_prioritaires', type:'hidden', value: "#{@dossier.quartier_prioritaires.to_json}"}
+    %input{id: 'cadastres', type:'hidden', value: "#{@dossier.cadastres.to_json}"}
 
     -if @dossier.draft?
       =render partial: '/layouts/etape_suivante'

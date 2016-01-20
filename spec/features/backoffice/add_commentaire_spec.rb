@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'add commentaire on backoffice' do
-  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, :with_user) }
+  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
   let(:dossier_id) { dossier.id }
   let!(:commentaire) { create(:commentaire, dossier: dossier, email: 'toto@toto.com') }
   let(:email_commentaire) { 'test@test.com' }

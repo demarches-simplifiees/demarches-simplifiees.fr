@@ -17,7 +17,7 @@ feature 'procedure locked' do
   end
   context 'when procedure have at least a file' do
     before do
-      create(:dossier, :with_user, procedure: procedure, state: :initiated)
+      create(:dossier,  procedure: procedure, state: :initiated)
       visit admin_procedure_path(procedure)
     end
 
