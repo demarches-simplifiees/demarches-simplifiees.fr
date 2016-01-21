@@ -157,11 +157,12 @@ class Users::DossiersController < UsersController
   end
 
   def mandataire_social? mandataires_list
-    mandataires_list.each do |mandataire|
-      return true if !current_user.france_connect_particulier_id.nil? &&
-          mandataire[:nom].upcase == current_user.family_name.upcase &&
-          mandataire[:prenom].upcase == current_user.given_name.upcase &&
-          mandataire[:date_naissance_timestamp] == current_user.birthdate.to_time.to_i
+    unless current_user.france_connect_information.nil?
+      mandataires_list.each do |mandataire|
+        return true if mandataire[:nom].upcase == current_user.family_name.upcase &&
+            mandataire[:prenom].upcase == current_user.given_name.upcase &&
+            mandataire[:date_naissance_timestamp] == current_user.birthdate.to_time.to_i
+      end
     end
 
     false

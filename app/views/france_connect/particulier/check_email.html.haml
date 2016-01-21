@@ -15,14 +15,9 @@
   #france_connect_particulier_email
     = form_for @user, url: {controller: 'france_connect/particulier', action: :check_email}, method: :post do |f|
       .form-group.form-group-lg
-        = f.text_field :email, class: "form-control", readonly: 'readonly'
+        = f.text_field :email_france_connect, class: "form-control", readonly: 'readonly'
         %br
         = f.password_field :password, class: "form-control", placeholder: "Entrez votre mot de passe"
-        = f.hidden_field :email
-        = f.hidden_field :gender
-        = f.hidden_field :given_name
-        = f.hidden_field :family_name
-        = f.hidden_field :birthdate
-        = f.hidden_field :birthplace
-        = f.hidden_field :france_connect_particulier_id
+        = hidden_field_tag :fci_id, params[:fci_id]
+        = hidden_field_tag :salt, params[:salt]
         = f.submit 'Terminer', class: %w(btn btn-lg btn-success), style: 'margin-top:20px;', id: 'valid_new_fcp'

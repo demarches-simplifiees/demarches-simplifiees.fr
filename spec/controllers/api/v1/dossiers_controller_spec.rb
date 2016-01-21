@@ -24,7 +24,7 @@ describe API::V1::DossiersController do
     context 'when procedure is found and belongs to admin' do
       let(:procedure_id) { procedure.id }
       let(:date_creation) { Time.local(2008, 9, 1, 10, 5, 0) }
-      let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :with_user, procedure: procedure) } }
+      let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
       let(:body) { JSON.parse(response.body, symbolize_names: true) }
       it { expect(response.code).to eq('200') }
       it { expect(body).to have_key :pagination }
@@ -54,8 +54,8 @@ describe API::V1::DossiersController do
 
       context 'when there are multiple pages' do
         let(:response) { get :index, token: admin.api_token, procedure_id: procedure_id, page: 2 }
-        let!(:dossier1) { create(:dossier, :with_entreprise, :with_user, procedure: procedure) }
-        let!(:dossier2) { create(:dossier, :with_entreprise, :with_user, procedure: procedure) }
+        let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure) }
+        let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure) }
         before do
           allow(Dossier).to receive(:per_page).and_return(1)
         end

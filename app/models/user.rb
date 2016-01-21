@@ -8,11 +8,10 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :dossiers, dependent: :destroy
+  has_one :france_connect_information, dependent: :destroy
 
-  def self.find_for_france_connect_particulier user_info
-
-    User.find_by(france_connect_particulier_id: user_info[:france_connect_particulier_id])
-  end
+  delegate :given_name, :family_name, :email_france_connect, :gender, :birthdate, :birthplace, :france_connect_particulier_id, to: :france_connect_information
+  accepts_nested_attributes_for :france_connect_information
 
   def self.find_for_france_connect email, siret
     user = User.find_by_email(email)

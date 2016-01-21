@@ -9,8 +9,7 @@ feature 'France Connect Particulier  Connexion' do
   let(:gender) { 'M' }
   let(:birthplace) { '1234' }
   let(:email) { 'plop@plop.com' }
-  let(:know_france_connect_particulier_id) { 'blabla' }
-  let(:unknow_france_connect_particulier_id) { 'titi' }
+  let(:france_connect_particulier_id) { 'blabla' }
 
   let(:user_info) { Hashie::Mash.new(france_connect_particulier_id: france_connect_particulier_id,
                                      given_name: given_name,
@@ -34,30 +33,31 @@ feature 'France Connect Particulier  Connexion' do
       let(:code) { 'plop' }
 
       context 'when authentification is ok' do
-        let!(:user) { create(:user,
-                             france_connect_particulier_id: know_france_connect_particulier_id,
-                             given_name: given_name,
-                             family_name: family_name,
-                             birthdate: birthdate,
-                             birthplace: birthplace,
-                             gender: gender) }
+        let(:france_connect_information) { create(:france_connect_information,
+                                                  france_connect_particulier_id: france_connect_particulier_id,
+                                                  given_name: given_name,
+                                                  family_name: family_name,
+                                                  birthdate: birthdate,
+                                                  birthplace: birthplace,
+                                                  gender: gender,
+                                                  email_france_connect: email) }
 
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
           allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(user_info)
-          page.find_by_id('btn_fcp').click
         end
 
         context 'when is the first connexion' do
-          let(:france_connect_particulier_id) { unknow_france_connect_particulier_id }
-
+          before do
+            page.find_by_id('btn_fcp').click
+          end
           scenario 'he is redirected to france connect particulier page' do
             expect(page).to have_content('Nouvelle connexion')
           end
 
           context 'when he fill an email and valid' do
             before do
-              page.find_by_id('user_email').set email
+              page.find_by_id('user_email_france_connect').set email
               page.find_by_id('valid_new_fcp').click
             end
 
@@ -68,7 +68,10 @@ feature 'France Connect Particulier  Connexion' do
         end
 
         context 'when is not the first connexion' do
-          let(:france_connect_particulier_id) { know_france_connect_particulier_id }
+          before do
+            create(:user, france_connect_information: france_connect_information)
+            page.find_by_id('btn_fcp').click
+          end
 
           scenario 'he is redirected to user dossiers page' do
             expect(page).to have_content('Mes dossiers')
