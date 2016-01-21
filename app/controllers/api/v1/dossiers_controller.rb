@@ -2,8 +2,8 @@ class API::V1::DossiersController < APIController
 
   def index
     procedure = current_administrateur.procedures.find(params[:procedure_id])
-    dossiers = procedure.dossiers.paginate(page: params[:page]).decorate
-    render json: dossiers, meta: pagination(dossiers), meta_key: 'pagination', status: 200
+    dossiers = procedure.dossiers.paginate(page: params[:page])
+    render json: dossiers, each_serializer: DossiersSerializer, meta: pagination(dossiers), meta_key: 'pagination', status: 200
   rescue ActiveRecord::RecordNotFound => e
     render json: {}, status: 404
   end
