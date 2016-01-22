@@ -21,17 +21,17 @@ function get_cadastre(coordinates) {
     return cadastre['cadastres'];
 }
 
-function display_cadastre(cadastre_list) {
+function display_cadastre(cadastre_array) {
     if (!cadastre_active())
         return;
 
-    cadastre_array = cadastre_list;
-
     $("#cadastre.list ul").html('');
-
     new_cadastreLayer();
 
-    if (cadastre_array.length > 0) {
+    if (cadastre_array.length == 1 && cadastre_array[0]['zoom_error'])
+        $("#cadastre.list ul").html('<li><b>Merci de dessiner une surface plus petite afin de récupérer les parcelles cadastrales.</b></li>');
+
+    else if (cadastre_array.length > 0) {
         cadastre_array.forEach(function (cadastre) {
             $("#cadastre.list ul").append('<li> Parcelle n°' + cadastre.numero + ' - Feuille ' + cadastre.code_arr + ' ' + cadastre.section + ' ' + cadastre.feuille+ '</li>');
 
@@ -56,6 +56,5 @@ function new_cadastreLayer() {
         map.removeLayer(cadastreItems);
 
     cadastreItems = new L.GeoJSON();
-
     cadastreItems.addTo(map);
 }

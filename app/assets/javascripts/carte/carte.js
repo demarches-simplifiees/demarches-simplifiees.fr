@@ -41,17 +41,42 @@ function initCarto() {
     add_event_freeDraw();
 }
 
-function default_position (){
+function default_position() {
     return {lon: LON, lat: LAT, zoom: 13}
 }
 
-function get_external_data (latLngs){
-
+function get_external_data(latLngs) {
     if (qp_active())
         display_qp(get_qp(latLngs));
 
-    if (cadastre_active())
-        display_cadastre(get_cadastre(latLngs));
+    if (cadastre_active()) {
+        cadastre_list = [];
+
+        polygons = {"type": "FeatureCollection", "features": []};
+
+        for (i = 0; i < latLngs.length; i++)
+            polygons.features.push(feature_polygon_latLngs(latLngs[i]))
+
+        if (turf.area(polygons) < 300000)
+            cadastre_list = get_cadastre(latLngs);
+        else
+            cadastre_list = [{zoom_error: true}];
+
+        display_cadastre(cadastre_list);
+    }
+}
+
+function feature_polygon_latLngs(coordinates) {
+    return ({
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                JSON.parse(L.FreeDraw.Utilities.getJsonPolygons([coordinates]))['latLngs']
+            ]
+        }
+    })
 }
 
 function add_event_freeDraw() {
