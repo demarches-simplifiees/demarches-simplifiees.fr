@@ -8,7 +8,15 @@ class API::V1::DossiersController < APIController
     render json: {}, status: 404
   end
 
-  def pagination dossiers
+  def show
+    procedure = current_administrateur.procedures.find(params[:procedure_id])
+    dossier = procedure.dossiers.find(params[:id])
+    render json: dossier, status: 200
+  rescue ActiveRecord::RecordNotFound => e
+    render json: {}, status: 404
+  end
+
+  def pagination(dossiers)
     {
       page: dossiers.current_page,
       resultats_par_page: dossiers.per_page,
