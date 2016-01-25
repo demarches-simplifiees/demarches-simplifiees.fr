@@ -1,4 +1,6 @@
 class Users::RecapitulatifController < UsersController
+  before_action :authorized_routes?, only: [:show]
+
   def show
     create_dossier_facade
   end

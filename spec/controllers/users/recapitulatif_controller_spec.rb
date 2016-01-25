@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::RecapitulatifController, type: :controller do
-  let(:dossier) { create(:dossier,  :with_procedure) }
+  let(:dossier) { create(:dossier,  :with_procedure, state:'initiated') }
   let(:bad_dossier_id) { Dossier.count + 100000 }
 
   before do
@@ -20,6 +20,19 @@ describe Users::RecapitulatifController, type: :controller do
     end
 
     it_behaves_like "not owner of dossier", :show
+
+    describe 'before_action authorized_routes?' do
+      context 'when dossier have draft state' do
+        before do
+          dossier.state = 'draft'
+          dossier.save
+
+          get :show, dossier_id: dossier.id
+        end
+
+        it { is_expected.to redirect_to root_path }
+      end
+    end
 
   end
 

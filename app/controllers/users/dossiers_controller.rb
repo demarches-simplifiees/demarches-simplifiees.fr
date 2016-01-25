@@ -5,6 +5,8 @@ class Users::DossiersController < UsersController
   before_action :authenticate_user!
   before_action :check_siret, only: :create
 
+  before_action :authorized_routes?, only: [:show]
+
   def index
     order = 'DESC'
 
@@ -152,7 +154,6 @@ class Users::DossiersController < UsersController
 
   def error_procedure
     flash.alert = t('errors.messages.procedure_not_found')
-
     redirect_to url_for users_dossiers_path
   end
 

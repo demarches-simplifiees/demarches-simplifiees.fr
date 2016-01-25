@@ -5,9 +5,9 @@ RSpec.describe Users::CarteController, type: :controller do
 
   let(:module_api_carto) { create(:module_api_carto, :with_api_carto) }
   let(:procedure) { create(:procedure, module_api_carto: module_api_carto) }
-  let(:dossier) { create(:dossier,  procedure: procedure) }
+  let(:dossier) { create(:dossier, procedure: procedure) }
 
-  let(:dossier_with_no_carto) { create(:dossier,  :with_procedure) }
+  let(:dossier_with_no_carto) { create(:dossier, :with_procedure) }
   let!(:entreprise) { create(:entreprise, dossier: dossier) }
   let!(:etablissement) { create(:etablissement, dossier: dossier) }
   let(:bad_dossier_id) { Dossier.count + 1000 }
@@ -18,6 +18,32 @@ RSpec.describe Users::CarteController, type: :controller do
   end
 
   describe 'GET #show' do
+
+    describe 'before_action authorized_routes?' do
+      context 'when dossier’s procedure have api carto actived' do
+        context 'when dossier does not have a valid state' do
+          before do
+            dossier.state = 'validated'
+            dossier.save
+
+            get :show, dossier_id: dossier.id
+          end
+
+          it { is_expected.to redirect_to root_path}
+        end
+      end
+
+      context 'when dossier’s procedure does not have api carto actived' do
+        let(:dossier) { create(:dossier, :with_procedure) }
+
+        before do
+          get :show, dossier_id: dossier.id
+        end
+
+        it { is_expected.to redirect_to(root_path) }
+      end
+    end
+
     context 'user is not connected' do
       before do
         sign_out dossier.user
@@ -60,7 +86,7 @@ RSpec.describe Users::CarteController, type: :controller do
     end
 
     context 'En train de modifier la localisation' do
-      let(:dossier) { create(:dossier, :with_procedure,  state: 'initiated') }
+      let(:dossier) { create(:dossier, :with_procedure, state: 'initiated') }
       before do
         post :save, dossier_id: dossier.id, json_latlngs: ''
       end
@@ -99,7 +125,7 @@ RSpec.describe Users::CarteController, type: :controller do
 
       context 'when json_latlngs params is empty' do
         context 'when dossier have quartier prioritaire in database' do
-          let!(:dossier) { create(:dossier,  :with_procedure, :with_two_quartier_prioritaires) }
+          let!(:dossier) { create(:dossier, :with_procedure, :with_two_quartier_prioritaires) }
 
           before do
             dossier.reload
@@ -139,14 +165,14 @@ RSpec.describe Users::CarteController, type: :controller do
       before do
         allow_any_instance_of(CARTO::SGMAP::Cadastre::Adapter).
             to receive(:to_params).
-                   and_return([{:surface_intersection=>"0.0006", :surface_parcelle=>11252.692583090324, :numero=>"0013", :feuille=>1, :section=>"CD", :code_dep=>"30", :nom_com=>"Le Grau-du-Roi", :code_com=>"133", :code_arr=>"000", :geometry=>{:type=>"MultiPolygon", :coordinates=>[[[[4.134084, 43.5209193], [4.1346615, 43.5212035], [4.1346984, 43.521189], [4.135096, 43.5213848], [4.1350839, 43.5214122], [4.1352697, 43.521505], [4.1356278, 43.5211065], [4.1357402, 43.5207188], [4.1350935, 43.5203936], [4.135002, 43.5204366], [4.1346051, 43.5202412], [4.134584, 43.5202472], [4.1345572, 43.5202551], [4.134356, 43.5203137], [4.1342488, 43.5203448], [4.134084, 43.5209193]]]]}}])
+                   and_return([{:surface_intersection => "0.0006", :surface_parcelle => 11252.692583090324, :numero => "0013", :feuille => 1, :section => "CD", :code_dep => "30", :nom_com => "Le Grau-du-Roi", :code_com => "133", :code_arr => "000", :geometry => {:type => "MultiPolygon", :coordinates => [[[[4.134084, 43.5209193], [4.1346615, 43.5212035], [4.1346984, 43.521189], [4.135096, 43.5213848], [4.1350839, 43.5214122], [4.1352697, 43.521505], [4.1356278, 43.5211065], [4.1357402, 43.5207188], [4.1350935, 43.5203936], [4.135002, 43.5204366], [4.1346051, 43.5202412], [4.134584, 43.5202472], [4.1345572, 43.5202551], [4.134356, 43.5203137], [4.1342488, 43.5203448], [4.134084, 43.5209193]]]]}}])
 
         post :save, dossier_id: dossier.id, json_latlngs: json_latlngs
       end
 
       context 'when json_latlngs params is empty' do
         context 'when dossier have cadastres in database' do
-          let!(:dossier) { create(:dossier,  :with_procedure, :with_two_cadastres) }
+          let!(:dossier) { create(:dossier, :with_procedure, :with_two_cadastres) }
 
           before do
             dossier.reload
@@ -181,7 +207,7 @@ RSpec.describe Users::CarteController, type: :controller do
           it { expect(subject.nom_com).to eq('Le Grau-du-Roi') }
           it { expect(subject.code_com).to eq('133') }
           it { expect(subject.code_arr).to eq('000') }
-          it { expect(subject.geometry).to eq({"type"=>"MultiPolygon", "coordinates"=>[[[[4.134084, 43.5209193], [4.1346615, 43.5212035], [4.1346984, 43.521189], [4.135096, 43.5213848], [4.1350839, 43.5214122], [4.1352697, 43.521505], [4.1356278, 43.5211065], [4.1357402, 43.5207188], [4.1350935, 43.5203936], [4.135002, 43.5204366], [4.1346051, 43.5202412], [4.134584, 43.5202472], [4.1345572, 43.5202551], [4.134356, 43.5203137], [4.1342488, 43.5203448], [4.134084, 43.5209193]]]]}) }
+          it { expect(subject.geometry).to eq({"type" => "MultiPolygon", "coordinates" => [[[[4.134084, 43.5209193], [4.1346615, 43.5212035], [4.1346984, 43.521189], [4.135096, 43.5213848], [4.1350839, 43.5214122], [4.1352697, 43.521505], [4.1356278, 43.5211065], [4.1357402, 43.5207188], [4.1350935, 43.5203936], [4.135002, 43.5204366], [4.1346051, 43.5202412], [4.134584, 43.5202472], [4.1345572, 43.5202551], [4.134356, 43.5203137], [4.1342488, 43.5203448], [4.134084, 43.5209193]]]]}) }
         end
       end
     end
@@ -190,7 +216,7 @@ RSpec.describe Users::CarteController, type: :controller do
   describe '#get_position' do
     context 'Geocodeur renvoie des positions nil' do
       let(:etablissement) { create(:etablissement, adresse: bad_adresse, numero_voie: 'dzj', type_voie: 'fzjfk', nom_voie: 'hdidjkz', complement_adresse: 'fjef', code_postal: 'fjeiefk', localite: 'zjfkfz') }
-      let(:dossier) { create(:dossier, :with_procedure,  etablissement: etablissement) }
+      let(:dossier) { create(:dossier, :with_procedure, etablissement: etablissement) }
       before do
         stub_request(:get, /http:\/\/api-adresse[.]data[.]gouv[.]fr\/search[?]limit=1&q=/)
             .to_return(status: 200, body: '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
