@@ -1,4 +1,6 @@
 class Users::DescriptionController < UsersController
+  before_action :authorized_routes?, only: [:show]
+
   def show
     @dossier = current_user_dossier
     @dossier = @dossier.decorate

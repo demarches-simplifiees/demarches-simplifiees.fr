@@ -5,6 +5,8 @@ class Users::DossiersController < UsersController
   before_action :authenticate_user!
   before_action :check_siret, only: :create
 
+  before_action :authorized_routes?, only: [:show]
+
   def index
     order = 'DESC'
 
@@ -152,16 +154,16 @@ class Users::DossiersController < UsersController
 
   def error_procedure
     flash.alert = t('errors.messages.procedure_not_found')
-
     redirect_to url_for users_dossiers_path
   end
 
   def mandataire_social? mandataires_list
-    mandataires_list.each do |mandataire|
-      return true if !current_user.france_connect_particulier_id.nil? &&
-          mandataire[:nom].upcase == current_user.family_name.upcase &&
-          mandataire[:prenom].upcase == current_user.given_name.upcase &&
-          mandataire[:date_naissance_timestamp] == current_user.birthdate.to_time.to_i
+    unless current_user.france_connect_information.nil?
+      mandataires_list.each do |mandataire|
+        return true if mandataire[:nom].upcase == current_user.family_name.upcase &&
+            mandataire[:prenom].upcase == current_user.given_name.upcase &&
+            mandataire[:date_naissance_timestamp] == current_user.birthdate.to_time.to_i
+      end
     end
 
     false

@@ -33,6 +33,19 @@ describe Users::DescriptionController, type: :controller do
     end
 
     it_behaves_like "not owner of dossier", :show
+
+    describe 'before_action authorized_routes?' do
+      context 'when dossier does not have a valid state' do
+        before do
+          dossier.state = 'validated'
+          dossier.save
+
+          get :show, dossier_id: dossier.id
+        end
+
+        it { is_expected.to redirect_to root_path }
+      end
+    end
   end
 
   describe 'POST #create' do

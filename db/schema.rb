@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160120141602) do
+
+ActiveRecord::Schema.define(version: 20160121110603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,6 +130,17 @@ ActiveRecord::Schema.define(version: 20160120141602) do
     t.integer  "etablissement_id"
   end
 
+  create_table "france_connect_informations", force: :cascade do |t|
+    t.string  "gender"
+    t.string  "given_name"
+    t.string  "family_name"
+    t.date    "birthdate"
+    t.string  "birthplace"
+    t.string  "france_connect_particulier_id"
+    t.integer "user_id"
+    t.string  "email_france_connect"
+  end
+
   create_table "gestionnaires", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -216,12 +228,12 @@ ActiveRecord::Schema.define(version: 20160120141602) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                         default: "",      null: false
-    t.string   "encrypted_password",            default: "",      null: false
+    t.string   "email",                        default: "",      null: false
+    t.string   "encrypted_password",           default: "",      null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                 default: 0,       null: false
+    t.integer  "sign_in_count",                default: 0,       null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
@@ -229,13 +241,7 @@ ActiveRecord::Schema.define(version: 20160120141602) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "siret"
-    t.string   "loged_in_with_france_connect",  default: "false"
-    t.string   "gender"
-    t.string   "given_name"
-    t.string   "family_name"
-    t.date     "birthdate"
-    t.string   "birthplace"
-    t.string   "france_connect_particulier_id"
+    t.string   "loged_in_with_france_connect", default: "false"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

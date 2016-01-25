@@ -30,7 +30,20 @@ describe Users::DossiersController, type: :controller do
 
     it 'redirection vers liste dossier si mauvais dossier ID' do
       get :show, id: siret_not_found
-      expect(response).to redirect_to('/users/dossiers')
+      expect(response).to redirect_to root_path
+    end
+
+    describe 'before_action authorized_routes?' do
+      context 'when dossier does not have a valid state' do
+        before do
+          dossier.state = 'validated'
+          dossier.save
+
+          get :show, id: dossier.id
+        end
+
+        it { is_expected.to redirect_to root_path }
+      end
     end
   end
 
@@ -152,7 +165,8 @@ describe Users::DossiersController, type: :controller do
         end
 
         describe 'Mandataires Sociaux' do
-          let(:user) { create(:user, given_name: given_name, family_name: family_name, birthdate: birthdate, france_connect_particulier_id: '1234567') }
+          let(:france_connect_information) { create(:france_connect_information, given_name: given_name, family_name: family_name, birthdate: birthdate, france_connect_particulier_id: '1234567') }
+          let(:user) { create(:user, france_connect_information: france_connect_information) }
 
           before do
             subject
