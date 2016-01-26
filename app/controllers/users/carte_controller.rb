@@ -1,7 +1,9 @@
 class Users::CarteController < UsersController
   include DossierConcern
 
-  before_action :authorized_routes?, only: [:show]
+  before_action only: [:show] do
+    authorized_routes? self.class
+  end
 
   def show
     @dossier = current_user_dossier
@@ -74,6 +76,13 @@ class Users::CarteController < UsersController
     cadastres = generate_cadastre JSON.parse(params[:coordinates])
 
     render json: {cadastres: cadastres}
+  end
+
+  def self.route_authorization
+    {
+        states: [:draft, :initiated, :replied, :updated],
+        api_carto: true
+    }
   end
 
   private

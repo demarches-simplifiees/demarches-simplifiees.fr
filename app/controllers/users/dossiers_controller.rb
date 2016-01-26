@@ -5,7 +5,9 @@ class Users::DossiersController < UsersController
   before_action :authenticate_user!
   before_action :check_siret, only: :create
 
-  before_action :authorized_routes?, only: [:show]
+  before_action only: [:show] do
+    authorized_routes? self.class
+  end
 
   def index
     order = 'DESC'
@@ -92,6 +94,12 @@ class Users::DossiersController < UsersController
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Dossier inéxistant'
     redirect_to users_dossiers_path
+  end
+
+  def self.route_authorization
+    {
+        states: [:draft]
+    }
   end
 
   private
