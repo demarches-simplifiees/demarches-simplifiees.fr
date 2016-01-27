@@ -7,13 +7,10 @@ class UsersController < ApplicationController
     current_user.dossiers.find(dossier_id)
   end
 
-  def authorized_routes?
-    sub_path = "/users/dossiers/#{current_user_dossier.id}"
-
+  def authorized_routes? controller
     redirect_to_root_path 'Le status de votre dossier n\'autorise pas cette URL' unless UserRoutesAuthorizationService.authorized_route?(
-        (request.env['PATH_INFO']).gsub(sub_path, ''),
-        current_user_dossier.state,
-        current_user_dossier.procedure.use_api_carto)
+        controller,
+        current_user_dossier)
   rescue ActiveRecord::RecordNotFound
     redirect_to_root_path 'Vous n’avez pas accès à ce dossier.'
   end

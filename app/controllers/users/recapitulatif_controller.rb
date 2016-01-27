@@ -1,5 +1,7 @@
 class Users::RecapitulatifController < UsersController
-  before_action :authorized_routes?, only: [:show]
+  before_action only: [:show] do
+    authorized_routes? self.class
+  end
 
   def show
     create_dossier_facade
@@ -23,6 +25,12 @@ class Users::RecapitulatifController < UsersController
     NotificationMailer.dossier_submitted(@facade.dossier).deliver_now!
 
     render 'show'
+  end
+
+  def self.route_authorization
+    {
+        states: [:initiated, :replied, :updated, :validated, :submitted, :closed]
+    }
   end
 
   private

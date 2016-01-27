@@ -1,5 +1,7 @@
 class Users::DescriptionController < UsersController
-  before_action :authorized_routes?, only: [:show]
+  before_action only: [:show] do
+    authorized_routes? self.class
+  end
 
   def show
     @dossier = current_user_dossier
@@ -60,6 +62,12 @@ class Users::DescriptionController < UsersController
 
     flash.notice = 'Félicitation, votre demande a bien été enregistrée.'
     redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
+  end
+
+  def self.route_authorization
+    {
+        states: [:draft, :initiated, :replied, :updated]
+    }
   end
 
   private

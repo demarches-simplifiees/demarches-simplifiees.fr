@@ -1,3 +1,0 @@
-class DossiersController < ApplicationController
-
-end
