@@ -91,22 +91,6 @@ RSpec.describe Users::CarteController, type: :controller do
         post :save, dossier_id: dossier.id, json_latlngs: ''
       end
 
-      context 'Enregistrement d\'un commentaire informant la modification' do
-        subject { dossier.commentaires.last }
-
-        it 'champs email' do
-          expect(subject.email).to eq('Modification localisation')
-        end
-
-        it 'champs body' do
-          expect(subject.body).to eq('La localisation de la demande a été modifiée. Merci de le prendre en compte.')
-        end
-
-        it 'champs dossier' do
-          expect(subject.dossier.id).to eq(dossier.id)
-        end
-      end
-
       it 'Redirection vers la page récapitulatif' do
         expect(response).to redirect_to("/users/dossiers/#{dossier.id}/recapitulatif")
       end
@@ -214,9 +198,10 @@ RSpec.describe Users::CarteController, type: :controller do
   end
 
   describe '#get_position' do
-    context 'Geocodeur renvoie des positions nil' do
+    context 'Geocodeur renvoie les positions par defaut' do
       let(:etablissement) { create(:etablissement, adresse: bad_adresse, numero_voie: 'dzj', type_voie: 'fzjfk', nom_voie: 'hdidjkz', complement_adresse: 'fjef', code_postal: 'fjeiefk', localite: 'zjfkfz') }
       let(:dossier) { create(:dossier, :with_procedure, etablissement: etablissement) }
+
       before do
         stub_request(:get, /http:\/\/api-adresse[.]data[.]gouv[.]fr\/search[?]limit=1&q=/)
             .to_return(status: 200, body: '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
@@ -225,9 +210,9 @@ RSpec.describe Users::CarteController, type: :controller do
 
       subject { JSON.parse(response.body) }
 
-      it 'on enregistre des coordonnées lat et lon à 0' do
-        expect(subject['lat']).to eq('0')
-        expect(subject['lon']).to eq('0')
+      it 'on enregistre des coordonnées lat et lon avec les valeurs par defaut' do
+        expect(subject['lat']).to eq('46.538192')
+        expect(subject['lon']).to eq('2.428462')
       end
     end
 

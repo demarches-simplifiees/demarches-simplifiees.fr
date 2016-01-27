@@ -29,4 +29,4 @@ doc/*.svg
 rubocop.html
 config/france_connect.yml
 uploads/*
-
+coverage/**/*

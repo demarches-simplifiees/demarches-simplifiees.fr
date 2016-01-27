@@ -6,7 +6,7 @@ function initCarto() {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
 
-    position = get_position() || default_position();
+    position = get_position() || default_gestionnaire_position();
 
     map = L.map("map", {
         center: new L.LatLng(position.lat, position.lon),
@@ -36,13 +36,13 @@ function initCarto() {
         map.fitBounds(freeDraw.polygons[0].getBounds());
     }
     else if (position.lat == LAT && position.lon == LON)
-        map.setView(new L.LatLng(position.lat, position.lon), 5);
+        map.setView(new L.LatLng(position.lat, position.lon), position.zoom);
 
     add_event_freeDraw();
 }
 
-function default_position() {
-    return {lon: LON, lat: LAT, zoom: 13}
+function default_gestionnaire_position() {
+    return {lon: LON, lat: LAT, zoom: 5}
 }
 
 function get_external_data(latLngs) {
@@ -50,17 +50,15 @@ function get_external_data(latLngs) {
         display_qp(get_qp(latLngs));
 
     if (cadastre_active()) {
-        cadastre_list = [];
-
         polygons = {"type": "FeatureCollection", "features": []};
 
         for (i = 0; i < latLngs.length; i++)
             polygons.features.push(feature_polygon_latLngs(latLngs[i]))
 
+        cadastre_list = [{zoom_error: true}];
+
         if (turf.area(polygons) < 300000)
             cadastre_list = get_cadastre(latLngs);
-        else
-            cadastre_list = [{zoom_error: true}];
 
         display_cadastre(cadastre_list);
     }
@@ -108,7 +106,6 @@ function get_position() {
         async: false
     }).done(function (data) {
         position = data
-        position.zoom = default_position().zoom
     });
 
     return position;

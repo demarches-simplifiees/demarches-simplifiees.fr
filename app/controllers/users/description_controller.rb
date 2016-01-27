@@ -50,13 +50,7 @@ class Users::DescriptionController < UsersController
       end
     end
 
-    if !@dossier.draft?
-      commentaire = Commentaire.create
-      commentaire.email = 'Modification détails'
-      commentaire.body = 'Les informations détaillées de la demande ont été modifiées. Merci de le prendre en compte.'
-      commentaire.dossier = @dossier
-      commentaire.save
-    else
+    if @dossier.draft?
       @dossier.initiated!
     end
 

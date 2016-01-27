@@ -87,22 +87,6 @@ describe Users::DescriptionController, type: :controller do
           dossier.reload
         end
 
-        context 'Enregistrement d\'un commentaire informant la modification' do
-          subject { Commentaire.last }
-
-          it 'champs email' do
-            expect(subject.email).to eq('Modification détails')
-          end
-
-          it 'champs body' do
-            expect(subject.body).to eq('Les informations détaillées de la demande ont été modifiées. Merci de le prendre en compte.')
-          end
-
-          it 'champs dossier' do
-            expect(subject.dossier.id).to eq(dossier_id)
-          end
-        end
-
         it 'Redirection vers la page récapitulatif' do
           expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
         end
