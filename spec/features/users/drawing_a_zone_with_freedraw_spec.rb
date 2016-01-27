@@ -47,7 +47,7 @@ feature 'drawing a zone with freedraw' do
           let(:module_api_carto) { create(:module_api_carto, :with_quartiers_prioritaires) }
 
           before do
-            allow_any_instance_of(Users::CarteController).
+            allow(ModuleApiCartoService).
                 to receive(:generate_qp).
                        and_return({"QPCODE1234" => {:code => "QPCODE1234", :nom => "Quartier de test", :commune => "Paris", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
 
