@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20160121110603) do
+ActiveRecord::Schema.define(version: 20160127170437) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,19 +90,19 @@ ActiveRecord::Schema.define(version: 20160121110603) do
   add_index "dossiers", ["user_id"], name: "index_dossiers_on_user_id", using: :btree
 
   create_table "entreprises", force: :cascade do |t|
-    t.string  "siren"
-    t.integer "capital_social"
-    t.string  "numero_tva_intracommunautaire"
-    t.string  "forme_juridique"
-    t.string  "forme_juridique_code"
-    t.string  "nom_commercial"
-    t.string  "raison_sociale"
-    t.string  "siret_siege_social"
-    t.string  "code_effectif_entreprise"
-    t.integer "date_creation"
-    t.string  "nom"
-    t.string  "prenom"
-    t.integer "dossier_id"
+    t.string   "siren"
+    t.integer  "capital_social"
+    t.string   "numero_tva_intracommunautaire"
+    t.string   "forme_juridique"
+    t.string   "forme_juridique_code"
+    t.string   "nom_commercial"
+    t.string   "raison_sociale"
+    t.string   "siret_siege_social"
+    t.string   "code_effectif_entreprise"
+    t.datetime "date_creation"
+    t.string   "nom"
+    t.string   "prenom"
+    t.integer  "dossier_id"
   end
 
   create_table "etablissements", force: :cascade do |t|

@@ -50,7 +50,7 @@ describe SIADE::EntrepriseAdapter do
     end
 
     it 'L\'entreprise contient bien une date_creation' do
-      expect(subject[:date_creation]).to eq(891_381_600)
+      expect(subject[:date_creation]).to eq('Mon, 01 Jan 1900 00:00:00.000000000 +0100')
     end
 
     it 'L\'entreprise contient bien un nom' do

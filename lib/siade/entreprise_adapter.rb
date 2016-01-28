@@ -15,6 +15,8 @@ class SIADE::EntrepriseAdapter
     data_source[:entreprise].each do |k, v|
       params[k] = v if attr_to_fetch.include?(k)
     end
+    params[:date_creation] = Time.at(params[:date_creation]).to_datetime
+
     params
   rescue
     nil

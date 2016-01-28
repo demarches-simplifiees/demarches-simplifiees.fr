@@ -144,7 +144,7 @@ describe API::V1::DossiersController do
           it { expect(subject[:raison_sociale]).to eq('GRTGAZ') }
           it { expect(subject[:siret_siege_social]).to eq('44011762001530') }
           it { expect(subject[:code_effectif_entreprise]).to eq('51') }
-          it { expect(subject[:date_creation]).to eq(1_004_914_800) }
+          it { expect(subject[:date_creation]).to eq('2016-01-28T10:16:29.000Z') }
           it { expect(subject.keys).to match_array(field_list) }
         end
 

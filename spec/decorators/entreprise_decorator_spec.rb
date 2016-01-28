@@ -53,7 +53,7 @@ describe EntrepriseDecorator do
 
   describe '#pretty_date_creation' do
     it 'pretty print date creation' do
-      expect(subject.pretty_date_creation).to eq('05-11-2001')
+      expect(subject.pretty_date_creation).to eq('28-01-2016')
     end
   end
 end
