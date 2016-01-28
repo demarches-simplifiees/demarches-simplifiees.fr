@@ -26,3 +26,4 @@
 //= require leaflet.freedraw
 //= require smart_listing
 //= require turf
+//= require franceconnect
