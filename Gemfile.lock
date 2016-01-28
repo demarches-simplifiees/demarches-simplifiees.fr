@@ -445,7 +445,6 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
-  autoprefixer-rails
   bootstrap-datepicker-rails
   bootstrap-sass (~> 3.3.5)
   byebug
