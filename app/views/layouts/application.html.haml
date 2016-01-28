@@ -12,7 +12,7 @@
   %body
     #beta
       Beta
-    %div
+    %div#wrap
       %div.navbar
         = image_tag('marianne_small.png', class: 'logo')
         %a{href: '/'}
@@ -50,3 +50,21 @@
 
       %div{:style => 'margin-left:10%; margin-right:10%;'}
         = yield
+
+      %br
+
+    #footer.navbar
+      .container.center
+        %p{style:'margin-top: 1em;'}
+          %p{class: "copyright text-muted small"}
+            Copyright &copy;
+
+            =link_to 'SGMAP', "http://etatplateforme.modernisation.gouv.fr"
+
+            2016. All Rights Reserved
+
+            =link_to 'contact@tps.apientreprise.fr', "mailto:contact@tps.apientreprise.fr"
+
+
+
+

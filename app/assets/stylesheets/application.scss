@@ -25,6 +25,26 @@ body {
   background-color: rgb(255, 255, 255)
 }
 
+html, body {
+  height: 100%;
+}
+
+#wrap {
+  min-height: 100%;
+  margin-bottom: -50px;
+}
+#wrap:after {
+  content: "";
+  display: block;
+}
+#footer, #wrap:after {
+  height: 40px;
+}
+
+#footer {
+  background-color: rgb(240, 240, 240)
+}
+
 .logo {
   margin-left: 10px;
   padding-top: 5px;
