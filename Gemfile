@@ -40,8 +40,12 @@ gem 'haml-rails'
 #bootstrap saas
 gem 'bootstrap-sass', '~> 3.3.5'
 
+gem 'autoprefixer-rails'
+
 # Pagination
 gem 'will_paginate-bootstrap'
+
+gem 'bootstrap-datepicker-rails'
 
 # Decorators
 gem 'draper'
@@ -60,7 +64,6 @@ gem 'leaflet-rails'
 gem 'leaflet-markercluster-rails', '~> 0.7.0'
 gem 'leaflet-draw-rails'
 
-gem 'bootstrap-datepicker-rails'
 
 gem 'chartkick'
 
