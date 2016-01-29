@@ -26,6 +26,7 @@
 //= require leaflet.freedraw
 //= require smart_listing
 //= require turf
+//= require franceconnect
 
 $(document).ready(function() {
     $('.js-scrollTo').on('click', function() { // Au clic sur un élément
