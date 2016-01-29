@@ -11,7 +11,7 @@ class RootController < ApplicationController
       redirect_to admin_procedures_path
 
     else
-      render 'landing'
+      redirect_to new_user_session_path
     end
   end
 end

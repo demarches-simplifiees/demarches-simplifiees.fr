@@ -1,0 +1,22 @@
+.dynamic_ul {
+  list-style-type: none;
+  margin-left: 20px;
+  margin-top: 13%;
+
+  li {
+    font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+    border-bottom: 1px solid #ccc;
+    margin-top: 9px;
+    margin-bottom: 9px;
+  }
+
+  li:last-child {
+    border: none;
+  }
+
+  li a {
+    text-decoration: none;
+    color: #000;
+    display: block;
+  }
+}
