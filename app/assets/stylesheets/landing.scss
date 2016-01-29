@@ -1,0 +1,65 @@
+#wrap {
+}
+
+.max-size {
+  margin-left: -13%;
+  margin-right: -13%;
+}
+
+#landing {
+  margin-top: -20px;
+
+  background-image: image-url('landing_background.jpg');
+  background-repeat: no-repeat;
+
+  #title {
+    h1 {
+      font-size: 65px;
+    }
+    h2 {
+      font-size: 35px;
+    }
+
+    color: white;
+    padding-top: 6%;
+    padding-bottom: 9%;
+    text-shadow: 3px 3px 4px rgba(0, 0, 0, .6);
+  }
+
+  .logo img {
+    width: 70px;
+  }
+
+  #buttons {
+    margin-top: 5%;
+
+    button {
+      margin-left: 30px;
+      margin-right: 30px;
+    }
+  }
+}
+
+#suite {
+  .word {
+    border-bottom: solid darkgrey 1px;
+    //height: 300px;
+
+    img {
+      padding-top: 50px;
+      padding-bottom: 50px;
+      width: 200px;
+      margin-left: 25%;
+    }
+  }
+
+  .securiser {
+    img {
+      width: 300px;
+    }
+  }
+
+  .profiter {
+    border-bottom: none;
+  }
+}
