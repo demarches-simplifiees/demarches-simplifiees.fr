@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
 
+  def index
+    redirect_to root_path
+  end
+
   def current_user_dossier dossier_id=nil
     dossier_id ||= params[:dossier_id] || params[:id]
 
