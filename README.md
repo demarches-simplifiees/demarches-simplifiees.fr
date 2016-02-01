@@ -1,4 +1,4 @@
-# TPS - TéléProcédure Simplifié
+# TPS - TéléProcédure Simplifiée
 
 ## Context
 
@@ -24,7 +24,7 @@ L'application utilise une base de donnée Postgresql. Pour en installer une, uti
 
     sudo apt-get install postgresql
 
-Les informations nécessaire à l'initialisation de la base doivent être pré-configurer à la main grâce à la procédure suivante :
+Les informations nécessaire à l'initialisation de la base doivent être pré-configurées à la main grâce à la procédure suivante :
 
     su - postgres
     psql
