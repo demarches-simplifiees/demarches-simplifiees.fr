@@ -7,19 +7,15 @@
 
     %br
     %h3.center
-      Simplifié toutes vos démarches pour les rendre 100% en ligne.
+      Simplifiez toutes vos démarches pour les rendre 100% en ligne.
 
-    #buttons.center
-      %button.js-scrollTo.btn.btn-lg.btn-default{cible: '.simplifier'}
-        Simplifier
-      %button.js-scrollTo.btn.btn-lg.btn-default{cible: '.securiser'}
-        Sécuriser
-      %button.js-scrollTo.btn.btn-lg.btn-default{cible: '.echanger'}
-        Échanger
-      %button.js-scrollTo.btn.btn-lg.btn-default{cible: '.faciliter'}
-        Faciliter
-      %button.js-scrollTo.btn.btn-lg.btn-default{cible: '.profiter'}
-        Profiter
+    %br
+    %br
+
+    .center
+      =mail_to "contact@tps.apientreprise.fr", 'Ouvrir un compte TPS',{ subject: 'Ouvrir un compte TPS',
+      body: 'Bonjour, je souhaiterais ouvrir un compte TPS. Merci de me recontacter par email ou par téléphone au _____.',
+       class: 'btn btn-lg btn-default' }
 
 #suite.max-size
   .row.word.simplifier
@@ -32,7 +28,7 @@
         %li
           %a Ne demander que les informations strictement nécessaires
         %li
-          %a Gérer les procédures, publication, suspension, en un clic.
+          %a Gérer les procédures, publication, suspension, en un clic
 
   .row.word.securiser
     .col-md-6.col-lg-6
@@ -62,9 +58,9 @@
     .col-md-6.col-lg-6
       %ul.dynamic_ul
         %li
-          Construire la démarche en plusieurs fois
-        %li
           Gagner du temps sur l’instruction
+        %li
+          Profiter des ressources cartographiques directement mobilisées, si nécessaire
 
     .col-md-6.col-lg-6
       = image_tag image_url('keywords/faciliter.png')
@@ -77,4 +73,4 @@
         %li
           Récupérer des informations officielles collectées directement auprès des administrations
         %li
-          Profiter des ressources cartographiques directement mobilisées, si nécessaire
+          Construire la démarche en plusieurs fois

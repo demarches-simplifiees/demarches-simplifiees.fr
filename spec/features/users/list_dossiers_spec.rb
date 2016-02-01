@@ -9,7 +9,7 @@ feature 'user access to the list of his dossier' do
 
   before do
     last_updated_dossier.update_attributes(nom_projet: 'salut la compagnie')
-    visit root_path
+    visit new_user_session_path
     within('#new_user') do
       page.find_by_id('user_email').set user.email
       page.find_by_id('user_password').set user.password

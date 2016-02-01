@@ -32,7 +32,7 @@ feature 'Administrator connection' do
           page.find_by_id('admin_sign_out').click
         end
         scenario 'admin is redireted to home page' do
-          expect(page).to have_css('#login_user')
+          expect(page).to have_css('#landing')
         end
       end
       context 'when clicking on profile' do
