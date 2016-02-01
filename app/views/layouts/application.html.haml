@@ -39,9 +39,10 @@
                 = current_user.email
 
                 = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
-          -#- else
-          -#  = link_to "Se connecter", '/users/sign_in', method: :get, :class => 'btn btn-md'
-          -#  = link_to "S'inscrire", '/users/sign_up', method: :get, :class => 'btn btn-md'
+          - else
+            = link_to "Utilisateur", '/users/sign_in', method: :get, :class => 'btn btn-md'
+            = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
+            = link_to "Administrateur", '/administrateurs/sign_in', method: :get, :class => 'btn btn-md'
 
       #flash_message.center
       - if flash.notice
