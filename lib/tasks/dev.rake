@@ -34,7 +34,7 @@ particulier_logout_endpoint: 'https://fcp.integ01.dev-franceconnect.fr/api/v1/lo
 EOF
     file.write(comment)
     file.close
-    
-    file.write("TPS::Application.config.FRANCE_CONNECT = #{Hashie::Mash.new('config/france_connect.yml')}")
+
+    file.write("TPS::Application.config.FRANCE_CONNECT = #{Hashie::Mash.load('config/france_connect.yml')}")
   end
 end
