@@ -1,0 +1,19 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "https://tps.apientreprise.fr",
+  "apis": [
+    {
+      "path": "/api/v1/procedures.{format}",
+      "description": "Procédure API"
+    }
+  ],
+  "authorizations": null,
+  "info": {
+    "title": "TPS application",
+    "description": "Doc des APIs de TPS",
+    "contact": "contact@tps.apientreprise.fr",
+    "license": "Apache 2.0",
+    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0.html"
+  }
+}

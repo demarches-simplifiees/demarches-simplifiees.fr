@@ -1,0 +1,45 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "https://tps.apientreprise.fr",
+  "resourcePath": "procedures",
+  "apis": [
+    {
+      "path": "/api/v1/procedures/{id}.json",
+      "operations": [
+        {
+          "summary": "Récupérer les informations d'une procédure",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": null,
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": "Procedure",
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            },
+            {
+              "code": 404,
+              "responseModel": null,
+              "message": "Not Found"
+            }
+          ],
+          "nickname": "API::V1::Procedures#show",
+          "method": "get"
+        }
+      ]
+    }
+  ],
+  "authorizations": null
+}

@@ -380,6 +380,9 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    swagger-docs (0.2.8)
+      activesupport (>= 3, < 5)
+      rails (>= 3, < 5)
     swd (1.0.0)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
@@ -493,6 +496,7 @@ DEPENDENCIES
   smart_listing
   spring
   spring-commands-rspec
+  swagger-docs
   terminal-notifier
   terminal-notifier-guard
   therubyracer
