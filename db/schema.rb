@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20160121110603) do
+ActiveRecord::Schema.define(version: 20160127162841) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -190,6 +189,7 @@ ActiveRecord::Schema.define(version: 20160121110603) do
     t.boolean  "archived",          default: false
     t.boolean  "euro_flag",         default: false
     t.string   "logo"
+    t.boolean  "cerfa_flag",        default: false
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|

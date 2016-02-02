@@ -63,13 +63,27 @@ describe Dossier do
     end
 
     describe 'creation' do
-      it 'create default cerfa' do
-        expect { described_class.create(user: user) }.to change { Cerfa.count }.by(1)
+      describe 'Procedure accepts cerfa upload' do
+        let(:procedure) { create(:procedure, cerfa_flag: true) }
+        let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, user: user) }
+        it 'create default cerfa' do
+          expect { subject.to change(Cerfa.count).by(1) }
+          expect { subject.cerfa_available.to be_truthy }
+        end
+
+        it 'link cerfa to dossier' do
+          expect { subject.cerfa.to eq(Cerfa.last) }
+        end
       end
 
-      it 'link cerfa to dossier' do
-        dossier = described_class.create
-        expect(dossier.cerfa).to eq(Cerfa.last)
+      describe 'Procedure does not accept cerfa upload' do
+        let(:procedure) { create(:procedure, cerfa_flag: false) }
+        let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, user: user) }
+        it 'default cerfa is not created' do
+          expect { subject.to change(Cerfa.count).by(0) }
+          expect { subject.cerfa.to eq(nil) }
+          expect { subject.cerfa_available.to be_falsey }
+        end
       end
     end
 
@@ -104,20 +118,21 @@ describe Dossier do
     end
 
     describe '#save' do
-      subject { create(:dossier, procedure_id: nil, user: user) }
+      subject { build(:dossier, procedure: procedure, user: user) }
       let!(:procedure) { create(:procedure) }
       context 'when is linked to a procedure' do
         it 'creates default pieces justificatives' do
           expect(subject).to receive(:build_default_pieces_justificatives)
-          subject.update_attributes(procedure_id: procedure.id)
+          subject.save
         end
 
         it 'creates default champs' do
           expect(subject).to receive(:build_default_champs)
-          subject.update_attributes(procedure_id: procedure.id)
+          subject.save
         end
       end
       context 'when is not linked to a procedure' do
+        subject { create(:dossier, procedure: procedure, user: user) }
         it 'does not create default pieces justificatives' do
           expect(subject).not_to receive(:build_default_pieces_justificatives)
           subject.update_attributes(description: 'plop')
@@ -502,6 +517,28 @@ describe Dossier do
 
         it { expect(subject.size).to eq(1) }
       end
+    end
+  end
+
+  describe '#cerfa_available?' do
+    let(:procedure) { create(:procedure, cerfa_flag: cerfa_flag)  }
+    let(:dossier) { create(:dossier, procedure: procedure)}
+    context 'Procedure accepts CERFA' do
+      let(:cerfa_flag) { true }
+      context 'when cerfa is not uploaded' do
+        it { expect(dossier.cerfa_available?).to be_falsey }
+      end
+      context 'when cerfa is uploaded' do
+        let(:dossier_with_cerfa) { create(:dossier, procedure: procedure) }
+        before do
+          allow_any_instance_of(Cerfa).to receive(:empty?).and_return(false)
+        end
+        it { expect(dossier_with_cerfa.cerfa_available?).to be_truthy }
+      end
+    end
+    context 'Procedure does not accept CERFA' do
+      let(:cerfa_flag) { false }
+      it { expect(dossier.cerfa_available?).to be_falsey }
     end
   end
 end

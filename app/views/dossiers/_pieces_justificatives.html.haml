@@ -8,7 +8,7 @@
         %th{class:'col-lg-6'}
           ='Formulaire'
         %td.col-lg-6.col-md-6
-          - if !@facade.dossier.cerfa.empty?
+          - if @facade.dossier.cerfa_available?
             - if user_signed_in?
               = 'Pièce fournie'
             - elsif gestionnaire_signed_in?

@@ -4,7 +4,13 @@ FactoryGirl.define do
     description "Ma super description"
     state 'draft'
     association :user, factory:[:user]
-
+    unless procedure
+      before(:create) do |dossier, _evaluator|
+        procedure = create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ)
+        dossier.procedure = procedure
+      end
+    end
+    
     trait :with_entreprise do
       after(:build) do |dossier, _evaluator|
         etablissement = create(:etablissement)
@@ -15,7 +21,7 @@ FactoryGirl.define do
     end
 
     trait :with_procedure do
-      after(:build) do |dossier, _evaluator|
+      before(:create) do |dossier, _evaluator|
         procedure = create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ)
         dossier.procedure = procedure
       end

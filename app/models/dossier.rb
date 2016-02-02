@@ -25,8 +25,8 @@ class Dossier < ActiveRecord::Base
   delegate :types_de_piece_justificative, to: :procedure
   delegate :types_de_champ, to: :procedure
 
-  before_create :build_default_cerfa
 
+  before_save :build_default_cerfa, if: Proc.new { procedure_id_changed? }
   after_save :build_default_pieces_justificatives, if: Proc.new { procedure_id_changed? }
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 
@@ -188,10 +188,15 @@ class Dossier < ActiveRecord::Base
     return composed_scope, dossier
   end
 
+  def cerfa_available?
+    procedure.cerfa_flag? && !cerfa.empty?
+  end
+
   private
 
   def build_default_cerfa
-    build_cerfa
+    build_cerfa if procedure.cerfa_flag?
     true
   end
+
 end

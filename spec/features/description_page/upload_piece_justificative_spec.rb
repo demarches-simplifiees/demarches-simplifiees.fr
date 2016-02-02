@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 feature 'user is on description page' do
-  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
+  let!(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, cerfa_flag: true) }
+  let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
   before do
     visit users_dossier_description_path dossier
 
@@ -42,7 +43,7 @@ feature 'user is on description page' do
     context 'when he adds a piece_justificative and submit form' do
       before do
         file_input_id = 'piece_justificative_' + dossier.pieces_justificatives.first.type.to_s
-        attach_file(file_input_id, File.path('spec/support/files/dossierPDF.pdf'))
+        attach_file(file_inp  ut_id, File.path('spec/support/files/dossierPDF.pdf'))
         click_on('Soumettre mon dossier')
         dossier.reload
       end

@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe 'users/description/show.html.haml', type: :view do
   let(:user) { create(:user) }
-  let(:dossier) { create(:dossier, :with_procedure, user: user) }
+  let(:cerfa_flag) { true }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: cerfa_flag) }
+  let(:dossier) { create(:dossier, procedure: procedure, user: user) }
   let(:dossier_id) { dossier.id }
 
   before do
@@ -124,5 +126,16 @@ describe 'users/description/show.html.haml', type: :view do
         expect(rendered).to have_selector("#piece_justificative_#{all_type_pj_procedure_id[1]}", "Nous l'avons récupéré pour vous.")
       end
     end
+  end
+
+  context 'Envoi des CERFA désactivé' do
+    let!(:cerfa_flag) { false }
+
+    before do
+      render
+    end
+
+    it { expect(rendered).to_not have_css("#cerfa_flag") }
+    it { expect(rendered).to_not have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]') }
   end
 end
