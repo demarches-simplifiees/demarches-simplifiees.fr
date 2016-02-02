@@ -33,6 +33,7 @@ particulier_userinfo_endpoint: 'https://fcp.integ01.dev-franceconnect.fr/api/v1/
 particulier_logout_endpoint: 'https://fcp.integ01.dev-franceconnect.fr/api/v1/logout'
 EOF
     file.write(comment)
+    file.write("TPS::Application.config.FRANCECONNECT = #{comment}")
     file.close
   end
 end
