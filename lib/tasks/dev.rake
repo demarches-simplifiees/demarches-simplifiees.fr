@@ -2,40 +2,37 @@ namespace :dev do
   desc 'Initialise dev environment'
   task :init  do
     puts 'start initialisation'
-    Rake::Task['dev:generate_secret_token_file'].invoke
-    Rake::Task['dev:generate_clients_basic_auth'].invoke
+    Rake::Task['dev:generate_token_file'].invoke
+    Rake::Task['dev:generate_franceconnect_file'].invoke
+
     puts 'end initialisation'
   end
 
-  task :generate_clients_basic_auth  do
-    puts 'creating clients_basic_auth.yml file'
-    file = File.new('config/clients_basic_auth.yml',  'w+')
-    credentials = <<EOF
-username: toto
-password: password
+  task :generate_token_file  do
+    puts 'creating token.rb file'
+    res = `rake secret`.gsub("\n", '')
+    file = File.new('config/initializers/token.rb',  'w+')
+    comment = <<EOF
 EOF
-    file.write(credentials)
+    file.write(comment)
+    file.write("TPS::Application.config.SIADETOKEN = '#{res}'")
     file.close
   end
 
-  task :generate_secret_token_file  do
-    puts 'creating secret_token.rb file'
-    res = `rake secret`.gsub("\n", '')
-    file = File.new('config/initializers/secret_token.rb',  'w+')
+  task :generate_franceconnect_file do
+    file = File.new('config/france_connect.yml',  'w+')
     comment = <<EOF
-# Be sure to restart your server when you modify this file.
-# Your secret key is used for verifying the integrity of signed cookies.
-# If you change this key, all old signed cookies will become invalid!
+    particulier_identifier: plop
+particulier_secret: plip
 
-# Make sure the secret is at least 30 characters and all random,
-# no regular words or you'll be exposed to dictionary attacks.
-# You can use `rake secret` to generate a secure secret key.
+particulier_redirect_uri: 'http://localhost:3000/france_connect/particulier/callback'
 
-# Make sure your secret_key_base is kept private
-# if you're sharing your code publicly.
+particulier_authorization_endpoint: 'https://fcp.integ01.dev-franceconnect.fr/api/v1/authorize'
+particulier_token_endpoint: 'https://fcp.integ01.dev-franceconnect.fr/api/v1/token'
+particulier_userinfo_endpoint: 'https://fcp.integ01.dev-franceconnect.fr/api/v1/userinfo'
+particulier_logout_endpoint: 'https://fcp.integ01.dev-franceconnect.fr/api/v1/logout'
 EOF
     file.write(comment)
-    file.write("TPS::Application.config.secret_key_base = '#{res}'")
     file.close
   end
 end
