@@ -7,7 +7,7 @@ RSpec.describe Users::CarteController, type: :controller do
   let(:procedure) { create(:procedure, module_api_carto: module_api_carto) }
   let(:dossier) { create(:dossier, procedure: procedure) }
 
-  let(:dossier_with_no_carto) { create(:dossier, :with_procedure) }
+  let(:dossier_with_no_carto) { create(:dossier) }
   let!(:entreprise) { create(:entreprise, dossier: dossier) }
   let!(:etablissement) { create(:etablissement, dossier: dossier) }
   let(:bad_dossier_id) { Dossier.count + 1000 }
@@ -34,7 +34,7 @@ RSpec.describe Users::CarteController, type: :controller do
       end
 
       context 'when dossier’s procedure does not have api carto actived' do
-        let(:dossier) { create(:dossier, :with_procedure) }
+        let(:dossier) { create(:dossier) }
 
         before do
           get :show, dossier_id: dossier.id
@@ -86,7 +86,7 @@ RSpec.describe Users::CarteController, type: :controller do
     end
 
     context 'En train de modifier la localisation' do
-      let(:dossier) { create(:dossier, :with_procedure, state: 'initiated') }
+      let(:dossier) { create(:dossier, state: 'initiated') }
       before do
         post :save, dossier_id: dossier.id, json_latlngs: ''
       end
@@ -109,7 +109,7 @@ RSpec.describe Users::CarteController, type: :controller do
 
       context 'when json_latlngs params is empty' do
         context 'when dossier have quartier prioritaire in database' do
-          let!(:dossier) { create(:dossier, :with_procedure, :with_two_quartier_prioritaires) }
+          let!(:dossier) { create(:dossier, :with_two_quartier_prioritaires) }
 
           before do
             dossier.reload
@@ -156,7 +156,7 @@ RSpec.describe Users::CarteController, type: :controller do
 
       context 'when json_latlngs params is empty' do
         context 'when dossier have cadastres in database' do
-          let!(:dossier) { create(:dossier, :with_procedure, :with_two_cadastres) }
+          let!(:dossier) { create(:dossier, :with_two_cadastres) }
 
           before do
             dossier.reload
@@ -200,7 +200,7 @@ RSpec.describe Users::CarteController, type: :controller do
   describe '#get_position' do
     context 'Geocodeur renvoie les positions par defaut' do
       let(:etablissement) { create(:etablissement, adresse: bad_adresse, numero_voie: 'dzj', type_voie: 'fzjfk', nom_voie: 'hdidjkz', complement_adresse: 'fjef', code_postal: 'fjeiefk', localite: 'zjfkfz') }
-      let(:dossier) { create(:dossier, :with_procedure, etablissement: etablissement) }
+      let(:dossier) { create(:dossier, etablissement: etablissement) }
 
       before do
         stub_request(:get, /http:\/\/api-adresse[.]data[.]gouv[.]fr\/search[?]limit=1&q=/)

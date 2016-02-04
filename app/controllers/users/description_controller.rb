@@ -32,6 +32,7 @@ class Users::DescriptionController < UsersController
       flash.now.alert = @dossier.errors.full_messages.join('<br />').html_safe
       return render 'show'
     end
+
     if @procedure.cerfa_flag?
       unless params[:cerfa_pdf].nil?
         cerfa = @dossier.cerfa

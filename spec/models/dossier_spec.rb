@@ -47,7 +47,7 @@ describe Dossier do
   end
 
   describe 'methods' do
-    let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, user: user) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user) }
 
     let(:entreprise) { dossier.entreprise }
     let(:etablissement) { dossier.etablissement }
@@ -78,7 +78,7 @@ describe Dossier do
 
       describe 'Procedure does not accept cerfa upload' do
         let(:procedure) { create(:procedure, cerfa_flag: false) }
-        let(:dossier) { create(:dossier, :with_entreprise, :with_procedure, user: user) }
+        let(:dossier) { create(:dossier, :with_entreprise, user: user) }
         it 'default cerfa is not created' do
           expect { subject.to change(Cerfa.count).by(0) }
           expect { subject.cerfa.to eq(nil) }
@@ -101,7 +101,7 @@ describe Dossier do
 
     describe '#build_default_pieces_justificatives' do
       context 'when dossier is linked to a procedure' do
-        let(:dossier) { create(:dossier, :with_procedure, user: user) }
+        let(:dossier) { create(:dossier, user: user) }
         it 'build all pieces justificatives needed' do
           expect(dossier.pieces_justificatives.count).to eq(2)
         end
@@ -110,7 +110,8 @@ describe Dossier do
 
     describe '#build_default_champs' do
       context 'when dossier is linked to a procedure' do
-        let(:dossier) { create(:dossier, :with_procedure, user: user) }
+        let(:dossier) { create(:dossier, user: user) }
+
         it 'build all champs needed' do
           expect(dossier.champs.count).to eq(1)
         end

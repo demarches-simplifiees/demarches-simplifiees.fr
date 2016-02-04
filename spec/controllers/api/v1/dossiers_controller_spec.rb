@@ -6,10 +6,11 @@ describe API::V1::DossiersController do
   let(:wrong_procedure) { create(:procedure) }
 
   it { expect(described_class).to be < APIController }
+
   describe 'GET index' do
     let(:response) { get :index, token: admin.api_token, procedure_id: procedure_id }
-    subject { response }
 
+    subject { response }
 
     context 'when procedure is not found' do
       let(:procedure_id) { 99_999_999 }
@@ -24,10 +25,13 @@ describe API::V1::DossiersController do
     context 'when procedure is found and belongs to admin' do
       let(:procedure_id) { procedure.id }
       let(:date_creation) { Time.local(2008, 9, 1, 10, 5, 0) }
-      let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
+      let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') } }
       let(:body) { JSON.parse(response.body, symbolize_names: true) }
+
       it { expect(response.code).to eq('200') }
+
       it { expect(body).to have_key :pagination }
+
       it { expect(body).to have_key :dossiers }
 
       describe 'pagination' do
@@ -54,14 +58,17 @@ describe API::V1::DossiersController do
 
       context 'when there are multiple pages' do
         let(:response) { get :index, token: admin.api_token, procedure_id: procedure_id, page: 2 }
-        let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure) }
-        let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure) }
+
+        let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
+        let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
+
         before do
           allow(Dossier).to receive(:per_page).and_return(1)
         end
 
         describe 'pagination' do
           subject { body[:pagination] }
+
           it { expect(subject[:page]).to eq(2) }
           it { expect(subject[:resultats_par_page]).to eq(1) }
           it { expect(subject[:nombre_de_page]).to eq(3) }

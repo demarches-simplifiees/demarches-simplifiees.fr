@@ -3,10 +3,10 @@ require 'spec_helper'
 describe 'users/dossiers/index.html.haml', type: :view do
   let(:user) { create(:user) }
 
-  let!(:dossier) { create(:dossier, :with_procedure, user: user, state: 'initiated', nom_projet: 'projet de test').decorate }
-  let!(:dossier_2) { create(:dossier, :with_procedure, user: user, state: 'replied', nom_projet: 'projet répondu').decorate }
-  let!(:dossier_3) { create(:dossier, :with_procedure, user: user, state: 'replied', nom_projet: 'projet répondu 2').decorate }
-  let!(:dossier_termine) { create(:dossier, :with_procedure, user: user, state: 'closed').decorate }
+  let!(:dossier) { create(:dossier, user: user, state: 'initiated', nom_projet: 'projet de test').decorate }
+  let!(:dossier_2) { create(:dossier, user: user, state: 'replied', nom_projet: 'projet répondu').decorate }
+  let!(:dossier_3) { create(:dossier, user: user, state: 'replied', nom_projet: 'projet répondu 2').decorate }
+  let!(:dossier_termine) { create(:dossier, user: user, state: 'closed').decorate }
 
   describe 'params liste is a_traiter' do
     let(:dossiers_list) { user.dossiers.waiting_for_user('DESC') }

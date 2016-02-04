@@ -69,7 +69,7 @@ describe 'users/description/show.html.haml', type: :view do
 
   context 'les valeurs sont réaffichées si elles sont présentes dans la BDD' do
     let!(:dossier) do
-      create(:dossier, :with_procedure,
+      create(:dossier,
              nom_projet: 'Projet de test',
              description: 'Description de test',
              user: user)

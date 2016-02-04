@@ -2,10 +2,12 @@ require 'spec_helper'
 
 describe Users::DescriptionController, type: :controller do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure, cerfa_flag: true) }
-  let(:dossier) { create(:dossier, procedure: procedure, user: user) }
+
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: true) }
+  let!(:dossier) { create(:dossier, procedure: procedure, user: user) }
+
   let(:dossier_id) { dossier.id }
-  let(:bad_dossier_id) { Dossier.count + 10 }
+  let(:bad_dossier_id) { Dossier.count + 10000 }
 
   before do
     sign_in dossier.user
@@ -142,10 +144,14 @@ describe Users::DescriptionController, type: :controller do
         end
 
         context 'les anciens CERFA PDF sont écrasées à chaque fois' do
-          it 'il n\'y a qu\'un CERFA PDF par dossier' do
+          let(:cerfas) { Cerfa.find_by_dossier_id(dossier_id) }
+
+          before do
             post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, cerfa_pdf: cerfa_pdf
-            cerfa = PieceJustificative.where(type_de_piece_justificative_id: '0', dossier_id: dossier_id)
-            expect(cerfa.many?).to eq(false)
+          end
+
+          it 'il n\'y a qu\'un CERFA PDF par dossier' do
+            expect(cerfas.class).to eq Cerfa
           end
         end
 
@@ -175,6 +181,7 @@ describe Users::DescriptionController, type: :controller do
     context 'Sauvegarde des champs' do
       let(:champs_dossier) { dossier.champs }
       let(:dossier_champs_first) { 'test value' }
+
       before do
         post :create, {dossier_id: dossier_id,
                        nom_projet: nom_projet,
