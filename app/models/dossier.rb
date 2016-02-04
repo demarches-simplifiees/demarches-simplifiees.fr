@@ -26,7 +26,7 @@ class Dossier < ActiveRecord::Base
   delegate :types_de_champ, to: :procedure
 
 
-  before_save :build_default_cerfa, if: Proc.new { procedure_id_changed? }
+  after_save :build_default_cerfa, if: Proc.new { procedure.cerfa_flag? && procedure_id_changed? }
   after_save :build_default_pieces_justificatives, if: Proc.new { procedure_id_changed? }
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 
@@ -195,7 +195,7 @@ class Dossier < ActiveRecord::Base
   private
 
   def build_default_cerfa
-    build_cerfa if procedure.cerfa_flag?
+    build_cerfa
     true
   end
 
