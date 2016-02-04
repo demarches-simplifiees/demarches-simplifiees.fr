@@ -1,0 +1,86 @@
+.max-size {
+  margin-left: -10rem;
+  margin-right: -10rem;
+}
+
+#landing {
+
+  background-image: image-url('landing_background.jpg');
+  background-attachment: fixed;
+  background-position: top left;
+  background-repeat: no-repeat;
+
+  #title {
+    h1 {
+      font-size: 65px;
+    }
+    h2 {
+      font-size: 35px;
+    }
+
+    .btn {
+      text-shadow: none;
+    }
+
+    .btn-lg {
+      font-size: 20px;
+      padding: 12px 18px;
+    }
+
+    color: white;
+    padding-top: 6%;
+    padding-bottom: 7%;
+    text-shadow: 3px 3px 4px rgba(0, 0, 0, .6);
+  }
+
+  .logo img {
+    width: 70px;
+  }
+}
+
+#suite {
+  .row{
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .word {
+    border-bottom: solid darkgrey 1px;
+
+    img {
+      padding-top: 50px;
+      padding-bottom: 50px;
+      width: 200px;
+      margin-left: 25%;
+    }
+  }
+
+  .simplifier {
+    ul {
+      margin-top: 16%;
+    }
+  }
+
+  .securiser {
+    img {
+      width: 300px;
+    }
+
+    ul {
+      margin-top: 11%;
+    }
+  }
+
+  .echanger {
+    ul {
+      margin-top: 4%;
+    }
+  }
+  .profiter {
+    border-bottom: none;
+
+    ul {
+      margin-top: 11%;
+    }
+  }
+}

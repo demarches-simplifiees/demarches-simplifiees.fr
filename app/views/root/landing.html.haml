@@ -1,0 +1,63 @@
+#landing.max-size
+  #title
+    %h1.center
+      TPS
+    %h2.center
+      TéléProcédure Simplifiée
+
+    %br
+    %h3.center
+      Simplifiez toutes vos démarches pour les rendre 100% en ligne.
+
+    %br
+    %br
+
+    .center
+      =mail_to "contact@tps.apientreprise.fr", 'Ouvrir un compte TPS',{ subject: 'Ouvrir un compte TPS',
+      body: 'Bonjour, je souhaiterais ouvrir un compte TPS. Merci de me recontacter par email ou par téléphone au _____.',
+       class: 'btn btn-lg btn-default' }
+
+#suite.max-size
+  .row.word.simplifier
+    .col-md-6.col-lg-6
+      = image_tag image_url('keywords/simplifier.png')
+    .col-md-6.col-lg-6
+      %ul.dynamic_ul
+        %li
+          %a Générateur simplifiée de démarches en ligne pour les administrations
+        %li
+          %a Ne demander que les informations strictement nécessaires
+
+  .row.word.securiser
+    .col-md-6.col-lg-6
+      %ul.dynamic_ul
+        %li
+          Profiter d’une identification simplifiée grâce à FranceConnect
+        %li
+          Évoluer sur une plateforme de l'État totalement sécurisée
+    .col-md-6.col-lg-6
+      = image_tag image_url('keywords/securiser.png')
+
+  .row.word.echanger
+    .col-md-6.col-lg-6
+      = image_tag image_url('keywords/echanger.png')
+    .col-md-6.col-lg-6
+      %ul.dynamic_ul
+        %li
+          Tchatter avec les services traitant jusqu’à la complétude du dossier
+        %li
+          Etre notifié de manière électronique
+        %li
+          Accompagner les usagers dans leur démarche
+        %li
+          Vérifier les pièces au fur et à mesure
+
+  .row.word.profiter
+    .col-md-6.col-lg-6
+      %ul.dynamic_ul
+        %li
+          Profiter des ressources cartographiques directement mobilisées, si nécessaire
+        %li
+          Récupérer des informations officielles collectées directement auprès des administrations
+    .col-md-6.col-lg-6
+      = image_tag image_url('keywords/profiter.png')

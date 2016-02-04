@@ -4,16 +4,16 @@
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
     %title TPS - Téléprocédures simplifiées
     %meta{'http-equiv' => "X-UA-Compatible", :content => "IE=edge"}
-    %script{src: 'http://fcp.integ01.dev-franceconnect.fr/js/franceconnect.js'}
 
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
   %body
-    #beta
-      Beta
-    %div
-      %div.navbar
+    %div#wrap
+      %div#header.navbar
+
+        #beta
+          Beta
         = image_tag('marianne_small.png', class: 'logo')
         %a{href: '/'}
           = image_tag('logo-tps.png', class: 'logo')
@@ -39,6 +39,10 @@
                 = current_user.email
 
                 = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
+          - else
+            = link_to "Utilisateur", '/users/sign_in', method: :get, :class => 'btn btn-md'
+            = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
+            = link_to "Administrateur", '/administrateurs/sign_in', method: :get, :class => 'btn btn-md'
 
       #flash_message.center
       - if flash.notice
@@ -48,5 +52,23 @@
         .alert.alert-danger
           = flash.alert
 
-      %div{:style => 'margin-left:10%; margin-right:10%;'}
+      %div.main_div
         = yield
+
+      %br
+
+    #footer.navbar
+      .container.center
+        %p{style:'margin-top: 1em;'}
+          %p{class: "copyright text-muted small"}
+            Copyright &copy;
+
+            =link_to 'SGMAP', "http://etatplateforme.modernisation.gouv.fr"
+
+            2016 - Tous droits réservés
+
+            =link_to 'contact@tps.apientreprise.fr', "mailto:contact@tps.apientreprise.fr"
+
+
+
+

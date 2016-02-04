@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   end
 
   get 'demo' => 'demo#index'
+  get 'users' => 'users#index'
 
   namespace :users do
     resources :dossiers do

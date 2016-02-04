@@ -9,6 +9,6 @@ FactoryGirl.define do
     raison_sociale 'GRTGAZ'
     siret_siege_social '44011762001530'
     code_effectif_entreprise '51'
-    date_creation 1_004_914_800
+    date_creation Time.at(1453976189).to_datetime
   end
 end
