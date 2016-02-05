@@ -1,0 +1,19 @@
+%h1 Gestion des gestionnaires
+%br
+
+.row
+  .col-md-4.col-lg-4
+    = smart_listing_render :gestionnaires
+  .col-md-1.col-lg-1
+    &nbsp;
+  .col-md-6.col-lg-6
+    %h3 Ajouter un gestionnaire
+    #procedure_new.section.section-label
+      = form_for @gestionnaire, url: {controller: 'admin/gestionnaires', action: :create} do |f|
+        .row
+          .col-md-5.col-lg-5
+            =render partial: 'informations', locals: {f: f}
+          .col-md-2.col-lg-2
+            %br
+            %br
+            =f.submit 'Valider', class: 'btn btn-info', style: 'float:left'
