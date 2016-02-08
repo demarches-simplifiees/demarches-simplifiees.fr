@@ -37,4 +37,8 @@ class DossierFacades
   def procedure
     @dossier.procedure
   end
+
+  def invites
+    @dossier.invites
+  end
 end

@@ -28,6 +28,12 @@ Rails.application.routes.draw do
   get 'users' => 'users#index'
 
   namespace :users do
+    namespace :dossiers do
+      resources :invites, only: [:index, :show]
+
+      post '/commentaire' => 'commentaires#create'
+    end
+
     resources :dossiers do
       get '/description' => 'description#show'
       get '/description/error' => 'description#error'
@@ -79,6 +85,8 @@ Rails.application.routes.draw do
     resources :dossiers do
       post 'valid' => 'dossiers#valid'
       post 'close' => 'dossiers#close'
+
+      post 'invites' => '/invites#create'
     end
 
     resources :commentaires, only: [:create]

@@ -52,7 +52,11 @@ fr:
               blank: ': Le mot de passe est vide'
             password_confirmation:
               confirmation: ': Les deux mots de passe ne correspondent pas'
-
+        invite:
+          attributes:
+            email:
+              blank: est vide
+              taken: ': Invitation déjà envoyée'
 
   devise:
     confirmations:

@@ -1,4 +1,3 @@
-
 #infos_dossier
   %div.row
     .col-lg-6.col-md-6
@@ -51,8 +50,8 @@
         =render partial: '/dossiers/pieces_justificatives'
   %br
 
-  %div.row{style: 'text-align:right'}
-    -unless gestionnaire_signed_in?
+  .row{style: 'text-align:right'}
+    -if user_signed_in? && (current_user.email == @facade.dossier.user.email)
       -if !@facade.dossier.validated? && !@facade.dossier.submitted? && !@facade.dossier.closed?
         -if @facade.dossier.procedure.module_api_carto.use_api_carto
           %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@facade.dossier.id}/carte"}
@@ -60,7 +59,7 @@
         %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@facade.dossier.id}/description"}
           = 'Editer mon dossier'
 
-    -unless user_signed_in?
+    -if gestionnaire_signed_in?
       -if !@facade.dossier.validated? && !@facade.dossier.submitted? && !@facade.dossier.closed?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success

@@ -1,11 +1,12 @@
 require 'spec_helper'
 
 describe 'users/recapitulatif/show.html.haml', type: :view do
-  let(:dossier) { create(:dossier,  :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto)) }
+  let(:dossier) { create(:dossier, :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto)) }
   let(:dossier_id) { dossier.id }
   let(:state) { 'draft' }
 
   before do
+    sign_in dossier.user
     assign(:facade, DossierFacades.new(dossier.id, dossier.user.email))
   end
 
@@ -28,7 +29,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         expect(rendered).to have_content(dossier_id)
       end
 
-      context 'les liens de modifications' do
+      describe 'les liens de modifications' do
         context 'lien description' do
           it 'le lien vers description est présent' do
             expect(rendered).to have_css('#maj_infos')
@@ -127,6 +128,46 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           expect(rendered).not_to have_content('Editer mon dossier')
         end
       end
+    end
+
+    context 'when invite is logged' do
+      let!(:invite_user) { create(:user, email: 'invite@octo.com') }
+
+      before do
+        create(:invite) { create(:invite, email: invite_user.email, user: invite_user, dossier: dossier) }
+        sign_out dossier.user
+
+        sign_in invite_user
+
+        render
+      end
+
+      describe 'les liens de modifications' do
+        it 'describe link is not present' do
+          expect(rendered).not_to have_css('#maj_infos')
+        end
+
+        it 'map link is not present' do
+          expect(rendered).not_to have_css('#maj_carte')
+        end
+
+        it 'archive link is not present' do
+          expect(rendered).not_to have_content('Archiver')
+        end
+      end
+
+      context 'when dossier is validated' do
+        let(:state) { 'validated' }
+
+        before do
+          render
+        end
+
+        it 'submitted link is not present' do
+          expect(rendered).not_to have_content('Déposer mon dossier')
+        end
+      end
+
     end
   end
 end

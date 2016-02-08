@@ -24,6 +24,7 @@ describe Dossier do
     it { is_expected.to have_one(:etablissement) }
     it { is_expected.to have_one(:entreprise) }
     it { is_expected.to belong_to(:user) }
+    it { is_expected.to have_many(:invites) }
   end
 
   describe 'delegation' do

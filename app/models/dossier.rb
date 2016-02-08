@@ -16,6 +16,7 @@ class Dossier < ActiveRecord::Base
   has_many :quartier_prioritaires, dependent: :destroy
   has_many :cadastres, dependent: :destroy
   has_many :commentaires, dependent: :destroy
+  has_many :invites, dependent: :destroy
 
   belongs_to :procedure
   belongs_to :user

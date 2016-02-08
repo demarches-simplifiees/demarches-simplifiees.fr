@@ -11,7 +11,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
     assign(:facade, (DossierFacades.new dossier.id, gestionnaire.email))
   end
 
-  context 'on the dossier admin page' do
+  context 'on the dossier gestionnaire page' do
     before do
       render
     end

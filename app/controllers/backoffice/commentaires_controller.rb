@@ -4,5 +4,4 @@ class Backoffice::CommentairesController < CommentairesController
   def is_gestionnaire?
     true
   end
-
 end

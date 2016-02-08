@@ -4,17 +4,18 @@
       .col-md-6.col-lg-6
         %h2 Récapitulatif
       .col-md-6.col-lg-6
-        = form_tag "/users/dossiers/#{@facade.dossier.id}/archive", style:'margin-top:21px', action: :archive, method: :put do
-          %button#archive.btn.btn-sm.btn-default.text-info{type: :button}
-            %i.fa.fa-eraser
-            Archiver
-          #confirm
-            %button#cancel.btn.btn-sm.btn-danger{type: :button}
-              %i.fa.fa-remove
-              Annuler
-            %button#valid.btn.btn-sm.btn-success{type: :submit}
-              %i.fa.fa-check
-              Valider
+        - if current_user.email == @facade.dossier.user.email
+          = form_tag "/users/dossiers/#{@facade.dossier.id}/archive", style:'margin-top:21px', action: :archive, method: :put do
+            %button#archive.btn.btn-sm.btn-default.text-info{type: :button}
+              %i.fa.fa-eraser
+              Archiver
+            #confirm
+              %button#cancel.btn.btn-sm.btn-danger{type: :button}
+                %i.fa.fa-remove
+                Annuler
+              %button#valid.btn.btn-sm.btn-success{type: :submit}
+                %i.fa.fa-check
+                Valider
 
   .col-md-5.col-lg-5
 
@@ -22,7 +23,7 @@
     %h2#dossier_id{:class => 'text-info', :style => 'text-align:right; margin-bottom:15px'}
       = "Dossier n°#{@facade.dossier.id}"
 
-    - unless gestionnaire_signed_in?
+    - if user_signed_in? && current_user.email == @facade.dossier.user.email
       -if @facade.dossier.validated?
         %br
         = form_tag(url_for({controller: :recapitulatif, action: :submit, dossier_id: @facade.dossier.id}), method: 'POST') do
@@ -36,4 +37,4 @@
 
 = render partial: '/dossiers/infos_dossier'
 %br
-= render partial: 'commentaires_flux'
+= render partial: '/users/recapitulatif/commentaires_flux'
