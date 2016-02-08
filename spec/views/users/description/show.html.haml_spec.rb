@@ -138,4 +138,35 @@ describe 'users/description/show.html.haml', type: :view do
     it { expect(rendered).to_not have_css("#cerfa_flag") }
     it { expect(rendered).to_not have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]') }
   end
+
+  describe 'display title Documents administratifs' do
+    before do
+      render
+    end
+
+    let(:procedure) { create :procedure, lien_demarche: '' }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+
+    context 'when dossier not have cerfa, piece justificative and demarche link' do
+      it { expect(rendered).not_to have_content 'Documents administratifs' }
+    end
+
+    context 'when dossier have pj' do
+      let(:dossier) { create(:dossier) }
+
+      it { expect(rendered).to have_content 'Documents administratifs' }
+    end
+
+    context 'when procedure have demarche link' do
+      let(:procedure) { create :procedure }
+
+      it { expect(rendered).to have_content 'Documents administratifs' }
+    end
+
+    context 'when procedure have cerfa flag true' do
+      let(:procedure) {create(:procedure, cerfa_flag: true)}
+
+      it { expect(rendered).to have_content 'Documents administratifs' }
+    end
+  end
 end

@@ -37,10 +37,11 @@
                 'data-provide' => ('datepicker' if champ.type_champ == 'datetime'),
                 'data-date-format' => ('dd/mm/yyyy' if champ.type_champ == 'datetime')}
 
-    %br
-    %h3 Documents administratifs
+    -if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.pieces_justificatives.size > 1
+      %br
+      %h3 Documents administratifs
 
-    -if @procedure.lien_demarche != nil
+    -unless @procedure.lien_demarche.blank?
       %p
         Formulaire / documentation de la démarche :
         %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@procedure.lien_demarche}", :target => '_blank'} Accéder
@@ -76,6 +77,7 @@
                 %span.btn.btn-sm.btn-file.btn-success
                   Modifier
                   = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: '.pdf'
+
     %div{style: 'text-align:right'}
       %h6 Tous les champs portant un * sont obligatoires.
 
