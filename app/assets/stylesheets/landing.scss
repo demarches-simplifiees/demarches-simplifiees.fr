@@ -7,7 +7,7 @@
 
   background-image: image-url('landing_background.jpg');
   background-attachment: fixed;
-  background-position: top left;
+  background-position: top center;
   background-repeat: no-repeat;
 
   #title {
@@ -21,16 +21,10 @@
     .btn {
       text-shadow: none;
     }
-
-    .btn-lg {
-      font-size: 20px;
-      padding: 12px 18px;
-    }
-
     color: white;
     padding-top: 6%;
     padding-bottom: 7%;
-    text-shadow: 3px 3px 4px rgba(0, 0, 0, .6);
+    text-shadow: 0px 0px 10px rgb(0, 0, 0);
   }
 
   .logo img {
@@ -77,10 +71,27 @@
     }
   }
   .profiter {
-    border-bottom: none;
+    //border-bottom: none;
 
     ul {
       margin-top: 11%;
     }
+  }
+  .open_admin_compte {
+    border-bottom: none;
+    padding-top: 25px;
+    padding-bottom: 25px;
+
+    ol {
+      margin-top: 1%;
+    }
+
+    .btn-lg {
+      font-size: 20px;
+      padding: 12px 18px;
+
+      margin-top: 16%;
+    }
+
   }
 }

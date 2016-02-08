@@ -11,11 +11,10 @@
 
     %br
     %br
-
     .center
-      =mail_to "contact@tps.apientreprise.fr", 'Ouvrir un compte TPS',{ subject: 'Ouvrir un compte TPS',
-      body: 'Bonjour, je souhaiterais ouvrir un compte TPS. Merci de me recontacter par email ou par téléphone au _____.',
-       class: 'btn btn-lg btn-default' }
+      %button.js-scrollTo.btn.btn-lg.btn-success{cible: '.open_admin_compte'}
+        Ouvrir un compte TPS
+
 
 #suite.max-size
   .row.word.simplifier
@@ -61,3 +60,22 @@
           Récupérer des informations officielles collectées directement auprès des administrations
     .col-md-6.col-lg-6
       = image_tag image_url('keywords/profiter.png')
+
+  .row.word.open_admin_compte
+    .col-md-6.col-lg-6
+      .center
+        =link_to 'Ouvrir un compte TPS', 'https://tps.apientreprise.fr/users/dossiers/new?procedure_id=31', {class: 'btn btn-lg btn-success', target: '_blank'}
+    .col-md-6.col-lg-6
+      %h3 Envie d'essayer ? Rien de plus simple
+      %br
+      %ol.dynamic_ul
+        %li
+          Cliquez sur le bouton vert à gauche
+        %li
+          Inscrivez-vous avec votre email professionnel
+        %li
+          Entrez le SIRET de votre organisme
+        %li
+          Composez un dossier en trois clics et VOILÀ !
+      %br
+      %h4 Après, nos équipes prendrons rapidement contact avec vous via la plateforme.
