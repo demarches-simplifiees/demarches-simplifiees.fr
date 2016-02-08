@@ -10,7 +10,7 @@ var franceConnectKit = {};
         //initCurrentHostnameSource();
         //includeFCCss();
 
-        fconnect.currentHost = 'fcp.integ01.dev-franceconnect.fr'
+        fconnect.currentHost = 'fcp.integ01.dev-franceconnect.fr';
 
         var fconnectProfile = document.getElementById('fconnect-profile');
         if (fconnectProfile) {
