@@ -2,9 +2,12 @@ require 'spec_helper'
 
 describe Users::DescriptionController, type: :controller do
   let(:user) { create(:user) }
-  let(:dossier) { create(:dossier, :with_procedure, user: user) }
+
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: true) }
+  let!(:dossier) { create(:dossier, procedure: procedure, user: user) }
+
   let(:dossier_id) { dossier.id }
-  let(:bad_dossier_id) { Dossier.count + 10 }
+  let(:bad_dossier_id) { Dossier.count + 10000 }
 
   before do
     sign_in dossier.user
@@ -117,44 +120,68 @@ describe Users::DescriptionController, type: :controller do
         it { is_expected.to render_template(:show) }
         it { expect(flash[:alert]).to be_present }
       end
-   end
+    end
 
-    context 'Sauvegarde du CERFA PDF' do
-      before do
-        post :create, dossier_id: dossier_id,
-                      nom_projet: nom_projet,
-                      description: description,
-                      cerfa_pdf: cerfa_pdf
-        dossier.reload
-      end
-
-      context 'un CERFA PDF est envoyé' do
-        subject { dossier.cerfa }
-        it 'content' do
-          expect(subject['content']).to eq(name_piece_justificative)
+    context 'Quand la procédure accepte les CERFA' do
+      context 'Sauvegarde du CERFA PDF' do
+        before do
+          post :create, dossier_id: dossier_id,
+                        nom_projet: nom_projet,
+                        description: description,
+                        cerfa_pdf: cerfa_pdf
+          dossier.reload
         end
 
-        it 'dossier_id' do
-          expect(subject.dossier_id).to eq(dossier_id)
+        context 'un CERFA PDF est envoyé' do
+          subject { dossier.cerfa }
+          it 'content' do
+            expect(subject['content']).to eq(name_piece_justificative)
+          end
+
+          it 'dossier_id' do
+            expect(subject.dossier_id).to eq(dossier_id)
+          end
+        end
+
+        context 'les anciens CERFA PDF sont écrasées à chaque fois' do
+          let(:cerfas) { Cerfa.find_by_dossier_id(dossier_id) }
+
+          before do
+            post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, cerfa_pdf: cerfa_pdf
+          end
+
+          it 'il n\'y a qu\'un CERFA PDF par dossier' do
+            expect(cerfas.class).to eq Cerfa
+          end
+        end
+
+        context 'pas de CERFA PDF' do
+          # TODO à écrire
         end
       end
+    end
 
-      context 'les anciens CERFA PDF sont écrasées à chaque fois' do
-        it 'il n\'y a qu\'un CERFA PDF par dossier' do
-          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, cerfa_pdf: cerfa_pdf
-          cerfa = PieceJustificative.where(type_de_piece_justificative_id: '0', dossier_id: dossier_id)
-          expect(cerfa.many?).to eq(false)
+    context 'Quand la procédure n\'accepte pas les CERFA' do
+      context 'Sauvegarde du CERFA PDF' do
+        let!(:procedure) { create(:procedure) }
+        before do        
+          post :create, dossier_id: dossier_id,
+                        nom_projet: nom_projet,
+                        description: description,
+                        cerfa_pdf: cerfa_pdf
+          dossier.reload
         end
-      end
 
-      context 'pas de CERFA PDF' do
-        # TODO à écrire
+        context 'un CERFA PDF est envoyé' do
+          it { expect(dossier.cerfa_available?).to be_falsey }
+        end
       end
     end
 
     context 'Sauvegarde des champs' do
       let(:champs_dossier) { dossier.champs }
       let(:dossier_champs_first) { 'test value' }
+
       before do
         post :create, {dossier_id: dossier_id,
                        nom_projet: nom_projet,

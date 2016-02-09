@@ -29,6 +29,12 @@ describe RootController, type: :controller do
   end
 
   context 'when nobody is connected' do
-    it { expect(subject).to redirect_to(new_user_session_path) }
+    render_views
+
+    before do
+      subject
+    end
+
+    it { expect(response.body).to have_css('#landing') }
   end
 end

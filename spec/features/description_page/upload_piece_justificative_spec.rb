@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 feature 'user is on description page' do
-  let(:dossier) { create(:dossier, :with_entreprise, :with_procedure) }
+  let!(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, cerfa_flag: true) }
+  let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
   before do
     visit users_dossier_description_path dossier
 

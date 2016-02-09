@@ -9,10 +9,11 @@
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
   %body
-    #beta
-      Beta
     %div#wrap
-      %div.navbar
+      %div#header.navbar
+
+        #beta
+          Beta
         = image_tag('marianne_small.png', class: 'logo')
         %a{href: '/'}
           = image_tag('logo-tps.png', class: 'logo')
@@ -38,6 +39,10 @@
                 = current_user.email
 
                 = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
+          - else
+            = link_to "Utilisateur", '/users/sign_in', method: :get, :class => 'btn btn-md'
+            = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
+            = link_to "Administrateur", '/administrateurs/sign_in', method: :get, :class => 'btn btn-md'
 
       #flash_message.center
       - if flash.notice
@@ -47,7 +52,7 @@
         .alert.alert-danger
           = flash.alert
 
-      %div{:style => 'margin-left:10%; margin-right:10%;'}
+      %div.main_div
         = yield
 
       %br
@@ -60,7 +65,7 @@
 
             =link_to 'SGMAP', "http://etatplateforme.modernisation.gouv.fr"
 
-            2016. All Rights Reserved
+            2016 - Tous droits réservés
 
             =link_to 'contact@tps.apientreprise.fr', "mailto:contact@tps.apientreprise.fr"
 

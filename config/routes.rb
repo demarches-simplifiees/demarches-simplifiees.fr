@@ -10,7 +10,8 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: {
                        sessions: 'users/sessions',
-                       registrations: 'users/registrations'
+                       registrations: 'users/registrations',
+                       passwords: 'users/passwords'
                    }
 
   root 'root#index'
@@ -25,8 +26,15 @@ Rails.application.routes.draw do
   end
 
   get 'demo' => 'demo#index'
+  get 'users' => 'users#index'
 
   namespace :users do
+    namespace :dossiers do
+      resources :invites, only: [:index, :show]
+
+      post '/commentaire' => 'commentaires#create'
+    end
+
     resources :dossiers do
       get '/description' => 'description#show'
       get '/description/error' => 'description#error'
@@ -66,6 +74,7 @@ Rails.application.routes.draw do
       resource :pieces_justificatives, only: [:show, :update]
       resources :pieces_justificatives, only: :destroy
     end
+    resources :gestionnaires, only: [:index, :create, :destroy]
   end
 
   get 'backoffice' => 'backoffice#index'
@@ -78,6 +87,8 @@ Rails.application.routes.draw do
     resources :dossiers do
       post 'valid' => 'dossiers#valid'
       post 'close' => 'dossiers#close'
+
+      post 'invites' => '/invites#create'
     end
 
     resources :commentaires, only: [:create]

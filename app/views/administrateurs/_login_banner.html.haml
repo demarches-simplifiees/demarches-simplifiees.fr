@@ -11,10 +11,14 @@
           %i.fa.fa-list{ style: "background-size: 10px;"}
           &nbsp;Procédures
       %li
+        = link_to(admin_gestionnaires_path) do
+          %i.fa.fa-user
+          &nbsp;Gestionnaires
+      %li.divider{ role: :separator}
+      %li
         = link_to(admin_profile_path, id: :profile) do
           %i.fa.fa-user
           &nbsp;Profile
-      %li.divider{ role: :separator}
       %li
         = link_to('/administrateurs/sign_out',id: :admin_sign_out, method: :delete) do
           %i.fa.fa-power-off

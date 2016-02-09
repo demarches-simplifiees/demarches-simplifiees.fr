@@ -107,7 +107,8 @@ class Users::DossiersController < UsersController
   def dossiers_to_display
     {'a_traiter' => waiting_for_user,
      'en_attente' => waiting_for_gestionnaire,
-     'termine' => termine}[@liste]
+     'termine' => termine,
+     'invite' => invite}[@liste]
   end
 
   def waiting_for_user
@@ -125,10 +126,16 @@ class Users::DossiersController < UsersController
     @termine ||= current_user.dossiers.termine 'DESC'
   end
 
+  def invite
+    @invite_class = (@liste == 'invite' ? 'active' : '')
+    @invite ||= current_user.invites
+  end
+
   def total_dossiers_per_state
     @dossiers_a_traiter_total = waiting_for_user.count
     @dossiers_en_attente_total = waiting_for_gestionnaire.count
     @dossiers_termine_total = termine.count
+    @dossiers_invite_total = invite.count
   end
 
   def check_siret

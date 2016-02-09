@@ -23,4 +23,11 @@
           = "Terminé"
           .badge.progress-bar-success
             = @dossiers_termine_total
+
+    %li{ class:  @invite_class }
+      %a{:href => "#{url_for users_dossiers_path(liste: 'invite')}"}
+        %h5{style: 'color: #696969'}
+          = "Invitation"
+          .badge{style: 'background-color: #696969'}
+            = @dossiers_invite_total
 %br

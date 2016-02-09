@@ -3,7 +3,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
 # before_filter :configure_account_update_params, only: [:update]
 
   def after_sign_up_path_for(resource_or_scope)
-    WelcomeMailer.welcome_email(User.last).deliver_now!
+    WelcomeMailer.welcome_email(resource_or_scope).deliver_now!
+    check_invite! resource_or_scope
+
     super
   end
 
@@ -62,4 +64,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
+
+  private
+
+  def check_invite! user
+    Invite.where(email: user.email)
+        .each { |invite| invite.update_attribute(:user, user) }
+  end
 end

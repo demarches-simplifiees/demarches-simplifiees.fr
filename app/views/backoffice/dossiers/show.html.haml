@@ -2,20 +2,31 @@
   %h1#dossier_id.text-info{ :style => 'text-align:right'}
     = "Dossier n°#{@facade.dossier.id}"
 
-  %h3{:class => 'text-success', :style => 'text-align:right'}
-    = @facade.dossier.display_state
-
+  %div{:style => 'text-align:right'}
+    %h3{:class => 'text-success'}
+      = @facade.dossier.display_state
 
   = render partial: '/dossiers/infos_entreprise'
-  %br
+
   = render partial: '/dossiers/infos_dossier'
   %br
-  %br
 
-  = render partial: '/users/recapitulatif/commentaires_flux'
-  %br
-  %br
+  %div
+    %ul{class: "nav nav-tabs", role: "tablist"}
+      %li{role: "presentation", class: "active"}
+        %a{href: "#commentaires", 'aria-controls' => "commentaires", role: "tab", 'data-toggle' => "tab"}
+          Commentaires
+      %li{role: "presentation"}
+        %a{href: "#invites", 'aria-controls' => "invites", role: "tab", 'data-toggle' => "tab"}
+          Invités
 
--#%script{type: 'text/javascript'}
--#  ="url_carte = '#{@facade.dossier.id}/'"
--#  ="ref_dossier = '#{@facade.dossier.ref_dossier_carto}'"
+    %div{class: "tab-content"}
+      %div{role: "tabpanel", class: "tab-pane fade in active", id:"commentaires"}
+        %h3 Flux de commentaires
+        %br
+        = render partial: '/users/recapitulatif/commentaires_flux'
+      %div{role: "tabpanel", class: "tab-pane fade", id:"invites"}
+        = render partial: '/dossiers/invites'
+
+  %br
+  %br

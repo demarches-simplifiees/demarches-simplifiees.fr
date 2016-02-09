@@ -1,15 +1,13 @@
-#wrap {
-}
-
 .max-size {
-  margin-left: -13%;
-  margin-right: -13%;
+  margin-left: -10rem;
+  margin-right: -10rem;
 }
 
 #landing {
-  margin-top: -20px;
 
   background-image: image-url('landing_background.jpg');
+  background-attachment: fixed;
+  background-position: top center;
   background-repeat: no-repeat;
 
   #title {
@@ -20,30 +18,28 @@
       font-size: 35px;
     }
 
+    .btn {
+      text-shadow: none;
+    }
     color: white;
     padding-top: 6%;
-    padding-bottom: 9%;
-    text-shadow: 3px 3px 4px rgba(0, 0, 0, .6);
+    padding-bottom: 7%;
+    text-shadow: 0px 0px 10px rgb(0, 0, 0);
   }
 
   .logo img {
     width: 70px;
   }
-
-  #buttons {
-    margin-top: 5%;
-
-    button {
-      margin-left: 30px;
-      margin-right: 30px;
-    }
-  }
 }
 
 #suite {
+  .row{
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
   .word {
     border-bottom: solid darkgrey 1px;
-    //height: 300px;
 
     img {
       padding-top: 50px;
@@ -53,22 +49,49 @@
     }
   }
 
+  .simplifier {
+    ul {
+      margin-top: 16%;
+    }
+  }
+
   .securiser {
     img {
       width: 300px;
+    }
+
+    ul {
+      margin-top: 11%;
     }
   }
 
   .echanger {
     ul {
-      margin-top: 6%;
+      margin-top: 4%;
     }
   }
   .profiter {
-    border-bottom: none;
+    //border-bottom: none;
 
     ul {
-      margin-top: 9%;
+      margin-top: 11%;
     }
+  }
+  .open_admin_compte {
+    border-bottom: none;
+    padding-top: 25px;
+    padding-bottom: 25px;
+
+    ol {
+      margin-top: 1%;
+    }
+
+    .btn-lg {
+      font-size: 20px;
+      padding: 12px 18px;
+
+      margin-top: 16%;
+    }
+
   }
 }

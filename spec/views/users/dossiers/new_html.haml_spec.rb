@@ -3,8 +3,9 @@ require 'spec_helper'
 describe 'users/dossiers/new.html.haml', type: :view do
   let(:user) { create(:user) }
   let(:euro_flag) { false }
+  let(:cerfa_flag) { false }
   let(:logo) { '' }
-  let(:procedure) { create(:procedure, euro_flag: euro_flag, logo: logo) }
+  let(:procedure) { create(:procedure, euro_flag: euro_flag, cerfa_flag: cerfa_flag, logo: logo) }
   let!(:dossier) { create(:dossier, procedure: procedure, user: user).decorate }
 
   before do
@@ -31,7 +32,7 @@ describe 'users/dossiers/new.html.haml', type: :view do
 
   describe 'logo procedure' do
     context 'procedure have no logo' do
-      it 'MPS logo is present' do
+      it 'TPS logo is present' do
         is_expected.to have_css("img[src='/assets#{asset_path('logo-tps.png')}']")
       end
     end

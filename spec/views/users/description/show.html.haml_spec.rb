@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe 'users/description/show.html.haml', type: :view do
   let(:user) { create(:user) }
-  let(:dossier) { create(:dossier, :with_procedure, user: user) }
+  let(:cerfa_flag) { true }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: cerfa_flag) }
+  let(:dossier) { create(:dossier, procedure: procedure, user: user) }
   let(:dossier_id) { dossier.id }
 
   before do
@@ -67,7 +69,7 @@ describe 'users/description/show.html.haml', type: :view do
 
   context 'les valeurs sont réaffichées si elles sont présentes dans la BDD' do
     let!(:dossier) do
-      create(:dossier, :with_procedure,
+      create(:dossier,
              nom_projet: 'Projet de test',
              description: 'Description de test',
              user: user)
@@ -123,6 +125,48 @@ describe 'users/description/show.html.haml', type: :view do
       it 'Attestation MSA' do
         expect(rendered).to have_selector("#piece_justificative_#{all_type_pj_procedure_id[1]}", "Nous l'avons récupéré pour vous.")
       end
+    end
+  end
+
+  context 'Envoi des CERFA désactivé' do
+    let!(:cerfa_flag) { false }
+
+    before do
+      render
+    end
+
+    it { expect(rendered).to_not have_css("#cerfa_flag") }
+    it { expect(rendered).to_not have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]') }
+  end
+
+  describe 'display title Documents administratifs' do
+    before do
+      render
+    end
+
+    let(:procedure) { create :procedure, lien_demarche: '' }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+
+    context 'when dossier not have cerfa, piece justificative and demarche link' do
+      it { expect(rendered).not_to have_content 'Documents administratifs' }
+    end
+
+    context 'when dossier have pj' do
+      let(:dossier) { create(:dossier) }
+
+      it { expect(rendered).to have_content 'Documents administratifs' }
+    end
+
+    context 'when procedure have demarche link' do
+      let(:procedure) { create :procedure }
+
+      it { expect(rendered).to have_content 'Documents administratifs' }
+    end
+
+    context 'when procedure have cerfa flag true' do
+      let(:procedure) {create(:procedure, cerfa_flag: true)}
+
+      it { expect(rendered).to have_content 'Documents administratifs' }
     end
   end
 end

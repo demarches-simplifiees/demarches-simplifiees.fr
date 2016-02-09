@@ -21,22 +21,28 @@
       =f.check_box :euro_flag
     Afficher le drapeau européen
 
-
 %br
 
-%h4 Cartographie
+.row
+  .col-md-6.col-lg-6
+    %h4 Cartographie
 
-= f.fields_for :module_api_carto, @procedure.module_api_carto do |ff|
-  %label
-    =ff.check_box :use_api_carto, {id: :procedure_module_api_carto_use_api_carto}
-    Utilisation de la cartographie
+    = f.fields_for :module_api_carto, @procedure.module_api_carto do |ff|
+      %label
+        =ff.check_box :use_api_carto, {id: :procedure_module_api_carto_use_api_carto}
+        Utilisation de la cartographie
 
-  %ul#modules_api_carto
-    %li
-      %label
-        = ff.check_box :quartiers_prioritaires
-        Quartiers Prioritaires
-    %li
-      %label
-        = ff.check_box :cadastre
-        Cadastre
+      %ul#modules_api_carto
+        %li
+          %label
+            = ff.check_box :quartiers_prioritaires
+            Quartiers Prioritaires
+        %li
+          %label
+            = ff.check_box :cadastre
+            Cadastre
+  .col-md-6.col-lg-6
+    %h4 Formulaire / CERFA
+    %label
+      =f.check_box :cerfa_flag
+    Activer l'envoi de formulaire / CERFA

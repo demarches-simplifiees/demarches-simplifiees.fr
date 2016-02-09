@@ -23,6 +23,19 @@ describe Users::RegistrationsController, type: :controller do
 
         subject
       end
+
+      describe '#check_invite!' do
+        let!(:invite) { create :invite, email: email }
+        let!(:invite2) { create :invite, email: email }
+
+        before do
+          subject
+        end
+
+        it 'the new user is connect at his two invite' do
+          expect(User.last.invites.size).to eq 2
+        end
+      end
     end
 
     context 'when user is not correct' do

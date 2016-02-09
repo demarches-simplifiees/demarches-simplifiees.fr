@@ -16,6 +16,7 @@ class Dossier < ActiveRecord::Base
   has_many :quartier_prioritaires, dependent: :destroy
   has_many :cadastres, dependent: :destroy
   has_many :commentaires, dependent: :destroy
+  has_many :invites, dependent: :destroy
 
   belongs_to :procedure
   belongs_to :user
@@ -25,8 +26,7 @@ class Dossier < ActiveRecord::Base
   delegate :types_de_piece_justificative, to: :procedure
   delegate :types_de_champ, to: :procedure
 
-  before_create :build_default_cerfa
-
+  after_save :build_default_cerfa, if: Proc.new { procedure.cerfa_flag? && procedure_id_changed? }
   after_save :build_default_pieces_justificatives, if: Proc.new { procedure_id_changed? }
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 
@@ -188,10 +188,15 @@ class Dossier < ActiveRecord::Base
     return composed_scope, dossier
   end
 
+  def cerfa_available?
+    procedure.cerfa_flag? && !cerfa.empty?
+  end
+
   private
 
   def build_default_cerfa
-    build_cerfa
+    create_cerfa
     true
   end
+
 end

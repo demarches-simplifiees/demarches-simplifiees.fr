@@ -3,7 +3,14 @@ FactoryGirl.define do
     nom_projet "Demande de subvention dans le cadre d'accompagnement d'enfant à l'étranger"
     description "Ma super description"
     state 'draft'
-    association :user, factory:[:user]
+    association :user, factory: [:user]
+
+    before(:create) do |dossier, _evaluator|
+      unless dossier.procedure
+        procedure = create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ)
+        dossier.procedure = procedure
+      end
+    end
 
     trait :with_entreprise do
       after(:build) do |dossier, _evaluator|
@@ -11,13 +18,6 @@ FactoryGirl.define do
         entreprise = create(:entreprise, etablissement: etablissement)
         dossier.entreprise = entreprise
         dossier.etablissement = etablissement
-      end
-    end
-
-    trait :with_procedure do
-      after(:build) do |dossier, _evaluator|
-        procedure = create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ)
-        dossier.procedure = procedure
       end
     end
 

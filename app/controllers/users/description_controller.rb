@@ -23,6 +23,8 @@ class Users::DescriptionController < UsersController
 
   def create
     @dossier = current_user_dossier
+    @procedure = @dossier.procedure
+    
     unless @dossier.update_attributes(create_params)
       @dossier = @dossier.decorate
       @procedure = @dossier.procedure
@@ -30,10 +32,13 @@ class Users::DescriptionController < UsersController
       flash.now.alert = @dossier.errors.full_messages.join('<br />').html_safe
       return render 'show'
     end
-    unless params[:cerfa_pdf].nil?
-      cerfa = @dossier.cerfa
-      cerfa.content = params[:cerfa_pdf]
-      cerfa.save
+
+    if @procedure.cerfa_flag?
+      unless params[:cerfa_pdf].nil?
+        cerfa = @dossier.cerfa
+        cerfa.content = params[:cerfa_pdf]
+        cerfa.save
+      end
     end
 
     unless params[:champs].nil?

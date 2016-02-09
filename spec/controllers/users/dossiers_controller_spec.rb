@@ -345,4 +345,17 @@ describe Users::DossiersController, type: :controller do
       end
     end
   end
+
+  describe 'GET #invite' do
+    context 'when user is connected' do
+      before do
+        sign_in user
+      end
+
+      it 'returns http success' do
+        get :index, liste: :invite
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
 end

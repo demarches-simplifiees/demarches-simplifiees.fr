@@ -23,27 +23,38 @@
 @import "bootstrap";
 
 body {
-  background-color: rgb(255, 255, 255)
+  background-color: rgb(255, 255, 255);
 }
 
 html, body {
   height: 100%;
 }
 
+body {
+  padding-top: 50px;
+}
+
 #wrap {
   min-height: 100%;
   margin-bottom: -50px;
 }
+
 #wrap:after {
   content: "";
   display: block;
 }
+
 #footer, #wrap:after {
   height: 40px;
 }
 
 #footer {
   background-color: rgb(240, 240, 240)
+}
+
+.main_div {
+  margin-left: 10rem;
+  margin-right: 10rem;
 }
 
 .logo {
@@ -85,14 +96,26 @@ html, body {
   margin-right: 105px;
 }
 
-.alert.alert-success,
-.alert.alert-danger {
-  margin-top: -20px
+
+#header {
+  top: 0;
+  left: -3px;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+
 }
+
 
 .navbar {
   height: 35px;
-  background-color: rgb(235, 235, 235)
+  background-color: rgba(235, 235, 235, 0.95);
+
+  .sign_in_FC {
+    margin-top: -18px;
+    height: 70px;
+  }
+
 }
 
 .btn {
@@ -161,6 +184,7 @@ div.pagination {
   height: 52px;
   width: 100%;
   margin-top: 0px;
+  z-index: 10;
 
 }
 
@@ -211,7 +235,6 @@ div.pagination {
   font-size: 15px !important;
   margin-top: -4px;
 }
-
 
 #fconnect-access {
   right: 50px;

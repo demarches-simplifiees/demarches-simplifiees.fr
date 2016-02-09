@@ -6,12 +6,18 @@
       %th.col-md-2.col-lg-2= smart_listing.sortable 'État', 'state'
       %th.col-md-2.col-lg-2= smart_listing.sortable 'Date de mise à jour', 'updated_at'
     - @dossiers.each do |dossier|
-      - dossier = dossier.decorate
+      - if dossier.class == Invite
+        -invite = dossier
+        -dossier = dossier.dossier.decorate
+      - else
+        - dossier = dossier.decorate
       %tr
         %td
           = dossier.procedure.libelle
         %td
-          = link_to(dossier.nom_projet, users_dossier_recapitulatif_path(dossier))
+          = link_to(dossier.nom_projet, users_dossiers_invite_path(id: invite.id)) unless invite.nil?
+          = link_to(dossier.nom_projet, users_dossier_recapitulatif_path(dossier)) if invite.nil?
+
         %td{id: "dossier_#{dossier.id}_state"}= dossier.display_state
         %td= dossier.last_update
 

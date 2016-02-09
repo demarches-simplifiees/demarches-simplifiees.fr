@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'backoffice/dossiers/show.html.haml', type: :view do
-  let!(:dossier) { create(:dossier, :with_entreprise, :with_procedure,  state: state) }
+  let!(:dossier) { create(:dossier, :with_entreprise,  state: state) }
   let(:state) { 'draft' }
   let(:dossier_id) { dossier.id }
   let(:gestionnaire) { create(:gestionnaire) }
@@ -11,7 +11,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
     assign(:facade, (DossierFacades.new dossier.id, gestionnaire.email))
   end
 
-  context 'on the dossier admin page' do
+  context 'on the dossier gestionnaire page' do
     before do
       render
     end

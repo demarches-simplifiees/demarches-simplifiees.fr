@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe NotificationMailer, type: :mailer do
   describe ".new_answer" do
     let(:user) { create(:user) }
-    let(:dossier) { create(:dossier, :with_procedure, user: user) }
+    let(:dossier) { create(:dossier, user: user) }
 
     subject(:subject) { described_class.new_answer(dossier) }
 
@@ -14,7 +14,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
   describe ".dossier_validated" do
     let(:user) { create(:user) }
-    let(:dossier) { create(:dossier, :with_procedure, user: user) }
+    let(:dossier) { create(:dossier, user: user) }
 
     subject(:subject) { described_class.dossier_validated(dossier) }
 
@@ -25,7 +25,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
   describe ".dossier_submitted" do
     let(:user) { create(:user) }
-    let(:dossier) { create(:dossier, :with_procedure, user: user) }
+    let(:dossier) { create(:dossier, user: user) }
 
     subject(:subject) { described_class.dossier_submitted(dossier) }
 

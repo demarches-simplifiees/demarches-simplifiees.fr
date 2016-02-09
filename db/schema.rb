@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160127170437) do
+ActiveRecord::Schema.define(version: 20160204155519) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -159,6 +159,13 @@ ActiveRecord::Schema.define(version: 20160127170437) do
   add_index "gestionnaires", ["email"], name: "index_gestionnaires_on_email", unique: true, using: :btree
   add_index "gestionnaires", ["reset_password_token"], name: "index_gestionnaires_on_reset_password_token", unique: true, using: :btree
 
+  create_table "invites", force: :cascade do |t|
+    t.string  "email"
+    t.string  "email_sender"
+    t.integer "dossier_id"
+    t.integer "user_id"
+  end
+
   create_table "module_api_cartos", force: :cascade do |t|
     t.integer "procedure_id"
     t.boolean "use_api_carto",          default: false
@@ -189,6 +196,7 @@ ActiveRecord::Schema.define(version: 20160127170437) do
     t.boolean  "archived",          default: false
     t.boolean  "euro_flag",         default: false
     t.string   "logo"
+    t.boolean  "cerfa_flag",        default: false
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|

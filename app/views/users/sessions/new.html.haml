@@ -3,16 +3,14 @@
   %br
   %h2#login_user Connexion
 
-  -#%a.btn_fc#btn_fcp{href: '/france_connect/particulier'}
-  -#  = image_tag 'franceconnect_logo.png'
-  -#
-  -#%br
-  -#%a.text-info{href: 'https://fcp.integ01.dev-franceconnect.fr/a-propos', target: '_blank'}
-  -#  Qu’est-ce que FranceConnect ?
-  -#
-  -#%hr
+  %a.btn_fc#btn_fcp{href: '/france_connect/particulier'}
+    = image_tag 'franceconnect_logo.png'
 
   %br
+  %a.text-info{href: 'https://fcp.integ01.dev-franceconnect.fr/a-propos', target: '_blank'}
+    Qu’est-ce que FranceConnect ?
+
+  %hr
   = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
     %h4
       = f.label :email
@@ -32,19 +30,18 @@
     .actions
       = f.submit "Se connecter", class:'btn btn-primary'
     %br
-
   = render "users/shared/links"
 
+  %br
   %div{style:'text-align:center'}
-    \-
-    %br
-    %a{href: '/gestionnaires/sign_in'}
-      = 'Accompagnateur'
-    %br
-    %a{href: '/administrateurs/sign_in'}
-      = 'Administrateur'
+    -#\-
+    -#%br
+    -#%a{href: '/gestionnaires/sign_in'}
+    -#  = 'Accompagnateur'
+    -#%br
+    -#%a{href: '/administrateurs/sign_in'}
+    -#  = 'Administrateur'
 
-    %br
     \-
     %br
     %a{href: 'https://github.com/sgmap/tps/releases', target: '_blank'}

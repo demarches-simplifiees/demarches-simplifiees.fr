@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/recapitulatif/_commentaires_flux.html.haml', type: :view do
-  let(:dossier) { create(:dossier, :with_procedure) }
+  let(:dossier) { create(:dossier) }
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'mon_mail_de_commentaire@test.com' }
   let!(:commentaire) { create(:commentaire, dossier: dossier, email: email_commentaire, body: 'ma super description') }
