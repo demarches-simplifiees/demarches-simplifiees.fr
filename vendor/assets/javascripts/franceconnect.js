@@ -6,11 +6,14 @@ var franceConnectKit = {};
         aboutUrl: ''
     };
 
-    franceConnectKit.init = function() {
+    franceConnectKit.init = function () {
         //initCurrentHostnameSource();
         //includeFCCss();
 
         fconnect.currentHost = 'fcp.integ01.dev-franceconnect.fr';
+
+        if (window.location.hostname == 'tps.apientreprise.fr')
+            fconnect.currentHost = 'app.franceconnect.gouv.fr';
 
         var fconnectProfile = document.getElementById('fconnect-profile');
         if (fconnectProfile) {
