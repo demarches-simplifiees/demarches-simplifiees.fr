@@ -399,7 +399,7 @@ describe Dossier do
       end
     end
 
-    context 'gestionnaire backoffice methods' do
+    describe 'gestionnaire backoffice methods' do
       let(:admin) { create(:administrateur) }
       let(:admin_2) { create(:administrateur) }
 
