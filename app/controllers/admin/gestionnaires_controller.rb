@@ -25,6 +25,13 @@ class Admin::GestionnairesController < AdminController
     redirect_to admin_gestionnaires_path
   end
 
+
+  def destroy
+    Gestionnaire.find(params[:id]).destroy
+    redirect_to admin_gestionnaires_path
+  end
+
+
   def create_gestionnaire_params
     params.require(:gestionnaire).permit(:email)
                                  .merge(administrateur_id: current_administrateur.id)

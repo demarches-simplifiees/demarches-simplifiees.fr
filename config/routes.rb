@@ -74,7 +74,7 @@ Rails.application.routes.draw do
       resource :pieces_justificatives, only: [:show, :update]
       resources :pieces_justificatives, only: :destroy
     end
-    resources :gestionnaires, only: [:index, :create]
+    resources :gestionnaires, only: [:index, :create, :destroy]
   end
 
   get 'backoffice' => 'backoffice#index'

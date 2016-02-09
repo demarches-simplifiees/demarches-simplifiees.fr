@@ -87,4 +87,20 @@ describe Admin::GestionnairesController, type: :controller  do
 
     end
   end
+
+
+  describe 'DELETE #destroy' do
+    let(:email) { 'test@plop.com' }
+    before do
+      post :create, gestionnaire: { email: email }
+    end
+    let(:gestionnaire) { Gestionnaire.last }
+
+    let(:response) { delete :destroy, id: gestionnaire.id }
+
+    it { expect(response.status).to eq(302) }
+    it { expect(response).to redirect_to admin_gestionnaires_path }
+    it { expect{response}.to change(Gestionnaire, :count).by(-1) }
+  end
+
 end
