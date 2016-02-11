@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::SessionsController, type: :controller do
-  let(:loged_in_with_france_connect) { 'entreprise' }
+  let(:loged_in_with_france_connect) { 'particulier' }
   let(:user) { create(:user, loged_in_with_france_connect: loged_in_with_france_connect) }
 
   before do
@@ -38,13 +38,8 @@ describe Users::SessionsController, type: :controller do
       expect(user.loged_in_with_france_connect?).to be_falsey
     end
 
-    context 'when user is connect with france connect entreprise' do
-      it 'redirect to france connect logout page' do
-        expect(response).to redirect_to(FRANCE_CONNECT.entreprise_logout_endpoint)
-      end
-    end
 
-    context 'when user is connect with france connect entreprise' do
+    context 'when user is connect with france connect particulier' do
       let(:loged_in_with_france_connect) { 'particulier' }
 
       it 'redirect to france connect logout page' do
