@@ -1,0 +1,31 @@
+@media print {
+  html, body {
+    width: 900px;
+    margin: 0;
+  }
+
+  #main_div{
+    margin-left: 50px;
+    margin-right: 0;
+  }
+
+  #commentaire_new {
+    display: none;
+  }
+
+  #commentaires_flux {
+    margin-top: -50px;
+  }
+
+  #infos_dossier .row:last-child {
+    display: none;
+  }
+
+  #infos_dossier {
+    margin-bottom: -70px;
+  }
+
+  #backoffice_dossier_show .nav-tabs {
+    display: none;
+  }
+}
