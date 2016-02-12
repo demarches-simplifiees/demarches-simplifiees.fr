@@ -74,6 +74,8 @@ gem 'mailjet'
 
 gem "smart_listing"
 
+gem 'css_splitter'
+
 group :test do
   gem 'capybara'
   gem 'factory_girl'

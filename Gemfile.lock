@@ -93,6 +93,8 @@ GEM
     columnize (0.9.0)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
+    css_splitter (0.4.4)
+      sprockets (>= 2.0.0)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
     devise (3.4.1)
@@ -452,6 +454,7 @@ DEPENDENCIES
   carrierwave
   chartkick
   coffee-rails (~> 4.1.0)
+  css_splitter
   database_cleaner
   devise
   draper
