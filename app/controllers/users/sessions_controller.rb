@@ -1,10 +1,16 @@
 class Users::SessionsController < Sessions::SessionsController
 # before_filter :configure_sign_in_params, only: [:create]
 
+  def demo
+    @user = User.new(email: 'demo@tps.fr', password: 'password')
+
+    render 'new'
+  end
+
 # GET /resource/sign_in
-# def new
-#   super
-# end
+  def new
+    @user = User.new
+  end
 
 #POST /resource/sign_in
   def create
@@ -13,7 +19,7 @@ class Users::SessionsController < Sessions::SessionsController
     current_user.update_attributes(loged_in_with_france_connect: '')
   end
 
-  # DELETE /resource/sign_out
+# DELETE /resource/sign_out
   def destroy
     connected_with_france_connect = current_user.loged_in_with_france_connect
     current_user.update_attributes(loged_in_with_france_connect: '')
