@@ -29,6 +29,9 @@ feature 'Administrator connection' do
       end
       context 'when clicking on sign_out' do
         before do
+          stub_request(:get, "https://api.github.com/repos/sgmap/tps/releases/latest").
+              to_return(:status => 200, :body => '{"tag_name": "plip", "body": "blabla", "published_at": "2016-02-09T16:46:47Z"}', :headers => {})
+
           page.find_by_id('admin_sign_out').click
         end
         scenario 'admin is redireted to home page' do

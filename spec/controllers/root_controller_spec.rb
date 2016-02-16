@@ -32,6 +32,9 @@ describe RootController, type: :controller do
     render_views
 
     before do
+      stub_request(:get, "https://api.github.com/repos/sgmap/tps/releases/latest").
+          to_return(:status => 200, :body => '{"tag_name": "plip", "body": "blabla", "published_at": "2016-02-09T16:46:47Z"}', :headers => {})
+
       subject
     end
 
