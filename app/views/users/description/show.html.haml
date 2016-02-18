@@ -13,7 +13,7 @@
       .row
         .col-md-12
           %h4 Description de votre projet *
-          = text_area_tag :description, @dossier.description, rows: '6', placeholder: 'Description du projet', class: 'form-control'
+          = text_area_tag :description, @dossier.description, rows: '6', placeholder: 'Description du projet', class: 'form-control wysihtml5'
 
     #liste_champs
       -unless @champs.nil?

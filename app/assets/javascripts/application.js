@@ -27,6 +27,8 @@
 //= require smart_listing
 //= require turf
 //= require franceconnect
+//= require bootstrap-wysihtml5
+//= require bootstrap-wysihtml5/locales/fr-FR
 
 
 $(document).on('page:load', scroll_to);
