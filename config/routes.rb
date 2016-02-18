@@ -25,6 +25,8 @@ Rails.application.routes.draw do
 
   root 'root#index'
 
+  mount GrapeSwaggerRails::Engine => '/docs'
+
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
