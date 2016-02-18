@@ -2,7 +2,8 @@ class TypeDeChamp < ActiveRecord::Base
   enum type_champs: {text: 'text',
                      textarea: 'textarea',
                      datetime: 'datetime',
-                     number: 'number'
+                     number: 'number',
+                     checkbox: 'checkbox'
        }
 
   belongs_to :procedure
