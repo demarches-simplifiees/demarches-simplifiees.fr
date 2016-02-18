@@ -41,6 +41,14 @@ fr:
   activerecord:
     errors:
       models:
+        piece_justificative:
+          attributes:
+            content:
+              size_too_big: "La taille du fichier joint est trop importante. Elle doit être inférieure à 3Mo."
+        cerfa:
+          attributes:
+            content:
+              size_too_big: "La taille du fichier joint est trop importante. Elle doit être inférieure à 3Mo."
         user:
           attributes:
             email:
@@ -130,5 +138,5 @@ fr:
       procedure_not_found: "La procédure n'existe pas"
       france_connect:
        connexion: "Erreur lors de la connexion à France Connect."
-
+      extension_white_list_error: "Le format de fichier de la pièce jointe n'est pas valide."
 

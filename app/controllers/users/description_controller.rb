@@ -37,7 +37,10 @@ class Users::DescriptionController < UsersController
       unless params[:cerfa_pdf].nil?
         cerfa = @dossier.cerfa
         cerfa.content = params[:cerfa_pdf]
-        cerfa.save
+        unless cerfa.save
+          flash.now.alert = cerfa.errors.full_messages.join('<br />').html_safe
+          return render 'show'
+        end
       end
     end
 
@@ -51,7 +54,10 @@ class Users::DescriptionController < UsersController
     @dossier.pieces_justificatives.each do |piece_justificative|
       unless params["piece_justificative_#{piece_justificative.type}"].nil?
         piece_justificative.content = params["piece_justificative_#{piece_justificative.type}"]
-        piece_justificative.save
+        unless piece_justificative.save
+          flash.now.alert = piece_justificative.errors.full_messages.join('<br />').html_safe
+          return render 'show'
+        end
       end
     end
 
