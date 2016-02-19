@@ -543,4 +543,39 @@ describe Dossier do
       it { expect(dossier.cerfa_available?).to be_falsey }
     end
   end
+
+  describe '#as_csv?' do
+    let(:procedure) { create(:procedure)  }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+    subject { dossier.as_csv }
+
+    it { expect(subject[:nom_projet]).to eq("Demande de subvention dans le cadre d'accompagnement d'enfant à l'étranger") }
+    it { expect(subject[:description]).to eq("Ma super description") }
+    it { expect(subject[:archived]).to be_falsey }
+    it { expect(subject['etablissement.siret']).to eq('44011762001530') }
+    it { expect(subject['etablissement.siege_social']).to be_truthy }
+    it { expect(subject['etablissement.naf']).to eq('4950Z') }
+    it { expect(subject['etablissement.libelle_naf']).to eq('Transports par conduites') }
+    it { expect(subject['etablissement.adresse']).to eq("GRTGAZ\r IMMEUBLE BORA\r 6 RUE RAOUL NORDLING\r 92270 BOIS COLOMBES\r") }
+    it { expect(subject['etablissement.numero_voie']).to eq('6') }
+    it { expect(subject['etablissement.type_voie']).to eq('RUE') }
+    it { expect(subject['etablissement.nom_voie']).to eq('RAOUL NORDLING') }
+    it { expect(subject['etablissement.complement_adresse']).to eq('IMMEUBLE BORA') }
+    it { expect(subject['etablissement.code_postal']).to eq('92270') }
+    it { expect(subject['etablissement.localite']).to eq('BOIS COLOMBES') }
+    it { expect(subject['etablissement.code_insee_localite']).to eq('92009') }
+    it { expect(subject['entreprise.siren']).to eq('440117620') }
+    it { expect(subject['entreprise.capital_social']).to eq(537100000) }
+    it { expect(subject['entreprise.numero_tva_intracommunautaire']).to eq('FR27440117620') }
+    it { expect(subject['entreprise.forme_juridique']).to eq("SA à conseil d'administration (s.a.i.)") }
+    it { expect(subject['entreprise.forme_juridique_code']).to eq('5599') }
+    it { expect(subject['entreprise.nom_commercial']).to eq('GRTGAZ') }
+    it { expect(subject['entreprise.raison_sociale']).to eq('GRTGAZ') }
+    it { expect(subject['entreprise.siret_siege_social']).to eq('44011762001530') }
+    it { expect(subject['entreprise.code_effectif_entreprise']).to eq('51') }
+    it { expect(subject['entreprise.date_creation']).to eq('Thu, 28 Jan 2016 10:16:29 UTC +00:0') }
+    it { expect(subject['entreprise.nom']).to be_nil }
+    it { expect(subject['entreprise.prenom']).to be_nil }
+  end
+
 end

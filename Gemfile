@@ -80,6 +80,8 @@ gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 gem 'swagger-docs'
 gem 'grape-swagger-rails'
 
+gem 'as_csv'
+
 group :test do
   gem 'capybara'
   gem 'factory_girl'

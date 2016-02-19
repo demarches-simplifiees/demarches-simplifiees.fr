@@ -1,5 +1,4 @@
 class API::V1::DossiersController < APIController
-
   swagger_controller :dossiers, "Dossiers"
 
   swagger_api :index do
@@ -32,7 +31,10 @@ class API::V1::DossiersController < APIController
   def show
     procedure = current_administrateur.procedures.find(params[:procedure_id])
     dossier = procedure.dossiers.find(params[:id])
-    render json: dossier, status: 200
+    respond_to do |format|
+      format.json { render json: dossier, status: 200 }
+      format.csv  { render  csv: dossier, status: 200 }
+    end
   rescue ActiveRecord::RecordNotFound => e
     render json: {}, status: 404
   end
