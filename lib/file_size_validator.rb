@@ -1,6 +1,7 @@
+# Source: https://github.com/gitlabhq/gitlabhq/blob/master/lib/file_size_validator.rb
 class FileSizeValidator < ActiveModel::EachValidator
-  MESSAGES  = { :is => :wrong_size, :minimum => :size_too_small, :maximum => :size_too_big }.freeze
-  CHECKS    = { :is => :==, :minimum => :>=, :maximum => :<= }.freeze
+  MESSAGES  = { is: :wrong_size, minimum: :size_too_small, maximum: :size_too_big }.freeze
+  CHECKS    = { is: :==, minimum: :>=, maximum: :<= }.freeze
 
   DEFAULT_TOKENIZER = lambda { |value| value.split(//) }
   RESERVED_OPTIONS  = [:minimum, :maximum, :within, :is, :tokenizer, :too_short, :too_long]
@@ -25,19 +26,27 @@ class FileSizeValidator < ActiveModel::EachValidator
     keys.each do |key|
       value = options[key]
 
-      unless value.is_a?(Integer) && value >= 0
-        raise ArgumentError, ":#{key} must be a nonnegative Integer"
+      unless (value.is_a?(Integer) && value >= 0) || value.is_a?(Symbol)
+        raise ArgumentError, ":#{key} must be a nonnegative Integer or symbol"
       end
     end
   end
 
   def validate_each(record, attribute, value)
     raise(ArgumentError, "A CarrierWave::Uploader::Base object was expected") unless value.kind_of? CarrierWave::Uploader::Base
-    
+
     value = (options[:tokenizer] || DEFAULT_TOKENIZER).call(value) if value.kind_of?(String)
 
     CHECKS.each do |key, validity_check|
       next unless check_value = options[key]
+
+      check_value =
+        case check_value
+        when Integer
+          check_value
+        when Symbol
+          record.send(check_value)
+        end
 
       value ||= [] if key == :maximum
 
@@ -53,7 +62,7 @@ class FileSizeValidator < ActiveModel::EachValidator
       record.errors.add(attribute, MESSAGES[key], errors_options)
     end
   end
-  
+
   def help
     Helper.instance
   end
