@@ -7,7 +7,7 @@ class PieceJustificative < ActiveRecord::Base
   alias_attribute :type, :type_de_piece_justificative_id
 
   mount_uploader :content, PieceJustificativeUploader
-  validates :content, :file_size => { :maximum => 3.megabytes.to_i }
+  validates :content, :file_size => { :maximum => 3.megabytes }
 
   def empty?
     content.blank?
