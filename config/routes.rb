@@ -22,6 +22,9 @@ Rails.application.routes.draw do
     get '/gestionnaires/sign_in/demo' => 'gestionnaires/sessions#demo'
   end
 
+  devise_scope :administrateur do
+    get '/administrateurs/sign_in/demo' => 'administrateurs/sessions#demo'
+  end
 
   root 'root#index'
 
