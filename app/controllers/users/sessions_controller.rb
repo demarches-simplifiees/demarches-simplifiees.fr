@@ -2,6 +2,8 @@ class Users::SessionsController < Sessions::SessionsController
 # before_filter :configure_sign_in_params, only: [:create]
 
   def demo
+    return redirect_to root_path if Rails.env.production?
+
     @user = User.new(email: 'demo@tps.fr', password: 'password')
 
     render 'new'
