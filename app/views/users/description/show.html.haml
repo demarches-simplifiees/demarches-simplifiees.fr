@@ -65,9 +65,9 @@
             -if @dossier.cerfa_available?
               %span.btn.btn-sm.btn-file.btn-success
                 Modifier
-                %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: "application/pdf", :max_file_size => 3.megabytes }
+                %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: "application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document", :max_file_size => 3.megabytes }
             -else
-              %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: "application/pdf", :max_file_size => 3.megabytes }
+              %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: "application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document", :max_file_size => 3.megabytes }
 
       - @dossier.pieces_justificatives.each do |piece_justificative|
         %tr
@@ -78,11 +78,11 @@
               %span.text-success{ id: "piece_justificative_#{piece_justificative.type}" } Nous l'avons récupéré pour vous.
             -else
               -if piece_justificative.empty?
-                = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: 'application/pdf', :max_file_size => 3.megabytes
+                = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: 'application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document', :max_file_size => 3.megabytes
               -else
                 %span.btn.btn-sm.btn-file.btn-success
                   Modifier
-                  = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: 'application/pdf', :max_file_size => 3.megabytes
+                  = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: 'application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document', :max_file_size => 3.megabytes
 
     %div{style: 'text-align:right'}
       %h6 Tous les champs portant un * sont obligatoires.
