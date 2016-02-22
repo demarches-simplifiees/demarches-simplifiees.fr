@@ -12,7 +12,7 @@
     %br
     %br
     .center
-      %button.js-scrollTo.btn.btn-lg.btn-success{cible: '.open_account'}
+      %button.js-scrollTo.btn.btn-lg.btn-success{cible: '.demo_account'}
         Envie d'essayer ?
 
 
@@ -86,12 +86,11 @@
           %li
             =link_to "TPS: dernière étape, la validation du dossier et notification", "http://dai.ly/x3s2p6k", {target: '_blank'}
 
-
-  .row.word.open_account.center
+  .row.word.demo_account.center
     .col-md-4.col-lg-4
       %h3.text-primary Acteurs publics
       %h4 Créez des démarches en ligne simplifiées et sécurisées.
-      =link_to 'Demander un accès', 'https://tps.apientreprise.fr/users/dossiers/new?procedure_id=31', {class: 'btn btn-lg btn-primary', target: '_blank'}
+      =link_to 'Démonstration', 'https://tps-dev.apientreprise.fr/administrateurs/sign_in/demo', {class: 'btn btn-lg btn-primary'}
     .col-md-4.col-lg-4
       %h3.text-warning Agents et services
       %h4 Accompagnez et co-traitez les projets avec les usagers.
@@ -101,17 +100,20 @@
       %h3.text-success Usagers
       %h4 Profitez de démarches simplifiées et d’échanges continus avec les services traitants.
       =link_to 'Démonstration', 'https://tps-dev.apientreprise.fr/users/sign_in/demo', {class: 'btn btn-lg btn-success'}
+
   .row.word.documentation
-    .col-md-6.col-lg-6
+    .col-md-4.col-lg-4.center
       = image_tag image_url('keywords/documentation.png')
-    .col-md-6.col-lg-6
+    .col-md-4.col-lg-4
       %ul.dynamic_ul
         %li
           =link_to 'Dépliant de présentation', '/data/TPS_Trois_volets.pdf', {target: '_blank'}
         %li
           =link_to 'Documentation d’utilisation', '/data/TPS_documentations_v1_1.pdf', {target: '_blank'}
-        -#%li
-        -#  Documentation des API TPS :
+        %li
+          = link_to 'Documentation des APIs (béta)', '/docs', {target: '_blank'}
+    .col-md-4.col-lg-4.center
+      = link_to 'Demander un accès administrateur', 'https://tps.apientreprise.fr/users/dossiers/new?procedure_id=31', {class: 'btn btn-lg btn-primary', target: '_blank'}
 
 
 

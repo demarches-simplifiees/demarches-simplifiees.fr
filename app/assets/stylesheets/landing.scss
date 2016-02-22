@@ -88,7 +88,7 @@
     }
   }
 
-  .open_account {
+  .demo_account {
     img {
       margin-left: 0;
       padding-top: 10px;
@@ -108,12 +108,17 @@
     padding-top: 15px;
     padding-bottom: 15px;
 
+    a {
+      margin-top: 16%;
+    }
+
     ul{
-      margin-top: 10%;
+      margin-top: 8%;
     }
 
     img {
-      width: 15%;
+      margin-left: 0;
+      width: 22%;
     }
   }
 }
