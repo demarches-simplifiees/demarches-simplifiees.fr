@@ -9,21 +9,20 @@
       "operations": [
         {
           "summary": "Récupérer la liste de ses dossiers.",
-          "notes": "<pre>\n<code>\n{\n  \"dossiers\": [\n    {\n      \"id\": 1,\n      \"nom_projet\": \"Dossier un\",\n      \"updated_at\": \"2016-02-18T12:49:41.105Z\"\n    },\n    {\n      \"id\": 2,\n      \"nom_projet\": \"Dossier de test\",\n      \"updated_at\": \"2016-02-08T18:36:49.394Z\"\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"resultats_par_page\": 12,\n    \"nombre_de_page\": 1\n  }\n}\n</code>\n</pre>\n",
           "parameters": [
             {
               "paramType": "path",
               "name": "procedure_id",
               "type": "integer",
-              "description": "Procédure ID",
-              "required": true
+              "description": null,
+              "required": false
             },
             {
               "paramType": "query",
               "name": "token",
               "type": "integer",
-              "description": "Admin TOKEN",
-              "required": true
+              "description": null,
+              "required": false
             }
           ],
           "responseMessages": [
@@ -53,42 +52,27 @@
       "operations": [
         {
           "summary": "Récupérer le détails d'un dossier.",
-          "notes": "<pre>\n<code>\n{\n  \"dossier\": {\n    \"id\": 2,\n    \"nom_projet\": \"Projet de test\",\n    \"description\": \"Description de test\",\n    \"created_at\": \"2016-02-08T18:33:23.779Z\",\n    \"updated_at\": \"2016-02-08T18:36:49.394Z\",\n    \"archived\": false,\n    \"entreprise\": {\n      \"siren\": \"418166096\",\n      \"capital_social\": 459356,\n      \"numero_tva_intracommunautaire\": \"FR16418166096\",\n      \"forme_juridique\": \"SA à directoire (s.a.i.)\",\n      \"forme_juridique_code\": \"5699\",\n      \"nom_commercial\": \"OCTO-TECHNOLOGY\",\n      \"raison_sociale\": \"OCTO-TECHNOLOGY\",\n      \"siret_siege_social\": \"41816609600051\",\n      \"code_effectif_entreprise\": \"31\",\n      \"date_creation\": \"1998-03-31T22:00:00.000Z\",\n      \"nom\": null,\n      \"prenom\": null\n    },\n    \"etablissement\": {\n      \"siret\": \"41816609600051\",\n      \"siege_social\": true,\n      \"naf\": \"6202A\",\n      \"libelle_naf\": \"Conseil en systèmes et logiciels informatiques\",\n      \"adresse\": \"OCTO-TECHNOLOGY\\r\\n50 AV DES CHAMPS ELYSEES\\r\\n75008 PARIS 8\\r\\n\",\n      \"numero_voie\": \"50\",\n      \"type_voie\": \"AV\",\n      \"nom_voie\": \"DES CHAMPS ELYSEES\",\n      \"complement_adresse\": null,\n      \"code_postal\": \"75008\",\n      \"localite\": \"PARIS 8\",\n      \"code_insee_localite\": \"75108\"\n    }\n  }\n}\n</code>\n</pre>\n",
           "parameters": [
             {
               "paramType": "path",
               "name": "procedure_id",
               "type": "integer",
-              "description": "Procédure ID",
-              "required": true
+              "description": null,
+              "required": false
             },
             {
               "paramType": "path",
               "name": "id",
               "type": "integer",
-              "description": "Dossier ID",
-              "required": true
+              "description": null,
+              "required": false
             },
             {
               "paramType": "query",
               "name": "token",
               "type": "integer",
-              "description": "Admin TOKEN",
-              "required": true
-            },
-            {
-              "paramType": "query",
-              "name": "format",
-              "type": "string",
-              "description": "Format de retour",
-              "required": false,
-              "allowableValues": {
-                "valueType": "LIST",
-                "values": [
-                  "json",
-                  "csv"
-                ]
-              }
+              "description": null,
+              "required": false
             }
           ],
           "responseMessages": [
@@ -106,11 +90,6 @@
               "code": 404,
               "responseModel": null,
               "message": "Not Found"
-            },
-            {
-              "code": 406,
-              "responseModel": null,
-              "message": "Not Acceptable"
             }
           ],
           "nickname": "API::V1::Dossiers#show",

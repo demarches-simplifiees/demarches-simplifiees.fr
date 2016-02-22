@@ -9,21 +9,20 @@
       "operations": [
         {
           "summary": "Récupérer la liste de ses procédures.",
-          "notes": "<pre>\n  <code>\n{\n  \"procedure\": {\n    \"label\": \"zklenkgnjzk\",\n    \"link\": \"\",\n    \"id\": 2,\n    \"description\": \"nzgjenjkgzenkn\",\n    \"organisation\": \"\",\n    \"direction\": \"\",\n    \"archived\": false,\n    \"geographic_information\": {\n      \"use_api_carto\": true,\n      \"quartiers_prioritaires\": false,\n      \"cadastre\": false\n    },\n    \"types_de_champ\": [\n      {\n        \"id\": 1,\n        \"libelle\": \"fzeknfezkz\",\n        \"type_champ\": \"text\",\n        \"order_place\": 0,\n        \"description\": \"zgezgze\"\n      },\n      {\n        \"id\": 2,\n        \"libelle\": \"gzzgeez\",\n        \"type_champ\": \"text\",\n        \"order_place\": 1,\n        \"description\": \"zgezeg\"\n      },\n      {\n        \"id\": 3,\n        \"libelle\": \"zgezgzeg\",\n        \"type_champ\": \"text\",\n        \"order_place\": 2,\n        \"description\": \"gezgzeg\"\n      }\n    ],\n    \"types_de_piece_justificative\": [\n      {\n        \"id\": 1,\n        \"libelle\": \"gzeezgzg\",\n        \"description\": \"gzeegz\"\n      },\n      {\n        \"id\": 2,\n        \"libelle\": \"gzgzeg\",\n        \"description\": \"gzeegz\"\n      }\n    ]\n  }\n}\n</code>\n</pre>\n",
           "parameters": [
             {
               "paramType": "path",
               "name": "id",
               "type": "integer",
-              "description": "Procédure ID",
-              "required": true
+              "description": null,
+              "required": false
             },
             {
               "paramType": "query",
               "name": "token",
               "type": "integer",
-              "description": "Admin TOKEN",
-              "required": true
+              "description": null,
+              "required": false
             }
           ],
           "responseMessages": [
