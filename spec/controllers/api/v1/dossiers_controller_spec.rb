@@ -28,7 +28,9 @@ describe API::V1::DossiersController do
       let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') } }
       let(:body) { JSON.parse(response.body, symbolize_names: true) }
 
-      it { expect(response.code).to eq('200') }
+      it 'return REST code 200', :show_in_doc do
+        expect(response.code).to eq('200')
+      end
 
       it { expect(body).to have_key :pagination }
 
@@ -117,7 +119,9 @@ describe API::V1::DossiersController do
         let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :description, :archived, :entreprise, :etablissement] }
         subject { body[:dossier] }
 
-        it { expect(response.code).to eq('200') }
+        it 'return REST code 200', :show_in_doc do
+          expect(response.code).to eq('200')
+        end
         it { expect(subject[:id]).to eq(dossier.id) }
         it { expect(subject[:nom_projet]).to eq(dossier.nom_projet) }
         it { expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z') }
@@ -128,24 +132,24 @@ describe API::V1::DossiersController do
 
         describe 'entreprise' do
           let(:field_list) { [
-            :siren,
-            :capital_social,
-            :numero_tva_intracommunautaire,
-            :forme_juridique,
-            :forme_juridique_code,
-            :nom_commercial,
-            :raison_sociale,
-            :siret_siege_social,
-            :code_effectif_entreprise,
-            :date_creation,
-            :nom,
-            :prenom] }
-          subject { super()[:entreprise]}
+              :siren,
+              :capital_social,
+              :numero_tva_intracommunautaire,
+              :forme_juridique,
+              :forme_juridique_code,
+              :nom_commercial,
+              :raison_sociale,
+              :siret_siege_social,
+              :code_effectif_entreprise,
+              :date_creation,
+              :nom,
+              :prenom] }
+          subject { super()[:entreprise] }
 
-          it { expect(subject[:siren]).to eq('440117620')}
-          it { expect(subject[:capital_social]).to eq(537_100_000)}
-          it { expect(subject[:numero_tva_intracommunautaire]).to eq('FR27440117620')}
-          it { expect(subject[:forme_juridique]).to eq('SA à conseil d\'administration (s.a.i.)')}
+          it { expect(subject[:siren]).to eq('440117620') }
+          it { expect(subject[:capital_social]).to eq(537_100_000) }
+          it { expect(subject[:numero_tva_intracommunautaire]).to eq('FR27440117620') }
+          it { expect(subject[:forme_juridique]).to eq('SA à conseil d\'administration (s.a.i.)') }
           it { expect(subject[:forme_juridique_code]).to eq('5599') }
           it { expect(subject[:nom_commercial]).to eq('GRTGAZ') }
           it { expect(subject[:raison_sociale]).to eq('GRTGAZ') }
@@ -157,20 +161,20 @@ describe API::V1::DossiersController do
 
         describe 'etablissement' do
           let(:field_list) { [
-            :siret,
-            :siege_social,
-            :naf,
-            :libelle_naf,
-            :adresse,
-            :numero_voie,
-            :type_voie,
-            :nom_voie,
-            :complement_adresse,
-            :code_postal,
-            :localite,
-            :code_insee_localite
+              :siret,
+              :siege_social,
+              :naf,
+              :libelle_naf,
+              :adresse,
+              :numero_voie,
+              :type_voie,
+              :nom_voie,
+              :complement_adresse,
+              :code_postal,
+              :localite,
+              :code_insee_localite
           ] }
-          subject { super()[:etablissement]}
+          subject { super()[:etablissement] }
 
           it { expect(subject[:siret]).to eq('44011762001530') }
           it { expect(subject[:siege_social]).to eq(true) }
