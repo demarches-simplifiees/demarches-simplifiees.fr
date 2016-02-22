@@ -18,7 +18,7 @@ class CommentairesController < ApplicationController
       NotificationMailer.new_answer(@commentaire.dossier).deliver_now!
       redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
     elsif current_user.email != @commentaire.dossier.user.email
-      invite = Invite.find_by_email current_user.email
+      invite = Invite.where(dossier: @commentaire.dossier, user: current_user).first
       redirect_to url_for(controller: 'users/dossiers/invites', action: :show, id: invite.id)
     else
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params['dossier_id'])
