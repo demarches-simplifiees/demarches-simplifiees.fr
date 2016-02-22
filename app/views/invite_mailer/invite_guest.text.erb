@@ -4,7 +4,7 @@ L'utilisateur <%= @invite.email_sender %> souhaite que vous participiez à l'él
 
 Cette plateforme permet à ses utilisateurs d'établir des dossiers 100% en ligne et de dialoguer avec plusieurs interlocuteurs privilégiés avant d'instruire un dépot.
 
-Afin de répondre à cette invitation, merci de vous inscrit avec l'adresse email <%= @invite.email %> sur <%= users_dossiers_invite_url(@invite.id) %>.
+Afin de répondre à cette invitation, merci de vous inscrit avec l'adresse email <%= @invite.email %> sur <%= users_dossiers_invite_url(@invite.id)+"?email=#{@invite.email}" %>.
 
 Bonne journée.
 

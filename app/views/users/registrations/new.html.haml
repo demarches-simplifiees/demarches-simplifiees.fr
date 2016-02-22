@@ -42,7 +42,7 @@
       .input-group
         .input-group-addon
           %span.glyphicon.glyphicon-user
-        = f.email_field :email, class: 'form-control', placeholder: 'Email'
+        = f.email_field :email, class: 'form-control', placeholder: 'Email', value: params[:user_email]
       %br
       %h4
         = f.label :password
