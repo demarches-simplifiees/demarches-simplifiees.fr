@@ -59,10 +59,6 @@ GEM
     autoprefixer-rails (5.2.1)
       execjs
       json
-    axiom-types (0.1.1)
-      descendants_tracker (~> 0.0.4)
-      ice_nine (~> 0.11.0)
-      thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.10)
     bindata (2.1.0)
     binding_of_caller (0.7.2)
@@ -93,8 +89,6 @@ GEM
       ffi (~> 1.0, >= 1.0.11)
     cliver (0.3.2)
     coderay (1.1.0)
-    coercible (1.0.0)
-      descendants_tracker (~> 0.0.1)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -109,8 +103,6 @@ GEM
       sprockets (>= 2.0.0)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
-    descendants_tracker (0.0.4)
-      thread_safe (~> 0.3, >= 0.3.1)
     devise (3.4.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -130,7 +122,6 @@ GEM
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
-    equalizer (0.0.11)
     erubis (2.7.0)
     eventmachine (1.0.8)
     execjs (2.5.2)
@@ -144,25 +135,6 @@ GEM
     formatador (0.2.5)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
-    grape (0.14.0)
-      activesupport
-      builder
-      hashie (>= 2.1.0)
-      multi_json (>= 1.3.2)
-      multi_xml (>= 0.5.2)
-      rack (>= 1.3.0)
-      rack-accept
-      rack-mount
-      virtus (>= 1.0.0)
-    grape-entity (0.4.8)
-      activesupport
-      multi_json (>= 1.3.2)
-    grape-swagger (0.10.4)
-      grape (>= 0.8.0)
-      grape-entity (< 0.5.0)
-    grape-swagger-rails (0.1.0)
-      grape-swagger (>= 0.7.2)
-      railties (>= 3.2.12)
     guard (2.13.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, <= 4.0)
@@ -200,7 +172,6 @@ GEM
     http_parser.rb (0.6.0)
     httpclient (2.6.0.1)
     i18n (0.7.0)
-    ice_nine (0.11.2)
     jbuilder (2.3.1)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
@@ -245,7 +216,6 @@ GEM
     mini_portile (0.6.2)
     minitest (5.7.0)
     multi_json (1.11.2)
-    multi_xml (0.5.5)
     multipart-post (2.0.0)
     nenv (0.2.0)
     netrc (0.10.3)
@@ -289,10 +259,6 @@ GEM
       byebug (~> 5.0)
       pry (~> 0.10)
     rack (1.6.4)
-    rack-accept (0.4.5)
-      rack (>= 0.4)
-    rack-mount (0.8.3)
-      rack (>= 1.0.0)
     rack-oauth2 (1.2.1)
       activesupport (>= 2.3)
       attr_required (>= 0.0.5)
@@ -422,9 +388,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
-    swagger-docs (0.2.8)
-      activesupport (>= 3, < 5)
-      rails (>= 3, < 5)
     swd (1.0.0)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
@@ -461,11 +424,6 @@ GEM
     validate_url (1.0.2)
       activemodel (>= 3.0.0)
       addressable
-    virtus (1.0.5)
-      axiom-types (~> 0.1)
-      coercible (~> 1.0)
-      descendants_tracker (~> 0.0, >= 0.0.3)
-      equalizer (~> 0.0, >= 0.0.9)
     warden (1.2.3)
       rack (>= 1.0)
     web-console (2.2.1)
@@ -510,7 +468,6 @@ DEPENDENCIES
   draper
   factory_girl
   font-awesome-rails
-  grape-swagger-rails
   guard
   guard-livereload (~> 2.4)
   guard-rspec
@@ -547,7 +504,6 @@ DEPENDENCIES
   smart_listing
   spring
   spring-commands-rspec
-  swagger-docs
   terminal-notifier
   terminal-notifier-guard
   therubyracer
