@@ -17,6 +17,6 @@ class APIController < ApplicationController
   end
 
   def default_format_json
-    request.format = "json" unless request.accept
+    request.format = "json" unless request.params[:format]
   end
 end
