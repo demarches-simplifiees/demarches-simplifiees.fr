@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  devise_for :administrations, skip: [:password, :registrations]
+
   devise_for :administrateurs, controllers: {
                                  sessions: 'administrateurs/sessions'
                              }, skip: [:password, :registrations]
@@ -105,6 +107,8 @@ Rails.application.routes.draw do
 
     resources :commentaires, only: [:create]
   end
+
+  resources :administrations
 
   namespace :api do
     namespace :v1 do
