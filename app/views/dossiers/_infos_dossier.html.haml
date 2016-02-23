@@ -7,12 +7,7 @@
         = @facade.dossier.procedure.libelle
 
       .description
-        - begin
-          - @facade.dossier.description.split(/(?:\n\r?|\r\n?')/).each do |line|
-            = line
-            %br
-        - rescue
-          =''
+        = @facade.dossier.description.html_safe
 
       - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
         .mandataire_social.text-success.center
@@ -45,7 +40,7 @@
               %th{ style: 'width:25%' }
                 =champ.libelle
               %td
-                =champ.value
+                =champ.decorate.value
       .col-lg-6.col-md-6
         =render partial: '/dossiers/pieces_justificatives'
   %br

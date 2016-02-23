@@ -1,5 +1,10 @@
 class Gestionnaires::SessionsController < Sessions::SessionsController
+  def demo
+    return redirect_to root_path if Rails.env.production?
 
+    @gestionnaire = Gestionnaire.new(email: 'gestionnaire@apientreprise.fr', password: 'password')
+    render 'new'
+  end
 
   def new
     @gestionnaire = Gestionnaire.new

@@ -43,5 +43,7 @@ class SIADE::API
     else
       'https://api-dev.apientreprise.fr'
     end
+
+    'https://apientreprise.fr'
   end
 end

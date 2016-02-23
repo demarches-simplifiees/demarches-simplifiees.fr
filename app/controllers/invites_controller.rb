@@ -3,7 +3,7 @@ class InvitesController < ApplicationController
     email_sender = current_gestionnaire.email
 
     user = User.find_by_email(params[:email])
-    invite = Invite.create(dossier_id: params[:dossier_id], user: user, email: params[:email], email_sender: email_sender)
+    invite = Invite.create(dossier_id: params[:dossier_id], user: user, email: params[:email].downcase, email_sender: email_sender)
 
     if invite.valid?
       InviteMailer.invite_user(invite).deliver_now!   unless invite.user.nil?

@@ -6,7 +6,7 @@ describe SIADE::EtablissementAdapter do
     subject { described_class.new(siret).to_params }
 
     before do
-      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}")
         .to_return(body: File.read('spec/support/files/etablissement.json', status: 200))
     end
 
@@ -73,7 +73,7 @@ describe SIADE::EtablissementAdapter do
     subject { described_class.new(bad_siret).to_params }
 
     before do
-      stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/etablissements/#{bad_siret}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://apientreprise.fr/api/v1/etablissements/#{bad_siret}?token=#{SIADETOKEN}")
         .to_return(body: 'Fake body', status: 404)
     end
 

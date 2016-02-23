@@ -91,16 +91,19 @@ describe Admin::GestionnairesController, type: :controller  do
 
   describe 'DELETE #destroy' do
     let(:email) { 'test@plop.com' }
-    before do
-      post :create, gestionnaire: { email: email }
+    let!(:gestionnaire) { create :gestionnaire, email: email } 
+    subject { delete :destroy, id: gestionnaire.id }
+
+    context "when gestionaire_id is valid" do
+      before do
+        subject
+      end
+      it { expect(response.status).to eq(302) }
+      it { expect(response).to redirect_to admin_gestionnaires_path }
+      it { expect{Gestionnaire.find(gestionnaire.id)}.to raise_error ActiveRecord::RecordNotFound}
     end
-    let(:gestionnaire) { Gestionnaire.last }
 
-    let(:response) { delete :destroy, id: gestionnaire.id }
-
-    it { expect(response.status).to eq(302) }
-    it { expect(response).to redirect_to admin_gestionnaires_path }
-    it { expect{response}.to change(Gestionnaire, :count).by(-1) }
+    it { expect{subject}.to change(Gestionnaire, :count).by(-1) }
   end
 
 end

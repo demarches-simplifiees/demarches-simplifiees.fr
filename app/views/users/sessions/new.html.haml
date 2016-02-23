@@ -11,7 +11,7 @@
     Qu’est-ce que FranceConnect ?
 
   %hr
-  = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+  = form_for @user, url: user_session_path, method: :post do |f|
     %h4
       = f.label :email
     .input-group
@@ -24,27 +24,12 @@
     .input-group
       .input-group-addon
         %span.fa.fa-asterisk
-      = f.password_field :password, autocomplete: "off", class: 'form-control'
+      = f.password_field :password, class: 'form-control', value: "#{@user.password}"
     %br
     %br
     .actions
       = f.submit "Se connecter", class:'btn btn-primary'
     %br
   = render "users/shared/links"
-
-  %br
-  %div{style:'text-align:center'}
-    -#\-
-    -#%br
-    -#%a{href: '/gestionnaires/sign_in'}
-    -#  = 'Accompagnateur'
-    -#%br
-    -#%a{href: '/administrateurs/sign_in'}
-    -#  = 'Administrateur'
-
-    \-
-    %br
-    %a{href: 'https://github.com/sgmap/tps/releases', target: '_blank'}
-      = 'Nouveautés'
 
 

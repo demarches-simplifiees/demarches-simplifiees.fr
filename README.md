@@ -63,4 +63,7 @@ Pour éxécuter les tests de l'application, plusieurs possibilités :
         rspec file_path/file_name_spec.rb
 
 
+## Regénérer les binstubs
 
+    bundle binstub railties --force
+    rake rails:update:bin

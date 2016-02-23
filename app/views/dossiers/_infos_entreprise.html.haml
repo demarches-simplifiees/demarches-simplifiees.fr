@@ -1,9 +1,9 @@
-.col-md-12
+.col-md-12.col-xs-12
   %h4
     = @facade.entreprise.raison_sociale_or_name
 
 .row#infos_entreprise
-  .col-lg-6.col-md-6
+  .col-lg-6.col-md-6.col-xs-12.col-sm-12
     %dl.dl-horizontal
       %dt Siret :
       %dd.text-success= @facade.etablissement.siret
@@ -34,7 +34,7 @@
       %dd= @facade.entreprise.numero_tva_intracommunautaire
 
 
-  .col-lg-6.col-md-6
+  .col-lg-6.col-md-6.col-xs-12.col-sm-12
     %dl.dl-horizontal
       %dt Adresse :
       %dd

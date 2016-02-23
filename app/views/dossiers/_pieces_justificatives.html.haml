@@ -3,7 +3,7 @@
   -#%br
 
   %table.table
-    -if @facade.procedure.lien_demarche != nil
+    -if @facade.procedure.cerfa_flag?
       %tr{id: "piece_justificative_0"}
         %th{class:'col-lg-6'}
           ='Formulaire'

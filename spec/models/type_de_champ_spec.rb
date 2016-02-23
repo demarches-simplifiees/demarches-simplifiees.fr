@@ -28,6 +28,7 @@ describe TypeDeChamp do
       it { is_expected.to allow_value('textarea').for(:type_champ) }
       it { is_expected.to allow_value('datetime').for(:type_champ) }
       it { is_expected.to allow_value('number').for(:type_champ) }
+      it { is_expected.to allow_value('checkbox').for(:type_champ) }
     end
 
     context 'order_place' do

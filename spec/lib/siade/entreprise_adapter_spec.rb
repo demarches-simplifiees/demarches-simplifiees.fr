@@ -4,7 +4,7 @@ describe SIADE::EntrepriseAdapter do
   subject { described_class.new('418166096').to_params }
 
   before do
-    stub_request(:get, "https://api-dev.apientreprise.fr/api/v1/entreprises/418166096?token=#{SIADETOKEN}")
+    stub_request(:get, "https://apientreprise.fr/api/v1/entreprises/418166096?token=#{SIADETOKEN}")
         .to_return(body: File.read('spec/support/files/entreprise.json', status: 200))
   end
 

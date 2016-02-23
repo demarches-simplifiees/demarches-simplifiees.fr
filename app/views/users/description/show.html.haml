@@ -13,29 +13,35 @@
       .row
         .col-md-12
           %h4 Description de votre projet *
-          = text_area_tag :description, @dossier.description, rows: '6', placeholder: 'Description du projet', class: 'form-control'
+          = text_area_tag :description, @dossier.description, rows: '6', placeholder: 'Description du projet', class: 'form-control wysihtml5'
 
     #liste_champs
       -unless @champs.nil?
         -@champs.each do |champ|
           .row
             %div{class: "type_champ-#{champ.type_champ}"}
-              %h4
-                = champ.libelle
-
-              -if champ.type_champ == 'textarea'
-                %textarea.form-control{name:"champs['#{champ.id}']",
-                placeholder: champ.libelle,
-                id: "champs_#{champ.id}"}
-                  =champ.value
+              -if champ.type_champ == 'checkbox'
+                %h4{style:'margin-left:15px;'}
+                  = champ.libelle
+                  %input{type: 'hidden', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", value: ''}
+                  %input{type: 'checkbox', style:'margin-left: 15px;', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", checked: ('checked' if champ.value == 'on')}
               -else
-                %input.form-control{name:"champs['#{champ.id}']",
-                placeholder: champ.libelle,
-                id: "champs_#{champ.id}",
-                value: champ.value,
-                type:"#{champ.type_champ}",
-                'data-provide' => ('datepicker' if champ.type_champ == 'datetime'),
-                'data-date-format' => ('dd/mm/yyyy' if champ.type_champ == 'datetime')}
+                %h4
+                  = champ.libelle
+
+                -if champ.type_champ == 'textarea'
+                  %textarea.form-control{name:"champs['#{champ.id}']",
+                  placeholder: champ.libelle,
+                  id: "champs_#{champ.id}"}
+                    =champ.value
+                -else
+                  %input.form-control{name:"champs['#{champ.id}']",
+                  placeholder: champ.libelle,
+                  id: "champs_#{champ.id}",
+                  value: champ.value,
+                  type:"#{champ.type_champ}",
+                  'data-provide' => ('datepicker' if champ.type_champ == 'datetime'),
+                  'data-date-format' => ('dd/mm/yyyy' if champ.type_champ == 'datetime')}
 
     -if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.pieces_justificatives.size > 1
       %br
@@ -53,15 +59,15 @@
       - if @procedure.cerfa_flag
         %tr
           %th{class:'col-lg-6'}
-            ='Formulaire (.pdf / .doc)'
+            ='Formulaire (.pdf / .doc / .docx / .xls / .xlsx)'
 
           %td{class:'col-lg-5'}
             -if @dossier.cerfa_available?
               %span.btn.btn-sm.btn-file.btn-success
                 Modifier
-                %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: ".pdf"}
+                %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: "application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document", :max_file_size => 3.megabytes }
             -else
-              %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: ".pdf"}
+              %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: "application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document", :max_file_size => 3.megabytes }
 
       - @dossier.pieces_justificatives.each do |piece_justificative|
         %tr
@@ -72,11 +78,11 @@
               %span.text-success{ id: "piece_justificative_#{piece_justificative.type}" } Nous l'avons récupéré pour vous.
             -else
               -if piece_justificative.empty?
-                = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: '.pdf'
+                = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: 'application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document', :max_file_size => 3.megabytes
               -else
                 %span.btn.btn-sm.btn-file.btn-success
                   Modifier
-                  = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: '.pdf'
+                  = file_field_tag "piece_justificative_#{piece_justificative.type}", accept: 'application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document', :max_file_size => 3.megabytes
 
     %div{style: 'text-align:right'}
       %h6 Tous les champs portant un * sont obligatoires.

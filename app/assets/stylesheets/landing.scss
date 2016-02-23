@@ -51,7 +51,7 @@
 
   .simplifier {
     ul {
-      margin-top: 16%;
+      margin-top: 13%;
     }
   }
 
@@ -74,24 +74,51 @@
     //border-bottom: none;
 
     ul {
-      margin-top: 11%;
+      margin-top: 10%;
     }
   }
-  .open_admin_compte {
-    border-bottom: none;
+  .news {
     padding-top: 25px;
     padding-bottom: 25px;
 
-    ol {
-      margin-top: 1%;
+    .latest_release {
+      .body {
+        margin-left: 3%;
+      }
     }
+  }
 
-    .btn-lg {
-      font-size: 20px;
-      padding: 12px 18px;
+  .demo_account {
+    img {
+      margin-left: 0;
+      padding-top: 10px;
+      padding-bottom: 0;
+    }
+    padding-top: 25px;
+    padding-bottom: 25px;
 
+    .btn {
+      margin-top: 10%;
+    }
+  }
+
+  .documentation {
+    border-bottom: none;
+
+    padding-top: 15px;
+    padding-bottom: 15px;
+
+    a {
       margin-top: 16%;
     }
 
+    ul{
+      margin-top: 14%;
+    }
+
+    img {
+      margin-left: 0;
+      width: 22%;
+    }
   }
 }

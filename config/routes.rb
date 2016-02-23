@@ -14,6 +14,18 @@ Rails.application.routes.draw do
                        passwords: 'users/passwords'
                    }
 
+  devise_scope :user do
+    get '/users/sign_in/demo' => 'users/sessions#demo'
+  end
+
+  devise_scope :gestionnaire do
+    get '/gestionnaires/sign_in/demo' => 'gestionnaires/sessions#demo'
+  end
+
+  devise_scope :administrateur do
+    get '/administrateurs/sign_in/demo' => 'administrateurs/sessions#demo'
+  end
+
   root 'root#index'
 
   namespace :france_connect do

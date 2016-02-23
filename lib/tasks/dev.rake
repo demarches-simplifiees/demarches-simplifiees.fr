@@ -22,7 +22,7 @@ EOF
   task :generate_franceconnect_file do
     file = File.new('config/france_connect.yml',  'w+')
     comment = <<EOF
-    particulier_identifier: plop
+particulier_identifier: plop
 particulier_secret: plip
 
 particulier_redirect_uri: 'http://localhost:3000/france_connect/particulier/callback'

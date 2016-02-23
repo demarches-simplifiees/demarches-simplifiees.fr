@@ -22,6 +22,15 @@ describe InvitesController, type: :controller do
         subject
       end
 
+      describe 'Invite information' do
+        let(:email) { 'PLIP@octo.com' }
+        let(:invite) { Invite.last }
+
+        it 'email is on lower case' do
+          expect(invite.email).to eq 'plip@octo.com'
+        end
+      end
+
       it { expect(invite.user).to eq user }
       it { expect(flash[:notice]).to be_present }
 

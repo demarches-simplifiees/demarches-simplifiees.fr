@@ -57,7 +57,7 @@ function get_external_data(latLngs) {
 
         cadastre_list = [{zoom_error: true}];
 
-        if (turf.area(polygons) < 300000)
+        if (turf_area(polygons) < 300000)
             cadastre_list = get_cadastre(latLngs);
 
         display_cadastre(cadastre_list);

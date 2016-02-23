@@ -12,12 +12,11 @@ class Admin::GestionnairesController < AdminController
 
 
   def create
-    gestionnaire_params = create_gestionnaire_params
-    @gestionnaire = Gestionnaire.create(gestionnaire_params)
+    @gestionnaire = Gestionnaire.create(create_gestionnaire_params)
 
     if @gestionnaire.errors.messages.empty?
       flash.notice = 'Gestionnaire ajouté'
-      GestionnaireMailer.new_gestionnaire(gestionnaire_params[:email], gestionnaire_params[:password]).deliver_now!
+      GestionnaireMailer.new_gestionnaire(@gestionnaire.email, @gestionnaire.password).deliver_now!
     else
       flash.alert = @gestionnaire.errors.full_messages.join('<br />').html_safe
     end

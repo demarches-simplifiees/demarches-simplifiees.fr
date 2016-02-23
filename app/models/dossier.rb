@@ -1,4 +1,5 @@
 class Dossier < ActiveRecord::Base
+
   enum state: {draft: 'draft',
                initiated: 'initiated',
                replied: 'replied',
@@ -190,6 +191,13 @@ class Dossier < ActiveRecord::Base
 
   def cerfa_available?
     procedure.cerfa_flag? && !cerfa.empty?
+  end
+
+  def as_csv(options={})
+    dossier_attr = DossierSerializer.new(self).attributes
+    etablissement_attr = EtablissementSerializer.new(self.etablissement).attributes.map {|k, v| ["etablissement.#{k}", v] }.to_h
+    entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map {|k, v| ["entreprise.#{k}", v] }.to_h
+    dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
   end
 
   private

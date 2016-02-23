@@ -19,7 +19,7 @@
       .input-group
         .input-group-addon
           %span.glyphicon.glyphicon-asterisk
-        = f.password_field :password, autocomplete: "off", class: 'form-control'
+        = f.password_field :password, autocomplete: "off", class: 'form-control', value: @gestionnaire.password
       %br
       %br
       .actions

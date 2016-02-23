@@ -3,6 +3,8 @@ class DemoController < ApplicationController
   helper SmartListing::Helper
 
   def index
+    return root_path if Rails.env.production?
+
     smart_listing_create :procedures,
                          Procedure.where(archived: false),
                          partial: "demo/list",

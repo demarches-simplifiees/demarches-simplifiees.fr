@@ -11,6 +11,7 @@ class RootController < ApplicationController
       redirect_to admin_procedures_path
 
     else
+      @latest_release = Github::Releases.latest
       render 'landing'
     end
   end
