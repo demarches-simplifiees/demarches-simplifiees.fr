@@ -5,7 +5,7 @@ describe SIADE::ExercicesAdapter do
   subject { described_class.new(siret).to_params }
 
   before do
-    stub_request(:get, /https:\/\/api-dev.apientreprise.fr\/api\/v1\/etablissements\/exercices\/.*token=/)
+    stub_request(:get, /https:\/\/apientreprise.fr\/api\/v1\/etablissements\/exercices\/.*token=/)
         .to_return(body: File.read('spec/support/files/exercices.json', status: 200))
   end
 
