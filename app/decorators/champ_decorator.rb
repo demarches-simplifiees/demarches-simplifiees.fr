@@ -4,6 +4,7 @@ class ChampDecorator < Draper::Decorator
     if type_champ == 'checkbox'
       return object.value == 'on' ? 'Oui' : 'Non'
     end
+    object.value
   end
 
   def type_champ
