@@ -1,0 +1,1 @@
+Administration.create(email: SUPERADMIN.email, password: SUPERADMIN.password)

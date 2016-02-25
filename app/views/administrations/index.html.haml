@@ -1,0 +1,19 @@
+%br
+%br
+
+= form_for @admin, url: {controller: 'administrations', action: :create} do |f|
+  .form-group.form-inline.center
+    = f.text_field :email, placeholder: :email, class: 'form-control'
+    = f.text_field :password, placeholder: :password, class: 'form-control'
+
+    = f.submit 'Valider', class: 'btn btn-success', id: 'submit_new_administrateur'
+
+%br
+
+= smart_listing_render :admins
+
+%br
+%br
+
+.center
+  =link_to 'Deconnexion', '/administrations/sign_out', method: :delete

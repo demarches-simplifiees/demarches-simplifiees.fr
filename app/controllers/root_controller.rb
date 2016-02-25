@@ -10,6 +10,9 @@ class RootController < ApplicationController
     elsif administrateur_signed_in?
       redirect_to admin_procedures_path
 
+    elsif administration_signed_in?
+      redirect_to administrations_path
+
     else
       @latest_release = Github::Releases.latest
       render 'landing'

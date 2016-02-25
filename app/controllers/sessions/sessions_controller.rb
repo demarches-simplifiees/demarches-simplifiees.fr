@@ -6,5 +6,6 @@ class Sessions::SessionsController < Devise::SessionsController
     sign_out :user if user_signed_in?
     sign_out :gestionnaire if gestionnaire_signed_in?
     sign_out :administrateur if administrateur_signed_in?
+    sign_out :administration if administration_signed_in?
   end
 end
