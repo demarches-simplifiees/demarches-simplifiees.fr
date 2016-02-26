@@ -28,7 +28,9 @@ describe API::V1::DossiersController do
       let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') } }
       let(:body) { JSON.parse(response.body, symbolize_names: true) }
 
-      it { expect(response.code).to eq('200') }
+      it 'return REST code 200', :show_in_doc do
+        expect(response.code).to eq('200')
+      end
 
       it { expect(body).to have_key :pagination }
 
@@ -117,7 +119,9 @@ describe API::V1::DossiersController do
         let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :description, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :pieces_justificatives, :champs] }
         subject { body[:dossier] }
 
-        it { expect(response.code).to eq('200') }
+        it 'return REST code 200', :show_in_doc do
+          expect(response.code).to eq('200')
+        end
         it { expect(subject[:id]).to eq(dossier.id) }
         it { expect(subject[:nom_projet]).to eq(dossier.nom_projet) }
         it { expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z') }

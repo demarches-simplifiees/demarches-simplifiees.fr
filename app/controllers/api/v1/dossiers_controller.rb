@@ -1,5 +1,18 @@
 class API::V1::DossiersController < APIController
 
+  api :GET, '/procedures/:procedure_id/dossiers/', 'Liste de tous les dossiers d\'une procédure'
+  param :procedure_id, Integer, desc: "L'identifiant de la procédure", required: true
+  error code: 401, desc: "Non authorisé"
+  error code: 404, desc: "Procédure inconnue"
+
+  description <<-EOS
+  Plop
+  EOS
+
+  meta champs: {
+
+       }
+
   def index
     procedure = current_administrateur.procedures.find(params[:procedure_id])
     dossiers = procedure.dossiers.where.not(state: :draft).paginate(page: params[:page])
@@ -7,6 +20,20 @@ class API::V1::DossiersController < APIController
   rescue ActiveRecord::RecordNotFound => e
     render json: {}, status: 404
   end
+
+  api :GET, '/procedures/:procedure_id/dossiers/:id', 'Informations du dossier d\'une procédure'
+  param :procedure_id, Integer, desc: "L'identifiant de la procédure", required: true
+  param :dossier_id, Integer, desc: "L'identifiant de la procédure", required: true
+  error code: 401, desc: "Non authorisé"
+  error code: 404, desc: "Procédure ou dossier inconnu"
+
+  description <<-EOS
+  Plop
+  EOS
+
+  meta champs: {
+
+       }
 
   def show
     procedure = current_administrateur.procedures.find(params[:procedure_id])
