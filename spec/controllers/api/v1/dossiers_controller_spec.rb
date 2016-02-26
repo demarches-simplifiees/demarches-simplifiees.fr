@@ -8,9 +8,9 @@ describe API::V1::DossiersController do
   it { expect(described_class).to be < APIController }
 
   describe 'GET index' do
-    let(:response) { get :index, token: admin.api_token, procedure_id: procedure_id }
+    let(:retour) { get :index, token: admin.api_token, procedure_id: procedure_id }
 
-    subject { response }
+    subject { retour }
 
     context 'when procedure is not found' do
       let(:procedure_id) { 99_999_999 }
@@ -26,10 +26,10 @@ describe API::V1::DossiersController do
       let(:procedure_id) { procedure.id }
       let(:date_creation) { Time.local(2008, 9, 1, 10, 5, 0) }
       let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') } }
-      let(:body) { JSON.parse(response.body, symbolize_names: true) }
+      let(:body) { JSON.parse(retour.body, symbolize_names: true) }
 
       it 'return REST code 200', :show_in_doc do
-        expect(response.code).to eq('200')
+        expect(retour.code).to eq('200')
       end
 
       it { expect(body).to have_key :pagination }
@@ -59,7 +59,7 @@ describe API::V1::DossiersController do
       end
 
       context 'when there are multiple pages' do
-        let(:response) { get :index, token: admin.api_token, procedure_id: procedure_id, page: 2 }
+        let(:retour) { get :index, token: admin.api_token, procedure_id: procedure_id, page: 2 }
 
         let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
         let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
@@ -80,8 +80,8 @@ describe API::V1::DossiersController do
   end
 
   describe 'GET show' do
-    let(:response) { get :show, token: admin.api_token, procedure_id: procedure_id, id: dossier_id }
-    subject { response }
+    let(:retour) { get :show, token: admin.api_token, procedure_id: procedure_id, id: dossier_id }
+    subject { retour }
 
     context 'when procedure is not found' do
       let(:procedure_id) { 99_999_999 }
@@ -115,12 +115,12 @@ describe API::V1::DossiersController do
         let(:date_creation) { Time.local(2008, 9, 1, 10, 5, 0) }
         let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
         let(:dossier_id) { dossier.id }
-        let(:body) { JSON.parse(response.body, symbolize_names: true) }
+        let(:body) { JSON.parse(retour.body, symbolize_names: true) }
         let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :description, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :pieces_justificatives, :champs] }
         subject { body[:dossier] }
 
         it 'return REST code 200', :show_in_doc do
-          expect(response.code).to eq('200')
+          expect(retour.code).to eq('200')
         end
         it { expect(subject[:id]).to eq(dossier.id) }
         it { expect(subject[:nom_projet]).to eq(dossier.nom_projet) }
