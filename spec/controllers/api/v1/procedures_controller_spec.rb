@@ -37,7 +37,7 @@ describe API::V1::ProceduresController do
           let(:champ) { procedure.types_de_champ.first }
           it { expect(subject[:id]).to eq(champ.id) }
           it { expect(subject[:libelle]).to eq(champ.libelle) }
-          it { expect(subject[:type_champ]).to eq(champ.type_champ) }
+          it { expect(subject[:type]).to eq(champ.type_champ) }
           it { expect(subject[:order_place]).to eq(champ.order_place) }
           it { expect(subject[:description]).to eq(champ.description) }
         end
