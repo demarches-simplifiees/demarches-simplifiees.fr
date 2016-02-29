@@ -49,6 +49,7 @@ gem 'draper'
 #Gestion des comptes utilisateurs
 gem 'devise'
 gem 'openid_connect'
+
 gem 'rest-client'
 
 gem 'carrierwave'
