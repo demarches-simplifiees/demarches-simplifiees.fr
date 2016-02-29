@@ -10,10 +10,10 @@ class API::StatistiquesController < ApplicationController
   private
 
   def total_dossiers
-    Dossier.all.size
+    Dossier.where.not(state: :draft).size
   end
 
   def dossiers_mois
-    Dossier.where(created_at: (1.month.ago)..Time.now).size
+    Dossier.where.not(state: :draft).where(created_at: (1.month.ago)..Time.now).size
   end
 end
