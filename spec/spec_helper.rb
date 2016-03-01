@@ -80,6 +80,8 @@ RSpec.configure do |config|
 
   config.infer_base_class_for_anonymous_controllers = false
 
+  config.filter_run :show_in_doc => true if ENV['APIPIE_RECORD']
+
   config.order = 'random'
 
   config.include Devise::TestHelpers, type: :view

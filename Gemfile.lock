@@ -47,6 +47,8 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.3.8)
+    apipie-rails (0.3.1)
+      json
     arel (6.0.2)
     as_csv (2.0.2)
       actionpack (>= 3.0)
@@ -211,6 +213,7 @@ GEM
       activesupport (>= 3.1.0)
       rack (>= 1.4.0)
       rest-client
+    maruku (0.7.2)
     method_source (0.8.2)
     mime-types (2.6.1)
     mini_portile (0.6.2)
@@ -453,6 +456,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  apipie-rails (= 0.3.1)
   as_csv
   bootstrap-datepicker-rails
   bootstrap-sass (~> 3.3.5)
@@ -480,6 +484,7 @@ DEPENDENCIES
   leaflet-rails
   logstasher
   mailjet
+  maruku
   mina!
   nyan-cat-formatter
   openid_connect

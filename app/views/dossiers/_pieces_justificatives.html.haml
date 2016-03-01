@@ -12,7 +12,7 @@
             - if user_signed_in?
               = 'Pièce fournie'
             - elsif gestionnaire_signed_in?
-              %a{ href: "#{(Downloader.new @facade.dossier.cerfa.content, 'CERFA').url}", target: '_blank' } Consulter
+              %a{ href: "#{@facade.dossier.cerfa.content_url}", target: '_blank' } Consulter
           - else
             = 'Pièce non fournie'
 
@@ -27,7 +27,7 @@
             - if user_signed_in?
               = 'Pièce fournie'
             - elsif gestionnaire_signed_in?
-              %a{ href: "#{(Downloader.new piece_justificative.content, piece_justificative.type_de_piece_justificative.libelle).url}", target: '_blank' } Consulter
+              %a{ href: "#{piece_justificative.content_url}", target: '_blank' } Consulter
           - else
             = 'Pièce non fournie'
 
