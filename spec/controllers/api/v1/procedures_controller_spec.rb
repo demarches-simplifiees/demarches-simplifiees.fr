@@ -32,7 +32,7 @@ describe API::V1::ProceduresController do
         it { expect(subject[:label]).to eq(procedure.libelle) }
         it { expect(subject[:description]).to eq(procedure.description) }
         it { expect(subject[:organisation]).to eq(procedure.organisation) }
-        it { expect(subject[:direction]).to eq(proced,ure.direction) }
+        it { expect(subject[:direction]).to eq(procedure.direction) }
         it { expect(subject[:link]).to eq(procedure.lien_demarche) }
         it { expect(subject[:archived]).to eq(procedure.archived) }
         it { is_expected.to have_key(:types_de_champ) }

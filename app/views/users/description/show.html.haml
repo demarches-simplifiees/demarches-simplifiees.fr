@@ -1,5 +1,8 @@
 .container#description_page
-  %h2 Description de votre projet
+  %h2
+    = @dossier.procedure.libelle
+  %h3 Votre dossier
+
   %br
 
   -#TODO use form_for
@@ -7,12 +10,12 @@
     %div
       .row
         .col-md-12
-          %h4 Nom de votre projet *
+          %h4 Libellé pour votre dossier *
           = text_field_tag :nom_projet, @dossier.nom_projet, placeholder: 'Nom du projet', class: 'form-control'
       %br
       .row
         .col-md-12
-          %h4 Description de votre projet *
+          %h4 Description *
           = text_area_tag :description, @dossier.description, rows: '6', placeholder: 'Description du projet', class: 'form-control wysihtml5'
 
     #liste_champs
