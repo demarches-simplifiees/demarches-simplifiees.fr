@@ -33,7 +33,7 @@ describe 'users/dossiers/new.html.haml', type: :view do
   describe 'logo procedure' do
     context 'procedure have no logo' do
       it 'TPS logo is present' do
-        is_expected.to have_css("img[src='/assets#{asset_path('logo-tps.png')}']")
+        is_expected.to match(/src="\/assets\/logo-tps-.*\.png"/)
       end
     end
 
