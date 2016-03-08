@@ -6,7 +6,7 @@
     = @procedure.libelle
 
   %p
-    = @procedure.description
+    = @procedure.description.html_safe
 
   %br
   = form_tag(url_for({controller: :dossiers, action: :create}), class: 'form-inline', method: 'POST') do |f|

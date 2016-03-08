@@ -14,7 +14,7 @@
       %h2#titre_procedure.text-info
         = @dossier.procedure.libelle
       %p
-        = @dossier.procedure.description
+        = @dossier.procedure.description.html_safe
       %br
 
       = form_for @dossier, url: {controller: 'users/dossiers', action: :create}, method: :post do |f|
