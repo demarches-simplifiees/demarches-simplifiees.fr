@@ -21,9 +21,7 @@
 
         #sign_out
           -if gestionnaire_signed_in?
-            %div
-              = current_gestionnaire.email
-              = link_to "Déconnexion", '/gestionnaires/sign_out', method: :delete, :class => 'btn btn-md'
+            = render partial: 'gestionnaires/login_banner'
           -elsif administrateur_signed_in?
             = render partial: 'administrateurs/login_banner'
           - elsif user_signed_in?
