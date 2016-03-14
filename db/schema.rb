@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160314102523) do
+ActiveRecord::Schema.define(version: 20160314161959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,8 +68,9 @@ ActiveRecord::Schema.define(version: 20160314102523) do
   end
 
   create_table "cerfas", force: :cascade do |t|
-    t.string  "content"
-    t.integer "dossier_id"
+    t.string   "content"
+    t.integer  "dossier_id"
+    t.datetime "created_at"
   end
 
   add_index "cerfas", ["dossier_id"], name: "index_cerfas_on_dossier_id", using: :btree
@@ -195,9 +196,10 @@ ActiveRecord::Schema.define(version: 20160314102523) do
   add_index "module_api_cartos", ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true, using: :btree
 
   create_table "pieces_justificatives", force: :cascade do |t|
-    t.string  "content"
-    t.integer "dossier_id"
-    t.integer "type_de_piece_justificative_id"
+    t.string   "content"
+    t.integer  "dossier_id"
+    t.integer  "type_de_piece_justificative_id"
+    t.datetime "created_at"
   end
 
   add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
