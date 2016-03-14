@@ -5,9 +5,10 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   let(:gestionnaire) { create(:gestionnaire, administrateur: administrateur) }
 
   let!(:procedure) { create(:procedure, administrateur: administrateur) }
-  let!(:decorate_dossier_initiated) { create(:dossier,  procedure: procedure, nom_projet: 'projet initiated', state: 'initiated').decorate }
-  let!(:decorate_dossier_replied) { create(:dossier,  procedure: procedure, nom_projet: 'projet replied', state: 'replied').decorate }
-  let!(:decorate_dossier_closed) { create(:dossier,  procedure: procedure, nom_projet: 'projet closed', state: 'closed').decorate }
+
+  let!(:decorate_dossier_initiated) { create(:dossier, procedure: procedure, nom_projet: 'projet initiated', state: 'initiated').decorate }
+  let!(:decorate_dossier_replied) { create(:dossier, procedure: procedure, nom_projet: 'projet replied', state: 'replied').decorate }
+  let!(:decorate_dossier_closed) { create(:dossier, procedure: procedure, nom_projet: 'projet closed', state: 'closed').decorate }
 
   describe 'on tab a_traiter' do
     before do
@@ -35,7 +36,6 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
       it { is_expected.to have_selector('.active .text-danger') }
     end
   end
-
 
   describe 'on tab en_attente' do
     before do

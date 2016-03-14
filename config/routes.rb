@@ -98,6 +98,10 @@ Rails.application.routes.draw do
 
     get 'dossiers/search' => 'dossiers#search'
 
+    get 'filtres' => 'procedure_filter#index'
+    patch 'filtres/update' => 'procedure_filter#update'
+
+
     resources :dossiers do
       post 'valid' => 'dossiers#valid'
       post 'close' => 'dossiers#close'

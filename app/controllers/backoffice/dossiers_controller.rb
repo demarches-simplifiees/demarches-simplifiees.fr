@@ -64,17 +64,17 @@ class Backoffice::DossiersController < ApplicationController
 
   def waiting_for_gestionnaire
     @a_traiter_class = (@liste == 'a_traiter' ? 'active' : '')
-    @waiting_for_gestionnaire ||= current_gestionnaire.dossiers.waiting_for_gestionnaire
+    @waiting_for_gestionnaire ||= current_gestionnaire.dossiers_filter.waiting_for_gestionnaire
   end
 
   def waiting_for_user
     @en_attente_class = (@liste == 'en_attente' ? 'active' : '')
-    @waiting_for_user ||= current_gestionnaire.dossiers.waiting_for_user
+    @waiting_for_user ||= current_gestionnaire.dossiers_filter.waiting_for_user
   end
 
   def termine
     @termine_class = (@liste == 'termine' ? 'active' : '')
-    @termine ||= current_gestionnaire.dossiers.termine
+    @termine ||= current_gestionnaire.dossiers_filter.termine
   end
 
   def total_dossiers_per_state

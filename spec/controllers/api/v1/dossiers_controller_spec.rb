@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, administrateur: admin) }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, administrateur: admin, cerfa_flag: true) }
   let(:wrong_procedure) { create(:procedure) }
 
   it { expect(described_class).to be < APIController }
@@ -116,7 +116,7 @@ describe API::V1::DossiersController do
         let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
-        let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :description, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :pieces_justificatives, :champs] }
+        let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :description, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :pieces_justificatives, :champs, :commentaires] }
         subject { body[:dossier] }
 
         it 'return REST code 200', :show_in_doc do
@@ -217,6 +217,32 @@ describe API::V1::DossiersController do
               it { expect(subject[:type]).to eq('textarea') }
             end
           end
+        end
+
+        describe 'commentaires' do
+          let!(:commentaire) { create :commentaire, body: 'plop', created_at: '2016-03-14 14:00:00', email: 'plop@plip.com', dossier: dossier }
+          let!(:commentaire_2) { create :commentaire, body: 'plip', created_at: '2016-03-14 15:00:00', email: 'plip@plap.com', dossier: dossier }
+
+          subject { super()[:commentaires] }
+
+          it { expect(subject.size).to eq 2 }
+
+          it { expect(subject.first[:body]).to eq 'plop' }
+          it { expect(subject.first[:created_at]).to eq '2016-03-14T14:00:00.000Z' }
+          it { expect(subject.first[:email]).to eq 'plop@plip.com' }
+        end
+
+        describe 'cerfa' do
+          let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
+
+          before do
+            dossier.cerfa.content = content
+            dossier.cerfa.save
+          end
+
+          subject { super()[:cerfa] }
+
+          it { expect(subject[:url]).to match /^http:\/\/.*downloads.*_CERFA\.pdf$/ }
         end
 
         describe 'etablissement' do
