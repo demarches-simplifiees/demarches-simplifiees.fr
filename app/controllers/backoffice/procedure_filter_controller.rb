@@ -8,7 +8,7 @@ class Backoffice::ProcedureFilterController < ApplicationController
 
   def update
 
-    current_gestionnaire.update_attribute(:procedure_filter, params[:procedure_filter])
+    current_gestionnaire.update_attribute(:procedure_filter, (params[:procedure_filter].nil? ? []  : params[:procedure_filter]))
 
     flash.notice = 'Filtre mis à jour'
     redirect_to backoffice_filtres_path

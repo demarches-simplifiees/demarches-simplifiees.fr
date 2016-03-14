@@ -21,4 +21,46 @@ describe Gestionnaire, type: :model do
     it { is_expected.to have_many(:procedures) }
     it { is_expected.to have_many(:dossiers) }
   end
+
+  describe '#dossiers_filter' do
+    let(:admin) { create :administrateur }
+    let(:procedure) { create :procedure, administrateur: admin }
+    let(:procedure_2) { create :procedure, administrateur: admin }
+    let(:gestionnaire) { create :gestionnaire, procedure_filter: procedure_filter, administrateur: admin }
+    let!(:dossier) { create :dossier, procedure: procedure }
+    let(:procedure_filter) { [] }
+
+    subject { gestionnaire.dossiers_filter }
+
+    context 'before filter' do
+      it { expect(subject.size).to eq 1 }
+    end
+
+    context 'after filter' do
+      let(:procedure_filter) { [procedure_2.id] }
+
+      it { expect(subject.size).to eq 0 }
+    end
+  end
+
+  describe '#procedure_filter_list' do
+    let(:admin) { create :administrateur }
+    let!(:procedure) { create :procedure, administrateur: admin }
+    let!(:procedure_2) { create :procedure, administrateur: admin }
+    let(:gestionnaire) { create :gestionnaire, procedure_filter: procedure_filter, administrateur: admin }
+
+    let(:procedure_filter) { [] }
+
+    subject { gestionnaire.procedure_filter_list }
+
+    context 'when gestionnaire procedure_filter is empty' do
+      it { expect(subject).to eq [procedure.id, procedure_2.id] }
+    end
+
+    context 'when gestionnaire procedure_filter is no empty' do
+      let(:procedure_filter) { [procedure.id] }
+
+      it { expect(subject).to eq [procedure.id] }
+    end
+  end
 end

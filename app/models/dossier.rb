@@ -174,12 +174,12 @@ class Dossier < ActiveRecord::Base
 
     #TODO refactor
     composed_scope = composed_scope.where(
-        dossiers[:id].eq_any(current_gestionnaire.dossiers.ids).and\
+        dossiers[:id].eq_any(current_gestionnaire.dossiers_filter.ids).and\
         dossiers[:state].does_not_match('draft').and\
         dossiers[:archived].eq(false))
 
     begin
-      if Float(terms) && terms.to_i <= 2147483647 && current_gestionnaire.dossiers.ids.include?(terms.to_i)
+      if Float(terms) && terms.to_i <= 2147483647 && current_gestionnaire.dossiers_filter.ids.include?(terms.to_i)
         dossier = Dossier.where("state != 'draft'").find(terms.to_i)
       end
     rescue ArgumentError, ActiveRecord::RecordNotFound
