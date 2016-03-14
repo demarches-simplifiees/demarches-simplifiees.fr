@@ -219,6 +219,19 @@ describe API::V1::DossiersController do
           end
         end
 
+        describe 'commentaires' do
+          let!(:commentaire) { create :commentaire, body: 'plop', created_at: '2016-03-14 14:00:00', email: 'plop@plip.com', dossier: dossier }
+          let!(:commentaire_2) { create :commentaire, body: 'plip', created_at: '2016-03-14 15:00:00', email: 'plip@plap.com', dossier: dossier }
+
+          subject { super()[:commentaires] }
+
+          it { expect(subject.size).to eq 2 }
+
+          it { expect(subject.first[:body]).to eq 'plop' }
+          it { expect(subject.first[:created_at]).to eq '2016-03-14T14:00:00.000Z' }
+          it { expect(subject.first[:email]).to eq 'plop@plip.com' }
+        end
+
         describe 'etablissement' do
           let(:field_list) { [
               :siret,
