@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160314161959) do
+ActiveRecord::Schema.define(version: 20160315101245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -244,6 +244,7 @@ ActiveRecord::Schema.define(version: 20160314161959) do
     t.integer "order_place"
     t.integer "procedure_id"
     t.text    "description"
+    t.boolean "mandatory",    default: false
   end
 
   create_table "types_de_piece_justificative", force: :cascade do |t|
