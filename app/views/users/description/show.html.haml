@@ -26,11 +26,15 @@
               -if champ.type_champ == 'checkbox'
                 %h4{style:'margin-left:15px;'}
                   = champ.libelle
+                  - if champ.mandatory?
+                    = '*'
                   %input{type: 'hidden', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", value: ''}
                   %input{type: 'checkbox', style:'margin-left: 15px;', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", checked: ('checked' if champ.value == 'on')}
               -else
                 %h4
                   = champ.libelle
+                  - if champ.mandatory?
+                    = '*'
 
                 -if champ.type_champ == 'textarea'
                   %textarea.form-control{name:"champs['#{champ.id}']",
@@ -62,7 +66,7 @@
       - if @procedure.cerfa_flag
         %tr
           %th{class:'col-lg-6'}
-            ='Formulaire (.pdf / .doc / .docx / .xls / .xlsx)'
+            ='Formulaire'
 
           %td{class:'col-lg-5'}
             -if @dossier.cerfa_available?

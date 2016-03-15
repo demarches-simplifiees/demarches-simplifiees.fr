@@ -1,5 +1,7 @@
 class CerfaSerializer < ActiveModel::Serializer
 
-  attributes :content_url => :url
+  attributes :created_at,
+             :content_url => :url
+
 
 end

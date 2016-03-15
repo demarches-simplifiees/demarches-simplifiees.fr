@@ -19,7 +19,7 @@ class Admin::TypesDeChampController < AdminController
   end
 
   def update_params
-    params.require(:procedure).permit(types_de_champ_attributes: [:libelle, :description, :order_place, :type_champ, :id])
+    params.require(:procedure).permit(types_de_champ_attributes: [:libelle, :description, :order_place, :type_champ, :id, :mandatory])
   end
 
   def move_up

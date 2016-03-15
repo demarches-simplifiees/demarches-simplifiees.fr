@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Cerfa do
   describe 'database columns' do
     it { is_expected.to have_db_column(:content) }
+    it { is_expected.to have_db_column(:created_at) }
   end
 
   describe 'associations' do

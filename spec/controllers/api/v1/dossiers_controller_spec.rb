@@ -172,6 +172,7 @@ describe API::V1::DossiersController do
             subject { super().first }
 
             it { expect(subject.keys.include?(:url)).to be_truthy }
+            it { expect(subject[:created_at]).not_to be_nil }
             it { expect(subject.keys.include?(:type_de_piece_justificative)).to be_truthy }
 
             describe 'type de piece justificative' do
@@ -242,6 +243,7 @@ describe API::V1::DossiersController do
 
           subject { super()[:cerfa] }
 
+          it { expect(subject[:created_at]).not_to be_nil }
           it { expect(subject[:url]).to match /^http:\/\/.*downloads.*_CERFA\.pdf$/ }
         end
 
