@@ -27,6 +27,14 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_type_de_champ_mandatory do
+      after(:build) do |procedure, _evaluator|
+        type_de_champ = create(:type_de_champ, mandatory: true)
+
+        procedure.types_de_champ << type_de_champ
+      end
+    end
+
     trait :with_two_type_de_piece_justificative do
       after(:build) do |procedure, _evaluator|
         rib = create(:type_de_piece_justificative, :rib)

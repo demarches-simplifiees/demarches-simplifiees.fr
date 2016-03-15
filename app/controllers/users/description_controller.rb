@@ -4,8 +4,7 @@ class Users::DescriptionController < UsersController
   end
 
   def show
-    @dossier = current_user_dossier
-    @dossier = @dossier.decorate
+    @dossier = current_user_dossier.decorate
 
     @procedure = @dossier.procedure
     @champs = @dossier.ordered_champs
@@ -24,10 +23,10 @@ class Users::DescriptionController < UsersController
   def create
     @dossier = current_user_dossier
     @procedure = @dossier.procedure
-    
+    @champs = @dossier.ordered_champs
+
     unless @dossier.update_attributes(create_params)
       @dossier = @dossier.decorate
-      @procedure = @dossier.procedure
 
       flash.now.alert = @dossier.errors.full_messages.join('<br />').html_safe
       return render 'show'
@@ -47,6 +46,12 @@ class Users::DescriptionController < UsersController
     unless params[:champs].nil?
       @dossier.champs.each do |champ|
         champ.value = params[:champs]["'#{champ.id}'"]
+
+        if champ.mandatory? && (champ.value.nil? || champ.value.blank?)
+          flash.now.alert = "Le champ #{champ.libelle} doit être rempli."
+          return render 'show'
+        end
+
         champ.save
       end
     end

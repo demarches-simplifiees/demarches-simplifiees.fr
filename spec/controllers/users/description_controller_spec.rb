@@ -4,7 +4,7 @@ describe Users::DescriptionController, type: :controller do
   let(:user) { create(:user) }
 
   let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: true) }
-  let!(:dossier) { create(:dossier, procedure: procedure, user: user) }
+  let(:dossier) { create(:dossier, procedure: procedure, user: user) }
 
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10000 }
@@ -103,9 +103,9 @@ describe Users::DescriptionController, type: :controller do
     context 'Attribut(s) manquant(s)' do
       subject {
         post :create,
-            dossier_id: dossier_id,
-            nom_projet: nom_projet,
-            description: description
+             dossier_id: dossier_id,
+             nom_projet: nom_projet,
+             description: description
       }
       before { subject }
 
@@ -126,9 +126,9 @@ describe Users::DescriptionController, type: :controller do
       context 'Sauvegarde du CERFA PDF' do
         before do
           post :create, dossier_id: dossier_id,
-                        nom_projet: nom_projet,
-                        description: description,
-                        cerfa_pdf: cerfa_pdf
+               nom_projet: nom_projet,
+               description: description,
+               cerfa_pdf: cerfa_pdf
           dossier.reload
         end
 
@@ -164,11 +164,11 @@ describe Users::DescriptionController, type: :controller do
     context 'Quand la procédure n\'accepte pas les CERFA' do
       context 'Sauvegarde du CERFA PDF' do
         let!(:procedure) { create(:procedure) }
-        before do        
+        before do
           post :create, dossier_id: dossier_id,
-                        nom_projet: nom_projet,
-                        description: description,
-                        cerfa_pdf: cerfa_pdf
+               nom_projet: nom_projet,
+               description: description,
+               cerfa_pdf: cerfa_pdf
           dossier.reload
         end
 
@@ -178,7 +178,7 @@ describe Users::DescriptionController, type: :controller do
       end
     end
 
-    context 'Sauvegarde des champs' do
+    describe 'Sauvegarde des champs' do
       let(:champs_dossier) { dossier.champs }
       let(:dossier_champs_first) { 'test value' }
 
@@ -194,22 +194,31 @@ describe Users::DescriptionController, type: :controller do
       end
 
       it { expect(dossier.champs.first.value).to eq(dossier_champs_first) }
+      it { expect(response).to redirect_to users_dossier_recapitulatif_path }
 
       context 'when champs value is empty' do
-        let(:dossier_champs_first) { 'test value' }
+        let(:dossier_champs_first) { '' }
 
         it { expect(dossier.champs.first.value).to eq(dossier_champs_first) }
+        it { expect(response).to redirect_to users_dossier_recapitulatif_path }
+
+        context 'when champs is mandatory' do
+          let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ_mandatory, cerfa_flag: true) }
+
+          it { expect(response).not_to redirect_to users_dossier_recapitulatif_path }
+          it { expect(flash[:alert]).to be_present }
+        end
       end
     end
 
     context 'Sauvegarde des pièces justificatives' do
-      let(:all_pj_type){ dossier.procedure.type_de_piece_justificative_ids }
+      let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
       before do
         post :create, {dossier_id: dossier_id,
-                      nom_projet: nom_projet,
-                      description: description,
-                      'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
-                      'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
+                       nom_projet: nom_projet,
+                       description: description,
+                       'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
+                       'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
         dossier.reload
       end
 

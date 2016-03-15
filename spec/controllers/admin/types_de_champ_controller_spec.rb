@@ -37,6 +37,7 @@ describe Admin::TypesDeChampController, type: :controller do
     let(:description) { 'titi' }
     let(:order_place) { '' }
     let(:types_de_champ_id) { '' }
+    let(:mandatory) { 'on' }
 
     let(:procedure_params) do
       { types_de_champ_attributes:
@@ -46,7 +47,8 @@ describe Admin::TypesDeChampController, type: :controller do
             type_champ: type_champ,
             description: description,
             order_place: order_place,
-            id: types_de_champ_id
+            id: types_de_champ_id,
+            mandatory: mandatory
           }
         }
       }
@@ -67,7 +69,7 @@ describe Admin::TypesDeChampController, type: :controller do
         it { expect(subject.libelle).to eq('mon libelle') }
         it { expect(subject.type_champ).to eq('text') }
         it { expect(subject.description).to eq('titi') }
-        # it { expect(subject.order_place).to eq('0') }
+        it { expect(subject.mandatory).to be_truthy }
       end
 
       context 'when type_de_champ already exist' do
@@ -78,6 +80,7 @@ describe Admin::TypesDeChampController, type: :controller do
         let(:type_champ) { 'text' }
         let(:description) { 'citrouille' }
         let(:order_place) { '0' }
+        let(:mandatory) { 'on' }
         before do
           request
           procedure.reload
@@ -86,7 +89,8 @@ describe Admin::TypesDeChampController, type: :controller do
         it { expect(subject.libelle).to eq('toto') }
         it { expect(subject.type_champ).to eq('text') }
         it { expect(subject.description).to eq('citrouille') }
-        # it { expect(subject.order_place).to eq(0) }
+        it { expect(subject.order_place).to eq(0) }
+        it { expect(subject.order_place).to be_truthy }
       end
     end
     context 'when procedure is not found' do

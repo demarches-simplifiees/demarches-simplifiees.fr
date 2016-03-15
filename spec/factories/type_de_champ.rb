@@ -4,5 +4,6 @@ FactoryGirl.define do
     description 'description de votre projet'
     type_champ 'textarea'
     order_place 1
+    mandatory false
   end
 end
