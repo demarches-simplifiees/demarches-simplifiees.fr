@@ -234,14 +234,16 @@ describe API::V1::DossiersController do
         end
 
         describe 'cerfa' do
+          let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :with_cerfa_upload, procedure: procedure) } }
           let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
 
           before do
-            dossier.cerfa.content = content
-            dossier.cerfa.save
+            tmp_cerfa = dossier.cerfa.first
+            tmp_cerfa.content = content
+            tmp_cerfa.save
           end
 
-          subject { super()[:cerfa] }
+          subject { super()[:cerfa].first }
 
           it { expect(subject[:created_at]).not_to be_nil }
           it { expect(subject[:url]).to match /^http:\/\/.*downloads.*_CERFA\.pdf$/ }

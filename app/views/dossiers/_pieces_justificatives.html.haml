@@ -1,6 +1,4 @@
 #pieces_justificatives
-  -#%h3.text-info Liste des pièces justificatives
-  -#%br
 
   %table.table
     -if @facade.procedure.cerfa_flag?
@@ -12,7 +10,15 @@
             - if user_signed_in?
               = 'Pièce fournie'
             - elsif gestionnaire_signed_in?
-              %a{ href: "#{@facade.dossier.cerfa.content_url}", target: '_blank' } Consulter
+              %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
+              %span{style:'margin-left:12px'}
+                \-
+              %a.btn.glyphicon.glyphicon-time{style:'color: black; padding-top: 0',
+                                                  "data-target" => "#PJmodal",
+                                                  "data-toggle" => "modal",
+                                                  :type => "button",
+                                                  "data-modal_title" => 'formulaires',
+                                                  "data-modal_type" => 'cerfa'}
           - else
             = 'Pièce non fournie'
 
@@ -31,4 +37,5 @@
           - else
             = 'Pièce non fournie'
 
-
+  - if gestionnaire_signed_in?
+    =render partial: '/dossiers/modal_historique'

@@ -34,8 +34,7 @@ class Users::DescriptionController < UsersController
 
     if @procedure.cerfa_flag?
       unless params[:cerfa_pdf].nil?
-        cerfa = @dossier.cerfa
-        cerfa.content = params[:cerfa_pdf]
+        cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier)
         unless cerfa.save
           flash.now.alert = cerfa.errors.full_messages.join('<br />').html_safe
           return render 'show'

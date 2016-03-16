@@ -1,0 +1,31 @@
+#PJmodal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog.modal-lg{:role => "document"}
+    .modal-content
+      .modal-header
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+        %h4#myModalLabel.modal-title
+          Historique des
+          %span#PJmodal_title
+      .modal-body
+        %table.table#cerfa
+          %thead
+            %th
+              Utilisateur
+            %th
+              Date d'envoi
+            %th
+              Lien
+          -if @facade.procedure.cerfa_flag?
+            - if @facade.dossier.cerfa_available?
+              - @facade.cerfas_ordered.each do |cerfa|
+                %tr
+                  %td.col-md-6.col-lg-4
+                    = cerfa.dossier.user.email
+                  %td.col-md-6.col-lg-4
+                    = cerfa.created_at
+                  %td.col-md-6.col-lg-4
+                    =link_to 'Récupérer', cerfa.content_url, {target: :blank}
+
+
+      .modal-footer

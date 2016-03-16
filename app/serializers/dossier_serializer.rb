@@ -9,7 +9,7 @@ class DossierSerializer < ActiveModel::Serializer
 
   has_one :entreprise
   has_one :etablissement
-  has_one :cerfa
+  has_many :cerfa
   has_many :commentaires
   has_many :champs
   has_many :pieces_justificatives

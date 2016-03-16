@@ -20,7 +20,7 @@ describe Dossier do
     it { is_expected.to have_many(:commentaires) }
     it { is_expected.to have_many(:quartier_prioritaires) }
     it { is_expected.to have_many(:cadastres) }
-    it { is_expected.to have_one(:cerfa) }
+    it { is_expected.to have_many(:cerfa) }
     it { is_expected.to have_one(:etablissement) }
     it { is_expected.to have_one(:entreprise) }
     it { is_expected.to belong_to(:user) }
@@ -525,17 +525,15 @@ describe Dossier do
   describe '#cerfa_available?' do
     let(:procedure) { create(:procedure, cerfa_flag: cerfa_flag)  }
     let(:dossier) { create(:dossier, procedure: procedure)}
+
     context 'Procedure accepts CERFA' do
       let(:cerfa_flag) { true }
       context 'when cerfa is not uploaded' do
         it { expect(dossier.cerfa_available?).to be_falsey }
       end
       context 'when cerfa is uploaded' do
-        let(:dossier_with_cerfa) { create(:dossier, procedure: procedure) }
-        before do
-          allow_any_instance_of(Cerfa).to receive(:empty?).and_return(false)
-        end
-        it { expect(dossier_with_cerfa.cerfa_available?).to be_truthy }
+        let(:dossier) { create :dossier, :with_cerfa_upload, procedure: procedure }
+        it { expect(dossier.cerfa_available?).to be_truthy }
       end
     end
     context 'Procedure does not accept CERFA' do

@@ -23,23 +23,22 @@ FactoryGirl.define do
 
     trait :with_two_quartier_prioritaires do
       after(:build) do |dossier, _evaluator|
-
-        qp1 = create(:quartier_prioritaire)
-        qp2 = create(:quartier_prioritaire)
-
-        dossier.quartier_prioritaires << qp1
-        dossier.quartier_prioritaires << qp2
+        dossier.quartier_prioritaires << create(:quartier_prioritaire)
+        dossier.quartier_prioritaires << create(:quartier_prioritaire)
       end
     end
 
     trait :with_two_cadastres do
       after(:build) do |dossier, _evaluator|
+        dossier.cadastres << create(:cadastre)
+        dossier.cadastres << create(:cadastre)
+      end
+    end
 
-        qp1 = create(:cadastre)
-        qp2 = create(:cadastre)
+    trait :with_cerfa_upload do
+      after(:build) do |dossier, _evaluator|
 
-        dossier.cadastres << qp1
-        dossier.cadastres << qp2
+        dossier.cerfa << create(:cerfa)
       end
     end
   end

@@ -11,7 +11,6 @@ class API::V1::DossiersController < APIController
   EOS
 
   meta champs: {
-
        }
 
   def index
