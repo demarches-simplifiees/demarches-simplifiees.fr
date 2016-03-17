@@ -21,6 +21,8 @@ describe User, type: :model do
   describe 'associations' do
     it { is_expected.to have_many(:dossiers) }
     it { is_expected.to have_many(:invites) }
+    it { is_expected.to have_many(:piece_justificative) }
+    it { is_expected.to have_many(:cerfa) }
   end
   describe '#find_for_france_connect' do
     let(:siret) { '00000000000000' }

@@ -9,6 +9,8 @@ describe PieceJustificative do
   describe 'associations' do
     it { is_expected.to belong_to(:dossier) }
     it { is_expected.to belong_to(:type_de_piece_justificative) }
+    it { is_expected.to belong_to(:user) }
+
   end
 
   describe 'delegation' do

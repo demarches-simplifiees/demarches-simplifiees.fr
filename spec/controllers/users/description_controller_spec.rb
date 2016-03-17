@@ -142,6 +142,8 @@ describe Users::DescriptionController, type: :controller do
           it 'dossier_id' do
             expect(subject.dossier_id).to eq(dossier_id)
           end
+
+          it { expect(subject.user).to eq user }
         end
 
         context 'les anciens CERFA PDF ne sont pas écrasées' do
@@ -222,10 +224,12 @@ describe Users::DescriptionController, type: :controller do
       context 'for piece 0' do
         subject { dossier.retrieve_last_piece_justificative_by_type all_pj_type[0].to_s }
         it { expect(subject.content).not_to be_nil }
+        it { expect(subject.user).to eq user }
       end
       context 'for piece 1' do
         subject { dossier.retrieve_last_piece_justificative_by_type all_pj_type[1].to_s }
         it { expect(subject.content).not_to be_nil }
+        it { expect(subject.user).to eq user }
       end
     end
   end

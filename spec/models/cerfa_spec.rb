@@ -8,6 +8,7 @@ describe Cerfa do
 
   describe 'associations' do
     it { is_expected.to belong_to(:dossier) }
+    it { is_expected.to belong_to(:user) }
   end
 
   describe 'empty?' do

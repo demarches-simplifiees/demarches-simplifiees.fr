@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160317135217) do
+ActiveRecord::Schema.define(version: 20160317153115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20160317135217) do
     t.string   "content"
     t.integer  "dossier_id"
     t.datetime "created_at"
+    t.integer  "user_id"
   end
 
   add_index "cerfas", ["dossier_id"], name: "index_cerfas_on_dossier_id", using: :btree
@@ -200,6 +201,7 @@ ActiveRecord::Schema.define(version: 20160317135217) do
     t.integer  "dossier_id"
     t.integer  "type_de_piece_justificative_id"
     t.datetime "created_at"
+    t.integer  "user_id"
   end
 
   add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree

@@ -34,7 +34,7 @@ class Users::DescriptionController < UsersController
 
     if @procedure.cerfa_flag?
       unless params[:cerfa_pdf].nil?
-        cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier)
+        cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
         unless cerfa.save
           flash.now.alert = cerfa.errors.full_messages.join('<br />').html_safe
           return render 'show'
@@ -60,7 +60,8 @@ class Users::DescriptionController < UsersController
 
         piece_justificative = PieceJustificative.new(content: params["piece_justificative_#{type_de_pieces_justificatives.id}"],
                                                      dossier: @dossier,
-                                                     type_de_piece_justificative: type_de_pieces_justificatives)
+                                                     type_de_piece_justificative: type_de_pieces_justificatives,
+                                                     user: current_user)
 
         unless piece_justificative.save
           flash.now.alert = piece_justificative.errors.full_messages.join('<br />').html_safe
