@@ -1,21 +1,18 @@
 - unless smart_listing.empty?
-  %table.table
+  %table.table#liste_gestionnaire
     %thead
       %th#libelle= smart_listing.sortable 'Email', 'email'
+      %th= ''
 
     - @gestionnaires.each do |gestionnaire|
       %tr
-        %td= gestionnaire.email
+        %td{style:'padding-top: 11px; font-size:15px'}= gestionnaire.email
         %td{ style: 'text-align:right' }
-          %span#destroy{ class: "fa fa-times" }
-          #confirm
-            =link_to(admin_gestionnaire_path(id: gestionnaire.id), method: :delete) do
-              %span#valid{ class: "fa fa-check btn-success" }
-              %span#valid
-                Valider
-            %span
-              |
-            %span#cancel{ class: "fa fa-minus btn-danger" }
+          .delete.btn.btn-sm.glyphicon.glyphicon-remove
+
+          .confirm
+            =link_to 'Valider', admin_gestionnaire_path(id: gestionnaire.id), {method: :delete, class: 'btn btn-sm btn-success'}
+            .cancel.btn.btn-sm.btn-danger.glyphicon.glyphicon-minus{style: 'top: 0'}
 
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links
