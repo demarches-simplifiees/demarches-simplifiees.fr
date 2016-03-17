@@ -116,7 +116,7 @@ describe API::V1::DossiersController do
         let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
-        let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :description, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :champs, :commentaires] }
+        let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :description, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :commentaires] }
         subject { body[:dossier] }
 
         it 'return REST code 200', :show_in_doc do
@@ -162,10 +162,6 @@ describe API::V1::DossiersController do
         end
 
         describe 'types_de_piece_justificative' do
-          before do
-            create :piece_justificative, dossier: dossier, type_de_piece_justificative: dossier.procedure.types_de_piece_justificative.first
-          end
-
           let(:field_list) { [
               :id,
               :libelle,
@@ -180,16 +176,32 @@ describe API::V1::DossiersController do
             it { expect(subject.keys.include?(:id)).to be_truthy }
             it { expect(subject[:libelle]).to eq('RIB') }
             it { expect(subject[:description]).to eq('Releve identité bancaire') }
+          end
+        end
 
-            describe 'piece justificative' do
-              let(:field_list) { [
-                  :url, :created_at] }
-              subject {
-                super()[:pieces_justificatives].first }
+        describe 'piece justificative' do
+          before do
+            create :piece_justificative, dossier: dossier, type_de_piece_justificative: dossier.procedure.types_de_piece_justificative.first, user: dossier.user
+          end
 
-              it { expect(subject.keys.include?(:url)).to be_truthy }
-              it { expect(subject[:created_at]).not_to be_nil }
-            end
+          let(:field_list) { [
+              :url, :created_at, :type_de_piece_justificative_id] }
+          subject {
+            super()[:pieces_justificatives].first }
+
+          it { expect(subject.keys.include?(:url)).to be_truthy }
+          it { expect(subject[:created_at]).not_to be_nil }
+          it { expect(subject[:type_de_piece_justificative_id]).not_to be_nil }
+
+          it { expect(subject.keys.include?(:user)).to be_truthy }
+
+          describe 'user' do
+            let(:field_list) { [
+                :url, :created_at, :type_de_piece_justificative_id] }
+            subject {
+              super()[:user] }
+
+            it { expect(subject[:email]).not_to be_nil }
           end
         end
 
@@ -244,6 +256,7 @@ describe API::V1::DossiersController do
           before do
             tmp_cerfa = dossier.cerfa.first
             tmp_cerfa.content = content
+            tmp_cerfa.user = dossier.user
             tmp_cerfa.save
           end
 
@@ -251,6 +264,15 @@ describe API::V1::DossiersController do
 
           it { expect(subject[:created_at]).not_to be_nil }
           it { expect(subject[:url]).to match /^http:\/\/.*downloads.*_CERFA\.pdf$/ }
+
+          describe 'user' do
+            let(:field_list) { [
+                :url, :created_at, :type_de_piece_justificative_id] }
+            subject {
+              super()[:user] }
+
+            it { expect(subject[:email]).not_to be_nil }
+          end
         end
 
         describe 'etablissement' do

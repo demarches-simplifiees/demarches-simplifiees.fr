@@ -22,7 +22,7 @@
                 - @facade.cerfas_ordered.each do |cerfa|
                   %tr
                     %td.col-md-6.col-lg-4
-                      = cerfa.dossier.user.email
+                      = cerfa.user.email
                     %td.col-md-6.col-lg-4
                       = cerfa.created_at
                     %td.col-md-6.col-lg-4
@@ -32,7 +32,7 @@
               - @facade.dossier.retrieve_all_piece_justificative_by_type(type_de_piece_justificative.id).each do |piece_justificative|
                 %tr
                   %td.col-md-6.col-lg-4
-                    = piece_justificative.dossier.user.email
+                    = piece_justificative.user.email
                   %td.col-md-6.col-lg-4
                     = piece_justificative.created_at
                   %td.col-md-6.col-lg-4

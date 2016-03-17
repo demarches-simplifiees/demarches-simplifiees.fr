@@ -2,6 +2,8 @@ class PieceJustificative < ActiveRecord::Base
   belongs_to :dossier
   belongs_to :type_de_piece_justificative
 
+  belongs_to :user
+
   delegate :api_entreprise, :libelle, to: :type_de_piece_justificative
 
   alias_attribute :type, :type_de_piece_justificative_id

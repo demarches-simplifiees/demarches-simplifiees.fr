@@ -3,5 +3,4 @@ class TypeDePieceJustificativeSerializer < ActiveModel::Serializer
              :libelle,
              :description
 
-  has_many :pieces_justificatives
 end
