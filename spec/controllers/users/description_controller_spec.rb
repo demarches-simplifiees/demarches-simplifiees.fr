@@ -132,8 +132,9 @@ describe Users::DescriptionController, type: :controller do
           dossier.reload
         end
 
-        context 'un CERFA PDF est envoyé' do
-          subject { dossier.cerfa }
+        context 'when a CERFA PDF is send' do
+          subject { dossier.cerfa.first }
+
           it 'content' do
             expect(subject['content']).to eq(name_piece_justificative)
           end
@@ -143,20 +144,16 @@ describe Users::DescriptionController, type: :controller do
           end
         end
 
-        context 'les anciens CERFA PDF sont écrasées à chaque fois' do
-          let(:cerfas) { Cerfa.find_by_dossier_id(dossier_id) }
+        context 'les anciens CERFA PDF ne sont pas écrasées' do
+          let(:cerfas) { Cerfa.where(dossier_id: dossier_id) }
 
           before do
             post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, cerfa_pdf: cerfa_pdf
           end
 
-          it 'il n\'y a qu\'un CERFA PDF par dossier' do
-            expect(cerfas.class).to eq Cerfa
+          it "il y a deux CERFA PDF pour ce dossier" do
+            expect(cerfas.size).to eq 2
           end
-        end
-
-        context 'pas de CERFA PDF' do
-          # TODO à écrire
         end
       end
     end
@@ -223,11 +220,11 @@ describe Users::DescriptionController, type: :controller do
       end
 
       context 'for piece 0' do
-        subject { dossier.retrieve_piece_justificative_by_type all_pj_type[0].to_s }
+        subject { dossier.retrieve_last_piece_justificative_by_type all_pj_type[0].to_s }
         it { expect(subject.content).not_to be_nil }
       end
       context 'for piece 1' do
-        subject { dossier.retrieve_piece_justificative_by_type all_pj_type[1].to_s }
+        subject { dossier.retrieve_last_piece_justificative_by_type all_pj_type[1].to_s }
         it { expect(subject.content).not_to be_nil }
       end
     end

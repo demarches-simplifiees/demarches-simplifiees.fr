@@ -1,6 +1,4 @@
 #pieces_justificatives
-  -#%h3.text-info Liste des pièces justificatives
-  -#%br
 
   %table.table
     -if @facade.procedure.cerfa_flag?
@@ -12,23 +10,40 @@
             - if user_signed_in?
               = 'Pièce fournie'
             - elsif gestionnaire_signed_in?
-              %a{ href: "#{@facade.dossier.cerfa.content_url}", target: '_blank' } Consulter
+              %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
+              %span{style:'margin-left:12px'}
+                \-
+              %a.btn.glyphicon.glyphicon-time{style:'color: black; padding-top: 0',
+                                                  "data-target" => "#PJmodal",
+                                                  "data-toggle" => "modal",
+                                                  :type => "button",
+                                                  "data-modal_title" => 'formulaires',
+                                                  "data-modal_index" => 'cerfa'}
           - else
             = 'Pièce non fournie'
 
-    - @facade.dossier.pieces_justificatives.each do |piece_justificative|
-      %tr{ id: "piece_justificative_#{piece_justificative.type}" }
+    - @facade.dossier.types_de_piece_justificative.each do |type_de_piece_justificative|
+      %tr{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
         %th.col-lg-6
-          = piece_justificative.libelle
+          = type_de_piece_justificative.libelle
         %td.col-lg-6.col-md-6
-          - if piece_justificative.api_entreprise
+          - if type_de_piece_justificative.api_entreprise
             %span.text-success Nous l'avons récupéré pour vous.
-          - elsif !piece_justificative.empty?
+          - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?
             - if user_signed_in?
               = 'Pièce fournie'
             - elsif gestionnaire_signed_in?
-              %a{ href: "#{piece_justificative.content_url}", target: '_blank' } Consulter
+              %a{ href: "#{@pj.content_url}", target: '_blank' } Consulter
+              %span{style:'margin-left:12px'}
+                \-
+              %a.btn.glyphicon.glyphicon-time{style:'color: black; padding-top: 0',
+                                                  "data-target" => "#PJmodal",
+                                                  "data-toggle" => "modal",
+                                                  :type => "button",
+                                                  "data-modal_title" => type_de_piece_justificative.libelle,
+                                                  "data-modal_index" => "type_de_pj_#{type_de_piece_justificative.id}"}
           - else
             = 'Pièce non fournie'
 
-
+  - if gestionnaire_signed_in?
+    =render partial: '/dossiers/modal_historique'

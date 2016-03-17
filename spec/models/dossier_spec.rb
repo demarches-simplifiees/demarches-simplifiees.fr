@@ -20,7 +20,7 @@ describe Dossier do
     it { is_expected.to have_many(:commentaires) }
     it { is_expected.to have_many(:quartier_prioritaires) }
     it { is_expected.to have_many(:cadastres) }
-    it { is_expected.to have_one(:cerfa) }
+    it { is_expected.to have_many(:cerfa) }
     it { is_expected.to have_one(:etablissement) }
     it { is_expected.to have_one(:entreprise) }
     it { is_expected.to belong_to(:user) }
@@ -88,24 +88,17 @@ describe Dossier do
       end
     end
 
-    describe '#retrieve_piece_justificative_by_type' do
-      let(:all_dossier_pj_id) { dossier.procedure.types_de_piece_justificative }
-      subject { dossier.retrieve_piece_justificative_by_type all_dossier_pj_id.first }
+    describe '#retrieve_last_piece_justificative_by_type' do
+      let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
+
+      subject { dossier.retrieve_last_piece_justificative_by_type types_de_pj_dossier.first }
+
       before do
-        dossier.build_default_pieces_justificatives
+        create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: types_de_pj_dossier.first
       end
 
       it 'returns piece justificative with given type' do
-        expect(subject.type).to eq(all_dossier_pj_id.first.id)
-      end
-    end
-
-    describe '#build_default_pieces_justificatives' do
-      context 'when dossier is linked to a procedure' do
-        let(:dossier) { create(:dossier, user: user) }
-        it 'build all pieces justificatives needed' do
-          expect(dossier.pieces_justificatives.count).to eq(2)
-        end
+        expect(subject.type).to eq(types_de_pj_dossier.first.id)
       end
     end
 
@@ -123,11 +116,6 @@ describe Dossier do
       subject { build(:dossier, procedure: procedure, user: user) }
       let!(:procedure) { create(:procedure) }
       context 'when is linked to a procedure' do
-        it 'creates default pieces justificatives' do
-          expect(subject).to receive(:build_default_pieces_justificatives)
-          subject.save
-        end
-
         it 'creates default champs' do
           expect(subject).to receive(:build_default_champs)
           subject.save
@@ -135,10 +123,6 @@ describe Dossier do
       end
       context 'when is not linked to a procedure' do
         subject { create(:dossier, procedure: procedure, user: user) }
-        it 'does not create default pieces justificatives' do
-          expect(subject).not_to receive(:build_default_pieces_justificatives)
-          subject.update_attributes(description: 'plop')
-        end
 
         it 'does not create default champs' do
           expect(subject).not_to receive(:build_default_champs)
@@ -525,17 +509,15 @@ describe Dossier do
   describe '#cerfa_available?' do
     let(:procedure) { create(:procedure, cerfa_flag: cerfa_flag)  }
     let(:dossier) { create(:dossier, procedure: procedure)}
+
     context 'Procedure accepts CERFA' do
       let(:cerfa_flag) { true }
       context 'when cerfa is not uploaded' do
         it { expect(dossier.cerfa_available?).to be_falsey }
       end
       context 'when cerfa is uploaded' do
-        let(:dossier_with_cerfa) { create(:dossier, procedure: procedure) }
-        before do
-          allow_any_instance_of(Cerfa).to receive(:empty?).and_return(false)
-        end
-        it { expect(dossier_with_cerfa.cerfa_available?).to be_truthy }
+        let(:dossier) { create :dossier, :with_cerfa_upload, procedure: procedure }
+        it { expect(dossier.cerfa_available?).to be_truthy }
       end
     end
     context 'Procedure does not accept CERFA' do

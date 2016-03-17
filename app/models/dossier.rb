@@ -10,7 +10,7 @@ class Dossier < ActiveRecord::Base
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
-  has_one :cerfa, dependent: :destroy
+  has_many :cerfa, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
   has_many :champs, dependent: :destroy
@@ -27,8 +27,6 @@ class Dossier < ActiveRecord::Base
   delegate :types_de_piece_justificative, to: :procedure
   delegate :types_de_champ, to: :procedure
 
-  after_save :build_default_cerfa, if: Proc.new { procedure.cerfa_flag? && procedure_id_changed? }
-  after_save :build_default_pieces_justificatives, if: Proc.new { procedure_id_changed? }
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 
   validates :nom_projet, presence: true, allow_blank: false, allow_nil: true
@@ -39,15 +37,12 @@ class Dossier < ActiveRecord::Base
   WAITING_FOR_USER = %w(replied validated)
   TERMINE = %w(closed)
 
-  def retrieve_piece_justificative_by_type(type)
+  def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
   end
 
-  def build_default_pieces_justificatives
-
-    procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
-      PieceJustificative.create(type_de_piece_justificative_id: type_de_piece_justificative.id, dossier_id: id)
-    end
+  def retrieve_all_piece_justificative_by_type(type)
+    pieces_justificatives.where(type_de_piece_justificative_id: type)
   end
 
   def build_default_champs
@@ -190,7 +185,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def cerfa_available?
-    procedure.cerfa_flag? && !cerfa.empty?
+    procedure.cerfa_flag? && cerfa.size != 0
   end
 
   def as_csv(options={})
@@ -199,12 +194,4 @@ class Dossier < ActiveRecord::Base
     entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map {|k, v| ["entreprise.#{k}", v] }.to_h
     dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
   end
-
-  private
-
-  def build_default_cerfa
-    create_cerfa
-    true
-  end
-
 end
