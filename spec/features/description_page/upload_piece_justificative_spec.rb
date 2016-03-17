@@ -42,7 +42,7 @@ feature 'user is on description page' do
     end
     context 'when he adds a piece_justificative and submit form' do
       before do
-        file_input_id = 'piece_justificative_' + dossier.pieces_justificatives.first.type.to_s
+        file_input_id = 'piece_justificative_' + dossier.types_de_piece_justificative.first.id.to_s
         attach_file(file_input_id, File.path('spec/support/files/dossierPDF.pdf'))
         click_on('Soumettre mon dossier')
         dossier.reload

@@ -27,7 +27,6 @@ class Dossier < ActiveRecord::Base
   delegate :types_de_piece_justificative, to: :procedure
   delegate :types_de_champ, to: :procedure
 
-  after_save :build_default_pieces_justificatives, if: Proc.new { procedure_id_changed? }
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 
   validates :nom_projet, presence: true, allow_blank: false, allow_nil: true
@@ -38,14 +37,12 @@ class Dossier < ActiveRecord::Base
   WAITING_FOR_USER = %w(replied validated)
   TERMINE = %w(closed)
 
-  def retrieve_piece_justificative_by_type(type)
+  def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
   end
 
-  def build_default_pieces_justificatives
-    procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
-      PieceJustificative.create(type_de_piece_justificative_id: type_de_piece_justificative.id, dossier_id: id)
-    end
+  def retrieve_all_piece_justificative_by_type(type)
+    pieces_justificatives.where(type_de_piece_justificative_id: type)
   end
 
   def build_default_champs

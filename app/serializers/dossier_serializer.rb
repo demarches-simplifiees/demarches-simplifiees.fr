@@ -12,5 +12,5 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :cerfa
   has_many :commentaires
   has_many :champs
-  has_many :pieces_justificatives
+  has_many :types_de_piece_justificative
 end

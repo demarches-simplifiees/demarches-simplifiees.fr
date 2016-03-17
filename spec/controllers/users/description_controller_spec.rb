@@ -220,11 +220,11 @@ describe Users::DescriptionController, type: :controller do
       end
 
       context 'for piece 0' do
-        subject { dossier.retrieve_piece_justificative_by_type all_pj_type[0].to_s }
+        subject { dossier.retrieve_last_piece_justificative_by_type all_pj_type[0].to_s }
         it { expect(subject.content).not_to be_nil }
       end
       context 'for piece 1' do
-        subject { dossier.retrieve_piece_justificative_by_type all_pj_type[1].to_s }
+        subject { dossier.retrieve_last_piece_justificative_by_type all_pj_type[1].to_s }
         it { expect(subject.content).not_to be_nil }
       end
     end

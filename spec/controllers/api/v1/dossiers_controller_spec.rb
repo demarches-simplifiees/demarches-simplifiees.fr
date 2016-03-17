@@ -116,7 +116,7 @@ describe API::V1::DossiersController do
         let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
-        let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :description, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :pieces_justificatives, :champs, :commentaires] }
+        let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :description, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :champs, :commentaires] }
         subject { body[:dossier] }
 
         it 'return REST code 200', :show_in_doc do
@@ -161,30 +161,34 @@ describe API::V1::DossiersController do
           it { expect(subject.keys).to match_array(field_list) }
         end
 
-        describe 'pieces_justificatives' do
+        describe 'types_de_piece_justificative' do
+          before do
+            create :piece_justificative, dossier: dossier, type_de_piece_justificative: dossier.procedure.types_de_piece_justificative.first
+          end
+
           let(:field_list) { [
-              :url] }
-          subject { super()[:pieces_justificatives] }
+              :id,
+              :libelle,
+              :description] }
+          subject { super()[:types_de_piece_justificative] }
 
           it { expect(subject.length).to eq 2 }
 
-          describe 'first piece justificative' do
+          describe 'first type de piece justificative' do
             subject { super().first }
 
-            it { expect(subject.keys.include?(:url)).to be_truthy }
-            it { expect(subject[:created_at]).not_to be_nil }
-            it { expect(subject.keys.include?(:type_de_piece_justificative)).to be_truthy }
+            it { expect(subject.keys.include?(:id)).to be_truthy }
+            it { expect(subject[:libelle]).to eq('RIB') }
+            it { expect(subject[:description]).to eq('Releve identité bancaire') }
 
-            describe 'type de piece justificative' do
+            describe 'piece justificative' do
               let(:field_list) { [
-                  :id,
-                  :libelle,
-                  :description] }
-              subject { super()[:type_de_piece_justificative] }
+                  :url, :created_at] }
+              subject {
+                super()[:pieces_justificatives].first }
 
-              it { expect(subject.keys.include?(:id)).to be_truthy }
-              it { expect(subject[:libelle]).to eq('RIB') }
-              it { expect(subject[:description]).to eq('Releve identité bancaire') }
+              it { expect(subject.keys.include?(:url)).to be_truthy }
+              it { expect(subject[:created_at]).not_to be_nil }
             end
           end
         end

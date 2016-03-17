@@ -88,24 +88,17 @@ describe Dossier do
       end
     end
 
-    describe '#retrieve_piece_justificative_by_type' do
-      let(:all_dossier_pj_id) { dossier.procedure.types_de_piece_justificative }
-      subject { dossier.retrieve_piece_justificative_by_type all_dossier_pj_id.first }
+    describe '#retrieve_last_piece_justificative_by_type' do
+      let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
+
+      subject { dossier.retrieve_last_piece_justificative_by_type types_de_pj_dossier.first }
+
       before do
-        dossier.build_default_pieces_justificatives
+        create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: types_de_pj_dossier.first
       end
 
       it 'returns piece justificative with given type' do
-        expect(subject.type).to eq(all_dossier_pj_id.first.id)
-      end
-    end
-
-    describe '#build_default_pieces_justificatives' do
-      context 'when dossier is linked to a procedure' do
-        let(:dossier) { create(:dossier, user: user) }
-        it 'build all pieces justificatives needed' do
-          expect(dossier.pieces_justificatives.count).to eq(2)
-        end
+        expect(subject.type).to eq(types_de_pj_dossier.first.id)
       end
     end
 
@@ -123,11 +116,6 @@ describe Dossier do
       subject { build(:dossier, procedure: procedure, user: user) }
       let!(:procedure) { create(:procedure) }
       context 'when is linked to a procedure' do
-        it 'creates default pieces justificatives' do
-          expect(subject).to receive(:build_default_pieces_justificatives)
-          subject.save
-        end
-
         it 'creates default champs' do
           expect(subject).to receive(:build_default_champs)
           subject.save
@@ -135,10 +123,6 @@ describe Dossier do
       end
       context 'when is not linked to a procedure' do
         subject { create(:dossier, procedure: procedure, user: user) }
-        it 'does not create default pieces justificatives' do
-          expect(subject).not_to receive(:build_default_pieces_justificatives)
-          subject.update_attributes(description: 'plop')
-        end
 
         it 'does not create default champs' do
           expect(subject).not_to receive(:build_default_champs)

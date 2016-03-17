@@ -55,9 +55,13 @@ class Users::DescriptionController < UsersController
       end
     end
 
-    @dossier.pieces_justificatives.each do |piece_justificative|
-      unless params["piece_justificative_#{piece_justificative.type}"].nil?
-        piece_justificative.content = params["piece_justificative_#{piece_justificative.type}"]
+    @dossier.types_de_piece_justificative.each do |type_de_pieces_justificatives|
+      unless params["piece_justificative_#{type_de_pieces_justificatives.id}"].nil?
+
+        piece_justificative = PieceJustificative.new(content: params["piece_justificative_#{type_de_pieces_justificatives.id}"],
+                                                     dossier: @dossier,
+                                                     type_de_piece_justificative: type_de_pieces_justificatives)
+
         unless piece_justificative.save
           flash.now.alert = piece_justificative.errors.full_messages.join('<br />').html_safe
           return render 'show'
