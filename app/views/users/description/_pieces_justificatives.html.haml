@@ -1,0 +1,65 @@
+%table{class:'table', style:'width:55%; margin-left:5%'}
+  - if @dossier.procedure.cerfa_flag
+    %tr
+      %th{class:'col-lg-6'}
+        ='Formulaire'
+
+      %td{class:'col-lg-5'}
+        -if @dossier.cerfa_available?
+          %span.btn.btn-sm.btn-file.btn-success
+            Modifier
+            %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: "application/pdf,
+                                                                                application/msword,
+                                                                                application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                                                                application/vnd.ms-excel,
+                                                                                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                                                                                application/vnd.ms-powerpoint,
+                                                                                application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                                                                                application/vnd.oasis.opendocument.text,
+                                                                                application/vnd.oasis.opendocument.presentation,
+                                                                                application/vnd.oasis.opendocument.spreadsheet", :max_file_size => 3.megabytes }
+        -else
+          %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: "application/pdf,
+                                                                              application/msword,
+                                                                              application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                                                              application/vnd.ms-excel,
+                                                                              application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                                                                              application/vnd.ms-powerpoint,
+                                                                              application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                                                                              application/vnd.oasis.opendocument.text,
+                                                                              application/vnd.oasis.opendocument.presentation,
+                                                                              application/vnd.oasis.opendocument.spreadsheet", :max_file_size => 3.megabytes }
+
+  - @dossier.types_de_piece_justificative.each do |type_de_piece_justificative|
+    %tr
+      %th.col-lg-6
+        = type_de_piece_justificative.libelle
+      %td.col-lg-5
+        -if type_de_piece_justificative.api_entreprise
+          %span.text-success{ id: "piece_justificative_#{type_de_piece_justificative.id}" } Nous l'avons récupéré pour vous.
+        -else
+          -if @dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id).nil?
+            = file_field_tag "piece_justificative_#{type_de_piece_justificative.id}", accept: " application/pdf,
+                                                                                              application/msword,
+                                                                                              application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                                                                              application/vnd.ms-excel,
+                                                                                              application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                                                                                              application/vnd.ms-powerpoint,
+                                                                                              application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                                                                                              application/vnd.oasis.opendocument.text,
+                                                                                              application/vnd.oasis.opendocument.presentation,
+                                                                                              application/vnd.oasis.opendocument.spreadsheet", :max_file_size => 3.megabytes
+          -else
+            %span.btn.btn-sm.btn-file.btn-success
+              Modifier
+              = file_field_tag "piece_justificative_#{type_de_piece_justificative.id}", accept: " application/pdf,
+                                                                                                application/msword,
+                                                                                                application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                                                                                application/vnd.ms-excel,
+                                                                                                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                                                                                                application/vnd.ms-powerpoint,
+                                                                                                application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                                                                                                application/vnd.oasis.opendocument.text,
+                                                                                                application/vnd.oasis.opendocument.presentation,
+                                                                                                application/vnd.oasis.opendocument.spreadsheet", :max_file_size => 3.megabytes
+

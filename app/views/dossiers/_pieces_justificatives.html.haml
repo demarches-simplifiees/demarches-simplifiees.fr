@@ -7,18 +7,18 @@
           ='Formulaire'
         %td.col-lg-6.col-md-6
           - if @facade.dossier.cerfa_available?
-            - if user_signed_in?
-              = 'Pièce fournie'
-            - elsif gestionnaire_signed_in?
-              %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
-              %span{style:'margin-left:12px'}
-                \-
-              %a.btn.glyphicon.glyphicon-time{style:'color: black; padding-top: 0',
-                                                  "data-target" => "#PJmodal",
-                                                  "data-toggle" => "modal",
-                                                  :type => "button",
-                                                  "data-modal_title" => 'formulaires',
-                                                  "data-modal_index" => 'cerfa'}
+            -#- if user_signed_in?
+            -#  = 'Pièce fournie'
+            -#- elsif gestionnaire_signed_in?
+            %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
+            %span{style:'margin-left:12px'}
+              \-
+            %a.btn.glyphicon.glyphicon-time{style:'color: black; padding-top: 0',
+                                                "data-target" => "#PJmodal",
+                                                "data-toggle" => "modal",
+                                                :type => "button",
+                                                "data-modal_title" => 'formulaires',
+                                                "data-modal_index" => 'cerfa'}
           - else
             = 'Pièce non fournie'
 
@@ -30,20 +30,20 @@
           - if type_de_piece_justificative.api_entreprise
             %span.text-success Nous l'avons récupéré pour vous.
           - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?
-            - if user_signed_in?
-              = 'Pièce fournie'
-            - elsif gestionnaire_signed_in?
-              %a{ href: "#{@pj.content_url}", target: '_blank' } Consulter
-              %span{style:'margin-left:12px'}
-                \-
-              %a.btn.glyphicon.glyphicon-time{style:'color: black; padding-top: 0',
-                                                  "data-target" => "#PJmodal",
-                                                  "data-toggle" => "modal",
-                                                  :type => "button",
-                                                  "data-modal_title" => type_de_piece_justificative.libelle,
-                                                  "data-modal_index" => "type_de_pj_#{type_de_piece_justificative.id}"}
+            -#- if user_signed_in?
+            -#  = 'Pièce fournie'
+            -#- elsif gestionnaire_signed_in?
+            %a{ href: "#{@pj.content_url}", target: '_blank' } Consulter
+            %span{style:'margin-left:12px'}
+              \-
+            %a.btn.glyphicon.glyphicon-time{style:'color: black; padding-top: 0',
+                                                "data-target" => "#PJmodal",
+                                                "data-toggle" => "modal",
+                                                :type => "button",
+                                                "data-modal_title" => type_de_piece_justificative.libelle,
+                                                "data-modal_index" => "type_de_pj_#{type_de_piece_justificative.id}"}
           - else
             = 'Pièce non fournie'
 
-  - if gestionnaire_signed_in?
-    =render partial: '/dossiers/modal_historique'
+  -#- if gestionnaire_signed_in?
+  =render partial: '/dossiers/modal_historique'

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/recapitulatif/show.html.haml', type: :view do
-  let(:dossier) { create(:dossier, :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto)) }
+  let(:dossier) { create(:dossier, :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto, :with_two_type_de_piece_justificative)) }
   let(:dossier_id) { dossier.id }
   let(:state) { 'draft' }
 
@@ -60,6 +60,12 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         end
 
         it { expect(rendered).to have_content('Soumis') }
+
+        it 'button Modifier les document est present' do
+          expect(rendered).to have_content('Modifier les documents')
+          expect(rendered).to have_css('#UploadPJmodal')
+        end
+
       end
 
       context 'when dossier state is replied' do
@@ -96,7 +102,11 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
         it 'button Editer mon dossier n\'est plus present' do
           expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Editer mon dossier')
+          expect(rendered).not_to have_content('Modifier mon dossier')
+        end
+
+        it 'button Modifier les document n\'est plus present' do
+          expect(rendered).not_to have_content('Modifier les documents')
         end
       end
 
@@ -111,7 +121,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
         it 'button Editer mon dossier n\'est plus present' do
           expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Editer mon dossier')
+          expect(rendered).not_to have_content('Modifier mon dossier')
         end
       end
 
@@ -125,7 +135,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
         it 'button Editer mon dossier n\'est plus present' do
           expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Editer mon dossier')
+          expect(rendered).not_to have_content('Modifier mon dossier')
         end
       end
     end

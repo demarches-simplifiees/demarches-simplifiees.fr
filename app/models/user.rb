@@ -29,4 +29,8 @@ class User < ActiveRecord::Base
   def loged_in_with_france_connect?
     !loged_in_with_france_connect.nil?
   end
+
+  def invite? dossier_id
+    invites.pluck(:dossier_id).include?(dossier_id.to_i)
+  end
 end

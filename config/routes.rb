@@ -53,9 +53,13 @@ Rails.application.routes.draw do
       get '/description' => 'description#show'
       get '/description/error' => 'description#error'
       post 'description' => 'description#create'
+
+      patch 'pieces_justificatives' => 'description#pieces_justificatives'
+
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/initiate' => 'recapitulatif#initiate'
       post '/recapitulatif/submit' => 'recapitulatif#submit'
+
       post '/commentaire' => 'commentaires#create'
 
       get '/carte/position' => 'carte#get_position'
