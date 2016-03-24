@@ -7,7 +7,7 @@
         = @facade.dossier.procedure.libelle
 
       .description
-        = @facade.dossier.description.html_safe
+        = h @facade.dossier.description.html_safe
 
       - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
         .mandataire_social.text-success.center

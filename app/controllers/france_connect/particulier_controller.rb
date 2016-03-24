@@ -11,7 +11,7 @@ class FranceConnect::ParticulierController < ApplicationController
         state: session[:state],
         nonce: session[:nonce]
     )
-    redirect_to authorization_uri
+    redirect_to URI.parse(authorization_uri).to_s
   end
 
   def callback
