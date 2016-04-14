@@ -1,12 +1,9 @@
 class ClamavService
-  def self.safe_io_data? io_data
+  def self.safe_io_data? path_file
     client = ClamAV::Client.new
 
-    io = StringIO.new(io_data)
-
-    response = client.execute(ClamAV::Commands::InstreamCommand.new(io))
+    response = client.execute(ClamAV::Commands::ScanCommand.new(path_file))
 
     puts response
-
   end
 end
