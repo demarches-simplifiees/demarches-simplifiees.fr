@@ -13,6 +13,10 @@ class PiecesJustificativesService
         unless piece_justificative.save
           errors << piece_justificative.errors.messages[:content][0]+" (#{piece_justificative.libelle})"+"<br>"
         end
+
+        unless ClamavService.safe_file? piece_justificative.content
+
+        end
       end
     end
     errors
