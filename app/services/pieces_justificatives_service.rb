@@ -5,6 +5,10 @@ class PiecesJustificativesService
     dossier.types_de_piece_justificative.each do |type_de_pieces_justificatives|
       unless params["piece_justificative_#{type_de_pieces_justificatives.id}"].nil?
 
+        unless ClamavService.safe_io_data? params["piece_justificative_#{type_de_pieces_justificatives.id}"].content
+
+        end
+
         piece_justificative = PieceJustificative.new(content: params["piece_justificative_#{type_de_pieces_justificatives.id}"],
                                                      dossier: dossier,
                                                      type_de_piece_justificative: type_de_pieces_justificatives,
@@ -14,9 +18,7 @@ class PiecesJustificativesService
           errors << piece_justificative.errors.messages[:content][0]+" (#{piece_justificative.libelle})"+"<br>"
         end
 
-        unless ClamavService.safe_file? piece_justificative.content
 
-        end
       end
     end
     errors
