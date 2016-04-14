@@ -5,9 +5,9 @@ class PiecesJustificativesService
     dossier.types_de_piece_justificative.each do |type_de_pieces_justificatives|
       unless params["piece_justificative_#{type_de_pieces_justificatives.id}"].nil?
 
-        unless ClamavService.safe_io_data? params["piece_justificative_#{type_de_pieces_justificatives.id}"].path
-
-        end
+        # unless ClamavService.safe_io_data? params["piece_justificative_#{type_de_pieces_justificatives.id}"].path
+        #
+        # end
 
         piece_justificative = PieceJustificative.new(content: params["piece_justificative_#{type_de_pieces_justificatives.id}"],
                                                      dossier: dossier,
