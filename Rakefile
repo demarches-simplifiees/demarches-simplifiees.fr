@@ -13,8 +13,8 @@ task :deploy do
 end
 
 task :deploy_test do
-  domains = %w(test_sgmap)
-  branch = 'master'
+  domains = %w(192.168.0.116)
+  branch = 'clamav'
   domains.each do |domain|
     sh "mina deploy domain=#{domain} branch=#{branch}"
   end

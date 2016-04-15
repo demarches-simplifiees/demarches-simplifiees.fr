@@ -56,7 +56,7 @@ class Users::DescriptionController < UsersController
     end
 
     unless (errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)).empty?
-      flash.alert = errors_upload.full_messages.joins('<br>').html_safe
+      flash.alert = errors_upload.html_safe
       return render 'show'
     end
 

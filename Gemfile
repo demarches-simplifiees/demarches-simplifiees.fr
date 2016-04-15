@@ -53,6 +53,8 @@ gem 'openid_connect'
 
 gem 'rest-client'
 
+gem 'clamav-client', require: 'clamav/client'
+
 gem 'carrierwave'
 
 gem 'pg'
