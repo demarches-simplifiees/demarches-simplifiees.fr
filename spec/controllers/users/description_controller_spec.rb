@@ -9,7 +9,17 @@ describe Users::DescriptionController, type: :controller do
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10000 }
 
+  let(:name_piece_justificative) { 'dossierPDF.pdf' }
+  let(:name_piece_justificative_0) { 'piece_justificative_0.pdf' }
+  let(:name_piece_justificative_1) { 'piece_justificative_1.pdf' }
+
+  let(:cerfa_pdf) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative}", 'application/pdf') }
+  let(:piece_justificative_0) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative_0}", 'application/pdf') }
+  let(:piece_justificative_1) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative_1}", 'application/pdf') }
+
   before do
+    allow(ClamavService).to receive(:safe_file?).and_return(true)
+
     sign_in dossier.user
   end
 
@@ -55,14 +65,6 @@ describe Users::DescriptionController, type: :controller do
     let(:timestamp) { Time.now }
     let(:nom_projet) { 'Projet de test' }
     let(:description) { 'Description de test Coucou, je suis un saut à la ligne Je suis un double saut  la ligne.' }
-
-    let(:name_piece_justificative) { 'dossierPDF.pdf' }
-    let(:name_piece_justificative_0) { 'piece_justificative_0.pdf' }
-    let(:name_piece_justificative_1) { 'piece_justificative_1.pdf' }
-
-    let(:cerfa_pdf) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative}", 'application/pdf') }
-    let(:piece_justificative_0) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative_0}", 'application/pdf') }
-    let(:piece_justificative_1) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative_1}", 'application/pdf') }
 
     context 'Tous les attributs sont bons' do
       # TODO separer en deux tests : check donnees et check redirect
@@ -221,6 +223,20 @@ describe Users::DescriptionController, type: :controller do
         dossier.reload
       end
 
+      describe 'clamav anti-virus presence' do
+        it 'ClamavService safe_file? is call' do
+          expect(ClamavService).to receive(:safe_file?).twice
+
+          post :create, {dossier_id: dossier_id,
+                         nom_projet: nom_projet,
+                         description: description,
+                         'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
+                         'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
+
+
+        end
+      end
+
       context 'for piece 0' do
         subject { dossier.retrieve_last_piece_justificative_by_type all_pj_type[0].to_s }
         it { expect(subject.content).not_to be_nil }
@@ -230,6 +246,134 @@ describe Users::DescriptionController, type: :controller do
         subject { dossier.retrieve_last_piece_justificative_by_type all_pj_type[1].to_s }
         it { expect(subject.content).not_to be_nil }
         it { expect(subject.user).to eq user }
+      end
+    end
+  end
+
+  describe 'POST #pieces_justificatives' do
+    let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
+
+    subject { patch :pieces_justificatives, {dossier_id: dossier.id,
+                                             'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
+                                             'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1} }
+
+    context 'when user is the owner' do
+      before do
+        sign_in user
+      end
+
+      context 'when PJ have no documents' do
+        it { expect(dossier.pieces_justificatives.size).to eq 0 }
+
+        context 'when upload two PJ' do
+          before do
+            subject
+            dossier.reload
+          end
+
+          it { expect(dossier.pieces_justificatives.size).to eq 2 }
+          it { expect(flash[:notice]).to be_present }
+          it { is_expected.to redirect_to users_dossier_recapitulatif_path }
+        end
+      end
+
+      context 'when PJ have already a document' do
+        before do
+          create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative_id: all_pj_type[0]
+          create :piece_justificative, :contrat, dossier: dossier, type_de_piece_justificative_id: all_pj_type[1]
+        end
+
+        it { expect(dossier.pieces_justificatives.size).to eq 2 }
+
+        context 'when upload two PJ' do
+          before do
+            subject
+            dossier.reload
+          end
+
+          it { expect(dossier.pieces_justificatives.size).to eq 4 }
+          it { expect(flash[:notice]).to be_present }
+          it { is_expected.to redirect_to users_dossier_recapitulatif_path }
+        end
+      end
+
+      context 'when one of PJs is not valid' do
+        let(:piece_justificative_0) { Rack::Test::UploadedFile.new("./spec/support/files/entreprise.json", 'application/json') }
+
+        it { expect(dossier.pieces_justificatives.size).to eq 0 }
+
+        context 'when upload two PJ' do
+          before do
+            subject
+            dossier.reload
+          end
+
+          it { expect(dossier.pieces_justificatives.size).to eq 1 }
+          it { expect(flash[:alert]).to be_present }
+          it { is_expected.to redirect_to users_dossier_recapitulatif_path }
+        end
+      end
+    end
+
+    context 'when user is a guest' do
+      let(:guest) { create :user }
+
+      before do
+        create :invite, dossier: dossier, email: guest.email, user: guest
+
+        sign_in guest
+      end
+
+      context 'when PJ have no documents' do
+        it { expect(dossier.pieces_justificatives.size).to eq 0 }
+
+        context 'when upload two PJ' do
+          before do
+            subject
+            dossier.reload
+          end
+
+          it { expect(dossier.pieces_justificatives.size).to eq 2 }
+          it { expect(flash[:notice]).to be_present }
+          it { is_expected.to redirect_to users_dossiers_invite_path(id: guest.invites.find_by_dossier_id(dossier.id).id) }
+        end
+      end
+
+      context 'when PJ have already a document' do
+        before do
+          create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative_id: all_pj_type[0]
+          create :piece_justificative, :contrat, dossier: dossier, type_de_piece_justificative_id: all_pj_type[1]
+        end
+
+        it { expect(dossier.pieces_justificatives.size).to eq 2 }
+
+        context 'when upload two PJ' do
+          before do
+            subject
+            dossier.reload
+          end
+
+          it { expect(dossier.pieces_justificatives.size).to eq 4 }
+          it { expect(flash[:notice]).to be_present }
+          it { is_expected.to redirect_to users_dossiers_invite_path(id: guest.invites.find_by_dossier_id(dossier.id).id) }
+        end
+      end
+
+      context 'when one of PJs is not valid' do
+        let(:piece_justificative_0) { Rack::Test::UploadedFile.new("./spec/support/files/entreprise.json", 'application/json') }
+
+        it { expect(dossier.pieces_justificatives.size).to eq 0 }
+
+        context 'when upload two PJ' do
+          before do
+            subject
+            dossier.reload
+          end
+
+          it { expect(dossier.pieces_justificatives.size).to eq 1 }
+          it { expect(flash[:alert]).to be_present }
+          it { is_expected.to redirect_to users_dossiers_invite_path(id: guest.invites.find_by_dossier_id(dossier.id).id) }
+        end
       end
     end
   end

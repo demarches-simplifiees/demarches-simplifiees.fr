@@ -42,7 +42,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def retrieve_all_piece_justificative_by_type(type)
-    pieces_justificatives.where(type_de_piece_justificative_id: type)
+    pieces_justificatives.where(type_de_piece_justificative_id: type).order(created_at: :DESC)
   end
 
   def build_default_champs

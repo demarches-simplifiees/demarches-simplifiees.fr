@@ -15,6 +15,12 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
     before do
       render
     end
+
+    it 'button Modifier les document est present' do
+      expect(rendered).not_to have_content('Modifier les documents')
+      expect(rendered).not_to have_css('#UploadPJmodal')
+    end
+
     it 'enterprise informations are present' do
       expect(rendered).to have_selector('#infos_entreprise')
     end

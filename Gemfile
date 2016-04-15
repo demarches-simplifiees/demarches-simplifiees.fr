@@ -22,6 +22,7 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -51,6 +52,8 @@ gem 'devise'
 gem 'openid_connect'
 
 gem 'rest-client'
+
+gem 'clamav-client', require: 'clamav/client'
 
 gem 'carrierwave'
 
@@ -124,6 +127,7 @@ group :development, :test do
 
   gem 'parallel_tests'
 
+  gem 'brakeman', require: false
   # Deploy
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git'
 end
