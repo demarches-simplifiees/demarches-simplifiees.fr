@@ -3,7 +3,10 @@ require 'spec_helper'
 feature 'user is on description page' do
   let!(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, cerfa_flag: true) }
   let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
+
   before do
+    allow(ClamavService).to receive(:safe_file?).and_return(true)
+
     visit users_dossier_description_path dossier
 
     within('#new_user') do
@@ -13,6 +16,7 @@ feature 'user is on description page' do
     end
 
   end
+
   it { expect(page).to have_css('#description_page') }
 
   context 'he fill description fields' do

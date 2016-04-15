@@ -18,6 +18,8 @@ describe Users::DescriptionController, type: :controller do
   let(:piece_justificative_1) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative_1}", 'application/pdf') }
 
   before do
+    allow(ClamavService).to receive(:safe_file?).and_return(true)
+
     sign_in dossier.user
   end
 
@@ -219,6 +221,20 @@ describe Users::DescriptionController, type: :controller do
                        'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
                        'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
         dossier.reload
+      end
+
+      describe 'clamav anti-virus presence' do
+        it 'ClamavService safe_file? is call' do
+          expect(ClamavService).to receive(:safe_file?).twice
+
+          post :create, {dossier_id: dossier_id,
+                         nom_projet: nom_projet,
+                         description: description,
+                         'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
+                         'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
+
+
+        end
       end
 
       context 'for piece 0' do
