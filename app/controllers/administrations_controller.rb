@@ -5,13 +5,14 @@ class AdministrationsController < ApplicationController
   before_action :authenticate_administration!
 
   def index
+    @admin = Administrateur.new
 
     @admins = smart_listing_create :admins,
-                                   Administrateur.all,
+                                   Administrateur.all.order(:email),
                                    partial: "administrations/list",
                                    array: true
 
-    @admin = Administrateur.new
+
   end
 
   def show
