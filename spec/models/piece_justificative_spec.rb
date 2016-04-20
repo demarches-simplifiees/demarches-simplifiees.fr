@@ -10,7 +10,15 @@ describe PieceJustificative do
     it { is_expected.to belong_to(:dossier) }
     it { is_expected.to belong_to(:type_de_piece_justificative) }
     it { is_expected.to belong_to(:user) }
+    it { is_expected.to have_one(:commentaire) }
 
+  end
+
+  describe 'validations' do
+    context 'content' do
+      it { is_expected.not_to allow_value(nil).for(:content) }
+      it { is_expected.not_to allow_value('').for(:content) }
+    end
   end
 
   describe 'delegation' do
@@ -21,10 +29,7 @@ describe PieceJustificative do
   describe '#empty?' do
     let(:piece_justificative) { create(:piece_justificative, content: content) }
     subject { piece_justificative.empty? }
-    context 'when content is nil' do
-      let(:content) { nil }
-      it { is_expected.to be_truthy }
-    end
+
     context 'when content exist' do
       let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
       it { is_expected.to be_falsey }

@@ -11,8 +11,18 @@ class CommentairesController < ApplicationController
       @commentaire.dossier.next_step! 'user', 'comment' if current_user.email == @commentaire.dossier.user.email
     end
 
+    unless params[:piece_justificative].nil?
+      pj = PiecesJustificativesService.upload_one! @commentaire.dossier, current_user, params
+
+      if pj.errors.empty?
+        @commentaire.piece_justificative = pj
+      else
+        flash.alert = pj.errors.full_messages.join("<br>").html_safe
+      end
+    end
+
     @commentaire.body = params['texte_commentaire']
-    @commentaire.save
+    @commentaire.save unless flash.alert
 
     if is_gestionnaire?
       NotificationMailer.new_answer(@commentaire.dossier).deliver_now!

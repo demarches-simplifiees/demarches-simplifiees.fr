@@ -4,7 +4,11 @@ describe 'users/recapitulatif/_commentaires_flux.html.haml', type: :view do
   let(:dossier) { create(:dossier) }
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'mon_mail_de_commentaire@test.com' }
-  let!(:commentaire) { create(:commentaire, dossier: dossier, email: email_commentaire, body: 'ma super description') }
+
+  let(:document_upload) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
+  let(:pj) { create :piece_justificative, content: document_upload }
+
+  let!(:commentaire) { create(:commentaire, dossier: dossier, email: email_commentaire, body: 'ma super description', piece_justificative: pj) }
   let(:body) { 'Commentaire de test' }
 
   before do
@@ -24,6 +28,12 @@ describe 'users/recapitulatif/_commentaires_flux.html.haml', type: :view do
     it 'le corps du commentaire est présent' do
       expect(rendered).to have_selector('div[class=description][id=body]')
     end
+
+    context 'when commentaire as PJ' do
+      it 'commentaire present the link' do
+        expect(rendered).to have_css('#piece_justificative')
+      end
+    end
   end
 
   context 'Affichage du formulaire de commentaire' do
@@ -33,6 +43,12 @@ describe 'users/recapitulatif/_commentaires_flux.html.haml', type: :view do
 
     it 'Champs de texte' do
       expect(rendered).to have_selector('textarea[id=texte_commentaire][name=texte_commentaire]')
+    end
+
+    describe 'File input' do
+      it 'have file_input tag' do
+        expect(rendered).to have_css('#piece_justificative_content')
+      end
     end
   end
 end
