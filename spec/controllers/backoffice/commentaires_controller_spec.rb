@@ -6,6 +6,10 @@ describe Backoffice::CommentairesController, type: :controller do
   let(:email_commentaire) { 'test@test.com' }
   let(:texte_commentaire) { 'Commentaire de test' }
 
+  before do
+    allow(ClamavService).to receive(:safe_file?).and_return(true)
+  end
+
   describe '#POST create' do
     before do
       sign_in create(:gestionnaire)
@@ -14,6 +18,52 @@ describe Backoffice::CommentairesController, type: :controller do
       it 'depuis la page admin' do
         post :create, dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire
         expect(response).to redirect_to("/backoffice/dossiers/#{dossier_id}")
+      end
+    end
+
+    context 'when document is upload whith a commentaire' do
+      let(:document_upload) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
+
+      subject do
+        post :create, dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire, piece_justificative: {content: document_upload}
+      end
+
+      it 'create a new piece justificative' do
+        expect { subject }.to change(PieceJustificative, :count).by(1)
+      end
+
+      it 'clamav check the pj' do
+        expect(ClamavService).to receive(:safe_file?)
+        subject
+      end
+
+      describe 'piece justificative created' do
+        let(:pj) { PieceJustificative.last }
+
+        before do
+          subject
+        end
+
+        it 'not have a type de pj' do
+          expect(pj.type_de_piece_justificative).to be_nil
+        end
+
+        it 'content not be nil' do
+          expect(pj.content).not_to be_nil
+        end
+      end
+
+      describe 'commentaire created' do
+        let(:commentaire) { Commentaire.last }
+
+        before do
+          subject
+        end
+
+        it 'have a piece justificative reference' do
+          expect(commentaire.piece_justificative).not_to be_nil
+          expect(commentaire.piece_justificative).to eq PieceJustificative.last
+        end
       end
     end
 

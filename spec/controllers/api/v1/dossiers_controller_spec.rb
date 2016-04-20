@@ -181,7 +181,7 @@ describe API::V1::DossiersController do
 
         describe 'piece justificative' do
           before do
-            create :piece_justificative, dossier: dossier, type_de_piece_justificative: dossier.procedure.types_de_piece_justificative.first, user: dossier.user
+            create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: dossier.procedure.types_de_piece_justificative.first, user: dossier.user
           end
 
           let(:field_list) { [

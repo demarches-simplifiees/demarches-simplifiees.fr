@@ -1,6 +1,7 @@
 class PieceJustificative < ActiveRecord::Base
   belongs_to :dossier
   belongs_to :type_de_piece_justificative
+  has_one :commentaire
 
   belongs_to :user
 
@@ -10,6 +11,7 @@ class PieceJustificative < ActiveRecord::Base
 
   mount_uploader :content, PieceJustificativeUploader
   validates :content, :file_size => {:maximum => 3.megabytes}
+  validates :content, presence: true, allow_blank: false, allow_nil: false
 
   def empty?
     content.blank?
@@ -17,7 +19,22 @@ class PieceJustificative < ActiveRecord::Base
 
   def content_url
     unless content.url.nil?
-      (Downloader.new content, type_de_piece_justificative.libelle).url
+      (Downloader.new content,
+                      (type_de_piece_justificative.nil? ? content.file.original_filename : type_de_piece_justificative.libelle)).url
     end
+  end
+
+  def self.accept_format
+    " application/pdf,
+      application/msword,
+      application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+      application/vnd.ms-excel,
+      application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+      application/vnd.ms-powerpoint,
+      application/vnd.openxmlformats-officedocument.presentationml.presentation,
+      application/vnd.oasis.opendocument.text,
+      application/vnd.oasis.opendocument.presentation,
+      application/vnd.oasis.opendocument.spreadsheet
+    "
   end
 end

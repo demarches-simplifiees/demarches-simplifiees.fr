@@ -46,8 +46,8 @@
   %br
 
   .row{style: 'text-align:right'}
-    -if !@facade.dossier.validated? && !@facade.dossier.submitted? && !@facade.dossier.closed?
-      - if user_signed_in?
+    - if !@facade.dossier.validated? && !@facade.dossier.submitted? && !@facade.dossier.closed?
+      - if user_signed_in? && (current_user.email == @facade.dossier.user.email)
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
           %a.btn.btn-success{"data-target" => "#UploadPJmodal",
                              "data-toggle" => "modal",
@@ -57,18 +57,19 @@
           %br
           = render partial: 'users/recapitulatif/modal_upload_pj'
 
-        - if(current_user.email == @facade.dossier.user.email)
-          -if @facade.dossier.procedure.module_api_carto.use_api_carto
-            %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@facade.dossier.id}/carte"}
-              = 'Modifier ma carte'
-          %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@facade.dossier.id}/description"}
-            = 'Modifier mon dossier'
+
+        -if @facade.dossier.procedure.module_api_carto.use_api_carto
+          %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@facade.dossier.id}/carte"}
+            = 'Modifier ma carte'
+        %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@facade.dossier.id}/description"}
+          = 'Modifier mon dossier'
 
     -if gestionnaire_signed_in?
       -if !@facade.dossier.validated? && !@facade.dossier.submitted? && !@facade.dossier.closed?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Valider le dossier'
+
       -elsif @facade.dossier.submitted?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success

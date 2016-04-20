@@ -21,4 +21,20 @@ class PiecesJustificativesService
     end
     errors
   end
+
+  def self.upload_one! dossier, user, params
+    if ClamavService.safe_file? params[:piece_justificative][:content].path
+      piece_justificative = PieceJustificative.new(content: params[:piece_justificative][:content],
+                                                   dossier: dossier,
+                                                   type_de_piece_justificative: nil,
+                                                   user: user)
+
+      piece_justificative.save
+    else
+      piece_justificative = PieceJustificative.new
+      piece_justificative.errors.add(:content, params[:piece_justificative][:content].original_filename+": <b>Virus détecté !!</b>")
+    end
+
+    piece_justificative
+  end
 end
