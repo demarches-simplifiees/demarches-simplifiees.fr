@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'users/dossiers/new.html.haml', type: :view do
+describe 'users/dossiers/new.html.haml', type: :view, vcr: { cassette_name: 'user_dossier_new_html' } do
   let(:user) { create(:user) }
   let(:euro_flag) { false }
   let(:cerfa_flag) { false }

@@ -50,6 +50,13 @@ Dir[Rails.root.join('spec/factories/**/*.rb')].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
+VCR.configure do |c|
+  c.ignore_localhost = true
+  c.hook_into :webmock
+  c.cassette_library_dir = 'spec/fixtures/cassettes'
+  c.configure_rspec_metadata!
+end
+
 DatabaseCleaner.strategy = :truncation
 
 SIADETOKEN = :valid_token unless defined? SIADETOKEN
@@ -88,4 +95,20 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, type: :controller
 
   config.include FactoryGirl::Syntax::Methods
+
+  config.before(:each) do
+    allow_any_instance_of(PieceJustificativeUploader).to receive(:generate_secure_token).and_return("3dbb3535-5388-4a37-bc2d-778327b9f997")
+    allow_any_instance_of(ProcedureLogoUploader).to receive(:generate_secure_token).and_return("3dbb3535-5388-4a37-bc2d-778327b9f998")
+    allow_any_instance_of(CerfaUploader).to receive(:generate_secure_token).and_return("3dbb3535-5388-4a37-bc2d-778327b9f999")
+  end
+
+  config.before(:all) {
+    Warden.test_mode!
+
+    VCR.use_cassette("ovh_storage_init") do
+      CarrierWave.configure do |config|
+        config.fog_credentials = { provider: 'OpenStack' }
+      end
+    end
+  }
 end

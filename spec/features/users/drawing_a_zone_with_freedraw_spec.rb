@@ -25,7 +25,7 @@ feature 'drawing a zone with freedraw' do
       end
 
       context 'when procedure have api carto activated' do
-        scenario 'he is redirected to carte page' do
+        scenario 'he is redirected to carte page', vcr: { cassette_name: 'drawing_a_zone_with_freedraw_redirected_to_carte_page' } do
           expect(page).to have_css('.content #map')
         end
       end
@@ -42,7 +42,7 @@ feature 'drawing a zone with freedraw' do
         end
       end
 
-      context 'when draw a zone on #map', js: true do
+      context 'when draw a zone on #map', js: true, vcr: { cassette_name: 'drawing_a_zone_with_freedraw_when_draw_a_zone_on_map' } do
         context 'when module quartiers prioritaires is activated' do
           let(:module_api_carto) { create(:module_api_carto, :with_quartiers_prioritaires) }
 

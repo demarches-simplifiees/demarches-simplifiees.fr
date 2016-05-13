@@ -26,7 +26,7 @@ describe PieceJustificative do
     it { is_expected.to delegate_method(:api_entreprise).to(:type_de_piece_justificative) }
   end
 
-  describe '#empty?' do
+  describe '#empty?', vcr: { cassette_name: 'model_piece_justificative' } do
     let(:piece_justificative) { create(:piece_justificative, content: content) }
     subject { piece_justificative.empty? }
 

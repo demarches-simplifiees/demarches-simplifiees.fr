@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'users/recapitulatif/_commentaires_flux.html.haml', type: :view do
+describe 'users/recapitulatif/_commentaires_flux.html.haml', type: :view, vcr: { cassette_name: 'views_users_recapitulatif_commentaires_flux' } do
   let(:dossier) { create(:dossier) }
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'mon_mail_de_commentaire@test.com' }

@@ -1,0 +1,104 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://auth.cloud.ovh.net/v2.0/tokens
+    body:
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"ovh_fake_username","password":"ovh_fake_password"},"tenantName":"ovh_fake_tenant_name"}}'
+    headers:
+      User-Agent:
+      - fog/1.38.0 fog-core/1.38.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '7079'
+      Date:
+      - Thu, 12 May 2016 13:58:56 GMT
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2016-05-12T13:58:56.448274", "expires":
+        "2016-05-13T13:58:56Z", "id": "b80279bbdb5040b0901870d040c56dda", "tenant":
+        {"id": "a24c37ed11a84896914514384898c34b", "enabled": true, "name": "2627898119540674",
+        "description": "apientreprise"}, "audit_ids": ["b2vx3mXxTBOpADiqbwFo3Q"]},
+        "serviceCatalog": [{"endpoints": [{"adminURL": "https://compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "GRA1", "internalURL": "https://compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "17f6ef1cc63e492ab8d3f2bda8428cb0", "publicURL": "https://compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "BHS1", "internalURL": "https://compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "21fdd202afd04470bbaf84f9396d0dcc", "publicURL": "https://compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "SBG1", "internalURL": "https://compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "a707bffedf1c4b80a124c585c67c1639", "publicURL": "https://compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "https://network.compute.gra1.cloud.ovh.net/", "region": "GRA1", "internalURL":
+        "https://network.compute.gra1.cloud.ovh.net/", "id": "26a339a8c7d5463f89ca937068ebbcd4",
+        "publicURL": "https://network.compute.gra1.cloud.ovh.net/"}, {"adminURL":
+        "https://network.compute.bhs1.cloud.ovh.net/", "region": "BHS1", "internalURL":
+        "https://network.compute.bhs1.cloud.ovh.net/", "id": "3fe2326789ec4e37af2e6b2c80a90876",
+        "publicURL": "https://network.compute.bhs1.cloud.ovh.net/"}, {"adminURL":
+        "https://network.compute.sbg1.cloud.ovh.net/", "region": "SBG1", "internalURL":
+        "https://network.compute.sbg1.cloud.ovh.net/", "id": "075839111e7a41f1bb458926e5f04cec",
+        "publicURL": "https://network.compute.sbg1.cloud.ovh.net/"}], "endpoints_links":
+        [], "type": "network", "name": "neutron"}, {"endpoints": [{"adminURL": "https://volume.compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "GRA1", "internalURL": "https://volume.compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "7231957fdf0346e5adebe860ac5e5e57", "publicURL": "https://volume.compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://volume.compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "BHS1", "internalURL": "https://volume.compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "2f5b68f95d7b4b1fad1a683dac8e8ca3", "publicURL": "https://volume.compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://volume.compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "SBG1", "internalURL": "https://volume.compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "021b61bd7313479e8f8d77d21c7b434a", "publicURL": "https://volume.compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"}],
+        "endpoints_links": [], "type": "volumev2", "name": "cinderv2"}, {"endpoints":
+        [{"adminURL": "https://image.compute.gra1.cloud.ovh.net/", "region": "GRA1",
+        "internalURL": "https://image.compute.gra1.cloud.ovh.net/", "id": "56795c82f1744e47b7782f1fc2407212",
+        "publicURL": "https://image.compute.gra1.cloud.ovh.net/"}, {"adminURL": "https://image.compute.bhs1.cloud.ovh.net/",
+        "region": "BHS1", "internalURL": "https://image.compute.bhs1.cloud.ovh.net/",
+        "id": "5eaa4cbe80354ea482f2b0477c9c16f0", "publicURL": "https://image.compute.bhs1.cloud.ovh.net/"},
+        {"adminURL": "https://image.compute.sbg1.cloud.ovh.net/", "region": "SBG1",
+        "internalURL": "https://image.compute.sbg1.cloud.ovh.net/", "id": "15758b246d1340e887a2170bd3399071",
+        "publicURL": "https://image.compute.sbg1.cloud.ovh.net/"}], "endpoints_links":
+        [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL": "https://volume.compute.gra1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "region": "GRA1", "internalURL": "https://volume.compute.gra1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "id": "a6936c8876c1490cbf91d0707e78d350", "publicURL": "https://volume.compute.gra1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://volume.compute.bhs1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "region": "BHS1", "internalURL": "https://volume.compute.bhs1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "id": "43bc107cf78448faa9e5a6b3a5ca48dd", "publicURL": "https://volume.compute.bhs1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://volume.compute.sbg1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "region": "SBG1", "internalURL": "https://volume.compute.sbg1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "id": "2be04ee1ddb148c19e91d3da5934fa55", "publicURL": "https://volume.compute.sbg1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "https://storage.gra1.cloud.ovh.net", "region": "GRA1", "internalURL":
+        "http://127.0.0.1:8888/v1/AUTH_a24c37ed11a84896914514384898c34b", "id": "c96f61d071a74e36bd3c07e53d241ce3",
+        "publicURL": "https://storage.gra1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://storage.bhs1.cloud.ovh.net:8888/", "region": "BHS1",
+        "internalURL": "http://127.0.0.1:8888/v1/AUTH_a24c37ed11a84896914514384898c34b",
+        "id": "3327534a1a824389aae5d663b9821d67", "publicURL": "https://storage.bhs1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://storage.sbg1.cloud.ovh.net", "region": "SBG1", "internalURL":
+        "http://127.0.0.1:8888/v1/AUTH_a24c37ed11a84896914514384898c34b", "id": "2af96b87ad484cb7879a9ea554d5418c",
+        "publicURL": "https://storage.sbg1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "https://auth.cloud.ovh.net:35357/v2.0", "region": "GRA1", "internalURL":
+        "http://127.0.0.1:5000/v2.0", "id": "62101e498fc3404dbc18ec80888992cb", "publicURL":
+        "https://auth.cloud.ovh.net/v2.0"}, {"adminURL": "https://auth.cloud.ovh.net:35357/v2.0",
+        "region": "BHS1", "internalURL": "http://127.0.0.1:5000/v2.0", "id": "00e403276b3246c4a5c54dc7133f9f0a",
+        "publicURL": "https://auth.cloud.ovh.net/v2.0"}, {"adminURL": "https://auth.cloud.ovh.net:35357/v2.0",
+        "region": "SBG1", "internalURL": "http://127.0.0.1:5000/v2.0", "id": "6094ef2ed9f240ed9b648dfcc0d9f923",
+        "publicURL": "https://auth.cloud.ovh.net/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "MhsuDbK4DsPr", "roles_links":
+        [], "id": "43914cf4645747ba90d075c62ebb5018", "roles": [{"name": "_member_"}],
+        "name": "MhsuDbK4DsPr"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
+    http_version:
+  recorded_at: Thu, 12 May 2016 13:58:56 GMT
+recorded_with: VCR 3.0.1

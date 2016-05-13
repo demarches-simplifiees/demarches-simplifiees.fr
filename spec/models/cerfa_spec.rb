@@ -11,7 +11,7 @@ describe Cerfa do
     it { is_expected.to belong_to(:user) }
   end
 
-  describe 'empty?' do
+  describe 'empty?', vcr: { cassette_name: 'models_cerfa_empty' } do
     subject { create(:cerfa, content: content) }
     context 'when content exist' do
       let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }

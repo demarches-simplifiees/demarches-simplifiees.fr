@@ -56,6 +56,8 @@ gem 'rest-client'
 gem 'clamav-client', require: 'clamav/client'
 
 gem 'carrierwave'
+gem 'fog'
+gem 'fog-openstack'
 
 gem 'pg'
 
@@ -99,6 +101,7 @@ group :test do
   gem 'guard'
   gem 'guard-rspec', require: false
   gem 'guard-livereload', '~> 2.4', require: false
+  gem 'vcr'
 end
 
 group :development, :test do

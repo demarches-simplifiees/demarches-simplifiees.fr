@@ -88,7 +88,7 @@ describe Dossier do
       end
     end
 
-    describe '#retrieve_last_piece_justificative_by_type' do
+    describe '#retrieve_last_piece_justificative_by_type', vcr: { cassette_name: 'models_dossier_retrieve_last_piece_justificative_by_type' } do
       let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
 
       subject { dossier.retrieve_last_piece_justificative_by_type types_de_pj_dossier.first }
