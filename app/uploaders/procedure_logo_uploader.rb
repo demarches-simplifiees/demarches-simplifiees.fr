@@ -12,9 +12,7 @@ class ProcedureLogoUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    if Features.remote_storage
-      nil
-    else
+    unless Features.remote_storage
       "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
     end
   end
@@ -30,16 +28,14 @@ class ProcedureLogoUploader < CarrierWave::Uploader::Base
   end
 
   def filename
-    if original_filename || model.logo_secure_token
+    if original_filename.present? || model.logo_secure_token
       if Features.remote_storage
-        @filename = "#{model.class.to_s.underscore}-#{secure_token}.pdf"
+        filename = "#{model.class.to_s.underscore}-#{secure_token}.pdf"
       else original_filename
-        @filename = "#{model.class.to_s.underscore}.pdf"
+        filename = "#{model.class.to_s.underscore}.pdf"
       end
-    else
-      @filename = nil
     end
-    @filename
+    filename
   end
 
   private

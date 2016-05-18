@@ -10,10 +10,10 @@ class Cerfa < ActiveRecord::Base
   end
 
   def content_url
-    if Features.remote_storage and !content.url.nil?
-      (RemoteDownloader.new content.filename).url
-    else
-      unless content.url.nil?
+    unless content.url.nil?
+      if Features.remote_storage
+        (RemoteDownloader.new content.filename).url
+      else
         (LocalDownloader.new content, 'CERFA').url
       end
     end

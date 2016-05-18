@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class PieceJustificativeUploader < CarrierWave::Uploader::Base
-  before :cache, :save_original_filename
+  before :cache, :set_original_filename
 
   # Choose what kind of storage to use for this uploader:
   if Features.remote_storage
@@ -13,9 +13,7 @@ class PieceJustificativeUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    if Features.remote_storage
-      nil
-    else
+    unless Features.remote_storage
       "../uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
     end
   end
@@ -31,16 +29,14 @@ class PieceJustificativeUploader < CarrierWave::Uploader::Base
   end
 
   def filename
-    if original_filename || model.content_secure_token
+    if original_filename.present? || model.content_secure_token
       if Features.remote_storage
-        @filename = "#{model.class.to_s.underscore}-#{secure_token}.pdf"
+        filename = "#{model.class.to_s.underscore}-#{secure_token}.pdf"
       else original_filename
-        @filename = "#{model.class.to_s.underscore}.pdf"
+        filename = "#{model.class.to_s.underscore}.pdf"
       end
-    else
-      @filename = nil
     end
-    @filename
+    filename
   end
 
   def original_filename
@@ -57,7 +53,7 @@ class PieceJustificativeUploader < CarrierWave::Uploader::Base
     SecureRandom.uuid
   end
 
-  def save_original_filename(file)
+  def set_original_filename(file)
     model.original_filename ||= file.original_filename if file.respond_to?(:original_filename)
   end
 end

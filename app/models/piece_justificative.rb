@@ -18,10 +18,10 @@ class PieceJustificative < ActiveRecord::Base
   end
 
   def content_url
-    if Features.remote_storage and !content.url.nil?
-      (RemoteDownloader.new content.filename).url
-    else
-      unless content.url.nil?
+    unless content.url.nil?
+      if Features.remote_storage
+        (RemoteDownloader.new content.filename).url
+      else
         (LocalDownloader.new content,
                         (type_de_piece_justificative.nil? ? content.original_filename : type_de_piece_justificative.libelle)).url
       end

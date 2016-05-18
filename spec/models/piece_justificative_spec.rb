@@ -3,6 +3,8 @@ require 'spec_helper'
 describe PieceJustificative do
   describe 'database columns' do
     it { is_expected.to have_db_column(:content) }
+    it { is_expected.to have_db_column(:original_filename) }
+    it { is_expected.to have_db_column(:content_secure_token) }
     it { is_expected.to have_db_column(:created_at) }
   end
 
