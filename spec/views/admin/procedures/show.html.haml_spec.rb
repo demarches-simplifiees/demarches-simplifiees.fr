@@ -5,7 +5,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
 
   before do
     assign(:facade, AdminProceduresShowFacades.new(procedure.decorate))
-
+    assign(:procedure, procedure)
     render
   end
 
