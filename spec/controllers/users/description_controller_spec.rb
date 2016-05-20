@@ -138,7 +138,11 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
           subject { dossier.cerfa.first }
 
           it 'content' do
-            expect(subject['content']).to eq('cerfa-3dbb3535-5388-4a37-bc2d-778327b9f999.pdf')
+            if Features.remote_storage
+              expect(subject['content']).to eq('cerfa-3dbb3535-5388-4a37-bc2d-778327b9f999.pdf')
+            else
+              expect(subject['content']).to eq('cerfa.pdf')
+            end
           end
 
           it 'dossier_id' do
