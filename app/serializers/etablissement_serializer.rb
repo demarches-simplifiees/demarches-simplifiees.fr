@@ -11,4 +11,8 @@ class EtablissementSerializer < ActiveModel::Serializer
              :code_postal,
              :localite,
              :code_insee_localite
+
+  def adresse
+    object.adresse.chomp.gsub("\r\n", ' ')
+  end
 end
