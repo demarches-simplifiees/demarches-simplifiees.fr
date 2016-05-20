@@ -4,7 +4,7 @@ namespace :dev do
     puts 'start initialisation'
     Rake::Task['dev:generate_token_file'].invoke
     Rake::Task['dev:generate_franceconnect_file'].invoke
-    Rake::Task['dev:generate_ovh_storage_file'].invoke
+    Rake::Task['dev:generate_fog_credentials_file'].invoke
     Rake::Task['dev:generate_features_file'].invoke
 
     puts 'end initialisation'
@@ -38,8 +38,8 @@ EOF
     file.close
   end
 
-  task :generate_ovh_storage_file do
-    puts 'creating fog_credentials.yml file'
+  task :generate_fog_credentials_file do
+    puts 'creating fog_credentials.test.yml file'
     content = <<EOF
 default:
   openstack_tenant: "ovh_fake_tenant_name"
@@ -48,7 +48,7 @@ default:
   openstack_auth_url: "https://auth.cloud.ovh.net/v2.0/tokens"
   openstack_region: "SBG1"
 EOF
-    file = File.new("config/fog_credentials.yml",  "w+")
+    file = File.new("config/fog_credentials.test.yml",  "w+")
     file.write(content)
     file.close
   end

@@ -1,6 +1,10 @@
 require_relative 'features'
 
-Fog.credentials_path = Rails.root.join('config/fog_credentials.yml')
+if Rails.env.test?
+  Fog.credentials_path = Rails.root.join('config/fog_credentials.test.yml')
+else
+  Fog.credentials_path = Rails.root.join('config/fog_credentials.yml')
+end
 
 CarrierWave.configure do |config|
   # These permissions will make dir and files available only to the user running
