@@ -2,13 +2,16 @@ require 'spec_helper'
 
 feature 'on backoffice page' do
   let(:administrateur) { create(:administrateur) }
-  let(:gestionnaire) { create(:gestionnaire, administrateur: administrateur) }
+  let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
   let(:procedure) { create(:procedure, administrateur: administrateur) }
 
   let!(:dossier) { create(:dossier,  :with_entreprise, procedure: procedure, state: 'initiated') }
+
   before do
+    create :assign_to, gestionnaire: gestionnaire, procedure: procedure
     visit backoffice_path
   end
+
   context 'when gestionnaire is logged in' do
     before do
       page.find_by_id(:gestionnaire_email).set gestionnaire.email

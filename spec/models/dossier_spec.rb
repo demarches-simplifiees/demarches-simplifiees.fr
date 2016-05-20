@@ -387,9 +387,13 @@ describe Dossier do
       let(:admin) { create(:administrateur) }
       let(:admin_2) { create(:administrateur) }
 
-      let(:gestionnaire) { create(:gestionnaire, administrateur: admin) }
+      let(:gestionnaire) { create(:gestionnaire, administrateurs: [admin]) }
       let(:procedure_admin) { create(:procedure, administrateur: admin) }
       let(:procedure_admin_2) { create(:procedure, administrateur: admin_2) }
+
+      before do
+        create :assign_to, gestionnaire: gestionnaire, procedure: procedure_admin
+      end
 
       let!(:dossier1) { create(:dossier,  procedure: procedure_admin, state: 'draft') }
       let!(:dossier2) { create(:dossier,  procedure: procedure_admin, state: 'initiated') } #a_traiter
@@ -432,8 +436,13 @@ describe Dossier do
       let(:administrateur_1) { create(:administrateur) }
       let(:administrateur_2) { create(:administrateur) }
 
-      let(:gestionnaire_1) { create(:gestionnaire, administrateur: administrateur_1) }
-      let(:gestionnaire_2) { create(:gestionnaire, administrateur: administrateur_2) }
+      let(:gestionnaire_1) { create(:gestionnaire, administrateurs: [administrateur_1]) }
+      let(:gestionnaire_2) { create(:gestionnaire, administrateurs: [administrateur_2]) }
+
+      before do
+        create :assign_to, gestionnaire: gestionnaire_1, procedure: procedure_1
+        create :assign_to, gestionnaire: gestionnaire_2, procedure: procedure_2
+      end
 
       let(:procedure_1) { create(:procedure, administrateur: administrateur_1) }
       let(:procedure_2) { create(:procedure, administrateur: administrateur_2) }

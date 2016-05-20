@@ -15,6 +15,8 @@ class Admin::GestionnairesController < AdminController
     @gestionnaire = Gestionnaire.create(create_gestionnaire_params)
 
     if @gestionnaire.errors.messages.empty?
+      @gestionnaire.administrateurs.push current_administrateur
+
       flash.notice = 'Gestionnaire ajouté'
       GestionnaireMailer.new_gestionnaire(@gestionnaire.email, @gestionnaire.password).deliver_now!
     else
@@ -33,8 +35,6 @@ class Admin::GestionnairesController < AdminController
 
   def create_gestionnaire_params
     params.require(:gestionnaire).permit(:email)
-                                 .merge(administrateur_id: current_administrateur.id)
                                  .merge(password: SecureRandom.hex(5))
   end
-
 end

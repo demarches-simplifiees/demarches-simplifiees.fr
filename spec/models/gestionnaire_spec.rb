@@ -17,7 +17,7 @@ describe Gestionnaire, type: :model do
   end
 
   describe 'association' do
-    it { is_expected.to belong_to(:administrateur) }
+    it { is_expected.to have_and_belong_to_many(:administrateurs) }
     it { is_expected.to have_many(:procedures) }
     it { is_expected.to have_many(:dossiers) }
   end
@@ -26,9 +26,14 @@ describe Gestionnaire, type: :model do
     let(:admin) { create :administrateur }
     let(:procedure) { create :procedure, administrateur: admin }
     let(:procedure_2) { create :procedure, administrateur: admin }
-    let(:gestionnaire) { create :gestionnaire, procedure_filter: procedure_filter, administrateur: admin }
+    let(:gestionnaire) { create :gestionnaire, procedure_filter: procedure_filter, administrateurs: [admin] }
     let!(:dossier) { create :dossier, procedure: procedure }
     let(:procedure_filter) { [] }
+
+    before do
+      create :assign_to, gestionnaire: gestionnaire, procedure: procedure
+      create :assign_to, gestionnaire: gestionnaire, procedure: procedure_2
+    end
 
     subject { gestionnaire.dossiers_filter }
 
@@ -47,7 +52,12 @@ describe Gestionnaire, type: :model do
     let(:admin) { create :administrateur }
     let!(:procedure) { create :procedure, administrateur: admin }
     let!(:procedure_2) { create :procedure, administrateur: admin }
-    let(:gestionnaire) { create :gestionnaire, procedure_filter: procedure_filter, administrateur: admin }
+    let(:gestionnaire) { create :gestionnaire, procedure_filter: procedure_filter, administrateurs: [admin] }
+
+    before do
+      create :assign_to, gestionnaire: gestionnaire, procedure: procedure
+      create :assign_to, gestionnaire: gestionnaire, procedure: procedure_2
+    end
 
     let(:procedure_filter) { [] }
 

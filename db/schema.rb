@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160513093425) do
+ActiveRecord::Schema.define(version: 20160519101018) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,14 @@ ActiveRecord::Schema.define(version: 20160513093425) do
   add_index "administrateurs", ["email"], name: "index_administrateurs_on_email", unique: true, using: :btree
   add_index "administrateurs", ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true, using: :btree
 
+  create_table "administrateurs_gestionnaires", id: false, force: :cascade do |t|
+    t.integer "administrateur_id"
+    t.integer "gestionnaire_id"
+  end
+
+  add_index "administrateurs_gestionnaires", ["administrateur_id"], name: "index_administrateurs_gestionnaires_on_administrateur_id", using: :btree
+  add_index "administrateurs_gestionnaires", ["gestionnaire_id"], name: "index_administrateurs_gestionnaires_on_gestionnaire_id", using: :btree
+
   create_table "administrations", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -52,6 +60,14 @@ ActiveRecord::Schema.define(version: 20160513093425) do
 
   add_index "administrations", ["email"], name: "index_administrations_on_email", unique: true, using: :btree
   add_index "administrations", ["reset_password_token"], name: "index_administrations_on_reset_password_token", unique: true, using: :btree
+
+  create_table "assign_tos", id: false, force: :cascade do |t|
+    t.integer "gestionnaire_id"
+    t.integer "procedure_id"
+  end
+
+  add_index "assign_tos", ["gestionnaire_id"], name: "index_assign_tos_on_gestionnaire_id", using: :btree
+  add_index "assign_tos", ["procedure_id"], name: "index_assign_tos_on_procedure_id", using: :btree
 
   create_table "cadastres", force: :cascade do |t|
     t.string  "surface_intersection"
@@ -176,7 +192,6 @@ ActiveRecord::Schema.define(version: 20160513093425) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "administrateur_id"
     t.integer  "procedure_filter",       default: [],              array: true
   end
 

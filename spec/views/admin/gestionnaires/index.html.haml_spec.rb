@@ -21,7 +21,7 @@ describe 'admin/gestionnaires/index.html.haml', type: :view do
 
   context 'Ajout d\'un accompagnateur' do
     before do
-      create(:gestionnaire, administrateur: admin)
+      create(:gestionnaire, administrateurs: [admin])
       admin.reload
       assign(:gestionnaires, (smart_listing_create :gestionnaires,
                                                   admin.gestionnaires,

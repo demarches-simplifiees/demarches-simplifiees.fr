@@ -6,7 +6,7 @@ describe Backoffice::DossiersController, type: :controller do
 
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10 }
-  let(:gestionnaire) { create(:gestionnaire, administrateur: create(:administrateur)) }
+  let(:gestionnaire) { create(:gestionnaire, administrateurs: [create(:administrateur)]) }
 
   describe 'GET #show' do
     context 'gestionnaire is connected' do

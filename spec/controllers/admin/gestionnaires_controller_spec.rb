@@ -19,13 +19,19 @@ describe Admin::GestionnairesController, type: :controller  do
       before do
         subject
       end
+
+      let(:gestionnaire) { Gestionnaire.last }
+
       it { expect(response.status).to eq(302) }
       it { expect(response).to redirect_to admin_gestionnaires_path }
 
       describe 'Gestionnaire attributs in database' do
-        let(:gestionnaire) { Gestionnaire.last }
         it { expect(gestionnaire.email).to eq(email) }
-        it { expect(gestionnaire.administrateur_id).to eq(admin.id) }
+      end
+
+      describe 'New gestionnaire is assign to the admin' do
+        it { expect(gestionnaire.administrateurs).to include admin }
+        it { expect(admin.gestionnaires).to include gestionnaire }
       end
     end
 

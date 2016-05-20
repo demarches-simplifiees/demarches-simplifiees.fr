@@ -18,7 +18,7 @@ describe Administrateur, type: :model do
   end
 
   describe 'assocations' do
-    it { is_expected.to have_many(:gestionnaires) }
+    it { is_expected.to have_and_belong_to_many(:gestionnaires) }
     it { is_expected.to have_many(:procedures) }
   end
 

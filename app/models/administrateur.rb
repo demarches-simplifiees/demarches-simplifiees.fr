@@ -1,10 +1,8 @@
 class Administrateur < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  has_many :gestionnaires
+  has_and_belongs_to_many :gestionnaires
   has_many :procedures
 
   before_save :ensure_api_token
