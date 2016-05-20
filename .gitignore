@@ -28,5 +28,7 @@ config/initializers/token.rb
 doc/*.svg
 rubocop.html
 config/france_connect.yml
+config/initializers/mailjet.rb
+config/fog_credentials.yml
 uploads/*
 coverage/**/*
