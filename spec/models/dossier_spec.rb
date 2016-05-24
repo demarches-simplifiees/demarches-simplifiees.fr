@@ -538,7 +538,7 @@ describe Dossier do
     it { expect(subject['etablissement.siege_social']).to be_truthy }
     it { expect(subject['etablissement.naf']).to eq('4950Z') }
     it { expect(subject['etablissement.libelle_naf']).to eq('Transports par conduites') }
-    it { expect(subject['etablissement.adresse']).to eq("GRTGAZ\r IMMEUBLE BORA\r 6 RUE RAOUL NORDLING\r 92270 BOIS COLOMBES\r") }
+    it { expect(subject['etablissement.adresse']).to eq("GRTGAZ IMMEUBLE BORA 6 RUE RAOUL NORDLING 92270 BOIS COLOMBES") }
     it { expect(subject['etablissement.numero_voie']).to eq('6') }
     it { expect(subject['etablissement.type_voie']).to eq('RUE') }
     it { expect(subject['etablissement.nom_voie']).to eq('RAOUL NORDLING') }
