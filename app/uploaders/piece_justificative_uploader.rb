@@ -31,9 +31,9 @@ class PieceJustificativeUploader < CarrierWave::Uploader::Base
   def filename
     if original_filename.present? || model.content_secure_token
       if Features.remote_storage
-        filename = "#{model.class.to_s.underscore}-#{secure_token}.pdf"
+        filename = "#{model.class.to_s.underscore}-#{secure_token}.#{file.extension.downcase}"
       else original_filename
-        filename = "#{model.class.to_s.underscore}.pdf"
+        filename = "#{model.class.to_s.underscore}.#{file.extension.downcase}"
       end
     end
     filename
