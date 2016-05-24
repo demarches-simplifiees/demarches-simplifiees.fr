@@ -91,11 +91,15 @@ Rails.application.routes.draw do
 
       resource :accompagnateurs, only: [:show, :update]
 
+
       resources :types_de_champ, only: [:destroy]
       resource :pieces_justificatives, only: [:show, :update]
       resources :pieces_justificatives, only: :destroy
     end
 
+    namespace :accompagnateurs do
+      get 'show' #delete after fixed tests admin/accompagnateurs/show_spec without this line
+    end
 
     resources :gestionnaires, only: [:index, :create, :destroy]
   end

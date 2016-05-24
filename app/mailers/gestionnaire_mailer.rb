@@ -4,15 +4,19 @@ class GestionnaireMailer < ApplicationMailer
     send_mail email, password, "Vous avez été nommé accompagnateur sur la plateforme TPS"
   end
 
+  def new_assignement email, email_admin
+    send_mail email, email_admin, "Vous avez été assigné à un nouvel administrateur sur la plateforme TPS"
+  end
+
   private
 
-  def vars_mailer email, password
-    @password = password
+  def vars_mailer email, args
+    @args = args
     @email = email
   end
 
-  def send_mail email, password, subject
-    vars_mailer email, password
+  def send_mail email, args, subject
+    vars_mailer email, args
 
     mail(from: "tps@apientreprise.fr", to: email,
          subject: subject)

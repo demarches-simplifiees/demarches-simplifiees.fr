@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160519101018) do
+ActiveRecord::Schema.define(version: 20160523163054) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 20160519101018) do
   end
 
   add_index "administrateurs_gestionnaires", ["administrateur_id"], name: "index_administrateurs_gestionnaires_on_administrateur_id", using: :btree
+  add_index "administrateurs_gestionnaires", ["gestionnaire_id", "administrateur_id"], name: "unique_couple_administrateur_gestionnaire", unique: true, using: :btree
   add_index "administrateurs_gestionnaires", ["gestionnaire_id"], name: "index_administrateurs_gestionnaires_on_gestionnaire_id", using: :btree
 
   create_table "administrations", force: :cascade do |t|
