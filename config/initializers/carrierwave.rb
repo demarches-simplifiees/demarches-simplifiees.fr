@@ -9,8 +9,8 @@ end
 CarrierWave.configure do |config|
   # These permissions will make dir and files available only to the user running
   # the servers
-  config.permissions = 0600
-  config.directory_permissions = 0700
+  config.permissions = 0664
+  config.directory_permissions = 0775
 
   if Features.remote_storage and not Rails.env.test?
     config.fog_credentials = { provider: 'OpenStack' }
