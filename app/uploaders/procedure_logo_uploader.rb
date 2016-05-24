@@ -2,6 +2,10 @@
 
 class ProcedureLogoUploader < CarrierWave::Uploader::Base
 
+  def root
+    File.join(Rails.root, "public")
+  end
+
   # Choose what kind of storage to use for this uploader:
   if Features.remote_storage
     storage :fog

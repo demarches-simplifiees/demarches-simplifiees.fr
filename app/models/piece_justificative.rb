@@ -22,7 +22,7 @@ class PieceJustificative < ActiveRecord::Base
       if Features.remote_storage
         (RemoteDownloader.new content.filename).url
       else
-        (LocalDownloader.new content,
+        (LocalDownloader.new content.path,
                         (type_de_piece_justificative.nil? ? content.original_filename : type_de_piece_justificative.libelle)).url
       end
     end

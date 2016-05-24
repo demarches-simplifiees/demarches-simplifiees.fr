@@ -14,7 +14,7 @@ class Cerfa < ActiveRecord::Base
       if Features.remote_storage
         (RemoteDownloader.new content.filename).url
       else
-        (LocalDownloader.new content, 'CERFA').url
+        (LocalDownloader.new content.path, 'CERFA').url
       end
     end
   end
