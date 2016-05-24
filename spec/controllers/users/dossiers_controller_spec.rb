@@ -17,6 +17,7 @@ describe Users::DossiersController, type: :controller do
 
   let(:siren) { dossier.siren }
   let(:siret) { dossier.siret }
+  let(:siret_with_whitespaces) { '440 1176 2001 530' }
   let(:bad_siret) { 1 }
 
   describe 'GET #show' do
@@ -103,12 +104,12 @@ describe Users::DossiersController, type: :controller do
     describe 'dossier attributs' do
       let(:user) { create(:user) }
 
-      context 'with valid siret ' do
+      shared_examples 'with valid siret' do
         before do
           sign_in user
         end
 
-        subject { post :create, dossier: {siret: siret, procedure_id: Procedure.last} }
+        subject { post :create, dossier: {siret: example_siret, procedure_id: Procedure.last} }
 
         it 'create a dossier' do
           expect { subject }.to change { Dossier.count }.by(1)
@@ -213,6 +214,16 @@ describe Users::DossiersController, type: :controller do
             end
           end
         end
+      end
+
+      describe "with siret without whitespaces" do
+        let(:example_siret) { siret }
+        it_should_behave_like "with valid siret"
+      end
+
+      describe "with siret with whitespaces" do
+        let(:example_siret) { siret_with_whitespaces }
+        it_should_behave_like "with valid siret"
       end
 
       context 'with non existant siret' do
