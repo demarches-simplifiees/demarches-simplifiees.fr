@@ -21,7 +21,7 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
   end
   context 'when user enter good credentials' do
     let(:administrateur) { create(:administrateur) }
-    let(:gestionnaire) { create(:gestionnaire, administrateur: administrateur) }
+    let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
 
     before do
       page.find_by_id(:gestionnaire_email).set  gestionnaire.email

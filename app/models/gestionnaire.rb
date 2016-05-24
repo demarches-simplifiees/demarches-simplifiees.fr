@@ -1,12 +1,11 @@
 class Gestionnaire < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  belongs_to :administrateur
+  has_and_belongs_to_many :administrateurs
 
-  has_many :procedures, through: :administrateur
+  has_many :assign_to
+  has_many :procedures, through: :assign_to
   has_many :dossiers, through: :procedures
 
   def dossiers_filter

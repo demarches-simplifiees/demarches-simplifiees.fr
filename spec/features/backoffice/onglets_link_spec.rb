@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'on click on tabs button' do
   let(:administrateur) { create(:administrateur) }
-  let(:gestionnaire) { create(:gestionnaire, administrateur: administrateur) }
+  let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
 
   before do
     login_as gestionnaire, scope: :gestionnaire

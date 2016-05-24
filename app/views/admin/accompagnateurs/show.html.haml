@@ -1,0 +1,19 @@
+%h2.text-info
+  =@procedure.libelle
+%br
+
+%ul.nav.nav-tabs
+  = render partial: 'admin/procedures/navbar', locals: {active: 'Accompagnateurs'}
+
+#accompagnateur_form
+  .row
+    .col-md-6.col-lg-6
+      %h3.text-info Disponibles
+      = smart_listing_render :accompagnateurs_not_assign
+
+    .col-md-6.col-lg-6
+      %h3.text-success Affectés
+
+      = smart_listing_render :accompagnateurs_assign
+
+
