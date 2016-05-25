@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Users::DescriptionController, type: :controller do
+describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 'controllers_users_description_controller' } do
   let(:user) { create(:user) }
 
   let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: true) }
@@ -125,7 +125,7 @@ describe Users::DescriptionController, type: :controller do
     end
 
     context 'Quand la procédure accepte les CERFA' do
-      context 'Sauvegarde du CERFA PDF' do
+      context 'Sauvegarde du CERFA PDF', vcr: { cassette_name: 'controllers_users_description_controller_save_cerfa' } do
         before do
           post :create, dossier_id: dossier_id,
                nom_projet: nom_projet,
@@ -134,11 +134,15 @@ describe Users::DescriptionController, type: :controller do
           dossier.reload
         end
 
-        context 'when a CERFA PDF is send' do
+        context 'when a CERFA PDF is sent', vcr: { cassette_name: 'controllers_users_description_controller_cerfa_is_sent' } do
           subject { dossier.cerfa.first }
 
           it 'content' do
-            expect(subject['content']).to eq(name_piece_justificative)
+            if Features.remote_storage
+              expect(subject['content']).to eq('cerfa-3dbb3535-5388-4a37-bc2d-778327b9f999.pdf')
+            else
+              expect(subject['content']).to eq('cerfa.pdf')
+            end
           end
 
           it 'dossier_id' do
@@ -212,7 +216,7 @@ describe Users::DescriptionController, type: :controller do
       end
     end
 
-    context 'Sauvegarde des pièces justificatives' do
+    context 'Sauvegarde des pièces justificatives', vcr: { cassette_name: 'controllers_users_description_controller_sauvegarde_pj' } do
       let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
       before do
         post :create, {dossier_id: dossier_id,
@@ -223,7 +227,7 @@ describe Users::DescriptionController, type: :controller do
         dossier.reload
       end
 
-      describe 'clamav anti-virus presence' do
+      describe 'clamav anti-virus presence', vcr: { cassette_name: 'controllers_users_description_controller_clamav_presence' } do
         it 'ClamavService safe_file? is call' do
           expect(ClamavService).to receive(:safe_file?).twice
 
@@ -250,7 +254,7 @@ describe Users::DescriptionController, type: :controller do
     end
   end
 
-  describe 'POST #pieces_justificatives' do
+  describe 'POST #pieces_justificatives', vcr: { cassette_name: 'controllers_users_description_controller_pieces_justificatives' } do
     let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
 
     subject { patch :pieces_justificatives, {dossier_id: dossier.id,
@@ -277,7 +281,7 @@ describe Users::DescriptionController, type: :controller do
         end
       end
 
-      context 'when PJ have already a document' do
+      context 'when PJ have already a document', vcr: { cassette_name: 'controllers_users_description_controller_pj_already_exist' } do
         before do
           create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative_id: all_pj_type[0]
           create :piece_justificative, :contrat, dossier: dossier, type_de_piece_justificative_id: all_pj_type[1]
@@ -285,7 +289,7 @@ describe Users::DescriptionController, type: :controller do
 
         it { expect(dossier.pieces_justificatives.size).to eq 2 }
 
-        context 'when upload two PJ' do
+        context 'when upload two PJ', vcr: { cassette_name: 'controllers_users_description_controller_pj_already_exist_upload_2pj' } do
           before do
             subject
             dossier.reload
@@ -347,7 +351,7 @@ describe Users::DescriptionController, type: :controller do
 
         it { expect(dossier.pieces_justificatives.size).to eq 2 }
 
-        context 'when upload two PJ' do
+        context 'when upload two PJ', vcr: { cassette_name: 'controllers_users_description_controller_upload_2pj' } do
           before do
             subject
             dossier.reload

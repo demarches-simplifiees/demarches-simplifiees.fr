@@ -4,21 +4,7 @@
   %br
 
   %ul.nav.nav-tabs
-    %li.active
-      = link_to('Informations', admin_procedure_path(@facade.procedure))
-
-    %li{ class: ('disabled' if @facade.procedure.locked?) }
-      = link_to_unless(@facade.procedure.locked?, 'Description', edit_admin_procedure_path(@facade.procedure)) do
-        = link_to('Description', '#')
-
-    %li{ class: ('disabled' if @facade.procedure.locked?) }
-      = link_to_unless(@facade.procedure.locked?, 'Champs', admin_procedure_types_de_champ_path(@facade.procedure)) do
-        = link_to('Champs', '#')
-
-    %li{ class: ('disabled' if @facade.procedure.locked?) }
-      = link_to_unless(@facade.procedure.locked?, 'Pièces justificatives', admin_procedure_pieces_justificatives_path(@facade.procedure)) do
-        = link_to('Pièces justificatives', '#')
-
+    = render partial: 'navbar', locals: {active: 'Informations'}
 
     %li{style:'float:right'}
       = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put do

@@ -88,7 +88,7 @@ describe Dossier do
       end
     end
 
-    describe '#retrieve_last_piece_justificative_by_type' do
+    describe '#retrieve_last_piece_justificative_by_type', vcr: { cassette_name: 'models_dossier_retrieve_last_piece_justificative_by_type' } do
       let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
 
       subject { dossier.retrieve_last_piece_justificative_by_type types_de_pj_dossier.first }
@@ -387,9 +387,13 @@ describe Dossier do
       let(:admin) { create(:administrateur) }
       let(:admin_2) { create(:administrateur) }
 
-      let(:gestionnaire) { create(:gestionnaire, administrateur: admin) }
+      let(:gestionnaire) { create(:gestionnaire, administrateurs: [admin]) }
       let(:procedure_admin) { create(:procedure, administrateur: admin) }
       let(:procedure_admin_2) { create(:procedure, administrateur: admin_2) }
+
+      before do
+        create :assign_to, gestionnaire: gestionnaire, procedure: procedure_admin
+      end
 
       let!(:dossier1) { create(:dossier,  procedure: procedure_admin, state: 'draft') }
       let!(:dossier2) { create(:dossier,  procedure: procedure_admin, state: 'initiated') } #a_traiter
@@ -432,8 +436,13 @@ describe Dossier do
       let(:administrateur_1) { create(:administrateur) }
       let(:administrateur_2) { create(:administrateur) }
 
-      let(:gestionnaire_1) { create(:gestionnaire, administrateur: administrateur_1) }
-      let(:gestionnaire_2) { create(:gestionnaire, administrateur: administrateur_2) }
+      let(:gestionnaire_1) { create(:gestionnaire, administrateurs: [administrateur_1]) }
+      let(:gestionnaire_2) { create(:gestionnaire, administrateurs: [administrateur_2]) }
+
+      before do
+        create :assign_to, gestionnaire: gestionnaire_1, procedure: procedure_1
+        create :assign_to, gestionnaire: gestionnaire_2, procedure: procedure_2
+      end
 
       let(:procedure_1) { create(:procedure, administrateur: administrateur_1) }
       let(:procedure_2) { create(:procedure, administrateur: administrateur_2) }
@@ -538,7 +547,7 @@ describe Dossier do
     it { expect(subject['etablissement.siege_social']).to be_truthy }
     it { expect(subject['etablissement.naf']).to eq('4950Z') }
     it { expect(subject['etablissement.libelle_naf']).to eq('Transports par conduites') }
-    it { expect(subject['etablissement.adresse']).to eq("GRTGAZ\r IMMEUBLE BORA\r 6 RUE RAOUL NORDLING\r 92270 BOIS COLOMBES\r") }
+    it { expect(subject['etablissement.adresse']).to eq("GRTGAZ IMMEUBLE BORA 6 RUE RAOUL NORDLING 92270 BOIS COLOMBES") }
     it { expect(subject['etablissement.numero_voie']).to eq('6') }
     it { expect(subject['etablissement.type_voie']).to eq('RUE') }
     it { expect(subject['etablissement.nom_voie']).to eq('RAOUL NORDLING') }

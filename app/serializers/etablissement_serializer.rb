@@ -11,4 +11,5 @@ class EtablissementSerializer < ActiveModel::Serializer
              :code_postal,
              :localite,
              :code_insee_localite
+
 end

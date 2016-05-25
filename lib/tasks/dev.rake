@@ -4,6 +4,8 @@ namespace :dev do
     puts 'start initialisation'
     Rake::Task['dev:generate_token_file'].invoke
     Rake::Task['dev:generate_franceconnect_file'].invoke
+    Rake::Task['dev:generate_fog_credentials_file'].invoke
+    Rake::Task['dev:generate_features_file'].invoke
 
     puts 'end initialisation'
   end
@@ -33,6 +35,31 @@ particulier_userinfo_endpoint: 'https://fcp.integ01.dev-franceconnect.fr/api/v1/
 particulier_logout_endpoint: 'https://fcp.integ01.dev-franceconnect.fr/api/v1/logout'
 EOF
     file.write(comment)
+    file.close
+  end
+
+  task :generate_fog_credentials_file do
+    puts 'creating fog_credentials.test.yml file'
+    content = <<EOF
+default:
+  openstack_tenant: "ovh_fake_tenant_name"
+  openstack_api_key: "ovh_fake_password"
+  openstack_username: "ovh_fake_username"
+  openstack_auth_url: "https://auth.cloud.ovh.net/v2.0/tokens"
+  openstack_region: "SBG1"
+EOF
+    file = File.new("config/fog_credentials.test.yml",  "w+")
+    file.write(content)
+    file.close
+  end
+
+  task :generate_features_file do
+    puts 'creating features.yml file'
+    content = <<EOF
+remote_storage: true
+EOF
+    file = File.new("config/initializers/features.yml",  "w+")
+    file.write(content)
     file.close
   end
 end

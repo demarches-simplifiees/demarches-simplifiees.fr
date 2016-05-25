@@ -11,11 +11,15 @@ describe 'backoffice/procedure_filter/index.html.haml', type: :view do
 
   context 'when gestionnaire have already check procedure' do
     let(:gestionnaire) { create(:gestionnaire,
-                                administrateur: administrateur,
+                                administrateurs: [administrateur],
                                 procedure_filter: [administrateur.procedures.first.id,
                                                    administrateur.procedures.last.id]) }
 
     before do
+      create :assign_to, gestionnaire: gestionnaire, procedure: administrateur.procedures.first
+      create :assign_to, gestionnaire: gestionnaire, procedure: administrateur.procedures.second
+      create :assign_to, gestionnaire: gestionnaire, procedure: administrateur.procedures.last
+
       sign_in gestionnaire
 
       assign(:gestionnaire, gestionnaire)

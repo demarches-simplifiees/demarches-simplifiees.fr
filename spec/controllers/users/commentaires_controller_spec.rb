@@ -30,7 +30,7 @@ describe Users::CommentairesController, type: :controller do
       end
     end
 
-    context 'when document is upload whith a commentaire' do
+    context 'when document is upload whith a commentaire', vcr: { cassette_name: 'controllers_sers_commentaires_controller_upload_doc' } do
       let(:document_upload) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
 
       subject do

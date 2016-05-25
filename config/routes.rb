@@ -80,6 +80,7 @@ Rails.application.routes.draw do
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'profile' => 'profile#show', as: :profile
+
     resources :procedures do
       resource :types_de_champ, only: [:show, :update] do
         post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
@@ -88,10 +89,18 @@ Rails.application.routes.draw do
 
       put 'archive' => 'procedures#archive', as: :archive
 
+      resource :accompagnateurs, only: [:show, :update]
+
+
       resources :types_de_champ, only: [:destroy]
       resource :pieces_justificatives, only: [:show, :update]
       resources :pieces_justificatives, only: :destroy
     end
+
+    namespace :accompagnateurs do
+      get 'show' #delete after fixed tests admin/accompagnateurs/show_spec without this line
+    end
+
     resources :gestionnaires, only: [:index, :create, :destroy]
   end
 

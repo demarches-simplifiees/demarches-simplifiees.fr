@@ -3,6 +3,8 @@ require 'spec_helper'
 describe PieceJustificative do
   describe 'database columns' do
     it { is_expected.to have_db_column(:content) }
+    it { is_expected.to have_db_column(:original_filename) }
+    it { is_expected.to have_db_column(:content_secure_token) }
     it { is_expected.to have_db_column(:created_at) }
   end
 
@@ -26,7 +28,7 @@ describe PieceJustificative do
     it { is_expected.to delegate_method(:api_entreprise).to(:type_de_piece_justificative) }
   end
 
-  describe '#empty?' do
+  describe '#empty?', vcr: { cassette_name: 'model_piece_justificative' } do
     let(:piece_justificative) { create(:piece_justificative, content: content) }
     subject { piece_justificative.empty? }
 

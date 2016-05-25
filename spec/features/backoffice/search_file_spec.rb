@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'search file on gestionnaire backoffice' do
   let(:administrateur) { create(:administrateur) }
-  let(:gestionnaire) { create(:gestionnaire, administrateur: administrateur) }
+  let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
 
   before do
     login_as gestionnaire, scope: :gestionnaire
@@ -11,8 +11,11 @@ feature 'search file on gestionnaire backoffice' do
   context 'when gestionnaire is logged in' do
     context 'when he click on search button' do
       let(:terms) { '' }
+      let!(:procedure) { create(:procedure, administrateur: administrateur) }
 
       before do
+        create :assign_to, gestionnaire: gestionnaire, procedure: procedure
+
         visit backoffice_dossiers_url
         page.find_by_id(:q).set terms
         page.find_by_id(:search_button).click
@@ -36,7 +39,6 @@ feature 'search file on gestionnaire backoffice' do
         end
 
         context 'when terms input does return result' do
-          let!(:procedure) { create(:procedure, administrateur: administrateur) }
           let!(:dossier) { create(:dossier, :with_entreprise,  procedure: procedure, state: 'initiated') }
           let!(:dossier_2) { create(:dossier,  procedure: procedure, state: 'initiated', nom_projet: 'Projet de test') }
 

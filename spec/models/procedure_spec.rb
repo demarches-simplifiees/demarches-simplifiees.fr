@@ -17,6 +17,7 @@ describe Procedure do
     it { is_expected.to have_db_column(:test) }
     it { is_expected.to have_db_column(:euro_flag) }
     it { is_expected.to have_db_column(:logo) }
+    it { is_expected.to have_db_column(:logo_secure_token) }
     it { is_expected.to have_db_column(:cerfa_flag) }
   end
 

@@ -179,7 +179,7 @@ describe API::V1::DossiersController do
           end
         end
 
-        describe 'piece justificative' do
+        describe 'piece justificative', vcr: { cassette_name: 'controllers_api_v1_dossiers_controller_piece_justificative' } do
           before do
             create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: dossier.procedure.types_de_piece_justificative.first, user: dossier.user
           end
@@ -249,7 +249,7 @@ describe API::V1::DossiersController do
           it { expect(subject.first[:email]).to eq 'plop@plip.com' }
         end
 
-        describe 'cerfa' do
+        describe 'cerfa', vcr: { cassette_name: 'controllers_api_v1_dossiers_controller_cerfa' } do
           let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :with_cerfa_upload, procedure: procedure) } }
           let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
 
@@ -263,7 +263,11 @@ describe API::V1::DossiersController do
           subject { super()[:cerfa].first }
 
           it { expect(subject[:created_at]).not_to be_nil }
-          it { expect(subject[:url]).to match /^http:\/\/.*downloads.*_CERFA\.pdf$/ }
+          if Features.remote_storage
+            it { expect(subject[:url]).to match /^https:\/\/storage.apientreprise.fr\/tps_dev\/cerfa-.*\.pdf$/ }
+          else
+            it { expect(subject[:url]).to match /^http:\/\/.*downloads.*_CERFA\.pdf$/ }
+          end
 
           describe 'user' do
             let(:field_list) { [

@@ -7,6 +7,9 @@ class Procedure < ActiveRecord::Base
 
   belongs_to :administrateur
 
+  has_many :assign_to
+  has_many :gestionnaires, through: :assign_to
+
   delegate :use_api_carto, to: :module_api_carto
 
   accepts_nested_attributes_for :types_de_champ,:reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
