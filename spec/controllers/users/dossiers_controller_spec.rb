@@ -288,36 +288,6 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe 'PUT #archive' do
-    let(:dossier) { create(:dossier, user: user) }
-
-    context 'when user is the owner of the file' do
-      before do
-        sign_in user
-        put :archive, dossier_id: dossier.id
-        dossier.reload
-      end
-
-      it { expect(dossier.archived).to be_truthy }
-      it { expect(response).to redirect_to :users_dossiers }
-      it { expect(flash[:notice]).to have_content 'Dossier archivé' }
-    end
-
-    context 'when user is not the owner of the file' do
-      let(:user_2) { create(:user) }
-
-      before do
-        sign_in user_2
-
-        put :archive, dossier_id: dossier.id
-        procedure.reload
-      end
-
-      it { expect(response).to redirect_to :users_dossiers }
-      it { expect(flash[:alert]).to have_content 'Dossier inéxistant' }
-    end
-  end
-
   describe 'GET #a_traiter' do
     context 'when user is connected' do
       before do
