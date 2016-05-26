@@ -67,4 +67,33 @@ describe Users::SessionsController, type: :controller do
       end
     end
   end
+
+  describe '.new' do
+    subject { get :new }
+
+    context 'when procedure_id is not present in user_return_to session params' do
+      it { expect(subject.status).to eq 200}
+    end
+
+    context 'when procedure_id is present in user_return_to session params' do
+      context 'when procedure_id does not exist' do
+        before do
+          session["user_return_to"] = '?procedure_id=0'
+        end
+
+        it { expect(subject.status).to eq 302}
+        it { expect(subject).to redirect_to root_path }
+      end
+
+      context 'when procedure_id exist' do
+        let(:procedure) { create :procedure }
+
+        before do
+          session["user_return_to"] = "?procedure_id=#{procedure.id}"
+        end
+
+        it { expect(subject.status).to eq 200}
+      end
+    end
+  end
 end

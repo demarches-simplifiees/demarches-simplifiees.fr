@@ -11,7 +11,13 @@ class Users::SessionsController < Sessions::SessionsController
 
 # GET /resource/sign_in
   def new
+    unless user_return_to_procedure_id.nil?
+      @dossier = Dossier.new(procedure: Procedure.not_archived(user_return_to_procedure_id))
+    end
+
     @user = User.new
+  rescue ActiveRecord::RecordNotFound
+    error_procedure
   end
 
 #POST /resource/sign_in
@@ -39,10 +45,21 @@ class Users::SessionsController < Sessions::SessionsController
     end
   end
 
-# protected
+  def no_procedure
+    session['user_return_to'] = nil
+    redirect_to new_user_session_path
+  end
 
-# You can put the params you want to permit in the empty array.
-# def configure_sign_in_params
-#   devise_parameter_sanitizer.for(:sign_in) << :attribute
-# end
+  private
+
+  def error_procedure
+    flash.alert = t('errors.messages.procedure_not_found')
+    redirect_to url_for root_path
+  end
+
+  def user_return_to_procedure_id
+    return nil if session["user_return_to"].nil?
+
+    NumberService.to_number session["user_return_to"].split("?procedure_id=").second
+  end
 end
