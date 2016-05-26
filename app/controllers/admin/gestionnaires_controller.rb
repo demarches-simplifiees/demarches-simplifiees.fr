@@ -13,6 +13,7 @@ class Admin::GestionnairesController < AdminController
 
   def create
     @gestionnaire = Gestionnaire.find_by_email(params[:gestionnaire][:email])
+    procedure_id = params[:procedure_id]
 
     if @gestionnaire.nil?
       new_gestionnaire!
@@ -20,6 +21,7 @@ class Admin::GestionnairesController < AdminController
       assign_gestionnaire!
     end
 
+    return redirect_to admin_procedure_accompagnateurs_path(procedure_id: procedure_id) unless procedure_id.nil?
     redirect_to admin_gestionnaires_path
   end
 

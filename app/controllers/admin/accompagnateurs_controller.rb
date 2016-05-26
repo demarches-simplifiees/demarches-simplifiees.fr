@@ -19,6 +19,7 @@ class Admin::AccompagnateursController < AdminController
                                                        partial: "admin/accompagnateurs/list_not_assign",
                                                        array: true
 
+    @gestionnaire ||= Gestionnaire.new
   end
 
   def update

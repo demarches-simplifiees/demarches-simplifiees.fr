@@ -9,6 +9,7 @@ describe 'admin/accompagnateurs/show.html.haml', type: :view do
 
   before do
     assign(:procedure, procedure)
+    assign(:gestionnaire, Gestionnaire.new)
 
     assign(:accompagnateurs_assign, (smart_listing_create :accompagnateurs_assign,
                                                           assign_gestionnaires,
