@@ -16,7 +16,8 @@ describe Admin::GestionnairesController, type: :controller do
 
   describe 'POST #create' do
     let(:email) { 'test@plop.com' }
-    subject { post :create, gestionnaire: {email: email} }
+    let(:procedure_id) { nil }
+    subject { post :create, gestionnaire: {email: email}, procedure_id: procedure_id }
 
     context 'When email is valid' do
       before do
@@ -27,6 +28,14 @@ describe Admin::GestionnairesController, type: :controller do
 
       it { expect(response.status).to eq(302) }
       it { expect(response).to redirect_to admin_gestionnaires_path }
+
+      context 'when procedure_id params is not null' do
+        let(:procedure) { create :procedure }
+        let(:procedure_id) { procedure.id }
+
+        it { expect(response.status).to eq(302) }
+        it { expect(response).to redirect_to admin_procedure_accompagnateurs_path(procedure_id: procedure_id) }
+      end
 
       describe 'Gestionnaire attributs in database' do
         it { expect(gestionnaire.email).to eq(email) }
