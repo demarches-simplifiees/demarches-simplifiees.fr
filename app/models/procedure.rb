@@ -25,6 +25,10 @@ class Procedure < ActiveRecord::Base
     types_de_champ.order(:order_place)
   end
 
+  def self.not_archived id
+    Procedure.where(archived: false).find(id)
+  end
+
   def switch_types_de_champ index_of_first_element
     return false if index_of_first_element < 0
     types_de_champ_tmp = types_de_champ_ordered

@@ -1,0 +1,11 @@
+- if @dossier.procedure.euro_flag
+  #euro_flag.flag
+    =image_tag('drapeau_europe.png')
+
+#logo_procedure.flag
+  =image_tag( @dossier.procedure.decorate.logo_img )
+
+%h2#titre_procedure.text-info
+  = @dossier.procedure.libelle
+%p
+  = h @dossier.procedure.description.html_safe

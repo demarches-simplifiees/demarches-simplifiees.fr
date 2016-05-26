@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get '/users/sign_in/demo' => 'users/sessions#demo'
+    get '/users/no_procedure' => 'users/sessions#no_procedure'
   end
 
   devise_scope :gestionnaire do
