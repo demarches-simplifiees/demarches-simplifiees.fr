@@ -33,7 +33,7 @@ class Admin::GestionnairesController < AdminController
 
   def create_gestionnaire_params
     params.require(:gestionnaire).permit(:email)
-        .merge(password: SecureRandom.hex(5))
+        .merge(password: 'TPS2016BOOSTCAMP') #SecureRandom.hex(5)
         .merge(administrateurs: [current_administrateur])
   end
 
