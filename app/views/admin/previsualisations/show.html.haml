@@ -1,0 +1,9 @@
+%h2.text-info
+  =@procedure.libelle
+%br
+
+%ul.nav.nav-tabs
+  = render partial: 'admin/procedures/navbar', locals: {active: 'Prévisualisation'}
+
+#previsualisation
+  =render 'users/description/show'

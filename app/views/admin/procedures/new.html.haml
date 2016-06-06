@@ -4,3 +4,6 @@
   = form_for @procedure, url: {controller: 'admin/procedures', action: :create}, multipart: true do |f|
     =render partial: 'informations', locals: {f: f}
     =f.submit 'Valider', class: 'btn btn-info', style: 'float:right'
+    %br
+    %br
+    %br

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'users/description/show.html.haml', type: :view do
+describe 'admin/previsualisations/show.html.haml', type: :view do
   let(:user) { create(:user) }
   let(:cerfa_flag) { true }
   let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: cerfa_flag) }
@@ -8,7 +8,6 @@ describe 'users/description/show.html.haml', type: :view do
   let(:dossier_id) { dossier.id }
 
   before do
-    sign_in user
     assign(:dossier, dossier)
     assign(:procedure, dossier.procedure)
     assign(:champs, dossier.ordered_champs)
@@ -43,8 +42,8 @@ describe 'users/description/show.html.haml', type: :view do
     before do
       render
     end
-    it 'le bouton "Terminer" est présent' do
-      expect(rendered).to have_selector('#suivant')
+    it 'le bouton "Terminer" n\'est pas présent' do
+      expect(rendered).not_to have_selector('#suivant')
     end
   end
 
@@ -59,12 +58,12 @@ describe 'users/description/show.html.haml', type: :view do
       expect(rendered).to_not have_selector('#suivant')
     end
 
-    it 'le bouton "Modification terminé" est présent' do
-      expect(rendered).to have_selector('#modification_terminee')
+    it 'le bouton "Modification terminé" n\'est pas présent' do
+      expect(rendered).not_to have_selector('#modification_terminee')
     end
 
-    it 'le lien de retour au récapitulatif est présent' do
-      expect(rendered).to have_selector("a[href='/users/dossiers/#{dossier_id}/recapitulatif']")
+    it 'le lien de retour au récapitulatif n\'est pas présent' do
+      expect(rendered).not_to have_selector("a[href='/users/dossiers/#{dossier_id}/recapitulatif']")
     end
   end
 
