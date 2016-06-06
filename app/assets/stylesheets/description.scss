@@ -7,11 +7,34 @@
   }
 }
 
+.input-error {
+  color: darkred !important;
+  border-color: darkred !important
+}
+
 .type_champ-text {
   @extend .col-md-6;
   @extend .col-lg-6;
 
   input[type='text'] {
+    width: 100%;
+  }
+}
+
+.type_champ-email {
+  @extend .col-md-4;
+  @extend .col-lg-4;
+
+  input[type='email'] {
+    width: 100%;
+  }
+}
+
+.type_champ-phone {
+  @extend .col-md-2;
+  @extend .col-lg-2;
+
+  input[type='phone'] {
     width: 100%;
   }
 }
