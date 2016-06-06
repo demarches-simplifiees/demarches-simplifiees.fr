@@ -2,6 +2,7 @@ class TypeDeChamp < ActiveRecord::Base
   enum type_champs: {text: 'text',
                      email: 'email',
                      phone: 'phone',
+                     civilite: 'civilite',
                      textarea: 'textarea',
                      datetime: 'datetime',
                      number: 'number',
