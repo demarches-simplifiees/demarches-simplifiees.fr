@@ -1,8 +1,8 @@
 @import "bootstrap";
 @import "bootstrap-datepicker3";
 
-#description_page #liste_champs{
-  h4{
+#description_page #liste_champs {
+  h4 {
     margin-top: 35px;
   }
 }
@@ -16,12 +16,17 @@
   }
 }
 
+.datepicker-switch {
+  color: #0086b3;
+  text-decoration: underline;
+}
+
 .type_champ-textarea {
   @extend .col-md-8;
   @extend .col-lg-8;
 
   textarea.form-control {
-    width:100%;
+    width: 100%;
     height: 133px;
   }
 }
@@ -30,7 +35,7 @@
   @extend .col-md-3;
   @extend .col-lg-3;
 
-  input[type='number']{
+  input[type='number'] {
     width: 100%;
   }
 }
@@ -39,7 +44,7 @@
   @extend .col-md-2;
   @extend .col-lg-2;
 
-  input[type='number']{
+  input[type='number'] {
     width: 100%;
   }
 }
