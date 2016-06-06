@@ -60,7 +60,7 @@ class Admin::ProceduresController < AdminController
     end
 
     flash.notice = 'Préocédure modifiée'
-    redirect_to admin_procedures_path
+    redirect_to edit_admin_procedure_path(id: @procedure.id)
   end
 
   def archive

@@ -1,9 +1,4 @@
-%h2.text-info
-  =@procedure.libelle
-%br
-
-%ul.nav.nav-tabs
-  = render partial: 'admin/procedures/navbar', locals: {active: 'Champs'}
+=render partial: 'admin/procedures/head', locals: {active: 'Champs'}
 
 #liste_champ
   = render partial: 'form'

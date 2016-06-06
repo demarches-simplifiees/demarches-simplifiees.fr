@@ -192,7 +192,7 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.cadastre).to be_truthy }
         end
 
-        it { expect(subject).to redirect_to(admin_procedures_path) }
+        it { expect(subject).to redirect_to(edit_admin_procedure_path id: procedure.id) }
         it { expect(flash[:notice]).to be_present }
       end
 

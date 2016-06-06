@@ -1,10 +1,5 @@
 #procedure_show
-  %h2.text-info
-    =@facade.procedure.libelle
-  %br
-
-  %ul.nav.nav-tabs
-    = render partial: 'navbar', locals: {active: 'Informations'}
+  =render partial: 'head', locals: {active: 'Informations'}
 
   = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style:'float: right; margin-top: 10px' do
     %button#archive.btn.btn-small.btn-default.text-info{type: :button}
