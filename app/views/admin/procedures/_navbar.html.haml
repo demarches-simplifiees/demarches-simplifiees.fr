@@ -15,3 +15,6 @@
 %li{ class: ('disabled' if @procedure.locked?) || ('active' if active == 'Pieces') }
   = link_to_unless(@procedure.locked?, 'Pièces justificatives', admin_procedure_pieces_justificatives_path(@procedure)) do
     = link_to('Pièces justificatives', '#')
+
+%li{ class: ('active' if active == 'Prévisualisation'), style: 'float:right' }
+  = link_to('Prévisualisation', admin_procedure_previsualisation_path(@procedure), {style: 'font-style: italic;'})

@@ -1,9 +1,4 @@
-%h2.text-info
-  =@procedure.libelle
-%br
-
-%ul.nav.nav-tabs
-  = render partial: 'navbar', locals: {active: 'Description'}
+= render partial: 'head', locals: {active: 'Description'}
 
 #procedure_new.section.section-label
   = form_for @procedure, url: url_for({controller: 'admin/procedures', action: :update, id: @procedure.id}), multipart: true do |f|

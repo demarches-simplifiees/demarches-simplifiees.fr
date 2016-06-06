@@ -36,7 +36,7 @@ class ProcedureLogoUploader < CarrierWave::Uploader::Base
       if Features.remote_storage
         filename = "#{model.class.to_s.underscore}-#{secure_token}.#{file.extension.downcase}"
       else
-        filename = "logo.#{file.extension.downcase}"
+        filename = "logo-#{secure_token}.#{file.extension.downcase}"
       end
     end
     filename

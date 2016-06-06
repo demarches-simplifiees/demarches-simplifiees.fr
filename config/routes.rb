@@ -94,6 +94,7 @@ Rails.application.routes.draw do
 
       resource :accompagnateurs, only: [:show, :update]
 
+      resource :previsualisation, only: [:show]
 
       resources :types_de_champ, only: [:destroy]
       resource :pieces_justificatives, only: [:show, :update]

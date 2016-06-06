@@ -23,7 +23,7 @@ class PieceJustificative < ActiveRecord::Base
         (RemoteDownloader.new content.filename).url
       else
         (LocalDownloader.new content.path,
-                        (type_de_piece_justificative.nil? ? content.original_filename : type_de_piece_justificative.libelle)).url
+                             (type_de_piece_justificative.nil? ? content.original_filename : type_de_piece_justificative.libelle)).url
       end
     end
   end
@@ -38,7 +38,9 @@ class PieceJustificative < ActiveRecord::Base
       application/vnd.openxmlformats-officedocument.presentationml.presentation,
       application/vnd.oasis.opendocument.text,
       application/vnd.oasis.opendocument.presentation,
-      application/vnd.oasis.opendocument.spreadsheet
+      application/vnd.oasis.opendocument.spreadsheet,
+      image/png,
+      image/jpeg
     "
   end
 end
