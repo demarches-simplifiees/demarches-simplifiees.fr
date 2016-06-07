@@ -8,7 +8,10 @@
     %span{ style: 'margin-left: 25px;' }
       %b
         Mes Dossiers
-
+  -elsif administrateur_signed_in?
+    %span{ style: 'margin-left: 25px;' }
+      %b
+        Mes Procédures
 #sign_out
   -if gestionnaire_signed_in?
     = render partial: 'gestionnaires/login_banner'
