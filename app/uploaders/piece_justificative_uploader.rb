@@ -19,7 +19,11 @@ class PieceJustificativeUploader < CarrierWave::Uploader::Base
   end
 
   def cache_dir
-    '/tmp/tps-cache'
+    if Rails.env.production?
+      '/tmp/tps-cache'
+    else
+      '/tmp/tps-dev-cache'
+    end
   end
 
   # Add a white list of extensions which are allowed to be uploaded.
