@@ -12,44 +12,7 @@
   %body
     %div#wrap
       %div#header.navbar
-
-        #beta
-          Beta
-        = image_tag('marianne_small.png', class: 'logo')
-        %a{href: '/'}
-          = image_tag('logo-tps.png', class: 'logo')
-
-        #sign_out
-          -if gestionnaire_signed_in?
-            = render partial: 'gestionnaires/login_banner'
-          -elsif administrateur_signed_in?
-            = render partial: 'administrateurs/login_banner'
-          - elsif user_signed_in?
-            %div.user
-              -if current_user.loged_in_with_france_connect?
-                %div{ id: "fconnect-profile", "data-fc-logout-url" => '/users/sign_out" data-method="delete' }
-                  %a.text-info{ href: "#" }
-                    = "#{current_user.given_name} #{current_user.family_name}"
-
-                = link_to "", '/users/sign_out', method: :delete, :class => 'btn fa fa-power-off off-fc-link'
-
-              -else
-                %i.fa.fa-user
-                = current_user.email
-
-                = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
-          - else
-            = link_to "Utilisateur", '/users/sign_in', method: :get, :class => 'btn btn-md'
-            = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
-            = link_to "Administrateur", '/administrateurs/sign_in', method: :get, :class => 'btn btn-md'
-
-      #flash_message.center
-      - if flash.notice
-        .alert.alert-success
-          = flash.notice
-      - if flash.alert
-        .alert.alert-danger
-          = flash.alert
+        =render partial: "layouts/navbar"
 
       #main_div.main_div
         = yield
