@@ -3,15 +3,11 @@
 = image_tag('marianne_small.png', class: 'logo')
 %a{href: '/'}
   = image_tag('logo-tps.png', class: 'logo')
-%a{href: '/'}
-  -if gestionnaire_signed_in?
-    %span{ style: 'margin-left: 25px;' }
-      %b
-        Mes Dossiers
+%a{href: '/', class: 'btn btn-md'}
+  -if gestionnaire_signed_in? || user_signed_in?
+    Mes Dossiers
   -elsif administrateur_signed_in?
-    %span{ style: 'margin-left: 25px;' }
-      %b
-        Mes Procédures
+    Mes Procédures
 #sign_out
   -if gestionnaire_signed_in?
     = render partial: 'gestionnaires/login_banner'
@@ -35,11 +31,3 @@
     = link_to "Utilisateur", '/users/sign_in', method: :get, :class => 'btn btn-md'
     = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
     = link_to "Administrateur", '/administrateurs/sign_in', method: :get, :class => 'btn btn-md'
-
-#flash_message.center
-- if flash.notice
-  .alert.alert-success
-    = flash.notice
-- if flash.alert
-  .alert.alert-danger
-    = flash.alert
