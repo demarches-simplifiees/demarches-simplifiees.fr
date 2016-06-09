@@ -58,10 +58,14 @@
 
   .row.word.news
     .latest_release.col-md-7.col-lg-7
-      %h3.text-info
-        = "Dernière version (#{@latest_release.tag_name} - #{@latest_release.published_at})"
-      .body
-        =@latest_release.body.html_safe
+      - if @latest_release.nil?
+        %p
+          Erreur dans la récupération des données
+      -else
+        %h3.text-info
+          = "Dernière version (#{@latest_release.tag_name} - #{@latest_release.published_at})"
+        .body
+          =@latest_release.body.html_safe
 
       .center
         \-

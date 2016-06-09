@@ -12,7 +12,9 @@ class Github::API
 
   def self.call(end_point, params = {})
     RestClient::Resource.new(
-        base_uri+end_point
+        base_uri+end_point, timeout: 5
     ).get(params: params)
+  rescue RestClient::Forbidden
+    nil
   end
 end
