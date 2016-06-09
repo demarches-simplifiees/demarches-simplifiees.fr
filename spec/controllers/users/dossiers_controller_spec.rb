@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Users::DossiersController, type: :controller do
   let(:user) { create(:user) }
 
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, :published) }
   let(:procedure_id) { procedure.id }
   let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
   let(:dossier_id) { dossier.id }
@@ -73,6 +73,16 @@ describe Users::DossiersController, type: :controller do
 
       context 'when procedure_id is not valid' do
         let(:procedure_id) { 0 }
+
+        before do
+          sign_in create(:user)
+        end
+
+        it { is_expected.to redirect_to users_dossiers_path }
+      end
+
+      context 'when procedure is not published' do
+        let(:procedure) { create(:procedure, published: false) }
 
         before do
           sign_in create(:user)

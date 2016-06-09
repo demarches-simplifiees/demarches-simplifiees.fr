@@ -7,7 +7,7 @@ class Admin::ProceduresController < AdminController
 
   def index
     @procedures = smart_listing_create :procedures,
-                         current_administrateur.procedures.where(archived: false),
+                         current_administrateur.procedures.where(published: true, archived: false),
                          partial: "admin/procedures/list",
                          array: true
 
@@ -24,6 +24,18 @@ class Admin::ProceduresController < AdminController
 
     render 'index'
   end
+
+  def draft
+    @procedures = smart_listing_create :procedures,
+                                       current_administrateur.procedures.where(published: false, archived: false),
+                                       partial: "admin/procedures/draft_list",
+                                       array: true
+
+    draft_class
+
+    render 'index'
+  end
+
 
   def show
     @facade = AdminProceduresShowFacades.new @procedure.decorate
@@ -63,16 +75,12 @@ class Admin::ProceduresController < AdminController
     redirect_to edit_admin_procedure_path(id: @procedure.id)
   end
 
+  def publish
+    change_status({published: params[:published]})
+  end
+
   def archive
-    @procedure = current_administrateur.procedures.find(params[:procedure_id])
-    @procedure.update_attributes({archived: params[:archive]})
-
-    flash.notice = 'Procédure éditée'
-    redirect_to admin_procedures_path
-
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
-    redirect_to admin_procedures_path
+    change_status({archived: params[:archive]})
   end
 
   def active_class
@@ -83,6 +91,10 @@ class Admin::ProceduresController < AdminController
     @archived_class = 'active'
   end
 
+  def draft_class
+    @draft_class = 'active'
+  end
+
   private
 
   def create_procedure_params
@@ -91,5 +103,17 @@ class Admin::ProceduresController < AdminController
 
   def create_module_api_carto_params
     params.require(:procedure).require(:module_api_carto_attributes).permit(:id, :use_api_carto, :quartiers_prioritaires, :cadastre)
+  end
+
+  def change_status(status_options)
+    @procedure = current_administrateur.procedures.find(params[:procedure_id])
+    @procedure.update_attributes(status_options)
+
+    flash.notice = 'Procédure éditée'
+    redirect_to admin_procedures_path
+
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = 'Procédure inéxistante'
+    redirect_to admin_procedures_path
   end
 end

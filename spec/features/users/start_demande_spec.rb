@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'user arrive on siret page' do
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, :published) }
   let(:user) { create(:user) }
   let(:siret) { '42149333900020' }
   let(:siren) { siret[0...9] }

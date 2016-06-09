@@ -82,6 +82,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
+    get 'procedures/draft' => 'procedures#draft'
     get 'profile' => 'profile#show', as: :profile
 
     resources :procedures do
@@ -95,6 +96,7 @@ Rails.application.routes.draw do
       end
 
       put 'archive' => 'procedures#archive', as: :archive
+      put 'publish' => 'procedures#publish', as: :publish
 
       resource :accompagnateurs, only: [:show, :update]
 

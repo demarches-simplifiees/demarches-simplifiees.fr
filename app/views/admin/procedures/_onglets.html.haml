@@ -1,5 +1,10 @@
 #onglets
   %ul.nav.nav-tabs
+    %li{class: @draft_class}
+      %a{:href => "#{url_for :admin_procedures_draft}"}
+        %h5{style: 'color: black'}
+          ="Brouillons"
+
     %li{class: @active_class}
       %a{:href => "#{url_for :admin_procedures}"}
         %h5.text-success

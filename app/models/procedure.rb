@@ -33,6 +33,10 @@ class Procedure < ActiveRecord::Base
     Procedure.where(archived: false).find(id)
   end
 
+  def self.active id
+    Procedure.where(archived: false, published: true).find(id)
+  end
+
   def switch_types_de_champ index_of_first_element
     switch_list_order(types_de_champ_ordered, index_of_first_element)
   end
@@ -51,6 +55,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def locked?
-    dossiers.where.not(state: :draft).count > 0
+    published?
   end
+
 end

@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Admin::PiecesJustificativesController, type: :controller  do
   let(:admin) { create(:administrateur) }
-  let(:procedure) { create(:procedure, administrateur: admin) }
+  let(:published) { false }
+  let(:procedure) { create(:procedure, administrateur: admin, published: published) }
   before do
     sign_in admin
   end
@@ -17,8 +18,8 @@ describe Admin::PiecesJustificativesController, type: :controller  do
       it { expect(subject.status).to eq(404) }
     end
 
-    context 'when procedure have at least a file' do
-      let!(:dossier) { create(:dossier,  procedure: procedure, state: :initiated) }
+    context 'when procedure is published' do
+      let(:published) { true }
       it { is_expected.to redirect_to admin_procedure_path id: procedure_id }
     end
 
