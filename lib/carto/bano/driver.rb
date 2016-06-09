@@ -3,12 +3,15 @@ module Carto
     # input : string (address)
     # output : json
     class Driver
-      def initialize(address)
+      def initialize(address, limit = 1)
         @address = address
+        @limit = limit
       end
 
       def call
-        RestClient.get api_url, params: { q: @address, limit: 1 }
+        RestClient.get api_url, params: { q: @address, limit: @limit }
+      rescue RestClient::ServiceUnavailable
+        nil
       end
 
       def api_url

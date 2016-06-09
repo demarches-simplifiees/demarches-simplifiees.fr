@@ -1,12 +1,14 @@
 class TypeDeChamp < ActiveRecord::Base
-  enum type_champs: {text: 'text',
-                     email: 'email',
-                     phone: 'phone',
-                     civilite: 'civilite',
-                     textarea: 'textarea',
-                     datetime: 'datetime',
-                     number: 'number',
-                     checkbox: 'checkbox'
+  enum type_champs: {
+           text: 'text',
+           textarea: 'textarea',
+           datetime: 'datetime',
+           number: 'number',
+           checkbox: 'checkbox',
+           civilite: 'civilite',
+           email: 'email',
+           phone: 'phone',
+           address: 'address'
        }
 
   belongs_to :procedure

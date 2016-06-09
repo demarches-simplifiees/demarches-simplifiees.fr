@@ -108,6 +108,10 @@ Rails.application.routes.draw do
     resources :gestionnaires, only: [:index, :create, :destroy]
   end
 
+  namespace :ban do
+    get 'search' => 'search#get'
+  end
+
   get 'backoffice' => 'backoffice#index'
 
   namespace :backoffice do

@@ -34,5 +34,5 @@
                   id: "champs_#{champ.id}",
                   value: champ.value,
                   type: champ.type_champ,
-                  'data-provide' => ('datepicker' if champ.type_champ == 'datetime'),
+                  'data-provide' => champ.data_provide,
                   'data-date-format' => ('dd/mm/yyyy' if champ.type_champ == 'datetime')}

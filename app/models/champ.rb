@@ -7,4 +7,9 @@ class Champ < ActiveRecord::Base
   def mandatory?
     mandatory
   end
+
+  def data_provide
+    return 'datepicker' if type_champ == 'datetime'
+    return 'typeahead' if type_champ == 'address'
+  end
 end

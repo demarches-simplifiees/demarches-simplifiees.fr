@@ -21,6 +21,15 @@
   }
 }
 
+.type_champ-address {
+  @extend .col-md-6;
+  @extend .col-lg-6;
+
+  input[type='address'] {
+    width: 100%;
+  }
+}
+
 .type_champ-email {
   @extend .col-md-4;
   @extend .col-lg-4;
