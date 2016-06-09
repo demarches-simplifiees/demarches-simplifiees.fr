@@ -9,6 +9,8 @@
   \-
   %button#delete.btn.btn-sm.btn-danger{type:'button'} Supprimer
 
+  %span#search_by_address{style: 'margin-left: 20px'}
+    %input.form-control{type: :address, placeholder: 'Rechercher une adresse'}
   %br
   %br
   #carte_page.row
@@ -23,7 +25,6 @@
       #cadastre.list
         %h3.text-warning Cadastres
         %ul
-
 
   = form_tag(url_for({controller: :carte, action: :save, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
     %br

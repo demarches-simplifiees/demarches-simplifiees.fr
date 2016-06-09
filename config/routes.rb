@@ -114,6 +114,7 @@ Rails.application.routes.draw do
 
   namespace :ban do
     get 'search' => 'search#get'
+    get 'address_point' => 'search#get_address_point'
   end
 
   get 'backoffice' => 'backoffice#index'
