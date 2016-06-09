@@ -89,6 +89,10 @@ Rails.application.routes.draw do
         post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
         post '/:index/move_down' => 'types_de_champ#move_down', as: :move_down
       end
+      resource :pieces_justificatives, only: [:show, :update] do
+        post '/:index/move_up' => 'pieces_justificatives#move_up', as: :move_up
+        post '/:index/move_down' => 'pieces_justificatives#move_down', as: :move_down
+      end
 
       put 'archive' => 'procedures#archive', as: :archive
 

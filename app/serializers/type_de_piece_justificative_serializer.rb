@@ -1,6 +1,6 @@
 class TypeDePieceJustificativeSerializer < ActiveModel::Serializer
   attributes :id,
              :libelle,
-             :description
-
+             :description,
+             :order_place
 end

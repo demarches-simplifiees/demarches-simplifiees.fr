@@ -1,7 +1,7 @@
 class Admin::TypesDeChampController < AdminController
   before_action :retrieve_procedure
   before_action :procedure_locked?
-  
+
   def destroy
     @procedure.types_de_champ.destroy(params[:id])
     render 'show', format: :js
@@ -19,7 +19,9 @@ class Admin::TypesDeChampController < AdminController
   end
 
   def update_params
-    params.require(:procedure).permit(types_de_champ_attributes: [:libelle, :description, :order_place, :type_champ, :id, :mandatory])
+    params
+        .require(:procedure)
+        .permit(types_de_champ_attributes: [:libelle, :description, :order_place, :type_champ, :id, :mandatory])
   end
 
   def move_up

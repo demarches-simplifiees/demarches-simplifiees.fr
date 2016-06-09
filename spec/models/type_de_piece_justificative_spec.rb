@@ -9,6 +9,7 @@ describe TypeDePieceJustificative do
     it { is_expected.to have_db_column(:api_entreprise) }
     it { is_expected.to have_db_column(:created_at) }
     it { is_expected.to have_db_column(:updated_at) }
+    it { is_expected.to have_db_column(:order_place) }
   end
 
   describe 'associations' do
@@ -21,6 +22,12 @@ describe TypeDePieceJustificative do
       it { is_expected.not_to allow_value(nil).for(:libelle) }
       it { is_expected.not_to allow_value('').for(:libelle) }
       it { is_expected.to allow_value('RIB').for(:libelle) }
+    end
+
+    context 'order_place' do
+      # it { is_expected.not_to allow_value(nil).for(:order_place) }
+      # it { is_expected.not_to allow_value('').for(:order_place) }
+      it { is_expected.to allow_value(1).for(:order_place) }
     end
   end
 end
