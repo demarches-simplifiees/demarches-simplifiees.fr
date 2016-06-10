@@ -82,6 +82,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
+    get 'procedures/draft' => 'procedures#draft'
     get 'profile' => 'profile#show', as: :profile
 
     resources :procedures do
@@ -89,8 +90,13 @@ Rails.application.routes.draw do
         post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
         post '/:index/move_down' => 'types_de_champ#move_down', as: :move_down
       end
+      resource :pieces_justificatives, only: [:show, :update] do
+        post '/:index/move_up' => 'pieces_justificatives#move_up', as: :move_up
+        post '/:index/move_down' => 'pieces_justificatives#move_down', as: :move_down
+      end
 
       put 'archive' => 'procedures#archive', as: :archive
+      put 'publish' => 'procedures#publish', as: :publish
 
       resource :accompagnateurs, only: [:show, :update]
 
@@ -106,6 +112,11 @@ Rails.application.routes.draw do
     end
 
     resources :gestionnaires, only: [:index, :create, :destroy]
+  end
+
+  namespace :ban do
+    get 'search' => 'search#get'
+    get 'address_point' => 'search#get_address_point'
   end
 
   get 'backoffice' => 'backoffice#index'

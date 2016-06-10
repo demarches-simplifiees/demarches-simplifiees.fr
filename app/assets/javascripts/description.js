@@ -13,6 +13,16 @@ function action_type_de_champs() {
 
         toggleErrorClass(this, validatePhone(val));
     });
+
+    $("#liste_champs input").on('focus', function (){
+        $("#description_"+this.id).slideDown();
+    });
+
+    $("#liste_champs input").on('blur', function (){
+        $("#description_"+this.id).slideUp();
+    });
+
+    address_type_init();
 }
 
 function toggleErrorClass(node, boolean) {

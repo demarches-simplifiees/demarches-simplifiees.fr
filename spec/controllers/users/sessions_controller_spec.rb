@@ -85,8 +85,18 @@ describe Users::SessionsController, type: :controller do
         it { expect(subject).to redirect_to root_path }
       end
 
+      context 'when procedure is not published' do
+        let(:procedure) { create :procedure, published: false }
+        before do
+          session["user_return_to"] = "?procedure_id=#{procedure.id}"
+        end
+
+        it { expect(subject.status).to eq 302}
+        it { expect(subject).to redirect_to root_path }
+      end
+
       context 'when procedure_id exist' do
-        let(:procedure) { create :procedure }
+        let(:procedure) { create :procedure, published: true }
 
         before do
           session["user_return_to"] = "?procedure_id=#{procedure.id}"

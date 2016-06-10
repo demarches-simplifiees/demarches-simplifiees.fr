@@ -79,28 +79,47 @@ describe Procedure do
   end
 
   describe 'locked?' do
-    let(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, published: published) }
 
     subject { procedure.locked? }
 
-    context 'when procedure does not have dossier' do
+    context 'when procedure is in draft status' do
+      let(:published) { false }
       it { is_expected.to be_falsey }
     end
 
-    context 'when procedure have dossier with state draft' do
-      before do
-        create(:dossier,  procedure: procedure, state: :draft)
-      end
-
-      it { is_expected.to be_falsey }
-    end
-
-    context 'when procedure have dossier with state initiated' do
-      before do
-        create(:dossier,  procedure: procedure, state: :initiated)
-      end
-
+    context 'when procedure is in draft status' do
+      let(:published) { true }
       it { is_expected.to be_truthy }
+    end
+  end
+
+  describe 'active' do
+    let(:procedure) { create(:procedure, published: published, archived: archived) }
+    subject { Procedure.active(procedure.id) }
+
+    context 'when procedure is in draft status and not archived' do
+      let(:published) { false }
+      let(:archived) { false }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+
+    context 'when procedure is published and not archived' do
+      let(:published) { true }
+      let(:archived) { false }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when procedure is published and archived' do
+      let(:published) { true }
+      let(:archived) { true }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+
+    context 'when procedure is in draft status and archived' do
+      let(:published) { false }
+      let(:archived) { true }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
 end

@@ -3,26 +3,27 @@ require 'spec_helper'
 feature 'procedure locked' do
 
   let(:administrateur) { create(:administrateur) }
-  let(:procedure) { create(:procedure, administrateur: administrateur) }
+  let(:published) { false }
+  let(:procedure) { create(:procedure, administrateur: administrateur, published: published) }
 
   before do
     login_as administrateur, scope: :administrateur
     visit admin_procedure_path(procedure)
   end
 
-  context 'when procedure have no file' do
+  context 'when procedure is not published' do
     scenario 'info label is not present' do
-      expect(page).not_to have_content('La procédure ne peut plus être modifiée car un usagé a déjà déposé un dossier')
+      expect(page).not_to have_content('La procédure ne peut plus être modifiée car elle a été publiée')
     end
   end
-  context 'when procedure have at least a file' do
+  context 'when procedure is published' do
+    let(:published) { true }
     before do
-      create(:dossier,  procedure: procedure, state: :initiated)
       visit admin_procedure_path(procedure)
     end
 
     scenario 'info label is present' do
-      expect(page).to have_content('La procédure ne peut plus être modifiée car un usagé a déjà déposé un dossier')
+      expect(page).to have_content('La procédure ne peut plus être modifiée car elle a été publiée')
     end
 
     context 'when user click on Description tab' do
@@ -45,7 +46,7 @@ feature 'procedure locked' do
       end
     end
 
-    context 'when user click on Pieces Justificatiives tab' do
+    context 'when user click on Pieces Justificatives tab' do
       before do
         page.click_on 'Pièces justificatives'
       end

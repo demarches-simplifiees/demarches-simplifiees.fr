@@ -21,6 +21,15 @@
   }
 }
 
+.type_champ-address {
+  @extend .col-md-6;
+  @extend .col-lg-6;
+
+  input[type='address'] {
+    width: 100%;
+  }
+}
+
 .type_champ-email {
   @extend .col-md-4;
   @extend .col-lg-4;
@@ -75,4 +84,11 @@
   input[type='number'] {
     width: 100%;
   }
+}
+
+.description_div {
+  margin-top: 5px;
+  margin-left: 5px;
+  color: dimgrey;
+  display: none;
 }

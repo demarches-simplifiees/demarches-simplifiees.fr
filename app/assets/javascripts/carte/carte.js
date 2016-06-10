@@ -14,6 +14,17 @@ function initCarto() {
         layers: [OSM]
     });
 
+    icon = L.icon({
+        iconUrl: '/assets/marker-icon.png',
+        //shadowUrl: 'leaf-shadow.png',
+
+        iconSize: [34.48, 40], // size of the icon
+        //shadowSize:   [50, 64], // size of the shadow
+        iconAnchor: [20, 20] // point of the icon which will correspond to marker's location
+        //shadowAnchor: [4, 62],  // the same for the shadow
+        //popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
     if (qp_active())
         display_qp(JSON.parse($("#quartier_prioritaires").val()));
 
@@ -39,6 +50,7 @@ function initCarto() {
         map.setView(new L.LatLng(position.lat, position.lon), position.zoom);
 
     add_event_freeDraw();
+    add_event_search_address();
 }
 
 function default_gestionnaire_position() {
@@ -111,8 +123,32 @@ function get_position() {
     return position;
 }
 
+function get_address_point(request) {
+    $.ajax({
+        url: '/ban/address_point?request=' + request,
+        dataType: 'json',
+        async: true
+    }).done(function (data) {
+        if (data.lat != null) {
+            map.setView(new L.LatLng(data.lat, data.lon), data.zoom);
+            L.marker([data.lat, data.lon], {icon: icon}).addTo(map);
+        }
+    });
+}
+
 function jsObject_to_array(qp_list) {
     return Object.keys(qp_list).map(function (v) {
         return qp_list[v];
+    });
+}
+
+function add_event_search_address() {
+    $("#search_by_address input[type='address']").bind('typeahead:select', function (ev, seggestion) {
+        get_address_point(seggestion['label']);
+    });
+
+    $("#search_by_address input[type='address']").keypress(function (e) {
+        if (e.which == 13)
+            get_address_point($(this).val());
     });
 }

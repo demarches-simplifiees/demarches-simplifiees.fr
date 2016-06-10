@@ -46,8 +46,15 @@ describe Admin::ProceduresController, type: :controller do
     it { expect(response.status).to eq(200) }
   end
 
+  describe 'GET #published' do
+    subject { get :published }
+
+    it { expect(response.status).to eq(200) }
+  end
+
   describe 'GET #edit' do
-    let(:procedure) { create(:procedure, administrateur: admin) }
+    let(:published) { false }
+    let(:procedure) { create(:procedure, administrateur: admin, published: published) }
     let(:procedure_id) { procedure.id }
 
     subject { get :edit, id: procedure_id }
@@ -66,8 +73,8 @@ describe Admin::ProceduresController, type: :controller do
         it { expect(subject).to have_http_status(:success) }
       end
 
-      context 'when procedure have at least a file' do
-        let!(:dossier) { create(:dossier,  procedure: procedure, state: :initiated) }
+      context 'when procedure is published' do
+        let(:published) { true }
         it { is_expected.to redirect_to admin_procedure_path id: procedure_id }
       end
 

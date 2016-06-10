@@ -23,7 +23,7 @@ class Users::DossiersController < UsersController
   end
 
   def new
-    procedure = Procedure.where(archived: false).find(params[:procedure_id])
+    procedure = Procedure.where(archived: false, published: true).find(params[:procedure_id])
 
     @dossier = Dossier.new(procedure: procedure)
     @siret = params[:siret] || current_user.siret

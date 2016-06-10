@@ -1,0 +1,101 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.github.com/repos/sgmap/tps/releases/latest
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - GitHub.com
+      Date:
+      - Thu, 09 Jun 2016 14:42:08 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Status:
+      - 200 OK
+      X-Ratelimit-Limit:
+      - '60'
+      X-Ratelimit-Remaining:
+      - '43'
+      X-Ratelimit-Reset:
+      - '1465485629'
+      Cache-Control:
+      - public, max-age=60, s-maxage=60
+      Vary:
+      - Accept
+      - Accept-Encoding
+      Etag:
+      - W/"0962b5ade3f87b4e0092d56f4719512e"
+      Last-Modified:
+      - Fri, 03 Jun 2016 10:05:19 GMT
+      X-Github-Media-Type:
+      - github.v3
+      Access-Control-Expose-Headers:
+      - ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset,
+        X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Security-Policy:
+      - default-src 'none'
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Served-By:
+      - c6c65e5196703428e7641f7d1e9bc353
+      Content-Encoding:
+      - gzip
+      X-Github-Request-Id:
+      - B918B84A:B215:2AB0D00D:5759803F
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA6VW7WobRxR9lWH/+I/jlSrjEuE2mEAhYEogTiltihjtXq0m
+        zM5s5mMjR/hdQn9Fz7Ev1nNHK1lSZAdRsJFXe++Ze88994yXWXQ6G2fzEBo/
+        znPZqItKhXmcXhS2zh011ue+qmWTIwDPmqQnn49GV1ejwc/ZeSa9p+An/wsm
+        X4MALTbayvIAbf2lP6WwHnH5ysiazrWckn4A/DzU+gB8p9sjfQZZ5e3wYoRc
+        VWbjvu3zDN9PGBrU9a+DdBWFCVirVVB+jje19IEcUncixVjczGZUBBmUNaIk
+        L2SBpEZWRgaKzgsKolHdtwKvPkYf1EwVCG7xWN4DSX2K5AFaOjkL2XgmtSeM
+        IYa5ddl4mWlbKYPT//wY9ZthX/hwNBhevrwaILCVKPVwXunLDcPRkyusCWRC
+        UkHMN+mv2l+Yisr1KMxJxmN7TkQM5/NtOc/PYBs2s1rbz8g8LHVfobvg+TYH
+        Ja3/VqY6OR85y9yGOYEllM66qZT/kcb3Cknxy5w/JqpkBA9+HR0q+2Dd9jD6
+        DJTy2aCKZVrGBBWnvnCqYQGdws5eHnCsq6RRX5IQT8FBHusvecMJ5KZ45FEL
+        XZ2SuE5Y5o1TrSzumQJHBWEjysnJYAeZwAr3Da/xe4yayVWBJrKseYXSaj2c
+        Z42j3vi261Y4wraWE4kNzH4aDK9eDPAzuhu8HA/xM/gLUE2cahjBkajhYDy4
+        HF+OOKq3vvHf/7CruKnUhw71A0/ukzY29UU1p2P0SRuMqS3v0df1fPTr7za2
+        BHPpVv46x/MH98FcR73+1Cp9vjdCGjiUchFuZqS+9yRqqdhB8EKQEYHqxgvX
+        rUiLYBGm2c5sEWsWg/gUFaKCw6/w0QktRaNB8My6mi7SmXl/2PXm0KDA7qNl
+        HrpoQygccHt1tPaeXDLdx7NLBU2gPg4uqYmKixMzHRd4FOzneCMRhCQ8zyX8
+        F+neK3Ln3Fuj0Q9jPuXaVEtTonVEWDTHbq+7Fa4GPqhHOt7kLXiQFYK4EGNo
+        wXdGAolGxEcGBPm9TpN7L0KUoAgHi+5rotTZoluV0ZHwShSko3pR9MQn2u/e
+        vhOV6/4tUgaO0Ar94XCzVsHzxbIMeHFgek7yVSYaintlyXTzoe+ETrsFHbsI
+        fdOtClx/fOEx0TNriv7WFPgnREzJW2X8hWCB3J7tK0AAvyXnWEmYDw9trbk0
+        uH5gW0Kg27hAjOYYpROf62q71cFo8o36sQ03dbfSyqJdDGa7H8d25Ba4OwNj
+        KXjffSsPJMqstCjVK2gErfPwtqIEo71a1hogs9HzekCp+OMiPC6vOxsDUp5O
+        Ex5C2l2hOYZrXRIVcwpdp0EmfeB4ZtyzRpm/VB43gH9osPObk/oQuAGC0tIp
+        31ijplwGpqxVZZ7Y+T26MUJcAQ5C2PeHzXzSt5jRa4uLN+nm0cGOTegxjhWv
+        z2SJApORaZaCKuZpGNKAsDNaNNYF8frdH6I8w6Js5tIqibc3b9/wLh0nHWuy
+        u7m8BrwmSaXSFXPVdiuu4KgxpMJ7B/xNLcQ0Vj0N3/vm97RkD/8BJlYZoPAL
+        AAA=
+    http_version: 
+  recorded_at: Thu, 09 Jun 2016 14:42:08 GMT
+recorded_with: VCR 3.0.1

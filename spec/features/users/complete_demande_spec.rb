@@ -2,9 +2,10 @@ require 'spec_helper'
 
 feature 'user path for dossier creation' do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, :published) }
   let(:siret) { '53272417600013' }
   let(:siren) { siret[0...9] }
+
   context 'user arrives on siret page' do
     before do
       visit new_users_dossiers_path(procedure_id: procedure.id)
@@ -63,6 +64,17 @@ feature 'user path for dossier creation' do
           end
         end
       end
+    end
+  end
+
+  context 'user cannot access non-published procedures' do
+    let(:procedure) { create(:procedure) }
+    before do
+      visit new_users_dossiers_path(procedure_id: procedure.id)
+    end
+
+    scenario 'user is on home page', vcr: { cassette_name: 'complete_demande_spec' } do
+      expect(page).to have_content('La procédure n\'existe pas')
     end
   end
 end

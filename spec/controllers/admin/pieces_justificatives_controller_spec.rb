@@ -2,12 +2,13 @@ require 'spec_helper'
 
 describe Admin::PiecesJustificativesController, type: :controller  do
   let(:admin) { create(:administrateur) }
+  let(:published) { false }
+  let(:procedure) { create(:procedure, administrateur: admin, published: published) }
   before do
     sign_in admin
   end
 
   describe 'GET #show' do
-    let(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure_id) { procedure.id }
 
     subject { get :show, procedure_id: procedure_id }
@@ -17,8 +18,8 @@ describe Admin::PiecesJustificativesController, type: :controller  do
       it { expect(subject.status).to eq(404) }
     end
 
-    context 'when procedure have at least a file' do
-      let!(:dossier) { create(:dossier,  procedure: procedure, state: :initiated) }
+    context 'when procedure is published' do
+      let(:published) { true }
       it { is_expected.to redirect_to admin_procedure_path id: procedure_id }
     end
 
@@ -30,7 +31,6 @@ describe Admin::PiecesJustificativesController, type: :controller  do
   end
 
   describe 'PUT #update' do
-    let(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure_id) { procedure.id }
     let(:libelle) { 'RIB' }
     let(:description) { "relevé d'identité bancaire" }
@@ -72,7 +72,6 @@ describe Admin::PiecesJustificativesController, type: :controller  do
   end
 
   describe 'DELETE #destroy' do
-    let(:procedure) { create(:procedure, administrateur: admin) }
     let!(:pj) { create(:type_de_piece_justificative, procedure: procedure) }
     let(:procedure_id) { procedure.id }
     let(:pj_id) { pj.id }
@@ -95,6 +94,78 @@ describe Admin::PiecesJustificativesController, type: :controller  do
     context 'when pj is found' do
       it { expect(subject.status).to eq(200) }
       it { expect{ subject }.to change(TypeDePieceJustificative, :count).by(-1) }
+    end
+  end
+
+  describe 'POST #move_up' do
+    subject { post :move_up, procedure_id: procedure.id, index: index, format: :js }
+
+    context 'when procedure have no type de champ' do
+      let(:index) { 0 }
+      it { expect(subject.status).to eq(400) }
+    end
+    context 'when procedure have only one type de champ' do
+      let(:index) { 1 }
+      let!(:type_de_piece_justificative) { create(:type_de_piece_justificative, procedure: procedure) }
+      it { expect(subject.status).to eq(400) }
+    end
+    context 'when procedure have tow type de champs' do
+      context 'when index == 0' do
+        let(:index) { 0 }
+        let!(:type_de_piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure) }
+        let!(:type_de_piece_justificative_2) { create(:type_de_piece_justificative, procedure: procedure) }
+        it { expect(subject.status).to eq(400) }
+      end
+      context 'when index > 0' do
+        let(:index) { 1 }
+        let!(:type_de_piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
+        let!(:type_de_piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
+
+        it { expect(subject.status).to eq(200) }
+        it { expect(subject).to render_template('show') }
+        it 'changes order places' do
+          post :move_up, procedure_id: procedure.id, index: index, format: :js
+          type_de_piece_justificative_0.reload
+          type_de_piece_justificative_1.reload
+          expect(type_de_piece_justificative_0.order_place).to eq(1)
+          expect(type_de_piece_justificative_1.order_place).to eq(0)
+        end
+      end
+    end
+  end
+
+  describe 'POST #move_down' do
+    let(:request) { post :move_down, procedure_id: procedure.id, index: index, format: :js }
+    let(:index) { 0 }
+
+    subject { request }
+
+    context 'when procedure have no type de champ' do
+      it { expect(subject.status).to eq(400) }
+    end
+    context 'when procedure have only one type de champ' do
+      let!(:type_de_piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure) }
+      it { expect(subject.status).to eq(400) }
+    end
+    context 'when procedure have 2 type de champ' do
+      let!(:type_de_piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
+      let!(:type_de_piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
+      context 'when index represent last type_de_piece_justificative' do
+        let(:index) { 1 }
+        it { expect(subject.status).to eq(400) }
+      end
+      context 'when index does not represent last type_de_piece_justificative' do
+        let(:index) { 0 }
+        it { expect(subject.status).to eq(200) }
+        it { expect(subject).to render_template('show') }
+        it 'changes order place' do
+          request
+          type_de_piece_justificative_0.reload
+          type_de_piece_justificative_1.reload
+          expect(type_de_piece_justificative_0.order_place).to eq(1)
+          expect(type_de_piece_justificative_1.order_place).to eq(0)
+        end
+      end
     end
   end
 end

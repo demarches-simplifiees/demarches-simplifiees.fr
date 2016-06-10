@@ -1,0 +1,19 @@
+- unless smart_listing.empty?
+  %table.table
+    %thead
+      %th#ID= smart_listing.sortable 'ID', 'id'
+      %th#libelle= smart_listing.sortable 'Libellé', 'libelle'
+
+    - @procedures.each do |procedure|
+      - procedure = procedure.decorate
+      %tr
+        %td.col-md-1.col-lg-1= procedure.id
+        %td.col-md-6.col-lg-6
+          = link_to(procedure.libelle, "/admin/procedures/#{procedure.id}")
+
+  = smart_listing.paginate
+  = smart_listing.pagination_per_page_links
+
+- else
+  %h4.center
+    Aucune procédure

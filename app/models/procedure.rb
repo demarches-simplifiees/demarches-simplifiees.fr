@@ -25,22 +25,37 @@ class Procedure < ActiveRecord::Base
     types_de_champ.order(:order_place)
   end
 
+  def types_de_piece_justificative_ordered
+    types_de_piece_justificative.order(:order_place)
+  end
+
   def self.not_archived id
     Procedure.where(archived: false).find(id)
   end
 
+  def self.active id
+    Procedure.where(archived: false, published: true).find(id)
+  end
+
   def switch_types_de_champ index_of_first_element
+    switch_list_order(types_de_champ_ordered, index_of_first_element)
+  end
+
+  def switch_types_de_piece_justificative index_of_first_element
+    switch_list_order(types_de_piece_justificative_ordered, index_of_first_element)
+  end
+
+  def switch_list_order(list, index_of_first_element)
     return false if index_of_first_element < 0
-    types_de_champ_tmp = types_de_champ_ordered
-    nb_types_de_champ = types_de_champ_tmp.count
-    return false if index_of_first_element == nb_types_de_champ - 1
-    return false if types_de_champ_ordered.count < 1
-    types_de_champ_tmp[index_of_first_element].update_attributes(order_place: index_of_first_element + 1)
-    types_de_champ_tmp[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
+    return false if index_of_first_element == list.count - 1
+    return false if list.count < 1
+    list[index_of_first_element].update_attributes(order_place: index_of_first_element + 1)
+    list[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
     true
   end
 
   def locked?
-    dossiers.where.not(state: :draft).count > 0
+    published?
   end
+
 end
