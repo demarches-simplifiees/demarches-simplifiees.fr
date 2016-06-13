@@ -30,7 +30,7 @@ class SIADE::EtablissementAdapter
 
   def adresse
     adresse = ''
-    [:l1, :l2, :l3, :l4, :l5].each do |line|
+    [:l1, :l2, :l3, :l4, :l5, :l6, :l7].each do |line|
       adresse = adresse + data_source[:etablissement][:adresse][line] + "\r\n" unless data_source[:etablissement][:adresse][line].nil?
     end
     adresse

@@ -4,23 +4,45 @@
     "siret": "41816609600051",
     "naf": "6202A",
     "libelle_naf": "Conseil en systèmes et logiciels informatiques",
-    "etat_administratif_etablissement": {
-      "value": "Actif",
-      "date_mise_a_jour": 1108594800
+    "date_mise_a_jour": 1449183600,
+    "tranche_effectif_salarie_etablissement": {
+      "de": 200,
+      "a": 249,
+      "code": "31",
+      "date_reference": "2014",
+      "intitule": "200 à 249 salariés"
     },
+    "date_creation_etablissement": 1108594800,
+    "enseigne": null,
+    "region_implantation": {
+      "code": "11",
+      "value": "Île-de-France"
+    },
+    "commune_implantation": {
+      "code": "75108",
+      "value": "PARIS 8"
+    },
+    "pays_implantation": {
+      "code": null,
+      "value": null
+    },
+    "diffusable_commercialement": null,
     "adresse": {
-      "l1": "OCTO-TECHNOLOGY",
-      "l2": "50 AV DES CHAMPS ELYSEES",
-      "l3": "75008 PARIS 8",
-      "l4": "ligne 4",
-      "l5": "ligne 5",
+      "l1": "OCTO TECHNOLOGY",
+      "l2": null,
+      "l3": null,
+      "l4": "50 AVENUE DES CHAMPS ELYSEES",
+      "l5": null,
+      "l6": "75008 PARIS",
+      "l7": "FRANCE",
       "numero_voie": "50",
       "type_voie": "AV",
       "nom_voie": "DES CHAMPS ELYSEES",
       "complement_adresse": "complement_adresse",
       "code_postal": "75008",
       "localite": "PARIS 8",
-      "code_insee_localite": "75108"
+      "code_insee_localite": "75108",
+      "cedex": null
     }
   },
   "gateway_error": false

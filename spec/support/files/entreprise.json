@@ -1,24 +1,27 @@
 {
   "entreprise": {
     "siren": "418166096",
-    "capital_social": 372795,
+    "capital_social": 462308,
     "numero_tva_intracommunautaire": "FR16418166096",
     "forme_juridique": "SA à directoire (s.a.i.)",
     "forme_juridique_code": "5699",
-    "nombre_etablissements_actifs": 1,
     "nom_commercial": "OCTO-TECHNOLOGY",
     "procedure_collective": false,
     "raison_sociale": "OCTO-TECHNOLOGY",
     "siret_siege_social": "41816609600051",
-    "code_effectif_entreprise": "22",
-    "date_creation": -2208992400,
+    "code_effectif_entreprise": "31",
+    "date_creation": 891381600,
     "nom": "test_nom",
     "prenom": "test_prenom",
-    "etat_administratif": {
-      "value": "Actif",
-      "date_mise_a_jour": 891381600
-    },
     "date_radiation": null,
+    "categorie_entreprise": "PME",
+    "tranche_effectif_salarie_entreprise": {
+      "de": 200,
+      "a": 249,
+      "code": "31",
+      "date_reference": "2014",
+      "intitule": "200 à 249 salariés"
+    },
     "exercices": [
       {
         "chiffre_affaires": null,
@@ -46,7 +49,10 @@
         "fonction": "PRESIDENT DU DIRECTOIRE",
         "dirigeant": true,
         "date_naissance": "1965-01-27",
-        "date_naissance_timestamp": -155523600
+        "date_naissance_timestamp": -155523600,
+        "raison_sociale": "",
+        "identifiant": "",
+        "type": "PP"
       },
       {
         "nom": "BONTE",
@@ -54,7 +60,10 @@
         "fonction": "PRESIDENT DU CONSEIL DE SURVEILLANCE",
         "dirigeant": true,
         "date_naissance": "1965-01-21",
-        "date_naissance_timestamp": -156042000
+        "date_naissance_timestamp": -156042000,
+        "raison_sociale": "",
+        "identifiant": "",
+        "type": "PP"
       },
       {
         "nom": "BOSQUE",
@@ -62,7 +71,10 @@
         "fonction": "VICE PRESIDENT ET MEMBRE DU CONSEIL DE SURVEILLANCE",
         "dirigeant": true,
         "date_naissance": "1970-12-31",
-        "date_naissance_timestamp": 31446000
+        "date_naissance_timestamp": 31446000,
+        "raison_sociale": "",
+        "identifiant": "",
+        "type": "PP"
       },
       {
         "nom": "CINQUIN",
@@ -70,7 +82,10 @@
         "fonction": "MEMBRE DU DIRECTOIRE",
         "dirigeant": true,
         "date_naissance": "1972-01-25",
-        "date_naissance_timestamp": 65142000
+        "date_naissance_timestamp": 65142000,
+        "raison_sociale": "",
+        "identifiant": "",
+        "type": "PP"
       },
       {
         "nom": "LUCAS",
@@ -78,7 +93,10 @@
         "fonction": "MEMBRE DU CONSEIL DE SURVEILLANCE",
         "dirigeant": true,
         "date_naissance": "1964-12-02",
-        "date_naissance_timestamp": -160362000
+        "date_naissance_timestamp": -160362000,
+        "raison_sociale": "",
+        "identifiant": "",
+        "type": "PP"
       },
       {
         "nom": "DEGONSE",
@@ -86,7 +104,10 @@
         "fonction": "MEMBRE DU CONSEIL DE SURVEILLANCE",
         "dirigeant": true,
         "date_naissance": "1947-07-03",
-        "date_naissance_timestamp": -710038800
+        "date_naissance_timestamp": -710038800,
+        "raison_sociale": "",
+        "identifiant": "",
+        "type": "PP"
       },
       {
         "nom": "PLANTIN",
@@ -94,7 +115,10 @@
         "fonction": "COMMISSAIRE AUX COMPTES TITULAIRE",
         "dirigeant": true,
         "date_naissance": "1959-01-27",
-        "date_naissance_timestamp": -344912400
+        "date_naissance_timestamp": -344912400,
+        "raison_sociale": "",
+        "identifiant": "",
+        "type": "PP"
       },
       {
         "nom": "",
@@ -102,9 +126,58 @@
         "fonction": "COMMISSAIRE AUX COMPTES SUPPLEANT",
         "dirigeant": true,
         "date_naissance": "",
-        "date_naissance_timestamp": 0
+        "date_naissance_timestamp": 0,
+        "raison_sociale": "BCRH \u0026 ASSOCIES - SOCIETE A RESPONSABILITE LIMITEE A ASSOCIE UNIQUE",
+        "identifiant": "490092574",
+        "type": "PM"
       }
     ]
+  },
+  "etablissement_siege": {
+    "siege_social": true,
+    "siret": "41816609600051",
+    "naf": "6202A",
+    "libelle_naf": "Conseil en systèmes et logiciels informatiques",
+    "date_mise_a_jour": 1449183600,
+    "tranche_effectif_salarie_etablissement": {
+      "de": 200,
+      "a": 249,
+      "code": "31",
+      "date_reference": "2014",
+      "intitule": "200 à 249 salariés"
+    },
+    "date_creation_etablissement": 1108594800,
+    "enseigne": null,
+    "region_implantation": {
+      "code": "11",
+      "value": "Île-de-France"
+    },
+    "commune_implantation": {
+      "code": "75108",
+      "value": "PARIS 8"
+    },
+    "pays_implantation": {
+      "code": null,
+      "value": null
+    },
+    "diffusable_commercialement": null,
+    "adresse": {
+      "l1": "OCTO TECHNOLOGY",
+      "l2": null,
+      "l3": null,
+      "l4": "50 AVENUE DES CHAMPS ELYSEES",
+      "l5": null,
+      "l6": "75008 PARIS",
+      "l7": "FRANCE",
+      "numero_voie": "50",
+      "type_voie": "AV",
+      "nom_voie": "DES CHAMPS ELYSEES",
+      "complement_adresse": null,
+      "code_postal": "75008",
+      "localite": "PARIS 8",
+      "code_insee_localite": "75108",
+      "cedex": null
+    }
   },
   "gateway_error": false
 }
