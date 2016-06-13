@@ -6,7 +6,7 @@ describe SIADE::EtablissementAdapter do
     subject { described_class.new(siret).to_params }
 
     before do
-      stub_request(:get, "https://apientreprise.fr/api/v1/etablissements/#{siret}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
         .to_return(body: File.read('spec/support/files/etablissement.json', status: 200))
     end
 
@@ -33,7 +33,7 @@ describe SIADE::EtablissementAdapter do
 
       context 'Concaténation lignes adresse' do
         it 'L\'entreprise contient bien une adresse sur plusieurs lignes' do
-          expect(subject[:adresse]).to eq("OCTO-TECHNOLOGY\r\n50 AV DES CHAMPS ELYSEES\r\n75008 PARIS 8\r\nligne 4\r\nligne 5\r\n")
+          expect(subject[:adresse]).to eq("OCTO TECHNOLOGY\r\n50 AVENUE DES CHAMPS ELYSEES\r\n75008 PARIS\r\nFRANCE\r\n")
         end
       end
 
@@ -73,7 +73,7 @@ describe SIADE::EtablissementAdapter do
     subject { described_class.new(bad_siret).to_params }
 
     before do
-      stub_request(:get, "https://apientreprise.fr/api/v1/etablissements/#{bad_siret}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{bad_siret}?token=#{SIADETOKEN}")
         .to_return(body: 'Fake body', status: 404)
     end
 

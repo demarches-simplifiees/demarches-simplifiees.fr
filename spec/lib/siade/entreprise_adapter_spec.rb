@@ -4,7 +4,7 @@ describe SIADE::EntrepriseAdapter do
   subject { described_class.new('418166096').to_params }
 
   before do
-    stub_request(:get, "https://apientreprise.fr/api/v1/entreprises/418166096?token=#{SIADETOKEN}")
+    stub_request(:get, "https://api-dev.apientreprise.fr/v2/entreprises/418166096?token=#{SIADETOKEN}")
         .to_return(body: File.read('spec/support/files/entreprise.json', status: 200))
   end
 
@@ -18,7 +18,7 @@ describe SIADE::EntrepriseAdapter do
     end
 
     it 'L\'entreprise contient bien un capital_social' do
-      expect(subject[:capital_social]).to eq(372_795)
+      expect(subject[:capital_social]).to eq(462308)
     end
 
     it 'L\'entreprise contient bien un numero_tva_intracommunautaire' do
@@ -46,11 +46,11 @@ describe SIADE::EntrepriseAdapter do
     end
 
     it 'L\'entreprise contient bien un code_effectif_entreprise' do
-      expect(subject[:code_effectif_entreprise]).to eq('22')
+      expect(subject[:code_effectif_entreprise]).to eq('31')
     end
 
     it 'L\'entreprise contient bien une date_creation' do
-      expect(subject[:date_creation]).to eq('Mon, 01 Jan 1900 00:00:00.000000000 +0100')
+      expect(subject[:date_creation]).to eq('Wed, 01 Apr 1998 00:00:00.000000000 +0200')
     end
 
     it 'L\'entreprise contient bien un nom' do
