@@ -6,9 +6,6 @@
       %h4
         = @facade.dossier.procedure.libelle
 
-      .description
-        = h @facade.dossier.description.html_safe
-
       - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
         .mandataire_social.text-success.center
           %br

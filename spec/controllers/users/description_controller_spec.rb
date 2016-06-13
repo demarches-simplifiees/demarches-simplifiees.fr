@@ -116,12 +116,6 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
         it { is_expected.to render_template(:show) }
         it { expect(flash[:alert]).to be_present }
       end
-
-      context 'description empty' do
-        let(:description) { '' }
-        it { is_expected.to render_template(:show) }
-        it { expect(flash[:alert]).to be_present }
-      end
     end
 
     context 'Quand la procédure accepte les CERFA' do

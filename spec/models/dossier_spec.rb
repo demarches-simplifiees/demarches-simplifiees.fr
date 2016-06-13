@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Dossier do
   let(:user) { create(:user) }
   describe 'database columns' do
-    it { is_expected.to have_db_column(:description) }
     it { is_expected.to have_db_column(:autorisation_donnees) }
     it { is_expected.to have_db_column(:nom_projet) }
     it { is_expected.to have_db_column(:created_at) }
@@ -39,11 +38,6 @@ describe Dossier do
       it { is_expected.to allow_value(nil).for(:nom_projet) }
       it { is_expected.not_to allow_value('').for(:nom_projet) }
       it { is_expected.to allow_value('mon super projet').for(:nom_projet) }
-    end
-    context 'description' do
-      it { is_expected.to allow_value(nil).for(:description) }
-      it { is_expected.not_to allow_value('').for(:description) }
-      it { is_expected.to allow_value('ma superbe description').for(:description) }
     end
   end
 
@@ -115,6 +109,7 @@ describe Dossier do
     describe '#save' do
       subject { build(:dossier, procedure: procedure, user: user) }
       let!(:procedure) { create(:procedure) }
+
       context 'when is linked to a procedure' do
         it 'creates default champs' do
           expect(subject).to receive(:build_default_champs)
@@ -122,11 +117,11 @@ describe Dossier do
         end
       end
       context 'when is not linked to a procedure' do
-        subject { create(:dossier, procedure: procedure, user: user) }
+        subject { create(:dossier, procedure: nil, user: user) }
 
         it 'does not create default champs' do
           expect(subject).not_to receive(:build_default_champs)
-          subject.update_attributes(description: 'plop')
+          subject.update_attributes(nom_projet: 'plop')
         end
       end
     end
@@ -541,7 +536,6 @@ describe Dossier do
     subject { dossier.as_csv }
 
     it { expect(subject[:nom_projet]).to eq("Demande de subvention dans le cadre d'accompagnement d'enfant à l'étranger") }
-    it { expect(subject[:description]).to eq("Ma super description") }
     it { expect(subject[:archived]).to be_falsey }
     it { expect(subject['etablissement.siret']).to eq('44011762001530') }
     it { expect(subject['etablissement.siege_social']).to be_truthy }

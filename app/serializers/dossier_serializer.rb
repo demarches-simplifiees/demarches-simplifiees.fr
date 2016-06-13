@@ -1,7 +1,6 @@
 class DossierSerializer < ActiveModel::Serializer
   attributes :id,
              :nom_projet,
-             :description,
              :created_at,
              :updated_at,
              :archived,
