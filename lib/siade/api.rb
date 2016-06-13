@@ -7,22 +7,22 @@ class SIADE::API
   end
 
   def self.entreprise(siren)
-    endpoint = "/api/v1/entreprises/#{siren}"
+    endpoint = "/v2/entreprises/#{siren}"
     call(base_url + endpoint)
   end
 
   def self.etablissement(siret)
-    endpoint = "/api/v1/etablissements/#{siret}"
+    endpoint = "/v2/etablissements/#{siret}"
     call(base_url + endpoint)
   end
 
   def self.exercices(siret)
-    endpoint = "/api/v1/etablissements/exercices/#{siret}"
+    endpoint = "/v1/etablissements/exercices/#{siret}"
     call(base_url + endpoint)
   end
 
   def self.rna(siret)
-    endpoint = "/api/v1/associations/#{siret}"
+    endpoint = "/v1/associations/#{siret}"
     call(base_url + endpoint)
   end
 
@@ -39,11 +39,9 @@ class SIADE::API
 
   def self.base_url
     if Rails.env.production?
-      'https://apientreprise.fr'
+      'https://api.apientreprise.fr'
     else
       'https://api-dev.apientreprise.fr'
     end
-
-    'https://apientreprise.fr'
   end
 end
