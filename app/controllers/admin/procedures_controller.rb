@@ -76,11 +76,11 @@ class Admin::ProceduresController < AdminController
   end
 
   def publish
-    change_status({published: params[:published]})
+    change_status({published: true})
   end
 
   def archive
-    change_status({archived: params[:archive]})
+    change_status({archived: true})
   end
 
   def active_class
