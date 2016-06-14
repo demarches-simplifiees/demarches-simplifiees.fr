@@ -1,13 +1,17 @@
 %h2
-  ='Localisation de votre demande'
+  ='Localisation'
+%h4.text-primary
+  Positionnez-vous et dessinez sur la carte la zone d'action de votre demande.
 %br
 
 .content{style:'margin-bottom:60px'}
-  %button#new.btn.btn-sm.btn-success{type:'button'} Nouveau
-  \-
-  %button#edit.btn.btn-sm.btn-info{type:'button'} Editer
-  \-
-  %button#delete.btn.btn-sm.btn-danger{type:'button'} Supprimer
+  %button#new.btn.btn-md.btn-success{type:'button'}
+    %i.fa.fa-pencil
+    Ajouter une zone
+  -#\-
+  -#%button#edit.btn.btn-sm.btn-info{type:'button'} Editer
+  -#\-
+  -#%button#delete.btn.btn-sm.btn-danger{type:'button'} Supprimer
 
   %span#search_by_address{style: 'margin-left: 20px'}
     %input.form-control{type: :address, placeholder: 'Rechercher une adresse'}
