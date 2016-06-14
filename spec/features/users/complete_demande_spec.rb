@@ -55,7 +55,6 @@ feature 'user path for dossier creation' do
           context 'user fill and validate description page' do
             before do
               page.find_by_id('nom_projet').set 'Mon super projet'
-              page.find_by_id('description').set 'Ma super description'
               page.click_on 'Soumettre mon dossier'
             end
             scenario 'user is on recap page' do

@@ -25,10 +25,6 @@ describe 'admin/previsualisations/show.html.haml', type: :view do
       expect(rendered).to have_selector('input[id=nom_projet][name=nom_projet]')
     end
 
-    it 'Description du projet' do
-      expect(rendered).to have_selector('textarea[id=description][name=description]')
-    end
-
     it 'Charger votre CERFA (PDF)' do
       expect(rendered).to have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]')
     end
@@ -71,7 +67,6 @@ describe 'admin/previsualisations/show.html.haml', type: :view do
     let!(:dossier) do
       create(:dossier,
              nom_projet: 'Projet de test',
-             description: 'Description de test',
              user: user)
     end
 
@@ -81,10 +76,6 @@ describe 'admin/previsualisations/show.html.haml', type: :view do
 
     it 'Nom du projet' do
       expect(rendered).to have_selector("input[id=nom_projet][value='#{dossier.nom_projet}']")
-    end
-
-    it 'Description du projet' do
-      expect(rendered).to have_content("#{dossier.description}")
     end
   end
 

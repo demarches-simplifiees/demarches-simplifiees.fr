@@ -93,19 +93,27 @@ function add_event_freeDraw() {
     freeDraw.on('markers', function (e) {
         $("#json_latlngs").val(JSON.stringify(e.latLngs));
 
+        add_event_edit();
+
         get_external_data(e.latLngs);
+    });
+
+    $("#map").on('click', function(){
+        freeDraw.setMode(L.FreeDraw.MODES.VIEW);
     });
 
     $("#new").on('click', function (e) {
         freeDraw.setMode(L.FreeDraw.MODES.CREATE);
     });
 
-    $("#edit").on('click', function (e) {
-        freeDraw.setMode(L.FreeDraw.MODES.EDIT);
-    });
-
     $("#delete").on('click', function (e) {
         freeDraw.setMode(L.FreeDraw.MODES.DELETE);
+    });
+}
+
+function add_event_edit (){
+    $(".leaflet-container g path").on('click', function (e) {
+        setTimeout(function(){freeDraw.setMode(L.FreeDraw.MODES.EDIT | L.FreeDraw.MODES.DELETE)}, 50);
     });
 }
 
@@ -131,7 +139,7 @@ function get_address_point(request) {
     }).done(function (data) {
         if (data.lat != null) {
             map.setView(new L.LatLng(data.lat, data.lon), data.zoom);
-            L.marker([data.lat, data.lon], {icon: icon}).addTo(map);
+            //L.marker([data.lat, data.lon], {icon: icon}).addTo(map);
         }
     });
 }

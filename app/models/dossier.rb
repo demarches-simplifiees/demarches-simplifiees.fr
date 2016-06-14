@@ -30,7 +30,6 @@ class Dossier < ActiveRecord::Base
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 
   validates :nom_projet, presence: true, allow_blank: false, allow_nil: true
-  validates :description, presence: true, allow_blank: false, allow_nil: true
   validates :user, presence: true
 
   WAITING_FOR_GESTIONNAIRE = %w(initiated updated submitted)

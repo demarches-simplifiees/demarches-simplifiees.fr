@@ -80,7 +80,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def archive
-    change_status({archived: true})
+    change_status({archived: params[:archive]})
   end
 
   def active_class

@@ -22,7 +22,6 @@ feature 'user is on description page' do
   context 'he fill description fields' do
     before do
       find_by_id('nom_projet').set 'mon nom'
-      find_by_id('description').set 'ma description'
     end
     context 'before submit' do
       it 'dossier cerfa is empty' do

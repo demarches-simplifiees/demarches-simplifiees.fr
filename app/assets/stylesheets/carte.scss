@@ -12,12 +12,16 @@ table {
     @extend .col-md-12;
     @extend .col-lg-12;
 
+    margin-left: 15px;
+    width: 90%;
     height: 600px;
   }
 
   #map.qp, #map.cadastre {
     @extend .col-md-9;
     @extend .col-lg-9;
+
+    width: 70%;
   }
 
   .list {
@@ -35,14 +39,16 @@ table {
   }
 }
 
+.leaflet-container path {
+  cursor: url('/assets/edit.png'), default !important;
+}
+
 #infos_dossier {
   #map.mini {
     height: 300px;
     width: 100%;
   }
 }
-
-
 
 #map section.overlay {
   position: absolute;
@@ -56,7 +62,7 @@ table {
 }
 
 #map.mode-create {
-  cursor: crosshair !important;
+  cursor: url('/assets/pencil.png'), crosshair !important;
 }
 
 #map g path.tracer {
