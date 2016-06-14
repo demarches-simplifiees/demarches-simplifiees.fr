@@ -41,6 +41,8 @@ class DeleteDefaultDescriptionToDossier < ActiveRecord::Migration
   def down
     add_column :dossiers, :description, :text
 
+    Champ.destroy_all(dossier_id: 0)
+
     TypeDeChamp.where(libelle: 'Description', type_champ: 'textarea', order_place: 0, mandatory: true).each do |type_de_champ|
       Champ.where(type_de_champ_id: type_de_champ.id).each do |champ|
         dossier = Dossier.find(champ.dossier_id)
