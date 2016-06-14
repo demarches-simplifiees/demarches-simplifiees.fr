@@ -5,7 +5,7 @@ class Admin::PrevisualisationsController < AdminController
     @procedure
     @dossier = Dossier.new(id: 0, procedure: @procedure)
 
-    Champ.where(dossier_id: @dossier.id).destroy_all
+    PrevisualisationService.destroy_all_champs @dossier
     @dossier.build_default_champs
 
     @champs = @dossier.ordered_champs
