@@ -100,6 +100,7 @@ Rails.application.routes.draw do
 
       put 'archive' => 'procedures#archive', as: :archive
       put 'publish' => 'procedures#publish', as: :publish
+      put 'clone' => 'procedures#clone', as: :clone
 
       resource :accompagnateurs, only: [:show, :update]
 

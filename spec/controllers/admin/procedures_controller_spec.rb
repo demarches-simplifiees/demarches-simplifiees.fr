@@ -265,4 +265,35 @@ describe Admin::ProceduresController, type: :controller do
       it { expect(flash[:alert]).to have_content 'Procédure inéxistante' }
     end
   end
+
+  describe 'PUT #clone' do
+    let!(:procedure) { create(:procedure, administrateur: admin) }
+    subject { put :clone, procedure_id: procedure.id }
+
+    it { expect{ subject }.to change(Procedure, :count).by(1) }
+
+    context 'when admin is the owner of the procedure' do
+      before do
+        subject
+      end
+
+      it 'creates a new procedure and redirect to it' do
+        expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
+        expect(flash[:notice]).to have_content 'Procédure clonée'
+      end
+    end
+
+    context 'when admin is not the owner of the procedure' do
+      let(:admin_2) { create(:administrateur) }
+
+      before do
+        sign_out admin
+        sign_in admin_2
+        subject
+      end
+
+      it { expect(response).to redirect_to :admin_procedures }
+      it { expect(flash[:alert]).to have_content 'Procédure inéxistante' }
+    end
+  end
 end

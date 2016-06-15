@@ -122,4 +122,44 @@ describe Procedure do
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
+
+  describe 'clone' do
+    let(:archived) { false }
+    let(:published) { false }
+    let(:procedure) { create(:procedure, archived: archived, published: published) }
+    let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
+    let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
+    let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
+    let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
+    subject { procedure.clone }
+
+    it 'should duplicate specific objects with different id' do
+      expect(subject.id).not_to eq(procedure.id)
+      expect(subject).to have_same_attributes_as(procedure)
+      expect(subject.module_api_carto).to have_same_attributes_as(procedure.module_api_carto)
+
+      subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
+        expect(stc).to have_same_attributes_as(ptc)
+      end
+
+      subject.types_de_piece_justificative.zip(procedure.types_de_piece_justificative).each do |stc, ptc|
+        expect(stc).to have_same_attributes_as(ptc)
+      end
+    end
+
+    it 'should not duplicate specific related objects' do
+      expect(subject.dossiers).to eq([])
+      expect(subject.gestionnaires).to eq([])
+      expect(subject.assign_to).to eq([])
+    end
+
+    describe 'procedure status is reset' do
+      let(:archived) { true }
+      let(:published) { true }
+      it 'sets published and archived to false' do
+        expect(subject.archived).to be_falsey
+        expect(subject.published).to be_falsey
+      end
+    end
+  end
 end
