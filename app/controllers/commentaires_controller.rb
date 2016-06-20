@@ -22,10 +22,11 @@ class CommentairesController < ApplicationController
     end
 
     @commentaire.body = params['texte_commentaire']
-    @commentaire.save unless flash.alert
+    saved = false
+    saved = @commentaire.save unless flash.alert
 
     if is_gestionnaire?
-      NotificationMailer.new_answer(@commentaire.dossier).deliver_now!
+      NotificationMailer.new_answer(@commentaire.dossier).deliver_now! if saved
       redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
     elsif current_user.email != @commentaire.dossier.user.email
       invite = Invite.where(dossier: @commentaire.dossier, user: current_user).first

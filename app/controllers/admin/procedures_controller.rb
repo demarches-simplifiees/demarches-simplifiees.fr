@@ -83,6 +83,23 @@ class Admin::ProceduresController < AdminController
     change_status({archived: params[:archive]})
   end
 
+  def clone
+    @procedure = current_administrateur.procedures.find(params[:procedure_id])
+
+    new_procedure = @procedure.clone
+    if new_procedure
+      flash.notice = 'Procédure clonée'
+      redirect_to edit_admin_procedure_path(id: new_procedure.id)
+    else
+      flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
+      render 'index'
+    end
+
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = 'Procédure inéxistante'
+    redirect_to admin_procedures_path
+  end
+
   def active_class
     @active_class = 'active'
   end

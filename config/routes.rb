@@ -9,8 +9,9 @@ Rails.application.routes.draw do
                              }, skip: [:password, :registrations]
 
   devise_for :gestionnaires, controllers: {
-                               sessions: 'gestionnaires/sessions'
-                           }, skip: [:password, :registrations]
+                               sessions: 'gestionnaires/sessions',
+                               passwords: 'gestionnaires/passwords'
+                           }, skip: [:registrations]
 
   devise_for :users, controllers: {
                        sessions: 'users/sessions',
@@ -25,6 +26,8 @@ Rails.application.routes.draw do
 
   devise_scope :gestionnaire do
     get '/gestionnaires/sign_in/demo' => 'gestionnaires/sessions#demo'
+    get '/gestionnaires/edit' => 'gestionnaires/registrations#edit', :as => 'edit_gestionnaires_registration'
+    put '/gestionnaires' => 'gestionnaires/registrations#update', :as => 'gestionnaires_registration'
   end
 
   devise_scope :administrateur do
@@ -100,6 +103,7 @@ Rails.application.routes.draw do
 
       put 'archive' => 'procedures#archive', as: :archive
       put 'publish' => 'procedures#publish', as: :publish
+      put 'clone' => 'procedures#clone', as: :clone
 
       resource :accompagnateurs, only: [:show, :update]
 

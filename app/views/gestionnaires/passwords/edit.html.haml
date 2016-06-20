@@ -1,0 +1,31 @@
+= devise_error_messages!
+
+#form_login
+  = image_tag('logo-tps.png')
+  %br
+  %h2#gestionnaire_login Changement de mot de passe
+
+  %br
+  %br
+  #new_user
+    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
+      = f.hidden_field :reset_password_token
+      %h4
+        = f.label 'Nouveau mot de passe'
+
+      .input-group
+        .input-group-addon
+          %span.glyphicon.glyphicon-asterisk
+        = f.password_field :password, autofocus: true, autocomplete: "off", class: 'form-control'
+      %br
+      %h4
+        = f.label 'Retaper le mot de passe'
+      .input-group
+        .input-group-addon
+          %span.glyphicon.glyphicon-asterisk
+        = f.password_field :password_confirmation, autocomplete: "off", class: 'form-control'
+      %br
+      %br
+      .actions
+        = f.submit "Changer", class:'btn btn-primary'
+      %br
