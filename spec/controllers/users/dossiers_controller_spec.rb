@@ -5,18 +5,20 @@ describe Users::DossiersController, type: :controller do
 
   let(:procedure) { create(:procedure, :published) }
   let(:procedure_id) { procedure.id }
-  let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+  let(:dossier) { create(:dossier, user: user, procedure: procedure) }
   let(:dossier_id) { dossier.id }
   let(:siret_not_found) { 999_999_999_999 }
 
   let(:rna_status) { 404 }
   let(:rna_body) { '' }
 
+  let(:user) { create :user }
+
   let(:exercices_status) { 200 }
   let(:exercices_body) { File.read('spec/support/files/exercices.json') }
 
-  let(:siren) { dossier.siren }
-  let(:siret) { dossier.siret }
+  let(:siren) { '440117620' }
+  let(:siret) { '44011762001530' }
   let(:siret_with_whitespaces) { '440 1176 2001 530' }
   let(:bad_siret) { 1 }
 
@@ -55,10 +57,66 @@ describe Users::DossiersController, type: :controller do
       context 'when procedure_id is valid' do
         context 'when user is logged in' do
           before do
-            sign_in create(:user)
+            sign_in user
           end
 
-          it { is_expected.to have_http_status(:success) }
+          it { is_expected.to have_http_status(302) }
+          it { is_expected.to redirect_to users_dossier_path(id: Dossier.last) }
+
+          it { expect { subject }.to change(Dossier, :count).by 1 }
+
+          describe 'save user siret' do
+
+            context 'when user have not a saved siret' do
+              context 'when siret is present on request' do
+                subject { get :new, procedure_id: procedure_id, siret: siret }
+
+                before do
+                  subject
+                  user.reload
+                end
+
+                it { expect(user.siret).to eq siret }
+              end
+
+              context 'when siret is not present on the request' do
+                before do
+                  subject
+                  user.reload
+                end
+
+                it { expect(user.siret).to eq nil }
+              end
+            end
+
+            context 'when user have a saved siret' do
+              before do
+                user.siret = '53029478400026'
+                user.save
+                user.reload
+              end
+
+              context 'when siret is present on request' do
+                subject { get :new, procedure_id: procedure_id, siret: siret }
+
+                before do
+                  subject
+                  user.reload
+                end
+
+                it { expect(user.siret).to eq siret }
+              end
+
+              context 'when siret is not present on the request' do
+                before do
+                  subject
+                  user.reload
+                end
+
+                it { expect(user.siret).to eq '53029478400026' }
+              end
+            end
+          end
 
           context 'when procedure is archived' do
             let(:procedure) { create(:procedure, archived: 'true') }
@@ -68,6 +126,7 @@ describe Users::DossiersController, type: :controller do
         end
         context 'when user is not logged' do
           it { is_expected.to have_http_status(302) }
+          it { is_expected.to redirect_to new_user_session_path }
         end
       end
 
@@ -75,7 +134,7 @@ describe Users::DossiersController, type: :controller do
         let(:procedure_id) { 0 }
 
         before do
-          sign_in create(:user)
+          sign_in user
         end
 
         it { is_expected.to redirect_to users_dossiers_path }
@@ -85,7 +144,7 @@ describe Users::DossiersController, type: :controller do
         let(:procedure) { create(:procedure, published: false) }
 
         before do
-          sign_in create(:user)
+          sign_in user
         end
 
         it { is_expected.to redirect_to users_dossiers_path }
@@ -93,7 +152,7 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe 'POST #create' do
+  describe 'POST #siret_informations' do
     before do
       stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{siret_not_found}?token=#{SIADETOKEN}")
           .to_return(status: 404, body: 'fake body')
@@ -109,6 +168,8 @@ describe Users::DossiersController, type: :controller do
 
       stub_request(:get, "https://api-dev.apientreprise.fr/v1/associations/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: rna_status, body: rna_body)
+
+      dossier
     end
 
     describe 'dossier attributs' do
@@ -119,10 +180,10 @@ describe Users::DossiersController, type: :controller do
           sign_in user
         end
 
-        subject { post :create, dossier: {siret: example_siret, procedure_id: Procedure.last} }
+        subject { post :siret_informations, dossier_id: dossier.id, dossier: {siret: example_siret} }
 
         it 'create a dossier' do
-          expect { subject }.to change { Dossier.count }.by(1)
+          expect { subject }.to change { Dossier.count }.by(0)
         end
 
         it 'creates entreprise' do
@@ -238,27 +299,32 @@ describe Users::DossiersController, type: :controller do
 
       context 'with non existant siret' do
         before do
-          sign_in create(:user)
+          sign_in user
+          subject
         end
 
         let(:siret_not_found) { '11111111111111' }
-        subject { post :create, dossier: {siret: siret_not_found, procedure_id: procedure.id} }
+        subject { post :siret_informations, dossier_id: dossier.id, dossier: {siret: siret_not_found} }
+
         it 'does not create new dossier' do
           expect { subject }.not_to change { Dossier.count }
         end
 
-        it 'redirects to show' do
-          expect(subject).to redirect_to new_users_dossiers_path(procedure_id: procedure_id)
-        end
+        it { expect(response.status).to eq 200 }
+        it { expect(flash.alert).to eq 'Le siret est incorrect' }
+        it { expect(response.to_a[2]).to be_an_instance_of ActionDispatch::Response::RackBody }
       end
     end
   end
 
   describe 'PUT #update' do
+    subject { put :update, id: dossier_id, dossier: {id: dossier_id, autorisation_donnees: autorisation_donnees} }
+
     before do
       sign_in dossier.user
-      put :update, id: dossier_id, dossier: {autorisation_donnees: autorisation_donnees}
+      subject
     end
+
     context 'when Checkbox is checked' do
       let(:autorisation_donnees) { '1' }
 
@@ -272,7 +338,7 @@ describe Users::DossiersController, type: :controller do
         let(:procedure) { create(:procedure, :with_api_carto) }
 
         before do
-          put :update, id: dossier_id, dossier: {autorisation_donnees: autorisation_donnees}
+          subject
         end
         it 'redirects to carte' do
           expect(response).to redirect_to(controller: :carte, action: :show, dossier_id: dossier.id)
@@ -295,6 +361,25 @@ describe Users::DossiersController, type: :controller do
         dossier.reload
         expect(dossier.autorisation_donnees).to be_falsy
       end
+
+      it { is_expected.to redirect_to users_dossier_path(id: dossier.id) }
+    end
+  end
+
+  describe 'PUT #change_siret' do
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+
+    subject { put :change_siret, dossier_id: dossier.id }
+
+    before do
+      sign_in user
+    end
+
+    it { expect(subject.status).to eq 200 }
+
+    it 'function dossier.reset! is call' do
+      expect_any_instance_of(Dossier).to receive(:reset!)
+      subject
     end
   end
 

@@ -1,0 +1,7 @@
+$('.row.etape.etape_2').html("<%= escape_javascript(render partial: '/dossiers/etapes/etape2', locals: { facade: @facade } ) %>");
+the_terms();
+
+<% unless flash.empty? %>
+error_form_siret('<%= invalid_siret %>');
+<%  end %>
+<% flash.clear %>

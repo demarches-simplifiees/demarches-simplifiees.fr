@@ -9,6 +9,7 @@ describe 'dossiers/show.html.haml', type: :view do
 
     render
   end
+
   it 'have autorisation_donnees check box' do
     expect(rendered).to have_css('#dossier_autorisation_donnees')
   end

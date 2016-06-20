@@ -193,4 +193,10 @@ class Dossier < ActiveRecord::Base
     entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map {|k, v| ["entreprise.#{k}", v] }.to_h
     dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
   end
+
+  def reset!
+    entreprise.destroy unless entreprise.nil?
+
+    update_attributes(autorisation_donnees: false)
+  end
 end

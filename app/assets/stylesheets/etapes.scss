@@ -1,0 +1,29 @@
+.etapes_menu{
+  h3 {
+    margin-left: 3%;
+  }
+  padding-right: 0 !important;
+}
+
+.etapes_informations {
+  padding-left: 0 !important;
+}
+
+.etape{
+  margin-bottom: 0px;
+}
+
+.etape_2{
+  .etapes_menu{
+    #dossier_siret{
+      width: 200px;
+    }
+
+    button{
+      margin-top: 8px;
+    }
+  }
+  .etapes_informations{
+    padding-top: 15px;
+  }
+}
