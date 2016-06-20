@@ -3,6 +3,7 @@
     %thead
       %th#ID= smart_listing.sortable 'ID', 'id'
       %th#libelle= smart_listing.sortable 'Libellé', 'libelle'
+      %th#lien Actions
 
     - @procedures.each do |procedure|
       - procedure = procedure.decorate
@@ -10,6 +11,7 @@
         %td.col-md-1.col-lg-1= procedure.id
         %td.col-md-6.col-lg-6
           = link_to(procedure.libelle, "/admin/procedures/#{procedure.id}")
+        %td= link_to('cloner', admin_procedure_clone_path(procedure.id), 'data-method' => :put, class: 'btn-xs btn-primary')
 
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links

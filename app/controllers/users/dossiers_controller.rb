@@ -3,7 +3,7 @@ class Users::DossiersController < UsersController
   helper SmartListing::Helper
 
   before_action :authenticate_user!
-  before_action :check_siret, only: :create
+  before_action :check_siret, only: :siret_informations
 
   before_action only: [:show] do
     authorized_routes? self.class
@@ -25,50 +25,53 @@ class Users::DossiersController < UsersController
   def new
     procedure = Procedure.where(archived: false, published: true).find(params[:procedure_id])
 
-    @dossier = Dossier.new(procedure: procedure)
-    @siret = params[:siret] || current_user.siret
+    dossier = Dossier.create(procedure: procedure, user: current_user, state: 'draft')
+    siret = params[:siret] || current_user.siret
 
+    update_current_user_siret! siret unless siret.nil?
+
+    redirect_to users_dossier_path(id: dossier.id)
   rescue ActiveRecord::RecordNotFound
     error_procedure
   end
 
   def show
-    @facade = DossierFacades.new params[:id], current_user.email
+    @facade = facade
+    @siret = current_user.siret unless current_user.siret.nil?
 
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for users_dossiers_path
   end
 
-  def create
-    entreprise_adapter = SIADE::EntrepriseAdapter.new(siren)
+  def siret_informations
+    @facade = facade params[:dossier_id]
 
-    dossier = Dossier.create(user: current_user,
-                             state: 'draft',
-                             procedure_id: create_params[:procedure_id],
-                             mandataire_social: mandataire_social?(entreprise_adapter.mandataires_sociaux))
+    update_current_user_siret! siret
 
-    entreprise = dossier.create_entreprise(entreprise_adapter.to_params)
+    DossierService.new(@facade.dossier, siret, current_user.france_connect_information).dossier_informations!
 
-    entreprise.create_rna_information(SIADE::RNAAdapter.new(siret).to_params)
-
-    etablissement = dossier.create_etablissement(SIADE::EtablissementAdapter.new(siret).to_params
-                                                     .merge({entreprise_id: entreprise.id}))
-
-    etablissement.exercices.create(SIADE::ExercicesAdapter.new(siret).to_params)
-
-    redirect_to url_for(controller: :dossiers, action: :show, id: dossier.id)
+    @facade = facade params[:dossier_id]
+    render '/dossiers/new_siret', formats: 'js'
 
   rescue RestClient::ResourceNotFound
     errors_valid_siret
 
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: :siret)
+    redirect_to url_for users_dossiers_path
+  end
+
+  def change_siret
+    Dossier.find(params[:dossier_id]).reset!
+
+    @facade = facade params[:dossier_id]
+
+    render '/dossiers/new_siret', formats: :js
   end
 
   def update
-    @facade = DossierFacades.new params[:id], current_user.email
+    @facade = facade params[:dossier][:id]
 
     if checked_autorisation_donnees?
       @facade.dossier.update_attributes(update_params)
@@ -79,8 +82,8 @@ class Users::DossiersController < UsersController
         redirect_to url_for(controller: :description, action: :show, dossier_id: @facade.dossier.id)
       end
     else
-      flash.now.alert = 'Les conditions sont obligatoires.'
-      render 'show'
+      flash.alert = 'Les conditions sont obligatoires.'
+      redirect_to users_dossier_path(id: @facade.dossier.id)
     end
   end
 
@@ -132,7 +135,9 @@ class Users::DossiersController < UsersController
 
   def errors_valid_siret
     flash.alert = t('errors.messages.invalid_siret')
-    redirect_to url_for new_users_dossiers_path(procedure_id: create_params[:procedure_id])
+    @facade = facade params[:dossier_id]
+
+    render '/dossiers/new_siret', formats: :js, locals: {invalid_siret: siret}
   end
 
   def update_params
@@ -147,28 +152,21 @@ class Users::DossiersController < UsersController
     create_params[:siret]
   end
 
-  def siren
-    siret[0..8]
-  end
-
   def create_params
-    params.require(:dossier).permit(:siret, :procedure_id)
+    params.require(:dossier).permit(:siret)
   end
 
   def error_procedure
     flash.alert = t('errors.messages.procedure_not_found')
+
     redirect_to url_for users_dossiers_path
   end
 
-  def mandataire_social? mandataires_list
-    unless current_user.france_connect_information.nil?
-      mandataires_list.each do |mandataire|
-        return true if mandataire[:nom].upcase == current_user.family_name.upcase &&
-            mandataire[:prenom].upcase == current_user.given_name.upcase &&
-            mandataire[:date_naissance_timestamp] == current_user.birthdate.to_time.to_i
-      end
-    end
+  def update_current_user_siret! siret
+    current_user.update_attributes(siret: siret)
+  end
 
-    false
+  def facade id = params[:id]
+    DossierFacades.new id, current_user.email
   end
 end

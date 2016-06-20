@@ -6,7 +6,7 @@ feature 'user arrive on siret page' do
   let(:siret) { '42149333900020' }
   let(:siren) { siret[0...9] }
 
-  context 'when user is not logged in' do
+  context 'when user is not logged in', js: true do
     before do
       visit new_users_dossiers_path(procedure_id: procedure.id)
     end
@@ -22,7 +22,7 @@ feature 'user arrive on siret page' do
         end
       end
       scenario 'he is redirected to siret page to enter a siret' do
-        expect(page).to have_css('#pro_section')
+        expect(page).to have_css('#new_siret')
       end
       context 'when enter a siret' do
         before do
@@ -36,7 +36,7 @@ feature 'user arrive on siret page' do
               .to_return(status: 404, body: '')
 
           page.find_by_id('dossier_siret').set siret
-          page.click_on 'Commencer'
+          page.click_on 'Valider'
         end
         scenario 'he is redirected to recap info entreprise page' do
           expect(page).to have_css('#recap_info_entreprise')

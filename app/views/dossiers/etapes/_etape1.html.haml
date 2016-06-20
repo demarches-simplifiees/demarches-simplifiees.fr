@@ -1,0 +1,19 @@
+.etape.etapes_menu.col-md-3.col-lg-3
+  %h3
+    Ma procédure
+  %br
+  .center
+    - if @facade.procedure.euro_flag
+      #euro_flag.flag
+        =image_tag('drapeau_europe.png')
+
+    #logo_procedure.flag
+      =image_tag( @facade.procedure.decorate.logo_img )
+
+.etape.etapes_informations.col-md-9.col-lg-9
+  .row
+    %h2#titre_procedure.text-info
+      = @facade.procedure.libelle
+
+    %p{style:'width: 95%;'}
+      = h @facade.procedure.description.html_safe

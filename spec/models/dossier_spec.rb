@@ -563,4 +563,35 @@ describe Dossier do
     it { expect(subject['entreprise.prenom']).to be_nil }
   end
 
+  describe '#reset!' do
+    let!(:dossier) { create :dossier, :with_entreprise, autorisation_donnees: true }
+    let!(:rna_information) { create :rna_information, entreprise: dossier.entreprise }
+    let!(:exercice) { create :exercice, etablissement: dossier.etablissement }
+
+    subject { dossier.reset! }
+
+    it { expect(dossier.entreprise).not_to be_nil }
+    it { expect(dossier.etablissement).not_to be_nil }
+    it { expect(dossier.etablissement.exercices).not_to be_empty }
+    it { expect(dossier.etablissement.exercices.size).to eq 1 }
+    it { expect(dossier.entreprise.rna_information).not_to be_nil }
+    it { expect(dossier.autorisation_donnees).to be_truthy }
+
+    it { expect{subject}.to change(RNAInformation, :count).by(-1) }
+    it { expect{subject}.to change(Exercice, :count).by(-1) }
+
+    it { expect{subject}.to change(Entreprise, :count).by(-1) }
+    it { expect{subject}.to change(Etablissement, :count).by(-1) }
+
+    context 'when method reset! is call' do
+      before do
+        subject
+        dossier.reload
+      end
+
+      it { expect(dossier.entreprise).to be_nil }
+      it { expect(dossier.etablissement).to be_nil }
+      it { expect(dossier.autorisation_donnees).to be_falsey }
+    end
+  end
 end

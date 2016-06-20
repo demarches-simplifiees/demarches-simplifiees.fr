@@ -91,5 +91,17 @@ describe Backoffice::CommentairesController, type: :controller do
         end
       end
     end
+
+    describe 'comment cannot be saved' do
+      before do
+        allow_any_instance_of(Commentaire).to receive(:save).and_return(false)
+      end
+      it 'Notification email is not sent' do
+        expect(NotificationMailer).not_to receive(:new_answer)
+        expect(NotificationMailer).not_to receive(:deliver_now!)
+
+        post :create, dossier_id: dossier_id, texte_commentaire: texte_commentaire
+      end
+    end
   end
 end

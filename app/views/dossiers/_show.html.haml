@@ -1,13 +1,21 @@
-.container#recap_info_entreprise
-  %h2 Récapitulatif de vos informations <em id="insee_infogreffe" class='small'>(récupérées auprès de l'INSEE et d'INFOGREFFE)</em>
-  %br
+#users_siret_index
 
-  %div.row
-    = render partial: '/dossiers/infos_entreprise'
-  %br
-  = form_for @facade.dossier, url: { controller: '/users/dossiers', action: :update } do |f|
-    %label{ style:'font-weight:normal' }
-      = f.check_box :autorisation_donnees
-      J'autorise les décideurs publics à vérifier les informations de mon organisation auprès des administrations concernées. Ces informations resteront strictement confidentielles.
-    %br
-    = f.submit 'Etape suivante', class: "btn btn btn-info", style: 'float:right', id: 'etape_suivante'
+  .row.etape.etape_1
+    = render partial: '/dossiers/etapes/etape1'
+
+  .row.etape.etape_2
+    = render partial: '/dossiers/etapes/etape2'
+
+  -#- if @facade.procedure.module_api_carto.use_api_carto?
+  -#  .row.etape.etape_3
+  -#    .etape.etapes_menu.col-md-3.col-lg-3
+  -#      %h3
+  -#        3 - Ma zone d'intervention
+  -#    .etape.etapes_informations.col-md-9.col-lg-9
+  -#
+  -#.row.etape.etape_4
+  -#  .etape.etapes_menu.col-md-3.col-lg-3
+  -#    %h3
+  -#      = "#{@facade.procedure.module_api_carto.use_api_carto? ? '4' : '3'} - Mon dossier"
+  -#  .etape.etapes_informations.col-md-9.col-lg-9
+
