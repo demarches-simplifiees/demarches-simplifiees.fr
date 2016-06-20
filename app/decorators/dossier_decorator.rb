@@ -3,7 +3,7 @@ class DossierDecorator < Draper::Decorator
   delegate_all
 
   def display_date
-    date_previsionnelle.to_date.strftime('%d/%m/%Y')
+    date_previsionnelle.localtime.strftime('%d/%m/%Y')
   rescue
     'dd/mm/YYYY'
   end
