@@ -4,7 +4,7 @@ class Gestionnaire < ActiveRecord::Base
 
   has_and_belongs_to_many :administrateurs
 
-  has_many :assign_to
+  has_many :assign_to, dependent: :destroy
   has_many :procedures, through: :assign_to
   has_many :dossiers, through: :procedures
 

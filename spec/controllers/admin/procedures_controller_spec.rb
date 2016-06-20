@@ -52,6 +52,47 @@ describe Admin::ProceduresController, type: :controller do
     it { expect(response.status).to eq(200) }
   end
 
+  describe 'DELETE #destroy' do
+
+    let(:procedure_draft) { create :procedure, published: false, archived: false }
+    let(:procedure_published) { create :procedure, published: true, archived: false }
+    let(:procedure_archived) { create :procedure, published: false, archived: true }
+
+    subject { delete :destroy, id: procedure.id }
+
+    context 'when procedure is draft' do
+      let!(:procedure) { procedure_draft }
+
+      describe 'tech params' do
+        before do
+          subject
+        end
+
+        it { expect(subject.status).to eq 302 }
+        it { expect(flash[:notice]).to be_present }
+      end
+
+      it 'destroy procedure is call' do
+        expect_any_instance_of(Procedure).to receive(:destroy)
+        subject
+      end
+
+      it { expect { subject }.to change{Procedure.count}.by(-1) }
+    end
+
+    context 'when procedure is published' do
+      let(:procedure) { procedure_published }
+
+      it { expect(subject.status).to eq 401 }
+    end
+
+    context 'when procedure is archived' do
+      let(:procedure) { procedure_published }
+
+      it { expect(subject.status).to eq 401 }
+    end
+  end
+
   describe 'GET #edit' do
     let(:published) { false }
     let(:procedure) { create(:procedure, administrateur: admin, published: published) }
@@ -270,7 +311,7 @@ describe Admin::ProceduresController, type: :controller do
     let!(:procedure) { create(:procedure, administrateur: admin) }
     subject { put :clone, procedure_id: procedure.id }
 
-    it { expect{ subject }.to change(Procedure, :count).by(1) }
+    it { expect { subject }.to change(Procedure, :count).by(1) }
 
     context 'when admin is the owner of the procedure' do
       before do

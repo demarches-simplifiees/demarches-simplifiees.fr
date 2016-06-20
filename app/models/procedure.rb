@@ -1,13 +1,13 @@
 class Procedure < ActiveRecord::Base
   has_many :types_de_piece_justificative, dependent: :destroy
   has_many :types_de_champ, dependent: :destroy
-  has_many :dossiers, dependent: :destroy
+  has_many :dossiers
 
   has_one :module_api_carto, dependent: :destroy
 
   belongs_to :administrateur
 
-  has_many :assign_to
+  has_many :assign_to, dependent: :destroy
   has_many :gestionnaires, through: :assign_to
 
   delegate :use_api_carto, to: :module_api_carto
