@@ -594,4 +594,47 @@ describe Dossier do
       it { expect(dossier.autorisation_donnees).to be_falsey }
     end
   end
+
+  describe '#ordered_champs' do
+    let!(:procedure_1) { create :procedure }
+    let!(:procedure_2) { create :procedure }
+
+    let(:dossier_1) { Dossier.new(id: 0, procedure: procedure_1) }
+    let(:dossier_2) { Dossier.new(id: 0, procedure: procedure_2)  }
+
+    before do
+      create :type_de_champ, libelle: 'type_1_1', order_place: 1, procedure: dossier_1.procedure
+      create :type_de_champ, libelle: 'type_1_2', order_place: 2, procedure: dossier_1.procedure
+
+      create :type_de_champ, libelle: 'type_2_1', order_place: 1, procedure: dossier_2.procedure
+      create :type_de_champ, libelle: 'type_2_2', order_place: 2, procedure: dossier_2.procedure
+      create :type_de_champ, libelle: 'type_2_3', order_place: 3, procedure: dossier_2.procedure
+
+      dossier_1.build_default_champs
+      dossier_2.build_default_champs
+    end
+
+    subject { dossier.ordered_champs }
+
+    it { expect(Champ.where(dossier_id: 0).size).to eq 5 }
+
+    describe 'for dossier 1' do
+      let(:dossier) { dossier_1 }
+
+      it { expect(subject.size).to eq 2 }
+      it { expect(subject.first.type_de_champ.libelle).to eq 'type_1_1' }
+      it { expect(subject.last.type_de_champ.libelle).to eq 'type_1_2' }
+    end
+
+    describe 'for dossier 2' do
+      let(:dossier) { dossier_2 }
+
+      it { expect(subject.size).to eq 3 }
+
+      it { expect(subject.first.type_de_champ.libelle).to eq 'type_2_1' }
+      it { expect(subject.second.type_de_champ.libelle).to eq 'type_2_2' }
+      it { expect(subject.last.type_de_champ.libelle).to eq 'type_2_3' }
+    end
+
+  end
 end
