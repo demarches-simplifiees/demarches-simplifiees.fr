@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'users/description/show.html.haml', type: :view do
   let(:user) { create(:user) }
   let(:cerfa_flag) { true }
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: cerfa_flag) }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: cerfa_flag) }
   let(:dossier) { create(:dossier, procedure: procedure, user: user) }
   let(:dossier_id) { dossier.id }
 
@@ -82,8 +82,12 @@ describe 'users/description/show.html.haml', type: :view do
 
   context 'Champs' do
     let(:champs) { dossier.champs }
+    let(:types_de_champ) { procedure.types_de_champ.where(type_champ: 'datetime').first }
+    let(:champ_datetime) { champs.where(type_de_champ_id: types_de_champ.id).first }
 
     before do
+      champ_datetime.value = "22/06/2016 12:05"
+      champ_datetime.save
       render
     end
 
@@ -97,6 +101,12 @@ describe 'users/description/show.html.haml', type: :view do
       subject { dossier.champs.last }
       it { expect(rendered).to have_css(".type_champ-#{subject.type_champ}") }
       it { expect(rendered).to have_css("#champs_#{subject.id}") }
+    end
+
+    describe 'datetime value is correctly setup when is not nil' do
+      it { expect(rendered).to have_css("input[type='datetime'][id='champs_#{champ_datetime.id}'][value='22/06/2016']") }
+      it { expect(rendered).to have_css("option[value='12'][selected='selected']")}
+      it { expect(rendered).to have_css("option[value='05'][selected='selected']")}
     end
   end
 
@@ -156,7 +166,7 @@ describe 'users/description/show.html.haml', type: :view do
     end
 
     context 'when procedure have cerfa flag true' do
-      let(:procedure) {create(:procedure, cerfa_flag: true)}
+      let(:procedure) { create(:procedure, cerfa_flag: true) }
 
       it { expect(rendered).to have_content 'Documents administratifs' }
     end
