@@ -7,38 +7,18 @@ class DossierService
   end
 
   def dossier_informations!
-    entreprise_thread = Thread.new {
-      @entreprise_adapter = SIADE::EntrepriseAdapter.new(DossierService.siren @siret)
+    @entreprise_adapter = SIADE::EntrepriseAdapter.new(DossierService.siren @siret)
 
-      @dossier.create_entreprise(@entreprise_adapter.to_params)
-    }
+    @dossier.create_entreprise(@entreprise_adapter.to_params)
+    @etablissement_adapter = SIADE::EtablissementAdapter.new(@siret)
 
-    etablissement_thread = Thread.new {
-      @etablissement_adapter = SIADE::EtablissementAdapter.new(@siret)
+    @dossier.create_etablissement(@etablissement_adapter.to_params)
 
-      @dossier.create_etablissement(@etablissement_adapter.to_params)
-    }
+    @rna_adapter = SIADE::RNAAdapter.new(@siret)
+    @dossier.entreprise.create_rna_information(@rna_adapter.to_params)
 
-    rna_thread = Thread.new {
-      @rna_adapter = SIADE::RNAAdapter.new(@siret)
-
-      sleep(0.1) while entreprise_thread.alive?
-
-      @dossier.entreprise.create_rna_information(@rna_adapter.to_params)
-    }
-
-    exercices_thread = Thread.new {
-      @exercices_adapter = SIADE::ExercicesAdapter.new(@siret)
-
-      sleep(0.1) while etablissement_thread.alive?
-
-      @dossier.etablissement.exercices.create(@exercices_adapter.to_params)
-    }
-
-    sleep(0.1) while entreprise_thread.alive? ||
-        etablissement_thread.alive? ||
-        rna_thread.alive? ||
-        exercices_thread.alive?
+    @exercices_adapter = SIADE::ExercicesAdapter.new(@siret)
+    @dossier.etablissement.exercices.create(@exercices_adapter.to_params)
 
     @dossier.update_attributes(mandataire_social: mandataire_social?(@entreprise_adapter.mandataires_sociaux))
     @dossier.etablissement.update_attributes(entreprise: @dossier.entreprise)

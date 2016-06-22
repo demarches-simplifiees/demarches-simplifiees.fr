@@ -77,12 +77,21 @@
   }
 }
 
-.type_champ-datetime {
+.type_champ-date {
   @extend .col-md-2;
   @extend .col-lg-2;
 
-  input[type='number'] {
-    width: 100%;
+  input[type='date'] {
+    width: 120px;
+  }
+}
+
+.type_champ-datetime {
+  @extend .col-md-4;
+  @extend .col-lg-4;
+
+  input[type='datetime'] {
+    width: 120px;
   }
 }
 

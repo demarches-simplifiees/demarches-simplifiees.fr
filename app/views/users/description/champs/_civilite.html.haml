@@ -1,0 +1,7 @@
+%label.radio-inline
+  = radio_button_tag "champs['#{champ.id}']", "M.", champ.value == 'Mme' ? false : true
+  Monsieur
+
+%label.radio-inline
+  = radio_button_tag "champs['#{champ.id}']", "Mme", champ.value == 'Mme'
+  Madame

@@ -15,19 +15,13 @@
             = '*'
 
         -if champ.type_champ == 'textarea'
-          %textarea.form-control.wysihtml5{name:"champs['#{champ.id}']",
-                  placeholder: champ.description,
-                  id: "champs_#{champ.id}",
-                  row: '6'}
-            =champ.value
-        -elsif champ.type_champ == 'civilite'
-          %label.radio-inline
-            = radio_button_tag "champs['#{champ.id}']", "M.", champ.value == 'Mme' ? false : true
-            Monsieur
+          =render partial: 'users/description/champs/textarea', locals: {champ: champ}
 
-          %label.radio-inline
-            = radio_button_tag "champs['#{champ.id}']", "Mme", champ.value == 'Mme'
-            Madame
+        -elsif champ.type_champ == 'civilite'
+          =render partial: 'users/description/champs/civilite', locals: {champ: champ}
+
+        - elsif champ.type_champ == 'datetime'
+          =render partial: 'users/description/champs/datetime', locals: {champ: champ}
 
         -else
           %input.form-control{name:"champs['#{champ.id}']",
@@ -36,7 +30,7 @@
                   value: champ.value,
                   type: champ.type_champ,
                   'data-provide' => champ.data_provide,
-                  'data-date-format' => ('dd/mm/yyyy' if champ.type_champ == 'datetime')}
+                  'data-date-format' => champ.data_date_format}
 
   - unless champ.description.empty?
     .row
