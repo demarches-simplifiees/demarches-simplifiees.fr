@@ -6,12 +6,16 @@
           %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
             %span{"aria-hidden" => "true"} ×
           %h4#myModalLabel.modal-title
-            Publier la procédure
+            =@procedure.archived?? 'Réactiver' : 'Publier'
+            la procédure
             %span#publishModal_title
         .modal-body
-          Vous vous apprêtez à publier votre procédure au public.
-          %b
-            Elle ne pourra plus être modifiée à l'issue de cette publication.
+          Vous vous apprêtez à
+          =@procedure.archived?? 'republier' : 'publier'
+          votre procédure au public.
+          - unless @procedure.archived?
+            %b
+              Elle ne pourra plus être modifiée à l'issue de cette publication.
           %br
           Afin de faciliter l'accès à la procédure, vous êtes invité à personnaliser l'adresse d'accès si vous le souhaitez.
           %br
@@ -39,7 +43,7 @@
                 Ce lien n'est pas valide. Seuls les caractères a-z, 0-9 et '_' sont autorisés.
         .modal-footer
           = submit_tag 'Annuler', class: %w(btn btn btn-default), id: 'cancel', data: { dismiss: 'modal' }
-          = submit_tag 'Publier', class: %w(btn btn btn-success),
+          = submit_tag "#{@procedure.archived?? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
                                   id: 'publish',
                                   data: { disable_with: 'Publication en cours', submit: true},
                                   disabled: :disabled

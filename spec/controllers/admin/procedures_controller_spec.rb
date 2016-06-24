@@ -355,26 +355,25 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :archive, procedure_id: procedure.id, archive: archive
+        put :archive, procedure_id: procedure.id
         procedure.reload
       end
 
       context 'when owner want archive procedure' do
-
-        let(:archive) { true }
-
         it { expect(procedure.archived).to be_truthy }
         it { expect(response).to redirect_to :admin_procedures }
         it { expect(flash[:notice]).to have_content 'Procédure archivée' }
       end
 
       context 'when owner want reactive procedure' do
-
-        let(:archive) { false }
+        before do
+          put :publish, procedure_id: procedure.id, procedure_path: 'fake_path'
+          procedure.reload
+        end
 
         it { expect(procedure.archived).to be_falsey }
         it { expect(response).to redirect_to :admin_procedures }
-        it { expect(flash[:notice]).to have_content 'Procédure éditée' }
+        it { expect(flash[:notice]).to have_content 'Procédure publiée' }
       end
     end
 
