@@ -1,0 +1,45 @@
+#publishModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog.modal-lg{:role => "document"}
+    = form_tag admin_procedure_publish_path(procedure_id: @procedure.id), method: :put do
+      .modal-content
+        .modal-header
+          %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+            %span{"aria-hidden" => "true"} ×
+          %h4#myModalLabel.modal-title
+            Publier la procédure
+            %span#publishModal_title
+        .modal-body
+          Vous vous apprêtez à publier votre procédure au public.
+          %b
+            Elle ne pourra plus être modifiée à l'issue de cette publication.
+          %br
+          Afin de faciliter l'accès à la procédure, vous êtes invité à personnaliser l'adresse d'accès si vous le souhaitez.
+          %br
+          .form-group
+            %br
+            %h4 Lien de la procédure
+            %p.center
+              = root_url
+              = text_field_tag('procedure_path', @procedure.libelle.downcase.gsub(/[^a-z0-9\-_]/,"_").gsub(/_*$/, '').gsub(/_+/, '_'),
+                                id: 'procedure_path',
+                                placeholder: 'Chemin vers la procédure',
+                                class:'form-control',
+                                maxlength: 30,
+                                style: 'width: 300px; display: inline')
+            #path_messages
+              #path_is_mine.text-warning.center.message
+                Ce lien est déjà utilisé par une de vos procédure.
+                %br
+                Si vous voulez l'utiliser, l'ancienne procédure sera archivée (plus accessible du public).
+              #path_is_not_mine.text-danger.center.message
+                Ce lien est déjà utilisé par une procédure.
+                %br
+                Vous ne pouvez pas l'utiliser car il appartient à un autre administrateur.
+              #path_is_invalid.text-danger.center.message
+                Ce lien n'est pas valide. Seuls les caractères a-z, 0-9 et '_' sont autorisés.
+        .modal-footer
+          = submit_tag 'Annuler', class: %w(btn btn btn-default), id: 'cancel', data: { dismiss: 'modal' }
+          = submit_tag 'Publier', class: %w(btn btn btn-success),
+                                  id: 'publish',
+                                  data: { disable_with: 'Publication en cours', submit: true},
+                                  disabled: :disabled

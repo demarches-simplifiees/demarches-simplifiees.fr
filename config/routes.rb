@@ -89,6 +89,7 @@ Rails.application.routes.draw do
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
+    get 'procedures/path_list' => 'procedures#path_list'
     get 'profile' => 'profile#show', as: :profile
 
     resources :procedures do
@@ -159,6 +160,10 @@ Rails.application.routes.draw do
     namespace :statistiques do
       get 'dossiers' => '/api/statistiques#dossiers_stats'
     end
+  end
+
+  namespace :commencer do
+    get '/:procedure_path' => '/users/dossiers#new'
   end
 
   apipie

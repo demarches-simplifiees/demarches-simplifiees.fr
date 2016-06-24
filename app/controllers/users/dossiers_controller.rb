@@ -23,7 +23,11 @@ class Users::DossiersController < UsersController
   end
 
   def new
-    procedure = Procedure.where(archived: false, published: true).find(params[:procedure_id])
+    if (! params[:procedure_path].nil?)
+      procedure = ProcedurePath.where(path: params[:procedure_path]).first!.procedure
+    else
+      procedure = Procedure.where(archived: false, published: true).find(params[:procedure_id])
+    end
 
     dossier = Dossier.create(procedure: procedure, user: current_user, state: 'draft')
     siret = params[:siret] || current_user.siret

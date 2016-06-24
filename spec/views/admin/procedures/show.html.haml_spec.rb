@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe 'admin/procedures/show.html.haml', type: :view do
   let(:archived) { false }
-  let(:published) { false }
-  let(:procedure) { create(:procedure, published: published, archived: archived) }
+  let(:procedure) { create(:procedure, archived: archived) }
 
   before do
     assign(:facade, AdminProceduresShowFacades.new(procedure.decorate))
@@ -16,9 +15,16 @@ describe 'admin/procedures/show.html.haml', type: :view do
   end
 
   describe 'archive and unarchive button' do
-    let(:published) { true }
+    before do
+      procedure.publish('fake_path')
+      render
+    end
 
     context 'when procedure is published' do
+      before do
+        procedure.publish('fake_path')
+        procedure.reload
+      end
       it { expect(rendered).to have_content('Archiver') }
     end
 
@@ -35,8 +41,19 @@ describe 'admin/procedures/show.html.haml', type: :view do
     end
 
     context 'is present when already published' do
-      let(:published) { true }
-      it { expect(rendered).to have_content(new_users_dossiers_url(procedure_id: procedure.id)) }
+      before do
+        procedure.publish('fake_path')
+        render
+      end
+      it { expect(rendered).to have_content(commencer_url(procedure_path: procedure.path)) }
+    end
+
+    context 'is not present when archived' do
+      before do
+        procedure.archive
+        render
+      end
+      it { expect(rendered).to have_content('Cette procédure a été archivée et n\'est plus accessible par le public.') }
     end
   end
 end

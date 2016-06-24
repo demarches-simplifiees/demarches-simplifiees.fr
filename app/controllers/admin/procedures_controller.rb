@@ -87,11 +87,44 @@ class Admin::ProceduresController < AdminController
   end
 
   def publish
-    change_status({published: true})
+    if ! ProcedurePathFormatValidator.new().validate_string(params[:procedure_path])
+      flash.alert = 'Lien de la procédure invalide'
+      return redirect_to admin_procedures_path
+    end
+
+    procedure_path = ProcedurePath.find_by_path(params[:procedure_path])
+    @procedure = current_administrateur.procedures.find(params[:procedure_id])
+
+    if (procedure_path)
+      if (procedure_path.administrateur_id == current_administrateur.id)
+        procedure_path.procedure.archive
+        @procedure.publish(params[:procedure_path])
+      else
+        flash.alert = 'Ce lien appartient à un autre administrateur et ne peut pas être utilisé.'
+        return redirect_to admin_procedures_path
+      end
+    else
+      @procedure.publish(params[:procedure_path])
+    end
+
+    flash.notice = "Procédure publiée"
+    redirect_to admin_procedures_path
+
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = 'Procédure inéxistante'
+    redirect_to admin_procedures_path
   end
 
   def archive
-    change_status({archived: params[:archive]})
+    @procedure = current_administrateur.procedures.find(params[:procedure_id])
+    @procedure.archive
+
+    flash.notice = "Procédure archivée"
+    redirect_to admin_procedures_path
+
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = 'Procédure inéxistante'
+    redirect_to admin_procedures_path
   end
 
   def clone
@@ -123,6 +156,12 @@ class Admin::ProceduresController < AdminController
     @draft_class = 'active'
   end
 
+  def path_list
+    render json: ProcedurePath.where("path LIKE '%#{params[:request]}%'").pluck(:path, :administrateur_id).inject([]) {
+      |acc, value| acc.push({ label: value.first, mine: value.second == current_administrateur.id })
+    }.to_json
+  end
+
   private
 
   def create_procedure_params
@@ -131,17 +170,5 @@ class Admin::ProceduresController < AdminController
 
   def create_module_api_carto_params
     params.require(:procedure).require(:module_api_carto_attributes).permit(:id, :use_api_carto, :quartiers_prioritaires, :cadastre)
-  end
-
-  def change_status(status_options)
-    @procedure = current_administrateur.procedures.find(params[:procedure_id])
-    @procedure.update_attributes(status_options)
-
-    flash.notice = 'Procédure éditée'
-    redirect_to admin_procedures_path
-
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
-    redirect_to admin_procedures_path
   end
 end

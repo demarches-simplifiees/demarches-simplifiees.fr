@@ -1,4 +1,5 @@
 FactoryGirl.define do
+  sequence(:published_path) { |n| "fake_path#{n}" }
   factory :procedure do
     lien_demarche 'http://localhost'
     libelle 'Demande de subvention'
@@ -6,6 +7,7 @@ FactoryGirl.define do
     organisation "Orga SGMAP"
     direction "direction SGMAP"
     published false
+    administrateur { create(:administrateur) }
 
     after(:build) do |procedure, _evaluator|
       if procedure.module_api_carto.nil?
@@ -55,8 +57,8 @@ FactoryGirl.define do
     end
 
     trait :published do
-      after(:build) do |procedure, _evaluator|
-        procedure.published = true
+      after(:create) do |procedure, _evaluator|
+        procedure.publish(generate(:published_path))
       end
     end
   end
