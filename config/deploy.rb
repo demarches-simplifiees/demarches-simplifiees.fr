@@ -63,6 +63,7 @@ set :shared_paths, [
                      'public/system',
                      'public/uploads',
                      'config/database.yml',
+                     "config/fog_credentials.yml",
                      'config/initializers/secret_token.rb',
                      "config/environments/#{ENV['to']}.rb",
                      "config/initializers/token.rb",
@@ -132,7 +133,7 @@ task :deploy => :environment do
 
     to :launch do
       queue "/etc/init.d/#{user} upgrade "
-      
+
       queue "cd #{deploy_to}/#{current_path}/"
       queue "bundle exec rake db:seed RAILS_ENV=#{rails_env}"
       queue %[echo "-----> Rake Seeding Completed."]

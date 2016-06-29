@@ -14,7 +14,9 @@
 .row
   .col-md-6.col-lg-6
     %h4 Logo de la procédure
-    = f.file_field(:logo, accept: 'image/png, image/jpg,image/jpeg')
+    - unless @procedure.logo.blank?
+      = image_tag @procedure.logo, {style: 'height: 40px; display: inline; margin-right: 6px', id: 'preview_procedure_logo'}
+    = f.file_field(:logo, accept: 'image/png, image/jpg, image/jpeg', style: 'display:inline')
 
     %div{style:'margin-top:5px'}
       %i

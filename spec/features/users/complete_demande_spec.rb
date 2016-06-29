@@ -2,10 +2,11 @@ require 'spec_helper'
 
 feature 'user path for dossier creation' do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, :published) }
   let(:siret) { '53272417600013' }
   let(:siren) { siret[0...9] }
-  context 'user arrives on siret page' do
+
+  context 'user arrives on siret page', js: true do
     before do
       visit new_users_dossiers_path(procedure_id: procedure.id)
     end
@@ -38,11 +39,23 @@ feature 'user path for dossier creation' do
               .to_return(status: 404, body: '')
 
           page.find_by_id('dossier_siret').set siret
-          page.click_on 'Commencer'
+          page.click_on 'Valider'
         end
+
         scenario 'user is on page recap info entreprise' do
           expect(page).to have_css('#recap_info_entreprise')
         end
+
+        context 'when user would like change siret' do
+          before do
+            page.click_on('Changer de SIRET')
+          end
+
+          scenario 'redirects to siret page' do
+            expect(page).to have_css('#dossier_siret')
+          end
+        end
+
         context 'when validating info entreprise recap page' do
           before do
             page.check('dossier_autorisation_donnees')
@@ -54,7 +67,6 @@ feature 'user path for dossier creation' do
           context 'user fill and validate description page' do
             before do
               page.find_by_id('nom_projet').set 'Mon super projet'
-              page.find_by_id('description').set 'Ma super description'
               page.click_on 'Soumettre mon dossier'
             end
             scenario 'user is on recap page' do
@@ -63,6 +75,17 @@ feature 'user path for dossier creation' do
           end
         end
       end
+    end
+  end
+
+  context 'user cannot access non-published procedures' do
+    let(:procedure) { create(:procedure) }
+    before do
+      visit new_users_dossiers_path(procedure_id: procedure.id)
+    end
+
+    scenario 'user is on home page', vcr: { cassette_name: 'complete_demande_spec' } do
+      expect(page).to have_content('La procédure n\'existe pas')
     end
   end
 end

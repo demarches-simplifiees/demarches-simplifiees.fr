@@ -12,7 +12,7 @@ class Users::SessionsController < Sessions::SessionsController
 # GET /resource/sign_in
   def new
     unless user_return_to_procedure_id.nil?
-      @dossier = Dossier.new(procedure: Procedure.not_archived(user_return_to_procedure_id))
+      @dossier = Dossier.new(procedure: Procedure.active(user_return_to_procedure_id))
     end
 
     @user = User.new

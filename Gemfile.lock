@@ -119,6 +119,8 @@ GEM
       sprockets (>= 2.0.0)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
+    deep_cloneable (2.2.1)
+      activerecord (>= 3.1.0, < 5.2.0)
     devise (3.4.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -634,6 +636,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   css_splitter
   database_cleaner
+  deep_cloneable (~> 2.2.1)
   devise
   draper
   factory_girl
@@ -690,4 +693,4 @@ DEPENDENCIES
   will_paginate-bootstrap
 
 BUNDLED WITH
-   1.11.2
+   1.12.5

@@ -1,10 +1,15 @@
 @import "bootstrap";
 @import "bootstrap-datepicker3";
 
-#description_page #liste_champs{
-  h4{
+#description_page #liste_champs {
+  h4 {
     margin-top: 35px;
   }
+}
+
+.input-error {
+  color: darkred !important;
+  border-color: darkred !important
 }
 
 .type_champ-text {
@@ -16,12 +21,49 @@
   }
 }
 
+.type_champ-address {
+  @extend .col-md-6;
+  @extend .col-lg-6;
+
+  input[type='address'] {
+    width: 100%;
+  }
+}
+
+.type_champ-email {
+  @extend .col-md-4;
+  @extend .col-lg-4;
+
+  input[type='email'] {
+    width: 100%;
+  }
+}
+
+.type_champ-civilite {
+  @extend .col-md-3;
+  @extend .col-lg-3;
+}
+
+.type_champ-phone {
+  @extend .col-md-2;
+  @extend .col-lg-2;
+
+  input[type='phone'] {
+    width: 100%;
+  }
+}
+
+.datepicker-switch {
+  color: #0086b3;
+  text-decoration: underline;
+}
+
 .type_champ-textarea {
   @extend .col-md-8;
   @extend .col-lg-8;
 
   textarea.form-control {
-    width:100%;
+    width: 100%;
     height: 133px;
   }
 }
@@ -30,16 +72,32 @@
   @extend .col-md-3;
   @extend .col-lg-3;
 
-  input[type='number']{
+  input[type='number'] {
     width: 100%;
   }
 }
 
-.type_champ-datetime {
+.type_champ-date {
   @extend .col-md-2;
   @extend .col-lg-2;
 
-  input[type='number']{
-    width: 100%;
+  input[type='date'] {
+    width: 120px;
   }
+}
+
+.type_champ-datetime {
+  @extend .col-md-4;
+  @extend .col-lg-4;
+
+  input[type='datetime'] {
+    width: 120px;
+  }
+}
+
+.description_div {
+  margin-top: 5px;
+  margin-left: 5px;
+  color: dimgrey;
+  display: none;
 }

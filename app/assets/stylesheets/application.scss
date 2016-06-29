@@ -182,7 +182,12 @@ div.pagination {
   text-align: center;
 }
 
-.alert.alert-success.move_up {
+.alert{
+  margin-bottom: 0px;
+}
+
+.alert.alert-success.move_up,
+.alert.alert-danger.siret{
   position: absolute;
   top: 0px;
   left: 0;

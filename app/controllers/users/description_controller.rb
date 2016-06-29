@@ -46,6 +46,14 @@ class Users::DescriptionController < UsersController
       @dossier.champs.each do |champ|
         champ.value = params[:champs]["'#{champ.id}'"]
 
+        if champ.type_champ == 'datetime'
+          champ.value = params[:champs]["'#{champ.id}'"]+
+              ' ' +
+              params[:time_hour]["'#{champ.id}'"] +
+              ':' +
+              params[:time_minute]["'#{champ.id}'"]
+        end
+
         if champ.mandatory? && (champ.value.nil? || champ.value.blank?)
           flash.now.alert = "Le champ #{champ.libelle} doit être rempli."
           return render 'show'
@@ -94,6 +102,6 @@ class Users::DescriptionController < UsersController
   private
 
   def create_params
-    params.permit(:nom_projet, :description)
+    params.permit(:nom_projet)
   end
 end

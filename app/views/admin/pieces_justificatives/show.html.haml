@@ -1,9 +1,4 @@
-%h2.text-info
-  =@procedure.libelle
-%br
-
-%ul.nav.nav-tabs
-  = render partial: 'admin/procedures/navbar', locals: {active: 'Pieces'}
+=render partial: 'admin/procedures/head', locals: {active: 'Pieces'}
 
 #piece_justificative_form
   = render 'form'

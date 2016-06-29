@@ -113,4 +113,11 @@ RSpec.configure do |config|
       end
     end
   }
+
+  RSpec::Matchers.define :have_same_attributes_as do |expected|
+    match do |actual|
+      ignored = [:id, :procedure_id, :updated_at, :created_at]
+      actual.attributes.with_indifferent_access.except(*ignored) == expected.attributes.with_indifferent_access.except(*ignored)
+    end
+  end
 end

@@ -15,7 +15,7 @@ class DossierFacades
   end
 
   def entreprise
-    @dossier.entreprise.decorate
+    @dossier.entreprise.decorate unless @dossier.entreprise.nil?
   end
 
   def etablissement

@@ -9,8 +9,9 @@ Rails.application.routes.draw do
                              }, skip: [:password, :registrations]
 
   devise_for :gestionnaires, controllers: {
-                               sessions: 'gestionnaires/sessions'
-                           }, skip: [:password, :registrations]
+                               sessions: 'gestionnaires/sessions',
+                               passwords: 'gestionnaires/passwords'
+                           }, skip: [:registrations]
 
   devise_for :users, controllers: {
                        sessions: 'users/sessions',
@@ -25,6 +26,8 @@ Rails.application.routes.draw do
 
   devise_scope :gestionnaire do
     get '/gestionnaires/sign_in/demo' => 'gestionnaires/sessions#demo'
+    get '/gestionnaires/edit' => 'gestionnaires/registrations#edit', :as => 'edit_gestionnaires_registration'
+    put '/gestionnaires' => 'gestionnaires/registrations#update', :as => 'gestionnaires_registration'
   end
 
   devise_scope :administrateur do
@@ -73,6 +76,9 @@ Rails.application.routes.draw do
       post '/carte' => 'carte#save'
 
       put '/archive' => 'dossiers#archive'
+
+      post '/siret_informations' => 'dossiers#siret_informations'
+      put '/change_siret' => 'dossiers#change_siret'
     end
     resource :dossiers
   end
@@ -82,6 +88,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
+    get 'procedures/draft' => 'procedures#draft'
     get 'profile' => 'profile#show', as: :profile
 
     resources :procedures do
@@ -89,11 +96,18 @@ Rails.application.routes.draw do
         post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
         post '/:index/move_down' => 'types_de_champ#move_down', as: :move_down
       end
+      resource :pieces_justificatives, only: [:show, :update] do
+        post '/:index/move_up' => 'pieces_justificatives#move_up', as: :move_up
+        post '/:index/move_down' => 'pieces_justificatives#move_down', as: :move_down
+      end
 
       put 'archive' => 'procedures#archive', as: :archive
+      put 'publish' => 'procedures#publish', as: :publish
+      put 'clone' => 'procedures#clone', as: :clone
 
       resource :accompagnateurs, only: [:show, :update]
 
+      resource :previsualisation, only: [:show]
 
       resources :types_de_champ, only: [:destroy]
       resource :pieces_justificatives, only: [:show, :update]
@@ -105,6 +119,11 @@ Rails.application.routes.draw do
     end
 
     resources :gestionnaires, only: [:index, :create, :destroy]
+  end
+
+  namespace :ban do
+    get 'search' => 'search#get'
+    get 'address_point' => 'search#get_address_point'
   end
 
   get 'backoffice' => 'backoffice#index'

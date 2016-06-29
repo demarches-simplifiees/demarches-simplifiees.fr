@@ -5,6 +5,7 @@ FactoryGirl.define do
     description "Demande de subvention à l'intention des associations"
     organisation "Orga SGMAP"
     direction "direction SGMAP"
+    published false
 
     after(:build) do |procedure, _evaluator|
       if procedure.module_api_carto.nil?
@@ -35,6 +36,14 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_datetime do
+      after(:build) do |procedure, _evaluator|
+        type_de_champ = create(:type_de_champ, mandatory: true, type_champ: :datetime)
+
+        procedure.types_de_champ << type_de_champ
+      end
+    end
+
     trait :with_two_type_de_piece_justificative do
       after(:build) do |procedure, _evaluator|
         rib = create(:type_de_piece_justificative, :rib)
@@ -42,6 +51,12 @@ FactoryGirl.define do
 
         procedure.types_de_piece_justificative << rib
         procedure.types_de_piece_justificative << msa
+      end
+    end
+
+    trait :published do
+      after(:build) do |procedure, _evaluator|
+        procedure.published = true
       end
     end
   end

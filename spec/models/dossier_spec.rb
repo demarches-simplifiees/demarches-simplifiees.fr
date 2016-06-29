@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Dossier do
   let(:user) { create(:user) }
   describe 'database columns' do
-    it { is_expected.to have_db_column(:description) }
     it { is_expected.to have_db_column(:autorisation_donnees) }
     it { is_expected.to have_db_column(:nom_projet) }
     it { is_expected.to have_db_column(:created_at) }
@@ -39,11 +38,6 @@ describe Dossier do
       it { is_expected.to allow_value(nil).for(:nom_projet) }
       it { is_expected.not_to allow_value('').for(:nom_projet) }
       it { is_expected.to allow_value('mon super projet').for(:nom_projet) }
-    end
-    context 'description' do
-      it { is_expected.to allow_value(nil).for(:description) }
-      it { is_expected.not_to allow_value('').for(:description) }
-      it { is_expected.to allow_value('ma superbe description').for(:description) }
     end
   end
 
@@ -115,6 +109,7 @@ describe Dossier do
     describe '#save' do
       subject { build(:dossier, procedure: procedure, user: user) }
       let!(:procedure) { create(:procedure) }
+
       context 'when is linked to a procedure' do
         it 'creates default champs' do
           expect(subject).to receive(:build_default_champs)
@@ -122,11 +117,11 @@ describe Dossier do
         end
       end
       context 'when is not linked to a procedure' do
-        subject { create(:dossier, procedure: procedure, user: user) }
+        subject { create(:dossier, procedure: nil, user: user) }
 
         it 'does not create default champs' do
           expect(subject).not_to receive(:build_default_champs)
-          subject.update_attributes(description: 'plop')
+          subject.update_attributes(nom_projet: 'plop')
         end
       end
     end
@@ -541,7 +536,6 @@ describe Dossier do
     subject { dossier.as_csv }
 
     it { expect(subject[:nom_projet]).to eq("Demande de subvention dans le cadre d'accompagnement d'enfant à l'étranger") }
-    it { expect(subject[:description]).to eq("Ma super description") }
     it { expect(subject[:archived]).to be_falsey }
     it { expect(subject['etablissement.siret']).to eq('44011762001530') }
     it { expect(subject['etablissement.siege_social']).to be_truthy }
@@ -569,4 +563,78 @@ describe Dossier do
     it { expect(subject['entreprise.prenom']).to be_nil }
   end
 
+  describe '#reset!' do
+    let!(:dossier) { create :dossier, :with_entreprise, autorisation_donnees: true }
+    let!(:rna_information) { create :rna_information, entreprise: dossier.entreprise }
+    let!(:exercice) { create :exercice, etablissement: dossier.etablissement }
+
+    subject { dossier.reset! }
+
+    it { expect(dossier.entreprise).not_to be_nil }
+    it { expect(dossier.etablissement).not_to be_nil }
+    it { expect(dossier.etablissement.exercices).not_to be_empty }
+    it { expect(dossier.etablissement.exercices.size).to eq 1 }
+    it { expect(dossier.entreprise.rna_information).not_to be_nil }
+    it { expect(dossier.autorisation_donnees).to be_truthy }
+
+    it { expect{subject}.to change(RNAInformation, :count).by(-1) }
+    it { expect{subject}.to change(Exercice, :count).by(-1) }
+
+    it { expect{subject}.to change(Entreprise, :count).by(-1) }
+    it { expect{subject}.to change(Etablissement, :count).by(-1) }
+
+    context 'when method reset! is call' do
+      before do
+        subject
+        dossier.reload
+      end
+
+      it { expect(dossier.entreprise).to be_nil }
+      it { expect(dossier.etablissement).to be_nil }
+      it { expect(dossier.autorisation_donnees).to be_falsey }
+    end
+  end
+
+  describe '#ordered_champs' do
+    let!(:procedure_1) { create :procedure }
+    let!(:procedure_2) { create :procedure }
+
+    let(:dossier_1) { Dossier.new(id: 0, procedure: procedure_1) }
+    let(:dossier_2) { Dossier.new(id: 0, procedure: procedure_2)  }
+
+    before do
+      create :type_de_champ, libelle: 'type_1_1', order_place: 1, procedure: dossier_1.procedure
+      create :type_de_champ, libelle: 'type_1_2', order_place: 2, procedure: dossier_1.procedure
+
+      create :type_de_champ, libelle: 'type_2_1', order_place: 1, procedure: dossier_2.procedure
+      create :type_de_champ, libelle: 'type_2_2', order_place: 2, procedure: dossier_2.procedure
+      create :type_de_champ, libelle: 'type_2_3', order_place: 3, procedure: dossier_2.procedure
+
+      dossier_1.build_default_champs
+      dossier_2.build_default_champs
+    end
+
+    subject { dossier.ordered_champs }
+
+    it { expect(Champ.where(dossier_id: 0).size).to eq 5 }
+
+    describe 'for dossier 1' do
+      let(:dossier) { dossier_1 }
+
+      it { expect(subject.size).to eq 2 }
+      it { expect(subject.first.type_de_champ.libelle).to eq 'type_1_1' }
+      it { expect(subject.last.type_de_champ.libelle).to eq 'type_1_2' }
+    end
+
+    describe 'for dossier 2' do
+      let(:dossier) { dossier_2 }
+
+      it { expect(subject.size).to eq 3 }
+
+      it { expect(subject.first.type_de_champ.libelle).to eq 'type_2_1' }
+      it { expect(subject.second.type_de_champ.libelle).to eq 'type_2_2' }
+      it { expect(subject.last.type_de_champ.libelle).to eq 'type_2_3' }
+    end
+
+  end
 end

@@ -79,28 +79,87 @@ describe Procedure do
   end
 
   describe 'locked?' do
-    let(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, published: published) }
 
     subject { procedure.locked? }
 
-    context 'when procedure does not have dossier' do
+    context 'when procedure is in draft status' do
+      let(:published) { false }
       it { is_expected.to be_falsey }
     end
 
-    context 'when procedure have dossier with state draft' do
-      before do
-        create(:dossier,  procedure: procedure, state: :draft)
-      end
-
-      it { is_expected.to be_falsey }
-    end
-
-    context 'when procedure have dossier with state initiated' do
-      before do
-        create(:dossier,  procedure: procedure, state: :initiated)
-      end
-
+    context 'when procedure is in draft status' do
+      let(:published) { true }
       it { is_expected.to be_truthy }
+    end
+  end
+
+  describe 'active' do
+    let(:procedure) { create(:procedure, published: published, archived: archived) }
+    subject { Procedure.active(procedure.id) }
+
+    context 'when procedure is in draft status and not archived' do
+      let(:published) { false }
+      let(:archived) { false }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+
+    context 'when procedure is published and not archived' do
+      let(:published) { true }
+      let(:archived) { false }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when procedure is published and archived' do
+      let(:published) { true }
+      let(:archived) { true }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+
+    context 'when procedure is in draft status and archived' do
+      let(:published) { false }
+      let(:archived) { true }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+  end
+
+  describe 'clone' do
+    let(:archived) { false }
+    let(:published) { false }
+    let(:procedure) { create(:procedure, archived: archived, published: published) }
+    let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
+    let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
+    let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
+    let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
+    subject { procedure.clone }
+
+    it 'should duplicate specific objects with different id' do
+      expect(subject.id).not_to eq(procedure.id)
+      expect(subject).to have_same_attributes_as(procedure)
+      expect(subject.module_api_carto).to have_same_attributes_as(procedure.module_api_carto)
+
+      subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
+        expect(stc).to have_same_attributes_as(ptc)
+      end
+
+      subject.types_de_piece_justificative.zip(procedure.types_de_piece_justificative).each do |stc, ptc|
+        expect(stc).to have_same_attributes_as(ptc)
+      end
+    end
+
+    it 'should not duplicate specific related objects' do
+      expect(subject.dossiers).to eq([])
+      expect(subject.gestionnaires).to eq([])
+      expect(subject.assign_to).to eq([])
+    end
+
+    describe 'procedure status is reset' do
+      let(:archived) { true }
+      let(:published) { true }
+      it 'sets published and archived to false' do
+        expect(subject.archived).to be_falsey
+        expect(subject.published).to be_falsey
+      end
     end
   end
 end

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 'controllers_users_description_controller' } do
+describe Users::DescriptionController, type: :controller, vcr: {cassette_name: 'controllers_users_description_controller'} do
   let(:user) { create(:user) }
 
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: true) }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: true) }
   let(:dossier) { create(:dossier, procedure: procedure, user: user) }
 
   let(:dossier_id) { dossier.id }
@@ -67,11 +67,10 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
     let(:description) { 'Description de test Coucou, je suis un saut à la ligne Je suis un double saut  la ligne.' }
 
     context 'Tous les attributs sont bons' do
-      # TODO separer en deux tests : check donnees et check redirect
       describe 'Premier enregistrement des données' do
         before do
           dossier.draft!
-          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description
+          post :create, dossier_id: dossier_id, nom_projet: nom_projet
           dossier.reload
         end
 
@@ -79,12 +78,13 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
           expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
         end
 
+        it { expect(dossier.nom_projet).to eq nom_projet }
+
         it 'etat du dossier est soumis' do
           expect(dossier.state).to eq('initiated')
         end
       end
 
-      # TODO changer les valeurs des champs et check in bdd
       context 'En train de manipuler un dossier non brouillon' do
         before do
           dossier.initiated!
@@ -116,16 +116,10 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
         it { is_expected.to render_template(:show) }
         it { expect(flash[:alert]).to be_present }
       end
-
-      context 'description empty' do
-        let(:description) { '' }
-        it { is_expected.to render_template(:show) }
-        it { expect(flash[:alert]).to be_present }
-      end
     end
 
     context 'Quand la procédure accepte les CERFA' do
-      context 'Sauvegarde du CERFA PDF', vcr: { cassette_name: 'controllers_users_description_controller_save_cerfa' } do
+      context 'Sauvegarde du CERFA PDF', vcr: {cassette_name: 'controllers_users_description_controller_save_cerfa'} do
         before do
           post :create, dossier_id: dossier_id,
                nom_projet: nom_projet,
@@ -134,7 +128,7 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
           dossier.reload
         end
 
-        context 'when a CERFA PDF is sent', vcr: { cassette_name: 'controllers_users_description_controller_cerfa_is_sent' } do
+        context 'when a CERFA PDF is sent', vcr: {cassette_name: 'controllers_users_description_controller_cerfa_is_sent'} do
           subject { dossier.cerfa.first }
 
           it 'content' do
@@ -186,13 +180,23 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
     describe 'Sauvegarde des champs' do
       let(:champs_dossier) { dossier.champs }
       let(:dossier_champs_first) { 'test value' }
+      let(:dossier_date_value) { '23/06/2016' }
+      let(:dossier_hour_value) { '17' }
+      let(:dossier_minute_value) { '00' }
 
       before do
         post :create, {dossier_id: dossier_id,
                        nom_projet: nom_projet,
                        description: description,
                        champs: {
-                           "'#{dossier.champs.first.id}'" => dossier_champs_first
+                           "'#{dossier.champs.first.id}'" => dossier_champs_first,
+                           "'#{dossier.champs.second.id}'" => dossier_date_value
+                       },
+                       time_hour: {
+                           "'#{dossier.champs.second.id}'" => dossier_hour_value,
+                       },
+                       time_minute: {
+                           "'#{dossier.champs.second.id}'" => dossier_minute_value,
                        }
                     }
         dossier.reload
@@ -201,6 +205,10 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
       it { expect(dossier.champs.first.value).to eq(dossier_champs_first) }
       it { expect(response).to redirect_to users_dossier_recapitulatif_path }
 
+      context 'when champs is type_de_champ datetime' do
+        it { expect(dossier.champs.second.value).to eq(dossier_date_value+' '+dossier_hour_value+':'+dossier_minute_value) }
+      end
+
       context 'when champs value is empty' do
         let(:dossier_champs_first) { '' }
 
@@ -208,7 +216,7 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
         it { expect(response).to redirect_to users_dossier_recapitulatif_path }
 
         context 'when champs is mandatory' do
-          let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ_mandatory, cerfa_flag: true) }
+          let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ_mandatory, :with_datetime, cerfa_flag: true) }
 
           it { expect(response).not_to redirect_to users_dossier_recapitulatif_path }
           it { expect(flash[:alert]).to be_present }
@@ -216,7 +224,7 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
       end
     end
 
-    context 'Sauvegarde des pièces justificatives', vcr: { cassette_name: 'controllers_users_description_controller_sauvegarde_pj' } do
+    context 'Sauvegarde des pièces justificatives', vcr: {cassette_name: 'controllers_users_description_controller_sauvegarde_pj'} do
       let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
       before do
         post :create, {dossier_id: dossier_id,
@@ -227,7 +235,7 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
         dossier.reload
       end
 
-      describe 'clamav anti-virus presence', vcr: { cassette_name: 'controllers_users_description_controller_clamav_presence' } do
+      describe 'clamav anti-virus presence', vcr: {cassette_name: 'controllers_users_description_controller_clamav_presence'} do
         it 'ClamavService safe_file? is call' do
           expect(ClamavService).to receive(:safe_file?).twice
 
@@ -236,8 +244,6 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
                          description: description,
                          'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
                          'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
-
-
         end
       end
 
@@ -254,7 +260,7 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
     end
   end
 
-  describe 'POST #pieces_justificatives', vcr: { cassette_name: 'controllers_users_description_controller_pieces_justificatives' } do
+  describe 'POST #pieces_justificatives', vcr: {cassette_name: 'controllers_users_description_controller_pieces_justificatives'} do
     let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
 
     subject { patch :pieces_justificatives, {dossier_id: dossier.id,
@@ -281,7 +287,7 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
         end
       end
 
-      context 'when PJ have already a document', vcr: { cassette_name: 'controllers_users_description_controller_pj_already_exist' } do
+      context 'when PJ have already a document', vcr: {cassette_name: 'controllers_users_description_controller_pj_already_exist'} do
         before do
           create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative_id: all_pj_type[0]
           create :piece_justificative, :contrat, dossier: dossier, type_de_piece_justificative_id: all_pj_type[1]
@@ -289,7 +295,7 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
 
         it { expect(dossier.pieces_justificatives.size).to eq 2 }
 
-        context 'when upload two PJ', vcr: { cassette_name: 'controllers_users_description_controller_pj_already_exist_upload_2pj' } do
+        context 'when upload two PJ', vcr: {cassette_name: 'controllers_users_description_controller_pj_already_exist_upload_2pj'} do
           before do
             subject
             dossier.reload
@@ -351,7 +357,7 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
 
         it { expect(dossier.pieces_justificatives.size).to eq 2 }
 
-        context 'when upload two PJ', vcr: { cassette_name: 'controllers_users_description_controller_upload_2pj' } do
+        context 'when upload two PJ', vcr: {cassette_name: 'controllers_users_description_controller_upload_2pj'} do
           before do
             subject
             dossier.reload

@@ -30,7 +30,6 @@ class Dossier < ActiveRecord::Base
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 
   validates :nom_projet, presence: true, allow_blank: false, allow_nil: true
-  validates :description, presence: true, allow_blank: false, allow_nil: true
   validates :user, presence: true
 
   WAITING_FOR_GESTIONNAIRE = %w(initiated updated submitted)
@@ -52,7 +51,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def ordered_champs
-    champs.joins(', types_de_champ').where('champs.type_de_champ_id = types_de_champ.id').order('order_place')
+    champs.joins(', types_de_champ').where("champs.type_de_champ_id = types_de_champ.id AND types_de_champ.procedure_id = #{procedure.id}").order('order_place')
   end
 
   def ordered_commentaires
@@ -193,5 +192,11 @@ class Dossier < ActiveRecord::Base
     etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.map {|k, v| ["etablissement.#{k}", v] }.to_h
     entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map {|k, v| ["entreprise.#{k}", v] }.to_h
     dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
+  end
+
+  def reset!
+    entreprise.destroy unless entreprise.nil?
+
+    update_attributes(autorisation_donnees: false)
   end
 end

@@ -7,7 +7,7 @@ class Admin::ProceduresController < AdminController
 
   def index
     @procedures = smart_listing_create :procedures,
-                         current_administrateur.procedures.where(archived: false),
+                         current_administrateur.procedures.where(published: true, archived: false).order(created_at: :desc),
                          partial: "admin/procedures/list",
                          array: true
 
@@ -16,7 +16,7 @@ class Admin::ProceduresController < AdminController
 
   def archived
     @procedures = smart_listing_create :procedures,
-                                       current_administrateur.procedures.where(archived: true),
+                                       current_administrateur.procedures.where(archived: true).order(created_at: :desc),
                                        partial: "admin/procedures/list",
                                        array: true
 
@@ -25,12 +25,35 @@ class Admin::ProceduresController < AdminController
     render 'index'
   end
 
+  def draft
+    @procedures = smart_listing_create :procedures,
+                                       current_administrateur.procedures.where(published: false, archived: false).order(created_at: :desc),
+                                       partial: "admin/procedures/list",
+                                       array: true
+
+    draft_class
+
+    render 'index'
+  end
+
+
   def show
     @facade = AdminProceduresShowFacades.new @procedure.decorate
   end
 
   def edit
 
+  end
+
+  def destroy
+    procedure = Procedure.find(params[:id])
+
+    return render json: {}, status: 401 if procedure.published? || procedure.archived?
+
+    procedure.destroy
+
+    flash.notice = 'Procédure supprimée'
+    redirect_to admin_procedures_draft_path
   end
 
   def new
@@ -60,15 +83,28 @@ class Admin::ProceduresController < AdminController
     end
 
     flash.notice = 'Préocédure modifiée'
-    redirect_to admin_procedures_path
+    redirect_to edit_admin_procedure_path(id: @procedure.id)
+  end
+
+  def publish
+    change_status({published: true})
   end
 
   def archive
-    @procedure = current_administrateur.procedures.find(params[:procedure_id])
-    @procedure.update_attributes({archived: params[:archive]})
+    change_status({archived: params[:archive]})
+  end
 
-    flash.notice = 'Procédure éditée'
-    redirect_to admin_procedures_path
+  def clone
+    @procedure = current_administrateur.procedures.find(params[:procedure_id])
+
+    new_procedure = @procedure.clone
+    if new_procedure
+      flash.notice = 'Procédure clonée'
+      redirect_to edit_admin_procedure_path(id: new_procedure.id)
+    else
+      flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
+      render 'index'
+    end
 
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inéxistante'
@@ -83,6 +119,10 @@ class Admin::ProceduresController < AdminController
     @archived_class = 'active'
   end
 
+  def draft_class
+    @draft_class = 'active'
+  end
+
   private
 
   def create_procedure_params
@@ -91,5 +131,17 @@ class Admin::ProceduresController < AdminController
 
   def create_module_api_carto_params
     params.require(:procedure).require(:module_api_carto_attributes).permit(:id, :use_api_carto, :quartiers_prioritaires, :cadastre)
+  end
+
+  def change_status(status_options)
+    @procedure = current_administrateur.procedures.find(params[:procedure_id])
+    @procedure.update_attributes(status_options)
+
+    flash.notice = 'Procédure éditée'
+    redirect_to admin_procedures_path
+
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = 'Procédure inéxistante'
+    redirect_to admin_procedures_path
   end
 end

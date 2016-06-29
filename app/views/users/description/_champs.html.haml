@@ -1,0 +1,38 @@
+-@champs.each do |champ|
+  .row
+    %div{class: "type_champ-#{champ.type_champ}"}
+      -if champ.type_champ == 'checkbox'
+        %h4{style:'margin-left:15px;'}
+          = champ.libelle
+          - if champ.mandatory?
+            = '*'
+          %input{type: 'hidden', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", value: ''}
+          %input{type: 'checkbox', style:'margin-left: 15px;', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", checked: ('checked' if champ.value == 'on')}
+      -else
+        %h4
+          = champ.libelle
+          - if champ.mandatory?
+            = '*'
+
+        -if champ.type_champ == 'textarea'
+          =render partial: 'users/description/champs/textarea', locals: {champ: champ}
+
+        -elsif champ.type_champ == 'civilite'
+          =render partial: 'users/description/champs/civilite', locals: {champ: champ}
+
+        - elsif champ.type_champ == 'datetime'
+          =render partial: 'users/description/champs/datetime', locals: {champ: champ}
+
+        -else
+          %input.form-control{name:"champs['#{champ.id}']",
+                  placeholder: champ.libelle,
+                  id: "champs_#{champ.id}",
+                  value: champ.value,
+                  type: champ.type_champ,
+                  'data-provide' => champ.data_provide,
+                  'data-date-format' => champ.data_date_format}
+
+  - unless champ.description.empty?
+    .row
+      .col-lg-8.col-md-8{class: 'description_div', id:"description_champs_#{champ.id}"}
+        = champ.description

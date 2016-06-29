@@ -1,0 +1,45 @@
+.container#description_page
+  %h2
+    = @dossier.procedure.libelle
+  %h3 Votre dossier
+
+  %br
+
+  -#TODO use form_for
+  = form_tag(url_for({controller: 'users/description', action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
+    %div
+      .row
+        .col-md-12
+          %h4 Libellé pour votre dossier *
+          = text_field_tag :nom_projet, @dossier.nom_projet, placeholder: 'Nom du projet', class: 'form-control'
+
+    #liste_champs
+      -unless @champs.nil?
+        =render partial: 'users/description/champs'
+
+    -if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0
+      %br
+      %h3 Documents administratifs
+
+    -unless @procedure.lien_demarche.blank?
+      %p
+        Formulaire / documentation de la démarche :
+        %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@procedure.lien_demarche}", :target => '_blank'} Accéder
+
+
+    %br
+    //TODO a refactorer
+    = render partial: 'users/description/pieces_justificatives'
+
+    - if user_signed_in?
+
+      %div{style: 'text-align:right'}
+        %h6 Tous les champs portant un * sont obligatoires.
+
+      -if !@dossier.draft?
+        =render partial: '/layouts/modifications_terminees'
+      -else
+        = submit_tag 'Soumettre mon dossier', id: 'suivant', class: %w(btn btn btn-success), style: 'float:right', data: { disable_with: 'Soumettre votre dossier', submit: true}
+
+    %br
+    %br

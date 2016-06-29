@@ -46,8 +46,56 @@ describe Admin::ProceduresController, type: :controller do
     it { expect(response.status).to eq(200) }
   end
 
+  describe 'GET #published' do
+    subject { get :published }
+
+    it { expect(response.status).to eq(200) }
+  end
+
+  describe 'DELETE #destroy' do
+
+    let(:procedure_draft) { create :procedure, published: false, archived: false }
+    let(:procedure_published) { create :procedure, published: true, archived: false }
+    let(:procedure_archived) { create :procedure, published: false, archived: true }
+
+    subject { delete :destroy, id: procedure.id }
+
+    context 'when procedure is draft' do
+      let!(:procedure) { procedure_draft }
+
+      describe 'tech params' do
+        before do
+          subject
+        end
+
+        it { expect(subject.status).to eq 302 }
+        it { expect(flash[:notice]).to be_present }
+      end
+
+      it 'destroy procedure is call' do
+        expect_any_instance_of(Procedure).to receive(:destroy)
+        subject
+      end
+
+      it { expect { subject }.to change{Procedure.count}.by(-1) }
+    end
+
+    context 'when procedure is published' do
+      let(:procedure) { procedure_published }
+
+      it { expect(subject.status).to eq 401 }
+    end
+
+    context 'when procedure is archived' do
+      let(:procedure) { procedure_published }
+
+      it { expect(subject.status).to eq 401 }
+    end
+  end
+
   describe 'GET #edit' do
-    let(:procedure) { create(:procedure, administrateur: admin) }
+    let(:published) { false }
+    let(:procedure) { create(:procedure, administrateur: admin, published: published) }
     let(:procedure_id) { procedure.id }
 
     subject { get :edit, id: procedure_id }
@@ -66,8 +114,8 @@ describe Admin::ProceduresController, type: :controller do
         it { expect(subject).to have_http_status(:success) }
       end
 
-      context 'when procedure have at least a file' do
-        let!(:dossier) { create(:dossier,  procedure: procedure, state: :initiated) }
+      context 'when procedure is published' do
+        let(:published) { true }
         it { is_expected.to redirect_to admin_procedure_path id: procedure_id }
       end
 
@@ -192,7 +240,7 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.cadastre).to be_truthy }
         end
 
-        it { expect(subject).to redirect_to(admin_procedures_path) }
+        it { expect(subject).to redirect_to(edit_admin_procedure_path id: procedure.id) }
         it { expect(flash[:notice]).to be_present }
       end
 
@@ -252,6 +300,37 @@ describe Admin::ProceduresController, type: :controller do
 
         put :archive, procedure_id: procedure.id
         procedure.reload
+      end
+
+      it { expect(response).to redirect_to :admin_procedures }
+      it { expect(flash[:alert]).to have_content 'Procédure inéxistante' }
+    end
+  end
+
+  describe 'PUT #clone' do
+    let!(:procedure) { create(:procedure, administrateur: admin) }
+    subject { put :clone, procedure_id: procedure.id }
+
+    it { expect { subject }.to change(Procedure, :count).by(1) }
+
+    context 'when admin is the owner of the procedure' do
+      before do
+        subject
+      end
+
+      it 'creates a new procedure and redirect to it' do
+        expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
+        expect(flash[:notice]).to have_content 'Procédure clonée'
+      end
+    end
+
+    context 'when admin is not the owner of the procedure' do
+      let(:admin_2) { create(:administrateur) }
+
+      before do
+        sign_out admin
+        sign_in admin_2
+        subject
       end
 
       it { expect(response).to redirect_to :admin_procedures }
