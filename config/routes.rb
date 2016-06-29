@@ -163,7 +163,7 @@ Rails.application.routes.draw do
   end
 
   namespace :commencer do
-    get '/:procedure_path' => '/users/dossiers#new'
+    get '/:procedure_path' => '/users/dossiers#commencer'
   end
 
   apipie
