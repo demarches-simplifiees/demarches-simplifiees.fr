@@ -28,6 +28,10 @@ class Procedure < ActiveRecord::Base
     procedure_path.path unless procedure_path.nil?
   end
 
+  def default_path
+    libelle.downcase.gsub(/[^a-z0-9\-_]/,"_").gsub(/_*$/, '').gsub(/_+/, '_')
+  end
+
   def types_de_champ_ordered
     types_de_champ.order(:order_place)
   end

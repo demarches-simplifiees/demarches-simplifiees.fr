@@ -11,24 +11,24 @@ describe ProcedurePath do
   end
 
   describe 'validation' do
-    context 'path' do
+    describe 'path' do
       let(:admin) { create(:administrateur) }
       let(:procedure) { create(:procedure) }
       let(:procedure_path) { create(:procedure_path, administrateur: admin, procedure: procedure, path: path) }
 
-      context 'path is nil' do
+      context 'when path is nil' do
         let(:path) { nil }
-        it { expect{procedure_path}.to raise_error }
+        it { expect{procedure_path}.to raise_error ActiveRecord::RecordInvalid }
       end
-      context 'path is empty' do
+      context 'when path is empty' do
         let(:path) { '' }
-        it { expect{procedure_path}.to raise_error }
+        it { expect{procedure_path}.to raise_error ActiveRecord::RecordInvalid }
       end
-      context 'path is invalid' do
+      context 'when path is invalid' do
         let(:path) { 'Demande de subvention' }
-        it { expect{procedure_path}.to raise_error(ActiveRecord::RecordInvalid) }
+        it { expect{procedure_path}.to raise_error ActiveRecord::RecordInvalid }
       end
-      context 'path is invalid' do
+      context 'when path is valid' do
         let(:path) { 'ma_super_procedure' }
         it { expect{procedure_path}.not_to raise_error }
       end

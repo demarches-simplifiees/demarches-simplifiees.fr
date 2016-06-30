@@ -9,8 +9,4 @@ class ProcedurePathFormatValidator < ActiveModel::Validator
     record.errors[:path] << "Path invalide" unless path_regex.match(record.path)
   end
 
-  def validate_string(path)
-    return false if path.blank?
-    path_regex.match(path)
-  end
 end

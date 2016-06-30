@@ -54,8 +54,6 @@ function path_validation(el) {
 }
 
 function validatePath(path) {
-    console.log(path);
-
     var re = /^[a-z0-9_]{3,30}$/;
     return re.test(path);
 }
@@ -81,6 +79,7 @@ function path_type_init() {
         display: display,
         source: bloodhound,
         templates: {
+            empty: 'Ce lien est disponible !',
             suggestion: Handlebars.compile("<div class='path_mine_{{mine}}'>{{label}}</div>")
         },
         limit: 5
