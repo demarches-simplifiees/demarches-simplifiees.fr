@@ -87,26 +87,30 @@ class Admin::ProceduresController < AdminController
   end
 
   def publish
-    if ! ProcedurePathFormatValidator.new().validate_string(params[:procedure_path])
+    procedure = current_administrateur.procedures.find(params[:procedure_id])
+
+    test_procedure = ProcedurePath.new(
+        {
+            path: params[:procedure_path],
+            procedure: procedure,
+            administrateur: procedure.administrateur
+        })
+    unless test_procedure.validate
       flash.alert = 'Lien de la procédure invalide'
       return redirect_to admin_procedures_path
     end
 
     procedure_path = ProcedurePath.find_by_path(params[:procedure_path])
-    @procedure = current_administrateur.procedures.find(params[:procedure_id])
-
     if (procedure_path)
       if (procedure_path.administrateur_id == current_administrateur.id)
         procedure_path.procedure.archive
-        @procedure.publish(params[:procedure_path])
       else
         @mine = false
         return render '/admin/procedures/publish', formats: 'js'
       end
-    else
-      @procedure.publish(params[:procedure_path])
     end
 
+    procedure.publish(params[:procedure_path])
     flash.notice = "Procédure publiée"
     render js: "window.location = '#{admin_procedures_path}'"
 
@@ -116,8 +120,8 @@ class Admin::ProceduresController < AdminController
   end
 
   def archive
-    @procedure = current_administrateur.procedures.find(params[:procedure_id])
-    @procedure.archive
+    procedure = current_administrateur.procedures.find(params[:procedure_id])
+    procedure.archive
 
     flash.notice = "Procédure archivée"
     redirect_to admin_procedures_path
@@ -128,14 +132,14 @@ class Admin::ProceduresController < AdminController
   end
 
   def clone
-    @procedure = current_administrateur.procedures.find(params[:procedure_id])
+    procedure = current_administrateur.procedures.find(params[:procedure_id])
 
-    new_procedure = @procedure.clone
+    new_procedure = procedure.clone
     if new_procedure
       flash.notice = 'Procédure clonée'
       redirect_to edit_admin_procedure_path(id: new_procedure.id)
     else
-      flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
+      flash.now.alert = procedure.errors.full_messages.join('<br />').html_safe
       render 'index'
     end
 

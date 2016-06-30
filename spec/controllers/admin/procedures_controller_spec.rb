@@ -364,7 +364,7 @@ describe Admin::ProceduresController, type: :controller do
         it { expect(flash[:notice]).to have_content 'Procédure archivée' }
       end
 
-      context 'when owner want reactive procedure' do
+      context 'when owner want to re-enable procedure' do
         before do
           put :publish, procedure_id: procedure.id, procedure_path: 'fake_path'
           procedure.reload

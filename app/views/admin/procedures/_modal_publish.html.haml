@@ -23,8 +23,8 @@
             %br
             %h4 Lien de la procédure
             %p.center
-              = root_url
-              = text_field_tag('procedure_path', @procedure.libelle.downcase.gsub(/[^a-z0-9\-_]/,"_").gsub(/_*$/, '').gsub(/_+/, '_'),
+              ="#{root_url}commencer/"
+              = text_field_tag('procedure_path', @procedure.default_path,
                                 id: 'procedure_path',
                                 placeholder: 'Chemin vers la procédure',
                                 class:'form-control',
@@ -40,7 +40,7 @@
                 %br
                 Vous ne pouvez pas l'utiliser car il appartient à un autre administrateur.
               #path_is_invalid.text-danger.center.message
-                Ce lien n'est pas valide. Seuls les caractères a-z, 0-9 et '_' sont autorisés.
+                Ce lien n'est pas valide. Il doit comporter au moins 3 caractères et seuls les caractères a-z, 0-9 et '_' sont autorisés.
         .modal-footer
           = submit_tag "#{@procedure.archived?? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
                                   id: 'publish',

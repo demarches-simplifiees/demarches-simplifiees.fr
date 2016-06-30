@@ -2,19 +2,19 @@
   =render partial: 'head', locals: {active: 'Informations'}
 
   -if ! @facade.procedure.published?
-    %a.btn.btn-success{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
+    %a#publish.btn.btn-success{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
       %i.fa.fa-eraser
       Publier
     %br
       =render partial: '/admin/procedures/modal_publish'
 
   -if @facade.procedure.archived?
-    %a.btn.btn-small.btn-default.text-info{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
+    %a#reenable.btn.btn-small.btn-default.text-info{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
       %i.fa.fa-eraser
       Réactiver
     %br
       =render partial: '/admin/procedures/modal_publish'
-  -else
+  -elsif @facade.procedure.published?
     = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style:'float: right; margin-top: 10px' do
       %button#archive.btn.btn-small.btn-default.text-info{type: :button}
         %i.fa.fa-eraser
