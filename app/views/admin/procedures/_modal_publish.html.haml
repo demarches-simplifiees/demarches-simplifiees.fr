@@ -1,6 +1,6 @@
 #publishModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
   .modal-dialog.modal-lg{:role => "document"}
-    = form_tag admin_procedure_publish_path(procedure_id: @procedure.id), method: :put do
+    = form_tag admin_procedure_publish_path(procedure_id: @procedure.id), method: :put, remote: true do
       .modal-content
         .modal-header
           %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
@@ -42,8 +42,7 @@
               #path_is_invalid.text-danger.center.message
                 Ce lien n'est pas valide. Seuls les caractères a-z, 0-9 et '_' sont autorisés.
         .modal-footer
-          = submit_tag 'Annuler', class: %w(btn btn btn-default), id: 'cancel', data: { dismiss: 'modal' }
           = submit_tag "#{@procedure.archived?? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
                                   id: 'publish',
-                                  data: { disable_with: 'Publication en cours', submit: true},
                                   disabled: :disabled
+          = button_tag 'Annuler', class: %w(btn btn btn-default), id: 'cancel', data: { dismiss: 'modal' }

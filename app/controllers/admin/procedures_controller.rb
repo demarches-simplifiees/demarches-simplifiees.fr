@@ -100,15 +100,15 @@ class Admin::ProceduresController < AdminController
         procedure_path.procedure.archive
         @procedure.publish(params[:procedure_path])
       else
-        flash.alert = 'Ce lien appartient à un autre administrateur et ne peut pas être utilisé.'
-        return redirect_to admin_procedures_path
+        @mine = false
+        return render '/admin/procedures/publish', formats: 'js'
       end
     else
       @procedure.publish(params[:procedure_path])
     end
 
     flash.notice = "Procédure publiée"
-    redirect_to admin_procedures_path
+    render js: "window.location = '#{admin_procedures_path}'"
 
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inéxistante'

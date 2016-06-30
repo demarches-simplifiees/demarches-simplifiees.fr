@@ -281,7 +281,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'publish the given procedure' do
           expect(procedure.published).to be_truthy
           expect(procedure.path).to eq(procedure_path)
-          expect(response).to redirect_to :admin_procedures
+          expect(response.status).to eq 200
           expect(flash[:notice]).to have_content 'Procédure publiée'
         end
       end
@@ -292,7 +292,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'publish the given procedure' do
           expect(procedure.published).to be_truthy
           expect(procedure.path).to eq(procedure_path)
-          expect(response).to redirect_to :admin_procedures
+          expect(response.status).to eq 200
           expect(flash[:notice]).to have_content 'Procédure publiée'
         end
 
@@ -309,8 +309,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'does not publish the given procedure' do
           expect(procedure.published).to be_falsey
           expect(procedure.path).to be_nil
-          expect(response).to redirect_to :admin_procedures
-          expect(flash[:alert]).to have_content 'Ce lien appartient à un autre administrateur et ne peut pas être utilisé.'
+          expect(response.status).to eq 200
         end
 
         it 'previous procedure remains published' do
@@ -372,7 +371,7 @@ describe Admin::ProceduresController, type: :controller do
         end
 
         it { expect(procedure.archived).to be_falsey }
-        it { expect(response).to redirect_to :admin_procedures }
+        it { expect(response.status).to eq 200 }
         it { expect(flash[:notice]).to have_content 'Procédure publiée' }
       end
     end
