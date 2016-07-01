@@ -65,6 +65,7 @@ set :shared_paths, [
                      'config/database.yml',
                      "config/fog_credentials.yml",
                      'config/initializers/secret_token.rb',
+                     'config/initializers/features.yml',
                      "config/environments/#{ENV['to']}.rb",
                      "config/initializers/token.rb",
                      "config/initializers/super_admin.rb",
