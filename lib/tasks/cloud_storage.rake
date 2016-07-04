@@ -34,6 +34,7 @@ namespace :cloudstorage do
             @cont.create_object(filename, {}, File.open(content.current_path))
             File.open(File.dirname(content.current_path) + '/uploaded', "w+"){ |f| f.write(File.basename(content.current_path)) }
             entry.update_column(c == Procedure ? :logo : :content, filename)
+            entry.update_column(c == Procedure ? :logo_secure_token : :content_secure_token, secure_token)
           rescue Errno::ENOENT
             puts "ERROR: #{content.current_path} does not exist!"
             File.open('upload_errors.report', "a+"){ |f| f.write(content.current_path) }
@@ -65,6 +66,7 @@ namespace :cloudstorage do
           if File.exist?(File.dirname(content.current_path) + '/uploaded')
             previous_filename = File.read(File.dirname(content.current_path) + '/uploaded')
             entry.update_column(c == Procedure ? :logo : :content, previous_filename)
+            entry.update_column(c == Procedure ? :logo_secure_token : :content_secure_token, nil)
             puts "restoring #{content.current_path} db data to #{previous_filename}"
             FileUtils.rm(File.dirname(content.current_path) + '/uploaded')
           end
