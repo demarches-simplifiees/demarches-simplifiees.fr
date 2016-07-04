@@ -60,8 +60,7 @@ namespace :cloudstorage do
 
     [Cerfa, PieceJustificative, Procedure].each { |c|
       c.all.each { |entry|
-        content = entry.content
-        content = entry.logo if c == Procedure
+        content = (c == Procedure)? entry.logo : entry.content
         unless content.current_path.nil?
           if File.exist?(File.dirname(content.current_path) + '/uploaded')
             previous_filename = File.read(File.dirname(content.current_path) + '/uploaded')
