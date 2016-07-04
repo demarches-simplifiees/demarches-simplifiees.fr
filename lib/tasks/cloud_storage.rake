@@ -22,22 +22,30 @@ namespace :cloudstorage do
 
     Rake::Task['cloudstorage:init'].invoke
 
+    error_count = 0
     [Cerfa, PieceJustificative, Procedure].each { |c|
       c.all.each { |entry|
-        content = entry.content
-        content = entry.logo if c == Procedure
+        content = (c == Procedure)? entry.logo : entry.content
         unless content.current_path.nil? || File.exist?(File.dirname(content.current_path) + '/uploaded')
           secure_token = SecureRandom.uuid
           filename = "#{entry.class.to_s.underscore}-#{secure_token}.pdf"
           puts "Uploading #{content.current_path}"
-          @cont.create_object(filename, { content_type: "application/pdf"}, File.open(content.current_path))
-          File.open(File.dirname(content.current_path) + '/uploaded', "w+"){ |f| f.write(File.basename(content.current_path)) }
-          entry.update_column(c == Procedure ? :logo : :content, filename)
+          begin
+            @cont.create_object(filename, { content_type: "application/pdf"}, File.open(content.current_path))
+            File.open(File.dirname(content.current_path) + '/uploaded', "w+"){ |f| f.write(File.basename(content.current_path)) }
+            entry.update_column(c == Procedure ? :logo : :content, filename)
+          rescue Errno::ENOENT
+            puts "ERROR: #{content.current_path} does not exist!"
+            File.open('upload_errors.report', "a+"){ |f| f.write(content.current_path) }
+            error_count += 1
+          end
+        else
+          puts "Skipping #{content.current_path}"
         end
       }
     }
 
-
+    puts "There were #{error_count} errors while uploading files. See upload_errors.report file for details."
     puts 'Enf of migration'
   end
 
