@@ -28,10 +28,10 @@ namespace :cloudstorage do
         content = (c == Procedure)? entry.logo : entry.content
         unless content.current_path.nil? || File.exist?(File.dirname(content.current_path) + '/uploaded')
           secure_token = SecureRandom.uuid
-          filename = "#{entry.class.to_s.underscore}-#{secure_token}.pdf"
+          filename = "#{entry.class.to_s.underscore}-#{secure_token}#{File.extname(content.current_path)}"
           puts "Uploading #{content.current_path}"
           begin
-            @cont.create_object(filename, { content_type: "application/pdf"}, File.open(content.current_path))
+            @cont.create_object(filename, {}, File.open(content.current_path))
             File.open(File.dirname(content.current_path) + '/uploaded', "w+"){ |f| f.write(File.basename(content.current_path)) }
             entry.update_column(c == Procedure ? :logo : :content, filename)
           rescue Errno::ENOENT
