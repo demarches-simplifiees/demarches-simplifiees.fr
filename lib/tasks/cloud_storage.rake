@@ -65,7 +65,7 @@ namespace :cloudstorage do
         unless content.current_path.nil?
           if File.exist?(File.dirname(content.current_path) + '/uploaded')
             previous_filename = File.read(File.dirname(content.current_path) + '/uploaded')
-            entry.update_column(c == Procedure ? :logo : :content, filename)
+            entry.update_column(c == Procedure ? :logo : :content, previous_filename)
             puts "restoring #{content.current_path} db data to #{previous_filename}"
             FileUtils.rm(File.dirname(content.current_path) + '/uploaded')
           end
