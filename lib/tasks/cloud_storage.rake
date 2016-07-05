@@ -25,23 +25,37 @@ namespace :cloudstorage do
     error_count = 0
     [Cerfa, PieceJustificative, Procedure].each { |c|
       c.all.each { |entry|
-        content = (c == Procedure)? entry.logo : entry.content
+        content = (c == Procedure) ? entry.logo : entry.content
         unless content.current_path.nil? || File.exist?(File.dirname(content.current_path) + '/uploaded')
           secure_token = SecureRandom.uuid
           filename = "#{entry.class.to_s.underscore}-#{secure_token}#{File.extname(content.current_path)}"
           puts "Uploading #{content.current_path}"
           begin
             @cont.create_object(filename, {}, File.open(content.current_path))
-            File.open(File.dirname(content.current_path) + '/uploaded', "w+"){ |f| f.write(File.basename(content.current_path)) }
+
+            File.open(File.dirname(content.current_path) + '/uploaded', "w+") { |f| f.write(File.basename(content.current_path)) }
+            File.open(File.dirname(content.current_path) + '/filename_cloudstorage', "w+") { |f| f.write(filename) }
+            File.open(File.dirname(content.current_path) + '/secure_token_cloudstorage', "w+") { |f| f.write(secure_token) }
+
             entry.update_column(c == Procedure ? :logo : :content, filename)
             entry.update_column(c == Procedure ? :logo_secure_token : :content_secure_token, secure_token)
           rescue Errno::ENOENT
             puts "ERROR: #{content.current_path} does not exist!"
-            File.open('upload_errors.report', "a+"){ |f| f.write(content.current_path) }
+            File.open('upload_errors.report', "a+") { |f| f.write(content.current_path) }
             error_count += 1
           end
         else
-          puts "Skipping #{content.current_path}"
+          if !content.current_path.nil? && File.exist?(File.dirname(content.current_path) + '/uploaded')
+            filename = File.open(File.dirname(content.current_path) + '/filename_cloudstorage', "r").read
+            secure_token = File.open(File.dirname(content.current_path) + '/secure_token_cloudstorage', "r").read
+
+            entry.update_column(c == Procedure ? :logo : :content, filename)
+            entry.update_column(c == Procedure ? :logo_secure_token : :content_secure_token, secure_token)
+
+            puts "RESTORE IN DATABASE: #{filename} "
+          elsif !content.current_path.nil?
+            puts "Skipping #{content.current_path}"
+          end
         end
       }
     }
@@ -54,21 +68,23 @@ namespace :cloudstorage do
   task :revert do
     Rake::Task['cloudstorage:init'].invoke
 
-    @cont.objects.each { |object|
-      puts "Removing #{object}"
-      @cont.delete_object(object)
-    }
-
     [Cerfa, PieceJustificative, Procedure].each { |c|
       c.all.each { |entry|
-        content = (c == Procedure)? entry.logo : entry.content
+        content = (c == Procedure) ? entry.logo : entry.content
         unless content.current_path.nil?
           if File.exist?(File.dirname(content.current_path) + '/uploaded')
             previous_filename = File.read(File.dirname(content.current_path) + '/uploaded')
+
             entry.update_column(c == Procedure ? :logo : :content, previous_filename)
             entry.update_column(c == Procedure ? :logo_secure_token : :content_secure_token, nil)
+
             puts "restoring #{content.current_path} db data to #{previous_filename}"
+
+            @cont.delete_object(File.open(File.dirname(content.current_path) + '/filename_cloudstorage', "r").read)
+
             FileUtils.rm(File.dirname(content.current_path) + '/uploaded')
+            FileUtils.rm(File.dirname(content.current_path) + '/filename_cloudstorage')
+            FileUtils.rm(File.dirname(content.current_path) + '/secure_token_cloudstorage')
           end
         end
       }
@@ -91,7 +107,7 @@ namespace :cloudstorage do
 
     @cont.objects_detail.each { |object, details|
       last_modified = DateTime.parse(details[:last_modified])
-      @cont.delete_object(object) unless last_modified.utc >  (Time.now - 2.year).utc
+      @cont.delete_object(object) unless last_modified.utc > (Time.now - 2.year).utc
     }
   end
 
