@@ -90,6 +90,8 @@ gem 'as_csv'
 gem 'apipie-rails', '=0.3.1'
 gem "maruku" # for Markdown support in apipie
 
+gem 'openstack'
+
 group :test do
   gem 'capybara'
   gem 'factory_girl'
