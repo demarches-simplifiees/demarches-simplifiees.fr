@@ -11,7 +11,7 @@ class ProcedureDecorator < Draper::Decorator
 
   def logo_img
     return 'logo-tps.png' if logo.blank?
-    logo
+    File.join(STORAGE_URL, File.basename(logo.path))
   end
   def geographic_information
     module_api_carto
