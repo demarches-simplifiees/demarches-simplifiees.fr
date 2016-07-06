@@ -1,6 +1,6 @@
 %h2.text-info
   -unless @procedure.logo.blank?
-    = image_tag @procedure.logo, style: 'width: 30px'
+    = image_tag @procedure.decorate.logo_img, style: 'width: 30px'
   =@procedure.libelle
 %br
 

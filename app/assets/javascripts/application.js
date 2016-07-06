@@ -29,6 +29,7 @@
 //= require franceconnect
 //= require bootstrap-wysihtml5
 //= require bootstrap-wysihtml5/locales/fr-FR
+//= require handlebars
 //= require typeahead.bundle
 
 $(document).on('page:load', scroll_to);

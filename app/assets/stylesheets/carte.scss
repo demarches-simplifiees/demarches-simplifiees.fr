@@ -133,3 +133,12 @@ table {
   margin: 0 0 5px;
   color: #777;
 }
+
+#search_by_address {
+  .twitter-typeahead {
+    width: 555px;
+  }
+  .tt-menu {
+    width: 555px;
+  }
+}

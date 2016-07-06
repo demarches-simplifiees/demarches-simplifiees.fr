@@ -2,26 +2,23 @@
   =render partial: 'head', locals: {active: 'Informations'}
 
   -if ! @facade.procedure.published?
-    = form_tag admin_procedure_publish_path(procedure_id: @facade.procedure.id, publish: true), method: :put, style:'float: right; margin-top: 10px' do
-      %button#archive.btn.btn-small.btn-success.text-info{type: :button}
-        %i.fa.fa-eraser
-        Publier
-      #confirm
-        %button#valid.btn.btn-small.btn-success{type: :submit}
-          %i.fa.fa-check
-          Valider
-        %button#cancel.btn.btn-small.btn-danger{type: :button}
-          %i.fa.fa-remove
-          Annuler
+    %a#publish.btn.btn-success{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
+      %i.fa.fa-eraser
+      Publier
+    %br
+      =render partial: '/admin/procedures/modal_publish'
 
-  -else
+  -if @facade.procedure.archived?
+    %a#reenable.btn.btn-small.btn-default.text-info{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
+      %i.fa.fa-eraser
+      Réactiver
+    %br
+      =render partial: '/admin/procedures/modal_publish'
+  -elsif @facade.procedure.published?
     = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style:'float: right; margin-top: 10px' do
       %button#archive.btn.btn-small.btn-default.text-info{type: :button}
         %i.fa.fa-eraser
-        - if @facade.procedure.archived
-          = 'Réactiver'
-        - else
-          = 'Archiver'
+        = 'Archiver'
       #confirm
         %button#valid.btn.btn-small.btn-success{type: :submit}
           %i.fa.fa-check
@@ -38,7 +35,10 @@
   %div
     %h3 Lien procédure
     %div{style:'margin-left:3%'}
-      -if @facade.procedure.published?
+      -if @facade.procedure.archived?
+        %b
+          Cette procédure a été archivée et n'est plus accessible par le public.
+      -elsif @facade.procedure.published?
         = @facade.procedure.lien
       -else
         %b

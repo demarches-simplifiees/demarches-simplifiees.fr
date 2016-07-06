@@ -3,6 +3,8 @@ class Procedure < ActiveRecord::Base
   has_many :types_de_champ, dependent: :destroy
   has_many :dossiers
 
+  has_one :procedure_path, dependent: :destroy
+
   has_one :module_api_carto, dependent: :destroy
 
   belongs_to :administrateur
@@ -15,11 +17,20 @@ class Procedure < ActiveRecord::Base
   accepts_nested_attributes_for :types_de_champ,:reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :types_de_piece_justificative, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :module_api_carto
+  accepts_nested_attributes_for :procedure_path
 
   mount_uploader :logo, ProcedureLogoUploader
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+
+  def path
+    procedure_path.path unless procedure_path.nil?
+  end
+
+  def default_path
+    libelle.downcase.gsub(/[^a-z0-9\-_]/,"_").gsub(/_*$/, '').gsub(/_+/, '_')
+  end
 
   def types_de_champ_ordered
     types_de_champ.order(:order_place)
@@ -63,6 +74,16 @@ class Procedure < ActiveRecord::Base
     procedure.archived = false
     procedure.published = false
     return procedure if procedure.save
+  end
+
+  def publish(path)
+    self.update_attributes!({ published: true, archived: false })
+    ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
+  end
+
+  def archive
+    self.procedure_path.destroy! if self.path
+    self.update_attributes!({ archived: true })
   end
 
 end

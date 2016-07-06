@@ -156,7 +156,7 @@ function add_event_search_address() {
     });
 
     $("#search_by_address input[type='address']").keypress(function (e) {
-        if (e.which == 13)
+        if (e.keyCode == 13)
             get_address_point($(this).val());
     });
 }

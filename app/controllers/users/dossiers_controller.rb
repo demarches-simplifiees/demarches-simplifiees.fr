@@ -2,7 +2,7 @@ class Users::DossiersController < UsersController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :commencer
   before_action :check_siret, only: :siret_informations
 
   before_action only: [:show] do
@@ -20,6 +20,16 @@ class Users::DossiersController < UsersController
                                      array: true
 
     total_dossiers_per_state
+  end
+
+  def commencer
+    unless params[:procedure_path].nil?
+      procedure = ProcedurePath.where(path: params[:procedure_path]).first!.procedure
+    end
+
+    redirect_to new_users_dossier_path(procedure_id: procedure.id)
+  rescue ActiveRecord::RecordNotFound
+    error_procedure
   end
 
   def new
@@ -169,4 +179,5 @@ class Users::DossiersController < UsersController
   def facade id = params[:id]
     DossierFacades.new id, current_user.email
   end
+
 end

@@ -8,11 +8,13 @@ feature 'user path for dossier creation' do
 
   context 'user arrives on siret page', js: true do
     before do
-      visit new_users_dossiers_path(procedure_id: procedure.id)
+      visit commencer_path(procedure_path: procedure.path)
     end
 
     scenario 'he is redirected on login page' do
       expect(page).to have_css('#login_user')
+      expect(page).to have_css('#logo_procedure')
+      expect(page).to have_css('#titre_procedure')
     end
 
     context 'user sign_in' do

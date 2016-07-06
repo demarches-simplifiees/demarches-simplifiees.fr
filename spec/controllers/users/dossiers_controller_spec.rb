@@ -152,6 +152,13 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe 'GET #commencer' do
+    subject { get :commencer, procedure_path: procedure.path }
+
+    it { expect(subject.status).to eq 302 }
+    it { expect(subject).to redirect_to new_users_dossier_path(procedure_id: procedure.id) }
+  end
+
   describe 'POST #siret_informations' do
     before do
       stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{siret_not_found}?token=#{SIADETOKEN}")
