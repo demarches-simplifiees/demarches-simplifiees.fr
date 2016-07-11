@@ -4,7 +4,8 @@ class DossierSerializer < ActiveModel::Serializer
              :created_at,
              :updated_at,
              :archived,
-             :mandataire_social
+             :mandataire_social,
+             :state
 
   has_one :entreprise
   has_one :etablissement

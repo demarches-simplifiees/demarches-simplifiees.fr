@@ -116,7 +116,7 @@ describe API::V1::DossiersController do
         let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
-        let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :commentaires] }
+        let(:field_list) { [:id, :nom_projet, :created_at, :updated_at, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :commentaires, :state] }
         subject { body[:dossier] }
 
         it 'return REST code 200', :show_in_doc do
@@ -124,6 +124,7 @@ describe API::V1::DossiersController do
         end
         it { expect(subject[:id]).to eq(dossier.id) }
         it { expect(subject[:nom_projet]).to eq(dossier.nom_projet) }
+        it { expect(subject[:state]).to eq(dossier.state) }
         it { expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z') }
         it { expect(subject[:updated_at]).to eq('2008-09-01T08:05:00.000Z') }
         it { expect(subject[:archived]).to eq(dossier.archived) }
