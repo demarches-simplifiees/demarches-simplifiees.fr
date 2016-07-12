@@ -44,6 +44,11 @@
   @extend .col-lg-3;
 }
 
+.type_champ-yes_no {
+  @extend .col-md-3;
+  @extend .col-lg-3;
+}
+
 .type_champ-phone {
   @extend .col-md-2;
   @extend .col-lg-2;

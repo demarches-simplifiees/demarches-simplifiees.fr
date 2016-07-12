@@ -23,6 +23,9 @@
         - elsif champ.type_champ == 'datetime'
           =render partial: 'users/description/champs/datetime', locals: {champ: champ}
 
+        - elsif champ.type_champ == 'yes_no'
+          =render partial: 'users/description/champs/yes_no', locals: {champ: champ}
+
         -else
           %input.form-control{name:"champs['#{champ.id}']",
                   placeholder: champ.libelle,

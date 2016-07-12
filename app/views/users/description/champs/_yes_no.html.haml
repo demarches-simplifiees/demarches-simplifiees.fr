@@ -1,0 +1,7 @@
+%label.radio-inline
+  = radio_button_tag "champs['#{champ.id}']", "true", champ.value == 'true'
+  Oui
+
+%label.radio-inline
+  = radio_button_tag "champs['#{champ.id}']", "false", champ.value == 'false'
+  Non
