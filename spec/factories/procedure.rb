@@ -58,7 +58,7 @@ FactoryGirl.define do
 
     trait :published do
       after(:create) do |procedure, _evaluator|
-        procedure.publish(generate(:published_path))
+        procedure.publish!(generate(:published_path))
       end
     end
   end
