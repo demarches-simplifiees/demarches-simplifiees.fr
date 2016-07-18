@@ -54,6 +54,13 @@ class Backoffice::DossiersController < ApplicationController
     render 'show'
   end
 
+  def follow
+    follow = current_gestionnaire.toggle_follow_dossier params[:dossier_id]
+
+    flash.notice = (follow.class == Follow ? 'Dossier suivi' : 'Dossier relaché')
+    redirect_to request.referer
+  end
+
   private
 
   def dossiers_to_display

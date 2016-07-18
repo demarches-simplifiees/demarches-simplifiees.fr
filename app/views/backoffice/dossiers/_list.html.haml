@@ -1,19 +1,27 @@
 - unless smart_listing.empty?
   %table.table
-    %thead.row
-      %th.col-md-4.col-lg-4= smart_listing.sortable 'Procédure', 'procedure.libelle'
-      %th.col-md-4.col-lg-4= smart_listing.sortable 'Dossier', 'nom_projet'
-      %th.col-md-2.col-lg-2= smart_listing.sortable 'État', 'state'
-      %th.col-md-2.col-lg-2= smart_listing.sortable 'Date de mise à jour', 'updated_at'
+    %thead
+      %th= smart_listing.sortable 'Procédure', 'procedure.libelle'
+      %th= smart_listing.sortable 'Dossier', 'nom_projet'
+      %th= smart_listing.sortable 'État', 'state'
+      %th= smart_listing.sortable 'Date de mise à jour', 'updated_at'
+      - unless @liste == 'termine'
+        %th Actions
 
     - @dossiers.each do |dossier|
       - dossier = dossier.decorate
       %tr
-        %td= dossier.procedure.libelle
-        %td
+        %td.col-md-4.col-lg-4= dossier.procedure.libelle
+        %td.col-md-4.col-lg-4
           = link_to(dossier.nom_projet, "/backoffice/dossiers/#{dossier.id}")
         %td= dossier.display_state
         %td= dossier.last_update
+        - unless @liste == 'termine'
+          %td
+            - if current_gestionnaire.follow?(dossier.id)
+              = link_to('Quitter'.html_safe, backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-danger', id: "suivre_dossier_#{dossier.id}")
+            -else
+              = link_to('Suivre', backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-primary', id: "suivre_dossier_#{dossier.id}")
 
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links

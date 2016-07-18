@@ -6,6 +6,11 @@
     %h3{:class => 'text-success'}
       = @facade.dossier.display_state
 
+    - if current_gestionnaire.follow?(@facade.dossier.id)
+      = link_to('Quitter'.html_safe, backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'btn btn-md btn-danger', id: "suivre_dossier_#{@facade.dossier.id}")
+    -else
+      = link_to('Suivre', backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'btn btn-md btn-primary', id: "suivre_dossier_#{@facade.dossier.id}")
+
   = render partial: '/dossiers/infos_entreprise'
 
   = render partial: '/dossiers/infos_dossier'

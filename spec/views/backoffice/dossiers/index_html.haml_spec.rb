@@ -36,6 +36,8 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     it { is_expected.not_to have_content(decorate_dossier_replied.nom_projet) }
     it { is_expected.not_to have_content(decorate_dossier_closed.nom_projet) }
 
+    it { is_expected.to have_css("#suivre_dossier_#{gestionnaire.dossiers.waiting_for_gestionnaire.first.id}") }
+
     describe 'active tab' do
       it { is_expected.to have_selector('.active .text-danger') }
     end
@@ -89,6 +91,8 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
     it { is_expected.not_to have_content(decorate_dossier_initiated.nom_projet) }
     it { is_expected.not_to have_content(decorate_dossier_replied.nom_projet) }
+
+    it { is_expected.not_to have_css("#suivre_dossier_#{gestionnaire.dossiers.termine.first.id}") }
 
     describe 'active tab' do
       it { is_expected.to have_selector('.active .text-success') }

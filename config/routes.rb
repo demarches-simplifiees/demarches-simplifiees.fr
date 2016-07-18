@@ -143,6 +143,8 @@ Rails.application.routes.draw do
       post 'close' => 'dossiers#close'
 
       post 'invites' => '/invites#create'
+
+      put 'follow' => 'dossiers#follow'
     end
 
     resources :commentaires, only: [:create]

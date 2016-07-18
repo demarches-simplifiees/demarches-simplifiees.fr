@@ -5,6 +5,7 @@ describe Backoffice::CommentairesController, type: :controller do
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'test@test.com' }
   let(:texte_commentaire) { 'Commentaire de test' }
+  let(:gestionnaire) { create(:gestionnaire) }
 
   before do
     allow(ClamavService).to receive(:safe_file?).and_return(true)
@@ -12,16 +13,32 @@ describe Backoffice::CommentairesController, type: :controller do
 
   describe '#POST create' do
     before do
-      sign_in create(:gestionnaire)
+      sign_in gestionnaire
     end
+
     context "création correct d'un commentaire" do
+      subject { post :create, dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire }
+
       it 'depuis la page admin' do
-        post :create, dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire
         expect(response).to redirect_to("/backoffice/dossiers/#{dossier_id}")
+      end
+
+      it 'gestionnaire is automatically affect to follow the dossier' do
+        expect { subject }.to change(Follow, :count).by(1)
+      end
+
+      context 'when gestionnaire already follow dossier' do
+        before do
+          create :follow, gestionnaire_id: gestionnaire.id, dossier_id: dossier_id
+        end
+
+        it 'gestionnaire is automatically affect to follow the dossier' do
+          expect { subject }.to change(Follow, :count).by(0)
+        end
       end
     end
 
-    context 'when document is upload whith a commentaire', vcr: { cassette_name: 'controllers_backoffice_commentaires_controller_doc_upload_with_comment' } do
+    context 'when document is upload whith a commentaire', vcr: {cassette_name: 'controllers_backoffice_commentaires_controller_doc_upload_with_comment'} do
       let(:document_upload) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
 
       subject do
@@ -80,7 +97,7 @@ describe Backoffice::CommentairesController, type: :controller do
 
           subject { dossier.state }
 
-          it {is_expected.to eq('replied')}
+          it { is_expected.to eq('replied') }
 
           it 'Notification email is send' do
             expect(NotificationMailer).to receive(:new_answer).and_return(NotificationMailer)
