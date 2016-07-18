@@ -22,6 +22,9 @@
         %a{href: "#commentaires", 'aria-controls' => "commentaires", role: "tab", 'data-toggle' => "tab"}
           Commentaires
       %li{role: "presentation"}
+        %a{href: "#commentaires_files", 'aria-controls' => "commentaires_files", role: "tab", 'data-toggle' => "tab"}
+          Fichiers
+      %li{role: "presentation"}
         %a{href: "#invites", 'aria-controls' => "invites", role: "tab", 'data-toggle' => "tab"}
           Invités
 
@@ -30,6 +33,8 @@
         %h3 Flux de commentaires
         %br
         = render partial: '/users/recapitulatif/commentaires_flux'
+      %div{role: "tabpanel", class: "tab-pane fade", id:"commentaires_files"}
+        = render partial: '/dossiers/commentaires_files'
       %div{role: "tabpanel", class: "tab-pane fade", id:"invites"}
         = render partial: '/dossiers/invites'
 

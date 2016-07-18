@@ -45,4 +45,8 @@ class DossierFacades
   def invites
     @dossier.invites
   end
+
+  def commentaires_files
+    PieceJustificative.where(dossier_id: @dossier.id, type_de_piece_justificative_id: nil)
+  end
 end

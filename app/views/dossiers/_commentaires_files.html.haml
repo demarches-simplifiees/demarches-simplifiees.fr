@@ -1,0 +1,23 @@
+%h3 Fichiers des commentaires
+
+%br
+- if @facade.commentaires_files.size > 0
+  %table.table
+    %thead
+      %th.col-md-3
+        Email
+      %th.col-md-2
+        Date
+      %th.col-md-6
+        Fichier
+
+
+    - @facade.commentaires_files.each do |file|
+      %tr
+        %td= file.user.nil? ? 'Accompagnateur' : file.user.email
+        %td= file.created_at.localtime
+        %td= link_to file.original_filename, file.content_url, style:'color: green', target: '_blank'
+- else
+  %h4.text-primary
+    Pas de fichier dans le flux de commentaires.
+
