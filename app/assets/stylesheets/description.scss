@@ -25,7 +25,14 @@
   @extend .col-md-6;
   @extend .col-lg-6;
 
-  input[type='address'] {
+  .twitter-typeahead {
+    width: 100%;
+    input {
+      width: 100%;
+      display: block !important;
+    }
+  }
+  .tt-menu {
     width: 100%;
   }
 }
