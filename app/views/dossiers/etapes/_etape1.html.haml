@@ -2,7 +2,8 @@
   %h3
     Ma procédure
   %br
-  .center
+
+  #logos.center{class: (@facade.entreprise.nil? ? '' : 'mask')}
     - if @facade.procedure.euro_flag
       #euro_flag.flag
         =image_tag('drapeau_europe.png')
@@ -15,5 +16,5 @@
     %h2#titre_procedure.text-info
       = @facade.procedure.libelle
 
-    %p{style:'width: 95%;'}
+    %p#description_procedure{style:'width: 95%;', class: (@facade.entreprise.nil? ? '' : 'mask')}
       = h @facade.procedure.description.html_safe
