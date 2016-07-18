@@ -26,6 +26,8 @@ CarrierWave.configure do |config|
 
   if Rails.env.production?
     config.fog_directory = "tps"
+  elsif Rails.env.development?
+    config.fog_directory= "test_local"
   else
     config.fog_directory = "tps_dev"
   end

@@ -89,20 +89,22 @@ class Admin::ProceduresController < AdminController
   def publish
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
-    test_procedure = ProcedurePath.new(
+    new_procedure_path = ProcedurePath.new(
         {
             path: params[:procedure_path],
             procedure: procedure,
             administrateur: procedure.administrateur
         })
-    unless test_procedure.validate
+    if new_procedure_path.validate
+      new_procedure_path.delete
+    else
       flash.alert = 'Lien de la procédure invalide'
       return redirect_to admin_procedures_path
     end
 
     procedure_path = ProcedurePath.find_by_path(params[:procedure_path])
-    if (procedure_path)
-      if (procedure_path.administrateur_id == current_administrateur.id)
+    if procedure_path
+      if procedure_path.administrateur_id == current_administrateur.id
         procedure_path.procedure.archive
       else
         @mine = false
@@ -110,7 +112,8 @@ class Admin::ProceduresController < AdminController
       end
     end
 
-    procedure.publish(params[:procedure_path])
+    procedure.publish!(params[:procedure_path])
+
     flash.notice = "Procédure publiée"
     render js: "window.location = '#{admin_procedures_path}'"
 

@@ -17,7 +17,6 @@ class Procedure < ActiveRecord::Base
   accepts_nested_attributes_for :types_de_champ,:reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :types_de_piece_justificative, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :module_api_carto
-  accepts_nested_attributes_for :procedure_path
 
   mount_uploader :logo, ProcedureLogoUploader
 
@@ -76,7 +75,7 @@ class Procedure < ActiveRecord::Base
     return procedure if procedure.save
   end
 
-  def publish(path)
+  def publish!(path)
     self.update_attributes!({ published: true, archived: false })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
   end

@@ -22,6 +22,7 @@
             = f.hidden_field :dossier_id, value: @facade.dossier.id
             = f.submit 'Valider', class: %w(btn btn-lg btn-success), data: { disable_with: "Recherche en cours ..." }
     - else
+      %br
       #recap_info_entreprise
         = render partial: '/dossiers/infos_entreprise'
 

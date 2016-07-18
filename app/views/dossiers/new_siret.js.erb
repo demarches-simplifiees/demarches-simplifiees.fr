@@ -1,7 +1,14 @@
-$('.row.etape.etape_2').html("<%= escape_javascript(render partial: '/dossiers/etapes/etape2', locals: { facade: @facade } ) %>");
-the_terms();
-
-<% unless flash.empty? %>
+<% if flash.empty? %>
+$('.row.etape.etape_2').hide(300, render_new_siret);
+$('.row.etape.etape_2').slideDown(400, the_terms);
+toggle_etape_1();
+<% else %>
 error_form_siret('<%= invalid_siret %>');
 <%  end %>
+
 <% flash.clear %>
+
+
+function render_new_siret(){
+    $('.row.etape.etape_2').html("<%= escape_javascript(render partial: '/dossiers/etapes/etape2', locals: { facade: @facade } ) %>");
+}
