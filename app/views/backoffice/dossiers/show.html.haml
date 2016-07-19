@@ -6,10 +6,7 @@
     %h3{:class => 'text-success'}
       = @facade.dossier.display_state
 
-    - if current_gestionnaire.follow?(@facade.dossier.id)
-      = link_to('Quitter'.html_safe, backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'btn btn-md btn-danger', id: "suivre_dossier_#{@facade.dossier.id}")
-    -else
-      = link_to('Suivre', backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'btn btn-md btn-primary', id: "suivre_dossier_#{@facade.dossier.id}")
+    = render partial: 'follow_action'
 
   = render partial: '/dossiers/infos_entreprise'
 
@@ -27,6 +24,9 @@
       %li{role: "presentation"}
         %a{href: "#invites", 'aria-controls' => "invites", role: "tab", 'data-toggle' => "tab"}
           Invités
+      %li{role: "presentation"}
+        %a{href: "#followers", 'aria-controls' => "followers", role: "tab", 'data-toggle' => "tab"}
+          Abonnés
 
     %div{class: "tab-content"}
       %div{role: "tabpanel", class: "tab-pane fade in active", id:"commentaires"}
@@ -37,6 +37,8 @@
         = render partial: '/dossiers/commentaires_files'
       %div{role: "tabpanel", class: "tab-pane fade", id:"invites"}
         = render partial: '/dossiers/invites'
+      %div{role: "tabpanel", class: "tab-pane fade", id:"followers"}
+        = render partial: 'followers'
 
   %br
   %br

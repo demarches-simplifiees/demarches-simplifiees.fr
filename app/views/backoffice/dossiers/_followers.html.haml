@@ -1,0 +1,14 @@
+%h3 Personnes suivant l'activité de ce dossier
+
+%br
+.row
+  .col-md-4.col-lg-4
+    - if @facade.followers.size > 0
+      %ul
+        - @facade.followers.each do |follower|
+          %li
+            = follower.email
+    - else
+      Aucune personne ne suit ce dossier
+
+

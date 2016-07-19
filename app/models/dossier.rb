@@ -198,4 +198,8 @@ class Dossier < ActiveRecord::Base
 
     update_attributes(autorisation_donnees: false)
   end
+
+  def total_follow
+    follows.size
+  end
 end
