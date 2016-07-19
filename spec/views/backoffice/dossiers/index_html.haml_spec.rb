@@ -75,6 +75,37 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     end
   end
 
+  describe 'on tab suivi' do
+    before do
+      create :follow, dossier_id: decorate_dossier_replied.id, gestionnaire_id: gestionnaire.id
+
+      assign(:dossiers, (smart_listing_create :dossiers,
+                                              gestionnaire.dossiers_follow,
+                                              partial: "backoffice/dossiers/list",
+                                              array: true))
+      assign(:suivi_class, 'active')
+      assign(:liste, 'suivi')
+      render
+    end
+
+    subject { rendered }
+
+    it { is_expected.to have_css('#backoffice_index') }
+    it { is_expected.to have_content(procedure.libelle) }
+    it { is_expected.to have_content(decorate_dossier_replied.entreprise.raison_sociale) }
+    it { is_expected.to have_content(decorate_dossier_replied.display_state) }
+    it { is_expected.to have_content(decorate_dossier_replied.last_update) }
+
+    it { is_expected.not_to have_content(decorate_dossier_initiated.entreprise.raison_sociale) }
+    it { is_expected.not_to have_content(decorate_dossier_closed.entreprise.raison_sociale) }
+
+    it { is_expected.to have_css("#suivre_dossier_#{gestionnaire.dossiers_follow.first.id}") }
+
+    describe 'active tab' do
+      it { is_expected.to have_selector('.active .text-warning') }
+    end
+  end
+
   describe 'on tab termine' do
     before do
       assign(:dossiers, (smart_listing_create :dossiers,
@@ -97,7 +128,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     it { is_expected.not_to have_content(decorate_dossier_initiated.entreprise.raison_sociale) }
     it { is_expected.not_to have_content(decorate_dossier_replied.entreprise.raison_sociale) }
 
-    it { is_expected.not_to have_css("#suivre_dossier_#{gestionnaire.dossiers.termine.first.id}") }
+    it { is_expected.to have_css("#suivre_dossier_#{gestionnaire.dossiers.termine.first.id}") }
 
     describe 'active tab' do
       it { is_expected.to have_selector('.active .text-success') }

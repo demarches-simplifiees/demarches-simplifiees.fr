@@ -17,6 +17,13 @@
           .badge.progress-bar-info
             =@dossiers_en_attente_total
 
+    %li{ class: (@suivi_class) }
+      %a{:href => "#{url_for backoffice_dossiers_path(liste: 'suivi')}"}
+        %h5.text-warning
+          ="Suivi"
+          .badge.progress-bar-warning
+            =@dossiers_suivi_total
+
     %li{ class: (@termine_class) }
       %a{:href => "#{url_for backoffice_dossiers_path(liste: 'termine')}"}
         %h5.text-success
