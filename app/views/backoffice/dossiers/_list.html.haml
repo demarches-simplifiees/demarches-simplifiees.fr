@@ -2,7 +2,7 @@
   %table.table
     %thead
       %th= smart_listing.sortable 'Procédure', 'procedure.libelle'
-      %th= smart_listing.sortable 'Dossier', 'nom_projet'
+      %th= smart_listing.sortable 'Raison sociale', 'entreprise.raison_sociale'
       %th= smart_listing.sortable 'État', 'state'
       %th= smart_listing.sortable 'Date de mise à jour', 'updated_at'
       - unless @liste == 'termine'
@@ -13,7 +13,7 @@
       %tr
         %td.col-md-4.col-lg-4= dossier.procedure.libelle
         %td.col-md-4.col-lg-4
-          = link_to(dossier.nom_projet, "/backoffice/dossiers/#{dossier.id}")
+          = link_to(dossier.entreprise.raison_sociale, "/backoffice/dossiers/#{dossier.id}")
         %td= dossier.display_state
         %td= dossier.last_update
         - unless @liste == 'termine'

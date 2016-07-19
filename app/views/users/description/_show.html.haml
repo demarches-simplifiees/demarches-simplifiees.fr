@@ -3,15 +3,8 @@
     = @dossier.procedure.libelle
   %h3 Votre dossier
 
-  %br
-
   -#TODO use form_for
   = form_tag(url_for({controller: 'users/description', action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
-    %div
-      .row
-        .col-md-12
-          %h4 Libellé pour votre dossier *
-          = text_field_tag :nom_projet, @dossier.nom_projet, placeholder: 'Nom du projet', class: 'form-control'
 
     #liste_champs
       -unless @champs.nil?

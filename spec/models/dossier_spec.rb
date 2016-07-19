@@ -34,14 +34,6 @@ describe Dossier do
     it { is_expected.to delegate_method(:types_de_champ).to(:procedure) }
   end
 
-  describe 'validation' do
-    context 'nom_projet' do
-      it { is_expected.to allow_value(nil).for(:nom_projet) }
-      it { is_expected.not_to allow_value('').for(:nom_projet) }
-      it { is_expected.to allow_value('mon super projet').for(:nom_projet) }
-    end
-  end
-
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
 
@@ -122,7 +114,7 @@ describe Dossier do
 
         it 'does not create default champs' do
           expect(subject).not_to receive(:build_default_champs)
-          subject.update_attributes(nom_projet: 'plop')
+          subject.update_attributes(state: 'initiated')
         end
       end
     end
@@ -443,11 +435,11 @@ describe Dossier do
       let(:procedure_1) { create(:procedure, administrateur: administrateur_1) }
       let(:procedure_2) { create(:procedure, administrateur: administrateur_2) }
 
-      let!(:dossier_0) { create(:dossier, nom_projet: 'je suis un brouillon', state: 'draft', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
-      let!(:dossier_1) { create(:dossier, nom_projet: 'Projet de test', state: 'initiated', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
-      let!(:dossier_2) { create(:dossier, nom_projet: 'Lili et Marcel', state: 'initiated', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
-      let!(:dossier_3) { create(:dossier, nom_projet: 'Construction projet marcel', state: 'initiated', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
-      let!(:dossier_archived) { create(:dossier, nom_projet: 'je suis un Marcel archivé', state: 'initiated', procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
+      let!(:dossier_0) { create(:dossier, state: 'draft', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
+      let!(:dossier_1) { create(:dossier, state: 'initiated', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
+      let!(:dossier_2) { create(:dossier, state: 'initiated', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
+      let!(:dossier_3) { create(:dossier, state: 'initiated', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
+      let!(:dossier_archived) { create(:dossier, state: 'initiated', procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
 
       let!(:etablissement_1) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'OCTO Academy', dossier: dossier_1), dossier: dossier_1, siret: '41636169600051') }
       let!(:etablissement_2) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'Plop octo', dossier: dossier_2), dossier: dossier_2, siret: '41816602300012') }
@@ -463,12 +455,6 @@ describe Dossier do
         let(:terms) { 'brouillon' }
 
         it { expect(subject.size).to eq(0) }
-      end
-
-      describe 'search on file title' do
-        let(:terms) { 'Marcel' }
-
-        it { expect(subject.size).to eq(1) }
       end
 
       describe 'search on contact email' do
@@ -536,7 +522,6 @@ describe Dossier do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
     subject { dossier.as_csv }
 
-    it { expect(subject[:nom_projet]).to eq("Demande de subvention dans le cadre d'accompagnement d'enfant à l'étranger") }
     it { expect(subject[:archived]).to be_falsey }
     it { expect(subject['etablissement.siret']).to eq('44011762001530') }
     it { expect(subject['etablissement.siege_social']).to be_truthy }

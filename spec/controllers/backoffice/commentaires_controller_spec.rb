@@ -20,7 +20,7 @@ describe Backoffice::CommentairesController, type: :controller do
       subject { post :create, dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire }
 
       it 'depuis la page admin' do
-        expect(response).to redirect_to("/backoffice/dossiers/#{dossier_id}")
+        expect(subject).to redirect_to("/backoffice/dossiers/#{dossier_id}")
       end
 
       it 'gestionnaire is automatically affect to follow the dossier' do

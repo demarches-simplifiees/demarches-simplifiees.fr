@@ -6,12 +6,17 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   let!(:procedure) { create(:procedure, administrateur: administrateur) }
 
-  let!(:decorate_dossier_initiated) { create(:dossier, procedure: procedure, nom_projet: 'projet initiated', state: 'initiated').decorate }
-  let!(:decorate_dossier_replied) { create(:dossier, procedure: procedure, nom_projet: 'projet replied', state: 'replied').decorate }
-  let!(:decorate_dossier_closed) { create(:dossier, procedure: procedure, nom_projet: 'projet closed', state: 'closed').decorate }
+  let!(:decorate_dossier_initiated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated').decorate }
+  let!(:decorate_dossier_replied) { create(:dossier, :with_entreprise, procedure: procedure, state: 'replied').decorate }
+  let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, procedure: procedure, state: 'closed').decorate }
 
   before do
+
+    decorate_dossier_closed.entreprise.update_column(:raison_sociale, 'plip')
+    decorate_dossier_replied.entreprise.update_column(:raison_sociale, 'plop')
+
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure
+    sign_in gestionnaire
   end
 
   describe 'on tab a_traiter' do
@@ -29,12 +34,12 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     subject { rendered }
     it { is_expected.to have_css('#backoffice_index') }
     it { is_expected.to have_content(procedure.libelle) }
-    it { is_expected.to have_content(decorate_dossier_initiated.nom_projet) }
+    it { is_expected.to have_content(decorate_dossier_initiated.entreprise.raison_sociale) }
     it { is_expected.to have_content(decorate_dossier_initiated.display_state) }
     it { is_expected.to have_content(decorate_dossier_initiated.last_update) }
 
-    it { is_expected.not_to have_content(decorate_dossier_replied.nom_projet) }
-    it { is_expected.not_to have_content(decorate_dossier_closed.nom_projet) }
+    it { is_expected.not_to have_content(decorate_dossier_replied.entreprise.raison_sociale) }
+    it { is_expected.not_to have_content(decorate_dossier_closed.entreprise.raison_sociale) }
 
     it { is_expected.to have_css("#suivre_dossier_#{gestionnaire.dossiers.waiting_for_gestionnaire.first.id}") }
 
@@ -58,12 +63,12 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     subject { rendered }
     it { is_expected.to have_css('#backoffice_index') }
     it { is_expected.to have_content(procedure.libelle) }
-    it { is_expected.to have_content(decorate_dossier_replied.nom_projet) }
+    it { is_expected.to have_content(decorate_dossier_replied.entreprise.raison_sociale) }
     it { is_expected.to have_content(decorate_dossier_replied.display_state) }
     it { is_expected.to have_content(decorate_dossier_replied.last_update) }
 
-    it { is_expected.not_to have_content(decorate_dossier_initiated.nom_projet) }
-    it { is_expected.not_to have_content(decorate_dossier_closed.nom_projet) }
+    it { is_expected.not_to have_content(decorate_dossier_initiated.entreprise.raison_sociale) }
+    it { is_expected.not_to have_content(decorate_dossier_closed.entreprise.raison_sociale) }
 
     describe 'active tab' do
       it { is_expected.to have_selector('.active .text-info') }
@@ -85,12 +90,12 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
     it { is_expected.to have_css('#backoffice_index') }
     it { is_expected.to have_content(procedure.libelle) }
-    it { is_expected.to have_content(decorate_dossier_closed.nom_projet) }
+    it { is_expected.to have_content(decorate_dossier_closed.entreprise.raison_sociale) }
     it { is_expected.to have_content(decorate_dossier_closed.display_state) }
     it { is_expected.to have_content(decorate_dossier_closed.last_update) }
 
-    it { is_expected.not_to have_content(decorate_dossier_initiated.nom_projet) }
-    it { is_expected.not_to have_content(decorate_dossier_replied.nom_projet) }
+    it { is_expected.not_to have_content(decorate_dossier_initiated.entreprise.raison_sociale) }
+    it { is_expected.not_to have_content(decorate_dossier_replied.entreprise.raison_sociale) }
 
     it { is_expected.not_to have_css("#suivre_dossier_#{gestionnaire.dossiers.termine.first.id}") }
 

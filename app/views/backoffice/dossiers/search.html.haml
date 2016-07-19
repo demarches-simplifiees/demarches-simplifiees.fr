@@ -8,16 +8,14 @@
           %h4
             = "Dossier N°#{@dossier.id}"
       %tr
-        %td.col-md-2.col-lg-1
+        %td.col-md-1.col-lg-1
           = @dossier.id
-        %td.col-md-4.col-lg-3
-          = link_to(@dossier.nom_projet, "/backoffice/dossiers/#{@dossier.id}")
-        %td.col-md-2.col-lg-3
-          = @dossier.entreprise.raison_sociale
-        %td.col-md-4.col-lg-2
-          = @dossier.user.email
+        %td.col-md-4.col-lg-4
+          = @dossier.procedure.libelle
+        %td.col-md-4.col-lg-4
+          = link_to(@dossier.entreprise.raison_sociale, "/backoffice/dossiers/#{@dossier.id}")
         %td.col-md-2.col-lg-2
-          = @dossier.etablissement.siret
+          = @dossier.user.email
         %td.col-md-1.col-lg-1{class: @dossier.state_color_class}
           = @dossier.display_state
     %br
@@ -29,21 +27,18 @@
   - elsif !@dossiers_search.empty?
     %table.table
       %tr
-        %th.col-md-2.col-lg-1 ID dossier
-        %th.col-md-4.col-lg-3 Dossier
-        %th.col-md-2.col-lg-3 Raison Sociale
-        %th.col-md-4.col-lg-2 Email contact
-        %th.col-md-2.col-lg-2 SIRET
+        %th.col-md-1.col-lg-1 ID dossier
+        %th.col-md-4.col-lg-4 Procédure
+        %th.col-md-4.col-lg-4 Raison Sociale
+        %th.col-md-2.col-lg-2 Email contact
         %th.col-md-1.col-lg-1 État
 
       - @dossiers_search.each do |dossier|
         %tr
           %td= dossier.id
-          %td
-            = link_to(dossier.nom_projet, "/backoffice/dossiers/#{dossier.id}")
-          %td= dossier.entreprise.raison_sociale
+          %td= dossier.procedure.libelle
+          %td= link_to(dossier.entreprise.raison_sociale, "/backoffice/dossiers/#{dossier.id}")
           %td= dossier.user.email
-          %td= dossier.etablissement.siret
           %td{class: dossier.state_color_class}= dossier.display_state
 
     .pagination

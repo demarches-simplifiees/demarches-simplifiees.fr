@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe Backoffice::DossiersController, type: :controller do
+  before do
+    @request.env['HTTP_REFERER'] =  TPS::Application::URL
+  end
+
   let(:dossier) { create(:dossier, :with_entreprise) }
   let(:dossier_archived) { create(:dossier, :with_entreprise, archived: true) }
 
@@ -62,19 +66,6 @@ describe Backoffice::DossiersController, type: :controller do
 
       it 'returns http success' do
         get :index, liste: :en_attente
-        expect(response).to have_http_status(200)
-      end
-    end
-  end
-
-  describe 'GET #suivi' do
-    context 'when gestionnaire is connected' do
-      before do
-        sign_in gestionnaire
-      end
-
-      it 'returns http success' do
-        get :index, liste: :suivi
         expect(response).to have_http_status(200)
       end
     end
@@ -150,7 +141,6 @@ describe Backoffice::DossiersController, type: :controller do
     subject { put :follow, dossier_id: dossier_id }
 
     it { expect(subject.status).to eq 302 }
-    it { is_expected.to redirect_to backoffice_dossiers_path }
 
     describe 'flash alert' do
       context 'when dossier is not follow by gestionnaire' do
