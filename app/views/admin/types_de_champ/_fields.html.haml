@@ -1,15 +1,18 @@
 = f.fields_for :types_de_champ, types_de_champ, remote: true do |ff|
-  .form-inline
-    .form-group
+  .form-inline{class:"#{ff.object.object.type_champ == 'header_section' ? 'header_section' : ''}"}
+    .form-group.libelle
       %h4 Libellé
       = ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
-    .form-group
+
+    .form-group.type
       %h4 Type
       = ff.select :type_champ, TypeDeChamp.type_champs, {}, {class: 'form-control type_champ'}
-    .form-group
+
+    .form-group.description
       %h4 Description
       = ff.text_area :description, class: 'form-control description', placeholder: 'Description'
-    .form-group
+
+    .form-group.mandatory
       %h4 Obligatoire ?
       .center
         = ff.check_box :mandatory, placeholder: 'Obligatoire ?'

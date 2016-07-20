@@ -102,6 +102,6 @@ class Users::DescriptionController < UsersController
   private
 
   def create_params
-    params.permit(:nom_projet)
+    params.permit()
   end
 end

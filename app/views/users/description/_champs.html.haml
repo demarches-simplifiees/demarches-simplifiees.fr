@@ -8,6 +8,10 @@
             = '*'
           %input{type: 'hidden', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", value: ''}
           %input{type: 'checkbox', style:'margin-left: 15px;', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", checked: ('checked' if champ.value == 'on')}
+
+      - elsif champ.type_champ == 'header_section'
+        =render partial: 'users/description/champs/header_section', locals: {champ: champ}
+
       -else
         %h4
           = champ.libelle

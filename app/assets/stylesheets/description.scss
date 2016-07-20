@@ -7,6 +7,10 @@
   }
 }
 
+.page-header{
+  border-bottom: 1px solid #CCCCCC !important;
+}
+
 .input-error {
   color: darkred !important;
   border-color: darkred !important
@@ -19,6 +23,13 @@
   input[type='text'] {
     width: 100%;
   }
+}
+
+.type_champ-header_section {
+  @extend .col-md-12;
+  @extend .col-lg-12;
+
+  margin-bottom: -25px;
 }
 
 .type_champ-address {

@@ -11,7 +11,7 @@
     - @procedures.each do |procedure|
       - procedure = procedure.decorate
       %tr
-        %td.col-md-1.col-lg-1= procedure.id
+        %td= procedure.id
         %td.col-md-6.col-lg-6
           = link_to(procedure.libelle, "/admin/procedures/#{procedure.id}")
         - if @active_class

@@ -54,12 +54,20 @@ class Backoffice::DossiersController < ApplicationController
     render 'show'
   end
 
+  def follow
+    follow = current_gestionnaire.toggle_follow_dossier params[:dossier_id]
+
+    flash.notice = (follow.class == Follow ? 'Dossier suivi' : 'Dossier relaché')
+    redirect_to request.referer
+  end
+
   private
 
   def dossiers_to_display
     {'a_traiter' => waiting_for_gestionnaire,
      'en_attente' => waiting_for_user,
-     'termine' => termine}[@liste]
+     'termine' => termine,
+     'suivi' => suivi}[@liste]
   end
 
   def waiting_for_gestionnaire
@@ -77,10 +85,16 @@ class Backoffice::DossiersController < ApplicationController
     @termine ||= current_gestionnaire.dossiers_filter.termine
   end
 
+  def suivi
+    @suivi_class = (@liste == 'suivi' ? 'active' : '')
+    @suivi ||= current_gestionnaire.dossiers_follow
+  end
+
   def total_dossiers_per_state
     @dossiers_a_traiter_total = waiting_for_gestionnaire.count
     @dossiers_en_attente_total = waiting_for_user.count
     @dossiers_termine_total = termine.count
+    @dossiers_suivi_total = suivi.count
   end
 
   def create_dossier_facade dossier_id

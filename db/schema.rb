@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160622081322) do
+ActiveRecord::Schema.define(version: 20160718124741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,6 +167,14 @@ ActiveRecord::Schema.define(version: 20160622081322) do
     t.integer  "date_fin_exercice_timestamp"
     t.integer  "etablissement_id"
   end
+
+  create_table "follows", force: :cascade do |t|
+    t.integer "gestionnaire_id"
+    t.integer "dossier_id"
+  end
+
+  add_index "follows", ["dossier_id"], name: "index_follows_on_dossier_id", using: :btree
+  add_index "follows", ["gestionnaire_id"], name: "index_follows_on_gestionnaire_id", using: :btree
 
   create_table "france_connect_informations", force: :cascade do |t|
     t.string  "gender"

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'user path for dossier creation' do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure, :published) }
+  let(:procedure) { create(:procedure, :published, :with_type_de_champ) }
   let(:siret) { '53272417600013' }
   let(:siren) { siret[0...9] }
 
@@ -68,7 +68,7 @@ feature 'user path for dossier creation' do
           end
           context 'user fill and validate description page' do
             before do
-              page.find_by_id('nom_projet').set 'Mon super projet'
+              page.find_by_id("champs_#{Dossier.last.champs.first.id}").set 'Mon super projet'
               page.click_on 'Soumettre mon dossier'
             end
             scenario 'user is on recap page' do

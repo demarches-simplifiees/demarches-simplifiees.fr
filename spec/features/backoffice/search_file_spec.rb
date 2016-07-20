@@ -40,13 +40,11 @@ feature 'search file on gestionnaire backoffice' do
 
         context 'when terms input does return result' do
           let!(:dossier) { create(:dossier, :with_entreprise,  procedure: procedure, state: 'initiated') }
-          let!(:dossier_2) { create(:dossier,  procedure: procedure, state: 'initiated', nom_projet: 'Projet de test') }
+          let!(:dossier_2) { create(:dossier,  procedure: procedure, state: 'initiated') }
 
-          let(:terms) { dossier.nom_projet }
+          let(:terms) { dossier.entreprise.raison_sociale }
 
-          it { expect(page).not_to have_content('Projet de test') }
-
-          it { expect(page).to have_content(dossier.nom_projet) }
+          it { expect(page).to have_content(dossier.entreprise.raison_sociale) }
 
           context "when terms is a file's id" do
             let(:terms) { dossier.id }

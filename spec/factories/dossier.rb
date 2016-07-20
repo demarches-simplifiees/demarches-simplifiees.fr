@@ -1,6 +1,5 @@
 FactoryGirl.define do
   factory :dossier do
-    nom_projet "Demande de subvention dans le cadre d'accompagnement d'enfant à l'étranger"
     state 'draft'
     association :user, factory: [:user]
 
