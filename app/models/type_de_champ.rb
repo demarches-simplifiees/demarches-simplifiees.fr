@@ -10,7 +10,8 @@ class TypeDeChamp < ActiveRecord::Base
            email: 'email',
            phone: 'phone',
            address: 'address',
-           yes_no: 'yes_no'
+           yes_no: 'yes_no',
+           header_section: 'header_section'
        }
 
   belongs_to :procedure
