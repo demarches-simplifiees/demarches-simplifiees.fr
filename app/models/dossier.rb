@@ -202,4 +202,8 @@ class Dossier < ActiveRecord::Base
   def total_follow
     follows.size
   end
+
+  def total_commentaire
+    self.commentaires.size
+  end
 end

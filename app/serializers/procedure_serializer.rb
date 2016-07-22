@@ -7,7 +7,8 @@ class ProcedureSerializer < ActiveModel::Serializer
              :organisation,
              :direction,
              :archived,
-             :geographic_information
+             :geographic_information,
+             :total_dossier
 
 
   has_one :geographic_information, serializer: ModuleApiCartoSerializer

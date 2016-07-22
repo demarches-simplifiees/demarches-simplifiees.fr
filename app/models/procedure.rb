@@ -85,4 +85,7 @@ class Procedure < ActiveRecord::Base
     self.update_attributes!({ archived: true })
   end
 
+  def total_dossier
+    self.dossiers.where.not(state: :draft).size
+  end
 end

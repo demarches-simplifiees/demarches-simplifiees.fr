@@ -200,4 +200,20 @@ describe Procedure do
       expect(ProcedurePath.find_by_procedure_id(procedure.id)).to be_nil
     end
   end
+
+  describe 'total_dossier' do
+
+    let(:procedure) { create :procedure }
+
+    before do
+      create :dossier, procedure: procedure, state: :initiated
+      create :dossier, procedure: procedure, state: :draft
+      create :dossier, procedure: procedure, state: :replied
+    end
+
+    subject { procedure.total_dossier }
+
+    it { is_expected.to eq 2 }
+
+  end
 end
