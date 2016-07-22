@@ -1,0 +1,23 @@
+#transferModal.modal.fade{"aria-labelledby" => "TransferProcedureModal", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog.modal-md{:role => "document"}
+    = form_tag admin_procedure_transfer_path(procedure_id: @procedure.id), method: :post, remote: true do
+      .modal-content
+        .modal-header
+          %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+            %span{"aria-hidden" => "true"} ×
+          %h4#myModalLabel.modal-title
+            Petit transfert de procédure entre administrateur
+        .modal-body
+          %p
+            Cette fonctionnalité vous permet de transmettre un clone de votre procédure à un autre administrateur.
+          %div{style:'margin-top:20px'}
+            = text_field_tag :email_admin, '', {class: 'form-control',
+                                                type: 'email',
+                                                placeholder: 'Email administrateur cible',
+                                                maxlength: 30,
+                                                style: 'width: 300px; margin-left:auto; margin-right:auto'}
+          %div#not_found_admin.center.text-danger{style:'display:none; margin-top: 10px'}
+            Cet administrateur n'existe pas.
+        .modal-footer
+          = submit_tag "Envoyer", class: 'btn btn-success'
+          = button_tag 'Annuler', class: %w(btn btn btn-default), id: 'cancel', data: { dismiss: 'modal' }

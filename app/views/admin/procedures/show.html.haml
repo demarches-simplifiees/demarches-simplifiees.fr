@@ -1,19 +1,26 @@
 #procedure_show
   =render partial: 'head', locals: {active: 'Informations'}
 
-  -if ! @facade.procedure.published?
+  -unless @facade.procedure.published?
     %a#publish.btn.btn-success{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
       %i.fa.fa-eraser
       Publier
-    %br
-      =render partial: '/admin/procedures/modal_publish'
+
+    =render partial: '/admin/procedures/modal_publish'
+
+  %a#reenable.btn.btn-small.btn-default{"data-target" => "#transferModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
+    %i.fa.fa-exchange
+    Transférer
+
+  =render partial: '/admin/procedures/modal_transfer'
 
   -if @facade.procedure.archived?
     %a#reenable.btn.btn-small.btn-default.text-info{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
       %i.fa.fa-eraser
       Réactiver
-    %br
-      =render partial: '/admin/procedures/modal_publish'
+
+    =render partial: '/admin/procedures/modal_publish'
+
   -elsif @facade.procedure.published?
     = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style:'float: right; margin-top: 10px' do
       %button#archive.btn.btn-small.btn-default.text-info{type: :button}
