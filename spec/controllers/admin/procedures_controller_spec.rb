@@ -467,12 +467,6 @@ describe Admin::ProceduresController, type: :controller do
       let(:email_admin) { new_admin.email }
 
       it { expect(subject.status).to eq 200 }
-
-      it 'procedure clone is called' do
-        expect_any_instance_of(Procedure).to receive(:clone)
-        subject
-      end
-
       it { expect {subject}.to change(Procedure, :count).by(1) }
 
       context {
@@ -482,7 +476,6 @@ describe Admin::ProceduresController, type: :controller do
 
         it { expect(Procedure.last.administrateur).to eq new_admin }
       }
-
     end
   end
 end

@@ -123,12 +123,12 @@ class Admin::ProceduresController < AdminController
 
   def transfer
     admin = Administrateur.find_by_email(params[:email_admin])
-    #
-    return render '/admin/procedures/transfer', formats: 'js', status: 404 if admin.nil?
-    #
-    procedure = current_administrateur.procedures.find(params[:procedure_id])
 
+    return render '/admin/procedures/transfer', formats: 'js', status: 404 if admin.nil?
+
+    procedure = current_administrateur.procedures.find(params[:procedure_id])
     clone_procedure = procedure.clone
+
     clone_procedure.administrateur = admin
     clone_procedure.save
 
