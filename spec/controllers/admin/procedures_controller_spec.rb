@@ -77,7 +77,7 @@ describe Admin::ProceduresController, type: :controller do
         subject
       end
 
-      it { expect { subject }.to change{Procedure.count}.by(-1) }
+      it { expect { subject }.to change { Procedure.count }.by(-1) }
     end
 
     context 'when procedure is published' do
@@ -451,4 +451,31 @@ describe Admin::ProceduresController, type: :controller do
     end
   end
 
+  describe 'POST transfer' do
+    let!(:procedure) { create :procedure, administrateur: admin }
+
+    subject { post :transfer, email_admin: email_admin, procedure_id: procedure.id }
+
+    context 'when admin is unknow' do
+      let(:email_admin) { 'plop' }
+
+      it { expect(subject.status).to eq 404 }
+    end
+
+    context 'when admin is know' do
+      let(:new_admin) { create :administrateur, email: 'new_admin@admin.com' }
+      let(:email_admin) { new_admin.email }
+
+      it { expect(subject.status).to eq 200 }
+      it { expect {subject}.to change(Procedure, :count).by(1) }
+
+      context {
+        before do
+          subject
+        end
+
+        it { expect(Procedure.last.administrateur).to eq new_admin }
+      }
+    end
+  end
 end

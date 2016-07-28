@@ -561,8 +561,6 @@ GEM
       i18n
       json (>= 1.4.3)
     temple (0.7.6)
-    terminal-notifier (1.6.3)
-    terminal-notifier-guard (1.6.4)
     terminal-table (1.5.2)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
@@ -683,8 +681,6 @@ DEPENDENCIES
   smart_listing
   spring
   spring-commands-rspec
-  terminal-notifier
-  terminal-notifier-guard
   therubyracer
   timecop
   turbolinks

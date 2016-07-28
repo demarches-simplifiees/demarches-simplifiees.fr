@@ -22,7 +22,6 @@ function path_modal_action() {
     })
 }
 
-
 function path_validation_action() {
     $("input[id='procedure_path']").keyup(function (key) {
         if (key.keyCode != 13)
@@ -58,7 +57,6 @@ function validatePath(path) {
     return re.test(path);
 }
 
-
 function path_type_init() {
     display = 'label';
 
@@ -88,4 +86,13 @@ function path_type_init() {
     $('#procedure_path').bind('typeahead:select', function(ev, suggestion) {
         togglePathMessage(true, suggestion['mine']);
     });
+}
+
+function transfer_errors_message(show) {
+    if(show){
+        $("#not_found_admin").slideDown(100)
+    }
+    else {
+        $("#not_found_admin").slideUp(100)
+    }
 }

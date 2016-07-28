@@ -59,12 +59,16 @@ class Users::DossiersController < UsersController
 
     update_current_user_siret! siret
 
-    DossierService.new(@facade.dossier, siret, current_user.france_connect_information).dossier_informations!
+    dossier = DossierService.new(@facade.dossier, siret, current_user.france_connect_information).dossier_informations!
+
+    if dossier.entreprise.nil? || dossier.etablissement.nil?
+      return errors_valid_siret
+    end
 
     @facade = facade params[:dossier_id]
     render '/dossiers/new_siret', formats: 'js'
 
-  rescue RestClient::ResourceNotFound
+  rescue RestClient::ResourceNotFound, RestClient::BadRequest
     errors_valid_siret
 
   rescue ActiveRecord::RecordNotFound

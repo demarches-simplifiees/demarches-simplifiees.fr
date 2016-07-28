@@ -7,9 +7,9 @@ class Admin::ProceduresController < AdminController
 
   def index
     @procedures = smart_listing_create :procedures,
-                         current_administrateur.procedures.where(published: true, archived: false).order(created_at: :desc),
-                         partial: "admin/procedures/list",
-                         array: true
+                                       current_administrateur.procedures.where(published: true, archived: false).order(created_at: :desc),
+                                       partial: "admin/procedures/list",
+                                       array: true
 
     active_class
   end
@@ -35,7 +35,6 @@ class Admin::ProceduresController < AdminController
 
     render 'index'
   end
-
 
   def show
     @facade = AdminProceduresShowFacades.new @procedure.decorate
@@ -122,6 +121,22 @@ class Admin::ProceduresController < AdminController
     redirect_to admin_procedures_path
   end
 
+  def transfer
+    admin = Administrateur.find_by_email(params[:email_admin])
+
+    return render '/admin/procedures/transfer', formats: 'js', status: 404 if admin.nil?
+
+    procedure = current_administrateur.procedures.find(params[:procedure_id])
+    clone_procedure = procedure.clone
+
+    clone_procedure.administrateur = admin
+    clone_procedure.save
+
+    flash.now.notice = "La procédure a correctement été cloné vers le nouvel administrateur."
+
+    render '/admin/procedures/transfer', formats: 'js', status: 200
+  end
+
   def archive
     procedure = current_administrateur.procedures.find(params[:procedure_id])
     procedure.archive
@@ -165,8 +180,8 @@ class Admin::ProceduresController < AdminController
 
   def path_list
     render json: ProcedurePath.where("path LIKE '%#{params[:request]}%'").pluck(:path, :administrateur_id).inject([]) {
-      |acc, value| acc.push({ label: value.first, mine: value.second == current_administrateur.id })
-    }.to_json
+               |acc, value| acc.push({label: value.first, mine: value.second == current_administrateur.id})
+           }.to_json
   end
 
   private
