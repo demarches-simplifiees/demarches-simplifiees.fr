@@ -61,7 +61,7 @@ class Users::DossiersController < UsersController
 
     dossier = DossierService.new(@facade.dossier, siret, current_user.france_connect_information).dossier_informations!
 
-    if dossier.entreprise.nil?
+    if dossier.entreprise.nil? || dossier.etablissement.nil?
       return errors_valid_siret
     end
 
