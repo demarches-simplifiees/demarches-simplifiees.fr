@@ -27,6 +27,7 @@ class Dossier < ActiveRecord::Base
   delegate :siret, to: :etablissement, allow_nil: true
   delegate :types_de_piece_justificative, to: :procedure
   delegate :types_de_champ, to: :procedure
+  delegate :france_connect_information, to: :user
 
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 

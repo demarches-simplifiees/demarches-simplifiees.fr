@@ -7,10 +7,7 @@ class Backoffice::DossiersController < ApplicationController
   def index
     @liste = params[:liste] || 'a_traiter'
 
-    @dossiers = smart_listing_create :dossiers,
-                                     dossiers_to_display,
-                                     partial: "backoffice/dossiers/list",
-                                     array: true
+    smartlisting_dossier
 
     total_dossiers_per_state
   end
@@ -61,7 +58,25 @@ class Backoffice::DossiersController < ApplicationController
     redirect_to request.referer
   end
 
+  def reload_smartlisting
+    begin
+      @liste = URI(request.referer).query.split('=').second
+    rescue NoMethodError
+      @liste = 'a_traiter'
+    end
+    smartlisting_dossier
+
+    render 'backoffice/dossiers/index', formats: :js
+  end
+
   private
+
+  def smartlisting_dossier
+    @dossiers = smart_listing_create :dossiers,
+                                     dossiers_to_display,
+                                     partial: "backoffice/dossiers/list",
+                                     array: true
+  end
 
   def dossiers_to_display
     {'a_traiter' => waiting_for_gestionnaire,

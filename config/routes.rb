@@ -139,6 +139,14 @@ Rails.application.routes.draw do
     patch 'filtres/update' => 'procedure_filter#update'
 
 
+    namespace :preference_list_dossier do
+      post 'add'
+      delete 'delete'
+
+      get 'reload_smartlisting' => '/backoffice/dossiers#reload_smartlisting'
+      get 'reload_pref_list'
+    end
+
     resources :dossiers do
       post 'valid' => 'dossiers#valid'
       post 'close' => 'dossiers#close'

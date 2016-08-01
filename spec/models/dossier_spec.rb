@@ -33,6 +33,7 @@ describe Dossier do
     it { is_expected.to delegate_method(:siret).to(:etablissement) }
     it { is_expected.to delegate_method(:types_de_piece_justificative).to(:procedure) }
     it { is_expected.to delegate_method(:types_de_champ).to(:procedure) }
+    it { is_expected.to delegate_method(:france_connect_information).to(:user) }
   end
 
   describe 'methods' do

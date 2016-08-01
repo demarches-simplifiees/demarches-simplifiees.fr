@@ -8,6 +8,7 @@ class Gestionnaire < ActiveRecord::Base
   has_many :procedures, through: :assign_to
   has_many :dossiers, through: :procedures
   has_many :follows
+  has_many :preference_list_dossiers
 
   def dossiers_filter
     dossiers.where(procedure_id: procedure_filter_list)

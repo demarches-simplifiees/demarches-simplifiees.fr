@@ -1,0 +1,43 @@
+%button#pref_list_dossier_close_action.btn.btn-danger.btn-xs{style:'float:right'}
+  %i.fa.fa-close
+%h3 Gestion de colonnes affichées
+
+%p{style:'margin-top: 15px; margin-bottom: 20px'}
+  Ce menu vous permet de choisir les différentes colonnes que vous souhaitez voir apparaitrent dans votre interface de suivi des dossiers.
+
+%h4.text-primary
+  Actuelles
+
+%ul
+  - current_gestionnaire.preference_list_dossiers.order(:id).each_with_index do |preference, index|
+    %li
+      = form_tag backoffice_preference_list_dossier_delete_path, method: :delete, remote: true  do
+        = hidden_field_tag :pref_id, preference.id
+        = preference.libelle
+        %button.btn.btn-default.btn-xs{type: :submit, id: "delete_pref_list_#{preference[:table]}_#{preference[:attr]}"}
+          %i.fa.fa-minus
+
+%h4.text-success{style:'margin-top: 15px'}
+  Disponibles
+
+%table
+  - PreferenceListDossier.available_columns.each_with_index do |tables, index|
+    - if index%2 == 0
+      %tr
+
+    %td.col-sm-5.col-md-5.col-lg-5{style: 'vertical-align: top'}
+      %h5= tables.first.to_s.gsub('_', ' ').capitalize
+      %ul
+        - tables.second.each do |columns|
+          %li
+            = form_tag backoffice_preference_list_dossier_add_path, method: :post, remote: true do
+              = hidden_field_tag :libelle, columns.second[:libelle]
+              = hidden_field_tag :table, columns.second[:table]
+              = hidden_field_tag :attr, columns.second[:attr]
+              = hidden_field_tag :attr_decorate, columns.second[:attr_decorate]
+              = hidden_field_tag :bootstrap_lg, columns.second[:bootstrap_lg]
+
+              = columns.second[:libelle]
+              %button.btn.btn-default.btn-xs{type: :submit, id: "add_pref_list_#{columns.second[:table]}_#{columns.second[:attr]}"}
+                %i.fa.fa-plus
+

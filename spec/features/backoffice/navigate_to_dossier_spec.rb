@@ -9,6 +9,13 @@ feature 'on backoffice page' do
 
   before do
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure
+
+    create :preference_list_dossier,
+           gestionnaire: gestionnaire,
+           table: 'entreprise',
+           attr: 'raison_sociale',
+           attr_decorate: 'raison_sociale'
+
     visit backoffice_path
   end
 
@@ -17,6 +24,8 @@ feature 'on backoffice page' do
       page.find_by_id(:gestionnaire_email).set gestionnaire.email
       page.find_by_id(:gestionnaire_password).set gestionnaire.password
       page.click_on 'Se connecter'
+
+
     end
     context 'when he click on first dossier' do
       before do

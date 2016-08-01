@@ -4,7 +4,7 @@ class NewAdminMailer < ApplicationMailer
     @admin = admin
     @password = password
 
-    mail(from: "tech@apientreprise.fr", to: 'tech@apientreprise.fr',
+    mail(from: "tps@apientreprise.fr", to: 'tech@apientreprise.fr',
          subject: "Création d'un compte Admin TPS")
   end
 end
