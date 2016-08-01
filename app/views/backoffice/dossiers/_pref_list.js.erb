@@ -1,0 +1,14 @@
+$.ajax({
+    method: 'get',
+    url: '/backoffice/preference_list_dossier/reload_smartlisting',
+    async: true
+});
+
+$.ajax({
+    methd: 'get',
+    url: '/backoffice/preference_list_dossier/reload_pref_list',
+    async: true
+}).done(function (data) {
+    $("#pref_list_menu").html(data);
+    pref_list_dossier_actions();
+});

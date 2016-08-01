@@ -31,12 +31,20 @@
           .badge.progress-bar-success
             =@dossiers_termine_total
 
-    %li#search{class: "#{'active' unless @dossiers_search.nil?}", style:'float:right'}
-      %a
-        = form_tag(backoffice_dossiers_search_url, method: :get) do
-          .input-group{style:'width: 300px'}
-            = text_field_tag('q', "#{@search_terms unless @search_terms.nil? }", id: 'q', placeholder: "Rechercher un dossier ...", class:'form-control')
-            %span.input-group-btn
-              %button.btn.btn-default{ id:'search_button' }
-                %i.fa.fa-search
+    %ul.nav.nav-tabs.navbar-right{style:'border-bottom: none;'}
+      %li#search{class: "#{'active' unless @dossiers_search.nil?}"}
+        %a
+          = form_tag(backoffice_dossiers_search_url, method: :get) do
+            .input-group{style:'width: 300px'}
+              = text_field_tag('q', "#{@search_terms unless @search_terms.nil? }", id: 'q', placeholder: "Rechercher un dossier ...", class:'form-control')
+              %span.input-group-btn
+                %button.btn.btn-default{ id:'search_button' }
+                  %i.fa.fa-search
+
+      - if @dossiers_search.nil?
+        %li#pref_list
+          %a.btn#pref_list_dossier_open_action{href: '#'}
+            %i.fa.fa-columns
+
+
 %br

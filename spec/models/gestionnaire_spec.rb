@@ -32,6 +32,7 @@ describe Gestionnaire, type: :model do
     it { is_expected.to have_many(:procedures) }
     it { is_expected.to have_many(:dossiers) }
     it { is_expected.to have_many(:follows) }
+    it { is_expected.to have_many(:preference_list_dossiers) }
   end
 
   describe '#dossiers_filter' do
