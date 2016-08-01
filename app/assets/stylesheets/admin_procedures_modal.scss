@@ -1,0 +1,18 @@
+.path_mine_false {
+  color: red
+}
+
+#path_messages {
+  .message {
+    display: none
+  }
+}
+
+#publishModal {
+  .twitter-typeahead {
+    width: 300px;
+  }
+  .tt-menu {
+    width: 300px;
+  }
+}

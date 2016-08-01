@@ -89,6 +89,7 @@ Rails.application.routes.draw do
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
+    get 'procedures/path_list' => 'procedures#path_list'
     get 'profile' => 'profile#show', as: :profile
 
     resources :procedures do
@@ -103,6 +104,7 @@ Rails.application.routes.draw do
 
       put 'archive' => 'procedures#archive', as: :archive
       put 'publish' => 'procedures#publish', as: :publish
+      post 'transfer' => 'procedures#transfer', as: :transfer
       put 'clone' => 'procedures#clone', as: :clone
 
       resource :accompagnateurs, only: [:show, :update]
@@ -142,6 +144,8 @@ Rails.application.routes.draw do
       post 'close' => 'dossiers#close'
 
       post 'invites' => '/invites#create'
+
+      put 'follow' => 'dossiers#follow'
     end
 
     resources :commentaires, only: [:create]
@@ -159,6 +163,10 @@ Rails.application.routes.draw do
     namespace :statistiques do
       get 'dossiers' => '/api/statistiques#dossiers_stats'
     end
+  end
+
+  namespace :commencer do
+    get '/:procedure_path' => '/users/dossiers#commencer'
   end
 
   apipie

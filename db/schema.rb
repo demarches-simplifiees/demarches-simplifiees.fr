@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160622081321) do
+ActiveRecord::Schema.define(version: 20160718124741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -168,6 +168,14 @@ ActiveRecord::Schema.define(version: 20160622081321) do
     t.integer  "etablissement_id"
   end
 
+  create_table "follows", force: :cascade do |t|
+    t.integer "gestionnaire_id"
+    t.integer "dossier_id"
+  end
+
+  add_index "follows", ["dossier_id"], name: "index_follows_on_dossier_id", using: :btree
+  add_index "follows", ["gestionnaire_id"], name: "index_follows_on_gestionnaire_id", using: :btree
+
   create_table "france_connect_informations", force: :cascade do |t|
     t.string  "gender"
     t.string  "given_name"
@@ -225,6 +233,14 @@ ActiveRecord::Schema.define(version: 20160622081321) do
   end
 
   add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
+
+  create_table "procedure_paths", force: :cascade do |t|
+    t.string  "path",              limit: 30
+    t.integer "procedure_id"
+    t.integer "administrateur_id"
+  end
+
+  add_index "procedure_paths", ["path"], name: "index_procedure_paths_on_path", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"
@@ -304,4 +320,6 @@ ActiveRecord::Schema.define(version: 20160622081321) do
   add_foreign_key "cerfas", "dossiers"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossiers", "users"
+  add_foreign_key "procedure_paths", "administrateurs"
+  add_foreign_key "procedure_paths", "procedures"
 end

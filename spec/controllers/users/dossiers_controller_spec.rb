@@ -152,16 +152,25 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe 'GET #commencer' do
+    subject { get :commencer, procedure_path: procedure.path }
+
+    it { expect(subject.status).to eq 302 }
+    it { expect(subject).to redirect_to new_users_dossier_path(procedure_id: procedure.id) }
+  end
+
   describe 'POST #siret_informations' do
+    let(:user) { create(:user) }
+
     before do
       stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{siret_not_found}?token=#{SIADETOKEN}")
           .to_return(status: 404, body: 'fake body')
 
       stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
-          .to_return(status: 200, body: File.read('spec/support/files/etablissement.json'))
+          .to_return(status: status_entreprise_call, body: File.read('spec/support/files/etablissement.json'))
 
       stub_request(:get, "https://api-dev.apientreprise.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
-          .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
+          .to_return(status: status_entreprise_call, body: File.read('spec/support/files/entreprise.json'))
 
       stub_request(:get, "https://api-dev.apientreprise.fr/v1/etablissements/exercices/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: exercices_status, body: exercices_body)
@@ -173,8 +182,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     describe 'dossier attributs' do
-      let(:user) { create(:user) }
-
+      let(:status_entreprise_call) { 200 }
       shared_examples 'with valid siret' do
         before do
           sign_in user
@@ -314,6 +322,20 @@ describe Users::DossiersController, type: :controller do
         it { expect(flash.alert).to eq 'Le siret est incorrect' }
         it { expect(response.to_a[2]).to be_an_instance_of ActionDispatch::Response::RackBody }
       end
+    end
+
+    context 'when REST error 400 is return' do
+      let(:status_entreprise_call) { 400 }
+
+      subject { post :siret_informations, dossier_id: dossier.id, dossier: {siret: siret} }
+
+      before do
+        sign_in user
+        subject
+      end
+
+      it { expect(response.status).to eq 200 }
+
     end
   end
 

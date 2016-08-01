@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Dossier do
   let(:user) { create(:user) }
+
   describe 'database columns' do
     it { is_expected.to have_db_column(:autorisation_donnees) }
     it { is_expected.to have_db_column(:nom_projet) }
@@ -24,6 +25,7 @@ describe Dossier do
     it { is_expected.to have_one(:entreprise) }
     it { is_expected.to belong_to(:user) }
     it { is_expected.to have_many(:invites) }
+    it { is_expected.to have_many(:follows) }
   end
 
   describe 'delegation' do
@@ -31,14 +33,6 @@ describe Dossier do
     it { is_expected.to delegate_method(:siret).to(:etablissement) }
     it { is_expected.to delegate_method(:types_de_piece_justificative).to(:procedure) }
     it { is_expected.to delegate_method(:types_de_champ).to(:procedure) }
-  end
-
-  describe 'validation' do
-    context 'nom_projet' do
-      it { is_expected.to allow_value(nil).for(:nom_projet) }
-      it { is_expected.not_to allow_value('').for(:nom_projet) }
-      it { is_expected.to allow_value('mon super projet').for(:nom_projet) }
-    end
   end
 
   describe 'methods' do
@@ -82,7 +76,7 @@ describe Dossier do
       end
     end
 
-    describe '#retrieve_last_piece_justificative_by_type', vcr: { cassette_name: 'models_dossier_retrieve_last_piece_justificative_by_type' } do
+    describe '#retrieve_last_piece_justificative_by_type', vcr: {cassette_name: 'models_dossier_retrieve_last_piece_justificative_by_type'} do
       let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
 
       subject { dossier.retrieve_last_piece_justificative_by_type types_de_pj_dossier.first }
@@ -121,7 +115,7 @@ describe Dossier do
 
         it 'does not create default champs' do
           expect(subject).not_to receive(:build_default_champs)
-          subject.update_attributes(nom_projet: 'plop')
+          subject.update_attributes(state: 'initiated')
         end
       end
     end
@@ -390,18 +384,18 @@ describe Dossier do
         create :assign_to, gestionnaire: gestionnaire, procedure: procedure_admin
       end
 
-      let!(:dossier1) { create(:dossier,  procedure: procedure_admin, state: 'draft') }
-      let!(:dossier2) { create(:dossier,  procedure: procedure_admin, state: 'initiated') } #a_traiter
-      let!(:dossier3) { create(:dossier,  procedure: procedure_admin, state: 'initiated') } #a_traiter
-      let!(:dossier4) { create(:dossier,  procedure: procedure_admin, state: 'replied') } #en_attente
-      let!(:dossier5) { create(:dossier,  procedure: procedure_admin, state: 'updated') } #a_traiter
-      let!(:dossier6) { create(:dossier,  procedure: procedure_admin_2, state: 'validated') } #en_attente
-      let!(:dossier7) { create(:dossier,  procedure: procedure_admin_2, state: 'submitted') } #a_traiter
-      let!(:dossier8) { create(:dossier,  procedure: procedure_admin_2, state: 'closed') } #termine
-      let!(:dossier9) { create(:dossier,  procedure: procedure_admin, state: 'closed') } #termine
-      let!(:dossier10) { create(:dossier,  procedure: procedure_admin, state: 'initiated', archived: true) } #a_traiter #archived
-      let!(:dossier11) { create(:dossier,  procedure: procedure_admin, state: 'replied', archived: true) } #en_attente #archived
-      let!(:dossier12) { create(:dossier,  procedure: procedure_admin, state: 'closed', archived: true) } #termine #archived
+      let!(:dossier1) { create(:dossier, procedure: procedure_admin, state: 'draft') }
+      let!(:dossier2) { create(:dossier, procedure: procedure_admin, state: 'initiated') } #a_traiter
+      let!(:dossier3) { create(:dossier, procedure: procedure_admin, state: 'initiated') } #a_traiter
+      let!(:dossier4) { create(:dossier, procedure: procedure_admin, state: 'replied') } #en_attente
+      let!(:dossier5) { create(:dossier, procedure: procedure_admin, state: 'updated') } #a_traiter
+      let!(:dossier6) { create(:dossier, procedure: procedure_admin_2, state: 'validated') } #en_attente
+      let!(:dossier7) { create(:dossier, procedure: procedure_admin_2, state: 'submitted') } #a_traiter
+      let!(:dossier8) { create(:dossier, procedure: procedure_admin_2, state: 'closed') } #termine
+      let!(:dossier9) { create(:dossier, procedure: procedure_admin, state: 'closed') } #termine
+      let!(:dossier10) { create(:dossier, procedure: procedure_admin, state: 'initiated', archived: true) } #a_traiter #archived
+      let!(:dossier11) { create(:dossier, procedure: procedure_admin, state: 'replied', archived: true) } #en_attente #archived
+      let!(:dossier12) { create(:dossier, procedure: procedure_admin, state: 'closed', archived: true) } #termine #archived
 
       describe '#waiting_for_gestionnaire' do
         subject { gestionnaire.dossiers.waiting_for_gestionnaire }
@@ -442,11 +436,11 @@ describe Dossier do
       let(:procedure_1) { create(:procedure, administrateur: administrateur_1) }
       let(:procedure_2) { create(:procedure, administrateur: administrateur_2) }
 
-      let!(:dossier_0) { create(:dossier, nom_projet: 'je suis un brouillon', state: 'draft', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
-      let!(:dossier_1) { create(:dossier, nom_projet: 'Projet de test', state: 'initiated', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
-      let!(:dossier_2) { create(:dossier, nom_projet: 'Lili et Marcel', state: 'initiated', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
-      let!(:dossier_3) { create(:dossier, nom_projet: 'Construction projet marcel', state: 'initiated', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
-      let!(:dossier_archived) { create(:dossier, nom_projet: 'je suis un Marcel archivé', state: 'initiated', procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
+      let!(:dossier_0) { create(:dossier, state: 'draft', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
+      let!(:dossier_1) { create(:dossier, state: 'initiated', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
+      let!(:dossier_2) { create(:dossier, state: 'initiated', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
+      let!(:dossier_3) { create(:dossier, state: 'initiated', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
+      let!(:dossier_archived) { create(:dossier, state: 'initiated', procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
 
       let!(:etablissement_1) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'OCTO Academy', dossier: dossier_1), dossier: dossier_1, siret: '41636169600051') }
       let!(:etablissement_2) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'Plop octo', dossier: dossier_2), dossier: dossier_2, siret: '41816602300012') }
@@ -462,12 +456,6 @@ describe Dossier do
         let(:terms) { 'brouillon' }
 
         it { expect(subject.size).to eq(0) }
-      end
-
-      describe 'search on file title' do
-        let(:terms) { 'Marcel' }
-
-        it { expect(subject.size).to eq(1) }
       end
 
       describe 'search on contact email' do
@@ -511,8 +499,8 @@ describe Dossier do
   end
 
   describe '#cerfa_available?' do
-    let(:procedure) { create(:procedure, cerfa_flag: cerfa_flag)  }
-    let(:dossier) { create(:dossier, procedure: procedure)}
+    let(:procedure) { create(:procedure, cerfa_flag: cerfa_flag) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
 
     context 'Procedure accepts CERFA' do
       let(:cerfa_flag) { true }
@@ -531,11 +519,10 @@ describe Dossier do
   end
 
   describe '#as_csv?' do
-    let(:procedure) { create(:procedure)  }
+    let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
     subject { dossier.as_csv }
 
-    it { expect(subject[:nom_projet]).to eq("Demande de subvention dans le cadre d'accompagnement d'enfant à l'étranger") }
     it { expect(subject[:archived]).to be_falsey }
     it { expect(subject['etablissement.siret']).to eq('44011762001530') }
     it { expect(subject['etablissement.siege_social']).to be_truthy }
@@ -577,11 +564,11 @@ describe Dossier do
     it { expect(dossier.entreprise.rna_information).not_to be_nil }
     it { expect(dossier.autorisation_donnees).to be_truthy }
 
-    it { expect{subject}.to change(RNAInformation, :count).by(-1) }
-    it { expect{subject}.to change(Exercice, :count).by(-1) }
+    it { expect { subject }.to change(RNAInformation, :count).by(-1) }
+    it { expect { subject }.to change(Exercice, :count).by(-1) }
 
-    it { expect{subject}.to change(Entreprise, :count).by(-1) }
-    it { expect{subject}.to change(Etablissement, :count).by(-1) }
+    it { expect { subject }.to change(Entreprise, :count).by(-1) }
+    it { expect { subject }.to change(Etablissement, :count).by(-1) }
 
     context 'when method reset! is call' do
       before do
@@ -600,7 +587,7 @@ describe Dossier do
     let!(:procedure_2) { create :procedure }
 
     let(:dossier_1) { Dossier.new(id: 0, procedure: procedure_1) }
-    let(:dossier_2) { Dossier.new(id: 0, procedure: procedure_2)  }
+    let(:dossier_2) { Dossier.new(id: 0, procedure: procedure_2) }
 
     before do
       create :type_de_champ, libelle: 'type_1_1', order_place: 1, procedure: dossier_1.procedure
@@ -636,5 +623,28 @@ describe Dossier do
       it { expect(subject.last.type_de_champ.libelle).to eq 'type_2_3' }
     end
 
+  end
+
+  describe '#total_follow' do
+    let(:dossier) { create(:dossier, :with_entreprise, user: user) }
+    let(:dossier2) { create(:dossier, :with_entreprise, user: user) }
+
+    subject { dossier.total_follow }
+
+    context 'when no body follow dossier' do
+      it { expect(subject).to eq 0 }
+    end
+
+    context 'when 2 people follow dossier' do
+      before do
+        create :follow, dossier_id: dossier.id, gestionnaire_id: (create :gestionnaire).id
+        create :follow, dossier_id: dossier.id, gestionnaire_id: (create :gestionnaire).id
+
+        create :follow, dossier_id: dossier2.id, gestionnaire_id: (create :gestionnaire).id
+        create :follow, dossier_id: dossier2.id, gestionnaire_id: (create :gestionnaire).id
+      end
+
+      it { expect(subject).to eq 2 }
+    end
   end
 end

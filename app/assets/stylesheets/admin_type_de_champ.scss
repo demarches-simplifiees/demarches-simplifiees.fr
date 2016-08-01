@@ -1,0 +1,18 @@
+.header_section{
+  background-color: rgb(245,245,245);
+  margin-top: 20px;
+  margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 0;
+  text-align:center;
+  padding-bottom: 8px;
+
+  .form-group.description {
+    display: none;
+  }
+
+  .form-group.mandatory {
+    display: none;
+  }
+
+}

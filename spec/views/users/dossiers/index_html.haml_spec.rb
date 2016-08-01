@@ -3,10 +3,17 @@ require 'spec_helper'
 describe 'users/dossiers/index.html.haml', type: :view do
   let(:user) { create(:user) }
 
-  let!(:dossier) { create(:dossier, user: user, state: 'initiated', nom_projet: 'projet de test').decorate }
-  let!(:dossier_2) { create(:dossier, user: user, state: 'replied', nom_projet: 'projet répondu').decorate }
-  let!(:dossier_3) { create(:dossier, user: user, state: 'replied', nom_projet: 'projet répondu 2').decorate }
-  let!(:dossier_termine) { create(:dossier, user: user, state: 'closed').decorate }
+  let!(:dossier) { create(:dossier, :with_entreprise, user: user, state: 'initiated').decorate }
+  let!(:dossier_2) { create(:dossier, :with_entreprise, user: user, state: 'replied').decorate }
+  let!(:dossier_3) { create(:dossier, :with_entreprise, user: user, state: 'replied').decorate }
+  let!(:dossier_termine) { create(:dossier, :with_entreprise, user: user, state: 'closed').decorate }
+
+  before do
+    dossier_2.entreprise.update_column(:raison_sociale, 'plip')
+    dossier_2.entreprise.update_column(:raison_sociale, 'plop')
+    dossier_3.entreprise.update_column(:raison_sociale, 'plup')
+    dossier_termine.entreprise.update_column(:raison_sociale, 'plap')
+  end
 
   describe 'params liste is a_traiter' do
     let(:dossiers_list) { user.dossiers.waiting_for_user('DESC') }
@@ -32,14 +39,14 @@ describe 'users/dossiers/index.html.haml', type: :view do
 
     describe 'dossier replied is present' do
       it { is_expected.to have_content(dossier_2.procedure.libelle) }
-      it { is_expected.to have_content(dossier_2.nom_projet) }
+      it { is_expected.to have_content(dossier_2.entreprise.raison_sociale) }
       it { is_expected.to have_content(dossier_2.display_state) }
       it { is_expected.to have_content(dossier_2.last_update) }
     end
 
     describe 'dossier initiated and closed are not present' do
-      it { is_expected.not_to have_content(dossier.nom_projet) }
-      it { is_expected.not_to have_content(dossier_termine.nom_projet) }
+      it { is_expected.not_to have_content(dossier.entreprise.raison_sociale) }
+      it { is_expected.not_to have_content(dossier_termine.entreprise.raison_sociale) }
     end
 
     describe 'badges on tabs' do
@@ -69,14 +76,14 @@ describe 'users/dossiers/index.html.haml', type: :view do
 
     describe 'dossier initiated is present' do
       it { is_expected.to have_content(dossier.procedure.libelle) }
-      it { is_expected.to have_content(dossier.nom_projet) }
+      it { is_expected.to have_content(dossier.entreprise.raison_sociale) }
       it { is_expected.to have_content(dossier.display_state) }
       it { is_expected.to have_content(dossier.last_update) }
     end
 
     describe 'dossier replied and closed are not present' do
-      it { is_expected.not_to have_content(dossier_2.nom_projet) }
-      it { is_expected.not_to have_content(dossier_termine.nom_projet) }
+      it { is_expected.not_to have_content(dossier_2.entreprise.raison_sociale) }
+      it { is_expected.not_to have_content(dossier_termine.entreprise.raison_sociale) }
     end
   end
 
@@ -100,14 +107,14 @@ describe 'users/dossiers/index.html.haml', type: :view do
 
     describe 'dossier termine is present' do
       it { is_expected.to have_content(dossier_termine.procedure.libelle) }
-      it { is_expected.to have_content(dossier_termine.nom_projet) }
+      it { is_expected.to have_content(dossier_termine.entreprise.raison_sociale) }
       it { is_expected.to have_content(dossier_termine.display_state) }
       it { is_expected.to have_content(dossier_termine.last_update) }
     end
 
     describe 'dossier initiated and replied are not present' do
-      it { is_expected.not_to have_content(dossier.nom_projet) }
-      it { is_expected.not_to have_content(dossier_2.nom_projet) }
+      it { is_expected.not_to have_content(dossier.entreprise.raison_sociale) }
+      it { is_expected.not_to have_content(dossier_2.entreprise.raison_sociale) }
     end
   end
 end

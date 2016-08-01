@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 describe Backoffice::DossiersController, type: :controller do
+  before do
+    @request.env['HTTP_REFERER'] =  TPS::Application::URL
+  end
+
   let(:dossier) { create(:dossier, :with_entreprise) }
-  let(:dossier_archived) { create(:dossier, :with_entreprise,  archived: true) }
+  let(:dossier_archived) { create(:dossier, :with_entreprise, archived: true) }
 
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10 }
@@ -126,6 +130,33 @@ describe Backoffice::DossiersController, type: :controller do
 
       dossier.reload
       expect(dossier.state).to eq('closed')
+    end
+  end
+
+  describe 'PUT #toggle_follow' do
+    before do
+      sign_in gestionnaire
+    end
+
+    subject { put :follow, dossier_id: dossier_id }
+
+    it { expect(subject.status).to eq 302 }
+
+    describe 'flash alert' do
+      context 'when dossier is not follow by gestionnaire' do
+        before do
+          subject
+        end
+        it { expect(flash[:notice]).to have_content 'Dossier suivi' }
+      end
+
+      context 'when dossier is follow by gestionnaire' do
+        before do
+          create :follow, gestionnaire_id: gestionnaire.id, dossier_id: dossier.id
+          subject
+        end
+        it { expect(flash[:notice]).to have_content 'Dossier relaché' }
+      end
     end
   end
 end

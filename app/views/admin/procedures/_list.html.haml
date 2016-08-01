@@ -3,7 +3,7 @@
     %thead
       %th#ID= smart_listing.sortable 'ID', 'id'
       %th#libelle= smart_listing.sortable 'Libellé', 'libelle'
-      - unless @draft_class
+      - if @active_class
         %th#lien Lien
       %th#created_at= smart_listing.sortable 'Date création', 'created_at'
       %th#lien Actions
@@ -11,10 +11,10 @@
     - @procedures.each do |procedure|
       - procedure = procedure.decorate
       %tr
-        %td.col-md-1.col-lg-1= procedure.id
+        %td= procedure.id
         %td.col-md-6.col-lg-6
           = link_to(procedure.libelle, "/admin/procedures/#{procedure.id}")
-        - unless @draft_class
+        - if @active_class
           %td= link_to procedure.lien, procedure.lien
         %td
           = procedure.created_at_fr

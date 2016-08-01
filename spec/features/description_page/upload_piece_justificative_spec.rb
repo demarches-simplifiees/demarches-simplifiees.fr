@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'user is on description page' do
-  let!(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, cerfa_flag: true) }
+  let!(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: true) }
   let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
 
   before do
@@ -21,7 +21,7 @@ feature 'user is on description page' do
 
   context 'he fill description fields' do
     before do
-      find_by_id('nom_projet').set 'mon nom'
+      find_by_id("champs_#{dossier.champs.first.id}").set 'mon nom'
     end
     context 'before submit' do
       it 'dossier cerfa is empty' do

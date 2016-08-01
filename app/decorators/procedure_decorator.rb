@@ -2,7 +2,7 @@ class ProcedureDecorator < Draper::Decorator
   delegate_all
 
   def lien
-    h.new_users_dossiers_url(procedure_id: id)
+    h.commencer_url(procedure_path: path) unless path.nil?
   end
 
   def created_at_fr
@@ -11,7 +11,7 @@ class ProcedureDecorator < Draper::Decorator
 
   def logo_img
     return 'logo-tps.png' if logo.blank?
-    logo
+    File.join(STORAGE_URL, File.basename(logo.path))
   end
   def geographic_information
     module_api_carto

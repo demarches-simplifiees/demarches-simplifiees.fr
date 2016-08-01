@@ -63,22 +63,19 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
 
   describe 'POST #create' do
     let(:timestamp) { Time.now }
-    let(:nom_projet) { 'Projet de test' }
     let(:description) { 'Description de test Coucou, je suis un saut à la ligne Je suis un double saut  la ligne.' }
 
     context 'Tous les attributs sont bons' do
       describe 'Premier enregistrement des données' do
         before do
           dossier.draft!
-          post :create, dossier_id: dossier_id, nom_projet: nom_projet
+          post :create, dossier_id: dossier_id
           dossier.reload
         end
 
         it "redirection vers la page recapitulative" do
           expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
         end
-
-        it { expect(dossier.nom_projet).to eq nom_projet }
 
         it 'etat du dossier est soumis' do
           expect(dossier.state).to eq('initiated')
@@ -88,7 +85,7 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
       context 'En train de manipuler un dossier non brouillon' do
         before do
           dossier.initiated!
-          post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description
+          post :create, dossier_id: dossier_id
           dossier.reload
         end
 
@@ -102,28 +99,10 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
       end
     end
 
-    context 'Attribut(s) manquant(s)' do
-      subject {
-        post :create,
-             dossier_id: dossier_id,
-             nom_projet: nom_projet,
-             description: description
-      }
-      before { subject }
-
-      context 'nom_projet empty' do
-        let(:nom_projet) { '' }
-        it { is_expected.to render_template(:show) }
-        it { expect(flash[:alert]).to be_present }
-      end
-    end
-
     context 'Quand la procédure accepte les CERFA' do
       context 'Sauvegarde du CERFA PDF', vcr: {cassette_name: 'controllers_users_description_controller_save_cerfa'} do
         before do
           post :create, dossier_id: dossier_id,
-               nom_projet: nom_projet,
-               description: description,
                cerfa_pdf: cerfa_pdf
           dossier.reload
         end
@@ -150,7 +129,7 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
           let(:cerfas) { Cerfa.where(dossier_id: dossier_id) }
 
           before do
-            post :create, dossier_id: dossier_id, nom_projet: nom_projet, description: description, cerfa_pdf: cerfa_pdf
+            post :create, dossier_id: dossier_id, cerfa_pdf: cerfa_pdf
           end
 
           it "il y a deux CERFA PDF pour ce dossier" do
@@ -165,8 +144,6 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
         let!(:procedure) { create(:procedure) }
         before do
           post :create, dossier_id: dossier_id,
-               nom_projet: nom_projet,
-               description: description,
                cerfa_pdf: cerfa_pdf
           dossier.reload
         end
@@ -186,8 +163,6 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
 
       before do
         post :create, {dossier_id: dossier_id,
-                       nom_projet: nom_projet,
-                       description: description,
                        champs: {
                            "'#{dossier.champs.first.id}'" => dossier_champs_first,
                            "'#{dossier.champs.second.id}'" => dossier_date_value
@@ -228,8 +203,6 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
       let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
       before do
         post :create, {dossier_id: dossier_id,
-                       nom_projet: nom_projet,
-                       description: description,
                        'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
                        'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
         dossier.reload
@@ -240,8 +213,6 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
           expect(ClamavService).to receive(:safe_file?).twice
 
           post :create, {dossier_id: dossier_id,
-                         nom_projet: nom_projet,
-                         description: description,
                          'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
                          'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
         end

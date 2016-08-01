@@ -18,6 +18,7 @@ class Dossier < ActiveRecord::Base
   has_many :cadastres, dependent: :destroy
   has_many :commentaires, dependent: :destroy
   has_many :invites, dependent: :destroy
+  has_many :follows
 
   belongs_to :procedure
   belongs_to :user
@@ -29,7 +30,6 @@ class Dossier < ActiveRecord::Base
 
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
 
-  validates :nom_projet, presence: true, allow_blank: false, allow_nil: true
   validates :user, presence: true
 
   WAITING_FOR_GESTIONNAIRE = %w(initiated updated submitted)
@@ -160,7 +160,6 @@ class Dossier < ActiveRecord::Base
       query_string_start_with = "#{word}%"
 
       composed_scope = composed_scope.where(
-          dossiers[:nom_projet].matches(query_string).or\
           users[:email].matches(query_string).or\
           etablissements[:siret].matches(query_string_start_with).or\
           entreprises[:raison_sociale].matches(query_string))
@@ -198,5 +197,13 @@ class Dossier < ActiveRecord::Base
     entreprise.destroy unless entreprise.nil?
 
     update_attributes(autorisation_donnees: false)
+  end
+
+  def total_follow
+    follows.size
+  end
+
+  def total_commentaire
+    self.commentaires.size
   end
 end

@@ -26,6 +26,10 @@ class CommentairesController < ApplicationController
     saved = @commentaire.save unless flash.alert
 
     if is_gestionnaire?
+      unless current_gestionnaire.follow? @commentaire.dossier
+        current_gestionnaire.toggle_follow_dossier @commentaire.dossier
+      end
+
       NotificationMailer.new_answer(@commentaire.dossier).deliver_now! if saved
       redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
     elsif current_user.email != @commentaire.dossier.user.email

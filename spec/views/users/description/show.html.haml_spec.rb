@@ -22,10 +22,6 @@ describe 'users/description/show.html.haml', type: :view do
       expect(rendered).to have_selector("form[action='/users/dossiers/#{dossier_id}/description'][method=post]")
     end
 
-    it 'Nom du projet' do
-      expect(rendered).to have_selector('input[id=nom_projet][name=nom_projet]')
-    end
-
     it 'Charger votre CERFA (PDF)' do
       expect(rendered).to have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]')
     end
@@ -61,22 +57,6 @@ describe 'users/description/show.html.haml', type: :view do
 
     it 'le lien de retour au récapitulatif est présent' do
       expect(rendered).to have_selector("a[href='/users/dossiers/#{dossier_id}/recapitulatif']")
-    end
-  end
-
-  context 'les valeurs sont réaffichées si elles sont présentes dans la BDD' do
-    let!(:dossier) do
-      create(:dossier,
-             nom_projet: 'Projet de test',
-             user: user)
-    end
-
-    before do
-      render
-    end
-
-    it 'Nom du projet' do
-      expect(rendered).to have_selector("input[id=nom_projet][value='#{dossier.nom_projet}']")
     end
   end
 

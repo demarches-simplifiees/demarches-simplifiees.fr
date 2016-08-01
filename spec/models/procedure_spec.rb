@@ -19,6 +19,7 @@ describe Procedure do
     it { is_expected.to have_db_column(:logo) }
     it { is_expected.to have_db_column(:logo_secure_token) }
     it { is_expected.to have_db_column(:cerfa_flag) }
+    it { is_expected.to have_db_column(:published) }
   end
 
   describe 'validation' do
@@ -156,10 +157,63 @@ describe Procedure do
     describe 'procedure status is reset' do
       let(:archived) { true }
       let(:published) { true }
-      it 'sets published and archived to false' do
+      it 'Not published nor archived' do
         expect(subject.archived).to be_falsey
         expect(subject.published).to be_falsey
+        expect(subject.path).to be_nil
       end
     end
+  end
+
+  describe 'publish' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
+
+    it 'is available from a valid path' do
+      expect(procedure.path).to match(/fake_path/)
+      expect(procedure.published).to be_truthy
+    end
+
+    it 'is correctly set in ProcedurePath table' do
+      expect(ProcedurePath.count(path: procedure.path)).to eq(1)
+      expect(procedure_path.procedure_id).to eq(procedure.id)
+      expect(procedure_path.administrateur_id).to eq(procedure.administrateur_id)
+    end
+  end
+
+  describe 'archive' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
+    before do
+      procedure.archive
+      procedure.reload
+    end
+
+    it 'is not available from a valid path anymore' do
+      expect(procedure.path).to be_nil
+      expect(procedure.published).to be_truthy
+      expect(procedure.archived).to be_truthy
+    end
+
+    it 'is not in ProcedurePath table anymore' do
+      expect(ProcedurePath.count(path: procedure.path)).to eq(0)
+      expect(ProcedurePath.find_by_procedure_id(procedure.id)).to be_nil
+    end
+  end
+
+  describe 'total_dossier' do
+
+    let(:procedure) { create :procedure }
+
+    before do
+      create :dossier, procedure: procedure, state: :initiated
+      create :dossier, procedure: procedure, state: :draft
+      create :dossier, procedure: procedure, state: :replied
+    end
+
+    subject { procedure.total_dossier }
+
+    it { is_expected.to eq 2 }
+
   end
 end

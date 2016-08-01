@@ -77,7 +77,7 @@ describe Admin::ProceduresController, type: :controller do
         subject
       end
 
-      it { expect { subject }.to change{Procedure.count}.by(-1) }
+      it { expect { subject }.to change { Procedure.count }.by(-1) }
     end
 
     context 'when procedure is published' do
@@ -263,31 +263,116 @@ describe Admin::ProceduresController, type: :controller do
     end
   end
 
+  describe 'PUT #publish' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+    let(:procedure2) { create(:procedure, :published, administrateur: admin) }
+    let(:procedure3) { create(:procedure, :published) }
+
+    context 'when admin is the owner of the procedure' do
+      before do
+        put :publish, procedure_id: procedure.id, procedure_path: procedure_path
+        procedure.reload
+        procedure2.reload
+      end
+
+      context 'procedure path does not exist' do
+        let(:procedure_path) { 'new_path' }
+
+        it 'publish the given procedure' do
+          expect(procedure.published).to be_truthy
+          expect(procedure.path).to eq(procedure_path)
+          expect(response.status).to eq 200
+          expect(flash[:notice]).to have_content 'Procédure publiée'
+        end
+      end
+
+      context 'procedure path exists and is owned by current administrator' do
+        let(:procedure_path) { procedure2.path }
+
+        it 'publish the given procedure' do
+          expect(procedure.published).to be_truthy
+          expect(procedure.path).to eq(procedure_path)
+          expect(response.status).to eq 200
+          expect(flash[:notice]).to have_content 'Procédure publiée'
+        end
+
+        it 'archive previous procedure' do
+          expect(procedure2.published).to be_truthy
+          expect(procedure2.archived).to be_truthy
+          expect(procedure2.path).to be_nil
+        end
+      end
+
+      context 'procedure path exists and is not owned by current administrator' do
+        let(:procedure_path) { procedure3.path }
+
+        it 'does not publish the given procedure' do
+          expect(procedure.published).to be_falsey
+          expect(procedure.path).to be_nil
+          expect(response.status).to eq 200
+        end
+
+        it 'previous procedure remains published' do
+          expect(procedure2.published).to be_truthy
+          expect(procedure2.archived).to be_falsey
+          expect(procedure2.path).to match(/fake_path/)
+        end
+      end
+
+      context 'procedure path is invalid' do
+        let(:procedure_path) { 'Invalid Procedure Path' }
+
+        it 'does not publish the given procedure' do
+          expect(procedure.published).to be_falsey
+          expect(procedure.path).to be_nil
+          expect(response).to redirect_to :admin_procedures
+          expect(flash[:alert]).to have_content 'Lien de la procédure invalide'
+        end
+      end
+    end
+
+    context 'when admin is not the owner of the procedure' do
+      let(:admin_2) { create(:administrateur) }
+
+      before do
+        sign_out admin
+        sign_in admin_2
+
+        put :publish, procedure_id: procedure.id, procedure_path: 'fake_path'
+        procedure.reload
+      end
+
+      it 'fails' do
+        expect(response).to redirect_to :admin_procedures
+        expect(flash[:alert]).to have_content 'Procédure inéxistante'
+      end
+    end
+  end
+
   describe 'PUT #archive' do
     let(:procedure) { create(:procedure, administrateur: admin) }
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :archive, procedure_id: procedure.id, archive: archive
+        put :archive, procedure_id: procedure.id
         procedure.reload
       end
 
       context 'when owner want archive procedure' do
-
-        let(:archive) { true }
-
         it { expect(procedure.archived).to be_truthy }
         it { expect(response).to redirect_to :admin_procedures }
-        it { expect(flash[:notice]).to have_content 'Procédure éditée' }
+        it { expect(flash[:notice]).to have_content 'Procédure archivée' }
       end
 
-      context 'when owner want reactive procedure' do
-
-        let(:archive) { false }
+      context 'when owner want to re-enable procedure' do
+        before do
+          put :publish, procedure_id: procedure.id, procedure_path: 'fake_path'
+          procedure.reload
+        end
 
         it { expect(procedure.archived).to be_falsey }
-        it { expect(response).to redirect_to :admin_procedures }
-        it { expect(flash[:notice]).to have_content 'Procédure éditée' }
+        it { expect(response.status).to eq 200 }
+        it { expect(flash[:notice]).to have_content 'Procédure publiée' }
       end
     end
 
@@ -335,6 +420,62 @@ describe Admin::ProceduresController, type: :controller do
 
       it { expect(response).to redirect_to :admin_procedures }
       it { expect(flash[:alert]).to have_content 'Procédure inéxistante' }
+    end
+  end
+
+  describe 'GET #path_list' do
+    let!(:procedure) { create(:procedure, :published, administrateur: admin) }
+    let(:admin2) { create(:administrateur) }
+    let!(:procedure2) { create(:procedure, :published, administrateur: admin2) }
+    subject { get :path_list }
+    let(:body) { JSON.parse(response.body) }
+
+    before do
+      subject
+    end
+
+    it { expect(response.status).to eq(200) }
+    it { expect(body.size).to eq(2) }
+    it { expect(body.first['label']).to eq(procedure.path) }
+    it { expect(body.first['mine']).to be_truthy }
+    it { expect(body.second['label']).to eq(procedure2.path) }
+    it { expect(body.second['mine']).to be_falsy }
+
+    context 'filtered' do
+      subject { get :path_list, request: procedure2.path }
+
+      it { expect(response.status).to eq(200) }
+      it { expect(body.size).to eq(1) }
+      it { expect(body.first['label']).to eq(procedure2.path) }
+      it { expect(body.first['mine']).to be_falsy }
+    end
+  end
+
+  describe 'POST transfer' do
+    let!(:procedure) { create :procedure, administrateur: admin }
+
+    subject { post :transfer, email_admin: email_admin, procedure_id: procedure.id }
+
+    context 'when admin is unknow' do
+      let(:email_admin) { 'plop' }
+
+      it { expect(subject.status).to eq 404 }
+    end
+
+    context 'when admin is know' do
+      let(:new_admin) { create :administrateur, email: 'new_admin@admin.com' }
+      let(:email_admin) { new_admin.email }
+
+      it { expect(subject.status).to eq 200 }
+      it { expect {subject}.to change(Procedure, :count).by(1) }
+
+      context {
+        before do
+          subject
+        end
+
+        it { expect(Procedure.last.administrateur).to eq new_admin }
+      }
     end
   end
 end

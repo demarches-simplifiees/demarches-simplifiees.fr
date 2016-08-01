@@ -1,9 +1,7 @@
 #infos_dossier
   %div.row
     .col-lg-6.col-md-6
-      %h3.text-info
-        = @facade.dossier.nom_projet
-      %h4
+      %h3
         = @facade.dossier.procedure.libelle
 
       - if @facade.dossier.mandataire_social && gestionnaire_signed_in?

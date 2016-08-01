@@ -32,3 +32,8 @@ function reset_form_siret(){
     $("input[type='submit']").removeClass('btn-danger').addClass('btn-success').val('Valider');
     $("#dossier_siret").removeClass('input-error');
 }
+
+function toggle_etape_1(){
+    $('.row.etape.etape_1 .etapes_menu #logos').toggle(100);
+    $('.row.etape.etape_1 .etapes_informations #description_procedure').toggle(100);
+}

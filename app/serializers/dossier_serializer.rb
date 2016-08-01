@@ -1,10 +1,11 @@
 class DossierSerializer < ActiveModel::Serializer
   attributes :id,
-             :nom_projet,
              :created_at,
              :updated_at,
              :archived,
-             :mandataire_social
+             :mandataire_social,
+             :state,
+             :total_commentaire
 
   has_one :entreprise
   has_one :etablissement

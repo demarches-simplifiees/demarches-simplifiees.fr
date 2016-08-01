@@ -5,7 +5,7 @@ feature 'on backoffice page' do
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
   let(:procedure) { create(:procedure, administrateur: administrateur) }
 
-  let!(:dossier) { create(:dossier,  :with_entreprise, procedure: procedure, state: 'initiated') }
+  let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
 
   before do
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure
@@ -20,7 +20,7 @@ feature 'on backoffice page' do
     end
     context 'when he click on first dossier' do
       before do
-        page.click_on dossier.nom_projet
+        page.click_on dossier.entreprise.raison_sociale
       end
       scenario 'it redirect to dossier page' do
         expect(page).to have_css('#backoffice_dossier_show')
