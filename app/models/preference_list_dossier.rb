@@ -2,7 +2,7 @@ class PreferenceListDossier < ActiveRecord::Base
   belongs_to :gestionnaire
 
   def table_attr
-    return self.attr if table.empty?
+    return self.attr if table.nil? || table.empty?
     table + '.' + attr
   end
 

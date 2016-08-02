@@ -10,6 +10,8 @@ class Gestionnaire < ActiveRecord::Base
   has_many :follows
   has_many :preference_list_dossiers
 
+  after_create :build_default_preferences_list_dossier
+
   def dossiers_filter
     dossiers.where(procedure_id: procedure_filter_list)
   end
@@ -37,5 +39,49 @@ class Gestionnaire < ActiveRecord::Base
     dossier_id = dossier_id.id if dossier_id.class == Dossier
 
     Follow.where(gestionnaire_id: id, dossier_id: dossier_id).any?
+  end
+
+  def build_default_preferences_list_dossier
+
+    PreferenceListDossier.available_columns.each do |table|
+      table.second.each do |column|
+
+        if valid_couple_table_attr? table.first, column.first
+          PreferenceListDossier.create(
+              libelle: column.second[:libelle],
+              table: column.second[:table],
+              attr: column.second[:attr],
+              attr_decorate: column.second[:attr_decorate],
+              bootstrap_lg: column.second[:bootstrap_lg],
+              order: nil,
+              filter: nil,
+              gestionnaire: self
+          )
+        end
+      end
+    end
+  end
+
+  private
+
+  def valid_couple_table_attr? table, column
+    couples = [{
+                   table: :dossier,
+                   column: :dossier_id
+               }, {
+                   table: :procedure,
+                   column: :libelle
+               }, {
+                   table: :etablissement,
+                   column: :siret
+               }, {
+                   table: :entreprise,
+                   column: :raison_sociale
+               }, {
+                   table: :dossier,
+                   column: :state
+               }]
+
+    couples.include?({table: table, column: column})
   end
 end
