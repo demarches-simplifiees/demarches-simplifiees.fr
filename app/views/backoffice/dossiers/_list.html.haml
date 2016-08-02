@@ -10,7 +10,7 @@
       %tr
         - current_gestionnaire.preference_list_dossiers.order(:id).each_with_index do |preference, index|
           %td
-            - if preference.table.empty?
+            - if preference.table.nil? || preference.table.empty?
               - value = dossier.decorate.public_send(preference.attr_decorate)
             - else
               - value = dossier.public_send(preference.table).decorate.public_send(preference.attr_decorate)
