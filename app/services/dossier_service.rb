@@ -9,6 +9,10 @@ class DossierService
   def dossier_informations!
     @entreprise_adapter = SIADE::EntrepriseAdapter.new(DossierService.siren @siret)
 
+    if @entreprise_adapter.to_params.nil?
+      raise RestClient::ResourceNotFound
+    end
+
     @dossier.create_entreprise(@entreprise_adapter.to_params)
     @etablissement_adapter = SIADE::EtablissementAdapter.new(@siret)
 
