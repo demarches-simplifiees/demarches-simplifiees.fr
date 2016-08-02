@@ -18,6 +18,8 @@ class TypeDeChamp < ActiveRecord::Base
 
   has_many :champ, dependent: :destroy
 
+  default_scope { where(private: false) }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
   # validates :order_place, presence: true, allow_blank: false, allow_nil: false

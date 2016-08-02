@@ -1,6 +1,7 @@
 class Procedure < ActiveRecord::Base
   has_many :types_de_piece_justificative, dependent: :destroy
   has_many :types_de_champ, dependent: :destroy
+  has_many :types_de_champ_private, class_name: 'TypeDeChampPrivate', dependent: :destroy
   has_many :dossiers
 
   has_one :procedure_path, dependent: :destroy
