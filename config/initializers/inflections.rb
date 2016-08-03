@@ -13,6 +13,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular 'piece_justificative', 'pieces_justificatives'
   inflect.irregular 'type_de_piece_justificative', 'types_de_piece_justificative'
   inflect.irregular 'type_de_champ', 'types_de_champ'
+  inflect.irregular 'type_de_champ_private', 'types_de_champ_private'
   inflect.irregular 'assign_to', 'assign_tos'
 end
 

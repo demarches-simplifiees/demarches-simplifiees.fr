@@ -23,7 +23,7 @@ describe Champ do
 
     context 'when type_champ is datetime' do
       before do
-        champ.type_de_champ = create :type_de_champ, type_champ: 'datetime'
+        champ.type_de_champ = create :type_de_champ_public, type_champ: 'datetime'
       end
 
       it { is_expected.to eq 'datepicker' }
@@ -31,7 +31,7 @@ describe Champ do
 
     context 'when type_champ is address' do
       before do
-        champ.type_de_champ = create :type_de_champ, type_champ: 'address'
+        champ.type_de_champ = create :type_de_champ_public, type_champ: 'address'
       end
 
       it { is_expected.to eq 'typeahead' }

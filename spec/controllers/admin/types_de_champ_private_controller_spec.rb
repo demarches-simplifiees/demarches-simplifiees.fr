@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::TypesDeChampController, type: :controller do
+describe Admin::TypesDeChampPrivateController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:procedure) { create(:procedure, administrateur: admin) }
 
@@ -41,7 +41,7 @@ describe Admin::TypesDeChampController, type: :controller do
     let(:mandatory) { 'on' }
 
     let(:procedure_params) do
-      { types_de_champ_attributes:
+      { types_de_champ_private_attributes:
         { '0' =>
           {
             libelle: libelle,
@@ -49,7 +49,8 @@ describe Admin::TypesDeChampController, type: :controller do
             description: description,
             order_place: order_place,
             id: types_de_champ_id,
-            mandatory: mandatory
+            mandatory: mandatory,
+            type: 'TypeDeChampPrivate'
           }
         }
       }
@@ -65,7 +66,7 @@ describe Admin::TypesDeChampController, type: :controller do
           request
           procedure.reload
         end
-        subject { procedure.types_de_champ.first }
+        subject { procedure.types_de_champ_private.first }
 
         it { expect(subject.libelle).to eq('mon libelle') }
         it { expect(subject.type_champ).to eq('text') }
@@ -74,8 +75,8 @@ describe Admin::TypesDeChampController, type: :controller do
       end
 
       context 'when type_de_champ already exist' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, administrateur: admin) }
-        let(:type_de_champ) { procedure.types_de_champ.first }
+        let(:procedure) { create(:procedure, :with_type_de_champ_private, administrateur: admin) }
+        let(:type_de_champ) { procedure.types_de_champ_private.first }
         let(:types_de_champ_id) { type_de_champ.id }
         let(:libelle) { 'toto' }
         let(:type_champ) { 'text' }
@@ -86,7 +87,7 @@ describe Admin::TypesDeChampController, type: :controller do
           request
           procedure.reload
         end
-        subject { procedure.types_de_champ.first }
+        subject { procedure.types_de_champ_private.first }
         it { expect(subject.libelle).to eq('toto') }
         it { expect(subject.type_champ).to eq('text') }
         it { expect(subject.description).to eq('citrouille') }
@@ -112,8 +113,8 @@ describe Admin::TypesDeChampController, type: :controller do
       it { expect(subject.status).to eq(404) }
     end
     context 'when types_de_champ exists' do
-      let(:procedure) { create(:procedure, :with_type_de_champ, administrateur: admin) }
-      let(:type_de_champ_id) { procedure.types_de_champ.first.id }
+      let(:procedure) { create(:procedure, :with_type_de_champ_private, administrateur: admin) }
+      let(:type_de_champ_id) { procedure.types_de_champ_private.first.id }
       it { expect(subject.status).to eq(200) }
       it 'destroy type de champ' do
         procedure.reload
@@ -136,20 +137,20 @@ describe Admin::TypesDeChampController, type: :controller do
     end
     context 'when procedure have only one type de champ' do
       let(:index) { 1 }
-      let!(:type_de_champ) { create(:type_de_champ_public, procedure: procedure) }
+      let!(:type_de_champ) { create(:type_de_champ_private, procedure: procedure) }
       it { expect(subject.status).to eq(400) }
     end
     context 'when procedure have tow type de champs' do
       context 'when index == 0' do
         let(:index) { 0 }
-        let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure) }
-        let!(:type_de_champ_2) { create(:type_de_champ_public, procedure: procedure) }
+        let!(:type_de_champ_1) { create(:type_de_champ_private, procedure: procedure) }
+        let!(:type_de_champ_2) { create(:type_de_champ_private, procedure: procedure) }
         it { expect(subject.status).to eq(400) }
       end
       context 'when index > 0' do
         let(:index) { 1 }
-        let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure, order_place: 0) }
-        let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
+        let!(:type_de_champ_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
+        let!(:type_de_champ_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
 
         it { expect(subject.status).to eq(200) }
         it { expect(subject).to render_template('show') }
@@ -174,12 +175,12 @@ describe Admin::TypesDeChampController, type: :controller do
       it { expect(subject.status).to eq(400) }
     end
     context 'when procedure have only one type de champ' do
-      let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure) }
+      let!(:type_de_champ_0) { create(:type_de_champ_private, procedure: procedure) }
       it { expect(subject.status).to eq(400) }
     end
     context 'when procedure have 2 type de champ' do
-      let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure, order_place: 0) }
-      let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
+      let!(:type_de_champ_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
+      let!(:type_de_champ_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
       context 'when index represent last type_de_champ' do
         let(:index) { 1 }
         it { expect(subject.status).to eq(400) }

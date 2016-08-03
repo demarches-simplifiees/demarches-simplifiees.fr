@@ -3,6 +3,5 @@ class TypeDeChampSerializer < ActiveModel::Serializer
              :libelle,
              {:type_champ => :type},
              :order_place,
-             :description,
-             :private
+             :description
 end

@@ -3,4 +3,4 @@
   = f.submit "Enregistrer", class: 'btn btn-success', id: :save
   %hr
   #new_type_de_champ
-    = render partial: 'fields', locals: { types_de_champ: TypeDeChamp.new.decorate, f: f }
+    = render partial: 'fields', locals: { types_de_champ: TypeDeChampPublic.new.decorate, f: f }

@@ -230,7 +230,7 @@ describe API::V1::DossiersController do
               it { expect(subject[:libelle]).to eq('Description') }
               it { expect(subject[:description]).to eq('description de votre projet') }
               it { expect(subject.keys.include?(:order_place)).to be_truthy }
-              it { expect(subject[:type]).to eq('text') }
+              it { expect(subject[:type_champ]).to eq('text') }
             end
           end
         end

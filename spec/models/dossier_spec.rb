@@ -591,12 +591,12 @@ describe Dossier do
     let(:dossier_2) { Dossier.new(id: 0, procedure: procedure_2) }
 
     before do
-      create :type_de_champ, libelle: 'type_1_1', order_place: 1, procedure: dossier_1.procedure
-      create :type_de_champ, libelle: 'type_1_2', order_place: 2, procedure: dossier_1.procedure
+      create :type_de_champ_public, libelle: 'type_1_1', order_place: 1, procedure: dossier_1.procedure
+      create :type_de_champ_public, libelle: 'type_1_2', order_place: 2, procedure: dossier_1.procedure
 
-      create :type_de_champ, libelle: 'type_2_1', order_place: 1, procedure: dossier_2.procedure
-      create :type_de_champ, libelle: 'type_2_2', order_place: 2, procedure: dossier_2.procedure
-      create :type_de_champ, libelle: 'type_2_3', order_place: 3, procedure: dossier_2.procedure
+      create :type_de_champ_public, libelle: 'type_2_1', order_place: 1, procedure: dossier_2.procedure
+      create :type_de_champ_public, libelle: 'type_2_2', order_place: 2, procedure: dossier_2.procedure
+      create :type_de_champ_public, libelle: 'type_2_3', order_place: 3, procedure: dossier_2.procedure
 
       dossier_1.build_default_champs
       dossier_2.build_default_champs
