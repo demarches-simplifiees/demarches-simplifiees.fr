@@ -4,19 +4,22 @@ class Admin::TypesDeChampPrivateController < AdminController
 
   def destroy
     @procedure.types_de_champ_private.destroy(params[:id])
-    render 'show', format: :js
+    create_facade
+    render 'admin/types_de_champ/show', format: :js
   rescue ActiveRecord::RecordNotFound
     render json: { message: 'Champ not found' }, status: 404
   end
 
   def show
-
+     create_facade
+    render 'admin/types_de_champ/show'
   end
 
   def update
     @procedure.update_attributes(update_params)
+    create_facade
     flash.now.notice = 'Modifications sauvegardées'
-    render 'show', format: :js
+    render 'admin/types_de_champ/show', format: :js
   end
 
   def update_params
@@ -28,7 +31,8 @@ class Admin::TypesDeChampPrivateController < AdminController
   def move_up
     index = params[:index].to_i - 1
     if @procedure.switch_types_de_champ_private index
-      render 'show', format: :js
+      create_facade
+      render 'admin/types_de_champ/show', format: :js
     else
       render json: {}, status: 400
     end
@@ -36,9 +40,16 @@ class Admin::TypesDeChampPrivateController < AdminController
 
   def move_down
     if @procedure.switch_types_de_champ_private params[:index].to_i
-      render 'show', format: :js
+      create_facade
+      render 'admin/types_de_champ/show', format: :js
     else
       render json: {}, status: 400
     end
+  end
+
+  private
+
+  def create_facade
+    @types_de_champ_facade = AdminTypesDeChampFacades.new true, @procedure
   end
 end

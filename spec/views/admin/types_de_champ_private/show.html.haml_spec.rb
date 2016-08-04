@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'admin/types_de_champ_private/show.html.haml', type: :view do
+describe 'admin/types_de_champ/show.html.haml', type: :view do
   let(:procedure) { create(:procedure) }
 
   describe 'fields sorted' do
@@ -11,6 +11,7 @@ describe 'admin/types_de_champ_private/show.html.haml', type: :view do
     before do
       procedure.reload
       assign(:procedure, procedure)
+      assign(:types_de_champ_facade, AdminTypesDeChampFacades.new(true, procedure))
       render
     end
     it 'sorts by order place' do
@@ -22,6 +23,7 @@ describe 'admin/types_de_champ_private/show.html.haml', type: :view do
     subject do
       procedure.reload
       assign(:procedure, procedure)
+      assign(:types_de_champ_facade, AdminTypesDeChampFacades.new(true, procedure))
       render
       rendered
     end
