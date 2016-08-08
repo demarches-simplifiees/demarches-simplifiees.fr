@@ -27,6 +27,9 @@
       %li{role: "presentation"}
         %a{href: "#followers", 'aria-controls' => "followers", role: "tab", 'data-toggle' => "tab"}
           Abonnés
+      %li{role: "presentation"}
+        %a{href: "#champs_private", 'aria-controls' => "champs_private", role: "tab", 'data-toggle' => "tab"}
+          Formulaire
 
     %div{class: "tab-content"}
       %div{role: "tabpanel", class: "tab-pane fade in active", id:"commentaires"}
@@ -39,6 +42,12 @@
         = render partial: '/dossiers/invites'
       %div{role: "tabpanel", class: "tab-pane fade", id:"followers"}
         = render partial: 'followers'
-
+      %div{role: "tabpanel", class: "tab-pane fade", id:"champs_private"}
+        %h3 Formulaire privé
+        - unless @champs.nil?
+          = form_for @facade.dossier, url: {controller: 'backoffice/private_formulaires', action: :update, dossier_id: @facade.dossier.id}, remote: true do
+            = render partial: '/users/description/champs'
+            %br
+            = submit_tag :Enregistrer, {class: 'btn btn-success', style: 'float: right'}
   %br
   %br

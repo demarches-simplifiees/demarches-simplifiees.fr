@@ -145,6 +145,7 @@ Rails.application.routes.draw do
     get 'filtres' => 'procedure_filter#index'
     patch 'filtres/update' => 'procedure_filter#update'
 
+    resource :private_formulaire
 
     namespace :preference_list_dossier do
       post 'add'

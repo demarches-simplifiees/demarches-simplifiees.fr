@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, administrateur: admin, cerfa_flag: true) }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin, cerfa_flag: true) }
   let(:wrong_procedure) { create(:procedure) }
 
   it { expect(described_class).to be < APIController }
@@ -115,7 +115,7 @@ describe API::V1::DossiersController do
         let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
-        let(:field_list) { [:id, :created_at, :updated_at, :archived, :mandataire_social, :total_commentaire, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :commentaires, :state] }
+        let(:field_list) { [:id, :created_at, :updated_at, :archived, :mandataire_social, :total_commentaire, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :champs_private, :commentaires, :state] }
         subject { body[:dossier] }
 
         it 'return REST code 200', :show_in_doc do
@@ -208,6 +208,37 @@ describe API::V1::DossiersController do
           let(:field_list) { [
               :url] }
           subject { super()[:champs] }
+
+          it { expect(subject.length).to eq 1 }
+
+          describe 'first champs' do
+            subject { super().first }
+
+            it { expect(subject.keys.include?(:value)).to be_truthy }
+            it { expect(subject.keys.include?(:type_de_champ)).to be_truthy }
+
+            describe 'type de champ' do
+              let(:field_list) { [
+                  :id,
+                  :libelle,
+                  :description,
+                  :order_place,
+                  :type] }
+              subject { super()[:type_de_champ] }
+
+              it { expect(subject.keys.include?(:id)).to be_truthy }
+              it { expect(subject[:libelle]).to eq('Description') }
+              it { expect(subject[:description]).to eq('description de votre projet') }
+              it { expect(subject.keys.include?(:order_place)).to be_truthy }
+              it { expect(subject[:type_champ]).to eq('text') }
+            end
+          end
+        end
+
+        describe 'champs_private' do
+          let(:field_list) { [
+              :url] }
+          subject { super()[:champs_private] }
 
           it { expect(subject.length).to eq 1 }
 

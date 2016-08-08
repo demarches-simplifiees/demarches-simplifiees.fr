@@ -1,0 +1,3 @@
+class ChampPrivate < Champ
+
+end

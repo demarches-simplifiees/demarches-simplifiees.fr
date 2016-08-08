@@ -1,0 +1,4 @@
+<% flash.each do |type, message| %>
+$("#flash_message").html("<div class=\"alert alert-success move_up\" style=\"display: block:\"> <%= message.html_safe %></div>").children().fadeOut(5000)
+<%  end %>
+<% flash.clear %>
