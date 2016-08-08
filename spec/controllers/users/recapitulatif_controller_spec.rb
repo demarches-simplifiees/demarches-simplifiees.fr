@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::RecapitulatifController, type: :controller do
-  let(:dossier) { create(:dossier, state:'initiated') }
+  let(:dossier) { create(:dossier, state: 'initiated') }
   let(:bad_dossier_id) { Dossier.count + 100000 }
 
   before do
@@ -55,14 +55,20 @@ describe Users::RecapitulatifController, type: :controller do
 
   describe 'POST #submit' do
     context 'when an user depose his dossier' do
+      let(:deposit_datetime) { Time.local(2016, 8, 1, 10, 5, 0) }
+
       before do
         dossier.validated!
-        post :submit, dossier_id: dossier.id
+        Timecop.freeze(deposit_datetime) { post :submit, dossier_id: dossier.id }
+        dossier.reload
       end
 
       it 'dossier change his state for submitted' do
-        dossier.reload
         expect(dossier.state).to eq('submitted')
+      end
+
+      it 'dossier deposit datetime is filled' do
+        expect(dossier.deposit_datetime).to eq deposit_datetime
       end
 
       it 'a message informe user what his dossier is initiated' do

@@ -12,6 +12,7 @@ class ProcedureSerializer < ActiveModel::Serializer
 
 
   has_one :geographic_information, serializer: ModuleApiCartoSerializer
-  has_many :types_de_champ,  serializer: TypeDeChampSerializer
-  has_many :types_de_piece_justificative,  serializer: TypeDePieceJustificativeSerializer
+  has_many :types_de_champ, serializer: TypeDeChampSerializer
+  has_many :types_de_champ_private, serializer: TypeDeChampSerializer
+  has_many :types_de_piece_justificative, serializer: TypeDePieceJustificativeSerializer
 end

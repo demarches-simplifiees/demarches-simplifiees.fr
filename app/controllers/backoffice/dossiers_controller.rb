@@ -14,6 +14,7 @@ class Backoffice::DossiersController < ApplicationController
 
   def show
     create_dossier_facade params[:id]
+    @champs = @facade.champs_private unless @facade.nil?
   end
 
   def search

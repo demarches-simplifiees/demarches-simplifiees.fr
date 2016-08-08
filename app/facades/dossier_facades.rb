@@ -46,6 +46,10 @@ class DossierFacades
     @dossier.invites
   end
 
+  def champs_private
+    @dossier.ordered_champs_private
+  end
+
   def commentaires_files
     PieceJustificative.where(dossier_id: @dossier.id, type_de_piece_justificative_id: nil)
   end

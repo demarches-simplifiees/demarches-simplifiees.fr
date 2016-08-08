@@ -5,9 +5,9 @@ describe TypeDeChampDecorator do
   let(:procedure) { create(:procedure) }
   let(:url) { 'http://localhost' }
   let(:params) { { url: url, index: index } }
-  let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
-  let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
-  let!(:type_de_champ_2) { create(:type_de_champ, procedure: procedure, order_place: 2) }
+  let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure, order_place: 0) }
+  let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
+  let!(:type_de_champ_2) { create(:type_de_champ_public, procedure: procedure, order_place: 2) }
 
   describe '#button_up' do
 

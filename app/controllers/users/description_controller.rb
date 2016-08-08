@@ -43,23 +43,11 @@ class Users::DescriptionController < UsersController
     end
 
     unless params[:champs].nil?
-      @dossier.champs.each do |champ|
-        champ.value = params[:champs]["'#{champ.id}'"]
+      champs_service_errors = ChampsService.save_formulaire @dossier.champs, params
 
-        if champ.type_champ == 'datetime'
-          champ.value = params[:champs]["'#{champ.id}'"]+
-              ' ' +
-              params[:time_hour]["'#{champ.id}'"] +
-              ':' +
-              params[:time_minute]["'#{champ.id}'"]
-        end
-
-        if champ.mandatory? && (champ.value.nil? || champ.value.blank?)
-          flash.now.alert = "Le champ #{champ.libelle} doit être rempli."
-          return render 'show'
-        end
-
-        champ.save
+      unless champs_service_errors.empty?
+        flash.now.alert = (champs_service_errors.inject('') {|acc, error| acc+= error[:message]+'<br>' }).html_safe
+        return render 'show'
       end
     end
 

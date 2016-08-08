@@ -1,6 +1,6 @@
-= form_for [:admin, @procedure], url: admin_procedure_types_de_champ_path(@procedure) , remote: true do |f|
-  = render partial: 'fields', locals: { types_de_champ: @procedure.types_de_champ_ordered.decorate, f: f }
+= form_for [:admin, @procedure], url: @types_de_champ_facade.url , remote: true do |f|
+  = render partial: 'admin/types_de_champ/fields', locals: { types_de_champ: @types_de_champ_facade.types_de_champ, f: f }
   = f.submit "Enregistrer", class: 'btn btn-success', id: :save
   %hr
   #new_type_de_champ
-    = render partial: 'fields', locals: { types_de_champ: TypeDeChamp.new.decorate, f: f }
+    = render partial: 'admin/types_de_champ/fields', locals: { types_de_champ: @types_de_champ_facade.new_type_de_champ, f: f }

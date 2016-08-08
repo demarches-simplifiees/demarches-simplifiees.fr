@@ -93,10 +93,20 @@ Rails.application.routes.draw do
     get 'profile' => 'profile#show', as: :profile
 
     resources :procedures do
+      resources :types_de_champ, only: [:destroy]
       resource :types_de_champ, only: [:show, :update] do
         post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
         post '/:index/move_down' => 'types_de_champ#move_down', as: :move_down
       end
+
+      resources :types_de_champ_private, only: [:destroy]
+      resource :types_de_champ_private, only: [:show, :update] do
+        post '/:index/move_up' => 'types_de_champ_private#move_up', as: :move_up
+        post '/:index/move_down' => 'types_de_champ_private#move_down', as: :move_down
+      end
+
+      resource :pieces_justificatives, only: [:show, :update]
+      resources :pieces_justificatives, only: :destroy
       resource :pieces_justificatives, only: [:show, :update] do
         post '/:index/move_up' => 'pieces_justificatives#move_up', as: :move_up
         post '/:index/move_down' => 'pieces_justificatives#move_down', as: :move_down
@@ -111,9 +121,6 @@ Rails.application.routes.draw do
 
       resource :previsualisation, only: [:show]
 
-      resources :types_de_champ, only: [:destroy]
-      resource :pieces_justificatives, only: [:show, :update]
-      resources :pieces_justificatives, only: :destroy
     end
 
     namespace :accompagnateurs do
@@ -138,6 +145,7 @@ Rails.application.routes.draw do
     get 'filtres' => 'procedure_filter#index'
     patch 'filtres/update' => 'procedure_filter#update'
 
+    resource :private_formulaire
 
     namespace :preference_list_dossier do
       post 'add'

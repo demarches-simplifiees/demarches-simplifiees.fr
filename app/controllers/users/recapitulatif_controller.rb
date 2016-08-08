@@ -19,10 +19,8 @@ class Users::RecapitulatifController < UsersController
   def submit
     create_dossier_facade
 
-    @facade.dossier.next_step! 'user', 'submit'
+    @facade.dossier.submit!
     flash.notice = 'Dossier déposé avec succès.'
-
-    NotificationMailer.dossier_submitted(@facade.dossier).deliver_now!
 
     render 'show'
   end

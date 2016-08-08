@@ -1,0 +1,43 @@
+%ul{class: "nav nav-tabs", role: "tablist"}
+  %li{role: "presentation", class: "active"}
+    %a{href: "#commentaires", 'aria-controls' => "commentaires", role: "tab", 'data-toggle' => "tab"}
+      Commentaires
+  %li{role: "presentation"}
+    %a{href: "#commentaires_files", 'aria-controls' => "commentaires_files", role: "tab", 'data-toggle' => "tab"}
+      Fichiers
+
+  - if gestionnaire_signed_in?
+    %li{role: "presentation"}
+      %a{href: "#invites", 'aria-controls' => "invites", role: "tab", 'data-toggle' => "tab"}
+        Invités
+    %li{role: "presentation"}
+      %a{href: "#followers", 'aria-controls' => "followers", role: "tab", 'data-toggle' => "tab"}
+        Abonnés
+    %li{role: "presentation"}
+      %a{href: "#champs_private", 'aria-controls' => "champs_private", role: "tab", 'data-toggle' => "tab"}
+        Formulaire
+
+%div{class: "tab-content"}
+  %div{role: "tabpanel", class: "tab-pane fade in active", id:"commentaires"}
+    %h3 Flux de commentaires
+    %br
+    = render partial: '/users/recapitulatif/commentaires_flux'
+  %div{role: "tabpanel", class: "tab-pane fade", id:"commentaires_files"}
+    = render partial: '/dossiers/commentaires_files'
+
+  - if gestionnaire_signed_in?
+    %div{role: "tabpanel", class: "tab-pane fade", id:"invites"}
+      = render partial: '/dossiers/invites'
+    %div{role: "tabpanel", class: "tab-pane fade", id:"followers"}
+      = render partial: 'followers'
+    %div{role: "tabpanel", class: "tab-pane fade", id:"champs_private"}
+      %h3 Formulaire privé
+      - if @champs.nil? || @champs.empty?
+        %br
+        %h4.text-primary
+          Pas de formulaire privé pour ce dossier
+      - else
+        = form_for @facade.dossier, url: {controller: 'backoffice/private_formulaires', action: :update, dossier_id: @facade.dossier.id}, remote: true do
+          = render partial: '/users/description/champs'
+          %br
+          = submit_tag :Enregistrer, {class: 'btn btn-success', style: 'float: right'}

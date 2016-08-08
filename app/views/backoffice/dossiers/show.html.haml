@@ -14,31 +14,5 @@
   %br
 
   %div
-    %ul{class: "nav nav-tabs", role: "tablist"}
-      %li{role: "presentation", class: "active"}
-        %a{href: "#commentaires", 'aria-controls' => "commentaires", role: "tab", 'data-toggle' => "tab"}
-          Commentaires
-      %li{role: "presentation"}
-        %a{href: "#commentaires_files", 'aria-controls' => "commentaires_files", role: "tab", 'data-toggle' => "tab"}
-          Fichiers
-      %li{role: "presentation"}
-        %a{href: "#invites", 'aria-controls' => "invites", role: "tab", 'data-toggle' => "tab"}
-          Invités
-      %li{role: "presentation"}
-        %a{href: "#followers", 'aria-controls' => "followers", role: "tab", 'data-toggle' => "tab"}
-          Abonnés
-
-    %div{class: "tab-content"}
-      %div{role: "tabpanel", class: "tab-pane fade in active", id:"commentaires"}
-        %h3 Flux de commentaires
-        %br
-        = render partial: '/users/recapitulatif/commentaires_flux'
-      %div{role: "tabpanel", class: "tab-pane fade", id:"commentaires_files"}
-        = render partial: '/dossiers/commentaires_files'
-      %div{role: "tabpanel", class: "tab-pane fade", id:"invites"}
-        = render partial: '/dossiers/invites'
-      %div{role: "tabpanel", class: "tab-pane fade", id:"followers"}
-        = render partial: 'followers'
-
-  %br
+    = render partial: 'dossiers/tab_objects_dossier'
   %br

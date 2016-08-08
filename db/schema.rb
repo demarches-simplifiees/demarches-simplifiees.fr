@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160802113112) do
+ActiveRecord::Schema.define(version: 20160808115924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 20160802113112) do
     t.string  "value"
     t.integer "type_de_champ_id"
     t.integer "dossier_id"
+    t.string  "type"
   end
 
   create_table "commentaires", force: :cascade do |t|
@@ -123,6 +124,7 @@ ActiveRecord::Schema.define(version: 20160802113112) do
     t.text     "json_latlngs"
     t.boolean  "archived",             default: false
     t.boolean  "mandataire_social",    default: false
+    t.datetime "deposit_datetime"
   end
 
   add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
@@ -296,6 +298,7 @@ ActiveRecord::Schema.define(version: 20160802113112) do
     t.integer "procedure_id"
     t.text    "description"
     t.boolean "mandatory",    default: false
+    t.string  "type"
   end
 
   create_table "types_de_piece_justificative", force: :cascade do |t|
