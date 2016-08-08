@@ -216,4 +216,11 @@ class Dossier < ActiveRecord::Base
   def total_commentaire
     self.commentaires.size
   end
+
+  def submit!
+    self.deposit_datetime= DateTime.now
+
+    next_step! 'user', 'submit'
+    NotificationMailer.dossier_submitted(self).deliver_now!
+  end
 end
