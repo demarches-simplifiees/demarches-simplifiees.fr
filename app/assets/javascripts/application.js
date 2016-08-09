@@ -44,5 +44,3 @@ function scroll_to() {
     });
 }
 
-
-

@@ -30,6 +30,9 @@
         - elsif champ.type_champ == 'yes_no'
           =render partial: 'users/description/champs/yes_no', locals: {champ: champ}
 
+        - elsif champ.type_champ == 'drop_down_list'
+          =render partial: 'users/description/champs/drop_down_list', locals: {champ: champ}
+
         -else
           %input.form-control{name:"champs['#{champ.id}']",
                   placeholder: champ.libelle,

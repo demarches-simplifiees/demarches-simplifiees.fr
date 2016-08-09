@@ -10,8 +10,13 @@
 
     .form-group.description
       %h4 Description
-      = ff.text_area :description, class: 'form-control description', placeholder: 'Description'
+      = ff.text_area :description, class: 'form-control description', placeholder: 'Description', rows: 2
 
+    .form-group.drop_down_list{class:"#{ff.object.object.type_champ == 'drop_down_list' ? 'show_inline' : ''}",style:'margin-right: 5px'}
+      %h4 Liste déroulante
+      = ff.fields_for :drop_down_list_attributes, ff.object.object.drop_down_list do |fff|
+        = fff.text_area :value, class: 'form-control drop_down_list', placeholder: "Ecrire une valeur par ligne.\nEcrire --valeur-- pour un séparateur.", rows: 3, cols: 30
+        = fff.hidden_field :id
     - unless ff.object.object.class == TypeDeChampPrivate
       .form-group.mandatory
         %h4 Obligatoire ?

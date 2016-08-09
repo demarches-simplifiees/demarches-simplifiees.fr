@@ -26,13 +26,19 @@ function on_change_type_de_champ_select (){
 
     $("select.form-control.type_champ").on('change', function(e){
 
-        parent = $(this).parent().parent()
+        parent = $(this).parent().parent();
 
-        if (this.value === 'header_section') {
-            parent.addClass('header_section')
-        }
-        else {
-            parent.removeClass('header_section')
+        parent.removeClass('header_section');
+        parent.children(".drop_down_list").removeClass('show_inline');
+
+        switch(this.value){
+            case 'header_section':
+                parent.addClass('header_section');
+                break;
+            case 'drop_down_list':
+                parent.children(".drop_down_list").addClass('show_inline');
+                break;
+
         }
     })
 }

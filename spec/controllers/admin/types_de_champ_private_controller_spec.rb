@@ -51,7 +51,17 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
             id: types_de_champ_id,
             mandatory: mandatory,
             type: 'TypeDeChampPrivate'
-          }
+          },
+          '1' =>
+              {
+                  libelle: '',
+                  type_champ: 'text',
+                  description: '',
+                  order_place: '1',
+                  id: '',
+                  mandatory: false,
+                  type: 'TypeDeChampPrivate'
+              }
         }
       }
     end

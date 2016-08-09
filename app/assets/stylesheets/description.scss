@@ -57,6 +57,12 @@
   }
 }
 
+.type_champ-drop_down_list {
+  @extend .col-md-4;
+  @extend .col-lg-4;
+
+}
+
 .type_champ-civilite {
   @extend .col-md-3;
   @extend .col-lg-3;
