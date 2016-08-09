@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160808115924) do
+ActiveRecord::Schema.define(version: 20160809083606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,6 +129,11 @@ ActiveRecord::Schema.define(version: 20160808115924) do
 
   add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
   add_index "dossiers", ["user_id"], name: "index_dossiers_on_user_id", using: :btree
+
+  create_table "drop_down_lists", force: :cascade do |t|
+    t.string  "value"
+    t.integer "type_de_champ_id"
+  end
 
   create_table "entreprises", force: :cascade do |t|
     t.string   "siren"

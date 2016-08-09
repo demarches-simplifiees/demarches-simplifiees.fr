@@ -14,5 +14,14 @@
   .form-group.mandatory {
     display: none;
   }
+}
 
+#liste_champ{
+  .show_inline {
+    display: inline-block !important;
+  }
+
+  .form-group.drop_down_list{
+    display: none;
+  }
 }
