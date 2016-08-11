@@ -8,12 +8,23 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   let!(:decorate_dossier_initiated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated').decorate }
   let!(:decorate_dossier_replied) { create(:dossier, :with_entreprise, procedure: procedure, state: 'replied').decorate }
+  let!(:decorate_dossier_updated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'updated').decorate }
+  let!(:decorate_dossier_validated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'validated').decorate }
+  let!(:decorate_dossier_submitted) { create(:dossier, :with_entreprise, procedure: procedure, state: 'submitted').decorate }
+  let!(:decorate_dossier_received) { create(:dossier, :with_entreprise, procedure: procedure, state: 'received').decorate }
   let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, procedure: procedure, state: 'closed').decorate }
+  let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, procedure: procedure, state: 'refused').decorate }
+  let!(:decorate_dossier_without_continuation) { create(:dossier, :with_entreprise, procedure: procedure, state: 'without_continuation').decorate }
 
   before do
-
-    decorate_dossier_closed.entreprise.update_column(:raison_sociale, 'plip')
-    decorate_dossier_replied.entreprise.update_column(:raison_sociale, 'plop')
+    decorate_dossier_replied.entreprise.update_column(:raison_sociale, 'plap')
+    decorate_dossier_updated.entreprise.update_column(:raison_sociale, 'plep')
+    decorate_dossier_validated.entreprise.update_column(:raison_sociale, 'plip')
+    decorate_dossier_submitted.entreprise.update_column(:raison_sociale, 'plop')
+    decorate_dossier_received.entreprise.update_column(:raison_sociale, 'plup')
+    decorate_dossier_closed.entreprise.update_column(:raison_sociale, 'plyp')
+    decorate_dossier_refused.entreprise.update_column(:raison_sociale, 'plzp')
+    decorate_dossier_without_continuation.entreprise.update_column(:raison_sociale, 'plnp')
 
     create :preference_list_dossier,
            gestionnaire: gestionnaire,
@@ -43,119 +54,120 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     sign_in gestionnaire
   end
 
-  describe 'on tab a_traiter' do
+  shared_examples 'check_tab_content' do
     before do
+      assign :dossiers_list_facade, (DossiersListFacades.new gestionnaire, liste)
       assign(:dossiers, (smart_listing_create :dossiers,
-                                              gestionnaire.dossiers.waiting_for_gestionnaire,
+                                              dossiers_to_display,
                                               partial: "backoffice/dossiers/list",
                                               array: true))
-      assign(:liste, 'a_traiter')
-      assign(:a_traiter_class, 'active')
-
       render
     end
 
     subject { rendered }
-    it { is_expected.to have_css('#backoffice_index') }
-    it { is_expected.to have_content(procedure.libelle) }
-    it { is_expected.to have_content(decorate_dossier_initiated.entreprise.raison_sociale) }
-    it { is_expected.to have_content(decorate_dossier_initiated.display_state) }
-    it { is_expected.to have_content(decorate_dossier_initiated.last_update) }
 
-    it { is_expected.not_to have_content(decorate_dossier_replied.entreprise.raison_sociale) }
-    it { is_expected.not_to have_content(decorate_dossier_closed.entreprise.raison_sociale) }
+    describe 'pref list column' do
+      it { is_expected.to have_css('#backoffice_index') }
+      it { is_expected.to have_content(procedure.libelle) }
+      it { is_expected.to have_content(decorate_dossier_at_check.entreprise.raison_sociale) }
+      it { is_expected.to have_content(decorate_dossier_at_check.display_state) }
+      it { is_expected.to have_content(decorate_dossier_at_check.last_update) }
+    end
 
-    it { is_expected.to have_css("#suivre_dossier_#{gestionnaire.dossiers.waiting_for_gestionnaire.first.id}") }
+    it { is_expected.to have_css("#suivre_dossier_#{dossiers_to_display.first.id}") }
+
+    it { expect(dossiers_to_display.count).to eq total_dossiers }
 
     describe 'active tab' do
-      it { is_expected.to have_selector('.active .text-danger') }
+      it { is_expected.to have_selector(active_class) }
+    end
+  end
+
+  describe 'on tab nouveaux' do
+    let(:total_dossiers) { 1 }
+    let(:active_class) { '.active .text-info' }
+    let(:dossiers_to_display) { gestionnaire.dossiers.nouveaux }
+    let(:liste) { 'nouveaux' }
+
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_initiated }
+    end
+  end
+
+  describe 'on tab a_traiter' do
+    let(:total_dossiers) { 1 }
+    let(:active_class) { '.active .text-danger' }
+    let(:dossiers_to_display) { gestionnaire.dossiers.waiting_for_gestionnaire }
+    let(:liste) { 'a_traiter' }
+
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_updated }
     end
   end
 
   describe 'on tab en_attente' do
-    before do
-      assign(:dossiers, (smart_listing_create :dossiers,
-                                              gestionnaire.dossiers.waiting_for_user,
-                                              partial: "backoffice/dossiers/list",
-                                              array: true))
-      assign(:liste, 'en_attente')
-      assign(:en_attente_class, 'active')
+    let(:total_dossiers) { 2 }
+    let(:active_class) { '.active .text-default' }
+    let(:dossiers_to_display) { gestionnaire.dossiers.waiting_for_user }
+    let(:liste) { 'en_attente' }
 
-      render
+    describe 'for state replied' do
+      it_behaves_like 'check_tab_content' do
+        let(:decorate_dossier_at_check) { decorate_dossier_replied }
+      end
     end
 
-    subject { rendered }
-    it { is_expected.to have_css('#backoffice_index') }
-    it { is_expected.to have_content(procedure.libelle) }
-    it { is_expected.to have_content(decorate_dossier_replied.entreprise.raison_sociale) }
-    it { is_expected.to have_content(decorate_dossier_replied.display_state) }
-    it { is_expected.to have_content(decorate_dossier_replied.last_update) }
-
-    it { is_expected.not_to have_content(decorate_dossier_initiated.entreprise.raison_sociale) }
-    it { is_expected.not_to have_content(decorate_dossier_closed.entreprise.raison_sociale) }
-
-    describe 'active tab' do
-      it { is_expected.to have_selector('.active .text-info') }
+    describe 'for state validated' do
+      it_behaves_like 'check_tab_content' do
+        let(:decorate_dossier_at_check) { decorate_dossier_validated }
+      end
     end
   end
 
-  describe 'on tab suivi' do
-    before do
-      create :follow, dossier_id: decorate_dossier_replied.id, gestionnaire_id: gestionnaire.id
+  describe 'on tab deposes' do
+    let(:total_dossiers) { 1 }
+    let(:active_class) { '.active .text-purple' }
+    let(:dossiers_to_display) { gestionnaire.dossiers.deposes }
+    let(:liste) { 'deposes' }
 
-      assign(:dossiers, (smart_listing_create :dossiers,
-                                              gestionnaire.dossiers_follow,
-                                              partial: "backoffice/dossiers/list",
-                                              array: true))
-      assign(:suivi_class, 'active')
-      assign(:liste, 'suivi')
-      render
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_submitted }
     end
+  end
 
-    subject { rendered }
+  describe 'on tab a_instruire' do
+    let(:total_dossiers) { 1 }
+    let(:active_class) { '.active .text-warning' }
+    let(:dossiers_to_display) { gestionnaire.dossiers.a_instruire }
+    let(:liste) { 'a_instruire' }
 
-    it { is_expected.to have_css('#backoffice_index') }
-    it { is_expected.to have_content(procedure.libelle) }
-    it { is_expected.to have_content(decorate_dossier_replied.entreprise.raison_sociale) }
-    it { is_expected.to have_content(decorate_dossier_replied.display_state) }
-    it { is_expected.to have_content(decorate_dossier_replied.last_update) }
-
-    it { is_expected.not_to have_content(decorate_dossier_initiated.entreprise.raison_sociale) }
-    it { is_expected.not_to have_content(decorate_dossier_closed.entreprise.raison_sociale) }
-
-    it { is_expected.to have_css("#suivre_dossier_#{gestionnaire.dossiers_follow.first.id}") }
-
-    describe 'active tab' do
-      it { is_expected.to have_selector('.active .text-warning') }
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_received }
     end
   end
 
   describe 'on tab termine' do
-    before do
-      assign(:dossiers, (smart_listing_create :dossiers,
-                                              gestionnaire.dossiers.termine,
-                                              partial: "backoffice/dossiers/list",
-                                              array: true))
-      assign(:termine_class, 'active')
-      assign(:liste, 'termine')
-      render
+    let(:total_dossiers) { 3 }
+    let(:active_class) { '.active .text-success' }
+    let(:dossiers_to_display) { gestionnaire.dossiers.termine }
+    let(:liste) { 'termine' }
+
+    describe 'for state closed' do
+      it_behaves_like 'check_tab_content' do
+        let(:decorate_dossier_at_check) { decorate_dossier_closed }
+      end
     end
 
-    subject { rendered }
+    describe 'for state refused' do
+      it_behaves_like 'check_tab_content' do
+        let(:decorate_dossier_at_check) { decorate_dossier_refused }
+      end
+    end
 
-    it { is_expected.to have_css('#backoffice_index') }
-    it { is_expected.to have_content(procedure.libelle) }
-    it { is_expected.to have_content(decorate_dossier_closed.entreprise.raison_sociale) }
-    it { is_expected.to have_content(decorate_dossier_closed.display_state) }
-    it { is_expected.to have_content(decorate_dossier_closed.last_update) }
-
-    it { is_expected.not_to have_content(decorate_dossier_initiated.entreprise.raison_sociale) }
-    it { is_expected.not_to have_content(decorate_dossier_replied.entreprise.raison_sociale) }
-
-    it { is_expected.to have_css("#suivre_dossier_#{gestionnaire.dossiers.termine.first.id}") }
-
-    describe 'active tab' do
-      it { is_expected.to have_selector('.active .text-success') }
+    describe 'for state without_continuation' do
+      it_behaves_like 'check_tab_content' do
+        let(:decorate_dossier_at_check) { decorate_dossier_without_continuation }
+      end
     end
   end
 end

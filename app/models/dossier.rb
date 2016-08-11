@@ -2,11 +2,15 @@ class Dossier < ActiveRecord::Base
 
   enum state: {draft: 'draft',
                initiated: 'initiated',
-               replied: 'replied',
-               updated: 'updated',
+               replied: 'replied', #action utilisateur demandé
+               updated: 'updated',#etude par l'administration en cours
                validated: 'validated',
                submitted: 'submitted',
-               closed: 'closed'}
+               received: 'received',
+               closed: 'closed',
+               refused: 'refused',
+               without_continuation: 'without_continuation'
+       }
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
@@ -34,9 +38,12 @@ class Dossier < ActiveRecord::Base
 
   validates :user, presence: true
 
-  WAITING_FOR_GESTIONNAIRE = %w(initiated updated submitted)
+  NOUVEAUX = %w(initiated)
+  WAITING_FOR_GESTIONNAIRE = %w(updated)
   WAITING_FOR_USER = %w(replied validated)
-  TERMINE = %w(closed)
+  DEPOSES = %w(submitted)
+  A_INSTRUIRE = %w(received)
+  TERMINE = %w(closed refused without_continuation)
 
   def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
@@ -129,6 +136,10 @@ class Dossier < ActiveRecord::Base
     state
   end
 
+  def nouveaux?
+    NOUVEAUX.include?(state)
+  end
+
   def waiting_for_gestionnaire?
     WAITING_FOR_GESTIONNAIRE.include?(state)
   end
@@ -137,8 +148,20 @@ class Dossier < ActiveRecord::Base
     WAITING_FOR_USER.include?(state)
   end
 
+  def deposes?
+    DEPOSES.include?(state)
+  end
+
+  def a_instruire?
+    A_INSTRUIRE.include?(state)
+  end
+
   def termine?
     TERMINE.include?(state)
+  end
+
+  def self.nouveaux order = 'ASC'
+    where(state: NOUVEAUX, archived: false).order("updated_at #{order}")
   end
 
   def self.waiting_for_gestionnaire order = 'ASC'
@@ -147,6 +170,14 @@ class Dossier < ActiveRecord::Base
 
   def self.waiting_for_user order = 'ASC'
     where(state: WAITING_FOR_USER, archived: false).order("updated_at #{order}")
+  end
+
+  def self.deposes order = 'ASC'
+    where(state: DEPOSES, archived: false).order("updated_at #{order}")
+  end
+
+  def self.a_instruire order = 'ASC'
+    where(state: A_INSTRUIRE, archived: false).order("updated_at #{order}")
   end
 
   def self.termine order = 'ASC'

@@ -9,12 +9,15 @@ fr:
         date_previsionnelle: "La date de début prévisionnelle"
         state:
           draft: "Brouillon"
-          initiated: "Soumis"
+          initiated: "Nouveau"
           replied: "Répondu"
           updated: "Mis à jour"
-          validated: "Validé"
+          validated: "Figé"
           submitted: "Déposé"
-          closed: "Traité"
+          received: "Reçu"
+          closed: "Accepté"
+          refused: "Refusé"
+          without_continuation: "Sans suite"
 
     errors:
       models:

@@ -387,25 +387,36 @@ describe Dossier do
 
       before do
         create :assign_to, gestionnaire: gestionnaire, procedure: procedure_admin
+
+        create(:dossier, procedure: procedure_admin, state: 'draft')
+        create(:dossier, procedure: procedure_admin, state: 'initiated') #nouveaux
+        create(:dossier, procedure: procedure_admin, state: 'initiated') #nouveaux
+        create(:dossier, procedure: procedure_admin, state: 'replied') #en_attente
+        create(:dossier, procedure: procedure_admin, state: 'updated') #a_traiter
+        create(:dossier, procedure: procedure_admin, state: 'submitted') #deposes
+        create(:dossier, procedure: procedure_admin, state: 'received') #a_instruire
+        create(:dossier, procedure: procedure_admin, state: 'received') #a_instruire
+        create(:dossier, procedure: procedure_admin, state: 'closed') #termine
+        create(:dossier, procedure: procedure_admin, state: 'refused') #termine
+        create(:dossier, procedure: procedure_admin, state: 'without_continuation') #termine
+        create(:dossier, procedure: procedure_admin_2, state: 'validated') #en_attente
+        create(:dossier, procedure: procedure_admin_2, state: 'submitted') #deposes
+        create(:dossier, procedure: procedure_admin_2, state: 'closed') #termine
+        create(:dossier, procedure: procedure_admin, state: 'initiated', archived: true) #a_traiter #archived
+        create(:dossier, procedure: procedure_admin, state: 'replied', archived: true) #en_attente #archived
+        create(:dossier, procedure: procedure_admin, state: 'closed', archived: true) #termine #archived
       end
 
-      let!(:dossier1) { create(:dossier, procedure: procedure_admin, state: 'draft') }
-      let!(:dossier2) { create(:dossier, procedure: procedure_admin, state: 'initiated') } #a_traiter
-      let!(:dossier3) { create(:dossier, procedure: procedure_admin, state: 'initiated') } #a_traiter
-      let!(:dossier4) { create(:dossier, procedure: procedure_admin, state: 'replied') } #en_attente
-      let!(:dossier5) { create(:dossier, procedure: procedure_admin, state: 'updated') } #a_traiter
-      let!(:dossier6) { create(:dossier, procedure: procedure_admin_2, state: 'validated') } #en_attente
-      let!(:dossier7) { create(:dossier, procedure: procedure_admin_2, state: 'submitted') } #a_traiter
-      let!(:dossier8) { create(:dossier, procedure: procedure_admin_2, state: 'closed') } #termine
-      let!(:dossier9) { create(:dossier, procedure: procedure_admin, state: 'closed') } #termine
-      let!(:dossier10) { create(:dossier, procedure: procedure_admin, state: 'initiated', archived: true) } #a_traiter #archived
-      let!(:dossier11) { create(:dossier, procedure: procedure_admin, state: 'replied', archived: true) } #en_attente #archived
-      let!(:dossier12) { create(:dossier, procedure: procedure_admin, state: 'closed', archived: true) } #termine #archived
+      describe '#nouveaux' do
+        subject { gestionnaire.dossiers.nouveaux }
+
+        it { expect(subject.size).to eq(2) }
+      end
 
       describe '#waiting_for_gestionnaire' do
         subject { gestionnaire.dossiers.waiting_for_gestionnaire }
 
-        it { expect(subject.size).to eq(3) }
+        it { expect(subject.size).to eq(1) }
       end
 
       describe '#waiting_for_user' do
@@ -414,10 +425,22 @@ describe Dossier do
         it { expect(subject.size).to eq(1) }
       end
 
+      describe '#a_instruire' do
+        subject { gestionnaire.dossiers.a_instruire }
+
+        it { expect(subject.size).to eq(2) }
+      end
+
+      describe '#deposes' do
+        subject { gestionnaire.dossiers.deposes }
+
+        it { expect(subject.size).to eq(1) }
+      end
+
       describe '#termine' do
         subject { gestionnaire.dossiers.termine }
 
-        it { expect(subject.size).to eq(1) }
+        it { expect(subject.size).to eq(3) }
       end
     end
 
