@@ -41,7 +41,9 @@ class Dossier < ActiveRecord::Base
   NOUVEAUX = %w(initiated)
   WAITING_FOR_GESTIONNAIRE = %w(updated)
   WAITING_FOR_USER = %w(replied validated)
+  VALIDES = %w(validated)
   DEPOSES = %w(submitted)
+  EN_INSTRUCTION = %w(submitted received)
   A_INSTRUIRE = %w(received)
   TERMINE = %w(closed refused without_continuation)
 
@@ -152,8 +154,16 @@ class Dossier < ActiveRecord::Base
     DEPOSES.include?(state)
   end
 
+  def valides?
+    VALIDES.include?(state)
+  end
+
   def a_instruire?
     A_INSTRUIRE.include?(state)
+  end
+
+  def en_instruction?
+    EN_INSTRUCTION.include?(state)
   end
 
   def termine?
@@ -172,12 +182,20 @@ class Dossier < ActiveRecord::Base
     where(state: WAITING_FOR_USER, archived: false).order("updated_at #{order}")
   end
 
+  def self.valides order = 'ASC'
+    where(state: VALIDES, archived: false).order("updated_at #{order}")
+  end
+
   def self.deposes order = 'ASC'
     where(state: DEPOSES, archived: false).order("updated_at #{order}")
   end
 
   def self.a_instruire order = 'ASC'
     where(state: A_INSTRUIRE, archived: false).order("updated_at #{order}")
+  end
+
+  def self.en_instruction order = 'ASC'
+    where(state: EN_INSTRUCTION, archived: false).order("updated_at #{order}")
   end
 
   def self.termine order = 'ASC'

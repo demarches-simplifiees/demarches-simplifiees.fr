@@ -1,0 +1,19 @@
+#state_description.row{style:'width: 50%; margin-left: auto; margin-right: auto'}
+  .panel.panel-info
+    .panel-body.center
+      .row
+        .col-md-1.col-lg-1
+          .fa.fa-info-circle.text-info{style:'font-size: 2em; margin-top: 20%'}
+        .col-md-11.col-lg-11
+          -if dossiers_list_facade.liste == 'nouveaux'
+            plop
+          -elsif dossiers_list_facade.liste == 'a_traiter'
+            plop
+          -elsif dossiers_list_facade.liste == 'en_attente'
+            plop
+          -elsif dossiers_list_facade.liste == 'deposes'
+            plop
+          -elsif dossiers_list_facade.liste == 'a_instruire'
+            plop
+          -elsif dossiers_list_facade.liste == 'termine'
+            plop

@@ -10,16 +10,12 @@ class Users::DossiersController < UsersController
   end
 
   def index
-    order = 'DESC'
-
-    @liste = params[:liste] || 'a_traiter'
+    @dossiers_list_facade = DossiersListFacades.new current_user, (params[:liste] || 'a_traiter')
 
     @dossiers = smart_listing_create :dossiers,
-                                     dossiers_to_display,
+                                     @dossiers_list_facade.dossiers_to_display,
                                      partial: "users/dossiers/list",
                                      array: true
-
-    total_dossiers_per_state
   end
 
   def commencer
@@ -109,40 +105,6 @@ class Users::DossiersController < UsersController
 
   private
 
-  def dossiers_to_display
-    {'a_traiter' => waiting_for_user,
-     'en_attente' => waiting_for_gestionnaire,
-     'termine' => termine,
-     'invite' => invite}[@liste]
-  end
-
-  def waiting_for_user
-    @a_traiter_class = (@liste == 'a_traiter' ? 'active' : '')
-    @waiting_for_user ||= current_user.dossiers.waiting_for_user 'DESC'
-  end
-
-  def waiting_for_gestionnaire
-    @en_attente_class = (@liste == 'en_attente' ? 'active' : '')
-    @waiting_for_gestionnaire ||= current_user.dossiers.waiting_for_gestionnaire 'DESC'
-  end
-
-  def termine
-    @termine_class = (@liste == 'termine' ? 'active' : '')
-    @termine ||= current_user.dossiers.termine 'DESC'
-  end
-
-  def invite
-    @invite_class = (@liste == 'invite' ? 'active' : '')
-    @invite ||= current_user.invites
-  end
-
-  def total_dossiers_per_state
-    @dossiers_a_traiter_total = waiting_for_user.count
-    @dossiers_en_attente_total = waiting_for_gestionnaire.count
-    @dossiers_termine_total = termine.count
-    @dossiers_invite_total = invite.count
-  end
-
   def check_siret
     errors_valid_siret unless Siret.new(siret: siret).valid?
   end
@@ -183,5 +145,4 @@ class Users::DossiersController < UsersController
   def facade id = params[:id]
     DossierFacades.new id, current_user.email
   end
-
 end
