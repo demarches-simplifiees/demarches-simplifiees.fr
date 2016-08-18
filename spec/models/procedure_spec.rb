@@ -175,7 +175,7 @@ describe Procedure do
     end
 
     it 'is correctly set in ProcedurePath table' do
-      expect(ProcedurePath.count(path: procedure.path)).to eq(1)
+      expect(ProcedurePath.where(path: procedure.path).count.to eq(1)
       expect(procedure_path.procedure_id).to eq(procedure.id)
       expect(procedure_path.administrateur_id).to eq(procedure.administrateur_id)
     end
@@ -196,7 +196,7 @@ describe Procedure do
     end
 
     it 'is not in ProcedurePath table anymore' do
-      expect(ProcedurePath.count(path: procedure.path)).to eq(0)
+      expect(ProcedurePath.where(path: procedure.path).count).to eq(0)
       expect(ProcedurePath.find_by_procedure_id(procedure.id)).to be_nil
     end
   end
