@@ -93,6 +93,17 @@ body {
   z-index: 10;
 }
 
+.beta_staging {
+  background-color: #B00100 !important;
+}
+
+.staging_warning {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 #sign_out {
   decorate: none;
   box-shadow: none;
