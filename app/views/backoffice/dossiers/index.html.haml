@@ -4,3 +4,7 @@
   = render partial: 'onglets'
 
   = smart_listing_render :dossiers
+
+  %br
+  %br
+  = render partial: 'state_description', locals: {dossiers_list_facade: @dossiers_list_facade}

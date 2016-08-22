@@ -5,11 +5,7 @@ class Backoffice::DossiersController < ApplicationController
   before_action :authenticate_gestionnaire!
 
   def index
-    @liste = params[:liste] || 'a_traiter'
-
-    smartlisting_dossier
-
-    total_dossiers_per_state
+    smartlisting_dossier (params[:liste] || 'a_traiter')
   end
 
   def show
@@ -21,13 +17,14 @@ class Backoffice::DossiersController < ApplicationController
     @search_terms = params[:q]
     @dossiers_search, @dossier = Dossier.search(current_gestionnaire, @search_terms)
 
+    create_dossiers_list_facade
+
     unless @dossiers_search.empty?
       @dossiers_search = @dossiers_search.paginate(:page => params[:page]).decorate
     end
 
     @dossier = @dossier.decorate unless @dossier.nil?
 
-    total_dossiers_per_state
   rescue RuntimeError
     @dossiers_search = []
   end
@@ -65,52 +62,25 @@ class Backoffice::DossiersController < ApplicationController
     rescue NoMethodError
       @liste = 'a_traiter'
     end
-    smartlisting_dossier
+
+    smartlisting_dossier @liste
 
     render 'backoffice/dossiers/index', formats: :js
   end
 
   private
 
-  def smartlisting_dossier
+  def smartlisting_dossier liste
+    create_dossiers_list_facade liste
+
     @dossiers = smart_listing_create :dossiers,
-                                     dossiers_to_display,
+                                     @dossiers_list_facade.dossiers_to_display,
                                      partial: "backoffice/dossiers/list",
                                      array: true
   end
 
-  def dossiers_to_display
-    {'a_traiter' => waiting_for_gestionnaire,
-     'en_attente' => waiting_for_user,
-     'termine' => termine,
-     'suivi' => suivi}[@liste]
-  end
-
-  def waiting_for_gestionnaire
-    @a_traiter_class = (@liste == 'a_traiter' ? 'active' : '')
-    @waiting_for_gestionnaire ||= current_gestionnaire.dossiers_filter.waiting_for_gestionnaire
-  end
-
-  def waiting_for_user
-    @en_attente_class = (@liste == 'en_attente' ? 'active' : '')
-    @waiting_for_user ||= current_gestionnaire.dossiers_filter.waiting_for_user
-  end
-
-  def termine
-    @termine_class = (@liste == 'termine' ? 'active' : '')
-    @termine ||= current_gestionnaire.dossiers_filter.termine
-  end
-
-  def suivi
-    @suivi_class = (@liste == 'suivi' ? 'active' : '')
-    @suivi ||= current_gestionnaire.dossiers_follow
-  end
-
-  def total_dossiers_per_state
-    @dossiers_a_traiter_total = waiting_for_gestionnaire.count
-    @dossiers_en_attente_total = waiting_for_user.count
-    @dossiers_termine_total = termine.count
-    @dossiers_suivi_total = suivi.count
+  def create_dossiers_list_facade liste='a_traiter'
+    @dossiers_list_facade = DossiersListFacades.new current_gestionnaire, liste
   end
 
   def create_dossier_facade dossier_id

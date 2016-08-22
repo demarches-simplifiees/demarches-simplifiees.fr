@@ -142,9 +142,6 @@ Rails.application.routes.draw do
 
     get 'dossiers/search' => 'dossiers#search'
 
-    get 'filtres' => 'procedure_filter#index'
-    patch 'filtres/update' => 'procedure_filter#update'
-
     resource :private_formulaire
 
     namespace :preference_list_dossier do

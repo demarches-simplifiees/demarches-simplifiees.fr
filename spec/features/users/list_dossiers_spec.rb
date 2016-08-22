@@ -8,7 +8,7 @@ feature 'user access to the list of his dossier' do
   let!(:dossier2) { create(:dossier, :with_entreprise) }
 
   before do
-    dossier1.update_column(:updated_at, "19/07/2016 15:35".to_time)
+    dossier1.update_column(:updated_at, "19/07/2052 15:35".to_time)
     dossier1.entreprise.update_column(:raison_sociale, 'PLOP')
     last_updated_dossier.entreprise.update_column(:raison_sociale, 'PLIP')
 

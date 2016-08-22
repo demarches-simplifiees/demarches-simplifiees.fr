@@ -36,7 +36,7 @@ body {
 }
 
 .wysihtml5-sandbox {
-  resize:vertical;
+  resize: vertical;
 }
 
 #wrap {
@@ -93,6 +93,17 @@ body {
   z-index: 10;
 }
 
+.beta_staging {
+  background-color: #B00100 !important;
+}
+
+.staging_warning {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 #sign_out {
   decorate: none;
   box-shadow: none;
@@ -100,7 +111,6 @@ body {
   margin-top: 8px;
   margin-right: 105px;
 }
-
 
 #header {
   top: 0;
@@ -111,7 +121,6 @@ body {
 
 }
 
-
 .navbar {
   height: 35px;
   background-color: rgba(235, 235, 235, 0.95);
@@ -121,6 +130,18 @@ body {
     height: 70px;
   }
 
+}
+
+.text-purple {
+  color: #8B008B
+}
+
+.text-default {
+  color: grey;
+}
+
+.progress-bar-purple {
+  background-color: #800080;
 }
 
 .btn {
@@ -178,12 +199,12 @@ div.pagination {
   text-align: center;
 }
 
-.alert{
+.alert {
   margin-bottom: 0px;
 }
 
 .alert.alert-success.move_up,
-.alert.alert-danger.siret{
+.alert.alert-danger.siret {
   position: fixed;
   top: 0px;
   left: 0;

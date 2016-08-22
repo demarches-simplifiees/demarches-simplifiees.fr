@@ -41,7 +41,7 @@
   %br
 
   .row{style: 'text-align:right'}
-    - if !@facade.dossier.validated? && !@facade.dossier.submitted? && !@facade.dossier.closed?
+    - if !@facade.dossier.validated? && !@facade.dossier.received? && !@facade.dossier.submitted? && !@facade.dossier.closed? && !@facade.dossier.refused? && !@facade.dossier.without_continuation?
       - if user_signed_in? && (current_user.email == @facade.dossier.user.email)
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
           %a.btn.btn-success{"data-target" => "#UploadPJmodal",
@@ -60,7 +60,7 @@
           = 'Modifier mon dossier'
 
     -if gestionnaire_signed_in?
-      -if !@facade.dossier.validated? && !@facade.dossier.submitted? && !@facade.dossier.closed?
+      -if !@facade.dossier.validated? && !@facade.dossier.received? && !@facade.dossier.submitted? && !@facade.dossier.closed? && !@facade.dossier.refused? && !@facade.dossier.without_continuation?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
             = 'Valider le dossier'

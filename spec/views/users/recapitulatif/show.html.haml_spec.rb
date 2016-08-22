@@ -59,7 +59,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           render
         end
 
-        it { expect(rendered).to have_content('Soumis') }
+        it { expect(rendered).to have_content('Nouveau') }
 
         it 'button Modifier les document est present' do
           expect(rendered).to have_content('Modifier les documents')
@@ -125,13 +125,41 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         end
       end
 
-      context 'when dossier state is traité' do
+      context 'when dossier state is closed' do
         let(:state) { 'closed' }
 
         before do
           render
         end
-        it { expect(rendered).to have_content('Traité') }
+        it { expect(rendered).to have_content('Accepté') }
+
+        it 'button Editer mon dossier n\'est plus present' do
+          expect(rendered).not_to have_css('#maj_infos')
+          expect(rendered).not_to have_content('Modifier mon dossier')
+        end
+      end
+
+      context 'when dossier state is refused' do
+        let(:state) { 'refused' }
+
+        before do
+          render
+        end
+        it { expect(rendered).to have_content('Refusé') }
+
+        it 'button Editer mon dossier n\'est plus present' do
+          expect(rendered).not_to have_css('#maj_infos')
+          expect(rendered).not_to have_content('Modifier mon dossier')
+        end
+      end
+
+      context 'when dossier state is without_continuation' do
+        let(:state) { 'without_continuation' }
+
+        before do
+          render
+        end
+        it { expect(rendered).to have_content('Sans suite') }
 
         it 'button Editer mon dossier n\'est plus present' do
           expect(rendered).not_to have_css('#maj_infos')

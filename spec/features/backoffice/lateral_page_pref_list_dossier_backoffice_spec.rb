@@ -7,7 +7,7 @@ feature 'usage of pref list dossier lateral panel', js: true do
   let(:procedure) { create(:procedure, administrateur: administrateur) }
 
   before do
-    create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated')
+    create(:dossier, :with_entreprise, procedure: procedure, state: 'updated')
     create :assign_to, procedure: procedure, gestionnaire: gestionnaire
     visit backoffice_path
   end

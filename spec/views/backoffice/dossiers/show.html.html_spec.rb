@@ -57,7 +57,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
         render
       end
 
-      it { expect(rendered).to have_content('Soumis') }
+      it { expect(rendered).to have_content('Nouveau') }
 
       it 'button Valider le dossier is present' do
         expect(rendered).to have_css('#action_button')
@@ -102,7 +102,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
         render
       end
 
-      it { expect(rendered).to have_content('Validé') }
+      it { expect(rendered).to have_content('Figé') }
 
       it 'button Valider le dossier  is not present' do
         expect(rendered).not_to have_css('#action_button')
@@ -136,7 +136,52 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
         render
       end
 
-      it { expect(rendered).to have_content('Traité') }
+      it { expect(rendered).to have_content('Accepté') }
+
+      it 'button Valider le dossier is not present' do
+        expect(rendered).not_to have_css('#action_button')
+        expect(rendered).not_to have_content('Valider le dossier')
+      end
+    end
+
+    context 'when dossier have state received' do
+      let(:state) { 'received' }
+
+      before do
+        render
+      end
+
+      it { expect(rendered).to have_content('Reçu') }
+
+      it 'button Valider le dossier is not present' do
+        expect(rendered).not_to have_css('#action_button')
+        expect(rendered).not_to have_content('Valider le dossier')
+      end
+    end
+
+    context 'when dossier have state without_continuation' do
+      let(:state) { 'without_continuation' }
+
+      before do
+        render
+      end
+
+      it { expect(rendered).to have_content('Sans suite') }
+
+      it 'button Valider le dossier is not present' do
+        expect(rendered).not_to have_css('#action_button')
+        expect(rendered).not_to have_content('Valider le dossier')
+      end
+    end
+
+    context 'when dossier have state refused' do
+      let(:state) { 'refused' }
+
+      before do
+        render
+      end
+
+      it { expect(rendered).to have_content('Refusé') }
 
       it 'button Valider le dossier is not present' do
         expect(rendered).not_to have_css('#action_button')
