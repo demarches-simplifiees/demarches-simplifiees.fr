@@ -23,7 +23,7 @@ class DossiersListUserService
   end
 
   def waiting_for_user
-    @waiting_for_user ||= @current_devise_profil.dossiers.waiting_for_user
+    @waiting_for_user ||= @current_devise_profil.dossiers.waiting_for_user_without_validated
   end
 
   def invite

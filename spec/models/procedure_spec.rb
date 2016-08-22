@@ -175,7 +175,7 @@ describe Procedure do
     end
 
     it 'is correctly set in ProcedurePath table' do
-      expect(ProcedurePath.where(path: procedure.path).count.to eq(1)
+      expect(ProcedurePath.where(path: procedure.path).count).to eq(1)
       expect(procedure_path.procedure_id).to eq(procedure.id)
       expect(procedure_path.administrateur_id).to eq(procedure.administrateur_id)
     end
@@ -214,6 +214,5 @@ describe Procedure do
     subject { procedure.total_dossier }
 
     it { is_expected.to eq 2 }
-
   end
 end

@@ -41,6 +41,7 @@ class Dossier < ActiveRecord::Base
   NOUVEAUX = %w(initiated)
   WAITING_FOR_GESTIONNAIRE = %w(updated)
   WAITING_FOR_USER = %w(replied validated)
+  WAITING_FOR_USER_WITHOUT_VALIDATED = %w(replied)
   VALIDES = %w(validated)
   DEPOSES = %w(submitted)
   EN_INSTRUCTION = %w(submitted received)
@@ -150,6 +151,10 @@ class Dossier < ActiveRecord::Base
     WAITING_FOR_USER.include?(state)
   end
 
+  def waiting_for_user_without_validated?
+    WAITING_FOR_USER_WITHOUT_VALIDATED.include?(state)
+  end
+
   def deposes?
     DEPOSES.include?(state)
   end
@@ -180,6 +185,10 @@ class Dossier < ActiveRecord::Base
 
   def self.waiting_for_user order = 'ASC'
     where(state: WAITING_FOR_USER, archived: false).order("updated_at #{order}")
+  end
+
+  def self.waiting_for_user_without_validated order = 'ASC'
+    where(state: WAITING_FOR_USER_WITHOUT_VALIDATED, archived: false).order("updated_at #{order}")
   end
 
   def self.valides order = 'ASC'

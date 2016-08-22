@@ -6,7 +6,7 @@
     %li{ class: @dossiers_list_facade.nouveaux_class }
       %a{:href => "#{url_for users_dossiers_path(liste: 'nouveaux')}", 'data-toggle' => :tooltip, title: 'Les nouveaux dossiers qui n\'ont pas encore été vus par votre accompagnateur.'}
         %h5.text-info
-          = "Nouveau"
+          = "Nouveaux"
           .badge.progress-bar-info
             = @dossiers_list_facade.nouveaux_total
 

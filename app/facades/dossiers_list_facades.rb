@@ -65,12 +65,12 @@ class DossiersListFacades
   end
 
   def a_traiter_total
-    service.waiting_for_gestionnaire.count if gestionnaire?
+    return service.waiting_for_gestionnaire.count if gestionnaire?
     service.waiting_for_user.count if user?
   end
 
   def en_attente_total
-    service.waiting_for_user.count if gestionnaire?
+    return service.waiting_for_user.count if gestionnaire?
     service.waiting_for_gestionnaire.count if user?
   end
 

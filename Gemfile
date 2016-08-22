@@ -132,7 +132,7 @@ group :development, :test do
 
   gem "nyan-cat-formatter"
 
-  gem 'parallel_tests'
+  gem 'parallel_tests', '~> 1.9.0'
 
   gem 'brakeman', require: false
   # Deploy
