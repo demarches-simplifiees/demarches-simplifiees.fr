@@ -24,15 +24,23 @@ FactoryGirl.define do
 
     trait :with_type_de_champ do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ)
+        type_de_champ = create(:type_de_champ_public)
 
         procedure.types_de_champ << type_de_champ
       end
     end
 
+    trait :with_type_de_champ_private do
+      after(:build) do |procedure, _evaluator|
+        type_de_champ = create(:type_de_champ_private)
+
+        procedure.types_de_champ_private << type_de_champ
+      end
+    end
+
     trait :with_type_de_champ_mandatory do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ, mandatory: true)
+        type_de_champ = create(:type_de_champ_public, mandatory: true)
 
         procedure.types_de_champ << type_de_champ
       end
@@ -40,7 +48,7 @@ FactoryGirl.define do
 
     trait :with_datetime do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ, mandatory: true, type_champ: :datetime)
+        type_de_champ = create(:type_de_champ_public, mandatory: true, type_champ: :datetime)
 
         procedure.types_de_champ << type_de_champ
       end

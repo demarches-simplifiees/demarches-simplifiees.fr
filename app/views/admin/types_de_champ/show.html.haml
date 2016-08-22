@@ -1,4 +1,4 @@
-=render partial: 'admin/procedures/head', locals: {active: 'Champs'}
+=render partial: 'admin/procedures/head', locals: {active: @types_de_champ_facade.active}
 
 #liste_champ
-  = render partial: 'form'
+  = render partial: 'admin/types_de_champ/form'

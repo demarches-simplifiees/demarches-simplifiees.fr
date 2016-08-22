@@ -1,21 +1,25 @@
 - unless smart_listing.empty?
   %table.table
     %thead
-      %th= smart_listing.sortable 'Procédure', 'procedure.libelle'
-      %th= smart_listing.sortable 'Raison sociale', 'entreprise.raison_sociale'
-      %th= smart_listing.sortable 'État', 'state'
-      %th= smart_listing.sortable 'Date de mise à jour', 'updated_at'
-      %th.center Actions
-      %th.center Abonnés
+      - current_gestionnaire.preference_list_dossiers.order(:id).each do |preference|
+        %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}= smart_listing.sortable preference.libelle, preference.table_attr
+      %th.col-md-1.col-lg-1.center Actions
+      %th.col-md-1.col-lg-1.center Abonnés
 
     - @dossiers.each do |dossier|
-      - dossier = dossier.decorate
       %tr
-        %td.col-md-4.col-lg-4= dossier.procedure.libelle
-        %td.col-md-4.col-lg-4
-          = link_to(dossier.entreprise.raison_sociale, "/backoffice/dossiers/#{dossier.id}")
-        %td= dossier.display_state
-        %td= dossier.last_update
+        - current_gestionnaire.preference_list_dossiers.order(:id).each_with_index do |preference, index|
+          %td
+            - if preference.table.nil? || preference.table.empty?
+              - value = dossier.decorate.public_send(preference.attr_decorate)
+            - else
+              - value = dossier.public_send(preference.table).decorate.public_send(preference.attr_decorate)
+
+            - if index == 0
+              = link_to value, backoffice_dossier_path(id: dossier.id)
+            - else
+              = value
+
         %td.center
           - if current_gestionnaire.follow?(dossier.id)
             = link_to('Quitter'.html_safe, backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-danger', id: "suivre_dossier_#{dossier.id}")
@@ -26,6 +30,7 @@
 
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links
+
 - else
   %h4.center
     Aucun dossier

@@ -1,0 +1,3 @@
+class ChampPublic < Champ
+
+end

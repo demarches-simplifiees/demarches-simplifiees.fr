@@ -15,6 +15,30 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     decorate_dossier_closed.entreprise.update_column(:raison_sociale, 'plip')
     decorate_dossier_replied.entreprise.update_column(:raison_sociale, 'plop')
 
+    create :preference_list_dossier,
+           gestionnaire: gestionnaire,
+           table: '',
+           attr: 'state',
+           attr_decorate: 'display_state'
+
+    create :preference_list_dossier,
+           gestionnaire: gestionnaire,
+           table: 'procedure',
+           attr: 'libelle',
+           attr_decorate: 'libelle'
+
+    create :preference_list_dossier,
+           gestionnaire: gestionnaire,
+           table: 'entreprise',
+           attr: 'raison_sociale',
+           attr_decorate: 'raison_sociale'
+
+    create :preference_list_dossier,
+           gestionnaire: gestionnaire,
+           table: '',
+           attr: 'last_update',
+           attr_decorate: 'last_update'
+
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure
     sign_in gestionnaire
   end

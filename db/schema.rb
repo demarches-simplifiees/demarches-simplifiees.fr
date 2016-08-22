@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160718124741) do
+ActiveRecord::Schema.define(version: 20160809083606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 20160718124741) do
     t.string  "value"
     t.integer "type_de_champ_id"
     t.integer "dossier_id"
+    t.string  "type"
   end
 
   create_table "commentaires", force: :cascade do |t|
@@ -123,10 +124,16 @@ ActiveRecord::Schema.define(version: 20160718124741) do
     t.text     "json_latlngs"
     t.boolean  "archived",             default: false
     t.boolean  "mandataire_social",    default: false
+    t.datetime "deposit_datetime"
   end
 
   add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
   add_index "dossiers", ["user_id"], name: "index_dossiers_on_user_id", using: :btree
+
+  create_table "drop_down_lists", force: :cascade do |t|
+    t.string  "value"
+    t.integer "type_de_champ_id"
+  end
 
   create_table "entreprises", force: :cascade do |t|
     t.string   "siren"
@@ -234,6 +241,17 @@ ActiveRecord::Schema.define(version: 20160718124741) do
 
   add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
 
+  create_table "preference_list_dossiers", force: :cascade do |t|
+    t.string  "libelle"
+    t.string  "table"
+    t.string  "attr"
+    t.string  "attr_decorate"
+    t.string  "bootstrap_lg"
+    t.string  "order"
+    t.string  "filter"
+    t.integer "gestionnaire_id"
+  end
+
   create_table "procedure_paths", force: :cascade do |t|
     t.string  "path",              limit: 30
     t.integer "procedure_id"
@@ -285,6 +303,7 @@ ActiveRecord::Schema.define(version: 20160718124741) do
     t.integer "procedure_id"
     t.text    "description"
     t.boolean "mandatory",    default: false
+    t.string  "type"
   end
 
   create_table "types_de_piece_justificative", force: :cascade do |t|

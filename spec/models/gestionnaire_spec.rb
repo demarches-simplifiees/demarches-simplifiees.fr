@@ -32,6 +32,7 @@ describe Gestionnaire, type: :model do
     it { is_expected.to have_many(:procedures) }
     it { is_expected.to have_many(:dossiers) }
     it { is_expected.to have_many(:follows) }
+    it { is_expected.to have_many(:preference_list_dossiers) }
   end
 
   describe '#dossiers_filter' do
@@ -154,5 +155,40 @@ describe Gestionnaire, type: :model do
 
     it { expect(Follow.all.size).to eq 1 }
     it { expect(subject.first).to eq dossier }
+  end
+
+  describe '#build_default_preferences_list_dossier' do
+    subject { gestionnaire.preference_list_dossiers }
+
+    context 'when gestionnaire is created' do
+      it 'build default 5 pref list dossier object' do
+        expect(subject.size).to eq 5
+      end
+
+      it 'build dossier_id column' do
+        expect(subject.first.table).to be_nil
+        expect(subject.first.attr).to eq 'id'
+      end
+
+      it 'build dossier state column' do
+        expect(subject[1].table).to be_nil
+        expect(subject[1].attr).to eq 'state'
+      end
+
+      it 'build procedure libelle column' do
+        expect(subject[2].table).to eq 'procedure'
+        expect(subject[2].attr).to eq 'libelle'
+      end
+
+      it 'build entreprise raison_sociale column' do
+        expect(subject[3].table).to eq 'entreprise'
+        expect(subject[3].attr).to eq 'raison_sociale'
+      end
+
+      it 'build entreprise raison_sociale column' do
+        expect(subject.last.table).to eq 'etablissement'
+        expect(subject.last.attr).to eq 'siret'
+      end
+    end
   end
 end

@@ -1,4 +1,4 @@
-= f.fields_for :types_de_champ, types_de_champ, remote: true do |ff|
+= f.fields_for @types_de_champ_facade.fields_for_var, types_de_champ, remote: true do |ff|
   .form-inline{class:"#{ff.object.object.type_champ == 'header_section' ? 'header_section' : ''}"}
     .form-group.libelle
       %h4 Libellé
@@ -10,28 +10,35 @@
 
     .form-group.description
       %h4 Description
-      = ff.text_area :description, class: 'form-control description', placeholder: 'Description'
+      = ff.text_area :description, class: 'form-control description', placeholder: 'Description', rows: 2
 
-    .form-group.mandatory
-      %h4 Obligatoire ?
-      .center
-        = ff.check_box :mandatory, placeholder: 'Obligatoire ?'
+    .form-group.drop_down_list{class:"#{ff.object.object.type_champ == 'drop_down_list' ? 'show_inline' : ''}",style:'margin-right: 5px'}
+      %h4 Liste déroulante
+      = ff.fields_for :drop_down_list_attributes, ff.object.object.drop_down_list do |fff|
+        = fff.text_area :value, class: 'form-control drop_down_list', placeholder: "Ecrire une valeur par ligne.\nEcrire --valeur-- pour un séparateur.", rows: 3, cols: 30
+        = fff.hidden_field :id
+    - unless ff.object.object.class == TypeDeChampPrivate
+      .form-group.mandatory
+        %h4 Obligatoire ?
+        .center
+          = ff.check_box :mandatory, placeholder: 'Obligatoire ?'
 
     .form-group
       = ff.hidden_field :order_place, value: ff.index
+      = ff.hidden_field :type
       = ff.hidden_field :id
+
     - unless ff.object.id.nil?
       .form-group
         %br &nbsp;
-        = ff.object.button_up(index: ff.index, url: move_up_admin_procedure_types_de_champ_path(@procedure, ff.index))
-        = ff.object.button_down(index: ff.index, url: move_down_admin_procedure_types_de_champ_path(@procedure, ff.index))
-
+        = ff.object.button_up(index: ff.index, url: @types_de_champ_facade.move_up_url(ff), private: @types_de_champ_facade.private)
+        = ff.object.button_down(index: ff.index, url: @types_de_champ_facade.move_down_url(ff), private: @types_de_champ_facade.private)
 
     .form-group
       %br &nbsp;
       - if ff.object.id.nil?
-        = f.submit "Ajouter le champ", class: 'btn btn-success', id: :add_type_de_champ
+        = f.submit "Ajouter le champ", class: 'btn btn-success', id: @types_de_champ_facade.add_button_id
       - else
-        = link_to("", admin_procedure_type_de_champ_path(@procedure, ff.object.id), method: :delete, remote: true, id: "delete_type_de_champ_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
+        = link_to("", @types_de_champ_facade.delete_url(ff), method: :delete, remote: true, id: "delete_type_de_champ_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
 
 

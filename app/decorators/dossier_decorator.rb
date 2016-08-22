@@ -8,6 +8,10 @@ class DossierDecorator < Draper::Decorator
     'dd/mm/YYYY'
   end
 
+  def first_creation
+    created_at.localtime.strftime('%d/%m/%Y %H:%M')
+  end
+
   def last_update
     updated_at.localtime.strftime('%d/%m/%Y %H:%M')
   end

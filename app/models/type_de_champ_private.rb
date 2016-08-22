@@ -1,0 +1,3 @@
+class TypeDeChampPrivate < TypeDeChamp
+
+end

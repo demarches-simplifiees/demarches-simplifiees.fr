@@ -33,6 +33,7 @@ describe Dossier do
     it { is_expected.to delegate_method(:siret).to(:etablissement) }
     it { is_expected.to delegate_method(:types_de_piece_justificative).to(:procedure) }
     it { is_expected.to delegate_method(:types_de_champ).to(:procedure) }
+    it { is_expected.to delegate_method(:france_connect_information).to(:user) }
   end
 
   describe 'methods' do
@@ -91,11 +92,15 @@ describe Dossier do
     end
 
     describe '#build_default_champs' do
-      context 'when dossier is linked to a procedure' do
+      context 'when dossier is linked to a procedure with type_de_champ_public and private' do
         let(:dossier) { create(:dossier, user: user) }
 
         it 'build all champs needed' do
           expect(dossier.champs.count).to eq(1)
+        end
+
+        it 'build all champs_private needed' do
+          expect(dossier.champs_private.count).to eq(1)
         end
       end
     end
@@ -590,12 +595,12 @@ describe Dossier do
     let(:dossier_2) { Dossier.new(id: 0, procedure: procedure_2) }
 
     before do
-      create :type_de_champ, libelle: 'type_1_1', order_place: 1, procedure: dossier_1.procedure
-      create :type_de_champ, libelle: 'type_1_2', order_place: 2, procedure: dossier_1.procedure
+      create :type_de_champ_public, libelle: 'type_1_1', order_place: 1, procedure: dossier_1.procedure
+      create :type_de_champ_public, libelle: 'type_1_2', order_place: 2, procedure: dossier_1.procedure
 
-      create :type_de_champ, libelle: 'type_2_1', order_place: 1, procedure: dossier_2.procedure
-      create :type_de_champ, libelle: 'type_2_2', order_place: 2, procedure: dossier_2.procedure
-      create :type_de_champ, libelle: 'type_2_3', order_place: 3, procedure: dossier_2.procedure
+      create :type_de_champ_public, libelle: 'type_2_1', order_place: 1, procedure: dossier_2.procedure
+      create :type_de_champ_public, libelle: 'type_2_2', order_place: 2, procedure: dossier_2.procedure
+      create :type_de_champ_public, libelle: 'type_2_3', order_place: 3, procedure: dossier_2.procedure
 
       dossier_1.build_default_champs
       dossier_2.build_default_champs
@@ -603,7 +608,7 @@ describe Dossier do
 
     subject { dossier.ordered_champs }
 
-    it { expect(Champ.where(dossier_id: 0).size).to eq 5 }
+    it { expect(ChampPublic.where(dossier_id: 0).size).to eq 5 }
 
     describe 'for dossier 1' do
       let(:dossier) { dossier_1 }
@@ -623,6 +628,48 @@ describe Dossier do
       it { expect(subject.last.type_de_champ.libelle).to eq 'type_2_3' }
     end
 
+  end
+
+  describe '#ordered_champs_private' do
+    let!(:procedure_1) { create :procedure }
+    let!(:procedure_2) { create :procedure }
+
+    let(:dossier_1) { Dossier.new(id: 0, procedure: procedure_1) }
+    let(:dossier_2) { Dossier.new(id: 0, procedure: procedure_2) }
+
+    before do
+      create :type_de_champ_private, libelle: 'type_1_1', order_place: 1, procedure: dossier_1.procedure
+      create :type_de_champ_private, libelle: 'type_1_2', order_place: 2, procedure: dossier_1.procedure
+
+      create :type_de_champ_private, libelle: 'type_2_1', order_place: 1, procedure: dossier_2.procedure
+      create :type_de_champ_private, libelle: 'type_2_2', order_place: 2, procedure: dossier_2.procedure
+      create :type_de_champ_private, libelle: 'type_2_3', order_place: 3, procedure: dossier_2.procedure
+
+      dossier_1.build_default_champs
+      dossier_2.build_default_champs
+    end
+
+    subject { dossier.ordered_champs_private }
+
+    it { expect(ChampPrivate.where(dossier_id: 0).size).to eq 5 }
+
+    describe 'for dossier 1' do
+      let(:dossier) { dossier_1 }
+
+      it { expect(subject.size).to eq 2 }
+      it { expect(subject.first.type_de_champ.libelle).to eq 'type_1_1' }
+      it { expect(subject.last.type_de_champ.libelle).to eq 'type_1_2' }
+    end
+
+    describe 'for dossier 2' do
+      let(:dossier) { dossier_2 }
+
+      it { expect(subject.size).to eq 3 }
+
+      it { expect(subject.first.type_de_champ.libelle).to eq 'type_2_1' }
+      it { expect(subject.second.type_de_champ.libelle).to eq 'type_2_2' }
+      it { expect(subject.last.type_de_champ.libelle).to eq 'type_2_3' }
+    end
   end
 
   describe '#total_follow' do
