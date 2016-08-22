@@ -12,16 +12,8 @@ class Gestionnaire < ActiveRecord::Base
 
   after_create :build_default_preferences_list_dossier
 
-  def dossiers_filter
-    dossiers.where(procedure_id: procedure_filter_list)
-  end
-
   def dossiers_follow
     dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")
-  end
-
-  def procedure_filter_list
-    procedure_filter.empty? ? procedures.pluck(:id) : procedure_filter
   end
 
   def toggle_follow_dossier dossier_id

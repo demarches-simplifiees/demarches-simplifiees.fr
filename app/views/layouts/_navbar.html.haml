@@ -18,19 +18,7 @@
   -elsif administrateur_signed_in?
     = render partial: 'administrateurs/login_banner'
   - elsif user_signed_in?
-    %div.user
-      -if current_user.loged_in_with_france_connect?
-        %div{ id: "fconnect-profile", "data-fc-logout-url" => '/users/sign_out" data-method="delete' }
-          %a.text-info{ href: "#" }
-            = "#{current_user.given_name} #{current_user.family_name}"
-
-        = link_to "", '/users/sign_out', method: :delete, :class => 'btn fa fa-power-off off-fc-link'
-
-      -else
-        %i.fa.fa-user
-        = current_user.email
-
-        = link_to "Déconnexion", '/users/sign_out', method: :delete, :class => 'btn btn-md'
+    = render partial: 'users/login_banner'
   - else
     = link_to "Utilisateur", '/users/sign_in', method: :get, :class => 'btn btn-md'
     = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
