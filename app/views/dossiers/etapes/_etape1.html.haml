@@ -21,4 +21,4 @@
 
       - unless @facade.procedure.lien_site_web.blank?
         .center
-          =link_to truncate(@facade.procedure.lien_site_web, length: 40), @facade.procedure.lien_site_web, {target: '_blank'}
+          =link_to 'En savoir plus ...', @facade.procedure.lien_site_web, {target: '_blank'}

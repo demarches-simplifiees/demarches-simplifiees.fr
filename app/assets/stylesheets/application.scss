@@ -18,10 +18,10 @@
  *= require leaflet
  *= require font-awesome
  *= require franceconnect
+ *= require bootstrap-wysihtml5
  */
 @import "bootstrap-sprockets";
 @import "bootstrap";
-@import "bootstrap-wysihtml5/bootstrap3-wysihtml5";
 
 body {
   background-color: rgb(255, 255, 255);
