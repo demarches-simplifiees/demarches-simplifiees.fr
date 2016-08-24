@@ -1,0 +1,20 @@
+fr:
+  activerecord:
+    models:
+      type_de_champ: 'Type de champ'
+    attributes:
+      type_de_champ:
+        type_champs:
+          text: 'Texte'
+          textarea: 'Zone de texte'
+          date: 'Date'
+          datetime: 'Date et Heure'
+          number: 'Nombre'
+          checkbox: 'checkbox'
+          civilite: 'Civilité'
+          email: 'Email'
+          phone: 'Téléphone'
+          address: 'Adresse'
+          yes_no: 'Oui/Non'
+          drop_down_list: 'Menu déroulant'
+          header_section: 'Titre de section'

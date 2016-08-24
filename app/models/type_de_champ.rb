@@ -26,4 +26,8 @@ class TypeDeChamp < ActiveRecord::Base
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
   # validates :order_place, presence: true, allow_blank: false, allow_nil: false
+
+  def self.type_de_champs_list_fr
+    type_champs.map { |champ| [ I18n.t("activerecord.attributes.type_de_champ.type_champs.#{champ.last}"), champ.first ] }
+  end
 end

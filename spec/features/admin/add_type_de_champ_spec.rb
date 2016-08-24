@@ -40,11 +40,12 @@ feature 'add a new type de champs', js: true do
 
     context 'user fill another one' do
       let(:libelle) { 'coucou' }
-      let(:type_champ) { 'textarea' }
+      let(:type_champ_value) { 'textarea' }
+      let(:type_champ_label) { 'Zone de texte' }
       let(:description) { 'to be or not to be' }
       before do
         page.find_by_id('procedure_types_de_champ_attributes_1_libelle').set libelle
-        select(type_champ, from: 'procedure_types_de_champ_attributes_1_type_champ')
+        select(type_champ_label, from: 'procedure_types_de_champ_attributes_1_type_champ')
         page.find_by_id('procedure_types_de_champ_attributes_1_description').set description
         click_button 'Ajouter le champ'
         wait_for_ajax
@@ -54,7 +55,7 @@ feature 'add a new type de champs', js: true do
       scenario 'creates another types_de_champ' do
         expect(page).to have_css('#procedure_types_de_champ_attributes_2_libelle')
         expect(subject.libelle).to eq(libelle)
-        expect(subject.type_champ).to eq(type_champ)
+        expect(subject.type_champ).to eq(type_champ_value)
         expect(subject.description).to eq(description)
         expect(subject.order_place).to eq(1)
         expect(procedure.types_de_champ.count).to eq(2)
