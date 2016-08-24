@@ -1,7 +1,7 @@
 
 %br
 
--{libelle: 'Libellé*', description: 'Description*', lien_demarche: 'Lien démarche', organisation: 'Organisation', direction: 'Direction'}.each do |key, value|
+-{libelle: 'Libellé*', description: 'Description*', organisation: 'Organisation', direction: 'Direction'}.each do |key, value|
   .form-group{class: ('has-error' if @procedure.errors.messages[key])}
     %h4
       =value
@@ -47,8 +47,11 @@
           %label
             = ff.check_box :cadastre
             Cadastre
+
   .col-md-6.col-lg-6
     %h4 Formulaire / CERFA
     %label
       =f.check_box :cerfa_flag
     Activer l'envoi de formulaire / CERFA
+    %br
+    =f.text_field :lien_demarche, class: 'form-control', placeholder: 'URL vers le formulaire vierge (facultatif)'
