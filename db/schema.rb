@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160822142045) do
+ActiveRecord::Schema.define(version: 20160824094451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -276,6 +276,8 @@ ActiveRecord::Schema.define(version: 20160822142045) do
     t.boolean  "cerfa_flag",        default: false
     t.string   "logo_secure_token"
     t.boolean  "published",         default: false, null: false
+    t.string   "lien_site_web"
+    t.string   "lien_notice"
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|

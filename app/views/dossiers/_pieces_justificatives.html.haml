@@ -7,9 +7,6 @@
           ='Formulaire'
         %td.col-lg-6.col-md-6
           - if @facade.dossier.cerfa_available?
-            -#- if user_signed_in?
-            -#  = 'Pièce fournie'
-            -#- elsif gestionnaire_signed_in?
             %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
             %span{style:'margin-left:12px'}
               \-
