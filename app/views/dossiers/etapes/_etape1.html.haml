@@ -18,3 +18,7 @@
 
     %p#description_procedure{style:'width: 95%;', class: (@facade.entreprise.nil? ? '' : 'mask')}
       = h @facade.procedure.description.html_safe
+
+      - unless @facade.procedure.lien_site_web.blank?
+        .center
+          =link_to truncate(@facade.procedure.lien_site_web, length: 40), @facade.procedure.lien_site_web, {target: '_blank'}
