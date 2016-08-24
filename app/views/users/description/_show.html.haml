@@ -1,6 +1,19 @@
 .container#description_page
-  %h2
+  - unless @dossier.procedure.lien_notice.blank?
+    #lien_notice_panel.row{style:'width: 280px; position: fixed; background-color: white; right: 5%; top: 80px;'}
+      .panel.panel-info{style:'margin-bottom:0'}
+        .panel-body.center
+          .row
+            .col-md-1.col-lg-1
+              .fa.fa-info-circle.text-info{style:'font-size: 2em; margin-top: 20%'}
+            .col-md-10.col-lg-10{style:'padding-right: 0px'}
+              %b
+                =link_to 'Accéder au guide', @dossier.procedure.lien_notice, {target: '_blank'}
+              pour remplir pour votre dossier
+
+  %h2.text-info
     = @dossier.procedure.libelle
+
   %h3 Votre dossier
 
   -#TODO use form_for
@@ -16,8 +29,8 @@
 
     -unless @procedure.lien_demarche.blank?
       %p
-        Formulaire / documentation de la démarche :
-        %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@procedure.lien_demarche}", :target => '_blank'} Accéder
+        Récupérer le formulaire / CERFA vierge pour mon dossier :
+        %a{style:'font-size:0.9em; padding-left:3px', id: 'lien_cerfa' ,href: "#{@procedure.lien_demarche}", :target => '_blank'} Télécharger
 
 
     %br
