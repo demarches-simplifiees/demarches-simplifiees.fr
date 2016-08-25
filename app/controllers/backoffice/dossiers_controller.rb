@@ -13,6 +13,14 @@ class Backoffice::DossiersController < ApplicationController
     @champs = @facade.champs_private unless @facade.nil?
   end
 
+  def download_dossiers_tps
+    dossiers = current_gestionnaire.dossiers.where.not(state: :draft)
+
+    response.headers['Content-Type'] = 'text/csv'
+
+    render csv: dossiers, status: 200
+  end
+
   def search
     @search_terms = params[:q]
     @dossiers_search, @dossier = Dossier.search(current_gestionnaire, @search_terms)

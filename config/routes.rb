@@ -152,6 +152,8 @@ Rails.application.routes.draw do
       get 'reload_pref_list'
     end
 
+    get 'download_dossiers_tps' => 'dossiers#download_dossiers_tps'
+
     resources :dossiers do
       post 'valid' => 'dossiers#valid'
       post 'close' => 'dossiers#close'
