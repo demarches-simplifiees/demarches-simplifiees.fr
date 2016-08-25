@@ -156,6 +156,7 @@ Rails.application.routes.draw do
 
     resources :dossiers do
       post 'valid' => 'dossiers#valid'
+      post 'receive' => 'dossiers#receive'
       post 'close' => 'dossiers#close'
 
       post 'invites' => '/invites#create'

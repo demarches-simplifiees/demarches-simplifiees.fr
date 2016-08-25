@@ -119,9 +119,23 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
-  describe 'POST #close' do
+  describe 'POST #receive' do
     before do
       dossier.submitted!
+      sign_in gestionnaire
+    end
+
+    it 'change state to received' do
+      post :receive, dossier_id: dossier_id
+
+      dossier.reload
+      expect(dossier.state).to eq('received')
+    end
+  end
+
+  describe 'POST #close' do
+    before do
+      dossier.received!
       sign_in gestionnaire
     end
 

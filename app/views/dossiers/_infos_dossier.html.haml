@@ -66,7 +66,12 @@
             = 'Valider le dossier'
 
       -elsif @facade.dossier.submitted?
+        = form_tag(url_for({controller: 'backoffice/dossiers', action: :receive, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
+          %button#action_button.btn.btn-success
+            = 'Notifier de la bonne réception'
+
+      -elsif @facade.dossier.received?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
           %button#action_button.btn.btn-success
-            = 'Traiter le dossier'
+            = 'Accepter le dossier'
 

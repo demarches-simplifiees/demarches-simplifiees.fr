@@ -48,6 +48,15 @@ class Backoffice::DossiersController < ApplicationController
     render 'show'
   end
 
+  def receive
+    create_dossier_facade params[:dossier_id]
+
+    @facade.dossier.next_step! 'gestionnaire', 'receive'
+    flash.notice = 'Dossier considéré comme reçu.'
+
+    render 'show'
+  end
+
   def close
     create_dossier_facade params[:dossier_id]
 
