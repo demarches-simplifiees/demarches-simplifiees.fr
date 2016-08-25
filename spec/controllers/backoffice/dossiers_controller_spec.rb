@@ -133,17 +133,71 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
+  describe 'POST #refuse' do
+    before do
+      dossier.refused!
+      sign_in gestionnaire
+    end
+
+    subject { post :refuse, dossier_id: dossier_id }
+
+    it 'change state to refused' do
+      subject
+
+      dossier.reload
+      expect(dossier.state).to eq('refused')
+    end
+
+    it 'Notification email is sent' do
+      expect(NotificationMailer).to receive(:dossier_refused).and_return(NotificationMailer)
+      expect(NotificationMailer).to receive(:deliver_now!)
+
+      subject
+    end
+  end
+
+  describe 'POST #without_continuation' do
+    before do
+      dossier.without_continuation!
+      sign_in gestionnaire
+    end
+    subject { post :without_continuation, dossier_id: dossier_id }
+
+
+    it 'change state to without_continuation' do
+      subject
+
+      dossier.reload
+      expect(dossier.state).to eq('without_continuation')
+    end
+
+    it 'Notification email is sent' do
+      expect(NotificationMailer).to receive(:dossier_without_continuation).and_return(NotificationMailer)
+      expect(NotificationMailer).to receive(:deliver_now!)
+
+      subject
+    end
+  end
+
   describe 'POST #close' do
     before do
       dossier.received!
       sign_in gestionnaire
     end
+    subject { post :close, dossier_id: dossier_id }
 
     it 'change state to closed' do
-      post :close, dossier_id: dossier_id
+      subject
 
       dossier.reload
       expect(dossier.state).to eq('closed')
+    end
+
+    it 'Notification email is sent' do
+      expect(NotificationMailer).to receive(:dossier_closed).and_return(NotificationMailer)
+      expect(NotificationMailer).to receive(:deliver_now!)
+
+      subject
     end
   end
 

@@ -63,6 +63,8 @@ class Backoffice::DossiersController < ApplicationController
     @facade.dossier.next_step! 'gestionnaire', 'refuse'
     flash.notice = 'Dossier considéré comme refusé.'
 
+    NotificationMailer.dossier_refused(@facade.dossier).deliver_now!
+
     render 'show'
   end
 
@@ -72,6 +74,8 @@ class Backoffice::DossiersController < ApplicationController
     @facade.dossier.next_step! 'gestionnaire', 'without_continuation'
     flash.notice = 'Dossier considéré comme sans suite.'
 
+    NotificationMailer.dossier_without_continuation(@facade.dossier).deliver_now!
+
     render 'show'
   end
 
@@ -80,6 +84,8 @@ class Backoffice::DossiersController < ApplicationController
 
     @facade.dossier.next_step! 'gestionnaire', 'close'
     flash.notice = 'Dossier traité avec succès.'
+
+    NotificationMailer.dossier_closed(@facade.dossier).deliver_now!
 
     render 'show'
   end
