@@ -42,6 +42,7 @@ function application_init(){
 }
 
 function tooltip_init() {
+    $('.action_button[data-toggle="tooltip"]').tooltip({delay: { "show": 100, "hide": 100 }});
     $('[data-toggle="tooltip"]').tooltip({delay: { "show": 800, "hide": 100 }});
 }
 

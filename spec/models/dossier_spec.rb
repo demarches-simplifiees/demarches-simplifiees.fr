@@ -382,6 +382,59 @@ describe Dossier do
         end
       end
 
+      context 'when dossier is at state refused' do
+        before do
+          dossier.refused!
+        end
+
+        context 'when user is connected' do
+          let(:role) { 'user' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('refused') }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('refused') }
+          end
+        end
+      end
+
+      context 'when dossier is at state without_continuation' do
+        before do
+          dossier.without_continuation!
+        end
+
+        context 'when user is connected' do
+          let(:role) { 'user' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('without_continuation') }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('without_continuation') }
+          end
+        end
+      end
+
+
       context 'when dossier is at state closed' do
         before do
           dossier.closed!

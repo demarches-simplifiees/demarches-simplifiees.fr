@@ -138,8 +138,10 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Reçu') }
 
-      it 'button accepter le dossier is present' do
-        expect(rendered).to have_content('Accepter le dossier')
+      it 'button accepter / refuser / classer sans suite are present' do
+        expect(rendered).to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
+        expect(rendered).to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
+        expect(rendered).to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
       end
     end
 
@@ -153,8 +155,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       it { expect(rendered).to have_content('Accepté') }
 
       it 'button Accepter le dossier is not present' do
-        expect(rendered).not_to have_css('#action_button')
-        expect(rendered).not_to have_content('Accepter le dossier')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
       end
     end
 
@@ -168,8 +171,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       it { expect(rendered).to have_content('Sans suite') }
 
       it 'button Valider le dossier is not present' do
-        expect(rendered).not_to have_css('#action_button')
-        expect(rendered).not_to have_content('Valider le dossier')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
       end
     end
 
@@ -183,8 +187,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       it { expect(rendered).to have_content('Refusé') }
 
       it 'button Valider le dossier is not present' do
-        expect(rendered).not_to have_css('#action_button')
-        expect(rendered).not_to have_content('Valider le dossier')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
       end
     end
   end

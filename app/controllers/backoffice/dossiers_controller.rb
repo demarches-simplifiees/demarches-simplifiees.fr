@@ -57,6 +57,24 @@ class Backoffice::DossiersController < ApplicationController
     render 'show'
   end
 
+  def refuse
+    create_dossier_facade params[:dossier_id]
+
+    @facade.dossier.next_step! 'gestionnaire', 'refuse'
+    flash.notice = 'Dossier considéré comme refusé.'
+
+    render 'show'
+  end
+
+  def without_continuation
+    create_dossier_facade params[:dossier_id]
+
+    @facade.dossier.next_step! 'gestionnaire', 'without_continuation'
+    flash.notice = 'Dossier considéré comme sans suite.'
+
+    render 'show'
+  end
+
   def close
     create_dossier_facade params[:dossier_id]
 

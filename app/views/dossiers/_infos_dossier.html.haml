@@ -71,7 +71,13 @@
             = 'Notifier de la bonne réception'
 
       -elsif @facade.dossier.received?
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
+        = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
           %button#action_button.btn.btn-success
-            = 'Accepter le dossier'
+            %i.fa.fa-check
+        = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
+          %button#action_button.btn.btn-danger
+            %i.fa.fa-times
+        = form_tag(url_for({controller: 'backoffice/dossiers', action: :without_continuation, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Classer sans suite') do
+          %button#action_button.btn.btn-warning
+            %i.fa.fa-circle-o
 
