@@ -37,6 +37,17 @@
     //TODO a refactorer
     = render partial: 'users/description/pieces_justificatives'
 
+    #state_description.row{style:'width: 50%; margin-left:20px'}
+      .panel.panel-info
+        .panel-body.center
+          .row
+            .col-md-1.col-lg-1
+              .fa.fa-info-circle.text-info{style:'font-size: 2em; margin-top: 20%'}
+            .col-md-11.col-lg-11
+              Les documents administratifs ne sont pas indispensables afin d'initier votre dossier.
+              Vous pourrez dans tous les cas les compléter plus tard si vous ne les possédez pas de suite.
+
+
     - if user_signed_in?
 
       %div{style: 'text-align:right'}
