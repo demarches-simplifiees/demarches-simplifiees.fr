@@ -36,6 +36,8 @@ Rails.application.routes.draw do
 
   root 'root#index'
 
+  get 'cgu' => 'cgu#index'
+
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
