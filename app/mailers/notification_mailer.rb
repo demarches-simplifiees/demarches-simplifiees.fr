@@ -11,6 +11,18 @@ class NotificationMailer < ApplicationMailer
     send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été déposé"
   end
 
+  def dossier_without_continuation dossier
+    send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été classé sans suite"
+  end
+
+  def dossier_refused dossier
+    send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été refusé"
+  end
+
+  def dossier_closed dossier
+    send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été accepté"
+  end
+
   private
 
   def vars_mailer dossier

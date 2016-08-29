@@ -119,28 +119,13 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Déposé') }
 
-      it 'button Traiter le dossier is present' do
+      it 'button notifier de la bonne réception is present' do
         expect(rendered).to have_css('#action_button')
-        expect(rendered).to have_content('Traiter le dossier')
+        expect(rendered).to have_content('Notifier de la bonne réception')
       end
 
       it 'button Valider le dossier is not present' do
-        expect(rendered).not_to have_content('Valider le dossier')
-      end
-    end
-
-    context 'when dossier have state closed' do
-      let(:state) { 'closed' }
-
-      before do
-        render
-      end
-
-      it { expect(rendered).to have_content('Accepté') }
-
-      it 'button Valider le dossier is not present' do
-        expect(rendered).not_to have_css('#action_button')
-        expect(rendered).not_to have_content('Valider le dossier')
+        expect(rendered).not_to have_content('Accepter le dossier')
       end
     end
 
@@ -153,9 +138,26 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Reçu') }
 
-      it 'button Valider le dossier is not present' do
-        expect(rendered).not_to have_css('#action_button')
-        expect(rendered).not_to have_content('Valider le dossier')
+      it 'button accepter / refuser / classer sans suite are present' do
+        expect(rendered).to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
+        expect(rendered).to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
+        expect(rendered).to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
+      end
+    end
+
+    context 'when dossier have state closed' do
+      let(:state) { 'closed' }
+
+      before do
+        render
+      end
+
+      it { expect(rendered).to have_content('Accepté') }
+
+      it 'button Accepter le dossier is not present' do
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
       end
     end
 
@@ -169,8 +171,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       it { expect(rendered).to have_content('Sans suite') }
 
       it 'button Valider le dossier is not present' do
-        expect(rendered).not_to have_css('#action_button')
-        expect(rendered).not_to have_content('Valider le dossier')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
       end
     end
 
@@ -184,8 +187,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       it { expect(rendered).to have_content('Refusé') }
 
       it 'button Valider le dossier is not present' do
-        expect(rendered).not_to have_css('#action_button')
-        expect(rendered).not_to have_content('Valider le dossier')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
+        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
       end
     end
   end

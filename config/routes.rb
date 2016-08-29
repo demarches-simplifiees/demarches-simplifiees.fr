@@ -36,6 +36,8 @@ Rails.application.routes.draw do
 
   root 'root#index'
 
+  get 'cgu' => 'cgu#index'
+
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
@@ -152,8 +154,13 @@ Rails.application.routes.draw do
       get 'reload_pref_list'
     end
 
+    get 'download_dossiers_tps' => 'dossiers#download_dossiers_tps'
+
     resources :dossiers do
       post 'valid' => 'dossiers#valid'
+      post 'receive' => 'dossiers#receive'
+      post 'refuse' => 'dossiers#refuse'
+      post 'without_continuation' => 'dossiers#without_continuation'
       post 'close' => 'dossiers#close'
 
       post 'invites' => '/invites#create'

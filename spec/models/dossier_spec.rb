@@ -323,10 +323,10 @@ describe Dossier do
           dossier.submitted!
         end
 
-        context 'when user is connect' do
+        context 'when user is connected' do
           let(:role) { 'user' }
 
-          context 'when is post a comment' do
+          context 'when he posts a comment' do
             let(:action) { 'comment' }
 
             it { is_expected.to eq('submitted') }
@@ -336,19 +336,104 @@ describe Dossier do
         context 'when gestionnaire is connect' do
           let(:role) { 'gestionnaire' }
 
-          context 'when is post a comment' do
+          context 'when he posts a comment' do
             let(:action) { 'comment' }
 
             it { is_expected.to eq('submitted') }
           end
 
-          context 'when is closed the dossier' do
+          context 'when he receive the dossier' do
+            let(:action) { 'receive' }
+
+            it { is_expected.to eq('received') }
+          end
+        end
+      end
+
+      context 'when dossier is at state received' do
+        before do
+          dossier.received!
+        end
+
+        context 'when user is connected' do
+          let(:role) { 'user' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('received') }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('received') }
+          end
+
+          context 'when he closes the dossier' do
             let(:action) { 'close' }
 
             it { is_expected.to eq('closed') }
           end
         end
       end
+
+      context 'when dossier is at state refused' do
+        before do
+          dossier.refused!
+        end
+
+        context 'when user is connected' do
+          let(:role) { 'user' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('refused') }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('refused') }
+          end
+        end
+      end
+
+      context 'when dossier is at state without_continuation' do
+        before do
+          dossier.without_continuation!
+        end
+
+        context 'when user is connected' do
+          let(:role) { 'user' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('without_continuation') }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('without_continuation') }
+          end
+        end
+      end
+
 
       context 'when dossier is at state closed' do
         before do
