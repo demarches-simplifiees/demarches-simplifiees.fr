@@ -29,5 +29,21 @@ feature 'on backoffice page' do
         expect(page).to have_css('#backoffice_dossier_show')
       end
     end
+
+    context 'when gestionnaire have enterprise and individual dossier in his inbox' do
+      let!(:procedure_individual) { create :procedure, libelle: 'procedure individual', administrateur: administrateur, for_individual: true }
+      let!(:dossier_individual) { create :dossier, procedure: procedure_individual, state: 'updated' }
+
+      before do
+        create :assign_to, gestionnaire: gestionnaire, procedure: procedure_individual
+
+        visit backoffice_path
+        page.click_on dossier_individual.id
+      end
+
+      scenario 'it redirect to dossier page' do
+        expect(page).to have_css('#backoffice_dossier_show')
+      end
+    end
   end
 end

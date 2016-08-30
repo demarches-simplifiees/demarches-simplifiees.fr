@@ -15,15 +15,6 @@ describe 'users/dossiers/index.html.haml', type: :view do
   let!(:decorate_dossier_invite) { create(:dossier, :with_entreprise, user: create(:user), state: 'initiated').decorate }
 
   before do
-    decorate_dossier_replied.entreprise.update_column(:raison_sociale, 'plap')
-    decorate_dossier_updated.entreprise.update_column(:raison_sociale, 'plep')
-    decorate_dossier_validated.entreprise.update_column(:raison_sociale, 'plip')
-    decorate_dossier_submitted.entreprise.update_column(:raison_sociale, 'plop')
-    decorate_dossier_received.entreprise.update_column(:raison_sociale, 'plup')
-    decorate_dossier_closed.entreprise.update_column(:raison_sociale, 'plyp')
-    decorate_dossier_refused.entreprise.update_column(:raison_sociale, 'plzp')
-    decorate_dossier_without_continuation.entreprise.update_column(:raison_sociale, 'plnp')
-
     create :invite, dossier: decorate_dossier_invite, user: user
   end
 
@@ -42,8 +33,8 @@ describe 'users/dossiers/index.html.haml', type: :view do
     subject { rendered }
 
     describe 'columns' do
+      it { is_expected.to have_content(decorate_dossier_at_check.id) }
       it { is_expected.to have_content(decorate_dossier_at_check.procedure.libelle) }
-      it { is_expected.to have_content(decorate_dossier_at_check.entreprise.raison_sociale) }
       it { is_expected.to have_content(decorate_dossier_at_check.display_state) }
       it { is_expected.to have_content(decorate_dossier_at_check.last_update) }
     end

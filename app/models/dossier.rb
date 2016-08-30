@@ -14,6 +14,7 @@ class Dossier < ActiveRecord::Base
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
+  has_one :individual, dependent: :destroy
   has_many :cerfa, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
@@ -28,6 +29,8 @@ class Dossier < ActiveRecord::Base
   belongs_to :procedure
   belongs_to :user
 
+  accepts_nested_attributes_for :individual
+
   delegate :siren, to: :entreprise
   delegate :siret, to: :etablissement, allow_nil: true
   delegate :types_de_piece_justificative, to: :procedure
@@ -35,6 +38,7 @@ class Dossier < ActiveRecord::Base
   delegate :france_connect_information, to: :user
 
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
+  after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
 
   validates :user, presence: true
 
@@ -64,6 +68,12 @@ class Dossier < ActiveRecord::Base
     procedure.types_de_champ_private.each do |type_de_champ|
       ChampPrivate.create(type_de_champ_id: type_de_champ.id, dossier_id: id)
     end
+  end
+
+  def build_default_individual
+    Individual.new(dossier_id: id).save(validate: false)
+    Entreprise.new(dossier_id: id).save(validate: false)
+    Etablissement.new(dossier_id: id, entreprise_id: entreprise.id).save(validate: false)
   end
 
   def ordered_champs

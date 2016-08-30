@@ -1,0 +1,40 @@
+.etape.etapes_menu.col-md-3.col-lg-3
+  %h3
+    Mes informations
+  %br
+  %p.center
+    Les informations de bases
+    %br
+    vous concernant.
+
+.etape.etapes_informations.col-md-9.col-lg-9
+  .row
+    = form_for @facade.dossier, url: { controller: '/users/dossiers', action: :update } do |f|
+      = f.hidden_field :id
+
+      = f.fields_for :individual, @facade.individual do |ff|
+        .form-group
+          %label
+            %h4
+              Nom
+            = ff.text_field :nom, {class: 'form-control'}
+        .form-group
+          %label
+            %h4
+              Prénom
+            = ff.text_field :prenom, {class: 'form-control'}
+        .form-group
+          %label
+            %h4
+              Date de naissance
+            = ff.text_field :birthdate, {class: 'form-control', 'data-provide' => 'datepicker', 'data-date-format' => 'dd/mm/yyyy'}
+
+      %p
+        %label{ style:'font-weight:normal' }
+          = f.check_box :autorisation_donnees
+          = "&nbsp;".html_safe
+          Vos informations personnelles ne seront jamais utilisées dans un but lucratif ou commercial. Elles ne pourront être communiquées à de tiers personnes sans votre accord préalable. Elles pourront en revanche être communiquées aux administrations compétentes afin d'instruire votre dossier, conformément à la déclaration CNIL effectué par le service TPS.
+          =link_to 'en savoir plus', cgu_path, target: '_blank'
+
+      %br
+      = f.submit 'Etape suivante', class: "btn btn btn-info", style: 'float:right', id: 'etape_suivante'
