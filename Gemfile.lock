@@ -115,8 +115,6 @@ GEM
     concurrent-ruby (1.0.2)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
-    css_splitter (0.4.5)
-      sprockets (>= 2.0.0)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
     deep_cloneable (2.2.1)
@@ -636,7 +634,6 @@ DEPENDENCIES
   chartkick
   clamav-client
   coffee-rails (~> 4.1.0)
-  css_splitter
   database_cleaner
   deep_cloneable (~> 2.2.1)
   devise
