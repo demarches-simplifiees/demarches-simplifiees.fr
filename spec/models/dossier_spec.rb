@@ -23,6 +23,7 @@ describe Dossier do
     it { is_expected.to have_many(:cerfa) }
     it { is_expected.to have_one(:etablissement) }
     it { is_expected.to have_one(:entreprise) }
+    it { is_expected.to have_one(:individual) }
     it { is_expected.to belong_to(:user) }
     it { is_expected.to have_many(:invites) }
     it { is_expected.to have_many(:follows) }
@@ -101,6 +102,24 @@ describe Dossier do
 
         it 'build all champs_private needed' do
           expect(dossier.champs_private.count).to eq(1)
+        end
+      end
+    end
+
+    describe '#build_default_individual' do
+      context 'when dossier is linked to a procedure with for_individual attr false' do
+        let(:dossier) { create(:dossier, user: user) }
+
+        it 'have no object created' do
+          expect(dossier.individual).to be_nil
+        end
+      end
+
+      context 'when dossier is linked to a procedure with for_individual attr true' do
+        let(:dossier) { create(:dossier, user: user, procedure: (create :procedure, for_individual: true)) }
+
+        it 'have no object created' do
+          expect(dossier.individual).not_to be_nil
         end
       end
     end

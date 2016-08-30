@@ -1,8 +1,8 @@
 - unless smart_listing.empty?
   %table.table
     %thead
-      %th.col-md-4.col-lg-4= smart_listing.sortable 'Procédure', 'procedure.libelle'
-      %th.col-md-4.col-lg-4= smart_listing.sortable 'Raison sociale', 'entreprise.raison_sociale'
+      %th.col-md-1.col-lg-1= smart_listing.sortable 'Numéro', 'id'
+      %th.col-md-5.col-lg-5= smart_listing.sortable 'Procédure', 'procedure.libelle'
       %th.col-md-2.col-lg-2= smart_listing.sortable 'État', 'state'
       %th.col-md-2.col-lg-2= smart_listing.sortable 'Date de mise à jour', 'updated_at'
     - @dossiers.each do |dossier|
@@ -12,11 +12,11 @@
       - else
         - dossier = dossier.decorate
       %tr
+        %td.center
+          = dossier.id
         %td
-          = dossier.procedure.libelle
-        %td
-          = link_to(dossier.entreprise.raison_sociale, users_dossiers_invite_path(id: invite.id)) unless invite.nil?
-          = link_to(dossier.entreprise.raison_sociale, users_dossier_recapitulatif_path(dossier)) if invite.nil?
+          = link_to(dossier.procedure.libelle, users_dossiers_invite_path(id: invite.id)) unless invite.nil?
+          = link_to(dossier.procedure.libelle, users_dossier_recapitulatif_path(dossier)) if invite.nil?
 
         %td{id: "dossier_#{dossier.id}_state"}= dossier.display_state
         %td= dossier.last_update

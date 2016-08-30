@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829094658) do
+ActiveRecord::Schema.define(version: 20160829114646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -212,6 +212,13 @@ ActiveRecord::Schema.define(version: 20160829094658) do
 
   add_index "gestionnaires", ["email"], name: "index_gestionnaires_on_email", unique: true, using: :btree
   add_index "gestionnaires", ["reset_password_token"], name: "index_gestionnaires_on_reset_password_token", unique: true, using: :btree
+
+  create_table "individuals", force: :cascade do |t|
+    t.string  "nom"
+    t.string  "prenom"
+    t.string  "birthdate"
+    t.integer "dossier_id"
+  end
 
   create_table "invites", force: :cascade do |t|
     t.string  "email"
