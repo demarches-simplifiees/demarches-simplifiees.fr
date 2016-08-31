@@ -1,0 +1,29 @@
+=render partial: 'admin/procedures/head', locals: {active: 'E-mails'}
+
+%h3
+  E-mail d'accusé de réception
+
+- unless @procedure.mail_received.blank?
+  = form_for @procedure.mail_received, url: {controller: 'admin/mails', action: 'update', id: @procedure.mail_received.id} do |f|
+    =f.text_field :object, {class:'form-control', style:'width: 40%'}
+    %br
+    =f.text_area :body, {class: 'form-control wysihtml5'}
+    %br
+    =f.submit 'Mettre à jour', {class:'btn btn-success', style:'float: right'}
+
+
+%table.table{style:'width: 50%'}
+  %tr
+    %th
+      Balise
+    %th
+      Description
+  - MailTemplate.balises.each do |balise|
+    %tr
+      %td.center
+        %b.text-success
+          \--
+          = balise.first
+          \--
+      %td
+        =balise.second[:description]

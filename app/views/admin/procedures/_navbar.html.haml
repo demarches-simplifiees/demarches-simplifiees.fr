@@ -20,5 +20,8 @@
   = link_to_unless(@procedure.locked?, 'Champs privés', admin_procedure_types_de_champ_private_path(@procedure)) do
     = link_to('Champs privés', '#')
 
+%li{ class: ('active' if active == 'E-mails') }
+  = link_to('E-mails', admin_procedure_mails_path(@procedure))
+
 %li{ class: ('active' if active == 'Prévisualisation'), style: 'float:right' }
   = link_to('Prévisualisation', admin_procedure_previsualisation_path(@procedure), {style: 'font-style: italic;'})
