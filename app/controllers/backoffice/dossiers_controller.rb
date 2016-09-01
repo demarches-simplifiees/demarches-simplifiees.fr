@@ -54,6 +54,8 @@ class Backoffice::DossiersController < ApplicationController
     @facade.dossier.next_step! 'gestionnaire', 'receive'
     flash.notice = 'Dossier considéré comme reçu.'
 
+    NotificationMailer.dossier_received(@facade.dossier).deliver_now!
+
     render 'show'
   end
 

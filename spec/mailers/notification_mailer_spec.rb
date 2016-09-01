@@ -34,4 +34,14 @@ RSpec.describe NotificationMailer, type: :mailer do
     it { expect(subject.body).to match("ce jour à #{dossier.updated_at}.") }
     it { expect(subject.subject).to eq("Votre dossier TPS N°#{dossier.id} a été déposé") }
   end
+
+  describe '.dossier_received' do
+    let(:user) { create(:user) }
+    let(:dossier) { create(:dossier, user: user) }
+
+    subject(:subject) { described_class.dossier_received(dossier) }
+
+    it { expect(subject.subject).to eq("[TPS] Accusé de réception pour votre dossier n°#{dossier.id}") }
+    it { expect(subject.body).to match("Votre administration vous confirme la bonne réception de votre dossier n°#{dossier.id}") }
+  end
 end
