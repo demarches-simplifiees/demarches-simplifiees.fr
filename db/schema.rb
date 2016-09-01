@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829114646) do
+ActiveRecord::Schema.define(version: 20160830142653) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,6 +225,13 @@ ActiveRecord::Schema.define(version: 20160829114646) do
     t.string  "email_sender"
     t.integer "dossier_id"
     t.integer "user_id"
+  end
+
+  create_table "mail_templates", force: :cascade do |t|
+    t.string  "object"
+    t.text    "body"
+    t.string  "type"
+    t.integer "procedure_id"
   end
 
   create_table "module_api_cartos", force: :cascade do |t|

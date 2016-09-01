@@ -114,6 +114,8 @@ Rails.application.routes.draw do
         post '/:index/move_down' => 'pieces_justificatives#move_down', as: :move_down
       end
 
+      resources 'mails'
+
       put 'archive' => 'procedures#archive', as: :archive
       put 'publish' => 'procedures#publish', as: :publish
       post 'transfer' => 'procedures#transfer', as: :transfer

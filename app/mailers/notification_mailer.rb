@@ -3,6 +3,10 @@ class NotificationMailer < ApplicationMailer
     send_mail dossier, "Nouveau commentaire pour votre dossier TPS N°#{dossier.id}"
   end
 
+  def dossier_received dossier
+    send_mail dossier, MailTemplate.replace_tags(dossier.procedure.mail_received.object, dossier)
+  end
+
   def dossier_validated dossier
     send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été validé"
   end

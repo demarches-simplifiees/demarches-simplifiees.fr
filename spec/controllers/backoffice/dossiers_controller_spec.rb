@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Backoffice::DossiersController, type: :controller do
   before do
-    @request.env['HTTP_REFERER'] =  TPS::Application::URL
+    @request.env['HTTP_REFERER'] = TPS::Application::URL
   end
 
   let(:dossier) { create(:dossier, :with_entreprise) }
@@ -125,11 +125,24 @@ describe Backoffice::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
-    it 'change state to received' do
-      post :receive, dossier_id: dossier_id
+    subject { post :receive, dossier_id: dossier_id }
 
-      dossier.reload
-      expect(dossier.state).to eq('received')
+    context 'when it post a receive instruction' do
+      before do
+        subject
+        dossier.reload
+      end
+
+      it 'change state to received' do
+        expect(dossier.state).to eq('received')
+      end
+    end
+
+    it 'Notification email is send' do
+      expect(NotificationMailer).to receive(:dossier_received).and_return(NotificationMailer)
+      expect(NotificationMailer).to receive(:deliver_now!)
+
+      subject
     end
   end
 

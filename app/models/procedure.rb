@@ -3,6 +3,8 @@ class Procedure < ActiveRecord::Base
   has_many :types_de_champ, class_name: 'TypeDeChampPublic', dependent: :destroy
   has_many :types_de_champ_private, dependent: :destroy
   has_many :dossiers
+  has_many :mail_templates
+  has_one :mail_received
 
   has_one :procedure_path, dependent: :destroy
 
@@ -15,7 +17,7 @@ class Procedure < ActiveRecord::Base
 
   delegate :use_api_carto, to: :module_api_carto
 
-  accepts_nested_attributes_for :types_de_champ,:reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
+  accepts_nested_attributes_for :types_de_champ, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :types_de_piece_justificative, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :module_api_carto
   accepts_nested_attributes_for :types_de_champ_private
@@ -25,12 +27,18 @@ class Procedure < ActiveRecord::Base
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
 
+  after_save :build_default_mails, if: Proc.new { id_changed? }
+
+  def build_default_mails
+    MailReceived.create(procedure: self)
+  end
+
   def path
     procedure_path.path unless procedure_path.nil?
   end
 
   def default_path
-    libelle.downcase.gsub(/[^a-z0-9\-_]/,"_").gsub(/_*$/, '').gsub(/_+/, '_')
+    libelle.downcase.gsub(/[^a-z0-9\-_]/, "_").gsub(/_*$/, '').gsub(/_+/, '_')
   end
 
   def types_de_champ_ordered
@@ -79,20 +87,20 @@ class Procedure < ActiveRecord::Base
   end
 
   def clone
-    procedure = self.deep_clone(include: [ :types_de_piece_justificative, :types_de_champ, :module_api_carto ])
+    procedure = self.deep_clone(include: [:types_de_piece_justificative, :types_de_champ, :module_api_carto])
     procedure.archived = false
     procedure.published = false
     return procedure if procedure.save
   end
 
   def publish!(path)
-    self.update_attributes!({ published: true, archived: false })
+    self.update_attributes!({published: true, archived: false})
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
   end
 
   def archive
     self.procedure_path.destroy! if self.path
-    self.update_attributes!({ archived: true })
+    self.update_attributes!({archived: true})
   end
 
   def total_dossier
