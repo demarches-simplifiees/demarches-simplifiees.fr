@@ -164,6 +164,11 @@ describe Procedure do
     let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
+
+    before do
+      procedure.mail_received.object = "Je vais être cloné"
+    end
+
     subject { procedure.clone }
 
     it 'should duplicate specific objects with different id' do
@@ -171,11 +176,16 @@ describe Procedure do
       expect(subject).to have_same_attributes_as(procedure)
       expect(subject.module_api_carto).to have_same_attributes_as(procedure.module_api_carto)
 
+
       subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
 
       subject.types_de_piece_justificative.zip(procedure.types_de_piece_justificative).each do |stc, ptc|
+        expect(stc).to have_same_attributes_as(ptc)
+      end
+
+      subject.mail_templates.zip(procedure.mail_templates).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
     end

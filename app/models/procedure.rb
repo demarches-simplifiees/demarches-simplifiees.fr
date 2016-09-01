@@ -87,7 +87,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def clone
-    procedure = self.deep_clone(include: [:types_de_piece_justificative, :types_de_champ, :module_api_carto])
+    procedure = self.deep_clone(include: [:types_de_piece_justificative, :types_de_champ, :module_api_carto, :mail_templates])
     procedure.archived = false
     procedure.published = false
     return procedure if procedure.save
