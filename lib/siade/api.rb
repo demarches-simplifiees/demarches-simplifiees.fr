@@ -38,10 +38,6 @@ class SIADE::API
   end
 
   def self.base_url
-    if Rails.env.production?
-      'https://api.apientreprise.fr'
-    else
-      'https://api-dev.apientreprise.fr'
-    end
+    SIADEURL
   end
 end
