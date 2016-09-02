@@ -90,6 +90,8 @@ class Procedure < ActiveRecord::Base
     procedure = self.deep_clone(include: [:types_de_piece_justificative, :types_de_champ, :module_api_carto, :mail_templates])
     procedure.archived = false
     procedure.published = false
+    procedure.logo_secure_token = nil
+    procedure.remote_logo_url = self.logo_url
     return procedure if procedure.save
   end
 
