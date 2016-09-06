@@ -1,12 +1,13 @@
 class DossiersListFacades
-  def initialize current_devise_profil, liste
+  def initialize current_devise_profil, liste, procedure = nil
     @current_devise_profil = current_devise_profil
     @liste = liste
+    @procedure = procedure
   end
 
   def service
     if gestionnaire?
-      @service ||= DossiersListGestionnaireService.new @current_devise_profil, @liste
+      @service ||= DossiersListGestionnaireService.new @current_devise_profil, @liste, @procedure
     elsif user?
       @service ||= DossiersListUserService.new @current_devise_profil, @liste
     end
