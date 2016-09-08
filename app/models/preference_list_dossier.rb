@@ -1,5 +1,6 @@
 class PreferenceListDossier < ActiveRecord::Base
   belongs_to :gestionnaire
+  belongs_to :procedure
 
   def table_attr
     return self.attr if table.nil? || table.empty?

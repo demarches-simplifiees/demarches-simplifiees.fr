@@ -39,6 +39,6 @@ class DossiersListGestionnaireService
   end
 
   def filter_dossiers
-    @procedure.nil? ? @current_devise_profil.dossiers : @procedure.dossiers
+    @filter_dossiers ||= @procedure.nil? ? @current_devise_profil.dossiers : @procedure.dossiers
   end
 end

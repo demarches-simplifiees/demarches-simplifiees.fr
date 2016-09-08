@@ -19,8 +19,16 @@ class DossiersListFacades
     @liste
   end
 
+  def procedure_id
+    @procedure.nil? ? nil : @procedure.id
+  end
+
   def dossiers_to_display
     service.dossiers_to_display
+  end
+
+  def preference_list_dossiers_filter
+    @list_table_columns ||= @current_devise_profil.preference_list_dossiers.where(procedure: @procedure).order(:id)
   end
 
   def nouveaux_class

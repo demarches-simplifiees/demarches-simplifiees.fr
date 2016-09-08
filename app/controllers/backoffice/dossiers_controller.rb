@@ -123,7 +123,7 @@ class Backoffice::DossiersController < ApplicationController
   end
 
   def create_dossiers_list_facade liste='a_traiter'
-    @dossiers_list_facade = DossiersListFacades.new current_gestionnaire, liste
+    @dossiers_list_facade = DossiersListFacades.new current_gestionnaire, liste, retrieve_procedure
   end
 
   def create_dossier_facade dossier_id
@@ -132,5 +132,11 @@ class Backoffice::DossiersController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(controller: '/backoffice')
+  end
+
+
+  def retrieve_procedure
+    return if params[:procedure_id].blank?
+    current_gestionnaire.procedures.find params[:procedure_id]
   end
 end

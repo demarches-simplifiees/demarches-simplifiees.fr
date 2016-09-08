@@ -11,6 +11,7 @@ describe PreferenceListDossier do
   it { is_expected.to have_db_column(:gestionnaire_id) }
 
   it { is_expected.to belong_to(:gestionnaire) }
+  it { is_expected.to belong_to(:procedure) }
 
   describe '.available_columns' do
     subject { PreferenceListDossier.available_columns }

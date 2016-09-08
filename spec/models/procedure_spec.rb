@@ -9,6 +9,7 @@ describe Procedure do
     it { is_expected.to have_one(:mail_received) }
     it { is_expected.to have_one(:module_api_carto) }
     it { is_expected.to belong_to(:administrateur) }
+    it { is_expected.to have_many(:preference_list_dossiers) }
   end
 
   describe 'attributes' do

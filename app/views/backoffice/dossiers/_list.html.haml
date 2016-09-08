@@ -1,14 +1,14 @@
 - unless smart_listing.empty?
   %table.table
     %thead
-      - current_gestionnaire.preference_list_dossiers.order(:id).each do |preference|
+      - @dossiers_list_facade.preference_list_dossiers_filter.each do |preference|
         %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}= smart_listing.sortable preference.libelle, preference.table_attr
       %th.col-md-1.col-lg-1.center Actions
       %th.col-md-1.col-lg-1.center Abonnés
 
     - @dossiers.each do |dossier|
       %tr
-        - current_gestionnaire.preference_list_dossiers.order(:id).each_with_index do |preference, index|
+        - @dossiers_list_facade.preference_list_dossiers_filter.each_with_index do |preference, index|
           %td
             - if preference.table.nil? || preference.table.empty?
               - value = dossier.decorate.public_send(preference.attr_decorate)

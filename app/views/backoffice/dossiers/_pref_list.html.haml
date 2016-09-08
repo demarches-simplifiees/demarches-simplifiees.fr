@@ -9,10 +9,11 @@
   Actuelles
 
 %ul
-  - current_gestionnaire.preference_list_dossiers.order(:id).each_with_index do |preference, index|
+  - @dossiers_list_facade.preference_list_dossiers_filter.each_with_index do |preference, index|
     %li
       = form_tag backoffice_preference_list_dossier_delete_path, method: :delete, remote: true  do
         = hidden_field_tag :pref_id, preference.id
+        = hidden_field_tag :procedure_id, preference.procedure_id
         = preference.libelle
         %button.btn.btn-default.btn-xs{type: :submit, id: "delete_pref_list_#{preference[:table]}_#{preference[:attr]}"}
           %i.fa.fa-minus
@@ -36,6 +37,7 @@
               = hidden_field_tag :attr, columns.second[:attr]
               = hidden_field_tag :attr_decorate, columns.second[:attr_decorate]
               = hidden_field_tag :bootstrap_lg, columns.second[:bootstrap_lg]
+              = hidden_field_tag :procedure_id, @dossiers_list_facade.procedure_id
 
               = columns.second[:libelle]
               %button.btn.btn-default.btn-xs{type: :submit, id: "add_pref_list_#{columns.second[:table]}_#{columns.second[:attr]}"}
