@@ -5,7 +5,8 @@ class Backoffice::DossiersController < ApplicationController
   before_action :authenticate_gestionnaire!
 
   def index
-    smartlisting_dossier (params[:liste] || 'a_traiter')
+    cookies[:liste] = params[:liste] || cookies[:liste] || 'a_traiter'
+    smartlisting_dossier (cookies[:liste])
   end
 
   def show

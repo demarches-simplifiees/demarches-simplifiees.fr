@@ -10,7 +10,8 @@ class Users::DossiersController < UsersController
   end
 
   def index
-    @dossiers_list_facade = DossiersListFacades.new current_user, (params[:liste] || 'a_traiter')
+    cookies[:liste] = params[:liste] || cookies[:liste] || 'a_traiter'
+    @dossiers_list_facade = DossiersListFacades.new current_user, cookies[:liste]
 
     @dossiers = smart_listing_create :dossiers,
                                      @dossiers_list_facade.dossiers_to_display,

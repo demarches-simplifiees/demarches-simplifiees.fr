@@ -5,7 +5,8 @@ class Backoffice::Dossiers::ProcedureController < ApplicationController
   before_action :authenticate_gestionnaire!
 
   def show
-    smartlisting_dossier (params[:liste] || 'a_traiter')
+    cookies[:liste] = params[:liste] || cookies[:liste] || 'a_traiter'
+    smartlisting_dossier cookies[:liste]
 
     render 'backoffice/dossiers/index'
   rescue ActiveRecord::RecordNotFound
