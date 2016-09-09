@@ -9,6 +9,7 @@ describe Procedure do
     it { is_expected.to have_one(:mail_received) }
     it { is_expected.to have_one(:module_api_carto) }
     it { is_expected.to belong_to(:administrateur) }
+    it { is_expected.to have_many(:preference_list_dossiers) }
   end
 
   describe 'attributes' do
@@ -162,6 +163,8 @@ describe Procedure do
     let(:procedure) { create(:procedure, archived: archived, published: published) }
     let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
+    let!(:type_de_champ_private_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
+    let!(:type_de_champ_private_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
 
@@ -176,8 +179,16 @@ describe Procedure do
       expect(subject).to have_same_attributes_as(procedure)
       expect(subject.module_api_carto).to have_same_attributes_as(procedure.module_api_carto)
 
+      expect(subject.types_de_piece_justificative.size).to eq procedure.types_de_piece_justificative.size
+      expect(subject.types_de_champ.size).to eq procedure.types_de_champ.size
+      expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
+      expect(subject.mail_templates.size).to eq procedure.mail_templates.size
 
       subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
+        expect(stc).to have_same_attributes_as(ptc)
+      end
+
+      subject.types_de_champ_private.zip(procedure.types_de_champ_private).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
 

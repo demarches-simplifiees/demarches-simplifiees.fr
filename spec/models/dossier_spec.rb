@@ -219,6 +219,12 @@ describe Dossier do
             it { is_expected.to eq('replied') }
           end
 
+          context 'when is follow' do
+            let(:action) { 'follow' }
+
+            it { is_expected.to eq 'updated' }
+          end
+
           context 'when is validated the dossier' do
             let(:action) { 'valid' }
 
@@ -244,10 +250,7 @@ describe Dossier do
           context 'when is updated dossier informations' do
             let(:action) { 'update' }
 
-            it {
-
-              is_expected.to eq('updated')
-            }
+            it { is_expected.to eq('updated') }
           end
         end
 
@@ -258,6 +261,12 @@ describe Dossier do
             let(:action) { 'comment' }
 
             it { is_expected.to eq('replied') }
+          end
+
+          context 'when is follow' do
+            let(:action) { 'follow' }
+
+            it { is_expected.to eq 'replied' }
           end
 
           context 'when is validated the dossier' do
@@ -452,7 +461,6 @@ describe Dossier do
           end
         end
       end
-
 
       context 'when dossier is at state closed' do
         before do

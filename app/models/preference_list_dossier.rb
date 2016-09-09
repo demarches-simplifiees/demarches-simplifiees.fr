@@ -1,19 +1,27 @@
 class PreferenceListDossier < ActiveRecord::Base
   belongs_to :gestionnaire
+  belongs_to :procedure
 
   def table_attr
     return self.attr if table.nil? || table.empty?
     table + '.' + attr
   end
 
-  def self.available_columns
-    {
+  def self.available_columns_for procedure_id = nil
+    columns = {
         dossier: columns_dossier,
         procedure: columns_procedure,
         entreprise: columns_entreprise,
         etablissement: columns_etablissement,
-        user: columns_user
+        user: columns_user,
+        france_connect: columns_france_connect
     }
+
+    columns = columns.merge({
+                      champs: columns_champs_procedure(procedure_id)
+                  }) unless procedure_id.nil?
+
+    columns
   end
 
   private
@@ -64,7 +72,6 @@ class PreferenceListDossier < ActiveRecord::Base
 
   def self.columns_user
     table = 'user'
-
     {
         email: create_column('Email', table, 'email', 'email', 2)
     }
@@ -74,10 +81,21 @@ class PreferenceListDossier < ActiveRecord::Base
     table = 'france_connect_information'
 
     {
-        gender: create_column('Civilité', table, 'gender', 'gender', 1),
-        given_name: create_column('Prénom', table, 'given_name', 'given_name', 2),
-        family_name: create_column('Nom', table, 'family_name', 'family_name', 2)
+        gender: create_column('Civilité (FC)', table, 'gender', 'gender_fr', 1),
+        given_name: create_column('Prénom (FC)', table, 'given_name', 'given_name', 2),
+        family_name: create_column('Nom (FC)', table, 'family_name', 'family_name', 2)
     }
+  end
+
+  def self.columns_champs_procedure procedure_id
+    table = 'champs'
+
+    Procedure.find(procedure_id).types_de_champ.inject({}) do |acc, type_de_champ|
+      acc = acc.merge({
+                          "type_de_champ_#{type_de_champ.id}" => create_column(type_de_champ.libelle, table, type_de_champ.id, 'value', 2)
+                      }) if type_de_champ.field_for_list?
+      acc
+    end
   end
 
   def self.create_column libelle, table, attr, attr_decorate, bootstrap_lg

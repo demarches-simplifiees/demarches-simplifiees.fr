@@ -9,10 +9,11 @@
   Actuelles
 
 %ul
-  - current_gestionnaire.preference_list_dossiers.order(:id).each_with_index do |preference, index|
+  - @dossiers_list_facade.preference_list_dossiers_filter.each_with_index do |preference, index|
     %li
       = form_tag backoffice_preference_list_dossier_delete_path, method: :delete, remote: true  do
         = hidden_field_tag :pref_id, preference.id
+        = hidden_field_tag :procedure_id, preference.procedure_id
         = preference.libelle
         %button.btn.btn-default.btn-xs{type: :submit, id: "delete_pref_list_#{preference[:table]}_#{preference[:attr]}"}
           %i.fa.fa-minus
@@ -21,11 +22,11 @@
   Disponibles
 
 %table
-  - PreferenceListDossier.available_columns.each_with_index do |tables, index|
-    - if index%2 == 0
+  - PreferenceListDossier.available_columns_for(@dossiers_list_facade.procedure_id).each_with_index do |tables, index|
+    - if index%2 == 0 || tables.first == :champs
       %tr
 
-    %td.col-sm-5.col-md-5.col-lg-5{style: 'vertical-align: top'}
+    %td.col-sm-5.col-md-5.col-lg-5{style: 'vertical-align: top', colspan: (tables.first == :champs ? 2 : 1)}
       %h5= tables.first.to_s.gsub('_', ' ').capitalize
       %ul
         - tables.second.each do |columns|
@@ -36,6 +37,7 @@
               = hidden_field_tag :attr, columns.second[:attr]
               = hidden_field_tag :attr_decorate, columns.second[:attr_decorate]
               = hidden_field_tag :bootstrap_lg, columns.second[:bootstrap_lg]
+              = hidden_field_tag :procedure_id, @dossiers_list_facade.procedure_id
 
               = columns.second[:libelle]
               %button.btn.btn-default.btn-xs{type: :submit, id: "add_pref_list_#{columns.second[:table]}_#{columns.second[:attr]}"}

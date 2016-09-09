@@ -5,7 +5,8 @@ class Backoffice::DossiersController < ApplicationController
   before_action :authenticate_gestionnaire!
 
   def index
-    smartlisting_dossier (params[:liste] || 'a_traiter')
+    cookies[:liste] = params[:liste] || cookies[:liste] || 'a_traiter'
+    smartlisting_dossier (cookies[:liste])
   end
 
   def show
@@ -95,6 +96,8 @@ class Backoffice::DossiersController < ApplicationController
   def follow
     follow = current_gestionnaire.toggle_follow_dossier params[:dossier_id]
 
+    current_gestionnaire.dossiers.find(params[:dossier_id]).next_step! 'gestionnaire', 'follow'
+
     flash.notice = (follow.class == Follow ? 'Dossier suivi' : 'Dossier relaché')
     redirect_to request.referer
   end
@@ -123,7 +126,7 @@ class Backoffice::DossiersController < ApplicationController
   end
 
   def create_dossiers_list_facade liste='a_traiter'
-    @dossiers_list_facade = DossiersListFacades.new current_gestionnaire, liste
+    @dossiers_list_facade = DossiersListFacades.new current_gestionnaire, liste, retrieve_procedure
   end
 
   def create_dossier_facade dossier_id
@@ -132,5 +135,11 @@ class Backoffice::DossiersController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(controller: '/backoffice')
+  end
+
+
+  def retrieve_procedure
+    return if params[:procedure_id].blank?
+    current_gestionnaire.procedures.find params[:procedure_id]
   end
 end

@@ -1,10 +1,10 @@
 #backoffice_index
   #pref_list_menu
-    = render partial: 'pref_list'
-  = render partial: 'onglets'
+    = render partial: 'backoffice/dossiers/pref_list'
+  = render partial: 'backoffice/dossiers/onglets'
 
   = smart_listing_render :dossiers
 
   %br
   %br
-  = render partial: 'state_description', locals: {dossiers_list_facade: @dossiers_list_facade}
+  = render partial: 'backoffice/dossiers/state_description', locals: {dossiers_list_facade: @dossiers_list_facade}

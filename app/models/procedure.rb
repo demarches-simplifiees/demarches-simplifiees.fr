@@ -15,6 +15,8 @@ class Procedure < ActiveRecord::Base
   has_many :assign_to, dependent: :destroy
   has_many :gestionnaires, through: :assign_to
 
+  has_many :preference_list_dossiers
+
   delegate :use_api_carto, to: :module_api_carto
 
   accepts_nested_attributes_for :types_de_champ, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
@@ -87,7 +89,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def clone
-    procedure = self.deep_clone(include: [:types_de_piece_justificative, :types_de_champ, :module_api_carto, :mail_templates])
+    procedure = self.deep_clone(include: [:types_de_piece_justificative, :types_de_champ, :types_de_champ_private, :module_api_carto, :mail_templates])
     procedure.archived = false
     procedure.published = false
     procedure.logo_secure_token = nil

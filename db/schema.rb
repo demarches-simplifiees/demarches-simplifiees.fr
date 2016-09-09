@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160901082824) do
+ActiveRecord::Schema.define(version: 20160906134155) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -264,6 +264,7 @@ ActiveRecord::Schema.define(version: 20160901082824) do
     t.string  "order"
     t.string  "filter"
     t.integer "gestionnaire_id"
+    t.integer "procedure_id"
   end
 
   create_table "procedure_paths", force: :cascade do |t|

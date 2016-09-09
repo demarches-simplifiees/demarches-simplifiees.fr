@@ -97,7 +97,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action
-    unless %w(initiate update comment valid submit receive refuse without_continuation close).include?(action)
+    unless %w(initiate follow update comment valid submit receive refuse without_continuation close).include?(action)
       fail 'action is not valid'
     end
 
@@ -131,6 +131,10 @@ class Dossier < ActiveRecord::Base
             replied!
           elsif initiated?
             replied!
+          end
+        when 'follow'
+          if initiated?
+            updated!
           end
         when 'valid'
           if updated?
