@@ -4,13 +4,18 @@ describe Backoffice::DossiersController, type: :controller do
   before do
     @request.env['HTTP_REFERER'] = TPS::Application::URL
   end
+  let(:procedure) { create :procedure }
 
-  let(:dossier) { create(:dossier, :with_entreprise) }
+  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
   let(:dossier_archived) { create(:dossier, :with_entreprise, archived: true) }
 
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10 }
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [create(:administrateur)]) }
+
+  before do
+    create :assign_to, procedure: procedure, gestionnaire: gestionnaire
+  end
 
   describe 'GET #show' do
     context 'gestionnaire is connected' do
@@ -222,6 +227,20 @@ describe Backoffice::DossiersController, type: :controller do
     subject { put :follow, dossier_id: dossier_id }
 
     it { expect(subject.status).to eq 302 }
+
+    context 'when dossier is at state initiated' do
+      let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
+
+      before do
+        subject
+        dossier.reload
+      end
+
+      it 'change state for updated' do
+        expect(dossier.state).to eq 'updated'
+      end
+
+    end
 
     describe 'flash alert' do
       context 'when dossier is not follow by gestionnaire' do
