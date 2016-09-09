@@ -4,7 +4,7 @@ feature 'usage of pref list dossier lateral panel by procedure', js: true do
 
   let(:administrateur) { create(:administrateur) }
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
-  let(:procedure) { create(:procedure, administrateur: administrateur) }
+  let(:procedure) { create(:procedure, :with_type_de_champ, administrateur: administrateur) }
 
   before do
     create(:dossier, :with_entreprise, procedure: procedure, state: 'updated')
@@ -45,29 +45,24 @@ feature 'usage of pref list dossier lateral panel by procedure', js: true do
           expect(page).to have_css('#pref_list_menu')
         end
 
-        context 'when on click on add attribut button' do
+        context 'when on click on add attribut specific at the procedure button' do
           before do
-            page.click_on 'add_pref_list_entreprise_siren'
+            page.click_on 'add_pref_list_champs_'+procedure.types_de_champ.first.id.to_s
           end
 
           scenario 'preference list panel is brought up to date' do
             wait_for_ajax
-            expect(page).to have_css('#delete_pref_list_entreprise_siren')
-          end
-
-          scenario 'dossier is brought up to date' do
-            wait_for_ajax
-            expect(page).to have_selector("a.sortable[data-attr='entreprise.siren']")
+            expect(page).to have_css('#delete_pref_list_champs_'+procedure.types_de_champ.first.id.to_s)
           end
 
           context 'when on click on delete attribut button' do
             before do
-              page.click_on 'delete_pref_list_entreprise_siren'
+              page.click_on 'delete_pref_list_champs_'+procedure.types_de_champ.first.id.to_s
             end
 
             scenario 'preference list panel is brought up to date' do
               wait_for_ajax
-              expect(page).not_to have_css('#delete_pref_list_entreprise_siren')
+              expect(page).not_to have_css('#delete_pref_list_champs_'+procedure.types_de_champ.first.id.to_s)
             end
 
             scenario 'dossier is brought up to date' do

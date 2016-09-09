@@ -22,11 +22,11 @@
   Disponibles
 
 %table
-  - PreferenceListDossier.available_columns.each_with_index do |tables, index|
-    - if index%2 == 0
+  - PreferenceListDossier.available_columns_for(@dossiers_list_facade.procedure_id).each_with_index do |tables, index|
+    - if index%2 == 0 || tables.first == :champs
       %tr
 
-    %td.col-sm-5.col-md-5.col-lg-5{style: 'vertical-align: top'}
+    %td.col-sm-5.col-md-5.col-lg-5{style: 'vertical-align: top', colspan: (tables.first == :champs ? 2 : 1)}
       %h5= tables.first.to_s.gsub('_', ' ').capitalize
       %ul
         - tables.second.each do |columns|
