@@ -55,9 +55,9 @@
 
         -if @facade.dossier.procedure.module_api_carto.use_api_carto
           %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@facade.dossier.id}/carte"}
-            = 'Modifier ma carte'
+            = 'Modifier la carte'
         %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@facade.dossier.id}/description"}
-          = 'Modifier mon dossier'
+          = 'Modifier le dossier'
 
     -if gestionnaire_signed_in?
       -if !@facade.dossier.read_only?

@@ -6,9 +6,9 @@
       %th.col-md-2.col-lg-2= smart_listing.sortable 'État', 'state'
       %th.col-md-2.col-lg-2= smart_listing.sortable 'Date de mise à jour', 'updated_at'
     - @dossiers.each do |dossier|
-      - if dossier.class == Invite
+      - if dossier.kind_of? Invite
         -invite = dossier
-        -dossier = dossier.dossier.decorate
+        -dossier = invite.dossier.decorate
       - else
         - dossier = dossier.decorate
       %tr
