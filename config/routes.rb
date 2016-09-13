@@ -141,6 +141,10 @@ Rails.application.routes.draw do
     get 'address_point' => 'search#get_address_point'
   end
 
+  namespace :invites do
+    post 'dossier/:dossier_id' => '/invites#create', as: 'dossier'
+  end
+
   namespace :backoffice do
     get 'sign_in' => '/gestionnaires/sessions#new'
     get 'dossiers/search' => 'dossiers#search'
@@ -154,8 +158,6 @@ Rails.application.routes.draw do
       post 'refuse' => 'dossiers#refuse'
       post 'without_continuation' => 'dossiers#without_continuation'
       post 'close' => 'dossiers#close'
-
-      post 'invites' => '/invites#create'
 
       put 'follow' => 'dossiers#follow'
     end

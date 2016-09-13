@@ -1,6 +1,8 @@
 class InvitesController < ApplicationController
+  before_action :gestionnaire_or_user?
+
   def create
-    email_sender = current_gestionnaire.email
+    email_sender = @current_devise_profil.email
 
     user = User.find_by_email(params[:email])
     invite = Invite.create(dossier_id: params[:dossier_id], user: user, email: params[:email].downcase, email_sender: email_sender)
@@ -16,8 +18,17 @@ class InvitesController < ApplicationController
 
     if gestionnaire_signed_in?
       redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
-      # else
-      #   redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params['dossier_id'])
+    else
+      redirect_to url_for(controller: 'users/recapitulatif', action: :show, dossier_id: params['dossier_id'])
     end
+  end
+
+  private
+
+  def gestionnaire_or_user?
+    return redirect_to root_path unless user_signed_in? || gestionnaire_signed_in?
+
+    @current_devise_profil = current_user if user_signed_in?
+    @current_devise_profil = current_gestionnaire if gestionnaire_signed_in?
   end
 end

@@ -307,4 +307,12 @@ class Dossier < ActiveRecord::Base
     next_step! 'user', 'submit'
     NotificationMailer.dossier_submitted(self).deliver_now!
   end
+  
+  def read_only?
+    validated? || received? || submitted? || closed? || refused? || without_continuation?
+  end
+
+  def owner? email
+    user.email == email
+  end
 end

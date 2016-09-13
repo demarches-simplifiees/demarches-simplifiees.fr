@@ -6,10 +6,12 @@
     %a{href: "#commentaires_files", 'aria-controls' => "commentaires_files", role: "tab", 'data-toggle' => "tab"}
       Fichiers
 
-  - if gestionnaire_signed_in?
+  - if gestionnaire_signed_in? || @facade.dossier.owner?(current_user.email)
     %li{role: "presentation"}
       %a{href: "#invites", 'aria-controls' => "invites", role: "tab", 'data-toggle' => "tab"}
         Invités
+
+  - if gestionnaire_signed_in?
     %li{role: "presentation"}
       %a{href: "#followers", 'aria-controls' => "followers", role: "tab", 'data-toggle' => "tab"}
         Abonnés
@@ -25,9 +27,10 @@
   %div{role: "tabpanel", class: "tab-pane fade", id:"commentaires_files"}
     = render partial: '/dossiers/commentaires_files'
 
-  - if gestionnaire_signed_in?
+  - if gestionnaire_signed_in? || @facade.dossier.owner?(current_user.email)
     %div{role: "tabpanel", class: "tab-pane fade", id:"invites"}
       = render partial: '/dossiers/invites'
+  - if gestionnaire_signed_in?
     %div{role: "tabpanel", class: "tab-pane fade", id:"followers"}
       = render partial: 'followers'
     %div{role: "tabpanel", class: "tab-pane fade", id:"champs_private"}
