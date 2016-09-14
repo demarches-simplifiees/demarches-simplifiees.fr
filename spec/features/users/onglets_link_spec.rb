@@ -66,10 +66,10 @@ feature 'on click on tabs button' do
       end
     end
 
-    context 'when he click on tabs en instruction' do
+    context 'when he click on tabs en examen' do
       before do
         visit users_dossiers_url(liste: :en_instruction)
-        page.click_on 'En instruction 2'
+        page.click_on 'En examen 2'
       end
 
       scenario 'it redirect to users dossier termine' do
