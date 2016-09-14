@@ -50,7 +50,7 @@ gem 'will_paginate-bootstrap'
 gem 'draper'
 
 #Gestion des comptes utilisateurs
-gem 'devise'
+gem 'devise', '~> 3.0'
 gem 'openid_connect'
 
 gem 'rest-client'
