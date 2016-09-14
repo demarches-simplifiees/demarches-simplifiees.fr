@@ -25,16 +25,16 @@
             = @dossiers_list_facade.en_attente_total
 
     %li{ class: @dossiers_list_facade.valides_class }
-      %a{:href => "#{url_for users_dossiers_path(liste: 'valides')}", 'data-toggle' => :tooltip, title: 'Les dossiers relus par votre accompagnateur pouvant être déposés pour instruction.'}
+      %a{:href => "#{url_for users_dossiers_path(liste: 'valides')}", 'data-toggle' => :tooltip, title: 'Les dossiers relus par votre accompagnateur pouvant être déposés pour examen.'}
         %h5.text-purple
           ="À déposer"
           .badge.progress-bar-purple
             = @dossiers_list_facade.valides_total
 
     %li{ class: @dossiers_list_facade.en_instruction_class }
-      %a{:href => "#{url_for users_dossiers_path(liste: 'en_instruction')}", 'data-toggle' => :tooltip, title: 'Les dossiers en cours d\'instruction par l\'administration compétante.'}
+      %a{:href => "#{url_for users_dossiers_path(liste: 'en_instruction')}", 'data-toggle' => :tooltip, title: 'Les dossiers en cours d\'examen par l\'administration compétante.'}
         %h5.text-default
-          ="En instruction"
+          ="En examen"
           .badge.progress-bar-default
             = @dossiers_list_facade.en_instruction_total
 

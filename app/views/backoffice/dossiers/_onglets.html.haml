@@ -32,7 +32,7 @@
             =@dossiers_list_facade.en_attente_total
 
     %li{ class: (@dossiers_list_facade.deposes_class) }
-      %a{:href => "#{url_for @dossiers_list_facade.deposes_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui ont été validés et déposés par les usager qui attendent une réponse de bonne réception avant instruction.'}
+      %a{:href => "#{url_for @dossiers_list_facade.deposes_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui ont été validés et déposés par les usager qui attendent une réponse de bonne réception avant examen.'}
         %h5.text-purple
           ="À réceptionner"
           .badge.progress-bar-purple

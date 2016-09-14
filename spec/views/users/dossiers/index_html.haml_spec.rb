@@ -90,7 +90,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     end
   end
 
-  describe 'on tab etude en instruction' do
+  describe 'on tab etude en examen' do
     let(:total_dossiers) { 2 }
     let(:active_class) { '.active .text-default' }
     let(:dossiers_to_display) { user.dossiers.en_instruction }
