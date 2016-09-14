@@ -829,4 +829,31 @@ describe Dossier do
       it { expect(subject).to eq 2 }
     end
   end
+
+  describe '#invite_by_user?' do
+    let(:dossier) { create :dossier }
+    let(:invite_user) { create :user, email: user_invite_email }
+    let(:invite_gestionnaire) { create :user, email: gestionnaire_invite_email }
+    let(:user_invite_email) { 'plup@plop.com' }
+    let(:gestionnaire_invite_email) { 'plap@plip.com' }
+
+    before do
+      create :invite, dossier: dossier, user: invite_user, email: invite_user.email, type: 'InviteUser'
+      create :invite, dossier: dossier, user: invite_gestionnaire, email: invite_gestionnaire.email, type: 'InviteGestionnaire'
+    end
+
+    subject { dossier.invite_by_user? email }
+
+    context 'when email is present on invite list' do
+      let(:email) { user_invite_email }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when email is present on invite list' do
+      let(:email) { gestionnaire_invite_email }
+
+      it { is_expected.to be_falsey }
+    end
+  end
 end

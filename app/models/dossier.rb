@@ -24,6 +24,7 @@ class Dossier < ActiveRecord::Base
   has_many :cadastres, dependent: :destroy
   has_many :commentaires, dependent: :destroy
   has_many :invites, dependent: :destroy
+  has_many :invites_user, class_name: 'InviteUser', dependent: :destroy
   has_many :follows
 
   belongs_to :procedure
@@ -314,5 +315,9 @@ class Dossier < ActiveRecord::Base
 
   def owner? email
     user.email == email
+  end
+
+  def invite_by_user? email
+    (invites_user.pluck :email).include? email
   end
 end

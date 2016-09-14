@@ -42,9 +42,9 @@
 
   .row{style: 'text-align:right'}
     - unless @facade.dossier.read_only?
-      - if user_signed_in? && @facade.dossier.owner?(current_user.email)
+      - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
-          %a.btn.btn-success{"data-target" => "#UploadPJmodal",
+          %a#maj_pj.btn.btn-success{"data-target" => "#UploadPJmodal",
                              "data-toggle" => "modal",
                              :type => "button",
                              style: 'margin-bottom: 15px; margin-top: -30px'}
