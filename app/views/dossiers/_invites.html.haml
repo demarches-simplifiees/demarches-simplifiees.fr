@@ -12,7 +12,7 @@
       Aucune personne invité
 
   .col-md-3.col-lg-3
-    =form_tag backoffice_dossier_invites_path(dossier_id: @facade.dossier.id), method: :post, class: 'form-inline' do
+    =form_tag invites_dossier_path(dossier_id: @facade.dossier.id), method: :post, class: 'form-inline' do
       =text_field_tag :email, '', class: 'form-control', placeholder: 'Envoyer une invitation'
       =submit_tag 'Ajouter', class: 'btn btn-success'
 

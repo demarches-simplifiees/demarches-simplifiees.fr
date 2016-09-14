@@ -13,7 +13,15 @@ describe InvitesController, type: :controller do
 
     subject { post :create, dossier_id: dossier.id, email: email }
 
-    it { expect { subject }.to change(Invite, :count).by(1) }
+    it { expect { subject }.to change(InviteGestionnaire, :count).by(1) }
+
+    context 'when is a user who is loged' do
+      before do
+        sign_in create(:user)
+      end
+
+      it { expect { subject }.to change(InviteGestionnaire, :count).by(1) }
+    end
 
     context 'when email is assign to an user' do
       let! (:user) { create(:user, email: email) }

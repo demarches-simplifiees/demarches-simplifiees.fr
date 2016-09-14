@@ -1,55 +1,31 @@
 require 'spec_helper'
 
+require 'controllers/user_controller_shared_example'
+
 describe UsersController, type: :controller do
-
   describe '#current_user_dossier' do
-    let(:user) { create(:user) }
-    let(:dossier) { create(:dossier, user: user)}
+    let(:owner_user) { create(:user) }
+    let(:invite_user) { create :user, email: 'invite@plop.com' }
+    let(:not_invite_user) { create :user, email: 'not_invite@plop.com' }
 
-    before do
-      sign_in user
+    let(:dossier) { create(:dossier, user: owner_user) }
+
+    context 'when user is the owner' do
+      before do
+        sign_in owner_user
+      end
+
+      it_should_behave_like "current_user_dossier_spec"
     end
 
-    context 'when no dossier_id is filled' do
-      it { expect{ subject.current_user_dossier }.to raise_error }
-    end
-
-    context 'when dossier_id is given as a param' do
-      context 'when dossier id is valid' do
-        it 'returns current user dossier' do
-          expect(subject.current_user_dossier dossier.id).to eq(dossier)
-        end
+    context 'when user is invite by the owner' do
+      before do
+        create :invite, email: invite_user.email, dossier: dossier, user: invite_user, type: 'InviteUser'
+        sign_in invite_user
       end
 
-      context 'when dossier id is incorrect' do
-        it { expect{ subject.current_user_dossier 1 }.to raise_error }
-      end
-    end
-
-    context 'when no params[] is given' do
-      context 'when dossier id is valid' do
-        before do
-          subject.params[:dossier_id] = dossier.id
-        end
-
-        it 'returns current user dossier' do
-          expect(subject.current_user_dossier).to eq(dossier)
-        end
-      end
-
-      context 'when dossier id is incorrect' do
-        it { expect{ subject.current_user_dossier }.to raise_error }
-      end
-
-      context 'when dossier_id is given as a param' do
-        before do
-          subject.params[:dossier_id] = 1
-        end
-
-        it 'returns dossier with the id on params past' do
-          expect(subject.current_user_dossier dossier.id).to eq(dossier)
-        end
-      end
+      it_should_behave_like "current_user_dossier_spec"
     end
   end
 end
+

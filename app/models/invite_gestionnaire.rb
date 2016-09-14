@@ -1,0 +1,3 @@
+class InviteGestionnaire < Invite
+
+end
