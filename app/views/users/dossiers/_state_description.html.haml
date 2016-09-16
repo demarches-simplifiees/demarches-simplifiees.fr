@@ -1,0 +1,45 @@
+#state_description.row{style:'width: 55%; margin-left: auto; margin-right: auto'}
+  .panel.panel-info
+    .panel-body.center
+      .row
+        .col-md-1.col-lg-1
+          .fa.fa-info-circle.text-info{style:'font-size: 2em; margin-top: 20%'}
+        .col-md-11.col-lg-11
+          -if dossiers_list_facade.liste == 'nouveaux'
+            Les dossiers présents dans cette liste
+            %b
+              n'ont pas encore été ouverts
+            par votre accompagnteur. Une notification vous sera envoyée quand votre demande aura été étudiée.
+          -elsif dossiers_list_facade.liste == 'a_traiter'
+            Les dossiers présents dans cette liste
+            %b
+              attendent une action de votre part.
+            Plus d'informations vous sont généralement données par votre accompagnateur dans le flux de commentaires du dossier.
+          -elsif dossiers_list_facade.liste == 'en_attente'
+            Les dossiers présents dans cette liste sont
+            %b
+              en cours de relecture par votre accompagnateur.
+            Il reviendra vers vous si des informations ou documents sont manquants pour le futur examen de votre dossier.
+          -elsif dossiers_list_facade.liste == 'valides'
+            Les dossiers présents dans cette liste ont été
+            %b
+              relus et considérés comme complet
+            pour examen par votre accompagnateur. Ceux-ci ne peuvent maintenant plus être modifié. Il faut que vous procédiez à leurs dépôts afin qu'une décision finale soit rendue.
+          -elsif dossiers_list_facade.liste == 'en_instruction'
+            Les dossiers présents dans cette liste sont
+            %b
+              en cours de réception
+            ou
+            %b
+              en cours d'examen
+            par l'administration compétente. Une notification vous sera envoyée une fois qu'une décision aura été rendue.
+          -elsif dossiers_list_facade.liste == 'termine'
+            Les dossiers présents dans cette liste sont ceux qui ont été instruits par l'admnistration et
+            %b
+              une décision finale a été rendue.
+            Ils peuvent posséder trois états différents : Accepté, Refusé ou Sans Suite.
+          -elsif dossiers_list_facade.liste == 'invite'
+            Les dossiers présents dans cete liste sont ceux
+            %b
+              auxquels vous avez été invités
+            à participer afin d'émettre un avis et/ou à founir des documents complétmentaires.

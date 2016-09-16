@@ -32,8 +32,19 @@
 //= require handlebars
 //= require typeahead.bundle
 
-$(document).on('page:load', scroll_to);
-$(document).ready(scroll_to);
+$(document).on('page:load', application_init);
+$(document).ready(application_init);
+
+
+function application_init(){
+    tooltip_init();
+    scroll_to();
+}
+
+function tooltip_init() {
+    $('.action_button[data-toggle="tooltip"]').tooltip({delay: { "show": 100, "hide": 100 }});
+    $('[data-toggle="tooltip"]').tooltip({delay: { "show": 800, "hide": 100 }});
+}
 
 function scroll_to() {
     $('.js-scrollTo').on('click', function () { // Au clic sur un élément

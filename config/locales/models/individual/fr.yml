@@ -1,0 +1,19 @@
+fr:
+  activerecord:
+    attributes:
+      individual:
+        nom: Nom
+        prenom: Prénom
+        birthdate: Date de naissance
+    errors:
+      models:
+        individual:
+          attributes:
+            nom:
+              blank: 'doit être rempli'
+            prenom:
+              blank: 'doit être rempli'
+            birthdate:
+              blank: 'doit être rempli'
+
+

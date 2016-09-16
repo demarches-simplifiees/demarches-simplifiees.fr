@@ -11,9 +11,12 @@ describe PreferenceListDossier do
   it { is_expected.to have_db_column(:gestionnaire_id) }
 
   it { is_expected.to belong_to(:gestionnaire) }
+  it { is_expected.to belong_to(:procedure) }
 
-  describe '.available_columns' do
-    subject { PreferenceListDossier.available_columns }
+  describe '.available_columns_for' do
+    let(:procedure_id) { nil }
+
+    subject { PreferenceListDossier.available_columns_for procedure_id }
 
     describe 'dossier' do
       subject { super()[:dossier] }
@@ -247,6 +250,71 @@ describe PreferenceListDossier do
         it { expect(subject[:bootstrap_lg]).to eq 2 }
         it { expect(subject[:order]).to be_nil }
         it { expect(subject[:filter]).to be_nil }
+      end
+    end
+
+    describe 'france_connect' do
+      subject { super()[:france_connect] }
+
+      it { expect(subject.size).to eq 3 }
+
+      describe 'gender' do
+        subject { super()[:gender] }
+
+        it { expect(subject[:libelle]).to eq 'Civilité (FC)' }
+        it { expect(subject[:table]).to eq 'france_connect_information' }
+        it { expect(subject[:attr]).to eq 'gender' }
+        it { expect(subject[:attr_decorate]).to eq 'gender_fr' }
+        it { expect(subject[:bootstrap_lg]).to eq 1 }
+        it { expect(subject[:order]).to be_nil }
+        it { expect(subject[:filter]).to be_nil }
+      end
+
+      describe 'family_name' do
+        subject { super()[:family_name] }
+
+        it { expect(subject[:libelle]).to eq 'Nom (FC)' }
+        it { expect(subject[:table]).to eq 'france_connect_information' }
+        it { expect(subject[:attr]).to eq 'family_name' }
+        it { expect(subject[:attr_decorate]).to eq 'family_name' }
+        it { expect(subject[:bootstrap_lg]).to eq 2 }
+        it { expect(subject[:order]).to be_nil }
+        it { expect(subject[:filter]).to be_nil }
+      end
+
+      describe 'gender' do
+        subject { super()[:given_name] }
+
+        it { expect(subject[:libelle]).to eq 'Prénom (FC)' }
+        it { expect(subject[:table]).to eq 'france_connect_information' }
+        it { expect(subject[:attr]).to eq 'given_name' }
+        it { expect(subject[:attr_decorate]).to eq 'given_name' }
+        it { expect(subject[:bootstrap_lg]).to eq 2 }
+        it { expect(subject[:order]).to be_nil }
+        it { expect(subject[:filter]).to be_nil }
+      end
+    end
+
+    context 'when a procedure ID is pasted' do
+      let(:procedure) { (create :procedure, :with_type_de_champ) }
+      let(:procedure_id) { procedure.id }
+
+      describe 'champs' do
+        subject { super()[:champs] }
+
+        it { expect(subject.size).to eq 1 }
+
+        describe 'first champs' do
+          subject { super()["type_de_champ_#{procedure.types_de_champ.first.id}"] }
+
+          it { expect(subject[:libelle]).to eq 'Description' }
+          it { expect(subject[:table]).to eq 'champs' }
+          it { expect(subject[:attr]).to eq procedure.types_de_champ.first.id }
+          it { expect(subject[:attr_decorate]).to eq 'value' }
+          it { expect(subject[:bootstrap_lg]).to eq 2 }
+          it { expect(subject[:order]).to be_nil }
+          it { expect(subject[:filter]).to be_nil }
+        end
       end
     end
   end

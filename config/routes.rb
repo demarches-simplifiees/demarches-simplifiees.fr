@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  default_url_options protocol: :https
 
   get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
 
@@ -37,6 +38,12 @@ Rails.application.routes.draw do
   root 'root#index'
 
   get 'cgu' => 'cgu#index'
+  get 'demo' => 'demo#index'
+  get 'users' => 'users#index'
+  get 'admin' => 'admin#index'
+  get 'backoffice' => 'backoffice#index'
+
+  resources :administrations
 
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
@@ -46,9 +53,6 @@ Rails.application.routes.draw do
     post 'particulier/create' => 'particulier#create'
     post 'particulier/check_email' => 'particulier#check_email'
   end
-
-  get 'demo' => 'demo#index'
-  get 'users' => 'users#index'
 
   namespace :users do
     namespace :dossiers do
@@ -85,8 +89,6 @@ Rails.application.routes.draw do
     resource :dossiers
   end
 
-  get 'admin' => 'admin#index'
-
   namespace :admin do
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
@@ -114,6 +116,8 @@ Rails.application.routes.draw do
         post '/:index/move_down' => 'pieces_justificatives#move_down', as: :move_down
       end
 
+      resources 'mails'
+
       put 'archive' => 'procedures#archive', as: :archive
       put 'publish' => 'procedures#publish', as: :publish
       post 'transfer' => 'procedures#transfer', as: :transfer
@@ -137,17 +141,32 @@ Rails.application.routes.draw do
     get 'address_point' => 'search#get_address_point'
   end
 
-  get 'backoffice' => 'backoffice#index'
+  namespace :invites do
+    post 'dossier/:dossier_id' => '/invites#create', as: 'dossier'
+  end
 
   namespace :backoffice do
     get 'sign_in' => '/gestionnaires/sessions#new'
-
     get 'dossiers/search' => 'dossiers#search'
-
-    get 'filtres' => 'procedure_filter#index'
-    patch 'filtres/update' => 'procedure_filter#update'
+    get 'download_dossiers_tps' => 'dossiers#download_dossiers_tps'
 
     resource :private_formulaire
+
+    resources :dossiers do
+      post 'valid' => 'dossiers#valid'
+      post 'receive' => 'dossiers#receive'
+      post 'refuse' => 'dossiers#refuse'
+      post 'without_continuation' => 'dossiers#without_continuation'
+      post 'close' => 'dossiers#close'
+
+      put 'follow' => 'dossiers#follow'
+    end
+
+    namespace :dossiers do
+      resources :procedure, only: [:show]
+    end
+
+    resources :commentaires, only: [:create]
 
     namespace :preference_list_dossier do
       post 'add'
@@ -156,20 +175,7 @@ Rails.application.routes.draw do
       get 'reload_smartlisting' => '/backoffice/dossiers#reload_smartlisting'
       get 'reload_pref_list'
     end
-
-    resources :dossiers do
-      post 'valid' => 'dossiers#valid'
-      post 'close' => 'dossiers#close'
-
-      post 'invites' => '/invites#create'
-
-      put 'follow' => 'dossiers#follow'
-    end
-
-    resources :commentaires, only: [:create]
   end
-
-  resources :administrations
 
   namespace :api do
     namespace :v1 do

@@ -8,7 +8,11 @@ class UsersController < ApplicationController
   def current_user_dossier dossier_id=nil
     dossier_id ||= params[:dossier_id] || params[:id]
 
-    current_user.dossiers.find(dossier_id)
+    dossier = Dossier.find(dossier_id)
+
+    return dossier if dossier.owner?(current_user.email) || dossier.invite_by_user?(current_user.email)
+
+    raise ActiveRecord::RecordNotFound
   end
 
   def authorized_routes? controller

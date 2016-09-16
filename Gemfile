@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.5.2'
+gem 'rails', '4.2.7.1'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -50,7 +50,7 @@ gem 'will_paginate-bootstrap'
 gem 'draper'
 
 #Gestion des comptes utilisateurs
-gem 'devise'
+gem 'devise', '~> 3.0'
 gem 'openid_connect'
 
 gem 'rest-client'
@@ -82,7 +82,7 @@ gem 'mailjet'
 
 gem "smart_listing"
 
-gem 'css_splitter'
+# gem 'css_splitter'
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 
 gem 'as_csv'
@@ -132,7 +132,7 @@ group :development, :test do
 
   gem "nyan-cat-formatter"
 
-  gem 'parallel_tests'
+  gem 'parallel_tests', '~> 1.9.0'
 
   gem 'brakeman', require: false
   # Deploy

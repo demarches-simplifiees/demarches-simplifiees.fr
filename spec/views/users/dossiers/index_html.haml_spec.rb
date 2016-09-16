@@ -3,118 +3,135 @@ require 'spec_helper'
 describe 'users/dossiers/index.html.haml', type: :view do
   let(:user) { create(:user) }
 
-  let!(:dossier) { create(:dossier, :with_entreprise, user: user, state: 'initiated').decorate }
-  let!(:dossier_2) { create(:dossier, :with_entreprise, user: user, state: 'replied').decorate }
-  let!(:dossier_3) { create(:dossier, :with_entreprise, user: user, state: 'replied').decorate }
-  let!(:dossier_termine) { create(:dossier, :with_entreprise, user: user, state: 'closed').decorate }
+  let!(:decorate_dossier_initiated) { create(:dossier, :with_entreprise, user: user, state: 'initiated').decorate }
+  let!(:decorate_dossier_replied) { create(:dossier, :with_entreprise, user: user, state: 'replied').decorate }
+  let!(:decorate_dossier_updated) { create(:dossier, :with_entreprise, user: user, state: 'updated').decorate }
+  let!(:decorate_dossier_validated) { create(:dossier, :with_entreprise, user: user, state: 'validated').decorate }
+  let!(:decorate_dossier_submitted) { create(:dossier, :with_entreprise, user: user, state: 'submitted').decorate }
+  let!(:decorate_dossier_received) { create(:dossier, :with_entreprise, user: user, state: 'received').decorate }
+  let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, user: user, state: 'closed').decorate }
+  let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, user: user, state: 'refused').decorate }
+  let!(:decorate_dossier_without_continuation) { create(:dossier, :with_entreprise, user: user, state: 'without_continuation').decorate }
+  let!(:decorate_dossier_invite) { create(:dossier, :with_entreprise, user: create(:user), state: 'initiated').decorate }
 
   before do
-    dossier_2.entreprise.update_column(:raison_sociale, 'plip')
-    dossier_2.entreprise.update_column(:raison_sociale, 'plop')
-    dossier_3.entreprise.update_column(:raison_sociale, 'plup')
-    dossier_termine.entreprise.update_column(:raison_sociale, 'plap')
+    create :invite, dossier: decorate_dossier_invite, user: user
   end
 
-  describe 'params liste is a_traiter' do
-    let(:dossiers_list) { user.dossiers.waiting_for_user('DESC') }
-
+  shared_examples 'check_tab_content' do
     before do
       sign_in user
 
+      assign :dossiers_list_facade, (DossiersListFacades.new user, liste)
       assign(:dossiers, (smart_listing_create :dossiers,
-                                              user.dossiers.waiting_for_user('DESC'),
+                                              dossiers_to_display,
                                               partial: "users/dossiers/list",
                                               array: true))
-      assign(:liste, 'a_traiter')
-      assign(:dossiers_a_traiter_total, '1')
-      assign(:dossiers_en_attente_total, '2')
-      assign(:dossiers_termine_total, '1')
-
       render
     end
 
     subject { rendered }
 
-    it { is_expected.to have_css('#users_index') }
-
-    describe 'dossier replied is present' do
-      it { is_expected.to have_content(dossier_2.procedure.libelle) }
-      it { is_expected.to have_content(dossier_2.entreprise.raison_sociale) }
-      it { is_expected.to have_content(dossier_2.display_state) }
-      it { is_expected.to have_content(dossier_2.last_update) }
+    describe 'columns' do
+      it { is_expected.to have_content(decorate_dossier_at_check.id) }
+      it { is_expected.to have_content(decorate_dossier_at_check.procedure.libelle) }
+      it { is_expected.to have_content(decorate_dossier_at_check.display_state) }
+      it { is_expected.to have_content(decorate_dossier_at_check.last_update) }
     end
 
-    describe 'dossier initiated and closed are not present' do
-      it { is_expected.not_to have_content(dossier.entreprise.raison_sociale) }
-      it { is_expected.not_to have_content(dossier_termine.entreprise.raison_sociale) }
-    end
+    it { expect(dossiers_to_display.count).to eq total_dossiers }
 
-    describe 'badges on tabs' do
-      it { is_expected.to have_content('À traiter 1') }
-      it { is_expected.to have_content('En attente 2') }
-      it { is_expected.to have_content('Terminé 1') }
+    describe 'active tab' do
+      it { is_expected.to have_selector(active_class) }
     end
   end
 
-  describe 'params liste is en_attente' do
-    let(:dossiers_list) { user.dossiers.waiting_for_gestionnaire('DESC') }
+  describe 'on tab nouveaux' do
+    let(:total_dossiers) { 1 }
+    let(:active_class) { '.active .text-info' }
+    let(:dossiers_to_display) { user.dossiers.nouveaux }
+    let(:liste) { 'nouveaux' }
 
-    before do
-      sign_in user
-
-      assign(:dossiers, (smart_listing_create :dossiers,
-                                              user.dossiers.waiting_for_gestionnaire('DESC'),
-                                              partial: "users/dossiers/list",
-                                              array: true))
-      assign(:liste, 'en_attente')
-      render
-    end
-
-    subject { rendered }
-
-    it { is_expected.to have_css('#users_index') }
-
-    describe 'dossier initiated is present' do
-      it { is_expected.to have_content(dossier.procedure.libelle) }
-      it { is_expected.to have_content(dossier.entreprise.raison_sociale) }
-      it { is_expected.to have_content(dossier.display_state) }
-      it { is_expected.to have_content(dossier.last_update) }
-    end
-
-    describe 'dossier replied and closed are not present' do
-      it { is_expected.not_to have_content(dossier_2.entreprise.raison_sociale) }
-      it { is_expected.not_to have_content(dossier_termine.entreprise.raison_sociale) }
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_initiated }
     end
   end
 
-  describe 'params liste is termine' do
-    let(:dossiers_list) { user.dossiers.termine('DESC') }
+  describe 'on tab action requise' do
+    let(:total_dossiers) { 1 }
+    let(:active_class) { '.active .text-danger' }
+    let(:dossiers_to_display) { user.dossiers.waiting_for_user_without_validated }
+    let(:liste) { 'a_traiter' }
 
-    before do
-      sign_in user
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_replied }
+    end
+  end
 
-      assign(:dossiers, (smart_listing_create :dossiers,
-                                              user.dossiers.termine('DESC'),
-                                              partial: "users/dossiers/list",
-                                              array: true))
-      assign(:liste, 'termine')
-      render
+  describe 'on tab etude en cours' do
+    let(:total_dossiers) { 1 }
+    let(:active_class) { '.active .text-default' }
+    let(:dossiers_to_display) { user.dossiers.waiting_for_gestionnaire }
+    let(:liste) { 'en_attente' }
+
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_updated }
+    end
+  end
+
+  describe 'on tab etude a deposer' do
+    let(:total_dossiers) { 1 }
+    let(:active_class) { '.active .text-purple' }
+    let(:dossiers_to_display) { user.dossiers.valides }
+    let(:liste) { 'valides' }
+
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_validated }
+    end
+  end
+
+  describe 'on tab etude en examen' do
+    let(:total_dossiers) { 2 }
+    let(:active_class) { '.active .text-default' }
+    let(:dossiers_to_display) { user.dossiers.en_instruction }
+    let(:liste) { 'en_instruction' }
+
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_submitted }
     end
 
-    subject { rendered }
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_received }
+    end
+  end
 
-    it { is_expected.to have_css('#users_index') }
+  describe 'on tab etude termine' do
+    let(:total_dossiers) { 3 }
+    let(:active_class) { '.active .text-success' }
+    let(:dossiers_to_display) { user.dossiers.termine }
+    let(:liste) { 'termine' }
 
-    describe 'dossier termine is present' do
-      it { is_expected.to have_content(dossier_termine.procedure.libelle) }
-      it { is_expected.to have_content(dossier_termine.entreprise.raison_sociale) }
-      it { is_expected.to have_content(dossier_termine.display_state) }
-      it { is_expected.to have_content(dossier_termine.last_update) }
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_closed }
     end
 
-    describe 'dossier initiated and replied are not present' do
-      it { is_expected.not_to have_content(dossier.entreprise.raison_sociale) }
-      it { is_expected.not_to have_content(dossier_2.entreprise.raison_sociale) }
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_refused }
+    end
+
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_without_continuation }
+    end
+  end
+
+  describe 'on tab etude invite' do
+    let(:total_dossiers) { 1 }
+    let(:active_class) { '.active .text-warning' }
+    let(:dossiers_to_display) { user.invites }
+    let(:liste) { 'invite' }
+
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_invite }
     end
   end
 end

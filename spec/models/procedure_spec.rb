@@ -5,8 +5,11 @@ describe Procedure do
     it { is_expected.to have_many(:types_de_piece_justificative) }
     it { is_expected.to have_many(:types_de_champ) }
     it { is_expected.to have_many(:dossiers) }
+    it { is_expected.to have_many(:mail_templates) }
+    it { is_expected.to have_one(:mail_received) }
     it { is_expected.to have_one(:module_api_carto) }
     it { is_expected.to belong_to(:administrateur) }
+    it { is_expected.to have_many(:preference_list_dossiers) }
   end
 
   describe 'attributes' do
@@ -20,6 +23,36 @@ describe Procedure do
     it { is_expected.to have_db_column(:logo_secure_token) }
     it { is_expected.to have_db_column(:cerfa_flag) }
     it { is_expected.to have_db_column(:published) }
+
+    describe 'mail_received' do
+      let(:procedure) { create :procedure }
+
+      before do
+        create :mail_received, procedure: procedure
+      end
+
+      it { expect(procedure.mail_received).not_to be_nil }
+    end
+
+  end
+
+  describe '#build_default_mails' do
+    subject { build :procedure }
+
+    it 'call the fonction build_default_mails' do
+      expect(subject).to receive(:build_default_mails)
+      subject.save
+    end
+
+    describe 'accessible values' do
+
+      before do
+        subject.save
+      end
+
+      it { expect(subject.mail_templates.size).to eq 1 }
+      it { expect(subject.mail_received).not_to be_nil }
+    end
   end
 
   describe 'validation' do
@@ -130,8 +163,15 @@ describe Procedure do
     let(:procedure) { create(:procedure, archived: archived, published: published) }
     let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
+    let!(:type_de_champ_private_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
+    let!(:type_de_champ_private_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
+
+    before do
+      procedure.mail_received.object = "Je vais être cloné"
+    end
+
     subject { procedure.clone }
 
     it 'should duplicate specific objects with different id' do
@@ -139,11 +179,24 @@ describe Procedure do
       expect(subject).to have_same_attributes_as(procedure)
       expect(subject.module_api_carto).to have_same_attributes_as(procedure.module_api_carto)
 
+      expect(subject.types_de_piece_justificative.size).to eq procedure.types_de_piece_justificative.size
+      expect(subject.types_de_champ.size).to eq procedure.types_de_champ.size
+      expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
+      expect(subject.mail_templates.size).to eq procedure.mail_templates.size
+
       subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
 
+      subject.types_de_champ_private.zip(procedure.types_de_champ_private).each do |stc, ptc|
+        expect(stc).to have_same_attributes_as(ptc)
+      end
+
       subject.types_de_piece_justificative.zip(procedure.types_de_piece_justificative).each do |stc, ptc|
+        expect(stc).to have_same_attributes_as(ptc)
+      end
+
+      subject.mail_templates.zip(procedure.mail_templates).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
     end
@@ -175,7 +228,7 @@ describe Procedure do
     end
 
     it 'is correctly set in ProcedurePath table' do
-      expect(ProcedurePath.count(path: procedure.path)).to eq(1)
+      expect(ProcedurePath.where(path: procedure.path).count).to eq(1)
       expect(procedure_path.procedure_id).to eq(procedure.id)
       expect(procedure_path.administrateur_id).to eq(procedure.administrateur_id)
     end
@@ -196,7 +249,7 @@ describe Procedure do
     end
 
     it 'is not in ProcedurePath table anymore' do
-      expect(ProcedurePath.count(path: procedure.path)).to eq(0)
+      expect(ProcedurePath.where(path: procedure.path).count).to eq(0)
       expect(ProcedurePath.find_by_procedure_id(procedure.id)).to be_nil
     end
   end
@@ -214,6 +267,5 @@ describe Procedure do
     subject { procedure.total_dossier }
 
     it { is_expected.to eq 2 }
-
   end
 end

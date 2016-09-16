@@ -68,6 +68,7 @@ set :shared_paths, [
                      'config/initializers/features.yml',
                      "config/environments/#{ENV['to']}.rb",
                      "config/initializers/token.rb",
+                     "config/initializers/urls.rb",
                      "config/initializers/super_admin.rb",
                      "config/unicorn.rb",
                      "config/initializers/raven.rb",

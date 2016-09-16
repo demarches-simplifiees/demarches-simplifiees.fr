@@ -35,36 +35,6 @@ describe Gestionnaire, type: :model do
     it { is_expected.to have_many(:preference_list_dossiers) }
   end
 
-  describe '#dossiers_filter' do
-    let!(:dossier) { create :dossier, procedure: procedure }
-
-    subject { gestionnaire.dossiers_filter }
-
-    context 'before filter' do
-      it { expect(subject.size).to eq 1 }
-    end
-
-    context 'after filter' do
-      let(:procedure_filter) { [procedure_2.id] }
-
-      it { expect(subject.size).to eq 0 }
-    end
-  end
-
-  describe '#procedure_filter_list' do
-    subject { gestionnaire.procedure_filter_list }
-
-    context 'when gestionnaire procedure_filter is empty' do
-      it { expect(subject).to eq [procedure.id, procedure_2.id] }
-    end
-
-    context 'when gestionnaire procedure_filter is no empty' do
-      let(:procedure_filter) { [procedure.id] }
-
-      it { expect(subject).to eq [procedure.id] }
-    end
-  end
-
   describe '#toggle_follow_dossier' do
     let!(:dossier) { create :dossier, procedure: procedure }
 

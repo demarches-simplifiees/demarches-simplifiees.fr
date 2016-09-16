@@ -1,35 +1,56 @@
+=link_to 'Tous mes dossiers en CSV', backoffice_download_dossiers_tps_path, {class: 'btn btn-success btn-sm', style: 'float: right; margin-right: 4%; margin-top: 7px'}
 %h1 Gestion des dossiers
-%br
+
+#filter_by_procedure{style:'margin-left: 5%'}
+  %select{onchange: 'location = this.value', style:'margin-top: 10px; margin-bottom: 10px', id: 'filter_by_procedure_select'}
+    %option{value: backoffice_dossiers_path}
+    - @dossiers_list_facade.gestionnaire_procedures_name_and_id_list.each do |procedure|
+      %option{value: backoffice_dossiers_procedure_path(procedure[:id]), ('selected' if procedure[:id] == params[:id].to_i) => '' }
+        = truncate(procedure[:libelle], {length: 50})
 
 #onglets
   %ul.nav.nav-tabs
-    %li{ class: (@a_traiter_class) }
-      %a{:href => "#{url_for backoffice_dossiers_path(liste: 'a_traiter')}"}
-        %h5.text-danger
-          = "À traiter "
-          .badge.progress-bar-danger
-            =@dossiers_a_traiter_total
-
-    %li{ class: (@en_attente_class) }
-      %a{:href => "#{url_for backoffice_dossiers_path(liste: 'en_attente')}"}
+    %li{ class: (@dossiers_list_facade.nouveaux_class)}
+      %a{:href => "#{url_for @dossiers_list_facade.nouveaux_url}", 'data-toggle' => :tooltip, title: 'Les nouveaux dossiers non ouverts.'}
         %h5.text-info
-          ="En attente "
+          = "Nouveaux "
           .badge.progress-bar-info
-            =@dossiers_en_attente_total
+            =@dossiers_list_facade.nouveaux_total
 
-    %li{ class: (@suivi_class) }
-      %a{:href => "#{url_for backoffice_dossiers_path(liste: 'suivi')}"}
+    %li{ class: (@dossiers_list_facade.a_traiter_class) }
+      %a{:href => "#{url_for @dossiers_list_facade.a_traiter_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui requièrent une action de votre part.'}
+        %h5.text-danger
+          = "Action requise"
+          .badge.progress-bar-danger
+            =@dossiers_list_facade.a_traiter_total
+
+    %li{ class: (@dossiers_list_facade.en_attente_class) }
+      %a{:href => "#{url_for @dossiers_list_facade.en_attente_url}", 'data-toggle' => :tooltip, title: 'Les dossiers en attentes d\'une action de la part de l\'usager.'}
+        %h5.text-default
+          ="Attente usager "
+          .badge.progress-bar-default
+            =@dossiers_list_facade.en_attente_total
+
+    %li{ class: (@dossiers_list_facade.deposes_class) }
+      %a{:href => "#{url_for @dossiers_list_facade.deposes_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui ont été validés et déposés par les usager qui attendent une réponse de bonne réception avant examen.'}
+        %h5.text-purple
+          ="À réceptionner"
+          .badge.progress-bar-purple
+            =@dossiers_list_facade.deposes_total
+
+    %li{ class: (@dossiers_list_facade.a_instruire_class) }
+      %a{:href => "#{url_for @dossiers_list_facade.a_instruire_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui ont été notifiés comme bien réceptionnés et qui attendent un verdict final.'}
         %h5.text-warning
-          ="Suivi"
+          = "À instruire"
           .badge.progress-bar-warning
-            =@dossiers_suivi_total
+            =@dossiers_list_facade.a_instruire_total
 
-    %li{ class: (@termine_class) }
-      %a{:href => "#{url_for backoffice_dossiers_path(liste: 'termine')}"}
+    %li{ class: (@dossiers_list_facade.termine_class) }
+      %a{:href => "#{url_for @dossiers_list_facade.termine_url}",'data-toggle' => :tooltip, title: 'Tous les dossiers qui ont été traité avec un statut "Validé", "Refusé" ou "Sans suite "'}
         %h5.text-success
           = "Terminé"
           .badge.progress-bar-success
-            =@dossiers_termine_total
+            =@dossiers_list_facade.termine_total
 
     %ul.nav.nav-tabs.navbar-right{style:'border-bottom: none;'}
       %li#search{class: "#{'active' unless @dossiers_search.nil?}"}
@@ -45,6 +66,5 @@
         %li#pref_list
           %a.btn#pref_list_dossier_open_action{href: '#'}
             %i.fa.fa-columns
-
 
 %br

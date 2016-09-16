@@ -23,7 +23,13 @@ class Admin::AccompagnateursController < AdminController
   end
 
   def update
-    AccompagnateurService.change_assignement! Gestionnaire.find(params[:accompagnateur_id]), Procedure.find(params[:procedure_id]), params[:to]
+    gestionnaire = Gestionnaire.find(params[:accompagnateur_id])
+    procedure = Procedure.find(params[:procedure_id])
+    to = params[:to]
+
+
+    AccompagnateurService.change_assignement! gestionnaire, procedure, to
+    AccompagnateurService.build_default_column gestionnaire, procedure, to
 
     flash.notice = "Assignement effectué"
     redirect_to admin_procedure_accompagnateurs_path, procedure_id: params[:procedure_id]

@@ -23,6 +23,7 @@ describe Dossier do
     it { is_expected.to have_many(:cerfa) }
     it { is_expected.to have_one(:etablissement) }
     it { is_expected.to have_one(:entreprise) }
+    it { is_expected.to have_one(:individual) }
     it { is_expected.to belong_to(:user) }
     it { is_expected.to have_many(:invites) }
     it { is_expected.to have_many(:follows) }
@@ -101,6 +102,24 @@ describe Dossier do
 
         it 'build all champs_private needed' do
           expect(dossier.champs_private.count).to eq(1)
+        end
+      end
+    end
+
+    describe '#build_default_individual' do
+      context 'when dossier is linked to a procedure with for_individual attr false' do
+        let(:dossier) { create(:dossier, user: user) }
+
+        it 'have no object created' do
+          expect(dossier.individual).to be_nil
+        end
+      end
+
+      context 'when dossier is linked to a procedure with for_individual attr true' do
+        let(:dossier) { create(:dossier, user: user, procedure: (create :procedure, for_individual: true)) }
+
+        it 'have no object created' do
+          expect(dossier.individual).not_to be_nil
         end
       end
     end
@@ -200,6 +219,12 @@ describe Dossier do
             it { is_expected.to eq('replied') }
           end
 
+          context 'when is follow' do
+            let(:action) { 'follow' }
+
+            it { is_expected.to eq 'updated' }
+          end
+
           context 'when is validated the dossier' do
             let(:action) { 'valid' }
 
@@ -225,10 +250,7 @@ describe Dossier do
           context 'when is updated dossier informations' do
             let(:action) { 'update' }
 
-            it {
-
-              is_expected.to eq('updated')
-            }
+            it { is_expected.to eq('updated') }
           end
         end
 
@@ -239,6 +261,12 @@ describe Dossier do
             let(:action) { 'comment' }
 
             it { is_expected.to eq('replied') }
+          end
+
+          context 'when is follow' do
+            let(:action) { 'follow' }
+
+            it { is_expected.to eq 'replied' }
           end
 
           context 'when is validated the dossier' do
@@ -323,10 +351,10 @@ describe Dossier do
           dossier.submitted!
         end
 
-        context 'when user is connect' do
+        context 'when user is connected' do
           let(:role) { 'user' }
 
-          context 'when is post a comment' do
+          context 'when he posts a comment' do
             let(:action) { 'comment' }
 
             it { is_expected.to eq('submitted') }
@@ -336,16 +364,100 @@ describe Dossier do
         context 'when gestionnaire is connect' do
           let(:role) { 'gestionnaire' }
 
-          context 'when is post a comment' do
+          context 'when he posts a comment' do
             let(:action) { 'comment' }
 
             it { is_expected.to eq('submitted') }
           end
 
-          context 'when is closed the dossier' do
+          context 'when he receive the dossier' do
+            let(:action) { 'receive' }
+
+            it { is_expected.to eq('received') }
+          end
+        end
+      end
+
+      context 'when dossier is at state received' do
+        before do
+          dossier.received!
+        end
+
+        context 'when user is connected' do
+          let(:role) { 'user' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('received') }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('received') }
+          end
+
+          context 'when he closes the dossier' do
             let(:action) { 'close' }
 
             it { is_expected.to eq('closed') }
+          end
+        end
+      end
+
+      context 'when dossier is at state refused' do
+        before do
+          dossier.refused!
+        end
+
+        context 'when user is connected' do
+          let(:role) { 'user' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('refused') }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('refused') }
+          end
+        end
+      end
+
+      context 'when dossier is at state without_continuation' do
+        before do
+          dossier.without_continuation!
+        end
+
+        context 'when user is connected' do
+          let(:role) { 'user' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('without_continuation') }
+          end
+        end
+
+        context 'when gestionnaire is connect' do
+          let(:role) { 'gestionnaire' }
+
+          context 'when he posts a comment' do
+            let(:action) { 'comment' }
+
+            it { is_expected.to eq('without_continuation') }
           end
         end
       end
@@ -387,25 +499,36 @@ describe Dossier do
 
       before do
         create :assign_to, gestionnaire: gestionnaire, procedure: procedure_admin
+
+        create(:dossier, procedure: procedure_admin, state: 'draft')
+        create(:dossier, procedure: procedure_admin, state: 'initiated') #nouveaux
+        create(:dossier, procedure: procedure_admin, state: 'initiated') #nouveaux
+        create(:dossier, procedure: procedure_admin, state: 'replied') #en_attente
+        create(:dossier, procedure: procedure_admin, state: 'updated') #a_traiter
+        create(:dossier, procedure: procedure_admin, state: 'submitted') #deposes
+        create(:dossier, procedure: procedure_admin, state: 'received') #a_instruire
+        create(:dossier, procedure: procedure_admin, state: 'received') #a_instruire
+        create(:dossier, procedure: procedure_admin, state: 'closed') #termine
+        create(:dossier, procedure: procedure_admin, state: 'refused') #termine
+        create(:dossier, procedure: procedure_admin, state: 'without_continuation') #termine
+        create(:dossier, procedure: procedure_admin_2, state: 'validated') #en_attente
+        create(:dossier, procedure: procedure_admin_2, state: 'submitted') #deposes
+        create(:dossier, procedure: procedure_admin_2, state: 'closed') #termine
+        create(:dossier, procedure: procedure_admin, state: 'initiated', archived: true) #a_traiter #archived
+        create(:dossier, procedure: procedure_admin, state: 'replied', archived: true) #en_attente #archived
+        create(:dossier, procedure: procedure_admin, state: 'closed', archived: true) #termine #archived
       end
 
-      let!(:dossier1) { create(:dossier, procedure: procedure_admin, state: 'draft') }
-      let!(:dossier2) { create(:dossier, procedure: procedure_admin, state: 'initiated') } #a_traiter
-      let!(:dossier3) { create(:dossier, procedure: procedure_admin, state: 'initiated') } #a_traiter
-      let!(:dossier4) { create(:dossier, procedure: procedure_admin, state: 'replied') } #en_attente
-      let!(:dossier5) { create(:dossier, procedure: procedure_admin, state: 'updated') } #a_traiter
-      let!(:dossier6) { create(:dossier, procedure: procedure_admin_2, state: 'validated') } #en_attente
-      let!(:dossier7) { create(:dossier, procedure: procedure_admin_2, state: 'submitted') } #a_traiter
-      let!(:dossier8) { create(:dossier, procedure: procedure_admin_2, state: 'closed') } #termine
-      let!(:dossier9) { create(:dossier, procedure: procedure_admin, state: 'closed') } #termine
-      let!(:dossier10) { create(:dossier, procedure: procedure_admin, state: 'initiated', archived: true) } #a_traiter #archived
-      let!(:dossier11) { create(:dossier, procedure: procedure_admin, state: 'replied', archived: true) } #en_attente #archived
-      let!(:dossier12) { create(:dossier, procedure: procedure_admin, state: 'closed', archived: true) } #termine #archived
+      describe '#nouveaux' do
+        subject { gestionnaire.dossiers.nouveaux }
+
+        it { expect(subject.size).to eq(2) }
+      end
 
       describe '#waiting_for_gestionnaire' do
         subject { gestionnaire.dossiers.waiting_for_gestionnaire }
 
-        it { expect(subject.size).to eq(3) }
+        it { expect(subject.size).to eq(1) }
       end
 
       describe '#waiting_for_user' do
@@ -414,10 +537,22 @@ describe Dossier do
         it { expect(subject.size).to eq(1) }
       end
 
+      describe '#a_instruire' do
+        subject { gestionnaire.dossiers.a_instruire }
+
+        it { expect(subject.size).to eq(2) }
+      end
+
+      describe '#deposes' do
+        subject { gestionnaire.dossiers.deposes }
+
+        it { expect(subject.size).to eq(1) }
+      end
+
       describe '#termine' do
         subject { gestionnaire.dossiers.termine }
 
-        it { expect(subject.size).to eq(1) }
+        it { expect(subject.size).to eq(3) }
       end
     end
 
@@ -692,6 +827,33 @@ describe Dossier do
       end
 
       it { expect(subject).to eq 2 }
+    end
+  end
+
+  describe '#invite_by_user?' do
+    let(:dossier) { create :dossier }
+    let(:invite_user) { create :user, email: user_invite_email }
+    let(:invite_gestionnaire) { create :user, email: gestionnaire_invite_email }
+    let(:user_invite_email) { 'plup@plop.com' }
+    let(:gestionnaire_invite_email) { 'plap@plip.com' }
+
+    before do
+      create :invite, dossier: dossier, user: invite_user, email: invite_user.email, type: 'InviteUser'
+      create :invite, dossier: dossier, user: invite_gestionnaire, email: invite_gestionnaire.email, type: 'InviteGestionnaire'
+    end
+
+    subject { dossier.invite_by_user? email }
+
+    context 'when email is present on invite list' do
+      let(:email) { user_invite_email }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when email is present on invite list' do
+      let(:email) { gestionnaire_invite_email }
+
+      it { is_expected.to be_falsey }
     end
   end
 end

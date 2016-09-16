@@ -13,9 +13,13 @@ class DossierService
       raise RestClient::ResourceNotFound
     end
 
-    @dossier.create_entreprise(@entreprise_adapter.to_params)
     @etablissement_adapter = SIADE::EtablissementAdapter.new(@siret)
 
+    if @etablissement_adapter.to_params.nil?
+      raise RestClient::ResourceNotFound
+    end
+
+    @dossier.create_entreprise(@entreprise_adapter.to_params)
     @dossier.create_etablissement(@etablissement_adapter.to_params)
 
     @rna_adapter = SIADE::RNAAdapter.new(@siret)

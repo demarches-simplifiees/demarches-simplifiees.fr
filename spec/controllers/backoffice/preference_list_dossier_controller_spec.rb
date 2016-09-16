@@ -36,6 +36,7 @@ describe Backoffice::PreferenceListDossierController, type: :controller do
       it { expect(last.bootstrap_lg).to eq bootstrap_lg }
       it { expect(last.order).to be_nil }
       it { expect(last.filter).to be_nil }
+      it { expect(last.procedure_id).to be_nil }
       it { expect(last.gestionnaire).to eq gestionnaire }
     end
   end

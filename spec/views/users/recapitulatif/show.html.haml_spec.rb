@@ -42,6 +42,12 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
         context 'lien carte' do
           it 'le lien vers carte est présent' do
+            expect(rendered).to have_css('#maj_pj')
+          end
+        end
+
+        context 'lien carte' do
+          it 'le lien vers carte est présent' do
             expect(rendered).to have_css('#maj_carte')
           end
 
@@ -59,7 +65,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           render
         end
 
-        it { expect(rendered).to have_content('Soumis') }
+        it { expect(rendered).to have_content('Nouveau') }
 
         it 'button Modifier les document est present' do
           expect(rendered).to have_content('Modifier les documents')
@@ -125,13 +131,41 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         end
       end
 
-      context 'when dossier state is traité' do
+      context 'when dossier state is closed' do
         let(:state) { 'closed' }
 
         before do
           render
         end
-        it { expect(rendered).to have_content('Traité') }
+        it { expect(rendered).to have_content('Accepté') }
+
+        it 'button Editer mon dossier n\'est plus present' do
+          expect(rendered).not_to have_css('#maj_infos')
+          expect(rendered).not_to have_content('Modifier mon dossier')
+        end
+      end
+
+      context 'when dossier state is refused' do
+        let(:state) { 'refused' }
+
+        before do
+          render
+        end
+        it { expect(rendered).to have_content('Refusé') }
+
+        it 'button Editer mon dossier n\'est plus present' do
+          expect(rendered).not_to have_css('#maj_infos')
+          expect(rendered).not_to have_content('Modifier mon dossier')
+        end
+      end
+
+      context 'when dossier state is without_continuation' do
+        let(:state) { 'without_continuation' }
+
+        before do
+          render
+        end
+        it { expect(rendered).to have_content('Sans suite') }
 
         it 'button Editer mon dossier n\'est plus present' do
           expect(rendered).not_to have_css('#maj_infos')
@@ -141,43 +175,88 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
     end
 
     context 'when invite is logged' do
-      let!(:invite_user) { create(:user, email: 'invite@octo.com') }
 
-      before do
-        create(:invite) { create(:invite, email: invite_user.email, user: invite_user, dossier: dossier) }
-        sign_out dossier.user
-
-        sign_in invite_user
-
-        render
-      end
-
-      describe 'les liens de modifications' do
-        it 'describe link is not present' do
-          expect(rendered).not_to have_css('#maj_infos')
-        end
-
-        it 'map link is not present' do
-          expect(rendered).not_to have_css('#maj_carte')
-        end
-
-        it 'archive link is not present' do
-          expect(rendered).not_to have_content('Archiver')
-        end
-      end
-
-      context 'when dossier is validated' do
-        let(:state) { 'validated' }
+      context 'when invite is by Gestionnaire' do
+        let!(:invite_user) { create(:user, email: 'invite@octo.com') }
 
         before do
+          create(:invite) { create(:invite, email: invite_user.email, user: invite_user, dossier: dossier) }
+          sign_out dossier.user
+          sign_in invite_user
           render
         end
 
-        it 'submitted link is not present' do
-          expect(rendered).not_to have_content('Déposer mon dossier')
+        describe 'les liens de modifications' do
+          it 'describe link is not present' do
+            expect(rendered).not_to have_css('#maj_infos')
+          end
+
+          it 'map link is not present' do
+            expect(rendered).not_to have_css('#maj_carte')
+          end
+
+          it 'PJ link is not present' do
+            expect(rendered).not_to have_css('#maj_pj')
+          end
+
+          it 'archive link is not present' do
+            expect(rendered).not_to have_content('Archiver')
+          end
+        end
+
+        context 'when dossier is validated' do
+          let(:state) { 'validated' }
+
+          before do
+            render
+          end
+
+          it 'submitted link is not present' do
+            expect(rendered).not_to have_content('Déposer mon dossier')
+          end
         end
       end
 
+      context 'invite is by User' do
+        let!(:invite_user) { create(:user, email: 'invite@octo.com') }
+
+        before do
+          create(:invite) { create(:invite, email: invite_user.email, user: invite_user, dossier: dossier, type: 'InviteUser') }
+          sign_out dossier.user
+          sign_in invite_user
+          render
+        end
+
+        describe 'les liens de modifications' do
+          it 'describe link is not present' do
+            expect(rendered).to have_css('#maj_infos')
+          end
+
+          it 'map link is present' do
+            expect(rendered).to have_css('#maj_carte')
+          end
+
+          it 'PJ link is present' do
+            expect(rendered).to have_css('#maj_pj')
+          end
+
+          it 'archive link is present' do
+            expect(rendered).not_to have_content('Archiver')
+          end
+        end
+
+        context 'when dossier is validated' do
+          let(:state) { 'validated' }
+
+          before do
+            render
+          end
+
+          it 'submitted link is not present' do
+            expect(rendered).not_to have_content('Déposer mon dossier')
+          end
+        end
+      end
     end
   end
 end

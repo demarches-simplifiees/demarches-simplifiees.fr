@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160822142045) do
+ActiveRecord::Schema.define(version: 20160913093948) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -213,11 +213,26 @@ ActiveRecord::Schema.define(version: 20160822142045) do
   add_index "gestionnaires", ["email"], name: "index_gestionnaires_on_email", unique: true, using: :btree
   add_index "gestionnaires", ["reset_password_token"], name: "index_gestionnaires_on_reset_password_token", unique: true, using: :btree
 
+  create_table "individuals", force: :cascade do |t|
+    t.string  "nom"
+    t.string  "prenom"
+    t.string  "birthdate"
+    t.integer "dossier_id"
+  end
+
   create_table "invites", force: :cascade do |t|
     t.string  "email"
     t.string  "email_sender"
     t.integer "dossier_id"
     t.integer "user_id"
+    t.string  "type",         default: "InviteGestionnaire"
+  end
+
+  create_table "mail_templates", force: :cascade do |t|
+    t.string  "object"
+    t.text    "body"
+    t.string  "type"
+    t.integer "procedure_id"
   end
 
   create_table "module_api_cartos", force: :cascade do |t|
@@ -250,6 +265,7 @@ ActiveRecord::Schema.define(version: 20160822142045) do
     t.string  "order"
     t.string  "filter"
     t.integer "gestionnaire_id"
+    t.integer "procedure_id"
   end
 
   create_table "procedure_paths", force: :cascade do |t|
@@ -276,6 +292,9 @@ ActiveRecord::Schema.define(version: 20160822142045) do
     t.boolean  "cerfa_flag",        default: false
     t.string   "logo_secure_token"
     t.boolean  "published",         default: false, null: false
+    t.string   "lien_site_web"
+    t.string   "lien_notice"
+    t.boolean  "for_individual",    default: false
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|

@@ -5,11 +5,8 @@ class Backoffice::DossiersController < ApplicationController
   before_action :authenticate_gestionnaire!
 
   def index
-    @liste = params[:liste] || 'a_traiter'
-
-    smartlisting_dossier
-
-    total_dossiers_per_state
+    cookies[:liste] = params[:liste] || cookies[:liste] || 'a_traiter'
+    smartlisting_dossier (cookies[:liste])
   end
 
   def show
@@ -17,9 +14,19 @@ class Backoffice::DossiersController < ApplicationController
     @champs = @facade.champs_private unless @facade.nil?
   end
 
+  def download_dossiers_tps
+    dossiers = current_gestionnaire.dossiers.where.not(state: :draft)
+
+    response.headers['Content-Type'] = 'text/csv'
+
+    render csv: dossiers, status: 200
+  end
+
   def search
     @search_terms = params[:q]
     @dossiers_search, @dossier = Dossier.search(current_gestionnaire, @search_terms)
+
+    create_dossiers_list_facade
 
     unless @dossiers_search.empty?
       @dossiers_search = @dossiers_search.paginate(:page => params[:page]).decorate
@@ -27,7 +34,6 @@ class Backoffice::DossiersController < ApplicationController
 
     @dossier = @dossier.decorate unless @dossier.nil?
 
-    total_dossiers_per_state
   rescue RuntimeError
     @dossiers_search = []
   end
@@ -43,17 +49,54 @@ class Backoffice::DossiersController < ApplicationController
     render 'show'
   end
 
+  def receive
+    create_dossier_facade params[:dossier_id]
+
+    @facade.dossier.next_step! 'gestionnaire', 'receive'
+    flash.notice = 'Dossier considéré comme reçu.'
+
+    NotificationMailer.dossier_received(@facade.dossier).deliver_now!
+
+    render 'show'
+  end
+
+  def refuse
+    create_dossier_facade params[:dossier_id]
+
+    @facade.dossier.next_step! 'gestionnaire', 'refuse'
+    flash.notice = 'Dossier considéré comme refusé.'
+
+    NotificationMailer.dossier_refused(@facade.dossier).deliver_now!
+
+    render 'show'
+  end
+
+  def without_continuation
+    create_dossier_facade params[:dossier_id]
+
+    @facade.dossier.next_step! 'gestionnaire', 'without_continuation'
+    flash.notice = 'Dossier considéré comme sans suite.'
+
+    NotificationMailer.dossier_without_continuation(@facade.dossier).deliver_now!
+
+    render 'show'
+  end
+
   def close
     create_dossier_facade params[:dossier_id]
 
     @facade.dossier.next_step! 'gestionnaire', 'close'
     flash.notice = 'Dossier traité avec succès.'
 
+    NotificationMailer.dossier_closed(@facade.dossier).deliver_now!
+
     render 'show'
   end
 
   def follow
     follow = current_gestionnaire.toggle_follow_dossier params[:dossier_id]
+
+    current_gestionnaire.dossiers.find(params[:dossier_id]).next_step! 'gestionnaire', 'follow'
 
     flash.notice = (follow.class == Follow ? 'Dossier suivi' : 'Dossier relaché')
     redirect_to request.referer
@@ -65,52 +108,25 @@ class Backoffice::DossiersController < ApplicationController
     rescue NoMethodError
       @liste = 'a_traiter'
     end
-    smartlisting_dossier
+
+    smartlisting_dossier @liste
 
     render 'backoffice/dossiers/index', formats: :js
   end
 
   private
 
-  def smartlisting_dossier
+  def smartlisting_dossier liste
+    create_dossiers_list_facade liste
+
     @dossiers = smart_listing_create :dossiers,
-                                     dossiers_to_display,
+                                     @dossiers_list_facade.dossiers_to_display,
                                      partial: "backoffice/dossiers/list",
                                      array: true
   end
 
-  def dossiers_to_display
-    {'a_traiter' => waiting_for_gestionnaire,
-     'en_attente' => waiting_for_user,
-     'termine' => termine,
-     'suivi' => suivi}[@liste]
-  end
-
-  def waiting_for_gestionnaire
-    @a_traiter_class = (@liste == 'a_traiter' ? 'active' : '')
-    @waiting_for_gestionnaire ||= current_gestionnaire.dossiers_filter.waiting_for_gestionnaire
-  end
-
-  def waiting_for_user
-    @en_attente_class = (@liste == 'en_attente' ? 'active' : '')
-    @waiting_for_user ||= current_gestionnaire.dossiers_filter.waiting_for_user
-  end
-
-  def termine
-    @termine_class = (@liste == 'termine' ? 'active' : '')
-    @termine ||= current_gestionnaire.dossiers_filter.termine
-  end
-
-  def suivi
-    @suivi_class = (@liste == 'suivi' ? 'active' : '')
-    @suivi ||= current_gestionnaire.dossiers_follow
-  end
-
-  def total_dossiers_per_state
-    @dossiers_a_traiter_total = waiting_for_gestionnaire.count
-    @dossiers_en_attente_total = waiting_for_user.count
-    @dossiers_termine_total = termine.count
-    @dossiers_suivi_total = suivi.count
+  def create_dossiers_list_facade liste='a_traiter'
+    @dossiers_list_facade = DossiersListFacades.new current_gestionnaire, liste, retrieve_procedure
   end
 
   def create_dossier_facade dossier_id
@@ -119,5 +135,11 @@ class Backoffice::DossiersController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(controller: '/backoffice')
+  end
+
+
+  def retrieve_procedure
+    return if params[:procedure_id].blank?
+    current_gestionnaire.procedures.find params[:procedure_id]
   end
 end

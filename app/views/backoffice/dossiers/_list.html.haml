@@ -1,19 +1,29 @@
 - unless smart_listing.empty?
   %table.table
     %thead
-      - current_gestionnaire.preference_list_dossiers.order(:id).each do |preference|
-        %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}= smart_listing.sortable preference.libelle, preference.table_attr
+      - @dossiers_list_facade.preference_list_dossiers_filter.each do |preference|
+        %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}
+          - if preference.table == 'champs'
+            = preference.libelle
+          -else
+            = smart_listing.sortable preference.libelle, preference.table_attr
+
       %th.col-md-1.col-lg-1.center Actions
       %th.col-md-1.col-lg-1.center Abonnés
 
     - @dossiers.each do |dossier|
       %tr
-        - current_gestionnaire.preference_list_dossiers.order(:id).each_with_index do |preference, index|
+        - @dossiers_list_facade.preference_list_dossiers_filter.each_with_index do |preference, index|
           %td
             - if preference.table.nil? || preference.table.empty?
               - value = dossier.decorate.public_send(preference.attr_decorate)
+            - elsif preference.table == 'champs'
+              - value = dossier.champs.find_by_type_de_champ_id(preference.attr).value
             - else
-              - value = dossier.public_send(preference.table).decorate.public_send(preference.attr_decorate)
+              - begin
+                - value = dossier.public_send(preference.table).decorate.public_send(preference.attr_decorate)
+              - rescue NoMethodError
+                - value = ''
 
             - if index == 0
               = link_to value, backoffice_dossier_path(id: dossier.id)
