@@ -18,6 +18,8 @@ class SIADE::EtablissementAdapter
       params[k] = v if address_attribut_to_fetch.include?(k)
     end
     params
+  rescue
+    nil
   end
 
   def attr_to_fetch
