@@ -21,4 +21,5 @@
 
       - unless @facade.procedure.lien_site_web.blank?
         .center
-          =link_to 'En savoir plus ...', @facade.procedure.lien_site_web, {target: '_blank'}
+          %a{href: "#{@facade.procedure.lien_site_web.html_safe}", target: '_blank'}
+            En savoir plus ...

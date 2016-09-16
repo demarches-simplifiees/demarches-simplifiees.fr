@@ -23,7 +23,12 @@ function the_terms() {
 }
 
 function error_form_siret(invalid_siret){
-    $("input[type='submit']").removeClass('btn-success').addClass('btn-danger').val('Erreur SIRET');
+    setTimeout(function(){
+        $("input[type='submit']").val('Erreur SIRET');
+    }, 10);
+
+    $("input[type='submit']").removeClass('btn-success').addClass('btn-danger');
+
     $("#dossier_siret").addClass('input-error').val(invalid_siret).on('input', reset_form_siret);
 
 }

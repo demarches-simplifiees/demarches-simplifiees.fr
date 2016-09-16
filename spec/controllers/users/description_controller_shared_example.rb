@@ -285,7 +285,7 @@ shared_examples 'description_controller_spec_POST_piece_justificatives_for_owner
                                            'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
                                            'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1} }
 
-  context 'when user is the owner' do
+  context 'when user is the owner', vcr: {cassette_name: 'controllers_users_description_controller_pieces_justificatives'} do
     before do
       sign_in user
     end

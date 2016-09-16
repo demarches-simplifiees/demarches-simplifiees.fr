@@ -62,7 +62,7 @@ GEM
     autoprefixer-rails (5.2.1)
       execjs
       json
-    bcrypt (3.1.10)
+    bcrypt (3.1.11)
     bindata (2.1.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
@@ -119,7 +119,7 @@ GEM
     debug_inspector (0.0.2)
     deep_cloneable (2.2.1)
       activerecord (>= 3.1.0, < 5.2.0)
-    devise (3.4.1)
+    devise (3.5.10)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
@@ -141,7 +141,7 @@ GEM
     erubis (2.7.0)
     eventmachine (1.0.8)
     excon (0.49.0)
-    execjs (2.5.2)
+    execjs (2.7.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     faraday (0.9.1)
@@ -461,8 +461,8 @@ GEM
       json (~> 1.4)
     ref (2.0.0)
     request_store (1.1.0)
-    responders (2.1.0)
-      railties (>= 4.2.0, < 5)
+    responders (2.3.0)
+      railties (>= 4.2.0, < 5.1)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
@@ -574,9 +574,8 @@ GEM
       coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (2.7.1)
-      execjs (>= 0.3.0)
-      json (>= 1.8.0)
+    uglifier (3.0.2)
+      execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
@@ -592,7 +591,7 @@ GEM
       activemodel (>= 3.0.0)
       addressable
     vcr (3.0.1)
-    warden (1.2.3)
+    warden (1.2.6)
       rack (>= 1.0)
     web-console (2.2.1)
       activemodel (>= 4.0)
@@ -636,7 +635,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   database_cleaner
   deep_cloneable (~> 2.2.1)
-  devise
+  devise (~> 3.0)
   draper
   factory_girl
   fog
