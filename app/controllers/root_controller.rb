@@ -14,7 +14,11 @@ class RootController < ApplicationController
       redirect_to administrations_path
 
     else
-      @latest_release = Github::Releases.latest
+      begin
+        @latest_release = Github::Releases.latest
+      rescue OpenSSL::SSL::SSLErrorWaitReadable
+        @latest_release = nil
+      end
       render 'landing'
     end
   end
