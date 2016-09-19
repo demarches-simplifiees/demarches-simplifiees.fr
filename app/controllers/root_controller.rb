@@ -14,7 +14,8 @@ class RootController < ApplicationController
       redirect_to administrations_path
 
     else
-      @latest_release = Github::Releases.latest
+      # @latest_release = Github::Releases.latest
+      @latest_release = nil
       render 'landing'
     end
   end
