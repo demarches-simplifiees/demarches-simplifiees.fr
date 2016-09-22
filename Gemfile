@@ -92,6 +92,8 @@ gem "maruku" # for Markdown support in apipie
 
 gem 'openstack'
 
+gem 'browser'
+
 group :test do
   gem 'capybara'
   gem 'factory_girl'

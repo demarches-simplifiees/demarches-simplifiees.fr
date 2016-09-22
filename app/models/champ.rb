@@ -9,7 +9,7 @@ class Champ < ActiveRecord::Base
   end
 
   def data_provide
-    return 'datepicker' if type_champ == 'datetime' || type_champ == 'date'
+    return 'datepicker' if (type_champ == 'datetime' || type_champ == 'date') && !BROWSER.value.chrome?
     return 'typeahead' if type_champ == 'address'
   end
 
