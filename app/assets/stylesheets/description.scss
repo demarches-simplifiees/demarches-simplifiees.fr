@@ -111,16 +111,16 @@
   @extend .col-lg-2;
 
   input[type='date'] {
-    width: 120px;
+    width: 160px;
   }
 }
 
 .type_champ-datetime {
-  @extend .col-md-4;
-  @extend .col-lg-4;
+  @extend .col-md-5;
+  @extend .col-lg-5;
 
   input[type='datetime'] {
-    width: 120px;
+    width: 160px;
   }
 }
 
