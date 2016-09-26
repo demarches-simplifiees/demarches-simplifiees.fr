@@ -6,7 +6,8 @@
 = image_tag('marianne_small.png', class: 'logo')
 %a{href: '/'}
   = image_tag('logo-tps.png', class: 'logo')
-%a{href: '/', class: 'btn btn-md'}
+
+%a{href: (current_gestionnaire.procedure_filter.empty? ? '/' : backoffice_dossiers_procedure_path(current_gestionnaire.procedure_filter)), class: 'btn btn-md'}
   -if gestionnaire_signed_in? || user_signed_in?
     Mes Dossiers
   -elsif administrateur_signed_in?
