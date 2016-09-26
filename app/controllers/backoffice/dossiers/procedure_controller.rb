@@ -8,6 +8,8 @@ class Backoffice::Dossiers::ProcedureController < ApplicationController
     cookies[:liste] = params[:liste] || cookies[:liste] || 'a_traiter'
     smartlisting_dossier cookies[:liste]
 
+    current_gestionnaire.update_column :procedure_filter, [params[:id]]
+
     render 'backoffice/dossiers/index'
   rescue ActiveRecord::RecordNotFound
     flash[:alert] = "Cette procédure n'existe pas ou vous n'y avez pas accès."

@@ -6,6 +6,9 @@ class Backoffice::DossiersController < ApplicationController
 
   def index
     cookies[:liste] = params[:liste] || cookies[:liste] || 'a_traiter'
+
+    current_gestionnaire.update_column :procedure_filter, []
+
     smartlisting_dossier (cookies[:liste])
   end
 
