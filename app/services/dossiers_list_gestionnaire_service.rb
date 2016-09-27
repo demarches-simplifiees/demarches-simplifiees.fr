@@ -76,7 +76,7 @@ class DossiersListGestionnaireService
 
     @current_devise_profil.preference_list_dossiers
         .find_by(table: table, attr: attr, procedure: @procedure)
-        .update_column :order, order
+        .update order: order
   end
 
   def reset_sort!
