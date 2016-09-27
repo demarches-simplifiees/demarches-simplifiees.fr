@@ -163,7 +163,7 @@ Rails.application.routes.draw do
     end
 
     namespace :dossiers do
-      resources :procedure, only: [:show]
+      get 'procedure/:id' => 'procedure#index', as: 'procedure'
     end
 
     resources :commentaires, only: [:create]
