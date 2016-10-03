@@ -35,7 +35,7 @@
               %th{ style: 'width:25%' }
                 =champ.libelle
               %td
-                =champ.decorate.value
+                =champ.decorate.value.html_safe
       .col-lg-6.col-md-6
         =render partial: '/dossiers/pieces_justificatives'
   %br
