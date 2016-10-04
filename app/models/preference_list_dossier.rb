@@ -7,6 +7,11 @@ class PreferenceListDossier < ActiveRecord::Base
     table + '.' + attr
   end
 
+  def table_with_s_attr
+    return self.attr if table.nil? || table.empty?
+    table + 's' + '.' + attr
+  end
+
   def self.available_columns_for procedure_id = nil
     columns = {
         dossier: columns_dossier,

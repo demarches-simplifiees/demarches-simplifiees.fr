@@ -5,14 +5,17 @@ class Backoffice::DossiersListController < ApplicationController
   before_action :authenticate_gestionnaire!
 
   def index
-    liste = params[:liste] || cookies[:liste] || 'a_traiter'
-    cookies[:liste] = liste
+    cookies[:liste] = param_liste
 
-    dossiers_list_facade liste
-
+    dossiers_list_facade param_liste
     dossiers_list_facade.service.change_sort! param_sort unless params[:dossiers_smart_listing].nil?
 
     smartlisting_dossier
+  end
+
+  def filter
+    dossiers_list_facade param_liste
+    dossiers_list_facade.service.add_filter param_filter
   end
 
   def dossiers_list_facade liste='a_traiter'
@@ -31,5 +34,13 @@ class Backoffice::DossiersListController < ApplicationController
 
   def param_sort
     params[:dossiers_smart_listing][:sort]
+  end
+
+  def param_filter
+    params[:filter_input]
+  end
+
+  def param_liste
+    @liste ||= params[:liste] || cookies[:liste] || 'a_traiter'
   end
 end

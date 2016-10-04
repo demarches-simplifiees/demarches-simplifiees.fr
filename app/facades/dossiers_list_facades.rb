@@ -141,6 +141,10 @@ class DossiersListFacades
     base_url 'termine'
   end
 
+  def filter_url
+    @procedure.nil? ? backoffice_dossiers_filter_path(liste: liste) : backoffice_dossiers_procedure_filter_path(id: @procedure.id, liste: liste)
+  end
+
   private
 
   def gestionnaire?
