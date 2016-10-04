@@ -39,7 +39,7 @@ class DossiersListGestionnaireService
   end
 
   def filter_dossiers
-    @filter_dossiers ||= @procedure.nil? ? @current_devise_profil.dossiers : @procedure.dossiers
+    @filter_dossiers ||= @procedure.nil? ? @current_devise_profil.dossiers.joins(joins_filter).where(where_filter) : @procedure.dossiers.joins(joins_filter).where(where_filter)
   end
 
   def filter_procedure_reset!
@@ -65,6 +65,7 @@ class DossiersListGestionnaireService
   end
 
   def change_sort! new_sort
+    return if new_sort.blank?
 
     raw_table_attr = new_sort.keys.first.split('.')
     order = new_sort.values.first
@@ -84,5 +85,50 @@ class DossiersListGestionnaireService
         .where(procedure: @procedure)
         .where.not(order: nil)
         .update_all order: nil
+  end
+
+  def joins_filter
+    filter_preference_list.inject([]) do |acc, preference|
+      acc.push(preference.table.to_sym) unless preference.table.blank?
+      acc
+    end
+  end
+
+  def where_filter
+    filter_preference_list.inject('') do |acc, preference|
+      unless preference.filter.blank?
+        filter = preference.filter.gsub('*', '%')
+        filter = "%"+filter+"%" unless filter.include? '%'
+
+        acc += (acc.to_s.empty? ? ''.to_s : " AND ") +
+            preference.table_with_s_attr +
+            " LIKE " +
+            "'" +
+            filter +
+            "'"
+      end
+      acc
+    end
+  end
+
+  def add_filter new_filter
+    raw_table_attr = new_filter.keys.first.split('.')
+    filter = new_filter.values.first
+
+    table = (raw_table_attr.size == 2 ? raw_table_attr.first : nil)
+    attr = (raw_table_attr.size == 2 ? raw_table_attr.second : raw_table_attr.first)
+
+    @current_devise_profil.preference_list_dossiers
+        .find_by(table: table, attr: attr, procedure: @procedure)
+        .update filter: filter
+  end
+
+  private
+
+  def filter_preference_list
+    @filter_preference ||= @current_devise_profil.preference_list_dossiers
+                               .where(procedure: @procedure)
+                               .where.not(filter: nil)
+                               .order(:id)
   end
 end

@@ -11,6 +11,12 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     @champs = @facade.champs_private unless @facade.nil?
   end
 
+  def filter
+    super
+
+    redirect_to backoffice_dossiers_path(liste: param_liste)
+  end
+
   def download_dossiers_tps
     dossiers = current_gestionnaire.dossiers.where.not(state: :draft)
 

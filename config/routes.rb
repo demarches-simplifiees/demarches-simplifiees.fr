@@ -162,8 +162,12 @@ Rails.application.routes.draw do
       put 'follow' => 'dossiers#follow'
     end
 
+
     namespace :dossiers do
+      post 'filter'
+
       get 'procedure/:id' => 'procedure#index', as: 'procedure'
+      post 'procedure/:id/filter' => 'procedure#filter', as: 'procedure_filter'
     end
 
     resources :commentaires, only: [:create]

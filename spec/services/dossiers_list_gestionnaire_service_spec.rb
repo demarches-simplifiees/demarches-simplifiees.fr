@@ -90,4 +90,83 @@ describe DossiersListGestionnaireService do
       end
     end
   end
+
+  describe '#add_filter' do
+    let(:table) { 'entreprise' }
+    let(:attr) { 'raison_sociale' }
+    let(:filter_value) { 'plop' }
+
+    let(:select_preference_list_dossier) { gestionnaire.preference_list_dossiers
+                                               .find_by(table: table, attr: attr, procedure: nil) }
+
+    subject { described_class.new(gestionnaire, liste).add_filter new_filter }
+
+    describe 'with one or two params in filter' do
+      before do
+        subject
+        gestionnaire.reload
+      end
+
+      context 'when sort_params as table and attr' do
+        let(:new_filter) { ({"#{table}.#{attr}" => filter_value}) }
+
+        it { expect(select_preference_list_dossier.filter).to eq filter_value }
+      end
+
+      context 'when sort_params as no table' do
+        let(:new_filter) { ({"#{attr}" => filter_value}) }
+        let(:table) { nil }
+        let(:attr) { 'id' }
+
+        it { expect(select_preference_list_dossier.filter).to eq filter_value }
+      end
+    end
+  end
+
+  describe '#where_filter' do
+    before do
+      gestionnaire.preference_list_dossiers
+          .find_by(table: 'entreprise', attr: 'raison_sociale', procedure: nil)
+          .update_column :filter, 'plop'
+
+      gestionnaire.preference_list_dossiers
+          .find_by(table: nil, attr: 'id', procedure: nil)
+          .update_column :filter, '23'
+    end
+
+    subject { DossiersListGestionnaireService.new(gestionnaire, liste, nil).where_filter }
+
+    it { is_expected.to eq "id LIKE '%23%' AND entreprises.raison_sociale LIKE '%plop%'" }
+
+    context 'when last filter caractere is *' do
+
+      before do
+        gestionnaire.preference_list_dossiers
+            .find_by(table: 'entreprise', attr: 'raison_sociale', procedure: nil)
+            .update_column :filter, 'plop*'
+      end
+
+      it { is_expected.to eq "id LIKE '%23%' AND entreprises.raison_sociale LIKE 'plop%'" }
+    end
+
+    context 'when first filter caractere is *' do
+      before do
+        gestionnaire.preference_list_dossiers
+            .find_by(table: nil, attr: 'id', procedure: nil)
+            .update_column :filter, '*23'
+      end
+
+      it { is_expected.to eq "id LIKE '%23' AND entreprises.raison_sociale LIKE '%plop%'" }
+    end
+
+    context 'when * caractere is presente' do
+      before do
+        gestionnaire.preference_list_dossiers
+            .find_by(table: 'entreprise', attr: 'raison_sociale', procedure: nil)
+            .update_column :filter, 'plop*plip'
+      end
+
+      it { is_expected.to eq "id LIKE '%23%' AND entreprises.raison_sociale LIKE 'plop%plip'" }
+    end
+  end
 end

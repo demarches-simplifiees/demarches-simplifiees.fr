@@ -11,6 +11,12 @@ class Backoffice::Dossiers::ProcedureController < Backoffice::DossiersListContro
     redirect_to backoffice_dossiers_path
   end
 
+  def filter
+    super
+
+    redirect_to backoffice_dossiers_procedure_path(id: params[:id], liste: param_liste)
+  end
+
   private
 
   def retrieve_procedure
