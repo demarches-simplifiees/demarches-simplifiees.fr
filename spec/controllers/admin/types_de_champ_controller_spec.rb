@@ -34,7 +34,7 @@ describe Admin::TypesDeChampController, type: :controller do
 
   describe '#update' do
     let(:libelle) { 'mon libelle' }
-    let(:type_champ) { 'text' }
+    let(:type_champ) { 'header_section' }
     let(:description) { 'titi' }
     let(:order_place) { '' }
     let(:types_de_champ_id) { '' }
@@ -78,9 +78,23 @@ describe Admin::TypesDeChampController, type: :controller do
         subject { procedure.types_de_champ.first }
 
         it { expect(subject.libelle).to eq('mon libelle') }
-        it { expect(subject.type_champ).to eq('text') }
+        it { expect(subject.type_champ).to eq('header_section') }
         it { expect(subject.description).to eq('titi') }
-        it { expect(subject.mandatory).to be_truthy }
+      end
+
+      context 'when type_champ is header_section and mandatory is true' do
+        let(:type_champ) { 'header_section' }
+        let(:mandatory) { 'on' }
+
+        before do
+          request
+          procedure.reload
+        end
+
+        subject { procedure.types_de_champ.first }
+
+        it { expect(subject.type_champ).to eq type_champ }
+        it { expect(subject.mandatory).to be_falsey }
       end
 
       context 'when type_de_champ already exist' do
@@ -88,20 +102,24 @@ describe Admin::TypesDeChampController, type: :controller do
         let(:type_de_champ) { procedure.types_de_champ.first }
         let(:types_de_champ_id) { type_de_champ.id }
         let(:libelle) { 'toto' }
-        let(:type_champ) { 'text' }
+        let(:type_champ) { 'header_section' }
         let(:description) { 'citrouille' }
         let(:order_place) { '0' }
         let(:mandatory) { 'on' }
+
         before do
           request
           procedure.reload
         end
+
         subject { procedure.types_de_champ.first }
+
         it { expect(subject.libelle).to eq('toto') }
-        it { expect(subject.type_champ).to eq('text') }
+        it { expect(subject.type_champ).to eq('header_section') }
         it { expect(subject.description).to eq('citrouille') }
         it { expect(subject.order_place).to eq(0) }
         it { expect(subject.order_place).to be_truthy }
+        it { expect(subject.mandatory).to be_falsey }
       end
     end
     context 'when procedure is not found' do
