@@ -62,6 +62,8 @@ Rails.application.routes.draw do
     end
 
     resources :dossiers do
+      get '/add_siret' => 'dossiers/add_siret#show'
+
       get '/description' => 'description#show'
       get '/description/error' => 'description#error'
       post 'description' => 'description#create'

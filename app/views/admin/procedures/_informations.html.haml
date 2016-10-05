@@ -25,7 +25,7 @@
     %h4 Drapeau européen
     %label
       =f.check_box :euro_flag
-    Afficher le drapeau européen
+      Afficher le drapeau européen
 
 %br
 
@@ -60,9 +60,16 @@
 .row
   .col-md-6.col-lg-6
     %h4 Particuliers
-    %label
-      =f.check_box :for_individual
-      Cette procédure s'adresse à un public qui
-      %b
-        ne possède pas de numéro SIRET,
-      qui doivent donc s'identifier en tant que personne physique.
+    %div
+      %label
+        =f.check_box :for_individual
+        Cette procédure s'adresse à un public qui
+        %b
+          ne possède pas (ou pas encore) de numéro SIRET,
+        qui doivent donc s'identifier en tant que personne physique.
+
+      %ul#individual_with_siret{style:'margin-top: 8px'}
+        %li
+          %label
+            =f.check_box :individual_with_siret
+            Donner la possibilité de renseigner un SIRET au cours de la construction du dossier.

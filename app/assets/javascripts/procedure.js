@@ -4,6 +4,7 @@ $(document).ready(button_edit_procedure_init);
 function button_edit_procedure_init(){
     buttons_api_carto();
     button_cerfa();
+    button_individual();
 }
 
 function buttons_api_carto () {
@@ -24,4 +25,14 @@ function button_cerfa () {
 
     if ($('#procedure_cerfa_flag').is(':checked'))
         $("#procedure_lien_demarche").show();
+}
+
+function button_individual () {
+
+    $("#procedure_for_individual").on('change', function() {
+        $("#individual_with_siret").toggle()
+    });
+
+    if ($('#procedure_for_individual').is(':checked'))
+        $("#individual_with_siret").show();
 }

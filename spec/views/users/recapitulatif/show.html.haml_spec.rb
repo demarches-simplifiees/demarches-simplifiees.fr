@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/recapitulatif/show.html.haml', type: :view do
-  let(:dossier) { create(:dossier, :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto, :with_two_type_de_piece_justificative)) }
+  let(:dossier) { create(:dossier, :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto, :with_two_type_de_piece_justificative, for_individual: true, individual_with_siret: true)) }
   let(:dossier_id) { dossier.id }
   let(:state) { 'draft' }
 
@@ -43,6 +43,12 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         context 'lien carte' do
           it 'le lien vers carte est présent' do
             expect(rendered).to have_css('#maj_pj')
+          end
+        end
+
+        context 'lien carte' do
+          it 'le lien vers le renseignement un SIRET est présent' do
+            expect(rendered).to have_css('#add_siret')
           end
         end
 

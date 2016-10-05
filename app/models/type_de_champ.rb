@@ -28,7 +28,7 @@ class TypeDeChamp < ActiveRecord::Base
   before_validation :change_header_section_mandatory
 
   def self.type_de_champs_list_fr
-    type_champs.map { |champ| [ I18n.t("activerecord.attributes.type_de_champ.type_champs.#{champ.last}"), champ.first ] }
+    type_champs.map { |champ| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{champ.last}"), champ.first] }
   end
 
   def field_for_list?
@@ -37,5 +37,6 @@ class TypeDeChamp < ActiveRecord::Base
 
   def change_header_section_mandatory
     self.mandatory = false if self.type_champ == 'header_section'
+    true
   end
 end
