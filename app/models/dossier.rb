@@ -287,8 +287,8 @@ class Dossier < ActiveRecord::Base
   end
 
   def reset!
-    entreprise.destroy
     etablissement.destroy
+    entreprise.destroy
 
     update_attributes(autorisation_donnees: false)
   end
