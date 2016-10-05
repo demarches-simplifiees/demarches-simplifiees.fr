@@ -65,8 +65,12 @@ class Users::DossiersController < UsersController
     end
 
     @facade = facade params[:dossier_id]
-    render '/dossiers/new_siret', formats: 'js'
 
+    if @facade.procedure.individual_with_siret?
+      render '/dossiers/add_siret', formats: 'js'
+    else
+      render '/dossiers/new_siret', formats: 'js'
+    end
   rescue RestClient::ResourceNotFound, RestClient::BadRequest
     errors_valid_siret
 
@@ -80,7 +84,11 @@ class Users::DossiersController < UsersController
 
     @facade = facade params[:dossier_id]
 
-    render '/dossiers/new_siret', formats: :js
+    if @facade.procedure.individual_with_siret?
+      render '/dossiers/add_siret', formats: 'js'
+    else
+      render '/dossiers/new_siret', formats: 'js'
+    end
   end
 
   def update

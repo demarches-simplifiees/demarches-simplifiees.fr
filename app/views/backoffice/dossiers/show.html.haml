@@ -7,7 +7,7 @@
       = @facade.dossier.display_state
 
     = render partial: 'follow_action'
-  - unless @facade.procedure.for_individual?
+  - unless @facade.entreprise.nil?
     = render partial: '/dossiers/infos_entreprise'
 
   = render partial: '/dossiers/infos_dossier'

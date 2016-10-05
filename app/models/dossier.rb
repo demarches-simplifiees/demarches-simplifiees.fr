@@ -73,8 +73,6 @@ class Dossier < ActiveRecord::Base
 
   def build_default_individual
     Individual.new(dossier_id: id).save(validate: false)
-    Entreprise.new(dossier_id: id).save(validate: false)
-    Etablissement.new(dossier_id: id, entreprise_id: entreprise.id).save(validate: false)
   end
 
   def ordered_champs
@@ -289,7 +287,8 @@ class Dossier < ActiveRecord::Base
   end
 
   def reset!
-    entreprise.destroy unless entreprise.nil?
+    entreprise.destroy
+    etablissement.destroy
 
     update_attributes(autorisation_donnees: false)
   end
