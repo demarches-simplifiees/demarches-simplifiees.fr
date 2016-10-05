@@ -5,7 +5,12 @@
         .col-md-1.col-lg-1
           .fa.fa-info-circle.text-info{style:'font-size: 2em; margin-top: 20%'}
         .col-md-11.col-lg-11
-          -if dossiers_list_facade.liste == 'nouveaux'
+          -if dossiers_list_facade.liste == 'brouillon'
+            Les dossiers présents dans cette liste
+            %b
+              n'ont pas encore été soumis à votre administrations.
+            Ils ne sont visible que par vous.
+          -elsif dossiers_list_facade.liste == 'nouveaux'
             Les dossiers présents dans cette liste
             %b
               n'ont pas encore été ouverts
