@@ -43,9 +43,13 @@ shared_examples 'description_controller_spec' do
 
     context 'Tous les attributs sont bons' do
       describe 'Premier enregistrement des données' do
+        let(:submit) { {nouveaux: 'nouveaux'} }
+
+        subject { post :create, dossier_id: dossier_id, submit: submit }
+
         before do
           dossier.draft!
-          post :create, dossier_id: dossier_id
+          subject
           dossier.reload
         end
 
@@ -55,6 +59,18 @@ shared_examples 'description_controller_spec' do
 
         it 'etat du dossier est soumis' do
           expect(dossier.state).to eq('initiated')
+        end
+
+        context 'when user whould like save just a draft' do
+          let(:submit) { {brouillon: 'brouillon'} }
+
+          it "redirection vers la page recapitulative" do
+            expect(response).to redirect_to("/users/dossiers?liste=brouillon")
+          end
+
+          it 'etat du dossier est soumis' do
+            expect(dossier.state).to eq('draft')
+          end
         end
       end
 

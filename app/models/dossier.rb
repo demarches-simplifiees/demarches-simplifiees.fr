@@ -43,6 +43,7 @@ class Dossier < ActiveRecord::Base
 
   validates :user, presence: true
 
+  BROUILLON = %w(draft)
   NOUVEAUX = %w(initiated)
   WAITING_FOR_GESTIONNAIRE = %w(updated)
   WAITING_FOR_USER = %w(replied validated)
@@ -164,6 +165,10 @@ class Dossier < ActiveRecord::Base
     state
   end
 
+  def brouillon?
+    BROUILLON.include?(state)
+  end
+
   def nouveaux?
     NOUVEAUX.include?(state)
   end
@@ -198,6 +203,10 @@ class Dossier < ActiveRecord::Base
 
   def termine?
     TERMINE.include?(state)
+  end
+
+  def self.brouillon order = 'ASC'
+    where(state: BROUILLON, archived: false).order("updated_at #{order}")
   end
 
   def self.nouveaux order = 'ASC'

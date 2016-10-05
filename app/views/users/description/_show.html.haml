@@ -56,7 +56,8 @@
       -if !@dossier.draft?
         =render partial: '/layouts/modifications_terminees'
       -else
-        = submit_tag 'Soumettre mon dossier', id: 'suivant', class: %w(btn btn btn-success), style: 'float:right', data: { disable_with: 'Soumettre votre dossier', submit: true}
+        = submit_tag 'Soumettre mon dossier', id: 'suivant', name: 'submit[nouveaux]', class: %w(btn btn btn-success), style: 'float:right', data: { disable_with: 'Soumettre votre dossier', submit: true}
+        = submit_tag 'Enregistrer un brouillon', id: 'brouillon', name: 'submit[brouillon]', class: %w(btn btn-xs btn-default), style: 'float:right; margin-right: 10px; margin-top: 6px', data: {disable_with: 'Enregistrer un brouillon', submit: true}
 
     %br
     %br
