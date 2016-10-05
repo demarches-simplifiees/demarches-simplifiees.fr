@@ -1,5 +1,5 @@
 class ChampsService
-  def self.save_formulaire champs, params
+  def self.save_formulaire champs, params, check_mandatory=true
     errors = Array.new
 
     champs.each do |champ|
@@ -13,8 +13,10 @@ class ChampsService
             params[:time_minute]["'#{champ.id}'"]
       end
 
-      if champ.mandatory? && (champ.value.nil? || champ.value.blank?)
-        errors.push({message: "Le champ #{champ.libelle} doit être rempli."})
+      if check_mandatory
+        if champ.mandatory? && (champ.value.nil? || champ.value.blank?)
+          errors.push({message: "Le champ #{champ.libelle} doit être rempli."})
+        end
       end
 
       champ.save
