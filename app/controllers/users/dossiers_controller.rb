@@ -132,7 +132,7 @@ class Users::DossiersController < UsersController
   end
 
   def update_params
-    params.require(:dossier).permit(:id, :autorisation_donnees, individual_attributes: [:nom, :prenom, :birthdate])
+    params.require(:dossier).permit(:id, :autorisation_donnees, individual_attributes: [:gender, :nom, :prenom, :birthdate])
   end
 
   def checked_autorisation_donnees?
