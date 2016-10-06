@@ -16,6 +16,11 @@
         .form-group
           %label
             %h4
+              Civilité
+            = ff.select :gender, ['Mr', 'Mme']
+        .form-group
+          %label
+            %h4
               Nom
             = ff.text_field :nom, {class: 'form-control'}
         .form-group
