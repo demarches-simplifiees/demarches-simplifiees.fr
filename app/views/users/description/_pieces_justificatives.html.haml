@@ -12,7 +12,7 @@
         -else
           %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept:  PieceJustificative.accept_format, :max_file_size => 3.megabytes }
 
-  - @dossier.types_de_piece_justificative.each do |type_de_piece_justificative|
+  - @dossier.types_de_piece_justificative.order('order_place ASC').each do |type_de_piece_justificative|
     %tr
       %th.col-lg-6
         = type_de_piece_justificative.libelle

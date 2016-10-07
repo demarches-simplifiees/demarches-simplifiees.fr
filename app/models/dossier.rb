@@ -84,6 +84,10 @@ class Dossier < ActiveRecord::Base
     champs_private.joins(', types_de_champ').where("champs.type_de_champ_id = types_de_champ.id AND types_de_champ.procedure_id = #{procedure.id}").order('order_place')
   end
 
+  def ordered_pieces_justificatives
+    champs.joins(', types_de_piece_justificative').where("pieces_justificatives.type_de_piece_justificative_id = types_de_piece_justificative.id AND types_de_piece_justificative.procedure_id = #{procedure.id}").order('order_place ASC')
+  end
+
   def ordered_commentaires
     commentaires.order(created_at: :desc)
   end

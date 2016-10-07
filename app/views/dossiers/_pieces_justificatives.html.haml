@@ -19,7 +19,7 @@
           - else
             = 'Pièce non fournie'
 
-    - @facade.dossier.types_de_piece_justificative.each do |type_de_piece_justificative|
+    - @facade.dossier.types_de_piece_justificative.order('order_place ASC').each do |type_de_piece_justificative|
       %tr{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
         %th.col-lg-6
           = type_de_piece_justificative.libelle
