@@ -7,6 +7,11 @@ class Backoffice::DossiersListController < ApplicationController
   def index
     cookies[:liste] = param_liste
 
+    unless DossiersListGestionnaireService.dossiers_list_libelle.include?(param_liste)
+      cookies[:liste] = 'a_traiter'
+      return redirect_to backoffice_dossiers_path
+    end
+
     dossiers_list_facade param_liste
     dossiers_list_facade.service.change_sort! param_sort unless params[:dossiers_smart_listing].nil?
 

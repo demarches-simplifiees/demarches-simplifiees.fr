@@ -689,6 +689,13 @@ describe Dossier do
     it { expect(subject['entreprise.date_creation']).to eq('Thu, 28 Jan 2016 10:16:29 UTC +00:0') }
     it { expect(subject['entreprise.nom']).to be_nil }
     it { expect(subject['entreprise.prenom']).to be_nil }
+
+    context 'when dossier does not have enterprise' do
+      let(:dossier) { create(:dossier, user: user, procedure: procedure) }
+      subject { dossier.as_csv }
+
+      it { expect(subject[:archived]).to be_falsey }
+    end
   end
 
   describe '#reset!' do

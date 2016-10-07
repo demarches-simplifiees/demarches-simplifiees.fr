@@ -23,7 +23,7 @@ class DossierFacades
   end
 
   def pieces_justificatives
-    @dossier.pieces_justificatives
+    @dossier.ordered_pieces_justificatives
   end
 
   def commentaires

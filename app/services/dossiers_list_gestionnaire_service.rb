@@ -14,6 +14,10 @@ class DossiersListGestionnaireService
      'termine' => termine}[@liste]
   end
 
+  def self.dossiers_list_libelle
+    ['nouveaux', 'a_traiter', 'en_attente', 'deposes', 'a_instruire', 'termine']
+  end
+
   def nouveaux
     @nouveaux ||= filter_dossiers.nouveaux
   end
