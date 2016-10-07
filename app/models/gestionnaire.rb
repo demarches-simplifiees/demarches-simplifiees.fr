@@ -33,9 +33,9 @@ class Gestionnaire < ActiveRecord::Base
     Follow.where(gestionnaire_id: id, dossier_id: dossier_id).any?
   end
 
-  def build_default_preferences_list_dossier
+  def build_default_preferences_list_dossier procedure_id=nil
 
-    PreferenceListDossier.available_columns_for.each do |table|
+    PreferenceListDossier.available_columns_for(procedure_id).each do |table|
       table.second.each do |column|
 
         if valid_couple_table_attr? table.first, column.first
@@ -47,6 +47,7 @@ class Gestionnaire < ActiveRecord::Base
               bootstrap_lg: column.second[:bootstrap_lg],
               order: nil,
               filter: nil,
+              procedure_id: procedure_id,
               gestionnaire: self
           )
         end

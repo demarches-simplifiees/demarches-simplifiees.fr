@@ -4,13 +4,14 @@ describe DossiersListGestionnaireService do
   let(:gestionnaire) { create :gestionnaire }
   let(:liste) { 'a_traiter' }
   let(:dossier) { create :dossier }
+  let(:accompagnateur_service) { AccompagnateurService.new gestionnaire, procedure, 'assign'}
 
   describe '#default_sort' do
     let(:procedure) { dossier.procedure }
 
     before do
-      AccompagnateurService.change_assignement! gestionnaire, procedure, 'assign'
-      AccompagnateurService.build_default_column gestionnaire, procedure, 'assign'
+      accompagnateur_service.change_assignement!
+      accompagnateur_service.build_default_column
 
       gestionnaire.reload
     end
