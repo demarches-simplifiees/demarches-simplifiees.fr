@@ -89,6 +89,19 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
+  describe 'GET #list_fake' do
+    context 'when gestionnaire is connected' do
+      before do
+        sign_in gestionnaire
+      end
+
+      it 'returns http success' do
+        get :index, liste: :list_fake
+        expect(response).to redirect_to(backoffice_dossiers_path)
+      end
+    end
+  end
+
   describe 'POST #search' do
     before do
       sign_in gestionnaire
