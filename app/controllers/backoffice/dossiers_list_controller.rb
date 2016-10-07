@@ -22,9 +22,12 @@ class Backoffice::DossiersListController < ApplicationController
     @dossiers_list_facade ||= DossiersListFacades.new current_gestionnaire, liste, retrieve_procedure
   end
 
-  def smartlisting_dossier
+  def smartlisting_dossier dossiers_list=nil, liste='a_traiter'
+    dossiers_list_facade liste
+    dossiers_list = dossiers_list_facade.dossiers_to_display if dossiers_list.nil?
+
     @dossiers = smart_listing_create :dossiers,
-                                     dossiers_list_facade.dossiers_to_display,
+                                     dossiers_list,
                                      partial: "backoffice/dossiers/list",
                                      array: true,
                                      default_sort: dossiers_list_facade.service.default_sort

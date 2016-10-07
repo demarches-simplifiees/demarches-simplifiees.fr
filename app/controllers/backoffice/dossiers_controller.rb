@@ -27,18 +27,12 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def search
     @search_terms = params[:q]
-    @dossiers_search, @dossier = Dossier.search(current_gestionnaire, @search_terms)
+    @dossier = Dossier.search(current_gestionnaire, @search_terms)
 
-    dossiers_list_facade
-
-    unless @dossiers_search.empty?
-      @dossiers_search = @dossiers_search.paginate(:page => params[:page]).decorate
-    end
-
-    @dossier = @dossier.decorate unless @dossier.nil?
+    smartlisting_dossier @dossier, 'search'
 
   rescue RuntimeError
-    @dossiers_search = []
+    smartlisting_dossier [], 'search'
   end
 
   def valid
