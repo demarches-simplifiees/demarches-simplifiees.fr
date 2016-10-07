@@ -286,9 +286,14 @@ class Dossier < ActiveRecord::Base
 
   def as_csv(options={})
     dossier_attr = DossierSerializer.new(self).attributes
-    etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.map { |k, v| ["etablissement.#{k}", v] }.to_h
-    entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map { |k, v| ["entreprise.#{k}", v] }.to_h
-    dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
+
+    unless entreprise.nil?
+      etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.map { |k, v| ["etablissement.#{k}", v] }.to_h
+      entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map { |k, v| ["entreprise.#{k}", v] }.to_h
+      dossier_attr = dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
+    end
+
+    dossier_attr
   end
 
   def reset!
