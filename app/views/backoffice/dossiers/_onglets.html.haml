@@ -53,7 +53,7 @@
             =@dossiers_list_facade.termine_total
 
     %ul.nav.nav-tabs.navbar-right{style:'border-bottom: none;'}
-      %li#search{class: "#{'active' unless @dossiers_search.nil?}"}
+      %li#search{ class: (@dossiers_list_facade.search_class) }
         %a
           = form_tag(backoffice_dossiers_search_url, method: :get) do
             .input-group{style:'width: 300px'}

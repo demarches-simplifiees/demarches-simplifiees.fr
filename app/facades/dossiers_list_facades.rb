@@ -79,6 +79,10 @@ class DossiersListFacades
     (@liste == 'invite' ? 'active' : '')
   end
 
+  def search_class
+    (@liste == 'search' ? 'active' : '')
+  end
+
   def brouillon_total
     service.brouillon.count
   end

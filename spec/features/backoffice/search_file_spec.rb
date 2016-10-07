@@ -24,7 +24,7 @@ feature 'search file on gestionnaire backoffice' do
       it { expect(page).to have_css('#backoffice_search') }
 
       context 'when terms input is empty' do
-        it { expect(page).to have_content('Aucun dossier trouvé') }
+        it { expect(page).to have_content('Aucun dossier') }
       end
 
       context 'when terms input is informed' do
@@ -35,7 +35,7 @@ feature 'search file on gestionnaire backoffice' do
         end
 
         context 'when terms input does not return result' do
-          it { expect(page).to have_content('Aucun dossier trouvé') }
+          it { expect(page).to have_content('Aucun dossier') }
         end
 
         context 'when terms input does return result' do
@@ -45,12 +45,6 @@ feature 'search file on gestionnaire backoffice' do
           let(:terms) { dossier.entreprise.raison_sociale }
 
           it { expect(page).to have_content(dossier.entreprise.raison_sociale) }
-
-          context "when terms is a file's id" do
-            let(:terms) { dossier.id }
-
-            it { expect(page).to have_content("Dossier N°#{dossier.id}") }
-          end
         end
       end
     end
