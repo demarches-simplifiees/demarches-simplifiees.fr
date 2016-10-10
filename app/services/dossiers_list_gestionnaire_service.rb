@@ -105,7 +105,9 @@ class DossiersListGestionnaireService
         filter = "%"+filter+"%" unless filter.include? '%'
 
         acc += (acc.to_s.empty? ? ''.to_s : " AND ") +
+            "CAST(" +
             preference.table_with_s_attr +
+            " as TEXT)" +
             " LIKE " +
             "'" +
             filter +
