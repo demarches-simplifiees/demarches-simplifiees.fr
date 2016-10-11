@@ -11,10 +11,9 @@ require 'mina/rbenv' # for rbenv support. (http://rbenv.org)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 ENV['to'] ||= "staging"
-ENV['to'] = "staging" unless ["staging", "production"].include?(ENV['to'])
+ENV['to'] = "staging" unless ["staging", "production", "opensimplif"].include?(ENV['to'])
 
 raise "missing domain, run with 'rake deploy domain=37.187.154.237'" if ENV['domain'].nil?
-
 
 print "Deploy to #{ENV['to']} environment branch #{branch}\n"
 
@@ -24,7 +23,6 @@ set :repository, 'https://github.com/sgmap/tps.git'
 set :port, 2200
 
 set :deploy_to, '/var/www/tps_dev'
-
 
 if ENV["to"] == "staging"
   if ENV['branch'].nil?
@@ -44,10 +42,24 @@ elsif ENV["to"] == "production"
   set :deploy_to, '/var/www/tps'
   set :user, 'tps' # Username in the server to SSH to.
   appname = 'tps'
+elsif ENV["to"] == "opensimplif"
+  if ENV['branch'].nil?
+    set :branch, 'master'
+  else
+    set :branch, ENV['branch']
+  end
+  set :deploy_to, '/var/www/opensimplif'
+  set :user, 'opensimplif' # Username in the server to SSH to.
+  appname = 'opensimplif'
 end
 
 
 set :rails_env, ENV["to"]
+
+if ENV["to"] == "opensimplif"
+  set :rails_env, "production"
+end
+
 # For system-wide RVM install.
 #   set :rvm_path, '/usr/local/rvm/bin/rvm'
 
@@ -66,7 +78,7 @@ set :shared_paths, [
                      "config/fog_credentials.yml",
                      'config/initializers/secret_token.rb',
                      'config/initializers/features.yml',
-                     "config/environments/#{ENV['to']}.rb",
+                     "config/environments/#{rails_env}.rb",
                      "config/initializers/token.rb",
                      "config/initializers/urls.rb",
                      "config/initializers/super_admin.rb",
@@ -74,7 +86,8 @@ set :shared_paths, [
                      "config/initializers/raven.rb",
                      'config/france_connect.yml',
                      'config/initializers/mailjet.rb',
-                     'config/initializers/storage_url.rb'
+                     'config/initializers/storage_url.rb',
+                     'app/views/root/landing.html.haml'
                  ]
 
 
@@ -111,6 +124,9 @@ task :setup => :environment do
 
   queue! %[mkdir -p "#{deploy_to}/shared/config"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config"]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/app"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/app"]
 
   queue! %[touch "#{deploy_to}/shared/config/database.yml"]
   queue %[echo "-----> Be sure to edit 'shared/config/database.yml'."]

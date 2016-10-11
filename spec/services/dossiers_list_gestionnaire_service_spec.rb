@@ -2,9 +2,10 @@ require 'spec_helper'
 
 describe DossiersListGestionnaireService do
   let(:gestionnaire) { create :gestionnaire }
+  let(:preference_smart_listing_page) { gestionnaire.preference_smart_listing_page }
   let(:liste) { 'a_traiter' }
   let(:dossier) { create :dossier }
-  let(:accompagnateur_service) { AccompagnateurService.new gestionnaire, procedure, 'assign'}
+  let(:accompagnateur_service) { AccompagnateurService.new gestionnaire, procedure, 'assign' }
 
   describe '#default_sort' do
     let(:procedure) { dossier.procedure }
@@ -137,7 +138,7 @@ describe DossiersListGestionnaireService do
 
     subject { DossiersListGestionnaireService.new(gestionnaire, liste, nil).where_filter }
 
-    it { is_expected.to eq "id LIKE '%23%' AND entreprises.raison_sociale LIKE '%plop%'" }
+    it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE '%plop%'" }
 
     context 'when last filter caractere is *' do
 
@@ -147,7 +148,7 @@ describe DossiersListGestionnaireService do
             .update_column :filter, 'plop*'
       end
 
-      it { is_expected.to eq "id LIKE '%23%' AND entreprises.raison_sociale LIKE 'plop%'" }
+      it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE 'plop%'" }
     end
 
     context 'when first filter caractere is *' do
@@ -157,7 +158,7 @@ describe DossiersListGestionnaireService do
             .update_column :filter, '*23'
       end
 
-      it { is_expected.to eq "id LIKE '%23' AND entreprises.raison_sociale LIKE '%plop%'" }
+      it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23' AND CAST(entreprises.raison_sociale as TEXT) LIKE '%plop%'" }
     end
 
     context 'when * caractere is presente' do
@@ -167,7 +168,109 @@ describe DossiersListGestionnaireService do
             .update_column :filter, 'plop*plip'
       end
 
-      it { is_expected.to eq "id LIKE '%23%' AND entreprises.raison_sociale LIKE 'plop%plip'" }
+      it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE 'plop%plip'" }
+    end
+  end
+
+  describe '#default_page' do
+    let(:page) { 2 }
+    let(:procedure) { nil }
+
+    before do
+      preference_smart_listing_page.update page: page, liste: 'a_traiter'
+    end
+
+    subject { described_class.new(gestionnaire, liste, procedure).default_page }
+
+    context 'when liste and procedure match with the actual preference' do
+      let(:liste) { 'a_traiter' }
+
+      it { is_expected.to eq 2 }
+    end
+
+    context 'when liste and procedure does not match with the actual preference' do
+      let(:liste) { 'en_attente' }
+
+      it { is_expected.to eq 1 }
+    end
+  end
+
+  describe '#change_page!' do
+    let(:procedure) { nil }
+    let(:liste) { 'a_traiter' }
+
+    let(:page) { 2 }
+    let(:new_page) { 1 }
+
+    before do
+      preference_smart_listing_page.update page: page, liste: 'a_traiter', procedure: nil
+      subject
+      preference_smart_listing_page.reload
+    end
+
+    subject { described_class.new(gestionnaire, liste, procedure).change_page! new_page }
+
+    context 'when liste and procedure does not change' do
+      it { expect(preference_smart_listing_page.liste).to eq liste }
+      it { expect(preference_smart_listing_page.procedure).to eq procedure }
+      it { expect(preference_smart_listing_page.page).to eq new_page }
+
+      context 'when new_page is nil' do
+        let(:new_page) { nil }
+
+        it { expect(preference_smart_listing_page.liste).to eq liste }
+        it { expect(preference_smart_listing_page.procedure).to eq procedure }
+        it { expect(preference_smart_listing_page.page).to eq page }
+      end
+    end
+
+    context 'when liste change' do
+      let(:liste) { 'en_attente' }
+
+      it { expect(preference_smart_listing_page.liste).to eq liste }
+      it { expect(preference_smart_listing_page.procedure).to eq procedure }
+      it { expect(preference_smart_listing_page.page).to eq new_page }
+
+      context 'when new_page is nil' do
+        let(:new_page) { nil }
+
+        it { expect(preference_smart_listing_page.liste).to eq liste }
+        it { expect(preference_smart_listing_page.procedure).to eq procedure }
+        it { expect(preference_smart_listing_page.page).to eq 1 }
+      end
+    end
+
+    context 'when procedure change' do
+      let(:procedure) { dossier.procedure }
+
+      it { expect(preference_smart_listing_page.liste).to eq liste }
+      it { expect(preference_smart_listing_page.procedure).to eq procedure }
+      it { expect(preference_smart_listing_page.page).to eq new_page }
+
+      context 'when new_page is nil' do
+        let(:new_page) { nil }
+
+        it { expect(preference_smart_listing_page.liste).to eq liste }
+        it { expect(preference_smart_listing_page.procedure).to eq procedure }
+        it { expect(preference_smart_listing_page.page).to eq 1 }
+      end
+    end
+
+    context 'when procedure and liste change' do
+      let(:liste) { 'en_attente' }
+      let(:procedure) { dossier.procedure }
+
+      it { expect(preference_smart_listing_page.liste).to eq liste }
+      it { expect(preference_smart_listing_page.procedure).to eq procedure }
+      it { expect(preference_smart_listing_page.page).to eq new_page }
+
+      context 'when new_page is nil' do
+        let(:new_page) { nil }
+
+        it { expect(preference_smart_listing_page.liste).to eq liste }
+        it { expect(preference_smart_listing_page.procedure).to eq procedure }
+        it { expect(preference_smart_listing_page.page).to eq 1 }
+      end
     end
   end
 end

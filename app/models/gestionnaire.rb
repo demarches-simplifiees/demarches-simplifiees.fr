@@ -4,6 +4,8 @@ class Gestionnaire < ActiveRecord::Base
 
   has_and_belongs_to_many :administrateurs
 
+  has_one :preference_smart_listing_page, dependent: :destroy
+
   has_many :assign_to, dependent: :destroy
   has_many :procedures, through: :assign_to
   has_many :dossiers, through: :procedures
@@ -11,6 +13,7 @@ class Gestionnaire < ActiveRecord::Base
   has_many :preference_list_dossiers
 
   after_create :build_default_preferences_list_dossier
+  after_create :build_default_preferences_smart_listing_page
 
   def dossiers_follow
     dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")
@@ -53,6 +56,10 @@ class Gestionnaire < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def build_default_preferences_smart_listing_page
+    PreferenceSmartListingPage.create(page: 1, procedure: nil, gestionnaire: self, liste: 'a_traiter')
   end
 
   private

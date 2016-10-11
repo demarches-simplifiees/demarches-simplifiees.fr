@@ -13,7 +13,8 @@ class Backoffice::DossiersListController < ApplicationController
     end
 
     dossiers_list_facade param_liste
-    dossiers_list_facade.service.change_sort! param_sort unless params[:dossiers_smart_listing].nil?
+    dossiers_list_facade.service.change_sort! param_sort unless param_smart_listing.nil?
+    dossiers_list_facade.service.change_page! param_page
 
     smartlisting_dossier
   end
@@ -31,6 +32,10 @@ class Backoffice::DossiersListController < ApplicationController
     dossiers_list_facade liste
     dossiers_list = dossiers_list_facade.dossiers_to_display if dossiers_list.nil?
 
+    if param_page.nil?
+      params[:dossiers_smart_listing] = {page: dossiers_list_facade.service.default_page}
+    end
+
     @dossiers = smart_listing_create :dossiers,
                                      dossiers_list,
                                      partial: "backoffice/dossiers/list",
@@ -40,8 +45,19 @@ class Backoffice::DossiersListController < ApplicationController
 
   private
 
+  def param_smart_listing
+    params[:dossiers_smart_listing]
+  end
+
+  def param_page
+    unless param_smart_listing.nil?
+      return 1 if params[:dossiers_smart_listing][:page].blank?
+      params[:dossiers_smart_listing][:page]
+    end
+  end
+
   def param_sort
-    params[:dossiers_smart_listing][:sort]
+    params[:dossiers_smart_listing][:sort] unless param_smart_listing.nil?
   end
 
   def param_filter

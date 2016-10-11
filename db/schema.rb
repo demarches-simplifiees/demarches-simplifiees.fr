@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161007095443) do
+ActiveRecord::Schema.define(version: 20161011125345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -267,6 +267,13 @@ ActiveRecord::Schema.define(version: 20161007095443) do
     t.string  "filter"
     t.integer "gestionnaire_id"
     t.integer "procedure_id"
+  end
+
+  create_table "preference_smart_listing_pages", force: :cascade do |t|
+    t.string  "liste"
+    t.integer "page"
+    t.integer "procedure_id"
+    t.integer "gestionnaire_id"
   end
 
   create_table "procedure_paths", force: :cascade do |t|
