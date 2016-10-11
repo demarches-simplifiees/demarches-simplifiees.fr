@@ -28,6 +28,7 @@ describe Gestionnaire, type: :model do
   end
 
   describe 'association' do
+    it { is_expected.to have_one(:preference_smart_listing_page) }
     it { is_expected.to have_and_belong_to_many(:administrateurs) }
     it { is_expected.to have_many(:procedures) }
     it { is_expected.to have_many(:dossiers) }
@@ -158,6 +159,28 @@ describe Gestionnaire, type: :model do
       it 'build entreprise raison_sociale column' do
         expect(subject.last.table).to eq 'etablissement'
         expect(subject.last.attr).to eq 'siret'
+      end
+    end
+  end
+
+  describe '#build_default_preferences_smart_listing_page' do
+    subject { gestionnaire.preference_smart_listing_page }
+
+    context 'when gestionnaire is created' do
+      it 'build page column' do
+        expect(subject.page).to eq 1
+      end
+
+      it 'build liste column' do
+        expect(subject.liste).to eq 'a_traiter'
+      end
+
+      it 'build procedure_id column' do
+        expect(subject.procedure).to eq nil
+      end
+
+      it 'build gestionnaire column' do
+        expect(subject.gestionnaire).to eq gestionnaire
       end
     end
   end

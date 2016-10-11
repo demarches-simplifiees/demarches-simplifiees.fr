@@ -31,6 +31,14 @@ class Backoffice::DossiersListController < ApplicationController
     dossiers_list_facade liste
     dossiers_list = dossiers_list_facade.dossiers_to_display if dossiers_list.nil?
 
+    if params[:dossiers_smart_listing].nil? || params[:dossiers_smart_listing][:page].nil?
+      pref = current_gestionnaire.preference_smart_listing_page
+
+      if pref.liste == liste && pref.procedure_id == dossiers_list_facade.procedure_id
+        params[:dossiers_smart_listing] = {page: pref.page.to_s}
+      end
+    end
+
     @dossiers = smart_listing_create :dossiers,
                                      dossiers_list,
                                      partial: "backoffice/dossiers/list",
