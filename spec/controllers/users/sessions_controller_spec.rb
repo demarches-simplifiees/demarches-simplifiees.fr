@@ -33,6 +33,41 @@ describe Users::SessionsController, type: :controller do
 
       it { is_expected.to be_falsey }
     end
+
+    context "when associated gestionnaire" do
+      let(:user) { create(:user, email: 'unique@plop.com', password: 'password') }
+      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'password') }
+
+      it 'signs user in' do
+        post :create, user: { email: user.email, password: user.password }
+        expect(@response.redirect?).to be(true)
+        expect(subject.current_user).to eq(user)
+        expect(subject.current_gestionnaire).to be(nil)
+        expect(user.reload.loged_in_with_france_connect).to be(nil)
+      end
+
+      it 'signs gestionnaire in' do
+        post :create, user: { email: gestionnaire.email, password: gestionnaire.password }
+        expect(@response.redirect?).to be(true)
+        expect(subject.current_user).to be(nil)
+        expect(subject.current_gestionnaire).to eq(gestionnaire)
+      end
+
+      it 'signs user + gestionnaire in' do
+        post :create, user: { email: user.email, password: gestionnaire.password }
+        expect(@response.redirect?).to be(true)
+        expect(subject.current_user).to eq(user)
+        expect(subject.current_gestionnaire).to eq(gestionnaire)
+        expect(user.reload.loged_in_with_france_connect).to be(nil)
+      end
+
+      it 'fails to sign in with bad credentials' do
+        post :create, user: { email: user.email, password: 'wrong_password' }
+        expect(@response.unauthorized?).to be(true)
+        expect(subject.current_user).to be(nil)
+        expect(subject.current_gestionnaire).to be(nil)
+      end
+    end
   end
 
   describe '.destroy' do
@@ -64,6 +99,41 @@ describe Users::SessionsController, type: :controller do
 
       it 'redirect to root page' do
         expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context "when associated gestionnaire" do
+      let(:user) { create(:user, email: 'unique@plop.com', password: 'password') }
+      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'password') }
+
+      it 'signs user out' do
+        sign_in user
+        delete :destroy
+        expect(@response.redirect?).to be(true)
+        expect(subject.current_user).to be(nil)
+      end
+
+      it 'signs gestionnaire out' do
+        sign_in gestionnaire
+        delete :destroy
+        expect(@response.redirect?).to be(true)
+        expect(subject.current_gestionnaire).to be(nil)
+      end
+
+      it 'signs user + gestionnaire out' do
+        sign_in user
+        sign_in gestionnaire
+        delete :destroy
+        expect(@response.redirect?).to be(true)
+        expect(subject.current_user).to be(nil)
+        expect(subject.current_gestionnaire).to be(nil)
+      end
+
+      it 'signs user out from france connect' do
+        user.update_attributes(loged_in_with_france_connect: 'particulier')
+        sign_in user
+        delete :destroy
+        expect(@response.headers["Location"]).to eq(FRANCE_CONNECT.particulier_logout_endpoint)
       end
     end
   end
