@@ -14,6 +14,7 @@ class Gestionnaire < ActiveRecord::Base
 
   after_create :build_default_preferences_list_dossier
   after_create :build_default_preferences_smart_listing_page
+  after_save :sync_credentials
 
   def dossiers_follow
     dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")
@@ -83,5 +84,17 @@ class Gestionnaire < ActiveRecord::Base
                }]
 
     couples.include?({table: table, column: column})
+  end
+
+  def sync_credentials
+    if email_changed? || encrypted_password_changed?
+      user = User.find_by(email: email_was)
+      if user
+        return user.update_columns(
+          email: email,
+          encrypted_password: encrypted_password)
+      end
+    end
+    true
   end
 end
