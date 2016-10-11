@@ -68,6 +68,32 @@ class DossiersListGestionnaireService
     }
   end
 
+  def default_page
+    pref = current_preference_smart_listing_page
+    return pref.page if pref.procedure == @procedure && pref.liste == @liste
+
+    1
+  end
+
+  def change_page! new_page
+    pref = current_preference_smart_listing_page
+
+    unless pref.liste == @liste && pref.procedure == @procedure
+      pref.liste = @liste
+      pref.procedure = @procedure
+
+      if new_page.nil?
+        pref.page = 1
+        pref.save
+      end
+    end
+
+    unless new_page.nil?
+      pref.page = new_page
+      pref.save
+    end
+  end
+
   def change_sort! new_sort
     return if new_sort.blank?
 
@@ -136,5 +162,9 @@ class DossiersListGestionnaireService
                                .where(procedure: @procedure)
                                .where.not(filter: nil)
                                .order(:id)
+  end
+
+  def current_preference_smart_listing_page
+    @current_devise_profil.preference_smart_listing_page
   end
 end
