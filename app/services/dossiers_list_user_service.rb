@@ -15,6 +15,10 @@ class DossiersListUserService
      'invite' => invite}[@liste]
   end
 
+  def self.dossiers_liste_libelle
+    ['brouillon', 'nouveaux', 'a_traiter', 'en_attente', 'valides', 'en_instruction', 'termine', 'invite']
+  end
+
   def brouillon
     @brouillon ||= @current_devise_profil.dossiers.brouillon
   end

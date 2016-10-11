@@ -456,4 +456,18 @@ describe Users::DossiersController, type: :controller do
       end
     end
   end
+
+  describe 'GET #list_fake' do
+    context 'when user is connected' do
+      before do
+        sign_in user
+      end
+
+      it 'returns http success' do
+        get :index, liste: :list_fake
+        expect(response).to redirect_to(users_dossiers_path)
+      end
+    end
+  end
+
 end
