@@ -1,45 +1,4 @@
 #backoffice_search
   = render partial: 'onglets'
 
-  - unless @dossier.nil?
-    %table.table{style:'background-color: rgba(248, 248, 255, 0.8)'}
-      %tr
-        %th{colspan:2}
-          %h4
-            = "Dossier N°#{@dossier.id}"
-      %tr
-        %td.col-md-1.col-lg-1
-          = @dossier.id
-        %td.col-md-4.col-lg-4
-          = @dossier.procedure.libelle
-        %td.col-md-4.col-lg-4
-          = link_to(@dossier.entreprise.raison_sociale, "/backoffice/dossiers/#{@dossier.id}")
-        %td.col-md-2.col-lg-2
-          = @dossier.user.email
-        %td.col-md-1.col-lg-1{class: @dossier.state_color_class}
-          = @dossier.display_state
-    %br
-
-  - if @dossiers_search.empty? && @dossier.nil?
-    %div{style: 'text-align:center'}
-      %h4 Aucun dossier trouvé
-
-  - elsif !@dossiers_search.empty?
-    %table.table
-      %tr
-        %th.col-md-1.col-lg-1 ID dossier
-        %th.col-md-4.col-lg-4 Procédure
-        %th.col-md-4.col-lg-4 Raison Sociale
-        %th.col-md-2.col-lg-2 Email contact
-        %th.col-md-1.col-lg-1 État
-
-      - @dossiers_search.each do |dossier|
-        %tr
-          %td= dossier.id
-          %td= dossier.procedure.libelle
-          %td= link_to(dossier.entreprise.raison_sociale, "/backoffice/dossiers/#{dossier.id}")
-          %td= dossier.user.email
-          %td{class: dossier.state_color_class}= dossier.display_state
-
-    .pagination
-      = will_paginate @dossiers_search, renderer: BootstrapPagination::Rails
+  = smart_listing_render :dossiers

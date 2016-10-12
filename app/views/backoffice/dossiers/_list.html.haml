@@ -1,16 +1,18 @@
-- unless smart_listing.empty?
-  %table.table
-    %thead
-      - @dossiers_list_facade.preference_list_dossiers_filter.each do |preference|
-        %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}
-          - if preference.table == 'champs'
-            = preference.libelle
-          -else
-            = smart_listing.sortable preference.libelle, preference.table_attr
+%table.table
+  %thead
+    - @dossiers_list_facade.preference_list_dossiers_filter.each do |preference|
+      %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}
+        - if preference.table == 'champs'
+          = preference.libelle
+        -else
+          = smart_listing.sortable preference.libelle, preference.table_attr
+          %i.filter.fa.fa-filter{style: "cursor: pointer; margin-left:3px; font-size: 1.1em; color:#{(preference.filter.blank? ? 'grey' : 'orange')}", id: "filter_"+preference.table_attr.sub('.', '_')}
+          = render partial: 'backoffice/dossiers/filter_framed', locals:{preference: preference, filter_framed_id: "framed_filter_"+preference.table_attr.sub('.', '_')}
 
-      %th.col-md-1.col-lg-1.center Actions
-      %th.col-md-1.col-lg-1.center Abonnés
+    %th.col-md-1.col-lg-1.center Actions
+    %th.col-md-1.col-lg-1.center Abonnés
 
+  - unless smart_listing.empty?
     - @dossiers.each do |dossier|
       %tr
         - @dossiers_list_facade.preference_list_dossiers_filter.each_with_index do |preference, index|
@@ -38,9 +40,9 @@
         %td.center{style:"color: #{dossier.total_follow == 0 ? 'red' : ''}"}
           = dossier.total_follow
 
-  = smart_listing.paginate
-  = smart_listing.pagination_per_page_links
+= smart_listing.paginate
+= smart_listing.pagination_per_page_links
 
-- else
+- if smart_listing.empty?
   %h4.center
     Aucun dossier

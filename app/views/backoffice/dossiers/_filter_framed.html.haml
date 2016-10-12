@@ -1,0 +1,8 @@
+%div.filter_framed.panel.panel-primary{id: "#{filter_framed_id}", style:'width: 300px; height: 100px; position: absolute; top: 0; left: 0; display: none'}
+  .panel-heading
+    = preference.libelle
+
+  =form_tag @dossiers_list_facade.filter_url, {class: 'panel-body form-inline', method: :post} do
+    %input.form-control.filter_input{name: "filter_input[#{preference.table_attr}]", style:'width: 84%', value: "#{preference.filter}"}
+    %button.btn.btn-sm.btn-success
+      %i.fa.fa-check

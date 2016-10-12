@@ -25,6 +25,9 @@ class Users::DescriptionController < UsersController
     @procedure = @dossier.procedure
     @champs = @dossier.ordered_champs
 
+    mandatory = true
+    mandatory = !(params[:submit].keys.first == 'brouillon') unless params[:submit].nil?
+
     unless @dossier.update_attributes(create_params)
       @dossier = @dossier.decorate
 
@@ -43,10 +46,10 @@ class Users::DescriptionController < UsersController
     end
 
     unless params[:champs].nil?
-      champs_service_errors = ChampsService.save_formulaire @dossier.champs, params
+      champs_service_errors = ChampsService.save_formulaire @dossier.champs, params, mandatory
 
       unless champs_service_errors.empty?
-        flash.now.alert = (champs_service_errors.inject('') {|acc, error| acc+= error[:message]+'<br>' }).html_safe
+        flash.now.alert = (champs_service_errors.inject('') { |acc, error| acc+= error[:message]+'<br>' }).html_safe
         return render 'show'
       end
     end
@@ -56,12 +59,18 @@ class Users::DescriptionController < UsersController
       return render 'show'
     end
 
-    if @dossier.draft?
-      @dossier.initiated!
-    end
 
-    flash.notice = 'Félicitation, votre demande a bien été enregistrée.'
-    redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
+    if mandatory
+      if @dossier.draft?
+        @dossier.initiated!
+      end
+
+      flash.notice = 'Félicitation, votre demande a bien été enregistrée.'
+      redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
+    else
+      flash.notice = 'Votre brouillon a bien été sauvegardé.'
+      redirect_to url_for(controller: :dossiers, action: :index, liste: :brouillon)
+    end
   end
 
   def pieces_justificatives
@@ -92,4 +101,5 @@ class Users::DescriptionController < UsersController
   def create_params
     params.permit()
   end
+
 end

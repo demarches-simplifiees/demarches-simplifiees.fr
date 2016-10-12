@@ -5,13 +5,22 @@ class DossiersListUserService
   end
 
   def dossiers_to_display
-    {'nouveaux' => nouveaux,
+    {'brouillon' => brouillon,
+     'nouveaux' => nouveaux,
      'a_traiter' => waiting_for_user,
      'en_attente' => waiting_for_gestionnaire,
      'valides' => valides,
      'en_instruction' => en_instruction,
      'termine' => termine,
      'invite' => invite}[@liste]
+  end
+
+  def self.dossiers_liste_libelle
+    ['brouillon', 'nouveaux', 'a_traiter', 'en_attente', 'valides', 'en_instruction', 'termine', 'invite']
+  end
+
+  def brouillon
+    @brouillon ||= @current_devise_profil.dossiers.brouillon
   end
 
   def nouveaux

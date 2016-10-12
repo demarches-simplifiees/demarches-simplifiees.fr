@@ -3,6 +3,13 @@
 %br
 #onglets
   %ul.nav.nav-tabs
+    %li{ class: @dossiers_list_facade.brouillon_class }
+      %a{:href => "#{url_for users_dossiers_path(liste: 'brouillon')}", 'data-toggle' => :tooltip, title: 'Les dossiers jamais proposés à la relecture.'}
+        %h5.text-default
+          = "Brouillons"
+          .badge.progress-bar-default
+            = @dossiers_list_facade.brouillon_total
+
     %li{ class: @dossiers_list_facade.nouveaux_class }
       %a{:href => "#{url_for users_dossiers_path(liste: 'nouveaux')}", 'data-toggle' => :tooltip, title: 'Les nouveaux dossiers qui n\'ont pas encore été vus par votre accompagnateur.'}
         %h5.text-info

@@ -3,7 +3,7 @@ class Dossier < ActiveRecord::Base
   enum state: {draft: 'draft',
                initiated: 'initiated',
                replied: 'replied', #action utilisateur demandé
-               updated: 'updated',#etude par l'administration en cours
+               updated: 'updated', #etude par l'administration en cours
                validated: 'validated',
                submitted: 'submitted',
                received: 'received',
@@ -43,6 +43,7 @@ class Dossier < ActiveRecord::Base
 
   validates :user, presence: true
 
+  BROUILLON = %w(draft)
   NOUVEAUX = %w(initiated)
   WAITING_FOR_GESTIONNAIRE = %w(updated)
   WAITING_FOR_USER = %w(replied validated)
@@ -73,8 +74,6 @@ class Dossier < ActiveRecord::Base
 
   def build_default_individual
     Individual.new(dossier_id: id).save(validate: false)
-    Entreprise.new(dossier_id: id).save(validate: false)
-    Etablissement.new(dossier_id: id, entreprise_id: entreprise.id).save(validate: false)
   end
 
   def ordered_champs
@@ -83,6 +82,10 @@ class Dossier < ActiveRecord::Base
 
   def ordered_champs_private
     champs_private.joins(', types_de_champ').where("champs.type_de_champ_id = types_de_champ.id AND types_de_champ.procedure_id = #{procedure.id}").order('order_place')
+  end
+
+  def ordered_pieces_justificatives
+    champs.joins(', types_de_piece_justificative').where("pieces_justificatives.type_de_piece_justificative_id = types_de_piece_justificative.id AND types_de_piece_justificative.procedure_id = #{procedure.id}").order('order_place ASC')
   end
 
   def ordered_commentaires
@@ -166,6 +169,10 @@ class Dossier < ActiveRecord::Base
     state
   end
 
+  def brouillon?
+    BROUILLON.include?(state)
+  end
+
   def nouveaux?
     NOUVEAUX.include?(state)
   end
@@ -200,6 +207,10 @@ class Dossier < ActiveRecord::Base
 
   def termine?
     TERMINE.include?(state)
+  end
+
+  def self.brouillon order = 'ASC'
+    where(state: BROUILLON, archived: false).order("updated_at #{order}")
   end
 
   def self.nouveaux order = 'ASC'
@@ -239,7 +250,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.search current_gestionnaire, terms
-    return [], nil if terms.blank?
+    return [] if terms.blank?
 
     dossiers = Dossier.arel_table
     users = User.arel_table
@@ -257,24 +268,16 @@ class Dossier < ActiveRecord::Base
       composed_scope = composed_scope.where(
           users[:email].matches(query_string).or\
           etablissements[:siret].matches(query_string_start_with).or\
-          entreprises[:raison_sociale].matches(query_string))
+          entreprises[:raison_sociale].matches(query_string).or\
+          dossiers[:id].eq(word_is_an_integer word))
     end
 
-    #TODO refactor
     composed_scope = composed_scope.where(
         dossiers[:id].eq_any(current_gestionnaire.dossiers.ids).and\
         dossiers[:state].does_not_match('draft').and\
         dossiers[:archived].eq(false))
 
-    begin
-      if Float(terms) && terms.to_i <= 2147483647 && current_gestionnaire.dossiers.ids.include?(terms.to_i)
-        dossier = Dossier.where("state != 'draft'").find(terms.to_i)
-      end
-    rescue ArgumentError, ActiveRecord::RecordNotFound
-      dossier = nil
-    end
-
-    return composed_scope, dossier
+    composed_scope
   end
 
   def cerfa_available?
@@ -283,13 +286,19 @@ class Dossier < ActiveRecord::Base
 
   def as_csv(options={})
     dossier_attr = DossierSerializer.new(self).attributes
-    etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.map {|k, v| ["etablissement.#{k}", v] }.to_h
-    entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map {|k, v| ["entreprise.#{k}", v] }.to_h
-    dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
+
+    unless entreprise.nil?
+      etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.map { |k, v| ["etablissement.#{k}", v] }.to_h
+      entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map { |k, v| ["entreprise.#{k}", v] }.to_h
+      dossier_attr = dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
+    end
+
+    dossier_attr
   end
 
   def reset!
-    entreprise.destroy unless entreprise.nil?
+    etablissement.destroy
+    entreprise.destroy
 
     update_attributes(autorisation_donnees: false)
   end
@@ -308,7 +317,7 @@ class Dossier < ActiveRecord::Base
     next_step! 'user', 'submit'
     NotificationMailer.dossier_submitted(self).deliver_now!
   end
-  
+
   def read_only?
     validated? || received? || submitted? || closed? || refused? || without_continuation?
   end
@@ -319,5 +328,13 @@ class Dossier < ActiveRecord::Base
 
   def invite_by_user? email
     (invites_user.pluck :email).include? email
+  end
+
+  def self.word_is_an_integer word
+    return 0 if Float(word) > 2147483647
+
+    Float(word)
+  rescue ArgumentError
+    0
   end
 end

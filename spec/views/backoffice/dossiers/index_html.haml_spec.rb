@@ -28,7 +28,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
     create :preference_list_dossier,
            gestionnaire: gestionnaire,
-           table: '',
+           table: nil,
            attr: 'state',
            attr_decorate: 'display_state'
 
@@ -46,7 +46,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
     create :preference_list_dossier,
            gestionnaire: gestionnaire,
-           table: '',
+           table: nil,
            attr: 'last_update',
            attr_decorate: 'last_update'
 

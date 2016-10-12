@@ -35,6 +35,10 @@ class DossiersListFacades
     @list_table_columns ||= @current_devise_profil.preference_list_dossiers.where(procedure: @procedure).order(:id)
   end
 
+  def brouillon_class
+    (@liste == 'brouillon' ? 'active' : '')
+  end
+
   def nouveaux_class
     (@liste == 'nouveaux' ? 'active' : '')
   end
@@ -73,6 +77,14 @@ class DossiersListFacades
 
   def invite_class
     (@liste == 'invite' ? 'active' : '')
+  end
+
+  def search_class
+    (@liste == 'search' ? 'active' : '')
+  end
+
+  def brouillon_total
+    service.brouillon.count
   end
 
   def nouveaux_total
@@ -116,7 +128,11 @@ class DossiersListFacades
   def invite_total
     service.invite.count
   end
-  
+
+  def brouillon_url
+    base_url 'brouillon'
+  end
+
   def nouveaux_url
     base_url 'nouveaux'
   end
@@ -139,6 +155,10 @@ class DossiersListFacades
 
   def termine_url
     base_url 'termine'
+  end
+
+  def filter_url
+    @procedure.nil? ? backoffice_dossiers_filter_path(liste: liste) : backoffice_dossiers_procedure_filter_path(id: @procedure.id, liste: liste)
   end
 
   private

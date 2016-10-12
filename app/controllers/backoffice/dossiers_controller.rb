@@ -1,17 +1,20 @@
-class Backoffice::DossiersController < ApplicationController
-  include SmartListing::Helper::ControllerExtensions
-  helper SmartListing::Helper
-
-  before_action :authenticate_gestionnaire!
+class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def index
-    cookies[:liste] = params[:liste] || cookies[:liste] || 'a_traiter'
-    smartlisting_dossier (cookies[:liste])
+    super
+
+    dossiers_list_facade.service.filter_procedure_reset!
   end
 
   def show
     create_dossier_facade params[:id]
     @champs = @facade.champs_private unless @facade.nil?
+  end
+
+  def filter
+    super
+
+    redirect_to backoffice_dossiers_path(liste: param_liste)
   end
 
   def download_dossiers_tps
@@ -24,18 +27,12 @@ class Backoffice::DossiersController < ApplicationController
 
   def search
     @search_terms = params[:q]
-    @dossiers_search, @dossier = Dossier.search(current_gestionnaire, @search_terms)
+    @dossier = Dossier.search(current_gestionnaire, @search_terms)
 
-    create_dossiers_list_facade
-
-    unless @dossiers_search.empty?
-      @dossiers_search = @dossiers_search.paginate(:page => params[:page]).decorate
-    end
-
-    @dossier = @dossier.decorate unless @dossier.nil?
+    smartlisting_dossier @dossier, 'search'
 
   rescue RuntimeError
-    @dossiers_search = []
+    smartlisting_dossier [], 'search'
   end
 
   def valid
@@ -106,28 +103,16 @@ class Backoffice::DossiersController < ApplicationController
     begin
       @liste = URI(request.referer).query.split('=').second
     rescue NoMethodError
-      @liste = 'a_traiter'
+      @liste = cookies[:liste] || 'a_traiter'
     end
 
-    smartlisting_dossier @liste
+    dossiers_list_facade @liste
+    smartlisting_dossier
 
     render 'backoffice/dossiers/index', formats: :js
   end
 
   private
-
-  def smartlisting_dossier liste
-    create_dossiers_list_facade liste
-
-    @dossiers = smart_listing_create :dossiers,
-                                     @dossiers_list_facade.dossiers_to_display,
-                                     partial: "backoffice/dossiers/list",
-                                     array: true
-  end
-
-  def create_dossiers_list_facade liste='a_traiter'
-    @dossiers_list_facade = DossiersListFacades.new current_gestionnaire, liste, retrieve_procedure
-  end
 
   def create_dossier_facade dossier_id
     @facade = DossierFacades.new dossier_id, current_gestionnaire.email
@@ -136,7 +121,6 @@ class Backoffice::DossiersController < ApplicationController
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(controller: '/backoffice')
   end
-
 
   def retrieve_procedure
     return if params[:procedure_id].blank?

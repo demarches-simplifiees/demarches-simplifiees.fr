@@ -15,7 +15,7 @@ class DossierFacades
   end
 
   def entreprise
-    @dossier.entreprise.decorate unless @dossier.entreprise.nil?
+    @dossier.entreprise.decorate unless @dossier.entreprise.nil? || @dossier.entreprise.siren.blank?
   end
 
   def etablissement
@@ -23,7 +23,7 @@ class DossierFacades
   end
 
   def pieces_justificatives
-    @dossier.pieces_justificatives
+    @dossier.ordered_pieces_justificatives
   end
 
   def commentaires

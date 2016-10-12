@@ -5,9 +5,11 @@ describe AccompagnateurService do
   let(:procedure) { create :procedure }
   let(:accompagnateur) { create :gestionnaire }
 
+  let(:accompagnateur_service) { AccompagnateurService.new accompagnateur, procedure, to}
+
   describe '#change_assignement!' do
 
-    subject { AccompagnateurService.change_assignement! accompagnateur, procedure, to }
+    subject { accompagnateur_service.change_assignement!  }
 
     context 'when accompagnateur is not assign at the procedure' do
       let(:to) { AccompagnateurService::ASSIGN }
@@ -33,7 +35,7 @@ describe AccompagnateurService do
 
   describe '#build_default_column' do
 
-    subject { AccompagnateurService.build_default_column accompagnateur, procedure, to }
+    subject { accompagnateur_service.build_default_column }
 
     context 'when to is not assign' do
       let(:to) { AccompagnateurService::NOT_ASSIGN }

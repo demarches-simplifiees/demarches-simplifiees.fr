@@ -8,7 +8,6 @@ error_form_siret('<%= invalid_siret %>');
 
 <% flash.clear %>
 
-
 function render_new_siret(){
     $('.row.etape.etape_2').html("<%= escape_javascript(render partial: '/dossiers/etapes/etape2', locals: { facade: @facade } ) %>");
 }

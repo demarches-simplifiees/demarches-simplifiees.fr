@@ -1,13 +1,14 @@
 %select{  name:"champs['#{champ.id}']",
           id: "champs_#{champ.id}" }
-  - champ.drop_down_list.options.each do |option|
-    - if (option=~ /^--.*--$/).nil?
-      - if champ.value == option
-        %option{selected:''}
+  - unless champ.drop_down_list.blank?
+    - champ.drop_down_list.options.each do |option|
+      - if (option=~ /^--.*--$/).nil?
+        - if champ.value == option
+          %option{selected:''}
+            = option
+        - else
+          %option
+            = option
+      -else
+        %option{disabled:''}
           = option
-      - else
-        %option
-          = option
-    -else
-      %option{disabled:''}
-        = option

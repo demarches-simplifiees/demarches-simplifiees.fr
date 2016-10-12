@@ -10,10 +10,14 @@ class Users::DossiersController < UsersController
   end
 
   def index
-    liste = params[:liste] || cookies[:liste] || 'a_traiter'
-    cookies[:liste] = liste
+    cookies[:liste] = param_liste
 
-    @dossiers_list_facade = DossiersListFacades.new current_user, liste
+    @dossiers_list_facade = DossiersListFacades.new current_user, param_liste
+
+    unless DossiersListUserService.dossiers_liste_libelle.include?(param_liste)
+      cookies[:liste] = 'a_traiter'
+      return redirect_to users_dossiers_path
+    end
 
     @dossiers = smart_listing_create :dossiers,
                                      @dossiers_list_facade.dossiers_to_display,
@@ -48,6 +52,15 @@ class Users::DossiersController < UsersController
     @facade = facade
     @siret = current_user.siret unless current_user.siret.nil?
 
+    if @facade.procedure.for_individual? && current_user.loged_in_with_france_connect?
+      individual = @facade.dossier.individual
+
+      individual.update_column :gender, @facade.dossier.france_connect_information.gender
+      individual.update_column :nom, @facade.dossier.france_connect_information.family_name
+      individual.update_column :prenom, @facade.dossier.france_connect_information.given_name
+      individual.update_column :birthdate, @facade.dossier.france_connect_information.birthdate.strftime("%d/%m/%Y")
+    end
+
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for users_dossiers_path
@@ -65,8 +78,12 @@ class Users::DossiersController < UsersController
     end
 
     @facade = facade params[:dossier_id]
-    render '/dossiers/new_siret', formats: 'js'
 
+    if @facade.procedure.individual_with_siret?
+      render '/dossiers/add_siret', formats: 'js'
+    else
+      render '/dossiers/new_siret', formats: 'js'
+    end
   rescue RestClient::ResourceNotFound, RestClient::BadRequest
     errors_valid_siret
 
@@ -80,7 +97,11 @@ class Users::DossiersController < UsersController
 
     @facade = facade params[:dossier_id]
 
-    render '/dossiers/new_siret', formats: :js
+    if @facade.procedure.individual_with_siret?
+      render '/dossiers/add_siret', formats: 'js'
+    else
+      render '/dossiers/new_siret', formats: 'js'
+    end
   end
 
   def update
@@ -124,7 +145,7 @@ class Users::DossiersController < UsersController
   end
 
   def update_params
-    params.require(:dossier).permit(:id, :autorisation_donnees, individual_attributes: [:nom, :prenom, :birthdate])
+    params.require(:dossier).permit(:id, :autorisation_donnees, individual_attributes: [:gender, :nom, :prenom, :birthdate])
   end
 
   def checked_autorisation_donnees?
@@ -151,5 +172,9 @@ class Users::DossiersController < UsersController
 
   def facade id = params[:id]
     DossierFacades.new id, current_user.email
+  end
+
+  def param_liste
+    @liste ||= params[:liste] || cookies[:liste] || 'a_traiter'
   end
 end

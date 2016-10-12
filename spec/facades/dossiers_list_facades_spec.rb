@@ -12,13 +12,13 @@ describe DossiersListFacades do
 
     create :preference_list_dossier,
            gestionnaire: gestionnaire,
-           table: '',
+           table: nil,
            attr: 'state',
            attr_decorate: 'display_state'
 
     create :preference_list_dossier,
            gestionnaire: gestionnaire,
-           table: '',
+           table: nil,
            attr: 'state',
            attr_decorate: 'display_state',
            procedure_id: procedure.id

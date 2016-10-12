@@ -559,8 +559,8 @@ describe Dossier do
     describe '.search' do
       subject { liste_dossiers }
 
-      let(:liste_dossiers) { described_class.search(gestionnaire_1, terms)[0] }
-      let(:dossier) { described_class.search(gestionnaire_1, terms)[1] }
+      let(:liste_dossiers) { described_class.search(gestionnaire_1, terms) }
+      # let(:dossier) { described_class.search(gestionnaire_1, terms)[1] }
 
       let(:administrateur_1) { create(:administrateur) }
       let(:administrateur_2) { create(:administrateur) }
@@ -596,6 +596,7 @@ describe Dossier do
         let(:terms) { 'brouillon' }
 
         it { expect(subject.size).to eq(0) }
+        it { expect(subject.class).to eq Dossier::ActiveRecord_Relation }
       end
 
       describe 'search on contact email' do
@@ -607,7 +608,7 @@ describe Dossier do
       describe 'search on ID dossier' do
         let(:terms) { "#{dossier_2.id}" }
 
-        it { expect(dossier.id).to eq(dossier_2.id) }
+        it { expect(subject.size).to eq(1) }
       end
 
       describe 'search on SIRET' do
@@ -688,6 +689,13 @@ describe Dossier do
     it { expect(subject['entreprise.date_creation']).to eq('Thu, 28 Jan 2016 10:16:29 UTC +00:0') }
     it { expect(subject['entreprise.nom']).to be_nil }
     it { expect(subject['entreprise.prenom']).to be_nil }
+
+    context 'when dossier does not have enterprise' do
+      let(:dossier) { create(:dossier, user: user, procedure: procedure) }
+      subject { dossier.as_csv }
+
+      it { expect(subject[:archived]).to be_falsey }
+    end
   end
 
   describe '#reset!' do

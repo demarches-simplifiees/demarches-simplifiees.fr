@@ -4,6 +4,7 @@ class Entreprise < ActiveRecord::Base
   has_one :rna_information, dependent: :destroy
 
   validates_presence_of :siren
+  validates_uniqueness_of :dossier_id
 
   before_save :default_values
 

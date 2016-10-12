@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160913093948) do
+ActiveRecord::Schema.define(version: 20161011125345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,7 +207,7 @@ ActiveRecord::Schema.define(version: 20160913093948) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "procedure_filter",       default: [],              array: true
+    t.integer  "procedure_filter"
   end
 
   add_index "gestionnaires", ["email"], name: "index_gestionnaires_on_email", unique: true, using: :btree
@@ -218,6 +218,7 @@ ActiveRecord::Schema.define(version: 20160913093948) do
     t.string  "prenom"
     t.string  "birthdate"
     t.integer "dossier_id"
+    t.string  "gender"
   end
 
   create_table "invites", force: :cascade do |t|
@@ -268,6 +269,13 @@ ActiveRecord::Schema.define(version: 20160913093948) do
     t.integer "procedure_id"
   end
 
+  create_table "preference_smart_listing_pages", force: :cascade do |t|
+    t.string  "liste"
+    t.integer "page"
+    t.integer "procedure_id"
+    t.integer "gestionnaire_id"
+  end
+
   create_table "procedure_paths", force: :cascade do |t|
     t.string  "path",              limit: 30
     t.integer "procedure_id"
@@ -282,19 +290,20 @@ ActiveRecord::Schema.define(version: 20160913093948) do
     t.string   "organisation"
     t.string   "direction"
     t.string   "lien_demarche"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.boolean  "test"
     t.integer  "administrateur_id"
-    t.boolean  "archived",          default: false
-    t.boolean  "euro_flag",         default: false
+    t.boolean  "archived",              default: false
+    t.boolean  "euro_flag",             default: false
     t.string   "logo"
-    t.boolean  "cerfa_flag",        default: false
+    t.boolean  "cerfa_flag",            default: false
     t.string   "logo_secure_token"
-    t.boolean  "published",         default: false, null: false
+    t.boolean  "published",             default: false, null: false
     t.string   "lien_site_web"
     t.string   "lien_notice"
-    t.boolean  "for_individual",    default: false
+    t.boolean  "for_individual",        default: false
+    t.boolean  "individual_with_siret", default: false
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|

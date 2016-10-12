@@ -62,6 +62,8 @@ Rails.application.routes.draw do
     end
 
     resources :dossiers do
+      get '/add_siret' => 'dossiers/add_siret#show'
+
       get '/description' => 'description#show'
       get '/description/error' => 'description#error'
       post 'description' => 'description#create'
@@ -162,8 +164,12 @@ Rails.application.routes.draw do
       put 'follow' => 'dossiers#follow'
     end
 
+
     namespace :dossiers do
-      resources :procedure, only: [:show]
+      post 'filter'
+
+      get 'procedure/:id' => 'procedure#index', as: 'procedure'
+      post 'procedure/:id/filter' => 'procedure#filter', as: 'procedure_filter'
     end
 
     resources :commentaires, only: [:create]
