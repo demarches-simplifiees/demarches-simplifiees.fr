@@ -21,6 +21,8 @@
           = @facade.dossier.display_state
 
 %br
+- unless @facade.entreprise.nil?
+  = render partial: '/dossiers/infos_entreprise'
 
 = render partial: '/dossiers/infos_dossier'
 

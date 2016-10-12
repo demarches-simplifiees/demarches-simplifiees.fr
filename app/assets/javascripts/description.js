@@ -23,6 +23,7 @@ function action_type_de_champs() {
     });
 
     address_type_init();
+    toggle_header_section_composents();
 }
 
 function toggleErrorClass(node, boolean) {
@@ -44,4 +45,22 @@ function validateEmail(email) {
 
 function validateInput(input, regex) {
     return regex.test(input);
+}
+
+function toggle_header_section_composents() {
+    $("a.mask_section_button").on('click', function (e) {
+        target = e.currentTarget;
+
+        header_section_id = target.id.split('mask_button_')[1];
+        header_section_composents = $(".header_section_" + header_section_id);
+
+        header_section_composents.slideToggle(200, function(){
+            if (header_section_composents.css('display') == 'none') {
+                $(target).html('Afficher la section <i class="fa fa-chevron-down" />')
+            }
+            else {
+                $(target).html('Masquer la section <i class="fa fa-chevron-up" />')
+            }
+        });
+    });
 }

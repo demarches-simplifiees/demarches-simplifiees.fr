@@ -10,18 +10,34 @@ describe 'admin/procedures/show.html.haml', type: :view do
   end
 
   describe 'procedure is draft' do
-    before do
-      render
+    context 'when procedure does not have a gestionnare affected' do
+      before do
+        render
+      end
+
+      describe 'publish button is not visible' do
+        it { expect(rendered).not_to have_css('a#publish') }
+        it { expect(rendered).not_to have_css('button#archive') }
+        it { expect(rendered).not_to have_css('a#reenable') }
+      end
     end
 
-    describe 'publish button is visible' do
-      it { expect(rendered).to have_css('a#publish') }
-      it { expect(rendered).not_to have_css('button#archive') }
-      it { expect(rendered).not_to have_css('a#reenable') }
-    end
+    context 'when procedure have a gestionnare affected' do
 
-    describe 'procedure link is not present' do
-      it { expect(rendered).to have_content('Cette procédure n\'a pas encore été publiée et n\'est donc pas accessible par le public.') }
+      before do
+        create :assign_to, gestionnaire: create(:gestionnaire), procedure: procedure
+        render
+      end
+
+      describe 'publish button is visible' do
+        it { expect(rendered).to have_css('a#publish') }
+        it { expect(rendered).not_to have_css('button#archive') }
+        it { expect(rendered).not_to have_css('a#reenable') }
+      end
+
+      describe 'procedure link is not present' do
+        it { expect(rendered).to have_content('Cette procédure n\'a pas encore été publiée et n\'est donc pas accessible par le public.') }
+      end
     end
   end
 
