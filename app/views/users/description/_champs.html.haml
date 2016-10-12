@@ -32,6 +32,15 @@
         - elsif champ.type_champ == 'drop_down_list'
           =render partial: 'users/description/champs/drop_down_list', locals: {champ: champ}
 
+        - elsif champ.type_champ == 'pays'
+          =render partial: 'users/description/champs/pays', locals: {champ: champ}
+
+        - elsif champ.type_champ == 'regions'
+          =render partial: 'users/description/champs/regions', locals: {champ: champ}
+
+        - elsif champ.type_champ == 'departements'
+          =render partial: 'users/description/champs/departements', locals: {champ: champ}
+
         -else
           %input.form-control{name:"champs['#{champ.id}']",
                   placeholder: champ.libelle,

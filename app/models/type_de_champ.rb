@@ -12,6 +12,9 @@ class TypeDeChamp < ActiveRecord::Base
            address: 'address',
            yes_no: 'yes_no',
            drop_down_list: 'drop_down_list',
+           pays: 'pays',
+           regions: 'regions',
+           departements: 'departements',
            header_section: 'header_section'
        }
 

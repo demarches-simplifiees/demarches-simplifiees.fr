@@ -33,4 +33,16 @@ class Champ < ActiveRecord::Base
     end
     false
   end
+
+  def self.regions
+    JSON.parse(Carto::GeoAPI::Driver.regions).sort_by{|e| e['nom']}.inject([]){|acc, liste| acc.push(liste['nom']) }
+  end
+
+  def self.departements
+    JSON.parse(Carto::GeoAPI::Driver.departements).inject([]){|acc, liste| acc.push(liste['code'] + ' - ' + liste['nom']) }
+  end
+
+  def self.pays
+    JSON.parse(Carto::GeoAPI::Driver.pays).inject([]){|acc, liste| acc.push(liste['nom']) }
+  end
 end
