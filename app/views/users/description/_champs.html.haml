@@ -1,25 +1,24 @@
+-actual_header_section = nil
 -@champs.each do |champ|
-  .row
+  .row{class: (actual_header_section.nil? || champ.type_champ == 'header_section' ? '' : "header_section_"+actual_header_section.to_s)}
     %div{class: "type_champ-#{champ.type_champ}"}
-      -if champ.type_champ == 'checkbox'
-        %h4{style:'margin-left:15px;'}
-          = champ.libelle
-          - if champ.mandatory?
-            = '*'
-          %input{type: 'hidden', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", value: ''}
-          %input{type: 'checkbox', style:'margin-left: 15px;', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", checked: ('checked' if champ.value == 'on')}
 
-      - elsif champ.type_champ == 'header_section'
+      - if champ.type_champ == 'header_section'
         =render partial: 'users/description/champs/header_section', locals: {champ: champ}
+        -actual_header_section = champ.id
 
       -else
-        %h4
-          = champ.libelle
-          - if champ.mandatory?
-            = '*'
+        - unless champ.type_champ == 'checkbox'
+          %h4
+            = champ.libelle
+            - if champ.mandatory?
+              = '*'
 
         -if champ.type_champ == 'textarea'
           =render partial: 'users/description/champs/textarea', locals: {champ: champ}
+
+        -elsif champ.type_champ == 'checkbox'
+          = render partial: 'users/description/champs/checkbox', locals: {champ: champ}
 
         -elsif champ.type_champ == 'civilite'
           =render partial: 'users/description/champs/civilite', locals: {champ: champ}
