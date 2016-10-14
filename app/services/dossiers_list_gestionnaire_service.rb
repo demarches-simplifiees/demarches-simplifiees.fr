@@ -44,6 +44,7 @@ class DossiersListGestionnaireService
 
   def filter_dossiers
     @filter_dossiers ||= @procedure.nil? ? @current_devise_profil.dossiers.joins(joins_filter).where(where_filter) : @procedure.dossiers.joins(joins_filter).where(where_filter)
+    @filter_dossiers.uniq
   end
 
   def filter_procedure_reset!
@@ -105,9 +106,10 @@ class DossiersListGestionnaireService
 
     reset_sort!
 
-    @current_devise_profil.preference_list_dossiers
-        .find_by(table: table, attr: attr, procedure: @procedure)
-        .update order: order
+    preference = @current_devise_profil.preference_list_dossiers
+                     .find_by(table: table, attr: attr, procedure: @procedure)
+
+    preference.update order: order unless (preference.nil?)
   end
 
   def reset_sort!
@@ -130,9 +132,18 @@ class DossiersListGestionnaireService
         filter = preference.filter.gsub('*', '%')
         filter = "%"+filter+"%" unless filter.include? '%'
 
+        value = preference.table_with_s_attr
+
+        if preference.table_attr.include?('champs')
+          value = 'champs.value'
+
+          acc += (acc.to_s.empty? ? ''.to_s : " AND ") +
+              'champs.type_de_champ_id = ' + preference.attr
+        end
+
         acc += (acc.to_s.empty? ? ''.to_s : " AND ") +
             "CAST(" +
-            preference.table_with_s_attr +
+            value +
             " as TEXT)" +
             " LIKE " +
             "'" +
@@ -152,7 +163,7 @@ class DossiersListGestionnaireService
 
     @current_devise_profil.preference_list_dossiers
         .find_by(table: table, attr: attr, procedure: @procedure)
-        .update filter: filter
+        .update filter: filter.strip
   end
 
   private

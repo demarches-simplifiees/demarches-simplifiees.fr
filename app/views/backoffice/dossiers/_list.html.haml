@@ -6,6 +6,7 @@
           = preference.libelle
         -else
           = smart_listing.sortable preference.libelle, preference.table_attr
+        - if @dossiers_list_facade.active_filter? preference
           %i.filter.fa.fa-filter{style: "cursor: pointer; margin-left:3px; font-size: 1.1em; color:#{(preference.filter.blank? ? 'grey' : 'orange')}", id: "filter_"+preference.table_attr.sub('.', '_')}
           = render partial: 'backoffice/dossiers/filter_framed', locals:{preference: preference, filter_framed_id: "framed_filter_"+preference.table_attr.sub('.', '_')}
 

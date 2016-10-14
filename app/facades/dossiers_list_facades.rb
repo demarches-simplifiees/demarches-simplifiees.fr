@@ -35,6 +35,12 @@ class DossiersListFacades
     @list_table_columns ||= @current_devise_profil.preference_list_dossiers.where(procedure: @procedure).order(:id)
   end
 
+  def active_filter? preference
+    return true if @procedure.nil? || preference.table != 'champs' || (preference.table == 'champs' && !preference.filter.blank?)
+
+    preference_list_dossiers_filter.where(table: :champs).where.not(filter: '').size == 0
+  end
+
   def brouillon_class
     (@liste == 'brouillon' ? 'active' : '')
   end
