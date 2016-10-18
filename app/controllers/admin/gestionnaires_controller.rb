@@ -21,8 +21,11 @@ class Admin::GestionnairesController < AdminController
       assign_gestionnaire!
     end
 
-    return redirect_to admin_procedure_accompagnateurs_path(procedure_id: procedure_id) unless procedure_id.nil?
-    redirect_to admin_gestionnaires_path
+    if procedure_id
+      redirect_to admin_procedure_accompagnateurs_path(procedure_id: procedure_id)
+    else
+      redirect_to admin_gestionnaires_path
+    end
   end
 
   def destroy
@@ -30,19 +33,18 @@ class Admin::GestionnairesController < AdminController
     redirect_to admin_gestionnaires_path
   end
 
-
-  def create_gestionnaire_params
-    params.require(:gestionnaire).permit(:email)
-        .merge(password: SecureRandom.hex(5))
-        .merge(administrateurs: [current_administrateur])
-  end
-
   private
 
   def new_gestionnaire!
-    @gestionnaire = Gestionnaire.create(create_gestionnaire_params)
+    attributes = params.require(:gestionnaire).permit(:email)
+      .merge(password: SecureRandom.hex(5))
+
+    @gestionnaire = Gestionnaire.create(attributes.merge(
+      administrateurs: [current_administrateur]
+    ))
 
     if @gestionnaire.errors.messages.empty?
+      User.create(attributes) if Features.unified_login
       flash.notice = 'Accompagnateur ajouté'
       GestionnaireMailer.new_gestionnaire(@gestionnaire.email, @gestionnaire.password).deliver_now!
       GestionnaireMailer.new_assignement(@gestionnaire.email, current_administrateur.email).deliver_now!

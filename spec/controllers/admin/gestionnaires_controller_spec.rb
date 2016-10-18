@@ -147,6 +147,27 @@ describe Admin::GestionnairesController, type: :controller do
         }
       end
     end
+
+    context 'unified login' do
+      before do
+        allow(Features).to receive(:unified_login).and_return(true)
+        subject
+      end
+
+      it "creates associated user with same credentials" do
+        gestionnaire = controller.instance_variable_get(:@gestionnaire)
+        user = User.find_by(email: gestionnaire.email)
+        expect(user.valid_password?(gestionnaire.password)).to be(true)
+      end
+
+      context 'invalid email' do
+        let(:email) { 'fail' }
+
+        it "won't create associated user" do
+          expect(User.where(email: email).exists?).to be(false)
+        end
+      end
+    end
   end
 
   describe 'DELETE #destroy' do
