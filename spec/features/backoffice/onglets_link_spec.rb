@@ -89,4 +89,16 @@ feature 'on click on tabs button' do
       end
     end
   end
+
+  context "OpenSimplif" do
+    before do
+      allow(Features).to receive(:opensimplif).and_return(true)
+      visit backoffice_dossiers_url
+    end
+
+    scenario "it hides the tabs" do
+      expect(page).to_not have_css('#filter_by_procedure')
+      expect(page).to_not have_css('#onglets')
+    end
+  end
 end
