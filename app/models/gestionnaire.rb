@@ -14,7 +14,7 @@ class Gestionnaire < ActiveRecord::Base
 
   after_create :build_default_preferences_list_dossier
   after_create :build_default_preferences_smart_listing_page
-  after_save :sync_credentials
+  after_update :sync_credentials, if: -> { Features.unified_login }
 
   def dossiers_follow
     dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")

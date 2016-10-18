@@ -34,9 +34,10 @@ describe Users::SessionsController, type: :controller do
       it { is_expected.to be_falsey }
     end
 
-    context "when associated gestionnaire" do
+    context "unified login" do
       let(:user) { create(:user, email: 'unique@plop.com', password: 'password') }
       let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'password') }
+      before { allow(Features).to receive(:unified_login).and_return(true) }
 
       it 'signs user in' do
         post :create, user: { email: user.email, password: user.password }
