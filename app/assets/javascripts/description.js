@@ -54,7 +54,7 @@ function toggle_header_section_composents() {
         header_section_id = target.id.split('mask_button_')[1];
         header_section_composents = $(".header_section_" + header_section_id);
 
-        header_section_composents.slideToggle(200, function(){
+        header_section_composents.slideToggle(200, function () {
             if (header_section_composents.css('display') == 'none') {
                 $(target).html('Afficher la section <i class="fa fa-chevron-down" />')
             }
@@ -62,5 +62,12 @@ function toggle_header_section_composents() {
                 $(target).html('Masquer la section <i class="fa fa-chevron-up" />')
             }
         });
+    });
+
+    $.each($("a.mask_section_button"), function (index, e) {
+        if (index != 0) {
+            $(e).click();
+            $(e).html('Afficher la section <i class="fa fa-chevron-down" />')
+        }
     });
 }
