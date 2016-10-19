@@ -22,35 +22,13 @@ feature 'on click on tabs button' do
   end
 
   context 'when user is logged in' do
-    context 'when he click on tabs nouveaux' do
-      before do
-        visit users_dossiers_url(liste: :nouveaux)
-        page.click_on 'Nouveaux 1'
-      end
-
-      scenario 'it redirect to users dossier termine' do
-        expect(page).to have_css('#users_index')
-      end
-    end
-
-    context 'when he click on tabs a traite' do
+    context 'when he click on tabs en construction' do
       before do
         visit users_dossiers_url(liste: :a_traiter)
-        page.click_on 'Action requise 1'
+        page.click_on 'En construction 3'
       end
 
       scenario 'it redirect to users dossier termine' do
-        expect(page).to have_css('#users_index')
-      end
-    end
-
-    context 'when he click on tabs en attente' do
-      before do
-        visit users_dossiers_url(liste: :en_attente)
-        page.click_on 'Etude en cours 1'
-      end
-
-      scenario 'it redirect to users dossier en attente' do
         expect(page).to have_css('#users_index')
       end
     end

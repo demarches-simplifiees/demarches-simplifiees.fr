@@ -8,26 +8,12 @@
           .badge.progress-bar-default
             = @dossiers_list_facade.brouillon_total
 
-    %li{ class: @dossiers_list_facade.nouveaux_class }
-      %a{:href => "#{url_for users_dossiers_path(liste: 'nouveaux')}", 'data-toggle' => :tooltip, title: 'Les nouveaux dossiers qui n\'ont pas encore été vus par votre accompagnateur.'}
-        %h5.text-info
-          = "Nouveaux"
-          .badge.progress-bar-info
-            = @dossiers_list_facade.nouveaux_total
-
-    %li{ class: @dossiers_list_facade.a_traiter_class }
+    %li{ class: @dossiers_list_facade.en_construction_class }
       %a{:href => "#{url_for users_dossiers_path(liste: 'a_traiter')}", 'data-toggle' => :tooltip, title: 'Les dossiers qui requièrent une action de votre part.'}
         %h5.text-danger
-          = "Action requise"
+          = "En construction"
           .badge.progress-bar-danger
-            = @dossiers_list_facade.a_traiter_total
-
-    %li{ class: @dossiers_list_facade.en_attente_class }
-      %a{:href => "#{url_for users_dossiers_path(liste: 'en_attente')}", 'data-toggle' => :tooltip, title: 'Les dossiers en cours de relecture par votre accompagnateur.'}
-        %h5.text-default
-          ="Etude en cours"
-          .badge.progress-bar-default
-            = @dossiers_list_facade.en_attente_total
+            = @dossiers_list_facade.en_construction_total
 
     %li{ class: @dossiers_list_facade.valides_class }
       %a{:href => "#{url_for users_dossiers_path(liste: 'valides')}", 'data-toggle' => :tooltip, title: 'Les dossiers relus par votre accompagnateur pouvant être déposés pour examen.'}

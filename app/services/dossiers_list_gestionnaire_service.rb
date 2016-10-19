@@ -121,7 +121,7 @@ class DossiersListGestionnaireService
 
   def joins_filter
     filter_preference_list.inject([]) do |acc, preference|
-      acc.push(preference.table.to_sym) unless preference.table.blank?
+      acc.push(preference.table.to_sym) unless preference.table.blank? || preference.filter.blank?
       acc
     end
   end

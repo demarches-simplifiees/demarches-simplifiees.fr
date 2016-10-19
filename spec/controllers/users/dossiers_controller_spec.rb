@@ -418,14 +418,40 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe 'GET #en_attente' do
+  describe 'GET #valides' do
     context 'when user is connected' do
       before do
         sign_in user
       end
 
       it 'returns http success' do
-        get :index, liste: :en_attente
+        get :index, liste: :valides
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
+
+  describe 'GET #en_instruction' do
+    context 'when user is connected' do
+      before do
+        sign_in user
+      end
+
+      it 'returns http success' do
+        get :index, liste: :en_instruction
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
+
+  describe 'GET #brouillon' do
+    context 'when user is connected' do
+      before do
+        sign_in user
+      end
+
+      it 'returns http success' do
+        get :index, liste: :brouillon
         expect(response).to have_http_status(200)
       end
     end

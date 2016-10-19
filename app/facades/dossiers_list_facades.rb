@@ -20,7 +20,7 @@ class DossiersListFacades
   end
 
   def gestionnaire_procedures_name_and_id_list
-    @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure|  acc.push({id: procedure.id, libelle: procedure.libelle})}
+    @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure| acc.push({id: procedure.id, libelle: procedure.libelle}) }
   end
 
   def procedure_id
@@ -50,6 +50,10 @@ class DossiersListFacades
   end
 
   def a_traiter_class
+    (@liste == 'a_traiter' ? 'active' : '')
+  end
+
+  def en_construction_class
     (@liste == 'a_traiter' ? 'active' : '')
   end
 
@@ -98,13 +102,15 @@ class DossiersListFacades
   end
 
   def a_traiter_total
-    return service.waiting_for_gestionnaire.count if gestionnaire?
-    service.waiting_for_user.count if user?
+    service.waiting_for_gestionnaire.count
+  end
+
+  def en_construction_total
+    service.en_construction.count
   end
 
   def en_attente_total
-    return service.waiting_for_user.count if gestionnaire?
-    service.waiting_for_gestionnaire.count if user?
+    service.waiting_for_user.count
   end
 
   def valides_total
@@ -144,6 +150,10 @@ class DossiersListFacades
   end
 
   def a_traiter_url
+    base_url 'a_traiter'
+  end
+
+  def en_construction_url
     base_url 'a_traiter'
   end
 
