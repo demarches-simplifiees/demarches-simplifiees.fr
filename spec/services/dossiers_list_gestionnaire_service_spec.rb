@@ -171,6 +171,16 @@ describe DossiersListGestionnaireService do
       it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE 'plop%plip'" }
     end
 
+    context "when filter containe the character <'> " do
+      before do
+        gestionnaire.preference_list_dossiers
+            .find_by(table: 'entreprise', attr: 'raison_sociale', procedure: nil)
+            .update_column :filter, "MCDONALD'S FRANCE"
+      end
+
+      it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE '%MCDONALD''S FRANCE%'" }
+    end
+
     context 'when preference list contain a champ' do
       before do
         create :preference_list_dossier,
