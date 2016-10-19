@@ -39,7 +39,7 @@ class Champ < ActiveRecord::Base
   end
 
   def self.departements
-    JSON.parse(Carto::GeoAPI::Driver.departements).inject([]){|acc, liste| acc.push(liste['code'] + ' - ' + liste['nom']) }
+    JSON.parse(Carto::GeoAPI::Driver.departements).inject([]){|acc, liste| acc.push(liste['code'] + ' - ' + liste['nom']) }.push('99 - Étranger')
   end
 
   def self.pays
