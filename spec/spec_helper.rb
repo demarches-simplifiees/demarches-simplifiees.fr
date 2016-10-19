@@ -75,6 +75,20 @@ module SmartListing
   end
 end
 
+class Features
+  #def self.remote_storage
+  #  true
+  #end
+
+  def self.unified_login
+    false
+  end
+
+  def self.opensimplif
+    false
+  end
+end
+
 WebMock.disable_net_connect!(allow_localhost: true)
 
 RSpec.configure do |config|

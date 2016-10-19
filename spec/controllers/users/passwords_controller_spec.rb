@@ -6,11 +6,12 @@ describe Users::PasswordsController, type: :controller do
   end
 
   describe "update" do
-    context "when associated gestionnaire" do
+    context "unified login" do
       let(:user) { create(:user, email: 'unique@plop.com', password: 'password') }
       let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'password') }
 
       before do
+        allow(Features).to receive(:unified_login).and_return(true)
         @token = user.send(:set_reset_password_token)
         gestionnaire # make sure it's created
       end

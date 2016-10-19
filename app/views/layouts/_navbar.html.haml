@@ -31,7 +31,8 @@
     = render partial: 'administrateurs/login_banner'
   -else
     = link_to "Utilisateur", '/users/sign_in', method: :get, :class => 'btn btn-md'
-    = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
+    -unless Features.unified_login
+      = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
     = link_to "Administrateur", '/administrateurs/sign_in', method: :get, :class => 'btn btn-md'
 
 - if Rails.env != 'production'
