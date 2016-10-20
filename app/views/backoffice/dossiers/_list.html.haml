@@ -2,7 +2,7 @@
   %thead
     - @dossiers_list_facade.preference_list_dossiers_filter.each do |preference|
       %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}
-        - if preference.table == 'champs'
+        - if preference.table.to_s.include? 'champs'
           = preference.libelle
         -else
           = smart_listing.sortable preference.libelle, preference.table_attr
@@ -22,6 +22,8 @@
               - value = dossier.decorate.public_send(preference.attr_decorate)
             - elsif preference.table == 'champs'
               - value = dossier.champs.find_by_type_de_champ_id(preference.attr).value
+            - elsif preference.table == 'champs_private'
+              - value = dossier.champs_private.find_by_type_de_champ_id(preference.attr).value
             - else
               - begin
                 - value = dossier.public_send(preference.table).decorate.public_send(preference.attr_decorate)

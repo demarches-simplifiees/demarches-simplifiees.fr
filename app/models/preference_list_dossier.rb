@@ -23,7 +23,8 @@ class PreferenceListDossier < ActiveRecord::Base
     }
 
     columns = columns.merge({
-                      champs: columns_champs_procedure(procedure_id)
+                      champs: columns_champs_procedure(procedure_id),
+                      champs_private: columns_champs_private_procedure(procedure_id)
                   }) unless procedure_id.nil?
 
     columns
@@ -98,6 +99,17 @@ class PreferenceListDossier < ActiveRecord::Base
     Procedure.find(procedure_id).types_de_champ.inject({}) do |acc, type_de_champ|
       acc = acc.merge({
                           "type_de_champ_#{type_de_champ.id}" => create_column(type_de_champ.libelle, table, type_de_champ.id, 'value', 2)
+                      }) if type_de_champ.field_for_list?
+      acc
+    end
+  end
+
+  def self.columns_champs_private_procedure procedure_id
+    table = 'champs_private'
+
+    Procedure.find(procedure_id).types_de_champ_private.inject({}) do |acc, type_de_champ|
+      acc = acc.merge({
+                          "type_de_champ_private_#{type_de_champ.id}" => create_column(type_de_champ.libelle, table, type_de_champ.id, 'value', 2)
                       }) if type_de_champ.field_for_list?
       acc
     end
