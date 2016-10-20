@@ -23,16 +23,16 @@ class Users::SessionsController < Sessions::SessionsController
 #POST /resource/sign_in
   def create
     try_to_authenticate(User)
-    try_to_authenticate(Gestionnaire)
+    try_to_authenticate(Gestionnaire) if Features.unified_login
 
     if user_signed_in?
       current_user.update_attributes(loged_in_with_france_connect: '')
     end
 
-    if gestionnaire_signed_in?
-      redirect_to backoffice_path
-    elsif user_signed_in?
+    if user_signed_in?
       redirect_to after_sign_in_path_for(:user)
+    elsif gestionnaire_signed_in?
+      redirect_to backoffice_path
     else
       new
       render :new, status: 401
