@@ -8,4 +8,5 @@
 
   %br
   %br
-  = render partial: 'state_description', locals: {dossiers_list_facade: @dossiers_list_facade}
+  - unless Features.opensimplif
+    = render partial: 'state_description', locals: {dossiers_list_facade: @dossiers_list_facade}

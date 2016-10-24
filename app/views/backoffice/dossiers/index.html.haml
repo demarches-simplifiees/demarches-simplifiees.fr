@@ -12,4 +12,5 @@
 
   %br
   %br
-  = render partial: 'backoffice/dossiers/state_description', locals: {dossiers_list_facade: @dossiers_list_facade}
+  - unless Features.opensimplif
+    = render partial: 'backoffice/dossiers/state_description', locals: {dossiers_list_facade: @dossiers_list_facade}
