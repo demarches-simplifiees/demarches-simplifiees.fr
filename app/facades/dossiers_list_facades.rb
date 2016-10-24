@@ -4,6 +4,7 @@ class DossiersListFacades
   def initialize current_devise_profil, liste, procedure = nil
     @current_devise_profil = current_devise_profil
     @liste = liste
+    @liste = 'all_state' if Features.opensimplif
     @procedure = procedure
   end
 
@@ -28,11 +29,7 @@ class DossiersListFacades
   end
 
   def dossiers_to_display
-    if Features.opensimplif
-      @current_devise_profil.dossiers
-    else
-      service.dossiers_to_display
-    end
+    service.dossiers_to_display
   end
 
   def preference_list_dossiers_filter
@@ -194,4 +191,5 @@ class DossiersListFacades
   def base_url liste
     @procedure.nil? ? backoffice_dossiers_path(liste: liste) : backoffice_dossiers_procedure_path(id: @procedure.id, liste: liste)
   end
+
 end

@@ -10,11 +10,16 @@ class DossiersListUserService
      'valides' => valides,
      'en_instruction' => en_instruction,
      'termine' => termine,
-     'invite' => invite}[@liste]
+     'invite' => invite,
+     'all_state' => all_state}[@liste]
   end
 
   def self.dossiers_liste_libelle
-    ['brouillon', 'a_traiter', 'valides', 'en_instruction', 'termine', 'invite']
+    ['brouillon', 'a_traiter', 'valides', 'en_instruction', 'termine', 'invite', 'all_state']
+  end
+
+  def all_state
+    @all_state ||= @current_devise_profil.dossiers.all_state
   end
 
   def brouillon

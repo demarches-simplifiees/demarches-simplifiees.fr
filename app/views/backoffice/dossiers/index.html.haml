@@ -5,8 +5,7 @@
   =link_to 'Tous mes dossiers en CSV', backoffice_download_dossiers_tps_path, {class: 'btn btn-success btn-sm', style: 'float: right; margin-right: 4%; margin-top: 7px'}
   %h1 Gestion des dossiers
 
-  -unless Features.opensimplif
-    = render partial: 'backoffice/dossiers/onglets'
+  = render partial: 'backoffice/dossiers/onglets'
 
   = smart_listing_render :dossiers
 
