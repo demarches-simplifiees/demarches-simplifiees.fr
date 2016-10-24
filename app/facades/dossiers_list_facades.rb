@@ -28,7 +28,11 @@ class DossiersListFacades
   end
 
   def dossiers_to_display
-    service.dossiers_to_display
+    if Features.opensimplif
+      @current_devise_profil.dossiers
+    else
+      service.dossiers_to_display
+    end
   end
 
   def preference_list_dossiers_filter
