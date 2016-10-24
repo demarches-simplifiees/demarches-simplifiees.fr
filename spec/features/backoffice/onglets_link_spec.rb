@@ -97,8 +97,7 @@ feature 'on click on tabs button' do
     end
 
     scenario "it hides the tabs" do
-      expect(page).to_not have_css('#filter_by_procedure')
-      expect(page).to_not have_css('#onglets')
+      expect(page).to_not have_content('Nouveaux')
     end
   end
 end
