@@ -7,26 +7,32 @@
 %a{href: '/'}
   = image_tag('logo-tps.png', class: 'logo')
 
-- if gestionnaire_signed_in?
-  %a{href: (current_gestionnaire.procedure_filter.blank? ? '/' : backoffice_dossiers_procedure_path(current_gestionnaire.procedure_filter)), class: 'btn btn-md'}
+- if gestionnaire_signed_in? && user_signed_in?
+  %a{href: (current_gestionnaire.procedure_filter.blank? ? backoffice_dossiers_path : backoffice_dossiers_procedure_path(current_gestionnaire.procedure_filter)), class: 'btn btn-md'}
+    Dossiers
+  %a{href: users_dossiers_path, class: 'btn btn-md'}
+    Mes Dossiers
+- elsif gestionnaire_signed_in?
+  %a{href: (current_gestionnaire.procedure_filter.blank? ? backoffice_dossiers_path : backoffice_dossiers_procedure_path(current_gestionnaire.procedure_filter)), class: 'btn btn-md'}
     Mes Dossiers
 - elsif user_signed_in?
-  %a{href: '/', class: 'btn btn-md'}
+  %a{href: users_dossiers_path, class: 'btn btn-md'}
     Mes Dossiers
 - elsif administrateur_signed_in?
-  %a{href: '/', class: 'btn btn-md'}
+  %a{href: admin_procedures_path, class: 'btn btn-md'}
     Mes Procédures
 
 #sign_out
-  -if gestionnaire_signed_in?
+  -if user_signed_in?
+    = render partial: 'users/login_banner'
+  -elsif gestionnaire_signed_in?
     = render partial: 'gestionnaires/login_banner'
   -elsif administrateur_signed_in?
     = render partial: 'administrateurs/login_banner'
-  - elsif user_signed_in?
-    = render partial: 'users/login_banner'
-  - else
+  -else
     = link_to "Utilisateur", '/users/sign_in', method: :get, :class => 'btn btn-md'
-    = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
+    -unless Features.unified_login
+      = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
     = link_to "Administrateur", '/administrateurs/sign_in', method: :get, :class => 'btn btn-md'
 
 - if Rails.env != 'production'

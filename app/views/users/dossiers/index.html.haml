@@ -1,5 +1,8 @@
 #users_index
-  = render partial: 'onglets'
+  %h1 Mes dossiers
+
+  -unless Features.opensimplif
+    = render partial: 'onglets'
 
   = smart_listing_render :dossiers
 

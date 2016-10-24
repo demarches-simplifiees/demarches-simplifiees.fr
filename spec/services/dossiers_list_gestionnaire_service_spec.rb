@@ -125,6 +125,43 @@ describe DossiersListGestionnaireService do
     end
   end
 
+  describe '#join_filter' do
+
+    subject { DossiersListGestionnaireService.new(gestionnaire, liste, nil).joins_filter }
+
+    it { is_expected.to eq []}
+
+    context 'when a filter is fielded' do
+      before do
+        gestionnaire.preference_list_dossiers
+            .find_by(table: 'entreprise', attr: 'raison_sociale', procedure: nil)
+            .update_column :filter, 'plop'
+      end
+
+      it { is_expected.to eq [:entreprise] }
+    end
+
+    context 'when a filter is empty' do
+      before do
+        gestionnaire.preference_list_dossiers
+            .find_by(table: 'entreprise', attr: 'raison_sociale', procedure: nil)
+            .update_column :filter, ''
+      end
+
+      it { is_expected.to eq [] }
+    end
+
+    context 'when a filter is nil' do
+      before do
+        gestionnaire.preference_list_dossiers
+            .find_by(table: 'entreprise', attr: 'raison_sociale', procedure: nil)
+            .update_column :filter, nil
+      end
+
+      it { is_expected.to eq [] }
+    end
+  end
+
   describe '#where_filter' do
     before do
       gestionnaire.preference_list_dossiers
@@ -169,6 +206,41 @@ describe DossiersListGestionnaireService do
       end
 
       it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE 'plop%plip'" }
+    end
+
+    context "when filter containe the character <'> " do
+      before do
+        gestionnaire.preference_list_dossiers
+            .find_by(table: 'entreprise', attr: 'raison_sociale', procedure: nil)
+            .update_column :filter, "MCDONALD'S FRANCE"
+      end
+
+      it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE '%MCDONALD''S FRANCE%'" }
+    end
+
+    context "when filter is empty " do
+      before do
+        gestionnaire.preference_list_dossiers
+            .find_by(table: 'entreprise', attr: 'raison_sociale', procedure: nil)
+            .update_column :filter, ""
+      end
+
+      it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%'" }
+    end
+
+    context 'when preference list contain a champ' do
+      before do
+        create :preference_list_dossier,
+               gestionnaire: gestionnaire,
+               table: 'champs',
+               attr: '34',
+               attr_decorate: '',
+               filter: 'plop',
+               procedure_id: create(:procedure)
+      end
+
+      it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE '%plop%' AND champs.type_de_champ_id = 34 AND CAST(champs.value as TEXT) LIKE '%plop%'" }
+
     end
   end
 

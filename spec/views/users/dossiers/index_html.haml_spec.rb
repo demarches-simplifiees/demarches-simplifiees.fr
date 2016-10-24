@@ -46,33 +46,19 @@ describe 'users/dossiers/index.html.haml', type: :view do
     end
   end
 
-  describe 'on tab nouveaux' do
-    let(:total_dossiers) { 1 }
-    let(:active_class) { '.active .text-info' }
-    let(:dossiers_to_display) { user.dossiers.nouveaux }
-    let(:liste) { 'nouveaux' }
+  describe 'on tab en construction' do
+    let(:total_dossiers) { 3 }
+    let(:active_class) { '.active .text-danger' }
+    let(:dossiers_to_display) { user.dossiers.en_construction }
+    let(:liste) { 'a_traiter' }
 
     it_behaves_like 'check_tab_content' do
       let(:decorate_dossier_at_check) { decorate_dossier_initiated }
     end
-  end
-
-  describe 'on tab action requise' do
-    let(:total_dossiers) { 1 }
-    let(:active_class) { '.active .text-danger' }
-    let(:dossiers_to_display) { user.dossiers.waiting_for_user_without_validated }
-    let(:liste) { 'a_traiter' }
 
     it_behaves_like 'check_tab_content' do
       let(:decorate_dossier_at_check) { decorate_dossier_replied }
     end
-  end
-
-  describe 'on tab etude en cours' do
-    let(:total_dossiers) { 1 }
-    let(:active_class) { '.active .text-default' }
-    let(:dossiers_to_display) { user.dossiers.waiting_for_gestionnaire }
-    let(:liste) { 'en_attente' }
 
     it_behaves_like 'check_tab_content' do
       let(:decorate_dossier_at_check) { decorate_dossier_updated }

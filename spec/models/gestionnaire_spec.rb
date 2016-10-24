@@ -184,4 +184,19 @@ describe Gestionnaire, type: :model do
       end
     end
   end
+
+  context 'unified login' do
+    before { allow(Features).to receive(:unified_login).and_return(true) }
+
+    it 'syncs credentials to associated user' do
+      gestionnaire = create(:gestionnaire)
+      user = create(:user, email: gestionnaire.email)
+
+      gestionnaire.update_attributes(email: 'whoami@plop.com', password: 'super secret')
+
+      user.reload
+      expect(user.email).to eq('whoami@plop.com')
+      expect(user.valid_password?('super secret')).to be(true)
+    end
+  end
 end

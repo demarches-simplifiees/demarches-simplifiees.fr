@@ -1,4 +1,6 @@
 class Gestionnaires::PasswordsController < Devise::PasswordsController
+  after_action :try_to_authenticate_user, only: %i(update)
+
   # GET /resource/password/new
   # def new
   #   super
@@ -29,4 +31,11 @@ class Gestionnaires::PasswordsController < Devise::PasswordsController
   # def after_sending_reset_password_instructions_path_for(resource_name)
   #   super(resource_name)
   # end
+
+  def try_to_authenticate_user
+    if gestionnaire_signed_in?
+      user = User.find_by(email: current_gestionnaire.email)
+      sign_in user if user
+    end
+  end
 end

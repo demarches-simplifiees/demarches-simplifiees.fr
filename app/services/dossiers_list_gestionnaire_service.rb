@@ -44,6 +44,7 @@ class DossiersListGestionnaireService
 
   def filter_dossiers
     @filter_dossiers ||= @procedure.nil? ? @current_devise_profil.dossiers.joins(joins_filter).where(where_filter) : @procedure.dossiers.joins(joins_filter).where(where_filter)
+    @filter_dossiers.uniq
   end
 
   def filter_procedure_reset!
@@ -105,9 +106,10 @@ class DossiersListGestionnaireService
 
     reset_sort!
 
-    @current_devise_profil.preference_list_dossiers
-        .find_by(table: table, attr: attr, procedure: @procedure)
-        .update order: order
+    preference = @current_devise_profil.preference_list_dossiers
+                     .find_by(table: table, attr: attr, procedure: @procedure)
+
+    preference.update order: order unless (preference.nil?)
   end
 
   def reset_sort!
@@ -119,7 +121,7 @@ class DossiersListGestionnaireService
 
   def joins_filter
     filter_preference_list.inject([]) do |acc, preference|
-      acc.push(preference.table.to_sym) unless preference.table.blank?
+      acc.push(preference.table.to_sym) unless preference.table.blank? || preference.filter.blank?
       acc
     end
   end
@@ -127,12 +129,21 @@ class DossiersListGestionnaireService
   def where_filter
     filter_preference_list.inject('') do |acc, preference|
       unless preference.filter.blank?
-        filter = preference.filter.gsub('*', '%')
+        filter = preference.filter.gsub('*', '%').gsub("'", "''")
         filter = "%"+filter+"%" unless filter.include? '%'
+
+        value = preference.table_with_s_attr
+
+        if preference.table_attr.include?('champs')
+          value = 'champs.value'
+
+          acc += (acc.to_s.empty? ? ''.to_s : " AND ") +
+              'champs.type_de_champ_id = ' + preference.attr
+        end
 
         acc += (acc.to_s.empty? ? ''.to_s : " AND ") +
             "CAST(" +
-            preference.table_with_s_attr +
+            value +
             " as TEXT)" +
             " LIKE " +
             "'" +
@@ -152,7 +163,7 @@ class DossiersListGestionnaireService
 
     @current_devise_profil.preference_list_dossiers
         .find_by(table: table, attr: attr, procedure: @procedure)
-        .update filter: filter
+        .update filter: filter.strip
   end
 
   private
