@@ -131,6 +131,15 @@ class Users::DossiersController < UsersController
     }
   end
 
+  def destroy
+    dossier = Dossier.find(params[:id])
+    if dossier.brouillon?
+      dossier.destroy
+      flash.notice = 'Brouillon supprimé'
+    end
+    redirect_to url_for users_dossiers_path
+  end
+
   private
 
   def check_siret

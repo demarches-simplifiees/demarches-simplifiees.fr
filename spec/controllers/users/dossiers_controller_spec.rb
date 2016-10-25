@@ -388,6 +388,46 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe 'DELETE #destroy' do
+    let(:user)              { create(:user) }
+    let!(:dossier_draft)     { create :dossier, state: "draft", user: user }
+    let!(:dossier_not_draft) { create :dossier, state: "initiated", user: user }
+
+    subject { delete :destroy, id: dossier.id }
+
+    before do
+      sign_in user
+    end
+
+    context 'when dossier is draft' do
+      let(:dossier) { dossier_draft }
+
+      it { expect(subject.status).to eq 302 }
+
+      describe 'flash notice' do
+        before do
+          subject
+        end
+
+        it { expect(flash[:notice]).to be_present }
+      end
+
+      it 'destroy dossier is call' do
+        expect_any_instance_of(Dossier).to receive(:destroy)
+        subject
+      end
+
+      it { expect { subject }.to change { Dossier.count }.by(-1) }
+    end
+
+    context 'when dossier is not a draft' do
+      let(:dossier) { dossier_not_draft }
+
+      it { expect { subject }.to change { Dossier.count }.by(0) }
+    end
+
+  end
+
   describe 'PUT #change_siret' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
 
