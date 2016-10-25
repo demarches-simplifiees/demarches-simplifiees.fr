@@ -2,22 +2,26 @@
   %table.table
     %thead
       %th.col-md-4.col-lg-4= smart_listing.sortable 'Email', :email
-      %th.col-md-4.col-lg-4= smart_listing.sortable 'API Token', :api_token
       %th.col-md-4.col-lg-4= smart_listing.sortable 'Date de dernière connexion', :last_sign_in_at
+      %th.col-md-2.col-lg-2 Procédure active
+      %th.col-md-2.col-lg-2 Dossier en cours
 
     - @admins.each do |admin|
       %tr
         %td
           = admin.email
         %td
-          = admin.api_token
-        %td
           - unless admin.last_sign_in_at.nil?
             = time_ago_in_words(l(admin.last_sign_in_at, format: "%d/%m/%Y %H:%M UTC +02:00"))
             (
             = admin.last_sign_in_at.to_date.strftime('%d/%m/%Y')
             )
-
+        %td
+          = admin.procedures.where(published: true).count
+        %td
+          - total_dossier = 0
+          - admin.procedures.each do |procedure| total_dossier += procedure.dossiers.count end
+          = total_dossier
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links
 
