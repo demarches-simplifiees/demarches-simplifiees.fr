@@ -27,7 +27,15 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def search
     @search_terms = params[:q]
-    @dossier = Dossier.search(current_gestionnaire, @search_terms)
+
+    @dossier = Search.new(
+      gestionnaire: current_gestionnaire,
+      query: @search_terms,
+    ).results
+
+    unless @dossier.empty?
+      @dossiers = @dossiers.paginate(page: params[:page])
+    end
 
     smartlisting_dossier @dossier, 'search'
 

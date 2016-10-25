@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161011125345) do
+ActiveRecord::Schema.define(version: 20161025150900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -369,4 +369,46 @@ ActiveRecord::Schema.define(version: 20161011125345) do
   add_foreign_key "dossiers", "users"
   add_foreign_key "procedure_paths", "administrateurs"
   add_foreign_key "procedure_paths", "procedures"
+
+  create_view :searches,  sql_definition: <<-SQL
+      SELECT dossiers.id AS dossier_id,
+      (dossiers.id)::text AS term
+     FROM dossiers
+  UNION
+   SELECT cerfas.dossier_id,
+      cerfas.content AS term
+     FROM cerfas
+  UNION
+   SELECT champs.dossier_id,
+      champs.value AS term
+     FROM champs
+  UNION
+   SELECT champs.dossier_id,
+      drop_down_lists.value AS term
+     FROM (drop_down_lists
+       JOIN champs ON ((champs.type_de_champ_id = champs.type_de_champ_id)))
+  UNION
+   SELECT entreprises.dossier_id,
+      (((((((((((((((((((((((entreprises.siren)::text || ' '::text) || (entreprises.numero_tva_intracommunautaire)::text) || ' '::text) || (entreprises.forme_juridique)::text) || ' '::text) || (entreprises.forme_juridique_code)::text) || ' '::text) || (entreprises.nom_commercial)::text) || ' '::text) || (entreprises.raison_sociale)::text) || ' '::text) || (entreprises.siret_siege_social)::text) || ' '::text) || (entreprises.nom)::text) || ' '::text) || (entreprises.prenom)::text) || ' '::text) || (rna_informations.association_id)::text) || ' '::text) || (rna_informations.titre)::text) || ' '::text) || rna_informations.objet) AS term
+     FROM (entreprises
+       JOIN rna_informations ON ((rna_informations.entreprise_id = entreprises.id)))
+  UNION
+   SELECT etablissements.dossier_id,
+      (((((((((((((etablissements.siret)::text || ' '::text) || (etablissements.naf)::text) || ' '::text) || (etablissements.libelle_naf)::text) || ' '::text) || (etablissements.adresse)::text) || ' '::text) || (etablissements.code_postal)::text) || ' '::text) || (etablissements.localite)::text) || ' '::text) || (etablissements.code_insee_localite)::text) AS term
+     FROM etablissements
+  UNION
+   SELECT individuals.dossier_id,
+      (((individuals.nom)::text || ' '::text) || (individuals.prenom)::text) AS term
+     FROM individuals
+  UNION
+   SELECT pieces_justificatives.dossier_id,
+      pieces_justificatives.content AS term
+     FROM pieces_justificatives
+  UNION
+   SELECT dossiers.id AS dossier_id,
+      (((france_connect_informations.given_name)::text || ' '::text) || (france_connect_informations.family_name)::text) AS term
+     FROM (france_connect_informations
+       JOIN dossiers ON ((dossiers.user_id = france_connect_informations.user_id)));
+  SQL
+
 end
