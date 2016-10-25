@@ -53,6 +53,7 @@ class Dossier < ActiveRecord::Base
   EN_INSTRUCTION = %w(submitted received)
   A_INSTRUIRE = %w(received)
   TERMINE = %w(closed refused without_continuation)
+  ALL_STATE = %w(draft initiated updated replied validated submitted received closed refused without_continuation)
 
   def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
@@ -169,6 +170,10 @@ class Dossier < ActiveRecord::Base
     state
   end
 
+  def all_state?
+    ALL_STATE.include?(state)
+  end
+
   def brouillon?
     BROUILLON.include?(state)
   end
@@ -207,6 +212,10 @@ class Dossier < ActiveRecord::Base
 
   def termine?
     TERMINE.include?(state)
+  end
+
+  def self.all_state order = 'ASC'
+    where(state: ALL_STATE, archived: false).order("updated_at #{order}")
   end
 
   def self.brouillon order = 'ASC'

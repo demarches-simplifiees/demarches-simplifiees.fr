@@ -11,11 +11,16 @@ class DossiersListGestionnaireService
      'en_attente' => waiting_for_user,
      'deposes' => deposes,
      'a_instruire' => a_instruire,
-     'termine' => termine}[@liste]
+     'termine' => termine,
+     'all_state' => all_state}[@liste]
   end
 
   def self.dossiers_liste_libelle
-    ['nouveaux', 'a_traiter', 'en_attente', 'deposes', 'a_instruire', 'termine']
+    ['nouveaux', 'a_traiter', 'en_attente', 'deposes', 'a_instruire', 'termine', 'all_state']
+  end
+
+  def all_state
+    @all_state ||= filter_dossiers.all_state
   end
 
   def nouveaux
