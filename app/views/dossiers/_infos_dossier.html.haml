@@ -4,6 +4,33 @@
       %h3
         = @facade.dossier.procedure.libelle
 
+      - if @facade.procedure.for_individual?
+        %br
+        .individual.text-info
+          %h4 Dépositaire
+
+          %table.table{style:'width: 60%'}
+            %tr
+              %th.col-md-3.col-lg-3
+                Civilité
+              %td.col-md-5.col-lg-5
+                = @facade.individual.gender
+            %tr
+              %th.col-md-3.col-lg-3
+                Nom
+              %td.col-md-5.col-lg-5
+                = @facade.individual.nom
+            %tr
+              %th.col-md-3.col-lg-3
+                Prénom
+              %td.col-md-5.col-lg-5
+                = @facade.individual.prenom
+            %tr
+              %th.col-md-3.col-lg-3
+                Date de naissance
+              %td.col-md-5.col-lg-5
+                = @facade.individual.birthdate
+
       - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
         .mandataire_social.text-success.center
           %br
@@ -66,22 +93,22 @@
     -if gestionnaire_signed_in?
       -if !@facade.dossier.read_only?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-          %button#action_button.btn.btn-success
-            = 'Valider le dossier'
+          %button.action_button.btn.btn-success{'data-toggle' => :tooltip, title: 'En cliquant ici, vous figez le dossier et autorisez le dépôt du dossier pour instruction.'}
+            = 'Déclarer complet'
 
       -elsif @facade.dossier.submitted?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :receive, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-          %button#action_button.btn.btn-success
+          %button.action_button.btn.btn-success
             = 'Notifier de la bonne réception'
 
       -elsif @facade.dossier.received?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
-          %button#action_button.btn.btn-success
+          %button.action_button.btn.btn-success
             %i.fa.fa-check
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
-          %button#action_button.btn.btn-danger
+          %button.action_button.btn.btn-danger
             %i.fa.fa-times
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :without_continuation, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Classer sans suite') do
-          %button#action_button.btn.btn-warning
+          %button.action_button.btn.btn-warning
             %i.fa.fa-circle-o
 

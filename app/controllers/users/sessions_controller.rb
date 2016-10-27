@@ -22,27 +22,45 @@ class Users::SessionsController < Sessions::SessionsController
 
 #POST /resource/sign_in
   def create
-    super
+    try_to_authenticate(User)
+    try_to_authenticate(Gestionnaire) if Features.unified_login
 
-    current_user.update_attributes(loged_in_with_france_connect: '')
+    if user_signed_in?
+      current_user.update_attributes(loged_in_with_france_connect: '')
+    end
+
+    if user_signed_in?
+      redirect_to after_sign_in_path_for(:user)
+    elsif gestionnaire_signed_in?
+      redirect_to backoffice_path
+    else
+      new
+      render :new, status: 401
+    end
   end
 
 # DELETE /resource/sign_out
   def destroy
-    connected_with_france_connect = current_user.loged_in_with_france_connect
-    current_user.update_attributes(loged_in_with_france_connect: '')
-
-    signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
-    set_flash_message :notice, :signed_out if signed_out && is_flashing_format?
-    yield if block_given?
-
-    if connected_with_france_connect == 'entreprise'
-      redirect_to FRANCE_CONNECT.entreprise_logout_endpoint
-    elsif connected_with_france_connect == 'particulier'
-      redirect_to FRANCE_CONNECT.particulier_logout_endpoint
-    else
-      respond_to_on_destroy
+    if gestionnaire_signed_in?
+      sign_out :gestionnaire
     end
+
+    if user_signed_in?
+      connected_with_france_connect = current_user.loged_in_with_france_connect
+      current_user.update_attributes(loged_in_with_france_connect: '')
+
+      sign_out :user
+
+      if connected_with_france_connect == 'entreprise'
+        redirect_to FRANCE_CONNECT.entreprise_logout_endpoint
+        return
+      elsif connected_with_france_connect == 'particulier'
+        redirect_to FRANCE_CONNECT.particulier_logout_endpoint
+        return
+      end
+    end
+
+    respond_to_on_destroy
   end
 
   def no_procedure
@@ -61,5 +79,14 @@ class Users::SessionsController < Sessions::SessionsController
     return nil if session["user_return_to"].nil?
 
     NumberService.to_number session["user_return_to"].split("?procedure_id=").second
+  end
+
+  def try_to_authenticate(klass)
+    if resource = klass.find_for_database_authentication(email: params[:user][:email])
+      if resource.valid_password?(params[:user][:password])
+        sign_in resource
+        set_flash_message :notice, :signed_in
+      end
+    end
   end
 end

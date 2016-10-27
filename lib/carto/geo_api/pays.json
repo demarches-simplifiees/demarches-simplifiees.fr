@@ -1,0 +1,851 @@
+[
+  {
+    "nom": "FRANCE"
+  },
+  {
+    "nom": "----"
+  },
+  {
+    "nom": "ACORES, MADERE"
+  },
+  {
+    "nom": "AFGHANISTAN"
+  },
+  {
+    "nom": "AFRIQUE DU SUD"
+  },
+  {
+    "nom": "ALASKA"
+  },
+  {
+    "nom": "ALBANIE"
+  },
+  {
+    "nom": "ALGERIE"
+  },
+  {
+    "nom": "ALLEMAGNE"
+  },
+  {
+    "nom": "ANDORRE"
+  },
+  {
+    "nom": "ANGOLA"
+  },
+  {
+    "nom": "ANGUILLA"
+  },
+  {
+    "nom": "ANTIGUA-ET-BARBUDA"
+  },
+  {
+    "nom": "ANTILLES NEERLANDAISES"
+  },
+  {
+    "nom": "ARABIE SAOUDITE"
+  },
+  {
+    "nom": "ARGENTINE"
+  },
+  {
+    "nom": "ARMENIE"
+  },
+  {
+    "nom": "ARUBA"
+  },
+  {
+    "nom": "AUSTRALIE"
+  },
+  {
+    "nom": "AUTRICHE"
+  },
+  {
+    "nom": "AZERBAIDJAN"
+  },
+  {
+    "nom": "BAHAMAS"
+  },
+  {
+    "nom": "BAHREIN"
+  },
+  {
+    "nom": "BANGLADESH"
+  },
+  {
+    "nom": "BARBADE"
+  },
+  {
+    "nom": "BELGIQUE"
+  },
+  {
+    "nom": "BELIZE"
+  },
+  {
+    "nom": "BENIN"
+  },
+  {
+    "nom": "BERMUDES"
+  },
+  {
+    "nom": "BHOUTAN"
+  },
+  {
+    "nom": "BIELORUSSIE"
+  },
+  {
+    "nom": "BIRMANIE"
+  },
+  {
+    "nom": "BOLIVIE"
+  },
+  {
+    "nom": "BONAIRE, SAINT EUSTACHE ET SABA"
+  },
+  {
+    "nom": "BOSNIE-HERZEGOVINE"
+  },
+  {
+    "nom": "BOTSWANA"
+  },
+  {
+    "nom": "BOUVET (ILE)"
+  },
+  {
+    "nom": "BRESIL"
+  },
+  {
+    "nom": "BRUNEI"
+  },
+  {
+    "nom": "BULGARIE"
+  },
+  {
+    "nom": "BURKINA"
+  },
+  {
+    "nom": "BURUNDI"
+  },
+  {
+    "nom": "CAIMANES (ILES)"
+  },
+  {
+    "nom": "CAMBODGE"
+  },
+  {
+    "nom": "CAMEROUN"
+  },
+  {
+    "nom": "CAMEROUN ET TOGO"
+  },
+  {
+    "nom": "CANADA"
+  },
+  {
+    "nom": "CANARIES (ILES)"
+  },
+  {
+    "nom": "CAP-VERT"
+  },
+  {
+    "nom": "CENTRAFRICAINE (REPUBLIQUE)"
+  },
+  {
+    "nom": "CHILI"
+  },
+  {
+    "nom": "CHINE"
+  },
+  {
+    "nom": "CHRISTMAS (ILE)"
+  },
+  {
+    "nom": "CHYPRE"
+  },
+  {
+    "nom": "CLIPPERTON (ILE)"
+  },
+  {
+    "nom": "COCOS ou KEELING (ILES)"
+  },
+  {
+    "nom": "COLOMBIE"
+  },
+  {
+    "nom": "COMORES"
+  },
+  {
+    "nom": "CONGO"
+  },
+  {
+    "nom": "CONGO (REPUBLIQUE DEMOCRATIQUE)"
+  },
+  {
+    "nom": "COOK (ILES)"
+  },
+  {
+    "nom": "COREE"
+  },
+  {
+    "nom": "COREE (REPUBLIQUE DE)"
+  },
+  {
+    "nom": "COREE (REPUBLIQUE POPULAIRE DEMOCRATIQUE DE)"
+  },
+  {
+    "nom": "COSTA RICA"
+  },
+  {
+    "nom": "COTE D'IVOIRE"
+  },
+  {
+    "nom": "CROATIE"
+  },
+  {
+    "nom": "CUBA"
+  },
+  {
+    "nom": "CURAÇAO"
+  },
+  {
+    "nom": "DANEMARK"
+  },
+  {
+    "nom": "DJIBOUTI"
+  },
+  {
+    "nom": "DOMINICAINE (REPUBLIQUE)"
+  },
+  {
+    "nom": "DOMINIQUE"
+  },
+  {
+    "nom": "EGYPTE"
+  },
+  {
+    "nom": "EL SALVADOR"
+  },
+  {
+    "nom": "EMIRATS ARABES UNIS"
+  },
+  {
+    "nom": "EQUATEUR"
+  },
+  {
+    "nom": "ERYTHREE"
+  },
+  {
+    "nom": "ESPAGNE"
+  },
+  {
+    "nom": "ESTONIE"
+  },
+  {
+    "nom": "ETATS MALAIS NON FEDERES"
+  },
+  {
+    "nom": "ETATS-UNIS"
+  },
+  {
+    "nom": "ETHIOPIE"
+  },
+  {
+    "nom": "EX-REPUBLIQUE YOUGOSLAVE DE MACEDOINE"
+  },
+  {
+    "nom": "FEROE (ILES)"
+  },
+  {
+    "nom": "FIDJI"
+  },
+  {
+    "nom": "FINLANDE"
+  },
+  {
+    "nom": "GABON"
+  },
+  {
+    "nom": "GAMBIE"
+  },
+  {
+    "nom": "GEORGIE"
+  },
+  {
+    "nom": "GEORGIE DU SUD ET LES ILES SANDWICH DU SUD"
+  },
+  {
+    "nom": "GHANA"
+  },
+  {
+    "nom": "GIBRALTAR"
+  },
+  {
+    "nom": "GOA"
+  },
+  {
+    "nom": "GRECE"
+  },
+  {
+    "nom": "GRENADE"
+  },
+  {
+    "nom": "GROENLAND"
+  },
+  {
+    "nom": "GUADELOUPE"
+  },
+  {
+    "nom": "GUAM"
+  },
+  {
+    "nom": "GUATEMALA"
+  },
+  {
+    "nom": "GUERNESEY"
+  },
+  {
+    "nom": "GUINEE"
+  },
+  {
+    "nom": "GUINEE EQUATORIALE"
+  },
+  {
+    "nom": "GUINEE-BISSAU"
+  },
+  {
+    "nom": "GUYANA"
+  },
+  {
+    "nom": "GUYANE"
+  },
+  {
+    "nom": "HAITI"
+  },
+  {
+    "nom": "HAWAII (ILES)"
+  },
+  {
+    "nom": "HEARD ET MACDONALD (ILES)"
+  },
+  {
+    "nom": "HONDURAS"
+  },
+  {
+    "nom": "HONG-KONG"
+  },
+  {
+    "nom": "HONGRIE"
+  },
+  {
+    "nom": "ILES PORTUGAISES DE L'OCEAN INDIEN"
+  },
+  {
+    "nom": "INDE"
+  },
+  {
+    "nom": "INDONESIE"
+  },
+  {
+    "nom": "IRAN"
+  },
+  {
+    "nom": "IRAQ"
+  },
+  {
+    "nom": "IRLANDE, ou EIRE"
+  },
+  {
+    "nom": "ISLANDE"
+  },
+  {
+    "nom": "ISRAEL"
+  },
+  {
+    "nom": "ITALIE"
+  },
+  {
+    "nom": "JAMAIQUE"
+  },
+  {
+    "nom": "JAPON"
+  },
+  {
+    "nom": "JERSEY"
+  },
+  {
+    "nom": "JORDANIE"
+  },
+  {
+    "nom": "KAMTCHATKA"
+  },
+  {
+    "nom": "KAZAKHSTAN"
+  },
+  {
+    "nom": "KENYA"
+  },
+  {
+    "nom": "KIRGHIZISTAN"
+  },
+  {
+    "nom": "KIRIBATI"
+  },
+  {
+    "nom": "KOSOVO"
+  },
+  {
+    "nom": "KOWEIT"
+  },
+  {
+    "nom": "LA REUNION"
+  },
+  {
+    "nom": "LABRADOR"
+  },
+  {
+    "nom": "LAOS"
+  },
+  {
+    "nom": "LESOTHO"
+  },
+  {
+    "nom": "LETTONIE"
+  },
+  {
+    "nom": "LIBAN"
+  },
+  {
+    "nom": "LIBERIA"
+  },
+  {
+    "nom": "LIBYE"
+  },
+  {
+    "nom": "LIECHTENSTEIN"
+  },
+  {
+    "nom": "LITUANIE"
+  },
+  {
+    "nom": "LUXEMBOURG"
+  },
+  {
+    "nom": "MACAO"
+  },
+  {
+    "nom": "MADAGASCAR"
+  },
+  {
+    "nom": "MALAISIE"
+  },
+  {
+    "nom": "MALAWI"
+  },
+  {
+    "nom": "MALDIVES"
+  },
+  {
+    "nom": "MALI"
+  },
+  {
+    "nom": "MALOUINES, OU FALKLAND (ILES)"
+  },
+  {
+    "nom": "MALTE"
+  },
+  {
+    "nom": "MAN (ILE)"
+  },
+  {
+    "nom": "MANDCHOURIE"
+  },
+  {
+    "nom": "MARIANNES DU NORD (ILES)"
+  },
+  {
+    "nom": "MAROC"
+  },
+  {
+    "nom": "MARSHALL (ILES)"
+  },
+  {
+    "nom": "MARTINIQUE"
+  },
+  {
+    "nom": "MAURICE"
+  },
+  {
+    "nom": "MAURITANIE"
+  },
+  {
+    "nom": "MAYOTTE"
+  },
+  {
+    "nom": "MEXIQUE"
+  },
+  {
+    "nom": "MICRONESIE (ETATS FEDERES DE)"
+  },
+  {
+    "nom": "MOLDAVIE"
+  },
+  {
+    "nom": "MONACO"
+  },
+  {
+    "nom": "MONGOLIE"
+  },
+  {
+    "nom": "MONTENEGRO"
+  },
+  {
+    "nom": "MONTSERRAT"
+  },
+  {
+    "nom": "MOZAMBIQUE"
+  },
+  {
+    "nom": "NAMIBIE"
+  },
+  {
+    "nom": "NAURU"
+  },
+  {
+    "nom": "NEPAL"
+  },
+  {
+    "nom": "NICARAGUA"
+  },
+  {
+    "nom": "NIGER"
+  },
+  {
+    "nom": "NIGERIA"
+  },
+  {
+    "nom": "NIUE"
+  },
+  {
+    "nom": "NORFOLK (ILE)"
+  },
+  {
+    "nom": "NORVEGE"
+  },
+  {
+    "nom": "NOUVELLE-CALEDONIE"
+  },
+  {
+    "nom": "NOUVELLE-ZELANDE"
+  },
+  {
+    "nom": "OCEAN INDIEN (TERRITOIRE BRITANNIQUE DE L')"
+  },
+  {
+    "nom": "OMAN"
+  },
+  {
+    "nom": "OUGANDA"
+  },
+  {
+    "nom": "OUZBEKISTAN"
+  },
+  {
+    "nom": "PAKISTAN"
+  },
+  {
+    "nom": "PALAOS (ILES)"
+  },
+  {
+    "nom": "PALESTINE (Etat de)"
+  },
+  {
+    "nom": "PANAMA"
+  },
+  {
+    "nom": "PAPOUASIE-NOUVELLE-GUINEE"
+  },
+  {
+    "nom": "PARAGUAY"
+  },
+  {
+    "nom": "PAYS-BAS"
+  },
+  {
+    "nom": "PEROU"
+  },
+  {
+    "nom": "PHILIPPINES"
+  },
+  {
+    "nom": "PITCAIRN (ILE)"
+  },
+  {
+    "nom": "POLOGNE"
+  },
+  {
+    "nom": "POLYNESIE FRANCAISE"
+  },
+  {
+    "nom": "PORTO RICO"
+  },
+  {
+    "nom": "PORTUGAL"
+  },
+  {
+    "nom": "POSSESSIONS BRITANNIQUES AU PROCHE-ORIENT"
+  },
+  {
+    "nom": "PRESIDES"
+  },
+  {
+    "nom": "PROVINCES ESPAGNOLES D'AFRIQUE"
+  },
+  {
+    "nom": "QATAR"
+  },
+  {
+    "nom": "REPUBLIQUE DEMOCRATIQUE ALLEMANDE"
+  },
+  {
+    "nom": "REPUBLIQUE FEDERALE D'ALLEMAGNE"
+  },
+  {
+    "nom": "ROUMANIE"
+  },
+  {
+    "nom": "ROYAUME-UNI"
+  },
+  {
+    "nom": "RUSSIE"
+  },
+  {
+    "nom": "RWANDA"
+  },
+  {
+    "nom": "SAHARA OCCIDENTAL"
+  },
+  {
+    "nom": "SAINT-BARTHELEMY"
+  },
+  {
+    "nom": "SAINT-CHRISTOPHE-ET-NIEVES"
+  },
+  {
+    "nom": "SAINT-MARIN"
+  },
+  {
+    "nom": "SAINT-MARTIN"
+  },
+  {
+    "nom": "SAINT-MARTIN (PARTIE NEERLANDAISE)"
+  },
+  {
+    "nom": "SAINT-PIERRE-ET-MIQUELON"
+  },
+  {
+    "nom": "SAINT-VINCENT-ET-LES GRENADINES"
+  },
+  {
+    "nom": "SAINTE HELENE, ASCENSION ET TRISTAN DA CUNHA"
+  },
+  {
+    "nom": "SAINTE-LUCIE"
+  },
+  {
+    "nom": "SALOMON (ILES)"
+  },
+  {
+    "nom": "SAMOA AMERICAINES"
+  },
+  {
+    "nom": "SAMOA OCCIDENTALES"
+  },
+  {
+    "nom": "SAO TOME-ET-PRINCIPE"
+  },
+  {
+    "nom": "SENEGAL"
+  },
+  {
+    "nom": "SERBIE"
+  },
+  {
+    "nom": "SEYCHELLES"
+  },
+  {
+    "nom": "SIBERIE"
+  },
+  {
+    "nom": "SIERRA LEONE"
+  },
+  {
+    "nom": "SINGAPOUR"
+  },
+  {
+    "nom": "SLOVAQUIE"
+  },
+  {
+    "nom": "SLOVENIE"
+  },
+  {
+    "nom": "SOMALIE"
+  },
+  {
+    "nom": "SOUDAN"
+  },
+  {
+    "nom": "SOUDAN ANGLO-EGYPTIEN, KENYA, OUGANDA"
+  },
+  {
+    "nom": "SOUDAN DU SUD"
+  },
+  {
+    "nom": "SRI LANKA"
+  },
+  {
+    "nom": "SUEDE"
+  },
+  {
+    "nom": "SUISSE"
+  },
+  {
+    "nom": "SURINAME"
+  },
+  {
+    "nom": "SVALBARD et ILE JAN MAYEN"
+  },
+  {
+    "nom": "SWAZILAND"
+  },
+  {
+    "nom": "SYRIE"
+  },
+  {
+    "nom": "TADJIKISTAN"
+  },
+  {
+    "nom": "TAIWAN"
+  },
+  {
+    "nom": "TANGER"
+  },
+  {
+    "nom": "TANZANIE"
+  },
+  {
+    "nom": "TCHAD"
+  },
+  {
+    "nom": "TCHECOSLOVAQUIE"
+  },
+  {
+    "nom": "TCHEQUE (REPUBLIQUE)"
+  },
+  {
+    "nom": "TERR. DES ETATS-UNIS D'AMERIQUE EN AMERIQUE"
+  },
+  {
+    "nom": "TERR. DES ETATS-UNIS D'AMERIQUE EN OCEANIE"
+  },
+  {
+    "nom": "TERR. DU ROYAUME-UNI DANS L'ATLANTIQUE SUD"
+  },
+  {
+    "nom": "TERRE-NEUVE"
+  },
+  {
+    "nom": "TERRES AUSTRALES FRANCAISES"
+  },
+  {
+    "nom": "TERRITOIRES DU ROYAUME-UNI AUX ANTILLES"
+  },
+  {
+    "nom": "THAILANDE"
+  },
+  {
+    "nom": "TIMOR ORIENTAL"
+  },
+  {
+    "nom": "TOGO"
+  },
+  {
+    "nom": "TOKELAU"
+  },
+  {
+    "nom": "TONGA"
+  },
+  {
+    "nom": "TRINITE-ET-TOBAGO"
+  },
+  {
+    "nom": "TUNISIE"
+  },
+  {
+    "nom": "TURKESTAN RUSSE"
+  },
+  {
+    "nom": "TURKMENISTAN"
+  },
+  {
+    "nom": "TURKS ET CAIQUES (ILES)"
+  },
+  {
+    "nom": "TURQUIE"
+  },
+  {
+    "nom": "TURQUIE D'EUROPE"
+  },
+  {
+    "nom": "TUVALU"
+  },
+  {
+    "nom": "UKRAINE"
+  },
+  {
+    "nom": "URUGUAY"
+  },
+  {
+    "nom": "VANUATU"
+  },
+  {
+    "nom": "VATICAN, ou SAINT-SIEGE"
+  },
+  {
+    "nom": "VENEZUELA"
+  },
+  {
+    "nom": "VIERGES BRITANNIQUES (ILES)"
+  },
+  {
+    "nom": "VIERGES DES ETATS-UNIS (ILES)"
+  },
+  {
+    "nom": "VIET NAM"
+  },
+  {
+    "nom": "VIET NAM DU NORD"
+  },
+  {
+    "nom": "VIET NAM DU SUD"
+  },
+  {
+    "nom": "WALLIS-ET-FUTUNA"
+  },
+  {
+    "nom": "YEMEN"
+  },
+  {
+    "nom": "YEMEN (REPUBLIQUE ARABE DU)"
+  },
+  {
+    "nom": "YEMEN DEMOCRATIQUE"
+  },
+  {
+    "nom": "ZAMBIE"
+  },
+  {
+    "nom": "ZANZIBAR"
+  },
+  {
+    "nom": "ZIMBABWE"
+  }
+]

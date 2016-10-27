@@ -65,7 +65,7 @@ class Users::DescriptionController < UsersController
         @dossier.initiated!
       end
 
-      flash.notice = 'Félicitation, votre demande a bien été enregistrée.'
+      flash.notice = 'Félicitations, votre demande a bien été enregistrée.'
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
     else
       flash.notice = 'Votre brouillon a bien été sauvegardé.'

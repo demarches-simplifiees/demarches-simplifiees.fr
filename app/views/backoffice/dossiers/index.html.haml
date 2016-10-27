@@ -1,10 +1,15 @@
 #backoffice_index
   #pref_list_menu
     = render partial: 'backoffice/dossiers/pref_list'
+
+  =link_to 'Tous mes dossiers en CSV', backoffice_download_dossiers_tps_path, {class: 'btn btn-success btn-sm', style: 'float: right; margin-right: 4%; margin-top: 7px'}
+  %h1 Gestion des dossiers
+
   = render partial: 'backoffice/dossiers/onglets'
 
   = smart_listing_render :dossiers
 
   %br
   %br
-  = render partial: 'backoffice/dossiers/state_description', locals: {dossiers_list_facade: @dossiers_list_facade}
+  - unless Features.opensimplif
+    = render partial: 'backoffice/dossiers/state_description', locals: {dossiers_list_facade: @dossiers_list_facade}

@@ -296,7 +296,7 @@ describe PreferenceListDossier do
     end
 
     context 'when a procedure ID is pasted' do
-      let(:procedure) { (create :procedure, :with_type_de_champ) }
+      let(:procedure) { (create :procedure, :with_type_de_champ, :with_type_de_champ_private) }
       let(:procedure_id) { procedure.id }
 
       describe 'champs' do
@@ -310,6 +310,24 @@ describe PreferenceListDossier do
           it { expect(subject[:libelle]).to eq 'Description' }
           it { expect(subject[:table]).to eq 'champs' }
           it { expect(subject[:attr]).to eq procedure.types_de_champ.first.id }
+          it { expect(subject[:attr_decorate]).to eq 'value' }
+          it { expect(subject[:bootstrap_lg]).to eq 2 }
+          it { expect(subject[:order]).to be_nil }
+          it { expect(subject[:filter]).to be_nil }
+        end
+      end
+
+      describe 'champs private' do
+        subject { super()[:champs_private] }
+
+        it { expect(subject.size).to eq 1 }
+
+        describe 'first champs' do
+          subject { super()["type_de_champ_private_#{procedure.types_de_champ_private.first.id}"] }
+
+          it { expect(subject[:libelle]).to eq 'Description' }
+          it { expect(subject[:table]).to eq 'champs_private' }
+          it { expect(subject[:attr]).to eq procedure.types_de_champ_private.first.id }
           it { expect(subject[:attr_decorate]).to eq 'value' }
           it { expect(subject[:bootstrap_lg]).to eq 2 }
           it { expect(subject[:order]).to be_nil }

@@ -22,35 +22,13 @@ feature 'on click on tabs button' do
   end
 
   context 'when user is logged in' do
-    context 'when he click on tabs nouveaux' do
-      before do
-        visit users_dossiers_url(liste: :nouveaux)
-        page.click_on 'Nouveaux 1'
-      end
-
-      scenario 'it redirect to users dossier termine' do
-        expect(page).to have_css('#users_index')
-      end
-    end
-
-    context 'when he click on tabs a traite' do
+    context 'when he click on tabs en construction' do
       before do
         visit users_dossiers_url(liste: :a_traiter)
-        page.click_on 'Action requise 1'
+        page.click_on 'En construction 3'
       end
 
       scenario 'it redirect to users dossier termine' do
-        expect(page).to have_css('#users_index')
-      end
-    end
-
-    context 'when he click on tabs en attente' do
-      before do
-        visit users_dossiers_url(liste: :en_attente)
-        page.click_on 'Etude en cours 1'
-      end
-
-      scenario 'it redirect to users dossier en attente' do
         expect(page).to have_css('#users_index')
       end
     end
@@ -97,6 +75,17 @@ feature 'on click on tabs button' do
       scenario 'it redirect to users dossier invites' do
         expect(page).to have_css('#users_index')
       end
+    end
+  end
+
+  context "OpenSimplif" do
+    before do
+      allow(Features).to receive(:opensimplif).and_return(true)
+      visit users_dossiers_url
+    end
+
+    scenario "it hides the tabs" do
+      expect(page).to_not have_css('#onglets')
     end
   end
 end

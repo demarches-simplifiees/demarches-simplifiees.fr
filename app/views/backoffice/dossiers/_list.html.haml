@@ -2,10 +2,11 @@
   %thead
     - @dossiers_list_facade.preference_list_dossiers_filter.each do |preference|
       %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}
-        - if preference.table == 'champs'
+        - if preference.table.to_s.include? 'champs'
           = preference.libelle
         -else
           = smart_listing.sortable preference.libelle, preference.table_attr
+        - if @dossiers_list_facade.active_filter? preference
           %i.filter.fa.fa-filter{style: "cursor: pointer; margin-left:3px; font-size: 1.1em; color:#{(preference.filter.blank? ? 'grey' : 'orange')}", id: "filter_"+preference.table_attr.sub('.', '_')}
           = render partial: 'backoffice/dossiers/filter_framed', locals:{preference: preference, filter_framed_id: "framed_filter_"+preference.table_attr.sub('.', '_')}
 
@@ -21,6 +22,8 @@
               - value = dossier.decorate.public_send(preference.attr_decorate)
             - elsif preference.table == 'champs'
               - value = dossier.champs.find_by_type_de_champ_id(preference.attr).value
+            - elsif preference.table == 'champs_private'
+              - value = dossier.champs_private.find_by_type_de_champ_id(preference.attr).value
             - else
               - begin
                 - value = dossier.public_send(preference.table).decorate.public_send(preference.attr_decorate)

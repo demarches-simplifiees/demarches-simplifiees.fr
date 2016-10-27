@@ -40,4 +40,18 @@ describe RootController, type: :controller do
 
     it { expect(response.body).to have_css('#landing') }
   end
+
+  context "unified login" do
+    render_views
+
+    before do
+      allow(Features).to receive(:unified_login).and_return(true)
+      subject
+    end
+
+    it "won't have gestionnaire login link" do
+      expect(response.body).to have_css("a[href='#{new_user_session_path}']")
+      expect(response.body).to_not have_css("a[href='#{new_gestionnaire_session_path}']")
+    end
+  end
 end

@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
 
   delegate :given_name, :family_name, :email_france_connect, :gender, :birthdate, :birthplace, :france_connect_particulier_id, to: :france_connect_information
   accepts_nested_attributes_for :france_connect_information
+  after_update :sync_credentials, if: -> { Features.unified_login }
 
   def self.find_for_france_connect email, siret
     user = User.find_by_email(email)
@@ -32,5 +33,19 @@ class User < ActiveRecord::Base
 
   def invite? dossier_id
     invites.pluck(:dossier_id).include?(dossier_id.to_i)
+  end
+
+  private
+
+  def sync_credentials
+    if email_changed? || encrypted_password_changed?
+      gestionnaire = Gestionnaire.find_by(email: email_was)
+      if gestionnaire
+        return gestionnaire.update_columns(
+          email: email,
+          encrypted_password: encrypted_password)
+      end
+    end
+    true
   end
 end

@@ -9,6 +9,8 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
   before do
     sign_in gestionnaire
     assign(:facade, (DossierFacades.new dossier.id, gestionnaire.email))
+
+    @request.env['PATH_INFO'] = 'backoffice/user'
   end
 
   context 'on the dossier gestionnaire page' do
@@ -59,9 +61,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Nouveau') }
 
-      it 'button Valider le dossier is present' do
-        expect(rendered).to have_css('#action_button')
-        expect(rendered).to have_content('Valider le dossier')
+      it 'button Déclarer complet is present' do
+        expect(rendered).to have_css('.action_button')
+        expect(rendered).to have_content('Déclarer complet')
       end
     end
 
@@ -74,9 +76,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Répondu') }
 
-      it 'button Valider le dossier is present' do
-        expect(rendered).to have_css('#action_button')
-        expect(rendered).to have_content('Valider le dossier')
+      it 'button Déclarer complet is present' do
+        expect(rendered).to have_css('.action_button')
+        expect(rendered).to have_content('Déclarer complet')
       end
     end
 
@@ -89,9 +91,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Mis à jour') }
 
-      it 'button Valider le dossier is present' do
-        expect(rendered).to have_css('#action_button')
-        expect(rendered).to have_content('Valider le dossier')
+      it 'button Déclarer complet is present' do
+        expect(rendered).to have_css('.action_button')
+        expect(rendered).to have_content('Déclarer complet')
       end
     end
 
@@ -104,9 +106,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Figé') }
 
-      it 'button Valider le dossier  is not present' do
-        expect(rendered).not_to have_css('#action_button')
-        expect(rendered).not_to have_content('Valider le dossier')
+      it 'button Déclarer complet  is not present' do
+        expect(rendered).not_to have_css('.action_button')
+        expect(rendered).not_to have_content('Déclarer complet')
       end
     end
 
@@ -120,11 +122,11 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       it { expect(rendered).to have_content('Déposé') }
 
       it 'button notifier de la bonne réception is present' do
-        expect(rendered).to have_css('#action_button')
+        expect(rendered).to have_css('.action_button')
         expect(rendered).to have_content('Notifier de la bonne réception')
       end
 
-      it 'button Valider le dossier is not present' do
+      it 'button Déclarer complet is not present' do
         expect(rendered).not_to have_content('Accepter le dossier')
       end
     end
@@ -170,7 +172,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Sans suite') }
 
-      it 'button Valider le dossier is not present' do
+      it 'button Déclarer complet is not present' do
         expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
         expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
         expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
@@ -186,7 +188,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Refusé') }
 
-      it 'button Valider le dossier is not present' do
+      it 'button Déclarer complet is not present' do
         expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
         expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
         expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')

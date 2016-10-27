@@ -47,12 +47,13 @@ class Dossier < ActiveRecord::Base
   NOUVEAUX = %w(initiated)
   WAITING_FOR_GESTIONNAIRE = %w(updated)
   WAITING_FOR_USER = %w(replied validated)
-  WAITING_FOR_USER_WITHOUT_VALIDATED = %w(replied)
+  EN_CONSTRUCTION = %w(initiated updated replied)
   VALIDES = %w(validated)
   DEPOSES = %w(submitted)
   EN_INSTRUCTION = %w(submitted received)
   A_INSTRUIRE = %w(received)
   TERMINE = %w(closed refused without_continuation)
+  ALL_STATE = %w(draft initiated updated replied validated submitted received closed refused without_continuation)
 
   def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
@@ -169,6 +170,10 @@ class Dossier < ActiveRecord::Base
     state
   end
 
+  def all_state?
+    ALL_STATE.include?(state)
+  end
+
   def brouillon?
     BROUILLON.include?(state)
   end
@@ -185,8 +190,8 @@ class Dossier < ActiveRecord::Base
     WAITING_FOR_USER.include?(state)
   end
 
-  def waiting_for_user_without_validated?
-    WAITING_FOR_USER_WITHOUT_VALIDATED.include?(state)
+  def en_construction?
+    EN_CONSTRUCTION.include?(state)
   end
 
   def deposes?
@@ -209,6 +214,10 @@ class Dossier < ActiveRecord::Base
     TERMINE.include?(state)
   end
 
+  def self.all_state order = 'ASC'
+    where(state: ALL_STATE, archived: false).order("updated_at #{order}")
+  end
+
   def self.brouillon order = 'ASC'
     where(state: BROUILLON, archived: false).order("updated_at #{order}")
   end
@@ -225,8 +234,8 @@ class Dossier < ActiveRecord::Base
     where(state: WAITING_FOR_USER, archived: false).order("updated_at #{order}")
   end
 
-  def self.waiting_for_user_without_validated order = 'ASC'
-    where(state: WAITING_FOR_USER_WITHOUT_VALIDATED, archived: false).order("updated_at #{order}")
+  def self.en_construction order = 'ASC'
+    where(state: EN_CONSTRUCTION, archived: false).order("updated_at #{order}")
   end
 
   def self.valides order = 'ASC'
