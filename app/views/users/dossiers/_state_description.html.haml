@@ -16,10 +16,13 @@
               n'ont pas encore été ouverts
             par votre accompagnteur. Une notification vous sera envoyée quand votre demande aura été étudiée.
           -elsif dossiers_list_facade.liste == 'a_traiter'
-            Les dossiers présents dans cette liste
+            Les dossiers présents dans cette liste sont
             %b
-              attendent une action de votre part.
-            Plus d'informations vous sont généralement données par votre accompagnateur dans le flux de commentaires du dossier.
+              visibles par l'admnistration.
+            %br
+            Ces dossiers ne sont pas encore figés et peuvent être modifiés à souhait.
+            %br
+            Une fois que le dossier aura été considéré comme complet par votre accompagnateur, celui-ci passera à l'étape suivante de dépôt.
           -elsif dossiers_list_facade.liste == 'en_attente'
             Les dossiers présents dans cette liste sont
             %b
