@@ -132,7 +132,7 @@ class Users::DossiersController < UsersController
   end
 
   def destroy
-    dossier = Dossier.find(params[:id])
+    dossier = current_user.dossiers.find(params[:id])
     if dossier.brouillon?
       dossier.destroy
       flash.notice = 'Brouillon supprimé'
