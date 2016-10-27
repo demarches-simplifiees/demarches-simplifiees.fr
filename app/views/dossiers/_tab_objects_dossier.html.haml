@@ -11,7 +11,7 @@
       %a{href: "#invites", 'aria-controls' => "invites", role: "tab", 'data-toggle' => "tab"}
         Invités
 
-  - if gestionnaire_signed_in? && !request.env['PATH_INFO'].include?('users/dossiers')
+  - if gestionnaire_signed_in? && (!request.env['PATH_INFO'].include?('users/dossiers') )
     %li{role: "presentation"}
       %a{href: "#followers", 'aria-controls' => "followers", role: "tab", 'data-toggle' => "tab"}
         Abonnés
