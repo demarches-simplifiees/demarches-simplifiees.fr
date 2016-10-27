@@ -9,6 +9,8 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
   before do
     sign_in gestionnaire
     assign(:facade, (DossierFacades.new dossier.id, gestionnaire.email))
+
+    @request.env['PATH_INFO'] = 'backoffice/user'
   end
 
   context 'on the dossier gestionnaire page' do

@@ -20,7 +20,11 @@ class PieceJustificativeUploader < CarrierWave::Uploader::Base
 
   def cache_dir
     if Rails.env.production?
-      '/tmp/tps-cache'
+      if Features.opensimplif?
+        '/tmp/opensimplif-cache'
+      else
+        '/tmp/tps-cache'
+      end
     else
       '/tmp/tps-dev-cache'
     end

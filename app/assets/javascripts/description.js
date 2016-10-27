@@ -63,11 +63,4 @@ function toggle_header_section_composents() {
             }
         });
     });
-
-    $.each($("a.mask_section_button"), function (index, e) {
-        if (index != 0) {
-            $(e).click();
-            $(e).html('Afficher la section <i class="fa fa-chevron-down" />')
-        }
-    });
 }

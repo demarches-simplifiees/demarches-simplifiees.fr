@@ -8,7 +8,7 @@
         -actual_header_section = champ.id
 
       -else
-        - unless champ.type_champ == 'checkbox'
+        - unless champ.type_champ == 'checkbox' || champ.type_champ == 'engagement'
           %h4
             = champ.libelle
             - if champ.mandatory?
@@ -37,6 +37,9 @@
 
         - elsif champ.type_champ == 'regions'
           =render partial: 'users/description/champs/regions', locals: {champ: champ}
+
+        - elsif champ.type_champ == 'engagement'
+          =render partial: 'users/description/champs/engagement', locals: {champ: champ}
 
         - elsif champ.type_champ == 'departements'
           =render partial: 'users/description/champs/departements', locals: {champ: champ}

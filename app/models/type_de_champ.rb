@@ -15,6 +15,7 @@ class TypeDeChamp < ActiveRecord::Base
            pays: 'pays',
            regions: 'regions',
            departements: 'departements',
+           engagement: 'engagement',
            header_section: 'header_section'
        }
 
