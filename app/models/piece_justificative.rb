@@ -10,7 +10,7 @@ class PieceJustificative < ActiveRecord::Base
   alias_attribute :type, :type_de_piece_justificative_id
 
   mount_uploader :content, PieceJustificativeUploader
-  validates :content, :file_size => {:maximum => 3.megabytes}
+  validates :content, :file_size => {:maximum => 6.megabytes}
   validates :content, presence: true, allow_blank: false, allow_nil: false
 
   def empty?
