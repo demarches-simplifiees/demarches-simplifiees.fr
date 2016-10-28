@@ -12,11 +12,12 @@ class Search < ActiveRecord::Base
   def results
     if @query.present?
       self.class
-        .select("DISTINCT(dossiers.*)")
+        .select("DISTINCT(searches.dossier_id)")
         .search(@query)
         .joins(:dossier)
         .where(dossier_id: @gestionnaire.dossier_ids)
         .where("dossiers.archived = ? AND dossiers.state != ?", false, "draft")
+        .preload(:dossier)
         .map(&:dossier)
     else
       Search.none
@@ -31,9 +32,10 @@ class Search < ActiveRecord::Base
     %i(term)
   end
 
-  # NOTE: could be executed concurrently
-  # See https://github.com/thoughtbot/scenic#what-about-materialized-views
+  # Refreshes the materialized searches view.
   def self.refresh
+    # NOTE: could be executed concurrently
+    # See https://github.com/thoughtbot/scenic#what-about-materialized-views
     Scenic.database.refresh_materialized_view(table_name, concurrently: false)
   end
 end

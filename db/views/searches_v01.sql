@@ -7,13 +7,10 @@ UNION SELECT cerfas.dossier_id,
   FROM cerfas
 
 UNION SELECT champs.dossier_id,
-  champs.value AS term
-  FROM champs
-
-UNION SELECT champs.dossier_id,
+  champs.value || ' ' ||
   drop_down_lists.value AS term
-  FROM drop_down_lists
-  INNER JOIN champs ON champs.type_de_champ_id = champs.type_de_champ_id
+  FROM champs
+  INNER JOIN drop_down_lists ON drop_down_lists.type_de_champ_id = champs.type_de_champ_id
 
 UNION SELECT entreprises.dossier_id,
   entreprises.siren || ' ' ||
@@ -43,7 +40,7 @@ UNION SELECT etablissements.dossier_id,
 
 UNION SELECT individuals.dossier_id,
   individuals.nom || ' ' ||
-  individuals.prenom  AS term
+  individuals.prenom AS term
   FROM individuals
 
 UNION SELECT pieces_justificatives.dossier_id,
