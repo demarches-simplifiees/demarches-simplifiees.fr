@@ -53,7 +53,7 @@
                   'data-provide' => champ.data_provide,
                   'data-date-format' => champ.data_date_format}
 
-  - unless champ.description.empty?
+  - unless champ.description.empty? || champ.type_champ == 'engagement'
     .row
       .col-lg-8.col-md-8{class: 'description_div', id:"description_champs_#{champ.id}"}
         = champ.description
