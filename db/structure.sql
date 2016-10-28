@@ -954,45 +954,68 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: searches; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE MATERIALIZED VIEW searches AS
+CREATE TABLE users (
+    id integer NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    remember_created_at timestamp without time zone,
+    sign_in_count integer DEFAULT 0 NOT NULL,
+    current_sign_in_at timestamp without time zone,
+    last_sign_in_at timestamp without time zone,
+    current_sign_in_ip inet,
+    last_sign_in_ip inet,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    siret character varying,
+    loged_in_with_france_connect character varying DEFAULT false
+);
+
+
+--
+-- Name: searches; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW searches AS
  SELECT dossiers.id AS dossier_id,
-    (dossiers.id)::text AS term
-   FROM dossiers
+    (((dossiers.id)::text || ' '::text) || (COALESCE(users.email, ''::character varying))::text) AS term
+   FROM (dossiers
+     JOIN users ON ((users.id = dossiers.user_id)))
 UNION
  SELECT cerfas.dossier_id,
-    cerfas.content AS term
+    COALESCE(cerfas.content, ''::character varying) AS term
    FROM cerfas
 UNION
  SELECT champs.dossier_id,
-    (((champs.value)::text || ' '::text) || (drop_down_lists.value)::text) AS term
+    (((COALESCE(champs.value, ''::character varying))::text || ' '::text) || (COALESCE(drop_down_lists.value, ''::character varying))::text) AS term
    FROM (champs
      JOIN drop_down_lists ON ((drop_down_lists.type_de_champ_id = champs.type_de_champ_id)))
 UNION
  SELECT entreprises.dossier_id,
-    (((((((((((((((((((((((entreprises.siren)::text || ' '::text) || (entreprises.numero_tva_intracommunautaire)::text) || ' '::text) || (entreprises.forme_juridique)::text) || ' '::text) || (entreprises.forme_juridique_code)::text) || ' '::text) || (entreprises.nom_commercial)::text) || ' '::text) || (entreprises.raison_sociale)::text) || ' '::text) || (entreprises.siret_siege_social)::text) || ' '::text) || (entreprises.nom)::text) || ' '::text) || (entreprises.prenom)::text) || ' '::text) || (rna_informations.association_id)::text) || ' '::text) || (rna_informations.titre)::text) || ' '::text) || rna_informations.objet) AS term
+    (((((((((((((((((((((((COALESCE(entreprises.siren, ''::character varying))::text || ' '::text) || (COALESCE(entreprises.numero_tva_intracommunautaire, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.forme_juridique, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.forme_juridique_code, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.nom_commercial, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.raison_sociale, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.siret_siege_social, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.nom, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.prenom, ''::character varying))::text) || ' '::text) || (COALESCE(rna_informations.association_id, ''::character varying))::text) || ' '::text) || (COALESCE(rna_informations.titre, ''::character varying))::text) || ' '::text) || COALESCE(rna_informations.objet, ''::text)) AS term
    FROM (entreprises
-     JOIN rna_informations ON ((rna_informations.entreprise_id = entreprises.id)))
+     LEFT JOIN rna_informations ON ((rna_informations.entreprise_id = entreprises.id)))
 UNION
  SELECT etablissements.dossier_id,
-    (((((((((((((etablissements.siret)::text || ' '::text) || (etablissements.naf)::text) || ' '::text) || (etablissements.libelle_naf)::text) || ' '::text) || (etablissements.adresse)::text) || ' '::text) || (etablissements.code_postal)::text) || ' '::text) || (etablissements.localite)::text) || ' '::text) || (etablissements.code_insee_localite)::text) AS term
+    (((((((((((((COALESCE(etablissements.siret, ''::character varying))::text || ' '::text) || (COALESCE(etablissements.naf, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.libelle_naf, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.adresse, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.code_postal, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.localite, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.code_insee_localite, ''::character varying))::text) AS term
    FROM etablissements
 UNION
  SELECT individuals.dossier_id,
-    (((individuals.nom)::text || ' '::text) || (individuals.prenom)::text) AS term
+    (((COALESCE(individuals.nom, ''::character varying))::text || ' '::text) || (COALESCE(individuals.prenom, ''::character varying))::text) AS term
    FROM individuals
 UNION
  SELECT pieces_justificatives.dossier_id,
-    pieces_justificatives.content AS term
+    COALESCE(pieces_justificatives.content, ''::character varying) AS term
    FROM pieces_justificatives
 UNION
  SELECT dossiers.id AS dossier_id,
-    (((france_connect_informations.given_name)::text || ' '::text) || (france_connect_informations.family_name)::text) AS term
+    (((COALESCE(france_connect_informations.given_name, ''::character varying))::text || ' '::text) || (COALESCE(france_connect_informations.family_name, ''::character varying))::text) AS term
    FROM (france_connect_informations
-     JOIN dossiers ON ((dossiers.user_id = france_connect_informations.user_id)))
-  WITH NO DATA;
+     JOIN dossiers ON ((dossiers.user_id = france_connect_informations.user_id)));
 
 
 --
@@ -1063,29 +1086,6 @@ CREATE SEQUENCE types_de_piece_justificative_id_seq
 --
 
 ALTER SEQUENCE types_de_piece_justificative_id_seq OWNED BY types_de_piece_justificative.id;
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE users (
-    id integer NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
-    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-    reset_password_token character varying,
-    reset_password_sent_at timestamp without time zone,
-    remember_created_at timestamp without time zone,
-    sign_in_count integer DEFAULT 0 NOT NULL,
-    current_sign_in_at timestamp without time zone,
-    last_sign_in_at timestamp without time zone,
-    current_sign_in_ip inet,
-    last_sign_in_ip inet,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    siret character varying,
-    loged_in_with_france_connect character varying DEFAULT false
-);
 
 
 --

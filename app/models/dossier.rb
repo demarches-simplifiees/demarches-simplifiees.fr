@@ -258,37 +258,6 @@ class Dossier < ActiveRecord::Base
     where(state: TERMINE, archived: false).order("updated_at #{order}")
   end
 
-  def self.search current_gestionnaire, terms
-    return [] if terms.blank?
-
-    dossiers = Dossier.arel_table
-    users = User.arel_table
-    etablissements = Etablissement.arel_table
-    entreprises = Entreprise.arel_table
-
-    composed_scope = self.joins('LEFT OUTER JOIN users ON users.id = dossiers.user_id')
-                         .joins('LEFT OUTER JOIN entreprises ON entreprises.dossier_id = dossiers.id')
-                         .joins('LEFT OUTER JOIN etablissements ON etablissements.dossier_id = dossiers.id')
-
-    terms.split.each do |word|
-      query_string = "%#{word}%"
-      query_string_start_with = "#{word}%"
-
-      composed_scope = composed_scope.where(
-          users[:email].matches(query_string).or\
-          etablissements[:siret].matches(query_string_start_with).or\
-          entreprises[:raison_sociale].matches(query_string).or\
-          dossiers[:id].eq(word_is_an_integer word))
-    end
-
-    composed_scope = composed_scope.where(
-        dossiers[:id].eq_any(current_gestionnaire.dossiers.ids).and\
-        dossiers[:state].does_not_match('draft').and\
-        dossiers[:archived].eq(false))
-
-    composed_scope
-  end
-
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
   end

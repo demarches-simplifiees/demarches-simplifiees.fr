@@ -2,40 +2,82 @@
 # - https://robots.thoughtbot.com/implementing-multi-table-full-text-search-with-postgres
 # - http://calebthompson.io/talks/search.html
 class Search < ActiveRecord::Base
-  extend Textacular
+  # :nodoc:
+  #
+  # Englobs a search result (actually a collection of Search objects) so it acts
+  # like a collection of regular Dossier objects, which can be decorated,
+  # paginated, ...
+  class Results
+    include Enumerable
+
+    def initialize(results)
+      @results = results
+    end
+
+    def each
+      @results.each do |search|
+        yield search.dossier
+      end
+    end
+
+    def method_missing(name, *args, &block)
+      @results.__send__(name, *args, &block)
+    end
+
+    def decorate!
+      @results.each do |search|
+        search.dossier = search.dossier.decorate
+      end
+    end
+  end
+
+  #extend Textacular
 
   attr_accessor :gestionnaire
   attr_accessor :query
+  attr_accessor :page
 
   belongs_to :dossier
 
   def results
-    if @query.present?
-      self.class
-        .select("DISTINCT(searches.dossier_id)")
-        .search(@query)
-        .joins(:dossier)
-        .where(dossier_id: @gestionnaire.dossier_ids)
-        .where("dossiers.archived = ? AND dossiers.state != ?", false, "draft")
-        .preload(:dossier)
-        .map(&:dossier)
-    else
+    unless @query.present?
+      return Search.none
+    end
+
+    search_term = self.class.connection.quote(to_tsquery)
+
+    q = self.class
+      .select("DISTINCT(searches.dossier_id)")
+      .select("COALESCE(ts_rank(to_tsvector('french', searches.term::text), to_tsquery('french', #{search_term})), 0) AS rank")
+      .joins(:dossier)
+      .where(dossier_id: @gestionnaire.dossier_ids)
+      .where("dossiers.archived = ? AND dossiers.state != ?", false, "draft")
+      .where("to_tsvector('french', searches.term::text) @@ to_tsquery('french', #{search_term})")
+      .order("rank DESC")
+      .paginate(page: @page)
+      .preload(:dossier)
+
+    begin
+      q.to_a
+    rescue ActiveRecord::StatementInvalid
       Search.none
+    else
+      Results.new(q)
     end
   end
 
-  def self.searchable_language
-    "french"
-  end
+  #def self.refresh
+  #  # TODO: could be executed concurrently
+  #  # See https://github.com/thoughtbot/scenic#what-about-materialized-views
+  #  Scenic.database.refresh_materialized_view(table_name, concurrently: false)
+  #end
 
-  def self.searchable_columns
-    %i(term)
-  end
+  private
 
-  # Refreshes the materialized searches view.
-  def self.refresh
-    # NOTE: could be executed concurrently
-    # See https://github.com/thoughtbot/scenic#what-about-materialized-views
-    Scenic.database.refresh_materialized_view(table_name, concurrently: false)
+  def to_tsquery
+    @query.gsub(/['?\\:&|!]/, "") # drop disallowed characters
+      .split(/\s+/)               # split words
+      .map { |x| "#{x}:*" }       # enable prefix matching
+      .join(" & ")
   end
 end
