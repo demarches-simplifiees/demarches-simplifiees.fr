@@ -7,10 +7,14 @@ class DossierService
   end
 
   def dossier_informations!
-    @entreprise_adapter = SIADE::EntrepriseAdapter.new(DossierService.siren @siret)
+    @entreprise_adapter = SIADE::EntrepriseAdapter.new(DossierService.siren @siret).to_params
 
-    if @entreprise_adapter.to_params.nil?
+    if @entreprise_adapter[:http_code] == 404
       raise RestClient::ResourceNotFound
+    elsif @entreprise_adapter[:http_code] == 503 ||
+          @entreprise_adapter[:http_code] == 500 ||
+          @entreprise_adapter[:http_code] == 400
+      raise RestClient::ServiceUnavailable
     end
 
     @etablissement_adapter = SIADE::EtablissementAdapter.new(@siret)
@@ -33,7 +37,6 @@ class DossierService
 
     @dossier
   end
-
 
   def self.siren siret
     siret[0..8]
