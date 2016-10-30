@@ -86,7 +86,8 @@ class Users::DossiersController < UsersController
     end
   rescue RestClient::ResourceNotFound, RestClient::BadRequest
     errors_valid_siret
-
+  rescue RestClient::ServiceUnavailable
+    render '/dossiers/degraded', formats: 'js'
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for users_dossiers_path
