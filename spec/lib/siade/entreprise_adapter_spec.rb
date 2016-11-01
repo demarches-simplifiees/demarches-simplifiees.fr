@@ -12,8 +12,6 @@ describe SIADE::EntrepriseAdapter do
     expect(subject).to be_an_instance_of(Hash)
   end
 
-  it { expect(described_class.new('418166096').data_source[:http_code]).to eq 200 }
-
   context 'Attributs Entreprises' do
     it 'L\'entreprise contient bien un siren' do
       expect(subject[:siren]).to eq('418166096')
