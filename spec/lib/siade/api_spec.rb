@@ -15,9 +15,6 @@ describe SIADE::API do
       it 'raises RestClient::ResourceNotFound' do
         expect { subject }.to raise_error(RestClient::ResourceNotFound)
       end
-
-      it { expect(subject.http_code).to eq status }
-
     end
     context 'when siret exist' do
       let(:siren) { '418166096' }

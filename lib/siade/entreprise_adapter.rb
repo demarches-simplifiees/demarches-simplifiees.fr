@@ -4,19 +4,9 @@ class SIADE::EntrepriseAdapter
   end
 
   def data_source
-    @data_source ||= JSON.parse(SIADE::API.entreprise(@siren), symbolize_names: true).merge(http_code: 200)
-  rescue RestClient::ServiceUnavailable
-    @data_source = {http_code: 503}
-  rescue RestClient::ResourceNotFound
-    @data_source = {http_code: 404}
-  rescue RestClient::InternalServerError
-    @data_source = {http_code: 500}
-  rescue => e
-    if e.http_code == 400
-      @data_source = {http_code: 400}
-    else
-      @data_source = nil
-    end
+    @data_source ||= JSON.parse(SIADE::API.entreprise(@siren), symbolize_names: true)
+  rescue
+    @data_source = nil
   end
 
   def to_params
@@ -29,7 +19,7 @@ class SIADE::EntrepriseAdapter
 
     params
   rescue
-    data_source
+    nil
   end
 
   def attr_to_fetch
