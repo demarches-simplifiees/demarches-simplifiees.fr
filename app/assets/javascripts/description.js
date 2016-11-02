@@ -7,6 +7,10 @@ function action_type_de_champs() {
         toggleErrorClass(this, validateEmail($(this).val()));
     });
 
+    $("input[type='number']").on('change', function () {
+        toggleErrorClass(this, validateNumber($(this).val()));
+    });
+
     $("input[type='phone']").on('change', function () {
         val = $(this).val();
         val = val.replace(/[ ]/g, '');
@@ -41,6 +45,11 @@ function validatePhone(phone) {
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return validateInput(email, re)
+}
+
+function validateNumber(number) {
+    var re = /^[0-9]+$/;
+    return validateInput(number, re)
 }
 
 function validateInput(input, regex) {
