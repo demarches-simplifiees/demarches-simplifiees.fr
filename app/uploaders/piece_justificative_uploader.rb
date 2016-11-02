@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class PieceJustificativeUploader < CarrierWave::Uploader::Base
+class PieceJustificativeUploader < BaseUploader
   before :cache, :set_original_filename
 
   # Choose what kind of storage to use for this uploader:
@@ -15,18 +15,6 @@ class PieceJustificativeUploader < CarrierWave::Uploader::Base
   def store_dir
     unless Features.remote_storage
       "./uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
-    end
-  end
-
-  def cache_dir
-    if Rails.env.production?
-      if Features.opensimplif?
-        '/tmp/opensimplif-cache'
-      else
-        '/tmp/tps-cache'
-      end
-    else
-      '/tmp/tps-dev-cache'
     end
   end
 
