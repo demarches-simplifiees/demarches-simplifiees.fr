@@ -3,8 +3,11 @@ class Users::DescriptionController < UsersController
     authorized_routes? self.class
   end
 
+  before_action :check_autorisation_donnees, only: [:show]
+  before_action :check_starter_dossier_informations, only: [:show]
+
   def show
-    @dossier = current_user_dossier.decorate
+    @dossier ||= current_user_dossier.decorate
 
     @procedure = @dossier.procedure
     @champs = @dossier.ordered_champs
@@ -83,6 +86,7 @@ class Users::DescriptionController < UsersController
       flash.alert = errors_upload.html_safe
     else
       flash.notice = 'Nouveaux fichiers envoyés'
+      @dossier.next_step! 'user', 'update'
     end
 
     return redirect_to users_dossiers_invite_path(id: current_user.invites.find_by_dossier_id(@dossier.id).id) if invite
@@ -97,6 +101,21 @@ class Users::DescriptionController < UsersController
   end
 
   private
+
+  def check_autorisation_donnees
+    @dossier ||= current_user_dossier
+
+    redirect_to url_for(users_dossier_path(@dossier.id)) if @dossier.autorisation_donnees.nil? || !@dossier.autorisation_donnees
+  end
+
+  def check_starter_dossier_informations
+    @dossier ||= current_user_dossier
+
+    if (@dossier.procedure.for_individual? && @dossier.individual.nil?) ||
+        (!@dossier.procedure.for_individual? && @dossier.entreprise.nil?)
+      redirect_to url_for(users_dossier_path(@dossier.id))
+    end
+  end
 
   def create_params
     params.permit()

@@ -1,5 +1,8 @@
 shared_examples 'description_controller_spec' do
   describe 'GET #show' do
+    before do
+      dossier.update_column :autorisation_donnees, true
+    end
     context 'user is not connected' do
       before do
         sign_out dossier.user
@@ -11,9 +14,15 @@ shared_examples 'description_controller_spec' do
       end
     end
 
-    it 'returns http success' do
-      get :show, dossier_id: dossier_id
-      expect(response).to have_http_status(:success)
+    context 'when all is ok' do
+      before do
+        dossier.entreprise = create :entreprise
+      end
+
+      it 'returns http success' do
+        get :show, dossier_id: dossier_id
+        expect(response).to have_http_status(:success)
+      end
     end
 
     it 'redirection vers start si mauvais dossier ID' do
@@ -33,6 +42,48 @@ shared_examples 'description_controller_spec' do
         end
 
         it { is_expected.to redirect_to root_path }
+      end
+    end
+
+    describe 'before action check_autorisation_donnees' do
+      subject { get :show, dossier_id: dossier_id }
+
+      context 'when dossier does not have a valid autorisations_donness (nil)' do
+        before do
+          dossier.update_column :autorisation_donnees, nil
+        end
+
+        it { expect(subject).to redirect_to "/users/dossiers/#{dossier.id}" }
+      end
+
+      context 'when dossier does not have a valid autorisations_donness (false)' do
+        before do
+          dossier.update_column :autorisation_donnees, false
+        end
+
+        it { expect(subject).to redirect_to "/users/dossiers/#{dossier.id}" }
+      end
+    end
+
+    describe 'before action check_starter_dossier_informations' do
+      subject { get :show, dossier_id: dossier_id }
+
+      context 'when dossier does not have an enterprise datas' do
+        before do
+
+        end
+
+        it { expect(dossier.entreprise).to be_nil }
+        it { expect(subject).to redirect_to "/users/dossiers/#{dossier.id}" }
+      end
+
+      context 'when dossier does not have an individual datas' do
+        before do
+          procedure.update_column :for_individual, true
+        end
+
+        it { expect(dossier.individual).to be_nil }
+        it { expect(subject).to redirect_to "/users/dossiers/#{dossier.id}" }
       end
     end
   end

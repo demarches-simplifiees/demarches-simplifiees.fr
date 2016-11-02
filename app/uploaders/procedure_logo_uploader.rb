@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class ProcedureLogoUploader < CarrierWave::Uploader::Base
+class ProcedureLogoUploader < BaseUploader
 
   def root
     File.join(Rails.root, "public")
@@ -18,14 +18,6 @@ class ProcedureLogoUploader < CarrierWave::Uploader::Base
   def store_dir
     unless Features.remote_storage
       "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
-    end
-  end
-
-  def cache_dir
-    if Rails.env.production?
-      '/tmp/tps-cache'
-    else
-      '/tmp/tps-dev-cache'
     end
   end
 
