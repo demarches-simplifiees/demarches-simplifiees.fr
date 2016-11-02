@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'user is on description page' do
   let!(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: true) }
-  let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
+  let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, autorisation_donnees: true) }
 
   before do
     allow(ClamavService).to receive(:safe_file?).and_return(true)
