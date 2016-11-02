@@ -1,3 +1,6 @@
+-- this version allows to search for a single term within many tables,
+-- but behaves badly with multiple terms scattered in multiple tables.
+
 SELECT dossiers.id AS dossier_id,
   dossiers.id::text || ' ' ||
   COALESCE(users.email, '') AS term

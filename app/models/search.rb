@@ -46,12 +46,16 @@ class Search < ActiveRecord::Base
 
     search_term = self.class.connection.quote(to_tsquery)
 
+    dossier_ids = @gestionnaire.dossiers
+      .select(:id)
+      .where(archived: false)
+      .where.not(state: "draft")
+
     q = self.class
       .select("DISTINCT(searches.dossier_id)")
       .select("COALESCE(ts_rank(to_tsvector('french', searches.term::text), to_tsquery('french', #{search_term})), 0) AS rank")
       .joins(:dossier)
-      .where(dossier_id: @gestionnaire.dossier_ids)
-      .where("dossiers.archived = ? AND dossiers.state != ?", false, "draft")
+      .where(dossier_id: dossier_ids)
       .where("to_tsvector('french', searches.term::text) @@ to_tsquery('french', #{search_term})")
       .order("rank DESC")
       .paginate(page: @page)

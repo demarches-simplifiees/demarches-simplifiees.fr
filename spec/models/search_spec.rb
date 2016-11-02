@@ -5,13 +5,8 @@ describe Search do
     subject { liste_dossiers }
 
     let(:liste_dossiers) do
-      #described_class.refresh
       described_class.new(gestionnaire: gestionnaire_1, query: terms).results
     end
-    #let(:dossier) do
-    #  described_class.refresh
-    #  described_class.search(gestionnaire: gestionnaire_1, query: terms)[1]
-    #end
 
     let(:administrateur_1) { create(:administrateur) }
     let(:administrateur_2) { create(:administrateur) }
@@ -55,12 +50,6 @@ describe Search do
       it { expect(subject.size).to eq(0) }
     end
 
-    #describe 'search on ID dossier' do
-    #  let(:terms) { "#{dossier_2.id}" }
-
-    #  it { expect(dossier.id).to eq(dossier_2.id) }
-    #end
-
     describe 'search on SIRET' do
       context 'when is part of SIRET' do
         let(:terms) { '4181' }
@@ -82,9 +71,9 @@ describe Search do
     end
 
     describe 'search on multiple fields' do
-      let(:terms) { 'octo test' }
+      let(:terms) { 'octo plop' }
 
-      pending { expect(subject.size).to eq(1) }
+      it { expect(subject.size).to eq(1) }
     end
   end
 end
