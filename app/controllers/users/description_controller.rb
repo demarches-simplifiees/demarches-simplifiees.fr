@@ -83,6 +83,7 @@ class Users::DescriptionController < UsersController
       flash.alert = errors_upload.html_safe
     else
       flash.notice = 'Nouveaux fichiers envoyés'
+      @dossier.next_step! 'user', 'update'
     end
 
     return redirect_to users_dossiers_invite_path(id: current_user.invites.find_by_dossier_id(@dossier.id).id) if invite
