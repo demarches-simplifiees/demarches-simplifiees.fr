@@ -51,6 +51,8 @@ fr:
               size_too_big: "La taille du fichier joint est trop importante. Elle doit être inférieure à 3Mo."
         user:
           attributes:
+            reset_password_token:
+              invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d'en demander un nouveau."
             email:
               invalid: invalide
               taken: déjà utilisé
