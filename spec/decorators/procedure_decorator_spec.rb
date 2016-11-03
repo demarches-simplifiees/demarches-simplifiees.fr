@@ -16,7 +16,7 @@ describe ProcedureDecorator do
 
   describe 'logo_img' do
     subject { super().logo_img }
-    it { is_expected.to eq(LOGO_NAME) }
+    it { is_expected.to eq(image_url(LOGO_NAME)) }
   end
 
   describe 'geographic_information' do

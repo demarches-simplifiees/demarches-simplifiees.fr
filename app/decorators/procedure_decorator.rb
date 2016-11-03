@@ -10,7 +10,7 @@ class ProcedureDecorator < Draper::Decorator
   end
 
   def logo_img
-    return LOGO_NAME if logo.blank?
+    return image_url(LOGO_NAME) if logo.blank?
     File.join(STORAGE_URL, File.basename(logo.path))
   end
   def geographic_information
