@@ -5,7 +5,7 @@
     Env Test
 = image_tag('marianne_small.png', class: 'logo')
 %a{href: '/'}
-  = image_tag('logo-tps.png', class: 'logo')
+  = image_tag(LOGO_NAME, class: 'logo')
 
 - if gestionnaire_signed_in? && user_signed_in?
   %a{href: (current_gestionnaire.procedure_filter.blank? ? backoffice_dossiers_path : backoffice_dossiers_procedure_path(current_gestionnaire.procedure_filter)), class: 'btn btn-md'}
