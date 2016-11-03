@@ -9,18 +9,18 @@
 
 - if gestionnaire_signed_in? && user_signed_in?
   %a{href: (current_gestionnaire.procedure_filter.blank? ? backoffice_dossiers_path : backoffice_dossiers_procedure_path(current_gestionnaire.procedure_filter)), class: 'btn btn-md'}
-    Dossiers
+    =t('dynamics.backoffice.dossiers')
   %a{href: users_dossiers_path, class: 'btn btn-md'}
-    Mes Dossiers
+    =t('dynamics.users.mes_dossiers')
 - elsif gestionnaire_signed_in?
   %a{href: (current_gestionnaire.procedure_filter.blank? ? backoffice_dossiers_path : backoffice_dossiers_procedure_path(current_gestionnaire.procedure_filter)), class: 'btn btn-md'}
-    Mes Dossiers
+    =t('dynamics.users.mes_dossiers')
 - elsif user_signed_in?
   %a{href: users_dossiers_path, class: 'btn btn-md'}
-    Mes Dossiers
+    =t('dynamics.users.mes_dossiers')
 - elsif administrateur_signed_in?
   %a{href: admin_procedures_path, class: 'btn btn-md'}
-    Mes Procédures
+    =t('dynamics.admin.menu.title')
 
 #sign_out
   -if user_signed_in?

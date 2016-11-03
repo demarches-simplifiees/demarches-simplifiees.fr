@@ -2,7 +2,8 @@
   %br
   = image_tag('logo-tps.png')
   %br
-  %h2#login_admin Administration
+  %h2#login_admin
+    =t('dynamics.admin.connexion_title')
 
   %br
   %br
@@ -16,7 +17,7 @@
         = f.email_field :email, class: 'form-control'
       %br
       %h4
-        = f.label :password
+        = f.label 'Mot de passe'
       .input-group
         .input-group-addon
           %span.glyphicon.glyphicon-asterisk
