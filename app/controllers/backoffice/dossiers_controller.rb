@@ -34,10 +34,6 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       page: params[:page]
     ).results
 
-    unless @dossier.empty?
-      @dossier = @dossier.paginate(page: params[:page])
-    end
-
     smartlisting_dossier @dossier, 'search'
 
   rescue RuntimeError

@@ -31,8 +31,6 @@ class Search < ActiveRecord::Base
     end
   end
 
-  #extend Textacular
-
   attr_accessor :gestionnaire
   attr_accessor :query
   attr_accessor :page
@@ -44,30 +42,27 @@ class Search < ActiveRecord::Base
       return Search.none
     end
 
-    search_term = self.class.connection.quote(to_tsquery)
+    search_term = Search.connection.quote(to_tsquery)
 
     dossier_ids = @gestionnaire.dossiers
       .select(:id)
       .where(archived: false)
       .where.not(state: "draft")
 
-    q = self.class
+    q = Search
       .select("DISTINCT(searches.dossier_id)")
       .select("COALESCE(ts_rank(to_tsvector('french', searches.term::text), to_tsquery('french', #{search_term})), 0) AS rank")
       .joins(:dossier)
       .where(dossier_id: dossier_ids)
       .where("to_tsvector('french', searches.term::text) @@ to_tsquery('french', #{search_term})")
       .order("rank DESC")
-      .paginate(page: @page)
       .preload(:dossier)
 
-    begin
-      q.to_a
-    rescue ActiveRecord::StatementInvalid
-      Search.none
-    else
-      Results.new(q)
+    if @page.present?
+      q = q.paginate(page: @page)
     end
+
+    Results.new(q)
   end
 
   #def self.refresh

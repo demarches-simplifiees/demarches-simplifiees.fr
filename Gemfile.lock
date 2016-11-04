@@ -566,8 +566,6 @@ GEM
       json (>= 1.4.3)
     temple (0.7.6)
     terminal-table (1.5.2)
-    textacular (4.0.1)
-      activerecord (>= 3.0, < 5.1)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
@@ -687,7 +685,6 @@ DEPENDENCIES
   smart_listing
   spring
   spring-commands-rspec
-  textacular
   therubyracer
   timecop
   turbolinks
@@ -699,4 +696,4 @@ DEPENDENCIES
   will_paginate-bootstrap
 
 BUNDLED WITH
-   1.12.5
+   1.13.2
