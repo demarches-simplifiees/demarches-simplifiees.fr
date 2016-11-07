@@ -7,6 +7,9 @@ function filters_init() {
         filter_framed_show(event);
         filter_framed_close_all_excepted(framed_id(event));
     });
+    $(".erase-filter").on('click', function (event) {
+      $(this).parent().find(".filter_input").val("");
+    });
 }
 
 function filter_framed_close_all_excepted(id) {
