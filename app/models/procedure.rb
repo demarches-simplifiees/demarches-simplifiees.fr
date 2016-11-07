@@ -103,7 +103,6 @@ class Procedure < ActiveRecord::Base
   end
 
   def archive
-    self.procedure_path.destroy! if self.path
     self.update_attributes!({archived: true})
   end
 

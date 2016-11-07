@@ -299,7 +299,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'archive previous procedure' do
           expect(procedure2.published).to be_truthy
           expect(procedure2.archived).to be_truthy
-          expect(procedure2.path).to be_nil
+          expect(procedure2.path).not_to be_nil
         end
       end
 
@@ -427,27 +427,49 @@ describe Admin::ProceduresController, type: :controller do
     let!(:procedure) { create(:procedure, :published, administrateur: admin) }
     let(:admin2) { create(:administrateur) }
     let!(:procedure2) { create(:procedure, :published, administrateur: admin2) }
+    let!(:procedure3) { create(:procedure, :published, administrateur: admin2) }
+
     subject { get :path_list }
+
     let(:body) { JSON.parse(response.body) }
 
-    before do
-      subject
+    describe 'when no params' do
+      before do
+        subject
+      end
+
+      it { expect(response.status).to eq(200) }
+      it { expect(body.size).to eq(3) }
+      it { expect(body.first['label']).to eq(procedure.path) }
+      it { expect(body.first['mine']).to be_truthy }
+      it { expect(body.second['label']).to eq(procedure2.path) }
+      it { expect(body.second['mine']).to be_falsy }
+
     end
 
-    it { expect(response.status).to eq(200) }
-    it { expect(body.size).to eq(2) }
-    it { expect(body.first['label']).to eq(procedure.path) }
-    it { expect(body.first['mine']).to be_truthy }
-    it { expect(body.second['label']).to eq(procedure2.path) }
-    it { expect(body.second['mine']).to be_falsy }
-
     context 'filtered' do
+      before do
+        subject
+      end
+
       subject { get :path_list, request: procedure2.path }
 
       it { expect(response.status).to eq(200) }
       it { expect(body.size).to eq(1) }
       it { expect(body.first['label']).to eq(procedure2.path) }
       it { expect(body.first['mine']).to be_falsy }
+    end
+
+    context 'when procedure is archived' do
+
+      before do
+        procedure3.update_attribute :archived, true
+        subject
+      end
+
+      it 'do not return on the json' do
+        expect(body.size).to eq(2)
+      end
     end
   end
 
@@ -467,7 +489,7 @@ describe Admin::ProceduresController, type: :controller do
       let(:email_admin) { new_admin.email }
 
       it { expect(subject.status).to eq 200 }
-      it { expect {subject}.to change(Procedure, :count).by(1) }
+      it { expect { subject }.to change(Procedure, :count).by(1) }
 
       context {
         before do

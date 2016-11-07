@@ -30,6 +30,13 @@ class Users::DossiersController < UsersController
       procedure = ProcedurePath.where(path: params[:procedure_path]).first!.procedure
     end
 
+    if procedure.archived?
+
+      @dossier = Dossier.new(procedure: procedure)
+
+      return render 'commencer/archived'
+    end
+
     redirect_to new_users_dossier_path(procedure_id: procedure.id)
   rescue ActiveRecord::RecordNotFound
     error_procedure
