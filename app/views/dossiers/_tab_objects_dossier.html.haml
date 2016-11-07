@@ -17,7 +17,7 @@
         Abonnés
     %li{role: "presentation"}
       %a{href: "#champs_private", 'aria-controls' => "champs_private", role: "tab", 'data-toggle' => "tab"}
-        Formulaire
+        Champs privés
 
 %div{class: "tab-content"}
   %div{role: "tabpanel", class: "tab-pane fade in active", id:"commentaires"}
@@ -34,11 +34,11 @@
     %div{role: "tabpanel", class: "tab-pane fade", id:"followers"}
       = render partial: 'followers'
     %div{role: "tabpanel", class: "tab-pane fade", id:"champs_private"}
-      %h3 Formulaire privé
+      %h3 Champs privés
       - if @champs.nil? || @champs.empty?
         %br
         %h4.text-primary
-          Pas de formulaire privé pour ce dossier
+          Pas de champ privé pour ce dossier
       - else
         = form_for @facade.dossier, url: {controller: 'backoffice/private_formulaires', action: :update, dossier_id: @facade.dossier.id}, remote: true do
           = render partial: '/users/description/champs'

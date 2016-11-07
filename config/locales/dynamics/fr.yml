@@ -1,0 +1,44 @@
+fr:
+  dynamics:
+    contact_email: contact@tps.apientreprise.fr
+    users:
+      connexion_title: Connexion
+      mes_dossiers: 'Mes dossiers'
+
+    backoffice:
+      title: Gestion des dossiers
+      dossiers: Dossiers
+      pref_list:
+        title: 'Gestion de colonnes affichées'
+        description: 'Ce menu vous permet de choisir les différentes colonnes que vous souhaitez voir apparaître dans votre interface de suivi des dossiers.'
+      download_all_dossiers: 'Tous mes dossiers en CSV'
+      research:
+        placeholder: 'Rechercher un dossier ...'
+      filter_procedure:
+        title: "Voir qu'une procédure :"
+        first: ''
+
+    dossiers:
+      depositaite: "Dépositaire"
+      numéro: 'Dossier n°'
+      followers:
+        title: "Personnes suivant l'activité de ce dossier"
+
+    admin:
+      connexion_title: Administration
+      dossiers:
+        tableau_de_bord:
+          title: 'Gestion des procédures'
+          nouvelle_procedure: 'Nouvelle procédure'
+      menu:
+        title: Mes procédures
+        accompagnateurs: Accompagnateurs
+        procedures: Procédures
+      procedure:
+        onglets:
+          accompagnateurs: Accompagnateurs
+        stats:
+          title: Dossiers
+        onglet_accompagnateurs:
+          add:
+            title: 'Ajouter un accompagnateur'

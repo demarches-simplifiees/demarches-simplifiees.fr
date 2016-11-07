@@ -104,9 +104,9 @@ group :test do
   gem 'simplecov', require: false
   gem 'poltergeist'
   gem 'timecop'
-  gem 'guard'
-  gem 'guard-rspec', require: false
-  gem 'guard-livereload', '~> 2.4', require: false
+  # gem 'guard'
+  # gem 'guard-rspec', require: false
+  # gem 'guard-livereload', '~> 2.4', require: false
   gem 'vcr'
 end
 

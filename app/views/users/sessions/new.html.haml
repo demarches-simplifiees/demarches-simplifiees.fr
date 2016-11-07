@@ -1,26 +1,9 @@
 #form_login
   %br
-  - if @dossier
-    = link_to 'X', users_no_procedure_url, class: 'btn btn-xs', style:'float: right'
+  = render partial: 'users/sessions/resume_procedure'
 
-    - if @dossier.procedure.euro_flag
-      #euro_flag.flag
-        =image_tag('drapeau_europe.png')
-
-    #logo_procedure.flag
-      =image_tag( @dossier.procedure.decorate.logo_img )
-
-    %h2#titre_procedure.text-info
-      = @dossier.procedure.libelle
-    %p
-      = h @dossier.procedure.description.html_safe
-
-
-  - else
-    = image_tag('logo-tps.png', {id: 'logo_tps'})
-  %br
-
-  %h2#login_user Connexion
+  %h2#login_user
+    =t('dynamics.users.connexion_title')
 
   %a.btn_fc#btn_fcp{href: '/france_connect/particulier'}
     = image_tag 'franceconnect_logo.png'
@@ -39,7 +22,7 @@
       = f.email_field :email, class: 'form-control'
     %br
     %h4
-      = f.label :password
+      = f.label 'Mot de passe'
     .input-group
       .input-group-addon
         %span.fa.fa-asterisk

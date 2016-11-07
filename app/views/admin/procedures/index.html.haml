@@ -1,5 +1,6 @@
-= link_to("Nouvelle procédure", "/admin/procedures/new", class: 'btn btn-success', style: 'float:right; margin-top:2%;')
-%h1 Gestion des procédures
+= link_to(t('dynamics.admin.dossiers.tableau_de_bord.nouvelle_procedure'), "/admin/procedures/new", class: 'btn btn-success', style: 'float:right; margin-top:2%;')
+%h1
+  =t('dynamics.admin.dossiers.tableau_de_bord.title')
 %br
 
 = render partial: 'onglets'

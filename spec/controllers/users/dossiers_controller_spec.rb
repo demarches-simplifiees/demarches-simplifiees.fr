@@ -157,6 +157,16 @@ describe Users::DossiersController, type: :controller do
 
     it { expect(subject.status).to eq 302 }
     it { expect(subject).to redirect_to new_users_dossier_path(procedure_id: procedure.id) }
+
+    context 'when procedure is archived' do
+      let(:procedure) { create(:procedure, :published, archived: true) }
+
+      before do
+        procedure.update_column :archived, true
+      end
+
+      it { expect(subject.status).to eq 200 }
+    end
   end
 
   describe 'POST #siret_informations' do
