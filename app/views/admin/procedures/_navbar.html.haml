@@ -2,7 +2,7 @@
   = link_to('Informations', admin_procedure_path(@procedure))
 
 %li{ class: ('active' if active == 'Accompagnateurs') }
-  = link_to('Accompagnateurs', admin_procedure_accompagnateurs_path(@procedure))
+  = link_to(t('dynamics.admin.procedure.onglets.accompagnateurs'), admin_procedure_accompagnateurs_path(@procedure))
 
 %li{ class: ('disabled' if @procedure.locked?) || ('active' if active == 'Description') }
   = link_to_unless(@procedure.locked?, 'Description', edit_admin_procedure_path(@procedure)) do

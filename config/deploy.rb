@@ -94,6 +94,7 @@ set :shared_paths, [
                      "config/initializers/super_admin.rb",
                      "config/unicorn.rb",
                      "config/initializers/raven.rb",
+                     "config/locales/dynamics/fr.yml",
                      'config/france_connect.yml',
                      'config/initializers/mailjet.rb',
                      'config/initializers/storage_url.rb',
@@ -137,6 +138,9 @@ task :setup => :environment do
 
   queue! %[mkdir -p "#{deploy_to}/shared/app"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/app"]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/config/locales/dynamics"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config/locales/dynamics"]
 
   queue! %[touch "#{deploy_to}/shared/config/database.yml"]
   queue %[echo "-----> Be sure to edit 'shared/config/database.yml'."]

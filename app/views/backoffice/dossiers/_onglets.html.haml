@@ -1,6 +1,9 @@
-#filter_by_procedure{style:'margin-left: 5%'}
+#filter_by_procedure{style:'margin-left: 2%'}
+  %b.text-info
+    = t('dynamics.backoffice.filter_procedure.title')
   %select{onchange: 'location = this.value', style:'margin-top: 10px; margin-bottom: 10px', id: 'filter_by_procedure_select'}
     %option{value: backoffice_dossiers_path}
+      = t('dynamics.backoffice.filter_procedure.first')
     - @dossiers_list_facade.gestionnaire_procedures_name_and_id_list.each do |procedure|
       %option{value: backoffice_dossiers_procedure_path(procedure[:id]), ('selected' if procedure[:id] == params[:id].to_i) => '' }
         = truncate(procedure[:libelle], {length: 50})
@@ -55,7 +58,7 @@
         %a
           = form_tag(backoffice_dossiers_search_url, method: :get) do
             .input-group{style:'width: 300px'}
-              = text_field_tag('q', "#{@search_terms unless @search_terms.nil? }", id: 'q', placeholder: "Rechercher un dossier ...", class:'form-control')
+              = text_field_tag('q', "#{@search_terms unless @search_terms.nil? }", id: 'q', placeholder: t('dynamics.backoffice.research.placeholder'), class:'form-control')
               %span.input-group-btn
                 %button.btn.btn-default{ id:'search_button' }
                   %i.fa.fa-search

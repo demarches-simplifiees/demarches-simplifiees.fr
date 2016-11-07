@@ -7,7 +7,8 @@
       - if @facade.procedure.for_individual?
         %br
         .individual.text-info
-          %h4 Dépositaire
+          %h4
+            =t('dynamics.dossiers.depositaite')
 
           %table.table{style:'width: 60%'}
             %tr
@@ -25,11 +26,12 @@
                 Prénom
               %td.col-md-5.col-lg-5
                 = @facade.individual.prenom
-            %tr
-              %th.col-md-3.col-lg-3
-                Date de naissance
-              %td.col-md-5.col-lg-5
-                = @facade.individual.birthdate
+            - unless Features.opensimplif
+              %tr
+                %th.col-md-3.col-lg-3
+                  Date de naissance
+                %td.col-md-5.col-lg-5
+                  = @facade.individual.birthdate
 
       - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
         .mandataire_social.text-success.center

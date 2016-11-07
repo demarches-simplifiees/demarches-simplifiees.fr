@@ -16,7 +16,7 @@ describe ProcedureDecorator do
 
   describe 'logo_img' do
     subject { super().logo_img }
-    it { is_expected.to eq('logo-tps.png') }
+    it { is_expected.to match(/http.*#{ActionController::Base.helpers.image_url(LOGO_NAME)}/) }
   end
 
   describe 'geographic_information' do

@@ -9,11 +9,13 @@
       %li
         = link_to(admin_procedures_path, id: :menu_item_procedure) do
           %i.fa.fa-list{ style: "background-size: 10px;"}
-          &nbsp;Procédures
+          &nbsp;
+          =t('dynamics.admin.menu.procedures')
       %li
         = link_to(admin_gestionnaires_path) do
           %i.fa.fa-user
-          &nbsp;Accompagnateur
+          &nbsp;
+          =t('dynamics.admin.menu.accompagnateurs')
       %li.divider{ role: :separator}
       %li
         = link_to(admin_profile_path, id: :profile) do

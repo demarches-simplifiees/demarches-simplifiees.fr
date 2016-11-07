@@ -17,10 +17,11 @@
 
 
   - else
-    = image_tag('logo-tps.png', {id: 'logo_tps'})
+    = image_tag(image_url(LOGO_NAME), {id: 'logo_tps'})
   %br
 
-  %h2#login_user Connexion
+  %h2#login_user
+    =t('dynamics.users.connexion_title')
 
   %a.btn_fc#btn_fcp{href: '/france_connect/particulier'}
     = image_tag 'franceconnect_logo.png'
@@ -39,7 +40,7 @@
       = f.email_field :email, class: 'form-control'
     %br
     %h4
-      = f.label :password
+      = f.label 'Mot de passe'
     .input-group
       .input-group-addon
         %span.fa.fa-asterisk
