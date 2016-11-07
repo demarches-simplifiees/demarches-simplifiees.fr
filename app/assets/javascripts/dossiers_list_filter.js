@@ -3,9 +3,21 @@ $(document).ready(filters_init);
 
 
 function filters_init() {
+    $('html').click(function(event) { 
+        var visible_filter = $('.filter_framed:visible')
+        if(visible_filter.length) {
+          if (!$(event.target).closest('.filter_framed').is(":visible")) {
+            visible_filter.hide();
+          }
+        }        
+    });
     $(".filter").on('click', function (event) {
         filter_framed_show(event);
         filter_framed_close_all_excepted(framed_id(event));
+        event.stopPropagation();
+    });
+    $(".erase-filter").on('click', function (event) {
+      $(this).parent().find(".filter_input").val("");
     });
 }
 
