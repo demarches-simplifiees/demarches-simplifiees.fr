@@ -1,4 +1,5 @@
 class Dossier < ActiveRecord::Base
+  include SpreadsheetArchitect
 
   enum state: {draft: 'draft',
                initiated: 'initiated',
@@ -297,12 +298,19 @@ class Dossier < ActiveRecord::Base
     dossier_attr = DossierSerializer.new(self).attributes
 
     unless entreprise.nil?
-      etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.map { |k, v| ["etablissement.#{k}", v] }.to_h
-      entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map { |k, v| ["entreprise.#{k}", v] }.to_h
-      dossier_attr = dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
+      etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.map { |k, v| ["etablissement.#{k}".parameterize.underscore.to_sym, v] }.to_h
+      entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map { |k, v| ["entreprise.#{k}".parameterize.underscore.to_sym, v] }.to_h
+    else
+      etablissement_attr = EtablissementSerializer.new(Etablissement.new).attributes.map { |k, v| ["etablissement.#{k}".parameterize.underscore.to_sym, v] }.to_h
+      entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.map { |k, v| ["entreprise.#{k}".parameterize.underscore.to_sym, v] }.to_h
     end
+    dossier_attr = dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
 
     dossier_attr
+  end
+
+  def spreadsheet_columns
+    self.as_csv.to_a
   end
 
   def reset!
