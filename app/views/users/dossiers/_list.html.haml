@@ -1,5 +1,5 @@
 - unless smart_listing.empty?
-  %table.table
+  %table#dossiers_list.table
     %thead
       %th.col-md-1.col-lg-1= smart_listing.sortable 'Numéro', 'id'
       %th.col-md-5.col-lg-5= smart_listing.sortable 'Procédure', 'procedure.libelle'
@@ -13,14 +13,17 @@
         -dossier = invite.dossier.decorate
       - else
         - dossier = dossier.decorate
-      %tr
+
+      - dossier_url = users_dossiers_invite_path(id: invite.id) unless invite.nil?
+      - if invite.nil?
+        - dossier_url = users_dossier_recapitulatif_path(dossier) unless dossier.brouillon?
+        - dossier_url = users_dossier_description_path(dossier) if dossier.brouillon?
+
+      %tr{'data-dossier_url' => dossier_url}
         %td.center
           = dossier.id
         %td
-          = link_to(dossier.procedure.libelle, users_dossiers_invite_path(id: invite.id)) unless invite.nil?
-          - if invite.nil?
-            = link_to(dossier.procedure.libelle, users_dossier_recapitulatif_path(dossier)) unless dossier.brouillon?
-            = link_to(dossier.procedure.libelle, users_dossier_description_path(dossier)) if dossier.brouillon?
+          = dossier.procedure.libelle
 
         %td{id: "dossier_#{dossier.id}_state"}= dossier.display_state
         %td= dossier.last_update
