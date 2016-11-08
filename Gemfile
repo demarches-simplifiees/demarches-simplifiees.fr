@@ -62,6 +62,7 @@ gem 'fog'
 gem 'fog-openstack'
 
 gem 'pg'
+gem 'scenic'
 
 gem 'rgeo-geojson'
 gem 'leaflet-rails'
