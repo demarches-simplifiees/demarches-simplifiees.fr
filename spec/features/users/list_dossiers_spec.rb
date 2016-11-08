@@ -32,9 +32,9 @@ feature 'user access to the list of his dossier' do
     expect(page).to have_css("#dossier_#{dossier1.id}_state")
   end
 
-  context 'when user clicks on a projet in list' do
+  context 'when user clicks on a projet in list', js: true do
     before do
-      page.click_on dossier1.procedure.libelle
+      page.find("#tr_dossier_#{dossier1.id}").click
     end
     scenario 'user is redirected to dossier page' do
       expect(page).to have_css('#recap_dossier')

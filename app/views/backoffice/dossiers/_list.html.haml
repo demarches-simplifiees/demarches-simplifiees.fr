@@ -15,7 +15,7 @@
 
   - unless smart_listing.empty?
     - @dossiers.each do |dossier|
-      %tr{'data-dossier_url' => backoffice_dossier_url(id: dossier.id)}
+      %tr{id: "tr_dossier_#{dossier.id}", 'data-dossier_url' => backoffice_dossier_url(id: dossier.id)}
         - @dossiers_list_facade.preference_list_dossiers_filter.each_with_index do |preference, index|
           %td
             - if preference.table.nil? || preference.table.empty?
