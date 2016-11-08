@@ -11,9 +11,10 @@ fr:
       pref_list:
         title: 'Gestion de colonnes affichées'
         description: 'Ce menu vous permet de choisir les différentes colonnes que vous souhaitez voir apparaître dans votre interface de suivi des dossiers.'
-      download_all_dossiers_csv: 'Tous mes dossiers en CSV'
-      download_all_dossiers_xlsx: 'Tous mes dossiers en XLSX'
-      download_all_dossiers_ods: 'Tous mes dossiers en ODS'
+      download_all_dossiers: 'Télécharger mes dossiers'
+      format_csv: 'Au format CSV'
+      format_xlsx: 'Au format XLSX'
+      format_ods: 'Au format ODS'
       research:
         placeholder: 'Rechercher un dossier ...'
       filter_procedure:
