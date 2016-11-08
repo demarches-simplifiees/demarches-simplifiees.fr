@@ -664,37 +664,37 @@ describe Dossier do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
     subject { dossier.as_csv }
 
-    it { expect(subject[:archived]).to be_falsey }
-    it { expect(subject['etablissement.siret']).to eq('44011762001530') }
-    it { expect(subject['etablissement.siege_social']).to be_truthy }
-    it { expect(subject['etablissement.naf']).to eq('4950Z') }
-    it { expect(subject['etablissement.libelle_naf']).to eq('Transports par conduites') }
-    it { expect(subject['etablissement.adresse']).to eq("GRTGAZ IMMEUBLE BORA 6 RUE RAOUL NORDLING 92270 BOIS COLOMBES") }
-    it { expect(subject['etablissement.numero_voie']).to eq('6') }
-    it { expect(subject['etablissement.type_voie']).to eq('RUE') }
-    it { expect(subject['etablissement.nom_voie']).to eq('RAOUL NORDLING') }
-    it { expect(subject['etablissement.complement_adresse']).to eq('IMMEUBLE BORA') }
-    it { expect(subject['etablissement.code_postal']).to eq('92270') }
-    it { expect(subject['etablissement.localite']).to eq('BOIS COLOMBES') }
-    it { expect(subject['etablissement.code_insee_localite']).to eq('92009') }
-    it { expect(subject['entreprise.siren']).to eq('440117620') }
-    it { expect(subject['entreprise.capital_social']).to eq(537100000) }
-    it { expect(subject['entreprise.numero_tva_intracommunautaire']).to eq('FR27440117620') }
-    it { expect(subject['entreprise.forme_juridique']).to eq("SA à conseil d'administration (s.a.i.)") }
-    it { expect(subject['entreprise.forme_juridique_code']).to eq('5599') }
-    it { expect(subject['entreprise.nom_commercial']).to eq('GRTGAZ') }
-    it { expect(subject['entreprise.raison_sociale']).to eq('GRTGAZ') }
-    it { expect(subject['entreprise.siret_siege_social']).to eq('44011762001530') }
-    it { expect(subject['entreprise.code_effectif_entreprise']).to eq('51') }
-    it { expect(subject['entreprise.date_creation']).to eq('Thu, 28 Jan 2016 10:16:29 UTC +00:0') }
-    it { expect(subject['entreprise.nom']).to be_nil }
-    it { expect(subject['entreprise.prenom']).to be_nil }
+    it { expect(subject[:archived]).to eq('false') }
+    it { expect(subject[:etablissement_siret]).to eq('44011762001530') }
+    it { expect(subject[:etablissement_siege_social]).to eq('true') }
+    it { expect(subject[:etablissement_naf]).to eq('4950Z') }
+    it { expect(subject[:etablissement_libelle_naf]).to eq('Transports par conduites') }
+    it { expect(subject[:etablissement_adresse]).to eq('GRTGAZ IMMEUBLE BORA 6 RUE RAOUL NORDLING 92270 BOIS COLOMBES') }
+    it { expect(subject[:etablissement_numero_voie]).to eq('6') }
+    it { expect(subject[:etablissement_type_voie]).to eq('RUE') }
+    it { expect(subject[:etablissement_nom_voie]).to eq('RAOUL NORDLING') }
+    it { expect(subject[:etablissement_complement_adresse]).to eq('IMMEUBLE BORA') }
+    it { expect(subject[:etablissement_code_postal]).to eq('92270') }
+    it { expect(subject[:etablissement_localite]).to eq('BOIS COLOMBES') }
+    it { expect(subject[:etablissement_code_insee_localite]).to eq('92009') }
+    it { expect(subject[:entreprise_siren]).to eq('440117620') }
+    it { expect(subject[:entreprise_capital_social]).to eq('537100000') }
+    it { expect(subject[:entreprise_numero_tva_intracommunautaire]).to eq('FR27440117620') }
+    it { expect(subject[:entreprise_forme_juridique]).to eq("SA à conseil d'administration (s.a.i.)") }
+    it { expect(subject[:entreprise_forme_juridique_code]).to eq('5599') }
+    it { expect(subject[:entreprise_nom_commercial]).to eq('GRTGAZ') }
+    it { expect(subject[:entreprise_raison_sociale]).to eq('GRTGAZ') }
+    it { expect(subject[:entreprise_siret_siege_social]).to eq('44011762001530') }
+    it { expect(subject[:entreprise_code_effectif_entreprise]).to eq('51') }
+    it { expect(subject[:entreprise_date_creation]).to eq('Thu, 28 Jan 2016 10:16:29 UTC +00:0') }
+    it { expect(subject[:entreprise_nom]).to be_nil }
+    it { expect(subject[:entreprise_prenom]).to be_nil }
 
     context 'when dossier does not have enterprise' do
       let(:dossier) { create(:dossier, user: user, procedure: procedure) }
       subject { dossier.as_csv }
 
-      it { expect(subject[:archived]).to be_falsey }
+      it { expect(subject[:archived]).to eq('false') }
     end
   end
 

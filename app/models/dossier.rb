@@ -294,9 +294,18 @@ class Dossier < ActiveRecord::Base
     procedure.cerfa_flag? && cerfa.size != 0
   end
 
+  def convert_specific_values_to_string(hash_to_convert)
+    hash = {}
+    hash_to_convert.each do |key, value|
+      value = value.to_s if !value.kind_of?(Time) && !value.nil?
+      hash.store(key, value)
+    end
+    return hash
+  end
+
   def as_csv(options={})
     dossier_attr = DossierSerializer.new(self).attributes
-
+    dossier_attr = convert_specific_values_to_string(dossier_attr)
     unless entreprise.nil?
       etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.map { |k, v| ["etablissement.#{k}".parameterize.underscore.to_sym, v] }.to_h
       entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map { |k, v| ["entreprise.#{k}".parameterize.underscore.to_sym, v] }.to_h
@@ -304,7 +313,7 @@ class Dossier < ActiveRecord::Base
       etablissement_attr = EtablissementSerializer.new(Etablissement.new).attributes.map { |k, v| ["etablissement.#{k}".parameterize.underscore.to_sym, v] }.to_h
       entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.map { |k, v| ["entreprise.#{k}".parameterize.underscore.to_sym, v] }.to_h
     end
-    dossier_attr = dossier_attr.merge(etablissement_attr).merge(entreprise_attr)
+    dossier_attr = dossier_attr.merge(convert_specific_values_to_string(etablissement_attr)).merge(convert_specific_values_to_string(entreprise_attr))
 
     dossier_attr
   end
