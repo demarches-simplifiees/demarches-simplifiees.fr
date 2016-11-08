@@ -98,7 +98,8 @@ set :shared_paths, [
                      'config/france_connect.yml',
                      'config/initializers/mailjet.rb',
                      'config/initializers/storage_url.rb',
-                     'app/views/root/landing.html.haml'
+                     'app/views/root/landing.html.haml',
+                     'app/views/cgu/index.html.haml'
                  ]
 
 
@@ -138,6 +139,9 @@ task :setup => :environment do
 
   queue! %[mkdir -p "#{deploy_to}/shared/app"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/app"]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/views/cgu"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/views/cgu"]
 
   queue! %[mkdir -p "#{deploy_to}/shared/config/locales/dynamics"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config/locales/dynamics"]
