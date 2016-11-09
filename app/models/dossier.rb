@@ -303,9 +303,7 @@ class Dossier < ActiveRecord::Base
     return hash
   end
 
-  def export_default_columns
-    dossier_attr = DossierSerializer.new(self).attributes
-    dossier_attr = convert_specific_values_to_string(dossier_attr)
+  def export_entreprise_data
     unless entreprise.nil?
       etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.map { |k, v| ["etablissement.#{k}".parameterize.underscore.to_sym, v] }.to_h
       entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.map { |k, v| ["entreprise.#{k}".parameterize.underscore.to_sym, v] }.to_h
@@ -313,34 +311,33 @@ class Dossier < ActiveRecord::Base
       etablissement_attr = EtablissementSerializer.new(Etablissement.new).attributes.map { |k, v| ["etablissement.#{k}".parameterize.underscore.to_sym, v] }.to_h
       entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.map { |k, v| ["entreprise.#{k}".parameterize.underscore.to_sym, v] }.to_h
     end
-    dossier_attr = dossier_attr.merge(convert_specific_values_to_string(etablissement_attr)).merge(convert_specific_values_to_string(entreprise_attr))
+    return convert_specific_values_to_string(etablissement_attr).merge(convert_specific_values_to_string(entreprise_attr))
+  end
 
-    dossier_attr
+  def export_default_columns
+    dossier_attr = DossierSerializer.new(self).attributes
+    dossier_attr = convert_specific_values_to_string(dossier_attr)
+    dossier_attr = dossier_attr.merge(self.export_entreprise_data)
+    return dossier_attr
   end
 
   def spreadsheet_columns
     self.export_default_columns.to_a
   end
 
-  def self.export_columns_and_procedure(dossiers, format, procedure)
+  def self.export_columns_and_procedure(dossiers, format)
     data = []
-    headers = dossiers.first.export_default_columns.keys
-    procedure_types = procedure.types_de_champ.order("id ASC")
-    procedure_types.map(&:libelle).each do |libelle|
-      headers << libelle.parameterize.underscore.to_sym
-    end
+    headers = []
     dossiers.each do |dossier|
-      dossier_data = dossier.export_default_columns.values
-      champs_with_value = dossier.champs.where.not(value: ["", nil])
-      dossier_procedure_data = []
-      procedure_types.map(&:id).each do |type_id|
-        if champs_with_value.map(&:type_de_champ_id).include?(type_id)
-          dossier_procedure_data << champs_with_value.find_by(type_de_champ_id: type_id).value
-        else
-          dossier_procedure_data << nil
-        end
+      serialized_dossier = DossierProcedureSerializer.new(dossier).as_json[:dossier_procedure]
+      champs = {}
+      serialized_dossier[:champs].each do |champ_hash|
+        champs[champ_hash[:type_de_champ]["libelle"].parameterize.underscore.to_sym] = champ_hash[:value]
       end
-      data << (dossier_data << dossier_procedure_data).flatten
+      dossier_data = serialized_dossier.except(:champs).merge(champs)
+      dossier_data = dossier.convert_specific_values_to_string(dossier_data)
+      headers = (dossier_data.keys << dossier.export_entreprise_data.keys).flatten
+      data << (dossier_data.values << dossier.export_entreprise_data.values).flatten
     end
     if ["csv"].include?(format)
       return SpreadsheetArchitect.to_csv(data: data, headers: headers)
