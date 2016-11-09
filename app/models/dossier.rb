@@ -327,7 +327,7 @@ class Dossier < ActiveRecord::Base
 
   def self.export_columns_and_procedure(dossiers, format)
     data = []
-    headers = []
+    headers = nil
     dossiers.each do |dossier|
       serialized_dossier = DossierProcedureSerializer.new(dossier).as_json[:dossier_procedure]
       champs = {}
@@ -336,7 +336,7 @@ class Dossier < ActiveRecord::Base
       end
       dossier_data = serialized_dossier.except(:champs).merge(champs)
       dossier_data = dossier.convert_specific_values_to_string(dossier_data)
-      headers = (dossier_data.keys << dossier.export_entreprise_data.keys).flatten
+      headers ||= (dossier_data.keys << dossier.export_entreprise_data.keys).flatten
       data << (dossier_data.values << dossier.export_entreprise_data.values).flatten
     end
     if ["csv"].include?(format)

@@ -20,10 +20,10 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def download_dossiers_tps
     if procedure = Procedure.find_by(id: params[:procedure_id])
-      dossiers = procedure.dossiers.where.not(state: :draft)
+      dossiers = DossiersListGestionnaireService.new(current_gestionnaire, nil, procedure).filter_dossiers
       respond_with Dossier.export_columns_and_procedure(dossiers, request.format)
     else
-      dossiers = current_gestionnaire.dossiers.where.not(state: :draft)
+      dossiers = DossiersListGestionnaireService.new(current_gestionnaire, nil, nil).filter_dossiers
       respond_to do |format|
         format.xlsx { render xlsx: dossiers }
         format.ods  { render ods:  dossiers }
