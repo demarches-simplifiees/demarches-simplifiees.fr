@@ -325,8 +325,22 @@ class Dossier < ActiveRecord::Base
   def self.export_columns_and_procedure(dossiers, format, procedure)
     data = []
     headers = dossiers.first.export_default_columns.keys
+    procedure_types = procedure.types_de_champ.order("id ASC")
+    procedure_types.map(&:libelle).each do |libelle|
+      headers << libelle.parameterize.underscore.to_sym
+    end
     dossiers.each do |dossier|
-      data << dossier.export_default_columns.values
+      dossier_data = dossier.export_default_columns.values
+      champs_with_value = dossier.champs.where.not(value: ["", nil])
+      dossier_procedure_data = []
+      procedure_types.map(&:id).each do |type_id|
+        if champs_with_value.map(&:type_de_champ_id).include?(type_id)
+          dossier_procedure_data << champs_with_value.find_by(type_de_champ_id: type_id).value
+        else
+          dossier_procedure_data << nil
+        end
+      end
+      data << (dossier_data << dossier_procedure_data).flatten
     end
     if ["csv"].include?(format)
       return SpreadsheetArchitect.to_csv(data: data, headers: headers)
