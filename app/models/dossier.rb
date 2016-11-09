@@ -303,7 +303,7 @@ class Dossier < ActiveRecord::Base
     return hash
   end
 
-  def as_csv(options={})
+  def export_default_columns
     dossier_attr = DossierSerializer.new(self).attributes
     dossier_attr = convert_specific_values_to_string(dossier_attr)
     unless entreprise.nil?
@@ -319,7 +319,22 @@ class Dossier < ActiveRecord::Base
   end
 
   def spreadsheet_columns
-    self.as_csv.to_a
+    self.export_default_columns.to_a
+  end
+
+  def self.export_columns_and_procedure(dossiers, format, procedure)
+    data = []
+    headers = dossiers.first.export_default_columns.keys
+    dossiers.each do |dossier|
+      data << dossier.export_default_columns.values
+    end
+    if ["csv"].include?(format)
+      return SpreadsheetArchitect.to_csv(data: data, headers: headers)
+    elsif ["xlsx"].include?(format)
+      return SpreadsheetArchitect.to_xlsx(data: data, headers: headers)
+    elsif ["ods"].include?(format)
+      return SpreadsheetArchitect.to_ods(data: data, headers: headers)
+    end
   end
 
   def reset!

@@ -12,13 +12,13 @@
       %span.caret
     %ul.dropdown-menu.dropdown-menu-right
       %li
-        = link_to backoffice_download_dossiers_tps_path(format: :csv),  { class: 'btn btn-sm' } do
+        = link_to backoffice_download_dossiers_tps_path(format: :csv, procedure_id: params[:id]),  { class: 'btn btn-sm' } do
           = t('dynamics.backoffice.format_csv')
       %li
-        = link_to backoffice_download_dossiers_tps_path(format: :xlsx), { class: 'btn btn-sm' } do
+        = link_to backoffice_download_dossiers_tps_path(format: :xlsx, procedure_id: params[:id]), { class: 'btn btn-sm' } do
           = t('dynamics.backoffice.format_xlsx')
       %li
-        = link_to backoffice_download_dossiers_tps_path(format: :ods), { class: 'btn btn-sm' } do
+        = link_to backoffice_download_dossiers_tps_path(format: :ods, procedure_id: params[:id]),  { class: 'btn btn-sm' } do
           = t('dynamics.backoffice.format_ods')
 
   = render partial: 'backoffice/dossiers/onglets'

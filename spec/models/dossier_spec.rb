@@ -659,10 +659,10 @@ describe Dossier do
     end
   end
 
-  describe '#as_csv?' do
+  describe '#export_default_columns?' do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
-    subject { dossier.as_csv }
+    subject { dossier.export_default_columns }
 
     it { expect(subject[:archived]).to eq('false') }
     it { expect(subject[:etablissement_siret]).to eq('44011762001530') }
@@ -692,7 +692,7 @@ describe Dossier do
 
     context 'when dossier does not have enterprise' do
       let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-      subject { dossier.as_csv }
+      subject { dossier.export_default_columns }
 
       it { expect(subject[:archived]).to eq('false') }
     end
