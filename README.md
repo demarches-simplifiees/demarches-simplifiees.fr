@@ -67,3 +67,8 @@ Pour éxécuter les tests de l'application, plusieurs possibilités :
 
     bundle binstub railties --force
     rake rails:update:bin
+
+## Docker Quick Start
+
+    docker-compose run init
+    docker-compose up tps

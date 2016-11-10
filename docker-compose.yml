@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  postgres:
+    image: postgres:9.5
+    environment:
+      POSTGRES_USER: tps
+      POSTGRES_PASSWORD: lol
+    volumes_from:
+      - data
+
+  data:
+    image: busybox
+    volumes:
+      - "/var/lib/postgresql"
+
+  init:
+    depends_on:
+      - postgres
+    build: .
+    environment:
+      POSTGRES_HOST: postgres
+    command: "rake db:create db:schema:load db:migrate"
+
+  tps:
+    depends_on:
+      - postgres
+    build: .
+    environment:
+      POSTGRES_HOST: postgres
+    ports:
+      - 3000:3000
