@@ -19,18 +19,18 @@
               =@dossiers_list_facade.nouveaux_total
 
       %li{ class: (@dossiers_list_facade.a_traiter_class) }
-        %a{:href => "#{url_for @dossiers_list_facade.a_traiter_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui requièrent une action de votre part.'}
+        %a{:href => "#{url_for @dossiers_list_facade.a_traiter_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui ne sont pas encore déclarés complets.'}
           %h5.text-danger
-            = "Action requise"
+            ="Ouverts"
             .badge.progress-bar-danger
               =@dossiers_list_facade.a_traiter_total
 
-      %li{ class: (@dossiers_list_facade.en_attente_class) }
-        %a{:href => "#{url_for @dossiers_list_facade.en_attente_url}", 'data-toggle' => :tooltip, title: 'Les dossiers en attentes d\'une action de la part de l\'usager.'}
+      %li{ class: (@dossiers_list_facade.fige_class) }
+        %a{:href => "#{url_for @dossiers_list_facade.fige_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui sont déclarés complets et donc figés.'}
           %h5.text-default
-            ="Attente usager "
+            ="Figés"
             .badge.progress-bar-default
-              =@dossiers_list_facade.en_attente_total
+              =@dossiers_list_facade.fige_total
 
       %li{ class: (@dossiers_list_facade.deposes_class) }
         %a{:href => "#{url_for @dossiers_list_facade.deposes_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui ont été validés et déposés par les usager qui attendent une réponse de bonne réception avant examen.'}

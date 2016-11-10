@@ -482,6 +482,9 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
+    scenic (1.3.0)
+      activerecord (>= 4.0.0)
+      railties (>= 4.0.0)
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -635,6 +638,7 @@ DEPENDENCIES
   rubocop-checkstyle_formatter
   rubocop-rspec
   sass-rails (~> 5.0)
+  scenic
   sdoc (~> 0.4.0)
   selenium-webdriver
   sentry-raven
@@ -654,4 +658,4 @@ DEPENDENCIES
   will_paginate-bootstrap
 
 BUNDLED WITH
-   1.12.5
+   1.13.2

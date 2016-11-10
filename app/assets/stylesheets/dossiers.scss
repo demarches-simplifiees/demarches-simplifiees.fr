@@ -28,3 +28,8 @@ h5 span {
     float: right;
   }
 }
+
+#dossiers_list tr:hover{
+  background-color: #eeeeee;
+  cursor: pointer;
+}
