@@ -20,9 +20,9 @@ feature 'on backoffice page' do
 
       page.click_on 'Se connecter'
     end
-    context 'when he click on first dossier' do
+    context 'when he click on first dossier', js: true do
       before do
-        page.click_on dossier.id
+        page.find("#tr_dossier_#{dossier.id}").click
       end
 
       scenario 'it redirect to dossier page' do
@@ -30,7 +30,7 @@ feature 'on backoffice page' do
       end
     end
 
-    context 'when gestionnaire have enterprise and individual dossier in his inbox' do
+    context 'when gestionnaire have enterprise and individual dossier in his inbox', js: true do
       let!(:procedure_individual) { create :procedure, libelle: 'procedure individual', administrateur: administrateur, for_individual: true }
       let!(:dossier_individual) { create :dossier, procedure: procedure_individual, state: 'updated' }
 
@@ -38,7 +38,7 @@ feature 'on backoffice page' do
         create :assign_to, gestionnaire: gestionnaire, procedure: procedure_individual
 
         visit backoffice_path
-        page.click_on dossier_individual.id
+        page.find("#tr_dossier_#{dossier_individual.id}").click
       end
 
       scenario 'it redirect to dossier page' do

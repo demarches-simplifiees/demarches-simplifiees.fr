@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161011125345) do
+ActiveRecord::Schema.define(version: 20161102154835) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,6 +102,9 @@ ActiveRecord::Schema.define(version: 20161011125345) do
     t.string  "type"
   end
 
+  add_index "champs", ["dossier_id"], name: "index_champs_on_dossier_id", using: :btree
+  add_index "champs", ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id", using: :btree
+
   create_table "commentaires", force: :cascade do |t|
     t.string   "email"
     t.datetime "created_at",             null: false
@@ -135,6 +138,8 @@ ActiveRecord::Schema.define(version: 20161011125345) do
     t.integer "type_de_champ_id"
   end
 
+  add_index "drop_down_lists", ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id", using: :btree
+
   create_table "entreprises", force: :cascade do |t|
     t.string   "siren"
     t.integer  "capital_social"
@@ -150,6 +155,8 @@ ActiveRecord::Schema.define(version: 20161011125345) do
     t.string   "prenom"
     t.integer  "dossier_id"
   end
+
+  add_index "entreprises", ["dossier_id"], name: "index_entreprises_on_dossier_id", using: :btree
 
   create_table "etablissements", force: :cascade do |t|
     t.string  "siret"
@@ -167,6 +174,8 @@ ActiveRecord::Schema.define(version: 20161011125345) do
     t.integer "dossier_id"
     t.integer "entreprise_id"
   end
+
+  add_index "etablissements", ["dossier_id"], name: "index_etablissements_on_dossier_id", using: :btree
 
   create_table "exercices", force: :cascade do |t|
     t.string   "ca"
@@ -194,6 +203,8 @@ ActiveRecord::Schema.define(version: 20161011125345) do
     t.string  "email_france_connect"
   end
 
+  add_index "france_connect_informations", ["user_id"], name: "index_france_connect_informations_on_user_id", using: :btree
+
   create_table "gestionnaires", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -220,6 +231,8 @@ ActiveRecord::Schema.define(version: 20161011125345) do
     t.integer "dossier_id"
     t.string  "gender"
   end
+
+  add_index "individuals", ["dossier_id"], name: "index_individuals_on_dossier_id", using: :btree
 
   create_table "invites", force: :cascade do |t|
     t.string  "email"
@@ -255,6 +268,7 @@ ActiveRecord::Schema.define(version: 20161011125345) do
     t.string   "content_secure_token"
   end
 
+  add_index "pieces_justificatives", ["dossier_id"], name: "index_pieces_justificatives_on_dossier_id", using: :btree
   add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
 
   create_table "preference_list_dossiers", force: :cascade do |t|
@@ -324,6 +338,8 @@ ActiveRecord::Schema.define(version: 20161011125345) do
     t.integer "entreprise_id"
   end
 
+  add_index "rna_informations", ["entreprise_id"], name: "index_rna_informations_on_entreprise_id", using: :btree
+
   create_table "types_de_champ", force: :cascade do |t|
     t.string  "libelle"
     t.string  "type_champ"
@@ -369,4 +385,21 @@ ActiveRecord::Schema.define(version: 20161011125345) do
   add_foreign_key "dossiers", "users"
   add_foreign_key "procedure_paths", "administrateurs"
   add_foreign_key "procedure_paths", "procedures"
+
+  create_view :searches,  sql_definition: <<-SQL
+      SELECT dossiers.id AS dossier_id,
+      (((((((((((((((((((((((((((((((((((((((((((((((((((((((COALESCE(users.email, ''::character varying))::text || ' '::text) || (COALESCE(france_connect_informations.given_name, ''::character varying))::text) || ' '::text) || (COALESCE(france_connect_informations.family_name, ''::character varying))::text) || ' '::text) || (COALESCE(cerfas.content, ''::character varying))::text) || ' '::text) || (COALESCE(champs.value, ''::character varying))::text) || ' '::text) || (COALESCE(drop_down_lists.value, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.siren, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.numero_tva_intracommunautaire, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.forme_juridique, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.forme_juridique_code, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.nom_commercial, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.raison_sociale, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.siret_siege_social, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.nom, ''::character varying))::text) || ' '::text) || (COALESCE(entreprises.prenom, ''::character varying))::text) || ' '::text) || (COALESCE(rna_informations.association_id, ''::character varying))::text) || ' '::text) || (COALESCE(rna_informations.titre, ''::character varying))::text) || ' '::text) || COALESCE(rna_informations.objet, ''::text)) || ' '::text) || (COALESCE(etablissements.siret, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.naf, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.libelle_naf, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.adresse, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.code_postal, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.localite, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.code_insee_localite, ''::character varying))::text) || ' '::text) || (COALESCE(individuals.nom, ''::character varying))::text) || ' '::text) || (COALESCE(individuals.prenom, ''::character varying))::text) || ' '::text) || (COALESCE(pieces_justificatives.content, ''::character varying))::text) AS term
+     FROM ((((((((((dossiers
+       JOIN users ON ((users.id = dossiers.user_id)))
+       LEFT JOIN france_connect_informations ON ((france_connect_informations.user_id = dossiers.user_id)))
+       LEFT JOIN cerfas ON ((cerfas.dossier_id = dossiers.id)))
+       LEFT JOIN champs ON ((champs.dossier_id = dossiers.id)))
+       LEFT JOIN drop_down_lists ON ((drop_down_lists.type_de_champ_id = champs.type_de_champ_id)))
+       LEFT JOIN entreprises ON ((entreprises.dossier_id = dossiers.id)))
+       LEFT JOIN rna_informations ON ((rna_informations.entreprise_id = entreprises.id)))
+       LEFT JOIN etablissements ON ((etablissements.dossier_id = dossiers.id)))
+       LEFT JOIN individuals ON ((individuals.dossier_id = dossiers.id)))
+       LEFT JOIN pieces_justificatives ON ((pieces_justificatives.dossier_id = dossiers.id)));
+  SQL
+
 end

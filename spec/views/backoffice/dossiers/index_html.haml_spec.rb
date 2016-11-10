@@ -95,29 +95,27 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   end
 
   describe 'on tab a_traiter' do
-    let(:total_dossiers) { 1 }
+    let(:total_dossiers) { 2 }
     let(:active_class) { '.active .text-danger' }
-    let(:dossiers_to_display) { gestionnaire.dossiers.waiting_for_gestionnaire }
+    let(:dossiers_to_display) { gestionnaire.dossiers.ouvert }
     let(:liste) { 'a_traiter' }
 
     it_behaves_like 'check_tab_content' do
       let(:decorate_dossier_at_check) { decorate_dossier_updated }
     end
+
+    it_behaves_like 'check_tab_content' do
+      let(:decorate_dossier_at_check) { decorate_dossier_replied }
+    end
   end
 
-  describe 'on tab en_attente' do
-    let(:total_dossiers) { 2 }
+  describe 'on tab figes' do
+    let(:total_dossiers) { 1 }
     let(:active_class) { '.active .text-default' }
-    let(:dossiers_to_display) { gestionnaire.dossiers.waiting_for_user }
-    let(:liste) { 'en_attente' }
+    let(:dossiers_to_display) { gestionnaire.dossiers.fige }
+    let(:liste) { 'fige' }
 
     describe 'for state replied' do
-      it_behaves_like 'check_tab_content' do
-        let(:decorate_dossier_at_check) { decorate_dossier_replied }
-      end
-    end
-
-    describe 'for state validated' do
       it_behaves_like 'check_tab_content' do
         let(:decorate_dossier_at_check) { decorate_dossier_validated }
       end

@@ -1,5 +1,6 @@
 fr_opensimplif:
   dynamics:
+    page_title: OpenSimplif
     contact_email: simplification.sgmap@modernisation.gouv.fr
     users:
       connexion_title: "Connectez-vous en tant qu'utilisateur"
