@@ -45,6 +45,7 @@ class Dossier < ActiveRecord::Base
 
   BROUILLON = %w(draft)
   NOUVEAUX = %w(initiated)
+  OUVERT = %w(updated replied)
   WAITING_FOR_GESTIONNAIRE = %w(updated)
   WAITING_FOR_USER = %w(replied validated)
   EN_CONSTRUCTION = %w(initiated updated replied)
@@ -194,11 +195,19 @@ class Dossier < ActiveRecord::Base
     EN_CONSTRUCTION.include?(state)
   end
 
+  def ouvert?
+    OUVERT.include?(state)
+  end
+
   def deposes?
     DEPOSES.include?(state)
   end
 
   def valides?
+    VALIDES.include?(state)
+  end
+
+  def fige?
     VALIDES.include?(state)
   end
 
@@ -238,7 +247,15 @@ class Dossier < ActiveRecord::Base
     where(state: EN_CONSTRUCTION, archived: false).order("updated_at #{order}")
   end
 
+  def self.ouvert order = 'ASC'
+    where(state: OUVERT, archived: false).order("updated_at #{order}")
+  end
+
   def self.valides order = 'ASC'
+    where(state: VALIDES, archived: false).order("updated_at #{order}")
+  end
+
+  def self.fige order = 'ASC'
     where(state: VALIDES, archived: false).order("updated_at #{order}")
   end
 

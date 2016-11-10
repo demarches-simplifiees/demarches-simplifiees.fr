@@ -63,14 +63,14 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
-  describe 'GET #en_attente' do
+  describe 'GET #fige' do
     context 'when gestionnaire is connected' do
       before do
         sign_in gestionnaire
       end
 
       it 'returns http success' do
-        get :index, liste: :en_attente
+        get :index, liste: :fige
         expect(response).to have_http_status(200)
       end
     end
