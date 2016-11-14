@@ -297,13 +297,8 @@ class Dossier < ActiveRecord::Base
   def convert_specific_values_to_string(hash_to_convert)
     hash = {}
     hash_to_convert.each do |key, value|
-      if value.nil?
-        value = ""
-        hash.store(key, value)
-      else
-        value = value.to_s if !value.kind_of?(Time)
-        hash.store(key, value)
-      end
+      value = value.to_s if !value.kind_of?(Time) && !value.nil?
+      hash.store(key, value)
     end
     return hash
   end

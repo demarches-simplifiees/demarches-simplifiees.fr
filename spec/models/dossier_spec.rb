@@ -754,7 +754,21 @@ describe Dossier do
     end
   end
 
+  describe '#export_headers' do
+    let(:procedure) { create(:procedure, :with_type_de_champ) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+    subject { dossier.export_headers }
+
+    it { expect(subject).to include(:description) }
+    it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+  end
+
   describe '#data_with_champs' do
+    let(:procedure) { create(:procedure, :with_type_de_champ) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+    subject { dossier.data_with_champs }
+
+    it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
   end
 
   describe '#Dossier.to_csv' do
@@ -803,7 +817,7 @@ describe Dossier do
     let!(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
 
-    subject { Dossier.to_ods }
+    subject { Dossier.to_xlsx }
 
     it { expect(subject).is_a?(String) }
   end
