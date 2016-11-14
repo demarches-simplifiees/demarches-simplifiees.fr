@@ -1,4 +1,4 @@
 
 RSpec.configure do |config|
-  config.include Devise::Test::ControllerHelpers
+  # config.include Devise::TestHelpers, type: :controller
 end

@@ -97,6 +97,9 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.tty = true
 
+  config.include Shoulda::Matchers::ActiveRecord, type: :model
+  config.include Shoulda::Matchers::ActiveModel, type: :model
+  config.include Shoulda::Matchers::Independent, type: :model
 
   config.use_transactional_fixtures = false
 
@@ -106,8 +109,8 @@ RSpec.configure do |config|
 
   config.order = 'random'
 
-  config.include Devise::TestHelpers, type: :view
-  config.include Devise::Test::ControllerHelpers
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
 
   config.include FactoryGirl::Syntax::Methods
 

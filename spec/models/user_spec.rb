@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 describe User, type: :model do
   describe 'database columns' do
