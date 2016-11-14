@@ -5,11 +5,4 @@ class DossierProcedureSerializer < ActiveModel::Serializer
              :archived,
              :mandataire_social,
              :state
-
-  has_many :champs
-
-
-  def champs
-    object.champs.order("type_de_champ_id")
-  end
 end

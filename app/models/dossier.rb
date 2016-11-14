@@ -331,26 +331,26 @@ class Dossier < ActiveRecord::Base
   end
 
   def data_with_champs
-    data = []
-    serialized_dossier = DossierProcedureSerializer.new(self).as_json[:dossier_procedure]
-    champs = {}
-    serialized_dossier[:champs].each do |champ_hash|
-      champs[champ_hash[:type_de_champ]["libelle"].parameterize.underscore.to_sym] = champ_hash[:value]
-    end
-    binding.pry
-    dossier_data = serialized_dossier.except(:champs).merge(champs)
-    dossier_data = self.convert_specific_values_to_string(dossier_data)
-    return dossier_data.merge(self.export_entreprise_data)
+    serialized_dossier = DossierProcedureSerializer.new(self)
+    data = serialized_dossier.attributes.values
+    data += self.champs.order('type_de_champ_id ASC').map(&:value)
+    data += self.export_entreprise_data.values
+    return data
+  end
+
+  def export_headers
+    serialized_dossier = DossierProcedureSerializer.new(self)
+    headers = serialized_dossier.attributes.keys
+    headers += self.procedure.types_de_champ.order('id ASC').map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
+    headers += self.export_entreprise_data.keys
+    return headers
   end
 
   def self.export_full_generation(dossiers, format)
     data = []
-    headers = []
+    headers = dossiers.first.export_headers
     dossiers.each do |dossier|
-      if dossier.id == 948 || dossier.id == 955
-        data << dossier.data_with_champs.values
-        headers = dossier.data_with_champs.keys if headers.empty?
-      end
+      data << dossier.data_with_champs
     end
     if ["csv"].include?(format)
       return SpreadsheetArchitect.to_csv(data: data, headers: headers)
