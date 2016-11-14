@@ -325,19 +325,34 @@ class Dossier < ActiveRecord::Base
     self.export_default_columns.to_a
   end
 
-  def self.export_columns_and_procedure(dossiers, format)
+  def export_headers
+    serialized_dossier = DossierProcedureSerializer.new(self).as_json[:dossier_procedure]
+    champs = {}
+    serialized_dossier[:champs].each do |champ_hash|
+      champs[champ_hash[:type_de_champ]["libelle"].parameterize.underscore.to_sym] = champ_hash[:value]
+    end
+    dossier_data = serialized_dossier.except(:champs).merge(champs)
+    dossier_data = self.convert_specific_values_to_string(dossier_data)
+    return (dossier_data.keys << self.export_entreprise_data.keys).flatten
+  end
+
+  def data_with_champs
+    serialized_dossier = DossierProcedureSerializer.new(self).as_json[:dossier_procedure]
+    champs = {}
+    serialized_dossier[:champs].each do |champ_hash|
+      champs[champ_hash[:type_de_champ]["libelle"].parameterize.underscore.to_sym] = champ_hash[:value]
+    end
+    dossier_data = serialized_dossier.except(:champs).merge(champs)
+    dossier_data = self.convert_specific_values_to_string(dossier_data)
+    return (dossier_data.values << self.export_entreprise_data.values).flatten
+  end
+
+  def self.export_full_generation(dossiers, format)
     data = []
-    headers = nil
+    headers = []
     dossiers.each do |dossier|
-      serialized_dossier = DossierProcedureSerializer.new(dossier).as_json[:dossier_procedure]
-      champs = {}
-      serialized_dossier[:champs].each do |champ_hash|
-        champs[champ_hash[:type_de_champ]["libelle"].parameterize.underscore.to_sym] = champ_hash[:value]
-      end
-      dossier_data = serialized_dossier.except(:champs).merge(champs)
-      dossier_data = dossier.convert_specific_values_to_string(dossier_data)
-      headers ||= (dossier_data.keys << dossier.export_entreprise_data.keys).flatten
-      data << (dossier_data.values << dossier.export_entreprise_data.values).flatten
+      headers = dossier.export_headers if headers.empty?
+      data << dossier.data_with_champs
     end
     if ["csv"].include?(format)
       return SpreadsheetArchitect.to_csv(data: data, headers: headers)
