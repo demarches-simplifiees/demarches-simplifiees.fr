@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161102154835) do
+ActiveRecord::Schema.define(version: 20161110082244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,8 +112,10 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.integer  "dossier_id"
     t.datetime "updated_at",             null: false
     t.integer  "piece_justificative_id"
+    t.integer  "champ_id"
   end
 
+  add_index "commentaires", ["champ_id"], name: "index_commentaires_on_champ_id", using: :btree
   add_index "commentaires", ["dossier_id"], name: "index_commentaires_on_dossier_id", using: :btree
 
   create_table "dossiers", force: :cascade do |t|
