@@ -39,7 +39,7 @@ Capybara.register_driver :poltergeist do |app|
 end
 
 
-Capybara.default_wait_time = 1
+Capybara.default_max_wait_time = 1
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -107,7 +107,7 @@ RSpec.configure do |config|
   config.order = 'random'
 
   config.include Devise::TestHelpers, type: :view
-  config.include Devise::TestHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers
 
   config.include FactoryGirl::Syntax::Methods
 
