@@ -49,7 +49,7 @@ class DossiersListGestionnaireService
 
   def filter_dossiers
     @filter_dossiers ||= @procedure.nil? ? @current_devise_profil.dossiers.joins(joins_filter).where(where_filter) : @procedure.dossiers.joins(joins_filter).where(where_filter)
-    @filter_dossiers.uniq
+    @filter_dossiers.distinct
   end
 
   def filter_procedure_reset!

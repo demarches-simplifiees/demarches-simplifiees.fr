@@ -2,14 +2,13 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.7.1'
+gem 'rails', '5.0.0.1'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
+
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
 
@@ -47,10 +46,10 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'will_paginate-bootstrap'
 
 # Decorators
-gem 'draper'
+gem 'draper', '~> 3.0.0.pre1'
 
 #Gestion des comptes utilisateurs
-gem 'devise', '~> 3.0'
+gem 'devise'
 gem 'openid_connect'
 
 gem 'rest-client'
@@ -111,6 +110,10 @@ group :test do
   gem 'vcr'
 end
 
+group :development do
+  gem 'web-console', '~> 2.0'
+end
+
 group :development, :test do
   # gem 'terminal-notifier'
   # gem 'terminal-notifier-guard'
@@ -120,7 +123,6 @@ group :development, :test do
   gem 'pry-byebug'
 
   # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
@@ -135,7 +137,7 @@ group :development, :test do
 
   gem "nyan-cat-formatter"
 
-  gem 'parallel_tests', '~> 1.9.0'
+  gem 'parallel_tests', '~> 2.10'
 
   gem 'brakeman', require: false
   # Deploy

@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -30,19 +29,17 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "api_token"
+    t.index ["email"], name: "index_administrateurs_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true, using: :btree
   end
-
-  add_index "administrateurs", ["email"], name: "index_administrateurs_on_email", unique: true, using: :btree
-  add_index "administrateurs", ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true, using: :btree
 
   create_table "administrateurs_gestionnaires", id: false, force: :cascade do |t|
     t.integer "administrateur_id"
     t.integer "gestionnaire_id"
+    t.index ["administrateur_id"], name: "index_administrateurs_gestionnaires_on_administrateur_id", using: :btree
+    t.index ["gestionnaire_id", "administrateur_id"], name: "unique_couple_administrateur_gestionnaire", unique: true, using: :btree
+    t.index ["gestionnaire_id"], name: "index_administrateurs_gestionnaires_on_gestionnaire_id", using: :btree
   end
-
-  add_index "administrateurs_gestionnaires", ["administrateur_id"], name: "index_administrateurs_gestionnaires_on_administrateur_id", using: :btree
-  add_index "administrateurs_gestionnaires", ["gestionnaire_id", "administrateur_id"], name: "unique_couple_administrateur_gestionnaire", unique: true, using: :btree
-  add_index "administrateurs_gestionnaires", ["gestionnaire_id"], name: "index_administrateurs_gestionnaires_on_gestionnaire_id", using: :btree
 
   create_table "administrations", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -57,18 +54,22 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["email"], name: "index_administrations_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_administrations_on_reset_password_token", unique: true, using: :btree
   end
 
-  add_index "administrations", ["email"], name: "index_administrations_on_email", unique: true, using: :btree
-  add_index "administrations", ["reset_password_token"], name: "index_administrations_on_reset_password_token", unique: true, using: :btree
+  create_table "ar_internal_metadata", primary_key: "key", id: :string, force: :cascade do |t|
+    t.string   "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "assign_tos", id: false, force: :cascade do |t|
     t.integer "gestionnaire_id"
     t.integer "procedure_id"
+    t.index ["gestionnaire_id"], name: "index_assign_tos_on_gestionnaire_id", using: :btree
+    t.index ["procedure_id"], name: "index_assign_tos_on_procedure_id", using: :btree
   end
-
-  add_index "assign_tos", ["gestionnaire_id"], name: "index_assign_tos_on_gestionnaire_id", using: :btree
-  add_index "assign_tos", ["procedure_id"], name: "index_assign_tos_on_procedure_id", using: :btree
 
   create_table "cadastres", force: :cascade do |t|
     t.string  "surface_intersection"
@@ -91,19 +92,17 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.integer  "user_id"
     t.string   "original_filename"
     t.string   "content_secure_token"
+    t.index ["dossier_id"], name: "index_cerfas_on_dossier_id", using: :btree
   end
-
-  add_index "cerfas", ["dossier_id"], name: "index_cerfas_on_dossier_id", using: :btree
 
   create_table "champs", force: :cascade do |t|
     t.string  "value"
     t.integer "type_de_champ_id"
     t.integer "dossier_id"
     t.string  "type"
+    t.index ["dossier_id"], name: "index_champs_on_dossier_id", using: :btree
+    t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id", using: :btree
   end
-
-  add_index "champs", ["dossier_id"], name: "index_champs_on_dossier_id", using: :btree
-  add_index "champs", ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id", using: :btree
 
   create_table "commentaires", force: :cascade do |t|
     t.string   "email"
@@ -112,9 +111,8 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.integer  "dossier_id"
     t.datetime "updated_at",             null: false
     t.integer  "piece_justificative_id"
+    t.index ["dossier_id"], name: "index_commentaires_on_dossier_id", using: :btree
   end
-
-  add_index "commentaires", ["dossier_id"], name: "index_commentaires_on_dossier_id", using: :btree
 
   create_table "dossiers", force: :cascade do |t|
     t.boolean  "autorisation_donnees"
@@ -128,17 +126,15 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.boolean  "archived",             default: false
     t.boolean  "mandataire_social",    default: false
     t.datetime "deposit_datetime"
+    t.index ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
+    t.index ["user_id"], name: "index_dossiers_on_user_id", using: :btree
   end
-
-  add_index "dossiers", ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
-  add_index "dossiers", ["user_id"], name: "index_dossiers_on_user_id", using: :btree
 
   create_table "drop_down_lists", force: :cascade do |t|
     t.string  "value"
     t.integer "type_de_champ_id"
+    t.index ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id", using: :btree
   end
-
-  add_index "drop_down_lists", ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id", using: :btree
 
   create_table "entreprises", force: :cascade do |t|
     t.string   "siren"
@@ -154,9 +150,8 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.string   "nom"
     t.string   "prenom"
     t.integer  "dossier_id"
+    t.index ["dossier_id"], name: "index_entreprises_on_dossier_id", using: :btree
   end
-
-  add_index "entreprises", ["dossier_id"], name: "index_entreprises_on_dossier_id", using: :btree
 
   create_table "etablissements", force: :cascade do |t|
     t.string  "siret"
@@ -173,9 +168,8 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.string  "code_insee_localite"
     t.integer "dossier_id"
     t.integer "entreprise_id"
+    t.index ["dossier_id"], name: "index_etablissements_on_dossier_id", using: :btree
   end
-
-  add_index "etablissements", ["dossier_id"], name: "index_etablissements_on_dossier_id", using: :btree
 
   create_table "exercices", force: :cascade do |t|
     t.string   "ca"
@@ -187,10 +181,9 @@ ActiveRecord::Schema.define(version: 20161102154835) do
   create_table "follows", force: :cascade do |t|
     t.integer "gestionnaire_id"
     t.integer "dossier_id"
+    t.index ["dossier_id"], name: "index_follows_on_dossier_id", using: :btree
+    t.index ["gestionnaire_id"], name: "index_follows_on_gestionnaire_id", using: :btree
   end
-
-  add_index "follows", ["dossier_id"], name: "index_follows_on_dossier_id", using: :btree
-  add_index "follows", ["gestionnaire_id"], name: "index_follows_on_gestionnaire_id", using: :btree
 
   create_table "france_connect_informations", force: :cascade do |t|
     t.string  "gender"
@@ -201,9 +194,8 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.string  "france_connect_particulier_id"
     t.integer "user_id"
     t.string  "email_france_connect"
+    t.index ["user_id"], name: "index_france_connect_informations_on_user_id", using: :btree
   end
-
-  add_index "france_connect_informations", ["user_id"], name: "index_france_connect_informations_on_user_id", using: :btree
 
   create_table "gestionnaires", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -219,10 +211,9 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "procedure_filter"
+    t.index ["email"], name: "index_gestionnaires_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_gestionnaires_on_reset_password_token", unique: true, using: :btree
   end
-
-  add_index "gestionnaires", ["email"], name: "index_gestionnaires_on_email", unique: true, using: :btree
-  add_index "gestionnaires", ["reset_password_token"], name: "index_gestionnaires_on_reset_password_token", unique: true, using: :btree
 
   create_table "individuals", force: :cascade do |t|
     t.string  "nom"
@@ -230,9 +221,8 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.string  "birthdate"
     t.integer "dossier_id"
     t.string  "gender"
+    t.index ["dossier_id"], name: "index_individuals_on_dossier_id", using: :btree
   end
-
-  add_index "individuals", ["dossier_id"], name: "index_individuals_on_dossier_id", using: :btree
 
   create_table "invites", force: :cascade do |t|
     t.string  "email"
@@ -254,9 +244,8 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.boolean "use_api_carto",          default: false
     t.boolean "quartiers_prioritaires", default: false
     t.boolean "cadastre",               default: false
+    t.index ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true, using: :btree
   end
-
-  add_index "module_api_cartos", ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true, using: :btree
 
   create_table "pieces_justificatives", force: :cascade do |t|
     t.string   "content"
@@ -266,10 +255,9 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.integer  "user_id"
     t.string   "original_filename"
     t.string   "content_secure_token"
+    t.index ["dossier_id"], name: "index_pieces_justificatives_on_dossier_id", using: :btree
+    t.index ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
   end
-
-  add_index "pieces_justificatives", ["dossier_id"], name: "index_pieces_justificatives_on_dossier_id", using: :btree
-  add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
 
   create_table "preference_list_dossiers", force: :cascade do |t|
     t.string  "libelle"
@@ -294,9 +282,8 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.string  "path",              limit: 30
     t.integer "procedure_id"
     t.integer "administrateur_id"
+    t.index ["path"], name: "index_procedure_paths_on_path", using: :btree
   end
-
-  add_index "procedure_paths", ["path"], name: "index_procedure_paths_on_path", using: :btree
 
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"
@@ -336,9 +323,8 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.date    "date_declaration"
     t.date    "date_publication"
     t.integer "entreprise_id"
+    t.index ["entreprise_id"], name: "index_rna_informations_on_entreprise_id", using: :btree
   end
-
-  add_index "rna_informations", ["entreprise_id"], name: "index_rna_informations_on_entreprise_id", using: :btree
 
   create_table "types_de_champ", force: :cascade do |t|
     t.string  "libelle"
@@ -375,10 +361,9 @@ ActiveRecord::Schema.define(version: 20161102154835) do
     t.datetime "updated_at"
     t.string   "siret"
     t.string   "loged_in_with_france_connect", default: "false"
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
-
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   add_foreign_key "cerfas", "dossiers"
   add_foreign_key "commentaires", "dossiers"

@@ -1,5 +1,5 @@
 class Users::SessionsController < Sessions::SessionsController
-# before_filter :configure_sign_in_params, only: [:create]
+# before_action :configure_sign_in_params, only: [:create]
 
   def demo
     return redirect_to root_path if Rails.env.production?

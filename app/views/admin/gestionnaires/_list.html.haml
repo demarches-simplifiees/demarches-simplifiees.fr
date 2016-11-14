@@ -8,11 +8,11 @@
       %tr
         %td{style:'padding-top: 11px; font-size:15px'}= gestionnaire.email
         %td{ style: 'text-align:right' }
-          .delete.btn.btn-sm.glyphicon.glyphicon-remove
+          .delete.btn.btn-sm.fa.fa-trash
 
           .confirm
             =link_to 'Valider', admin_gestionnaire_path(id: gestionnaire.id), {method: :delete, class: 'btn btn-sm btn-success'}
-            .cancel.btn.btn-sm.btn-danger.glyphicon.glyphicon-minus{style: 'top: 0'}
+            .cancel.btn.btn-sm.btn-danger.fa.fa-minus{style: 'top: 0'}
 
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links

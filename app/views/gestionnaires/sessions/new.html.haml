@@ -12,14 +12,14 @@
         = f.label :email
       .input-group
         .input-group-addon
-          %span.glyphicon.glyphicon-user
+          %span.fa.fa-user
         = f.email_field :email, class: 'form-control'
       %br
       %h4
         = f.label :password
       .input-group
         .input-group-addon
-          %span.glyphicon.glyphicon-asterisk
+          %span.fa.fa-asterisk
         = f.password_field :password, autocomplete: "off", class: 'form-control', value: @gestionnaire.password
       %br
       %br
