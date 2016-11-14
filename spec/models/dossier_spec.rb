@@ -659,12 +659,12 @@ describe Dossier do
     end
   end
 
-  describe '#convert_specific_values_to_string(hash_to_convert)' do
+  describe '#convert_specific_hash_values_to_string(hash_to_convert)' do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
     let(:dossier_serialized_attributes) { DossierSerializer.new(dossier).attributes }
 
-    subject { dossier.convert_specific_values_to_string(dossier_serialized_attributes) }
+    subject { dossier.convert_specific_hash_values_to_string(dossier_serialized_attributes) }
 
     it { expect(dossier_serialized_attributes[:id]).to be_an(Integer) }
     it { expect(dossier_serialized_attributes[:created_at]).to be_a(Time) }
@@ -679,6 +679,14 @@ describe Dossier do
     it { expect(subject[:archived]).to be_a(String) }
     it { expect(subject[:mandataire_social]).to be_a(String) }
     it { expect(subject[:state]).to be_a(String) }
+  end
+
+  describe '#convert_specific_array_values_to_string(array_to_convert)' do
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+    let(:dossier_data_with_champs) { dossier.data_with_champs }
+
+    subject { dossier.convert_specific_hash_values_to_string(dossier_data_with_champs) }
   end
 
   describe '#export_entreprise_data' do
@@ -768,6 +776,12 @@ describe Dossier do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
     subject { dossier.data_with_champs }
 
+    it do
+      binding.pry
+    end
+    it { expect(subject[0]).to be_a_kind_of(Integer)}
+    it { expect(subject[1]).to be_a_kind_of(Time)}
+    it { expect(subject[2]).to be_a_kind_of(Time)}
     it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
   end
 

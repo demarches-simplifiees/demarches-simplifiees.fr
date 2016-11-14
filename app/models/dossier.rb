@@ -294,13 +294,22 @@ class Dossier < ActiveRecord::Base
     procedure.cerfa_flag? && cerfa.size != 0
   end
 
-  def convert_specific_values_to_string(hash_to_convert)
+  def convert_specific_hash_values_to_string(hash_to_convert)
     hash = {}
     hash_to_convert.each do |key, value|
       value = value.to_s if !value.kind_of?(Time) && !value.nil?
       hash.store(key, value)
     end
     return hash
+  end
+
+  def convert_specific_array_values_to_string(array_to_convert)
+    array = []
+    array_to_convert.each do |value|
+      value = value.to_s if !value.kind_of?(Time) && !value.nil?
+      array << value
+    end
+    return array
   end
 
   def export_entreprise_data
@@ -311,12 +320,12 @@ class Dossier < ActiveRecord::Base
       etablissement_attr = EtablissementSerializer.new(Etablissement.new).attributes.map { |k, v| ["etablissement.#{k}".parameterize.underscore.to_sym, v] }.to_h
       entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.map { |k, v| ["entreprise.#{k}".parameterize.underscore.to_sym, v] }.to_h
     end
-    return convert_specific_values_to_string(etablissement_attr).merge(convert_specific_values_to_string(entreprise_attr))
+    return convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
   end
 
   def export_default_columns
     dossier_attr = DossierSerializer.new(self).attributes
-    dossier_attr = convert_specific_values_to_string(dossier_attr)
+    dossier_attr = convert_specific_hash_values_to_string(dossier_attr)
     dossier_attr = dossier_attr.merge(self.export_entreprise_data)
     return dossier_attr
   end
@@ -345,7 +354,7 @@ class Dossier < ActiveRecord::Base
     data = []
     headers = dossiers.first.export_headers
     dossiers.each do |dossier|
-      data << dossier.data_with_champs
+      data << dossier.convert_specific_array_values_to_string(data_with_champs)
     end
     if ["csv"].include?(format)
       return SpreadsheetArchitect.to_csv(data: data, headers: headers)
