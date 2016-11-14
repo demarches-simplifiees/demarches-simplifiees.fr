@@ -297,8 +297,13 @@ class Dossier < ActiveRecord::Base
   def convert_specific_values_to_string(hash_to_convert)
     hash = {}
     hash_to_convert.each do |key, value|
-      value = value.to_s if !value.kind_of?(Time) && !value.nil?
-      hash.store(key, value)
+      if value.nil?
+        value = ""
+        hash.store(key, value)
+      else
+        value = value.to_s if !value.kind_of?(Time)
+        hash.store(key, value)
+      end
     end
     return hash
   end
@@ -325,34 +330,27 @@ class Dossier < ActiveRecord::Base
     self.export_default_columns.to_a
   end
 
-  def export_headers
-    serialized_dossier = DossierProcedureSerializer.new(self).as_json[:dossier_procedure]
-    champs = {}
-    serialized_dossier[:champs].each do |champ_hash|
-      champs[champ_hash[:type_de_champ]["libelle"].parameterize.underscore.to_sym] = champ_hash[:value]
-    end
-    dossier_data = serialized_dossier.except(:champs).merge(champs)
-    dossier_data = self.convert_specific_values_to_string(dossier_data)
-    return (dossier_data.keys << self.export_entreprise_data.keys).flatten
-  end
-
   def data_with_champs
+    data = []
     serialized_dossier = DossierProcedureSerializer.new(self).as_json[:dossier_procedure]
     champs = {}
     serialized_dossier[:champs].each do |champ_hash|
       champs[champ_hash[:type_de_champ]["libelle"].parameterize.underscore.to_sym] = champ_hash[:value]
     end
+    binding.pry
     dossier_data = serialized_dossier.except(:champs).merge(champs)
     dossier_data = self.convert_specific_values_to_string(dossier_data)
-    return (dossier_data.values << self.export_entreprise_data.values).flatten
+    return dossier_data.merge(self.export_entreprise_data)
   end
 
   def self.export_full_generation(dossiers, format)
     data = []
     headers = []
     dossiers.each do |dossier|
-      headers = dossier.export_headers if headers.empty?
-      data << dossier.data_with_champs
+      if dossier.id == 948 || dossier.id == 955
+        data << dossier.data_with_champs.values
+        headers = dossier.data_with_champs.keys if headers.empty?
+      end
     end
     if ["csv"].include?(format)
       return SpreadsheetArchitect.to_csv(data: data, headers: headers)

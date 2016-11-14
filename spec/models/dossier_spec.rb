@@ -754,15 +754,6 @@ describe Dossier do
     end
   end
 
-  describe '#export_headers' do
-    let(:procedure) { create(:procedure) }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
-
-    subject { dossier.export_headers }
-    it do
-    end
-  end
-
   describe '#data_with_champs' do
   end
 

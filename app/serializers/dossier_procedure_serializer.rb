@@ -7,4 +7,9 @@ class DossierProcedureSerializer < ActiveModel::Serializer
              :state
 
   has_many :champs
+
+
+  def champs
+    object.champs.order("type_de_champ_id")
+  end
 end
