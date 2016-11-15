@@ -578,43 +578,190 @@ describe Dossier do
     end
   end
 
-  describe '#as_csv?' do
+  describe '#convert_specific_hash_values_to_string(hash_to_convert)' do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
-    subject { dossier.as_csv }
+    let(:dossier_serialized_attributes) { DossierSerializer.new(dossier).attributes }
 
-    it { expect(subject[:archived]).to be_falsey }
-    it { expect(subject['etablissement.siret']).to eq('44011762001530') }
-    it { expect(subject['etablissement.siege_social']).to be_truthy }
-    it { expect(subject['etablissement.naf']).to eq('4950Z') }
-    it { expect(subject['etablissement.libelle_naf']).to eq('Transports par conduites') }
-    it { expect(subject['etablissement.adresse']).to eq("GRTGAZ IMMEUBLE BORA 6 RUE RAOUL NORDLING 92270 BOIS COLOMBES") }
-    it { expect(subject['etablissement.numero_voie']).to eq('6') }
-    it { expect(subject['etablissement.type_voie']).to eq('RUE') }
-    it { expect(subject['etablissement.nom_voie']).to eq('RAOUL NORDLING') }
-    it { expect(subject['etablissement.complement_adresse']).to eq('IMMEUBLE BORA') }
-    it { expect(subject['etablissement.code_postal']).to eq('92270') }
-    it { expect(subject['etablissement.localite']).to eq('BOIS COLOMBES') }
-    it { expect(subject['etablissement.code_insee_localite']).to eq('92009') }
-    it { expect(subject['entreprise.siren']).to eq('440117620') }
-    it { expect(subject['entreprise.capital_social']).to eq(537100000) }
-    it { expect(subject['entreprise.numero_tva_intracommunautaire']).to eq('FR27440117620') }
-    it { expect(subject['entreprise.forme_juridique']).to eq("SA à conseil d'administration (s.a.i.)") }
-    it { expect(subject['entreprise.forme_juridique_code']).to eq('5599') }
-    it { expect(subject['entreprise.nom_commercial']).to eq('GRTGAZ') }
-    it { expect(subject['entreprise.raison_sociale']).to eq('GRTGAZ') }
-    it { expect(subject['entreprise.siret_siege_social']).to eq('44011762001530') }
-    it { expect(subject['entreprise.code_effectif_entreprise']).to eq('51') }
-    it { expect(subject['entreprise.date_creation']).to eq('Thu, 28 Jan 2016 10:16:29 UTC +00:0') }
-    it { expect(subject['entreprise.nom']).to be_nil }
-    it { expect(subject['entreprise.prenom']).to be_nil }
+    subject { dossier.convert_specific_hash_values_to_string(dossier_serialized_attributes) }
+
+    it { expect(dossier_serialized_attributes[:id]).to be_an(Integer) }
+    it { expect(dossier_serialized_attributes[:created_at]).to be_a(Time) }
+    it { expect(dossier_serialized_attributes[:updated_at]).to be_a(Time) }
+    it { expect(dossier_serialized_attributes[:archived]).to be_in([true, false]) }
+    it { expect(dossier_serialized_attributes[:mandataire_social]).to be_in([true, false]) }
+    it { expect(dossier_serialized_attributes[:state]).to be_a(String) }
+
+    it { expect(subject[:id]).to be_a(String) }
+    it { expect(subject[:created_at]).to be_a(Time) }
+    it { expect(subject[:updated_at]).to be_a(Time) }
+    it { expect(subject[:archived]).to be_a(String) }
+    it { expect(subject[:mandataire_social]).to be_a(String) }
+    it { expect(subject[:state]).to be_a(String) }
+  end
+
+  describe '#convert_specific_array_values_to_string(array_to_convert)' do
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+    let(:dossier_data_with_champs) { dossier.data_with_champs }
+
+    subject { dossier.convert_specific_hash_values_to_string(dossier_data_with_champs) }
+  end
+
+  describe '#export_entreprise_data' do
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+
+    subject { dossier.export_entreprise_data }
+
+    it { expect(subject[:etablissement_siret]).to eq('44011762001530') }
+    it { expect(subject[:etablissement_siege_social]).to eq('true') }
+    it { expect(subject[:etablissement_naf]).to eq('4950Z') }
+    it { expect(subject[:etablissement_libelle_naf]).to eq('Transports par conduites') }
+    it { expect(subject[:etablissement_adresse]).to eq('GRTGAZ IMMEUBLE BORA 6 RUE RAOUL NORDLING 92270 BOIS COLOMBES') }
+    it { expect(subject[:etablissement_numero_voie]).to eq('6') }
+    it { expect(subject[:etablissement_type_voie]).to eq('RUE') }
+    it { expect(subject[:etablissement_nom_voie]).to eq('RAOUL NORDLING') }
+    it { expect(subject[:etablissement_complement_adresse]).to eq('IMMEUBLE BORA') }
+    it { expect(subject[:etablissement_code_postal]).to eq('92270') }
+    it { expect(subject[:etablissement_localite]).to eq('BOIS COLOMBES') }
+    it { expect(subject[:etablissement_code_insee_localite]).to eq('92009') }
+    it { expect(subject[:entreprise_siren]).to eq('440117620') }
+    it { expect(subject[:entreprise_capital_social]).to eq('537100000') }
+    it { expect(subject[:entreprise_numero_tva_intracommunautaire]).to eq('FR27440117620') }
+    it { expect(subject[:entreprise_forme_juridique]).to eq("SA à conseil d'administration (s.a.i.)") }
+    it { expect(subject[:entreprise_forme_juridique_code]).to eq('5599') }
+    it { expect(subject[:entreprise_nom_commercial]).to eq('GRTGAZ') }
+    it { expect(subject[:entreprise_raison_sociale]).to eq('GRTGAZ') }
+    it { expect(subject[:entreprise_siret_siege_social]).to eq('44011762001530') }
+    it { expect(subject[:entreprise_code_effectif_entreprise]).to eq('51') }
+    it { expect(subject[:entreprise_date_creation]).to eq('Thu, 28 Jan 2016 10:16:29 UTC +00:0') }
+    it { expect(subject[:entreprise_nom]).to be_nil }
+    it { expect(subject[:entreprise_prenom]).to be_nil }
+
+    it { expect(subject.count).to eq(EntrepriseSerializer.new(Entreprise.new).as_json[:entreprise].count + EtablissementSerializer.new(Etablissement.new).as_json[:etablissement].count) }
+  end
+
+  describe '#export_default_columns' do
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+    subject { dossier.export_default_columns }
+
+    it { expect(subject[:archived]).to eq('false') }
+    it { expect(subject[:etablissement_siret]).to eq('44011762001530') }
+    it { expect(subject[:etablissement_siege_social]).to eq('true') }
+    it { expect(subject[:etablissement_naf]).to eq('4950Z') }
+    it { expect(subject[:etablissement_libelle_naf]).to eq('Transports par conduites') }
+    it { expect(subject[:etablissement_adresse]).to eq('GRTGAZ IMMEUBLE BORA 6 RUE RAOUL NORDLING 92270 BOIS COLOMBES') }
+    it { expect(subject[:etablissement_numero_voie]).to eq('6') }
+    it { expect(subject[:etablissement_type_voie]).to eq('RUE') }
+    it { expect(subject[:etablissement_nom_voie]).to eq('RAOUL NORDLING') }
+    it { expect(subject[:etablissement_complement_adresse]).to eq('IMMEUBLE BORA') }
+    it { expect(subject[:etablissement_code_postal]).to eq('92270') }
+    it { expect(subject[:etablissement_localite]).to eq('BOIS COLOMBES') }
+    it { expect(subject[:etablissement_code_insee_localite]).to eq('92009') }
+    it { expect(subject[:entreprise_siren]).to eq('440117620') }
+    it { expect(subject[:entreprise_capital_social]).to eq('537100000') }
+    it { expect(subject[:entreprise_numero_tva_intracommunautaire]).to eq('FR27440117620') }
+    it { expect(subject[:entreprise_forme_juridique]).to eq("SA à conseil d'administration (s.a.i.)") }
+    it { expect(subject[:entreprise_forme_juridique_code]).to eq('5599') }
+    it { expect(subject[:entreprise_nom_commercial]).to eq('GRTGAZ') }
+    it { expect(subject[:entreprise_raison_sociale]).to eq('GRTGAZ') }
+    it { expect(subject[:entreprise_siret_siege_social]).to eq('44011762001530') }
+    it { expect(subject[:entreprise_code_effectif_entreprise]).to eq('51') }
+    it { expect(subject[:entreprise_date_creation]).to eq('Thu, 28 Jan 2016 10:16:29 UTC +00:0') }
+    it { expect(subject[:entreprise_nom]).to be_nil }
+    it { expect(subject[:entreprise_prenom]).to be_nil }
 
     context 'when dossier does not have enterprise' do
       let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-      subject { dossier.as_csv }
+      subject { dossier.export_default_columns }
 
-      it { expect(subject[:archived]).to be_falsey }
+      it { expect(subject[:archived]).to eq('false') }
     end
+  end
+
+  describe '#export_headers' do
+    let(:procedure) { create(:procedure, :with_type_de_champ) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+    subject { dossier.export_headers }
+
+    it { expect(subject).to include(:description) }
+    it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+  end
+
+  describe '#data_with_champs' do
+    let(:procedure) { create(:procedure, :with_type_de_champ) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+    subject { dossier.data_with_champs }
+
+    it { expect(subject[0]).to be_a_kind_of(Integer) }
+    it { expect(subject[1]).to be_a_kind_of(Time) }
+    it { expect(subject[2]).to be_a_kind_of(Time) }
+    it { expect(subject[3]).to be_in([true, false]) }
+    it { expect(subject[4]).to be_in([true, false]) }
+    it { expect(subject[5]).to eq("draft") }
+    it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+  end
+
+  describe '#Dossier.to_csv' do
+    let!(:procedure) { create(:procedure) }
+    let!(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+
+    subject do
+      dossier_hash = {}
+      dossier_splitted = Dossier.to_csv.split("\n").map { |cell| cell.split(",") }
+      index = 0
+      dossier_splitted[0].each do |column|
+        dossier_hash.store(column.to_sym, dossier_splitted[1][index])
+        index = index + 1
+      end
+      dossier_hash
+    end
+
+    it { expect(subject[:archived]).to eq('false') }
+    it { expect(subject[:etablissement_siret]).to eq('44011762001530') }
+    it { expect(subject[:etablissement_siege_social]).to eq('true') }
+    it { expect(subject[:etablissement_naf]).to eq('4950Z') }
+    it { expect(subject[:etablissement_libelle_naf]).to eq('Transports par conduites') }
+    it { expect(subject[:etablissement_adresse]).to eq('GRTGAZ IMMEUBLE BORA 6 RUE RAOUL NORDLING 92270 BOIS COLOMBES') }
+    it { expect(subject[:etablissement_numero_voie]).to eq('6') }
+    it { expect(subject[:etablissement_type_voie]).to eq('RUE') }
+    it { expect(subject[:etablissement_nom_voie]).to eq('RAOUL NORDLING') }
+    it { expect(subject[:etablissement_complement_adresse]).to eq('IMMEUBLE BORA') }
+    it { expect(subject[:etablissement_code_postal]).to eq('92270') }
+    it { expect(subject[:etablissement_localite]).to eq('BOIS COLOMBES') }
+    it { expect(subject[:etablissement_code_insee_localite]).to eq('92009') }
+    it { expect(subject[:entreprise_siren]).to eq('440117620') }
+    it { expect(subject[:entreprise_capital_social]).to eq('537100000') }
+    it { expect(subject[:entreprise_numero_tva_intracommunautaire]).to eq('FR27440117620') }
+    it { expect(subject[:entreprise_forme_juridique]).to eq("SA à conseil d'administration (s.a.i.)") }
+    it { expect(subject[:entreprise_forme_juridique_code]).to eq('5599') }
+    it { expect(subject[:entreprise_nom_commercial]).to eq('GRTGAZ') }
+    it { expect(subject[:entreprise_raison_sociale]).to eq('GRTGAZ') }
+    it { expect(subject[:entreprise_siret_siege_social]).to eq('44011762001530') }
+    it { expect(subject[:entreprise_code_effectif_entreprise]).to eq('51') }
+    it { expect(subject[:entreprise_date_creation]).to eq('2016-01-28 10:16:29 UTC') }
+    it { expect(subject[:entreprise_nom]).to be_nil }
+    it { expect(subject[:entreprise_prenom]).to be_nil }
+  end
+
+  describe '#Dossier.to_xlsx' do
+    let!(:procedure) { create(:procedure) }
+    let!(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+
+    subject { Dossier.to_xlsx }
+
+    it { expect(subject).is_a?(String) }
+  end
+
+  describe '#Dossier.to_ods' do
+    let!(:procedure) { create(:procedure) }
+    let!(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+
+    subject { Dossier.to_ods }
+
+    it { expect(subject).is_a?(String) }
   end
 
   describe '#reset!' do
