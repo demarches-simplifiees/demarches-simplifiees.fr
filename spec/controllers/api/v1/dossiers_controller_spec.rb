@@ -8,7 +8,7 @@ describe API::V1::DossiersController do
   it { expect(described_class).to be < APIController }
 
   describe 'GET index' do
-    let(:retour) { get :index, token: admin.api_token, procedure_id: procedure_id }
+    let(:retour) { get :index, params: {token: admin.api_token, procedure_id: procedure_id} }
 
     subject { retour }
 
@@ -58,7 +58,7 @@ describe API::V1::DossiersController do
       end
 
       context 'when there are multiple pages' do
-        let(:retour) { get :index, token: admin.api_token, procedure_id: procedure_id, page: 2 }
+        let(:retour) { get :index, params: {token: admin.api_token, procedure_id: procedure_id, page: 2} }
 
         let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
         let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
@@ -79,7 +79,7 @@ describe API::V1::DossiersController do
   end
 
   describe 'GET show' do
-    let(:retour) { get :show, token: admin.api_token, procedure_id: procedure_id, id: dossier_id }
+    let(:retour) { get :show, params: {token: admin.api_token, procedure_id: procedure_id, id: dossier_id} }
     subject { retour }
 
     context 'when procedure is not found' do
@@ -121,6 +121,7 @@ describe API::V1::DossiersController do
         it 'return REST code 200', :show_in_doc do
           expect(retour.code).to eq('200')
         end
+
         it { expect(subject[:id]).to eq(dossier.id) }
         it { expect(subject[:state]).to eq(dossier.state) }
         it { expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z') }
@@ -178,7 +179,7 @@ describe API::V1::DossiersController do
           end
         end
 
-        describe 'piece justificative', vcr: { cassette_name: 'controllers_api_v1_dossiers_controller_piece_justificative' } do
+        describe 'piece justificative', vcr: {cassette_name: 'controllers_api_v1_dossiers_controller_piece_justificative'} do
           before do
             create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: dossier.procedure.types_de_piece_justificative.first, user: dossier.user
           end
@@ -188,17 +189,14 @@ describe API::V1::DossiersController do
           subject {
             super()[:pieces_justificatives].first }
 
-          it { expect(subject.keys.include?(:url)).to be_truthy }
+          it { expect(subject.keys.include?(:content_url)).to be_truthy }
           it { expect(subject[:created_at]).not_to be_nil }
           it { expect(subject[:type_de_piece_justificative_id]).not_to be_nil }
 
           it { expect(subject.keys.include?(:user)).to be_truthy }
 
           describe 'user' do
-            let(:field_list) { [
-                :url, :created_at, :type_de_piece_justificative_id] }
-            subject {
-              super()[:user] }
+            subject { super()[:user] }
 
             it { expect(subject[:email]).not_to be_nil }
           end
@@ -279,7 +277,7 @@ describe API::V1::DossiersController do
           it { expect(subject.first[:email]).to eq 'plop@plip.com' }
         end
 
-        describe 'cerfa', vcr: { cassette_name: 'controllers_api_v1_dossiers_controller_cerfa' } do
+        describe 'cerfa', vcr: {cassette_name: 'controllers_api_v1_dossiers_controller_cerfa'} do
           let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :with_cerfa_upload, procedure: procedure) } }
           let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
 
@@ -294,9 +292,9 @@ describe API::V1::DossiersController do
 
           it { expect(subject[:created_at]).not_to be_nil }
           if Features.remote_storage
-            it { expect(subject[:url]).to match /^https:\/\/storage.apientreprise.fr\/tps_dev\/cerfa-.*\.pdf$/ }
+            it { expect(subject[:content_url]).to match /^https:\/\/storage.apientreprise.fr\/tps_dev\/cerfa-.*\.pdf$/ }
           else
-            it { expect(subject[:url]).to match /^http:\/\/.*downloads.*_CERFA\.pdf$/ }
+            it { expect(subject[:content_url]).to match /^http:\/\/.*downloads.*_CERFA\.pdf$/ }
           end
 
           describe 'user' do
