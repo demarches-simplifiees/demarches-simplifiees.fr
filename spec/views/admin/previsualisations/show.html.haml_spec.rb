@@ -102,12 +102,6 @@ describe 'admin/previsualisations/show.html.haml', type: :view do
         expect(rendered).to have_css("#piece_justificative_#{all_type_pj_procedure_id[0]}")
       end
     end
-
-    context 'la liste des pièces récupérées automatiquement est signaliée' do
-      it 'Attestation MSA' do
-        expect(rendered).to have_selector("#piece_justificative_#{all_type_pj_procedure_id[1]}", "Nous l'avons récupéré pour vous.")
-      end
-    end
   end
 
   context 'Envoi des CERFA désactivé' do
