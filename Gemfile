@@ -141,8 +141,9 @@ group :development, :test do
   gem 'parallel_tests', '~> 2.10'
 
   gem 'brakeman', require: false
+
   # Deploy
-  gem 'mina', git: 'https://github.com/mina-deploy/mina.git'
+  gem 'mina', ref: '343a7', git: 'https://github.com/mina-deploy/mina.git'
 end
 
 group :production, :staging do
