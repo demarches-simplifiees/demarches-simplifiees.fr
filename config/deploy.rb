@@ -53,7 +53,7 @@ elsif ENV["to"] == "opensimplif"
   appname = 'opensimplif'
 elsif ENV["to"] == "tps_v2"
   if ENV['branch'].nil?
-    set :branch, 'tps_v2'
+    set :branch, 'staging_v2'
   else
     set :branch, ENV['branch']
   end
