@@ -21,7 +21,7 @@ class Admin::GestionnairesController < AdminController
       assign_gestionnaire!
     end
 
-    if procedure_id
+    if procedure_id.present?
       redirect_to admin_procedure_accompagnateurs_path(procedure_id: procedure_id)
     else
       redirect_to admin_gestionnaires_path

@@ -108,6 +108,7 @@ group :test do
   # gem 'guard-rspec', require: false
   # gem 'guard-livereload', '~> 2.4', require: false
   gem 'vcr'
+  gem 'rails-controller-testing'
 end
 
 group :development do
