@@ -1,0 +1,77 @@
+.btn-nav {
+  color: white;
+  background-color: transparent;
+  margin-top: 6px;
+  height: 36px;
+}
+
+.btn-nav:hover {
+  background-color: #eeeeee;
+  border-color: #eeeeee #eeeeee #ddd;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-nav.text-info:hover {
+  color: #23527c;
+}
+
+.btn-nav.text-success:hover {
+  color: #3c763d;
+}
+
+.btn-nav.text-danger:hover {
+  color: #a94442;
+}
+
+.navbar {
+  color: white;
+  height: 35px;
+  background-color: rgb(15, 56, 130);
+  border: 0 !important;
+
+  .sign_in_FC {
+    margin-top: -18px;
+    height: 70px;
+  }
+
+  .btn{
+    color: white;
+  }
+  .btn:hover{
+    color: #aaaaaa;
+  }
+}
+
+
+.logo {
+  margin-right: 10px;
+  max-height: 100%;
+}
+
+
+#title_navbar{
+  color: white;
+  font-weight: bold;
+  font-size: 1.8em;
+}
+
+#title_navbar:hover{
+  text-decoration: none;
+}
+#beta {
+  text-align: center;
+  text-transform: uppercase;
+  position: absolute;
+  top: 26px;
+  right: -35px;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  width: 150px;
+  background-color: #008cba;
+  color: #fff;
+  padding: 5px;
+  font-size: 15px;
+  font-weight: 700;
+  z-index: 10;
+}

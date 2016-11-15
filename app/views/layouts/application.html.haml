@@ -7,9 +7,8 @@
     %meta{'http-equiv' => "X-UA-Compatible", :content => "IE=edge"}
 
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
-    = stylesheet_link_tag    'application_split2', media: 'all', 'data-turbolinks-track' => true
-
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
+
     = csrf_meta_tags
   %body
     - if Rails.env == 'test'
@@ -38,7 +37,7 @@
 
       %br
 
-    #footer.navbar
+    #footer
       .container.center
         %p{style:'margin-top: 1em;'}
           %p{class: "copyright text-muted small"}

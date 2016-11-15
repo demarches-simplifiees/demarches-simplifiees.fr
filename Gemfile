@@ -82,7 +82,6 @@ gem 'mailjet'
 
 gem "smart_listing"
 
-# gem 'css_splitter'
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 
 gem 'as_csv'

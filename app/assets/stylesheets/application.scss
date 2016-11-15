@@ -50,47 +50,11 @@ body {
 }
 
 #footer, #wrap:after {
-  height: 40px;
+  height: 50px;
 }
 
 #footer {
-  background-color: rgb(240, 240, 240)
-}
-
-.main_div {
-  margin-left: 10rem;
-  margin-right: 10rem;
-}
-
-.logo {
-  margin-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  max-height: 100%;
-}
-
-.logo_navbar {
-  margin-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  max-height: 100%;
-}
-
-#beta {
-  text-align: center;
-  text-transform: uppercase;
-  position: absolute;
-  top: 26px;
-  right: -35px;
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
-  width: 150px;
-  background-color: #008cba;
-  color: #fff;
-  padding: 5px;
-  font-size: 15px;
-  font-weight: 700;
-  z-index: 10;
+  background-color: rgb(240, 240, 240);
 }
 
 .beta_staging {
@@ -118,17 +82,6 @@ body {
   position: fixed;
   width: 100%;
   z-index: 10;
-
-}
-
-.navbar {
-  height: 35px;
-  background-color: rgba(235, 235, 235, 0.95);
-
-  .sign_in_FC {
-    margin-top: -18px;
-    height: 70px;
-  }
 
 }
 
@@ -222,31 +175,6 @@ div.pagination {
   .confirm {
     display: none;
   }
-}
-
-.btn-nav {
-  background-color: transparent;
-  margin-top: 6px;
-  height: 36px;
-}
-
-.btn-nav:hover {
-  background-color: #eeeeee;
-  border-color: #eeeeee #eeeeee #ddd;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.btn-nav.text-info:hover {
-  color: #23527c;
-}
-
-.btn-nav.text-success:hover {
-  color: #3c763d;
-}
-
-.btn-nav.text-danger:hover {
-  color: #a94442;
 }
 
 #confirm {
