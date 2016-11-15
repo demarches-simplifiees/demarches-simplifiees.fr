@@ -25,7 +25,7 @@ describe Users::SessionsController, type: :controller do
 
     describe 'France Connect attribut' do
       before do
-        post :create, user: {email: user.email, password: user.password}
+        post :create, params: {user: {email: user.email, password: user.password}}
         user.reload
       end
 
@@ -40,7 +40,7 @@ describe Users::SessionsController, type: :controller do
       before { allow(Features).to receive(:unified_login).and_return(true) }
 
       it 'signs user in' do
-        post :create, user: { email: user.email, password: user.password }
+        post :create, params: {user: {email: user.email, password: user.password}}
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to eq(user)
         expect(subject.current_gestionnaire).to be(nil)
@@ -48,14 +48,14 @@ describe Users::SessionsController, type: :controller do
       end
 
       it 'signs gestionnaire in' do
-        post :create, user: { email: gestionnaire.email, password: gestionnaire.password }
+        post :create, params: {user: {email: gestionnaire.email, password: gestionnaire.password}}
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to be(nil)
         expect(subject.current_gestionnaire).to eq(gestionnaire)
       end
 
       it 'signs user + gestionnaire in' do
-        post :create, user: { email: user.email, password: gestionnaire.password }
+        post :create, params: {user: {email: user.email, password: gestionnaire.password}}
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to eq(user)
         expect(subject.current_gestionnaire).to eq(gestionnaire)
@@ -63,7 +63,7 @@ describe Users::SessionsController, type: :controller do
       end
 
       it 'fails to sign in with bad credentials' do
-        post :create, user: { email: user.email, password: 'wrong_password' }
+        post :create, params: {user: {email: user.email, password: 'wrong_password'}}
         expect(@response.unauthorized?).to be(true)
         expect(subject.current_user).to be(nil)
         expect(subject.current_gestionnaire).to be(nil)
@@ -143,7 +143,7 @@ describe Users::SessionsController, type: :controller do
     subject { get :new }
 
     context 'when procedure_id is not present in user_return_to session params' do
-      it { expect(subject.status).to eq 200}
+      it { expect(subject.status).to eq 200 }
     end
 
     context 'when procedure_id is present in user_return_to session params' do
@@ -152,7 +152,7 @@ describe Users::SessionsController, type: :controller do
           session["user_return_to"] = '?procedure_id=0'
         end
 
-        it { expect(subject.status).to eq 302}
+        it { expect(subject.status).to eq 302 }
         it { expect(subject).to redirect_to root_path }
       end
 
@@ -162,7 +162,7 @@ describe Users::SessionsController, type: :controller do
           session["user_return_to"] = "?procedure_id=#{procedure.id}"
         end
 
-        it { expect(subject.status).to eq 302}
+        it { expect(subject.status).to eq 302 }
         it { expect(subject).to redirect_to root_path }
       end
 
@@ -173,7 +173,7 @@ describe Users::SessionsController, type: :controller do
           session["user_return_to"] = "?procedure_id=#{procedure.id}"
         end
 
-        it { expect(subject.status).to eq 200}
+        it { expect(subject.status).to eq 200 }
       end
     end
   end
