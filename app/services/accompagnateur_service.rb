@@ -12,7 +12,7 @@ class AccompagnateurService
     if @to == ASSIGN
       AssignTo.create(gestionnaire: @accompagnateur, procedure: @procedure)
     elsif @to == NOT_ASSIGN
-      AssignTo.delete_all(gestionnaire: @accompagnateur, procedure: @procedure)
+      AssignTo.where(gestionnaire: @accompagnateur, procedure: @procedure).delete_all
     end
   end
 
