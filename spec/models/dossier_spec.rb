@@ -776,12 +776,12 @@ describe Dossier do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
     subject { dossier.data_with_champs }
 
-    it do
-      binding.pry
-    end
-    it { expect(subject[0]).to be_a_kind_of(Integer)}
-    it { expect(subject[1]).to be_a_kind_of(Time)}
-    it { expect(subject[2]).to be_a_kind_of(Time)}
+    it { expect(subject[0]).to be_a_kind_of(Integer) }
+    it { expect(subject[1]).to be_a_kind_of(Time) }
+    it { expect(subject[2]).to be_a_kind_of(Time) }
+    it { expect(subject[3]).to be_in([true, false]) }
+    it { expect(subject[4]).to be_in([true, false]) }
+    it { expect(subject[5]).to eq("draft") }
     it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
   end
 
