@@ -12,10 +12,11 @@ describe Backoffice::PrivateFormulairesController, type: :controller do
   end
 
   describe '#PATCH update' do
-    subject { patch :update, dossier_id: dossier.id,
-                   champs: {
-                       "'#{dossier.champs_private.first.id}'" => dossier_champs_first
-                   } }
+    subject { patch :update,
+                    params: {dossier_id: dossier.id,
+                             champs: {
+                                 "'#{dossier.champs_private.first.id}'" => dossier_champs_first
+                             }} }
 
     before do
       subject
