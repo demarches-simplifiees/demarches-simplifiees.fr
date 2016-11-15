@@ -1,6 +1,6 @@
 shared_examples 'current_user_dossier_spec' do
   context 'when no dossier_id is filled' do
-    it { expect { subject.current_user_dossier }.to raise_error }
+    it { expect { subject.current_user_dossier }.to raise_error ActiveRecord::RecordNotFound }
   end
 
   context 'when dossier_id is given as a param' do
@@ -11,7 +11,7 @@ shared_examples 'current_user_dossier_spec' do
     end
 
     context 'when dossier id is incorrect' do
-      it { expect { subject.current_user_dossier 1 }.to raise_error }
+      it { expect { subject.current_user_dossier 1 }.to raise_error ActiveRecord::RecordNotFound }
     end
   end
 
@@ -27,7 +27,7 @@ shared_examples 'current_user_dossier_spec' do
     end
 
     context 'when dossier id is incorrect' do
-      it { expect { subject.current_user_dossier }.to raise_error }
+      it { expect { subject.current_user_dossier }.to raise_error ActiveRecord::RecordNotFound }
     end
 
     context 'when dossier_id is given as a param' do
