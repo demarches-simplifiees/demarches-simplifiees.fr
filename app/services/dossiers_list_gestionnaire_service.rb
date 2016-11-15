@@ -7,8 +7,8 @@ class DossiersListGestionnaireService
 
   def dossiers_to_display
     {'nouveaux' => nouveaux,
-     'a_traiter' => waiting_for_gestionnaire,
-     'en_attente' => waiting_for_user,
+     'a_traiter' => ouvert,
+     'fige' => fige,
      'deposes' => deposes,
      'a_instruire' => a_instruire,
      'termine' => termine,
@@ -16,7 +16,7 @@ class DossiersListGestionnaireService
   end
 
   def self.dossiers_liste_libelle
-    ['nouveaux', 'a_traiter', 'en_attente', 'deposes', 'a_instruire', 'termine', 'all_state']
+    ['nouveaux', 'a_traiter', 'fige' ,'deposes', 'a_instruire', 'termine', 'all_state']
   end
 
   def all_state
@@ -27,12 +27,12 @@ class DossiersListGestionnaireService
     @nouveaux ||= filter_dossiers.nouveaux
   end
 
-  def waiting_for_gestionnaire
-    @waiting_for_gestionnaire ||= filter_dossiers.waiting_for_gestionnaire
+  def ouvert
+    @ouvert ||= filter_dossiers.ouvert
   end
 
-  def waiting_for_user
-    @waiting_for_user ||= filter_dossiers.waiting_for_user
+  def fige
+    @fige ||= filter_dossiers.fige
   end
 
   def deposes

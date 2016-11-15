@@ -11,12 +11,18 @@
               n'ont jamais été ouvert par votre service.
             Il attende une première lecture et intervention de votre part.
           -elsif dossiers_list_facade.liste == 'a_traiter'
-            Tous les dossiers présents dans cette liste sont ceux qui
+            Tous les dossiers présents dans cette liste sont ceux qui sont
             %b
-              attendent une action de votre part.
-            Cela peut être par exemple une demande client ou une relecture pour validation de complétude.
-          -elsif dossiers_list_facade.liste == 'en_attente'
-            Tous les dossiers présents dans cette liste sont ceux qui requière une action de la part de l'usager. À priori, vous n'avez donc pas d'intervention particulière à réaliser.
+              en cours de construction avec l'usager.
+            Ils ne sont pas figés et ne sont donc pas complets.
+          -elsif dossiers_list_facade.liste == 'fige'
+            Tous les dossiers présents dans cette liste ont été déclarés
+            %b
+              complets
+            et ne sont
+            %b
+              plus modifiables par l'usager.
+            Ils attendent donc leurs dépots officiels qui doit être effectué par l'usager.
           -elsif dossiers_list_facade.liste == 'deposes'
             Tous les dossiers présents dans cette liste ont été
             %b

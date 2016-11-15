@@ -44,11 +44,11 @@ fr:
         piece_justificative:
           attributes:
             content:
-              size_too_big: "La taille du fichier joint est trop importante. Elle doit être inférieure à 3Mo."
+              size_too_big: "La taille du fichier joint est trop importante. Elle doit être inférieure à 6Mo."
         cerfa:
           attributes:
             content:
-              size_too_big: "La taille du fichier joint est trop importante. Elle doit être inférieure à 3Mo."
+              size_too_big: "La taille du fichier joint est trop importante. Elle doit être inférieure à 6Mo."
         user:
           attributes:
             reset_password_token:

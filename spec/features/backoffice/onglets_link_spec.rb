@@ -37,7 +37,7 @@ feature 'on click on tabs button' do
     context 'when he click on tabs a traite' do
       before do
         visit backoffice_dossiers_url(liste: :a_traiter)
-        page.click_on 'Action requise 1'
+        page.click_on 'Ouverts 2'
       end
 
       scenario 'it redirect to backoffice dossier termine' do
@@ -47,8 +47,8 @@ feature 'on click on tabs button' do
 
     context 'when he click on tabs en attente' do
       before do
-        visit backoffice_dossiers_url(liste: :en_attente)
-        page.click_on 'Attente usager 2'
+        visit backoffice_dossiers_url(liste: :figes)
+        page.click_on 'Figés 1'
       end
 
       scenario 'it redirect to backoffice dossier en attente' do

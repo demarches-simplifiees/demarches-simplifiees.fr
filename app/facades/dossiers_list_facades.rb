@@ -58,6 +58,10 @@ class DossiersListFacades
     (@liste == 'a_traiter' ? 'active' : '')
   end
 
+  def fige_class
+    (@liste == 'fige' ? 'active' : '')
+  end
+
   def en_attente_class
     (@liste == 'en_attente' ? 'active' : '')
   end
@@ -103,11 +107,15 @@ class DossiersListFacades
   end
 
   def a_traiter_total
-    service.waiting_for_gestionnaire.count
+    service.ouvert.count
   end
 
   def en_construction_total
     service.en_construction.count
+  end
+
+  def fige_total
+    service.fige.count
   end
 
   def en_attente_total
@@ -156,6 +164,10 @@ class DossiersListFacades
 
   def en_construction_url
     base_url 'a_traiter'
+  end
+
+  def fige_url
+    base_url 'fige'
   end
 
   def en_attente_url

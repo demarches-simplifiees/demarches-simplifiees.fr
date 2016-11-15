@@ -38,6 +38,15 @@ class Users::DescriptionController < UsersController
       return render 'show'
     end
 
+    unless params[:champs].nil?
+      champs_service_errors = ChampsService.save_formulaire @dossier.champs, params, mandatory
+
+      unless champs_service_errors.empty?
+        flash.now.alert = (champs_service_errors.inject('') { |acc, error| acc+= error[:message]+'<br>' }).html_safe
+        return render 'show'
+      end
+    end
+
     if @procedure.cerfa_flag?
       unless params[:cerfa_pdf].nil?
         cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
@@ -45,15 +54,6 @@ class Users::DescriptionController < UsersController
           flash.now.alert = cerfa.errors.full_messages.join('<br />').html_safe
           return render 'show'
         end
-      end
-    end
-
-    unless params[:champs].nil?
-      champs_service_errors = ChampsService.save_formulaire @dossier.champs, params, mandatory
-
-      unless champs_service_errors.empty?
-        flash.now.alert = (champs_service_errors.inject('') { |acc, error| acc+= error[:message]+'<br>' }).html_safe
-        return render 'show'
       end
     end
 
@@ -82,10 +82,24 @@ class Users::DescriptionController < UsersController
     @dossier ||= Dossier.find(params[:dossier_id]) if invite
     @dossier ||= current_user_dossier
 
+    if @dossier.procedure.cerfa_flag?
+      unless params[:cerfa_pdf].nil?
+        cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
+        unless cerfa.save
+          flash.alert = cerfa.errors.full_messages.join('<br />').html_safe
+        end
+      end
+    end
+
     if !((errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)).empty?)
-      flash.alert = errors_upload.html_safe
+      if flash.alert.nil?
+        flash.alert = errors_upload.html_safe
+      else
+        flash.alert = (flash.alert + '<br />' + errors_upload.html_safe).html_safe
+      end
+
     else
-      flash.notice = 'Nouveaux fichiers envoyés'
+      flash.notice = 'Nouveaux fichiers envoyés' if flash.alert.nil?
       @dossier.next_step! 'user', 'update'
     end
 

@@ -46,6 +46,7 @@ class Dossier < ActiveRecord::Base
 
   BROUILLON = %w(draft)
   NOUVEAUX = %w(initiated)
+  OUVERT = %w(updated replied)
   WAITING_FOR_GESTIONNAIRE = %w(updated)
   WAITING_FOR_USER = %w(replied validated)
   EN_CONSTRUCTION = %w(initiated updated replied)
@@ -195,11 +196,19 @@ class Dossier < ActiveRecord::Base
     EN_CONSTRUCTION.include?(state)
   end
 
+  def ouvert?
+    OUVERT.include?(state)
+  end
+
   def deposes?
     DEPOSES.include?(state)
   end
 
   def valides?
+    VALIDES.include?(state)
+  end
+
+  def fige?
     VALIDES.include?(state)
   end
 
@@ -239,7 +248,15 @@ class Dossier < ActiveRecord::Base
     where(state: EN_CONSTRUCTION, archived: false).order("updated_at #{order}")
   end
 
+  def self.ouvert order = 'ASC'
+    where(state: OUVERT, archived: false).order("updated_at #{order}")
+  end
+
   def self.valides order = 'ASC'
+    where(state: VALIDES, archived: false).order("updated_at #{order}")
+  end
+
+  def self.fige order = 'ASC'
     where(state: VALIDES, archived: false).order("updated_at #{order}")
   end
 
@@ -257,37 +274,6 @@ class Dossier < ActiveRecord::Base
 
   def self.termine order = 'ASC'
     where(state: TERMINE, archived: false).order("updated_at #{order}")
-  end
-
-  def self.search current_gestionnaire, terms
-    return [] if terms.blank?
-
-    dossiers = Dossier.arel_table
-    users = User.arel_table
-    etablissements = Etablissement.arel_table
-    entreprises = Entreprise.arel_table
-
-    composed_scope = self.joins('LEFT OUTER JOIN users ON users.id = dossiers.user_id')
-                         .joins('LEFT OUTER JOIN entreprises ON entreprises.dossier_id = dossiers.id')
-                         .joins('LEFT OUTER JOIN etablissements ON etablissements.dossier_id = dossiers.id')
-
-    terms.split.each do |word|
-      query_string = "%#{word}%"
-      query_string_start_with = "#{word}%"
-
-      composed_scope = composed_scope.where(
-          users[:email].matches(query_string).or\
-          etablissements[:siret].matches(query_string_start_with).or\
-          entreprises[:raison_sociale].matches(query_string).or\
-          dossiers[:id].eq(word_is_an_integer word))
-    end
-
-    composed_scope = composed_scope.where(
-        dossiers[:id].eq_any(current_gestionnaire.dossiers.ids).and\
-        dossiers[:state].does_not_match('draft').and\
-        dossiers[:archived].eq(false))
-
-    composed_scope
   end
 
   def cerfa_available?
@@ -354,7 +340,7 @@ class Dossier < ActiveRecord::Base
     data = []
     headers = dossiers.first.export_headers
     dossiers.each do |dossier|
-      data << dossier.convert_specific_array_values_to_string(data_with_champs)
+      data << dossier.convert_specific_array_values_to_string(dossier.data_with_champs)
     end
     if ["csv"].include?(format)
       return SpreadsheetArchitect.to_csv(data: data, headers: headers)
