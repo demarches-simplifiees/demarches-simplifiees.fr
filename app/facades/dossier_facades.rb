@@ -32,11 +32,7 @@ class DossierFacades
   end
 
   def commentaires
-    if @champ_id
-      @dossier.ordered_commentaires.where(champ_id: @champ_id).decorate
-    else
-      @dossier.ordered_commentaires.all.decorate
-    end
+    @dossier.ordered_commentaires.where(champ_id: @champ_id).decorate
   end
 
   def commentaire_email

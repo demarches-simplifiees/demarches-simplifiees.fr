@@ -18,12 +18,12 @@ feature 'backoffice: flux de commentaires' do
     visit backoffice_dossier_path(dossier)
   end
 
-  scenario "tous les commentaires sont affichés" do
+  scenario "seuls les commentaires généraux sont affichés" do
     comments = find("#commentaires_flux")
-    expect(comments).to have_selector(".description", count: 4)
+    expect(comments).to have_selector(".description", count: 1)
   end
 
-  scenario "ouverture commentaires limités au champs dans une modale", js: true do
+  scenario "affichage des commentaires du champs", js: true do
     find("#liste_champs th", text: champ1.libelle).click_link("COM")
     expect(page).to have_css("#modalCommentairesDossierParChamp.in")
 
@@ -40,9 +40,9 @@ feature 'backoffice: flux de commentaires' do
     form.fill_in("texte_commentaire", with: "le corps du commentaire sur le champ #{champ1.libelle}")
     form.click_on("Poster")
 
-    # ajout du commentaire à la liste des commentaires
+    # le commentaire ne s'ajoute pas aux commentaires généraux
     comments = find("#commentaires_flux")
-    expect(comments).to have_selector(".description", count: 5)
+    expect(comments).to have_selector(".description", count: 1)
 
     # ajout du commentaire aux commentaires du champs
     find("#liste_champs th", text: champ1.libelle).click_link("COM")
