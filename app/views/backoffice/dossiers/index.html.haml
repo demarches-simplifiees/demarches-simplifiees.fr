@@ -6,10 +6,11 @@
     =t('dynamics.backoffice.title')
 
   %div.dropdown.pull-right#download_menu
-    %button.btn.btn-success.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false, class: ('disabled' if (@dossiers.count > 200)) }
-      - if (@dossiers.count > 200)
+    - if @dossiers.count > 200
+      %button.btn.btn-error.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false, class: 'disabled', 'data-toggle' => :tooltip, title: 'Pour réduire le nombre de dossiers et ne pas dépasser la limite autorisée de 200 dossiers en téléchargement, merci de bien vouloir appliquer vos filtres.'}
         = t('dynamics.backoffice.limit_excess_download_all_dossiers')
-      - else
+    - else
+      %button.btn.btn-success.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
         %i.fa.fa-download
         = t('dynamics.backoffice.download_all_dossiers')
       %span.caret
