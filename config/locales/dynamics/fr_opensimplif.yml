@@ -1,4 +1,4 @@
-fr_opensimplif:
+fr:
   dynamics:
     page_title: OpenSimplif
     contact_email: simplification.sgmap@modernisation.gouv.fr
@@ -12,7 +12,11 @@ fr_opensimplif:
       pref_list:
         title: 'Affichage du tableau de bord'
         description: 'Ce menu vous permet de choisir les différentes colonnes que vous souhaitez voir apparaître dans le tableau de bord.'
-      download_all_dossiers: 'Exporter'
+      download_all_dossiers: 'Télécharger'
+      limit_excess_download_all_dossiers: 'Limite de téléchargemebt fixée à 200'
+      format_csv: 'Au format CSV'
+      format_xlsx: 'Au format XLSX'
+      format_ods: 'Au format ODS'
       research:
         placeholder: 'Rechercher une simplification ...'
       filter_procedure:
