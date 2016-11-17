@@ -4,8 +4,7 @@ class DossierSerializer < ActiveModel::Serializer
              :updated_at,
              :archived,
              :mandataire_social,
-             :state,
-             :total_commentaire
+             :state
 
   has_one :entreprise
   has_one :etablissement

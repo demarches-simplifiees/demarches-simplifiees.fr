@@ -87,6 +87,7 @@ gem "smart_listing"
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 
 gem 'as_csv'
+gem 'spreadsheet_architect'
 
 gem 'apipie-rails', '=0.3.1'
 gem "maruku" # for Markdown support in apipie
@@ -111,6 +112,10 @@ group :test do
   gem 'vcr'
 end
 
+group :development do
+  gem 'web-console', '~> 2.0'
+end
+
 group :development, :test do
   # gem 'terminal-notifier'
   # gem 'terminal-notifier-guard'
@@ -120,7 +125,6 @@ group :development, :test do
   gem 'pry-byebug'
 
   # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
