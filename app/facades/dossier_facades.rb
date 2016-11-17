@@ -1,9 +1,10 @@
 class DossierFacades
 
   #TODO rechercher en fonction de la personne/email
-  def initialize dossier_id, email
+  def initialize(dossier_id, email, champ_id = nil)
     @dossier = Dossier.where(archived: false).find(dossier_id)
     @email = email
+    @champ_id = champ_id
   end
 
   def dossier
@@ -26,8 +27,12 @@ class DossierFacades
     @dossier.ordered_pieces_justificatives
   end
 
+  def champ_id
+    @champ_id
+  end
+
   def commentaires
-    @dossier.ordered_commentaires.all.decorate
+    @dossier.ordered_commentaires.where(champ_id: @champ_id).decorate
   end
 
   def commentaire_email
