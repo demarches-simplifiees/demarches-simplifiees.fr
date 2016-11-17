@@ -6,14 +6,15 @@
     =t('dynamics.backoffice.title')
 
   %div.dropdown.pull-right#download_menu
-    - if @dossiers.count > 200
-      %button.btn.btn-error.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false, class: 'disabled', 'data-toggle' => :tooltip, title: 'Pour réduire le nombre de dossiers et ne pas dépasser la limite autorisée de 200 dossiers en téléchargement, merci de bien vouloir appliquer vos filtres.'}
-        = t('dynamics.backoffice.limit_excess_download_all_dossiers')
+    - if @dossiers_list.count > 200
+      %button.btn.btn-error.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false, class: 'disabled'}
+        %span{'data-toggle' => :tooltip, "data-placement" => :left, title: 'Pour réduire le nombre de dossiers et ne pas dépasser la limite autorisée de 200, merci de bien vouloir appliquer des filtres.'}
+          = t('dynamics.backoffice.limit_excess_download_all_dossiers')
     - else
       %button.btn.btn-success.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
         %i.fa.fa-download
         = t('dynamics.backoffice.download_all_dossiers')
-      %span.caret
+        %span.caret
     %ul.dropdown-menu.dropdown-menu-right
       %li
         = link_to backoffice_download_dossiers_tps_path(format: :csv, procedure_id: params[:id]),  { class: 'btn btn-sm' } do

@@ -17,7 +17,6 @@ describe Procedure do
     it { is_expected.to have_db_column(:description) }
     it { is_expected.to have_db_column(:organisation) }
     it { is_expected.to have_db_column(:direction) }
-    it { is_expected.to have_db_column(:test) }
     it { is_expected.to have_db_column(:euro_flag) }
     it { is_expected.to have_db_column(:logo) }
     it { is_expected.to have_db_column(:logo_secure_token) }
