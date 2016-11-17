@@ -1,6 +1,7 @@
 class Champ < ActiveRecord::Base
   belongs_to :dossier
   belongs_to :type_de_champ
+  has_many :commentaires
 
   delegate :libelle, :type_champ, :order_place, :mandatory, :description, :drop_down_list, to: :type_de_champ
 

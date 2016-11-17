@@ -63,6 +63,12 @@
             %tr
               %th{ style: 'width:25%' }
                 =champ.libelle
+                -if gestionnaire_signed_in?
+                  =link_to "COM", "", "data-href" => backoffice_dossier_commentaires_path(@facade.dossier, champs_id: champ.id),
+                    "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp"
+                -else
+                  =link_to "COM", "", "data-href" => users_dossier_commentaires_path(@facade.dossier, champs_id: champ.id),
+                    "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp"
               %td
                 -unless champ.decorate.value.blank?
                   =champ.decorate.value.html_safe
@@ -114,3 +120,18 @@
           %button.action_button.btn.btn-warning
             %i.fa.fa-circle-o
 
+#modalCommentairesDossierParChamp.modal.fade{"tabindex" => -1, "role" => "dialog"}
+  .modal-dialog{"role" => "document"}
+    .modal-content
+      .modal-header
+        %button.close{"data-dismiss" => "modal", "aria-label" => "Fermer"}
+          %span{"aria-hidden" => true}
+            &times;
+        .modal-title
+          Commentaires
+      .modal-body
+        %p
+          Chargement des commentaires en cours...
+      .modal-footer
+        %button.btn.btn-primary{"data-dismiss" => "modal"}
+          Fermer
