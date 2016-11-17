@@ -1,4 +1,5 @@
 class Backoffice::DossiersController < Backoffice::DossiersListController
+  respond_to :html, :xlsx, :ods, :csv
 
   def index
     super
@@ -18,11 +19,17 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   def download_dossiers_tps
-    dossiers = current_gestionnaire.dossiers.where.not(state: :draft)
-
-    response.headers['Content-Type'] = 'text/csv'
-
-    render csv: dossiers, status: 200
+    if procedure = Procedure.find_by(id: params[:procedure_id])
+      dossiers = dossiers_list_facade(param_liste).dossiers_to_display
+      respond_with Dossier.export_full_generation(dossiers, request.format)
+    else
+      dossiers = dossiers_list_facade(param_liste).dossiers_to_display
+      respond_to do |format|
+        format.xlsx { render xlsx: dossiers }
+        format.ods  { render ods:  dossiers }
+        format.csv  { render csv:  dossiers }
+      end
+    end
   end
 
   def search

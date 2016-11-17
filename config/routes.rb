@@ -75,6 +75,7 @@ Rails.application.routes.draw do
       post '/recapitulatif/submit' => 'recapitulatif#submit'
 
       post '/commentaire' => 'commentaires#create'
+      resources :commentaires, only: [:index]
 
       get '/carte/position' => 'carte#get_position'
       post '/carte/qp' => 'carte#get_qp'
@@ -162,6 +163,7 @@ Rails.application.routes.draw do
       post 'close' => 'dossiers#close'
 
       put 'follow' => 'dossiers#follow'
+      resources :commentaires, only: [:index]
     end
 
 

@@ -1,6 +1,6 @@
-.content#commentaires_flux{style:'width:100%;'}
+.content{id: ('commentaires_flux' + (@facade.champ_id.nil? ? '' : "_#{@facade.champ_id}")),style:'width:100%;'}
   %div#commentaire_new{style: 'width:80%; margin-left:auto; margin-right:auto; margin-bottom:7%'}
-    = form_tag(url_for({ controller: 'commentaires', action: :create, dossier_id: @facade.dossier.id }), class: 'form-inline', method: 'POST', multipart: true) do
+    = form_tag(url_for({ controller: 'commentaires', action: :create, dossier_id: @facade.dossier.id, champ_id: @facade.champ_id }), class: 'form-inline', method: 'POST', multipart: true) do
       %textarea.form-control{id: 'texte_commentaire', class: 'wysihtml5', name: 'texte_commentaire', style: 'width: 100%; margin-bottom:2%', rows: '5', placeholder:"Commentaire"}
       %h4.text-primary{style: 'margin-top: 0px'} Ajout un fichier
       = file_field_tag "piece_justificative[content]", accept:  PieceJustificative.accept_format, style: 'float: left; margin-left: 20px'

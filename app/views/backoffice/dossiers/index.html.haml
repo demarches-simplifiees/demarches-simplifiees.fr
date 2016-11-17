@@ -2,9 +2,29 @@
   #pref_list_menu
     = render partial: 'backoffice/dossiers/pref_list'
 
-  =link_to t('dynamics.backoffice.download_all_dossiers'), backoffice_download_dossiers_tps_path, {class: 'btn btn-success btn-sm', style: 'float: right; margin-right: 4%; margin-top: 7px'}
   %h1
     =t('dynamics.backoffice.title')
+
+  %div.dropdown.pull-right#download_menu
+    - if @dossiers_list_facade.dossiers_to_display.count > 200
+      %button.btn.btn-error.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false, class: 'disabled'}
+        %span{'data-toggle' => :tooltip, "data-placement" => :left, title: 'Pour réduire le nombre de dossiers et ne pas dépasser la limite autorisée de 200, merci de bien vouloir appliquer des filtres.'}
+          = t('dynamics.backoffice.limit_excess_download_all_dossiers')
+    - else
+      %button.btn.btn-success.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
+        %i.fa.fa-download
+        = t('dynamics.backoffice.download_all_dossiers')
+        %span.caret
+    %ul.dropdown-menu.dropdown-menu-right
+      %li
+        = link_to backoffice_download_dossiers_tps_path(format: :csv, procedure_id: params[:id]),  { class: 'btn btn-sm' } do
+          = t('dynamics.backoffice.format_csv')
+      %li
+        = link_to backoffice_download_dossiers_tps_path(format: :xlsx, procedure_id: params[:id]), { class: 'btn btn-sm' } do
+          = t('dynamics.backoffice.format_xlsx')
+      %li
+        = link_to backoffice_download_dossiers_tps_path(format: :ods, procedure_id: params[:id]),  { class: 'btn btn-sm' } do
+          = t('dynamics.backoffice.format_ods')
 
   = render partial: 'backoffice/dossiers/onglets'
 

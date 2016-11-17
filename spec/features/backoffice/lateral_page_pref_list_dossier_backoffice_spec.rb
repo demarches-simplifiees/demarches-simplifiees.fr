@@ -65,7 +65,7 @@ feature 'usage of pref list dossier lateral panel', js: true do
             expect(page).not_to have_css('#delete_pref_list_entreprise_siren')
           end
 
-          scenario 'dossier is brought up to date' do
+          scenario 'dossier is brought up to date', js: true do
             wait_for_ajax
             expect(page).not_to have_selector("a.sortable[data-attr='entreprise.siren']")
           end
