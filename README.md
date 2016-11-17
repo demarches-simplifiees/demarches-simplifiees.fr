@@ -7,8 +7,8 @@ TéléProcédure Simplifiée, ou TPS pour les intimes, est une plateforme 100% w
 
 ## Technologies utilisées
 
-Ruby  : 2.1.5
-Rails : 4.2.0
+Ruby  : 2.3.1
+Rails : 5.0.0.1
 
 
 ## Initialisation de l'environnement de développement
