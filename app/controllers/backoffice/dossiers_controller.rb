@@ -3,7 +3,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def index
     super
-
+    @options = ["dossiers/download_dossiers"]
     dossiers_list_facade.service.filter_procedure_reset!
   end
 
