@@ -1,3 +1,35 @@
+#header {
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+  border-radius: 0;
+  height: 60px;
+  #home {
+    text-align: center;
+    padding: 10px;
+    background-color: #003189;
+    .logo {
+      width: 118px;
+      height: 40px;
+    }
+    #tps-title {
+      font-family: Arial;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 28px;
+      padding: 5px 0 0 20px;
+    }
+  }
+  #navbar-body {
+    height: 60px;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5);
+    padding-left: 15px;
+  }
+}
+
 .btn-nav {
   color: white;
   background-color: transparent;
@@ -27,7 +59,6 @@
 .navbar {
   color: white;
   height: 35px;
-  background-color: rgb(15, 56, 130);
   border: 0 !important;
 
   .sign_in_FC {
@@ -42,13 +73,6 @@
     color: #aaaaaa;
   }
 }
-
-
-.logo {
-  margin-right: 10px;
-  max-height: 100%;
-}
-
 
 #title_navbar{
   color: white;

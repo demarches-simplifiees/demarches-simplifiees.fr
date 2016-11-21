@@ -76,15 +76,6 @@ body {
   margin-right: 105px;
 }
 
-#header {
-  top: 0;
-  left: -3px;
-  position: fixed;
-  width: 100%;
-  z-index: 10;
-
-}
-
 .text-purple {
   color: #8B008B
 }
@@ -218,4 +209,8 @@ div.pagination {
     margin-right: 0px !important;
   }
 
+}
+
+.no-padding {
+  padding: 0;
 }
