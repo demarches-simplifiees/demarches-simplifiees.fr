@@ -19,8 +19,8 @@
         Start UP region ile de france (8 dossiers en cours)
       %div.col-lg-3.col-md-3.options
         %div.row
-          - if @options
-            - @options.each do |option|
+          - if @navbar_options
+            - @navbar_options.each do |option|
               %div.col-lg-12.col-md-12
                 = render partial: option
       %div.col-lg-1.col-md-1.log-options
