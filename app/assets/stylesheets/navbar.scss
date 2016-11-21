@@ -6,6 +6,16 @@
   z-index: 10;
   border-radius: 0;
   height: 60px;
+  #title_navbar{
+    color: white;
+    font-weight: bold;
+    font-size: 1.8em;
+    z-index: 10;
+    overflow: hidden;
+  }
+  #title_navbar:hover{
+    text-decoration: none;
+  }
   #home {
     text-align: center;
     padding: 10px;
@@ -27,6 +37,27 @@
     background-color: #FFFFFF;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5);
     padding-left: 15px;
+    .main-info {
+      font-family: Arial;
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 58px;
+      color: #000000;
+    }
+    .options {
+      font-family: Arial;
+      font-size: 14px;
+      text-align: right;
+      line-height: 22px;
+      color: #666666;
+      padding: 8px;
+      border-right: 1px solid #C8C6C8;
+    }
+    .log-options {
+      color: #003189;
+      font-size: 45px;
+      padding: 8px 0 0 20px;
+    }
   }
 }
 
@@ -57,15 +88,11 @@
 }
 
 .navbar {
-  color: white;
-  height: 35px;
   border: 0 !important;
-
   .sign_in_FC {
     margin-top: -18px;
     height: 70px;
   }
-
   .btn{
     color: white;
   }
@@ -74,15 +101,6 @@
   }
 }
 
-#title_navbar{
-  color: white;
-  font-weight: bold;
-  font-size: 1.8em;
-}
-
-#title_navbar:hover{
-  text-decoration: none;
-}
 #beta {
   text-align: center;
   text-transform: uppercase;

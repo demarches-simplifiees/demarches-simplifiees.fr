@@ -1,8 +1,9 @@
-#beta{class:(Rails.env == 'production' ? '' : 'beta_staging')}
-  - if Rails.env == 'production'
-    Beta
-  - else
-    Env Test
+- if false
+  #beta{class:(Rails.env == 'production' ? '' : 'beta_staging')}
+    - if Rails.env == 'production'
+      Beta
+    - else
+      Env Test
 
 %div.col-lg-2.col-md-2.no-padding
   %a#title_navbar{href: '/'}
@@ -15,6 +16,18 @@
 %div.col-lg-10.col-md-10.no-padding
   %div#navbar-body
     %div.row
+      %div.col-lg-8.col-md-8.main-info
+        Start UP region ile de france (8 dossiers en cours)
+      %div.col-lg-3.col-md-3.options
+        %div.row
+          %div.col-lg-12.col-md-12
+            %span.fa.fa-pencil
+            Modifier le tableau
+          %div.col-lg-12.col-md-12
+            %span.fa.fa-download
+            Télécharger les données
+      %div.col-lg-1.col-md-1.log-options
+        %span.fa.fa-sign-out
 
     - if false
       - if gestionnaire_signed_in? && user_signed_in?
