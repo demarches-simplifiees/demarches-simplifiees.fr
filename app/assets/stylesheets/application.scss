@@ -24,7 +24,7 @@
 @import "bootstrap";
 
 body {
-  background-color: rgb(255, 255, 255);
+  background-color: #F2F6FA;
 }
 
 html, body {
@@ -49,12 +49,14 @@ body {
   display: block;
 }
 
-#footer, #wrap:after {
-  height: 50px;
-}
-
 #footer {
   background-color: rgb(240, 240, 240);
+  position: relative;
+  width: 100%;
+  margin-top: 30px;
+  bottom: 0px;
+  height: 50px;
+  line-height: 50px;
 }
 
 .beta_staging {
@@ -213,4 +215,8 @@ div.pagination {
 
 .no-padding {
   padding: 0;
+}
+
+.no-margin {
+  margin: 0;
 }

@@ -24,12 +24,14 @@
       %div.row
         %div#header.navbar
           = render partial: "layouts/navbar"
-      %div.row
-        %div#left-pannel
-        %div#main_div
+      %div.row.no-margin
+        %div.col-lg-2.col-md-2#left-pannel
+          = render partial: 'layouts/left_pannel'
+        %div.col-lg-10.col-md-10#main-container
           %div.row
             = render partial: 'layouts/flash_messages'
           %div.row
-            =# yield
-    = render partial: 'layouts/footer'
+            = yield
+          %div.row
+            = render partial: 'layouts/footer'
     = render partial: 'layouts/google_analytics'

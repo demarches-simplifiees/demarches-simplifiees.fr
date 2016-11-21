@@ -1,3 +1,22 @@
 #left-pannel {
-  width: 100%;
+  padding: 80px 0 0 10px;
+  background-color: #003189;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  color: white;
+  #first-block {
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 18px;
+  }
+  #action-block {
+  }
+  #menu-block {
+  }
+  #infos-block {
+  }
 }
