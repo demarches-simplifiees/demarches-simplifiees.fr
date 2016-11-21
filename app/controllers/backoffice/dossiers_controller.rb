@@ -35,14 +35,19 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   def search
     @search_terms = params[:q]
 
-    @dossier = Search.new(
-      gestionnaire: current_gestionnaire,
-      query: @search_terms,
-      page: params[:page]
-    ).results
+    # exact id match?
+    @dossier = Dossier.where(id: @search_terms)
+
+    # full text search
+    unless @dossier.any?
+      @dossier ||= Search.new(
+        gestionnaire: current_gestionnaire,
+        query: @search_terms,
+        page: params[:page]
+      ).results
+    end
 
     smartlisting_dossier @dossier, 'search'
-
   rescue RuntimeError
     smartlisting_dossier [], 'search'
   end
