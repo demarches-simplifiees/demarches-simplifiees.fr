@@ -21,40 +21,15 @@
     ="<![endif]-->".html_safe
 
     %div#wrap
-      .row
+      %div.row
         %div#header.navbar
-          =render partial: "layouts/navbar"
-
-      .row
-        #left-pannel
-        #main_div
-          .row
-            #flash_message.center
-            - if flash.notice
-              .alert.alert-success
-                = flash.notice
-            - if flash.alert
-              .alert.alert-danger
-                = flash.alert
-          .row
+          = render partial: "layouts/navbar"
+      %div.row
+        %div#left-pannel
+        %div#main_div
+          %div.row
+            = render partial: 'layouts/flash_messages'
+          %div.row
             = yield
-
-    #footer
-      .container.center
-        %p{style:'margin-top: 1em;'}
-          %p{class: "copyright text-muted small"}
-            =link_to 'SGMAP', "http://etatplateforme.modernisation.gouv.fr"
-
-            2016
-
-            \-
-
-            =link_to 'CGU / Mentions légales', cgu_path
-
-            \-
-
-            =link_to 'Contact', "mailto:"+t('dynamics.contact_email')
-
+    = render partial: 'layouts/footer'
     = render partial: 'layouts/google_analytics'
-
-
