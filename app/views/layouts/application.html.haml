@@ -1,4 +1,3 @@
-!!!
 %html
   %head
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
@@ -22,20 +21,23 @@
     ="<![endif]-->".html_safe
 
     %div#wrap
-      %div#header.navbar
-        =render partial: "layouts/navbar"
+      .row
+        %div#header.navbar
+          =render partial: "layouts/navbar"
 
-      #flash_message.center
-      - if flash.notice
-        .alert.alert-success
-          = flash.notice
-      - if flash.alert
-        .alert.alert-danger
-          = flash.alert
-      #main_div.main_div
-        = yield
-
-      %br
+      .row
+        #left-pannel
+        #main_div
+          .row
+            #flash_message.center
+            - if flash.notice
+              .alert.alert-success
+                = flash.notice
+            - if flash.alert
+              .alert.alert-danger
+                = flash.alert
+          .row
+            = yield
 
     #footer
       .container.center
