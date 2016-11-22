@@ -60,7 +60,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.dossier_validated(@facade.dossier).deliver_now!
 
-    render 'show'
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   def receive

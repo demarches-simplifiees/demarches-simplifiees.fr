@@ -14,6 +14,6 @@ describe RenderPartialService do
   describe 'left_panel' do
     subject { service.left_panel }
 
-    it { is_expected.to eq 'layouts/left_panel/_leftpanel_'+controller.to_s.parameterize + '_' + method.to_s }
+    it { is_expected.to eq 'layouts/left_panel/_left_panel_'+controller.to_s.parameterize + '_' + method.to_s }
   end
 end
