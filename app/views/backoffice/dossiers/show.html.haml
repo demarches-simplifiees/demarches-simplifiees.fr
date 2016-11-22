@@ -1,4 +1,18 @@
-#backoffice_dossier_show
+%div.col-lg-12.col-md-12#backoffice_dossier_show
+
+  %div.row#messages
+    %div.col-lg-8.col-md-8.header.centered
+      %div.row
+        %div.col-lg-10.col-md-10.title
+          Message
+        %div.col-lg-2.col-md-2.action
+          Editer
+    %div.col-lg-8.col-md-8.body.centered
+
+  %div.row#infos
+
+  %div.row#dossier
+
   %h1#dossier_id.text-info{ :style => 'text-align:right'}
     = t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
 
@@ -11,8 +25,6 @@
     = render partial: '/dossiers/infos_entreprise'
 
   = render partial: '/dossiers/infos_dossier'
-  %br
 
   %div
     = render partial: 'dossiers/tab_objects_dossier'
-  %br

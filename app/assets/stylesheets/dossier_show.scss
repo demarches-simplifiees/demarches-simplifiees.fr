@@ -1,0 +1,29 @@
+#backoffice_dossier_show {
+  margin-top: 40px;
+  text-align:center;
+  .centered {
+    display:inline-block;
+    float:none;
+    box-shadow: 0 0 1px 0 rgba(0,0,0,0.5);
+  }
+  .header {
+    background-color: #003C92;
+    height: 30px;
+    .title {
+
+    }
+    .action {
+    }
+  }
+  .body {
+    background-color: #FFFFFF;
+    height: 300px;
+    margin-bottom: 40px;
+  }
+  #message {
+  }
+  #infos {
+  }
+  #dossier {
+  }
+}
