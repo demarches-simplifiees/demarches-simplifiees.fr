@@ -1,10 +1,10 @@
 class Backoffice::DossiersController < Backoffice::DossiersListController
-  before_action :set_layout_options
   respond_to :html, :xlsx, :ods, :csv
 
   def index
     super
     dossiers_list_facade.service.filter_procedure_reset!
+    @facade_data_view = dossiers_list_facade
   end
 
   def show
@@ -130,10 +130,6 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   private
-
-  def set_layout_options
-    @navbar_options = ["dossiers/download_dossiers"]
-  end
 
   def create_dossier_facade dossier_id
     @facade = DossierFacades.new dossier_id, current_gestionnaire.email

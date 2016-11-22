@@ -18,14 +18,14 @@ class RenderPartialService
   private
 
   def retrieve_navbar
-    'layouts/navbars/_navbar_' + retrieve_name
+    'layouts/navbars/navbar_' + retrieve_name
   end
 
   def retrieve_left_panel
-    'layouts/left_panel/_leftpanel_' + retrieve_name
+    'layouts/left_panels/left_panel_' + retrieve_name
   end
 
   def retrieve_name
-    controller.to_s.parameterize + '_' + method.to_s
+    controller.to_s.parameterize.underscore + '_' + method.to_s
   end
 end
