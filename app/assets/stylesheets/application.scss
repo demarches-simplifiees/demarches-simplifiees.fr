@@ -49,14 +49,17 @@ body {
   display: block;
 }
 
+#footer, #wrap:after {
+  height: 50px;
+}
+
 #footer {
   background-color: rgb(240, 240, 240);
-  position: relative;
-  width: 100%;
-  margin-top: 30px;
-  bottom: 0px;
-  height: 50px;
-  line-height: 50px;
+  text-align: center;
+  margin-top: 1em;
+  p {
+    line-height: 50px;
+  }
 }
 
 .beta_staging {
