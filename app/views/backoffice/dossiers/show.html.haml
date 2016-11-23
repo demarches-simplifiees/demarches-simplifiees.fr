@@ -1,17 +1,29 @@
 %div.col-lg-12.col-md-12#backoffice_dossier_show
 
-  %div.row#messages
-    %div.col-lg-8.col-md-8.header.centered
-      %div.row
-        %div.col-lg-10.col-md-10.title
-          Message
-        %div.col-lg-2.col-md-2.action
-          Editer
-    %div.col-lg-8.col-md-8.body.centered
+  %div.row.show-block#messages
+    %div.header
+      %div.col-lg-10.col-md-10.title
+        %div.carret-right
+        MESSAGES
+      %div.col-lg-2.col-md-2.count
+        2 messages
+    %div.body
 
-  %div.row#infos
+  %div.row.show-block#infos
+    %div.header
+      %div.col-lg-12.col-md-12.title
+        %div.carret-right
+        INFORMATIONS ENTREPRISE / ASSOCIATION / INDIVIDU
+    %div.body
 
-  %div.row#dossier
+  %div.row.show-block#dossier
+    %div.header
+      %div.col-lg-10.col-md-10.title
+        %div.carret-right
+        CONSTRUCTION DU DOSSIER
+      %div.col-lg-2.col-md-2.action
+        EDITER
+    %div.body
 
   %h1#dossier_id.text-info{ :style => 'text-align:right'}
     = t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
