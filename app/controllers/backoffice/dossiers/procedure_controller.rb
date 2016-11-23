@@ -5,6 +5,8 @@ class Backoffice::Dossiers::ProcedureController < Backoffice::DossiersListContro
 
     dossiers_list_facade.service.filter_procedure! params[:id]
 
+    @facade_data_view = dossiers_list_facade
+
     render 'backoffice/dossiers/index'
   rescue ActiveRecord::RecordNotFound
     flash[:alert] = "Cette procédure n'existe pas ou vous n'y avez pas accès."
