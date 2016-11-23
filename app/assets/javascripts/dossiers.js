@@ -3,15 +3,6 @@ $(document).ready(the_terms);
 $(document).on('page:load', init_collapse);
 $(document).ready(init_collapse);
 
-function init_collapse() {
-
-  $('.title').click(function() {
-    var section = $(this).parents().closest(".show-block").children(".body");
-    return section.slideToggle(500, function () {});
-  });
-
-}
-
 function the_terms() {
     var the_terms = $("#dossier_autorisation_donnees");
 
@@ -52,4 +43,33 @@ function reset_form_siret(){
 function toggle_etape_1(){
     $('.row.etape.etape_1 .etapes_menu #logos').toggle(100);
     $('.row.etape.etape_1 .etapes_informations #description_procedure').toggle(100);
+}
+
+function openning_block(block) {
+  var right = $(block).find(".carret-right");
+  var down = $(block).find(".carret-down")
+  right.addClass("hidden");
+  down.removeClass("hidden");
+}
+
+function closing_block(block) {
+  var right = $(block).find(".carret-right");
+  var down = $(block).find(".carret-down")
+  right.removeClass("hidden");
+  down.addClass("hidden");
+}
+
+function init_collapse() {
+
+  $('.title').click(function() {
+    var block = $(this).parents().closest(".show-block");
+    var section = block.children(".body");
+    section.slideToggle(500, function () {});
+    if ($(section).is("visible") === true) {
+      closing_block(block);
+    }
+    if ($(section).is("visible") === false) {
+      openning_block(block);
+    }
+  });
 }
