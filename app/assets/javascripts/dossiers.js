@@ -1,5 +1,16 @@
 $(document).on('page:load', the_terms);
 $(document).ready(the_terms);
+$(document).on('page:load', init_collapse);
+$(document).ready(init_collapse);
+
+function init_collapse() {
+
+  $('.title').click(function() {
+    var section = $(this).parents().closest(".show-block").children(".body");
+    return section.slideToggle(500, function () {});
+  });
+
+}
 
 function the_terms() {
     var the_terms = $("#dossier_autorisation_donnees");

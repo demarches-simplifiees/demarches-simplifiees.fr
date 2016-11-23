@@ -28,7 +28,6 @@
     margin: 12px 12px 0 15px;
   }
   .header {
-    cursor: pointer;
     background-color: #003C92;
     height: 40px;
     color: #FFFFFF;
@@ -42,6 +41,7 @@
     .action {
       background-color: #E45B51;
       text-align: center;
+      float: right;
     }
     .count {
       font-size: 16px;
@@ -51,6 +51,7 @@
   .body {
     background-color: #FFFFFF;
     height: 100px;
+    display: none;
   }
   #message {
   }
