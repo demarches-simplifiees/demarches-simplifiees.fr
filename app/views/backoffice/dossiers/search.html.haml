@@ -1,4 +1,10 @@
 #backoffice_search
-  = render partial: 'onglets'
+  #pref_list_menu
+    = render partial: 'backoffice/dossiers/pref_list'
+
+  %h1
+    =t('dynamics.backoffice.title')
+
+  = render partial: 'backoffice/dossiers/onglets'
 
   = smart_listing_render :dossiers

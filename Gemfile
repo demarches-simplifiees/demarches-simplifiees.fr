@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.0.0.1'
 
@@ -104,9 +103,9 @@ group :test do
   gem 'simplecov', require: false
   gem 'poltergeist'
   gem 'timecop'
-  # gem 'guard'
+  gem 'guard'
   # gem 'guard-rspec', require: false
-  # gem 'guard-livereload', '~> 2.4', require: false
+  gem 'guard-livereload', '~> 2.4', require: false
   gem 'vcr'
   gem 'rails-controller-testing'
 end
