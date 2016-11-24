@@ -7,6 +7,7 @@ class DossiersListGestionnaireService
 
   def dossiers_to_display
     {'nouveaux' => nouveaux,
+     'suivi' => suivi,
      'a_traiter' => ouvert,
      'fige' => fige,
      'deposes' => deposes,
@@ -16,11 +17,15 @@ class DossiersListGestionnaireService
   end
 
   def self.dossiers_liste_libelle
-    ['nouveaux', 'a_traiter', 'fige' ,'deposes', 'a_instruire', 'termine', 'all_state']
+    ['nouveaux', 'suivi', 'a_traiter', 'fige' ,'deposes', 'a_instruire', 'termine', 'all_state']
   end
 
   def all_state
     @all_state ||= filter_dossiers.all_state
+  end
+
+  def suivi
+    @suivi ||= @current_devise_profil.dossiers_follow
   end
 
   def nouveaux

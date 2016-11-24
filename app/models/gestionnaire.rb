@@ -8,7 +8,7 @@ class Gestionnaire < ActiveRecord::Base
 
   has_many :assign_to, dependent: :destroy
   has_many :procedures, through: :assign_to
-  has_many :dossiers, through: :procedures
+  has_many :dossiers, -> { where.not(state: :draft) }, through: :procedures
   has_many :follows
   has_many :preference_list_dossiers
 
@@ -17,7 +17,7 @@ class Gestionnaire < ActiveRecord::Base
   after_update :sync_credentials, if: -> { Features.unified_login }
 
   def dossiers_follow
-    dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")
+    @dossiers_follow ||= dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")
   end
 
   def toggle_follow_dossier dossier_id

@@ -30,17 +30,32 @@ class Backoffice::DossiersListController < ApplicationController
 
   def smartlisting_dossier dossiers_list=nil, liste='a_traiter'
     dossiers_list_facade liste
-    dossiers_list = dossiers_list_facade.dossiers_to_display if dossiers_list.nil?
+
+    new_dossiers_list = dossiers_list_facade.service.nouveaux
+    follow_dossiers_list = dossiers_list_facade.service.suivi
+    all_state_dossiers_list = dossiers_list_facade.service.all_state
 
     if param_page.nil?
       params[:dossiers_smart_listing] = {page: dossiers_list_facade.service.default_page}
     end
 
-    @dossiers = smart_listing_create :dossiers,
-                                     dossiers_list,
-                                     partial: "backoffice/dossiers/list",
-                                     array: true,
-                                     default_sort: dossiers_list_facade.service.default_sort
+    smart_listing_create :new_dossiers,
+                         new_dossiers_list,
+                         partial: "backoffice/dossiers/list",
+                         array: true,
+                         default_sort: dossiers_list_facade.service.default_sort
+
+    smart_listing_create :follow_dossiers,
+                         follow_dossiers_list,
+                         partial: "backoffice/dossiers/list",
+                         array: true,
+                         default_sort: dossiers_list_facade.service.default_sort
+
+    smart_listing_create :all_state_dossiers,
+                         all_state_dossiers_list,
+                         partial: "backoffice/dossiers/list",
+                         array: true,
+                         default_sort: dossiers_list_facade.service.default_sort
   end
 
   private

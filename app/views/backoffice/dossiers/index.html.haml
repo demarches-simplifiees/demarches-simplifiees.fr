@@ -2,14 +2,41 @@
   #pref_list_menu
     = render partial: 'backoffice/dossiers/pref_list'
 
-  %h1
-    =t('dynamics.backoffice.title')
+  .default_data_block
+    %div.row.show-block#new_dossiers
+      %div.header
+        %div.col-lg-10.col-md-10.title
+          %div.carret-right
+          %div.carret-down
+          Nouveaux dossiers
+        %div.col-lg-2.col-md-2.count
+          =@facade_data_view.nouveaux_total
+          dossiers
+      %div.body
+        = smart_listing_render :new_dossiers
 
-  = render partial: 'backoffice/dossiers/onglets'
+  .default_data_block.default_visible
+    %div.row.show-block#follow_dossiers
+      %div.header
+        %div.col-lg-10.col-md-10.title
+          %div.carret-right
+          %div.carret-down
+          Dossiers suivis
+        %div.col-lg-2.col-md-2.count
+          =@dossiers_list_facade.suivi_total
+          dossiers
+      %div.body
+        = smart_listing_render :follow_dossiers
 
-  = smart_listing_render :dossiers
-
-  %br
-  %br
-  - unless Features.opensimplif
-    = render partial: 'backoffice/dossiers/state_description', locals: {dossiers_list_facade: @dossiers_list_facade}
+  .default_data_block
+    %div.row.show-block#all_dossiers
+      %div.header
+        %div.col-lg-10.col-md-10.title
+          %div.carret-right
+          %div.carret-down
+          Tous les dossiers
+        %div.col-lg-2.col-md-2.count
+          =@dossiers_list_facade.all_state_total
+          dossiers
+      %div.body
+        = smart_listing_render :all_state_dossiers

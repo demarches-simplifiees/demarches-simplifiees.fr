@@ -1,32 +1,35 @@
 %div.col-lg-12.col-md-12#backoffice_dossier_show
 
-  %div.row.show-block#messages
-    %div.header
-      %div.col-lg-10.col-md-10.title
-        %div.carret-right
-        %div.carret-down.hidden
-        MESSAGES
-      %div.col-lg-2.col-md-2.count
-        2 messages
-    %div.body
+  .default_data_block
+    .row.show-block#messages
+      %div.header
+        %div.col-lg-10.col-md-10.title
+          %div.carret-right
+          %div.carret-down
+          MESSAGES
+        %div.col-lg-2.col-md-2.count
+          2 messages
+      %div.body
 
-  %div.row.show-block#infos
-    %div.header
-      %div.col-lg-12.col-md-12.title
-        %div.carret-right
-        %div.carret-down.hidden
-        INFORMATIONS ENTREPRISE / ASSOCIATION / INDIVIDU
-    %div.body
+  .default_data_block
+    %div.row.show-block#infos
+      %div.header
+        %div.col-lg-12.col-md-12.title
+          %div.carret-right
+          %div.carret-down
+          INFORMATIONS ENTREPRISE / ASSOCIATION / INDIVIDU
+      %div.body
 
-  %div.row.show-block#dossier
-    %div.header
-      %div.col-lg-10.col-md-10.title
-        %div.carret-right
-        %div.carret-down.hidden
-        CONSTRUCTION DU DOSSIER
-      %div.col-lg-2.col-md-2.action
-        EDITER
-    %div.body
+  .default_data_block
+    %div.row.show-block#dossier
+      %div.header
+        %div.col-lg-10.col-md-10.title
+          %div.carret-right
+          %div.carret-down
+          CONSTRUCTION DU DOSSIER
+        %div.col-lg-2.col-md-2.action
+          EDITER
+      %div.body
 
   %h1#dossier_id.text-info{ :style => 'text-align:right'}
     = t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s

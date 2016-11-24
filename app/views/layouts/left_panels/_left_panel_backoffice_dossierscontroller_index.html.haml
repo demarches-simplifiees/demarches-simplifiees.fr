@@ -1,9 +1,27 @@
 %div#first-block
-  %div.row
-    %div.col-lg-12.col-md-12
-      112 dossiers en cours
-    %div.col-lg-12.col-md-12
-      > 2 nouveaux dossiers
+  %div
+    =@facade_data_view.current_devise_profil.dossiers.where(archived: false).count
+    DOSSIERS EN COURS
+  %div
+    =@facade_data_view.current_devise_profil.dossiers.where(state: :initiated, archived: false).count
+    NOUVEAUX DOSSIERS
+
 %div#action-block
+  #search_area
+    = form_tag(backoffice_dossiers_search_url, method: :get) do
+      .input-group
+        = text_field_tag('q', "#{@search_terms unless @search_terms.nil? }", id: 'q', placeholder: t('dynamics.backoffice.research.placeholder'), class:'form-control')
+        %span.input-group-btn
+          %button.btn.btn-default{ id:'search_button' }
+            %i.fa.fa-search
+
 %div#menu-block
+
 %div#infos-block
+  #procedure_list
+    %div.procedure_list_element
+      =link_to "Tous les dossiers", backoffice_dossiers_path
+    - @dossiers_list_facade.gestionnaire_procedures_name_and_id_list.each do |procedure|
+      %div.procedure_list_element
+        =link_to truncate(procedure[:libelle], {length: 50}), backoffice_dossiers_procedure_path(procedure[:id]),{title: procedure[:libelle]}
+

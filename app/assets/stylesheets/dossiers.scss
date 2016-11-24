@@ -33,3 +33,18 @@ h5 span {
   background-color: #eeeeee;
   cursor: pointer;
 }
+
+#procedure_list {
+  .procedure_list_element{
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+    overflow: hidden;
+    max-height: 3.6em;
+    line-height: 1.8em;
+  }
+
+  .procedure_list_element:hover{
+    background-color: #aaaaaa;
+  }
+}

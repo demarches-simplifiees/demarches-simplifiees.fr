@@ -1,6 +1,8 @@
 class DossiersListFacades
   include Rails.application.routes.url_helpers
 
+  attr_accessor :procedure, :current_devise_profil
+
   def initialize current_devise_profil, liste, procedure = nil
     @current_devise_profil = current_devise_profil
     @liste = liste
@@ -40,6 +42,10 @@ class DossiersListFacades
     return true if @procedure.nil? || preference.table != 'champs' || (preference.table == 'champs' && !preference.filter.blank?)
 
     preference_list_dossiers_filter.where(table: :champs).where.not(filter: '').size == 0
+  end
+
+  def all_state_class
+    (@liste == 'all_state' ? 'active' : '')
   end
 
   def brouillon_class
@@ -98,6 +104,10 @@ class DossiersListFacades
     (@liste == 'search' ? 'active' : '')
   end
 
+  def all_state_total
+    service.all_state.count
+  end
+
   def brouillon_total
     service.brouillon.count
   end
@@ -152,6 +162,14 @@ class DossiersListFacades
 
   def brouillon_url
     base_url 'brouillon'
+  end
+
+  def all_state_url
+    base_url 'all_state'
+  end
+
+  def suivi_url
+    base_url 'suivi'
   end
 
   def nouveaux_url

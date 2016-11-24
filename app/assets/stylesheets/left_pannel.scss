@@ -7,10 +7,11 @@
   left: 0;
   bottom: 0;
   color: white;
+  overflow: scroll;
+
   #first-block {
     font-family: Arial;
     font-size: 16px;
-    font-weight: bold;
     line-height: 18px;
   }
   #action-block {

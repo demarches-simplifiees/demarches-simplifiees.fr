@@ -14,7 +14,7 @@
     %th.col-md-1.col-lg-1.center Abonnés
 
   - unless smart_listing.empty?
-    - @dossiers.each do |dossier|
+    - smart_listing.collection.each do |dossier|
       %tr{id: "tr_dossier_#{dossier.id}", 'data-dossier_url' => backoffice_dossier_url(id: dossier.id)}
         - @dossiers_list_facade.preference_list_dossiers_filter.each_with_index do |preference, index|
           %td
@@ -41,7 +41,6 @@
           = dossier.total_follow
 
 = smart_listing.paginate
-= smart_listing.pagination_per_page_links
 
 - if smart_listing.empty?
   %h4.center

@@ -9,9 +9,18 @@
 #backoffice_index, #backoffice_search {
   margin-left: 2rem;
   margin-right: 2rem;
+
+  .default_data_block {
+    .show-block {
+      width: 100%;
+    }
+    .body {
+      height: auto;
+    }
+  }
 }
 
-#pref_list{
+#pref_list {
   .dropdown-menu {
     padding: 10px;
     width: 500px;
