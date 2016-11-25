@@ -1,6 +1,33 @@
 #backoffice_dossier_show {
 
-  #message {
+  #messages {
+    .last-message {
+      display: block;
+      background-color: #FFFFFF;
+      padding: 20px;
+      .comment-header {
+        font-family: Arial;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 16px;
+        color: #000000;
+        margin-bottom: 10px;
+      }
+      .content {
+        margin-bottom: 20px;
+      }
+      .new-action {
+        background-color: #E45B51;
+        text-align: center;
+        color: #FFFFFF;
+        width: 253px;
+        height: 40px;
+        line-height: 40px;
+        font-family: Arial;
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
   }
   #infos {
   }
