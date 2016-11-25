@@ -8,7 +8,8 @@
           %div.carret-down
           MESSAGES
         %div.col-lg-2.col-md-2.count
-          2 messages
+          - message_count = @facade.commentaires.count
+          = (message_count == 1) ? "1 message" : "#{message_count} messages"
       %div.body
 
   .default_data_block
