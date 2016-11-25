@@ -121,9 +121,9 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
 
       it { expect(rendered).to have_content('Déposé') }
 
-      it 'button notifier de la bonne réception is present' do
+      it 'button Accuser réception is present' do
         expect(rendered).to have_css('.action_button')
-        expect(rendered).to have_content('Notifier de la bonne réception')
+        expect(rendered).to have_content('Accuser réception')
       end
 
       it 'button Déclarer complet is not present' do
