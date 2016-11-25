@@ -107,9 +107,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           render
         end
 
-        it 'button Déposer mon dossier est present' do
+        it 'button Procéder au dépôt définitif est present' do
           expect(rendered).to have_css('#validate_button')
-          expect(rendered).to have_content('Déposer mon dossier')
+          expect(rendered).to have_content('Procéder au dépôt définitif')
         end
 
         it 'button Editer mon dossier n\'est plus present' do
@@ -218,7 +218,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           end
 
           it 'submitted link is not present' do
-            expect(rendered).not_to have_content('Déposer mon dossier')
+            expect(rendered).not_to have_content('Procéder au dépôt définitif')
           end
         end
       end
@@ -259,7 +259,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           end
 
           it 'submitted link is not present' do
-            expect(rendered).not_to have_content('Déposer mon dossier')
+            expect(rendered).not_to have_content('Procéder au dépôt définitif')
           end
         end
       end
