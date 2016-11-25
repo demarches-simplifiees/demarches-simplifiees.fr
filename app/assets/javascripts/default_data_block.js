@@ -6,6 +6,11 @@ function init_default_data_block() {
         toggle_default_data_bloc(this, 400);
     });
 
+    $('.new-action').click(function () {
+        var messages_block = $(this).parents().closest(".default_data_block").find(".title")
+        toggle_default_data_bloc(messages_block, 400);
+    });
+
     $('.default_data_block.default_visible').each(function() {
         toggle_default_data_bloc($(this).find('.title'), 0);
     });
