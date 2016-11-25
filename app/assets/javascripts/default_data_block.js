@@ -18,7 +18,7 @@ function init_default_data_block() {
     function toggle_default_data_bloc(element, duration){
         var block = $(element).parents('.show-block');
         if (block.attr("id") == "messages") {
-          block.children(".last-message").toggle();
+          block.children(".last-commentaire").toggle();
         }
 
         block.children(".body").slideToggle(duration);

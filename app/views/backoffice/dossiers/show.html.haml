@@ -4,23 +4,35 @@
     .row.show-block#messages
       %div.header
         %div.col-lg-10.col-md-10.title
-          %div.carret-right
-          %div.carret-down
+          .carret-right
+          .carret-down
           MESSAGES
         %div.col-lg-2.col-md-2.count
           - message_count = @facade.commentaires.count
           = (message_count == 1) ? "1 message" : "#{message_count} messages"
       %div.body
+        - @facade.commentaires.object.sort.each do |commentaire|
+          = render partial: commentaire
+        .row
+          .col-lg-12.col-md-12
+            %div.split-hr
+        .row
+          %div.col-lg-12.col-md-12#new-commentaire
+            = form_tag(url_for({ controller: 'commentaires', action: :create, dossier_id: @facade.dossier.id, champ_id: @facade.champ_id }), class: 'form-inline', method: 'POST', multipart: true) do
+              %textarea.form-control{id: 'texte_commentaire', class: 'wysihtml5', name: 'texte_commentaire', style: 'width: 100%; margin-bottom:2%', rows: '5', placeholder:"Commentaire"}
+              %h4.text-primary{style: 'margin-top: 0px'} Ajouter un fichier
+              = file_field_tag "piece_justificative[content]", accept:  PieceJustificative.accept_format, style: 'float: left; margin-left: 20px'
+              %input.form-control.btn.btn-send{ type: 'submit', value: 'ENVOYER' }
       - if last_comment = @facade.commentaires.first
-        %div.last-message
-          %div.row
+        %div.last-commentaire
+          .row
             %div.col-lg-12.col-md-12.comment-header
               = "DERNIER MESSAGE (#{last_comment.header})"
-          %div.row
+          .row
             %div.col-lg-12.col-md-12.content
               = last_comment.body.html_safe
-          %div.row
-            %div.col-lg-12.col-md-12
+          .row
+            .col-lg-12.col-md-12
               %div.new-action
                 ENVOYER UN MESSAGE
 

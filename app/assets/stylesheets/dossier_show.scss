@@ -1,10 +1,15 @@
 #backoffice_dossier_show {
 
   #messages {
-    .last-message {
+    .last-commentaire {
       display: block;
       background-color: #FFFFFF;
-      padding: 20px;
+      .content, .new-action {
+        margin-bottom: 20px;
+      }
+    }
+    .last-commentaire, .commentaire {
+      padding: 20px 0 0 20px;
       .comment-header {
         font-family: Arial;
         font-size: 14px;
@@ -13,12 +18,10 @@
         color: #000000;
         margin-bottom: 10px;
       }
-      .content {
-        margin-bottom: 20px;
-      }
       .new-action {
         background-color: #E45B51;
         text-align: center;
+        cursor: pointer;
         color: #FFFFFF;
         width: 253px;
         height: 40px;
@@ -26,6 +29,26 @@
         font-family: Arial;
         font-size: 16px;
         font-weight: bold;
+      }
+    }
+    .split-hr {
+      margin: 20px 20px 0 20px;
+      border-bottom: 1px solid #979797;
+    }
+    #new-commentaire {
+      padding: 35px;
+      .btn-send {
+        background-color: #E45B51;
+        text-align: center;
+        color: #FFFFFF;
+        width: 150px;
+        height: 40px;
+        line-height: 28px;
+        font-family: Arial;
+        font-size: 16px;
+        font-weight: bold;
+        float: right;
+        border-radius: 0;
       }
     }
   }
