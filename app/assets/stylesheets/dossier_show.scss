@@ -30,6 +30,16 @@
         font-size: 16px;
         font-weight: bold;
       }
+      .file {
+        padding-right: 70px;
+        text-align: center;
+        .link {
+          span {
+            width: 100%;
+            font-size: 40px;
+          }
+        }
+      }
     }
     .split-hr {
       margin: 20px 20px 0 20px;
