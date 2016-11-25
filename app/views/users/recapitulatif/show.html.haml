@@ -15,7 +15,7 @@
         %br
         = form_tag(url_for({controller: :recapitulatif, action: :submit, dossier_id: @facade.dossier.id}), method: 'POST') do
           %button#validate_button.btn.btn-success
-            = 'Déposer mon dossier'
+            = 'Procéder au dépôt définitif'
       -else
         %h3{:class => 'text-success', :style => 'text-align:right'}
           = @facade.dossier.display_state
