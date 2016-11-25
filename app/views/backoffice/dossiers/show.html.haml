@@ -31,6 +31,13 @@
           .row
             %div.col-lg-12.col-md-12.content
               = last_comment.body.html_safe
+          - if file = last_comment.piece_justificative
+            .row
+              %div.col-lg-12.col-md-12.file
+                = link_to file.content_url, class: 'link', target: '_blank' do
+                  %span.fa.fa-file
+                  %div
+                    = file.original_filename
           .row
             .col-lg-12.col-md-12
               %div.new-action
