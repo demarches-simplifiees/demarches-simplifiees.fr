@@ -107,7 +107,7 @@
       -elsif @facade.dossier.submitted?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :receive, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
           %button.action_button.btn.btn-success
-            = 'Notifier de la bonne réception'
+            = 'Accuser réception'
 
       -elsif @facade.dossier.received?
         = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
