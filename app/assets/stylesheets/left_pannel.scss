@@ -13,8 +13,23 @@
     font-family: Arial;
     font-size: 16px;
     line-height: 18px;
+    .infos {
+      margin-bottom: 20px;
+    }
   }
   #action-block {
+    .action {
+      background-color: #E45B51;
+      text-align: center;
+      cursor: pointer;
+      color: #FFFFFF;
+      margin: 0 10px 0 0;
+      height: 40px;
+      line-height: 40px;
+      font-family: Arial;
+      font-size: 16px;
+      font-weight: bold;
+    }
   }
   #menu-block {
   }
