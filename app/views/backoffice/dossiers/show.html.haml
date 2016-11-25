@@ -43,14 +43,16 @@
               %div.new-action
                 ENVOYER UN MESSAGE
 
-  .default_data_block
-    %div.row.show-block#infos
-      %div.header
-        %div.col-lg-12.col-md-12.title
-          %div.carret-right
-          %div.carret-down
-          INFORMATIONS ENTREPRISE / ASSOCIATION / INDIVIDU
-      %div.body
+  - unless @facade.entreprise.nil?
+    .default_data_block
+      %div.row.show-block#infos
+        %div.header
+          %div.col-lg-12.col-md-12.title
+            %div.carret-right
+            %div.carret-down
+            INFORMATIONS ENTREPRISE / ASSOCIATION / INDIVIDU
+        %div.body
+          = render partial: '/dossiers/infos_entreprise'
 
   .default_data_block
     %div.row.show-block#dossier
@@ -63,16 +65,7 @@
           EDITER
       %div.body
 
-  %h1#dossier_id.text-info{ :style => 'text-align:right'}
-    = t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
 
-  %div{:style => 'text-align:right'}
-    %h3{:class => 'text-success'}
-      = @facade.dossier.display_state
-
-    = render partial: 'follow_action'
-  - unless @facade.entreprise.nil?
-    = render partial: '/dossiers/infos_entreprise'
 
   = render partial: '/dossiers/infos_dossier'
 

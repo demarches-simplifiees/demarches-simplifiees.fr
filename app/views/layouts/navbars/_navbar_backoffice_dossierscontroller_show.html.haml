@@ -4,3 +4,10 @@
 %div.col-lg-3.col-md-3.options
   %div.row
     %div.col-lg-12.col-md-12
+      - if current_gestionnaire.follow?(@facade.dossier.id)
+        = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), "data-method" => :put, class: "button-navbar-action",id: "suivre_dossier_#{@facade.dossier.id}" do
+          %i.fa.fa-user-times
+          Ne plus suivre
+      -else
+        %i.fa.fa-user-plus
+        = link_to("S'abonner", backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'btn btn-md btn-primary', id: "suivre_dossier_#{@facade.dossier.id}")

@@ -126,11 +126,29 @@
   z-index: 10;
 }
 
-.button_navbar{
+.button_navbar {
   color: #666666;
   cursor: pointer;
 }
-.button_navbar:hover{
+
+.button-navbar-action {
+  background-color: #E4594F;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: block;
+  width: 140px;
+  text-align: center;
+  padding: 2px;
+  .fa {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+}
+.button-navbar-action:hover {
+  color: #F2F6FA;
+}
+
+.button_navbar:hover, .button-navbar-action:hover {
   text-decoration: none;
 }
 
