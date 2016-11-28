@@ -17,7 +17,7 @@ class DossiersListGestionnaireService
   end
 
   def self.dossiers_liste_libelle
-    ['nouveaux', 'suivi', 'a_traiter', 'fige' ,'deposes', 'a_instruire', 'termine', 'all_state']
+    ['nouveaux', 'suivi', 'a_traiter', 'fige', 'deposes', 'a_instruire', 'termine', 'all_state']
   end
 
   def all_state
@@ -25,7 +25,7 @@ class DossiersListGestionnaireService
   end
 
   def suivi
-    @suivi ||= @current_devise_profil.dossiers_follow
+    @suivi ||= @current_devise_profil.dossiers_follow.merge(all_state)
   end
 
   def nouveaux
@@ -188,4 +188,5 @@ class DossiersListGestionnaireService
   def current_preference_smart_listing_page
     @current_devise_profil.preference_smart_listing_page
   end
+
 end
