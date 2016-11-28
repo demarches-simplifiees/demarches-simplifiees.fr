@@ -10,7 +10,7 @@
   Actuelles
 
 %ul
-  - @dossiers_list_facade.preference_list_dossiers_filter.each_with_index do |preference, index|
+  - @facade_data_view.preference_list_dossiers_filter.each_with_index do |preference, index|
     %li
       = form_tag backoffice_preference_list_dossier_delete_path, method: :delete, remote: true  do
         = hidden_field_tag :pref_id, preference.id
@@ -23,7 +23,7 @@
   Disponibles
 
 %table
-  - PreferenceListDossier.available_columns_for(@dossiers_list_facade.procedure_id).each_with_index do |tables, index|
+  - PreferenceListDossier.available_columns_for(@facade_data_view.procedure_id).each_with_index do |tables, index|
     - if index%2 == 0 || tables.first.to_s.include?('champs')
       %tr
 
@@ -38,7 +38,7 @@
               = hidden_field_tag :attr, columns.second[:attr]
               = hidden_field_tag :attr_decorate, columns.second[:attr_decorate]
               = hidden_field_tag :bootstrap_lg, columns.second[:bootstrap_lg]
-              = hidden_field_tag :procedure_id, @dossiers_list_facade.procedure_id
+              = hidden_field_tag :procedure_id, @facade_data_view.procedure_id
 
               = columns.second[:libelle]
               %button.btn.btn-default.btn-xs{type: :submit, id: "add_pref_list_#{columns.second[:table]}_#{columns.second[:attr]}"}

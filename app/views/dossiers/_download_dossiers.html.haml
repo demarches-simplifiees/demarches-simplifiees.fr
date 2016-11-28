@@ -1,5 +1,5 @@
 %div.dropdown.pull-right#download-menu
-  - if @dossiers_list_facade.dossiers_to_display.count > 400
+  - if @facade_data_view.dossiers_to_display.count > 400
     %button.btn.btn-error.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false, class: 'disabled'}
       %span{'data-toggle' => :tooltip, "data-placement" => :left, title: 'Pour réduire le nombre de dossiers et ne pas dépasser la limite autorisée de 400, merci de bien vouloir appliquer des filtres.'}
         = t('dynamics.backoffice.limit_excess_download_all_dossiers')
