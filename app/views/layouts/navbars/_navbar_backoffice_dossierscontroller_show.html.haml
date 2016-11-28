@@ -16,7 +16,7 @@
     %div.col-lg-12.col-md-12
       %div.dropdown-toggle{ 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
         %i.fa.fa-user
-        Voir les personnes impliquées
+        = t('dynamics.dossiers.involved')
       %div.dropdown-menu.dropdown-menu-right.dropdown-pannel
         %h4= t('dynamics.dossiers.followers.title')
         %ul
@@ -24,19 +24,17 @@
             - @facade.followers.each do |follower|
               %li= follower.email
           - else
-            Aucune personne ne suit ce dossier
-        %h3= t('dynamics.dossiers.invites.title')
+            = t('dynamics.dossiers.followers.empty')
+        %h4= t('dynamics.dossiers.invites.title')
+        %ul
+          - unless @facade.invites.empty?
+            - @facade.invites.each do |invite|
+              %li= invite.email
+          - else
+            = t('dynamics.dossiers.invites.empty')
 
-    - if @facade.invites.size > 0
-      %ul
-        - @facade.invites.each do |invite|
           %li
-            = invite.email
-    - else
-      Aucune personne invitée
-
-  .col-md-3.col-lg-3
-    =form_tag invites_dossier_path(dossier_id: @facade.dossier.id), method: :post, class: 'form-inline' do
-      =text_field_tag :email, '', class: 'form-control', placeholder: 'Envoyer une invitation'
-      =submit_tag 'Ajouter', class: 'btn btn-success'
+            =form_tag invites_dossier_path(dossier_id: @facade.dossier.id), method: :post, class: 'form-inline' do
+              =text_field_tag :email, '', class: 'form-control', placeholder: 'Envoyer une invitation'
+              =submit_tag 'Ajouter', class: 'btn btn-success'
 
