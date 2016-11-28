@@ -1,124 +1,117 @@
-#infos_dossier
-  %div.row
-    .col-lg-6.col-md-6
-      %h3
-        = @facade.dossier.procedure.libelle
+%div.row
+  .col-lg-12.col-md-12
+    %h3= @facade.dossier.procedure.libelle
+    - if @facade.procedure.for_individual?
+      .row.title-row
+        %div.col-md-4.col-lg-4.split-hr
+        %div.col-md-4.col-lg-4.dossier-title= t('dynamics.dossiers.depositaite').upcase
+        %div.col-md-4.col-lg-4.split-hr
+      .row
+        %div.col-md-6.col-lg-6.depositaire-label Civilité
+        %div.col-md-6.col-lg-6.depositaire-info= @facade.individual.gender
+      .row
+        %div.col-md-6.col-lg-6.depositaire-label Nom
+        %div.col-md-6.col-lg-6.depositaire-info= @facade.individual.nom
+      .row
+        %div.col-md-6.col-lg-6.depositaire-label Prénom
+        %div.col-md-6.col-lg-6.despositaire-info= @facade.individual.prenom
+      - unless Features.opensimplif
+        .row
+          %div.col-md-6.col-lg-6.depositaire-label Date de naissance
+          %div.col-md-6.col-lg-6.depositaire-info= @facade.individual.birthdate
 
-      - if @facade.procedure.for_individual?
+    - unless @facade.champs.nil?
+      .row.title-row
+        %div.col-md-4.col-lg-4.split-hr
+        %div.col-md-4.col-lg-4.dossier-title= t('dynamics.dossiers.liste_champs').upcase
+        %div.col-md-4.col-lg-4.split-hr
+        -@facade.champs.each do |champ|
+          .row
+            %div.col-md-6.col-lg-6.depositaire-label= champ.libelle
+            %div.col-md-1.col-lg-1.depositaire-info
+              -if gestionnaire_signed_in?
+                = link_to "COM", "", "data-href" => backoffice_dossier_commentaires_path(@facade.dossier, champs_id: champ.id),
+                  "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp"
+              -else
+                = link_to "COM", "", "data-href" => users_dossier_commentaires_path(@facade.dossier, champs_id: champ.id),
+                  "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp"
+            %div.col-md-5.col-lg-5.depositaire-info
+              -unless champ.decorate.value.blank?
+                = champ.decorate.value.html_safe
+
+  .row
+    .col-lg-12.col-md-12
+      =render partial: '/dossiers/pieces_justificatives'
+
+
+
+    - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
+      .mandataire_social.text-success.center
         %br
-        .individual.text-info
-          %h4
-            =t('dynamics.dossiers.depositaite')
+        ="Il est probable que le soumissionnaire du dossier soit un des mandataire social de l'entreprise ("
+        %b
+          ="#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
+        =")"
 
-          %table.table{style:'width: 60%'}
-            %tr
-              %th.col-md-3.col-lg-3
-                Civilité
-              %td.col-md-5.col-lg-5
-                = @facade.individual.gender
-            %tr
-              %th.col-md-3.col-lg-3
-                Nom
-              %td.col-md-5.col-lg-5
-                = @facade.individual.nom
-            %tr
-              %th.col-md-3.col-lg-3
-                Prénom
-              %td.col-md-5.col-lg-5
-                = @facade.individual.prenom
-            - unless Features.opensimplif
-              %tr
-                %th.col-md-3.col-lg-3
-                  Date de naissance
-                %td.col-md-5.col-lg-5
-                  = @facade.individual.birthdate
+  - if @facade.dossier.procedure.module_api_carto.use_api_carto
+    .col-lg-6.col-md-6
 
-      - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
-        .mandataire_social.text-success.center
-          %br
-          ="Il est probable que le soumissionnaire du dossier soit un des mandataire social de l'entreprise ("
-          %b
-            ="#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
-          =")"
+      #map.mini{class: @facade.dossier.procedure.module_api_carto.classes}
 
-    - if @facade.dossier.procedure.module_api_carto.use_api_carto
-      .col-lg-6.col-md-6
+      %input{id: 'json_latlngs', type:'hidden', value: "#{@facade.dossier.json_latlngs}"}
+      %input{id: 'quartier_prioritaires', type:'hidden', value: "#{@facade.dossier.quartier_prioritaires.to_json}"}
+      %input{id: 'cadastres', type:'hidden', value: "#{@facade.dossier.cadastres.to_json}"}
 
-        #map.mini{class: @facade.dossier.procedure.module_api_carto.classes}
+      %script{type: 'text/javascript'}
+        = "var dossier_id =#{@facade.dossier.id}"
+        initCarto();
 
-        %input{id: 'json_latlngs', type:'hidden', value: "#{@facade.dossier.json_latlngs}"}
-        %input{id: 'quartier_prioritaires', type:'hidden', value: "#{@facade.dossier.quartier_prioritaires.to_json}"}
-        %input{id: 'cadastres', type:'hidden', value: "#{@facade.dossier.cadastres.to_json}"}
+%br
+%br
 
-        %script{type: 'text/javascript'}
-          = "var dossier_id =#{@facade.dossier.id}"
-          initCarto();
-
-  %br
-  -unless @facade.champs.nil?
-    .row
-      .col-lg-6.col-md-6
-        %table.table#liste_champs
-          -@facade.champs.each do |champ|
-            %tr
-              %th{ style: 'width:25%' }
-                =champ.libelle
-                -if gestionnaire_signed_in?
-                  =link_to "COM", "", "data-href" => backoffice_dossier_commentaires_path(@facade.dossier, champs_id: champ.id),
-                    "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp"
-                -else
-                  =link_to "COM", "", "data-href" => users_dossier_commentaires_path(@facade.dossier, champs_id: champ.id),
-                    "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp"
-              %td
-                -unless champ.decorate.value.blank?
-                  =champ.decorate.value.html_safe
-      .col-lg-6.col-md-6
-        =render partial: '/dossiers/pieces_justificatives'
-  %br
-
-  .row{style: 'text-align:right'}
-    - unless @facade.dossier.read_only?
-      - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
-        - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
-          %a#maj_pj.btn.btn-success{"data-target" => "#UploadPJmodal",
-                             "data-toggle" => "modal",
-                             :type => "button",
-                             style: 'margin-bottom: 15px; margin-top: -30px'}
-            Modifier les documents
-          %br
-          = render partial: 'users/recapitulatif/modal_upload_pj'
+.row{style: 'text-align:right'}
+  - unless @facade.dossier.read_only?
+    - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
+      - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
+        %a#maj_pj.btn.btn-success{"data-target" => "#UploadPJmodal",
+                           "data-toggle" => "modal",
+                           :type => "button",
+                           style: 'margin-bottom: 15px; margin-top: -30px'}
+          Modifier les documents
+        %br
+        = render partial: 'users/recapitulatif/modal_upload_pj'
 
 
-        -if @facade.procedure.individual_with_siret
-          %a#add_siret.btn.btn-success{href: users_dossier_add_siret_path(dossier_id: @facade.dossier.id)}
-            = "Renseigner un SIRET"
-        -if @facade.dossier.procedure.module_api_carto.use_api_carto
-          %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@facade.dossier.id}/carte"}
-            = 'Modifier la carte'
-        %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@facade.dossier.id}/description"}
-          = 'Modifier le dossier'
+      -if @facade.procedure.individual_with_siret
+        %a#add_siret.btn.btn-success{href: users_dossier_add_siret_path(dossier_id: @facade.dossier.id)}
+          = "Renseigner un SIRET"
+      -if @facade.dossier.procedure.module_api_carto.use_api_carto
+        %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@facade.dossier.id}/carte"}
+          = 'Modifier la carte'
+      %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@facade.dossier.id}/description"}
+        = 'Modifier le dossier'
 
-    -if gestionnaire_signed_in?
-      -if !@facade.dossier.read_only?
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-          %button.action_button.btn.btn-success{'data-toggle' => :tooltip, title: 'En cliquant ici, vous figez le dossier et autorisez le dépôt du dossier pour instruction.'}
-            = 'Déclarer complet'
+  -if gestionnaire_signed_in?
+    -if !@facade.dossier.read_only?
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
+        %button.action_button.btn.btn-success{'data-toggle' => :tooltip, title: 'En cliquant ici, vous figez le dossier et autorisez le dépôt du dossier pour instruction.'}
+          = 'Déclarer complet'
 
-      -elsif @facade.dossier.submitted?
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :receive, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-          %button.action_button.btn.btn-success
-            = 'Accuser réception'
+    -elsif @facade.dossier.submitted?
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :receive, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
+        %button.action_button.btn.btn-success
+          = 'Accuser réception'
 
-      -elsif @facade.dossier.received?
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
-          %button.action_button.btn.btn-success
-            %i.fa.fa-check
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
-          %button.action_button.btn.btn-danger
-            %i.fa.fa-times
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :without_continuation, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Classer sans suite') do
-          %button.action_button.btn.btn-warning
-            %i.fa.fa-circle-o
+    -elsif @facade.dossier.received?
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
+        %button.action_button.btn.btn-success
+          %i.fa.fa-check
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
+        %button.action_button.btn.btn-danger
+          %i.fa.fa-times
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :without_continuation, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Classer sans suite') do
+        %button.action_button.btn.btn-warning
+          %i.fa.fa-circle-o
 
 #modalCommentairesDossierParChamp.modal.fade{"tabindex" => -1, "role" => "dialog"}
   .modal-dialog{"role" => "document"}

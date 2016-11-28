@@ -33,6 +33,7 @@ fr:
       invites:
         title: "Personnes invitées à voir ce dossier"
         empty: "Aucune personne invitée"
+      liste_champs: "Champs du dossier"
 
     admin:
       connexion_title: Administration

@@ -66,5 +66,27 @@
   #infos {
   }
   #dossier {
+    .body {
+      padding: 0 20px 0 20px;
+      color: #000000;
+      .depositaire-label {
+        font-weight: bold;
+        text-align: end;
+      }
+      .depositaire-info {
+      }
+      .dossier-title {
+        font-size: 16px;
+        height: 40px;
+        text-align: center;
+      }
+      .split-hr {
+        border-bottom: 1px solid #979797;
+        height: 12px;
+      }
+      .title-row {
+        margin: 20px 10px 0 10px;
+      }
+    }
   }
 }

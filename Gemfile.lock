@@ -588,6 +588,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.2)
     unicode-display_width (1.1.1)
+    unicode_utils (1.4.0)
     unicorn (5.2.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
@@ -693,6 +694,7 @@ DEPENDENCIES
   timecop
   turbolinks (~> 2.5)
   uglifier (>= 1.3.0)
+  unicode_utils
   unicorn
   vcr
   web-console (~> 2.0)
