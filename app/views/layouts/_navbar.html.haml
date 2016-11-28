@@ -15,7 +15,10 @@
 %div.col-lg-10.col-md-10.no-padding
   %div#navbar-body
     %div.row
-      = render partial: @navbar_url
+      -begin
+        = render partial: @navbar_url
+      -rescue
+        = render partial: 'layouts/navbars/navbar_default'
       %div.col-lg-1.col-md-1.log-options
         %span.fa.fa-sign-out
 
