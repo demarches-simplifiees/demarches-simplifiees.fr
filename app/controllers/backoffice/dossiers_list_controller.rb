@@ -25,7 +25,7 @@ class Backoffice::DossiersListController < ApplicationController
   end
 
   def dossiers_list_facade liste='a_traiter'
-    @dossiers_list_facade ||= DossiersListFacades.new current_gestionnaire, liste, retrieve_procedure
+    @facade_data_view ||= DossiersListFacades.new current_gestionnaire, liste, retrieve_procedure
   end
 
   def smartlisting_dossier dossiers_list=nil, liste='a_traiter'

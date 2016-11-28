@@ -1,4 +1,4 @@
-class Backoffice::PreferenceListDossierController < ApplicationController
+class Backoffice::PreferenceListDossierController < Backoffice::DossiersListController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
@@ -22,7 +22,7 @@ class Backoffice::PreferenceListDossierController < ApplicationController
   end
 
   def reload_pref_list
-    @dossiers_list_facade = DossiersListFacades.new current_gestionnaire, '', retrieve_procedure
+    dossiers_list_facade
 
     render partial: 'backoffice/dossiers/pref_list', id: params_procedure_id
   end

@@ -123,7 +123,6 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       @liste = cookies[:liste] || 'a_traiter'
     end
 
-    dossiers_list_facade @liste
     smartlisting_dossier
 
     render 'backoffice/dossiers/index', formats: :js
