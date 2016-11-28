@@ -4,7 +4,6 @@ class Backoffice::Dossiers::ProcedureController < Backoffice::DossiersListContro
     super
 
     dossiers_list_facade.service.filter_procedure! params[:id]
-
     @facade_data_view = dossiers_list_facade
 
     render 'backoffice/dossiers/index'
