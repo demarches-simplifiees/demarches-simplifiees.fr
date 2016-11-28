@@ -9,5 +9,34 @@
           %i.fa.fa-user-times
           Ne plus suivre
       -else
-        %i.fa.fa-user-plus
-        = link_to("S'abonner", backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'btn btn-md btn-primary', id: "suivre_dossier_#{@facade.dossier.id}")
+        = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'button-navbar-action', id: "suivre_dossier_#{@facade.dossier.id}" do
+          %i.fa.fa-user-plus
+          Suivre le dossier
+  %div.row
+    %div.col-lg-12.col-md-12
+      %div.dropdown-toggle{ 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
+        %i.fa.fa-user
+        Voir les personnes impliquées
+      %div.dropdown-menu.dropdown-menu-right.dropdown-pannel
+        %h4= t('dynamics.dossiers.followers.title')
+        %ul
+          - unless @facade.followers.empty?
+            - @facade.followers.each do |follower|
+              %li= follower.email
+          - else
+            Aucune personne ne suit ce dossier
+        %h3= t('dynamics.dossiers.invites.title')
+
+    - if @facade.invites.size > 0
+      %ul
+        - @facade.invites.each do |invite|
+          %li
+            = invite.email
+    - else
+      Aucune personne invitée
+
+  .col-md-3.col-lg-3
+    =form_tag invites_dossier_path(dossier_id: @facade.dossier.id), method: :post, class: 'form-inline' do
+      =text_field_tag :email, '', class: 'form-control', placeholder: 'Envoyer une invitation'
+      =submit_tag 'Ajouter', class: 'btn btn-success'
+

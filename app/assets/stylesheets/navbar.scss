@@ -54,6 +54,14 @@
       padding: 8px;
       border-right: 1px solid #C8C6C8;
       height: 60px;
+      .dropdown-toggle {
+        cursor: pointer;
+      }
+      .dropdown-pannel {
+        min-height: 100px;
+        width: 400px;
+        padding-left: 10px;
+      }
     }
     .log-options {
       color: #003189;
@@ -136,9 +144,10 @@
   color: #FFFFFF;
   cursor: pointer;
   display: block;
-  width: 140px;
+  width: 150px;
   text-align: center;
   padding: 2px;
+  float: right;
   .fa {
     font-size: 20px;
     margin-right: 10px;
