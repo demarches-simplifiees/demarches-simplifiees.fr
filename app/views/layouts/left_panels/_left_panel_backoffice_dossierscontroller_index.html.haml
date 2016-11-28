@@ -20,7 +20,6 @@
 %div#infos-block
   #procedure_list
     %div.procedure_list_element
-      =link_to "Tous les dossiers", backoffice_dossiers_path
     - @dossiers_list_facade.gestionnaire_procedures_name_and_id_list.each do |procedure|
       %div.procedure_list_element
         =link_to truncate(procedure[:libelle], {length: 50}), backoffice_dossiers_procedure_path(procedure[:id]),{title: procedure[:libelle]}

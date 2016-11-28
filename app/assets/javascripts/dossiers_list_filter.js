@@ -35,6 +35,11 @@ function framed_id(event) {
 function filter_framed_show(event) {
     dom_object = $(framed_id(event));
 
-    dom_object.css('top', (event.pageY + 7) + 'px');
-    dom_object.css('left', (event.pageX + 7) + 'px');
+    var offset = $('#main-container').offset();
+
+    var y = event.pageY - offset.top;
+    var x = event.pageX - offset.left;
+
+    dom_object.css('top', (y + 7) + 'px');
+    dom_object.css('left', (x + 7) + 'px');
 }

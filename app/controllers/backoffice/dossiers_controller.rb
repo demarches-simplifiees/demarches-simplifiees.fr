@@ -3,8 +3,8 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def index
     super
-    dossiers_list_facade.service.filter_procedure_reset!
-    @facade_data_view = dossiers_list_facade
+    procedure = dossiers_list_facade.gestionnaire_procedures_name_and_id_list.first
+    redirect_to backoffice_dossiers_procedure_path(id: procedure[:id])
   end
 
   def show
