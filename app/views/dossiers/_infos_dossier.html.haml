@@ -38,7 +38,6 @@
             %div.col-md-5.col-lg-5.depositaire-info
               - unless champ.decorate.value.blank?
                 = champ.decorate.value.html_safe
-
       .row
         .col-lg-12.col-md-12= render partial: '/dossiers/pieces_justificatives'
 
@@ -75,7 +74,6 @@
         %br
         = render partial: 'users/recapitulatif/modal_upload_pj'
 
-
       -if @facade.procedure.individual_with_siret
         %a#add_siret.btn.btn-success{href: users_dossier_add_siret_path(dossier_id: @facade.dossier.id)}
           = "Renseigner un SIRET"
@@ -84,28 +82,6 @@
           = 'Modifier la carte'
       %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@facade.dossier.id}/description"}
         = 'Modifier le dossier'
-
-  -if gestionnaire_signed_in?
-    -if !@facade.dossier.read_only?
-      = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-        %button.action_button.btn.btn-success{'data-toggle' => :tooltip, title: 'En cliquant ici, vous figez le dossier et autorisez le dépôt du dossier pour instruction.'}
-          = 'Déclarer complet'
-
-    -elsif @facade.dossier.submitted?
-      = form_tag(url_for({controller: 'backoffice/dossiers', action: :receive, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-        %button.action_button.btn.btn-success
-          = 'Accuser réception'
-
-    -elsif @facade.dossier.received?
-      = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
-        %button.action_button.btn.btn-success
-          %i.fa.fa-check
-      = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
-        %button.action_button.btn.btn-danger
-          %i.fa.fa-times
-      = form_tag(url_for({controller: 'backoffice/dossiers', action: :without_continuation, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Classer sans suite') do
-        %button.action_button.btn.btn-warning
-          %i.fa.fa-circle-o
 
 #modalCommentairesDossierParChamp.modal.fade{"tabindex" => -1, "role" => "dialog"}
   .modal-dialog{"role" => "document"}
