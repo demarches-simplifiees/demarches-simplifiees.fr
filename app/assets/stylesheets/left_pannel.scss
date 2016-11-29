@@ -36,5 +36,28 @@
   #menu-block {
   }
   #infos-block {
+    .split-hr {
+      border-bottom: 1px solid #FFFFFF;
+      width: 200px;
+      margin: 20px 0 20px 0;
+    }
+    .dossier-state {
+      text-align: center;
+      font-size: 25px;
+      width: 200px;
+    }
+    .tips {
+      margin: 0 10px 0 5px;
+      .fa {
+        color: #FFFFFF;
+        font-size: 40px;
+        width: inherit;
+        padding: 5px;
+      }
+      .notice {
+        font-size: 18px;
+        display: initial;
+      }
+    }
   }
 }
