@@ -29,9 +29,16 @@ h5 span {
   }
 }
 
+#dossiers_list {
+  .filter {
+    cursor: pointer;
+    font-size: 1.1em;
+    display: inline;
+  }
+}
+
 #dossiers_list tr:hover{
   background-color: #eeeeee;
-  cursor: pointer;
 }
 
 #procedure_list {
