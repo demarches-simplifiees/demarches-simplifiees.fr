@@ -2,9 +2,16 @@
   #pref_list_menu
     = render partial: 'backoffice/dossiers/pref_list'
 
-  %h1
-    =t('dynamics.backoffice.title')
+  .default_data_block.default_visible
+    %div.row.show-block#new_dossiers
+      %div.header
+        %div.col-lg-10.col-md-10.title
+          %div.carret-right
+          %div.carret-down
+          Résultat de la recherche
+        %div.col-lg-2.col-md-2.count
+          =@dossiers.count
+          dossiers
+      %div.body
+        = smart_listing_render :search
 
-  = render partial: 'backoffice/dossiers/onglets'
-
-  = smart_listing_render :dossiers

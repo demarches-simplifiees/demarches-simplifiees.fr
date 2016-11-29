@@ -1,16 +1,16 @@
 %div#first-block
   %div
-    =@facade_data_view.current_devise_profil.dossiers.where(archived: false).count
+    =@facade_data_view.total_dossier
     DOSSIERS EN COURS
   %div
-    =@facade_data_view.current_devise_profil.dossiers.where(state: :initiated, archived: false).count
+    =@facade_data_view.total_new_dossier
     NOUVEAUX DOSSIERS
 
 %div#action-block
   #search_area
     = form_tag(backoffice_dossiers_search_url, method: :get) do
       .input-group
-        = text_field_tag('q', "#{@search_terms unless @search_terms.nil? }", id: 'q', placeholder: t('dynamics.backoffice.research.placeholder'), class:'form-control')
+        = text_field_tag('q', "#{@search_terms unless @search_terms.nil? }", id: 'q', placeholder: "Recherchez parmi vos #{@facade_data_view.total_dossier} dossiers", class:'form-control')
         %span.input-group-btn
           %button.btn.btn-default{ id:'search_button' }
             %i.fa.fa-search

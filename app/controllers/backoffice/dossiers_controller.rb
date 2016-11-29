@@ -36,20 +36,29 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     @search_terms = params[:q]
 
     # exact id match?
-    @dossier = Dossier.where(id: @search_terms)
+    @dossiers = Dossier.where(id: @search_terms)
 
     # full text search
-    unless @dossier.any?
-      @dossier ||= Search.new(
+    unless @dossiers.any?
+      @dossiers = Search.new(
         gestionnaire: current_gestionnaire,
         query: @search_terms,
         page: params[:page]
       ).results
     end
 
-    smartlisting_dossier @dossier, 'search'
+    smart_listing_create :search,
+                         @dossiers,
+                         partial: "backoffice/dossiers/list",
+                         array: true,
+                         default_sort: dossiers_list_facade.service.default_sort
+
   rescue RuntimeError
-    smartlisting_dossier [], 'search'
+    smart_listing_create :search,
+                         [],
+                         partial: "backoffice/dossiers/list",
+                         array: true,
+                         default_sort: dossiers_list_facade.service.default_sort
   end
 
   def valid
