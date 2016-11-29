@@ -1,6 +1,6 @@
 %div.row
   .col-lg-12.col-md-12
-    %h3= @facade.dossier.procedure.libelle
+    %h3.libelle-procedure= @facade.dossier.procedure.libelle
     - if @facade.procedure.for_individual?
       .row.title-row
         %div.col-md-4.col-lg-4.split-hr
@@ -39,9 +39,8 @@
               - unless champ.decorate.value.blank?
                 = champ.decorate.value.html_safe
 
-  .row
-    .col-lg-12.col-md-12
-      =render partial: '/dossiers/pieces_justificatives'
+      .row
+        .col-lg-12.col-md-12= render partial: '/dossiers/pieces_justificatives'
 
     - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
       .mandataire_social.text-success.center

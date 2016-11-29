@@ -69,6 +69,10 @@
     .body {
       padding: 0 20px 0 20px;
       color: #000000;
+      .libelle-procedure {
+        font-style: italic;
+        padding: 10px;
+      }
       .depositaire-label {
         font-weight: bold;
         text-align: end;
