@@ -47,7 +47,7 @@ function search_fadeOut(){
         search_area.css('z-index', '');
         search_area.css('width', 'auto');
 
-        $('#action-block').append(search_area);
+        $('#search-block').append(search_area);
         search_area.fadeIn(200);
 
         init_search_anim();

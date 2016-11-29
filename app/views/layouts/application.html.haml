@@ -26,6 +26,8 @@
           = render partial: "layouts/navbar"
       %div.row.no-margin
         %div.col-lg-2.col-md-2#left-pannel
+          #search-block
+            = render partial: 'layouts/left_panels/search_area'
           - begin
             = render partial: @left_pannel_url
           -rescue

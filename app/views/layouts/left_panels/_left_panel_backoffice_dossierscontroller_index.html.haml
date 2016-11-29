@@ -7,13 +7,6 @@
     NOUVEAUX DOSSIERS
 
 %div#action-block
-  #search_area
-    = form_tag(backoffice_dossiers_search_url, method: :get) do
-      .input-group
-        = text_field_tag('q', "#{@search_terms unless @search_terms.nil? }", id: 'q', placeholder: "Recherchez parmi vos #{@facade_data_view.total_dossier} dossiers", class:'form-control')
-        %span.input-group-btn
-          %button.btn.btn-default{ id:'search_button' }
-            %i.fa.fa-search
 
 %div#menu-block
 
