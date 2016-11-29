@@ -8,6 +8,13 @@
         margin-bottom: 20px;
       }
     }
+    .body {
+      .commentaires {
+        max-height: 350px;
+        overflow-y: scroll;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.075) 0%, rgba(219, 219, 219, 0) 50%, rgba(250, 251, 253, 0.18) 51%, #ffffff 100%);
+      }
+    }
     .last-commentaire, .commentaire {
       padding: 20px 0 0 20px;
       .comment-header {

@@ -21,6 +21,7 @@ function init_default_data_block() {
         var block = $(element).parents('.show-block');
         if (block.attr('id') == 'messages') {
           block.children('.last-commentaire').toggle();
+          $(".commentaires").animate({ scrollTop: $(this).height() }, "slow");
         }
 
         block.children('.body').slideToggle(duration);

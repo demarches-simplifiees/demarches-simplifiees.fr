@@ -11,8 +11,9 @@
           - message_count = @facade.commentaires.count
           = (message_count == 1) ? "1 message" : "#{message_count} messages"
       %div.body
-        - @facade.commentaires.object.sort.each do |commentaire|
-          = render partial: commentaire
+        %div.commentaires
+          - @facade.commentaires.object.sort.each do |commentaire|
+            = render partial: commentaire
         .row
           .col-lg-12.col-md-12
             %div.split-hr
