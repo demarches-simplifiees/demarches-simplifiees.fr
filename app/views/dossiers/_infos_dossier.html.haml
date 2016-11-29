@@ -28,22 +28,20 @@
         -@facade.champs.each do |champ|
           .row
             %div.col-md-6.col-lg-6.depositaire-label= champ.libelle
-            %div.col-md-1.col-lg-1.depositaire-info
-              -if gestionnaire_signed_in?
-                = link_to "COM", "", "data-href" => backoffice_dossier_commentaires_path(@facade.dossier, champs_id: champ.id),
-                  "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp"
-              -else
-                = link_to "COM", "", "data-href" => users_dossier_commentaires_path(@facade.dossier, champs_id: champ.id),
-                  "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp"
+            %div.col-md-1.col-lg-1.comments
+              - if gestionnaire_signed_in?
+                = link_to "", "data-href" => backoffice_dossier_commentaires_path(@facade.dossier, champs_id: champ.id), "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp" do
+                  %i.fa.fa-comment-o
+              - else
+                = link_to "", "data-href" => users_dossier_commentaires_path(@facade.dossier, champs_id: champ.id), "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp" do
+                  %i.fa.fa-commenting-o
             %div.col-md-5.col-lg-5.depositaire-info
-              -unless champ.decorate.value.blank?
+              - unless champ.decorate.value.blank?
                 = champ.decorate.value.html_safe
 
   .row
     .col-lg-12.col-md-12
       =render partial: '/dossiers/pieces_justificatives'
-
-
 
     - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
       .mandataire_social.text-success.center
