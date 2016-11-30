@@ -39,25 +39,26 @@ h5 span {
 
 #dossiers_list tr:hover{
   background-color: #eeeeee;
+  cursor: pointer;
 }
 
 #procedure_list {
   max-height: 300px;
+  margin-left: -10px;
   overflow: scroll;
-  margin: 0 -1px 0 -10px;
-  padding: 0 40px 15px 15px;
-  .procedure_list_element{
-    margin-top: 15px;
-    margin-bottom: 15px;
+  a, a:hover {
+    color: #FFFFFF;
+    text-decoration: none;
+  }
+  .procedure_list_element {
+    padding: 15px 40px 15px 20px;
+    cursor: pointer;
     overflow: hidden;
     line-height: 1.8em;
-    a, a:hover {
-      color: #FFFFFF;
-      text-decoration: none;
-    }
   }
   .procedure_list_element:hover{
-    background-color: #aaaaaa;
+    background-color: #668ABD;
+    cursor: pointer;
   }
 }
 
