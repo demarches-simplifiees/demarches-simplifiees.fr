@@ -32,7 +32,7 @@ html, body {
 }
 
 body {
-  padding-top: 60px;
+  padding-top: 70px;
 }
 
 form {
@@ -60,9 +60,12 @@ form {
 #footer {
   background-color: rgb(240, 240, 240);
   text-align: center;
-  margin-top: 1em;
+  //margin-top: 1em;
+  padding: 0;
+
   p {
-    line-height: 50px;
+    line-height: 40px;
+    padding: 0;
   }
 }
 

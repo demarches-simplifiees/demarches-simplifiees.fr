@@ -10,6 +10,12 @@
 
     = csrf_meta_tags
   %body
+    #beta{class:(Rails.env == 'production' ? '' : 'beta_staging')}
+      - if Rails.env == 'production'
+        Beta
+      - else
+        Env Test
+
     - if Rails.env == 'test'
       %script{type: 'text/javascript'}
         (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
