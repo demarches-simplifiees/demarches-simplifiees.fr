@@ -16,5 +16,4 @@
     - @facade_data_view.gestionnaire_procedures_name_and_id_list.each do |procedure|
       = link_to backoffice_dossiers_procedure_path(procedure[:id]),{title: procedure[:libelle]} do
         %div.procedure_list_element
-          = procedure[:libelle]
-  %div.split-hr-left
+          = truncate(procedure[:libelle], length: 50)
