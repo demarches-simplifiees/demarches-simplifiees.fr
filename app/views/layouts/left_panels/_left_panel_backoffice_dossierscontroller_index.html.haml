@@ -11,9 +11,9 @@
 %div#menu-block
 
 %div#infos-block
+  %div.split-hr-left
   #procedure_list
-    %div.procedure_list_element
     - @facade_data_view.gestionnaire_procedures_name_and_id_list.each do |procedure|
       %div.procedure_list_element
-        =link_to truncate(procedure[:libelle], {length: 50}), backoffice_dossiers_procedure_path(procedure[:id]),{title: procedure[:libelle]}
-
+        =link_to procedure[:libelle], backoffice_dossiers_procedure_path(procedure[:id]),{title: procedure[:libelle]}
+  %div.split-hr-left

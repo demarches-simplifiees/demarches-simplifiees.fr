@@ -42,16 +42,27 @@ h5 span {
 }
 
 #procedure_list {
+  max-height: 300px;
+  overflow: scroll;
+  margin: 0 -1px 0 -10px;
+  padding: 0 40px 15px 15px;
   .procedure_list_element{
     margin-top: 15px;
     margin-bottom: 15px;
-
     overflow: hidden;
-    max-height: 3.6em;
     line-height: 1.8em;
+    a, a:hover {
+      color: #FFFFFF;
+      text-decoration: none;
+    }
   }
-
   .procedure_list_element:hover{
     background-color: #aaaaaa;
   }
 }
+
+.split-hr-left {
+  border-bottom: 1px solid #FFFFFF;
+  margin: 20px 10px 20px 0;
+}
+
