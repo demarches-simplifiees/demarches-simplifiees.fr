@@ -1,0 +1,50 @@
+.row
+  .col-md-6.col-md-offset-3
+    %h2
+      Mon profil
+
+    .edit-user-profile
+      = form_for @user, url: users_profile_path, multipart: true do |f|
+        .form-group
+          = f.label :gender, "Civilité :"
+
+          .radio
+            = label_tag do
+              = f.radio_button :gender, "male"
+              Homme
+            %br
+            = label_tag do
+              = f.radio_button :gender, "female"
+              Femme
+
+        .form-group
+          = f.label :family_name, "Nom :"
+          = f.text_field :family_name, class: "form-control"
+
+        .form-group
+          = f.label :given_name, "Prénom :"
+          = f.text_field :given_name, class: "form-control"
+
+        .form-group
+          = f.label :entreprise_siret, "SIRET société principale"
+          = f.text_field :entreprise_siret, class: "form-control"
+
+        .form-group
+          = f.label :birthdate, "Date de naissance :"
+          = f.date_field :birthdate, class: "form-control"
+
+        .form-group
+          - if @user.picture?
+            = f.label :picture, "Photo actuelle :"
+            .clearfix
+              = image_tag @user.picture_url, class: "user-profile-picture"
+              = link_to "Effacer photo", users_profile_path, method: "delete", class: "btn btn-default"
+          %div
+            - if @user.picture?
+              = f.label :picture, "Nouvelle photo :"
+            - else
+              = f.label :picture, "Photo :"
+            = f.file_field :picture
+
+        = f.submit "Enregistrer", class: "btn btn-success"
+        = link_to "Annuler", user_profile_path(@user), class: "btn btn-link"

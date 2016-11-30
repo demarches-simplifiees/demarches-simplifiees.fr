@@ -90,6 +90,11 @@ Rails.application.routes.draw do
       put '/change_siret' => 'dossiers#change_siret'
     end
     resource :dossiers
+    resource :profile, only: %i(edit update destroy)
+  end
+
+  resources :users, only: [] do
+    resource :profile, controller: "users/profiles", only: %i(show)
   end
 
   namespace :admin do

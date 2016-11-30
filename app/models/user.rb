@@ -13,9 +13,13 @@ class User < ActiveRecord::Base
   has_many :cerfa, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
 
-  delegate :given_name, :family_name, :email_france_connect, :gender, :birthdate, :birthplace, :france_connect_particulier_id, to: :france_connect_information
+  delegate :email_france_connect, :gender, :birthplace, :france_connect_particulier_id, to: :france_connect_information
+
   accepts_nested_attributes_for :france_connect_information
   after_update :sync_credentials, if: -> { Features.unified_login }
+
+  mount_uploader :picture, ProfilePictureUploader
+  validates :picture, file_size: { maximum: 1.megabyte }
 
   def self.find_for_france_connect email, siret
     user = User.find_by_email(email)
@@ -33,6 +37,30 @@ class User < ActiveRecord::Base
 
   def invite? dossier_id
     invites.pluck(:dossier_id).include?(dossier_id.to_i)
+  end
+
+  def gender
+    self[:gender] || france_connect_information.try(&:gender)
+  end
+
+  def given_name
+    self[:given_name] || france_connect_information.try(&:given_name)
+  end
+
+  def family_name
+    self[:family_name] || france_connect_information.try(&:family_name)
+  end
+
+  def birthdate
+    self[:birthdate] || france_connect_information.try(&:birthdate)
+  end
+
+  def picture_url
+    if Features.remote_storage
+      File.join(STORAGE_URL, picture.path)
+    else
+      picture.url
+    end
   end
 
   private

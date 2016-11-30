@@ -12,6 +12,10 @@
     =t('dynamics.backoffice.dossiers')
   %a{href: users_dossiers_path, class: 'btn btn-md'}
     =t('dynamics.users.mes_dossiers')
+  - if Features.opensimplif
+    %a{href: user_profile_path(current_user), class: 'btn btn-md'}
+      =t('dynamics.users.mon_profil')
+
 - elsif gestionnaire_signed_in?
   %a{href: (current_gestionnaire.procedure_filter.blank? ? backoffice_dossiers_path : backoffice_dossiers_procedure_path(current_gestionnaire.procedure_filter)), class: 'btn btn-md'}
     =t('dynamics.users.mes_dossiers')
