@@ -49,6 +49,11 @@ h5 span {
     color: #FFFFFF;
     text-decoration: none;
   }
+
+  .procedure_list_element.active{
+    background-color: #668ABD;
+  }
+
   .procedure_list_element {
     padding: 15px 40px 15px 20px;
     cursor: pointer;

@@ -1,4 +1,15 @@
 #users_index{
   margin-left: 2rem;
   margin-right: 2rem;
+
+  .default_data_block {
+    margin-top: 20px;
+    background-color: #FFFFFF;
+    .show-block {
+      width: 100%;
+    }
+    .body {
+      height: auto;
+    }
+  }
 }

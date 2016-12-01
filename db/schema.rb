@@ -295,6 +295,7 @@ ActiveRecord::Schema.define(version: 20161110082244) do
     t.string   "lien_demarche"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.boolean  "test"
     t.integer  "administrateur_id"
     t.boolean  "archived",              default: false
     t.boolean  "euro_flag",             default: false
@@ -306,7 +307,6 @@ ActiveRecord::Schema.define(version: 20161110082244) do
     t.string   "lien_notice"
     t.boolean  "for_individual",        default: false
     t.boolean  "individual_with_siret", default: false
-    t.boolean  "test"
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|
