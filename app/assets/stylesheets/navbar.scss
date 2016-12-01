@@ -18,10 +18,11 @@
   }
   #home {
     text-align: center;
-    padding: 10px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5);
     background-color: #003189;
+    height: 60px;
     .logo {
-      width: 118px;
+      margin-top: 10px;
       height: 40px;
     }
     #tps-title {
@@ -29,13 +30,13 @@
       font-size: 24px;
       font-weight: bold;
       line-height: 28px;
-      padding: 5px 0 0 20px;
+      margin-top: 17px;
     }
   }
   #navbar-body {
     height: 60px;
     background-color: #FFFFFF;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5);
+    box-shadow: 0 1px 2px 0 rgba(50,50,50,0.5);
     padding-left: 50px;
     .main-info {
       font-family: Arial;

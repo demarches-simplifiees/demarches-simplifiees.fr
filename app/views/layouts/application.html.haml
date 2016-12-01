@@ -31,22 +31,21 @@
         %div#header.navbar
           = render partial: "layouts/navbar"
       %div.row.no-margin
-        %div.col-lg-2.col-md-2#left-pannel
-          - if gestionnaire_signed_in?
-            #search-block
-              = render partial: 'layouts/left_panels/search_area'
-          - begin
+        - if RenderPartialService.left_panel_exist? @left_pannel_url
+          %div.col-lg-2.col-md-2#left-pannel
+            - if gestionnaire_signed_in?
+              #search-block
+                = render partial: 'layouts/left_panels/search_area'
+
             = render partial: @left_pannel_url
-          -rescue
-            = render partial: 'layouts/left_panels/left_panel_default'
-        %div.col-lg-10.col-md-10#main-container
-          %div.row
-            = render partial: 'layouts/flash_messages'
-          %div.row
-            = yield
-          %div.row
+            - main_container_size = 10
+        - else
+          - main_container_size = 12
+
+        =render partial: 'layouts/main_container', locals: {main_container_size: main_container_size}
     #mask_search
       %h1
         %i.fa.fa-times{style:'position: fixed; top: 10; right: 30; color: white;'}
-    = render partial: 'layouts/footer'
+
+    = render partial: 'layouts/footer', locals: {main_container_size: main_container_size}
     = render partial: 'layouts/google_analytics'
