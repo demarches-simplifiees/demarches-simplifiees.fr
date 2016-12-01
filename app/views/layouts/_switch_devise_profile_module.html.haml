@@ -1,0 +1,15 @@
+#switch_menu.dropdown.dropup
+  %button.btn.btn-default.dropdown-toggle{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false}
+    %i.fa.fa-toggle-on
+    %span.caret
+  %ul.dropdown-menu.dropdown-menu-left
+    %li
+      = link_to(users_dossiers_path, id: :menu_item_procedure) do
+        %i.fa.fa-user
+        &nbsp;
+        Utilisateur
+    %li
+      = link_to(backoffice_dossiers_path) do
+        %i.fa.fa-user
+        &nbsp;
+        Accompagnateur
