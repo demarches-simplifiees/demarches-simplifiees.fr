@@ -65,11 +65,22 @@
       }
     }
 
+    #sign_in{
+      margin-top: 7px;
+      .btn{
+        float: right;
+        margin-right: 1.3em;
+      }
+    }
+
     #sign_out{
       height: 60px;
+
       .fa {
-        margin-left: 10%;
-        margin-top: 3%;
+        float: right;
+        width: 70px;
+        margin-top: 2%;
+        margin-right: 0.5em;
         font-size: 40px;
       }
     }
@@ -113,12 +124,6 @@
   .sign_in_FC {
     margin-top: -18px;
     height: 70px;
-  }
-  .btn{
-    //color: white;
-  }
-  .btn:hover{
-    //color: #aaaaaa;
   }
 }
 

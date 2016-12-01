@@ -1,14 +1,15 @@
 -#%span.fa.fa-sign-out
 
 -if user_signed_in?
-  = render partial: 'users/login_banner'
+  .col-lg-1.col-md-1#sign_out.no-padding
+    = render partial: 'users/login_banner'
 -elsif gestionnaire_signed_in?
   .col-lg-1.col-md-1#sign_out.no-padding
     = render partial: 'gestionnaires/login_banner'
 -elsif administrateur_signed_in?
   = render partial: 'administrateurs/login_banner'
 -else
-  .col-lg-5.col-md-5
-    = link_to "Connexion", '/users/sign_in', :class => 'btn btn-md'
+  .col-lg-1.col-md-1#sign_in
+    = link_to "Connexion", '/users/sign_in', :class => 'btn btn-lg'
     -unless Features.unified_login
       = link_to "Accompagnateur", '/gestionnaires/sign_in', :class => 'btn btn-md'
