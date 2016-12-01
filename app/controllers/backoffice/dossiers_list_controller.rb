@@ -9,7 +9,6 @@ class Backoffice::DossiersListController < ApplicationController
 
     unless DossiersListGestionnaireService.dossiers_liste_libelle.include?(param_liste)
       cookies[:liste] = 'a_traiter'
-      return redirect_to backoffice_dossiers_path
     end
 
     dossiers_list_facade param_liste

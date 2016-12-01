@@ -6,7 +6,7 @@ describe Backoffice::DossiersController, type: :controller do
   end
   let(:procedure) { create :procedure }
 
-  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
+  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
   let(:dossier_archived) { create(:dossier, :with_entreprise, archived: true) }
 
   let(:dossier_id) { dossier.id }
@@ -58,7 +58,7 @@ describe Backoffice::DossiersController, type: :controller do
 
       it 'returns http success' do
         get :index, params: {liste: :a_traiter}
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(302)
       end
     end
   end
@@ -71,7 +71,7 @@ describe Backoffice::DossiersController, type: :controller do
 
       it 'returns http success' do
         get :index, params: {liste: :fige}
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(302)
       end
     end
   end
@@ -84,7 +84,7 @@ describe Backoffice::DossiersController, type: :controller do
 
       it 'returns http success' do
         get :index, params: {liste: :termine}
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(302)
       end
     end
   end
@@ -97,7 +97,7 @@ describe Backoffice::DossiersController, type: :controller do
 
       it 'returns http success' do
         get :index, params: {liste: :list_fake}
-        expect(response).to redirect_to(backoffice_dossiers_path)
+        expect(response).to redirect_to(backoffice_dossiers_procedure_path(id: gestionnaire.procedures.first.id))
       end
     end
   end
