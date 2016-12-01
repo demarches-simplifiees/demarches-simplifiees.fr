@@ -1,26 +1,38 @@
 class Users::ProfilesController < ApplicationController
   def show
-    @user = User.find(params[:user_id]).decorate
+    @profile = Profile.find_or_initialize_by(user_id: params[:user_id]).decorate
   end
 
   def edit
-    @user = current_user
+    @profile = (current_user.profile || current_user.build_profile).decorate
   end
 
   def update
-    current_user.update(profile_params)
+    if profile = current_user.profile
+      profile.update(profile_params)
+    else
+      current_user.create_profile(profile_params)
+    end
     redirect_to user_profile_url(current_user)
   end
 
   def destroy
-    current_user.update(picture: nil, remove_picture: true)
+    if profile = current_user.profile
+      profile.remove_picture!
+
+      # If using #save CarrierWave will try to delete the file *twice* and fail
+      # hard, since the file can't be found the second time. We thus erase the
+      # column in database directly, which avoids the callback to be fired a
+      # second time.
+      profile.update_column(:picture, nil)
+    end
     redirect_to edit_users_profile_url
   end
 
   private
 
   def profile_params
-    params.require(:user)
+    params.require(:profile)
       .permit(:gender, :given_name, :family_name, :entreprise_siret, :birthdate, :picture)
   end
 end

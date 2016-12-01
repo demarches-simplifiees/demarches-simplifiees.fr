@@ -3,8 +3,8 @@
     %h2
       Mon profil
 
-    .edit-user-profile
-      = form_for @user, url: users_profile_path, multipart: true do |f|
+    .edit-profile
+      = form_for @profile, url: users_profile_path, method: "patch", multipart: true do |f|
         .form-group
           = f.label :gender, "Civilité :"
 
@@ -34,17 +34,17 @@
           = f.date_field :birthdate, class: "form-control"
 
         .form-group
-          - if @user.picture?
+          - if @profile.picture?
             = f.label :picture, "Photo actuelle :"
             .clearfix
-              = image_tag @user.picture_url, class: "user-profile-picture"
+              = image_tag @profile.picture_url, class: "profile-picture"
               = link_to "Effacer photo", users_profile_path, method: "delete", class: "btn btn-default"
           %div
-            - if @user.picture?
+            - if @profile.picture?
               = f.label :picture, "Nouvelle photo :"
             - else
               = f.label :picture, "Photo :"
             = f.file_field :picture
 
         = f.submit "Enregistrer", class: "btn btn-success"
-        = link_to "Annuler", user_profile_path(@user), class: "btn btn-link"
+        = link_to "Annuler", user_profile_path(current_user), class: "btn btn-link"

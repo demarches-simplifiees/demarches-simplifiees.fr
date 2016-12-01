@@ -17,6 +17,8 @@ describe Users::ProfilesController, type: :controller do
   end
 
   describe "#GET edit" do
+    let!(:profile) { create(:profile, user: user) }
+
     it "current user profile" do
       get :edit
       expect(response.status).to be(200)
@@ -25,7 +27,8 @@ describe Users::ProfilesController, type: :controller do
 
   describe "#PATCH update" do
     it "current user profile" do
-      patch :update, user: {
+      profile = create(:profile, user: user)
+      patch :update, profile: {
         gender: "male",
         family_name: "Smith",
         given_name: "John",
@@ -33,32 +36,39 @@ describe Users::ProfilesController, type: :controller do
         birthdate: "1979-10-31",
       }
       expect(response).to redirect_to(user_profile_path(user))
-      user.reload
-      expect(user.gender).to eq("male")
-      expect(user.family_name).to eq("Smith")
-      expect(user.given_name).to eq("John")
-      expect(user.entreprise_siret).to eq("750123456")
-      expect(user.birthdate).to eq(Date.new(1979, 10, 31))
+      profile.reload
+      expect(profile.gender).to eq("male")
+      expect(profile.family_name).to eq("Smith")
+      expect(profile.given_name).to eq("John")
+      expect(profile.entreprise_siret).to eq("750123456")
+      expect(profile.birthdate).to eq(Date.new(1979, 10, 31))
     end
 
-    it "won't change certified" do
-      patch :update, user: { certified: true }
-      expect(user.reload.certified).to be(false)
+    it "creates missing profile" do
+      patch :update, profile: { gender: "female" }
+      expect(response).to redirect_to(user_profile_path(user))
+      expect(user.profile).to be_truthy
+      expect(user.profile.gender).to eq("female")
     end
 
     it "uploads profile picture for current user" do
       VCR.use_cassette("post_user_profile_picture") do
-        patch :update, user: { picture: picture }
+        patch :update, profile: { picture: picture }
       end
       expect(response).to redirect_to(user_profile_path(user))
-      expect(user.picture?).to be(false)
+      expect(user.profile[:picture]).to be_truthy
+    end
+
+    it "won't change certified" do
+      patch :update, profile: { certified: true }
+      expect(user.profile.reload.certified).to be(false)
     end
   end
 
   describe "#DELETE destroy" do
-    let(:user) do
+    let!(:profile) do
       VCR.use_cassette("post_user_profile_picture") do
-        create(:user, picture: picture)
+        create(:profile, user: user, picture: picture)
       end
     end
 
@@ -67,7 +77,7 @@ describe Users::ProfilesController, type: :controller do
         delete :destroy
       end
       expect(response).to redirect_to(edit_users_profile_path)
-      expect(user.picture?).to be(false)
+      expect(profile.reload[:picture]).to be(nil)
     end
   end
 end

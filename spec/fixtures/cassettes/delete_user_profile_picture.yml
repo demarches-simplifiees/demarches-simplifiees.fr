@@ -1,49 +1,8 @@
 ---
 http_interactions:
 - request:
-    method: head
-    uri: https://storage.sbg1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b/tps_dev/user-3dbb3535-5388-4a37-bc2d-778327b9f997.jpg
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - fog/1.38.0 fog-core/1.38.0
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      X-Auth-Token:
-      - b4b2c1e4cd2c412cbfc5a88cd17374eb
-  response:
-    status:
-      code: 200
-      message: ''
-    headers:
-      Content-Length:
-      - '10287'
-      Accept-Ranges:
-      - bytes
-      Last-Modified:
-      - Wed, 30 Nov 2016 15:38:28 GMT
-      Etag:
-      - f69ff7e5239eb4c2efec12f533f783a4
-      X-Timestamp:
-      - '1480520307.16039'
-      Content-Type:
-      - image/jpeg
-      X-Trans-Id:
-      - txc1a4d1e3e166428eaa31d-00583ef273
-      Date:
-      - Wed, 30 Nov 2016 15:38:27 GMT
-    body:
-      encoding: UTF-8
-      string: ''
-    http_version: 
-  recorded_at: Wed, 30 Nov 2016 15:38:27 GMT
-- request:
     method: delete
-    uri: https://storage.sbg1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b/tps_dev/user-3dbb3535-5388-4a37-bc2d-778327b9f997.jpg
+    uri: https://storage.sbg1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b/tps_dev/profile-3dbb3535-5388-4a37-bc2d-778327b9f997.jpg
     body:
       encoding: US-ASCII
       string: ''
@@ -55,40 +14,7 @@ http_interactions:
       Accept:
       - application/json
       X-Auth-Token:
-      - b4b2c1e4cd2c412cbfc5a88cd17374eb
-  response:
-    status:
-      code: 204
-      message: ''
-    headers:
-      Content-Length:
-      - '0'
-      Content-Type:
-      - text/html; charset=UTF-8
-      X-Trans-Id:
-      - txebd8a67023b940e2b8a99-00583ef273
-      Date:
-      - Wed, 30 Nov 2016 15:38:27 GMT
-    body:
-      encoding: UTF-8
-      string: ''
-    http_version: 
-  recorded_at: Wed, 30 Nov 2016 15:38:27 GMT
-- request:
-    method: delete
-    uri: https://storage.sbg1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b/tps_dev/user-3dbb3535-5388-4a37-bc2d-778327b9f997.jpg
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - fog/1.38.0 fog-core/1.38.0
-      Content-Type:
-      - application/json
-      Accept:
-      - application/json
-      X-Auth-Token:
-      - b4b2c1e4cd2c412cbfc5a88cd17374eb
+      - 905266de83d1416e917da08a8e794c07
   response:
     status:
       code: 404
@@ -99,12 +25,12 @@ http_interactions:
       Content-Type:
       - text/html; charset=UTF-8
       X-Trans-Id:
-      - tx475cbdf3718f4af0a758f-00583ef274
+      - txbf5869ccb1b244c9b887d-00584030ca
       Date:
-      - Wed, 30 Nov 2016 15:38:28 GMT
+      - Thu, 01 Dec 2016 14:16:42 GMT
     body:
       encoding: UTF-8
       string: "<html><h1>Not Found</h1><p>The resource could not be found.</p></html>"
     http_version: 
-  recorded_at: Wed, 30 Nov 2016 15:38:28 GMT
+  recorded_at: Thu, 01 Dec 2016 14:16:42 GMT
 recorded_with: VCR 3.0.1

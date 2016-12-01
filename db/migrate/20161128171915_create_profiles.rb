@@ -1,6 +1,7 @@
-class AddProfileFieldsToUsers < ActiveRecord::Migration
+class CreateProfiles < ActiveRecord::Migration
   def change
-    change_table :users do |t|
+    create_table :profiles do |t|
+      t.references :user, null: false
       t.string :gender, null: true
       t.string :given_name, null: true
       t.string :family_name, null: true

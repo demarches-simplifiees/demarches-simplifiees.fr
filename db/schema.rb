@@ -308,6 +308,7 @@ ActiveRecord::Schema.define(version: 20161128171915) do
     t.string   "lien_demarche"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.boolean  "test"
     t.integer  "administrateur_id"
     t.boolean  "archived",              default: false
     t.boolean  "euro_flag",             default: false
@@ -319,6 +320,18 @@ ActiveRecord::Schema.define(version: 20161128171915) do
     t.string   "lien_notice"
     t.boolean  "for_individual",        default: false
     t.boolean  "individual_with_siret", default: false
+  end
+
+  create_table "profiles", force: :cascade do |t|
+    t.integer "user_id",                              null: false
+    t.string  "gender"
+    t.string  "given_name"
+    t.string  "family_name"
+    t.string  "entreprise_siret"
+    t.date    "birthdate"
+    t.string  "picture"
+    t.string  "picture_secure_token"
+    t.boolean "certified",            default: false, null: false
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|
@@ -376,14 +389,6 @@ ActiveRecord::Schema.define(version: 20161128171915) do
     t.datetime "updated_at"
     t.string   "siret"
     t.string   "loged_in_with_france_connect", default: "false"
-    t.string   "gender"
-    t.string   "given_name"
-    t.string   "family_name"
-    t.string   "entreprise_siret"
-    t.date     "birthdate"
-    t.string   "picture"
-    t.string   "picture_secure_token"
-    t.boolean  "certified",                    default: false,   null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
