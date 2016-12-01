@@ -1,1 +1,11 @@
-= render partial: 'layouts/navbars/navbar_backoffice_dossierscontroller_index'
+%div.col-lg-3.col-md-3.main-info
+  =@facade_data_view.procedure_id.nil? ? "Tous les dossiers" :  truncate(@facade_data_view.procedure.libelle, {length: 50})
+%div.col-lg-3.col-md-3.options
+  %div.row
+    %div.col-lg-12.col-md-12
+      %a.button_navbar#pref_list_dossier_open_action{href: '#', type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
+        %i.fa.fa-pencil
+        Modifier le tableau
+  %div.row
+    %div.col-lg-12.col-md-12
+      = render partial: "dossiers/download_dossiers"
