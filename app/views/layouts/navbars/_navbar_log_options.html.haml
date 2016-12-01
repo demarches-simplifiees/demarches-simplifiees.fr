@@ -3,7 +3,7 @@
 -if user_signed_in?
   = render partial: 'users/login_banner'
 -elsif gestionnaire_signed_in?
-  .col-lg-2.col-md-2
+  .col-lg-1.col-md-1#sign_out.no-padding
     = render partial: 'gestionnaires/login_banner'
 -elsif administrateur_signed_in?
   = render partial: 'administrateurs/login_banner'
