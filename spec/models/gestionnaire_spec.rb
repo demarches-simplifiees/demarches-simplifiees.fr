@@ -116,7 +116,7 @@ describe Gestionnaire, type: :model do
   end
 
   describe '#dossiers_follow' do
-    let!(:dossier) { create :dossier, procedure: procedure }
+    let!(:dossier) { create :dossier, procedure: procedure, state: :initiated }
 
     before do
       create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
