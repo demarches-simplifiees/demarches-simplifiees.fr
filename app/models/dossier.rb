@@ -55,7 +55,7 @@ class Dossier < ActiveRecord::Base
   EN_INSTRUCTION = %w(submitted received)
   A_INSTRUIRE = %w(received)
   TERMINE = %w(closed refused without_continuation)
-  ALL_STATE = %w(draft initiated updated replied validated submitted received closed refused without_continuation)
+  ALL_STATE = %w(initiated updated replied validated submitted received closed refused without_continuation)
 
   def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
