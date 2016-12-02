@@ -69,6 +69,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def check_invite! user
     Invite.where(email: user.email)
-        .each { |invite| invite.update_attribute(:user, user) }
+        .each { |invite| invite.update user: user }
   end
 end
