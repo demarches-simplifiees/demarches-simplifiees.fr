@@ -1,7 +1,6 @@
 #pieces_justificatives
-
   %table.table
-    -if @facade.procedure.cerfa_flag?
+    - if @facade.procedure.cerfa_flag?
       %tr{id: "piece_justificative_0"}
         %th{class:'col-lg-6'}
           ='Formulaire'
