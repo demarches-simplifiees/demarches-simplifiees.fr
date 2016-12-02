@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   has_many :piece_justificative, dependent: :destroy
   has_many :cerfa, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
+  has_one :profile, dependent: :destroy
 
   delegate :given_name, :family_name, :email_france_connect, :gender, :birthdate, :birthplace, :france_connect_particulier_id, to: :france_connect_information
   accepts_nested_attributes_for :france_connect_information

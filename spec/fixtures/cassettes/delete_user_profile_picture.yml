@@ -1,0 +1,36 @@
+---
+http_interactions:
+- request:
+    method: delete
+    uri: https://storage.sbg1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b/tps_dev/profile-3dbb3535-5388-4a37-bc2d-778327b9f997.jpg
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - fog/1.38.0 fog-core/1.38.0
+      Content-Type:
+      - application/json
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 905266de83d1416e917da08a8e794c07
+  response:
+    status:
+      code: 204
+      message: ''
+    headers:
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/html; charset=UTF-8
+      X-Trans-Id:
+      - tx8df05ee097a0414f977c9-0058404d3e
+      Date:
+      - Thu, 01 Dec 2016 16:18:06 GMT
+    body:
+      encoding: UTF-8
+      string: ""
+    http_version:
+  recorded_at: Thu, 01 Dec 2016 16:18:06 GMT
+recorded_with: VCR 3.0.1

@@ -7,6 +7,6 @@ class UserDecorator < Draper::Decorator
   end
 
   def birthdate_fr
-    birthdate.strftime('%d/%m/%Y')
+    birthdate.try { strftime('%d/%m/%Y') }
   end
 end

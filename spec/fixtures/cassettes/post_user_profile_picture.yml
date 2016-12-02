@@ -1,0 +1,370 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://auth.cloud.ovh.net/v2.0/tokens
+    body:
+      encoding: UTF-8
+      string: '{"auth":{"passwordCredentials":{"username":"MhsuDbK4DsPr","password":"q4xNQKQuBcBJcKrFThxfc8KsE8jrcY7A"},"tenantName":"2627898119540674"}}'
+    headers:
+      User-Agent:
+      - fog/1.38.0 fog-core/1.38.0
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Vary:
+      - X-Auth-Token
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '7079'
+      Date:
+      - Thu, 01 Dec 2016 16:18:30 GMT
+    body:
+      encoding: UTF-8
+      string: '{"access": {"token": {"issued_at": "2016-12-01T16:18:30.163908", "expires":
+        "2016-12-02T16:18:30Z", "id": "10adc86dd1294e619ff59cc0a572f11f", "tenant":
+        {"id": "a24c37ed11a84896914514384898c34b", "enabled": true, "name": "2627898119540674",
+        "description": "apientreprise"}, "audit_ids": ["SSKToZnPRcCDStaAzyN1ZQ"]},
+        "serviceCatalog": [{"endpoints": [{"adminURL": "https://compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "GRA1", "internalURL": "https://compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "17f6ef1cc63e492ab8d3f2bda8428cb0", "publicURL": "https://compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "BHS1", "internalURL": "https://compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "21fdd202afd04470bbaf84f9396d0dcc", "publicURL": "https://compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "SBG1", "internalURL": "https://compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "a707bffedf1c4b80a124c585c67c1639", "publicURL": "https://compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"}],
+        "endpoints_links": [], "type": "compute", "name": "nova"}, {"endpoints": [{"adminURL":
+        "https://network.compute.gra1.cloud.ovh.net/", "region": "GRA1", "internalURL":
+        "https://network.compute.gra1.cloud.ovh.net/", "id": "26a339a8c7d5463f89ca937068ebbcd4",
+        "publicURL": "https://network.compute.gra1.cloud.ovh.net/"}, {"adminURL":
+        "https://network.compute.bhs1.cloud.ovh.net/", "region": "BHS1", "internalURL":
+        "https://network.compute.bhs1.cloud.ovh.net/", "id": "3fe2326789ec4e37af2e6b2c80a90876",
+        "publicURL": "https://network.compute.bhs1.cloud.ovh.net/"}, {"adminURL":
+        "https://network.compute.sbg1.cloud.ovh.net/", "region": "SBG1", "internalURL":
+        "https://network.compute.sbg1.cloud.ovh.net/", "id": "075839111e7a41f1bb458926e5f04cec",
+        "publicURL": "https://network.compute.sbg1.cloud.ovh.net/"}], "endpoints_links":
+        [], "type": "network", "name": "neutron"}, {"endpoints": [{"adminURL": "https://volume.compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "GRA1", "internalURL": "https://volume.compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "7231957fdf0346e5adebe860ac5e5e57", "publicURL": "https://volume.compute.gra1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://volume.compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "BHS1", "internalURL": "https://volume.compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "2f5b68f95d7b4b1fad1a683dac8e8ca3", "publicURL": "https://volume.compute.bhs1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://volume.compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "region": "SBG1", "internalURL": "https://volume.compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b",
+        "id": "021b61bd7313479e8f8d77d21c7b434a", "publicURL": "https://volume.compute.sbg1.cloud.ovh.net/v2/a24c37ed11a84896914514384898c34b"}],
+        "endpoints_links": [], "type": "volumev2", "name": "cinderv2"}, {"endpoints":
+        [{"adminURL": "https://image.compute.gra1.cloud.ovh.net/", "region": "GRA1",
+        "internalURL": "https://image.compute.gra1.cloud.ovh.net/", "id": "56795c82f1744e47b7782f1fc2407212",
+        "publicURL": "https://image.compute.gra1.cloud.ovh.net/"}, {"adminURL": "https://image.compute.bhs1.cloud.ovh.net/",
+        "region": "BHS1", "internalURL": "https://image.compute.bhs1.cloud.ovh.net/",
+        "id": "5eaa4cbe80354ea482f2b0477c9c16f0", "publicURL": "https://image.compute.bhs1.cloud.ovh.net/"},
+        {"adminURL": "https://image.compute.sbg1.cloud.ovh.net/", "region": "SBG1",
+        "internalURL": "https://image.compute.sbg1.cloud.ovh.net/", "id": "15758b246d1340e887a2170bd3399071",
+        "publicURL": "https://image.compute.sbg1.cloud.ovh.net/"}], "endpoints_links":
+        [], "type": "image", "name": "glance"}, {"endpoints": [{"adminURL": "https://volume.compute.gra1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "region": "GRA1", "internalURL": "https://volume.compute.gra1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "id": "a6936c8876c1490cbf91d0707e78d350", "publicURL": "https://volume.compute.gra1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://volume.compute.bhs1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "region": "BHS1", "internalURL": "https://volume.compute.bhs1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "id": "43bc107cf78448faa9e5a6b3a5ca48dd", "publicURL": "https://volume.compute.bhs1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://volume.compute.sbg1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "region": "SBG1", "internalURL": "https://volume.compute.sbg1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b",
+        "id": "2be04ee1ddb148c19e91d3da5934fa55", "publicURL": "https://volume.compute.sbg1.cloud.ovh.net/v1/a24c37ed11a84896914514384898c34b"}],
+        "endpoints_links": [], "type": "volume", "name": "cinder"}, {"endpoints":
+        [{"adminURL": "https://storage.gra1.cloud.ovh.net", "region": "GRA1", "internalURL":
+        "http://127.0.0.1:8888/v1/AUTH_a24c37ed11a84896914514384898c34b", "id": "c96f61d071a74e36bd3c07e53d241ce3",
+        "publicURL": "https://storage.gra1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://storage.bhs1.cloud.ovh.net:8888/", "region": "BHS1",
+        "internalURL": "http://127.0.0.1:8888/v1/AUTH_a24c37ed11a84896914514384898c34b",
+        "id": "3327534a1a824389aae5d663b9821d67", "publicURL": "https://storage.bhs1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b"},
+        {"adminURL": "https://storage.sbg1.cloud.ovh.net", "region": "SBG1", "internalURL":
+        "http://127.0.0.1:8888/v1/AUTH_a24c37ed11a84896914514384898c34b", "id": "2af96b87ad484cb7879a9ea554d5418c",
+        "publicURL": "https://storage.sbg1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b"}],
+        "endpoints_links": [], "type": "object-store", "name": "swift"}, {"endpoints":
+        [{"adminURL": "https://auth.cloud.ovh.net:35357/v2.0", "region": "GRA1", "internalURL":
+        "http://127.0.0.1:5000/v2.0", "id": "62101e498fc3404dbc18ec80888992cb", "publicURL":
+        "https://auth.cloud.ovh.net/v2.0"}, {"adminURL": "https://auth.cloud.ovh.net:35357/v2.0",
+        "region": "BHS1", "internalURL": "http://127.0.0.1:5000/v2.0", "id": "00e403276b3246c4a5c54dc7133f9f0a",
+        "publicURL": "https://auth.cloud.ovh.net/v2.0"}, {"adminURL": "https://auth.cloud.ovh.net:35357/v2.0",
+        "region": "SBG1", "internalURL": "http://127.0.0.1:5000/v2.0", "id": "6094ef2ed9f240ed9b648dfcc0d9f923",
+        "publicURL": "https://auth.cloud.ovh.net/v2.0"}], "endpoints_links": [], "type":
+        "identity", "name": "keystone"}], "user": {"username": "MhsuDbK4DsPr", "roles_links":
+        [], "id": "43914cf4645747ba90d075c62ebb5018", "roles": [{"name": "_member_"}],
+        "name": "MhsuDbK4DsPr"}, "metadata": {"is_admin": 0, "roles": ["9fe2ff9ee4384b1894a90878d3e92bab"]}}}'
+    http_version: 
+  recorded_at: Thu, 01 Dec 2016 16:18:30 GMT
+- request:
+    method: put
+    uri: https://storage.sbg1.cloud.ovh.net/v1/AUTH_a24c37ed11a84896914514384898c34b/tps_dev/profile-3dbb3535-5388-4a37-bc2d-778327b9f997.jpg
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+        QDMuQBg738kP/PbWf+F/96B6uAM61gACK//Z
+    headers:
+      User-Agent:
+      - fog/1.38.0 fog-core/1.38.0
+      Content-Type:
+      - image/jpeg
+      Accept:
+      - application/json
+      X-Auth-Token:
+      - 10adc86dd1294e619ff59cc0a572f11f
+      Content-Length:
+      - '10287'
+  response:
+    status:
+      code: 201
+      message: ''
+    headers:
+      Last-Modified:
+      - Thu, 01 Dec 2016 16:18:31 GMT
+      Content-Length:
+      - '0'
+      Etag:
+      - f69ff7e5239eb4c2efec12f533f783a4
+      Content-Type:
+      - text/html; charset=UTF-8
+      X-Trans-Id:
+      - tx4fb647f68524408abb02c-0058404d56
+      Date:
+      - Thu, 01 Dec 2016 16:18:30 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Thu, 01 Dec 2016 16:18:30 GMT
+recorded_with: VCR 3.0.1

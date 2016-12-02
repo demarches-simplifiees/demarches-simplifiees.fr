@@ -1,0 +1,27 @@
+.row
+  .col-md-6.col-md-offset-3
+    %h2
+      Profil
+
+    .profile.clearfix
+      %li
+        - if @profile.picture?
+          = image_tag @profile.picture_url, class: "profile-picture"
+      %li
+        = @profile.gender_fr
+        = @profile.given_name
+        = @profile.family_name
+      %li
+        = @profile.born_on_date_fr
+      - if @profile.entreprise_siret
+        %li
+          SIRET société principale :
+          = @profile.entreprise_siret
+      - if @profile.certified?
+        %li
+          Utilisateur certifié !
+
+    - if user_signed_in?
+      %div
+        - if @profile.user_id == current_user.id
+          = link_to "Modifier profil", edit_users_profile_path
