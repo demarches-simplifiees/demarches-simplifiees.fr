@@ -6,12 +6,12 @@ class ApplicationController < ActionController::Base
   before_action :load_navbar_left_pannel_partial_url
 
   def default_url_options
-    return { protocol: 'https' } if Rails.env.staging? || Rails.env.production?
+    return {protocol: 'https'} if Rails.env.staging? || Rails.env.production?
     {}
   end
 
   def check_browser
-    BROWSER.value = Browser.new(request.user_agent)
+    BROWSER.value = BrowserService.get_browser(request)
   end
 
   def load_navbar_left_pannel_partial_url

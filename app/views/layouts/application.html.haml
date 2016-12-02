@@ -10,6 +10,7 @@
 
     = csrf_meta_tags
   %body
+    = render partial: 'layouts/support_navigator_banner'
     #beta{class:(Rails.env == 'production' ? '' : 'beta_staging')}
       - if Rails.env == 'production'
         Beta
