@@ -20,11 +20,13 @@
           %div.col-md-6.col-lg-6.depositaire-info= @facade.individual.birthdate
 
     - unless @facade.champs.nil?
-      .row.title-row
-        %div.col-md-4.col-lg-4.split-hr
-        %div.col-md-4.col-lg-4.dossier-title= t('dynamics.dossiers.liste_champs').upcase
-        %div.col-md-4.col-lg-4.split-hr
-        -@facade.champs.each do |champ|
+      - @facade.champs.each do |champ|
+        - if champ.type_champ == 'header_section'
+          .row.title-row.margin-top-40
+            %div.col-md-3.col-lg-3.split-hr
+            %div.col-md-6.col-lg-6.dossier-title= champ.libelle.upcase
+            %div.col-md-3.col-lg-3.split-hr
+        - else
           .row
             %div.col-md-6.col-lg-6.depositaire-label= champ.libelle
             %div.col-md-1.col-lg-1.comments
@@ -37,7 +39,7 @@
             %div.col-md-5.col-lg-5.depositaire-info
               - unless champ.decorate.value.blank?
                 = champ.decorate.value.html_safe
-      .row
+      .row.margin-top-40
         .col-lg-12.col-md-12= render partial: '/dossiers/pieces_justificatives'
 
     - if @facade.dossier.mandataire_social && gestionnaire_signed_in?

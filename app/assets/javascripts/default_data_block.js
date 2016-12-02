@@ -3,6 +3,8 @@ $(document).ready(init_default_data_block);
 
 function init_default_data_block() {
     $('.default_data_block #dossier .body').toggle();
+    $('.default_data_block #dossier .carret-right').toggle();
+    $('.default_data_block #dossier .carret-down').toggle();
 
     $('.default_data_block .title').click(function () {
         toggle_default_data_bloc(this, 400);

@@ -1,4 +1,4 @@
-#backoffice_dossier_show {
+#backoffice_dossier_show, #users_recapitulatif_dossier_show {
 
   #messages {
     .last-commentaire {
@@ -71,8 +71,18 @@
     }
   }
   #infos {
+    .split-row {
+      margin: 0 0 20px 0;
+    }
+    .entreprise-info {
+      font-size: 14px;
+    }
+    .entreprise-label {
+      font-weight: bold;
+      text-align: end;
+    }
   }
-  #dossier {
+  #dossier, #infos {
     .body {
       padding: 0 20px 0 20px;
       color: #000000;
@@ -91,15 +101,19 @@
       }
       .dossier-title {
         font-size: 16px;
-        height: 40px;
+        min-height: 40px;
         text-align: center;
       }
       .split-hr {
         border-bottom: 1px solid #979797;
         height: 12px;
+        min-height: 10px;
       }
       .title-row {
-        margin: 20px 10px 20px 10px;
+        margin: 20px 10px 10px 10px;
+      }
+      .margin-top-40 {
+        margin-top: 40px;
       }
     }
   }

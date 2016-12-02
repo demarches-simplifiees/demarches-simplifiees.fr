@@ -1,0 +1,19 @@
+%div#first-block
+  %div.en-cours
+    %h2 Récapitulatif
+  %div.infos
+    %div #{@facade.dossier.nom_projet}
+    %div= t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
+
+%div#action-block
+  - if @facade.dossier.validated?
+    = form_tag(url_for({controller: :recapitulatif, action: :submit, dossier_id: @facade.dossier.id}), method: 'POST') do
+      %button.action= 'Procéder au dépôt définitif'
+
+%div#menu-block
+
+%div#infos-block
+  - if user_signed_in? && current_user.email == @facade.dossier.user.email
+    %div.split-hr-left
+    %div.dossier-state= @facade.dossier.display_state
+    %div.split-hr-left
