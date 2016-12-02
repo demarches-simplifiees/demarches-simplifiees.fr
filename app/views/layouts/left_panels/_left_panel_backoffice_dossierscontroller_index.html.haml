@@ -14,6 +14,6 @@
   %div.split-hr-left
   #procedure_list
     - @facade_data_view.gestionnaire_procedures_name_and_id_list.each do |procedure|
-      = link_to backoffice_dossiers_procedure_path(procedure[:id]),{title: procedure[:libelle]} do
-        %div.procedure_list_element
+      = link_to backoffice_dossiers_procedure_path(procedure[:id]), {title: procedure[:libelle]} do
+        %div.procedure_list_element{ class: ('active' if procedure[:id] == @facade_data_view.procedure.id) }
           = truncate(procedure[:libelle], length: 50)
