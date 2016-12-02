@@ -1,8 +1,12 @@
 %div#first-block
+  %div.en-cours
+    = @dossiers.count
+    DOSSIERS EN COURS
 
 %div#action-block
 
 %div#menu-block
+  %div.split-hr-left
   #procedure_list
     %a{:href => "#{url_for users_dossiers_path(liste: 'brouillon')}", 'data-toggle' => :tooltip, title: 'Les dossiers jamais proposés à la relecture.'}
       %div.procedure_list_element{ class: @dossiers_list_facade.brouillon_class }
@@ -39,6 +43,7 @@
         = "Invitation"
         .badge.progress-bar-warning
           = @dossiers_list_facade.invite_total
+  %div.split-hr-left
 
 
 %div#infos-block
