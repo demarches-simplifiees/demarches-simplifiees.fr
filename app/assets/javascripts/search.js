@@ -16,6 +16,8 @@ function search_fadeIn(){
     search_area.css('left', positions.left);
     search_area.css('z-index', 300);
     search_area.css('width', width);
+    search_area.find('#q').animate({ height: '50px' });
+    search_area.find('#search_button').animate({ height: '50px' });
 
     body_dom.append(search_area);
     $('#mask_search').fadeIn(200);
@@ -46,6 +48,8 @@ function search_fadeOut(){
         search_area.css('left', '');
         search_area.css('z-index', '');
         search_area.css('width', 'auto');
+        search_area.find('#q').css('height', 34);
+        search_area.find('#search_button').css('height', 34);
 
         $('#search-block').append(search_area);
         search_area.fadeIn(200);
