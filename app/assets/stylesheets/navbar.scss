@@ -67,6 +67,16 @@
         line-height: 40px;
         height: 40px;
       }
+      .caret-right {
+        border-bottom: 4px solid transparent;
+        border-top: 4px solid transparent;
+        border-left: 4px solid;
+        display: inline-block;
+        height: 0;
+        margin: 8px 2px 0 5px;
+        vertical-align: top;
+        width: 0;
+      }
     }
 
     #sign_in{
@@ -195,3 +205,4 @@
     font-size: 20px;
   }
 }
+
