@@ -1,7 +1,9 @@
 %div#first-block
   %div.en-cours
-    = @dossiers.count
-    DOSSIERS EN COURS
+    = dossier_count = @dossiers_list_facade.dossiers_to_display.count
+    = ("Dossier".pluralize(dossier_count)).upcase
+    %br
+    = "EN COURS"
 
 %div#action-block
 
