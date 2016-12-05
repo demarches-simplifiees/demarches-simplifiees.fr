@@ -7,14 +7,14 @@
     %a.dropdown-toggle#dropdownDownloadMenu.button_navbar{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
       %i.fa.fa-download
       = t('dynamics.backoffice.download_all_dossiers')
-      -#%span.caret
+      %span.caret
   %ul.dropdown-menu.dropdown-menu-right
     %li
-      = link_to backoffice_download_dossiers_tps_path(format: :csv, procedure_id: params[:id]),  { class: 'btn btn-sm' } do
+      = link_to backoffice_download_dossiers_tps_path(format: :csv, procedure_id: params[:id]),  { class: 'btn btn-sm export-link' } do
         = t('dynamics.backoffice.format_csv')
     %li
-      = link_to backoffice_download_dossiers_tps_path(format: :xlsx, procedure_id: params[:id]), { class: 'btn btn-sm' } do
+      = link_to backoffice_download_dossiers_tps_path(format: :xlsx, procedure_id: params[:id]), { class: 'btn btn-sm export-link' } do
         = t('dynamics.backoffice.format_xlsx')
     %li
-      = link_to backoffice_download_dossiers_tps_path(format: :ods, procedure_id: params[:id]),  { class: 'btn btn-sm' } do
+      = link_to backoffice_download_dossiers_tps_path(format: :ods, procedure_id: params[:id]),  { class: 'btn btn-sm export-link' } do
         = t('dynamics.backoffice.format_ods')
