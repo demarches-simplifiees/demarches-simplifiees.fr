@@ -71,9 +71,13 @@
 
     #sign_in{
       margin-top: 7px;
-      .btn{
+      .btn {
+        color: #003C92;
         float: right;
         margin-right: 1.3em;
+      }
+      .btn:hover {
+        color: #668ABD;
       }
     }
 
@@ -81,11 +85,15 @@
       height: 60px;
 
       .fa {
+        color: #003C92;
         float: right;
         width: 70px;
         margin-top: 2%;
         margin-right: 0.5em;
         font-size: 40px;
+      }
+      .fa:hover {
+        color: #668ABD;
       }
     }
   }
@@ -181,4 +189,9 @@
   width: initial;
   padding: 10px;
   left: -130px;
+  .description {
+    font-weight: bold;
+    text-align: center;
+    font-size: 20px;
+  }
 }

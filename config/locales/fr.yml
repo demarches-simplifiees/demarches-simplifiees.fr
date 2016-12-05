@@ -20,6 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 fr:
+  utils:
+    deconnexion: "Déconnexion"
   will_paginate:
     next_label: 'Suivant'
     previous_label: 'Précédent'
