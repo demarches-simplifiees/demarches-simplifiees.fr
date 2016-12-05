@@ -175,3 +175,10 @@
 .button_navbar:hover, .button-navbar-action:hover {
   text-decoration: none;
 }
+
+#credentials {
+  display: none;
+  width: initial;
+  padding: 10px;
+  left: -130px;
+}
