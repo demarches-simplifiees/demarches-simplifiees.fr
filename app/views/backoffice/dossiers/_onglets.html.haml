@@ -1,23 +1,23 @@
 #onglets
   %ul.nav.nav-tabs
-    -unless Features.opensimplif
+    - unless Features.opensimplif
       %li{ class: (@dossiers_list_facade.nouveaux_class)}
         %a{:href => "#{url_for @dossiers_list_facade.nouveaux_url}", 'data-toggle' => :tooltip, title: 'Les nouveaux dossiers non ouverts.'}
           %h5.text-info
             = "Nouveaux "
             .badge.progress-bar-info
-              =@dossiers_list_facade.nouveaux_total
+              = @dossiers_list_facade.nouveaux_total
 
       %li{ class: (@dossiers_list_facade.suivi_class) }
         %a{:href => "#{url_for @dossiers_list_facade.suivi_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui ne sont pas encore déclarés complets.'}
           %h5.text-danger
-            ="Suivis"
+            = "Suivis"
             .badge.progress-bar-danger
-              =@dossiers_list_facade.suivi_total
+              = @dossiers_list_facade.suivi_total
 
       %li{ class: (@dossiers_list_facade.all_state_class) }
         %a{:href => "#{url_for @dossiers_list_facade.all_state_url}", 'data-toggle' => :tooltip, title: 'Les dossiers qui sont déclarés complets et donc figés.'}
           %h5.text-default
-            ="Tous"
+            = "Tous"
             .badge.progress-bar-default
-              =@dossiers_list_facade.all_state_total
+              = @dossiers_list_facade.all_state_total

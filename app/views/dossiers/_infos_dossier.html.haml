@@ -29,13 +29,17 @@
         - else
           .row
             %div.col-md-6.col-lg-6.depositaire-label= champ.libelle
-            %div.col-md-1.col-lg-1.comments
-              - if gestionnaire_signed_in?
-                = link_to "", "data-href" => backoffice_dossier_commentaires_path(@facade.dossier, champs_id: champ.id), "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp" do
-                  %i.fa.fa-comment-o
-              - else
-                = link_to "", "data-href" => users_dossier_commentaires_path(@facade.dossier, champs_id: champ.id), "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp" do
-                  %i.fa.fa-commenting-o
+            - if Features.opensimplif
+              %div.col-md-1.col-lg-1.comments
+                - if gestionnaire_signed_in?
+                  = link_to "", "data-href" => backoffice_dossier_commentaires_path(@facade.dossier, champs_id: champ.id), "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp" do
+                    %i.fa.fa-comment-o
+                - else
+                  = link_to "", "data-href" => users_dossier_commentaires_path(@facade.dossier, champs_id: champ.id), "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp" do
+                    %i.fa.fa-commenting-o
+            - else
+              %div.col-md-1.col-lg-1.comments-off
+                = "-"
             %div.col-md-5.col-lg-5.depositaire-info
               - unless champ.decorate.value.blank?
                 = champ.decorate.value.html_safe
