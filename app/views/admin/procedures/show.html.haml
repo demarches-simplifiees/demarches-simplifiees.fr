@@ -70,7 +70,7 @@
         Champs
         .badge.progress-bar-info
           = @facade.procedure.types_de_champ.size
-      - @facade.procedure.types_de_champ.each do |champ|
+      - @facade.procedure.types_de_champ.order(:order_place).each do |champ|
         = champ.libelle
         %br
 
