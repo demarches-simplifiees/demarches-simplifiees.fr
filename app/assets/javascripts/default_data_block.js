@@ -12,9 +12,7 @@ function init_default_data_block() {
 
     $('#sign_out').hover(function () {
       $(this).find('#credentials').toggle();
-    });
-
-    $('#sign_out').off(function () {
+    }, function() {
       $(this).find('credentials').toggle();
     });
 
