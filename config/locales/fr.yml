@@ -23,6 +23,7 @@ fr:
   utils:
     deconnexion: "Déconnexion"
     involved: "Voir les personnes impliquées"
+    no-commentaires: "Il n'y a aucun message dans le fil de discussion, n'hésitez pas à initier le premier."
   will_paginate:
     next_label: 'Suivant'
     previous_label: 'Précédent'

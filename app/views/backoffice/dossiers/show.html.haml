@@ -11,9 +11,13 @@
           - message_count = @facade.commentaires.count
           = (message_count == 1) ? "1 message" : "#{message_count} messages"
       %div.body
-        %div.commentaires
-          - @facade.commentaires.object.sort.each do |commentaire|
-            = render partial: commentaire
+        - unless @facade.commentaires.empty?
+          %div.commentaires
+            - @facade.commentaires.object.sort.each do |commentaire|
+              = render partial: commentaire
+        - else
+          %div.no-commentaires
+            = t("utils.no-commentaires")
         .row
           .col-lg-12.col-md-12
             %div.split-hr

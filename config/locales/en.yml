@@ -24,3 +24,4 @@ en:
   utils:
     deconnexion: "Logout"
     involved: "See concerned people"
+    no-commentaires: "There is no message yet, feel free to start the first one."

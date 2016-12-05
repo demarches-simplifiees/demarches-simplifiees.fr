@@ -6,6 +6,10 @@ function init_default_data_block() {
     $('.default_data_block #dossier .carret-right').toggle();
     $('.default_data_block #dossier .carret-down').toggle();
 
+    if ($('.default_data_block #messages .commentaires').length == 0) {
+      $('.default_data_block #messages .body').toggle();
+    }
+
     $('.default_data_block .title').click(function () {
       toggle_default_data_bloc(this, 400);
     });

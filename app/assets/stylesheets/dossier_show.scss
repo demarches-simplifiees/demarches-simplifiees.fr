@@ -14,6 +14,11 @@
         overflow-y: scroll;
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0.075) 0%, rgba(219, 219, 219, 0) 50%, rgba(250, 251, 253, 0.18) 51%, #ffffff 100%);
       }
+      .no-commentaires {
+        text-align: center;
+        font-size: 18px;
+        padding-top: 20px;
+      }
     }
     .last-commentaire, .commentaire {
       padding: 20px 0 0 20px;
