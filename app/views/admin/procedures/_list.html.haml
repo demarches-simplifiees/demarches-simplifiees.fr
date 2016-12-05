@@ -24,7 +24,6 @@
             = link_to('X', url_for(controller: 'admin/procedures', action: :destroy, id: procedure.id), 'data-method' => :delete, class: 'btn-sm btn-danger')
 
   = smart_listing.paginate
-  = smart_listing.pagination_per_page_links
 
 - else
   %h4.center

@@ -1,8 +1,16 @@
-= link_to(t('dynamics.admin.dossiers.tableau_de_bord.nouvelle_procedure'), "/admin/procedures/new", class: 'btn btn-success', style: 'float:right; margin-top:2%;')
-%h1
-  =t('dynamics.admin.dossiers.tableau_de_bord.title')
-%br
+#admins_index
+  .default_data_block.default_visible
+    %div.row.show-block#new_dossiers
+      %div.header
+        %div.col-lg-10.col-md-10.title
+          %div.carret-right
+          %div.carret-down
+          Procédures
+        %a{href:'/admin/procedures/new'}
+          %div.col-lg-2.col-md-2.action
+            Nouvelle
 
-= render partial: 'onglets'
+      %div.body
+        = smart_listing_render :procedures
 
-= smart_listing_render :procedures
+
