@@ -23,3 +23,4 @@ en:
   hello: "Hello world"
   utils:
     deconnexion: "Logout"
+    involved: "See concerned people"

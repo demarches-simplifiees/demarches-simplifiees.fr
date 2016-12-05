@@ -26,7 +26,6 @@ fr:
     dossiers:
       depositaite: "Dépositaire"
       numéro: 'Dossier n°'
-      involved: "Voir les personnes impliquées"
       followers:
         title: "Personnes suivant l'activité de ce dossier"
         empty: "Aucune personne ne suit ce dossier"
