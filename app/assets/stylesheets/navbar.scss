@@ -45,6 +45,8 @@
       line-height: 58px;
       height: 58px;
       color: #000000;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .options {
       font-family: Arial;
