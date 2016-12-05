@@ -3,8 +3,9 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def index
     super
-    procedure = dossiers_list_facade.gestionnaire_procedures_name_and_id_list.first
-    redirect_to backoffice_dossiers_procedure_path(id: procedure[:id])
+    procedure = current_gestionnaire.procedure_filter || dossiers_list_facade.gestionnaire_procedures_name_and_id_list.first[:id]
+
+    redirect_to backoffice_dossiers_procedure_path(id: procedure)
   end
 
   def show
