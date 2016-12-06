@@ -1,5 +1,5 @@
 %div.row
-  .col-lg-12.col-md-12
+  .col-lg-12.col-md-12.margin-bot-40
     - if @facade.procedure.for_individual?
       .row.title-row
         %div.col-md-4.col-lg-4.split-hr
@@ -43,8 +43,6 @@
             %div.col-md-5.col-lg-5.depositaire-info
               - unless champ.decorate.value.blank?
                 = champ.decorate.value.html_safe
-      .row.margin-top-40
-        .col-lg-12.col-md-12= render partial: '/dossiers/pieces_justificatives'
 
     - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
       .mandataire_social.text-success.center

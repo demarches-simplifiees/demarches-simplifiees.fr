@@ -89,7 +89,19 @@
   }
   #carto {
   }
-  #dossier, #infos, #carto {
+  #pieces-jointes {
+    .piece-row {
+      margin: 20px;
+      .piece-label {
+        text-align: right;
+        font-weight: bold;
+      }
+    }
+    .modal-title {
+      color: #000000;
+    }
+  }
+  #dossier, #pieces-jointes, #infos, #carto {
     .body {
       padding: 0 20px 0 20px;
       color: #000000;
@@ -124,6 +136,9 @@
       }
       .margin-top-40 {
         margin-top: 40px;
+      }
+      .margin-bot-40 {
+        margin-bottom: 40px;
       }
     }
   }
