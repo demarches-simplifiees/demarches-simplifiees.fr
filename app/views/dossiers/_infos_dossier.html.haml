@@ -52,19 +52,6 @@
           ="#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
         =")"
 
-  - if @facade.dossier.procedure.module_api_carto.use_api_carto
-    .col-lg-6.col-md-6
-
-      #map.mini{class: @facade.dossier.procedure.module_api_carto.classes}
-
-      %input{id: 'json_latlngs', type:'hidden', value: "#{@facade.dossier.json_latlngs}"}
-      %input{id: 'quartier_prioritaires', type:'hidden', value: "#{@facade.dossier.quartier_prioritaires.to_json}"}
-      %input{id: 'cadastres', type:'hidden', value: "#{@facade.dossier.cadastres.to_json}"}
-
-      %script{type: 'text/javascript'}
-        = "var dossier_id =#{@facade.dossier.id}"
-        initCarto();
-
 #modalCommentairesDossierParChamp.modal.fade{"tabindex" => -1, "role" => "dialog"}
   .modal-dialog{"role" => "document"}
     .modal-content
