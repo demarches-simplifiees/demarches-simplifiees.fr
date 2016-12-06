@@ -1,0 +1,9 @@
+.row
+  .col-md-12.col-lg-12
+    - if @champs.nil? || @champs.empty?
+      %h4.text-primary.center
+        Pas de champ privé pour ce dossier
+    - else
+      = form_for @facade.dossier, url: {controller: 'backoffice/private_formulaires', action: :update, dossier_id: @facade.dossier.id}, remote: true do
+        = render partial: '/users/description/champs'
+        = submit_tag :Enregistrer, {class: 'action', style: 'float: right'}
