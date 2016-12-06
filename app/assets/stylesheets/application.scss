@@ -58,11 +58,15 @@ form {
 }
 
 #footer {
-  background-color: rgb(240, 240, 240);
+  background-color: #F2F6FA;
   text-align: center;
-  //margin-top: 1em;
   padding: 0;
-
+  a, p {
+    color: #000000;
+  }
+  a:hover {
+    color: #000000;
+  }
   p {
     line-height: 40px;
     padding: 0;
