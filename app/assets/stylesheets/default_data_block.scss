@@ -35,12 +35,17 @@
     color: #FFFFFF;
     font-size: 18px;
     font-weight: bold;
-    .title, .action, .count {
-      cursor: pointer;
+    .title, .title-no-expanse, .action, .count {
       height: 100%;
       line-height: 40px;
       padding: 0px;
       text-transform: uppercase;
+    }
+    .title-no-expanse {
+      cursor: not-allowed;
+    }
+    .title, .action, .count {
+      cursor: pointer;
     }
     .action {
       background-color: #E45B51;

@@ -9,7 +9,3 @@
           Modifier les documents
         %br
         = render partial: 'users/recapitulatif/modal_upload_pj'
-
-      - if @facade.procedure.individual_with_siret
-        %a#add_siret.btn.btn-success{href: users_dossier_add_siret_path(dossier_id: @facade.dossier.id)}
-          = "Renseigner un SIRET"

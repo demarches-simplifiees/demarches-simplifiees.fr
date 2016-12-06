@@ -48,6 +48,17 @@
               %div.new-action
                 ENVOYER UN MESSAGE
 
+  - if @facade.procedure.individual_with_siret
+    .default_data_block
+      %div.row.show-block#infos
+        %div.header
+          %div.col-lg-8.col-md-8.title-no-expanse
+            %div.carret-right
+            INFORMATIONS ENTREPRISE / ASSOCIATION
+          %div.col-lg-4.col-md-4.action
+            %a#add_siret.action{href: users_dossier_add_siret_path(dossier_id: @facade.dossier.id)}
+              = "Renseigner un SIRET"
+
   - unless @facade.entreprise.nil?
     .default_data_block
       %div.row.show-block#infos
