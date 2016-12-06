@@ -1,0 +1,20 @@
+%div.col-lg-2.col-md-2.action
+  - unless @facade.dossier.read_only?
+    - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
+      - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
+        %a#maj_pj.btn.btn-success{"data-target" => "#UploadPJmodal",
+                           "data-toggle" => "modal",
+                           :type => "button",
+                           style: 'margin-bottom: 15px; margin-top: -30px'}
+          Modifier les documents
+        %br
+        = render partial: 'users/recapitulatif/modal_upload_pj'
+
+      - if @facade.procedure.individual_with_siret
+        %a#add_siret.btn.btn-success{href: users_dossier_add_siret_path(dossier_id: @facade.dossier.id)}
+          = "Renseigner un SIRET"
+      - if @facade.dossier.procedure.module_api_carto.use_api_carto
+        %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@facade.dossier.id}/carte"}
+          = 'Modifier la carte'
+      %a#maj_infos.action{href: "/users/dossiers/#{@facade.dossier.id}/description"}
+        = 'Modifier le dossier'

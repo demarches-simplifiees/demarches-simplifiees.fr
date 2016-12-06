@@ -46,8 +46,13 @@
       background-color: #E45B51;
       text-align: center;
       float: right;
-      color: white;
+      line-height: 20px;
+      font-size: 15px;
       text-decoration: none;
+      color: #FFFFFF;
+    }
+    .action:hover {
+      color: #F2F6FA;
     }
     .count {
       font-size: 16px;
