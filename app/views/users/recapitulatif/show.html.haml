@@ -70,3 +70,14 @@
       %div.body
         = render partial: '/dossiers/infos_dossier'
         = render partial: '/dossiers/actions'
+
+  - if !@facade.dossier.procedure.module_api_carto.use_api_carto
+    .default_data_block
+      %div.row.show-block#carto
+        %div.header
+          %div.col-lg-10.col-md-10.title
+            %div.carret-right
+            %div.carret-down
+            CARTOGRAPHIE
+          = render partial: '/dossiers/edit_carto'
+
