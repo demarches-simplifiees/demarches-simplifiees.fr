@@ -102,11 +102,11 @@
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
           .row
             .col-lg-4.col-md-4
-            .col-lg-4.col-md-4.action
-              %a#maj_pj.action{"data-target" => "#UploadPJmodal", "data-toggle" => "modal", :type => "button"}
+            %a#maj_pj.action{"data-target" => "#UploadPJmodal", "data-toggle" => "modal", :type => "button"}
+              .col-lg-4.col-md-4.action
                 Modifier les documents
               %br
-              = render partial: 'users/recapitulatif/modal_upload_pj'
+            = render partial: 'users/recapitulatif/modal_upload_pj'
             .col-lg-4.col-md-4
 
     - if gestionnaire_signed_in?

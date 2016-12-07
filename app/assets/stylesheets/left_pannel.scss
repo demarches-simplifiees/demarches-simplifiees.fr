@@ -23,9 +23,10 @@
         padding: 5px;
       }
     }
-    .en-cours {
+    .dossiers-en-cours, .en-cours {
       margin-top: 20px;
-      font-size: 25px;
+    }
+    .dossiers-en-cours, .nouveaux-dossiers, .en-cours {
       line-height: initial;
       text-align: center;
       margin-right: 10px;
