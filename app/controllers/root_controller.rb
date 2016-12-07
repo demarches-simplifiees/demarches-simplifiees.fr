@@ -1,9 +1,8 @@
 class RootController < ApplicationController
   def index
-
     route = Rails.application.routes.recognize_path(request.referrer)
 
-    unless route[:controller].match('users').nil?
+    if user_signed_in? && !route[:controller].match('users').nil?
       return redirect_to users_dossiers_path
     end
 
