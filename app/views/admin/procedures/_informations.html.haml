@@ -2,7 +2,7 @@
 %br
 
 -{libelle: 'Libellé*', description: 'Description*', organisation: 'Organisation', direction: 'Direction', lien_site_web: 'Lien site internet', lien_notice: 'Lien notice'}.each do |key, value|
-  .form-group{class: ('has-error' if @procedure.errors.messages[key])}
+  .form-group
     %h4
       =value
     - if key == :description

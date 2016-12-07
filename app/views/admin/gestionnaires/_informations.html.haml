@@ -1,5 +1,5 @@
 -{email: 'Email*'}.each do |key, value|
-  .form-group{class: ('has-error' if @gestionnaire.errors.messages[key])}
+  .form-group
     %h4
       =value
     =f.text_field key, class: 'form-control', placeholder: value
