@@ -6,4 +6,7 @@
     - else
       = form_for @facade.dossier, url: {controller: 'backoffice/private_formulaires', action: :update, dossier_id: @facade.dossier.id}, remote: true do
         = render partial: '/users/description/champs'
-        = submit_tag :Enregistrer, {class: 'action', style: 'float: right'}
+        .row
+          .col-md-4.col-lg-4
+          .col-md-4.col-lg-4= submit_tag :Enregistrer, {class: 'btn-action'}
+          .col-md-4.col-lg-4

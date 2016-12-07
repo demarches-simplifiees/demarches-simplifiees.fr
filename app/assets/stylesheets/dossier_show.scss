@@ -117,8 +117,39 @@
       .depositaire-label {
         font-weight: bold;
         text-align: end;
+        margin-left: -20px;
       }
       .depositaire-info {
+      }
+      .btn-action{
+        border: none;
+        margin: 20px 0 40px 0;
+      }
+      .btn-action:hover {
+        color: #EEEEEE;
+      }
+      .action {
+        margin: 20px 0 0 15px;
+      }
+      .action, .btn-action {
+        background-color: #E45B51;
+        text-align: center;
+        cursor: pointer;
+        color: #FFFFFF;
+        width: 253px;
+        height: 40px;
+        line-height: 40px;
+        font-family: Arial;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        a:hover {
+          color: #EEEEEE;
+        }
+      }
+      .historique {
+        color: #000000;
+        margin-left: 20px;
       }
       .comments {
         margin-right: -10px;
