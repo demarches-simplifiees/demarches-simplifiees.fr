@@ -1,3 +1,8 @@
+- total = 100 - 2
+- interface = 10
+- notification = 10
+- bugs = 20
+- realise = total - interface - notification - bugs
 #landing.max-size
   #title{style:'padding-bottom: 2%; padding-top: 2%'}
     %h1.center
@@ -16,22 +21,20 @@
   %h2.center Où en est la migration vers TPS V2 ? ...
 
   %h2.text-success.center{style:'margin-left: 135px'}
-    55%
+    = realise
+    \%
     %i.text-default{style:'font-size: 18px'}
       du site migré
-  %div{style: 'width: 60%; margin-left:auto; margin-right:auto'}
+  %div{style: "width: 60%; margin-left:auto; margin-right:auto"}
     .progress{style:'height: 30px; background-color: #ddd'}
-      .progress-bar.progress-bar-success.progress-bar-striped{:style => "width: 55%;"}
-      .progress-bar.progress-bar-warning{:style => "width: 8%;"}
+      .progress-bar.progress-bar-success.progress-bar-striped{:style => "width: #{realise}%;"}
+      .progress-bar.progress-bar-warning{:style => "width: #{interface}%;"}
         %div{style:'margin-top: 0.4em'}
           Interface
-      .progress-bar.progress-bar-info{:style => "width: 5%; font-size: 10px"}
-        %div{style:'margin-top: 0.4em'}
-          Connexion
-      .progress-bar.progress-bar-purple{:style => "width: 10%;"}
+      .progress-bar.progress-bar-purple{:style => "width: #{notification}%;"}
         %div{style:'margin-top: 0.4em'}
           Notifications
-      .progress-bar.progress-bar-danger{:style => "width: 20%;"}
+      .progress-bar.progress-bar-danger{:style => "width: #{bugs}%;"}
         %div{style:'margin-top: 0.4em'}
           Fiabilisations et bugs
 
@@ -45,14 +48,13 @@
       %li
         Un design général qui permet de mieux s'y retrouver
       %li
-        Utilisateur et Accompagnateur ont maintenant la même page de connexion :
-        = link_to "Par ici", '/users/sign_in'
+        Utilisateur, Accompagnateur et Administrateur ont maintenant la même page de connexion
       %li
         Un tout nouveau tableau de bord pour les Accompagnteurs
       %li
         Une page récapitulative pour un dossier entièrement revue
       %li
-        La possibilité de changer en un clic de compte entre Utilisateur et Accompagnateur
+        La possibilité de changer en un clic de compte entre Utilisateur, Accompagnateur et Administrateur
       %li
         Une recherche globale : tapez et vous trouverez !!
 
@@ -65,19 +67,15 @@
       %li
         Terminer d'optimiser nos pages avec la nouvelle interface
         %b.text-warning
-          (8%)
-      %li
-        Intégrer la connexion unifiée pour les administrateurs (et permettre le switch entre compte)
-        %b.text-info
-          (5%)
+          ="(#{interface}%)"
       %li
         Centre de notification : un seul endroit pour suivre l'activité de l'ensemble de vos dossiers (Accompagnateur)
         %b.text-purple
-          (10%)
+          ="(#{notification}%)"
       %li
         Fiabilisation accrue de la plateforme : un certain nombre de bug sont encore présents ...
         %b.text-danger
-          (20%)
+          ="(#{bugs}%)"
       %li
         %b
           Prendre vos retours en compte :
