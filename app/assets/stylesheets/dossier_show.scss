@@ -108,7 +108,7 @@
   }
   #dossier, #pieces-jointes, #infos, #carto, #private-fields {
     .body {
-      padding: 0 20px 0 20px;
+      padding: 20px 20px 0 20px;
       color: #000000;
       .libelle-procedure {
         font-style: italic;
@@ -129,7 +129,7 @@
         color: #EEEEEE;
       }
       .action {
-        margin: 20px 0 0 15px;
+        margin: 50px 0 0 15px;
       }
       .action, .btn-action {
         background-color: #E45B51;
@@ -175,6 +175,11 @@
       }
       .margin-bot-40 {
         margin-bottom: 40px;
+      }
+    }
+    #pieces_justificatives {
+      .piece-row {
+        margin: 0 0 0 0;
       }
     }
   }

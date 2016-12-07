@@ -1,6 +1,6 @@
 %div#first-block
   %div.infos
-    %div #{@facade.dossier.nom_projet}
+    %div.projet-name #{@facade.dossier.nom_projet.capitalize}
     %div= t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
 
 %div#action-block

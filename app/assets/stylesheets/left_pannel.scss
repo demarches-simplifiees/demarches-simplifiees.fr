@@ -14,10 +14,14 @@
     font-size: 16px;
     line-height: 18px;
     .infos {
-      margin-bottom: 20px;
       font-size: 25px;
       text-align: center;
-      margin-right: 10px;
+      margin: 20px 10px 30px 0;
+      .projet-name {
+        font-size: 25px;
+        line-height: normal;
+        padding: 5px;
+      }
     }
     .en-cours {
       margin-top: 20px;
