@@ -1,5 +1,6 @@
 class Users::PasswordsController < Devise::PasswordsController
   after_action :try_to_authenticate_gestionnaire, only: %i(update)
+  after_action :try_to_authenticate_administrateur, only: %i(update)
 
   # GET /resource/password/new
   # def new
@@ -36,6 +37,13 @@ class Users::PasswordsController < Devise::PasswordsController
     if user_signed_in?
       gestionnaire = Gestionnaire.find_by(email: current_user.email)
       sign_in gestionnaire if gestionnaire
+    end
+  end
+
+  def try_to_authenticate_administrateur
+    if user_signed_in?
+      administrateur = Administrateur.find_by(email: current_user.email)
+      sign_in administrateur if administrateur
     end
   end
 end
