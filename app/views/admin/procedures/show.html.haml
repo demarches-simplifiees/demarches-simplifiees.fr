@@ -1,126 +1,127 @@
-#procedure_show
-  =render partial: 'head', locals: {active: 'Informations'}
+.row.white-back
+  #procedure_show
+    = render partial: 'head', locals: {active: 'Informations'}
 
-  -unless @facade.procedure.published?
-    - if @facade.procedure.gestionnaires.size == 0
-      %a.action_button.btn.btn-success{style:'float: right; margin-top: 10px', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.'}
-        %i.fa.fa-eraser
-        Publier
-    -else
-      %a#publish.btn.btn-success{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
-        %i.fa.fa-eraser
-        Publier
-
-    =render partial: '/admin/procedures/modal_publish'
-
-  %a#transfer.btn.btn-small.btn-default{"data-target" => "#transferModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px; margin-right: 10px'}
-    %i.fa.fa-exchange
-    Transférer
-
-  =render partial: '/admin/procedures/modal_transfer'
-
-  -if @facade.procedure.archived?
-    %a#reenable.btn.btn-small.btn-default.text-info{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
-      %i.fa.fa-eraser
-      Réactiver
-
-    =render partial: '/admin/procedures/modal_publish'
-
-  -elsif @facade.procedure.published?
-    = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style:'float: right; margin-top: 10px' do
-      %button#archive.btn.btn-small.btn-default.text-info{type: :button}
-        %i.fa.fa-eraser
-        = 'Archiver'
-      #confirm
-        %button#valid.btn.btn-small.btn-success{type: :submit}
-          %i.fa.fa-check
-          Valider
-        %button#cancel.btn.btn-small.btn-danger{type: :button}
-          %i.fa.fa-remove
-          Annuler
-
-  - if @facade.procedure.locked?
-    #procedure_locked.center
-      %h5
-        .label.label-info La procédure ne peut plus être modifiée car elle a été publiée
-
-  %div
-    %h3 Lien procédure
-    %div{style:'margin-left:3%'}
-      -if @facade.procedure.archived?
-        %b
-          Cette procédure a été archivée et n'est plus accessible par le public.
-      -elsif @facade.procedure.published?
-        = @facade.procedure.lien
+    -unless @facade.procedure.published?
+      - if @facade.procedure.gestionnaires.size == 0
+        %a.action_button.btn.btn-success{style:'float: right; margin-top: 10px', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.'}
+          %i.fa.fa-eraser
+          Publier
       -else
-        %b
-          Cette procédure n'a pas encore été publiée et n'est donc pas accessible par le public.
+        %a#publish.btn.btn-success{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
+          %i.fa.fa-eraser
+          Publier
 
-  %br
-  %h3 Détails
+      =render partial: '/admin/procedures/modal_publish'
 
-  .row{style:'margin-right:3%; margin-left:3%;'}
-    .description.col-md-4.col-lg-4
-      %h4.text-info
-        = @facade.procedure.libelle
+    %a#transfer.btn.btn-small.btn-default{"data-target" => "#transferModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px; margin-right: 10px'}
+      %i.fa.fa-exchange
+      Transférer
 
-      = h @facade.procedure.description.html_safe
-    .champs.col-md-4.col-lg-4
-      %h4.text-info
-        Champs
-        .badge.progress-bar-info
-          = @facade.procedure.types_de_champ.size
-      - @facade.procedure.types_de_champ.order(:order_place).each do |champ|
-        = champ.libelle
-        %br
+    =render partial: '/admin/procedures/modal_transfer'
 
-    .pieces_justificatives.col-md-4.col-lg-4
-      %h4.text-info
-        Pièces justificatives
-        .badge.progress-bar-info
-          = @facade.procedure.types_de_piece_justificative.size
-      - @facade.procedure.types_de_piece_justificative.each do |piece_justificative|
-        = piece_justificative.libelle
-        %br
-  %br
-  %h3
-    =t('dynamics.admin.procedure.stats.title')
+    -if @facade.procedure.archived?
+      %a#reenable.btn.btn-small.btn-default.text-info{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
+        %i.fa.fa-eraser
+        Réactiver
 
-  .row
-    .col-md-6.col-lg-6{style:'margin-left:3%'}
-      %h4 Total
-      %div
-        = @facade.dossiers_total
+      =render partial: '/admin/procedures/modal_publish'
 
-      %h4.text-danger Attente Accompagnateur
-      %div
-        = @facade.dossiers_waiting_gestionnaire_total
+    -elsif @facade.procedure.published?
+      = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style:'float: right; margin-top: 10px' do
+        %button#archive.btn.btn-small.btn-default.text-info{type: :button}
+          %i.fa.fa-eraser
+          = 'Archiver'
+        #confirm
+          %button#valid.btn.btn-small.btn-success{type: :submit}
+            %i.fa.fa-check
+            Valider
+          %button#cancel.btn.btn-small.btn-danger{type: :button}
+            %i.fa.fa-remove
+            Annuler
 
-      %h4.text-info Attente Utilisateur
-      %div
-        = @facade.dossiers_waiting_user_total
+    - if @facade.procedure.locked?
+      #procedure_locked.center
+        %h5
+          .label.label-info La procédure ne peut plus être modifiée car elle a été publiée
 
-      %h4.text-success Terminé
-      %div
-        = @facade.dossiers_termine_total
+    %div
+      %h3 Lien procédure
+      %div{style:'margin-left:3%'}
+        -if @facade.procedure.archived?
+          %b
+            Cette procédure a été archivée et n'est plus accessible par le public.
+        -elsif @facade.procedure.published?
+          = @facade.procedure.lien
+        -else
+          %b
+            Cette procédure n'a pas encore été publiée et n'est donc pas accessible par le public.
 
-      %h4 Archivé
+    %br
+    %h3 Détails
 
-      - unless @facade.dossiers_archived_total == 0
-        %ul
-          - @facade.dossiers_archived_by_state_total.each do |dossier|
-            %li
-              = dossier.display_state
-              \:
-              = dossier.total
-      - else
-        %p
-          0
+    .row{style:'margin-right:3%; margin-left:3%;'}
+      .description.col-md-4.col-lg-4
+        %h4.text-info
+          = @facade.procedure.libelle
 
-    .col-md-5.col-lg-5
-      %h4 Non archivés
-      = javascript_include_tag "https://code.highcharts.com/highcharts.js", "chartkick"
-      - if @facade.dossiers_for_pie_highchart.blank?
-        Aucune statistique pour le moment
-      -else
-        =pie_chart @facade.dossiers_for_pie_highchart
+        = h @facade.procedure.description.html_safe
+      .champs.col-md-4.col-lg-4
+        %h4.text-info
+          Champs
+          .badge.progress-bar-info
+            = @facade.procedure.types_de_champ.size
+        - @facade.procedure.types_de_champ.order(:order_place).each do |champ|
+          = champ.libelle
+          %br
+
+      .pieces_justificatives.col-md-4.col-lg-4
+        %h4.text-info
+          Pièces justificatives
+          .badge.progress-bar-info
+            = @facade.procedure.types_de_piece_justificative.size
+        - @facade.procedure.types_de_piece_justificative.each do |piece_justificative|
+          = piece_justificative.libelle
+          %br
+    %br
+    %h3
+      =t('dynamics.admin.procedure.stats.title')
+
+    .row
+      .col-md-6.col-lg-6{style:'margin-left:3%'}
+        %h4 Total
+        %div
+          = @facade.dossiers_total
+
+        %h4.text-danger Attente Accompagnateur
+        %div
+          = @facade.dossiers_waiting_gestionnaire_total
+
+        %h4.text-info Attente Utilisateur
+        %div
+          = @facade.dossiers_waiting_user_total
+
+        %h4.text-success Terminé
+        %div
+          = @facade.dossiers_termine_total
+
+        %h4 Archivé
+
+        - unless @facade.dossiers_archived_total == 0
+          %ul
+            - @facade.dossiers_archived_by_state_total.each do |dossier|
+              %li
+                = dossier.display_state
+                \:
+                = dossier.total
+        - else
+          %p
+            0
+
+      .col-md-5.col-lg-5
+        %h4 Non archivés
+        = javascript_include_tag "https://code.highcharts.com/highcharts.js", "chartkick"
+        - if @facade.dossiers_for_pie_highchart.blank?
+          Aucune statistique pour le moment
+        -else
+          =pie_chart @facade.dossiers_for_pie_highchart

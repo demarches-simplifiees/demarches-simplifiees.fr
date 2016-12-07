@@ -20,17 +20,17 @@
           .form-group
             %label
               %h4
-                Nom
+                Nom *
               = ff.text_field :nom, {class: 'form-control'}
           .form-group
             %label
               %h4
-                Prénom
+                Prénom *
               = ff.text_field :prenom, {class: 'form-control'}
           .form-group
             %label
               %h4
-                Date de naissance
+                Date de naissance *
               = ff.text_field :birthdate, {class: 'form-control', 'data-provide' => 'datepicker', 'data-date-format' => 'dd/mm/yyyy'}
 
         %p
