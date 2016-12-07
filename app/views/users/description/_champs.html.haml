@@ -1,5 +1,5 @@
 - render_partial_url = private ? 'users/description/champs/header_private_section' : 'users/description/champs/header_section'
-- unless @headers.empty?
+- unless @headers.blank?
   - @headers.each do |header|
     .row
       %div{class: "type_champ-#{header.type_champ}"}
