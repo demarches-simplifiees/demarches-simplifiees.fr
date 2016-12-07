@@ -1,63 +1,62 @@
-.row
-  .col-lg-12.col-md-12
-    .row.title-row
-      .col-md-4.col-lg-4.split-hr
-      .col-md-4.col-lg-4.dossier-title= libelle
-      .col-md-4.col-lg-4.split-hr
-    .row
-      .col-lg-4.col-md-4
-      .col-lg-8.col-md-8
-        -champs.each do |champ|
-          - if champ.order_place > order_place
-            - if champ.type_champ == 'header_section'
-              - break
+.default_data_block.default_visible
+  %div.row.show-block#infos
+    %div.header
+      %div.col-lg-12.col-md-12.title
+        %div.carret-right
+        %div.carret-down
+        =libelle
+    %div.body
+      -champs.each do |champ|
+        - if champ.order_place > order_place
+          - if champ.type_champ == 'header_section'
+            - break
 
-            - unless champ.type_champ == 'checkbox' || champ.type_champ == 'engagement'
-              %h4
-                = champ.libelle
-                - if champ.mandatory?
-                  = '*'
+          - unless champ.type_champ == 'checkbox' || champ.type_champ == 'engagement'
+            %h4
+              = champ.libelle
+              - if champ.mandatory?
+                = '*'
 
-            -if champ.type_champ == 'textarea'
-              =render partial: 'users/description/champs/textarea', locals: {champ: champ}
+          -if champ.type_champ == 'textarea'
+            =render partial: 'users/description/champs/textarea', locals: {champ: champ}
 
-            -elsif champ.type_champ == 'checkbox'
-              = render partial: 'users/description/champs/checkbox', locals: {champ: champ}
+          -elsif champ.type_champ == 'checkbox'
+            = render partial: 'users/description/champs/checkbox', locals: {champ: champ}
 
-            -elsif champ.type_champ == 'civilite'
-              =render partial: 'users/description/champs/civilite', locals: {champ: champ}
+          -elsif champ.type_champ == 'civilite'
+            =render partial: 'users/description/champs/civilite', locals: {champ: champ}
 
-            - elsif champ.type_champ == 'datetime'
-              =render partial: 'users/description/champs/datetime', locals: {champ: champ}
+          - elsif champ.type_champ == 'datetime'
+            =render partial: 'users/description/champs/datetime', locals: {champ: champ}
 
-            - elsif champ.type_champ == 'yes_no'
-              =render partial: 'users/description/champs/yes_no', locals: {champ: champ}
+          - elsif champ.type_champ == 'yes_no'
+            =render partial: 'users/description/champs/yes_no', locals: {champ: champ}
 
-            - elsif champ.type_champ == 'drop_down_list'
-              =render partial: 'users/description/champs/drop_down_list', locals: {champ: champ}
+          - elsif champ.type_champ == 'drop_down_list'
+            =render partial: 'users/description/champs/drop_down_list', locals: {champ: champ}
 
-            - elsif champ.type_champ == 'pays'
-              =render partial: 'users/description/champs/pays', locals: {champ: champ}
+          - elsif champ.type_champ == 'pays'
+            =render partial: 'users/description/champs/pays', locals: {champ: champ}
 
-            - elsif champ.type_champ == 'regions'
-              =render partial: 'users/description/champs/regions', locals: {champ: champ}
+          - elsif champ.type_champ == 'regions'
+            =render partial: 'users/description/champs/regions', locals: {champ: champ}
 
-            - elsif champ.type_champ == 'engagement'
-              =render partial: 'users/description/champs/engagement', locals: {champ: champ}
+          - elsif champ.type_champ == 'engagement'
+            =render partial: 'users/description/champs/engagement', locals: {champ: champ}
 
-            - elsif champ.type_champ == 'departements'
-              =render partial: 'users/description/champs/departements', locals: {champ: champ}
+          - elsif champ.type_champ == 'departements'
+            =render partial: 'users/description/champs/departements', locals: {champ: champ}
 
-            -else
-              %input.form-control{name:"champs['#{champ.id}']",
-                      placeholder: champ.libelle,
-                      id: "champs_#{champ.id}",
-                      value: champ.value,
-                      type: champ.type_champ,
-                      'data-provide' => champ.data_provide,
-                      'data-date-format' => champ.data_date_format}
+          -else
+            %input.form-control{name:"champs['#{champ.id}']",
+                    placeholder: champ.libelle,
+                    id: "champs_#{champ.id}",
+                    value: champ.value,
+                    type: champ.type_champ,
+                    'data-provide' => champ.data_provide,
+                    'data-date-format' => champ.data_date_format}
 
-          - unless champ.description.empty? || champ.type_champ == 'engagement'
-            .row
-              .col-lg-8.col-md-8{class: 'description_div', id:"description_champs_#{champ.id}"}
-                = champ.description
+        - unless champ.description.empty? || champ.type_champ == 'engagement'
+          .row
+            .col-lg-8.col-md-8{class: 'description_div', id:"description_champs_#{champ.id}"}
+              = champ.description

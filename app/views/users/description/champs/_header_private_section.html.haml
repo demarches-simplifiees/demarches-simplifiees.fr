@@ -1,0 +1,10 @@
+.row
+  .col-lg-12.col-md-12
+    .row.title-row
+      .col-md-4.col-lg-4.split-hr
+      .col-md-4.col-lg-4.dossier-title= libelle
+      .col-md-4.col-lg-4.split-hr
+    .row
+      .col-lg-4.col-md-4
+      .col-lg-8.col-md-8
+        =render partial: 'users/description/champs/render_list_champs', locals: {champs: champs, order_place: order_place}

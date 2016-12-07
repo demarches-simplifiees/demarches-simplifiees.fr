@@ -1,8 +1,9 @@
-- unless @headers.nil?
+- render_partial_url = private ? 'users/description/champs/header_private_section' : 'users/description/champs/header_section'
+- unless @headers.empty?
   - @headers.each do |header|
     .row
       %div{class: "type_champ-#{header.type_champ}"}
-        =render partial: 'users/description/champs/header_section', locals: {libelle: header.libelle, order_place: header.order_place, champs: @champs}
+        =render partial: render_partial_url, locals: {libelle: header.libelle, order_place: header.order_place, champs: @champs}
 - else
   .row
-    =render partial: 'users/description/champs/header_section', locals: {libelle: 'Dossier', order_place: -1, champs: @champs}
+    =render partial: render_partial_url, locals: {libelle: 'Dossier', order_place: -1, champs: @champs}

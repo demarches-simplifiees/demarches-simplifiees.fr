@@ -19,7 +19,7 @@
 
     #liste_champs
       -unless @champs.nil?
-        =render partial: 'users/description/champs'
+        =render partial: 'users/description/champs', locals:{private: false}
 
     -if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0
       %br
