@@ -35,8 +35,13 @@ describe Users::SessionsController, type: :controller do
     end
 
     context "unified login" do
-      let(:user) { create(:user, email: 'unique@plop.com', password: 'password') }
-      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'password') }
+      let(:email) { 'unique@plop.com' }
+      let(:password) { 'password' }
+
+      let(:user) { create(:user, email: email, password: password) }
+      let(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
+      let(:administrateur) { create(:administrateur, email: email, password: password) }
+
       before { allow(Features).to receive(:unified_login).and_return(true) }
 
       it 'signs user in' do
@@ -44,6 +49,7 @@ describe Users::SessionsController, type: :controller do
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to eq(user)
         expect(subject.current_gestionnaire).to be(nil)
+        expect(subject.current_administrateur).to be(nil)
         expect(user.reload.loged_in_with_france_connect).to be(nil)
       end
 
@@ -52,21 +58,40 @@ describe Users::SessionsController, type: :controller do
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to be(nil)
         expect(subject.current_gestionnaire).to eq(gestionnaire)
+        expect(subject.current_administrateur).to be(nil)
       end
 
-      it 'signs user + gestionnaire in' do
-        post :create, params: {user: {email: user.email, password: gestionnaire.password}}
+      it 'signs administrateur in' do
+        post :create, params: {user: {email: administrateur.email, password: administrateur.password}}
         expect(@response.redirect?).to be(true)
-        expect(subject.current_user).to eq(user)
-        expect(subject.current_gestionnaire).to eq(gestionnaire)
-        expect(user.reload.loged_in_with_france_connect).to be(nil)
+        expect(subject.current_user).to be(nil)
+        expect(subject.current_gestionnaire).to be(nil)
+        expect(subject.current_administrateur).to eq(administrateur)
       end
+
+      context {
+        before do
+          user
+          gestionnaire
+        end
+
+        it 'signs user + gestionnaire + administrateur in' do
+
+          post :create, params: {user: {email: administrateur.email, password: administrateur.password}}
+          expect(@response.redirect?).to be(true)
+          expect(subject.current_user).to eq(user)
+          expect(subject.current_gestionnaire).to eq(gestionnaire)
+          expect(subject.current_administrateur).to eq(administrateur)
+          expect(user.reload.loged_in_with_france_connect).to be(nil)
+        end
+      }
 
       it 'fails to sign in with bad credentials' do
         post :create, params: {user: {email: user.email, password: 'wrong_password'}}
         expect(@response.unauthorized?).to be(true)
         expect(subject.current_user).to be(nil)
         expect(subject.current_gestionnaire).to be(nil)
+        expect(subject.current_administrateur).to be(nil)
       end
     end
   end
@@ -136,6 +161,22 @@ describe Users::SessionsController, type: :controller do
         delete :destroy
         expect(@response.headers["Location"]).to eq(FRANCE_CONNECT.particulier_logout_endpoint)
       end
+
+      context "when associated administrateur" do
+        let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'password') }
+
+        it 'signs user + gestionnaire + administrateur out' do
+          sign_in user
+          sign_in gestionnaire
+          sign_in administrateur
+          delete :destroy
+          expect(@response.redirect?).to be(true)
+          expect(subject.current_user).to be(nil)
+          expect(subject.current_gestionnaire).to be(nil)
+          expect(subject.current_administrateur).to be(nil)
+        end
+      end
+
     end
   end
 
