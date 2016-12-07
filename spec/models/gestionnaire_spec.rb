@@ -198,5 +198,16 @@ describe Gestionnaire, type: :model do
       expect(user.email).to eq('whoami@plop.com')
       expect(user.valid_password?('super secret')).to be(true)
     end
+
+    it 'syncs credentials to associated administrateur' do
+      gestionnaire = create(:gestionnaire)
+      admin = create(:administrateur, email: gestionnaire.email)
+
+      gestionnaire.update_attributes(email: 'whoami@plop.com', password: 'super secret')
+
+      admin.reload
+      expect(admin.email).to eq('whoami@plop.com')
+      expect(admin.valid_password?('super secret')).to be(true)
+    end
   end
 end

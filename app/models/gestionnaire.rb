@@ -88,12 +88,7 @@ class Gestionnaire < ActiveRecord::Base
 
   def sync_credentials
     if email_changed? || encrypted_password_changed?
-      user = User.find_by(email: email_was)
-      if user
-        return user.update_columns(
-          email: email,
-          encrypted_password: encrypted_password)
-      end
+      return SyncCredentialsService.new(Gestionnaire, email_was, email, encrypted_password).change_credentials!
     end
     true
   end

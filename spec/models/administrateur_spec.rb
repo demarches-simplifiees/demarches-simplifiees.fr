@@ -42,4 +42,30 @@ describe Administrateur, type: :model do
       expect(admin_1.api_token).to eq(new_token)
     end
   end
+
+  context 'unified login' do
+    before { allow(Features).to receive(:unified_login).and_return(true) }
+
+    it 'syncs credentials to associated user' do
+      administrateur = create(:administrateur)
+      user = create(:user, email: administrateur.email)
+
+      administrateur.update_attributes(email: 'whoami@plop.com', password: 'super secret')
+
+      user.reload
+      expect(user.email).to eq('whoami@plop.com')
+      expect(user.valid_password?('super secret')).to be(true)
+    end
+
+    it 'syncs credentials to associated administrateur' do
+      administrateur = create(:administrateur)
+      gestionnaire = create(:gestionnaire, email: administrateur.email)
+
+      administrateur.update_attributes(email: 'whoami@plop.com', password: 'super secret')
+
+      gestionnaire.reload
+      expect(gestionnaire.email).to eq('whoami@plop.com')
+      expect(gestionnaire.valid_password?('super secret')).to be(true)
+    end
+  end
 end
