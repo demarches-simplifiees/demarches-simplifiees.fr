@@ -116,12 +116,6 @@ ActiveRecord::Schema.define(version: 20161205110427) do
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id", using: :btree
   end
 
-  create_table "comments", force: :cascade do |t|
-    t.string   "comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "dossiers", force: :cascade do |t|
     t.boolean  "autorisation_donnees"
     t.string   "nom_projet"
@@ -255,12 +249,6 @@ ActiveRecord::Schema.define(version: 20161205110427) do
     t.index ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true, using: :btree
   end
 
-  create_table "notifications", force: :cascade do |t|
-    t.string   "message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "pieces_justificatives", force: :cascade do |t|
     t.string   "content"
     t.integer  "dossier_id"
@@ -314,6 +302,7 @@ ActiveRecord::Schema.define(version: 20161205110427) do
     t.string   "lien_demarche"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.boolean  "test"
     t.integer  "administrateur_id"
     t.boolean  "archived",              default: false
     t.boolean  "euro_flag",             default: false
