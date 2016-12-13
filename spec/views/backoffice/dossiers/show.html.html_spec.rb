@@ -23,16 +23,7 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       expect(rendered).not_to have_css('#UploadPJmodal')
     end
 
-    it 'enterprise informations are present' do
-      expect(rendered).to have_selector('#infos_entreprise')
-    end
-
-    it 'dossier informations are present' do
-      expect(rendered).to have_selector('#infos_dossier')
-    end
-
     it 'dossier number is present' do
-      expect(rendered).to have_selector('#dossier_id')
       expect(rendered).to have_content(dossier_id)
     end
 
@@ -52,50 +43,6 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
   end
 
   context 'dossier state changements' do
-    context 'when dossier have state initiated' do
-      let(:state) { 'initiated' }
-
-      before do
-        render
-      end
-
-      it { expect(rendered).to have_content('Nouveau') }
-
-      it 'button Déclarer complet is present' do
-        expect(rendered).to have_css('.action_button')
-        expect(rendered).to have_content('Déclarer complet')
-      end
-    end
-
-    context 'when dossier have state replied' do
-      let(:state) { 'replied' }
-
-      before do
-        render
-      end
-
-      it { expect(rendered).to have_content('Répondu') }
-
-      it 'button Déclarer complet is present' do
-        expect(rendered).to have_css('.action_button')
-        expect(rendered).to have_content('Déclarer complet')
-      end
-    end
-
-    context 'when dossier have state update' do
-      let(:state) { 'updated' }
-
-      before do
-        render
-      end
-
-      it { expect(rendered).to have_content('Mis à jour') }
-
-      it 'button Déclarer complet is present' do
-        expect(rendered).to have_css('.action_button')
-        expect(rendered).to have_content('Déclarer complet')
-      end
-    end
 
     context 'when dossier have state validated' do
       let(:state) { 'validated' }
@@ -104,46 +51,8 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
         render
       end
 
-      it { expect(rendered).to have_content('Figé') }
-
       it 'button Déclarer complet  is not present' do
-        expect(rendered).not_to have_css('.action_button')
         expect(rendered).not_to have_content('Déclarer complet')
-      end
-    end
-
-    context 'when dossier have state submitted' do
-      let(:state) { 'submitted' }
-
-      before do
-        render
-      end
-
-      it { expect(rendered).to have_content('Déposé') }
-
-      it 'button Accuser réception is present' do
-        expect(rendered).to have_css('.action_button')
-        expect(rendered).to have_content('Accuser réception')
-      end
-
-      it 'button Déclarer complet is not present' do
-        expect(rendered).not_to have_content('Accepter le dossier')
-      end
-    end
-
-    context 'when dossier have state received' do
-      let(:state) { 'received' }
-
-      before do
-        render
-      end
-
-      it { expect(rendered).to have_content('Reçu') }
-
-      it 'button accepter / refuser / classer sans suite are present' do
-        expect(rendered).to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
-        expect(rendered).to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
-        expect(rendered).to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
       end
     end
 
@@ -153,8 +62,6 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       before do
         render
       end
-
-      it { expect(rendered).to have_content('Accepté') }
 
       it 'button Accepter le dossier is not present' do
         expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
@@ -170,8 +77,6 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
         render
       end
 
-      it { expect(rendered).to have_content('Sans suite') }
-
       it 'button Déclarer complet is not present' do
         expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
         expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
@@ -185,8 +90,6 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       before do
         render
       end
-
-      it { expect(rendered).to have_content('Refusé') }
 
       it 'button Déclarer complet is not present' do
         expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')

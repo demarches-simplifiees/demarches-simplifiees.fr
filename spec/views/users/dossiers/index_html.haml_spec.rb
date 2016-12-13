@@ -40,10 +40,6 @@ describe 'users/dossiers/index.html.haml', type: :view do
     end
 
     it { expect(dossiers_to_display.count).to eq total_dossiers }
-
-    describe 'active tab' do
-      it { is_expected.to have_selector(active_class) }
-    end
   end
 
   describe 'on tab en construction' do

@@ -344,6 +344,8 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     kgio (2.10.0)
+    launchy (2.4.3)
+      addressable (~> 2.3)
     leaflet-draw-rails (0.1.0)
     leaflet-markercluster-rails (0.7.0)
       railties (>= 3.1)
@@ -657,6 +659,7 @@ DEPENDENCIES
   hashie
   jbuilder (~> 2.0)
   jquery-rails
+  launchy
   leaflet-draw-rails
   leaflet-markercluster-rails (~> 0.7.0)
   leaflet-rails

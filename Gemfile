@@ -96,6 +96,7 @@ gem 'browser'
 
 group :test do
   gem 'capybara'
+  gem 'launchy'
   gem 'factory_girl'
   gem 'database_cleaner'
   gem 'selenium-webdriver'

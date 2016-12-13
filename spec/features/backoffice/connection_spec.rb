@@ -24,6 +24,7 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
     let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
 
     before do
+      create :assign_to, gestionnaire: gestionnaire, procedure: procedure
       page.find_by_id(:gestionnaire_email).set  gestionnaire.email
       page.find_by_id(:gestionnaire_password).set  gestionnaire.password
       page.click_on 'Se connecter'

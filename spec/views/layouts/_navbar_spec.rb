@@ -13,12 +13,10 @@ describe 'layouts/_navbar.html.haml', type: :view do
         render
       end
       subject { rendered }
-      it { is_expected.to match(/href="\/users\/sign_in">Utilisateur/) }
+      it { is_expected.not_to match(/href="\/users\/sign_in">Utilisateur/) }
       it { is_expected.to match(/href="\/gestionnaires\/sign_in">Accompagnateur/) }
-      it { is_expected.to match(/href="\/administrateurs\/sign_in">Administrateur/) }
-      it { is_expected.not_to match(/Mes Dossiers/) }
-      it { is_expected.not_to match(/Mes Procédures/) }
-      it { is_expected.not_to match(/Se déconnecter/) }
+      it { is_expected.not_to match(/href="\/administrateurs\/sign_in">Administrateur/) }
+      it { is_expected.to match(/Connexion/) }
     end
 
     context 'when administrateur is connected' do
@@ -33,9 +31,7 @@ describe 'layouts/_navbar.html.haml', type: :view do
       it { is_expected.not_to match(/href="\/users\/sign_in">Utilisateur/) }
       it { is_expected.not_to match(/href="\/gestionnaires\/sign_in">Accompagnateur/) }
       it { is_expected.not_to match(/href="\/administrateurs\/sign_in">Administrateur/) }
-      it { is_expected.not_to match(/Mes dossiers/) }
-      it { is_expected.to match(/Mes procédures/) }
-      it { is_expected.to match(/Se déconnecter/) }
+      it { is_expected.to match(/Déconnexion/) }
     end
 
     context 'when gestionnaire is connected' do
@@ -50,8 +46,6 @@ describe 'layouts/_navbar.html.haml', type: :view do
       it { is_expected.not_to match(/href="\/users\/sign_in">Utilisateur/) }
       it { is_expected.not_to match(/href="\/gestionnaires\/sign_in">Accompagnateur/) }
       it { is_expected.not_to match(/href="\/administrateurs\/sign_in">Administrateur/) }
-      it { is_expected.not_to match(/Mes procédures/) }
-      it { is_expected.to match(/Mes dossiers/) }
       it { is_expected.to match(/Déconnexion/) }
     end
 

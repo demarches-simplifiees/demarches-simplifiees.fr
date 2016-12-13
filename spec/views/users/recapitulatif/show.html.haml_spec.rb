@@ -17,15 +17,10 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
 
       it 'la section infos dossier est présente' do
-        expect(rendered).to have_selector('#infos_dossier')
-      end
-
-      it 'le flux de commentaire est présent' do
-        expect(rendered).to have_selector('#commentaires_flux')
+        expect(rendered).to have_selector('#dossier')
       end
 
       it 'le numéro de dossier est présent' do
-        expect(rendered).to have_selector('#dossier_id')
         expect(rendered).to have_content(dossier_id)
       end
 
@@ -40,25 +35,15 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           end
         end
 
-        context 'lien carte' do
-          it 'le lien vers carte est présent' do
+        context 'lien mise à jour pj' do
+          it 'le lien vers la mise à jour des pj est présent' do
             expect(rendered).to have_css('#maj_pj')
           end
         end
 
-        context 'lien carte' do
+        context 'lien siret' do
           it 'le lien vers le renseignement un SIRET est présent' do
             expect(rendered).to have_css('#add_siret')
-          end
-        end
-
-        context 'lien carte' do
-          it 'le lien vers carte est présent' do
-            expect(rendered).to have_css('#maj_carte')
-          end
-
-          it 'le lien vers description est correct' do
-            expect(rendered).to have_selector("a[id=maj_carte][href='/users/dossiers/#{dossier_id}/carte']")
           end
         end
       end
@@ -71,8 +56,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           render
         end
 
-        it { expect(rendered).to have_content('Nouveau') }
-
         it 'button Modifier les document est present' do
           expect(rendered).to have_content('Modifier les documents')
           expect(rendered).to have_css('#UploadPJmodal')
@@ -80,36 +63,11 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
       end
 
-      context 'when dossier state is replied' do
-        let(:state) { 'replied' }
-
-        before do
-          render
-        end
-
-        it { expect(rendered).to have_content('Répondu') }
-      end
-
-      context 'when dossier state is updated' do
-        let(:state) { 'updated' }
-
-        before do
-          render
-        end
-
-        it { expect(rendered).to have_content('Mis à jour') }
-      end
-
       context 'when dossier state is validated' do
         let(:state) { 'validated' }
 
         before do
           render
-        end
-
-        it 'button Procéder au dépôt définitif est present' do
-          expect(rendered).to have_css('#validate_button')
-          expect(rendered).to have_content('Procéder au dépôt définitif')
         end
 
         it 'button Editer mon dossier n\'est plus present' do
@@ -129,8 +87,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           render
         end
 
-        it { expect(rendered).to have_content('Déposé') }
-
         it 'button Editer mon dossier n\'est plus present' do
           expect(rendered).not_to have_css('#maj_infos')
           expect(rendered).not_to have_content('Modifier mon dossier')
@@ -143,7 +99,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         before do
           render
         end
-        it { expect(rendered).to have_content('Accepté') }
 
         it 'button Editer mon dossier n\'est plus present' do
           expect(rendered).not_to have_css('#maj_infos')
@@ -157,7 +112,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         before do
           render
         end
-        it { expect(rendered).to have_content('Refusé') }
 
         it 'button Editer mon dossier n\'est plus present' do
           expect(rendered).not_to have_css('#maj_infos')
@@ -171,7 +125,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         before do
           render
         end
-        it { expect(rendered).to have_content('Sans suite') }
 
         it 'button Editer mon dossier n\'est plus present' do
           expect(rendered).not_to have_css('#maj_infos')
@@ -236,10 +189,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         describe 'les liens de modifications' do
           it 'describe link is not present' do
             expect(rendered).to have_css('#maj_infos')
-          end
-
-          it 'map link is present' do
-            expect(rendered).to have_css('#maj_carte')
           end
 
           it 'PJ link is present' do

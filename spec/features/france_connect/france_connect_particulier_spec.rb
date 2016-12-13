@@ -62,7 +62,7 @@ feature 'France Connect Particulier  Connexion' do
             end
 
             scenario 'he is redirected to user dossiers page' do
-              expect(page).to have_content('Mes dossiers')
+              expect(page).to have_content('Dossiers')
             end
           end
         end
@@ -74,7 +74,7 @@ feature 'France Connect Particulier  Connexion' do
           end
 
           scenario 'he is redirected to user dossiers page' do
-            expect(page).to have_content('Mes dossiers')
+            expect(page).to have_content('Dossiers')
           end
         end
       end

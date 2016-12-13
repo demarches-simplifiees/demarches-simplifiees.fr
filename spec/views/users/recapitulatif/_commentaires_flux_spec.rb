@@ -35,20 +35,4 @@ describe 'users/recapitulatif/_commentaires_flux.html.haml', type: :view, vcr: {
       end
     end
   end
-
-  context 'Affichage du formulaire de commentaire' do
-    it 'Le formulaire envoie vers /dossiers/:dossier_id/commentaire en #POST' do
-      expect(rendered).to have_selector("form[action='/users/dossiers/#{dossier_id}/commentaire'][method=post]")
-    end
-
-    it 'Champs de texte' do
-      expect(rendered).to have_selector('textarea[id=texte_commentaire][name=texte_commentaire]')
-    end
-
-    describe 'File input' do
-      it 'have file_input tag' do
-        expect(rendered).to have_css('#piece_justificative_content')
-      end
-    end
-  end
 end
