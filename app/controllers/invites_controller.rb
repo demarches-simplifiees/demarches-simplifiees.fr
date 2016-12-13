@@ -6,8 +6,10 @@ class InvitesController < ApplicationController
 
     class_var = @current_devise_profil.class == User ? InviteUser : InviteGestionnaire
 
-    user = User.find_by_email(params[:email])
-    invite = class_var.create(dossier_id: params[:dossier_id], user: user, email: params[:email].downcase, email_sender: email_sender)
+    email = params[:email].downcase
+
+    user = User.find_by_email(email)
+    invite = class_var.create(dossier_id: params[:dossier_id], user: user, email: email, email_sender: email_sender)
 
     if invite.valid?
       InviteMailer.invite_user(invite).deliver_now!   unless invite.user.nil?

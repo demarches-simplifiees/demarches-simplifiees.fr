@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161115053251) do
+ActiveRecord::Schema.define(version: 20161205110427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -278,6 +278,13 @@ ActiveRecord::Schema.define(version: 20161115053251) do
 
   add_index "pieces_justificatives", ["dossier_id"], name: "index_pieces_justificatives_on_dossier_id", using: :btree
   add_index "pieces_justificatives", ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
+
+  create_table "preference_devise_profils", force: :cascade do |t|
+    t.string  "last_current_devise_profil"
+    t.integer "administrateurs_id"
+    t.integer "gestionnaires_id"
+    t.integer "users_id"
+  end
 
   create_table "preference_list_dossiers", force: :cascade do |t|
     t.string  "libelle"
