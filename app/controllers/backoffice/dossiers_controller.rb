@@ -2,8 +2,17 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   respond_to :html, :xlsx, :ods, :csv
 
   def index
-    super
-    procedure = current_gestionnaire.procedure_filter || dossiers_list_facade.gestionnaire_procedures_name_and_id_list.first[:id]
+    procedure = current_gestionnaire.procedure_filter
+
+    if procedure.nil?
+      procedure_list = dossiers_list_facade.gestionnaire_procedures_name_and_id_list
+      if procedure_list.count == 0
+        flash.alert = "Vous n'avez aucune procédure d'affectée."
+        return redirect_to root_path
+      end
+
+      procedure = procedure_list.first[:id]
+    end
 
     redirect_to backoffice_dossiers_procedure_path(id: procedure)
   end
@@ -27,8 +36,8 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       dossiers = dossiers_list_facade(param_liste).dossiers_to_display
       respond_to do |format|
         format.xlsx { render xlsx: dossiers }
-        format.ods  { render ods:  dossiers }
-        format.csv  { render csv:  dossiers }
+        format.ods { render ods: dossiers }
+        format.csv { render csv: dossiers }
       end
     end
   end
@@ -43,9 +52,9 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     # full text search
     unless @dossiers.any?
       @dossiers = Search.new(
-        gestionnaire: current_gestionnaire,
-        query: @search_terms,
-        page: params[:page]
+          gestionnaire: current_gestionnaire,
+          query: @search_terms,
+          page: params[:page]
       ).results
     end
 

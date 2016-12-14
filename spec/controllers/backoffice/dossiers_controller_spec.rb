@@ -17,6 +17,26 @@ describe Backoffice::DossiersController, type: :controller do
     create :assign_to, procedure: procedure, gestionnaire: gestionnaire
   end
 
+  describe 'GET #index' do
+    subject { get :index }
+
+    before do
+      sign_in gestionnaire
+    end
+
+    context 'when gestionnaire is assign to a procedure' do
+      it { is_expected.to redirect_to backoffice_dossiers_procedure_path(id: procedure.id) }
+    end
+
+    context 'when gestionnaire is not assign to a procedure' do
+      before do
+        AssignTo.where(procedure: procedure, gestionnaire: gestionnaire).delete_all
+      end
+
+      it { is_expected.to redirect_to root_path }
+    end
+  end
+
   describe 'GET #show' do
     context 'gestionnaire is connected' do
       before do

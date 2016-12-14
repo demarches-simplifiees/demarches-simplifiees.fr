@@ -17,10 +17,16 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
 
       it 'la section infos dossier est présente' do
-        expect(rendered).to have_selector('#dossier')
+        expect(rendered).to have_selector('#infos_dossier')
+      end
+
+      it 'le flux de commentaire est présent' do
+        expect(rendered).to have_selector('#messages')
       end
 
       it 'le numéro de dossier est présent' do
+        pending 'move to test layout'
+        expect(rendered).to have_selector('#dossier_id')
         expect(rendered).to have_content(dossier_id)
       end
 
@@ -35,102 +41,43 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           end
         end
 
-        context 'lien mise à jour pj' do
-          it 'le lien vers la mise à jour des pj est présent' do
+        context 'lien carte' do
+          it 'le lien vers carte est présent' do
             expect(rendered).to have_css('#maj_pj')
           end
         end
 
-        context 'lien siret' do
+        context 'lien carte' do
           it 'le lien vers le renseignement un SIRET est présent' do
             expect(rendered).to have_css('#add_siret')
+          end
+        end
+
+        context 'lien carte' do
+          it 'le lien vers carte est présent' do
+            pending 'map: later'
+            expect(rendered).to have_css('#maj_carte')
+          end
+
+          it 'le lien vers description est correct' do
+            pending 'map: later'
+            expect(rendered).to have_selector("a[id=maj_carte][href='/users/dossiers/#{dossier_id}/carte']")
           end
         end
       end
     end
 
-    context 'buttons to change dossier state' do
-      context 'when dossier state is initiated' do
-        let(:state) { 'initiated' }
-        before do
-          render
-        end
-
-        it 'button Modifier les document est present' do
-          expect(rendered).to have_content('Modifier les documents')
-          expect(rendered).to have_css('#UploadPJmodal')
-        end
-
+    context 'when dossier state is initiated' do
+      let(:state) { 'initiated' }
+      before do
+        render
       end
 
-      context 'when dossier state is validated' do
-        let(:state) { 'validated' }
-
-        before do
-          render
-        end
-
-        it 'button Editer mon dossier n\'est plus present' do
-          expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Modifier mon dossier')
-        end
-
-        it 'button Modifier les document n\'est plus present' do
-          expect(rendered).not_to have_content('Modifier les documents')
-        end
+      it 'button Modifier les document est present' do
+        expect(rendered).to have_content('Modifier les documents')
+        expect(rendered).to have_css('#UploadPJmodal')
       end
 
-      context 'when dossier state is submitted' do
-        let(:state) { 'submitted' }
-
-        before do
-          render
-        end
-
-        it 'button Editer mon dossier n\'est plus present' do
-          expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Modifier mon dossier')
-        end
-      end
-
-      context 'when dossier state is closed' do
-        let(:state) { 'closed' }
-
-        before do
-          render
-        end
-
-        it 'button Editer mon dossier n\'est plus present' do
-          expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Modifier mon dossier')
-        end
-      end
-
-      context 'when dossier state is refused' do
-        let(:state) { 'refused' }
-
-        before do
-          render
-        end
-
-        it 'button Editer mon dossier n\'est plus present' do
-          expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Modifier mon dossier')
-        end
-      end
-
-      context 'when dossier state is without_continuation' do
-        let(:state) { 'without_continuation' }
-
-        before do
-          render
-        end
-
-        it 'button Editer mon dossier n\'est plus present' do
-          expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Modifier mon dossier')
-        end
-      end
     end
 
     context 'when invite is logged' do
@@ -189,6 +136,11 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         describe 'les liens de modifications' do
           it 'describe link is not present' do
             expect(rendered).to have_css('#maj_infos')
+          end
+
+          it 'map link is present' do
+            pending 'map: later'
+            expect(rendered).to have_css('#maj_carte')
           end
 
           it 'PJ link is present' do

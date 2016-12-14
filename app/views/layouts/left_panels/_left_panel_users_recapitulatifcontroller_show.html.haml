@@ -7,8 +7,8 @@
 
 %div#action-block
   - if @facade.dossier.validated?
-    = form_tag(url_for({controller: :recapitulatif, action: :submit, dossier_id: @facade.dossier.id}), method: 'POST') do
-      %button.action= 'Procéder au dépôt définitif'
+    = form_tag(url_for({controller: 'users/recapitulatif', action: :submit, dossier_id: @facade.dossier.id}), method: 'POST') do
+      %button#validate_button.action= 'Procéder au dépôt définitif'
 
 %div#menu-block
 

@@ -1,5 +1,4 @@
 .content{id: ('commentaires_flux' + (@facade.champ_id.nil? ? '' : "_#{@facade.champ_id}")),style:'width:100%;'}
-
   -@facade.commentaires.each do |com|
     %span.text-info#email_contact{style: 'font-weight:bold'}
       =com.email

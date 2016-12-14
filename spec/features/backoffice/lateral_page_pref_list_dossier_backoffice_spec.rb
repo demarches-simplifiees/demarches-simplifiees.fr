@@ -50,6 +50,11 @@ feature 'usage of pref list dossier lateral panel', js: true do
           expect(page).to have_css('#delete_pref_list_entreprise_siren')
         end
 
+        scenario 'dossier is brought up to date' do
+          wait_for_ajax
+          expect(page).to have_selector("a.sortable[data-attr='entreprise.siren']", visible: false)
+        end
+
         context 'when on click on delete attribut button' do
           before do
             page.click_on 'delete_pref_list_entreprise_siren'
@@ -63,6 +68,16 @@ feature 'usage of pref list dossier lateral panel', js: true do
           scenario 'dossier is brought up to date', js: true do
             wait_for_ajax
             expect(page).not_to have_selector("a.sortable[data-attr='entreprise.siren']")
+          end
+
+          context 'when on click on close pref list button' do
+            before do
+              page.click_on 'pref_list_dossier_close_action'
+            end
+
+            scenario 'lateral panel is masked' do
+              expect(page).to have_css('#pref_list_menu', visible: false)
+            end
           end
         end
       end

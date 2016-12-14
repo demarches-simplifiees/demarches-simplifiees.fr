@@ -1,7 +1,7 @@
 %div#first-block
   %div.infos
     %div.projet-name #{@facade.dossier.nom_projet.capitalize rescue nil}
-    %div= t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
+    #dossier_id= t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
 
 %div#action-block
   - if gestionnaire_signed_in?

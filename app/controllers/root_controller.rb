@@ -7,21 +7,29 @@ class RootController < ApplicationController
     end
 
     if gestionnaire_signed_in?
-      redirect_to backoffice_dossiers_procedure_path(id: current_gestionnaire.procedure_filter)
+      procedure_id = current_gestionnaire.procedure_filter
+      if procedure_id.nil?
+        procedure_list = current_gestionnaire.procedures
 
+        if procedure_list.count > 0
+          return redirect_to backoffice_dossiers_procedure_path(id: procedure_list.first.id)
+        else
+          flash.alert = "Vous n'avez aucune procédure d'affectée"
+        end
+      end
     elsif user_signed_in?
-      redirect_to users_dossiers_path
+      return redirect_to users_dossiers_path
 
     elsif administrateur_signed_in?
-      redirect_to admin_procedures_path
+      return redirect_to admin_procedures_path
 
     elsif administration_signed_in?
-      redirect_to administrations_path
+      return redirect_to administrations_path
 
-    else
-      # @latest_release = Github::Releases.latest
-      @latest_release = nil
-      render 'landing'
     end
+
+    # @latest_release = Github::Releases.latest
+    @latest_release = nil
+    render 'landing'
   end
 end

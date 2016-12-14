@@ -71,6 +71,9 @@ feature 'user path for dossier creation' do
               page.find_by_id("champs_#{Dossier.last.champs.first.id}").set 'Mon super projet'
               page.click_on 'Soumettre mon dossier'
             end
+            scenario 'user is on recap page' do
+              expect(page).to have_css('#users_recapitulatif_dossier_show')
+            end
           end
         end
       end

@@ -23,8 +23,12 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       expect(rendered).not_to have_css('#UploadPJmodal')
     end
 
-    it 'dossier number is present' do
-      expect(rendered).to have_content(dossier_id)
+    it 'enterprise informations are present' do
+      expect(rendered).to have_selector('#infos_entreprise')
+    end
+
+    it 'dossier informations are present' do
+      expect(rendered).to have_selector('#infos_dossier')
     end
 
     context 'edit link are present' do
@@ -41,111 +45,4 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       end
     end
   end
-
-  context 'dossier state changements' do
-
-    context 'when dossier have state validated' do
-      let(:state) { 'validated' }
-
-      before do
-        render
-      end
-
-      it 'button Déclarer complet  is not present' do
-        expect(rendered).not_to have_content('Déclarer complet')
-      end
-    end
-
-    context 'when dossier have state closed' do
-      let(:state) { 'closed' }
-
-      before do
-        render
-      end
-
-      it 'button Accepter le dossier is not present' do
-        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
-        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
-        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
-      end
-    end
-
-    context 'when dossier have state without_continuation' do
-      let(:state) { 'without_continuation' }
-
-      before do
-        render
-      end
-
-      it 'button Déclarer complet is not present' do
-        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
-        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
-        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
-      end
-    end
-
-    context 'when dossier have state refused' do
-      let(:state) { 'refused' }
-
-      before do
-        render
-      end
-
-      it 'button Déclarer complet is not present' do
-        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Accepter"]')
-        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Classer sans suite"]')
-        expect(rendered).not_to have_css('.action_button[data-toggle="tooltip"][title="Refuser"]')
-      end
-    end
-  end
-
-  #TODO réactiver
-  # context 'la liste des pièces justificatives est présente' do
-  #   context 'Attestation MSA' do
-  #     let(:id_piece_justificative) { 93 }
-  #
-  #     it 'la ligne de la pièce justificative est présente' do
-  #       expect(rendered).to have_selector("tr[id=piece_justificative_#{id_piece_justificative}]")
-  #     end
-  #
-  #     it 'le bouton "Récupérer" est présent' do
-  #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_selector("a[href='']")
-  #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_content('Récupérer')
-  #     end
-  #   end
-  #
-  #   context 'Attestation RDI' do
-  #     let(:id_piece_justificative) { 103 }
-  #
-  #     it 'la ligne de la pièce justificative est présente' do
-  #       expect(rendered).to have_selector("tr[id=piece_justificative_#{id_piece_justificative}]")
-  #     end
-  #
-  #     it 'le libelle "Pièce manquante" est présent' do
-  #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_content('Pièce non fournie')
-  #     end
-  #   end
-  #
-  #   context 'Devis' do
-  #     let(:id_piece_justificative) { 388 }
-  #     let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
-  #
-  #     before do
-  #       piece_justificative = dossier.pieces_justificatives.where(type_de_piece_justificative_id: 388).first
-  #       piece_justificative.content = content
-  #       piece_justificative.save!
-  #       visit "/admin/dossiers/#{dossier_id}"
-  #     end
-  #
-  #     it 'la ligne de la pièce justificative est présente' do
-  #       expect(rendered).to have_selector("tr[id=piece_justificative_#{id_piece_justificative}]")
-  #     end
-  #
-  #     it 'le libelle "Consulter" est présent' do
-  #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}] a")[:href]).to have_content('piece_justificative_388.pdf')
-  #       expect(rendered.find("tr[id=piece_justificative_#{id_piece_justificative}]")).to have_content('Consulter')
-  #     end
-  #   end
-  # end
-  #
 end
