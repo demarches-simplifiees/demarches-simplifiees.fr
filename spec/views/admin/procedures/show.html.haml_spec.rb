@@ -30,7 +30,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
       end
 
       describe 'publish button is visible' do
-        it { expect(rendered).to have_css('a#publish') }
+        it { expect(rendered).to have_css('a#publish-procedure') }
         it { expect(rendered).not_to have_css('button#archive') }
         it { expect(rendered).not_to have_css('a#reenable') }
       end
