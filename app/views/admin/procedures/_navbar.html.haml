@@ -1,27 +1,27 @@
 %li{ class: ('active' if active == 'Informations') }
-  = link_to('Informations', admin_procedure_path(@procedure))
+  = link_to 'Informations', admin_procedure_path(@procedure), id: 'onglet-infos'
 
 %li{ class: ('active' if active == 'Accompagnateurs') }
-  = link_to(t('dynamics.admin.procedure.onglets.accompagnateurs'), admin_procedure_accompagnateurs_path(@procedure))
+  = link_to t('dynamics.admin.procedure.onglets.accompagnateurs'), admin_procedure_accompagnateurs_path(@procedure), id: 'onglet-accompagnateurs'
 
 %li{ class: ('disabled' if @procedure.locked?) || ('active' if active == 'Description') }
-  = link_to_unless(@procedure.locked?, 'Description', edit_admin_procedure_path(@procedure)) do
-    = link_to('Description', '#')
+  = link_to_unless(@procedure.locked?, 'Description', edit_admin_procedure_path(@procedure), id: 'onglet-description') do
+    = link_to 'Description', '#', id: 'onglet-description'
 
 %li{ class: ('disabled' if @procedure.locked?) || ('active' if active == 'Champs') }
-  = link_to_unless(@procedure.locked?, 'Champs', admin_procedure_types_de_champ_path(@procedure)) do
-    = link_to('Champs', '#')
+  = link_to_unless(@procedure.locked?, 'Champs', admin_procedure_types_de_champ_path(@procedure), id: 'onglet-champs') do
+    = link_to 'Champs', '#', id: 'onglet-champs'
 
 %li{ class: ('disabled' if @procedure.locked?) || ('active' if active == 'Pieces') }
-  = link_to_unless(@procedure.locked?, 'Pièces justificatives', admin_procedure_pieces_justificatives_path(@procedure)) do
-    = link_to('Pièces justificatives', '#')
+  = link_to_unless(@procedure.locked?, 'Pièces justificatives', admin_procedure_pieces_justificatives_path(@procedure), id: 'onglet-pieces') do
+    = link_to 'Pièces justificatives', '#', id: 'onglet-pieces'
 
 %li{ class: ('disabled' if @procedure.locked?) || ('active' if active == 'Champs privés') }
-  = link_to_unless(@procedure.locked?, 'Champs privés', admin_procedure_types_de_champ_private_path(@procedure)) do
-    = link_to('Champs privés', '#')
+  = link_to_unless(@procedure.locked?, 'Champs privés', admin_procedure_types_de_champ_private_path(@procedure), id: 'onglet-private-champs') do
+    = link_to 'Champs privés', '#', id: 'onglet-private-champs'
 
 %li{ class: ('active' if active == 'E-mails') }
-  = link_to('E-mails', admin_procedure_mails_path(@procedure))
+  = link_to 'E-mails', admin_procedure_mails_path(@procedure), id: 'onglet-emails'
 
 %li{ class: ('active' if active == 'Prévisualisation'), style: 'float:right' }
-  = link_to('Prévisualisation', admin_procedure_previsualisation_path(@procedure), {style: 'font-style: italic;'})
+  = link_to 'Prévisualisation', admin_procedure_previsualisation_path(@procedure), id: 'onglet-preview'

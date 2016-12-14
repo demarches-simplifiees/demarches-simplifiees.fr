@@ -34,11 +34,12 @@ require 'factory_girl'
 
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
+Capybara.ignore_hidden_elements = false
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, js_errors: true, port: 44_678 + ENV['TEST_ENV_NUMBER'].to_i, phantomjs_options: ['--proxy-type=none'], timeout: 180)
 end
 
-# ActiveSupport::Deprecation.silenced = true
+#ActiveSupport::Deprecation.silenced = true
 
 Capybara.default_max_wait_time = 1
 

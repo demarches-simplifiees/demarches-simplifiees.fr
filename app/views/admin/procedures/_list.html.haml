@@ -15,7 +15,7 @@
         %td.col-md-6.col-lg-6
           = link_to(procedure.libelle, "/admin/procedures/#{procedure.id}")
         - if @active_class
-          %td= link_to procedure.lien, procedure.lien
+          %td= link_to procedure.lien, procedure.lien, class: 'procedure-lien'
         %td
           = procedure.created_at_fr
         %td
