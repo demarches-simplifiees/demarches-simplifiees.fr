@@ -87,7 +87,7 @@ gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 gem 'as_csv'
 gem 'spreadsheet_architect'
 
-gem 'apipie-rails', '=0.3.1'
+gem 'apipie-rails'
 gem "maruku" # for Markdown support in apipie
 
 gem 'openstack'
