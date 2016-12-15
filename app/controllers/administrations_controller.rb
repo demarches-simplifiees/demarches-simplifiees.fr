@@ -15,10 +15,6 @@ class AdministrationsController < ApplicationController
 
   end
 
-  def show
-    @admin = Administrateur.find(params[:id])
-  end
-
   def create
     admin = Administrateur.new create_administrateur_params
 
