@@ -1,7 +1,7 @@
 class DossiersListFacades
   include Rails.application.routes.url_helpers
 
-  attr_accessor :procedure, :current_devise_profil
+  attr_accessor :procedure, :current_devise_profil, :liste
 
   def initialize current_devise_profil, liste, procedure = nil
     @current_devise_profil = current_devise_profil
@@ -16,10 +16,6 @@ class DossiersListFacades
     elsif user?
       @service ||= DossiersListUserService.new @current_devise_profil, @liste
     end
-  end
-
-  def liste
-    @liste
   end
 
   def total_dossier
@@ -60,28 +56,8 @@ class DossiersListFacades
     (@liste == 'brouillon' ? 'active' : '')
   end
 
-  def nouveaux_class
-    (@liste == 'nouveaux' ? 'active' : '')
-  end
-
-  def a_traiter_class
-    (@liste == 'a_traiter' ? 'active' : '')
-  end
-
   def en_construction_class
     (@liste == 'a_traiter' ? 'active' : '')
-  end
-
-  def fige_class
-    (@liste == 'fige' ? 'active' : '')
-  end
-
-  def en_attente_class
-    (@liste == 'en_attente' ? 'active' : '')
-  end
-
-  def deposes_class
-    (@liste == 'deposes' ? 'active' : '')
   end
 
   def valides_class
@@ -92,24 +68,12 @@ class DossiersListFacades
     (@liste == 'en_instruction' ? 'active' : '')
   end
 
-  def a_instruire_class
-    (@liste == 'a_instruire' ? 'active' : '')
-  end
-
   def termine_class
     (@liste == 'termine' ? 'active' : '')
   end
 
-  def suivi_class
-    (@liste == 'suivi' ? 'active' : '')
-  end
-
   def invite_class
     (@liste == 'invite' ? 'active' : '')
-  end
-
-  def search_class
-    (@liste == 'search' ? 'active' : '')
   end
 
   def all_state_total
@@ -124,36 +88,16 @@ class DossiersListFacades
     service.nouveaux.count
   end
 
-  def a_traiter_total
-    service.ouvert.count
-  end
-
   def en_construction_total
     service.en_construction.count
-  end
-
-  def fige_total
-    service.fige.count
-  end
-
-  def en_attente_total
-    service.waiting_for_user.count
   end
 
   def valides_total
     service.valides.count
   end
 
-  def deposes_total
-    service.deposes.count
-  end
-
   def en_instruction_total
     service.en_instruction.count
-  end
-
-  def a_instruire_total
-    service.a_instruire.count
   end
 
   def termine_total
@@ -166,50 +110,6 @@ class DossiersListFacades
 
   def invite_total
     service.invite.count
-  end
-
-  def brouillon_url
-    base_url 'brouillon'
-  end
-
-  def all_state_url
-    base_url 'all_state'
-  end
-
-  def suivi_url
-    base_url 'suivi'
-  end
-
-  def nouveaux_url
-    base_url 'nouveaux'
-  end
-
-  def a_traiter_url
-    base_url 'a_traiter'
-  end
-
-  def en_construction_url
-    base_url 'a_traiter'
-  end
-
-  def fige_url
-    base_url 'fige'
-  end
-
-  def en_attente_url
-    base_url 'en_attente'
-  end
-
-  def deposes_url
-    base_url 'deposes'
-  end
-
-  def a_instruire_url
-    base_url 'a_instruire'
-  end
-
-  def termine_url
-    base_url 'termine'
   end
 
   def filter_url
