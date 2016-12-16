@@ -51,4 +51,28 @@ RSpec.describe Users::Dossiers::InvitesController, type: :controller do
       end
     end
   end
+
+  describe '#GET show' do
+    let(:user) { create :user }
+
+    let(:invite) { create :invite, email: email, dossier: (create :dossier) }
+
+    subject { get :show, params: {id: invite.id} }
+
+    before do
+      sign_in user
+    end
+
+    context 'when invitation ID is attach at the user email account' do
+      let(:email) { user.email }
+      it { expect(subject.status).to eq 200 }
+    end
+
+    context 'when invitation ID is not attach at the user email account' do
+      let(:email) { 'fake@email.com' }
+
+      it { expect(subject.status).to eq 302 }
+      it { is_expected.to redirect_to users_dossiers_path }
+    end
+  end
 end
