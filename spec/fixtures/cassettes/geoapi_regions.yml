@@ -1,0 +1,57 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://geo.api.gouv.fr/regions?fields=nom
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (darwin15.6.0 x86_64) ruby/2.3.1p112
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 16 Dec 2016 09:24:28 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      - Accept-Encoding
+      X-Powered-By:
+      - Express
+      Access-Control-Allow-Origin:
+      - "*"
+      Etag:
+      - W/"2dd-2SAFdhiM3SIQ2017gqYxbw"
+      Strict-Transport-Security:
+      - max-age=15552000
+      Content-Encoding:
+      - gzip
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA11Ry2rDMBD8FeNLLxE0rybpzTE0F6eYHHopPSyWSASyNllJ
+        Abf0F/ofvucP/GO1aIvXPQm0M7MzO68fqcU6fUx3AaQyGM4qnaQVStX/3U/T
+        z8kfYA/ktdWXwAEzBtiFBiwfztmwgOTQtcFqtEx/MdJv0HvOf2DT7ssoIZV4
+        IrAVA025xVxZT0q8gEmkSgrUxJAzvmyLgY54tL+CJyVyrH3XDt5mK7b9GakG
+        KzWXW4/nUpTgosMcDGgnSl0BjRhzfqzMOKh68AnqM0QfGUll+7dAItD8jgtu
+        vITGxXAG/udbcvktKR9lhzxL3kZ2CdrHLaLQNQanrShRewzREPVXVG5grpaj
+        Hu0xKImVOPQ8p41BK/ZaalE21LW2a0dUXmEWropi1MOpu8XE5syx61FMwqvq
+        i/4Biby7eZXIu+w90GBswyPlSI7F3fRqb99L+pyA3QIAAA==
+    http_version: 
+  recorded_at: Fri, 16 Dec 2016 09:24:25 GMT
+recorded_with: VCR 3.0.3

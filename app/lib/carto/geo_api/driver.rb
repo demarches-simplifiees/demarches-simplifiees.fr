@@ -11,7 +11,15 @@ module Carto
       end
 
       def self.pays
-        File.open('lib/carto/geo_api/pays.json').read
+        File.open('app/lib/carto/geo_api/pays.json').read
+      end
+
+      def self.departements_url
+        'https://geo.api.gouv.fr/departements'
+      end
+
+      def self.regions_url
+        'https://geo.api.gouv.fr/regions'
       end
 
       private
@@ -22,13 +30,6 @@ module Carto
         nil
       end
 
-      def self.departements_url
-        'https://geo.api.gouv.fr/departements'
-      end
-
-      def self.regions_url
-        'https://geo.api.gouv.fr/regions'
-      end
     end
   end
 end
