@@ -2,16 +2,26 @@ require 'spec_helper'
 
 describe Ban::SearchController, type: :controller do
   describe '#GET get' do
-    let (:request) { '' }
+    subject { get :get, params: {request: request} }
 
     before do
-      stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=5&q=").
-          to_return(:status => 200, :body => 'Missing query', :headers => {})
-
-      get :get, params: {request: request}
+      subject
     end
 
-    it { expect(response.status).to eq 200 }
+    context 'when request return result', vcr: {cassette_name: 'bano_search_paris'} do
+      let (:request) { 'Paris' }
+
+      it { expect(response.status).to eq 200 }
+      it { expect(response.body).to eq '[{"label":"Paris"},{"label":"Paris 63120 Courpière"},{"label":"PARIS (Vaillac) 46240 Cœur de Causse"},{"label":"Paris 40500 Saint-Sever"},{"label":"Paris Buton 37140 Bourgueil"}]' }
+    end
+
+    context 'when request return nothing', vcr: {cassette_name: 'bano_search_nothing'} do
+
+      let (:request) { 'je recherche pas grand chose' }
+
+      it { expect(response.status).to eq 200 }
+      it { expect(response.body).to eq "[]" }
+    end
   end
 
   describe '#GET get_address_point' do
