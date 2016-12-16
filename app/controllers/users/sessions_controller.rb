@@ -23,8 +23,8 @@ class Users::SessionsController < Sessions::SessionsController
 #POST /resource/sign_in
   def create
     try_to_authenticate(User)
-    try_to_authenticate(Gestionnaire) if Features.unified_login
-    try_to_authenticate(Administrateur) if Features.unified_login
+    try_to_authenticate(Gestionnaire)
+    try_to_authenticate(Administrateur)
 
     if user_signed_in?
       current_user.update_attributes(loged_in_with_france_connect: '')

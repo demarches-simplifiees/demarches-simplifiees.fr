@@ -6,7 +6,7 @@ class Administrateur < ActiveRecord::Base
   has_many :procedures
 
   before_save :ensure_api_token
-  after_update :sync_credentials, if: -> { Features.unified_login }
+  after_update :sync_credentials
 
   def ensure_api_token
     if api_token.nil?

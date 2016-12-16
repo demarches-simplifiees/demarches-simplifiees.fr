@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
 
   delegate :given_name, :family_name, :email_france_connect, :gender, :birthdate, :birthplace, :france_connect_particulier_id, to: :france_connect_information
   accepts_nested_attributes_for :france_connect_information
-  after_update :sync_credentials, if: -> { Features.unified_login }
+  after_update :sync_credentials
 
   def self.find_for_france_connect email, siret
     user = User.find_by_email(email)

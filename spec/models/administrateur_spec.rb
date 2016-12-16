@@ -44,8 +44,6 @@ describe Administrateur, type: :model do
   end
 
   context 'unified login' do
-    before { allow(Features).to receive(:unified_login).and_return(true) }
-
     it 'syncs credentials to associated user' do
       administrateur = create(:administrateur)
       user = create(:user, email: administrateur.email)

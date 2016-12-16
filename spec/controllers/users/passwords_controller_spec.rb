@@ -12,7 +12,6 @@ describe Users::PasswordsController, type: :controller do
       let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'password') }
 
       before do
-        allow(Features).to receive(:unified_login).and_return(true)
         @token = user.send(:set_reset_password_token)
         gestionnaire # make sure it's created
         administrateur # make sure it's created

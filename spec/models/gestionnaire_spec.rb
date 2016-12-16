@@ -186,8 +186,6 @@ describe Gestionnaire, type: :model do
   end
 
   context 'unified login' do
-    before { allow(Features).to receive(:unified_login).and_return(true) }
-
     it 'syncs credentials to associated user' do
       gestionnaire = create(:gestionnaire)
       user = create(:user, email: gestionnaire.email)

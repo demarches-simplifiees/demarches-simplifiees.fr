@@ -13,9 +13,6 @@ describe 'layouts/_navbar.html.haml', type: :view do
         render
       end
       subject { rendered }
-      it { is_expected.not_to match(/href="\/users\/sign_in">Utilisateur/) }
-      it { is_expected.to match(/href="\/gestionnaires\/sign_in">Accompagnateur/) }
-      it { is_expected.not_to match(/href="\/administrateurs\/sign_in">Administrateur/) }
       it { is_expected.to match(/Connexion/) }
     end
 
@@ -28,9 +25,6 @@ describe 'layouts/_navbar.html.haml', type: :view do
       end
 
       subject { rendered }
-      it { is_expected.not_to match(/href="\/users\/sign_in">Utilisateur/) }
-      it { is_expected.not_to match(/href="\/gestionnaires\/sign_in">Accompagnateur/) }
-      it { is_expected.not_to match(/href="\/administrateurs\/sign_in">Administrateur/) }
       it { is_expected.to match(/Déconnexion/) }
     end
 
@@ -43,9 +37,6 @@ describe 'layouts/_navbar.html.haml', type: :view do
       end
 
       subject { rendered }
-      it { is_expected.not_to match(/href="\/users\/sign_in">Utilisateur/) }
-      it { is_expected.not_to match(/href="\/gestionnaires\/sign_in">Accompagnateur/) }
-      it { is_expected.not_to match(/href="\/administrateurs\/sign_in">Administrateur/) }
       it { is_expected.to match(/Déconnexion/) }
     end
 

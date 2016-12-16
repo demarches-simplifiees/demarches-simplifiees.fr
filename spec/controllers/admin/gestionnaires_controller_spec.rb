@@ -150,7 +150,6 @@ describe Admin::GestionnairesController, type: :controller do
 
     context 'unified login' do
       before do
-        allow(Features).to receive(:unified_login).and_return(true)
         subject
       end
 

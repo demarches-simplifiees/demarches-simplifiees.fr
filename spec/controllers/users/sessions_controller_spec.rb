@@ -51,8 +51,6 @@ describe Users::SessionsController, type: :controller do
       let(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
       let(:administrateur) { create(:administrateur, email: email, password: password) }
 
-      before { allow(Features).to receive(:unified_login).and_return(true) }
-
       it 'signs user in' do
         post :create, params: {user: {email: user.email, password: user.password}}
         expect(@response.redirect?).to be(true)
