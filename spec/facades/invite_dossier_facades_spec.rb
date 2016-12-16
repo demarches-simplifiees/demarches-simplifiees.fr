@@ -12,5 +12,4 @@ describe InviteDossierFacades do
   end
 
   it { expect(subject.dossier).to eq dossier }
-  it { expect(subject.commentaire_email).to eq email }
 end
