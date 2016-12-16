@@ -4,8 +4,8 @@ describe DossierDecorator do
   let(:dossier) { create(:dossier, created_at: Time.new(2015, 12, 24, 14, 10), updated_at: Time.new(2015, 12, 24, 14, 10)) }
   subject { dossier.decorate }
 
-  describe 'created_at' do
-    subject { super().created_at }
+  describe 'first_creation' do
+    subject { super().first_creation }
     it { is_expected.to eq('24/12/2015 14:10') }
   end
 
