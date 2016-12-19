@@ -19,9 +19,11 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-# require 'simplecov'
-# SimpleCov.start 'rails'
-# puts "required simplecov"
+if ENV['COV']
+  require 'simplecov'
+  SimpleCov.start 'rails'
+  puts "required simplecov"
+end
 
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
@@ -77,20 +79,6 @@ module SmartListing
   end
 end
 
-class Features
-  #def self.remote_storage
-  #  true
-  #end
-
-  def self.unified_login
-    false
-  end
-
-  def self.opensimplif
-    false
-  end
-end
-
 WebMock.disable_net_connect!(allow_localhost: true)
 
 RSpec.configure do |config|
@@ -128,7 +116,7 @@ RSpec.configure do |config|
     if Features.remote_storage
       VCR.use_cassette("ovh_storage_init") do
         CarrierWave.configure do |config|
-          config.fog_credentials = { provider: 'OpenStack' }
+          config.fog_credentials = {provider: 'OpenStack'}
         end
       end
     end
