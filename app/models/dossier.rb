@@ -172,56 +172,8 @@ class Dossier < ActiveRecord::Base
     state
   end
 
-  def all_state?
-    ALL_STATE.include?(state)
-  end
-
   def brouillon?
     BROUILLON.include?(state)
-  end
-
-  def nouveaux?
-    NOUVEAUX.include?(state)
-  end
-
-  def waiting_for_gestionnaire?
-    WAITING_FOR_GESTIONNAIRE.include?(state)
-  end
-
-  def waiting_for_user?
-    WAITING_FOR_USER.include?(state)
-  end
-
-  def en_construction?
-    EN_CONSTRUCTION.include?(state)
-  end
-
-  def ouvert?
-    OUVERT.include?(state)
-  end
-
-  def deposes?
-    DEPOSES.include?(state)
-  end
-
-  def valides?
-    VALIDES.include?(state)
-  end
-
-  def fige?
-    VALIDES.include?(state)
-  end
-
-  def a_instruire?
-    A_INSTRUIRE.include?(state)
-  end
-
-  def en_instruction?
-    EN_INSTRUCTION.include?(state)
-  end
-
-  def termine?
-    TERMINE.include?(state)
   end
 
   def self.all_state order = 'ASC'
