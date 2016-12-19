@@ -75,7 +75,7 @@
       }
     }
   }
-  #infos {
+  .infos {
     .split-row {
       margin: 0 0 20px 0;
     }
@@ -106,7 +106,7 @@
       color: #000000;
     }
   }
-  #dossier, #pieces-jointes, #infos, #carto, #private-fields {
+  #dossier, #pieces-jointes, .infos, #carto, #private-fields {
     .body {
       padding: 20px 20px 0 20px;
       color: #000000;
