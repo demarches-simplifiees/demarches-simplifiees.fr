@@ -44,7 +44,7 @@
             - else
               %div.col-md-1.col-lg-1.comments-off
                 = "-"
-            %div.col-md-5.col-lg-5.depositaire-info
+            %div.col-md-5.col-lg-5.depositaire-info{ id: "champ-#{champ.id}-value" }
               - unless champ.decorate.value.blank?
                 = champ.decorate.value.html_safe
 

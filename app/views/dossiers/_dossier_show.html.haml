@@ -22,7 +22,7 @@
             %textarea.form-control{id: 'texte_commentaire', class: 'wysihtml5', name: 'texte_commentaire', style: 'width: 100%; margin-bottom:2%', rows: '5', placeholder:"Commentaire"}
             %h4.text-primary{style: 'margin-top: 0px'} Ajouter un fichier
             = file_field_tag "piece_justificative[content]", accept:  PieceJustificative.accept_format, style: 'float: left; margin-left: 20px'
-            %input.form-control.btn.btn-send{ type: 'submit', value: 'ENVOYER' }
+            %input#save-message.form-control.btn.btn-send{ type: 'submit', value: 'ENVOYER' }
     - if last_comment = @facade.commentaires.first
       %div.last-commentaire
         .row
@@ -40,13 +40,13 @@
                   = file.original_filename
         .row
           .col-lg-12.col-md-12
-            %div.new-action
+            %div#open-message.new-action
               ENVOYER UN MESSAGE
     - else
       .last-commentaire
         .row
           .col-lg-12.col-md-12
-            %div.new-action
+            %div#open-message.new-action
               ENVOYER UN MESSAGE
 
 - if @facade.procedure.individual_with_siret
