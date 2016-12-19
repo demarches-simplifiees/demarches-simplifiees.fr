@@ -51,7 +51,7 @@
 
 - if @facade.procedure.individual_with_siret
   .default_data_block
-    %div.row.show-block#infos
+    %div.row.show-block.infos
       %div.header
         %div.col-lg-8.col-md-8.title-no-expanse
           %div.carret-right
@@ -62,7 +62,7 @@
 
 - unless @facade.entreprise.nil?
   .default_data_block
-    %div.row.show-block#infos_entreprise
+    %div.row.show-block.infos#infos_entreprise
       %div.header
         %div.col-lg-12.col-md-12.title
           %div.carret-right
@@ -71,8 +71,8 @@
       %div.body
         = render partial: '/dossiers/infos_entreprise'
 
-.default_data_block
-  %div.row.show-block#infos_dossier
+.default_data_block.default_visible
+  %div.row.show-block.infos#infos_dossier
     %div.header
       %div.col-lg-10.col-md-10.title
         %div.carret-right
