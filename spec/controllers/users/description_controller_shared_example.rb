@@ -27,6 +27,8 @@ shared_examples 'description_controller_spec' do
 
     it 'redirection vers start si mauvais dossier ID' do
       get :show, params: {dossier_id: bad_dossier_id}
+
+      expect(flash[:alert]).to be_present
       expect(response).to redirect_to(root_path)
     end
 

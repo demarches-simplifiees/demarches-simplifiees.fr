@@ -551,10 +551,6 @@ GEM
     spreadsheet_architect (1.4.8)
       axlsx (>= 2.0)
       rodf (= 0.3.7)
-    spring (2.0.0)
-      activesupport (>= 4.2)
-    spring-commands-rspec (1.0.4)
-      spring (>= 0.9.1)
     sprockets (3.7.0)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -687,8 +683,6 @@ DEPENDENCIES
   simplecov
   smart_listing
   spreadsheet_architect
-  spring
-  spring-commands-rspec
   therubyracer
   timecop
   turbolinks (~> 2.5)
