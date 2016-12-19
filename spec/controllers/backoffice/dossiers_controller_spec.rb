@@ -155,6 +155,8 @@ describe Backoffice::DossiersController, type: :controller do
 
       subject
     end
+
+    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
   end
 
   describe 'POST #receive' do
@@ -182,6 +184,8 @@ describe Backoffice::DossiersController, type: :controller do
 
       subject
     end
+
+    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
   end
 
   describe 'POST #refuse' do
@@ -205,6 +209,8 @@ describe Backoffice::DossiersController, type: :controller do
 
       subject
     end
+
+    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
   end
 
   describe 'POST #without_continuation' do
@@ -228,6 +234,8 @@ describe Backoffice::DossiersController, type: :controller do
 
       subject
     end
+
+    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
   end
 
   describe 'POST #close' do
@@ -250,6 +258,8 @@ describe Backoffice::DossiersController, type: :controller do
 
       subject
     end
+
+    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
   end
 
   describe 'PUT #toggle_follow' do
