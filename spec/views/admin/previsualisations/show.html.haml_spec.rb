@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe 'admin/previsualisations/show.html.haml', type: :view do
+  before do
+    @request.env['HTTP_REFERER'] = admin_procedures_url
+  end
+
   let(:user) { create(:user) }
   let(:cerfa_flag) { true }
   let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: cerfa_flag) }

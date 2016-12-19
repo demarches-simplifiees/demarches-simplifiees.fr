@@ -1,8 +1,0 @@
-%h2.text-info
-  -unless @procedure.logo.blank?
-    = image_tag @procedure.decorate.logo_img, style: 'width: 30px'
-  =@procedure.libelle
-%br
-
-%ul.nav.nav-tabs
-  = render partial: 'admin/procedures/navbar', locals: {active: active}
