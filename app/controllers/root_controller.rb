@@ -4,9 +4,11 @@ class RootController < ApplicationController
 
     if user_signed_in? && !route[:controller].match('users').nil?
       return redirect_to users_dossiers_path
-    end
 
-    if gestionnaire_signed_in?
+    elsif administrateur_signed_in? && !route[:controller].match('admin').nil?
+      return redirect_to admin_procedures_path
+
+    elsif gestionnaire_signed_in?
       procedure_id = current_gestionnaire.procedure_filter
       if procedure_id.nil?
         procedure_list = current_gestionnaire.procedures
@@ -16,7 +18,10 @@ class RootController < ApplicationController
         else
           flash.alert = "Vous n'avez aucune procédure d'affectée"
         end
+      else
+        return redirect_to backoffice_dossiers_procedure_path(id: procedure_id)
       end
+
     elsif user_signed_in?
       return redirect_to users_dossiers_path
 
@@ -25,7 +30,6 @@ class RootController < ApplicationController
 
     elsif administration_signed_in?
       return redirect_to administrations_path
-
     end
 
     # @latest_release = Github::Releases.latest
