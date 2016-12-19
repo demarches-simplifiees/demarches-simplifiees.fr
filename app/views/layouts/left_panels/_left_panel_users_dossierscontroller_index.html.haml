@@ -11,37 +11,37 @@
   %div.split-hr-left
   #procedure_list
     %a{:href => "#{url_for users_dossiers_path(liste: 'brouillon')}", 'data-toggle' => :tooltip, title: 'Les dossiers jamais proposés à la relecture.'}
-      %div.procedure_list_element{ class: @dossiers_list_facade.brouillon_class }
+      %div.procedure_list_element{ class: @dossiers_list_facade.brouillon_class, id: 'brouillon' }
         = "Brouillons"
         .badge.progress-bar-default
           = @dossiers_list_facade.brouillon_total
 
     %a{:href => "#{url_for users_dossiers_path(liste: 'a_traiter')}", 'data-toggle' => :tooltip, title: 'Les dossiers qui requièrent une action de votre part.'}
-      %div.procedure_list_element{ class: @dossiers_list_facade.en_construction_class }
+      %div.procedure_list_element{ class: @dossiers_list_facade.en_construction_class, id: 'a_traiter' }
         = "En construction"
         .badge.progress-bar-danger
           = @dossiers_list_facade.en_construction_total
 
     %a{:href => "#{url_for users_dossiers_path(liste: 'valides')}", 'data-toggle' => :tooltip, title: 'Les dossiers relus par votre accompagnateur pouvant être déposés pour examen.'}
-      %div.procedure_list_element{ class: @dossiers_list_facade.valides_class }
+      %div.procedure_list_element{ class: @dossiers_list_facade.valides_class, id: 'valides' }
         ="À déposer"
         .badge.progress-bar-purple
           = @dossiers_list_facade.valides_total
 
     %a{:href => "#{url_for users_dossiers_path(liste: 'en_instruction')}", 'data-toggle' => :tooltip, title: 'Les dossiers en cours d\'examen par l\'administration compétante.'}
-      %div.procedure_list_element{ class: @dossiers_list_facade.en_instruction_class }
+      %div.procedure_list_element{ class: @dossiers_list_facade.en_instruction_class, id: 'en_instruction' }
         ="En examen"
         .badge.progress-bar-default
           = @dossiers_list_facade.en_instruction_total
 
     %a{:href => "#{url_for users_dossiers_path(liste: 'termine')}", 'data-toggle' => :tooltip, title: 'Les dossiers cloturés qui peuvent être "Accepté", "Refusé" ou "Sans suite".'}
-      %div.procedure_list_element{ class:  @dossiers_list_facade.termine_class }
+      %div.procedure_list_element{ class:  @dossiers_list_facade.termine_class, id: 'termine' }
         = "Cloturé"
         .badge.progress-bar-success
           = @dossiers_list_facade.termine_total
 
     %a{:href => "#{url_for users_dossiers_path(liste: 'invite')}"}
-      %div.procedure_list_element{ class:  @dossiers_list_facade.invite_class }
+      %div.procedure_list_element{ class:  @dossiers_list_facade.invite_class, id: 'invite' }
         = "Invitation"
         .badge.progress-bar-warning
           = @dossiers_list_facade.invite_total
