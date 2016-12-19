@@ -7,14 +7,14 @@ class Backoffice::Dossiers::ProcedureController < Backoffice::DossiersListContro
 
     render 'backoffice/dossiers/index'
   rescue ActiveRecord::RecordNotFound
-    flash[:alert] = "Cette procédure n'existe pas ou vous n'y avez pas accès."
+    flash.alert = "Cette procédure n'existe pas ou vous n'y avez pas accès."
     redirect_to backoffice_dossiers_path
   end
 
   def filter
     super
 
-    redirect_to backoffice_dossiers_procedure_path(id: params[:id], liste: param_liste)
+    redirect_to backoffice_dossiers_procedure_path(id: params[:id])
   end
 
   private

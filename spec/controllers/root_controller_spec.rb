@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe RootController, type: :controller do
-
   subject { get :index }
 
   context 'when User is connected' do
@@ -13,11 +12,29 @@ describe RootController, type: :controller do
   end
 
   context 'when Gestionnaire is connected' do
+    let(:gestionnaire) { create(:gestionnaire) }
+
     before do
-      sign_in create(:gestionnaire)
+      sign_in gestionnaire
     end
 
-    it { expect(subject).to redirect_to(backoffice_dossiers_path) }
+    context 'when gestionnaire is affect to a procedure' do
+      before do
+        create :assign_to, procedure: (create :procedure), gestionnaire: gestionnaire
+      end
+
+      it { expect(subject).to redirect_to(backoffice_dossiers_procedure_path(id: Procedure.all.first.id)) }
+    end
+
+    context 'when gestionnaire is not affect to a procedure' do
+      render_views
+
+      before do
+        subject
+      end
+
+      it { expect(response.body).to have_css('#landing') }
+    end
   end
 
   context 'when Administrateur is connected' do
@@ -45,13 +62,11 @@ describe RootController, type: :controller do
     render_views
 
     before do
-      allow(Features).to receive(:unified_login).and_return(true)
       subject
     end
 
     it "won't have gestionnaire login link" do
       expect(response.body).to have_css("a[href='#{new_user_session_path}']")
-      expect(response.body).to_not have_css("a[href='#{new_gestionnaire_session_path}']")
     end
   end
 end

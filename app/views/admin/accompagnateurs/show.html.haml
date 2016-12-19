@@ -1,28 +1,25 @@
-=render partial: 'admin/procedures/head', locals: {active: 'Accompagnateurs'}
+.row.white-back
+  = render partial: 'admin/procedures/head', locals: {active: 'Accompagnateurs'}
 
-#accompagnateur_form
-  .row
-    .col-md-6.col-lg-6
-      %h3.text-info Disponibles
-      = smart_listing_render :accompagnateurs_not_assign
+  #accompagnateur_form
+    .row
+      .col-md-6.col-lg-6
+        %h3.text-info Disponibles
+        = smart_listing_render :accompagnateurs_not_assign
 
-      %br
-      %h3
-        =t('dynamics.admin.procedure.onglet_accompagnateurs.add.title')
-      #procedure_new.section.section-label
-        = form_for @gestionnaire, url: {controller: 'admin/gestionnaires', action: :create} do |f|
-          .row
-            .col-md-5.col-lg-5
-              = hidden_field_tag :procedure_id, params[:procedure_id]
-              =render partial: 'admin/gestionnaires/informations', locals: {f: f}
-            .col-md-2.col-lg-2
-              %br
-              %br
-              =f.submit 'Valider', class: 'btn btn-info', style: 'float:left'
-
-    .col-md-6.col-lg-6
-      %h3.text-success Affectés
-
-      = smart_listing_render :accompagnateurs_assign
-
-
+        %br
+        %h3
+          = t('dynamics.admin.procedure.onglet_accompagnateurs.add.title')
+        #procedure_new.section.section-label
+          = form_for @gestionnaire, url: {controller: 'admin/gestionnaires', action: :create} do |f|
+            .row
+              .col-md-5.col-lg-5
+                = hidden_field_tag :procedure_id, params[:procedure_id]
+                =render partial: 'admin/gestionnaires/informations', locals: {f: f}
+              .col-md-2.col-lg-2
+                %br
+                %br
+                = f.submit 'Valider', class: 'btn btn-info', style: 'float:left', id: 'add-gestionnaire-email'
+      .col-md-6.col-lg-6
+        %h3.text-success Affectés
+        = smart_listing_render :accompagnateurs_assign

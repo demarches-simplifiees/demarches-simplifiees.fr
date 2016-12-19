@@ -9,6 +9,7 @@ feature 'on backoffice page' do
 
   before do
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure
+    create :follow, gestionnaire: gestionnaire, dossier: dossier
 
     visit backoffice_path
   end
@@ -22,7 +23,7 @@ feature 'on backoffice page' do
     end
     context 'when he click on first dossier', js: true do
       before do
-        page.find("#tr_dossier_#{dossier.id}").click
+        page.find("#tr_dossier_#{dossier.id}", visible: true).click
       end
 
       scenario 'it redirect to dossier page' do
@@ -36,9 +37,10 @@ feature 'on backoffice page' do
 
       before do
         create :assign_to, gestionnaire: gestionnaire, procedure: procedure_individual
+        create :follow, gestionnaire: gestionnaire, dossier: dossier_individual
 
-        visit backoffice_path
-        page.find("#tr_dossier_#{dossier_individual.id}").click
+        visit backoffice_dossiers_procedure_path(id: procedure_individual.id)
+        page.find("#tr_dossier_#{dossier_individual.id}", visible: true).click
       end
 
       scenario 'it redirect to dossier page' do

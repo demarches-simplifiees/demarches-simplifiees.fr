@@ -21,7 +21,7 @@ class Admin::GestionnairesController < AdminController
       assign_gestionnaire!
     end
 
-    if procedure_id
+    if procedure_id.present?
       redirect_to admin_procedure_accompagnateurs_path(procedure_id: procedure_id)
     else
       redirect_to admin_gestionnaires_path
@@ -44,7 +44,7 @@ class Admin::GestionnairesController < AdminController
     ))
 
     if @gestionnaire.errors.messages.empty?
-      User.create(attributes) if Features.unified_login
+      User.create(attributes)
       flash.notice = 'Accompagnateur ajouté'
       GestionnaireMailer.new_gestionnaire(@gestionnaire.email, @gestionnaire.password).deliver_now!
       GestionnaireMailer.new_assignement(@gestionnaire.email, current_administrateur.email).deliver_now!

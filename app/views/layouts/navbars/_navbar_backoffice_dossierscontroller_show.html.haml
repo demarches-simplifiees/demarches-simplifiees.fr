@@ -1,0 +1,40 @@
+%div.col-lg-8.col-md-8.main-info
+  %span{ 'data-toggle' => :tooltip, "data-placement" => :bottom, title: @facade.dossier.procedure.libelle }
+    = @facade.dossier.procedure.libelle
+%div.col-lg-3.col-md-3.options
+  %div.row
+    %div.col-lg-12.col-md-12
+      - if current_gestionnaire.follow?(@facade.dossier.id)
+        = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), "data-method" => :put, class: "button-navbar-action",id: "suivre_dossier_#{@facade.dossier.id}" do
+          %i.fa.fa-user-times
+          Ne plus suivre
+      -else
+        = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'button-navbar-action', id: "suivre_dossier_#{@facade.dossier.id}" do
+          %i.fa.fa-user-plus
+          Suivre le dossier
+  %div.row
+    %div.col-lg-12.col-md-12
+      %div.dropdown-toggle{ 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
+        %i.fa.fa-user
+        = t('utils.involved')
+      %div.dropdown-menu.dropdown-menu-right.dropdown-pannel
+        %h4= t('dynamics.dossiers.followers.title')
+        %ul
+          - unless @facade.followers.empty?
+            - @facade.followers.each do |follower|
+              %li= follower.email
+          - else
+            = t('dynamics.dossiers.followers.empty')
+        %h4= t('dynamics.dossiers.invites.title')
+        %ul
+          - unless @facade.invites.empty?
+            - @facade.invites.each do |invite|
+              %li= invite.email
+          - else
+            = t('dynamics.dossiers.invites.empty')
+
+          %li
+            =form_tag invites_dossier_path(dossier_id: @facade.dossier.id), method: :post, class: 'form-inline' do
+              =text_field_tag :email, '', class: 'form-control', placeholder: 'Envoyer une invitation'
+              =submit_tag 'Ajouter', class: 'btn btn-success'
+

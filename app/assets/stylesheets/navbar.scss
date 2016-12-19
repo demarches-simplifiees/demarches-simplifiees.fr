@@ -1,0 +1,210 @@
+#header {
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+  border-radius: 0;
+  height: 60px;
+  #title_navbar{
+    color: white;
+    font-weight: bold;
+    font-size: 1.8em;
+    z-index: 10;
+    overflow: hidden;
+  }
+  #title_navbar:hover{
+    text-decoration: none;
+  }
+  #home {
+    text-align: center;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5);
+    background-color: #003189;
+    height: 60px;
+    .logo {
+      margin-top: 10px;
+      height: 40px;
+    }
+    #tps-title {
+      font-family: Arial;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 28px;
+      margin-top: 17px;
+    }
+  }
+  #navbar-body {
+    height: 60px;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 2px 0 rgba(50,50,50,0.5);
+    padding-left: 50px;
+    .main-info {
+      font-family: Arial;
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 58px;
+      height: 58px;
+      color: #000000;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .options {
+      font-family: Arial;
+      font-size: 14px;
+      text-align: right;
+      line-height: 22px;
+      color: #666666;
+      padding: 8px;
+      border-right: 1px solid #C8C6C8;
+      height: 60px;
+      .dropdown-toggle {
+        cursor: pointer;
+      }
+      .dropdown-pannel {
+        min-height: 100px;
+        width: 400px;
+        padding-left: 10px;
+      }
+      .centered-option {
+        line-height: 40px;
+        height: 40px;
+      }
+      .caret-right {
+        border-bottom: 4px solid transparent;
+        border-top: 4px solid transparent;
+        border-left: 4px solid;
+        display: inline-block;
+        height: 0;
+        margin: 8px 2px 0 5px;
+        vertical-align: top;
+        width: 0;
+      }
+    }
+
+    #sign_in{
+      margin-top: 7px;
+      .btn {
+        color: #003C92;
+        float: right;
+        margin-right: 1.3em;
+      }
+      .btn:hover {
+        color: #668ABD;
+      }
+    }
+
+    #sign_out{
+      height: 60px;
+
+      .fa {
+        color: #003C92;
+        float: right;
+        width: 70px;
+        margin-top: 2%;
+        margin-right: 0.5em;
+        font-size: 40px;
+      }
+      .fa:hover {
+        color: #668ABD;
+      }
+    }
+  }
+}
+
+#download-menu {
+  .btn-sm {
+    color: #000000;
+    font-size: 14px;
+  }
+}
+
+.btn-nav {
+  color: white;
+  background-color: transparent;
+  margin-top: 6px;
+  height: 36px;
+}
+
+.btn-nav:hover {
+  background-color: #eeeeee;
+  border-color: #eeeeee #eeeeee #ddd;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-nav.text-info:hover {
+  color: #23527c;
+}
+
+.btn-nav.text-success:hover {
+  color: #3c763d;
+}
+
+.btn-nav.text-danger:hover {
+  color: #a94442;
+}
+
+.navbar {
+  border: 0 !important;
+  .sign_in_FC {
+    margin-top: -18px;
+    height: 70px;
+  }
+}
+
+#beta {
+  text-align: center;
+  text-transform: uppercase;
+  position: fixed;
+  bottom: 26px;
+  right: -35px;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  width: 150px;
+  background-color: #008cba;
+  color: #fff;
+  padding: 5px;
+  font-size: 15px;
+  font-weight: 700;
+  z-index: 10;
+}
+
+.button_navbar {
+  color: #666666;
+  cursor: pointer;
+}
+
+.button-navbar-action {
+  background-color: #E4594F;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: block;
+  width: 150px;
+  text-align: center;
+  padding: 2px;
+  float: right;
+  .fa {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+}
+.button-navbar-action:hover {
+  color: #F2F6FA;
+}
+
+.button_navbar:hover, .button-navbar-action:hover {
+  text-decoration: none;
+}
+
+#credentials {
+  display: none;
+  width: initial;
+  padding: 10px;
+  left: -130px;
+  text-align: center;
+  .description {
+    font-weight: bold;
+    font-size: 20px;
+  }
+}
+

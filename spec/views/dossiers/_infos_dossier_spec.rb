@@ -21,9 +21,5 @@ describe 'dossiers/_infos_dossier.html.haml', type: :view do
 
     it { expect(rendered).to have_content(champs.last.libelle) }
     it { expect(rendered).to have_content(champs.last.value) }
-
-    context 'when api carto is used' do
-      it { expect(rendered).to have_css('#map') }
-    end
   end
 end

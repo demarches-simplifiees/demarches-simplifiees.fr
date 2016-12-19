@@ -30,7 +30,6 @@
         %td= link_to('X', url_for(controller: 'dossiers', action: :destroy, id: dossier.id), 'data-method' => :delete, class: 'btn-sm btn-danger') if @liste == "brouillon"
 
   = smart_listing.paginate
-  = smart_listing.pagination_per_page_links
 
 - else
   %h4.center

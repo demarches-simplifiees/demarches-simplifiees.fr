@@ -27,7 +27,7 @@ class Users::DossiersController < UsersController
 
   def commencer
     unless params[:procedure_path].nil?
-      procedure = ProcedurePath.where(path: params[:procedure_path]).first!.procedure
+      procedure = ProcedurePath.where(path: params[:procedure_path]).last.procedure
     end
 
     if procedure.archived?

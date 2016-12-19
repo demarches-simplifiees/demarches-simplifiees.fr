@@ -3,7 +3,7 @@
     = text_field_tag :filter, '', class: "search form-control",
                               placeholder: "Recherche...", autocomplete: :off
   %button.btn.btn-primary{type: :submit}
-    %span.glyphicon.glyphicon-search
+    %span.fa.fa-search
 
 - unless smart_listing.empty?
 
@@ -16,7 +16,7 @@
       %tr
         %td.col-md-11.col-lg-11{style:'padding-top: 11px; font-size:15px'}= accompagnateur.email
         %td.center
-          %a.btn.btn-success{href: "#{admin_procedure_accompagnateurs_path(procedure_id: @procedure.id, accompagnateur_id: accompagnateur.id, to: AccompagnateurService::ASSIGN)}", 'data-method' => 'put'}
+          %a.btn.btn-success.gestionnaire-affectation{href: "#{admin_procedure_accompagnateurs_path(procedure_id: @procedure.id, accompagnateur_id: accompagnateur.id, to: AccompagnateurService::ASSIGN)}", 'data-method' => 'put'}
             .fa.fa-arrow-right
 
 

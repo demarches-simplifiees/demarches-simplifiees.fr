@@ -12,6 +12,11 @@ class Users::DescriptionController < UsersController
     @procedure = @dossier.procedure
     @champs = @dossier.ordered_champs
 
+    @headers = @champs.inject([]) do |acc, champ|
+      acc.push(champ) if champ.type_champ == 'header_section'
+      acc
+    end
+
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(root_path)
@@ -34,16 +39,16 @@ class Users::DescriptionController < UsersController
     unless @dossier.update_attributes(create_params)
       @dossier = @dossier.decorate
 
-      flash.now.alert = @dossier.errors.full_messages.join('<br />').html_safe
-      return render 'show'
+      flash.alert = @dossier.errors.full_messages.join('<br />').html_safe
+      return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
     end
 
     unless params[:champs].nil?
       champs_service_errors = ChampsService.save_formulaire @dossier.champs, params, mandatory
 
       unless champs_service_errors.empty?
-        flash.now.alert = (champs_service_errors.inject('') { |acc, error| acc+= error[:message]+'<br>' }).html_safe
-        return render 'show'
+        flash.alert = (champs_service_errors.inject('') { |acc, error| acc+= error[:message]+'<br>' }).html_safe
+        return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
       end
     end
 
@@ -51,15 +56,15 @@ class Users::DescriptionController < UsersController
       unless params[:cerfa_pdf].nil?
         cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
         unless cerfa.save
-          flash.now.alert = cerfa.errors.full_messages.join('<br />').html_safe
-          return render 'show'
+          flash.alert = cerfa.errors.full_messages.join('<br />').html_safe
+          return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
         end
       end
     end
 
     unless (errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)).empty?
       flash.alert = errors_upload.html_safe
-      return render 'show'
+      return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
     end
 
 

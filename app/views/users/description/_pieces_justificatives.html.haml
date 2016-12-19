@@ -14,7 +14,7 @@
 
   - @dossier.types_de_piece_justificative.order('order_place ASC').each do |type_de_piece_justificative|
     %tr
-      %th.col-lg-6
+      %th.col-lg-6.piece-libelle
         = type_de_piece_justificative.libelle
       %td.col-lg-5
         -if type_de_piece_justificative.api_entreprise

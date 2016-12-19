@@ -1,4 +1,3 @@
-!!!
 %html
   %head
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
@@ -7,11 +6,17 @@
     %meta{'http-equiv' => "X-UA-Compatible", :content => "IE=edge"}
 
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
-    = stylesheet_link_tag    'application_split2', media: 'all', 'data-turbolinks-track' => true
-
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
+
     = csrf_meta_tags
   %body
+    = render partial: 'layouts/support_navigator_banner'
+    #beta{class:(Rails.env == 'production' ? '' : 'beta_staging')}
+      - if Rails.env == 'production'
+        Beta
+      - else
+        Env Test
+
     - if Rails.env == 'test'
       %script{type: 'text/javascript'}
         (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
@@ -23,37 +28,27 @@
     ="<![endif]-->".html_safe
 
     %div#wrap
-      %div#header.navbar
-        =render partial: "layouts/navbar"
+      %div.row
+        %div#header.navbar
+          = render partial: "layouts/navbar"
+      %div.row.no-margin
+        - if RenderPartialService.left_panel_exist? @left_pannel_url
+          %div.col-lg-2.col-md-2#left-pannel
+            - if gestionnaire_signed_in?
+              #search-block
+                = render partial: 'layouts/left_panels/search_area'
 
-      #flash_message.center
-      - if flash.notice
-        .alert.alert-success
-          = flash.notice
-      - if flash.alert
-        .alert.alert-danger
-          = flash.alert
-      #main_div.main_div
-        = yield
+            = render partial: @left_pannel_url
+            - main_container_size = 10
+        - else
+          - main_container_size = 12
 
-      %br
+        =render partial: 'layouts/main_container', locals: {main_container_size: main_container_size}
+    #mask_search
+      %h1
+        %i.fa.fa-times{style:'position: fixed; top: 10; right: 30; color: white;'}
 
-    #footer.navbar
-      .container.center
-        %p{style:'margin-top: 1em;'}
-          %p{class: "copyright text-muted small"}
-            =link_to 'SGMAP', "http://etatplateforme.modernisation.gouv.fr"
+    = render partial: 'layouts/switch_devise_profile_module'
 
-            2016
-
-            \-
-
-            =link_to 'CGU / Mentions légales', cgu_path
-
-            \-
-
-            =link_to 'Contact', "mailto:"+t('dynamics.contact_email')
-
+    = render partial: 'layouts/footer', locals: {main_container_size: main_container_size}
     = render partial: 'layouts/google_analytics'
-
-

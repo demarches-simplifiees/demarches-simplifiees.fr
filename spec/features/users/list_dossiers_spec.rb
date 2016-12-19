@@ -37,7 +37,7 @@ feature 'user access to the list of his dossier' do
       page.find("#tr_dossier_#{dossier1.id}").click
     end
     scenario 'user is redirected to dossier page' do
-      expect(page).to have_css('#recap_dossier')
+      expect(page).to have_css('#users_recapitulatif_dossier_show')
     end
   end
 end

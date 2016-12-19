@@ -12,7 +12,7 @@ describe Users::Dossiers::CommentairesController, type: :controller do
         sign_in invite.user
         dossier.replied!
 
-        post :create, dossier_id: dossier.id, texte_commentaire: texte_commentaire
+        post :create, params:{dossier_id: dossier.id, texte_commentaire: texte_commentaire}
         dossier.reload
       end
 

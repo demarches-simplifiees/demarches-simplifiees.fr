@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Backoffice::PrivateFormulairesController, type: :controller do
   let(:gestionnaire) { create :gestionnaire }
-  let(:dossier) { create :dossier }
+  let(:dossier) { create :dossier, state: :initiated }
   let(:dossier_champs_first) { 'plop' }
 
   before do
@@ -12,10 +12,11 @@ describe Backoffice::PrivateFormulairesController, type: :controller do
   end
 
   describe '#PATCH update' do
-    subject { patch :update, dossier_id: dossier.id,
-                   champs: {
-                       "'#{dossier.champs_private.first.id}'" => dossier_champs_first
-                   } }
+    subject { patch :update,
+                    params: {dossier_id: dossier.id,
+                             champs: {
+                                 "'#{dossier.champs_private.first.id}'" => dossier_champs_first
+                             }} }
 
     before do
       subject

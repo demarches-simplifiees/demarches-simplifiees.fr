@@ -16,7 +16,8 @@ class API::V1::DossiersController < APIController
   def index
     procedure = current_administrateur.procedures.find(params[:procedure_id])
     dossiers = procedure.dossiers.where.not(state: :draft).paginate(page: params[:page])
-    render json: dossiers, each_serializer: DossiersSerializer, meta: pagination(dossiers), meta_key: 'pagination', status: 200
+
+    render json: {dossiers: dossiers.map{|dossier| DossiersSerializer.new(dossier)}, pagination: pagination(dossiers)}, status: 200
   rescue ActiveRecord::RecordNotFound => e
     render json: {}, status: 404
   end
@@ -39,9 +40,10 @@ class API::V1::DossiersController < APIController
   def show
     procedure = current_administrateur.procedures.find(params[:procedure_id])
     dossier = procedure.dossiers.find(params[:id])
+
     respond_to do |format|
-      format.json { render json: dossier, status: 200 }
-      format.csv  { render  csv: dossier, status: 200 }
+      format.json { render json: {dossier: DossierSerializer.new(dossier).as_json}, status: 200 }
+      format.csv { render csv: dossier.as_csv, status: 200 }
     end
   rescue ActiveRecord::RecordNotFound => e
     render json: {}, status: 404

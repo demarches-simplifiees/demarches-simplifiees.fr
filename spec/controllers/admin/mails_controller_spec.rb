@@ -8,7 +8,7 @@ describe Admin::MailsController, type: :controller do
   end
 
   describe 'GET index' do
-    subject { get :index, procedure_id: procedure.id }
+    subject { get :index, params: {procedure_id: procedure.id} }
 
     it { expect(subject.status).to eq 200 }
   end
@@ -19,12 +19,12 @@ describe Admin::MailsController, type: :controller do
 
     context 'when is mail_received id' do
       subject { patch :update,
-                      procedure_id: procedure.id,
-                      id: procedure.mail_received.id,
-                      mail_received: {
-                          object: object,
-                          body: body
-                      } }
+                      params: {procedure_id: procedure.id,
+                               id: procedure.mail_received.id,
+                               mail_received: {
+                                   object: object,
+                                   body: body
+                               }} }
 
       it { expect(subject).to redirect_to admin_procedure_mails_path }
 

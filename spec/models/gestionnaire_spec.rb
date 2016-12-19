@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 describe Gestionnaire, type: :model do
   let(:admin) { create :administrateur }
@@ -116,7 +116,7 @@ describe Gestionnaire, type: :model do
   end
 
   describe '#dossiers_follow' do
-    let!(:dossier) { create :dossier, procedure: procedure }
+    let!(:dossier) { create :dossier, procedure: procedure, state: :initiated }
 
     before do
       create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
@@ -186,8 +186,6 @@ describe Gestionnaire, type: :model do
   end
 
   context 'unified login' do
-    before { allow(Features).to receive(:unified_login).and_return(true) }
-
     it 'syncs credentials to associated user' do
       gestionnaire = create(:gestionnaire)
       user = create(:user, email: gestionnaire.email)
@@ -197,6 +195,17 @@ describe Gestionnaire, type: :model do
       user.reload
       expect(user.email).to eq('whoami@plop.com')
       expect(user.valid_password?('super secret')).to be(true)
+    end
+
+    it 'syncs credentials to associated administrateur' do
+      gestionnaire = create(:gestionnaire)
+      admin = create(:administrateur, email: gestionnaire.email)
+
+      gestionnaire.update_attributes(email: 'whoami@plop.com', password: 'super secret')
+
+      admin.reload
+      expect(admin.email).to eq('whoami@plop.com')
+      expect(admin.valid_password?('super secret')).to be(true)
     end
   end
 end

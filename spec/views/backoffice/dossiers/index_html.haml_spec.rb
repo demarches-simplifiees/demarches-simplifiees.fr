@@ -16,6 +16,12 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, procedure: procedure, state: 'refused').decorate }
   let!(:decorate_dossier_without_continuation) { create(:dossier, :with_entreprise, procedure: procedure, state: 'without_continuation').decorate }
 
+  let(:dossiers_list_facade) { DossiersListFacades.new gestionnaire, nil }
+
+  let(:new_dossiers_list) { dossiers_list_facade.service.nouveaux }
+  let(:follow_dossiers_list) { dossiers_list_facade.service.suivi }
+  let(:all_state_dossiers_list) { dossiers_list_facade.service.all_state }
+
   before do
     decorate_dossier_replied.entreprise.update_column(:raison_sociale, 'plap')
     decorate_dossier_updated.entreprise.update_column(:raison_sociale, 'plep')
@@ -52,120 +58,42 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure
     sign_in gestionnaire
+
+    assign :facade_data_view, dossiers_list_facade
+
+    assign(:new_dossiers, (smart_listing_create :new_dossiers,
+                                                new_dossiers_list,
+                                                partial: "backoffice/dossiers/list",
+                                                array: true))
+
+    assign(:follow_dossiers, (smart_listing_create :follow_dossiers,
+                                                   follow_dossiers_list,
+                                                   partial: "backoffice/dossiers/list",
+                                                   array: true))
+
+    assign(:all_state_dossiers, (smart_listing_create :all_state_dossiers,
+                                                      all_state_dossiers_list,
+                                                      partial: "backoffice/dossiers/list",
+                                                      array: true))
+
+    render
   end
 
-  shared_examples 'check_tab_content' do
-    before do
-      assign :dossiers_list_facade, (DossiersListFacades.new gestionnaire, liste)
-      assign(:dossiers, (smart_listing_create :dossiers,
-                                              dossiers_to_display,
-                                              partial: "backoffice/dossiers/list",
-                                              array: true))
-      render
-    end
+  subject { rendered }
 
-    subject { rendered }
+  it { is_expected.to have_content('Nouveaux dossiers 1 dossiers') }
+  it { is_expected.to have_content('Dossiers suivis 0 dossiers') }
+  it { is_expected.to have_content('Tous les dossiers 9 dossiers') }
 
-    describe 'pref list column' do
-      it { is_expected.to have_css('#backoffice_index') }
-      it { is_expected.to have_content(procedure.libelle) }
-      it { is_expected.to have_content(decorate_dossier_at_check.entreprise.raison_sociale) }
-      it { is_expected.to have_content(decorate_dossier_at_check.display_state) }
-      it { is_expected.to have_content(decorate_dossier_at_check.last_update) }
-    end
+  it { is_expected.to have_content('État') }
+  it { is_expected.to have_content('Libellé procédure') }
+  it { is_expected.to have_content('Raison sociale') }
+  it { is_expected.to have_content('Mise à jour le') }
 
-    it { is_expected.to have_css("#suivre_dossier_#{dossiers_to_display.first.id}") }
-
-    it { expect(dossiers_to_display.count).to eq total_dossiers }
-
-    describe 'active tab' do
-      it { is_expected.to have_selector(active_class) }
-    end
-  end
-
-  describe 'on tab nouveaux' do
-    let(:total_dossiers) { 1 }
-    let(:active_class) { '.active .text-info' }
-    let(:dossiers_to_display) { gestionnaire.dossiers.nouveaux }
-    let(:liste) { 'nouveaux' }
-
-    it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_initiated }
-    end
-  end
-
-  describe 'on tab a_traiter' do
-    let(:total_dossiers) { 2 }
-    let(:active_class) { '.active .text-danger' }
-    let(:dossiers_to_display) { gestionnaire.dossiers.ouvert }
-    let(:liste) { 'a_traiter' }
-
-    it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_updated }
-    end
-
-    it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_replied }
-    end
-  end
-
-  describe 'on tab figes' do
-    let(:total_dossiers) { 1 }
-    let(:active_class) { '.active .text-default' }
-    let(:dossiers_to_display) { gestionnaire.dossiers.fige }
-    let(:liste) { 'fige' }
-
-    describe 'for state replied' do
-      it_behaves_like 'check_tab_content' do
-        let(:decorate_dossier_at_check) { decorate_dossier_validated }
-      end
-    end
-  end
-
-  describe 'on tab deposes' do
-    let(:total_dossiers) { 1 }
-    let(:active_class) { '.active .text-purple' }
-    let(:dossiers_to_display) { gestionnaire.dossiers.deposes }
-    let(:liste) { 'deposes' }
-
-    it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_submitted }
-    end
-  end
-
-  describe 'on tab a_instruire' do
-    let(:total_dossiers) { 1 }
-    let(:active_class) { '.active .text-warning' }
-    let(:dossiers_to_display) { gestionnaire.dossiers.a_instruire }
-    let(:liste) { 'a_instruire' }
-
-    it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_received }
-    end
-  end
-
-  describe 'on tab termine' do
-    let(:total_dossiers) { 3 }
-    let(:active_class) { '.active .text-success' }
-    let(:dossiers_to_display) { gestionnaire.dossiers.termine }
-    let(:liste) { 'termine' }
-
-    describe 'for state closed' do
-      it_behaves_like 'check_tab_content' do
-        let(:decorate_dossier_at_check) { decorate_dossier_closed }
-      end
-    end
-
-    describe 'for state refused' do
-      it_behaves_like 'check_tab_content' do
-        let(:decorate_dossier_at_check) { decorate_dossier_refused }
-      end
-    end
-
-    describe 'for state without_continuation' do
-      it_behaves_like 'check_tab_content' do
-        let(:decorate_dossier_at_check) { decorate_dossier_without_continuation }
-      end
-    end
-  end
+  it { is_expected.to have_content('plap') }
+  it { is_expected.to have_content('plep') }
+  it { is_expected.to have_content('plip') }
+  it { is_expected.to have_content('plop') }
+  it { is_expected.to have_content('plup') }
+  it { is_expected.to have_content('plyp') }
 end

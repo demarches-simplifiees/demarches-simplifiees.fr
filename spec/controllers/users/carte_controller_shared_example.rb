@@ -7,10 +7,10 @@ shared_examples 'carte_controller_spec' do
             dossier.state = 'validated'
             dossier.save
 
-            get :show, dossier_id: dossier.id
+            get :show, params: {dossier_id: dossier.id}
           end
 
-          it { is_expected.to redirect_to root_path}
+          it { is_expected.to redirect_to root_path }
         end
       end
 
@@ -18,7 +18,7 @@ shared_examples 'carte_controller_spec' do
         let(:dossier) { create(:dossier) }
 
         before do
-          get :show, dossier_id: dossier.id
+          get :show, params: {dossier_id: dossier.id}
         end
 
         it { is_expected.to redirect_to(root_path) }
@@ -31,26 +31,26 @@ shared_examples 'carte_controller_spec' do
       end
 
       it 'redirects to users/sign_in' do
-        get :show, dossier_id: dossier.id
+        get :show, params: {dossier_id: dossier.id}
         expect(response).to redirect_to('/users/sign_in')
       end
     end
 
     it 'returns http success if carto is activated' do
-      get :show, dossier_id: dossier.id
+      get :show, params: {dossier_id: dossier.id}
       expect(response).to have_http_status(:success)
     end
 
     context 'when procedure not have activate api carto' do
       it 'redirection on user dossier list' do
-        get :show, dossier_id: dossier_with_no_carto.id
+        get :show, params: {dossier_id: dossier_with_no_carto.id}
         expect(response).to redirect_to(root_path)
       end
     end
 
     context 'when dossier id not exist' do
       it 'redirection on user dossier list' do
-        get :show, dossier_id: bad_dossier_id
+        get :show, params: {dossier_id: bad_dossier_id}
         expect(response).to redirect_to(root_path)
       end
     end
@@ -61,7 +61,7 @@ shared_examples 'carte_controller_spec' do
   describe 'POST #save' do
     context 'Aucune localisation n\'a jamais été enregistrée' do
       it do
-        post :save, dossier_id: dossier.id, json_latlngs: ''
+        post :save, params: {dossier_id: dossier.id, json_latlngs: ''}
         expect(response).to redirect_to("/users/dossiers/#{dossier.id}/description")
       end
     end
@@ -69,7 +69,7 @@ shared_examples 'carte_controller_spec' do
     context 'En train de modifier la localisation' do
       let(:dossier) { create(:dossier, state: 'initiated') }
       before do
-        post :save, dossier_id: dossier.id, json_latlngs: ''
+        post :save, params: {dossier_id: dossier.id, json_latlngs: ''}
       end
 
       it 'Redirection vers la page récapitulatif' do
@@ -85,7 +85,7 @@ shared_examples 'carte_controller_spec' do
             to receive(:to_params).
                    and_return({"QPCODE1234" => {:code => "QPCODE1234", :nom => "QP de test", :commune => "Paris", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
 
-        post :save, dossier_id: dossier.id, json_latlngs: json_latlngs
+        post :save, params: {dossier_id: dossier.id, json_latlngs: json_latlngs}
       end
 
       context 'when json_latlngs params is empty' do
@@ -132,7 +132,7 @@ shared_examples 'carte_controller_spec' do
             to receive(:to_params).
                    and_return([{:surface_intersection => "0.0006", :surface_parcelle => 11252.692583090324, :numero => "0013", :feuille => 1, :section => "CD", :code_dep => "30", :nom_com => "Le Grau-du-Roi", :code_com => "133", :code_arr => "000", :geometry => {:type => "MultiPolygon", :coordinates => [[[[4.134084, 43.5209193], [4.1346615, 43.5212035], [4.1346984, 43.521189], [4.135096, 43.5213848], [4.1350839, 43.5214122], [4.1352697, 43.521505], [4.1356278, 43.5211065], [4.1357402, 43.5207188], [4.1350935, 43.5203936], [4.135002, 43.5204366], [4.1346051, 43.5202412], [4.134584, 43.5202472], [4.1345572, 43.5202551], [4.134356, 43.5203137], [4.1342488, 43.5203448], [4.134084, 43.5209193]]]]}}])
 
-        post :save, dossier_id: dossier.id, json_latlngs: json_latlngs
+        post :save, params: {dossier_id: dossier.id, json_latlngs: json_latlngs}
       end
 
       context 'when json_latlngs params is empty' do
@@ -186,7 +186,7 @@ shared_examples 'carte_controller_spec' do
       before do
         stub_request(:get, /http:\/\/api-adresse[.]data[.]gouv[.]fr\/search[?]limit=1&q=/)
             .to_return(status: 200, body: '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
-        get :get_position, dossier_id: dossier.id
+        get :get_position, params: {dossier_id: dossier.id}
       end
 
       subject { JSON.parse(response.body) }
@@ -202,7 +202,7 @@ shared_examples 'carte_controller_spec' do
         stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{adresse}")
             .to_return(status: 200, body: '{"query": "50 avenue des champs u00e9lysu00e9es Paris 75008", "version": "draft", "licence": "ODbL 1.0", "features": [{"geometry": {"coordinates": [2.306888, 48.870374], "type": "Point"}, "type": "Feature", "properties": {"city": "Paris", "label": "50 Avenue des Champs u00c9lysu00e9es 75008 Paris", "housenumber": "50", "id": "ADRNIVX_0000000270748251", "postcode": "75008", "name": "50 Avenue des Champs u00c9lysu00e9es", "citycode": "75108", "context": "75, u00cele-de-France", "score": 0.9054545454545454, "type": "housenumber"}}], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
 
-        get :get_position, dossier_id: dossier.id
+        get :get_position, params: {dossier_id: dossier.id}
       end
       subject { JSON.parse(response.body) }
 
@@ -230,7 +230,7 @@ shared_examples 'carte_controller_spec' do
           to receive(:to_params).
                  and_return({"QPCODE1234" => {:code => "QPCODE1234", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
 
-      post :get_qp, dossier_id: dossier.id, coordinates: coordinates
+      post :get_qp, params: {dossier_id: dossier.id, coordinates: coordinates}
     end
 
     context 'when coordinates are empty' do

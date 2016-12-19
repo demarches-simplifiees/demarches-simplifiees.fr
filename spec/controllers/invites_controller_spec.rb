@@ -11,7 +11,7 @@ describe InvitesController, type: :controller do
       sign_in create(:gestionnaire)
     end
 
-    subject { post :create, dossier_id: dossier.id, email: email }
+    subject { post :create, params: {dossier_id: dossier.id, email: email} }
 
     it { expect { subject }.to change(InviteGestionnaire, :count).by(1) }
 

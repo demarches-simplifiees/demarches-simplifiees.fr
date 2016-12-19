@@ -1,4 +1,4 @@
-require "rails_helper"
+require "spec_helper"
 
 RSpec.describe NotificationMailer, type: :mailer do
   describe ".new_answer" do

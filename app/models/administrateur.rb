@@ -6,6 +6,7 @@ class Administrateur < ActiveRecord::Base
   has_many :procedures
 
   before_save :ensure_api_token
+  after_update :sync_credentials
 
   def ensure_api_token
     if api_token.nil?
@@ -24,5 +25,12 @@ class Administrateur < ActiveRecord::Base
       token = SecureRandom.hex(20)
       break token unless Administrateur.find_by(api_token: token)
     end
+  end
+
+  def sync_credentials
+    if email_changed? || encrypted_password_changed?
+      return SyncCredentialsService.new(Administrateur, email_was, email, encrypted_password).change_credentials!
+    end
+    true
   end
 end

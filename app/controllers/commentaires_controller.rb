@@ -36,7 +36,11 @@ class CommentairesController < ApplicationController
 
     @commentaire.body = params['texte_commentaire']
     saved = false
-    saved = @commentaire.save unless flash.alert
+    unless @commentaire.body.blank? && @commentaire.piece_justificative.nil?
+      saved = @commentaire.save unless flash.alert
+    else
+      flash.alert = "Veuillez rédiger un message ou ajouter une pièce jointe."
+    end
 
     if is_gestionnaire?
       unless current_gestionnaire.follow? @commentaire.dossier

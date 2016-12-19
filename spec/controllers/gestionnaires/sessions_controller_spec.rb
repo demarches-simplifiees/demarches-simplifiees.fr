@@ -6,14 +6,23 @@ describe Gestionnaires::SessionsController, type: :controller do
   end
 
   describe '.demo' do
-    context 'when server is on env production' do
+    subject { get :demo }
+
+    context 'when rails env is production' do
       before do
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("production"))
       end
-      subject { get :demo }
 
-      it { expect(subject).to redirect_to root_path }
+      it { is_expected.to redirect_to root_path }
+    end
 
+    context 'when rails env is not production' do
+      it { expect(subject.status).to eq 200 }
+
+      it 'Gestionnaire demo is initiated' do
+        expect(Gestionnaire).to receive(:new).with(email: 'gestionnaire@apientreprise.fr', password: 'password').and_return(Gestionnaire)
+        subject
+      end
     end
   end
 

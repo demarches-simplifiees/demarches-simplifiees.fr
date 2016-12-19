@@ -1,43 +1,17 @@
-#beta{class:(Rails.env == 'production' ? '' : 'beta_staging')}
-  - if Rails.env == 'production'
-    Beta
-  - else
-    Env Test
-= image_tag('marianne_small.png', class: 'logo')
-%a{href: '/'}
-  = image_tag(image_url(LOGO_NAME), class: 'logo') rescue nil
+%div.col-lg-2.col-md-2
+  %a#title_navbar{href: '/'}
+    %div.row#home
+      %div.col-lg-6.no-padding
+        = image_tag('marianne_small.png', class: 'logo')
+      %div.col-lg-6.no-padding#tps-title
+        TPS
 
-- if gestionnaire_signed_in? && user_signed_in?
-  %a{href: (current_gestionnaire.procedure_filter.blank? ? backoffice_dossiers_path : backoffice_dossiers_procedure_path(current_gestionnaire.procedure_filter)), class: 'btn btn-md'}
-    =t('dynamics.backoffice.dossiers')
-  %a{href: users_dossiers_path, class: 'btn btn-md'}
-    =t('dynamics.users.mes_dossiers')
-- elsif gestionnaire_signed_in?
-  %a{href: (current_gestionnaire.procedure_filter.blank? ? backoffice_dossiers_path : backoffice_dossiers_procedure_path(current_gestionnaire.procedure_filter)), class: 'btn btn-md'}
-    =t('dynamics.users.mes_dossiers')
-- elsif user_signed_in?
-  %a{href: users_dossiers_path, class: 'btn btn-md'}
-    =t('dynamics.users.mes_dossiers')
-- elsif administrateur_signed_in?
-  %a{href: admin_procedures_path, class: 'btn btn-md'}
-    =t('dynamics.admin.menu.title')
+%div.col-lg-10.col-md-10.no-padding
+  %div#navbar-body
+    %div.row
+      -begin
+        = render partial: @navbar_url
+      -rescue
+        = render partial: 'layouts/navbars/navbar_default'
 
-#sign_out
-  -if user_signed_in?
-    = render partial: 'users/login_banner'
-  -elsif gestionnaire_signed_in?
-    = render partial: 'gestionnaires/login_banner'
-  -elsif administrateur_signed_in?
-    = render partial: 'administrateurs/login_banner'
-  -else
-    = link_to "Utilisateur", '/users/sign_in', method: :get, :class => 'btn btn-md'
-    -unless Features.unified_login
-      = link_to "Accompagnateur", '/gestionnaires/sign_in', method: :get, :class => 'btn btn-md'
-    = link_to "Administrateur", '/administrateurs/sign_in', method: :get, :class => 'btn btn-md'
-
-- if Rails.env != 'production'
-  %div.staging_warning
-    %b{style:'color: #B00100', 'data-placement' => 'bottom', 'data-original-title' => "Aucune donnée présente sur cette plateforme ne pourra être transférée sur l'environnement final de production.", 'data-toggle' => 'tooltip'}
-      Vous vous trouvez actuellement sur la plateforme de test.
-      %div.badge.progress-bar-danger
-        ?
+      = render partial: 'layouts/navbars/navbar_log_options'

@@ -20,7 +20,7 @@
     .form-group
       %br &nbsp;
       - if ff.object.id.nil?
-        = f.submit('Ajouter la pièce', class: 'btn btn-success')
+        = f.submit('Ajouter la pièce', class: 'btn btn-success', id: 'add_piece_justificative')
       - else
         = link_to("", admin_procedure_piece_justificative_path(@procedure, ff.object.id), method: :delete, remote: true, id: "delete_type_de_piece_justificative_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
 

@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
 
   delegate :given_name, :family_name, :email_france_connect, :gender, :birthdate, :birthplace, :france_connect_particulier_id, to: :france_connect_information
   accepts_nested_attributes_for :france_connect_information
-  after_update :sync_credentials, if: -> { Features.unified_login }
+  after_update :sync_credentials
 
   def self.find_for_france_connect email, siret
     user = User.find_by_email(email)
@@ -39,12 +39,7 @@ class User < ActiveRecord::Base
 
   def sync_credentials
     if email_changed? || encrypted_password_changed?
-      gestionnaire = Gestionnaire.find_by(email: email_was)
-      if gestionnaire
-        return gestionnaire.update_columns(
-          email: email,
-          encrypted_password: encrypted_password)
-      end
+      return SyncCredentialsService.new(User, email_was, email, encrypted_password).change_credentials!
     end
     true
   end

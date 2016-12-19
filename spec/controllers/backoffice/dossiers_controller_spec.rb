@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 describe Backoffice::DossiersController, type: :controller do
   before do
@@ -6,7 +6,7 @@ describe Backoffice::DossiersController, type: :controller do
   end
   let(:procedure) { create :procedure }
 
-  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
+  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
   let(:dossier_archived) { create(:dossier, :with_entreprise, archived: true) }
 
   let(:dossier_id) { dossier.id }
@@ -17,6 +17,26 @@ describe Backoffice::DossiersController, type: :controller do
     create :assign_to, procedure: procedure, gestionnaire: gestionnaire
   end
 
+  describe 'GET #index' do
+    subject { get :index }
+
+    before do
+      sign_in gestionnaire
+    end
+
+    context 'when gestionnaire is assign to a procedure' do
+      it { is_expected.to redirect_to backoffice_dossiers_procedure_path(id: procedure.id) }
+    end
+
+    context 'when gestionnaire is not assign to a procedure' do
+      before do
+        AssignTo.where(procedure: procedure, gestionnaire: gestionnaire).delete_all
+      end
+
+      it { is_expected.to redirect_to root_path }
+    end
+  end
+
   describe 'GET #show' do
     context 'gestionnaire is connected' do
       before do
@@ -24,27 +44,27 @@ describe Backoffice::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :show, id: dossier_id
+        get :show, params: {id: dossier_id}
         expect(response).to have_http_status(200)
       end
 
       context ' when dossier is archived' do
         before do
-          get :show, id: dossier_archived.id
+          get :show, params: {id: dossier_archived.id}
         end
         it { expect(response).to redirect_to('/backoffice') }
       end
 
       context 'when dossier id does not exist' do
         before do
-          get :show, id: bad_dossier_id
+          get :show, params: {id: bad_dossier_id}
         end
         it { expect(response).to redirect_to('/backoffice') }
       end
     end
 
     context 'gestionnaire does not connected but dossier id is correct' do
-      subject { get :show, id: dossier_id }
+      subject { get :show, params: {id: dossier_id} }
 
       it { is_expected.to redirect_to('/gestionnaires/sign_in') }
     end
@@ -57,8 +77,8 @@ describe Backoffice::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :a_traiter
-        expect(response).to have_http_status(200)
+        get :index, params: {liste: :a_traiter}
+        expect(response).to have_http_status(302)
       end
     end
   end
@@ -70,8 +90,8 @@ describe Backoffice::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :fige
-        expect(response).to have_http_status(200)
+        get :index, params: {liste: :fige}
+        expect(response).to have_http_status(302)
       end
     end
   end
@@ -83,8 +103,8 @@ describe Backoffice::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :termine
-        expect(response).to have_http_status(200)
+        get :index, params: {liste: :termine}
+        expect(response).to have_http_status(302)
       end
     end
   end
@@ -96,8 +116,8 @@ describe Backoffice::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :list_fake
-        expect(response).to redirect_to(backoffice_dossiers_path)
+        get :index, params: {liste: :list_fake}
+        expect(response).to redirect_to(backoffice_dossiers_procedure_path(id: gestionnaire.procedures.first.id))
       end
     end
   end
@@ -108,7 +128,7 @@ describe Backoffice::DossiersController, type: :controller do
     end
 
     it 'returns http success' do
-      post :search, search_terms: 'test'
+      post :search, params: {search_terms: 'test'}
       expect(response).to have_http_status(200)
     end
 
@@ -120,7 +140,7 @@ describe Backoffice::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
-    subject { post :valid, dossier_id: dossier_id }
+    subject { post :valid, params: {dossier_id: dossier_id} }
 
     it 'change state to validated' do
       subject
@@ -143,7 +163,7 @@ describe Backoffice::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
-    subject { post :receive, dossier_id: dossier_id }
+    subject { post :receive, params: {dossier_id: dossier_id} }
 
     context 'when it post a receive instruction' do
       before do
@@ -170,7 +190,7 @@ describe Backoffice::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
-    subject { post :refuse, dossier_id: dossier_id }
+    subject { post :refuse, params: {dossier_id: dossier_id} }
 
     it 'change state to refused' do
       subject
@@ -192,7 +212,7 @@ describe Backoffice::DossiersController, type: :controller do
       dossier.without_continuation!
       sign_in gestionnaire
     end
-    subject { post :without_continuation, dossier_id: dossier_id }
+    subject { post :without_continuation, params: {dossier_id: dossier_id} }
 
 
     it 'change state to without_continuation' do
@@ -215,7 +235,7 @@ describe Backoffice::DossiersController, type: :controller do
       dossier.received!
       sign_in gestionnaire
     end
-    subject { post :close, dossier_id: dossier_id }
+    subject { post :close, params: {dossier_id: dossier_id} }
 
     it 'change state to closed' do
       subject
@@ -237,7 +257,7 @@ describe Backoffice::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
-    subject { put :follow, dossier_id: dossier_id }
+    subject { put :follow, params: {dossier_id: dossier_id} }
 
     it { expect(subject.status).to eq 302 }
 

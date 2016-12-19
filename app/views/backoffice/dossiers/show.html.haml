@@ -1,18 +1,2 @@
-#backoffice_dossier_show
-  %h1#dossier_id.text-info{ :style => 'text-align:right'}
-    = t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
-
-  %div{:style => 'text-align:right'}
-    %h3{:class => 'text-success'}
-      = @facade.dossier.display_state
-
-    = render partial: 'follow_action'
-  - unless @facade.entreprise.nil?
-    = render partial: '/dossiers/infos_entreprise'
-
-  = render partial: '/dossiers/infos_dossier'
-  %br
-
-  %div
-    = render partial: 'dossiers/tab_objects_dossier'
-  %br
+%div.col-lg-12.col-md-12#backoffice_dossier_show
+  = render partial: "dossiers/dossier_show"

@@ -16,7 +16,7 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
       page.click_on 'Se connecter'
     end
     scenario 'he stay on the same page with an error' do
-      expect(page).to have_content('email ou mot de passe incorrect.')
+      expect(page).to have_content('Email ou mot de passe incorrect.')
     end
   end
   context 'when user enter good credentials' do
@@ -24,6 +24,7 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
     let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
 
     before do
+      create :assign_to, gestionnaire: gestionnaire, procedure: procedure
       page.find_by_id(:gestionnaire_email).set  gestionnaire.email
       page.find_by_id(:gestionnaire_password).set  gestionnaire.password
       page.click_on 'Se connecter'

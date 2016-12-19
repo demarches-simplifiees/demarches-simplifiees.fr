@@ -17,7 +17,7 @@ describe Backoffice::CommentairesController, type: :controller do
     end
 
     context "création correct d'un commentaire" do
-      subject { post :create, dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire }
+      subject { post :create, params: {dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire} }
 
       it 'depuis la page admin' do
         expect(subject).to redirect_to("/backoffice/dossiers/#{dossier_id}")
@@ -42,7 +42,7 @@ describe Backoffice::CommentairesController, type: :controller do
       let(:document_upload) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
 
       subject do
-        post :create, dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire, piece_justificative: {content: document_upload}
+        post :create, params: {dossier_id: dossier_id, email_commentaire: email_commentaire, texte_commentaire: texte_commentaire, piece_justificative: {content: document_upload}}
       end
 
       it 'create a new piece justificative' do
@@ -91,7 +91,7 @@ describe Backoffice::CommentairesController, type: :controller do
             sign_in create(:gestionnaire)
             dossier.updated!
 
-            post :create, dossier_id: dossier_id, texte_commentaire: texte_commentaire
+            post :create, params: {dossier_id: dossier_id, texte_commentaire: texte_commentaire}
             dossier.reload
           end
 
@@ -103,7 +103,7 @@ describe Backoffice::CommentairesController, type: :controller do
             expect(NotificationMailer).to receive(:new_answer).and_return(NotificationMailer)
             expect(NotificationMailer).to receive(:deliver_now!)
 
-            post :create, dossier_id: dossier_id, texte_commentaire: texte_commentaire
+            post :create, params: {dossier_id: dossier_id, texte_commentaire: texte_commentaire}
           end
         end
       end
@@ -117,7 +117,7 @@ describe Backoffice::CommentairesController, type: :controller do
         expect(NotificationMailer).not_to receive(:new_answer)
         expect(NotificationMailer).not_to receive(:deliver_now!)
 
-        post :create, dossier_id: dossier_id, texte_commentaire: texte_commentaire
+        post :create, params: {dossier_id: dossier_id, texte_commentaire: texte_commentaire}
       end
     end
   end

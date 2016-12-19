@@ -1,0 +1,80 @@
+#left-pannel {
+  padding: 60px 0 0 10px;
+  background-color: #003189;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  color: white;
+  overflow: scroll;
+
+  #first-block {
+    font-family: Arial;
+    font-size: 16px;
+    line-height: 18px;
+    .infos {
+      font-size: 25px;
+      text-align: center;
+      margin: 20px 10px 30px 0;
+      .projet-name {
+        font-size: 25px;
+        line-height: normal;
+        padding: 5px;
+      }
+    }
+    .dossiers-en-cours, .en-cours {
+      margin-top: 20px;
+    }
+    .dossiers-en-cours, .nouveaux-dossiers, .en-cours {
+      line-height: initial;
+      text-align: center;
+      margin-right: 10px;
+    }
+  }
+  #action-block {
+    margin-right: 10px;
+    .action {
+      background-color: #E45B51;
+      text-align: center;
+      cursor: pointer;
+      color: #FFFFFF;
+      margin: 0 10px 0 0;
+      min-height: 40px;
+      padding: 5px;
+      font-family: Arial;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      width: 100%;
+    }
+  }
+  #menu-block {
+  }
+  #infos-block {
+    .split-hr {
+      border-bottom: 1px solid #FFFFFF;
+      width: 200px;
+      margin: 20px 0 20px 0;
+    }
+    .dossier-state {
+      text-align: center;
+      font-size: 25px;
+      width: 200px;
+      margin-top: 20px;
+    }
+    .tips {
+      margin: 0 10px 0 5px;
+      .fa {
+        color: #FFFFFF;
+        font-size: 40px;
+        width: inherit;
+        padding: 5px;
+      }
+      .notice {
+        font-size: 18px;
+        display: initial;
+      }
+    }
+  }
+}

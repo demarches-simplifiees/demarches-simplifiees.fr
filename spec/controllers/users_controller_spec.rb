@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require 'controllers/user_controller_shared_example'
+require 'controllers/users_controller_shared_example'
 
 describe UsersController, type: :controller do
   describe '#current_user_dossier' do

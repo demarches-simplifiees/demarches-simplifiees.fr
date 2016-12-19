@@ -72,7 +72,7 @@ feature 'user path for dossier creation' do
               page.click_on 'Soumettre mon dossier'
             end
             scenario 'user is on recap page' do
-              expect(page).to have_css('#recap_dossier')
+              expect(page).to have_css('#users_recapitulatif_dossier_show')
             end
           end
         end

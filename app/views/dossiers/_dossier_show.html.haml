@@ -1,0 +1,111 @@
+.default_data_block
+  .row.show-block#messages
+    %div.header
+      %div.col-lg-10.col-md-10.title
+        .carret-right
+        .carret-down
+        MESSAGES
+      %div.col-lg-2.col-md-2.count
+        - message_count = @facade.commentaires.count
+        = (message_count == 1) ? "1 message" : "#{message_count} messages"
+    %div.body
+      - unless @facade.commentaires.empty?
+        %div.commentaires
+          - @facade.commentaires.object.sort.each do |commentaire|
+            = render partial: commentaire
+      .row
+        .col-lg-12.col-md-12
+          %div.split-hr
+      .row
+        %div.col-lg-12.col-md-12#new-commentaire
+          = form_tag(url_for({ controller: 'commentaires', action: :create, dossier_id: @facade.dossier.id, champ_id: @facade.champ_id }), class: 'form-inline', method: 'POST', multipart: true) do
+            %textarea.form-control{id: 'texte_commentaire', class: 'wysihtml5', name: 'texte_commentaire', style: 'width: 100%; margin-bottom:2%', rows: '5', placeholder:"Commentaire"}
+            %h4.text-primary{style: 'margin-top: 0px'} Ajouter un fichier
+            = file_field_tag "piece_justificative[content]", accept:  PieceJustificative.accept_format, style: 'float: left; margin-left: 20px'
+            %input.form-control.btn.btn-send{ type: 'submit', value: 'ENVOYER' }
+    - if last_comment = @facade.commentaires.first
+      %div.last-commentaire
+        .row
+          %div.col-lg-12.col-md-12.comment-header
+            = "DERNIER MESSAGE (#{last_comment.header})"
+        .row
+          %div.col-lg-12.col-md-12.content
+            = last_comment.body.html_safe
+        - if file = last_comment.piece_justificative
+          .row
+            %div.col-lg-12.col-md-12.file
+              = link_to file.content_url, class: 'link', target: '_blank' do
+                %span.fa.fa-file
+                %div
+                  = file.original_filename
+        .row
+          .col-lg-12.col-md-12
+            %div.new-action
+              ENVOYER UN MESSAGE
+    - else
+      .last-commentaire
+        .row
+          .col-lg-12.col-md-12
+            %div.new-action
+              ENVOYER UN MESSAGE
+
+- if @facade.procedure.individual_with_siret
+  .default_data_block
+    %div.row.show-block#infos
+      %div.header
+        %div.col-lg-8.col-md-8.title-no-expanse
+          %div.carret-right
+          INFORMATIONS ENTREPRISE / ASSOCIATION
+        %a#add_siret.action{href: users_dossier_add_siret_path(dossier_id: @facade.dossier.id)}
+          %div.col-lg-4.col-md-4.action
+            = "Renseigner un SIRET"
+
+- unless @facade.entreprise.nil?
+  .default_data_block
+    %div.row.show-block#infos_entreprise
+      %div.header
+        %div.col-lg-12.col-md-12.title
+          %div.carret-right
+          %div.carret-down
+          INFORMATIONS ENTREPRISE / ASSOCIATION
+      %div.body
+        = render partial: '/dossiers/infos_entreprise'
+
+.default_data_block
+  %div.row.show-block#infos_dossier
+    %div.header
+      %div.col-lg-10.col-md-10.title
+        %div.carret-right
+        %div.carret-down
+        CONSTRUCTION DU DOSSIER
+      = render partial: '/dossiers/edit_dossier'
+    %div.body
+      = render partial: '/dossiers/infos_dossier'
+
+- if @facade.dossier.procedure.module_api_carto.use_api_carto
+  - if false
+    .default_data_block
+      %div.row.show-block#carto
+        %div.header
+          %div.col-lg-10.col-md-10.title
+            %div.carret-right
+            %div.carret-down
+            CARTOGRAPHIE
+          = render partial: '/dossiers/edit_carto'
+        %div.body
+          = render partial: '/dossiers/infos_carto'
+
+- if @current_gestionnaire && gestionnaire_signed_in? && @champs.count > 0
+  .default_data_block
+    %div.row.show-block#private-fields
+      %div.header
+        %div.col-lg-10.col-md-10.title
+          %div.carret-right
+          %div.carret-down
+          = "champs".upcase
+        %div.col-lg-2.col-md-2.count
+          - private_fields_count = @champs.count
+          = (private_fields_count == 1) ? "1 champ" : "#{private_fields_count} champs"
+      %div.body
+        = render partial: '/dossiers/infos_private_fields'
+

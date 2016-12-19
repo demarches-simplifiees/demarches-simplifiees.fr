@@ -7,6 +7,7 @@ class DossiersListGestionnaireService
 
   def dossiers_to_display
     {'nouveaux' => nouveaux,
+     'suivi' => suivi,
      'a_traiter' => ouvert,
      'fige' => fige,
      'deposes' => deposes,
@@ -16,11 +17,15 @@ class DossiersListGestionnaireService
   end
 
   def self.dossiers_liste_libelle
-    ['nouveaux', 'a_traiter', 'fige' ,'deposes', 'a_instruire', 'termine', 'all_state']
+    ['nouveaux', 'suivi', 'a_traiter', 'fige', 'deposes', 'a_instruire', 'termine', 'all_state']
   end
 
   def all_state
     @all_state ||= filter_dossiers.all_state
+  end
+
+  def suivi
+    @suivi ||= @current_devise_profil.dossiers_follow.merge(all_state)
   end
 
   def nouveaux
@@ -49,7 +54,7 @@ class DossiersListGestionnaireService
 
   def filter_dossiers
     @filter_dossiers ||= @procedure.nil? ? @current_devise_profil.dossiers.joins(joins_filter).where(where_filter) : @procedure.dossiers.joins(joins_filter).where(where_filter)
-    @filter_dossiers.uniq
+    @filter_dossiers.distinct
   end
 
   def filter_procedure_reset!
@@ -183,4 +188,5 @@ class DossiersListGestionnaireService
   def current_preference_smart_listing_page
     @current_devise_profil.preference_smart_listing_page
   end
+
 end

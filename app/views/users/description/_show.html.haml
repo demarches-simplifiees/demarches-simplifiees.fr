@@ -1,6 +1,6 @@
 .container#description_page
   - unless @dossier.procedure.lien_notice.blank?
-    #lien_notice_panel.row{style:'width: 280px; position: fixed; background-color: white; right: 5%; top: 80px;'}
+    #lien_notice_panel.row{style:'width: 280px; position: fixed; background-color: white; right: 5%; top: 80px; z-index: 200'}
       .panel.panel-info{style:'margin-bottom:0'}
         .panel-body.center
           .row
@@ -14,15 +14,12 @@
   %h2.text-info
     = @dossier.procedure.libelle
 
-  - unless Features.opensimplif
-    %h3 Votre dossier
-
   -#TODO use form_for
   = form_tag(url_for({controller: 'users/description', action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
 
     #liste_champs
       -unless @champs.nil?
-        =render partial: 'users/description/champs'
+        =render partial: 'users/description/champs', locals:{private: false}
 
     -if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0
       %br

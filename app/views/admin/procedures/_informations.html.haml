@@ -2,14 +2,14 @@
 %br
 
 -{libelle: 'Libellé*', description: 'Description*', organisation: 'Organisation', direction: 'Direction', lien_site_web: 'Lien site internet', lien_notice: 'Lien notice'}.each do |key, value|
-  .form-group{class: ('has-error' if @procedure.errors.messages[key])}
+  .form-group
     %h4
-      =value
+      = value
     - if key == :description
       = f.text_area key, rows: '6', placeholder: 'Description du projet', class: 'form-control wysihtml5'
 
     - else
-      =f.text_field key, class: 'form-control', placeholder: value
+      = f.text_field key, class: 'form-control', placeholder: value
 
 .row
   .col-md-6.col-lg-6

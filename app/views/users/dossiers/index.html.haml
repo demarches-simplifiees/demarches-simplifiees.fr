@@ -1,13 +1,16 @@
 #users_index
-  %h1
-    =t('dynamics.users.mes_dossiers')
+  .default_data_block.default_visible
+    %div.row.show-block#new_dossiers
+      %div.header
+        %div.col-lg-10.col-md-10.title
+          %div.carret-right
+          %div.carret-down
+          Dossiers
+        %div.col-lg-2.col-md-2.count
+          -#0
+          -#dossiers
+      %div.body
+        = smart_listing_render :dossiers
 
-  -unless Features.opensimplif
-    = render partial: 'onglets'
-
-  = smart_listing_render :dossiers
-
-  %br
-  %br
   - unless Features.opensimplif
     = render partial: 'state_description', locals: {dossiers_list_facade: @dossiers_list_facade}

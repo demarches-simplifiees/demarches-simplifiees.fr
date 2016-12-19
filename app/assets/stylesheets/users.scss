@@ -1,0 +1,59 @@
+#users_index, #admins_index{
+  margin-left: 2rem;
+  margin-right: 2rem;
+
+  .default_data_block {
+    margin-top: 20px;
+    background-color: #FFFFFF;
+    .show-block {
+      width: 100%;
+    }
+    .body {
+      height: auto;
+    }
+  }
+}
+
+#users_siret_index {
+  margin: 20px;
+}
+
+#description_page {
+}
+
+#carto_page {
+  margin: 20px;
+}
+
+.white-back {
+  margin: 20px !important;
+  #previsualisation {
+    margin-top: 30px;
+  }
+}
+
+.white-back, #users_siret_index, #description_page, #carto_page {
+  background-color: #FFFFFF;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  .action {
+    background-color: #E45B51;
+    text-align: center;
+    line-height: 40px;
+    font-size: 15px;
+    text-decoration: none;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    border: none;
+    padding: 10px;
+  }
+  .action:hover {
+    color: #F2F6FA;
+  }
+  .padding-left-30 {
+    padding-left: 30px;
+  }
+  h3 {
+    margin-bottom: 20px;
+  }
+}

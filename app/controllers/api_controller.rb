@@ -1,6 +1,6 @@
 class APIController < ApplicationController
   before_action :authenticate_user
-  before_filter :default_format_json
+  before_action :default_format_json
 
   def authenticate_user
     render json: {}, status: 401 unless valid_token?
