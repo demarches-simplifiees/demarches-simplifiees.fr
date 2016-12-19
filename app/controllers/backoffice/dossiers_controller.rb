@@ -91,7 +91,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.dossier_received(@facade.dossier).deliver_now!
 
-    render 'show'
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   def refuse
@@ -102,7 +102,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.dossier_refused(@facade.dossier).deliver_now!
 
-    render 'show'
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   def without_continuation
@@ -113,7 +113,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.dossier_without_continuation(@facade.dossier).deliver_now!
 
-    render 'show'
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   def close
@@ -124,7 +124,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.dossier_closed(@facade.dossier).deliver_now!
 
-    render 'show'
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   def follow

@@ -47,7 +47,8 @@
                 Vous pourrez dans tous les cas les compléter plus tard si vous ne les possédez pas de suite.
 
 
-    - if user_signed_in?
+    -route = Rails.application.routes.recognize_path(request.referrer)
+    - unless route[:controller].match('admin')
       %div{style: 'text-align:right'}
         %h6 Tous les champs portant un * sont obligatoires.
 

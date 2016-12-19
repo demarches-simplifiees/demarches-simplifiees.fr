@@ -22,6 +22,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :for_individual do
+      after(:build) do |procedure, _evaluator|
+        procedure.for_individual = true
+      end
+    end
+
     trait :with_type_de_champ do
       after(:build) do |procedure, _evaluator|
         type_de_champ = create(:type_de_champ_public)

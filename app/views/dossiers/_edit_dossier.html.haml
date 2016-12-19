@@ -1,5 +1,5 @@
 - unless @facade.dossier.read_only?
   - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
     %a#maj_infos.action{href: "/users/dossiers/#{@facade.dossier.id}/description"}
-      %div.col-lg-2.col-md-2.action
+      %div#edit-dossier.col-lg-2.col-md-2.action
         = "éditer".upcase

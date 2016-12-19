@@ -20,7 +20,7 @@
           .form-group.form-group-lg
             = f.text_field :siret, class: "form-control", placeholder: "Entrez votre Siret", value: @siret
             = f.hidden_field :dossier_id, value: @facade.dossier.id
-            = f.submit 'Valider', class: %w(btn btn-lg btn-success), data: { disable_with: "Recherche en cours ..." }
+            = f.submit 'Valider', class: %w(btn btn-lg btn-success), id: 'submit-siret', data: { disable_with: "Recherche en cours ..." }
     - else
       %br
       #recap_info_entreprise
