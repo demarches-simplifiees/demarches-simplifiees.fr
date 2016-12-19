@@ -22,11 +22,11 @@ class Users::DescriptionController < UsersController
     redirect_to url_for(root_path)
   end
 
-  def error
-    show
-    flash.now.alert = 'Un ou plusieurs attributs obligatoires sont manquants ou incorrects.'
-    render 'show'
-  end
+  # def error
+  #   show
+  #   flash.now.alert = 'Un ou plusieurs attributs obligatoires sont manquants ou incorrects.'
+  #   render 'show'
+  # end
 
   def create
     @dossier = current_user_dossier
