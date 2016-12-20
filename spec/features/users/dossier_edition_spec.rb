@@ -2,20 +2,20 @@ require 'spec_helper'
 
 feature 'As a User I want to edit a dossier I own', js: true do
 
-  let(:user)      { create(:user) }
+  let(:user)                     { create(:user) }
   let(:procedure_for_individual) { create(:procedure, :published, :for_individual, :with_api_carto, :with_type_de_champ, :with_two_type_de_piece_justificative) }
 
   before "Create dossier" do
-      login_as user, scope: :user
-      visit commencer_path(procedure_path: procedure_for_individual.path)
-      fill_in 'dossier_individual_attributes_nom',       with: 'Nom'
-      fill_in 'dossier_individual_attributes_prenom',    with: 'Prenom'
-      fill_in 'dossier_individual_attributes_birthdate', with: '14/10/1987'
-      find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
-      page.find_by_id('etape_suivante').click
-      page.find_by_id('etape_suivante').click
-      page.find_by_id('suivant').click
-      visit root_path
+    login_as user, scope: :user
+    visit commencer_path(procedure_path: procedure_for_individual.path)
+    fill_in 'dossier_individual_attributes_nom',       with: 'Nom'
+    fill_in 'dossier_individual_attributes_prenom',    with: 'Prenom'
+    fill_in 'dossier_individual_attributes_birthdate', with: '14/10/1987'
+    find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
+    page.find_by_id('etape_suivante').click
+    page.find_by_id('etape_suivante').click
+    page.find_by_id('suivant').click
+    visit root_path
   end
 
   context 'After sign_in, I can navigate through dossiers indexes and edit a dossier' do

@@ -1,16 +1,16 @@
 - unless smart_listing.empty?
   %table#dossiers_list.table
     %thead
-      %th.col-md-1.col-lg-1= smart_listing.sortable 'Numéro', 'id'
-      %th.col-md-5.col-lg-5= smart_listing.sortable 'Procédure', 'procedure.libelle'
-      %th.col-md-2.col-lg-2= smart_listing.sortable 'État', 'state'
-      %th.col-md-2.col-lg-2= smart_listing.sortable 'Date de mise à jour', 'updated_at'
+      %th#sort-id.col-md-1.col-lg-1= smart_listing.sortable 'Numéro', 'id'
+      %th#sort-libelle.col-md-5.col-lg-5= smart_listing.sortable 'Procédure', 'procedure.libelle'
+      %th#sort-state.col-md-2.col-lg-2= smart_listing.sortable 'État', 'state'
+      %th#sort-updated.col-md-2.col-lg-2= smart_listing.sortable 'Date de mise à jour', 'updated_at'
       - if @liste == "brouillon"
         %th.col-md-2.col-lg-2= 'Action'
     - @dossiers.each do |dossier|
       - if dossier.kind_of? Invite
-        -invite = dossier
-        -dossier = invite.dossier.decorate
+        - invite = dossier
+        - dossier = invite.dossier.decorate
       - else
         - dossier = dossier.decorate
 
