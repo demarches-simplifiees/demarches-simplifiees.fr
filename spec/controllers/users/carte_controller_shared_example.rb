@@ -179,6 +179,24 @@ shared_examples 'carte_controller_spec' do
   end
 
   describe '#get_position' do
+
+    context 'when etablissement is nil' do
+      before do
+        dossier.update etablissement: nil
+
+        stub_request(:get, /http:\/\/api-adresse[.]data[.]gouv[.]fr\/search[?]limit=1&q=/)
+            .to_return(status: 200, body: '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
+        get :get_position, params: {dossier_id: dossier.id}
+      end
+
+      subject { JSON.parse(response.body) }
+
+      it 'on enregistre des coordonnées lat et lon avec les valeurs par defaut' do
+        expect(subject['lat']).to eq('46.538192')
+        expect(subject['lon']).to eq('2.428462')
+      end
+    end
+
     context 'Geocodeur renvoie les positions par defaut' do
       let(:etablissement) { create(:etablissement, adresse: bad_adresse, numero_voie: 'dzj', type_voie: 'fzjfk', nom_voie: 'hdidjkz', complement_adresse: 'fjef', code_postal: 'fjeiefk', localite: 'zjfkfz') }
       let(:dossier) { create(:dossier, etablissement: etablissement) }
