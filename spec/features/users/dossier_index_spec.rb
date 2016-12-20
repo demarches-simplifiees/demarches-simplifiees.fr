@@ -41,8 +41,12 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
       page.find('.next_page a').click
       wait_for_ajax
       expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('15')
+      page.find('.prev a').click
+      wait_for_ajax
+      page.find('.prev a').click
+      wait_for_ajax
+      expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('1')
     end
   end
-
 
 end

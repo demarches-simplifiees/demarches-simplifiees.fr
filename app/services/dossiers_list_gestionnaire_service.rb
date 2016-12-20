@@ -89,19 +89,21 @@ class DossiersListGestionnaireService
   def change_page! new_page
     pref = current_preference_smart_listing_page
 
-    unless pref.liste == @liste && pref.procedure == @procedure
-      pref.liste = @liste
-      pref.procedure = @procedure
+    if pref
+      unless pref.liste == @liste && pref.procedure == @procedure
+        pref.liste = @liste
+        pref.procedure = @procedure
 
-      if new_page.nil?
-        pref.page = 1
+        if new_page.nil?
+          pref.page = 1
+          pref.save
+        end
+      end
+
+      unless new_page.nil?
+        pref.page = new_page
         pref.save
       end
-    end
-
-    unless new_page.nil?
-      pref.page = new_page
-      pref.save
     end
   end
 
