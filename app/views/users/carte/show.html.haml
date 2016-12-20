@@ -10,27 +10,13 @@
       %button#new.btn.btn-md.btn-success{type:'button'}
         %i.fa.fa-pencil
         Ajouter une zone
-      -#\-
-      -#%button#edit.btn.btn-sm.btn-info{type:'button'} Editer
-      -#\-
-      -#%button#delete.btn.btn-sm.btn-danger{type:'button'} Supprimer
 
       %span#search_by_address{style: 'margin-left: 20px'}
         %input.form-control{type: :address, placeholder: 'Rechercher une adresse'}
       %br
       %br
-      #carte_page.row
-        #map{class: @dossier.procedure.module_api_carto.classes }
 
-        - if @dossier.procedure.module_api_carto.quartiers_prioritaires
-          #qp.list
-            %h3.text-info Quartiers prioritaites
-            %ul
-
-        - if @dossier.procedure.module_api_carto.cadastre
-          #cadastre.list
-            %h3.text-warning Cadastres
-            %ul
+      =render partial: 'users/carte/map', locals: {dossier: @dossier}
 
       = form_tag(url_for({controller: :carte, action: :save, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
         %br
@@ -43,6 +29,4 @@
         -else
           =render partial: '/layouts/modifications_terminees'
 
-    %script{type: 'text/javascript'}
-      ="var dossier_id =#{@dossier.id}"
-      initCarto();
+    = render partial: 'users/carte/init_carto', locals: {dossier: @dossier}
