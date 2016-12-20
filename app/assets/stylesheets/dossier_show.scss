@@ -106,6 +106,14 @@
       color: #000000;
     }
   }
+
+  #carto {
+    #map {
+      margin-bottom: 20px;
+      height: 350px;
+    }
+  }
+
   #dossier, #pieces-jointes, .infos, #carto, #private-fields {
     .body {
       padding: 20px 20px 0 20px;

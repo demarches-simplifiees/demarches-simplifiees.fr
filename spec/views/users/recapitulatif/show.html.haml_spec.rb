@@ -55,12 +55,10 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
         context 'lien carte' do
           it 'le lien vers carte est présent' do
-            pending 'map: later'
             expect(rendered).to have_css('#maj_carte')
           end
 
           it 'le lien vers description est correct' do
-            pending 'map: later'
             expect(rendered).to have_selector("a[id=maj_carte][href='/users/dossiers/#{dossier_id}/carte']")
           end
         end
@@ -139,7 +137,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           end
 
           it 'map link is present' do
-            pending 'map: later'
             expect(rendered).to have_css('#maj_carte')
           end
 
