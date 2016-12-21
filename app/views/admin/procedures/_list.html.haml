@@ -1,5 +1,5 @@
 - unless smart_listing.empty?
-  %table.table
+  %table.table#dossiers_list
     %thead
       %th#ID= smart_listing.sortable 'ID', 'id'
       %th#libelle= smart_listing.sortable 'Libellé', 'libelle'
@@ -10,12 +10,12 @@
 
     - @procedures.each do |procedure|
       - procedure = procedure.decorate
-      %tr
+      %tr{id: "tr_dossier_#{procedure.id}", 'data-dossier_url' => admin_procedure_path(id: procedure.id)}
         %td= procedure.id
         %td.col-md-6.col-lg-6
-          = link_to(procedure.libelle, "/admin/procedures/#{procedure.id}")
+          = procedure.libelle
         - if @active_class
-          %td= link_to procedure.lien, procedure.lien, class: 'procedure-lien'
+          %td= link_to procedure.lien, procedure.lien, class: 'procedure-lien', 'data-method' => :get
         %td
           = procedure.created_at_fr
         %td
