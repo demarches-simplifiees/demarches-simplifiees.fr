@@ -27,6 +27,7 @@ describe Dossier do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to have_many(:invites) }
     it { is_expected.to have_many(:follows) }
+    it { is_expected.to have_many(:notifications) }
   end
 
   describe 'delegation' do

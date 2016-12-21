@@ -27,6 +27,7 @@ class Dossier < ActiveRecord::Base
   has_many :invites, dependent: :destroy
   has_many :invites_user, class_name: 'InviteUser', dependent: :destroy
   has_many :follows
+  has_many :notifications, dependent: :destroy
 
   belongs_to :procedure
   belongs_to :user

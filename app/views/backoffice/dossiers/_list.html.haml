@@ -1,5 +1,8 @@
 %table#dossiers_list.table
   %thead
+    - if smart_listing.name.to_s == 'follow_dossiers'
+      %th
+        %i.fa.fa-bell
     - @facade_data_view.preference_list_dossiers_filter.each do |preference|
       %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}
         - if preference.table.to_s.include? 'champs'
@@ -16,6 +19,15 @@
   - unless smart_listing.empty?
     - smart_listing.collection.each do |dossier|
       %tr{id: "tr_dossier_#{dossier.id}", 'data-dossier_url' => backoffice_dossier_url(id: dossier.id)}
+        - if smart_listing.name.to_s == 'follow_dossiers'
+          %td.center
+            - total_notif = dossier.notifications.count
+            - if total_notif == 0
+              .badge.progress-bar-default
+                = total_notif
+            - else
+              .badge.progress-bar-danger
+                = total_notif
         - @facade_data_view.preference_list_dossiers_filter.each_with_index do |preference, index|
           %td
             - if preference.table.nil? || preference.table.empty?
