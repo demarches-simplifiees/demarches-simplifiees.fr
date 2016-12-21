@@ -1,13 +1,14 @@
 #left-pannel {
-  padding: 60px 0 0 10px;
+  margin-top: 60px;
+  padding: 0 0 0 10px;
   background-color: #003189;
-  height: 100%;
+  height: calc(100% - 60px);
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   color: white;
-  overflow: scroll;
+  overflow-y: scroll;
 
   #first-block {
     font-family: Arial;

@@ -350,11 +350,24 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe 'PUT #update' do
-    subject { put :update, params: {id: dossier_id, dossier: {id: dossier_id, autorisation_donnees: autorisation_donnees}} }
+    let(:params) { {id: dossier_id, dossier: {id: dossier_id, autorisation_donnees: autorisation_donnees}} }
+    subject { put :update, params: params }
 
     before do
       sign_in dossier.user
       subject
+    end
+
+    context 'when procedure is for individual' do
+      let(:params) { {id: dossier_id, dossier: {id: dossier_id, autorisation_donnees: '1', individual_attributes: individual_params}} }
+      let(:individual_params) { {id: dossier.individual.id, gender: 'Mr', nom: 'Julien', prenom: 'Xavier', birthdate: '20/01/1991', dossier_id: dossier.id} }
+      let(:procedure) { create(:procedure, :published, for_individual: true) }
+
+      it { expect(dossier.individual.gender).to eq 'Mr'  }
+      it { expect(dossier.individual.nom).to eq 'Xavier'  }
+      it { expect(dossier.individual.prenom).to eq 'Julien'  }
+      it { expect(dossier.individual.birthdate).to eq '20/01/1991'  }
+      it { expect(dossier.procedure.for_individual).to eq true }
     end
 
     context 'when Checkbox is checked' do

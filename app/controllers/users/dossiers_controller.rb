@@ -119,7 +119,7 @@ class Users::DossiersController < UsersController
         @facade.dossier.update_attributes!(update_params)
       rescue
         flash.now.alert = @facade.dossier.errors.full_messages.join('<br />').html_safe
-        return render 'show'
+        return redirect_to users_dossier_path(id: @facade.dossier.id)
       end
       if @facade.dossier.procedure.module_api_carto.use_api_carto
         redirect_to url_for(controller: :carte, action: :show, dossier_id: @facade.dossier.id)
