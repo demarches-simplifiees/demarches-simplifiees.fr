@@ -76,7 +76,9 @@ class Dossier < ActiveRecord::Base
   end
 
   def build_default_individual
-    Individual.new(dossier_id: id).save(validate: false)
+    if Individual.where(dossier_id: self.id).count == 0
+      Individual.create(dossier: self)
+    end
   end
 
   def ordered_champs
