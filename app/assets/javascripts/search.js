@@ -12,7 +12,7 @@ function search_fadeIn(){
     var width = search_area.width();
 
     search_area.css('position', 'fixed');
-    search_area.css('top', positions.top);
+    search_area.css('top', positions.top + $('.navbar').height());
     search_area.css('left', positions.left);
     search_area.css('z-index', 300);
     search_area.css('width', width);
