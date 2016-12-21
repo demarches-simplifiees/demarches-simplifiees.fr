@@ -1,9 +1,8 @@
 - total = 100 - 2
-- interface = 10
+- interface = 5
 - notification = 10
-- bugs = 20
+- bugs = 10
 - realise = total - interface - notification - bugs
-
 #landing.max-size
   #title{style:'padding-bottom: 2%; padding-top: 2%'}
     %h1.center
@@ -13,10 +12,7 @@
 
     %br
     %h3.center
-      Un seul espace pour suivre les évolutions UX de la Version 2 de TPS
-
-    .center{style:'margin-top: 40px'}
-      = link_to "Découvrir", '/users/sign_in', {class: "btn btn-lg btn-success"}
+      La plateforme évolue pour une meilleure interface, de meilleures interactions et une meilleure expérience.
 
 #progression{style:'margin-left: 2em; margin-right: 2em; margin-top: 50px'}
   %h2.center Où en est la migration vers TPS V2 ? ...
@@ -51,7 +47,7 @@
       %li
         Utilisateur, Accompagnateur et Administrateur ont maintenant la même page de connexion
       %li
-        Un tout nouveau tableau de bord pour les Accompagnteurs
+        Un tout nouveau tableau de bord pour les Accompagnateurs
       %li
         Une page récapitulative pour un dossier entièrement revue
       %li
@@ -74,7 +70,7 @@
         %b.text-purple
           ="(#{notification}%)"
       %li
-        Fiabilisation accrue de la plateforme : un certain nombre de bug sont encore présents ...
+        Fiabilisation accrue de la plateforme : un certain nombre de bugs est encore présents ...
         %b.text-danger
           ="(#{bugs}%)"
       %li
