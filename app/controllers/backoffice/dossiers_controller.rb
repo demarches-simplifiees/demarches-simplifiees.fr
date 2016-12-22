@@ -19,7 +19,12 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def show
     create_dossier_facade params[:id]
-    @champs = @facade.champs_private unless @facade.nil?
+    @champs_private = @facade.champs_private unless @facade.nil?
+
+    @headers_private = @champs_private.inject([]) do |acc, champ|
+      acc.push(champ) if champ.type_champ == 'header_section'
+      acc
+    end
   end
 
   def filter
