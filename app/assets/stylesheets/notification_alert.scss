@@ -1,0 +1,12 @@
+#notification_alert {
+  position: fixed;
+  top: 20px;
+  right: -250px;
+
+  z-index: 1000;
+
+  width: 250px;
+  height: 80px;
+
+  border: solid black 1px;
+}
