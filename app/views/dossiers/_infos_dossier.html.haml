@@ -81,7 +81,7 @@
                 = 'Pièce non fournie'
     .row
       .col-md-12.col-lg-12
-        - @facade.dossier.types_de_piece_justificative.order('order_place ASC').each do |type_de_piece_justificative|
+        - @facade.types_de_pieces_justificatives.each do |type_de_piece_justificative|
           .row.piece-row
             .col-md-12.col-lg-12{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
               .row
