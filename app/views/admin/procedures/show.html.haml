@@ -59,12 +59,12 @@
     %h3 Détails
 
     .row{style:'margin-right:3%; margin-left:3%;'}
-      .description.col-md-4.col-lg-4
+      .description.col-md-3.col-lg-3
         %h4.text-info
           = @facade.procedure.libelle
 
         = h @facade.procedure.description.html_safe
-      .champs.col-md-4.col-lg-4
+      .champs.col-md-3.col-lg-3
         %h4.text-info
           Champs
           .badge.progress-bar-info
@@ -73,7 +73,16 @@
           = champ.libelle
           %br
 
-      .pieces_justificatives.col-md-4.col-lg-4
+      .champs_private.col-md-3.col-lg-3
+        %h4.text-info
+          Champs privés
+          .badge.progress-bar-info
+            = @facade.procedure.types_de_champ_private.size
+        - @facade.procedure.types_de_champ_private.order(:order_place).each do |champ|
+          = champ.libelle
+          %br
+
+      .pieces_justificatives.col-md-3.col-lg-3
         %h4.text-info
           Pièces justificatives
           .badge.progress-bar-info

@@ -26,6 +26,10 @@ class DossierFacades
     @dossier.ordered_pieces_justificatives
   end
 
+  def types_de_pieces_justificatives
+    @dossier.types_de_piece_justificative.order('order_place ASC')
+  end
+
   def champ_id
     @champ_id
   end
