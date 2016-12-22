@@ -56,12 +56,13 @@
           ="#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
         =")"
 %div.row
-  .col-lg-12.col-md-12
-    - if @facade.procedure.for_individual?
+  - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.count > 0
+    .col-lg-12.col-md-12
       .row.title-row
         %div.col-md-4.col-lg-4.split-hr
         %div.col-md-4.col-lg-4.dossier-title= t('utils.pieces').upcase
         %div.col-md-4.col-lg-4.split-hr
+
   .col-lg-12.col-md-12#pieces_justificatives.margin-bot-40
     .row
       - if @facade.procedure.cerfa_flag?
@@ -97,6 +98,7 @@
                       %span.fa.fa-clock-o
                   - else
                     = 'Pièce non fournie'
+
     - unless @facade.dossier.read_only?
       - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
