@@ -5,6 +5,8 @@
         = image_tag('marianne_small.png', class: 'logo')
       %div.col-lg-6.no-padding#tps-title
         TPS
+        .badge.progress-bar-danger
+          = Notification.where(already_read: false).count
 
 %div.col-lg-10.col-md-10.no-padding
   %div#navbar-body

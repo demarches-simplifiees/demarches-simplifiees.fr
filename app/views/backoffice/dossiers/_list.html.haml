@@ -26,7 +26,7 @@
               .badge.progress-bar-default
                 = total_notif
             - else
-              .badge.progress-bar-danger
+              .badge.progress-bar-warning
                 = total_notif
         - @facade_data_view.preference_list_dossiers_filter.each_with_index do |preference, index|
           %td
