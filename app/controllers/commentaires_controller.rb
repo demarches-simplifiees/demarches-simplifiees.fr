@@ -1,9 +1,9 @@
 class CommentairesController < ApplicationController
   def index
     @facade = DossierFacades.new(
-      params[:dossier_id],
-      (current_gestionnaire || current_user).email,
-      params[:champs_id]
+        params[:dossier_id],
+        (current_gestionnaire || current_user).email,
+        params[:champs_id]
     )
     render layout: false
   rescue ActiveRecord::RecordNotFound
@@ -48,12 +48,17 @@ class CommentairesController < ApplicationController
       end
 
       NotificationMailer.new_answer(@commentaire.dossier).deliver_now! if saved
+
       redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
-    elsif current_user.email != @commentaire.dossier.user.email
-      invite = Invite.where(dossier: @commentaire.dossier, user: current_user).first
-      redirect_to url_for(controller: 'users/dossiers/invites', action: :show, id: invite.id)
     else
-      redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params['dossier_id'])
+      NotificationService.new('commentaire', @commentaire.dossier.id).notify if saved
+
+      if current_user.email != @commentaire.dossier.user.email
+        invite = Invite.where(dossier: @commentaire.dossier, user: current_user).first
+        redirect_to url_for(controller: 'users/dossiers/invites', action: :show, id: invite.id)
+      else
+        redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params['dossier_id'])
+      end
     end
   end
 
