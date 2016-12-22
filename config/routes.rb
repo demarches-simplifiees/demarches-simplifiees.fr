@@ -202,4 +202,6 @@ Rails.application.routes.draw do
   end
 
   apipie
+
+  mount ActionCable.server => '/cable'
 end
