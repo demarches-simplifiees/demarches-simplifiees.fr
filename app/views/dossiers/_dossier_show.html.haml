@@ -1,4 +1,4 @@
-.default_data_block
+.default_data_block{style:'margin-top: 40px'}
   .row.show-block#messages
     %div.header
       %div.col-lg-10.col-md-10.title
@@ -100,16 +100,16 @@
         = render partial: 'users/carte/init_carto', locals: {dossier: @facade.dossier}
 
 
-- if @current_gestionnaire && gestionnaire_signed_in? && @champs.count > 0
-  .default_data_block
+- if @current_gestionnaire && gestionnaire_signed_in? && @champs_private.count > 0
+  .default_data_block.default_visible
     %div.row.show-block#private-fields
       %div.header
         %div.col-lg-10.col-md-10.title
           %div.carret-right
           %div.carret-down
-          = "champs".upcase
+          = "formulaire privé".upcase
         %div.col-lg-2.col-md-2.count
-          - private_fields_count = @champs.count
+          - private_fields_count = @champs_private.count
           = (private_fields_count == 1) ? "1 champ" : "#{private_fields_count} champs"
       %div.body
         = render partial: '/dossiers/infos_private_fields'

@@ -16,9 +16,8 @@
 
   -#TODO use form_for
   = form_tag(url_for({controller: 'users/description', action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
-
-    #liste_champs
-      -unless @champs.nil?
+    -unless @champs.nil?
+      #liste_champs
         =render partial: 'users/description/champs', locals:{private: false}
 
     -if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0

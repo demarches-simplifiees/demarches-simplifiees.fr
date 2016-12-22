@@ -1,4 +1,6 @@
 .row
-  .col-lg-2.col-md-2
-  .col-lg-8.col-md-8
+  .col-lg-12.col-md-12
+    %br
+    %h3.text-info
+      =libelle
     = render partial: 'users/description/champs/render_list_champs', locals: {champs: champs, order_place: order_place}

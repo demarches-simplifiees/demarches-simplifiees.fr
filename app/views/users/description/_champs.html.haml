@@ -1,5 +1,10 @@
 - render_partial_url = private ? 'users/description/champs/header_private_section' : 'users/description/champs/header_section'
+- @champs = @champs_private if private
+- @headers = @headers_private if private
+
 - unless @headers.blank?
+  - if @champs.first.type_champ != 'header_section'
+    =render partial: render_partial_url, locals: {libelle: 'Dossier', order_place: -1, champs: @champs}
   - @headers.each do |header|
     .row
       %div{class: "type_champ-#{header.type_champ}"}
