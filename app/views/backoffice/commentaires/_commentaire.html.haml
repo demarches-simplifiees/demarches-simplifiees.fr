@@ -1,13 +1,13 @@
 %div.commentaire
   .row
-    %div.col-lg-12.col-md-12.comment-header
+    %div.col-lg-12.col-md-12.col-sm-12.col-xs-12.comment-header
       = commentaire.header
   .row
-    %div.col-lg-12.col-md-12.content
+    %div.col-lg-12.col-md-12.col-sm-12.col-xs-12.content
       = commentaire.body.html_safe
   - if file = commentaire.piece_justificative
     .row
-      %div.col-lg-12.col-md-12.file
+      %div.col-lg-12.col-md-12.col-sm-12.col-xs-12.file
         = link_to file.content_url, class: 'link', target: '_blank' do
           %span.fa.fa-file
           %div

@@ -1,12 +1,12 @@
-%div.col-lg-8.col-md-8.main-info
+%div.col-lg-8.col-md-8.col-sm-8.col-xs-8.main-info
   = @facade_data_view.procedure_id.nil? ? "Tous les dossiers" :  @facade_data_view.procedure.libelle
-%div.col-lg-3.col-md-3.options
+%div.col-lg-3.col-md-3.col-sm-3.col-xs-3.options
   %div.row
-    %div.col-lg-12.col-md-12
+    %div.col-lg-12.col-md-12.col-sm-12.col-xs-12
       %a.button_navbar#pref_list_dossier_open_action{href: '#', type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
         %i.fa.fa-pencil
         Modifier le tableau
       %span.caret-right
   %div.row
-    %div.col-lg-12.col-md-12
+    %div.col-lg-12.col-md-12.col-sm-12.col-xs-12
       = render partial: "dossiers/download_dossiers"

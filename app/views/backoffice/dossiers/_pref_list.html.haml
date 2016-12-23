@@ -27,7 +27,7 @@
     - if index%2 == 0 || tables.first.to_s.include?('champs')
       %tr
 
-    %td.col-sm-5.col-md-5.col-lg-5{style: 'vertical-align: top', colspan: (tables.first == :champs ? 2 : 1)}
+    %td.col-sm-5.col-md-5.col-sm-5.col-xs-5.col-lg-5{style: 'vertical-align: top', colspan: (tables.first == :champs ? 2 : 1)}
       %h5= tables.first.to_s.gsub('_', ' ').capitalize
       %ul
         - if tables.second

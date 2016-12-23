@@ -1,5 +1,5 @@
 .row{style: 'margin-top: -20px'}
-  .col-md-12.col-lg-12
+  .col-md-12.col-sm-12.col-xs-12.col-lg-12
     = form_for @facade.dossier, url: {controller: 'backoffice/private_formulaires', action: :update, dossier_id: @facade.dossier.id}, remote: true do
       = render partial: '/users/description/champs', locals:{private: true}
       .row.center
