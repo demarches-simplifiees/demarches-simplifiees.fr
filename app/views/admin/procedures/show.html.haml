@@ -59,12 +59,12 @@
     %h3 Détails
 
     .row{style:'margin-right:3%; margin-left:3%;'}
-      .description.col-md-3.col-lg-3
+      .description.col-md-3.col-sm-3.col-xs-3.col-lg-3
         %h4.text-info
           = @facade.procedure.libelle
 
         = h @facade.procedure.description.html_safe
-      .champs.col-md-3.col-lg-3
+      .champs.col-md-3.col-sm-3.col-xs-3.col-lg-3
         %h4.text-info
           Champs
           .badge.progress-bar-info
@@ -73,7 +73,7 @@
           = champ.libelle
           %br
 
-      .champs_private.col-md-3.col-lg-3
+      .champs_private.col-md-3.col-sm-3.col-xs-3.col-lg-3
         %h4.text-info
           Champs privés
           .badge.progress-bar-info
@@ -82,7 +82,7 @@
           = champ.libelle
           %br
 
-      .pieces_justificatives.col-md-3.col-lg-3
+      .pieces_justificatives.col-md-3.col-sm-3.col-xs-3.col-lg-3
         %h4.text-info
           Pièces justificatives
           .badge.progress-bar-info
@@ -95,7 +95,7 @@
       =t('dynamics.admin.procedure.stats.title')
 
     .row
-      .col-md-6.col-lg-6{style:'margin-left:3%'}
+      .col-md-6.col-sm-6.col-xs-6.col-lg-6{style:'margin-left:3%'}
         %h4 Total
         %div
           = @facade.dossiers_total
@@ -125,7 +125,7 @@
           %p
             0
 
-      .col-md-5.col-lg-5
+      .col-md-5.col-sm-5.col-xs-5.col-lg-5
         %h4 Non archivés
         = javascript_include_tag "https://code.highcharts.com/highcharts.js", "chartkick"
         - if @facade.dossiers_for_pie_highchart.blank?
