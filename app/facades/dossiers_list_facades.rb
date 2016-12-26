@@ -27,7 +27,7 @@ class DossiersListFacades
   end
 
   def gestionnaire_procedures_name_and_id_list
-    @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure| acc.push({id: procedure.id, libelle: procedure.libelle}) }
+    @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure| acc.push({id: procedure.id, libelle: procedure.libelle, notification_unread: @current_devise_profil.notification_unread(procedure)}) }
   end
 
   def procedure_id
