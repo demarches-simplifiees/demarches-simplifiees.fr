@@ -7,7 +7,8 @@ class Notification < ActiveRecord::Base
            commentaire: 'commentaire',
            cerfa: 'cerfa',
            piece_justificative: 'piece_justificative',
-           champs: 'champs'
+           champs: 'champs',
+           submitted: 'submitted'
        }
 
   # def broadcast_notification

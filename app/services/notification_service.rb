@@ -33,6 +33,8 @@ class NotificationService
         attribut
       when 'champs'
         attribut
+      when 'submitted'
+        "Le dossier n°#{@dossier_id} a été déposé."
       else
         'Notification par défaut'
     end
