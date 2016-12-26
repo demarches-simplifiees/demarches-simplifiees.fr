@@ -31,6 +31,8 @@ class NotificationService
         "Un nouveau formulaire a été déposé."
       when 'piece_justificative'
         attribut
+      when 'champs'
+        attribut
       else
         'Notification par défaut'
     end

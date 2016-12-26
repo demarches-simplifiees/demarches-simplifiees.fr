@@ -5,6 +5,8 @@ class Champ < ActiveRecord::Base
 
   delegate :libelle, :type_champ, :order_place, :mandatory, :description, :drop_down_list, to: :type_de_champ
 
+  after_save :internal_notification
+
   def mandatory?
     mandatory
   end
@@ -36,14 +38,20 @@ class Champ < ActiveRecord::Base
   end
 
   def self.regions
-    JSON.parse(Carto::GeoAPI::Driver.regions).sort_by{|e| e['nom']}.inject([]){|acc, liste| acc.push(liste['nom']) }
+    JSON.parse(Carto::GeoAPI::Driver.regions).sort_by { |e| e['nom'] }.inject([]) { |acc, liste| acc.push(liste['nom']) }
   end
 
   def self.departements
-    JSON.parse(Carto::GeoAPI::Driver.departements).inject([]){|acc, liste| acc.push(liste['code'] + ' - ' + liste['nom']) }.push('99 - Étranger')
+    JSON.parse(Carto::GeoAPI::Driver.departements).inject([]) { |acc, liste| acc.push(liste['code'] + ' - ' + liste['nom']) }.push('99 - Étranger')
   end
 
   def self.pays
-    JSON.parse(Carto::GeoAPI::Driver.pays).inject([]){|acc, liste| acc.push(liste['nom']) }
+    JSON.parse(Carto::GeoAPI::Driver.pays).inject([]) { |acc, liste| acc.push(liste['nom']) }
+  end
+
+  private
+
+  def internal_notification
+    NotificationService.new('champs', self.dossier.id, self.libelle).notify
   end
 end

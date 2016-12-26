@@ -6,7 +6,8 @@ class Notification < ActiveRecord::Base
   enum type_notif: {
            commentaire: 'commentaire',
            cerfa: 'cerfa',
-           piece_justificative: 'piece_justificative'
+           piece_justificative: 'piece_justificative',
+           champs: 'champs'
        }
 
   # def broadcast_notification
