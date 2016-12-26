@@ -13,6 +13,8 @@ class Commentaire < ActiveRecord::Base
   private
 
   def internal_notification
-    NotificationService.new('commentaire', self.dossier.id).notify
+    if email == dossier.user.email || dossier.invites.pluck(:email).to_a.include?(email)
+      NotificationService.new('commentaire', self.dossier.id).notify
+    end
   end
 end

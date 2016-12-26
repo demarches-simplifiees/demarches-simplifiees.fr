@@ -52,6 +52,8 @@ class Champ < ActiveRecord::Base
   private
 
   def internal_notification
-    NotificationService.new('champs', self.dossier.id, self.libelle).notify
+    unless dossier.state == 'draft'
+      NotificationService.new('champs', self.dossier.id, self.libelle).notify
+    end
   end
 end
