@@ -299,6 +299,10 @@ shared_examples 'description_controller_spec' do
         sign_in guest
       end
 
+      it 'Notification interne is create' do
+        expect { subject }.to change(Notification, :count).by (1)
+      end
+
       context 'when PJ have no documents' do
         it { expect(dossier.pieces_justificatives.size).to eq 0 }
 

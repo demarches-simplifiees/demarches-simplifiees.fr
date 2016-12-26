@@ -1,10 +1,11 @@
 class NotificationService
 
-  def initialize type_notif, dossier_id
+  def initialize type_notif, dossier_id, attribut_change=''
     @type_notif = type_notif
     @dossier_id = dossier_id
 
-    notification.liste.push text_for_notif
+    notification.liste.push text_for_notif attribut_change
+    notification.liste = notification.liste.uniq
 
     self
   end
@@ -22,12 +23,14 @@ class NotificationService
         end
   end
 
-  def text_for_notif
+  def text_for_notif attribut=''
     case @type_notif
       when 'commentaire'
         "#{notification.liste.size + 1} nouveau(x) commentaire(s) déposé(s)."
       when 'cerfa'
         "Un nouveau formulaire a été déposé."
+      when 'piece_justificative'
+        attribut
       else
         'Notification par défaut'
     end
