@@ -38,11 +38,16 @@
       - @facade.dossier.notifications.limit(5).each do |notification|
         .notification
           .updated-at= notification.updated_at.strftime('%d/%m/%Y %H:%M')
-          - if ['champs', 'piece_justificative'].include?(notification.type_notif)
+          - if ['champs'].include?(notification.type_notif)
             - if notification.liste.size > 1
               .type= "Plusieurs attributs ont été changés, dont: #{notification.liste.join(" ")}"
             - else
               .type= "Un attribut à été changé: #{notification.liste.last}"
+          - elsif ['piece_justificative'].include?(notification.type_notif)
+            - if notification.liste.size > 1
+              .type= "Plusieurs pièces justificatives ont été changés, dont: #{notification.liste.join(" ")}"
+            - else
+              .type= "Une pièce justificative à été changée: #{notification.liste.last}"
           - else
             .type= notification.liste.last
           .split-hr
