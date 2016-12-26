@@ -51,8 +51,6 @@ class CommentairesController < ApplicationController
 
       redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
     else
-      NotificationService.new('commentaire', @commentaire.dossier.id).notify if saved
-
       if current_user.email != @commentaire.dossier.user.email
         invite = Invite.where(dossier: @commentaire.dossier, user: current_user).first
         redirect_to url_for(controller: 'users/dossiers/invites', action: :show, id: invite.id)
