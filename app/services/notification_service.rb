@@ -26,6 +26,8 @@ class NotificationService
     case @type_notif
       when 'commentaire'
         "#{notification.liste.size + 1} nouveau(x) commentaire(s) déposé(s)."
+      when 'cerfa'
+        "Un nouveau formulaire a été déposé."
       else
         'Notification par défaut'
     end
