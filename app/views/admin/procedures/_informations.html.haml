@@ -12,7 +12,7 @@
       = f.text_field key, class: 'form-control', placeholder: value
 
 .row
-  .col-md-6.col-lg-6
+  .col-md-6.col-sm-6.col-xs-6.col-lg-6
     %h4 Logo de la procédure
     - unless @procedure.logo.blank?
       = image_tag @procedure.decorate.logo_img, {style: 'height: 40px; display: inline; margin-right: 6px', id: 'preview_procedure_logo'}
@@ -21,7 +21,7 @@
     %div{style:'margin-top:5px'}
       %i
         Fichier accepté : JPG / JPEG / PNG
-  .col-md-6.col-lg-6
+  .col-md-6.col-sm-6.col-xs-6.col-lg-6
     %h4 Drapeau européen
     %label
       =f.check_box :euro_flag
@@ -30,7 +30,7 @@
 %br
 
 .row
-  .col-md-6.col-lg-6
+  .col-md-6.col-sm-6.col-xs-6.col-lg-6
     %h4 Cartographie
 
     = f.fields_for :module_api_carto, @procedure.module_api_carto do |ff|
@@ -48,7 +48,7 @@
             = ff.check_box :cadastre
             Cadastre
 
-  .col-md-6.col-lg-6
+  .col-md-6.col-sm-6.col-xs-6.col-lg-6
     %h4 Formulaire / CERFA
     %label
       =f.check_box :cerfa_flag
@@ -58,7 +58,7 @@
 
 %br
 .row
-  .col-md-6.col-lg-6
+  .col-md-6.col-sm-6.col-xs-6.col-lg-6
     %h4 Particuliers
     %div
       %label

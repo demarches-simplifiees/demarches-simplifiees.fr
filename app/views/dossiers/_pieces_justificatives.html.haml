@@ -4,7 +4,7 @@
       %tr{id: "piece_justificative_0"}
         %th{class:'col-lg-6'}
           ='Formulaire'
-        %td.col-lg-6.col-md-6
+        %td.col-lg-6.col-md-6.col-sm-6.col-xs-6
           - if @facade.dossier.cerfa_available?
             %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
             %span{style:'margin-left:12px'}
@@ -22,7 +22,7 @@
       %tr{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
         %th.col-lg-6
           = type_de_piece_justificative.libelle
-        %td.col-lg-6.col-md-6
+        %td.col-lg-6.col-md-6.col-sm-6.col-xs-6
           - if type_de_piece_justificative.api_entreprise
             %span.text-success Nous l'avons récupéré pour vous.
           - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?
