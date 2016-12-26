@@ -38,5 +38,11 @@
       - @facade.dossier.notifications.limit(5).each do |notification|
         .notification
           .updated-at= notification.updated_at.strftime('%d/%m/%Y %H:%M')
-          .type= notification.liste.last
+          - if ['champs', 'piece_justificative'].include?(notification.type_notif)
+            - if notification.liste.size > 1
+              .type= "Plusieurs attributs ont été changés, dont: #{notification.liste.last}"
+            - else
+              .type= "Un attribut à été changé: #{notification.liste.last}"
+          - else
+            .type= notification.liste.last
           .split-hr
