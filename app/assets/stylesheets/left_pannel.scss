@@ -64,17 +64,27 @@
       width: 200px;
       margin-top: 20px;
     }
-    .tips {
-      margin: 0 10px 0 5px;
+    .notifications {
+      margin: 20px 10px 0 5px;
       .fa {
-        color: #FFFFFF;
-        font-size: 40px;
-        width: inherit;
-        padding: 5px;
+        font-size: 25px;
+        width: 100%;
+        margin: 0 0 15px 0;
       }
-      .notice {
-        font-size: 18px;
-        display: initial;
+      .notification {
+        margin: 10px 0 10px 0;
+        .type {
+          margin-bottom: 20px;
+        }
+        .updated-at {
+          color: #CCCCCC;
+          font-size: 12px;
+          text-align: left;
+        }
+        .split-hr {
+          width: 40px;
+          margin: auto;
+        }
       }
     }
   }
