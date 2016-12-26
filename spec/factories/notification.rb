@@ -3,7 +3,7 @@ FactoryGirl.define do
     type_notif 'commentaire'
     liste []
 
-    after(:create) do |notification, _evaluator|
+    before(:create) do |notification, _evaluator|
       unless notification.dossier
         notification.dossier = create :dossier
       end

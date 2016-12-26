@@ -5,7 +5,7 @@ class Champ < ActiveRecord::Base
 
   delegate :libelle, :type_champ, :order_place, :mandatory, :description, :drop_down_list, to: :type_de_champ
 
-  after_save :internal_notification
+  after_save :internal_notification, if: Proc.new { !dossier.nil? }
 
   def mandatory?
     mandatory
