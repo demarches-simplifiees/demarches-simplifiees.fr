@@ -19,7 +19,7 @@ class ChampsService
         end
       end
 
-      champ.save
+      champ.save if champ.changed?
     end
 
     errors
