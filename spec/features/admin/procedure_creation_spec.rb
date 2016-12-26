@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'as an administrateur I wanna create a new procedure', js: true do
+feature 'As an administrateur I wanna create a new procedure', js: true do
 
   let(:administrateur) { create(:administrateur) }
 
