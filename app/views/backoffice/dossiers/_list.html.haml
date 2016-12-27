@@ -21,7 +21,7 @@
       %tr.dossier-row{id: "tr_dossier_#{dossier.id}", 'data-dossier_url' => backoffice_dossier_url(id: dossier.id)}
         - if smart_listing.name.to_s == 'follow_dossiers'
           %td.center
-            - total_notif = dossier.notifications.count
+            - total_notif = dossier.notifications.where(already_read: false).count
             - if total_notif == 0
               .badge.progress-bar-default
                 = total_notif
