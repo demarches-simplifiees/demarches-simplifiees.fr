@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161221153929) do
+ActiveRecord::Schema.define(version: 20161227103823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,7 +118,6 @@ ActiveRecord::Schema.define(version: 20161221153929) do
 
   create_table "dossiers", force: :cascade do |t|
     t.boolean  "autorisation_donnees"
-    t.string   "nom_projet"
     t.integer  "procedure_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -252,7 +251,6 @@ ActiveRecord::Schema.define(version: 20161221153929) do
   create_table "notifications", force: :cascade do |t|
     t.boolean  "already_read", default: false
     t.string   "liste",                        array: true
-    t.boolean  "multiple",     default: false
     t.string   "type_notif"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -313,7 +311,6 @@ ActiveRecord::Schema.define(version: 20161221153929) do
     t.string   "lien_demarche"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
-    t.boolean  "test"
     t.integer  "administrateur_id"
     t.boolean  "archived",              default: false
     t.boolean  "euro_flag",             default: false
