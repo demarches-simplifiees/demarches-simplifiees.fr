@@ -17,6 +17,11 @@
       = link_to backoffice_dossiers_procedure_path(procedure[:id]), {title: procedure[:libelle]} do
         %div.procedure_list_element{ class: ('active' if procedure[:id] == @facade_data_view.procedure.id rescue '') }
           = truncate(procedure[:libelle], length: 50)
+          - total_new = @facade_data_view.new_dossier_number procedure[:id]
+          - if total_new > 0
+            .badge.progress-bar-success{title:'Nouveaux dossiers'}
+              = total_new
           -if procedure[:unread_notifications] > 0
-            .badge.progress-bar-warning
+            .badge.progress-bar-warning{title: 'Notifications'}
               = procedure[:unread_notifications]
+
