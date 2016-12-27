@@ -133,8 +133,4 @@ describe DossiersListFacades do
       end
     end
   end
-
-  describe 'unread_notifications' do
-    pending
-  end
 end

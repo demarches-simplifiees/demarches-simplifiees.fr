@@ -209,8 +209,8 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#unread_notifications' do
-    subject { gestionnaire.unread_notifications procedure }
+  describe '#notifications_for' do
+    subject { gestionnaire.notifications_for procedure }
 
     context 'when gestionnaire follow any dossier' do
       it { is_expected.to eq 0 }
