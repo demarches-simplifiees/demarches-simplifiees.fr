@@ -63,7 +63,7 @@ class Gestionnaire < ActiveRecord::Base
     PreferenceSmartListingPage.create(page: 1, procedure: nil, gestionnaire: self, liste: 'a_traiter')
   end
 
-  def notification_unread procedure
+  def unread_notifications procedure
     procedure_ids = dossiers_follow.pluck(:procedure_id)
 
     if procedure_ids.include?(procedure.id)

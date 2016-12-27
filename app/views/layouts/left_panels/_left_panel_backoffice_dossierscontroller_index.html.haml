@@ -17,6 +17,6 @@
       = link_to backoffice_dossiers_procedure_path(procedure[:id]), {title: procedure[:libelle]} do
         %div.procedure_list_element{ class: ('active' if procedure[:id] == @facade_data_view.procedure.id rescue '') }
           = truncate(procedure[:libelle], length: 50)
-          -if procedure[:notification_unread] > 0
+          -if procedure[:unread_notifications] > 0
             .badge.progress-bar-warning
-              = procedure[:notification_unread]
+              = procedure[:unread_notifications]
