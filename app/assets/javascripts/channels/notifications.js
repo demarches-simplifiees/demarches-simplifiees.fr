@@ -1,8 +1,8 @@
 App.messages = App.cable.subscriptions.create('NotificationsChannel', {
     received: function (data) {
-
         if (window.location.href.indexOf('backoffice') !== -1) {
             $("#notification_alert").html(data['message']);
+
             slideIn_notification_alert();
         }
     }
