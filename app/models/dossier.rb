@@ -27,6 +27,7 @@ class Dossier < ActiveRecord::Base
   has_many :invites, dependent: :destroy
   has_many :invites_user, class_name: 'InviteUser', dependent: :destroy
   has_many :follows
+  has_many :notifications, dependent: :destroy
 
   belongs_to :procedure
   belongs_to :user
@@ -41,6 +42,7 @@ class Dossier < ActiveRecord::Base
 
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
+  after_save :internal_notification
 
   validates :user, presence: true
 
@@ -325,5 +327,13 @@ class Dossier < ActiveRecord::Base
 
   def invite_by_user? email
     (invites_user.pluck :email).include? email
+  end
+
+  private
+
+  def internal_notification
+    if state_changed? && state == 'submitted'
+      NotificationService.new('submitted', self.id).notify
+    end
   end
 end

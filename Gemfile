@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.0.0.1'
 
+gem 'actioncable', '5.0.0.1'
+gem 'redis'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -116,6 +119,8 @@ group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
 
   gem 'web-console'
+
+  gem 'rack-handlers'
 end
 
 group :development, :test do

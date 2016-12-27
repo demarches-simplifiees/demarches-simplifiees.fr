@@ -13,6 +13,8 @@ class PieceJustificative < ActiveRecord::Base
   validates :content, :file_size => {:maximum => 20.megabytes}
   validates :content, presence: true, allow_blank: false, allow_nil: false
 
+  after_save :internal_notification, if: Proc.new { !dossier.nil? }
+
   def empty?
     content.blank?
   end
@@ -42,5 +44,13 @@ class PieceJustificative < ActiveRecord::Base
       image/png,
       image/jpeg
     "
+  end
+
+  private
+
+  def internal_notification
+    unless self.type_de_piece_justificative.nil? && dossier.state == 'draft'
+      NotificationService.new('piece_justificative', self.dossier.id, self.libelle).notify
+    end
   end
 end

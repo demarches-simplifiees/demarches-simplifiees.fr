@@ -1,4 +1,4 @@
-RSpec.describe Users::Dossiers::InvitesController, type: :controller do
+describe Users::Dossiers::InvitesController, type: :controller do
   describe '#authenticate_user!' do
     let(:user) { create :user }
     let(:invite) { create :invite }

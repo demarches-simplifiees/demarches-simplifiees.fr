@@ -63,6 +63,22 @@ class Gestionnaire < ActiveRecord::Base
     PreferenceSmartListingPage.create(page: 1, procedure: nil, gestionnaire: self, liste: 'a_traiter')
   end
 
+  def notifications
+    Notification.where(already_read: false, dossier_id: follows.pluck(:dossier_id) ).order("updated_at DESC")
+  end
+
+  def notifications_for procedure
+    procedure_ids = dossiers_follow.pluck(:procedure_id)
+
+    if procedure_ids.include?(procedure.id)
+      return dossiers_follow.where(procedure_id: procedure.id)
+                 .inject(0) do |acc, dossier|
+        acc += dossier.notifications.where(already_read: false).count
+      end
+    end
+    0
+  end
+
   private
 
   def valid_couple_table_attr? table, column

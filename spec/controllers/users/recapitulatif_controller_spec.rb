@@ -82,6 +82,10 @@ describe Users::RecapitulatifController, type: :controller do
         dossier.validated!
         post :submit, params: {dossier_id: dossier.id}
       end
+
+      it 'Internal notification is created' do
+        expect(Notification.where(dossier_id: dossier.id, type_notif: 'submitted').first).not_to be_nil
+      end
     end
   end
 end

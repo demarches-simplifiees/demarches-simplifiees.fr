@@ -19,6 +19,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def show
     create_dossier_facade params[:id]
+
     unless @facade.nil?
       @champs_private = @facade.champs_private
 
@@ -27,6 +28,8 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
         acc
       end
     end
+
+    Notification.where(dossier_id: params[:id].to_i).update_all already_read: true
   end
 
   def filter

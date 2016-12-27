@@ -1,6 +1,6 @@
 #left-pannel {
   margin-top: 60px;
-  padding: 0 0 0 10px;
+  padding: 0;
   background-color: #003189;
   height: calc(100% - 60px);
   position: fixed;
@@ -51,6 +51,53 @@
     }
   }
   #menu-block {
+    #switch-buttons {
+      height: 30px;
+      line-height: 30px;
+      font-size: 16px;
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 205px;
+      border: 1px solid;
+      padding: 0 0 0 10px;
+      border-radius: 25px;
+      cursor: pointer;
+      .active {
+        background-color: #668ABD !important;
+        cursor: default;
+      }
+      .separator {
+        height: 26px;
+        width: 1px;
+        display: inline-block;
+        background-color: #FFFFFF;
+      }
+      #switch-procedures:hover, #switch-notifications:hover {
+        background-color: #668AEA;
+      }
+      #switch-procedures {
+        height: 28px;
+        margin: 0 0 0 -10px;
+        padding-left: 10px;
+        width: 100px;
+        display: inline-block;
+        border-radius: 25px 0 0 25px;
+      }
+      #switch-notifications {
+        width: 103px;
+        display: inline-block;
+        border-radius: 0 25px 25px 0;
+        height: 28px;
+        margin: 0 0 0 -5px;
+        padding: 0 0 0 5px;
+      }
+    }
+    .split-hr {
+      border-bottom: 1px solid #FFFFFF;
+      width: 200px;
+      margin: 20px 0 20px 0;
+    }
   }
   #infos-block {
     .split-hr {
@@ -63,18 +110,42 @@
       font-size: 25px;
       width: 200px;
       margin-top: 20px;
+      width: 200px;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .tips {
-      margin: 0 10px 0 5px;
-      .fa {
-        color: #FFFFFF;
-        font-size: 40px;
-        width: inherit;
-        padding: 5px;
+    #notifications_list {
+      .notification {
+        padding: 10px 10px 10px 20px;
+        .dossier, .updated-at {
+          display: inline-block;
+          color: #CCCCCC;
+          font-size: 12px;
+          text-align: left;
+        }
       }
-      .notice {
-        font-size: 18px;
-        display: initial;
+    }
+    .notifications {
+      margin: 20px 10px 0 5px;
+      .fa {
+        font-size: 25px;
+        width: 100%;
+        margin: 0 0 15px 0;
+      }
+      .notification {
+        margin: 10px 0 10px 10px;
+        .type {
+          margin-bottom: 20px;
+        }
+        .updated-at {
+          color: #CCCCCC;
+          font-size: 12px;
+          text-align: left;
+        }
+        .split-hr {
+          width: 40px;
+          margin: auto;
+        }
       }
     }
   }

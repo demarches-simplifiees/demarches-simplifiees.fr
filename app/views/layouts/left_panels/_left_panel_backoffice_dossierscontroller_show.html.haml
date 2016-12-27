@@ -1,6 +1,5 @@
 %div#first-block
   %div.infos
-    %div.projet-name #{@facade.dossier.nom_projet.capitalize rescue nil}
     #dossier_id= t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
 
 %div#action-block
@@ -30,6 +29,24 @@
   %div.split-hr-left
   %div.dossier-state= @facade.dossier.display_state
   %div.split-hr-left
-  %div.tips.hidden
-    %i.fa.fa-lightbulb-o
-    %div.notice= "Ceci est un bloc destiné à contenir des informations sur ce que vous êtes censé pouvoir faire à ce stade de traitement du dossier."
+  %div.notifications
+    - if @facade.dossier.notifications.empty?
+      = "Aucune notification pour le moment."
+    - else
+      %i.fa.fa-bell-o
+      - @facade.last_notifications.each do |notification|
+        .notification
+          .updated-at= notification.updated_at.strftime('%d/%m/%Y %H:%M')
+          - if ['champs'].include?(notification.type_notif)
+            - if notification.liste.size > 1
+              .type= "Plusieurs attributs ont été changés, dont: #{notification.liste.join(" ")}"
+            - else
+              .type= "Un attribut à été changé: #{notification.liste.last}"
+          - elsif ['piece_justificative'].include?(notification.type_notif)
+            - if notification.liste.size > 1
+              .type= "Plusieurs pièces justificatives ont été changés, dont: #{notification.liste.join(" ")}"
+            - else
+              .type= "Une pièce justificative à été changée: #{notification.liste.last}"
+          - else
+            .type= notification.liste.last
+          .split-hr

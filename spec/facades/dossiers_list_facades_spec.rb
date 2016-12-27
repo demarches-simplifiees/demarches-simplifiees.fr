@@ -50,10 +50,12 @@ describe DossiersListFacades do
 
     it { expect(subject.first[:id]).to eq procedure.id }
     it { expect(subject.first[:libelle]).to eq procedure.libelle }
+    it { expect(subject.first[:unread_notifications]).to eq 0 }
+
 
     it { expect(subject.last[:id]).to eq procedure_2.id }
     it { expect(subject.last[:libelle]).to eq procedure_2.libelle }
-
+    it { expect(subject.last[:unread_notifications]).to eq 0 }
   end
 
   describe '#active_filter?' do
