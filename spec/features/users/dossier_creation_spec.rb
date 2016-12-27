@@ -17,11 +17,11 @@ feature 'As a User I wanna create a dossier', js: true do
       fill_in 'dossier_individual_attributes_prenom',    with: 'Prenom'
       fill_in 'dossier_individual_attributes_birthdate', with: '14/10/1987'
       find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
-      page.find_by_id('etape_suivante').click
+      page.find_by_id('etape_suivante').trigger('click')
       expect(page).to have_current_path(users_dossier_carte_path(Dossier.first.id.to_s), only_path: true)
-      page.find_by_id('etape_suivante').click
+      page.find_by_id('etape_suivante').trigger('click')
       fill_in 'champs_1', with: 'contenu du champ 1'
-      page.find_by_id('suivant').click
+      page.find_by_id('suivant').trigger('click')
       expect(page).to have_current_path(users_dossier_recapitulatif_path(Dossier.first.id.to_s), only_path: true)
     end
 
@@ -39,14 +39,14 @@ feature 'As a User I wanna create a dossier', js: true do
       stub_request(:get, "https://api-dev.apientreprise.fr/v1/associations/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: 404, body: '')
       page.find_by_id('dossier_siret').set siret
-      page.find_by_id('submit-siret').click
+      page.find_by_id('submit-siret').trigger('click')
       expect(page).to have_css('#recap_info_entreprise')
       find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
-      page.find_by_id('etape_suivante').click
+      page.find_by_id('etape_suivante').trigger('click')
       expect(page).to have_current_path(users_dossier_carte_path(Dossier.first.id.to_s), only_path: true)
-      page.find_by_id('etape_suivante').click
+      page.find_by_id('etape_suivante').trigger('click')
       fill_in 'champs_1', with: 'contenu du champ 1'
-      page.find_by_id('suivant').click
+      page.find_by_id('suivant').trigger('click')
       expect(page).to have_current_path(users_dossier_recapitulatif_path(Dossier.first.id.to_s), only_path: true)
     end
   end
