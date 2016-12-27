@@ -52,8 +52,8 @@
   }
   #menu-block {
     #switch-buttons {
-      height: 40px;
-      line-height: 40px;
+      height: 30px;
+      line-height: 30px;
       font-size: 16px;
       margin-top: 20px;
       margin-left: auto;
@@ -62,21 +62,33 @@
       border: 1px solid;
       padding: 0 0 0 10px;
       border-radius: 25px;
+      cursor: pointer;
+      .active {
+        background-color: #668ABD !important;
+        cursor: default;
+      }
+      .separator {
+        height: 26px;
+        width: 1px;
+        display: inline-block;
+        background-color: #FFFFFF;
+      }
+      #switch-procedures:hover, #switch-notifications:hover {
+        background-color: #668AEA;
+      }
       #switch-procedures {
-        height: 38px;
-        margin: 0 -5px 0 -10px;
+        height: 28px;
+        margin: 0 0 0 -10px;
         padding-left: 10px;
         width: 100px;
         display: inline-block;
-        background-color: #CCCCCC;
         border-radius: 25px 0 0 25px;
       }
       #switch-notifications {
-        width: 100px;
-        background-color: #CCCCCC;
+        width: 103px;
         display: inline-block;
         border-radius: 0 25px 25px 0;
-        height: 38px;
+        height: 28px;
         margin: 0 0 0 -5px;
         padding: 0 0 0 5px;
       }
@@ -98,6 +110,20 @@
       font-size: 25px;
       width: 200px;
       margin-top: 20px;
+      width: 200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #notifications_list {
+      .notification {
+        padding: 10px 10px 10px 20px;
+        .dossier, .updated-at {
+          display: inline-block;
+          color: #CCCCCC;
+          font-size: 12px;
+          text-align: left;
+        }
+      }
     }
     .notifications {
       margin: 20px 10px 0 5px;
@@ -107,7 +133,7 @@
         margin: 0 0 15px 0;
       }
       .notification {
-        margin: 10px 0 10px 0;
+        margin: 10px 0 10px 10px;
         .type {
           margin-bottom: 20px;
         }

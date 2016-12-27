@@ -64,7 +64,7 @@ class Gestionnaire < ActiveRecord::Base
   end
 
   def notifications
-    Notification.where(already_read: false, dossier_id: follows.pluck(:dossier_id) )
+    Notification.where(already_read: false, dossier_id: follows.pluck(:dossier_id) ).order("updated_at DESC")
   end
 
   def notifications_for procedure

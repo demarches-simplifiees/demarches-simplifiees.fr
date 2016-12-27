@@ -11,8 +11,7 @@
 %div#menu-block
   %div.split-hr-left
   #switch-buttons
-    #switch-procedures Procédures
-    |
+    #switch-procedures.active Procédures
     #switch-notifications Notifications
 
 %div#infos-block
@@ -29,4 +28,10 @@
           -if procedure[:unread_notifications] > 0
             .badge.progress-bar-warning{title: 'Notifications'}
               = procedure[:unread_notifications]
-
+  #notifications_list.hidden
+    - @facade_data_view.unread_notifications.each do |notification|
+      = link_to backoffice_dossier_path(notification.dossier.id) do
+        .notification
+          .dossier= notification.decorate.index_display[:dossier]
+          .updated-at= notification.decorate.index_display[:date]
+          .type= notification.decorate.index_display[:type]

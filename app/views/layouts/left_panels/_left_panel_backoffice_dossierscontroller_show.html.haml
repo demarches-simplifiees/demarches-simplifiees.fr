@@ -34,7 +34,7 @@
       = "Aucune notification pour le moment."
     - else
       %i.fa.fa-bell-o
-      - @facade.dossier.notifications.limit(5).each do |notification|
+      - @facade.last_notifications.each do |notification|
         .notification
           .updated-at= notification.updated_at.strftime('%d/%m/%Y %H:%M')
           - if ['champs'].include?(notification.type_notif)
