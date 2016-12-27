@@ -1,6 +1,6 @@
 #left-pannel {
   margin-top: 60px;
-  padding: 0 0 0 10px;
+  padding: 0;
   background-color: #003189;
   height: calc(100% - 60px);
   position: fixed;
@@ -51,6 +51,41 @@
     }
   }
   #menu-block {
+    #switch-buttons {
+      height: 40px;
+      line-height: 40px;
+      font-size: 16px;
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 205px;
+      border: 1px solid;
+      padding: 0 0 0 10px;
+      border-radius: 25px;
+      #switch-procedures {
+        height: 38px;
+        margin: 0 -5px 0 -10px;
+        padding-left: 10px;
+        width: 100px;
+        display: inline-block;
+        background-color: #CCCCCC;
+        border-radius: 25px 0 0 25px;
+      }
+      #switch-notifications {
+        width: 100px;
+        background-color: #CCCCCC;
+        display: inline-block;
+        border-radius: 0 25px 25px 0;
+        height: 38px;
+        margin: 0 0 0 -5px;
+        padding: 0 0 0 5px;
+      }
+    }
+    .split-hr {
+      border-bottom: 1px solid #FFFFFF;
+      width: 200px;
+      margin: 20px 0 20px 0;
+    }
   }
   #infos-block {
     .split-hr {
