@@ -417,6 +417,8 @@ GEM
       pry (~> 0.10)
     public_suffix (2.0.4)
     rack (2.0.1)
+    rack-handlers (0.7.3)
+      rack
     rack-oauth2 (1.4.0)
       activesupport (>= 2.3)
       attr_required (>= 0.0.5)
@@ -465,6 +467,7 @@ GEM
       nokogiri (~> 1.5)
       trollop (~> 2.1)
     rdoc (4.3.0)
+    redis (3.3.0)
     ref (2.0.0)
     request_store (1.3.1)
     responders (2.3.0)
@@ -624,6 +627,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  actioncable (= 5.0.0.1)
   active_model_serializers
   apipie-rails
   as_csv
@@ -665,9 +669,11 @@ DEPENDENCIES
   pg
   poltergeist
   pry-byebug
+  rack-handlers
   railroady
   rails (= 5.0.0.1)
   rails-controller-testing
+  redis
   rest-client
   rgeo-geojson
   rspec-rails (~> 3.0)

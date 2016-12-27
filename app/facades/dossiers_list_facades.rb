@@ -26,8 +26,16 @@ class DossiersListFacades
     current_devise_profil.dossiers.where(state: :initiated, archived: false).count
   end
 
+  def new_dossier_number procedure_id
+    current_devise_profil.dossiers.where(state: :initiated, archived: false, procedure_id: procedure_id).count
+  end
+
   def gestionnaire_procedures_name_and_id_list
-    @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure| acc.push({id: procedure.id, libelle: procedure.libelle}) }
+    @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure| acc.push({id: procedure.id, libelle: procedure.libelle, unread_notifications: @current_devise_profil.notifications_for(procedure)}) }
+  end
+
+  def unread_notifications
+    current_devise_profil.notifications
   end
 
   def procedure_id

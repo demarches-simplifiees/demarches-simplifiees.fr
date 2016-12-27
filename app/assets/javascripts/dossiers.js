@@ -1,5 +1,22 @@
 $(document).on('page:load', the_terms);
 $(document).ready(the_terms);
+$(document).on('page:load', pannel_switch);
+$(document).ready(pannel_switch);
+
+function pannel_switch() {
+  $('#switch-notifications').click(function () {
+    $('#procedure_list').addClass('hidden');
+    $('#notifications_list').removeClass('hidden');
+    $(this).addClass('active');
+    $('#switch-procedures').removeClass('active');
+  })
+  $('#switch-procedures').click(function () {
+    $('#notifications_list').addClass('hidden');
+    $('#procedure_list').removeClass('hidden');
+    $(this).addClass('active');
+    $('#switch-notifications').removeClass('active');
+  })
+}
 
 function the_terms() {
     var the_terms = $("#dossier_autorisation_donnees");

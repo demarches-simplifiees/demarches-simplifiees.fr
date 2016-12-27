@@ -145,6 +145,13 @@ shared_examples 'description_controller_spec' do
     end
 
     context 'Quand la procédure accepte les CERFA' do
+      subject { post :create, params: {dossier_id: dossier_id,
+                                       cerfa_pdf: cerfa_pdf} }
+
+      it 'Notification interne is create' do
+        expect { subject }.to change(Notification, :count).by (1)
+      end
+
       context 'Sauvegarde du CERFA PDF', vcr: {cassette_name: 'controllers_users_description_controller_save_cerfa'} do
         before do
           post :create, params: {dossier_id: dossier_id,
@@ -290,6 +297,10 @@ shared_examples 'description_controller_spec' do
         create :invite, dossier: dossier, email: guest.email, user: guest
 
         sign_in guest
+      end
+
+      it 'Notification interne is create' do
+        expect { subject }.to change(Notification, :count).by (1)
       end
 
       context 'when PJ have no documents' do

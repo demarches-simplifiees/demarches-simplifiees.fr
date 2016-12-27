@@ -38,34 +38,40 @@ describe Backoffice::DossiersController, type: :controller do
   end
 
   describe 'GET #show' do
+    subject { get :show, params: {id: dossier_id} }
+
     context 'gestionnaire is connected' do
       before do
         sign_in gestionnaire
       end
 
       it 'returns http success' do
-        get :show, params: {id: dossier_id}
-        expect(response).to have_http_status(200)
+        expect(subject).to have_http_status(200)
+      end
+
+      describe 'all notifications unread are changed' do
+        it do
+          expect(Notification).to receive(:where).with(dossier_id: dossier_id).and_return(Notification::ActiveRecord_Relation)
+          expect(Notification::ActiveRecord_Relation).to receive(:update_all).with(already_read: true).and_return(true)
+
+          subject
+        end
       end
 
       context ' when dossier is archived' do
-        before do
-          get :show, params: {id: dossier_archived.id}
-        end
-        it { expect(response).to redirect_to('/backoffice') }
+        let(:dossier_id) { dossier_archived }
+
+        it { expect(subject).to redirect_to('/backoffice') }
       end
 
       context 'when dossier id does not exist' do
-        before do
-          get :show, params: {id: bad_dossier_id}
-        end
-        it { expect(response).to redirect_to('/backoffice') }
+        let(:dossier_id) { bad_dossier_id }
+
+        it { expect(subject).to redirect_to('/backoffice') }
       end
     end
 
     context 'gestionnaire does not connected but dossier id is correct' do
-      subject { get :show, params: {id: dossier_id} }
-
       it { is_expected.to redirect_to('/gestionnaires/sign_in') }
     end
   end

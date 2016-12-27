@@ -36,6 +36,10 @@ describe Backoffice::CommentairesController, type: :controller do
           expect { subject }.to change(Follow, :count).by(0)
         end
       end
+
+      it 'Internal notification is not create' do
+        expect { subject }.to change(Notification, :count).by (0)
+      end
     end
 
     context 'when document is upload whith a commentaire', vcr: {cassette_name: 'controllers_backoffice_commentaires_controller_doc_upload_with_comment'} do
@@ -52,6 +56,10 @@ describe Backoffice::CommentairesController, type: :controller do
       it 'clamav check the pj' do
         expect(ClamavService).to receive(:safe_file?)
         subject
+      end
+
+      it 'Internal notification is not create' do
+        expect { subject }.to change(Notification, :count).by (0)
       end
 
       describe 'piece justificative created' do
