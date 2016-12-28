@@ -22,6 +22,7 @@
           %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label Date de naissance
           %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
           %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.depositaire-info= @facade.individual.birthdate
+      .row.margin-top-20
 
     - unless @facade.champs.nil?
       - @facade.champs.each do |champ|
