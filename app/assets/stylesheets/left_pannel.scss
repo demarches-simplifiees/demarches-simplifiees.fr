@@ -115,6 +115,9 @@
       margin-right: auto;
     }
     #notifications_list {
+      .no-notification {
+        margin: 0 30px 0 30px;
+      }
       .notification {
         padding: 10px 10px 10px 20px;
         .dossier, .updated-at {

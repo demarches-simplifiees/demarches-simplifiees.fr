@@ -29,9 +29,12 @@
             .badge.progress-bar-warning{title: 'Notifications'}
               = procedure[:unread_notifications]
   #notifications_list.hidden
-    - @facade_data_view.unread_notifications.each do |notification|
-      = link_to backoffice_dossier_path(notification.dossier.id) do
-        .notification
-          .dossier= notification.decorate.index_display[:dossier]
-          .updated-at= notification.decorate.index_display[:date]
-          .type= notification.decorate.index_display[:type]
+    - if @facade_data_view.unread_notifications.empty?
+      .no-notification= "Aucune notification pour le moment."
+    - else
+      - @facade_data_view.unread_notifications.each do |notification|
+        = link_to backoffice_dossier_path(notification.dossier.id) do
+          .notification
+            .dossier= notification.decorate.index_display[:dossier]
+            .updated-at= notification.decorate.index_display[:date]
+            .type= notification.decorate.index_display[:type]
