@@ -59,6 +59,14 @@ class Dossier < ActiveRecord::Base
   TERMINE = %w(closed refused without_continuation)
   ALL_STATE = %w(initiated updated replied validated submitted received closed refused without_continuation)
 
+  def unreaded_notifications
+    @unreaded_notif ||= notifications.where(already_read: false)
+  end
+
+  def first_unread_notification
+    unreaded_notifications.order("created_at ASC").first
+  end
+
   def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
   end

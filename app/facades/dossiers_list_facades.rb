@@ -38,14 +38,6 @@ class DossiersListFacades
     current_devise_profil.notifications
   end
 
-  def last_unread_notifications
-    last_unread_notifications = []
-    dossiers_with_unread_notifications.each do |dossier|
-      last_unread_notifications << dossier.notifications.last
-    end
-    return last_unread_notifications
-  end
-
   def dossiers_with_unread_notifications
     (unread_notifications.inject([]) { |acc, notif| acc.push(notif.dossier) }).uniq
   end
