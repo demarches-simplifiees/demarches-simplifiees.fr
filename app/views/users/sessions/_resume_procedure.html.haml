@@ -14,5 +14,6 @@
     = h @dossier.procedure.description.html_safe
 
 - else
-  = image_tag(image_url(LOGO_NAME), {id: 'logo_tps'})
+  #logo_procedure.flag
+    = image_tag(image_url(LOGO_NAME), {id: 'logo_tps'})
 %br

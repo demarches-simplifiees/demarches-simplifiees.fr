@@ -1,6 +1,6 @@
 class NotificationMailer < ApplicationMailer
   def new_answer dossier
-    send_mail dossier, "Nouveau commentaire pour votre dossier TPS N°#{dossier.id}"
+    send_mail dossier, "Nouveau message pour votre dossier TPS N°#{dossier.id}"
   end
 
   def dossier_received dossier

@@ -14,26 +14,55 @@
     font-family: Arial;
     font-size: 16px;
     line-height: 18px;
+    margin-top: 20px;
     .infos {
       font-size: 25px;
       text-align: center;
-      margin: 20px 10px 30px 0;
+      margin: 10px 10px 30px 0;
       .projet-name {
         font-size: 25px;
         line-height: normal;
         padding: 5px;
       }
     }
+    .count {
+      display: inline-block;
+      padding: 3px;
+      border-radius: 25px;
+      min-width: 40px;
+      text-align: center;
+      line-height: 23px;
+    }
+    .text {
+      display: inline-block;
+      width: 30px;
+      margin: 0 0 0 8px;
+    }
     .dossiers-en-cours, .en-cours {
       margin-top: 20px;
     }
-    .dossiers-en-cours, .nouveaux-dossiers, .en-cours {
-      line-height: initial;
-      text-align: center;
-      margin-right: 10px;
+    .dossiers-en-cours {
+      .count {
+        border: 1px solid #FFFFFF;
+      }
+    }
+    .nouveaux-dossiers {
+      .count {
+        background-color: #5CB85C;
+      }
+    }
+    .nouvelles-notifications {
+      .count {
+        background-color: #E4594F;
+      }
+    }
+    .dossiers-en-cours, .nouveaux-dossiers, .nouvelles-notifications, .en-cours {
+      margin: 5px auto 0 20px;
+      width: 150px;
     }
   }
   #action-block {
+    text-align: center;
     margin: 10px;
     .action {
       background-color: #E45B51;
@@ -140,12 +169,25 @@
         margin: 0 30px 0 30px;
       }
       .notification {
-        padding: 10px 10px 10px 20px;
+        padding: 10px 2px 10px 15px;
         .dossier, .updated-at {
           display: inline-block;
           color: #CCCCCC;
           font-size: 12px;
           text-align: left;
+        }
+        .dossier-index, .updated-at-index, .count {
+          display: inline-block;
+          color: #FFFFFF;
+          font-size: 14px;
+          text-align: left;
+        }
+        .count {
+          background-color: #F0AD4E;
+          border-radius: 25px;
+          padding: 0 5px 0 5px;
+          width: 25px;
+          text-align: center;
         }
         .type-notif {
           font-size: 16px;

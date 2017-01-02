@@ -31,11 +31,15 @@ class DossiersListFacades
   end
 
   def gestionnaire_procedures_name_and_id_list
-    @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure| acc.push({id: procedure.id, libelle: procedure.libelle, unread_notifications: @current_devise_profil.notifications_for(procedure)}) }
+    @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure| acc.push({id: procedure.id, libelle: procedure.libelle, unread_notifications: @current_devise_profil.dossier_with_notification_for(procedure)}) }
   end
 
   def unread_notifications
     current_devise_profil.notifications
+  end
+
+  def dossiers_with_unread_notifications
+    (unread_notifications.inject([]) { |acc, notif| acc.push(notif.dossier) }).uniq
   end
 
   def procedure_id

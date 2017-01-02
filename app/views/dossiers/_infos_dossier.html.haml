@@ -95,8 +95,9 @@
                     %a{ href: "#{@pj.content_url}", target: '_blank' } Consulter
                     %span{style:'margin-left:12px'}
                       \-
-                    = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#PJmodal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => 'cerfa' do
-                      %span.fa.fa-clock-o
+                    - if @facade.dossier.pieces_justificatives.where(type_de_piece_justificative_id: type_de_piece_justificative.id).count > 1
+                      = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#PJmodal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => "type_de_pj_#{type_de_piece_justificative.id}" do
+                        %span.fa.fa-clock-o
                   - else
                     = 'Pièce non fournie'
 

@@ -56,6 +56,9 @@ h5 span {
     padding: 15px 40px 15px 20px;
     cursor: pointer;
     line-height: 1.8em;
+    .progress-bar-warning {
+      background-color: #E4594F;
+    }
   }
   .procedure_list_element:hover, .notification:hover {
     background-color: #668ABD;
