@@ -14,14 +14,14 @@
           = 'Accuser réception'.upcase
     - elsif @facade.dossier.received?
       = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
-        %button.action
+        %button.action.close-dossier
           %i.fa.fa-check
-      = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
-        %button.action
-          %i.fa.fa-times
       = form_tag(url_for({controller: 'backoffice/dossiers', action: :without_continuation, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Classer sans suite') do
-        %button.action
+        %button.action.forget-dossier
           %i.fa.fa-circle-o
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
+        %button.action.refuse-dossier
+          %i.fa.fa-times
 
 %div#menu-block
 
@@ -37,22 +37,17 @@
       - @facade.last_notifications.each do |notification|
         .notification
           .updated-at= notification.updated_at.strftime('%d/%m/%Y %H:%M')
+          = render partial: "layouts/left_panels/type_notif_fa", locals: {notification: notification}
           - if ['champs'].include?(notification.type_notif)
-            .type-notif.fa.fa-list-alt
             - if notification.liste.size > 1
               .type= "Plusieurs attributs ont été changés, dont: #{notification.liste.join(" ")}"
             - else
               .type= "Un attribut à été changé: #{notification.liste.last}"
           - elsif ['piece_justificative'].include?(notification.type_notif)
-            .type-notif.fa.fa-chain
             - if notification.liste.size > 1
               .type= "Plusieurs pièces justificatives ont été changés, dont: #{notification.liste.join(" ")}"
             - else
               .type= "Une pièce justificative à été changée: #{notification.liste.last}"
           - else
-            - if notification.type_notif == "commentaire"
-              .type-notif.fa.fa-comments-o
-            - elsif notification.type_notif == "submited"
-              .type-notif.fa.fa-thumbs-o-up
             .type= notification.liste.last
           .split-hr

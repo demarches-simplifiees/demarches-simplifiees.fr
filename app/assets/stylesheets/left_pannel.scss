@@ -49,6 +49,27 @@
       border: none;
       width: 100%;
     }
+    .close-dossier, .refuse-dossier, .forget-dossier {
+      border: 1px solid #FFFFFF;
+      border-radius: 25px;
+      margin: 5px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 60px;
+    }
+    .close-dossier:hover, .refuse-dossier:hover, .forget-dossier:hover {
+      color: #000000;
+      border-color: #000000;
+    }
+    .close-dossier {
+      background-color: #2A9E2A;
+    }
+    .refuse-dossier {
+      background-color: #E4594F;
+    }
+    .forget-dossier {
+      background-color: #FF8300;
+    }
   }
   #menu-block {
     #switch-buttons {
@@ -126,6 +147,9 @@
           font-size: 12px;
           text-align: left;
         }
+        .type-notif {
+          font-size: 16px;
+        }
       }
     }
     .notifications {
@@ -137,10 +161,8 @@
       }
       .type-notif {
         font-size: 16px;
-        float: left;
+        float: right;
         width: 30px;
-        height: 50px;
-        margin: 10px 0 0 0;
       }
       .notification {
         margin: 10px 0 10px 10px;

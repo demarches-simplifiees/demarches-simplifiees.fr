@@ -17,7 +17,6 @@ feature 'As a User I can send invitations from dossiers', js: true do
       page.find('#invitations').click
       fill_in 'invitation-email', with: 'toto@email.com'
       page.find('#send-invitation .btn-success').trigger('click')
-      save_and_open_page
     end
 
   end
