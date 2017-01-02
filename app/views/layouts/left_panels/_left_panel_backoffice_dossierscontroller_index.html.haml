@@ -6,13 +6,8 @@
     .count= @facade_data_view.total_new_dossier
     .text= "NOUVEAUX"
   %div.nouvelles-notifications
-    - new_notifications = @facade_data_view.dossiers_with_unread_notifications.count
-    - if new_notifications > 1
-      .count= new_notifications
-      .text= "MODIFIÉS"
-    - elsif new_notifications == 1
-      .count 1
-      .text= "MODIFIÉ"
+    .count= @facade_data_view.dossiers_with_unread_notifications.count
+    .text= "MODIFIÉS"
 
 %div#action-block
 
