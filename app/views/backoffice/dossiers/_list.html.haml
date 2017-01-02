@@ -53,6 +53,10 @@
           = dossier.total_follow
 
 = smart_listing.paginate
+- if smart_listing.name.to_s == 'follow_dossiers'
+  = smart_listing.pagination_per_page_links
+  %br
+
 
 - if smart_listing.empty?
   %h4.center
