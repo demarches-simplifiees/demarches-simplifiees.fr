@@ -38,15 +38,21 @@
         .notification
           .updated-at= notification.updated_at.strftime('%d/%m/%Y %H:%M')
           - if ['champs'].include?(notification.type_notif)
+            .type-notif.fa.fa-list-alt
             - if notification.liste.size > 1
               .type= "Plusieurs attributs ont été changés, dont: #{notification.liste.join(" ")}"
             - else
               .type= "Un attribut à été changé: #{notification.liste.last}"
           - elsif ['piece_justificative'].include?(notification.type_notif)
+            .type-notif.fa.fa-chain
             - if notification.liste.size > 1
               .type= "Plusieurs pièces justificatives ont été changés, dont: #{notification.liste.join(" ")}"
             - else
               .type= "Une pièce justificative à été changée: #{notification.liste.last}"
           - else
+            - if notification.type_notif == "commentaire"
+              .type-notif.fa.fa-comments-o
+            - elsif notification.type_notif == "submited"
+              .type-notif.fa.fa-thumbs-o-up
             .type= notification.liste.last
           .split-hr
