@@ -37,6 +37,7 @@ class Users::SessionsController < Sessions::SessionsController
     elsif administrateur_signed_in?
       redirect_to admin_path
     else
+      flash.alert = 'Mauvais couple login / mot de passe'
       new
       render :new, status: 401
     end
