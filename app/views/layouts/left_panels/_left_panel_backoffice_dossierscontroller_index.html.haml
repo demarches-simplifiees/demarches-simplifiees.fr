@@ -6,7 +6,7 @@
     = @facade_data_view.total_new_dossier
     NOUVEAUX DOSSIERS
   %div.nouvelles-notifications
-    - new_notifications = @facade_data_view.unread_notifications.count
+    - new_notifications = @facade_data_view.dossiers_with_unread_notifications.count
     - if new_notifications > 1
       = "#{new_notifications} DOSSIERS MODIFIÉS"
     - elsif new_notifications == 1
@@ -35,12 +35,11 @@
             .badge.progress-bar-warning{title: 'Notifications'}
               = procedure[:unread_notifications]
   #notifications_list.hidden
-    - if @facade_data_view.unread_notifications.empty?
+    - if @facade_data_view.dossiers_with_unread_notifications.empty?
       .no-notification= "Aucune notification pour le moment."
     - else
-      - @facade_data_view.unread_notifications.each do |notification|
+      - @facade_data_view.last_unread_notifications.each do |notification|
         = link_to backoffice_dossier_path(notification.dossier.id) do
           .notification
-            .dossier= notification.decorate.index_display[:dossier]
-            .updated-at= notification.decorate.index_display[:date]
-            = render partial: "layouts/left_panels/type_notif_fa", locals: {notification: notification}
+            .dossier-index= notification.decorate.index_display[:dossier]
+            .updated-at-index= notification.decorate.index_display[:date]
