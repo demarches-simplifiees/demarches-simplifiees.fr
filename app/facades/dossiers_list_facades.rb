@@ -38,6 +38,10 @@ class DossiersListFacades
     current_devise_profil.notifications
   end
 
+  def dossiers_with_unread_notifications
+    (unread_notifications.inject([]) { |acc, notif| acc.push(notif.dossier) }).uniq
+  end
+
   def procedure_id
     @procedure.nil? ? nil : @procedure.id
   end
