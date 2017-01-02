@@ -1,87 +1,102 @@
-- total = 100 - 2
-- interface = 5
-- notification = 10
-- bugs = 10
-- realise = total - interface - notification - bugs
 #landing.max-size
-  #title{style:'padding-bottom: 2%; padding-top: 2%'}
+  #title
     %h1.center
-      TPS V2
+      %img#logo-tps{src: image_url('logos/logo-tps.png')}
     %h2.center
-      Pour une meilleure plateforme
+      TéléProcédure Simplifiée
+
+    %h3.center
+      Plateforme publique pour réaliser des démarches administratives 100% en ligne.
 
     %br
-    %h3.center
-      La plateforme évolue pour une meilleure interface, de meilleures interactions et une meilleure expérience.
+    %br
+    .center
+      %button.background-tps.js-scrollTo.btn.btn-lg{cible: '.demo_account'}
+        Envie d'essayer ?
 
-#progression{style:'margin-left: 2em; margin-right: 2em; margin-top: 50px'}
-  %h2.center Où en est la migration vers TPS V2 ? ...
+#landing_body.max-size
+  .row#etapes.center
+    #create_1.col-lg-3.col-md-3.col-sm-3.col-xs-3
+      %img{src:image_url('etapes/create_1.png')}
+      %br
+      %h4 Administration
+      %h3.text-info Je construis ma démarche 100% en ligne
+    #complet_2.col-lg-3.col-md-3.col-sm-3.col-xs-3
+      %img{src:image_url('etapes/complet_2.png')}
+      %br
+      %h4 Usager
+      %h3.text-success Je remplis un dossier de manière simplifiée
+    #message_3.col-lg-3.col-md-3.col-sm-3.col-xs-3
+      %img{src:image_url('etapes/message_3.png')}
+      %br
+      %h4 Usager
+      %h3.text-warning Je dialogue avec mon administration en ligne
+    #shared_4.col-lg-3.col-md-3.col-sm-3.col-xs-3
+      %img{src:image_url('etapes/shared_4.png')}
+      %br
+      %h4 Usager et Administrations
+      %h3.text-danger
+        J'invite des partenaires à co-construire le dossier
 
-  %h2.text-success.center{style:'margin-left: 135px'}
-    = realise
-    \%
-    %i.text-default{style:'font-size: 18px'}
-      du site migré
-  %div{style: "width: 60%; margin-left:auto; margin-right:auto"}
-    .progress{style:'height: 30px; background-color: #ddd'}
-      .progress-bar.progress-bar-success.progress-bar-striped{:style => "width: #{realise}%;"}
-      .progress-bar.progress-bar-warning{:style => "width: #{interface}%;"}
-        %div{style:'margin-top: 0.4em'}
-          Interface
-      .progress-bar.progress-bar-purple{:style => "width: #{notification}%;"}
-        %div{style:'margin-top: 0.4em'}
-          Notifications
-      .progress-bar.progress-bar-danger{:style => "width: #{bugs}%;"}
-        %div{style:'margin-top: 0.4em'}
-          Fiabilisations et bugs
+  .split-hr-left
 
+  .row.demo_account.center
+    .col-md-4.col-lg-4
+      %h3.text-primary Acteurs publics
+      %h4 Créez des démarches en ligne simplifiées et sécurisées.
+      =link_to 'Démonstration', 'https://tps-dev.apientreprise.fr/administrateurs/sign_in/demo', {class: 'btn btn-lg btn-primary'}
 
-#road_map.center{style:'margin-top: 30px; margin-bottom: 50px'}
-  %h2.text-success
-    Réalisé
+    .col-md-4.col-lg-4
+      %h3.text-warning Agents et services
+      %h4 Accompagnez et co-traitez les projets avec les usagers.
+      =link_to 'Démonstration', 'https://tps-dev.apientreprise.fr/gestionnaires/sign_in/demo', {class: 'btn btn-lg btn-warning'}
 
-  #realise{style: 'width: 650px; margin-left: auto; margin-right: auto; text-align:left'}
-    %ul
-      %li
-        Un design général qui permet de mieux s'y retrouver
-      %li
-        Utilisateur, Accompagnateur et Administrateur ont maintenant la même page de connexion
-      %li
-        Un tout nouveau tableau de bord pour les Accompagnateurs
-      %li
-        Une page récapitulative pour un dossier entièrement revue
-      %li
-        La possibilité de changer en un clic de compte entre Utilisateur, Accompagnateur et Administrateur
-      %li
-        Une recherche globale : tapez et vous trouverez !!
+    .col-md-4.col-lg-4
+      %h3.text-success Usagers
+      %h4 Profitez de démarches simplifiées et d’échanges continus avec les services traitants.
+      =link_to 'Démonstration', 'https://tps-dev.apientreprise.fr/users/sign_in/demo', {class: 'btn btn-lg btn-success'}
 
-  %br
-  %h2.text-warning
-    Reste à faire
+  .split-hr-left
 
-  #reste_a_faire{style: 'width: 650px; margin-left: auto; margin-right: auto; text-align:left'}
-    %ul
-      %li
-        Terminer d'optimiser nos pages avec la nouvelle interface
-        %b.text-warning
-          ="(#{interface}%)"
-      %li
-        Centre de notification : un seul endroit pour suivre l'activité de l'ensemble de vos dossiers (Accompagnateur)
-        %b.text-purple
-          ="(#{notification}%)"
-      %li
-        Fiabilisation accrue de la plateforme : un certain nombre de bugs est encore présents ...
-        %b.text-danger
-          ="(#{bugs}%)"
-      %li
-        %b
-          Prendre vos retours en compte :
-          = link_to 'feedback@tps.apientreprise.fr', "mailto:feedback@tps.apientreprise.fr"
+  #request_access.row.center
+    .col-xs-12.col-sm-12.col-md-12.col-lg-12
+    %h3 Envi de commencer à créer votre démarche ?
 
+    = link_to 'Demander un accès administrateur', 'https://tps.apientreprise.fr/users/dossiers/new?procedure_id=31', {class: 'btn btn-lg background-tps', target: '_blank'}
 
-%h3.center
-  Disponible sur
-  = link_to "tps.apientreprise.fr", 'https://tps.apientreprise.fr', target: '_blank'
-  le
-  %span.text-success
-    3 Janvier 2017
+  .split-hr-left
+
+  .center
+    .row
+      #utilisateurs.col-xs-12.col-sm-12.col-md-12.col-lg-12
+        %h4 Ils nous font confiances
+
+        Consel regional Ile de France,
+        Politique de la ville du Pas de calais,
+        DRIEA Ile de France
+
+        %br
+
+        Préfecture de la martinique,
+        DRIEE Ile de France,
+        Ministère de l'écologie et du développement durable,
+        MEME,
+        CCI Normandie
+
+    %br
+    .row
+      #partenaires.col-xs-12.col-sm-12.col-md-12.col-lg-12
+        %h4 Ils travaillent avec nous
+
+        Insee
+        Infogreff,
+        Ministere de la jeunesse et du sport,
+        IGN,
+        DGFIP
+        France Connect,
+        BAN,
+        api.gouv.fr
+        Euroquity,
+        BPI,
+        FNTP,
+        Qualibat
