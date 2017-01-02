@@ -5,6 +5,12 @@
   %div.nouveaux-dossiers
     = @facade_data_view.total_new_dossier
     NOUVEAUX DOSSIERS
+  %div.nouvelles-notifications
+    - new_notifications = @facade_data_view.unread_notifications.count
+    - if new_notifications > 1
+      = "#{new_notifications} DOSSIERS MODIFIÉS"
+    - elsif new_notifications == 1
+      1 DOSSIER MODIFIÉ
 
 %div#action-block
 
