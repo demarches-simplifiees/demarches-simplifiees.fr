@@ -12,8 +12,8 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
     fill_in 'dossier_individual_attributes_prenom',    with: 'Prenom'
     fill_in 'dossier_individual_attributes_birthdate', with: '14/10/1987'
     find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
-    page.find_by_id('etape_suivante').click
-    page.find_by_id('suivant').click
+    page.find_by_id('etape_suivante').trigger('click')
+    page.find_by_id('suivant').trigger('click')
     50.times do
       Dossier.create(procedure_id: 1, user_id: 1, state: "initiated")
     end
@@ -23,7 +23,7 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
   context 'After sign_in, I can see my 51 dossiers on the index' do
 
     scenario 'Using sort' do
-      expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('1')
+      expect(page.all(:css, '#dossiers_list tr')[0].text.split(" ").first).to eq('1')
       expect(page.all(:css, '#dossiers_list tr')[2].text.split(" ").first).to eq('2')
       visit "/users/dossiers?dossiers_smart_listing[sort][id]=desc"
       expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('51')
@@ -34,16 +34,16 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
     end
 
     scenario 'Using pagination' do
-      expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('1')
-      page.find('.next_page a').click
+      expect(page.all(:css, '#dossiers_list tr')[0].text.split(" ").first).to eq('1')
+      page.find('.next_page a').trigger('click')
       wait_for_ajax
       expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('8')
-      page.find('.next_page a').click
+      page.find('.next_page a').trigger('click')
       wait_for_ajax
       expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('15')
-      page.find('.prev a').click
+      page.find('.prev a').trigger('click')
       wait_for_ajax
-      page.find('.prev a').click
+      page.find('.prev a').trigger('click')
       wait_for_ajax
       expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('1')
     end

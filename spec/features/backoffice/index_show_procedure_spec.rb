@@ -23,29 +23,28 @@ feature 'As an Accompagnateur I can navigate and use each functionnality around 
   context 'On index' do
 
     scenario 'Switching between procedures' do
-      page.all('#procedure_list a').first.click
+      page.all('#procedure_list a').first.trigger('click')
       expect(page).to have_current_path(backoffice_dossiers_procedure_path(id: procedure_1.id.to_s), only_path: true)
       expect(page.find('#all_dossiers .count').text).to eq('20 dossiers')
-      page.all('#procedure_list a').last.click
+      page.all('#procedure_list a').last.trigger('click')
       expect(page).to have_current_path(backoffice_dossiers_procedure_path(id: procedure_2.id.to_s), only_path: true)
       expect(page.find('#all_dossiers .count').text).to eq('15 dossiers')
-      #save_and_open_page
     end
 
     scenario 'Searching with search bar' do
       page.find_by_id('search_area').trigger('click')
       fill_in 'q', with: '15'
-      page.find_by_id('search_button').click
-      page.find_by_id('tr_dossier_15').click
+      page.find_by_id('search_button').trigger('click')
+      page.find_by_id('tr_dossier_15').trigger('click')
       expect(page).to have_current_path("/backoffice/dossiers/15")
     end
 
     scenario 'Following dossier' do
-      page.all('#procedure_list a').first.click
+      page.all('#procedure_list a').first.trigger('click')
       expect(page.all('#follow_dossiers .smart-listing')[0]['data-item-count']).to eq ("0")
-      page.find_by_id('all_dossiers').click
+      page.find_by_id('all_dossiers').trigger('click')
       expect(page.all('#dossiers_list a').first.text).to eq('Suivre')
-      page.all('#dossiers_list a').first.click
+      page.all('#dossiers_list a').first.trigger('click')
       expect(page.all('#follow_dossiers .smart-listing')[0]['data-item-count']).to eq ("1")
     end
 
@@ -91,9 +90,9 @@ feature 'As an Accompagnateur I can navigate and use each functionnality around 
     scenario 'Adding message' do
       page.find_by_id('tr_dossier_4').trigger('click')
       expect(page).to have_current_path(backoffice_dossier_path(4), only_path: true)
-      page.find_by_id('open-message').click
+      page.find_by_id('open-message').trigger('click')
       page.execute_script("$('#texte_commentaire').data('wysihtml5').editor.setValue('Contenu du nouveau message')")
-      page.find_by_id('save-message').click
+      page.find_by_id('save-message').trigger('click')
       expect(page.find('.last-commentaire .content').text).to eq('Contenu du nouveau message')
     end
   end
