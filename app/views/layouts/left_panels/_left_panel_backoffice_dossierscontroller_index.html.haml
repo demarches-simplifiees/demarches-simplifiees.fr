@@ -1,16 +1,18 @@
 %div#first-block
   %div.dossiers-en-cours
-    = @facade_data_view.total_dossier
-    DOSSIERS SUIVIS
+    .count= @facade_data_view.total_dossier
+    .text= "SUIVIS"
   %div.nouveaux-dossiers
-    = @facade_data_view.total_new_dossier
-    NOUVEAUX DOSSIERS
+    .count= @facade_data_view.total_new_dossier
+    .text= "NOUVEAUX"
   %div.nouvelles-notifications
     - new_notifications = @facade_data_view.dossiers_with_unread_notifications.count
     - if new_notifications > 1
-      = "#{new_notifications} DOSSIERS MODIFIÉS"
+      .count= new_notifications
+      .text= "MODIFIÉS"
     - elsif new_notifications == 1
-      1 DOSSIER MODIFIÉ
+      .count 1
+      .text= "MODIFIÉ"
 
 %div#action-block
 

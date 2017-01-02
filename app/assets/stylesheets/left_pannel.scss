@@ -14,23 +14,51 @@
     font-family: Arial;
     font-size: 16px;
     line-height: 18px;
+    margin-top: 20px;
     .infos {
       font-size: 25px;
       text-align: center;
-      margin: 20px 10px 30px 0;
+      margin: 10px 10px 30px 0;
       .projet-name {
         font-size: 25px;
         line-height: normal;
         padding: 5px;
       }
     }
+    .count {
+      display: inline-block;
+      padding: 3px;
+      border-radius: 25px;
+      min-width: 40px;
+      text-align: center;
+      line-height: 23px;
+    }
+    .text {
+      display: inline-block;
+      width: 30px;
+      margin: 0 0 0 8px;
+    }
     .dossiers-en-cours, .en-cours {
       margin-top: 20px;
     }
+    .dossiers-en-cours {
+      .count {
+        border: 1px solid #FFFFFF;
+      }
+    }
+    .nouveaux-dossiers {
+      .count {
+        background-color: #5CB85C;
+      }
+    }
+    .nouvelles-notifications {
+      .count {
+        background-color: #E4594F;
+      }
+    }
     .dossiers-en-cours, .nouveaux-dossiers, .nouvelles-notifications, .en-cours {
-      line-height: initial;
-      text-align: center;
-      margin-right: 10px;
+      margin: 5px auto 0 20px;
+      width: 150px;
     }
   }
   #action-block {
