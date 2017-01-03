@@ -293,17 +293,19 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.export_full_generation(dossiers, format)
-    data = []
-    headers = dossiers.first.export_headers
-    dossiers.each do |dossier|
-      data << dossier.convert_specific_array_values_to_string(dossier.data_with_champs)
-    end
-    if ["csv"].include?(format)
-      return SpreadsheetArchitect.to_csv(data: data, headers: headers)
-    elsif ["xlsx"].include?(format)
-      return SpreadsheetArchitect.to_xlsx(data: data, headers: headers)
-    elsif ["ods"].include?(format)
-      return SpreadsheetArchitect.to_ods(data: data, headers: headers)
+    if dossiers && !dossiers.empty?
+      data = []
+      headers = dossiers.first.export_headers
+      dossiers.each do |dossier|
+        data << dossier.convert_specific_array_values_to_string(dossier.data_with_champs)
+      end
+      if ["csv"].include?(format)
+        return SpreadsheetArchitect.to_csv(data: data, headers: headers)
+      elsif ["xlsx"].include?(format)
+        return SpreadsheetArchitect.to_xlsx(data: data, headers: headers)
+      elsif ["ods"].include?(format)
+        return SpreadsheetArchitect.to_ods(data: data, headers: headers)
+      end
     end
   end
 
