@@ -7,16 +7,16 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
     visit backoffice_path
   end
   scenario 'he is redirected to /gestionnaires/sign_id' do
-    expect(page).to have_css('#gestionnaire_login')
+    expect(page).to have_css('#user_email')
   end
   context 'when user enter bad credentials' do
     before do
-      page.find_by_id(:gestionnaire_email).set 'unknown@plop.com'
-      page.find_by_id(:gestionnaire_password).set 'password'
+      page.find_by_id(:user_email).set 'unknown@plop.com'
+      page.find_by_id(:user_password).set 'password'
       page.click_on 'Se connecter'
     end
     scenario 'he stay on the same page with an error' do
-      expect(page).to have_content('Email ou mot de passe incorrect.')
+      expect(page).to have_content('Mauvais couple login / mot de passe')
     end
   end
   context 'when user enter good credentials' do
@@ -25,8 +25,8 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
 
     before do
       create :assign_to, gestionnaire: gestionnaire, procedure: procedure
-      page.find_by_id(:gestionnaire_email).set  gestionnaire.email
-      page.find_by_id(:gestionnaire_password).set  gestionnaire.password
+      page.find_by_id(:user_email).set  gestionnaire.email
+      page.find_by_id(:user_password).set  gestionnaire.password
       page.click_on 'Se connecter'
     end
     scenario 'he is redirected to /backoffice' do

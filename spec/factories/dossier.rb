@@ -19,6 +19,13 @@ FactoryGirl.define do
       end
     end
 
+    trait :for_individual do
+      after(:build) do |dossier, _evaluator|
+        dossier.individual = create :individual
+        dossier.save
+      end
+    end
+
     trait :with_two_quartier_prioritaires do
       after(:build) do |dossier, _evaluator|
         dossier.quartier_prioritaires << create(:quartier_prioritaire)

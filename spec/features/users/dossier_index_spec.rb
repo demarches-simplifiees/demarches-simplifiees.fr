@@ -23,7 +23,8 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
   context 'After sign_in, I can see my 51 dossiers on the index' do
 
     scenario 'Using sort' do
-      expect(page.all(:css, '#dossiers_list tr')[0].text.split(" ").first).to eq('1')
+      visit "/users/dossiers?dossiers_smart_listing[sort][id]=asc"
+      expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('1')
       expect(page.all(:css, '#dossiers_list tr')[2].text.split(" ").first).to eq('2')
       visit "/users/dossiers?dossiers_smart_listing[sort][id]=desc"
       expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('51')
@@ -34,13 +35,14 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
     end
 
     scenario 'Using pagination' do
-      expect(page.all(:css, '#dossiers_list tr')[0].text.split(" ").first).to eq('1')
+      visit "/users/dossiers?dossiers_smart_listing[sort][id]=asc"
+      expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('1')
       page.find('.next_page a').trigger('click')
       wait_for_ajax
-      expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('8')
+      expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('11')
       page.find('.next_page a').trigger('click')
       wait_for_ajax
-      expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('15')
+      expect(page.all(:css, '#dossiers_list tr')[1].text.split(" ").first).to eq('21')
       page.find('.prev a').trigger('click')
       wait_for_ajax
       page.find('.prev a').trigger('click')

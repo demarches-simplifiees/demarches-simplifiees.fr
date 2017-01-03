@@ -21,7 +21,7 @@ http_interactions:
       Server:
       - nginx/1.11.3
       Date:
-      - Tue, 20 Dec 2016 11:36:58 GMT
+      - Tue, 03 Jan 2017 13:00:54 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -44,5 +44,50 @@ http_interactions:
         "housenumber": "50", "street": "Avenue des Champs \u00c9lys\u00e9es"}, "type":
         "Feature"}]}'
     http_version: 
-  recorded_at: Tue, 20 Dec 2016 11:36:58 GMT
+  recorded_at: Tue, 03 Jan 2017 13:00:54 GMT
+- request:
+    method: get
+    uri: http://api-adresse.data.gouv.fr/search?limit=1&q=50%20AV%20DES%20CHAMPS%20ELYSEES%20complement_adresse%2075008%20PARIS%208
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (darwin15.6.0 x86_64) ruby/2.3.1p112
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.11.3
+      Date:
+      - Tue, 03 Jan 2017 13:00:55 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '660'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - X-Requested-With
+    body:
+      encoding: UTF-8
+      string: '{"limit": 1, "attribution": "BAN", "version": "draft", "licence": "ODbL
+        1.0", "query": "50 AV DES CHAMPS ELYSEES complement_adresse 75008 PARIS 8",
+        "type": "FeatureCollection", "features": [{"geometry": {"type": "Point", "coordinates":
+        [2.306888, 48.870374]}, "properties": {"citycode": "75108", "postcode": "75008",
+        "name": "50 Avenue des Champs \u00c9lys\u00e9es", "id": "ADRNIVX_0000000270748251",
+        "type": "housenumber", "context": "75, \u00cele-de-France", "score": 0.596517719568567,
+        "label": "50 Avenue des Champs \u00c9lys\u00e9es 75008 Paris", "city": "Paris",
+        "housenumber": "50", "street": "Avenue des Champs \u00c9lys\u00e9es"}, "type":
+        "Feature"}]}'
+    http_version: 
+  recorded_at: Tue, 03 Jan 2017 13:00:55 GMT
 recorded_with: VCR 3.0.3

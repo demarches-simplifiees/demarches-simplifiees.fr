@@ -105,7 +105,7 @@ describe Admin::ProceduresController, type: :controller do
         sign_out admin
       end
 
-      it { expect(subject).to redirect_to new_administrateur_session_path }
+      it { expect(subject).to redirect_to new_user_session_path }
     end
 
     context 'when user is connected' do
@@ -204,7 +204,7 @@ describe Admin::ProceduresController, type: :controller do
 
       subject { put :update, params: {id: procedure.id} }
 
-      it { expect(subject).to redirect_to new_administrateur_session_path }
+      it { expect(subject).to redirect_to new_user_session_path }
     end
 
     context 'when administrateur is connected' do

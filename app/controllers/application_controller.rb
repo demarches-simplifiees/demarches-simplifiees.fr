@@ -22,4 +22,22 @@ class ApplicationController < ActionController::Base
     @left_pannel_url = service.left_panel
     @facade_data_view = nil
   end
+
+  protected
+
+  def authenticate_gestionnaire!
+    if gestionnaire_signed_in?
+      super
+    else
+      redirect_to new_user_session_path
+    end
+  end
+
+  def authenticate_administrateur!
+    if administrateur_signed_in?
+      super
+    else
+      redirect_to new_user_session_path
+    end
+  end
 end
