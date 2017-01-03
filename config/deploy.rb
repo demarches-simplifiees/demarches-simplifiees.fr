@@ -53,7 +53,7 @@ elsif ENV["to"] == "opensimplif"
   appname = 'opensimplif'
 elsif ENV["to"] == "tps_v2"
   if ENV['branch'].nil?
-    set :branch, 'tps_v2'
+    set :branch, 'staging_v2'
   else
     set :branch, ENV['branch']
   end
@@ -67,7 +67,7 @@ set :rails_env, ENV["to"]
 if ENV["to"] == "opensimplif"
   set :rails_env, "production"
 elsif ENV["to"] == "tps_v2"
-  set :rails_env, "production"
+  set :rails_env, "staging"
 end
 
 # For system-wide RVM install.

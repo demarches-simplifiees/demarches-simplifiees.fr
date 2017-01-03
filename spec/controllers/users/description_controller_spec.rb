@@ -7,7 +7,7 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
   let(:invite_by_user) { create :user, email: 'invite@plop.com' }
 
   let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: true) }
-  let(:dossier) { create(:dossier, procedure: procedure, user: owner_user) }
+  let(:dossier) { create(:dossier, procedure: procedure, user: owner_user, state: 'initiated') }
 
   let(:dossier_id) { dossier.id }
   let(:bad_dossier_id) { Dossier.count + 10000 }

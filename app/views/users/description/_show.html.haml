@@ -1,12 +1,12 @@
 .container#description_page
   - unless @dossier.procedure.lien_notice.blank?
-    #lien_notice_panel.row{style:'width: 280px; position: fixed; background-color: white; right: 5%; top: 80px;'}
+    #lien_notice_panel.row{style:'width: 280px; position: fixed; background-color: white; right: 5%; top: 80px; z-index: 200'}
       .panel.panel-info{style:'margin-bottom:0'}
         .panel-body.center
           .row
-            .col-md-1.col-lg-1
+            .col-md-1.col-lg-1.col-sm-1.col-xs-1
               .fa.fa-info-circle.text-info{style:'font-size: 2em; margin-top: 20%'}
-            .col-md-10.col-lg-10{style:'padding-right: 0px'}
+            .col-md-10.col-sm-10.col-xs-10.col-lg-10{style:'padding-right: 0px'}
               %b
                 =link_to 'Accéder au guide', @dossier.procedure.lien_notice, {target: '_blank'}
               pour remplir pour votre dossier
@@ -14,15 +14,11 @@
   %h2.text-info
     = @dossier.procedure.libelle
 
-  - unless Features.opensimplif
-    %h3 Votre dossier
-
   -#TODO use form_for
   = form_tag(url_for({controller: 'users/description', action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
-
-    #liste_champs
-      -unless @champs.nil?
-        =render partial: 'users/description/champs'
+    -unless @champs.nil?
+      #liste_champs
+        =render partial: 'users/description/champs', locals:{private: false}
 
     -if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0
       %br
@@ -43,14 +39,15 @@
         .panel.panel-info
           .panel-body.center
             .row
-              .col-md-1.col-lg-1
+              .col-md-1.col-lg-1.col-sm-1.col-xs-1
                 .fa.fa-info-circle.text-info{style:'font-size: 2em; margin-top: 20%'}
-              .col-md-11.col-lg-11
+              .col-md-11.col-sm-11.col-xs-11.col-lg-11
                 Les documents administratifs ne sont pas indispensables afin d'initier votre dossier.
                 Vous pourrez dans tous les cas les compléter plus tard si vous ne les possédez pas de suite.
 
 
-    - if user_signed_in?
+    -route = Rails.application.routes.recognize_path(request.referrer)
+    - unless route[:controller].match('admin')
       %div{style: 'text-align:right'}
         %h6 Tous les champs portant un * sont obligatoires.
 

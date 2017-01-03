@@ -1,0 +1,13 @@
+#carte_page.row
+  #map{class: dossier.procedure.module_api_carto.classes }
+
+  - if dossier.procedure.module_api_carto.quartiers_prioritaires
+    #qp.list
+      %h3.text-info Quartiers prioritaites
+      %ul
+
+  - if dossier.procedure.module_api_carto.cadastre
+    #cadastre.list
+      %h3.text-warning Cadastres
+      %ul
+

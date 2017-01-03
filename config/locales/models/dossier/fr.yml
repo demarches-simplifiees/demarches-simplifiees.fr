@@ -26,10 +26,6 @@ fr:
             mail_contact:
               blank: 'doit être rempli'
               invalid: 'est incorrect'
-            nom_projet:
-              blank: 'doit être rempli'
-            description:
-              blank: 'doit être remplie'
             montant_projet:
               blank: 'doit être rempli'
             montant_aide_demande:

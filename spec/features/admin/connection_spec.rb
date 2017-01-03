@@ -25,14 +25,15 @@ feature 'Administrator connection' do
       end
       scenario 'it displays the menu' do
         expect(page).to have_css('a#profile')
-        expect(page).to have_css('a#admin_sign_out')
+        expect(page).to have_css('#sign_out')
+        expect(page).to have_css('a.fa-sign-out')
       end
       context 'when clicking on sign_out' do
         before do
           stub_request(:get, "https://api.github.com/repos/sgmap/tps/releases/latest").
               to_return(:status => 200, :body => '{"tag_name": "plip", "body": "blabla", "published_at": "2016-02-09T16:46:47Z"}', :headers => {})
 
-          page.find_by_id('admin_sign_out').click
+          page.find_by_id('sign_out').find('a.fa-sign-out').click
         end
         scenario 'admin is redireted to home page' do
           expect(page).to have_css('#landing')
@@ -52,7 +53,7 @@ feature 'Administrator connection' do
           end
 
           scenario 'it redirects to procedure page' do
-            expect(page).to have_content('Gestion des procédures')
+            expect(page).to have_content('Procédures')
           end
         end
       end

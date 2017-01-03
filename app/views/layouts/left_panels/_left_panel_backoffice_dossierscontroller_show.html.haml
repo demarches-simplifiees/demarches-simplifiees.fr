@@ -1,0 +1,53 @@
+%div#first-block
+  %div.infos
+    #dossier_id= t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
+
+%div#action-block
+  - if gestionnaire_signed_in?
+    - if !@facade.dossier.read_only?
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
+        %button.action{'data-toggle' => :tooltip, title: 'En cliquant ici, vous figez le dossier et autorisez le dépôt du dossier pour instruction.'}
+          = 'Déclarer complet'.upcase
+    - elsif @facade.dossier.submitted?
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :receive, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
+        %button.action
+          = 'Accuser réception'.upcase
+    - elsif @facade.dossier.received?
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
+        %button.action.close-dossier
+          %i.fa.fa-check
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :without_continuation, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Classer sans suite') do
+        %button.action.forget-dossier
+          %i.fa.fa-circle-o
+      = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
+        %button.action.refuse-dossier
+          %i.fa.fa-times
+
+%div#menu-block
+
+%div#infos-block
+  %div.split-hr-left
+  %div.dossier-state= @facade.dossier.display_state
+  %div.split-hr-left
+  %div.notifications
+    - if @facade.dossier.notifications.empty?
+      = "Aucune notification pour le moment."
+    - else
+      %i.fa.fa-bell-o
+      - @facade.last_notifications.each do |notification|
+        .notification
+          .updated-at= notification.updated_at.strftime('%d/%m/%Y %H:%M')
+          = render partial: "layouts/left_panels/type_notif_fa", locals: {notification: notification}
+          - if ['champs'].include?(notification.type_notif)
+            - if notification.liste.size > 1
+              .type= "Plusieurs attributs ont été changés, dont: #{notification.liste.join(" ")}"
+            - else
+              .type= "Un attribut à été changé: #{notification.liste.last}"
+          - elsif ['piece_justificative'].include?(notification.type_notif)
+            - if notification.liste.size > 1
+              .type= "Plusieurs pièces justificatives ont été changés, dont: #{notification.liste.join(" ")}"
+            - else
+              .type= "Une pièce justificative à été changée: #{notification.liste.last}"
+          - else
+            .type= notification.liste.last
+          .split-hr

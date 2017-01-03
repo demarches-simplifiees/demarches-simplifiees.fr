@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe 'admin/previsualisations/show.html.haml', type: :view do
+  before do
+    @request.env['HTTP_REFERER'] = admin_procedures_url
+  end
+
   let(:user) { create(:user) }
   let(:cerfa_flag) { true }
   let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: cerfa_flag) }
@@ -79,13 +83,11 @@ describe 'admin/previsualisations/show.html.haml', type: :view do
 
     describe 'first champs' do
       subject { dossier.champs.first }
-      it { expect(rendered).to have_css(".type_champ-#{subject.type_champ}") }
       it { expect(rendered).to have_css("#champs_#{subject.id}") }
     end
 
     describe 'last champs' do
       subject { dossier.champs.last }
-      it { expect(rendered).to have_css(".type_champ-#{subject.type_champ}") }
       it { expect(rendered).to have_css("#champs_#{subject.id}") }
     end
   end
@@ -100,12 +102,6 @@ describe 'admin/previsualisations/show.html.haml', type: :view do
     context 'la liste des pièces justificatives a envoyé est affichée' do
       it 'RIB' do
         expect(rendered).to have_css("#piece_justificative_#{all_type_pj_procedure_id[0]}")
-      end
-    end
-
-    context 'la liste des pièces récupérées automatiquement est signaliée' do
-      it 'Attestation MSA' do
-        expect(rendered).to have_selector("#piece_justificative_#{all_type_pj_procedure_id[1]}", "Nous l'avons récupéré pour vous.")
       end
     end
   end

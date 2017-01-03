@@ -13,11 +13,12 @@ describe Backoffice::PreferenceListDossierController, type: :controller do
   end
 
   describe '#POST add' do
-    subject { post :add, libelle: libelle,
-                   table: table,
-                   attr: attr,
-                   attr_decorate: attr_decorate,
-                   bootstrap_lg: bootstrap_lg }
+    subject { post :add,
+                   params: {libelle: libelle,
+                            table: table,
+                            attr: attr,
+                            attr_decorate: attr_decorate,
+                            bootstrap_lg: bootstrap_lg} }
 
     it { expect(subject.status).to eq 200 }
     it { expect { subject }.to change(PreferenceListDossier, :count).by(1) }
@@ -44,7 +45,7 @@ describe Backoffice::PreferenceListDossierController, type: :controller do
   describe '#DELETE delete' do
     let!(:pref) { create :preference_list_dossier }
 
-    subject { delete :delete, pref_id: pref.id }
+    subject { delete :delete, params: {pref_id: pref.id} }
 
     it { expect(subject.status).to eq 200 }
     it { expect { subject }.to change(PreferenceListDossier, :count).by(-1) }

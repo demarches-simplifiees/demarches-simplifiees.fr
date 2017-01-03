@@ -83,7 +83,8 @@ class FranceConnect::ParticulierController < ApplicationController
 
     unless user.valid?
       flash.alert = 'Email non valide'
-      return redirect_to france_connect_particulier_new_path fci_id: params[:fci_id], salt: params[:salt], user: params[:user]
+
+      return redirect_to france_connect_particulier_new_path fci_id: params[:fci_id], salt: params[:salt], user: {email_france_connect: params[:user]['email_france_connect']}
     end
 
     user.save

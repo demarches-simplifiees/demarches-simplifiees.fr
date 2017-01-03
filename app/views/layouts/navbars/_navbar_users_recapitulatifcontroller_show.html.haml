@@ -1,0 +1,29 @@
+%div.col-lg-8.col-md-8.col-sm-8.col-xs-8.main-info
+  %span{ 'data-toggle' => :tooltip, "data-placement" => :bottom, title: @facade.dossier.procedure.libelle }
+    = @facade.dossier.procedure.libelle.truncate(60)
+%div.col-lg-3.col-md-3.col-sm-3.col-xs-3.options
+  %div.row.centered-option
+    %div.col-lg-12.col-md-12.col-sm-12.col-xs-12
+      %div#invitations.dropdown-toggle{ 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
+        %i.fa.fa-user
+        = t('utils.involved')
+      %div.dropdown-menu.dropdown-menu-right.dropdown-pannel
+        %h4= t('dynamics.dossiers.followers.title')
+        %ul
+          - unless @facade.followers.empty?
+            - @facade.followers.each do |follower|
+              %li= follower.email
+          - else
+            = t('dynamics.dossiers.followers.empty')
+        %h4= t('dynamics.dossiers.invites.title')
+        %ul
+          - unless @facade.invites.empty?
+            - @facade.invites.each do |invite|
+              %li= invite.email
+          - else
+            = t('dynamics.dossiers.invites.empty')
+
+          %li
+            = form_tag invites_dossier_path(dossier_id: @facade.dossier.id), method: :post, class: 'form-inline', id: 'send-invitation' do
+              = text_field_tag :email, '', class: 'form-control', placeholder: 'Envoyer une invitation', id: 'invitation-email'
+              = submit_tag 'Ajouter', class: 'btn btn-success'

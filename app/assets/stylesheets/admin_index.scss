@@ -1,17 +1,23 @@
-.table {
-  #id {
-    width: 5%;
-  }
+#admin_index{
+  margin-left: 2em;
+  margin-right: 2em;
 
-  #libelle {
-    width: 40%;
-  }
+  .table {
+    #id {
+      width: 5%;
+    }
 
-  #organisation {
-    width: 28%;
-  }
+    #libelle {
+      width: 40%;
+    }
 
-  #direction {
-    width: 22%;
+    #organisation {
+      width: 28%;
+    }
+
+    #direction {
+      width: 22%;
+    }
   }
 }
+

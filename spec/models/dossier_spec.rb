@@ -5,7 +5,6 @@ describe Dossier do
 
   describe 'database columns' do
     it { is_expected.to have_db_column(:autorisation_donnees) }
-    it { is_expected.to have_db_column(:nom_projet) }
     it { is_expected.to have_db_column(:created_at) }
     it { is_expected.to have_db_column(:updated_at) }
     it { is_expected.to have_db_column(:state) }
@@ -27,6 +26,7 @@ describe Dossier do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to have_many(:invites) }
     it { is_expected.to have_many(:follows) }
+    it { is_expected.to have_many(:notifications) }
   end
 
   describe 'delegation' do
@@ -639,7 +639,7 @@ describe Dossier do
     it { expect(subject[:entreprise_nom]).to be_nil }
     it { expect(subject[:entreprise_prenom]).to be_nil }
 
-    it { expect(subject.count).to eq(EntrepriseSerializer.new(Entreprise.new).as_json[:entreprise].count + EtablissementSerializer.new(Etablissement.new).as_json[:etablissement].count) }
+    it { expect(subject.count).to eq(EntrepriseSerializer.new(Entreprise.new).as_json.count + EtablissementSerializer.new(Etablissement.new).as_json.count) }
   end
 
   describe '#export_default_columns' do

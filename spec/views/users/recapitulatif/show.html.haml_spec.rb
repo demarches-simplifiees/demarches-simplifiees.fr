@@ -21,10 +21,11 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
 
       it 'le flux de commentaire est présent' do
-        expect(rendered).to have_selector('#commentaires_flux')
+        expect(rendered).to have_selector('#messages')
       end
 
       it 'le numéro de dossier est présent' do
+        pending 'move to test layout'
         expect(rendered).to have_selector('#dossier_id')
         expect(rendered).to have_content(dossier_id)
       end
@@ -64,120 +65,17 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
     end
 
-    context 'buttons to change dossier state' do
-      context 'when dossier state is initiated' do
-        let(:state) { 'initiated' }
-        before do
-          render
-        end
-
-        it { expect(rendered).to have_content('Nouveau') }
-
-        it 'button Modifier les document est present' do
-          expect(rendered).to have_content('Modifier les documents')
-          expect(rendered).to have_css('#UploadPJmodal')
-        end
-
+    context 'when dossier state is initiated' do
+      let(:state) { 'initiated' }
+      before do
+        render
       end
 
-      context 'when dossier state is replied' do
-        let(:state) { 'replied' }
-
-        before do
-          render
-        end
-
-        it { expect(rendered).to have_content('Répondu') }
+      it 'button Modifier les document est present' do
+        expect(rendered).to have_content('Modifier les documents')
+        expect(rendered).to have_css('#UploadPJmodal')
       end
 
-      context 'when dossier state is updated' do
-        let(:state) { 'updated' }
-
-        before do
-          render
-        end
-
-        it { expect(rendered).to have_content('Mis à jour') }
-      end
-
-      context 'when dossier state is validated' do
-        let(:state) { 'validated' }
-
-        before do
-          render
-        end
-
-        it 'button Procéder au dépôt définitif est present' do
-          expect(rendered).to have_css('#validate_button')
-          expect(rendered).to have_content('Procéder au dépôt définitif')
-        end
-
-        it 'button Editer mon dossier n\'est plus present' do
-          expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Modifier mon dossier')
-        end
-
-        it 'button Modifier les document n\'est plus present' do
-          expect(rendered).not_to have_content('Modifier les documents')
-        end
-      end
-
-      context 'when dossier state is submitted' do
-        let(:state) { 'submitted' }
-
-        before do
-          render
-        end
-
-        it { expect(rendered).to have_content('Déposé') }
-
-        it 'button Editer mon dossier n\'est plus present' do
-          expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Modifier mon dossier')
-        end
-      end
-
-      context 'when dossier state is closed' do
-        let(:state) { 'closed' }
-
-        before do
-          render
-        end
-        it { expect(rendered).to have_content('Accepté') }
-
-        it 'button Editer mon dossier n\'est plus present' do
-          expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Modifier mon dossier')
-        end
-      end
-
-      context 'when dossier state is refused' do
-        let(:state) { 'refused' }
-
-        before do
-          render
-        end
-        it { expect(rendered).to have_content('Refusé') }
-
-        it 'button Editer mon dossier n\'est plus present' do
-          expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Modifier mon dossier')
-        end
-      end
-
-      context 'when dossier state is without_continuation' do
-        let(:state) { 'without_continuation' }
-
-        before do
-          render
-        end
-        it { expect(rendered).to have_content('Sans suite') }
-
-        it 'button Editer mon dossier n\'est plus present' do
-          expect(rendered).not_to have_css('#maj_infos')
-          expect(rendered).not_to have_content('Modifier mon dossier')
-        end
-      end
     end
 
     context 'when invite is logged' do

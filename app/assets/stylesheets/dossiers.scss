@@ -29,7 +29,44 @@ h5 span {
   }
 }
 
+#dossiers_list {
+  .filter {
+    cursor: pointer;
+    font-size: 1.1em;
+    display: inline;
+  }
+}
+
 #dossiers_list tr:hover{
   background-color: #eeeeee;
   cursor: pointer;
+}
+
+#procedure_list, #notifications_list {
+  margin-left: -10px;
+  margin-top: 20px;
+  a, a:hover {
+    color: #FFFFFF;
+    text-decoration: none;
+  }
+  .procedure_list_element.active, .notification.active {
+    background-color: #668ABD;
+  }
+  .procedure_list_element, .notification {
+    padding: 15px 40px 15px 20px;
+    cursor: pointer;
+    line-height: 1.8em;
+    .progress-bar-warning {
+      background-color: #E4594F;
+    }
+  }
+  .procedure_list_element:hover, .notification:hover {
+    background-color: #668ABD;
+    cursor: pointer;
+  }
+}
+
+.split-hr-left {
+  border-bottom: 1px solid #FFFFFF;
+  margin: 20px 10px 0px 10px;
 }

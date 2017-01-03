@@ -25,6 +25,7 @@ public/uploads
 public/downloads
 bin/*
 config/initializers/token.rb
+config/initializers/super_admin.rb
 doc/*.svg
 rubocop.html
 config/france_connect.yml

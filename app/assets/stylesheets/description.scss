@@ -2,8 +2,21 @@
 @import "bootstrap-datepicker3";
 
 #description_page #liste_champs {
+
+  .default_data_block {
+    .show-block {
+      width: 90%;
+      .body{
+        padding-left: 35px;
+        padding-right: 35px;
+        padding-bottom: 35px;
+      }
+    }
+  }
+
   h4 {
-    margin-top: 35px;
+    padding-top: 35px;
+    margin: 0;
   }
 }
 
@@ -28,8 +41,6 @@
 .type_champ-header_section {
   @extend .col-md-12;
   @extend .col-lg-12;
-
-  margin-bottom: -25px;
 }
 
 .type_champ-address {

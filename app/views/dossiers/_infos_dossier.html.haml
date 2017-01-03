@@ -1,124 +1,159 @@
-#infos_dossier
-  %div.row
-    .col-lg-6.col-md-6
-      %h3
-        = @facade.dossier.procedure.libelle
+%div.row
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    - if @facade.procedure.for_individual?
+      .row.title-row
+        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.split-hr
+        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.dossier-title= t('utils.depositaire').upcase
+        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.split-hr
+      .row
+        %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label Civilité
+        %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+        %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.depositaire-info= @facade.individual.gender
+      .row
+        %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label Nom
+        %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+        %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.depositaire-info= @facade.individual.nom
+      .row
+        %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label Prénom
+        %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+        %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.despositaire-info= @facade.individual.prenom
+      - unless Features.opensimplif
+        .row
+          %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label Date de naissance
+          %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+          %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.depositaire-info= @facade.individual.birthdate
+      .row.margin-top-20
 
-      - if @facade.procedure.for_individual?
+    - unless @facade.champs.nil?
+      - @facade.champs.each do |champ|
+        - if champ.type_champ == 'header_section'
+          .row.title-row.margin-top-40
+            %div.col-md-3.col-sm-3.col-xs-3.col-lg-3.split-hr
+            %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.dossier-title= champ.libelle.upcase
+            %div.col-md-3.col-sm-3.col-xs-3.col-lg-3.split-hr
+        - else
+          .row
+            %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label= champ.libelle
+            - if Features.opensimplif
+              %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments
+                - if gestionnaire_signed_in?
+                  = link_to "", "data-href" => backoffice_dossier_commentaires_path(@facade.dossier, champs_id: champ.id), "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp" do
+                    %i.fa.fa-comment-o
+                - else
+                  = link_to "", "data-href" => users_dossier_commentaires_path(@facade.dossier, champs_id: champ.id), "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp" do
+                    %i.fa.fa-commenting-o
+            - else
+              %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off
+                = "-"
+            %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.depositaire-info{ id: "champ-#{champ.id}-value" }
+              - unless champ.decorate.value.blank?
+                = champ.decorate.value.html_safe
+
+    - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
+      .mandataire_social.text-success.center
         %br
-        .individual.text-info
-          %h4
-            =t('dynamics.dossiers.depositaite')
+        ="Il est probable que le soumissionnaire du dossier soit un des mandataire social de l'entreprise ("
+        %b
+          ="#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
+        =")"
+%div.row
+  - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.count > 0
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      .row.title-row
+        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.split-hr
+        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.dossier-title= t('utils.pieces').upcase
+        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.split-hr
 
-          %table.table{style:'width: 60%'}
-            %tr
-              %th.col-md-3.col-lg-3
-                Civilité
-              %td.col-md-5.col-lg-5
-                = @facade.individual.gender
-            %tr
-              %th.col-md-3.col-lg-3
-                Nom
-              %td.col-md-5.col-lg-5
-                = @facade.individual.nom
-            %tr
-              %th.col-md-3.col-lg-3
-                Prénom
-              %td.col-md-5.col-lg-5
-                = @facade.individual.prenom
-            - unless Features.opensimplif
-              %tr
-                %th.col-md-3.col-lg-3
-                  Date de naissance
-                %td.col-md-5.col-lg-5
-                  = @facade.individual.birthdate
-
-      - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
-        .mandataire_social.text-success.center
-          %br
-          ="Il est probable que le soumissionnaire du dossier soit un des mandataire social de l'entreprise ("
-          %b
-            ="#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
-          =")"
-
-    - if @facade.dossier.procedure.module_api_carto.use_api_carto
-      .col-lg-6.col-md-6
-
-        #map.mini{class: @facade.dossier.procedure.module_api_carto.classes}
-
-        %input{id: 'json_latlngs', type:'hidden', value: "#{@facade.dossier.json_latlngs}"}
-        %input{id: 'quartier_prioritaires', type:'hidden', value: "#{@facade.dossier.quartier_prioritaires.to_json}"}
-        %input{id: 'cadastres', type:'hidden', value: "#{@facade.dossier.cadastres.to_json}"}
-
-        %script{type: 'text/javascript'}
-          = "var dossier_id =#{@facade.dossier.id}"
-          initCarto();
-
-  %br
-  -unless @facade.champs.nil?
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12#pieces_justificatives.margin-bot-40
     .row
-      .col-lg-6.col-md-6
-        %table.table#liste_champs
-          -@facade.champs.each do |champ|
-            %tr
-              %th{ style: 'width:25%' }
-                =champ.libelle
-                -if gestionnaire_signed_in?
-                  =link_to "COM", "", "data-href" => backoffice_dossier_commentaires_path(@facade.dossier, champs_id: champ.id),
-                    "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp"
-                -else
-                  =link_to "COM", "", "data-href" => users_dossier_commentaires_path(@facade.dossier, champs_id: champ.id),
-                    "data-toggle" => "modal", "data-target" => "#modalCommentairesDossierParChamp"
-              %td
-                -unless champ.decorate.value.blank?
-                  =champ.decorate.value.html_safe
-      .col-lg-6.col-md-6
-        =render partial: '/dossiers/pieces_justificatives'
-  %br
+      - if @facade.procedure.cerfa_flag?
+        .col-md-12.col-sm-12.col-xs-12.col-lg-12#piece_justificative_0
+          .row.piece-row
+            .col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label= 'Formulaire'
+            .col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+            .col-md-5.col-sm-5.col-xs-5.col-lg-5.despositaire-info
+              - if @facade.dossier.cerfa_available?
+                %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
+                %span{style:'margin-left:12px'}
+                  \-
+                = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#PJmodal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => 'cerfa' do
+                  %span.fa.fa-clock-o
+              - else
+                = 'Pièce non fournie'
+    .row
+      .col-md-12.col-sm-12.col-xs-12.col-lg-12
+        - @facade.types_de_pieces_justificatives.each do |type_de_piece_justificative|
+          .row.piece-row
+            .col-md-12.col-sm-12.col-xs-12.col-lg-12{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
+              .row
+                %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label= type_de_piece_justificative.libelle
+                %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+                %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.despositaire-info
+                  - if type_de_piece_justificative.api_entreprise
+                    %span.text-success Nous l'avons récupéré pour vous.
+                  - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?
+                    %a{ href: "#{@pj.content_url}", target: '_blank' } Consulter
+                    %span{style:'margin-left:12px'}
+                      \-
+                    - if @facade.dossier.pieces_justificatives.where(type_de_piece_justificative_id: type_de_piece_justificative.id).count > 1
+                      = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#PJmodal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => "type_de_pj_#{type_de_piece_justificative.id}" do
+                        %span.fa.fa-clock-o
+                  - else
+                    = 'Pièce non fournie'
 
-  .row{style: 'text-align:right'}
     - unless @facade.dossier.read_only?
       - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
-          %a#maj_pj.btn.btn-success{"data-target" => "#UploadPJmodal",
-                             "data-toggle" => "modal",
-                             :type => "button",
-                             style: 'margin-bottom: 15px; margin-top: -30px'}
-            Modifier les documents
-          %br
-          = render partial: 'users/recapitulatif/modal_upload_pj'
+          .row
+            .col-lg-4.col-md-4.col-sm-4.col-xs-4
+            %a#maj_pj.action{"data-target" => "#UploadPJmodal", "data-toggle" => "modal", :type => "button"}
+              .col-lg-4.col-md-4.col-sm-4.col-xs-4.action
+                Modifier les documents
+              %br
+            = render partial: 'users/recapitulatif/modal_upload_pj'
+            .col-lg-4.col-md-4.col-sm-4.col-xs-4
 
-
-        -if @facade.procedure.individual_with_siret
-          %a#add_siret.btn.btn-success{href: users_dossier_add_siret_path(dossier_id: @facade.dossier.id)}
-            = "Renseigner un SIRET"
-        -if @facade.dossier.procedure.module_api_carto.use_api_carto
-          %a#maj_carte.btn.btn-primary{href: "/users/dossiers/#{@facade.dossier.id}/carte"}
-            = 'Modifier la carte'
-        %a#maj_infos.btn.btn-info{href: "/users/dossiers/#{@facade.dossier.id}/description"}
-          = 'Modifier le dossier'
-
-    -if gestionnaire_signed_in?
-      -if !@facade.dossier.read_only?
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-          %button.action_button.btn.btn-success{'data-toggle' => :tooltip, title: 'En cliquant ici, vous figez le dossier et autorisez le dépôt du dossier pour instruction.'}
-            = 'Déclarer complet'
-
-      -elsif @facade.dossier.submitted?
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :receive, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-          %button.action_button.btn.btn-success
-            = 'Accuser réception'
-
-      -elsif @facade.dossier.received?
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
-          %button.action_button.btn.btn-success
-            %i.fa.fa-check
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
-          %button.action_button.btn.btn-danger
-            %i.fa.fa-times
-        = form_tag(url_for({controller: 'backoffice/dossiers', action: :without_continuation, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Classer sans suite') do
-          %button.action_button.btn.btn-warning
-            %i.fa.fa-circle-o
+    - if gestionnaire_signed_in?
+      #PJmodal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+        .modal-dialog.modal-lg{:role => "document"}
+          .modal-content
+            .modal-header
+              %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+                %span{"aria-hidden" => "true"} ×
+              %h4#myModalLabel.modal-title
+                Historique des
+                %span#PJmodal_title
+            .modal-body
+              %table.table
+                %thead
+                  %th
+                    Utilisateur
+                  %th
+                    Date d'envoi
+                  %th
+                    Lien
+                %thead.tr_content#cerfa
+                  -if @facade.procedure.cerfa_flag?
+                    - if @facade.dossier.cerfa_available?
+                      - @facade.cerfas_ordered.each do |cerfa|
+                        %tr
+                          %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
+                            = cerfa.user.email
+                          %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
+                            = cerfa.created_at
+                          %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
+                            =link_to 'Récupérer', cerfa.content_url, {target: :blank}
+                - @facade.dossier.types_de_piece_justificative.each do |type_de_piece_justificative|
+                  %tbody.tr_content{id: "type_de_pj_#{type_de_piece_justificative.id}"}
+                    - @facade.dossier.retrieve_all_piece_justificative_by_type(type_de_piece_justificative.id).each do |piece_justificative|
+                      %tr
+                        %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
+                          = piece_justificative.user.email
+                        %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
+                          = piece_justificative.created_at
+                        %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
+                          =link_to 'Récupérer', piece_justificative.content_url, {target: :blank}
+            .modal-footer
 
 #modalCommentairesDossierParChamp.modal.fade{"tabindex" => -1, "role" => "dialog"}
   .modal-dialog{"role" => "document"}

@@ -8,16 +8,16 @@ class Gestionnaire < ActiveRecord::Base
 
   has_many :assign_to, dependent: :destroy
   has_many :procedures, through: :assign_to
-  has_many :dossiers, through: :procedures
+  has_many :dossiers, -> { where.not(state: :draft) }, through: :procedures
   has_many :follows
   has_many :preference_list_dossiers
 
   after_create :build_default_preferences_list_dossier
   after_create :build_default_preferences_smart_listing_page
-  after_update :sync_credentials, if: -> { Features.unified_login }
+  after_update :sync_credentials
 
   def dossiers_follow
-    dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")
+    @dossiers_follow ||= dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")
   end
 
   def toggle_follow_dossier dossier_id
@@ -63,6 +63,34 @@ class Gestionnaire < ActiveRecord::Base
     PreferenceSmartListingPage.create(page: 1, procedure: nil, gestionnaire: self, liste: 'a_traiter')
   end
 
+  def notifications
+    Notification.where(already_read: false, dossier_id: follows.pluck(:dossier_id) ).order("updated_at DESC")
+  end
+
+  def notifications_for procedure
+    procedure_ids = dossiers_follow.pluck(:procedure_id)
+
+    if procedure_ids.include?(procedure.id)
+      return dossiers_follow.where(procedure_id: procedure.id)
+                 .inject(0) do |acc, dossier|
+        acc += dossier.notifications.where(already_read: false).count
+      end
+    end
+    0
+  end
+
+  def dossier_with_notification_for procedure
+    procedure_ids = dossiers_follow.pluck(:procedure_id)
+
+    if procedure_ids.include?(procedure.id)
+      return dossiers_follow.where(procedure_id: procedure.id)
+                 .inject(0) do |acc, dossier|
+        acc += ((dossier.notifications.where(already_read: false).count) > 0 ? 1 : 0)
+      end
+    end
+    0
+  end
+
   private
 
   def valid_couple_table_attr? table, column
@@ -88,12 +116,7 @@ class Gestionnaire < ActiveRecord::Base
 
   def sync_credentials
     if email_changed? || encrypted_password_changed?
-      user = User.find_by(email: email_was)
-      if user
-        return user.update_columns(
-          email: email,
-          encrypted_password: encrypted_password)
-      end
+      return SyncCredentialsService.new(Gestionnaire, email_was, email, encrypted_password).change_credentials!
     end
     true
   end

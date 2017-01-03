@@ -13,7 +13,7 @@ fr:
         title: 'Gestion de colonnes affichées'
         description: 'Ce menu vous permet de choisir les différentes colonnes que vous souhaitez voir apparaître dans votre interface de suivi des dossiers.'
       download_all_dossiers: 'Télécharger mes dossiers'
-      limit_excess_download_all_dossiers: 'Limite de dossiers fixée à 200 pour le téléchargement'
+      limit_excess_download_all_dossiers: 'Limite de dossiers fixée à 400 pour le téléchargement'
       format_csv: 'Au format CSV'
       format_xlsx: 'Au format XLSX'
       format_ods: 'Au format ODS'
@@ -28,6 +28,11 @@ fr:
       numéro: 'Dossier n°'
       followers:
         title: "Personnes suivant l'activité de ce dossier"
+        empty: "Aucune personne ne suit ce dossier"
+      invites:
+        title: "Personnes invitées à voir ce dossier"
+        empty: "Aucune personne invitée"
+      liste_champs: "Champs du dossier"
 
     admin:
       connexion_title: Administration

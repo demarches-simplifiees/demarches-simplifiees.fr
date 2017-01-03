@@ -1,0 +1,9 @@
+- unless BrowserService.recommended_browser?
+  #support_navigator_banner.row
+    .col-md-12.col-sm-12.col-xs-12.col-lg-12
+      = BROWSER.value.name
+      = BROWSER.value.version
+      \-
+      Attention, votre navigateur n'est pas recommandé pour la navigation sur ce site internet. Aucun support ne pourra vous être prodigué en cas de dysfonctionnement.
+      %a{href: '/cgu/#navigateurs'}
+        Voir la liste des navigateurs compatibles.

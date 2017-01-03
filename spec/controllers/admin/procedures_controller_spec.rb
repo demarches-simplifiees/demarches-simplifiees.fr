@@ -58,7 +58,7 @@ describe Admin::ProceduresController, type: :controller do
     let(:procedure_published) { create :procedure, published: true, archived: false }
     let(:procedure_archived) { create :procedure, published: false, archived: true }
 
-    subject { delete :destroy, id: procedure.id }
+    subject { delete :destroy, params: {id: procedure.id} }
 
     context 'when procedure is draft' do
       let!(:procedure) { procedure_draft }
@@ -98,7 +98,7 @@ describe Admin::ProceduresController, type: :controller do
     let(:procedure) { create(:procedure, administrateur: admin, published: published) }
     let(:procedure_id) { procedure.id }
 
-    subject { get :edit, id: procedure_id }
+    subject { get :edit, params: {id: procedure_id} }
 
     context 'when user is not connected' do
       before do
@@ -130,14 +130,14 @@ describe Admin::ProceduresController, type: :controller do
   describe 'POST #create' do
     context 'when all attributs are filled' do
       describe 'new procedure in database' do
-        subject { post :create, procedure: procedure_params }
+        subject { post :create, params: {procedure: procedure_params} }
 
         it { expect { subject }.to change { Procedure.count }.by(1) }
       end
 
       context 'when procedure is correctly save' do
         before do
-          post :create, procedure: procedure_params
+          post :create, params: {procedure: procedure_params}
         end
 
         describe 'procedure attributs in database' do
@@ -175,7 +175,7 @@ describe Admin::ProceduresController, type: :controller do
       let(:description) { '' }
 
       describe 'no new procedure in database' do
-        subject { post :create, procedure: procedure_params }
+        subject { post :create, params: {procedure: procedure_params} }
 
         it { expect { subject }.to change { Procedure.count }.by(0) }
 
@@ -186,7 +186,7 @@ describe Admin::ProceduresController, type: :controller do
 
       describe 'flash message is present' do
         before do
-          post :create, procedure: procedure_params
+          post :create, params: {procedure: procedure_params}
         end
 
         it { expect(flash[:alert]).to be_present }
@@ -202,14 +202,14 @@ describe Admin::ProceduresController, type: :controller do
         sign_out admin
       end
 
-      subject { put :update, id: procedure.id }
+      subject { put :update, params: {id: procedure.id} }
 
       it { expect(subject).to redirect_to new_administrateur_session_path }
     end
 
     context 'when administrateur is connected' do
       before do
-        put :update, id: procedure.id, procedure: procedure_params
+        put :update, params: {id: procedure.id, procedure: procedure_params}
         procedure.reload
       end
 
@@ -270,7 +270,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :publish, procedure_id: procedure.id, procedure_path: procedure_path
+        put :publish, params: {procedure_id: procedure.id, procedure_path: procedure_path}
         procedure.reload
         procedure2.reload
       end
@@ -299,7 +299,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'archive previous procedure' do
           expect(procedure2.published).to be_truthy
           expect(procedure2.archived).to be_truthy
-          expect(procedure2.path).not_to be_nil
+          expect(procedure2.path).to be_nil
         end
       end
 
@@ -338,7 +338,7 @@ describe Admin::ProceduresController, type: :controller do
         sign_out admin
         sign_in admin_2
 
-        put :publish, procedure_id: procedure.id, procedure_path: 'fake_path'
+        put :publish, params: {procedure_id: procedure.id, procedure_path: 'fake_path'}
         procedure.reload
       end
 
@@ -354,7 +354,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :archive, procedure_id: procedure.id
+        put :archive, params: {procedure_id: procedure.id}
         procedure.reload
       end
 
@@ -366,7 +366,7 @@ describe Admin::ProceduresController, type: :controller do
 
       context 'when owner want to re-enable procedure' do
         before do
-          put :publish, procedure_id: procedure.id, procedure_path: 'fake_path'
+          put :publish, params: {procedure_id: procedure.id, procedure_path: 'fake_path'}
           procedure.reload
         end
 
@@ -383,7 +383,7 @@ describe Admin::ProceduresController, type: :controller do
         sign_out admin
         sign_in admin_2
 
-        put :archive, procedure_id: procedure.id
+        put :archive, params: {procedure_id: procedure.id}
         procedure.reload
       end
 
@@ -394,7 +394,7 @@ describe Admin::ProceduresController, type: :controller do
 
   describe 'PUT #clone' do
     let!(:procedure) { create(:procedure, administrateur: admin) }
-    subject { put :clone, procedure_id: procedure.id }
+    subject { put :clone, params: {procedure_id: procedure.id} }
 
     it { expect { subject }.to change(Procedure, :count).by(1) }
 
@@ -452,7 +452,7 @@ describe Admin::ProceduresController, type: :controller do
         subject
       end
 
-      subject { get :path_list, request: procedure2.path }
+      subject { get :path_list, params: {request: procedure2.path} }
 
       it { expect(response.status).to eq(200) }
       it { expect(body.size).to eq(1) }
@@ -476,7 +476,7 @@ describe Admin::ProceduresController, type: :controller do
   describe 'POST transfer' do
     let!(:procedure) { create :procedure, administrateur: admin }
 
-    subject { post :transfer, email_admin: email_admin, procedure_id: procedure.id }
+    subject { post :transfer, params: {email_admin: email_admin, procedure_id: procedure.id} }
 
     context 'when admin is unknow' do
       let(:email_admin) { 'plop' }

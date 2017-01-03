@@ -1,7 +1,5 @@
-.etape.etapes_menu.col-md-3.col-lg-3
-  %h3
-    Ma procédure
-  %br
+.col-md-3.col-sm-3.col-xs-3.col-lg-3.center
+  %h3 Ma procédure
 
   #logos.center{class: (@facade.entreprise.nil? ? '' : 'mask')}
     - if @facade.procedure.euro_flag
@@ -11,15 +9,16 @@
     #logo_procedure.flag
       =image_tag( @facade.procedure.decorate.logo_img )
 
-.etape.etapes_informations.col-md-9.col-lg-9
+.etape.etapes_informations.col-md-9.col-sm-9.col-xs-9.col-lg-9
   .row
-    %h2#titre_procedure.text-info
-      = @facade.procedure.libelle
+    .col-md-12.col-sm-12.col-xs-12.col-lg-12.padding-left-30
+      %h2#titre_procedure.text-info
+        = @facade.procedure.libelle
 
-    %p#description_procedure{style:'width: 95%;', class: (@facade.entreprise.nil? ? '' : 'mask')}
-      = h @facade.procedure.description.html_safe
+      %p#description_procedure{style:'width: 95%;', class: (@facade.entreprise.nil? ? '' : 'mask')}
+        = h @facade.procedure.description.html_safe
 
-      - unless @facade.procedure.lien_site_web.blank?
-        .center
-          %a{href: "#{@facade.procedure.lien_site_web.html_safe}", target: '_blank'}
-            En savoir plus ...
+        - unless @facade.procedure.lien_site_web.blank?
+          .center
+            %a{href: "#{@facade.procedure.lien_site_web.html_safe}", target: '_blank'}
+              En savoir plus ...

@@ -20,6 +20,16 @@ describe CARTO::SGMAP::API do
       end
     end
 
+    context 'when request return 500' do
+      let(:geojson) { File.read('spec/support/files/geojson/request_qp.json') }
+      let(:status) { 500 }
+      let(:body) { 'toto' }
+
+      it 'raises RestClient::ResourceNotFound' do
+        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      end
+    end
+
     context 'when geojson exist' do
       let(:geojson) { File.read('spec/support/files/geojson/request_qp.json') }
       let(:status) { 200 }

@@ -3,12 +3,15 @@ class DossierFacades
   #TODO rechercher en fonction de la personne/email
   def initialize(dossier_id, email, champ_id = nil)
     @dossier = Dossier.where(archived: false).find(dossier_id)
-    @email = email
     @champ_id = champ_id
   end
 
   def dossier
     @dossier.decorate
+  end
+
+  def last_notifications
+    @dossier.notifications.order("updated_at DESC").limit(5)
   end
 
   def champs
@@ -27,16 +30,16 @@ class DossierFacades
     @dossier.ordered_pieces_justificatives
   end
 
+  def types_de_pieces_justificatives
+    @dossier.types_de_piece_justificative.order('order_place ASC')
+  end
+
   def champ_id
     @champ_id
   end
 
   def commentaires
     @dossier.ordered_commentaires.where(champ_id: @champ_id).decorate
-  end
-
-  def commentaire_email
-    @email
   end
 
   def procedure

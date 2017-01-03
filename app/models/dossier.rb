@@ -27,6 +27,7 @@ class Dossier < ActiveRecord::Base
   has_many :invites, dependent: :destroy
   has_many :invites_user, class_name: 'InviteUser', dependent: :destroy
   has_many :follows
+  has_many :notifications, dependent: :destroy
 
   belongs_to :procedure
   belongs_to :user
@@ -41,6 +42,7 @@ class Dossier < ActiveRecord::Base
 
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
+  after_save :internal_notification
 
   validates :user, presence: true
 
@@ -55,7 +57,15 @@ class Dossier < ActiveRecord::Base
   EN_INSTRUCTION = %w(submitted received)
   A_INSTRUIRE = %w(received)
   TERMINE = %w(closed refused without_continuation)
-  ALL_STATE = %w(draft initiated updated replied validated submitted received closed refused without_continuation)
+  ALL_STATE = %w(initiated updated replied validated submitted received closed refused without_continuation)
+
+  def unreaded_notifications
+    @unreaded_notif ||= notifications.where(already_read: false)
+  end
+
+  def first_unread_notification
+    unreaded_notifications.order("created_at ASC").first
+  end
 
   def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
@@ -76,7 +86,9 @@ class Dossier < ActiveRecord::Base
   end
 
   def build_default_individual
-    Individual.new(dossier_id: id).save(validate: false)
+    if Individual.where(dossier_id: self.id).count == 0
+      Individual.create(dossier: self)
+    end
   end
 
   def ordered_champs
@@ -93,14 +105,6 @@ class Dossier < ActiveRecord::Base
 
   def ordered_commentaires
     commentaires.order(created_at: :desc)
-  end
-
-  def sous_domaine
-    if Rails.env.production?
-      'tps'
-    else
-      'tps-dev'
-    end
   end
 
   def next_step! role, action
@@ -172,56 +176,8 @@ class Dossier < ActiveRecord::Base
     state
   end
 
-  def all_state?
-    ALL_STATE.include?(state)
-  end
-
   def brouillon?
     BROUILLON.include?(state)
-  end
-
-  def nouveaux?
-    NOUVEAUX.include?(state)
-  end
-
-  def waiting_for_gestionnaire?
-    WAITING_FOR_GESTIONNAIRE.include?(state)
-  end
-
-  def waiting_for_user?
-    WAITING_FOR_USER.include?(state)
-  end
-
-  def en_construction?
-    EN_CONSTRUCTION.include?(state)
-  end
-
-  def ouvert?
-    OUVERT.include?(state)
-  end
-
-  def deposes?
-    DEPOSES.include?(state)
-  end
-
-  def valides?
-    VALIDES.include?(state)
-  end
-
-  def fige?
-    VALIDES.include?(state)
-  end
-
-  def a_instruire?
-    A_INSTRUIRE.include?(state)
-  end
-
-  def en_instruction?
-    EN_INSTRUCTION.include?(state)
-  end
-
-  def termine?
-    TERMINE.include?(state)
   end
 
   def self.all_state order = 'ASC'
@@ -362,10 +318,6 @@ class Dossier < ActiveRecord::Base
     follows.size
   end
 
-  def total_commentaire
-    self.commentaires.size
-  end
-
   def submit!
     self.deposit_datetime= DateTime.now
 
@@ -385,11 +337,11 @@ class Dossier < ActiveRecord::Base
     (invites_user.pluck :email).include? email
   end
 
-  def self.word_is_an_integer word
-    return 0 if Float(word) > 2147483647
+  private
 
-    Float(word)
-  rescue ArgumentError
-    0
+  def internal_notification
+    if state_changed? && state == 'submitted'
+      NotificationService.new('submitted', self.id).notify
+    end
   end
 end

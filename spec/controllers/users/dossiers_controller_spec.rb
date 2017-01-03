@@ -27,12 +27,12 @@ describe Users::DossiersController, type: :controller do
       sign_in dossier.user
     end
     it 'returns http success with dossier_id valid' do
-      get :show, id: dossier_id
+      get :show, params: {id: dossier_id}
       expect(response).to have_http_status(:success)
     end
 
     it 'redirection vers liste dossier si mauvais dossier ID' do
-      get :show, id: siret_not_found
+      get :show, params: {id: siret_not_found}
       expect(response).to redirect_to root_path
     end
 
@@ -42,7 +42,7 @@ describe Users::DossiersController, type: :controller do
           dossier.state = 'validated'
           dossier.save
 
-          get :show, id: dossier.id
+          get :show, params: {id: dossier.id}
         end
 
         it { is_expected.to redirect_to root_path }
@@ -51,7 +51,7 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe 'GET #new' do
-    subject { get :new, procedure_id: procedure_id }
+    subject { get :new, params: {procedure_id: procedure_id} }
 
     context 'when params procedure_id is present' do
       context 'when procedure_id is valid' do
@@ -69,7 +69,7 @@ describe Users::DossiersController, type: :controller do
 
             context 'when user have not a saved siret' do
               context 'when siret is present on request' do
-                subject { get :new, procedure_id: procedure_id, siret: siret }
+                subject { get :new, params: {procedure_id: procedure_id, siret: siret} }
 
                 before do
                   subject
@@ -97,7 +97,7 @@ describe Users::DossiersController, type: :controller do
               end
 
               context 'when siret is present on request' do
-                subject { get :new, procedure_id: procedure_id, siret: siret }
+                subject { get :new, params: {procedure_id: procedure_id, siret: siret} }
 
                 before do
                   subject
@@ -153,7 +153,7 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe 'GET #commencer' do
-    subject { get :commencer, procedure_path: procedure.path }
+    subject { get :commencer, params: {procedure_path: procedure.path} }
 
     it { expect(subject.status).to eq 302 }
     it { expect(subject).to redirect_to new_users_dossier_path(procedure_id: procedure.id) }
@@ -198,7 +198,7 @@ describe Users::DossiersController, type: :controller do
           sign_in user
         end
 
-        subject { post :siret_informations, dossier_id: dossier.id, dossier: {siret: example_siret} }
+        subject { post :siret_informations, params: {dossier_id: dossier.id, dossier: {siret: example_siret}} }
 
         it 'create a dossier' do
           expect { subject }.to change { Dossier.count }.by(0)
@@ -322,7 +322,7 @@ describe Users::DossiersController, type: :controller do
         end
 
         let(:siret_not_found) { '11111111111111' }
-        subject { post :siret_informations, dossier_id: dossier.id, dossier: {siret: siret_not_found} }
+        subject { post :siret_informations, params: {dossier_id: dossier.id, dossier: {siret: siret_not_found}} }
 
         it 'does not create new dossier' do
           expect { subject }.not_to change { Dossier.count }
@@ -337,7 +337,7 @@ describe Users::DossiersController, type: :controller do
     context 'when REST error 400 is return' do
       let(:status_entreprise_call) { 400 }
 
-      subject { post :siret_informations, dossier_id: dossier.id, dossier: {siret: siret} }
+      subject { post :siret_informations, params: {dossier_id: dossier.id, dossier: {siret: siret}} }
 
       before do
         sign_in user
@@ -350,11 +350,28 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe 'PUT #update' do
-    subject { put :update, id: dossier_id, dossier: {id: dossier_id, autorisation_donnees: autorisation_donnees} }
+    let(:params) { {id: dossier_id, dossier: {id: dossier_id, autorisation_donnees: autorisation_donnees}} }
+    subject { put :update, params: params }
 
     before do
       sign_in dossier.user
       subject
+    end
+
+    context 'when procedure is for individual' do
+      let(:params) { {id: dossier_id, dossier: {id: dossier_id, autorisation_donnees: '1', individual_attributes: individual_params}} }
+      let(:individual_params) { {gender: 'Mr', nom: 'Julien', prenom: 'Xavier', birthdate: '20/01/1991'} }
+      let(:procedure) { create(:procedure, :published, for_individual: true) }
+
+      before do
+        dossier.reload
+      end
+
+      it { expect(dossier.individual.gender).to eq 'Mr'  }
+      it { expect(dossier.individual.nom).to eq 'Julien'  }
+      it { expect(dossier.individual.prenom).to eq 'Xavier'  }
+      it { expect(dossier.individual.birthdate).to eq '20/01/1991'  }
+      it { expect(dossier.procedure.for_individual).to eq true }
     end
 
     context 'when Checkbox is checked' do
@@ -399,11 +416,11 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:user)              { create(:user) }
-    let!(:dossier_draft)     { create :dossier, state: "draft", user: user }
+    let(:user) { create(:user) }
+    let!(:dossier_draft) { create :dossier, state: "draft", user: user }
     let!(:dossier_not_draft) { create :dossier, state: "initiated", user: user }
 
-    subject { delete :destroy, id: dossier.id }
+    subject { delete :destroy, params: {id: dossier.id} }
 
     before do
       sign_in user
@@ -441,7 +458,7 @@ describe Users::DossiersController, type: :controller do
   describe 'PUT #change_siret' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
 
-    subject { put :change_siret, dossier_id: dossier.id }
+    subject { put :change_siret, params: {dossier_id: dossier.id} }
 
     before do
       sign_in user
@@ -462,7 +479,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :a_traiter
+        get :index, params: {liste: :a_traiter}
         expect(response).to have_http_status(200)
       end
     end
@@ -475,7 +492,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :valides
+        get :index, params: {liste: :valides}
         expect(response).to have_http_status(200)
       end
     end
@@ -488,7 +505,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :en_instruction
+        get :index, params: {liste: :en_instruction}
         expect(response).to have_http_status(200)
       end
     end
@@ -501,7 +518,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :brouillon
+        get :index, params: {liste: :brouillon}
         expect(response).to have_http_status(200)
       end
     end
@@ -514,7 +531,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :termine
+        get :index, params: {liste: :termine}
         expect(response).to have_http_status(200)
       end
     end
@@ -527,7 +544,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :invite
+        get :index, params: {liste: :invite}
         expect(response).to have_http_status(200)
       end
     end
@@ -540,7 +557,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'returns http success' do
-        get :index, liste: :list_fake
+        get :index, params: {liste: :list_fake}
         expect(response).to redirect_to(users_dossiers_path)
       end
     end

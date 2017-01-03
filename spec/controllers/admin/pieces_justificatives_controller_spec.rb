@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::PiecesJustificativesController, type: :controller  do
+describe Admin::PiecesJustificativesController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:published) { false }
   let(:procedure) { create(:procedure, administrateur: admin, published: published) }
@@ -11,7 +11,7 @@ describe Admin::PiecesJustificativesController, type: :controller  do
   describe 'GET #show' do
     let(:procedure_id) { procedure.id }
 
-    subject { get :show, procedure_id: procedure_id }
+    subject { get :show, params: {procedure_id: procedure_id} }
 
     context 'when procedure is not found' do
       let(:procedure_id) { 9_999_999 }
@@ -36,22 +36,22 @@ describe Admin::PiecesJustificativesController, type: :controller  do
     let(:description) { "relevé d'identité bancaire" }
     let(:update_params) do
       {
-        types_de_piece_justificative_attributes:
-        {
-          '0' =>
-          {
-            libelle: libelle,
-            description: description
-          }
-        }
+          types_de_piece_justificative_attributes:
+              {
+                  '0' =>
+                      {
+                          libelle: libelle,
+                          description: description
+                      }
+              }
       }
     end
 
-    let(:request) { put :update, procedure_id: procedure_id, format: :js, procedure: update_params }
+    let(:request) { put :update, params: {procedure_id: procedure_id, format: :js, procedure: update_params} }
     subject { request }
 
     it { is_expected.to render_template('show') }
-    it { expect{ subject }.to change(TypeDePieceJustificative, :count).by(1) }
+    it { expect { subject }.to change(TypeDePieceJustificative, :count).by(1) }
     it 'adds type de pj to procedure' do
       request
       procedure.reload
@@ -67,7 +67,7 @@ describe Admin::PiecesJustificativesController, type: :controller  do
 
     context 'when libelle is blank' do
       let(:libelle) { '' }
-      it { expect{ subject }.not_to change(TypeDePieceJustificative, :count) }
+      it { expect { subject }.not_to change(TypeDePieceJustificative, :count) }
     end
   end
 
@@ -75,7 +75,7 @@ describe Admin::PiecesJustificativesController, type: :controller  do
     let!(:pj) { create(:type_de_piece_justificative, procedure: procedure) }
     let(:procedure_id) { procedure.id }
     let(:pj_id) { pj.id }
-    let(:request) { delete :destroy, procedure_id: procedure_id, id: pj_id }
+    let(:request) { delete :destroy, params: {procedure_id: procedure_id, id: pj_id} }
     subject { request }
     context 'when procedure is not found' do
       let(:procedure_id) { 9_999_999 }
@@ -93,12 +93,12 @@ describe Admin::PiecesJustificativesController, type: :controller  do
     end
     context 'when pj is found' do
       it { expect(subject.status).to eq(200) }
-      it { expect{ subject }.to change(TypeDePieceJustificative, :count).by(-1) }
+      it { expect { subject }.to change(TypeDePieceJustificative, :count).by(-1) }
     end
   end
 
   describe 'POST #move_up' do
-    subject { post :move_up, procedure_id: procedure.id, index: index, format: :js }
+    subject { post :move_up, params: {procedure_id: procedure.id, index: index, format: :js} }
 
     context 'when procedure have no type de champ' do
       let(:index) { 0 }
@@ -124,7 +124,7 @@ describe Admin::PiecesJustificativesController, type: :controller  do
         it { expect(subject.status).to eq(200) }
         it { expect(subject).to render_template('show') }
         it 'changes order places' do
-          post :move_up, procedure_id: procedure.id, index: index, format: :js
+          post :move_up, params: {procedure_id: procedure.id, index: index, format: :js}
           type_de_piece_justificative_0.reload
           type_de_piece_justificative_1.reload
           expect(type_de_piece_justificative_0.order_place).to eq(1)
@@ -135,7 +135,7 @@ describe Admin::PiecesJustificativesController, type: :controller  do
   end
 
   describe 'POST #move_down' do
-    let(:request) { post :move_down, procedure_id: procedure.id, index: index, format: :js }
+    let(:request) { post :move_down, params: {procedure_id: procedure.id, index: index, format: :js} }
     let(:index) { 0 }
 
     subject { request }

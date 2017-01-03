@@ -1,100 +1,51 @@
 #landing.max-size
   #title
     %h1.center
-      TPS
+      %img#logo-tps{src: image_url('logos/logo-tps.png')}
     %h2.center
       TéléProcédure Simplifiée
 
-    %br
     %h3.center
-      Dématérialisez, réceptionnez et co-instruisez toutes vos démarches depuis un espace unique.
+      Plateforme publique pour réaliser des démarches administratives 100% en ligne.
 
     %br
     %br
     .center
-      %button.js-scrollTo.btn.btn-lg.btn-success{cible: '.demo_account'}
+      %button.background-tps.js-scrollTo.btn.btn-lg{cible: '.demo_account'}
         Envie d'essayer ?
 
+#landing_body.max-size
+  .row#etapes.center
+    #create_1.col-lg-3.col-md-3.col-sm-3.col-xs-3
+      %img{src:image_url('etapes/create_1.png')}
+      %br
+      %h4 Administration
+      %h3.text-info Je construis ma démarche 100% en ligne
+    #complet_2.col-lg-3.col-md-3.col-sm-3.col-xs-3
+      %img{src:image_url('etapes/complet_2.png')}
+      %br
+      %h4 Usager
+      %h3.text-success Je remplis un dossier de manière simplifiée
+    #message_3.col-lg-3.col-md-3.col-sm-3.col-xs-3
+      %img{src:image_url('etapes/message_3.png')}
+      %br
+      %h4 Usager
+      %h3.text-warning Je dialogue avec mon administration en ligne
+    #shared_4.col-lg-3.col-md-3.col-sm-3.col-xs-3
+      %img{src:image_url('etapes/shared_4.png')}
+      %br
+      %h4 Usager et Administrations
+      %h3.text-danger
+        J'invite des partenaires à co-construire le dossier
 
-#suite.max-size
-  .row.word.simplifier
-    .col-md-6.col-lg-6
-      = image_tag image_url('keywords/simplifier.png')
-    .col-md-6.col-lg-6
-      %ul.dynamic_ul
-        %li
-          Générateur simplifié de démarches en ligne pour les administrations
-        %li
-          Ne demander que les informations strictement nécessaires
-        %li
-          Profiter d’une identification simplifiée grâce à
-          %a{href: 'http://www.modernisation.gouv.fr/ladministration-change-avec-le-numerique/par-son-systeme-dinformation/france-connect-un-acces-universel-aux-administrations-en-ligne',
-          target: '_blank'}
-            FranceConnect
+  .split-hr-left
 
-  .row.word.echanger
-    .col-md-6.col-lg-6
-      %ul.dynamic_ul
-        %li
-          Tchatter avec les services traitant jusqu’à la complétude du dossier
-        %li
-          Etre notifié de manière électronique
-        %li
-          Accompagner les usagers dans leur démarche
-        %li
-          Vérifier les pièces au fur et à mesure
-    .col-md-6.col-lg-6
-      = image_tag image_url('keywords/echanger.png')
-
-  .row.word.profiter
-    .col-md-6.col-lg-6
-      = image_tag image_url('keywords/profiter.png')
-    .col-md-6.col-lg-6
-      %ul.dynamic_ul
-        %li
-          Profiter des ressources cartographiques directement mobilisées, si nécessaire
-        %li
-          Récupérer des informations officielles collectées directement auprès des administrations
-
-  .row.word.news
-    .latest_release.col-md-7.col-lg-7
-      - if @latest_release.nil?
-        %p
-          Erreur dans la récupération des données
-      -else
-        %h3.text-info
-          = "Dernière version (#{@latest_release.tag_name} - #{@latest_release.published_at})"
-        .body
-          =@latest_release.body.html_safe
-
-      .center
-        \-
-        %br
-        %a{href: 'https://github.com/sgmap/tps/releases', target: '_blank'}
-          = 'Voir toutes les versions'
-
-    .col-md-5.col-lg-5
-      #video.center
-        %iframe{:allowfullscreen => "", :frameborder => "0", :height => "270", :src => "//www.dailymotion.com/embed/video/x3lp4cs", :width => "480"}
-        %br
-        =link_to 'Toutes les vidéos', '#', {style: 'text-decoration: none', class: 'all_video btn btn-default btn-sm'}
-      #all_video{style:'display: none'}
-        %br
-        %ul
-          %li
-            =link_to "Création d'une démarche avec TPS (Téléprocédure Simplifiée)", "http://dai.ly/x3s2o65", {target: '_blank'}
-          %li
-            =link_to "Etape 2 avec TPS : saisine de l'administration par un usager avec France Connect", "http://dai.ly/x3s2oj6", {target: '_blank'}
-          %li
-            =link_to "Etape 3 avec TPS : l'accompagnement par les services et l'invitation d'autres partenaires publics à co-instruire", "http://dai.ly/x3s2oqp", {target: '_blank'}
-          %li
-            =link_to "TPS: dernière étape, la validation du dossier et notification", "http://dai.ly/x3s2p6k", {target: '_blank'}
-
-  .row.word.demo_account.center
+  .row.demo_account.center
     .col-md-4.col-lg-4
       %h3.text-primary Acteurs publics
       %h4 Créez des démarches en ligne simplifiées et sécurisées.
       =link_to 'Démonstration', 'https://tps-dev.apientreprise.fr/administrateurs/sign_in/demo', {class: 'btn btn-lg btn-primary'}
+
     .col-md-4.col-lg-4
       %h3.text-warning Agents et services
       %h4 Accompagnez et co-traitez les projets avec les usagers.
@@ -105,19 +56,31 @@
       %h4 Profitez de démarches simplifiées et d’échanges continus avec les services traitants.
       =link_to 'Démonstration', 'https://tps-dev.apientreprise.fr/users/sign_in/demo', {class: 'btn btn-lg btn-success'}
 
-  .row.word.documentation
-    .col-md-4.col-lg-4.center
-      = image_tag image_url('keywords/documentation.png')
-    .col-md-4.col-lg-4
-      %ul.dynamic_ul
-        %li
-          =link_to 'Dépliant de présentation', '/data/TPS_Trois_volets.pdf', {target: '_blank'}
-        %li
-          =link_to 'Documentation d’utilisation', '/data/TPS_documentations_v1_1.pdf', {target: '_blank'}
-        -#%li
-        -#  = link_to 'Documentation des APIs (béta)', '/docs', {target: '_blank'}
-    .col-md-4.col-lg-4.center
-      = link_to 'Demander un accès administrateur', 'https://tps.apientreprise.fr/users/dossiers/new?procedure_id=31', {class: 'btn btn-lg btn-primary', target: '_blank'}
+  .split-hr-left
 
+  #request_access.row.center
+    .col-xs-12.col-sm-12.col-md-12.col-lg-12
+    %h3 Envi de commencer à créer votre démarche ?
 
+    = link_to 'Demander un accès administrateur', 'https://tps.apientreprise.fr/users/dossiers/new?procedure_id=31', {class: 'btn btn-lg background-tps', target: '_blank'}
+
+  .split-hr-left
+
+  .center
+    .row
+      #utilisateurs.col-xs-12.col-sm-12.col-md-12.col-lg-12
+        %h4 Ils nous font confiances
+
+        Conseil Regional Ile de France, Politique de la ville du Pas de Calais (ensemble des administrations et collectivités territoriales concernées), DRIEA Ile de France
+        %br
+        Préfecture de la Martinique, DRIEE Ile de France, Ministère de l’écologie et du développement durable, MEEM, CCI Normandie, DGE
+
+    %br
+    .row
+      #partenaires.col-xs-12.col-sm-12.col-md-12.col-lg-12
+        %h4 Ils travaillent avec nous
+
+        Insee, Infogreffe, Ministère de la jeunesse et du sport, IGN, DGFIP, CGET, France Connect, Open Streetmap, la BAN, api.gouv.fr, Euroquity - BPI, FNTP, Qualibat
+
+  .split-hr-left
 

@@ -38,7 +38,7 @@ describe FranceConnect::ParticulierController, type: :controller do
           let!(:france_connect_information) { create(:france_connect_information, france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, gender: gender, birthplace: birthplace) }
 
           context {
-            subject { get :callback, code: code }
+            subject { get :callback, params: {code: code} }
 
             it 'does not create a new france_connect_information in database' do
               expect { subject }.not_to change { FranceConnectInformation.count }
@@ -49,7 +49,7 @@ describe FranceConnect::ParticulierController, type: :controller do
             before do
               create(:user, email: email, france_connect_information: france_connect_information)
 
-              get :callback, code: code
+              get :callback, params: {code: code}
             end
 
             let(:email) { 'plop@plop.com' }
@@ -63,7 +63,7 @@ describe FranceConnect::ParticulierController, type: :controller do
             it 'redirect to stored location' do
               subject.store_location_for(:user, stored_location)
 
-              get :callback, code: code
+              get :callback, params: {code: code}
               expect(response).to redirect_to(stored_location)
             end
           end
@@ -72,7 +72,7 @@ describe FranceConnect::ParticulierController, type: :controller do
             let(:salt) { FranceConnectSaltService.new(france_connect_information).salt }
 
             before do
-              get :callback, code: code
+              get :callback, params: {code: code}
             end
 
             it 'redirects to check email FC page' do
@@ -84,13 +84,13 @@ describe FranceConnect::ParticulierController, type: :controller do
         context 'when france_connect_particulier_id does not exist in database' do
           let(:last_france_connect_information) { FranceConnectInformation.last }
           let(:salt) { FranceConnectSaltService.new(last_france_connect_information).salt }
-          subject { get :callback, code: code }
+          subject { get :callback, params: {code: code} }
 
           it { expect { subject }.to change { FranceConnectInformation.count }.by(1) }
 
           describe 'FranceConnectInformation attributs' do
             before do
-              get :callback, code: code
+              get :callback, params: {code: code}
             end
 
             subject { last_france_connect_information }
@@ -113,7 +113,7 @@ describe FranceConnect::ParticulierController, type: :controller do
       context 'when code is not correct' do
         before do
           allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
-          get :callback, code: code
+          get :callback, params: {code: code}
         end
 
         it 'redirect to login page' do
@@ -134,7 +134,7 @@ describe FranceConnect::ParticulierController, type: :controller do
     let(:france_connect_information_id) { france_connect_information.id }
     let(:salt) { FranceConnectSaltService.new(france_connect_information).salt }
 
-    subject { post :check_email, fci_id: france_connect_information_id, salt: salt, user: {email_france_connect: email} }
+    subject { post :check_email, params: {fci_id: france_connect_information_id, salt: salt, user: {email_france_connect: email}} }
 
     context 'when salt and fci_id does not matches' do
       let(:france_connect_information_fake) { create(:france_connect_information, france_connect_particulier_id: 'iugfjh') }
@@ -177,7 +177,7 @@ describe FranceConnect::ParticulierController, type: :controller do
           subject
         end
 
-        subject { post :check_email, fci_id: france_connect_information_id, salt: salt, user: {email_france_connect: email, password: password} }
+        subject { post :check_email, params: {fci_id: france_connect_information_id, salt: salt, user: {email_france_connect: email, password: password}} }
 
         context 'when email and password couple is valid' do
           it { expect { subject }.not_to change { User.count } }
@@ -205,7 +205,7 @@ describe FranceConnect::ParticulierController, type: :controller do
     let(:france_connect_information_id) { france_connect_information.id }
     let(:salt) { FranceConnectSaltService.new(france_connect_information).salt }
 
-    subject { post :create, fci_id: france_connect_information_id, salt: salt, user:{email_france_connect: france_connect_information.email_france_connect} }
+    subject { post :create, params: {fci_id: france_connect_information_id, salt: salt, user: {email_france_connect: france_connect_information.email_france_connect}} }
 
     context 'when email is filled' do
       let(:email) { 'plop@gmail.com' }
@@ -218,7 +218,7 @@ describe FranceConnect::ParticulierController, type: :controller do
       let(:email) { '' }
 
       it { expect { subject }.not_to change { User.count } }
-      it { expect(subject).to redirect_to(france_connect_particulier_new_path(fci_id: france_connect_information_id, salt: salt, user:{email_france_connect: france_connect_information.email_france_connect})) }
+      it { expect(subject).to redirect_to(france_connect_particulier_new_path(fci_id: france_connect_information_id, salt: salt, user: {email_france_connect: france_connect_information.email_france_connect})) }
     end
   end
 end

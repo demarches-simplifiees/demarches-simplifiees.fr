@@ -1,59 +1,14 @@
--actual_header_section = nil
--@champs.each do |champ|
-  .row{class: (actual_header_section.nil? || champ.type_champ == 'header_section' ? '' : "header_section_"+actual_header_section.to_s)}
-    %div{class: "type_champ-#{champ.type_champ}"}
+- render_partial_url = private ? 'users/description/champs/header_private_section' : 'users/description/champs/header_section'
+- @champs = @champs_private if private
+- @headers = @headers_private if private
 
-      - if champ.type_champ == 'header_section'
-        =render partial: 'users/description/champs/header_section', locals: {champ: champ}
-        -actual_header_section = champ.id
-
-      -else
-        - unless champ.type_champ == 'checkbox' || champ.type_champ == 'engagement'
-          %h4
-            = champ.libelle
-            - if champ.mandatory?
-              = '*'
-
-        -if champ.type_champ == 'textarea'
-          =render partial: 'users/description/champs/textarea', locals: {champ: champ}
-
-        -elsif champ.type_champ == 'checkbox'
-          = render partial: 'users/description/champs/checkbox', locals: {champ: champ}
-
-        -elsif champ.type_champ == 'civilite'
-          =render partial: 'users/description/champs/civilite', locals: {champ: champ}
-
-        - elsif champ.type_champ == 'datetime'
-          =render partial: 'users/description/champs/datetime', locals: {champ: champ}
-
-        - elsif champ.type_champ == 'yes_no'
-          =render partial: 'users/description/champs/yes_no', locals: {champ: champ}
-
-        - elsif champ.type_champ == 'drop_down_list'
-          =render partial: 'users/description/champs/drop_down_list', locals: {champ: champ}
-
-        - elsif champ.type_champ == 'pays'
-          =render partial: 'users/description/champs/pays', locals: {champ: champ}
-
-        - elsif champ.type_champ == 'regions'
-          =render partial: 'users/description/champs/regions', locals: {champ: champ}
-
-        - elsif champ.type_champ == 'engagement'
-          =render partial: 'users/description/champs/engagement', locals: {champ: champ}
-
-        - elsif champ.type_champ == 'departements'
-          =render partial: 'users/description/champs/departements', locals: {champ: champ}
-
-        -else
-          %input.form-control{name:"champs['#{champ.id}']",
-                  placeholder: champ.libelle,
-                  id: "champs_#{champ.id}",
-                  value: champ.value,
-                  type: champ.type_champ,
-                  'data-provide' => champ.data_provide,
-                  'data-date-format' => champ.data_date_format}
-
-  - unless champ.description.empty? || champ.type_champ == 'engagement'
+- unless @headers.blank?
+  - if @champs.first.type_champ != 'header_section'
+    =render partial: render_partial_url, locals: {libelle: 'Dossier', order_place: -1, champs: @champs}
+  - @headers.each do |header|
     .row
-      .col-lg-8.col-md-8{class: 'description_div', id:"description_champs_#{champ.id}"}
-        = champ.description
+      %div{class: "type_champ-#{header.type_champ}"}
+        =render partial: render_partial_url, locals: {libelle: header.libelle, order_place: header.order_place, champs: @champs}
+- else
+  .row
+    =render partial: render_partial_url, locals: {libelle: 'Dossier', order_place: -1, champs: @champs}

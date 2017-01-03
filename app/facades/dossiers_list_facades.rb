@@ -1,6 +1,8 @@
 class DossiersListFacades
   include Rails.application.routes.url_helpers
 
+  attr_accessor :procedure, :current_devise_profil, :liste
+
   def initialize current_devise_profil, liste, procedure = nil
     @current_devise_profil = current_devise_profil
     @liste = liste
@@ -16,12 +18,28 @@ class DossiersListFacades
     end
   end
 
-  def liste
-    @liste
+  def total_dossier
+    current_devise_profil.dossiers.where(archived: false).count
+  end
+
+  def total_new_dossier
+    current_devise_profil.dossiers.where(state: :initiated, archived: false).count
+  end
+
+  def new_dossier_number procedure_id
+    current_devise_profil.dossiers.where(state: :initiated, archived: false, procedure_id: procedure_id).count
   end
 
   def gestionnaire_procedures_name_and_id_list
-    @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure| acc.push({id: procedure.id, libelle: procedure.libelle}) }
+    @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure| acc.push({id: procedure.id, libelle: procedure.libelle, unread_notifications: @current_devise_profil.dossier_with_notification_for(procedure)}) }
+  end
+
+  def unread_notifications
+    current_devise_profil.notifications
+  end
+
+  def dossiers_with_unread_notifications
+    (unread_notifications.inject([]) { |acc, notif| acc.push(notif.dossier) }).uniq
   end
 
   def procedure_id
@@ -42,32 +60,16 @@ class DossiersListFacades
     preference_list_dossiers_filter.where(table: :champs).where.not(filter: '').size == 0
   end
 
+  def all_state_class
+    (@liste == 'all_state' ? 'active' : '')
+  end
+
   def brouillon_class
     (@liste == 'brouillon' ? 'active' : '')
   end
 
-  def nouveaux_class
-    (@liste == 'nouveaux' ? 'active' : '')
-  end
-
-  def a_traiter_class
-    (@liste == 'a_traiter' ? 'active' : '')
-  end
-
   def en_construction_class
     (@liste == 'a_traiter' ? 'active' : '')
-  end
-
-  def fige_class
-    (@liste == 'fige' ? 'active' : '')
-  end
-
-  def en_attente_class
-    (@liste == 'en_attente' ? 'active' : '')
-  end
-
-  def deposes_class
-    (@liste == 'deposes' ? 'active' : '')
   end
 
   def valides_class
@@ -78,24 +80,16 @@ class DossiersListFacades
     (@liste == 'en_instruction' ? 'active' : '')
   end
 
-  def a_instruire_class
-    (@liste == 'a_instruire' ? 'active' : '')
-  end
-
   def termine_class
     (@liste == 'termine' ? 'active' : '')
-  end
-
-  def suivi_class
-    (@liste == 'suivi' ? 'active' : '')
   end
 
   def invite_class
     (@liste == 'invite' ? 'active' : '')
   end
 
-  def search_class
-    (@liste == 'search' ? 'active' : '')
+  def all_state_total
+    service.all_state.count
   end
 
   def brouillon_total
@@ -106,36 +100,16 @@ class DossiersListFacades
     service.nouveaux.count
   end
 
-  def a_traiter_total
-    service.ouvert.count
-  end
-
   def en_construction_total
     service.en_construction.count
-  end
-
-  def fige_total
-    service.fige.count
-  end
-
-  def en_attente_total
-    service.waiting_for_user.count
   end
 
   def valides_total
     service.valides.count
   end
 
-  def deposes_total
-    service.deposes.count
-  end
-
   def en_instruction_total
     service.en_instruction.count
-  end
-
-  def a_instruire_total
-    service.a_instruire.count
   end
 
   def termine_total
@@ -148,42 +122,6 @@ class DossiersListFacades
 
   def invite_total
     service.invite.count
-  end
-
-  def brouillon_url
-    base_url 'brouillon'
-  end
-
-  def nouveaux_url
-    base_url 'nouveaux'
-  end
-
-  def a_traiter_url
-    base_url 'a_traiter'
-  end
-
-  def en_construction_url
-    base_url 'a_traiter'
-  end
-
-  def fige_url
-    base_url 'fige'
-  end
-
-  def en_attente_url
-    base_url 'en_attente'
-  end
-
-  def deposes_url
-    base_url 'deposes'
-  end
-
-  def a_instruire_url
-    base_url 'a_instruire'
-  end
-
-  def termine_url
-    base_url 'termine'
   end
 
   def filter_url

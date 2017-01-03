@@ -1,4 +1,17 @@
 #backoffice_search
-  = render partial: 'onglets'
+  #pref_list_menu
+    = render partial: 'backoffice/dossiers/pref_list'
 
-  = smart_listing_render :dossiers
+  .default_data_block.default_visible
+    %div.row.show-block#new_dossiers
+      %div.header
+        %div.col-lg-10.col-md-10.col-sm-10.col-xs-10.title
+          %div.carret-right
+          %div.carret-down
+          Résultat de la recherche
+        %div.col-lg-2.col-md-2.col-sm-2.col-xs-2.count
+          =@dossiers.count
+          dossiers
+      %div.body
+        = smart_listing_render :search
+

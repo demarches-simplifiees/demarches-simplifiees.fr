@@ -9,5 +9,10 @@ class Admin::PrevisualisationsController < AdminController
     @dossier.build_default_champs
 
     @champs = @dossier.ordered_champs
+
+    @headers = @champs.inject([]) do |acc, champ|
+      acc.push(champ) if champ.type_champ == 'header_section'
+      acc
+    end
   end
 end

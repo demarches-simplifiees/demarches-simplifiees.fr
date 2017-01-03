@@ -1,3 +1,2 @@
-remote_storage: true
-unified_login: false
+remote_storage: false
 opensimplif: false

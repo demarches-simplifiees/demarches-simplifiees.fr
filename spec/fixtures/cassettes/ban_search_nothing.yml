@@ -1,0 +1,42 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://api-adresse.data.gouv.fr/search?limit=1&q=je%20recherche%20pas%20grand%20chose
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (darwin15.6.0 x86_64) ruby/2.3.1p112
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.11.3
+      Date:
+      - Fri, 16 Dec 2016 14:17:40 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '163'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Headers:
+      - X-Requested-With
+    body:
+      encoding: UTF-8
+      string: '{"limit": 1, "attribution": "BAN", "version": "draft", "licence": "ODbL
+        1.0", "query": "je recherche pas grand chose", "type": "FeatureCollection",
+        "features": []}'
+    http_version: 
+  recorded_at: Fri, 16 Dec 2016 14:17:40 GMT
+recorded_with: VCR 3.0.3

@@ -10,12 +10,12 @@ describe Users::RecapitulatifController, type: :controller do
 
   describe 'GET #show' do
     it 'returns http success' do
-      get :show, dossier_id: dossier.id
+      get :show, params: {dossier_id: dossier.id}
       expect(response).to have_http_status(:success)
     end
 
     it 'redirection vers siret si mauvais dossier ID' do
-      get :show, dossier_id: bad_dossier_id
+      get :show, params: {dossier_id: bad_dossier_id}
       expect(response).to redirect_to('/')
     end
 
@@ -27,7 +27,7 @@ describe Users::RecapitulatifController, type: :controller do
           dossier.state = 'draft'
           dossier.save
 
-          get :show, dossier_id: dossier.id
+          get :show, params: {dossier_id: dossier.id}
         end
 
         it { is_expected.to redirect_to root_path }
@@ -39,7 +39,7 @@ describe Users::RecapitulatifController, type: :controller do
   describe 'POST #initiate' do
     context 'when an user initiate his dossier' do
       before do
-        post :initiate, dossier_id: dossier.id
+        post :initiate, params: {dossier_id: dossier.id}
       end
 
       it 'dossier change his state for closed' do
@@ -59,7 +59,7 @@ describe Users::RecapitulatifController, type: :controller do
 
       before do
         dossier.validated!
-        Timecop.freeze(deposit_datetime) { post :submit, dossier_id: dossier.id }
+        Timecop.freeze(deposit_datetime) { post :submit, params: {dossier_id: dossier.id} }
         dossier.reload
       end
 
@@ -80,10 +80,12 @@ describe Users::RecapitulatifController, type: :controller do
         expect(NotificationMailer).to receive(:deliver_now!)
 
         dossier.validated!
-        post :submit, dossier_id: dossier.id
+        post :submit, params: {dossier_id: dossier.id}
       end
 
+      it 'Internal notification is created' do
+        expect(Notification.where(dossier_id: dossier.id, type_notif: 'submitted').first).not_to be_nil
+      end
     end
   end
-
 end

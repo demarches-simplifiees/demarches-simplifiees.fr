@@ -1,22 +1,23 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.7.1'
+gem 'rails', '5.0.0.1'
+
+gem 'actioncable', '5.0.0.1'
+gem 'redis'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
+
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+gem 'turbolinks', '~> 2.5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
@@ -47,10 +48,11 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'will_paginate-bootstrap'
 
 # Decorators
-gem 'draper'
+gem 'draper', '~> 3.0.0.pre1'
+gem 'unicode_utils'
 
 #Gestion des comptes utilisateurs
-gem 'devise', '~> 3.0'
+gem 'devise'
 gem 'openid_connect'
 
 gem 'rest-client'
@@ -83,13 +85,12 @@ gem 'mailjet'
 
 gem "smart_listing"
 
-# gem 'css_splitter'
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 
 gem 'as_csv'
 gem 'spreadsheet_architect'
 
-gem 'apipie-rails', '=0.3.1'
+gem 'apipie-rails'
 gem "maruku" # for Markdown support in apipie
 
 gem 'openstack'
@@ -98,6 +99,7 @@ gem 'browser'
 
 group :test do
   gem 'capybara'
+  gem 'launchy'
   gem 'factory_girl'
   gem 'database_cleaner'
   gem 'selenium-webdriver'
@@ -106,14 +108,19 @@ group :test do
   gem 'simplecov', require: false
   gem 'poltergeist'
   gem 'timecop'
-  # gem 'guard'
+  gem 'guard'
   # gem 'guard-rspec', require: false
-  # gem 'guard-livereload', '~> 2.4', require: false
+  gem 'guard-livereload', '~> 2.4', require: false
   gem 'vcr'
+  gem 'rails-controller-testing'
 end
 
 group :development do
-  gem 'web-console', '~> 2.0'
+  # Access an IRB console on exception pages or by using <%= console %> in views
+
+  gem 'web-console'
+
+  gem 'rack-handlers'
 end
 
 group :development, :test do
@@ -124,11 +131,9 @@ group :development, :test do
   gem 'byebug'
   gem 'pry-byebug'
 
-  # Access an IRB console on exception pages or by using <%= console %> in views
-
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'spring-commands-rspec'
+  # gem 'spring'
+  # gem 'spring-commands-rspec'
   gem 'rspec-rails', '~> 3.0'
 
   gem 'railroady'
@@ -137,13 +142,12 @@ group :development, :test do
   gem 'rubocop-checkstyle_formatter', require: false
   gem 'rubocop-rspec', require: false
 
-  gem "nyan-cat-formatter"
-
-  gem 'parallel_tests', '~> 1.9.0'
+  gem 'parallel_tests', '~> 2.10'
 
   gem 'brakeman', require: false
+
   # Deploy
-  gem 'mina', git: 'https://github.com/mina-deploy/mina.git'
+  gem 'mina', ref: '343a7', git: 'https://github.com/mina-deploy/mina.git'
 end
 
 group :production, :staging do

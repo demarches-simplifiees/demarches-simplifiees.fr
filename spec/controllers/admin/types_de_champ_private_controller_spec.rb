@@ -13,7 +13,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
     let(:procedure) { create(:procedure, administrateur: admin, published: published) }
     let(:procedure_id) { procedure.id }
 
-    subject { get :show, procedure_id: procedure_id }
+    subject { get :show, params: {procedure_id: procedure_id} }
 
     context 'when procedure is not found' do
       let(:procedure_id) { 9_999_999 }
@@ -41,35 +41,35 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
     let(:mandatory) { 'on' }
 
     let(:procedure_params) do
-      { types_de_champ_private_attributes:
-        { '0' =>
-          {
-            libelle: libelle,
-            type_champ: type_champ,
-            description: description,
-            order_place: order_place,
-            id: types_de_champ_id,
-            mandatory: mandatory,
-            type: 'TypeDeChampPrivate'
-          },
-          '1' =>
-              {
-                  libelle: '',
-                  type_champ: 'text',
-                  description: '',
-                  order_place: '1',
-                  id: '',
-                  mandatory: false,
-                  type: 'TypeDeChampPrivate'
-              }
-        }
+      {types_de_champ_private_attributes:
+           {'0' =>
+                {
+                    libelle: libelle,
+                    type_champ: type_champ,
+                    description: description,
+                    order_place: order_place,
+                    id: types_de_champ_id,
+                    mandatory: mandatory,
+                    type: 'TypeDeChampPrivate'
+                },
+            '1' =>
+                {
+                    libelle: '',
+                    type_champ: 'text',
+                    description: '',
+                    order_place: '1',
+                    id: '',
+                    mandatory: false,
+                    type: 'TypeDeChampPrivate'
+                }
+           }
       }
     end
 
-    let(:request) { put :update, format: :js, procedure_id: procedure.id, procedure: procedure_params }
+    let(:request) { put :update, params: {format: :js, procedure_id: procedure.id, procedure: procedure_params} }
 
     context 'when procedure is found' do
-      it { expect{ request }.to change(TypeDeChamp, :count).by(1) }
+      it { expect { request }.to change(TypeDeChamp, :count).by(1) }
 
       describe 'created type de champ' do
         before do
@@ -106,7 +106,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
       end
     end
     context 'when procedure is not found' do
-      subject { put :update, format: :js, procedure_id: 9_999_999, procedure: procedure_params }
+      subject { put :update, params: {format: :js, procedure_id: 9_999_999, procedure: procedure_params} }
       it 'creates type de champ' do
         expect(subject.status).to eq(404)
       end
@@ -115,7 +115,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
 
   describe '#destroy' do
     before do
-      delete :destroy, procedure_id: procedure.id, id: type_de_champ_id, format: :js
+      delete :destroy, params: {procedure_id: procedure.id, id: type_de_champ_id, format: :js}
     end
 
     context 'when type de champs does not exist' do
@@ -139,7 +139,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
   end
 
   describe 'POST #move_up' do
-    subject { post :move_up, procedure_id: procedure.id, index: index, format: :js }
+    subject { post :move_up, params: {procedure_id: procedure.id, index: index, format: :js} }
 
     context 'when procedure have no type de champ' do
       let(:index) { 0 }
@@ -165,7 +165,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
         it { expect(subject.status).to eq(200) }
         it { expect(subject).to render_template('show') }
         it 'changes order places' do
-          post :move_up, procedure_id: procedure.id, index: index, format: :js
+          post :move_up, params: {procedure_id: procedure.id, index: index, format: :js}
           type_de_champ_0.reload
           type_de_champ_1.reload
           expect(type_de_champ_0.order_place).to eq(1)
@@ -176,7 +176,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
   end
 
   describe 'POST #move_down' do
-    let(:request) { post :move_down, procedure_id: procedure.id, index: index, format: :js }
+    let(:request) { post :move_down, params: {procedure_id: procedure.id, index: index, format: :js} }
     let(:index) { 0 }
 
     subject { request }

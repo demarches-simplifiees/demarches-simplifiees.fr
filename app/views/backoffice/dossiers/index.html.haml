@@ -2,35 +2,41 @@
   #pref_list_menu
     = render partial: 'backoffice/dossiers/pref_list'
 
-  %h1
-    =t('dynamics.backoffice.title')
+  .default_data_block
+    %div.row.show-block#new_dossiers
+      %div.header
+        %div.col-lg-10.col-md-10.col-sm-10.col-xs-10.title
+          %div.carret-right
+          %div.carret-down
+          Nouveaux dossiers
+        %div.col-lg-2.col-md-2.col-sm-2.col-xs-2.count
+          =@facade_data_view.nouveaux_total
+          dossiers
+      %div.body
+        = smart_listing_render :new_dossiers
 
-  %div.dropdown.pull-right#download_menu
-    - if @dossiers_list_facade.dossiers_to_display.count > 400
-      %button.btn.btn-error.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false, class: 'disabled'}
-        %span{'data-toggle' => :tooltip, "data-placement" => :left, title: 'Pour réduire le nombre de dossiers et ne pas dépasser la limite autorisée de 400, merci de bien vouloir appliquer des filtres.'}
-          = t('dynamics.backoffice.limit_excess_download_all_dossiers')
-    - else
-      %button.btn.btn-success.dropdown-toggle#dropdownDownloadMenu{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
-        %i.fa.fa-download
-        = t('dynamics.backoffice.download_all_dossiers')
-        %span.caret
-    %ul.dropdown-menu.dropdown-menu-right
-      %li
-        = link_to backoffice_download_dossiers_tps_path(format: :csv, procedure_id: params[:id]),  { class: 'btn btn-sm' } do
-          = t('dynamics.backoffice.format_csv')
-      %li
-        = link_to backoffice_download_dossiers_tps_path(format: :xlsx, procedure_id: params[:id]), { class: 'btn btn-sm' } do
-          = t('dynamics.backoffice.format_xlsx')
-      %li
-        = link_to backoffice_download_dossiers_tps_path(format: :ods, procedure_id: params[:id]),  { class: 'btn btn-sm' } do
-          = t('dynamics.backoffice.format_ods')
+  .default_data_block.default_visible
+    %div.row.show-block#follow_dossiers
+      %div.header
+        %div.col-lg-10.col-md-10.col-sm-10.col-xs-10.title
+          %div.carret-right
+          %div.carret-down
+          Dossiers suivis
+        %div.col-lg-2.col-md-2.col-sm-2.col-xs-2.count
+          =@facade_data_view.suivi_total
+          dossiers
+      %div.body
+        = smart_listing_render :follow_dossiers
 
-  = render partial: 'backoffice/dossiers/onglets'
-
-  = smart_listing_render :dossiers
-
-  %br
-  %br
-  - unless Features.opensimplif
-    = render partial: 'backoffice/dossiers/state_description', locals: {dossiers_list_facade: @dossiers_list_facade}
+  .default_data_block
+    %div.row.show-block#all_dossiers
+      %div.header
+        %div.col-lg-10.col-md-10.col-sm-10.col-xs-10.title
+          %div.carret-right
+          %div.carret-down
+          Tous les dossiers
+        %div.col-lg-2.col-md-2.col-sm-2.col-xs-2.count
+          =@facade_data_view.all_state_total
+          dossiers
+      %div.body
+        = smart_listing_render :all_state_dossiers

@@ -2,14 +2,34 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   respond_to :html, :xlsx, :ods, :csv
 
   def index
-    super
+    procedure = current_gestionnaire.procedure_filter
 
-    dossiers_list_facade.service.filter_procedure_reset!
+    if procedure.nil?
+      procedure_list = dossiers_list_facade.gestionnaire_procedures_name_and_id_list
+      if procedure_list.count == 0
+        flash.alert = "Vous n'avez aucune procédure d'affectée."
+        return redirect_to root_path
+      end
+
+      procedure = procedure_list.first[:id]
+    end
+
+    redirect_to backoffice_dossiers_procedure_path(id: procedure)
   end
 
   def show
     create_dossier_facade params[:id]
-    @champs = @facade.champs_private unless @facade.nil?
+
+    unless @facade.nil?
+      @champs_private = @facade.champs_private
+
+      @headers_private = @champs_private.inject([]) do |acc, champ|
+        acc.push(champ) if champ.type_champ == 'header_section'
+        acc
+      end
+    end
+
+    Notification.where(dossier_id: params[:id].to_i).update_all already_read: true
   end
 
   def filter
@@ -26,8 +46,8 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       dossiers = dossiers_list_facade(param_liste).dossiers_to_display
       respond_to do |format|
         format.xlsx { render xlsx: dossiers }
-        format.ods  { render ods:  dossiers }
-        format.csv  { render csv:  dossiers }
+        format.ods { render ods: dossiers }
+        format.csv { render csv: dossiers }
       end
     end
   end
@@ -36,20 +56,30 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     @search_terms = params[:q]
 
     # exact id match?
-    @dossier = Dossier.where(id: @search_terms)
+    @dossiers = Dossier.where(id: @search_terms.to_i) if @search_terms.to_i < 2147483647
+    @dossiers = Dossier.none if @dossiers.nil?
 
     # full text search
-    unless @dossier.any?
-      @dossier ||= Search.new(
-        gestionnaire: current_gestionnaire,
-        query: @search_terms,
-        page: params[:page]
+    unless @dossiers.any?
+      @dossiers = Search.new(
+          gestionnaire: current_gestionnaire,
+          query: @search_terms,
+          page: params[:page]
       ).results
     end
 
-    smartlisting_dossier @dossier, 'search'
+    smart_listing_create :search,
+                         @dossiers,
+                         partial: "backoffice/dossiers/list",
+                         array: true,
+                         default_sort: dossiers_list_facade.service.default_sort
+
   rescue RuntimeError
-    smartlisting_dossier [], 'search'
+    smart_listing_create :search,
+                         [],
+                         partial: "backoffice/dossiers/list",
+                         array: true,
+                         default_sort: dossiers_list_facade.service.default_sort
   end
 
   def valid
@@ -60,7 +90,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.dossier_validated(@facade.dossier).deliver_now!
 
-    render 'show'
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   def receive
@@ -71,7 +101,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.dossier_received(@facade.dossier).deliver_now!
 
-    render 'show'
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   def refuse
@@ -82,7 +112,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.dossier_refused(@facade.dossier).deliver_now!
 
-    render 'show'
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   def without_continuation
@@ -93,7 +123,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.dossier_without_continuation(@facade.dossier).deliver_now!
 
-    render 'show'
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   def close
@@ -104,7 +134,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.dossier_closed(@facade.dossier).deliver_now!
 
-    render 'show'
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   def follow
@@ -123,7 +153,6 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       @liste = cookies[:liste] || 'a_traiter'
     end
 
-    dossiers_list_facade @liste
     smartlisting_dossier
 
     render 'backoffice/dossiers/index', formats: :js

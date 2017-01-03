@@ -65,7 +65,7 @@ Rails.application.routes.draw do
       get '/add_siret' => 'dossiers/add_siret#show'
 
       get '/description' => 'description#show'
-      get '/description/error' => 'description#error'
+      # get '/description/error' => 'description#error'
       post 'description' => 'description#create'
 
       patch 'pieces_justificatives' => 'description#pieces_justificatives'
@@ -202,4 +202,6 @@ Rails.application.routes.draw do
   end
 
   apipie
+
+  mount ActionCable.server => '/cable'
 end

@@ -1,0 +1,10 @@
+%div#footer
+  %p{class: "copyright col-md-push-#{12-main_container_size} col-md-#{main_container_size} col-lg-push-#{12-main_container_size} col-lg-#{main_container_size} text-muted small"}
+    = link_to 'SGMAP', "http://etatplateforme.modernisation.gouv.fr"
+    = Time.now.year
+    \-
+    = link_to 'Nouveautés', 'https://github.com/sgmap/tps/releases', target: '_blank'
+    \-
+    = link_to 'CGU / Mentions légales', cgu_path
+    \-
+    = link_to 'Contact', "mailto:"+t('dynamics.contact_email')

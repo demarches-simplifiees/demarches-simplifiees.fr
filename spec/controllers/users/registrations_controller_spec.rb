@@ -12,7 +12,7 @@ describe Users::RegistrationsController, type: :controller do
   end
 
   describe '.create' do
-    subject { post :create, user: user }
+    subject { post :create, params: {user: user }}
 
     context 'when user is correct' do
       it { expect(described_class).to be < Devise::RegistrationsController }

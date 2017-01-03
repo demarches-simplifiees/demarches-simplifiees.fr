@@ -19,9 +19,11 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-# require 'simplecov'
-# SimpleCov.start 'rails'
-# puts "required simplecov"
+if ENV['COV']
+  require 'simplecov'
+  SimpleCov.start 'rails'
+  puts "required simplecov"
+end
 
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
@@ -34,12 +36,14 @@ require 'factory_girl'
 
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
+Capybara.ignore_hidden_elements = false
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, js_errors: true, port: 44_678 + ENV['TEST_ENV_NUMBER'].to_i, phantomjs_options: ['--proxy-type=none'], timeout: 180)
 end
 
+ActiveSupport::Deprecation.silenced = true
 
-Capybara.default_wait_time = 1
+Capybara.default_max_wait_time = 1
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -75,20 +79,6 @@ module SmartListing
   end
 end
 
-class Features
-  #def self.remote_storage
-  #  true
-  #end
-
-  def self.unified_login
-    false
-  end
-
-  def self.opensimplif
-    false
-  end
-end
-
 WebMock.disable_net_connect!(allow_localhost: true)
 
 RSpec.configure do |config|
@@ -97,6 +87,9 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.tty = true
 
+  config.include Shoulda::Matchers::ActiveRecord, type: :model
+  config.include Shoulda::Matchers::ActiveModel, type: :model
+  config.include Shoulda::Matchers::Independent, type: :model
 
   config.use_transactional_fixtures = false
 
@@ -106,8 +99,8 @@ RSpec.configure do |config|
 
   config.order = 'random'
 
-  config.include Devise::TestHelpers, type: :view
-  config.include Devise::TestHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
 
   config.include FactoryGirl::Syntax::Methods
 
@@ -123,7 +116,7 @@ RSpec.configure do |config|
     if Features.remote_storage
       VCR.use_cassette("ovh_storage_init") do
         CarrierWave.configure do |config|
-          config.fog_credentials = { provider: 'OpenStack' }
+          config.fog_credentials = {provider: 'OpenStack'}
         end
       end
     end

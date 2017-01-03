@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 describe Gestionnaire, type: :model do
   let(:admin) { create :administrateur }
@@ -116,7 +116,7 @@ describe Gestionnaire, type: :model do
   end
 
   describe '#dossiers_follow' do
-    let!(:dossier) { create :dossier, procedure: procedure }
+    let!(:dossier) { create :dossier, procedure: procedure, state: :initiated }
 
     before do
       create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
@@ -186,8 +186,6 @@ describe Gestionnaire, type: :model do
   end
 
   context 'unified login' do
-    before { allow(Features).to receive(:unified_login).and_return(true) }
-
     it 'syncs credentials to associated user' do
       gestionnaire = create(:gestionnaire)
       user = create(:user, email: gestionnaire.email)
@@ -197,6 +195,53 @@ describe Gestionnaire, type: :model do
       user.reload
       expect(user.email).to eq('whoami@plop.com')
       expect(user.valid_password?('super secret')).to be(true)
+    end
+
+    it 'syncs credentials to associated administrateur' do
+      gestionnaire = create(:gestionnaire)
+      admin = create(:administrateur, email: gestionnaire.email)
+
+      gestionnaire.update_attributes(email: 'whoami@plop.com', password: 'super secret')
+
+      admin.reload
+      expect(admin.email).to eq('whoami@plop.com')
+      expect(admin.valid_password?('super secret')).to be(true)
+    end
+  end
+
+  describe '#notifications_for' do
+    subject { gestionnaire.notifications_for procedure }
+
+    context 'when gestionnaire follow any dossier' do
+      it { is_expected.to eq 0 }
+      it { expect(gestionnaire.follows.count).to eq 0 }
+      it { expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:inject)
+      subject }
+    end
+
+    context 'when gestionnaire follow any dossier into the procedure past in params' do
+      before do
+        create :follow, gestionnaire: gestionnaire, dossier: create(:dossier, procedure: procedure_2)
+      end
+
+      it { is_expected.to eq 0 }
+      it { expect(gestionnaire.follows.count).to eq 1 }
+      it { expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:inject)
+      subject }
+    end
+
+    context 'when gestionnaire follow a dossier with a notification into the procedure past in params' do
+      let(:dossier) { create(:dossier, procedure: procedure, state: 'initiated') }
+
+      before do
+        create :follow, gestionnaire: gestionnaire, dossier: dossier
+        create :notification, dossier: dossier
+      end
+
+      it { is_expected.to eq 1 }
+      it { expect(gestionnaire.follows.count).to eq 1 }
+      it { expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).to receive(:inject)
+      subject }
     end
   end
 end

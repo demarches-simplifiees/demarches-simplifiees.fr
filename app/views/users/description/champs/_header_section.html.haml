@@ -1,6 +1,9 @@
-%h3.text-primary.page-header
-  =champ.libelle
-  %span.mask_section{style:'float: right'}
-    %a.mask_section_button.btn.btn-xs.btn-info{id: "mask_button_"+champ.id.to_s}
-      Masquer la section
-      %i.fa.fa-chevron-up
+.default_data_block.default_visible
+  %div.row.show-block.infos
+    %div.header
+      %div.col-lg-12.col-md-12.col-sm-12.col-xs-12.title
+        %div.carret-right
+        %div.carret-down
+        =libelle
+    %div.body
+      = render partial: 'users/description/champs/render_list_champs', locals: {champs: champs, order_place: order_place}

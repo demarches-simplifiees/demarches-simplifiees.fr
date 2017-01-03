@@ -105,6 +105,7 @@ class Admin::ProceduresController < AdminController
     if procedure_path
       if procedure_path.administrateur_id == current_administrateur.id
         procedure_path.procedure.archive
+        procedure_path.delete
       else
         @mine = false
         return render '/admin/procedures/publish', formats: 'js'

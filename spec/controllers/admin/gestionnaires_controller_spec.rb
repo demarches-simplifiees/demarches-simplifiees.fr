@@ -17,7 +17,7 @@ describe Admin::GestionnairesController, type: :controller do
   describe 'POST #create' do
     let(:email) { 'test@plop.com' }
     let(:procedure_id) { nil }
-    subject { post :create, gestionnaire: {email: email}, procedure_id: procedure_id }
+    subject { post :create, params: {gestionnaire: {email: email}, procedure_id: procedure_id} }
 
     context 'When email is valid' do
       before do
@@ -150,7 +150,6 @@ describe Admin::GestionnairesController, type: :controller do
 
     context 'unified login' do
       before do
-        allow(Features).to receive(:unified_login).and_return(true)
         subject
       end
 
@@ -175,7 +174,7 @@ describe Admin::GestionnairesController, type: :controller do
     let!(:admin) { create :administrateur }
     let!(:gestionnaire) { create :gestionnaire, email: email, administrateurs: [admin] }
 
-    subject { delete :destroy, id: gestionnaire.id }
+    subject { delete :destroy, params: {id: gestionnaire.id} }
 
     context "when gestionaire_id is valid" do
       before do

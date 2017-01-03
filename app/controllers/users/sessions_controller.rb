@@ -1,11 +1,10 @@
 class Users::SessionsController < Sessions::SessionsController
-# before_filter :configure_sign_in_params, only: [:create]
+# before_action :configure_sign_in_params, only: [:create]
 
   def demo
     return redirect_to root_path if Rails.env.production?
 
-    @user = User.new(email: 'demo@tps.fr', password: 'password')
-
+    @user = User.new(email: DemoEmails[:user], password: 'password')
     render 'new'
   end
 
@@ -23,7 +22,8 @@ class Users::SessionsController < Sessions::SessionsController
 #POST /resource/sign_in
   def create
     try_to_authenticate(User)
-    try_to_authenticate(Gestionnaire) if Features.unified_login
+    try_to_authenticate(Gestionnaire)
+    try_to_authenticate(Administrateur)
 
     if user_signed_in?
       current_user.update_attributes(loged_in_with_france_connect: '')
@@ -33,7 +33,10 @@ class Users::SessionsController < Sessions::SessionsController
       redirect_to after_sign_in_path_for(:user)
     elsif gestionnaire_signed_in?
       redirect_to backoffice_path
+    elsif administrateur_signed_in?
+      redirect_to admin_path
     else
+      flash.alert = 'Mauvais couple login / mot de passe'
       new
       render :new, status: 401
     end
@@ -41,9 +44,8 @@ class Users::SessionsController < Sessions::SessionsController
 
 # DELETE /resource/sign_out
   def destroy
-    if gestionnaire_signed_in?
-      sign_out :gestionnaire
-    end
+    sign_out :gestionnaire if gestionnaire_signed_in?
+    sign_out :administrateur if administrateur_signed_in?
 
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
