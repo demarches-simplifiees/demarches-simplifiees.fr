@@ -20,7 +20,7 @@ describe Administrateurs::SessionsController, type: :controller do
       it { expect(subject.status).to eq 200 }
 
       it 'Administrateur demo is initiated' do
-        expect(Administrateur).to receive(:new).with(email: 'admin@tps.fr', password: 'password').and_return(Administrateur)
+        expect(User).to receive(:new).with(email: 'admin@tps.fr', password: 'password').and_return(Administrateur)
         subject
       end
     end
