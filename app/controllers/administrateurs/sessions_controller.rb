@@ -7,7 +7,7 @@ class Administrateurs::SessionsController < Sessions::SessionsController
   end
 
   def new
-    @administrateur = Administrateur.new
+    redirect_to new_user_session_path
   end
 
   def create

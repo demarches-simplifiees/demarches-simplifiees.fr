@@ -7,7 +7,7 @@ class Gestionnaires::SessionsController < Sessions::SessionsController
   end
 
   def new
-    @gestionnaire = Gestionnaire.new
+    redirect_to new_user_session_path
   end
 
   def create

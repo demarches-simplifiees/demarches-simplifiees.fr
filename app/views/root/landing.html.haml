@@ -84,18 +84,3 @@
 
   .split-hr-left
 
-  - unless @latest_release.nil?
-
-    .latest_release.col-md-6.col-lg-6.col-sm-6.col-xs-6
-      %h3.text-info{style:'display: inline'}
-        = "Dernières nouveautés "
-        %h5{style:'display: inline'}
-          = "(#{@latest_release.tag_name} - #{@latest_release.published_at})"
-      .body
-        =@latest_release.body.html_safe
-
-      .center
-        \-
-        %br
-        %a{href: 'https://github.com/sgmap/tps/releases', target: '_blank'}
-          = 'Voir toutes les versions'
