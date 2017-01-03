@@ -4,17 +4,10 @@ feature 'As a User I want to edit a dossier I own', js: true do
 
   let(:user)                     { create(:user) }
   let(:procedure_for_individual) { create(:procedure, :published, :for_individual, :with_api_carto, :with_type_de_champ, :with_two_type_de_piece_justificative) }
+  let!(:dossier)                 { create(:dossier, :with_entreprise, procedure: procedure_for_individual, user: user, state: 'initiated') }
 
-  before "Create dossier" do
+  before "Create dossier and visit root path" do
     login_as user, scope: :user
-    visit commencer_path(procedure_path: procedure_for_individual.path)
-    fill_in 'dossier_individual_attributes_nom',       with: 'Nom'
-    fill_in 'dossier_individual_attributes_prenom',    with: 'Prenom'
-    fill_in 'dossier_individual_attributes_birthdate', with: '14/10/1987'
-    find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
-    page.find_by_id('etape_suivante').trigger('click')
-    page.find_by_id('etape_suivante').trigger('click')
-    page.find_by_id('suivant').trigger('click')
     visit root_path
   end
 
