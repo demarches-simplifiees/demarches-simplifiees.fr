@@ -2,8 +2,8 @@ class Gestionnaires::SessionsController < Sessions::SessionsController
   def demo
     return redirect_to root_path if Rails.env.production?
 
-    @gestionnaire = Gestionnaire.new(email: 'gestionnaire@apientreprise.fr', password: 'password')
-    render 'new'
+    @user = User.new(email: DemoEmails[:gestionnaire], password: 'password')
+    render 'users/sessions/new'
   end
 
   def new
