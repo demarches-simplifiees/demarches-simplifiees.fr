@@ -23,7 +23,6 @@ feature 'As a User I wanna create a dossier', js: true do
       fill_in 'champs_1', with: 'contenu du champ 1'
       page.find_by_id('suivant').trigger('click')
       expect(page).to have_current_path(users_dossier_recapitulatif_path(Dossier.first.id.to_s), only_path: true)
-      binding.pry
     end
 
     scenario 'Identification through siret', vcr: {cassette_name: 'search_ban_paris'} do
