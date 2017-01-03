@@ -7,7 +7,7 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
     visit backoffice_path
   end
   scenario 'he is redirected to /gestionnaires/sign_id' do
-    expect(page).to have_css('#gestionnaire_login')
+    expect(page).to have_css('#user_email')
   end
   context 'when user enter bad credentials' do
     before do
@@ -16,7 +16,7 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
       page.click_on 'Se connecter'
     end
     scenario 'he stay on the same page with an error' do
-      expect(page).to have_content('Email ou mot de passe incorrect.')
+      expect(page).to have_content('Mauvais couple login / mot de passe')
     end
   end
   context 'when user enter good credentials' do
