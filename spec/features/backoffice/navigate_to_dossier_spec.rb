@@ -1,16 +1,19 @@
 require 'spec_helper'
 
-feature 'on backoffice page' do
+feature 'on backoffice page', js: true do
   let(:administrateur) { create(:administrateur) }
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
   let(:procedure) { create(:procedure, administrateur: administrateur) }
+  let(:procedure_individual) { create :procedure, libelle: 'procedure individual', administrateur: administrateur, for_individual: true }
 
   let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'updated') }
+  let!(:dossier_individual) { create :dossier, procedure: procedure_individual, state: 'updated' }
 
   before do
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure
     create :follow, gestionnaire: gestionnaire, dossier: dossier
-
+    create :assign_to, gestionnaire: gestionnaire, procedure: procedure_individual
+    create :follow, gestionnaire: gestionnaire, dossier: dossier_individual
     visit backoffice_path
   end
 
@@ -18,10 +21,9 @@ feature 'on backoffice page' do
     before do
       page.find_by_id(:user_email).set gestionnaire.email
       page.find_by_id(:user_password).set gestionnaire.password
-
       page.click_on 'Se connecter'
     end
-    context 'when he click on first dossier', js: true do
+    context 'when he click on first dossier' do
       before do
         page.find("#tr_dossier_#{dossier.id}", visible: true).click
       end
@@ -30,22 +32,20 @@ feature 'on backoffice page' do
         expect(page).to have_css('#backoffice_dossier_show')
       end
     end
+  end
 
-    context 'when gestionnaire have enterprise and individual dossier in his inbox', js: true do
-      let!(:procedure_individual) { create :procedure, libelle: 'procedure individual', administrateur: administrateur, for_individual: true }
-      let!(:dossier_individual) { create :dossier, procedure: procedure_individual, state: 'updated' }
+  context 'when gestionnaire have enterprise and individual dossier in his inbox', js: true do
+    before do
+      page.find_by_id(:user_email).set gestionnaire.email
+      page.find_by_id(:user_password).set gestionnaire.password
+      page.click_on 'Se connecter'
 
-      before do
-        create :assign_to, gestionnaire: gestionnaire, procedure: procedure_individual
-        create :follow, gestionnaire: gestionnaire, dossier: dossier_individual
+      visit backoffice_dossiers_procedure_path(id: procedure_individual.id)
+      page.find("#tr_dossier_#{dossier_individual.id}", visible: true).click
+    end
 
-        visit backoffice_dossiers_procedure_path(id: procedure_individual.id)
-        page.find("#tr_dossier_#{dossier_individual.id}", visible: true).click
-      end
-
-      scenario 'it redirect to dossier page' do
-        expect(page).to have_css('#backoffice_dossier_show')
-      end
+    scenario 'it redirect to dossier page' do
+      expect(page).to have_css('#backoffice_dossier_show')
     end
   end
 end
