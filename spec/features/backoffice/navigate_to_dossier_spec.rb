@@ -16,8 +16,8 @@ feature 'on backoffice page' do
 
   context 'when gestionnaire is logged in' do
     before do
-      page.find_by_id(:gestionnaire_email).set gestionnaire.email
-      page.find_by_id(:gestionnaire_password).set gestionnaire.password
+      page.find_by_id(:user_email).set gestionnaire.email
+      page.find_by_id(:user_password).set gestionnaire.password
 
       page.click_on 'Se connecter'
     end

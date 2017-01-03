@@ -9,20 +9,13 @@ feature 'usage of pref list dossier lateral panel', js: true do
   before do
     create(:dossier, :with_entreprise, procedure: procedure, state: 'updated')
     create :assign_to, procedure: procedure, gestionnaire: gestionnaire
+
+    login_as gestionnaire, scope: :gestionnaire
+
     visit backoffice_path
   end
 
-  scenario 'he is redirected to /gestionnaires/sign_id' do
-    expect(page).to have_css('#gestionnaire_login')
-  end
-
   context 'when user enter good credentials' do
-    before do
-      page.find_by_id(:gestionnaire_email).set gestionnaire.email
-      page.find_by_id(:gestionnaire_password).set gestionnaire.password
-      page.click_on 'Se connecter'
-    end
-
     scenario 'he is redirected to /backoffice' do
       expect(page).to have_css('#backoffice_index')
     end
