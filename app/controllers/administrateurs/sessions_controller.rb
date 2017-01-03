@@ -2,12 +2,12 @@ class Administrateurs::SessionsController < Sessions::SessionsController
   def demo
     return redirect_to root_path if Rails.env.production?
 
-    @administrateur = Administrateur.new(email: 'admin@tps.fr', password: 'password')
-    render 'new'
+    @user = User.new(email: DemoEmails[:admin], password: 'password')
+    render 'users/sessions/new'
   end
 
   def new
-    @administrateur = Administrateur.new
+    redirect_to new_user_session_path
   end
 
   def create
