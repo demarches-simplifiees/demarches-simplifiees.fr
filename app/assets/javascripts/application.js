@@ -50,7 +50,7 @@ function scroll_to() {
     $('.js-scrollTo').on('click', function () { // Au clic sur un élément
         var page = $(this).attr('cible'); // Page cible
         var speed = 600; // Durée de l'animation (en ms)
-        $('html, body').animate({scrollTop: $(page).offset().top - 100}, speed); // Go
+        $('html, body').animate({scrollTop: $(page).offset().top - 200}, speed); // Go
         return false;
     });
 }
