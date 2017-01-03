@@ -6,13 +6,13 @@ feature 'Administrator connection' do
     visit new_administrateur_session_path
   end
   scenario 'administrator is on admin loggin page' do
-    expect(page).to have_css('#login_admin')
+    expect(page).to have_css('#form_login.user_connexion_page')
   end
 
   context "admin fills form and log in" do
     before do
-      page.find_by_id('administrateur_email').set admin.email
-      page.find_by_id('administrateur_password').set admin.password
+      page.find_by_id('user_email').set admin.email
+      page.find_by_id('user_password').set admin.password
       page.click_on 'Se connecter'
     end
     scenario 'a menu button is available' do

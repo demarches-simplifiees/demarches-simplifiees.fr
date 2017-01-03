@@ -20,7 +20,7 @@ describe Gestionnaires::SessionsController, type: :controller do
       it { expect(subject.status).to eq 200 }
 
       it 'Gestionnaire demo is initiated' do
-        expect(Gestionnaire).to receive(:new).with(email: 'gestionnaire@apientreprise.fr', password: 'password').and_return(Gestionnaire)
+        expect(User).to receive(:new).with(email: 'gestionnaire@apientreprise.fr', password: 'password').and_return(Gestionnaire)
         subject
       end
     end

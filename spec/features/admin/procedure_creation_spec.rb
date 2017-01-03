@@ -83,13 +83,13 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       expect(page).to have_current_path(admin_procedure_path(Procedure.first.id.to_s))
       expect(page.find_by_id('publish-procedure')['disabled']).to eq('disabled')
 
-      page.find_by_id('onglet-accompagnateurs').click
+      page.find_by_id('onglet-accompagnateurs').trigger('click')
       expect(page).to have_current_path(admin_procedure_accompagnateurs_path(Procedure.first.id.to_s))
       page.find_by_id('gestionnaire_email').set 'gestionnaire@apientreprise.fr'
       page.find_by_id('add-gestionnaire-email').click
       page.first('.gestionnaire-affectation').click
 
-      page.find_by_id('onglet-infos').click
+      page.find_by_id('onglet-infos').trigger('click')
       expect(page).to have_selector('#publish-procedure', visible: true)
       page.find_by_id('publish-procedure').click
 

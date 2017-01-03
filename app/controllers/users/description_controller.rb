@@ -122,7 +122,7 @@ class Users::DescriptionController < UsersController
   private
 
   def check_autorisation_donnees
-    @dossier ||= current_user_dossier
+    @dossier = current_user_dossier
 
     redirect_to url_for(users_dossier_path(@dossier.id)) if @dossier.autorisation_donnees.nil? || !@dossier.autorisation_donnees
   end

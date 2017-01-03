@@ -72,7 +72,7 @@ describe Backoffice::DossiersController, type: :controller do
     end
 
     context 'gestionnaire does not connected but dossier id is correct' do
-      it { is_expected.to redirect_to('/gestionnaires/sign_in') }
+      it { is_expected.to redirect_to('/users/sign_in') }
     end
   end
 
