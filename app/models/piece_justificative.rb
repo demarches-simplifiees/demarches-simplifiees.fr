@@ -19,6 +19,14 @@ class PieceJustificative < ActiveRecord::Base
     content.blank?
   end
 
+  def libelle
+    if type_de_piece_justificative.nil?
+      return content.to_s
+    else
+      type_de_piece_justificative.libelle
+    end
+  end
+
   def content_url
     unless content.url.nil?
       if Features.remote_storage
