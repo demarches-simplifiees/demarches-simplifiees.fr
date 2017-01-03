@@ -41,7 +41,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   def download_dossiers_tps
     if procedure = Procedure.find_by(id: params[:procedure_id])
       dossiers = dossiers_list_facade(param_liste).dossiers_to_display
-      respond_with Dossier.export_full_generation(dossiers, request.format)
+      respond_with Dossier.export_full_generation(dossiers, request.format) if dossiers.empty?
     else
       dossiers = dossiers_list_facade(param_liste).dossiers_to_display
       respond_to do |format|
