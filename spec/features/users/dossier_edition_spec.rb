@@ -37,7 +37,7 @@ feature 'As a User I want to edit a dossier I own' do
       expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier.id.to_s), only_path: true)
       page.find_by_id('maj_infos').trigger('click')
       expect(page).to have_current_path(users_dossier_description_path(dossier.id.to_s), only_path: true)
-      fill_in 'champs_1', with: 'Contenu du champ 1'
+      fill_in "champs_#{dossier.champs.first.id.to_s}", with: 'Contenu du champ 1'
       page.find_by_id('modification_terminee').click
       expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier.id.to_s), only_path: true)
       expect(page.find('#champ-1-value').text).to eq('Contenu du champ 1')
