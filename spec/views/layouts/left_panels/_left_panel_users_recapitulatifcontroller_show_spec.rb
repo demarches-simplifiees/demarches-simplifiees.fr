@@ -27,7 +27,7 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Répondu') }
+      it { expect(rendered).to have_content('En construction') }
     end
 
     context 'when dossier state is updated' do
@@ -37,7 +37,7 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Mis à jour') }
+      it { expect(rendered).to have_content('En construction') }
     end
 
     context 'when dossier state is validated' do
@@ -69,7 +69,7 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Déposé') }
+      it { expect(rendered).to have_content('Déposé / À réceptionner') }
 
       it 'button Editer mon dossier n\'est plus present' do
         expect(rendered).not_to have_css('#maj_infos')
