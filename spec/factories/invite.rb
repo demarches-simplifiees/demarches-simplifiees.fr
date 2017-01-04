@@ -6,6 +6,10 @@ FactoryGirl.define do
       if invite.dossier.nil?
         invite.dossier = create(:dossier)
       end
+
+      unless invite.user.nil?
+        invite.email = invite.user.email
+      end
     end
 
     trait :with_user do
