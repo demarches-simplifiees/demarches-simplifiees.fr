@@ -16,7 +16,7 @@
       - unless @facade.commentaires.empty?
         %div.commentaires
           - @facade.commentaires.object.sort.each do |commentaire|
-            = render partial: commentaire
+            = render partial: 'dossiers/commentaire', locals: {commentaire: commentaire}
       .row
         .col-lg-12.col-md-12.col-sm-12.col-xs-12
           %div.split-hr

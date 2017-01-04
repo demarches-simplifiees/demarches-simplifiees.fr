@@ -8,7 +8,7 @@ class Users::Dossiers::InvitesController < UsersController
   end
 
   def show
-    @facade = InviteDossierFacades.new params[:id], current_user.email
+    @facade = InviteDossierFacades.new params[:id].to_i, current_user.email
 
     render 'users/recapitulatif/show'
   rescue ActiveRecord::RecordNotFound

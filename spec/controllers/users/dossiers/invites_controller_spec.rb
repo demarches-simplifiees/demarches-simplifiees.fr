@@ -21,7 +21,7 @@ describe Users::Dossiers::InvitesController, type: :controller do
           get :show, params: {id: invite.id}
         end
 
-        # it { expect(response.status).to eq 200 }
+        it { expect(response.status).to eq 200 }
       end
     end
 

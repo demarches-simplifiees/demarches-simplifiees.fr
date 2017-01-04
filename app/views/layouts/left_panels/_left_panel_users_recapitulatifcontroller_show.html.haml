@@ -12,7 +12,6 @@
 %div#menu-block
 
 %div#infos-block
-  - if user_signed_in? && current_user.email == @facade.dossier.user.email
-    %div.split-hr-left
-    %div.dossier-state= @facade.dossier.display_state
-    %div.split-hr-left
+  %div.split-hr-left
+  %div.dossier-state= @facade.dossier.display_state
+  %div.split-hr-left
