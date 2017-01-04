@@ -45,7 +45,7 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Répondu') }
+      it { expect(rendered).to have_content('En construction') }
 
       it 'button Déclarer complet is present' do
         expect(rendered).to have_css('.action')
@@ -60,7 +60,7 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Mis à jour') }
+      it { expect(rendered).to have_content('En construction') }
 
       it 'button Déclarer complet is present' do
         expect(rendered).to have_css('.action')
@@ -90,7 +90,7 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Déposé') }
+      it { expect(rendered).to have_content('Déposé / À réceptionner') }
 
       it 'button Accuser réception is present' do
         expect(rendered).to have_css('.action')
@@ -109,7 +109,7 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Reçu') }
+      it { expect(rendered).to have_content('En instruction') }
 
       it 'button accepter / refuser / classer sans suite are present' do
         expect(rendered).to have_css('form[data-toggle="tooltip"][title="Accepter"]')
