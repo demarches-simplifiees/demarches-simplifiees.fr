@@ -22,6 +22,10 @@ class DossiersListFacades
     current_devise_profil.dossiers.where(archived: false).count
   end
 
+  def total_dossier_follow
+    @current_devise_profil.dossiers_follow.count
+  end
+
   def total_new_dossier
     current_devise_profil.dossiers.where(state: :initiated, archived: false).count
   end
