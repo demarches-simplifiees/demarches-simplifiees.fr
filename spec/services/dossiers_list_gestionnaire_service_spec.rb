@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DossiersListGestionnaireService do
   let(:gestionnaire) { create :gestionnaire }
   let(:preference_smart_listing_page) { gestionnaire.preference_smart_listing_page }
-  let(:liste) { 'a_traiter' }
+  let(:liste) { 'all_state' }
   let(:dossier) { create :dossier }
   let(:accompagnateur_service) { AccompagnateurService.new gestionnaire, procedure, 'assign' }
 

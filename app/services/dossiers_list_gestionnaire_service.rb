@@ -6,14 +6,16 @@ class DossiersListGestionnaireService
   end
 
   def dossiers_to_display
-    {'nouveaux' => nouveaux,
-     'suivi' => suivi,
-     'a_traiter' => ouvert,
-     'fige' => fige,
-     'deposes' => deposes,
-     'a_instruire' => a_instruire,
-     'termine' => termine,
-     'all_state' => all_state}[@liste]
+    @dossiers_to_display ||=
+        {'nouveaux' => nouveaux,
+         # 'suivi' => suivi,
+         'a_traiter' => ouvert,
+         'fige' => fige,
+         'deposes' => deposes,
+         'a_instruire' => a_instruire,
+         'termine' => termine,
+         'all_state' => all_state}[@liste]
+
   end
 
   def self.dossiers_liste_libelle
@@ -25,7 +27,7 @@ class DossiersListGestionnaireService
   end
 
   def suivi
-    @suivi ||= @current_devise_profil.dossiers_follow.merge(all_state)
+    @suivi ||= @current_devise_profil.dossiers_follow.merge(dossiers_to_display)
   end
 
   def nouveaux
