@@ -150,7 +150,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     begin
       @liste = URI(request.referer).query.split('=').second
     rescue NoMethodError
-      @liste = cookies[:liste] || 'a_traiter'
+      @liste = cookies[:liste] || 'all_state'
     end
 
     smartlisting_dossier

@@ -8,7 +8,7 @@ class Backoffice::DossiersListController < ApplicationController
     cookies[:liste] = param_liste
 
     unless DossiersListGestionnaireService.dossiers_liste_libelle.include?(param_liste)
-      cookies[:liste] = 'a_traiter'
+      cookies[:liste] = 'all_state'
     end
 
     dossiers_list_facade param_liste
@@ -23,11 +23,11 @@ class Backoffice::DossiersListController < ApplicationController
     dossiers_list_facade.service.add_filter param_filter
   end
 
-  def dossiers_list_facade liste='a_traiter'
+  def dossiers_list_facade liste='all_state'
     @facade_data_view ||= DossiersListFacades.new current_gestionnaire, liste, retrieve_procedure
   end
 
-  def smartlisting_dossier dossiers_list=nil, liste='a_traiter'
+  def smartlisting_dossier dossiers_list=nil, liste='all_state'
     dossiers_list_facade liste
 
     new_dossiers_list = dossiers_list_facade.service.nouveaux
@@ -79,6 +79,6 @@ class Backoffice::DossiersListController < ApplicationController
   end
 
   def param_liste
-    @liste ||= params[:liste] || cookies[:liste] || 'a_traiter'
+    @liste ||= params[:liste] || cookies[:liste] || 'all_state'
   end
 end
