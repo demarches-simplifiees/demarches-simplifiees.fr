@@ -20,6 +20,12 @@ class Gestionnaire < ActiveRecord::Base
     @dossiers_follow ||= dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")
   end
 
+  def procedure_filter
+    return nil unless assign_to.pluck(:procedure_id).include?(self[:procedure_filter])
+
+    self[:procedure_filter]
+  end
+
   def toggle_follow_dossier dossier_id
     dossier = dossier_id
     dossier = Dossier.find(dossier_id) unless dossier_id.class == Dossier
@@ -64,7 +70,7 @@ class Gestionnaire < ActiveRecord::Base
   end
 
   def notifications
-    Notification.where(already_read: false, dossier_id: follows.pluck(:dossier_id) ).order("updated_at DESC")
+    Notification.where(already_read: false, dossier_id: follows.pluck(:dossier_id)).order("updated_at DESC")
   end
 
   def notifications_for procedure

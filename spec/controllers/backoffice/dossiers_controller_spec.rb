@@ -26,6 +26,43 @@ describe Backoffice::DossiersController, type: :controller do
 
     context 'when gestionnaire is assign to a procedure' do
       it { is_expected.to redirect_to backoffice_dossiers_procedure_path(id: procedure.id) }
+
+      context 'when gestionnaire is assign to many proceudure' do
+        before do
+          create :assign_to, procedure: create(:procedure), gestionnaire: gestionnaire
+          create :assign_to, procedure: create(:procedure), gestionnaire: gestionnaire
+        end
+
+        it { expect(gestionnaire.procedures.count).to eq 3 }
+
+        context 'when gestionnaire procedure_filter is nil' do
+          it { expect(gestionnaire.procedure_filter).to be_nil }
+          it { is_expected.to redirect_to backoffice_dossiers_procedure_path(id: gestionnaire.procedures.order('libelle ASC').first.id) }
+        end
+
+        context 'when gestionnaire procedure_filter is not nil' do
+          let(:procedure_filter_id) { gestionnaire.procedures.order('libelle ASC').last.id }
+
+          before do
+            gestionnaire.update_column :procedure_filter, procedure_filter_id
+          end
+
+          context 'when gestionnaire is assign_to the procedure filter id' do
+            it { is_expected.to redirect_to backoffice_dossiers_procedure_path(id: procedure_filter_id) }
+          end
+
+          context 'when gestionnaire not any more assign_to the procedure filter id' do
+            before do
+              AssignTo.where(procedure: procedure_filter_id, gestionnaire: gestionnaire).delete_all
+            end
+
+            it { expect(gestionnaire.procedure_filter).to be_nil }
+            it { expect(AssignTo.where(procedure: procedure_filter_id, gestionnaire: gestionnaire).count).to eq 0 }
+
+            it { is_expected.to redirect_to backoffice_dossiers_procedure_path(id: gestionnaire.procedures.order('libelle ASC').first.id) }
+          end
+        end
+      end
     end
 
     context 'when gestionnaire is not assign to a procedure' do
