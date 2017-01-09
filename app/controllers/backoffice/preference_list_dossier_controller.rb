@@ -18,7 +18,7 @@ class Backoffice::PreferenceListDossierController < Backoffice::DossiersListCont
         procedure_id: params_procedure_id
     )
 
-    render partial: 'backoffice/dossiers/pref_list', formats: :js
+    render partial: path, formats: :js
   end
 
   def reload_pref_list
@@ -30,10 +30,14 @@ class Backoffice::PreferenceListDossierController < Backoffice::DossiersListCont
   def delete
     PreferenceListDossier.delete(params[:pref_id])
 
-    render partial: 'backoffice/dossiers/pref_list', formats: :js
+    render partial: path, formats: :js
   end
 
   private
+
+  def path
+    Features.opensimplif ? 'opensimplif/pref_list' : 'backoffice/dossiers/pref_list'
+  end
 
   def params_procedure_id
     @procedure_id ||= params[:procedure_id]
