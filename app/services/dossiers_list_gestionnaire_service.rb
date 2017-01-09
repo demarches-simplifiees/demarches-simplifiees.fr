@@ -1,7 +1,7 @@
 class DossiersListGestionnaireService
   def initialize current_devise_profil, liste, procedure = nil
     @current_devise_profil = current_devise_profil
-    @liste = liste
+    @liste = (DossiersListGestionnaireService.dossiers_liste_libelle.include?(liste) ? liste : 'all_state')
     @procedure = procedure
   end
 
