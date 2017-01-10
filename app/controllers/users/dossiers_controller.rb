@@ -27,7 +27,14 @@ class Users::DossiersController < UsersController
 
   def commencer
     unless params[:procedure_path].nil?
-      procedure = ProcedurePath.where(path: params[:procedure_path]).last.procedure
+      procedure_path = ProcedurePath.where(path: params[:procedure_path]).last
+
+      if procedure_path.nil?
+        flash.alert = "Procédure inconnue"
+        return redirect_to root_path
+      else
+        procedure = procedure_path.procedure
+      end
     end
 
     if procedure.archived?
