@@ -106,6 +106,10 @@ Rails.application.routes.draw do
     get 'procedures/path_list' => 'procedures#path_list'
     get 'profile' => 'profile#show', as: :profile
 
+    get 'change_dossier_state' => 'change_dossier_state#index'
+    post 'change_dossier_state' => 'change_dossier_state#check'
+    patch 'change_dossier_state' => 'change_dossier_state#change'
+
     resources :procedures do
       resources :types_de_champ, only: [:destroy]
       resource :types_de_champ, only: [:show, :update] do
