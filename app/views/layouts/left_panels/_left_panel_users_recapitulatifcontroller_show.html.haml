@@ -5,7 +5,7 @@
     %div= t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
 
 %div#action-block
-  - if @facade.dossier.validated?
+  - if @facade.dossier.validated? && @facade.dossier.user == current_user
     = form_tag(url_for({controller: 'users/recapitulatif', action: :submit, dossier_id: @facade.dossier.id}), method: 'POST') do
       %button#validate_button.action= 'Procéder au dépôt définitif'
 
