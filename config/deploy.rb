@@ -11,7 +11,7 @@ require 'mina/rbenv' # for rbenv support. (http://rbenv.org)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 ENV['to'] ||= "staging"
-ENV['to'] = "staging" unless ["staging", "production", "opensimplif", "tps_v2"].include?(ENV['to'])
+raise "Bad to=#{+ENV['to']}" unless ["staging", "production", "opensimplif", "tps_v2"].include?(ENV['to'])
 
 raise "missing domain, run with 'rake deploy domain=37.187.154.237'" if ENV['domain'].nil?
 

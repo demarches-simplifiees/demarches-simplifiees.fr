@@ -29,6 +29,8 @@ class Users::SessionsController < Sessions::SessionsController
       current_user.update_attributes(loged_in_with_france_connect: '')
     end
 
+    check_opensimplif if Features.opensimplif
+
     if user_signed_in?
       redirect_to after_sign_in_path_for(:user)
     elsif gestionnaire_signed_in?
@@ -71,6 +73,18 @@ class Users::SessionsController < Sessions::SessionsController
   end
 
   private
+
+  def check_opensimplif
+    return if (user_signed_in? && gestionnaire_signed_in?) || administrateur_signed_in?
+
+    if gestionnaire_signed_in?
+      User.create email: params[:user][:email], password: params[:user][:password]
+      try_to_authenticate User
+    elsif user_signed_in?
+      Gestionnaire.create email: params[:user][:email], password: params[:user][:password]
+      try_to_authenticate Gestionnaire
+    end
+  end
 
   def error_procedure
     flash.alert = t('errors.messages.procedure_not_found')
