@@ -1,6 +1,11 @@
 class RootController < ApplicationController
   def index
-    route = Rails.application.routes.recognize_path(request.referrer)
+
+    begin
+      route = Rails.application.routes.recognize_path(request.referrer)
+    rescue ActionController::RoutingError
+      route = Rails.application.routes.recognize_path(new_user_session_path)
+    end
 
     if Features.opensimplif
       unless !user_signed_in? && !administrateur_signed_in? && !gestionnaire_signed_in?
