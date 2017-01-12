@@ -7,6 +7,8 @@
       %div#invitations.dropdown-toggle{ 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
         %i.fa.fa-user
         = t('utils.involved')
+        .badge.progress-bar-info
+          = @facade.dossier.invites.count
       %div.dropdown-menu.dropdown-menu-right.dropdown-pannel
         %h4= t('dynamics.dossiers.followers.title')
         %ul
