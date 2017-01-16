@@ -28,10 +28,10 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
 
     su - postgres
     psql
-    > create user tps with password 'lol' createdb;
+    > create user tps with password 'lol' superuser;
     > \q
-    
-    
+
+
 Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les commandes suivantes :
 
     rake db:create db:schema:load db:migrate
