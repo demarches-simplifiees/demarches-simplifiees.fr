@@ -22,11 +22,9 @@
       %script{type: 'text/javascript'}
         (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
 
-    ="<!--[if lt IE 10]>".html_safe
 
     = render partial: 'layouts/ie_lt_10'
 
-    ="<![endif]-->".html_safe
 
     %div#wrap
       %div.row

@@ -121,6 +121,8 @@ group :development do
   gem 'web-console'
 
   gem 'rack-handlers'
+
+  gem 'xray-rails'
 end
 
 group :development, :test do
@@ -153,4 +155,3 @@ end
 group :production, :staging do
   gem 'sentry-raven'
 end
-
