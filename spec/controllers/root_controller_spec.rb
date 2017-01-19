@@ -56,6 +56,31 @@ describe RootController, type: :controller do
     end
 
     it { expect(response.body).to have_css('#landing') }
+
+  end
+
+  context 'environment is not development' do
+    render_views
+
+    before do
+      Rails.env.stub(:development? => false)
+      subject
+    end
+
+    it { expect(response.body).to have_link('Démonstration', href: "https://tps-dev.apientreprise.fr#{ users_sign_in_demo_path }") }
+
+  end
+
+  context 'environment is development' do
+    render_views
+
+    before do
+      Rails.env.stub(:development? => true)
+      subject
+    end
+
+    it { expect(response.body).to have_link('Démonstration', href: users_sign_in_demo_path) }
+
   end
 
   context 'when opensimplif features is true' do
@@ -81,4 +106,5 @@ describe RootController, type: :controller do
       expect(response.body).to have_css("a[href='#{new_user_session_path}']")
     end
   end
+
 end
