@@ -33,3 +33,4 @@ config/initializers/mailjet.rb
 config/fog_credentials.yml
 uploads/*
 coverage/**/*
+.DS_Store

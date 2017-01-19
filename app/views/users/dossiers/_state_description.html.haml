@@ -8,8 +8,8 @@
           -if dossiers_list_facade.liste == 'brouillon'
             Les dossiers présents dans cette liste
             %b
-              n'ont pas encore été soumis à votre administrations.
-            Ils ne sont visible que par vous.
+              n'ont pas encore été soumis à votre administration.
+            Ils ne sont visibles que par vous.
           -elsif dossiers_list_facade.liste == 'nouveaux'
             Les dossiers présents dans cette liste
             %b
@@ -18,7 +18,7 @@
           -elsif dossiers_list_facade.liste == 'a_traiter'
             Les dossiers présents dans cette liste sont
             %b
-              visibles par l'admnistration.
+              visibles par l'administration.
             %br
             Ces dossiers ne sont pas encore figés et peuvent être modifiés à souhait.
             %br
@@ -31,8 +31,8 @@
           -elsif dossiers_list_facade.liste == 'valides'
             Les dossiers présents dans cette liste ont été
             %b
-              relus et considérés comme complet
-            pour examen par votre accompagnateur. Ceux-ci ne peuvent maintenant plus être modifié. Il faut que vous procédiez à leurs dépôts afin qu'une décision finale soit rendue.
+              relus et considérés comme complets
+            pour examen par votre accompagnateur. Ceux-ci ne peuvent maintenant plus être modifiés. Il faut que vous procédiez à leur dépôt afin qu'une décision finale soit rendue.
           -elsif dossiers_list_facade.liste == 'en_instruction'
             Les dossiers présents dans cette liste sont
             %b
@@ -42,12 +42,12 @@
               en cours d'examen
             par l'administration compétente. Une notification vous sera envoyée une fois qu'une décision aura été rendue.
           -elsif dossiers_list_facade.liste == 'termine'
-            Les dossiers présents dans cette liste sont ceux qui ont été instruits par l'admnistration et
+            Les dossiers présents dans cette liste sont ceux qui ont été instruits par l'administration et
             %b
               une décision finale a été rendue.
             Ils peuvent posséder trois états différents : Accepté, Refusé ou Sans Suite.
           -elsif dossiers_list_facade.liste == 'invite'
-            Les dossiers présents dans cete liste sont ceux
+            Les dossiers présents dans cette liste sont ceux
             %b
               auxquels vous avez été invités
-            à participer afin d'émettre un avis et/ou à founir des documents complétmentaires.
+            à participer afin d'émettre un avis et/ou à fournir des documents complémentaires.
