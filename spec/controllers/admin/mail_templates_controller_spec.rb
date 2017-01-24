@@ -37,14 +37,14 @@ describe Admin::MailTemplatesController, type: :controller do
         expect {
             subject
             mail_template.reload
-        }.to change(mail_template, :object).from("Object, voila voila").to(object)
+        }.to change(mail_template, :object).from("[TPS] Accusé de réception pour votre dossier n°--numero_dossier--").to(object)
       }
 
       it {
         expect {
             subject
             mail_template.reload
-        }.to change(mail_template, :body).from("Blabla ceci est mon body").to(body)
+        }.to change(mail_template, :body).from("Votre administration vous confirme la bonne réception de votre dossier n°--numero_dossier--").to(body)
       }
     end
   end

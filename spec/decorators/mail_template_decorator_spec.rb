@@ -11,7 +11,7 @@ describe MailTemplateDecorator do
 
     context 'when mail_template is a MailReceived' do
       let(:mail_template) {create :mail_template, :dossier_received}
-      it { is_expected.to eq "Email d'accusé de réception" }
+      it { is_expected.to eq "E-mail d'accusé de réception" }
     end
 
   end
