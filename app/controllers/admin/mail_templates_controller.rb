@@ -1,4 +1,4 @@
-class Admin::MailsController < AdminController
+class Admin::MailTemplatesController < AdminController
   before_action :retrieve_procedure
 
   def index
@@ -10,10 +10,10 @@ class Admin::MailsController < AdminController
   end
 
   def update
-    mail = @procedure.mail_templates.find(params[:id])
-    mail.update_attributes(update_params)
+    mail_template = @procedure.mail_templates.find(params[:id])
+    mail_template.update_attributes(update_params)
 
-    redirect_to admin_procedure_mails_path
+    redirect_to admin_procedure_mail_templates_path
   end
 
   private

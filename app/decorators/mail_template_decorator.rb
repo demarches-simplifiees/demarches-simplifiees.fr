@@ -4,7 +4,7 @@ class MailTemplateDecorator < Draper::Decorator
   def name
     case object.type
     when "MailReceived"
-      "Email d'accusé de réception"
+      "E-mail d'accusé de réception"
     else
       object.type
     end
