@@ -2,11 +2,15 @@ class Admin::MailsController < AdminController
   before_action :retrieve_procedure
 
   def index
+    @mail_templates = @procedure.mail_templates
+  end
 
+  def edit
+    @mail_template = @procedure.mail_templates.find(params[:id])
   end
 
   def update
-    mail = current_administrateur.procedures.find(params[:procedure_id]).mail_templates.find(params[:id])
+    mail = @procedure.mail_templates.find(params[:id])
     mail.update_attributes(update_params)
 
     redirect_to admin_procedure_mails_path

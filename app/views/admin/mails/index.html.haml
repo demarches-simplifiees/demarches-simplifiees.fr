@@ -1,28 +1,13 @@
 .row.white-back
-  %h3
-    E-mail d'accusé de réception
+  %h1 Emails personnalisables
 
-  - unless @procedure.mail_received.blank?
-    = form_for @procedure.mail_received, url: {controller: 'admin/mails', action: 'update', id: @procedure.mail_received.id} do |f|
-      =f.text_field :object, {class:'form-control', style:'width: 40%'}
-      %br
-      =f.text_area :body, {class: 'form-control wysihtml5'}
-      %br
-      =f.submit 'Mettre à jour', {class:'btn btn-success', style:'float: right'}
-
-
-  %table.table{style:'width: 50%'}
+  %table.table
     %tr
-      %th
-        Balise
-      %th
-        Description
-    - MailTemplate.tags.each do |balise|
+      %th{ colspan: 2 }
+        Type d'email
+    - @procedure.mail_templates.each do |mt|
       %tr
-        %td.center
-          %b.text-success
-            \--
-            = balise.first
-            \--
         %td
-          =balise.second[:description]
+          = mt.type
+        %td.text-right
+          = link_to "Personnaliser l'email", edit_admin_procedure_mail_path(@procedure, mt)

@@ -8,9 +8,13 @@ describe Admin::MailsController, type: :controller do
   end
 
   describe 'GET index' do
+    render_views
+
     subject { get :index, params: {procedure_id: procedure.id} }
 
     it { expect(subject.status).to eq 200 }
+    it { expect(subject.body).to include("Emails personnalisables") }
+    it { expect(subject.body).to include(*procedure.mail_templates.pluck(:type)) }
   end
 
   describe 'PATCH update' do
