@@ -42,9 +42,9 @@
               - if preference.table.nil? || preference.table.empty?
                 - value = dossier.decorate.public_send(preference.attr_decorate)
               - elsif preference.table == 'champs'
-                - value = dossier.champs.find_by_type_de_champ_id(preference.attr).value
+                - value = dossier.champs.find_by_type_de_champ_id(preference.attr).value rescue nil
               - elsif preference.table == 'champs_private'
-                - value = dossier.champs_private.find_by_type_de_champ_id(preference.attr).value
+                - value = dossier.champs_private.find_by_type_de_champ_id(preference.attr).value rescue nil
               - else
                 - begin
                   - value = dossier.public_send(preference.table).decorate.public_send(preference.attr_decorate)
