@@ -22,16 +22,16 @@ describe Admin::MailTemplatesController, type: :controller do
     let(:object) { 'plop modif' }
     let(:body) { 'plip modif' }
 
-    context 'when is mail_received id' do
+    context 'when is mail_template id' do
       subject { patch :update,
                       params: {procedure_id: mail_template.procedure.id,
                                id: mail_template.id,
-                               mail_received: {
+                               mail_template: {
                                    object: object,
                                    body: body
                                }} }
 
-      it { expect(subject).to redirect_to admin_procedure_mail_templates_path }
+      it { expect(subject).to redirect_to admin_procedure_mail_templates_path(mail_template.procedure) }
 
       it {
         expect {

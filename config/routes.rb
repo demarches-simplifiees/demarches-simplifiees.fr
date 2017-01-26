@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  default_url_options protocol: :https
 
   get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
 

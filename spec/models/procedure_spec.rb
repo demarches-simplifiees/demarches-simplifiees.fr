@@ -6,7 +6,6 @@ describe Procedure do
     it { is_expected.to have_many(:types_de_champ) }
     it { is_expected.to have_many(:dossiers) }
     it { is_expected.to have_many(:mail_templates) }
-    it { is_expected.to have_one(:mail_received) }
     it { is_expected.to have_one(:module_api_carto) }
     it { is_expected.to belong_to(:administrateur) }
     it { is_expected.to have_many(:preference_list_dossiers) }
@@ -36,7 +35,7 @@ describe Procedure do
   end
 
   describe '#build_default_mails' do
-    subject { build :procedure }
+    subject { build :procedure, mail_templates: [] }
 
     it 'call the fonction build_default_mails' do
       expect(subject).to receive(:build_default_mails)
@@ -49,8 +48,10 @@ describe Procedure do
         subject.save
       end
 
-      it { expect(subject.mail_templates.size).to eq 1 }
+      it { expect(subject.mail_templates.size).to eq 2 }
+
       it { expect(subject.mail_received).not_to be_nil }
+      it { expect(subject.mail_validated).not_to be_nil }
     end
   end
 

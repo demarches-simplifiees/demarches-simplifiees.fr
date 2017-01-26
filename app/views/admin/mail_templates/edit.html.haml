@@ -2,7 +2,7 @@
   %h3
     = @mail_template.decorate.name
 
-  = simple_form_for @mail_template, url: admin_procedure_mail_template_path(@procedure, @mail_template) do |f|
+  = simple_form_for @mail_template.becomes(MailTemplate), url: admin_procedure_mail_template_path(@procedure, @mail_template) do |f|
     .row
       .col-md-6
         = f.input :object, label: "Objet de l'email"
@@ -19,7 +19,7 @@
             Balise
           %th
             Description
-        - MailTemplate.tags.each do |balise|
+        - MailTemplate::TAGS.each do |balise|
           %tr
             %td.center
               %b.text-success

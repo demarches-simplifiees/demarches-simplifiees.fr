@@ -7,7 +7,9 @@ describe MailTemplateDecorator do
   context '#name' do
     subject { decorator.name }
 
-    it { is_expected.to eq decorator.type}
+    context 'when mail_template is a MailValidated' do
+      it { is_expected.to eq "E-mail de validation" }
+    end
 
     context 'when mail_template is a MailReceived' do
       let(:mail_template) {create :mail_template, :dossier_received}

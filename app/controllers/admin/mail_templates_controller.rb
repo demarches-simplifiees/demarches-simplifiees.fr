@@ -19,6 +19,6 @@ class Admin::MailTemplatesController < AdminController
   private
 
   def update_params
-    params.require(:mail_received).permit(:body, :object)
+    params.require(:mail_template).permit(:body, :object)
   end
 end
