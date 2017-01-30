@@ -42,12 +42,12 @@ class CommentairesController < ApplicationController
       flash.alert = "Veuillez rédiger un message ou ajouter une pièce jointe."
     end
 
+    notify_user_with_mail(@commentaire)
+
     if is_gestionnaire?
       unless current_gestionnaire.follow? @commentaire.dossier
         current_gestionnaire.toggle_follow_dossier @commentaire.dossier
       end
-
-      NotificationMailer.new_answer(@commentaire.dossier).deliver_now! if saved
 
       redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
     else
@@ -55,12 +55,18 @@ class CommentairesController < ApplicationController
         invite = Invite.where(dossier: @commentaire.dossier, email: current_user.email).first
         redirect_to url_for(controller: 'users/dossiers/invites', action: :show, id: invite.id)
       else
-        redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: params['dossier_id'])
+        redirect_to users_dossier_recapitulatif_path(params['dossier_id'])
       end
     end
   end
 
   def is_gestionnaire?
     false
+  end
+
+  private
+
+  def notify_user_with_mail(commentaire)
+    NotificationMailer.new_answer(commentaire.dossier).deliver_now! unless current_user.email == commentaire.dossier.user.email
   end
 end
