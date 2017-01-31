@@ -9,3 +9,11 @@
 #individual_with_siret {
   display: none;
 }
+
+.procedure {
+  &-description {
+    img {
+      max-width: 100%;
+    }
+  }
+}
