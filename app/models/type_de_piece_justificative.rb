@@ -5,5 +5,5 @@ class TypeDePieceJustificative < ActiveRecord::Base
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
 
-  validates_format_of :lien_demarche, with: URI::regexp
+  validates :lien_demarche, format: { with: URI::regexp }, allow_blank: true, allow_nil: true
 end
