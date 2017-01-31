@@ -10,6 +10,7 @@ describe TypeDePieceJustificative do
     it { is_expected.to have_db_column(:created_at) }
     it { is_expected.to have_db_column(:updated_at) }
     it { is_expected.to have_db_column(:order_place) }
+    it { is_expected.to have_db_column(:lien_demarche) }
   end
 
   describe 'associations' do
@@ -28,6 +29,13 @@ describe TypeDePieceJustificative do
       # it { is_expected.not_to allow_value(nil).for(:order_place) }
       # it { is_expected.not_to allow_value('').for(:order_place) }
       it { is_expected.to allow_value(1).for(:order_place) }
+    end
+
+    context 'lien_demarche' do
+      it { is_expected.not_to allow_value(nil).for(:lien_demarche) }
+      it { is_expected.not_to allow_value('').for(:lien_demarche) }
+      it { is_expected.not_to allow_value('not-a-link').for(:lien_demarche) }
+      it { is_expected.to allow_value('http://link').for(:lien_demarche) }
     end
   end
 end
