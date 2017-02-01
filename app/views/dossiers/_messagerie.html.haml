@@ -7,41 +7,25 @@
         MESSAGERIE
 
       .col-xs-2.count
-        - message_count = dossier_facade.commentaires.count
-        = (message_count == 1) ? "1 message" : "#{message_count} messages"
+        = pluralize(@facade.commentaires.count, "message")
+
     .alert.alert-info
       Cette messagerie permet d'échanger entre le demandeur et le service instructeur.
     .body
       - if dossier_facade.commentaires.any?
         .commentaires
-          = render partial: 'dossiers/commentaire', collection: dossier_facade.commentaires.object.sort
+          = render partial: 'dossiers/commentaires/commentaire', collection: dossier_facade.commentaires.object.sort
         .split-hr
       #new-commentaire
-        = form_tag(url_for({ controller: 'commentaires', action: :create, dossier_id: dossier_facade.dossier.id, champ_id: dossier_facade.champ_id }), class: 'form-inline', method: 'POST', multipart: true) do
+        = render partial: 'dossiers/commentaires/form', locals: { dossier_facade: @facade }
 
-          %textarea.form-control{id: 'texte_commentaire', class: 'wysihtml5', name: 'texte_commentaire', style: 'width: 100%; margin-bottom:2%', rows: '5', placeholder:"Commentaire"}
-
-          .row
-            .col-md-6
-              %h4.text-primary{style: 'margin-top: 0px'} Ajouter un fichier
-              = file_field_tag "piece_justificative[content]", accept:  PieceJustificative.accept_format, style: 'float: left; margin-left: 20px'
-
-            .col-md-6
-              %input#save-message.form-control.btn.btn-send{ type: 'submit', value: 'ENVOYER' }
 
 
     .last-commentaire.clearfix
       - if last_comment = dossier_facade.commentaires.first
         %div
           DERNIER MESSAGE
-          = render partial: 'dossiers/commentaire', object: last_comment
-          -# = "DERNIER MESSAGE (#{last_comment.header})"
-          -# .content
-          -#   = last_comment.body.html_safe
-          -# - if file = last_comment.piece_justificative
-          -#   .file
-          -#     = link_to file.content_url, class: 'link', target: '_blank' do
-          -#       %span.fa.fa-file
-          -#         = file.original_filename
+          = render partial: 'dossiers/commentaires/commentaire', object: last_comment
+
       #open-message.new-action
         ENVOYER UN MESSAGE
