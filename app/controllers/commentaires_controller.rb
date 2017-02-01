@@ -42,7 +42,7 @@ class CommentairesController < ApplicationController
       flash.alert = "Veuillez rédiger un message ou ajouter une pièce jointe."
     end
 
-    notify_user_with_mail(@commentaire)
+    notify_user_with_mail(@commentaire) if saved
 
     if is_gestionnaire?
       unless current_gestionnaire.follow? @commentaire.dossier
