@@ -1,6 +1,5 @@
 @media print {
   html, body {
-    width: 900px;
     margin: 0;
   }
 
@@ -27,5 +26,40 @@
 
   #backoffice_dossier_show .nav-tabs {
     display: none;
+  }
+
+  #left-panel {
+    margin-top: 0;
+    height: auto;
+    position: relative;
+    width: 100%;
+  }
+
+  #wrap {
+    overflow: visible;
+  }
+
+  #main-container {
+    width: 100%;
+  }
+
+  #beta {
+    top: 26px;
+    bottom: initial;
+    position: absolute;
+    transform: rotate(45deg);
+  }
+
+  .copyright {
+    width: 100%;
+    left: 0;
+  }
+
+  .no-page-break-inside {
+    page-break-inside: avoid;
+  }
+
+  .display-block-on-print {
+    display: block !important;
   }
 }

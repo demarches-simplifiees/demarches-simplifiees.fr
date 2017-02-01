@@ -11,12 +11,12 @@
         = (message_count == 1) ? "1 message" : "#{message_count} messages"
     .alert.alert-info
       Cette messagerie permet d'échanger entre le demandeur et le service instructeur.
-    .body
+    .body.display-block-on-print
       - if dossier_facade.commentaires.any?
         .commentaires
           = render partial: 'dossiers/commentaire', collection: dossier_facade.commentaires.object.sort
         .split-hr
-      #new-commentaire
+      #new-commentaire.hidden-print
         = form_tag(url_for({ controller: 'commentaires', action: :create, dossier_id: dossier_facade.dossier.id, champ_id: dossier_facade.champ_id }), class: 'form-inline', method: 'POST', multipart: true) do
 
           %textarea.form-control{id: 'texte_commentaire', class: 'wysihtml5', name: 'texte_commentaire', style: 'width: 100%; margin-bottom:2%', rows: '5', placeholder:"Commentaire"}
@@ -30,7 +30,7 @@
               %input#save-message.form-control.btn.btn-send{ type: 'submit', value: 'ENVOYER' }
 
 
-    .last-commentaire.clearfix
+    .last-commentaire.clearfix.hidden-print
       - if last_comment = dossier_facade.commentaires.first
         %div
           DERNIER MESSAGE
