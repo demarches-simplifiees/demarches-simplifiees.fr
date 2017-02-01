@@ -1,0 +1,11 @@
+%div.commentaire
+  .comment-header
+    = commentaire.header
+  .content
+    = commentaire.body.html_safe
+  - if file = commentaire.piece_justificative
+    .file
+      = link_to file.content_url, class: 'link', target: '_blank' do
+        %span.fa.fa-file
+        %div
+          = file.original_filename
