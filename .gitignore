@@ -34,3 +34,4 @@ config/fog_credentials.yml
 uploads/*
 coverage/**/*
 .DS_Store
+.byebug_history
