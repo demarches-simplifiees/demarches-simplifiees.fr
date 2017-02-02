@@ -11,7 +11,8 @@ function initCarto() {
     map = L.map("map", {
         center: new L.LatLng(position.lat, position.lon),
         zoom: position.zoom,
-        layers: [OSM]
+        layers: [OSM],
+        scrollWheelZoom: false
     });
 
     icon = L.icon({
