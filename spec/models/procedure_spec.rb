@@ -46,6 +46,7 @@ describe Procedure do
 
       before do
         subject.save
+        subject.reload
       end
 
       it { expect(subject.mail_templates.size).to eq 2 }
