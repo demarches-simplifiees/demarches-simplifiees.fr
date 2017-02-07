@@ -101,6 +101,7 @@ class Users::SessionsController < Sessions::SessionsController
     if resource = klass.find_for_database_authentication(email: params[:user][:email])
       if resource.valid_password?(params[:user][:password])
         sign_in resource
+        resource.force_sync_credentials
         set_flash_message :notice, :signed_in
       end
     end

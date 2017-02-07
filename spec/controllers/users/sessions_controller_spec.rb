@@ -100,6 +100,24 @@ describe Users::SessionsController, type: :controller do
         expect(subject.current_gestionnaire).to be(nil)
         expect(subject.current_administrateur).to be(nil)
       end
+
+      context 'with different passwords' do
+        let!(:gestionnaire) { create(:gestionnaire, email: email, password: 'another_password') }
+        let!(:administrateur) { create(:administrateur, email: email, password: 'another_password') }
+
+        before do
+          user
+        end
+
+        it 'should sync passwords on login' do
+          post :create, params: { user: { email: email, password: password } }
+          gestionnaire.reload
+          administrateur.reload
+          expect(user.valid_password?(password)).to be(true)
+          expect(gestionnaire.valid_password?(password)).to be(true)
+          expect(administrateur.valid_password?(password)).to be(true)
+        end
+      end
     end
   end
 
