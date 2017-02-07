@@ -19,15 +19,9 @@
       #new-commentaire.hidden-print
         = render partial: 'dossiers/commentaires/form', locals: { dossier_facade: @facade }
 
-
-          .row
-            .col-md-6
-              %h4.text-primary{style: 'margin-top: 0px'} Ajouter un fichier
-              = file_field_tag "piece_justificative[content]", accept:  PieceJustificative.accept_format, style: 'float: left; margin-left: 20px'
-
     .last-commentaire.clearfix
-            .col-md-6
-              %input#save-message.form-control.btn.btn-send{ type: 'submit', value: 'ENVOYER' }
+      .col-md-6
+        %input#save-message.form-control.btn.btn-send{ type: 'submit', value: 'ENVOYER' }
 
 
     .last-commentaire.clearfix.hidden-print
