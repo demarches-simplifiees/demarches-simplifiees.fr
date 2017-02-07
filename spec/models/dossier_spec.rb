@@ -681,27 +681,32 @@ describe Dossier do
     end
   end
 
-  describe '#export_headers' do
+  context 'when dossier is followed' do
     let(:procedure) { create(:procedure, :with_type_de_champ) }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
-    subject { dossier.export_headers }
+    let(:gestionnaire) { create(:gestionnaire) }
+    let(:follow) { create(:follow, gestionnaire: gestionnaire) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow]) }
 
-    it { expect(subject).to include(:description) }
-    it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
-  end
+    describe '#export_headers' do
 
-  describe '#data_with_champs' do
-    let(:procedure) { create(:procedure, :with_type_de_champ) }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
-    subject { dossier.data_with_champs }
+      subject { dossier.export_headers }
 
-    it { expect(subject[0]).to be_a_kind_of(Integer) }
-    it { expect(subject[1]).to be_a_kind_of(Time) }
-    it { expect(subject[2]).to be_a_kind_of(Time) }
-    it { expect(subject[3]).to be_in([true, false]) }
-    it { expect(subject[4]).to be_in([true, false]) }
-    it { expect(subject[5]).to eq("draft") }
-    it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+      it { expect(subject).to include(:description) }
+      it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+    end
+
+    describe '#data_with_champs' do
+      subject { dossier.data_with_champs }
+
+      it { expect(subject[0]).to be_a_kind_of(Integer) }
+      it { expect(subject[1]).to be_a_kind_of(Time) }
+      it { expect(subject[2]).to be_a_kind_of(Time) }
+      it { expect(subject[3]).to be_in([true, false]) }
+      it { expect(subject[4]).to be_in([true, false]) }
+      it { expect(subject[5]).to eq("draft") }
+      it { expect(subject[6]).to eq(dossier.followers_gestionnaires_emails) }
+      it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+    end
   end
 
   describe '#Dossier.to_csv' do
@@ -745,6 +750,7 @@ describe Dossier do
     it { expect(subject[:entreprise_nom]).to be_nil }
     it { expect(subject[:entreprise_prenom]).to be_nil }
   end
+
 
   describe '#Dossier.to_xlsx' do
     let!(:procedure) { create(:procedure) }
@@ -929,5 +935,40 @@ describe Dossier do
 
       it { is_expected.to be_falsey }
     end
+  end
+
+  describe '#followers_gestionnaires_emails' do
+
+    context 'when there is no follower' do
+      let(:dossier) { create(:dossier, follows: []) }
+
+      subject { dossier.followers_gestionnaires_emails }
+
+      it { is_expected.to eq "" }
+    end
+
+    let(:gestionnaire) { create(:gestionnaire) }
+    let(:follow) { create(:follow, gestionnaire: gestionnaire) }
+
+    context 'when there is 1 follower' do
+      let(:dossier) { create(:dossier, follows: [follow]) }
+
+      subject { dossier.followers_gestionnaires_emails }
+
+      it { is_expected.to eq gestionnaire.email }
+    end
+
+    let(:gestionnaire2) { create :gestionnaire}
+    let(:follow2) { create(:follow, gestionnaire: gestionnaire2) }
+
+    context 'when there is 2 followers' do
+      let(:dossier) { create(:dossier, follows: [follow, follow2]) }
+
+      subject { dossier.followers_gestionnaires_emails }
+
+      it { is_expected.to eq "#{gestionnaire.email} #{gestionnaire2.email}" }
+    end
+
+
   end
 end
