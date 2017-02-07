@@ -8,31 +8,29 @@
           -if dossiers_list_facade.liste == 'brouillon'
             Les dossiers présents dans cette liste
             %b
-              n'ont pas encore été soumis à votre administration.
+              n'ont pas encore été soumis aux services instructeurs.
             Ils ne sont visibles que par vous.
           -elsif dossiers_list_facade.liste == 'nouveaux'
             Les dossiers présents dans cette liste
             %b
               n'ont pas encore été ouverts
-            par votre accompagnteur. Une notification vous sera envoyée quand votre demande aura été étudiée.
+            par les services instructeurs. Une notification vous sera envoyée quand votre demande aura été étudiée.
           -elsif dossiers_list_facade.liste == 'a_traiter'
             Les dossiers présents dans cette liste sont
             %b
-              visibles par l'administration.
+              visibles par les services instructeurs.
             %br
             Ces dossiers ne sont pas encore figés et peuvent être modifiés à souhait.
-            %br
-            Une fois que le dossier aura été considéré comme complet par votre accompagnateur, celui-ci passera à l'étape suivante de dépôt.
           -elsif dossiers_list_facade.liste == 'en_attente'
             Les dossiers présents dans cette liste sont
             %b
-              en cours de relecture par votre accompagnateur.
+              en cours de relecture par les services instructeurs.
             Il reviendra vers vous si des informations ou documents sont manquants pour le futur examen de votre dossier.
           -elsif dossiers_list_facade.liste == 'valides'
             Les dossiers présents dans cette liste ont été
             %b
               relus et considérés comme complets
-            pour examen par votre accompagnateur. Ceux-ci ne peuvent maintenant plus être modifiés. Il faut que vous procédiez à leur dépôt afin qu'une décision finale soit rendue.
+            pour examen par les services instructeurs. Ceux-ci ne peuvent maintenant plus être modifiés. Il faut que vous procédiez à leur dépôt afin qu'une décision finale soit rendue.
           -elsif dossiers_list_facade.liste == 'en_instruction'
             Les dossiers présents dans cette liste sont
             %b
@@ -40,9 +38,9 @@
             ou
             %b
               en cours d'examen
-            par l'administration compétente. Une notification vous sera envoyée une fois qu'une décision aura été rendue.
+            par les services instructeurs. Une notification vous sera envoyée une fois qu'une décision aura été rendue.
           -elsif dossiers_list_facade.liste == 'termine'
-            Les dossiers présents dans cette liste sont ceux qui ont été instruits par l'administration et
+            Les dossiers présents dans cette liste sont ceux qui ont été instruits et pour lesquels
             %b
               une décision finale a été rendue.
             Ils peuvent posséder trois états différents : Accepté, Refusé ou Sans Suite.
@@ -50,4 +48,4 @@
             Les dossiers présents dans cette liste sont ceux
             %b
               auxquels vous avez été invités
-            à participer afin d'émettre un avis et/ou à fournir des documents complémentaires.
+            à participer afin d'émettre un avis ou de fournir des documents complémentaires.

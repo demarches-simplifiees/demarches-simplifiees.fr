@@ -46,5 +46,9 @@ FactoryGirl.define do
         dossier.cerfa << create(:cerfa)
       end
     end
+
+    trait :replied do
+      state 'replied'
+    end
   end
 end
