@@ -19,11 +19,6 @@
       #new-commentaire.hidden-print
         = render partial: 'dossiers/commentaires/form', locals: { dossier_facade: @facade }
 
-    .last-commentaire.clearfix
-      .col-md-6
-        %input#save-message.form-control.btn.btn-send{ type: 'submit', value: 'ENVOYER' }
-
-
     .last-commentaire.clearfix.hidden-print
       - if last_comment = dossier_facade.commentaires.first
         %div
