@@ -158,6 +158,15 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     render 'backoffice/dossiers/index', formats: :js
   end
 
+  def archive
+    facade = create_dossier_facade params[:dossier_id]
+    unless facade.dossier.archived
+      facade.dossier.update(archived: true)
+      flash.notice = 'Dossier archivé'
+    end
+    redirect_to backoffice_dossiers_path
+  end
+
   private
 
   def create_dossier_facade dossier_id

@@ -345,4 +345,23 @@ describe Backoffice::DossiersController, type: :controller do
       end
     end
   end
+
+
+  describe 'POST #archive' do
+    before do
+      dossier.update(archived: false)
+      sign_in gestionnaire
+    end
+
+    subject { post :archive, params: {dossier_id: dossier_id} }
+
+    it 'change state to archived' do
+      subject
+
+      dossier.reload
+      expect(dossier.archived).to eq(true)
+    end
+
+    it { is_expected.to redirect_to backoffice_dossiers_path }
+  end
 end
