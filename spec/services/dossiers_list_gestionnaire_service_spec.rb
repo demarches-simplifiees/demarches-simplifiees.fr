@@ -269,13 +269,13 @@ describe DossiersListGestionnaireService do
 
   describe '#change_page!' do
     let(:procedure) { nil }
-    let(:liste) { 'a_traiter' }
+    let(:liste) { 'all_state' }
 
     let(:page) { 2 }
     let(:new_page) { 1 }
 
     before do
-      preference_smart_listing_page.update page: page, liste: 'a_traiter', procedure: nil
+      preference_smart_listing_page.update page: page, liste: liste, procedure: nil
       subject
       preference_smart_listing_page.reload
     end
@@ -297,7 +297,7 @@ describe DossiersListGestionnaireService do
     end
 
     context 'when liste change' do
-      let(:liste) { 'en_attente' }
+      let(:liste) { 'all_state' }
 
       it { expect(preference_smart_listing_page.liste).to eq liste }
       it { expect(preference_smart_listing_page.procedure).to eq procedure }
@@ -308,7 +308,7 @@ describe DossiersListGestionnaireService do
 
         it { expect(preference_smart_listing_page.liste).to eq liste }
         it { expect(preference_smart_listing_page.procedure).to eq procedure }
-        it { expect(preference_smart_listing_page.page).to eq 1 }
+        it { expect(preference_smart_listing_page.page).to eq page }
       end
     end
 
@@ -329,7 +329,7 @@ describe DossiersListGestionnaireService do
     end
 
     context 'when procedure and liste change' do
-      let(:liste) { 'en_attente' }
+      let(:liste) { 'all_state' }
       let(:procedure) { dossier.procedure }
 
       it { expect(preference_smart_listing_page.liste).to eq liste }

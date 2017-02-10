@@ -84,15 +84,16 @@ describe RootController, type: :controller do
   end
 
   context 'when opensimplif features is true' do
-    let(:gestionnaire) { create(:gestionnaire) }
-
-    before do
-      sign_in gestionnaire
-
-      allow_any_instance_of(Features).to receive(:opensimplif).and_return(true)
-    end
-
-    it { expect(subject).to redirect_to(simplifications_path) }
+    pending
+    # let(:gestionnaire) { create(:gestionnaire) }
+    #
+    # before do
+    #   sign_in gestionnaire
+    #
+    #   allow_any_instance_of(Features).to receive(:opensimplif).and_return(true)
+    # end
+    #
+    # it { expect(subject).to redirect_to(simplifications_path) }
   end
 
   context "unified login" do

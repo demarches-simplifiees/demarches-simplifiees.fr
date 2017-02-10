@@ -8,6 +8,8 @@ describe 'layouts/left_panels/_left_panel_users_dossierscontroller_index.html.ha
     before do
       sign_in user
 
+      create :dossier, user: user
+
       assign :dossiers_list_facade, (DossiersListFacades.new user, param_list)
 
       render
