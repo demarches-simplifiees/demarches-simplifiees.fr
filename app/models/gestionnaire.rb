@@ -14,7 +14,8 @@ class Gestionnaire < ActiveRecord::Base
 
   after_create :build_default_preferences_list_dossier
   after_create :build_default_preferences_smart_listing_page
-  after_update :sync_credentials
+
+  include CredentialsSyncableConcern
 
   def dossiers_follow
     @dossiers_follow ||= dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")
@@ -118,12 +119,5 @@ class Gestionnaire < ActiveRecord::Base
                }]
 
     couples.include?({table: table, column: column})
-  end
-
-  def sync_credentials
-    if email_changed? || encrypted_password_changed?
-      return SyncCredentialsService.new(Gestionnaire, email_was, email, encrypted_password).change_credentials!
-    end
-    true
   end
 end
