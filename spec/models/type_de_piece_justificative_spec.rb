@@ -32,8 +32,8 @@ describe TypeDePieceJustificative do
     end
 
     context 'lien_demarche' do
-      it { is_expected.not_to allow_value(nil).for(:lien_demarche) }
-      it { is_expected.not_to allow_value('').for(:lien_demarche) }
+      it { is_expected.to allow_value(nil).for(:lien_demarche) }
+      it { is_expected.to allow_value('').for(:lien_demarche) }
       it { is_expected.not_to allow_value('not-a-link').for(:lien_demarche) }
       it { is_expected.to allow_value('http://link').for(:lien_demarche) }
     end

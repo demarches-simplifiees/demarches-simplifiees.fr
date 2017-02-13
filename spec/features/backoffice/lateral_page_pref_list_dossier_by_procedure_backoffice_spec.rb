@@ -35,6 +35,7 @@ feature 'usage of pref list dossier lateral panel by procedure', js: true do
         end
 
         scenario 'lateral panel is appeared' do
+          wait_for_ajax
           expect(page).to have_css('#pref_list_menu')
         end
 
@@ -69,6 +70,7 @@ feature 'usage of pref list dossier lateral panel by procedure', js: true do
               end
 
               scenario 'lateral panel is masked' do
+                wait_for_ajax
                 expect(page).to have_css('#pref_list_menu', visible: false)
               end
             end
