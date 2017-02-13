@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  default_url_options protocol: :https
 
   get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
 
@@ -130,7 +129,7 @@ Rails.application.routes.draw do
         post '/:index/move_down' => 'pieces_justificatives#move_down', as: :move_down
       end
 
-      resources 'mails'
+      resources :mail_templates, only: [:index, :edit, :update]
 
       put 'archive' => 'procedures#archive', as: :archive
       put 'publish' => 'procedures#publish', as: :publish

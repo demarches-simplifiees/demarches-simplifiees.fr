@@ -8,6 +8,7 @@ FactoryGirl.define do
     direction "direction SGMAP"
     published false
     administrateur { create(:administrateur) }
+    mail_templates { [create(:mail_template, :dossier_received)]}
 
     after(:build) do |procedure, _evaluator|
       if procedure.module_api_carto.nil?
