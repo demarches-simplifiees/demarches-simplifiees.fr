@@ -14,7 +14,7 @@ feature 'on backoffice page', js: true do
     create :follow, gestionnaire: gestionnaire, dossier: dossier
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure_individual
     create :follow, gestionnaire: gestionnaire, dossier: dossier_individual
-    visit backoffice_path
+    visit users_path
   end
 
   context 'when gestionnaire is logged in' do

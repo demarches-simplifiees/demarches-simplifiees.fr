@@ -14,7 +14,6 @@ feature 'user is on description page' do
       page.find_by_id('user_password').set dossier.user.password
       page.click_on 'Se connecter'
     end
-
   end
 
   it { expect(page).to have_css('#description_page') }
