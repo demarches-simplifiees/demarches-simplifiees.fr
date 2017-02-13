@@ -2,10 +2,9 @@
   %div.dossiers-en-cours
     .count= @facade_data_view.total_dossier_follow
     .text= "SUIVIS"
-  - unless Features.opensimplif
-    %div.nouveaux-dossiers
-      .count= @facade_data_view.total_new_dossier
-      .text= "NOUVEAUX"
+  %div.nouveaux-dossiers
+    .count= @facade_data_view.total_new_dossier
+    .text= "NOUVEAUX"
   %div.nouvelles-notifications
     .count= @facade_data_view.dossiers_with_unread_notifications.count
     .text= "MODIFIÉS"
@@ -23,13 +22,11 @@
   #procedure_list
     - @facade_data_view.gestionnaire_procedures_name_and_id_list.each do |procedure|
 
-      - url_path = Features.opensimplif ? simplification_path(procedure[:id]) : backoffice_dossiers_procedure_path(procedure[:id])
-
-      = link_to url_path, {title: procedure[:libelle]} do
+      = link_to backoffice_dossiers_procedure_path(procedure[:id]), {title: procedure[:libelle]} do
         %div.procedure_list_element{ class: ('active' if procedure[:id] == @facade_data_view.procedure.id rescue '') }
           = truncate(procedure[:libelle], length: 50)
           - total_new = @facade_data_view.new_dossier_number procedure[:id]
-          - if total_new > 0 && !Features.opensimplif
+          - if total_new > 0
             .badge.progress-bar-success{title:'Nouveaux dossiers'}
               = total_new
           -if procedure[:unread_notifications] > 0

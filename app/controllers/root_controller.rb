@@ -7,12 +7,6 @@ class RootController < ApplicationController
       route = Rails.application.routes.recognize_path(new_user_session_path)
     end
 
-    if Features.opensimplif
-      unless !user_signed_in? && !administrateur_signed_in? && !gestionnaire_signed_in?
-        return redirect_to simplifications_path
-      end
-    end
-
     if user_signed_in? && !route[:controller].match('users').nil?
       return redirect_to users_dossiers_path
 

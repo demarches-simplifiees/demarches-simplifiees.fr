@@ -3,11 +3,7 @@
 class BaseUploader < CarrierWave::Uploader::Base
   def cache_dir
     if Rails.env.production?
-      if Features.opensimplif?
-        '/tmp/opensimplif-cache'
-      else
-        '/tmp/tps-cache'
-      end
+      '/tmp/tps-cache'
     else
       '/tmp/tps-dev-cache'
     end

@@ -22,33 +22,4 @@ feature 'backoffice: flux de commentaires' do
     comments = find(".commentaires")
     expect(comments).to have_selector(".content", count: 1)
   end
-
-  scenario "affichage des commentaires du champs", js: true do
-    pending 'later: open simplif'
-    find("#liste_champs th", text: champ1.libelle).click_link("COM")
-    expect(page).to have_css("#modalCommentairesDossierParChamp.in")
-
-    modal = find("#modalCommentairesDossierParChamp")
-    expect(modal).to have_css(".description", count: 2)
-  end
-
-  scenario "crée un commentaire sur un champ", js: true do
-    pending 'later: open simplif'
-    # ouverture modale
-    find("#liste_champs th", text: champ1.libelle).click_link("COM")
-
-    # ajout du commentaire
-    form = find("#modalCommentairesDossierParChamp").find("#commentaire_new")
-    form.fill_in("texte_commentaire", with: "le corps du commentaire sur le champ #{champ1.libelle}")
-    form.click_on("Poster")
-
-    # le commentaire ne s'ajoute pas aux commentaires généraux
-    comments = find("#commentaires_flux")
-    expect(comments).to have_selector(".description", count: 1)
-
-    # ajout du commentaire aux commentaires du champs
-    find("#liste_champs th", text: champ1.libelle).click_link("COM")
-    modal = find("#modalCommentairesDossierParChamp")
-    expect(modal).to have_css(".description", count: 3)
-  end
 end

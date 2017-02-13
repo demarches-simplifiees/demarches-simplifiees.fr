@@ -17,14 +17,6 @@ describe BaseUploader do
       end
 
       it { is_expected.to eq '/tmp/tps-cache' }
-
-      context 'when is opensimplif' do
-        before do
-          allow(Features).to receive(:opensimplif?).and_return(true)
-        end
-
-        it { is_expected.to eq '/tmp/opensimplif-cache' }
-      end
     end
   end
 end
