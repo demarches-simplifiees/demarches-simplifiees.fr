@@ -5,6 +5,7 @@ class Procedure < ActiveRecord::Base
   has_many :dossiers
   has_many :mail_templates
   has_one :mail_received
+  has_one :mail_validated
 
   has_one :procedure_path, dependent: :destroy
 
@@ -32,7 +33,8 @@ class Procedure < ActiveRecord::Base
   after_save :build_default_mails, if: Proc.new { id_changed? }
 
   def build_default_mails
-    MailReceived.create(procedure: self)
+    MailReceived.create(procedure: self) unless mail_received
+    MailValidated.create(procedure: self) unless mail_validated
   end
 
   def path
@@ -109,4 +111,5 @@ class Procedure < ActiveRecord::Base
   def total_dossier
     self.dossiers.where.not(state: :draft).size
   end
+
 end

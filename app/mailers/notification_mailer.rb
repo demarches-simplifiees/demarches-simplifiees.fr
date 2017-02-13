@@ -4,11 +4,11 @@ class NotificationMailer < ApplicationMailer
   end
 
   def dossier_received dossier
-    send_mail dossier, MailTemplate.replace_tags(dossier.procedure.mail_received.object, dossier)
+    send_mail dossier, dossier.procedure.mail_received.object_for_dossier(dossier)
   end
 
   def dossier_validated dossier
-    send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été validé"
+    send_mail dossier, dossier.procedure.mail_validated.object_for_dossier(dossier)
   end
 
   def dossier_submitted dossier

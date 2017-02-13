@@ -18,9 +18,11 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     subject(:subject) { described_class.dossier_validated(dossier) }
 
+    before { dossier.reload }
+
     it { expect(subject.body).to match("Votre dossier N°#{dossier.id} est prêt à être déposé pour instruction.") }
-    it { expect(subject.body).to include("Afin de finaliser son dépôt, merci de vous rendre sur #{users_dossier_recapitulatif_url(dossier_id: dossier.id)}") }
-    it { expect(subject.subject).to eq("Votre dossier TPS N°#{dossier.id} a été validé") }
+    it { expect(subject.body).to include("Afin de finaliser son dépôt, merci de vous rendre sur", users_dossier_recapitulatif_url(dossier_id: dossier.id)) }
+    it { expect(subject.subject).to eq("[TPS] Votre dossier TPS N°#{dossier.id} a été validé") }
   end
 
   describe ".dossier_submitted" do
@@ -28,6 +30,8 @@ RSpec.describe NotificationMailer, type: :mailer do
     let(:dossier) { create(:dossier, user: user) }
 
     subject(:subject) { described_class.dossier_submitted(dossier) }
+
+    before { dossier.reload }
 
     it { expect(subject.body).to match("Nous vous confirmons que votre dossier N°#{dossier.id} a été déposé") }
     it { expect(subject.body).to match("auprès de #{dossier.procedure.organisation} avec succès") }
@@ -40,6 +44,8 @@ RSpec.describe NotificationMailer, type: :mailer do
     let(:dossier) { create(:dossier, user: user) }
 
     subject(:subject) { described_class.dossier_received(dossier) }
+
+    before { dossier.reload }
 
     it { expect(subject.subject).to eq("[TPS] Accusé de réception pour votre dossier n°#{dossier.id}") }
     it { expect(subject.body).to match("Votre administration vous confirme la bonne réception de votre dossier n°#{dossier.id}") }

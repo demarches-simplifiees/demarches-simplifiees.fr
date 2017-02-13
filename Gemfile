@@ -97,6 +97,8 @@ gem 'openstack'
 
 gem 'browser'
 
+gem 'simple_form'
+
 group :test do
   gem 'capybara'
   gem 'launchy'

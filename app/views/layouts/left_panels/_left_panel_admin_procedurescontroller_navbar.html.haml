@@ -39,7 +39,7 @@
         %div.procedure_list_element{class: ('active' if active == 'Champs privés')}
           Champs privés
 
-    %a{:href => "#{url_for admin_procedure_mails_path(@procedure)}", id: 'onglet-inemailsfos'}
+    %a{:href => "#{url_for admin_procedure_mail_templates_path(@procedure)}", id: 'onglet-inemailsfos'}
       %div.procedure_list_element{class: ('active' if active == 'E-mails')}
         E-mails
 

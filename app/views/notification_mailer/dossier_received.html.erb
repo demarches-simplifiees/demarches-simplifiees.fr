@@ -1,1 +1,1 @@
-<%= MailTemplate.replace_tags(@dossier.procedure.mail_received.body, @dossier).html_safe %>
+<%= @dossier.procedure.mail_received.body_for_dossier(@dossier).html_safe %>
