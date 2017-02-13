@@ -24,6 +24,11 @@
           %button.action.refuse-dossier
             %i.fa.fa-times
 
+      - unless @facade.dossier.archived?
+        = link_to 'Archiver', backoffice_dossier_archive_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
+
+
+
 %div#menu-block
 
 %div#infos-block
@@ -33,7 +38,7 @@
   %div.split-hr-left
   %div.notifications
     - if @facade.dossier.notifications.empty?
-      = "Aucune notification pour le moment."
+      Aucune notification pour le moment.
     - else
       %i.fa.fa-bell-o
       - @facade.last_notifications.each do |notification|
