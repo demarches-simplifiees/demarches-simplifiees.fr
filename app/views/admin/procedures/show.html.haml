@@ -96,7 +96,7 @@
       =t('dynamics.admin.procedure.stats.title')
 
     .row
-      .col-md-6.col-sm-6.col-xs-6.col-lg-6{style:'margin-left:3%'}
+      .col-xs-6{style:'margin-left:3%'}
         %h4 Total
         %div
           = @facade.dossiers_total
@@ -126,7 +126,7 @@
           %p
             0
 
-      .col-md-5.col-sm-5.col-xs-5.col-lg-5
+      .col-xs-5
         %h4 Non archivés
         = javascript_include_tag "https://code.highcharts.com/highcharts.js", "chartkick"
         - if @facade.dossiers_for_pie_highchart.blank?

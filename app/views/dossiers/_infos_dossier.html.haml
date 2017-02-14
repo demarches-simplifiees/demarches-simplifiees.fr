@@ -2,40 +2,40 @@
   .col-lg-12.col-md-12.col-sm-12.col-xs-12
     - if @facade.procedure.for_individual?
       .row.title-row
-        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.split-hr
-        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.dossier-title= t('utils.depositaire').upcase
-        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.split-hr
+        %div.col-xs-4.split-hr
+        %div.col-xs-4.dossier-title= t('utils.depositaire').upcase
+        %div.col-xs-4.split-hr
       .row
-        %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label Civilité
+        %div.col-xs-6.depositaire-label Civilité
         %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
-        %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.depositaire-info= @facade.individual.gender
+        %div.col-xs-5.depositaire-info= @facade.individual.gender
       .row
-        %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label Nom
+        %div.col-xs-6.depositaire-label Nom
         %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
-        %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.depositaire-info= @facade.individual.nom
+        %div.col-xs-5.depositaire-info= @facade.individual.nom
       .row
-        %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label Prénom
+        %div.col-xs-6.depositaire-label Prénom
         %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
-        %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.despositaire-info= @facade.individual.prenom
+        %div.col-xs-5.despositaire-info= @facade.individual.prenom
       .row
-        %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label Date de naissance
+        %div.col-xs-6.depositaire-label Date de naissance
         %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
-        %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.depositaire-info= @facade.individual.birthdate
+        %div.col-xs-5.depositaire-info= @facade.individual.birthdate
       .row.margin-top-20
 
     - unless @facade.champs.nil?
       - @facade.champs.each do |champ|
         - if champ.type_champ == 'header_section'
           .row.title-row.margin-top-40
-            %div.col-md-3.col-sm-3.col-xs-3.col-lg-3.split-hr
-            %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.dossier-title= champ.libelle.upcase
-            %div.col-md-3.col-sm-3.col-xs-3.col-lg-3.split-hr
+            %div.col-xs-3.split-hr
+            %div.col-xs-6.dossier-title= champ.libelle.upcase
+            %div.col-xs-3.split-hr
         - else
           .row
-            %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label= champ.libelle
+            %div.col-xs-6.depositaire-label= champ.libelle
             %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off
               = "-"
-            %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.depositaire-info{ id: "champ-#{champ.id}-value" }
+            %div.col-xs-5.depositaire-info{ id: "champ-#{champ.id}-value" }
               - unless champ.decorate.value.blank?
                 = champ.decorate.value.html_safe
 
@@ -50,18 +50,18 @@
   - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.count > 0
     .col-lg-12.col-md-12.col-sm-12.col-xs-12
       .row.title-row
-        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.split-hr
-        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.dossier-title= t('utils.pieces').upcase
-        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.split-hr
+        %div.col-xs-4.split-hr
+        %div.col-xs-4.dossier-title= t('utils.pieces').upcase
+        %div.col-xs-4.split-hr
 
   .col-lg-12.col-md-12.col-sm-12.col-xs-12#pieces_justificatives.margin-bot-40
     .row
       - if @facade.procedure.cerfa_flag?
-        .col-md-12.col-sm-12.col-xs-12.col-lg-12#piece_justificative_0
+        .col-xs-12#piece_justificative_0
           .row.piece-row
-            .col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label= 'Formulaire'
+            .col-xs-6.depositaire-label= 'Formulaire'
             .col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
-            .col-md-5.col-sm-5.col-xs-5.col-lg-5.despositaire-info
+            .col-xs-5.despositaire-info
               - if @facade.dossier.cerfa_available?
                 %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
                 %span{style:'margin-left:12px'}
@@ -71,14 +71,14 @@
               - else
                 = 'Pièce non fournie'
     .row
-      .col-md-12.col-sm-12.col-xs-12.col-lg-12
+      .col-xs-12
         - @facade.types_de_pieces_justificatives.each do |type_de_piece_justificative|
           .row.piece-row
-            .col-md-12.col-sm-12.col-xs-12.col-lg-12{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
+            .col-xs-12{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
               .row
-                %div.col-md-6.col-sm-6.col-xs-6.col-lg-6.depositaire-label= type_de_piece_justificative.libelle
+                %div.col-xs-6.depositaire-label= type_de_piece_justificative.libelle
                 %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
-                %div.col-md-5.col-sm-5.col-xs-5.col-lg-5.despositaire-info
+                %div.col-xs-5.despositaire-info
                   - if type_de_piece_justificative.api_entreprise
                     %span.text-success Nous l'avons récupéré pour vous.
                   - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?

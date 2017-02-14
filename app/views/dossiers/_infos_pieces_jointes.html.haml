@@ -1,11 +1,11 @@
 #pieces_justificatives
   .row
     - if @facade.procedure.cerfa_flag?
-      .col-md-12.col-sm-12.col-xs-12.col-lg-12#piece_justificative_0
+      .col-xs-12#piece_justificative_0
         .row.piece-row
-          .col-md-6.col-sm-6.col-xs-6.col-lg-6.piece-label= 'Formulaire'
+          .col-xs-6.piece-label= 'Formulaire'
           .col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
-          .col-md-5.col-sm-5.col-xs-5.col-lg-5
+          .col-xs-5
             - if @facade.dossier.cerfa_available?
               %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
               %span{style:'margin-left:12px'}
@@ -20,13 +20,13 @@
               = 'Pièce non fournie'
 
   .row
-    .col-md-12.col-sm-12.col-xs-12.col-lg-12
+    .col-xs-12
       - @facade.dossier.types_de_piece_justificative.order('order_place ASC').each do |type_de_piece_justificative|
         .row.piece-row
-          .col-md-12.col-sm-12.col-xs-12.col-lg-12{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
+          .col-xs-12{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
             .row
-              .col-md-6.col-sm-6.col-xs-6.col-lg-6= type_de_piece_justificative.libelle
-              .col-md-6.col-sm-6.col-xs-6.col-lg-6
+              .col-xs-6= type_de_piece_justificative.libelle
+              .col-xs-6
                 - if type_de_piece_justificative.api_entreprise
                   %span.text-success Nous l'avons récupéré pour vous.
                 - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?
