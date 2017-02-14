@@ -1,8 +1,3 @@
-%h4{style:'margin-left:15px;'}
-  = champ.libelle
-  - if champ.mandatory?
-    = '*'
-  %input{type: 'hidden', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", value: ''}
-  %input{type: 'checkbox', style:'margin-left: 15px;', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", checked: ('checked' if champ.value == 'on')}
-%div{style:'margin-left: 5%; margin-right: 5%; text-align: justify; text-justify: inter-word;'}
-  = champ.description.gsub(/\r\n/, '<br>').html_safe
+%div
+    %input{type: 'hidden', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", value: ''}
+    %input{type: 'checkbox', style:'margin-left: 15px;', name:"champs['#{champ.id}']", id: "champs_#{champ.id}", checked: ('checked' if champ.value == 'on')}
