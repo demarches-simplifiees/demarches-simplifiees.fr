@@ -15,7 +15,7 @@
     = @dossier.procedure.libelle
 
   -#TODO use form_for
-  = form_tag(url_for({controller: 'users/description', action: :create, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST', multipart: true) do
+  = form_tag(url_for({controller: 'users/description', action: :create, dossier_id: @dossier.id}), class: 'form', method: 'POST', multipart: true) do
     -unless @champs.nil?
       #liste_champs
         =render partial: 'users/description/champs', locals:{private: false}
