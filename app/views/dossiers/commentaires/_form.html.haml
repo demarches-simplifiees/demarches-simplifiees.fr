@@ -7,5 +7,5 @@
       %h4.text-primary{style: 'margin-top: 0px'} Ajouter un fichier
       = file_field_tag "piece_justificative[content]", accept:  PieceJustificative.accept_format, style: 'float: left; margin-left: 20px'
 
-    .col-md-6
-      %input#save-message.form-control.btn.btn-send{ type: 'submit', value: 'ENVOYER' }
+    .col-md-6.text-right
+      %input#save-message.form-control.btn.btn-danger{ type: 'submit', value: 'ENVOYER' }

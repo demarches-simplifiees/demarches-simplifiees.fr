@@ -20,6 +20,7 @@
  *= require franceconnect
  *= require bootstrap-wysihtml5
  */
+@import "variables";
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
@@ -141,10 +142,6 @@ textarea#description {
 
 .logo_fc_small {
   max-width: 27px;
-}
-
-label {
-  font-weight: normal;
 }
 
 div.pagination {
