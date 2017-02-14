@@ -122,8 +122,6 @@ group :development do
   gem 'web-console'
   gem 'rack-handlers'
   gem 'xray-rails'
-  gem 'guard'
-
 end
 
 group :development, :test do
