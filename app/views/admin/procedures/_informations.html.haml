@@ -49,12 +49,13 @@
             Cadastre
 
   .col-xs-6
-    %h4 Formulaire de demande ou CERFA
-    %label
-      =f.check_box :cerfa_flag
-      Activer l'envoi de formulaire de demande ou CERFA
-    %br
-    =f.text_field :lien_demarche, class: 'form-control', placeholder: 'URL vers le formulaire vierge (facultatif)'
+    - if @procedure.cerfa_flag
+      %h4 Formulaire de demande ou CERFA
+      %label
+        =f.check_box :cerfa_flag
+        Activer l'envoi de formulaire de demande ou CERFA
+      %br
+      =f.text_field :lien_demarche, class: 'form-control', placeholder: 'URL vers le formulaire vierge (facultatif)'
 
 %br
 .row
