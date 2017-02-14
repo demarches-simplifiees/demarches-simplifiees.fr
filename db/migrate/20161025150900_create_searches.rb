@@ -9,7 +9,7 @@ class CreateSearches < ActiveRecord::Migration
     add_index :individuals, :dossier_id
     add_index :pieces_justificatives, :dossier_id
     add_index :rna_informations, :entreprise_id
-    create_view :searches #, materialized: true
+    create_view :searches unless Rails.env.test? #, materialized: true
   end
 
   def down
@@ -22,6 +22,6 @@ class CreateSearches < ActiveRecord::Migration
     remove_index :individuals, :dossier_id
     remove_index :pieces_justificatives, :dossier_id
     remove_index :rna_informations, :entreprise_id
-    drop_view :searches #, materialized: true
+    drop_view :searches unless Rails.env.test? #, materialized: true
   end
 end
