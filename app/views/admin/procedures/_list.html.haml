@@ -12,7 +12,7 @@
       - procedure = procedure.decorate
       %tr{id: "tr_dossier_#{procedure.id}", 'data-dossier_url' => admin_procedure_path(id: procedure.id)}
         %td= procedure.id
-        %td.col-md-6.col-sm-6.col-xs-6.col-lg-6
+        %td.col-xs-6
           = procedure.libelle
         - if @active_class
           %td= link_to procedure.lien, procedure.lien, class: 'procedure-lien', 'data-method' => :get

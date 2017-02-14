@@ -1,10 +1,10 @@
 - unless smart_listing.empty?
   %table.table
     %thead
-      %th.col-md-4.col-sm-4.col-xs-4.col-lg-4= smart_listing.sortable 'Email', :email
-      %th.col-md-4.col-sm-4.col-xs-4.col-lg-4= smart_listing.sortable 'Date de dernière connexion', :last_sign_in_at
-      %th.col-md-2.col-sm-2.col-xs-2.col-lg-2 Procédure active
-      %th.col-md-2.col-sm-2.col-xs-2.col-lg-2 Dossier en cours
+      %th.col-xs-4= smart_listing.sortable 'Email', :email
+      %th.col-xs-4= smart_listing.sortable 'Date de dernière connexion', :last_sign_in_at
+      %th.col-xs-2 Procédure active
+      %th.col-xs-2 Dossier en cours
 
     - @admins.each do |admin|
       %tr
