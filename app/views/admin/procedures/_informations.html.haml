@@ -1,5 +1,7 @@
 
-%br
+- if @procedure.locked?
+  .alert.alert-info
+    Cette procédure est publiée, certaines informations ne sont plus modifiables
 
 -{libelle: 'Libellé*', description: 'Description*', organisation: 'Organisation', direction: 'Direction', lien_site_web: 'Lien site internet', lien_notice: 'Lien notice'}.each do |key, value|
   .form-group
@@ -16,7 +18,7 @@
     %h4 Logo de la procédure
     - unless @procedure.logo.blank?
       = image_tag @procedure.decorate.logo_img, {style: 'height: 40px; display: inline; margin-right: 6px', id: 'preview_procedure_logo'}
-    = f.file_field(:logo, accept: 'image/png, image/jpg, image/jpeg', style: 'display:inline')
+    = f.file_field :logo, accept: 'image/png, image/jpg, image/jpeg', style: 'display:inline', disabled: @procedure.locked?
 
     %div{style:'margin-top:5px'}
       %i
@@ -35,27 +37,27 @@
 
     = f.fields_for :module_api_carto, @procedure.module_api_carto do |ff|
       %label
-        =ff.check_box :use_api_carto, {id: :procedure_module_api_carto_use_api_carto}
+        =ff.check_box :use_api_carto, disabled: @procedure.locked?, id: :procedure_module_api_carto_use_api_carto
         Utilisation de la cartographie
 
       %ul#modules_api_carto
         %li
           %label
-            = ff.check_box :quartiers_prioritaires
+            = ff.check_box :quartiers_prioritaires, disabled: @procedure.locked?
             Quartiers Prioritaires
         %li
           %label
-            = ff.check_box :cadastre
+            = ff.check_box :cadastre, disabled: @procedure.locked?
             Cadastre
 
   .col-xs-6
     - if @procedure.cerfa_flag
       %h4 Formulaire de demande ou CERFA
       %label
-        =f.check_box :cerfa_flag
+        =f.check_box :cerfa_flag, disabled: @procedure.locked?
         Activer l'envoi de formulaire de demande ou CERFA
       %br
-      =f.text_field :lien_demarche, class: 'form-control', placeholder: 'URL vers le formulaire vierge (facultatif)'
+      =f.text_field :lien_demarche, class: 'form-control', placeholder: 'URL vers le formulaire vierge (facultatif)', disabled: @procedure.locked?
 
 %br
 .row
@@ -63,7 +65,7 @@
     %h4 Particuliers
     %div
       %label
-        =f.check_box :for_individual
+        =f.check_box :for_individual, disabled: @procedure.locked?
         Cette procédure s'adresse à un public qui
         %b
           ne possède pas (ou pas encore) de numéro SIRET,
@@ -72,5 +74,5 @@
       %ul#individual_with_siret{style:'margin-top: 8px'}
         %li
           %label
-            =f.check_box :individual_with_siret
+            =f.check_box :individual_with_siret, disabled: @procedure.locked?
             Donner la possibilité de renseigner un SIRET au cours de la construction du dossier.
