@@ -30,7 +30,7 @@ class Procedure < ActiveRecord::Base
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
 
-  after_save :build_default_mails, if: Proc.new { id_changed? }
+  after_create :build_default_mails
 
   def build_default_mails
     MailReceived.create(procedure: self) unless mail_received
