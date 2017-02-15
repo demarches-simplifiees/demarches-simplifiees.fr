@@ -195,7 +195,7 @@ class Admin::ProceduresController < AdminController
     if @procedure.try(:locked?)
       params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_site_web, :lien_notice, :euro_flag, :logo)
     else
-      params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_demarche, :lien_site_web, :lien_notice, :euro_flag, :logo, :cerfa_flag, :for_individual, :individual_with_siret, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
+      params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_site_web, :lien_notice, :euro_flag, :logo, :lien_demarche, :cerfa_flag, :for_individual, :individual_with_siret, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
     end
   end
 
