@@ -80,7 +80,7 @@ class Admin::ProceduresController < AdminController
       return render 'edit'
     end
 
-    flash.notice = 'Préocédure modifiée'
+    flash.notice = 'Procédure modifiée'
     redirect_to edit_admin_procedure_path(id: @procedure.id)
   end
 
