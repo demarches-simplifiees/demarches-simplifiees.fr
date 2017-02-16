@@ -12,7 +12,7 @@
       = f.button :submit, 'Mettre à jour', class: "btn-success"
 
   .row
-    .col-md-6
+    .col-md-8
       %table.table
         %tr
           %th
@@ -23,8 +23,6 @@
           %tr
             %td.center
               %b.text-success
-                \--
-                = balise.first
-                \--
+                = "--#{balise.first}--"
             %td
               =balise.second[:description]
