@@ -39,7 +39,7 @@ describe MailTemplate do
     end
   end
 
-  describe '.replace_tags' do
+  xdescribe '.replace_tags' do
     let(:dossier) { create :dossier }
     let(:procedure) { dossier.procedure }
     let(:mail_received) { procedure.mail_received }
