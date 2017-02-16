@@ -12,5 +12,4 @@
       %div.body
         = smart_listing_render :dossiers
 
-  - unless Features.opensimplif
-    = render partial: 'state_description', locals: {dossiers_list_facade: @dossiers_list_facade}
+  = render partial: 'state_description', locals: {dossiers_list_facade: @dossiers_list_facade}

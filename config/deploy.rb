@@ -11,7 +11,7 @@ require 'mina/rbenv' # for rbenv support. (http://rbenv.org)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 ENV['to'] ||= "staging"
-raise "Bad to=#{+ENV['to']}" unless ["staging", "production", "opensimplif", "tps_v2"].include?(ENV['to'])
+raise "Bad to=#{+ENV['to']}" unless ["staging", "production", "tps_v2"].include?(ENV['to'])
 
 raise "missing domain, run with 'rake deploy domain=37.187.154.237'" if ENV['domain'].nil?
 
@@ -42,15 +42,6 @@ elsif ENV["to"] == "production"
   set :deploy_to, '/var/www/tps'
   set :user, 'tps' # Username in the server to SSH to.
   appname = 'tps'
-elsif ENV["to"] == "opensimplif"
-  if ENV['branch'].nil?
-    set :branch, 'master'
-  else
-    set :branch, ENV['branch']
-  end
-  set :deploy_to, '/var/www/opensimplif'
-  set :user, 'opensimplif' # Username in the server to SSH to.
-  appname = 'opensimplif'
 elsif ENV["to"] == "tps_v2"
   if ENV['branch'].nil?
     set :branch, 'staging_v2'
@@ -64,9 +55,7 @@ end
 
 set :rails_env, ENV["to"]
 
-if ENV["to"] == "opensimplif"
-  set :rails_env, "production"
-elsif ENV["to"] == "tps_v2"
+if ENV["to"] == "tps_v2"
   set :rails_env, "staging"
 end
 

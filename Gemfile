@@ -119,11 +119,8 @@ end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
-
   gem 'web-console'
-
   gem 'rack-handlers'
-
   gem 'xray-rails'
 end
 

@@ -1,6 +1,3 @@
-
-%br
-
 -{libelle: 'Libellé*', description: 'Description*', organisation: 'Organisation', direction: 'Direction', lien_site_web: 'Lien site internet', lien_notice: 'Lien notice'}.each do |key, value|
   .form-group
     %h4
@@ -12,7 +9,7 @@
       = f.text_field key, class: 'form-control', placeholder: value
 
 .row
-  .col-md-6.col-sm-6.col-xs-6.col-lg-6
+  .col-xs-6
     %h4 Logo de la procédure
     - unless @procedure.logo.blank?
       = image_tag @procedure.decorate.logo_img, {style: 'height: 40px; display: inline; margin-right: 6px', id: 'preview_procedure_logo'}
@@ -21,55 +18,60 @@
     %div{style:'margin-top:5px'}
       %i
         Fichier accepté : JPG / JPEG / PNG
-  .col-md-6.col-sm-6.col-xs-6.col-lg-6
+  .col-xs-6
     %h4 Drapeau européen
-    %label
-      =f.check_box :euro_flag
-      Afficher le drapeau européen
-
-%br
+    .checkbox
+      %label
+        =f.check_box :euro_flag
+        Afficher le drapeau européen
 
 .row
-  .col-md-6.col-sm-6.col-xs-6.col-lg-6
+  .col-xs-6
     %h4 Cartographie
 
     = f.fields_for :module_api_carto, @procedure.module_api_carto do |ff|
-      %label
-        =ff.check_box :use_api_carto, {id: :procedure_module_api_carto_use_api_carto}
-        Utilisation de la cartographie
+      .checkbox
+        %label
+          =ff.check_box :use_api_carto, {id: :procedure_module_api_carto_use_api_carto}
+          Utilisation de la cartographie
 
       %ul#modules_api_carto
         %li
-          %label
-            = ff.check_box :quartiers_prioritaires
-            Quartiers Prioritaires
+          .checkbox
+            %label
+              = ff.check_box :quartiers_prioritaires
+              Quartiers Prioritaires
         %li
-          %label
-            = ff.check_box :cadastre
-            Cadastre
+          .checkbox
+            %label
+              = ff.check_box :cadastre
+              Cadastre
 
-  .col-md-6.col-sm-6.col-xs-6.col-lg-6
-    %h4 Formulaire de demande ou CERFA
-    %label
-      =f.check_box :cerfa_flag
-      Activer l'envoi de formulaire de demande ou CERFA
-    %br
-    =f.text_field :lien_demarche, class: 'form-control', placeholder: 'URL vers le formulaire vierge (facultatif)'
+  .col-xs-6
+    - if @procedure.cerfa_flag
+      %h4 Formulaire de demande ou CERFA
+      .checkbox
+        %label
+          =f.check_box :cerfa_flag
+          Activer l'envoi de formulaire de demande ou CERFA
+      =f.text_field :lien_demarche, class: 'form-control', placeholder: 'URL vers le formulaire vierge (facultatif)'
 
-%br
 .row
-  .col-md-6.col-sm-6.col-xs-6.col-lg-6
+  .col-xs-6
     %h4 Particuliers
-    %div
-      %label
-        =f.check_box :for_individual
-        Cette procédure s'adresse à un public qui
-        %b
-          ne possède pas (ou pas encore) de numéro SIRET,
-        qui doivent donc s'identifier en tant que personne physique.
-
-      %ul#individual_with_siret{style:'margin-top: 8px'}
-        %li
+    %ul.list-unstyled
+      %li
+        .checkbox
           %label
-            =f.check_box :individual_with_siret
-            Donner la possibilité de renseigner un SIRET au cours de la construction du dossier.
+            =f.check_box :for_individual
+            Cette procédure s'adresse à un public qui
+            %b
+              ne possède pas (ou pas encore) de numéro SIRET,
+            qui doit donc s'identifier en tant que personne physique.
+
+        %ul.list-unstyled#individual_with_siret{style:'margin-left: 15px'}
+          %li
+            .checkbox
+              %label
+                =f.check_box :individual_with_siret
+                Donner la possibilité de renseigner un SIRET au cours de la construction du dossier.

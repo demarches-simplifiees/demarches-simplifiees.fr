@@ -3,9 +3,8 @@
     - if smart_listing.name.to_s == 'follow_dossiers'
       %th.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1.center
         %i.fa.fa-bell
-    - unless Features.opensimplif
-      %th.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1
-        État
+    %th.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1
+      État
 
     - @facade_data_view.preference_list_dossiers_filter.each do |preference|
       - unless preference.libelle == 'Statut' || preference.libelle == 'État'
@@ -33,9 +32,8 @@
             - else
               .badge.progress-bar-warning
                 = total_notif
-        - unless Features.opensimplif
-          %td.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1
-            = dossier.decorate.display_state
+        %td.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1
+          = dossier.decorate.display_state
         - @facade_data_view.preference_list_dossiers_filter.each_with_index do |preference, index|
           - unless preference.libelle == 'Statut' || preference.libelle == 'État'
             %td
