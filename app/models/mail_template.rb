@@ -37,8 +37,8 @@ class MailTemplate < ActiveRecord::Base
       when :numero_dossier
         dossier.id.to_s
       when :lien_dossier
-        TPS::Application::URL # quickfix
-        # link_to users_dossier_recapitulatif_url(dossier), users_dossier_recapitulatif_url(dossier), target: '_blank'
+        # TPS::Application::URL # quickfix
+        link_to users_dossier_recapitulatif_url(dossier), users_dossier_recapitulatif_url(dossier), target: '_blank'
       when :libelle_procedure
         dossier.procedure.libelle
       else
