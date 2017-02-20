@@ -13,6 +13,7 @@ describe Admin::ProceduresController, type: :controller do
   let(:use_api_carto) { '0' }
   let(:quartiers_prioritaires) { '0' }
   let(:cadastre) { '0' }
+  let(:cerfa_flag) { true }
 
   let(:procedure_params) {
     {
@@ -21,6 +22,7 @@ describe Admin::ProceduresController, type: :controller do
         organisation: organisation,
         direction: direction,
         lien_demarche: lien_demarche,
+        cerfa_flag: cerfa_flag,
         module_api_carto_attributes: {
             use_api_carto: use_api_carto,
             quartiers_prioritaires: quartiers_prioritaires,
@@ -105,24 +107,24 @@ describe Admin::ProceduresController, type: :controller do
         sign_out admin
       end
 
-      it { expect(subject).to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_user_session_path }
     end
 
     context 'when user is connected' do
       context 'when procedure exist' do
         let(:procedure_id) { procedure.id }
-        it { expect(subject).to have_http_status(:success) }
+        it { is_expected.to have_http_status(:success) }
       end
 
       context 'when procedure is published' do
         let(:published) { true }
-        it { is_expected.to redirect_to admin_procedure_path id: procedure_id }
+        it { is_expected.to have_http_status(:success) }
       end
 
       context "when procedure doesn't exist" do
         let(:procedure_id) { bad_procedure_id }
 
-        it { expect(subject).to have_http_status(404) }
+        it { is_expected.to have_http_status(404) }
       end
     end
   end
@@ -164,7 +166,7 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.quartiers_prioritaires).to be_truthy }
         end
 
-        it { expect(subject).to redirect_to(admin_procedure_types_de_champ_path(procedure_id: Procedure.last.id)) }
+        it { is_expected.to redirect_to(admin_procedure_types_de_champ_path(procedure_id: Procedure.last.id)) }
 
         it { expect(flash[:notice]).to be_present }
       end
@@ -204,7 +206,7 @@ describe Admin::ProceduresController, type: :controller do
 
       subject { put :update, params: {id: procedure.id} }
 
-      it { expect(subject).to redirect_to new_user_session_path }
+      it { is_expected.to redirect_to new_user_session_path }
     end
 
     context 'when administrateur is connected' do
@@ -213,7 +215,7 @@ describe Admin::ProceduresController, type: :controller do
         procedure.reload
       end
 
-      context 'when all attributs are informated' do
+      context 'when all attributs are present' do
         let(:libelle) { 'Blable' }
         let(:description) { 'blabla' }
         let(:organisation) { 'plop' }
@@ -240,7 +242,7 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.cadastre).to be_truthy }
         end
 
-        it { expect(subject).to redirect_to(edit_admin_procedure_path id: procedure.id) }
+        it { is_expected.to redirect_to(edit_admin_procedure_path id: procedure.id) }
         it { expect(flash[:notice]).to be_present }
       end
 
@@ -258,6 +260,26 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.use_api_carto).to be_falsey }
           it { expect(subject.quartiers_prioritaires).to be_falsey }
           it { expect(subject.cadastre).to be_falsey }
+        end
+      end
+
+      context 'when procedure is published' do
+        let!(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, :published, administrateur: admin) }
+
+        describe 'only some properties can be updated' do
+          subject { procedure }
+
+          it { expect(subject.libelle).to eq procedure_params[:libelle] }
+          it { expect(subject.description).to eq procedure_params[:description] }
+          it { expect(subject.organisation).to eq procedure_params[:organisation] }
+          it { expect(subject.direction).to eq procedure_params[:direction] }
+
+          it { expect(subject.cerfa_flag).not_to eq procedure_params[:cerfa_flag] }
+          it { expect(subject.lien_demarche).not_to eq procedure_params[:lien_demarche] }
+          it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
+          it { expect(subject.individual_with_siret).not_to eq procedure_params[:individual_with_siret] }
+          it { expect(subject.use_api_carto).not_to eq procedure_params[:module_api_carto_attributes][:use_api_carto] }
+
         end
       end
     end

@@ -1,0 +1,21 @@
+$default-spacer: 15px;
+
+.m-1 {
+  margin: $default-spacer;
+}
+
+.mt-1 {
+  margin-top: $default-spacer;
+}
+
+.mr-1 {
+  margin-right: $default-spacer;
+}
+
+.mb-1 {
+  margin-bottom: $default-spacer;
+}
+
+.ml-1 {
+  margin-left: $default-spacer;
+}
