@@ -11,9 +11,17 @@ class ProcedureDecorator < Draper::Decorator
   end
 
   def logo_img
-    return h.image_url(LOGO_NAME) if logo.blank?
-    File.join(STORAGE_URL, File.basename(logo.path))
+    if logo.blank?
+      h.image_url(LOGO_NAME)
+    else
+      if Features.remote_storage
+        (RemoteDownloader.new logo.filename).url
+      else
+        (LocalDownloader.new logo.path, 'logo').url
+      end
+    end
   end
+
   def geographic_information
     module_api_carto
   end

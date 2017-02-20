@@ -7,6 +7,7 @@ FactoryGirl.define do
     organisation "Orga SGMAP"
     direction "direction SGMAP"
     published false
+    cerfa_flag false
     administrateur { create(:administrateur) }
     mail_templates { [create(:mail_template, :dossier_received)]}
 
