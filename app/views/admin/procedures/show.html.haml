@@ -39,9 +39,9 @@
             Annuler
 
     - if @facade.procedure.locked?
-      #procedure_locked.center
-        %h5
-          .label.label-info La procédure ne peut plus être modifiée car elle a été publiée
+      #procedure_locked
+        .alert.alert-info
+          Cette procédure a été publiée, certains éléments ne peuvent plus être modifiés.
 
     %div
       %h3 Lien procédure
