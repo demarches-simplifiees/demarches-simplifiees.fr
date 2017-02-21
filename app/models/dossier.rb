@@ -5,8 +5,8 @@ class Dossier < ActiveRecord::Base
                initiated: 'initiated',
                replied: 'replied', #action utilisateur demandé
                updated: 'updated', #etude par l'administration en cours
-               validated: 'validated',
-               submitted: 'submitted',
+              #  validated: 'validated',
+              #  submitted: 'submitted',
                received: 'received',
                closed: 'closed',
                refused: 'refused',
@@ -122,10 +122,6 @@ class Dossier < ActiveRecord::Base
           if draft?
             initiated!
           end
-        when 'submit'
-          if validated?
-            submitted!
-          end
         when 'update'
           if replied?
             updated!
@@ -146,18 +142,6 @@ class Dossier < ActiveRecord::Base
         when 'follow'
           if initiated?
             updated!
-          end
-        when 'valid'
-          if updated?
-            validated!
-          elsif replied?
-            validated!
-          elsif initiated?
-            validated!
-          end
-        when 'receive'
-          if submitted?
-            received!
           end
         when 'close'
           if received?
@@ -332,7 +316,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def read_only?
-    validated? || received? || submitted? || closed? || refused? || without_continuation?
+    received? || closed? || refused? || without_continuation?
   end
 
   def owner? email

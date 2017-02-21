@@ -22,7 +22,6 @@
         - MailTemplate::TAGS.each do |balise|
           %tr
             %td.center
-              %b.text-success
-                = "--#{balise.first}--"
+              = "--#{balise.first}--"
             %td
               =balise.second[:description]
