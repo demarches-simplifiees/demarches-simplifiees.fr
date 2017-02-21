@@ -25,9 +25,6 @@ module TPS
     config.assets.paths << Rails.root.join('app', 'assets', 'javascript')
     config.assets.precompile += %w( application_split2.css )
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
-
     if Rails.env.production?
       URL = "https://tps.apientreprise.fr/"
     elsif Rails.env.staging?
