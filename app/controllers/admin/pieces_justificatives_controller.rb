@@ -6,8 +6,11 @@ class Admin::PiecesJustificativesController < AdminController
   end
 
   def update
-    @procedure.update_attributes(update_params)
-    flash.now.notice = 'Modifications sauvegardées'
+    if @procedure.update_attributes(update_params)
+      flash.now.notice = 'Modifications sauvegardées'
+    else
+      flash.now.notice = 'Une erreur est survenue'
+    end
     render 'show', format: :js
   end
 
@@ -22,7 +25,7 @@ class Admin::PiecesJustificativesController < AdminController
   def update_params
     params
       .require(:procedure)
-      .permit(types_de_piece_justificative_attributes: [:libelle, :description, :id, :order_place])
+      .permit(types_de_piece_justificative_attributes: [:libelle, :description, :id, :order_place, :lien_demarche])
   end
 
   def move_up

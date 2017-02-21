@@ -1,5 +1,7 @@
 
-%br
+- if @procedure.locked?
+  .alert.alert-info
+    Cette procédure est publiée, certains éléments de la description ne sont plus modifiables
 
 -{libelle: 'Libellé*', description: 'Description*', organisation: 'Organisation', direction: 'Direction', lien_site_web: 'Lien site internet', lien_notice: 'Lien notice'}.each do |key, value|
   .form-group
@@ -12,64 +14,69 @@
       = f.text_field key, class: 'form-control', placeholder: value
 
 .row
-  .col-md-6.col-sm-6.col-xs-6.col-lg-6
+  .col-md-6
     %h4 Logo de la procédure
     - unless @procedure.logo.blank?
       = image_tag @procedure.decorate.logo_img, {style: 'height: 40px; display: inline; margin-right: 6px', id: 'preview_procedure_logo'}
-    = f.file_field(:logo, accept: 'image/png, image/jpg, image/jpeg', style: 'display:inline')
+    = f.file_field :logo, accept: 'image/png, image/jpg, image/jpeg', style: 'display:inline'
 
     %div{style:'margin-top:5px'}
       %i
         Fichier accepté : JPG / JPEG / PNG
-  .col-md-6.col-sm-6.col-xs-6.col-lg-6
+  .col-md-6
     %h4 Drapeau européen
-    %label
-      =f.check_box :euro_flag
-      Afficher le drapeau européen
-
-%br
-
-.row
-  .col-md-6.col-sm-6.col-xs-6.col-lg-6
-    %h4 Cartographie
-
-    = f.fields_for :module_api_carto, @procedure.module_api_carto do |ff|
+    .checkbox
       %label
-        =ff.check_box :use_api_carto, {id: :procedure_module_api_carto_use_api_carto}
-        Utilisation de la cartographie
+        =f.check_box :euro_flag
+        Afficher le drapeau européen
 
-      %ul#modules_api_carto
-        %li
+- unless @procedure.locked?
+  .row
+    .col-md-6
+      %h4 Cartographie
+
+      = f.fields_for :module_api_carto, @procedure.module_api_carto do |ff|
+        .checkbox
           %label
-            = ff.check_box :quartiers_prioritaires
-            Quartiers Prioritaires
-        %li
+            =ff.check_box :use_api_carto, id: :procedure_module_api_carto_use_api_carto
+            Utilisation de la cartographie
+
+        %ul#modules_api_carto
+          %li
+            .checkbox
+              %label
+                = ff.check_box :quartiers_prioritaires
+                Quartiers Prioritaires
+          %li
+            .checkbox
+              %label
+                = ff.check_box :cadastre
+                Cadastre
+
+    .col-md-6
+      - if @procedure.cerfa_flag
+        %h4 Formulaire de demande ou CERFA
+        .checkbox
           %label
-            = ff.check_box :cadastre
-            Cadastre
+            = f.check_box :cerfa_flag
+            Activer l'envoi de formulaire de demande ou CERFA
+        %br
+        = f.text_field :lien_demarche, class: 'form-control', placeholder: 'URL vers le formulaire vierge (facultatif)'
 
-  .col-md-6.col-sm-6.col-xs-6.col-lg-6
-    %h4 Formulaire de demande ou CERFA
-    %label
-      =f.check_box :cerfa_flag
-      Activer l'envoi de formulaire de demande ou CERFA
-    %br
-    =f.text_field :lien_demarche, class: 'form-control', placeholder: 'URL vers le formulaire vierge (facultatif)'
+  .row
+    .col-md-6
+      %h4 Particuliers
+      .checkbox
+        %label
+          =f.check_box :for_individual
+          Cette procédure s'adresse à un public qui
+          %b
+            ne possède pas (ou pas encore) de numéro SIRET,
+          qui doivent donc s'identifier en tant que personne physique.
 
-%br
-.row
-  .col-md-6.col-sm-6.col-xs-6.col-lg-6
-    %h4 Particuliers
-    %div
-      %label
-        =f.check_box :for_individual
-        Cette procédure s'adresse à un public qui
-        %b
-          ne possède pas (ou pas encore) de numéro SIRET,
-        qui doivent donc s'identifier en tant que personne physique.
-
-      %ul#individual_with_siret{style:'margin-top: 8px'}
+      %ul#individual_with_siret
         %li
-          %label
-            =f.check_box :individual_with_siret
-            Donner la possibilité de renseigner un SIRET au cours de la construction du dossier.
+          .checkbox
+            %label
+              = f.check_box :individual_with_siret
+              Donner la possibilité de renseigner un SIRET au cours de la construction du dossier.

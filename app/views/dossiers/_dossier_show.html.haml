@@ -4,7 +4,7 @@
   .default_data_block
     %div.row.show-block.infos
       %div.header
-        %div.col-lg-8.col-md-8.col-sm-8.col-xs-8.title-no-expanse
+        %div.col-xs-8.title-no-expanse
           %div.carret-right
           INFORMATIONS DU DEMANDEUR
         - if !@current_gestionnaire && ["draft", "updated", "replied", "initiated"].include?(@facade.dossier.state)
@@ -16,34 +16,34 @@
   .default_data_block
     %div.row.show-block.infos#infos_entreprise
       %div.header
-        %div.col-lg-12.col-md-12.col-sm-12.col-xs-12.title
+        %div.col-xs-12.title
           %div.carret-right
           %div.carret-down
           INFORMATIONS DU DEMANDEUR
-      %div.body
+      %div.body.display-block-on-print
         = render partial: '/dossiers/infos_entreprise'
 
 .default_data_block.default_visible
   %div.row.show-block.infos#infos_dossier
     %div.header
-      %div.col-lg-10.col-md-10.col-sm-10.col-xs-10.title
+      %div.col-xs-10.title
         %div.carret-right
         %div.carret-down
         CONSTRUCTION DU DOSSIER
       = render partial: '/dossiers/edit_dossier'
-    %div.body
+    %div.body.display-block-on-print
       = render partial: '/dossiers/infos_dossier'
 
 - if @facade.dossier.procedure.module_api_carto.use_api_carto
-  .default_data_block.default_visible
+  .default_data_block.default_visible.no-page-break-inside
     %div.row.show-block#carto
       %div.header
-        %div.col-lg-10.col-md-10.col-sm-10.col-xs-10.title
+        %div.col-xs-10.title
           %div.carret-right
           %div.carret-down
           CARTOGRAPHIE
         = render partial: '/dossiers/edit_carto'
-      %div.body
+      %div.body.display-block-on-print
         %input{id: 'json_latlngs',          type: 'hidden', value: "#{@facade.dossier.json_latlngs}", name: 'json_latlngs'}
         %input{id: 'quartier_prioritaires', type: 'hidden', value: "#{@facade.dossier.quartier_prioritaires.to_json}"}
         %input{id: 'cadastres',             type: 'hidden', value: "#{@facade.dossier.cadastres.to_json}"}
@@ -56,11 +56,11 @@
   .default_data_block.default_visible
     %div.row.show-block#private-fields
       %div.header
-        %div.col-lg-10.col-md-10.col-sm-10.col-xs-10.title
+        %div.col-xs-10.title
           %div.carret-right
           %div.carret-down
           = "formulaire privé".upcase
-        %div.col-lg-2.col-md-2.col-sm-2.col-xs-2.count
+        %div.col-xs-2.count
           - private_fields_count = @champs_private.count
           = (private_fields_count == 1) ? "1 champ" : "#{private_fields_count} champs"
       %div.body

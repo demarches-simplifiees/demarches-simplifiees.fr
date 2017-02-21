@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  default_url_options protocol: :https
 
   get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
 
@@ -42,13 +41,6 @@ Rails.application.routes.draw do
   get 'users' => 'users#index'
   get 'admin' => 'admin#index'
   get 'backoffice' => 'backoffice#index'
-
-  if Features.opensimplif
-    get 'simplifications' => 'opensimplif#index'
-    get 'simplifications/reload_smartlisting' => 'opensimplif#reload_smartlisting'
-    get 'simplifications/nothing' => 'opensimplif#nothing'
-    get 'simplifications/:id' => 'opensimplif#index', as: :simplification
-  end
 
   resources :administrations
 
@@ -130,7 +122,7 @@ Rails.application.routes.draw do
         post '/:index/move_down' => 'pieces_justificatives#move_down', as: :move_down
       end
 
-      resources 'mails'
+      resources :mail_templates, only: [:index, :edit, :update]
 
       put 'archive' => 'procedures#archive', as: :archive
       put 'publish' => 'procedures#publish', as: :publish
@@ -172,6 +164,7 @@ Rails.application.routes.draw do
       post 'refuse' => 'dossiers#refuse'
       post 'without_continuation' => 'dossiers#without_continuation'
       post 'close' => 'dossiers#close'
+      post 'archive' => 'dossiers#archive'
 
       put 'follow' => 'dossiers#follow'
       resources :commentaires, only: [:index]

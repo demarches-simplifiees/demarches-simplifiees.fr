@@ -56,7 +56,10 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     @search_terms = params[:q]
 
     # exact id match?
-    @dossiers = Dossier.where(id: @search_terms.to_i) if @search_terms.to_i < 2147483647
+    if @search_terms.to_i != 0
+      @dossiers = current_gestionnaire.dossiers.where(id: @search_terms.to_i)
+    end
+
     @dossiers = Dossier.none if @dossiers.nil?
 
     # full text search
@@ -156,6 +159,15 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     smartlisting_dossier
 
     render 'backoffice/dossiers/index', formats: :js
+  end
+
+  def archive
+    facade = create_dossier_facade params[:dossier_id]
+    unless facade.dossier.archived
+      facade.dossier.update(archived: true)
+      flash.notice = 'Dossier archivé'
+    end
+    redirect_to backoffice_dossiers_path
   end
 
   private

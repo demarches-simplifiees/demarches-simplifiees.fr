@@ -5,16 +5,25 @@ describe Backoffice::DossiersController, type: :controller do
     @request.env['HTTP_REFERER'] = TPS::Application::URL
   end
   let(:procedure) { create :procedure }
+  let(:procedure2) { create :procedure }
 
   let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
+  let(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure2, state: :initiated) }
   let(:dossier_archived) { create(:dossier, :with_entreprise, archived: true) }
 
   let(:dossier_id) { dossier.id }
+  let(:dossier2_id) { dossier2.id }
   let(:bad_dossier_id) { Dossier.count + 10 }
+
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [create(:administrateur)]) }
+  let!(:gestionnaire2) { create(:gestionnaire, administrateurs: [create(:administrateur)]) }
 
   before do
     create :assign_to, procedure: procedure, gestionnaire: gestionnaire
+    create :assign_to, procedure: procedure2, gestionnaire: gestionnaire2
+
+    procedure.dossiers << dossier
+    procedure2.dossiers << dossier2
   end
 
   describe 'GET #index' do
@@ -166,15 +175,42 @@ describe Backoffice::DossiersController, type: :controller do
   end
 
   describe 'POST #search' do
-    before do
-      sign_in gestionnaire
-    end
+    describe 'by id' do
+      context 'when I am logged as a gestionnaire' do
+        before do
+          sign_in gestionnaire
+        end
 
-    it 'returns http success' do
-      post :search, params: {search_terms: 'test'}
-      expect(response).to have_http_status(200)
-    end
+        context 'when I own the dossier' do
+          before :each do
+            post :search, params: { q: dossier_id }
+          end
 
+          it 'returns http success' do
+            expect(response).to have_http_status(200)
+          end
+
+          it 'returns the expected dossier' do
+            expect(assigns(:dossiers).count).to eq(1)
+            expect(assigns(:dossiers).first.id).to eq(dossier_id)
+          end
+        end
+
+        context 'when I do not own the dossier' do
+          before :each do
+            post :search, params: { q: dossier2_id }
+          end
+
+          it 'returns http success' do
+            expect(response).to have_http_status(200)
+          end
+
+          it 'returns nothing' do
+            expect(assigns(:dossiers).count).to eq(0)
+          end
+        end
+      end
+    end
   end
 
   describe 'POST #valid' do
@@ -344,5 +380,24 @@ describe Backoffice::DossiersController, type: :controller do
         it { expect(flash[:notice]).to have_content 'Dossier relaché' }
       end
     end
+  end
+
+
+  describe 'POST #archive' do
+    before do
+      dossier.update(archived: false)
+      sign_in gestionnaire
+    end
+
+    subject { post :archive, params: {dossier_id: dossier_id} }
+
+    it 'change state to archived' do
+      subject
+
+      dossier.reload
+      expect(dossier.archived).to eq(true)
+    end
+
+    it { is_expected.to redirect_to backoffice_dossiers_path }
   end
 end

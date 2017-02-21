@@ -39,17 +39,14 @@
             Annuler
 
     - if @facade.procedure.locked?
-      #procedure_locked.center
-        %h5
-          .label.label-info La procédure ne peut plus être modifiée car elle a été publiée
+      #procedure_locked
+        .alert.alert-info
+          Cette procédure a été publiée, certains éléments ne peuvent plus être modifiés.
 
     %div
       %h3 Lien procédure
       %div{style:'margin-left:3%'}
-        - if @facade.procedure.archived?
-          %b
-            Cette procédure a été archivée et n'est plus accessible par le public.
-        - elsif @facade.procedure.published?
+        - if @facade.procedure.published?
           = link_to @facade.procedure.lien, @facade.procedure.lien, target: '_blank'
         - else
           %b
@@ -70,18 +67,18 @@
           Champs
           .badge.progress-bar-info
             = @facade.procedure.types_de_champ.size
-        - @facade.procedure.types_de_champ.order(:order_place).each do |champ|
-          = champ.libelle
-          %br
+        %ul
+          - @facade.procedure.types_de_champ.order(:order_place).each do |champ|
+            %li= champ.libelle
 
       .champs_private.col-xs-6.col-md-3
         %h4.text-info
           Champs privés
           .badge.progress-bar-info
             = @facade.procedure.types_de_champ_private.size
-        - @facade.procedure.types_de_champ_private.order(:order_place).each do |champ|
-          = champ.libelle
-          %br
+        %ul
+          - @facade.procedure.types_de_champ_private.order(:order_place).each do |champ|
+            %li= champ.libelle
 
       .pieces_justificatives.col-xs-6.col-md-3
         %h4.text-info
@@ -96,7 +93,7 @@
       =t('dynamics.admin.procedure.stats.title')
 
     .row
-      .col-md-6.col-sm-6.col-xs-6.col-lg-6{style:'margin-left:3%'}
+      .col-xs-6{style:'margin-left:3%'}
         %h4 Total
         %div
           = @facade.dossiers_total
@@ -126,7 +123,7 @@
           %p
             0
 
-      .col-md-5.col-sm-5.col-xs-5.col-lg-5
+      .col-xs-5
         %h4 Non archivés
         = javascript_include_tag "https://code.highcharts.com/highcharts.js", "chartkick"
         - if @facade.dossiers_for_pie_highchart.blank?

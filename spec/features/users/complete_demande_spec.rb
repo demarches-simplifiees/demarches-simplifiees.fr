@@ -61,7 +61,7 @@ feature 'user path for dossier creation' do
         context 'when validating info entreprise recap page' do
           before do
             page.check('dossier_autorisation_donnees')
-            page.click_on 'Etape suivante'
+            page.find_by_id('etape_suivante').trigger('click')
           end
           scenario 'user is on description page' do
             expect(page).to have_css('#description_page')
@@ -69,7 +69,7 @@ feature 'user path for dossier creation' do
           context 'user fill and validate description page' do
             before do
               page.find_by_id("champs_#{Dossier.last.champs.first.id}").set 'Mon super projet'
-              page.click_on 'Soumettre mon dossier'
+              page.find_by_id('suivant').trigger('click')
             end
             scenario 'user is on recap page' do
               expect(page).to have_css('#users_recapitulatif_dossier_show')

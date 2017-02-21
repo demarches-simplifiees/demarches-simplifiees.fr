@@ -11,7 +11,7 @@ class SyncCredentialsService
     unless @klass == User
       user = User.find_by(email: @email_was)
       if user
-        return user.update_columns(
+        return false unless user.update_columns(
             email: @email,
             encrypted_password: @encrypted_password)
       end
@@ -20,7 +20,7 @@ class SyncCredentialsService
     unless @klass == Gestionnaire
       gestionnaire = Gestionnaire.find_by(email: @email_was)
       if gestionnaire
-        return gestionnaire.update_columns(
+        return false unless gestionnaire.update_columns(
             email: @email,
             encrypted_password: @encrypted_password)
       end
@@ -29,10 +29,12 @@ class SyncCredentialsService
     unless @klass == Administrateur
       administrateur = Administrateur.find_by(email: @email_was)
       if administrateur
-        return administrateur.update_columns(
+        return false unless administrateur.update_columns(
             email: @email,
             encrypted_password: @encrypted_password)
       end
     end
+
+    true
   end
 end

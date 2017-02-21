@@ -19,10 +19,9 @@
       %div.procedure_list_element{class: ('active' if active == 'Accompagnateurs')}
         =t('dynamics.admin.procedure.onglets.accompagnateurs')
 
-    - unless @procedure.locked?
-      %a{:href => "#{url_for edit_admin_procedure_path(@procedure)}", id: 'onglet-description'}
-        %div.procedure_list_element{class: ('active' if active == 'Description')}
-          Description
+    %a{:href => "#{url_for edit_admin_procedure_path(@procedure)}", id: 'onglet-description'}
+      %div.procedure_list_element{class: ('active' if active == 'Description')}
+        Description
 
     - unless @procedure.locked?
       %a{:href => "#{url_for admin_procedure_types_de_champ_path(@procedure)}", id: 'onglet-champs'}
@@ -39,7 +38,7 @@
         %div.procedure_list_element{class: ('active' if active == 'Champs privés')}
           Champs privés
 
-    %a{:href => "#{url_for admin_procedure_mails_path(@procedure)}", id: 'onglet-inemailsfos'}
+    %a{:href => "#{url_for admin_procedure_mail_templates_path(@procedure)}", id: 'onglet-inemailsfos'}
       %div.procedure_list_element{class: ('active' if active == 'E-mails')}
         E-mails
 

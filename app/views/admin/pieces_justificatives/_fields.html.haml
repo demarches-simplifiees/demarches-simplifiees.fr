@@ -6,6 +6,12 @@
     .form-group
       %h4 Description
       =ff.text_area :description, class: 'form-control description', placeholder: 'Description'
+    .form-group
+      %h4
+        Lien du formulaire vierge
+        %small
+          (optionel)
+      =ff.url_field :lien_demarche, class: 'form-control', placeholder: 'Lien du document vierge'
 
     .form-group
       = ff.hidden_field :order_place, value: ff.index
@@ -23,4 +29,3 @@
         = f.submit('Ajouter la pièce', class: 'btn btn-success', id: 'add_piece_justificative')
       - else
         = link_to("", admin_procedure_piece_justificative_path(@procedure, ff.object.id), method: :delete, remote: true, id: "delete_type_de_piece_justificative_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
-

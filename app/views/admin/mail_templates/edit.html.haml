@@ -1,0 +1,28 @@
+.white-back
+  %h3
+    = @mail_template.decorate.name
+
+  = simple_form_for @mail_template.becomes(MailTemplate), url: admin_procedure_mail_template_path(@procedure, @mail_template) do |f|
+    .row
+      .col-md-6
+        = f.input :object, label: "Objet de l'email"
+    = f.input :body, label: "Corps de l'email", input_html: {class: 'wysihtml5'}
+    .text-right
+      = link_to "Annuler", admin_procedure_mail_templates_path(@procedure), class: "btn btn-default"
+      = f.button :submit, 'Mettre à jour', class: "btn-success"
+
+  .row
+    .col-md-8
+      %table.table
+        %tr
+          %th
+            Balise
+          %th
+            Description
+        - MailTemplate::TAGS.each do |balise|
+          %tr
+            %td.center
+              %b.text-success
+                = "--#{balise.first}--"
+            %td
+              =balise.second[:description]

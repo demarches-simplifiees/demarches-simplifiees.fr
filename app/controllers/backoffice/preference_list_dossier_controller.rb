@@ -36,7 +36,7 @@ class Backoffice::PreferenceListDossierController < Backoffice::DossiersListCont
   private
 
   def path
-    Features.opensimplif ? 'opensimplif/pref_list' : 'backoffice/dossiers/pref_list'
+    'backoffice/dossiers/pref_list'
   end
 
   def params_procedure_id

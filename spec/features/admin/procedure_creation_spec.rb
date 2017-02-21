@@ -46,7 +46,6 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   end
 
   context 'Editing a new procedure' do
-
     before 'Create procedure' do
       page.find_by_id('new-procedure').click
       fill_in 'procedure_libelle', with: 'libelle de la procedure'

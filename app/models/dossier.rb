@@ -309,6 +309,10 @@ class Dossier < ActiveRecord::Base
     end
   end
 
+  def followers_gestionnaires_emails
+    follows.includes(:gestionnaire).map { |f| f.gestionnaire }.pluck(:email).join(' ')
+  end
+
   def reset!
     etablissement.destroy
     entreprise.destroy

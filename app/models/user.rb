@@ -15,7 +15,8 @@ class User < ActiveRecord::Base
 
   delegate :given_name, :family_name, :email_france_connect, :gender, :birthdate, :birthplace, :france_connect_particulier_id, to: :france_connect_information
   accepts_nested_attributes_for :france_connect_information
-  after_update :sync_credentials
+
+  include CredentialsSyncableConcern
 
   def self.find_for_france_connect email, siret
     user = User.find_by_email(email)
@@ -35,12 +36,4 @@ class User < ActiveRecord::Base
     invites.pluck(:dossier_id).include?(dossier_id.to_i)
   end
 
-  private
-
-  def sync_credentials
-    if email_changed? || encrypted_password_changed?
-      return SyncCredentialsService.new(User, email_was, email, encrypted_password).change_credentials!
-    end
-    true
-  end
 end

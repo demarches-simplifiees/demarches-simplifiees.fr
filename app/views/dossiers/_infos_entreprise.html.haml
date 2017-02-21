@@ -2,51 +2,51 @@
   %h4
     = @facade.entreprise.raison_sociale_or_name
   .row.split-row
-    %div.col-md-12.col-sm-12.col-xs-12.col-lg-12.split-hr
+    %div.col-xs-12.split-hr
 %div.row
-  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+  .col-xs-12
 
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Siret :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info= @facade.etablissement.siret
+      %div.col-xs-4.entreprise-label Siret :
+      %div.col-xs-8.entreprise-info= @facade.etablissement.siret
     - if @facade.etablissement.siret != @facade.entreprise.siret_siege_social
       .row
-        %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label SIRET siège social :
-        %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info= @facade.entreprise.siret_siege_social
+        %div.col-xs-4.entreprise-label SIRET siège social :
+        %div.col-xs-8.entreprise-info= @facade.entreprise.siret_siege_social
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Forme juridique :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info= @facade.entreprise.forme_juridique
+      %div.col-xs-4.entreprise-label Forme juridique :
+      %div.col-xs-8.entreprise-info= @facade.entreprise.forme_juridique
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Libellé naf :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info= @facade.etablissement.libelle_naf
+      %div.col-xs-4.entreprise-label Libellé naf :
+      %div.col-xs-8.entreprise-info= @facade.etablissement.libelle_naf
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Code naf :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info= @facade.etablissement.naf
+      %div.col-xs-4.entreprise-label Code naf :
+      %div.col-xs-8.entreprise-info= @facade.etablissement.naf
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Date de création :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info= Time.at(@facade.entreprise.date_creation).strftime "%d-%m-%Y"
+      %div.col-xs-4.entreprise-label Date de création :
+      %div.col-xs-8.entreprise-info= Time.at(@facade.entreprise.date_creation).strftime "%d-%m-%Y"
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Effectif organisation :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info= @facade.entreprise.effectif
+      %div.col-xs-4.entreprise-label Effectif organisation :
+      %div.col-xs-8.entreprise-info= @facade.entreprise.effectif
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Code effectif :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info= @facade.entreprise.code_effectif_entreprise
+      %div.col-xs-4.entreprise-label Code effectif :
+      %div.col-xs-8.entreprise-info= @facade.entreprise.code_effectif_entreprise
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Numéro TVA intracommunautaire :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info= @facade.entreprise.numero_tva_intracommunautaire
+      %div.col-xs-4.entreprise-label Numéro TVA intracommunautaire :
+      %div.col-xs-8.entreprise-info= @facade.entreprise.numero_tva_intracommunautaire
 
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Adresse :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info
+      %div.col-xs-4.entreprise-label Adresse :
+      %div.col-xs-8.entreprise-info
         - @facade.etablissement.adresse.split("\n").each do |line|
           = line
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Capital social :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info= @facade.entreprise.pretty_capital_social
+      %div.col-xs-4.entreprise-label Capital social :
+      %div.col-xs-8.entreprise-info= @facade.entreprise.pretty_capital_social
 
     .row
-      %div.col-md-4.col-sm-4.col-xs-4.col-lg-4.entreprise-label Exercices :
-      %div.col-md-8.col-sm-8.col-xs-8.col-lg-8.entreprise-info
+      %div.col-xs-4.entreprise-label Exercices :
+      %div.col-xs-8.entreprise-info
         - @facade.etablissement.exercices.each_with_index do |exercice, index|
           %strong
             = "#{exercice.dateFinExercice.year} : "
@@ -54,7 +54,7 @@
           %br
 
     .row.split-row
-      %div.col-md-12.col-sm-12.col-xs-12.col-lg-12.split-hr
+      %div.col-xs-12.split-hr
 - unless @facade.entreprise.rna_information.nil?
   = render partial: '/dossiers/infos_rna'
 

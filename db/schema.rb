@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161227103823) do
+ActiveRecord::Schema.define(version: 20170215142944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -234,10 +234,12 @@ ActiveRecord::Schema.define(version: 20161227103823) do
   end
 
   create_table "mail_templates", force: :cascade do |t|
-    t.string  "object"
-    t.text    "body"
-    t.string  "type"
-    t.integer "procedure_id"
+    t.string   "object"
+    t.text     "body"
+    t.string   "type"
+    t.integer  "procedure_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "module_api_cartos", force: :cascade do |t|
@@ -361,6 +363,7 @@ ActiveRecord::Schema.define(version: 20161227103823) do
     t.datetime "updated_at",                     null: false
     t.integer  "procedure_id"
     t.integer  "order_place"
+    t.string   "lien_demarche"
   end
 
   create_table "users", force: :cascade do |t|

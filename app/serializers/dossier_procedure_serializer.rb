@@ -5,4 +5,6 @@ class DossierProcedureSerializer < ActiveModel::Serializer
              :archived,
              :mandataire_social,
              :state
+
+  attribute :followers_gestionnaires_emails, key: :emails_accompagnateurs
 end

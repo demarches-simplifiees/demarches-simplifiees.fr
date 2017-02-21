@@ -3,7 +3,6 @@ class Admin::ProceduresController < AdminController
   helper SmartListing::Helper
 
   before_action :retrieve_procedure, only: [:show, :edit]
-  before_action :procedure_locked?, only: [:edit]
 
   def index
     @procedures = smart_listing_create :procedures,
@@ -61,7 +60,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def create
-    @procedure = Procedure.new(create_procedure_params)
+    @procedure = Procedure.new(procedure_params)
     @procedure.module_api_carto = ModuleAPICarto.new(create_module_api_carto_params) if @procedure.valid?
 
     unless @procedure.save
@@ -76,12 +75,12 @@ class Admin::ProceduresController < AdminController
   def update
     @procedure = current_administrateur.procedures.find(params[:id])
 
-    unless @procedure.update_attributes(create_procedure_params)
+    unless @procedure.update_attributes(procedure_params)
       flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
       return render 'edit'
     end
 
-    flash.notice = 'Préocédure modifiée'
+    flash.notice = 'Procédure modifiée'
     redirect_to edit_admin_procedure_path(id: @procedure.id)
   end
 
@@ -192,8 +191,12 @@ class Admin::ProceduresController < AdminController
 
   private
 
-  def create_procedure_params
-    params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_demarche, :lien_site_web, :lien_notice, :euro_flag, :logo, :cerfa_flag, :for_individual, :individual_with_siret, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
+  def procedure_params
+    if @procedure.try(:locked?)
+      params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_site_web, :lien_notice, :euro_flag, :logo)
+    else
+      params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_site_web, :lien_notice, :euro_flag, :logo, :lien_demarche, :cerfa_flag, :for_individual, :individual_with_siret, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
+    end
   end
 
   def create_module_api_carto_params
