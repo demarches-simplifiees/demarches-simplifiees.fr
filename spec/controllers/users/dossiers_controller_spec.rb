@@ -307,12 +307,16 @@ describe Users::DossiersController, type: :controller do
 
       describe "with siret without whitespaces" do
         let(:example_siret) { siret }
-        it_should_behave_like "with valid siret"
+        if ENV['CIRCLECI'].nil?
+          it_should_behave_like "with valid siret"
+        end
       end
 
       describe "with siret with whitespaces" do
         let(:example_siret) { siret_with_whitespaces }
-        it_should_behave_like "with valid siret"
+        if ENV['CIRCLECI'].nil?
+          it_should_behave_like "with valid siret"
+        end
       end
 
       context 'with non existant siret' do
