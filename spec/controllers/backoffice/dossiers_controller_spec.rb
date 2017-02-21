@@ -12,6 +12,7 @@ describe Backoffice::DossiersController, type: :controller do
   let(:dossier_archived) { create(:dossier, :with_entreprise, archived: true) }
 
   let(:dossier_id) { dossier.id }
+  let(:dossier2_id) { dossier2.id }
   let(:bad_dossier_id) { Dossier.count + 10 }
 
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [create(:administrateur)]) }
