@@ -73,9 +73,10 @@ describe 'admin/procedures/show.html.haml', type: :view do
       it { expect(rendered).to have_css('a#reenable') }
     end
 
-    describe 'procedure link is not present' do
-      it { expect(rendered).to have_content('Cette procédure a été archivée et n\'est plus accessible par le public.') }
+    describe 'procedure link is present' do
+      it { expect(rendered).to have_content(commencer_url(procedure_path: procedure.path)) }
     end
+
   end
 
 end
