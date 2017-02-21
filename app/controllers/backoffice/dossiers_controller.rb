@@ -56,7 +56,10 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     @search_terms = params[:q]
 
     # exact id match?
-    @dossiers = Dossier.where(id: @search_terms.to_i) if @search_terms.to_i < 2147483647
+    if @search_terms.to_i != 0
+      @dossiers = current_gestionnaire.dossiers.where(id: @search_terms.to_i)
+    end
+
     @dossiers = Dossier.none if @dossiers.nil?
 
     # full text search
