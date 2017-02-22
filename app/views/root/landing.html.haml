@@ -1,18 +1,20 @@
 #landing.max-size
   #title
+    .center
+      = image_tag 'logos/logo-tps.png', id: 'logo-tps'
     %h1.center
-      %img#logo-tps{src: image_url('logos/logo-tps.png')}
-    %h2.center
       TéléProcédure Simplifiée
 
-    %h3.center
-      Plateforme publique pour réaliser des démarches administratives 100% en ligne.
+    .row
+      .col-md-8.col-md-push-2.center
+        %h3
+          Dématérialisez n'importe quelle démarche administrative en quelques minutes,
+          avec un outil
+          %strong
+            gratuit, simple, collaboratif et sûr
 
-    %br
-    %br
-    .center
-      %button.background-tps.js-scrollTo.btn.btn-lg{cible: '.demo_account'}
-        Envie d'essayer ?
+        %p.mt-1 Vous êtes intéressés ?
+        %p= link_to 'Programmer une démo', "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS", target: '_blank', class: 'btn btn-danger btn-lg'
 
 #landing_body.max-size
   .row#etapes.center
