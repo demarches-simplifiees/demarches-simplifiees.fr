@@ -12,8 +12,6 @@ fr:
           initiated: "Nouveau"
           replied: "En construction"
           updated: "En construction"
-          validated: "Figé"
-          submitted: "Déposé / À réceptionner"
           received: "En instruction"
           closed: "Accepté"
           refused: "Refusé"

@@ -5,8 +5,6 @@ class Dossier < ActiveRecord::Base
                initiated: 'initiated',
                replied: 'replied', #action utilisateur demandé
                updated: 'updated', #etude par l'administration en cours
-              #  validated: 'validated',
-              #  submitted: 'submitted',
                received: 'received',
                closed: 'closed',
                refused: 'refused',
@@ -42,7 +40,6 @@ class Dossier < ActiveRecord::Base
 
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
-  after_save :internal_notification
 
   validates :user, presence: true
 
@@ -50,14 +47,12 @@ class Dossier < ActiveRecord::Base
   NOUVEAUX = %w(initiated)
   OUVERT = %w(updated replied)
   WAITING_FOR_GESTIONNAIRE = %w(updated)
-  WAITING_FOR_USER = %w(replied validated)
+  WAITING_FOR_USER = %w(replied)
   EN_CONSTRUCTION = %w(initiated updated replied)
-  VALIDES = %w(validated)
-  DEPOSES = %w(submitted)
-  EN_INSTRUCTION = %w(submitted received)
+  EN_INSTRUCTION = %w(received)
   A_INSTRUIRE = %w(received)
   TERMINE = %w(closed refused without_continuation)
-  ALL_STATE = %w(initiated updated replied validated submitted received closed refused without_continuation)
+  ALL_STATE = %w(initiated updated replied received closed refused without_continuation)
 
   def unreaded_notifications
     @unreaded_notif ||= notifications.where(already_read: false)
@@ -108,7 +103,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action
-    unless %w(initiate follow update comment valid submit receive refuse without_continuation close).include?(action)
+    unless %w(initiate follow update comment receive refuse without_continuation close).include?(action)
       fail 'action is not valid'
     end
 
@@ -190,18 +185,6 @@ class Dossier < ActiveRecord::Base
 
   def self.ouvert order = 'ASC'
     where(state: OUVERT, archived: false).order("updated_at #{order}")
-  end
-
-  def self.valides order = 'ASC'
-    where(state: VALIDES, archived: false).order("updated_at #{order}")
-  end
-
-  def self.fige order = 'ASC'
-    where(state: VALIDES, archived: false).order("updated_at #{order}")
-  end
-
-  def self.deposes order = 'ASC'
-    where(state: DEPOSES, archived: false).order("updated_at #{order}")
   end
 
   def self.a_instruire order = 'ASC'
@@ -308,13 +291,6 @@ class Dossier < ActiveRecord::Base
     follows.size
   end
 
-  def submit!
-    self.deposit_datetime= DateTime.now
-
-    next_step! 'user', 'submit'
-    NotificationMailer.dossier_submitted(self).deliver_now!
-  end
-
   def read_only?
     received? || closed? || refused? || without_continuation?
   end
@@ -325,13 +301,5 @@ class Dossier < ActiveRecord::Base
 
   def invite_by_user? email
     (invites_user.pluck :email).include? email
-  end
-
-  private
-
-  def internal_notification
-    if state_changed? && state == 'submitted'
-      NotificationService.new('submitted', self.id).notify
-    end
   end
 end

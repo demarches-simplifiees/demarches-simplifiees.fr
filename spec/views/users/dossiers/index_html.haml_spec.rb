@@ -6,8 +6,6 @@ describe 'users/dossiers/index.html.haml', type: :view do
   let!(:decorate_dossier_initiated) { create(:dossier, :with_entreprise, user: user, state: 'initiated').decorate }
   let!(:decorate_dossier_replied) { create(:dossier, :with_entreprise, user: user, state: 'replied').decorate }
   let!(:decorate_dossier_updated) { create(:dossier, :with_entreprise, user: user, state: 'updated').decorate }
-  let!(:decorate_dossier_validated) { create(:dossier, :with_entreprise, user: user, state: 'validated').decorate }
-  let!(:decorate_dossier_submitted) { create(:dossier, :with_entreprise, user: user, state: 'submitted').decorate }
   let!(:decorate_dossier_received) { create(:dossier, :with_entreprise, user: user, state: 'received').decorate }
   let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, user: user, state: 'closed').decorate }
   let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, user: user, state: 'refused').decorate }
@@ -61,26 +59,12 @@ describe 'users/dossiers/index.html.haml', type: :view do
     end
   end
 
-  describe 'on tab etude a deposer' do
-    let(:total_dossiers) { 1 }
-    let(:active_class) { '.active .text-purple' }
-    let(:dossiers_to_display) { user.dossiers.valides }
-    let(:liste) { 'valides' }
-
-    it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_validated }
-    end
-  end
 
   describe 'on tab etude en examen' do
-    let(:total_dossiers) { 2 }
+    let(:total_dossiers) { 1 }
     let(:active_class) { '.active .text-default' }
     let(:dossiers_to_display) { user.dossiers.en_instruction }
     let(:liste) { 'en_instruction' }
-
-    it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_submitted }
-    end
 
     it_behaves_like 'check_tab_content' do
       let(:decorate_dossier_at_check) { decorate_dossier_received }
