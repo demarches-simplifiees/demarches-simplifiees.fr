@@ -34,7 +34,6 @@ class Procedure < ActiveRecord::Base
 
   def build_default_mails
     MailReceived.create(procedure: self) unless mail_received
-    MailValidated.create(procedure: self) unless mail_validated
   end
 
   def path
