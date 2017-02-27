@@ -5,7 +5,6 @@ class Procedure < ActiveRecord::Base
   has_many :dossiers
   has_many :mail_templates
   has_one :mail_received
-  has_one :mail_validated
 
   has_one :procedure_path, dependent: :destroy
 
