@@ -5,51 +5,61 @@
   .default_data_block
     %div.row.show-block#new_dossiers
       %div.header
-        %div.col-lg-10.col-md-10.col-sm-10.col-xs-10.title
+        %div.col-xs-10.title
           %div.carret-right
           %div.carret-down
           Nouveaux dossiers
-        %div.col-lg-2.col-md-2.col-sm-2.col-xs-2.count
-          =@facade_data_view.nouveaux_total
-          dossiers
+        %div.col-xs-2.count
+          = pluralize(@facade_data_view.nouveaux_total, "dossier")
       %div.body
         = smart_listing_render :new_dossiers
 
   .row.center
-    .col-lg-1.col-md-1.col-sm-1.col-xs-1
-    .col-lg-2.col-md-2.col-sm-2.col-xs-2
+    .col-xs-2.col-xs-offset-1
       =link_to 'Tous les états', '?liste=all_state', class: 'text-info', style:"text-decoration: #{@facade_data_view.liste == 'all_state'? 'underline' : ''}"
-    .col-lg-2.col-md-2.col-sm-2.col-xs-2
+    .col-xs-2
       =link_to 'En construction', '?liste=a_traiter', class: 'text-danger', style:"text-decoration: #{@facade_data_view.liste == 'a_traiter'? 'underline' : ''}"
-    .col-lg-2.col-md-2.col-sm-2.col-xs-2
+    .col-xs-2
       =link_to 'À receptionner', '?liste=deposes', class: 'text-purple', style:"text-decoration: #{@facade_data_view.liste == 'deposes'? 'underline' : ''}"
-    .col-lg-2.col-md-2.col-sm-2.col-xs-2
+    .col-xs-2
       =link_to  'À instruire', '?liste=a_instruire', class: 'text-warning', style:"text-decoration: #{@facade_data_view.liste == 'a_instruire'? 'underline' : ''}"
-    .col-lg-2.col-md-2.col-sm-2.col-xs-2
+    .col-xs-2
       =link_to  'Terminés', '?liste=termine', class: 'text-success', style:"text-decoration: #{@facade_data_view.liste == 'termine'? 'underline' : ''}"
 
   .default_data_block.default_visible
     %div.row.show-block#follow_dossiers
       %div.header
-        %div.col-lg-10.col-md-10.col-sm-10.col-xs-10.title
+        %div.col-xs-10.title
           %div.carret-right
           %div.carret-down
           Dossiers suivis
-        %div.col-lg-2.col-md-2.col-sm-2.col-xs-2.count
-          =@facade_data_view.suivi_total
-          dossiers
+        %div.col-xs-2.count
+          = pluralize(@facade_data_view.suivi_total, "dossier")
       %div.body
         = smart_listing_render :follow_dossiers
 
   .default_data_block
     %div.row.show-block#all_dossiers
       %div.header
-        %div.col-lg-10.col-md-10.col-sm-10.col-xs-10.title
+        %div.col-xs-10.title
           %div.carret-right
           %div.carret-down
           Tous les dossiers
-        %div.col-lg-2.col-md-2.col-sm-2.col-xs-2.count
-          =@facade_data_view.all_state_total
-          dossiers
+        %div.col-xs-2.count
+          = pluralize(@facade_data_view.all_state_total, "dossier")
       %div.body
         = smart_listing_render :all_state_dossiers
+
+
+  .default_data_block
+    %div.row.show-block#all_dossiers
+      %div.header
+        %div.col-xs-10.title
+          %div.carret-right
+          %div.carret-down
+          Dossiers archivés
+        %div.col-xs-2.count
+          = pluralize(@dossiers_archived.count, "dossier")
+
+      %div.body
+        = smart_listing_render :dossiers_archived

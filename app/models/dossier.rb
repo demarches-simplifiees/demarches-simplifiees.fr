@@ -232,6 +232,8 @@ class Dossier < ActiveRecord::Base
     where(state: TERMINE, archived: false).order("updated_at #{order}")
   end
 
+  scope :archived, -> { where(archived: true) }
+
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
   end

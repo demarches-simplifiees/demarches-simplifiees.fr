@@ -55,6 +55,16 @@ class Backoffice::DossiersListController < ApplicationController
                          partial: "backoffice/dossiers/list",
                          array: true,
                          default_sort: dossiers_list_facade.service.default_sort
+
+
+    @procedure = current_gestionnaire.procedures.find(params[:id])
+    @dossiers_archived = @procedure.dossiers.archived
+    smart_listing_create :dossiers_archived,
+                            @dossiers_archived,
+                            partial: "backoffice/dossiers/list",
+                            array: true,
+                            default_sort: dossiers_list_facade.service.default_sort
+
   end
 
   private

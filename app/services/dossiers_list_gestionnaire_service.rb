@@ -14,6 +14,7 @@ class DossiersListGestionnaireService
          'deposes' => deposes,
          'a_instruire' => a_instruire,
          'termine' => termine,
+         'archive' => archive,
          'all_state' => all_state}[@liste]
 
   end
@@ -48,6 +49,10 @@ class DossiersListGestionnaireService
 
   def a_instruire
     @a_instruire ||= filter_dossiers.a_instruire
+  end
+
+  def archive
+    @archive ||= filter_dossiers.archived
   end
 
   def termine
