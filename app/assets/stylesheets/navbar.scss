@@ -34,7 +34,7 @@
     }
   }
   #navbar-body {
-    height: 60px;
+    min-height: 60px;
     background-color: #FFFFFF;
     box-shadow: 0 1px 2px 0 rgba(50,50,50,0.5);
     padding-left: 50px;
@@ -43,7 +43,7 @@
       font-size: 18px;
       font-weight: bold;
       line-height: 58px;
-      height: 58px;
+      min-height: 58px;
       color: #000000;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -56,7 +56,7 @@
       color: #666666;
       padding: 8px;
       border-right: 1px solid #C8C6C8;
-      height: 60px;
+      min-height: 60px;
       .dropdown-toggle {
         cursor: pointer;
       }

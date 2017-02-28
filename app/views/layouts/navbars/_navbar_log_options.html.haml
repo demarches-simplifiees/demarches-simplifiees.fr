@@ -1,17 +1,15 @@
--#%span.fa.fa-sign-out
-
 -if user_signed_in?
-  .col-lg-1.col-md-1.col-sm-1.col-xs-1#sign_out.no-padding
+  #sign_out.col-xs-2.no-padding
     = render partial: 'users/login_banner'
     = render partial: 'layouts/credentials'
 -elsif gestionnaire_signed_in?
-  .col-lg-1.col-md-1.col-sm-1.col-xs-1#sign_out.no-padding
+  #sign_out.col-xs-2.no-padding
     = render partial: 'gestionnaires/login_banner'
     = render partial: 'layouts/credentials'
 -elsif administrateur_signed_in?
-  .col-lg-1.col-md-1.col-sm-1.col-xs-1#sign_out.no-padding
+  #sign_out.col-xs-2.no-padding
     = render partial: 'administrateurs/login_banner'
     = render partial: 'layouts/credentials'
 -else
-  .col-lg-1.col-md-1.col-sm-1.col-xs-1#sign_in
+  #sign_in.col-xs-2
     = link_to "Connexion", '/users/sign_in', :class => 'btn btn-lg'
