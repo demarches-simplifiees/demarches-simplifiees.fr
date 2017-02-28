@@ -1,15 +1,13 @@
-.row.white-back
-  %h1 E-mails personnalisables
-
-  .row
-    .col-md-6
-      %table.table
+#custom-mails
+  .wrapper
+    %h1 E-mails personnalisables
+    %table.table
+      %tr
+        %th{ colspan: 2 }
+          Type d'email
+      - @procedure.mail_templates.each do |mt|
         %tr
-          %th{ colspan: 2 }
-            Type d'email
-        - @procedure.mail_templates.each do |mt|
-          %tr
-            %td
-              = mt.decorate.name
-            %td.text-right
-              = link_to "Personnaliser l'e-mail", edit_admin_procedure_mail_template_path(@procedure, mt)
+          %td
+            = mt.decorate.name
+          %td.text-right
+            = link_to "Personnaliser l'e-mail", edit_admin_procedure_mail_template_path(@procedure, mt)
