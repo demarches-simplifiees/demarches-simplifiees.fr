@@ -17,7 +17,6 @@ feature 'As a User I want to edit a dossier I own' do
       expect(page.find('#a_traiter')['class'] ).to eq('active procedure_list_element')
       page.find_by_id('brouillon').click
       page.find_by_id('a_traiter').click
-      page.find_by_id('valides').click
       page.find_by_id('en_instruction').click
       page.find_by_id('termine').click
       page.find_by_id('invite').click

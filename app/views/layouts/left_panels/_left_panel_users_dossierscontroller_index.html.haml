@@ -23,12 +23,6 @@
           .badge.progress-bar-danger
             = @dossiers_list_facade.en_construction_total
 
-      %a{:href => "#{url_for users_dossiers_path(liste: 'valides')}", 'data-toggle' => :tooltip, title: 'Les dossiers relus par votre accompagnateur pouvant être déposés pour examen.'}
-        %div.procedure_list_element{ class: @dossiers_list_facade.valides_class, id: 'valides' }
-          ="À déposer"
-          .badge.progress-bar-purple
-            = @dossiers_list_facade.valides_total
-
       %a{:href => "#{url_for users_dossiers_path(liste: 'en_instruction')}", 'data-toggle' => :tooltip, title: 'Les dossiers en cours d\'examen par l\'administration compétante.'}
         %div.procedure_list_element{ class: @dossiers_list_facade.en_instruction_class, id: 'en_instruction' }
           ="En examen"
