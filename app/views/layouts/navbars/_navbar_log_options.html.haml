@@ -14,4 +14,4 @@
     = render partial: 'layouts/credentials'
 -else
   .col-lg-1.col-md-1.col-sm-1.col-xs-1#sign_in
-    = link_to "Connexion", '/users/sign_in', :class => 'btn btn-lg'
+    = link_to "Connexion", new_user_session_path, :class => 'btn btn-lg btn-primary'
