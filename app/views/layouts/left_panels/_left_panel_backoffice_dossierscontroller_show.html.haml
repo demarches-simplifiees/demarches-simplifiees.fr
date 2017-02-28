@@ -23,12 +23,14 @@
         %button.action.refuse-dossier
           %i.fa.fa-times
 
+    %hr
     - if @facade.dossier.archived?
-      %hr
-        %p
-          Archivé
+      %p
+        Archivé
+      = link_to 'Désarchiver', unarchive_backoffice_dossier_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
+
     - else
-      = link_to 'Archiver', backoffice_dossier_archive_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
+      = link_to 'Archiver', archive_backoffice_dossier_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
 
 
 

@@ -162,12 +162,21 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   def archive
-    facade = create_dossier_facade params[:dossier_id]
+    facade = create_dossier_facade params[:id]
     unless facade.dossier.archived
       facade.dossier.update(archived: true)
       flash.notice = 'Dossier archivé'
     end
     redirect_to backoffice_dossiers_path
+  end
+
+  def unarchive
+    @dossier = Dossier.find(params[:id])
+    if @dossier.archived
+      @dossier.update(archived: false)
+      flash.notice = 'Dossier désarchivé'
+    end
+    redirect_to backoffice_dossier_path(@dossier)
   end
 
   private
