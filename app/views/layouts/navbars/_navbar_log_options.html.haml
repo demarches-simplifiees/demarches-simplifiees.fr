@@ -12,4 +12,4 @@
     = render partial: 'layouts/credentials'
 -else
   #sign_in.col-xs-2
-    = link_to "Connexion", '/users/sign_in', :class => 'btn btn-lg'
+    = link_to "Connexion", new_user_session_path, :class => 'btn btn-lg btn-primary'

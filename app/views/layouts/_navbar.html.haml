@@ -1,14 +1,14 @@
-%div.col-lg-2.col-md-2.col-sm-2.col-xs-2
+.col-xs-2
   %a#title_navbar{href: '/'}
-    %div.row#home
-      %div.col-lg-6.no-padding
+    .row#home
+      .col-lg-6.no-padding
         = image_tag('marianne_small.png', class: 'logo')
-      %div.col-lg-6.no-padding#tps-title
+      .col-lg-6.no-padding#tps-title
         TPS
 
-%div.col-lg-10.col-md-10.col-sm-10.col-xs-10.no-padding
-  %div#navbar-body
-    %div.row
+.col-xs-10.no-padding
+  #navbar-body
+    .row
       -begin
         = render partial: @navbar_url
       -rescue
