@@ -1,6 +1,6 @@
 .white-back
   %h3
-    = @mail_template.decorate.name
+    = @mail_template.name
 
   = simple_form_for @mail_template.becomes(MailTemplate), url: admin_procedure_mail_template_path(@procedure, @mail_template) do |f|
     .row
