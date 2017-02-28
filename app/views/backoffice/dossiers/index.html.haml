@@ -51,15 +51,16 @@
         = smart_listing_render :all_state_dossiers
 
 
-  .default_data_block
-    %div.row.show-block#all_dossiers
-      %div.header
-        %div.col-xs-10.title
-          %div.carret-right
-          %div.carret-down
-          Dossiers archivés
-        %div.col-xs-2.count
-          = pluralize(@dossiers_archived.count, "dossier")
+  - if @dossiers_archived
+    .default_data_block
+      %div.row.show-block#archived_dossiers
+        %div.header
+          %div.col-xs-10.title
+            %div.carret-right
+            %div.carret-down
+            Dossiers archivés
+          %div.col-xs-2.count
+            = pluralize(@dossiers_archived.count, "dossier")
 
-      %div.body
-        = smart_listing_render :dossiers_archived
+        %div.body
+          = smart_listing_render :dossiers_archived

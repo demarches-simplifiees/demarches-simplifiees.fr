@@ -104,12 +104,6 @@ describe Backoffice::DossiersController, type: :controller do
         end
       end
 
-      context ' when dossier is archived' do
-        let(:dossier_id) { dossier_archived }
-
-        it { expect(subject).to redirect_to('/backoffice') }
-      end
-
       context 'when dossier id does not exist' do
         let(:dossier_id) { bad_dossier_id }
 
