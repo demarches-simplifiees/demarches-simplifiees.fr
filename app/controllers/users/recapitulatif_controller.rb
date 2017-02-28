@@ -17,18 +17,9 @@ class Users::RecapitulatifController < UsersController
     redirect_to users_dossier_recapitulatif_path
   end
 
-  def submit
-    create_dossier_facade
-
-    @facade.dossier.submit!
-    flash.notice = 'Dossier déposé avec succès.'
-
-    redirect_to users_dossier_recapitulatif_path
-  end
-
   def self.route_authorization
     {
-        states: [:initiated, :replied, :updated, :validated, :received, :submitted, :without_continuation, :closed, :refused]
+        states: [:initiated, :replied, :updated, :received, :without_continuation, :closed, :refused]
     }
   end
 

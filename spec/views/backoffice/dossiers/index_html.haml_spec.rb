@@ -9,8 +9,6 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   let!(:decorate_dossier_initiated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated').decorate }
   let!(:decorate_dossier_replied) { create(:dossier, :with_entreprise, procedure: procedure, state: 'replied').decorate }
   let!(:decorate_dossier_updated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'updated').decorate }
-  let!(:decorate_dossier_validated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'validated').decorate }
-  let!(:decorate_dossier_submitted) { create(:dossier, :with_entreprise, procedure: procedure, state: 'submitted').decorate }
   let!(:decorate_dossier_received) { create(:dossier, :with_entreprise, procedure: procedure, state: 'received').decorate }
   let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, procedure: procedure, state: 'closed').decorate }
   let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, procedure: procedure, state: 'refused').decorate }
@@ -25,8 +23,6 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   before do
     decorate_dossier_replied.entreprise.update_column(:raison_sociale, 'plap')
     decorate_dossier_updated.entreprise.update_column(:raison_sociale, 'plep')
-    decorate_dossier_validated.entreprise.update_column(:raison_sociale, 'plip')
-    decorate_dossier_submitted.entreprise.update_column(:raison_sociale, 'plop')
     decorate_dossier_received.entreprise.update_column(:raison_sociale, 'plup')
     decorate_dossier_closed.entreprise.update_column(:raison_sociale, 'plyp')
     decorate_dossier_refused.entreprise.update_column(:raison_sociale, 'plzp')
@@ -83,7 +79,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   it { is_expected.to have_content('Nouveaux dossiers 1 dossiers') }
   it { is_expected.to have_content('Dossiers suivis 0 dossiers') }
-  it { is_expected.to have_content('Tous les dossiers 9 dossiers') }
+  it { is_expected.to have_content('Tous les dossiers 7 dossiers') }
 
   it { is_expected.to have_content('État') }
   it { is_expected.to have_content('Libellé procédure') }
@@ -92,8 +88,6 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   it { is_expected.to have_content('plap') }
   it { is_expected.to have_content('plep') }
-  it { is_expected.to have_content('plip') }
-  it { is_expected.to have_content('plop') }
   it { is_expected.to have_content('plup') }
   it { is_expected.to have_content('plyp') }
 end

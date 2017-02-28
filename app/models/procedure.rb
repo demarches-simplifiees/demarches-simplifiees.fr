@@ -5,7 +5,6 @@ class Procedure < ActiveRecord::Base
   has_many :dossiers
   has_many :mail_templates
   has_one :mail_received
-  has_one :mail_validated
 
   has_one :procedure_path, dependent: :destroy
 
@@ -34,7 +33,6 @@ class Procedure < ActiveRecord::Base
 
   def build_default_mails
     MailReceived.create(procedure: self) unless mail_received
-    MailValidated.create(procedure: self) unless mail_validated
   end
 
   def path

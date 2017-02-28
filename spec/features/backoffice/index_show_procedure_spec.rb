@@ -10,10 +10,10 @@ feature 'As an Accompagnateur I can navigate and use each functionnality around 
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure_1
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure_2
     30.times do
-      Dossier.create(procedure_id: procedure_1.id.to_s, user: user, state: 'validated')
+      Dossier.create(procedure_id: procedure_1.id.to_s, user: user, state: 'initiated')
     end
     22.times do
-      Dossier.create(procedure_id: procedure_2.id.to_s, user: user, state: 'validated')
+      Dossier.create(procedure_id: procedure_2.id.to_s, user: user, state: 'received')
     end
     login_as gestionnaire, scope: :gestionnaire
     visit backoffice_path

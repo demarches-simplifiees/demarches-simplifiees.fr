@@ -33,16 +33,6 @@ describe UserRoutesAuthorizationService do
         it { is_expected.to be_falsey }
       end
 
-      describe 'validated' do
-        let(:state) { 'validated' }
-        it { is_expected.to be_falsey }
-      end
-
-      describe 'submitted' do
-        let(:state) { 'submitted' }
-        it { is_expected.to be_falsey }
-      end
-
       describe 'closed' do
         let(:state) { 'closed' }
         it { is_expected.to be_falsey }
@@ -71,16 +61,6 @@ describe UserRoutesAuthorizationService do
 
         describe 'updated' do
           let(:state) { 'updated' }
-          it { is_expected.to be_falsey }
-        end
-
-        describe 'validated' do
-          let(:state) { 'validated' }
-          it { is_expected.to be_falsey }
-        end
-
-        describe 'submitted' do
-          let(:state) { 'submitted' }
           it { is_expected.to be_falsey }
         end
 
@@ -113,16 +93,6 @@ describe UserRoutesAuthorizationService do
           it { is_expected.to be_truthy }
         end
 
-        describe 'validated' do
-          let(:state) { 'validated' }
-          it { is_expected.to be_falsey }
-        end
-
-        describe 'submitted' do
-          let(:state) { 'submitted' }
-          it { is_expected.to be_falsey }
-        end
-
         describe 'closed' do
           let(:state) { 'closed' }
           it { is_expected.to be_falsey }
@@ -153,16 +123,6 @@ describe UserRoutesAuthorizationService do
         it { is_expected.to be_truthy }
       end
 
-      describe 'validated' do
-        let(:state) { 'validated' }
-        it { is_expected.to be_falsey }
-      end
-
-      describe 'submitted' do
-        let(:state) { 'submitted' }
-        it { is_expected.to be_falsey }
-      end
-
       describe 'closed' do
         let(:state) { 'closed' }
         it { is_expected.to be_falsey }
@@ -189,16 +149,6 @@ describe UserRoutesAuthorizationService do
 
       describe 'updated' do
         let(:state) { 'updated' }
-        it { is_expected.to be_truthy }
-      end
-
-      describe 'validated' do
-        let(:state) { 'validated' }
-        it { is_expected.to be_truthy }
-      end
-
-      describe 'submitted' do
-        let(:state) { 'submitted' }
         it { is_expected.to be_truthy }
       end
 

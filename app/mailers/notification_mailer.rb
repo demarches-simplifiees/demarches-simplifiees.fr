@@ -7,10 +7,6 @@ class NotificationMailer < ApplicationMailer
     send_mail dossier, dossier.procedure.mail_received.object_for_dossier(dossier)
   end
 
-  def dossier_validated dossier
-    send_mail dossier, dossier.procedure.mail_validated.object_for_dossier(dossier)
-  end
-
   def dossier_submitted dossier
     send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été déposé"
   end

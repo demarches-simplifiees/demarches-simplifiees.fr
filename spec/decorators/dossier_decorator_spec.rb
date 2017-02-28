@@ -37,16 +37,6 @@ describe DossierDecorator do
       expect(subject).to eq('En construction')
     end
 
-    it 'validated is valide' do
-      dossier.validated!
-      expect(subject).to eq('Figé')
-    end
-
-    it 'submitted is dépose' do
-      dossier.submitted!
-      expect(subject).to eq('Déposé / À réceptionner')
-    end
-
     it 'closed is traité' do
       dossier.closed!
       expect(subject).to eq('Accepté')
