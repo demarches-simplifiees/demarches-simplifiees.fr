@@ -886,10 +886,10 @@ describe Dossier do
   describe '#update_state_dates' do
     let(:state) { 'draft' }
     let(:dossier) { create(:dossier, state: state) }
-    let(:now) { Time.now.beginning_of_day }
+    let(:beginning_of_day) { Time.now.beginning_of_day }
 
     before do
-      Timecop.freeze(now)
+      Timecop.freeze(beginning_of_day)
     end
 
     context 'when dossier is initiated' do
@@ -899,12 +899,15 @@ describe Dossier do
       end
 
       it { expect(dossier.state).to eq('initiated') }
-      it { expect(dossier.initiated_at).to eq(now) }
+      it { expect(dossier.initiated_at).to eq(beginning_of_day) }
 
-      # it 'should not change initiated_at if it is already set' do
-      #   dossier.initiated_at = 1.day.ago
-      #   expect(dossier.initiated_at).to eq(1.day.ago)
-      # end
+      it 'should keep first initiated_at date' do
+        Timecop.return
+        dossier.received!
+        dossier.initiated!
+
+        expect(dossier.initiated_at).to eq(beginning_of_day)
+      end
     end
 
     context 'when dossier is received' do
@@ -916,7 +919,15 @@ describe Dossier do
       end
 
       it { expect(dossier.state).to eq('received') }
-      it { expect(dossier.received_at).to eq(now) }
+      it { expect(dossier.received_at).to eq(beginning_of_day) }
+
+      it 'should keep first received_at date if dossier is set to initiated again' do
+        Timecop.return
+        dossier.initiated!
+        dossier.received!
+
+        expect(dossier.received_at).to eq(beginning_of_day)
+      end
     end
 
     shared_examples 'dossier is processed' do |new_state|
@@ -926,7 +937,7 @@ describe Dossier do
       end
 
       it { expect(dossier.state).to eq(new_state) }
-      it { expect(dossier.processed_at).to eq(now) }
+      it { expect(dossier.processed_at).to eq(beginning_of_day) }
     end
 
     context 'when dossier is closed' do
