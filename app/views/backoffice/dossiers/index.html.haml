@@ -3,15 +3,15 @@
     = render partial: 'backoffice/dossiers/pref_list'
 
   .default_data_block
-    %div.row.show-block#new_dossiers
-      %div.header
-        %div.col-xs-10.title
-          %div.carret-right
-          %div.carret-down
+    .row.show-block#new_dossiers
+      .header
+        .col-xs-10.title
+          .carret-right
+          .carret-down
           Nouveaux dossiers
-        %div.col-xs-2.count
+        .col-xs-2.count
           = pluralize(@facade_data_view.nouveaux_total, "dossier")
-      %div.body
+      .body
         = smart_listing_render :new_dossiers
 
   .row.center
@@ -27,40 +27,40 @@
       =link_to  'Terminés', '?liste=termine', class: 'text-success', style:"text-decoration: #{@facade_data_view.liste == 'termine'? 'underline' : ''}"
 
   .default_data_block.default_visible
-    %div.row.show-block#follow_dossiers
-      %div.header
-        %div.col-xs-10.title
-          %div.carret-right
-          %div.carret-down
+    .row.show-block#follow_dossiers
+      .header
+        .col-xs-10.title
+          .carret-right
+          .carret-down
           Dossiers suivis
-        %div.col-xs-2.count
+        .col-xs-2.count
           = pluralize(@facade_data_view.suivi_total, "dossier")
-      %div.body
+      .body
         = smart_listing_render :follow_dossiers
 
   .default_data_block
-    %div.row.show-block#all_dossiers
-      %div.header
-        %div.col-xs-10.title
-          %div.carret-right
-          %div.carret-down
+    .row.show-block#all_dossiers
+      .header
+        .col-xs-10.title
+          .carret-right
+          .carret-down
           Tous les dossiers
-        %div.col-xs-2.count
+        .col-xs-2.count
           = pluralize(@facade_data_view.all_state_total, "dossier")
-      %div.body
+      .body
         = smart_listing_render :all_state_dossiers
 
 
   - if @dossiers_archived
     .default_data_block
-      %div.row.show-block#archived_dossiers
-        %div.header
-          %div.col-xs-10.title
-            %div.carret-right
-            %div.carret-down
+      .row.show-block#archived_dossiers
+        .header
+          .col-xs-10.title
+            .carret-right
+            .carret-down
             Dossiers archivés
-          %div.col-xs-2.count
+          .col-xs-2.count
             = pluralize(@dossiers_archived.count, "dossier")
 
-        %div.body
+        .body
           = smart_listing_render :archived_dossiers
