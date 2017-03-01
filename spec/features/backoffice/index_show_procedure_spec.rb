@@ -53,15 +53,15 @@ feature 'As an Accompagnateur I can navigate and use each functionnality around 
       expect(page.all("#all_state_dossiers .dossier-row")[0]['id']).to eq("tr_dossier_#{procedure_1.dossiers.first.id}")
       visit "/backoffice/dossiers/procedure/#{procedure_1.id}?all_state_dossiers_smart_listing[sort][id]=desc"
       wait_for_ajax
-      expect(page.all(".dossier-row")[0]['id']).to eq("tr_dossier_#{procedure_1.dossiers.last.id}")
+      expect(page.all("#all_dossiers .dossier-row")[0]['id']).to eq("tr_dossier_#{procedure_1.dossiers.last.id}")
       page.find('#all_state_dossiers .next_page a').trigger('click')
       wait_for_ajax
       page.find('#all_state_dossiers .next_page a').trigger('click')
       wait_for_ajax
-      expect(page.all(".dossier-row")[0]['id']).to eq("tr_dossier_#{procedure_1.dossiers.first.id + 9}")
+      expect(page.all("#all_dossiers .dossier-row")[0]['id']).to eq("tr_dossier_#{procedure_1.dossiers.first.id + 9}")
       page.find('#all_state_dossiers .prev a').trigger('click')
       wait_for_ajax
-      expect(page.all(".dossier-row")[0]['id']).to eq("tr_dossier_#{procedure_1.dossiers.first.id + 19}")
+      expect(page.all("#all_dossiers .dossier-row")[0]['id']).to eq("tr_dossier_#{procedure_1.dossiers.first.id + 19}")
     end
 
     scenario 'Using filter' do
@@ -79,7 +79,7 @@ feature 'As an Accompagnateur I can navigate and use each functionnality around 
       expect(page.all('#follow_dossiers .count').first.text).to eq('0 dossiers')
 
       visit "/backoffice/dossiers/procedure/#{procedure_1.id}?all_state_dossiers_smart_listing[sort][id]=asc"
-      page.find_by_id("suivre_dossier_#{procedure_1.dossiers.first.id}").click
+      page.find("#all_dossiers #suivre_dossier_#{procedure_1.dossiers.first.id}").click
 
       visit "/backoffice/dossiers/#{procedure_1.dossiers.second.id}"
       page.find_by_id("suivre_dossier_#{procedure_1.dossiers.second.id}").click
@@ -90,7 +90,7 @@ feature 'As an Accompagnateur I can navigate and use each functionnality around 
 
     if ENV['CIRCLECI'].nil?
       scenario 'Adding message', js: true do
-        page.find_by_id("tr_dossier_#{procedure_1.dossiers.first.id}").trigger('click')
+        page.find("#all_dossiers #tr_dossier_#{procedure_1.dossiers.first.id}").trigger('click')
         expect(page).to have_current_path(backoffice_dossier_path(procedure_1.dossiers.first.id), only_path: true)
         page.find_by_id('open-message').click
         page.execute_script("$('#texte_commentaire').data('wysihtml5').editor.setValue('Contenu du nouveau message')")
