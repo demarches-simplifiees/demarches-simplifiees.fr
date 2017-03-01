@@ -881,6 +881,71 @@ describe Dossier do
       it { is_expected.to eq "#{gestionnaire.email} #{gestionnaire2.email}" }
     end
 
+  end
+
+  describe '#update_state_dates' do
+    let(:state) { 'draft' }
+    let(:dossier) { create(:dossier, state: state) }
+    let(:now) { Time.now.beginning_of_day }
+
+    before do
+      Timecop.freeze(now)
+    end
+
+    context 'when dossier is initiated' do
+      before do
+        dossier.initiated!
+        dossier.reload
+      end
+
+      it { expect(dossier.state).to eq('initiated') }
+      it { expect(dossier.initiated_at).to eq(now) }
+
+      # it 'should not change initiated_at if it is already set' do
+      #   dossier.initiated_at = 1.day.ago
+      #   expect(dossier.initiated_at).to eq(1.day.ago)
+      # end
+    end
+
+    context 'when dossier is received' do
+      let(:state) { 'initiated' }
+
+      before do
+        dossier.received!
+        dossier.reload
+      end
+
+      it { expect(dossier.state).to eq('received') }
+      it { expect(dossier.received_at).to eq(now) }
+    end
+
+    shared_examples 'dossier is processed' do |new_state|
+      before do
+        dossier.update(state: new_state)
+        dossier.reload
+      end
+
+      it { expect(dossier.state).to eq(new_state) }
+      it { expect(dossier.processed_at).to eq(now) }
+    end
+
+    context 'when dossier is closed' do
+      let(:state) { 'received' }
+
+      it_behaves_like 'dossier is processed', 'closed'
+    end
+
+    context 'when dossier is refused' do
+      let(:state) { 'received' }
+
+      it_behaves_like 'dossier is processed', 'refused'
+    end
+
+    context 'when dossier is without_continuation' do
+      let(:state) { 'received' }
+
+      it_behaves_like 'dossier is processed', 'without_continuation'
+    end
 
   end
 end
