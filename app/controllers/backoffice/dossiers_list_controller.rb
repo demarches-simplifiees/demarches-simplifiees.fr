@@ -29,11 +29,7 @@ class Backoffice::DossiersListController < ApplicationController
 
   def smartlisting_dossier dossiers_list=nil, liste='all_state'
     dossiers_list_facade liste
-
-    new_dossiers_list = dossiers_list_facade.service.nouveaux
-    follow_dossiers_list = dossiers_list_facade.service.suivi
-    all_state_dossiers_list = dossiers_list_facade.service.all_state
-    archived_dossier_list = dossiers_list_facade.service.archive
+    service = dossiers_list_facade.service
 
     @dossiers_archived = archived_dossier_list
 
@@ -41,13 +37,10 @@ class Backoffice::DossiersListController < ApplicationController
       params[:dossiers_smart_listing] = {page: dossiers_list_facade.service.default_page}
     end
 
-    default_smart_listing_create :new_dossiers, new_dossiers_list
-
-    default_smart_listing_create :follow_dossiers, follow_dossiers_list
-
-    default_smart_listing_create :all_state_dossiers, all_state_dossiers_list
-
-    default_smart_listing_create :dossiers_archived, archived_dossier_list
+    default_smart_listing_create :new_dossiers, service.nouveaux
+    default_smart_listing_create :follow_dossiers, service.suivi
+    default_smart_listing_create :all_state_dossiers, service.all_state
+    default_smart_listing_create :dossiers_archived, service.archive
   end
 
   private
