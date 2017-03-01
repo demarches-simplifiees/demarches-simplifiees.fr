@@ -31,7 +31,6 @@ class Backoffice::DossiersListController < ApplicationController
     dossiers_list_facade liste
     service = dossiers_list_facade.service
 
-    @dossiers_archived = archived_dossier_list
 
     if param_page.nil?
       params[:dossiers_smart_listing] = {page: dossiers_list_facade.service.default_page}
@@ -41,6 +40,8 @@ class Backoffice::DossiersListController < ApplicationController
     default_smart_listing_create :follow_dossiers, service.suivi
     default_smart_listing_create :all_state_dossiers, service.all_state
     default_smart_listing_create :archived_dossiers, service.archive
+
+    @archived_dossiers = service.archive
   end
 
   private

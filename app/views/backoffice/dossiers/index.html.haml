@@ -51,7 +51,7 @@
         = smart_listing_render :all_state_dossiers
 
 
-  - if @dossiers_archived
+  - if @archived_dossiers
     .default_data_block
       .row.show-block#archived_dossiers
         .header
@@ -60,7 +60,7 @@
             .carret-down
             Dossiers archivés
           .col-xs-2.count
-            = pluralize(@dossiers_archived.count, "dossier")
+            = pluralize(@archived_dossiers.count, "dossier")
 
         .body
           = smart_listing_render :archived_dossiers
