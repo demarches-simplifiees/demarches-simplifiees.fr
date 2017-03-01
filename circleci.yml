@@ -1,3 +1,4 @@
 database:
   override:
+    - cp config/database.yml.ci config/database.yml
     - bundle exec rake db:drop db:create db:migrate RAILS_ENV=test
