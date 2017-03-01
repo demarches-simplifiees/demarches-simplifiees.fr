@@ -1,9 +1,9 @@
-%div.col-lg-8.col-md-8.col-sm-8.col-xs-8.main-info
+.col-xs-7.main-info
   %span{ 'data-toggle' => :tooltip, "data-placement" => :bottom, title: @facade.dossier.procedure.libelle }
     = @facade.dossier.procedure.libelle
-%div.col-lg-3.col-md-3.col-sm-3.col-xs-3.options
-  %div.row
-    %div.col-lg-12.col-md-12.col-sm-12.col-xs-12
+.col-xs-3.options
+  .row
+    .col-xs-12
       - if current_gestionnaire.follow?(@facade.dossier.id)
         = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), "data-method" => :put, class: "button-navbar-action",id: "suivre_dossier_#{@facade.dossier.id}" do
           %i.fa.fa-user-times
@@ -12,14 +12,14 @@
         = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'button-navbar-action', id: "suivre_dossier_#{@facade.dossier.id}" do
           %i.fa.fa-user-plus
           Suivre le dossier
-  %div.row
-    %div.col-lg-12.col-md-12.col-sm-12.col-xs-12
-      %div#invitations.dropdown-toggle{ 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
+  .row
+    .col-xs-12
+      #invitations.dropdown-toggle{ 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
         %i.fa.fa-user
         = t('utils.involved')
         .badge.progress-bar-info
           = @facade.dossier.invites.count
-      %div.dropdown-menu.dropdown-menu-right.dropdown-pannel
+      .dropdown-menu.dropdown-menu-right.dropdown-pannel
         %h4= t('dynamics.dossiers.followers.title')
         %ul
           - unless @facade.followers.empty?

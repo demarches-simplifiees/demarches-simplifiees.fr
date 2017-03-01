@@ -4,8 +4,4 @@ class NotificationMailerPreview < ActionMailer::Preview
     NotificationMailer.dossier_received(Dossier.last)
   end
 
-  def dossier_validated
-    NotificationMailer.dossier_validated(Dossier.last)
-  end
-
 end

@@ -207,34 +207,9 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
-  describe 'POST #valid' do
-    before do
-      dossier.initiated!
-      sign_in gestionnaire
-    end
-
-    subject { post :valid, params: {dossier_id: dossier_id} }
-
-    it 'change state to validated' do
-      subject
-
-      dossier.reload
-      expect(dossier.state).to eq('validated')
-    end
-
-    it 'Notification email is send' do
-      expect(NotificationMailer).to receive(:dossier_validated).and_return(NotificationMailer)
-      expect(NotificationMailer).to receive(:deliver_now!)
-
-      subject
-    end
-
-    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
-  end
-
   describe 'POST #receive' do
     before do
-      dossier.submitted!
+      dossier.initiated!
       sign_in gestionnaire
     end
 
@@ -376,6 +351,23 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
+  describe 'POST #reopen' do
+    before do
+      dossier.received!
+      sign_in gestionnaire
+    end
+
+    subject { post :reopen, params: {dossier_id: dossier_id} }
+
+    it 'change state to initiated' do
+      subject
+
+      dossier.reload
+      expect(dossier.state).to eq('initiated')
+    end
+
+    it { is_expected.to redirect_to backoffice_dossiers_path }
+  end
 
   describe 'POST #archive' do
     before do

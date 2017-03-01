@@ -71,7 +71,6 @@ Rails.application.routes.draw do
 
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/initiate' => 'recapitulatif#initiate'
-      post '/recapitulatif/submit' => 'recapitulatif#submit'
 
       post '/commentaire' => 'commentaires#create'
       resources :commentaires, only: [:index]
@@ -159,7 +158,6 @@ Rails.application.routes.draw do
     resource :private_formulaire
 
     resources :dossiers do
-      post 'valid' => 'dossiers#valid'
       post 'receive' => 'dossiers#receive'
       post 'refuse' => 'dossiers#refuse'
       post 'without_continuation' => 'dossiers#without_continuation'
@@ -168,11 +166,10 @@ Rails.application.routes.draw do
         post 'archive'
         post 'unarchive'
       end
-
+      post 'reopen' => 'dossiers#reopen'
       put 'follow' => 'dossiers#follow'
       resources :commentaires, only: [:index]
     end
-
 
     namespace :dossiers do
       post 'filter'

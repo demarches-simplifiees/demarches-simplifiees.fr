@@ -85,21 +85,10 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
                          default_sort: dossiers_list_facade.service.default_sort
   end
 
-  def valid
-    create_dossier_facade params[:dossier_id]
-
-    @facade.dossier.next_step! 'gestionnaire', 'valid'
-    flash.notice = 'Dossier confirmé avec succès.'
-
-    NotificationMailer.dossier_validated(@facade.dossier).deliver_now!
-
-    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
-  end
-
   def receive
     create_dossier_facade params[:dossier_id]
 
-    @facade.dossier.next_step! 'gestionnaire', 'receive'
+    @facade.dossier.received!
     flash.notice = 'Dossier considéré comme reçu.'
 
     NotificationMailer.dossier_received(@facade.dossier).deliver_now!
@@ -170,6 +159,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     redirect_to backoffice_dossiers_path
   end
 
+
   def unarchive
     @dossier = Dossier.find(params[:id])
     if @dossier.archived
@@ -177,6 +167,15 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       flash.notice = 'Dossier désarchivé'
     end
     redirect_to backoffice_dossier_path(@dossier)
+  end
+  
+  def reopen
+    create_dossier_facade params[:dossier_id]
+
+    @facade.dossier.initiated!
+    flash.notice = 'Dossier réouvert.'
+
+    redirect_to backoffice_dossiers_path
   end
 
   private

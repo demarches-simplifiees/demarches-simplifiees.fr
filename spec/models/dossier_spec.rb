@@ -224,12 +224,6 @@ describe Dossier do
 
             it { is_expected.to eq 'updated' }
           end
-
-          context 'when is validated the dossier' do
-            let(:action) { 'valid' }
-
-            it { is_expected.to eq('validated') }
-          end
         end
       end
 
@@ -269,11 +263,6 @@ describe Dossier do
             it { is_expected.to eq 'replied' }
           end
 
-          context 'when is validated the dossier' do
-            let(:action) { 'valid' }
-
-            it { is_expected.to eq('validated') }
-          end
         end
       end
 
@@ -307,74 +296,6 @@ describe Dossier do
             it { is_expected.to eq('replied') }
           end
 
-          context 'when is validated the dossier' do
-            let(:action) { 'valid' }
-
-            it { is_expected.to eq('validated') }
-          end
-        end
-      end
-
-      context 'when dossier is at state validated' do
-        before do
-          dossier.validated!
-        end
-
-        context 'when user is connect' do
-          let(:role) { 'user' }
-
-          context 'when is post a comment' do
-            let(:action) { 'comment' }
-            it { is_expected.to eq('validated') }
-          end
-
-          context 'when is submitted the dossier' do
-            let(:action) { 'submit' }
-
-            it { is_expected.to eq('submitted') }
-          end
-        end
-
-        context 'when gestionnaire is connect' do
-          let(:role) { 'gestionnaire' }
-
-          context 'when is post a comment' do
-            let(:action) { 'comment' }
-
-            it { is_expected.to eq('validated') }
-          end
-        end
-      end
-
-      context 'when dossier is at state submitted' do
-        before do
-          dossier.submitted!
-        end
-
-        context 'when user is connected' do
-          let(:role) { 'user' }
-
-          context 'when he posts a comment' do
-            let(:action) { 'comment' }
-
-            it { is_expected.to eq('submitted') }
-          end
-        end
-
-        context 'when gestionnaire is connect' do
-          let(:role) { 'gestionnaire' }
-
-          context 'when he posts a comment' do
-            let(:action) { 'comment' }
-
-            it { is_expected.to eq('submitted') }
-          end
-
-          context 'when he receive the dossier' do
-            let(:action) { 'receive' }
-
-            it { is_expected.to eq('received') }
-          end
         end
       end
 
@@ -505,14 +426,11 @@ describe Dossier do
         create(:dossier, procedure: procedure_admin, state: 'initiated') #nouveaux
         create(:dossier, procedure: procedure_admin, state: 'replied') #en_attente
         create(:dossier, procedure: procedure_admin, state: 'updated') #a_traiter
-        create(:dossier, procedure: procedure_admin, state: 'submitted') #deposes
         create(:dossier, procedure: procedure_admin, state: 'received') #a_instruire
         create(:dossier, procedure: procedure_admin, state: 'received') #a_instruire
         create(:dossier, procedure: procedure_admin, state: 'closed') #termine
         create(:dossier, procedure: procedure_admin, state: 'refused') #termine
         create(:dossier, procedure: procedure_admin, state: 'without_continuation') #termine
-        create(:dossier, procedure: procedure_admin_2, state: 'validated') #en_attente
-        create(:dossier, procedure: procedure_admin_2, state: 'submitted') #deposes
         create(:dossier, procedure: procedure_admin_2, state: 'closed') #termine
         create(:dossier, procedure: procedure_admin, state: 'initiated', archived: true) #a_traiter #archived
         create(:dossier, procedure: procedure_admin, state: 'replied', archived: true) #en_attente #archived
@@ -541,12 +459,6 @@ describe Dossier do
         subject { gestionnaire.dossiers.a_instruire }
 
         it { expect(subject.size).to eq(2) }
-      end
-
-      describe '#deposes' do
-        subject { gestionnaire.dossiers.deposes }
-
-        it { expect(subject.size).to eq(1) }
       end
 
       describe '#termine' do

@@ -37,7 +37,7 @@ shared_examples 'description_controller_spec' do
     describe 'before_action authorized_routes?' do
       context 'when dossier does not have a valid state' do
         before do
-          dossier.state = 'validated'
+          dossier.state = 'received'
           dossier.save
 
           get :show, params: {dossier_id: dossier.id}

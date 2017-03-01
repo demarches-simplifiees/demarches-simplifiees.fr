@@ -4,14 +4,9 @@
 
 #action-block
   - if gestionnaire_signed_in?
-    - if !@facade.dossier.read_only?
-      = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-        %button.action{'data-toggle' => :tooltip, title: 'En cliquant ici, vous figez le dossier et autorisez le dépôt du dossier pour instruction.'}
-          = 'Déclarer complet'.upcase
-    - elsif @facade.dossier.submitted?
-      = form_tag(url_for({controller: 'backoffice/dossiers', action: :receive, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-        %button.action
-          = 'Accuser réception'.upcase
+    - if !@facade.dossier.read_only? || @facade.dossier.initiated?
+      = link_to 'Accuser réception', backoffice_dossier_receive_path(@facade.dossier), method: :post, class: 'btn btn-danger btn-block'
+
     - elsif @facade.dossier.received?
       = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
         %button.action.close-dossier
@@ -22,6 +17,7 @@
       = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
         %button.action.refuse-dossier
           %i.fa.fa-times
+      = link_to 'Reouvrir', backoffice_dossier_reopen_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
 
     %hr
     - if @facade.dossier.archived?
