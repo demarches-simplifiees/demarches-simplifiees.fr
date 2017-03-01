@@ -17,6 +17,7 @@
       = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
         %button.action.refuse-dossier
           %i.fa.fa-times
+      = link_to 'Reouvrir', backoffice_dossier_reopen_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
 
     - unless @facade.dossier.archived?
       = link_to 'Archiver', backoffice_dossier_archive_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
