@@ -40,7 +40,7 @@ class Backoffice::DossiersListController < ApplicationController
     default_smart_listing_create :new_dossiers, service.nouveaux
     default_smart_listing_create :follow_dossiers, service.suivi
     default_smart_listing_create :all_state_dossiers, service.all_state
-    default_smart_listing_create :dossiers_archived, service.archive
+    default_smart_listing_create :archived_dossiers, service.archive
   end
 
   private
