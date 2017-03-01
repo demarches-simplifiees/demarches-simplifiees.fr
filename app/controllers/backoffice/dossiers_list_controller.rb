@@ -33,6 +33,9 @@ class Backoffice::DossiersListController < ApplicationController
     new_dossiers_list = dossiers_list_facade.service.nouveaux
     follow_dossiers_list = dossiers_list_facade.service.suivi
     all_state_dossiers_list = dossiers_list_facade.service.all_state
+    archived_dossier_list = dossiers_list_facade.service.archive
+
+    @dossiers_archived = archived_dossier_list
 
     if param_page.nil?
       params[:dossiers_smart_listing] = {page: dossiers_list_facade.service.default_page}
@@ -44,10 +47,7 @@ class Backoffice::DossiersListController < ApplicationController
 
     default_smart_listing_create :all_state_dossiers, all_state_dossiers_list
 
-    procedure_id = params[:id] || params[:procedure_id]
-    @procedure = current_gestionnaire.procedures.find(procedure_id)
-    @dossiers_archived = @procedure.dossiers.archived
-    default_smart_listing_create :dossiers_archived, @dossiers_archived
+    default_smart_listing_create :dossiers_archived, archived_dossier_list
   end
 
   private
