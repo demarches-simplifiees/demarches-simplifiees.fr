@@ -38,37 +38,27 @@ class Backoffice::DossiersListController < ApplicationController
       params[:dossiers_smart_listing] = {page: dossiers_list_facade.service.default_page}
     end
 
-    smart_listing_create :new_dossiers,
-                         new_dossiers_list,
-                         partial: "backoffice/dossiers/list",
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
+    default_smart_listing_create :new_dossiers, new_dossiers_list
 
-    smart_listing_create :follow_dossiers,
-                         follow_dossiers_list,
-                         partial: "backoffice/dossiers/list",
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
+    default_smart_listing_create :follow_dossiers, follow_dossiers_list
 
-    smart_listing_create :all_state_dossiers,
-                         all_state_dossiers_list,
-                         partial: "backoffice/dossiers/list",
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
-
+    default_smart_listing_create :all_state_dossiers, all_state_dossiers_list
 
     procedure_id = params[:id] || params[:procedure_id]
     @procedure = current_gestionnaire.procedures.find(procedure_id)
     @dossiers_archived = @procedure.dossiers.archived
-    smart_listing_create :dossiers_archived,
-                            @dossiers_archived,
-                            partial: "backoffice/dossiers/list",
-                            array: true,
-                            default_sort: dossiers_list_facade.service.default_sort
-
+    default_smart_listing_create :dossiers_archived, @dossiers_archived
   end
 
   private
+
+  def default_smart_listing_create name, collection
+    smart_listing_create name,
+                         collection,
+                         partial: 'backoffice/dossiers/list',
+                         array: true,
+                         default_sort: dossiers_list_facade.service.default_sort
+  end
 
   def param_smart_listing
     params[:dossiers_smart_listing]
