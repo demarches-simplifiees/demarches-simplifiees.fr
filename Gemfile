@@ -64,7 +64,6 @@ gem 'fog'
 gem 'fog-openstack'
 
 gem 'pg'
-gem 'scenic'
 
 gem 'rgeo-geojson'
 gem 'leaflet-rails'
@@ -115,6 +114,7 @@ group :test do
   gem 'guard-livereload', '~> 2.4', require: false
   gem 'vcr'
   gem 'rails-controller-testing'
+  gem 'sqlite3'
 end
 
 group :development do
@@ -122,6 +122,7 @@ group :development do
   gem 'web-console'
   gem 'rack-handlers'
   gem 'xray-rails'
+  gem 'scenic'
 end
 
 group :development, :test do
@@ -152,5 +153,6 @@ group :development, :test do
 end
 
 group :production, :staging do
+  gem 'scenic'
   gem 'sentry-raven'
 end

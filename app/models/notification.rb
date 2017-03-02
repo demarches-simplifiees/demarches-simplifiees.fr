@@ -1,5 +1,6 @@
 class Notification < ActiveRecord::Base
   belongs_to :dossier
+  serialize :liste if Rails.env.test?
 
   # after_save :broadcast_notification
 
