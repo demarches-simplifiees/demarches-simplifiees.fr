@@ -26,6 +26,8 @@ class Users::DossiersController < UsersController
   end
 
   def commencer
+    PreremplissageService.new.parse_into(params[:inject],session) if params[:inject]
+
     unless params[:procedure_path].nil?
       procedure_path = ProcedurePath.where(path: params[:procedure_path]).last
 
@@ -54,6 +56,8 @@ class Users::DossiersController < UsersController
 
     dossier = Dossier.create(procedure: procedure, user: current_user, state: 'draft')
     siret = params[:siret] || current_user.siret
+
+    PreremplissageService.new.fill_from(session,dossier)
 
     update_current_user_siret! siret unless siret.nil?
 
