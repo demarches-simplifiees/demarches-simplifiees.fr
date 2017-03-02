@@ -29,35 +29,30 @@ class Backoffice::DossiersListController < ApplicationController
 
   def smartlisting_dossier dossiers_list=nil, liste='all_state'
     dossiers_list_facade liste
+    service = dossiers_list_facade.service
 
-    new_dossiers_list = dossiers_list_facade.service.nouveaux
-    follow_dossiers_list = dossiers_list_facade.service.suivi
-    all_state_dossiers_list = dossiers_list_facade.service.all_state
 
     if param_page.nil?
       params[:dossiers_smart_listing] = {page: dossiers_list_facade.service.default_page}
     end
 
-    smart_listing_create :new_dossiers,
-                         new_dossiers_list,
-                         partial: "backoffice/dossiers/list",
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
+    default_smart_listing_create :new_dossiers, service.nouveaux
+    default_smart_listing_create :follow_dossiers, service.suivi
+    default_smart_listing_create :all_state_dossiers, service.all_state
+    default_smart_listing_create :archived_dossiers, service.archive
 
-    smart_listing_create :follow_dossiers,
-                         follow_dossiers_list,
-                         partial: "backoffice/dossiers/list",
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
-
-    smart_listing_create :all_state_dossiers,
-                         all_state_dossiers_list,
-                         partial: "backoffice/dossiers/list",
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
+    @archived_dossiers = service.archive
   end
 
   private
+
+  def default_smart_listing_create name, collection
+    smart_listing_create name,
+                         collection,
+                         partial: 'backoffice/dossiers/list',
+                         array: true,
+                         default_sort: dossiers_list_facade.service.default_sort
+  end
 
   def param_smart_listing
     params[:dossiers_smart_listing]
