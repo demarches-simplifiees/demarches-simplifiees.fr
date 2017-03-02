@@ -49,7 +49,7 @@ describe Procedure do
         subject.reload
       end
 
-      it { expect(subject.mail_templates.size).to eq 2 }
+      it { expect(subject.mail_templates.size).to eq 1 }
 
       it { expect(subject.mail_received).not_to be_nil }
     end

@@ -52,7 +52,9 @@ describe API::V1::DossiersController do
         describe 'dossier' do
           subject { super().first }
           it { expect(subject[:id]).to eq(dossier.id) }
-          it { expect(subject[:updated_at]).to eq("2008-09-01T08:05:00.000Z") }
+          if ENV['PG'] == 'true'
+            it { expect(subject[:updated_at]).to eq("2008-09-01T08:05:00.000Z") }
+          end
           it { expect(subject.keys.size).to eq(2) }
         end
       end
@@ -124,8 +126,10 @@ describe API::V1::DossiersController do
 
         it { expect(subject[:id]).to eq(dossier.id) }
         it { expect(subject[:state]).to eq(dossier.state) }
-        it { expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z') }
-        it { expect(subject[:updated_at]).to eq('2008-09-01T08:05:00.000Z') }
+        if ENV['PG'] == 'true'
+          it { expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z') }
+          it { expect(subject[:updated_at]).to eq('2008-09-01T08:05:00.000Z') }
+        end
         it { expect(subject[:archived]).to eq(dossier.archived) }
         it { expect(subject[:mandataire_social]).to eq(dossier.mandataire_social) }
 

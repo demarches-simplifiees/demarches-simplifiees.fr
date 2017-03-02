@@ -564,6 +564,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    sqlite3 (1.3.13)
     swd (1.0.1)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
@@ -695,6 +696,7 @@ DEPENDENCIES
   simplecov
   smart_listing
   spreadsheet_architect
+  sqlite3
   therubyracer
   timecop
   turbolinks (~> 2.5)
@@ -708,4 +710,4 @@ DEPENDENCIES
   xray-rails
 
 BUNDLED WITH
-   1.13.7
+   1.14.4
