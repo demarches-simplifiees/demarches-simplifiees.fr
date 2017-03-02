@@ -181,7 +181,8 @@ class Admin::ProceduresController < AdminController
   def path_list
     render json: ProcedurePath
                      .joins(', procedures')
-                     .where("procedures.id = procedure_paths.procedure_id AND procedures.archived != true")
+                     .where("procedures.id = procedure_paths.procedure_id")
+                     .where("procedures.archived" => false)
                      .where("path LIKE '%#{params[:request]}%'")
                      .pluck(:path, :administrateur_id)
                      .inject([]) {
