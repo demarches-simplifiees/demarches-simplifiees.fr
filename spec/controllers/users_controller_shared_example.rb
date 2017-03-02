@@ -11,7 +11,7 @@ shared_examples 'current_user_dossier_spec' do
     end
 
     context 'when dossier id is incorrect' do
-      it { expect { subject.current_user_dossier 1 }.to raise_error ActiveRecord::RecordNotFound }
+      it { expect { subject.current_user_dossier 666 }.to raise_error ActiveRecord::RecordNotFound }
     end
   end
 
