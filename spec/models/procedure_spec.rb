@@ -55,6 +55,34 @@ describe Procedure do
     end
   end
 
+  describe 'initiated_mail' do
+    subject { create(:procedure) }
+
+    context 'when initiated_mail is not customize' do
+      it { expect(subject.initiated_mail.body).to eq(InitiatedMail.default.body) }
+    end
+
+    context 'when initiated_mail is customize' do
+      before :each do
+        subject.initiated_mail = InitiatedMail.new(body: 'sisi')
+        subject.save
+        subject.reload
+      end
+      it { expect(subject.initiated_mail.body).to eq('sisi') }
+    end
+
+    context 'when initiated_mail is customize ... again' do
+      before :each do
+        subject.initiated_mail = InitiatedMail.new(body: 'toto')
+        subject.save
+        subject.reload
+      end
+      it { expect(subject.initiated_mail.body).to eq('toto') }
+
+      it { expect(InitiatedMail.count).to eq(1) }
+    end
+  end
+
   describe 'validation' do
     context 'libelle' do
       it { is_expected.not_to allow_value(nil).for(:libelle) }

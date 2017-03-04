@@ -37,6 +37,11 @@ class Procedure < ActiveRecord::Base
     MailReceived.create(procedure: self) unless mail_received
   end
 
+  def initiated_mail_with_override
+    initiated_mail_without_override || InitiatedMail.default
+  end
+  alias_method_chain :initiated_mail, :override
+
   def path
     procedure_path.path unless procedure_path.nil?
   end
