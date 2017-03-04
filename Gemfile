@@ -110,7 +110,7 @@ group :test do
   gem 'poltergeist'
   gem 'timecop'
   gem 'guard'
-  # gem 'guard-rspec', require: false
+  gem 'guard-rspec', require: false
   gem 'guard-livereload', '~> 2.4', require: false
   gem 'vcr'
   gem 'rails-controller-testing'
@@ -134,8 +134,8 @@ group :development, :test do
   gem 'pry-byebug'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  # gem 'spring'
-  # gem 'spring-commands-rspec'
+  gem 'spring'
+  gem 'spring-commands-rspec'
   gem 'rspec-rails', '~> 3.0'
 
   gem 'railroady'
