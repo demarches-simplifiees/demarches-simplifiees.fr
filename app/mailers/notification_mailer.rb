@@ -1,4 +1,7 @@
 class NotificationMailer < ApplicationMailer
+  default from: 'tps@apientreprise.fr',
+          to:  Proc.new { @user.email }
+
   def new_answer dossier
     send_mail dossier, "Nouveau message pour votre dossier TPS N°#{dossier.id}"
   end
@@ -33,7 +36,6 @@ class NotificationMailer < ApplicationMailer
   def send_mail dossier, subject
     vars_mailer dossier
 
-    mail(from: "tps@apientreprise.fr", to: @user.email,
-         subject: subject)
+    mail(subject: subject)
   end
 end
