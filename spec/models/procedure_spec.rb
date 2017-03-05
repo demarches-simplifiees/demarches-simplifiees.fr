@@ -21,38 +21,6 @@ describe Procedure do
     it { is_expected.to have_db_column(:logo_secure_token) }
     it { is_expected.to have_db_column(:cerfa_flag) }
     it { is_expected.to have_db_column(:published) }
-
-    describe 'mail_received' do
-      let(:procedure) { create :procedure }
-
-      before do
-        create :mail_received, procedure: procedure
-      end
-
-      it { expect(procedure.mail_received).not_to be_nil }
-    end
-
-  end
-
-  describe '#build_default_mails' do
-    subject { build :procedure, mail_templates: [] }
-
-    it 'call the fonction build_default_mails' do
-      expect(subject).to receive(:build_default_mails)
-      subject.save
-    end
-
-    describe 'accessible values' do
-
-      before do
-        subject.save
-        subject.reload
-      end
-
-      it { expect(subject.mail_templates.size).to eq 1 }
-
-      it { expect(subject.mail_received).not_to be_nil }
-    end
   end
 
   describe 'initiated_mail' do
@@ -195,10 +163,6 @@ describe Procedure do
     let!(:type_de_champ_private_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
-
-    before do
-      procedure.mail_received.object = "Je vais être cloné"
-    end
 
     subject { procedure.clone }
 

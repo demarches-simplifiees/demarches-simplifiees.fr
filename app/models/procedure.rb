@@ -4,7 +4,6 @@ class Procedure < ActiveRecord::Base
   has_many :types_de_champ_private, dependent: :destroy
   has_many :dossiers
   has_many :mail_templates
-  has_one :mail_received
 
   has_one :initiated_mail
 
@@ -30,12 +29,6 @@ class Procedure < ActiveRecord::Base
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
-
-  after_create :build_default_mails
-
-  def build_default_mails
-    MailReceived.create(procedure: self) unless mail_received
-  end
 
   def initiated_mail_with_override
     initiated_mail_without_override || InitiatedMail.default
