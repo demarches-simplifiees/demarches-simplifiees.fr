@@ -5,9 +5,9 @@
       %tr
         %th{ colspan: 2 }
           Type d'email
-      - @procedure.mail_templates.each do |mt|
+      - @mails.each do |mail|
         %tr
           %td
-            = mt.name
+            = mail.name
           %td.text-right
-            = link_to "Personnaliser l'e-mail", edit_admin_procedure_mail_template_path(@procedure, mt)
+            = link_to "Personnaliser l'e-mail", edit_admin_procedure_mail_template_path(@procedure, mail.class.slug)
