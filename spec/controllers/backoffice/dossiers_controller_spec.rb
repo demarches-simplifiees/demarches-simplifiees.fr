@@ -236,7 +236,8 @@ describe Backoffice::DossiersController, type: :controller do
     end
 
     it 'Notification email is send' do
-      expect(NotificationMailer).to receive(:dossier_received).and_return(NotificationMailer)
+      expect(NotificationMailer).to receive(:send_notification)
+        .with(dossier, kind_of(InitiatedMail)).and_return(NotificationMailer)
       expect(NotificationMailer).to receive(:deliver_now!)
 
       subject

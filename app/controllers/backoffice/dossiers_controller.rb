@@ -88,10 +88,12 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   def receive
     create_dossier_facade params[:dossier_id]
 
-    @facade.dossier.received!
+    dossier = @facade.dossier
+
+    dossier.received!
     flash.notice = 'Dossier considéré comme reçu.'
 
-    NotificationMailer.dossier_received(@facade.dossier).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.initiated_mail).deliver_now!
 
     redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
