@@ -43,23 +43,4 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
 
     it_should_behave_like "description_controller_spec"
   end
-  #
-  # context 'POST #update' do
-  #   let(:user) { owner_user }
-  #
-  #   subject { post :update, params: { dossier_id: dossier.id } }
-  #
-  #   before do
-  #     subject
-  #   end
-  #
-  #   it { expect(response.status).to eq(302) }
-  #
-  #   context 'when procedure is archived' do
-  #     let(:archived) { true }
-  #
-  #     it { expect(response.status).to eq(403) }
-  #   end
-  #
-  # end
 end
