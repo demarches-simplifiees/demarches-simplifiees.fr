@@ -8,6 +8,6 @@
       - @mails.each do |mail|
         %tr
           %td
-            = mail.name
+            = mail.class.const_get(:DISPLAYED_NAME)
           %td.text-right
             = link_to "Personnaliser l'e-mail", edit_admin_procedure_mail_template_path(@procedure, mail.class.slug)

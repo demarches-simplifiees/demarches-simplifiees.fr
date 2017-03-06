@@ -15,7 +15,7 @@ describe Admin::MailTemplatesController, type: :controller do
 
     it { expect(subject.status).to eq 200 }
     it { expect(subject.body).to include("E-mails personnalisables") }
-    it { expect(subject.body).to include(initiated_mail.name ) }
+    it { expect(subject.body).to include(Mails::InitiatedMail::DISPLAYED_NAME) }
   end
 
   describe 'PATCH update' do

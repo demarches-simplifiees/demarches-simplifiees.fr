@@ -1,6 +1,6 @@
 .white-back
   %h3
-    = @mail_template.name
+    = @mail_template.class.const_get(:DISPLAYED_NAME)
 
   = simple_form_for @mail_template,
     as: 'mail_template', 
