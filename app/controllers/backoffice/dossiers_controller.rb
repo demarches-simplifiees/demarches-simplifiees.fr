@@ -168,11 +168,11 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     end
     redirect_to backoffice_dossier_path(@dossier)
   end
-  
+
   def reopen
     create_dossier_facade params[:dossier_id]
 
-    @facade.dossier.initiated!
+    @facade.dossier.replied!
     flash.notice = 'Dossier réouvert.'
 
     redirect_to backoffice_dossiers_path
