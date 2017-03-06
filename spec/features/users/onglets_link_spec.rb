@@ -34,7 +34,7 @@ feature 'on click on tabs button' do
     context 'when he click on tabs en examen' do
       before do
         visit users_dossiers_url(liste: :en_instruction)
-        page.click_on 'En examen 1'
+        page.click_on 'En instruction 1'
       end
 
       scenario 'it redirect to users dossier termine' do
@@ -45,7 +45,7 @@ feature 'on click on tabs button' do
     context 'when he click on tabs termine' do
       before do
         visit users_dossiers_url(liste: :termine)
-        page.click_on 'Cloturé 3'
+        page.click_on 'Terminé 3'
       end
 
       scenario 'it redirect to users dossier termine' do

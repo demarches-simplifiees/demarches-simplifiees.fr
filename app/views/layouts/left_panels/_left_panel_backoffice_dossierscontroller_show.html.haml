@@ -5,7 +5,7 @@
 #action-block
   - if gestionnaire_signed_in?
     - if !@facade.dossier.read_only? || @facade.dossier.initiated?
-      = link_to 'Accuser réception', backoffice_dossier_receive_path(@facade.dossier), method: :post, class: 'btn btn-danger btn-block'
+      = link_to 'Passer en instruction', backoffice_dossier_receive_path(@facade.dossier), method: :post, class: 'btn btn-danger btn-block'
 
     - elsif @facade.dossier.received?
       = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do

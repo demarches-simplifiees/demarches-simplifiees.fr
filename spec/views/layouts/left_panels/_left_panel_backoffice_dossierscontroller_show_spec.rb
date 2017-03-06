@@ -25,8 +25,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
 
   context 'button dossier state changements' do
 
-    shared_examples 'button Accuser réception is present' do
-      it { expect(rendered).to have_link('Accuser réception') }
+    shared_examples 'button Passer en instruction is present' do
+      it { expect(rendered).to have_link('Passer en instruction') }
     end
 
     context 'when dossier have state initiated' do
@@ -36,9 +36,9 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Nouveau') }
+      it { expect(rendered).to have_content('En construction') }
 
-      include_examples 'button Accuser réception is present'
+      include_examples 'button Passer en instruction is present'
     end
 
     context 'when dossier have state replied' do
@@ -50,7 +50,7 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
 
       it { expect(rendered).to have_content('En construction') }
 
-      include_examples 'button Accuser réception is present'
+      include_examples 'button Passer en instruction is present'
     end
 
     context 'when dossier have state update' do
@@ -62,7 +62,7 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
 
       it { expect(rendered).to have_content('En construction') }
 
-      include_examples 'button Accuser réception is present'
+      include_examples 'button Passer en instruction is present'
     end
 
     context 'when dossier have state received' do

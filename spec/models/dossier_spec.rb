@@ -597,7 +597,10 @@ describe Dossier do
     let(:procedure) { create(:procedure, :with_type_de_champ) }
     let(:gestionnaire) { create(:gestionnaire) }
     let(:follow) { create(:follow, gestionnaire: gestionnaire) }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow]) }
+    let(:date1) { 1.day.ago }
+    let(:date2) { 1.hour.ago }
+    let(:date3) { 1.minute.ago }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow], initiated_at: date1, received_at: date2, processed_at: date3) }
 
     describe '#export_headers' do
 
@@ -608,6 +611,7 @@ describe Dossier do
     end
 
     describe '#data_with_champs' do
+
       subject { dossier.data_with_champs }
 
       it { expect(subject[0]).to be_a_kind_of(Integer) }
@@ -616,14 +620,17 @@ describe Dossier do
       it { expect(subject[3]).to be_in([true, false]) }
       it { expect(subject[4]).to be_in([true, false]) }
       it { expect(subject[5]).to eq("draft") }
-      it { expect(subject[6]).to eq(dossier.followers_gestionnaires_emails) }
+      it { expect(subject[6]).to eq(date1) }
+      it { expect(subject[7]).to eq(date2) }
+      it { expect(subject[8]).to eq(date3) }
+      it { expect(subject[9]).to eq(dossier.followers_gestionnaires_emails) }
       it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
     end
   end
 
   describe '#Dossier.to_csv' do
     let!(:procedure) { create(:procedure) }
-    let!(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, ) }
 
     subject do
       dossier_hash = {}
@@ -881,6 +888,82 @@ describe Dossier do
       it { is_expected.to eq "#{gestionnaire.email} #{gestionnaire2.email}" }
     end
 
+  end
+
+  describe '#update_state_dates' do
+    let(:state) { 'draft' }
+    let(:dossier) { create(:dossier, state: state) }
+    let(:beginning_of_day) { Time.now.beginning_of_day }
+
+    before do
+      Timecop.freeze(beginning_of_day)
+    end
+
+    context 'when dossier is initiated' do
+      before do
+        dossier.initiated!
+        dossier.reload
+      end
+
+      it { expect(dossier.state).to eq('initiated') }
+      it { expect(dossier.initiated_at).to eq(beginning_of_day) }
+
+      it 'should keep first initiated_at date' do
+        Timecop.return
+        dossier.received!
+        dossier.initiated!
+
+        expect(dossier.initiated_at).to eq(beginning_of_day)
+      end
+    end
+
+    context 'when dossier is received' do
+      let(:state) { 'initiated' }
+
+      before do
+        dossier.received!
+        dossier.reload
+      end
+
+      it { expect(dossier.state).to eq('received') }
+      it { expect(dossier.received_at).to eq(beginning_of_day) }
+
+      it 'should keep first received_at date if dossier is set to initiated again' do
+        Timecop.return
+        dossier.initiated!
+        dossier.received!
+
+        expect(dossier.received_at).to eq(beginning_of_day)
+      end
+    end
+
+    shared_examples 'dossier is processed' do |new_state|
+      before do
+        dossier.update(state: new_state)
+        dossier.reload
+      end
+
+      it { expect(dossier.state).to eq(new_state) }
+      it { expect(dossier.processed_at).to eq(beginning_of_day) }
+    end
+
+    context 'when dossier is closed' do
+      let(:state) { 'received' }
+
+      it_behaves_like 'dossier is processed', 'closed'
+    end
+
+    context 'when dossier is refused' do
+      let(:state) { 'received' }
+
+      it_behaves_like 'dossier is processed', 'refused'
+    end
+
+    context 'when dossier is without_continuation' do
+      let(:state) { 'received' }
+
+      it_behaves_like 'dossier is processed', 'without_continuation'
+    end
 
   end
 end

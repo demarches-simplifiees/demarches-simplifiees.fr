@@ -24,7 +24,7 @@ describe DossierDecorator do
 
     it 'initiated is initiate' do
       dossier.initiated!
-      expect(subject).to eq('Nouveau')
+      expect(subject).to eq('En construction')
     end
 
     it 'replied is repondu' do
