@@ -98,6 +98,8 @@ gem 'browser'
 
 gem 'simple_form'
 
+gem 'newrelic_rpm'
+
 group :test do
   gem 'capybara'
   gem 'launchy'
