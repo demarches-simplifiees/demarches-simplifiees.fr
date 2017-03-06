@@ -5,7 +5,6 @@ describe Procedure do
     it { is_expected.to have_many(:types_de_piece_justificative) }
     it { is_expected.to have_many(:types_de_champ) }
     it { is_expected.to have_many(:dossiers) }
-    it { is_expected.to have_many(:mail_templates) }
     it { is_expected.to have_one(:module_api_carto) }
     it { is_expected.to belong_to(:administrateur) }
     it { is_expected.to have_many(:preference_list_dossiers) }
@@ -182,7 +181,6 @@ describe Procedure do
       expect(subject.types_de_piece_justificative.size).to eq procedure.types_de_piece_justificative.size
       expect(subject.types_de_champ.size).to eq procedure.types_de_champ.size
       expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
-      expect(subject.mail_templates.size).to eq procedure.mail_templates.size
 
       subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
@@ -193,10 +191,6 @@ describe Procedure do
       end
 
       subject.types_de_piece_justificative.zip(procedure.types_de_piece_justificative).each do |stc, ptc|
-        expect(stc).to have_same_attributes_as(ptc)
-      end
-
-      subject.mail_templates.zip(procedure.mail_templates).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
     end

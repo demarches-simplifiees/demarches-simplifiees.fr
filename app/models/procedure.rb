@@ -3,8 +3,6 @@ class Procedure < ActiveRecord::Base
   has_many :types_de_champ, class_name: 'TypeDeChampPublic', dependent: :destroy
   has_many :types_de_champ_private, dependent: :destroy
   has_many :dossiers
-  has_many :mail_templates
-
 
   has_one :procedure_path, dependent: :destroy
 
@@ -28,6 +26,15 @@ class Procedure < ActiveRecord::Base
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+
+  # for all those mails do
+  # has_one initiated_mail
+  #
+  # add a method to return default mail if none is saved
+  # define method :initiated_mail_with_override
+  #   self initiated_mail_without_override || InitiatedMail.default
+  # end
+  # alias_method_chain :initiated_mail, :override
 
   %w(InitiatedMail ReceivedMail ClosedMail RefusedMail WithoutContinuationMail).each do |name|
     has_one "#{name.underscore}".to_sym
@@ -91,7 +98,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def clone
-    procedure = self.deep_clone(include: [:types_de_piece_justificative, :types_de_champ, :types_de_champ_private, :module_api_carto, :mail_templates, types_de_champ: [:drop_down_list]])
+    procedure = self.deep_clone(include: [:types_de_piece_justificative, :types_de_champ, :types_de_champ_private, :module_api_carto, types_de_champ: [:drop_down_list]])
     procedure.archived = false
     procedure.published = false
     procedure.logo_secure_token = nil
