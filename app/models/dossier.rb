@@ -304,4 +304,8 @@ class Dossier < ActiveRecord::Base
   def invite_by_user? email
     (invites_user.pluck :email).include? email
   end
+
+  def can_be_initiated?
+    !(procedure.archived && draft?)
+  end
 end

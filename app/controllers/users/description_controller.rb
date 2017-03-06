@@ -17,7 +17,7 @@ class Users::DescriptionController < UsersController
       acc
     end
 
-    if @procedure.archived?
+    unless @dossier.can_be_initiated?
       flash[:alert] = t('errors.messages.procedure_archived')
     end
 
@@ -30,7 +30,7 @@ class Users::DescriptionController < UsersController
     @dossier = current_user_dossier
     @procedure = @dossier.procedure
 
-    return head :forbidden if @procedure.archived?
+    return head :forbidden unless @dossier.can_be_initiated?
 
     @champs = @dossier.ordered_champs
 

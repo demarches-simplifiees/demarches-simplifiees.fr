@@ -24,12 +24,19 @@ shared_examples 'description_controller_spec' do
         expect(response).to have_http_status(:success)
       end
 
-      context 'but procedure is archived' do
-        let(:archived) { true }
+      context 'procedure is archived' do
         render_views
+        let(:archived) { true }
 
         it { expect(response).to have_http_status(:success) }
-        it { expect(response.body).to have_content(I18n.t('errors.messages.procedure_archived')) }
+        it { expect(response.body).to_not have_content(I18n.t('errors.messages.procedure_archived')) }
+
+        context 'dossier is a draft' do
+          let(:state) { 'draft' }
+
+          it { expect(response).to have_http_status(:success) }
+          it { expect(response.body).to have_content(I18n.t('errors.messages.procedure_archived')) }
+        end
       end
     end
 
@@ -297,7 +304,13 @@ shared_examples 'description_controller_spec' do
         post :update, params: { dossier_id: dossier.id }
       end
 
-      it { expect(response.status).to eq(403) }
+      it { expect(response.status).to eq(302) }
+
+      context 'Le dossier est en brouillon' do
+        let(:state) { 'draft' }
+
+        it { expect(response.status).to eq(403) }
+      end
     end
   end
 
