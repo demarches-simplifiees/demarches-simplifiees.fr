@@ -201,6 +201,8 @@ class Dossier < ActiveRecord::Base
     where(state: TERMINE, archived: false).order("updated_at #{order}")
   end
 
+  scope :archived, -> { where(archived: true) }
+
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
   end
@@ -305,6 +307,7 @@ class Dossier < ActiveRecord::Base
     (invites_user.pluck :email).include? email
   end
 
+
   private
 
   def update_state_dates
@@ -315,5 +318,9 @@ class Dossier < ActiveRecord::Base
     elsif TERMINE.include?(state)
       self.processed_at = DateTime.now
     end
+  end
+
+  def can_be_initiated?
+    !(procedure.archived && draft?)
   end
 end
