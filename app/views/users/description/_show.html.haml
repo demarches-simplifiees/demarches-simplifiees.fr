@@ -15,7 +15,7 @@
     = @dossier.procedure.libelle
 
   -#TODO use form_for
-  = form_tag(url_for({controller: 'users/description', action: :create, dossier_id: @dossier.id}), class: 'form', method: 'POST', multipart: true) do
+  = form_tag(url_for({controller: 'users/description', action: :update, dossier_id: @dossier.id}), class: 'form', method: 'POST', multipart: true) do
     -unless @champs.nil?
       #liste_champs
         =render partial: 'users/description/champs', locals:{private: false}
@@ -41,16 +41,16 @@
               Vous pourrez dans tous les cas les compléter plus tard si vous ne les possédez pas de suite.
 
 
-    -route = Rails.application.routes.recognize_path(request.referrer)
+    -route = Rails.application.routes.recognize_path(request.referrer) # WTF ?
     - unless route[:controller].match('admin')
       %div{style: 'text-align:right'}
         %h6 Tous les champs portant un * sont obligatoires.
 
-      -if !@dossier.draft?
-        =render partial: '/layouts/modifications_terminees'
-      -else
-        = submit_tag 'Soumettre mon dossier', id: 'suivant', name: 'submit[nouveaux]', class: %w(btn btn btn-success), style: 'float:right', data: { disable_with: 'Soumettre votre dossier', submit: true}
-        = submit_tag 'Enregistrer un brouillon', id: 'brouillon', name: 'submit[brouillon]', class: %w(btn btn-xs btn-default), style: 'float:right; margin-right: 10px; margin-top: 6px', data: {disable_with: 'Enregistrer un brouillon', submit: true}
-
-    %br
-    %br
+      - if !@dossier.can_be_initiated?
+        .alert.alert-danger
+          = t('errors.messages.procedure_archived')
+      - elsif !@dossier.draft?
+        = render partial: '/layouts/modifications_terminees'
+      - else
+        = submit_tag 'Soumettre mon dossier', id: 'suivant', name: 'submit[nouveaux]', class: 'btn btn btn-success', style: 'float:right', disabled: @procedure.archived?, data: { disable_with: 'Soumettre votre dossier', submit: true}
+        = submit_tag 'Enregistrer un brouillon', id: 'brouillon', name: 'submit[brouillon]', class: 'btn btn-xs btn-default', style: 'float:right; margin-right: 10px; margin-top: 6px', disabled: @procedure.archived?, data: {disable_with: 'Enregistrer un brouillon', submit: true}
