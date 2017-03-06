@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.html.haml', type: :view do
 
-  let!(:dossier) { create(:dossier, :with_entreprise,  state: state) }
+  let!(:dossier) { create(:dossier, :with_entreprise,  state: state, archived: archived) }
   let(:state) { 'draft' }
+  let(:archived) { false }
   let(:gestionnaire) { create(:gestionnaire) }
 
   before do
@@ -126,6 +127,28 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
         expect(rendered).not_to have_css('form[data-toggle="tooltip"][title="Classer sans suite"]')
         expect(rendered).not_to have_css('form[data-toggle="tooltip"][title="Refuser"]')
       end
+    end
+
+    context 'when dossier is not archived' do
+      let(:archived) { false }
+
+      before do
+        render
+      end
+
+      it { expect(rendered).to have_link('Archiver') }
+    end
+
+    context 'when dossier is archived' do
+      let(:archived) { true }
+
+      before do
+        render
+      end
+
+      it { expect(rendered).to have_content('Archivé') }
+      it { expect(rendered).to have_link('Désarchiver') }
+
     end
   end
 

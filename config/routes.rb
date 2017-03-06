@@ -162,9 +162,11 @@ Rails.application.routes.draw do
       post 'refuse' => 'dossiers#refuse'
       post 'without_continuation' => 'dossiers#without_continuation'
       post 'close' => 'dossiers#close'
-      post 'archive' => 'dossiers#archive'
+      member do
+        post 'archive'
+        post 'unarchive'
+      end
       post 'reopen' => 'dossiers#reopen'
-
       put 'follow' => 'dossiers#follow'
       resources :commentaires, only: [:index]
     end
