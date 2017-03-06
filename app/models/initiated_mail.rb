@@ -1,15 +1,13 @@
-class InitiatedMail < MailTemplate
+class InitiatedMail < ActiveRecord::Base
+  include MailTemplateConcern
+
   def name
-    "E-mail d'accusé de réception"
+    "Accusé de réception"
   end
 
   def self.default
-    obj = "[TPS] Accusé de réception pour votre dossier n°--numero_dossier--"
+    obj = "Votre dossier TPS N°--numero_dossier-- a été bien reçu"
     body = ActionController::Base.new.render_to_string(template: 'notification_mailer/initiated_mail')
     InitiatedMail.new(object: obj, body: body)
-  end
-
-  def self.slug
-    self.name.parameterize
   end
 end

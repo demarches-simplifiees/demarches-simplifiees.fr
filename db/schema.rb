@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170302105557) do
+ActiveRecord::Schema.define(version: 20170306102320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,6 +102,15 @@ ActiveRecord::Schema.define(version: 20170302105557) do
     t.string  "type"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id", using: :btree
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id", using: :btree
+  end
+
+  create_table "closed_mails", force: :cascade do |t|
+    t.text     "body"
+    t.text     "object"
+    t.integer  "procedure_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["procedure_id"], name: "index_closed_mails_on_procedure_id", using: :btree
   end
 
   create_table "commentaires", force: :cascade do |t|
@@ -343,6 +352,24 @@ ActiveRecord::Schema.define(version: 20170302105557) do
     t.integer "dossier_id"
   end
 
+  create_table "received_mails", force: :cascade do |t|
+    t.text     "body"
+    t.text     "object"
+    t.integer  "procedure_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["procedure_id"], name: "index_received_mails_on_procedure_id", using: :btree
+  end
+
+  create_table "refused_mails", force: :cascade do |t|
+    t.text     "body"
+    t.text     "object"
+    t.integer  "procedure_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["procedure_id"], name: "index_refused_mails_on_procedure_id", using: :btree
+  end
+
   create_table "rna_informations", force: :cascade do |t|
     t.string  "association_id"
     t.string  "titre"
@@ -394,12 +421,25 @@ ActiveRecord::Schema.define(version: 20170302105557) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  create_table "without_continuation_mails", force: :cascade do |t|
+    t.text     "body"
+    t.text     "object"
+    t.integer  "procedure_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id", using: :btree
+  end
+
   add_foreign_key "cerfas", "dossiers"
+  add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossiers", "users"
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "procedure_paths", "administrateurs"
   add_foreign_key "procedure_paths", "procedures"
+  add_foreign_key "received_mails", "procedures"
+  add_foreign_key "refused_mails", "procedures"
+  add_foreign_key "without_continuation_mails", "procedures"
 
   create_view :searches,  sql_definition: <<-SQL
       SELECT dossiers.id AS dossier_id,
