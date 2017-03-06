@@ -3,7 +3,7 @@ require 'spec_helper'
 describe MailTemplateConcern do
   describe '.replace_tags' do
     let(:dossier) { create :dossier }
-    let(:initiated_mail) { InitiatedMail.default }
+    let(:initiated_mail) { Mails::InitiatedMail.default }
 
     it 'works' do
         initiated_mail.object = '[TPS] --numero_dossier-- --libelle_procedure-- --lien_dossier--'

@@ -23,23 +23,23 @@ describe Procedure do
   end
 
   describe 'mails' do
-      it { expect(subject.initiated_mail).to be_a(InitiatedMail) }
-      it { expect(subject.received_mail).to be_a(ReceivedMail) }
-      it { expect(subject.closed_mail).to be_a(ClosedMail) }
-      it { expect(subject.refused_mail).to be_a(RefusedMail) }
-      it { expect(subject.without_continuation_mail).to be_a(WithoutContinuationMail) }
+      it { expect(subject.initiated_mail).to be_a(Mails::InitiatedMail) }
+      it { expect(subject.received_mail).to be_a(Mails::ReceivedMail) }
+      it { expect(subject.closed_mail).to be_a(Mails::ClosedMail) }
+      it { expect(subject.refused_mail).to be_a(Mails::RefusedMail) }
+      it { expect(subject.without_continuation_mail).to be_a(Mails::WithoutContinuationMail) }
   end
 
   describe 'initiated_mail' do
     subject { create(:procedure) }
 
     context 'when initiated_mail is not customize' do
-      it { expect(subject.initiated_mail.body).to eq(InitiatedMail.default.body) }
+      it { expect(subject.initiated_mail.body).to eq(Mails::InitiatedMail.default.body) }
     end
 
     context 'when initiated_mail is customize' do
       before :each do
-        subject.initiated_mail = InitiatedMail.new(body: 'sisi')
+        subject.initiated_mail = Mails::InitiatedMail.new(body: 'sisi')
         subject.save
         subject.reload
       end
@@ -48,13 +48,13 @@ describe Procedure do
 
     context 'when initiated_mail is customize ... again' do
       before :each do
-        subject.initiated_mail = InitiatedMail.new(body: 'toto')
+        subject.initiated_mail = Mails::InitiatedMail.new(body: 'toto')
         subject.save
         subject.reload
       end
       it { expect(subject.initiated_mail.body).to eq('toto') }
 
-      it { expect(InitiatedMail.count).to eq(1) }
+      it { expect(Mails::InitiatedMail.count).to eq(1) }
     end
   end
 

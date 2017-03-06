@@ -28,18 +28,18 @@ class Procedure < ActiveRecord::Base
   validates :description, presence: true, allow_blank: false, allow_nil: false
 
   # for all those mails do
-  # has_one initiated_mail
+  # has_one :initiated_mail, class_name: 'Mails::InitiatedMail'
   #
   # add a method to return default mail if none is saved
-  # define method :initiated_mail_with_override
-  #   self initiated_mail_without_override || InitiatedMail.default
+  # def initiated_mail_with_override
+  #   self.initiated_mail_without_override || InitiatedMail.default
   # end
   # alias_method_chain :initiated_mail, :override
 
   %w(InitiatedMail ReceivedMail ClosedMail RefusedMail WithoutContinuationMail).each do |name|
-    has_one "#{name.underscore}".to_sym
+    has_one "#{name.underscore}".to_sym, class_name: "Mails::#{name}"
     define_method("#{name.underscore}_with_override") do
-      self.send("#{name.underscore}_without_override") || Object.const_get(name).default
+      self.send("#{name.underscore}_without_override") || Object.const_get("Mails::#{name}").default
     end
     alias_method_chain "#{name.underscore.to_sym}".to_s, :override
   end

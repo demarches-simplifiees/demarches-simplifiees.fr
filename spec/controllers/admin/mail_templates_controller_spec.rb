@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Admin::MailTemplatesController, type: :controller do
-  let(:initiated_mail) { InitiatedMail.default }
+  let(:initiated_mail) { Mails::InitiatedMail.default }
   let(:procedure) { create :procedure }
 
   before do
