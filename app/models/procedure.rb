@@ -5,7 +5,6 @@ class Procedure < ActiveRecord::Base
   has_many :dossiers
   has_many :mail_templates
 
-  has_one :initiated_mail
 
   has_one :procedure_path, dependent: :destroy
 
@@ -30,10 +29,13 @@ class Procedure < ActiveRecord::Base
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
 
-  def initiated_mail_with_override
-    initiated_mail_without_override || InitiatedMail.default
+  %w(InitiatedMail ReceivedMail ClosedMail RefusedMail WithoutContinuationMail).each do |name|
+    has_one "#{name.underscore}".to_sym
+    define_method("#{name.underscore}_with_override") do
+      self.send("#{name.underscore}_without_override") || Object.const_get(name).default
+    end
+    alias_method_chain "#{name.underscore.to_sym}".to_s, :override
   end
-  alias_method_chain :initiated_mail, :override
 
   def path
     procedure_path.path unless procedure_path.nil?

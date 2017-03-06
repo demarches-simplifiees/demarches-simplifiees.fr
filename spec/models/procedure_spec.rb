@@ -23,6 +23,14 @@ describe Procedure do
     it { is_expected.to have_db_column(:published) }
   end
 
+  describe 'mails' do
+      it { expect(subject.initiated_mail).to be_a(InitiatedMail) }
+      it { expect(subject.received_mail).to be_a(ReceivedMail) }
+      it { expect(subject.closed_mail).to be_a(ClosedMail) }
+      it { expect(subject.refused_mail).to be_a(RefusedMail) }
+      it { expect(subject.without_continuation_mail).to be_a(WithoutContinuationMail) }
+  end
+
   describe 'initiated_mail' do
     subject { create(:procedure) }
 
