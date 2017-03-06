@@ -17,11 +17,19 @@ shared_examples 'description_controller_spec' do
     context 'when all is ok' do
       before do
         dossier.entreprise = create :entreprise
+        get :show, params: {dossier_id: dossier_id}
       end
 
       it 'returns http success' do
-        get :show, params: {dossier_id: dossier_id}
         expect(response).to have_http_status(:success)
+      end
+
+      context 'but procedure is archived' do
+        let(:archived) { true }
+        render_views
+
+        it { expect(response).to have_http_status(:success) }
+        it { expect(response.body).to have_content(I18n.t('errors.messages.procedure_archived')) }
       end
     end
 
@@ -90,7 +98,7 @@ shared_examples 'description_controller_spec' do
     end
   end
 
-  describe 'POST #create' do
+  describe 'POST #update' do
     let(:timestamp) { Time.now }
     let(:description) { 'Description de test Coucou, je suis un saut à la ligne Je suis un double saut  la ligne.' }
 
@@ -98,7 +106,7 @@ shared_examples 'description_controller_spec' do
       describe 'Premier enregistrement des données' do
         let(:submit) { {nouveaux: 'nouveaux'} }
 
-        subject { post :create, params: {dossier_id: dossier_id, submit: submit} }
+        subject { post :update, params: {dossier_id: dossier_id, submit: submit} }
 
         before do
           dossier.draft!
@@ -130,7 +138,7 @@ shared_examples 'description_controller_spec' do
       context 'En train de manipuler un dossier non brouillon' do
         before do
           dossier.initiated!
-          post :create, params: {dossier_id: dossier_id}
+          post :update, params: {dossier_id: dossier_id}
           dossier.reload
         end
 
@@ -145,7 +153,7 @@ shared_examples 'description_controller_spec' do
     end
 
     context 'Quand la procédure accepte les CERFA' do
-      subject { post :create, params: {dossier_id: dossier_id,
+      subject { post :update, params: {dossier_id: dossier_id,
                                        cerfa_pdf: cerfa_pdf} }
 
       it 'Notification interne is create' do
@@ -154,7 +162,7 @@ shared_examples 'description_controller_spec' do
 
       context 'Sauvegarde du CERFA PDF', vcr: {cassette_name: 'controllers_users_description_controller_save_cerfa'} do
         before do
-          post :create, params: {dossier_id: dossier_id,
+          post :update, params: {dossier_id: dossier_id,
                                  cerfa_pdf: cerfa_pdf}
           dossier.reload
         end
@@ -181,7 +189,7 @@ shared_examples 'description_controller_spec' do
           let(:cerfas) { Cerfa.where(dossier_id: dossier_id) }
 
           before do
-            post :create, params: {dossier_id: dossier_id, cerfa_pdf: cerfa_pdf}
+            post :update, params: {dossier_id: dossier_id, cerfa_pdf: cerfa_pdf}
           end
 
           it "il y a deux CERFA PDF pour ce dossier" do
@@ -195,7 +203,7 @@ shared_examples 'description_controller_spec' do
       context 'Sauvegarde du CERFA PDF' do
         let!(:procedure) { create(:procedure) }
         before do
-          post :create, params: {dossier_id: dossier_id,
+          post :update, params: {dossier_id: dossier_id,
                                  cerfa_pdf: cerfa_pdf}
           dossier.reload
         end
@@ -214,7 +222,7 @@ shared_examples 'description_controller_spec' do
       let(:dossier_minute_value) { '00' }
 
       before do
-        post :create, params: {dossier_id: dossier_id,
+        post :update, params: {dossier_id: dossier_id,
                                champs: {
                                    "'#{dossier.champs.first.id}'" => dossier_champs_first,
                                    "'#{dossier.champs.second.id}'" => dossier_date_value
@@ -254,7 +262,7 @@ shared_examples 'description_controller_spec' do
     context 'Sauvegarde des pièces justificatives', vcr: {cassette_name: 'controllers_users_description_controller_sauvegarde_pj'} do
       let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
       before do
-        post :create, params: {dossier_id: dossier_id,
+        post :update, params: {dossier_id: dossier_id,
                                'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
                                'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
         dossier.reload
@@ -264,7 +272,7 @@ shared_examples 'description_controller_spec' do
         it 'ClamavService safe_file? is call' do
           expect(ClamavService).to receive(:safe_file?).twice
 
-          post :create, params: {dossier_id: dossier_id,
+          post :update, params: {dossier_id: dossier_id,
                                  'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
                                  'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
         end
@@ -280,6 +288,16 @@ shared_examples 'description_controller_spec' do
         it { expect(subject.content).not_to be_nil }
         it { expect(subject.user).to eq user }
       end
+    end
+
+    context 'La procédure est archivée' do
+      let(:archived) { true }
+
+      before do
+        post :update, params: { dossier_id: dossier.id }
+      end
+
+      it { expect(response.status).to eq(403) }
     end
   end
 

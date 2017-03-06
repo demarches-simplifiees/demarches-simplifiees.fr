@@ -5,8 +5,9 @@ require 'controllers/users/description_controller_shared_example'
 describe Users::DescriptionController, type: :controller, vcr: {cassette_name: 'controllers_users_description_controller'} do
   let(:owner_user) { create(:user) }
   let(:invite_by_user) { create :user, email: 'invite@plop.com' }
+  let(:archived) { false }
 
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: true) }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: true, archived: archived) }
   let(:dossier) { create(:dossier, procedure: procedure, user: owner_user, state: 'initiated') }
 
   let(:dossier_id) { dossier.id }
@@ -42,4 +43,23 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
 
     it_should_behave_like "description_controller_spec"
   end
+  #
+  # context 'POST #update' do
+  #   let(:user) { owner_user }
+  #
+  #   subject { post :update, params: { dossier_id: dossier.id } }
+  #
+  #   before do
+  #     subject
+  #   end
+  #
+  #   it { expect(response.status).to eq(302) }
+  #
+  #   context 'when procedure is archived' do
+  #     let(:archived) { true }
+  #
+  #     it { expect(response.status).to eq(403) }
+  #   end
+  #
+  # end
 end

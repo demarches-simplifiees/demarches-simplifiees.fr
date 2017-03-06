@@ -17,20 +17,21 @@ class Users::DescriptionController < UsersController
       acc
     end
 
+    if @procedure.archived?
+      flash[:alert] = t('errors.messages.procedure_archived')
+    end
+
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for(root_path)
   end
 
-  # def error
-  #   show
-  #   flash.now.alert = 'Un ou plusieurs attributs obligatoires sont manquants ou incorrects.'
-  #   render 'show'
-  # end
-
-  def create
+  def update
     @dossier = current_user_dossier
     @procedure = @dossier.procedure
+
+    return head :forbidden if @procedure.archived?
+
     @champs = @dossier.ordered_champs
 
     mandatory = true
