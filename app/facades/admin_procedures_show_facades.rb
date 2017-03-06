@@ -13,8 +13,11 @@ class AdminProceduresShowFacades
 
   def dossiers_for_pie_highchart
     dossiers.where.not(state: :draft, archived: true).group(:state).count
-        .map{|key, value| { (DossierDecorator.case_state_fr key) => value } }
-        .reduce({}, :merge)
+      .reduce({}) do |acc, (key, val)|
+      translated_key = DossierDecorator.case_state_fr(key)
+      acc[translated_key].nil? ? acc[translated_key] = val : acc[translated_key] += val
+      acc
+    end
   end
 
   def dossiers_archived_by_state_total

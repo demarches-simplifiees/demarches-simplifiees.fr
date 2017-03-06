@@ -15,15 +15,13 @@
         = smart_listing_render :new_dossiers
 
   .row.center
-    .col-xs-2.col-xs-offset-1
+    .col-xs-3
       =link_to 'Tous les états', '?liste=all_state', class: 'text-info', style:"text-decoration: #{@facade_data_view.liste == 'all_state'? 'underline' : ''}"
-    .col-xs-2
+    .col-xs-3
       =link_to 'En construction', '?liste=a_traiter', class: 'text-danger', style:"text-decoration: #{@facade_data_view.liste == 'a_traiter'? 'underline' : ''}"
-    .col-xs-2
-      =link_to 'À receptionner', '?liste=deposes', class: 'text-purple', style:"text-decoration: #{@facade_data_view.liste == 'deposes'? 'underline' : ''}"
-    .col-xs-2
-      =link_to  'À instruire', '?liste=a_instruire', class: 'text-warning', style:"text-decoration: #{@facade_data_view.liste == 'a_instruire'? 'underline' : ''}"
-    .col-xs-2
+    .col-xs-3
+      =link_to  'En instruction', '?liste=a_instruire', class: 'text-warning', style:"text-decoration: #{@facade_data_view.liste == 'a_instruire'? 'underline' : ''}"
+    .col-xs-3
       =link_to  'Terminés', '?liste=termine', class: 'text-success', style:"text-decoration: #{@facade_data_view.liste == 'termine'? 'underline' : ''}"
 
   .default_data_block.default_visible

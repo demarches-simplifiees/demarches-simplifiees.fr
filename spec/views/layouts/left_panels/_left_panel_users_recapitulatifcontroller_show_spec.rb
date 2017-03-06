@@ -17,7 +17,7 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Nouveau') }
+      it { expect(rendered).to have_content('En construction') }
     end
 
     context 'when dossier state is replied' do
