@@ -13,6 +13,12 @@ class MailTemplate < ActiveRecord::Base
       },
       libelle_procedure: {
          description: "Permet d'afficher le libellé de la procédure."
+      },
+      email: {
+         description: "Permet d'afficher l'email du porteur de projet."
+      },
+      nom_organisation: {
+         description: "Permet d'afficher le nom de l'organisation."
       }
    }
 
@@ -34,6 +40,10 @@ class MailTemplate < ActiveRecord::Base
 
   def replace_tag tag, dossier
     case tag
+      when :email
+        dossier.user.email.to_s
+      when :nom_organisation
+        dossier.procedure.organisation.to_s
       when :numero_dossier
         dossier.id.to_s
       when :lien_dossier
