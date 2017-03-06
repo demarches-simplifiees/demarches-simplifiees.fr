@@ -362,11 +362,11 @@ describe Backoffice::DossiersController, type: :controller do
 
     subject { post :reopen, params: {dossier_id: dossier_id} }
 
-    it 'change state to initiated' do
+    it 'change state to replied' do
       subject
 
       dossier.reload
-      expect(dossier.state).to eq('initiated')
+      expect(dossier.state).to eq('replied')
     end
 
     it { is_expected.to redirect_to backoffice_dossiers_path }
