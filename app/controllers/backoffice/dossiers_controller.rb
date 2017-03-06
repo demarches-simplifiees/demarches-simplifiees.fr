@@ -95,40 +95,46 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.send_notification(dossier, dossier.procedure.initiated_mail).deliver_now!
 
-    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
+    redirect_to backoffice_dossier_path(id: dossier.id)
   end
 
   def refuse
     create_dossier_facade params[:dossier_id]
 
-    @facade.dossier.next_step! 'gestionnaire', 'refuse'
+    dossier = @facade.dossier
+
+    dossier.next_step! 'gestionnaire', 'refuse'
     flash.notice = 'Dossier considéré comme refusé.'
 
-    NotificationMailer.dossier_refused(@facade.dossier).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.refused_mail).deliver_now!
 
-    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
+    redirect_to backoffice_dossier_path(id: dossier.id)
   end
 
   def without_continuation
     create_dossier_facade params[:dossier_id]
 
-    @facade.dossier.next_step! 'gestionnaire', 'without_continuation'
+    dossier = @facade.dossier
+
+    dossier.next_step! 'gestionnaire', 'without_continuation'
     flash.notice = 'Dossier considéré comme sans suite.'
 
-    NotificationMailer.dossier_without_continuation(@facade.dossier).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.without_continuation_mail).deliver_now!
 
-    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
+    redirect_to backoffice_dossier_path(id: dossier.id)
   end
 
   def close
     create_dossier_facade params[:dossier_id]
 
-    @facade.dossier.next_step! 'gestionnaire', 'close'
+    dossier = @facade.dossier
+
+    dossier.next_step! 'gestionnaire', 'close'
     flash.notice = 'Dossier traité avec succès.'
 
-    NotificationMailer.dossier_closed(@facade.dossier).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.closed_mail).deliver_now!
 
-    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
+    redirect_to backoffice_dossier_path(id: dossier.id)
   end
 
   def follow

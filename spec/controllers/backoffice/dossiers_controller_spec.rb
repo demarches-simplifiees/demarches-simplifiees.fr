@@ -262,7 +262,8 @@ describe Backoffice::DossiersController, type: :controller do
     end
 
     it 'Notification email is sent' do
-      expect(NotificationMailer).to receive(:dossier_refused).and_return(NotificationMailer)
+      expect(NotificationMailer).to receive(:send_notification)
+        .with(dossier, kind_of(RefusedMail)).and_return(NotificationMailer)
       expect(NotificationMailer).to receive(:deliver_now!)
 
       subject
@@ -287,7 +288,8 @@ describe Backoffice::DossiersController, type: :controller do
     end
 
     it 'Notification email is sent' do
-      expect(NotificationMailer).to receive(:dossier_without_continuation).and_return(NotificationMailer)
+      expect(NotificationMailer).to receive(:send_notification)
+        .with(dossier, kind_of(WithoutContinuationMail)).and_return(NotificationMailer)
       expect(NotificationMailer).to receive(:deliver_now!)
 
       subject
@@ -311,7 +313,8 @@ describe Backoffice::DossiersController, type: :controller do
     end
 
     it 'Notification email is sent' do
-      expect(NotificationMailer).to receive(:dossier_closed).and_return(NotificationMailer)
+      expect(NotificationMailer).to receive(:send_notification)
+        .with(dossier, kind_of(ClosedMail)).and_return(NotificationMailer)
       expect(NotificationMailer).to receive(:deliver_now!)
 
       subject
