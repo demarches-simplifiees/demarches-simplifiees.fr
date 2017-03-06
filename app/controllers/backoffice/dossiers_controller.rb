@@ -93,7 +93,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier.received!
     flash.notice = 'Dossier considéré comme reçu.'
 
-    NotificationMailer.send_notification(dossier, dossier.procedure.initiated_mail).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.received_mail).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
