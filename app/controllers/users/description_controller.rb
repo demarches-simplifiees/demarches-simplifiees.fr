@@ -72,6 +72,7 @@ class Users::DescriptionController < UsersController
     if mandatory
       if @dossier.draft?
         @dossier.initiated!
+        NotificationMailer.send_notification(@dossier, @dossier.procedure.initiated_mail).deliver_now!
       end
 
       flash.notice = 'Félicitations, votre demande a bien été enregistrée.'

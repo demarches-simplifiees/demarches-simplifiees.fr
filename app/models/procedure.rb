@@ -3,8 +3,6 @@ class Procedure < ActiveRecord::Base
   has_many :types_de_champ, class_name: 'TypeDeChampPublic', dependent: :destroy
   has_many :types_de_champ_private, dependent: :destroy
   has_many :dossiers
-  has_many :mail_templates
-  has_one :mail_received
 
   has_one :procedure_path, dependent: :destroy
 
@@ -29,10 +27,23 @@ class Procedure < ActiveRecord::Base
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
 
-  after_create :build_default_mails
+  # for all those mails do
+  # has_one :initiated_mail, class_name: 'Mails::InitiatedMail'
+  #
+  # add a method to return default mail if none is saved
+  # def initiated_mail_with_override
+  #   self.initiated_mail_without_override || InitiatedMail.default
+  # end
+  # alias_method_chain :initiated_mail, :override
 
-  def build_default_mails
-    MailReceived.create(procedure: self) unless mail_received
+  MAIL_TEMPLATE_TYPES = %w(InitiatedMail ReceivedMail ClosedMail RefusedMail WithoutContinuationMail)
+
+  MAIL_TEMPLATE_TYPES.each do |name|
+    has_one "#{name.underscore}".to_sym, class_name: "Mails::#{name}"
+    define_method("#{name.underscore}_with_override") do
+      self.send("#{name.underscore}_without_override") || Object.const_get("Mails::#{name}").default
+    end
+    alias_method_chain "#{name.underscore.to_sym}".to_s, :override
   end
 
   def path
@@ -89,11 +100,22 @@ class Procedure < ActiveRecord::Base
   end
 
   def clone
-    procedure = self.deep_clone(include: [:types_de_piece_justificative, :types_de_champ, :types_de_champ_private, :module_api_carto, :mail_templates, types_de_champ: [:drop_down_list]])
+    procedure = self.deep_clone(include:
+      [:types_de_piece_justificative,
+        :types_de_champ,
+        :types_de_champ_private,
+        :module_api_carto,
+        types_de_champ: [:drop_down_list]
+      ])
     procedure.archived = false
     procedure.published = false
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
+
+    MAIL_TEMPLATE_TYPES.each do |mtt|
+      procedure.send("#{mtt.underscore}=", self.send("#{mtt.underscore}_without_override").try(:dup))
+    end
+
     return procedure if procedure.save
   end
 

@@ -1,26 +1,18 @@
 class NotificationMailer < ApplicationMailer
+  default from: 'tps@apientreprise.fr',
+          to:  Proc.new { @user.email }
+
+  def send_notification dossier, mail_template
+    vars_mailer(dossier)
+
+    obj  = mail_template.object_for_dossier dossier
+    body = mail_template.body_for_dossier dossier
+
+    mail(subject: obj) { |format| format.html { body } }
+  end
+
   def new_answer dossier
     send_mail dossier, "Nouveau message pour votre dossier TPS N°#{dossier.id}"
-  end
-
-  def dossier_received dossier
-    send_mail dossier, dossier.procedure.mail_received.object_for_dossier(dossier)
-  end
-
-  def dossier_submitted dossier
-    send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été déposé"
-  end
-
-  def dossier_without_continuation dossier
-    send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été classé sans suite"
-  end
-
-  def dossier_refused dossier
-    send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été refusé"
-  end
-
-  def dossier_closed dossier
-    send_mail dossier, "Votre dossier TPS N°#{dossier.id} a été accepté"
   end
 
   private
@@ -33,7 +25,6 @@ class NotificationMailer < ApplicationMailer
   def send_mail dossier, subject
     vars_mailer dossier
 
-    mail(from: "tps@apientreprise.fr", to: @user.email,
-         subject: subject)
+    mail(subject: subject)
   end
 end

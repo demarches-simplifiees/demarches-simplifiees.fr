@@ -1,57 +1,40 @@
 require 'spec_helper'
 
 describe Procedure do
-  describe 'assocations' do
-    it { is_expected.to have_many(:types_de_piece_justificative) }
-    it { is_expected.to have_many(:types_de_champ) }
-    it { is_expected.to have_many(:dossiers) }
-    it { is_expected.to have_many(:mail_templates) }
-    it { is_expected.to have_one(:module_api_carto) }
-    it { is_expected.to belong_to(:administrateur) }
-    it { is_expected.to have_many(:preference_list_dossiers) }
+
+  describe 'mails' do
+      it { expect(subject.initiated_mail).to be_a(Mails::InitiatedMail) }
+      it { expect(subject.received_mail).to be_a(Mails::ReceivedMail) }
+      it { expect(subject.closed_mail).to be_a(Mails::ClosedMail) }
+      it { expect(subject.refused_mail).to be_a(Mails::RefusedMail) }
+      it { expect(subject.without_continuation_mail).to be_a(Mails::WithoutContinuationMail) }
   end
 
-  describe 'attributes' do
-    it { is_expected.to have_db_column(:libelle) }
-    it { is_expected.to have_db_column(:description) }
-    it { is_expected.to have_db_column(:organisation) }
-    it { is_expected.to have_db_column(:direction) }
-    it { is_expected.to have_db_column(:euro_flag) }
-    it { is_expected.to have_db_column(:logo) }
-    it { is_expected.to have_db_column(:logo_secure_token) }
-    it { is_expected.to have_db_column(:cerfa_flag) }
-    it { is_expected.to have_db_column(:published) }
+  describe 'initiated_mail' do
+    subject { create(:procedure) }
 
-    describe 'mail_received' do
-      let(:procedure) { create :procedure }
-
-      before do
-        create :mail_received, procedure: procedure
-      end
-
-      it { expect(procedure.mail_received).not_to be_nil }
+    context 'when initiated_mail is not customize' do
+      it { expect(subject.initiated_mail.body).to eq(Mails::InitiatedMail.default.body) }
     end
 
-  end
-
-  describe '#build_default_mails' do
-    subject { build :procedure, mail_templates: [] }
-
-    it 'call the fonction build_default_mails' do
-      expect(subject).to receive(:build_default_mails)
-      subject.save
-    end
-
-    describe 'accessible values' do
-
-      before do
+    context 'when initiated_mail is customize' do
+      before :each do
+        subject.initiated_mail = Mails::InitiatedMail.new(body: 'sisi')
         subject.save
         subject.reload
       end
+      it { expect(subject.initiated_mail.body).to eq('sisi') }
+    end
 
-      it { expect(subject.mail_templates.size).to eq 1 }
+    context 'when initiated_mail is customize ... again' do
+      before :each do
+        subject.initiated_mail = Mails::InitiatedMail.new(body: 'toto')
+        subject.save
+        subject.reload
+      end
+      it { expect(subject.initiated_mail.body).to eq('toto') }
 
-      it { expect(subject.mail_received).not_to be_nil }
+      it { expect(Mails::InitiatedMail.count).to eq(1) }
     end
   end
 
@@ -160,17 +143,14 @@ describe Procedure do
   describe 'clone' do
     let(:archived) { false }
     let(:published) { false }
-    let(:procedure) { create(:procedure, archived: archived, published: published) }
+    let(:procedure) { create(:procedure, archived: archived, published: published, received_mail: received_mail) }
     let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_private_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_private_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
-
-    before do
-      procedure.mail_received.object = "Je vais être cloné"
-    end
+    let(:received_mail){ create(:received_mail) }
 
     subject { procedure.clone }
 
@@ -182,7 +162,6 @@ describe Procedure do
       expect(subject.types_de_piece_justificative.size).to eq procedure.types_de_piece_justificative.size
       expect(subject.types_de_champ.size).to eq procedure.types_de_champ.size
       expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
-      expect(subject.mail_templates.size).to eq procedure.mail_templates.size
 
       subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
@@ -196,9 +175,22 @@ describe Procedure do
         expect(stc).to have_same_attributes_as(ptc)
       end
 
-      subject.mail_templates.zip(procedure.mail_templates).each do |stc, ptc|
-        expect(stc).to have_same_attributes_as(ptc)
-      end
+    end
+
+    it 'should duplicate existing mail_templates' do
+      expect(subject.received_mail.attributes.except("id", "procedure_id", "created_at", "updated_at")).to eq procedure.received_mail.attributes.except("id", "procedure_id", "created_at", "updated_at")
+      expect(subject.received_mail.id).not_to eq procedure.received_mail.id
+      expect(subject.received_mail.id).not_to be nil
+      expect(subject.received_mail.procedure_id).not_to eq procedure.received_mail.procedure_id
+      expect(subject.received_mail.procedure_id).not_to be nil
+      expect(subject.received_mail.created_at).not_to eq procedure.received_mail.created_at
+      expect(subject.received_mail.created_at).not_to be nil
+      expect(subject.received_mail.updated_at).not_to eq procedure.received_mail.updated_at
+      expect(subject.received_mail.updated_at).not_to be nil
+    end
+
+    it 'should not duplicate default mail_template' do
+      expect(subject.initiated_mail.attributes).to eq Mails::InitiatedMail.default.attributes
     end
 
     it 'should not duplicate specific related objects' do

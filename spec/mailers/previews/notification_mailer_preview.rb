@@ -1,7 +1,7 @@
 class NotificationMailerPreview < ActionMailer::Preview
 
-  def dossier_received
-    NotificationMailer.dossier_received(Dossier.last)
+  def send_notification
+    NotificationMailer.send_notification(Dossier.last, Dossier.last.procedure.initiated_mail)
   end
 
 end
