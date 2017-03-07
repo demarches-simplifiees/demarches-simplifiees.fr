@@ -5,8 +5,7 @@ class CreateInitiatedMails < ActiveRecord::Migration[5.0]
       t.text :body
       t.belongs_to :procedure, index: true, unique: true, foreign_key: true
 
-      t.column  :created_at, :timestamp, null: true
-      t.column  :updated_at, :timestamp, null: true
+      t.timestamps
     end
   end
 end
