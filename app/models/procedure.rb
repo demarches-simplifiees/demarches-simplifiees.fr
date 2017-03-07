@@ -6,6 +6,8 @@ class Procedure < ActiveRecord::Base
   has_many :mail_templates
   has_one :mail_received
 
+  has_one :initiated_mail
+
   has_one :procedure_path, dependent: :destroy
 
   has_one :module_api_carto, dependent: :destroy

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170228150522) do
+ActiveRecord::Schema.define(version: 20170302105557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,6 +225,15 @@ ActiveRecord::Schema.define(version: 20170228150522) do
     t.index ["dossier_id"], name: "index_individuals_on_dossier_id", using: :btree
   end
 
+  create_table "initiated_mails", force: :cascade do |t|
+    t.text     "object"
+    t.text     "body"
+    t.integer  "procedure_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["procedure_id"], name: "index_initiated_mails_on_procedure_id", using: :btree
+  end
+
   create_table "invites", force: :cascade do |t|
     t.string  "email"
     t.string  "email_sender"
@@ -388,6 +397,7 @@ ActiveRecord::Schema.define(version: 20170228150522) do
   add_foreign_key "cerfas", "dossiers"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossiers", "users"
+  add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "procedure_paths", "administrateurs"
   add_foreign_key "procedure_paths", "procedures"
 
