@@ -10,7 +10,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20170307092820) do
 
   # These are extensions that must be enabled in order to support this database
@@ -107,7 +106,7 @@ ActiveRecord::Schema.define(version: 20170307092820) do
 
   create_table "closed_mails", force: :cascade do |t|
     t.text     "body"
-    t.text     "object"
+    t.string   "object"
     t.integer  "procedure_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
@@ -238,7 +237,7 @@ ActiveRecord::Schema.define(version: 20170307092820) do
   end
 
   create_table "initiated_mails", force: :cascade do |t|
-    t.text     "object"
+    t.string   "object"
     t.text     "body"
     t.integer  "procedure_id"
     t.datetime "created_at",   null: false
@@ -357,7 +356,7 @@ ActiveRecord::Schema.define(version: 20170307092820) do
 
   create_table "received_mails", force: :cascade do |t|
     t.text     "body"
-    t.text     "object"
+    t.string   "object"
     t.integer  "procedure_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
@@ -366,7 +365,7 @@ ActiveRecord::Schema.define(version: 20170307092820) do
 
   create_table "refused_mails", force: :cascade do |t|
     t.text     "body"
-    t.text     "object"
+    t.string   "object"
     t.integer  "procedure_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
@@ -426,7 +425,7 @@ ActiveRecord::Schema.define(version: 20170307092820) do
 
   create_table "without_continuation_mails", force: :cascade do |t|
     t.text     "body"
-    t.text     "object"
+    t.string   "object"
     t.integer  "procedure_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false

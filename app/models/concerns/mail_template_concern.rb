@@ -32,7 +32,7 @@ module MailTemplateConcern
 
   module ClassMethods
     def slug
-      self.name.underscore.parameterize
+      self.name.demodulize.underscore.parameterize
     end
 
     def default
@@ -48,7 +48,6 @@ module MailTemplateConcern
     when :numero_dossier
       dossier.id.to_s
     when :lien_dossier
-      # TPS::Application::URL # quickfix
       link_to users_dossier_recapitulatif_url(dossier), users_dossier_recapitulatif_url(dossier), target: '_blank'
     when :libelle_procedure
       dossier.procedure.libelle

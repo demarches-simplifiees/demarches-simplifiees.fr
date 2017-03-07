@@ -2,11 +2,11 @@ class NotificationMailer < ApplicationMailer
   default from: 'tps@apientreprise.fr',
           to:  Proc.new { @user.email }
 
-  def send_notification dossier, email
+  def send_notification dossier, mail_template
     vars_mailer(dossier)
 
-    obj  = email.object_for_dossier dossier
-    body = email.body_for_dossier dossier
+    obj  = mail_template.object_for_dossier dossier
+    body = mail_template.body_for_dossier dossier
 
     mail(subject: obj) { |format| format.html { body } }
   end
