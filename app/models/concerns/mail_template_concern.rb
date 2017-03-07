@@ -1,8 +1,8 @@
-class MailTemplate < ActiveRecord::Base
+module MailTemplateConcern
+  extend ActiveSupport::Concern
+
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
-
-  belongs_to :procedure
 
   TAGS = {
       numero_dossier: {
@@ -30,19 +30,29 @@ class MailTemplate < ActiveRecord::Base
     end
   end
 
+  module ClassMethods
+    def slug
+      self.name.demodulize.underscore.parameterize
+    end
+
+    def default
+      body = ActionController::Base.new.render_to_string(template: self.name.underscore)
+      self.new(object: self.const_get(:DEFAULT_OBJECT), body: body)
+    end
+  end
+
   private
 
   def replace_tag tag, dossier
     case tag
-      when :numero_dossier
-        dossier.id.to_s
-      when :lien_dossier
-        # TPS::Application::URL # quickfix
-        link_to users_dossier_recapitulatif_url(dossier), users_dossier_recapitulatif_url(dossier), target: '_blank'
-      when :libelle_procedure
-        dossier.procedure.libelle
-      else
-        '--BALISE_NON_RECONNUE--'
+    when :numero_dossier
+      dossier.id.to_s
+    when :lien_dossier
+      link_to users_dossier_recapitulatif_url(dossier), users_dossier_recapitulatif_url(dossier), target: '_blank'
+    when :libelle_procedure
+      dossier.procedure.libelle
+    else
+      '--BALISE_NON_RECONNUE--'
     end
   end
 end

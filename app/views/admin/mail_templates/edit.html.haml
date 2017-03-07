@@ -1,8 +1,11 @@
 .white-back
   %h3
-    = @mail_template.decorate.name
+    = @mail_template.class.const_get(:DISPLAYED_NAME)
 
-  = simple_form_for @mail_template.becomes(MailTemplate), url: admin_procedure_mail_template_path(@procedure, @mail_template) do |f|
+  = simple_form_for @mail_template,
+    as: 'mail_template', 
+    url: admin_procedure_mail_template_path(@procedure, @mail_template.class.slug), 
+    method: :put do |f|
     .row
       .col-md-6
         = f.input :object, label: "Objet de l'email"
@@ -19,7 +22,7 @@
             Balise
           %th
             Description
-        - MailTemplate::TAGS.each do |balise|
+        - MailTemplateConcern::TAGS.each do |balise|
           %tr
             %td.center
               = "--#{balise.first}--"
