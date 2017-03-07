@@ -36,7 +36,9 @@ class Procedure < ActiveRecord::Base
   # end
   # alias_method_chain :initiated_mail, :override
 
-  %w(InitiatedMail ReceivedMail ClosedMail RefusedMail WithoutContinuationMail).each do |name|
+  MAIL_TEMPLATE_TYPES = %w(InitiatedMail ReceivedMail ClosedMail RefusedMail WithoutContinuationMail)
+
+  MAIL_TEMPLATE_TYPES.each do |name|
     has_one "#{name.underscore}".to_sym, class_name: "Mails::#{name}"
     define_method("#{name.underscore}_with_override") do
       self.send("#{name.underscore}_without_override") || Object.const_get("Mails::#{name}").default
@@ -98,11 +100,22 @@ class Procedure < ActiveRecord::Base
   end
 
   def clone
-    procedure = self.deep_clone(include: [:types_de_piece_justificative, :types_de_champ, :types_de_champ_private, :module_api_carto, types_de_champ: [:drop_down_list]])
+    procedure = self.deep_clone(include:
+      [:types_de_piece_justificative,
+        :types_de_champ,
+        :types_de_champ_private,
+        :module_api_carto,
+        types_de_champ: [:drop_down_list]
+      ])
     procedure.archived = false
     procedure.published = false
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
+
+    MAIL_TEMPLATE_TYPES.each do |mtt|
+      procedure.send("#{mtt.underscore}=", self.send("#{mtt.underscore}_without_override").try(:dup))
+    end
+
     return procedure if procedure.save
   end
 

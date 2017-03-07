@@ -1,26 +1,6 @@
 require 'spec_helper'
 
 describe Procedure do
-  describe 'assocations' do
-    it { is_expected.to have_many(:types_de_piece_justificative) }
-    it { is_expected.to have_many(:types_de_champ) }
-    it { is_expected.to have_many(:dossiers) }
-    it { is_expected.to have_one(:module_api_carto) }
-    it { is_expected.to belong_to(:administrateur) }
-    it { is_expected.to have_many(:preference_list_dossiers) }
-  end
-
-  describe 'attributes' do
-    it { is_expected.to have_db_column(:libelle) }
-    it { is_expected.to have_db_column(:description) }
-    it { is_expected.to have_db_column(:organisation) }
-    it { is_expected.to have_db_column(:direction) }
-    it { is_expected.to have_db_column(:euro_flag) }
-    it { is_expected.to have_db_column(:logo) }
-    it { is_expected.to have_db_column(:logo_secure_token) }
-    it { is_expected.to have_db_column(:cerfa_flag) }
-    it { is_expected.to have_db_column(:published) }
-  end
 
   describe 'mails' do
       it { expect(subject.initiated_mail).to be_a(Mails::InitiatedMail) }
@@ -163,13 +143,14 @@ describe Procedure do
   describe 'clone' do
     let(:archived) { false }
     let(:published) { false }
-    let(:procedure) { create(:procedure, archived: archived, published: published) }
+    let(:procedure) { create(:procedure, archived: archived, published: published, received_mail: received_mail) }
     let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_private_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_private_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
+    let(:received_mail){ create(:received_mail) }
 
     subject { procedure.clone }
 
@@ -193,6 +174,23 @@ describe Procedure do
       subject.types_de_piece_justificative.zip(procedure.types_de_piece_justificative).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
+
+    end
+
+    it 'should duplicate existing mail_templates' do
+      expect(subject.received_mail.attributes.except("id", "procedure_id", "created_at", "updated_at")).to eq procedure.received_mail.attributes.except("id", "procedure_id", "created_at", "updated_at")
+      expect(subject.received_mail.id).not_to eq procedure.received_mail.id
+      expect(subject.received_mail.id).not_to be nil
+      expect(subject.received_mail.procedure_id).not_to eq procedure.received_mail.procedure_id
+      expect(subject.received_mail.procedure_id).not_to be nil
+      expect(subject.received_mail.created_at).not_to eq procedure.received_mail.created_at
+      expect(subject.received_mail.created_at).not_to be nil
+      expect(subject.received_mail.updated_at).not_to eq procedure.received_mail.updated_at
+      expect(subject.received_mail.updated_at).not_to be nil
+    end
+
+    it 'should not duplicate default mail_template' do
+      expect(subject.initiated_mail.attributes).to eq Mails::InitiatedMail.default.attributes
     end
 
     it 'should not duplicate specific related objects' do
