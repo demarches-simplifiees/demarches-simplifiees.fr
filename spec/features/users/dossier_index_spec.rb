@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'As a User I want to sort and paginate dossiers', js: true do
+xfeature 'As a User I want to sort and paginate dossiers', js: true do
 
   let(:user) { create(:user) }
   let(:procedure_for_individual) { create(:procedure, :published, :for_individual) }

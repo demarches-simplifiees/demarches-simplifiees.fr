@@ -10,12 +10,7 @@ development:
 
 
 test:
-  adapter: postgresql
-  encoding: unicode
-  database: tps_test<%= ENV['TEST_ENV_NUMBER'] %>
-  host: localhost
+  adapter: sqlite3
   pool: 5
-  username: tps
-  password: lol
-
-
+  timeout: 5000
+  database: db/test<%= ENV['TEST_ENV_NUMBER'] %>.sqlite3

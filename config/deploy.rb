@@ -87,7 +87,6 @@ set :shared_paths, [
                      'config/france_connect.yml',
                      'config/initializers/mailjet.rb',
                      'config/initializers/storage_url.rb',
-                     'app/views/root/landing.html.haml',
                      'app/views/layouts/_google_analytics.html',
                      'app/views/cgu/index.html.haml'
                  ]

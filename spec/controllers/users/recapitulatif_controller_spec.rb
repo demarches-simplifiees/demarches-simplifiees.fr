@@ -52,40 +52,4 @@ describe Users::RecapitulatifController, type: :controller do
       end
     end
   end
-
-  describe 'POST #submit' do
-    context 'when an user depose his dossier' do
-      let(:deposit_datetime) { Time.local(2016, 8, 1, 10, 5, 0) }
-
-      before do
-        dossier.validated!
-        Timecop.freeze(deposit_datetime) { post :submit, params: {dossier_id: dossier.id} }
-        dossier.reload
-      end
-
-      it 'dossier change his state for submitted' do
-        expect(dossier.state).to eq('submitted')
-      end
-
-      it 'dossier deposit datetime is filled' do
-        expect(dossier.deposit_datetime).to eq deposit_datetime
-      end
-
-      it 'a message informe user what his dossier is initiated' do
-        expect(flash[:notice]).to include('Dossier déposé avec succès.')
-      end
-
-      it 'Notification email is send' do
-        expect(NotificationMailer).to receive(:dossier_submitted).and_return(NotificationMailer)
-        expect(NotificationMailer).to receive(:deliver_now!)
-
-        dossier.validated!
-        post :submit, params: {dossier_id: dossier.id}
-      end
-
-      it 'Internal notification is created' do
-        expect(Notification.where(dossier_id: dossier.id, type_notif: 'submitted').first).not_to be_nil
-      end
-    end
-  end
 end

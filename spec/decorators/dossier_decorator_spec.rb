@@ -24,7 +24,7 @@ describe DossierDecorator do
 
     it 'initiated is initiate' do
       dossier.initiated!
-      expect(subject).to eq('Nouveau')
+      expect(subject).to eq('En construction')
     end
 
     it 'replied is repondu' do
@@ -35,16 +35,6 @@ describe DossierDecorator do
     it 'updated is mis à jour' do
       dossier.updated!
       expect(subject).to eq('En construction')
-    end
-
-    it 'validated is valide' do
-      dossier.validated!
-      expect(subject).to eq('Figé')
-    end
-
-    it 'submitted is dépose' do
-      dossier.submitted!
-      expect(subject).to eq('Déposé / À réceptionner')
     end
 
     it 'closed is traité' do

@@ -23,21 +23,15 @@
           .badge.progress-bar-danger
             = @dossiers_list_facade.en_construction_total
 
-      %a{:href => "#{url_for users_dossiers_path(liste: 'valides')}", 'data-toggle' => :tooltip, title: 'Les dossiers relus par votre accompagnateur pouvant être déposés pour examen.'}
-        %div.procedure_list_element{ class: @dossiers_list_facade.valides_class, id: 'valides' }
-          ="À déposer"
-          .badge.progress-bar-purple
-            = @dossiers_list_facade.valides_total
-
       %a{:href => "#{url_for users_dossiers_path(liste: 'en_instruction')}", 'data-toggle' => :tooltip, title: 'Les dossiers en cours d\'examen par l\'administration compétante.'}
         %div.procedure_list_element{ class: @dossiers_list_facade.en_instruction_class, id: 'en_instruction' }
-          ="En examen"
+          ="En instruction"
           .badge.progress-bar-default
             = @dossiers_list_facade.en_instruction_total
 
       %a{:href => "#{url_for users_dossiers_path(liste: 'termine')}", 'data-toggle' => :tooltip, title: 'Les dossiers cloturés qui peuvent être "Accepté", "Refusé" ou "Sans suite".'}
         %div.procedure_list_element{ class:  @dossiers_list_facade.termine_class, id: 'termine' }
-          = "Cloturé"
+          = "Terminé"
           .badge.progress-bar-success
             = @dossiers_list_facade.termine_total
 

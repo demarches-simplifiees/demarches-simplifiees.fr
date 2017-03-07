@@ -17,7 +17,7 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Nouveau') }
+      it { expect(rendered).to have_content('En construction') }
     end
 
     context 'when dossier state is replied' do
@@ -38,43 +38,6 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
       end
 
       it { expect(rendered).to have_content('En construction') }
-    end
-
-    context 'when dossier state is validated' do
-      let(:state) { 'validated' }
-
-      before do
-        render
-      end
-
-      it 'button Procéder au dépôt définitif est present' do
-        expect(rendered).to have_css('#validate_button')
-        expect(rendered).to have_content('Procéder au dépôt définitif')
-      end
-
-      it 'button Editer mon dossier n\'est plus present' do
-        expect(rendered).not_to have_css('#maj_infos')
-        expect(rendered).not_to have_content('Modifier mon dossier')
-      end
-
-      it 'button Modifier les document n\'est plus present' do
-        expect(rendered).not_to have_content('Modifier les documents')
-      end
-    end
-
-    context 'when dossier state is submitted' do
-      let(:state) { 'submitted' }
-
-      before do
-        render
-      end
-
-      it { expect(rendered).to have_content('Déposé / À réceptionner') }
-
-      it 'button Editer mon dossier n\'est plus present' do
-        expect(rendered).not_to have_css('#maj_infos')
-        expect(rendered).not_to have_content('Modifier mon dossier')
-      end
     end
 
     context 'when dossier state is closed' do

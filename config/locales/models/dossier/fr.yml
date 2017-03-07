@@ -9,11 +9,9 @@ fr:
         date_previsionnelle: "La date de début prévisionnelle"
         state:
           draft: "Brouillon"
-          initiated: "Nouveau"
+          initiated: "En construction"
           replied: "En construction"
           updated: "En construction"
-          validated: "Figé"
-          submitted: "Déposé / À réceptionner"
           received: "En instruction"
           closed: "Accepté"
           refused: "Refusé"

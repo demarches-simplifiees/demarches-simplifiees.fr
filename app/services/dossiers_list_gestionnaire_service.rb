@@ -8,18 +8,16 @@ class DossiersListGestionnaireService
   def dossiers_to_display
     @dossiers_to_display ||=
         {'nouveaux' => nouveaux,
-         # 'suivi' => suivi,
          'a_traiter' => ouvert,
-         'fige' => fige,
-         'deposes' => deposes,
          'a_instruire' => a_instruire,
          'termine' => termine,
+         'archive' => archive,
          'all_state' => all_state}[@liste]
 
   end
 
   def self.dossiers_liste_libelle
-    ['nouveaux', 'suivi', 'a_traiter', 'fige', 'deposes', 'a_instruire', 'termine', 'all_state']
+    ['nouveaux', 'suivi', 'a_traiter', 'a_instruire', 'termine', 'all_state']
   end
 
   def all_state
@@ -38,16 +36,12 @@ class DossiersListGestionnaireService
     @ouvert ||= filter_dossiers.ouvert
   end
 
-  def fige
-    @fige ||= filter_dossiers.fige
-  end
-
-  def deposes
-    @deposes ||= filter_dossiers.deposes
-  end
-
   def a_instruire
     @a_instruire ||= filter_dossiers.a_instruire
+  end
+
+  def archive
+    @archive ||= filter_dossiers.archived
   end
 
   def termine

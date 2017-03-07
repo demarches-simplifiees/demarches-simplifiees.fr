@@ -107,18 +107,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
             expect(rendered).not_to have_content('Archiver')
           end
         end
-
-        context 'when dossier is validated' do
-          let(:state) { 'validated' }
-
-          before do
-            render
-          end
-
-          it 'submitted link is not present' do
-            expect(rendered).not_to have_content('Procéder au dépôt définitif')
-          end
-        end
       end
 
       context 'invite is by User' do
@@ -146,18 +134,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
           it 'archive link is present' do
             expect(rendered).not_to have_content('Archiver')
-          end
-        end
-
-        context 'when dossier is validated' do
-          let(:state) { 'validated' }
-
-          before do
-            render
-          end
-
-          it 'submitted link is not present' do
-            expect(rendered).not_to have_content('Procéder au dépôt définitif')
           end
         end
       end

@@ -1,17 +1,12 @@
-%div#first-block
-  %div.infos
+#first-block
+  .infos
     #dossier_id= t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
 
-%div#action-block
+#action-block
   - if gestionnaire_signed_in?
-    - if !@facade.dossier.read_only?
-      = form_tag(url_for({controller: 'backoffice/dossiers', action: :valid, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-        %button.action{'data-toggle' => :tooltip, title: 'En cliquant ici, vous figez le dossier et autorisez le dépôt du dossier pour instruction.'}
-          = 'Déclarer complet'.upcase
-    - elsif @facade.dossier.submitted?
-      = form_tag(url_for({controller: 'backoffice/dossiers', action: :receive, dossier_id: @facade.dossier.id}), class: 'form-inline', method: 'POST') do
-        %button.action
-          = 'Accuser réception'.upcase
+    - if !@facade.dossier.read_only? || @facade.dossier.initiated?
+      = link_to 'Passer en instruction', backoffice_dossier_receive_path(@facade.dossier), method: :post, class: 'btn btn-danger btn-block'
+
     - elsif @facade.dossier.received?
       = form_tag(url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Accepter') do
         %button.action.close-dossier
@@ -22,19 +17,26 @@
       = form_tag(url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'form-inline action_button', method: 'POST', style: 'display:inline', 'data-toggle' => :tooltip, title: 'Refuser') do
         %button.action.refuse-dossier
           %i.fa.fa-times
+      = link_to 'Reouvrir', backoffice_dossier_reopen_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
 
-    - unless @facade.dossier.archived?
-      = link_to 'Archiver', backoffice_dossier_archive_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
+    %hr
+    - if @facade.dossier.archived?
+      %p
+        Archivé
+      = link_to 'Désarchiver', unarchive_backoffice_dossier_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
+
+    - else
+      = link_to 'Archiver', archive_backoffice_dossier_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block'
 
 
 
-%div#menu-block
+#menu-block
 
-%div#infos-block
-  %div.split-hr-left
-  %div.dossier-state= @facade.dossier.display_state
-  %div.split-hr-left
-  %div.notifications
+#infos-block
+  .split-hr-left
+  .dossier-state= @facade.dossier.display_state
+  .split-hr-left
+  .notifications
     - if @facade.dossier.notifications.empty?
       Aucune notification pour le moment.
     - else

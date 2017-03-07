@@ -63,15 +63,13 @@ Rails.application.routes.draw do
     resources :dossiers do
       get '/add_siret' => 'dossiers/add_siret#show'
 
-      get '/description' => 'description#show'
-      # get '/description/error' => 'description#error'
-      post 'description' => 'description#create'
+      get 'description' => 'description#show'
+      post 'description' => 'description#update'
 
       patch 'pieces_justificatives' => 'description#pieces_justificatives'
 
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/initiate' => 'recapitulatif#initiate'
-      post '/recapitulatif/submit' => 'recapitulatif#submit'
 
       post '/commentaire' => 'commentaires#create'
       resources :commentaires, only: [:index]
@@ -159,17 +157,18 @@ Rails.application.routes.draw do
     resource :private_formulaire
 
     resources :dossiers do
-      post 'valid' => 'dossiers#valid'
       post 'receive' => 'dossiers#receive'
       post 'refuse' => 'dossiers#refuse'
       post 'without_continuation' => 'dossiers#without_continuation'
       post 'close' => 'dossiers#close'
-      post 'archive' => 'dossiers#archive'
-
+      member do
+        post 'archive'
+        post 'unarchive'
+      end
+      post 'reopen' => 'dossiers#reopen'
       put 'follow' => 'dossiers#follow'
       resources :commentaires, only: [:index]
     end
-
 
     namespace :dossiers do
       post 'filter'
