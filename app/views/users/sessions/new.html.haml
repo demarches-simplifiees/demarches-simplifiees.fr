@@ -13,25 +13,16 @@
     Qu’est-ce que FranceConnect ?
 
   %hr
-  = form_for @user, url: user_session_path, method: :post do |f|
-    %h4
-      = f.label :email
-    .input-group
-      .input-group-addon
-        %span.fa.fa-user
-      = f.email_field :email, class: 'form-control'
-    %br
-    %h4
-      = f.label 'Mot de passe'
-    .input-group
-      .input-group-addon
-        %span.fa.fa-asterisk
-      = f.password_field :password, class: 'form-control', value: "#{@user.password}"
-    %br
-    %br
-    .actions
-      = f.submit "Se connecter", class:'btn btn-primary'
-    %br
+
+  .text-left
+    = simple_form_for @user, url: user_session_path do |f|
+      = f.input :email
+      = f.input :password, label: 'Mot de passe', input_html: { value: @user.password }
+      - if devise_mapping.rememberable?
+        = f.input :remember_me, as: :boolean, label: 'Se souvenir de moi'
+      .text-center
+        = f.submit "Se connecter", class:'btn btn-primary'
+
   - if @user.email != DemoEmails[:gestionnaire] && @user.email != DemoEmails[:admin]
     = render "users/shared/links"
 
