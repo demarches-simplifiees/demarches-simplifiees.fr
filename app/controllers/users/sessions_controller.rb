@@ -10,7 +10,7 @@ class Users::SessionsController < Sessions::SessionsController
 
 # GET /resource/sign_in
   def new
-    unless user_return_to_procedure_id.nil?
+    unless user_return_to_procedure_id.nil? # WTF ?
       @dossier = Dossier.new(procedure: Procedure.active(user_return_to_procedure_id))
     end
 
@@ -21,9 +21,10 @@ class Users::SessionsController < Sessions::SessionsController
 
 #POST /resource/sign_in
   def create
-    try_to_authenticate(User)
-    try_to_authenticate(Gestionnaire)
-    try_to_authenticate(Administrateur)
+    remember_me = params[:user][:remember_me] == '1'
+    try_to_authenticate(User, remember_me)
+    try_to_authenticate(Gestionnaire, remember_me)
+    try_to_authenticate(Administrateur, remember_me)
 
     if user_signed_in?
       current_user.update_attributes(loged_in_with_france_connect: '')
@@ -83,9 +84,10 @@ class Users::SessionsController < Sessions::SessionsController
     NumberService.to_number session["user_return_to"].split("?procedure_id=").second
   end
 
-  def try_to_authenticate(klass)
+  def try_to_authenticate(klass, remember_me = false)
     if resource = klass.find_for_database_authentication(email: params[:user][:email])
       if resource.valid_password?(params[:user][:password])
+        resource.remember_me = remember_me
         sign_in resource
         resource.force_sync_credentials
         set_flash_message :notice, :signed_in
