@@ -5,7 +5,8 @@ class CreateReceivedMails < ActiveRecord::Migration[5.0]
       t.text :object
       t.references :procedure, foreign_key: true
 
-      t.timestamps
+      t.column  :created_at, :timestamp, null: true
+      t.column  :updated_at, :timestamp, null: true
     end
   end
 end
