@@ -77,7 +77,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   subject { rendered }
 
-  it { is_expected.to have_content('Nouveaux dossiers 1 dossiers') }
+  it { is_expected.to have_content('Nouveaux dossiers 1 dossier') }
   it { is_expected.to have_content('Dossiers suivis 0 dossiers') }
   it { is_expected.to have_content('Tous les dossiers 7 dossiers') }
 

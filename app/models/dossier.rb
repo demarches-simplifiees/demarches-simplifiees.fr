@@ -38,6 +38,8 @@ class Dossier < ActiveRecord::Base
   delegate :types_de_champ, to: :procedure
   delegate :france_connect_information, to: :user
 
+  before_validation :update_state_dates, if: -> { state_changed? }
+
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
 
@@ -199,6 +201,8 @@ class Dossier < ActiveRecord::Base
     where(state: TERMINE, archived: false).order("updated_at #{order}")
   end
 
+  scope :archived, -> { where(archived: true) }
+
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
   end
@@ -302,4 +306,21 @@ class Dossier < ActiveRecord::Base
   def invite_by_user? email
     (invites_user.pluck :email).include? email
   end
+
+  def can_be_initiated?
+    !(procedure.archived && draft?)
+  end
+
+  private
+
+  def update_state_dates
+    if initiated? && !self.initiated_at
+      self.initiated_at = DateTime.now
+    elsif received? && !self.received_at
+      self.received_at = DateTime.now
+    elsif TERMINE.include?(state)
+      self.processed_at = DateTime.now
+    end
+  end
+
 end

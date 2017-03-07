@@ -1,9 +1,9 @@
 %table#dossiers_list.table
   %thead
     - if smart_listing.name.to_s == 'follow_dossiers'
-      %th.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1.center
+      %th.col-xs-1.center
         %i.fa.fa-bell
-    %th.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1
+    %th.col-xs-1
       État
 
     - @facade_data_view.preference_list_dossiers_filter.each do |preference|
@@ -17,14 +17,14 @@
             %i.filter.fa.fa-filter{style: "color:#{(preference.filter.blank? ? 'grey' : 'orange')}", id: "filter_#{smart_listing.name.to_s}_#{preference.table_attr.sub('.', '_')}"}
             = render partial: 'backoffice/dossiers/filter_framed', locals:{preference: preference, filter_framed_id: "framed_filter_#{smart_listing.name.to_s}_#{preference.table_attr.sub('.', '_')}"}
 
-    %th.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1.center Actions
-    %th.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1.center Abonnés
+    %th.col-xs-1.center Actions
+    %th.col-xs-1.center Abonnés
 
   - unless smart_listing.empty?
     - smart_listing.collection.each do |dossier|
       %tr.dossier-row{id: "tr_dossier_#{dossier.id}", 'data-dossier_url' => backoffice_dossier_url(id: dossier.id)}
         - if smart_listing.name.to_s == 'follow_dossiers'
-          %td.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1.center
+          %td.col-xs-1.center
             - total_notif = dossier.notifications.where(already_read: false).count
             - if total_notif == 0
               .badge.progress-bar-default
@@ -32,7 +32,7 @@
             - else
               .badge.progress-bar-warning
                 = total_notif
-        %td.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1
+        %td.col-xs-1
           = dossier.decorate.display_state
         - @facade_data_view.preference_list_dossiers_filter.each_with_index do |preference, index|
           - unless preference.libelle == 'Statut' || preference.libelle == 'État'

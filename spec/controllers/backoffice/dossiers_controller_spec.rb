@@ -104,12 +104,6 @@ describe Backoffice::DossiersController, type: :controller do
         end
       end
 
-      context ' when dossier is archived' do
-        let(:dossier_id) { dossier_archived }
-
-        it { expect(subject).to redirect_to('/backoffice') }
-      end
-
       context 'when dossier id does not exist' do
         let(:dossier_id) { bad_dossier_id }
 
@@ -372,11 +366,11 @@ describe Backoffice::DossiersController, type: :controller do
 
     subject { post :reopen, params: {dossier_id: dossier_id} }
 
-    it 'change state to initiated' do
+    it 'change state to replied' do
       subject
 
       dossier.reload
-      expect(dossier.state).to eq('initiated')
+      expect(dossier.state).to eq('replied')
     end
 
     it { is_expected.to redirect_to backoffice_dossiers_path }
@@ -388,7 +382,7 @@ describe Backoffice::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
-    subject { post :archive, params: {dossier_id: dossier_id} }
+    subject { post :archive, params: {id: dossier_id} }
 
     it 'change state to archived' do
       subject

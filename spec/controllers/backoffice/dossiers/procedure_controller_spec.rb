@@ -3,6 +3,8 @@ require 'spec_helper'
 describe Backoffice::Dossiers::ProcedureController, type: :controller do
   let(:gestionnaire) { create :gestionnaire }
   let(:procedure) { create :procedure }
+  let(:archived) { false }
+  let(:dossier) { create :dossier, procedure: procedure, archived: archived, state: 'initiated'}
 
   before do
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure
@@ -27,6 +29,24 @@ describe Backoffice::Dossiers::ProcedureController, type: :controller do
       it { expect(response.status).to eq 302 }
       it { is_expected.to redirect_to backoffice_dossiers_path }
       it { expect(flash[:alert]).to be_present}
+    end
+
+    context 'when procedure contains a dossier' do
+      render_views
+
+      before do
+        dossier
+        subject
+      end
+
+      it { expect(response.body).to have_content('Tous les dossiers 1 dossier') }
+
+      context 'archived' do
+        let(:archived) { true }
+
+        it { expect(response.body).to have_content('Tous les dossiers 0 dossiers') }
+        it { expect(response.body).to have_content('Dossiers archivés 1 dossier') }
+      end
     end
   end
 

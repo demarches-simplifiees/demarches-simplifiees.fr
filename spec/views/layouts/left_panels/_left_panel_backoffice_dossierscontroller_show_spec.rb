@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.html.haml', type: :view do
 
-  let!(:dossier) { create(:dossier, :with_entreprise,  state: state) }
+  let!(:dossier) { create(:dossier, :with_entreprise,  state: state, archived: archived) }
   let(:state) { 'draft' }
+  let(:archived) { false }
   let(:gestionnaire) { create(:gestionnaire) }
 
   before do
@@ -24,8 +25,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
 
   context 'button dossier state changements' do
 
-    shared_examples 'button Accuser réception is present' do
-      it { expect(rendered).to have_link('Accuser réception') }
+    shared_examples 'button Passer en instruction is present' do
+      it { expect(rendered).to have_link('Passer en instruction') }
     end
 
     context 'when dossier have state initiated' do
@@ -35,9 +36,9 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
         render
       end
 
-      it { expect(rendered).to have_content('Nouveau') }
+      it { expect(rendered).to have_content('En construction') }
 
-      include_examples 'button Accuser réception is present'
+      include_examples 'button Passer en instruction is present'
     end
 
     context 'when dossier have state replied' do
@@ -49,7 +50,7 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
 
       it { expect(rendered).to have_content('En construction') }
 
-      include_examples 'button Accuser réception is present'
+      include_examples 'button Passer en instruction is present'
     end
 
     context 'when dossier have state update' do
@@ -61,7 +62,7 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
 
       it { expect(rendered).to have_content('En construction') }
 
-      include_examples 'button Accuser réception is present'
+      include_examples 'button Passer en instruction is present'
     end
 
     context 'when dossier have state received' do
@@ -126,6 +127,28 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
         expect(rendered).not_to have_css('form[data-toggle="tooltip"][title="Classer sans suite"]')
         expect(rendered).not_to have_css('form[data-toggle="tooltip"][title="Refuser"]')
       end
+    end
+
+    context 'when dossier is not archived' do
+      let(:archived) { false }
+
+      before do
+        render
+      end
+
+      it { expect(rendered).to have_link('Archiver') }
+    end
+
+    context 'when dossier is archived' do
+      let(:archived) { true }
+
+      before do
+        render
+      end
+
+      it { expect(rendered).to have_content('Archivé') }
+      it { expect(rendered).to have_link('Désarchiver') }
+
     end
   end
 
