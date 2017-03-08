@@ -42,7 +42,10 @@ Rails.application.routes.draw do
   get 'admin' => 'admin#index'
   get 'backoffice' => 'backoffice#index'
 
-  resources :administrations
+  resources :administrations, only: [:index, :create]
+  namespace :administrations do
+    resources :stats, only: [:index]
+  end
 
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
