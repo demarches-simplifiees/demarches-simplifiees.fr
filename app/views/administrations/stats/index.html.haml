@@ -1,10 +1,11 @@
 = javascript_include_tag 'https://code.highcharts.com/highcharts.js', 'chartkick'
 
-.stats
-  .stat-card
-    %h1 Procédures crées
-    = line_chart @procedures
+.container
+  .stats
+    .stat-card
+      %h1 Procédures crées
+      = line_chart @procedures
 
-  .stat-card
-    %h1 Dossiers créés
-    = line_chart @dossiers
+    .stat-card
+      %h1 Dossiers créés
+      = line_chart @dossiers
