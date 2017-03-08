@@ -1,0 +1,9 @@
+@import "card";
+
+.stats {
+  .stat-card {
+    @extend .card;
+    margin: 15px auto;
+    max-width: 1200px;
+  }
+}
