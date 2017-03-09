@@ -130,6 +130,10 @@ GEM
     docile (1.1.5)
     domain_name (0.5.20161129)
       unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.2.0)
+    dotenv-rails (2.2.0)
+      dotenv (= 2.2.0)
+      railties (>= 3.2, < 5.1)
     draper (3.0.0.pre1)
       actionpack (~> 5.0)
       activemodel (~> 5.0)
@@ -651,6 +655,7 @@ DEPENDENCIES
   database_cleaner
   deep_cloneable (~> 2.2.1)
   devise
+  dotenv-rails
   draper (~> 3.0.0.pre1)
   factory_girl
   fog
