@@ -1,22 +1,19 @@
-%br
-%br
+.container
+  .mt-1
+    = form_for @admin, url: {controller: 'administrations', action: :create} do |f|
+      .form-group.form-inline.text-center
+        = f.text_field :email, placeholder: :email, class: 'form-control'
+        = f.text_field :password, placeholder: :password, class: 'form-control'
 
-= form_for @admin, url: {controller: 'administrations', action: :create} do |f|
-  .form-group.form-inline.center
-    = f.text_field :email, placeholder: :email, class: 'form-control'
-    = f.text_field :password, placeholder: :password, class: 'form-control'
+        = f.submit 'Créer un administrateur', class: 'btn btn-success', id: 'submit_new_administrateur'
 
-    = f.submit 'Valider', class: 'btn btn-success', id: 'submit_new_administrateur'
+    .text-center
+      =link_to 'Stats', administrations_stats_path, style: 'margin-bottom: 50px; display: block', 'data-no-turbolink': true
 
-%br
+    = smart_listing_render :admins
 
-.center
-  =link_to 'Stats', administrations_stats_path, style: 'margin-bottom: 50px; display: block', 'data-no-turbolink': true
+    %br
+    %br
 
-= smart_listing_render :admins
-
-%br
-%br
-
-.center
-  =link_to 'Deconnexion', '/administrations/sign_out', method: :delete
+    .text-center
+      =link_to 'Deconnexion', '/administrations/sign_out', method: :delete

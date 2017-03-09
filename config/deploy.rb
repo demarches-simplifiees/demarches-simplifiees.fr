@@ -74,6 +74,7 @@ set :shared_paths, [
                      'public/system',
                      'public/uploads',
                      'config/database.yml',
+                     "config/newrelic.yml",
                      "config/fog_credentials.yml",
                      'config/initializers/secret_token.rb',
                      'config/initializers/features.yml',

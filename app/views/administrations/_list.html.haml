@@ -1,30 +1,31 @@
-- unless smart_listing.empty?
-  %table.table
-    %thead
-      %th.col-xs-4= smart_listing.sortable 'Email', :email
-      %th.col-xs-4= smart_listing.sortable 'Date de dernière connexion', :last_sign_in_at
-      %th.col-xs-2 Procédure active
-      %th.col-xs-2 Dossier en cours
+.card
+  - unless smart_listing.empty?
+    %table.table
+      %thead
+        %th.col-xs-4= smart_listing.sortable 'Email', :email
+        %th.col-xs-4= smart_listing.sortable 'Date de dernière connexion', :last_sign_in_at
+        %th.col-xs-2 Procédure active
+        %th.col-xs-2 Dossier en cours
 
-    - @admins.each do |admin|
-      %tr
-        %td
-          = admin.email
-        %td
-          - unless admin.last_sign_in_at.nil?
-            = time_ago_in_words(l(admin.last_sign_in_at, format: "%d/%m/%Y %H:%M UTC +02:00"))
-            (
-            = admin.last_sign_in_at.to_date.strftime('%d/%m/%Y')
-            )
-        %td
-          = admin.procedures.where(published: true).count
-        %td
-          - total_dossier = 0
-          - admin.procedures.each do |procedure| total_dossier += procedure.dossiers.where.not(state: :draft).count end
-          = total_dossier
-  = smart_listing.paginate
-  = smart_listing.pagination_per_page_links
+      - @admins.each do |admin|
+        %tr
+          %td
+            = admin.email
+          %td
+            - unless admin.last_sign_in_at.nil?
+              = time_ago_in_words(l(admin.last_sign_in_at, format: "%d/%m/%Y %H:%M UTC +02:00"))
+              (
+              = admin.last_sign_in_at.to_date.strftime('%d/%m/%Y')
+              )
+          %td
+            = admin.procedures.where(published: true).count
+          %td
+            - total_dossier = 0
+            - admin.procedures.each do |procedure| total_dossier += procedure.dossiers.where.not(state: :draft).count end
+            = total_dossier
+    = smart_listing.paginate
+    = smart_listing.pagination_per_page_links
 
-- else
-  %h4.center
-    Aucun administrateur créé
+  - else
+    %h4.center
+      Aucun administrateur créé
