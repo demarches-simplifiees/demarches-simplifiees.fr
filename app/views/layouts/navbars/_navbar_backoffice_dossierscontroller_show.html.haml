@@ -38,4 +38,4 @@
           %li
             = form_tag invites_dossier_path(dossier_id: @facade.dossier.id), method: :post, class: 'form-inline', id: 'send-invitation' do
               = text_field_tag :email, '', class: 'form-control', placeholder: 'Envoyer une invitation', id: 'invitation-email'
-              = submit_tag 'Ajouter', class: 'btn btn-success'
+              = submit_tag 'Ajouter', class: 'btn btn-success', data: {confirm: "Envoyer l'invitation ?"}
