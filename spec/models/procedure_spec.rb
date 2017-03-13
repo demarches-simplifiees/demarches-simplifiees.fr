@@ -183,10 +183,6 @@ describe Procedure do
       expect(subject.received_mail.id).not_to be nil
       expect(subject.received_mail.procedure_id).not_to eq procedure.received_mail.procedure_id
       expect(subject.received_mail.procedure_id).not_to be nil
-      expect(subject.received_mail.created_at).not_to eq procedure.received_mail.created_at
-      expect(subject.received_mail.created_at).not_to be nil
-      expect(subject.received_mail.updated_at).not_to eq procedure.received_mail.updated_at
-      expect(subject.received_mail.updated_at).not_to be nil
     end
 
     it 'should not duplicate default mail_template' do
