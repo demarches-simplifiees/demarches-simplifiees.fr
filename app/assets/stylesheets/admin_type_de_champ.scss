@@ -23,11 +23,27 @@
 }
 
 #liste_champ{
+  .form-inline {
+    margin-bottom: 30px;
+  }
+
   .show_inline {
     display: inline-block !important;
   }
 
   .form-group.drop_down_list{
     display: none;
+  }
+
+  .form-group {
+    vertical-align: top;
+    margin-right:  15px;
+  }
+
+  .description {
+    padding: 0;
+    textarea {
+      padding: 6px 12px;
+    }
   }
 }
