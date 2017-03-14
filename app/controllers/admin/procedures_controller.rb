@@ -80,6 +80,8 @@ class Admin::ProceduresController < AdminController
       return render 'edit'
     end
 
+    puts procedure_params
+
     flash.notice = 'Procédure modifiée'
     redirect_to edit_admin_procedure_path(id: @procedure.id)
   end
@@ -193,10 +195,11 @@ class Admin::ProceduresController < AdminController
   private
 
   def procedure_params
+    editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :lien_notice, :euro_flag, :logo, :auto_archive_on]
     if @procedure.try(:locked?)
-      params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_site_web, :lien_notice, :euro_flag, :logo)
+      params.require(:procedure).permit(*editable_params)
     else
-      params.require(:procedure).permit(:libelle, :description, :organisation, :direction, :lien_site_web, :lien_notice, :euro_flag, :logo, :lien_demarche, :cerfa_flag, :for_individual, :individual_with_siret, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
+      params.require(:procedure).permit(*editable_params, :lien_demarche, :cerfa_flag, :for_individual, :individual_with_siret, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
     end
   end
 
