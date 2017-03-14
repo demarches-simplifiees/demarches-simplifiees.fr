@@ -25,6 +25,7 @@
 
     - unless @facade.champs.nil?
       - @facade.champs.each do |champ|
+        - next if champ.type_champ == 'explication' 
         - if champ.type_champ == 'header_section'
           .row.title-row.margin-top-40
             %div.col-xs-3.split-hr
