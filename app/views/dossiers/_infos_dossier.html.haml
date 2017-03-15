@@ -49,19 +49,19 @@
         =")"
 %div.row
   - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.count > 0
-    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    .col-xs-12
       .row.title-row
         %div.col-xs-4.split-hr
         %div.col-xs-4.dossier-title= t('utils.pieces').upcase
         %div.col-xs-4.split-hr
 
-  .col-lg-12.col-md-12.col-sm-12.col-xs-12#pieces_justificatives.margin-bot-40
+  .col-xs-12#pieces_justificatives.margin-bot-40
     .row
       - if @facade.procedure.cerfa_flag?
         .col-xs-12#piece_justificative_0
           .row.piece-row
             .col-xs-6.depositaire-label= 'Formulaire'
-            .col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+            .col-xs-1.comments-off= "-"
             .col-xs-5.despositaire-info
               - if @facade.dossier.cerfa_available?
                 %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
@@ -78,7 +78,7 @@
             .col-xs-12{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
               .row
                 %div.col-xs-6.depositaire-label= type_de_piece_justificative.libelle
-                %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+                %div.col-xs-1.comments-off= "-"
                 %div.col-xs-5.despositaire-info
                   - if type_de_piece_justificative.api_entreprise
                     %span.text-success Nous l'avons récupéré pour vous.
@@ -96,13 +96,13 @@
       - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
           .row
-            .col-lg-4.col-md-4.col-sm-4.col-xs-4
+            .col-xs-4
             %a#maj_pj.action{"data-target" => "#UploadPJmodal", "data-toggle" => "modal", :type => "button"}
-              .col-lg-4.col-md-4.col-sm-4.col-xs-4.action
+              .col-xs-4.action
                 Modifier les documents
               %br
             = render partial: 'users/recapitulatif/modal_upload_pj'
-            .col-lg-4.col-md-4.col-sm-4.col-xs-4
+            .col-xs-4
 
     - if gestionnaire_signed_in?
       #PJmodal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
