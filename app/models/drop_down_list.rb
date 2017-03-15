@@ -11,7 +11,7 @@ class DropDownList < ActiveRecord::Base
   end
 
   def selected_options(champ)
-    champ.value.blank? ? [] : multiple ? JSON.parse(champ.value) : [champ.value]
+    champ.object.value.blank? ? [] : multiple ? JSON.parse(champ.object.value) : [champ.object.value]
   end
 
   def multiple

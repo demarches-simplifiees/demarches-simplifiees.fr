@@ -41,7 +41,6 @@ ouaich" }
   end
 
   describe 'selected_options' do
-
     let(:dropdownlist) do
       create(:drop_down_list, type_de_champ: type_de_champ)
     end
@@ -49,14 +48,14 @@ ouaich" }
     context 'when multiple' do
       let(:type_de_champ) { TypeDeChamp.new(type_champ: 'multiple_drop_down_list') }
 
-      let(:champ) { Champ.new(value: '["1","2"]') }
+      let(:champ) { Champ.new(value: '["1","2"]').decorate }
       it { expect(dropdownlist.selected_options(champ)).to match(['1', '2']) }
     end
 
     context 'when simple' do
       let(:type_de_champ) { TypeDeChamp.new(type_champ: 'drop_down_list') }
 
-      let(:champ) { Champ.new(value: '1') }
+      let(:champ) { Champ.new(value: '1').decorate }
       it { expect(dropdownlist.selected_options(champ)).to match(['1']) }
     end
   end
