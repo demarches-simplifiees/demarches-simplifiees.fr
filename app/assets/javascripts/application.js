@@ -31,6 +31,7 @@
 //= require bootstrap-wysihtml5/locales/fr-FR
 //= require handlebars
 //= require typeahead.bundle
+//= require select2
 
 $(document).on('page:load', application_init);
 $(document).ready(application_init);
