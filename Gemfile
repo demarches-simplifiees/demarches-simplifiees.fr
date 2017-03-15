@@ -102,6 +102,10 @@ gem 'simple_form'
 
 gem 'newrelic_rpm'
 
+gem 'sidekiq'
+gem 'sidekiq-cron', '~> 0.4.4'
+gem 'sinatra', github: 'sinatra', require: false
+
 group :test do
   gem 'capybara'
   gem 'launchy'

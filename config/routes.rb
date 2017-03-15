@@ -207,7 +207,9 @@ Rails.application.routes.draw do
     get '/:procedure_path' => '/users/dossiers#commencer'
   end
 
-  apipie
+  require 'sidekiq/web'
+  require 'sidekiq/cron/web'
+  mount Sidekiq::Web => '/sidekiq' # , constraints: lambda { |request| User::is_admin_from_request(request) }
 
-  mount ActionCable.server => '/cable'
+  apipie
 end

@@ -46,6 +46,8 @@ class Procedure < ActiveRecord::Base
     alias_method_chain "#{name.underscore.to_sym}".to_s, :override
   end
 
+  scope :not_archived, -> { where(archived: false) }
+
   def path
     procedure_path.path unless procedure_path.nil?
   end
@@ -64,10 +66,6 @@ class Procedure < ActiveRecord::Base
 
   def types_de_piece_justificative_ordered
     types_de_piece_justificative.order(:order_place)
-  end
-
-  def self.not_archived id
-    Procedure.where(archived: false).find(id)
   end
 
   def self.active id

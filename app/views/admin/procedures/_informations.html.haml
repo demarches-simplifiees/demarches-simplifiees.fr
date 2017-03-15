@@ -86,6 +86,9 @@
       %label{ for: :auto_archive_on} Archivage automatique le
       = f.text_field :auto_archive_on, id: 'auto_archive_on', value: @procedure.auto_archive_on.try{ |d| d.strftime("%d-%m-%Y") }, data: { provide: 'datepicker', 'date-format' => 'dd/mm/yyyy' }
       (à 00h00 )
+      %p.help-block
+        %i.fa.fa-info-circle
+        L'archivage automatique de la procédure entrainera le passage en instruction de tous les dossiers en construction.
 
 
 
