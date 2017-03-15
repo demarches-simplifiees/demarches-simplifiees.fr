@@ -47,6 +47,8 @@ Rails.application.routes.draw do
     namespace :administrations do
       resources :stats, only: [:index]
 
+      require 'sidekiq/web'
+      require 'sidekiq/cron/web'
       mount Sidekiq::Web => '/sidekiq'
     end
   end
@@ -210,9 +212,6 @@ Rails.application.routes.draw do
   namespace :commencer do
     get '/:procedure_path' => '/users/dossiers#commencer'
   end
-
-  require 'sidekiq/web'
-  require 'sidekiq/cron/web'
 
   apipie
 end

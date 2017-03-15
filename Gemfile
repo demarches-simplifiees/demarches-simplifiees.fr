@@ -104,7 +104,7 @@ gem 'newrelic_rpm'
 
 gem 'sidekiq'
 gem 'sidekiq-cron', '~> 0.4.4'
-gem 'sinatra', github: 'sinatra', require: false
+gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git', require: false
 
 group :test do
   gem 'capybara'
@@ -130,7 +130,6 @@ group :development do
   gem 'web-console'
   gem 'rack-handlers'
   gem 'xray-rails'
-  gem 'scenic'
 end
 
 group :development, :test do
@@ -161,6 +160,9 @@ group :development, :test do
 end
 
 group :production, :staging do
-  gem 'scenic'
   gem 'sentry-raven'
+end
+
+group :production, :staging, :development do
+  gem 'scenic'
 end
