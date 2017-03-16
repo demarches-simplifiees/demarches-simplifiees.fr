@@ -41,6 +41,8 @@
           - elsif champ.type_champ == 'departements'
             = render partial: 'users/description/champs/departements', locals: { champ: champ }
 
+          - elsif champ.type_champ == 'explication'
+
           - else
             %input.form-control{name:"champs['#{ champ.id }']",
                             placeholder: champ.libelle,

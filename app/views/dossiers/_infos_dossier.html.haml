@@ -1,5 +1,5 @@
 %div.row
-  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+  .col-xs-12
     - if @facade.procedure.for_individual?
       .row.title-row
         %div.col-xs-4.split-hr
@@ -7,24 +7,25 @@
         %div.col-xs-4.split-hr
       .row
         %div.col-xs-6.depositaire-label Civilité
-        %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+        %div.col-xs-1.comments-off= "-"
         %div.col-xs-5.depositaire-info= @facade.individual.gender
       .row
         %div.col-xs-6.depositaire-label Nom
-        %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+        %div.col-xs-1.comments-off= "-"
         %div.col-xs-5.depositaire-info= @facade.individual.nom
       .row
         %div.col-xs-6.depositaire-label Prénom
-        %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+        %div.col-xs-1.comments-off= "-"
         %div.col-xs-5.despositaire-info= @facade.individual.prenom
       .row
         %div.col-xs-6.depositaire-label Date de naissance
-        %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
+        %div.col-xs-1.comments-off= "-"
         %div.col-xs-5.depositaire-info= @facade.individual.birthdate
       .row.margin-top-20
 
     - unless @facade.champs.nil?
       - @facade.champs.each do |champ|
+        - next if champ.type_champ == 'explication' 
         - if champ.type_champ == 'header_section'
           .row.title-row.margin-top-40
             %div.col-xs-3.split-hr

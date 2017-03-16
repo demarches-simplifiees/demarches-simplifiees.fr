@@ -16,8 +16,8 @@ describe TypeDeChampDecorator do
       subject { type_de_champ_0.decorate }
       let(:button_up) { type_de_champ_.decorate }
 
-      it 'returns a button up' do
-        expect(subject.button_up(params)).to be(nil)
+      it 'hide a button up' do
+        expect(subject.button_up(params)).to include('visibility: hidden')
       end
       it 'returns a button down' do
         expect(subject.button_down(params)).to match(/fa-chevron-down/)
@@ -45,8 +45,9 @@ describe TypeDeChampDecorator do
       it 'returns a button up' do
         expect(subject.button_up(params)).to match(/fa-chevron-up/)
       end
-      it 'returns a button down' do
-        expect(subject.button_down(params)).to be(nil)
+
+      it 'hide a button down' do
+        expect(subject.button_down(params)).to include('visibility: hidden')
       end
     end
   end

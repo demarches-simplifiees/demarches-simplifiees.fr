@@ -1,27 +1,29 @@
 = f.fields_for @types_de_champ_facade.fields_for_var, types_de_champ, remote: true do |ff|
-  .form-inline{class:"#{ff.object.object.type_champ == 'header_section' ? 'header_section' : ''}"}
+  .form-inline{ class: (ff.object.object.type_champ == 'header_section' ? 'header_section' : '') }
     .form-group.libelle
       %h4 Libellé
       = ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
 
     .form-group.type
       %h4 Type
-      = ff.select :type_champ, TypeDeChamp.type_de_champs_list_fr, {}, {class: 'form-control type_champ'}
+      = ff.select :type_champ, TypeDeChamp.type_de_champs_list_fr, {}, { class: 'form-control type_champ' }
 
     .form-group.description
       %h4 Description
-      = ff.text_area :description, class: 'form-control description', placeholder: 'Description', rows: 2
+      = ff.text_area :description, class: 'form-control description', placeholder: 'Description', rows: 3
 
-    .form-group.drop_down_list{class:"#{ff.object.object.type_champ == 'drop_down_list' ? 'show_inline' : ''}",style:'margin-right: 5px'}
+    .form-group.drop_down_list{ class: (ff.object.object.type_champ == 'drop_down_list' ? 'show_inline' : ''), style: 'margin-right: 5px' }
       %h4 Liste déroulante
       = ff.fields_for :drop_down_list_attributes, ff.object.object.drop_down_list do |fff|
         = fff.text_area :value, class: 'form-control drop_down_list', placeholder: "Ecrire une valeur par ligne.\nEcrire --valeur-- pour un séparateur.", rows: 3, cols: 30
         = fff.hidden_field :id
-    - unless ff.object.object.class == TypeDeChampPrivate
-      .form-group.mandatory
-        %h4 Obligatoire ?
-        .center
-          = ff.check_box :mandatory, placeholder: 'Obligatoire ?'
+
+
+    - hide_mandatory = (ff.object.object.class == TypeDeChampPrivate || ff.object.object.type_champ == 'explication')
+    .form-group.mandatory{ style: hide_mandatory ? 'visibility: hidden;' : '' }
+      %h4 Obligatoire ?
+      .center
+        = ff.check_box :mandatory, placeholder: 'Obligatoire ?'
 
     .form-group
       = ff.hidden_field :order_place, value: ff.index

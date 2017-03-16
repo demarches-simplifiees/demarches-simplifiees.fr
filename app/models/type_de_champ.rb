@@ -16,7 +16,8 @@ class TypeDeChamp < ActiveRecord::Base
            regions: 'regions',
            departements: 'departements',
            engagement: 'engagement',
-           header_section: 'header_section'
+           header_section: 'header_section',
+           explication: 'explication'
        }
 
   belongs_to :procedure
@@ -29,7 +30,7 @@ class TypeDeChamp < ActiveRecord::Base
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
 
-  before_validation :change_header_section_mandatory
+  before_validation :check_mandatory
 
   def self.type_de_champs_list_fr
     type_champs.map { |champ| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{champ.last}"), champ.first] }
@@ -39,8 +40,8 @@ class TypeDeChamp < ActiveRecord::Base
     !(type_champ == 'textarea' || type_champ == 'header_section')
   end
 
-  def change_header_section_mandatory
-    self.mandatory = false if self.type_champ == 'header_section'
+  def check_mandatory
+    self.mandatory = false if %w(header_section explication).include?(self.type_champ)
     true
   end
 end
