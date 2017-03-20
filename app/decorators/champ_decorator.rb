@@ -3,7 +3,7 @@ class ChampDecorator < Draper::Decorator
 
   def value
     return object.value == 'on' ? 'Oui' : 'Non' if type_champ == 'checkbox'
-    return JSON.parse(object.value).join(', ')  if type_champ == 'multiple_drop_down_list' && !object.value.blank?
+    return JSON.parse(object.value).join(', ')  if type_champ == 'multiple_drop_down_list' && object.value.present?
     object.value
   end
 
