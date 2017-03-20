@@ -1,18 +1,6 @@
-%select{  name:"champs['#{champ.id}']",
-          id: "champs_#{champ.id}" }
-
-  - unless values.blank?
-    %option
-      = ''
-
-    - values.each do |option|
-      - if (option=~ /^--.*--$/).nil?
-        - if champ.value == option
-          %option{selected:''}
-            = option
-        - else
-          %option
-            = option
-      -else
-        %option{disabled:''}
-          = option
+- unless drop_down_list.options.blank?
+  = select_tag("champs['#{champ.id}']", 
+    options_for_select(drop_down_list.options, selected: drop_down_list.selected_options(champ), 
+                                               disabled: drop_down_list.disabled_options), 
+                       multiple: drop_down_list.multiple, 
+                       class: drop_down_list.multiple ? 'select2' : nil)

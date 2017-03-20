@@ -102,6 +102,8 @@ gem 'simple_form'
 
 gem 'newrelic_rpm'
 
+gem 'select2-rails'
+
 group :test do
   gem 'capybara'
   gem 'launchy'

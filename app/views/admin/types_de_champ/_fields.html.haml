@@ -1,5 +1,7 @@
 = f.fields_for @types_de_champ_facade.fields_for_var, types_de_champ, remote: true do |ff|
-  .form-inline{ class: (ff.object.object.type_champ == 'header_section' ? 'header_section' : '') }
+  - type_champ = ff.object.object.type_champ
+
+  .form-inline{ class: (type_champ == 'header_section' ? 'header_section' : nil) }
     .form-group.libelle
       %h4 Libellé
       = ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
@@ -12,15 +14,15 @@
       %h4 Description
       = ff.text_area :description, class: 'form-control description', placeholder: 'Description', rows: 3
 
-    .form-group.drop_down_list{ class: (ff.object.object.type_champ == 'drop_down_list' ? 'show_inline' : ''), style: 'margin-right: 5px' }
+    .form-group.drop_down_list{ class: (%w(drop_down_list multiple_drop_down_list).include?(type_champ) ? 'show_inline' : nil), style: 'margin-right: 5px' }
       %h4 Liste déroulante
       = ff.fields_for :drop_down_list_attributes, ff.object.object.drop_down_list do |fff|
-        = fff.text_area :value, class: 'form-control drop_down_list', placeholder: "Ecrire une valeur par ligne.\nEcrire --valeur-- pour un séparateur.", rows: 3, cols: 30
+        ~ fff.text_area :value, class: 'form-control drop_down_list', placeholder: "Ecrire une valeur par ligne et --valeur-- pour un séparateur.", rows: 3, cols: 30
         = fff.hidden_field :id
 
 
-    - hide_mandatory = (ff.object.object.class == TypeDeChampPrivate || ff.object.object.type_champ == 'explication')
-    .form-group.mandatory{ style: hide_mandatory ? 'visibility: hidden;' : '' }
+    - hide_mandatory = (ff.object.object.class == TypeDeChampPrivate || type_champ == 'explication')
+    .form-group.mandatory{ style: hide_mandatory ? 'visibility: hidden;' : nil }
       %h4 Obligatoire ?
       .center
         = ff.check_box :mandatory, placeholder: 'Obligatoire ?'
@@ -42,5 +44,7 @@
         = f.submit "Ajouter le champ", class: 'btn btn-success', id: @types_de_champ_facade.add_button_id
       - else
         = link_to("", @types_de_champ_facade.delete_url(ff), method: :delete, remote: true, id: "delete_type_de_champ_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
+
+    %div{ style: 'background-color: rgb(204, 204, 204); height: 1px; margin: 30px auto;' }
 
 
