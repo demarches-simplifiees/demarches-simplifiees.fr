@@ -31,7 +31,7 @@
     - unless @procedure.locked?
       %a{:href => "#{url_for admin_procedure_pieces_justificatives_path(@procedure)}", id: 'onglet-pieces'}
         %div.procedure_list_element{class: ('active' if active == 'Pieces')}
-          Pièces justificatives
+          Pièces jointes
 
     - unless @procedure.locked?
       %a{:href => "#{url_for admin_procedure_types_de_champ_private_path(@procedure)}", id: 'onglet-private-champs'}

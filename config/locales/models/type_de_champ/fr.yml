@@ -22,3 +22,5 @@ fr:
           departements: 'Départements'
           engagement: 'Engagement'
           header_section: 'Titre de section'
+          explication: 'Explication'
+          multiple_drop_down_list: 'Menu déroulant à choix multiples'
