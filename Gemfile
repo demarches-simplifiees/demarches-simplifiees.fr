@@ -97,7 +97,6 @@ group :test do
   gem 'launchy'
   gem 'factory_girl'
   gem 'database_cleaner'
-  gem 'selenium-webdriver'
   gem 'webmock'
   gem 'shoulda-matchers', require: false
   gem 'simplecov', require: false
