@@ -406,9 +406,6 @@ GEM
     openstack (3.3.7)
       json
     orm_adapter (0.5.0)
-    parallel (1.10.0)
-    parallel_tests (2.10.0)
-      parallel
     parser (2.3.3.1)
       ast (~> 2.2)
     pg (0.19.0)
@@ -692,7 +689,6 @@ DEPENDENCIES
   newrelic_rpm
   openid_connect
   openstack
-  parallel_tests (~> 2.10)
   pg
   poltergeist
   pry-byebug

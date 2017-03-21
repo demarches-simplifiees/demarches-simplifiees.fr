@@ -148,8 +148,6 @@ group :development, :test do
   gem 'rubocop-checkstyle_formatter', require: false
   gem 'rubocop-rspec', require: false
 
-  gem 'parallel_tests', '~> 2.10'
-
   gem 'brakeman', require: false
 
   # Deploy
