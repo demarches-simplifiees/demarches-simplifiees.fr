@@ -82,7 +82,6 @@ GEM
       sass (>= 3.3.4)
     bootstrap-wysihtml5-rails (0.3.3.8)
       railties (>= 3.0)
-    brakeman (3.4.1)
     browser (2.3.0)
     builder (3.2.2)
     byebug (9.0.6)
@@ -617,7 +616,6 @@ DEPENDENCIES
   bootstrap-datepicker-rails
   bootstrap-sass (~> 3.3.5)
   bootstrap-wysihtml5-rails (~> 0.3.3.8)
-  brakeman
   browser
   byebug
   capybara

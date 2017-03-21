@@ -127,8 +127,6 @@ group :development, :test do
   gem 'spring-commands-rspec'
   gem 'rspec-rails', '~> 3.0'
 
-  gem 'brakeman', require: false
-
   # Deploy
   gem 'mina', ref: '343a7', git: 'https://github.com/mina-deploy/mina.git'
 
