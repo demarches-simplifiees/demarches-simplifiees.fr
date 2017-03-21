@@ -144,8 +144,6 @@ group :development, :test do
   gem 'spring-commands-rspec'
   gem 'rspec-rails', '~> 3.0'
 
-  gem 'railroady'
-
   gem 'rubocop', require: false
   gem 'rubocop-checkstyle_formatter', require: false
   gem 'rubocop-rspec', require: false
