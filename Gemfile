@@ -1,8 +1,5 @@
 source 'https://rubygems.org'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'dotenv-rails', groups: [:development, :test]
-
 gem 'rails', '5.0.0.1'
 
 gem 'actioncable', '5.0.0.1'
@@ -143,6 +140,9 @@ group :development, :test do
 
   # Deploy
   gem 'mina', ref: '343a7', git: 'https://github.com/mina-deploy/mina.git'
+
+  # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+  gem 'dotenv-rails'
 end
 
 group :production, :staging do
