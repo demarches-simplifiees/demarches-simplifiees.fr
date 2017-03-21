@@ -114,7 +114,6 @@ group :development do
   gem 'web-console'
   gem 'rack-handlers'
   gem 'xray-rails'
-  gem 'scenic'
 end
 
 group :development, :test do
@@ -134,7 +133,10 @@ group :development, :test do
   gem 'dotenv-rails'
 end
 
-group :production, :staging do
+group :development, :production, :staging do
   gem 'scenic'
+end
+
+group :production, :staging do
   gem 'sentry-raven'
 end
