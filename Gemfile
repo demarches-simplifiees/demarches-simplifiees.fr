@@ -65,13 +65,13 @@ gem 'chartkick'
 
 gem 'logstasher'
 
-gem "font-awesome-rails"
+gem 'font-awesome-rails'
 
 gem 'hashie'
 
 gem 'mailjet'
 
-gem "smart_listing"
+gem 'smart_listing'
 
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 
@@ -80,7 +80,7 @@ gem 'spreadsheet_architect'
 
 gem 'apipie-rails'
 # For Markdown support in apipie
-gem "maruku"
+gem 'maruku'
 
 gem 'openstack'
 
