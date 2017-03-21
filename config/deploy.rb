@@ -78,6 +78,7 @@ set :shared_paths, [
                      "config/fog_credentials.yml",
                      'config/initializers/secret_token.rb',
                      'config/initializers/features.yml',
+                     'config/initializers/sidekiq.rb',
                      "config/environments/#{rails_env}.rb",
                      "config/initializers/token.rb",
                      "config/initializers/urls.rb",
