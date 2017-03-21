@@ -19,12 +19,6 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-if ENV['COV']
-  require 'simplecov'
-  SimpleCov.start 'rails'
-  puts "required simplecov"
-end
-
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'capybara/rspec'

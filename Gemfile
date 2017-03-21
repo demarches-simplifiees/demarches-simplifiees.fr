@@ -99,7 +99,6 @@ group :test do
   gem 'database_cleaner'
   gem 'webmock'
   gem 'shoulda-matchers', require: false
-  gem 'simplecov', require: false
   gem 'poltergeist'
   gem 'timecop'
   gem 'guard'

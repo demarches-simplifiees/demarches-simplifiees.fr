@@ -125,7 +125,6 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
-    docile (1.1.5)
     domain_name (0.5.20161129)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.2.0)
@@ -543,11 +542,6 @@ GEM
     simple_form (3.4.0)
       actionpack (> 4, < 5.1)
       activemodel (> 4, < 5.1)
-    simplecov (0.12.0)
-      docile (~> 1.1.0)
-      json (>= 1.8, < 3)
-      simplecov-html (~> 0.10.0)
-    simplecov-html (0.10.0)
     slop (3.6.0)
     smart_listing (1.2.0)
       coffee-rails
@@ -693,7 +687,6 @@ DEPENDENCIES
   sentry-raven
   shoulda-matchers
   simple_form
-  simplecov
   smart_listing
   spreadsheet_architect
   spring
