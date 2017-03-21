@@ -26,10 +26,10 @@ gem 'unicorn'
 # serializer
 gem 'active_model_serializers'
 
-#haml
+# haml
 gem 'haml-rails'
 
-#bootstrap saas
+# bootstrap saas
 gem 'bootstrap-sass', '~> 3.3.5'
 
 # Pagination
@@ -40,7 +40,7 @@ gem 'draper', '~> 3.0.0.pre1'
 
 gem 'unicode_utils'
 
-#Gestion des comptes utilisateurs
+# Gestion des comptes utilisateurs
 gem 'devise'
 gem 'openid_connect'
 
@@ -79,7 +79,8 @@ gem 'as_csv'
 gem 'spreadsheet_architect'
 
 gem 'apipie-rails'
-gem "maruku" # for Markdown support in apipie
+# For Markdown support in apipie
+gem "maruku"
 
 gem 'openstack'
 
