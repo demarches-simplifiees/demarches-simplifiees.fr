@@ -37,6 +37,7 @@ gem 'will_paginate-bootstrap'
 
 # Decorators
 gem 'draper', '~> 3.0.0.pre1'
+
 gem 'unicode_utils'
 
 #Gestion des comptes utilisateurs
