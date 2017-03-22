@@ -19,12 +19,6 @@
 
 ENV['RAILS_ENV'] ||= 'test'
 
-if ENV['COV']
-  require 'simplecov'
-  SimpleCov.start 'rails'
-  puts "required simplecov"
-end
-
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'capybara/rspec'
@@ -38,7 +32,7 @@ require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 Capybara.ignore_hidden_elements = false
 Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, js_errors: true, port: 44_678 + ENV['TEST_ENV_NUMBER'].to_i, phantomjs_options: ['--proxy-type=none'], timeout: 180)
+  Capybara::Poltergeist::Driver.new(app, js_errors: true, port: 44_678, phantomjs_options: ['--proxy-type=none'], timeout: 180)
 end
 
 ActiveSupport::Deprecation.silenced = true
