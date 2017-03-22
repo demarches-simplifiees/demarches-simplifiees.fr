@@ -102,9 +102,12 @@ gem 'simple_form'
 
 gem 'newrelic_rpm'
 
+# Sidekiq
 gem 'sidekiq'
 gem 'sidekiq-cron', '~> 0.4.4'
 gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git', require: false
+
+gem 'select2-rails'
 
 group :test do
   gem 'capybara'

@@ -23,22 +23,25 @@ function destroy_action(){
 }
 
 function on_change_type_de_champ_select (){
-
     $("select.form-control.type_champ").on('change', function(e){
 
         parent = $(this).parent().parent();
 
         parent.removeClass('header_section');
         parent.children(".drop_down_list").removeClass('show_inline');
+        $('.mandatory', parent).show();
 
         switch(this.value){
             case 'header_section':
                 parent.addClass('header_section');
                 break;
             case 'drop_down_list':
+            case 'multiple_drop_down_list':
                 parent.children(".drop_down_list").addClass('show_inline');
                 break;
-
+            case 'explication':
+                $('.mandatory', parent).hide();
+                break;
         }
-    })
+    });
 }

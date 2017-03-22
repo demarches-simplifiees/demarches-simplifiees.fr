@@ -125,22 +125,5 @@ describe 'users/description/show.html.haml', type: :view do
       it { expect(rendered).not_to have_content 'Documents administratifs' }
     end
 
-    context 'when dossier have pj' do
-      let(:dossier) { create(:dossier) }
-
-      it { expect(rendered).to have_content 'Documents administratifs' }
-    end
-
-    context 'when procedure have demarche link' do
-      let(:procedure) { create :procedure }
-
-      it { expect(rendered).to have_content 'Documents administratifs' }
-    end
-
-    context 'when procedure have cerfa flag true' do
-      let(:procedure) { create(:procedure, cerfa_flag: true) }
-
-      it { expect(rendered).to have_content 'Documents administratifs' }
-    end
   end
 end

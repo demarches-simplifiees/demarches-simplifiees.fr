@@ -561,6 +561,8 @@ GEM
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
     securecompare (1.0.0)
+    select2-rails (4.0.3)
+      thor (~> 0.14)
     selenium-webdriver (3.0.3)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
@@ -736,6 +738,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   scenic
   sdoc (~> 0.4.0)
+  select2-rails
   selenium-webdriver
   sentry-raven
   shoulda-matchers

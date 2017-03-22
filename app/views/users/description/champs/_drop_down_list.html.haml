@@ -1,2 +1,2 @@
 - unless champ.drop_down_list.nil?
-  = render partial: 'users/description/champs/drop_down_template', locals: {values: champ.drop_down_list.options, champ: champ}
+  = render partial: 'users/description/champs/drop_down_template', locals: { drop_down_list: champ.drop_down_list, champ: champ }
