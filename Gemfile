@@ -93,6 +93,11 @@ gem 'simple_form'
 
 gem 'newrelic_rpm'
 
+# Sidekiq
+gem 'sidekiq'
+gem 'sidekiq-cron', '~> 0.4.4'
+gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git', require: false
+
 gem 'select2-rails'
 
 group :test do
@@ -136,10 +141,10 @@ group :development, :test do
   gem 'dotenv-rails'
 end
 
-group :development, :production, :staging do
-  gem 'scenic'
-end
-
 group :production, :staging do
   gem 'sentry-raven'
+end
+
+group :production, :staging, :development do
+  gem 'scenic'
 end
