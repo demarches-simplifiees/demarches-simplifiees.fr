@@ -699,7 +699,6 @@ DEPENDENCIES
   sidekiq
   sidekiq-cron (~> 0.4.4)
   simple_form
-  simplecov
   sinatra!
   smart_listing
   spreadsheet_architect
