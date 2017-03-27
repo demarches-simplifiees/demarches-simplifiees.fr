@@ -364,14 +364,14 @@ describe Users::DossiersController, type: :controller do
 
     context 'when procedure is for individual' do
       let(:params) { {id: dossier_id, dossier: {id: dossier_id, autorisation_donnees: '1', individual_attributes: individual_params}} }
-      let(:individual_params) { {gender: 'Mr', nom: 'Julien', prenom: 'Xavier', birthdate: '20/01/1991'} }
+      let(:individual_params) { {gender: 'M.', nom: 'Julien', prenom: 'Xavier', birthdate: '20/01/1991'} }
       let(:procedure) { create(:procedure, :published, for_individual: true) }
 
       before do
         dossier.reload
       end
 
-      it { expect(dossier.individual.gender).to eq 'Mr'  }
+      it { expect(dossier.individual.gender).to eq 'M.'  }
       it { expect(dossier.individual.nom).to eq 'Julien'  }
       it { expect(dossier.individual.prenom).to eq 'Xavier'  }
       it { expect(dossier.individual.birthdate).to eq '20/01/1991'  }
