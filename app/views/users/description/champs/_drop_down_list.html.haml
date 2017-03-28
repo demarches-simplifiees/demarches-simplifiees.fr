@@ -1,2 +1,6 @@
-- unless champ.drop_down_list.nil?
-  = render partial: 'users/description/champs/drop_down_template', locals: { drop_down_list: champ.drop_down_list, champ: champ }
+- if champ.drop_down_list && champ.drop_down_list.options.any?
+    = select_tag("champs['#{champ.id}']",
+      options_for_select(champ.drop_down_list.options, selected: champ.drop_down_list.selected_options(champ),
+                                                 disabled: champ.drop_down_list.disabled_options),
+                         multiple: champ.drop_down_list.multiple,
+                         class: champ.drop_down_list.multiple ? 'select2' : nil)
