@@ -41,6 +41,9 @@
           - elsif champ.type_champ == 'departements'
             = render partial: 'users/description/champs/departements', locals: { champ: champ }
 
+          - elsif champ.type_champ == 'dossier_link'
+            = render partial: 'users/description/champs/dossier_link', locals: { champ: champ }
+
           - elsif champ.type_champ == 'explication'
 
           - else
