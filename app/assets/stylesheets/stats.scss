@@ -1,6 +1,8 @@
 @import "card";
 
 $dark-grey: #333333;
+$blue: rgba(61, 149, 236, 1);
+$blue-hover: rgba(61, 149, 236, 0.8);
 
 $default-space: 15px;
 
@@ -42,9 +44,53 @@ $stat-card-half-horizontal-spacing: 4 * $default-space;
 
 .stat-card-title {
   color: $dark-grey;
-  margin-top: -2px;
   font-size: 26px;
   font-weight: 500;
+  width: 200px;
+}
+
+$segmented-control-margin-top: $default-space;
+.segmented-control {
+  border-radius: 36px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 0;
+  padding: 0;
+  display: inline-block;
+  margin-top: $segmented-control-margin-top;
+}
+
+$segmented-control-item-horizontal-padding: $default-space;
+$segmented-control-item-border-radius: 2 * $default-space;
+.segmented-control-item {
+  color: $blue;
+  display: inline-block;
+  font-size: 15px;
+  border: 2px solid $blue;
+  margin-right: -2px;
+  padding-left: $segmented-control-item-horizontal-padding;
+  padding-right: $segmented-control-item-horizontal-padding;
+  color: $blue;
+
+  &:first-of-type {
+    border-radius: $segmented-control-item-border-radius 0px 0px $segmented-control-item-border-radius;
+  }
+
+  &:last-of-type {
+    border-radius: 0px $segmented-control-item-border-radius $segmented-control-item-border-radius 0px;
+    margin-right: 0;
+  }
+
+  &:hover {
+    background-color: $blue-hover;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.segmented-control-item-active {
+  background-color: $blue;
+  color: white;
 }
 
 .chart-container {

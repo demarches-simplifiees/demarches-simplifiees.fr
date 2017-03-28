@@ -23,4 +23,21 @@ describe StatsController, type: :controller do
 
     it { expect(subject).to eq(@expected_hash) }
   end
+
+  describe '#cumulative_hash' do
+    before do
+      FactoryGirl.create(:procedure, :created_at => 45.days.ago)
+      FactoryGirl.create(:procedure, :created_at => 15.days.ago)
+      FactoryGirl.create(:procedure, :created_at => 15.days.ago)
+    end
+
+    let (:association) { Procedure.all }
+
+    subject { StatsController.new.send(:cumulative_hash, association) }
+
+    it { expect(subject).to eq({
+      45.days.ago.beginning_of_month => 1,
+      15.days.ago.beginning_of_month => 3
+    }) }
+  end
 end

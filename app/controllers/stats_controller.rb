@@ -6,6 +6,9 @@ class StatsController < ApplicationController
 
     @procedures_30_days_flow = thirty_days_flow_hash(procedures)
     @dossiers_30_days_flow = thirty_days_flow_hash(dossiers)
+
+    @procedures_cumulative = cumulative_hash(procedures)
+    @dossiers_cumulative = cumulative_hash(dossiers)
   end
 
   private
@@ -27,5 +30,16 @@ class StatsController < ApplicationController
       h[date] = 0 if h[date].nil?
     end
     h
+  end
+
+  def cumulative_hash(association)
+    sum = 0
+    association
+      .group("DATE_TRUNC('month', created_at)")
+      .count
+      .to_a
+      .sort{ |x, y| x[0] <=> y[0] }
+      .map { |x, y| { x => (sum += y)} }
+      .reduce({}, :merge)
   end
 end
