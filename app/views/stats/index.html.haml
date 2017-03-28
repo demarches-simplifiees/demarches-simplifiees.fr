@@ -7,16 +7,36 @@
   .stat-cards
 
     .stat-card.stat-card-half.pull-left
-      %span.stat-card-title.pull-left Procédures
+      %ul.segmented-control.pull-right
+        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.cumulative-procedures-chart');" }
+          Cumul
+        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.flux-procedures-chart');" }
+          Flux (30 jours)
+      %span.stat-card-title.pull-left Démarches dématérialisées
+      .clearfix
+
       .chart-container
-        .chart.flux-procedures-chart
+        .chart.cumulative-procedures-chart
+          = area_chart @procedures_cumulative,
+            :colors => ["rgba(61, 149, 236, 1)"]
+        .chart.flux-procedures-chart.hidden
           = line_chart @procedures_30_days_flow,
             :colors => ["rgba(61, 149, 236, 1)"]
 
     .stat-card.stat-card-half.pull-left
-      %span.stat-card-title.pull-left Dossiers
+      %ul.segmented-control.pull-right
+        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.cumulative-dossiers-chart');" }
+          Cumul
+        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.flux-dossiers-chart');" }
+          Flux (30 jours)
+      %span.stat-card-title.pull-left Dossiers déposés
+      .clearfix
+
       .chart-container
-        .chart.flux-dossiers-chart
+        .chart.cumulative-dossiers-chart
+          = area_chart @dossiers_cumulative,
+            :colors => ["rgba(61, 149, 236, 1)"]
+        .chart.flux-dossiers-chart.hidden
           = line_chart @dossiers_30_days_flow,
             :colors => ["rgba(61, 149, 236, 1)"]
 
