@@ -34,11 +34,18 @@
         - else
           .row
             .col-xs-6.depositaire-label= champ.libelle
-            .col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off
+            .col-xs-1.comments-off
               = "-"
             .col-xs-5.depositaire-info{ id: "champ-#{champ.id}-value" }
               - unless champ.decorate.value.blank?
-                = champ.decorate.value.html_safe
+                - if champ.type_champ == 'dossier_link'
+                  - dossier = Dossier.find_by(id: champ.decorate.value)
+                  - if dossier && gestionnaire_signed_in?
+                    = link_to(dossier.procedure.libelle, backoffice_dossier_path(champ.decorate.value), target: '_blank')
+                  - else
+                    = dossier.nil? ? 'pas de dossier associé' : dossier.procedure.libelle
+                - else
+                  = champ.decorate.value.html_safe
 
     - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
       .mandataire_social.text-success.center
