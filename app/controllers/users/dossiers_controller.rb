@@ -154,6 +154,13 @@ class Users::DossiersController < UsersController
     redirect_to url_for users_dossiers_path
   end
 
+  def procedure_libelle
+    dossier = Dossier.find(params[:dossier_id])
+    render json: { procedureLibelle: dossier.procedure.libelle }
+  rescue ActiveRecord::RecordNotFound
+    render json: {}, status: 404
+  end
+
   private
 
   def check_siret
