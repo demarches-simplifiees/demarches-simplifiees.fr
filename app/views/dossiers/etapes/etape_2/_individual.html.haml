@@ -21,17 +21,17 @@
             %label
               %h4
                 Nom *
-              = ff.text_field :nom, { class: 'form-control' }
+              = ff.text_field :nom, { class: 'form-control', required: true }
           .form-group
             %label
               %h4
                 Prénom *
-              = ff.text_field :prenom, { class: 'form-control' }
+              = ff.text_field :prenom, { class: 'form-control', required: true }
           .form-group
             %label
               %h4
                 Date de naissance *
-              = ff.date_field :birthdate, { class: 'form-control', placeholder: 'jj/mm/aaaa' }
+              = ff.date_field :birthdate, { class: 'form-control', placeholder: 'jj/mm/aaaa', required: true }
 
         %p
           %label{ style: 'font-weight: normal;' }
