@@ -34,8 +34,7 @@ class Users::DescriptionController < UsersController
 
     @champs = @dossier.ordered_champs
 
-    check_mandatory_fields = true
-    check_mandatory_fields = !(params[:submit].keys.first == 'brouillon') if params[:submit]
+    check_mandatory_fields = !draft_submission?
 
     if params[:champs]
       champs_service_errors = ChampsService.save_champs @dossier.champs,
@@ -115,6 +114,10 @@ class Users::DescriptionController < UsersController
   end
 
   private
+
+  def draft_submission?
+    params[:submit] && params[:submit].keys.first == 'brouillon'
+  end
 
   def check_autorisation_donnees
     @dossier = current_user_dossier
