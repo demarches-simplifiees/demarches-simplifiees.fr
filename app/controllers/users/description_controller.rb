@@ -34,8 +34,8 @@ class Users::DescriptionController < UsersController
 
     @champs = @dossier.ordered_champs
 
-    mandatory = true
-    mandatory = !(params[:submit].keys.first == 'brouillon') unless params[:submit].nil?
+    check_mandatory_fields = true
+    check_mandatory_fields = !(params[:submit].keys.first == 'brouillon') unless params[:submit].nil?
 
     unless @dossier.update_attributes(create_params)
       @dossier = @dossier.decorate
@@ -47,7 +47,7 @@ class Users::DescriptionController < UsersController
     if params[:champs]
       champs_service_errors = ChampsService.save_champs @dossier.champs,
                                                         params,
-                                                        mandatory
+                                                        check_mandatory_fields
 
       unless champs_service_errors.empty?
         flash.alert = (champs_service_errors.inject('') { |acc, error| acc+= error[:message]+'<br>' }).html_safe
@@ -71,7 +71,7 @@ class Users::DescriptionController < UsersController
     end
 
 
-    if mandatory
+    if check_mandatory_fields
       if @dossier.draft?
         @dossier.initiated!
         NotificationMailer.send_notification(@dossier, @dossier.procedure.initiated_mail).deliver_now!
