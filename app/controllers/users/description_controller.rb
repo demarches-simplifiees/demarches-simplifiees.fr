@@ -44,8 +44,10 @@ class Users::DescriptionController < UsersController
       return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
     end
 
-    unless params[:champs].nil?
-      champs_service_errors = ChampsService.save_formulaire @dossier.champs, params, mandatory
+    if params[:champs]
+      champs_service_errors = ChampsService.save_champs @dossier.champs,
+                                                        params,
+                                                        mandatory
 
       unless champs_service_errors.empty?
         flash.alert = (champs_service_errors.inject('') { |acc, error| acc+= error[:message]+'<br>' }).html_safe

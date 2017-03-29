@@ -5,7 +5,7 @@ class Backoffice::PrivateFormulairesController < ApplicationController
     dossier = current_gestionnaire.dossiers.find(params[:dossier_id])
 
     unless params[:champs].nil?
-      champs_service_errors = ChampsService.save_formulaire dossier.champs_private, params
+      champs_service_errors = ChampsService.save_champs dossier.champs_private, params
 
       if champs_service_errors.empty?
         flash[:notice] = "Formulaire enregistré"
