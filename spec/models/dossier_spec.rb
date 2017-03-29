@@ -611,7 +611,6 @@ describe Dossier do
     end
 
     describe '#data_with_champs' do
-
       subject { dossier.data_with_champs }
 
       it { expect(subject[0]).to be_a_kind_of(Integer) }
@@ -625,6 +624,27 @@ describe Dossier do
       it { expect(subject[8]).to eq(date3) }
       it { expect(subject[9]).to eq(dossier.followers_gestionnaires_emails) }
       it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+    end
+
+    describe '.export_full_generation' do
+
+      context 'when there are no dossiers' do
+        subject { Dossier.export_full_generation(Dossier.none) }
+
+        it { expect(subject[:data]).to eq([]) }
+        it { expect(subject[:headers]).to eq([]) }
+      end
+
+      context 'when there are some dossiers' do
+        let!(:dossier){ create(:dossier) }
+        let!(:dossier2){ create(:dossier) }
+
+        subject { Dossier.export_full_generation(Dossier.all) }
+
+        it { expect(subject[:data].size).to eq(2) }
+        it { expect(subject[:headers]).to eq(dossier.export_headers) }
+      end
+
     end
   end
 
@@ -669,7 +689,6 @@ describe Dossier do
     it { expect(subject[:entreprise_nom]).to be_nil }
     it { expect(subject[:entreprise_prenom]).to be_nil }
   end
-
 
   describe '#Dossier.to_xlsx' do
     let!(:procedure) { create(:procedure) }
@@ -965,5 +984,18 @@ describe Dossier do
       it_behaves_like 'dossier is processed', 'without_continuation'
     end
 
+  end
+
+  describe '.downloadable' do
+    let(:procedure) { create(:procedure) }
+    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :draft) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :received) }
+
+    subject { procedure.dossiers.downloadable }
+
+    it { is_expected.not_to include(dossier)}
+    it { is_expected.to include(dossier2)}
+    it { is_expected.to include(dossier3)}
   end
 end

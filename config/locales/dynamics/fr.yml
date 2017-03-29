@@ -12,8 +12,6 @@ fr:
       pref_list:
         title: 'Gestion de colonnes affichées'
         description: 'Ce menu vous permet de choisir les différentes colonnes que vous souhaitez voir apparaître dans votre interface de suivi des dossiers.'
-      download_all_dossiers: 'Télécharger mes dossiers'
-      limit_excess_download_all_dossiers: 'Limite de dossiers fixée à 400 pour le téléchargement'
       format_csv: 'Au format CSV'
       format_xlsx: 'Au format XLSX'
       format_ods: 'Au format ODS'
