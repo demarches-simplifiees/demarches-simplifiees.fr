@@ -37,13 +37,6 @@ class Users::DescriptionController < UsersController
     check_mandatory_fields = true
     check_mandatory_fields = !(params[:submit].keys.first == 'brouillon') unless params[:submit].nil?
 
-    unless @dossier.update_attributes(create_params)
-      @dossier = @dossier.decorate
-
-      flash.alert = @dossier.errors.full_messages.join('<br />').html_safe
-      return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
-    end
-
     if params[:champs]
       champs_service_errors = ChampsService.save_champs @dossier.champs,
                                                         params,
@@ -139,9 +132,4 @@ class Users::DescriptionController < UsersController
       redirect_to url_for(users_dossier_path(@dossier.id))
     end
   end
-
-  def create_params
-    params.permit()
-  end
-
 end
