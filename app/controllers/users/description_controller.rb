@@ -12,10 +12,7 @@ class Users::DescriptionController < UsersController
     @procedure = @dossier.procedure
     @champs = @dossier.ordered_champs
 
-    @headers = @champs.inject([]) do |acc, champ|
-      acc.push(champ) if champ.type_champ == 'header_section'
-      acc
-    end
+    @headers = @champs.select { |c| c.type_champ == 'header_section' }
 
     unless @dossier.can_be_initiated?
       flash[:alert] = t('errors.messages.procedure_archived')
