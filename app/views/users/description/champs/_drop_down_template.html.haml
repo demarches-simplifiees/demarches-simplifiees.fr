@@ -1,6 +1,0 @@
-- unless drop_down_list.options.blank?
-  = select_tag("champs['#{champ.id}']", 
-    options_for_select(drop_down_list.options, selected: drop_down_list.selected_options(champ), 
-                                               disabled: drop_down_list.disabled_options), 
-                       multiple: drop_down_list.multiple, 
-                       class: drop_down_list.multiple ? 'select2' : nil)
