@@ -1,25 +1,21 @@
 class PiecesJustificativesService
-  def self.upload! dossier, user, params
-    errors = ''
+  def self.upload!(dossier, user, params)
+    tpj_contents = dossier.types_de_piece_justificative
+                          .map { |tpj| [tpj, params["piece_justificative_#{tpj.id}"]] }
+                          .select { |_, content| content }
 
-    dossier.types_de_piece_justificative.each do |type_de_pieces_justificatives|
-      unless params["piece_justificative_#{type_de_pieces_justificatives.id}"].nil?
+    without_virus, with_virus = tpj_contents
+                                .partition { |_, content| ClamavService.safe_file?(content.path) }
 
-        if ClamavService.safe_file? params["piece_justificative_#{type_de_pieces_justificatives.id}"].path
-          piece_justificative = PieceJustificative.new(content: params["piece_justificative_#{type_de_pieces_justificatives.id}"],
-                                                       dossier: dossier,
-                                                       type_de_piece_justificative: type_de_pieces_justificatives,
-                                                       user: user)
+    errors = with_virus
+             .map { |_, content| content.original_filename + ': <b>Virus détecté !!</b><br>' }
 
-          unless piece_justificative.save
-            errors << piece_justificative.errors.messages[:content][0]+" (#{piece_justificative.libelle})"+"<br>"
-          end
-        else
-          errors << params["piece_justificative_#{type_de_pieces_justificatives.id}"].original_filename+": <b>Virus détecté !!</b>"+"<br>"
-        end
-      end
-    end
-    errors
+    errors += without_virus
+              .map { |tpj, content| save_pj(content, dossier, tpj, user) }
+
+    errors += missing_pj_error_messages(dossier)
+
+    errors.join
   end
 
   def self.upload_one! dossier, user, params
@@ -36,5 +32,22 @@ class PiecesJustificativesService
     end
 
     piece_justificative
+  end
+
+  def self.save_pj(content, dossier, tpj, user)
+    pj = PieceJustificative.new(content: content,
+                                dossier: dossier,
+                                type_de_piece_justificative: tpj,
+                                user: user)
+
+    pj.save ? '' : "le fichier #{pj.libelle} n'a pas pu être sauvegardé<br>"
+  end
+
+  def self.missing_pj_error_messages(dossier)
+    mandatory_pjs = dossier.types_de_piece_justificative.select(&:mandatory)
+    present_pjs = dossier.pieces_justificatives.map(&:type_de_piece_justificative)
+    missing_pjs = mandatory_pjs - present_pjs
+
+    missing_pjs.map { |pj| "La pièce jointe #{pj.libelle} doit être fournie.<br>" }
   end
 end
