@@ -28,9 +28,6 @@ class Users::DescriptionController < UsersController
     procedure = dossier.procedure
 
     return head :forbidden unless dossier.can_be_initiated?
-
-    @champs = dossier.ordered_champs
-
     check_mandatory_fields = !draft_submission?
 
     if params[:champs]
