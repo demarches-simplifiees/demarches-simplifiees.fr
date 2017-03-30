@@ -34,10 +34,8 @@ class Users::DescriptionController < UsersController
     check_mandatory_fields = !draft_submission?
 
     if params[:champs]
-      champs_service_errors = ChampsService.save_champs dossier.champs,
-                                                        params,
-                                                        check_mandatory_fields
-
+      champs_service_errors =
+        ChampsService.save_champs(dossier.champs, params, check_mandatory_fields)
       return redirect_to_description_with_errors(dossier, champs_service_errors) if champs_service_errors.any?
     end
 
