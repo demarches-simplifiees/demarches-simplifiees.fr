@@ -61,17 +61,16 @@ class Users::DescriptionController < UsersController
       return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
     end
 
-    if check_mandatory_fields
+    if draft_submission?
+      flash.notice = 'Votre brouillon a bien été sauvegardé.'
+      redirect_to url_for(controller: :dossiers, action: :index, liste: :brouillon)
+    else
       if @dossier.draft?
         @dossier.initiated!
         NotificationMailer.send_notification(@dossier, @dossier.procedure.initiated_mail).deliver_now!
       end
-
       flash.notice = 'Félicitations, votre demande a bien été enregistrée.'
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
-    else
-      flash.notice = 'Votre brouillon a bien été sauvegardé.'
-      redirect_to url_for(controller: :dossiers, action: :index, liste: :brouillon)
     end
   end
 
