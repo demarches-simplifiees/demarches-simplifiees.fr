@@ -1,11 +1,14 @@
 class ChampsService
   class << self
-    def save_champs(champs, params, check_mandatory = true)
+    def save_champs(champs, params)
       fill_champs(champs, params)
 
       champs.select(&:changed?).each(&:save)
+    end
 
-      check_mandatory ? build_error_messages(champs) : []
+    def build_error_messages(champs)
+      champs.select(&:mandatory_and_blank?)
+            .map { |c| "Le champ #{c.libelle} doit être rempli." }
     end
 
     private
@@ -27,11 +30,6 @@ class ChampsService
 
     def extract_minute(champ_id, h)
       h[:time_minute]["'#{champ_id}'"]
-    end
-
-    def build_error_messages(champs)
-      champs.select(&:mandatory_and_blank?)
-            .map { |c| "Le champ #{c.libelle} doit être rempli." }
     end
   end
 end
