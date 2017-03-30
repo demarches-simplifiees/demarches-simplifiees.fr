@@ -38,25 +38,16 @@ class Users::DescriptionController < UsersController
                                                         params,
                                                         check_mandatory_fields
 
-      unless champs_service_errors.empty?
-        flash.alert = (champs_service_errors.inject('') { |acc, error| acc+= error[:message]+'<br>' }).html_safe
-        return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
-      end
+      return redirect_to_description_with_errors(@dossier, champs_service_errors) if champs_service_errors.any?
     end
 
     if @procedure.cerfa_flag? && params[:cerfa_pdf]
       cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
-      unless cerfa.save
-        flash.alert = cerfa.errors.full_messages.join('<br />').html_safe
-        return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
-      end
+      return redirect_to_description_with_errors(@dossier, cerfa.errors.full_messages) unless cerfa.save
     end
 
     errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)
-    unless errors_upload.empty?
-      flash.alert = errors_upload.html_safe
-      return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
-    end
+    return redirect_to_description_with_errors(@dossier, errors_upload) if errors_upload.any?
 
     if draft_submission?
       flash.notice = 'Votre brouillon a bien été sauvegardé.'
@@ -88,9 +79,9 @@ class Users::DescriptionController < UsersController
 
     if !((errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)).empty?)
       if flash.alert.nil?
-        flash.alert = errors_upload.html_safe
+        flash.alert = errors_upload.join('<br>').html_safe
       else
-        flash.alert = (flash.alert + '<br />' + errors_upload.html_safe).html_safe
+        flash.alert = (flash.alert + '<br />' + errors_upload.join('<br>').html_safe).html_safe
       end
 
     else
@@ -110,6 +101,11 @@ class Users::DescriptionController < UsersController
   end
 
   private
+
+  def redirect_to_description_with_errors(dossier, errors)
+    flash.alert = errors.join('<br>').html_safe
+    redirect_to users_dossier_description_path(dossier_id: dossier.id)
+  end
 
   def draft_submission?
     params[:submit] && params[:submit].keys.first == 'brouillon'

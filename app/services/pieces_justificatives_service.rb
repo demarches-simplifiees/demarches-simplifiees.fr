@@ -8,14 +8,13 @@ class PiecesJustificativesService
                                 .partition { |_, content| ClamavService.safe_file?(content.path) }
 
     errors = with_virus
-             .map { |_, content| content.original_filename + ': <b>Virus détecté !!</b><br>' }
+             .map { |_, content| content.original_filename + ': <b>Virus détecté !!</b>' }
 
     errors += without_virus
               .map { |tpj, content| save_pj(content, dossier, tpj, user) }
+              .reject(&:empty?)
 
     errors += missing_pj_error_messages(dossier)
-
-    errors.join
   end
 
   def self.upload_one! dossier, user, params
@@ -41,7 +40,7 @@ class PiecesJustificativesService
                                 type_de_piece_justificative: tpj,
                                 user: user)
 
-    pj.save ? '' : "le fichier #{pj.libelle} n'a pas pu être sauvegardé<br>"
+    pj.save ? '' : "le fichier #{pj.libelle} n'a pas pu être sauvegardé"
   end
 
   def self.missing_pj_error_messages(dossier)
@@ -49,6 +48,6 @@ class PiecesJustificativesService
     present_pjs = dossier.pieces_justificatives.map(&:type_de_piece_justificative)
     missing_pjs = mandatory_pjs - present_pjs
 
-    missing_pjs.map { |pj| "La pièce jointe #{pj.libelle} doit être fournie.<br>" }
+    missing_pjs.map { |pj| "La pièce jointe #{pj.libelle} doit être fournie." }
   end
 end

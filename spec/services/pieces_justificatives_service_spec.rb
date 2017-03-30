@@ -24,7 +24,7 @@ describe PiecesJustificativesService do
       let(:tpjs) { [tpj_not_mandatory] }
 
       context 'when no params are given' do
-        it { expect(errors).to eq('') }
+        it { expect(errors).to eq([]) }
       end
 
       context 'when sometihing wrong with file save' do
@@ -35,7 +35,7 @@ describe PiecesJustificativesService do
           }
         end
 
-        it { expect(errors).to eq("le fichier not mandatory n'a pas pu être sauvegardé<br>") }
+        it { expect(errors).to match(["le fichier not mandatory n'a pas pu être sauvegardé"]) }
       end
 
       context 'when a virus is provided' do
@@ -47,7 +47,7 @@ describe PiecesJustificativesService do
           }
         end
 
-        it { expect(errors).to eq('bad_file: <b>Virus détecté !!</b><br>') }
+        it { expect(errors).to match(['bad_file: <b>Virus détecté !!</b>']) }
       end
     end
 
@@ -55,7 +55,7 @@ describe PiecesJustificativesService do
       let(:tpjs) { [tpj_mandatory] }
 
       context 'when no params are given' do
-        it { expect(errors).to eq('La pièce jointe justificatif doit être fournie.<br>') }
+        it { expect(errors).to match(['La pièce jointe justificatif doit être fournie.']) }
       end
 
       context 'when the piece justificative is provided' do
@@ -74,7 +74,7 @@ describe PiecesJustificativesService do
           }
         end
 
-        it { expect(errors).to eq('') }
+        it { expect(errors).to match([]) }
       end
     end
   end

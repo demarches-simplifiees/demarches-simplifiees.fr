@@ -31,11 +31,7 @@ class ChampsService
 
     def build_error_messages(champs)
       champs.select(&:mandatory_and_blank?)
-            .map { |c| build_champ_error_message(c) }
-    end
-
-    def build_champ_error_message(champ)
-      { message: "Le champ #{champ.libelle} doit être rempli." }
+            .map { |c| "Le champ #{c.libelle} doit être rempli." }
     end
   end
 end

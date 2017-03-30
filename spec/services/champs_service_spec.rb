@@ -34,7 +34,7 @@ describe ChampsService do
       end
 
       it 'adds error for the missing mandatory champ' do
-        expect(@errors).to match([{ message: 'Le champ mandatory doit être rempli.' }])
+        expect(@errors).to match(['Le champ mandatory doit être rempli.'])
       end
     end
 
