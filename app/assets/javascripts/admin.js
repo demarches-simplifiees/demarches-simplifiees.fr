@@ -1,5 +1,4 @@
-$(document).on('page:load', init_admin);
-$(document).ready(init_admin);
+$(document).on('turbolinks:load', init_admin);
 
 function init_admin(){
     destroy_action();

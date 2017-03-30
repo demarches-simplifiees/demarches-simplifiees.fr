@@ -1,5 +1,4 @@
-$(document).on('page:load', init_path_modal);
-$(document).ready(init_path_modal);
+$(document).on('turbolinks:load', init_path_modal);
 
 function init_path_modal() {
     path_modal_action();

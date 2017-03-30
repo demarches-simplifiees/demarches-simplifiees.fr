@@ -1,5 +1,4 @@
-$(document).on('page:load', buttons_archived);
-$(document).ready(buttons_archived);
+$(document).on('turbolinks:load', buttons_archived);
 
 function buttons_archived(){
     $("button#archive").on('click', function(){

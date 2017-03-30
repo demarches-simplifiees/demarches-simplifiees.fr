@@ -1,7 +1,5 @@
-$(document).on('page:load', the_terms);
-$(document).ready(the_terms);
-$(document).on('page:load', pannel_switch);
-$(document).ready(pannel_switch);
+$(document).on('turbolinks:load', the_terms);
+$(document).on('turbolinks:load', pannel_switch);
 
 function pannel_switch() {
   $('#switch-notifications').click(function () {

@@ -1,5 +1,4 @@
-$(document).on('page:load', init_search_anim);
-$(document).ready(init_search_anim);
+$(document).on('turbolinks:load', init_search_anim);
 
 function init_search_anim(){
     $("#search_area").on('click', search_fadeIn);

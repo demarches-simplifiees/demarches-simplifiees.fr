@@ -1,5 +1,4 @@
-$(document).on('page:load', pref_list_dossier_actions);
-$(document).ready(pref_list_dossier_actions);
+$(document).on('turbolinks:load', pref_list_dossier_actions);
 
 function pref_list_dossier_actions() {
     pref_list_dossier_open_action();

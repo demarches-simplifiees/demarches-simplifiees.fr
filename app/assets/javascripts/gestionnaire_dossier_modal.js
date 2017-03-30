@@ -1,5 +1,4 @@
-$(document).on('page:load', modal_action);
-$(document).ready(modal_action);
+$(document).on('turbolinks:load', modal_action);
 
 function modal_action() {
     $('#PJmodal').on('show.bs.modal', function (event) {

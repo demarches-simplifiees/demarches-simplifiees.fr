@@ -1,5 +1,4 @@
-$(document).on('page:load', init_default_data_block);
-$(document).ready(init_default_data_block);
+$(document).on('turbolinks:load', init_default_data_block);
 
 function init_default_data_block() {
     $('.default_data_block #dossier .body').toggle();
