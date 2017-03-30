@@ -18,24 +18,24 @@
         - else
           %input{ type: 'file', name: 'cerfa_pdf', id: 'cerfa_pdf', accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes }
 
-  - dossier.types_de_piece_justificative.order('order_place ASC').each do |type_de_piece_justificative|
+  - dossier.types_de_piece_justificative.order('order_place ASC').each do |tpj|
     %tr
       %th.piece-libelle
-        = type_de_piece_justificative.libelle
+        = tpj.mandatory ? tpj.libelle + ' *' : tpj.libelle
 
       %td
-        - unless type_de_piece_justificative.lien_demarche.blank?
+        - unless tpj.lien_demarche.blank?
           %em
             Récupérer le formulaire vierge pour mon dossier :
-            = link_to "Télécharger", type_de_piece_justificative.lien_demarche, target: :blank
+            = link_to "Télécharger", tpj.lien_demarche, target: :blank
 
       %td
-        - if type_de_piece_justificative.api_entreprise
-          %span.text-success{ id: "piece_justificative_#{type_de_piece_justificative.id}" } Nous l'avons récupéré pour vous.
+        - if tpj.api_entreprise
+          %span.text-success{ id: "piece_justificative_#{tpj.id}" } Nous l'avons récupéré pour vous.
         - else
-          - if dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id).nil?
-            = file_field_tag "piece_justificative_#{type_de_piece_justificative.id}", accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes
+          - if dossier.retrieve_last_piece_justificative_by_type(tpj.id).nil?
+            = file_field_tag "piece_justificative_#{tpj.id}", accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes
           - else
             %span.btn.btn-sm.btn-file.btn-success
               Modifier
-              = file_field_tag "piece_justificative_#{type_de_piece_justificative.id}", accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes
+              = file_field_tag "piece_justificative_#{tpj.id}", accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes
