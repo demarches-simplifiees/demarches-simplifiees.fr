@@ -40,4 +40,14 @@
           = line_chart @dossiers_30_days_flow,
             :colors => ["rgba(61, 149, 236, 1)"]
 
+    .stat-card.stat-card-half.big-number-card.pull-left
+      %span.big-number-card-title TOTAL DÉMARCHES DÉMATÉRIALISÉES
+      %span.big-number-card-number
+        = @procedures_count
+
+    .stat-card.stat-card-half.big-number-card.pull-left
+      %span.big-number-card-title TOTAL DOSSIERS DÉPOSÉS
+      %span.big-number-card-number
+        = @dossiers_count
+
     .clearfix

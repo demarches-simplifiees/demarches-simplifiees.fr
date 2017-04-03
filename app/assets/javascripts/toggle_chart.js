@@ -3,7 +3,7 @@ var TPS = TPS || {};
 TPS.toggleChart = function(event, chartClass) {
   var nextSelectorItem = $(event.target),
       nextChart = $(chartClass),
-      nextChartId = nextChart.children().first().attr('id'),
+      nextChartId = nextChart.children().first().attr("id"),
       currentSelectorItem = nextSelectorItem.parent().find(".segmented-control-item-active"),
       currentChart = nextSelectorItem.parent().parent().find(".chart:not(.hidden)");
 

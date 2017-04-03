@@ -1,6 +1,7 @@
 @import "card";
 
 $dark-grey: #333333;
+$light-grey: #999999;
 $blue: rgba(61, 149, 236, 1);
 $blue-hover: rgba(61, 149, 236, 0.8);
 
@@ -99,4 +100,25 @@ $segmented-control-item-border-radius: 2 * $default-space;
 
 .chart {
   width: 100%;
+}
+
+$big-number-card-padding: 2 * $segmented-control-item-border-radius;
+.big-number-card {
+  padding: $big-number-card-padding;
+}
+
+.big-number-card-title {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+  color: $light-grey;
+}
+
+.big-number-card-number {
+  display: block;
+  text-align: center;
+  font-size: 90px;
+  line-height: 90px;
+  font-weight: bold;
+  color: $blue;
 }
