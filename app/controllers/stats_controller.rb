@@ -9,6 +9,9 @@ class StatsController < ApplicationController
 
     @procedures_cumulative = cumulative_hash(procedures)
     @dossiers_cumulative = cumulative_hash(dossiers)
+
+    @procedures_count = procedures.count
+    @dossiers_count = dossiers.count
   end
 
   private
