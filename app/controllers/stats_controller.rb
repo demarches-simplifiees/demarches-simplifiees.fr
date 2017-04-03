@@ -1,8 +1,8 @@
 class StatsController < ApplicationController
 
   def index
-    procedures = Procedure.where(:created_at => 90.days.ago..Time.now).group("date_trunc('day', created_at)").count
-    dossiers = Dossier.where(:created_at => 90.days.ago..Time.now).group("date_trunc('day', created_at)").count
+    procedures = Procedure.where(:created_at => 30.days.ago..Time.now).group("date_trunc('day', created_at)").count
+    dossiers = Dossier.where(:created_at => 30.days.ago..Time.now).group("date_trunc('day', created_at)").count
 
     @procedures = clean_hash(procedures)
     @dossiers = clean_hash(dossiers)
