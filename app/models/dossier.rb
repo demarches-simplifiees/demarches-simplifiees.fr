@@ -181,9 +181,7 @@ class Dossier < ActiveRecord::Base
     where(state: WAITING_FOR_USER, archived: false).order("updated_at #{order}")
   end
 
-  def self.en_construction order = 'ASC'
-    where(state: EN_CONSTRUCTION, archived: false).order("updated_at #{order}")
-  end
+  scope :en_construction, -> { where(state: EN_CONSTRUCTION, archived: false).order(updated_at: :asc) }
 
   def self.ouvert order = 'ASC'
     where(state: OUVERT, archived: false).order("updated_at #{order}")

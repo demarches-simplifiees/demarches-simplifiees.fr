@@ -1,7 +1,0 @@
-require: rubocop-rspec
-AllCops:
-  Exclude:
-    - db/**/*
-  RunRailsCops: true
-Metrics/LineLength:
-  Enabled: false

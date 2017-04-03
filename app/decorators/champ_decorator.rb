@@ -2,9 +2,8 @@ class ChampDecorator < Draper::Decorator
   delegate_all
 
   def value
-    if type_champ == 'checkbox'
-      return object.value == 'on' ? 'Oui' : 'Non'
-    end
+    return object.value == 'on' ? 'Oui' : 'Non' if type_champ == 'checkbox'
+    return JSON.parse(object.value).join(', ')  if type_champ == 'multiple_drop_down_list' && object.value.present?
     object.value
   end
 

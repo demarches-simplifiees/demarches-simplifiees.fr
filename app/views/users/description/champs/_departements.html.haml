@@ -1,1 +1,2 @@
-= render partial: 'users/description/champs/drop_down_template', locals: {values: Champ.departements, champ: champ}
+= select_tag("champs['#{champ.id}']",
+  options_for_select(Champ.departements, selected: champ.object.value))

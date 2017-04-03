@@ -27,7 +27,6 @@ bin/*
 config/initializers/token.rb
 config/initializers/super_admin.rb
 doc/*.svg
-rubocop.html
 config/france_connect.yml
 config/initializers/mailjet.rb
 config/fog_credentials.yml
@@ -35,3 +34,4 @@ uploads/*
 coverage/**/*
 .DS_Store
 .byebug_history
+.env

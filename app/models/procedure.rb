@@ -39,12 +39,14 @@ class Procedure < ActiveRecord::Base
   MAIL_TEMPLATE_TYPES = %w(InitiatedMail ReceivedMail ClosedMail RefusedMail WithoutContinuationMail)
 
   MAIL_TEMPLATE_TYPES.each do |name|
-    has_one "#{name.underscore}".to_sym, class_name: "Mails::#{name}"
+    has_one "#{name.underscore}".to_sym, class_name: "Mails::#{name}", dependent: :destroy
     define_method("#{name.underscore}_with_override") do
       self.send("#{name.underscore}_without_override") || Object.const_get("Mails::#{name}").default
     end
     alias_method_chain "#{name.underscore.to_sym}".to_s, :override
   end
+
+  scope :not_archived, -> { where(archived: false) }
 
   def path
     procedure_path.path unless procedure_path.nil?
@@ -64,10 +66,6 @@ class Procedure < ActiveRecord::Base
 
   def types_de_piece_justificative_ordered
     types_de_piece_justificative.order(:order_place)
-  end
-
-  def self.not_archived id
-    Procedure.where(archived: false).find(id)
   end
 
   def self.active id

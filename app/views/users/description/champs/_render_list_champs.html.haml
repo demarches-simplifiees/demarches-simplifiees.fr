@@ -26,7 +26,7 @@
           - elsif champ.type_champ == 'yes_no'
             = render partial: 'users/description/champs/yes_no', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'drop_down_list'
+          - elsif %w(drop_down_list multiple_drop_down_list).include?(champ.type_champ)
             = render partial: 'users/description/champs/drop_down_list', locals: { champ: champ }
 
           - elsif champ.type_champ == 'pays'
@@ -40,6 +40,8 @@
 
           - elsif champ.type_champ == 'departements'
             = render partial: 'users/description/champs/departements', locals: { champ: champ }
+
+          - elsif champ.type_champ == 'explication'
 
           - else
             %input.form-control{name:"champs['#{ champ.id }']",

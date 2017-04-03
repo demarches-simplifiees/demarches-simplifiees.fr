@@ -86,6 +86,18 @@
               }
             }
           ],
+          "champs_private": [
+            {
+              "value": null,
+              "type_de_champ": {
+                "id": 1,
+                "libelle": "Description privée",
+                "type_champ": "text",
+                "order_place": 0,
+                "description": "description privée"
+              }
+            }
+          ],
           "pieces_justificatives": [
             {
               "url": null,

@@ -12,8 +12,18 @@ class TypesDeChampService
       if param_second[:libelle].empty?
         parameters[attributes].delete(param_first.to_s)
       end
+
+      if param_second['drop_down_list_attributes'] && param_second['drop_down_list_attributes']['value']
+        param_second['drop_down_list_attributes']['value'] = self.clean_value (param_second['drop_down_list_attributes']['value'])
+      end
     end
 
     parameters
+  end
+
+  private
+
+  def self.clean_value value
+    value.split("\r\n").map{ |v| v.strip }.join("\r\n")
   end
 end

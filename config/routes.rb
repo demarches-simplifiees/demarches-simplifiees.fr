@@ -42,9 +42,15 @@ Rails.application.routes.draw do
   get 'admin' => 'admin#index'
   get 'backoffice' => 'backoffice#index'
 
-  resources :administrations, only: [:index, :create]
-  namespace :administrations do
-    resources :stats, only: [:index]
+  authenticate :administration do
+    resources :administrations, only: [:index, :create]
+    namespace :administrations do
+      resources :stats, only: [:index]
+
+      require 'sidekiq/web'
+      require 'sidekiq/cron/web'
+      mount Sidekiq::Web => '/sidekiq'
+    end
   end
 
   namespace :france_connect do
@@ -208,6 +214,4 @@ Rails.application.routes.draw do
   end
 
   apipie
-
-  mount ActionCable.server => '/cable'
 end
