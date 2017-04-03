@@ -5,5 +5,9 @@ FactoryGirl.define do
     type_champ 'text'
     order_place 1
     mandatory false
+
+    trait :checkbox do
+      type_champ 'checkbox'
+    end
   end
 end
