@@ -1,9 +1,56 @@
 @import "card";
 
-.stats {
-  .stat-card {
-    @extend .card;
-    margin: 15px auto;
-    max-width: 1200px;
+$dark-grey: #333333;
+
+$default-space: 15px;
+
+$new-h1-margin-bottom: 4 * $default-space;
+.new-h1 {
+  color: $dark-grey;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: $new-h1-margin-bottom;
+}
+
+$statistiques-padding-top: $default-space * 2;
+.statistiques {
+  width: 1040px;
+  margin: 0 auto;
+  padding-top: $statistiques-padding-top;
+}
+
+.stat-cards {
+  .stat-card:nth-of-type(even) {
+    margin-right: 0px;
   }
+}
+
+$stat-card-margin-bottom: 3 * $default-space;
+.stat-card {
+  @extend .card;
+  margin-bottom: $stat-card-margin-bottom;
+  border-radius: 5px;
+  box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+$stat-card-half-horizontal-spacing: 4 * $default-space;
+.stat-card-half {
+  width: calc((100% - #{$stat-card-half-horizontal-spacing}) / 2);
+  margin-right: 3 * $default-space;
+}
+
+.stat-card-title {
+  color: $dark-grey;
+  margin-top: -2px;
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.chart-container {
+  margin-top: 36px;
+}
+
+.chart {
+  width: 100%;
 }

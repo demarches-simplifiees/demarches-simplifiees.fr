@@ -1,11 +1,23 @@
 = javascript_include_tag 'https://code.highcharts.com/highcharts.js', 'chartkick'
 
-.container
-  .stats
-    .stat-card
-      %h1 Procédures créées
-      = line_chart @procedures_30_days_flow,
+.statistiques
 
-    .stat-card
-      %h1 Dossiers créés
-      = line_chart @dossiers_30_days_flow,
+  %h1.new-h1 Statistiques
+
+  .stat-cards
+
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title.pull-left Procédures
+      .chart-container
+        .chart.flux-procedures-chart
+          = line_chart @procedures_30_days_flow,
+            :colors => ["rgba(61, 149, 236, 1)"]
+
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title.pull-left Dossiers
+      .chart-container
+        .chart.flux-dossiers-chart
+          = line_chart @dossiers_30_days_flow,
+            :colors => ["rgba(61, 149, 236, 1)"]
+
+    .clearfix
