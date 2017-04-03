@@ -1,5 +1,4 @@
-$(document).on('page:load', button_edit_procedure_init);
-$(document).ready(button_edit_procedure_init);
+$(document).on('turbolinks:load', button_edit_procedure_init);
 
 function button_edit_procedure_init(){
     buttons_api_carto();

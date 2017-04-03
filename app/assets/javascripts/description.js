@@ -1,5 +1,4 @@
-$(document).on('page:load', action_type_de_champs);
-$(document).ready(action_type_de_champs);
+$(document).on('turbolinks:load', action_type_de_champs);
 
 
 function action_type_de_champs() {

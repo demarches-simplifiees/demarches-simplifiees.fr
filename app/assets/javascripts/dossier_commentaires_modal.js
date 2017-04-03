@@ -1,5 +1,4 @@
-$(document).on('page:load', init_modal_commentaire);
-$(document).ready(init_modal_commentaire);
+$(document).on('turbolinks:load', init_modal_commentaire);
 
 function init_modal_commentaire() {
     var modal = $("#modalCommentairesDossierParChamp");

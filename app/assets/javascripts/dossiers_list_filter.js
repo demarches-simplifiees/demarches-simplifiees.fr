@@ -1,14 +1,13 @@
-$(document).on('page:load', filters_init);
-$(document).ready(filters_init);
+$(document).on('turbolinks:load', filters_init);
 
 function filters_init() {
-    $('html').click(function(event) { 
+    $('html').click(function(event) {
         var visible_filter = $('.filter_framed:visible')
         if(visible_filter.length) {
           if (!$(event.target).closest('.filter_framed').is(":visible")) {
             visible_filter.hide();
           }
-        }        
+        }
     });
 
     $(".filter").on('click', function (event) {

@@ -33,8 +33,7 @@
 //= require typeahead.bundle
 //= require select2
 
-$(document).on('page:load', application_init);
-$(document).ready(application_init);
+$(document).on('turbolinks:load', application_init);
 
 
 function application_init(){
@@ -55,4 +54,3 @@ function scroll_to() {
         return false;
     });
 }
-

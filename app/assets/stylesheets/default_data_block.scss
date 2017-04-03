@@ -1,3 +1,5 @@
+@import "variables";
+
 .default_data_block {
   font-family: Arial;
 
@@ -53,7 +55,7 @@
       color: #FFFFFF;
     }
     .action:hover {
-      color: #F2F6FA;
+      color: $light-blue;
     }
     .count {
       font-size: 16px;

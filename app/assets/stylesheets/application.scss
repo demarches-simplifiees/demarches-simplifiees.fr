@@ -27,7 +27,7 @@
 @import "bootstrap";
 
 body {
-  background-color: #F2F6FA;
+  background-color: $light-blue;
 }
 
 html, body {
@@ -63,7 +63,7 @@ form {
 }
 
 #footer {
-  background-color: #F2F6FA;
+  background-color: $light-blue;
   text-align: center;
   padding: 0;
   a, p {
