@@ -1,8 +1,8 @@
 class StatsController < ApplicationController
 
   def index
-    procedures = Procedure
-    dossiers = Dossier
+    procedures = Procedure.where(:published => true)
+    dossiers = Dossier.where.not(:state => :draft)
 
     @procedures_30_days_flow = thirty_days_flow_hash(procedures)
     @dossiers_30_days_flow = thirty_days_flow_hash(dossiers)
