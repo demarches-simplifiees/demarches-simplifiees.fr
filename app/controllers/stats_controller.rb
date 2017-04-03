@@ -1,14 +1,23 @@
 class StatsController < ApplicationController
 
   def index
-    procedures = Procedure.where(:created_at => 30.days.ago..Time.now).group("date_trunc('day', created_at)").count
-    dossiers = Dossier.where(:created_at => 30.days.ago..Time.now).group("date_trunc('day', created_at)").count
+    procedures = Procedure
+    dossiers = Dossier
 
-    @procedures_30_days_flow = clean_hash(procedures)
-    @dossiers_30_days_flow = clean_hash(dossiers)
+    @procedures_30_days_flow = thirty_days_flow_hash(procedures)
+    @dossiers_30_days_flow = thirty_days_flow_hash(dossiers)
   end
 
   private
+
+  def thirty_days_flow_hash(association)
+    thirty_days_flow_hash = association
+      .where(:created_at => 30.days.ago..Time.now)
+      .group("date_trunc('day', created_at)")
+      .count
+
+    clean_hash(thirty_days_flow_hash)
+  end
 
   def clean_hash h
     h.keys.each{ |key| h[key.to_date] = h[key]; h.delete(key) }
