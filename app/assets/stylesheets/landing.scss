@@ -172,3 +172,24 @@ $number-count: 3;
   font-weight: bold;
   font-size: 20px;
 }
+
+.users {
+  @extend %horizontal-list;
+}
+
+$image-width: 170px;
+$images-total-width: $image-width * 5;
+$images-count: 5;
+
+.user {
+  @extend %horizontal-list-item;
+  margin-right: calc((#{$page-width} - (#{$images-total-width}))/ (#{$images-count} - 1));
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.user-image {
+  width: $image-width;
+}
