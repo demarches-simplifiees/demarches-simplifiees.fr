@@ -39,7 +39,7 @@ Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les c
     rake db:create db:schema:load db:migrate RAILS_ENV=test
 
 
-## Exécution des tests (Rspec)
+## Exécution des tests (RSpec)
 
 Pour éxécuter les tests de l'application, plusieurs possibilités :
 
