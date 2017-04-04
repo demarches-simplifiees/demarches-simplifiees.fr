@@ -7,7 +7,6 @@ development:
   username: tps_development
   password: tps_development
 
-
 test:
   adapter: postgresql
   encoding: unicode
