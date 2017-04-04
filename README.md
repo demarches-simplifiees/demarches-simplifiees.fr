@@ -33,7 +33,6 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
     > create user tps_test with password 'tps_test' superuser;
     > \q
 
-
 Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les commandes suivantes :
 
     rake db:create db:schema:load db:migrate
