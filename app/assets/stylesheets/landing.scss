@@ -143,3 +143,32 @@ $quote-count: 2;
 .quote-author-name {
   font-weight: bold;
 }
+
+.numbers-panel {
+  background-color: $light-grey;
+}
+
+.numbers {
+  @extend %horizontal-list;
+}
+
+$number-width: 320px;
+$number-count: 3;
+
+.number {
+  @extend %horizontal-list-item;
+  width: $number-width;
+  margin-right: calc((#{$page-width} - (#{$number-width} * #{$number-count}))/ (#{$number-count} - 1));
+  text-align: center;
+}
+
+.number-value {
+  color: $blue;
+  font-weight: bold;
+  font-size: 36px;
+}
+
+.number-label {
+  font-weight: bold;
+  font-size: 20px;
+}

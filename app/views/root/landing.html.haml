@@ -74,3 +74,30 @@
             %br
             Chef de bureau, DRIEA Ile-de-France
           .clearfix
+
+  - cache "numbers-panel", :expires_in => 3.hours do
+    .landing-panel.numbers-panel
+      .landing-panel-inner-content
+        %h2.landing-panel-title TPS en chiffres
+        %ul.numbers
+          %li.number
+            .number-value
+              = number_with_delimiter(Procedure.where(:published => true).count, :locale => :fr)
+            .number-label<
+              procédures
+              %br<>
+              dématérialisées
+          %li.number
+            .number-value
+              = number_with_delimiter(Dossier.where.not(:state => :draft).count, :locale => :fr)
+            .number-label<
+              dossiers
+              %br<>
+              déposés
+          %li.number
+            .number-value
+              = "#{number_with_delimiter(50, :locale => :fr)} %"
+            .number-label<
+              de réduction
+              %br<>
+              des délais de traitement
