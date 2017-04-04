@@ -43,7 +43,7 @@ http_interactions:
         "label": "50 Avenue des Champs \u00c9lys\u00e9es 75008 Paris", "city": "Paris",
         "housenumber": "50", "street": "Avenue des Champs \u00c9lys\u00e9es"}, "type":
         "Feature"}]}'
-    http_version: 
+    http_version:
   recorded_at: Tue, 03 Jan 2017 13:00:54 GMT
 - request:
     method: get
@@ -88,6 +88,6 @@ http_interactions:
         "label": "50 Avenue des Champs \u00c9lys\u00e9es 75008 Paris", "city": "Paris",
         "housenumber": "50", "street": "Avenue des Champs \u00c9lys\u00e9es"}, "type":
         "Feature"}]}'
-    http_version: 
+    http_version:
   recorded_at: Tue, 03 Jan 2017 13:00:55 GMT
 recorded_with: VCR 3.0.3
