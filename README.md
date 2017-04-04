@@ -29,6 +29,7 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
     su - postgres
     psql
     > create user tps with password 'lol' superuser;
+    > create user tps_test with password 'tps_test' superuser;
     > \q
 
 
