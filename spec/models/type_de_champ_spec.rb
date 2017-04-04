@@ -6,4 +6,3 @@ describe TypeDeChamp do
 
   it_should_behave_like "type_de_champ_spec"
 end
-
