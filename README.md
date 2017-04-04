@@ -5,12 +5,6 @@
 TéléProcédure Simplifiée, ou TPS pour les intimes, est une plateforme 100% web et 0% email, conçue afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100% démat' à l'horizon 2018 pour les démarches administratives.
 
 
-## Technologies utilisées
-
-Ruby  : 2.3.1
-Rails : 5.0.0.1
-
-
 ## Initialisation de l'environnement de développement
 
 Afin d'initialiser l'environnement de développement, éxécutez la commande suivante :
