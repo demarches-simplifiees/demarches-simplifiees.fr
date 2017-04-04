@@ -1,4 +1,3 @@
-
 development:
   adapter: postgresql
   encoding: unicode

@@ -1,4 +1,3 @@
-
 class TypeDePieceJustificativeDecorator < Draper::Decorator
   delegate_all
   def button_up params

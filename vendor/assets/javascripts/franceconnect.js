@@ -147,4 +147,3 @@ var franceConnectKit = {};
         }
     }, false);
 })(this);
-

@@ -88,6 +88,6 @@ http_interactions:
         MsC0IZpxkADm3tm4bNnpxecB+3J2Ef3+/N3FkL1DrTrQ4K5WqIy667x3ahI8
         qCS5omo3ShFsugfGRc9Uf2pgQWVa90f7eBvTqToJNRraltKlBsbyUYwGlx3I
         EAhlg5VDW2QyJPYzKNZKRjtiOlVgqzz+4AgY6e7UtgdoZtf/AIfUb6aECAAA
-    http_version: 
+    http_version:
   recorded_at: Thu, 15 Dec 2016 15:48:21 GMT
 recorded_with: VCR 3.0.3

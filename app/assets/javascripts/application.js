@@ -37,20 +37,20 @@ $(document).on('turbolinks:load', application_init);
 
 
 function application_init(){
-    tooltip_init();
-    scroll_to();
+  tooltip_init();
+  scroll_to();
 }
 
 function tooltip_init() {
-    $('.action_button[data-toggle="tooltip"]').tooltip({delay: { "show": 100, "hide": 100 }});
-    $('[data-toggle="tooltip"]').tooltip({delay: { "show": 800, "hide": 100 }});
+  $('.action_button[data-toggle="tooltip"]').tooltip({delay: { "show": 100, "hide": 100 }});
+  $('[data-toggle="tooltip"]').tooltip({delay: { "show": 800, "hide": 100 }});
 }
 
 function scroll_to() {
-    $('.js-scrollTo').on('click', function () { // Au clic sur un élément
-        var page = $(this).attr('cible'); // Page cible
-        var speed = 600; // Durée de l'animation (en ms)
-        $('html, body').animate({scrollTop: $(page).offset().top - 200}, speed); // Go
-        return false;
-    });
+  $('.js-scrollTo').on('click', function () { // Au clic sur un élément
+    var page = $(this).attr('cible'); // Page cible
+    var speed = 600; // Durée de l'animation (en ms)
+    $('html, body').animate({scrollTop: $(page).offset().top - 200}, speed); // Go
+    return false;
+  });
 }
