@@ -1,4 +1,4 @@
-# TPS - TéléProcédure Simplifié
+# TPS - TéléProcédure Simplifiée
 
 ## Context
 
@@ -25,7 +25,7 @@ Afin d'initialiser l'environnement de développement, éxécutez la commande sui
 
 ## Création de la base de données
 
-Les informations nécessaire à l'initialisation de la base doivent être pré-configurer à la main grâce à la procédure suivante :
+Les informations nécessaire à l'initialisation de la base doivent être pré-configurées à la main grâce à la procédure suivante :
 
     su - postgres
     psql
@@ -41,7 +41,7 @@ Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les c
 
 ## Exécution des tests (RSpec)
 
-Pour éxécuter les tests de l'application, plusieurs possibilités :
+Pour exécuter les tests de l'application, plusieurs possibilités :
 
 - Lancer tous les tests
 
@@ -62,7 +62,7 @@ Pour éxécuter les tests de l'application, plusieurs possibilités :
 
 - Linter les fichiers HAML : `bundle exec haml-lint app/views/`
 
-## Regénérer les binstubs
+## Régénérer les binstubs
 
     bundle binstub railties --force
     rake rails:update:bin
