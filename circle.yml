@@ -1,6 +1,7 @@
 database:
   override:
-    - bundle exec rake db:drop db:create db:migrate RAILS_ENV=test
+    - cp config/database.yml.ci config/database.yml
+    - bundle exec rake db:create db:schema:load db:migrate RAILS_ENV=test
 
 deployment:
   staging:
