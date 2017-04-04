@@ -122,3 +122,13 @@
         %li.user
           %a{ :href => "http://www.driea.ile-de-france.developpement-durable.gouv.fr/", :target => "_blank " }
             %img.user-image{ :src => image_url("landing/users/driea-idf.jpg") }
+
+  .landing-panel.cta-panel
+    .landing-panel-inner-content
+      = link_to "Demander une démo",
+        "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS",
+        :class => "cta-panel-button pull-right"
+      %h1.cta-panel-title.pull-left Commencez à dématerialiser vos démarches
+      %p.cta-panel-explanation.pull-left Nous vous accompagnons dans la prise en main de l’outil
+      .clearfix
+
