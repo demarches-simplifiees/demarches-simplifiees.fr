@@ -108,3 +108,38 @@ $features-count: 3;
   margin: 0 auto;
   margin-bottom: 24px;
 }
+
+.quotes {
+  @extend %horizontal-list;
+}
+
+$quote-width: 500px;
+$quote-count: 2;
+
+.quote {
+  @extend %horizontal-list-item;
+  width: $quote-width;
+  margin-right: calc((#{$page-width} - (#{$quote-width} * #{$quote-count}))/ (#{$quote-count} - 1));
+  background-color: #FFFFFF;
+  box-shadow: 0 4px 16px 0 rgba(153, 153, 153, 0.2);
+  padding: 24px;
+}
+
+.quote-quotation-mark {
+  margin-top: 12px;
+}
+
+.quote-content {
+  font-size: 18px;
+  width: 388px;
+  margin-bottom: 24px;
+}
+
+.quote-author {
+  font-size: 14px;
+  margin-left: 64px;
+}
+
+.quote-author-name {
+  font-weight: bold;
+}
