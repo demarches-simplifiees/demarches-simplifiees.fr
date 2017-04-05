@@ -15,8 +15,8 @@ class Users::CarteController < UsersController
   def save
     dossier = current_user_dossier
 
-    dossier.quartier_prioritaires.map(&:destroy)
-    dossier.cadastres.map(&:destroy)
+    dossier.quartier_prioritaires.each(&:destroy)
+    dossier.cadastres.each(&:destroy)
 
     unless params[:json_latlngs].blank?
       ModuleApiCartoService.save_qp! dossier, params[:json_latlngs]
