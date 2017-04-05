@@ -512,14 +512,6 @@ describe Dossier do
     it { expect(subject[:state]).to be_a(String) }
   end
 
-  describe '#convert_specific_array_values_to_string(array_to_convert)' do
-    let(:procedure) { create(:procedure) }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
-    let(:dossier_data_with_champs) { dossier.data_with_champs }
-
-    subject { dossier.convert_specific_hash_values_to_string(dossier_data_with_champs) }
-  end
-
   describe '#export_entreprise_data' do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
