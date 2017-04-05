@@ -130,4 +130,18 @@ class Procedure < ActiveRecord::Base
     self.dossiers.where.not(state: :draft).size
   end
 
+  def generate_export
+    exportable_dossiers = dossiers.downloadable
+
+    headers = exportable_dossiers.any? ? exportable_dossiers.first.export_headers : []
+    data = exportable_dossiers.map do |dossier|
+      dossier.convert_specific_array_values_to_string(dossier.data_with_champs)
+    end
+
+    {
+      headers: headers,
+      data: data
+    }
+  end
+
 end

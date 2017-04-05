@@ -603,7 +603,6 @@ describe Dossier do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow], initiated_at: date1, received_at: date2, processed_at: date3) }
 
     describe '#export_headers' do
-
       subject { dossier.export_headers }
 
       it { expect(subject).to include(:description) }
@@ -624,27 +623,6 @@ describe Dossier do
       it { expect(subject[8]).to eq(date3) }
       it { expect(subject[9]).to eq(dossier.followers_gestionnaires_emails) }
       it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
-    end
-
-    describe '.export_full_generation' do
-
-      context 'when there are no dossiers' do
-        subject { Dossier.export_full_generation(Dossier.none) }
-
-        it { expect(subject[:data]).to eq([]) }
-        it { expect(subject[:headers]).to eq([]) }
-      end
-
-      context 'when there are some dossiers' do
-        let!(:dossier){ create(:dossier) }
-        let!(:dossier2){ create(:dossier) }
-
-        subject { Dossier.export_full_generation(Dossier.all) }
-
-        it { expect(subject[:data].size).to eq(2) }
-        it { expect(subject[:headers]).to eq(dossier.export_headers) }
-      end
-
     end
   end
 
