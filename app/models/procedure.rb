@@ -135,7 +135,7 @@ class Procedure < ActiveRecord::Base
 
     headers = exportable_dossiers.any? ? exportable_dossiers.first.export_headers : []
     data = exportable_dossiers.map do |dossier|
-      dossier.convert_specific_array_values_to_string(dossier.data_with_champs)
+      dossier.full_data_strings_array
     end
 
     {

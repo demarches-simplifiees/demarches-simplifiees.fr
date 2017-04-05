@@ -216,9 +216,9 @@ class Dossier < ActiveRecord::Base
     return hash
   end
 
-  def convert_specific_array_values_to_string(array_to_convert)
+  def full_data_strings_array
     array = []
-    array_to_convert.each do |value|
+    data_with_champs.each do |value|
       value = value.to_s if !value.kind_of?(Time) && !value.nil?
       array << value
     end
