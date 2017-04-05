@@ -31,7 +31,7 @@
             %label
               %h4
                 Date de naissance *
-              = ff.text_field :birthdate, {class: 'form-control', 'data-provide' => 'datepicker', 'data-date-format' => 'dd/mm/yyyy'}
+              = ff.date_field :birthdate, {class: 'form-control', placeholder: 'jj/mm/aaaa'}
 
         %p
           %label{ style:'font-weight:normal' }

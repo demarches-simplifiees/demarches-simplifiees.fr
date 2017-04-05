@@ -85,7 +85,6 @@ set :shared_paths, [
                      "config/initializers/super_admin.rb",
                      "config/unicorn.rb",
                      "config/initializers/raven.rb",
-                     "config/locales/dynamics/fr.yml",
                      'config/france_connect.yml',
                      'config/initializers/mailjet.rb',
                      'config/initializers/storage_url.rb',

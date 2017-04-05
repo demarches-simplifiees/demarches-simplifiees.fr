@@ -1,3 +1,5 @@
+@import "variables";
+
 #header {
   top: 0;
   left: 0;
@@ -185,7 +187,7 @@
   }
 }
 .button-navbar-action:hover {
-  color: #F2F6FA;
+  color: $light-blue;
 }
 
 .button_navbar:hover, .button-navbar-action:hover {

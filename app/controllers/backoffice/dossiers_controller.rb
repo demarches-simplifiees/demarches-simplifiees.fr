@@ -39,16 +39,13 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   def download_dossiers_tps
-    if procedure = Procedure.find_by(id: params[:procedure_id])
-      dossiers = dossiers_list_facade(param_liste).dossiers_to_display
-      respond_with Dossier.export_full_generation(dossiers, request.format) unless dossiers.empty?
-    else
-      dossiers = dossiers_list_facade(param_liste).dossiers_to_display
-      respond_to do |format|
-        format.xlsx { render xlsx: dossiers }
-        format.ods { render ods: dossiers }
-        format.csv { render csv: dossiers }
-      end
+    procedure = Procedure.find_by(id: params[:procedure_id])
+    export = procedure.generate_export
+
+    respond_to do |format|
+      format.csv { send_data(SpreadsheetArchitect.to_csv(data: export[:data], headers: export[:headers]), filename: 'dossiers.csv') }
+      format.xlsx { send_data(SpreadsheetArchitect.to_xlsx(data: export[:data], headers: export[:headers]), filename: 'dossiers.xlsx') }
+      format.ods { send_data(SpreadsheetArchitect.to_ods(data: export[:data], headers: export[:headers]), filename: 'dossiers.ods') }
     end
   end
 

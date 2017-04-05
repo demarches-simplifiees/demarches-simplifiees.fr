@@ -603,7 +603,6 @@ describe Dossier do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow], initiated_at: date1, received_at: date2, processed_at: date3) }
 
     describe '#export_headers' do
-
       subject { dossier.export_headers }
 
       it { expect(subject).to include(:description) }
@@ -611,7 +610,6 @@ describe Dossier do
     end
 
     describe '#data_with_champs' do
-
       subject { dossier.data_with_champs }
 
       it { expect(subject[0]).to be_a_kind_of(Integer) }
@@ -669,7 +667,6 @@ describe Dossier do
     it { expect(subject[:entreprise_nom]).to be_nil }
     it { expect(subject[:entreprise_prenom]).to be_nil }
   end
-
 
   describe '#Dossier.to_xlsx' do
     let!(:procedure) { create(:procedure) }
@@ -965,5 +962,18 @@ describe Dossier do
       it_behaves_like 'dossier is processed', 'without_continuation'
     end
 
+  end
+
+  describe '.downloadable' do
+    let(:procedure) { create(:procedure) }
+    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :draft) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :received) }
+
+    subject { procedure.dossiers.downloadable }
+
+    it { is_expected.not_to include(dossier)}
+    it { is_expected.to include(dossier2)}
+    it { is_expected.to include(dossier3)}
   end
 end

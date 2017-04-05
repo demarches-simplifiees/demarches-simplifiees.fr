@@ -1,7 +1,5 @@
-$(document).on('page:load', franceconnect_kit);
-$(document).ready(franceconnect_kit);
+$(document).on('turbolinks:load', franceconnect_kit);
 
 function franceconnect_kit() {
-    franceConnectKit.init()
+  franceConnectKit.init()
 }
-

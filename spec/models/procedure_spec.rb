@@ -256,4 +256,29 @@ describe Procedure do
 
     it { is_expected.to eq 2 }
   end
+
+  describe '#generate_export' do
+    let(:procedure) { create :procedure }
+    subject { procedure.generate_export }
+
+    context 'when there are no dossiers' do
+      it { expect(subject[:data]).to eq([]) }
+      it { expect(subject[:headers]).to eq([]) }
+    end
+
+    context 'when there are some dossiers' do
+      let!(:dossier){ create(:dossier, procedure: procedure, state: 'initiated') }
+      let!(:dossier2){ create(:dossier, procedure: procedure, state: 'closed') }
+
+      it { expect(subject[:data].size).to eq(2) }
+      it { expect(subject[:headers]).to eq(dossier.export_headers) }
+    end
+
+    context 'when there is a draft dossier' do
+      let!(:dossier_not_exportable){ create(:dossier, procedure: procedure, state: 'draft') }
+
+      it { expect(subject[:data]).to eq([]) }
+      it { expect(subject[:headers]).to eq([]) }
+    end
+  end
 end

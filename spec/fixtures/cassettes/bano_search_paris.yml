@@ -58,6 +58,6 @@ http_interactions:
         "Bourgueil", "context": "37, Indre-et-Loire, Centre Val-de-Loire", "score":
         0.8235454545454545, "label": "Paris Buton 37140 Bourgueil", "id": "37031_X027_0a5e7a",
         "type": "locality"}, "type": "Feature"}]}'
-    http_version: 
+    http_version:
   recorded_at: Fri, 16 Dec 2016 16:43:34 GMT
 recorded_with: VCR 3.0.3

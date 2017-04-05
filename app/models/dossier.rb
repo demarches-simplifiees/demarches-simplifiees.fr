@@ -201,6 +201,8 @@ class Dossier < ActiveRecord::Base
 
   scope :archived, -> { where(archived: true) }
 
+  scope :downloadable, -> { all_state }
+
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
   end
@@ -259,23 +261,6 @@ class Dossier < ActiveRecord::Base
     headers += self.procedure.types_de_champ.order('id ASC').map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
     headers += self.export_entreprise_data.keys
     return headers
-  end
-
-  def self.export_full_generation(dossiers, format)
-    if dossiers && !dossiers.empty?
-      data = []
-      headers = dossiers.first.export_headers
-      dossiers.each do |dossier|
-        data << dossier.convert_specific_array_values_to_string(dossier.data_with_champs)
-      end
-      if ["csv"].include?(format)
-        return SpreadsheetArchitect.to_csv(data: data, headers: headers)
-      elsif ["xlsx"].include?(format)
-        return SpreadsheetArchitect.to_xlsx(data: data, headers: headers)
-      elsif ["ods"].include?(format)
-        return SpreadsheetArchitect.to_ods(data: data, headers: headers)
-      end
-    end
   end
 
   def followers_gestionnaires_emails

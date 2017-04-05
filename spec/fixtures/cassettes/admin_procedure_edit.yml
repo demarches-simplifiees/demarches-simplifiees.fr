@@ -1339,6 +1339,6 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-    http_version: 
+    http_version:
   recorded_at: Wed, 29 Jun 2016 14:09:51 GMT
 recorded_with: VCR 3.0.1
