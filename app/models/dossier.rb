@@ -263,23 +263,6 @@ class Dossier < ActiveRecord::Base
     return headers
   end
 
-  def self.export_full_generation(dossiers)
-    data = []
-    headers = []
-
-    if dossiers && dossiers.any?
-      headers = dossiers.first.export_headers
-      dossiers.each do |dossier|
-        data << dossier.convert_specific_array_values_to_string(dossier.data_with_champs)
-      end
-    end
-
-    return {
-      data: data,
-      headers: headers
-    }
-  end
-
   def followers_gestionnaires_emails
     follows.includes(:gestionnaire).map { |f| f.gestionnaire }.pluck(:email).join(' ')
   end

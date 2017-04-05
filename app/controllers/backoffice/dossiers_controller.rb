@@ -40,7 +40,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def download_dossiers_tps
     procedure = Procedure.find_by(id: params[:procedure_id])
-    export = Dossier.export_full_generation(procedure.dossiers.downloadable)
+    export = procedure.generate_export
 
     respond_to do |format|
       format.csv { send_data(SpreadsheetArchitect.to_csv(data: export[:data], headers: export[:headers]), filename: 'dossiers.csv') }
