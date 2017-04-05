@@ -24,7 +24,8 @@ set :port, 2200
 
 set :deploy_to, '/var/www/tps_dev'
 
-if ENV["to"] == "staging"
+case ENV["to"]
+when "staging"
   if ENV['branch'].nil?
     set :branch, 'staging'
   else
@@ -33,7 +34,7 @@ if ENV["to"] == "staging"
   set :deploy_to, '/var/www/tps_dev'
   set :user, 'tps_dev' # Username in the server to SSH to.
   appname = 'tps_dev'
-elsif ENV["to"] == "production"
+when "production"
   if ENV['branch'].nil?
     set :branch, 'master'
   else

@@ -111,47 +111,49 @@ class Dossier < ActiveRecord::Base
       fail 'role is not valid'
     end
 
-    if role == 'user'
+    case role
+    when 'user'
       case action
-        when 'initiate'
-          if draft?
-            initiated!
-          end
-        when 'update'
-          if replied?
-            updated!
-          end
-        when 'comment'
-          if replied?
-            updated!
-          end
+      when 'initiate'
+        if draft?
+          initiated!
+        end
+      when 'update'
+        if replied?
+          updated!
+        end
+      when 'comment'
+        if replied?
+          updated!
+        end
       end
-    elsif role == 'gestionnaire'
+    when 'gestionnaire'
       case action
-        when 'comment'
-          if updated?
-            replied!
-          elsif initiated?
-            replied!
-          end
-        when 'follow'
-          if initiated?
-            updated!
-          end
-        when 'close'
-          if received?
-            closed!
-          end
-        when 'refuse'
-          if received?
-            refused!
-          end
-        when 'without_continuation'
-          if received?
-            without_continuation!
-          end
+      when 'comment'
+        if updated?
+          replied!
+        elsif initiated?
+          replied!
+        end
+      when 'follow'
+        if initiated?
+          updated!
+        end
+      when 'close'
+        if received?
+          closed!
+        end
+      when 'refuse'
+        if received?
+          refused!
+        end
+      when 'without_continuation'
+        if received?
+          without_continuation!
+        end
       end
     end
+
     state
   end
 
