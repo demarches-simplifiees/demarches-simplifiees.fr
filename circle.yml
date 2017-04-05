@@ -1,3 +1,9 @@
 database:
   override:
     - bundle exec rake db:drop db:create db:migrate RAILS_ENV=test
+
+deployment:
+  staging:
+    branch: staging
+    commands:
+      - bundle exec rake deploy_ha
