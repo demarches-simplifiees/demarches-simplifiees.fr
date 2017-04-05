@@ -217,12 +217,9 @@ class Dossier < ActiveRecord::Base
   end
 
   def full_data_strings_array
-    array = []
-    data_with_champs.each do |value|
-      value = value.to_s if !value.kind_of?(Time) && !value.nil?
-      array << value
+    data_with_champs.map do |value|
+      value.nil? || value.kind_of?(Time) ? value : value.to_s
     end
-    return array
   end
 
   def export_entreprise_data
