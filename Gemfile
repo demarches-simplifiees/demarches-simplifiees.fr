@@ -123,6 +123,7 @@ group :development do
   gem 'web-console'
   gem 'rack-handlers'
   gem 'xray-rails'
+  gem 'haml-lint'
 end
 
 group :development, :test do
