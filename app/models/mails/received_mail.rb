@@ -3,7 +3,7 @@ module Mails
     include MailTemplateConcern
 
     DISPLAYED_NAME = 'Accusé de passage en instruction'
-    DEFAULT_OBJECT = 'Votre dossier TPS Nº--numero_dossier-- va être instruit'
+    DEFAULT_OBJECT = 'Votre dossier TPS nº--numero_dossier-- va être instruit'
 
   end
 end
