@@ -15,13 +15,24 @@ feature 'drawing a zone with freedraw' do
       expect(page).to have_css('#login_user')
     end
 
-    context 'when he enter login information' do
+    scenario 'he logs in and he is redirected to carte page', vcr: { cassette_name: 'drawing_a_zone_with_freedraw_redirected_to_carte_page' } do
+      within('#new_user') do
+        page.find_by_id('user_email').set user.email
+        page.find_by_id('user_password').set user.password
+        page.click_on 'Se connecter'
+      end
+      expect(page).to have_css('.content #map')
+    end
+  end
+
+  context 'when user is logged in' do
+    before do
+      login_as user, scope: :user
+    end
+
+    context 'when he is visiting the map page' do
       before do
-        within('#new_user') do
-          page.find_by_id('user_email').set user.email
-          page.find_by_id('user_password').set user.password
-          page.click_on 'Se connecter'
-        end
+        visit users_dossier_carte_path dossier_id: dossier.id
       end
 
       context 'when procedure have api carto activated' do
