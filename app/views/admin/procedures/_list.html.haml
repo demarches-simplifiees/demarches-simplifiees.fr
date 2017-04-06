@@ -4,9 +4,9 @@
       %th#ID= smart_listing.sortable 'ID', 'id'
       %th#libelle= smart_listing.sortable 'Libellé', 'libelle'
       - if @active_class
-        %th#lien Lien
+        %th Lien
       %th#created_at= smart_listing.sortable 'Date création', 'created_at'
-      %th#lien Actions
+      %th Actions
 
     - @procedures.each do |procedure|
       - procedure = procedure.decorate
