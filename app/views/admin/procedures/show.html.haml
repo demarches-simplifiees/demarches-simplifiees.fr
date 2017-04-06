@@ -29,7 +29,7 @@
       = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style:'float: right; margin-top: 10px' do
         %button#archive.btn.btn-small.btn-default.text-info{type: :button}
           %i.fa.fa-eraser
-          = 'Archiver'
+          Archiver
         #confirm
           %button#valid.btn.btn-small.btn-success{type: :submit}
             %i.fa.fa-check

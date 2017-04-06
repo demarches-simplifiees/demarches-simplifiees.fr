@@ -1,13 +1,13 @@
 %div#first-block
   .dossiers-en-cours
     .count= @facade_data_view.total_dossier_follow
-    .text= "SUIVIS"
+    .text SUIVIS
   .nouveaux-dossiers
     .count= @facade_data_view.total_new_dossier
-    .text= "NOUVEAUX"
+    .text NOUVEAUX
   .nouvelles-notifications
     .count= @facade_data_view.dossiers_with_unread_notifications.count
-    .text= "MODIFIÉS"
+    .text MODIFIÉS
 
 %div#action-block
 
@@ -34,7 +34,7 @@
               = procedure[:unread_notifications]
   #notifications_list.hidden
     - if @facade_data_view.dossiers_with_unread_notifications.empty?
-      .no-notification= "Aucune notification pour le moment."
+      .no-notification Aucune notification pour le moment.
     - else
       - @facade_data_view.dossiers_with_unread_notifications.each do |dossier|
         = link_to backoffice_dossier_path(dossier.id) do

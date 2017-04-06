@@ -11,19 +11,19 @@
   #procedure_list
     %a{:href => "#{url_for :admin_procedures_draft}", id: "draft-procedures"}
       .procedure_list_element{class: @draft_class}
-        = "Brouillons"
+        Brouillons
         .badge.progress-bar-default
           = current_administrateur.procedures.where(published: false, archived: false).count
 
     %a{:href => "#{url_for :admin_procedures}", id: "active-procedures"}
       .procedure_list_element{class: @active_class}
-        = "Actives"
+        Actives
         .badge.progress-bar-success
           = current_administrateur.procedures.where(published: true, archived: false).count
 
     %a{:href => "#{url_for :admin_procedures_archived}", id: "archived-procedures"}
       .procedure_list_element{class: @archived_class}
-        = "Archivées"
+        Archivées
         .badge.progress-bar-purple
           = current_administrateur.procedures.where(archived: true).count
 

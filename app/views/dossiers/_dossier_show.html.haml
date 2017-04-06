@@ -10,7 +10,7 @@
         - if !@current_gestionnaire && ["draft", "updated", "replied", "initiated"].include?(@facade.dossier.state)
           %a#add_siret.action{href: users_dossier_add_siret_path(dossier_id: @facade.dossier.id)}
             .col-lg-4.col-md-4.col-sm-4.col-xs-4.action
-              = "Renseigner un SIRET"
+              Renseigner un SIRET
 
 - unless @facade.entreprise.nil?
   .default_data_block
