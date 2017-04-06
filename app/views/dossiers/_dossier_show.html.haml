@@ -2,48 +2,48 @@
 
 - if @facade.procedure.individual_with_siret
   .default_data_block
-    %div.row.show-block.infos
-      %div.header
-        %div.col-xs-8.title-no-expanse
-          %div.carret-right
+    .row.show-block.infos
+      .header
+        .col-xs-8.title-no-expanse
+          .carret-right
           INFORMATIONS DU DEMANDEUR
         - if !@current_gestionnaire && ["draft", "updated", "replied", "initiated"].include?(@facade.dossier.state)
           %a#add_siret.action{href: users_dossier_add_siret_path(dossier_id: @facade.dossier.id)}
-            %div.col-lg-4.col-md-4.col-sm-4.col-xs-4.action
+            .col-lg-4.col-md-4.col-sm-4.col-xs-4.action
               = "Renseigner un SIRET"
 
 - unless @facade.entreprise.nil?
   .default_data_block
-    %div.row.show-block.infos#infos_entreprise
-      %div.header
-        %div.col-xs-12.title
-          %div.carret-right
-          %div.carret-down
+    .row.show-block.infos#infos_entreprise
+      .header
+        .col-xs-12.title
+          .carret-right
+          .carret-down
           INFORMATIONS DU DEMANDEUR
-      %div.body.display-block-on-print
+      .body.display-block-on-print
         = render partial: '/dossiers/infos_entreprise'
 
 .default_data_block.default_visible
-  %div.row.show-block.infos#infos_dossier
-    %div.header
-      %div.col-xs-10.title
-        %div.carret-right
-        %div.carret-down
+  .row.show-block.infos#infos_dossier
+    .header
+      .col-xs-10.title
+        .carret-right
+        .carret-down
         CONSTRUCTION DU DOSSIER
       = render partial: '/dossiers/edit_dossier'
-    %div.body.display-block-on-print
+    .body.display-block-on-print
       = render partial: '/dossiers/infos_dossier'
 
 - if @facade.dossier.procedure.module_api_carto.use_api_carto
   .default_data_block.default_visible.no-page-break-inside
-    %div.row.show-block#carto
-      %div.header
-        %div.col-xs-10.title
-          %div.carret-right
-          %div.carret-down
+    .row.show-block#carto
+      .header
+        .col-xs-10.title
+          .carret-right
+          .carret-down
           CARTOGRAPHIE
         = render partial: '/dossiers/edit_carto'
-      %div.body.display-block-on-print
+      .body.display-block-on-print
         %input{id: 'json_latlngs',          type: 'hidden', value: "#{@facade.dossier.json_latlngs}", name: 'json_latlngs'}
         %input{id: 'quartier_prioritaires', type: 'hidden', value: "#{@facade.dossier.quartier_prioritaires.to_json}"}
         %input{id: 'cadastres',             type: 'hidden', value: "#{@facade.dossier.cadastres.to_json}"}
@@ -54,14 +54,14 @@
 
 - if @current_gestionnaire && gestionnaire_signed_in? && @champs_private.count > 0
   .default_data_block.default_visible
-    %div.row.show-block#private-fields
-      %div.header
-        %div.col-xs-10.title
-          %div.carret-right
-          %div.carret-down
+    .row.show-block#private-fields
+      .header
+        .col-xs-10.title
+          .carret-right
+          .carret-down
           = "formulaire privé".upcase
-        %div.col-xs-2.count
+        .col-xs-2.count
           - private_fields_count = @champs_private.count
           = (private_fields_count == 1) ? "1 champ" : "#{private_fields_count} champs"
-      %div.body
+      .body
         = render partial: '/dossiers/infos_private_fields'

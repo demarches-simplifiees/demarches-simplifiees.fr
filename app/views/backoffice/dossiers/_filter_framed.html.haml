@@ -1,4 +1,4 @@
-%div.filter_framed.panel.panel-primary{id: "#{filter_framed_id}", style:'width: 300px; height: 100px; position: absolute; top: 0; left: 0; display: none'}
+.filter_framed.panel.panel-primary{id: "#{filter_framed_id}", style:'width: 300px; height: 100px; position: absolute; top: 0; left: 0; display: none'}
   .panel-heading
     = preference.libelle
 
@@ -6,5 +6,5 @@
     %input.form-control.filter_input{name: "filter_input[#{preference.table_attr}]", style:'width: 69%', value: "#{preference.filter}"}
     %button.btn.btn-sm.btn-success
       %i.fa.fa-check
-    %div.btn.btn-sm.btn-danger.erase-filter
+    .btn.btn-sm.btn-danger.erase-filter
       %i.fa.fa-remove

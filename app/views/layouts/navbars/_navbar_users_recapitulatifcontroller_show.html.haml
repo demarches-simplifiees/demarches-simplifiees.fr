@@ -1,15 +1,15 @@
 .col-xs-7.main-info
   %span{ 'data-toggle' => :tooltip, "data-placement" => :bottom, title: @facade.dossier.procedure.libelle }
     = @facade.dossier.procedure.libelle.truncate(60)
-%div.col-lg-3.col-md-3.col-sm-3.col-xs-3.options
-  %div.row.centered-option
-    %div.col-lg-12.col-md-12.col-sm-12.col-xs-12
+.col-lg-3.col-md-3.col-sm-3.col-xs-3.options
+  .row.centered-option
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
       %div#invitations.dropdown-toggle{ 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
         %i.fa.fa-user
         = t('utils.involved')
         .badge.progress-bar-info
           = @facade.dossier.invites.count
-      %div.dropdown-menu.dropdown-menu-right.dropdown-pannel
+      .dropdown-menu.dropdown-menu-right.dropdown-pannel
         %h4= t('dynamics.dossiers.followers.title')
         %ul
           - unless @facade.followers.empty?

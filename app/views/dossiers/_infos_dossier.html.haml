@@ -1,26 +1,26 @@
-%div.row
+.row
   .col-xs-12
     - if @facade.procedure.for_individual?
       .row.title-row
-        %div.col-xs-4.split-hr
-        %div.col-xs-4.dossier-title= t('utils.depositaire').upcase
-        %div.col-xs-4.split-hr
+        .col-xs-4.split-hr
+        .col-xs-4.dossier-title= t('utils.depositaire').upcase
+        .col-xs-4.split-hr
       .row
-        %div.col-xs-6.depositaire-label Civilité
-        %div.col-xs-1.comments-off= "-"
-        %div.col-xs-5.depositaire-info= @facade.individual.gender
+        .col-xs-6.depositaire-label Civilité
+        .col-xs-1.comments-off= "-"
+        .col-xs-5.depositaire-info= @facade.individual.gender
       .row
-        %div.col-xs-6.depositaire-label Nom
-        %div.col-xs-1.comments-off= "-"
-        %div.col-xs-5.depositaire-info= @facade.individual.nom
+        .col-xs-6.depositaire-label Nom
+        .col-xs-1.comments-off= "-"
+        .col-xs-5.depositaire-info= @facade.individual.nom
       .row
-        %div.col-xs-6.depositaire-label Prénom
-        %div.col-xs-1.comments-off= "-"
-        %div.col-xs-5.despositaire-info= @facade.individual.prenom
+        .col-xs-6.depositaire-label Prénom
+        .col-xs-1.comments-off= "-"
+        .col-xs-5.despositaire-info= @facade.individual.prenom
       .row
-        %div.col-xs-6.depositaire-label Date de naissance
-        %div.col-xs-1.comments-off= "-"
-        %div.col-xs-5.depositaire-info= @facade.individual.birthdate
+        .col-xs-6.depositaire-label Date de naissance
+        .col-xs-1.comments-off= "-"
+        .col-xs-5.depositaire-info= @facade.individual.birthdate
       .row.margin-top-20
 
     - unless @facade.champs.nil?
@@ -28,15 +28,15 @@
         - next if champ.type_champ == 'explication'
         - if champ.type_champ == 'header_section'
           .row.title-row.margin-top-40
-            %div.col-xs-3.split-hr
-            %div.col-xs-6.dossier-title= champ.libelle.upcase
-            %div.col-xs-3.split-hr
+            .col-xs-3.split-hr
+            .col-xs-6.dossier-title= champ.libelle.upcase
+            .col-xs-3.split-hr
         - else
           .row
-            %div.col-xs-6.depositaire-label= champ.libelle
-            %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off
+            .col-xs-6.depositaire-label= champ.libelle
+            .col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off
               = "-"
-            %div.col-xs-5.depositaire-info{ id: "champ-#{champ.id}-value" }
+            .col-xs-5.depositaire-info{ id: "champ-#{champ.id}-value" }
               - unless champ.decorate.value.blank?
                 = champ.decorate.value.html_safe
 
@@ -47,13 +47,13 @@
         %b
           = "#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
         = ")"
-%div.row
+.row
   - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.count > 0
     .col-xs-12
       .row.title-row
-        %div.col-xs-4.split-hr
-        %div.col-xs-4.dossier-title= t('utils.pieces').upcase
-        %div.col-xs-4.split-hr
+        .col-xs-4.split-hr
+        .col-xs-4.dossier-title= t('utils.pieces').upcase
+        .col-xs-4.split-hr
 
   .col-xs-12#pieces_justificatives.margin-bot-40
     .row
@@ -77,9 +77,9 @@
           .row.piece-row
             .col-xs-12{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
               .row
-                %div.col-xs-6.depositaire-label= type_de_piece_justificative.libelle
-                %div.col-xs-1.comments-off= "-"
-                %div.col-xs-5.despositaire-info
+                .col-xs-6.depositaire-label= type_de_piece_justificative.libelle
+                .col-xs-1.comments-off= "-"
+                .col-xs-5.despositaire-info
                   - if type_de_piece_justificative.api_entreprise
                     %span.text-success Nous l'avons récupéré pour vous.
                   - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?

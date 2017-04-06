@@ -1,5 +1,5 @@
 %div#first-block
-  %div.en-cours
+  .en-cours
     %b
       = dossier_count = current_administrateur.procedures.count
     = ("Procedures".pluralize(dossier_count)).upcase
@@ -7,27 +7,27 @@
 %div#action-block
 
 %div#menu-block
-  %div.split-hr-left
+  .split-hr-left
   #procedure_list
     %a{:href => "#{url_for :admin_procedures_draft}", id: "draft-procedures"}
-      %div.procedure_list_element{class: @draft_class}
+      .procedure_list_element{class: @draft_class}
         = "Brouillons"
         .badge.progress-bar-default
           = current_administrateur.procedures.where(published: false, archived: false).count
 
     %a{:href => "#{url_for :admin_procedures}", id: "active-procedures"}
-      %div.procedure_list_element{class: @active_class}
+      .procedure_list_element{class: @active_class}
         = "Actives"
         .badge.progress-bar-success
           = current_administrateur.procedures.where(published: true, archived: false).count
 
     %a{:href => "#{url_for :admin_procedures_archived}", id: "archived-procedures"}
-      %div.procedure_list_element{class: @archived_class}
+      .procedure_list_element{class: @archived_class}
         = "Archivées"
         .badge.progress-bar-purple
           = current_administrateur.procedures.where(archived: true).count
 
-  %div.split-hr-left
+  .split-hr-left
 
 
 %div#infos-block
