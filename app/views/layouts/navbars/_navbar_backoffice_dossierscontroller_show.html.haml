@@ -5,7 +5,7 @@
   .row
     .col-xs-12
       - if current_gestionnaire.follow?(@facade.dossier.id)
-        = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), "data-method" => :put, class: "button-navbar-action",id: "suivre_dossier_#{@facade.dossier.id}" do
+        = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), "data-method" => :put, class: "button-navbar-action", id: "suivre_dossier_#{@facade.dossier.id}" do
           %i.fa.fa-user-times
           Ne plus suivre
       - else
