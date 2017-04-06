@@ -14,7 +14,7 @@
   %h2.text-info
     = @dossier.procedure.libelle
 
-  -#TODO use form_for
+  -# TODO use form_for
   = form_tag(url_for({controller: 'users/description', action: :update, dossier_id: @dossier.id}), class: 'form', method: 'POST', multipart: true) do
     - unless @champs.nil?
       #liste_champs

@@ -26,9 +26,9 @@
           - if type_de_piece_justificative.api_entreprise
             %span.text-success Nous l'avons récupéré pour vous.
           - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?
-            -#- if user_signed_in?
-            -#  = 'Pièce fournie'
-            -#- elsif gestionnaire_signed_in?
+            -# - if user_signed_in?
+            -#   = 'Pièce fournie'
+            -# - elsif gestionnaire_signed_in?
             %a{ href: "#{@pj.content_url}", target: '_blank' } Consulter
             %span{style:'margin-left:12px'}
               \-
@@ -41,5 +41,5 @@
           - else
             = 'Pièce non fournie'
 
-  -#- if gestionnaire_signed_in?
+  -# - if gestionnaire_signed_in?
   = render partial: '/dossiers/modal_historique'
