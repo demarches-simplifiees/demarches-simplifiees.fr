@@ -6,12 +6,12 @@
           %button.close{ "aria-label" => "Close", "data-dismiss" => "modal", :type => "button" }
             %span{ "aria-hidden" => "true" } ×
           %h4#myModalLabel.modal-title
-            = @procedure.archived?? 'Réactiver' : 'Publier'
+            = @procedure.archived? ? 'Réactiver' : 'Publier'
             la procédure
             %span#publishModal_title
         .modal-body
           Vous vous apprêtez à
-          = @procedure.archived?? 'republier' : 'publier'
+          = @procedure.archived? ? 'republier' : 'publier'
           votre procédure au public.
           - unless @procedure.archived?
             %b
@@ -42,7 +42,7 @@
               #path_is_invalid.text-danger.center.message
                 Ce lien n'est pas valide. Il doit comporter au moins 3 caractères et seuls les caractères a-z, 0-9 et '_' sont autorisés.
         .modal-footer
-          = submit_tag "#{@procedure.archived?? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
+          = submit_tag "#{@procedure.archived? ? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
                                   id: 'publish',
                                   disabled: :disabled
           = button_tag 'Annuler', class: %w(btn btn btn-default), id: 'cancel', data: { dismiss: 'modal' }
