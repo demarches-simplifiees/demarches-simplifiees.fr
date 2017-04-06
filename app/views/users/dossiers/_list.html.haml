@@ -19,13 +19,13 @@
         - dossier_url = users_dossier_recapitulatif_path(dossier) unless dossier.brouillon?
         - dossier_url = users_dossier_description_path(dossier) if dossier.brouillon?
 
-      %tr{id: "tr_dossier_#{dossier.id}", 'data-dossier_url' => dossier_url}
+      %tr{ id: "tr_dossier_#{dossier.id}", 'data-dossier_url' => dossier_url }
         %td.center
           = dossier.id
         %td
           = dossier.procedure.libelle
 
-        %td{id: "dossier_#{dossier.id}_state"}= dossier.display_state
+        %td{ id: "dossier_#{dossier.id}_state" }= dossier.display_state
         %td= dossier.last_update
         %td= link_to('X', url_for(controller: 'dossiers', action: :destroy, id: dossier.id), 'data-method' => :delete, class: 'btn-sm btn-danger') if @liste == "brouillon"
 

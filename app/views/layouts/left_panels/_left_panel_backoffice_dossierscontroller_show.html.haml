@@ -10,13 +10,13 @@
     - elsif @facade.dossier.received?
       %ul.list-inline
         %li
-          = link_to url_for({controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id}), class: 'btn btn-success', method: :post, title: 'Accepter', data: { toggle: :tooltip, confirm: "Accepter ce dossier ?" } do
+          = link_to url_for({ controller: 'backoffice/dossiers', action: :close, dossier_id: @facade.dossier.id }), class: 'btn btn-success', method: :post, title: 'Accepter', data: { toggle: :tooltip, confirm: "Accepter ce dossier ?" } do
             %i.fa.fa-check
         %li
-          = link_to url_for({controller: 'backoffice/dossiers', action: :without_continuation, dossier_id: @facade.dossier.id}), class: 'btn btn-warning', method: :post, title: 'Classer sans suite', data: { toggle: :tooltip, confirm: "Classer sans suite ce dossier ?" } do
+          = link_to url_for({ controller: 'backoffice/dossiers', action: :without_continuation, dossier_id: @facade.dossier.id }), class: 'btn btn-warning', method: :post, title: 'Classer sans suite', data: { toggle: :tooltip, confirm: "Classer sans suite ce dossier ?" } do
             %i.fa.fa-circle-o
         %li
-          = link_to url_for({controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id}), class: 'btn btn-danger', method: :post, title: 'Refuser', data: { toggle: :tooltip, confirm: "Refuser ce dossier ?" } do
+          = link_to url_for({ controller: 'backoffice/dossiers', action: :refuse, dossier_id: @facade.dossier.id }), class: 'btn btn-danger', method: :post, title: 'Refuser', data: { toggle: :tooltip, confirm: "Refuser ce dossier ?" } do
             %i.fa.fa-times
 
       = link_to 'Reouvrir', backoffice_dossier_reopen_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block', data: { confirm: "Confirmer vous la réouverture de ce dossier ?" }
@@ -46,7 +46,7 @@
       - @facade.last_notifications.each do |notification|
         .notification
           .updated-at= notification.updated_at.strftime('%d/%m/%Y %H:%M')
-          = render partial: "layouts/left_panels/type_notif_fa", locals: {notification: notification}
+          = render partial: "layouts/left_panels/type_notif_fa", locals: { notification: notification }
           - if ['champs'].include?(notification.type_notif)
             - if notification.liste.size > 1
               .type= "Plusieurs attributs ont été changés, dont: #{notification.liste.join(" ")}"

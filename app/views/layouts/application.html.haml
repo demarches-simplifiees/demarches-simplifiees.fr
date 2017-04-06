@@ -1,10 +1,10 @@
 %html
   %head
-    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %meta{ :content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type" }/
     %meta{ name: "turbolinks-cache-control", content: "no-cache" }
     %title
       = t('dynamics.page_title')
-    %meta{'http-equiv' => "X-UA-Compatible", :content => "IE=edge"}
+    %meta{ 'http-equiv' => "X-UA-Compatible", :content => "IE=edge" }
 
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = stylesheet_link_tag    'print', media: 'print', 'data-turbolinks-track' => true
@@ -14,14 +14,14 @@
     = action_cable_meta_tag
   %body
     = render partial: 'layouts/support_navigator_banner'
-    #beta{class:(Rails.env == 'production' ? '' : 'beta_staging')}
+    #beta{ class:(Rails.env == 'production' ? '' : 'beta_staging') }
       - if Rails.env == 'production'
         Beta
       - else
         Env Test
 
     - if Rails.env == 'test'
-      %script{type: 'text/javascript'}
+      %script{ type: 'text/javascript' }
         (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
 
 
@@ -44,13 +44,13 @@
         - else
           - main_container_size = 12
 
-        = render partial: 'layouts/main_container', locals: {main_container_size: main_container_size}
+        = render partial: 'layouts/main_container', locals: { main_container_size: main_container_size }
     #mask_search
       %h1
-        %i.fa.fa-times{style:'position: fixed; top: 10; right: 30; color: white;'}
+        %i.fa.fa-times{ style:'position: fixed; top: 10; right: 30; color: white;' }
 
     = render partial: 'layouts/switch_devise_profile_module'
     = render partial: 'layouts/notifications_alert'
 
-    = render partial: 'layouts/footer', locals: {main_container_size: main_container_size}
+    = render partial: 'layouts/footer', locals: { main_container_size: main_container_size }
     = render partial: 'layouts/google_analytics'

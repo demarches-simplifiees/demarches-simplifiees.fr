@@ -3,7 +3,7 @@
 %h3
   = t('dynamics.backoffice.pref_list.title')
 
-%p{style:'margin-top: 15px; margin-bottom: 20px'}
+%p{ style:'margin-top: 15px; margin-bottom: 20px' }
   = t('dynamics.backoffice.pref_list.description')
 
 %h4.text-primary
@@ -16,10 +16,10 @@
         = hidden_field_tag :pref_id, preference.id
         = hidden_field_tag :procedure_id, preference.procedure_id
         = preference.libelle
-        %button.btn.btn-default.btn-xs{type: :submit, id: "delete_pref_list_#{preference[:table]}_#{preference[:attr]}"}
+        %button.btn.btn-default.btn-xs{ type: :submit, id: "delete_pref_list_#{preference[:table]}_#{preference[:attr]}" }
           %i.fa.fa-minus
 
-%h4.text-success{style:'margin-top: 15px'}
+%h4.text-success{ style:'margin-top: 15px' }
   Disponibles
 
 %table
@@ -27,7 +27,7 @@
     - if index%2 == 0 || tables.first.to_s.include?('champs')
       %tr
 
-    %td.col-xs-5{style: 'vertical-align: top', colspan: (tables.first == :champs ? 2 : 1)}
+    %td.col-xs-5{ style: 'vertical-align: top', colspan: (tables.first == :champs ? 2 : 1) }
       %h5= tables.first.to_s.gsub('_', ' ').capitalize
       %ul
         - if tables.second
@@ -42,5 +42,5 @@
                 = hidden_field_tag :procedure_id, @facade_data_view.procedure_id
 
                 = columns.second[:libelle]
-                %button.btn.btn-default.btn-xs{type: :submit, id: "add_pref_list_#{columns.second[:table]}_#{columns.second[:attr]}"}
+                %button.btn.btn-default.btn-xs{ type: :submit, id: "add_pref_list_#{columns.second[:table]}_#{columns.second[:attr]}" }
                   %i.fa.fa-plus

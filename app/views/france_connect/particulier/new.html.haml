@@ -24,7 +24,7 @@
 
 .center
   #france_connect_particulier_email
-    = form_for @user, url: {controller: 'france_connect/particulier', action: :check_email}, method: :post do |f|
+    = form_for @user, url: { controller: 'france_connect/particulier', action: :check_email }, method: :post do |f|
       .form-group.form-group-lg
         = f.text_field :email_france_connect, class: "form-control", placeholder: "Entrez votre email"
         = hidden_field_tag :fci_id, params[:fci_id]

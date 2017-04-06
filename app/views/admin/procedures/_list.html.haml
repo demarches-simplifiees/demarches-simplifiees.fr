@@ -10,7 +10,7 @@
 
     - @procedures.each do |procedure|
       - procedure = procedure.decorate
-      %tr{id: "tr_dossier_#{procedure.id}", 'data-dossier_url' => admin_procedure_path(id: procedure.id)}
+      %tr{ id: "tr_dossier_#{procedure.id}", 'data-dossier_url' => admin_procedure_path(id: procedure.id) }
         %td= procedure.id
         %td.col-xs-6
           = procedure.libelle

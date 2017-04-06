@@ -9,11 +9,11 @@
         %h3
           = t('dynamics.admin.procedure.onglet_accompagnateurs.add.title')
         #procedure_new.section.section-label
-          = form_for @gestionnaire, url: {controller: 'admin/gestionnaires', action: :create} do |f|
+          = form_for @gestionnaire, url: { controller: 'admin/gestionnaires', action: :create } do |f|
             .row
               .col-xs-5
                 = hidden_field_tag :procedure_id, params[:procedure_id]
-                = render partial: 'admin/gestionnaires/informations', locals: {f: f}
+                = render partial: 'admin/gestionnaires/informations', locals: { f: f }
               .col-xs-2
                 %br
                 %br

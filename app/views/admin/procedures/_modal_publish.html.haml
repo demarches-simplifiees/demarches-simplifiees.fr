@@ -1,10 +1,10 @@
-#publishModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
-  .modal-dialog.modal-lg{:role => "document"}
+#publishModal.modal.fade{ "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1" }
+  .modal-dialog.modal-lg{ :role => "document" }
     = form_tag admin_procedure_publish_path(procedure_id: @procedure.id), method: :put, remote: true do
       .modal-content
         .modal-header
-          %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-            %span{"aria-hidden" => "true"} ×
+          %button.close{ "aria-label" => "Close", "data-dismiss" => "modal", :type => "button" }
+            %span{ "aria-hidden" => "true" } ×
           %h4#myModalLabel.modal-title
             = @procedure.archived?? 'Réactiver' : 'Publier'
             la procédure

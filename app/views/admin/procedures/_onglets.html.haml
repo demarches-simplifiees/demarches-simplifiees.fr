@@ -1,17 +1,17 @@
 #onglets
   %ul.nav.nav-tabs
-    %li{class: @draft_class}
-      %a{:href => "#{url_for :admin_procedures_draft}"}
+    %li{ class: @draft_class }
+      %a{ :href => "#{url_for :admin_procedures_draft}" }
         %h5.text-primary
           Brouillons
 
-    %li{class: @active_class}
-      %a{:href => "#{url_for :admin_procedures}"}
+    %li{ class: @active_class }
+      %a{ :href => "#{url_for :admin_procedures}" }
         %h5.text-success
           Actives
 
-    %li{class: @archived_class}
-      %a{:href => "#{url_for :admin_procedures_archived}"}
-        %h5{style: 'color: black'}
+    %li{ class: @archived_class }
+      %a{ :href => "#{url_for :admin_procedures_archived}" }
+        %h5{ style: 'color: black' }
           Archivées
 %br

@@ -1,24 +1,24 @@
 .container#description_page
   - unless @dossier.procedure.lien_notice.blank?
-    #lien_notice_panel.row{style:'width: 280px; position: fixed; background-color: white; right: 5%; top: 80px; z-index: 200'}
-      .panel.panel-info{style:'margin-bottom:0'}
+    #lien_notice_panel.row{ style:'width: 280px; position: fixed; background-color: white; right: 5%; top: 80px; z-index: 200' }
+      .panel.panel-info{ style:'margin-bottom:0' }
         .panel-body.center
           .row
             .col-xs-1
-              .fa.fa-info-circle.text-info{style:'font-size: 2em; margin-top: 20%'}
-            .col-xs-10{style:'padding-right: 0px'}
+              .fa.fa-info-circle.text-info{ style:'font-size: 2em; margin-top: 20%' }
+            .col-xs-10{ style:'padding-right: 0px' }
               %b
-                = link_to 'Accéder au guide', @dossier.procedure.lien_notice, {target: '_blank'}
+                = link_to 'Accéder au guide', @dossier.procedure.lien_notice, { target: '_blank' }
               pour remplir pour votre dossier
 
   %h2.text-info
     = @dossier.procedure.libelle
 
   -# TODO use form_for
-  = form_tag(url_for({controller: 'users/description', action: :update, dossier_id: @dossier.id}), class: 'form', method: 'POST', multipart: true) do
+  = form_tag(url_for({ controller: 'users/description', action: :update, dossier_id: @dossier.id }), class: 'form', method: 'POST', multipart: true) do
     - unless @champs.nil?
       #liste_champs
-        = render partial: 'users/description/champs', locals:{private: false}
+        = render partial: 'users/description/champs', locals:{ private: false }
 
     - if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0
       %br
@@ -33,7 +33,7 @@
     -# WTF ?
     - route = Rails.application.routes.recognize_path(request.referrer)
     - unless route[:controller].match('admin')
-      %div{style: 'text-align:right'}
+      %div{ style: 'text-align:right' }
         %h6 Tous les champs portant un * sont obligatoires.
 
       - if !@dossier.can_be_initiated?
@@ -42,5 +42,5 @@
       - elsif !@dossier.draft?
         = render partial: '/layouts/modifications_terminees'
       - else
-        = submit_tag 'Soumettre mon dossier', id: 'suivant', name: 'submit[nouveaux]', class: 'btn btn btn-success', style: 'float:right', disabled: @procedure.archived?, data: { disable_with: 'Soumettre votre dossier', submit: true}
-        = submit_tag 'Enregistrer un brouillon', id: 'brouillon', name: 'submit[brouillon]', class: 'btn btn-xs btn-default', style: 'float:right; margin-right: 10px; margin-top: 6px', disabled: @procedure.archived?, data: {disable_with: 'Enregistrer un brouillon', submit: true}
+        = submit_tag 'Soumettre mon dossier', id: 'suivant', name: 'submit[nouveaux]', class: 'btn btn btn-success', style: 'float:right', disabled: @procedure.archived?, data: { disable_with: 'Soumettre votre dossier', submit: true }
+        = submit_tag 'Enregistrer un brouillon', id: 'brouillon', name: 'submit[brouillon]', class: 'btn btn-xs btn-default', style: 'float:right; margin-right: 10px; margin-top: 6px', disabled: @procedure.archived?, data: { disable_with: 'Enregistrer un brouillon', submit: true }

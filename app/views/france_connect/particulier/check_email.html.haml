@@ -3,7 +3,7 @@
   &nbsp;France Connect - Particulier
 
 %h3 Nouvelle connexion
-%h4.text-warning{style:'margin-left: 20px'} Email déjà utilisé
+%h4.text-warning{ style:'margin-left: 20px' } Email déjà utilisé
 
 %br
 %p
@@ -13,7 +13,7 @@
   %br
 .center
   #france_connect_particulier_email
-    = form_for @user, url: {controller: 'france_connect/particulier', action: :check_email}, method: :post do |f|
+    = form_for @user, url: { controller: 'france_connect/particulier', action: :check_email }, method: :post do |f|
       .form-group.form-group-lg
         = f.text_field :email_france_connect, class: "form-control", readonly: 'readonly'
         %br

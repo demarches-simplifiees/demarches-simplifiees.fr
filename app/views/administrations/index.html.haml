@@ -1,6 +1,6 @@
 .container
   .mt-1
-    = form_for @admin, url: {controller: 'administrations', action: :create} do |f|
+    = form_for @admin, url: { controller: 'administrations', action: :create } do |f|
       .form-group.form-inline.text-center
         = f.text_field :email, placeholder: :email, class: 'form-control'
         = f.text_field :password, placeholder: :password, class: 'form-control'
