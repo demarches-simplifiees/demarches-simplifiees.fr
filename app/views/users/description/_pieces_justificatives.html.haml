@@ -14,9 +14,9 @@
         - if dossier.cerfa_available?
           %span.btn.btn-sm.btn-file.btn-success
             Modifier
-            %input{ type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: PieceJustificative.accept_format, :max_file_size => 6.megabytes }
+            %input{ type: 'file', name: 'cerfa_pdf', id: 'cerfa_pdf', accept: PieceJustificative.accept_format, :max_file_size => 6.megabytes }
         - else
-          %input{ type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes }
+          %input{ type: 'file', name: 'cerfa_pdf', id: 'cerfa_pdf', accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes }
 
   - dossier.types_de_piece_justificative.order('order_place ASC').each do |type_de_piece_justificative|
     %tr

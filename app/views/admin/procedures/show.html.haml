@@ -2,31 +2,31 @@
   #procedure_show
     - unless @facade.procedure.published?
       - if @facade.procedure.gestionnaires.size == 0
-        %a.action_button.btn.btn-success{ style:'float: right; margin-top: 10px', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.', id: 'publish-procedure' }
+        %a.action_button.btn.btn-success{ style: 'float: right; margin-top: 10px', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.', id: 'publish-procedure' }
           %i.fa.fa-eraser
           Publier
       - else
-        %a.btn.btn-success{ "data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px', id: 'publish-procedure' }
+        %a.btn.btn-success{ "data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px', id: 'publish-procedure' }
           %i.fa.fa-eraser
           Publier
 
       = render partial: '/admin/procedures/modal_publish'
 
-    %a#transfer.btn.btn-small.btn-default{ "data-target" => "#transferModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px; margin-right: 10px' }
+    %a#transfer.btn.btn-small.btn-default{ "data-target" => "#transferModal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px; margin-right: 10px' }
       %i.fa.fa-exchange
       Transférer
 
     = render partial: '/admin/procedures/modal_transfer'
 
     - if @facade.procedure.archived?
-      %a#reenable.btn.btn-small.btn-default.text-info{ "data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px' }
+      %a#reenable.btn.btn-small.btn-default.text-info{ "data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px' }
         %i.fa.fa-eraser
         Réactiver
 
       = render partial: '/admin/procedures/modal_publish'
 
     - elsif @facade.procedure.published?
-      = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style:'float: right; margin-top: 10px' do
+      = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style: 'float: right; margin-top: 10px' do
         %button#archive.btn.btn-small.btn-default.text-info{ type: :button }
           %i.fa.fa-eraser
           Archiver
@@ -45,7 +45,7 @@
 
     %div
       %h3 Lien procédure
-      %div{ style:'margin-left:3%' }
+      %div{ style: 'margin-left: 3%' }
         - if @facade.procedure.published?
           = link_to @facade.procedure.lien, @facade.procedure.lien, target: '_blank'
         - else
@@ -55,7 +55,7 @@
     %br
     %h3 Détails
 
-    .row{ style:'margin-right:3%; margin-left:3%;' }
+    .row{ style: 'margin-right: 3%; margin-left: 3%;' }
       .description.col-xs-6.col-md-3.procedure-description
         %h4.text-info
           = @facade.procedure.libelle
@@ -93,7 +93,7 @@
       = t('dynamics.admin.procedure.stats.title')
 
     .row
-      .col-xs-6{ style:'margin-left:3%' }
+      .col-xs-6{ style: 'margin-left: 3%' }
         %h4 Total
         %div
           = @facade.dossiers_total

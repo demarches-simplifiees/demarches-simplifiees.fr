@@ -3,7 +3,7 @@
     Mes informations
   %br
   - unless @facade.entreprise.nil?
-    .center{ style:'margin-left: -5%' }
+    .center{ style: 'margin-left: -5%' }
       Vous êtes authentifié avec le SIRET
 
       %h3.text-success
@@ -15,7 +15,7 @@
 .etape.etapes_informations.col-xs-9
   .row
     - if @facade.entreprise.nil?
-      #new_siret{ style:'margin-left: 20%; margin-top: 5%' }
+      #new_siret{ style: 'margin-left: 20%; margin-top: 5%' }
         = form_for @facade.dossier, html: { class: 'form-inline' }, url: users_dossier_siret_informations_path(dossier_id: @facade.dossier.id), method: :post, remote: true do |f|
           .form-group.form-group-lg
             = f.text_field :siret, class: "form-control", placeholder: "Entrez votre Siret", value: @siret
@@ -26,15 +26,15 @@
       #recap_info_entreprise
         = render partial: '/dossiers/infos_entreprise'
 
-        %p#insee_infogreffe{ style:'color:grey; float:right' }
+        %p#insee_infogreffe{ style: 'color: grey; float: right' }
           %i
             Informations récupérées auprès de l'INSEE et d'INFOGREFFE
 
         %br
         = form_for @facade.dossier, url: { controller: '/users/dossiers', action: :update } do |f|
           = f.hidden_field :id
-          %label{ style:'font-weight:normal' }
+          %label{ style: 'font-weight: normal' }
             = f.check_box :autorisation_donnees
             J'autorise les décideurs publics à vérifier les informations de mon organisation auprès des administrations concernées. Ces informations resteront strictement confidentielles.
           %br
-          = f.submit 'Etape suivante', class: "btn btn btn-info", style: 'float:right', id: 'etape_suivante', disabled: :disabled
+          = f.submit 'Etape suivante', class: "btn btn btn-info", style: 'float: right', id: 'etape_suivante', disabled: :disabled

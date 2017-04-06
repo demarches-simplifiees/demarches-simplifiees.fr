@@ -21,7 +21,7 @@
       - if devise_mapping.rememberable?
         = f.input :remember_me, as: :boolean, label: 'Se souvenir de moi'
       .text-center
-        = f.submit "Se connecter", class:'btn btn-primary'
+        = f.submit "Se connecter", class: 'btn btn-primary'
 
   - if @user.email != DemoEmails[:gestionnaire] && @user.email != DemoEmails[:admin]
     = render "users/shared/links"

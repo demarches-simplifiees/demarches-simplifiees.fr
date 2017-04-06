@@ -15,7 +15,7 @@
       %h2#titre_procedure.text-info
         = @facade.procedure.libelle
 
-      %p#description_procedure{ style:'width: 95%;', class: (@facade.entreprise.nil? ? '' : 'mask') }
+      %p#description_procedure{ style: 'width: 95%;', class: (@facade.entreprise.nil? ? '' : 'mask') }
         = h @facade.procedure.description.html_safe
 
         - unless @facade.procedure.lien_site_web.blank?

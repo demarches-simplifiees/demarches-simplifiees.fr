@@ -3,7 +3,7 @@
   &nbsp;France Connect - Particulier
 
 %h3 Nouvelle connexion
-%h4.text-warning{ style:'margin-left: 20px' } Email déjà utilisé
+%h4.text-warning{ style: 'margin-left: 20px' } Email déjà utilisé
 
 %br
 %p
@@ -20,4 +20,4 @@
         = f.password_field :password, class: "form-control", placeholder: "Entrez votre mot de passe"
         = hidden_field_tag :fci_id, params[:fci_id]
         = hidden_field_tag :salt, params[:salt]
-        = f.submit 'Terminer', class: %w(btn btn-lg btn-success), style: 'margin-top:20px;', id: 'valid_new_fcp'
+        = f.submit 'Terminer', class: %w(btn btn-lg btn-success), style: 'margin-top: 20px;', id: 'valid_new_fcp'

@@ -16,7 +16,7 @@
       %tr
         %td= file.user.nil? ? 'Accompagnateur' : file.user.email
         %td= file.created_at.localtime
-        %td= link_to file.original_filename, file.content_url, style:'color: green', target: '_blank'
+        %td= link_to file.original_filename, file.content_url, style: 'color: green', target: '_blank'
 - else
   %h4.text-primary
     Pas de fichier dans le flux de commentaires.

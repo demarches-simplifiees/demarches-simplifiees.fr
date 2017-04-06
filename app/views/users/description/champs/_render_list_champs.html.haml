@@ -44,7 +44,7 @@
           - elsif champ.type_champ == 'explication'
 
           - else
-            %input.form-control{ name:"champs['#{champ.id}']",
+            %input.form-control{ name: "champs['#{champ.id}']",
                             placeholder: champ.libelle,
                             id: "champs_#{champ.id}",
                             value: champ.value,
@@ -53,5 +53,5 @@
                             'data-date-format' => champ.data_date_format }
 
           - unless champ.description.empty?
-            %div{ id:"description_champs_#{champ.id}", class: ('help-block' unless champ.type_champ == 'engagement') }
+            %div{ id: "description_champs_#{champ.id}", class: ('help-block' unless champ.type_champ == 'engagement') }
               = champ.description_with_links

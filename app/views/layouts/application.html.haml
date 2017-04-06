@@ -14,7 +14,7 @@
     = action_cable_meta_tag
   %body
     = render partial: 'layouts/support_navigator_banner'
-    #beta{ class:(Rails.env == 'production' ? '' : 'beta_staging') }
+    #beta{ class: (Rails.env == 'production' ? '' : 'beta_staging') }
       - if Rails.env == 'production'
         Beta
       - else
@@ -47,7 +47,7 @@
         = render partial: 'layouts/main_container', locals: { main_container_size: main_container_size }
     #mask_search
       %h1
-        %i.fa.fa-times{ style:'position: fixed; top: 10; right: 30; color: white;' }
+        %i.fa.fa-times{ style: 'position: fixed; top: 10; right: 30; color: white;' }
 
     = render partial: 'layouts/switch_devise_profile_module'
     = render partial: 'layouts/notifications_alert'
