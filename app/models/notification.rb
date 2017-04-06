@@ -13,7 +13,7 @@ class Notification < ActiveRecord::Base
 
   # def broadcast_notification
   #   ActionCable.server.broadcast 'notifications',
-  #                                message: "Dossier nº#{self.dossier.id} : #{self.liste.last}",
+  #                                message: "Dossier nº #{self.dossier.id} : #{self.liste.last}",
   #                                dossier: {id: self.dossier.id}
   # end
 end

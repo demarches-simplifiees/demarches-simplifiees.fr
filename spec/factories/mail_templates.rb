@@ -13,8 +13,8 @@ FactoryGirl.define do
     end
 
     trait :dossier_received do
-      object "[TPS] Accusé de réception pour votre dossier nº--numero_dossier--"
-      body "Votre administration vous confirme la bonne réception de votre dossier nº--numero_dossier--"
+      object "[TPS] Accusé de réception pour votre dossier nº --numero_dossier--"
+      body "Votre administration vous confirme la bonne réception de votre dossier nº --numero_dossier--"
       type 'MailReceived'
     end
   end

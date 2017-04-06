@@ -11,7 +11,7 @@ class InitiatedAllReceivedMailForProcedure < ActiveRecord::Migration
     before_save :default_values
 
     def default_values
-      self.object ||= "[TPS] Accusé de réception pour votre dossier nº--numero_dossier--"
+      self.object ||= "[TPS] Accusé de réception pour votre dossier nº --numero_dossier--"
       self.body ||= "Bonjour,
                     <br>
                     <br>
