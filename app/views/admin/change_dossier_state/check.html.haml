@@ -13,5 +13,5 @@
     %select{id: :next_state, name: :next_state}
       - Dossier.states.each do |state|
         %option{value: state[0]}
-          =DossierDecorator.case_state_fr state[1]
+          = DossierDecorator.case_state_fr state[1]
     = f.submit 'Valider'

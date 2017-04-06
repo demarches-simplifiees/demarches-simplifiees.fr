@@ -8,7 +8,7 @@
               .fa.fa-info-circle.text-info{style:'font-size: 2em; margin-top: 20%'}
             .col-xs-10{style:'padding-right: 0px'}
               %b
-                =link_to 'Accéder au guide', @dossier.procedure.lien_notice, {target: '_blank'}
+                = link_to 'Accéder au guide', @dossier.procedure.lien_notice, {target: '_blank'}
               pour remplir pour votre dossier
 
   %h2.text-info
@@ -16,11 +16,11 @@
 
   -#TODO use form_for
   = form_tag(url_for({controller: 'users/description', action: :update, dossier_id: @dossier.id}), class: 'form', method: 'POST', multipart: true) do
-    -unless @champs.nil?
+    - unless @champs.nil?
       #liste_champs
-        =render partial: 'users/description/champs', locals:{private: false}
+        = render partial: 'users/description/champs', locals:{private: false}
 
-    -if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0
+    - if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0
       %br
       %h3 Pièces jointes
 
@@ -30,7 +30,7 @@
       .col-lg-8
         = render partial: 'users/description/pieces_justificatives', locals: { dossier: @dossier }
 
-    -route = Rails.application.routes.recognize_path(request.referrer) # WTF ?
+    - route = Rails.application.routes.recognize_path(request.referrer) # WTF ?
     - unless route[:controller].match('admin')
       %div{style: 'text-align:right'}
         %h6 Tous les champs portant un * sont obligatoires.

@@ -3,7 +3,7 @@
     %li{class: @draft_class}
       %a{:href => "#{url_for :admin_procedures_draft}"}
         %h5.text-primary
-          ="Brouillons"
+          = "Brouillons"
 
     %li{class: @active_class}
       %a{:href => "#{url_for :admin_procedures}"}
@@ -13,5 +13,5 @@
     %li{class: @archived_class}
       %a{:href => "#{url_for :admin_procedures_archived}"}
         %h5{style: 'color: black'}
-          ="Archivées"
+          = "Archivées"
 %br

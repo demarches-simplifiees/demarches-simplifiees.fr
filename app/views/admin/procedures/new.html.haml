@@ -1,6 +1,6 @@
 .row.white-back
   %h2
-    =t('dynamics.admin.dossiers.tableau_de_bord.nouvelle_procedure')
+    = t('dynamics.admin.dossiers.tableau_de_bord.nouvelle_procedure')
 
   #procedure_new.section.section-label
     = form_for @procedure, url: {controller: 'admin/procedures', action: :create}, multipart: true do |f|

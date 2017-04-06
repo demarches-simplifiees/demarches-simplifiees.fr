@@ -3,7 +3,7 @@
     - if @facade.procedure.cerfa_flag?
       %tr{id: "piece_justificative_0"}
         %th{class:'col-lg-6'}
-          ='Formulaire'
+          = 'Formulaire'
         %td.col-lg-6.col-md-6.col-sm-6.col-xs-6
           - if @facade.dossier.cerfa_available?
             %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
@@ -42,4 +42,4 @@
             = 'Pièce non fournie'
 
   -#- if gestionnaire_signed_in?
-  =render partial: '/dossiers/modal_historique'
+  = render partial: '/dossiers/modal_historique'

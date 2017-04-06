@@ -16,13 +16,13 @@
 
   .row.center
     .col-xs-3
-      =link_to 'Tous les états', '?liste=all_state', class: 'text-info', style:"text-decoration: #{@facade_data_view.liste == 'all_state'? 'underline' : ''}"
+      = link_to 'Tous les états', '?liste=all_state', class: 'text-info', style:"text-decoration: #{@facade_data_view.liste == 'all_state'? 'underline' : ''}"
     .col-xs-3
-      =link_to 'En construction', '?liste=a_traiter', class: 'text-danger', style:"text-decoration: #{@facade_data_view.liste == 'a_traiter'? 'underline' : ''}"
+      = link_to 'En construction', '?liste=a_traiter', class: 'text-danger', style:"text-decoration: #{@facade_data_view.liste == 'a_traiter'? 'underline' : ''}"
     .col-xs-3
-      =link_to  'En instruction', '?liste=a_instruire', class: 'text-warning', style:"text-decoration: #{@facade_data_view.liste == 'a_instruire'? 'underline' : ''}"
+      = link_to  'En instruction', '?liste=a_instruire', class: 'text-warning', style:"text-decoration: #{@facade_data_view.liste == 'a_instruire'? 'underline' : ''}"
     .col-xs-3
-      =link_to  'Terminés', '?liste=termine', class: 'text-success', style:"text-decoration: #{@facade_data_view.liste == 'termine'? 'underline' : ''}"
+      = link_to  'Terminés', '?liste=termine', class: 'text-success', style:"text-decoration: #{@facade_data_view.liste == 'termine'? 'underline' : ''}"
 
   .default_data_block.default_visible
     .row.show-block#follow_dossiers

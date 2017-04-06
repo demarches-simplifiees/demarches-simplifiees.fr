@@ -11,7 +11,7 @@
         %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}
           - if preference.table.to_s.include? 'champs'
             = preference.libelle
-          -else
+          - else
             = smart_listing.sortable preference.libelle, preference.table_attr
           - if @facade_data_view.active_filter? preference
             %i.filter.fa.fa-filter{style: "color:#{(preference.filter.blank? ? 'grey' : 'orange')}", id: "filter_#{smart_listing.name.to_s}_#{preference.table_attr.sub('.', '_')}"}
@@ -54,7 +54,7 @@
         %td.center
           - if current_gestionnaire.follow?(dossier.id)
             = link_to('Quitter'.html_safe, backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-danger', id: "suivre_dossier_#{dossier.id}")
-          -else
+          - else
             = link_to('Suivre', backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-primary', id: "suivre_dossier_#{dossier.id}")
         %td.center{style:"color: #{dossier.total_follow == 0 ? 'red' : ''}"}
           = dossier.total_follow

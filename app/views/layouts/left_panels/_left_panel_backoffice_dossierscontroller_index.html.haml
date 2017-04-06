@@ -29,7 +29,7 @@
           - if total_new > 0
             .badge.progress-bar-success{title:'Nouveaux dossiers'}
               = total_new
-          -if procedure[:unread_notifications] > 0
+          - if procedure[:unread_notifications] > 0
             .badge.progress-bar-warning{title: 'Notifications'}
               = procedure[:unread_notifications]
   #notifications_list.hidden

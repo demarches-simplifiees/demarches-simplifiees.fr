@@ -4,10 +4,10 @@
   #logos.center{class: (@facade.entreprise.nil? ? '' : 'mask')}
     - if @facade.procedure.euro_flag
       #euro_flag.flag
-        =image_tag('drapeau_europe.png')
+        = image_tag('drapeau_europe.png')
 
     #logo_procedure.flag
-      =image_tag( @facade.procedure.decorate.logo_img )
+      = image_tag( @facade.procedure.decorate.logo_img )
 
 .etape.etapes_informations.col-xs-9
   .row

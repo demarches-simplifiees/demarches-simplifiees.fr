@@ -8,7 +8,7 @@
         = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), "data-method" => :put, class: "button-navbar-action",id: "suivre_dossier_#{@facade.dossier.id}" do
           %i.fa.fa-user-times
           Ne plus suivre
-      -else
+      - else
         = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'button-navbar-action', id: "suivre_dossier_#{@facade.dossier.id}" do
           %i.fa.fa-user-plus
           Suivre le dossier

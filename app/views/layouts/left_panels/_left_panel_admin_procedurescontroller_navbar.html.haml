@@ -1,9 +1,9 @@
 %div#first-block
   %div.en-cours
-    -unless @procedure.logo.blank?
+    - unless @procedure.logo.blank?
       = image_tag @procedure.decorate.logo_img, style: 'width: 30px'
     %b
-      =@procedure.libelle
+      = @procedure.libelle
 
 %div#action-block
 
@@ -16,7 +16,7 @@
 
     %a{:href => "#{url_for admin_procedure_accompagnateurs_path(@procedure)}", id: 'onglet-accompagnateurs'}
       %div.procedure_list_element{class: ('active' if active == 'Accompagnateurs')}
-        =t('dynamics.admin.procedure.onglets.accompagnateurs')
+        = t('dynamics.admin.procedure.onglets.accompagnateurs')
 
     %a{:href => "#{url_for edit_admin_procedure_path(@procedure)}", id: 'onglet-description'}
       %div.procedure_list_element{class: ('active' if active == 'Description')}

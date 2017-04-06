@@ -1,6 +1,6 @@
 .row.white-back
   #procedure_show
-    -unless @facade.procedure.published?
+    - unless @facade.procedure.published?
       - if @facade.procedure.gestionnaires.size == 0
         %a.action_button.btn.btn-success{style:'float: right; margin-top: 10px', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.', id: 'publish-procedure'}
           %i.fa.fa-eraser
@@ -10,13 +10,13 @@
           %i.fa.fa-eraser
           Publier
 
-      =render partial: '/admin/procedures/modal_publish'
+      = render partial: '/admin/procedures/modal_publish'
 
     %a#transfer.btn.btn-small.btn-default{"data-target" => "#transferModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px; margin-right: 10px'}
       %i.fa.fa-exchange
       Transférer
 
-    =render partial: '/admin/procedures/modal_transfer'
+    = render partial: '/admin/procedures/modal_transfer'
 
     - if @facade.procedure.archived?
       %a#reenable.btn.btn-small.btn-default.text-info{"data-target" => "#publishModal", "data-toggle" => "modal", :type => "button", style:'float: right; margin-top: 10px'}
@@ -90,7 +90,7 @@
           %br
     %br
     %h3
-      =t('dynamics.admin.procedure.stats.title')
+      = t('dynamics.admin.procedure.stats.title')
 
     .row
       .col-xs-6{style:'margin-left:3%'}
@@ -129,4 +129,4 @@
         - if @facade.dossiers_for_pie_highchart.blank?
           Aucune statistique pour le moment
         - else
-          =pie_chart @facade.dossiers_for_pie_highchart
+          = pie_chart @facade.dossiers_for_pie_highchart

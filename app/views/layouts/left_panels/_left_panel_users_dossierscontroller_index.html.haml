@@ -25,7 +25,7 @@
 
       %a{:href => "#{url_for users_dossiers_path(liste: 'en_instruction')}", 'data-toggle' => :tooltip, title: 'Les dossiers en cours d\'examen par l\'administration compétante.'}
         %div.procedure_list_element{ class: @dossiers_list_facade.en_instruction_class, id: 'en_instruction' }
-          ="En instruction"
+          = "En instruction"
           .badge.progress-bar-default
             = @dossiers_list_facade.en_instruction_total
 

@@ -3,7 +3,7 @@
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
     %meta{ name: "turbolinks-cache-control", content: "no-cache" }
     %title
-      =t('dynamics.page_title')
+      = t('dynamics.page_title')
     %meta{'http-equiv' => "X-UA-Compatible", :content => "IE=edge"}
 
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
@@ -44,7 +44,7 @@
         - else
           - main_container_size = 12
 
-        =render partial: 'layouts/main_container', locals: {main_container_size: main_container_size}
+        = render partial: 'layouts/main_container', locals: {main_container_size: main_container_size}
     #mask_search
       %h1
         %i.fa.fa-times{style:'position: fixed; top: 10; right: 30; color: white;'}

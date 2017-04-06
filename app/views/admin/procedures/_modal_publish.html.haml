@@ -6,12 +6,12 @@
           %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
             %span{"aria-hidden" => "true"} ×
           %h4#myModalLabel.modal-title
-            =@procedure.archived?? 'Réactiver' : 'Publier'
+            = @procedure.archived?? 'Réactiver' : 'Publier'
             la procédure
             %span#publishModal_title
         .modal-body
           Vous vous apprêtez à
-          =@procedure.archived?? 'republier' : 'publier'
+          = @procedure.archived?? 'republier' : 'publier'
           votre procédure au public.
           - unless @procedure.archived?
             %b
@@ -23,7 +23,7 @@
             %br
             %h4 Lien de la procédure
             %p.center
-              ="#{root_url}commencer/"
+              = "#{root_url}commencer/"
               = text_field_tag('procedure_path', @procedure.default_path,
                                 id: 'procedure_path',
                                 placeholder: 'Chemin vers la procédure',

@@ -9,9 +9,9 @@
 .col-xs-10.no-padding
   #navbar-body
     .row
-      -begin
+      - begin
         = render partial: @navbar_url
-      -rescue
+      - rescue
         = render partial: 'layouts/navbars/navbar_default'
 
       = render partial: 'layouts/navbars/navbar_log_options'

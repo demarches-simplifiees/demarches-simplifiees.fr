@@ -23,7 +23,7 @@
 
     %a{:href => "#{url_for :admin_procedures_archived}", id: "archived-procedures"}
       %div.procedure_list_element{class: @archived_class}
-        ="Archivées"
+        = "Archivées"
         .badge.progress-bar-purple
           = current_administrateur.procedures.where(archived: true).count
 
