@@ -3,7 +3,7 @@ module Mails
     include MailTemplateConcern
 
     DISPLAYED_NAME = 'Accusé de rejet du dossier'
-    DEFAULT_OBJECT = 'Votre dossier TPS N°--numero_dossier-- a été refusé'
+    DEFAULT_OBJECT = 'Votre dossier TPS Nº--numero_dossier-- a été refusé'
 
   end
 end

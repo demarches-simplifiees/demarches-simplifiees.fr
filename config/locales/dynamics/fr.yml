@@ -23,7 +23,7 @@ fr:
 
     dossiers:
       depositaite: "Dépositaire"
-      numéro: 'Dossier n°'
+      numéro: 'Dossier nº'
       followers:
         title: "Personnes suivant l'activité de ce dossier"
         empty: "Aucune personne ne suit ce dossier"

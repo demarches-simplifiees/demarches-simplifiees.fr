@@ -33,7 +33,7 @@ function display_cadastre(cadastre_array) {
 
   else if (cadastre_array.length > 0) {
     cadastre_array.forEach(function (cadastre) {
-      $("#cadastre.list ul").append('<li> Parcelle n°' + cadastre.numero + ' - Feuille ' + cadastre.code_arr + ' ' + cadastre.section + ' ' + cadastre.feuille+ '</li>');
+      $("#cadastre.list ul").append('<li> Parcelle nº' + cadastre.numero + ' - Feuille ' + cadastre.code_arr + ' ' + cadastre.section + ' ' + cadastre.feuille+ '</li>');
 
       cadastreItems.addData(cadastre.geometry);
     });

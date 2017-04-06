@@ -19,6 +19,6 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     it { expect(subject.body).to match('Un nouveau message est disponible dans votre espace TPS.') }
     it { expect(subject.body).to include("Pour le consulter, merci de vous rendre sur #{users_dossier_recapitulatif_url(dossier_id: dossier.id)}") }
-    it { expect(subject.subject).to eq("Nouveau message pour votre dossier TPS N°#{dossier.id}") }
+    it { expect(subject.subject).to eq("Nouveau message pour votre dossier TPS Nº#{dossier.id}") }
   end
 end
