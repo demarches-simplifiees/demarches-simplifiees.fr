@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'user access to the list of his dossier' do
-
   let(:user) { create(:user) }
   let!(:last_updated_dossier) { create(:dossier, :with_entreprise, user: user, state: 'replied')}
   let!(:dossier1) { create(:dossier, :with_entreprise, user: user, state: 'replied') }
