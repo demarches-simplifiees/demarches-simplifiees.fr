@@ -93,6 +93,8 @@ gem 'simple_form'
 
 gem 'newrelic_rpm'
 
+gem 'scenic'
+
 # Sidekiq
 gem 'sidekiq'
 gem 'sidekiq-cron', '~> 0.4.4'
@@ -145,6 +147,3 @@ group :production, :staging do
   gem 'sentry-raven'
 end
 
-group :production, :staging, :development do
-  gem 'scenic'
-end

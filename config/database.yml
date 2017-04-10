@@ -9,7 +9,10 @@ development:
 
 
 test:
-  adapter: sqlite3
+  adapter: postgresql
+  encoding: unicode
+  database: tps_test
+  host: localhost
   pool: 5
-  timeout: 5000
-  database: db/test.sqlite3
+  username: tps_test
+  password: tps_test
