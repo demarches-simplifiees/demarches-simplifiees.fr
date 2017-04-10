@@ -35,7 +35,7 @@ class Users::DescriptionController < UsersController
     @champs = @dossier.ordered_champs
 
     check_mandatory_fields = true
-    check_mandatory_fields = !(params[:submit].keys.first == 'brouillon') unless params[:submit].nil?
+    check_mandatory_fields = !(params[:submit].keys.first == 'brouillon') if params[:submit]
 
     if params[:champs]
       champs_service_errors = ChampsService.save_champs @dossier.champs,
@@ -48,21 +48,19 @@ class Users::DescriptionController < UsersController
       end
     end
 
-    if @procedure.cerfa_flag?
-      unless params[:cerfa_pdf].nil?
-        cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
-        unless cerfa.save
-          flash.alert = cerfa.errors.full_messages.join('<br />').html_safe
-          return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
-        end
+    if @procedure.cerfa_flag? && params[:cerfa_pdf]
+      cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
+      unless cerfa.save
+        flash.alert = cerfa.errors.full_messages.join('<br />').html_safe
+        return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
       end
     end
 
-    unless (errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)).empty?
+    errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)
+    unless errors_upload.empty?
       flash.alert = errors_upload.html_safe
       return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
     end
-
 
     if check_mandatory_fields
       if @dossier.draft?
