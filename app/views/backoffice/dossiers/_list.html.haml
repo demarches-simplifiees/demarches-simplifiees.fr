@@ -8,21 +8,21 @@
 
     - @facade_data_view.preference_list_dossiers_filter.each do |preference|
       - unless preference.libelle == 'Statut' || preference.libelle == 'État'
-        %th{class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}"}
+        %th{ class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}" }
           - if preference.table.to_s.include? 'champs'
             = preference.libelle
-          -else
+          - else
             = smart_listing.sortable preference.libelle, preference.table_attr
           - if @facade_data_view.active_filter? preference
-            %i.filter.fa.fa-filter{style: "color:#{(preference.filter.blank? ? 'grey' : 'orange')}", id: "filter_#{smart_listing.name.to_s}_#{preference.table_attr.sub('.', '_')}"}
-            = render partial: 'backoffice/dossiers/filter_framed', locals:{preference: preference, filter_framed_id: "framed_filter_#{smart_listing.name.to_s}_#{preference.table_attr.sub('.', '_')}"}
+            %i.filter.fa.fa-filter{ style: "color: #{(preference.filter.blank? ? 'grey' : 'orange')}", id: "filter_#{smart_listing.name.to_s}_#{preference.table_attr.sub('.', '_')}" }
+            = render partial: 'backoffice/dossiers/filter_framed', locals: { preference: preference, filter_framed_id: "framed_filter_#{smart_listing.name.to_s}_#{preference.table_attr.sub('.', '_')}" }
 
     %th.col-xs-1.center Actions
     %th.col-xs-1.center Abonnés
 
   - unless smart_listing.empty?
     - smart_listing.collection.each do |dossier|
-      %tr.dossier-row{id: "tr_dossier_#{dossier.id}", 'data-dossier_url' => backoffice_dossier_url(id: dossier.id)}
+      %tr.dossier-row{ id: "tr_dossier_#{dossier.id}", 'data-dossier_url' => backoffice_dossier_url(id: dossier.id) }
         - if smart_listing.name.to_s == 'follow_dossiers'
           %td.col-xs-1.center
             - total_notif = dossier.notifications.where(already_read: false).count
@@ -54,9 +54,9 @@
         %td.center
           - if current_gestionnaire.follow?(dossier.id)
             = link_to('Quitter'.html_safe, backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-danger', id: "suivre_dossier_#{dossier.id}")
-          -else
+          - else
             = link_to('Suivre', backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-primary', id: "suivre_dossier_#{dossier.id}")
-        %td.center{style:"color: #{dossier.total_follow == 0 ? 'red' : ''}"}
+        %td.center{ style: "color: #{dossier.total_follow == 0 ? 'red' : ''}" }
           = dossier.total_follow
 
 = smart_listing.paginate

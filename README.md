@@ -63,6 +63,9 @@ Pour éxécuter les tests de l'application, plusieurs possibilités :
         rake spec SPEC=file_path/file_name_spec.rb
         rspec file_path/file_name_spec.rb
 
+## Linting
+
+- Linter les fichiers HAML : `bundle exec haml-lint app/views/`
 
 ## Regénérer les binstubs
 

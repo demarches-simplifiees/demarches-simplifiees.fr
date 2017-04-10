@@ -1,17 +1,17 @@
-.row{style:'height: 34px'}
+.row{ style: 'height: 34px;' }
 
 - unless smart_listing.empty?
   %table.table#liste_gestionnaire
     %thead
       %th Enlever
-      %th#email{style:'text-align: right'} Email
+      %th#email{ style: 'text-align: right;' } Email
 
     - @accompagnateurs_assign.each do |accompagnateur|
       %tr
         %td.col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1.center
-          %a.btn.btn-primary{href: "#{admin_procedure_accompagnateurs_path(procedure_id: @procedure.id, accompagnateur_id: accompagnateur.id, to: AccompagnateurService::NOT_ASSIGN)}", 'data-method' => 'put'}
+          %a.btn.btn-primary{ href: "#{admin_procedure_accompagnateurs_path(procedure_id: @procedure.id, accompagnateur_id: accompagnateur.id, to: AccompagnateurService::NOT_ASSIGN)}", 'data-method' => 'put' }
             .fa.fa-arrow-left
-        %td{style:'padding-top: 11px; font-size:15px; text-align:right'}= accompagnateur.email
+        %td{ style: 'padding-top: 11px; font-size: 15px; text-align: right;' }= accompagnateur.email
 
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links

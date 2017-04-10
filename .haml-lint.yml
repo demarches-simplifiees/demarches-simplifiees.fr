@@ -1,0 +1,119 @@
+linters:
+  AlignmentTabs:
+    enabled: true
+
+  AltText:
+    enabled: false
+
+  ClassAttributeWithStaticValue:
+    enabled: true
+
+  ClassesBeforeIds:
+    enabled: false
+
+  ConsecutiveComments:
+    enabled: false
+
+  ConsecutiveSilentScripts:
+    enabled: false
+    max_consecutive: 2
+
+  EmptyObjectReference:
+    enabled: true
+
+  EmptyScript:
+    enabled: true
+
+  FinalNewline:
+    enabled: true
+    present: true
+
+  HtmlAttributes:
+    enabled: true
+
+  IdNames:
+    enabled: false
+    style: lisp_case
+
+  ImplicitDiv:
+    enabled: false
+
+  Indentation:
+    enabled: true
+    character: space # or tab
+    width: 2 # ignored if character == tab
+
+  InstanceVariables:
+    enabled: false
+    file_types: partials
+    matchers:
+      all: .*
+      partials: \A_.*\.haml\z
+
+  LeadingCommentSpace:
+    enabled: true
+
+  LineLength:
+    enabled: false
+    max: 80
+
+  MultilinePipe:
+    enabled: true
+
+  MultilineScript:
+    enabled: true
+
+  ObjectReferenceAttributes:
+    enabled: true
+
+  RepeatedId:
+    enabled: false
+    severity: error
+
+  RuboCop:
+    enabled: false
+    # These cops are incredibly noisy when it comes to HAML templates, so we
+    # ignore them.
+    ignored_cops:
+      - Lint/BlockAlignment
+      - Lint/EndAlignment
+      - Lint/Void
+      - Metrics/BlockLength
+      - Metrics/LineLength
+      - Style/AlignParameters
+      - Style/BlockNesting
+      - Style/ElseAlignment
+      - Style/EndOfLine
+      - Style/FileName
+      - Style/FinalNewline
+      - Style/FrozenStringLiteralComment
+      - Style/IfUnlessModifier
+      - Style/IndentationWidth
+      - Style/Next
+      - Style/TrailingBlankLines
+      - Style/TrailingWhitespace
+      - Style/WhileUntilModifier
+
+  RubyComments:
+    enabled: true
+
+  SpaceBeforeScript:
+    enabled: true
+
+  SpaceInsideHashAttributes:
+    enabled: true
+    style: space
+
+  TagName:
+    enabled: true
+
+  TrailingWhitespace:
+    enabled: true
+
+  UnnecessaryInterpolation:
+    enabled: true
+
+  # Disabled because too agressive, but to enable
+  # locally from time to time
+  UnnecessaryStringOutput:
+    enabled: false

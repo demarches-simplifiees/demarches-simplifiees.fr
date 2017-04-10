@@ -4,19 +4,19 @@
       %th
         Formulaire de demande ou CERFA (complété et numérisé)
       %td
-        -unless dossier.procedure.lien_demarche.blank?
+        - unless dossier.procedure.lien_demarche.blank?
           %em
             Récupérer le formulaire de demande ou CERFA vierge pour mon dossier :
             = link_to "Télécharger", "#{dossier.procedure.lien_demarche}", target: :blank, id: :lien_cerfa
-            -# %a{ id: 'lien_cerfa', href: "#{dossier.procedure.lien_demarche}", target: '_blank'} Télécharger
+            -# %a{ id: 'lien_cerfa', href: "#{dossier.procedure.lien_demarche}", target: '_blank' } Télécharger
 
       %td
-        -if dossier.cerfa_available?
+        - if dossier.cerfa_available?
           %span.btn.btn-sm.btn-file.btn-success
             Modifier
-            %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept: PieceJustificative.accept_format, :max_file_size => 6.megabytes }
-        -else
-          %input{type: 'file', name:'cerfa_pdf', id:'cerfa_pdf', accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes }
+            %input{ type: 'file', name: 'cerfa_pdf', id: 'cerfa_pdf', accept: PieceJustificative.accept_format, :max_file_size => 6.megabytes }
+        - else
+          %input{ type: 'file', name: 'cerfa_pdf', id: 'cerfa_pdf', accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes }
 
   - dossier.types_de_piece_justificative.order('order_place ASC').each do |type_de_piece_justificative|
     %tr
@@ -30,12 +30,12 @@
             = link_to "Télécharger", type_de_piece_justificative.lien_demarche, target: :blank
 
       %td
-        -if type_de_piece_justificative.api_entreprise
+        - if type_de_piece_justificative.api_entreprise
           %span.text-success{ id: "piece_justificative_#{type_de_piece_justificative.id}" } Nous l'avons récupéré pour vous.
-        -else
-          -if dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id).nil?
+        - else
+          - if dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id).nil?
             = file_field_tag "piece_justificative_#{type_de_piece_justificative.id}", accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes
-          -else
+          - else
             %span.btn.btn-sm.btn-file.btn-success
               Modifier
               = file_field_tag "piece_justificative_#{type_de_piece_justificative.id}", accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes

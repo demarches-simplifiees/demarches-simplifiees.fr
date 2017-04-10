@@ -1,6 +1,6 @@
 .container
   .mt-1
-    = form_for @admin, url: {controller: 'administrations', action: :create} do |f|
+    = form_for @admin, url: { controller: 'administrations', action: :create } do |f|
       .form-group.form-inline.text-center
         = f.text_field :email, placeholder: :email, class: 'form-control'
         = f.text_field :password, placeholder: :password, class: 'form-control'
@@ -8,7 +8,7 @@
         = f.submit 'Créer un administrateur', class: 'btn btn-success', id: 'submit_new_administrateur'
 
     .text-center
-      =link_to 'Stats', administrations_stats_path, style: 'margin-bottom: 50px; display: block', 'data-no-turbolink': true
+      = link_to 'Stats', administrations_stats_path, style: 'margin-bottom: 50px; display: block;', 'data-no-turbolink': true
 
     = smart_listing_render :admins
 
@@ -16,4 +16,4 @@
     %br
 
     .text-center
-      =link_to 'Deconnexion', '/administrations/sign_out', method: :delete
+      = link_to 'Deconnexion', '/administrations/sign_out', method: :delete

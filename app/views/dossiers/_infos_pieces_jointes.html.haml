@@ -8,14 +8,14 @@
           .col-xs-5
             - if @facade.dossier.cerfa_available?
               %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
-              %span{style:'margin-left:12px'}
+              %span{ style: 'margin-left: 12px;' }
                 \-
-              %a.btn.fa.fa-timer{style:'color: black; padding-top: 0',
+              %a.btn.fa.fa-timer{ style: 'color: black; padding-top: 0;',
                                                 "data-target" => "#PJmodal",
                                                 "data-toggle" => "modal",
                                                 :type => "button",
                                                 "data-modal_title" => 'formulaires',
-                                                "data-modal_index" => 'cerfa'}
+                                                "data-modal_index" => 'cerfa' }
             - else
               = 'Pièce non fournie'
 
@@ -30,20 +30,20 @@
                 - if type_de_piece_justificative.api_entreprise
                   %span.text-success Nous l'avons récupéré pour vous.
                 - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?
-                  -#- if user_signed_in?
-                  -#  = 'Pièce fournie'
-                  -#- elsif gestionnaire_signed_in?
+                  -# - if user_signed_in?
+                  -#   = 'Pièce fournie'
+                  -# - elsif gestionnaire_signed_in?
                   %a{ href: "#{@pj.content_url}", target: '_blank' } Consulter
-                  %span{style:'margin-left:12px'}
+                  %span{ style: 'margin-left: 12px;' }
                     \-
-                  %a.btn.fa.fa-timer{style:'color: black; padding-top: 0',
+                  %a.btn.fa.fa-timer{ style: 'color: black; padding-top: 0;',
                                                       "data-target" => "#PJmodal",
                                                       "data-toggle" => "modal",
                                                       :type => "button",
                                                       "data-modal_title" => type_de_piece_justificative.libelle,
-                                                      "data-modal_index" => "type_de_pj_#{type_de_piece_justificative.id}"}
+                                                      "data-modal_index" => "type_de_pj_#{type_de_piece_justificative.id}" }
                 - else
                   = 'Pièce non fournie'
 
-  -#- if gestionnaire_signed_in?
+  -# - if gestionnaire_signed_in?
   = render partial: '/dossiers/modal_historique'

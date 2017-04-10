@@ -2,17 +2,17 @@
   %table.table#liste_gestionnaire
     %thead
       %th#libelle= smart_listing.sortable 'Email', 'email'
-      %th= ''
+      %th
 
     - @gestionnaires.each do |gestionnaire|
       %tr
-        %td{style:'padding-top: 11px; font-size:15px'}= gestionnaire.email
-        %td{ style: 'text-align:right' }
+        %td{ style: 'padding-top: 11px; font-size: 15px;' }= gestionnaire.email
+        %td{ style: 'text-align: right;' }
           .delete.btn.btn-sm.fa.fa-trash
 
           .confirm
-            =link_to 'Valider', admin_gestionnaire_path(id: gestionnaire.id), {method: :delete, class: 'btn btn-sm btn-success'}
-            .cancel.btn.btn-sm.btn-danger.fa.fa-minus{style: 'top: 0'}
+            = link_to 'Valider', admin_gestionnaire_path(id: gestionnaire.id), { method: :delete, class: 'btn btn-sm btn-success' }
+            .cancel.btn.btn-sm.btn-danger.fa.fa-minus{ style: 'top: 0;' }
 
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links
