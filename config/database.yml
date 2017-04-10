@@ -4,9 +4,8 @@ development:
   database: tps_development
   host: localhost
   pool: 5
-  username: tps
-  password: lol
-
+  username: tps_development
+  password: tps_development
 
 test:
   adapter: postgresql
