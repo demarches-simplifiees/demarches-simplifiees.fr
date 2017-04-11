@@ -83,7 +83,7 @@
 
 #map div.polygon-elbow {
   -webkit-transition: opacity .25s;
-  box-shadow: 0 0 0 2px white, 0 0 10px rgba(0, 0, 0, .35);
+  box-shadow: 0 0 0 2px #FFFFFF, 0 0 10px rgba(0, 0, 0, .35);
   border: 5px solid #D7217E;
   border-radius: 10px;
   transition: opacity 0.25s;
@@ -98,7 +98,7 @@
 #map div.polygon-elbow.non-polygon {
   opacity: 0 !important;
   pointer-events: none !important;
-  border: 5px solid darkgray;
+  border: 5px solid #A9A9A9;
 }
 
 #map.mode-edit div.polygon-elbow {
@@ -119,7 +119,7 @@
 .info {
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;
-  background: white;
+  background: #FFFFFF;
   background: rgba(255, 255, 255, 0.8);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;

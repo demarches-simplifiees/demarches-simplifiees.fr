@@ -84,14 +84,14 @@ $segmented-control-item-border-radius: 2 * $default-space;
 
   &:hover {
     background-color: $blue-hover;
-    color: white;
+    color: #FFFFFF;
     cursor: pointer;
   }
 }
 
 .segmented-control-item-active {
   background-color: $blue;
-  color: white;
+  color: #FFFFFF;
 }
 
 .chart-container {
