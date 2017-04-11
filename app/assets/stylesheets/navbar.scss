@@ -8,6 +8,7 @@
   z-index: 10;
   border-radius: 0;
   height: 60px;
+
   #title_navbar{
     color: #FFFFFF;
     font-weight: bold;
@@ -15,18 +16,22 @@
     z-index: 10;
     overflow: hidden;
   }
+
   #title_navbar:hover{
     text-decoration: none;
   }
+
   #home {
     text-align: center;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5);
     background-color: #003189;
     height: 60px;
+
     .logo {
       margin-top: 10px;
       height: 40px;
     }
+
     #tps-title {
       font-family: Arial;
       font-size: 24px;
@@ -35,11 +40,13 @@
       margin-top: 17px;
     }
   }
+
   #navbar-body {
     min-height: 60px;
     background-color: #FFFFFF;
     box-shadow: 0 1px 2px 0 rgba(50,50,50,0.5);
     padding-left: 50px;
+
     .main-info {
       font-family: Arial;
       font-size: 18px;
@@ -51,6 +58,7 @@
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+
     .options {
       font-family: Arial;
       font-size: 14px;
@@ -60,18 +68,22 @@
       padding: 8px;
       border-right: 1px solid #C8C6C8;
       min-height: 60px;
+
       .dropdown-toggle {
         cursor: pointer;
       }
+
       .dropdown-pannel {
         min-height: 100px;
         width: 400px;
         padding-left: 10px;
       }
+
       .centered-option {
         line-height: 40px;
         height: 40px;
       }
+
       .caret-right {
         border-bottom: 4px solid transparent;
         border-top: 4px solid transparent;
@@ -86,6 +98,7 @@
 
     #sign_in{
       margin-top: 7px;
+
       .btn {
         float: right;
         margin-right: 15px;
@@ -103,6 +116,7 @@
         margin-right: 0.5em;
         font-size: 40px;
       }
+
       .fa:hover {
         color: #668ABD;
       }
@@ -145,6 +159,7 @@
 
 .navbar {
   border: 0 !important;
+
   .sign_in_FC {
     margin-top: -18px;
     height: 70px;
@@ -181,11 +196,13 @@
   text-align: center;
   padding: 2px;
   float: right;
+
   .fa {
     font-size: 20px;
     margin-right: 10px;
   }
 }
+
 .button-navbar-action:hover {
   color: $light-blue;
 }
@@ -200,6 +217,7 @@
   padding: 10px;
   left: -130px;
   text-align: center;
+
   .description {
     font-weight: bold;
     font-size: 20px;

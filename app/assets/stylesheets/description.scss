@@ -6,6 +6,7 @@
   .default_data_block {
     .show-block {
       width: 90%;
+
       .body{
         padding: 15px;
       }
@@ -47,11 +48,13 @@
 
   .twitter-typeahead {
     width: 100%;
+
     input {
       width: 100%;
       display: block !important;
     }
   }
+
   .tt-menu {
     width: 100%;
   }

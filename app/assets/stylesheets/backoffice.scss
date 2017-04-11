@@ -5,13 +5,16 @@
   .default_data_block {
     background-color: #FFFFFF;
     margin-top: 20px;
+
     .show-block {
       width: 100%;
     }
+
     .body {
       height: auto;
     }
   }
+
   .fixed-right {
     position: fixed;
     right: 20px;
