@@ -8,7 +8,7 @@ describe StatsController, type: :controller do
       FactoryGirl.create(:procedure, :created_at => 1.day.ago)
 
       @expected_hash = {}
-      (15.days.ago.to_date..1.day.ago.to_date).each do |day|
+      (30.days.ago.to_date..Time.now.to_date).each do |day|
         if [15.days.ago.to_date, 1.day.ago.to_date].include?(day)
           @expected_hash[day] = 1
         else

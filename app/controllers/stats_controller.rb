@@ -17,21 +17,28 @@ class StatsController < ApplicationController
   private
 
   def thirty_days_flow_hash(association)
+    min_date = 30.days.ago.to_date
+    max_date = Time.now.to_date
+
     thirty_days_flow_hash = association
-      .where(:created_at => 30.days.ago..Time.now)
+      .where(:created_at => min_date..max_date)
       .group("date_trunc('day', created_at)")
       .count
 
-    clean_hash(thirty_days_flow_hash)
+    clean_hash(thirty_days_flow_hash, min_date, max_date)
   end
 
-  def clean_hash h
-    h.keys.each{ |key| h[key.to_date] = h[key]; h.delete(key) }
-    min_date = h.keys.min
-    max_date = h.keys.max
+  def clean_hash(h, min_date, max_date)
+    # Convert keys to date
+    h = Hash[h.map { |(k, v)| [k.to_date, v] } ]
+
+    # Add missing vales where count is 0
     (min_date..max_date).each do |date|
-      h[date] = 0 if h[date].nil?
+      if h[date].nil?
+        h[date] = 0
+      end
     end
+
     h
   end
 
