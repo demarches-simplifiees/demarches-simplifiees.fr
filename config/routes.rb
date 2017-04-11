@@ -94,6 +94,8 @@ Rails.application.routes.draw do
 
       post '/siret_informations' => 'dossiers#siret_informations'
       put '/change_siret' => 'dossiers#change_siret'
+
+      get 'procedure_libelle' => 'dossiers#procedure_libelle'
     end
     resource :dossiers
   end

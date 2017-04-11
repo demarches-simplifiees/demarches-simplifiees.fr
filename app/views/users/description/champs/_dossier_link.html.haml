@@ -1,0 +1,21 @@
+- dossier = Dossier.find_by(id: champ.value)
+- show_procedure_libelle = dossier ? true : false
+- show_warning = !show_procedure_libelle && champ.value.present?
+- procedure_libelle = dossier.nil? ? '' : dossier.procedure.libelle
+
+.dossier-link
+  %input.form-control{ name: "champs['#{ champ.id }']",
+                       placeholder: champ.libelle,
+                       id: "champs_#{ champ.id }",
+                       value: champ.value,
+                       type: 'number',
+                       'autocomplete' => 'off',
+                       'data-type' => 'dossier-link' }
+
+  .help-block
+    %p.text-info{ style: show_procedure_libelle ? nil : 'display: none;' }
+      ce dossier répond à la procédure :
+      %br
+      %span.procedureLibelle= procedure_libelle
+    %p.text-warning{ style: show_warning ? nil : 'display: none;' }
+      ce dossier est inconnu
