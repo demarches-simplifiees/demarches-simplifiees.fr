@@ -52,4 +52,5 @@ class StatsController < ApplicationController
       .map { |x, y| { x => (sum += y)} }
       .reduce({}, :merge)
   end
+
 end
