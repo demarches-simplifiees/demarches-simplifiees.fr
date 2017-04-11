@@ -45,13 +45,13 @@ Rails.application.routes.draw do
   authenticate :administration do
     resources :administrations, only: [:index, :create]
     namespace :administrations do
-      resources :stats, only: [:index]
-
       require 'sidekiq/web'
       require 'sidekiq/cron/web'
       mount Sidekiq::Web => '/sidekiq'
     end
   end
+
+  resources :stats, only: [:index]
 
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
