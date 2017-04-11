@@ -34,18 +34,12 @@ class Users::DescriptionController < UsersController
 
     @champs = @dossier.ordered_champs
 
-    mandatory = true
-    mandatory = !(params[:submit].keys.first == 'brouillon') unless params[:submit].nil?
+    check_mandatory_fields = !draft_submission?
 
-    unless @dossier.update_attributes(create_params)
-      @dossier = @dossier.decorate
-
-      flash.alert = @dossier.errors.full_messages.join('<br />').html_safe
-      return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
-    end
-
-    unless params[:champs].nil?
-      champs_service_errors = ChampsService.save_formulaire @dossier.champs, params, mandatory
+    if params[:champs]
+      champs_service_errors = ChampsService.save_champs @dossier.champs,
+                                                        params,
+                                                        check_mandatory_fields
 
       unless champs_service_errors.empty?
         flash.alert = (champs_service_errors.inject('') { |acc, error| acc+= error[:message]+'<br>' }).html_safe
@@ -53,33 +47,30 @@ class Users::DescriptionController < UsersController
       end
     end
 
-    if @procedure.cerfa_flag?
-      unless params[:cerfa_pdf].nil?
-        cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
-        unless cerfa.save
-          flash.alert = cerfa.errors.full_messages.join('<br />').html_safe
-          return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
-        end
+    if @procedure.cerfa_flag? && params[:cerfa_pdf]
+      cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
+      unless cerfa.save
+        flash.alert = cerfa.errors.full_messages.join('<br />').html_safe
+        return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
       end
     end
 
-    unless (errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)).empty?
+    errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)
+    unless errors_upload.empty?
       flash.alert = errors_upload.html_safe
       return redirect_to users_dossier_description_path(dossier_id: @dossier.id)
     end
 
-
-    if mandatory
+    if draft_submission?
+      flash.notice = 'Votre brouillon a bien été sauvegardé.'
+      redirect_to url_for(controller: :dossiers, action: :index, liste: :brouillon)
+    else
       if @dossier.draft?
         @dossier.initiated!
         NotificationMailer.send_notification(@dossier, @dossier.procedure.initiated_mail).deliver_now!
       end
-
       flash.notice = 'Félicitations, votre demande a bien été enregistrée.'
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
-    else
-      flash.notice = 'Votre brouillon a bien été sauvegardé.'
-      redirect_to url_for(controller: :dossiers, action: :index, liste: :brouillon)
     end
   end
 
@@ -123,6 +114,10 @@ class Users::DescriptionController < UsersController
 
   private
 
+  def draft_submission?
+    params[:submit] && params[:submit].keys.first == 'brouillon'
+  end
+
   def check_autorisation_donnees
     @dossier = current_user_dossier
 
@@ -137,9 +132,4 @@ class Users::DescriptionController < UsersController
       redirect_to url_for(users_dossier_path(@dossier.id))
     end
   end
-
-  def create_params
-    params.permit()
-  end
-
 end

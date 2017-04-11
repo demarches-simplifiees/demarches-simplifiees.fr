@@ -28,6 +28,10 @@ class Champ < ActiveRecord::Base
     same_date? num, '%M'
   end
 
+  def mandatory_and_blank?
+    mandatory? && value.blank?
+  end
+
   def same_date? num, compare
     if type_champ == 'datetime' && !value.nil?
       if value.to_datetime.strftime(compare) == num
