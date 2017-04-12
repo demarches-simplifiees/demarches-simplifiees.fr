@@ -9,7 +9,7 @@
   border-radius: 0;
   height: 60px;
 
-  #title_navbar{
+  #title_navbar {
     color: #FFFFFF;
     font-weight: bold;
     font-size: 1.8em;
@@ -17,7 +17,7 @@
     overflow: hidden;
   }
 
-  #title_navbar:hover{
+  #title_navbar:hover {
     text-decoration: none;
   }
 
@@ -96,7 +96,7 @@
       }
     }
 
-    #sign_in{
+    #sign_in {
       margin-top: 7px;
 
       .btn {
@@ -105,7 +105,7 @@
       }
     }
 
-    #sign_out{
+    #sign_out {
       height: 60px;
 
       .fa {
