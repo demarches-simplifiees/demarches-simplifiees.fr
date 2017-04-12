@@ -157,17 +157,17 @@ class Dossier < ActiveRecord::Base
     state
   end
 
-  def brouillon?
-    BROUILLON.include?(state)
-  end
-
   def self.all_state order = 'ASC'
     where(state: ALL_STATE, archived: false).order("updated_at #{order}")
   end
 
-  def self.brouillon order = 'ASC'
-    where(state: BROUILLON, archived: false).order("updated_at #{order}")
+  def brouillon?
+    BROUILLON.include?(state)
   end
+
+  scope :brouillon, -> { where(state: BROUILLON) }
+
+  scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
   def self.nouveaux order = 'ASC'
     where(state: NOUVEAUX, archived: false).order("updated_at #{order}")

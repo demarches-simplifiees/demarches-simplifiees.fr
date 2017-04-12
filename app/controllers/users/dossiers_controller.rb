@@ -16,7 +16,7 @@ class Users::DossiersController < UsersController
 
     @dossiers_filtered = case @liste
     when 'brouillon'
-      @user_dossiers.brouillon
+      @user_dossiers.brouillon.order_by_updated_at
     when 'a_traiter'
       @user_dossiers.en_construction
     when 'en_instruction'
