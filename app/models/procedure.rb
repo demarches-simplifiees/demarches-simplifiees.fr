@@ -134,9 +134,7 @@ class Procedure < ActiveRecord::Base
     exportable_dossiers = dossiers.downloadable
 
     headers = exportable_dossiers.any? ? exportable_dossiers.first.export_headers : []
-    data = exportable_dossiers.map do |dossier|
-      dossier.full_data_strings_array
-    end
+    data = exportable_dossiers.any? ? exportable_dossiers.map { |d| d.full_data_strings_array } : [[]]
 
     {
       headers: headers,
