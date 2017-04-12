@@ -261,9 +261,13 @@ describe Procedure do
     let(:procedure) { create :procedure }
     subject { procedure.generate_export }
 
-    context 'when there are no dossiers' do
-      it { expect(subject[:data]).to eq([]) }
+    shared_examples "export is empty" do
+      it { expect(subject[:data]).to eq([[]]) }
       it { expect(subject[:headers]).to eq([]) }
+    end
+
+    context 'when there are no dossiers' do
+      it_behaves_like "export is empty"
     end
 
     context 'when there are some dossiers' do
@@ -277,8 +281,7 @@ describe Procedure do
     context 'when there is a draft dossier' do
       let!(:dossier_not_exportable){ create(:dossier, procedure: procedure, state: 'draft') }
 
-      it { expect(subject[:data]).to eq([]) }
-      it { expect(subject[:headers]).to eq([]) }
+      it_behaves_like "export is empty"
     end
   end
 end
