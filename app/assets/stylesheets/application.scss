@@ -88,13 +88,6 @@ form {
   background-color: #B00100 !important;
 }
 
-.staging_warning {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .text-purple {
   color: #8B008B;
 }
@@ -146,10 +139,6 @@ form {
 
 textarea#description {
   width: 100%;
-}
-
-.logo_fc_small {
-  max-width: 27px;
 }
 
 div.pagination {
