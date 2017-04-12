@@ -10,8 +10,8 @@
     = @dossier.decorate.display_state
     %br
     État souhaité :
-    %select{id: :next_state, name: :next_state}
+    %select{ id: :next_state, name: :next_state }
       - Dossier.states.each do |state|
-        %option{value: state[0]}
-          =DossierDecorator.case_state_fr state[1]
+        %option{ value: state[0] }
+          = DossierDecorator.case_state_fr state[1]
     = f.submit 'Valider'

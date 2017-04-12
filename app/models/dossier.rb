@@ -210,19 +210,16 @@ class Dossier < ActiveRecord::Base
   def convert_specific_hash_values_to_string(hash_to_convert)
     hash = {}
     hash_to_convert.each do |key, value|
-      value = value.to_s if !value.kind_of?(Time) && !value.nil?
+      value = serialize_value_for_export(value)
       hash.store(key, value)
     end
     return hash
   end
 
-  def convert_specific_array_values_to_string(array_to_convert)
-    array = []
-    array_to_convert.each do |value|
-      value = value.to_s if !value.kind_of?(Time) && !value.nil?
-      array << value
+  def full_data_strings_array
+    data_with_champs.map do |value|
+      serialize_value_for_export(value)
     end
-    return array
   end
 
   def export_entreprise_data
@@ -304,6 +301,10 @@ class Dossier < ActiveRecord::Base
     elsif TERMINE.include?(state)
       self.processed_at = DateTime.now
     end
+  end
+
+  def serialize_value_for_export(value)
+    value.nil? || value.kind_of?(Time) ? value : value.to_s
   end
 
 end

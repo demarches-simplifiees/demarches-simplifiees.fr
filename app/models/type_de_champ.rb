@@ -18,7 +18,8 @@ class TypeDeChamp < ActiveRecord::Base
            departements: 'departements',
            engagement: 'engagement',
            header_section: 'header_section',
-           explication: 'explication'
+           explication: 'explication',
+           dossier_link: 'dossier_link'
        }
 
   belongs_to :procedure

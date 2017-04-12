@@ -93,6 +93,8 @@ gem 'simple_form'
 
 gem 'newrelic_rpm'
 
+gem 'scenic'
+
 # Sidekiq
 gem 'sidekiq'
 gem 'sidekiq-cron', '~> 0.4.4'
@@ -114,7 +116,6 @@ group :test do
   gem 'guard-livereload', '~> 2.4', require: false
   gem 'vcr'
   gem 'rails-controller-testing'
-  gem 'sqlite3'
 end
 
 group :development do
@@ -122,6 +123,7 @@ group :development do
   gem 'web-console'
   gem 'rack-handlers'
   gem 'xray-rails'
+  gem 'haml-lint'
 end
 
 group :development, :test do
@@ -145,6 +147,3 @@ group :production, :staging do
   gem 'sentry-raven'
 end
 
-group :production, :staging, :development do
-  gem 'scenic'
-end

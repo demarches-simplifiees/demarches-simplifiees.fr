@@ -2,13 +2,18 @@
 
 ## Context
 
-TéléProcédure Simplifiée, ou TPS pour les intimes, est une plateforme 100% web et 0% email, conçue afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100% démat' à l'horizon 2018 pour les démarches administratives.
+TéléProcédure Simplifiée, ou TPS pour les intimes, est une plateforme 100 % web et 0 % email, conçue afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % démat' à l'horizon 2018 pour les démarches administratives.
 
 
-## Technologies utilisées
+## Dépendances
 
-Ruby  : 2.3.1
-Rails : 5.0.0.1
+### Tous environnements
+
+- postgresql
+
+### Tests
+
+- PhantomJS
 
 
 ## Initialisation de l'environnement de développement
@@ -20,17 +25,13 @@ Afin d'initialiser l'environnement de développement, éxécutez la commande sui
 
 ## Création de la base de données
 
-L'application utilise une base de donnée Postgresql. Pour en installer une, utilisez la commande suivante :
-
-    sudo apt-get install postgresql
-
 Les informations nécessaire à l'initialisation de la base doivent être pré-configurées à la main grâce à la procédure suivante :
 
     su - postgres
     psql
-    > create user tps with password 'lol' superuser;
+    > create user tps_development with password 'tps_development' superuser;
+    > create user tps_test with password 'tps_test' superuser;
     > \q
-
 
 Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les commandes suivantes :
 
@@ -38,14 +39,9 @@ Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les c
     rake db:create db:schema:load db:migrate RAILS_ENV=test
 
 
-## Installation de Phantom JS
+## Exécution des tests (RSpec)
 
-Installer PhantomJS qui est utilisé par les tests automatisés de l'application.
-
-
-## Exécution des tests (Rspec)
-
-Pour éxécuter les tests de l'application, plusieurs possibilités :
+Pour exécuter les tests de l'application, plusieurs possibilités :
 
 - Lancer tous les tests
 
@@ -62,8 +58,11 @@ Pour éxécuter les tests de l'application, plusieurs possibilités :
         rake spec SPEC=file_path/file_name_spec.rb
         rspec file_path/file_name_spec.rb
 
+## Linting
 
-## Regénérer les binstubs
+- Linter les fichiers HAML : `bundle exec haml-lint app/views/`
+
+## Régénérer les binstubs
 
     bundle binstub railties --force
     rake rails:update:bin

@@ -164,7 +164,7 @@ shared_examples 'carte_controller_spec' do
           subject { Cadastre.last }
 
           it { expect(subject.surface_intersection).to eq('0.0006') }
-          it { expect(subject.surface_parcelle).to eq(11252.692583090324) }
+          it { expect(subject.surface_parcelle).to eq(11252.6925830903) }
           it { expect(subject.numero).to eq('0013') }
           it { expect(subject.feuille).to eq(1) }
           it { expect(subject.section).to eq('CD') }
