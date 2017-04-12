@@ -20,7 +20,7 @@ class Users::DossiersController < UsersController
     when 'a_traiter'
       @user_dossiers.en_construction.order_by_updated_at
     when 'en_instruction'
-      @user_dossiers.en_instruction
+      @user_dossiers.en_instruction.order_by_updated_at
     when 'termine'
       @user_dossiers.termine
     when 'invite'

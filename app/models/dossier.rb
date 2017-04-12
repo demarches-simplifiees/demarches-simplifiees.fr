@@ -191,9 +191,7 @@ class Dossier < ActiveRecord::Base
     where(state: A_INSTRUIRE, archived: false).order("updated_at #{order}")
   end
 
-  def self.en_instruction order = 'ASC'
-    where(state: EN_INSTRUCTION, archived: false).order("updated_at #{order}")
-  end
+  scope :en_instruction, -> { where(state: EN_INSTRUCTION) }
 
   def self.termine order = 'ASC'
     where(state: TERMINE, archived: false).order("updated_at #{order}")
