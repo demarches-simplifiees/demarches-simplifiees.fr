@@ -455,18 +455,6 @@ describe Dossier do
         it { expect(subject.size).to eq(1) }
       end
 
-      describe '#a_instruire' do
-        subject { gestionnaire.dossiers.a_instruire }
-
-        it { expect(subject.size).to eq(2) }
-      end
-
-      describe '#termine' do
-        subject { gestionnaire.dossiers.termine }
-
-        it { expect(subject.size).to eq(3) }
-      end
-
       describe '#en_instruction' do
         subject { gestionnaire.dossiers.en_instruction }
 
