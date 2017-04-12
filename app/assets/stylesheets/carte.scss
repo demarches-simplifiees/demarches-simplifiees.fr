@@ -29,7 +29,7 @@
 }
 
 .leaflet-container path {
-  cursor: url('/assets/edit.png'), default !important;
+  cursor: url("/assets/edit.png"), default !important;
 }
 
 #infos_dossier {
@@ -51,7 +51,7 @@
 }
 
 #map.mode-create {
-  cursor: url('/assets/pencil.png'), crosshair !important;
+  cursor: url("/assets/pencil.png"), crosshair !important;
 }
 
 #map g path.tracer {
