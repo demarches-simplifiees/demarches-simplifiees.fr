@@ -18,7 +18,7 @@ class Users::DossiersController < UsersController
     when 'brouillon'
       @user_dossiers.brouillon.order_by_updated_at
     when 'a_traiter'
-      @user_dossiers.en_construction
+      @user_dossiers.en_construction.order_by_updated_at
     when 'en_instruction'
       @user_dossiers.en_instruction
     when 'termine'
