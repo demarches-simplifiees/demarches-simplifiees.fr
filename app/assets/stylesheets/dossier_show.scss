@@ -1,11 +1,13 @@
-#backoffice_dossier_show, #users_recapitulatif_dossier_show {
+#backoffice_dossier_show,
+#users_recapitulatif_dossier_show {
 
   #messages {
     .last-commentaire {
       display: block;
       background-color: #FFFFFF;
 
-      .content, .new-action {
+      .content,
+      .new-action {
         margin-bottom: 20px;
       }
     }
@@ -24,7 +26,8 @@
       }
     }
 
-    .last-commentaire, .commentaire {
+    .last-commentaire,
+    .commentaire {
       padding: 20px 0 0 20px;
 
       .comment-header {
@@ -103,7 +106,11 @@
     }
   }
 
-  #dossier, #pieces-jointes, .infos, #carto, #private-fields {
+  #dossier,
+  #pieces-jointes,
+  .infos,
+  #carto,
+  #private-fields {
     .body {
       padding: 20px 20px 0 20px;
       color: #000000;
@@ -131,7 +138,8 @@
         margin: 50px 0 0 15px;
       }
 
-      .action, .btn-action {
+      .action,
+      .btn-action {
         background-color: #E45B51;
         text-align: center;
         cursor: pointer;

@@ -38,7 +38,10 @@
     font-size: 18px;
     font-weight: bold;
 
-    .title, .title-no-expanse, .action, .count {
+    .title,
+    .title-no-expanse,
+    .action,
+    .count {
       height: 100%;
       line-height: 40px;
       padding: 0px;
@@ -49,7 +52,9 @@
       cursor: not-allowed;
     }
 
-    .title, .action, .count {
+    .title,
+    .action,
+    .count {
       cursor: pointer;
     }
 

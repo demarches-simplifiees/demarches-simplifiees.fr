@@ -69,7 +69,10 @@
   }
 }
 
-.type_champ-drop_down_list, .type_champ-regions, .type_champ-departements, .type_champ-pays {
+.type_champ-drop_down_list,
+.type_champ-regions,
+.type_champ-departements,
+.type_champ-pays {
   @extend .col-md-4;
   @extend .col-lg-4;
 

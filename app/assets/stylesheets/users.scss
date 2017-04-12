@@ -1,6 +1,7 @@
 @import "variables";
 
-#users_index, #admins_index {
+#users_index,
+#admins_index {
   margin-left: 2rem;
   margin-right: 2rem;
 
@@ -34,7 +35,10 @@
   }
 }
 
-.white-back, #users_siret_index, #description_page, #carto_page {
+.white-back,
+#users_siret_index,
+#description_page,
+#carto_page {
   background-color: #FFFFFF;
   box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5);
   padding: 20px;

@@ -1,4 +1,5 @@
-#backoffice_index, #backoffice_search {
+#backoffice_index,
+#backoffice_search {
   margin-left: 2rem;
   margin-right: 2rem;
 
@@ -30,7 +31,8 @@
 
 #onglets {
   ul {
-    li, li.active {
+    li,
+    li.active {
       a {
         margin-top: 12px;
         height: 45px;

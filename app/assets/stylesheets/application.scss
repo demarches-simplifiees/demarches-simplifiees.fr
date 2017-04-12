@@ -30,7 +30,8 @@ body {
   background-color: $light-blue;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -58,7 +59,8 @@ form {
   display: block;
 }
 
-#footer, #wrap::after {
+#footer,
+#wrap::after {
   height: 50px;
 }
 
@@ -67,7 +69,8 @@ form {
   text-align: center;
   padding: 0;
 
-  a, p {
+  a,
+  p {
     color: #000000;
   }
 
