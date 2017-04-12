@@ -53,12 +53,12 @@ form {
   overflow: hidden;
 }
 
-#wrap:after {
+#wrap::after {
   content: "";
   display: block;
 }
 
-#footer, #wrap:after {
+#footer, #wrap::after {
   height: 50px;
 }
 
@@ -202,11 +202,11 @@ div.pagination {
   right: 50px;
 }
 
-#fconnect-access:before {
+#fconnect-access::before {
   left: 22.7% !important;
 }
 
-#fconnect-access:after {
+#fconnect-access::after {
   left: 23% !important;
 }
 
