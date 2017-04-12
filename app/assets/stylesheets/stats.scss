@@ -33,7 +33,6 @@ $statistiques-padding-top: $default-space * 2;
 $stat-card-margin-bottom: 3 * $default-space;
 
 .stat-card {
-  @extend .card;
   margin-bottom: $stat-card-margin-bottom;
   border-radius: 5px;
   box-shadow: none;
