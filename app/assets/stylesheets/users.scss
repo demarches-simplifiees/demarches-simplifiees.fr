@@ -1,11 +1,11 @@
 @import "variables";
 
-#users_index,
-#admins_index {
+#users-index,
+#admins-index {
   margin-left: 2rem;
   margin-right: 2rem;
 
-  .default_data_block {
+  .default-data-block {
     margin-top: 20px;
     background-color: #FFFFFF;
 
@@ -19,11 +19,11 @@
   }
 }
 
-#users_siret_index {
+#users-siret-index {
   margin: 20px;
 }
 
-#carto_page {
+#carto-page {
   margin: 20px;
 }
 
@@ -36,9 +36,9 @@
 }
 
 .white-back,
-#users_siret_index,
-#description_page,
-#carto_page {
+#users-siret-index,
+#description-page,
+#carto-page {
   background-color: #FFFFFF;
   box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5);
   padding: 20px;

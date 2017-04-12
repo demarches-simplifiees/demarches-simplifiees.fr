@@ -28,7 +28,7 @@
 
 = devise_error_messages!
 
-#form_login
+#form-login
   %br
   .flag
     = image_tag(image_url(LOGO_NAME))
@@ -37,7 +37,7 @@
 
   %br
   %br
-  #new_user
+  #new-user
     = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
       %h4
         = f.label :email

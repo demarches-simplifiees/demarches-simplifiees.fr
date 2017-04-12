@@ -9,7 +9,7 @@
   border-radius: 0;
   height: 60px;
 
-  #title_navbar {
+  #title-navbar {
     color: #FFFFFF;
     font-weight: bold;
     font-size: 1.8em;
@@ -17,7 +17,7 @@
     overflow: hidden;
   }
 
-  #title_navbar:hover {
+  #title-navbar:hover {
     text-decoration: none;
   }
 
@@ -96,7 +96,7 @@
       }
     }
 
-    #sign_in {
+    #sign-in {
       margin-top: 7px;
 
       .btn {
@@ -105,7 +105,7 @@
       }
     }
 
-    #sign_out {
+    #sign-out {
       height: 60px;
 
       .fa {
@@ -177,7 +177,7 @@
   z-index: 10;
 }
 
-.button_navbar {
+.button-navbar {
   color: #666666;
   cursor: pointer;
 }
@@ -202,7 +202,7 @@
   color: $light-blue;
 }
 
-.button_navbar:hover,
+.button-navbar:hover,
 .button-navbar-action:hover {
   text-decoration: none;
 }

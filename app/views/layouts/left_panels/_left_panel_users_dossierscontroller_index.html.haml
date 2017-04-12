@@ -9,34 +9,34 @@
 
 %div#menu-block
   .split-hr-left
-  #procedure_list
+  #procedure-list
     - unless current_user.dossiers.count == 0
       %a{ :href => "#{url_for users_dossiers_path(liste: 'brouillon')}", 'data-toggle' => :tooltip, title: 'Les dossiers jamais proposés à la relecture.' }
-        .procedure_list_element{ class: @dossiers_list_facade.brouillon_class, id: 'brouillon' }
+        .procedure-list-element{ class: @dossiers_list_facade.brouillon_class, id: 'brouillon' }
           Brouillons
           .badge.progress-bar-default
             = @dossiers_list_facade.brouillon_total
 
       %a{ :href => "#{url_for users_dossiers_path(liste: 'a_traiter')}", 'data-toggle' => :tooltip, title: 'Les dossiers qui requièrent une action de votre part.' }
-        .procedure_list_element{ class: @dossiers_list_facade.en_construction_class, id: 'a_traiter' }
+        .procedure-list-element{ class: @dossiers_list_facade.en_construction_class, id: 'a_traiter' }
           En construction
           .badge.progress-bar-danger
             = @dossiers_list_facade.en_construction_total
 
       %a{ :href => "#{url_for users_dossiers_path(liste: 'en_instruction')}", 'data-toggle' => :tooltip, title: 'Les dossiers en cours d\'examen par l\'administration compétante.' }
-        .procedure_list_element{ class: @dossiers_list_facade.en_instruction_class, id: 'en_instruction' }
+        .procedure-list-element{ class: @dossiers_list_facade.en_instruction_class, id: 'en_instruction' }
           En instruction
           .badge.progress-bar-default
             = @dossiers_list_facade.en_instruction_total
 
       %a{ :href => "#{url_for users_dossiers_path(liste: 'termine')}", 'data-toggle' => :tooltip, title: 'Les dossiers cloturés qui peuvent être "Accepté", "Refusé" ou "Sans suite".' }
-        .procedure_list_element{ class:  @dossiers_list_facade.termine_class, id: 'termine' }
+        .procedure-list-element{ class:  @dossiers_list_facade.termine_class, id: 'termine' }
           Terminé
           .badge.progress-bar-success
             = @dossiers_list_facade.termine_total
 
     %a{ :href => "#{url_for users_dossiers_path(liste: 'invite')}" }
-      .procedure_list_element{ class:  @dossiers_list_facade.invite_class, id: 'invite' }
+      .procedure-list-element{ class:  @dossiers_list_facade.invite_class, id: 'invite' }
         Invitation
         .badge.progress-bar-warning
           = @dossiers_list_facade.invite_total

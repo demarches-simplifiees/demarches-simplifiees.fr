@@ -21,7 +21,7 @@ describe 'users/siret/index.html.haml', type: :view do
     end
 
     it 'le titre de la procédure' do
-      expect(rendered).to have_selector('#titre_procedure')
+      expect(rendered).to have_selector('#titre-procedure')
     end
 
     context 'stockage de l\'ID de la procédure dans un champs hidden' do

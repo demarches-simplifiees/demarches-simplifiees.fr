@@ -9,14 +9,14 @@ feature 'user is on description page' do
 
     visit users_dossier_description_path dossier
 
-    within('#new_user') do
+    within('#new-user') do
       page.find_by_id('user_email').set dossier.user.email
       page.find_by_id('user_password').set dossier.user.password
       page.click_on 'Se connecter'
     end
   end
 
-  it { expect(page).to have_css('#description_page') }
+  it { expect(page).to have_css('#description-page') }
 
   context 'he fill description fields' do
     before do

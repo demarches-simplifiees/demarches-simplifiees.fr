@@ -18,10 +18,10 @@ feature 'search file on gestionnaire backoffice' do
 
         visit backoffice_dossiers_url
         page.find_by_id(:q).set terms
-        page.find_by_id(:search_button).click
+        page.find_by_id("search-button").click
       end
 
-      it { expect(page).to have_css('#backoffice_search') }
+      it { expect(page).to have_css('#backoffice-search') }
 
       context 'when terms input is empty' do
         it { expect(page).to have_content('Aucun dossier') }

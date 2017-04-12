@@ -17,20 +17,20 @@ feature 'usage of pref list dossier lateral panel', js: true do
 
   context 'when user enter good credentials' do
     scenario 'he is redirected to /backoffice' do
-      expect(page).to have_css('#backoffice_index')
+      expect(page).to have_css('#backoffice-index')
     end
 
     scenario 'lateral panel is masked' do
-      expect(page).to have_css('#pref_list_menu', visible: false)
+      expect(page).to have_css('#pref-list-menu', visible: false)
     end
 
     context 'when on click on pref list button' do
       before do
-        page.click_on 'pref_list_dossier_open_action'
+        page.click_on 'pref-list-dossier-open-action'
       end
 
       scenario 'lateral panel is appeared' do
-        expect(page).to have_css('#pref_list_menu')
+        expect(page).to have_css('#pref-list-menu')
       end
 
       context 'when on click on add attribut button' do
@@ -65,12 +65,12 @@ feature 'usage of pref list dossier lateral panel', js: true do
 
           context 'when on click on close pref list button' do
             before do
-              page.click_on 'pref_list_dossier_close_action'
+              page.click_on 'pref-list-dossier-close-action'
             end
 
             scenario 'lateral panel is masked' do
               wait_for_ajax
-              expect(page).to have_css('#pref_list_menu', visible: false)
+              expect(page).to have_css('#pref-list-menu', visible: false)
             end
           end
         end

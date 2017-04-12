@@ -1,4 +1,4 @@
-.header_section {
+.header-section {
   background-color: rgb(0, 49, 137);
   margin-top: 20px;
   margin-bottom: 10px;
@@ -22,16 +22,16 @@
   }
 }
 
-#liste_champ {
+#liste-champ {
   .form-inline {
     margin-bottom: 30px;
   }
 
-  .show_inline {
+  .show-inline {
     display: inline-block !important;
   }
 
-  .form-group.drop_down_list {
+  .form-group.drop-down-list {
     display: none;
   }
 

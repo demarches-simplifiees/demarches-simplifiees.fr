@@ -6,7 +6,7 @@ h5 span {
   font-weight: normal;
 }
 
-#insee_infogreffe {
+#insee-infogreffe {
   font-size: 17px;
 }
 
@@ -23,7 +23,7 @@ h5 span {
   }
 }
 
-#dossiers_list {
+#dossiers-list {
   .filter {
     cursor: pointer;
     font-size: 1.1em;
@@ -31,13 +31,13 @@ h5 span {
   }
 }
 
-#dossiers_list tr:hover {
+#dossiers-list tr:hover {
   background-color: #EEEEEE;
   cursor: pointer;
 }
 
-#procedure_list,
-#notifications_list {
+#procedure-list,
+#notifications-list {
   margin-left: -10px;
   margin-top: 20px;
 
@@ -47,12 +47,12 @@ h5 span {
     text-decoration: none;
   }
 
-  .procedure_list_element.active,
+  .procedure-list-element.active,
   .notification.active {
     background-color: #668ABD;
   }
 
-  .procedure_list_element,
+  .procedure-list-element,
   .notification {
     padding: 15px 40px 15px 20px;
     cursor: pointer;
@@ -63,7 +63,7 @@ h5 span {
     }
   }
 
-  .procedure_list_element:hover,
+  .procedure-list-element:hover,
   .notification:hover {
     background-color: #668ABD;
     cursor: pointer;

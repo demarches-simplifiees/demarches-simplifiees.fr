@@ -1,14 +1,14 @@
 = devise_error_messages!
 
 %br
-#form_login
+#form-login
   = image_tag(image_url(LOGO_NAME))
   %br
   %h2#gestionnaire_login Mot de passe oublié
 
   %br
   %br
-  #new_user
+  #new-user
     = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
       %h4
         = f.label :email

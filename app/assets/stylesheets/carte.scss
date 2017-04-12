@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 @import "bootstrap";
 
-#carte_page {
+#carte-page {
   #map {
     margin-left: 15px;
     width: 90%;
@@ -32,7 +32,7 @@
   cursor: url("/assets/edit.png"), default !important;
 }
 
-#infos_dossier {
+#infos-dossiers {
   #map.mini {
     height: 300px;
     width: 100%;
@@ -120,7 +120,7 @@
   color: #777777;
 }
 
-#search_by_address {
+#search-by-address {
   .twitter-typeahead {
     width: 555px;
   }
