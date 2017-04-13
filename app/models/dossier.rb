@@ -1,6 +1,4 @@
 class Dossier < ActiveRecord::Base
-  include SpreadsheetArchitect
-
   enum state: {draft: 'draft',
                initiated: 'initiated',
                replied: 'replied', #action utilisateur demandé
@@ -231,17 +229,6 @@ class Dossier < ActiveRecord::Base
       entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.map { |k, v| ["entreprise.#{k}".parameterize.underscore.to_sym, v] }.to_h
     end
     return convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
-  end
-
-  def export_default_columns
-    dossier_attr = DossierSerializer.new(self).attributes
-    dossier_attr = convert_specific_hash_values_to_string(dossier_attr)
-    dossier_attr = dossier_attr.merge(self.export_entreprise_data)
-    return dossier_attr
-  end
-
-  def spreadsheet_columns
-    self.export_default_columns.to_a
   end
 
   def data_with_champs
