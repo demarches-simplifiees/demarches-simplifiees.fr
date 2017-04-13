@@ -33,7 +33,7 @@ describe 'users/description/champs/render_list_champs.html.haml', type: :view do
       render 'users/description/champs/render_list_champs.html.haml', champs: Champ.all, order_place: 0
     end
 
-    it 'should render a number input with the right data-attribute' do
+    it 'should render the _dossier_link partial' do
       expect(view).to render_template(partial: 'users/description/champs/_dossier_link',
                                       locals: { champ: champ })
     end
