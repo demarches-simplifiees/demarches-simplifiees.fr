@@ -1,4 +1,4 @@
-- dossier = Dossier.find_by(id: champ.value)
+- dossier = Dossier.includes(:procedure).find_by(id: champ.value)
 - show_procedure_libelle = dossier ? true : false
 - show_warning = !show_procedure_libelle && champ.value.present?
 - procedure_libelle = dossier.nil? ? '' : dossier.procedure.libelle

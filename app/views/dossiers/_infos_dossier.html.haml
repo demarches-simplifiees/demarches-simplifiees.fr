@@ -39,7 +39,7 @@
             .col-xs-5.depositaire-info{ id: "champ-#{champ.id}-value" }
               - unless champ.decorate.value.blank?
                 - if champ.type_champ == 'dossier_link'
-                  - dossier = Dossier.find_by(id: champ.decorate.value)
+                  - dossier = Dossier.includes(:procedure).find_by(id: champ.decorate.value)
                   - if dossier && gestionnaire_signed_in?
                     = link_to(dossier.procedure.libelle, backoffice_dossier_path(champ.decorate.value), target: '_blank')
                   - else
