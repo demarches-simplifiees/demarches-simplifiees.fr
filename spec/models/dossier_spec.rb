@@ -576,6 +576,10 @@ describe Dossier do
     it { expect(subject[:entreprise_date_creation]).to eq('Thu, 28 Jan 2016 10:16:29 UTC +00:0') }
     it { expect(subject[:entreprise_nom]).to be_nil }
     it { expect(subject[:entreprise_prenom]).to be_nil }
+    it { expect(subject[:individual_gender]).to be_nil }
+    it { expect(subject[:individual_prenom]).to be_nil }
+    it { expect(subject[:individual_nom]).to be_nil }
+    it { expect(subject[:individual_birthdate]).to be_nil }
 
     context 'when dossier does not have enterprise' do
       let(:dossier) { create(:dossier, user: user, procedure: procedure) }
@@ -598,7 +602,11 @@ describe Dossier do
       subject { dossier.export_headers }
 
       it { expect(subject).to include(:description) }
-      it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+      it { expect(subject).to include(:individual_gender) }
+      it { expect(subject).to include(:individual_nom) }
+      it { expect(subject).to include(:individual_prenom) }
+      it { expect(subject).to include(:individual_birthdate) }
+      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
     end
 
     describe '#data_with_champs' do
@@ -614,7 +622,22 @@ describe Dossier do
       it { expect(subject[7]).to eq(date2) }
       it { expect(subject[8]).to eq(date3) }
       it { expect(subject[9]).to eq(dossier.followers_gestionnaires_emails) }
-      it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+      it { expect(subject[10]).to be_nil }
+      it { expect(subject[11]).to be_nil }
+      it { expect(subject[12]).to be_nil }
+      it { expect(subject[13]).to be_nil }
+      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+
+      context 'dossier for individual' do
+        let(:dossier_with_individual) { create(:dossier, :for_individual, user: user, procedure: procedure) }
+
+        subject { dossier_with_individual.data_with_champs }
+
+        it { expect(subject[10]).to eq(dossier_with_individual.individual.gender) }
+        it { expect(subject[11]).to eq(dossier_with_individual.individual.prenom) }
+        it { expect(subject[12]).to eq(dossier_with_individual.individual.nom) }
+        it { expect(subject[13]).to eq(dossier_with_individual.individual.birthdate) }
+      end
     end
 
     describe "#full_data_string" do
@@ -630,6 +653,10 @@ describe Dossier do
           dossier.received_at,
           dossier.processed_at,
           gestionnaire.email,
+          nil,
+          nil,
+          nil,
+          nil,
           nil,
           "44011762001530",
           "true",
