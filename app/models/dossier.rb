@@ -1,6 +1,4 @@
 class Dossier < ActiveRecord::Base
-  include SpreadsheetArchitect
-
   enum state: {draft: 'draft',
                initiated: 'initiated',
                replied: 'replied', #action utilisateur demandé
@@ -233,19 +231,8 @@ class Dossier < ActiveRecord::Base
     return convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
   end
 
-  def export_default_columns
-    dossier_attr = DossierSerializer.new(self).attributes
-    dossier_attr = convert_specific_hash_values_to_string(dossier_attr)
-    dossier_attr = dossier_attr.merge(self.export_entreprise_data)
-    return dossier_attr
-  end
-
-  def spreadsheet_columns
-    self.export_default_columns.to_a
-  end
-
   def data_with_champs
-    serialized_dossier = DossierProcedureSerializer.new(self)
+    serialized_dossier = DossierTableExportSerializer.new(self)
     data = serialized_dossier.attributes.values
     data += self.champs.order('type_de_champ_id ASC').map(&:value)
     data += self.export_entreprise_data.values
@@ -253,7 +240,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def export_headers
-    serialized_dossier = DossierProcedureSerializer.new(self)
+    serialized_dossier = DossierTableExportSerializer.new(self)
     headers = serialized_dossier.attributes.keys
     headers += self.procedure.types_de_champ.order('id ASC').map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
     headers += self.export_entreprise_data.keys
