@@ -1,59 +1,66 @@
-%div.row
+.row
   .col-xs-12
     - if @facade.procedure.for_individual?
       .row.title-row
-        %div.col-xs-4.split-hr
-        %div.col-xs-4.dossier-title= t('utils.depositaire').upcase
-        %div.col-xs-4.split-hr
+        .col-xs-4.split-hr
+        .col-xs-4.dossier-title= t('utils.depositaire').upcase
+        .col-xs-4.split-hr
       .row
-        %div.col-xs-6.depositaire-label Civilité
-        %div.col-xs-1.comments-off= "-"
-        %div.col-xs-5.depositaire-info= @facade.individual.gender
+        .col-xs-6.depositaire-label Civilité
+        .col-xs-1.comments-off= "-"
+        .col-xs-5.depositaire-info= @facade.individual.gender
       .row
-        %div.col-xs-6.depositaire-label Nom
-        %div.col-xs-1.comments-off= "-"
-        %div.col-xs-5.depositaire-info= @facade.individual.nom
+        .col-xs-6.depositaire-label Nom
+        .col-xs-1.comments-off= "-"
+        .col-xs-5.depositaire-info= @facade.individual.nom
       .row
-        %div.col-xs-6.depositaire-label Prénom
-        %div.col-xs-1.comments-off= "-"
-        %div.col-xs-5.despositaire-info= @facade.individual.prenom
+        .col-xs-6.depositaire-label Prénom
+        .col-xs-1.comments-off= "-"
+        .col-xs-5.despositaire-info= @facade.individual.prenom
       .row
-        %div.col-xs-6.depositaire-label Date de naissance
-        %div.col-xs-1.comments-off= "-"
-        %div.col-xs-5.depositaire-info= @facade.individual.birthdate
+        .col-xs-6.depositaire-label Date de naissance
+        .col-xs-1.comments-off= "-"
+        .col-xs-5.depositaire-info= @facade.individual.birthdate
       .row.margin-top-20
 
     - unless @facade.champs.nil?
       - @facade.champs.each do |champ|
-        - next if champ.type_champ == 'explication' 
+        - next if champ.type_champ == 'explication'
         - if champ.type_champ == 'header_section'
           .row.title-row.margin-top-40
-            %div.col-xs-3.split-hr
-            %div.col-xs-6.dossier-title= champ.libelle.upcase
-            %div.col-xs-3.split-hr
+            .col-xs-3.split-hr
+            .col-xs-6.dossier-title= champ.libelle.upcase
+            .col-xs-3.split-hr
         - else
           .row
-            %div.col-xs-6.depositaire-label= champ.libelle
-            %div.col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off
+            .col-xs-6.depositaire-label= champ.libelle
+            .col-xs-1.comments-off
               = "-"
-            %div.col-xs-5.depositaire-info{ id: "champ-#{champ.id}-value" }
+            .col-xs-5.depositaire-info{ id: "champ-#{champ.id}-value" }
               - unless champ.decorate.value.blank?
-                = champ.decorate.value.html_safe
+                - if champ.type_champ == 'dossier_link'
+                  - dossier = Dossier.find_by(id: champ.decorate.value)
+                  - if dossier && gestionnaire_signed_in?
+                    = link_to(dossier.procedure.libelle, backoffice_dossier_path(champ.decorate.value), target: '_blank')
+                  - else
+                    = dossier.nil? ? 'pas de dossier associé' : dossier.procedure.libelle
+                - else
+                  = champ.decorate.value.html_safe
 
     - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
       .mandataire_social.text-success.center
         %br
-        ="Il est probable que le soumissionnaire du dossier soit un des mandataire social de l'entreprise ("
+        Il est probable que le soumissionnaire du dossier soit un des mandataire social de l'entreprise (
         %b
-          ="#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
-        =")"
-%div.row
+          = "#{@facade.dossier.user.given_name} #{@facade.dossier.user.family_name}"
+        )
+.row
   - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.count > 0
     .col-xs-12
       .row.title-row
-        %div.col-xs-4.split-hr
-        %div.col-xs-4.dossier-title= t('utils.pieces').upcase
-        %div.col-xs-4.split-hr
+        .col-xs-4.split-hr
+        .col-xs-4.dossier-title= t('utils.pieces').upcase
+        .col-xs-4.split-hr
 
   .col-xs-12#pieces_justificatives.margin-bot-40
     .row
@@ -65,39 +72,39 @@
             .col-xs-5.despositaire-info
               - if @facade.dossier.cerfa_available?
                 %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
-                %span{style:'margin-left:12px'}
+                %span{ style: 'margin-left: 12px;' }
                   \-
                 = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#PJmodal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => 'cerfa' do
                   %span.fa.fa-clock-o
               - else
-                = 'Pièce non fournie'
+                Pièce non fournie
     .row
       .col-xs-12
         - @facade.types_de_pieces_justificatives.each do |type_de_piece_justificative|
           .row.piece-row
             .col-xs-12{ id: "piece_justificative_#{type_de_piece_justificative.id}" }
               .row
-                %div.col-xs-6.depositaire-label= type_de_piece_justificative.libelle
-                %div.col-xs-1.comments-off= "-"
-                %div.col-xs-5.despositaire-info
+                .col-xs-6.depositaire-label= type_de_piece_justificative.libelle
+                .col-xs-1.comments-off= "-"
+                .col-xs-5.despositaire-info
                   - if type_de_piece_justificative.api_entreprise
                     %span.text-success Nous l'avons récupéré pour vous.
                   - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?
                     %a{ href: "#{@pj.content_url}", target: '_blank' } Consulter
-                    %span{style:'margin-left:12px'}
+                    %span{ style: 'margin-left: 12px;' }
                       \-
                     - if @facade.dossier.pieces_justificatives.where(type_de_piece_justificative_id: type_de_piece_justificative.id).count > 1
                       = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#PJmodal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => "type_de_pj_#{type_de_piece_justificative.id}" do
                         %span.fa.fa-clock-o
                   - else
-                    = 'Pièce non fournie'
+                    Pièce non fournie
 
     - unless @facade.dossier.read_only?
       - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
           .row
             .col-xs-4
-            %a#maj_pj.action{"data-target" => "#UploadPJmodal", "data-toggle" => "modal", :type => "button"}
+            %a#maj_pj.action{ "data-target" => "#UploadPJmodal", "data-toggle" => "modal", :type => "button" }
               .col-xs-4.action
                 Modifier les documents
               %br
@@ -105,12 +112,12 @@
             .col-xs-4
 
     - if gestionnaire_signed_in?
-      #PJmodal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
-        .modal-dialog.modal-lg{:role => "document"}
+      #PJmodal.modal.fade{ "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1" }
+        .modal-dialog.modal-lg{ :role => "document" }
           .modal-content
             .modal-header
-              %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-                %span{"aria-hidden" => "true"} ×
+              %button.close{ "aria-label" => "Close", "data-dismiss" => "modal", :type => "button" }
+                %span{ "aria-hidden" => "true" } ×
               %h4#myModalLabel.modal-title
                 Historique des
                 %span#PJmodal_title
@@ -124,7 +131,7 @@
                   %th
                     Lien
                 %thead.tr_content#cerfa
-                  -if @facade.procedure.cerfa_flag?
+                  - if @facade.procedure.cerfa_flag?
                     - if @facade.dossier.cerfa_available?
                       - @facade.cerfas_ordered.each do |cerfa|
                         %tr
@@ -133,9 +140,9 @@
                           %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
                             = cerfa.created_at
                           %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
-                            =link_to 'Récupérer', cerfa.content_url, {target: :blank}
+                            = link_to 'Récupérer', cerfa.content_url, { target: :blank }
                 - @facade.dossier.types_de_piece_justificative.each do |type_de_piece_justificative|
-                  %tbody.tr_content{id: "type_de_pj_#{type_de_piece_justificative.id}"}
+                  %tbody.tr_content{ id: "type_de_pj_#{type_de_piece_justificative.id}" }
                     - @facade.dossier.retrieve_all_piece_justificative_by_type(type_de_piece_justificative.id).each do |piece_justificative|
                       %tr
                         %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
@@ -143,15 +150,15 @@
                         %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
                           = piece_justificative.created_at
                         %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
-                          =link_to 'Récupérer', piece_justificative.content_url, {target: :blank}
+                          = link_to 'Récupérer', piece_justificative.content_url, { target: :blank }
             .modal-footer
 
-#modalCommentairesDossierParChamp.modal.fade{"tabindex" => -1, "role" => "dialog"}
-  .modal-dialog{"role" => "document"}
+#modalCommentairesDossierParChamp.modal.fade{ "tabindex" => -1, "role" => "dialog" }
+  .modal-dialog{ "role" => "document" }
     .modal-content
       .modal-header
-        %button.close{"data-dismiss" => "modal", "aria-label" => "Fermer"}
-          %span{"aria-hidden" => true}
+        %button.close{ "data-dismiss" => "modal", "aria-label" => "Fermer" }
+          %span{ "aria-hidden" => true }
             &times;
         .modal-title
           Commentaires
@@ -159,5 +166,5 @@
         %p
           Chargement des commentaires en cours...
       .modal-footer
-        %button.btn.btn-primary{"data-dismiss" => "modal"}
+        %button.btn.btn-primary{ "data-dismiss" => "modal" }
           Fermer

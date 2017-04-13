@@ -201,6 +201,8 @@ class Dossier < ActiveRecord::Base
 
   scope :archived, -> { where(archived: true) }
 
+  scope :downloadable, -> { all_state }
+
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
   end
@@ -208,19 +210,16 @@ class Dossier < ActiveRecord::Base
   def convert_specific_hash_values_to_string(hash_to_convert)
     hash = {}
     hash_to_convert.each do |key, value|
-      value = value.to_s if !value.kind_of?(Time) && !value.nil?
+      value = serialize_value_for_export(value)
       hash.store(key, value)
     end
     return hash
   end
 
-  def convert_specific_array_values_to_string(array_to_convert)
-    array = []
-    array_to_convert.each do |value|
-      value = value.to_s if !value.kind_of?(Time) && !value.nil?
-      array << value
+  def full_data_strings_array
+    data_with_champs.map do |value|
+      serialize_value_for_export(value)
     end
-    return array
   end
 
   def export_entreprise_data
@@ -259,23 +258,6 @@ class Dossier < ActiveRecord::Base
     headers += self.procedure.types_de_champ.order('id ASC').map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
     headers += self.export_entreprise_data.keys
     return headers
-  end
-
-  def self.export_full_generation(dossiers, format)
-    if dossiers && !dossiers.empty?
-      data = []
-      headers = dossiers.first.export_headers
-      dossiers.each do |dossier|
-        data << dossier.convert_specific_array_values_to_string(dossier.data_with_champs)
-      end
-      if ["csv"].include?(format)
-        return SpreadsheetArchitect.to_csv(data: data, headers: headers)
-      elsif ["xlsx"].include?(format)
-        return SpreadsheetArchitect.to_xlsx(data: data, headers: headers)
-      elsif ["ods"].include?(format)
-        return SpreadsheetArchitect.to_ods(data: data, headers: headers)
-      end
-    end
   end
 
   def followers_gestionnaires_emails
@@ -319,6 +301,10 @@ class Dossier < ActiveRecord::Base
     elsif TERMINE.include?(state)
       self.processed_at = DateTime.now
     end
+  end
+
+  def serialize_value_for_export(value)
+    value.nil? || value.kind_of?(Time) ? value : value.to_s
   end
 
 end

@@ -1,3 +1,5 @@
+@import "variables";
+
 #users_index, #admins_index{
   margin-left: 2rem;
   margin-right: 2rem;
@@ -48,7 +50,7 @@
     padding: 10px;
   }
   .action:hover {
-    color: #F2F6FA;
+    color: $light-blue;
   }
   .padding-left-30 {
     padding-left: 30px;

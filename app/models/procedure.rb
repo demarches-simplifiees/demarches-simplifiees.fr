@@ -1,5 +1,5 @@
 class Procedure < ActiveRecord::Base
-  has_many :types_de_piece_justificative, dependent: :destroy
+  has_many :types_de_piece_justificative, -> { order "order_place ASC" }, dependent: :destroy
   has_many :types_de_champ, class_name: 'TypeDeChampPublic', dependent: :destroy
   has_many :types_de_champ_private, dependent: :destroy
   has_many :dossiers
@@ -64,10 +64,6 @@ class Procedure < ActiveRecord::Base
     types_de_champ_private.order(:order_place)
   end
 
-  def types_de_piece_justificative_ordered
-    types_de_piece_justificative.order(:order_place)
-  end
-
   def self.active id
     Procedure.where(archived: false, published: true).find(id)
   end
@@ -81,7 +77,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def switch_types_de_piece_justificative index_of_first_element
-    switch_list_order(types_de_piece_justificative_ordered, index_of_first_element)
+    switch_list_order(types_de_piece_justificative, index_of_first_element)
   end
 
   def switch_list_order(list, index_of_first_element)
@@ -128,6 +124,18 @@ class Procedure < ActiveRecord::Base
 
   def total_dossier
     self.dossiers.where.not(state: :draft).size
+  end
+
+  def generate_export
+    exportable_dossiers = dossiers.downloadable
+
+    headers = exportable_dossiers.any? ? exportable_dossiers.first.export_headers : []
+    data = exportable_dossiers.any? ? exportable_dossiers.map { |d| d.full_data_strings_array } : [[]]
+
+    {
+      headers: headers,
+      data: data
+    }
   end
 
 end

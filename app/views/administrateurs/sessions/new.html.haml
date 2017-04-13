@@ -3,12 +3,12 @@
   = image_tag(image_url(LOGO_NAME))
   %br
   %h2#login_admin
-    =t('dynamics.admin.connexion_title')
+    = t('dynamics.admin.connexion_title')
 
   %br
   %br
   #new_user
-    = form_for @administrateur, url: {controller: 'administrateurs/sessions', action: :create } do |f|
+    = form_for @administrateur, url: { controller: 'administrateurs/sessions', action: :create } do |f|
       %h4
         = f.label :email
       .input-group
@@ -25,5 +25,5 @@
       %br
       %br
       .actions
-        = f.submit "Se connecter", class:'btn btn-primary'
+        = f.submit "Se connecter", class: 'btn btn-primary'
       %br

@@ -1,17 +1,17 @@
-#publishModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
-  .modal-dialog.modal-lg{:role => "document"}
+#publishModal.modal.fade{ "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1" }
+  .modal-dialog.modal-lg{ :role => "document" }
     = form_tag admin_procedure_publish_path(procedure_id: @procedure.id), method: :put, remote: true do
       .modal-content
         .modal-header
-          %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-            %span{"aria-hidden" => "true"} ×
+          %button.close{ "aria-label" => "Close", "data-dismiss" => "modal", :type => "button" }
+            %span{ "aria-hidden" => "true" } ×
           %h4#myModalLabel.modal-title
-            =@procedure.archived?? 'Réactiver' : 'Publier'
+            = @procedure.archived? ? 'Réactiver' : 'Publier'
             la procédure
             %span#publishModal_title
         .modal-body
           Vous vous apprêtez à
-          =@procedure.archived?? 'republier' : 'publier'
+          = @procedure.archived? ? 'republier' : 'publier'
           votre procédure au public.
           - unless @procedure.archived?
             %b
@@ -23,13 +23,13 @@
             %br
             %h4 Lien de la procédure
             %p.center
-              ="#{root_url}commencer/"
+              = "#{root_url}commencer/"
               = text_field_tag('procedure_path', @procedure.default_path,
                                 id: 'procedure_path',
                                 placeholder: 'Chemin vers la procédure',
-                                class:'form-control',
+                                class: 'form-control',
                                 maxlength: 30,
-                                style: 'width: 300px; display: inline')
+                                style: 'width: 300px; display: inline;')
             #path_messages
               #path_is_mine.text-warning.center.message
                 Ce lien est déjà utilisé par une de vos procédure.
@@ -42,7 +42,7 @@
               #path_is_invalid.text-danger.center.message
                 Ce lien n'est pas valide. Il doit comporter au moins 3 caractères et seuls les caractères a-z, 0-9 et '_' sont autorisés.
         .modal-footer
-          = submit_tag "#{@procedure.archived?? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
+          = submit_tag "#{@procedure.archived? ? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
                                   id: 'publish',
                                   disabled: :disabled
           = button_tag 'Annuler', class: %w(btn btn btn-default), id: 'cancel', data: { dismiss: 'modal' }

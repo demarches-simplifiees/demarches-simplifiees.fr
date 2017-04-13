@@ -14,7 +14,7 @@
       %h4 Description
       = ff.text_area :description, class: 'form-control description', placeholder: 'Description', rows: 3
 
-    .form-group.drop_down_list{ class: (%w(drop_down_list multiple_drop_down_list).include?(type_champ) ? 'show_inline' : nil), style: 'margin-right: 5px' }
+    .form-group.drop_down_list{ class: (%w(drop_down_list multiple_drop_down_list).include?(type_champ) ? 'show_inline' : nil), style: 'margin-right: 5px;' }
       %h4 Liste déroulante
       = ff.fields_for :drop_down_list_attributes, ff.object.object.drop_down_list do |fff|
         ~ fff.text_area :value, class: 'form-control drop_down_list', placeholder: "Ecrire une valeur par ligne et --valeur-- pour un séparateur.", rows: 3, cols: 30
@@ -46,5 +46,3 @@
         = link_to("", @types_de_champ_facade.delete_url(ff), method: :delete, remote: true, id: "delete_type_de_champ_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
 
     %div{ style: 'background-color: rgb(204, 204, 204); height: 1px; margin: 30px auto;' }
-
-

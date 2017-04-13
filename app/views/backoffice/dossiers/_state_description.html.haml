@@ -1,21 +1,21 @@
-#state_description.row{style:'width: 50%; margin-left: auto; margin-right: auto'}
+#state_description.row{ style: 'width: 50%; margin-left: auto; margin-right: auto;' }
   .panel.panel-info
     .panel-body.center
       .row
         .col-md-1.col-lg-1.col-sm-1.col-xs-1.col-sm-1.col-xs-1
-          .fa.fa-info-circle.text-info{style:'font-size: 2em; margin-top: 20%'}
+          .fa.fa-info-circle.text-info{ style: 'font-size: 2em; margin-top: 20%;' }
         .col-xs-11
-          -if dossiers_list_facade.liste == 'nouveaux'
+          - if dossiers_list_facade.liste == 'nouveaux'
             Tous les dossiers présents dans cette liste sont ceux qui
             %b
               n'ont jamais été ouvert par votre service.
             Il attende une première lecture et intervention de votre part.
-          -elsif dossiers_list_facade.liste == 'a_traiter'
+          - elsif dossiers_list_facade.liste == 'a_traiter'
             Tous les dossiers présents dans cette liste sont ceux qui sont
             %b
               en cours de construction avec l'usager.
             Ils ne sont pas figés et ne sont donc pas complets.
-          -elsif dossiers_list_facade.liste == 'fige'
+          - elsif dossiers_list_facade.liste == 'fige'
             Tous les dossiers présents dans cette liste ont été déclarés
             %b
               complets
@@ -23,14 +23,14 @@
             %b
               plus modifiables par l'usager.
             Ils attendent donc leurs dépots officiels qui doit être effectué par l'usager.
-          -elsif dossiers_list_facade.liste == 'deposes'
+          - elsif dossiers_list_facade.liste == 'deposes'
             Tous les dossiers présents dans cette liste ont été
             %b
               officiellement déposé par l'usager pour examen.
             Il faut donc que vous confirmiez par "accusé de réception" la bonne réception de toutes les informations et documents demandés avant examen final.
-          -elsif dossiers_list_facade.liste == 'a_instruire'
+          - elsif dossiers_list_facade.liste == 'a_instruire'
             Tous les dossiers présents dans cette liste sont à instruire. Ceux sont tous les dossiers
             %b
               qui ont reçu bonne réception.
-          -elsif dossiers_list_facade.liste == 'termine'
+          - elsif dossiers_list_facade.liste == 'termine'
             Tous les dossiers présents dans cette liste sont considérés comme cloturé car ils ont tous reçu un verdict final qui peut être "Validé", "Refusé" ou "Sans suite".

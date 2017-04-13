@@ -45,13 +45,13 @@ Rails.application.routes.draw do
   authenticate :administration do
     resources :administrations, only: [:index, :create]
     namespace :administrations do
-      resources :stats, only: [:index]
-
       require 'sidekiq/web'
       require 'sidekiq/cron/web'
       mount Sidekiq::Web => '/sidekiq'
     end
   end
+
+  resources :stats, only: [:index]
 
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
@@ -94,6 +94,8 @@ Rails.application.routes.draw do
 
       post '/siret_informations' => 'dossiers#siret_informations'
       put '/change_siret' => 'dossiers#change_siret'
+
+      get 'procedure_libelle' => 'dossiers#procedure_libelle'
     end
     resource :dossiers
   end

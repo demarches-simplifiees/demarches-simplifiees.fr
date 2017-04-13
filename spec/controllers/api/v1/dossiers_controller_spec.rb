@@ -24,7 +24,7 @@ describe API::V1::DossiersController do
 
     context 'when procedure is found and belongs to admin' do
       let(:procedure_id) { procedure.id }
-      let(:date_creation) { Time.local(2008, 9, 1, 10, 5, 0) }
+      let(:date_creation) { Time.utc(2008, 9, 1, 10, 5, 0) }
       let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') } }
       let(:body) { JSON.parse(retour.body, symbolize_names: true) }
 
@@ -52,9 +52,7 @@ describe API::V1::DossiersController do
         describe 'dossier' do
           subject { super().first }
           it { expect(subject[:id]).to eq(dossier.id) }
-          if ENV['PG'] == 'true'
-            it { expect(subject[:updated_at]).to eq("2008-09-01T08:05:00.000Z") }
-          end
+          it { expect(subject[:updated_at]).to eq("2008-09-01T10:05:00.000Z") }
           it { expect(subject.keys.size).to eq(2) }
         end
       end
@@ -113,7 +111,7 @@ describe API::V1::DossiersController do
 
       context 'when dossier exists and belongs to procedure' do
         let(:procedure_id) { procedure.id }
-        let(:date_creation) { Time.local(2008, 9, 1, 10, 5, 0) }
+        let(:date_creation) { Time.utc(2008, 9, 1, 10, 5, 0) }
         let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
@@ -126,10 +124,8 @@ describe API::V1::DossiersController do
 
         it { expect(subject[:id]).to eq(dossier.id) }
         it { expect(subject[:state]).to eq(dossier.state) }
-        if ENV['PG'] == 'true'
-          it { expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z') }
-          it { expect(subject[:updated_at]).to eq('2008-09-01T08:05:00.000Z') }
-        end
+        it { expect(subject[:created_at]).to eq('2008-09-01T10:05:00.000Z') }
+        it { expect(subject[:updated_at]).to eq('2008-09-01T10:05:00.000Z') }
         it { expect(subject[:archived]).to eq(dossier.archived) }
         it { expect(subject[:mandataire_social]).to eq(dossier.mandataire_social) }
 

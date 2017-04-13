@@ -1,32 +1,32 @@
 .row#carto_page
   .col-lg-12.col-md-12.col-sm-12.col-xs-12
     %h2
-      ='Localisation'
+      Localisation
     %h4.text-primary
       Positionnez-vous et dessinez sur la carte la zone d'action de votre demande.
     %br
 
-    .content{style:'margin-bottom:60px'}
-      %button#new.btn.btn-md.btn-success{type:'button'}
+    .content{ style: 'margin-bottom: 60px;' }
+      %button#new.btn.btn-md.btn-success{ type: 'button' }
         %i.fa.fa-pencil
         Ajouter une zone
 
-      %span#search_by_address{style: 'margin-left: 20px'}
-        %input.form-control{type: :address, placeholder: 'Rechercher une adresse'}
+      %span#search_by_address{ style: 'margin-left: 20px;' }
+        %input.form-control{ type: :address, placeholder: 'Rechercher une adresse' }
       %br
       %br
 
-      =render partial: 'users/carte/map', locals: {dossier: @dossier}
+      = render partial: 'users/carte/map', locals: { dossier: @dossier }
 
-      = form_tag(url_for({controller: :carte, action: :save, dossier_id: @dossier.id}), class: 'form-inline', method: 'POST') do
+      = form_tag(url_for({ controller: :carte, action: :save, dossier_id: @dossier.id }), class: 'form-inline', method: 'POST') do
         %br
-        %input{type: 'hidden', value: "#{@dossier.json_latlngs}", name: 'json_latlngs', id: 'json_latlngs'}
-        %input{id: 'quartier_prioritaires', type:'hidden', value: "#{@dossier.quartier_prioritaires.to_json}"}
-        %input{id: 'cadastres', type:'hidden', value: "#{@dossier.cadastres.to_json}"}
+        %input{ type: 'hidden', value: "#{@dossier.json_latlngs}", name: 'json_latlngs', id: 'json_latlngs' }
+        %input{ id: 'quartier_prioritaires', type: 'hidden', value: "#{@dossier.quartier_prioritaires.to_json}" }
+        %input{ id: 'cadastres', type: 'hidden', value: "#{@dossier.cadastres.to_json}" }
 
-        -if @dossier.draft?
-          =render partial: '/layouts/etape_suivante'
-        -else
-          =render partial: '/layouts/modifications_terminees'
+        - if @dossier.draft?
+          = render partial: '/layouts/etape_suivante'
+        - else
+          = render partial: '/layouts/modifications_terminees'
 
-    = render partial: 'users/carte/init_carto', locals: {dossier: @dossier}
+    = render partial: 'users/carte/init_carto', locals: { dossier: @dossier }

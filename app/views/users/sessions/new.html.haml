@@ -3,13 +3,13 @@
   = render partial: 'users/sessions/resume_procedure'
 
   %h2#login_user
-    =t('dynamics.users.connexion_title')
+    = t('dynamics.users.connexion_title')
 
-  %a.btn_fc#btn_fcp{href: '/france_connect/particulier'}
+  %a.btn_fc#btn_fcp{ href: '/france_connect/particulier' }
     = image_tag 'franceconnect_logo.png'
 
   %br
-  %a.text-info{href: 'https://fcp.integ01.dev-franceconnect.fr/a-propos', target: '_blank'}
+  %a.text-info{ href: 'https://fcp.integ01.dev-franceconnect.fr/a-propos', target: '_blank' }
     Qu’est-ce que FranceConnect ?
 
   %hr
@@ -21,10 +21,7 @@
       - if devise_mapping.rememberable?
         = f.input :remember_me, as: :boolean, label: 'Se souvenir de moi'
       .text-center
-        = f.submit "Se connecter", class:'btn btn-primary'
+        = f.submit "Se connecter", class: 'btn btn-primary'
 
   - if @user.email != DemoEmails[:gestionnaire] && @user.email != DemoEmails[:admin]
     = render "users/shared/links"
-
-
-

@@ -3,13 +3,13 @@
     = @mail_template.class.const_get(:DISPLAYED_NAME)
 
   = simple_form_for @mail_template,
-    as: 'mail_template', 
-    url: admin_procedure_mail_template_path(@procedure, @mail_template.class.slug), 
+    as: 'mail_template',
+    url: admin_procedure_mail_template_path(@procedure, @mail_template.class.slug),
     method: :put do |f|
     .row
       .col-md-6
         = f.input :object, label: "Objet de l'email"
-    = f.input :body, label: "Corps de l'email", input_html: {class: 'wysihtml5'}
+    = f.input :body, label: "Corps de l'email", input_html: { class: 'wysihtml5' }
     .text-right
       = link_to "Annuler", admin_procedure_mail_templates_path(@procedure), class: "btn btn-default"
       = f.button :submit, 'Mettre à jour', class: "btn-success"
@@ -27,4 +27,4 @@
             %td.center
               = "--#{balise.first}--"
             %td
-              =balise.second[:description]
+              = balise.second[:description]

@@ -512,14 +512,6 @@ describe Dossier do
     it { expect(subject[:state]).to be_a(String) }
   end
 
-  describe '#convert_specific_array_values_to_string(array_to_convert)' do
-    let(:procedure) { create(:procedure) }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
-    let(:dossier_data_with_champs) { dossier.data_with_champs }
-
-    subject { dossier.convert_specific_hash_values_to_string(dossier_data_with_champs) }
-  end
-
   describe '#export_entreprise_data' do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
@@ -603,7 +595,6 @@ describe Dossier do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow], initiated_at: date1, received_at: date2, processed_at: date3) }
 
     describe '#export_headers' do
-
       subject { dossier.export_headers }
 
       it { expect(subject).to include(:description) }
@@ -611,7 +602,6 @@ describe Dossier do
     end
 
     describe '#data_with_champs' do
-
       subject { dossier.data_with_champs }
 
       it { expect(subject[0]).to be_a_kind_of(Integer) }
@@ -625,6 +615,52 @@ describe Dossier do
       it { expect(subject[8]).to eq(date3) }
       it { expect(subject[9]).to eq(dossier.followers_gestionnaires_emails) }
       it { expect(subject.count).to eq(DossierProcedureSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+    end
+
+    describe "#full_data_string" do
+      let(:expected_string) {
+        [
+          dossier.id.to_s,
+          dossier.created_at,
+          dossier.updated_at,
+          "false",
+          "false",
+          "draft",
+          dossier.initiated_at,
+          dossier.received_at,
+          dossier.processed_at,
+          gestionnaire.email,
+          nil,
+          "44011762001530",
+          "true",
+          "4950Z",
+          "Transports par conduites",
+          "GRTGAZ IMMEUBLE BORA 6 RUE RAOUL NORDLING 92270 BOIS COLOMBES",
+          "6",
+          "RUE",
+          "RAOUL NORDLING",
+          "IMMEUBLE BORA",
+          "92270",
+          "BOIS COLOMBES",
+          "92009",
+          "440117620",
+          "537100000",
+          "FR27440117620",
+          "SA à conseil d'administration (s.a.i.)",
+          "5599",
+          "GRTGAZ",
+          "GRTGAZ",
+          "44011762001530",
+          "51",
+          dossier.entreprise.date_creation,
+          nil,
+          nil
+        ]
+      }
+
+      subject { dossier }
+
+      it { expect(dossier.full_data_strings_array).to eq(expected_string)}
     end
   end
 
@@ -669,7 +705,6 @@ describe Dossier do
     it { expect(subject[:entreprise_nom]).to be_nil }
     it { expect(subject[:entreprise_prenom]).to be_nil }
   end
-
 
   describe '#Dossier.to_xlsx' do
     let!(:procedure) { create(:procedure) }
@@ -965,5 +1000,18 @@ describe Dossier do
       it_behaves_like 'dossier is processed', 'without_continuation'
     end
 
+  end
+
+  describe '.downloadable' do
+    let(:procedure) { create(:procedure) }
+    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :draft) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :received) }
+
+    subject { procedure.dossiers.downloadable }
+
+    it { is_expected.not_to include(dossier)}
+    it { is_expected.to include(dossier2)}
+    it { is_expected.to include(dossier3)}
   end
 end

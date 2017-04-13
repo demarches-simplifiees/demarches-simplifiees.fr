@@ -67,7 +67,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
       page.find_by_id('onglet-preview').trigger('click')
       expect(page).to have_current_path(admin_procedure_previsualisation_path(Procedure.first.id.to_s))
-      expect(page.find_by_id('champs_1')['placeholder']).to eq('libelle de champ')
+      expect(page.find("input[type='text']")['placeholder']).to eq('libelle de champ')
       expect(page.first('.piece-libelle').text).to eq('libelle de piece')
     end
 

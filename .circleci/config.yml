@@ -1,0 +1,70 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ruby:2.3.1
+      - image: postgres:9.4.1
+        environment:
+          POSTGRES_USER: tps_test
+          POSTGRES_PASSWORD: tps_test
+          POSTGRES_DB: tps_test
+
+    working_directory: /tps
+    steps:
+      - checkout
+      - run:
+          name: Install System Dependencies
+          command: apt-get update -qq && apt-get install -y build-essential nodejs
+      - restore_cache:
+          key: bundle-install-v3-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Install Ruby Dependencies
+          command: bundle install
+      - save_cache:
+          key: bundle-install-v3-{{ checksum "Gemfile.lock" }}
+          paths:
+            - /usr/local/bundle
+      - restore_cache:
+          key: phantomjs-2-1-1
+      - run:
+          name: Install PhantomJS Dependencies
+          command: |
+            [ -f /usr/local/bin/phantomjs ] || apt-get update
+            [ -f /usr/local/bin/phantomjs ] || apt-get install -y fontconfig wget
+      - run:
+          name: Install PhantomJS
+          command: |
+            [ -f /usr/local/bin/phantomjs ] || wget -O /tmp/phantomjs.tar.bz2 https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
+            [ -f /usr/local/bin/phantomjs ] || tar -xjf /tmp/phantomjs.tar.bz2 -C /tmp
+            [ -f /usr/local/bin/phantomjs ] || mv /tmp/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs
+      - save_cache:
+          key: phantomjs-2-1-1
+          paths:
+            - /usr/local/bin/phantomjs
+      - run:
+          environment:
+            DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
+          name: Create DB
+          command: bundle exec rake db:create db:schema:load db:migrate RAILS_ENV=test
+      - run:
+          environment:
+            DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
+          name: Run Tests, Splitted by Timings
+          command: |
+            TESTFILES=$(circleci tests glob "spec/**/*.rb"| xargs -n 1 echo | grep -v "spec/factories/" | tr " " "\n" | circleci tests split --split-by=timings)
+            bundle exec rspec --color --require spec_helper -- ${TESTFILES}
+      - run:
+          name: Run haml-lint
+          command: bundle exec haml-lint app/views/
+      - add_ssh_keys:
+          fingerprints:
+            - "0a:67:42:7d:7e:b7:e1:3c:48:8f:bf:68:10:51:a8:44"
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "staging" ]; then
+              bundle exec rake deploy_ha
+            fi
+
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              bundle exec rake deploy_ha to=production
+            fi

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CommentaireDecorator do
-  let(:commentaire) { Timecop.freeze(Time.local(2008, 9, 1, 10, 5, 0)) {create :commentaire} }
+  let(:commentaire) { Timecop.freeze(Time.utc(2008, 9, 1, 10, 5, 0)) {create :commentaire} }
   let(:decorator) { commentaire.decorate }
 
   describe 'created_at_fr' do

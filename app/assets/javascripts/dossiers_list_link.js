@@ -1,5 +1,4 @@
-$(document).on('page:load', link_init);
-$(document).ready(link_init);
+$(document).on('turbolinks:load', link_init);
 
 function link_init() {
   $('#dossiers_list tr').on('click', function () {

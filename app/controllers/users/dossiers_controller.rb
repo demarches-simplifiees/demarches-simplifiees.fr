@@ -122,7 +122,7 @@ class Users::DossiersController < UsersController
     @facade = facade params[:dossier][:id]
 
     if checked_autorisation_donnees?
-      unless Dossier.find(@facade.dossier.id).update_attributes update_params
+      unless Dossier.find(@facade.dossier.id).update_attributes update_params_with_formatted_birthdate
         flash.alert = @facade.dossier.errors.full_messages.join('<br />').html_safe
 
         return redirect_to users_dossier_path(id: @facade.dossier.id)
@@ -154,6 +154,13 @@ class Users::DossiersController < UsersController
     redirect_to url_for users_dossiers_path
   end
 
+  def procedure_libelle
+    dossier = Dossier.find(params[:dossier_id])
+    render json: { procedureLibelle: dossier.procedure.libelle }
+  rescue ActiveRecord::RecordNotFound
+    render json: {}, status: 404
+  end
+
   private
 
   def check_siret
@@ -169,6 +176,25 @@ class Users::DossiersController < UsersController
 
   def update_params
     params.require(:dossier).permit(:id, :autorisation_donnees, individual_attributes: [:gender, :nom, :prenom, :birthdate])
+  end
+
+  def update_params_with_formatted_birthdate
+    editable_params = update_params
+
+    # If the user was shown a date input field (if its browser supports it),
+    # the returned param will follow the YYYY-MM-DD pattern, which we need
+    # do convert to the DD/MM/YYYY pattern we use
+    if editable_params &&
+      editable_params[:individual_attributes] &&
+      editable_params[:individual_attributes][:birthdate] &&
+      editable_params[:individual_attributes][:birthdate] =~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
+
+      original_birthdate = editable_params[:individual_attributes][:birthdate]
+      formatted_birthdate = I18n.l(original_birthdate.to_date, format: '%d/%m/%Y')
+      editable_params[:individual_attributes][:birthdate] = formatted_birthdate
+    end
+
+    editable_params
   end
 
   def checked_autorisation_donnees?

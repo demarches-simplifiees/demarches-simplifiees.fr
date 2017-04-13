@@ -1,52 +1,51 @@
-
 %div#first-block
-  %div.en-cours
-    -unless @procedure.logo.blank?
-      = image_tag @procedure.decorate.logo_img, style: 'width: 30px'
+  .en-cours
+    - unless @procedure.logo.blank?
+      = image_tag @procedure.decorate.logo_img, style: 'width: 30px;'
     %b
-      =@procedure.libelle
+      = @procedure.libelle
 
 %div#action-block
 
 %div#menu-block
-  %div.split-hr-left
+  .split-hr-left
   #procedure_list
-    %a{:href => "#{url_for admin_procedure_path(@procedure)}", id: 'onglet-infos'}
-      %div.procedure_list_element{class: ('active' if active == 'Informations')}
+    %a{ :href => "#{url_for admin_procedure_path(@procedure)}", id: 'onglet-infos' }
+      .procedure_list_element{ class: ('active' if active == 'Informations') }
         Informations
 
-    %a{:href => "#{url_for admin_procedure_accompagnateurs_path(@procedure)}", id: 'onglet-accompagnateurs'}
-      %div.procedure_list_element{class: ('active' if active == 'Accompagnateurs')}
-        =t('dynamics.admin.procedure.onglets.accompagnateurs')
+    %a{ :href => "#{url_for admin_procedure_accompagnateurs_path(@procedure)}", id: 'onglet-accompagnateurs' }
+      .procedure_list_element{ class: ('active' if active == 'Accompagnateurs') }
+        = t('dynamics.admin.procedure.onglets.accompagnateurs')
 
-    %a{:href => "#{url_for edit_admin_procedure_path(@procedure)}", id: 'onglet-description'}
-      %div.procedure_list_element{class: ('active' if active == 'Description')}
+    %a{ :href => "#{url_for edit_admin_procedure_path(@procedure)}", id: 'onglet-description' }
+      .procedure_list_element{ class: ('active' if active == 'Description') }
         Description
 
     - unless @procedure.locked?
-      %a{:href => "#{url_for admin_procedure_types_de_champ_path(@procedure)}", id: 'onglet-champs'}
-        %div.procedure_list_element{class: ('active' if active == 'Champs')}
+      %a{ :href => "#{url_for admin_procedure_types_de_champ_path(@procedure)}", id: 'onglet-champs' }
+        .procedure_list_element{ class: ('active' if active == 'Champs') }
           Champs
 
     - unless @procedure.locked?
-      %a{:href => "#{url_for admin_procedure_pieces_justificatives_path(@procedure)}", id: 'onglet-pieces'}
-        %div.procedure_list_element{class: ('active' if active == 'Pieces')}
+      %a{ :href => "#{url_for admin_procedure_pieces_justificatives_path(@procedure)}", id: 'onglet-pieces' }
+        .procedure_list_element{ class: ('active' if active == 'Pieces') }
           Pièces jointes
 
     - unless @procedure.locked?
-      %a{:href => "#{url_for admin_procedure_types_de_champ_private_path(@procedure)}", id: 'onglet-private-champs'}
-        %div.procedure_list_element{class: ('active' if active == 'Champs privés')}
+      %a{ :href => "#{url_for admin_procedure_types_de_champ_private_path(@procedure)}", id: 'onglet-private-champs' }
+        .procedure_list_element{ class: ('active' if active == 'Champs privés') }
           Champs privés
 
-    %a{:href => "#{url_for admin_procedure_mail_templates_path(@procedure)}", id: 'onglet-inemailsfos'}
-      %div.procedure_list_element{class: ('active' if active == 'E-mails')}
+    %a{ :href => "#{url_for admin_procedure_mail_templates_path(@procedure)}", id: 'onglet-inemailsfos' }
+      .procedure_list_element{ class: ('active' if active == 'E-mails') }
         E-mails
 
-    %a{:href => "#{url_for admin_procedure_previsualisation_path(@procedure)}", id: 'onglet-preview'}
-      %div.procedure_list_element{class: ('active' if active == 'Prévisualisation')}
+    %a{ :href => "#{url_for admin_procedure_previsualisation_path(@procedure)}", id: 'onglet-preview' }
+      .procedure_list_element{ class: ('active' if active == 'Prévisualisation') }
         Prévisualisation
 
-  %div.split-hr-left
+  .split-hr-left
 
 
 %div#infos-block

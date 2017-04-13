@@ -1,5 +1,4 @@
-$(document).on('page:load', init_action_btn_rules);
-$(document).ready(init_action_btn_rules);
+$(document).on('turbolinks:load', init_action_btn_rules);
 
 function init_action_btn_rules() {
   $('.btn-send').click(function () {

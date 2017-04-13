@@ -37,6 +37,6 @@ http_interactions:
       string: '{"limit": 1, "attribution": "BAN", "version": "draft", "licence": "ODbL
         1.0", "query": "je recherche pas grand chose", "type": "FeatureCollection",
         "features": []}'
-    http_version: 
+    http_version:
   recorded_at: Fri, 16 Dec 2016 14:17:40 GMT
 recorded_with: VCR 3.0.3

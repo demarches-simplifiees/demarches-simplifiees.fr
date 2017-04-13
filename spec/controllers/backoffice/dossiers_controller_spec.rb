@@ -169,41 +169,39 @@ describe Backoffice::DossiersController, type: :controller do
   end
 
 
-  if ENV['PG'] == 'true'
-    describe 'POST #search' do
-      describe 'by id' do
-        context 'when I am logged as a gestionnaire' do
-          before do
-            sign_in gestionnaire
+  describe 'POST #search' do
+    describe 'by id' do
+      context 'when I am logged as a gestionnaire' do
+        before do
+          sign_in gestionnaire
+        end
+
+        context 'when I own the dossier' do
+          before :each do
+            post :search, params: { q: dossier_id }
           end
 
-          context 'when I own the dossier' do
-            before :each do
-              post :search, params: { q: dossier_id }
-            end
-
-            it 'returns http success' do
-              expect(response).to have_http_status(200)
-            end
-
-            it 'returns the expected dossier' do
-              expect(assigns(:dossiers).count).to eq(1)
-              expect(assigns(:dossiers).first.id).to eq(dossier_id)
-            end
+          it 'returns http success' do
+            expect(response).to have_http_status(200)
           end
 
-          context 'when I do not own the dossier' do
-            before :each do
-              post :search, params: { q: dossier2_id }
-            end
+          it 'returns the expected dossier' do
+            expect(assigns(:dossiers).count).to eq(1)
+            expect(assigns(:dossiers).first.id).to eq(dossier_id)
+          end
+        end
 
-            it 'returns http success' do
-              expect(response).to have_http_status(200)
-            end
+        context 'when I do not own the dossier' do
+          before :each do
+            post :search, params: { q: dossier2_id }
+          end
 
-            it 'returns nothing' do
-              expect(assigns(:dossiers).count).to eq(0)
-            end
+          it 'returns http success' do
+            expect(response).to have_http_status(200)
+          end
+
+          it 'returns nothing' do
+            expect(assigns(:dossiers).count).to eq(0)
           end
         end
       end

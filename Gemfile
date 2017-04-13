@@ -16,7 +16,7 @@ gem 'therubyracer', platforms: :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks', '~> 2.5'
+gem 'turbolinks', '~> 5.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
@@ -93,6 +93,8 @@ gem 'simple_form'
 
 gem 'newrelic_rpm'
 
+gem 'scenic'
+
 # Sidekiq
 gem 'sidekiq'
 gem 'sidekiq-cron', '~> 0.4.4'
@@ -114,7 +116,6 @@ group :test do
   gem 'guard-livereload', '~> 2.4', require: false
   gem 'vcr'
   gem 'rails-controller-testing'
-  gem 'sqlite3'
 end
 
 group :development do
@@ -122,6 +123,7 @@ group :development do
   gem 'web-console'
   gem 'rack-handlers'
   gem 'xray-rails'
+  gem 'haml-lint'
 end
 
 group :development, :test do
@@ -145,6 +147,3 @@ group :production, :staging do
   gem 'sentry-raven'
 end
 
-group :production, :staging, :development do
-  gem 'scenic'
-end

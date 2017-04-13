@@ -2,16 +2,16 @@
   .form-inline
     .form-group
       %h4 Libellé
-      =ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
+      = ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
     .form-group
       %h4 Description
-      =ff.text_area :description, class: 'form-control description', placeholder: 'Description'
+      = ff.text_area :description, class: 'form-control description', placeholder: 'Description'
     .form-group
       %h4
         Lien du formulaire vierge
         %small
           (optionel)
-      =ff.url_field :lien_demarche, class: 'form-control', placeholder: 'Lien du document vierge'
+      = ff.url_field :lien_demarche, class: 'form-control', placeholder: 'Lien du document vierge'
 
     .form-group
       = ff.hidden_field :order_place, value: ff.index

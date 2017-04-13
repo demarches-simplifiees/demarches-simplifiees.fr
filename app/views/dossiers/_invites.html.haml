@@ -14,5 +14,4 @@
   .col-xs-3
     = form_tag invites_dossier_path(dossier_id: @facade.dossier.id), method: :post, class: 'form-inline' do
       = text_field_tag :email, '', class: 'form-control', placeholder: 'Envoyer une invitation'
-      = submit_tag 'Ajouter', class: 'btn btn-success', id: 'send-invitation', data: {confirm: "Envoyer l'invitation ?"}
-
+      = submit_tag 'Ajouter', class: 'btn btn-success', id: 'send-invitation', data: { confirm: "Envoyer l'invitation ?" }
