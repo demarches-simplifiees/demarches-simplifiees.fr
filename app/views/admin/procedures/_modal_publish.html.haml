@@ -28,7 +28,7 @@
                                 id: 'procedure_path',
                                 placeholder: 'Chemin vers la procédure',
                                 class: 'form-control',
-                                maxlength: 30,
+                                maxlength: 50,
                                 style: 'width: 300px; display: inline;')
             #path-messages
               #path_is_mine.text-warning.center.message
@@ -40,7 +40,7 @@
                 %br
                 Vous ne pouvez pas l'utiliser car il appartient à un autre administrateur.
               #path_is_invalid.text-danger.center.message
-                Ce lien n'est pas valide. Il doit comporter au moins 3 caractères et seuls les caractères a-z, 0-9 et '_' sont autorisés.
+                = t('activerecord.errors.models.procedure_path.attributes.path.format')
         .modal-footer
           = submit_tag "#{@procedure.archived? ? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
                                   id: 'publish',
