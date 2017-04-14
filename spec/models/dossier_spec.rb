@@ -572,7 +572,7 @@ describe Dossier do
       it { expect(subject[6]).to eq(date1) }
       it { expect(subject[7]).to eq(date2) }
       it { expect(subject[8]).to eq(date3) }
-      it { expect(subject[9]).to eq(dossier.followers_gestionnaires_emails) }
+      it { expect(subject[9]).to be_a_kind_of(String) }
       it { expect(subject[10]).to be_nil }
       it { expect(subject[11]).to be_nil }
       it { expect(subject[12]).to be_nil }
@@ -807,40 +807,6 @@ describe Dossier do
 
       it { is_expected.to be_falsey }
     end
-  end
-
-  describe '#followers_gestionnaires_emails' do
-
-    context 'when there is no follower' do
-      let(:dossier) { create(:dossier, follows: []) }
-
-      subject { dossier.followers_gestionnaires_emails }
-
-      it { is_expected.to eq "" }
-    end
-
-    let(:gestionnaire) { create(:gestionnaire) }
-    let(:follow) { create(:follow, gestionnaire: gestionnaire) }
-
-    context 'when there is 1 follower' do
-      let(:dossier) { create(:dossier, follows: [follow]) }
-
-      subject { dossier.followers_gestionnaires_emails }
-
-      it { is_expected.to eq gestionnaire.email }
-    end
-
-    let(:gestionnaire2) { create :gestionnaire}
-    let(:follow2) { create(:follow, gestionnaire: gestionnaire2) }
-
-    context 'when there is 2 followers' do
-      let(:dossier) { create(:dossier, follows: [follow, follow2]) }
-
-      subject { dossier.followers_gestionnaires_emails }
-
-      it { is_expected.to eq "#{gestionnaire.email} #{gestionnaire2.email}" }
-    end
-
   end
 
   describe '#update_state_dates' do

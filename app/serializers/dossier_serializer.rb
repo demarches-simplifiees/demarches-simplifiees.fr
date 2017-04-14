@@ -8,7 +8,8 @@ class DossierSerializer < ActiveModel::Serializer
              :simplified_state,
              :initiated_at,
              :received_at,
-             :processed_at
+             :processed_at,
+             :accompagnateurs
 
   has_one :entreprise
   has_one :etablissement
@@ -21,5 +22,9 @@ class DossierSerializer < ActiveModel::Serializer
 
   def simplified_state
     object.decorate.display_state
+  end
+
+  def accompagnateurs
+    object.followers_gestionnaires.pluck(:email)
   end
 end

@@ -246,8 +246,8 @@ class Dossier < ActiveRecord::Base
     return headers
   end
 
-  def followers_gestionnaires_emails
-    follows.includes(:gestionnaire).map { |f| f.gestionnaire }.pluck(:email).join(' ')
+  def followers_gestionnaires
+    follows.includes(:gestionnaire).map(&:gestionnaire)
   end
 
   def reset!
