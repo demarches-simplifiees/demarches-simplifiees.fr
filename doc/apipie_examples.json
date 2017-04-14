@@ -47,6 +47,9 @@
           "mandataire_social": false,
           "state": "updated",
           "simplified_state": "En construction",
+          "initiated_at": "2017-04-11T12:00:12.000Z",
+          "received_at": null,
+          "processed_at": null,
           "entreprise": {
             "siren": "440117620",
             "capital_social": 537100000,
