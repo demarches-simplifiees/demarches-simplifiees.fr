@@ -53,6 +53,9 @@
           "accompagnateurs": [
             "gestionnaire@apientreprise.fr"
           ],
+          "invites": [
+            "nom@domaine.fr"
+          ],
           "entreprise": {
             "siren": "440117620",
             "capital_social": 537100000,

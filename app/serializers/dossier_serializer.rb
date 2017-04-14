@@ -9,7 +9,8 @@ class DossierSerializer < ActiveModel::Serializer
              :initiated_at,
              :received_at,
              :processed_at,
-             :accompagnateurs
+             :accompagnateurs,
+             :invites
 
   has_one :entreprise
   has_one :etablissement
@@ -26,5 +27,9 @@ class DossierSerializer < ActiveModel::Serializer
 
   def accompagnateurs
     object.followers_gestionnaires.pluck(:email)
+  end
+
+  def invites
+    object.invites_gestionnaires.pluck(:email)
   end
 end
