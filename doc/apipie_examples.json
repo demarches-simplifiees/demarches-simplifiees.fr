@@ -45,6 +45,8 @@
           "updated_at": "2008-09-01T08:05:00.000Z",
           "archived": false,
           "mandataire_social": false,
+          "state": "updated",
+          "simplified_state": "En construction",
           "entreprise": {
             "siren": "440117620",
             "capital_social": 537100000,

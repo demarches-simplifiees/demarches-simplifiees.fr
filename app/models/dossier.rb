@@ -292,5 +292,4 @@ class Dossier < ActiveRecord::Base
   def serialize_value_for_export(value)
     value.nil? || value.kind_of?(Time) ? value : value.to_s
   end
-
 end
