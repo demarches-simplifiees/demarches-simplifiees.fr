@@ -11,7 +11,7 @@ describe 'users/description/champs/dossier_link.html.haml', type: :view do
     let!(:champ) { create(:champ, type_de_champ: type_champ, value: nil) }
 
     it 'should render an input for the dossier link' do
-      expect(rendered).to have_css("input[type=number][placeholder=#{champ.libelle}]")
+      expect(rendered).to have_css("input[type=number][placeholder='Numéro de dossier']")
     end
   end
 
