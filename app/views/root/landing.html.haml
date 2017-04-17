@@ -1,87 +1,17 @@
-#landing.max-size
-  #title
-    .center
-      = image_tag 'logos/logo-tps.png', id: 'logo-tps'
-    %h1.center
-      TéléProcédure Simplifiée
+.landing
+  .landing-panel.hero-panel
+    .landing-panel-inner-content
+      .hero-text.pull-left
+        %p.hero-tagline
+          %em.hero-tagline-em Dématérialisez
+          %br
+          vos démarches administratives en quelques minutes
 
-    .row
-      .col-md-8.col-md-push-2.center
-        %h3
-          Dématérialisez n'importe quelle démarche administrative en quelques minutes,
-          avec un outil
-          %strong
-            gratuit, simple, collaboratif et sûr
+        = link_to "Demander une démo",
+          "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo TPS",
+          :class => "hero-button"
 
-        %p.mt-1 Vous êtes intéressés ?
-        %p= link_to 'Programmer une démo', "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS", target: '_blank', class: 'btn btn-danger btn-lg'
+      .hero-illustration.pull-right
+        %img{ :src => image_url("landing/hero/dematerialiser.svg") }
 
-#landing-body.max-size
-  .row#etapes.center
-    #create_1.col-lg-3.col-md-3.col-sm-3.col-xs-3
-      %img{ src: image_url('etapes/create_1.png') }
-      %br
-      %h4 Administration
-      %h3.text-info Je construis ma démarche 100% en ligne
-    #complet_2.col-lg-3.col-md-3.col-sm-3.col-xs-3
-      %img{ src: image_url('etapes/complet_2.png') }
-      %br
-      %h4 Usager
-      %h3.text-success Je remplis un dossier de manière simplifiée
-    #message_3.col-lg-3.col-md-3.col-sm-3.col-xs-3
-      %img{ src: image_url('etapes/message_3.png') }
-      %br
-      %h4 Usager
-      %h3.text-warning Je dialogue avec mon administration en ligne
-    #shared_4.col-lg-3.col-md-3.col-sm-3.col-xs-3
-      %img{ src: image_url('etapes/shared_4.png') }
-      %br
-      %h4 Usager et Administrations
-      %h3.text-danger
-        J'invite des partenaires à co-construire le dossier
-
-  .split-hr-left
-
-  .row.demo_account.center
-    .col-md-4.col-lg-4
-      %h3.text-primary Acteurs publics
-      %h4 Créez des démarches en ligne simplifiées et sécurisées.
-      = link_to 'Démonstration', "#{@demo_environment_host}/administrateurs/sign_in/demo", { class: 'btn btn-lg btn-primary' }
-
-    .col-md-4.col-lg-4
-      %h3.text-warning Agents et services
-      %h4 Accompagnez et co-traitez les projets avec les usagers.
-      = link_to 'Démonstration', "#{@demo_environment_host}/gestionnaires/sign_in/demo", { class: 'btn btn-lg btn-warning' }
-
-    .col-md-4.col-lg-4
-      %h3.text-success Usagers
-      %h4 Profitez de démarches simplifiées et d’échanges continus avec les services traitants.
-      = link_to 'Démonstration', "#{@demo_environment_host}/users/sign_in/demo", { class: 'btn btn-lg btn-success' }
-
-  .split-hr-left
-
-  .center
-    .row
-      #utilisateurs.col-xs-12.col-sm-12.col-md-12.col-lg-12
-        %h4 Ils nous font confiance
-
-        Conseil Regional Ile de France, Politique de la ville du Pas de Calais (ensemble des administrations et collectivités territoriales concernées), DRIEA Ile de France
-        %br
-        Préfecture de la Martinique, DRIEE Ile de France, Ministère de l'Environnement, de l'Energie et de la Mer, MEEM, CCI Normandie, DGE, Assemblée permanente des chambres de métiers et de l'artisanat
-
-    %br
-    .row
-      #partenaires.col-xs-12.col-sm-12.col-md-12.col-lg-12
-        %h4 Ils travaillent avec nous
-
-        Insee, Infogreffe, Ministère de la Ville, de la Jeunesse et des Sports, IGN, DGFIP, CGET, France Connect, Open Streetmap, la BAN, api.gouv.fr, Euroquity - BPI, FNTP, Qualibat
-
-  .split-hr-left
-
-  #request-access.row.center
-    .col-xs-12.col-sm-12.col-md-12.col-lg-12
-    %h3 Envie de commencer à créer votre démarche ?
-
-    = link_to 'Demander un accès administrateur', 'https://tps.apientreprise.fr/users/dossiers/new?procedure_id=31', { class: 'btn btn-lg background-tps', target: '_blank' }
-
-  .split-hr-left
+      .clearfix

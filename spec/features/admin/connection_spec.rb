@@ -36,7 +36,7 @@ feature 'Administrator connection' do
           page.find_by_id('sign-out').find('a.fa-sign-out').click
         end
         scenario 'admin is redireted to home page' do
-          expect(page).to have_css('#landing')
+          expect(page).to have_css('.landing')
         end
       end
       context 'when clicking on profile' do

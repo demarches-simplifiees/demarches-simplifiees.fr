@@ -1,58 +1,64 @@
-#logo-tps {
-  width: 200px;
+@import "constants";
+@import "colors";
+@import "mixins";
+@import "placeholders";
+@import "typography";
+
+.landing {
+  @extend %new-type;
+  background-color: #FFFFFF;
 }
 
-#landing {
-  background-image: image-url("landing_background.png");
-  background-attachment: fixed;
-  background-size: 130% auto;
-  background-position: top center;
-  background-repeat: no-repeat;
-
-  h5 {
-    color: #808080;
-  }
-
-  .logos {
-    width: 150px;
-  }
-
-  #title {
-    padding-bottom: 2%;
-    padding-top: 1%;
-    color: #FFFFFF;
-    text-shadow: 0px 0px 10px rgb(0, 0, 0);
-
-    h2 {
-      font-size: 35px;
-    }
-
-    .btn {
-      text-shadow: none;
-    }
-  }
+.landing-panel {
+  @include vertical-padding(60px);
 }
 
-.background-tps {
-  background-color: #668AEA;
+.landing-panel-inner-content {
+  width: $page-width;
+  margin: 0 auto;
+}
+
+.hero-tagline {
+  width: 500px;
+  font-size: 30px;
+  margin-bottom: 0px;
+}
+
+.hero-tagline-em {
+  color: $blue;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: bold;
+}
+
+.hero-text {
+  width: 500px;
+}
+
+.hero-illustration {
+  width: 500px;
+}
+
+.hero-button {
+  @include horizontal-padding(30px);
+
+  display: inline-block;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 60px;
+  background-color: $blue;
   color: #FFFFFF;
-}
+  font-size: 24px;
+  margin-top: 30px;
 
-#landing-body {
-  .split-hr-left {
-    margin-left: auto;
-    margin-right: auto;
-
-    margin-top: 40px;
-    margin-bottom: 20px;
-
-    border-color: #808080;
-    width: 40%;
+  &:hover {
+    color: #FFFFFF;
+    text-decoration: none;
+    background-color: $light-blue;
   }
 
-  #etapes,
-  #request-access {
-    margin-top: 20px;
-    margin-bottom: 20px;
+  &:focus {
+    color: #FFFFFF;
+    text-decoration: none;
   }
 }
