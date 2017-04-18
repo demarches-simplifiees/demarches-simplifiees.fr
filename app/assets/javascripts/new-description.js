@@ -5,7 +5,7 @@
   };
 
   var showData = function(data) {
-    $('.dossier-link .procedureLibelle').text(data.procedureLibelle);
+    $('.dossier-link .procedure-libelle').text(data.procedureLibelle);
     $('.dossier-link .text-info').show();
     $('.dossier-link .text-warning').hide();
   };
