@@ -24,41 +24,36 @@ class Users::DescriptionController < UsersController
   end
 
   def update
-    @dossier = current_user_dossier
-    @procedure = @dossier.procedure
+    dossier = current_user_dossier
+    procedure = dossier.procedure
 
-    return head :forbidden unless @dossier.can_be_initiated?
-
-    @champs = @dossier.ordered_champs
-
+    return head :forbidden unless dossier.can_be_initiated?
     check_mandatory_fields = !draft_submission?
 
     if params[:champs]
-      champs_service_errors = ChampsService.save_champs @dossier.champs,
-                                                        params,
-                                                        check_mandatory_fields
-
-      return redirect_to_description_with_errors(@dossier, champs_service_errors) if champs_service_errors.any?
+      champs_service_errors =
+        ChampsService.save_champs(dossier.champs, params, check_mandatory_fields)
+      return redirect_to_description_with_errors(dossier, champs_service_errors) if champs_service_errors.any?
     end
 
-    if @procedure.cerfa_flag? && params[:cerfa_pdf]
-      cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
-      return redirect_to_description_with_errors(@dossier, cerfa.errors.full_messages) unless cerfa.save
+    if procedure.cerfa_flag? && params[:cerfa_pdf]
+      cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: dossier, user: current_user)
+      return redirect_to_description_with_errors(dossier, cerfa.errors.full_messages) unless cerfa.save
     end
 
-    errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)
-    return redirect_to_description_with_errors(@dossier, errors_upload) if errors_upload.any?
+    errors_upload = PiecesJustificativesService.upload!(dossier, current_user, params)
+    return redirect_to_description_with_errors(dossier, errors_upload) if errors_upload.any?
 
     if draft_submission?
       flash.notice = 'Votre brouillon a bien été sauvegardé.'
       redirect_to url_for(controller: :dossiers, action: :index, liste: :brouillon)
     else
-      if @dossier.draft?
-        @dossier.initiated!
-        NotificationMailer.send_notification(@dossier, @dossier.procedure.initiated_mail).deliver_now!
+      if dossier.draft?
+        dossier.initiated!
+        NotificationMailer.send_notification(dossier, procedure.initiated_mail).deliver_now!
       end
       flash.notice = 'Félicitations, votre demande a bien été enregistrée.'
-      redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: @dossier.id)
+      redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: dossier.id)
     end
   end
 
@@ -103,7 +98,7 @@ class Users::DescriptionController < UsersController
   private
 
   def redirect_to_description_with_errors(dossier, errors)
-    flash.alert = errors.join('<br>').html_safe
+    flash.alert = errors.join('<br>')
     redirect_to users_dossier_description_path(dossier_id: dossier.id)
   end
 
