@@ -189,6 +189,59 @@ fr:
       extension_white_list_error: "Le format de fichier de la pièce jointe n'est pas valide."
       procedure_archived: "Cette démarche en ligne a été fermée, il n'est plus possible de déposer de dossier."
 
+  date:
+    abbr_day_names:
+      - dim
+      - lun
+      - mar
+      - mer
+      - jeu
+      - ven
+      - sam
+    abbr_month_names:
+      -
+      - jan.
+      - fév.
+      - mar.
+      - avr.
+      - mai
+      - juin
+      - juil.
+      - août
+      - sept.
+      - oct.
+      - nov.
+      - déc.
+    day_names:
+      - dimanche
+      - lundi
+      - mardi
+      - mercredi
+      - jeudi
+      - vendredi
+      - samedi
+    formats:
+      default: "%d/%m/%Y"
+      short: "%e %b"
+      long: "%e %B %Y"
+      month_names:
+        -
+        - janvier
+        - février
+        - mars
+        - avril
+        - mai
+        - juin
+        - juillet
+        - août
+        - septembre
+        - octobre
+        - novembre
+        - décembre
+      order:
+        - :day
+        - :month
+        - :year
   datetime:
     distance_in_words:
       about_x_hours:
