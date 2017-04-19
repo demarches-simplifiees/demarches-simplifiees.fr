@@ -63,7 +63,7 @@ describe PiecesJustificativesService do
           # we are messing around piece_justificative
           # because directly doubling carrierwave params seems complicated
 
-          allow(PiecesJustificativesService).to receive(:save_pj).and_return('')
+          allow(PiecesJustificativesService).to receive(:save_pj).and_return(nil)
           piece_justificative_double = double(type_de_piece_justificative: tpj_mandatory)
           expect(dossier).to receive(:pieces_justificatives).and_return([piece_justificative_double])
         end
