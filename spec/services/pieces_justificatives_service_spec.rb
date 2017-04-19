@@ -31,11 +31,11 @@ describe PiecesJustificativesService do
         let(:hash) do
           {
             "piece_justificative_#{tpj_not_mandatory.id}" =>
-              double(path: '', original_filename: 'file')
+              double(path: '', original_filename: 'filename')
           }
         end
 
-        it { expect(errors).to match(["le fichier not mandatory n'a pas pu être sauvegardé"]) }
+        it { expect(errors).to match(["le fichier filename (not mandatory) n'a pas pu être sauvegardé"]) }
       end
 
       context 'when a virus is provided' do

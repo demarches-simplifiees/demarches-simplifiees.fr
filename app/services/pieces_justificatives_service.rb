@@ -40,7 +40,7 @@ class PiecesJustificativesService
                                 type_de_piece_justificative: tpj,
                                 user: user)
 
-    pj.save ? nil : "le fichier #{pj.libelle} n'a pas pu être sauvegardé"
+    pj.save ? nil : "le fichier #{content.original_filename} (#{pj.libelle}) n'a pas pu être sauvegardé"
   end
 
   def self.missing_pj_error_messages(dossier)
