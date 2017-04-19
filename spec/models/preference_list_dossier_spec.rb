@@ -26,7 +26,7 @@ describe PreferenceListDossier do
       describe 'dossier_id' do
         subject { super()[:dossier_id] }
 
-        it { expect(subject[:libelle]).to eq 'N°' }
+        it { expect(subject[:libelle]).to eq 'Nº' }
         it { expect(subject[:table]).to be_nil }
         it { expect(subject[:attr]).to eq 'id' }
         it { expect(subject[:attr_decorate]).to eq 'id' }

@@ -9,9 +9,10 @@ class AccompagnateurService
   end
 
   def change_assignement!
-    if @to == ASSIGN
+    case @to
+    when ASSIGN
       AssignTo.create(gestionnaire: @accompagnateur, procedure: @procedure)
-    elsif @to == NOT_ASSIGN
+    when NOT_ASSIGN
       AssignTo.where(gestionnaire: @accompagnateur, procedure: @procedure).delete_all
     end
   end

@@ -43,11 +43,11 @@
     .stat-card.stat-card-half.big-number-card.pull-left
       %span.big-number-card-title TOTAL DÉMARCHES DÉMATÉRIALISÉES
       %span.big-number-card-number
-        = @procedures_count
+        = number_with_delimiter(@procedures_count)
 
     .stat-card.stat-card-half.big-number-card.pull-left
       %span.big-number-card-title TOTAL DOSSIERS DÉPOSÉS
       %span.big-number-card-number
-        = @dossiers_count
+        = number_with_delimiter(@dossiers_count)
 
     .clearfix
