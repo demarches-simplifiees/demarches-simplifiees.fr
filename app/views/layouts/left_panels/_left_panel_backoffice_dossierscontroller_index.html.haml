@@ -39,6 +39,6 @@
       - @facade_data_view.dossiers_with_unread_notifications.each do |dossier|
         = link_to backoffice_dossier_path(dossier.id) do
           .notification
-            .dossier-index= "Dossier n°#{dossier.id}"
+            .dossier-index= "Dossier nº #{dossier.id}"
             .updated-at-index= dossier.first_unread_notification.created_at.strftime('%d/%m %H:%M')
             .count= dossier.unreaded_notifications.count

@@ -36,7 +36,7 @@ class PreferenceListDossier < ActiveRecord::Base
     table = nil
 
     {
-        dossier_id: create_column('N°', table, 'id', 'id', 1),
+        dossier_id: create_column('Nº', table, 'id', 'id', 1),
         created_at: create_column('Créé le', table, 'created_at', 'first_creation', 2),
         updated_at: create_column('Mise à jour le', table, 'updated_at', 'last_update', 2),
         state: create_column('État', table, 'state', 'display_state', 1)
