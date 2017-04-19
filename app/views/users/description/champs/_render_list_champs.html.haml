@@ -11,40 +11,41 @@
             - if champ.mandatory?
               *
 
-          - if champ.type_champ == 'textarea'
+          - case champ.type_champ
+          - when 'textarea'
             = render partial: 'users/description/champs/textarea', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'checkbox'
+          - when 'checkbox'
             = render partial: 'users/description/champs/checkbox', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'civilite'
+          - when 'civilite'
             = render partial: 'users/description/champs/civilite', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'datetime'
+          - when 'datetime'
             = render partial: 'users/description/champs/datetime', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'yes_no'
+          - when 'yes_no'
             = render partial: 'users/description/champs/yes_no', locals: { champ: champ }
 
-          - elsif %w(drop_down_list multiple_drop_down_list).include?(champ.type_champ)
+          - when 'drop_down_list', 'multiple_drop_down_list'
             = render partial: 'users/description/champs/drop_down_list', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'pays'
+          - when 'pays'
             = render partial: 'users/description/champs/pays', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'regions'
+          - when 'regions'
             = render partial: 'users/description/champs/regions', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'engagement'
+          - when 'engagement'
             = render partial: 'users/description/champs/engagement', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'departements'
+          - when 'departements'
             = render partial: 'users/description/champs/departements', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'dossier_link'
+          - when 'dossier_link'
             = render partial: 'users/description/champs/dossier_link', locals: { champ: champ }
 
-          - elsif champ.type_champ == 'explication'
+          - when 'explication'
 
           - else
             %input.form-control{ name: "champs['#{champ.id}']",
