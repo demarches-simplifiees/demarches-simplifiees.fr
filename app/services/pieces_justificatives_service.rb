@@ -2,7 +2,7 @@ class PiecesJustificativesService
   def self.upload!(dossier, user, params)
     tpj_contents = dossier.types_de_piece_justificative
                           .map { |tpj| [tpj, params["piece_justificative_#{tpj.id}"]] }
-                          .select { |_, content| content }
+                          .select { |_, content| content.present? }
 
     without_virus, with_virus = tpj_contents
                                 .partition { |_, content| ClamavService.safe_file?(content.path) }
