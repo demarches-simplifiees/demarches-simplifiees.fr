@@ -8,7 +8,7 @@ class PiecesJustificativesService
                                 .partition { |_, content| ClamavService.safe_file?(content.path) }
 
     errors = with_virus
-             .map { |_, content| content.original_filename + ': <b>Virus détecté !!</b>' }
+             .map { |_, content| content.original_filename + ' : virus détecté' }
 
     errors += without_virus
               .map { |tpj, content| save_pj(content, dossier, tpj, user) }

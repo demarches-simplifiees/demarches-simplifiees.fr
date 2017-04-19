@@ -47,7 +47,7 @@ describe PiecesJustificativesService do
           }
         end
 
-        it { expect(errors).to match(['bad_file: <b>Virus détecté !!</b>']) }
+        it { expect(errors).to match(['bad_file : virus détecté']) }
       end
     end
 
