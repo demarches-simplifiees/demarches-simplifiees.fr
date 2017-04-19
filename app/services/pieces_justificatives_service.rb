@@ -2,17 +2,17 @@ class PiecesJustificativesService
   def self.upload!(dossier, user, params)
     tpj_contents = dossier.types_de_piece_justificative
                           .map { |tpj| [tpj, params["piece_justificative_#{tpj.id}"]] }
-                          .select { |_, content| content }
+                          .select { |_, content| content.present? }
 
     without_virus, with_virus = tpj_contents
                                 .partition { |_, content| ClamavService.safe_file?(content.path) }
 
     errors = with_virus
-             .map { |_, content| content.original_filename + ': <b>Virus détecté !!</b>' }
+             .map { |_, content| content.original_filename + ' : virus détecté' }
 
     errors += without_virus
               .map { |tpj, content| save_pj(content, dossier, tpj, user) }
-              .reject(&:empty?)
+              .compact()
 
     errors += missing_pj_error_messages(dossier)
   end
@@ -40,7 +40,7 @@ class PiecesJustificativesService
                                 type_de_piece_justificative: tpj,
                                 user: user)
 
-    pj.save ? '' : "le fichier #{pj.libelle} n'a pas pu être sauvegardé"
+    pj.save ? nil : "le fichier #{content.original_filename} (#{pj.libelle}) n'a pas pu être sauvegardé"
   end
 
   def self.missing_pj_error_messages(dossier)

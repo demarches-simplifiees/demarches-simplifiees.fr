@@ -31,11 +31,11 @@ describe PiecesJustificativesService do
         let(:hash) do
           {
             "piece_justificative_#{tpj_not_mandatory.id}" =>
-              double(path: '', original_filename: 'file')
+              double(path: '', original_filename: 'filename')
           }
         end
 
-        it { expect(errors).to match(["le fichier not mandatory n'a pas pu être sauvegardé"]) }
+        it { expect(errors).to match(["le fichier filename (not mandatory) n'a pas pu être sauvegardé"]) }
       end
 
       context 'when a virus is provided' do
@@ -47,7 +47,7 @@ describe PiecesJustificativesService do
           }
         end
 
-        it { expect(errors).to match(['bad_file: <b>Virus détecté !!</b>']) }
+        it { expect(errors).to match(['bad_file : virus détecté']) }
       end
     end
 
@@ -63,7 +63,7 @@ describe PiecesJustificativesService do
           # we are messing around piece_justificative
           # because directly doubling carrierwave params seems complicated
 
-          allow(PiecesJustificativesService).to receive(:save_pj).and_return('')
+          allow(PiecesJustificativesService).to receive(:save_pj).and_return(nil)
           piece_justificative_double = double(type_de_piece_justificative: tpj_mandatory)
           expect(dossier).to receive(:pieces_justificatives).and_return([piece_justificative_double])
         end
