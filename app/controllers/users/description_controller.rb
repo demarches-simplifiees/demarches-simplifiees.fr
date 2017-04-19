@@ -28,13 +28,8 @@ class Users::DescriptionController < UsersController
     procedure = dossier.procedure
 
     return head :forbidden unless dossier.can_be_initiated?
-    check_mandatory_fields = !draft_submission?
 
-    if params[:champs]
-      champs_service_errors =
-        ChampsService.save_champs(dossier.champs, params, check_mandatory_fields)
-      return redirect_to_description_with_errors(dossier, champs_service_errors) if champs_service_errors.any?
-    end
+    ChampsService.save_champs(dossier.champs, params) if params[:champs]
 
     if procedure.cerfa_flag? && params[:cerfa_pdf]
       cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: dossier, user: current_user)
@@ -43,6 +38,13 @@ class Users::DescriptionController < UsersController
 
     errors_upload = PiecesJustificativesService.upload!(dossier, current_user, params)
     return redirect_to_description_with_errors(dossier, errors_upload) if errors_upload.any?
+
+    if params[:champs] && !draft_submission?
+      errors =
+        ChampsService.build_error_messages(dossier.champs) +
+        PiecesJustificativesService.missing_pj_error_messages(dossier)
+      return redirect_to_description_with_errors(dossier, errors) if errors.any?
+    end
 
     if draft_submission?
       flash.notice = 'Votre brouillon a bien été sauvegardé.'

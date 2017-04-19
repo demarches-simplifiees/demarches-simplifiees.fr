@@ -13,8 +13,6 @@ class PiecesJustificativesService
     errors += without_virus
               .map { |tpj, content| save_pj(content, dossier, tpj, user) }
               .compact()
-
-    errors += missing_pj_error_messages(dossier)
   end
 
   def self.upload_one! dossier, user, params
