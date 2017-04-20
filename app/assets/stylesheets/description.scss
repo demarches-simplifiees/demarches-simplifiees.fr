@@ -1,12 +1,13 @@
 @import "bootstrap";
 @import "bootstrap-datepicker3";
 
-#description_page #liste_champs {
+#description-page #liste-champs {
 
-  .default_data_block {
+  .default-data-block {
     .show-block {
       width: 90%;
-      .body{
+
+      .body {
         padding: 15px;
       }
     }
@@ -18,16 +19,16 @@
   }
 }
 
-.page-header{
+.page-header {
   border-bottom: 1px solid #CCCCCC !important;
 }
 
 .input-error {
-  color: darkred !important;
-  border-color: darkred !important
+  color: #8B0000 !important;
+  border-color: #8B0000 !important;
 }
 
-.type_champ-text {
+.type-champ-text {
   @extend .col-md-6;
   @extend .col-lg-6;
 
@@ -36,28 +37,30 @@
   }
 }
 
-.type_champ-header_section {
+.type-champ-header-section {
   @extend .col-md-12;
   @extend .col-lg-12;
 }
 
-.type_champ-address {
+.type-champ-address {
   @extend .col-md-6;
   @extend .col-lg-6;
 
   .twitter-typeahead {
     width: 100%;
+
     input {
       width: 100%;
       display: block !important;
     }
   }
+
   .tt-menu {
     width: 100%;
   }
 }
 
-.type_champ-email {
+.type-champ-email {
   @extend .col-md-4;
   @extend .col-lg-4;
 
@@ -66,23 +69,26 @@
   }
 }
 
-.type_champ-drop_down_list, .type_champ-regions, .type_champ-departements, .type_champ-pays {
+.type-champ-drop-down-list,
+.type-champ-regions,
+.type-champ-departements,
+.type-champ-pays {
   @extend .col-md-4;
   @extend .col-lg-4;
 
 }
 
-.type_champ-civilite {
+.type-champ-civilite {
   @extend .col-md-3;
   @extend .col-lg-3;
 }
 
-.type_champ-yes_no {
+.type-champ-yes-no {
   @extend .col-md-3;
   @extend .col-lg-3;
 }
 
-.type_champ-phone {
+.type-champ-phone {
   @extend .col-md-2;
   @extend .col-lg-2;
 
@@ -92,11 +98,11 @@
 }
 
 .datepicker-switch {
-  color: #0086b3;
+  color: #0086B3;
   text-decoration: underline;
 }
 
-.type_champ-textarea {
+.type-champ-textarea {
   @extend .col-md-8;
   @extend .col-lg-8;
 
@@ -106,7 +112,7 @@
   }
 }
 
-.type_champ-number {
+.type-champ-number {
   @extend .col-md-3;
   @extend .col-lg-3;
 
@@ -115,7 +121,7 @@
   }
 }
 
-.type_champ-date {
+.type-champ-date {
   @extend .col-md-2;
   @extend .col-lg-2;
 
@@ -124,7 +130,7 @@
   }
 }
 
-.type_champ-datetime {
+.type-champ-datetime {
   @extend .col-md-5;
   @extend .col-lg-5;
 

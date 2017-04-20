@@ -17,7 +17,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
 
       it 'la section infos dossier est présente' do
-        expect(rendered).to have_selector('#infos_dossier')
+        expect(rendered).to have_selector('#infos-dossiers')
       end
 
       it 'le flux de commentaire est présent' do
@@ -73,7 +73,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
 
       it 'button Modifier les document est present' do
         expect(rendered).to have_content('Modifier les documents')
-        expect(rendered).to have_css('#UploadPJmodal')
+        expect(rendered).to have_css('#upload-pj-modal')
       end
 
     end

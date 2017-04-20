@@ -1,4 +1,4 @@
-.etape.etapes_menu.col-xs-3
+.etape.etapes-menu.col-xs-3
   %h3
     Mes informations
   %br
@@ -12,21 +12,21 @@
         = f.submit 'Changer de SIRET', class: %w(btn btn-xs btn-primary)
 
 
-.etape.etapes_informations.col-xs-9
+.etape.etapes-informations.col-xs-9
   .row
     - if @facade.entreprise.nil?
       #new_siret{ style: 'margin-left: 20%; margin-top: 5%;' }
         = form_for @facade.dossier, html: { class: 'form-inline' }, url: users_dossier_siret_informations_path(dossier_id: @facade.dossier.id), method: :post, remote: true do |f|
           .form-group.form-group-lg
-            = f.text_field :siret, class: "form-control", placeholder: "Entrez votre Siret", value: @siret
+            = f.text_field :siret, id: "dossier-siret", class: "form-control", placeholder: "Entrez votre Siret", value: @siret
             = f.hidden_field :dossier_id, value: @facade.dossier.id
             = f.submit 'Valider', class: %w(btn btn-lg btn-success), id: 'submit-siret', data: { disable_with: "Recherche en cours ..." }
     - else
       %br
-      #recap_info_entreprise
+      #recap-info-entreprise
         = render partial: '/dossiers/infos_entreprise'
 
-        %p#insee_infogreffe{ style: 'color: grey; float: right;' }
+        %p#insee-infogreffe{ style: 'color: grey; float: right;' }
           %i
             Informations récupérées auprès de l'INSEE et d'INFOGREFFE
 

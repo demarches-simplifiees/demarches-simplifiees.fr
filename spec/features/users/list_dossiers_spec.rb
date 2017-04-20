@@ -12,7 +12,7 @@ feature 'user access to the list of his dossier' do
     last_updated_dossier.procedure.update_column(:libelle, 'PLIP')
 
     visit new_user_session_path
-    within('#new_user') do
+    within('#new-user') do
       page.find_by_id('user_email').set user.email
       page.find_by_id('user_password').set user.password
       page.click_on 'Se connecter'
@@ -36,7 +36,7 @@ feature 'user access to the list of his dossier' do
       page.find("#tr_dossier_#{dossier1.id}").click
     end
     scenario 'user is redirected to dossier page' do
-      expect(page).to have_css('#users_recapitulatif_dossier_show')
+      expect(page).to have_css('#users-recapitulatif-dossier-show')
     end
   end
 end

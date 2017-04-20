@@ -1,11 +1,11 @@
 $(document).on('turbolinks:load', init_search_anim);
 
 function init_search_anim(){
-  $("#search_area").on('click', search_fadeIn);
+  $("#search-area").on('click', search_fadeIn);
 }
 
 function search_fadeIn(){
-  var search_area = $("#search_area");
+  var search_area = $("#search-area");
   var body_dom = $('body');
   var positions = search_area.position();
   var width = search_area.width();
@@ -16,10 +16,10 @@ function search_fadeIn(){
   search_area.css('z-index', 300);
   search_area.css('width', width);
   search_area.find('#q').animate({ height: '50px' });
-  search_area.find('#search_button').animate({ height: '50px' });
+  search_area.find('#search-button').animate({ height: '50px' });
 
   body_dom.append(search_area);
-  $('#mask_search').fadeIn(200);
+  $('#mask-search').fadeIn(200);
 
   var body_width = body_dom.width();
 
@@ -30,16 +30,16 @@ function search_fadeIn(){
     left: (body_width/2 - search_area_width/2 + 40)
   }, 400, function() {
     search_area.off();
-    $("#search_area input").focus();
+    $("#search-area input").focus();
 
-    $('#mask_search').on('click', search_fadeOut)
+    $('#mask-search').on('click', search_fadeOut)
   });
 }
 
 function search_fadeOut(){
-  var search_area = $("#search_area");
+  var search_area = $("#search-area");
 
-  $('#mask_search').fadeOut(200);
+  $('#mask-search').fadeOut(200);
 
   search_area.fadeOut(200, function(){
     search_area.css('position', 'static');
@@ -48,7 +48,7 @@ function search_fadeOut(){
     search_area.css('z-index', '');
     search_area.css('width', 'auto');
     search_area.find('#q').css('height', 34);
-    search_area.find('#search_button').css('height', 34);
+    search_area.find('#search-button').css('height', 34);
 
     $('#search-block').append(search_area);
     search_area.fadeIn(200);

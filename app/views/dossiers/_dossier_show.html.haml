@@ -1,7 +1,7 @@
 = render partial: 'dossiers/messagerie', locals: { dossier_facade: @facade }
 
 - if @facade.procedure.individual_with_siret
-  .default_data_block
+  .default-data-block
     .row.show-block.infos
       .header
         .col-xs-8.title-no-expanse
@@ -13,7 +13,7 @@
               Renseigner un SIRET
 
 - unless @facade.entreprise.nil?
-  .default_data_block
+  .default-data-block
     .row.show-block.infos#infos_entreprise
       .header
         .col-xs-12.title
@@ -23,8 +23,8 @@
       .body.display-block-on-print
         = render partial: '/dossiers/infos_entreprise'
 
-.default_data_block.default_visible
-  .row.show-block.infos#infos_dossier
+.default-data-block.default_visible
+  .row.show-block.infos#infos-dossiers
     .header
       .col-xs-10.title
         .carret-right
@@ -35,7 +35,7 @@
       = render partial: '/dossiers/infos_dossier'
 
 - if @facade.dossier.procedure.module_api_carto.use_api_carto
-  .default_data_block.default_visible.no-page-break-inside
+  .default-data-block.default_visible.no-page-break-inside
     .row.show-block#carto
       .header
         .col-xs-10.title
@@ -53,7 +53,7 @@
 
 
 - if @current_gestionnaire && gestionnaire_signed_in? && @champs_private.count > 0
-  .default_data_block.default_visible
+  .default-data-block.default_visible
     .row.show-block#private-fields
       .header
         .col-xs-10.title

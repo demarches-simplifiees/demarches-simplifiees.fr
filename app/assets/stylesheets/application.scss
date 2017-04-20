@@ -1,27 +1,27 @@
-//= depend_on_asset "layers.png"
-//= depend_on_asset "layers-2x.png"
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
- * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any styles
- * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
- * file per style scope.
- *
- *= require_tree .
- *= require_self
- *= require bootstrap-datepicker3
- *= require leaflet
- *= require font-awesome
- *= require franceconnect
- *= require bootstrap-wysihtml5
- *= require select2
- *= require select2-bootstrap
- */
+// = depend_on_asset "layers.png"
+// = depend_on_asset "layers-2x.png"
+
+// This is a manifest file that'll be compiled into application.css, which will include all the files
+// listed below.
+//
+// Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+// or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+//
+// You're free to add application-wide styles to this file and they'll appear at the bottom of the
+// compiled file so the styles you add here take precedence over styles defined in any styles
+// defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+// file per style scope.
+//
+// = require_tree .
+// = require_self
+// = require bootstrap-datepicker3
+// = require leaflet
+// = require font-awesome
+// = require franceconnect
+// = require bootstrap-wysihtml5
+// = require select2
+// = require select2-bootstrap
+
 @import "variables";
 @import "bootstrap-sprockets";
 @import "bootstrap";
@@ -30,7 +30,8 @@ body {
   background-color: $light-blue;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -53,12 +54,13 @@ form {
   overflow: hidden;
 }
 
-#wrap:after {
+#wrap::after {
   content: "";
   display: block;
 }
 
-#footer, #wrap:after {
+#footer,
+#wrap::after {
   height: 50px;
 }
 
@@ -66,35 +68,32 @@ form {
   background-color: $light-blue;
   text-align: center;
   padding: 0;
-  a, p {
+
+  a,
+  p {
     color: #000000;
   }
+
   a:hover {
     color: #000000;
   }
+
   p {
     line-height: 40px;
     padding: 0;
   }
 }
 
-.beta_staging {
+.beta-staging {
   background-color: #B00100 !important;
 }
 
-.staging_warning {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .text-purple {
-  color: #8B008B
+  color: #8B008B;
 }
 
 .text-default {
-  color: grey;
+  color: #808080;
 }
 
 .progress-bar-purple {
@@ -122,16 +121,16 @@ form {
   min-height: 100%;
   font-size: 100px;
   text-align: right;
-  filter: alpha(opacity=0);
+  filter: alpha(opacity = 0);
   opacity: 0;
   outline: none;
-  background: white;
+  background: #FFFFFF;
   cursor: inherit;
   display: block;
 }
 
 .vr {
-  border-left: 1px solid grey;
+  border-left: 1px solid #808080;
 }
 
 .center {
@@ -140,10 +139,6 @@ form {
 
 textarea#description {
   width: 100%;
-}
-
-.logo_fc_small {
-  max-width: 27px;
 }
 
 div.pagination {
@@ -156,7 +151,7 @@ div.pagination {
   margin-bottom: 0px;
 }
 
-.alert.alert-success.move_up,
+.alert.alert-success.move-up,
 .alert.alert-danger.siret {
   position: fixed;
   top: 0px;
@@ -199,11 +194,11 @@ div.pagination {
   right: 50px;
 }
 
-#fconnect-access:before {
+#fconnect-access::before {
   left: 22.7% !important;
 }
 
-#fconnect-access:after {
+#fconnect-access::after {
   left: 23% !important;
 }
 
@@ -217,7 +212,6 @@ div.pagination {
     font-size: 16px !important;
     margin-right: 0px !important;
   }
-
 }
 
 .no-padding {

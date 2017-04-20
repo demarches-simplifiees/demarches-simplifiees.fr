@@ -22,28 +22,28 @@ feature 'As an Accompagnateur I can navigate and use each functionnality around 
   context 'On index' do
 
     scenario 'Switching between procedures' do
-      page.all('#procedure_list a').first.click
+      page.all('#procedure-list a').first.click
       expect(page).to have_current_path(backoffice_dossiers_procedure_path(id: procedure_1.id.to_s), only_path: true)
       expect(page.find('#all_dossiers .count').text).to eq('30 dossiers')
-      page.all('#procedure_list a').last.click
+      page.all('#procedure-list a').last.click
       expect(page).to have_current_path(backoffice_dossiers_procedure_path(id: procedure_2.id.to_s), only_path: true)
       expect(page.find('#all_dossiers .count').text).to eq('22 dossiers')
     end
 
     scenario 'Searching with search bar', js: true do
-      page.find_by_id('search_area').trigger('click')
+      page.find_by_id('search-area').trigger('click')
       fill_in 'q', with: (procedure_1.dossiers.first.id + 14)
-      page.find_by_id('search_button').click
+      page.find_by_id('search-button').click
       page.find_by_id("tr_dossier_#{(procedure_1.dossiers.first.id + 14)}").click
       expect(page).to have_current_path("/backoffice/dossiers/#{(procedure_1.dossiers.first.id + 14)}")
     end
 
     scenario 'Following dossier' do
-      page.all('#procedure_list a').first.click
+      page.all('#procedure-list a').first.click
       expect(page.all('#follow_dossiers .smart-listing')[0]['data-item-count']).to eq ("0")
       page.find_by_id('all_dossiers').click
-      expect(page.all('#dossiers_list a').first.text).to eq('Suivre')
-      page.all('#dossiers_list a').first.click
+      expect(page.all('#dossiers-list a').first.text).to eq('Suivre')
+      page.all('#dossiers-list a').first.click
       expect(page.all('#follow_dossiers .smart-listing')[0]['data-item-count']).to eq ("1")
     end
 

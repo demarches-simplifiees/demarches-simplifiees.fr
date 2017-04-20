@@ -27,7 +27,7 @@ feature 'on click on tabs button' do
       end
 
       scenario 'it redirect to users dossier termine' do
-        expect(page).to have_css('#users_index')
+        expect(page).to have_css('#users-index')
       end
     end
 
@@ -38,7 +38,7 @@ feature 'on click on tabs button' do
       end
 
       scenario 'it redirect to users dossier termine' do
-        expect(page).to have_css('#users_index')
+        expect(page).to have_css('#users-index')
       end
     end
 
@@ -49,7 +49,7 @@ feature 'on click on tabs button' do
       end
 
       scenario 'it redirect to users dossier termine' do
-        expect(page).to have_css('#users_index')
+        expect(page).to have_css('#users-index')
       end
     end
 
@@ -60,7 +60,7 @@ feature 'on click on tabs button' do
       end
 
       scenario 'it redirect to users dossier invites' do
-        expect(page).to have_css('#users_index')
+        expect(page).to have_css('#users-index')
       end
     end
   end

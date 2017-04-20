@@ -3,14 +3,14 @@
 }
 
 #landing {
-  background-image: image-url('landing_background.png');
+  background-image: image-url("landing_background.png");
   background-attachment: fixed;
   background-size: 130% auto;
   background-position: top center;
   background-repeat: no-repeat;
 
-  h5{
-    color: grey;
+  h5 {
+    color: #808080;
   }
 
   .logos {
@@ -20,6 +20,8 @@
   #title {
     padding-bottom: 2%;
     padding-top: 1%;
+    color: #FFFFFF;
+    text-shadow: 0px 0px 10px rgb(0, 0, 0);
 
     h2 {
       font-size: 35px;
@@ -28,22 +30,15 @@
     .btn {
       text-shadow: none;
     }
-
-    color: white;
-    text-shadow: 0px 0px 10px rgb(0, 0, 0);
   }
 }
 
-.background-tps{
+.background-tps {
   background-color: #668AEA;
-  color: white;
+  color: #FFFFFF;
 }
 
-.latest_release{
-  margin-left: 1%
-}
-
-#landing_body{
+#landing-body {
   .split-hr-left {
     margin-left: auto;
     margin-right: auto;
@@ -51,11 +46,12 @@
     margin-top: 40px;
     margin-bottom: 20px;
 
-    border-color: grey;
+    border-color: #808080;
     width: 40%;
   }
 
-  #etapes, #request_access{
+  #etapes,
+  #request-access {
     margin-top: 20px;
     margin-bottom: 20px;
   }

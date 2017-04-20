@@ -8,30 +8,30 @@ function button_edit_procedure_init(){
 
 function buttons_api_carto () {
 
-  $("#procedure_module_api_carto_use_api_carto").on('change', function() {
-    $("#modules_api_carto").toggle()
+  $("#procedure-module-api-carto-use-api-carto").on('change', function() {
+    $("#modules-api-carto").toggle()
   });
 
-  if ($('#procedure_module_api_carto_use_api_carto').is(':checked'))
-    $("#modules_api_carto").show();
+  if ($('#procedure-module-api-carto-use-api-carto').is(':checked'))
+    $("#modules-api-carto").show();
 }
 
 function button_cerfa () {
 
   $("#procedure_cerfa_flag").on('change', function() {
-    $("#procedure_lien_demarche").toggle()
+    $("#procedure-lien-demarche").toggle()
   });
 
   if ($('#procedure_cerfa_flag').is(':checked'))
-    $("#procedure_lien_demarche").show();
+    $("#procedure-lien-demarche").show();
 }
 
 function button_individual () {
 
   $("#procedure_for_individual").on('change', function() {
-    $("#individual_with_siret").toggle()
+    $("#individual-with-siret").toggle()
   });
 
   if ($('#procedure_for_individual').is(':checked'))
-    $("#individual_with_siret").show();
+    $("#individual-with-siret").show();
 }

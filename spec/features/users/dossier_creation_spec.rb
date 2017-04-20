@@ -45,7 +45,7 @@ feature 'As a User I wanna create a dossier' do
       login_as user, scope: :user
       visit commencer_path(procedure_path: procedure_with_siret.path)
       expect(page).to have_current_path(users_dossier_path(procedure_with_siret.dossiers.last.id.to_s), only_path: true)
-      fill_in 'dossier_siret', with: siret
+      fill_in 'dossier-siret', with: siret
       stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: 200, body: File.read('spec/support/files/etablissement.json'))
       stub_request(:get, "https://api-dev.apientreprise.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
@@ -54,9 +54,9 @@ feature 'As a User I wanna create a dossier' do
           .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
       stub_request(:get, "https://api-dev.apientreprise.fr/v1/associations/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: 404, body: '')
-      page.find_by_id('dossier_siret').set siret
+      page.find_by_id('dossier-siret').set siret
       page.find_by_id('submit-siret').trigger('click')
-      expect(page).to have_css('#recap_info_entreprise')
+      expect(page).to have_css('#recap-info-entreprise')
       find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
       page.find_by_id('etape_suivante').trigger('click')
       expect(page).to have_current_path(users_dossier_carte_path(procedure_with_siret.dossiers.last.id.to_s), only_path: true)

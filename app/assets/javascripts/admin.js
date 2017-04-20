@@ -16,27 +16,27 @@ function destroy_action(){
     $(this).closest('td').find(".confirm").hide();
   });
 
-  $("#liste_gestionnaire #libelle").on('click', function(){
+  $("#liste-gestionnaire #libelle").on('click', function(){
     setTimeout(destroy_action, 500);
   });
 }
 
 function on_change_type_de_champ_select (){
-  $("select.form-control.type_champ").on('change', function(e){
+  $("select.form-control.type-champ").on('change', function(e){
 
     parent = $(this).parent().parent();
 
-    parent.removeClass('header_section');
-    parent.children(".drop_down_list").removeClass('show_inline');
+    parent.removeClass('header-section');
+    parent.children(".drop-down-list").removeClass('show-inline');
     $('.mandatory', parent).show();
 
     switch(this.value){
       case 'header_section':
-        parent.addClass('header_section');
+        parent.addClass('header-section');
         break;
       case 'drop_down_list':
       case 'multiple_drop_down_list':
-        parent.children(".drop_down_list").addClass('show_inline');
+        parent.children(".drop-down-list").addClass('show-inline');
         break;
       case 'explication':
         $('.mandatory', parent).hide();

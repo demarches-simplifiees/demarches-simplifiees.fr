@@ -18,7 +18,7 @@
     = action_cable_meta_tag
   %body
     = render partial: 'layouts/support_navigator_banner'
-    #beta{ class: (Rails.env == 'production' ? '' : 'beta_staging') }
+    #beta{ class: (Rails.env == 'production' ? '' : 'beta-staging') }
       - if Rails.env == 'production'
         Beta
       - else
@@ -49,7 +49,7 @@
           - main_container_size = 12
 
         = render partial: 'layouts/main_container', locals: { main_container_size: main_container_size }
-    #mask_search
+    #mask-search
       %h1
         %i.fa.fa-times{ style: 'position: fixed; top: 10; right: 30; color: white;' }
 
