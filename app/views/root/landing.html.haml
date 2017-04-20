@@ -11,6 +11,9 @@
           "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo TPS",
           :class => "hero-button"
 
+        %p.hero-phone-cta
+          ou nous appeler au 01 40 15 68 49
+
       .hero-illustration.pull-right
         %img{ :src => image_url("landing/hero/dematerialiser.svg") }
 
@@ -125,10 +128,14 @@
 
   .landing-panel.cta-panel
     .landing-panel-inner-content
-      = link_to "Demander une démo",
-        "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS",
-        :class => "cta-panel-button pull-right"
-      %h1.cta-panel-title.pull-left Commencez à dématerialiser vos démarches
-      %p.cta-panel-explanation.pull-left Nous vous accompagnons dans la prise en main de l’outil
+      .pull-right
+        = link_to "Demander une démo",
+          "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS",
+          :class => "cta-panel-button"
+        %p.cta-panel-phone-cta
+          ou nous appeler au 01 40 15 68 49
+      .pull-left
+        %h1.cta-panel-title Commencez à dématerialiser vos démarches
+        %p.cta-panel-explanation Nous vous accompagnons dans la prise en main de l’outil
       .clearfix
 
