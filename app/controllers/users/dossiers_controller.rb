@@ -10,7 +10,7 @@ class Users::DossiersController < UsersController
   end
 
   def index
-    set_liste
+    @liste ||= params[:liste] || 'a_traiter'
 
     @user_dossiers = current_user.dossiers
 
@@ -231,9 +231,5 @@ class Users::DossiersController < UsersController
 
   def facade id = params[:id]
     DossierFacades.new id, current_user.email
-  end
-
-  def set_liste
-    @liste ||= params[:liste] || 'a_traiter'
   end
 end

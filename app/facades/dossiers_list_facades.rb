@@ -10,11 +10,7 @@ class DossiersListFacades
   end
 
   def service
-    if gestionnaire?
-      @service ||= DossiersListGestionnaireService.new @current_devise_profil, @liste, @procedure
-    elsif user?
-      @service ||= DossiersListUserService.new @current_devise_profil, @liste
-    end
+    @service ||= DossiersListGestionnaireService.new @current_devise_profil, @liste, @procedure
   end
 
   def total_dossier
@@ -80,14 +76,6 @@ class DossiersListFacades
   end
 
   private
-
-  def gestionnaire?
-    @current_devise_profil.class == Gestionnaire
-  end
-
-  def user?
-    @current_devise_profil.class == User
-  end
 
   def base_url liste
     @procedure.nil? ? backoffice_dossiers_path(liste: liste) : backoffice_dossiers_procedure_path(id: @procedure.id, liste: liste)

@@ -200,6 +200,7 @@ class Dossier < ActiveRecord::Base
   end
 
   scope :archived, -> { where(archived: true) }
+  scope :not_archived, -> { where(archived: false) }
 
   scope :downloadable, -> { all_state }
 
