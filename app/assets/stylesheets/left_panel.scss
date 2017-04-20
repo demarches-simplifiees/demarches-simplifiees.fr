@@ -7,7 +7,7 @@
   top: 0;
   left: 0;
   bottom: 0;
-  color: white;
+  color: #FFFFFF;
   overflow-y: scroll;
 
   #first-block {
@@ -15,16 +15,19 @@
     font-size: 16px;
     line-height: 18px;
     margin-top: 20px;
+
     .infos {
       font-size: 25px;
       text-align: center;
       margin: 10px 10px 30px 0;
+
       .projet-name {
         font-size: 25px;
         line-height: normal;
         padding: 5px;
       }
     }
+
     .count {
       display: inline-block;
       padding: 3px;
@@ -33,37 +36,49 @@
       text-align: center;
       line-height: 23px;
     }
+
     .text {
       display: inline-block;
       width: 30px;
       margin: 0 0 0 8px;
     }
-    .dossiers-en-cours, .en-cours {
+
+    .dossiers-en-cours,
+    .en-cours {
       margin-top: 20px;
     }
+
     .dossiers-en-cours {
       .count {
         border: 1px solid #FFFFFF;
       }
     }
+
     .nouveaux-dossiers {
       .count {
         background-color: #5CB85C;
       }
     }
+
     .nouvelles-notifications {
       .count {
         background-color: #E4594F;
       }
     }
-    .dossiers-en-cours, .nouveaux-dossiers, .nouvelles-notifications, .en-cours {
+
+    .dossiers-en-cours,
+    .nouveaux-dossiers,
+    .nouvelles-notifications,
+    .en-cours {
       margin: 5px auto 0 20px;
       width: 150px;
     }
   }
+
   #action-block {
     text-align: center;
     margin: 10px;
+
     .action {
       background-color: #E45B51;
       text-align: center;
@@ -78,7 +93,10 @@
       border: none;
       width: 100%;
     }
-    .close-dossier, .refuse-dossier, .forget-dossier {
+
+    .close-dossier,
+    .refuse-dossier,
+    .forget-dossier {
       border: 1px solid #FFFFFF;
       border-radius: 25px;
       margin: 5px;
@@ -86,20 +104,27 @@
       margin-right: auto;
       width: 60px;
     }
-    .close-dossier:hover, .refuse-dossier:hover, .forget-dossier:hover {
+
+    .close-dossier:hover,
+    .refuse-dossier:hover,
+    .forget-dossier:hover {
       color: #000000;
       border-color: #000000;
     }
+
     .close-dossier {
       background-color: #2A9E2A;
     }
+
     .refuse-dossier {
       background-color: #E4594F;
     }
+
     .forget-dossier {
       background-color: #FF8300;
     }
   }
+
   #menu-block {
     #switch-buttons {
       height: 30px;
@@ -113,19 +138,24 @@
       padding: 0 0 0 10px;
       border-radius: 25px;
       cursor: pointer;
+
       .active {
         background-color: #668ABD !important;
         cursor: default;
       }
+
       .separator {
         height: 26px;
         width: 1px;
         display: inline-block;
         background-color: #FFFFFF;
       }
-      #switch-procedures:hover, #switch-notifications:hover {
+
+      #switch-procedures:hover,
+      #switch-notifications:hover {
         background-color: #668AEA;
       }
+
       #switch-procedures {
         height: 28px;
         margin: 0 0 0 -10px;
@@ -134,6 +164,7 @@
         display: inline-block;
         border-radius: 25px 0 0 25px;
       }
+
       #switch-notifications {
         width: 103px;
         display: inline-block;
@@ -143,45 +174,55 @@
         padding: 0 0 0 5px;
       }
     }
+
     .split-hr {
       border-bottom: 1px solid #FFFFFF;
       width: 200px;
       margin: 20px 0 20px 0;
     }
   }
+
   #infos-block {
     .split-hr {
       border-bottom: 1px solid #FFFFFF;
       width: 200px;
       margin: 20px 0 20px 0;
     }
+
     .dossier-state {
       text-align: center;
       font-size: 25px;
-      width: 200px;
       margin-top: 20px;
       width: 200px;
       margin-left: auto;
       margin-right: auto;
     }
-    #notifications_list {
+
+    #notifications-list {
       .no-notification {
         margin: 0 30px 0 30px;
       }
+
       .notification {
         padding: 10px 2px 10px 15px;
-        .dossier, .updated-at {
+
+        .dossier,
+        .updated-at {
           display: inline-block;
           color: #CCCCCC;
           font-size: 12px;
           text-align: left;
         }
-        .dossier-index, .updated-at-index, .count {
+
+        .dossier-index,
+        .updated-at-index,
+        .count {
           display: inline-block;
           color: #FFFFFF;
           font-size: 14px;
           text-align: left;
         }
+
         .count {
           background-color: #F0AD4E;
           border-radius: 25px;
@@ -189,33 +230,41 @@
           width: 25px;
           text-align: center;
         }
+
         .type-notif {
           font-size: 16px;
         }
       }
     }
+
     .notifications {
       margin: 20px 10px 0 5px;
+
       .fa {
         font-size: 25px;
         width: 100%;
         margin: 0 0 15px 0;
       }
+
       .type-notif {
         font-size: 16px;
         float: right;
         width: 30px;
       }
+
       .notification {
         margin: 10px 0 10px 10px;
+
         .type {
           margin-bottom: 20px;
         }
+
         .updated-at {
           color: #CCCCCC;
           font-size: 12px;
           text-align: left;
         }
+
         .split-hr {
           width: 40px;
           margin: auto;

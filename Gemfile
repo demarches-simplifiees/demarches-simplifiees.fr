@@ -124,6 +124,7 @@ group :development do
   gem 'rack-handlers'
   gem 'xray-rails'
   gem 'haml-lint'
+  gem 'scss_lint', require: false
 end
 
 group :development, :test do

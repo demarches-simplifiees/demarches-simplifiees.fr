@@ -1,11 +1,11 @@
-#form_login.user_connexion_page
+#form-login.user_connexion_page
   %br
   = render partial: 'users/sessions/resume_procedure'
 
-  %h2#login_user
+  %h2#login-user
     = t('dynamics.users.connexion_title')
 
-  %a.btn_fc#btn_fcp{ href: '/france_connect/particulier' }
+  %a.btn-fc#btn-fcp{ href: '/france_connect/particulier' }
     = image_tag 'franceconnect_logo.png'
 
   %br
@@ -15,13 +15,14 @@
   %hr
 
   .text-left
-    = simple_form_for @user, url: user_session_path do |f|
-      = f.input :email
-      = f.input :password, label: 'Mot de passe', input_html: { value: @user.password }
-      - if devise_mapping.rememberable?
-        = f.input :remember_me, as: :boolean, label: 'Se souvenir de moi'
-      .text-center
-        = f.submit "Se connecter", class: 'btn btn-primary'
+    #new-user
+      = simple_form_for @user, url: user_session_path do |f|
+        = f.input :email
+        = f.input :password, label: 'Mot de passe', input_html: { value: @user.password }
+        - if devise_mapping.rememberable?
+          = f.input :remember_me, as: :boolean, label: 'Se souvenir de moi'
+        .text-center
+          = f.submit "Se connecter", class: 'btn btn-primary'
 
   - if @user.email != DemoEmails[:gestionnaire] && @user.email != DemoEmails[:admin]
     = render "users/shared/links"

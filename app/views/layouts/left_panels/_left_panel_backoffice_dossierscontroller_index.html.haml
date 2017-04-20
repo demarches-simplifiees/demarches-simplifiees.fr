@@ -19,11 +19,11 @@
 
 %div#infos-block
   .split-hr-left
-  #procedure_list
+  #procedure-list
     - @facade_data_view.gestionnaire_procedures_name_and_id_list.each do |procedure|
 
       = link_to backoffice_dossiers_procedure_path(procedure[:id]), { title: procedure[:libelle] } do
-        .procedure_list_element{ class: ('active' if procedure[:id] == @facade_data_view.procedure.id rescue '') }
+        .procedure-list-element{ class: ('active' if procedure[:id] == @facade_data_view.procedure.id rescue '') }
           = truncate(procedure[:libelle], length: 50)
           - total_new = @facade_data_view.new_dossier_number procedure[:id]
           - if total_new > 0
@@ -32,7 +32,7 @@
           - if procedure[:unread_notifications] > 0
             .badge.progress-bar-warning{ title: 'Notifications' }
               = procedure[:unread_notifications]
-  #notifications_list.hidden
+  #notifications-list.hidden
     - if @facade_data_view.dossiers_with_unread_notifications.empty?
       .no-notification Aucune notification pour le moment.
     - else

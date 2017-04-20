@@ -1,8 +1,8 @@
-#backoffice_index
-  #pref_list_menu
+#backoffice-index
+  #pref-list-menu
     = render partial: 'backoffice/dossiers/pref_list'
 
-  .default_data_block
+  .default-data-block
     .row.show-block#new_dossiers
       .header
         .col-xs-10.title
@@ -24,7 +24,7 @@
     .col-xs-3
       = link_to  'Terminés', '?liste=termine', class: 'text-success', style: "text-decoration: #{@facade_data_view.liste == 'termine'? 'underline' : ''}"
 
-  .default_data_block.default_visible
+  .default-data-block.default_visible
     .row.show-block#follow_dossiers
       .header
         .col-xs-10.title
@@ -36,7 +36,7 @@
       .body
         = smart_listing_render :follow_dossiers
 
-  .default_data_block
+  .default-data-block
     .row.show-block#all_dossiers
       .header
         .col-xs-10.title
@@ -50,7 +50,7 @@
 
 
   - if @archived_dossiers
-    .default_data_block
+    .default-data-block
       .row.show-block#archived_dossiers
         .header
           .col-xs-10.title

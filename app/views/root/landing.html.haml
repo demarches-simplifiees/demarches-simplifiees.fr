@@ -1,87 +1,134 @@
-#landing.max-size
-  #title
-    .center
-      = image_tag 'logos/logo-tps.png', id: 'logo-tps'
-    %h1.center
-      TéléProcédure Simplifiée
+.landing
+  .landing-panel.hero-panel
+    .landing-panel-inner-content
+      .hero-text.pull-left
+        %p.hero-tagline
+          %em.hero-tagline-em Dématérialisez
+          %br
+          vos démarches administratives en quelques minutes
 
-    .row
-      .col-md-8.col-md-push-2.center
-        %h3
-          Dématérialisez n'importe quelle démarche administrative en quelques minutes,
-          avec un outil
-          %strong
-            gratuit, simple, collaboratif et sûr
+        = link_to "Demander une démo",
+          "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo TPS",
+          :class => "hero-button"
 
-        %p.mt-1 Vous êtes intéressés ?
-        %p= link_to 'Programmer une démo', "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS", target: '_blank', class: 'btn btn-danger btn-lg'
+      .hero-illustration.pull-right
+        %img{ :src => image_url("landing/hero/dematerialiser.svg") }
 
-#landing_body.max-size
-  .row#etapes.center
-    #create_1.col-lg-3.col-md-3.col-sm-3.col-xs-3
-      %img{ src: image_url('etapes/create_1.png') }
-      %br
-      %h4 Administration
-      %h3.text-info Je construis ma démarche 100% en ligne
-    #complet_2.col-lg-3.col-md-3.col-sm-3.col-xs-3
-      %img{ src: image_url('etapes/complet_2.png') }
-      %br
-      %h4 Usager
-      %h3.text-success Je remplis un dossier de manière simplifiée
-    #message_3.col-lg-3.col-md-3.col-sm-3.col-xs-3
-      %img{ src: image_url('etapes/message_3.png') }
-      %br
-      %h4 Usager
-      %h3.text-warning Je dialogue avec mon administration en ligne
-    #shared_4.col-lg-3.col-md-3.col-sm-3.col-xs-3
-      %img{ src: image_url('etapes/shared_4.png') }
-      %br
-      %h4 Usager et Administrations
-      %h3.text-danger
-        J'invite des partenaires à co-construire le dossier
+      .clearfix
 
-  .split-hr-left
+  .landing-panel.features-panel
+    .landing-panel-inner-content
+      %h2.landing-panel-title.features-panel-title Un outil dédié aux organismes publics
 
-  .row.demo_account.center
-    .col-md-4.col-lg-4
-      %h3.text-primary Acteurs publics
-      %h4 Créez des démarches en ligne simplifiées et sécurisées.
-      = link_to 'Démonstration', "#{@demo_environment_host}/administrateurs/sign_in/demo", { class: 'btn btn-lg btn-primary' }
+      %ul.features
+        %li.feature
+          %img.feature-image{ :src => image_url("landing/features/creer.svg") }
+          %p.feature-text
+            %em.feature-text-em Créer
+            %br
+            des procédures en ligne
+            %br
+            en toute simplicité
+        %li.feature
+          %img.feature-image{ :src => image_url("landing/features/gerer.svg") }
+          %p.feature-text
+            %em.feature-text-em Gérer
+            %br
+            les demandes des usagers 
+            %br
+            sur la plateforme
+        %li.feature
+          %img.feature-image{ :src => image_url("landing/features/collaborer.svg") }
+          %p.feature-text
+            %em.feature-text-em Collaborer
+            %br
+            pour instruire les demandes 
+            %br
+            à plusieurs
 
-    .col-md-4.col-lg-4
-      %h3.text-warning Agents et services
-      %h4 Accompagnez et co-traitez les projets avec les usagers.
-      = link_to 'Démonstration', "#{@demo_environment_host}/gestionnaires/sign_in/demo", { class: 'btn btn-lg btn-warning' }
+  .landing-panel
+    .landing-panel-inner-content
+      %h2.landing-panel-title Ce que les utilisateurs pensent du service
 
-    .col-md-4.col-lg-4
-      %h3.text-success Usagers
-      %h4 Profitez de démarches simplifiées et d’échanges continus avec les services traitants.
-      = link_to 'Démonstration', "#{@demo_environment_host}/users/sign_in/demo", { class: 'btn btn-lg btn-success' }
+      %ul.quotes
+        %li.quote
+          %img.quote-quotation-mark.pull-left{ :src => image_url("landing/testimonials/quotation-mark.svg") }
+          %p.quote-content.pull-right
+            TPS c’est surtout l’assurance d’un dialogue en toute fluidité et en toute transparence entre les porteurs de projet et l’administration. Un service qui garantit une économie de temps et beaucoup moins de manipulations des dossiers.
+          .clearfix
 
-  .split-hr-left
+          %p.quote-author.pull-left
+            %span.quote-author-name Nadja Briki
+            %br
+            Déléguée de la Préfète du Pas-de-Calais
+          .clearfix
 
-  .center
-    .row
-      #utilisateurs.col-xs-12.col-sm-12.col-md-12.col-lg-12
-        %h4 Ils nous font confiance
+        %li.quote
+          %img.quote-quotation-mark.pull-left{ :src => image_url("landing/testimonials/quotation-mark.svg") }
+          %p.quote-content.pull-right
+            TPS est un outil de dématérialisation adapté au dépôt de dossiers de demande d’inscription au registre des transporteurs routiers en Ile-de-France. Les échanges avec les usagers sont facilités, ce qui permet de réduire les délais d’instructions et de gagner en efficacité.
+          .clearfix
 
-        Conseil Regional Ile de France, Politique de la ville du Pas de Calais (ensemble des administrations et collectivités territoriales concernées), DRIEA Ile de France
-        %br
-        Préfecture de la Martinique, DRIEE Ile de France, Ministère de l'Environnement, de l'Energie et de la Mer, MEEM, CCI Normandie, DGE, Assemblée permanente des chambres de métiers et de l'artisanat
+          %p.quote-author.pull-left
+            %span.quote-author-name Elodie Le Rhun
+            %br
+            Chef de bureau, DRIEA Ile-de-France
+          .clearfix
 
-    %br
-    .row
-      #partenaires.col-xs-12.col-sm-12.col-md-12.col-lg-12
-        %h4 Ils travaillent avec nous
+  - cache "numbers-panel", :expires_in => 3.hours do
+    .landing-panel.numbers-panel
+      .landing-panel-inner-content
+        %h2.landing-panel-title TPS en chiffres
+        %ul.numbers
+          %li.number
+            .number-value
+              = number_with_delimiter(Procedure.where(:published => true).count, :locale => :fr)
+            .number-label<
+              procédures
+              %br<>
+              dématérialisées
+          %li.number
+            .number-value
+              = number_with_delimiter(Dossier.where.not(:state => :draft).count, :locale => :fr)
+            .number-label<
+              dossiers
+              %br<>
+              déposés
+          %li.number
+            .number-value
+              = "#{number_with_delimiter(50, :locale => :fr)} %"
+            .number-label<
+              de réduction
+              %br<>
+              des délais de traitement
 
-        Insee, Infogreffe, Ministère de la Ville, de la Jeunesse et des Sports, IGN, DGFIP, CGET, France Connect, Open Streetmap, la BAN, api.gouv.fr, Euroquity - BPI, FNTP, Qualibat
+  .landing-panel.users-panel
+    .landing-panel-inner-content
+      %h2.landing-panel-title Ils nous font confiance
 
-  .split-hr-left
+      %ul.users
+        %li.user
+          %a{ :href => "http://www.developpement-durable.gouv.fr/", :target => "_blank " }
+            %img.user-image{ :src => image_url("landing/users/ministere-environnement.jpg") }
+        %li.user
+          %a{ :href => "https://www.iledefrance.fr/", :target => "_blank " }
+            %img.user-image{ :src => image_url("landing/users/region-idf.jpg") }
+        %li.user
+          %a{ :href => "http://www.artisanat.fr/", :target => "_blank " }
+            %img.user-image{ :src => image_url("landing/users/chambres-de-metiers.jpg") }
+        %li.user
+          %a{ :href => "http://www.cci.fr/", :target => "_blank " }
+            %img.user-image{ :src => image_url("landing/users/cci.jpg") }
+        %li.user
+          %a{ :href => "http://www.driea.ile-de-france.developpement-durable.gouv.fr/", :target => "_blank " }
+            %img.user-image{ :src => image_url("landing/users/driea-idf.jpg") }
 
-  #request_access.row.center
-    .col-xs-12.col-sm-12.col-md-12.col-lg-12
-    %h3 Envie de commencer à créer votre démarche ?
+  .landing-panel.cta-panel
+    .landing-panel-inner-content
+      = link_to "Demander une démo",
+        "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS",
+        :class => "cta-panel-button pull-right"
+      %h1.cta-panel-title.pull-left Commencez à dématerialiser vos démarches
+      %p.cta-panel-explanation.pull-left Nous vous accompagnons dans la prise en main de l’outil
+      .clearfix
 
-    = link_to 'Demander un accès administrateur', 'https://tps.apientreprise.fr/users/dossiers/new?procedure_id=31', { class: 'btn btn-lg background-tps', target: '_blank' }
-
-  .split-hr-left

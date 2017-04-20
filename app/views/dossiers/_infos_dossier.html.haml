@@ -62,7 +62,7 @@
         .col-xs-4.dossier-title= t('utils.pieces').upcase
         .col-xs-4.split-hr
 
-  .col-xs-12#pieces_justificatives.margin-bot-40
+  .col-xs-12#pieces-justificatives.margin-bot-40
     .row
       - if @facade.procedure.cerfa_flag?
         .col-xs-12#piece_justificative_0
@@ -74,7 +74,7 @@
                 %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
                 %span{ style: 'margin-left: 12px;' }
                   \-
-                = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#PJmodal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => 'cerfa' do
+                = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#pj-modal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => 'cerfa' do
                   %span.fa.fa-clock-o
               - else
                 Pièce non fournie
@@ -94,7 +94,7 @@
                     %span{ style: 'margin-left: 12px;' }
                       \-
                     - if @facade.dossier.pieces_justificatives.where(type_de_piece_justificative_id: type_de_piece_justificative.id).count > 1
-                      = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#PJmodal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => "type_de_pj_#{type_de_piece_justificative.id}" do
+                      = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#pj-modal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => "type_de_pj_#{type_de_piece_justificative.id}" do
                         %span.fa.fa-clock-o
                   - else
                     Pièce non fournie
@@ -104,7 +104,7 @@
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
           .row
             .col-xs-4
-            %a#maj_pj.action{ "data-target" => "#UploadPJmodal", "data-toggle" => "modal", :type => "button" }
+            %a#maj_pj.action{ "data-target" => "#upload-pj-modal", "data-toggle" => "modal", :type => "button" }
               .col-xs-4.action
                 Modifier les documents
               %br
@@ -112,7 +112,7 @@
             .col-xs-4
 
     - if gestionnaire_signed_in?
-      #PJmodal.modal.fade{ "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1" }
+      #pj-modal.modal.fade{ "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1" }
         .modal-dialog.modal-lg{ :role => "document" }
           .modal-content
             .modal-header
@@ -120,7 +120,7 @@
                 %span{ "aria-hidden" => "true" } ×
               %h4#myModalLabel.modal-title
                 Historique des
-                %span#PJmodal_title
+                %span#pj-modal-title
             .modal-body
               %table.table
                 %thead
@@ -130,7 +130,7 @@
                     Date d'envoi
                   %th
                     Lien
-                %thead.tr_content#cerfa
+                %thead.tr-content#cerfa
                   - if @facade.procedure.cerfa_flag?
                     - if @facade.dossier.cerfa_available?
                       - @facade.cerfas_ordered.each do |cerfa|
@@ -142,7 +142,7 @@
                           %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
                             = link_to 'Récupérer', cerfa.content_url, { target: :blank }
                 - @facade.dossier.types_de_piece_justificative.each do |type_de_piece_justificative|
-                  %tbody.tr_content{ id: "type_de_pj_#{type_de_piece_justificative.id}" }
+                  %tbody.tr-content{ id: "type_de_pj_#{type_de_piece_justificative.id}" }
                     - @facade.dossier.retrieve_all_piece_justificative_by_type(type_de_piece_justificative.id).each do |piece_justificative|
                       %tr
                         %td.col-md-6.col-sm-6.col-xs-6.col-lg-4

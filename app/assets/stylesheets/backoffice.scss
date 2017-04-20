@@ -1,33 +1,31 @@
-#backoffice_index, #backoffice_search {
+#backoffice-index,
+#backoffice-search {
   margin-left: 2rem;
   margin-right: 2rem;
 
-  .default_data_block {
+  .default-data-block {
     background-color: #FFFFFF;
     margin-top: 20px;
+
     .show-block {
       width: 100%;
     }
+
     .body {
       height: auto;
     }
   }
+
   .fixed-right {
     position: fixed;
     right: 20px;
   }
 }
 
-#pref_list {
-  .dropdown-menu {
-    padding: 10px;
-    width: 500px;
-  }
-}
-
 #onglets {
   ul {
-    li, li.active {
+    li,
+    li.active {
       a {
         margin-top: 12px;
         height: 45px;

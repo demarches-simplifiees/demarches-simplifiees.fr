@@ -29,7 +29,7 @@ feature 'on backoffice page', js: true do
       end
 
       scenario 'it redirect to dossier page' do
-        expect(page).to have_css('#backoffice_dossier_show')
+        expect(page).to have_css('#backoffice-dossier-show')
       end
     end
   end
@@ -45,7 +45,7 @@ feature 'on backoffice page', js: true do
     end
 
     scenario 'it redirect to dossier page' do
-      expect(page).to have_css('#backoffice_dossier_show')
+      expect(page).to have_css('#backoffice-dossier-show')
     end
   end
 end

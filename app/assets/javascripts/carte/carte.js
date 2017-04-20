@@ -152,11 +152,11 @@ function jsObject_to_array(qp_list) {
 }
 
 function add_event_search_address() {
-  $("#search_by_address input[type='address']").bind('typeahead:select', function (ev, seggestion) {
+  $("#search-by-address input[type='address']").bind('typeahead:select', function (ev, seggestion) {
     get_address_point(seggestion['label']);
   });
 
-  $("#search_by_address input[type='address']").keypress(function (e) {
+  $("#search-by-address input[type='address']").keypress(function (e) {
     if (e.keyCode == 13)
       get_address_point($(this).val());
   });

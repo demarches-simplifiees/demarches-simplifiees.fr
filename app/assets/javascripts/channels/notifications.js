@@ -1,7 +1,7 @@
 //App.messages = App.cable.subscriptions.create('NotificationsChannel', {
 //  received: function (data) {
 //    if (window.location.href.indexOf('backoffice') !== -1) {
-//      $("#notification_alert").html(data['message']);
+//      $("#notification-alert").html(data['message']);
 //
 //      slideIn_notification_alert();
 //    }
@@ -9,7 +9,7 @@
 //});
 
 function slideIn_notification_alert (){
-  $("#notification_alert").animate({
+  $("#notification-alert").animate({
     right: '20px'
   }, 250);
 
@@ -17,7 +17,7 @@ function slideIn_notification_alert (){
 }
 
 function slideOut_notification_alert (){
-  $("#notification_alert").animate({
+  $("#notification-alert").animate({
     right: '-250px'
   }, 200);
 }

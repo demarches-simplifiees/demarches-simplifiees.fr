@@ -1,13 +1,13 @@
-.header_section{
+.header-section {
   background-color: rgb(0, 49, 137);
   margin-top: 20px;
   margin-bottom: 10px;
   margin-left: 0;
   margin-right: 0;
-  text-align:center;
+  text-align: center;
   padding-bottom: 8px;
 
-  color: white;
+  color: #FFFFFF;
 
   .form-control.libelle {
     font-weight: bold;
@@ -22,26 +22,27 @@
   }
 }
 
-#liste_champ{
+#liste-champ {
   .form-inline {
     margin-bottom: 30px;
   }
 
-  .show_inline {
+  .show-inline {
     display: inline-block !important;
   }
 
-  .form-group.drop_down_list{
+  .form-group.drop-down-list {
     display: none;
   }
 
   .form-group {
     vertical-align: top;
-    margin-right:  15px;
+    margin-right: 15px;
   }
 
   .description {
     padding: 0;
+
     textarea {
       padding: 6px 12px;
     }

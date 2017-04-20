@@ -3,10 +3,10 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 h5 span {
-  font-weight: normal
+  font-weight: normal;
 }
 
-#insee_infogreffe {
+#insee-infogreffe {
   font-size: 17px;
 }
 
@@ -23,13 +23,7 @@ h5 span {
   }
 }
 
-#recap_dossier {
-  #validate_button {
-    float: right;
-  }
-}
-
-#dossiers_list {
+#dossiers-list {
   .filter {
     cursor: pointer;
     font-size: 1.1em;
@@ -37,30 +31,40 @@ h5 span {
   }
 }
 
-#dossiers_list tr:hover{
-  background-color: #eeeeee;
+#dossiers-list tr:hover {
+  background-color: #EEEEEE;
   cursor: pointer;
 }
 
-#procedure_list, #notifications_list {
+#procedure-list,
+#notifications-list {
   margin-left: -10px;
   margin-top: 20px;
-  a, a:hover {
+
+  a,
+  a:hover {
     color: #FFFFFF;
     text-decoration: none;
   }
-  .procedure_list_element.active, .notification.active {
+
+  .procedure-list-element.active,
+  .notification.active {
     background-color: #668ABD;
   }
-  .procedure_list_element, .notification {
+
+  .procedure-list-element,
+  .notification {
     padding: 15px 40px 15px 20px;
     cursor: pointer;
     line-height: 1.8em;
+
     .progress-bar-warning {
       background-color: #E4594F;
     }
   }
-  .procedure_list_element:hover, .notification:hover {
+
+  .procedure-list-element:hover,
+  .notification:hover {
     background-color: #668ABD;
     cursor: pointer;
   }

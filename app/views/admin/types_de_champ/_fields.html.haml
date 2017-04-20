@@ -1,20 +1,20 @@
 = f.fields_for @types_de_champ_facade.fields_for_var, types_de_champ, remote: true do |ff|
   - type_champ = ff.object.object.type_champ
 
-  .form-inline{ class: (type_champ == 'header_section' ? 'header_section' : nil) }
+  .form-inline{ class: (type_champ == 'header_section' ? 'header-section' : nil) }
     .form-group.libelle
       %h4 Libellé
       = ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
 
     .form-group.type
       %h4 Type
-      = ff.select :type_champ, TypeDeChamp.type_de_champs_list_fr, {}, { class: 'form-control type_champ' }
+      = ff.select :type_champ, TypeDeChamp.type_de_champs_list_fr, {}, { class: 'form-control type-champ' }
 
     .form-group.description
       %h4 Description
       = ff.text_area :description, class: 'form-control description', placeholder: 'Description', rows: 3
 
-    .form-group.drop_down_list{ class: (%w(drop_down_list multiple_drop_down_list).include?(type_champ) ? 'show_inline' : nil), style: 'margin-right: 5px;' }
+    .form-group.drop-down-list{ class: (%w(drop_down_list multiple_drop_down_list).include?(type_champ) ? 'show-inline' : nil), style: 'margin-right: 5px;' }
       %h4 Liste déroulante
       = ff.fields_for :drop_down_list_attributes, ff.object.object.drop_down_list do |fff|
         ~ fff.text_area :value, class: 'form-control drop_down_list', placeholder: "Ecrire une valeur par ligne et --valeur-- pour un séparateur.", rows: 3, cols: 30

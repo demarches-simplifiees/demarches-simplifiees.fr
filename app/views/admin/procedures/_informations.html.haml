@@ -37,10 +37,10 @@
       = f.fields_for :module_api_carto, @procedure.module_api_carto do |ff|
         .checkbox
           %label
-            = ff.check_box :use_api_carto, id: :procedure_module_api_carto_use_api_carto
+            = ff.check_box :use_api_carto, id: "procedure-module-api-carto-use-api-carto"
             Utilisation de la cartographie
 
-        %ul#modules_api_carto
+        %ul#modules-api-carto
           %li
             .checkbox
               %label
@@ -73,7 +73,7 @@
             ne possède pas (ou pas encore) de numéro SIRET,
           qui doivent donc s'identifier en tant que personne physique.
 
-      %ul#individual_with_siret
+      %ul#individual-with-siret
         %li
           .checkbox
             %label

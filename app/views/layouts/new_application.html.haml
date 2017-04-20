@@ -1,0 +1,41 @@
+%html
+  %head
+    %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=UTF-8" }
+    %meta{ "http-equiv" => "X-UA-Compatible", :content => "IE=edge" }
+    %meta{ :name => "turbolinks-cache-control", :content => "no-cache" }
+    = csrf_meta_tags
+    = action_cable_meta_tag
+
+    %title
+      = t("dynamics.page_title")
+
+    = favicon_link_tag(image_url("favicons/16x16.png"), type: "image/png", sizes: "16x16")
+    = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")
+    = favicon_link_tag(image_url("favicons/96x96.png"), type: "image/png", sizes: "96x96")
+
+    = stylesheet_link_tag "application", :media => "all", "data-turbolinks-track" => true
+    = stylesheet_link_tag "print", :media => "print", "data-turbolinks-track" => true
+
+  %body
+    = render :partial => "layouts/support_navigator_banner"
+    = render :partial => "layouts/ie_lt_10"
+    #beta{ class:(Rails.env == "production" ? "" : "beta_staging") }
+      - if Rails.env == "production"
+        Beta
+      - else
+        Env Test
+
+    = render partial: "layouts/new_header"
+    = render partial: "layouts/flash_messages"
+    = yield
+
+    = render :partial => "layouts/switch_devise_profile_module"
+    = render :partial => "layouts/notifications_alert"
+
+    = render partial: "layouts/new_footer"
+    = render partial: "layouts/google_analytics"
+
+    = javascript_include_tag "application", "data-turbolinks-track" => true
+    - if Rails.env == "test"
+      %script{ :type => "text/javascript" }
+        (typeof jQuery !== "undefined") && (jQuery.fx.off = true);
