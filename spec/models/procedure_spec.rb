@@ -284,4 +284,12 @@ describe Procedure do
       it_behaves_like "export is empty"
     end
   end
+
+  describe '#default_path' do
+    let(:procedure){ create(:procedure, libelle: 'A long libelle with àccênts, blabla coucou hello un deux trois voila') }
+
+    subject { procedure.default_path }
+
+    it { is_expected.to eq('a-long-libelle-with-accents-blabla-coucou-hello-un') }
+  end
 end

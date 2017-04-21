@@ -52,7 +52,7 @@ function path_validation(el) {
 }
 
 function validatePath(path) {
-  var re = /^[a-z0-9_]{3,30}$/;
+  var re = /^[a-z0-9_\-]{3,50}$/;
   return re.test(path);
 }
 

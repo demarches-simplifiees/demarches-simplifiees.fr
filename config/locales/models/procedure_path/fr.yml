@@ -1,0 +1,8 @@
+fr:
+  activerecord:
+    errors:
+      models:
+        procedure_path:
+          attributes:
+            path:
+              format: Ce lien n'est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
