@@ -24,13 +24,25 @@ describe ProcedurePath do
         let(:path) { '' }
         it { expect{procedure_path}.to raise_error ActiveRecord::RecordInvalid }
       end
-      context 'when path is invalid' do
+      context 'when path contains spaces' do
         let(:path) { 'Demande de subvention' }
         it { expect{procedure_path}.to raise_error ActiveRecord::RecordInvalid }
       end
-      context 'when path is valid' do
-        let(:path) { 'ma_super_procedure' }
+      context 'when path contains alphanumerics and underscores' do
+        let(:path) { 'ma_super_procedure_1' }
         it { expect{procedure_path}.not_to raise_error }
+      end
+      context 'when path contains dashes' do
+        let(:path) { 'ma-super-procedure' }
+        it { expect{procedure_path}.not_to raise_error }
+      end
+      context 'when path is too long' do
+        let(:path) { 'ma-super-procedure-12345678901234567890123456789012345678901234567890' }
+        it { expect{procedure_path}.to raise_error ActiveRecord::RecordInvalid }
+      end
+      context 'when path is too short' do
+        let(:path) { 'pr' }
+        it { expect{procedure_path}.to raise_error ActiveRecord::RecordInvalid }
       end
     end
   end

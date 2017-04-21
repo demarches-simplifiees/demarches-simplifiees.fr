@@ -53,7 +53,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def default_path
-    libelle.downcase.gsub(/[^a-z0-9\-_]/, "_").gsub(/_*$/, '').gsub(/_+/, '_')
+    libelle.parameterize.first(50)
   end
 
   def types_de_champ_ordered

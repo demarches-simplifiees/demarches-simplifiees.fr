@@ -9,7 +9,7 @@ class DossierTableExportSerializer < ActiveModel::Serializer
              :received_at,
              :processed_at
 
-  attribute :followers_gestionnaires_emails, key: :emails_accompagnateurs
+  attribute :emails_accompagnateurs
 
   attributes :individual_gender,
              :individual_prenom,
@@ -30,5 +30,9 @@ class DossierTableExportSerializer < ActiveModel::Serializer
 
   def individual_gender
     object.individual.try(:gender)
+  end
+
+  def emails_accompagnateurs
+    object.followers_gestionnaires.pluck(:email).join(' ')
   end
 end

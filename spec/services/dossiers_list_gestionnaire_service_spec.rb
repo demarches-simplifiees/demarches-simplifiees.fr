@@ -345,4 +345,36 @@ describe DossiersListGestionnaireService do
       end
     end
   end
+
+  describe 'state filter methods' do
+    let!(:procedure) { create :procedure }
+    let!(:dossier) { create(:dossier, procedure: procedure, state: 'draft') }
+    let!(:dossier2) { create(:dossier, procedure: procedure, state: 'initiated') } #nouveaux
+    let!(:dossier3) { create(:dossier, procedure: procedure, state: 'initiated') } #nouveaux
+    let!(:dossier4) { create(:dossier, procedure: procedure, state: 'replied') } #en_attente
+    let!(:dossier5) { create(:dossier, procedure: procedure, state: 'updated') } #a_traiter
+    let!(:dossier6) { create(:dossier, procedure: procedure, state: 'received') } #a_instruire
+    let!(:dossier7) { create(:dossier, procedure: procedure, state: 'received') } #a_instruire
+    let!(:dossier8) { create(:dossier, procedure: procedure, state: 'closed') } #termine
+    let!(:dossier9) { create(:dossier, procedure: procedure, state: 'refused') } #termine
+    let!(:dossier10) { create(:dossier, procedure: procedure, state: 'without_continuation') } #termine
+    let!(:dossier11) { create(:dossier, procedure: procedure, state: 'closed') } #termine
+    let!(:dossier12) { create(:dossier, procedure: procedure, state: 'initiated', archived: true) } #a_traiter #archived
+    let!(:dossier13) { create(:dossier, procedure: procedure, state: 'replied', archived: true) } #en_attente #archived
+    let!(:dossier14) { create(:dossier, procedure: procedure, state: 'closed', archived: true) } #termine #archived
+
+    describe '#termine' do
+      subject { DossiersListGestionnaireService.new(gestionnaire, liste, procedure).termine }
+
+      it { expect(subject.size).to eq(4) }
+      it { expect(subject).to include(dossier8, dossier9, dossier10, dossier11) }
+    end
+
+    describe '#a_instruire' do
+      subject { DossiersListGestionnaireService.new(gestionnaire, liste, procedure).a_instruire }
+
+      it { expect(subject.size).to eq(2) }
+      it { expect(subject).to include(dossier6, dossier7) }
+    end
+  end
 end

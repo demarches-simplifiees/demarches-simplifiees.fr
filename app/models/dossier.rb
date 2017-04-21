@@ -22,6 +22,7 @@ class Dossier < ActiveRecord::Base
   has_many :commentaires, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :invites_user, class_name: 'InviteUser', dependent: :destroy
+  has_many :invites_gestionnaires, class_name: 'InviteGestionnaire', dependent: :destroy
   has_many :follows
   has_many :notifications, dependent: :destroy
 
@@ -157,17 +158,17 @@ class Dossier < ActiveRecord::Base
     state
   end
 
-  def brouillon?
-    BROUILLON.include?(state)
-  end
-
   def self.all_state order = 'ASC'
     where(state: ALL_STATE, archived: false).order("updated_at #{order}")
   end
 
-  def self.brouillon order = 'ASC'
-    where(state: BROUILLON, archived: false).order("updated_at #{order}")
+  def brouillon?
+    BROUILLON.include?(state)
   end
+
+  scope :brouillon, -> { where(state: BROUILLON) }
+
+  scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
   def self.nouveaux order = 'ASC'
     where(state: NOUVEAUX, archived: false).order("updated_at #{order}")
@@ -181,7 +182,7 @@ class Dossier < ActiveRecord::Base
     where(state: WAITING_FOR_USER, archived: false).order("updated_at #{order}")
   end
 
-  scope :en_construction, -> { where(state: EN_CONSTRUCTION, archived: false).order(updated_at: :asc) }
+  scope :en_construction, -> { where(state: EN_CONSTRUCTION) }
 
   def self.ouvert order = 'ASC'
     where(state: OUVERT, archived: false).order("updated_at #{order}")
@@ -191,15 +192,12 @@ class Dossier < ActiveRecord::Base
     where(state: A_INSTRUIRE, archived: false).order("updated_at #{order}")
   end
 
-  def self.en_instruction order = 'ASC'
-    where(state: EN_INSTRUCTION, archived: false).order("updated_at #{order}")
-  end
+  scope :en_instruction, -> { where(state: EN_INSTRUCTION) }
 
-  def self.termine order = 'ASC'
-    where(state: TERMINE, archived: false).order("updated_at #{order}")
-  end
+  scope :termine, -> { where(state: TERMINE) }
 
   scope :archived, -> { where(archived: true) }
+  scope :not_archived, -> { where(archived: false) }
 
   scope :downloadable, -> { all_state }
 
@@ -249,8 +247,8 @@ class Dossier < ActiveRecord::Base
     return headers
   end
 
-  def followers_gestionnaires_emails
-    follows.includes(:gestionnaire).map { |f| f.gestionnaire }.pluck(:email).join(' ')
+  def followers_gestionnaires
+    follows.includes(:gestionnaire).map(&:gestionnaire)
   end
 
   def reset!
@@ -295,5 +293,4 @@ class Dossier < ActiveRecord::Base
   def serialize_value_for_export(value)
     value.nil? || value.kind_of?(Time) ? value : value.to_s
   end
-
 end

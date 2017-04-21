@@ -418,23 +418,23 @@ describe Dossier do
       let(:procedure_admin) { create(:procedure, administrateur: admin) }
       let(:procedure_admin_2) { create(:procedure, administrateur: admin_2) }
 
+      let!(:dossier) { create(:dossier, procedure: procedure_admin, state: 'draft') }
+      let!(:dossier2) { create(:dossier, procedure: procedure_admin, state: 'initiated') } #nouveaux
+      let!(:dossier3) { create(:dossier, procedure: procedure_admin, state: 'initiated') } #nouveaux
+      let!(:dossier4) { create(:dossier, procedure: procedure_admin, state: 'replied') } #en_attente
+      let!(:dossier5) { create(:dossier, procedure: procedure_admin, state: 'updated') } #a_traiter
+      let!(:dossier6) { create(:dossier, procedure: procedure_admin, state: 'received') } #a_instruire
+      let!(:dossier7) { create(:dossier, procedure: procedure_admin, state: 'received') } #a_instruire
+      let!(:dossier8) { create(:dossier, procedure: procedure_admin, state: 'closed') } #termine
+      let!(:dossier9) { create(:dossier, procedure: procedure_admin, state: 'refused') } #termine
+      let!(:dossier10) { create(:dossier, procedure: procedure_admin, state: 'without_continuation') } #termine
+      let!(:dossier11) { create(:dossier, procedure: procedure_admin_2, state: 'closed') } #termine
+      let!(:dossier12) { create(:dossier, procedure: procedure_admin, state: 'initiated', archived: true) } #a_traiter #archived
+      let!(:dossier13) { create(:dossier, procedure: procedure_admin, state: 'replied', archived: true) } #en_attente #archived
+      let!(:dossier14) { create(:dossier, procedure: procedure_admin, state: 'closed', archived: true) } #termine #archived
+
       before do
         create :assign_to, gestionnaire: gestionnaire, procedure: procedure_admin
-
-        create(:dossier, procedure: procedure_admin, state: 'draft')
-        create(:dossier, procedure: procedure_admin, state: 'initiated') #nouveaux
-        create(:dossier, procedure: procedure_admin, state: 'initiated') #nouveaux
-        create(:dossier, procedure: procedure_admin, state: 'replied') #en_attente
-        create(:dossier, procedure: procedure_admin, state: 'updated') #a_traiter
-        create(:dossier, procedure: procedure_admin, state: 'received') #a_instruire
-        create(:dossier, procedure: procedure_admin, state: 'received') #a_instruire
-        create(:dossier, procedure: procedure_admin, state: 'closed') #termine
-        create(:dossier, procedure: procedure_admin, state: 'refused') #termine
-        create(:dossier, procedure: procedure_admin, state: 'without_continuation') #termine
-        create(:dossier, procedure: procedure_admin_2, state: 'closed') #termine
-        create(:dossier, procedure: procedure_admin, state: 'initiated', archived: true) #a_traiter #archived
-        create(:dossier, procedure: procedure_admin, state: 'replied', archived: true) #en_attente #archived
-        create(:dossier, procedure: procedure_admin, state: 'closed', archived: true) #termine #archived
       end
 
       describe '#nouveaux' do
@@ -455,19 +455,13 @@ describe Dossier do
         it { expect(subject.size).to eq(1) }
       end
 
-      describe '#a_instruire' do
-        subject { gestionnaire.dossiers.a_instruire }
+      describe '#en_instruction' do
+        subject { gestionnaire.dossiers.en_instruction }
 
         it { expect(subject.size).to eq(2) }
-      end
-
-      describe '#termine' do
-        subject { gestionnaire.dossiers.termine }
-
-        it { expect(subject.size).to eq(3) }
+        it { expect(subject).to include(dossier6, dossier7) }
       end
     end
-
   end
 
   describe '#cerfa_available?' do
@@ -578,7 +572,7 @@ describe Dossier do
       it { expect(subject[6]).to eq(date1) }
       it { expect(subject[7]).to eq(date2) }
       it { expect(subject[8]).to eq(date3) }
-      it { expect(subject[9]).to eq(dossier.followers_gestionnaires_emails) }
+      it { expect(subject[9]).to be_a_kind_of(String) }
       it { expect(subject[10]).to be_nil }
       it { expect(subject[11]).to be_nil }
       it { expect(subject[12]).to be_nil }
@@ -813,40 +807,6 @@ describe Dossier do
 
       it { is_expected.to be_falsey }
     end
-  end
-
-  describe '#followers_gestionnaires_emails' do
-
-    context 'when there is no follower' do
-      let(:dossier) { create(:dossier, follows: []) }
-
-      subject { dossier.followers_gestionnaires_emails }
-
-      it { is_expected.to eq "" }
-    end
-
-    let(:gestionnaire) { create(:gestionnaire) }
-    let(:follow) { create(:follow, gestionnaire: gestionnaire) }
-
-    context 'when there is 1 follower' do
-      let(:dossier) { create(:dossier, follows: [follow]) }
-
-      subject { dossier.followers_gestionnaires_emails }
-
-      it { is_expected.to eq gestionnaire.email }
-    end
-
-    let(:gestionnaire2) { create :gestionnaire}
-    let(:follow2) { create(:follow, gestionnaire: gestionnaire2) }
-
-    context 'when there is 2 followers' do
-      let(:dossier) { create(:dossier, follows: [follow, follow2]) }
-
-      subject { dossier.followers_gestionnaires_emails }
-
-      it { is_expected.to eq "#{gestionnaire.email} #{gestionnaire2.email}" }
-    end
-
   end
 
   describe '#update_state_dates' do

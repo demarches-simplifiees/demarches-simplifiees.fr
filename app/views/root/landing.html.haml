@@ -11,6 +11,9 @@
           "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo TPS",
           :class => "hero-button"
 
+        %p.hero-phone-cta
+          ou nous appeler au 01 40 15 68 49
+
       .hero-illustration.pull-right
         %img{ :src => image_url("landing/hero/dematerialiser.svg") }
 
@@ -54,18 +57,6 @@
         %li.quote
           %img.quote-quotation-mark.pull-left{ :src => image_url("landing/testimonials/quotation-mark.svg") }
           %p.quote-content.pull-right
-            TPS c’est surtout l’assurance d’un dialogue en toute fluidité et en toute transparence entre les porteurs de projet et l’administration. Un service qui garantit une économie de temps et beaucoup moins de manipulations des dossiers.
-          .clearfix
-
-          %p.quote-author.pull-left
-            %span.quote-author-name Nadja Briki
-            %br
-            Déléguée de la Préfète du Pas-de-Calais
-          .clearfix
-
-        %li.quote
-          %img.quote-quotation-mark.pull-left{ :src => image_url("landing/testimonials/quotation-mark.svg") }
-          %p.quote-content.pull-right
             TPS est un outil de dématérialisation adapté au dépôt de dossiers de demande d’inscription au registre des transporteurs routiers en Ile-de-France. Les échanges avec les usagers sont facilités, ce qui permet de réduire les délais d’instructions et de gagner en efficacité.
           .clearfix
 
@@ -73,6 +64,18 @@
             %span.quote-author-name Elodie Le Rhun
             %br
             Chef de bureau, DRIEA Ile-de-France
+          .clearfix
+
+        %li.quote
+          %img.quote-quotation-mark.pull-left{ :src => image_url("landing/testimonials/quotation-mark.svg") }
+          %p.quote-content.pull-right
+            TPS c’est surtout l’assurance d’un dialogue en toute fluidité et en toute transparence entre les porteurs de projet et l’administration. Un service qui garantit une économie de temps et beaucoup moins de manipulations des dossiers.
+          .clearfix
+
+          %p.quote-author.pull-left
+            %span.quote-author-name Nadja Briki
+            %br
+            Déléguée de la Préfète du Pas-de-Calais
           .clearfix
 
   - cache "numbers-panel", :expires_in => 3.hours do
@@ -125,10 +128,14 @@
 
   .landing-panel.cta-panel
     .landing-panel-inner-content
-      = link_to "Demander une démo",
-        "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS",
-        :class => "cta-panel-button pull-right"
-      %h1.cta-panel-title.pull-left Commencez à dématerialiser vos démarches
-      %p.cta-panel-explanation.pull-left Nous vous accompagnons dans la prise en main de l’outil
+      .pull-right
+        = link_to "Demander une démo",
+          "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS",
+          :class => "cta-panel-button"
+        %p.cta-panel-phone-cta
+          ou nous appeler au 01 40 15 68 49
+      .pull-left
+        %h1.cta-panel-title Commencez à dématerialiser vos démarches
+        %p.cta-panel-explanation Nous vous accompagnons dans la prise en main de l’outil
       .clearfix
 

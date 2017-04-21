@@ -3,8 +3,8 @@ require 'spec_helper'
 describe DossiersListFacades do
 
   let(:gestionnaire) { create :gestionnaire }
-  let(:procedure) { create :procedure }
-  let(:procedure_2) { create :procedure, libelle: 'plop' }
+  let(:procedure) { create :procedure, libelle: 'Ma procédure' }
+  let(:procedure_2) { create :procedure, libelle: 'Ma seconde procédure' }
 
   let!(:preference) { create :preference_list_dossier,
                              gestionnaire: gestionnaire,
@@ -48,14 +48,8 @@ describe DossiersListFacades do
 
     it { expect(subject.size).to eq 2 }
 
-    it { expect(subject.first[:id]).to eq procedure.id }
-    it { expect(subject.first[:libelle]).to eq procedure.libelle }
-    it { expect(subject.first[:unread_notifications]).to eq 0 }
-
-
-    it { expect(subject.last[:id]).to eq procedure_2.id }
-    it { expect(subject.last[:libelle]).to eq procedure_2.libelle }
-    it { expect(subject.last[:unread_notifications]).to eq 0 }
+    it { expect(subject.first).to eq({ id: procedure.id, libelle: procedure.libelle, unread_notifications: 0 }) }
+    it { expect(subject.last).to eq({ id: procedure_2.id, libelle: procedure_2.libelle, unread_notifications: 0 }) }
   end
 
   describe '#active_filter?' do
