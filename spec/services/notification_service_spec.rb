@@ -22,8 +22,4 @@ describe NotificationService do
       end
     end
   end
-
-  describe 'text_for_notif' do
-    pending
-  end
 end
