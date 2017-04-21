@@ -10,19 +10,29 @@ class Users::DossiersController < UsersController
   end
 
   def index
-    cookies[:liste] = param_liste
+    @liste ||= params[:liste] || 'a_traiter'
 
-    @dossiers_list_facade = DossiersListFacades.new current_user, param_liste
+    @user_dossiers = current_user.dossiers
 
-    unless DossiersListUserService.dossiers_liste_libelle.include?(param_liste)
-      cookies[:liste] = 'a_traiter'
+    @dossiers_filtered = case @liste
+    when 'brouillon'
+      @user_dossiers.brouillon.order_by_updated_at
+    when 'a_traiter'
+      @user_dossiers.en_construction.order_by_updated_at
+    when 'en_instruction'
+      @user_dossiers.en_instruction.order_by_updated_at
+    when 'termine'
+      @user_dossiers.termine.order_by_updated_at
+    when 'invite'
+      current_user.invites
+    else
       return redirect_to users_dossiers_path
     end
 
     @dossiers = smart_listing_create :dossiers,
-                                     @dossiers_list_facade.dossiers_to_display,
-                                     partial: "users/dossiers/list",
-                                     array: true
+                         @dossiers_filtered,
+                         partial: "users/dossiers/list",
+                         array: true
   end
 
   def commencer
@@ -221,9 +231,5 @@ class Users::DossiersController < UsersController
 
   def facade id = params[:id]
     DossierFacades.new id, current_user.email
-  end
-
-  def param_liste
-    @liste ||= params[:liste] || cookies[:liste] || 'a_traiter'
   end
 end

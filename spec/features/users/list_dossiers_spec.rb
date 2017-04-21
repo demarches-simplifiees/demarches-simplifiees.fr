@@ -1,15 +1,14 @@
 require 'spec_helper'
 
-feature 'user access to the list of his dossier' do
+describe 'user access to the list of his dossier' do
   let(:user) { create(:user) }
   let!(:last_updated_dossier) { create(:dossier, :with_entreprise, user: user, state: 'replied')}
   let!(:dossier1) { create(:dossier, :with_entreprise, user: user, state: 'replied') }
   let!(:dossier2) { create(:dossier, :with_entreprise) }
+  let!(:dossier_archived) { create(:dossier, :with_entreprise, user: user, state: 'replied') }
 
   before do
-    dossier1.update_column(:updated_at, "19/07/2052 15:35".to_time)
-    dossier1.procedure.update_column(:libelle, 'PLOP')
-    last_updated_dossier.procedure.update_column(:libelle, 'PLIP')
+    last_updated_dossier.update_column(:updated_at, "19/07/2052 15:35".to_time)
 
     visit new_user_session_path
     within('#new-user') do
@@ -18,16 +17,21 @@ feature 'user access to the list of his dossier' do
       page.click_on 'Se connecter'
     end
   end
-  scenario 'the list of dossier is displayed' do
+
+  it 'the list of dossier is displayed' do
     expect(page).to have_content(dossier1.procedure.libelle)
     expect(page).not_to have_content(dossier2.procedure.libelle)
   end
 
-  scenario 'the list must be order by last updated' do
+  it 'the list must be order by last updated' do
     expect(page.body).to match(/#{last_updated_dossier.procedure.libelle}.*#{dossier1.procedure.libelle}/m)
   end
 
-  scenario 'the state of dossier is displayed' do
+  it 'should list archived dossier' do
+    expect(page).to have_content(dossier_archived.procedure.libelle)
+  end
+
+  it 'the state of dossier is displayed' do
     expect(page).to have_css("#dossier_#{dossier1.id}_state")
   end
 

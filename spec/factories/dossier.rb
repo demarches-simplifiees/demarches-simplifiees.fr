@@ -47,6 +47,14 @@ FactoryGirl.define do
       end
     end
 
+    trait :archived do
+      archived true
+    end
+
+    trait :not_archived do
+      archived false
+    end
+
     trait :replied do
       state 'replied'
     end
