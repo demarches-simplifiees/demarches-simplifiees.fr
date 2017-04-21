@@ -16,8 +16,4 @@ describe RenderPartialService do
 
     it { is_expected.to eq 'layouts/left_panels/left_panel_'+controller.to_s.parameterize + '_' + method.to_s }
   end
-
-  describe 'left_panel_exist?' do
-    pending
-  end
 end

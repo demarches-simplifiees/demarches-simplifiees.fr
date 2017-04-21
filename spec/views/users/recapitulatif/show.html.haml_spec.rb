@@ -24,12 +24,6 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         expect(rendered).to have_selector('#messages')
       end
 
-      it 'le numéro de dossier est présent' do
-        pending 'move to test layout'
-        expect(rendered).to have_selector('#dossier_id')
-        expect(rendered).to have_content(dossier_id)
-      end
-
       describe 'les liens de modifications' do
         context 'lien description' do
           it 'le lien vers description est présent' do
