@@ -22,6 +22,7 @@ class Dossier < ActiveRecord::Base
   has_many :commentaires, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :invites_user, class_name: 'InviteUser', dependent: :destroy
+  has_many :invites_gestionnaires, class_name: 'InviteGestionnaire', dependent: :destroy
   has_many :follows
   has_many :notifications, dependent: :destroy
 
@@ -246,8 +247,8 @@ class Dossier < ActiveRecord::Base
     return headers
   end
 
-  def followers_gestionnaires_emails
-    follows.includes(:gestionnaire).map { |f| f.gestionnaire }.pluck(:email).join(' ')
+  def followers_gestionnaires
+    follows.includes(:gestionnaire).map(&:gestionnaire)
   end
 
   def reset!
@@ -292,5 +293,4 @@ class Dossier < ActiveRecord::Base
   def serialize_value_for_export(value)
     value.nil? || value.kind_of?(Time) ? value : value.to_s
   end
-
 end
