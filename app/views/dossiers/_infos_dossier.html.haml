@@ -40,10 +40,10 @@
               - unless champ.decorate.value.blank?
                 - if champ.type_champ == 'dossier_link'
                   - dossier = Dossier.includes(:procedure).find_by(id: champ.decorate.value)
-                  - if dossier && gestionnaire_signed_in?
+                  - if dossier
                     = link_to(dossier.procedure.libelle, backoffice_dossier_path(champ.decorate.value), target: '_blank')
                   - else
-                    = dossier.nil? ? 'pas de dossier associé' : dossier.procedure.libelle
+                    Pas de dossier associé
                 - else
                   = champ.decorate.value.html_safe
 

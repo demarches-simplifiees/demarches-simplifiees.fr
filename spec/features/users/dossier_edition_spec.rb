@@ -38,7 +38,7 @@ feature 'As a User I want to edit a dossier I own' do
       # Linked Dossier
       linked_dossier_id = dossier.champs.find { |c| c.type_de_champ.type_champ == 'dossier_link' }.value
       linked_dossier = Dossier.find(linked_dossier_id)
-      expect(page).to have_content(linked_dossier.procedure.libelle)
+      expect(page).to have_link(linked_dossier.procedure.libelle)
 
       page.find_by_id('maj_infos').trigger('click')
       expect(page).to have_current_path(users_dossier_description_path(dossier.id.to_s), only_path: true)
