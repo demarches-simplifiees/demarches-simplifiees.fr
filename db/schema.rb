@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170523081220) do
+ActiveRecord::Schema.define(version: 20170425100757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,18 @@ ActiveRecord::Schema.define(version: 20170523081220) do
     t.integer "procedure_id"
     t.index ["gestionnaire_id"], name: "index_assign_tos_on_gestionnaire_id", using: :btree
     t.index ["procedure_id"], name: "index_assign_tos_on_procedure_id", using: :btree
+  end
+
+  create_table "avis", force: :cascade do |t|
+    t.string   "email"
+    t.text     "introduction"
+    t.text     "answer"
+    t.integer  "gestionnaire_id"
+    t.integer  "dossier_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["dossier_id"], name: "index_avis_on_dossier_id", using: :btree
+    t.index ["gestionnaire_id"], name: "index_avis_on_gestionnaire_id", using: :btree
   end
 
   create_table "cadastres", force: :cascade do |t|
