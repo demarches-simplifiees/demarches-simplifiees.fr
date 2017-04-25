@@ -29,6 +29,8 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     end
 
     Notification.where(dossier_id: params[:id].to_i).update_all already_read: true
+
+    @new_avis = Avis.new(introduction: "Bonjour, merci de me donner votre avis sur ce dossier.")
   end
 
   def filter
