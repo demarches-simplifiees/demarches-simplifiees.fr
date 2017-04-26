@@ -165,7 +165,7 @@ class Users::DossiersController < UsersController
   end
 
   def procedure_libelle
-    dossier = Dossier.find(params[:dossier_id])
+    dossier = Dossier.includes(:procedure).find(params[:dossier_id])
     render json: { procedureLibelle: dossier.procedure.libelle }
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: 404

@@ -7,6 +7,14 @@ describe 'users/description/champs/dossier_link.html.haml', type: :view do
     render 'users/description/champs/dossier_link.html.haml', champ: champ
   end
 
+  context 'in all cases' do
+    let!(:champ) { create(:champ, type_de_champ: type_champ, value: nil) }
+
+    it 'should render an input for the dossier link' do
+      expect(rendered).to have_css("input[type=number][placeholder=#{champ.libelle}]")
+    end
+  end
+
   context 'When no dossier is provided' do
     let!(:champ) { create(:champ, type_de_champ: type_champ, value: nil) }
 
