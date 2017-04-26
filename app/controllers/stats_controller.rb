@@ -8,7 +8,7 @@ class StatsController < ApplicationController
     @dossiers_30_days_flow = thirty_days_flow_hash(dossiers, :initiated_at)
 
     @procedures_cumulative = cumulative_hash(procedures)
-    @dossiers_cumulative = cumulative_hash(dossiers)
+    @dossiers_cumulative = cumulative_hash(dossiers, :initiated_at)
 
     @procedures_count = procedures.count
     @dossiers_count = dossiers.count
