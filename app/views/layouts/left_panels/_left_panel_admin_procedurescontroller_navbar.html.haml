@@ -1,13 +1,13 @@
-%div#first-block
+#first-block
   .en-cours
     - unless @procedure.logo.blank?
       = image_tag @procedure.decorate.logo_img, style: 'width: 30px;'
     %b
       = @procedure.libelle
 
-%div#action-block
+#action-block
 
-%div#menu-block
+#menu-block
   .split-hr-left
   #procedure-list
     %a{ :href => "#{url_for admin_procedure_path(@procedure)}", id: 'onglet-infos' }
@@ -48,4 +48,4 @@
   .split-hr-left
 
 
-%div#infos-block
+#infos-block

@@ -1,12 +1,12 @@
-%div#first-block
+#first-block
   .en-cours
     %b
       = dossier_count = current_administrateur.procedures.count
     = ("Procedures".pluralize(dossier_count)).upcase
 
-%div#action-block
+#action-block
 
-%div#menu-block
+#menu-block
   .split-hr-left
   #procedure-list
     %a{ :href => "#{url_for :admin_procedures_draft}", id: "draft-procedures" }
@@ -30,4 +30,4 @@
   .split-hr-left
 
 
-%div#infos-block
+#infos-block

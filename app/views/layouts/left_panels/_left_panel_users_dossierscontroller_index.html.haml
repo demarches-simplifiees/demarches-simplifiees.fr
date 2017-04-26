@@ -1,13 +1,13 @@
-%div#first-block
+#first-block
   .en-cours
     = dossier_count = current_user.dossiers.count
     = ("Dossier".pluralize(dossier_count)).upcase
     %br
     EN COURS
 
-%div#action-block
+#action-block
 
-%div#menu-block
+#menu-block
   .split-hr-left
   #procedure-list
     - unless current_user.dossiers.count == 0
@@ -43,4 +43,4 @@
   .split-hr-left
 
 
-%div#infos-block
+#infos-block
