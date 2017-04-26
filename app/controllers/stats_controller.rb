@@ -16,13 +16,13 @@ class StatsController < ApplicationController
 
   private
 
-  def thirty_days_flow_hash(association)
+  def thirty_days_flow_hash(association, date_attribute = :created_at)
     min_date = 30.days.ago.to_date
     max_date = Time.now.to_date
 
     thirty_days_flow_hash = association
-      .where(:created_at => min_date..max_date)
-      .group("date_trunc('day', created_at)")
+      .where(date_attribute => min_date..max_date)
+      .group("date_trunc('day', #{date_attribute.to_s})")
       .count
 
     clean_hash(thirty_days_flow_hash, min_date, max_date)
