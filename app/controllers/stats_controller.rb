@@ -5,7 +5,7 @@ class StatsController < ApplicationController
     dossiers = Dossier.where.not(:state => :draft)
 
     @procedures_30_days_flow = thirty_days_flow_hash(procedures)
-    @dossiers_30_days_flow = thirty_days_flow_hash(dossiers)
+    @dossiers_30_days_flow = thirty_days_flow_hash(dossiers, :initiated_at)
 
     @procedures_cumulative = cumulative_hash(procedures)
     @dossiers_cumulative = cumulative_hash(dossiers)
