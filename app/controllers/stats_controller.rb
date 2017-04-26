@@ -42,10 +42,10 @@ class StatsController < ApplicationController
     h
   end
 
-  def cumulative_hash(association)
+  def cumulative_hash(association, date_attribute = :created_at)
     sum = 0
     association
-      .group("DATE_TRUNC('month', created_at)")
+      .group("DATE_TRUNC('month', #{date_attribute.to_s})")
       .count
       .to_a
       .sort{ |x, y| x[0] <=> y[0] }
