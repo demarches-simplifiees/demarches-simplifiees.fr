@@ -1,5 +1,5 @@
 - if current_user.loged_in_with_france_connect?
-  %div{ id: "fconnect-profile", "data-fc-logout-url" => '/users/sign_out" data-method="delete' }
+  #fconnect-profile{ "data-fc-logout-url" => '/users/sign_out" data-method="delete' }
     %a.text-info{ href: "#" }
       = "#{current_user.given_name} #{current_user.family_name}"
   = link_to "", "/users/sign_out", method: :delete, class: "btn fa fa-power-off off-fc-link"

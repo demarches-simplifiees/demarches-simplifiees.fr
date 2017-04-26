@@ -9,19 +9,19 @@
 #menu-block
   .split-hr-left
   #procedure-list
-    %a{ :href => "#{url_for :admin_procedures_draft}", id: "draft-procedures" }
+    %a#draft-procedures{ :href => "#{url_for :admin_procedures_draft}" }
       .procedure-list-element{ class: @draft_class }
         Brouillons
         .badge.progress-bar-default
           = current_administrateur.procedures.where(published: false, archived: false).count
 
-    %a{ :href => "#{url_for :admin_procedures}", id: "active-procedures" }
+    %a#active-procedures{ :href => "#{url_for :admin_procedures}" }
       .procedure-list-element{ class: @active_class }
         Actives
         .badge.progress-bar-success
           = current_administrateur.procedures.where(published: true, archived: false).count
 
-    %a{ :href => "#{url_for :admin_procedures_archived}", id: "archived-procedures" }
+    %a#archived-procedures{ :href => "#{url_for :admin_procedures_archived}" }
       .procedure-list-element{ class: @archived_class }
         Archivées
         .badge.progress-bar-purple
