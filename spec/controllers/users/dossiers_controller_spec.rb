@@ -554,27 +554,27 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe 'Get #procedure_libelle' do
+  describe 'Get #text_summary' do
     let!(:dossier) { create(:dossier, procedure: procedure) }
 
     context 'when user is connected' do
       before { sign_in user }
 
       context 'when the dossier exist' do
-        before { get :procedure_libelle, params: { dossier_id: dossier.id } }
+        before { get :text_summary, params: { dossier_id: dossier.id } }
         it 'returns the procedure name' do
-          expect(JSON.parse(response.body)).to eq('procedureLibelle' => procedure.libelle)
+          expect(JSON.parse(response.body)).to eq("textSummary" => "Dossier en brouillon répondant à la démarche #{procedure.libelle}, gérée par l'organisme #{procedure.organisation}")
         end
       end
 
       context 'when the dossier does not exist' do
-        before { get :procedure_libelle, params: { dossier_id: 666 } }
+        before { get :text_summary, params: { dossier_id: 666 } }
         it { expect(response.code).to eq('404') }
       end
     end
 
     context 'when user is not connected' do
-      before { get :procedure_libelle, params: { dossier_id: dossier.id } }
+      before { get :text_summary, params: { dossier_id: dossier.id } }
       it { expect(response.code).to eq('302') }
     end
   end
