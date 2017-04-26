@@ -1,8 +1,5 @@
 class Notification < ActiveRecord::Base
   belongs_to :dossier
-
-  # after_save :broadcast_notification
-
   enum type_notif: {
            commentaire: 'commentaire',
            cerfa: 'cerfa',
@@ -10,10 +7,5 @@ class Notification < ActiveRecord::Base
            champs: 'champs',
            submitted: 'submitted'
        }
-
-  # def broadcast_notification
-  #   ActionCable.server.broadcast 'notifications',
-  #                                message: "Dossier nº #{self.dossier.id} : #{self.liste.last}",
-  #                                dossier: {id: self.dossier.id}
-  # end
+  scope :unread, -> { where(already_read: false) }
 end
