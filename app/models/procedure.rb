@@ -3,6 +3,7 @@ class Procedure < ActiveRecord::Base
   has_many :types_de_champ, class_name: 'TypeDeChampPublic', dependent: :destroy
   has_many :types_de_champ_private, dependent: :destroy
   has_many :dossiers
+  has_many :notifications, through: :dossiers
 
   has_one :procedure_path, dependent: :destroy
 
@@ -47,6 +48,8 @@ class Procedure < ActiveRecord::Base
   end
 
   scope :not_archived, -> { where(archived: false) }
+  scope :by_libelle, -> { order(libelle: :asc) }
+
 
   def path
     procedure_path.path unless procedure_path.nil?

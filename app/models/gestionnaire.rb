@@ -98,6 +98,10 @@ class Gestionnaire < ActiveRecord::Base
     0
   end
 
+  def dossiers_with_notifications_count
+    notifications.pluck(:dossier_id).uniq.count
+  end
+
   private
 
   def valid_couple_table_attr? table, column
