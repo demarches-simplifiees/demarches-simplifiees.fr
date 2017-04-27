@@ -6,6 +6,7 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
   let(:state) { 'draft' }
   let(:archived) { false }
   let(:gestionnaire) { create(:gestionnaire) }
+  let!(:assign_to) { create(:assign_to, gestionnaire: gestionnaire, procedure: dossier.procedure) }
 
   before do
     sign_in gestionnaire
