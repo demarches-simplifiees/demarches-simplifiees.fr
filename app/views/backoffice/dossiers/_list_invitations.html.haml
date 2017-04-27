@@ -1,0 +1,20 @@
+- if smart_listing.collection.any?
+  %table#dossiers-list.table
+    %thead
+      %th
+        Nº
+      %th
+        Procédure
+      %th
+        Invité le
+    %tbody
+      - smart_listing.collection.each do |avis|
+        %tr.dossier-row{ id: "tr_dossier_#{avis.dossier.id}", 'data-dossier_url' => backoffice_dossier_url(id: avis.dossier.id) }
+          %td= avis.dossier.id
+          %td= avis.dossier.procedure.libelle
+          %td= avis.created_at.strftime('%d/%m/%Y %H:%M')
+  = smart_listing.paginate
+
+- else
+  .center{ colspan: 2 }
+    %em Aucun dossier
