@@ -42,6 +42,10 @@ class Gestionnaire < ActiveRecord::Base
     Follow.where(gestionnaire_id: id, dossier_id: dossier_id).any?
   end
 
+  def assigned_on_procedure?(procedure_id)
+    procedures.find_by(id: procedure_id).present?
+  end
+
   def build_default_preferences_list_dossier procedure_id=nil
 
     PreferenceListDossier.available_columns_for(procedure_id).each do |table|

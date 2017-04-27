@@ -1,4 +1,4 @@
-- if @current_gestionnaire
+- if current_gestionnaire && current_gestionnaire.assigned_on_procedure?(@facade.dossier.procedure_id)
 
   .default-data-block.default_visible
     .row.show-block.infos
