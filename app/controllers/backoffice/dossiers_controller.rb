@@ -4,10 +4,13 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   before_action :ensure_gestionnaire_is_authorized, only: :show
 
   def index
+    return redirect_to backoffice_invitations_path if current_gestionnaire.avis.any?
+
     procedure = current_gestionnaire.procedure_filter
 
     if procedure.nil?
       procedure_list = dossiers_list_facade.gestionnaire_procedures_name_and_id_list
+
       if procedure_list.count == 0
         flash.alert = "Vous n'avez aucune procédure d'affectée."
         return redirect_to root_path

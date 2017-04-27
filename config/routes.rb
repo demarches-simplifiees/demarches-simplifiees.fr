@@ -167,6 +167,8 @@ Rails.application.routes.draw do
 
     resource :private_formulaire
 
+    get 'invitations'
+
     resources :dossiers do
       post 'receive' => 'dossiers#receive'
       post 'refuse' => 'dossiers#refuse'
