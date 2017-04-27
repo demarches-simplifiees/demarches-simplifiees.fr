@@ -61,6 +61,14 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_dossier_link do
+      after(:build) do |procedure, _evaluator|
+        type_de_champ = create(:type_de_champ_public, :type_dossier_link)
+
+        procedure.types_de_champ << type_de_champ
+      end
+    end
+
     trait :with_two_type_de_piece_justificative do
       after(:build) do |procedure, _evaluator|
         rib = create(:type_de_piece_justificative, :rib, order_place: 1)

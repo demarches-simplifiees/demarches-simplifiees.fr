@@ -278,6 +278,28 @@ class Dossier < ActiveRecord::Base
     !(procedure.archived && draft?)
   end
 
+  def text_summary
+    if brouillon?
+      parts = [
+        "Dossier en brouillon répondant à la démarche ",
+        procedure.libelle,
+        ", gérée par l'organisme ",
+        procedure.organisation
+      ]
+    else
+      parts = [
+        "Dossier déposé le ",
+        initiated_at.strftime("%d/%m/%Y"),
+        ", sur la démarche ",
+        procedure.libelle,
+        ", gérée par l'organisme ",
+        procedure.organisation
+      ]
+    end
+
+    parts.join
+  end
+
   private
 
   def update_state_dates

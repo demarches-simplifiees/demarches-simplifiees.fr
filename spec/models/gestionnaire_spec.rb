@@ -272,6 +272,37 @@ describe Gestionnaire, type: :model do
         it { is_expected.to be_nil }
       end
     end
+  end
 
+  describe '#dossiers_with_notifications_count' do
+    subject { gestionnaire.dossiers_with_notifications_count }
+
+    context 'when there is no notifications' do
+      it { is_expected.to eq(0) }
+    end
+
+    context 'when there is one notification for one dossier' do
+      let(:notification){ create(:notification, already_read: false) }
+      let!(:follow){ create(:follow, dossier: notification.dossier, gestionnaire: gestionnaire) }
+
+      it { is_expected.to eq(1) }
+    end
+
+    context 'when there are many notifications for one dossier' do
+      let(:notification){ create(:notification, already_read: false) }
+      let(:notification2){ create(:notification, already_read: false, dossier: notification.dossier) }
+      let!(:follow){ create(:follow, dossier: notification.dossier, gestionnaire: gestionnaire) }
+
+      it { is_expected.to eq(1) }
+    end
+
+    context 'when there are many notifications for many dossiers' do
+      let(:notification){ create(:notification, already_read: false) }
+      let(:notification2){ create(:notification, already_read: false) }
+      let!(:follow){ create(:follow, dossier: notification.dossier, gestionnaire: gestionnaire) }
+      let!(:follow2){ create(:follow, dossier: notification2.dossier, gestionnaire: gestionnaire) }
+
+      it { is_expected.to eq(2) }
+    end
   end
 end

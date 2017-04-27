@@ -164,9 +164,9 @@ class Users::DossiersController < UsersController
     redirect_to url_for users_dossiers_path
   end
 
-  def procedure_libelle
+  def text_summary
     dossier = Dossier.find(params[:dossier_id])
-    render json: { procedureLibelle: dossier.procedure.libelle }
+    render json: { textSummary: dossier.text_summary }
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: 404
   end

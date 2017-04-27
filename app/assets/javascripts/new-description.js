@@ -5,7 +5,7 @@
   };
 
   var showData = function(data) {
-    $('.dossier-link .procedureLibelle').text(data.procedureLibelle);
+    $('.dossier-link .dossier-text-summary').text(data.textSummary);
     $('.dossier-link .text-info').show();
     $('.dossier-link .text-warning').hide();
   };
@@ -18,7 +18,7 @@
   var fetchProcedureLibelle = function(e) {
     var dossierId = $(e.target).val();
     if(dossierId) {
-      $.get('/users/dossiers/' + dossierId + '/procedure_libelle')
+      $.get('/users/dossiers/' + dossierId + '/text_summary')
         .done(showData)
         .fail(showNotFound);
     } else {
