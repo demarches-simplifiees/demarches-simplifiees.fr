@@ -32,6 +32,18 @@ feature 'on backoffice page', js: true do
         expect(page).to have_css('#backoffice-dossier-show')
       end
     end
+
+    context "and goes to the page of a dossier he hasn't access to" do
+      let!(:unauthorized_dossier) { create(:dossier, :with_entreprise, state: 'updated') }
+
+      before do
+        visit backoffice_dossier_path(unauthorized_dossier)
+      end
+
+      scenario "it shows an error message" do
+        expect(page).to have_content("Le dossier n'existe pas ou vous n'y avez pas accès.")
+      end
+    end
   end
 
   context 'when gestionnaire have enterprise and individual dossier in his inbox', js: true do
