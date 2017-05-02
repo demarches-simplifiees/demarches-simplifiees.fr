@@ -29,4 +29,26 @@ RSpec.describe Avis, type: :model do
       it { expect(subject).to eq([avis, avis3, avis2])}
     end
   end
+
+  describe ".link_avis_to_gestionnaire" do
+    let(:gestionnaire){ create(:gestionnaire) }
+
+    subject{ Avis.link_avis_to_gestionnaire(gestionnaire) }
+
+    context 'when there are 2 avis linked by email to a gestionnaire' do
+      let!(:avis){ create(:avis, email: gestionnaire.email, gestionnaire: nil) }
+      let!(:avis2){ create(:avis, email: gestionnaire.email, gestionnaire: nil) }
+
+      before do
+        subject
+        avis.reload
+        avis2.reload
+      end
+
+      it { expect(avis.email).to be_nil }
+      it { expect(avis.gestionnaire).to eq(gestionnaire) }
+      it { expect(avis2.email).to be_nil }
+      it { expect(avis2.gestionnaire).to eq(gestionnaire) }
+    end
+  end
 end

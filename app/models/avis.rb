@@ -16,4 +16,8 @@ class Avis < ApplicationRecord
   def notify_gestionnaire
     AvisMailer.you_are_invited_on_dossier(self).deliver_now
   end
+
+  def self.link_avis_to_gestionnaire(gestionnaire)
+    Avis.where(email: gestionnaire.email).update_all(email: nil, gestionnaire_id: gestionnaire.id)
+  end
 end
