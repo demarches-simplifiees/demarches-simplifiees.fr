@@ -8,6 +8,7 @@ $blue-hover: rgba(61, 149, 236, 0.8);
 $default-space: 15px;
 
 $new-h1-margin-bottom: 4 * $default-space;
+
 .new-h1 {
   color: $dark-grey;
   text-align: center;
@@ -16,6 +17,7 @@ $new-h1-margin-bottom: 4 * $default-space;
 }
 
 $statistiques-padding-top: $default-space * 2;
+
 .statistiques {
   width: 1040px;
   margin: 0 auto;
@@ -29,8 +31,8 @@ $statistiques-padding-top: $default-space * 2;
 }
 
 $stat-card-margin-bottom: 3 * $default-space;
+
 .stat-card {
-  @extend .card;
   margin-bottom: $stat-card-margin-bottom;
   border-radius: 5px;
   box-shadow: none;
@@ -38,6 +40,7 @@ $stat-card-margin-bottom: 3 * $default-space;
 }
 
 $stat-card-half-horizontal-spacing: 4 * $default-space;
+
 .stat-card-half {
   width: calc((100% - #{$stat-card-half-horizontal-spacing}) / 2);
   margin-right: 3 * $default-space;
@@ -51,6 +54,7 @@ $stat-card-half-horizontal-spacing: 4 * $default-space;
 }
 
 $segmented-control-margin-top: $default-space;
+
 .segmented-control {
   border-radius: 36px;
   height: 36px;
@@ -63,8 +67,8 @@ $segmented-control-margin-top: $default-space;
 
 $segmented-control-item-horizontal-padding: $default-space;
 $segmented-control-item-border-radius: 2 * $default-space;
+
 .segmented-control-item {
-  color: $blue;
   display: inline-block;
   font-size: 15px;
   border: 2px solid $blue;
@@ -84,14 +88,14 @@ $segmented-control-item-border-radius: 2 * $default-space;
 
   &:hover {
     background-color: $blue-hover;
-    color: white;
+    color: #FFFFFF;
     cursor: pointer;
   }
 }
 
 .segmented-control-item-active {
   background-color: $blue;
-  color: white;
+  color: #FFFFFF;
 }
 
 .chart-container {
@@ -103,6 +107,7 @@ $segmented-control-item-border-radius: 2 * $default-space;
 }
 
 $big-number-card-padding: 2 * $segmented-control-item-border-radius;
+
 .big-number-card {
   padding: $big-number-card-padding;
 }

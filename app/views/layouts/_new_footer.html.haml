@@ -1,0 +1,35 @@
+.footer
+  .footer-inner-content
+    %ul.footer-columns
+      %li.footer-column
+        %ul.footer-logos
+          %li
+            = link_to image_tag("footer/logo-rf.svg",
+                :class => "footer-logo footer-logo-rf"),
+              "http://www.gouvernement.fr/"
+          %li
+            = link_to image_tag("footer/logo-beta-gouv-fr.svg",
+                :class => "footer-logo footer-logo-beta-gouv-fr"),
+              "https://beta.gouv.fr/"
+
+      %li.footer-column
+        %ul.footer-links
+          %li.footer-link
+            = link_to "SGMAP", "http://www.modernisation.gouv.fr/le-sgmap", :class => "footer-link"
+          %li.footer-link
+            = link_to "Nouveautés", "https://github.com/sgmap/tps/releases", :class => "footer-link"
+          %li.footer-link
+            = link_to "Statistiques", stats_path, :class => "footer-link"
+          %li.footer-link
+            = link_to "Accès ancienne plateforme de test", "https://tps-dev.apientreprise.fr/", :class => "footer-link"
+
+      %li.footer-column
+        %ul.footer-links
+          %li.footer-link
+            = link_to "Contact",
+              "mailto:#{t('dynamics.contact_email')}",
+              :class => "footer-link"
+          %li.footer-link
+            = link_to "Mentions légales", cgu_path, :class => "footer-link"
+          %li.footer-link
+            = link_to "CGU", cgu_path, :class => "footer-link"

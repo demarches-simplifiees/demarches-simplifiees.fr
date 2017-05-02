@@ -1,15 +1,16 @@
-#support_navigator_banner{
+#support-navigator-banner {
   position: fixed;
-  text-align:center;
+  text-align: center;
   line-height: 2em;
-  color: white;
+  color: #FFFFFF;
   background-color: #990000;
   width: 100%;
   margin: 0;
   bottom: 0;
   left: 0;
   z-index: 1000;
-  a{
-    color: #c3d9ff;
+
+  a {
+    color: #C3D9FF;
   }
 }

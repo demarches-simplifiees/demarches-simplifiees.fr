@@ -7,7 +7,7 @@
     = render partial: render_partial_url, locals: { libelle: 'Dossier', order_place: -1, champs: @champs }
   - @headers.each do |header|
     .row
-      %div{ class: "type_champ-#{header.type_champ}" }
+      %div{ class: "type-champ-#{header.type_champ.gsub('_', '-')}" }
         = render partial: render_partial_url, locals: { libelle: header.libelle, order_place: header.order_place, champs: @champs }
 - else
   .row

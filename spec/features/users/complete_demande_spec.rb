@@ -12,21 +12,21 @@ feature 'user path for dossier creation' do
     end
 
     scenario 'he is redirected on login page' do
-      expect(page).to have_css('#login_user')
+      expect(page).to have_css('#login-user')
       expect(page).to have_css('#logo_procedure')
-      expect(page).to have_css('#titre_procedure')
+      expect(page).to have_css('#titre-procedure')
     end
 
     context 'user sign_in' do
       before do
-        within('#new_user') do
+        within('#new-user') do
           page.find_by_id('user_email').set user.email
           page.find_by_id('user_password').set user.password
           page.click_on 'Se connecter'
         end
       end
       scenario 'redirects to siret page' do
-        expect(page).to have_css('#dossier_siret')
+        expect(page).to have_css('#dossier-siret')
       end
       context 'sets siret' do
         before do
@@ -40,12 +40,12 @@ feature 'user path for dossier creation' do
           stub_request(:get, "https://api-dev.apientreprise.fr/v1/associations/#{siret}?token=#{SIADETOKEN}")
               .to_return(status: 404, body: '')
 
-          page.find_by_id('dossier_siret').set siret
+          page.find_by_id('dossier-siret').set siret
           page.click_on 'Valider'
         end
 
         scenario 'user is on page recap info entreprise' do
-          expect(page).to have_css('#recap_info_entreprise')
+          expect(page).to have_css('#recap-info-entreprise')
         end
 
         context 'when user would like change siret' do
@@ -54,7 +54,7 @@ feature 'user path for dossier creation' do
           end
 
           scenario 'redirects to siret page' do
-            expect(page).to have_css('#dossier_siret')
+            expect(page).to have_css('#dossier-siret')
           end
         end
 
@@ -64,7 +64,7 @@ feature 'user path for dossier creation' do
             page.find_by_id('etape_suivante').trigger('click')
           end
           scenario 'user is on description page' do
-            expect(page).to have_css('#description_page')
+            expect(page).to have_css('#description-page')
           end
           context 'user fill and validate description page' do
             before do
@@ -72,7 +72,7 @@ feature 'user path for dossier creation' do
               page.find_by_id('suivant').trigger('click')
             end
             scenario 'user is on recap page' do
-              expect(page).to have_css('#users_recapitulatif_dossier_show')
+              expect(page).to have_css('#users-recapitulatif-dossier-show')
             end
           end
         end

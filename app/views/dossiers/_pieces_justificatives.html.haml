@@ -1,4 +1,4 @@
-#pieces_justificatives
+#pieces-justificatives
   %table.table
     - if @facade.procedure.cerfa_flag?
       %tr{ id: "piece_justificative_0" }
@@ -10,7 +10,7 @@
             %span{ style: 'margin-left: 12px;' }
               \-
             %a.btn.fa.fa-timer{ style: 'color: black; padding-top: 0;',
-                                                "data-target" => "#PJmodal",
+                                                "data-target" => "#pj-modal",
                                                 "data-toggle" => "modal",
                                                 :type => "button",
                                                 "data-modal_title" => 'formulaires',
@@ -33,7 +33,7 @@
             %span{ style: 'margin-left: 12px;' }
               \-
             %a.btn.fa.fa-timer{ style: 'color: black; padding-top: 0;',
-                                                "data-target" => "#PJmodal",
+                                                "data-target" => "#pj-modal",
                                                 "data-toggle" => "modal",
                                                 :type => "button",
                                                 "data-modal_title" => type_de_piece_justificative.libelle,

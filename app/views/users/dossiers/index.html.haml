@@ -1,5 +1,5 @@
-#users_index
-  .default_data_block.default_visible
+#users-index
+  .default-data-block.default_visible
     .row.show-block#new_dossiers
       .header
         .col-lg-10.col-md-10.col-sm-10.col-xs-10.title
@@ -12,4 +12,4 @@
       .body
         = smart_listing_render :dossiers
 
-  = render partial: 'state_description', locals: { dossiers_list_facade: @dossiers_list_facade }
+  = render partial: 'state_description', locals: { liste: @liste }

@@ -23,6 +23,8 @@ module TPS
 
     config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/validators #{config.root}/app/facades)
     config.assets.paths << Rails.root.join('app', 'assets', 'javascript')
+    config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
+    config.assets.precompile += %w(.woff)
 
     if Rails.env.production?
       URL = "https://tps.apientreprise.fr/"

@@ -3,8 +3,8 @@ require 'spec_helper'
 feature 'As a User I want to edit a dossier I own' do
 
   let(:user)                     { create(:user) }
-  let(:procedure_for_individual) { create(:procedure, :published, :for_individual, :with_type_de_champ, :with_two_type_de_piece_justificative) }
-  let!(:dossier)                 { create(:dossier, :with_entreprise, :for_individual, procedure: procedure_for_individual, user: user, autorisation_donnees: true, state: 'initiated') }
+  let(:procedure_for_individual) { create(:procedure, :published, :for_individual, :with_type_de_champ, :with_two_type_de_piece_justificative, :with_dossier_link) }
+  let!(:dossier)                 { create(:dossier, :with_entreprise, :for_individual, :with_dossier_link, procedure: procedure_for_individual, user: user, autorisation_donnees: true, state: 'initiated') }
 
   before "Create dossier and visit root path" do
     login_as user, scope: :user
@@ -14,7 +14,7 @@ feature 'As a User I want to edit a dossier I own' do
   context 'After sign_in, I can navigate through dossiers indexes and edit a dossier' do
 
     scenario 'After sign_in, I can see dossiers "à traiter" (default), and other indexes' do
-      expect(page.find('#a_traiter')['class'] ).to eq('active procedure_list_element')
+      expect(page.find('#a_traiter')['class'] ).to eq('active procedure-list-element')
       page.find_by_id('brouillon').click
       page.find_by_id('a_traiter').click
       page.find_by_id('en_instruction').click
@@ -23,7 +23,7 @@ feature 'As a User I want to edit a dossier I own' do
     end
 
     scenario 'Getting a dossier, I want to create a new message on', js: true do
-      page.find_by_id('tr_dossier_' + Dossier.last.id.to_s).click
+      page.find_by_id('tr_dossier_' + dossier.id.to_s).click
       expect(page).to have_current_path(users_dossier_recapitulatif_path(Dossier.first.id.to_s), only_path: true)
       page.find_by_id('open-message').click
       page.execute_script("$('#texte_commentaire').data('wysihtml5').editor.setValue('Contenu du nouveau message')")
@@ -34,12 +34,17 @@ feature 'As a User I want to edit a dossier I own' do
     scenario 'On the same dossier, I want to edit informations', js: true do
       page.find_by_id('tr_dossier_' + dossier.id.to_s).click
       expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier.id.to_s), only_path: true)
+
+      # Linked Dossier
+      linked_dossier_id = dossier.champs.find { |c| c.type_de_champ.type_champ == 'dossier_link' }.value
+      expect(page).to have_link("Dossier #{linked_dossier_id}")
+
       page.find_by_id('maj_infos').trigger('click')
       expect(page).to have_current_path(users_dossier_description_path(dossier.id.to_s), only_path: true)
-      fill_in "champs_#{dossier.champs.first.id.to_s}", with: 'Contenu du champ 1'
+      fill_in "champs_#{dossier.champs.order(:id).first.id.to_s}", with: 'Contenu du champ 1'
       page.find_by_id('modification_terminee').click
       expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier.id.to_s), only_path: true)
-      expect(page.find("#champ-#{dossier.champs.first.id}-value").text).to eq('Contenu du champ 1')
+      expect(page.find("#champ-#{dossier.champs.order(:id).first.id}-value").text).to eq('Contenu du champ 1')
     end
   end
 end

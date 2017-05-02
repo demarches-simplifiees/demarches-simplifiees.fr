@@ -1,0 +1,53 @@
+@import "constants";
+@import "colors";
+@import "mixins";
+@import "typography";
+
+// FIXME: Rename when the header is generalized
+.new-header {
+  @extend %new-type;
+  height: 72px;
+  background-color: #FFFFFF;
+  // FIXME: Delete when the header is generalized
+  margin-top: -60px;
+}
+
+.header-inner-content {
+  width: $page-width;
+  margin: 0 auto;
+}
+
+.header-logo {
+  margin-top: 17px;
+}
+
+$header-login-button-height: 36px;
+$header-login-button-border-size: 1px;
+
+.header-login-button {
+  @include horizontal-padding(16px);
+
+  display: inline-block;
+  height: $header-login-button-height;
+  line-height: $header-login-button-height - (2 * $header-login-button-border-size);
+  border-radius: $header-login-button-height;
+  border: $header-login-button-border-size solid $blue;
+  color: $blue;
+  font-size: 14px;
+  margin-top: 18px;
+
+  &:hover {
+    color: #FFFFFF;
+    text-decoration: none;
+    background-color: $light-blue;
+  }
+
+  &:focus {
+    color: $blue;
+    text-decoration: none;
+  }
+
+  &:hover:focus {
+    color: #FFFFFF;
+  }
+}

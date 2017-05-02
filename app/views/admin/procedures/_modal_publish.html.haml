@@ -1,4 +1,4 @@
-#publishModal.modal.fade{ "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1" }
+#publish-modal.modal.fade{ "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1" }
   .modal-dialog.modal-lg{ :role => "document" }
     = form_tag admin_procedure_publish_path(procedure_id: @procedure.id), method: :put, remote: true do
       .modal-content
@@ -8,7 +8,7 @@
           %h4#myModalLabel.modal-title
             = @procedure.archived? ? 'Réactiver' : 'Publier'
             la procédure
-            %span#publishModal_title
+            %span#publish-modal-title
         .modal-body
           Vous vous apprêtez à
           = @procedure.archived? ? 'republier' : 'publier'
@@ -28,9 +28,9 @@
                                 id: 'procedure_path',
                                 placeholder: 'Chemin vers la procédure',
                                 class: 'form-control',
-                                maxlength: 30,
+                                maxlength: 50,
                                 style: 'width: 300px; display: inline;')
-            #path_messages
+            #path-messages
               #path_is_mine.text-warning.center.message
                 Ce lien est déjà utilisé par une de vos procédure.
                 %br
@@ -40,7 +40,7 @@
                 %br
                 Vous ne pouvez pas l'utiliser car il appartient à un autre administrateur.
               #path_is_invalid.text-danger.center.message
-                Ce lien n'est pas valide. Il doit comporter au moins 3 caractères et seuls les caractères a-z, 0-9 et '_' sont autorisés.
+                = t('activerecord.errors.models.procedure_path.attributes.path.format')
         .modal-footer
           = submit_tag "#{@procedure.archived? ? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
                                   id: 'publish',

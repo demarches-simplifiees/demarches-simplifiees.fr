@@ -1,4 +1,4 @@
-@import "variables";
+@import "constants";
 
 #header {
   top: 0;
@@ -8,25 +8,30 @@
   z-index: 10;
   border-radius: 0;
   height: 60px;
-  #title_navbar{
-    color: white;
+
+  #title-navbar {
+    color: #FFFFFF;
     font-weight: bold;
     font-size: 1.8em;
     z-index: 10;
     overflow: hidden;
   }
-  #title_navbar:hover{
+
+  #title-navbar:hover {
     text-decoration: none;
   }
+
   #home {
     text-align: center;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
     background-color: #003189;
     height: 60px;
+
     .logo {
       margin-top: 10px;
       height: 40px;
     }
+
     #tps-title {
       font-family: Arial;
       font-size: 24px;
@@ -35,11 +40,13 @@
       margin-top: 17px;
     }
   }
+
   #navbar-body {
     min-height: 60px;
     background-color: #FFFFFF;
-    box-shadow: 0 1px 2px 0 rgba(50,50,50,0.5);
+    box-shadow: 0 1px 2px 0 rgba(50, 50, 50, 0.5);
     padding-left: 50px;
+
     .main-info {
       font-family: Arial;
       font-size: 18px;
@@ -51,6 +58,7 @@
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+
     .options {
       font-family: Arial;
       font-size: 14px;
@@ -60,18 +68,22 @@
       padding: 8px;
       border-right: 1px solid #C8C6C8;
       min-height: 60px;
+
       .dropdown-toggle {
         cursor: pointer;
       }
+
       .dropdown-pannel {
         min-height: 100px;
         width: 400px;
         padding-left: 10px;
       }
+
       .centered-option {
         line-height: 40px;
         height: 40px;
       }
+
       .caret-right {
         border-bottom: 4px solid transparent;
         border-top: 4px solid transparent;
@@ -84,15 +96,16 @@
       }
     }
 
-    #sign_in{
+    #sign-in {
       margin-top: 7px;
+
       .btn {
         float: right;
         margin-right: 15px;
       }
     }
 
-    #sign_out{
+    #sign-out {
       height: 60px;
 
       .fa {
@@ -103,6 +116,7 @@
         margin-right: 0.5em;
         font-size: 40px;
       }
+
       .fa:hover {
         color: #668ABD;
       }
@@ -118,37 +132,33 @@
 }
 
 .btn-nav {
-  color: white;
+  color: #FFFFFF;
   background-color: transparent;
   margin-top: 6px;
   height: 36px;
 }
 
 .btn-nav:hover {
-  background-color: #eeeeee;
-  border-color: #eeeeee #eeeeee #ddd;
+  background-color: #EEEEEE;
+  border-color: #EEEEEE #EEEEEE #DDDDDD;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
 .btn-nav.text-info:hover {
-  color: #23527c;
+  color: #23527C;
 }
 
 .btn-nav.text-success:hover {
-  color: #3c763d;
+  color: #3C763D;
 }
 
 .btn-nav.text-danger:hover {
-  color: #a94442;
+  color: #A94442;
 }
 
 .navbar {
   border: 0 !important;
-  .sign_in_FC {
-    margin-top: -18px;
-    height: 70px;
-  }
 }
 
 #beta {
@@ -159,15 +169,15 @@
   right: -35px;
   transform: rotate(-45deg);
   width: 150px;
-  background-color: #008cba;
-  color: #fff;
+  background-color: #008CBA;
+  color: #FFFFFF;
   padding: 5px;
   font-size: 15px;
   font-weight: 700;
   z-index: 10;
 }
 
-.button_navbar {
+.button-navbar {
   color: #666666;
   cursor: pointer;
 }
@@ -181,16 +191,19 @@
   text-align: center;
   padding: 2px;
   float: right;
+
   .fa {
     font-size: 20px;
     margin-right: 10px;
   }
 }
+
 .button-navbar-action:hover {
   color: $light-blue;
 }
 
-.button_navbar:hover, .button-navbar-action:hover {
+.button-navbar:hover,
+.button-navbar-action:hover {
   text-decoration: none;
 }
 
@@ -200,6 +213,7 @@
   padding: 10px;
   left: -130px;
   text-align: center;
+
   .description {
     font-weight: bold;
     font-size: 20px;

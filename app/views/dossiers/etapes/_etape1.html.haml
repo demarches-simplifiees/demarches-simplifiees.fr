@@ -9,10 +9,10 @@
     #logo_procedure.flag
       = image_tag( @facade.procedure.decorate.logo_img )
 
-.etape.etapes_informations.col-xs-9
+.etape.etapes-informations.col-xs-9
   .row
     .col-xs-12.padding-left-30
-      %h2#titre_procedure.text-info
+      %h2#titre-procedure.text-info
         = @facade.procedure.libelle
 
       %p#description_procedure{ style: 'width: 95%;', class: (@facade.entreprise.nil? ? '' : 'mask') }

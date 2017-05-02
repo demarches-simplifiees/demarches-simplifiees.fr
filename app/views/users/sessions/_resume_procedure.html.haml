@@ -10,7 +10,7 @@
       #logo_procedure.flag
         = image_tag( @dossier.procedure.decorate.logo_img )
 
-      %h2#titre_procedure.text-info
+      %h2#titre-procedure.text-info
         = @dossier.procedure.libelle
       %p.procedure-description
         = h @dossier.procedure.description.html_safe

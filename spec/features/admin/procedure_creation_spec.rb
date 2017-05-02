@@ -92,7 +92,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       expect(page).to have_selector('#publish-procedure', visible: true)
       page.find_by_id('publish-procedure').click
 
-      expect(page.find_by_id('procedure_path')['value']).to eq('libelle_de_la_procedure')
+      expect(page.find_by_id('procedure_path')['value']).to eq('libelle-de-la-procedure')
       page.find_by_id('publish').click
       expect(page).to have_selector('.procedure-lien')
     end

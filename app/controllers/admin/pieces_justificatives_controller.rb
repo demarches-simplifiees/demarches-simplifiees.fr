@@ -25,7 +25,7 @@ class Admin::PiecesJustificativesController < AdminController
   def update_params
     params
       .require(:procedure)
-      .permit(types_de_piece_justificative_attributes: [:libelle, :description, :id, :order_place, :lien_demarche])
+      .permit(types_de_piece_justificative_attributes: [:libelle, :description, :id, :order_place, :mandatory, :lien_demarche])
   end
 
   def move_up

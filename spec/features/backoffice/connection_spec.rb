@@ -30,7 +30,7 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
       page.click_on 'Se connecter'
     end
     scenario 'he is redirected to /backoffice' do
-      expect(page).to have_css('#backoffice_index')
+      expect(page).to have_css('#backoffice-index')
     end
   end
 end

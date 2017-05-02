@@ -2,7 +2,7 @@ FactoryGirl.define do
   sequence(:published_path) { |n| "fake_path#{n}" }
   factory :procedure do
     lien_demarche 'http://localhost'
-    libelle 'Demande de subvention'
+    sequence(:libelle) { |n| "Procedure #{n}" }
     description "Demande de subvention à l'intention des associations"
     organisation "Orga SGMAP"
     direction "direction SGMAP"
@@ -56,6 +56,14 @@ FactoryGirl.define do
     trait :with_datetime do
       after(:build) do |procedure, _evaluator|
         type_de_champ = create(:type_de_champ_public, mandatory: true, type_champ: :datetime)
+
+        procedure.types_de_champ << type_de_champ
+      end
+    end
+
+    trait :with_dossier_link do
+      after(:build) do |procedure, _evaluator|
+        type_de_champ = create(:type_de_champ_public, :type_dossier_link)
 
         procedure.types_de_champ << type_de_champ
       end

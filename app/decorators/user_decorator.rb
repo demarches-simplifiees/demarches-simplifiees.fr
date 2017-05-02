@@ -2,8 +2,12 @@ class UserDecorator < Draper::Decorator
   delegate_all
 
   def gender_fr
-    return 'M.' if gender == 'male'
-    return 'Mme' if gender == 'female'
+    case gender
+    when 'male'
+      'M.'
+    when 'female'
+      'Mme'
+    end
   end
 
   def birthdate_fr

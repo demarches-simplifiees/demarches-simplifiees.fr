@@ -1,6 +1,4 @@
 class Dossier < ActiveRecord::Base
-  include SpreadsheetArchitect
-
   enum state: {draft: 'draft',
                initiated: 'initiated',
                replied: 'replied', #action utilisateur demandé
@@ -24,6 +22,7 @@ class Dossier < ActiveRecord::Base
   has_many :commentaires, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :invites_user, class_name: 'InviteUser', dependent: :destroy
+  has_many :invites_gestionnaires, class_name: 'InviteGestionnaire', dependent: :destroy
   has_many :follows
   has_many :notifications, dependent: :destroy
 
@@ -113,61 +112,63 @@ class Dossier < ActiveRecord::Base
       fail 'role is not valid'
     end
 
-    if role == 'user'
+    case role
+    when 'user'
       case action
-        when 'initiate'
-          if draft?
-            initiated!
-          end
-        when 'update'
-          if replied?
-            updated!
-          end
-        when 'comment'
-          if replied?
-            updated!
-          end
+      when 'initiate'
+        if draft?
+          initiated!
+        end
+      when 'update'
+        if replied?
+          updated!
+        end
+      when 'comment'
+        if replied?
+          updated!
+        end
       end
-    elsif role == 'gestionnaire'
+    when 'gestionnaire'
       case action
-        when 'comment'
-          if updated?
-            replied!
-          elsif initiated?
-            replied!
-          end
-        when 'follow'
-          if initiated?
-            updated!
-          end
-        when 'close'
-          if received?
-            closed!
-          end
-        when 'refuse'
-          if received?
-            refused!
-          end
-        when 'without_continuation'
-          if received?
-            without_continuation!
-          end
+      when 'comment'
+        if updated?
+          replied!
+        elsif initiated?
+          replied!
+        end
+      when 'follow'
+        if initiated?
+          updated!
+        end
+      when 'close'
+        if received?
+          closed!
+        end
+      when 'refuse'
+        if received?
+          refused!
+        end
+      when 'without_continuation'
+        if received?
+          without_continuation!
+        end
       end
     end
-    state
-  end
 
-  def brouillon?
-    BROUILLON.include?(state)
+    state
   end
 
   def self.all_state order = 'ASC'
     where(state: ALL_STATE, archived: false).order("updated_at #{order}")
   end
 
-  def self.brouillon order = 'ASC'
-    where(state: BROUILLON, archived: false).order("updated_at #{order}")
+  def brouillon?
+    BROUILLON.include?(state)
   end
+
+  scope :brouillon, -> { where(state: BROUILLON) }
+
+  scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
   def self.nouveaux order = 'ASC'
     where(state: NOUVEAUX, archived: false).order("updated_at #{order}")
@@ -181,7 +182,7 @@ class Dossier < ActiveRecord::Base
     where(state: WAITING_FOR_USER, archived: false).order("updated_at #{order}")
   end
 
-  scope :en_construction, -> { where(state: EN_CONSTRUCTION, archived: false).order(updated_at: :asc) }
+  scope :en_construction, -> { where(state: EN_CONSTRUCTION) }
 
   def self.ouvert order = 'ASC'
     where(state: OUVERT, archived: false).order("updated_at #{order}")
@@ -191,15 +192,12 @@ class Dossier < ActiveRecord::Base
     where(state: A_INSTRUIRE, archived: false).order("updated_at #{order}")
   end
 
-  def self.en_instruction order = 'ASC'
-    where(state: EN_INSTRUCTION, archived: false).order("updated_at #{order}")
-  end
+  scope :en_instruction, -> { where(state: EN_INSTRUCTION) }
 
-  def self.termine order = 'ASC'
-    where(state: TERMINE, archived: false).order("updated_at #{order}")
-  end
+  scope :termine, -> { where(state: TERMINE) }
 
   scope :archived, -> { where(archived: true) }
+  scope :not_archived, -> { where(archived: false) }
 
   scope :downloadable, -> { all_state }
 
@@ -233,19 +231,8 @@ class Dossier < ActiveRecord::Base
     return convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
   end
 
-  def export_default_columns
-    dossier_attr = DossierSerializer.new(self).attributes
-    dossier_attr = convert_specific_hash_values_to_string(dossier_attr)
-    dossier_attr = dossier_attr.merge(self.export_entreprise_data)
-    return dossier_attr
-  end
-
-  def spreadsheet_columns
-    self.export_default_columns.to_a
-  end
-
   def data_with_champs
-    serialized_dossier = DossierProcedureSerializer.new(self)
+    serialized_dossier = DossierTableExportSerializer.new(self)
     data = serialized_dossier.attributes.values
     data += self.champs.order('type_de_champ_id ASC').map(&:value)
     data += self.export_entreprise_data.values
@@ -253,15 +240,15 @@ class Dossier < ActiveRecord::Base
   end
 
   def export_headers
-    serialized_dossier = DossierProcedureSerializer.new(self)
+    serialized_dossier = DossierTableExportSerializer.new(self)
     headers = serialized_dossier.attributes.keys
     headers += self.procedure.types_de_champ.order('id ASC').map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
     headers += self.export_entreprise_data.keys
     return headers
   end
 
-  def followers_gestionnaires_emails
-    follows.includes(:gestionnaire).map { |f| f.gestionnaire }.pluck(:email).join(' ')
+  def followers_gestionnaires
+    follows.includes(:gestionnaire).map(&:gestionnaire)
   end
 
   def reset!
@@ -291,6 +278,28 @@ class Dossier < ActiveRecord::Base
     !(procedure.archived && draft?)
   end
 
+  def text_summary
+    if brouillon?
+      parts = [
+        "Dossier en brouillon répondant à la démarche ",
+        procedure.libelle,
+        ", gérée par l'organisme ",
+        procedure.organisation
+      ]
+    else
+      parts = [
+        "Dossier déposé le ",
+        initiated_at.strftime("%d/%m/%Y"),
+        ", sur la démarche ",
+        procedure.libelle,
+        ", gérée par l'organisme ",
+        procedure.organisation
+      ]
+    end
+
+    parts.join
+  end
+
   private
 
   def update_state_dates
@@ -306,5 +315,4 @@ class Dossier < ActiveRecord::Base
   def serialize_value_for_export(value)
     value.nil? || value.kind_of?(Time) ? value : value.to_s
   end
-
 end

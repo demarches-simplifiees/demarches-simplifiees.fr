@@ -45,7 +45,7 @@ class DossiersListGestionnaireService
   end
 
   def termine
-    @termine ||= filter_dossiers.termine
+    @termine ||= filter_dossiers.termine.not_archived
   end
 
   def filter_dossiers

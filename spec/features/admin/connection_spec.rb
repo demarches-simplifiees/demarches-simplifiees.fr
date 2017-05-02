@@ -6,7 +6,7 @@ feature 'Administrator connection' do
     visit new_administrateur_session_path
   end
   scenario 'administrator is on admin loggin page' do
-    expect(page).to have_css('#form_login.user_connexion_page')
+    expect(page).to have_css('#form-login.user_connexion_page')
   end
 
   context "admin fills form and log in" do
@@ -25,18 +25,18 @@ feature 'Administrator connection' do
       end
       scenario 'it displays the menu' do
         expect(page).to have_css('a#profile')
-        expect(page).to have_css('#sign_out')
+        expect(page).to have_css('#sign-out')
         expect(page).to have_css('a.fa-sign-out')
       end
-      context 'when clicking on sign_out' do
+      context 'when clicking on sign-out' do
         before do
           stub_request(:get, "https://api.github.com/repos/sgmap/tps/releases/latest").
               to_return(:status => 200, :body => '{"tag_name": "plip", "body": "blabla", "published_at": "2016-02-09T16:46:47Z"}', :headers => {})
 
-          page.find_by_id('sign_out').find('a.fa-sign-out').click
+          page.find_by_id('sign-out').find('a.fa-sign-out').click
         end
         scenario 'admin is redireted to home page' do
-          expect(page).to have_css('#landing')
+          expect(page).to have_css('.landing')
         end
       end
       context 'when clicking on profile' do

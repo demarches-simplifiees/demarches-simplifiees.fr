@@ -39,6 +39,6 @@ class RootController < ApplicationController
 
     @demo_environment_host = "https://tps-dev.apientreprise.fr" unless Rails.env.development?
 
-    render 'landing'
+    render 'landing', :layout => 'new_application'
   end
 end
