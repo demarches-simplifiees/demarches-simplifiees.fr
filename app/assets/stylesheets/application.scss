@@ -12,7 +12,49 @@
 // defined in the other CSS/SCSS files in this directory. It is generally better to create a new
 // file per style scope.
 //
-// = require_tree .
+// = require _card
+// = require _colors
+// = require _constants
+// = require _helpers
+// = require _mixins
+// = require _placeholders
+// = require _turbolinks
+// = require _typography
+// = require admin_procedures_modal
+// = require admin_type_de_champ
+// = require backoffice
+// = require carte
+// = require cgu
+// = require custom-mails
+// = require default_data_block
+// = require description
+// = require dossier_show
+// = require dossiers
+// = require etapes
+// = require fonts
+// = require france_connect_particulier
+// = require header
+// = require landing
+// = require left_panel
+// = require login
+// = require main_container
+// = require navbar
+// = require new_footer
+// = require notification_alert
+// = require pieces_justificatives_fields
+// = require pj_modal
+// = require pref_list_menu
+// = require print
+// = require procedure
+// = require recapitulatif
+// = require search
+// = require siret
+// = require stats
+// = require support_navigator_banner
+// = require switch_menu
+// = require typeahead
+// = require users
+
 // = require_self
 // = require bootstrap-datepicker3
 // = require leaflet
