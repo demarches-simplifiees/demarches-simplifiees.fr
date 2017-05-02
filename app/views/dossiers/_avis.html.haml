@@ -9,7 +9,7 @@
           AVIS EXTERNES
       .body
         .display-block-on-print
-          - dossier_facade.dossier.avis.order(updated_at: :desc).each do |avis|
+          - dossier_facade.dossier.avis.by_latest.each do |avis|
             - if avis.answer
               .panel.panel-success
                 .panel-heading
