@@ -20,9 +20,9 @@
 
       = form_tag(url_for({ controller: :carte, action: :save, dossier_id: @dossier.id }), class: 'form-inline', method: 'POST') do
         %br
-        %input{ type: 'hidden', value: "#{@dossier.json_latlngs}", name: 'json_latlngs', id: 'json_latlngs' }
-        %input{ id: 'quartier_prioritaires', type: 'hidden', value: "#{@dossier.quartier_prioritaires.to_json}" }
-        %input{ id: 'cadastres', type: 'hidden', value: "#{@dossier.cadastres.to_json}" }
+        %input#json_latlngs{ type: 'hidden', value: "#{@dossier.json_latlngs}", name: 'json_latlngs' }
+        %input#quartier_prioritaires{ type: 'hidden', value: "#{@dossier.quartier_prioritaires.to_json}" }
+        %input#cadastres{ type: 'hidden', value: "#{@dossier.cadastres.to_json}" }
 
         - if @dossier.draft?
           = render partial: '/layouts/etape_suivante'

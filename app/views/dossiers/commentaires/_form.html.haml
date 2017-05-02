@@ -1,6 +1,6 @@
 = form_tag(url_for({ controller: 'commentaires', action: :create, dossier_id: dossier_facade.dossier.id, champ_id: dossier_facade.champ_id }), class: 'form-inline', method: 'POST', multipart: true) do
 
-  %textarea.form-control.wysihtml5{ id: 'texte_commentaire', name: 'texte_commentaire', style: 'width: 100%; margin-bottom: 2%;', rows: '5', placeholder: "Commentaire" }
+  %textarea.form-control.wysihtml5#texte_commentaire{ name: 'texte_commentaire', style: 'width: 100%; margin-bottom: 2%;', rows: '5', placeholder: "Commentaire" }
 
   .row
     .col-md-6

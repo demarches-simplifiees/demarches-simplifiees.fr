@@ -36,7 +36,7 @@ linters:
     style: lisp_case
 
   ImplicitDiv:
-    enabled: false
+    enabled: true
 
   Indentation:
     enabled: true
