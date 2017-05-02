@@ -1,0 +1,24 @@
+%html
+  %body
+    %p
+      Bonjour,
+      %br
+      = "Vous avez été invité à donner votre avis sur le dossier nº #{@avis.dossier.id} de la procédure : #{@avis.dossier.procedure.libelle}."
+      %br
+      Message de votre interlocuteur :
+
+    %p{ style: 'border: 1px solid grey' }
+      = @avis.introduction
+
+    %p
+      = link_to "Connectez-vous pour donner votre avis", new_gestionnaire_session_url
+
+    Bonne journée,
+    %br
+    %br
+    L'équipe Téléprocédures Simplifiées
+    %br
+    %br
+    %hr
+    %br
+    Merci de ne pas répondre à cet email. Postez directement vos questions dans votre dossier sur la plateforme.
