@@ -1,0 +1,11 @@
+- if current_gestionnaire
+  - avis_for_dossier = current_gestionnaire.avis.for_dossier(dossier_facade.dossier.id).by_latest
+  - if avis_for_dossier.any?
+    .panel.panel-default
+      .panel-body
+        %h4 Votre avis est sollicité sur le dossier :
+        - avis_for_dossier.each do |avis|
+          %p= avis.introduction
+          = simple_form_for avis, url: backoffice_dossier_avis_path(dossier_facade.dossier, avis) do |f|
+            = f.input 'answer', label: "Votre avis"
+            = f.submit "Enregistrer votre avis", class: 'btn btn-default'
