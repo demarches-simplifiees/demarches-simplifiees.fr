@@ -1,0 +1,11 @@
+Bonjour,
+
+Vous avez été invité à donner votre avis sur le dossier nº <%= @avis.dossier.id %> de la procédure : <%= @avis.dossier.procedure.libelle %>.
+
+Message de votre interlocuteur :
+<%= @avis.introduction %>
+
+Connectez vous pour donner votre avis : <%= new_gestionnaire_session_url %>
+
+---
+L'équipe TPS - contact@tps.apientreprise.fr
