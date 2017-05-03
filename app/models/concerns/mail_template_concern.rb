@@ -34,6 +34,14 @@ module MailTemplateConcern
         "refused_mail",
         "without_continuation_mail"
       ]
+    },
+    date_de_decision: {
+      description: "Permet d'afficher la date à laquelle la décision finale (acceptation, refus, classement sans suite) sur le dossier a été prise.",
+      templates: [
+        "closed_mail",
+        "refused_mail",
+        "without_continuation_mail"
+      ]
     }
   }
 
@@ -76,6 +84,8 @@ module MailTemplateConcern
       link_to users_dossier_recapitulatif_url(dossier), users_dossier_recapitulatif_url(dossier), target: '_blank'
     when :libelle_procedure
       dossier.procedure.libelle
+    when :date_de_decision
+      dossier.processed_at.present? ? dossier.processed_at.strftime("%d/%m/%Y") : ""
     else
       '--BALISE_NON_RECONNUE--'
     end
