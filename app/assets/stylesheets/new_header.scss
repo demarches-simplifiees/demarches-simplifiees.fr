@@ -1,15 +1,11 @@
 @import "constants";
 @import "colors";
 @import "mixins";
-@import "typography";
 
 // FIXME: Rename when the header is generalized
 .new-header {
-  @extend %new-type;
   height: 72px;
   background-color: #FFFFFF;
-  // FIXME: Delete when the header is generalized
-  margin-top: -60px;
 }
 
 .header-inner-content {
