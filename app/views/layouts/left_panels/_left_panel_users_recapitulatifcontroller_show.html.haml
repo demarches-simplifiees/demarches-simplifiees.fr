@@ -1,12 +1,12 @@
-%div#first-block
+#first-block
   .en-cours
     %h2 Récapitulatif
   .infos
     %div= t('dynamics.dossiers.numéro') + @facade.dossier.id.to_s
 
-%div#menu-block
+#menu-block
 
-%div#infos-block
+#infos-block
   .split-hr-left
   .dossier-state= @facade.dossier.display_state
   .split-hr-left

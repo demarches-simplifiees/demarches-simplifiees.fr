@@ -32,9 +32,9 @@
     = render partial: 'layouts/ie_lt_10'
 
 
-    %div#wrap
+    #wrap
       .row
-        %div#header.navbar
+        #header.navbar
           = render partial: "layouts/navbar"
       .row.no-margin
         - if RenderPartialService.left_panel_exist? @left_pannel_url

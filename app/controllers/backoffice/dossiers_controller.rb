@@ -1,6 +1,8 @@
 class Backoffice::DossiersController < Backoffice::DossiersListController
   respond_to :html, :xlsx, :ods, :csv
 
+  before_action :ensure_gestionnaire_is_authorized, only: :show
+
   def index
     procedure = current_gestionnaire.procedure_filter
 
@@ -184,6 +186,14 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   private
+
+  def ensure_gestionnaire_is_authorized
+    current_gestionnaire.dossiers.find(params[:id])
+
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = t('errors.messages.dossier_not_found')
+    redirect_to url_for(controller: '/backoffice')
+  end
 
   def create_dossier_facade dossier_id
     @facade = DossierFacades.new dossier_id, current_gestionnaire.email

@@ -1,12 +1,13 @@
 require 'spec_helper'
 
 feature 'backoffice: flux de commentaires' do
+  let(:procedure) { create(:procedure) }
   let(:gestionnaire) { create(:gestionnaire) }
-  let(:dossier) { create(:dossier, :with_entreprise) }
+  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'updated') }
   let(:dossier_id) { dossier.id }
 
-  let(:champ1) { dossier.champs.first }
-  let(:champ2) { create(:champ, dossier: dossier, type_de_champ: create(:type_de_champ_public, libelle: "subtitle")) }
+  let(:champ1) { create(:champ, dossier: dossier, type_de_champ: create(:type_de_champ_public, libelle: "subtitle1")) }
+  let(:champ2) { create(:champ, dossier: dossier, type_de_champ: create(:type_de_champ_public, libelle: "subtitle2")) }
 
   let!(:commentaire1) { create(:commentaire, dossier: dossier, champ: champ1) }
   let!(:commentaire2) { create(:commentaire, dossier: dossier) }
@@ -14,6 +15,7 @@ feature 'backoffice: flux de commentaires' do
   let!(:commentaire4) { create(:commentaire, dossier: dossier, champ: champ1) }
 
   before do
+    create :assign_to, gestionnaire: gestionnaire, procedure: procedure
     login_as gestionnaire, scope: :gestionnaire
     visit backoffice_dossier_path(dossier)
   end

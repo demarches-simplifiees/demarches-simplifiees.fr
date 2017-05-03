@@ -2,11 +2,11 @@
   #procedure_show
     - unless @facade.procedure.published?
       - if @facade.procedure.gestionnaires.size == 0
-        %a.action_button.btn.btn-success{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.', id: 'publish-procedure' }
+        %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.' }
           %i.fa.fa-eraser
           Publier
       - else
-        %a.btn.btn-success{ "data-target" => "#publish-modal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px;', id: 'publish-procedure' }
+        %a.btn.btn-success#publish-procedure{ "data-target" => "#publish-modal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px;' }
           %i.fa.fa-eraser
           Publier
 
