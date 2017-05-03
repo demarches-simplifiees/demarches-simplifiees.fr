@@ -15,7 +15,7 @@
         %td.col-xs-6
           = procedure.libelle
         - if @active_class
-          %td= link_to procedure.lien, procedure.lien, class: 'procedure-lien', 'data-method' => :get
+          %td.procedure-lien= link_to procedure.lien, procedure.lien, 'data-method' => :get
         %td
           = procedure.created_at_fr
         %td
