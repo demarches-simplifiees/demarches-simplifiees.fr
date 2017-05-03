@@ -187,7 +187,7 @@ fr:
       procedure_not_found: "La procédure n'existe pas"
       france_connect:
        connexion: "Erreur lors de la connexion à France Connect."
-      extension_white_list_error: "Le format de fichier de la pièce jointe n'est pas valide."
+      extension_whitelist_error: "Le format de fichier de la pièce jointe n'est pas valide."
       procedure_archived: "Cette procédure en ligne a été fermée, il n'est plus possible de déposer de dossier."
 
   date:
