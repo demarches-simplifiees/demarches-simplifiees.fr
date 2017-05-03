@@ -6,15 +6,40 @@ module MailTemplateConcern
 
   TAGS = {
     numero_dossier: {
-      description: "Permet d'afficher le numéro de dossier de l'utilisateur."
+      description: "Permet d'afficher le numéro de dossier de l'utilisateur.",
+      templates: [
+        "initiated_mail",
+        "received_mail",
+        "closed_mail",
+        "refused_mail",
+        "without_continuation_mail"
+      ]
     },
     lien_dossier: {
-      description: "Permet d'afficher un lien vers le dossier de l'utilisateur."
+      description: "Permet d'afficher un lien vers le dossier de l'utilisateur.",
+      templates: [
+        "initiated_mail",
+        "received_mail",
+        "closed_mail",
+        "refused_mail",
+        "without_continuation_mail"
+      ]
     },
     libelle_procedure: {
-      description: "Permet d'afficher le libellé de la procédure."
+      description: "Permet d'afficher le libellé de la procédure.",
+      templates: [
+        "initiated_mail",
+        "received_mail",
+        "closed_mail",
+        "refused_mail",
+        "without_continuation_mail"
+      ]
     }
   }
+
+  def self.tags_for_template(template)
+    TAGS.select { |key, value| value[:templates].include?(template) }
+  end
 
   def object_for_dossier(dossier)
     replace_tags(object, dossier)

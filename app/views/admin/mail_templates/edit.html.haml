@@ -22,7 +22,7 @@
             Balise
           %th
             Description
-        - MailTemplateConcern::TAGS.each do |balise|
+        - MailTemplateConcern.tags_for_template(@mail_template_name).each do |balise|
           %tr
             %td.center
               = "--#{balise.first}--"

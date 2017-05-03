@@ -7,6 +7,7 @@ class Admin::MailTemplatesController < AdminController
 
   def edit
     @mail_template = find_the_right_mail params[:id]
+    @mail_template_name = params[:id]
   end
 
   def update
