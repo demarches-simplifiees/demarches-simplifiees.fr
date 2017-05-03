@@ -16,15 +16,15 @@ module MailTemplateConcern
     }
   }
 
-  def object_for_dossier dossier
+  def object_for_dossier(dossier)
     replace_tags(object, dossier)
   end
 
-  def body_for_dossier dossier
+  def body_for_dossier(dossier)
     replace_tags(body, dossier)
   end
 
-  def replace_tags string, dossier
+  def replace_tags(string, dossier)
     TAGS.inject(string) do |acc, tag|
       acc.gsub!("--#{tag.first}--", replace_tag(tag.first.to_sym, dossier)) || acc
     end
@@ -43,7 +43,7 @@ module MailTemplateConcern
 
   private
 
-  def replace_tag tag, dossier
+  def replace_tag(tag, dossier)
     case tag
     when :numero_dossier
       dossier.id.to_s
