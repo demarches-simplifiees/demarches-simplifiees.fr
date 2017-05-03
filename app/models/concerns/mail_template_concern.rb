@@ -5,16 +5,16 @@ module MailTemplateConcern
   include ActionView::Helpers::UrlHelper
 
   TAGS = {
-      numero_dossier: {
-         description: "Permet d'afficher le numéro de dossier de l'utilisateur."
-      },
-      lien_dossier: {
-          description: "Permet d'afficher un lien vers le dossier de l'utilisateur."
-      },
-      libelle_procedure: {
-         description: "Permet d'afficher le libellé de la procédure."
-      }
-   }
+    numero_dossier: {
+      description: "Permet d'afficher le numéro de dossier de l'utilisateur."
+    },
+    lien_dossier: {
+      description: "Permet d'afficher un lien vers le dossier de l'utilisateur."
+    },
+    libelle_procedure: {
+      description: "Permet d'afficher le libellé de la procédure."
+    }
+  }
 
   def object_for_dossier dossier
     replace_tags(object, dossier)
