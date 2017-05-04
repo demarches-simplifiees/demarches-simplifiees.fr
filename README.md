@@ -44,6 +44,14 @@ Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les c
     rake db:create db:schema:load db:migrate RAILS_ENV=test
 
 
+## Lancement de l'application
+
+    redis-server
+    sidekiq
+    mailcatcher -f
+    rails s
+
+
 ## Exécution des tests (RSpec)
 
 Pour exécuter les tests de l'application, plusieurs possibilités :
