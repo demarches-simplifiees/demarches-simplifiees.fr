@@ -1,4 +1,4 @@
-# TPS - TéléProcédure Simplifiée
+# TPS - TéléProcédures Simplifiées
 
 ## Context
 
