@@ -10,6 +10,11 @@ TéléProcédure Simplifiée, ou TPS pour les intimes, est une plateforme 100 % 
 ### Tous environnements
 
 - postgresql
+- redis
+
+### Développement
+
+- Mailcatcher : `gem install mailcatcher`
 
 ### Tests
 
