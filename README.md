@@ -2,7 +2,7 @@
 
 ## Context
 
-TéléProcédure Simplifiée, ou TPS pour les intimes, est une plateforme 100 % web et 0 % email, conçue afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % démat' à l'horizon 2018 pour les démarches administratives.
+TéléProcédure Simplifiée, ou TPS pour les intimes, est une plateforme 100 % web et 0 % email, conçue afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % démat' à l'horizon 2018 pour les procédures administratives.
 
 
 ## Dépendances

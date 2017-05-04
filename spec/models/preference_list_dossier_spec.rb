@@ -92,7 +92,7 @@ describe PreferenceListDossier do
       describe 'organisation' do
         subject { super()[:organisation] }
 
-        it { expect(subject[:libelle]).to eq 'Organisation' }
+        it { expect(subject[:libelle]).to eq 'Organisme' }
         it { expect(subject[:table]).to eq 'procedure' }
         it { expect(subject[:attr]).to eq 'organisation' }
         it { expect(subject[:attr_decorate]).to eq 'organisation' }

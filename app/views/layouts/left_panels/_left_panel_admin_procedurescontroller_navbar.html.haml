@@ -34,8 +34,8 @@
 
     - unless @procedure.locked?
       %a#onglet-private-champs{ :href => "#{url_for admin_procedure_types_de_champ_private_path(@procedure)}" }
-        .procedure-list-element{ class: ('active' if active == 'Champs privés') }
-          Champs privés
+        .procedure-list-element{ class: ('active' if active == 'Annotations privées') }
+          Annotations privées
 
     %a#onglet-inemailsfos{ :href => "#{url_for admin_procedure_mail_templates_path(@procedure)}" }
       .procedure-list-element{ class: ('active' if active == 'E-mails') }

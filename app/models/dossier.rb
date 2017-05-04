@@ -281,7 +281,7 @@ class Dossier < ActiveRecord::Base
   def text_summary
     if brouillon?
       parts = [
-        "Dossier en brouillon répondant à la démarche ",
+        "Dossier en brouillon répondant à la procédure ",
         procedure.libelle,
         " gérée par l'organisme ",
         procedure.organisation
@@ -290,7 +290,7 @@ class Dossier < ActiveRecord::Base
       parts = [
         "Dossier déposé le ",
         initiated_at.strftime("%d/%m/%Y"),
-        " sur la démarche ",
+        " sur la procédure ",
         procedure.libelle,
         " gérée par l'organisme ",
         procedure.organisation

@@ -7,7 +7,7 @@
       %th= smart_listing.sortable 'ID', 'id'
       %th= smart_listing.sortable 'Titre', 'libelle'
       %th Description
-      %th= smart_listing.sortable 'Organisation', 'organisation'
+      %th= smart_listing.sortable 'Organisme', 'organisation'
 
     - smart_listing.collection.each do |procedure|
       - procedure = procedure.decorate
