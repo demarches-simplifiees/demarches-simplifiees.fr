@@ -74,6 +74,7 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 ## Linting
 
 - Linter les fichiers HAML : `bundle exec haml-lint app/views/`
+- Linter les fichiers SCSS : `bundle exec scss-lint app/assets/stylesheets/`
 
 ## Régénérer les binstubs
 
