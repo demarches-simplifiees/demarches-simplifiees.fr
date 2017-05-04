@@ -74,10 +74,6 @@ GEM
     apipie-rails (0.3.7)
       json
     arel (7.1.4)
-    as_csv (2.0.2)
-      actionpack (>= 3.0)
-      activemodel (>= 3.0)
-      responders
     ast (2.3.0)
     attr_required (1.0.1)
     autoprefixer-rails (6.5.4)
@@ -669,7 +665,6 @@ DEPENDENCIES
   actioncable (= 5.0.0.1)
   active_model_serializers
   apipie-rails
-  as_csv
   bootstrap-datepicker-rails
   bootstrap-sass (~> 3.3.5)
   bootstrap-wysihtml5-rails (~> 0.3.3.8)
