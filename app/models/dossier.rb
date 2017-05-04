@@ -283,16 +283,16 @@ class Dossier < ActiveRecord::Base
       parts = [
         "Dossier en brouillon répondant à la démarche ",
         procedure.libelle,
-        ", gérée par l'organisme ",
+        " gérée par l'organisme ",
         procedure.organisation
       ]
     else
       parts = [
         "Dossier déposé le ",
         initiated_at.strftime("%d/%m/%Y"),
-        ", sur la démarche ",
+        " sur la démarche ",
         procedure.libelle,
-        ", gérée par l'organisme ",
+        " gérée par l'organisme ",
         procedure.organisation
       ]
     end
