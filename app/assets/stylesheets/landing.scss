@@ -2,10 +2,8 @@
 @import "colors";
 @import "mixins";
 @import "placeholders";
-@import "typography";
 
 .landing {
-  @extend %new-type;
   background-color: #FFFFFF;
 }
 

@@ -1,3 +1,5 @@
+exclude: 'app/assets/stylesheets/reset.scss'
+
 linters:
   BangFormat:
     enabled: true
