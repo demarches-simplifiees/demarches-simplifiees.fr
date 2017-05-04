@@ -121,6 +121,7 @@ fr:
               blank: est vide
             password:
               blank: ': Le mot de passe est vide'
+              too_short: ': Le mot de passe est trop court'
 
   devise:
     confirmations:
