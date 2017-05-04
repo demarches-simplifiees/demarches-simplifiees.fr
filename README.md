@@ -10,6 +10,11 @@ TéléProcédure Simplifiée, ou TPS pour les intimes, est une plateforme 100 % 
 ### Tous environnements
 
 - postgresql
+- redis
+
+### Développement
+
+- Mailcatcher : `gem install mailcatcher`
 
 ### Tests
 
@@ -39,6 +44,14 @@ Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les c
     rake db:create db:schema:load db:migrate RAILS_ENV=test
 
 
+## Lancement de l'application
+
+    redis-server
+    sidekiq
+    mailcatcher -f
+    rails s
+
+
 ## Exécution des tests (RSpec)
 
 Pour exécuter les tests de l'application, plusieurs possibilités :
@@ -61,6 +74,7 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 ## Linting
 
 - Linter les fichiers HAML : `bundle exec haml-lint app/views/`
+- Linter les fichiers SCSS : `bundle exec scss-lint app/assets/stylesheets/`
 
 ## Régénérer les binstubs
 
