@@ -1,4 +1,4 @@
-.new-header
+.new-header{ class: current_page?(root_path) ? nil : 'new-header-with-border' }
   .header-inner-content
     %img.header-logo.pull-left{ src: image_url("header/logo-tps.svg") }
 

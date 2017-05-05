@@ -8,6 +8,10 @@
   background-color: #FFFFFF;
 }
 
+.new-header-with-border {
+  border-bottom: 1px solid $border-grey;
+}
+
 .header-inner-content {
   width: $page-width;
   margin: 0 auto;
