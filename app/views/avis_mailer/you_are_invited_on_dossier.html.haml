@@ -10,8 +10,12 @@
     %p{ style: 'border: 1px solid grey' }
       = @avis.introduction
 
-    %p
-      = link_to "Connectez-vous pour donner votre avis", new_gestionnaire_session_url
+    - if @avis.gestionnaire.present?
+      %p
+        = link_to "Connectez-vous pour donner votre avis", new_gestionnaire_session_url
+    - else
+      %p
+        = link_to "Inscrivez-vous pour donner votre avis", avis_sign_up_url(@avis.id, @avis.email)
 
     Bonne journée,
     %br
