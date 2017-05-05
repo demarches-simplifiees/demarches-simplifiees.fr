@@ -5,10 +5,10 @@ class StatsController < ApplicationController
     dossiers = Dossier.where.not(:state => :draft)
 
     @procedures_30_days_flow = thirty_days_flow_hash(procedures)
-    @dossiers_30_days_flow = thirty_days_flow_hash(dossiers)
+    @dossiers_30_days_flow = thirty_days_flow_hash(dossiers, :initiated_at)
 
     @procedures_cumulative = cumulative_hash(procedures)
-    @dossiers_cumulative = cumulative_hash(dossiers)
+    @dossiers_cumulative = cumulative_hash(dossiers, :initiated_at)
 
     @procedures_count = procedures.count
     @dossiers_count = dossiers.count
@@ -16,13 +16,13 @@ class StatsController < ApplicationController
 
   private
 
-  def thirty_days_flow_hash(association)
+  def thirty_days_flow_hash(association, date_attribute = :created_at)
     min_date = 30.days.ago.to_date
     max_date = Time.now.to_date
 
     thirty_days_flow_hash = association
-      .where(:created_at => min_date..max_date)
-      .group("date_trunc('day', created_at)")
+      .where(date_attribute => min_date..max_date)
+      .group("date_trunc('day', #{date_attribute.to_s})")
       .count
 
     clean_hash(thirty_days_flow_hash, min_date, max_date)
@@ -42,10 +42,10 @@ class StatsController < ApplicationController
     h
   end
 
-  def cumulative_hash(association)
+  def cumulative_hash(association, date_attribute = :created_at)
     sum = 0
     association
-      .group("DATE_TRUNC('month', created_at)")
+      .group("DATE_TRUNC('month', #{date_attribute.to_s})")
       .count
       .to_a
       .sort{ |x, y| x[0] <=> y[0] }
