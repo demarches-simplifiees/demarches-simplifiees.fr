@@ -33,7 +33,7 @@
 
   .header {
     background-color: #003C92;
-    height: 40px;
+    min-height: 40px;
     color: #FFFFFF;
     font-size: 18px;
     font-weight: bold;
@@ -42,7 +42,6 @@
     .title-no-expanse,
     .action,
     .count {
-      height: 100%;
       line-height: 40px;
       padding: 0px;
       text-transform: uppercase;
@@ -56,6 +55,11 @@
     .action,
     .count {
       cursor: pointer;
+    }
+
+    .title-content {
+      width: calc(100% - 50px);
+      float: left;
     }
 
     .action {
