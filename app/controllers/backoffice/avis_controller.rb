@@ -1,6 +1,7 @@
 class Backoffice::AvisController < ApplicationController
 
   before_action :authenticate_gestionnaire!, except: [:sign_up, :create_gestionnaire]
+  before_action :redirect_if_no_sign_up_needed, only: [:sign_up]
   before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_gestionnaire]
 
   def create
@@ -66,6 +67,20 @@ class Backoffice::AvisController < ApplicationController
 
   def update_params
     params.require(:avis).permit(:answer)
+  end
+
+  def redirect_if_no_sign_up_needed
+    avis = Avis.find(params[:id])
+
+    if current_gestionnaire.present?
+      # a gestionnaire is authenticated ... lets see if it can view the dossier
+
+      redirect_to backoffice_dossier_url(avis.dossier)
+    elsif avis.gestionnaire.present? && avis.gestionnaire.email == params[:email]
+      # the avis gestionnaire has already signed up and it sould sign in
+
+      redirect_to new_gestionnaire_session_url
+    end
   end
 
   def check_avis_exists_and_email_belongs_to_avis

@@ -72,23 +72,60 @@ describe Backoffice::AvisController, type: :controller do
     let!(:avis) { Avis.create(email: invited_email, dossier: dossier) }
     let(:invitations_email) { true }
 
-    before do
-      expect(Avis).to receive(:avis_exists_and_email_belongs_to_avis?)
-        .with(avis.id.to_s, invited_email)
-        .and_return(invitations_email)
-      get :sign_up, params: { id: avis.id, email: invited_email }
+    context 'when the new gestionnaire has never signed up' do
+      before do
+        expect(Avis).to receive(:avis_exists_and_email_belongs_to_avis?)
+          .with(avis.id.to_s, invited_email)
+          .and_return(invitations_email)
+        get :sign_up, params: { id: avis.id, email: invited_email }
+      end
+
+      context 'when the email belongs to the invitation' do
+        it { expect(subject.status).to eq(200) }
+        it { expect(assigns(:email)).to eq(invited_email) }
+        it { expect(assigns(:dossier)).to eq(dossier) }
+      end
+
+      context 'when the email does not belong to the invitation' do
+        let(:invitations_email) { false }
+
+        it { is_expected.to redirect_to root_path }
+      end
     end
 
-    context 'when the email belongs to the invitation' do
-      it { expect(subject.status).to eq(200) }
-      it { expect(assigns(:email)).to eq(invited_email) }
-      it { expect(assigns(:dossier)).to eq(dossier) }
+    context 'when the gestionnaire has already signed up and belongs to the invitation' do
+      let(:gestionnaire) { create(:gestionnaire, email: invited_email) }
+      let!(:avis) { Avis.create(dossier: dossier, gestionnaire: gestionnaire) }
+
+      context 'when the gestionnaire is authenticated' do
+        before do
+          sign_in gestionnaire
+          get :sign_up, params: { id: avis.id, email: invited_email }
+        end
+
+        it { is_expected.to redirect_to backoffice_dossier_url(avis.dossier) }
+      end
+
+      context 'when the gestionnaire is not authenticated' do
+        before do
+          get :sign_up, params: { id: avis.id, email: invited_email }
+        end
+
+        it { is_expected.to redirect_to new_gestionnaire_session_url }
+      end
     end
 
-    context 'when the email does not belong to the invitation' do
-      let(:invitations_email) { false }
+    context 'when the gestionnaire has already signed up / is authenticated and does not belong to the invitation' do
+      let(:gestionnaire) { create(:gestionnaire, email: 'other@gmail.com') }
+      let!(:avis) { Avis.create(email: invited_email, dossier: dossier) }
 
-      it { is_expected.to redirect_to root_path }
+      before do
+        sign_in gestionnaire
+        get :sign_up, params: { id: avis.id, email: invited_email }
+      end
+
+      # redirected to dossier but then the gestionnaire gonna be banished !
+      it { is_expected.to redirect_to backoffice_dossier_url(avis.dossier) }
     end
   end
 
