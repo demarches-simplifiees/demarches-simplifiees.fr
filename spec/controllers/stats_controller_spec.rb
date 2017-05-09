@@ -210,4 +210,18 @@ describe StatsController, type: :controller do
 
     it { expect(subject).to eq(@expected_hash) }
   end
+
+  describe '#avis_usage' do
+    let!(:dossier) { create(:dossier) }
+    let!(:avis_with_dossier) { create(:avis) }
+    let!(:dossier2) { create(:dossier) }
+
+    before do
+      Timecop.freeze(Time.now)
+    end
+
+    subject { StatsController.new.send(:avis_usage) }
+
+    it { expect(subject).to match([[3.week.ago.to_i, 0], [2.week.ago.to_i, 0], [1.week.ago.to_i, 33.33]]) }
+  end
 end

@@ -6,13 +6,23 @@ $blue-hover: rgba(61, 149, 236, 0.8);
 $default-space: 15px;
 
 $new-h1-margin-bottom: 4 * $default-space;
+$new-h2-margin-bottom: 3 * $default-space;
 
-.new-h1 {
+.new-h1,
+.new-h2 {
   color: $dark-grey;
   text-align: center;
-  margin-bottom: $new-h1-margin-bottom;
   font-weight: bold;
+}
+
+.new-h1 {
+  margin-bottom: $new-h1-margin-bottom;
   font-size: 41px;
+}
+
+.new-h2 {
+  margin-bottom: $new-h2-margin-bottom;
+  font-size: 36px;
 }
 
 $statistiques-padding-top: $default-space * 2;
