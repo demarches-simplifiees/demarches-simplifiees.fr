@@ -129,19 +129,6 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
-  describe 'GET #fige' do
-    context 'when gestionnaire is connected' do
-      before do
-        sign_in gestionnaire
-      end
-
-      it 'returns http success' do
-        get :index, params: {liste: :fige}
-        expect(response).to have_http_status(302)
-      end
-    end
-  end
-
   describe 'GET #termine' do
     context 'when gestionnaire is connected' do
       before do
