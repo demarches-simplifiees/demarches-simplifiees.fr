@@ -22,7 +22,7 @@ class Avis < ApplicationRecord
     Avis.where(email: gestionnaire.email).update_all(email: nil, gestionnaire_id: gestionnaire.id)
   end
 
-  def  self.avis_exists_and_email_belongs_to_avis?(avis_id, email)
+  def self.avis_exists_and_email_belongs_to_avis?(avis_id, email)
     avis = Avis.find_by(id: avis_id)
     avis.present? && avis.email == email
   end

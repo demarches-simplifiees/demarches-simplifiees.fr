@@ -22,6 +22,7 @@ class StatsController < ApplicationController
     @dossier_filling_mean_time = dossier_filling_mean_time(dossiers)
 
     @avis_usage = avis_usage
+    @avis_average_answer_time = avis_average_answer_time
   end
 
   private
@@ -161,6 +162,20 @@ class StatsController < ApplicationController
         weekly_dossier_with_avis_count = weekly_dossiers.select { |dossier| dossier.avis.present? }.count
         result = ((weekly_dossier_with_avis_count.to_f / weekly_dossiers_count) * 100).round(2)
       end
+
+      [min_date.to_i, result]
+    end
+  end
+
+  def avis_average_answer_time
+    [3.week.ago, 2.week.ago, 1.week.ago].map do |min_date|
+      max_date = min_date + 1.week
+
+      average = Avis.with_answer
+        .where(created_at: min_date..max_date)
+        .average("EXTRACT(EPOCH FROM updated_at - created_at) / 86400")
+
+      result = average ? average.to_f.round(2) : 0
 
       [min_date.to_i, result]
     end

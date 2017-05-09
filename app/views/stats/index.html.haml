@@ -86,4 +86,8 @@
         %span.stat-card-title Taux d'utilisation des avis
         = line_chart @avis_usage, ytitle: 'dossiers avec avis / total dossiers', xtitle: 'semaines'
 
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Temps de réponse moyen par avis
+        = line_chart @avis_average_answer_time, ytitle: 'jours', xtitle: 'semaines'
+
       .clearfix

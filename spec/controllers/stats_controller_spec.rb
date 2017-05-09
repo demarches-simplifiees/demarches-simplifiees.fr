@@ -224,4 +224,29 @@ describe StatsController, type: :controller do
 
     it { expect(subject).to match([[3.week.ago.to_i, 0], [2.week.ago.to_i, 0], [1.week.ago.to_i, 33.33]]) }
   end
+
+  describe "#avis_average_answer_time" do
+    before do
+      # 1 week ago
+      create(:avis, answer: "voila ma réponse", created_at: 1.week.ago + 1.day, updated_at: 1.week.ago + 2.days) # 1 day
+      create(:avis, created_at: 1.week.ago + 2.days)
+
+      # 2 weeks ago
+      create(:avis, answer: "voila ma réponse", created_at: 2.week.ago + 1.day, updated_at: 2.week.ago + 2.days) # 1 day
+      create(:avis, answer: "voila ma réponse2", created_at: 2.week.ago + 3.days, updated_at: 1.week.ago + 6.days) # 10 days
+      create(:avis, answer: "voila ma réponse2", created_at: 2.week.ago + 2.days, updated_at: 1.week.ago + 6.days) # 11 days
+      create(:avis, created_at: 2.week.ago + 1.day, updated_at: 2.week.ago + 2.days)
+
+      # 3 weeks ago
+      create(:avis, answer: "voila ma réponse2", created_at: 3.weeks.ago + 1.day, updated_at: 3.weeks.ago + 2.days) # 1 day
+      create(:avis, answer: "voila ma réponse2", created_at: 3.weeks.ago + 1.day, updated_at: 1.week.ago + 5.days) # 18 day
+    end
+
+    subject { StatsController.new.send(:avis_average_answer_time) }
+
+    it { expect(subject.count).to eq(3) }
+    it { is_expected.to include [1.week.ago.to_i, 1.0] }
+    it { is_expected.to include [2.week.ago.to_i, 7.33] }
+    it { is_expected.to include [3.week.ago.to_i, 9.5] }
+  end
 end
