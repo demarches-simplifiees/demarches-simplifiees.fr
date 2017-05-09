@@ -48,7 +48,7 @@ class PreferenceListDossier < ActiveRecord::Base
 
     {
         libelle: create_column('Libellé procédure', table, 'libelle', 'libelle', 4),
-        organisation: create_column('Organisation', table, 'organisation', 'organisation', 3),
+        organisation: create_column('Organisme', table, 'organisation', 'organisation', 3),
         direction: create_column('Direction', table, 'direction', 'direction', 3)
     }
   end

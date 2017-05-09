@@ -11,7 +11,7 @@ class AdminTypesDeChampFacades
   end
 
   def active
-    @private ? 'Champs privés' : 'Champs'
+    @private ? 'Annotations privées' : 'Champs'
   end
 
   def url

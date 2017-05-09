@@ -1,4 +1,4 @@
-= javascript_include_tag 'https://code.highcharts.com/highcharts.js', 'chartkick'
+= javascript_include_tag 'https://code.highcharts.com/highcharts.js', 'chartkick', "data-turbolinks-track" => true
 
 .statistiques
 
@@ -12,7 +12,7 @@
           Cumul
         %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.flux-procedures-chart');" }
           Flux (30 jours)
-      %span.stat-card-title.pull-left Démarches dématérialisées
+      %span.stat-card-title.pull-left Procédures dématérialisées
       .clearfix
 
       .chart-container
@@ -41,7 +41,7 @@
             :colors => ["rgba(61, 149, 236, 1)"]
 
     .card.stat-card.stat-card-half.big-number-card.pull-left
-      %span.big-number-card-title TOTAL DÉMARCHES DÉMATÉRIALISÉES
+      %span.big-number-card-title TOTAL PROCÉDURES DÉMATÉRIALISÉES
       %span.big-number-card-number
         = number_with_delimiter(@procedures_count)
 

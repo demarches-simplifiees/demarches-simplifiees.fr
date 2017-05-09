@@ -1,4 +1,6 @@
 class DossierDecorator < Draper::Decorator
+  include Rails.application.routes.url_helpers
+
   delegate :current_page, :per_page, :offset, :total_entries, :total_pages
   delegate_all
 
@@ -12,6 +14,16 @@ class DossierDecorator < Draper::Decorator
 
   def display_state
     DossierDecorator.case_state_fr state
+  end
+
+  def url(gestionnaire_signed_in)
+    if gestionnaire_signed_in
+      backoffice_dossier_path(id)
+    elsif brouillon?
+      users_dossier_description_path(id)
+    else
+      users_dossier_recapitulatif_path(id)
+    end
   end
 
   def self.case_state_fr state=self.state

@@ -4,6 +4,8 @@
       .col-xs-12.title
         .carret-right
         .carret-down
-        = libelle
+        .title-content
+          = libelle
+      .clearfix
     .body
       = render partial: 'users/description/champs/render_list_champs', locals: { champs: champs, order_place: order_place }

@@ -15,14 +15,14 @@
       = f.button :submit, 'Mettre à jour', class: "btn-success"
 
   .row
-    .col-md-8
+    .col-md-12
       %table.table
         %tr
-          %th
+          %th.col-md-3
             Balise
           %th
             Description
-        - MailTemplateConcern::TAGS.each do |balise|
+        - MailTemplateConcern.tags_for_template(@mail_template_name).each do |balise|
           %tr
             %td.center
               = "--#{balise.first}--"

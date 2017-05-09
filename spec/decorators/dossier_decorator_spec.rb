@@ -57,4 +57,36 @@ describe DossierDecorator do
       expect(subject).to eq('Refusé')
     end
   end
+
+  describe '#url' do
+    context "when a gestionnaire is signed_in" do
+      subject { super().url(true) }
+
+      it { is_expected.to eq("/backoffice/dossiers/#{dossier.id}") }
+    end
+
+    context "when a gestionnaire is not signed_in" do
+      context "when the dossier is in brouillon state" do
+        before do
+          dossier.state = 'draft'
+          dossier.save
+        end
+
+        subject { super().url(false) }
+
+        it { is_expected.to eq("/users/dossiers/#{dossier.id}/description") }
+      end
+
+      context "when the dossier is not in brouillon state" do
+        before do
+          dossier.state = 'updated'
+          dossier.save
+        end
+
+        subject { super().url(false) }
+
+        it { is_expected.to eq("/users/dossiers/#{dossier.id}/recapitulatif") }
+      end
+    end
+  end
 end

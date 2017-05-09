@@ -1,12 +1,12 @@
+@import "colors";
 @import "constants";
 @import "mixins";
 @import "placeholders";
-@import "typography";
 
 .footer {
-  @extend %new-type;
   @include vertical-padding(72px);
   background-color: $light-grey;
+  border-top: 1px solid $border-grey;
 }
 
 .footer-inner-content {

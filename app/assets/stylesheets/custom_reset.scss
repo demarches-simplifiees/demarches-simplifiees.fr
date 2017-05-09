@@ -1,0 +1,27 @@
+html,
+body {
+  height: 100%;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+// remove dotted outline on firefox
+:focus {
+  outline: none;
+}
+
+::-moz-focus-inner {
+  border: none;
+}
