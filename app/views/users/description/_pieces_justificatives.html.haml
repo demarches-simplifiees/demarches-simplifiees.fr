@@ -22,6 +22,8 @@
     %tr
       %th.piece-libelle
         = tpj.mandatory ? tpj.libelle + ' *' : tpj.libelle
+        %br
+        .piece-description= tpj.description
 
       %td
         - unless tpj.lien_demarche.blank?
