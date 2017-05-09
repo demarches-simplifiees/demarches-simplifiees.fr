@@ -13,6 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require highcharts
+//= require chartkick
 //= require_tree .
 //= require bootstrap-sprockets
 //= require bootstrap-datepicker/core
