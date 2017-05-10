@@ -10,6 +10,14 @@
   color: #FFFFFF;
   overflow-y: scroll;
 
+  .link-to-dossiers {
+    padding: 15px 0 0 15px;
+
+    a {
+      color: #FFFFFF;
+    }
+  }
+
   #first-block {
     font-family: Arial;
     font-size: 16px;
