@@ -7,7 +7,7 @@ class Commentaire < ActiveRecord::Base
   after_save :internal_notification
 
   def header
-    "#{email}, " + I18n.l(created_at.localtime, format: '%d %b %Y %H:%M')
+    'Votre accompagnateur, le ' + I18n.l(created_at.localtime, format: '%d %b %Y %H:%M')
   end
 
   private
