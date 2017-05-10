@@ -288,6 +288,13 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq(1) }
     end
 
+    context 'when there is one notification read' do
+      let(:notification){ create(:notification, already_read: true) }
+      let!(:follow){ create(:follow, dossier: notification.dossier, gestionnaire: gestionnaire) }
+
+      it { is_expected.to eq(0) }
+    end
+
     context 'when there are many notifications for one dossier' do
       let(:notification){ create(:notification, already_read: false) }
       let(:notification2){ create(:notification, already_read: false, dossier: notification.dossier) }
