@@ -125,7 +125,6 @@
 
       .col-xs-5
         %h4 Non archivés
-        = javascript_include_tag "https://code.highcharts.com/highcharts.js", "chartkick"
         - if @facade.dossiers_for_pie_highchart.blank?
           Aucune statistique pour le moment
         - else
