@@ -1,0 +1,7 @@
+@import "typography";
+
+body {
+  @extend %new-type;
+  font-size: 16px;
+  line-height: 1.42857143;
+}

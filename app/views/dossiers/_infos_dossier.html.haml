@@ -41,7 +41,7 @@
                 - if champ.type_champ == 'dossier_link'
                   - dossier = Dossier.includes(:procedure).find_by(id: champ.decorate.value)
                   - if dossier
-                    = link_to("Dossier #{dossier.id}", backoffice_dossier_path(champ.decorate.value), target: '_blank')
+                    = link_to("Dossier #{dossier.id}", dossier.decorate.url(gestionnaire_signed_in?), target: '_blank')
                     %br
                     = dossier.text_summary
                   - else
@@ -127,7 +127,7 @@
               %table.table
                 %thead
                   %th
-                    Utilisateur
+                    Usager
                   %th
                     Date d'envoi
                   %th

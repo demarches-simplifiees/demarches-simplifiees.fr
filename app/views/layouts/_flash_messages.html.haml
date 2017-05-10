@@ -1,7 +1,8 @@
-#flash_message.center
-- if flash.notice
-  .alert.alert-success
-    = flash.notice
-- if flash.alert
-  .alert.alert-danger
-    = flash.alert.html_safe
+- if flash.notice.present? || flash.alert.present?
+  #flash_message.center
+    - if flash.notice.present?
+      .alert.alert-success
+        = flash.notice
+    - if flash.alert.present?
+      .alert.alert-danger
+        = flash.alert.html_safe

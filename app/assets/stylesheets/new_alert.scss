@@ -1,0 +1,12 @@
+@import "colors";
+
+.alert {
+  padding: 15px;
+  border: 1px solid transparent;
+}
+
+.alert-danger {
+  background-color: $lighter-red;
+  border-color: $light-red;
+  color: $dark-red;
+}
