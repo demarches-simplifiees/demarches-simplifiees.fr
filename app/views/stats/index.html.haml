@@ -90,4 +90,8 @@
         %span.stat-card-title Temps de réponse moyen par avis
         = line_chart @avis_average_answer_time, ytitle: 'jours', xtitle: 'semaines'
 
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Pourcentage d'avis rempli
+        = line_chart @avis_answer_percentages, ytitle: 'avis avec reponse / total avis', xtitle: 'semaines'
+
       .clearfix

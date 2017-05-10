@@ -23,6 +23,7 @@ class StatsController < ApplicationController
 
     @avis_usage = avis_usage
     @avis_average_answer_time = avis_average_answer_time
+    @avis_answer_percentages = avis_answer_percentages
   end
 
   private
@@ -178,6 +179,25 @@ class StatsController < ApplicationController
       result = average ? average.to_f.round(2) : 0
 
       [min_date.to_i, result]
+    end
+  end
+
+  def avis_answer_percentages
+    [3.week.ago, 2.week.ago, 1.week.ago].map do |min_date|
+      max_date = min_date + 1.week
+
+      weekly_avis = Avis.where(created_at: min_date..max_date)
+
+      weekly_avis_count = weekly_avis.count
+
+      if weekly_avis_count == 0
+        [min_date.to_i, 0]
+      else
+        answered_weekly_avis_count = weekly_avis.with_answer.count
+        result = ((answered_weekly_avis_count.to_f / weekly_avis_count) * 100).round(2)
+
+        [min_date.to_i, result]
+      end
     end
   end
 end

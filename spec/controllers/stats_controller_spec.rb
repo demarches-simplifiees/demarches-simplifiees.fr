@@ -249,4 +249,18 @@ describe StatsController, type: :controller do
     it { is_expected.to include [2.week.ago.to_i, 7.33] }
     it { is_expected.to include [3.week.ago.to_i, 9.5] }
   end
+
+  describe '#avis_answer_percentages' do
+    let!(:avis) { create(:avis, created_at: 2.days.ago) }
+    let!(:avis2) { create(:avis, answer: 'answer', created_at: 2.days.ago) }
+    let!(:avis3) { create(:avis, answer: 'answer', created_at: 2.days.ago) }
+
+    subject { StatsController.new.send(:avis_answer_percentages) }
+
+    before do
+      Timecop.freeze(Time.now)
+    end
+
+    it { is_expected.to match [[3.week.ago.to_i, 0], [2.week.ago.to_i, 0], [1.week.ago.to_i, 66.67]] }
+  end
 end
