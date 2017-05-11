@@ -50,10 +50,4 @@ describe EntrepriseDecorator do
       expect(subject.pretty_capital_social).to eq('123 000,00 €')
     end
   end
-
-  describe '#pretty_date_creation' do
-    it 'pretty print date creation' do
-      expect(subject.pretty_date_creation).to eq('28-01-2016')
-    end
-  end
 end
