@@ -188,7 +188,6 @@ describe Backoffice::DossiersController, type: :controller do
           end
 
           it 'returns nothing' do
-
             expect(assigns(:dossiers).count).to eq(0)
           end
         end
