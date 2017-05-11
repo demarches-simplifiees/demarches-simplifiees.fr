@@ -18,7 +18,6 @@ class GestionnaireMailer < ApplicationMailer
   def send_mail email, args, subject
     vars_mailer email, args
 
-    mail(from: "tps@apientreprise.fr", to: email,
-         subject: subject)
+    mail(to: email, subject: subject)
   end
 end
