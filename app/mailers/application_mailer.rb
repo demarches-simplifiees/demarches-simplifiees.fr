@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "tps@apientreprise.fr"
+  default from: "'Téléprocédures Simplifiées' <contact@tps.apientreprise.fr>"
   layout 'mailer'
 end
