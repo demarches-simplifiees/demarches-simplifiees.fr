@@ -15,7 +15,7 @@
             - unless admin.last_sign_in_at.nil?
               = time_ago_in_words(l(admin.last_sign_in_at, format: "%d/%m/%Y %H:%M UTC +02:00"))
               (
-              = admin.last_sign_in_at.to_date.strftime('%d/%m/%Y')
+              = admin.last_sign_in_at.to_date.localtime.strftime('%d/%m/%Y')
               )
           %td
             = admin.procedures.where(published: true).count
