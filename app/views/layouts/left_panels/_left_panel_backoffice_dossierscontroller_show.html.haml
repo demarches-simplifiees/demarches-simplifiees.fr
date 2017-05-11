@@ -45,7 +45,7 @@
       %i.fa.fa-bell-o
       - @facade.last_notifications.each do |notification|
         .notification
-          .updated-at= notification.updated_at.strftime('%d/%m/%Y %H:%M')
+          .updated-at= notification.updated_at.localtime.strftime('%d/%m/%Y %H:%M')
           = render partial: "layouts/left_panels/type_notif_fa", locals: { notification: notification }
           - if ['champs'].include?(notification.type_notif)
             - if notification.liste.size > 1

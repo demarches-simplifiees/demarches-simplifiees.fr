@@ -40,5 +40,5 @@
         = link_to backoffice_dossier_path(dossier.id) do
           .notification
             .dossier-index= "Dossier nº #{dossier.id}"
-            .updated-at-index= dossier.first_unread_notification.created_at.strftime('%d/%m %H:%M')
+            .updated-at-index= dossier.first_unread_notification.created_at.localtime.strftime('%d/%m %H:%M')
             .count= dossier.unreaded_notifications.count
