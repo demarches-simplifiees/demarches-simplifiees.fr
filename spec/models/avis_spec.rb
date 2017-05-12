@@ -51,4 +51,33 @@ RSpec.describe Avis, type: :model do
       it { expect(avis2.gestionnaire).to eq(gestionnaire) }
     end
   end
+
+  describe '.avis_exists_and_email_belongs_to_avis' do
+    let(:dossier) { create(:dossier) }
+    let(:invited_email) { 'invited@avis.com' }
+    let!(:avis) { Avis.create(email: invited_email, dossier: dossier) }
+
+    subject { Avis.avis_exists_and_email_belongs_to_avis?(avis_id, email) }
+
+    context 'when the avis is unknown' do
+      let(:avis_id) { 666 }
+      let(:email) { 'unknown@mystery.com' }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when the avis is known' do
+      let(:avis_id) { avis.id }
+
+      context 'when the email belongs to the invitation' do
+        let(:email) { invited_email }
+        it { is_expected.to be true }
+      end
+
+      context 'when the email is unknown' do
+        let(:email) { 'unknown@mystery.com' }
+        it { is_expected.to be false }
+      end
+    end
+  end
 end

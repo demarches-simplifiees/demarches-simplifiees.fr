@@ -30,6 +30,8 @@ Rails.application.routes.draw do
     put '/gestionnaires' => 'gestionnaires/registrations#update', :as => 'gestionnaires_registration'
   end
 
+  get 'avis/:id/sign_up/email/:email' => 'backoffice/avis#sign_up', constraints: { email: /.*/ }, as: 'avis_sign_up'
+
   devise_scope :administrateur do
     get '/administrateurs/sign_in/demo' => 'administrateurs/sessions#demo'
   end

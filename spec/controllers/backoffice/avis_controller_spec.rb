@@ -66,4 +66,30 @@ describe Backoffice::AvisController, type: :controller do
     end
   end
 
+  describe '.sign_up' do
+    let(:invited_email) { 'invited@avis.com' }
+    let(:dossier) { create(:dossier) }
+    let!(:avis) { Avis.create(email: invited_email, dossier: dossier) }
+    let(:invitations_email) { true }
+
+    before do
+      expect(Avis).to receive(:avis_exists_and_email_belongs_to_avis?)
+        .with(avis.id.to_s, invited_email)
+        .and_return(invitations_email)
+      get :sign_up, params: { id: avis.id, email: invited_email }
+    end
+
+    context 'when the email belongs to the invitation' do
+      it { expect(subject.status).to eq(200) }
+      it { expect(assigns(:email)).to eq(invited_email) }
+      it { expect(assigns(:dossier)).to eq(dossier) }
+    end
+
+    context 'when the email does not belong to the invitation' do
+      let(:invitations_email) { false }
+
+      it { is_expected.to redirect_to root_path }
+    end
+  end
+
 end

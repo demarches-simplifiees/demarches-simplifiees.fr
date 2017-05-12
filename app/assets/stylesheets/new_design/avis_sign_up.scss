@@ -1,0 +1,92 @@
+@import "typography";
+@import "colors";
+
+.avis-sign-up {
+  display: flex;
+
+  .left,
+  .right {
+    width: 50%;
+    padding: 60px 86px;
+  }
+
+  .left {
+    p {
+      margin: auto;
+      max-width: 410px;
+      text-align: center;
+    }
+
+    .description {
+      font-size: 30px;
+      line-height: 1.3;
+    }
+
+    .dossier {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  }
+
+  .right {
+    background-color: $light-grey;
+
+    h1 {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 60px;
+    }
+
+    form {
+      max-width: 420px;
+    }
+
+    label,
+    input {
+      display: block;
+      width: 100%;
+    }
+
+    label {
+      font-size: 14px;
+      line-height: 1.57;
+      margin: 24px 0 8px;
+    }
+
+    input {
+      border: solid 1px $border-grey;
+      border-radius: 4px;
+      height: 56px;
+      padding: 0 15px;
+      font-family: Muli;
+      font-size: 14px;
+
+      &:disabled {
+        background-color: $border-grey;
+      }
+    }
+
+    button {
+      display: inline-block;
+      height: 60px;
+      line-height: 60px;
+      border: none;
+      border-radius: 60px;
+      background-color: $blue;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      width: 100%;
+      margin: 55px 0;
+
+      &:hover {
+        color: #FFFFFF;
+        text-decoration: none;
+        background-color: $light-blue;
+        cursor: pointer;
+      }
+    }
+  }
+}
