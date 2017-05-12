@@ -1,6 +1,5 @@
 class NotificationMailer < ApplicationMailer
-  default from: 'tps@apientreprise.fr',
-          to:  Proc.new { @user.email }
+  default to: Proc.new { @user.email }
 
   def send_notification dossier, mail_template
     vars_mailer(dossier)
