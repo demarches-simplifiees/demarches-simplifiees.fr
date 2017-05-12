@@ -4,8 +4,7 @@ class Commentaire < ActiveRecord::Base
 
   belongs_to :piece_justificative
 
-  after_save :notify_gestionnaires
-  after_save :notify_user
+  after_create :notify
 
   def header
     "#{email}, " + I18n.l(created_at.localtime, format: '%d %b %Y %H:%M')
@@ -13,15 +12,32 @@ class Commentaire < ActiveRecord::Base
 
   private
 
-  def notify_gestionnaires
-    if email == dossier.user.email || dossier.invites_user.pluck(:email).to_a.include?(email)
-      NotificationService.new('commentaire', self.dossier.id).notify
+  def notify
+    dossier_user_email = dossier.user.email
+    invited_users_emails = dossier.invites_user.pluck(:email).to_a
+
+    case email
+    when "contact@tps.apientreprise.fr"
+      # The commentaire is a copy of an automated notification email
+      # we sent to a user, so do nothing
+    when dossier_user_email, *invited_users_emails
+      # A user or an inved user posted a commentaire,
+      # we need to notify the gestionnaires
+
+      notify_gestionnaires
+    else
+      # A gestionnaire posted a commentaire,
+      # we need to notify the user
+
+      notify_user
     end
   end
 
+  def notify_gestionnaires
+    NotificationService.new('commentaire', self.dossier.id).notify
+  end
+
   def notify_user
-    if email != dossier.user.email && email != 'contact@tps.apientreprise.fr'
-      NotificationMailer.new_answer(dossier).deliver_now!
-    end
+    NotificationMailer.new_answer(dossier).deliver_now!
   end
 end
