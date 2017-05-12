@@ -9,7 +9,7 @@ class Gestionnaire < ActiveRecord::Base
   has_many :assign_to, dependent: :destroy
   has_many :procedures, through: :assign_to
   has_many :dossiers, -> { where.not(state: :draft) }, through: :procedures
-  has_many :dossiers_follow, through: :follows, source: :dossier
+  has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :follows
   has_many :preference_list_dossiers
 
@@ -72,10 +72,10 @@ class Gestionnaire < ActiveRecord::Base
   end
 
   def notifications_for procedure
-    procedure_ids = dossiers_follow.pluck(:procedure_id)
+    procedure_ids = followed_dossiers.pluck(:procedure_id)
 
     if procedure_ids.include?(procedure.id)
-      return dossiers_follow.where(procedure_id: procedure.id)
+      return followed_dossiers.where(procedure_id: procedure.id)
                  .inject(0) do |acc, dossier|
         acc += dossier.notifications.where(already_read: false).count
       end
@@ -84,7 +84,7 @@ class Gestionnaire < ActiveRecord::Base
   end
 
   def dossiers_with_notifications_count_for_procedure(procedure)
-    followed_dossiers_id = dossiers_follow.where(procedure: procedure).pluck(:id)
+    followed_dossiers_id = followed_dossiers.where(procedure: procedure).pluck(:id)
     Notification.unread.where(dossier_id: followed_dossiers_id).select(:dossier_id).distinct(:dossier_id).count
   end
 

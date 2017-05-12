@@ -25,7 +25,7 @@ class DossiersListGestionnaireService
   end
 
   def suivi
-    @suivi ||= @current_devise_profil.dossiers_follow.merge(dossiers_to_display)
+    @suivi ||= @current_devise_profil.followed_dossiers.merge(dossiers_to_display)
   end
 
   def nouveaux
