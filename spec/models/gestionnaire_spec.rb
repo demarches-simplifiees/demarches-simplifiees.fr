@@ -313,8 +313,8 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#dossier_with_notification_for' do
-    subject { gestionnaire.dossier_with_notification_for(procedure) }
+  describe '#dossiers_with_notifications_count_for_procedure' do
+    subject { gestionnaire.dossiers_with_notifications_count_for_procedure(procedure) }
 
     context 'without notifications' do
       it { is_expected.to eq(0) }

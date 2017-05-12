@@ -86,7 +86,7 @@ class Gestionnaire < ActiveRecord::Base
     0
   end
 
-  def dossier_with_notification_for procedure
+  def dossiers_with_notifications_count_for_procedure(procedure)
     procedure_ids = dossiers_follow.pluck(:procedure_id)
 
     if procedure_ids.include?(procedure.id)
