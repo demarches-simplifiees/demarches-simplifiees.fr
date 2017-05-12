@@ -17,7 +17,7 @@ class Commentaire < ActiveRecord::Base
     invited_users_emails = dossier.invites_user.pluck(:email).to_a
 
     case email
-    when "contact@tps.apientreprise.fr"
+    when I18n.t("dynamics.contact_email")
       # The commentaire is a copy of an automated notification email
       # we sent to a user, so do nothing
     when dossier_user_email, *invited_users_emails
