@@ -92,4 +92,52 @@ describe Backoffice::AvisController, type: :controller do
     end
   end
 
+  describe '.create_gestionnaire' do
+    let(:invited_email) { 'invited@avis.com' }
+    let(:dossier) { create(:dossier) }
+    let!(:avis) { Avis.create(email: invited_email, dossier: dossier) }
+    let(:avis_id) { avis.id }
+    let(:password) { '12345678' }
+    let(:created_gestionnaire) { Gestionnaire.find_by(email: invited_email) }
+    let(:invitations_email) { true }
+
+    before do
+      allow(Avis).to receive(:link_avis_to_gestionnaire)
+      expect(Avis).to receive(:avis_exists_and_email_belongs_to_avis?)
+        .with(avis_id.to_s, invited_email)
+        .and_return(invitations_email)
+
+      post :create_gestionnaire, params: { id: avis_id,
+                                           email: invited_email,
+                                           gestionnaire: {
+                                             password: password
+                                           } }
+    end
+
+    context 'when the email does not belong to the invitation' do
+      let(:invitations_email) { false }
+
+      it { is_expected.to redirect_to root_path }
+    end
+
+    context 'when the email belongs to the invitation' do
+      context 'when the gestionnaire creation succeeds' do
+        it { expect(created_gestionnaire).to be_present }
+        it { expect(created_gestionnaire.valid_password?(password)).to be true }
+
+        it { expect(Avis).to have_received(:link_avis_to_gestionnaire) }
+
+        it { expect(subject.current_gestionnaire).to eq(created_gestionnaire) }
+        it { is_expected.to redirect_to backoffice_dossier_path(dossier) }
+      end
+
+      context 'when the gestionnaire creation fails' do
+        let(:password) { '' }
+
+        it { expect(created_gestionnaire).to be_nil }
+        it { is_expected.to redirect_to avis_sign_up_path(avis_id, invited_email) }
+        it { expect(flash.alert).to eq('Password : Le mot de passe est vide') }
+      end
+    end
+  end
 end

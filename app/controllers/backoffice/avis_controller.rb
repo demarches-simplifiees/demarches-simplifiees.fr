@@ -1,7 +1,7 @@
 class Backoffice::AvisController < ApplicationController
 
-  before_action :authenticate_gestionnaire!, except: [:sign_up]
-  before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up]
+  before_action :authenticate_gestionnaire!, except: [:sign_up, :create_gestionnaire]
+  before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_gestionnaire]
 
   def create
     avis = Avis.new(create_params)
@@ -31,6 +31,23 @@ class Backoffice::AvisController < ApplicationController
     @dossier = Avis.includes(:dossier).find(params[:id]).dossier
 
     render layout: 'new_application'
+  end
+
+  def create_gestionnaire
+    email = params[:email]
+    password = params['gestionnaire']['password']
+
+    gestionnaire = Gestionnaire.new(email: email, password: password)
+
+    if gestionnaire.save
+      sign_in(gestionnaire, scope: :gestionnaire)
+      Avis.link_avis_to_gestionnaire(gestionnaire)
+      avis = Avis.find(params[:id])
+      redirect_to url_for(backoffice_dossier_path(avis.dossier_id))
+    else
+      flash[:alert] = gestionnaire.errors.full_messages.join('<br>')
+      redirect_to url_for(avis_sign_up_path(params[:id], email))
+    end
   end
 
   private
