@@ -288,6 +288,13 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq(1) }
     end
 
+    context 'when there is one notification read' do
+      let(:notification){ create(:notification, already_read: true) }
+      let!(:follow){ create(:follow, dossier: notification.dossier, gestionnaire: gestionnaire) }
+
+      it { is_expected.to eq(0) }
+    end
+
     context 'when there are many notifications for one dossier' do
       let(:notification){ create(:notification, already_read: false) }
       let(:notification2){ create(:notification, already_read: false, dossier: notification.dossier) }
@@ -303,6 +310,38 @@ describe Gestionnaire, type: :model do
       let!(:follow2){ create(:follow, dossier: notification2.dossier, gestionnaire: gestionnaire) }
 
       it { is_expected.to eq(2) }
+    end
+  end
+
+  describe '#dossier_with_notification_for' do
+    subject { gestionnaire.dossier_with_notification_for(procedure) }
+
+    context 'without notifications' do
+      it { is_expected.to eq(0) }
+    end
+
+    context 'with a followed dossier' do
+      let!(:dossier){create(:dossier, procedure: procedure, state: 'received')}
+      let!(:follow){ create(:follow, dossier: dossier, gestionnaire: gestionnaire) }
+
+      context 'with 1 notification' do
+        let!(:notification){ create(:notification, already_read: false, dossier: dossier) }
+
+        it { is_expected.to eq(1) }
+      end
+
+      context 'with 1 read notification' do
+        let!(:notification){ create(:notification, already_read: true, dossier: dossier) }
+
+        it { is_expected.to eq(0) }
+      end
+
+      context 'with 2 notification' do
+        let!(:notification){ create(:notification, already_read: false, dossier: dossier) }
+        let!(:notification2){ create(:notification, already_read: false, dossier: dossier) }
+
+        it { is_expected.to eq(1) }
+      end
     end
   end
 end
