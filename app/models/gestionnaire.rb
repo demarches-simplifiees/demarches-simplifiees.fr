@@ -9,6 +9,7 @@ class Gestionnaire < ActiveRecord::Base
   has_many :assign_to, dependent: :destroy
   has_many :procedures, through: :assign_to
   has_many :dossiers, -> { where.not(state: :draft) }, through: :procedures
+  has_many :dossiers_follow, through: :follows, source: :dossier
   has_many :follows
   has_many :preference_list_dossiers
 
@@ -16,10 +17,6 @@ class Gestionnaire < ActiveRecord::Base
   after_create :build_default_preferences_smart_listing_page
 
   include CredentialsSyncableConcern
-
-  def dossiers_follow
-    @dossiers_follow ||= dossiers.joins(:follows).where("follows.gestionnaire_id = #{id}")
-  end
 
   def procedure_filter
     return nil unless assign_to.pluck(:procedure_id).include?(self[:procedure_filter])
