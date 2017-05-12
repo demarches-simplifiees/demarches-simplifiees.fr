@@ -92,6 +92,26 @@ class Gestionnaire < ActiveRecord::Base
     notifications.pluck(:dossier_id).uniq.count
   end
 
+  def last_week_overview
+    start_date = DateTime.now.beginning_of_week
+
+    active_procedure_overviews = procedures
+                            .where(published: true)
+                            .all
+                            .map { |procedure| procedure.procedure_overview(start_date, dossiers_with_notifications_count_for_procedure(procedure)) }
+                            .select(&:had_some_activities?)
+
+    if active_procedure_overviews.count == 0 && notifications.count == 0
+      nil
+    else
+      {
+        start_date: start_date,
+        procedure_overviews: active_procedure_overviews,
+        notifications: notifications
+      }
+    end
+  end
+
   private
 
   def valid_couple_table_attr? table, column

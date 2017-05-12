@@ -347,4 +347,52 @@ describe Gestionnaire, type: :model do
       end
     end
   end
+
+  describe 'last_week_overview' do
+    let!(:gestionnaire2) { create(:gestionnaire) }
+    subject { gestionnaire2.last_week_overview }
+    let(:friday) { DateTime.new(2017, 5, 12) }
+    let(:monday) { DateTime.now.beginning_of_week }
+
+    before :each do
+      Timecop.freeze(friday)
+    end
+
+    context 'when no procedure published was active last week' do
+      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published: true) }
+      context 'when the gestionnaire has no notifications' do
+        it { is_expected.to eq(nil) }
+      end
+
+      context 'when the gestionnaire has one notification' do
+        before :each do
+          expect(gestionnaire2).to receive(:notifications).twice.and_return([1])
+        end
+
+        it { is_expected.to eq({ start_date: monday, procedure_overviews: [], notifications: [1] }) }
+      end
+    end
+
+    context 'when a procedure published was active' do
+      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published: true) }
+      let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
+
+      before :each do
+        expect_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
+      end
+
+      it { expect(gestionnaire.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
+    end
+
+    context 'when a procedure not published was active with no notifications' do
+      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published: false) }
+      let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
+
+      before :each do
+        allow_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
+      end
+
+      it { is_expected.to eq(nil) }
+    end
+  end
 end
