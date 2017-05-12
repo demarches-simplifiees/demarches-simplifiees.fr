@@ -45,27 +45,4 @@ describe Users::Dossiers::CommentairesController, type: :controller do
 
     end
   end
-
-  describe '#notify_user_with_mail' do
-    let(:commentaire){create(:commentaire)}
-
-    context 'when usager is writing a commentaire on dossier' do
-      before { sign_in commentaire.dossier.user }
-
-      it {
-        expect(NotificationMailer).to_not receive(:new_answer)
-        subject.send(:notify_user_with_mail, commentaire)
-      }
-    end
-
-    context 'when anybody else but usager is writing a commentaire' do
-      before { sign_in create(:user, email: 'administrateur@test.fr') }
-
-      it {
-        expect(NotificationMailer).to receive(:new_answer).and_return(NotificationMailer)
-        expect(NotificationMailer).to receive(:deliver_now!)
-        subject.send(:notify_user_with_mail, commentaire)
-      }
-    end
-  end
 end
