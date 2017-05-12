@@ -21,7 +21,7 @@ class NotificationMailer < ApplicationMailer
   def create_commentaire_for_notification
     Commentaire.create(
       dossier: @dossier,
-      email: "contact@tps.apientreprise.fr",
+      email: I18n.t("dynamics.contact_email"),
       body: ["[#{@obj}]", @body].join("<br><br>")
     )
   end
