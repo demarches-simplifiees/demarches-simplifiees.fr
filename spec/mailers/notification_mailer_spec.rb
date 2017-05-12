@@ -5,10 +5,23 @@ RSpec.describe NotificationMailer, type: :mailer do
     let(:user) { create(:user) }
     let(:dossier) { create(:dossier, user: user) }
     let(:email) { instance_double('email', object_for_dossier: 'object', body_for_dossier: 'body') }
+    let (:notifications_count_before) { Notification.count }
     subject { described_class.send_notification(dossier, email) }
 
     it { expect(subject.subject).to eq(email.object_for_dossier) }
     it { expect(subject.body).to eq(email.body_for_dossier) }
+
+    it "creates a commentaire, which is not notified" do
+      described_class.send_notification(dossier, email).deliver_now
+
+      commentaire = Commentaire.last
+      notifications_count_after = Notification.count
+
+      expect(commentaire.dossier).to eq(dossier)
+      expect(commentaire.email).to eq("contact@tps.apientreprise.fr")
+      expect(commentaire.body).to eq("[object]<br><br>body")
+      expect(notifications_count_before).to eq(notifications_count_after)
+    end
   end
 
   describe ".new_answer" do
