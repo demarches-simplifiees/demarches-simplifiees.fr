@@ -86,16 +86,9 @@ class Gestionnaire < ActiveRecord::Base
     0
   end
 
-  def dossier_with_notification_for procedure
-    procedure_ids = dossiers_follow.pluck(:procedure_id)
-
-    if procedure_ids.include?(procedure.id)
-      return dossiers_follow.where(procedure_id: procedure.id)
-                 .inject(0) do |acc, dossier|
-        acc += ((dossier.notifications.where(already_read: false).count) > 0 ? 1 : 0)
-      end
-    end
-    0
+  def dossiers_with_notifications_count_for_procedure(procedure)
+    followed_dossiers_id = dossiers_follow.where(procedure: procedure).pluck(:id)
+    Notification.unread.where(dossier_id: followed_dossiers_id).select(:dossier_id).distinct(:dossier_id).count
   end
 
   def dossiers_with_notifications_count

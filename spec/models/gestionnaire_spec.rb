@@ -313,8 +313,8 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#dossier_with_notification_for' do
-    subject { gestionnaire.dossier_with_notification_for(procedure) }
+  describe '#dossiers_with_notifications_count_for_procedure' do
+    subject { gestionnaire.dossiers_with_notifications_count_for_procedure(procedure) }
 
     context 'without notifications' do
       it { is_expected.to eq(0) }
@@ -336,11 +336,27 @@ describe Gestionnaire, type: :model do
         it { is_expected.to eq(0) }
       end
 
-      context 'with 2 notification' do
+      context 'with 2 notifications' do
         let!(:notification){ create(:notification, already_read: false, dossier: dossier) }
         let!(:notification2){ create(:notification, already_read: false, dossier: dossier) }
 
         it { is_expected.to eq(1) }
+      end
+
+      context 'with another dossier' do
+        let!(:dossier2){create(:dossier, procedure: procedure, state: 'received')}
+        let!(:follow2){ create(:follow, dossier: dossier2, gestionnaire: gestionnaire) }
+
+        context 'and some notifications' do
+          let!(:notification){ create(:notification, already_read: false, dossier: dossier) }
+          let!(:notification2){ create(:notification, already_read: false, dossier: dossier) }
+          let!(:notification3){ create(:notification, already_read: false, dossier: dossier) }
+
+          let!(:notification4){ create(:notification, already_read: false, dossier: dossier2) }
+          let!(:notification5){ create(:notification, already_read: false, dossier: dossier2) }
+
+          it { is_expected.to eq(2) }
+        end
       end
     end
   end
