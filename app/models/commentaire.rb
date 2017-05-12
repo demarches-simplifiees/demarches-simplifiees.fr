@@ -20,6 +20,8 @@ class Commentaire < ActiveRecord::Base
   end
 
   def notify_user
-    NotificationMailer.new_answer(dossier).deliver_now! unless (current_user.try(:email) == dossier.user.email || email == 'contact@tps.apientreprise.fr')
+    if email != dossier.user.email && email != 'contact@tps.apientreprise.fr'
+      NotificationMailer.new_answer(dossier).deliver_now!
+    end
   end
 end
