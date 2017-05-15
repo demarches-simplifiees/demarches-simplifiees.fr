@@ -213,6 +213,24 @@ fr:
       - oct.
       - nov.
       - déc.
+    month_names:
+      -
+      - janvier
+      - février
+      - mars
+      - avril
+      - mai
+      - juin
+      - juillet
+      - août
+      - septembre
+      - octobre
+      - novembre
+      - décembre
+    order:
+      - :day
+      - :month
+      - :year
     day_names:
       - dimanche
       - lundi
@@ -225,24 +243,6 @@ fr:
       default: "%d/%m/%Y"
       short: "%e %b"
       long: "%e %B %Y"
-      month_names:
-        -
-        - janvier
-        - février
-        - mars
-        - avril
-        - mai
-        - juin
-        - juillet
-        - août
-        - septembre
-        - octobre
-        - novembre
-        - décembre
-      order:
-        - :day
-        - :month
-        - :year
   datetime:
     distance_in_words:
       about_x_hours:
