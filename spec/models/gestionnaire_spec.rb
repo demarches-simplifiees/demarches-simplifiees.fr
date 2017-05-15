@@ -116,19 +116,6 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#dossiers_follow' do
-    let!(:dossier) { create :dossier, procedure: procedure, state: :initiated }
-
-    before do
-      create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
-    end
-
-    subject { gestionnaire.dossiers_follow }
-
-    it { expect(Follow.all.size).to eq 1 }
-    it { expect(subject.first).to eq dossier }
-  end
-
   describe '#build_default_preferences_list_dossier' do
     subject { gestionnaire.preference_list_dossiers }
 

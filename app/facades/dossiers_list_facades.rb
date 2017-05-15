@@ -18,7 +18,7 @@ class DossiersListFacades
   end
 
   def total_dossier_follow
-    @current_devise_profil.dossiers_follow.count
+    @current_devise_profil.followed_dossiers.count
   end
 
   def total_new_dossier
