@@ -26,6 +26,8 @@
       %li.footer-column
         %ul.footer-links
           %li.footer-link
+            %a{ href: '#', 'data-token' => '11c89e7ddb46fbcdcb7f8fe5fdfca818', onclick: 'mjOpenPopin(event, this)' } Newsletter
+          %li.footer-link
             = link_to "Contact",
               "mailto:#{t('dynamics.contact_email')}",
               :class => "footer-link"

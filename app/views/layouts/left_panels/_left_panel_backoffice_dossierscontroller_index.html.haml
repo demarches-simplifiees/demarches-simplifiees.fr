@@ -1,6 +1,6 @@
 #first-block
   .dossiers-en-cours
-    .count= current_gestionnaire.dossiers_follow.count
+    .count= current_gestionnaire.followed_dossiers.count
     .text SUIVIS
   .nouveaux-dossiers
     .count= current_gestionnaire.dossiers.nouveaux.count
@@ -28,7 +28,7 @@
           - if total_new > 0
             .badge.progress-bar-success{ title: 'Nouveaux dossiers' }
               = total_new
-          - unread_notif_count = procedure.notifications.unread.count
+          - unread_notif_count = current_gestionnaire.dossiers_with_notifications_count_for_procedure(procedure)
           - if unread_notif_count > 0
             .badge.progress-bar-warning{ title: 'Notifications' }
               = unread_notif_count
@@ -40,5 +40,5 @@
         = link_to backoffice_dossier_path(dossier.id) do
           .notification
             .dossier-index= "Dossier nº #{dossier.id}"
-            .updated-at-index= dossier.first_unread_notification.created_at.strftime('%d/%m %H:%M')
+            .updated-at-index= dossier.first_unread_notification.created_at.localtime.strftime('%d/%m %H:%M')
             .count= dossier.unreaded_notifications.count

@@ -85,7 +85,7 @@ module MailTemplateConcern
     when :libelle_procedure
       dossier.procedure.libelle
     when :date_de_decision
-      dossier.processed_at.present? ? dossier.processed_at.strftime("%d/%m/%Y") : ""
+      dossier.processed_at.present? ? dossier.processed_at.localtime.strftime("%d/%m/%Y") : ""
     else
       '--BALISE_NON_RECONNUE--'
     end

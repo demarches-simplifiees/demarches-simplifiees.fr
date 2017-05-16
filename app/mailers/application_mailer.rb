@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "tps@apientreprise.fr"
+  default from: "'Téléprocédures Simplifiées' <#{I18n.t('dynamics.contact_email')}>"
   layout 'mailer'
 end

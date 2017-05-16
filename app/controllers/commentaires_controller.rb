@@ -35,14 +35,11 @@ class CommentairesController < ApplicationController
     end
 
     @commentaire.body = params['texte_commentaire']
-    saved = false
     unless @commentaire.body.blank? && @commentaire.piece_justificative.nil?
-      saved = @commentaire.save unless flash.alert
+      @commentaire.save unless flash.alert
     else
       flash.alert = "Veuillez rédiger un message ou ajouter une pièce jointe."
     end
-
-    notify_user_with_mail(@commentaire) if saved
 
     if is_gestionnaire?
       unless current_gestionnaire.follow? @commentaire.dossier
@@ -62,11 +59,5 @@ class CommentairesController < ApplicationController
 
   def is_gestionnaire?
     false
-  end
-
-  private
-
-  def notify_user_with_mail(commentaire)
-    NotificationMailer.new_answer(commentaire.dossier).deliver_now! unless current_user.try(:email) == commentaire.dossier.user.email
   end
 end

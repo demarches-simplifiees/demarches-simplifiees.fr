@@ -1,14 +1,15 @@
 class NotificationMailer < ApplicationMailer
-  default from: 'tps@apientreprise.fr',
-          to:  Proc.new { @user.email }
+  default to: Proc.new { @user.email }
+
+  after_action :create_commentaire_for_notification, only: :send_notification
 
   def send_notification dossier, mail_template
     vars_mailer(dossier)
 
-    obj  = mail_template.object_for_dossier dossier
-    body = mail_template.body_for_dossier dossier
+    @obj  = mail_template.object_for_dossier dossier
+    @body = mail_template.body_for_dossier dossier
 
-    mail(subject: obj) { |format| format.html { body } }
+    mail(subject: @obj) { |format| format.html { @body } }
   end
 
   def new_answer dossier
@@ -16,6 +17,14 @@ class NotificationMailer < ApplicationMailer
   end
 
   private
+
+  def create_commentaire_for_notification
+    Commentaire.create(
+      dossier: @dossier,
+      email: I18n.t("dynamics.contact_email"),
+      body: ["[#{@obj}]", @body].join("<br><br>")
+    )
+  end
 
   def vars_mailer dossier
     @dossier = dossier
