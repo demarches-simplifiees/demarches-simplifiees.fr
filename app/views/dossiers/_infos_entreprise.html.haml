@@ -24,7 +24,7 @@
       .col-xs-8.entreprise-info= @facade.etablissement.naf
     .row
       .col-xs-4.entreprise-label Date de création :
-      .col-xs-8.entreprise-info= Time.at(@facade.entreprise.date_creation).strftime "%d-%m-%Y"
+      .col-xs-8.entreprise-info= Time.at(@facade.entreprise.date_creation).localtime.strftime "%d-%m-%Y"
     .row
       .col-xs-4.entreprise-label Effectif organisation :
       .col-xs-8.entreprise-info= @facade.entreprise.effectif

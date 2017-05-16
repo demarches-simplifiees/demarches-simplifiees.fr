@@ -29,8 +29,4 @@ class EntrepriseDecorator < Draper::Decorator
   def pretty_capital_social
     h.number_to_currency(capital_social, delimiter: ' ', unit: '€', format: '%n %u')
   end
-
-  def pretty_date_creation
-    Time.at(date_creation).strftime('%d-%m-%Y')
-  end
 end

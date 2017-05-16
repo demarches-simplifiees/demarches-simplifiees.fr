@@ -3,7 +3,7 @@ class WelcomeMailer < ApplicationMailer
 
     @user = user
 
-    mail(from: "tps@apientreprise.fr", to: user.email,
+    mail(to: user.email,
          subject: "Création de votre compte TPS")
   end
 end

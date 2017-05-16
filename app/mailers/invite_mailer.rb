@@ -19,8 +19,7 @@ class InviteMailer < ApplicationMailer
   end
 
   def send_mail email, subject, reply_to
-    mail(from: "tps@apientreprise.fr",
-         to: email,
+    mail(to: email,
          subject: subject,
          reply_to: reply_to)
   end

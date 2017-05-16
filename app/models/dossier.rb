@@ -289,7 +289,7 @@ class Dossier < ActiveRecord::Base
     else
       parts = [
         "Dossier déposé le ",
-        initiated_at.strftime("%d/%m/%Y"),
+        initiated_at.localtime.strftime("%d/%m/%Y"),
         " sur la procédure ",
         procedure.libelle,
         " gérée par l'organisme ",
