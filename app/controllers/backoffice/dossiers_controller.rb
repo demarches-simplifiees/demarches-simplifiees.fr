@@ -190,11 +190,10 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   private
 
   def ensure_gestionnaire_is_authorized
-    current_gestionnaire.dossiers.find(params[:id])
-
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: '/backoffice')
+    unless current_gestionnaire.can_view_dossier?(params[:id])
+      flash.alert = t('errors.messages.dossier_not_found')
+      redirect_to url_for(controller: '/backoffice')
+    end
   end
 
   def create_dossier_facade dossier_id

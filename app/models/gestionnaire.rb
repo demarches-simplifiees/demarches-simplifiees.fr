@@ -25,6 +25,11 @@ class Gestionnaire < ActiveRecord::Base
     self[:procedure_filter]
   end
 
+  def can_view_dossier?(dossier_id)
+    avis.where(dossier_id: dossier_id).any? ||
+      dossiers.where(id: dossier_id).any?
+  end
+
   def toggle_follow_dossier dossier_id
     dossier = dossier_id
     dossier = Dossier.find(dossier_id) unless dossier_id.class == Dossier
