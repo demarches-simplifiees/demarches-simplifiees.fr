@@ -1,4 +1,4 @@
-exclude: 'app/assets/stylesheets/reset.scss'
+exclude: 'app/assets/stylesheets/new_design/reset.scss'
 
 linters:
   BangFormat:
