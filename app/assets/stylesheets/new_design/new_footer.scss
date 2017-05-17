@@ -10,23 +10,25 @@
 }
 
 .footer-inner-content {
-  width: $page-width;
-  margin: 0 auto;
+  @extend %page-width-container;
 }
 
 .footer-columns {
   @extend %horizontal-list;
+  justify-content: flex-start;
 }
-
-$footer-column-width: 320px;
-$footer-column-count: 3;
 
 .footer-column {
   @extend %horizontal-list-item;
-  width: $footer-column-width;
-  margin-right: calc((#{$page-width} - (#{$footer-column-width} * #{$footer-column-count})) / (#{$footer-column-count} - 1));
   font-size: 14px;
   vertical-align: top;
+  flex-grow: 1;
+  min-width: 320px;
+
+  @media (max-width: 1000px) {
+    width: 100%;
+    margin-bottom: 14px;
+  }
 }
 
 .footer-logos,

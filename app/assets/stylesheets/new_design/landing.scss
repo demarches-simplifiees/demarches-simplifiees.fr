@@ -12,12 +12,30 @@
 }
 
 .landing-panel-inner-content {
-  width: $page-width;
-  margin: 0 auto;
+  @extend %page-width-container;
+}
+
+$landing-breakpoint: 1040px;
+
+.hero-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  @media (max-width: $landing-breakpoint) {
+    justify-content: center;
+  }
+}
+
+.hero-text {
+  max-width: 500px;
+
+  @media (max-width: $landing-breakpoint) {
+    margin: auto;
+  }
 }
 
 .hero-tagline {
-  width: 500px;
   font-size: 30px;
   margin-bottom: 0px;
 }
@@ -29,12 +47,16 @@
   font-weight: bold;
 }
 
-.hero-text {
-  width: 500px;
-}
-
 .hero-illustration {
-  width: 500px;
+  max-width: 500px;
+
+  img {
+    max-width: 100%;
+  }
+
+  @media (max-width: 1030px) {
+    margin: auto;
+  }
 }
 
 .hero-button {
@@ -69,6 +91,7 @@
 }
 
 .landing-panel-title {
+  width: 100%;
   font-size: 30px;
   font-weight: normal;
   text-align: center;
@@ -86,15 +109,22 @@
 
 .features {
   @extend %horizontal-list;
-}
+  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
 
-$feature-width: 320px;
-$features-count: 3;
+  @media (max-width: $landing-breakpoint) {
+    justify-content: center;
+  }
+}
 
 .feature {
   @extend %horizontal-list-item;
-  width: $feature-width;
-  margin-right: calc((#{$page-width} - (#{$feature-width} * #{$features-count})) / (#{$features-count} - 1));
+  width: 320px;
+
+  @media (max-width: $landing-breakpoint) {
+    margin: 15px 20px;
+  }
 }
 
 .feature-text {
@@ -116,18 +146,27 @@ $features-count: 3;
 
 .quotes {
   @extend %horizontal-list;
-}
+  width: 100%;
+  justify-content: space-between;
 
-$quote-width: 500px;
-$quote-count: 2;
+  @media (max-width: $landing-breakpoint) {
+    justify-content: center;
+  }
+}
 
 .quote {
   @extend %horizontal-list-item;
-  width: $quote-width;
-  margin-right: calc((#{$page-width} - (#{$quote-width} * #{$quote-count}))/ (#{$quote-count} - 1));
+  max-width: 500px;
   background-color: #FFFFFF;
   box-shadow: 0 4px 16px 0 rgba(153, 153, 153, 0.2);
   padding: 24px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  @media (max-width: $landing-breakpoint) {
+    margin: 15px 0;
+  }
 }
 
 .quote-quotation-mark {
@@ -136,13 +175,16 @@ $quote-count: 2;
 
 .quote-content {
   font-size: 18px;
-  width: 388px;
   margin-bottom: 24px;
+}
+
+.quote-content-wrapper {
+  margin-left: 20px;
+  width: 100%;
 }
 
 .quote-author {
   font-size: 14px;
-  margin-left: 64px;
 }
 
 .quote-author-name {
@@ -155,16 +197,18 @@ $quote-count: 2;
 
 .numbers {
   @extend %horizontal-list;
+  justify-content: space-around;
+  width: 100%;
 }
-
-$number-width: 320px;
-$number-count: 3;
 
 .number {
   @extend %horizontal-list-item;
-  width: $number-width;
-  margin-right: calc((#{$page-width} - (#{$number-width} * #{$number-count}))/ (#{$number-count} - 1));
+  width: 320px;
   text-align: center;
+
+  @media (max-width: $landing-breakpoint) {
+    margin-bottom: 15px;
+  }
 }
 
 .number-value {
@@ -178,30 +222,45 @@ $number-count: 3;
   font-size: 20px;
 }
 
+$users-breakpoint: 950px;
+
 .users {
   @extend %horizontal-list;
-}
+  justify-content: space-between;
+  width: 100%;
 
-$image-width: 170px;
-$images-total-width: $image-width * 5;
-$images-count: 5;
+  @media (max-width: $users-breakpoint) {
+    justify-content: space-around;
+  }
+}
 
 .user {
   @extend %horizontal-list-item;
-  margin-right: calc((#{$page-width} - (#{$images-total-width}))/ (#{$images-count} - 1));
+  width: 170px;
 
   &:hover {
     opacity: 0.6;
   }
+
+  @media (max-width: $users-breakpoint) {
+    margin: 0 15px 15px;
+  }
 }
 
 .user-image {
-  width: $image-width;
+  width: 170px;
 }
 
 .cta-panel {
   background-color: $blue;
   color: #FFFFFF;
+}
+
+.cta-panel-wrapper {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .cta-panel-title {
@@ -212,22 +271,21 @@ $images-count: 5;
 
 .cta-panel-explanation {
   font-size: 24px;
-  margin-bottom: 0;
+  margin-bottom: 10px;
 }
 
-$cta-panel-button-height: 60px;
 $cta-panel-button-border-size: 2px;
 
 .cta-panel-button {
   @include horizontal-padding(30px);
 
   display: block;
-  height: $cta-panel-button-height;
-  line-height: $cta-panel-button-height - (2 * $cta-panel-button-border-size);
-  border-radius: $cta-panel-button-height;
+  padding: 10px;
+  border-radius: 100px;
   border: $cta-panel-button-border-size solid #FFFFFF;
   color: #FFFFFF;
   font-size: 24px;
+  text-align: center;
 
   &:hover {
     color: #FFFFFF;
