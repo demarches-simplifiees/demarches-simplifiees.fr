@@ -1,4 +1,4 @@
-Bonjour <%= @invite.email %>
+Bonjour,
 
 L'utilisateur <%= @invite.email_sender %> souhaite que vous participiez à l'élaboration d'un dossier sur la plateforme TPS.
 
@@ -6,7 +6,6 @@ Cette plateforme permet à ses utilisateurs d'établir des dossiers 100% en lign
 
 Afin de répondre à cette invitation, merci de vous inscrit avec l'adresse email <%= @invite.email %> sur <%= users_dossiers_invite_url(@invite.id)+"?email=#{@invite.email}" %>.
 
-Bonne journée.
+Bonne journée,
 
----
 L'équipe Téléprocédures Simplifiées
