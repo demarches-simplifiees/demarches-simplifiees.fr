@@ -25,10 +25,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     unless @facade.nil?
       @champs_private = @facade.champs_private
 
-      @headers_private = @champs_private.inject([]) do |acc, champ|
-        acc.push(champ) if champ.type_champ == 'header_section'
-        acc
-      end
+      @headers_private = @champs_private.select { |champ| champ.type_champ == 'header_section' }
     end
 
     Notification.where(dossier_id: params[:id].to_i).update_all already_read: true
