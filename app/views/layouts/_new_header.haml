@@ -1,7 +1,5 @@
 .new-header{ class: current_page?(root_path) ? nil : 'new-header-with-border' }
   .header-inner-content
-    %img.header-logo.pull-left{ src: image_url("header/logo-tps.svg") }
+    %img.header-logo{ src: image_url("header/logo-tps.svg") }
 
-    = link_to "Connexion", new_user_session_path, :class => "header-login-button pull-right"
-
-    .clear-fix
+    = link_to "Connexion", new_user_session_path, class: "header-login-button"
