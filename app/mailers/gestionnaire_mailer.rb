@@ -9,6 +9,7 @@ class GestionnaireMailer < ApplicationMailer
   end
 
   def last_week_overview(gestionnaire, overview)
+    headers['X-mailjet-campaign'] = 'last_week_overview'
     send_mail gestionnaire.email, overview, 'Résumé de la semaine'
   end
 
