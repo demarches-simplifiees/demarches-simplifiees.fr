@@ -8,13 +8,16 @@ class Backoffice::AvisController < ApplicationController
     avis = Avis.new(create_params)
     avis.dossier = dossier
 
-    gestionnaire = Gestionnaire.find_by(email: create_params[:email])
+    email = create_params[:email]
+    gestionnaire = Gestionnaire.find_by(email: email)
     if gestionnaire
       avis.gestionnaire = gestionnaire
       avis.email = nil
     end
 
-    avis.save
+    if avis.save
+      flash[:notice] = "Votre demande d'avis a bien été envoyée à #{email}"
+    end
 
     redirect_to backoffice_dossier_path(dossier)
   end
