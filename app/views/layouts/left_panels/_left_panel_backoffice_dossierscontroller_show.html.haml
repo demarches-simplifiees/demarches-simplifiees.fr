@@ -51,12 +51,12 @@
             - if notification.liste.size > 1
               .type= "Plusieurs attributs ont été changés, dont: #{notification.liste.join(" ")}"
             - else
-              .type= "Un attribut à été changé: #{notification.liste.last}"
+              .type= "Un attribut a été changé: #{notification.liste.last}"
           - elsif ['piece_justificative'].include?(notification.type_notif)
             - if notification.liste.size > 1
               .type= "Plusieurs pièces jointes ont été changés, dont: #{notification.liste.join(" ")}"
             - else
-              .type= "Une pièce jointe à été changée: #{notification.liste.last}"
+              .type= "Une pièce jointe a été changée: #{notification.liste.last}"
           - else
             .type= notification.liste.last
           .split-hr
