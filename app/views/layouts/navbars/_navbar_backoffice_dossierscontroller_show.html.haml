@@ -28,6 +28,8 @@
             - else
               = t('dynamics.dossiers.followers.empty')
           %h4= t('dynamics.dossiers.invites.title')
+          %p
+            %b Attention, les invitations sur les dossiers vont disparaître en faveur des avis externes situés en bas de la page
           %ul
             - unless @facade.invites.empty?
               - @facade.invites.each do |invite|
