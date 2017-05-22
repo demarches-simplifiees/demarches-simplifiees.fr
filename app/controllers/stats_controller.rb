@@ -1,4 +1,5 @@
 class StatsController < ApplicationController
+  layout "new_application"
 
   def index
     procedures = Procedure.where(:published => true)
