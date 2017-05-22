@@ -24,6 +24,7 @@ class Backoffice::AvisController < ApplicationController
 
   def update
     if avis.update(update_params)
+      NotificationService.new('avis', params[:dossier_id]).notify
       flash[:notice] = 'Merci, votre avis a été enregistré.'
     end
 

@@ -39,6 +39,11 @@ describe Backoffice::AvisController, type: :controller do
 
     subject { post :update, params: { dossier_id: dossier.id, id: avis.id, avis: { answer: "Ok ce dossier est valide." } } }
 
+    before :each do
+      notification = double('notification', notify: true)
+      allow(NotificationService).to receive(:new).and_return(notification)
+    end
+
     context 'when gestionnaire is not authenticated' do
       it { is_expected.to redirect_to new_user_session_path }
       it { expect(avis.answer).to be_nil }
@@ -54,6 +59,7 @@ describe Backoffice::AvisController, type: :controller do
         it do
           subject
           expect(avis.reload.answer).to eq("Ok ce dossier est valide.")
+          expect(NotificationService).to have_received(:new).at_least(:once)
         end
       end
 
