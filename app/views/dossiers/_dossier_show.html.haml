@@ -1,3 +1,5 @@
+= render partial: 'dossiers/edit_avis', locals: { dossier_facade: @facade }
+
 = render partial: 'dossiers/messagerie', locals: { dossier_facade: @facade }
 
 - if @facade.procedure.individual_with_siret
@@ -51,8 +53,7 @@
         = render partial: '/users/carte/map', locals: { dossier: @facade.dossier }
         = render partial: 'users/carte/init_carto', locals: { dossier: @facade.dossier }
 
-
-- if @current_gestionnaire && gestionnaire_signed_in? && @champs_private.count > 0
+- if @current_gestionnaire && gestionnaire_signed_in? && current_gestionnaire.assigned_on_procedure?(@facade.dossier.procedure_id) && @champs_private.count > 0
   .default-data-block.default_visible
     .row.show-block#private-fields
       .header
@@ -65,3 +66,5 @@
           = (private_fields_count == 1) ? "1 champ" : "#{private_fields_count} champs"
       .body
         = render partial: '/dossiers/infos_private_fields'
+
+= render partial: 'dossiers/avis', locals: { dossier_facade: @facade }

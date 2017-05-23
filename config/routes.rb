@@ -167,6 +167,8 @@ Rails.application.routes.draw do
 
     resource :private_formulaire
 
+    get 'invitations'
+
     resources :dossiers do
       post 'receive' => 'dossiers#receive'
       post 'refuse' => 'dossiers#refuse'
@@ -179,6 +181,7 @@ Rails.application.routes.draw do
       post 'reopen' => 'dossiers#reopen'
       put 'follow' => 'dossiers#follow'
       resources :commentaires, only: [:index]
+      resources :avis, only: [:create, :update]
     end
 
     namespace :dossiers do

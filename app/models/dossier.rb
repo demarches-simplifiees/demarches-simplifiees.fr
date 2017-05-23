@@ -25,6 +25,7 @@ class Dossier < ActiveRecord::Base
   has_many :invites_gestionnaires, class_name: 'InviteGestionnaire', dependent: :destroy
   has_many :follows
   has_many :notifications, dependent: :destroy
+  has_many :avis, dependent: :destroy
 
   belongs_to :procedure
   belongs_to :user

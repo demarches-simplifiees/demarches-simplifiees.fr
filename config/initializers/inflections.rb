@@ -15,6 +15,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular 'type_de_champ', 'types_de_champ'
   inflect.irregular 'type_de_champ_private', 'types_de_champ_private'
   inflect.irregular 'assign_to', 'assign_tos'
+  inflect.irregular('avis', 'avis')
 end
 
 # These inflection rules are supported but not enabled by default:
@@ -24,4 +25,5 @@ end
 ActiveSupport::Inflector.inflections(:fr) do |inflect|
   inflect.plural(/$/, 's')
   inflect.plural(/(hib|ch|bij|caill|p|gen|jouj)ou$/i, '\1oux')
+  inflect.irregular('avis', 'avis')
 end

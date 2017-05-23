@@ -14,6 +14,8 @@ class RootController < ApplicationController
       return redirect_to admin_procedures_path
 
     elsif gestionnaire_signed_in?
+      return redirect_to backoffice_invitations_path if current_gestionnaire.avis.any?
+
       procedure_id = current_gestionnaire.procedure_filter
       if procedure_id.nil?
         procedure_list = current_gestionnaire.procedures

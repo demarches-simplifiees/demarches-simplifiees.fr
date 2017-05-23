@@ -4,10 +4,13 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   before_action :ensure_gestionnaire_is_authorized, only: :show
 
   def index
+    return redirect_to backoffice_invitations_path if current_gestionnaire.avis.any?
+
     procedure = current_gestionnaire.procedure_filter
 
     if procedure.nil?
       procedure_list = dossiers_list_facade.gestionnaire_procedures_name_and_id_list
+
       if procedure_list.count == 0
         flash.alert = "Vous n'avez aucune procédure d'affectée."
         return redirect_to root_path
@@ -29,6 +32,8 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     end
 
     Notification.where(dossier_id: params[:id].to_i).update_all already_read: true
+
+    @new_avis = Avis.new(introduction: "Bonjour, merci de me donner votre avis sur ce dossier.")
   end
 
   def filter
@@ -185,11 +190,10 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   private
 
   def ensure_gestionnaire_is_authorized
-    current_gestionnaire.dossiers.find(params[:id])
-
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: '/backoffice')
+    unless current_gestionnaire.can_view_dossier?(params[:id])
+      flash.alert = t('errors.messages.dossier_not_found')
+      redirect_to url_for(controller: '/backoffice')
+    end
   end
 
   def create_dossier_facade dossier_id
