@@ -5,10 +5,6 @@ class API::V1::ProceduresController < APIController
   error code: 401, desc: "Non authorisé"
   error code: 404, desc: "Procédure inconnue"
 
-  meta champs: {
-
-       }
-
   def show
     procedure = current_administrateur.procedures.find(params[:id]).decorate
 
