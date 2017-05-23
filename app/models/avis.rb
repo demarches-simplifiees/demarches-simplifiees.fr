@@ -1,6 +1,7 @@
 class Avis < ApplicationRecord
   belongs_to :dossier
   belongs_to :gestionnaire
+  belongs_to :claimant, class_name: 'Gestionnaire'
 
   after_create :notify_gestionnaire
 

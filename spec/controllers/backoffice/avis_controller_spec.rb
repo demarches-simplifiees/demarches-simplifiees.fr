@@ -75,7 +75,7 @@ describe Backoffice::AvisController, type: :controller do
   describe '.sign_up' do
     let(:invited_email) { 'invited@avis.com' }
     let(:dossier) { create(:dossier) }
-    let!(:avis) { Avis.create(email: invited_email, dossier: dossier) }
+    let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
     let(:invitations_email) { true }
 
     context 'when the new gestionnaire has never signed up' do
@@ -101,7 +101,7 @@ describe Backoffice::AvisController, type: :controller do
 
     context 'when the gestionnaire has already signed up and belongs to the invitation' do
       let(:gestionnaire) { create(:gestionnaire, email: invited_email) }
-      let!(:avis) { Avis.create(dossier: dossier, gestionnaire: gestionnaire) }
+      let!(:avis) { create(:avis, dossier: dossier, gestionnaire: gestionnaire) }
 
       context 'when the gestionnaire is authenticated' do
         before do
@@ -123,7 +123,7 @@ describe Backoffice::AvisController, type: :controller do
 
     context 'when the gestionnaire has already signed up / is authenticated and does not belong to the invitation' do
       let(:gestionnaire) { create(:gestionnaire, email: 'other@gmail.com') }
-      let!(:avis) { Avis.create(email: invited_email, dossier: dossier) }
+      let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
 
       before do
         sign_in gestionnaire
@@ -138,7 +138,7 @@ describe Backoffice::AvisController, type: :controller do
   describe '.create_gestionnaire' do
     let(:invited_email) { 'invited@avis.com' }
     let(:dossier) { create(:dossier) }
-    let!(:avis) { Avis.create(email: invited_email, dossier: dossier) }
+    let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
     let(:avis_id) { avis.id }
     let(:password) { '12345678' }
     let(:created_gestionnaire) { Gestionnaire.find_by(email: invited_email) }

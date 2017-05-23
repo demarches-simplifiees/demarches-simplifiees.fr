@@ -5,7 +5,7 @@ class Backoffice::AvisController < ApplicationController
   before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_gestionnaire]
 
   def create
-    avis = Avis.new(create_params)
+    avis = Avis.new(create_params.merge(claimant: current_gestionnaire))
     avis.dossier = dossier
 
     email = create_params[:email]

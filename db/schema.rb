@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170425100757) do
+ActiveRecord::Schema.define(version: 20170523092900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,8 @@ ActiveRecord::Schema.define(version: 20170425100757) do
     t.integer  "dossier_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.integer  "claimant_id",     null: false
+    t.index ["claimant_id"], name: "index_avis_on_claimant_id", using: :btree
     t.index ["dossier_id"], name: "index_avis_on_dossier_id", using: :btree
     t.index ["gestionnaire_id"], name: "index_avis_on_gestionnaire_id", using: :btree
   end
@@ -446,6 +448,7 @@ ActiveRecord::Schema.define(version: 20170425100757) do
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id", using: :btree
   end
 
+  add_foreign_key "avis", "gestionnaires", column: "claimant_id"
   add_foreign_key "cerfas", "dossiers"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"

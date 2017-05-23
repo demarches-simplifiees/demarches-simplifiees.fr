@@ -1,9 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe Avis, type: :model do
+  let(:claimant) { create(:gestionnaire) }
+
   describe '.email_to_display' do
     let(:invited_email) { 'invited@avis.com' }
-    let!(:avis) { Avis.create(email: invited_email, dossier: create(:dossier)) }
+    let!(:avis) do
+      avis = create(:avis, email: invited_email, dossier: create(:dossier))
+      avis.gestionnaire = nil
+      avis
+    end
 
     subject { avis.email_to_display }
 
@@ -12,7 +18,7 @@ RSpec.describe Avis, type: :model do
     end
 
     context 'when gestionnaire is known' do
-      let!(:avis) { Avis.create(email: nil, gestionnaire: create(:gestionnaire), dossier: create(:dossier)) }
+      let!(:avis) { create(:avis, email: nil, gestionnaire: create(:gestionnaire), dossier: create(:dossier)) }
 
       it{ is_expected.to eq(avis.gestionnaire.email) }
     end
@@ -55,7 +61,7 @@ RSpec.describe Avis, type: :model do
   describe '.avis_exists_and_email_belongs_to_avis' do
     let(:dossier) { create(:dossier) }
     let(:invited_email) { 'invited@avis.com' }
-    let!(:avis) { Avis.create(email: invited_email, dossier: dossier) }
+    let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
 
     subject { Avis.avis_exists_and_email_belongs_to_avis?(avis_id, email) }
 

@@ -13,5 +13,11 @@ FactoryGirl.define do
         avis.dossier = create :dossier
       end
     end
+
+    before(:create) do |avis, _evaluator|
+      unless avis.claimant
+        avis.claimant = create :gestionnaire
+      end
+    end
   end
 end
