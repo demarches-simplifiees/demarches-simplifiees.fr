@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170414095411) do
+ActiveRecord::Schema.define(version: 20170523081220) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -344,7 +344,7 @@ ActiveRecord::Schema.define(version: 20170414095411) do
     t.string   "lien_notice"
     t.boolean  "for_individual",        default: false
     t.boolean  "individual_with_siret", default: false
-    t.date     "auto_archive_on"
+    t.datetime "auto_archive_on"
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|
