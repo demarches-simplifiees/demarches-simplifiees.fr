@@ -6,9 +6,6 @@ class API::V1::DossiersController < APIController
   error code: 401, desc: "Non authorisé"
   error code: 404, desc: "Procédure inconnue"
 
-  meta champs: {
-       }
-
   def index
     procedure = current_administrateur.procedures.find(params[:procedure_id])
     dossiers = procedure.dossiers.where.not(state: :draft).paginate(page: params[:page])
@@ -24,10 +21,6 @@ class API::V1::DossiersController < APIController
   param :token, String, desc: "Token administrateur", required: true
   error code: 401, desc: "Non authorisé"
   error code: 404, desc: "Procédure ou dossier inconnu"
-
-  meta champs: {
-
-       }
 
   def show
     procedure = current_administrateur.procedures.find(params[:procedure_id])
