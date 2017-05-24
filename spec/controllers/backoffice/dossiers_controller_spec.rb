@@ -127,6 +127,13 @@ describe Backoffice::DossiersController, type: :controller do
         it { expect(subject.status).to eq(200) }
         it { expect(subject.body).to include("Votre avis est sollicité sur le dossier") }
         it { expect(subject.body).to_not include("Invitez une personne externe à consulter le dossier et à vous donner un avis sur celui ci.") }
+
+        describe 'the notifications are not marked as read' do
+          it do
+            expect(Notification).not_to receive(:where)
+            subject
+          end
+        end
       end
     end
 

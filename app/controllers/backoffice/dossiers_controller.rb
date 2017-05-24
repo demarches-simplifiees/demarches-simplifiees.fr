@@ -32,7 +32,11 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       @headers_private = @champs_private.select { |champ| champ.type_champ == 'header_section' }
     end
 
-    Notification.where(dossier_id: dossier_id).update_all already_read: true
+    # if the current_gestionnaire does not own the dossier, it is here to give an advice
+    # and it should not remove the notifications
+    if current_gestionnaire.dossiers.find_by(id: dossier_id).present?
+      Notification.where(dossier_id: dossier_id).update_all(already_read: true)
+    end
 
     @new_avis = Avis.new(introduction: "Bonjour, merci de me donner votre avis sur ce dossier.")
   end
