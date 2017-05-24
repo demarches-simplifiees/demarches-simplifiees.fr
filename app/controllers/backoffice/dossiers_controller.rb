@@ -23,7 +23,8 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   def show
-    create_dossier_facade params[:id]
+    dossier_id = params[:id]
+    create_dossier_facade dossier_id
 
     unless @facade.nil?
       @champs_private = @facade.champs_private
@@ -31,7 +32,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       @headers_private = @champs_private.select { |champ| champ.type_champ == 'header_section' }
     end
 
-    Notification.where(dossier_id: params[:id].to_i).update_all already_read: true
+    Notification.where(dossier_id: dossier_id).update_all already_read: true
 
     @new_avis = Avis.new(introduction: "Bonjour, merci de me donner votre avis sur ce dossier.")
   end

@@ -97,7 +97,7 @@ describe Backoffice::DossiersController, type: :controller do
 
       describe 'all notifications unread are changed' do
         it do
-          expect(Notification).to receive(:where).with(dossier_id: dossier_id).and_return(Notification::ActiveRecord_Relation)
+          expect(Notification).to receive(:where).with(dossier_id: dossier_id.to_s).and_return(Notification::ActiveRecord_Relation)
           expect(Notification::ActiveRecord_Relation).to receive(:update_all).with(already_read: true).and_return(true)
 
           subject
