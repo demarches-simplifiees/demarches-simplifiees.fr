@@ -101,6 +101,10 @@ gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git', require: false
 
 gem 'select2-rails'
 
+# PDF Generation
+gem 'prawn', '~> 2.0.1'
+gem 'prawn_rails', '~> 0.0.11'
+
 group :test do
   gem 'capybara'
   gem 'launchy'
