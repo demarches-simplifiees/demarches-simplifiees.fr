@@ -1,3 +1,5 @@
+= render partial: 'dossiers/edit_avis', locals: { dossier_facade: @facade }
+
 = render partial: 'dossiers/messagerie', locals: { dossier_facade: @facade }
 
 - if @facade.procedure.individual_with_siret

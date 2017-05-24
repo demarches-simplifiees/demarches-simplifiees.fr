@@ -181,7 +181,7 @@ Rails.application.routes.draw do
       post 'reopen' => 'dossiers#reopen'
       put 'follow' => 'dossiers#follow'
       resources :commentaires, only: [:index]
-      resources :avis, only: [:create]
+      resources :avis, only: [:create, :update]
     end
 
     namespace :dossiers do
