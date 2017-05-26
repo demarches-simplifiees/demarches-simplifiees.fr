@@ -66,7 +66,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def self.active id
-    Procedure.where(archived: false, published: true).find(id)
+    not_archived.where(published: true).find(id)
   end
 
   def switch_types_de_champ index_of_first_element
