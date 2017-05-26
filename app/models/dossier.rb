@@ -63,7 +63,7 @@ class Dossier < ActiveRecord::Base
   scope :waiting_for_user,          -> { not_archived.state_waiting_for_user.order_by_updated_at(:asc) }
   scope :ouvert,                    -> { not_archived.state_ouvert.order_by_updated_at(:asc) }
   scope :a_instruire,               -> { not_archived.state_a_instruire.order_by_updated_at(:asc) }
-  scope :downloadable,              -> { state_not_brouillon.order_by_updated_at("ASC") }
+  scope :downloadable,              -> { state_not_brouillon.order_by_updated_at(:asc) }
 
   accepts_nested_attributes_for :individual
 
