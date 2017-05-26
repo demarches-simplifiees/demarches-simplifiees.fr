@@ -73,4 +73,13 @@
             :ytitle => "Jours",
             :colors => ["rgba(61, 149, 236, 1)"]
 
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title Temps de remplissage moyen d'un dossier
+
+      .chart-container
+        .chart
+          = line_chart @dossier_filling_mean_time,
+            :ytitle => "Minutes",
+            :colors => ["rgba(61, 149, 236, 1)"]
+
     .clearfix

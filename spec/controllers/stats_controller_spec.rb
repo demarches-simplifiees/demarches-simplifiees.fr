@@ -170,4 +170,56 @@ describe StatsController, type: :controller do
 
     it { expect(subject).to eq(@expected_hash) }
   end
+
+  describe "#dossier_filling_mean_time" do
+    # Month-2: mean 30 minutes
+    #  procedure_1: mean 20 minutes
+    #   dossier_p1_a: 30 minutes
+    #   dossier_p1_b: 10 minutes
+    #  procedure_2: mean 40 minutes
+    #    dossier_p2_a: 80 minutes, for twice the fields
+    #
+    # Month-1: mean 50 minutes
+    #   procedure_1: mean 50 minutes
+    #     dossier_p1_c: 50 minutes
+
+    before do
+      procedure_1 = FactoryGirl.create(:procedure, :with_type_de_champ, :types_de_champ_count => 24)
+      procedure_2 = FactoryGirl.create(:procedure, :with_type_de_champ, :types_de_champ_count => 48)
+      dossier_p1_a = FactoryGirl.create(:dossier,
+        :procedure    => procedure_1,
+        :created_at   => 2.months.ago.beginning_of_month,
+        :initiated_at => 2.months.ago.beginning_of_month + 30.minutes,
+        :processed_at => 2.months.ago.beginning_of_month + 1.day)
+      dossier_p1_b = FactoryGirl.create(:dossier,
+        :procedure    => procedure_1,
+        :created_at   => 2.months.ago.beginning_of_month,
+        :initiated_at => 2.months.ago.beginning_of_month + 10.minutes,
+        :processed_at => 2.months.ago.beginning_of_month + 1.day)
+      dossier_p1_c = FactoryGirl.create(:dossier,
+        :procedure    => procedure_1,
+        :created_at   => 1.months.ago.beginning_of_month,
+        :initiated_at => 1.months.ago.beginning_of_month + 50.minutes,
+        :processed_at => 1.months.ago.beginning_of_month + 1.day)
+      dossier_p2_a = FactoryGirl.create(:dossier,
+        :procedure    => procedure_2,
+        :created_at   => 2.month.ago.beginning_of_month,
+        :initiated_at => 2.month.ago.beginning_of_month + 80.minutes,
+        :processed_at => 2.month.ago.beginning_of_month + 1.day)
+
+      # Write directly in the DB to avoid the before_validation hook
+      Dossier.update_all(state: "closed")
+
+      @expected_hash = {
+        "#{2.months.ago.beginning_of_month}" => 30.0,
+        "#{1.months.ago.beginning_of_month}" => 50.0
+      }
+    end
+
+    let (:association) { Dossier.where.not(:state => :draft) }
+
+    subject { StatsController.new.send(:dossier_filling_mean_time, association) }
+
+    it { expect(subject).to eq(@expected_hash) }
+  end
 end
