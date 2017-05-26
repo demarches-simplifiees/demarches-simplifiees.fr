@@ -1,5 +1,4 @@
 class Sessions::SessionsController < Devise::SessionsController
-
   before_action :before_sign_in, only: [:create]
 
   def before_sign_in

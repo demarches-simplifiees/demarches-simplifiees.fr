@@ -1,5 +1,4 @@
 class API::V1::DossiersController < APIController
-
   api :GET, '/procedures/:procedure_id/dossiers/', 'Liste de tous les dossiers d\'une procédure'
   param :procedure_id, Integer, desc: "L'identifiant de la procédure", required: true
   param :token, String, desc: "Token administrateur", required: true

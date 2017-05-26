@@ -1,5 +1,4 @@
 class PingController < ApplicationController
-
   def index
     Rails.logger.silence do
       if (ActiveRecord::Base.connected?)
@@ -9,5 +8,4 @@ class PingController < ApplicationController
       end
     end
   end
-
 end
