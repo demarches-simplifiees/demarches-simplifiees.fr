@@ -867,4 +867,27 @@ describe Dossier do
     it { is_expected.to include(dossier3)}
     it { is_expected.to include(dossier4)}
   end
+
+  describe "#send_notification_email" do
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { create(:dossier, procedure: procedure, state: :initiated) }
+
+    before do
+      ActionMailer::Base.deliveries.clear
+    end
+
+    it "sends an email when the dossier becomes received" do
+      dossier.received!
+
+      mail = ActionMailer::Base.deliveries.last
+
+      expect(mail.subject).to eq("Votre dossier TPS nº #{dossier.id} va être instruit")
+    end
+
+    it "does not an email when the dossier becomes closed" do
+      dossier.closed!
+
+      expect(ActionMailer::Base.deliveries.size).to eq(0)
+    end
+  end
 end

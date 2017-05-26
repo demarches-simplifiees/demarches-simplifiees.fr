@@ -78,6 +78,7 @@ class Dossier < ActiveRecord::Base
 
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
+  after_save :send_notification_email
 
   validates :user, presence: true
 
@@ -301,5 +302,11 @@ class Dossier < ActiveRecord::Base
 
   def serialize_value_for_export(value)
     value.nil? || value.kind_of?(Time) ? value : value.to_s
+  end
+
+  def send_notification_email
+    if state_changed? && EN_INSTRUCTION.include?(state)
+      NotificationMailer.send_notification(self, procedure.received_mail_template).deliver_now!
+    end
   end
 end
