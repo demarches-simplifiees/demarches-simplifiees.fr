@@ -57,12 +57,12 @@ class Dossier < ActiveRecord::Base
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
-  scope :all_state,                 -> (order = :asc) { not_archived.state_not_brouillon.order_by_updated_at(order) }
-  scope :nouveaux,                  -> (order = :asc) { not_archived.state_nouveaux.order_by_updated_at(order) }
-  scope :waiting_for_gestionnaire,  -> (order = :asc) { not_archived.state_waiting_for_gestionnaire.order_by_updated_at(order) }
-  scope :waiting_for_user,          -> (order = :asc) { not_archived.state_waiting_for_user.order_by_updated_at(order) }
-  scope :ouvert,                    -> (order = :asc) { not_archived.state_ouvert.order_by_updated_at(order) }
-  scope :a_instruire,               -> (order = :asc) { not_archived.state_a_instruire.order_by_updated_at(order) }
+  scope :all_state,                 -> { not_archived.state_not_brouillon.order_by_updated_at(:asc) }
+  scope :nouveaux,                  -> { not_archived.state_nouveaux.order_by_updated_at(:asc) }
+  scope :waiting_for_gestionnaire,  -> { not_archived.state_waiting_for_gestionnaire.order_by_updated_at(:asc) }
+  scope :waiting_for_user,          -> { not_archived.state_waiting_for_user.order_by_updated_at(:asc) }
+  scope :ouvert,                    -> { not_archived.state_ouvert.order_by_updated_at(:asc) }
+  scope :a_instruire,               -> { not_archived.state_a_instruire.order_by_updated_at(:asc) }
   scope :downloadable,              -> { state_not_brouillon.order_by_updated_at("ASC") }
 
   accepts_nested_attributes_for :individual
