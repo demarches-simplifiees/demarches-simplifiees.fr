@@ -159,7 +159,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.all_state order = 'ASC'
-    not_brouillon.where(archived: false).order("updated_at #{order}")
+    not_brouillon.not_archived.order("updated_at #{order}")
   end
 
   def brouillon?
@@ -172,25 +172,25 @@ class Dossier < ActiveRecord::Base
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
   def self.nouveaux order = 'ASC'
-    where(state: NOUVEAUX, archived: false).order("updated_at #{order}")
+    not_archived.where(state: NOUVEAUX).order("updated_at #{order}")
   end
 
   def self.waiting_for_gestionnaire order = 'ASC'
-    where(state: WAITING_FOR_GESTIONNAIRE, archived: false).order("updated_at #{order}")
+    not_archived.where(state: WAITING_FOR_GESTIONNAIRE).order("updated_at #{order}")
   end
 
   def self.waiting_for_user order = 'ASC'
-    where(state: WAITING_FOR_USER, archived: false).order("updated_at #{order}")
+    not_archived.where(state: WAITING_FOR_USER).order("updated_at #{order}")
   end
 
   scope :en_construction, -> { where(state: EN_CONSTRUCTION) }
 
   def self.ouvert order = 'ASC'
-    where(state: OUVERT, archived: false).order("updated_at #{order}")
+    not_archived.where(state: OUVERT).order("updated_at #{order}")
   end
 
   def self.a_instruire order = 'ASC'
-    where(state: A_INSTRUIRE, archived: false).order("updated_at #{order}")
+    not_archived.where(state: A_INSTRUIRE).order("updated_at #{order}")
   end
 
   scope :en_instruction, -> { where(state: EN_INSTRUCTION) }
