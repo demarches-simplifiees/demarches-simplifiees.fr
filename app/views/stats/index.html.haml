@@ -5,6 +5,22 @@
   .stat-cards
 
     .stat-card.stat-card-half.pull-left
+      %span.stat-card-title Procédures dématérialisées / mois
+
+      .chart-container
+        .chart
+          = column_chart @procedures_in_the_last_4_months,
+            :colors => ["rgba(61, 149, 236, 1)"]
+
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title Dossiers déposés / mois
+
+      .chart-container
+        .chart
+          = column_chart @dossiers_in_the_last_4_months,
+            :colors => ["rgba(61, 149, 236, 1)"]
+
+    .stat-card.stat-card-half.pull-left
       %ul.segmented-control.pull-right
         %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.cumulative-procedures-chart');" }
           Cumul
