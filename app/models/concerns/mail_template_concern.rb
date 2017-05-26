@@ -4,50 +4,23 @@ module MailTemplateConcern
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
 
-  TAGS = {
-    numero_dossier: {
-      description: "Permet d'afficher le numéro de dossier de l'utilisateur.",
-      templates: [
-        "initiated_mail",
-        "received_mail",
-        "closed_mail",
-        "refused_mail",
-        "without_continuation_mail"
-      ]
-    },
-    lien_dossier: {
-      description: "Permet d'afficher un lien vers le dossier de l'utilisateur.",
-      templates: [
-        "initiated_mail",
-        "received_mail",
-        "closed_mail",
-        "refused_mail",
-        "without_continuation_mail"
-      ]
-    },
-    libelle_procedure: {
-      description: "Permet d'afficher le libellé de la procédure.",
-      templates: [
-        "initiated_mail",
-        "received_mail",
-        "closed_mail",
-        "refused_mail",
-        "without_continuation_mail"
-      ]
-    },
-    date_de_decision: {
-      description: "Permet d'afficher la date à laquelle la décision finale (acceptation, refus, classement sans suite) sur le dossier a été prise.",
-      templates: [
-        "closed_mail",
-        "refused_mail",
-        "without_continuation_mail"
-      ]
-    }
+  TAGS = []
+  TAGS << TAG_NUMERO_DOSSIER = {
+    name:         "numero_dossier",
+    description:  "Permet d'afficher le numéro de dossier de l'utilisateur."
   }
-
-  def self.tags_for_template(template)
-    TAGS.select { |key, value| value[:templates].include?(template) }
-  end
+  TAGS << TAG_LIEN_DOSSIER = {
+    name:         "lien_dossier",
+    description:  "Permet d'afficher un lien vers le dossier de l'utilisateur."
+  }
+  TAGS << TAG_LIBELLE_PROCEDURE = {
+    name:         "libelle_procedure",
+    description:  "Permet d'afficher le libellé de la procédure."
+  }
+  TAGS << TAG_DATE_DE_DECISION = {
+    name:         "date_de_decision",
+    description:  "Permet d'afficher la date à laquelle la décision finale (acceptation, refus, classement sans suite) sur le dossier a été prise."
+  }
 
   def object_for_dossier(dossier)
     replace_tags(object, dossier)
@@ -59,7 +32,7 @@ module MailTemplateConcern
 
   def replace_tags(string, dossier)
     TAGS.inject(string) do |acc, tag|
-      acc.gsub!("--#{tag.first}--", replace_tag(tag.first.to_sym, dossier)) || acc
+      acc.gsub!("--#{tag[:name]}--", replace_tag(tag, dossier)) || acc
     end
   end
 
@@ -78,13 +51,13 @@ module MailTemplateConcern
 
   def replace_tag(tag, dossier)
     case tag
-    when :numero_dossier
+    when TAG_NUMERO_DOSSIER
       dossier.id.to_s
-    when :lien_dossier
+    when TAG_LIEN_DOSSIER
       link_to users_dossier_recapitulatif_url(dossier), users_dossier_recapitulatif_url(dossier), target: '_blank'
-    when :libelle_procedure
+    when TAG_LIBELLE_PROCEDURE
       dossier.procedure.libelle
-    when :date_de_decision
+    when TAG_DATE_DE_DECISION
       dossier.processed_at.present? ? dossier.processed_at.localtime.strftime("%d/%m/%Y") : ""
     else
       '--BALISE_NON_RECONNUE--'
