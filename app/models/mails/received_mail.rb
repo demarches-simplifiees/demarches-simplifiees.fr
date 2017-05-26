@@ -1,5 +1,5 @@
 module Mails
-  class ReceivedMail < ActiveRecord::Base
+  class ReceivedMail < ApplicationRecord
     include MailTemplateConcern
 
     DISPLAYED_NAME = 'Accusé de passage en instruction'

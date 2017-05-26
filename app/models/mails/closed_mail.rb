@@ -1,5 +1,5 @@
 module Mails
-  class ClosedMail < ActiveRecord::Base
+  class ClosedMail < ApplicationRecord
     include MailTemplateConcern
 
     DISPLAYED_NAME = "Accusé d'acceptation"

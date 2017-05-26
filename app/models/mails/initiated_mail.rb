@@ -1,5 +1,5 @@
 module Mails
-  class InitiatedMail < ActiveRecord::Base
+  class InitiatedMail < ApplicationRecord
     include MailTemplateConcern
 
     DISPLAYED_NAME = 'Accusé de réception'
