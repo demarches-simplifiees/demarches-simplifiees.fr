@@ -2,7 +2,7 @@ class Admin::MailTemplatesController < AdminController
   before_action :retrieve_procedure
 
   def index
-    @mails = mails
+    @mail_templates = mail_templates
   end
 
   def edit
@@ -18,7 +18,7 @@ class Admin::MailTemplatesController < AdminController
 
   private
 
-  def mails
+  def mail_templates
     [
       @procedure.initiated_mail,
       @procedure.received_mail,
@@ -29,7 +29,7 @@ class Admin::MailTemplatesController < AdminController
   end
 
   def find_mail_template_by_slug(slug)
-    mails.find { |m| m.class.const_get(:SLUG) == slug }
+    mail_templates.find { |template| template.class.const_get(:SLUG) == slug }
   end
 
   def update_params
