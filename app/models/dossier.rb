@@ -54,7 +54,6 @@ class Dossier < ActiveRecord::Base
   EN_INSTRUCTION = %w(received)
   A_INSTRUIRE = %w(received)
   TERMINE = %w(closed refused without_continuation)
-  ALL_STATE = %w(initiated updated replied received closed refused without_continuation)
 
   def unreaded_notifications
     @unreaded_notif ||= notifications.where(already_read: false)
@@ -160,7 +159,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.all_state order = 'ASC'
-    where(state: ALL_STATE, archived: false).order("updated_at #{order}")
+    not_brouillon.where(archived: false).order("updated_at #{order}")
   end
 
   def brouillon?
@@ -168,6 +167,7 @@ class Dossier < ActiveRecord::Base
   end
 
   scope :brouillon, -> { where(state: BROUILLON) }
+  scope :not_brouillon, -> { where.not(state: BROUILLON) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
