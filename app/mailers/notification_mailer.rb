@@ -6,10 +6,10 @@ class NotificationMailer < ApplicationMailer
   def send_notification dossier, mail_template
     vars_mailer(dossier)
 
-    @obj  = mail_template.object_for_dossier dossier
+    @object = mail_template.object_for_dossier dossier
     @body = mail_template.body_for_dossier dossier
 
-    mail(subject: @obj) { |format| format.html { @body } }
+    mail(subject: @object) { |format| format.html { @body } }
   end
 
   def new_answer dossier
@@ -22,7 +22,7 @@ class NotificationMailer < ApplicationMailer
     Commentaire.create(
       dossier: @dossier,
       email: I18n.t("dynamics.contact_email"),
-      body: ["[#{@obj}]", @body].join("<br><br>")
+      body: ["[#{@object}]", @body].join("<br><br>")
     )
   end
 
