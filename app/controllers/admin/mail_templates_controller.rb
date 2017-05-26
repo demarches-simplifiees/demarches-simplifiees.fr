@@ -6,12 +6,12 @@ class Admin::MailTemplatesController < AdminController
   end
 
   def edit
-    @mail_template = find_the_right_mail params[:id]
+    @mail_template = find_mail_template_by_slug(params[:id])
     @mail_template_name = params[:id]
   end
 
   def update
-    mail_template = find_the_right_mail params[:id]
+    mail_template = find_mail_template_by_slug(params[:id])
     mail_template.update_attributes(update_params)
     redirect_to admin_procedure_mail_templates_path
   end
@@ -28,8 +28,8 @@ class Admin::MailTemplatesController < AdminController
     ]
   end
 
-  def find_the_right_mail type
-    mails.find { |m| m.class.slug == type }
+  def find_mail_template_by_slug(slug)
+    mails.find { |m| m.class.slug == slug }
   end
 
   def update_params
