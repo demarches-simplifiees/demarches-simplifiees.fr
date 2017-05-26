@@ -38,7 +38,7 @@ module MailTemplateConcern
 
   module ClassMethods
     def default
-      body = ActionController::Base.new.render_to_string(template: self.name.underscore)
+      body = ActionController::Base.new.render_to_string(template: self.const_get(:TEMPLATE_NAME))
       self.new(object: self.const_get(:DEFAULT_OBJECT), body: body)
     end
   end
