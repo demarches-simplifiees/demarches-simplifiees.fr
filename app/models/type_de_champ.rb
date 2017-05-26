@@ -1,26 +1,26 @@
 class TypeDeChamp < ActiveRecord::Base
   enum type_champs: {
-           text: 'text',
-           textarea: 'textarea',
-           date: 'date',
-           datetime: 'datetime',
-           number: 'number',
-           checkbox: 'checkbox',
-           civilite: 'civilite',
-           email: 'email',
-           phone: 'phone',
-           address: 'address',
-           yes_no: 'yes_no',
-           drop_down_list: 'drop_down_list',
-           multiple_drop_down_list: 'multiple_drop_down_list',
-           pays: 'pays',
-           regions: 'regions',
-           departements: 'departements',
-           engagement: 'engagement',
-           header_section: 'header_section',
-           explication: 'explication',
-           dossier_link: 'dossier_link'
-       }
+    text: 'text',
+    textarea: 'textarea',
+    date: 'date',
+    datetime: 'datetime',
+    number: 'number',
+    checkbox: 'checkbox',
+    civilite: 'civilite',
+    email: 'email',
+    phone: 'phone',
+    address: 'address',
+    yes_no: 'yes_no',
+    drop_down_list: 'drop_down_list',
+    multiple_drop_down_list: 'multiple_drop_down_list',
+    pays: 'pays',
+    regions: 'regions',
+    departements: 'departements',
+    engagement: 'engagement',
+    header_section: 'header_section',
+    explication: 'explication',
+    dossier_link: 'dossier_link'
+  }
 
   belongs_to :procedure
 
