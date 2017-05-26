@@ -15,6 +15,12 @@ class Procedure < ActiveRecord::Base
 
   has_many :preference_list_dossiers
 
+  has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
+  has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy
+  has_one :closed_mail, class_name: "Mails::ClosedMail", dependent: :destroy
+  has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
+  has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
+
   delegate :use_api_carto, to: :module_api_carto
 
   accepts_nested_attributes_for :types_de_champ, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
@@ -29,25 +35,6 @@ class Procedure < ActiveRecord::Base
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
-
-  # for all those mails do
-  # has_one :initiated_mail, class_name: 'Mails::InitiatedMail'
-  #
-  # add a method to return default mail if none is saved
-  # def initiated_mail_with_override
-  #   self.initiated_mail_without_override || InitiatedMail.default
-  # end
-  # alias_method_chain :initiated_mail, :override
-
-  MAIL_TEMPLATE_TYPES = %w(InitiatedMail ReceivedMail ClosedMail RefusedMail WithoutContinuationMail)
-
-  MAIL_TEMPLATE_TYPES.each do |name|
-    has_one "#{name.underscore}".to_sym, class_name: "Mails::#{name}", dependent: :destroy
-    define_method("#{name.underscore}_with_override") do
-      self.send("#{name.underscore}_without_override") || Object.const_get("Mails::#{name}").default
-    end
-    alias_method_chain "#{name.underscore.to_sym}".to_s, :override
-  end
 
   def path
     procedure_path.path unless procedure_path.nil?
@@ -112,9 +99,11 @@ class Procedure < ActiveRecord::Base
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
 
-    MAIL_TEMPLATE_TYPES.each do |mtt|
-      procedure.send("#{mtt.underscore}=", self.send("#{mtt.underscore}_without_override").try(:dup))
-    end
+    procedure.initiated_mail = initiated_mail_without_override.try(:dup)
+    procedure.received_mail = received_mail_without_override.try(:dup)
+    procedure.closed_mail = closed_mail_without_override.try(:dup)
+    procedure.refused_mail = refused_mail_without_override.try(:dup)
+    procedure.without_continuation_mail = without_continuation_mail_without_override.try(:dup)
 
     return procedure if procedure.save
   end
@@ -147,4 +136,29 @@ class Procedure < ActiveRecord::Base
   def procedure_overview(start_date, notifications_count)
     ProcedureOverview.new(self, start_date, notifications_count)
   end
+
+  def initiated_mail_with_override
+    self.initiated_mail_without_override || Mails::InitiatedMail.default
+  end
+  alias_method_chain "initiated_mail", :override
+
+  def received_mail_with_override
+    self.received_mail_without_override || Mails::ReceivedMail.default
+  end
+  alias_method_chain "received_mail", :override
+
+  def closed_mail_with_override
+    self.closed_mail_without_override || Mails::ClosedMail.default
+  end
+  alias_method_chain "closed_mail", :override
+
+  def refused_mail_with_override
+    self.refused_mail_without_override || Mails::RefusedMail.default
+  end
+  alias_method_chain "refused_mail", :override
+
+  def without_continuation_mail_with_override
+    self.without_continuation_mail_without_override || Mails::WithoutContinuationMail.default
+  end
+  alias_method_chain "without_continuation_mail", :override
 end
