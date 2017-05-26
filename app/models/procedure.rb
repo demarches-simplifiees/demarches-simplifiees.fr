@@ -82,12 +82,17 @@ class Procedure < ActiveRecord::Base
   end
 
   def switch_list_order(list, index_of_first_element)
-    return false if index_of_first_element < 0
-    return false if index_of_first_element == list.count - 1
-    return false if list.count < 1
-    list[index_of_first_element].update_attributes(order_place: index_of_first_element + 1)
-    list[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
-    true
+    if index_of_first_element < 0 ||
+      index_of_first_element == list.count - 1 ||
+      list.count < 1
+
+      false
+    else
+      list[index_of_first_element].update_attributes(order_place: index_of_first_element + 1)
+      list[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
+
+      true
+    end
   end
 
   def locked?
