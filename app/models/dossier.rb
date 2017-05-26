@@ -40,6 +40,19 @@ class Dossier < ActiveRecord::Base
   belongs_to :procedure
   belongs_to :user
 
+  scope :brouillon, -> { where(state: BROUILLON) }
+  scope :not_brouillon, -> { where.not(state: BROUILLON) }
+  scope :en_construction, -> { where(state: EN_CONSTRUCTION) }
+  scope :en_instruction, -> { where(state: EN_INSTRUCTION) }
+  scope :termine, -> { where(state: TERMINE) }
+
+  scope :archived, -> { where(archived: true) }
+  scope :not_archived, -> { where(archived: false) }
+
+  scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
+
+  scope :downloadable, -> { not_brouillon.order_by_updated_at("ASC") }
+
   accepts_nested_attributes_for :individual
 
   delegate :siren, to: :entreprise
@@ -166,11 +179,6 @@ class Dossier < ActiveRecord::Base
     BROUILLON.include?(state)
   end
 
-  scope :brouillon, -> { where(state: BROUILLON) }
-  scope :not_brouillon, -> { where.not(state: BROUILLON) }
-
-  scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
-
   def self.nouveaux order = 'ASC'
     not_archived.where(state: NOUVEAUX).order_by_updated_at(order)
   end
@@ -183,8 +191,6 @@ class Dossier < ActiveRecord::Base
     not_archived.where(state: WAITING_FOR_USER).order_by_updated_at(order)
   end
 
-  scope :en_construction, -> { where(state: EN_CONSTRUCTION) }
-
   def self.ouvert order = 'ASC'
     not_archived.where(state: OUVERT).order_by_updated_at(order)
   end
@@ -192,15 +198,6 @@ class Dossier < ActiveRecord::Base
   def self.a_instruire order = 'ASC'
     not_archived.where(state: A_INSTRUIRE).order_by_updated_at(order)
   end
-
-  scope :en_instruction, -> { where(state: EN_INSTRUCTION) }
-
-  scope :termine, -> { where(state: TERMINE) }
-
-  scope :archived, -> { where(archived: true) }
-  scope :not_archived, -> { where(archived: false) }
-
-  scope :downloadable, -> { not_brouillon.order_by_updated_at("ASC") }
 
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
