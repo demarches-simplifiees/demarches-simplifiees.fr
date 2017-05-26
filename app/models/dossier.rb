@@ -200,7 +200,7 @@ class Dossier < ActiveRecord::Base
   scope :archived, -> { where(archived: true) }
   scope :not_archived, -> { where(archived: false) }
 
-  scope :downloadable, -> { all_state }
+  scope :downloadable, -> { not_brouillon.order_by_updated_at("ASC") }
 
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0

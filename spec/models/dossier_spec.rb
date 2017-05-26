@@ -911,11 +911,13 @@ describe Dossier do
     let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :draft) }
     let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
     let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :received) }
+    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, archived: true) }
 
     subject { procedure.dossiers.downloadable }
 
     it { is_expected.not_to include(dossier)}
     it { is_expected.to include(dossier2)}
     it { is_expected.to include(dossier3)}
+    it { is_expected.to include(dossier4)}
   end
 end
