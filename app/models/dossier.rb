@@ -52,6 +52,12 @@ class Dossier < ActiveRecord::Base
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
+  scope :all_state, -> (order = :asc) { state_not_brouillon.not_archived.order_by_updated_at(order) }
+  scope :nouveaux, -> (order = :asc) { not_archived.where(state: NOUVEAUX).order_by_updated_at(order) }
+  scope :waiting_for_gestionnaire, -> (order = :asc) { not_archived.where(state: WAITING_FOR_GESTIONNAIRE).order_by_updated_at(order) }
+  scope :waiting_for_user, -> (order = :asc) { not_archived.where(state: WAITING_FOR_USER).order_by_updated_at(order) }
+  scope :ouvert, -> (order = :asc) { not_archived.where(state: OUVERT).order_by_updated_at(order) }
+  scope :a_instruire, -> (order = :asc) { not_archived.where(state: A_INSTRUIRE).order_by_updated_at(order) }
   scope :downloadable, -> { state_not_brouillon.order_by_updated_at("ASC") }
 
   accepts_nested_attributes_for :individual
@@ -172,32 +178,8 @@ class Dossier < ActiveRecord::Base
     state
   end
 
-  def self.all_state order = 'ASC'
-    state_not_brouillon.not_archived.order_by_updated_at(order)
-  end
-
   def brouillon?
     BROUILLON.include?(state)
-  end
-
-  def self.nouveaux order = 'ASC'
-    not_archived.where(state: NOUVEAUX).order_by_updated_at(order)
-  end
-
-  def self.waiting_for_gestionnaire order = 'ASC'
-    not_archived.where(state: WAITING_FOR_GESTIONNAIRE).order_by_updated_at(order)
-  end
-
-  def self.waiting_for_user order = 'ASC'
-    not_archived.where(state: WAITING_FOR_USER).order_by_updated_at(order)
-  end
-
-  def self.ouvert order = 'ASC'
-    not_archived.where(state: OUVERT).order_by_updated_at(order)
-  end
-
-  def self.a_instruire order = 'ASC'
-    not_archived.where(state: A_INSTRUIRE).order_by_updated_at(order)
   end
 
   def cerfa_available?
