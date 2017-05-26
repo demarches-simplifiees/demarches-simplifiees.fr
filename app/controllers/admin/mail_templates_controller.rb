@@ -19,8 +19,13 @@ class Admin::MailTemplatesController < AdminController
   private
 
   def mails
-    %w(initiated received closed refused without_continuation)
-      .map { |name| @procedure.send(name + "_mail") }
+    [
+      @procedure.initiated_mail,
+      @procedure.received_mail,
+      @procedure.closed_mail,
+      @procedure.refused_mail,
+      @procedure.without_continuation_mail
+    ]
   end
 
   def find_the_right_mail type
