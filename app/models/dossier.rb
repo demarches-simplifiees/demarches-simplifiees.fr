@@ -1,13 +1,14 @@
 class Dossier < ActiveRecord::Base
-  enum state: {draft: 'draft',
-               initiated: 'initiated',
-               replied: 'replied', #action utilisateur demandé
-               updated: 'updated', #etude par l'administration en cours
-               received: 'received',
-               closed: 'closed',
-               refused: 'refused',
-               without_continuation: 'without_continuation'
-       }
+  enum state: {
+    draft:                'draft',
+    initiated:            'initiated',
+    replied:              'replied',              # action utilisateur demandé
+    updated:              'updated',              # etude par l'administration en cours
+    received:             'received',
+    closed:               'closed',
+    refused:              'refused',
+    without_continuation: 'without_continuation'
+  }
 
   BROUILLON = %w(draft)
   NOUVEAUX = %w(initiated)
