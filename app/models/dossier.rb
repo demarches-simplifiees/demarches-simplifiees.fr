@@ -57,7 +57,7 @@ class Dossier < ActiveRecord::Base
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
-  scope :all_state, -> (order = :asc) { state_not_brouillon.not_archived.order_by_updated_at(order) }
+  scope :all_state, -> (order = :asc) { not_archived.state_not_brouillon.order_by_updated_at(order) }
   scope :nouveaux, -> (order = :asc) { not_archived.state_nouveaux.order_by_updated_at(order) }
   scope :waiting_for_gestionnaire, -> (order = :asc) { not_archived.state_waiting_for_gestionnaire.order_by_updated_at(order) }
   scope :waiting_for_user, -> (order = :asc) { not_archived.state_waiting_for_user.order_by_updated_at(order) }
