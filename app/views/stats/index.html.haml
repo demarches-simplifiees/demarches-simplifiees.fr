@@ -64,22 +64,23 @@
       %span.big-number-card-number
         = number_with_delimiter(@dossiers_count)
 
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title Temps de traitement moyen d'un dossier
+    - cache "computation-heavy-stats", :expires_in => 1.day do
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Temps de traitement moyen d'un dossier
 
-      .chart-container
-        .chart
-          = line_chart @dossier_instruction_mean_time,
-            :ytitle => "Jours",
-            :colors => ["rgba(61, 149, 236, 1)"]
+        .chart-container
+          .chart
+            = line_chart @dossier_instruction_mean_time,
+              :ytitle => "Jours",
+              :colors => ["rgba(61, 149, 236, 1)"]
 
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title Temps de remplissage moyen d'un dossier
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Temps de remplissage moyen d'un dossier
 
-      .chart-container
-        .chart
-          = line_chart @dossier_filling_mean_time,
-            :ytitle => "Minutes",
-            :colors => ["rgba(61, 149, 236, 1)"]
+        .chart-container
+          .chart
+            = line_chart @dossier_filling_mean_time,
+              :ytitle => "Minutes",
+              :colors => ["rgba(61, 149, 236, 1)"]
 
     .clearfix
