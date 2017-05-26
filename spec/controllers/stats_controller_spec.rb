@@ -66,22 +66,22 @@ describe StatsController, type: :controller do
         15.days.ago.beginning_of_month => 3
       }) }
     end
-  end
 
-  context "with a date attribute" do
-    before do
-      FactoryGirl.create(:procedure, :created_at => 45.days.ago, :updated_at => 20.days.ago)
-      FactoryGirl.create(:procedure, :created_at => 15.days.ago, :updated_at => 20.days.ago)
-      FactoryGirl.create(:procedure, :created_at => 15.days.ago, :updated_at => 10.days.ago)
+    context "with a date attribute" do
+      before do
+        FactoryGirl.create(:procedure, :created_at => 45.days.ago, :updated_at => 20.days.ago)
+        FactoryGirl.create(:procedure, :created_at => 15.days.ago, :updated_at => 20.days.ago)
+        FactoryGirl.create(:procedure, :created_at => 15.days.ago, :updated_at => 10.days.ago)
+      end
+
+      let (:association) { Procedure.all }
+
+      subject { StatsController.new.send(:cumulative_hash, association, :updated_at) }
+
+      it { expect(subject).to eq({
+        20.days.ago.beginning_of_month => 2,
+        10.days.ago.beginning_of_month => 3
+      }) }
     end
-
-    let (:association) { Procedure.all }
-
-    subject { StatsController.new.send(:cumulative_hash, association, :updated_at) }
-
-    it { expect(subject).to eq({
-      20.days.ago.beginning_of_month => 2,
-      10.days.ago.beginning_of_month => 3
-    }) }
   end
 end
