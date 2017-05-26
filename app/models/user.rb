@@ -37,5 +37,4 @@ class User < ActiveRecord::Base
   def invite? dossier_id
     invites.pluck(:dossier_id).include?(dossier_id.to_i)
   end
-
 end
