@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
-  enum loged_in_with_france_connect: {particulier: 'particulier',
-                                      entreprise: 'entreprise'}
+  enum loged_in_with_france_connect: {
+    particulier: 'particulier',
+    entreprise: 'entreprise'
+  }
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
