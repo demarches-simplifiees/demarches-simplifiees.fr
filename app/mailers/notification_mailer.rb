@@ -3,7 +3,7 @@ class NotificationMailer < ApplicationMailer
 
   after_action :create_commentaire_for_notification, only: :send_notification
 
-  def send_notification dossier, mail_template
+  def send_notification(dossier, mail_template)
     vars_mailer(dossier)
 
     @object = mail_template.object_for_dossier dossier
@@ -12,7 +12,7 @@ class NotificationMailer < ApplicationMailer
     mail(subject: @object) { |format| format.html { @body } }
   end
 
-  def new_answer dossier
+  def new_answer(dossier)
     send_mail dossier, "Nouveau message pour votre dossier TPS nº #{dossier.id}"
   end
 
@@ -26,12 +26,12 @@ class NotificationMailer < ApplicationMailer
     )
   end
 
-  def vars_mailer dossier
+  def vars_mailer(dossier)
     @dossier = dossier
     @user = dossier.user
   end
 
-  def send_mail dossier, subject
+  def send_mail(dossier, subject)
     vars_mailer dossier
 
     mail(subject: subject)
