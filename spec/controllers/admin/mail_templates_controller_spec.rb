@@ -25,7 +25,7 @@ describe Admin::MailTemplatesController, type: :controller do
     before :each do
       patch :update,
         params: { procedure_id: procedure.id,
-                  id: initiated_mail.class.slug,
+                  id: initiated_mail.class.const_get(:SLUG),
                   mail_template: { object: object, body: body }
                 }
     end

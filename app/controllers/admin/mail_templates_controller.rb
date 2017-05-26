@@ -29,7 +29,7 @@ class Admin::MailTemplatesController < AdminController
   end
 
   def find_mail_template_by_slug(slug)
-    mails.find { |m| m.class.slug == slug }
+    mails.find { |m| m.class.const_get(:SLUG) == slug }
   end
 
   def update_params

@@ -37,10 +37,6 @@ module MailTemplateConcern
   end
 
   module ClassMethods
-    def slug
-      self.name.demodulize.underscore.parameterize
-    end
-
     def default
       body = ActionController::Base.new.render_to_string(template: self.name.underscore)
       self.new(object: self.const_get(:DEFAULT_OBJECT), body: body)
