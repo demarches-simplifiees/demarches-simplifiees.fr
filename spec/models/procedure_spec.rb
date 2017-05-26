@@ -2,18 +2,20 @@ require 'spec_helper'
 
 describe Procedure do
   describe 'mail templates' do
-    it { expect(subject.initiated_mail).to be_a(Mails::InitiatedMail) }
-    it { expect(subject.received_mail).to be_a(Mails::ReceivedMail) }
-    it { expect(subject.closed_mail).to be_a(Mails::ClosedMail) }
-    it { expect(subject.refused_mail).to be_a(Mails::RefusedMail) }
-    it { expect(subject.without_continuation_mail).to be_a(Mails::WithoutContinuationMail) }
+    subject { create(:procedure) }
+
+    it { expect(subject.initiated_mail_template).to be_a(Mails::InitiatedMail) }
+    it { expect(subject.received_mail_template).to be_a(Mails::ReceivedMail) }
+    it { expect(subject.closed_mail_template).to be_a(Mails::ClosedMail) }
+    it { expect(subject.refused_mail_template).to be_a(Mails::RefusedMail) }
+    it { expect(subject.without_continuation_mail_template).to be_a(Mails::WithoutContinuationMail) }
   end
 
   describe 'initiated_mail' do
     subject { create(:procedure) }
 
     context 'when initiated_mail is not customize' do
-      it { expect(subject.initiated_mail.body).to eq(Mails::InitiatedMail.default.body) }
+      it { expect(subject.initiated_mail_template.body).to eq(Mails::InitiatedMail.default.body) }
     end
 
     context 'when initiated_mail is customize' do
@@ -22,7 +24,7 @@ describe Procedure do
         subject.save
         subject.reload
       end
-      it { expect(subject.initiated_mail.body).to eq('sisi') }
+      it { expect(subject.initiated_mail_template.body).to eq('sisi') }
     end
 
     context 'when initiated_mail is customize ... again' do
@@ -31,7 +33,7 @@ describe Procedure do
         subject.save
         subject.reload
       end
-      it { expect(subject.initiated_mail.body).to eq('toto') }
+      it { expect(subject.initiated_mail_template.body).to eq('toto') }
 
       it { expect(Mails::InitiatedMail.count).to eq(1) }
     end
@@ -185,7 +187,7 @@ describe Procedure do
     end
 
     it 'should not duplicate default mail_template' do
-      expect(subject.initiated_mail.attributes).to eq Mails::InitiatedMail.default.attributes
+      expect(subject.initiated_mail_template.attributes).to eq Mails::InitiatedMail.default.attributes
     end
 
     it 'should not duplicate specific related objects' do

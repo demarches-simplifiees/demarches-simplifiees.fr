@@ -99,11 +99,11 @@ class Procedure < ActiveRecord::Base
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
 
-    procedure.initiated_mail = initiated_mail_without_override.try(:dup)
-    procedure.received_mail = received_mail_without_override.try(:dup)
-    procedure.closed_mail = closed_mail_without_override.try(:dup)
-    procedure.refused_mail = refused_mail_without_override.try(:dup)
-    procedure.without_continuation_mail = without_continuation_mail_without_override.try(:dup)
+    procedure.initiated_mail = initiated_mail.try(:dup)
+    procedure.received_mail = received_mail.try(:dup)
+    procedure.closed_mail = closed_mail.try(:dup)
+    procedure.refused_mail = refused_mail.try(:dup)
+    procedure.without_continuation_mail = without_continuation_mail.try(:dup)
 
     return procedure if procedure.save
   end
@@ -137,28 +137,23 @@ class Procedure < ActiveRecord::Base
     ProcedureOverview.new(self, start_date, notifications_count)
   end
 
-  def initiated_mail_with_override
-    self.initiated_mail_without_override || Mails::InitiatedMail.default
+  def initiated_mail_template
+    initiated_mail || Mails::InitiatedMail.default
   end
-  alias_method_chain "initiated_mail", :override
 
-  def received_mail_with_override
-    self.received_mail_without_override || Mails::ReceivedMail.default
+  def received_mail_template
+    received_mail || Mails::ReceivedMail.default
   end
-  alias_method_chain "received_mail", :override
 
-  def closed_mail_with_override
-    self.closed_mail_without_override || Mails::ClosedMail.default
+  def closed_mail_template
+    closed_mail || Mails::ClosedMail.default
   end
-  alias_method_chain "closed_mail", :override
 
-  def refused_mail_with_override
-    self.refused_mail_without_override || Mails::RefusedMail.default
+  def refused_mail_template
+    refused_mail || Mails::RefusedMail.default
   end
-  alias_method_chain "refused_mail", :override
 
-  def without_continuation_mail_with_override
-    self.without_continuation_mail_without_override || Mails::WithoutContinuationMail.default
+  def without_continuation_mail_template
+    without_continuation_mail || Mails::WithoutContinuationMail.default
   end
-  alias_method_chain "without_continuation_mail", :override
 end

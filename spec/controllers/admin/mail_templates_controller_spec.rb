@@ -33,7 +33,7 @@ describe Admin::MailTemplatesController, type: :controller do
     it { expect(response).to redirect_to admin_procedure_mail_templates_path(procedure) }
 
     context 'the mail template' do
-      subject { procedure.reload ; procedure.initiated_mail }
+      subject { procedure.reload ; procedure.initiated_mail_template }
 
       it { expect(subject.object).to eq(object) }
       it { expect(subject.body).to eq(body) }

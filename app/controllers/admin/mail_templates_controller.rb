@@ -19,11 +19,11 @@ class Admin::MailTemplatesController < AdminController
 
   def mail_templates
     [
-      @procedure.initiated_mail,
-      @procedure.received_mail,
-      @procedure.closed_mail,
-      @procedure.refused_mail,
-      @procedure.without_continuation_mail
+      @procedure.initiated_mail_template,
+      @procedure.received_mail_template,
+      @procedure.closed_mail_template,
+      @procedure.refused_mail_template,
+      @procedure.without_continuation_mail_template
     ]
   end
 
