@@ -16,13 +16,13 @@ class Users::DossiersController < UsersController
 
     @dossiers_filtered = case @liste
     when 'brouillon'
-      @user_dossiers.brouillon.order_by_updated_at
+      @user_dossiers.state_brouillon.order_by_updated_at
     when 'a_traiter'
-      @user_dossiers.en_construction.order_by_updated_at
+      @user_dossiers.state_en_construction.order_by_updated_at
     when 'en_instruction'
-      @user_dossiers.en_instruction.order_by_updated_at
+      @user_dossiers.state_en_instruction.order_by_updated_at
     when 'termine'
-      @user_dossiers.termine.order_by_updated_at
+      @user_dossiers.state_termine.order_by_updated_at
     when 'invite'
       current_user.invites
     else

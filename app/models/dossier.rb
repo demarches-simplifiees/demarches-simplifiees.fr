@@ -41,18 +41,18 @@ class Dossier < ActiveRecord::Base
   belongs_to :procedure
   belongs_to :user
 
-  scope :brouillon, -> { where(state: BROUILLON) }
-  scope :not_brouillon, -> { where.not(state: BROUILLON) }
-  scope :en_construction, -> { where(state: EN_CONSTRUCTION) }
-  scope :en_instruction, -> { where(state: EN_INSTRUCTION) }
-  scope :termine, -> { where(state: TERMINE) }
+  scope :state_brouillon, -> { where(state: BROUILLON) }
+  scope :state_not_brouillon, -> { where.not(state: BROUILLON) }
+  scope :state_en_construction, -> { where(state: EN_CONSTRUCTION) }
+  scope :state_en_instruction, -> { where(state: EN_INSTRUCTION) }
+  scope :state_termine, -> { where(state: TERMINE) }
 
   scope :archived, -> { where(archived: true) }
   scope :not_archived, -> { where(archived: false) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
-  scope :downloadable, -> { not_brouillon.order_by_updated_at("ASC") }
+  scope :downloadable, -> { state_not_brouillon.order_by_updated_at("ASC") }
 
   accepts_nested_attributes_for :individual
 
@@ -173,7 +173,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.all_state order = 'ASC'
-    not_brouillon.not_archived.order_by_updated_at(order)
+    state_not_brouillon.not_archived.order_by_updated_at(order)
   end
 
   def brouillon?

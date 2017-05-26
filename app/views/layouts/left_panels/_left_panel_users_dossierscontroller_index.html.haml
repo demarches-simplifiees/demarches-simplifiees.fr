@@ -15,25 +15,25 @@
         .procedure-list-element#brouillon{ class: ('active' if @liste == 'brouillon') }
           Brouillons
           .badge.progress-bar-default
-            = @user_dossiers.brouillon.count
+            = @user_dossiers.state_brouillon.count
 
       %a{ :href => "#{url_for users_dossiers_path(liste: 'a_traiter')}", 'data-toggle' => :tooltip, title: 'Les dossiers qui requièrent une action de votre part.' }
         .procedure-list-element#a_traiter{ class: ('active' if @liste == 'a_traiter') }
           En construction
           .badge.progress-bar-danger
-            = @user_dossiers.en_construction.count
+            = @user_dossiers.state_en_construction.count
 
       %a{ :href => "#{url_for users_dossiers_path(liste: 'en_instruction')}", 'data-toggle' => :tooltip, title: 'Les dossiers en cours d\'examen par l\'administration compétante.' }
         .procedure-list-element#en_instruction{ class: ('active' if @liste == 'en_instruction') }
           En instruction
           .badge.progress-bar-default
-            = @user_dossiers.en_instruction.count
+            = @user_dossiers.state_en_instruction.count
 
       %a{ :href => "#{url_for users_dossiers_path(liste: 'termine')}", 'data-toggle' => :tooltip, title: 'Les dossiers cloturés qui peuvent être "Accepté", "Refusé" ou "Sans suite".' }
         .procedure-list-element#termine{ class: ('active' if @liste == 'termine') }
           Terminé
           .badge.progress-bar-success
-            = @user_dossiers.termine.count
+            = @user_dossiers.state_termine.count
 
     %a{ :href => "#{url_for users_dossiers_path(liste: 'invite')}" }
       .procedure-list-element#invite{ class: ('active' if @liste == 'invite') }

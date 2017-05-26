@@ -364,7 +364,7 @@ describe DossiersListGestionnaireService do
     let!(:dossier14) { create(:dossier, procedure: procedure, state: 'closed', archived: true) } #termine #archived
 
     describe '#termine' do
-      subject { DossiersListGestionnaireService.new(gestionnaire, liste, procedure).termine }
+      subject { DossiersListGestionnaireService.new(gestionnaire, liste, procedure).state_termine }
 
       it { expect(subject.size).to eq(4) }
       it { expect(subject).to include(dossier8, dossier9, dossier10, dossier11) }

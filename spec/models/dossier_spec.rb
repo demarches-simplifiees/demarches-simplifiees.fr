@@ -455,8 +455,8 @@ describe Dossier do
         it { expect(subject.size).to eq(1) }
       end
 
-      describe '#en_instruction' do
-        subject { gestionnaire.dossiers.en_instruction }
+      describe '#state_en_instruction' do
+        subject { gestionnaire.dossiers.state_en_instruction }
 
         it { expect(subject.size).to eq(2) }
         it { expect(subject).to include(dossier6, dossier7) }
