@@ -9,6 +9,5 @@ class AutoArchiveProcedureWorker
     end
 
     procedures_to_archive.update_all(archived: true)
-
   end
 end
