@@ -24,6 +24,9 @@ class Procedure < ActiveRecord::Base
 
   mount_uploader :logo, ProcedureLogoUploader
 
+  scope :not_archived, -> { where(archived: false) }
+  scope :by_libelle, -> { order(libelle: :asc) }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
 
@@ -45,10 +48,6 @@ class Procedure < ActiveRecord::Base
     end
     alias_method_chain "#{name.underscore.to_sym}".to_s, :override
   end
-
-  scope :not_archived, -> { where(archived: false) }
-  scope :by_libelle, -> { order(libelle: :asc) }
-
 
   def path
     procedure_path.path unless procedure_path.nil?
