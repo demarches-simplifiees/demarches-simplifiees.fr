@@ -9,6 +9,16 @@ class Dossier < ActiveRecord::Base
                without_continuation: 'without_continuation'
        }
 
+  BROUILLON = %w(draft)
+  NOUVEAUX = %w(initiated)
+  OUVERT = %w(updated replied)
+  WAITING_FOR_GESTIONNAIRE = %w(updated)
+  WAITING_FOR_USER = %w(replied)
+  EN_CONSTRUCTION = %w(initiated updated replied)
+  EN_INSTRUCTION = %w(received)
+  A_INSTRUIRE = %w(received)
+  TERMINE = %w(closed refused without_continuation)
+
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
   has_one :individual, dependent: :destroy
@@ -44,16 +54,6 @@ class Dossier < ActiveRecord::Base
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
 
   validates :user, presence: true
-
-  BROUILLON = %w(draft)
-  NOUVEAUX = %w(initiated)
-  OUVERT = %w(updated replied)
-  WAITING_FOR_GESTIONNAIRE = %w(updated)
-  WAITING_FOR_USER = %w(replied)
-  EN_CONSTRUCTION = %w(initiated updated replied)
-  EN_INSTRUCTION = %w(received)
-  A_INSTRUIRE = %w(received)
-  TERMINE = %w(closed refused without_continuation)
 
   def unreaded_notifications
     @unreaded_notif ||= notifications.where(already_read: false)
