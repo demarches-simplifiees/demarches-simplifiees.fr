@@ -8,7 +8,7 @@ class AutoArchiveProcedureWorker
       p.dossiers.state_en_construction.update_all(state: :received)
     end
 
-    procedures_to_archive.update_all(archived: true, auto_archive_on: nil)
+    procedures_to_archive.update_all(archived: true)
 
   end
 end
