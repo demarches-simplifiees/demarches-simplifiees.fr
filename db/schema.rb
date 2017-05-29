@@ -358,7 +358,7 @@ ActiveRecord::Schema.define(version: 20170523092900) do
     t.string   "lien_notice"
     t.boolean  "for_individual",        default: false
     t.boolean  "individual_with_siret", default: false
-    t.datetime "auto_archive_on"
+    t.date     "auto_archive_on"
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|
