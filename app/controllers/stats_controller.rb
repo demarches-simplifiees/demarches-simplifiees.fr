@@ -7,6 +7,9 @@ class StatsController < ApplicationController
     procedures = Procedure.where(:published => true)
     dossiers = Dossier.where.not(:state => :draft)
 
+    @procedures_count = procedures.count
+    @dossiers_count = dossiers.count
+
     @procedures_in_the_last_4_months = last_four_months_hash(procedures)
     @dossiers_in_the_last_4_months = last_four_months_hash(dossiers, :initiated_at)
 
@@ -15,9 +18,6 @@ class StatsController < ApplicationController
 
     @procedures_cumulative = cumulative_hash(procedures)
     @dossiers_cumulative = cumulative_hash(dossiers, :initiated_at)
-
-    @procedures_count = procedures.count
-    @dossiers_count = dossiers.count
 
     @dossier_instruction_mean_time = dossier_instruction_mean_time(dossiers)
     @dossier_filling_mean_time = dossier_filling_mean_time(dossiers)
