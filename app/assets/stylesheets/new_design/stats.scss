@@ -1,5 +1,3 @@
-@import "card";
-
 $dark-grey: #333333;
 $light-grey: #999999;
 $blue: rgba(61, 149, 236, 1);
@@ -12,8 +10,9 @@ $new-h1-margin-bottom: 4 * $default-space;
 .new-h1 {
   color: $dark-grey;
   text-align: center;
-  margin-top: 0;
   margin-bottom: $new-h1-margin-bottom;
+  font-weight: bold;
+  font-size: 41px;
 }
 
 $statistiques-padding-top: $default-space * 2;
@@ -33,6 +32,7 @@ $statistiques-padding-top: $default-space * 2;
 $stat-card-margin-bottom: 3 * $default-space;
 
 .stat-card {
+  padding: 15px;
   margin-bottom: $stat-card-margin-bottom;
   border-radius: 5px;
   box-shadow: none;
@@ -49,7 +49,7 @@ $stat-card-half-horizontal-spacing: 4 * $default-space;
 .stat-card-title {
   color: $dark-grey;
   font-size: 26px;
-  font-weight: 500;
+  font-weight: bold;
   width: 200px;
 }
 

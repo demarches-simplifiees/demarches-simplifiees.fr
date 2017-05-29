@@ -4,7 +4,7 @@
 
   .stat-cards
 
-    .card.stat-card.stat-card-half.pull-left
+    .stat-card.stat-card-half.pull-left
       %ul.segmented-control.pull-right
         %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.cumulative-procedures-chart');" }
           Cumul
@@ -21,7 +21,7 @@
           = line_chart @procedures_30_days_flow,
             :colors => ["rgba(61, 149, 236, 1)"]
 
-    .card.stat-card.stat-card-half.pull-left
+    .stat-card.stat-card-half.pull-left
       %ul.segmented-control.pull-right
         %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.cumulative-dossiers-chart');" }
           Cumul
@@ -38,12 +38,12 @@
           = line_chart @dossiers_30_days_flow,
             :colors => ["rgba(61, 149, 236, 1)"]
 
-    .card.stat-card.stat-card-half.big-number-card.pull-left
+    .stat-card.stat-card-half.big-number-card.pull-left
       %span.big-number-card-title TOTAL PROCÉDURES DÉMATÉRIALISÉES
       %span.big-number-card-number
         = number_with_delimiter(@procedures_count)
 
-    .card.stat-card.stat-card-half.big-number-card.pull-left
+    .stat-card.stat-card-half.big-number-card.pull-left
       %span.big-number-card-title TOTAL DOSSIERS DÉPOSÉS
       %span.big-number-card-number
         = number_with_delimiter(@dossiers_count)
