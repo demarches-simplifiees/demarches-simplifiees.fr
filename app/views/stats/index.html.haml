@@ -14,34 +14,36 @@
         = number_with_delimiter(@dossiers_count)
 
     .stat-card.stat-card-half.pull-left
-      %span.stat-card-title Procédures dématérialisées / mois
+      %ul.segmented-control.pull-right
+        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.monthly-procedures-chart');" }
+          Par mois
+        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.cumulative-procedures-chart');" }
+          Cumul
+      %span.stat-card-title.pull-left Procédures dématérialisées
+      .clearfix
 
       .chart-container
-        .chart
+        .chart.monthly-procedures-chart
           = column_chart @procedures_in_the_last_4_months,
             :colors => ["rgba(61, 149, 236, 1)"]
-
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title Dossiers déposés / mois
-
-      .chart-container
-        .chart
-          = column_chart @dossiers_in_the_last_4_months,
-            :colors => ["rgba(61, 149, 236, 1)"]
-
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title Procédures dématérialisées
-
-      .chart-container
-        .chart.cumulative-procedures-chart
+        .chart.cumulative-procedures-chart.hidden
           = area_chart @procedures_cumulative,
             :colors => ["rgba(61, 149, 236, 1)"]
 
     .stat-card.stat-card-half.pull-left
-      %span.stat-card-title Dossiers déposés
+      %ul.segmented-control.pull-right
+        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.monthly-dossiers-chart');" }
+          Par mois
+        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.cumulative-dossiers-chart');" }
+          Cumul
+      %span.stat-card-title.pull-left Dossiers déposés
+      .clearfix
 
       .chart-container
-        .chart.cumulative-dossiers-chart
+        .chart.monthly-dossiers-chart
+          = column_chart @dossiers_in_the_last_4_months,
+            :colors => ["rgba(61, 149, 236, 1)"]
+        .chart.cumulative-dossiers-chart.hidden
           = area_chart @dossiers_cumulative,
             :colors => ["rgba(61, 149, 236, 1)"]
 
