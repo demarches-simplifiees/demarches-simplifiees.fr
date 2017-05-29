@@ -122,4 +122,52 @@ describe StatsController, type: :controller do
       }) }
     end
   end
+
+  describe "#dossier_instruction_mean_time" do
+    # Month-2: mean 3 days
+    #  procedure_1: mean 2 days
+    #   dossier_p1_a: 3 days
+    #   dossier_p1_b: 1 days
+    #  procedure_2: mean 4 days
+    #    dossier_p2_a: 4 days
+    #
+    # Month-1: mean 5 days
+    #   procedure_1: mean 5 days
+    #     dossier_p1_c: 5 days
+
+    before do
+      procedure_1 = FactoryGirl.create(:procedure)
+      procedure_2 = FactoryGirl.create(:procedure)
+      dossier_p1_a = FactoryGirl.create(:dossier,
+        :procedure    => procedure_1,
+        :initiated_at => 2.months.ago.beginning_of_month,
+        :processed_at => 2.months.ago.beginning_of_month + 3.days)
+      dossier_p1_b = FactoryGirl.create(:dossier,
+        :procedure    => procedure_1,
+        :initiated_at => 2.months.ago.beginning_of_month,
+        :processed_at => 2.months.ago.beginning_of_month + 1.days)
+      dossier_p1_c = FactoryGirl.create(:dossier,
+        :procedure    => procedure_1,
+        :initiated_at => 1.months.ago.beginning_of_month,
+        :processed_at => 1.months.ago.beginning_of_month + 5.days)
+      dossier_p2_a = FactoryGirl.create(:dossier,
+        :procedure    => procedure_2,
+        :initiated_at => 2.month.ago.beginning_of_month,
+        :processed_at => 2.month.ago.beginning_of_month + 4.days)
+
+      # Write directly in the DB to avoid the before_validation hook
+      Dossier.update_all(state: "closed")
+
+      @expected_hash = {
+        "#{2.months.ago.beginning_of_month}" => 3.0,
+        "#{1.months.ago.beginning_of_month}" => 5.0
+      }
+    end
+
+    let (:association) { Dossier.where.not(:state => :draft) }
+
+    subject { StatsController.new.send(:dossier_instruction_mean_time, association) }
+
+    it { expect(subject).to eq(@expected_hash) }
+  end
 end
