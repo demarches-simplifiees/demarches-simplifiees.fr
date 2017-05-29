@@ -35,6 +35,8 @@ class NotificationService
         attribut
       when 'submitted'
         "Le dossier nº #{@dossier_id} a été déposé."
+      when 'avis'
+        'Un nouvel avis a été rendu'
       else
         'Notification par défaut'
     end

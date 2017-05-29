@@ -1,0 +1,52 @@
+- if current_gestionnaire && current_gestionnaire.assigned_on_procedure?(@facade.dossier.procedure_id)
+
+  .default-data-block.default_visible
+    .row.show-block.infos
+      .header
+        .col-xs-12.title
+          .carret-right
+          .carret-down
+          AVIS EXTERNES
+      .body
+        .display-block-on-print
+          - dossier_facade.dossier.avis.by_latest.each do |avis|
+            - if avis.answer
+              .panel.panel-success
+                .panel-heading
+                  %strong= avis.email_to_display
+                  a donné son avis le
+                  = avis.updated_at.localtime.strftime('%d/%m/%Y à %H:%M')
+                .panel-body
+                  %strong Vous :
+                  = avis.introduction
+                  %hr
+                  %strong= "#{avis.email_to_display} :"
+                  = avis.answer
+            - else
+              .panel.panel-info
+                .panel-heading
+                  Avis demandé à
+                  %strong= avis.email_to_display
+                  le
+                  = avis.created_at.localtime.strftime('%d/%m/%Y à %H:%M')
+                .panel-body
+                  %strong Vous :
+                  = avis.introduction
+                  %hr
+                  .center
+                    %em Avis en attente
+        .hidden-print
+          .panel.panel-default
+            .panel-heading
+              Demander un avis externe
+            .panel-body
+              .help-block
+                Invitez une personne externe à consulter le dossier et à vous donner un avis sur celui ci.
+                %br
+                Cette personne pourra également contribuer au fil de messagerie, mais ne pourra pas modifier le dossier.
+              = simple_form_for @new_avis, url: backoffice_dossier_avis_index_path(dossier_facade.dossier.object.id) do |f|
+
+                = f.input 'email', label: "Email de la personne qui doit donner un avis"
+                = f.input 'introduction', label: "Message"
+
+                = f.submit "Envoyer la demande d'avis", class: 'btn btn-default'

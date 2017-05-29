@@ -4,10 +4,13 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   before_action :ensure_gestionnaire_is_authorized, only: :show
 
   def index
+    return redirect_to backoffice_invitations_path if current_gestionnaire.avis.any?
+
     procedure = current_gestionnaire.procedure_filter
 
     if procedure.nil?
       procedure_list = dossiers_list_facade.gestionnaire_procedures_name_and_id_list
+
       if procedure_list.count == 0
         flash.alert = "Vous n'avez aucune procédure d'affectée."
         return redirect_to root_path
@@ -20,7 +23,8 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   def show
-    create_dossier_facade params[:id]
+    dossier_id = params[:id]
+    create_dossier_facade dossier_id
 
     unless @facade.nil?
       @champs_private = @facade.champs_private
@@ -28,7 +32,13 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       @headers_private = @champs_private.select { |champ| champ.type_champ == 'header_section' }
     end
 
-    Notification.where(dossier_id: params[:id].to_i).update_all already_read: true
+    # if the current_gestionnaire does not own the dossier, it is here to give an advice
+    # and it should not remove the notifications
+    if current_gestionnaire.dossiers.find_by(id: dossier_id).present?
+      Notification.where(dossier_id: dossier_id).update_all(already_read: true)
+    end
+
+    @new_avis = Avis.new(introduction: "Bonjour, merci de me donner votre avis sur ce dossier.")
   end
 
   def filter
@@ -185,11 +195,10 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   private
 
   def ensure_gestionnaire_is_authorized
-    current_gestionnaire.dossiers.find(params[:id])
-
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: '/backoffice')
+    unless current_gestionnaire.can_view_dossier?(params[:id])
+      flash.alert = t('errors.messages.dossier_not_found')
+      redirect_to url_for(controller: '/backoffice')
+    end
   end
 
   def create_dossier_facade dossier_id

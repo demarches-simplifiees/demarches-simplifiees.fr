@@ -30,6 +30,9 @@ Rails.application.routes.draw do
     put '/gestionnaires' => 'gestionnaires/registrations#update', :as => 'gestionnaires_registration'
   end
 
+  get 'avis/:id/sign_up/email/:email' => 'backoffice/avis#sign_up', constraints: { email: /.*/ }, as: 'avis_sign_up'
+  post 'avis/:id/sign_up/email/:email' => 'backoffice/avis#create_gestionnaire', constraints: { email: /.*/ }
+
   devise_scope :administrateur do
     get '/administrateurs/sign_in/demo' => 'administrateurs/sessions#demo'
   end
@@ -167,6 +170,8 @@ Rails.application.routes.draw do
 
     resource :private_formulaire
 
+    get 'invitations'
+
     resources :dossiers do
       post 'receive' => 'dossiers#receive'
       post 'refuse' => 'dossiers#refuse'
@@ -179,6 +184,7 @@ Rails.application.routes.draw do
       post 'reopen' => 'dossiers#reopen'
       put 'follow' => 'dossiers#follow'
       resources :commentaires, only: [:index]
+      resources :avis, only: [:create, :update]
     end
 
     namespace :dossiers do

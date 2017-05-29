@@ -12,6 +12,7 @@ class Gestionnaire < ActiveRecord::Base
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :follows
   has_many :preference_list_dossiers
+  has_many :avis
 
   after_create :build_default_preferences_list_dossier
   after_create :build_default_preferences_smart_listing_page
@@ -22,6 +23,11 @@ class Gestionnaire < ActiveRecord::Base
     return nil unless assign_to.pluck(:procedure_id).include?(self[:procedure_filter])
 
     self[:procedure_filter]
+  end
+
+  def can_view_dossier?(dossier_id)
+    avis.where(dossier_id: dossier_id).any? ||
+      dossiers.where(id: dossier_id).any?
   end
 
   def toggle_follow_dossier dossier_id
@@ -39,6 +45,10 @@ class Gestionnaire < ActiveRecord::Base
     dossier_id = dossier_id.id if dossier_id.class == Dossier
 
     Follow.where(gestionnaire_id: id, dossier_id: dossier_id).any?
+  end
+
+  def assigned_on_procedure?(procedure_id)
+    procedures.find_by(id: procedure_id).present?
   end
 
   def build_default_preferences_list_dossier procedure_id=nil
