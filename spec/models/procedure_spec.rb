@@ -1,13 +1,12 @@
 require 'spec_helper'
 
 describe Procedure do
-
-  describe 'mails' do
-      it { expect(subject.initiated_mail).to be_a(Mails::InitiatedMail) }
-      it { expect(subject.received_mail).to be_a(Mails::ReceivedMail) }
-      it { expect(subject.closed_mail).to be_a(Mails::ClosedMail) }
-      it { expect(subject.refused_mail).to be_a(Mails::RefusedMail) }
-      it { expect(subject.without_continuation_mail).to be_a(Mails::WithoutContinuationMail) }
+  describe 'mail templates' do
+    it { expect(subject.initiated_mail).to be_a(Mails::InitiatedMail) }
+    it { expect(subject.received_mail).to be_a(Mails::ReceivedMail) }
+    it { expect(subject.closed_mail).to be_a(Mails::ClosedMail) }
+    it { expect(subject.refused_mail).to be_a(Mails::RefusedMail) }
+    it { expect(subject.without_continuation_mail).to be_a(Mails::WithoutContinuationMail) }
   end
 
   describe 'initiated_mail' do
