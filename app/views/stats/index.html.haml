@@ -47,6 +47,15 @@
           = area_chart @dossiers_cumulative,
             :colors => ["rgba(61, 149, 236, 1)"]
 
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title
+        Nombre d'administrations ayant dématérialisé N procédures
+
+      .chart-container
+        .chart
+          = pie_chart @procedures_count_per_administrateur,
+            :colors => ["rgba(191, 220, 249, 1)", "rgba(113, 176, 239, 1)", "rgba(61, 149, 236, 1)"]
+
     - if administration_signed_in?
       - cache "computation-heavy-stats", :expires_in => 1.day do
         .stat-card.stat-card-half.pull-left
