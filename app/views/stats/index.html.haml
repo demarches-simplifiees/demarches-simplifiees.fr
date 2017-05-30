@@ -3,41 +3,6 @@
   %h1.new-h1 Statistiques
 
   .stat-cards
-
-    .stat-card.stat-card-half.pull-left
-      %ul.segmented-control.pull-right
-        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.cumulative-procedures-chart');" }
-          Cumul
-        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.flux-procedures-chart');" }
-          Flux (30 jours)
-      %span.stat-card-title.pull-left Procédures dématérialisées
-      .clearfix
-
-      .chart-container
-        .chart.cumulative-procedures-chart
-          = area_chart @procedures_cumulative,
-            :colors => ["rgba(61, 149, 236, 1)"]
-        .chart.flux-procedures-chart.hidden
-          = line_chart @procedures_30_days_flow,
-            :colors => ["rgba(61, 149, 236, 1)"]
-
-    .stat-card.stat-card-half.pull-left
-      %ul.segmented-control.pull-right
-        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.cumulative-dossiers-chart');" }
-          Cumul
-        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.flux-dossiers-chart');" }
-          Flux (30 jours)
-      %span.stat-card-title.pull-left Dossiers déposés
-      .clearfix
-
-      .chart-container
-        .chart.cumulative-dossiers-chart
-          = area_chart @dossiers_cumulative,
-            :colors => ["rgba(61, 149, 236, 1)"]
-        .chart.flux-dossiers-chart.hidden
-          = line_chart @dossiers_30_days_flow,
-            :colors => ["rgba(61, 149, 236, 1)"]
-
     .stat-card.stat-card-half.big-number-card.pull-left
       %span.big-number-card-title TOTAL PROCÉDURES DÉMATÉRIALISÉES
       %span.big-number-card-number
@@ -47,5 +12,59 @@
       %span.big-number-card-title TOTAL DOSSIERS DÉPOSÉS
       %span.big-number-card-number
         = number_with_delimiter(@dossiers_count)
+
+    .stat-card.stat-card-half.pull-left
+      %ul.segmented-control.pull-right
+        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.monthly-procedures-chart');" }
+          Par mois
+        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.cumulative-procedures-chart');" }
+          Cumul
+      %span.stat-card-title.pull-left Procédures dématérialisées
+      .clearfix
+
+      .chart-container
+        .chart.monthly-procedures-chart
+          = column_chart @procedures_in_the_last_4_months,
+            :colors => ["rgba(61, 149, 236, 1)"]
+        .chart.cumulative-procedures-chart.hidden
+          = area_chart @procedures_cumulative,
+            :colors => ["rgba(61, 149, 236, 1)"]
+
+    .stat-card.stat-card-half.pull-left
+      %ul.segmented-control.pull-right
+        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.monthly-dossiers-chart');" }
+          Par mois
+        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.cumulative-dossiers-chart');" }
+          Cumul
+      %span.stat-card-title.pull-left Dossiers déposés
+      .clearfix
+
+      .chart-container
+        .chart.monthly-dossiers-chart
+          = column_chart @dossiers_in_the_last_4_months,
+            :colors => ["rgba(61, 149, 236, 1)"]
+        .chart.cumulative-dossiers-chart.hidden
+          = area_chart @dossiers_cumulative,
+            :colors => ["rgba(61, 149, 236, 1)"]
+
+    - if administration_signed_in?
+      - cache "computation-heavy-stats", :expires_in => 1.day do
+        .stat-card.stat-card-half.pull-left
+          %span.stat-card-title Temps de traitement moyen d'un dossier
+
+          .chart-container
+            .chart
+              = line_chart @dossier_instruction_mean_time,
+                :ytitle => "Jours",
+                :colors => ["rgba(61, 149, 236, 1)"]
+
+        .stat-card.stat-card-half.pull-left
+          %span.stat-card-title Temps de remplissage moyen d'un dossier
+
+          .chart-container
+            .chart
+              = line_chart @dossier_filling_mean_time,
+                :ytitle => "Minutes",
+                :colors => ["rgba(61, 149, 236, 1)"]
 
     .clearfix
