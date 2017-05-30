@@ -51,7 +51,7 @@ describe ProcedureOverview, type: :model do
     subject { procedure_overview.to_html }
 
     context 'when the different count are equal to 0' do
-      it { is_expected.to match(/^<a href='.+'><strong>libelle<\/strong><\/a>$/) }
+      it { is_expected.to match(/^<a href='http:\/\/.+'><strong>libelle<\/strong><\/a>$/) }
     end
 
     context 'when the different counts are equal to 1' do
