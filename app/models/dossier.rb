@@ -54,7 +54,6 @@ class Dossier < ActiveRecord::Base
   EN_INSTRUCTION = %w(received)
   A_INSTRUIRE = %w(received)
   TERMINE = %w(closed refused without_continuation)
-  ALL_STATE = %w(initiated updated replied received closed refused without_continuation)
 
   def unreaded_notifications
     @unreaded_notif ||= notifications.where(already_read: false)
@@ -160,7 +159,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def self.all_state order = 'ASC'
-    where(state: ALL_STATE, archived: false).order("updated_at #{order}")
+    not_brouillon.not_archived.order_by_updated_at(order)
   end
 
   def brouillon?
@@ -168,29 +167,30 @@ class Dossier < ActiveRecord::Base
   end
 
   scope :brouillon, -> { where(state: BROUILLON) }
+  scope :not_brouillon, -> { where.not(state: BROUILLON) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
   def self.nouveaux order = 'ASC'
-    where(state: NOUVEAUX, archived: false).order("updated_at #{order}")
+    not_archived.where(state: NOUVEAUX).order_by_updated_at(order)
   end
 
   def self.waiting_for_gestionnaire order = 'ASC'
-    where(state: WAITING_FOR_GESTIONNAIRE, archived: false).order("updated_at #{order}")
+    not_archived.where(state: WAITING_FOR_GESTIONNAIRE).order_by_updated_at(order)
   end
 
   def self.waiting_for_user order = 'ASC'
-    where(state: WAITING_FOR_USER, archived: false).order("updated_at #{order}")
+    not_archived.where(state: WAITING_FOR_USER).order_by_updated_at(order)
   end
 
   scope :en_construction, -> { where(state: EN_CONSTRUCTION) }
 
   def self.ouvert order = 'ASC'
-    where(state: OUVERT, archived: false).order("updated_at #{order}")
+    not_archived.where(state: OUVERT).order_by_updated_at(order)
   end
 
   def self.a_instruire order = 'ASC'
-    where(state: A_INSTRUIRE, archived: false).order("updated_at #{order}")
+    not_archived.where(state: A_INSTRUIRE).order_by_updated_at(order)
   end
 
   scope :en_instruction, -> { where(state: EN_INSTRUCTION) }
@@ -200,7 +200,7 @@ class Dossier < ActiveRecord::Base
   scope :archived, -> { where(archived: true) }
   scope :not_archived, -> { where(archived: false) }
 
-  scope :downloadable, -> { all_state }
+  scope :downloadable, -> { not_brouillon.order_by_updated_at("ASC") }
 
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
