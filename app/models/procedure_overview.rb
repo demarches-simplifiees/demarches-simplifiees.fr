@@ -4,7 +4,7 @@ class ProcedureOverview
 
   def initialize(procedure, start_date, notifications_count)
     @libelle = procedure.libelle
-    @procedure_url = backoffice_dossiers_procedure_path(procedure)
+    @procedure_url = backoffice_dossiers_procedure_url(procedure)
     @notifications_count = notifications_count
 
     @received_dossiers_count = procedure.dossiers.where(state: :received).count
