@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170523092900) do
+ActiveRecord::Schema.define(version: 20170530141608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -151,6 +151,7 @@ ActiveRecord::Schema.define(version: 20170523092900) do
     t.datetime "initiated_at"
     t.datetime "received_at"
     t.datetime "processed_at"
+    t.text     "motivation"
     t.index ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
     t.index ["user_id"], name: "index_dossiers_on_user_id", using: :btree
   end
