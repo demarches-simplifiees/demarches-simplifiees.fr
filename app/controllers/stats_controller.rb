@@ -16,6 +16,8 @@ class StatsController < ApplicationController
     @dossiers_cumulative = cumulative_hash(dossiers, :initiated_at)
     @dossiers_in_the_last_4_months = last_four_months_hash(dossiers, :initiated_at)
 
+    @procedures_count_per_administrateur = procedures_count_per_administrateur(procedures)
+
     @dossier_instruction_mean_time = dossier_instruction_mean_time(dossiers)
     @dossier_filling_mean_time = dossier_filling_mean_time(dossiers)
   end
@@ -44,6 +46,15 @@ class StatsController < ApplicationController
       .sort{ |x, y| x[0] <=> y[0] }
       .map { |x, y| { x => (sum += y)} }
       .reduce({}, :merge)
+  end
+
+  def procedures_count_per_administrateur(procedures)
+    count_per_administrateur = procedures.group(:administrateur_id).count.values
+    {
+      'Une procédure' => count_per_administrateur.select { |count| count == 1 }.count,
+      'Entre deux et cinq procédures' => count_per_administrateur.select { |count| 2 <= count && count <= 5  }.count,
+      'Plus de cinq procédures' => count_per_administrateur.select { |count| 5 < count }.count
+    }
   end
 
   def mean(collection)
