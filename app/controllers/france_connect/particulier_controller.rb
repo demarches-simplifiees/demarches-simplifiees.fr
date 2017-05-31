@@ -1,5 +1,4 @@
 class FranceConnect::ParticulierController < ApplicationController
-
   def login
     client = FranceConnectParticulierClient.new
 

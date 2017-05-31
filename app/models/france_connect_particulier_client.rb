@@ -1,5 +1,4 @@
 class FranceConnectParticulierClient < OpenIDConnect::Client
-
   def initialize params={}
     super(
         identifier: FRANCE_CONNECT.particulier_identifier,

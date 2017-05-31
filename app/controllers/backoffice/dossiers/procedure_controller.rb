@@ -1,5 +1,4 @@
 class Backoffice::Dossiers::ProcedureController < Backoffice::DossiersListController
-
   def index
     super
 

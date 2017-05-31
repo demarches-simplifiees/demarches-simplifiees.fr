@@ -1,6 +1,5 @@
 class RootController < ApplicationController
   def index
-
     begin
       route = Rails.application.routes.recognize_path(request.referrer)
     rescue ActionController::RoutingError

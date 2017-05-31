@@ -25,5 +25,4 @@ class BackofficeController < ApplicationController
                         partial: 'backoffice/dossiers/list_invitations',
                         array: true
   end
-
 end

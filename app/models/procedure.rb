@@ -24,6 +24,9 @@ class Procedure < ActiveRecord::Base
 
   mount_uploader :logo, ProcedureLogoUploader
 
+  scope :not_archived, -> { where(archived: false) }
+  scope :by_libelle, -> { order(libelle: :asc) }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
 
@@ -46,10 +49,6 @@ class Procedure < ActiveRecord::Base
     alias_method_chain "#{name.underscore.to_sym}".to_s, :override
   end
 
-  scope :not_archived, -> { where(archived: false) }
-  scope :by_libelle, -> { order(libelle: :asc) }
-
-
   def path
     procedure_path.path unless procedure_path.nil?
   end
@@ -67,7 +66,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def self.active id
-    Procedure.where(archived: false, published: true).find(id)
+    not_archived.where(published: true).find(id)
   end
 
   def switch_types_de_champ index_of_first_element
@@ -83,12 +82,17 @@ class Procedure < ActiveRecord::Base
   end
 
   def switch_list_order(list, index_of_first_element)
-    return false if index_of_first_element < 0
-    return false if index_of_first_element == list.count - 1
-    return false if list.count < 1
-    list[index_of_first_element].update_attributes(order_place: index_of_first_element + 1)
-    list[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
-    true
+    if index_of_first_element < 0 ||
+      index_of_first_element == list.count - 1 ||
+      list.count < 1
+
+      false
+    else
+      list[index_of_first_element].update_attributes(order_place: index_of_first_element + 1)
+      list[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
+
+      true
+    end
   end
 
   def locked?
