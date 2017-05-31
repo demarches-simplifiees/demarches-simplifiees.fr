@@ -1,5 +1,7 @@
 = render partial: 'dossiers/edit_avis', locals: { dossier_facade: @facade }
 
+= render partial: 'dossiers/attestation', locals: { dossier: @facade.dossier }
+
 = render partial: 'dossiers/messagerie', locals: { dossier_facade: @facade }
 
 = render partial: 'dossiers/motivation', locals: { dossier_facade: @facade }

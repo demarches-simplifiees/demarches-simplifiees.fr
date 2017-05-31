@@ -15,8 +15,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
     before do
       post :preview,
-           params: { procedure_id: procedure.id,
-                     attestation_template: upload_params }
+        params: { procedure_id: procedure.id,
+                  attestation_template: upload_params }
     end
 
     context 'if an attestation template does not exist on the procedure' do
