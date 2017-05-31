@@ -35,18 +35,22 @@
                   %hr
                   .center
                     %em Avis en attente
-        .hidden-print
-          .panel.panel-default
-            .panel-heading
-              Demander un avis externe
-            .panel-body
-              .help-block
-                Invitez une personne externe à consulter le dossier et à vous donner un avis sur celui ci.
-                %br
-                Cette personne pourra également contribuer au fil de messagerie, mais ne pourra pas modifier le dossier.
-              = simple_form_for @new_avis, url: backoffice_dossier_avis_index_path(dossier_facade.dossier.object.id) do |f|
 
-                = f.input 'email', label: "Email de la personne qui doit donner un avis"
-                = f.input 'introduction', label: "Message"
+        -# FIXME prevent bug when the user is also a gestionnaire on the procedure #378
+        - if @new_avis.present?
+          .hidden-print
+            .panel.panel-default
+              .panel-heading
+                Demander un avis externe
+              .panel-body
+                .help-block
+                  Invitez une personne externe à consulter le dossier et à vous donner un avis sur celui ci.
+                  %br
+                  Cette personne pourra également contribuer au fil de messagerie, mais ne pourra pas modifier le dossier.
 
-                = f.submit "Envoyer la demande d'avis", class: 'btn btn-default'
+                = simple_form_for @new_avis, url: backoffice_dossier_avis_index_path(dossier_facade.dossier.object.id) do |f|
+
+                  = f.input 'email', label: "Email de la personne qui doit donner un avis"
+                  = f.input 'introduction', label: "Message"
+
+                  = f.submit "Envoyer la demande d'avis", class: 'btn btn-default'
