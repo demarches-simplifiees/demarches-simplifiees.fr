@@ -27,7 +27,7 @@ set :deploy_to, '/var/www/tps_dev'
 case ENV["to"]
 when "staging"
   if ENV['branch'].nil?
-    set :branch, 'staging'
+    set :branch, 'develop'
   else
     set :branch, ENV['branch']
   end
