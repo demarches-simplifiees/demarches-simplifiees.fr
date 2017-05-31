@@ -15,7 +15,6 @@ raise "Bad to=#{+ENV['to']}" unless ["staging", "production"].include?(ENV['to']
 
 raise "missing domain, run with 'rake deploy domain=37.187.154.237'" if ENV['domain'].nil?
 
-print "Deploy to #{ENV['to']} environment branch #{branch}\n"
 
 # set :domain, '5.135.190.60'
 set :domain, ENV['domain']
@@ -26,24 +25,18 @@ set :deploy_to, '/var/www/tps_dev'
 
 case ENV["to"]
 when "staging"
-  if ENV['branch'].nil?
-    set :branch, 'staging'
-  else
-    set :branch, ENV['branch']
-  end
+  set :branch, ENV['branch'] || 'develop'
   set :deploy_to, '/var/www/tps_dev'
   set :user, 'tps_dev' # Username in the server to SSH to.
   appname = 'tps_dev'
 when "production"
-  if ENV['branch'].nil?
-    set :branch, 'master'
-  else
-    set :branch, ENV['branch']
-  end
+  set :branch, ENV['branch'] || 'master'
   set :deploy_to, '/var/www/tps'
   set :user, 'tps' # Username in the server to SSH to.
   appname = 'tps'
 end
+
+print "Deploy to #{ENV['to']} environment branch #{branch}\n"
 
 set :rails_env, ENV["to"]
 
