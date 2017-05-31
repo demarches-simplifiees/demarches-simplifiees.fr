@@ -61,6 +61,8 @@
       ~ f.text_area :footer, class: 'form-control', rows: 2,
         placeholder: "Direction interministérielle du numérique et du système d'information et de communication de l'Etat (DINSIC)"
 
+    %button.btn.btn-primary{ formaction: admin_procedure_attestation_template_preview_path, formtarget: '_blank' } Prévisualiser
+
     .pull-right
       - if @attestation_template.activated
         %button.btn.btn-warning{ formaction: admin_procedure_attestation_template_disactivate_path } désactiver l'attestation

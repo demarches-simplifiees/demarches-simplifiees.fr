@@ -148,6 +148,9 @@ Rails.application.routes.draw do
 
       post 'attestation_template/disactivate' => 'attestation_templates#disactivate'
       patch 'attestation_template/disactivate' => 'attestation_templates#disactivate'
+
+      post 'attestation_template/preview' => 'attestation_templates#preview'
+      patch 'attestation_template/preview' => 'attestation_templates#preview'
     end
 
     namespace :accompagnateurs do

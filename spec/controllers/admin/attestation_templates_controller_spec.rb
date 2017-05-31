@@ -7,6 +7,38 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
   before do
     sign_in admin
+    Timecop.freeze(Time.now)
+  end
+
+  describe 'POST #preview' do
+    let(:upload_params) { { title: 't', body: 'b', footer: 'f' } }
+
+    before do
+      post :preview,
+           params: { procedure_id: procedure.id,
+                     attestation_template: upload_params }
+    end
+
+    context 'if an attestation template does not exist on the procedure' do
+      let(:attestation_template) { nil }
+      it { expect(subject.status).to eq(200) }
+      it { expect(assigns).to include(upload_params.stringify_keys) }
+    end
+
+    context 'if an attestation template exists on the procedure' do
+      context 'with logos' do
+        let!(:attestation_template) do
+          create(:attestation_template, logo: logo, signature: signature)
+        end
+
+        it { expect(subject.status).to eq(200) }
+        it { expect(assigns).to include(upload_params.stringify_keys) }
+        it { expect(assigns[:created_at]).to eq(DateTime.now) }
+        it { expect(assigns(:logo).read).to eq(logo.read) }
+        it { expect(assigns(:signature).read).to eq(signature.read) }
+        after { procedure.attestation_template.destroy }
+      end
+    end
   end
 
   describe 'GET #edit' do

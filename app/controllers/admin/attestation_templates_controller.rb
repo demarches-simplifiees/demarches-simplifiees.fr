@@ -39,6 +39,21 @@ class Admin::AttestationTemplatesController < AdminController
     redirect_to edit_admin_procedure_attestation_template_path(@procedure)
   end
 
+  def preview
+    @title      = activated_attestation_params[:title]
+    @body       = activated_attestation_params[:body]
+    @footer     = activated_attestation_params[:footer]
+    @created_at = DateTime.now
+
+    # In a case of a preview, when the user does not change its images,
+    # the images are not uploaded and thus should be retrieved from previous
+    # attestation_template
+    @logo = activated_attestation_params[:logo] || @procedure.attestation_template&.logo
+    @signature = activated_attestation_params[:signature] || @procedure.attestation_template&.signature
+
+    render 'admin/attestation_templates/show', formats: [:pdf]
+  end
+
   private
 
   def activated_attestation_params
