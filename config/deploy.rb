@@ -26,20 +26,12 @@ set :deploy_to, '/var/www/tps_dev'
 
 case ENV["to"]
 when "staging"
-  if ENV['branch'].nil?
-    set :branch, 'develop'
-  else
-    set :branch, ENV['branch']
-  end
+  set :branch, ENV['branch'] || 'develop'
   set :deploy_to, '/var/www/tps_dev'
   set :user, 'tps_dev' # Username in the server to SSH to.
   appname = 'tps_dev'
 when "production"
-  if ENV['branch'].nil?
-    set :branch, 'master'
-  else
-    set :branch, ENV['branch']
-  end
+  set :branch, ENV['branch'] || 'master'
   set :deploy_to, '/var/www/tps'
   set :user, 'tps' # Username in the server to SSH to.
   appname = 'tps'
