@@ -38,8 +38,6 @@ class RootController < ApplicationController
       return redirect_to administrations_path
     end
 
-    @demo_environment_host = "https://tps-dev.apientreprise.fr" unless Rails.env.development?
-
     render 'landing', :layout => 'new_application'
   end
 end
