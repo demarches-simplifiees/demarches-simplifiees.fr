@@ -45,6 +45,14 @@ describe RootController, type: :controller do
     it { expect(subject).to redirect_to(admin_procedures_path) }
   end
 
+  context 'when Administration is connected' do
+    before do
+      sign_in create(:administration)
+    end
+
+    it { expect(subject).to redirect_to(administrations_path) }
+  end
+
   context 'when nobody is connected' do
     render_views
 
