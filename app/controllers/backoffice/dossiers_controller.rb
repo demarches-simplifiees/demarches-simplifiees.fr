@@ -103,6 +103,17 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
 
+  def process_dossier
+    case params[:process_action]
+    when "refuse"
+      refuse
+    when "without_continuation"
+      without_continuation
+    when "close"
+      close
+    end
+  end
+
   def refuse
     create_dossier_facade params[:dossier_id]
 

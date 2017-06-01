@@ -250,6 +250,37 @@ describe Backoffice::DossiersController, type: :controller do
     it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
   end
 
+  describe 'POST #process_dossier' do
+    before do
+      dossier.received!
+      sign_in gestionnaire
+    end
+
+    context "with refuse" do
+      it "calls the refuse method" do
+        expect(controller).to receive(:refuse)
+
+        post :process_dossier, params: { dossier_id: dossier_id, process_action: "refuse" }
+      end
+    end
+
+    context "with without_continuation" do
+      it "calls the without_continuation method" do
+        expect(controller).to receive(:without_continuation)
+
+        post :process_dossier, params: { dossier_id: dossier_id, process_action: "without_continuation" }
+      end
+    end
+
+    context "with close" do
+      it "calls the close method" do
+        expect(controller).to receive(:close)
+
+        post :process_dossier, params: { dossier_id: dossier_id, process_action: "close" }
+      end
+    end
+  end
+
   describe 'POST #refuse' do
     before do
       dossier.received!
