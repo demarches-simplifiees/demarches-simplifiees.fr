@@ -18,8 +18,13 @@ class StatsController < ApplicationController
 
     @procedures_count_per_administrateur = procedures_count_per_administrateur(procedures)
 
-    @dossier_instruction_mean_time = dossier_instruction_mean_time(dossiers)
-    @dossier_filling_mean_time = dossier_filling_mean_time(dossiers)
+    @dossier_instruction_mean_time = Rails.cache.fetch("dossier_instruction_mean_time", expires_in: 1.day) do
+      dossier_instruction_mean_time(dossiers)
+    end
+
+    @dossier_filling_mean_time = Rails.cache.fetch("dossier_filling_mean_time", expires_in: 1.day) do
+      dossier_filling_mean_time(dossiers)
+    end
 
     @avis_usage = avis_usage
     @avis_average_answer_time = avis_average_answer_time
