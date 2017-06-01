@@ -1,13 +1,24 @@
 class Dossier < ActiveRecord::Base
-  enum state: {draft: 'draft',
-               initiated: 'initiated',
-               replied: 'replied', #action utilisateur demandé
-               updated: 'updated', #etude par l'administration en cours
-               received: 'received',
-               closed: 'closed',
-               refused: 'refused',
-               without_continuation: 'without_continuation'
-       }
+  enum state: {
+    draft:                'draft',
+    initiated:            'initiated',
+    replied:              'replied',              # action utilisateur demandé
+    updated:              'updated',              # etude par l'administration en cours
+    received:             'received',
+    closed:               'closed',
+    refused:              'refused',
+    without_continuation: 'without_continuation'
+  }
+
+  BROUILLON = %w(draft)
+  NOUVEAUX = %w(initiated)
+  OUVERT = %w(updated replied)
+  WAITING_FOR_GESTIONNAIRE = %w(updated)
+  WAITING_FOR_USER = %w(replied)
+  EN_CONSTRUCTION = %w(initiated updated replied)
+  EN_INSTRUCTION = %w(received)
+  A_INSTRUIRE = %w(received)
+  TERMINE = %w(closed refused without_continuation)
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
@@ -30,6 +41,31 @@ class Dossier < ActiveRecord::Base
   belongs_to :procedure
   belongs_to :user
 
+  scope :state_brouillon,                 -> { where(state: BROUILLON) }
+  scope :state_not_brouillon,             -> { where.not(state: BROUILLON) }
+  scope :state_nouveaux,                  -> { where(state: NOUVEAUX) }
+  scope :state_ouvert,                    -> { where(state: OUVERT) }
+  scope :state_waiting_for_gestionnaire,  -> { where(state: WAITING_FOR_GESTIONNAIRE) }
+  scope :state_waiting_for_user,          -> { where(state: WAITING_FOR_USER) }
+  scope :state_en_construction,           -> { where(state: EN_CONSTRUCTION) }
+  scope :state_en_instruction,            -> { where(state: EN_INSTRUCTION) }
+  scope :state_a_instruire,               -> { where(state: A_INSTRUIRE) }
+  scope :state_termine,                   -> { where(state: TERMINE) }
+
+  scope :archived,      -> { where(archived: true) }
+  scope :not_archived,  -> { where(archived: false) }
+
+  scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
+
+  scope :all_state,                 -> { not_archived.state_not_brouillon.order_by_updated_at(:asc) }
+  scope :nouveaux,                  -> { not_archived.state_nouveaux.order_by_updated_at(:asc) }
+  scope :ouvert,                    -> { not_archived.state_ouvert.order_by_updated_at(:asc) }
+  scope :waiting_for_gestionnaire,  -> { not_archived.state_waiting_for_gestionnaire.order_by_updated_at(:asc) }
+  scope :waiting_for_user,          -> { not_archived.state_waiting_for_user.order_by_updated_at(:asc) }
+  scope :a_instruire,               -> { not_archived.state_a_instruire.order_by_updated_at(:asc) }
+  scope :termine,                   -> { not_archived.state_termine.order_by_updated_at(:asc) }
+  scope :downloadable,              -> { state_not_brouillon.order_by_updated_at(:asc) }
+
   accepts_nested_attributes_for :individual
 
   delegate :siren, to: :entreprise
@@ -44,16 +80,6 @@ class Dossier < ActiveRecord::Base
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
 
   validates :user, presence: true
-
-  BROUILLON = %w(draft)
-  NOUVEAUX = %w(initiated)
-  OUVERT = %w(updated replied)
-  WAITING_FOR_GESTIONNAIRE = %w(updated)
-  WAITING_FOR_USER = %w(replied)
-  EN_CONSTRUCTION = %w(initiated updated replied)
-  EN_INSTRUCTION = %w(received)
-  A_INSTRUIRE = %w(received)
-  TERMINE = %w(closed refused without_continuation)
 
   def unreaded_notifications
     @unreaded_notif ||= notifications.where(already_read: false)
@@ -158,49 +184,9 @@ class Dossier < ActiveRecord::Base
     state
   end
 
-  def self.all_state order = 'ASC'
-    not_brouillon.not_archived.order_by_updated_at(order)
-  end
-
   def brouillon?
     BROUILLON.include?(state)
   end
-
-  scope :brouillon, -> { where(state: BROUILLON) }
-  scope :not_brouillon, -> { where.not(state: BROUILLON) }
-
-  scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
-
-  def self.nouveaux order = 'ASC'
-    not_archived.where(state: NOUVEAUX).order_by_updated_at(order)
-  end
-
-  def self.waiting_for_gestionnaire order = 'ASC'
-    not_archived.where(state: WAITING_FOR_GESTIONNAIRE).order_by_updated_at(order)
-  end
-
-  def self.waiting_for_user order = 'ASC'
-    not_archived.where(state: WAITING_FOR_USER).order_by_updated_at(order)
-  end
-
-  scope :en_construction, -> { where(state: EN_CONSTRUCTION) }
-
-  def self.ouvert order = 'ASC'
-    not_archived.where(state: OUVERT).order_by_updated_at(order)
-  end
-
-  def self.a_instruire order = 'ASC'
-    not_archived.where(state: A_INSTRUIRE).order_by_updated_at(order)
-  end
-
-  scope :en_instruction, -> { where(state: EN_INSTRUCTION) }
-
-  scope :termine, -> { where(state: TERMINE) }
-
-  scope :archived, -> { where(archived: true) }
-  scope :not_archived, -> { where(archived: false) }
-
-  scope :downloadable, -> { not_brouillon.order_by_updated_at("ASC") }
 
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
