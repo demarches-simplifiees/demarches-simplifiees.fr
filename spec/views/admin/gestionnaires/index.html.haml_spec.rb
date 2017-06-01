@@ -29,6 +29,6 @@ describe 'admin/gestionnaires/index.html.haml', type: :view do
                                                    array: true))
       render
     end
-    it { expect(rendered).to match(/gest\d+@plop.com/) }
+    it { expect(rendered).to match(/gest\d+@gest.com/) }
   end
 end
