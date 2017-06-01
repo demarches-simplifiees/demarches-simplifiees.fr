@@ -41,29 +41,29 @@ class Dossier < ActiveRecord::Base
   belongs_to :procedure
   belongs_to :user
 
-  scope :state_brouillon, -> { where(state: BROUILLON) }
-  scope :state_not_brouillon, -> { where.not(state: BROUILLON) }
-  scope :state_nouveaux, -> { where(state: NOUVEAUX) }
-  scope :state_ouvert, -> { where(state: OUVERT) }
-  scope :state_waiting_for_gestionnaire, -> { where(state: WAITING_FOR_GESTIONNAIRE) }
-  scope :state_waiting_for_user, -> { where(state: WAITING_FOR_USER) }
-  scope :state_en_construction, -> { where(state: EN_CONSTRUCTION) }
-  scope :state_en_instruction, -> { where(state: EN_INSTRUCTION) }
-  scope :state_a_instruire, -> { where(state: A_INSTRUIRE) }
-  scope :state_termine, -> { where(state: TERMINE) }
+  scope :state_brouillon,                 -> { where(state: BROUILLON) }
+  scope :state_not_brouillon,             -> { where.not(state: BROUILLON) }
+  scope :state_nouveaux,                  -> { where(state: NOUVEAUX) }
+  scope :state_ouvert,                    -> { where(state: OUVERT) }
+  scope :state_waiting_for_gestionnaire,  -> { where(state: WAITING_FOR_GESTIONNAIRE) }
+  scope :state_waiting_for_user,          -> { where(state: WAITING_FOR_USER) }
+  scope :state_en_construction,           -> { where(state: EN_CONSTRUCTION) }
+  scope :state_en_instruction,            -> { where(state: EN_INSTRUCTION) }
+  scope :state_a_instruire,               -> { where(state: A_INSTRUIRE) }
+  scope :state_termine,                   -> { where(state: TERMINE) }
 
-  scope :archived, -> { where(archived: true) }
-  scope :not_archived, -> { where(archived: false) }
+  scope :archived,      -> { where(archived: true) }
+  scope :not_archived,  -> { where(archived: false) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
-  scope :all_state, -> (order = :asc) { not_archived.state_not_brouillon.order_by_updated_at(order) }
-  scope :nouveaux, -> (order = :asc) { not_archived.state_nouveaux.order_by_updated_at(order) }
-  scope :waiting_for_gestionnaire, -> (order = :asc) { not_archived.state_waiting_for_gestionnaire.order_by_updated_at(order) }
-  scope :waiting_for_user, -> (order = :asc) { not_archived.state_waiting_for_user.order_by_updated_at(order) }
-  scope :ouvert, -> (order = :asc) { not_archived.state_ouvert.order_by_updated_at(order) }
-  scope :a_instruire, -> (order = :asc) { not_archived.state_a_instruire.order_by_updated_at(order) }
-  scope :downloadable, -> { state_not_brouillon.order_by_updated_at("ASC") }
+  scope :all_state,                 -> (order = :asc) { not_archived.state_not_brouillon.order_by_updated_at(order) }
+  scope :nouveaux,                  -> (order = :asc) { not_archived.state_nouveaux.order_by_updated_at(order) }
+  scope :waiting_for_gestionnaire,  -> (order = :asc) { not_archived.state_waiting_for_gestionnaire.order_by_updated_at(order) }
+  scope :waiting_for_user,          -> (order = :asc) { not_archived.state_waiting_for_user.order_by_updated_at(order) }
+  scope :ouvert,                    -> (order = :asc) { not_archived.state_ouvert.order_by_updated_at(order) }
+  scope :a_instruire,               -> (order = :asc) { not_archived.state_a_instruire.order_by_updated_at(order) }
+  scope :downloadable,              -> { state_not_brouillon.order_by_updated_at("ASC") }
 
   accepts_nested_attributes_for :individual
 
