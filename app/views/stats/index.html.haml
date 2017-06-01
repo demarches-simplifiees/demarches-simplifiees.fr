@@ -57,24 +57,23 @@
             :colors => ["rgba(191, 220, 249, 1)", "rgba(113, 176, 239, 1)", "rgba(61, 149, 236, 1)"]
 
     - if administration_signed_in?
-      - cache "computation-heavy-stats", :expires_in => 1.day do
-        .stat-card.stat-card-half.pull-left
-          %span.stat-card-title Temps de traitement moyen d'un dossier
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Temps de traitement moyen d'un dossier
 
-          .chart-container
-            .chart
-              = line_chart @dossier_instruction_mean_time,
-                :ytitle => "Jours",
-                :colors => ["rgba(61, 149, 236, 1)"]
+        .chart-container
+          .chart
+            = line_chart @dossier_instruction_mean_time,
+              :ytitle => "Jours",
+              :colors => ["rgba(61, 149, 236, 1)"]
 
-        .stat-card.stat-card-half.pull-left
-          %span.stat-card-title Temps de remplissage moyen d'un dossier
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Temps de remplissage moyen d'un dossier
 
-          .chart-container
-            .chart
-              = line_chart @dossier_filling_mean_time,
-                :ytitle => "Minutes",
-                :colors => ["rgba(61, 149, 236, 1)"]
+        .chart-container
+          .chart
+            = line_chart @dossier_filling_mean_time,
+              :ytitle => "Minutes",
+              :colors => ["rgba(61, 149, 236, 1)"]
 
     .clearfix
 
@@ -92,6 +91,6 @@
 
       .stat-card.stat-card-half.pull-left
         %span.stat-card-title Pourcentage d'avis rempli
-        = line_chart @avis_answer_percentages, ytitle: 'avis avec reponse / total avis', xtitle: 'semaines'
+        = line_chart @avis_answer_percentages, ytitle: 'avis avec réponse / total avis', xtitle: 'semaines'
 
       .clearfix
