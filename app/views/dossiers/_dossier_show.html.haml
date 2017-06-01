@@ -2,6 +2,8 @@
 
 = render partial: 'dossiers/messagerie', locals: { dossier_facade: @facade }
 
+= render partial: 'dossiers/motivation', locals: { dossier_facade: @facade }
+
 - if @facade.procedure.individual_with_siret
   .default-data-block
     .row.show-block.infos

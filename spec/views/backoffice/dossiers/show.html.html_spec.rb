@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'backoffice/dossiers/show.html.haml', type: :view do
-  let!(:dossier) { create(:dossier, :with_entreprise, state: state) }
-  let(:state) { 'draft' }
+  let!(:dossier) { create(:dossier, :with_entreprise, state: state, motivation: "Motivation de décision") }
+  let(:state) { 'closed' }
   let(:dossier_id) { dossier.id }
   let(:gestionnaire) { create(:gestionnaire) }
 
@@ -43,6 +43,10 @@ describe 'backoffice/dossiers/show.html.haml', type: :view do
       it 'Editer mon dossier button doesnt present' do
         expect(rendered).to_not have_css('#maj_infos')
       end
+    end
+
+    it "shows the motivation" do
+      expect(rendered).to have_content("Motivation de décision")
     end
   end
 end
