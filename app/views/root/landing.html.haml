@@ -10,7 +10,8 @@
 
           = link_to "Demander une démo",
             "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo TPS",
-            :class => "hero-button"
+            class: "hero-button",
+            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
 
           %p.hero-phone-cta
             ou nous appeler au 01 40 15 68 49
@@ -132,6 +133,7 @@
         %div
           = link_to "Demander une démo",
             "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS",
-            :class => "cta-panel-button"
+            class: "cta-panel-button",
+            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
           %p.cta-panel-phone-cta
             ou nous appeler au 01 40 15 68 49
