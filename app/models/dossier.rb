@@ -23,6 +23,7 @@ class Dossier < ActiveRecord::Base
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
   has_one :individual, dependent: :destroy
+  has_one :attestation
   has_many :cerfa, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy

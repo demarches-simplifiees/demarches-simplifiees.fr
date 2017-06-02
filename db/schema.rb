@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170524140630) do
+ActiveRecord::Schema.define(version: 20170601123221) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,15 @@ ActiveRecord::Schema.define(version: 20170524140630) do
     t.datetime "updated_at",   null: false
     t.integer  "procedure_id"
     t.index ["procedure_id"], name: "index_attestation_templates_on_procedure_id", unique: true, using: :btree
+  end
+
+  create_table "attestations", force: :cascade do |t|
+    t.string   "pdf"
+    t.string   "title"
+    t.integer  "dossier_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dossier_id"], name: "index_attestations_on_dossier_id", using: :btree
   end
 
   create_table "avis", force: :cascade do |t|
@@ -463,6 +472,7 @@ ActiveRecord::Schema.define(version: 20170524140630) do
   end
 
   add_foreign_key "attestation_templates", "procedures"
+  add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "gestionnaires", column: "claimant_id"
   add_foreign_key "cerfas", "dossiers"
   add_foreign_key "closed_mails", "procedures"
