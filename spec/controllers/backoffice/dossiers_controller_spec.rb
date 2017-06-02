@@ -252,7 +252,7 @@ describe Backoffice::DossiersController, type: :controller do
 
   describe 'POST #refuse' do
     before do
-      dossier.refused!
+      dossier.received!
       sign_in gestionnaire
     end
 
@@ -278,7 +278,7 @@ describe Backoffice::DossiersController, type: :controller do
 
   describe 'POST #without_continuation' do
     before do
-      dossier.without_continuation!
+      dossier.received!
       sign_in gestionnaire
     end
     subject { post :without_continuation, params: {dossier_id: dossier_id} }
