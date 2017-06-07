@@ -173,9 +173,6 @@ Rails.application.routes.draw do
     resources :dossiers do
       post 'receive' => 'dossiers#receive'
       post 'process_dossier' => 'dossiers#process_dossier'
-      post 'refuse' => 'dossiers#refuse'
-      post 'without_continuation' => 'dossiers#without_continuation'
-      post 'close' => 'dossiers#close'
       member do
         post 'archive'
         post 'unarchive'
