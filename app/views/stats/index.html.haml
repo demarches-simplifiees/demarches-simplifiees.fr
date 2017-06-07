@@ -24,11 +24,9 @@
 
       .chart-container
         .chart.monthly-procedures-chart
-          = column_chart @procedures_in_the_last_4_months,
-            :colors => ["rgba(61, 149, 236, 1)"]
+          = column_chart @procedures_in_the_last_4_months
         .chart.cumulative-procedures-chart.hidden
-          = area_chart @procedures_cumulative,
-            :colors => ["rgba(61, 149, 236, 1)"]
+          = area_chart @procedures_cumulative
 
     .stat-card.stat-card-half.pull-left
       %ul.segmented-control.pull-right
@@ -41,11 +39,9 @@
 
       .chart-container
         .chart.monthly-dossiers-chart
-          = column_chart @dossiers_in_the_last_4_months,
-            :colors => ["rgba(61, 149, 236, 1)"]
+          = column_chart @dossiers_in_the_last_4_months
         .chart.cumulative-dossiers-chart.hidden
-          = area_chart @dossiers_cumulative,
-            :colors => ["rgba(61, 149, 236, 1)"]
+          = area_chart @dossiers_cumulative
 
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title
@@ -53,8 +49,7 @@
 
       .chart-container
         .chart
-          = pie_chart @procedures_count_per_administrateur,
-            :colors => ["rgba(191, 220, 249, 1)", "rgba(113, 176, 239, 1)", "rgba(61, 149, 236, 1)"]
+          = pie_chart @procedures_count_per_administrateur
 
     - if administration_signed_in?
       .stat-card.stat-card-half.pull-left
@@ -63,8 +58,7 @@
         .chart-container
           .chart
             = line_chart @dossier_instruction_mean_time,
-              :ytitle => "Jours",
-              :colors => ["rgba(61, 149, 236, 1)"]
+              :ytitle => "Jours"
 
       .stat-card.stat-card-half.pull-left
         %span.stat-card-title Temps de remplissage moyen d'un dossier
@@ -72,8 +66,7 @@
         .chart-container
           .chart
             = line_chart @dossier_filling_mean_time,
-              :ytitle => "Minutes",
-              :colors => ["rgba(61, 149, 236, 1)"]
+              :ytitle => "Minutes"
 
     .clearfix
 
