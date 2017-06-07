@@ -104,63 +104,33 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   def process_dossier
+    create_dossier_facade params[:dossier_id]
+
+    if params[:dossier] && params[:dossier][:motivation].present?
+      motivation = params[:dossier][:motivation]
+    end
+
+    dossier = @facade.dossier
+
     case params[:process_action]
     when "refuse"
-      refuse
+      next_step = "refuse"
+      notice = "Dossier considéré comme refusé."
+      template = dossier.procedure.refused_mail_template
     when "without_continuation"
-      without_continuation
+      next_step = "without_continuation"
+      notice = "Dossier considéré comme sans suite."
+      template = dossier.procedure.without_continuation_mail_template
     when "close"
-      close
-    end
-  end
-
-  def refuse
-    create_dossier_facade params[:dossier_id]
-
-    if params[:dossier] && params[:dossier][:motivation].present?
-      motivation = params[:dossier][:motivation]
+      next_step = "close"
+      notice = "Dossier traité avec succès."
+      template = dossier.procedure.closed_mail_template
     end
 
-    dossier = @facade.dossier
+    dossier.next_step! 'gestionnaire', next_step, motivation
+    flash.notice = notice
 
-    dossier.next_step! 'gestionnaire', 'refuse', motivation
-    flash.notice = 'Dossier considéré comme refusé.'
-
-    NotificationMailer.send_notification(dossier, dossier.procedure.refused_mail_template).deliver_now!
-
-    redirect_to backoffice_dossier_path(id: dossier.id)
-  end
-
-  def without_continuation
-    create_dossier_facade params[:dossier_id]
-
-    if params[:dossier] && params[:dossier][:motivation].present?
-      motivation = params[:dossier][:motivation]
-    end
-
-    dossier = @facade.dossier
-
-    dossier.next_step! 'gestionnaire', 'without_continuation', motivation
-    flash.notice = 'Dossier considéré comme sans suite.'
-
-    NotificationMailer.send_notification(dossier, dossier.procedure.without_continuation_mail_template).deliver_now!
-
-    redirect_to backoffice_dossier_path(id: dossier.id)
-  end
-
-  def close
-    create_dossier_facade params[:dossier_id]
-
-    if params[:dossier] && params[:dossier][:motivation].present?
-      motivation = params[:dossier][:motivation]
-    end
-
-    dossier = @facade.dossier
-
-    dossier.next_step! 'gestionnaire', 'close', motivation
-    flash.notice = 'Dossier traité avec succès.'
-
-    NotificationMailer.send_notification(dossier, dossier.procedure.closed_mail_template).deliver_now!
+    NotificationMailer.send_notification(dossier, template).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
