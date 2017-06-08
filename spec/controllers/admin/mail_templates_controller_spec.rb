@@ -25,7 +25,7 @@ describe Admin::MailTemplatesController, type: :controller do
     before :each do
       patch :update,
         params: { procedure_id: procedure.id,
-                  id: initiated_mail.class.slug,
+                  id: initiated_mail.class.const_get(:SLUG),
                   mail_template: { object: object, body: body }
                 }
     end
@@ -33,7 +33,7 @@ describe Admin::MailTemplatesController, type: :controller do
     it { expect(response).to redirect_to admin_procedure_mail_templates_path(procedure) }
 
     context 'the mail template' do
-      subject { procedure.reload ; procedure.initiated_mail }
+      subject { procedure.reload ; procedure.initiated_mail_template }
 
       it { expect(subject.object).to eq(object) }
       it { expect(subject.body).to eq(body) }

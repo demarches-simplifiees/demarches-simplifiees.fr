@@ -99,7 +99,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier.received!
     flash.notice = 'Dossier considéré comme reçu.'
 
-    NotificationMailer.send_notification(dossier, dossier.procedure.received_mail).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.received_mail_template).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
@@ -112,7 +112,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier.next_step! 'gestionnaire', 'refuse'
     flash.notice = 'Dossier considéré comme refusé.'
 
-    NotificationMailer.send_notification(dossier, dossier.procedure.refused_mail).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.refused_mail_template).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
@@ -125,7 +125,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier.next_step! 'gestionnaire', 'without_continuation'
     flash.notice = 'Dossier considéré comme sans suite.'
 
-    NotificationMailer.send_notification(dossier, dossier.procedure.without_continuation_mail).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.without_continuation_mail_template).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
@@ -138,7 +138,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier.next_step! 'gestionnaire', 'close'
     flash.notice = 'Dossier traité avec succès.'
 
-    NotificationMailer.send_notification(dossier, dossier.procedure.closed_mail).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.closed_mail_template).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end

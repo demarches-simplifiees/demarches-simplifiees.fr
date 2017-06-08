@@ -52,7 +52,7 @@ class Users::DescriptionController < UsersController
     else
       if dossier.draft?
         dossier.initiated!
-        NotificationMailer.send_notification(dossier, procedure.initiated_mail).deliver_now!
+        NotificationMailer.send_notification(dossier, procedure.initiated_mail_template).deliver_now!
       end
       flash.notice = 'Félicitations, votre demande a bien été enregistrée.'
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: dossier.id)
