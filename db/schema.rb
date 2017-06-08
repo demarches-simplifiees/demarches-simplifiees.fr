@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 20170523092900) do
 
   create_table "closed_mails", force: :cascade do |t|
     t.text     "body"
-    t.string   "object"
+    t.text     "object"
     t.integer  "procedure_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
@@ -251,7 +251,7 @@ ActiveRecord::Schema.define(version: 20170523092900) do
   end
 
   create_table "initiated_mails", force: :cascade do |t|
-    t.string   "object"
+    t.text     "object"
     t.text     "body"
     t.integer  "procedure_id"
     t.datetime "created_at",   null: false
@@ -371,7 +371,7 @@ ActiveRecord::Schema.define(version: 20170523092900) do
 
   create_table "received_mails", force: :cascade do |t|
     t.text     "body"
-    t.string   "object"
+    t.text     "object"
     t.integer  "procedure_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
@@ -380,7 +380,7 @@ ActiveRecord::Schema.define(version: 20170523092900) do
 
   create_table "refused_mails", force: :cascade do |t|
     t.text     "body"
-    t.string   "object"
+    t.text     "object"
     t.integer  "procedure_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
@@ -441,7 +441,7 @@ ActiveRecord::Schema.define(version: 20170523092900) do
 
   create_table "without_continuation_mails", force: :cascade do |t|
     t.text     "body"
-    t.string   "object"
+    t.text     "object"
     t.integer  "procedure_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
