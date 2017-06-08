@@ -153,6 +153,17 @@ describe Procedure do
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
     let(:received_mail){ create(:received_mail) }
 
+    before do
+      @logo = File.open('spec/fixtures/white.png')
+      @signature = File.open('spec/fixtures/black.png')
+      @attestation_template = create(:attestation_template, procedure: procedure, logo: @logo, signature: @signature)
+    end
+
+    after do
+      @logo.close
+      @signature.close
+    end
+
     subject { procedure.clone }
 
     it 'should duplicate specific objects with different id' do
@@ -175,6 +186,8 @@ describe Procedure do
       subject.types_de_piece_justificative.zip(procedure.types_de_piece_justificative).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
+
+      expect(subject.attestation_template.title).to eq(procedure.attestation_template.title)
     end
 
     it 'should duplicate existing mail_templates' do

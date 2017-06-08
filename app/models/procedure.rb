@@ -7,6 +7,7 @@ class Procedure < ActiveRecord::Base
   has_one :procedure_path, dependent: :destroy
 
   has_one :module_api_carto, dependent: :destroy
+  has_one :attestation_template, dependent: :destroy
 
   belongs_to :administrateur
 
@@ -93,6 +94,7 @@ class Procedure < ActiveRecord::Base
         :types_de_champ,
         :types_de_champ_private,
         :module_api_carto,
+        :attestation_template,
         types_de_champ: [:drop_down_list]
       ])
     procedure.archived = false
