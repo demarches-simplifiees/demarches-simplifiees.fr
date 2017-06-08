@@ -47,14 +47,16 @@
 
           - when 'explication'
 
+          - when 'date'
+            = render partial: 'users/description/champs/date', locals: { champ: champ }
+
           - else
             %input.form-control{ name: "champs['#{champ.id}']",
                             placeholder: champ.libelle,
                             id: "champs_#{champ.id}",
                             value: champ.value,
-                            type: champ.type_champ,
-                            'data-provide' => champ.data_provide,
-                            'data-date-format' => champ.data_date_format }
+                            type: champ.type_champ }
+
 
           - unless champ.description.empty?
             %div{ id: "description_champs_#{champ.id}", class: ('help-block' unless champ.type_champ == 'engagement') }
