@@ -1,6 +1,16 @@
 class Admin::AttestationTemplatesController < AdminController
   before_action :retrieve_procedure
 
+  def show
+    attestation_template = @procedure.attestation_template
+    @logo                = attestation_template.logo
+    @title               = attestation_template.title
+    @body                = attestation_template.body
+    @signature           = attestation_template.signature
+    @footer              = attestation_template.footer
+    @created_at          = DateTime.now
+  end
+
   def edit
     @attestation_template = @procedure.attestation_template || AttestationTemplate.new(procedure: @procedure)
   end

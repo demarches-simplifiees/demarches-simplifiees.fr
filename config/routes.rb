@@ -146,7 +146,7 @@ Rails.application.routes.draw do
 
       resource :previsualisation, only: [:show]
 
-      resource :attestation_template, only: [:edit, :update, :create]
+      resource :attestation_template, only: [:show, :edit, :update, :create]
 
       post 'attestation_template/disactivate' => 'attestation_templates#disactivate'
       patch 'attestation_template/disactivate' => 'attestation_templates#disactivate'

@@ -10,6 +10,18 @@ describe Admin::AttestationTemplatesController, type: :controller do
     Timecop.freeze(Time.now)
   end
 
+  describe 'GET #show' do
+    before { get :show, params: { procedure_id: procedure.id, format: :pdf } }
+
+    it { expect(subject.status).to eq(200) }
+    it { expect(assigns[:title]).to eq(attestation_template.title) }
+    it { expect(assigns[:logo].read).to eq(attestation_template.logo.read) }
+    it { expect(assigns[:body]).to eq(attestation_template.body) }
+    it { expect(assigns[:signature].read).to eq(attestation_template.signature.read) }
+    it { expect(assigns[:footer]).to eq(attestation_template.footer) }
+    it { expect(assigns[:created_at]).to eq(DateTime.now) }
+  end
+
   describe 'POST #preview' do
     let(:upload_params) { { title: 't', body: 'b', footer: 'f' } }
 
