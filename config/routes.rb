@@ -143,6 +143,11 @@ Rails.application.routes.draw do
       resource :accompagnateurs, only: [:show, :update]
 
       resource :previsualisation, only: [:show]
+
+      resource :attestation_template, only: [:edit, :update, :create]
+
+      post 'attestation_template/disactivate' => 'attestation_templates#disactivate'
+      patch 'attestation_template/disactivate' => 'attestation_templates#disactivate'
     end
 
     namespace :accompagnateurs do
