@@ -268,7 +268,7 @@ describe Backoffice::DossiersController, type: :controller do
 
       it 'Notification email is sent' do
         expect(NotificationMailer).to receive(:send_notification)
-          .with(dossier, kind_of(Mails::RefusedMail)).and_return(NotificationMailer)
+          .with(dossier, kind_of(Mails::RefusedMail), nil).and_return(NotificationMailer)
         expect(NotificationMailer).to receive(:deliver_now!)
 
         subject
@@ -294,7 +294,7 @@ describe Backoffice::DossiersController, type: :controller do
 
       it 'Notification email is sent' do
         expect(NotificationMailer).to receive(:send_notification)
-          .with(dossier, kind_of(Mails::WithoutContinuationMail)).and_return(NotificationMailer)
+          .with(dossier, kind_of(Mails::WithoutContinuationMail), nil).and_return(NotificationMailer)
         expect(NotificationMailer).to receive(:deliver_now!)
 
         subject
@@ -304,9 +304,17 @@ describe Backoffice::DossiersController, type: :controller do
     end
 
     context "with close" do
+      let(:expected_attestation) { nil }
+
       before do
         dossier.received!
         sign_in gestionnaire
+
+        expect(NotificationMailer).to receive(:send_notification)
+          .with(dossier, kind_of(Mails::ClosedMail), expected_attestation)
+          .and_return(NotificationMailer)
+
+        expect(NotificationMailer).to receive(:deliver_now!)
       end
 
       subject { post :process_dossier, params: { process_action: "close", dossier_id: dossier_id} }
@@ -318,15 +326,42 @@ describe Backoffice::DossiersController, type: :controller do
         expect(dossier.state).to eq('closed')
       end
 
-      it 'Notification email is sent' do
-        expect(NotificationMailer).to receive(:send_notification)
-          .with(dossier, kind_of(Mails::ClosedMail)).and_return(NotificationMailer)
-        expect(NotificationMailer).to receive(:deliver_now!)
-
-        subject
+      context 'when the dossier does not have any attestation' do
+        it 'Notification email is sent' do
+          subject
+        end
       end
 
-      it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
+      context 'when the dossier has an attestation' do
+        let(:emailable) { false }
+
+        before do
+          fake_attestation = double(pdf: double(read: 'pdf', size: 2.megabytes), emailable?: emailable)
+          allow_any_instance_of(Dossier).to receive(:attestation).and_return(fake_attestation)
+        end
+
+        context 'emailable' do
+          let(:emailable) { true }
+          let(:expected_attestation) { 'pdf' }
+
+          it 'Notification email is sent with the attestation' do
+            subject
+          end
+        end
+
+        context 'when the dossier has an attestation not emailable' do
+          let(:emailable) { false }
+          let(:expected_attestation) { nil }
+
+          it 'Notification email is sent without the attestation' do
+            expect(controller).to receive(:capture_message)
+
+            subject
+          end
+        end
+
+        it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
+      end
     end
   end
 

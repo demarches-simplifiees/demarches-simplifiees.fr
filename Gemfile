@@ -106,6 +106,8 @@ gem 'select2-rails'
 gem 'prawn', '~> 2.0.1'
 gem 'prawn_rails', '~> 0.0.11'
 
+gem 'sentry-raven'
+
 group :test do
   gem 'capybara'
   gem 'launchy'
@@ -148,8 +150,3 @@ group :development, :test do
   # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
   gem 'dotenv-rails'
 end
-
-group :production, :staging do
-  gem 'sentry-raven'
-end
-
