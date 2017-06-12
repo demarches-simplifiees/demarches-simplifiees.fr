@@ -7,6 +7,5 @@ class DeleteAttributsToDossier < ActiveRecord::Migration
 
     remove_column :dossiers, :position_lon
     remove_column :dossiers, :ref_dossier_carto
-
   end
 end

@@ -1,6 +1,5 @@
 class NewAdminMailer < ApplicationMailer
   def new_admin_email admin, password
-
     @admin = admin
     @password = password
 

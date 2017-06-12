@@ -61,7 +61,7 @@ Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false
 
 Layout/EmptyLinesAroundMethodBody:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundModuleBody:
   Enabled: false

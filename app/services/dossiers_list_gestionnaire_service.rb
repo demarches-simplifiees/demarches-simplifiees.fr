@@ -13,7 +13,6 @@ class DossiersListGestionnaireService
          'termine' => termine,
          'archive' => archive,
          'all_state' => all_state}[@liste]
-
   end
 
   def self.dossiers_liste_libelle

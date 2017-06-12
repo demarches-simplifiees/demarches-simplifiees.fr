@@ -1,7 +1,6 @@
 class BuildDefaultPreferenceListDossier < ActiveRecord::Migration
   class Gestionnaire < ActiveRecord::Base
     def build_default_preferences_list_dossier
-
       PreferenceListDossier.available_columns.each do |table|
         table.second.each do |column|
           if valid_couple_table_attr? table.first, column.first

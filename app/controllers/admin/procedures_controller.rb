@@ -40,7 +40,6 @@ class Admin::ProceduresController < AdminController
   end
 
   def edit
-
   end
 
   def destroy
