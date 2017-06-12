@@ -46,7 +46,7 @@ Layout/EmptyLines:
   Enabled: true
 
 Layout/EmptyLinesAroundAccessModifier:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundBeginBody:
   Enabled: true
