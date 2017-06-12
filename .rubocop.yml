@@ -1,11 +1,11 @@
 Bundler/DuplicatedGem:
-  Enabled: false
+  Enabled: true
 
 Bundler/OrderedGems:
   Enabled: false
 
 Layout/AccessModifierIndentation:
-  Enabled: false
+  Enabled: true
 
 Layout/AlignArray:
   Enabled: false
@@ -23,7 +23,7 @@ Layout/CaseIndentation:
   Enabled: false
 
 Layout/ClosingParenthesisIndentation:
-  Enabled: false
+  Enabled: true
 
 Layout/CommentIndentation:
   Enabled: false
@@ -32,10 +32,10 @@ Layout/DotPosition:
   Enabled: false
 
 Layout/ElseAlignment:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLineAfterMagicComment:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLineBetweenDefs:
   Enabled: false
@@ -47,7 +47,7 @@ Layout/EmptyLinesAroundAccessModifier:
   Enabled: false
 
 Layout/EmptyLinesAroundBeginBody:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
@@ -65,7 +65,8 @@ Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
 Layout/EndOfLine:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: lf
 
 Layout/ExtraSpacing:
   Enabled: false
@@ -272,7 +273,8 @@ Lint/EmptyWhen:
   Enabled: false
 
 Lint/EndAlignment:
-  Enabled: false
+  Enabled: true
+  EnforcedStyleAlignWith: variable
 
 Lint/EndInMethod:
   Enabled: false
