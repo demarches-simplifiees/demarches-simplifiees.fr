@@ -88,7 +88,8 @@ class Procedure < ActiveRecord::Base
 
   def clone
     procedure = self.deep_clone(include:
-      [:types_de_piece_justificative,
+      [
+        :types_de_piece_justificative,
         :types_de_champ,
         :types_de_champ_private,
         :module_api_carto,

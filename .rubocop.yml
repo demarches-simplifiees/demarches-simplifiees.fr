@@ -8,7 +8,7 @@ Layout/AccessModifierIndentation:
   Enabled: true
 
 Layout/AlignArray:
-  Enabled: false
+  Enabled: true
 
 Layout/AlignHash:
   Enabled: false
