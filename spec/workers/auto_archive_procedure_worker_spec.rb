@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe AutoArchiveProcedureWorker, type: :worker do
-
   let!(:procedure) { create(:procedure, archived: false, auto_archive_on: nil )}
   let!(:procedure_hier) { create(:procedure, archived: false, auto_archive_on: 1.day.ago )}
   let!(:procedure_aujourdhui) { create(:procedure, archived: false, auto_archive_on: Date.today )}
@@ -17,11 +16,9 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
     end
 
     it { expect(procedure.archived).to eq false }
-
   end
 
   context "when procedures have auto_archive_on set on yesterday or today" do
-
     describe "titi" do
       before do
         subject
@@ -31,12 +28,9 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
 
       it { expect(procedure_hier.archived).to eq true }
       it { expect(procedure_aujourdhui.archived).to eq true }
-
     end
 
-
     context "with dossiers" do
-
       let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: 'draft', archived: false)}
       let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: 'initiated', archived: false)}
       let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'replied', archived: false)}
@@ -61,18 +55,14 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
       it { expect(dossier6.state).to eq 'closed' }
       it { expect(dossier7.state).to eq 'refused' }
       it { expect(dossier8.state).to eq 'without_continuation' }
-
     end
   end
 
   context "when procedures have auto_archive_on set on future" do
-
     before do
       subject
     end
 
     it { expect(procedure_demain.archived).to eq false }
-
   end
-
 end

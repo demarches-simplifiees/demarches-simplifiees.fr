@@ -2,13 +2,12 @@ class AutoArchiveProcedureWorker
   include Sidekiq::Worker
 
   def perform(*args)
-    procedures_to_archive = Procedure.not_archived.where("auto_archive_on <= ?", Date.today)
+    Procedure.not_archived.where("auto_archive_on <= ?", Date.today).each do |procedure|
+      procedure.dossiers.state_en_construction.each do |dossier|
+        dossier.received!
+      end
 
-    procedures_to_archive.each do |p|
-      p.dossiers.state_en_construction.update_all(state: :received)
+      procedure.update_attributes!(archived: true)
     end
-
-    procedures_to_archive.update_all(archived: true, auto_archive_on: nil)
-
   end
 end
