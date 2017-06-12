@@ -64,7 +64,7 @@ Layout/EmptyLinesAroundMethodBody:
   Enabled: true
 
 Layout/EmptyLinesAroundModuleBody:
-  Enabled: false
+  Enabled: true
 
 Layout/EndOfLine:
   Enabled: true
