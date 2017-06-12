@@ -34,5 +34,19 @@ describe ChampDecorator do
         it { is_expected.to eq '' }
       end
     end
+
+    describe "for a date" do
+      let(:type_champ) { :date }
+
+      context "when value is an ISO date" do
+        before { champ.update value: "2017-12-31" }
+        it { is_expected.to eq "31/12/2017" }
+      end
+
+      context "when value is empty" do
+        before { champ.update value: nil }
+        it { is_expected.to eq nil }
+      end
+    end
   end
 end

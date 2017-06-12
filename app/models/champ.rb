@@ -5,6 +5,7 @@ class Champ < ActiveRecord::Base
 
   delegate :libelle, :type_champ, :order_place, :mandatory, :description, :drop_down_list, to: :type_de_champ
 
+  before_save :format_date_to_iso, if: Proc.new { type_champ == 'date' }
   after_save :internal_notification, if: Proc.new { !dossier.nil? }
 
   def mandatory?
@@ -12,12 +13,12 @@ class Champ < ActiveRecord::Base
   end
 
   def data_provide
-    return 'datepicker' if (type_champ == 'datetime' || type_champ == 'date') && !(BROWSER.value.chrome? || BROWSER.value.edge?)
+    return 'datepicker' if (type_champ == 'datetime') && !(BROWSER.value.chrome? || BROWSER.value.edge?)
     return 'typeahead' if type_champ == 'address'
   end
 
   def data_date_format
-    ('dd/mm/yyyy' if type_champ == 'datetime' || type_champ == 'date')
+    ('dd/mm/yyyy' if type_champ == 'datetime')
   end
 
   def same_hour? num
@@ -54,6 +55,15 @@ class Champ < ActiveRecord::Base
   end
 
   private
+
+  def format_date_to_iso
+    date = begin
+      Date.parse(value).strftime("%F")
+    rescue
+      nil
+    end
+    self.value = date
+  end
 
   def internal_notification
     unless dossier.state == 'draft'
