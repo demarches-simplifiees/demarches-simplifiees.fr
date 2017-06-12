@@ -17,7 +17,8 @@ describe StatsController, type: :controller do
       it { expect(subject).to eq([
         [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 1],
         [I18n.l(1.days.ago.beginning_of_month, format: "%B %Y"), 2]
-      ] ) }
+        ])
+      }
     end
 
     context "with a date attribute" do
@@ -35,7 +36,8 @@ describe StatsController, type: :controller do
       it { expect(subject).to eq([
         [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 2],
         [I18n.l(1.days.ago.beginning_of_month, format: "%B %Y"), 1]
-      ] ) }
+        ])
+      }
     end
   end
 
@@ -52,9 +54,10 @@ describe StatsController, type: :controller do
       subject { StatsController.new.send(:cumulative_hash, association) }
 
       it { expect(subject).to eq({
-        45.days.ago.beginning_of_month => 1,
-        15.days.ago.beginning_of_month => 3
-      }) }
+          45.days.ago.beginning_of_month => 1,
+          15.days.ago.beginning_of_month => 3
+        })
+      }
     end
 
     context "with a date attribute" do
@@ -69,9 +72,10 @@ describe StatsController, type: :controller do
       subject { StatsController.new.send(:cumulative_hash, association, :updated_at) }
 
       it { expect(subject).to eq({
-        20.days.ago.beginning_of_month => 2,
-        10.days.ago.beginning_of_month => 3
-      }) }
+          20.days.ago.beginning_of_month => 2,
+          10.days.ago.beginning_of_month => 3
+        })
+      }
     end
   end
 

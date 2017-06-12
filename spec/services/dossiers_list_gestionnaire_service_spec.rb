@@ -49,7 +49,8 @@ describe DossiersListGestionnaireService do
     let(:order) { 'desc' }
 
     let(:select_preference_list_dossier) { gestionnaire.preference_list_dossiers
-                                               .find_by(table: table, attr: attr, procedure: nil) }
+                                               .find_by(table: table, attr: attr, procedure: nil)
+    }
 
     subject { DossiersListGestionnaireService.new(gestionnaire, liste).change_sort! param_sort }
 
@@ -99,7 +100,8 @@ describe DossiersListGestionnaireService do
     let(:filter_value) { 'plop' }
 
     let(:select_preference_list_dossier) { gestionnaire.preference_list_dossiers
-                                               .find_by(table: table, attr: attr, procedure: nil) }
+                                               .find_by(table: table, attr: attr, procedure: nil)
+    }
 
     subject { described_class.new(gestionnaire, liste).add_filter new_filter }
 

@@ -17,7 +17,8 @@ feature 'France Connect Particulier  Connexion' do
                                      birthdate: birthdate,
                                      birthplace: birthplace,
                                      gender: gender,
-                                     email: email) }
+                                     email: email)
+  }
 
   context 'when user is on login page' do
 
@@ -40,7 +41,8 @@ feature 'France Connect Particulier  Connexion' do
           birthdate: birthdate,
           birthplace: birthplace,
           gender: gender,
-          email_france_connect: email) }
+          email_france_connect: email)
+        }
 
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))

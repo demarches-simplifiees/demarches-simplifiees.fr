@@ -17,7 +17,8 @@ describe DropDownList do
 Dév.Eco / Emploi
 Cadre de vie / Urb.
 Pilotage / Ingénierie
-" }
+"
+}
 
     it { expect(dropdownlist.options).to eq ['', 'Cohésion sociale', 'Dév.Eco / Emploi', 'Cadre de vie / Urb.', 'Pilotage / Ingénierie'] }
 
@@ -26,7 +27,8 @@ Pilotage / Ingénierie
 
 Cadre de vie / Urb.
 Pilotage / Ingénierie
-"  }
+"
+}
 
       it { expect(dropdownlist.options).to eq ['', 'Cohésion sociale', 'Cadre de vie / Urb.', 'Pilotage / Ingénierie'] }
     end
@@ -36,7 +38,8 @@ Pilotage / Ingénierie
     let(:value) { "tip
 --top--
 --troupt--
-ouaich" }
+ouaich"
+}
 
     it { expect(dropdownlist.disabled_options).to match(['--top--', '--troupt--']) }
   end

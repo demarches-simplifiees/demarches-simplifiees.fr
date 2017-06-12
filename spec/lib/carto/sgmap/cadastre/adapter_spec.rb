@@ -31,7 +31,8 @@ describe CARTO::SGMAP::Cadastre::Adapter do
                                        :code_dep,
                                        :nom_com,
                                        :code_com,
-                                       :code_arr] }
+                                       :code_arr]
+      }
     end
 
     describe 'Attributes' do

@@ -204,7 +204,8 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq 0 }
       it { expect(gestionnaire.follows.count).to eq 0 }
       it { expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:inject)
-      subject }
+        subject
+      }
     end
 
     context 'when gestionnaire follow any dossier into the procedure past in params' do
@@ -215,7 +216,8 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq 0 }
       it { expect(gestionnaire.follows.count).to eq 1 }
       it { expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:inject)
-      subject }
+        subject
+      }
     end
 
     context 'when gestionnaire follow a dossier with a notification into the procedure past in params' do
@@ -229,7 +231,8 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq 1 }
       it { expect(gestionnaire.follows.count).to eq 1 }
       it { expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).to receive(:inject)
-      subject }
+        subject
+      }
     end
   end
 

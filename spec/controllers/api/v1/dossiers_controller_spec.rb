@@ -144,7 +144,8 @@ describe API::V1::DossiersController do
               :code_effectif_entreprise,
               :date_creation,
               :nom,
-              :prenom] }
+              :prenom]
+          }
           subject { super()[:entreprise] }
 
           it { expect(subject[:siren]).to eq('440117620') }
@@ -164,7 +165,8 @@ describe API::V1::DossiersController do
           let(:field_list) { [
               :id,
               :libelle,
-              :description] }
+              :description]
+          }
           subject { super()[:types_de_piece_justificative] }
 
           it { expect(subject.length).to eq 2 }
@@ -184,9 +186,9 @@ describe API::V1::DossiersController do
           end
 
           let(:field_list) { [
-              :url, :created_at, :type_de_piece_justificative_id] }
-          subject {
-            super()[:pieces_justificatives].first }
+              :url, :created_at, :type_de_piece_justificative_id]
+          }
+          subject { super()[:pieces_justificatives].first }
 
           it { expect(subject.keys.include?(:content_url)).to be_truthy }
           it { expect(subject[:created_at]).not_to be_nil }
@@ -203,7 +205,8 @@ describe API::V1::DossiersController do
 
         describe 'champs' do
           let(:field_list) { [
-              :url] }
+              :url]
+          }
           subject { super()[:champs] }
 
           it { expect(subject.length).to eq 1 }
@@ -220,7 +223,8 @@ describe API::V1::DossiersController do
                   :libelle,
                   :description,
                   :order_place,
-                  :type] }
+                  :type]
+              }
               subject { super()[:type_de_champ] }
 
               it { expect(subject.keys.include?(:id)).to be_truthy }
@@ -234,7 +238,8 @@ describe API::V1::DossiersController do
 
         describe 'champs_private' do
           let(:field_list) { [
-              :url] }
+              :url]
+          }
           subject { super()[:champs_private] }
 
           it { expect(subject.length).to eq 1 }
@@ -251,7 +256,8 @@ describe API::V1::DossiersController do
                   :libelle,
                   :description,
                   :order_place,
-                  :type] }
+                  :type]
+              }
               subject { super()[:type_de_champ] }
 
               it { expect(subject.keys.include?(:id)).to be_truthy }
@@ -298,9 +304,9 @@ describe API::V1::DossiersController do
 
           describe 'user' do
             let(:field_list) { [
-                :url, :created_at, :type_de_piece_justificative_id] }
-            subject {
-              super()[:user] }
+                :url, :created_at, :type_de_piece_justificative_id]
+            }
+            subject { super()[:user] }
 
             it { expect(subject[:email]).not_to be_nil }
           end
@@ -320,7 +326,8 @@ describe API::V1::DossiersController do
               :code_postal,
               :localite,
               :code_insee_localite
-          ] }
+            ]
+          }
           subject { super()[:etablissement] }
 
           it { expect(subject[:siret]).to eq('44011762001530') }

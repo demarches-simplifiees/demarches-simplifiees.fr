@@ -10,14 +10,16 @@ describe DossiersListFacades do
     gestionnaire: gestionnaire,
     table: nil,
     attr: 'state',
-    attr_decorate: 'display_state' }
+    attr_decorate: 'display_state'
+  }
 
   let!(:preference_2) { create :preference_list_dossier,
     gestionnaire: gestionnaire,
     table: 'champs',
     attr: 'state',
     attr_decorate: 'display_state',
-    procedure_id: procedure.id }
+    procedure_id: procedure.id
+  }
 
   before do
     create :assign_to, procedure: procedure, gestionnaire: gestionnaire
@@ -63,7 +65,8 @@ describe DossiersListFacades do
       attr: 'state',
       attr_decorate: 'display_state',
       filter: filter,
-      procedure_id: procedure_id }
+      procedure_id: procedure_id
+    }
 
     subject { facade.active_filter? preference }
 

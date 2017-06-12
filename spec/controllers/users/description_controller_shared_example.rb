@@ -161,7 +161,8 @@ shared_examples 'description_controller_spec' do
 
     context 'Quand la procédure accepte les CERFA' do
       subject { post :update, params: {dossier_id: dossier_id,
-                                       cerfa_pdf: cerfa_pdf} }
+                                       cerfa_pdf: cerfa_pdf}
+      }
 
       it 'Notification interne is create' do
         expect { subject }.to change(Notification, :count).by (1)
@@ -319,7 +320,8 @@ shared_examples 'description_controller_spec' do
 
     subject { patch :pieces_justificatives, params: {dossier_id: dossier.id,
                                                      'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
-                                                     'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1} }
+                                                     'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
+    }
 
     context 'when user is a guest' do
       let(:guest) { create :user }
@@ -394,7 +396,8 @@ shared_examples 'description_controller_spec_POST_piece_justificatives_for_owner
 
   subject { patch :pieces_justificatives, params: {dossier_id: dossier.id,
                                                    'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
-                                                   'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1} }
+                                                   'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
+  }
 
   context 'when user is the owner', vcr: {cassette_name: 'controllers_users_description_controller_pieces_justificatives'} do
     before do
