@@ -43,7 +43,7 @@ Layout/EmptyLineBetweenDefs:
   Enabled: true
 
 Layout/EmptyLines:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundAccessModifier:
   Enabled: false

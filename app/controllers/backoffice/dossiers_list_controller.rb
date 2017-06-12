@@ -31,7 +31,6 @@ class Backoffice::DossiersListController < ApplicationController
     dossiers_list_facade liste
     service = dossiers_list_facade.service
 
-
     if param_page.nil?
       params[:dossiers_smart_listing] = {page: dossiers_list_facade.service.default_page}
     end

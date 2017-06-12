@@ -136,7 +136,6 @@ describe Users::SessionsController, type: :controller do
       expect(user.loged_in_with_france_connect?).to be_falsey
     end
 
-
     context 'when user is connect with france connect particulier' do
       let(:loged_in_with_france_connect) { 'particulier' }
 

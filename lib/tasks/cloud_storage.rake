@@ -91,7 +91,6 @@ namespace :cloudstorage do
     }
   end
 
-
   desc 'Clear old documents in tenant'
   task :clear do
     Rake::Task['cloudstorage:init'].invoke

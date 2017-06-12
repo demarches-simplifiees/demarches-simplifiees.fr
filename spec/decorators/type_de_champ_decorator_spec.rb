@@ -51,5 +51,4 @@ describe TypeDeChampDecorator do
     end
   end
 
-
 end

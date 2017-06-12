@@ -49,6 +49,4 @@ describe TypeDePieceJustificativeDecorator do
       end
     end
   end
-
-
 end

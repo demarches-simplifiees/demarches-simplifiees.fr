@@ -4,7 +4,6 @@ describe ChampDecorator do
   let(:champ) {create :champ, type_de_champ: (create :type_de_champ_public, type_champ: type_champ)}
   let(:decorator) { champ.decorate }
 
-
   describe 'value' do
     subject { decorator.value }
 

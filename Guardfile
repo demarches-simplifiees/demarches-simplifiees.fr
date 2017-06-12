@@ -24,7 +24,6 @@
 #  * zeus: 'zeus rspec' (requires the server to be started separetly)
 #  * 'just' rspec: 'rspec'
 
-
 guard 'livereload' do
   extensions = {
     css: :css,

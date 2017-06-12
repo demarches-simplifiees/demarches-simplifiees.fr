@@ -14,7 +14,6 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :truncation, { except: expect_list }
   end
 
-
   config.before(:each) do
     DatabaseCleaner.start
   end

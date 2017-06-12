@@ -31,7 +31,6 @@ describe Admin::ProceduresController, type: :controller do
     }
   }
 
-
   before do
     sign_in admin
   end

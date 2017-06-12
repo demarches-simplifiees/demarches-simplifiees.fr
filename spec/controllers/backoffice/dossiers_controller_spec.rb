@@ -181,7 +181,6 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
-
   describe 'POST #search' do
     describe 'by id' do
       context 'when I am logged as a gestionnaire' do
@@ -283,7 +282,6 @@ describe Backoffice::DossiersController, type: :controller do
       sign_in gestionnaire
     end
     subject { post :without_continuation, params: {dossier_id: dossier_id} }
-
 
     it 'change state to without_continuation' do
       subject
