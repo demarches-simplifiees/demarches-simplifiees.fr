@@ -1,6 +1,7 @@
 class Backoffice::DossiersController < Backoffice::DossiersListController
   respond_to :html, :xlsx, :ods, :csv
 
+  prepend_before_action :store_current_location, only: :show
   before_action :ensure_gestionnaire_is_authorized, only: :show
 
   def index
@@ -191,6 +192,12 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   private
+
+  def store_current_location
+    if !gestionnaire_signed_in?
+      store_location_for(:gestionnaire, request.url)
+    end
+  end
 
   def ensure_gestionnaire_is_authorized
     unless current_gestionnaire.can_view_dossier?(params[:id])
