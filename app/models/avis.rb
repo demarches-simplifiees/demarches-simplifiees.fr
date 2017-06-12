@@ -15,7 +15,7 @@ class Avis < ApplicationRecord
   end
 
   def notify_gestionnaire
-    AvisMailer.you_are_invited_on_dossier(self).deliver_now
+    AvisMailer.avis_invitation(self).deliver_now
   end
 
   def self.link_avis_to_gestionnaire(gestionnaire)
