@@ -21,7 +21,8 @@ Layout/BlockEndNewline:
   Enabled: true
 
 Layout/CaseIndentation:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: end
 
 Layout/ClosingParenthesisIndentation:
   Enabled: true

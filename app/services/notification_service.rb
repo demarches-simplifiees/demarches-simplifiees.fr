@@ -25,20 +25,20 @@ class NotificationService
 
   def text_for_notif attribut=''
     case @type_notif
-      when 'commentaire'
-        "#{notification.liste.size + 1} nouveau(x) commentaire(s) déposé(s)."
-      when 'cerfa'
-        "Un nouveau formulaire a été déposé."
-      when 'piece_justificative'
-        attribut
-      when 'champs'
-        attribut
-      when 'submitted'
-        "Le dossier nº #{@dossier_id} a été déposé."
-      when 'avis'
-        'Un nouvel avis a été rendu'
-      else
-        'Notification par défaut'
+    when 'commentaire'
+      "#{notification.liste.size + 1} nouveau(x) commentaire(s) déposé(s)."
+    when 'cerfa'
+      "Un nouveau formulaire a été déposé."
+    when 'piece_justificative'
+      attribut
+    when 'champs'
+      attribut
+    when 'submitted'
+      "Le dossier nº #{@dossier_id} a été déposé."
+    when 'avis'
+      'Un nouvel avis a été rendu'
+    else
+      'Notification par défaut'
     end
   end
 end
