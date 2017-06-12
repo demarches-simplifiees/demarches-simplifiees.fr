@@ -369,10 +369,10 @@ describe Users::DossiersController, type: :controller do
         dossier.reload
       end
 
-      it { expect(dossier.individual.gender).to eq 'M.'  }
-      it { expect(dossier.individual.nom).to eq 'Julien'  }
-      it { expect(dossier.individual.prenom).to eq 'Xavier'  }
-      it { expect(dossier.individual.birthdate).to eq '20/01/1991'  }
+      it { expect(dossier.individual.gender).to eq 'M.' }
+      it { expect(dossier.individual.nom).to eq 'Julien' }
+      it { expect(dossier.individual.prenom).to eq 'Xavier' }
+      it { expect(dossier.individual.birthdate).to eq '20/01/1991' }
       it { expect(dossier.procedure.for_individual).to eq true }
     end
 

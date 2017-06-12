@@ -41,7 +41,7 @@ describe 'admin/pieces_justificatives/show.html.haml', type: :view do
       let!(:type_de_piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
       it { expect(subject).to have_css('#btn_down_0') }
       it { expect(subject).not_to have_css('#btn_up_0') }
-      it { expect(subject).to have_css('#btn_up_1')   }
+      it { expect(subject).to have_css('#btn_up_1') }
       it { expect(subject).not_to have_css('#btn_down_1') }
     end
   end

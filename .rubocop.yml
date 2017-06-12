@@ -71,7 +71,10 @@ Layout/EndOfLine:
   EnforcedStyle: lf
 
 Layout/ExtraSpacing:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - "Guardfile"
+    - "db/schema.rb"
 
 Layout/FirstArrayElementLineBreak:
   Enabled: false

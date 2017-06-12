@@ -7,7 +7,7 @@ describe AccompagnateurService do
   let(:accompagnateur_service) { AccompagnateurService.new accompagnateur, procedure, to}
 
   describe '#change_assignement!' do
-    subject { accompagnateur_service.change_assignement!  }
+    subject { accompagnateur_service.change_assignement! }
 
     context 'when accompagnateur is not assign at the procedure' do
       let(:to) { AccompagnateurService::ASSIGN }

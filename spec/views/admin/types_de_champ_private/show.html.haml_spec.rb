@@ -51,7 +51,7 @@ describe 'admin/types_de_champ/show.html.haml', type: :view do
         let!(:type_de_champ_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
         it { expect(subject).to have_css('#btn_down_0') }
         it { expect(subject).to have_css('#btn_up_0[style*="visibility: hidden"]') }
-        it { expect(subject).to have_css('#btn_up_1')   }
+        it { expect(subject).to have_css('#btn_up_1') }
         it { expect(subject).to have_css('#btn_down_1[style*="visibility: hidden"]') }
       end
     end

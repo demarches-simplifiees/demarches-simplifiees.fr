@@ -20,7 +20,7 @@ describe AdminProceduresShowFacades do
   describe '.dossiers' do
     subject { super().dossiers }
 
-    it { expect(subject.size).to eq(4)  }
+    it { expect(subject.size).to eq(4) }
   end
 
   describe '.dossiers_for_pie_highchart' do
@@ -34,7 +34,7 @@ describe AdminProceduresShowFacades do
 
     it { expect(subject.size).to eq(1)  }
 
-    it { expect(subject.first.state).to eq('initiated')  }
+    it { expect(subject.first.state).to eq('initiated') }
     it { expect(subject.first.total).to eq(1) }
   end
 

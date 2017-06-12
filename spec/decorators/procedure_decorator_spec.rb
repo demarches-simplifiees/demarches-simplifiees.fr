@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ProcedureDecorator do
-  let(:procedure) { create(:procedure, :published,  created_at: Time.new(2015, 12, 24, 14, 10)) }
+  let(:procedure) { create(:procedure, :published, created_at: Time.new(2015, 12, 24, 14, 10)) }
   subject { procedure.decorate }
 
   describe 'lien' do

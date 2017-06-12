@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'when gestionnaire come to /backoffice and is not authenticated' do
   let(:procedure) { create(:procedure) }
-  let!(:dossier) { create(:dossier,  procedure: procedure) }
+  let!(:dossier) { create(:dossier, procedure: procedure) }
   before do
     visit backoffice_path
   end
@@ -25,8 +25,8 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
 
     before do
       create :assign_to, gestionnaire: gestionnaire, procedure: procedure
-      page.find_by_id(:user_email).set  gestionnaire.email
-      page.find_by_id(:user_password).set  gestionnaire.password
+      page.find_by_id(:user_email).set gestionnaire.email
+      page.find_by_id(:user_password).set gestionnaire.password
       page.click_on 'Se connecter'
     end
     scenario 'he is redirected to /backoffice' do
