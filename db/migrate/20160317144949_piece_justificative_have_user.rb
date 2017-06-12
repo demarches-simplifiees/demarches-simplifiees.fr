@@ -8,7 +8,6 @@ class PieceJustificativeHaveUser < ActiveRecord::Migration
   end
 
   class User < ActiveRecord::Base
-
   end
 
   def change

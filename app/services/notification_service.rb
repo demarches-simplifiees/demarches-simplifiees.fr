@@ -1,5 +1,4 @@
 class NotificationService
-
   def initialize type_notif, dossier_id, attribut_change=''
     @type_notif = type_notif
     @dossier_id = dossier_id

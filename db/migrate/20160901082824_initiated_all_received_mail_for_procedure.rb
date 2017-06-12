@@ -4,7 +4,6 @@ class InitiatedAllReceivedMailForProcedure < ActiveRecord::Migration
   end
 
   class MailTemplate < ActiveRecord::Base
-
   end
 
   class ::MailReceived < MailTemplate

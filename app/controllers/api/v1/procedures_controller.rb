@@ -13,5 +13,4 @@ class API::V1::ProceduresController < APIController
     Rails.logger.error(e.message)
     render json: {}, status: 404
   end
-
 end

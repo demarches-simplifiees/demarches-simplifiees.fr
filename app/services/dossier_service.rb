@@ -1,5 +1,4 @@
 class DossierService
-
   def initialize dossier, siret, france_connect_information
     @dossier = dossier
     @siret = siret

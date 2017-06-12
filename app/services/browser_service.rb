@@ -1,5 +1,4 @@
 class BrowserService
-
   def self.get_browser request
     BROWSER.value = Browser.new(request.user_agent)
   end
@@ -15,5 +14,4 @@ class BrowserService
 
     true
   end
-
 end

@@ -1,6 +1,5 @@
 class ChangeEmptytoNilInPreferenceListDossierTable < ActiveRecord::Migration
   class PreferenceListDossier < ActiveRecord::Base
-
   end
 
   def change

@@ -55,7 +55,7 @@ Layout/EmptyLinesAroundBlockBody:
   Enabled: true
 
 Layout/EmptyLinesAroundClassBody:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundExceptionHandlingKeywords:
   Enabled: false

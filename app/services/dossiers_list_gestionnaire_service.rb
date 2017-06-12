@@ -186,5 +186,4 @@ class DossiersListGestionnaireService
   def current_preference_smart_listing_page
     @current_devise_profil.preference_smart_listing_page
   end
-
 end

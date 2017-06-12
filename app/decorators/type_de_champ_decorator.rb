@@ -1,5 +1,4 @@
 class TypeDeChampDecorator < Draper::Decorator
-
   delegate_all
 
   def button_up params

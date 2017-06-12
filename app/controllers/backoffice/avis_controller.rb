@@ -1,5 +1,4 @@
 class Backoffice::AvisController < ApplicationController
-
   before_action :authenticate_gestionnaire!, except: [:sign_up, :create_gestionnaire]
   before_action :redirect_if_no_sign_up_needed, only: [:sign_up]
   before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_gestionnaire]

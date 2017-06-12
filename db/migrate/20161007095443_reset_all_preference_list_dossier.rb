@@ -143,7 +143,6 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
   class Procedure < ActiveRecord::Base
     has_many :assign_to, dependent: :destroy
     has_many :gestionnaires, through: :assign_to
-
   end
 
   def change
