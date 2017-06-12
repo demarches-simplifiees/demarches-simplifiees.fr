@@ -14,11 +14,14 @@ describe Backoffice::PreferenceListDossierController, type: :controller do
 
   describe '#POST add' do
     subject { post :add,
-                   params: {libelle: libelle,
-                            table: table,
-                            attr: attr,
-                            attr_decorate: attr_decorate,
-                            bootstrap_lg: bootstrap_lg} }
+      params: {
+        libelle: libelle,
+        table: table,
+        attr: attr,
+        attr_decorate: attr_decorate,
+        bootstrap_lg: bootstrap_lg
+      }
+    }
 
     it { expect(subject.status).to eq 200 }
     it { expect { subject }.to change(PreferenceListDossier, :count).by(1) }

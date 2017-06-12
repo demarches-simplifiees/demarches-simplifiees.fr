@@ -1,16 +1,16 @@
 class DossierSerializer < ActiveModel::Serializer
   attributes :id,
-             :created_at,
-             :updated_at,
-             :archived,
-             :mandataire_social,
-             :state,
-             :simplified_state,
-             :initiated_at,
-             :received_at,
-             :processed_at,
-             :accompagnateurs,
-             :invites
+    :created_at,
+    :updated_at,
+    :archived,
+    :mandataire_social,
+    :state,
+    :simplified_state,
+    :initiated_at,
+    :received_at,
+    :processed_at,
+    :accompagnateurs,
+    :invites
 
   has_one :entreprise
   has_one :etablissement

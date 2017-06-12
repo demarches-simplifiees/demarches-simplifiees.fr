@@ -14,7 +14,8 @@ Layout/AlignHash:
   Enabled: false
 
 Layout/AlignParameters:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: with_fixed_indentation
 
 Layout/BlockEndNewline:
   Enabled: false

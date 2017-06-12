@@ -6,18 +6,18 @@ class Admin::ProceduresController < AdminController
 
   def index
     @procedures = smart_listing_create :procedures,
-                                       current_administrateur.procedures.where(published: true, archived: false).order(created_at: :desc),
-                                       partial: "admin/procedures/list",
-                                       array: true
+      current_administrateur.procedures.where(published: true, archived: false).order(created_at: :desc),
+      partial: "admin/procedures/list",
+      array: true
 
     active_class
   end
 
   def archived
     @procedures = smart_listing_create :procedures,
-                                       current_administrateur.procedures.where(archived: true).order(created_at: :desc),
-                                       partial: "admin/procedures/list",
-                                       array: true
+      current_administrateur.procedures.where(archived: true).order(created_at: :desc),
+      partial: "admin/procedures/list",
+      array: true
 
     archived_class
 
@@ -26,9 +26,9 @@ class Admin::ProceduresController < AdminController
 
   def draft
     @procedures = smart_listing_create :procedures,
-                                       current_administrateur.procedures.where(published: false, archived: false).order(created_at: :desc),
-                                       partial: "admin/procedures/list",
-                                       array: true
+      current_administrateur.procedures.where(published: false, archived: false).order(created_at: :desc),
+      partial: "admin/procedures/list",
+      array: true
 
     draft_class
 

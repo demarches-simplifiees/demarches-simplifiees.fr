@@ -79,17 +79,17 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     end
 
     smart_listing_create :search,
-                         @dossiers,
-                         partial: "backoffice/dossiers/list",
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
+      @dossiers,
+      partial: "backoffice/dossiers/list",
+      array: true,
+      default_sort: dossiers_list_facade.service.default_sort
 
   rescue RuntimeError
     smart_listing_create :search,
-                         [],
-                         partial: "backoffice/dossiers/list",
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
+      [],
+      partial: "backoffice/dossiers/list",
+      array: true,
+      default_sort: dossiers_list_facade.service.default_sort
   end
 
   def receive

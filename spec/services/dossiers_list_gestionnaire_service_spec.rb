@@ -231,12 +231,12 @@ describe DossiersListGestionnaireService do
     context 'when preference list contain a champ' do
       before do
         create :preference_list_dossier,
-               gestionnaire: gestionnaire,
-               table: 'champs',
-               attr: '34',
-               attr_decorate: '',
-               filter: 'plop',
-               procedure_id: create(:procedure)
+          gestionnaire: gestionnaire,
+          table: 'champs',
+          attr: '34',
+          attr_decorate: '',
+          filter: 'plop',
+          procedure_id: create(:procedure)
       end
 
       it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE '%plop%' AND champs.type_de_champ_id = 34 AND CAST(champs.value as TEXT) LIKE '%plop%'" }

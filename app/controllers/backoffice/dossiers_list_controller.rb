@@ -48,10 +48,10 @@ class Backoffice::DossiersListController < ApplicationController
 
   def default_smart_listing_create name, collection
     smart_listing_create name,
-                         collection,
-                         partial: 'backoffice/dossiers/list',
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
+      collection,
+      partial: 'backoffice/dossiers/list',
+      array: true,
+      default_sort: dossiers_list_facade.service.default_sort
   end
 
   def param_smart_listing

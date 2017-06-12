@@ -1,5 +1,5 @@
 class CommentaireSerializer < ActiveModel::Serializer
   attributes :email,
-             :body,
-             :created_at
+    :body,
+    :created_at
 end

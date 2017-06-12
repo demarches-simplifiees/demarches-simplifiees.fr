@@ -29,28 +29,28 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     decorate_dossier_without_continuation.entreprise.update_column(:raison_sociale, 'plnp')
 
     create :preference_list_dossier,
-           gestionnaire: gestionnaire,
-           table: nil,
-           attr: 'state',
-           attr_decorate: 'display_state'
+      gestionnaire: gestionnaire,
+      table: nil,
+      attr: 'state',
+      attr_decorate: 'display_state'
 
     create :preference_list_dossier,
-           gestionnaire: gestionnaire,
-           table: 'procedure',
-           attr: 'libelle',
-           attr_decorate: 'libelle'
+      gestionnaire: gestionnaire,
+      table: 'procedure',
+      attr: 'libelle',
+      attr_decorate: 'libelle'
 
     create :preference_list_dossier,
-           gestionnaire: gestionnaire,
-           table: 'entreprise',
-           attr: 'raison_sociale',
-           attr_decorate: 'raison_sociale'
+      gestionnaire: gestionnaire,
+      table: 'entreprise',
+      attr: 'raison_sociale',
+      attr_decorate: 'raison_sociale'
 
     create :preference_list_dossier,
-           gestionnaire: gestionnaire,
-           table: nil,
-           attr: 'last_update',
-           attr_decorate: 'last_update'
+      gestionnaire: gestionnaire,
+      table: nil,
+      attr: 'last_update',
+      attr_decorate: 'last_update'
 
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure
     sign_in gestionnaire
@@ -58,19 +58,19 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     assign :facade_data_view, dossiers_list_facade
 
     assign(:new_dossiers, (smart_listing_create :new_dossiers,
-                                                new_dossiers_list,
-                                                partial: "backoffice/dossiers/list",
-                                                array: true))
+      new_dossiers_list,
+      partial: "backoffice/dossiers/list",
+      array: true))
 
     assign(:follow_dossiers, (smart_listing_create :follow_dossiers,
-                                                   follow_dossiers_list,
-                                                   partial: "backoffice/dossiers/list",
-                                                   array: true))
+      follow_dossiers_list,
+      partial: "backoffice/dossiers/list",
+      array: true))
 
     assign(:all_state_dossiers, (smart_listing_create :all_state_dossiers,
-                                                      all_state_dossiers_list,
-                                                      partial: "backoffice/dossiers/list",
-                                                      array: true))
+      all_state_dossiers_list,
+      partial: "backoffice/dossiers/list",
+      array: true))
 
     render
   end

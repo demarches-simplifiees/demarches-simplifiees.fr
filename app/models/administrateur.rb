@@ -1,6 +1,6 @@
 class Administrateur < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+    :recoverable, :rememberable, :trackable, :validatable
 
   has_and_belongs_to_many :gestionnaires
   has_many :procedures
