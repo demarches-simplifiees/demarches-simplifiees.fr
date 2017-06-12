@@ -1,5 +1,4 @@
 class Users::CarteController < UsersController
-
   before_action only: [:show] do
     authorized_routes? self.class
   end

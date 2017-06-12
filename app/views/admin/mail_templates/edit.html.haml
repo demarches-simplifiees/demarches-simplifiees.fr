@@ -4,7 +4,7 @@
 
   = simple_form_for @mail_template,
     as: 'mail_template',
-    url: admin_procedure_mail_template_path(@procedure, @mail_template.class.slug),
+    url: admin_procedure_mail_template_path(@procedure, @mail_template.class.const_get(:SLUG)),
     method: :put do |f|
     .row
       .col-md-6
@@ -22,9 +22,9 @@
             Balise
           %th
             Description
-        - MailTemplateConcern.tags_for_template(@mail_template_name).each do |balise|
+        - @mail_template.class.const_get(:ALLOWED_TAGS).each do |tag|
           %tr
             %td.center
-              = "--#{balise.first}--"
+              = "--#{tag[:name]}--"
             %td
-              = balise.second[:description]
+              = tag[:description]

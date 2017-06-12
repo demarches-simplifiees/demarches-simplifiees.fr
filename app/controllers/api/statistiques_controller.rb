@@ -1,5 +1,4 @@
 class API::StatistiquesController < ApplicationController
-
   def dossiers_stats
     render json: {
                total: total_dossiers,

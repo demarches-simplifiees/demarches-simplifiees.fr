@@ -409,59 +409,6 @@ describe Dossier do
         end
       end
     end
-
-    describe 'gestionnaire backoffice methods' do
-      let(:admin) { create(:administrateur) }
-      let(:admin_2) { create(:administrateur) }
-
-      let(:gestionnaire) { create(:gestionnaire, administrateurs: [admin]) }
-      let(:procedure_admin) { create(:procedure, administrateur: admin) }
-      let(:procedure_admin_2) { create(:procedure, administrateur: admin_2) }
-
-      let!(:dossier) { create(:dossier, procedure: procedure_admin, state: 'draft') }
-      let!(:dossier2) { create(:dossier, procedure: procedure_admin, state: 'initiated') } #nouveaux
-      let!(:dossier3) { create(:dossier, procedure: procedure_admin, state: 'initiated') } #nouveaux
-      let!(:dossier4) { create(:dossier, procedure: procedure_admin, state: 'replied') } #en_attente
-      let!(:dossier5) { create(:dossier, procedure: procedure_admin, state: 'updated') } #a_traiter
-      let!(:dossier6) { create(:dossier, procedure: procedure_admin, state: 'received') } #a_instruire
-      let!(:dossier7) { create(:dossier, procedure: procedure_admin, state: 'received') } #a_instruire
-      let!(:dossier8) { create(:dossier, procedure: procedure_admin, state: 'closed') } #termine
-      let!(:dossier9) { create(:dossier, procedure: procedure_admin, state: 'refused') } #termine
-      let!(:dossier10) { create(:dossier, procedure: procedure_admin, state: 'without_continuation') } #termine
-      let!(:dossier11) { create(:dossier, procedure: procedure_admin_2, state: 'closed') } #termine
-      let!(:dossier12) { create(:dossier, procedure: procedure_admin, state: 'initiated', archived: true) } #a_traiter #archived
-      let!(:dossier13) { create(:dossier, procedure: procedure_admin, state: 'replied', archived: true) } #en_attente #archived
-      let!(:dossier14) { create(:dossier, procedure: procedure_admin, state: 'closed', archived: true) } #termine #archived
-
-      before do
-        create :assign_to, gestionnaire: gestionnaire, procedure: procedure_admin
-      end
-
-      describe '#nouveaux' do
-        subject { gestionnaire.dossiers.nouveaux }
-
-        it { expect(subject.size).to eq(2) }
-      end
-
-      describe '#waiting_for_gestionnaire' do
-        subject { gestionnaire.dossiers.waiting_for_gestionnaire }
-
-        it { expect(subject.size).to eq(1) }
-      end
-
-      describe '#waiting_for_user' do
-        subject { gestionnaire.dossiers.waiting_for_user }
-
-        it { expect(subject.size).to eq(1) }
-      end
-
-      describe '#en_instruction' do
-        subject { gestionnaire.dossiers.en_instruction }
-
-        it { expect(subject.size).to eq(2) }
-        it { expect(subject).to include(dossier6, dossier7) }
-      end
-    end
   end
 
   describe '#cerfa_available?' do
@@ -911,11 +858,36 @@ describe Dossier do
     let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :draft) }
     let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
     let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :received) }
+    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, archived: true) }
 
     subject { procedure.dossiers.downloadable }
 
     it { is_expected.not_to include(dossier)}
     it { is_expected.to include(dossier2)}
     it { is_expected.to include(dossier3)}
+    it { is_expected.to include(dossier4)}
+  end
+
+  describe "#send_notification_email" do
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { create(:dossier, procedure: procedure, state: :initiated) }
+
+    before do
+      ActionMailer::Base.deliveries.clear
+    end
+
+    it "sends an email when the dossier becomes received" do
+      dossier.received!
+
+      mail = ActionMailer::Base.deliveries.last
+
+      expect(mail.subject).to eq("Votre dossier TPS nº #{dossier.id} va être instruit")
+    end
+
+    it "does not an email when the dossier becomes closed" do
+      dossier.closed!
+
+      expect(ActionMailer::Base.deliveries.size).to eq(0)
+    end
   end
 end

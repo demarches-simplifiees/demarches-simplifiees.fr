@@ -68,4 +68,30 @@ shared_examples 'champ_spec' do
 
     it { expect(subject).to include '99 - Étranger' }
   end
+
+  context "when type_champ=date" do
+    let(:type_de_champ) { create(:type_de_champ_public, type_champ: "date")}
+    let(:champ) { create(:champ, type_de_champ: type_de_champ) }
+
+    it "should convert %d/%m/%Y format to ISO" do
+      champ.value = "31/12/2017"
+      champ.save
+      champ.reload
+      expect(champ.value).to eq("2017-12-31")
+    end
+
+    it "should convert to nil if date parse failed" do
+      champ.value = "bla"
+      champ.save
+      champ.reload
+      expect(champ.value).to be(nil)
+    end
+
+    it "should convert empty string to nil" do
+      champ.value = ""
+      champ.save
+      champ.reload
+      expect(champ.value).to be(nil)
+    end
+  end
 end

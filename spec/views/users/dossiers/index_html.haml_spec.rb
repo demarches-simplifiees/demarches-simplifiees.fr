@@ -43,7 +43,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
   describe 'on tab en construction' do
     let(:total_dossiers) { 3 }
     let(:active_class) { '.active .text-danger' }
-    let(:dossiers_to_display) { user.dossiers.en_construction }
+    let(:dossiers_to_display) { user.dossiers.state_en_construction }
     let(:liste) { 'a_traiter' }
 
     it_behaves_like 'check_tab_content' do
@@ -59,11 +59,10 @@ describe 'users/dossiers/index.html.haml', type: :view do
     end
   end
 
-
   describe 'on tab etude en examen' do
     let(:total_dossiers) { 1 }
     let(:active_class) { '.active .text-default' }
-    let(:dossiers_to_display) { user.dossiers.en_instruction }
+    let(:dossiers_to_display) { user.dossiers.state_en_instruction }
     let(:liste) { 'en_instruction' }
 
     it_behaves_like 'check_tab_content' do
@@ -74,7 +73,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
   describe 'on tab etude termine' do
     let(:total_dossiers) { 3 }
     let(:active_class) { '.active .text-success' }
-    let(:dossiers_to_display) { user.dossiers.termine }
+    let(:dossiers_to_display) { user.dossiers.state_termine }
     let(:liste) { 'termine' }
 
     it_behaves_like 'check_tab_content' do

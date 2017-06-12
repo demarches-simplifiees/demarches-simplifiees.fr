@@ -1,5 +1,4 @@
 class Users::Dossiers::InvitesController < UsersController
-
   def authenticate_user!
     session["user_return_to"] = request.fullpath
     return redirect_to new_user_registration_path(user_email: params[:email]) if !params[:email].blank? && User.find_by_email(params[:email]).nil?

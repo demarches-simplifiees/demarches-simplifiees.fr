@@ -1,13 +1,9 @@
 class API::V1::DossiersController < APIController
-
   api :GET, '/procedures/:procedure_id/dossiers/', 'Liste de tous les dossiers d\'une procédure'
   param :procedure_id, Integer, desc: "L'identifiant de la procédure", required: true
   param :token, String, desc: "Token administrateur", required: true
   error code: 401, desc: "Non authorisé"
   error code: 404, desc: "Procédure inconnue"
-
-  meta champs: {
-       }
 
   def index
     procedure = current_administrateur.procedures.find(params[:procedure_id])
@@ -24,10 +20,6 @@ class API::V1::DossiersController < APIController
   param :token, String, desc: "Token administrateur", required: true
   error code: 401, desc: "Non authorisé"
   error code: 404, desc: "Procédure ou dossier inconnu"
-
-  meta champs: {
-
-       }
 
   def show
     procedure = current_administrateur.procedures.find(params[:procedure_id])

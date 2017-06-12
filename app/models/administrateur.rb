@@ -27,5 +27,4 @@ class Administrateur < ActiveRecord::Base
       break token unless Administrateur.find_by(api_token: token)
     end
   end
-
 end

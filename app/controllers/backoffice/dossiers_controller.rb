@@ -1,13 +1,17 @@
 class Backoffice::DossiersController < Backoffice::DossiersListController
   respond_to :html, :xlsx, :ods, :csv
 
+  prepend_before_action :store_current_location, only: :show
   before_action :ensure_gestionnaire_is_authorized, only: :show
 
   def index
+    return redirect_to backoffice_invitations_path if current_gestionnaire.avis.any?
+
     procedure = current_gestionnaire.procedure_filter
 
     if procedure.nil?
       procedure_list = dossiers_list_facade.gestionnaire_procedures_name_and_id_list
+
       if procedure_list.count == 0
         flash.alert = "Vous n'avez aucune procédure d'affectée."
         return redirect_to root_path
@@ -20,18 +24,22 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   def show
-    create_dossier_facade params[:id]
+    dossier_id = params[:id]
+    create_dossier_facade dossier_id
 
     unless @facade.nil?
       @champs_private = @facade.champs_private
 
-      @headers_private = @champs_private.inject([]) do |acc, champ|
-        acc.push(champ) if champ.type_champ == 'header_section'
-        acc
-      end
+      @headers_private = @champs_private.select { |champ| champ.type_champ == 'header_section' }
     end
 
-    Notification.where(dossier_id: params[:id].to_i).update_all already_read: true
+    # if the current_gestionnaire does not own the dossier, it is here to give an advice
+    # and it should not remove the notifications
+    if current_gestionnaire.dossiers.find_by(id: dossier_id).present?
+      Notification.where(dossier_id: dossier_id).update_all(already_read: true)
+    end
+
+    @new_avis = Avis.new(introduction: "Bonjour, merci de me donner votre avis sur ce dossier.")
   end
 
   def filter
@@ -92,8 +100,6 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier.received!
     flash.notice = 'Dossier considéré comme reçu.'
 
-    NotificationMailer.send_notification(dossier, dossier.procedure.received_mail).deliver_now!
-
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
 
@@ -105,7 +111,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier.next_step! 'gestionnaire', 'refuse'
     flash.notice = 'Dossier considéré comme refusé.'
 
-    NotificationMailer.send_notification(dossier, dossier.procedure.refused_mail).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.refused_mail_template).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
@@ -118,7 +124,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier.next_step! 'gestionnaire', 'without_continuation'
     flash.notice = 'Dossier considéré comme sans suite.'
 
-    NotificationMailer.send_notification(dossier, dossier.procedure.without_continuation_mail).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.without_continuation_mail_template).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
@@ -131,7 +137,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier.next_step! 'gestionnaire', 'close'
     flash.notice = 'Dossier traité avec succès.'
 
-    NotificationMailer.send_notification(dossier, dossier.procedure.closed_mail).deliver_now!
+    NotificationMailer.send_notification(dossier, dossier.procedure.closed_mail_template).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
@@ -187,12 +193,17 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   private
 
-  def ensure_gestionnaire_is_authorized
-    current_gestionnaire.dossiers.find(params[:id])
+  def store_current_location
+    if !gestionnaire_signed_in?
+      store_location_for(:gestionnaire, request.url)
+    end
+  end
 
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: '/backoffice')
+  def ensure_gestionnaire_is_authorized
+    unless current_gestionnaire.can_view_dossier?(params[:id])
+      flash.alert = t('errors.messages.dossier_not_found')
+      redirect_to url_for(controller: '/backoffice')
+    end
   end
 
   def create_dossier_facade dossier_id

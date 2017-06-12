@@ -8,6 +8,11 @@ class GestionnaireMailer < ApplicationMailer
     send_mail email, email_admin, "Vous avez été assigné à un nouvel administrateur sur la plateforme TPS"
   end
 
+  def last_week_overview(gestionnaire, overview)
+    headers['X-mailjet-campaign'] = 'last_week_overview'
+    send_mail gestionnaire.email, overview, 'Résumé de la semaine'
+  end
+
   private
 
   def vars_mailer email, args

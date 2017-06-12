@@ -1,3 +1,6 @@
 auto_archive_procedure:
   cron: "* * * * *"
   class: "AutoArchiveProcedureWorker"
+weekly_overview_worker:
+  cron: "0 8 * * 0"
+  class: "WeeklyOverviewWorker"

@@ -3,49 +3,87 @@
   %h1.new-h1 Statistiques
 
   .stat-cards
-
-    .card.stat-card.stat-card-half.pull-left
-      %ul.segmented-control.pull-right
-        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.cumulative-procedures-chart');" }
-          Cumul
-        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.flux-procedures-chart');" }
-          Flux (30 jours)
-      %span.stat-card-title.pull-left Procédures dématérialisées
-      .clearfix
-
-      .chart-container
-        .chart.cumulative-procedures-chart
-          = area_chart @procedures_cumulative,
-            :colors => ["rgba(61, 149, 236, 1)"]
-        .chart.flux-procedures-chart.hidden
-          = line_chart @procedures_30_days_flow,
-            :colors => ["rgba(61, 149, 236, 1)"]
-
-    .card.stat-card.stat-card-half.pull-left
-      %ul.segmented-control.pull-right
-        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.cumulative-dossiers-chart');" }
-          Cumul
-        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.flux-dossiers-chart');" }
-          Flux (30 jours)
-      %span.stat-card-title.pull-left Dossiers déposés
-      .clearfix
-
-      .chart-container
-        .chart.cumulative-dossiers-chart
-          = area_chart @dossiers_cumulative,
-            :colors => ["rgba(61, 149, 236, 1)"]
-        .chart.flux-dossiers-chart.hidden
-          = line_chart @dossiers_30_days_flow,
-            :colors => ["rgba(61, 149, 236, 1)"]
-
-    .card.stat-card.stat-card-half.big-number-card.pull-left
+    .stat-card.stat-card-half.big-number-card.pull-left
       %span.big-number-card-title TOTAL PROCÉDURES DÉMATÉRIALISÉES
       %span.big-number-card-number
         = number_with_delimiter(@procedures_count)
 
-    .card.stat-card.stat-card-half.big-number-card.pull-left
+    .stat-card.stat-card-half.big-number-card.pull-left
       %span.big-number-card-title TOTAL DOSSIERS DÉPOSÉS
       %span.big-number-card-number
         = number_with_delimiter(@dossiers_count)
 
+    .stat-card.stat-card-half.pull-left
+      %ul.segmented-control.pull-right
+        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.monthly-procedures-chart');" }
+          Par mois
+        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.cumulative-procedures-chart');" }
+          Cumul
+      %span.stat-card-title.pull-left Procédures dématérialisées
+      .clearfix
+
+      .chart-container
+        .chart.monthly-procedures-chart
+          = column_chart @procedures_in_the_last_4_months
+        .chart.cumulative-procedures-chart.hidden
+          = area_chart @procedures_cumulative
+
+    .stat-card.stat-card-half.pull-left
+      %ul.segmented-control.pull-right
+        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.monthly-dossiers-chart');" }
+          Par mois
+        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.cumulative-dossiers-chart');" }
+          Cumul
+      %span.stat-card-title.pull-left Dossiers déposés
+      .clearfix
+
+      .chart-container
+        .chart.monthly-dossiers-chart
+          = column_chart @dossiers_in_the_last_4_months
+        .chart.cumulative-dossiers-chart.hidden
+          = area_chart @dossiers_cumulative
+
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title
+        Nombre d'administrations ayant dématérialisé N procédures
+
+      .chart-container
+        .chart
+          = pie_chart @procedures_count_per_administrateur
+
+    - if administration_signed_in?
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Temps de traitement moyen d'un dossier
+
+        .chart-container
+          .chart
+            = line_chart @dossier_instruction_mean_time,
+              :ytitle => "Jours"
+
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Temps de remplissage moyen d'un dossier
+
+        .chart-container
+          .chart
+            = line_chart @dossier_filling_mean_time,
+              :ytitle => "Minutes"
+
     .clearfix
+
+  - if administration_signed_in?
+    %h2.new-h2 Avis
+
+    .stat-cards
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Taux d'utilisation des avis
+        = line_chart @avis_usage, ytitle: 'dossiers avec avis / total dossiers', xtitle: 'semaines'
+
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Temps de réponse moyen par avis
+        = line_chart @avis_average_answer_time, ytitle: 'jours', xtitle: 'semaines'
+
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Pourcentage d'avis rempli
+        = line_chart @avis_answer_percentages, ytitle: 'avis avec réponse / total avis', xtitle: 'semaines'
+
+      .clearfix

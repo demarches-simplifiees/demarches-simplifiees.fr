@@ -33,7 +33,8 @@ class Users::SessionsController < Sessions::SessionsController
     if user_signed_in?
       redirect_to after_sign_in_path_for(:user)
     elsif gestionnaire_signed_in?
-      redirect_to backoffice_path
+      location = stored_location_for(:gestionnaire) || backoffice_path
+      redirect_to location
     elsif administrateur_signed_in?
       redirect_to admin_path
     else

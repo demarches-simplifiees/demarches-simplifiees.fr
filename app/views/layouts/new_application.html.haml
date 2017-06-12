@@ -3,6 +3,7 @@
     %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=UTF-8" }
     %meta{ "http-equiv" => "X-UA-Compatible", :content => "IE=edge" }
     %meta{ :name => "turbolinks-cache-control", :content => "no-cache" }
+    %meta{ name: "viewport", content: "width=device-width, initial-scale=1" }
     = csrf_meta_tags
     = action_cable_meta_tag
 
@@ -13,7 +14,7 @@
     = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")
     = favicon_link_tag(image_url("favicons/96x96.png"), type: "image/png", sizes: "96x96")
 
-    = stylesheet_link_tag "new_application", :media => "all", "data-turbolinks-track" => true
+    = stylesheet_link_tag "new_design/new_application", :media => "all", "data-turbolinks-track" => true
     = stylesheet_link_tag "print", :media => "print", "data-turbolinks-track" => true
 
   %body
@@ -36,6 +37,7 @@
     = render partial: "layouts/mailjet_newsletter"
 
     = javascript_include_tag "application", "data-turbolinks-track" => true
+    = yield :charts_js
     - if Rails.env == "test"
       %script{ :type => "text/javascript" }
         (typeof jQuery !== "undefined") && (jQuery.fx.off = true);

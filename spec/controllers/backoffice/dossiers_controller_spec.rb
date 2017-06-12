@@ -97,7 +97,7 @@ describe Backoffice::DossiersController, type: :controller do
 
       describe 'all notifications unread are changed' do
         it do
-          expect(Notification).to receive(:where).with(dossier_id: dossier_id).and_return(Notification::ActiveRecord_Relation)
+          expect(Notification).to receive(:where).with(dossier_id: dossier_id.to_s).and_return(Notification::ActiveRecord_Relation)
           expect(Notification::ActiveRecord_Relation).to receive(:update_all).with(already_read: true).and_return(true)
 
           subject
@@ -108,6 +108,32 @@ describe Backoffice::DossiersController, type: :controller do
         let(:dossier_id) { bad_dossier_id }
 
         it { expect(subject).to redirect_to('/backoffice') }
+      end
+
+      describe 'he can invite somebody for avis' do
+        render_views
+
+        it { expect(subject.body).to include("Invitez une personne externe à consulter le dossier et à vous donner un avis sur celui ci.") }
+      end
+
+      context 'and is invited on a dossier' do
+        let(:dossier_invited){ create(:dossier, procedure: create(:procedure)) }
+        let!(:avis){ create(:avis, dossier: dossier_invited, gestionnaire: gestionnaire) }
+
+        subject { get :show, params: { id: dossier_invited.id } }
+
+        render_views
+
+        it { expect(subject.status).to eq(200) }
+        it { expect(subject.body).to include("Votre avis est sollicité sur le dossier") }
+        it { expect(subject.body).to_not include("Invitez une personne externe à consulter le dossier et à vous donner un avis sur celui ci.") }
+
+        describe 'the notifications are not marked as read' do
+          it do
+            expect(Notification).not_to receive(:where)
+            subject
+          end
+        end
       end
     end
 

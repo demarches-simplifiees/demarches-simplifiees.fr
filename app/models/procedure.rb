@@ -3,7 +3,6 @@ class Procedure < ActiveRecord::Base
   has_many :types_de_champ, class_name: 'TypeDeChampPublic', dependent: :destroy
   has_many :types_de_champ_private, dependent: :destroy
   has_many :dossiers
-  has_many :notifications, through: :dossiers
 
   has_one :procedure_path, dependent: :destroy
 
@@ -16,6 +15,12 @@ class Procedure < ActiveRecord::Base
 
   has_many :preference_list_dossiers
 
+  has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
+  has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy
+  has_one :closed_mail, class_name: "Mails::ClosedMail", dependent: :destroy
+  has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
+  has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
+
   delegate :use_api_carto, to: :module_api_carto
 
   accepts_nested_attributes_for :types_de_champ, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
@@ -25,31 +30,11 @@ class Procedure < ActiveRecord::Base
 
   mount_uploader :logo, ProcedureLogoUploader
 
-  validates :libelle, presence: true, allow_blank: false, allow_nil: false
-  validates :description, presence: true, allow_blank: false, allow_nil: false
-
-  # for all those mails do
-  # has_one :initiated_mail, class_name: 'Mails::InitiatedMail'
-  #
-  # add a method to return default mail if none is saved
-  # def initiated_mail_with_override
-  #   self.initiated_mail_without_override || InitiatedMail.default
-  # end
-  # alias_method_chain :initiated_mail, :override
-
-  MAIL_TEMPLATE_TYPES = %w(InitiatedMail ReceivedMail ClosedMail RefusedMail WithoutContinuationMail)
-
-  MAIL_TEMPLATE_TYPES.each do |name|
-    has_one "#{name.underscore}".to_sym, class_name: "Mails::#{name}", dependent: :destroy
-    define_method("#{name.underscore}_with_override") do
-      self.send("#{name.underscore}_without_override") || Object.const_get("Mails::#{name}").default
-    end
-    alias_method_chain "#{name.underscore.to_sym}".to_s, :override
-  end
-
   scope :not_archived, -> { where(archived: false) }
   scope :by_libelle, -> { order(libelle: :asc) }
 
+  validates :libelle, presence: true, allow_blank: false, allow_nil: false
+  validates :description, presence: true, allow_blank: false, allow_nil: false
 
   def path
     procedure_path.path unless procedure_path.nil?
@@ -68,7 +53,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def self.active id
-    Procedure.where(archived: false, published: true).find(id)
+    not_archived.where(published: true).find(id)
   end
 
   def switch_types_de_champ index_of_first_element
@@ -84,12 +69,17 @@ class Procedure < ActiveRecord::Base
   end
 
   def switch_list_order(list, index_of_first_element)
-    return false if index_of_first_element < 0
-    return false if index_of_first_element == list.count - 1
-    return false if list.count < 1
-    list[index_of_first_element].update_attributes(order_place: index_of_first_element + 1)
-    list[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
-    true
+    if index_of_first_element < 0 ||
+      index_of_first_element == list.count - 1 ||
+      list.count < 1
+
+      false
+    else
+      list[index_of_first_element].update_attributes(order_place: index_of_first_element + 1)
+      list[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
+
+      true
+    end
   end
 
   def locked?
@@ -109,9 +99,11 @@ class Procedure < ActiveRecord::Base
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
 
-    MAIL_TEMPLATE_TYPES.each do |mtt|
-      procedure.send("#{mtt.underscore}=", self.send("#{mtt.underscore}_without_override").try(:dup))
-    end
+    procedure.initiated_mail = initiated_mail.try(:dup)
+    procedure.received_mail = received_mail.try(:dup)
+    procedure.closed_mail = closed_mail.try(:dup)
+    procedure.refused_mail = refused_mail.try(:dup)
+    procedure.without_continuation_mail = without_continuation_mail.try(:dup)
 
     return procedure if procedure.save
   end
@@ -141,4 +133,27 @@ class Procedure < ActiveRecord::Base
     }
   end
 
+  def procedure_overview(start_date, notifications_count)
+    ProcedureOverview.new(self, start_date, notifications_count)
+  end
+
+  def initiated_mail_template
+    initiated_mail || Mails::InitiatedMail.default
+  end
+
+  def received_mail_template
+    received_mail || Mails::ReceivedMail.default
+  end
+
+  def closed_mail_template
+    closed_mail || Mails::ClosedMail.default
+  end
+
+  def refused_mail_template
+    refused_mail || Mails::RefusedMail.default
+  end
+
+  def without_continuation_mail_template
+    without_continuation_mail || Mails::WithoutContinuationMail.default
+  end
 end

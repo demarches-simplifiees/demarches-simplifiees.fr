@@ -1,5 +1,4 @@
 class Backoffice::Dossiers::ProcedureController < Backoffice::DossiersListController
-
   def index
     super
 
@@ -22,4 +21,5 @@ class Backoffice::Dossiers::ProcedureController < Backoffice::DossiersListContro
   def retrieve_procedure
     current_gestionnaire.procedures.find params[:id]
   end
+
 end
