@@ -28,7 +28,7 @@ Layout/ClosingParenthesisIndentation:
   Enabled: true
 
 Layout/CommentIndentation:
-  Enabled: false
+  Enabled: true
 
 Layout/DotPosition:
   Enabled: false
