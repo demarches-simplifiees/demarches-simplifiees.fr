@@ -16,7 +16,6 @@ describe User, type: :model do
     it { is_expected.to have_db_column(:updated_at) }
     it { is_expected.to have_db_column(:siret) }
     it { is_expected.to have_db_column(:loged_in_with_france_connect) }
-
   end
   describe 'associations' do
     it { is_expected.to have_many(:dossiers) }

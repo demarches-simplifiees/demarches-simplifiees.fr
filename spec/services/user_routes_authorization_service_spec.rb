@@ -43,7 +43,6 @@ describe UserRoutesAuthorizationService do
       let(:controller) { Users::CarteController }
 
       context 'when use_api_carto is false' do
-
         describe 'draft' do
           let(:state) { 'draft' }
           it { is_expected.to be_falsey }

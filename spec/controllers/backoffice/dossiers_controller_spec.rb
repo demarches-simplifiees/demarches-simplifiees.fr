@@ -346,7 +346,6 @@ describe Backoffice::DossiersController, type: :controller do
       it 'change state for updated' do
         expect(dossier.state).to eq 'updated'
       end
-
     end
 
     describe 'flash alert' do

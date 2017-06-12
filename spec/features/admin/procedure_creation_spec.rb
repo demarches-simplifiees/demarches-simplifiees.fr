@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'As an administrateur I wanna create a new procedure', js: true do
-
   let(:administrateur) { create(:administrateur) }
 
   before do
@@ -10,7 +9,6 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   end
 
   context 'Right after sign_in I shall see all procedure states links' do
-
     scenario 'Finding draft procedures' do
       page.find_by_id('draft-procedures').trigger('click')
       expect(page).to have_current_path(admin_procedures_draft_path, only_path: true)
@@ -28,7 +26,6 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   end
 
   context 'Creating a new procedure' do
-
     scenario 'Finding new procedure link' do
       page.find_by_id('new-procedure').click
       expect(page).to have_current_path(new_admin_procedure_path, only_path: true)

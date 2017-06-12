@@ -66,7 +66,6 @@ describe Users::DossiersController, type: :controller do
           it { expect { subject }.to change(Dossier, :count).by 1 }
 
           describe 'save user siret' do
-
             context 'when user have not a saved siret' do
               context 'when siret is present on request' do
                 subject { get :new, params: {procedure_id: procedure_id, siret: siret} }
@@ -349,7 +348,6 @@ describe Users::DossiersController, type: :controller do
       end
 
       it { expect(response.status).to eq 200 }
-
     end
   end
 
@@ -456,7 +454,6 @@ describe Users::DossiersController, type: :controller do
 
       it { expect { subject }.to change { Dossier.count }.by(0) }
     end
-
   end
 
   describe 'PUT #change_siret' do

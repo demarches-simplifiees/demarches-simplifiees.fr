@@ -9,7 +9,6 @@ describe TypeDeChampDecorator do
   let!(:type_de_champ_2) { create(:type_de_champ_public, procedure: procedure, order_place: 2) }
 
   describe '#button_up' do
-
     describe 'with first piece justificative' do
       let(:index) { 0 }
       subject { type_de_champ_0.decorate }
@@ -50,5 +49,4 @@ describe TypeDeChampDecorator do
       end
     end
   end
-
 end

@@ -41,7 +41,6 @@ describe InvitesController, type: :controller do
 
       it { expect(invite.user).to eq user }
       it { expect(flash[:notice]).to be_present }
-
     end
 
     context 'when email is not assign to an user' do

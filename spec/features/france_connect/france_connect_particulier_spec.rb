@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'France Connect Particulier  Connexion' do
-
   let(:code) { 'plop' }
   let(:given_name) { 'titi' }
   let(:family_name) { 'toto' }
@@ -21,7 +20,6 @@ feature 'France Connect Particulier  Connexion' do
   }
 
   context 'when user is on login page' do
-
     before do
       visit new_user_session_path
     end

@@ -1,5 +1,4 @@
 RSpec.configure do |config|
-
   expect_list = %w()
 
   config.before(:suite) do

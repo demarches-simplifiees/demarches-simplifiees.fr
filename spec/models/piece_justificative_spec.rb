@@ -13,7 +13,6 @@ describe PieceJustificative do
     it { is_expected.to belong_to(:type_de_piece_justificative) }
     it { is_expected.to belong_to(:user) }
     it { is_expected.to have_one(:commentaire) }
-
   end
 
   describe 'validations' do

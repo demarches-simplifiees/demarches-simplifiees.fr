@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe DropDownList do
-
   describe 'database columns' do
     it { is_expected.to have_db_column(:value) }
   end
@@ -24,7 +23,6 @@ Pilotage / Ingénierie
 
     context 'when one value is empty' do
       let(:value) { "Cohésion sociale
-
 Cadre de vie / Urb.
 Pilotage / Ingénierie
 "

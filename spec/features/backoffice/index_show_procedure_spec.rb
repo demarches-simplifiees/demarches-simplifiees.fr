@@ -20,7 +20,6 @@ feature 'As an Accompagnateur I can navigate and use each functionnality around 
   end
 
   context 'On index' do
-
     scenario 'Switching between procedures' do
       page.all('#procedure-list a').first.click
       expect(page).to have_current_path(backoffice_dossiers_procedure_path(id: procedure_1.id.to_s), only_path: true)

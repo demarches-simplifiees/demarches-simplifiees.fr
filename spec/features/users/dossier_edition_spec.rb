@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'As a User I want to edit a dossier I own' do
-
   let(:user)                     { create(:user) }
   let(:procedure_for_individual) { create(:procedure, :published, :for_individual, :with_type_de_champ, :with_two_type_de_piece_justificative, :with_dossier_link) }
   let!(:dossier)                 { create(:dossier, :with_entreprise, :for_individual, :with_dossier_link, procedure: procedure_for_individual, user: user, autorisation_donnees: true, state: 'initiated') }
@@ -12,7 +11,6 @@ feature 'As a User I want to edit a dossier I own' do
   end
 
   context 'After sign_in, I can navigate through dossiers indexes and edit a dossier' do
-
     scenario 'After sign_in, I can see dossiers "à traiter" (default), and other indexes' do
       expect(page.find('#a_traiter')['class'] ).to eq('active procedure-list-element')
       page.find_by_id('brouillon').click

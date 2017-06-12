@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'procedure locked' do
-
   let(:administrateur) { create(:administrateur) }
   let(:published) { false }
   let(:procedure) { create(:procedure, administrateur: administrateur, published: published) }

@@ -42,7 +42,6 @@ FactoryGirl.define do
 
     trait :with_cerfa_upload do
       after(:build) do |dossier, _evaluator|
-
         dossier.cerfa << create(:cerfa)
       end
     end

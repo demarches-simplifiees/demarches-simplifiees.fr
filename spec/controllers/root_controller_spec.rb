@@ -64,7 +64,6 @@ describe RootController, type: :controller do
     end
 
     it { expect(response.body).to have_css('.landing') }
-
   end
 
   context "unified login" do
@@ -78,5 +77,4 @@ describe RootController, type: :controller do
       expect(response.body).to have_css("a[href='#{new_user_session_path}']")
     end
   end
-
 end

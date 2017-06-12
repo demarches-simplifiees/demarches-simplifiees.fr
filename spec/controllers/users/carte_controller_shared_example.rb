@@ -179,7 +179,6 @@ shared_examples 'carte_controller_spec' do
   end
 
   describe '#get_position' do
-
     context 'when etablissement is nil' do
       before do
         dossier.update etablissement: nil

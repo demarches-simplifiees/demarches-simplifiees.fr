@@ -43,7 +43,6 @@ shared_examples 'type_de_champ_spec' do
   end
 
   describe 'field_for_list?' do
-
     let(:type_de_champ_yes) { create :type_de_champ_public, type_champ: 'text' }
     let(:type_de_champ_no_1) { create :type_de_champ_public, type_champ: 'textarea' }
     let(:type_de_champ_no_2) { create :type_de_champ_public, type_champ: 'header_section' }

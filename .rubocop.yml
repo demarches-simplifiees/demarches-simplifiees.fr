@@ -52,7 +52,7 @@ Layout/EmptyLinesAroundBeginBody:
   Enabled: true
 
 Layout/EmptyLinesAroundBlockBody:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundClassBody:
   Enabled: false

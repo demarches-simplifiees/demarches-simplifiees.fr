@@ -9,7 +9,6 @@ describe TypeDePieceJustificativeDecorator do
   let!(:type_de_piece_justificative_2) { create(:type_de_piece_justificative, procedure: procedure, order_place: 2) }
 
   describe '#button_up' do
-
     describe 'with first piece justificative' do
       let(:index) { 0 }
       subject { type_de_piece_justificative_0.decorate }

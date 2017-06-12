@@ -9,7 +9,6 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
   subject { AutoArchiveProcedureWorker.new.perform }
 
   context "when procedures have no auto_archive_on" do
-
     before do
       subject
       procedure.reload

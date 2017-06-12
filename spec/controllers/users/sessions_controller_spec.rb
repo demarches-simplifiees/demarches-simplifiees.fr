@@ -83,7 +83,6 @@ describe Users::SessionsController, type: :controller do
         end
 
         it 'signs user + gestionnaire + administrateur in' do
-
           post :create, params: {user: {email: administrateur.email, password: administrateur.password}}
           expect(@response.redirect?).to be(true)
           expect(subject.current_user).to eq(user)
@@ -200,7 +199,6 @@ describe Users::SessionsController, type: :controller do
           expect(subject.current_administrateur).to be(nil)
         end
       end
-
     end
   end
 

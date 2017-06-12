@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe DossierTableExportSerializer do
-
   describe '#emails_accompagnateurs' do
-
     let(:gestionnaire){ create(:gestionnaire) }
     let(:follow) { create(:follow, gestionnaire: gestionnaire) }
 
@@ -28,7 +26,5 @@ describe DossierTableExportSerializer do
 
       it { is_expected.to eq "#{gestionnaire.email} #{gestionnaire2.email}" }
     end
-
   end
-
 end

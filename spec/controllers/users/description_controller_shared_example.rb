@@ -87,7 +87,6 @@ shared_examples 'description_controller_spec' do
 
       context 'when dossier does not have an enterprise datas' do
         before do
-
         end
 
         it { expect(dossier.entreprise).to be_nil }

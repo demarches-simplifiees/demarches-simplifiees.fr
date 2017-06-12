@@ -95,7 +95,6 @@ describe API::V1::DossiersController do
     end
 
     context 'when procedure is found and belongs to current admin' do
-
       context 'when dossier does not exist' do
         let(:procedure_id) { procedure.id }
         let(:dossier_id) { 99999 }

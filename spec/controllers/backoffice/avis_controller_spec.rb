@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Backoffice::AvisController, type: :controller do
-
   describe '#POST create' do
     let(:gestionnaire){ create(:gestionnaire) }
     let!(:dossier){ create(:dossier, state: 'received') }

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe PrevisualisationService do
-
   describe '.destroy_all_champs' do
     subject { described_class.destroy_all_champs dossier }
 

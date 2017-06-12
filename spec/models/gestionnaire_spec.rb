@@ -103,7 +103,6 @@ describe Gestionnaire, type: :model do
     subject { gestionnaire.follow? dossier.id }
 
     context 'when gestionnaire follow a dossier' do
-
       before do
         create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
       end

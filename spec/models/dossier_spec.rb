@@ -262,7 +262,6 @@ describe Dossier do
 
             it { is_expected.to eq 'replied' }
           end
-
         end
       end
 
@@ -295,7 +294,6 @@ describe Dossier do
 
             it { is_expected.to eq('replied') }
           end
-
         end
       end
 
@@ -661,7 +659,6 @@ describe Dossier do
       it { expect(subject.second.type_de_champ.libelle).to eq 'type_2_2' }
       it { expect(subject.last.type_de_champ.libelle).to eq 'type_2_3' }
     end
-
   end
 
   describe '#ordered_champs_private' do
@@ -850,7 +847,6 @@ describe Dossier do
 
       it_behaves_like 'dossier is processed', 'without_continuation'
     end
-
   end
 
   describe '.downloadable' do

@@ -1,5 +1,4 @@
 namespace :cloudstorage do
-
   task init: :environment do
     os_config = (YAML.load_file(Fog.credentials_path))['default']
     @os = OpenStack::Connection.create(
@@ -109,5 +108,4 @@ namespace :cloudstorage do
       @cont.delete_object(object) unless last_modified.utc > (Time.now - 2.year).utc
     }
   end
-
 end

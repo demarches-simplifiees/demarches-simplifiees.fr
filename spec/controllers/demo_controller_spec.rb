@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe DemoController, type: :controller do
   describe 'GET #index' do
-
     subject { get :index }
 
     it { expect(subject.status).to eq 200 }

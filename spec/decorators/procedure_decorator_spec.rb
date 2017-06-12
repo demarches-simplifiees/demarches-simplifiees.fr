@@ -25,5 +25,4 @@ describe ProcedureDecorator do
     it { expect(subject.quartiers_prioritaires).to be_falsey }
     it { expect(subject.cadastre).to be_falsey }
   end
-
 end

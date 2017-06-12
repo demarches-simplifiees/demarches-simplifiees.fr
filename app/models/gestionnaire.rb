@@ -55,7 +55,6 @@ class Gestionnaire < ActiveRecord::Base
 
     PreferenceListDossier.available_columns_for(procedure_id).each do |table|
       table.second.each do |column|
-
         if valid_couple_table_attr? table.first, column.first
           PreferenceListDossier.create(
               libelle: column.second[:libelle],
