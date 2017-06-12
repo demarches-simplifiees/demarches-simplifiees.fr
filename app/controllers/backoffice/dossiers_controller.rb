@@ -172,7 +172,6 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     redirect_to backoffice_dossiers_path
   end
 
-
   def unarchive
     @dossier = Dossier.find(params[:id])
     if @dossier.archived

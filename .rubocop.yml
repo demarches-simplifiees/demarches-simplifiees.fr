@@ -40,7 +40,7 @@ Layout/EmptyLineAfterMagicComment:
   Enabled: true
 
 Layout/EmptyLineBetweenDefs:
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLines:
   Enabled: false

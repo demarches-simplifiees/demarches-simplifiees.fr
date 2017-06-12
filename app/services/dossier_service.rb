@@ -34,7 +34,6 @@ class DossierService
     @dossier
   end
 
-
   def self.siren siret
     siret[0..8]
   end

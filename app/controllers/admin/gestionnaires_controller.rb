@@ -11,7 +11,6 @@ class Admin::GestionnairesController < AdminController
     @gestionnaire ||= Gestionnaire.new
   end
 
-
   def create
     @gestionnaire = Gestionnaire.find_by_email(params[:gestionnaire][:email])
     procedure_id = params[:procedure_id]

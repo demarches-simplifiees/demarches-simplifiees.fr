@@ -38,7 +38,6 @@ class CreateFranceConnectInformation < ActiveRecord::Migration
     remove_column :users, :france_connect_particulier_id
   end
 
-
   def down
     add_column :users, :gender, :string
     add_column :users, :given_name, :string
