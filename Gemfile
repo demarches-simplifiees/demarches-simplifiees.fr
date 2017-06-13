@@ -122,6 +122,7 @@ group :development do
   gem 'web-console'
   gem 'rack-handlers'
   gem 'xray-rails'
+  gem 'rubocop', require: false
   gem 'haml-lint'
   gem 'scss_lint', require: false
 end
