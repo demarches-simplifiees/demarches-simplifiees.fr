@@ -1,11 +1,9 @@
 require 'spec_helper'
 
 describe AdministrationsController, type: :controller do
-
   let(:administration) { create :administration }
 
   describe 'GET #index' do
-
     subject { get :index }
 
     context 'when administration user is not connect' do
@@ -13,7 +11,6 @@ describe AdministrationsController, type: :controller do
     end
 
     context 'when administration user is connect' do
-
       before do
         sign_in administration
       end
@@ -23,7 +20,6 @@ describe AdministrationsController, type: :controller do
   end
 
   describe 'POST #create' do
-
     let(:email) { 'plop@plop.com' }
     let(:password) { 'password' }
 
@@ -43,7 +39,6 @@ describe AdministrationsController, type: :controller do
         expect(NewAdminMailer).to receive(:deliver_now!)
         subject
       end
-
     end
 
     context 'when email or password are missing' do

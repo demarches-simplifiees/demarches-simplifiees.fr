@@ -5,7 +5,6 @@ describe Users::Dossiers::CommentairesController, type: :controller do
   let(:texte_commentaire) { 'Commentaire de test' }
 
   describe '#POST create' do
-
     subject {
       post :create, params:{dossier_id: dossier.id, texte_commentaire: texte_commentaire}
       dossier.reload
@@ -42,7 +41,6 @@ describe Users::Dossiers::CommentairesController, type: :controller do
         expect(NotificationMailer).to_not receive(:new_answer)
         subject
       end
-
     end
   end
 end

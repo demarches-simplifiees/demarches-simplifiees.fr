@@ -181,7 +181,6 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
-
   describe 'POST #search' do
     describe 'by id' do
       context 'when I am logged as a gestionnaire' do
@@ -284,7 +283,6 @@ describe Backoffice::DossiersController, type: :controller do
     end
     subject { post :without_continuation, params: {dossier_id: dossier_id} }
 
-
     it 'change state to without_continuation' do
       subject
 
@@ -348,7 +346,6 @@ describe Backoffice::DossiersController, type: :controller do
       it 'change state for updated' do
         expect(dossier.state).to eq 'updated'
       end
-
     end
 
     describe 'flash alert' do

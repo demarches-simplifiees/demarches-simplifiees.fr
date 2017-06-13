@@ -1,5 +1,4 @@
 class AddTypeAttrInChampTable < ActiveRecord::Migration
-
   class TypeDeChamp < ActiveRecord::Base
     has_many :champs
   end

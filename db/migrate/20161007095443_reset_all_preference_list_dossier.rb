@@ -96,10 +96,8 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
     has_many :procedures, through: :assign_to
 
     def build_default_preferences_list_dossier procedure_id=nil
-
       PreferenceListDossier.available_columns_for(procedure_id).each do |table|
         table.second.each do |column|
-
           if valid_couple_table_attr? table.first, column.first
             PreferenceListDossier.create(
                 libelle: column.second[:libelle],
@@ -144,7 +142,6 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
   class Procedure < ActiveRecord::Base
     has_many :assign_to, dependent: :destroy
     has_many :gestionnaires, through: :assign_to
-
   end
 
   def change

@@ -1,5 +1,4 @@
 class DossierService
-
   def initialize dossier, siret, france_connect_information
     @dossier = dossier
     @siret = siret
@@ -33,7 +32,6 @@ class DossierService
 
     @dossier
   end
-
 
   def self.siren siret
     siret[0..8]

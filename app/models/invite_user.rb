@@ -1,3 +1,2 @@
 class InviteUser < Invite
-
 end

@@ -13,7 +13,6 @@ class DossiersListGestionnaireService
          'termine' => termine,
          'archive' => archive,
          'all_state' => all_state}[@liste]
-
   end
 
   def self.dossiers_liste_libelle
@@ -186,5 +185,4 @@ class DossiersListGestionnaireService
   def current_preference_smart_listing_page
     @current_devise_profil.preference_smart_listing_page
   end
-
 end

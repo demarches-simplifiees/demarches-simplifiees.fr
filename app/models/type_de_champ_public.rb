@@ -1,3 +1,2 @@
 class TypeDeChampPublic < TypeDeChamp
-
 end

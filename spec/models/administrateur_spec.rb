@@ -33,7 +33,7 @@ describe Administrateur, type: :model do
   describe 'generate_api_token' do
     let(:token) { 'bullshit' }
     let(:new_token) { 'pocket_master' }
-    let!(:admin_1) { create(:administrateur, email: 'toto@tps.com', password: 'password', api_token: token)  }
+    let!(:admin_1) { create(:administrateur, email: 'toto@tps.com', password: 'password', api_token: token) }
     before do
       allow(SecureRandom).to receive(:hex).and_return(token, new_token)
       admin_1.renew_api_token

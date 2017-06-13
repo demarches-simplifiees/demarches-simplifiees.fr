@@ -1,7 +1,6 @@
 module Carto
   module GeoAPI
     class Driver
-
       def self.regions
         call regions_url
       end
@@ -29,7 +28,6 @@ module Carto
       rescue RestClient::ServiceUnavailable
         nil
       end
-
     end
   end
 end

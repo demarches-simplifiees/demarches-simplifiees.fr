@@ -9,6 +9,7 @@ class SiretFormatValidator < ActiveModel::EachValidator
   end
 
   private
+
   def luhn_checksum(value)
     accum = 0
     value.reverse.each_char.map(&:to_i).each_with_index do |digit, index|

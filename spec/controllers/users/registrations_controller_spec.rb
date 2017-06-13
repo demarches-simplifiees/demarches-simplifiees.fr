@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Users::RegistrationsController, type: :controller do
-
   let(:email) { 'test@octo.com' }
   let(:password) { 'password' }
 

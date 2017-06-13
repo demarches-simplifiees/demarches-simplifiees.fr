@@ -1,6 +1,5 @@
 class FixDefaultTypeOnTypeDeChampTable < ActiveRecord::Migration
   class TypeDeChamp < ActiveRecord::Base
-
   end
 
   def up

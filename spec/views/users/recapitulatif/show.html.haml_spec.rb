@@ -69,11 +69,9 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
         expect(rendered).to have_content('Modifier les documents')
         expect(rendered).to have_css('#upload-pj-modal')
       end
-
     end
 
     context 'when invite is logged' do
-
       context 'when invite is by Gestionnaire' do
         let!(:invite_user) { create(:user, email: 'invite@octo.com') }
 

@@ -14,5 +14,4 @@ Apipie.configure do |config|
 Description
 
   EOS
-
 end

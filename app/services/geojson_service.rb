@@ -11,7 +11,6 @@ class GeojsonService
   end
 
   def self.to_json_polygon_for_cadastre coordinates
-
     polygon = {
         geom: {
             type: "Feature",

@@ -81,9 +81,9 @@ shared_examples 'carte_controller_spec' do
       let(:module_api_carto) { create(:module_api_carto, :with_quartiers_prioritaires) }
 
       before do
-        allow_any_instance_of(CARTO::SGMAP::QuartiersPrioritaires::Adapter).
-            to receive(:to_params).
-                   and_return({"QPCODE1234" => {:code => "QPCODE1234", :nom => "QP de test", :commune => "Paris", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
+        allow_any_instance_of(CARTO::SGMAP::QuartiersPrioritaires::Adapter)
+            .to receive(:to_params)
+                   .and_return({"QPCODE1234" => {:code => "QPCODE1234", :nom => "QP de test", :commune => "Paris", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
 
         post :save, params: {dossier_id: dossier.id, json_latlngs: json_latlngs}
       end
@@ -128,9 +128,9 @@ shared_examples 'carte_controller_spec' do
       let(:module_api_carto) { create(:module_api_carto, :with_cadastre) }
 
       before do
-        allow_any_instance_of(CARTO::SGMAP::Cadastre::Adapter).
-            to receive(:to_params).
-                   and_return([{:surface_intersection => "0.0006", :surface_parcelle => 11252.692583090324, :numero => "0013", :feuille => 1, :section => "CD", :code_dep => "30", :nom_com => "Le Grau-du-Roi", :code_com => "133", :code_arr => "000", :geometry => {:type => "MultiPolygon", :coordinates => [[[[4.134084, 43.5209193], [4.1346615, 43.5212035], [4.1346984, 43.521189], [4.135096, 43.5213848], [4.1350839, 43.5214122], [4.1352697, 43.521505], [4.1356278, 43.5211065], [4.1357402, 43.5207188], [4.1350935, 43.5203936], [4.135002, 43.5204366], [4.1346051, 43.5202412], [4.134584, 43.5202472], [4.1345572, 43.5202551], [4.134356, 43.5203137], [4.1342488, 43.5203448], [4.134084, 43.5209193]]]]}}])
+        allow_any_instance_of(CARTO::SGMAP::Cadastre::Adapter)
+            .to receive(:to_params)
+                   .and_return([{:surface_intersection => "0.0006", :surface_parcelle => 11252.692583090324, :numero => "0013", :feuille => 1, :section => "CD", :code_dep => "30", :nom_com => "Le Grau-du-Roi", :code_com => "133", :code_arr => "000", :geometry => {:type => "MultiPolygon", :coordinates => [[[[4.134084, 43.5209193], [4.1346615, 43.5212035], [4.1346984, 43.521189], [4.135096, 43.5213848], [4.1350839, 43.5214122], [4.1352697, 43.521505], [4.1356278, 43.5211065], [4.1357402, 43.5207188], [4.1350935, 43.5203936], [4.135002, 43.5204366], [4.1346051, 43.5202412], [4.134584, 43.5202472], [4.1345572, 43.5202551], [4.134356, 43.5203137], [4.1342488, 43.5203448], [4.134084, 43.5209193]]]]}}])
 
         post :save, params: {dossier_id: dossier.id, json_latlngs: json_latlngs}
       end
@@ -179,7 +179,6 @@ shared_examples 'carte_controller_spec' do
   end
 
   describe '#get_position' do
-
     context 'when etablissement is nil' do
       before do
         dossier.update etablissement: nil
@@ -244,9 +243,9 @@ shared_examples 'carte_controller_spec' do
 
   describe 'POST #get_qp' do
     before do
-      allow_any_instance_of(CARTO::SGMAP::QuartiersPrioritaires::Adapter).
-          to receive(:to_params).
-                 and_return({"QPCODE1234" => {:code => "QPCODE1234", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
+      allow_any_instance_of(CARTO::SGMAP::QuartiersPrioritaires::Adapter)
+          .to receive(:to_params)
+                 .and_return({"QPCODE1234" => {:code => "QPCODE1234", :geometry => {:type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]]}}})
 
       post :get_qp, params: {dossier_id: dossier.id, coordinates: coordinates}
     end

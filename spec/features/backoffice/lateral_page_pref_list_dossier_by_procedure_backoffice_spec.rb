@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'usage of pref list dossier lateral panel by procedure', js: true do
-
   let(:administrateur) { create(:administrateur) }
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
   let(:procedure) { create(:procedure, :with_type_de_champ, administrateur: administrateur) }

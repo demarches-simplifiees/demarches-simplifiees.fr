@@ -7,7 +7,6 @@ describe 'layouts/_navbar.html.haml', type: :view do
   let!(:procedure) { create(:procedure, administrateur: administrateur) }
 
   describe 'navbar entries' do
-
     context 'when disconnected' do
       before do
         render
@@ -39,6 +38,5 @@ describe 'layouts/_navbar.html.haml', type: :view do
       subject { rendered }
       it { is_expected.to match(/Déconnexion/) }
     end
-
   end
 end

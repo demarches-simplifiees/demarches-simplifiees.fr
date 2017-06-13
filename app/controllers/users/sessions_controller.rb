@@ -1,5 +1,5 @@
 class Users::SessionsController < Sessions::SessionsController
-# before_action :configure_sign_in_params, only: [:create]
+  # before_action :configure_sign_in_params, only: [:create]
 
   def demo
     return redirect_to root_path if Rails.env.production?
@@ -8,7 +8,7 @@ class Users::SessionsController < Sessions::SessionsController
     render 'new'
   end
 
-# GET /resource/sign_in
+  # GET /resource/sign_in
   def new
     unless user_return_to_procedure_id.nil? # WTF ?
       @dossier = Dossier.new(procedure: Procedure.active(user_return_to_procedure_id))
@@ -19,7 +19,7 @@ class Users::SessionsController < Sessions::SessionsController
     error_procedure
   end
 
-#POST /resource/sign_in
+  #POST /resource/sign_in
   def create
     remember_me = params[:user][:remember_me] == '1'
     try_to_authenticate(User, remember_me)
@@ -44,7 +44,7 @@ class Users::SessionsController < Sessions::SessionsController
     end
   end
 
-# DELETE /resource/sign_out
+  # DELETE /resource/sign_out
   def destroy
     sign_out :gestionnaire if gestionnaire_signed_in?
     sign_out :administrateur if administrateur_signed_in?

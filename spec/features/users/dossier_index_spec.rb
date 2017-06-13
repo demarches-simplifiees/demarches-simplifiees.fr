@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'As a User I want to sort and paginate dossiers', js: true do
-
   let(:user) { create(:user) }
   let(:procedure_for_individual) { create(:procedure, :published, :for_individual) }
 
@@ -21,7 +20,6 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
   end
 
   context 'After sign_in, I can see my 51 dossiers on the index' do
-
     scenario 'Using sort' do
       visit "/users/dossiers?dossiers_smart_listing[sort][id]=asc"
       expect(page.all(:css, '#dossiers-list tr')[1].text.split(" ").first).to eq(user.dossiers.first.id.to_s)
@@ -50,5 +48,4 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
       expect(page.all(:css, '#dossiers-list tr')[1].text.split(" ").first).to eq((user.dossiers.first.id).to_s)
     end
   end
-
 end

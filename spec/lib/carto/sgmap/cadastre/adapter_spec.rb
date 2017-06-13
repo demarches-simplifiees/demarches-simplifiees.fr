@@ -4,10 +4,10 @@ describe CARTO::SGMAP::Cadastre::Adapter do
   subject { described_class.new(coordinates).to_params }
 
   before do
-    stub_request(:post, "https://apicarto.sgmap.fr/cadastre/geometrie").
-        with(:body => /.*/,
-             :headers => {'Content-Type' => 'application/json'}).
-        to_return(status: status, body: body)
+    stub_request(:post, "https://apicarto.sgmap.fr/cadastre/geometrie")
+        .with(:body => /.*/,
+             :headers => {'Content-Type' => 'application/json'})
+        .to_return(status: status, body: body)
   end
 
   context 'coordinates are filled' do
@@ -31,7 +31,8 @@ describe CARTO::SGMAP::Cadastre::Adapter do
                                        :code_dep,
                                        :nom_com,
                                        :code_com,
-                                       :code_arr] }
+                                       :code_arr]
+      }
     end
 
     describe 'Attributes' do

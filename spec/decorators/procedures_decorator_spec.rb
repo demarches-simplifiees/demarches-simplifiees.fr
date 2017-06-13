@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe ProceduresDecorator do
-
   before do
     create(:procedure, :published,  created_at: Time.new(2015, 12, 24, 14, 10))
     create(:procedure, :published,  created_at: Time.new(2015, 12, 24, 14, 10))

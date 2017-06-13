@@ -4,12 +4,12 @@ class Admin::GestionnairesController < AdminController
 
   def index
     @gestionnaires = smart_listing_create :gestionnaires,
-                                          current_administrateur.gestionnaires,
-                                          partial: "admin/gestionnaires/list",
-                                          array: true
+      current_administrateur.gestionnaires,
+      partial: "admin/gestionnaires/list",
+      array: true
+
     @gestionnaire ||= Gestionnaire.new
   end
-
 
   def create
     @gestionnaire = Gestionnaire.find_by_email(params[:gestionnaire][:email])

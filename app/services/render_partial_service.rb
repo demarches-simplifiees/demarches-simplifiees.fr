@@ -1,5 +1,4 @@
 class RenderPartialService
-
   attr_accessor :controller, :method
 
   def initialize controller, method

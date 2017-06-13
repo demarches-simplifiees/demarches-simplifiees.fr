@@ -30,8 +30,8 @@ feature 'Administrator connection' do
       end
       context 'when clicking on sign-out' do
         before do
-          stub_request(:get, "https://api.github.com/repos/sgmap/tps/releases/latest").
-              to_return(:status => 200, :body => '{"tag_name": "plip", "body": "blabla", "published_at": "2016-02-09T16:46:47Z"}', :headers => {})
+          stub_request(:get, "https://api.github.com/repos/sgmap/tps/releases/latest")
+              .to_return(:status => 200, :body => '{"tag_name": "plip", "body": "blabla", "published_at": "2016-02-09T16:46:47Z"}', :headers => {})
 
           page.find_by_id('sign-out').find('a.fa-sign-out').click
         end
@@ -58,6 +58,5 @@ feature 'Administrator connection' do
         end
       end
     end
-
   end
 end

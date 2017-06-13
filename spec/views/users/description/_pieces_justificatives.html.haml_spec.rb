@@ -2,20 +2,24 @@ require 'spec_helper'
 
 describe 'users/description/_pieces_justificatives.html.haml', type: :view do
   let!(:procedure) { create(:procedure) }
-  let!(:tpj1) { create(:type_de_piece_justificative,
-    procedure: procedure,
-    libelle: "Première pièce jointe",
-    description: "Première description",
-    order_place: 1,
-    mandatory: true
-  )}
-  let!(:tpj2) { create(:type_de_piece_justificative,
-    procedure: procedure,
-    libelle: "Seconde pièce jointe",
-    description: "Seconde description",
-    order_place: 2,
-    lien_demarche: "https://www.google.fr"
-  )}
+  let!(:tpj1) {
+    create(:type_de_piece_justificative,
+      procedure: procedure,
+      libelle: "Première pièce jointe",
+      description: "Première description",
+      order_place: 1,
+      mandatory: true
+    )
+  }
+  let!(:tpj2) {
+    create(:type_de_piece_justificative,
+      procedure: procedure,
+      libelle: "Seconde pièce jointe",
+      description: "Seconde description",
+      order_place: 2,
+      lien_demarche: "https://www.google.fr"
+    )
+  }
   let!(:dossier) { create(:dossier, :procedure => procedure) }
 
   before do

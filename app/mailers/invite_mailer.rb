@@ -1,5 +1,4 @@
 class InviteMailer < ApplicationMailer
-
   def invite_user invite
     vars_mailer invite
 

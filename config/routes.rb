@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
 
   devise_for :administrations, skip: [:password, :registrations]
@@ -144,7 +143,6 @@ Rails.application.routes.draw do
       resource :accompagnateurs, only: [:show, :update]
 
       resource :previsualisation, only: [:show]
-
     end
 
     namespace :accompagnateurs do

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe NotificationService do
-
   describe '.notify' do
     let(:dossier) { create :dossier }
     let(:service) { described_class.new type_notif, dossier.id }

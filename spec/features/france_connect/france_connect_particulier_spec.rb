@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'France Connect Particulier  Connexion' do
-
   let(:code) { 'plop' }
   let(:given_name) { 'titi' }
   let(:family_name) { 'toto' }
@@ -17,10 +16,10 @@ feature 'France Connect Particulier  Connexion' do
                                      birthdate: birthdate,
                                      birthplace: birthplace,
                                      gender: gender,
-                                     email: email) }
+                                     email: email)
+  }
 
   context 'when user is on login page' do
-
     before do
       visit new_user_session_path
     end
@@ -34,13 +33,14 @@ feature 'France Connect Particulier  Connexion' do
 
       context 'when authentification is ok' do
         let(:france_connect_information) { create(:france_connect_information,
-                                                  france_connect_particulier_id: france_connect_particulier_id,
-                                                  given_name: given_name,
-                                                  family_name: family_name,
-                                                  birthdate: birthdate,
-                                                  birthplace: birthplace,
-                                                  gender: gender,
-                                                  email_france_connect: email) }
+          france_connect_particulier_id: france_connect_particulier_id,
+          given_name: given_name,
+          family_name: family_name,
+          birthdate: birthdate,
+          birthplace: birthplace,
+          gender: gender,
+          email_france_connect: email)
+        }
 
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))

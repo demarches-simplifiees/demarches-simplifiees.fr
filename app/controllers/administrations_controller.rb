@@ -8,11 +8,9 @@ class AdministrationsController < ApplicationController
     @admin = Administrateur.new
 
     @admins = smart_listing_create :admins,
-                                   Administrateur.all.order(:email),
-                                   partial: "administrations/list",
-                                   array: true
-
-
+      Administrateur.all.order(:email),
+      partial: "administrations/list",
+      array: true
   end
 
   def create

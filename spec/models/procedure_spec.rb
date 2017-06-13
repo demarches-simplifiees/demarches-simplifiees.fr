@@ -175,7 +175,6 @@ describe Procedure do
       subject.types_de_piece_justificative.zip(procedure.types_de_piece_justificative).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
-
     end
 
     it 'should duplicate existing mail_templates' do
@@ -244,7 +243,6 @@ describe Procedure do
   end
 
   describe 'total_dossier' do
-
     let(:procedure) { create :procedure }
 
     before do

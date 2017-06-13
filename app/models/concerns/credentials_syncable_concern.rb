@@ -15,5 +15,4 @@ module CredentialsSyncableConcern
     def force_sync_credentials
       SyncCredentialsService.new(self.class, email_was, email, encrypted_password).change_credentials!
     end
-
 end

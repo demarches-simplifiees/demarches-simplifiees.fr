@@ -23,7 +23,6 @@ describe 'admin/procedures/show.html.haml', type: :view do
     end
 
     context 'when procedure have a gestionnare affected' do
-
       before do
         create :assign_to, gestionnaire: create(:gestionnaire), procedure: procedure
         render
@@ -76,7 +75,5 @@ describe 'admin/procedures/show.html.haml', type: :view do
     describe 'procedure link is present' do
       it { expect(rendered).to have_content(commencer_url(procedure_path: procedure.path)) }
     end
-
   end
-
 end

@@ -32,7 +32,6 @@ describe Invite do
       end
 
       it { expect{ subject }.to raise_error ActiveRecord::RecordInvalid }
-
     end
   end
 end

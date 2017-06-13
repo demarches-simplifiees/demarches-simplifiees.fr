@@ -12,14 +12,14 @@ describe 'admin/accompagnateurs/show.html.haml', type: :view do
     assign(:gestionnaire, Gestionnaire.new)
 
     assign(:accompagnateurs_assign, (smart_listing_create :accompagnateurs_assign,
-                                                          assign_gestionnaires,
-                                                          partial: "admin/accompagnateurs/list_assign",
-                                                          array: true))
+      assign_gestionnaires,
+      partial: "admin/accompagnateurs/list_assign",
+      array: true))
 
     assign(:accompagnateurs_not_assign, (smart_listing_create :accompagnateurs_not_assign,
-                                                              not_assign_gestionnaires,
-                                                              partial: "admin/accompagnateurs/list_not_assign",
-                                                              array: true))
+      not_assign_gestionnaires,
+      partial: "admin/accompagnateurs/list_not_assign",
+      array: true))
   end
 
   context 'when admin have none accompagnateur ' do
@@ -43,14 +43,14 @@ describe 'admin/accompagnateurs/show.html.haml', type: :view do
       assign_gestionnaires.reload
 
       assign(:accompagnateurs_assign, (smart_listing_create :accompagnateurs_assign,
-                                                            assign_gestionnaires,
-                                                            partial: "admin/accompagnateurs/list_assign",
-                                                            array: true))
+        assign_gestionnaires,
+        partial: "admin/accompagnateurs/list_assign",
+        array: true))
 
       assign(:accompagnateurs_not_assign, (smart_listing_create :accompagnateurs_not_assign,
-                                                                not_assign_gestionnaires,
-                                                                partial: "admin/accompagnateurs/list_not_assign",
-                                                                array: true))
+        not_assign_gestionnaires,
+        partial: "admin/accompagnateurs/list_not_assign",
+        array: true))
 
       render
     end

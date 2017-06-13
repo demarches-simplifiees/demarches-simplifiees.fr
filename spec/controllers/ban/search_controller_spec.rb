@@ -16,7 +16,6 @@ describe Ban::SearchController, type: :controller do
     end
 
     context 'when request return nothing', vcr: {cassette_name: 'bano_search_nothing'} do
-
       let (:request) { 'je recherche pas grand chose' }
 
       it { expect(response.status).to eq 200 }

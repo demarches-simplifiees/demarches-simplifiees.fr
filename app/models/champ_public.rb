@@ -1,3 +1,2 @@
 class ChampPublic < Champ
-
 end

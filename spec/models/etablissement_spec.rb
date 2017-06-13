@@ -23,7 +23,6 @@ describe Etablissement do
   end
 
   describe '#geo_adresse' do
-
     let(:etablissement) { create(:etablissement) }
 
     subject { etablissement.geo_adresse }

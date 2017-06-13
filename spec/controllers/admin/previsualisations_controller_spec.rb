@@ -12,5 +12,4 @@ describe Admin::PrevisualisationsController, type: :controller do
     subject { get :show, params: {procedure_id: procedure.id} }
     it { expect(subject.status).to eq(200) }
   end
-
 end

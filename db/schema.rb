@@ -11,7 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20170523092900) do
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -475,5 +474,4 @@ ActiveRecord::Schema.define(version: 20170523092900) do
        LEFT JOIN individuals ON ((individuals.dossier_id = dossiers.id)))
        LEFT JOIN pieces_justificatives ON ((pieces_justificatives.dossier_id = dossiers.id)));
   SQL
-
 end

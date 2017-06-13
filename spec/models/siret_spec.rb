@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Siret, type: :model do
-
   let(:valid_siret) { '41816609600051' }
   let(:invalid_siret) { '111111111' }
 

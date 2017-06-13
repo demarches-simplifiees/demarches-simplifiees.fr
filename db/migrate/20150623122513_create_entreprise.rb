@@ -13,7 +13,6 @@ class CreateEntreprise < ActiveRecord::Migration
       t.integer :date_creation
       t.string :nom
       t.string :prenom
-
     end
     add_reference :entreprises, :dossier, references: :dossiers
   end
