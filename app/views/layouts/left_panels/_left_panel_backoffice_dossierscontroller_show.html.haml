@@ -24,6 +24,7 @@
             = button_tag name: :process_action, value: "refuse", class: 'btn btn-danger', title: 'Refuser', data: { toggle: :tooltip, confirm: "Refuser ce dossier ?" } do
               %i.fa.fa-times
 
+      %hr
       = link_to 'Reouvrir', backoffice_dossier_reopen_path(@facade.dossier), method: :post, class: 'btn btn-default btn-block', data: { confirm: "Confirmer vous la réouverture de ce dossier ?" }
 
     %hr
