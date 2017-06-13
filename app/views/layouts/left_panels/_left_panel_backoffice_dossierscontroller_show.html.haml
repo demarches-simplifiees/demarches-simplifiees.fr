@@ -9,6 +9,8 @@
 
     - elsif @facade.dossier.received?
       = form_tag(backoffice_dossier_process_dossier_url(@facade.dossier.id), method: :post) do
+        = text_area :dossier, :motivation, class: "motivation-text-area", placeholder: "Motivation (facultative)"
+
         %ul.list-inline
           %li
             = button_tag name: :process_action, value: "close", class: 'btn btn-success', title: 'Accepter', data: { toggle: :tooltip, confirm: "Accepter ce dossier ?" } do

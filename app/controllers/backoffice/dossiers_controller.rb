@@ -117,9 +117,13 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   def refuse
     create_dossier_facade params[:dossier_id]
 
+    if params[:dossier] && params[:dossier][:motivation].present?
+      motivation = params[:dossier][:motivation]
+    end
+
     dossier = @facade.dossier
 
-    dossier.next_step! 'gestionnaire', 'refuse'
+    dossier.next_step! 'gestionnaire', 'refuse', motivation
     flash.notice = 'Dossier considéré comme refusé.'
 
     NotificationMailer.send_notification(dossier, dossier.procedure.refused_mail_template).deliver_now!
@@ -130,9 +134,13 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   def without_continuation
     create_dossier_facade params[:dossier_id]
 
+    if params[:dossier] && params[:dossier][:motivation].present?
+      motivation = params[:dossier][:motivation]
+    end
+
     dossier = @facade.dossier
 
-    dossier.next_step! 'gestionnaire', 'without_continuation'
+    dossier.next_step! 'gestionnaire', 'without_continuation', motivation
     flash.notice = 'Dossier considéré comme sans suite.'
 
     NotificationMailer.send_notification(dossier, dossier.procedure.without_continuation_mail_template).deliver_now!
@@ -143,9 +151,13 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   def close
     create_dossier_facade params[:dossier_id]
 
+    if params[:dossier] && params[:dossier][:motivation].present?
+      motivation = params[:dossier][:motivation]
+    end
+
     dossier = @facade.dossier
 
-    dossier.next_step! 'gestionnaire', 'close'
+    dossier.next_step! 'gestionnaire', 'close', motivation
     flash.notice = 'Dossier traité avec succès.'
 
     NotificationMailer.send_notification(dossier, dossier.procedure.closed_mail_template).deliver_now!
