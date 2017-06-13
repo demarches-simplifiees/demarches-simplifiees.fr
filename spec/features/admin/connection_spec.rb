@@ -5,8 +5,8 @@ feature 'Administrator connection' do
   before do
     visit new_administrateur_session_path
   end
-  scenario 'administrator is on admin loggin page' do
-    expect(page).to have_css('#form-login.user_connexion_page')
+  scenario 'administrator is on sign in page' do
+    expect(page).to have_css('#new_user')
   end
 
   context "admin fills form and log in" do

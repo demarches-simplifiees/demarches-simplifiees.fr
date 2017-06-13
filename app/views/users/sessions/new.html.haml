@@ -1,28 +1,44 @@
-#form-login.user_connexion_page
-  %br
-  = render partial: 'users/sessions/resume_procedure'
+.two-columns
+  .login-wrapper
+    .preview
+      = image_tag "landing/hero/dematerialiser.svg"
+      .baseline.center
+        %h3 Un outil simple
+        %p
+          pour gérer les formulaires
+          %br
+          administratifs dématérialisés.
+    .login-form
+      %h1.center Connectez-vous
 
-  %h2#login-user
-    = t('dynamics.users.connexion_title')
+      = form_for @user, url: user_session_path, html: { class: "form" } do |f|
+        = f.label :email, "Email"
+        = f.text_field :email
 
-  %a.btn-fc#btn-fcp{ href: '/france_connect/particulier' }
-    = image_tag 'franceconnect_logo.png'
+        = f.label :password, "Mot de passe"
+        = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
+        .reset-password.text-right
+          = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "link"
 
-  %br
-  %a.text-info{ href: 'https://fcp.integ01.dev-franceconnect.fr/a-propos', target: '_blank' }
-    Qu’est-ce que FranceConnect ?
-
-  %hr
-
-  .text-left
-    #new-user
-      = simple_form_for @user, url: user_session_path do |f|
-        = f.input :email
-        = f.input :password, label: 'Mot de passe', input_html: { value: @user.password }
         - if devise_mapping.rememberable?
-          = f.input :remember_me, as: :boolean, label: 'Se souvenir de moi'
-        .text-center
-          = f.submit "Se connecter", class: 'btn btn-primary'
+          = f.check_box :remember_me, as: :boolean
+          = f.label :remember_me, "Se souvenir de moi"
 
-  - if @user.email != DemoEmails[:gestionnaire] && @user.email != DemoEmails[:admin]
-    = render "users/shared/links"
+        = f.submit "Se connecter", class: "button large primary expand"
+
+      .separation.center
+        ou
+
+      .center
+        = image_tag "login-with-fc-hover.svg", style: "display: none"
+        = link_to "", france_connect_particulier_path, class: "login-with-fc"
+
+      .center
+        = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "link"
+
+      - if devise_mapping.registerable?
+        %hr
+        %p.register
+          %span
+            Nouveau sur TPS ?
+          = link_to "Créer un compte", new_registration_path(resource_name), class: "button"

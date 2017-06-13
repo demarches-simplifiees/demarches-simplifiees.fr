@@ -11,7 +11,7 @@ describe 'user access to the list of his dossier' do
     last_updated_dossier.update_column(:updated_at, "19/07/2052 15:35".to_time)
 
     visit new_user_session_path
-    within('#new-user') do
+    within('#new_user') do
       page.find_by_id('user_email').set user.email
       page.find_by_id('user_password').set user.password
       page.click_on 'Se connecter'

@@ -1,0 +1,98 @@
+@import "colors";
+@import "placeholders";
+
+.two-columns {
+  background: linear-gradient(to right, white 0%, white 50%, $light-grey 50%, $light-grey 100%);
+}
+
+.login-wrapper {
+  @extend %page-width-container;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+$login-padding: 60px;
+
+.preview,
+.login-form {
+  width: 50%;
+  padding: $login-padding;
+}
+
+@media (min-width: $page-width + (2 * $login-padding)) {
+  .preview {
+    padding-left: 0;
+  }
+
+  .login-form {
+    padding-right: 0;
+  }
+}
+
+.preview {
+  font-size: 24px;
+
+  img {
+    width: 100%;
+    margin-bottom: 60px;
+  }
+
+  h3 {
+    color: $blue;
+    font-weight: bold;
+  }
+}
+
+.login-form {
+  font-size: 14px;
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  .reset-password {
+    margin-top: 8px;
+  }
+
+  .separation {
+    font-size: 14px;
+    color: $grey;
+    margin: 24px 0;
+  }
+
+  .login-with-fc {
+    display: inline-block;
+    height: 52px;
+    width: 186px;
+    margin: auto;
+    margin-bottom: 8px;
+    background-image: image-url("login-with-fc.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;
+
+    &:hover {
+      background-image: image-url("login-with-fc-hover.svg");
+    }
+  }
+
+  hr {
+    margin-top: 60px;
+    margin-bottom: 20px;
+    background-color: $grey;
+    border: none;
+    height: 1px;
+  }
+
+  .register {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+}

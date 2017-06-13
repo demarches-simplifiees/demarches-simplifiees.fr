@@ -9,7 +9,7 @@ feature 'user is on description page' do
 
     visit users_dossier_description_path dossier
 
-    within('#new-user') do
+    within('#new_user') do
       page.find_by_id('user_email').set dossier.user.email
       page.find_by_id('user_password').set dossier.user.password
       page.click_on 'Se connecter'

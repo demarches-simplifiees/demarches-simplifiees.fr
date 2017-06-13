@@ -12,14 +12,14 @@ feature 'user path for dossier creation' do
     end
 
     scenario 'he is redirected on login page' do
-      expect(page).to have_css('#login-user')
-      expect(page).to have_css('#logo_procedure')
-      expect(page).to have_css('#titre-procedure')
+      expect(page).to have_css('#new_user')
+      expect(page).to have_css('.procedure-logos')
+      expect(page).to have_content(procedure.libelle)
     end
 
     context 'user sign_in' do
       before do
-        within('#new-user') do
+        within('#new_user') do
           page.find_by_id('user_email').set user.email
           page.find_by_id('user_password').set user.password
           page.click_on 'Se connecter'
