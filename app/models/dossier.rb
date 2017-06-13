@@ -130,7 +130,7 @@ class Dossier < ActiveRecord::Base
     commentaires.order(created_at: :desc)
   end
 
-  def next_step! role, action
+  def next_step! role, action, motivation = nil
     unless %w(initiate follow update comment receive refuse without_continuation close).include?(action)
       fail 'action is not valid'
     end
@@ -170,14 +170,29 @@ class Dossier < ActiveRecord::Base
       when 'close'
         if received?
           closed!
+
+          if motivation
+            self.motivation = motivation
+            save
+          end
         end
       when 'refuse'
         if received?
           refused!
+
+          if motivation
+            self.motivation = motivation
+            save
+          end
         end
       when 'without_continuation'
         if received?
           without_continuation!
+
+          if motivation
+            self.motivation = motivation
+            save
+          end
         end
       end
     end

@@ -250,80 +250,84 @@ describe Backoffice::DossiersController, type: :controller do
     it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
   end
 
-  describe 'POST #refuse' do
-    before do
-      dossier.refused!
-      sign_in gestionnaire
+  describe 'POST #process_dossier' do
+    context "with refuse" do
+      before do
+        dossier.received!
+        sign_in gestionnaire
+      end
+
+      subject { post :process_dossier, params: { process_action: "refuse", dossier_id: dossier_id} }
+
+      it 'change state to refused' do
+        subject
+
+        dossier.reload
+        expect(dossier.state).to eq('refused')
+      end
+
+      it 'Notification email is sent' do
+        expect(NotificationMailer).to receive(:send_notification)
+          .with(dossier, kind_of(Mails::RefusedMail)).and_return(NotificationMailer)
+        expect(NotificationMailer).to receive(:deliver_now!)
+
+        subject
+      end
+
+      it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
     end
 
-    subject { post :refuse, params: {dossier_id: dossier_id} }
+    context "with without_continuation" do
+      before do
+        dossier.received!
+        sign_in gestionnaire
+      end
 
-    it 'change state to refused' do
-      subject
+      subject { post :process_dossier, params: { process_action: "without_continuation", dossier_id: dossier_id} }
 
-      dossier.reload
-      expect(dossier.state).to eq('refused')
+      it 'change state to without_continuation' do
+        subject
+
+        dossier.reload
+        expect(dossier.state).to eq('without_continuation')
+      end
+
+      it 'Notification email is sent' do
+        expect(NotificationMailer).to receive(:send_notification)
+          .with(dossier, kind_of(Mails::WithoutContinuationMail)).and_return(NotificationMailer)
+        expect(NotificationMailer).to receive(:deliver_now!)
+
+        subject
+      end
+
+      it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
     end
 
-    it 'Notification email is sent' do
-      expect(NotificationMailer).to receive(:send_notification)
-        .with(dossier, kind_of(Mails::RefusedMail)).and_return(NotificationMailer)
-      expect(NotificationMailer).to receive(:deliver_now!)
+    context "with close" do
+      before do
+        dossier.received!
+        sign_in gestionnaire
+      end
 
-      subject
+      subject { post :process_dossier, params: { process_action: "close", dossier_id: dossier_id} }
+
+      it 'change state to closed' do
+        subject
+
+        dossier.reload
+        expect(dossier.state).to eq('closed')
+      end
+
+      it 'Notification email is sent' do
+        expect(NotificationMailer).to receive(:send_notification)
+          .with(dossier, kind_of(Mails::ClosedMail)).and_return(NotificationMailer)
+        expect(NotificationMailer).to receive(:deliver_now!)
+
+        subject
+      end
+
+      it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
     end
-
-    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
-  end
-
-  describe 'POST #without_continuation' do
-    before do
-      dossier.without_continuation!
-      sign_in gestionnaire
-    end
-    subject { post :without_continuation, params: {dossier_id: dossier_id} }
-
-    it 'change state to without_continuation' do
-      subject
-
-      dossier.reload
-      expect(dossier.state).to eq('without_continuation')
-    end
-
-    it 'Notification email is sent' do
-      expect(NotificationMailer).to receive(:send_notification)
-        .with(dossier, kind_of(Mails::WithoutContinuationMail)).and_return(NotificationMailer)
-      expect(NotificationMailer).to receive(:deliver_now!)
-
-      subject
-    end
-
-    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
-  end
-
-  describe 'POST #close' do
-    before do
-      dossier.received!
-      sign_in gestionnaire
-    end
-    subject { post :close, params: {dossier_id: dossier_id} }
-
-    it 'change state to closed' do
-      subject
-
-      dossier.reload
-      expect(dossier.state).to eq('closed')
-    end
-
-    it 'Notification email is sent' do
-      expect(NotificationMailer).to receive(:send_notification)
-        .with(dossier, kind_of(Mails::ClosedMail)).and_return(NotificationMailer)
-      expect(NotificationMailer).to receive(:deliver_now!)
-
-      subject
-    end
-
-    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
   end
 
   describe 'PUT #toggle_follow' do
