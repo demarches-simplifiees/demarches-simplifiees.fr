@@ -54,6 +54,9 @@ jobs:
             TESTFILES=$(circleci tests glob "spec/**/*.rb"| xargs -n 1 echo | grep -v "spec/factories/" | tr " " "\n" | circleci tests split --split-by=timings)
             bundle exec rspec --color --require spec_helper -- ${TESTFILES}
       - run:
+          name: Run rubocop
+          command: bundle exec rubocop
+      - run:
           name: Run haml-lint
           command: bundle exec haml-lint app/views/
       - run:
