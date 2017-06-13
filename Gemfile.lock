@@ -714,6 +714,7 @@ DEPENDENCIES
   rest-client
   rgeo-geojson
   rspec-rails (~> 3.0)
+  rubocop
   sass-rails (~> 5.0)
   scenic
   scss_lint
