@@ -1,9 +1,8 @@
 @import "colors";
 @import "placeholders";
+@import "mixins";
 
-.two-columns {
-  background: linear-gradient(to right, white 0%, white 50%, $light-grey 50%, $light-grey 100%);
-}
+$login-breakpoint: 820px;
 
 .login-wrapper {
   @extend %page-width-container;
@@ -18,6 +17,23 @@ $login-padding: 60px;
 .login-form {
   width: 50%;
   padding: $login-padding;
+}
+
+@media (max-width: $login-breakpoint) {
+  .preview {
+    display: none;
+  }
+
+  .login-form {
+    @include horizontal-padding(0);
+    width: 100%;
+  }
+}
+
+@media (min-width: $login-breakpoint) {
+  .two-columns {
+    background: linear-gradient(to right, #FFFFFF 0%, #FFFFFF 50%, $light-grey 50%, $light-grey 100%);
+  }
 }
 
 @media (min-width: $page-width + (2 * $login-padding)) {
