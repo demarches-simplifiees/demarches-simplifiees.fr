@@ -3,4 +3,5 @@
     = link_to root_path do
       %img.header-logo{ src: image_url("header/logo-tps.svg") }
 
-    = link_to "Connexion", new_user_session_path, class: "header-login-button"
+    - unless request.path == new_user_session_path
+      = link_to "Connexion", new_user_session_path, class: "header-login-button"
