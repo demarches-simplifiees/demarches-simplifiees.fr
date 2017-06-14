@@ -227,5 +227,7 @@ Rails.application.routes.draw do
     get '/:procedure_path' => '/users/dossiers#commencer'
   end
 
+  get "patron" => "root#patron"
+
   apipie
 end
