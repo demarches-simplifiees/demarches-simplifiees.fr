@@ -49,7 +49,7 @@ $login-padding: 60px;
 .preview {
   font-size: 24px;
 
-  img {
+  .paperless-logo {
     width: 100%;
     margin-bottom: 60px;
   }
@@ -57,6 +57,29 @@ $login-padding: 60px;
   h3 {
     color: $blue;
     font-weight: bold;
+  }
+
+  .close-procedure {
+    font-size: 12px;
+  }
+
+  .procedure-title {
+    font-size: 30px;
+    margin: 50px 0 32px;
+  }
+
+  .procedure-description {
+    font-size: 14px;
+  }
+
+  .procedure-logos {
+    display: flex;
+    justify-content: space-around;
+
+    img {
+      max-height: 130px;
+      margin: 0 10px;
+    }
   }
 }
 

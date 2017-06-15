@@ -1,13 +1,27 @@
 .two-columns
   .login-wrapper
     .preview
-      = image_tag "landing/hero/dematerialiser.svg"
-      .baseline.center
-        %h3 Un outil simple
-        %p
-          pour gérer les formulaires
-          %br
-          administratifs dématérialisés.
+      - unless @dossier
+        = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo"
+        .baseline.center
+          %h3 Un outil simple
+          %p
+            pour gérer les formulaires
+            %br
+            administratifs dématérialisés.
+      - else
+        .text-right
+          = link_to "Fermer", users_no_procedure_url, class: "link close-procedure"
+        .procedure-logos
+          = image_tag @dossier.procedure.decorate.logo_img
+          - if @dossier.procedure.euro_flag
+            = image_tag "flag_of_europe.svg"
+
+        %h2.procedure-title
+          = @dossier.procedure.libelle
+        %p.procedure-description
+          = h @dossier.procedure.description.html_safe
+
     .login-form
       %h1.center Connectez-vous
 
