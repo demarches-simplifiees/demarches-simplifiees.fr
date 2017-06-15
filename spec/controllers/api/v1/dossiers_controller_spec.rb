@@ -111,10 +111,10 @@ describe API::V1::DossiersController do
       context 'when dossier exists and belongs to procedure' do
         let(:procedure_id) { procedure.id }
         let(:date_creation) { Time.utc(2008, 9, 1, 10, 5, 0) }
-        let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
+        let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, motivation: "Motivation") } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
-        let(:field_list) { [:id, :created_at, :updated_at, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :champs_private, :commentaires, :state, :simplified_state, :initiated_at, :processed_at, :received_at, :accompagnateurs, :invites] }
+        let(:field_list) { [:id, :created_at, :updated_at, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :champs_private, :commentaires, :state, :simplified_state, :initiated_at, :processed_at, :received_at, :motivation, :accompagnateurs, :invites] }
         subject { body[:dossier] }
 
         it 'return REST code 200', :show_in_doc do
