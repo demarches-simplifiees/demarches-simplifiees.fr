@@ -267,4 +267,33 @@ describe StatsController, type: :controller do
 
     it { is_expected.to match [[3.week.ago.to_i, 0], [2.week.ago.to_i, 0], [1.week.ago.to_i, 66.67]] }
   end
+
+  describe '#motivation_usage_dossier' do
+    let!(:dossier) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation") }
+    let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
+    let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }
+
+    before do
+      Timecop.freeze(Time.now)
+    end
+
+    subject { StatsController.new.send(:motivation_usage_dossier) }
+
+    it { expect(subject).to match([[I18n.l(3.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
+  end
+
+  describe '#motivation_usage_procedure' do
+    let!(:dossier) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation" ) }
+    let!(:dossier1) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation", procedure: dossier.procedure) }
+    let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
+    let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }
+
+    before do
+      Timecop.freeze(Time.now)
+    end
+
+    subject { StatsController.new.send(:motivation_usage_procedure) }
+
+    it { expect(subject).to match([[I18n.l(3.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
+  end
 end
