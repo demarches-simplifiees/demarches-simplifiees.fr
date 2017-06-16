@@ -336,8 +336,11 @@ describe Backoffice::DossiersController, type: :controller do
         let(:emailable) { false }
 
         before do
-          fake_attestation = double(pdf: double(read: 'pdf', size: 2.megabytes), emailable?: emailable)
-          allow_any_instance_of(Dossier).to receive(:attestation).and_return(fake_attestation)
+          attestation = Attestation.new
+          allow(attestation).to receive(:pdf).and_return(double(read: 'pdf', size: 2.megabytes))
+          allow(attestation).to receive(:emailable?).and_return(emailable)
+
+          allow_any_instance_of(Dossier).to receive(:build_attestation).and_return(attestation)
         end
 
         context 'emailable' do

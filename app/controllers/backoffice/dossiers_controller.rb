@@ -114,8 +114,6 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     dossier = @facade.dossier
 
-    attestation_pdf = nil
-
     case params[:process_action]
     when "refuse"
       next_step = "refuse"
@@ -129,12 +127,15 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       next_step = "close"
       notice = "Dossier traité avec succès."
       template = dossier.procedure.closed_mail_template
-      if check_attestation_emailable(dossier)
-        attestation_pdf = dossier.attestation.pdf.read
-      end
     end
 
     dossier.next_step! 'gestionnaire', next_step, motivation
+
+    attestation_pdf = nil
+    if check_attestation_emailable(dossier)
+      attestation_pdf = dossier.attestation.pdf.read
+    end
+
     flash.notice = notice
 
     NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
