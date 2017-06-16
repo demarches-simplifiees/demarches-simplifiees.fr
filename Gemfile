@@ -52,6 +52,7 @@ gem 'rest-client'
 gem 'clamav-client', require: 'clamav/client'
 
 gem 'carrierwave'
+gem 'copy_carrierwave_file'
 gem 'fog'
 gem 'fog-openstack'
 
@@ -101,6 +102,12 @@ gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git', require: false
 
 gem 'select2-rails'
 
+# PDF Generation
+gem 'prawn', '~> 2.0.1'
+gem 'prawn_rails', '~> 0.0.11'
+
+gem 'sentry-raven'
+
 group :test do
   gem 'capybara'
   gem 'launchy'
@@ -143,8 +150,3 @@ group :development, :test do
   # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
   gem 'dotenv-rails'
 end
-
-group :production, :staging do
-  gem 'sentry-raven'
-end
-

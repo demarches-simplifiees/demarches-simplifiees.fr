@@ -886,4 +886,34 @@ describe Dossier do
       expect(ActionMailer::Base.deliveries.size).to eq(0)
     end
   end
+
+  describe '.build_attestation' do
+    let(:attestation_template) { nil }
+    let(:procedure) { create(:procedure, attestation_template: attestation_template) }
+
+    before :each do
+      dossier.next_step!('gestionnaire', 'close')
+      dossier.reload
+    end
+
+    context 'when the dossier is in received state ' do
+      let!(:dossier) { create(:dossier, procedure: procedure, state: :received) }
+
+      context 'when the procedure has no attestation' do
+        it { expect(dossier.attestation).to be_nil }
+      end
+
+      context 'when the procedure has an unactivated attestation' do
+        let(:attestation_template) { AttestationTemplate.new(activated: false) }
+
+        it { expect(dossier.attestation).to be_nil }
+      end
+
+      context 'when the procedure attached has an activated attestation' do
+        let(:attestation_template) { AttestationTemplate.new(activated: true) }
+
+        it { expect(dossier.attestation).not_to be_nil }
+      end
+    end
+  end
 end

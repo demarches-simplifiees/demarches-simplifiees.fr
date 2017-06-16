@@ -5,11 +5,25 @@ RSpec.describe NotificationMailer, type: :mailer do
     let(:user) { create(:user) }
     let(:dossier) { create(:dossier, user: user) }
     let(:email) { instance_double('email', object_for_dossier: 'object', body_for_dossier: 'body') }
-    let (:notifications_count_before) { Notification.count }
-    subject { described_class.send_notification(dossier, email) }
+    let(:attestation) { nil }
+    let(:notifications_count_before) { Notification.count }
+
+    subject { described_class.send_notification(dossier, email, attestation) }
 
     it { expect(subject.subject).to eq(email.object_for_dossier) }
     it { expect(subject.body).to eq(email.body_for_dossier) }
+    it { expect(subject.attachments['attestation.pdf']).to eq(nil) }
+
+    context 'when an attestation is provided' do
+      let(:attestation) { 'attestation' }
+
+      it do
+        expect(subject.attachments['attestation.pdf'].content_type)
+          .to eq('application/pdf; filename=attestation.pdf')
+
+        expect(subject.attachments['attestation.pdf'].body).to eq('attestation')
+      end
+    end
 
     it "creates a commentaire, which is not notified" do
       described_class.send_notification(dossier, email).deliver_now

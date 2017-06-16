@@ -45,6 +45,13 @@
       .procedure-list-element{ class: ('active' if active == 'Prévisualisation') }
         Prévisualisation
 
+    - if @procedure.locked?
+      %a#onglet-attestation{ href: url_for(admin_procedure_attestation_template_path(@procedure, format: :pdf)), target: '_blank' }
+        .procedure-list-element{ class: ('active' if active == 'Attestation') } Attestation
+    - else
+      %a#onglet-attestation{ href: url_for(edit_admin_procedure_attestation_template_path(@procedure)) }
+        .procedure-list-element{ class: ('active' if active == 'Attestation') } Attestation
+
   .split-hr-left
 
 

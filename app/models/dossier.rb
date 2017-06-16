@@ -23,6 +23,7 @@ class Dossier < ActiveRecord::Base
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
   has_one :individual, dependent: :destroy
+  has_one :attestation
   has_many :cerfa, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
@@ -169,6 +170,9 @@ class Dossier < ActiveRecord::Base
         end
       when 'close'
         if received?
+          self.attestation = build_attestation
+          save
+
           closed!
 
           if motivation
@@ -304,6 +308,12 @@ class Dossier < ActiveRecord::Base
   end
 
   private
+
+  def build_attestation
+    if procedure.attestation_template.present? && procedure.attestation_template.activated?
+      procedure.attestation_template.attestation_for(self)
+    end
+  end
 
   def update_state_dates
     if initiated? && !self.initiated_at

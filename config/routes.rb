@@ -82,6 +82,8 @@ Rails.application.routes.draw do
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/initiate' => 'recapitulatif#initiate'
 
+      get '/recapitulatif/attestation' => 'recapitulatif#attestation'
+
       post '/commentaire' => 'commentaires#create'
       resources :commentaires, only: [:index]
 
@@ -143,6 +145,14 @@ Rails.application.routes.draw do
       resource :accompagnateurs, only: [:show, :update]
 
       resource :previsualisation, only: [:show]
+
+      resource :attestation_template, only: [:show, :edit, :update, :create]
+
+      post 'attestation_template/disactivate' => 'attestation_templates#disactivate'
+      patch 'attestation_template/disactivate' => 'attestation_templates#disactivate'
+
+      post 'attestation_template/preview' => 'attestation_templates#preview'
+      patch 'attestation_template/preview' => 'attestation_templates#preview'
     end
 
     namespace :accompagnateurs do

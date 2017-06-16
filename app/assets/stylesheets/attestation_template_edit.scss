@@ -1,0 +1,30 @@
+#attestation-template-edit {
+  .notice {
+    margin-bottom: 30px;
+  }
+
+  .image-upload {
+    display: flex;
+    align-items: center;
+
+    input {
+      margin: 10px 0;
+    }
+  }
+
+  .thumbnail {
+    width: 90px;
+    margin-right: 15px;
+  }
+
+  .balises {
+    max-height: 180px;
+    overflow-y: scroll;
+    margin-bottom: 20px;
+  }
+
+  .table {
+    border: 1px solid #DDDDDD;
+    margin-bottom: 0px;
+  }
+}

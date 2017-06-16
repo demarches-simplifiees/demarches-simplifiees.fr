@@ -1,4 +1,6 @@
 class Backoffice::DossiersController < Backoffice::DossiersListController
+  include ActionView::Helpers::NumberHelper
+
   respond_to :html, :xlsx, :ods, :csv
 
   prepend_before_action :store_current_location, only: :show
@@ -112,6 +114,8 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     dossier = @facade.dossier
 
+    attestation_pdf = nil
+
     case params[:process_action]
     when "refuse"
       next_step = "refuse"
@@ -125,12 +129,15 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       next_step = "close"
       notice = "Dossier traité avec succès."
       template = dossier.procedure.closed_mail_template
+      if check_attestation_emailable(dossier)
+        attestation_pdf = dossier.attestation.pdf.read
+      end
     end
 
     dossier.next_step! 'gestionnaire', next_step, motivation
     flash.notice = notice
 
-    NotificationMailer.send_notification(dossier, template).deliver_now!
+    NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
@@ -184,6 +191,16 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   private
+
+  def check_attestation_emailable(dossier)
+    if dossier&.attestation&.emailable? == false
+      human_size = number_to_human_size(dossier.attestation.pdf.size)
+      msg = "the attestation of the dossier #{dossier.id} cannot be mailed because it is too heavy: #{human_size}"
+      capture_message(msg, level: 'error')
+    end
+
+    dossier&.attestation&.emailable?
+  end
 
   def store_current_location
     if !gestionnaire_signed_in?
