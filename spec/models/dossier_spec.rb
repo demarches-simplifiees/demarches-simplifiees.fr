@@ -492,7 +492,7 @@ describe Dossier do
     let(:date1) { 1.day.ago }
     let(:date2) { 1.hour.ago }
     let(:date3) { 1.minute.ago }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow], initiated_at: date1, received_at: date2, processed_at: date3) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow], initiated_at: date1, received_at: date2, processed_at: date3, motivation: "Motivation") }
 
     describe '#export_headers' do
       subject { dossier.export_headers }
@@ -518,10 +518,11 @@ describe Dossier do
       it { expect(subject[7]).to eq(date2) }
       it { expect(subject[8]).to eq(date3) }
       it { expect(subject[9]).to be_a_kind_of(String) }
-      it { expect(subject[10]).to be_nil }
+      it { expect(subject[10]).to be_a_kind_of(String) }
       it { expect(subject[11]).to be_nil }
       it { expect(subject[12]).to be_nil }
       it { expect(subject[13]).to be_nil }
+      it { expect(subject[14]).to be_nil }
       it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
 
       context 'dossier for individual' do
@@ -529,10 +530,10 @@ describe Dossier do
 
         subject { dossier_with_individual.data_with_champs }
 
-        it { expect(subject[10]).to eq(dossier_with_individual.individual.gender) }
-        it { expect(subject[11]).to eq(dossier_with_individual.individual.prenom) }
-        it { expect(subject[12]).to eq(dossier_with_individual.individual.nom) }
-        it { expect(subject[13]).to eq(dossier_with_individual.individual.birthdate) }
+        it { expect(subject[11]).to eq(dossier_with_individual.individual.gender) }
+        it { expect(subject[12]).to eq(dossier_with_individual.individual.prenom) }
+        it { expect(subject[13]).to eq(dossier_with_individual.individual.nom) }
+        it { expect(subject[14]).to eq(dossier_with_individual.individual.birthdate) }
       end
     end
 
@@ -548,6 +549,7 @@ describe Dossier do
           dossier.initiated_at,
           dossier.received_at,
           dossier.processed_at,
+          "Motivation",
           gestionnaire.email,
           nil,
           nil,

@@ -7,7 +7,8 @@ class DossierTableExportSerializer < ActiveModel::Serializer
     :state,
     :initiated_at,
     :received_at,
-    :processed_at
+    :processed_at,
+    :motivation
 
   attribute :emails_accompagnateurs
 
