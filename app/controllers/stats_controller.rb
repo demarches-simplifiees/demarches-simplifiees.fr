@@ -70,6 +70,10 @@ class StatsController < ApplicationController
     (collection.sum.to_f / collection.size).round(2)
   end
 
+  def percentage(numerator, denominator)
+    ((numerator.to_f / denominator) * 100).round(2)
+  end
+
   def dossier_instruction_mean_time(dossiers)
     # In the 12 last months, we compute for each month
     # the average time it took to instruct a dossier
@@ -166,7 +170,7 @@ class StatsController < ApplicationController
         result = 0
       else
         weekly_dossier_with_avis_count = weekly_dossiers.select { |dossier| dossier.avis.present? }.count
-        result = ((weekly_dossier_with_avis_count.to_f / weekly_dossiers_count) * 100).round(2)
+        result = percentage(weekly_dossier_with_avis_count, weekly_dossiers_count)
       end
 
       [min_date.to_i, result]
@@ -199,7 +203,7 @@ class StatsController < ApplicationController
         [min_date.to_i, 0]
       else
         answered_weekly_avis_count = weekly_avis.with_answer.count
-        result = ((answered_weekly_avis_count.to_f / weekly_avis_count) * 100).round(2)
+        result = percentage(answered_weekly_avis_count, weekly_avis_count)
 
         [min_date.to_i, result]
       end
