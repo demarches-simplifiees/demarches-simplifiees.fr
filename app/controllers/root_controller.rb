@@ -1,4 +1,6 @@
 class RootController < ApplicationController
+  layout 'new_application'
+
   def index
     if administrateur_signed_in?
       return redirect_to admin_procedures_path
@@ -26,6 +28,9 @@ class RootController < ApplicationController
       return redirect_to administrations_path
     end
 
-    render 'landing', :layout => 'new_application'
+    render 'landing'
+  end
+
+  def patron
   end
 end

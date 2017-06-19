@@ -25,7 +25,7 @@ feature 'France Connect Particulier  Connexion' do
     end
 
     scenario 'link to France Connect is present' do
-      expect(page).to have_css('a#btn-fcp')
+      expect(page).to have_css('a.login-with-fc')
     end
 
     context 'and click on france connect link' do
@@ -49,7 +49,7 @@ feature 'France Connect Particulier  Connexion' do
 
         context 'when is the first connexion' do
           before do
-            page.find_by_id('btn-fcp').click
+            page.find('.login-with-fc').click
           end
           scenario 'he is redirected to france connect particulier page' do
             expect(page).to have_content('Nouvelle connexion')
@@ -70,7 +70,7 @@ feature 'France Connect Particulier  Connexion' do
         context 'when is not the first connexion' do
           before do
             create(:user, france_connect_information: france_connect_information)
-            page.find_by_id('btn-fcp').click
+            page.find('.login-with-fc').click
           end
 
           scenario 'he is redirected to user dossiers page' do
@@ -83,11 +83,11 @@ feature 'France Connect Particulier  Connexion' do
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
           allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
-          page.find_by_id('btn-fcp').click
+          page.find('.login-with-fc').click
         end
 
         scenario 'he is redirected to login page' do
-          expect(page).to have_css('a#btn-fcp')
+          expect(page).to have_css('a.login-with-fc')
         end
 
         scenario 'error message is displayed' do

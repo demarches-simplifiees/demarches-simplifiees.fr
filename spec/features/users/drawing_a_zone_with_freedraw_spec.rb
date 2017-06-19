@@ -12,11 +12,11 @@ feature 'drawing a zone with freedraw' do
     end
 
     scenario 'he is redirected to login page' do
-      expect(page).to have_css('#login-user')
+      expect(page).to have_css('#new_user')
     end
 
     scenario 'he logs in and he is redirected to carte page', vcr: { cassette_name: 'drawing_a_zone_with_freedraw_redirected_to_carte_page' } do
-      within('#new-user') do
+      within('#new_user') do
         page.find_by_id('user_email').set user.email
         page.find_by_id('user_password').set user.password
         page.click_on 'Se connecter'

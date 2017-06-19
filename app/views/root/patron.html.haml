@@ -1,0 +1,27 @@
+.patron
+  %h1 Patron
+
+  %h2 Formulaires
+
+  %form.form
+    %label Nom
+    %input{ type: "text" }
+    %label Prénom
+    %input{ type: "text", placeholder: "ex : Ivan" }
+    %label Mot de passe
+    %input{ type: "password", value: "12345678" }
+    %input.button{ type: "submit", value: "Envoyer" }
+
+  %h2 Boutons
+
+  %p
+    = link_to ".button", "#", class: "button"
+
+    = link_to ".button.primary", "#", class: "button primary"
+
+    = link_to ".button.large", "#", class: "button large"
+
+    = link_to ".button.large.primary", "#", class: "button large primary"
+
+  %p
+    = link_to ".button.primary.expand", "#", class: "button primary expand"

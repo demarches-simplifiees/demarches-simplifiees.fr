@@ -1,4 +1,6 @@
 class Users::SessionsController < Sessions::SessionsController
+  layout "new_application"
+
   # before_action :configure_sign_in_params, only: [:create]
 
   def demo

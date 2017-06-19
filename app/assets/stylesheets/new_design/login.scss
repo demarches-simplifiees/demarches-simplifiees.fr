@@ -1,0 +1,137 @@
+@import "colors";
+@import "placeholders";
+@import "mixins";
+
+$login-breakpoint: 820px;
+
+.login-wrapper {
+  @extend %page-width-container;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+$login-padding: 60px;
+
+.preview,
+.login-form {
+  width: 50%;
+  padding: $login-padding;
+}
+
+@media (max-width: $login-breakpoint) {
+  .preview {
+    display: none;
+  }
+
+  .login-form {
+    @include horizontal-padding(0);
+    width: 100%;
+  }
+}
+
+@media (min-width: $login-breakpoint) {
+  .two-columns {
+    background: linear-gradient(to right, #FFFFFF 0%, #FFFFFF 50%, $light-grey 50%, $light-grey 100%);
+  }
+}
+
+@media (min-width: $page-width + (2 * $login-padding)) {
+  .preview {
+    padding-left: 0;
+  }
+
+  .login-form {
+    padding-right: 0;
+  }
+}
+
+.preview {
+  font-size: 24px;
+
+  .paperless-logo {
+    width: 100%;
+    margin-bottom: 60px;
+  }
+
+  h3 {
+    color: $blue;
+    font-weight: bold;
+  }
+
+  .close-procedure {
+    font-size: 12px;
+  }
+
+  .procedure-title {
+    font-size: 30px;
+    margin: 50px 0 32px;
+  }
+
+  .procedure-description {
+    font-size: 14px;
+  }
+
+  .procedure-logos {
+    display: flex;
+    justify-content: space-around;
+
+    img {
+      max-height: 130px;
+      margin: 0 10px;
+    }
+  }
+}
+
+.login-form {
+  font-size: 14px;
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  .reset-password {
+    margin-top: 8px;
+  }
+
+  .separation {
+    font-size: 14px;
+    color: $grey;
+    margin: 24px 0;
+  }
+
+  .login-with-fc {
+    display: inline-block;
+    height: 52px;
+    width: 186px;
+    margin: auto;
+    margin-bottom: 8px;
+    background-image: image-url("login-with-fc.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;
+
+    &:hover {
+      background-image: image-url("login-with-fc-hover.svg");
+    }
+  }
+
+  hr {
+    margin-top: 60px;
+    margin-bottom: 20px;
+    background-color: $grey;
+    border: none;
+    height: 1px;
+  }
+
+  .register {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+}

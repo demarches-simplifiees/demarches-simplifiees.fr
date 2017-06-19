@@ -18,8 +18,7 @@ describe 'users/sessions/new.html.haml', type: :view do
       render
     end
 
-    it { expect(rendered).to have_selector('#form-login #logo_procedure') }
-    it { expect(rendered).to have_selector('#form-login #titre-procedure') }
+    it { expect(rendered).to have_selector('.procedure-logos') }
     it { expect(rendered).to have_content(dossier.procedure.libelle) }
     it { expect(rendered).to have_content(dossier.procedure.description) }
   end
@@ -29,6 +28,6 @@ describe 'users/sessions/new.html.haml', type: :view do
       render
     end
 
-    it { expect(rendered).to have_selector('#form-login #logo_tps') }
+    it { expect(rendered).to have_content('Un outil simple') }
   end
 end
