@@ -340,6 +340,7 @@ describe Backoffice::DossiersController, type: :controller do
           allow(attestation).to receive(:pdf).and_return(double(read: 'pdf', size: 2.megabytes))
           allow(attestation).to receive(:emailable?).and_return(emailable)
 
+          expect_any_instance_of(Dossier).to receive(:reload)
           allow_any_instance_of(Dossier).to receive(:build_attestation).and_return(attestation)
         end
 
