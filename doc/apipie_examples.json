@@ -50,6 +50,7 @@
           "initiated_at": "2017-04-11T12:00:12.000Z",
           "received_at": null,
           "processed_at": null,
+          "motivation": null,
           "accompagnateurs": [
             "gestionnaire@apientreprise.fr"
           ],

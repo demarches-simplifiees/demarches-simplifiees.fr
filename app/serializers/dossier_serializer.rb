@@ -9,6 +9,7 @@ class DossierSerializer < ActiveModel::Serializer
     :initiated_at,
     :received_at,
     :processed_at,
+    :motivation,
     :accompagnateurs,
     :invites
 
