@@ -16,7 +16,7 @@ $login-breakpoint: 820px;
 }
 
 @media (max-width: $login-breakpoint) {
-  .two-columns {
+  .two-columns.login {
     background: #FFFFFF;
   }
 }
