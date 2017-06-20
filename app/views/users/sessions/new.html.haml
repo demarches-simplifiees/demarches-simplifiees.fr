@@ -23,9 +23,9 @@
           = h @dossier.procedure.description.html_safe
 
     .login-form
-      %h1.center Connectez-vous
-
       = form_for @user, url: user_session_path, html: { class: "form" } do |f|
+        %h1 Connectez-vous
+
         = f.label :email, "Email"
         = f.text_field :email
 
