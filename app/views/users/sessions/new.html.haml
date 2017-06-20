@@ -31,8 +31,10 @@
 
         = f.label :password, "Mot de passe"
         = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
-        .reset-password.text-right
-          = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "link"
+
+        - if [:user, :gestionnaire].include?(resource_name)
+          .reset-password.text-right
+            = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "link"
 
         - if devise_mapping.rememberable?
           = f.check_box :remember_me, as: :boolean
@@ -50,7 +52,7 @@
       .center
         = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "link"
 
-      - if devise_mapping.registerable?
+      - if resource_name == :user
         %hr
         %p.register
           %span
