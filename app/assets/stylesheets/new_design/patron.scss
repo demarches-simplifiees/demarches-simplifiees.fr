@@ -1,7 +1,9 @@
 @import "placeholders";
 
 .patron {
-  @extend %page-width-container;
+  .patron-container {
+    @extend %page-width-container;
+  }
 
   p {
     margin-bottom: 20px;
