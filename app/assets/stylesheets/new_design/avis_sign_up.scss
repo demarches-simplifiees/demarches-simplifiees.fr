@@ -2,14 +2,6 @@
 @import "colors";
 
 .avis-sign-up {
-  display: flex;
-
-  .left,
-  .right {
-    width: 50%;
-    padding: 60px 86px;
-  }
-
   .left {
     p {
       margin: auto;
@@ -26,14 +18,6 @@
       font-size: 18px;
       font-weight: bold;
       margin-top: 15px;
-    }
-  }
-
-  .right {
-    background-color: $light-grey;
-
-    form {
-      max-width: 420px;
     }
   }
 }
