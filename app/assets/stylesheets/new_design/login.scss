@@ -4,45 +4,20 @@
 
 $login-breakpoint: 820px;
 
-.login-wrapper {
-  @extend %page-width-container;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-$login-padding: 60px;
-
-.preview,
-.login-form {
-  width: 50%;
-  padding: $login-padding;
-}
-
 @media (max-width: $login-breakpoint) {
   .preview {
     display: none;
   }
 
-  .login-form {
+  .two-columns .column.login-form {
     @include horizontal-padding(0);
     width: 100%;
   }
 }
 
-@media (min-width: $login-breakpoint) {
+@media (max-width: $login-breakpoint) {
   .two-columns {
-    background: linear-gradient(to right, #FFFFFF 0%, #FFFFFF 50%, $light-grey 50%, $light-grey 100%);
-  }
-}
-
-@media (min-width: $page-width + (2 * $login-padding)) {
-  .preview {
-    padding-left: 0;
-  }
-
-  .login-form {
-    padding-right: 0;
+    background: #FFFFFF;
   }
 }
 
