@@ -1,4 +1,6 @@
 class Administrateurs::SessionsController < Sessions::SessionsController
+  layout "new_application"
+
   def demo
     return redirect_to root_path if Rails.env.production?
 
