@@ -1,6 +1,11 @@
 @import "colors";
 
 .form {
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
   label,
   input {
     font-size: 14px;

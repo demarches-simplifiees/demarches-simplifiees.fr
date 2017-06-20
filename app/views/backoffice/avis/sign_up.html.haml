@@ -3,9 +3,9 @@
     %p.description= @dossier.procedure.libelle
     %p.dossier Dossier nº #{@dossier.id}
   .right
-    %h1 Créez-vous un compte
-
     = form_for(Gestionnaire.new, url: { controller: "backoffice/avis", action: :create_gestionnaire }, method: :post, html: { class: "form" }) do |f|
+      %h1 Créez-vous un compte
+
       = f.label :email, "Email"
       = f.email_field :email, value: @email, disabled: true
 
