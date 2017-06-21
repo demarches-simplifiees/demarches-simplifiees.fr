@@ -1,4 +1,4 @@
-.two-columns.login
+.two-columns.auth
   .columns-container
     .column.preview
       - unless @dossier
@@ -22,7 +22,7 @@
         %p.procedure-description
           = h @dossier.procedure.description.html_safe
 
-    .column.login-form
+    .column.auth-form
       = form_for @user, url: user_session_path, html: { class: "form" } do |f|
         %h1 Connectez-vous
 

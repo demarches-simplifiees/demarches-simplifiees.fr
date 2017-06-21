@@ -13,7 +13,7 @@ describe FranceConnect::ParticulierController, type: :controller do
 
   let(:user_info) { Hashie::Mash.new(france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email: email, password: password) }
 
-  describe '.login' do
+  describe '.auth' do
     it 'redirect to france connect serveur' do
       get :login
       expect(response.status).to eq(302)
