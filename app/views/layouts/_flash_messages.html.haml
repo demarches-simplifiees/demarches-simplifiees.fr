@@ -1,8 +1,11 @@
-- if flash.notice.present? || flash.alert.present?
+- if flash.any?
   #flash_message.center
-    - if flash.notice.present?
-      .alert.alert-success
-        = flash.notice
-    - if flash.alert.present?
-      .alert.alert-danger
-        = flash.alert.html_safe
+    - flash.each do |key, value|
+      - if value.class == Array
+        .alert{ class: flash_class(key) }
+          - value.each do |message|
+            = message
+            %br
+      - else
+        .alert{ class: flash_class(key) }
+          = value
