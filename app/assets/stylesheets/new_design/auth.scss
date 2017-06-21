@@ -2,21 +2,21 @@
 @import "placeholders";
 @import "mixins";
 
-$login-breakpoint: 820px;
+$auth-breakpoint: 820px;
 
-@media (max-width: $login-breakpoint) {
+@media (max-width: $auth-breakpoint) {
   .preview {
     display: none;
   }
 
-  .two-columns .column.login-form {
+  .two-columns .column.auth-form {
     @include horizontal-padding(0);
     width: 100%;
   }
 }
 
-@media (max-width: $login-breakpoint) {
-  .two-columns.login {
+@media (max-width: $auth-breakpoint) {
+  .two-columns.auth {
     background: #FFFFFF;
   }
 }
@@ -58,7 +58,7 @@ $login-breakpoint: 820px;
   }
 }
 
-.login-form {
+.auth-form {
   font-size: 14px;
 
   .reset-password {
