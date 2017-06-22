@@ -11,6 +11,17 @@
               = text_field_tag "q", "#{@search_terms unless @search_terms.nil?}", placeholder: "Rechercher"
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg"
+        %li
+          .header-menu-opener
+            = image_tag "icons/account-circle.svg", onclick: "javascript:TPS.toggleHeaderMenu(event);", title: "Mon compte"
+            %ul.header-menu
+              %li
+                .menu-item{ title: current_email }
+                  = current_email
+              %li
+                = link_to destroy_user_session_path, method: :delete, class: "menu-item menu-link" do
+                  = image_tag "icons/sign-out.svg"
+                  Se déconnecter
 
       - elsif request.path != new_user_session_path
         %li

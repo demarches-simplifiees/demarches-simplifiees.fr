@@ -19,3 +19,8 @@
   max-width: $page-width + 2 * $default-padding;
   margin: 0 auto;
 }
+
+%animation {
+  animation-fill-mode: forwards;
+  animation-duration: 0.3s;
+}
