@@ -12,9 +12,9 @@
             Cette fonctionnalité vous permet de transmettre un clone de votre procédure à un autre administrateur.
           %div{ style:'margin-top:20px' }
             = text_field_tag :email_admin, '', { class: 'form-control',
-                                                type: 'email',
-                                                placeholder: 'Email administrateur cible',
-                                                style: 'width: 300px; margin-left:auto; margin-right:auto' }
+                type: 'email',
+                placeholder: 'Email administrateur cible',
+                style: 'width: 300px; margin-left:auto; margin-right:auto' }
           #not_found_admin.center.text-danger{ style:'display: none; margin-top: 10px;' }
             Cet administrateur n'existe pas.
         .modal-footer
