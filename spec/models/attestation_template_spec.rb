@@ -159,7 +159,7 @@ describe AttestationTemplate, type: :model do
           let(:etablissement) { create(:etablissement, adresse: 'adresse') }
           let(:template_title) { '--adresse--' }
 
-          it { expect(view_args[:title]).to eq('adresse') }
+          it { expect(view_args[:title]).to eq(etablissement.inline_adresse) }
         end
       end
     end
