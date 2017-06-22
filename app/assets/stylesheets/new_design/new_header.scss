@@ -23,6 +23,40 @@
   margin-top: 17px;
 }
 
+.header-right-content {
+  display: flex;
+  align-items: center;
+  height: 100%;
+
+  li {
+    @include horizontal-padding(8px);
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+.header-search {
+  position: relative;
+
+  .form input[type=text] {
+    padding: 9px;
+    padding-right: 42px;
+    float: right;
+    width: 300px;
+  }
+
+  button {
+    padding: 6px 9px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+  }
+}
+
 $header-login-button-height: 36px;
 $header-login-button-border-size: 1px;
 
@@ -36,7 +70,6 @@ $header-login-button-border-size: 1px;
   border: $header-login-button-border-size solid $blue;
   color: $blue;
   font-size: 14px;
-  margin-top: 18px;
 
   &:hover {
     color: #FFFFFF;
