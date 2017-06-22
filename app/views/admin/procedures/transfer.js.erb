@@ -1,11 +1,14 @@
 <%- if response.status == 404 %>
   transfer_errors_message(true);
 <%- else %>
-    <% flash.each do |type, message| %>
+  <% flash.each do |type, message| %>
     $("#flash_message").html("<div class=\"alert alert-success\"> <%= message.html_safe %></div>")
-    <%  end %>
-    <% flash.clear %>
-    transfer_errors_message(false);
-    $("#email_admin").val('');
-    $("button#cancel").click();
+  <%  end %>
+
+  <% flash.clear %>
+
+  transfer_errors_message(false);
+  
+  $("#email_admin").val('');
+  $("button#cancel").click();
 <%- end %>
