@@ -123,17 +123,19 @@ class Admin::ProceduresController < AdminController
   def transfer
     admin = Administrateur.find_by_email(params[:email_admin])
 
-    return render '/admin/procedures/transfer', formats: 'js', status: 404 if admin.nil?
+    if admin.nil?
+      render '/admin/procedures/transfer', formats: 'js', status: 404
+    else
+      procedure = current_administrateur.procedures.find(params[:procedure_id])
+      clone_procedure = procedure.clone
 
-    procedure = current_administrateur.procedures.find(params[:procedure_id])
-    clone_procedure = procedure.clone
+      clone_procedure.administrateur = admin
+      clone_procedure.save
 
-    clone_procedure.administrateur = admin
-    clone_procedure.save
+      flash.now.notice = "La procédure a correctement été clonée vers le nouvel administrateur."
 
-    flash.now.notice = "La procédure a correctement été clonée vers le nouvel administrateur."
-
-    render '/admin/procedures/transfer', formats: 'js', status: 200
+      render '/admin/procedures/transfer', formats: 'js', status: 200
+    end
   end
 
   def archive
