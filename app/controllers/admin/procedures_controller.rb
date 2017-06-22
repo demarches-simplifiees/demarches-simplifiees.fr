@@ -131,7 +131,7 @@ class Admin::ProceduresController < AdminController
     clone_procedure.administrateur = admin
     clone_procedure.save
 
-    flash.now.notice = "La procédure a correctement été cloné vers le nouvel administrateur."
+    flash.now.notice = "La procédure a correctement été clonée vers le nouvel administrateur."
 
     render '/admin/procedures/transfer', formats: 'js', status: 200
   end
