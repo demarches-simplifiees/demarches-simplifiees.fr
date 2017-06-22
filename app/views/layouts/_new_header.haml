@@ -1,7 +1,17 @@
-.new-header{ class: current_page?(root_path) ? nil : 'new-header-with-border' }
+.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
     = link_to root_path do
       %img.header-logo{ src: image_url("header/logo-tps.svg") }
 
-    - unless request.path == new_user_session_path
-      = link_to "Connexion", new_user_session_path, class: "header-login-button"
+    %ul.header-right-content
+      - if gestionnaire_signed_in?
+        %li
+          .header-search
+            = form_tag backoffice_dossiers_search_url, method: :get, class: "form" do
+              = text_field_tag "q", "#{@search_terms unless @search_terms.nil?}", placeholder: "Rechercher"
+              %button{ title: "Rechercher" }
+                = image_tag "icons/search-blue.svg"
+
+      - elsif request.path != new_user_session_path
+        %li
+          = link_to "Connexion", new_user_session_path, class: "header-login-button"
