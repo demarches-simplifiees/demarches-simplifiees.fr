@@ -121,7 +121,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def transfer
-    admin = Administrateur.find_by_email(params[:email_admin])
+    admin = Administrateur.find_by_email(params[:email_admin].downcase)
 
     if admin.nil?
       render '/admin/procedures/transfer', formats: 'js', status: 404
