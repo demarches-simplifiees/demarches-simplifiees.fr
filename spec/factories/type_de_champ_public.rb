@@ -14,5 +14,10 @@ FactoryGirl.define do
       libelle 'Référence autre dossier'
       type_champ 'dossier_link'
     end
+
+    trait :type_yes_no do
+      libelle 'Yes/no'
+      type_champ 'yes_no'
+    end
   end
 end
