@@ -36,7 +36,7 @@
     = render partial: "layouts/google_analytics"
     = render partial: "layouts/mailjet_newsletter"
 
-    = javascript_include_tag "application", "data-turbolinks-track": true
+    = javascript_include_tag "new_design/application", "data-turbolinks-track": true
     = yield :charts_js
     - if Rails.env == "test"
       %script{ type: "text/javascript" }
