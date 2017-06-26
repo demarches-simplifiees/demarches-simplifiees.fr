@@ -18,6 +18,24 @@
               %li
                 .menu-item{ title: current_email }
                   = current_email
+
+              - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
+                - if user_signed_in?
+                  %li
+                    = link_to users_dossiers_path, class: "menu-item menu-link" do
+                      = image_tag "icons/switch-profile.svg"
+                      Passer en usager
+                - if gestionnaire_signed_in?
+                  %li
+                    = link_to backoffice_dossiers_path, class: "menu-item menu-link" do
+                      = image_tag "icons/switch-profile.svg"
+                      Passer en accompagnateur
+                - if administrateur_signed_in?
+                  %li
+                    = link_to admin_procedures_path, class: "menu-item menu-link" do
+                      = image_tag "icons/switch-profile.svg"
+                      Passer en administrateur
+
               %li
                 = link_to destroy_user_session_path, method: :delete, class: "menu-item menu-link" do
                   = image_tag "icons/sign-out.svg"
