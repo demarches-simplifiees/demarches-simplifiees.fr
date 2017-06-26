@@ -47,7 +47,6 @@ class Admin::GestionnairesController < AdminController
       User.create(attributes)
       flash.notice = 'Accompagnateur ajouté'
       GestionnaireMailer.new_gestionnaire(@gestionnaire.email, @gestionnaire.password).deliver_now!
-      GestionnaireMailer.new_assignement(@gestionnaire.email, current_administrateur.email).deliver_now!
     else
       flash.alert = @gestionnaire.errors.full_messages.join('<br />').html_safe
     end
@@ -57,7 +56,6 @@ class Admin::GestionnairesController < AdminController
     if current_administrateur.gestionnaires.include? @gestionnaire
       flash.alert = 'Accompagnateur déjà ajouté'
     else
-      GestionnaireMailer.new_assignement(@gestionnaire.email, current_administrateur.email).deliver_now!
       @gestionnaire.administrateurs.push current_administrateur
       flash.notice = 'Accompagnateur ajouté'
       #TODO Mailer no assign_to
