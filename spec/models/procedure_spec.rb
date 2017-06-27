@@ -247,16 +247,8 @@ describe Procedure do
       procedure.reload
     end
 
-    it 'is not available from a valid path anymore' do
-      expect(procedure.path).to eq procedure_path.path
-      expect(procedure.published).to be_truthy
-      expect(procedure.archived).to be_truthy
-    end
-
-    it 'is not in ProcedurePath table anymore' do
-      expect(ProcedurePath.where(path: procedure.path).count).to eq(1)
-      expect(ProcedurePath.find_by_procedure_id(procedure.id)).not_to be_nil
-    end
+    it { expect(procedure.published).to be_truthy }
+    it { expect(procedure.archived).to be_truthy }
   end
 
   describe 'total_dossier' do
