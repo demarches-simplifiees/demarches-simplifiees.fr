@@ -147,8 +147,10 @@ describe Procedure do
     let(:procedure) { create(:procedure, archived: archived, published: published, received_mail: received_mail) }
     let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
+    let!(:type_de_champ_2) { create(:type_de_champ_public, :type_drop_down_list, procedure: procedure, order_place: 2) }
     let!(:type_de_champ_private_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_private_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
+    let!(:type_de_champ_private_2) { create(:type_de_champ_private, :type_drop_down_list, procedure: procedure, order_place: 2) }
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
     let(:received_mail){ create(:received_mail) }
@@ -174,6 +176,8 @@ describe Procedure do
       expect(subject.types_de_piece_justificative.size).to eq procedure.types_de_piece_justificative.size
       expect(subject.types_de_champ.size).to eq procedure.types_de_champ.size
       expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
+      expect(subject.types_de_champ.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ.map(&:drop_down_list).compact.size
+      expect(subject.types_de_champ_private.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_list).compact.size
 
       subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)

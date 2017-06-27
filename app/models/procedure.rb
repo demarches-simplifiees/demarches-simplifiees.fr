@@ -89,14 +89,13 @@ class Procedure < ActiveRecord::Base
 
   def clone
     procedure = self.deep_clone(include:
-      [
-        :types_de_piece_justificative,
-        :types_de_champ,
-        :types_de_champ_private,
-        :module_api_carto,
-        :attestation_template,
-        types_de_champ: [:drop_down_list]
-      ])
+      {
+        types_de_piece_justificative: nil,
+        module_api_carto: nil,
+        attestation_template: nil,
+        types_de_champ: :drop_down_list,
+        types_de_champ_private: :drop_down_list
+      })
     procedure.archived = false
     procedure.published = false
     procedure.logo_secure_token = nil
