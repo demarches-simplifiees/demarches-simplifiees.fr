@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170627091953) do
+ActiveRecord::Schema.define(version: 20170627143701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -383,6 +383,7 @@ ActiveRecord::Schema.define(version: 20170627091953) do
     t.boolean  "individual_with_siret", default: false
     t.datetime "auto_archive_on"
     t.datetime "published_at"
+    t.datetime "archived_at"
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|
