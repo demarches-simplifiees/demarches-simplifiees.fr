@@ -112,7 +112,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def publish!(path)
-    self.update_attributes!({published: true, archived: false})
+    self.update_attributes!({ published: true, archived: false, published_at: Time.now })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
   end
 
