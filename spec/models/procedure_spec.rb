@@ -219,6 +219,20 @@ describe Procedure do
     end
   end
 
+  describe '#publish!' do
+    let(:procedure) { create(:procedure) }
+
+    before do
+      procedure.publish!("example-path")
+    end
+
+    it { expect(procedure.published).to eq(true) }
+    it { expect(procedure.archived).to eq(false) }
+    it { expect(ProcedurePath.find_by_path("example-path")).to be }
+    it { expect(ProcedurePath.find_by_path("example-path").procedure).to eq(procedure) }
+    it { expect(ProcedurePath.find_by_path("example-path").administrateur).to eq(procedure.administrateur) }
+  end
+
   describe 'archive' do
     let(:procedure) { create(:procedure, :published) }
     let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
