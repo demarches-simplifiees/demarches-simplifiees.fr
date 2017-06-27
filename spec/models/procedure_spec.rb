@@ -227,8 +227,8 @@ describe Procedure do
     let(:procedure) { create(:procedure) }
 
     before do
-      procedure.publish!("example-path")
       Timecop.freeze(Time.now)
+      procedure.publish!("example-path")
     end
 
     it { expect(procedure.published).to eq(true) }
@@ -243,12 +243,14 @@ describe Procedure do
     let(:procedure) { create(:procedure, :published) }
     let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
     before do
+      Timecop.freeze(Time.now)
       procedure.archive
       procedure.reload
     end
 
     it { expect(procedure.published).to be_truthy }
     it { expect(procedure.archived).to be_truthy }
+    it { expect(procedure.archived_at).to eq(Time.now) }
   end
 
   describe 'total_dossier' do

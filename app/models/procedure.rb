@@ -116,7 +116,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def archive
-    self.update_attributes!({archived: true})
+    self.update_attributes!(archived: true, archived_at: Time.now)
   end
 
   def total_dossier
