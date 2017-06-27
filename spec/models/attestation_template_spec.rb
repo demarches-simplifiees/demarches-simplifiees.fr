@@ -40,6 +40,21 @@ describe AttestationTemplate, type: :model do
     end
   end
 
+  describe 'validates footer length' do
+    let(:attestation_template) { AttestationTemplate.new(footer: footer) }
+
+    subject do
+      attestation_template.validate
+      attestation_template.errors.details
+    end
+
+    context 'when the footer is too long' do
+      let(:footer) { 'a' * 191 }
+
+      it { is_expected.to match({ footer: [{ error: :too_long, count: 190 }] }) }
+    end
+  end
+
   describe 'dup' do
     before do
       @logo = File.open('spec/fixtures/white.png')
