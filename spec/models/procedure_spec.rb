@@ -219,20 +219,20 @@ describe Procedure do
     end
   end
 
-  describe 'publish' do
-    let(:procedure) { create(:procedure, :published) }
-    let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
+  describe '#publish!' do
+    let(:procedure) { create(:procedure) }
 
-    it 'is available from a valid path' do
-      expect(procedure.path).to match(/fake_path/)
-      expect(procedure.published).to be_truthy
+    before do
+      procedure.publish!("example-path")
+      Timecop.freeze(Time.now)
     end
 
-    it 'is correctly set in ProcedurePath table' do
-      expect(ProcedurePath.where(path: procedure.path).count).to eq(1)
-      expect(procedure_path.procedure_id).to eq(procedure.id)
-      expect(procedure_path.administrateur_id).to eq(procedure.administrateur_id)
-    end
+    it { expect(procedure.published).to eq(true) }
+    it { expect(procedure.archived).to eq(false) }
+    it { expect(procedure.published_at).to eq(Time.now) }
+    it { expect(ProcedurePath.find_by_path("example-path")).to be }
+    it { expect(ProcedurePath.find_by_path("example-path").procedure).to eq(procedure) }
+    it { expect(ProcedurePath.find_by_path("example-path").administrateur).to eq(procedure.administrateur) }
   end
 
   describe 'archive' do
