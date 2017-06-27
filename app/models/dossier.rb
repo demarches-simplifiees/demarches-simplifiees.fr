@@ -42,6 +42,7 @@ class Dossier < ActiveRecord::Base
   belongs_to :procedure
   belongs_to :user
 
+  default_scope { where(hidden_at: nil) }
   scope :state_brouillon,                 -> { where(state: BROUILLON) }
   scope :state_not_brouillon,             -> { where.not(state: BROUILLON) }
   scope :state_nouveaux,                  -> { where(state: NOUVEAUX) }

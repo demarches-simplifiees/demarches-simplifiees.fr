@@ -39,7 +39,9 @@ class Procedure < ActiveRecord::Base
   validates :description, presence: true, allow_blank: false, allow_nil: false
 
   def hide!
-    self.update_attributes(hidden_at: DateTime.now)
+    now = DateTime.now
+    self.update_attributes(hidden_at: now)
+    self.dossiers.update_all(hidden_at: now)
   end
 
   def path

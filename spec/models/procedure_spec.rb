@@ -320,4 +320,22 @@ describe Procedure do
       it { expect { Procedure.find(procedure.id) }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
+
+  describe "#hide!" do
+    let(:procedure) { create(:procedure) }
+    let!(:dossier) { create(:dossier, procedure: procedure) }
+    let!(:dossier2) { create(:dossier, procedure: procedure) }
+
+    it { expect(Dossier.count).to eq(2) }
+    it { expect(Dossier.all).to include(dossier, dossier2) }
+
+    context "when hidding procedure" do
+      before do
+        procedure.hide!
+      end
+
+      it { expect(procedure.dossiers.count).to eq(0) }
+      it { expect(Dossier.count).to eq(0) }
+    end
+  end
 end

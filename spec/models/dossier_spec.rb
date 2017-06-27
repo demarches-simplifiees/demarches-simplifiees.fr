@@ -928,4 +928,21 @@ describe Dossier do
       end
     end
   end
+
+  describe ".default_scope" do
+    let!(:dossier) { create(:dossier, hidden_at: hidden_at) }
+
+    context "when dossier is not hidden" do
+      let(:hidden_at) { nil }
+
+      it { expect(Dossier.count).to eq(1) }
+      it { expect(Dossier.all).to include(dossier) }
+    end
+
+    context "when dossier is hidden" do
+      let(:hidden_at) { 1.day.ago }
+
+      it { expect(Dossier.count).to eq(0) }
+    end
+  end
 end
