@@ -500,20 +500,32 @@ describe Admin::ProceduresController, type: :controller do
       it { expect(subject.status).to eq 404 }
     end
 
-    context 'when admin is know' do
-      let(:new_admin) { create :administrateur, email: 'new_admin@admin.com' }
-      let(:email_admin) { new_admin.email }
+    context 'when admin is known' do
+      let!(:new_admin) { create :administrateur, email: 'new_admin@admin.com' }
 
-      it { expect(subject.status).to eq 200 }
-      it { expect { subject }.to change(Procedure, :count).by(1) }
+      context "and its email address is correct" do
+        let(:email_admin) { 'new_admin@admin.com' }
 
-      context {
+        it { expect(subject.status).to eq 200 }
+        it { expect { subject }.to change(Procedure, :count).by(1) }
+      end
+
+      context 'when admin is know but its email was not downcased' do
+        let(:email_admin) { "NEW_admin@adMIN.com" }
+
+        it { expect(subject.status).to eq 200 }
+        it { expect { subject }.to change(Procedure, :count).by(1) }
+      end
+
+      describe "correctly assigns the new admin" do
+        let(:email_admin) { 'new_admin@admin.com' }
+
         before do
           subject
         end
 
         it { expect(Procedure.last.administrateur).to eq new_admin }
-      }
+      end
     end
   end
 end
