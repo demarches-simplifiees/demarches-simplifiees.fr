@@ -365,14 +365,6 @@ describe Gestionnaire, type: :model do
       context 'when the gestionnaire has no notifications' do
         it { is_expected.to eq(nil) }
       end
-
-      context 'when the gestionnaire has one notification' do
-        before :each do
-          expect(gestionnaire2).to receive(:notifications).twice.and_return([1])
-        end
-
-        it { is_expected.to eq({ start_date: monday, procedure_overviews: [], notifications: [1] }) }
-      end
     end
 
     context 'when a procedure published was active' do

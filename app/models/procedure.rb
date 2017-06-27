@@ -135,8 +135,8 @@ class Procedure < ActiveRecord::Base
     }
   end
 
-  def procedure_overview(start_date, notifications_count)
-    ProcedureOverview.new(self, start_date, notifications_count)
+  def procedure_overview(start_date)
+    ProcedureOverview.new(self, start_date)
   end
 
   def initiated_mail_template
