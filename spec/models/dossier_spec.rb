@@ -486,7 +486,7 @@ describe Dossier do
   end
 
   context 'when dossier is followed' do
-    let(:procedure) { create(:procedure, :with_type_de_champ) }
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
     let(:gestionnaire) { create(:gestionnaire) }
     let(:follow) { create(:follow, gestionnaire: gestionnaire) }
     let(:date1) { 1.day.ago }
@@ -502,7 +502,11 @@ describe Dossier do
       it { expect(subject).to include(:individual_nom) }
       it { expect(subject).to include(:individual_prenom) }
       it { expect(subject).to include(:individual_birthdate) }
-      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
+        dossier.procedure.types_de_champ.count +
+        dossier.procedure.types_de_champ_private.count +
+        dossier.export_entreprise_data.count)
+      }
     end
 
     describe '#data_with_champs' do
@@ -523,7 +527,12 @@ describe Dossier do
       it { expect(subject[12]).to be_nil }
       it { expect(subject[13]).to be_nil }
       it { expect(subject[14]).to be_nil }
-      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+      it { expect(subject[15]).to be_nil }
+      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
+        dossier.procedure.types_de_champ.count +
+        dossier.procedure.types_de_champ_private.count +
+        dossier.export_entreprise_data.count)
+      }
 
       context 'dossier for individual' do
         let(:dossier_with_individual) { create(:dossier, :for_individual, user: user, procedure: procedure) }
@@ -551,6 +560,7 @@ describe Dossier do
           dossier.processed_at,
           "Motivation",
           gestionnaire.email,
+          nil,
           nil,
           nil,
           nil,
