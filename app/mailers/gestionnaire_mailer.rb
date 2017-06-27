@@ -1,4 +1,6 @@
 class GestionnaireMailer < ApplicationMailer
+  layout 'mailers/layout'
+
   def new_gestionnaire email, password
     send_mail email, password, "Vous avez été nommé accompagnateur sur la plateforme TPS"
   end
