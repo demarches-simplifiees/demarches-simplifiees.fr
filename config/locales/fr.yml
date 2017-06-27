@@ -87,6 +87,10 @@ fr:
   activerecord:
     errors:
       models:
+        attestation_template:
+          attributes:
+            footer:
+              too_long: ": l'adresse en bas de page est trop longue."
         piece_justificative:
           attributes:
             content:

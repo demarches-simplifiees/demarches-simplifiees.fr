@@ -7,6 +7,7 @@ class AttestationTemplate < ApplicationRecord
   mount_uploader :signature, AttestationTemplateImageUploader
 
   validate :logo_signature_file_size
+  validates :footer, length: { maximum: 190 }
 
   FILE_MAX_SIZE_IN_MB = 0.5
 

@@ -58,8 +58,7 @@
 
     .form-group
       = f.label :footer, 'Adresse en bas de page'
-      ~ f.text_area :footer, class: 'form-control', rows: 2,
-        placeholder: "Direction interministérielle du numérique et du système d'information et de communication de l'Etat (DINSIC)"
+      = f.text_field :footer, class: 'form-control', maxlength: 190
 
     %button.btn.btn-primary{ formaction: admin_procedure_attestation_template_preview_path, formtarget: '_blank' } Prévisualiser
 
