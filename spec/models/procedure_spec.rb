@@ -302,4 +302,22 @@ describe Procedure do
 
     it { is_expected.to eq('a-long-libelle-with-accents-blabla-coucou-hello-un') }
   end
+
+  describe ".default_scope" do
+    let!(:procedure) { create(:procedure, hidden_at: hidden_at) }
+
+    context "when hidden_at is nil" do
+      let(:hidden_at) { nil }
+
+      it { expect(Procedure.count).to eq(1) }
+      it { expect(Procedure.all).to include(procedure) }
+    end
+
+    context "when hidden_at is not nil" do
+      let(:hidden_at) { 2.days.ago }
+
+      it { expect(Procedure.count).to eq(0) }
+      it { expect { Procedure.find(procedure.id) }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+  end
 end

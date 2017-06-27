@@ -381,7 +381,9 @@ ActiveRecord::Schema.define(version: 20170627143701) do
     t.string   "lien_notice"
     t.boolean  "for_individual",        default: false
     t.boolean  "individual_with_siret", default: false
-    t.datetime "auto_archive_on"
+    t.date     "auto_archive_on"
+    t.datetime "hidden_at"
+    t.index ["hidden_at"], name: "index_procedures_on_hidden_at", using: :btree
     t.datetime "published_at"
     t.datetime "archived_at"
   end
