@@ -75,7 +75,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def etablissement_tags
-    [{ libelle: 'adresse', description: '', target: 'adresse' }]
+    [{ libelle: 'adresse', description: '', target: 'inline_adresse' }]
   end
 
   def build_pdf(dossier)
