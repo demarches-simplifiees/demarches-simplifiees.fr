@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :check_browser
   before_action :load_navbar_left_pannel_partial_url
+  before_action :set_raven_context
 
   def default_url_options
     return {protocol: 'https'} if Rails.env.staging? || Rails.env.production?
@@ -39,5 +40,26 @@ class ApplicationController < ActionController::Base
     else
       redirect_to new_user_session_path
     end
+  end
+
+  private
+
+  def set_raven_context
+    context = { ip_address: request.ip }
+
+    logged_models = [
+      current_user,
+      current_gestionnaire,
+      current_administrateur,
+      current_administration
+    ].compact
+
+    context[:email] = logged_models.first&.email
+    context[:id]    = logged_models.first&.id
+
+    class_names = logged_models.map { |model| model.class.name }
+    context[:classes] = class_names.any? ? class_names.join(', ') : 'Guest'
+
+    Raven.user_context(context)
   end
 end
