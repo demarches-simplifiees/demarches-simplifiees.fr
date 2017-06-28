@@ -230,10 +230,10 @@ describe AttestationTemplate, type: :model do
     context 'when the dossier has a motivation' do
       let(:dossier) { create(:dossier, motivation: 'motivation') }
 
-      context 'and the title has the motivation tag' do
-        let(:template_title) { 'title --motivation--' }
+      context 'and the title has some dossier tags' do
+        let(:template_title) { 'title --motivation-- --numéro du dossier--' }
 
-        it { expect(view_args[:title]).to eq('title motivation') }
+        it { expect(view_args[:title]).to eq("title motivation #{dossier.id}") }
       end
     end
 
