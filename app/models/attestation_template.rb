@@ -59,7 +59,8 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def dossier_tags
-    [{ libelle: 'motivation', description: '', target: 'motivation' }]
+    [{ libelle: 'motivation', description: '', target: 'motivation' },
+     { libelle: 'numéro du dossier', description: '', target: 'id' }]
   end
 
   def individual_tags
