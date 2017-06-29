@@ -26,12 +26,15 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
     let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: 'closed', archived: false)}
     let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: 'refused', archived: false)}
     let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: 'without_continuation', archived: false)}
+    let!(:dossier9) { create(:dossier, procedure: procedure_aujourdhui, state: 'initiated', archived: false)}
 
     before do
       subject
-      (1..8).each do |i|
+
+      (1..9).each do |i|
         eval "dossier#{i}.reload"
       end
+
       procedure_hier.reload
       procedure_aujourdhui.reload
     end
@@ -44,6 +47,7 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
     it { expect(dossier6.state).to eq 'closed' }
     it { expect(dossier7.state).to eq 'refused' }
     it { expect(dossier8.state).to eq 'without_continuation' }
+    it { expect(dossier9.state).to eq 'received' }
 
     it { expect(procedure_hier.archived).to eq true }
     it { expect(procedure_aujourdhui.archived).to eq true }
