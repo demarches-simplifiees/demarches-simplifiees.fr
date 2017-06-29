@@ -82,8 +82,6 @@ Rails.application.routes.draw do
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/initiate' => 'recapitulatif#initiate'
 
-      get '/recapitulatif/attestation' => 'recapitulatif#attestation'
-
       post '/commentaire' => 'commentaires#create'
       resources :commentaires, only: [:index]
 

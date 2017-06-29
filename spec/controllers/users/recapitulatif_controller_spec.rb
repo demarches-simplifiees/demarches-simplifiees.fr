@@ -51,22 +51,4 @@ describe Users::RecapitulatifController, type: :controller do
       end
     end
   end
-
-  describe 'Get #attestation' do
-    context 'when a dossier has an attestation' do
-      let(:fake_pdf) { double(read: 'pdf content') }
-      let!(:dossier) { create(:dossier, attestation: Attestation.new) }
-
-      it 'returns the attestation pdf' do
-        allow_any_instance_of(Attestation).to receive(:pdf).and_return(fake_pdf)
-
-        expect(controller).to receive(:send_data)
-          .with('pdf content', filename: 'attestation.pdf', type: 'application/pdf') do
-            controller.render nothing: true
-          end
-
-        get :attestation, params: { dossier_id: dossier.id }
-      end
-    end
-  end
 end
