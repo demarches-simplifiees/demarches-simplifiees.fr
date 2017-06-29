@@ -106,16 +106,15 @@ class Gestionnaire < ActiveRecord::Base
     active_procedure_overviews = procedures
                             .where(published: true)
                             .all
-                            .map { |procedure| procedure.procedure_overview(start_date, dossiers_with_notifications_count_for_procedure(procedure)) }
+                            .map { |procedure| procedure.procedure_overview(start_date) }
                             .select(&:had_some_activities?)
 
-    if active_procedure_overviews.count == 0 && notifications.count == 0
+    if active_procedure_overviews.count == 0
       nil
     else
       {
         start_date: start_date,
         procedure_overviews: active_procedure_overviews,
-        notifications: notifications
       }
     end
   end
