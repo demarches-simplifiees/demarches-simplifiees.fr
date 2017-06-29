@@ -2,6 +2,10 @@ module NewUser
   class DossiersController < UserController
     before_action :ensure_ownership!
 
+    def attestation
+      send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
+    end
+
     private
 
     def dossier

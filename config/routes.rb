@@ -229,5 +229,11 @@ Rails.application.routes.draw do
 
   get "patron" => "root#patron"
 
+  scope module: 'new_user' do
+    resources :dossiers, only: [] do
+      get 'attestation'
+    end
+  end
+
   apipie
 end
