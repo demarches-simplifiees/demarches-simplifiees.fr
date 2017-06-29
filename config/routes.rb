@@ -235,5 +235,13 @@ Rails.application.routes.draw do
     end
   end
 
+  scope module: 'new_gestionnaire' do
+    resources :procedures, only: [] do
+      resources :dossiers, only: [] do
+        get 'attestation'
+      end
+    end
+  end
+
   apipie
 end
