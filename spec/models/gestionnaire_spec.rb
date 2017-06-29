@@ -260,6 +260,15 @@ describe Gestionnaire, type: :model do
         it { expect(AssignTo.where(gestionnaire: gestionnaire, procedure: procedure_3).count).to eq 0 }
         it { is_expected.to be_nil }
       end
+
+      context "when procedure is hidden clear procedure_filter" do
+        before do
+          gestionnaire.update_column :procedure_filter, procedure_3.id
+          procedure_3.hide!
+        end
+
+        it { is_expected.to be_nil }
+      end
     end
   end
 

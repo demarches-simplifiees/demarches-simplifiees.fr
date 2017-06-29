@@ -20,9 +20,13 @@ class Gestionnaire < ActiveRecord::Base
   include CredentialsSyncableConcern
 
   def procedure_filter
-    return nil unless assign_to.pluck(:procedure_id).include?(self[:procedure_filter])
-
-    self[:procedure_filter]
+    procedure_id = self[:procedure_filter]
+    if procedures.find_by(id: procedure_id).present?
+      procedure_id
+    else
+      self.update_column(:procedure_filter, nil)
+      nil
+    end
   end
 
   def can_view_dossier?(dossier_id)
