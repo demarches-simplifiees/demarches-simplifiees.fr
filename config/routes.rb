@@ -82,8 +82,6 @@ Rails.application.routes.draw do
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/initiate' => 'recapitulatif#initiate'
 
-      get '/recapitulatif/attestation' => 'recapitulatif#attestation'
-
       post '/commentaire' => 'commentaires#create'
       resources :commentaires, only: [:index]
 
@@ -228,6 +226,20 @@ Rails.application.routes.draw do
   end
 
   get "patron" => "root#patron"
+
+  scope module: 'new_user' do
+    resources :dossiers, only: [] do
+      get 'attestation'
+    end
+  end
+
+  scope module: 'new_gestionnaire' do
+    resources :procedures, only: [] do
+      resources :dossiers, only: [] do
+        get 'attestation'
+      end
+    end
+  end
 
   apipie
 end

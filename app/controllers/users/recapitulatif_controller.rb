@@ -7,10 +7,6 @@ class Users::RecapitulatifController < UsersController
     create_dossier_facade
   end
 
-  def attestation
-    send_data(current_user_dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
-  end
-
   def initiate
     create_dossier_facade
 

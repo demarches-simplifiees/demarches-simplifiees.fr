@@ -11,4 +11,7 @@
           = image_tag('pdf.svg', width: '20px')
           %p.title= dossier.attestation.title
           %p.delivery Délivrée le #{l(dossier.attestation.created_at, format: '%d %B %Y')}
-        %a.btn.btn-primary{ href: users_dossier_recapitulatif_attestation_path(dossier), target: '_blank' } Télécharger
+        - if user_signed_in?
+          = link_to 'Télécharger', dossier_attestation_path(dossier), target: '_blank', class: 'btn btn-primary'
+        - else
+          = link_to 'Télécharger', procedure_dossier_attestation_path(dossier.procedure, dossier), target: '_blank', class: 'btn btn-primary'
