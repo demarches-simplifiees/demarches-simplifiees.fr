@@ -1,0 +1,11 @@
+@import "colors";
+@import "constants";
+
+.label {
+  display: inline-block;
+  padding: 4px $default-spacer;
+  background: $grey;
+  color: #FFFFFF;
+  border-radius: 4px;
+  font-size: 12px;
+}
