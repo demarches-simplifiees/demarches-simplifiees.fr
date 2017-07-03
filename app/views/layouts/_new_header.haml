@@ -1,7 +1,14 @@
 .new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
-    = link_to root_path do
-      %img{ src: image_url("header/logo-tps.svg") }
+
+    .flex.align-center
+      = link_to root_path, class: "header-logo" do
+        %img{ src: image_url("header/logo-tps.svg") }
+
+      - if gestionnaire_signed_in?
+        %ul.header-left-menu
+          %li
+            = link_to "Procédures", procedures_path, class: "active"
 
     %ul.header-right-content
       - if gestionnaire_signed_in?
