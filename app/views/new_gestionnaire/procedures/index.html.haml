@@ -34,3 +34,7 @@
                 = archived_count
               .stats-legend
                 = "archivé".pluralize(archived_count, :fr)
+
+        - if p.archivee?
+          .procedure-status
+            %span.label Archivée
