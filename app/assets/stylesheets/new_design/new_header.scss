@@ -17,7 +17,29 @@
   @extend %page-width-container;
   display: flex;
   justify-content: space-between;
-  padding-top: 17px;
+  height: 100%;
+}
+
+.header-logo {
+  display: inline-block;
+  margin-right: 4 * $default-spacer;
+}
+
+.header-left-menu {
+  li {
+    display: inline-block;
+  }
+
+  a {
+    @include vertical-padding(23px);
+    font-size: 18px;
+    color: $black;
+
+    &.active {
+      color: $blue;
+      border-bottom: 2px solid $blue;
+    }
+  }
 }
 
 .header-right-content {
