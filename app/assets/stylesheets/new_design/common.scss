@@ -1,3 +1,4 @@
+@import "placeholders";
 @import "typography";
 
 body {
@@ -9,4 +10,8 @@ body {
 h1 {
   font-size: 36px;
   font-weight: bold;
+}
+
+.container {
+  @extend %page-width-container;
 }
