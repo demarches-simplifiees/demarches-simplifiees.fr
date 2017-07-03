@@ -1,6 +1,19 @@
 module NewGestionnaire
   class ProceduresController < GestionnaireController
-    before_action :ensure_ownership!
+    layout "new_application"
+
+    before_action :ensure_ownership!, except: [:index]
+
+    def index
+      @procedures = current_gestionnaire.procedures
+
+      dossiers = current_gestionnaire.dossiers.state_not_brouillon
+      @dossiers_count_per_procedure = dossiers.group(:procedure_id).count
+      @dossiers_nouveaux_count_per_procedure = dossiers.state_nouveaux.group(:procedure_id).count
+      @dossiers_archived_count_per_procedure = dossiers.archived.group(:procedure_id).count
+
+      @followed_dossiers_count_per_procedure = current_gestionnaire.followed_dossiers.where(procedure: @procedures).group(:procedure_id).count
+    end
 
     private
 
