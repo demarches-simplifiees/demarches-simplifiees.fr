@@ -23,33 +23,98 @@
   margin-top: 17px;
 }
 
-$header-login-button-height: 36px;
-$header-login-button-border-size: 1px;
+.header-right-content {
+  display: flex;
+  align-items: center;
+  height: 100%;
 
-.header-login-button {
-  @include horizontal-padding(16px);
+  > li {
+    @include horizontal-padding(8px);
 
-  display: inline-block;
-  height: $header-login-button-height;
-  line-height: $header-login-button-height - (2 * $header-login-button-border-size);
-  border-radius: $header-login-button-height;
-  border: $header-login-button-border-size solid $blue;
-  color: $blue;
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+.header-search {
+  position: relative;
+
+  .form input[type=text] {
+    padding: 9px;
+    padding-right: 42px;
+    float: right;
+    width: 300px;
+  }
+
+  button {
+    padding: 6px 9px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.header-menu-opener {
+  position: relative;
+
+  img {
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.header-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 34px;
   font-size: 14px;
-  margin-top: 18px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid $border-grey;
+  min-width: 270px;
+  max-width: 340px;
 
-  &:hover {
-    color: #FFFFFF;
-    text-decoration: none;
-    background-color: $light-blue;
+  &.open {
+    display: block;
   }
 
-  &:focus {
-    color: $blue;
-    text-decoration: none;
-  }
+  li {
+    border-bottom: 1px solid $border-grey;
 
-  &:hover:focus {
-    color: #FFFFFF;
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .menu-item {
+      align-items: center;
+      padding: 14px;
+      color: $grey;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      img {
+        margin-right: 14px;
+      }
+    }
+
+    .menu-link {
+      display: flex;
+      color: $black;
+
+      &:hover {
+        background: $light-grey;
+      }
+    }
   }
 }

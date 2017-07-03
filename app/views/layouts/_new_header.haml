@@ -1,7 +1,46 @@
-.new-header{ class: current_page?(root_path) ? nil : 'new-header-with-border' }
+.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
     = link_to root_path do
       %img.header-logo{ src: image_url("header/logo-tps.svg") }
 
-    - unless request.path == new_user_session_path
-      = link_to "Connexion", new_user_session_path, class: "header-login-button"
+    %ul.header-right-content
+      - if gestionnaire_signed_in?
+        %li
+          .header-search
+            = form_tag backoffice_dossiers_search_url, method: :get, class: "form" do
+              = text_field_tag "q", "#{@search_terms unless @search_terms.nil?}", placeholder: "Rechercher"
+              %button{ title: "Rechercher" }
+                = image_tag "icons/search-blue.svg"
+        %li
+          .header-menu-opener
+            = image_tag "icons/account-circle.svg", onclick: "javascript:TPS.toggleHeaderMenu(event);", title: "Mon compte"
+            %ul.header-menu
+              %li
+                .menu-item{ title: current_email }
+                  = current_email
+
+              - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
+                - if user_signed_in?
+                  %li
+                    = link_to users_dossiers_path, class: "menu-item menu-link" do
+                      = image_tag "icons/switch-profile.svg"
+                      Passer en usager
+                - if gestionnaire_signed_in?
+                  %li
+                    = link_to backoffice_dossiers_path, class: "menu-item menu-link" do
+                      = image_tag "icons/switch-profile.svg"
+                      Passer en accompagnateur
+                - if administrateur_signed_in?
+                  %li
+                    = link_to admin_procedures_path, class: "menu-item menu-link" do
+                      = image_tag "icons/switch-profile.svg"
+                      Passer en administrateur
+
+              %li
+                = link_to destroy_user_session_path, method: :delete, class: "menu-item menu-link" do
+                  = image_tag "icons/sign-out.svg"
+                  Se déconnecter
+
+      - elsif request.path != new_user_session_path
+        %li
+          = link_to "Connexion", new_user_session_path, class: "button secondary"
