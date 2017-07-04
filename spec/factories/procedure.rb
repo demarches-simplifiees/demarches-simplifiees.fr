@@ -98,5 +98,11 @@ FactoryGirl.define do
         procedure.publish!(generate(:published_path))
       end
     end
+
+    trait :archived do
+      after(:build) do |procedure, _evaluator|
+        procedure.archived_at = Time.now
+      end
+    end
   end
 end
