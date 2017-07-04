@@ -49,7 +49,7 @@ feature 'drawing a zone with freedraw' do
         end
 
         scenario 'alert message is present' do
-          expect(page).to have_content('Le status de votre dossier n\'autorise pas cette URL')
+          expect(page).to have_content('Le statut de votre dossier n\'autorise pas cette URL')
         end
       end
     end
