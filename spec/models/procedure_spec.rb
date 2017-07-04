@@ -225,32 +225,42 @@ describe Procedure do
 
   describe '#publish!' do
     let(:procedure) { create(:procedure) }
+    let(:now) { Time.now.beginning_of_minute }
 
     before do
-      Timecop.freeze(Time.now)
+      Timecop.freeze(now)
       procedure.publish!("example-path")
     end
 
     it { expect(procedure.published).to eq(true) }
     it { expect(procedure.archived).to eq(false) }
-    it { expect(procedure.published_at).to eq(Time.now) }
+    it { expect(procedure.published_at).to eq(now) }
     it { expect(ProcedurePath.find_by_path("example-path")).to be }
     it { expect(ProcedurePath.find_by_path("example-path").procedure).to eq(procedure) }
     it { expect(ProcedurePath.find_by_path("example-path").administrateur).to eq(procedure.administrateur) }
+
+    after do
+      Timecop.return
+    end
   end
 
   describe 'archive' do
     let(:procedure) { create(:procedure, :published) }
     let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
+    let(:now) { Time.now.beginning_of_minute }
     before do
-      Timecop.freeze(Time.now)
+      Timecop.freeze(now)
       procedure.archive
       procedure.reload
     end
 
     it { expect(procedure.published).to be_truthy }
     it { expect(procedure.archived).to be_truthy }
-    it { expect(procedure.archived_at).to eq(Time.now) }
+    it { expect(procedure.archived_at).to eq(now) }
+
+    after do
+      Timecop.return
+    end
   end
 
   describe 'total_dossier' do
