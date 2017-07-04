@@ -114,6 +114,10 @@ Rails.application.routes.draw do
     patch 'change_dossier_state' => 'change_dossier_state#change'
 
     resources :procedures do
+      member do
+        post :hide
+      end
+
       resources :types_de_champ, only: [:destroy]
       resource :types_de_champ, only: [:show, :update] do
         post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up

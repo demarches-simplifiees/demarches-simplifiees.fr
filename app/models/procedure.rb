@@ -31,11 +31,18 @@ class Procedure < ActiveRecord::Base
 
   mount_uploader :logo, ProcedureLogoUploader
 
+  default_scope { where(hidden_at: nil) }
   scope :not_archived, -> { where(archived: false) }
   scope :by_libelle, -> { order(libelle: :asc) }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+
+  def hide!
+    now = DateTime.now
+    self.update_attributes(hidden_at: now)
+    self.dossiers.update_all(hidden_at: now)
+  end
 
   def path
     procedure_path.path unless procedure_path.nil?
