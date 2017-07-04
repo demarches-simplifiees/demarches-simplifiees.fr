@@ -36,7 +36,7 @@
               dont <span style='font-weight: bold; color: #FF5D60; padding: 2px 0;' >#{procedure_overview.old_dossiers_en_instruction.count}</span> depuis plus de 7 jours
               - if procedure_overview.old_dossiers_en_instruction.count < 6
                 \:
-                = procedure_overview.old_dossiers_en_instruction.each do |old_dossier|
+                = procedure_overview.old_dossiers_en_instruction.map do |old_dossier|
                   - link_to "nº #{old_dossier.id}", backoffice_dossier_url(old_dossier), style: 'color: #4393F3;'
                 - end.join(', ').html_safe
 
