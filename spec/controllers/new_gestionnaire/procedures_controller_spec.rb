@@ -41,4 +41,81 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe "#index" do
+    let(:gestionnaire) { create(:gestionnaire) }
+    subject { get :index }
+
+    context "when not logged" do
+      before { subject }
+      it { expect(response).to redirect_to(new_user_session_path)}
+    end
+
+    context "when logged in" do
+      before { sign_in(gestionnaire) }
+
+      it { expect(response).to have_http_status(:ok) }
+
+      context "with procedures assigned" do
+        let(:procedure1) { create(:procedure, :published) }
+        let(:procedure2) { create(:procedure, :published, :archived) }
+        let(:procedure3) { create(:procedure) }
+
+        before do
+          gestionnaire.procedures << procedure1
+          gestionnaire.procedures << procedure2
+          gestionnaire.procedures << procedure3
+          subject
+        end
+
+        it { expect(assigns(:procedures)).to include(procedure1, procedure2, procedure3) }
+      end
+
+      context "with dossiers" do
+        let(:procedure) { create(:procedure, :published) }
+        let(:dossier) { create(:dossier, state: state, procedure: procedure) }
+
+        before do
+          gestionnaire.procedures << procedure
+          dossier
+        end
+
+        context "with draft state" do
+          let(:state) { "draft" }
+          before { subject }
+
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_nouveaux_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+        end
+
+        context "with not draft state on multiple procedures" do
+          let(:procedure2) { create(:procedure, :published) }
+          let(:state) { "initiated" }
+
+          before do
+            gestionnaire.procedures << procedure2
+            create(:dossier, procedure: procedure, state: "replied")
+            create(:dossier, procedure: procedure2, state: "updated")
+            create(:dossier, procedure: procedure, state: "received")
+            create(:dossier, procedure: procedure2, state: "closed")
+            create(:dossier, procedure: procedure, state: "without_continuation", archived: true)
+            gestionnaire.followed_dossiers << create(:dossier, procedure: procedure2, state: "refused")
+            subject
+          end
+
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(4) }
+          it { expect(assigns(:dossiers_nouveaux_count_per_procedure)[procedure.id]).to eq(1) }
+          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(1) }
+
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure2.id]).to eq(3) }
+          it { expect(assigns(:dossiers_nouveaux_count_per_procedure)[procedure2.id]).to eq(nil) }
+          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure2.id]).to eq(1) }
+          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure2.id]).to eq(nil) }
+        end
+      end
+    end
+  end
 end

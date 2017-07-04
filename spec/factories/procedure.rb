@@ -98,5 +98,9 @@ FactoryGirl.define do
         procedure.publish!(generate(:published_path))
       end
     end
+
+    trait :archived do
+      archived true
+    end
   end
 end
