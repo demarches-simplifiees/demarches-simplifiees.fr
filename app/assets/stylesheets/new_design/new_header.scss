@@ -17,16 +17,12 @@
   @extend %page-width-container;
   display: flex;
   justify-content: space-between;
-}
-
-.header-logo {
-  margin-top: 17px;
+  padding-top: 17px;
 }
 
 .header-right-content {
   display: flex;
   align-items: center;
-  height: 100%;
 
   > li {
     @include horizontal-padding(8px);
