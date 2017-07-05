@@ -24,7 +24,7 @@ set :deploy_to, '/var/www/tps_dev'
 
 case ENV["to"]
 when "staging"
-  set :branch, ENV['branch'] || 'develop'
+  set :branch, ENV['branch'] || 'dev'
   set :deploy_to, '/var/www/tps_dev'
   set :user, 'tps_dev' # Username in the server to SSH to.
   appname = 'tps_dev'
