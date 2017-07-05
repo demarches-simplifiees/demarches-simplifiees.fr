@@ -103,7 +103,6 @@ describe Gestionnaire, type: :model do
     subject { gestionnaire.follow? dossier.id }
 
     context 'when gestionnaire follow a dossier' do
-
       before do
         create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
       end
@@ -204,7 +203,8 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq 0 }
       it { expect(gestionnaire.follows.count).to eq 0 }
       it { expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:inject)
-      subject }
+        subject
+      }
     end
 
     context 'when gestionnaire follow any dossier into the procedure past in params' do
@@ -215,7 +215,8 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq 0 }
       it { expect(gestionnaire.follows.count).to eq 1 }
       it { expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:inject)
-      subject }
+        subject
+      }
     end
 
     context 'when gestionnaire follow a dossier with a notification into the procedure past in params' do
@@ -229,7 +230,8 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq 1 }
       it { expect(gestionnaire.follows.count).to eq 1 }
       it { expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).to receive(:inject)
-      subject }
+        subject
+      }
     end
   end
 
@@ -256,6 +258,15 @@ describe Gestionnaire, type: :model do
         end
 
         it { expect(AssignTo.where(gestionnaire: gestionnaire, procedure: procedure_3).count).to eq 0 }
+        it { is_expected.to be_nil }
+      end
+
+      context "when procedure is hidden clear procedure_filter" do
+        before do
+          gestionnaire.update_column :procedure_filter, procedure_3.id
+          procedure_3.hide!
+        end
+
         it { is_expected.to be_nil }
       end
     end
@@ -362,14 +373,6 @@ describe Gestionnaire, type: :model do
       let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published: true) }
       context 'when the gestionnaire has no notifications' do
         it { is_expected.to eq(nil) }
-      end
-
-      context 'when the gestionnaire has one notification' do
-        before :each do
-          expect(gestionnaire2).to receive(:notifications).twice.and_return([1])
-        end
-
-        it { is_expected.to eq({ start_date: monday, procedure_overviews: [], notifications: [1] }) }
       end
     end
 

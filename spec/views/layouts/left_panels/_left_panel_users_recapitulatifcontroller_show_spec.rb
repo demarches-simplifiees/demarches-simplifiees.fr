@@ -82,5 +82,4 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
       end
     end
   end
-
 end

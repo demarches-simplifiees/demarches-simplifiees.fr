@@ -1,6 +1,6 @@
 namespace :dev do
   desc 'Initialise dev environment'
-  task :init  do
+  task :init do
     puts 'start initialisation'
     Rake::Task['dev:generate_token_file'].invoke
     Rake::Task['dev:generate_franceconnect_file'].invoke
@@ -10,10 +10,10 @@ namespace :dev do
     puts 'end initialisation'
   end
 
-  task :generate_token_file  do
+  task :generate_token_file do
     puts 'creating token.rb file'
     res = `rake secret`.gsub("\n", '')
-    file = File.new('config/initializers/token.rb',  'w+')
+    file = File.new('config/initializers/token.rb', 'w+')
     comment = <<EOF
 EOF
     file.write(comment)
@@ -22,7 +22,7 @@ EOF
   end
 
   task :generate_franceconnect_file do
-    file = File.new('config/france_connect.yml',  'w+')
+    file = File.new('config/france_connect.yml', 'w+')
     comment = <<EOF
 particulier_identifier: plop
 particulier_secret: plip
@@ -48,7 +48,7 @@ default:
   openstack_auth_url: "https://auth.cloud.ovh.net/v2.0/tokens"
   openstack_region: "SBG1"
 EOF
-    file = File.new("config/fog_credentials.test.yml",  "w+")
+    file = File.new("config/fog_credentials.test.yml", "w+")
     file.write(content)
     file.close
   end
@@ -58,7 +58,7 @@ EOF
     content = <<EOF
 remote_storage: true
 EOF
-    file = File.new("config/initializers/features.yml",  "w+")
+    file = File.new("config/initializers/features.yml", "w+")
     file.write(content)
     file.close
   end

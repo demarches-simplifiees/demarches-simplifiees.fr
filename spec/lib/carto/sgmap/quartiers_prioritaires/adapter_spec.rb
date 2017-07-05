@@ -4,10 +4,10 @@ describe CARTO::SGMAP::QuartiersPrioritaires::Adapter do
   subject { described_class.new(coordinates).to_params }
 
   before do
-    stub_request(:post, "https://apicarto.sgmap.fr/quartiers-prioritaires/search").
-        with(:body => /.*/,
-             :headers => {'Content-Type' => 'application/json'}).
-        to_return(status: status, body: body)
+    stub_request(:post, "https://apicarto.sgmap.fr/quartiers-prioritaires/search")
+        .with(:body => /.*/,
+             :headers => {'Content-Type' => 'application/json'})
+        .to_return(status: status, body: body)
   end
 
   context 'coordinates are filled' do

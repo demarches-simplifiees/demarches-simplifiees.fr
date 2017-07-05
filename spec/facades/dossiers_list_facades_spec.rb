@@ -1,23 +1,24 @@
 require 'spec_helper'
 
 describe DossiersListFacades do
-
   let(:gestionnaire) { create :gestionnaire }
   let(:procedure) { create :procedure, libelle: 'Ma procédure' }
   let(:procedure_2) { create :procedure, libelle: 'Ma seconde procédure' }
 
   let!(:preference) { create :preference_list_dossier,
-                             gestionnaire: gestionnaire,
-                             table: nil,
-                             attr: 'state',
-                             attr_decorate: 'display_state' }
+    gestionnaire: gestionnaire,
+    table: nil,
+    attr: 'state',
+    attr_decorate: 'display_state'
+  }
 
   let!(:preference_2) { create :preference_list_dossier,
-                               gestionnaire: gestionnaire,
-                               table: 'champs',
-                               attr: 'state',
-                               attr_decorate: 'display_state',
-                               procedure_id: procedure.id }
+    gestionnaire: gestionnaire,
+    table: 'champs',
+    attr: 'state',
+    attr_decorate: 'display_state',
+    procedure_id: procedure.id
+  }
 
   before do
     create :assign_to, procedure: procedure, gestionnaire: gestionnaire
@@ -25,7 +26,6 @@ describe DossiersListFacades do
   end
 
   describe '#preference_list_dossiers_filter' do
-
     subject { facade.preference_list_dossiers_filter }
 
     context 'when procedure is not pasted at the facade' do
@@ -58,12 +58,13 @@ describe DossiersListFacades do
     let(:facade) { described_class.new gestionnaire, 'nouveaux', procedure_2 }
 
     let!(:preference) { create :preference_list_dossier,
-                               gestionnaire: gestionnaire,
-                               table: table,
-                               attr: 'state',
-                               attr_decorate: 'display_state',
-                               filter: filter,
-                               procedure_id: procedure_id }
+      gestionnaire: gestionnaire,
+      table: table,
+      attr: 'state',
+      attr_decorate: 'display_state',
+      filter: filter,
+      procedure_id: procedure_id
+    }
 
     subject { facade.active_filter? preference }
 
@@ -99,12 +100,12 @@ describe DossiersListFacades do
 
           before do
             create :preference_list_dossier,
-                   gestionnaire: gestionnaire,
-                   table: 'champs',
-                   attr: 'state',
-                   attr_decorate: 'display_state',
-                   filter: 'plop',
-                   procedure_id: procedure_id
+              gestionnaire: gestionnaire,
+              table: 'champs',
+              attr: 'state',
+              attr_decorate: 'display_state',
+              filter: 'plop',
+              procedure_id: procedure_id
           end
 
           it { is_expected.to be_falsey }

@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
 
   devise_for :administrations, skip: [:password, :registrations]
@@ -115,6 +114,10 @@ Rails.application.routes.draw do
     patch 'change_dossier_state' => 'change_dossier_state#change'
 
     resources :procedures do
+      member do
+        post :hide
+      end
+
       resources :types_de_champ, only: [:destroy]
       resource :types_de_champ, only: [:show, :update] do
         post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
@@ -145,6 +148,13 @@ Rails.application.routes.draw do
 
       resource :previsualisation, only: [:show]
 
+      resource :attestation_template, only: [:edit, :update, :create]
+
+      post 'attestation_template/disactivate' => 'attestation_templates#disactivate'
+      patch 'attestation_template/disactivate' => 'attestation_templates#disactivate'
+
+      post 'attestation_template/preview' => 'attestation_templates#preview'
+      patch 'attestation_template/preview' => 'attestation_templates#preview'
     end
 
     namespace :accompagnateurs do
@@ -174,9 +184,7 @@ Rails.application.routes.draw do
 
     resources :dossiers do
       post 'receive' => 'dossiers#receive'
-      post 'refuse' => 'dossiers#refuse'
-      post 'without_continuation' => 'dossiers#without_continuation'
-      post 'close' => 'dossiers#close'
+      post 'process_dossier' => 'dossiers#process_dossier'
       member do
         post 'archive'
         post 'unarchive'
@@ -219,6 +227,22 @@ Rails.application.routes.draw do
 
   namespace :commencer do
     get '/:procedure_path' => '/users/dossiers#commencer'
+  end
+
+  get "patron" => "root#patron"
+
+  scope module: 'new_user' do
+    resources :dossiers, only: [] do
+      get 'attestation'
+    end
+  end
+
+  scope module: 'new_gestionnaire' do
+    resources :procedures, only: [] do
+      resources :dossiers, only: [] do
+        get 'attestation'
+      end
+    end
   end
 
   apipie

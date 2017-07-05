@@ -262,7 +262,6 @@ describe Dossier do
 
             it { is_expected.to eq 'replied' }
           end
-
         end
       end
 
@@ -295,7 +294,6 @@ describe Dossier do
 
             it { is_expected.to eq('replied') }
           end
-
         end
       end
 
@@ -488,13 +486,13 @@ describe Dossier do
   end
 
   context 'when dossier is followed' do
-    let(:procedure) { create(:procedure, :with_type_de_champ) }
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
     let(:gestionnaire) { create(:gestionnaire) }
     let(:follow) { create(:follow, gestionnaire: gestionnaire) }
     let(:date1) { 1.day.ago }
     let(:date2) { 1.hour.ago }
     let(:date3) { 1.minute.ago }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow], initiated_at: date1, received_at: date2, processed_at: date3) }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow], initiated_at: date1, received_at: date2, processed_at: date3, motivation: "Motivation") }
 
     describe '#export_headers' do
       subject { dossier.export_headers }
@@ -504,7 +502,11 @@ describe Dossier do
       it { expect(subject).to include(:individual_nom) }
       it { expect(subject).to include(:individual_prenom) }
       it { expect(subject).to include(:individual_birthdate) }
-      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
+        dossier.procedure.types_de_champ.count +
+        dossier.procedure.types_de_champ_private.count +
+        dossier.export_entreprise_data.count)
+      }
     end
 
     describe '#data_with_champs' do
@@ -520,21 +522,27 @@ describe Dossier do
       it { expect(subject[7]).to eq(date2) }
       it { expect(subject[8]).to eq(date3) }
       it { expect(subject[9]).to be_a_kind_of(String) }
-      it { expect(subject[10]).to be_nil }
+      it { expect(subject[10]).to be_a_kind_of(String) }
       it { expect(subject[11]).to be_nil }
       it { expect(subject[12]).to be_nil }
       it { expect(subject[13]).to be_nil }
-      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count + dossier.procedure.types_de_champ.count + dossier.export_entreprise_data.count) }
+      it { expect(subject[14]).to be_nil }
+      it { expect(subject[15]).to be_nil }
+      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
+        dossier.procedure.types_de_champ.count +
+        dossier.procedure.types_de_champ_private.count +
+        dossier.export_entreprise_data.count)
+      }
 
       context 'dossier for individual' do
         let(:dossier_with_individual) { create(:dossier, :for_individual, user: user, procedure: procedure) }
 
         subject { dossier_with_individual.data_with_champs }
 
-        it { expect(subject[10]).to eq(dossier_with_individual.individual.gender) }
-        it { expect(subject[11]).to eq(dossier_with_individual.individual.prenom) }
-        it { expect(subject[12]).to eq(dossier_with_individual.individual.nom) }
-        it { expect(subject[13]).to eq(dossier_with_individual.individual.birthdate) }
+        it { expect(subject[11]).to eq(dossier_with_individual.individual.gender) }
+        it { expect(subject[12]).to eq(dossier_with_individual.individual.prenom) }
+        it { expect(subject[13]).to eq(dossier_with_individual.individual.nom) }
+        it { expect(subject[14]).to eq(dossier_with_individual.individual.birthdate) }
       end
     end
 
@@ -550,7 +558,9 @@ describe Dossier do
           dossier.initiated_at,
           dossier.received_at,
           dossier.processed_at,
+          "Motivation",
           gestionnaire.email,
+          nil,
           nil,
           nil,
           nil,
@@ -661,7 +671,6 @@ describe Dossier do
       it { expect(subject.second.type_de_champ.libelle).to eq 'type_2_2' }
       it { expect(subject.last.type_de_champ.libelle).to eq 'type_2_3' }
     end
-
   end
 
   describe '#ordered_champs_private' do
@@ -850,7 +859,6 @@ describe Dossier do
 
       it_behaves_like 'dossier is processed', 'without_continuation'
     end
-
   end
 
   describe '.downloadable' do
@@ -888,6 +896,53 @@ describe Dossier do
       dossier.closed!
 
       expect(ActionMailer::Base.deliveries.size).to eq(0)
+    end
+  end
+
+  describe '.build_attestation' do
+    let(:attestation_template) { nil }
+    let(:procedure) { create(:procedure, attestation_template: attestation_template) }
+
+    before :each do
+      dossier.next_step!('gestionnaire', 'close')
+      dossier.reload
+    end
+
+    context 'when the dossier is in received state ' do
+      let!(:dossier) { create(:dossier, procedure: procedure, state: :received) }
+
+      context 'when the procedure has no attestation' do
+        it { expect(dossier.attestation).to be_nil }
+      end
+
+      context 'when the procedure has an unactivated attestation' do
+        let(:attestation_template) { AttestationTemplate.new(activated: false) }
+
+        it { expect(dossier.attestation).to be_nil }
+      end
+
+      context 'when the procedure attached has an activated attestation' do
+        let(:attestation_template) { AttestationTemplate.new(activated: true) }
+
+        it { expect(dossier.attestation).not_to be_nil }
+      end
+    end
+  end
+
+  describe ".default_scope" do
+    let!(:dossier) { create(:dossier, hidden_at: hidden_at) }
+
+    context "when dossier is not hidden" do
+      let(:hidden_at) { nil }
+
+      it { expect(Dossier.count).to eq(1) }
+      it { expect(Dossier.all).to include(dossier) }
+    end
+
+    context "when dossier is hidden" do
+      let(:hidden_at) { 1.day.ago }
+
+      it { expect(Dossier.count).to eq(0) }
     end
   end
 end

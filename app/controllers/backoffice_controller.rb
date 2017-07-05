@@ -15,14 +15,14 @@ class BackofficeController < ApplicationController
   def invitations
     pending_avis = current_gestionnaire.avis.without_answer.includes(dossier: [:procedure]).by_latest
     @pending_avis = smart_listing_create :pending_avis,
-                         pending_avis,
-                         partial: 'backoffice/dossiers/list_invitations',
-                         array: true
+      pending_avis,
+      partial: 'backoffice/dossiers/list_invitations',
+      array: true
 
     avis_with_answer = current_gestionnaire.avis.with_answer.includes(dossier: [:procedure]).by_latest
     @avis_with_answer = smart_listing_create :avis_with_answer,
-                        avis_with_answer,
-                        partial: 'backoffice/dossiers/list_invitations',
-                        array: true
+      avis_with_answer,
+      partial: 'backoffice/dossiers/list_invitations',
+      array: true
   end
 end

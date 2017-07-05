@@ -80,5 +80,4 @@ class DossiersListFacades
   def base_url liste
     @procedure.nil? ? backoffice_dossiers_path(liste: liste) : backoffice_dossiers_procedure_path(id: @procedure.id, liste: liste)
   end
-
 end

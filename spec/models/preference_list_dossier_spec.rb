@@ -190,7 +190,6 @@ describe PreferenceListDossier do
         it { expect(subject[:order]).to be_nil }
         it { expect(subject[:filter]).to be_nil }
       end
-
     end
 
     describe 'etablissement' do

@@ -46,5 +46,4 @@ describe ProcedurePath do
       end
     end
   end
-
 end

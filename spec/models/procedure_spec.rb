@@ -147,11 +147,24 @@ describe Procedure do
     let(:procedure) { create(:procedure, archived: archived, published: published, received_mail: received_mail) }
     let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
+    let!(:type_de_champ_2) { create(:type_de_champ_public, :type_drop_down_list, procedure: procedure, order_place: 2) }
     let!(:type_de_champ_private_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_private_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
+    let!(:type_de_champ_private_2) { create(:type_de_champ_private, :type_drop_down_list, procedure: procedure, order_place: 2) }
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
     let(:received_mail){ create(:received_mail) }
+
+    before do
+      @logo = File.open('spec/fixtures/white.png')
+      @signature = File.open('spec/fixtures/black.png')
+      @attestation_template = create(:attestation_template, procedure: procedure, logo: @logo, signature: @signature)
+    end
+
+    after do
+      @logo.close
+      @signature.close
+    end
 
     subject { procedure.clone }
 
@@ -163,6 +176,8 @@ describe Procedure do
       expect(subject.types_de_piece_justificative.size).to eq procedure.types_de_piece_justificative.size
       expect(subject.types_de_champ.size).to eq procedure.types_de_champ.size
       expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
+      expect(subject.types_de_champ.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ.map(&:drop_down_list).compact.size
+      expect(subject.types_de_champ_private.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_list).compact.size
 
       subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
@@ -176,6 +191,7 @@ describe Procedure do
         expect(stc).to have_same_attributes_as(ptc)
       end
 
+      expect(subject.attestation_template.title).to eq(procedure.attestation_template.title)
     end
 
     it 'should duplicate existing mail_templates' do
@@ -207,44 +223,47 @@ describe Procedure do
     end
   end
 
-  describe 'publish' do
-    let(:procedure) { create(:procedure, :published) }
-    let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
+  describe '#publish!' do
+    let(:procedure) { create(:procedure) }
+    let(:now) { Time.now.beginning_of_minute }
 
-    it 'is available from a valid path' do
-      expect(procedure.path).to match(/fake_path/)
-      expect(procedure.published).to be_truthy
+    before do
+      Timecop.freeze(now)
+      procedure.publish!("example-path")
     end
 
-    it 'is correctly set in ProcedurePath table' do
-      expect(ProcedurePath.where(path: procedure.path).count).to eq(1)
-      expect(procedure_path.procedure_id).to eq(procedure.id)
-      expect(procedure_path.administrateur_id).to eq(procedure.administrateur_id)
+    it { expect(procedure.published).to eq(true) }
+    it { expect(procedure.archived).to eq(false) }
+    it { expect(procedure.published_at).to eq(now) }
+    it { expect(ProcedurePath.find_by_path("example-path")).to be }
+    it { expect(ProcedurePath.find_by_path("example-path").procedure).to eq(procedure) }
+    it { expect(ProcedurePath.find_by_path("example-path").administrateur).to eq(procedure.administrateur) }
+
+    after do
+      Timecop.return
     end
   end
 
   describe 'archive' do
     let(:procedure) { create(:procedure, :published) }
     let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
+    let(:now) { Time.now.beginning_of_minute }
     before do
+      Timecop.freeze(now)
       procedure.archive
       procedure.reload
     end
 
-    it 'is not available from a valid path anymore' do
-      expect(procedure.path).to eq procedure_path.path
-      expect(procedure.published).to be_truthy
-      expect(procedure.archived).to be_truthy
-    end
+    it { expect(procedure.published).to be_truthy }
+    it { expect(procedure.archived).to be_truthy }
+    it { expect(procedure.archived_at).to eq(now) }
 
-    it 'is not in ProcedurePath table anymore' do
-      expect(ProcedurePath.where(path: procedure.path).count).to eq(1)
-      expect(ProcedurePath.find_by_procedure_id(procedure.id)).not_to be_nil
+    after do
+      Timecop.return
     end
   end
 
   describe 'total_dossier' do
-
     let(:procedure) { create :procedure }
 
     before do
@@ -292,5 +311,41 @@ describe Procedure do
     subject { procedure.default_path }
 
     it { is_expected.to eq('a-long-libelle-with-accents-blabla-coucou-hello-un') }
+  end
+
+  describe ".default_scope" do
+    let!(:procedure) { create(:procedure, hidden_at: hidden_at) }
+
+    context "when hidden_at is nil" do
+      let(:hidden_at) { nil }
+
+      it { expect(Procedure.count).to eq(1) }
+      it { expect(Procedure.all).to include(procedure) }
+    end
+
+    context "when hidden_at is not nil" do
+      let(:hidden_at) { 2.days.ago }
+
+      it { expect(Procedure.count).to eq(0) }
+      it { expect { Procedure.find(procedure.id) }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+  end
+
+  describe "#hide!" do
+    let(:procedure) { create(:procedure) }
+    let!(:dossier) { create(:dossier, procedure: procedure) }
+    let!(:dossier2) { create(:dossier, procedure: procedure) }
+
+    it { expect(Dossier.count).to eq(2) }
+    it { expect(Dossier.all).to include(dossier, dossier2) }
+
+    context "when hidding procedure" do
+      before do
+        procedure.hide!
+      end
+
+      it { expect(procedure.dossiers.count).to eq(0) }
+      it { expect(Dossier.count).to eq(0) }
+    end
   end
 end

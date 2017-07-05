@@ -24,7 +24,6 @@ describe DossiersListGestionnaireService do
     end
 
     context 'when gestionnaire have default sort' do
-
       before do
         preference_attr.update_column(:order, 'asc')
       end
@@ -49,7 +48,8 @@ describe DossiersListGestionnaireService do
     let(:order) { 'desc' }
 
     let(:select_preference_list_dossier) { gestionnaire.preference_list_dossiers
-                                               .find_by(table: table, attr: attr, procedure: nil) }
+                                               .find_by(table: table, attr: attr, procedure: nil)
+    }
 
     subject { DossiersListGestionnaireService.new(gestionnaire, liste).change_sort! param_sort }
 
@@ -73,7 +73,6 @@ describe DossiersListGestionnaireService do
 
         it { expect(select_preference_list_dossier.order).to eq 'desc' }
       end
-
     end
 
     context 'when procedure as already a preference order' do
@@ -99,7 +98,8 @@ describe DossiersListGestionnaireService do
     let(:filter_value) { 'plop' }
 
     let(:select_preference_list_dossier) { gestionnaire.preference_list_dossiers
-                                               .find_by(table: table, attr: attr, procedure: nil) }
+                                               .find_by(table: table, attr: attr, procedure: nil)
+    }
 
     subject { described_class.new(gestionnaire, liste).add_filter new_filter }
 
@@ -126,7 +126,6 @@ describe DossiersListGestionnaireService do
   end
 
   describe '#join_filter' do
-
     subject { DossiersListGestionnaireService.new(gestionnaire, liste, nil).joins_filter }
 
     it { is_expected.to eq []}
@@ -178,7 +177,6 @@ describe DossiersListGestionnaireService do
     it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE '%plop%'" }
 
     context 'when last filter caractere is *' do
-
       before do
         gestionnaire.preference_list_dossiers
             .find_by(table: 'entreprise', attr: 'raison_sociale', procedure: nil)
@@ -231,16 +229,15 @@ describe DossiersListGestionnaireService do
     context 'when preference list contain a champ' do
       before do
         create :preference_list_dossier,
-               gestionnaire: gestionnaire,
-               table: 'champs',
-               attr: '34',
-               attr_decorate: '',
-               filter: 'plop',
-               procedure_id: create(:procedure)
+          gestionnaire: gestionnaire,
+          table: 'champs',
+          attr: '34',
+          attr_decorate: '',
+          filter: 'plop',
+          procedure_id: create(:procedure)
       end
 
       it { is_expected.to eq "CAST(dossiers.id as TEXT) LIKE '%23%' AND CAST(entreprises.raison_sociale as TEXT) LIKE '%plop%' AND champs.type_de_champ_id = 34 AND CAST(champs.value as TEXT) LIKE '%plop%'" }
-
     end
   end
 

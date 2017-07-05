@@ -1,6 +1,6 @@
 class Users::Dossiers::AddSiretController < ApplicationController
   def show
-    @facade =  DossierFacades.new params[:dossier_id], current_user.email
+    @facade = DossierFacades.new params[:dossier_id], current_user.email
 
     raise ActiveRecord::RecordNotFound unless @facade.procedure.individual_with_siret?
 

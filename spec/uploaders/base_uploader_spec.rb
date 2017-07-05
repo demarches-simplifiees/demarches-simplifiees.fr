@@ -4,7 +4,6 @@ describe BaseUploader do
   let(:uploader) { described_class.new }
 
   describe '#cache_dir' do
-
     subject { uploader.cache_dir }
 
     context 'when rails env is not production' do

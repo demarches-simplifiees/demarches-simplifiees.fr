@@ -1,28 +1,60 @@
-#form-login.user_connexion_page
-  %br
-  = render partial: 'users/sessions/resume_procedure'
+.two-columns.auth
+  .columns-container
+    .column.preview
+      - unless @dossier
+        = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo"
+        .baseline.center
+          %h3 Un outil simple
+          %p
+            pour gérer les formulaires
+            %br
+            administratifs dématérialisés.
+      - else
+        .text-right
+          = link_to "Fermer", users_no_procedure_url, class: "link close-procedure"
+        .procedure-logos
+          = image_tag @dossier.procedure.decorate.logo_img
+          - if @dossier.procedure.euro_flag
+            = image_tag "flag_of_europe.svg"
 
-  %h2#login-user
-    = t('dynamics.users.connexion_title')
+        %h2.procedure-title
+          = @dossier.procedure.libelle
+        %p.procedure-description
+          = h @dossier.procedure.description.html_safe
 
-  %a.btn-fc#btn-fcp{ href: '/france_connect/particulier' }
-    = image_tag 'franceconnect_logo.png'
+    .column.auth-form
+      = form_for @user, url: user_session_path, html: { class: "form" } do |f|
+        %h1 Connectez-vous
 
-  %br
-  %a.text-info{ href: 'https://fcp.integ01.dev-franceconnect.fr/a-propos', target: '_blank' }
-    Qu’est-ce que FranceConnect ?
+        = f.label :email, "Email"
+        = f.text_field :email
 
-  %hr
+        = f.label :password, "Mot de passe"
+        = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
 
-  .text-left
-    #new-user
-      = simple_form_for @user, url: user_session_path do |f|
-        = f.input :email
-        = f.input :password, label: 'Mot de passe', input_html: { value: @user.password }
+        - if [:user, :gestionnaire].include?(resource_name)
+          .reset-password.text-right
+            = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "link"
+
         - if devise_mapping.rememberable?
-          = f.input :remember_me, as: :boolean, label: 'Se souvenir de moi'
-        .text-center
-          = f.submit "Se connecter", class: 'btn btn-primary'
+          = f.check_box :remember_me, as: :boolean
+          = f.label :remember_me, "Se souvenir de moi"
 
-  - if @user.email != DemoEmails[:gestionnaire] && @user.email != DemoEmails[:admin]
-    = render "users/shared/links"
+        = f.submit "Se connecter", class: "button large primary expand"
+
+      .separation.center
+        ou
+
+      .center
+        = image_tag "login-with-fc-hover.svg", style: "display: none"
+        = link_to "", france_connect_particulier_path, class: "login-with-fc"
+
+      .center
+        = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "link"
+
+      - if resource_name == :user
+        %hr
+        %p.register
+          %span
+            Nouveau sur TPS ?
+          = link_to "Créer un compte", new_registration_path(resource_name), class: "button"

@@ -31,7 +31,6 @@ describe Admin::ProceduresController, type: :controller do
     }
   }
 
-
   before do
     sign_in admin
   end
@@ -55,7 +54,6 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-
     let(:procedure_draft) { create :procedure, published: false, archived: false }
     let(:procedure_published) { create :procedure, published: true, archived: false }
     let(:procedure_archived) { create :procedure, published: false, archived: true }
@@ -151,7 +149,6 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.direction).to eq(direction) }
           it { expect(subject.lien_demarche).to eq(lien_demarche) }
           it { expect(subject.administrateur_id).to eq(admin.id) }
-
         end
 
         describe 'procedure module api carto attributs in database' do
@@ -279,7 +276,6 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
           it { expect(subject.individual_with_siret).not_to eq procedure_params[:individual_with_siret] }
           it { expect(subject.use_api_carto).not_to eq procedure_params[:module_api_carto_attributes][:use_api_carto] }
-
         end
       end
     end
@@ -466,7 +462,6 @@ describe Admin::ProceduresController, type: :controller do
       it { expect(body.first['mine']).to be_truthy }
       it { expect(body.second['label']).to eq(procedure2.path) }
       it { expect(body.second['mine']).to be_falsy }
-
     end
 
     context 'filtered' do
@@ -483,7 +478,6 @@ describe Admin::ProceduresController, type: :controller do
     end
 
     context 'when procedure is archived' do
-
       before do
         procedure3.update_attribute :archived, true
         subject
@@ -506,20 +500,32 @@ describe Admin::ProceduresController, type: :controller do
       it { expect(subject.status).to eq 404 }
     end
 
-    context 'when admin is know' do
-      let(:new_admin) { create :administrateur, email: 'new_admin@admin.com' }
-      let(:email_admin) { new_admin.email }
+    context 'when admin is known' do
+      let!(:new_admin) { create :administrateur, email: 'new_admin@admin.com' }
 
-      it { expect(subject.status).to eq 200 }
-      it { expect { subject }.to change(Procedure, :count).by(1) }
+      context "and its email address is correct" do
+        let(:email_admin) { 'new_admin@admin.com' }
 
-      context {
+        it { expect(subject.status).to eq 200 }
+        it { expect { subject }.to change(Procedure, :count).by(1) }
+      end
+
+      context 'when admin is know but its email was not downcased' do
+        let(:email_admin) { "NEW_admin@adMIN.com" }
+
+        it { expect(subject.status).to eq 200 }
+        it { expect { subject }.to change(Procedure, :count).by(1) }
+      end
+
+      describe "correctly assigns the new admin" do
+        let(:email_admin) { 'new_admin@admin.com' }
+
         before do
           subject
         end
 
         it { expect(Procedure.last.administrateur).to eq new_admin }
-      }
+      end
     end
   end
 end

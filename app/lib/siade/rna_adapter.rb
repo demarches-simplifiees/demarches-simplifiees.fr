@@ -12,7 +12,6 @@ class SIADE::RNAAdapter
 
     data_source[:association].each do |k, v|
       params[k] = v if attr_to_fetch.include?(k)
-
     end
 
     params[:association_id] = params[:id]

@@ -65,8 +65,7 @@ describe 'admin/previsualisations/show.html.haml', type: :view do
 
   context 'les valeurs sont réaffichées si elles sont présentes dans la BDD' do
     let!(:dossier) do
-      create(:dossier,
-             user: user)
+      create(:dossier, user: user)
     end
 
     before do
@@ -128,6 +127,5 @@ describe 'admin/previsualisations/show.html.haml', type: :view do
     context 'when dossier not have cerfa, piece justificative and demarche link' do
       it { expect(rendered).not_to have_content 'Documents administratifs' }
     end
-
   end
 end

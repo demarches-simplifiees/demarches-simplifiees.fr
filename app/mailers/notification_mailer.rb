@@ -3,11 +3,15 @@ class NotificationMailer < ApplicationMailer
 
   after_action :create_commentaire_for_notification, only: :send_notification
 
-  def send_notification(dossier, mail_template)
+  def send_notification(dossier, mail_template, attestation = nil)
     vars_mailer(dossier)
 
     @object = mail_template.object_for_dossier dossier
     @body = mail_template.body_for_dossier dossier
+
+    if attestation.present?
+      attachments['attestation.pdf'] = attestation
+    end
 
     mail(subject: @object) { |format| format.html { @body } }
   end

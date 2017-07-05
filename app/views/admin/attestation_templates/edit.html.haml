@@ -1,0 +1,73 @@
+#attestation-template-edit.row.white-back
+  = form_for @attestation_template, url: admin_procedure_attestation_template_path do |f|
+    .row
+      .col-md-10
+        %h1
+          Attestation
+          - if @attestation_template.activated?
+            %small.text-success Activée
+          - else
+            %small Désactivée
+
+    %p.notice Les attestation, si elles sont activées, sont délivrées par email aux usagers lorsque leurs dossiers sont acceptés, et sont également disponibles au téléchargement sur leur espace personnel.
+
+    .image-upload
+      - if @attestation_template.logo.present?
+        = image_tag @attestation_template.logo.url, class: 'thumbnail'
+      .form-group
+        = f.label :logo, "Logo de l'attestation"
+        = f.file_field :logo, accept: 'image/png, image/jpg, image/jpeg'
+        %p.help-block
+          Fichier accepté : JPG / JPEG / PNG
+          %br
+          Dimensions conseillées : au minimum 500 px de largeur ou de hauteur, poids maximum : 0,5 Mo.
+
+    .form-group
+      = f.label :title, 'Titre'
+      = f.text_field :title, class: 'form-control'
+
+    .form-group
+      = f.label :body, 'Corps du document'
+      ~ f.text_area :body, class: 'form-control', rows: 10
+
+    .row
+      .col-md-12.balises
+        %table.table.table-striped
+          %tr
+            %th.col-md-3
+              Balise
+            %th
+              Description
+          - @attestation_template.tags.each do |tag|
+            %tr
+              %td
+                = "--#{tag[:libelle]}--"
+              %td
+                = tag[:description]
+
+    .image-upload
+      - if @attestation_template.signature.present?
+        = image_tag @attestation_template.signature.url, class: 'thumbnail'
+      .form-group
+        = f.label :signature, "Tampon de l'attestation"
+        = f.file_field :signature, accept: 'image/png, image/jpg, image/jpeg'
+        %p.help-block
+          Fichier accepté : JPG / JPEG / PNG
+          %br
+          Dimensions conseillées : au minimum 500 px de largeur ou de hauteur, poids maximum : 0,5 Mo.
+
+    .form-group
+      = f.label :footer, 'Adresse en bas de page'
+      = f.text_field :footer, class: 'form-control', maxlength: 190
+
+    %button.btn.btn-primary{ formaction: admin_procedure_attestation_template_preview_path, formtarget: '_blank' } Prévisualiser
+
+    .pull-right
+      - if @attestation_template.activated && !@procedure.locked?
+        %button.btn.btn-warning{ formaction: admin_procedure_attestation_template_disactivate_path } désactiver l'attestation
+
+      - if @attestation_template.new_record? || !@attestation_template.activated
+        %button.btn.btn-success Activer l'attestation
+      - else
+        - save_data = @procedure.locked? ? { toggle: :tooltip, confirm: "Attention: les modifications n'affecteront pas les attestations déjà délivrées." } : nil
+        %button.btn.btn-success{ data: save_data } Enregistrer

@@ -7,6 +7,7 @@ class Procedure < ActiveRecord::Base
   has_one :procedure_path, dependent: :destroy
 
   has_one :module_api_carto, dependent: :destroy
+  has_one :attestation_template, dependent: :destroy
 
   belongs_to :administrateur
 
@@ -30,11 +31,18 @@ class Procedure < ActiveRecord::Base
 
   mount_uploader :logo, ProcedureLogoUploader
 
+  default_scope { where(hidden_at: nil) }
   scope :not_archived, -> { where(archived: false) }
   scope :by_libelle, -> { order(libelle: :asc) }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+
+  def hide!
+    now = DateTime.now
+    self.update_attributes(hidden_at: now)
+    self.dossiers.update_all(hidden_at: now)
+  end
 
   def path
     procedure_path.path unless procedure_path.nil?
@@ -88,12 +96,13 @@ class Procedure < ActiveRecord::Base
 
   def clone
     procedure = self.deep_clone(include:
-      [:types_de_piece_justificative,
-        :types_de_champ,
-        :types_de_champ_private,
-        :module_api_carto,
-        types_de_champ: [:drop_down_list]
-      ])
+      {
+        types_de_piece_justificative: nil,
+        module_api_carto: nil,
+        attestation_template: nil,
+        types_de_champ: :drop_down_list,
+        types_de_champ_private: :drop_down_list
+      })
     procedure.archived = false
     procedure.published = false
     procedure.logo_secure_token = nil
@@ -109,12 +118,12 @@ class Procedure < ActiveRecord::Base
   end
 
   def publish!(path)
-    self.update_attributes!({published: true, archived: false})
+    self.update_attributes!({ published: true, archived: false, published_at: Time.now })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
   end
 
   def archive
-    self.update_attributes!({archived: true})
+    self.update_attributes!(archived: true, archived_at: Time.now)
   end
 
   def total_dossier
@@ -133,8 +142,8 @@ class Procedure < ActiveRecord::Base
     }
   end
 
-  def procedure_overview(start_date, notifications_count)
-    ProcedureOverview.new(self, start_date, notifications_count)
+  def procedure_overview(start_date)
+    ProcedureOverview.new(self, start_date)
   end
 
   def initiated_mail_template

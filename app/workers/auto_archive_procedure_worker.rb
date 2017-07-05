@@ -7,7 +7,7 @@ class AutoArchiveProcedureWorker
         dossier.received!
       end
 
-      procedure.update_attributes!(archived: true)
+      procedure.archive
     end
   end
 end

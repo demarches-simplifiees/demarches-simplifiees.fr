@@ -1,5 +1,4 @@
 class ProcedureDecorator < Draper::Decorator
-
   delegate_all
 
   def lien

@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class ProcedureLogoUploader < BaseUploader
-
   def root
     File.join(Rails.root, "public")
   end
@@ -47,5 +46,4 @@ class ProcedureLogoUploader < BaseUploader
   def generate_secure_token
     SecureRandom.uuid
   end
-
 end

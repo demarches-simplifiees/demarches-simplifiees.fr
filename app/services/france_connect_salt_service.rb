@@ -1,5 +1,4 @@
 class FranceConnectSaltService
-
   attr_reader :model
 
   def initialize france_connect_information

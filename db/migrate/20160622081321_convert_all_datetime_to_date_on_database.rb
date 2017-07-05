@@ -1,7 +1,5 @@
 class ConvertAllDatetimeToDateOnDatabase < ActiveRecord::Migration
-
   class TypeDeChamp < ActiveRecord::Base
-
   end
 
   def change

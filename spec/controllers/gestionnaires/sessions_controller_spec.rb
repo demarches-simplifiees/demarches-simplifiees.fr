@@ -7,6 +7,7 @@ describe Gestionnaires::SessionsController, type: :controller do
 
   describe '.demo' do
     subject { get :demo }
+    render_views
 
     context 'when rails env is production' do
       before do
@@ -20,8 +21,9 @@ describe Gestionnaires::SessionsController, type: :controller do
       it { expect(subject.status).to eq 200 }
 
       it 'Gestionnaire demo is initiated' do
-        expect(User).to receive(:new).with(email: 'gestionnaire@apientreprise.fr', password: 'password').and_return(Gestionnaire)
         subject
+        expect(response.body).to have_css("input#user_email[value='gestionnaire@apientreprise.fr']")
+        expect(response.body).to have_css("input#user_password[value='password']")
       end
     end
   end

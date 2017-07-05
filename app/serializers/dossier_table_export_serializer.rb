@@ -1,20 +1,21 @@
 class DossierTableExportSerializer < ActiveModel::Serializer
   attributes :id,
-             :created_at,
-             :updated_at,
-             :archived,
-             :mandataire_social,
-             :state,
-             :initiated_at,
-             :received_at,
-             :processed_at
+    :created_at,
+    :updated_at,
+    :archived,
+    :mandataire_social,
+    :state,
+    :initiated_at,
+    :received_at,
+    :processed_at,
+    :motivation
 
   attribute :emails_accompagnateurs
 
   attributes :individual_gender,
-             :individual_prenom,
-             :individual_nom,
-             :individual_birthdate
+    :individual_prenom,
+    :individual_nom,
+    :individual_birthdate
 
   def individual_prenom
     object.individual.try(:prenom)

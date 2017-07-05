@@ -30,9 +30,9 @@ class Users::DossiersController < UsersController
     end
 
     @dossiers = smart_listing_create :dossiers,
-                         @dossiers_filtered,
-                         partial: "users/dossiers/list",
-                         array: true
+      @dossiers_filtered,
+      partial: "users/dossiers/list",
+      array: true
   end
 
   def commencer

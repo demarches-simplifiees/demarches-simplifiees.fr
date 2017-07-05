@@ -21,6 +21,10 @@ module MailTemplateConcern
     name:         "date_de_decision",
     description:  "Permet d'afficher la date à laquelle la décision finale (acceptation, refus, classement sans suite) sur le dossier a été prise."
   }
+  TAGS << TAG_MOTIVATION = {
+    name:         "motivation",
+    description:  "Permet d'afficher la motivation associée à la décision finale (acceptation, refus, classement sans suite) sur le dossier. Attention, elle est facultative."
+  }
 
   def object_for_dossier(dossier)
     replace_tags(object, dossier)
@@ -55,6 +59,8 @@ module MailTemplateConcern
       dossier.procedure.libelle
     when TAG_DATE_DE_DECISION
       dossier.processed_at.present? ? dossier.processed_at.localtime.strftime("%d/%m/%Y") : ""
+    when TAG_MOTIVATION
+      dossier.motivation || ""
     else
       '--BALISE_NON_RECONNUE--'
     end

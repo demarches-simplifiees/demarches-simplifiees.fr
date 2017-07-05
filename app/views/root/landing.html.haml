@@ -8,11 +8,7 @@
             %br
             vos procédures administratives en quelques minutes
 
-          = link_to "Demander une démo",
-            "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo TPS",
-            class: "hero-button",
-            target: "_blank",
-            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
+          %a.hero-button{ target: "_blank", onclick: "javascript: ga('send', 'pageview', '/demander-une-demo'); $crisp.push(['do', 'chat:open'])" } Demander une démo
 
           %p.hero-phone-cta
             ou nous appeler au 01 40 15 68 49
@@ -132,10 +128,6 @@
           %h1.cta-panel-title Commencez à dématerialiser vos procédures
           %p.cta-panel-explanation Nous vous accompagnons dans la prise en main de l’outil
         %div
-          = link_to "Demander une démo",
-            "mailto:#{t('dynamics.contact_email')}?subject=Demande de démo TPS",
-            class: "cta-panel-button",
-            target: "_blank",
-            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
+          %a.cta-panel-button{ target: "_blank", onclick: "javascript: ga('send', 'pageview', '/demander-une-demo'); $crisp.push(['do', 'chat:open'])" } Demander une démo
           %p.cta-panel-phone-cta
             ou nous appeler au 01 40 15 68 49

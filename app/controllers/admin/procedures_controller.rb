@@ -6,18 +6,18 @@ class Admin::ProceduresController < AdminController
 
   def index
     @procedures = smart_listing_create :procedures,
-                                       current_administrateur.procedures.where(published: true, archived: false).order(created_at: :desc),
-                                       partial: "admin/procedures/list",
-                                       array: true
+      current_administrateur.procedures.where(published: true, archived: false).order(created_at: :desc),
+      partial: "admin/procedures/list",
+      array: true
 
     active_class
   end
 
   def archived
     @procedures = smart_listing_create :procedures,
-                                       current_administrateur.procedures.where(archived: true).order(created_at: :desc),
-                                       partial: "admin/procedures/list",
-                                       array: true
+      current_administrateur.procedures.where(archived: true).order(created_at: :desc),
+      partial: "admin/procedures/list",
+      array: true
 
     archived_class
 
@@ -26,9 +26,9 @@ class Admin::ProceduresController < AdminController
 
   def draft
     @procedures = smart_listing_create :procedures,
-                                       current_administrateur.procedures.where(published: false, archived: false).order(created_at: :desc),
-                                       partial: "admin/procedures/list",
-                                       array: true
+      current_administrateur.procedures.where(published: false, archived: false).order(created_at: :desc),
+      partial: "admin/procedures/list",
+      array: true
 
     draft_class
 
@@ -40,7 +40,14 @@ class Admin::ProceduresController < AdminController
   end
 
   def edit
+  end
 
+  def hide
+    procedure = Procedure.find(params[:id])
+    procedure.hide!
+
+    flash.notice = "Procédure supprimée, en cas d'erreur contactez nous : contact@tps.apientreprise.fr"
+    redirect_to admin_procedures_draft_path
   end
 
   def destroy
@@ -122,19 +129,21 @@ class Admin::ProceduresController < AdminController
   end
 
   def transfer
-    admin = Administrateur.find_by_email(params[:email_admin])
+    admin = Administrateur.find_by_email(params[:email_admin].downcase)
 
-    return render '/admin/procedures/transfer', formats: 'js', status: 404 if admin.nil?
+    if admin.nil?
+      render '/admin/procedures/transfer', formats: 'js', status: 404
+    else
+      procedure = current_administrateur.procedures.find(params[:procedure_id])
+      clone_procedure = procedure.clone
 
-    procedure = current_administrateur.procedures.find(params[:procedure_id])
-    clone_procedure = procedure.clone
+      clone_procedure.administrateur = admin
+      clone_procedure.save
 
-    clone_procedure.administrateur = admin
-    clone_procedure.save
+      flash.now.notice = "La procédure a correctement été clonée vers le nouvel administrateur."
 
-    flash.now.notice = "La procédure a correctement été cloné vers le nouvel administrateur."
-
-    render '/admin/procedures/transfer', formats: 'js', status: 200
+      render '/admin/procedures/transfer', formats: 'js', status: 200
+    end
   end
 
   def archive

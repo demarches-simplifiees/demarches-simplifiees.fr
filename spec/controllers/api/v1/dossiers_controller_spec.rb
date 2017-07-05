@@ -95,7 +95,6 @@ describe API::V1::DossiersController do
     end
 
     context 'when procedure is found and belongs to current admin' do
-
       context 'when dossier does not exist' do
         let(:procedure_id) { procedure.id }
         let(:dossier_id) { 99999 }
@@ -112,10 +111,10 @@ describe API::V1::DossiersController do
       context 'when dossier exists and belongs to procedure' do
         let(:procedure_id) { procedure.id }
         let(:date_creation) { Time.utc(2008, 9, 1, 10, 5, 0) }
-        let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure) } }
+        let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, motivation: "Motivation") } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
-        let(:field_list) { [:id, :created_at, :updated_at, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :champs_private, :commentaires, :state, :simplified_state, :initiated_at, :processed_at, :received_at, :accompagnateurs, :invites] }
+        let(:field_list) { [:id, :created_at, :updated_at, :archived, :mandataire_social, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :champs_private, :commentaires, :state, :simplified_state, :initiated_at, :processed_at, :received_at, :motivation, :accompagnateurs, :invites] }
         subject { body[:dossier] }
 
         it 'return REST code 200', :show_in_doc do
@@ -144,7 +143,8 @@ describe API::V1::DossiersController do
               :code_effectif_entreprise,
               :date_creation,
               :nom,
-              :prenom] }
+              :prenom]
+          }
           subject { super()[:entreprise] }
 
           it { expect(subject[:siren]).to eq('440117620') }
@@ -164,7 +164,8 @@ describe API::V1::DossiersController do
           let(:field_list) { [
               :id,
               :libelle,
-              :description] }
+              :description]
+          }
           subject { super()[:types_de_piece_justificative] }
 
           it { expect(subject.length).to eq 2 }
@@ -184,9 +185,9 @@ describe API::V1::DossiersController do
           end
 
           let(:field_list) { [
-              :url, :created_at, :type_de_piece_justificative_id] }
-          subject {
-            super()[:pieces_justificatives].first }
+              :url, :created_at, :type_de_piece_justificative_id]
+          }
+          subject { super()[:pieces_justificatives].first }
 
           it { expect(subject.keys.include?(:content_url)).to be_truthy }
           it { expect(subject[:created_at]).not_to be_nil }
@@ -203,7 +204,8 @@ describe API::V1::DossiersController do
 
         describe 'champs' do
           let(:field_list) { [
-              :url] }
+              :url]
+          }
           subject { super()[:champs] }
 
           it { expect(subject.length).to eq 1 }
@@ -220,7 +222,8 @@ describe API::V1::DossiersController do
                   :libelle,
                   :description,
                   :order_place,
-                  :type] }
+                  :type]
+              }
               subject { super()[:type_de_champ] }
 
               it { expect(subject.keys.include?(:id)).to be_truthy }
@@ -234,7 +237,8 @@ describe API::V1::DossiersController do
 
         describe 'champs_private' do
           let(:field_list) { [
-              :url] }
+              :url]
+          }
           subject { super()[:champs_private] }
 
           it { expect(subject.length).to eq 1 }
@@ -251,7 +255,8 @@ describe API::V1::DossiersController do
                   :libelle,
                   :description,
                   :order_place,
-                  :type] }
+                  :type]
+              }
               subject { super()[:type_de_champ] }
 
               it { expect(subject.keys.include?(:id)).to be_truthy }
@@ -298,9 +303,9 @@ describe API::V1::DossiersController do
 
           describe 'user' do
             let(:field_list) { [
-                :url, :created_at, :type_de_piece_justificative_id] }
-            subject {
-              super()[:user] }
+                :url, :created_at, :type_de_piece_justificative_id]
+            }
+            subject { super()[:user] }
 
             it { expect(subject[:email]).not_to be_nil }
           end
@@ -320,7 +325,8 @@ describe API::V1::DossiersController do
               :code_postal,
               :localite,
               :code_insee_localite
-          ] }
+            ]
+          }
           subject { super()[:etablissement] }
 
           it { expect(subject[:siret]).to eq('44011762001530') }

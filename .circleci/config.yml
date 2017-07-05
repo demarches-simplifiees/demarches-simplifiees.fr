@@ -1,6 +1,7 @@
 version: 2
 jobs:
   build:
+    parallelism: 2
     docker:
       - image: ruby:2.3.1
       - image: postgres:9.4.1
@@ -53,6 +54,9 @@ jobs:
           command: |
             TESTFILES=$(circleci tests glob "spec/**/*.rb"| xargs -n 1 echo | grep -v "spec/factories/" | tr " " "\n" | circleci tests split --split-by=timings)
             bundle exec rspec --color --require spec_helper -- ${TESTFILES}
+      - run:
+          name: Run rubocop
+          command: bundle exec rubocop
       - run:
           name: Run haml-lint
           command: bundle exec haml-lint app/views/

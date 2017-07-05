@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170523092900) do
+ActiveRecord::Schema.define(version: 20170627144046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,28 @@ ActiveRecord::Schema.define(version: 20170523092900) do
     t.integer "procedure_id"
     t.index ["gestionnaire_id"], name: "index_assign_tos_on_gestionnaire_id", using: :btree
     t.index ["procedure_id"], name: "index_assign_tos_on_procedure_id", using: :btree
+  end
+
+  create_table "attestation_templates", force: :cascade do |t|
+    t.text     "title"
+    t.text     "body"
+    t.text     "footer"
+    t.string   "logo"
+    t.string   "signature"
+    t.boolean  "activated"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "procedure_id"
+    t.index ["procedure_id"], name: "index_attestation_templates_on_procedure_id", unique: true, using: :btree
+  end
+
+  create_table "attestations", force: :cascade do |t|
+    t.string   "pdf"
+    t.string   "title"
+    t.integer  "dossier_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dossier_id"], name: "index_attestations_on_dossier_id", using: :btree
   end
 
   create_table "avis", force: :cascade do |t|
@@ -152,6 +174,9 @@ ActiveRecord::Schema.define(version: 20170523092900) do
     t.datetime "initiated_at"
     t.datetime "received_at"
     t.datetime "processed_at"
+    t.text     "motivation"
+    t.datetime "hidden_at"
+    t.index ["hidden_at"], name: "index_dossiers_on_hidden_at", using: :btree
     t.index ["procedure_id"], name: "index_dossiers_on_procedure_id", using: :btree
     t.index ["user_id"], name: "index_dossiers_on_user_id", using: :btree
   end
@@ -359,6 +384,10 @@ ActiveRecord::Schema.define(version: 20170523092900) do
     t.boolean  "for_individual",        default: false
     t.boolean  "individual_with_siret", default: false
     t.date     "auto_archive_on"
+    t.datetime "hidden_at"
+    t.index ["hidden_at"], name: "index_procedures_on_hidden_at", using: :btree
+    t.datetime "published_at"
+    t.datetime "archived_at"
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|
@@ -448,6 +477,8 @@ ActiveRecord::Schema.define(version: 20170523092900) do
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id", using: :btree
   end
 
+  add_foreign_key "attestation_templates", "procedures"
+  add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "gestionnaires", column: "claimant_id"
   add_foreign_key "cerfas", "dossiers"
   add_foreign_key "closed_mails", "procedures"

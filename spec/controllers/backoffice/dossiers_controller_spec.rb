@@ -181,7 +181,6 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
-
   describe 'POST #search' do
     describe 'by id' do
       context 'when I am logged as a gestionnaire' do
@@ -251,81 +250,123 @@ describe Backoffice::DossiersController, type: :controller do
     it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
   end
 
-  describe 'POST #refuse' do
-    before do
-      dossier.refused!
-      sign_in gestionnaire
+  describe 'POST #process_dossier' do
+    context "with refuse" do
+      before do
+        dossier.received!
+        sign_in gestionnaire
+      end
+
+      subject { post :process_dossier, params: { process_action: "refuse", dossier_id: dossier_id} }
+
+      it 'change state to refused' do
+        subject
+
+        dossier.reload
+        expect(dossier.state).to eq('refused')
+      end
+
+      it 'Notification email is sent' do
+        expect(NotificationMailer).to receive(:send_notification)
+          .with(dossier, kind_of(Mails::RefusedMail), nil).and_return(NotificationMailer)
+        expect(NotificationMailer).to receive(:deliver_now!)
+
+        subject
+      end
+
+      it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
     end
 
-    subject { post :refuse, params: {dossier_id: dossier_id} }
+    context "with without_continuation" do
+      before do
+        dossier.received!
+        sign_in gestionnaire
+      end
 
-    it 'change state to refused' do
-      subject
+      subject { post :process_dossier, params: { process_action: "without_continuation", dossier_id: dossier_id} }
 
-      dossier.reload
-      expect(dossier.state).to eq('refused')
+      it 'change state to without_continuation' do
+        subject
+
+        dossier.reload
+        expect(dossier.state).to eq('without_continuation')
+      end
+
+      it 'Notification email is sent' do
+        expect(NotificationMailer).to receive(:send_notification)
+          .with(dossier, kind_of(Mails::WithoutContinuationMail), nil).and_return(NotificationMailer)
+        expect(NotificationMailer).to receive(:deliver_now!)
+
+        subject
+      end
+
+      it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
     end
 
-    it 'Notification email is sent' do
-      expect(NotificationMailer).to receive(:send_notification)
-        .with(dossier, kind_of(Mails::RefusedMail)).and_return(NotificationMailer)
-      expect(NotificationMailer).to receive(:deliver_now!)
+    context "with close" do
+      let(:expected_attestation) { nil }
 
-      subject
+      before do
+        dossier.received!
+        sign_in gestionnaire
+
+        expect(NotificationMailer).to receive(:send_notification)
+          .with(dossier, kind_of(Mails::ClosedMail), expected_attestation)
+          .and_return(NotificationMailer)
+
+        expect(NotificationMailer).to receive(:deliver_now!)
+      end
+
+      subject { post :process_dossier, params: { process_action: "close", dossier_id: dossier_id} }
+
+      it 'change state to closed' do
+        subject
+
+        dossier.reload
+        expect(dossier.state).to eq('closed')
+      end
+
+      context 'when the dossier does not have any attestation' do
+        it 'Notification email is sent' do
+          subject
+        end
+      end
+
+      context 'when the dossier has an attestation' do
+        let(:emailable) { false }
+
+        before do
+          attestation = Attestation.new
+          allow(attestation).to receive(:pdf).and_return(double(read: 'pdf', size: 2.megabytes))
+          allow(attestation).to receive(:emailable?).and_return(emailable)
+
+          expect_any_instance_of(Dossier).to receive(:reload)
+          allow_any_instance_of(Dossier).to receive(:build_attestation).and_return(attestation)
+        end
+
+        context 'emailable' do
+          let(:emailable) { true }
+          let(:expected_attestation) { 'pdf' }
+
+          it 'Notification email is sent with the attestation' do
+            subject
+          end
+        end
+
+        context 'when the dossier has an attestation not emailable' do
+          let(:emailable) { false }
+          let(:expected_attestation) { nil }
+
+          it 'Notification email is sent without the attestation' do
+            expect(controller).to receive(:capture_message)
+
+            subject
+          end
+        end
+
+        it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
+      end
     end
-
-    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
-  end
-
-  describe 'POST #without_continuation' do
-    before do
-      dossier.without_continuation!
-      sign_in gestionnaire
-    end
-    subject { post :without_continuation, params: {dossier_id: dossier_id} }
-
-
-    it 'change state to without_continuation' do
-      subject
-
-      dossier.reload
-      expect(dossier.state).to eq('without_continuation')
-    end
-
-    it 'Notification email is sent' do
-      expect(NotificationMailer).to receive(:send_notification)
-        .with(dossier, kind_of(Mails::WithoutContinuationMail)).and_return(NotificationMailer)
-      expect(NotificationMailer).to receive(:deliver_now!)
-
-      subject
-    end
-
-    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
-  end
-
-  describe 'POST #close' do
-    before do
-      dossier.received!
-      sign_in gestionnaire
-    end
-    subject { post :close, params: {dossier_id: dossier_id} }
-
-    it 'change state to closed' do
-      subject
-
-      dossier.reload
-      expect(dossier.state).to eq('closed')
-    end
-
-    it 'Notification email is sent' do
-      expect(NotificationMailer).to receive(:send_notification)
-        .with(dossier, kind_of(Mails::ClosedMail)).and_return(NotificationMailer)
-      expect(NotificationMailer).to receive(:deliver_now!)
-
-      subject
-    end
-
-    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
   end
 
   describe 'PUT #toggle_follow' do
@@ -348,7 +389,6 @@ describe Backoffice::DossiersController, type: :controller do
       it 'change state for updated' do
         expect(dossier.state).to eq 'updated'
       end
-
     end
 
     describe 'flash alert' do

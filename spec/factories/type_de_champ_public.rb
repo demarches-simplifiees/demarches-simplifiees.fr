@@ -14,5 +14,16 @@ FactoryGirl.define do
       libelle 'Référence autre dossier'
       type_champ 'dossier_link'
     end
+
+    trait :type_yes_no do
+      libelle 'Yes/no'
+      type_champ 'yes_no'
+    end
+
+    trait :type_drop_down_list do
+      libelle 'Menu déroulant'
+      type_champ 'drop_down_list'
+      drop_down_list { create(:drop_down_list) }
+    end
   end
 end

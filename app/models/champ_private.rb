@@ -1,3 +1,2 @@
 class ChampPrivate < Champ
-
 end

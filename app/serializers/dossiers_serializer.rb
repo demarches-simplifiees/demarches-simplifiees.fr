@@ -1,4 +1,4 @@
 class DossiersSerializer < ActiveModel::Serializer
   attributes :id,
-             :updated_at
+    :updated_at
 end

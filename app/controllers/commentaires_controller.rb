@@ -1,9 +1,9 @@
 class CommentairesController < ApplicationController
   def index
     @facade = DossierFacades.new(
-        params[:dossier_id],
-        (current_gestionnaire || current_user).email,
-        params[:champs_id]
+      params[:dossier_id],
+      (current_gestionnaire || current_user).email,
+      params[:champs_id]
     )
     render layout: false
   rescue ActiveRecord::RecordNotFound

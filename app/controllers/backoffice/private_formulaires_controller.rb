@@ -11,7 +11,7 @@ class Backoffice::PrivateFormulairesController < ApplicationController
       if champs_service_errors.empty?
         flash[:notice] = "Formulaire enregistré"
       else
-        flash[:alert] = champs_service_errors.join('<br>').html_safe
+        flash[:alert] = champs_service_errors
       end
     end
 

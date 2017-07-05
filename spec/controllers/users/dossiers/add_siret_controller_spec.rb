@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Users::Dossiers::AddSiretController, type: :controller do
   describe '#GET show' do
-
     let(:dossier) { create :dossier }
 
     before do

@@ -1,4 +1,6 @@
 class Backoffice::DossiersController < Backoffice::DossiersListController
+  include ActionView::Helpers::NumberHelper
+
   respond_to :html, :xlsx, :ods, :csv
 
   prepend_before_action :store_current_location, only: :show
@@ -79,17 +81,17 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     end
 
     smart_listing_create :search,
-                         @dossiers,
-                         partial: "backoffice/dossiers/list",
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
+      @dossiers,
+      partial: "backoffice/dossiers/list",
+      array: true,
+      default_sort: dossiers_list_facade.service.default_sort
 
   rescue RuntimeError
     smart_listing_create :search,
-                         [],
-                         partial: "backoffice/dossiers/list",
-                         array: true,
-                         default_sort: dossiers_list_facade.service.default_sort
+      [],
+      partial: "backoffice/dossiers/list",
+      array: true,
+      default_sort: dossiers_list_facade.service.default_sort
   end
 
   def receive
@@ -103,41 +105,44 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
 
-  def refuse
+  def process_dossier
     create_dossier_facade params[:dossier_id]
+
+    if params[:dossier] && params[:dossier][:motivation].present?
+      motivation = params[:dossier][:motivation]
+    end
 
     dossier = @facade.dossier
 
-    dossier.next_step! 'gestionnaire', 'refuse'
-    flash.notice = 'Dossier considéré comme refusé.'
+    case params[:process_action]
+    when "refuse"
+      next_step = "refuse"
+      notice = "Dossier considéré comme refusé."
+      template = dossier.procedure.refused_mail_template
+    when "without_continuation"
+      next_step = "without_continuation"
+      notice = "Dossier considéré comme sans suite."
+      template = dossier.procedure.without_continuation_mail_template
+    when "close"
+      next_step = "close"
+      notice = "Dossier traité avec succès."
+      template = dossier.procedure.closed_mail_template
+    end
 
-    NotificationMailer.send_notification(dossier, dossier.procedure.refused_mail_template).deliver_now!
+    dossier.next_step! 'gestionnaire', next_step, motivation
 
-    redirect_to backoffice_dossier_path(id: dossier.id)
-  end
+    # needed to force Carrierwave to provide dossier.attestation.pdf.read
+    # when the Feature.remote_storage is true, otherwise pdf.read is a closed stream.
+    dossier.reload
 
-  def without_continuation
-    create_dossier_facade params[:dossier_id]
+    attestation_pdf = nil
+    if check_attestation_emailable(dossier)
+      attestation_pdf = dossier.attestation.pdf.read
+    end
 
-    dossier = @facade.dossier
+    flash.notice = notice
 
-    dossier.next_step! 'gestionnaire', 'without_continuation'
-    flash.notice = 'Dossier considéré comme sans suite.'
-
-    NotificationMailer.send_notification(dossier, dossier.procedure.without_continuation_mail_template).deliver_now!
-
-    redirect_to backoffice_dossier_path(id: dossier.id)
-  end
-
-  def close
-    create_dossier_facade params[:dossier_id]
-
-    dossier = @facade.dossier
-
-    dossier.next_step! 'gestionnaire', 'close'
-    flash.notice = 'Dossier traité avec succès.'
-
-    NotificationMailer.send_notification(dossier, dossier.procedure.closed_mail_template).deliver_now!
+    NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
   end
@@ -172,7 +177,6 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     redirect_to backoffice_dossiers_path
   end
 
-
   def unarchive
     @dossier = Dossier.find(params[:id])
     if @dossier.archived
@@ -192,6 +196,16 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   private
+
+  def check_attestation_emailable(dossier)
+    if dossier&.attestation&.emailable? == false
+      human_size = number_to_human_size(dossier.attestation.pdf.size)
+      msg = "the attestation of the dossier #{dossier.id} cannot be mailed because it is too heavy: #{human_size}"
+      capture_message(msg, level: 'error')
+    end
+
+    dossier&.attestation&.emailable?
+  end
 
   def store_current_location
     if !gestionnaire_signed_in?

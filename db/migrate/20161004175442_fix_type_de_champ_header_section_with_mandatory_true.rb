@@ -1,6 +1,5 @@
 class FixTypeDeChampHeaderSectionWithMandatoryTrue < ActiveRecord::Migration
   class TypeDeChamp < ActiveRecord::Base
-
   end
 
   def change

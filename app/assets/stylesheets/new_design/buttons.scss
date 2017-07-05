@@ -1,0 +1,51 @@
+@import "colors";
+
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 1px solid $border-grey;
+  font-size: 14px;
+  background-color: #FFFFFF;
+  color: $black;
+  cursor: pointer;
+
+  &:hover {
+    background: $light-grey;
+    text-decoration: none;
+  }
+
+  &.primary {
+    color: #FFFFFF;
+    border-color: $blue;
+    background-color: $blue;
+
+    &:hover {
+      background: $light-blue;
+    }
+  }
+
+  &.secondary {
+    color: $blue;
+    border-color: $blue;
+    background-color: #FFFFFF;
+
+    &:hover {
+      color: #FFFFFF;
+      background: $light-blue;
+    }
+  }
+
+  &.large {
+    font-size: 18px;
+    padding: 15px 32px;
+  }
+
+  &.expand {
+    width: 100%;
+  }
+}
+
+.link {
+  color: $blue;
+}

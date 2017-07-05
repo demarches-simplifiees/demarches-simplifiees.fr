@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 feature 'As an administrateur I wanna clone a procedure', js: true do
-
   let(:administrateur) { create(:administrateur) }
 
   before do
@@ -10,7 +9,6 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
   end
 
   context 'Cloning procedure' do
-
     before 'Create procedure' do
       page.find_by_id('new-procedure').click
       fill_in 'procedure_libelle', with: 'libelle de la procedure'

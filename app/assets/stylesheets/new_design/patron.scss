@@ -1,0 +1,11 @@
+@import "placeholders";
+
+.patron {
+  .patron-container {
+    @extend %page-width-container;
+  }
+
+  p {
+    margin-bottom: 20px;
+  }
+}

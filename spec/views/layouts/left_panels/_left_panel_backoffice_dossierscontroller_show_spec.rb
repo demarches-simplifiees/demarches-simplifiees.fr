@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.html.haml', type: :view do
-
   let!(:dossier) { create(:dossier, :with_entreprise,  state: state, archived: archived) }
   let(:state) { 'draft' }
   let(:archived) { false }
@@ -25,7 +24,6 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
   end
 
   context 'button dossier state changements' do
-
     shared_examples 'button Passer en instruction is present' do
       it { expect(rendered).to have_link('Passer en instruction') }
     end
@@ -76,9 +74,9 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       it { expect(rendered).to have_content('En instruction') }
 
       it 'button accepter / refuser / classer sans suite are present' do
-        expect(rendered).to have_css('a[title="Accepter"]')
-        expect(rendered).to have_css('a[title="Classer sans suite"]')
-        expect(rendered).to have_css('a[title="Refuser"]')
+        expect(rendered).to have_css('button[title="Accepter"]')
+        expect(rendered).to have_css('button[title="Classer sans suite"]')
+        expect(rendered).to have_css('button[title="Refuser"]')
       end
     end
 
@@ -149,8 +147,6 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
 
       it { expect(rendered).to have_content('Archivé') }
       it { expect(rendered).to have_link('Désarchiver') }
-
     end
   end
-
 end

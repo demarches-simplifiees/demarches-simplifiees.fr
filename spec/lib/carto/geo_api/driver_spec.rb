@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Carto::GeoAPI::Driver do
-
   describe '.regions', vcr: {cassette_name: 'geoapi_regions'} do
     subject { described_class.regions }
 
@@ -18,7 +17,6 @@ describe Carto::GeoAPI::Driver do
     subject { described_class.pays }
 
     it { is_expected.to eq File.open('app/lib/carto/geo_api/pays.json').read }
-
   end
 
   describe 'departements_url' do

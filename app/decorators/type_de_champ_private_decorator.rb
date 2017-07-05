@@ -1,3 +1,2 @@
 class TypeDeChampPrivateDecorator < TypeDeChampDecorator
-
 end

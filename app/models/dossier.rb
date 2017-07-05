@@ -23,6 +23,7 @@ class Dossier < ActiveRecord::Base
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
   has_one :individual, dependent: :destroy
+  has_one :attestation
   has_many :cerfa, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
@@ -41,6 +42,7 @@ class Dossier < ActiveRecord::Base
   belongs_to :procedure
   belongs_to :user
 
+  default_scope { where(hidden_at: nil) }
   scope :state_brouillon,                 -> { where(state: BROUILLON) }
   scope :state_not_brouillon,             -> { where.not(state: BROUILLON) }
   scope :state_nouveaux,                  -> { where(state: NOUVEAUX) }
@@ -130,7 +132,7 @@ class Dossier < ActiveRecord::Base
     commentaires.order(created_at: :desc)
   end
 
-  def next_step! role, action
+  def next_step! role, action, motivation = nil
     unless %w(initiate follow update comment receive refuse without_continuation close).include?(action)
       fail 'action is not valid'
     end
@@ -169,15 +171,33 @@ class Dossier < ActiveRecord::Base
         end
       when 'close'
         if received?
+          self.attestation = build_attestation
+          save
+
           closed!
+
+          if motivation
+            self.motivation = motivation
+            save
+          end
         end
       when 'refuse'
         if received?
           refused!
+
+          if motivation
+            self.motivation = motivation
+            save
+          end
         end
       when 'without_continuation'
         if received?
           without_continuation!
+
+          if motivation
+            self.motivation = motivation
+            save
+          end
         end
       end
     end
@@ -223,6 +243,7 @@ class Dossier < ActiveRecord::Base
     serialized_dossier = DossierTableExportSerializer.new(self)
     data = serialized_dossier.attributes.values
     data += self.champs.order('type_de_champ_id ASC').map(&:value)
+    data += self.champs_private.order('type_de_champ_id ASC').map(&:value)
     data += self.export_entreprise_data.values
     return data
   end
@@ -231,6 +252,7 @@ class Dossier < ActiveRecord::Base
     serialized_dossier = DossierTableExportSerializer.new(self)
     headers = serialized_dossier.attributes.keys
     headers += self.procedure.types_de_champ.order('id ASC').map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
+    headers += self.procedure.types_de_champ_private.order('id ASC').map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
     headers += self.export_entreprise_data.keys
     return headers
   end
@@ -289,6 +311,12 @@ class Dossier < ActiveRecord::Base
   end
 
   private
+
+  def build_attestation
+    if procedure.attestation_template.present? && procedure.attestation_template.activated?
+      procedure.attestation_template.attestation_for(self)
+    end
+  end
 
   def update_state_dates
     if initiated? && !self.initiated_at

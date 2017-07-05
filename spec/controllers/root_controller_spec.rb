@@ -57,14 +57,13 @@ describe RootController, type: :controller do
     render_views
 
     before do
-      stub_request(:get, "https://api.github.com/repos/sgmap/tps/releases/latest").
-          to_return(:status => 200, :body => '{"tag_name": "plip", "body": "blabla", "published_at": "2016-02-09T16:46:47Z"}', :headers => {})
+      stub_request(:get, "https://api.github.com/repos/sgmap/tps/releases/latest")
+          .to_return(:status => 200, :body => '{"tag_name": "plip", "body": "blabla", "published_at": "2016-02-09T16:46:47Z"}', :headers => {})
 
       subject
     end
 
     it { expect(response.body).to have_css('.landing') }
-
   end
 
   context "unified login" do
@@ -78,5 +77,4 @@ describe RootController, type: :controller do
       expect(response.body).to have_css("a[href='#{new_user_session_path}']")
     end
   end
-
 end

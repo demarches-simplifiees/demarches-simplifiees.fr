@@ -3,7 +3,7 @@
 class CerfaUploader < BaseUploader
   before :cache, :set_original_filename
 
-# Choose what kind of storage to use for this uploader:
+  # Choose what kind of storage to use for this uploader:
   if Features.remote_storage
     storage :fog
   else

@@ -1,6 +1,6 @@
 class Gestionnaire < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+    :recoverable, :rememberable, :trackable, :validatable
 
   has_and_belongs_to_many :administrateurs
 
@@ -20,9 +20,13 @@ class Gestionnaire < ActiveRecord::Base
   include CredentialsSyncableConcern
 
   def procedure_filter
-    return nil unless assign_to.pluck(:procedure_id).include?(self[:procedure_filter])
-
-    self[:procedure_filter]
+    procedure_id = self[:procedure_filter]
+    if procedures.find_by(id: procedure_id).present?
+      procedure_id
+    else
+      self.update_column(:procedure_filter, nil)
+      nil
+    end
   end
 
   def can_view_dossier?(dossier_id)
@@ -52,10 +56,8 @@ class Gestionnaire < ActiveRecord::Base
   end
 
   def build_default_preferences_list_dossier procedure_id=nil
-
     PreferenceListDossier.available_columns_for(procedure_id).each do |table|
       table.second.each do |column|
-
         if valid_couple_table_attr? table.first, column.first
           PreferenceListDossier.create(
               libelle: column.second[:libelle],
@@ -108,16 +110,15 @@ class Gestionnaire < ActiveRecord::Base
     active_procedure_overviews = procedures
                             .where(published: true)
                             .all
-                            .map { |procedure| procedure.procedure_overview(start_date, dossiers_with_notifications_count_for_procedure(procedure)) }
+                            .map { |procedure| procedure.procedure_overview(start_date) }
                             .select(&:had_some_activities?)
 
-    if active_procedure_overviews.count == 0 && notifications.count == 0
+    if active_procedure_overviews.count == 0
       nil
     else
       {
         start_date: start_date,
         procedure_overviews: active_procedure_overviews,
-        notifications: notifications
       }
     end
   end

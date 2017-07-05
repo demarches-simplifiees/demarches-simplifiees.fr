@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Backoffice::AvisController, type: :controller do
-
   describe '#POST create' do
     let(:gestionnaire){ create(:gestionnaire) }
     let!(:dossier){ create(:dossier, state: 'received') }
@@ -179,7 +178,7 @@ describe Backoffice::AvisController, type: :controller do
 
         it { expect(created_gestionnaire).to be_nil }
         it { is_expected.to redirect_to avis_sign_up_path(avis_id, invited_email) }
-        it { expect(flash.alert).to eq('Password : Le mot de passe est vide') }
+        it { expect(flash.alert).to eq(['Password : Le mot de passe est vide']) }
       end
     end
   end

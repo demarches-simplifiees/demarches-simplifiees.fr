@@ -33,7 +33,6 @@ describe Users::RecapitulatifController, type: :controller do
         it { is_expected.to redirect_to root_path }
       end
     end
-
   end
 
   describe 'POST #initiate' do

@@ -1,5 +1,4 @@
 class Backoffice::AvisController < ApplicationController
-
   before_action :authenticate_gestionnaire!, except: [:sign_up, :create_gestionnaire]
   before_action :redirect_if_no_sign_up_needed, only: [:sign_up]
   before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_gestionnaire]
@@ -50,7 +49,7 @@ class Backoffice::AvisController < ApplicationController
       avis = Avis.find(params[:id])
       redirect_to url_for(backoffice_dossier_path(avis.dossier_id))
     else
-      flash[:alert] = gestionnaire.errors.full_messages.join('<br>')
+      flash[:alert] = gestionnaire.errors.full_messages
       redirect_to url_for(avis_sign_up_path(params[:id], email))
     end
   end

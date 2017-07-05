@@ -5,37 +5,69 @@ describe StatsController, type: :controller do
     context "without a date attribute" do
       before do
         FactoryGirl.create(:procedure, :created_at => 6.months.ago)
-        FactoryGirl.create(:procedure, :created_at => 45.days.ago)
-        FactoryGirl.create(:procedure, :created_at => 1.days.ago)
-        FactoryGirl.create(:procedure, :created_at => 1.days.ago)
+        FactoryGirl.create(:procedure, :created_at => 62.days.ago)
+        FactoryGirl.create(:procedure, :created_at => 62.days.ago)
+        FactoryGirl.create(:procedure, :created_at => 31.days.ago)
+
+        @controller = StatsController.new
+
+        allow(@controller).to receive(:administration_signed_in?).and_return(false)
       end
 
       let (:association) { Procedure.all }
 
-      subject { StatsController.new.send(:last_four_months_hash, association) }
+      subject { @controller.send(:last_four_months_hash, association) }
 
       it { expect(subject).to eq([
-        [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 1],
-        [I18n.l(1.days.ago.beginning_of_month, format: "%B %Y"), 2]
-      ] ) }
+        [I18n.l(62.days.ago.beginning_of_month, format: "%B %Y"), 2],
+        [I18n.l(31.days.ago.beginning_of_month, format: "%B %Y"), 1]
+        ])
+      }
     end
 
     context "with a date attribute" do
       before do
         FactoryGirl.create(:procedure, :created_at => 6.months.ago, :updated_at => 6.months.ago)
-        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 45.days.ago)
-        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 45.days.ago)
-        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 1.days.ago)
+        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
+        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
+        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 31.days.ago)
+        @controller = StatsController.new
+
+        allow(@controller).to receive(:administration_signed_in?).and_return(false)
       end
 
       let (:association) { Procedure.all }
 
-      subject { StatsController.new.send(:last_four_months_hash, association, :updated_at) }
+      subject { @controller.send(:last_four_months_hash, association, :updated_at) }
 
       it { expect(subject).to eq([
-        [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 2],
-        [I18n.l(1.days.ago.beginning_of_month, format: "%B %Y"), 1]
-      ] ) }
+        [I18n.l(62.days.ago.beginning_of_month, format: "%B %Y"), 2],
+        [I18n.l(31.days.ago.beginning_of_month, format: "%B %Y"), 1]
+        ])
+      }
+    end
+
+    context "while a super admin is logged in" do
+      before do
+        FactoryGirl.create(:procedure, :created_at => 6.months.ago)
+        FactoryGirl.create(:procedure, :created_at => 45.days.ago)
+        FactoryGirl.create(:procedure, :created_at => 1.day.ago)
+        FactoryGirl.create(:procedure, :created_at => 1.day.ago)
+
+        @controller = StatsController.new
+
+        allow(@controller).to receive(:administration_signed_in?).and_return(true)
+      end
+
+      let (:association) { Procedure.all }
+
+      subject { @controller.send(:last_four_months_hash, association) }
+
+      it { expect(subject).to eq([
+        [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 1],
+        [I18n.l(1.days.ago.beginning_of_month, format: "%B %Y"), 2]
+        ])
+      }
     end
   end
 
@@ -52,9 +84,10 @@ describe StatsController, type: :controller do
       subject { StatsController.new.send(:cumulative_hash, association) }
 
       it { expect(subject).to eq({
-        45.days.ago.beginning_of_month => 1,
-        15.days.ago.beginning_of_month => 3
-      }) }
+          45.days.ago.beginning_of_month => 1,
+          15.days.ago.beginning_of_month => 3
+        })
+      }
     end
 
     context "with a date attribute" do
@@ -69,9 +102,10 @@ describe StatsController, type: :controller do
       subject { StatsController.new.send(:cumulative_hash, association, :updated_at) }
 
       it { expect(subject).to eq({
-        20.days.ago.beginning_of_month => 2,
-        10.days.ago.beginning_of_month => 3
-      }) }
+          20.days.ago.beginning_of_month => 2,
+          10.days.ago.beginning_of_month => 3
+        })
+      }
     end
   end
 
@@ -262,5 +296,34 @@ describe StatsController, type: :controller do
     end
 
     it { is_expected.to match [[3.week.ago.to_i, 0], [2.week.ago.to_i, 0], [1.week.ago.to_i, 66.67]] }
+  end
+
+  describe '#motivation_usage_dossier' do
+    let!(:dossier) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation") }
+    let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
+    let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }
+
+    before do
+      Timecop.freeze(Time.now)
+    end
+
+    subject { StatsController.new.send(:motivation_usage_dossier) }
+
+    it { expect(subject).to match([[I18n.l(3.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
+  end
+
+  describe '#motivation_usage_procedure' do
+    let!(:dossier) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation" ) }
+    let!(:dossier1) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation", procedure: dossier.procedure) }
+    let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
+    let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }
+
+    before do
+      Timecop.freeze(Time.now)
+    end
+
+    subject { StatsController.new.send(:motivation_usage_procedure) }
+
+    it { expect(subject).to match([[I18n.l(3.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
   end
 end
