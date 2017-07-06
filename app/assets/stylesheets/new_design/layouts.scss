@@ -1,6 +1,6 @@
 @import "colors";
+@import "common";
 @import "constants";
-@import "placeholders";
 
 .two-columns {
   $column-padding: 60px;
@@ -9,7 +9,7 @@
   background: linear-gradient(to right, #FFFFFF 0%, #FFFFFF 50%, $light-grey 50%, $light-grey 100%);
 
   .columns-container {
-    @extend %page-width-container;
+    @extend .container;
     display: flex;
     flex-direction: row;
     align-items: center;
