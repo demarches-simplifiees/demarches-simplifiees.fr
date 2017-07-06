@@ -1,6 +1,6 @@
 .landing
   .landing-panel.hero-panel
-    .landing-panel-inner-content
+    .container
       .hero-wrapper
         .hero-text
           %p.hero-tagline
@@ -17,7 +17,7 @@
           %img{ :src => image_url("landing/hero/dematerialiser.svg") }
 
   .landing-panel.features-panel
-    .landing-panel-inner-content
+    .container
       %h2.landing-panel-title.features-panel-title Un outil dédié aux organismes publics
 
       %ul.features
@@ -47,7 +47,7 @@
             à plusieurs
 
   .landing-panel
-    .landing-panel-inner-content
+    .container
       %h2.landing-panel-title Ce que les utilisateurs pensent du service
 
       %ul.quotes
@@ -75,7 +75,7 @@
 
   - cache "numbers-panel", :expires_in => 3.hours do
     .landing-panel.numbers-panel
-      .landing-panel-inner-content
+      .container
         %h2.landing-panel-title TPS en chiffres
         %ul.numbers
           %li.number
@@ -101,7 +101,7 @@
               des délais de traitement
 
   .landing-panel.users-panel
-    .landing-panel-inner-content
+    .container
       %h2.landing-panel-title Ils nous font confiance
 
       %ul.users
@@ -122,7 +122,7 @@
             %img.user-image{ :src => image_url("landing/users/driea-idf.jpg") }
 
   .landing-panel.cta-panel
-    .landing-panel-inner-content
+    .container
       .cta-panel-wrapper
         %div
           %h1.cta-panel-title Commencez à dématerialiser vos procédures
