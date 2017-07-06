@@ -9,10 +9,6 @@
   border-top: 1px solid $border-grey;
 }
 
-.footer-inner-content {
-  @extend %page-width-container;
-}
-
 .footer-columns {
   @extend %horizontal-list;
   justify-content: flex-start;
