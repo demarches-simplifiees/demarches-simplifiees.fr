@@ -1,7 +1,7 @@
-@import "constants";
 @import "colors";
+@import "common";
+@import "constants";
 @import "mixins";
-@import "placeholders";
 
 // FIXME: Rename when the header is generalized
 .new-header {
@@ -14,7 +14,7 @@
 }
 
 .header-inner-content {
-  @extend %page-width-container;
+  @extend .container;
   display: flex;
   justify-content: space-between;
   height: 100%;
