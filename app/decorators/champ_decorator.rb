@@ -6,6 +6,12 @@ class ChampDecorator < Draper::Decorator
       Date.parse(object.value).strftime("%d/%m/%Y")
     elsif type_champ == 'checkbox'
       object.value == 'on' ? 'Oui' : 'Non'
+    elsif type_champ == 'yes_no'
+      if object.value == 'true'
+        'Oui'
+      elsif object.value == 'false'
+        'Non'
+      end
     elsif type_champ == 'multiple_drop_down_list' && object.value.present?
       JSON.parse(object.value).join(', ')
     else
