@@ -46,11 +46,6 @@
                     = dossier.text_summary
                   - else
                     Pas de dossier associé
-                - elsif champ.type_champ == 'yes_no'
-                  - if champ.decorate.value == 'true'
-                    Oui
-                  - elsif champ.decorate.value == 'false'
-                    Non
                 - else
                   = sanitize(champ.decorate.value)
 
