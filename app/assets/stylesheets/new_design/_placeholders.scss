@@ -1,5 +1,4 @@
 @import "constants";
-@import "mixins";
 
 %horizontal-list {
   list-style-type: none;
@@ -12,12 +11,6 @@
 
 %horizontal-list-item {
   display: inline-block;
-}
-
-%page-width-container {
-  @include horizontal-padding($default-padding);
-  max-width: $page-width + 2 * $default-padding;
-  margin: 0 auto;
 }
 
 %animation {
