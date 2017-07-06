@@ -9,7 +9,7 @@
     - if @dossier.champs.present? && @dossier.champs.any?
       %table.table
         %tbody
-          - @dossier.champs.each do |c|
+          - @dossier.champs.decorate.each do |c|
             %tr
               %th
                 = "#{c.libelle} :"
