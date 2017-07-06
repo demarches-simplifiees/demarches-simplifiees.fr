@@ -1,0 +1,21 @@
+@import "constants";
+@import "mixins";
+
+.table {
+  width: 100%;
+  font-size: 14px;
+  line-height: 22px;
+
+  th,
+  td {
+    @include vertical-padding($default-spacer)
+  }
+
+  th {
+    text-align: left;
+  }
+
+  td {
+    font-weight: bold;
+  }
+}
