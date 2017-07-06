@@ -11,10 +11,6 @@
   @include vertical-padding(60px);
 }
 
-.landing-panel-inner-content {
-  @extend %page-width-container;
-}
-
 $landing-breakpoint: 1040px;
 
 .hero-wrapper {
