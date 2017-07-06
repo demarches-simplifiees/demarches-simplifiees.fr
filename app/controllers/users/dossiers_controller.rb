@@ -39,7 +39,7 @@ class Users::DossiersController < UsersController
     unless params[:procedure_path].nil?
       procedure_path = ProcedurePath.where(path: params[:procedure_path]).last
 
-      if procedure_path.nil?
+      if procedure_path.nil? || procedure_path.procedure.nil?
         flash.alert = "Procédure inconnue"
         return redirect_to root_path
       else
