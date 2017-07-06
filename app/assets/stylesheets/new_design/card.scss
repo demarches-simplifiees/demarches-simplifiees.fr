@@ -1,0 +1,22 @@
+@import "colors";
+@import "constants";
+
+.card {
+  padding: ($default-spacer * 3) ($default-spacer * 2);
+  border: 1px solid $border-grey;
+  margin-bottom: $default-spacer * 2;
+
+  &.featured {
+    border-top: 8px solid $blue;
+
+    .card-title {
+      color: $blue;
+    }
+  }
+
+  .card-title {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: $default-spacer;
+  }
+}
