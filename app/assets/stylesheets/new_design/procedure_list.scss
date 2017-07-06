@@ -1,0 +1,65 @@
+@import "colors";
+@import "mixins";
+
+.procedure-list {
+  .procedure-item {
+    @include vertical-padding(24px);
+    border-bottom: 1px solid $border-grey;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .procedure-logo {
+    margin-right: 16px;
+    width: 40px;
+    height: 40px;
+    border-bottom: 1px solid $border-grey;
+  }
+
+  .procedure-title {
+    min-height: 40px;
+    font-size: 20px;
+    margin-bottom: 16px;
+
+    a {
+      color: $black;
+
+      &:hover {
+        color: $blue;
+      }
+    }
+  }
+
+  .procedure-status {
+    margin-left: auto;
+  }
+
+  .procedure-stats {
+    li {
+      min-height: 36px;
+      border-left: 1px solid $border-grey;
+      width: 90px;
+
+      &:last-child {
+        border-right: 1px solid $border-grey;
+      }
+
+      .stats-number,
+      .stats-legend {
+        text-align: center;
+      }
+
+      .stats-number {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .stats-legend {
+        font-size: 12px;
+        color: $grey;
+      }
+    }
+  }
+}

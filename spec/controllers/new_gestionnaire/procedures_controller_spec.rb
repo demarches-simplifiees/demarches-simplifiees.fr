@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe NewGestionnaire::ProceduresController, type: :controller do
-  describe 'before_action: ensure_ownership!' do
-    it 'is present' do
+  describe "before_action: ensure_ownership!" do
+    it "is present" do
       before_actions = NewGestionnaire::ProceduresController
         ._process_action_callbacks
         .find_all{|process_action_callbacks| process_action_callbacks.kind == :before}
@@ -12,7 +12,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
     end
   end
 
-  describe 'ensure_ownership!' do
+  describe "ensure_ownership!" do
     let(:gestionnaire) { create(:gestionnaire) }
 
     before do
@@ -23,21 +23,98 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       @controller.send(:ensure_ownership!)
     end
 
-    context 'when a gestionnaire asks for its procedure' do
+    context "when a gestionnaire asks for its procedure" do
       let(:asked_procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
 
-      it 'does not redirects nor flash' do
+      it "does not redirects nor flash" do
         expect(@controller).not_to have_received(:redirect_to)
         expect(flash.alert).to eq(nil)
       end
     end
 
-    context 'when a gestionnaire asks for another procedure' do
+    context "when a gestionnaire asks for another procedure" do
       let(:asked_procedure) { create(:procedure) }
 
-      it 'redirects and flash' do
+      it "redirects and flash" do
         expect(@controller).to have_received(:redirect_to).with(root_path)
         expect(flash.alert).to eq("Vous n'avez pas accès à cette procédure")
+      end
+    end
+  end
+
+  describe "#index" do
+    let(:gestionnaire) { create(:gestionnaire) }
+    subject { get :index }
+
+    context "when not logged" do
+      before { subject }
+      it { expect(response).to redirect_to(new_user_session_path)}
+    end
+
+    context "when logged in" do
+      before { sign_in(gestionnaire) }
+
+      it { expect(response).to have_http_status(:ok) }
+
+      context "with procedures assigned" do
+        let(:procedure1) { create(:procedure, :published) }
+        let(:procedure2) { create(:procedure, :published, :archived) }
+        let(:procedure3) { create(:procedure) }
+
+        before do
+          gestionnaire.procedures << procedure1
+          gestionnaire.procedures << procedure2
+          gestionnaire.procedures << procedure3
+          subject
+        end
+
+        it { expect(assigns(:procedures)).to include(procedure1, procedure2, procedure3) }
+      end
+
+      context "with dossiers" do
+        let(:procedure) { create(:procedure, :published) }
+        let(:dossier) { create(:dossier, state: state, procedure: procedure) }
+
+        before do
+          gestionnaire.procedures << procedure
+          dossier
+        end
+
+        context "with draft state" do
+          let(:state) { "draft" }
+          before { subject }
+
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_nouveaux_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+        end
+
+        context "with not draft state on multiple procedures" do
+          let(:procedure2) { create(:procedure, :published) }
+          let(:state) { "initiated" }
+
+          before do
+            gestionnaire.procedures << procedure2
+            create(:dossier, procedure: procedure, state: "replied")
+            create(:dossier, procedure: procedure2, state: "updated")
+            create(:dossier, procedure: procedure, state: "received")
+            create(:dossier, procedure: procedure2, state: "closed")
+            create(:dossier, procedure: procedure, state: "without_continuation", archived: true)
+            gestionnaire.followed_dossiers << create(:dossier, procedure: procedure2, state: "refused")
+            subject
+          end
+
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(4) }
+          it { expect(assigns(:dossiers_nouveaux_count_per_procedure)[procedure.id]).to eq(1) }
+          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(1) }
+
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure2.id]).to eq(3) }
+          it { expect(assigns(:dossiers_nouveaux_count_per_procedure)[procedure2.id]).to eq(nil) }
+          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure2.id]).to eq(1) }
+          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure2.id]).to eq(nil) }
+        end
       end
     end
   end

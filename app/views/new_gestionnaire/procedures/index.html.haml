@@ -1,0 +1,40 @@
+.container
+  %h1.backoffice-title Procédures
+
+  %ul.procedure-list
+    - @procedures.each do |p|
+      %li.procedure-item.flex.align-start
+        = image_tag p.logo, class: "procedure-logo"
+        .procedure-details
+          %p.procedure-title
+            = link_to p.libelle, backoffice_dossiers_procedure_path(p)
+
+          %ul.procedure-stats.flex
+            %li
+              - dossier_count = @dossiers_count_per_procedure[p.id] || 0
+              .stats-number
+                = dossier_count
+              .stats-legend
+                = "dossier".pluralize(dossier_count, :fr)
+            %li
+              - nouveaux_count = @dossiers_nouveaux_count_per_procedure[p.id] || 0
+              .stats-number
+                = nouveaux_count
+              .stats-legend
+                = "nouveau".pluralize(nouveaux_count, :fr)
+            %li
+              - followed_count = @followed_dossiers_count_per_procedure[p.id] || 0
+              .stats-number
+                = followed_count
+              .stats-legend
+                = "suivi".pluralize(followed_count, :fr)
+            %li
+              - archived_count = @dossiers_archived_count_per_procedure[p.id] || 0
+              .stats-number
+                = archived_count
+              .stats-legend
+                = "archivé".pluralize(archived_count, :fr)
+
+        - if p.archived?
+          .procedure-status
+            %span.label Archivée
