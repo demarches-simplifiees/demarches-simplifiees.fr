@@ -1,0 +1,5 @@
+.container
+  .card
+    .card-title Identité du demandeur
+    - if @dossier.entreprise.present?
+      = render partial: "identite_entreprise", locals: { entreprise: @dossier.entreprise }
