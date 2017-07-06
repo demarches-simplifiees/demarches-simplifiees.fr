@@ -240,12 +240,14 @@ Rails.application.routes.draw do
   scope module: 'new_gestionnaire' do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
-        resources :dossiers, only: [] do
-          get 'attestation'
-          patch 'follow'
-          patch 'unfollow'
-          patch 'archive'
-          patch 'unarchive'
+        resources :dossiers, only: [:show], param: :dossier_id do
+          member do
+            get 'attestation'
+            patch 'follow'
+            patch 'unfollow'
+            patch 'archive'
+            patch 'unarchive'
+          end
         end
       end
     end

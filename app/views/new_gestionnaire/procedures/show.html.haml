@@ -42,10 +42,10 @@
           %th.follow-col
         - @dossiers.each do |dossier|
           %tr
-            %td.number-col= link_to(dossier.id, backoffice_dossier_path(dossier), class: 'big-link')
-            %td= link_to(dossier.user.email, backoffice_dossier_path(dossier), class: 'big-link')
+            %td.number-col= link_to(dossier.id, dossier_path(@procedure, dossier), class: 'big-link')
+            %td= link_to(dossier.user.email, dossier_path(@procedure, dossier), class: 'big-link')
             %td.status-col
-              = link_to(backoffice_dossier_path(dossier), class: 'big-link') do
+              = link_to(dossier_path(@procedure, dossier), class: 'big-link') do
                 = render partial: 'status', locals: { dossier: dossier }
             %td.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier }
     - else

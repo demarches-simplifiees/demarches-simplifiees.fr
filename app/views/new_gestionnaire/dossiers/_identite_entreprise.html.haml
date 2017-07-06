@@ -1,0 +1,49 @@
+- entreprise = entreprise.decorate
+- etablissement = entreprise.etablissement
+%h4= entreprise.raison_sociale_or_name
+
+%table.table
+  %tbody
+    %tr
+      %th SIRET :
+      %td= entreprise.siret_siege_social
+    %tr
+      %th Forme juridique :
+      %td= entreprise.forme_juridique
+    - if etablissement.present?
+      %tr
+        %th Libellé NAF :
+        %td= etablissement.libelle_naf
+      %tr
+        %th Code NAF :
+        %td= etablissement.naf
+    %tr
+      %th Date de création :
+      %td= Time.at(entreprise.date_creation).localtime.strftime("%d/%m/%Y")
+    %tr
+      %th Effectif de l'organisation :
+      %td= entreprise.effectif
+    %tr
+      %th Code effectif :
+      %td= entreprise.code_effectif_entreprise
+    %tr
+      %th Numéro de TVA intracommunautaire :
+      %td= entreprise.numero_tva_intracommunautaire
+    - if etablissement.present?
+      %tr
+        %th Adresse :
+        %td
+          - etablissement.adresse.split("\n").each do |line|
+            = line
+            %br
+    %tr
+      %th Capital social :
+      %td= entreprise.pretty_capital_social
+    - if etablissement.present?
+      %tr
+        %th Exercices :
+        %td
+          - etablissement.exercices.each_with_index do |exercice, index|
+            = "#{exercice.dateFinExercice.year} : "
+            = number_to_currency(exercice.ca)
+            %br
