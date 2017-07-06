@@ -4,6 +4,10 @@ module NewGestionnaire
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
     end
 
+    def show
+      @dossier = dossier
+    end
+
     def follow
       current_gestionnaire.followed_dossiers << dossier
       redirect_back(fallback_location: procedures_url)
@@ -27,7 +31,7 @@ module NewGestionnaire
     private
 
     def dossier
-      Dossier.find(params[:dossier_id])
+      current_gestionnaire.dossiers.find(params[:dossier_id])
     end
   end
 end
