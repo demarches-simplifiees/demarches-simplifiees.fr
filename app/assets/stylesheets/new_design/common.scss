@@ -1,3 +1,4 @@
+@import "colors";
 @import "constants";
 @import "mixins";
 @import "placeholders";
@@ -12,6 +13,10 @@ body {
 h1 {
   font-size: 36px;
   font-weight: bold;
+}
+
+a {
+  color: $blue;
 }
 
 .container {
