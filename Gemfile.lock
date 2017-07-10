@@ -108,6 +108,7 @@ GEM
       mime-types (>= 1.16)
       mimemagic (>= 0.3.0)
     chartkick (2.2.1)
+    chunky_png (1.3.8)
     clamav-client (3.1.0)
     cliver (0.3.2)
     coderay (1.1.1)
@@ -686,6 +687,7 @@ DEPENDENCIES
   capybara
   carrierwave
   chartkick
+  chunky_png
   clamav-client
   copy_carrierwave_file
   database_cleaner

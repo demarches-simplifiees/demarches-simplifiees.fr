@@ -4,6 +4,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
   let!(:procedure) { create :procedure, administrateur: admin, attestation_template: attestation_template }
   let(:logo) { fixture_file_upload('spec/fixtures/white.png', 'image/png') }
   let(:signature) { fixture_file_upload('spec/fixtures/black.png', 'image/png') }
+  let(:interlaced_logo) { fixture_file_upload('spec/fixtures/interlaced-black.png', 'image/png') }
+  let(:uninterlaced_logo) { fixture_file_upload('spec/fixtures/uninterlaced-black.png', 'image/png') }
 
   before do
     sign_in admin
@@ -17,6 +19,11 @@ describe Admin::AttestationTemplatesController, type: :controller do
       post :preview,
         params: { procedure_id: procedure.id,
                   attestation_template: upload_params }
+    end
+
+    context 'with an interlaced png' do
+      let(:upload_params) { { logo: interlaced_logo } }
+      it { expect(assigns(:logo).read).to eq(uninterlaced_logo.read) }
     end
 
     context 'if an attestation template does not exist on the procedure' do

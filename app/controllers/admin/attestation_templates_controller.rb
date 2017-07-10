@@ -57,8 +57,26 @@ class Admin::AttestationTemplatesController < AdminController
   private
 
   def activated_attestation_params
-    params.require(:attestation_template)
-      .permit(:title, :body, :footer, :logo, :signature)
-      .merge(activated: true)
+    # cache result to avoid multiple uninterlaced computations
+    if @activated_attestation_params.nil?
+      @activated_attestation_params = params.require(:attestation_template)
+        .permit(:title, :body, :footer, :signature)
+        .merge(activated: true)
+
+      @activated_attestation_params.merge!(logo: uninterlaced_png(params['attestation_template']['logo']))
+      @activated_attestation_params.merge!(signature: uninterlaced_png(params['attestation_template']['signature']))
+    end
+
+    @activated_attestation_params
+  end
+
+  def uninterlaced_png(uploaded_file)
+    if uploaded_file.present? && uploaded_file.content_type == 'image/png'
+       chunky_img = ChunkyPNG::Image.from_io(uploaded_file)
+       chunky_img.save(uploaded_file.tempfile.to_path, interlace: false)
+       uploaded_file.tempfile.reopen(uploaded_file.tempfile.to_path, 'rb')
+    end
+
+    uploaded_file
   end
 end
