@@ -109,7 +109,6 @@ class Gestionnaire < ActiveRecord::Base
 
     active_procedure_overviews = procedures
                             .published
-                            .all
                             .map { |procedure| procedure.procedure_overview(start_date) }
                             .select(&:had_some_activities?)
 
