@@ -6,7 +6,7 @@ class DemoController < ApplicationController
     return redirect_to root_path if Rails.env.production?
 
     smart_listing_create :procedures,
-      Procedure.published.where(archived: false).order("id DESC"),
+      Procedure.published.not_archived.order("id DESC"),
       partial: "demo/list",
       array: true
   end

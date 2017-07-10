@@ -60,7 +60,7 @@ class Users::DossiersController < UsersController
   end
 
   def new
-    procedure = Procedure.where(archived: false).published.find(params[:procedure_id])
+    procedure = Procedure.not_archived.published.find(params[:procedure_id])
 
     dossier = Dossier.create(procedure: procedure, user: current_user, state: 'draft')
     siret = params[:siret] || current_user.siret
