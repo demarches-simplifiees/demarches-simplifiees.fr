@@ -33,6 +33,7 @@ class Procedure < ActiveRecord::Base
 
   default_scope { where(hidden_at: nil) }
   scope :published, -> { where(published: true) }
+  scope :not_published, -> { where(published: false) }
   scope :not_archived, -> { where(archived: false) }
   scope :by_libelle, -> { order(libelle: :asc) }
 

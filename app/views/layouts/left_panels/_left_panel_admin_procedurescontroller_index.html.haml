@@ -13,7 +13,7 @@
       .procedure-list-element{ class: @draft_class }
         Brouillons
         .badge.progress-bar-default
-          = current_administrateur.procedures.where(published: false, archived: false).count
+          = current_administrateur.procedures.not_published.where(archived: false).count
 
     %a#active-procedures{ :href => "#{url_for :admin_procedures}" }
       .procedure-list-element{ class: @active_class }
