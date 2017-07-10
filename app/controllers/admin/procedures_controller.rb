@@ -15,7 +15,7 @@ class Admin::ProceduresController < AdminController
 
   def archived
     @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.where(archived: true).order(created_at: :desc),
+      current_administrateur.procedures.archived.order(created_at: :desc),
       partial: "admin/procedures/list",
       array: true
 
