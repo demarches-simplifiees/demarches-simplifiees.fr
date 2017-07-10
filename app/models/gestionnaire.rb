@@ -108,7 +108,7 @@ class Gestionnaire < ActiveRecord::Base
     start_date = DateTime.now.beginning_of_week
 
     active_procedure_overviews = procedures
-                            .where(published: true)
+                            .published
                             .all
                             .map { |procedure| procedure.procedure_overview(start_date) }
                             .select(&:had_some_activities?)

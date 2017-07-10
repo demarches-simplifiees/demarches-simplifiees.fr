@@ -6,7 +6,7 @@ class Admin::ProceduresController < AdminController
 
   def index
     @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.where(published: true, archived: false).order(created_at: :desc),
+      current_administrateur.procedures.published.where(archived: false).order(created_at: :desc),
       partial: "admin/procedures/list",
       array: true
 
