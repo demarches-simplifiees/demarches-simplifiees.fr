@@ -8,7 +8,7 @@ class Gestionnaire < ActiveRecord::Base
 
   has_many :assign_to, dependent: :destroy
   has_many :procedures, through: :assign_to
-  has_many :dossiers, -> { where.not(state: :draft) }, through: :procedures
+  has_many :dossiers, -> { state_not_brouillon }, through: :procedures
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :follows
   has_many :preference_list_dossiers
@@ -108,8 +108,7 @@ class Gestionnaire < ActiveRecord::Base
     start_date = DateTime.now.beginning_of_week
 
     active_procedure_overviews = procedures
-                            .where(published: true)
-                            .all
+                            .published
                             .map { |procedure| procedure.procedure_overview(start_date) }
                             .select(&:had_some_activities?)
 
