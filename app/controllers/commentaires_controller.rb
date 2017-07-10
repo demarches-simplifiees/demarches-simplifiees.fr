@@ -13,14 +13,16 @@ class CommentairesController < ApplicationController
 
   def create
     @commentaire = Commentaire.new
-    @commentaire.dossier = Dossier.find(params['dossier_id'])
     @commentaire.champ = @commentaire.dossier.champs.find(params[:champ_id]) if params[:champ_id]
 
+    dossier_id = params['dossier_id']
     if is_gestionnaire?
       @commentaire.email = current_gestionnaire.email
+      @commentaire.dossier = current_gestionnaire.dossiers.find_by(id: dossier_id) || current_gestionnaire.avis.find_by!(dossier_id: dossier_id).dossier
       @commentaire.dossier.next_step! 'gestionnaire', 'comment'
     else
       @commentaire.email = current_user.email
+      @commentaire.dossier = current_user.dossiers.find_by(id: dossier_id) || current_user.invites.find_by!(dossier_id: dossier_id).dossier
       @commentaire.dossier.next_step! 'user', 'comment' if current_user.email == @commentaire.dossier.user.email
     end
 
