@@ -46,7 +46,7 @@ class Search < ActiveRecord::Base
 
     dossier_ids = @gestionnaire.dossiers
       .select(:id)
-      .where(archived: false)
+      .not_archived
       .state_not_brouillon
 
     q = Search
