@@ -106,6 +106,7 @@ gem 'select2-rails'
 gem 'prawn', '~> 2.0.1'
 gem 'prawn_rails', '~> 0.0.11'
 
+gem 'chunky_png'
 gem 'sentry-raven'
 
 group :test do
