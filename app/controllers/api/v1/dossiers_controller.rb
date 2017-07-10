@@ -7,7 +7,7 @@ class API::V1::DossiersController < APIController
 
   def index
     procedure = current_administrateur.procedures.find(params[:procedure_id])
-    dossiers = procedure.dossiers.where.not(state: :draft).paginate(page: params[:page])
+    dossiers = procedure.dossiers.state_not_brouillon.paginate(page: params[:page])
 
     render json: { dossiers: dossiers.map{ |dossier| DossiersSerializer.new(dossier) }, pagination: pagination(dossiers) }, status: 200
   rescue ActiveRecord::RecordNotFound

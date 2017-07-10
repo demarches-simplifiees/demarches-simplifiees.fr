@@ -128,7 +128,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def total_dossier
-    self.dossiers.where.not(state: :draft).size
+    self.dossiers.state_not_brouillon.size
   end
 
   def generate_export

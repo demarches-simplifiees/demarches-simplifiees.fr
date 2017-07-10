@@ -8,11 +8,11 @@ class AdminProceduresShowFacades
   end
 
   def dossiers
-    @procedure.dossiers.where.not(state: :draft)
+    @procedure.dossiers.state_not_brouillon
   end
 
   def dossiers_for_pie_highchart
-    dossiers.where.not(state: :draft, archived: true).group(:state).count
+    dossiers.state_not_brouillon.where.not(archived: true).group(:state).count
       .reduce({}) do |acc, (key, val)|
       translated_key = DossierDecorator.case_state_fr(key)
       acc[translated_key].nil? ? acc[translated_key] = val : acc[translated_key] += val

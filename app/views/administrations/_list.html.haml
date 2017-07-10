@@ -21,7 +21,7 @@
             = admin.procedures.published.count
           %td
             - total_dossier = 0
-            - admin.procedures.each do |procedure| total_dossier += procedure.dossiers.where.not(state: :draft).count end
+            - admin.procedures.each do |procedure| total_dossier += procedure.dossiers.where.state_not_brouillon.count end
             = total_dossier
     = smart_listing.paginate
     = smart_listing.pagination_per_page_links
