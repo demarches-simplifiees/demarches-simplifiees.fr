@@ -113,38 +113,38 @@ describe Procedure do
   end
 
   describe 'active' do
-    let(:procedure) { create(:procedure, published_at: published_at, archived: archived) }
+    let(:procedure) { create(:procedure, published_at: published_at, archived_at: archived_at) }
     subject { Procedure.active(procedure.id) }
 
     context 'when procedure is in draft status and not archived' do
       let(:published_at) { nil }
-      let(:archived) { false }
+      let(:archived_at) { nil }
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
 
     context 'when procedure is published and not archived' do
       let(:published_at) { Time.now }
-      let(:archived) { false }
+      let(:archived_at) { nil }
       it { is_expected.to be_truthy }
     end
 
     context 'when procedure is published and archived' do
       let(:published_at) { Time.now }
-      let(:archived) { true }
+      let(:archived_at) { Time.now }
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
 
     context 'when procedure is in draft status and archived' do
       let(:published_at) { nil }
-      let(:archived) { true }
+      let(:archived_at) { Time.now }
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
 
   describe 'clone' do
-    let(:archived) { false }
+    let(:archived_at) { nil }
     let(:published_at) { nil }
-    let(:procedure) { create(:procedure, archived: archived, published_at: published_at, received_mail: received_mail) }
+    let(:procedure) { create(:procedure, archived_at: archived_at, published_at: published_at, received_mail: received_mail) }
     let!(:type_de_champ_0) { create(:type_de_champ_public, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ_public, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_2) { create(:type_de_champ_public, :type_drop_down_list, procedure: procedure, order_place: 2) }
@@ -213,10 +213,10 @@ describe Procedure do
     end
 
     describe 'procedure status is reset' do
-      let(:archived) { true }
+      let(:archived_at) { Time.now }
       let(:published_at) { Time.now }
       it 'Not published nor archived' do
-        expect(subject.archived).to be_falsey
+        expect(subject.archived_at).to be_nil
         expect(subject.published_at).to be_nil
         expect(subject.path).to be_nil
       end
@@ -232,7 +232,7 @@ describe Procedure do
       procedure.publish!("example-path")
     end
 
-    it { expect(procedure.archived).to eq(false) }
+    it { expect(procedure.archived_at).to eq(nil) }
     it { expect(procedure.published_at).to eq(now) }
     it { expect(ProcedurePath.find_by_path("example-path")).to be }
     it { expect(ProcedurePath.find_by_path("example-path").procedure).to eq(procedure) }
@@ -254,7 +254,7 @@ describe Procedure do
     end
 
     it { expect(procedure.published?).to be_truthy }
-    it { expect(procedure.archived).to be_truthy }
+    it { expect(procedure.archived?).to be_truthy }
     it { expect(procedure.archived_at).to eq(now) }
 
     after do

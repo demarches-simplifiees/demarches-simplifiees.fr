@@ -34,8 +34,8 @@ class Procedure < ActiveRecord::Base
   default_scope { where(hidden_at: nil) }
   scope :published, -> { where.not(published_at: nil) }
   scope :not_published, -> { where(published_at: nil) }
-  scope :archived, -> { where(archived: true) }
-  scope :not_archived, -> { where(archived: false) }
+  scope :archived, -> { where.not(archived_at: nil) }
+  scope :not_archived, -> { where(archived_at: nil) }
   scope :by_libelle, -> { order(libelle: :asc) }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
@@ -106,7 +106,7 @@ class Procedure < ActiveRecord::Base
         types_de_champ: :drop_down_list,
         types_de_champ_private: :drop_down_list
       })
-    procedure.archived = false
+    procedure.archived_at = nil
     procedure.published_at = nil
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
@@ -121,7 +121,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def publish!(path)
-    self.update_attributes!({ published_at: Time.now, archived: false })
+    self.update_attributes!({ published_at: Time.now, archived_at: nil })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
   end
 
@@ -131,7 +131,12 @@ class Procedure < ActiveRecord::Base
   end
 
   def archive
-    self.update_attributes!(archived: true, archived_at: Time.now)
+    self.update_attributes!(archived_at: Time.now)
+  end
+
+  # FIXME: remove once the archived colummn has been deleted
+  def archived?
+    archived_at.present?
   end
 
   def total_dossier

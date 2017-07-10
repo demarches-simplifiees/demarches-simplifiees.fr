@@ -118,7 +118,7 @@ describe Users::DossiersController, type: :controller do
           end
 
           context 'when procedure is archived' do
-            let(:procedure) { create(:procedure, archived: 'true') }
+            let(:procedure) { create(:procedure, archived_at: Time.now) }
 
             it { is_expected.to redirect_to users_dossiers_path }
           end
@@ -158,10 +158,10 @@ describe Users::DossiersController, type: :controller do
     it { expect(subject).to redirect_to new_users_dossier_path(procedure_id: procedure.id) }
 
     context 'when procedure is archived' do
-      let(:procedure) { create(:procedure, :published, archived: true) }
+      let(:procedure) { create(:procedure, :published, archived_at: Time.now) }
 
       before do
-        procedure.update_column :archived, true
+        procedure.update_column :archived_at, Time.now
       end
 
       it { expect(subject.status).to eq 200 }

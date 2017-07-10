@@ -54,9 +54,9 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:procedure_draft) { create :procedure, published_at: nil, archived: false }
-    let(:procedure_published) { create :procedure, published_at: Time.now, archived: false }
-    let(:procedure_archived) { create :procedure, published_at: nil, archived: true }
+    let(:procedure_draft) { create :procedure, published_at: nil, archived_at: nil }
+    let(:procedure_published) { create :procedure, published_at: Time.now, archived_at: nil }
+    let(:procedure_archived) { create :procedure, published_at: nil, archived_at: Time.now }
 
     subject { delete :destroy, params: {id: procedure.id} }
 
@@ -316,7 +316,7 @@ describe Admin::ProceduresController, type: :controller do
 
         it 'archive previous procedure' do
           expect(procedure2.published?).to be_truthy
-          expect(procedure2.archived).to be_truthy
+          expect(procedure2.archived?).to be_truthy
           expect(procedure2.path).to be_nil
         end
       end
@@ -332,7 +332,7 @@ describe Admin::ProceduresController, type: :controller do
 
         it 'previous procedure remains published' do
           expect(procedure2.published?).to be_truthy
-          expect(procedure2.archived).to be_falsey
+          expect(procedure2.archived?).to be_falsey
           expect(procedure2.path).to match(/fake_path/)
         end
       end
@@ -377,7 +377,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when owner want archive procedure' do
-        it { expect(procedure.archived).to be_truthy }
+        it { expect(procedure.archived?).to be_truthy }
         it { expect(response).to redirect_to :admin_procedures }
         it { expect(flash[:notice]).to have_content 'Procédure archivée' }
       end
@@ -388,7 +388,7 @@ describe Admin::ProceduresController, type: :controller do
           procedure.reload
         end
 
-        it { expect(procedure.archived).to be_falsey }
+        it { expect(procedure.archived?).to be_falsey }
         it { expect(response.status).to eq 200 }
         it { expect(flash[:notice]).to have_content 'Procédure publiée' }
       end
@@ -479,7 +479,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when procedure is archived' do
       before do
-        procedure3.update_attribute :archived, true
+        procedure3.update_attribute :archived_at, Time.now
         subject
       end
 

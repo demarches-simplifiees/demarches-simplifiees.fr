@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'admin/procedures/show.html.haml', type: :view do
-  let(:archived) { false }
-  let(:procedure) { create(:procedure, archived: archived) }
+  let(:archived_at) { nil }
+  let(:procedure) { create(:procedure, archived_at: archived_at) }
 
   before do
     assign(:facade, AdminProceduresShowFacades.new(procedure.decorate))
