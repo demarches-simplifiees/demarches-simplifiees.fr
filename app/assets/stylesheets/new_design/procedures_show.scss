@@ -133,6 +133,36 @@
       width: 200px;
     }
 
+    .label {
+      width: 110px;
+      text-align: center;
+
+      &.instruction {
+        background-color: #FFFFFF;
+        color: $blue;
+        border: 1px solid $blue;
+      }
+
+      &.construction {
+        background-color: #FFFFFF;
+        color: $black;
+        border: 1px solid $black;
+      }
+
+      &.closed {
+        background-color: $green;
+      }
+
+      &.refused {
+        background-color: $dark-red;
+      }
+
+      &.without-continuation {
+        background-color: $black;
+      }
+    }
+  }
+
   h2 {
     font-size: 20px;
     font-weight: bold;
