@@ -4,6 +4,9 @@
     - if @dossier.entreprise.present?
       = render partial: "identite_entreprise", locals: { entreprise: @dossier.entreprise }
 
+    - if @dossier.individual.present?
+      = render partial: "identite_individual", locals: { individual: @dossier.individual }
+
   .card.featured
     .card-title Construction du dossier
     - if @dossier.champs.present? && @dossier.champs.any?
