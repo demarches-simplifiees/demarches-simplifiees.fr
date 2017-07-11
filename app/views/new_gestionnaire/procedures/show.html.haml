@@ -45,6 +45,8 @@
             %td.number-col= link_to(dossier.id, backoffice_dossier_path(dossier), class: 'big-link')
             %td= link_to(dossier.user.email, backoffice_dossier_path(dossier), class: 'big-link')
             %td.status-col
+              = link_to(backoffice_dossier_path(dossier), class: 'big-link') do
+                = render partial: 'status', locals: { dossier: dossier }
             %td.follow-col
     - else
       %h2 Aucun dossier
