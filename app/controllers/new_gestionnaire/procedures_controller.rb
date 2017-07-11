@@ -33,6 +33,21 @@ module NewGestionnaire
       @all_state_dossiers = procedure.dossiers.all_state
 
       @archived_dossiers = procedure.dossiers.archived
+
+      @statut = params[:statut].present? ? params[:statut] : 'a-suivre'
+
+      @dossiers = case @statut
+      when 'a-suivre'
+        @a_suivre_dossiers
+      when 'suivis'
+        @followed_dossiers
+      when 'traites'
+        @termines_dossiers
+      when 'tous'
+        @all_state_dossiers
+      when 'archives'
+        @archived_dossiers
+      end
     end
 
     private
