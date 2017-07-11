@@ -47,3 +47,22 @@
             = "#{exercice.dateFinExercice.year} : "
             = number_to_currency(exercice.ca)
             %br
+    - if entreprise.rna_information.present?
+      %tr
+        %th Numéro RNA :
+        %td= entreprise.rna_information.association_id
+      %tr
+        %th Titre :
+        %td= entreprise.rna_information.titre
+      %tr
+        %th Objet :
+        %td= entreprise.rna_information.objet
+      %tr
+        %th Date de création :
+        %td= entreprise.rna_information.date_creation
+      %tr
+        %th Date de publication :
+        %td= entreprise.rna_information.date_publication
+      %tr
+        %th Date de déclaration :
+        %td= entreprise.rna_information.date_declaration
