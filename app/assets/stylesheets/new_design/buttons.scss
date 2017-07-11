@@ -1,4 +1,5 @@
 @import "colors";
+@import "constants";
 
 .button {
   display: inline-block;
@@ -43,6 +44,14 @@
 
   &.expand {
     width: 100%;
+  }
+
+  i {
+    width: 18px;
+    height: 18px;
+    background-size: 18px 18px;
+    vertical-align: middle;
+    margin-right: $default-spacer;
   }
 }
 

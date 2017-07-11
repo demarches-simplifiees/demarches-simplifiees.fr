@@ -221,6 +221,14 @@ class Dossier < ActiveRecord::Base
     EN_INSTRUCTION.include?(state)
   end
 
+  def en_construction_ou_instruction?
+    EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)
+  end
+
+  def termine?
+    TERMINE.include?(state)
+  end
+
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
   end
