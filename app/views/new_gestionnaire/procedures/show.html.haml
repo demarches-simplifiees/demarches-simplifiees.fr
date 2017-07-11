@@ -1,0 +1,33 @@
+#procedure-show
+  .header
+    .container
+      - if @procedure.logo.present?
+        = image_tag @procedure.logo, height: 40, class: 'procedure-logo'
+
+      .right
+        %h1= @procedure.libelle
+        %ul.dossiers-categories
+          %li{ class: (@statut == 'a-suivre') ? 'active' : nil }>
+            = link_to(procedure_path(@procedure, statut: 'a-suivre')) do
+              %span.dossiers-count= @a_suivre_dossiers.count
+              à suivre
+
+          %li{ class: (@statut == 'suivis') ? 'active' : nil }>
+            = link_to(procedure_path(@procedure, statut: 'suivis')) do
+              %span.dossiers-count= @followed_dossiers.count
+              = t('pluralize.followed', count: @followed_dossiers.count)
+
+          %li{ class: (@statut == 'traites') ? 'active' : nil }>
+            = link_to(procedure_path(@procedure, statut: 'traites')) do
+              %span.dossiers-count= @termines_dossiers.count
+              = t('pluralize.processed', count: @termines_dossiers.count)
+
+          %li{ class: (@statut == 'tous') ? 'active' : nil }>
+            = link_to(procedure_path(@procedure, statut: 'tous')) do
+              %span.dossiers-count= @all_state_dossiers.count
+              tous les dossiers
+
+          %li{ class: (@statut == 'archives') ? 'active' : nil }>
+            = link_to(procedure_path(@procedure, statut: 'archives')) do
+              %span.dossiers-count= @archived_dossiers.count
+              = t('pluralize.archived', count: @archived_dossiers.count)
