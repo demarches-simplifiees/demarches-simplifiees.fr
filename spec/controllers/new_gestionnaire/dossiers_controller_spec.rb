@@ -2,12 +2,14 @@ require 'spec_helper'
 
 describe NewGestionnaire::DossiersController, type: :controller do
   let(:gestionnaire) { create(:gestionnaire) }
+  let(:procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+  let(:dossier) { create(:dossier, procedure: procedure) }
+
   before { sign_in(gestionnaire) }
 
   describe 'attestation' do
     context 'when a dossier has an attestation' do
       let(:fake_pdf) { double(read: 'pdf content') }
-      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
       let!(:dossier) { create(:dossier, attestation: Attestation.new, procedure: procedure) }
 
       it 'returns the attestation pdf' do
@@ -22,5 +24,23 @@ describe NewGestionnaire::DossiersController, type: :controller do
         expect(response).to have_http_status(:success)
       end
     end
+  end
+
+  describe 'follow' do
+    before { patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+
+    it { expect(gestionnaire.followed_dossiers).to match([dossier]) }
+    it { expect(response).to redirect_to(procedures_url) }
+  end
+
+  describe 'unfollow' do
+    before do
+      gestionnaire.followed_dossiers << dossier
+      patch :unfollow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      gestionnaire.reload
+    end
+
+    it { expect(gestionnaire.followed_dossiers).to match([]) }
+    it { expect(response).to redirect_to(procedures_url) }
   end
 end
