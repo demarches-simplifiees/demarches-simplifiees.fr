@@ -140,7 +140,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       context 'when procedure is not published' do
-        let(:procedure) { create(:procedure, published: false) }
+        let(:procedure) { create(:procedure, published_at: nil) }
 
         before do
           sign_in user

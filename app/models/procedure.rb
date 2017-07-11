@@ -32,8 +32,8 @@ class Procedure < ActiveRecord::Base
   mount_uploader :logo, ProcedureLogoUploader
 
   default_scope { where(hidden_at: nil) }
-  scope :published, -> { where(published: true) }
-  scope :not_published, -> { where(published: false) }
+  scope :published, -> { where.not(published_at: nil) }
+  scope :not_published, -> { where(published_at: nil) }
   scope :archived, -> { where(archived: true) }
   scope :not_archived, -> { where(archived: false) }
   scope :by_libelle, -> { order(libelle: :asc) }
@@ -107,7 +107,7 @@ class Procedure < ActiveRecord::Base
         types_de_champ_private: :drop_down_list
       })
     procedure.archived = false
-    procedure.published = false
+    procedure.published_at = nil
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
 
@@ -121,8 +121,13 @@ class Procedure < ActiveRecord::Base
   end
 
   def publish!(path)
-    self.update_attributes!({ published: true, archived: false, published_at: Time.now })
+    self.update_attributes!({ published_at: Time.now, archived: false })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
+  end
+
+  # FIXME: remove once the published colummn has been deleted
+  def published?
+    published_at.present?
   end
 
   def archive
