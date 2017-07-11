@@ -183,6 +183,59 @@ describe NewGestionnaire::ProceduresController, type: :controller do
         it { expect(assigns(:all_state_dossiers)).to be_empty }
         it { expect(assigns(:archived_dossiers)).to match([archived_dossier]) }
       end
+
+      describe 'statut' do
+        let!(:a_suivre__dossier) { create(:dossier, procedure: procedure, state: 'received') }
+        let!(:new_followed_dossier) { create(:dossier, procedure: procedure, state: 'received') }
+        let!(:termine_dossier) { create(:dossier, procedure: procedure, state: 'closed') }
+        let!(:archived_dossier) { create(:dossier, procedure: procedure, state: 'received', archived: true) }
+        before do
+          gestionnaire.followed_dossiers << new_followed_dossier
+          get :show, params: { procedure_id: procedure.id, statut: statut }
+        end
+
+        context 'when statut is empty' do
+          let(:statut) { nil }
+
+          it { expect(assigns(:dossiers)).to match([a_suivre__dossier]) }
+          it { expect(assigns(:statut)).to eq('a-suivre') }
+        end
+
+        context 'when statut is a-suivre' do
+          let(:statut) { 'a-suivre' }
+
+          it { expect(assigns(:statut)).to eq('a-suivre') }
+          it { expect(assigns(:dossiers)).to match([a_suivre__dossier]) }
+        end
+
+        context 'when statut is suivis' do
+          let(:statut) { 'suivis' }
+
+          it { expect(assigns(:statut)).to eq('suivis') }
+          it { expect(assigns(:dossiers)).to match([new_followed_dossier]) }
+        end
+
+        context 'when statut is traites' do
+          let(:statut) { 'traites' }
+
+          it { expect(assigns(:statut)).to eq('traites') }
+          it { expect(assigns(:dossiers)).to match([termine_dossier]) }
+        end
+
+        context 'when statut is tous' do
+          let(:statut) { 'tous' }
+
+          it { expect(assigns(:statut)).to eq('tous') }
+          it { expect(assigns(:dossiers)).to match([a_suivre__dossier, new_followed_dossier, termine_dossier]) }
+        end
+
+        context 'when statut is archives' do
+          let(:statut) { 'archives' }
+
+          it { expect(assigns(:statut)).to eq('archives') }
+          it { expect(assigns(:dossiers)).to match([archived_dossier]) }
+        end
+      end
     end
   end
 end
