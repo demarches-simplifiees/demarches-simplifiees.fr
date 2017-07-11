@@ -14,6 +14,16 @@ module NewGestionnaire
       redirect_back(fallback_location: procedures_url)
     end
 
+    def archive
+      dossier.update_attributes(archived: true)
+      redirect_back(fallback_location: procedures_url)
+    end
+
+    def unarchive
+      dossier.update_attributes(archived: false)
+      redirect_back(fallback_location: procedures_url)
+    end
+
     private
 
     def dossier

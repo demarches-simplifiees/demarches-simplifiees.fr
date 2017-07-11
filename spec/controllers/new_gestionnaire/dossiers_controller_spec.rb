@@ -43,4 +43,25 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(gestionnaire.followed_dossiers).to match([]) }
     it { expect(response).to redirect_to(procedures_url) }
   end
+
+  describe 'archive' do
+    before do
+      patch :archive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      dossier.reload
+    end
+
+    it { expect(dossier.archived).to be true }
+    it { expect(response).to redirect_to(procedures_url) }
+  end
+
+  describe 'unarchive' do
+    before do
+      dossier.update_attributes(archived: true)
+      patch :unarchive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      dossier.reload
+    end
+
+    it { expect(dossier.archived).to be false }
+    it { expect(response).to redirect_to(procedures_url) }
+  end
 end
