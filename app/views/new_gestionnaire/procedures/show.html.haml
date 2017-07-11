@@ -31,3 +31,20 @@
             = link_to(procedure_path(@procedure, statut: 'archives')) do
               %span.dossiers-count= @archived_dossiers.count
               = t('pluralize.archived', count: @archived_dossiers.count)
+
+  .container
+    - if @dossiers.present?
+      %table.dossiers-table
+        %tr
+          %th.number-col Nº dossier
+          %th Demandeur
+          %th.status-col Statut
+          %th.follow-col
+        - @dossiers.each do |dossier|
+          %tr
+            %td.number-col= link_to(dossier.id, backoffice_dossier_path(dossier), class: 'big-link')
+            %td= link_to(dossier.user.email, backoffice_dossier_path(dossier), class: 'big-link')
+            %td.status-col
+            %td.follow-col
+    - else
+      %h2 Aucun dossier
