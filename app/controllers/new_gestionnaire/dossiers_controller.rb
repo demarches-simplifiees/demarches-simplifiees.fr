@@ -4,6 +4,16 @@ module NewGestionnaire
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
     end
 
+    def follow
+      current_gestionnaire.followed_dossiers << dossier
+      redirect_back(fallback_location: procedures_url)
+    end
+
+    def unfollow
+      current_gestionnaire.followed_dossiers.delete(dossier)
+      redirect_back(fallback_location: procedures_url)
+    end
+
     private
 
     def dossier
