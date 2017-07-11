@@ -14,7 +14,7 @@ class DossiersListFacades
   end
 
   def total_dossier
-    current_devise_profil.dossiers.where(archived: false).count
+    current_devise_profil.dossiers.not_archived.count
   end
 
   def total_dossier_follow
@@ -22,11 +22,11 @@ class DossiersListFacades
   end
 
   def total_new_dossier
-    current_devise_profil.dossiers.where(state: :initiated, archived: false).count
+    current_devise_profil.dossiers.state_nouveaux.not_archived.count
   end
 
   def new_dossier_number procedure_id
-    current_devise_profil.dossiers.where(state: :initiated, archived: false, procedure_id: procedure_id).count
+    current_devise_profil.dossiers.state_nouveaux.not_archived.where(procedure_id: procedure_id).count
   end
 
   def gestionnaire_procedures_name_and_id_list

@@ -32,6 +32,9 @@ class Procedure < ActiveRecord::Base
   mount_uploader :logo, ProcedureLogoUploader
 
   default_scope { where(hidden_at: nil) }
+  scope :published, -> { where(published: true) }
+  scope :not_published, -> { where(published: false) }
+  scope :archived, -> { where(archived: true) }
   scope :not_archived, -> { where(archived: false) }
   scope :by_libelle, -> { order(libelle: :asc) }
 
@@ -61,7 +64,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def self.active id
-    not_archived.where(published: true).find(id)
+    not_archived.published.find(id)
   end
 
   def switch_types_de_champ index_of_first_element
@@ -127,7 +130,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def total_dossier
-    self.dossiers.where.not(state: :draft).size
+    self.dossiers.state_not_brouillon.size
   end
 
   def generate_export

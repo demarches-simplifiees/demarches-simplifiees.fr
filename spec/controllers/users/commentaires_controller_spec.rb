@@ -11,6 +11,28 @@ describe Users::CommentairesController, type: :controller do
   end
 
   describe '#POST create' do
+    context "when user has no access to dossier" do
+      before do
+        sign_in create(:user)
+      end
+      subject { post :create, params: { dossier_id: dossier_id, texte_commentaire: texte_commentaire } }
+
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+      it { expect { subject rescue nil }.to change(Commentaire, :count).by(0) }
+    end
+
+    context "when user is invited on dossier" do
+      let(:user) { create(:user) }
+      subject { post :create, params: { dossier_id: dossier_id, texte_commentaire: texte_commentaire } }
+
+      before do
+        sign_in user
+        InviteUser.create(dossier: dossier, user: user, email: user.email, email_sender: "test@test.com")
+      end
+
+      it { expect{ subject }.to change(Commentaire, :count).by(1) }
+    end
+
     context 'création correct d\'un commentaire' do
       subject do
         sign_in dossier.user

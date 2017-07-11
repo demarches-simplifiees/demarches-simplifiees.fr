@@ -46,8 +46,8 @@ class Search < ActiveRecord::Base
 
     dossier_ids = @gestionnaire.dossiers
       .select(:id)
-      .where(archived: false)
-      .where.not(state: "draft")
+      .not_archived
+      .state_not_brouillon
 
     q = Search
       .select("DISTINCT(searches.dossier_id)")

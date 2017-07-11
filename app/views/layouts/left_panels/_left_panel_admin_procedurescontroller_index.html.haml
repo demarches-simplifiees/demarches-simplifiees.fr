@@ -13,19 +13,19 @@
       .procedure-list-element{ class: @draft_class }
         Brouillons
         .badge.progress-bar-default
-          = current_administrateur.procedures.where(published: false, archived: false).count
+          = current_administrateur.procedures.not_published.not_archived.count
 
     %a#active-procedures{ :href => "#{url_for :admin_procedures}" }
       .procedure-list-element{ class: @active_class }
         Actives
         .badge.progress-bar-success
-          = current_administrateur.procedures.where(published: true, archived: false).count
+          = current_administrateur.procedures.published.not_archived.count
 
     %a#archived-procedures{ :href => "#{url_for :admin_procedures_archived}" }
       .procedure-list-element{ class: @archived_class }
         Archivées
         .badge.progress-bar-purple
-          = current_administrateur.procedures.where(archived: true).count
+          = current_administrateur.procedures.archived.count
 
   .split-hr-left
 
