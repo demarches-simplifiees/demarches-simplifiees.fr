@@ -34,6 +34,7 @@ class Procedure < ActiveRecord::Base
   default_scope { where(hidden_at: nil) }
   scope :brouillons, -> { not_published.not_archived }
   scope :publiees, -> { where.not(published_at: nil).where(archived_at: nil) }
+  scope :archivees, -> { archived }
   scope :publiee_ou_archivee, -> { where.not(published_at: nil) }
   scope :not_published, -> { where(published_at: nil) }
   scope :archived, -> { where.not(archived_at: nil) }
