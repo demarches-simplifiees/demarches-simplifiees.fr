@@ -47,6 +47,6 @@
             %td.status-col
               = link_to(backoffice_dossier_path(dossier), class: 'big-link') do
                 = render partial: 'status', locals: { dossier: dossier }
-            %td.follow-col
+            %td.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier }
     - else
       %h2 Aucun dossier
