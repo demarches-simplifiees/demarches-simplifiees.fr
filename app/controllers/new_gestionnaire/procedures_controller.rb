@@ -15,6 +15,26 @@ module NewGestionnaire
       @followed_dossiers_count_per_procedure = current_gestionnaire.followed_dossiers.where(procedure: @procedures).group(:procedure_id).count
     end
 
+    def show
+      @procedure = procedure
+
+      @a_suivre_dossiers = procedure
+        .dossiers
+        .without_followers
+        .en_cours
+
+      @followed_dossiers = current_gestionnaire
+        .followed_dossiers
+        .where(procedure: @procedure)
+        .en_cours
+
+      @termines_dossiers = procedure.dossiers.termine
+
+      @all_state_dossiers = procedure.dossiers.all_state
+
+      @archived_dossiers = procedure.dossiers.archived
+    end
+
     private
 
     def procedure

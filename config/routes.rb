@@ -238,9 +238,11 @@ Rails.application.routes.draw do
   end
 
   scope module: 'new_gestionnaire' do
-    resources :procedures, only: [:index] do
-      resources :dossiers, only: [] do
-        get 'attestation'
+    resources :procedures, only: [:index, :show], param: :procedure_id do
+      member do
+        resources :dossiers, only: [] do
+          get 'attestation'
+        end
       end
     end
   end
