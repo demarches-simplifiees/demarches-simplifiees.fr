@@ -26,7 +26,7 @@ class Admin::ProceduresController < AdminController
 
   def draft
     @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.not_published.not_archived.order(created_at: :desc),
+      current_administrateur.procedures.brouillons.order(created_at: :desc),
       partial: "admin/procedures/list",
       array: true
 
