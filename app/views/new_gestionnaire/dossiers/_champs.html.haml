@@ -1,0 +1,12 @@
+%table.table
+  %tbody
+    - champs.each do |c|
+      %tr
+        - if c.type_champ == "header_section"
+          %th.header-section{ colspan: 2 }
+            = c.libelle
+        - else
+          %th
+            = "#{c.libelle} :"
+          %td
+            = c.value
