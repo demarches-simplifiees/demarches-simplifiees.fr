@@ -27,7 +27,7 @@
         %h1 Connectez-vous
 
         = f.label :email, "Email"
-        = f.text_field :email
+        = f.text_field :email, autofocus: true
 
         = f.label :password, "Mot de passe"
         = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
