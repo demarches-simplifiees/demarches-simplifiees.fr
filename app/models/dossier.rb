@@ -209,6 +209,14 @@ class Dossier < ActiveRecord::Base
     BROUILLON.include?(state)
   end
 
+  def en_construction?
+    EN_CONSTRUCTION.include?(state)
+  end
+
+  def en_instruction?
+    EN_INSTRUCTION.include?(state)
+  end
+
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
   end
