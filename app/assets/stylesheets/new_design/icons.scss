@@ -1,0 +1,19 @@
+i {
+  display: inline-block;
+
+  &.follow {
+    background-image: image-url("icons/follow-folder.svg");
+  }
+
+  &.unfollow {
+    background-image: image-url("icons/unfollow-folder.svg");
+  }
+
+  &.archive {
+    background-image: image-url("icons/archive.svg");
+  }
+
+  &.unarchive {
+    background-image: image-url("icons/unarchive.svg");
+  }
+}
