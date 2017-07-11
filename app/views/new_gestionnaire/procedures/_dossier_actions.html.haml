@@ -1,0 +1,19 @@
+- if dossier.en_construction_ou_instruction?
+  - if current_gestionnaire.follow?(dossier)
+    = link_to dossier_unfollow_path(procedure, dossier), method: :patch, class: 'button' do
+      %i.unfollow>
+      ne plus suivre
+  - else
+    = link_to dossier_follow_path(procedure, dossier), method: :patch, class: 'button' do
+      %i.follow>
+      suivre le dossier
+
+- elsif dossier.termine?
+  - if dossier.archived
+    = link_to dossier_unarchive_path(procedure, dossier), method: :patch, class: 'button' do
+      %i.unarchive>
+      désarchiver le dossier
+  - else
+    = link_to dossier_archive_path(procedure, dossier), method: :patch, class: 'button' do
+      %i.archive>
+      archiver le dossier
