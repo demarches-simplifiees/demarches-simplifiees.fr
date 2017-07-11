@@ -242,6 +242,8 @@ Rails.application.routes.draw do
       member do
         resources :dossiers, only: [] do
           get 'attestation'
+          patch 'follow'
+          patch 'unfollow'
         end
       end
     end
