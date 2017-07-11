@@ -244,6 +244,8 @@ Rails.application.routes.draw do
           get 'attestation'
           patch 'follow'
           patch 'unfollow'
+          patch 'archive'
+          patch 'unarchive'
         end
       end
     end
