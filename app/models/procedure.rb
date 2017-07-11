@@ -32,6 +32,7 @@ class Procedure < ActiveRecord::Base
   mount_uploader :logo, ProcedureLogoUploader
 
   default_scope { where(hidden_at: nil) }
+  scope :publiees, -> { where.not(published_at: nil).where(archived_at: nil) }
   scope :publiee_ou_archivee, -> { where.not(published_at: nil) }
   scope :not_published, -> { where(published_at: nil) }
   scope :archived, -> { where.not(archived_at: nil) }
@@ -64,7 +65,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def self.active id
-    not_archived.published.find(id)
+    publiees.find(id)
   end
 
   def switch_types_de_champ index_of_first_element

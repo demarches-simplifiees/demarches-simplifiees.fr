@@ -19,7 +19,7 @@
       .procedure-list-element{ class: @active_class }
         Actives
         .badge.progress-bar-success
-          = current_administrateur.procedures.published.not_archived.count
+          = current_administrateur.procedures.publiees.count
 
     %a#archived-procedures{ :href => "#{url_for :admin_procedures_archived}" }
       .procedure-list-element{ class: @archived_class }
