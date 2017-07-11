@@ -1,0 +1,10 @@
+- if dossier.en_instruction?
+  %span.label.instruction en instruction
+- elsif dossier.en_construction?
+  %span.label.construction nouveau
+- elsif dossier.closed?
+  %span.label.closed accepté
+- elsif dossier.refused?
+  %span.label.refused refusé
+- elsif dossier.without_continuation?
+  %span.label.without-continuation sans suite
