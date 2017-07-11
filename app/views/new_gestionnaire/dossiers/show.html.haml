@@ -7,17 +7,12 @@
     - if @dossier.individual.present?
       = render partial: "identite_individual", locals: { individual: @dossier.individual }
 
+  .backoffice-title Formulaire
+
   .card.featured
-    .card-title Construction du dossier
-    - if @dossier.champs.present? && @dossier.champs.any?
-      %table.table
-        %tbody
-          - @dossier.champs.decorate.each do |c|
-            %tr
-              %th
-                = "#{c.libelle} :"
-              %td
-                = c.value
+    - champs = @dossier.ordered_champs.decorate
+    - if champs.any?
+      = render partial: "champs", locals: { champs: champs }
 
   - if @dossier.procedure.cerfa_flag? || @dossier.types_de_piece_justificative.any?
     .card.featured

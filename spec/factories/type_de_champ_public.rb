@@ -10,6 +10,10 @@ FactoryGirl.define do
       type_champ 'checkbox'
     end
 
+    trait :header_section do
+      type_champ 'header_section'
+    end
+
     trait :type_dossier_link do
       libelle 'Référence autre dossier'
       type_champ 'dossier_link'
