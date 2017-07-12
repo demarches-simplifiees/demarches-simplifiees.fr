@@ -118,18 +118,18 @@ describe StatsController, type: :controller do
 
     before do
       3.times do
-        create(:procedure, published: true, administrateur: administrateur_1)
+        create(:procedure, published_at: Time.now, administrateur: administrateur_1)
       end
 
       2.times do
-        create(:procedure, published: true, administrateur: administrateur_2)
+        create(:procedure, published_at: Time.now, administrateur: administrateur_2)
       end
 
       8.times do
-        create(:procedure, published: true, administrateur: administrateur_3)
+        create(:procedure, published_at: Time.now, administrateur: administrateur_3)
       end
 
-      create(:procedure, published: true, administrateur: administrateur_4)
+      create(:procedure, published_at: Time.now, administrateur: administrateur_4)
     end
 
     let(:association){ Procedure.all }

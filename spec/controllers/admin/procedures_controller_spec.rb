@@ -54,9 +54,9 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:procedure_draft) { create :procedure, published: false, archived: false }
-    let(:procedure_published) { create :procedure, published: true, archived: false }
-    let(:procedure_archived) { create :procedure, published: false, archived: true }
+    let(:procedure_draft) { create :procedure, published_at: nil, archived_at: nil }
+    let(:procedure_published) { create :procedure, published_at: Time.now, archived_at: nil }
+    let(:procedure_archived) { create :procedure, published_at: nil, archived_at: Time.now }
 
     subject { delete :destroy, params: {id: procedure.id} }
 
@@ -94,8 +94,8 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'GET #edit' do
-    let(:published) { false }
-    let(:procedure) { create(:procedure, administrateur: admin, published: published) }
+    let(:published_at) { nil }
+    let(:procedure) { create(:procedure, administrateur: admin, published_at: published_at) }
     let(:procedure_id) { procedure.id }
 
     subject { get :edit, params: {id: procedure_id} }
@@ -115,7 +115,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when procedure is published' do
-        let(:published) { true }
+        let(:published_at) { Time.now }
         it { is_expected.to have_http_status(:success) }
       end
 
@@ -297,7 +297,7 @@ describe Admin::ProceduresController, type: :controller do
         let(:procedure_path) { 'new_path' }
 
         it 'publish the given procedure' do
-          expect(procedure.published).to be_truthy
+          expect(procedure.published?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
           expect(response.status).to eq 200
           expect(flash[:notice]).to have_content 'Procédure publiée'
@@ -308,15 +308,15 @@ describe Admin::ProceduresController, type: :controller do
         let(:procedure_path) { procedure2.path }
 
         it 'publish the given procedure' do
-          expect(procedure.published).to be_truthy
+          expect(procedure.published?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
           expect(response.status).to eq 200
           expect(flash[:notice]).to have_content 'Procédure publiée'
         end
 
         it 'archive previous procedure' do
-          expect(procedure2.published).to be_truthy
-          expect(procedure2.archived).to be_truthy
+          expect(procedure2.published?).to be_truthy
+          expect(procedure2.archived?).to be_truthy
           expect(procedure2.path).to be_nil
         end
       end
@@ -325,14 +325,14 @@ describe Admin::ProceduresController, type: :controller do
         let(:procedure_path) { procedure3.path }
 
         it 'does not publish the given procedure' do
-          expect(procedure.published).to be_falsey
+          expect(procedure.published?).to be_falsey
           expect(procedure.path).to be_nil
           expect(response.status).to eq 200
         end
 
         it 'previous procedure remains published' do
-          expect(procedure2.published).to be_truthy
-          expect(procedure2.archived).to be_falsey
+          expect(procedure2.published?).to be_truthy
+          expect(procedure2.archived?).to be_falsey
           expect(procedure2.path).to match(/fake_path/)
         end
       end
@@ -341,7 +341,7 @@ describe Admin::ProceduresController, type: :controller do
         let(:procedure_path) { 'Invalid Procedure Path' }
 
         it 'does not publish the given procedure' do
-          expect(procedure.published).to be_falsey
+          expect(procedure.published?).to be_falsey
           expect(procedure.path).to be_nil
           expect(response).to redirect_to :admin_procedures
           expect(flash[:alert]).to have_content 'Lien de la procédure invalide'
@@ -377,7 +377,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when owner want archive procedure' do
-        it { expect(procedure.archived).to be_truthy }
+        it { expect(procedure.archived?).to be_truthy }
         it { expect(response).to redirect_to :admin_procedures }
         it { expect(flash[:notice]).to have_content 'Procédure archivée' }
       end
@@ -388,7 +388,7 @@ describe Admin::ProceduresController, type: :controller do
           procedure.reload
         end
 
-        it { expect(procedure.archived).to be_falsey }
+        it { expect(procedure.archived?).to be_falsey }
         it { expect(response.status).to eq 200 }
         it { expect(flash[:notice]).to have_content 'Procédure publiée' }
       end
@@ -479,7 +479,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when procedure is archived' do
       before do
-        procedure3.update_attribute :archived, true
+        procedure3.update_attribute :archived_at, Time.now
         subject
       end
 

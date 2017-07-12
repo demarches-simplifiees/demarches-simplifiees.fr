@@ -34,7 +34,7 @@ describe API::V1::ProceduresController, type: :controller do
         it { expect(subject[:organisation]).to eq(procedure.organisation) }
         it { expect(subject[:direction]).to eq(procedure.direction) }
         it { expect(subject[:link]).to eq(procedure.lien_demarche) }
-        it { expect(subject[:archived]).to eq(procedure.archived) }
+        it { expect(subject[:archived_at]).to eq(procedure.archived_at) }
         it { expect(subject[:total_dossier]).to eq(procedure.total_dossier) }
         it { is_expected.to have_key(:types_de_champ) }
         it { expect(subject[:types_de_champ]).to be_an(Array) }

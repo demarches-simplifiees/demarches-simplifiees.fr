@@ -2,8 +2,8 @@ require 'spec_helper'
 
 feature 'procedure locked' do
   let(:administrateur) { create(:administrateur) }
-  let(:published) { false }
-  let(:procedure) { create(:procedure, administrateur: administrateur, published: published) }
+  let (:published_at) { nil }
+  let(:procedure) { create(:procedure, administrateur: administrateur, published_at: published_at) }
 
   before do
     login_as administrateur, scope: :administrateur

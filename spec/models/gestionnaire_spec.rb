@@ -370,14 +370,14 @@ describe Gestionnaire, type: :model do
     end
 
     context 'when no procedure published was active last week' do
-      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published: true) }
+      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published_at: Time.now) }
       context 'when the gestionnaire has no notifications' do
         it { is_expected.to eq(nil) }
       end
     end
 
     context 'when a procedure published was active' do
-      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published: true) }
+      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published_at: Time.now) }
       let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
 
       before :each do
@@ -388,7 +388,7 @@ describe Gestionnaire, type: :model do
     end
 
     context 'when a procedure not published was active with no notifications' do
-      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published: false) }
+      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published_at: nil) }
       let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
 
       before :each do

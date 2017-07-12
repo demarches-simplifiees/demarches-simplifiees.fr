@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe AutoArchiveProcedureWorker, type: :worker do
-  let!(:procedure) { create(:procedure, archived: false, auto_archive_on: nil )}
-  let!(:procedure_hier) { create(:procedure, archived: false, auto_archive_on: 1.day.ago )}
-  let!(:procedure_aujourdhui) { create(:procedure, archived: false, auto_archive_on: Date.today )}
-  let!(:procedure_demain) { create(:procedure, archived: false, auto_archive_on: 1.day.from_now )}
+  let!(:procedure) { create(:procedure, archived_at: nil, auto_archive_on: nil )}
+  let!(:procedure_hier) { create(:procedure, archived_at: nil, auto_archive_on: 1.day.ago )}
+  let!(:procedure_aujourdhui) { create(:procedure, archived_at: nil, auto_archive_on: Date.today )}
+  let!(:procedure_demain) { create(:procedure, archived_at: nil, auto_archive_on: 1.day.from_now )}
 
   subject { AutoArchiveProcedureWorker.new.perform }
 
@@ -14,7 +14,7 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
       procedure.reload
     end
 
-    it { expect(procedure.archived).to eq false }
+    it { expect(procedure.archived?).to eq false }
   end
 
   context "when procedures have auto_archive_on set on yesterday or today" do
@@ -49,8 +49,8 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
     it { expect(dossier8.state).to eq 'without_continuation' }
     it { expect(dossier9.state).to eq 'received' }
 
-    it { expect(procedure_hier.archived).to eq true }
-    it { expect(procedure_aujourdhui.archived).to eq true }
+    it { expect(procedure_hier.archived?).to eq true }
+    it { expect(procedure_aujourdhui.archived?).to eq true }
   end
 
   context "when procedures have auto_archive_on set on future" do
@@ -58,6 +58,6 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
       subject
     end
 
-    it { expect(procedure_demain.archived).to eq false }
+    it { expect(procedure_demain.archived?).to eq false }
   end
 end

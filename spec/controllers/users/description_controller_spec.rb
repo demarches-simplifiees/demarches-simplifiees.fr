@@ -5,10 +5,10 @@ require 'controllers/users/description_controller_shared_example'
 describe Users::DescriptionController, type: :controller, vcr: {cassette_name: 'controllers_users_description_controller'} do
   let(:owner_user) { create(:user) }
   let(:invite_by_user) { create :user, email: 'invite@plop.com' }
-  let(:archived) { false }
+  let(:archived_at) { nil }
   let(:state) { 'initiated' }
 
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: true, archived: archived) }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: true, archived_at: archived_at) }
   let(:dossier) { create(:dossier, procedure: procedure, user: owner_user, state: state) }
 
   let(:dossier_id) { dossier.id }
