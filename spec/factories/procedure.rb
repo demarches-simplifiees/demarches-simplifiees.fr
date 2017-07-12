@@ -6,7 +6,7 @@ FactoryGirl.define do
     description "Demande de subvention à l'intention des associations"
     organisation "Orga SGMAP"
     direction "direction SGMAP"
-    published false
+    published_at nil
     cerfa_flag false
     administrateur { create(:administrateur) }
 

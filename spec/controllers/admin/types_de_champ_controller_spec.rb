@@ -9,8 +9,8 @@ describe Admin::TypesDeChampController, type: :controller do
   end
 
   describe 'GET #show' do
-    let(:published) { false }
-    let(:procedure) { create(:procedure, administrateur: admin, published: published) }
+    let(:published_at) { nil }
+    let(:procedure) { create(:procedure, administrateur: admin, published_at: published_at) }
     let(:procedure_id) { procedure.id }
 
     subject { get :show, params: {procedure_id: procedure_id} }
@@ -21,7 +21,7 @@ describe Admin::TypesDeChampController, type: :controller do
     end
 
     context 'when procedure is published' do
-      let(:published) { true }
+      let(:published_at) { Time.now }
       it { is_expected.to redirect_to admin_procedure_path id: procedure_id }
     end
 

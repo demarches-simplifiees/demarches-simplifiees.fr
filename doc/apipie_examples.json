@@ -152,7 +152,7 @@
           "description": "Demande de subvention à l'intention des associations",
           "organisation": "Orga SGMAP",
           "direction": "direction SGMAP",
-          "archived": false,
+          "archived_at": null,
           "geographic_information": {
             "use_api_carto": false,
             "quartiers_prioritaires": false,

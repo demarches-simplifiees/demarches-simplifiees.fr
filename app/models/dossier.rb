@@ -285,7 +285,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def can_be_initiated?
-    !(procedure.archived && draft?)
+    !(procedure.archived? && draft?)
   end
 
   def text_summary
