@@ -2,7 +2,7 @@
   .comment-header
     = commentaire.header
   .content
-    = commentaire.body.html_safe
+    = sanitize(commentaire.body)
   - if file = commentaire.piece_justificative
     .file
       = link_to file.content_url, class: 'link', target: '_blank' do

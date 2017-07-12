@@ -52,7 +52,7 @@
                   - elsif champ.decorate.value == 'false'
                     Non
                 - else
-                  = champ.decorate.value.html_safe
+                  = sanitize(champ.decorate.value)
 
     - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
       .mandataire_social.text-success.center
