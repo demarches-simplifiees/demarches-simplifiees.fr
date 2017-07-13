@@ -15,25 +15,25 @@
               .stats-number
                 = dossier_count
               .stats-legend
-                = "dossier".pluralize(dossier_count, :fr)
+                = t('pluralize.case', count: dossier_count)
             %li
               - nouveaux_count = @dossiers_nouveaux_count_per_procedure[p.id] || 0
               .stats-number
                 = nouveaux_count
               .stats-legend
-                = "nouveau".pluralize(nouveaux_count, :fr)
+                = t('pluralize.new', count: nouveaux_count)
             %li
               - followed_count = @followed_dossiers_count_per_procedure[p.id] || 0
               .stats-number
                 = followed_count
               .stats-legend
-                = "suivi".pluralize(followed_count, :fr)
+                = t('pluralize.followed', count: followed_count)
             %li
               - archived_count = @dossiers_archived_count_per_procedure[p.id] || 0
               .stats-number
                 = archived_count
               .stats-legend
-                = "archivé".pluralize(archived_count, :fr)
+                = t('pluralize.archived', count: archived_count)
 
         - if p.archivee?
           .procedure-status
