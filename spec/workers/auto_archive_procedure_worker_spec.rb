@@ -14,7 +14,7 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
       procedure.reload
     end
 
-    it { expect(procedure.archived?).to eq false }
+    it { expect(procedure.archivee?).to eq false }
   end
 
   context "when procedures have auto_archive_on set on yesterday or today" do
@@ -49,8 +49,8 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
     it { expect(dossier8.state).to eq 'without_continuation' }
     it { expect(dossier9.state).to eq 'received' }
 
-    it { expect(procedure_hier.archived?).to eq true }
-    it { expect(procedure_aujourdhui.archived?).to eq true }
+    it { expect(procedure_hier.archivee?).to eq true }
+    it { expect(procedure_aujourdhui.archivee?).to eq true }
   end
 
   context "when procedures have auto_archive_on set on future" do
@@ -58,6 +58,6 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
       subject
     end
 
-    it { expect(procedure_demain.archived?).to eq false }
+    it { expect(procedure_demain.archivee?).to eq false }
   end
 end

@@ -47,7 +47,7 @@ class Users::DossiersController < UsersController
       end
     end
 
-    if procedure.archived?
+    if procedure.archivee?
 
       @dossier = Dossier.new(procedure: procedure)
 

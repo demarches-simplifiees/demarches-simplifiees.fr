@@ -243,6 +243,16 @@ describe Procedure do
     end
   end
 
+  describe "#archivee?" do
+    let(:procedure_brouillon) { Procedure.new() }
+    let(:procedure_publiee) { Procedure.new(published_at: Time.now) }
+    let(:procedure_archivee) { Procedure.new(published_at: Time.now, archived_at: Time.now) }
+
+    it { expect(procedure_brouillon.archivee?).to be_falsey }
+    it { expect(procedure_publiee.archivee?).to be_falsey }
+    it { expect(procedure_archivee.archivee?).to be_truthy }
+  end
+
   describe 'archive' do
     let(:procedure) { create(:procedure, :published) }
     let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
@@ -254,7 +264,7 @@ describe Procedure do
     end
 
     it { expect(procedure.published?).to be_truthy }
-    it { expect(procedure.archived?).to be_truthy }
+    it { expect(procedure.archivee?).to be_truthy }
     it { expect(procedure.archived_at).to eq(now) }
 
     after do

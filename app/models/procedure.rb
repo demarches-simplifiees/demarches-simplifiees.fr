@@ -133,7 +133,7 @@ class Procedure < ActiveRecord::Base
     self.update_attributes!(archived_at: Time.now)
   end
 
-  def archived?
+  def archivee?
     archived_at.present?
   end
 

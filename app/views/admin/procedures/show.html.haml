@@ -18,7 +18,7 @@
 
     = render partial: '/admin/procedures/modal_transfer'
 
-    - if @facade.procedure.archived?
+    - if @facade.procedure.archivee?
       %a#reenable.btn.btn-small.btn-default.text-info{ "data-target" => "#publish-modal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px;' }
         %i.fa.fa-eraser
         Réactiver
@@ -26,7 +26,7 @@
       = render partial: '/admin/procedures/modal_publish'
 
     - elsif @facade.procedure.published?
-      = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style: 'float: right; margin-top: 10px;' do
+      = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archivee?), method: :put, style: 'float: right; margin-top: 10px;' do
         %button#archive.btn.btn-small.btn-default.text-info{ type: :button }
           %i.fa.fa-eraser
           Archiver
@@ -130,7 +130,7 @@
         - else
           = pie_chart @facade.dossiers_for_pie_highchart
 
-    - if @facade.procedure.published? || @facade.procedure.archived?
+    - if @facade.procedure.published? || @facade.procedure.archivee?
       %h3 Supprimer la procédure
       .alert.alert-danger
         %p
