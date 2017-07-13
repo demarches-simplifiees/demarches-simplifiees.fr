@@ -32,7 +32,7 @@ class CommentairesController < ApplicationController
       if pj.errors.empty?
         @commentaire.piece_justificative = pj
       else
-        flash.alert = pj.errors.full_messages.join("<br>").html_safe
+        flash.alert = pj.errors.full_messages
       end
     end
 

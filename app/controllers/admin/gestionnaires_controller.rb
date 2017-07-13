@@ -48,7 +48,7 @@ class Admin::GestionnairesController < AdminController
       flash.notice = 'Accompagnateur ajouté'
       GestionnaireMailer.new_gestionnaire(@gestionnaire.email, @gestionnaire.password).deliver_now!
     else
-      flash.alert = @gestionnaire.errors.full_messages.join('<br />').html_safe
+      flash.alert = @gestionnaire.errors.full_messages
     end
   end
 
