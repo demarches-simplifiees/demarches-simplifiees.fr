@@ -6,14 +6,14 @@
           %button.close{ "aria-label" => "Close", "data-dismiss" => "modal", :type => "button" }
             %span{ "aria-hidden" => "true" } ×
           %h4#myModalLabel.modal-title
-            = @procedure.archived? ? 'Réactiver' : 'Publier'
+            = @procedure.archivee? ? 'Réactiver' : 'Publier'
             la procédure
             %span#publish-modal-title
         .modal-body
           Vous vous apprêtez à
-          = @procedure.archived? ? 'republier' : 'publier'
+          = @procedure.archivee? ? 'republier' : 'publier'
           votre procédure au public.
-          - unless @procedure.archived?
+          - unless @procedure.archivee?
             %b
               Elle ne pourra plus être modifiée à l'issue de cette publication.
           %br
@@ -42,7 +42,7 @@
               #path_is_invalid.text-danger.center.message
                 = t('activerecord.errors.models.procedure_path.attributes.path.format')
         .modal-footer
-          = submit_tag "#{@procedure.archived? ? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
+          = submit_tag "#{@procedure.archivee? ? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
                                   id: 'publish',
                                   disabled: :disabled
           = button_tag 'Annuler', class: %w(btn btn btn-default), id: 'cancel', data: { dismiss: 'modal' }

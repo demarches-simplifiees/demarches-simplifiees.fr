@@ -32,11 +32,11 @@ class Procedure < ActiveRecord::Base
   mount_uploader :logo, ProcedureLogoUploader
 
   default_scope { where(hidden_at: nil) }
-  scope :published, -> { where.not(published_at: nil) }
-  scope :not_published, -> { where(published_at: nil) }
-  scope :archived, -> { where.not(archived_at: nil) }
-  scope :not_archived, -> { where(archived_at: nil) }
-  scope :by_libelle, -> { order(libelle: :asc) }
+  scope :brouillons,          -> { where(published_at: nil).where(archived_at: nil) }
+  scope :publiees,            -> { where.not(published_at: nil).where(archived_at: nil) }
+  scope :archivees,           -> { where.not(archived_at: nil) }
+  scope :publiee_ou_archivee, -> { where.not(published_at: nil) }
+  scope :by_libelle,          -> { order(libelle: :asc) }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
@@ -64,7 +64,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def self.active id
-    not_archived.published.find(id)
+    publiees.find(id)
   end
 
   def switch_types_de_champ index_of_first_element
@@ -94,7 +94,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def locked?
-    published?
+    publiee_ou_archivee?
   end
 
   def clone
@@ -120,23 +120,29 @@ class Procedure < ActiveRecord::Base
     return procedure if procedure.save
   end
 
+  def brouillon?
+    published_at.nil?
+  end
+
   def publish!(path)
     self.update_attributes!({ published_at: Time.now, archived_at: nil })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
   end
 
-  # FIXME: remove once the published colummn has been deleted
-  def published?
-    published_at.present?
+  def publiee?
+    published_at.present? && archived_at.nil?
   end
 
   def archive
     self.update_attributes!(archived_at: Time.now)
   end
 
-  # FIXME: remove once the archived colummn has been deleted
-  def archived?
-    archived_at.present?
+  def archivee?
+    published_at.present? && archived_at.present?
+  end
+
+  def publiee_ou_archivee?
+    publiee? || archivee?
   end
 
   def total_dossier

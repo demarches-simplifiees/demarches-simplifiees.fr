@@ -1,6 +1,6 @@
 .row.white-back
   #procedure_show
-    - unless @facade.procedure.published?
+    - if @facade.procedure.brouillon?
       - if @facade.procedure.gestionnaires.size == 0
         %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.' }
           %i.fa.fa-eraser
@@ -18,15 +18,15 @@
 
     = render partial: '/admin/procedures/modal_transfer'
 
-    - if @facade.procedure.archived?
+    - if @facade.procedure.archivee?
       %a#reenable.btn.btn-small.btn-default.text-info{ "data-target" => "#publish-modal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px;' }
         %i.fa.fa-eraser
         Réactiver
 
       = render partial: '/admin/procedures/modal_publish'
 
-    - elsif @facade.procedure.published?
-      = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archived?), method: :put, style: 'float: right; margin-top: 10px;' do
+    - elsif @facade.procedure.publiee?
+      = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archivee?), method: :put, style: 'float: right; margin-top: 10px;' do
         %button#archive.btn.btn-small.btn-default.text-info{ type: :button }
           %i.fa.fa-eraser
           Archiver
@@ -46,7 +46,7 @@
     %div
       %h3 Lien procédure
       %div{ style: 'margin-left: 3%;' }
-        - if @facade.procedure.published?
+        - if @facade.procedure.publiee_ou_archivee?
           = link_to @facade.procedure.lien, @facade.procedure.lien, target: '_blank'
         - else
           %b
@@ -130,7 +130,7 @@
         - else
           = pie_chart @facade.dossiers_for_pie_highchart
 
-    - if @facade.procedure.published? || @facade.procedure.archived?
+    - if @facade.procedure.publiee_ou_archivee?
       %h3 Supprimer la procédure
       .alert.alert-danger
         %p
