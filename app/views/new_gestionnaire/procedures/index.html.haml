@@ -11,12 +11,6 @@
 
           %ul.procedure-stats.flex
             %li
-              - dossier_count = @dossiers_count_per_procedure[p.id] || 0
-              .stats-number
-                = dossier_count
-              .stats-legend
-                = t('pluralize.case', count: dossier_count)
-            %li
               - nouveaux_count = @dossiers_nouveaux_count_per_procedure[p.id] || 0
               .stats-number
                 = nouveaux_count
@@ -28,6 +22,12 @@
                 = followed_count
               .stats-legend
                 = t('pluralize.followed', count: followed_count)
+            %li
+              - dossier_count = @dossiers_count_per_procedure[p.id] || 0
+              .stats-number
+                = dossier_count
+              .stats-legend
+                = t('pluralize.case', count: dossier_count)
             %li
               - archived_count = @dossiers_archived_count_per_procedure[p.id] || 0
               .stats-number
