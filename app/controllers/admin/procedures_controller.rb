@@ -124,7 +124,7 @@ class Admin::ProceduresController < AdminController
     render js: "window.location = '#{admin_procedures_path}'"
 
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
+    flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path
   end
 
@@ -154,7 +154,7 @@ class Admin::ProceduresController < AdminController
     redirect_to admin_procedures_path
 
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
+    flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path
   end
 
@@ -171,7 +171,7 @@ class Admin::ProceduresController < AdminController
     end
 
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
+    flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path
   end
 

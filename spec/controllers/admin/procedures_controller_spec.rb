@@ -362,7 +362,7 @@ describe Admin::ProceduresController, type: :controller do
 
       it 'fails' do
         expect(response).to redirect_to :admin_procedures
-        expect(flash[:alert]).to have_content 'Procédure inéxistante'
+        expect(flash[:alert]).to have_content 'Procédure inexistante'
       end
     end
   end
@@ -406,7 +406,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       it { expect(response).to redirect_to :admin_procedures }
-      it { expect(flash[:alert]).to have_content 'Procédure inéxistante' }
+      it { expect(flash[:alert]).to have_content 'Procédure inexistante' }
     end
   end
 
@@ -437,7 +437,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       it { expect(response).to redirect_to :admin_procedures }
-      it { expect(flash[:alert]).to have_content 'Procédure inéxistante' }
+      it { expect(flash[:alert]).to have_content 'Procédure inexistante' }
     end
   end
 
