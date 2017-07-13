@@ -133,7 +133,7 @@ class Users::DossiersController < UsersController
 
     if checked_autorisation_donnees?
       unless Dossier.find(@facade.dossier.id).update_attributes update_params_with_formatted_birthdate
-        flash.alert = @facade.dossier.errors.full_messages.join('<br />').html_safe
+        flash.alert = @facade.dossier.errors.full_messages
 
         return redirect_to users_dossier_path(id: @facade.dossier.id)
       end

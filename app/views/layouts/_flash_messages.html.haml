@@ -4,8 +4,8 @@
       - if value.class == Array
         .alert{ class: flash_class(key) }
           - value.each do |message|
-            = message
+            = sanitize(message)
             %br
       - else
         .alert{ class: flash_class(key) }
-          = value
+          = sanitize(value)

@@ -60,4 +60,4 @@
 
           - unless champ.description.empty?
             %div{ id: "description_champs_#{champ.id}", class: ('help-block' unless champ.type_champ == 'engagement') }
-              = champ.description_with_links
+              = sanitize(champ.description_with_links, attributes: %w(href target))

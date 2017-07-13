@@ -60,7 +60,7 @@
         %h4.text-info
           = @facade.procedure.libelle
 
-        = h @facade.procedure.description.html_safe
+        = h sanitize(@facade.procedure.description)
 
       .champs.col-xs-6.col-md-3
         %h4.text-info

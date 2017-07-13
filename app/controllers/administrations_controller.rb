@@ -20,7 +20,7 @@ class AdministrationsController < ApplicationController
       flash.notice = "Administrateur créé"
       NewAdminMailer.new_admin_email(admin).deliver_now!
     else
-      flash.alert = admin.errors.full_messages.join('<br>').html_safe
+      flash.alert = admin.errors.full_messages
     end
 
     redirect_to administrations_path

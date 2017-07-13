@@ -71,7 +71,7 @@ class Admin::ProceduresController < AdminController
     @procedure.module_api_carto = ModuleAPICarto.new(create_module_api_carto_params) if @procedure.valid?
 
     unless @procedure.save
-      flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
+      flash.now.alert = @procedure.errors.full_messages
       return render 'new'
     end
 
@@ -83,7 +83,7 @@ class Admin::ProceduresController < AdminController
     @procedure = current_administrateur.procedures.find(params[:id])
 
     unless @procedure.update_attributes(procedure_params)
-      flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
+      flash.now.alert = @procedure.errors.full_messages
       return render 'edit'
     end
 
@@ -166,7 +166,7 @@ class Admin::ProceduresController < AdminController
       flash.notice = 'Procédure clonée'
       redirect_to edit_admin_procedure_path(id: new_procedure.id)
     else
-      flash.now.alert = procedure.errors.full_messages.join('<br />').html_safe
+      flash.now.alert = procedure.errors.full_messages
       render 'index'
     end
 

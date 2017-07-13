@@ -23,9 +23,10 @@
               dont <span style='font-weight: bold; color: #FF5D60; padding: 2px 0;' >#{procedure_overview.old_dossiers_en_construction.count}</span> depuis plus de 7 jours
               - if procedure_overview.old_dossiers_en_construction.count < 6
                 \:
-                = procedure_overview.old_dossiers_en_construction.map do |old_dossier|
+                - old_dossiers_en_construction = procedure_overview.old_dossiers_en_construction.map do |old_dossier|
                   - link_to "nº #{old_dossier.id}", backoffice_dossier_url(old_dossier), style: 'color: #4393F3;'
-                - end.join(', ').html_safe
+                - end.join(', ')
+                = sanitize(old_dossiers_en_construction, attributes: %w(href style))
 
       - if procedure_overview.dossiers_en_instruction_count > 0
         %tr
@@ -36,9 +37,10 @@
               dont <span style='font-weight: bold; color: #FF5D60; padding: 2px 0;' >#{procedure_overview.old_dossiers_en_instruction.count}</span> depuis plus de 7 jours
               - if procedure_overview.old_dossiers_en_instruction.count < 6
                 \:
-                = procedure_overview.old_dossiers_en_instruction.map do |old_dossier|
+                - old_dossiers_en_instruction = procedure_overview.old_dossiers_en_instruction.map do |old_dossier|
                   - link_to "nº #{old_dossier.id}", backoffice_dossier_url(old_dossier), style: 'color: #4393F3;'
-                - end.join(', ').html_safe
+                - end.join(', ')
+                = sanitize(old_dossiers_en_instruction, attributes: %w(href style))
 
   - if index != (@args[:procedure_overviews].count - 1)
     .spacer{ style: 'border-bottom: 1px solid #CCC; margin: 25px 0 30px;' }

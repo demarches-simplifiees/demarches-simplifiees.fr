@@ -18,7 +18,7 @@ class InvitesController < ApplicationController
 
       flash.notice = "Invitation envoyée (#{invite.email})"
     else
-      flash.alert = invite.errors.full_messages.join('<br />').html_safe
+      flash.alert = invite.errors.full_messages
     end
 
     if gestionnaire_signed_in?

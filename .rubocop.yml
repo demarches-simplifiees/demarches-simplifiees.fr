@@ -570,7 +570,7 @@ Rails/Output:
   Enabled: false
 
 Rails/OutputSafety:
-  Enabled: false
+  Enabled: true
 
 Rails/PluralizationGrammar:
   Enabled: false
