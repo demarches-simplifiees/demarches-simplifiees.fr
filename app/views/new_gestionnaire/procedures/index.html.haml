@@ -4,7 +4,9 @@
   %ul.procedure-list
     - @procedures.each do |p|
       %li.procedure-item.flex.align-start
-        = image_tag p.logo, class: "procedure-logo"
+        - if p.logo.present?
+          = image_tag p.logo, class: "procedure-logo"
+
         .procedure-details
           %p.procedure-title
             = link_to(p.libelle, procedure_path(p))
