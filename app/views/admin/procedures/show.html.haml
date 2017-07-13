@@ -1,6 +1,6 @@
 .row.white-back
   #procedure_show
-    - unless @facade.procedure.published?
+    - if @facade.procedure.brouillon?
       - if @facade.procedure.gestionnaires.size == 0
         %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.' }
           %i.fa.fa-eraser

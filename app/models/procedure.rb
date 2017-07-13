@@ -120,6 +120,10 @@ class Procedure < ActiveRecord::Base
     return procedure if procedure.save
   end
 
+  def brouillon?
+    published_at.nil?
+  end
+
   def publish!(path)
     self.update_attributes!({ published_at: Time.now, archived_at: nil })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
