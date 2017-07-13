@@ -56,7 +56,7 @@ jobs:
             bundle exec rspec --color --require spec_helper -- ${TESTFILES}
       - run:
           name: Run rubocop
-          command: bundle exec rubocop
+          command: bundle exec rubocop -R
       - run:
           name: Run haml-lint
           command: bundle exec haml-lint app/views/

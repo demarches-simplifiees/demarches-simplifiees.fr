@@ -8,7 +8,7 @@ describe Users::DescriptionController, type: :controller, vcr: {cassette_name: '
   let(:archived_at) { nil }
   let(:state) { 'initiated' }
 
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: true, archived_at: archived_at) }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: true, published_at: Time.now, archived_at: archived_at) }
   let(:dossier) { create(:dossier, procedure: procedure, user: owner_user, state: state) }
 
   let(:dossier_id) { dossier.id }

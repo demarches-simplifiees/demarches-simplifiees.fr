@@ -6,7 +6,7 @@ class Admin::ProceduresController < AdminController
 
   def index
     @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.published.not_archived.order(created_at: :desc),
+      current_administrateur.procedures.publiees.order(created_at: :desc),
       partial: "admin/procedures/list",
       array: true
 
@@ -15,7 +15,7 @@ class Admin::ProceduresController < AdminController
 
   def archived
     @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.archived.order(created_at: :desc),
+      current_administrateur.procedures.archivees.order(created_at: :desc),
       partial: "admin/procedures/list",
       array: true
 
@@ -26,7 +26,7 @@ class Admin::ProceduresController < AdminController
 
   def draft
     @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.not_published.not_archived.order(created_at: :desc),
+      current_administrateur.procedures.brouillons.order(created_at: :desc),
       partial: "admin/procedures/list",
       array: true
 
@@ -53,7 +53,7 @@ class Admin::ProceduresController < AdminController
   def destroy
     procedure = Procedure.find(params[:id])
 
-    return render json: {}, status: 401 if procedure.published? || procedure.archived?
+    return render json: {}, status: 401 if procedure.publiee_ou_archivee?
 
     procedure.destroy
 
@@ -71,7 +71,7 @@ class Admin::ProceduresController < AdminController
     @procedure.module_api_carto = ModuleAPICarto.new(create_module_api_carto_params) if @procedure.valid?
 
     unless @procedure.save
-      flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
+      flash.now.alert = @procedure.errors.full_messages
       return render 'new'
     end
 
@@ -83,7 +83,7 @@ class Admin::ProceduresController < AdminController
     @procedure = current_administrateur.procedures.find(params[:id])
 
     unless @procedure.update_attributes(procedure_params)
-      flash.now.alert = @procedure.errors.full_messages.join('<br />').html_safe
+      flash.now.alert = @procedure.errors.full_messages
       return render 'edit'
     end
 
@@ -124,7 +124,7 @@ class Admin::ProceduresController < AdminController
     render js: "window.location = '#{admin_procedures_path}'"
 
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
+    flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path
   end
 
@@ -154,7 +154,7 @@ class Admin::ProceduresController < AdminController
     redirect_to admin_procedures_path
 
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
+    flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path
   end
 
@@ -166,12 +166,12 @@ class Admin::ProceduresController < AdminController
       flash.notice = 'Procédure clonée'
       redirect_to edit_admin_procedure_path(id: new_procedure.id)
     else
-      flash.now.alert = procedure.errors.full_messages.join('<br />').html_safe
+      flash.now.alert = procedure.errors.full_messages
       render 'index'
     end
 
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
+    flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path
   end
 

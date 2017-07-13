@@ -42,5 +42,5 @@
       - elsif !@dossier.draft?
         = render partial: '/layouts/modifications_terminees'
       - else
-        = submit_tag 'Soumettre mon dossier', id: 'suivant', name: 'submit[nouveaux]', class: 'btn btn btn-success', style: 'float: right;', disabled: @procedure.archived?, data: { disable_with: 'Soumettre votre dossier', submit: true }
-        = submit_tag 'Enregistrer un brouillon', id: 'brouillon', name: 'submit[brouillon]', class: 'btn btn-xs btn-default', style: 'float: right; margin-right: 10px; margin-top: 6px;', disabled: @procedure.archived?, data: { disable_with: 'Enregistrer un brouillon', submit: true }
+        = submit_tag 'Soumettre mon dossier', id: 'suivant', name: 'submit[nouveaux]', class: 'btn btn btn-success', style: 'float: right;', disabled: @procedure.archivee?, data: { disable_with: 'Soumettre votre dossier', submit: true }
+        = submit_tag 'Enregistrer un brouillon', id: 'brouillon', name: 'submit[brouillon]', class: 'btn btn-xs btn-default', style: 'float: right; margin-right: 10px; margin-top: 6px;', disabled: @procedure.archivee?, data: { disable_with: 'Enregistrer un brouillon', submit: true }

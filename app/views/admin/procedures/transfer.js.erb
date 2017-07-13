@@ -2,7 +2,7 @@
   transfer_errors_message(true);
 <%- else %>
   $("#main-container").prepend("<div class='row'><div id='flash_message'></div></div>");
-  $("#flash_message").prepend("<div class=\"alert alert-success\"> <%= flash.notice.html_safe %></div>");
+  $("#flash_message").prepend("<div class=\"alert alert-success\"> <%= sanitize(flash.notice) %></div>");
   <% flash.clear %>
 
   transfer_errors_message(false);

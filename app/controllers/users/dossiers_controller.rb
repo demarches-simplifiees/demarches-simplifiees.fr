@@ -47,7 +47,7 @@ class Users::DossiersController < UsersController
       end
     end
 
-    if procedure.archived?
+    if procedure.archivee?
 
       @dossier = Dossier.new(procedure: procedure)
 
@@ -60,7 +60,7 @@ class Users::DossiersController < UsersController
   end
 
   def new
-    procedure = Procedure.not_archived.published.find(params[:procedure_id])
+    procedure = Procedure.publiees.find(params[:procedure_id])
 
     dossier = Dossier.create(procedure: procedure, user: current_user, state: 'draft')
     siret = params[:siret] || current_user.siret
@@ -133,7 +133,7 @@ class Users::DossiersController < UsersController
 
     if checked_autorisation_donnees?
       unless Dossier.find(@facade.dossier.id).update_attributes update_params_with_formatted_birthdate
-        flash.alert = @facade.dossier.errors.full_messages.join('<br />').html_safe
+        flash.alert = @facade.dossier.errors.full_messages
 
         return redirect_to users_dossier_path(id: @facade.dossier.id)
       end

@@ -69,16 +69,16 @@ class Users::DescriptionController < UsersController
       unless params[:cerfa_pdf].nil?
         cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
         unless cerfa.save
-          flash.alert = cerfa.errors.full_messages.join('<br />').html_safe
+          flash.alert = cerfa.errors.full_messages
         end
       end
     end
 
     if !((errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)).empty?)
       if flash.alert.nil?
-        flash.alert = errors_upload.join('<br>').html_safe
+        flash.alert = errors_upload
       else
-        flash.alert = (flash.alert + '<br />' + errors_upload.join('<br>').html_safe).html_safe
+        flash.alert = [flash.alert] + errors_upload
       end
 
     else
@@ -100,7 +100,7 @@ class Users::DescriptionController < UsersController
   private
 
   def redirect_to_description_with_errors(dossier, errors)
-    flash.alert = errors.join('<br>')
+    flash.alert = errors
     redirect_to users_dossier_description_path(dossier_id: dossier.id)
   end
 

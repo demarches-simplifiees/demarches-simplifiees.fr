@@ -11,7 +11,7 @@ class AdminController < ApplicationController
     @procedure = current_administrateur.procedures.find(id)
 
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inéxistante'
+    flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path, status: 404
   end
 

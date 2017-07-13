@@ -18,7 +18,7 @@
               = admin.last_sign_in_at.localtime.strftime('%d/%m/%Y')
               )
           %td
-            = admin.procedures.published.count
+            = admin.procedures.publiees.count
           %td
             - total_dossier = 0
             - admin.procedures.each do |procedure| total_dossier += procedure.dossiers.state_not_brouillon.count end

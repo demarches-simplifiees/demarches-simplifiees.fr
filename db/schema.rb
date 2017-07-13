@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170627144046) do
+ActiveRecord::Schema.define(version: 20170711125726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -373,12 +373,10 @@ ActiveRecord::Schema.define(version: 20170627144046) do
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
     t.integer  "administrateur_id"
-    t.boolean  "archived",              default: false
     t.boolean  "euro_flag",             default: false
     t.string   "logo"
     t.boolean  "cerfa_flag",            default: false
     t.string   "logo_secure_token"
-    t.boolean  "published",             default: false, null: false
     t.string   "lien_site_web"
     t.string   "lien_notice"
     t.boolean  "for_individual",        default: false
