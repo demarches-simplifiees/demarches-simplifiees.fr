@@ -267,10 +267,22 @@ describe Procedure do
     let(:procedure_brouillon) { Procedure.new() }
     let(:procedure_publiee) { Procedure.new(published_at: Time.now) }
     let(:procedure_archivee) { Procedure.new(published_at: Time.now, archived_at: Time.now) }
+    let(:procedure_batarde) { Procedure.new(published_at: nil, archived_at: Time.now) }
 
     it { expect(procedure_brouillon.archivee?).to be_falsey }
     it { expect(procedure_publiee.archivee?).to be_falsey }
     it { expect(procedure_archivee.archivee?).to be_truthy }
+    it { expect(procedure_batarde.archivee?).to be_falsey }
+  end
+
+  describe "#publiee_ou_archivee?" do
+    let(:procedure_brouillon) { Procedure.new() }
+    let(:procedure_publiee) { Procedure.new(published_at: Time.now) }
+    let(:procedure_archivee) { Procedure.new(published_at: Time.now, archived_at: Time.now) }
+
+    it { expect(procedure_brouillon.publiee_ou_archivee?).to be_falsey }
+    it { expect(procedure_publiee.publiee_ou_archivee?).to be_truthy }
+    it { expect(procedure_archivee.publiee_ou_archivee?).to be_truthy }
   end
 
   describe 'archive' do

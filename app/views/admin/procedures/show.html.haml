@@ -46,7 +46,7 @@
     %div
       %h3 Lien procédure
       %div{ style: 'margin-left: 3%;' }
-        - if @facade.procedure.publiee? || @facade.procedure.archivee?
+        - if @facade.procedure.publiee_ou_archivee?
           = link_to @facade.procedure.lien, @facade.procedure.lien, target: '_blank'
         - else
           %b
@@ -130,7 +130,7 @@
         - else
           = pie_chart @facade.dossiers_for_pie_highchart
 
-    - if @facade.procedure.publiee? || @facade.procedure.archivee?
+    - if @facade.procedure.publiee_ou_archivee?
       %h3 Supprimer la procédure
       .alert.alert-danger
         %p

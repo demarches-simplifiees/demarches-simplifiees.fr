@@ -94,7 +94,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def locked?
-    publiee? || archivee?
+    publiee_ou_archivee?
   end
 
   def clone
@@ -138,7 +138,11 @@ class Procedure < ActiveRecord::Base
   end
 
   def archivee?
-    archived_at.present?
+    published_at.present? && archived_at.present?
+  end
+
+  def publiee_ou_archivee?
+    publiee? || archivee?
   end
 
   def total_dossier
