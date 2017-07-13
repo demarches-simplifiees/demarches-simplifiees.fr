@@ -94,7 +94,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def locked?
-    published?
+    publiee? || archivee?
   end
 
   def clone
@@ -127,10 +127,6 @@ class Procedure < ActiveRecord::Base
   def publish!(path)
     self.update_attributes!({ published_at: Time.now, archived_at: nil })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
-  end
-
-  def published?
-    published_at.present?
   end
 
   def publiee?

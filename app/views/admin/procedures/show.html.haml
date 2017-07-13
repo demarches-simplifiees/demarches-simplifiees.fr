@@ -46,7 +46,7 @@
     %div
       %h3 Lien procédure
       %div{ style: 'margin-left: 3%;' }
-        - if @facade.procedure.published?
+        - if @facade.procedure.publiee? || @facade.procedure.archivee?
           = link_to @facade.procedure.lien, @facade.procedure.lien, target: '_blank'
         - else
           %b
