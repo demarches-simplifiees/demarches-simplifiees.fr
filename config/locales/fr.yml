@@ -286,6 +286,10 @@ fr:
         one: 1 seconde
         other: "%{count} secondes"
   pluralize:
+    case:
+      zero: dossier
+      one: dossier
+      other: dossiers
     processed:
       zero: traité
       one: traité
