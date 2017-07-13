@@ -367,7 +367,7 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'PUT #archive' do
-    let(:procedure) { create(:procedure, administrateur: admin) }
+    let(:procedure) { create(:procedure, :published, administrateur: admin) }
 
     context 'when admin is the owner of the procedure' do
       before do
