@@ -4,7 +4,7 @@ class StatsController < ApplicationController
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
   def index
-    procedures = Procedure.published
+    procedures = Procedure.publiee_ou_archivee
     dossiers = Dossier.where.not(:state => :draft)
 
     @procedures_count = procedures.count

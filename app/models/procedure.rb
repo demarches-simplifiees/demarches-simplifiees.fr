@@ -32,7 +32,7 @@ class Procedure < ActiveRecord::Base
   mount_uploader :logo, ProcedureLogoUploader
 
   default_scope { where(hidden_at: nil) }
-  scope :published, -> { where.not(published_at: nil) }
+  scope :publiee_ou_archivee, -> { where.not(published_at: nil) }
   scope :not_published, -> { where(published_at: nil) }
   scope :archived, -> { where.not(archived_at: nil) }
   scope :not_archived, -> { where(archived_at: nil) }

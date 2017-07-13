@@ -80,7 +80,7 @@
         %ul.numbers
           %li.number
             .number-value
-              = number_with_delimiter(Procedure.published.count, :locale => :fr)
+              = number_with_delimiter(Procedure.publiee_ou_archivee.count, :locale => :fr)
             .number-label<
               procédures
               %br<>
