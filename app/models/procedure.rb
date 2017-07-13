@@ -125,7 +125,6 @@ class Procedure < ActiveRecord::Base
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
   end
 
-  # FIXME: remove once the published colummn has been deleted
   def published?
     published_at.present?
   end
@@ -134,7 +133,6 @@ class Procedure < ActiveRecord::Base
     self.update_attributes!(archived_at: Time.now)
   end
 
-  # FIXME: remove once the archived colummn has been deleted
   def archived?
     archived_at.present?
   end
