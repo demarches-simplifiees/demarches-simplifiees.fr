@@ -243,6 +243,16 @@ describe Procedure do
     end
   end
 
+  describe "#publiee?" do
+    let(:procedure_brouillon) { Procedure.new() }
+    let(:procedure_publiee) { Procedure.new(published_at: Time.now) }
+    let(:procedure_archivee) { Procedure.new(published_at: Time.now, archived_at: Time.now) }
+
+    it { expect(procedure_brouillon.publiee?).to be_falsey }
+    it { expect(procedure_publiee.publiee?).to be_truthy }
+    it { expect(procedure_archivee.publiee?).to be_falsey }
+  end
+
   describe "#archivee?" do
     let(:procedure_brouillon) { Procedure.new() }
     let(:procedure_publiee) { Procedure.new(published_at: Time.now) }
@@ -263,7 +273,6 @@ describe Procedure do
       procedure.reload
     end
 
-    it { expect(procedure.published?).to be_truthy }
     it { expect(procedure.archivee?).to be_truthy }
     it { expect(procedure.archived_at).to eq(now) }
 

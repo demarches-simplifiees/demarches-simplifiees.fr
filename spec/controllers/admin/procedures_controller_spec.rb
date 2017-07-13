@@ -297,7 +297,7 @@ describe Admin::ProceduresController, type: :controller do
         let(:procedure_path) { 'new_path' }
 
         it 'publish the given procedure' do
-          expect(procedure.published?).to be_truthy
+          expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
           expect(response.status).to eq 200
           expect(flash[:notice]).to have_content 'Procédure publiée'
@@ -308,14 +308,13 @@ describe Admin::ProceduresController, type: :controller do
         let(:procedure_path) { procedure2.path }
 
         it 'publish the given procedure' do
-          expect(procedure.published?).to be_truthy
+          expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
           expect(response.status).to eq 200
           expect(flash[:notice]).to have_content 'Procédure publiée'
         end
 
         it 'archive previous procedure' do
-          expect(procedure2.published?).to be_truthy
           expect(procedure2.archivee?).to be_truthy
           expect(procedure2.path).to be_nil
         end
@@ -325,13 +324,13 @@ describe Admin::ProceduresController, type: :controller do
         let(:procedure_path) { procedure3.path }
 
         it 'does not publish the given procedure' do
-          expect(procedure.published?).to be_falsey
+          expect(procedure.publiee?).to be_falsey
           expect(procedure.path).to be_nil
           expect(response.status).to eq 200
         end
 
         it 'previous procedure remains published' do
-          expect(procedure2.published?).to be_truthy
+          expect(procedure2.publiee?).to be_truthy
           expect(procedure2.archivee?).to be_falsey
           expect(procedure2.path).to match(/fake_path/)
         end
@@ -341,7 +340,7 @@ describe Admin::ProceduresController, type: :controller do
         let(:procedure_path) { 'Invalid Procedure Path' }
 
         it 'does not publish the given procedure' do
-          expect(procedure.published?).to be_falsey
+          expect(procedure.publiee?).to be_falsey
           expect(procedure.path).to be_nil
           expect(response).to redirect_to :admin_procedures
           expect(flash[:alert]).to have_content 'Lien de la procédure invalide'

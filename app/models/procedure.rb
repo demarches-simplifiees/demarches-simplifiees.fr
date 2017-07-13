@@ -129,6 +129,10 @@ class Procedure < ActiveRecord::Base
     published_at.present?
   end
 
+  def publiee?
+    published_at.present? && archived_at.nil?
+  end
+
   def archive
     self.update_attributes!(archived_at: Time.now)
   end

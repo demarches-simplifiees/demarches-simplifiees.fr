@@ -25,7 +25,7 @@
 
       = render partial: '/admin/procedures/modal_publish'
 
-    - elsif @facade.procedure.published?
+    - elsif @facade.procedure.publiee?
       = form_tag admin_procedure_archive_path(procedure_id: @facade.procedure.id, archive: !@facade.procedure.archivee?), method: :put, style: 'float: right; margin-top: 10px;' do
         %button#archive.btn.btn-small.btn-default.text-info{ type: :button }
           %i.fa.fa-eraser
@@ -130,7 +130,7 @@
         - else
           = pie_chart @facade.dossiers_for_pie_highchart
 
-    - if @facade.procedure.published? || @facade.procedure.archivee?
+    - if @facade.procedure.publiee? || @facade.procedure.archivee?
       %h3 Supprimer la procédure
       .alert.alert-danger
         %p
