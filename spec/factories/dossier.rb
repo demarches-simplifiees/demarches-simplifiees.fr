@@ -65,6 +65,13 @@ FactoryGirl.define do
       end
     end
 
+    trait :followed do
+      after(:create) do |dossier, _evaluator|
+        g = create(:gestionnaire)
+        g.followed_dossiers << dossier
+      end
+    end
+
     trait :replied do
       state 'replied'
     end

@@ -13,17 +13,23 @@
 
           %ul.procedure-stats.flex
             %li
-              - nouveaux_count = @dossiers_nouveaux_count_per_procedure[p.id] || 0
+              - a_suivre_count = @dossiers_a_suivre_count_per_procedure[p.id] || 0
               .stats-number
-                = nouveaux_count
+                = a_suivre_count
               .stats-legend
-                = t('pluralize.new', count: nouveaux_count)
+                à suivre
             %li
               - followed_count = @followed_dossiers_count_per_procedure[p.id] || 0
               .stats-number
                 = followed_count
               .stats-legend
                 = t('pluralize.followed', count: followed_count)
+            %li
+              - termines_count = @dossiers_termines_count_per_procedure[p.id] || 0
+              .stats-number
+                = termines_count
+              .stats-legend
+                = t('pluralize.processed', count: termines_count)
             %li
               - dossier_count = @dossiers_count_per_procedure[p.id] || 0
               .stats-number
