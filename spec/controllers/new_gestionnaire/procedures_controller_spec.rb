@@ -85,9 +85,10 @@ describe NewGestionnaire::ProceduresController, type: :controller do
           before { subject }
 
           it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_nouveaux_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(nil) }
           it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(nil) }
           it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
         end
 
         context "with not draft state on multiple procedures" do
@@ -95,25 +96,29 @@ describe NewGestionnaire::ProceduresController, type: :controller do
           let(:state) { "initiated" }
 
           before do
-            gestionnaire.procedures << procedure2
             create(:dossier, procedure: procedure, state: "replied")
-            create(:dossier, procedure: procedure2, state: "updated")
             create(:dossier, procedure: procedure, state: "received")
-            create(:dossier, procedure: procedure2, state: "closed")
             create(:dossier, procedure: procedure, state: "without_continuation", archived: true)
-            gestionnaire.followed_dossiers << create(:dossier, procedure: procedure2, state: "refused")
+
+            gestionnaire.procedures << procedure2
+            create(:dossier, :followed, procedure: procedure2, state: "updated")
+            create(:dossier, procedure: procedure2, state: "closed")
+            gestionnaire.followed_dossiers << create(:dossier, procedure: procedure2, state: "received")
+
             subject
           end
 
-          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(4) }
-          it { expect(assigns(:dossiers_nouveaux_count_per_procedure)[procedure.id]).to eq(1) }
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(3) }
+          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(3) }
           it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
           it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(1) }
+          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
 
           it { expect(assigns(:dossiers_count_per_procedure)[procedure2.id]).to eq(3) }
-          it { expect(assigns(:dossiers_nouveaux_count_per_procedure)[procedure2.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure2.id]).to eq(nil) }
           it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure2.id]).to eq(1) }
           it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure2.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure2.id]).to eq(1) }
         end
       end
     end

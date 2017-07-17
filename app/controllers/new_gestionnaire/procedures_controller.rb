@@ -8,11 +8,18 @@ module NewGestionnaire
       @procedures = current_gestionnaire.procedures
 
       dossiers = current_gestionnaire.dossiers.state_not_brouillon
-      @dossiers_count_per_procedure = dossiers.group(:procedure_id).count
-      @dossiers_nouveaux_count_per_procedure = dossiers.state_nouveaux.group(:procedure_id).count
+      @dossiers_count_per_procedure = dossiers.all_state.group(:procedure_id).reorder(nil).count
+      @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group(:procedure_id).reorder(nil).count
       @dossiers_archived_count_per_procedure = dossiers.archived.group(:procedure_id).count
+      @dossiers_termines_count_per_procedure = dossiers.termine.group(:procedure_id).reorder(nil).count
 
-      @followed_dossiers_count_per_procedure = current_gestionnaire.followed_dossiers.where(procedure: @procedures).group(:procedure_id).count
+      @followed_dossiers_count_per_procedure = current_gestionnaire
+        .followed_dossiers
+        .en_cours
+        .where(procedure: @procedures)
+        .group(:procedure_id)
+        .reorder(nil)
+        .count
     end
 
     def show
