@@ -38,6 +38,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       end
 
       it { expect(gestionnaire.followed_dossiers).to match([dossier]) }
+      it { expect(flash.notice).to eq('Dossier suivi') }
       it { expect(response).to redirect_to(procedures_url) }
     end
 
@@ -49,6 +50,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       end
 
       it { expect(gestionnaire.followed_dossiers).to match([]) }
+      it { expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}") }
       it { expect(response).to redirect_to(procedures_url) }
     end
 
