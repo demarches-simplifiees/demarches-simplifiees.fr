@@ -239,14 +239,6 @@ describe Backoffice::DossiersController, type: :controller do
       end
     end
 
-    it 'Notification email is send' do
-      expect(NotificationMailer).to receive(:send_notification)
-        .with(dossier, kind_of(Mails::ReceivedMail)).and_return(NotificationMailer)
-      expect(NotificationMailer).to receive(:deliver_now!)
-
-      subject
-    end
-
     it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
 
     it do
