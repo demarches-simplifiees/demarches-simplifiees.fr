@@ -52,7 +52,7 @@
               = value
 
         %td.center
-          - if current_gestionnaire.follow?(dossier.id)
+          - if current_gestionnaire.follow?(dossier)
             = link_to('Quitter', backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-danger', id: "suivre_dossier_#{dossier.id}")
           - else
             = link_to('Suivre', backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-primary', id: "suivre_dossier_#{dossier.id}")
