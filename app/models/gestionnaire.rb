@@ -45,6 +45,12 @@ class Gestionnaire < ActiveRecord::Base
     nil
   end
 
+  def follow(dossier)
+    return if follow?(dossier)
+
+    followed_dossiers << dossier
+  end
+
   def follow?(dossier)
     followed_dossiers.include?(dossier)
   end
