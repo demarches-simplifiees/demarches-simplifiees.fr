@@ -190,7 +190,6 @@ Rails.application.routes.draw do
         post 'unarchive'
       end
       post 'reopen' => 'dossiers#reopen'
-      put 'follow' => 'dossiers#follow'
       resources :commentaires, only: [:index]
       resources :avis, only: [:create, :update]
     end
