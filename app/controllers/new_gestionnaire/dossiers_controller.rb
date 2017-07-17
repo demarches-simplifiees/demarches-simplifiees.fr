@@ -9,7 +9,7 @@ module NewGestionnaire
     end
 
     def follow
-      current_gestionnaire.followed_dossiers << dossier
+      current_gestionnaire.follow(dossier)
       redirect_back(fallback_location: procedures_url)
     end
 
