@@ -36,7 +36,7 @@ class StatsController < ApplicationController
 
   private
 
-  def last_four_months_hash(association, date_attribute = :created_at)
+  def last_four_months_hash(association, date_attribute)
     min_date = 3.months.ago.beginning_of_month.to_date
     if administration_signed_in?
       max_date = Time.now.to_date
@@ -53,7 +53,7 @@ class StatsController < ApplicationController
       .map { |e| [I18n.l(e.first, format: "%B %Y"), e.last] }
   end
 
-  def cumulative_hash(association, date_attribute = :created_at)
+  def cumulative_hash(association, date_attribute)
     sum = 0
     association
       .group("DATE_TRUNC('month', #{date_attribute.to_s})")
