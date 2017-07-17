@@ -248,6 +248,11 @@ describe Backoffice::DossiersController, type: :controller do
     end
 
     it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
+
+    it do
+      subject
+      expect(gestionnaire.follow?(dossier)).to be true
+    end
   end
 
   describe 'POST #process_dossier' do
