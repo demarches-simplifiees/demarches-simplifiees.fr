@@ -224,27 +224,13 @@ describe Backoffice::DossiersController, type: :controller do
     before do
       dossier.initiated!
       sign_in gestionnaire
+      post :receive, params: { dossier_id: dossier_id }
+      dossier.reload
     end
 
-    subject { post :receive, params: {dossier_id: dossier_id} }
-
-    context 'when it post a receive instruction' do
-      before do
-        subject
-        dossier.reload
-      end
-
-      it 'change state to received' do
-        expect(dossier.state).to eq('received')
-      end
-    end
-
-    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
-
-    it do
-      subject
-      expect(gestionnaire.follow?(dossier)).to be true
-    end
+    it { expect(dossier.state).to eq('received') }
+    it { is_expected.to redirect_to backoffice_dossier_path(dossier) }
+    it { expect(gestionnaire.follow?(dossier)).to be true }
   end
 
   describe 'POST #process_dossier' do
