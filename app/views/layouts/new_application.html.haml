@@ -18,25 +18,26 @@
     = stylesheet_link_tag "print", media: "print", "data-turbolinks-track": true
 
   %body
-    = render partial: "layouts/support_navigator_banner"
-    = render partial: "layouts/ie_lt_10"
-    #beta{ class:(Rails.env == "production" ? "" : "beta_staging") }
-      - if Rails.env == "production"
-        Beta
-      - else
-        Env Test
+    .page-wrapper
+      = render partial: "layouts/support_navigator_banner"
+      = render partial: "layouts/ie_lt_10"
+      #beta{ class:(Rails.env == "production" ? "" : "beta_staging") }
+        - if Rails.env == "production"
+          Beta
+        - else
+          Env Test
 
-    = render partial: "layouts/new_header"
-    = render partial: "layouts/flash_messages"
-    = yield
+      = render partial: "layouts/new_header"
+      = render partial: "layouts/flash_messages"
+      = yield
 
-    = render partial: "layouts/new_footer"
-    = render partial: "layouts/google_analytics"
-    = render partial: "layouts/mailjet_newsletter"
-    = render partial: "layouts/crisp"
+      = render partial: "layouts/new_footer"
+      = render partial: "layouts/google_analytics"
+      = render partial: "layouts/mailjet_newsletter"
+      = render partial: "layouts/crisp"
 
-    = javascript_include_tag "new_design/application", "data-turbolinks-eval": false
-    = yield :charts_js
-    - if Rails.env == "test"
-      %script{ type: "text/javascript" }
-        (typeof jQuery !== "undefined") && (jQuery.fx.off = true);
+      = javascript_include_tag "new_design/application", "data-turbolinks-eval": false
+      = yield :charts_js
+      - if Rails.env == "test"
+        %script{ type: "text/javascript" }
+          (typeof jQuery !== "undefined") && (jQuery.fx.off = true);
