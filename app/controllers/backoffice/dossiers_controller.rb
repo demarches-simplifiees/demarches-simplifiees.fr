@@ -98,6 +98,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier = Dossier.find(params[:dossier_id])
 
     dossier.received!
+    current_gestionnaire.follow(dossier)
     flash.notice = 'Dossier considéré comme reçu.'
 
     redirect_to backoffice_dossier_path(id: dossier.id)
