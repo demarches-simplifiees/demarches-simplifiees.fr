@@ -45,10 +45,8 @@ class Gestionnaire < ActiveRecord::Base
     nil
   end
 
-  def follow? dossier_id
-    dossier_id = dossier_id.id if dossier_id.class == Dossier
-
-    Follow.where(gestionnaire_id: id, dossier_id: dossier_id).any?
+  def follow?(dossier)
+    followed_dossiers.include?(dossier)
   end
 
   def assigned_on_procedure?(procedure_id)
