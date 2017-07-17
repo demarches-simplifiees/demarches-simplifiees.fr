@@ -73,6 +73,25 @@ describe Gestionnaire, type: :model do
     end
   end
 
+  describe 'follow' do
+    let(:dossier) { create :dossier }
+    let(:already_followed_dossier) { create :dossier }
+
+    before { gestionnaire.followed_dossiers << already_followed_dossier }
+
+    context 'when a gestionnaire follow a dossier for the first time' do
+      before { gestionnaire.follow(dossier) }
+
+      it { expect(gestionnaire.follow?(dossier)).to be true }
+    end
+
+    context 'when a gestionnaire follows a dossier already followed' do
+      before { gestionnaire.follow(already_followed_dossier) }
+
+      it { expect(gestionnaire.follow?(already_followed_dossier)).to be true }
+    end
+  end
+
   describe '#follow?' do
     let!(:dossier) { create :dossier, procedure: procedure }
 
