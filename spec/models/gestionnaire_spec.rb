@@ -100,7 +100,7 @@ describe Gestionnaire, type: :model do
   describe '#follow?' do
     let!(:dossier) { create :dossier, procedure: procedure }
 
-    subject { gestionnaire.follow? dossier.id }
+    subject { gestionnaire.follow?(dossier) }
 
     context 'when gestionnaire follow a dossier' do
       before do
