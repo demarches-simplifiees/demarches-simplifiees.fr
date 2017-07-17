@@ -53,9 +53,9 @@
 
         %td.center
           - if current_gestionnaire.follow?(dossier)
-            = link_to('Quitter', backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-danger', id: "suivre_dossier_#{dossier.id}")
+            = link_to('Quitter', unfollow_dossier_path(dossier.procedure, dossier), method: :patch, class: 'btn-sm btn-danger', id: "suivre_dossier_#{dossier.id}")
           - else
-            = link_to('Suivre', backoffice_dossier_follow_path(dossier_id: dossier.id), 'data-method' => :put, class: 'btn-sm btn-primary', id: "suivre_dossier_#{dossier.id}")
+            = link_to('Suivre', follow_dossier_path(dossier.procedure, dossier), method: :patch, class: 'btn-sm btn-primary', id: "suivre_dossier_#{dossier.id}")
         %td.center{ style: "color: #{dossier.total_follow == 0 ? 'red' : ''}" }
           = dossier.total_follow
 
