@@ -1,5 +1,10 @@
 .backoffice-header
   .container
+    %ul.breadcrumbs
+      %li
+        = link_to dossier.procedure.libelle, procedure_path(dossier.procedure)
+      %li
+        = "Dossier n° #{dossier.id}"
     %ul.tabs
       %li
         = link_to "Demande", "#", class: ("selected" if current_page?(dossier_path(dossier.procedure, dossier)))
