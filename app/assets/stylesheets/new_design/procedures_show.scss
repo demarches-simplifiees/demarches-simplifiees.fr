@@ -3,72 +3,63 @@
 @import "constants";
 
 #procedure-show {
-  .header {
-    background-color: $light-grey;
-    padding-top: $default-padding;
+  .procedure-logo {
+    margin-right: $default-padding;
+  }
 
-    .container {
-      display: flex;
-    }
+  h1 {
+    color: $black;
+    font-size: 22px;
+    margin-bottom: 2 * $default-padding;
+  }
 
-    .procedure-logo {
-      margin-right: $default-padding;
-    }
+  .dossiers-categories {
+    li {
+      display: inline-block;
+      height: 56px;
+      width: 130px;
+      line-height: 17px;
+      position: relative;
+      text-align: center;
+      font-size: 14px;
 
-    h1 {
-      color: $black;
-      font-size: 22px;
-      margin-bottom: 2 * $default-padding;
-    }
+      a {
+        color: $black;
+      }
 
-    .dossiers-categories {
-      li {
-        display: inline-block;
-        height: 56px;
-        width: 130px;
-        line-height: 17px;
-        position: relative;
-        text-align: center;
-        font-size: 14px;
+      &::before,
+      &:last-child::after {
+        content: "";
+        position: absolute;
+        height: 36px;
+        width: 1px;
+        background-color: $border-grey;
+        margin-right: $default-padding;
+      }
+
+      &::before {
+        left: 0px;
+      }
+
+      &:last-child::after {
+        right: 0px;
+        top: 0px;
+        margin-right: 0px;
+      }
+
+      &.active {
+        border-bottom: 2px solid $blue;
 
         a {
-          color: $black;
+          color: $blue;
         }
+      }
 
-        &::before,
-        &:last-child::after {
-          content: "";
-          position: absolute;
-          height: 36px;
-          width: 1px;
-          background-color: $border-grey;
-          margin-right: $default-padding;
-        }
-
-        &::before {
-          left: 0px;
-        }
-
-        &:last-child::after {
-          right: 0px;
-          top: 0px;
-          margin-right: 0px;
-        }
-
-        &.active {
-          border-bottom: 2px solid $blue;
-
-          a {
-            color: $blue;
-          }
-        }
-
-        .dossiers-count {
-          position: relative;
-          display: block;
-          font-size: 16px;
-          font-weight: bold;
-        }
+      .dossiers-count {
+        position: relative;
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
       }
     }
   }
