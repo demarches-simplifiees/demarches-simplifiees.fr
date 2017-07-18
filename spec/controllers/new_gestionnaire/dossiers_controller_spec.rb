@@ -31,7 +31,6 @@ describe NewGestionnaire::DossiersController, type: :controller do
   context "when gestionnaire is signed in" do
     before { sign_in(gestionnaire) }
 
-
     describe 'follow' do
       before { patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
 
