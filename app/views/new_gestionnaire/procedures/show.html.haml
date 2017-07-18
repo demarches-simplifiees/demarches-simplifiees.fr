@@ -1,6 +1,6 @@
 #procedure-show
-  .header
-    .container
+  .backoffice-header
+    .container.flex
       - if @procedure.logo.present?
         = image_tag @procedure.logo, height: 40, class: 'procedure-logo'
 
