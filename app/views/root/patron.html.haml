@@ -1,8 +1,6 @@
 .patron
   .container
-    %h1 Patron
-
-    %h2 Formulaires
+    %h1 Formulaires
 
     %form.form
       %label Nom
@@ -13,7 +11,7 @@
       %input{ type: "password", value: "12345678" }
       %input.button{ type: "submit", value: "Envoyer" }
 
-    %h2 Boutons
+    %h1 Boutons
 
     %p
       = link_to ".button", "#", class: "button"
@@ -42,7 +40,7 @@
     %p
       = link_to ".button.primary.expand", "#", class: "button primary expand"
 
-    %h2 Onglets
+    %h1 Onglets
 
     %ul.tabs
       %li
@@ -52,11 +50,11 @@
       %li
         = link_to "Onglet 3", "#"
 
-    %h2 Labels
+    %h1 Labels
 
     %span.label .label
 
-    %h2 Cards
+    %h1 Cards
 
     .card
       .card-title
@@ -68,7 +66,7 @@
         Titre de la carte mise en avant
       Et voici le contenu de la carte
 
-    %h2 Table
+    %h1 Table
 
     %table.table
       %tbody
@@ -84,7 +82,7 @@
           %th Header 3
           %td Table Data 3
 
-    %h2 Header
+    %h1 Header
   .backoffice-header
     .container
       Titre
@@ -97,7 +95,7 @@
           = link_to "Onglet 3", "#"
 
   .container
-    %h2 Breadcrumbs
+    %h1 Breadcrumbs
 
     %ul.breadcrumbs
       %li
@@ -106,7 +104,7 @@
         = "Dossier n° 38"
 
 
-    %h2 Layout deux colonnes
+    %h1 Layout deux colonnes
 
   .two-columns
     .columns-container
