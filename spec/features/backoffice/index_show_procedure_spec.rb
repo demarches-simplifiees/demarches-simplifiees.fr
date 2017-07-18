@@ -3,8 +3,8 @@ require 'spec_helper'
 feature 'As an Accompagnateur I can navigate and use each functionnality around procedures and their dossiers' do
   let(:user)           { create(:user) }
   let(:gestionnaire)   { create(:gestionnaire) }
-  let(:procedure_1)    { create(:procedure, :with_type_de_champ, libelle: 'procedure 1') }
-  let(:procedure_2)    { create(:procedure, :with_type_de_champ, libelle: 'procedure 2') }
+  let(:procedure_1)    { create(:procedure, :published, :with_type_de_champ, libelle: 'procedure 1') }
+  let(:procedure_2)    { create(:procedure, :published, :with_type_de_champ, libelle: 'procedure 2') }
 
   before 'Assign procedures to Accompagnateur and generating dossiers for each' do
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure_1

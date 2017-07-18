@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Gestionnaire, type: :model do
   let(:admin) { create :administrateur }
-  let!(:procedure) { create :procedure, administrateur: admin }
-  let!(:procedure_2) { create :procedure, administrateur: admin }
-  let!(:procedure_3) { create :procedure, administrateur: admin }
+  let!(:procedure) { create :procedure, :published, administrateur: admin }
+  let!(:procedure_2) { create :procedure, :published, administrateur: admin }
+  let!(:procedure_3) { create :procedure, :published, administrateur: admin }
   let(:gestionnaire) { create :gestionnaire, procedure_filter: procedure_filter, administrateurs: [admin] }
   let(:procedure_filter) { nil }
   let!(:procedure_assign) { create :assign_to, gestionnaire: gestionnaire, procedure: procedure }

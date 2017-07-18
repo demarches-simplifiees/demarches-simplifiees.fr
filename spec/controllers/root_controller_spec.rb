@@ -20,7 +20,7 @@ describe RootController, type: :controller do
 
     context 'when gestionnaire is affect to a procedure' do
       before do
-        create :assign_to, procedure: (create :procedure), gestionnaire: gestionnaire
+        create :assign_to, procedure: (create :procedure, :published), gestionnaire: gestionnaire
       end
 
       it { expect(subject).to redirect_to(backoffice_dossiers_procedure_path(id: Procedure.all.first.id)) }

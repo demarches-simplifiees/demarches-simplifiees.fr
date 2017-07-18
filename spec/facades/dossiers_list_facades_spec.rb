@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe DossiersListFacades do
   let(:gestionnaire) { create :gestionnaire }
-  let(:procedure) { create :procedure, libelle: 'Ma procédure' }
-  let(:procedure_2) { create :procedure, libelle: 'Ma seconde procédure' }
+  let(:procedure) { create :procedure, :published, libelle: 'Ma procédure' }
+  let(:procedure_2) { create :procedure, :published, libelle: 'Ma seconde procédure' }
 
   let!(:preference) { create :preference_list_dossier,
     gestionnaire: gestionnaire,

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe AccompagnateurService do
-  let(:procedure) { create :procedure }
+  let(:procedure) { create :procedure, :published }
   let(:accompagnateur) { create :gestionnaire }
 
   let(:accompagnateur_service) { AccompagnateurService.new accompagnateur, procedure, to}
