@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170711125726) do
+ActiveRecord::Schema.define(version: 20170713151123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -230,9 +230,10 @@ ActiveRecord::Schema.define(version: 20170711125726) do
   end
 
   create_table "follows", force: :cascade do |t|
-    t.integer "gestionnaire_id"
-    t.integer "dossier_id"
+    t.integer "gestionnaire_id", null: false
+    t.integer "dossier_id",      null: false
     t.index ["dossier_id"], name: "index_follows_on_dossier_id", using: :btree
+    t.index ["gestionnaire_id", "dossier_id"], name: "index_follows_on_gestionnaire_id_and_dossier_id", unique: true, using: :btree
     t.index ["gestionnaire_id"], name: "index_follows_on_gestionnaire_id", using: :btree
   end
 
