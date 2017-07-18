@@ -1,10 +1,11 @@
-.container
-  %ul.tabs
-    %li
-      = link_to "Demande", "#", class: ("selected" if request.path == dossier_path(dossier.procedure, dossier))
-    %li
-      = link_to "Instruction", "#"
-    %li
-      = link_to "Messagerie", "#"
-    %li
-      = link_to "Historique", "#"
+.backoffice-header
+  .container
+    %ul.tabs
+      %li
+        = link_to "Demande", "#", class: ("selected" if current_page?(dossier_path(dossier.procedure, dossier)))
+      %li
+        = link_to "Instruction", "#"
+      %li
+        = link_to "Messagerie", "#"
+      %li
+        = link_to "Historique", "#"
