@@ -488,11 +488,11 @@ describe Dossier do
   context 'when dossier is followed' do
     let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
     let(:gestionnaire) { create(:gestionnaire) }
-    let(:follow) { create(:follow, gestionnaire: gestionnaire) }
     let(:date1) { 1.day.ago }
     let(:date2) { 1.hour.ago }
     let(:date3) { 1.minute.ago }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, follows: [follow], initiated_at: date1, received_at: date2, processed_at: date3, motivation: "Motivation") }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, initiated_at: date1, received_at: date2, processed_at: date3, motivation: "Motivation") }
+    let!(:follow) { create(:follow, gestionnaire: gestionnaire, dossier: dossier) }
 
     describe '#export_headers' do
       subject { dossier.export_headers }
