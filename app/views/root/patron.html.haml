@@ -84,6 +84,19 @@
           %th Header 3
           %td Table Data 3
 
+    %h2 Header
+  .backoffice-header
+    .container
+      Titre
+      %ul.tabs
+        %li
+          = link_to "Onglet 1", "#", class: "selected"
+        %li
+          = link_to "Onglet 2", "#"
+        %li
+          = link_to "Onglet 3", "#"
+
+  .container
     %h2 Layout deux colonnes
 
   .two-columns
