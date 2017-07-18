@@ -7,7 +7,7 @@ module NewGestionnaire
     def index
       @procedures = current_gestionnaire.procedures.order(archived_at: :desc, published_at: :desc)
 
-      dossiers = current_gestionnaire.dossiers.state_not_brouillon
+      dossiers = current_gestionnaire.dossiers
       @dossiers_count_per_procedure = dossiers.all_state.group(:procedure_id).reorder(nil).count
       @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group(:procedure_id).reorder(nil).count
       @dossiers_archived_count_per_procedure = dossiers.archived.group(:procedure_id).count
