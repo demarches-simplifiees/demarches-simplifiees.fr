@@ -4,8 +4,8 @@ describe Backoffice::DossiersController, type: :controller do
   before do
     @request.env['HTTP_REFERER'] = TPS::Application::URL
   end
-  let(:procedure) { create :procedure }
-  let(:procedure2) { create :procedure }
+  let(:procedure) { create :procedure, :published }
+  let(:procedure2) { create :procedure, :published }
 
   let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
   let(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure2, state: :initiated) }
@@ -38,8 +38,8 @@ describe Backoffice::DossiersController, type: :controller do
 
       context 'when gestionnaire is assign to many proceudure' do
         before do
-          create :assign_to, procedure: create(:procedure), gestionnaire: gestionnaire
-          create :assign_to, procedure: create(:procedure), gestionnaire: gestionnaire
+          create :assign_to, procedure: create(:procedure, :published), gestionnaire: gestionnaire
+          create :assign_to, procedure: create(:procedure, :published), gestionnaire: gestionnaire
         end
 
         it { expect(gestionnaire.procedures.count).to eq 3 }
