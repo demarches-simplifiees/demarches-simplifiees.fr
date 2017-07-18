@@ -9,6 +9,10 @@ class ProcedureDecorator < Draper::Decorator
     created_at.localtime.strftime('%d/%m/%Y %H:%M')
   end
 
+  def published_at_fr
+    published_at.localtime.strftime('%d/%m/%Y %H:%M')
+  end
+
   def logo_img
     if logo.blank?
       h.image_url(LOGO_NAME)

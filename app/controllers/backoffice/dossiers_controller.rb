@@ -95,9 +95,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   def receive
-    create_dossier_facade params[:dossier_id]
-
-    dossier = @facade.dossier
+    dossier = Dossier.find(params[:dossier_id])
 
     dossier.received!
     flash.notice = 'Dossier considéré comme reçu.'

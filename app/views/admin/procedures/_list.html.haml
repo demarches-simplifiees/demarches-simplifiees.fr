@@ -5,7 +5,10 @@
       %th#libelle= smart_listing.sortable 'Libellé', 'libelle'
       - if @active_class
         %th Lien
-      %th#created_at= smart_listing.sortable 'Date création', 'created_at'
+      - if @active_class || @archived_class
+        %th#published_at= smart_listing.sortable 'Date publication', 'published_at'
+      - else
+        %th#created_at= smart_listing.sortable 'Date création', 'created_at'
       %th Actions
 
     - @procedures.each do |procedure|
@@ -16,8 +19,12 @@
           = procedure.libelle
         - if @active_class
           %td.procedure-lien= link_to procedure.lien, procedure.lien, 'data-method' => :get
-        %td
-          = procedure.created_at_fr
+        - if @active_class || @archived_class
+          %td
+            = procedure.published_at_fr
+        - else
+          %td
+            = procedure.created_at_fr
         %td
           = link_to('Cloner', admin_procedure_clone_path(procedure.id), 'data-method' => :put, class: 'btn-sm btn-primary clone-btn')
           - unless procedure.publiee_ou_archivee?

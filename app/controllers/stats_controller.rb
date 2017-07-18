@@ -4,14 +4,14 @@ class StatsController < ApplicationController
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
   def index
-    procedures = Procedure.publiee_ou_archivee
+    procedures = Procedure.publiees_ou_archivees
     dossiers = Dossier.where.not(:state => :draft)
 
     @procedures_count = procedures.count
     @dossiers_count = dossiers.count
 
-    @procedures_cumulative = cumulative_hash(procedures)
-    @procedures_in_the_last_4_months = last_four_months_hash(procedures)
+    @procedures_cumulative = cumulative_hash(procedures, :published_at)
+    @procedures_in_the_last_4_months = last_four_months_hash(procedures, :published_at)
 
     @dossiers_cumulative = cumulative_hash(dossiers, :initiated_at)
     @dossiers_in_the_last_4_months = last_four_months_hash(dossiers, :initiated_at)
@@ -36,7 +36,7 @@ class StatsController < ApplicationController
 
   private
 
-  def last_four_months_hash(association, date_attribute = :created_at)
+  def last_four_months_hash(association, date_attribute)
     min_date = 3.months.ago.beginning_of_month.to_date
     if administration_signed_in?
       max_date = Time.now.to_date
@@ -53,7 +53,7 @@ class StatsController < ApplicationController
       .map { |e| [I18n.l(e.first, format: "%B %Y"), e.last] }
   end
 
-  def cumulative_hash(association, date_attribute = :created_at)
+  def cumulative_hash(association, date_attribute)
     sum = 0
     association
       .group("DATE_TRUNC('month', #{date_attribute.to_s})")
