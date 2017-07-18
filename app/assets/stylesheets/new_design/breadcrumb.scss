@@ -1,0 +1,28 @@
+@import "colors";
+@import "constants";
+
+.breadcrumbs {
+  margin: $default-spacer 0;
+
+  li {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 14px;
+
+    a {
+      color: $black;
+    }
+
+    &::after {
+      content: " > ";
+    }
+
+    &:last-child {
+      color: $blue;
+
+      &::after {
+        content: none;
+      }
+    }
+  }
+}
