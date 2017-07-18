@@ -3,7 +3,7 @@ require 'spec_helper'
 feature 'usage of pref list dossier lateral panel', js: true do
   let(:administrateur) { create(:administrateur) }
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
-  let(:procedure) { create(:procedure, administrateur: administrateur) }
+  let(:procedure) { create(:procedure, :published, administrateur: administrateur) }
 
   before do
     create(:dossier, :with_entreprise, procedure: procedure, state: 'updated')

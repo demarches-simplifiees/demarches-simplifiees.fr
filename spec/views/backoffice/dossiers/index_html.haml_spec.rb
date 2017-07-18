@@ -4,7 +4,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   let(:administrateur) { create(:administrateur) }
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
 
-  let!(:procedure) { create(:procedure, administrateur: administrateur) }
+  let!(:procedure) { create(:procedure, :published, administrateur: administrateur) }
 
   let!(:decorate_dossier_initiated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated').decorate }
   let!(:decorate_dossier_replied) { create(:dossier, :with_entreprise, procedure: procedure, state: 'replied').decorate }

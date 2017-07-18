@@ -19,8 +19,8 @@ describe Search do
       create :assign_to, gestionnaire: gestionnaire_2, procedure: procedure_2
     end
 
-    let(:procedure_1) { create(:procedure, administrateur: administrateur_1) }
-    let(:procedure_2) { create(:procedure, administrateur: administrateur_2) }
+    let(:procedure_1) { create(:procedure, :published, administrateur: administrateur_1) }
+    let(:procedure_2) { create(:procedure, :published, administrateur: administrateur_2) }
 
     let!(:dossier_0) { create(:dossier, state: 'draft', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
     let!(:dossier_1) { create(:dossier, state: 'initiated', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
