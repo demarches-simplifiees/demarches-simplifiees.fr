@@ -68,7 +68,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
           subject
         end
 
-        it { expect(assigns(:procedures)).to include(procedure1, procedure2, procedure3) }
+        it { expect(assigns(:procedures)).to include(procedure1, procedure2) }
       end
 
       context "with dossiers" do
