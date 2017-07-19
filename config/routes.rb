@@ -247,6 +247,7 @@ Rails.application.routes.draw do
             patch 'unfollow'
             patch 'archive'
             patch 'unarchive'
+            post 'commentaire' => 'dossiers#create_commentaire'
           end
         end
       end

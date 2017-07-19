@@ -36,10 +36,19 @@ module NewGestionnaire
       redirect_back(fallback_location: procedures_url)
     end
 
+    def create_commentaire
+      Commentaire.create(commentaire_params.merge(email: current_gestionnaire.email, dossier: dossier))
+      redirect_to messagerie_dossier_path(dossier.procedure, dossier)
+    end
+
     private
 
     def dossier
       current_gestionnaire.dossiers.find(params[:dossier_id])
+    end
+
+    def commentaire_params
+      params.require(:commentaire).permit(:body)
     end
   end
 end
