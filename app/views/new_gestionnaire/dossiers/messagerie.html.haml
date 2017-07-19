@@ -1,0 +1,11 @@
+= render partial: "header", locals: { dossier: @dossier }
+
+#dossier-messagerie.container
+  %ul
+    - @dossier.commentaires.each do |commentaire|
+      %li
+        %h2
+          %span.mail
+            = render partial: 'commentaire_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
+          %span.date= I18n.l(commentaire.created_at.localtime, format: '%d/%m/%y')
+        %p= sanitize(commentaire.body)
