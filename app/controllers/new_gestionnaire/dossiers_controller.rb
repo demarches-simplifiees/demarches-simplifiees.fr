@@ -12,6 +12,10 @@ module NewGestionnaire
       @dossier = dossier
     end
 
+    def instruction
+      @dossier = dossier
+    end
+
     def follow
       current_gestionnaire.follow(dossier)
       dossier.next_step!('gestionnaire', 'follow')
