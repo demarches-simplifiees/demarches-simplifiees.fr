@@ -3,40 +3,6 @@ require 'spec_helper'
 describe Dossier do
   let(:user) { create(:user) }
 
-  describe 'database columns' do
-    it { is_expected.to have_db_column(:autorisation_donnees) }
-    it { is_expected.to have_db_column(:created_at) }
-    it { is_expected.to have_db_column(:updated_at) }
-    it { is_expected.to have_db_column(:state) }
-    it { is_expected.to have_db_column(:procedure_id) }
-    it { is_expected.to have_db_column(:user_id) }
-  end
-
-  describe 'associations' do
-    it { is_expected.to belong_to(:procedure) }
-    it { is_expected.to have_many(:pieces_justificatives) }
-    it { is_expected.to have_many(:champs) }
-    it { is_expected.to have_many(:commentaires) }
-    it { is_expected.to have_many(:quartier_prioritaires) }
-    it { is_expected.to have_many(:cadastres) }
-    it { is_expected.to have_many(:cerfa) }
-    it { is_expected.to have_one(:etablissement) }
-    it { is_expected.to have_one(:entreprise) }
-    it { is_expected.to have_one(:individual) }
-    it { is_expected.to belong_to(:user) }
-    it { is_expected.to have_many(:invites) }
-    it { is_expected.to have_many(:follows) }
-    it { is_expected.to have_many(:notifications) }
-  end
-
-  describe 'delegation' do
-    it { is_expected.to delegate_method(:siren).to(:entreprise) }
-    it { is_expected.to delegate_method(:siret).to(:etablissement) }
-    it { is_expected.to delegate_method(:types_de_piece_justificative).to(:procedure) }
-    it { is_expected.to delegate_method(:types_de_champ).to(:procedure) }
-    it { is_expected.to delegate_method(:france_connect_information).to(:user) }
-  end
-
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
 

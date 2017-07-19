@@ -13,30 +13,6 @@ describe Gestionnaire, type: :model do
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure_2
   end
 
-  describe 'database column' do
-    it { is_expected.to have_db_column(:email) }
-    it { is_expected.to have_db_column(:encrypted_password) }
-    it { is_expected.to have_db_column(:reset_password_token) }
-    it { is_expected.to have_db_column(:reset_password_sent_at) }
-    it { is_expected.to have_db_column(:remember_created_at) }
-    it { is_expected.to have_db_column(:sign_in_count) }
-    it { is_expected.to have_db_column(:current_sign_in_at) }
-    it { is_expected.to have_db_column(:last_sign_in_at) }
-    it { is_expected.to have_db_column(:current_sign_in_ip) }
-    it { is_expected.to have_db_column(:last_sign_in_ip) }
-    it { is_expected.to have_db_column(:created_at) }
-    it { is_expected.to have_db_column(:updated_at) }
-  end
-
-  describe 'association' do
-    it { is_expected.to have_one(:preference_smart_listing_page) }
-    it { is_expected.to have_and_belong_to_many(:administrateurs) }
-    it { is_expected.to have_many(:procedures) }
-    it { is_expected.to have_many(:dossiers) }
-    it { is_expected.to have_many(:follows) }
-    it { is_expected.to have_many(:preference_list_dossiers) }
-  end
-
   describe '#toggle_follow_dossier' do
     let!(:dossier) { create :dossier, procedure: procedure }
 
