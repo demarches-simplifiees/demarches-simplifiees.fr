@@ -319,7 +319,7 @@ describe Gestionnaire, type: :model do
         expect_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
       end
 
-      it { expect(gestionnaire.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
+      it { expect(gestionnaire2.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
     end
 
     context 'when a procedure not published was active with no notifications' do
