@@ -14,3 +14,7 @@
               %span.guest Invité
             %span.date= I18n.l(commentaire.created_at.localtime, format: '%d/%m/%y')
           %p= sanitize(commentaire.body)
+
+  = form_for(Commentaire.new, url: commentaire_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' }) do |f|
+    = f.text_area :body, class: 'new-commentaire', rows: 5, placeholder: 'Répondre ici', required: true
+    = f.submit 'Envoyer', class: 'button send'
