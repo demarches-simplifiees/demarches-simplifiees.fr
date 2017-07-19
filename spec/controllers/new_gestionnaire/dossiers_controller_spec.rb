@@ -101,4 +101,23 @@ describe NewGestionnaire::DossiersController, type: :controller do
       end
     end
   end
+
+  describe "commentaire" do
+    let(:saved_commentaire) { dossier.commentaires.first }
+
+    before do
+      sign_in(gestionnaire)
+
+      post :create_commentaire, params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id,
+        commentaire: { body: 'body' }
+      }
+    end
+
+    it { expect(saved_commentaire.body).to eq('body') }
+    it { expect(saved_commentaire.email).to eq(gestionnaire.email) }
+    it { expect(saved_commentaire.dossier).to eq(dossier) }
+    it { expect(response).to redirect_to(messagerie_dossier_path(dossier.procedure, dossier)) }
+  end
 end
