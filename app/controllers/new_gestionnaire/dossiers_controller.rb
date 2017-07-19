@@ -8,6 +8,10 @@ module NewGestionnaire
       @dossier = dossier
     end
 
+    def messagerie
+      @dossier = dossier
+    end
+
     def follow
       current_gestionnaire.follow(dossier)
       dossier.next_step!('gestionnaire', 'follow')
