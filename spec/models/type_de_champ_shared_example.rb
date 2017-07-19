@@ -1,16 +1,4 @@
 shared_examples 'type_de_champ_spec' do
-  describe 'database columns' do
-    it { is_expected.to have_db_column(:libelle) }
-    it { is_expected.to have_db_column(:type_champ) }
-    it { is_expected.to have_db_column(:order_place) }
-    it { is_expected.to have_db_column(:description) }
-  end
-
-  describe 'associations' do
-    it { is_expected.to belong_to(:procedure) }
-    it { is_expected.to have_many(:champ) }
-  end
-
   describe 'validation' do
     context 'libelle' do
       it { is_expected.not_to allow_value(nil).for(:libelle) }

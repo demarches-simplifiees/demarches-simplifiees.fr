@@ -1,20 +1,6 @@
 require 'spec_helper'
 
 describe FranceConnectInformation, type: :model do
-  describe 'database columns' do
-    it { is_expected.to have_db_column(:given_name) }
-    it { is_expected.to have_db_column(:family_name) }
-    it { is_expected.to have_db_column(:email_france_connect) }
-    it { is_expected.to have_db_column(:birthdate) }
-    it { is_expected.to have_db_column(:gender) }
-    it { is_expected.to have_db_column(:birthplace) }
-    it { is_expected.to have_db_column(:france_connect_particulier_id) }
-  end
-
-  describe 'associations' do
-    it { is_expected.to belong_to(:user) }
-  end
-
   describe 'validation' do
     context 'france_connect_particulier_id' do
       it { is_expected.not_to allow_value(nil).for(:france_connect_particulier_id) }
