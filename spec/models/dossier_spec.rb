@@ -463,7 +463,7 @@ describe Dossier do
     describe '#export_headers' do
       subject { dossier.export_headers }
 
-      it { expect(subject).to include(:description) }
+      it { expect(subject).to include(dossier.champs.first.libelle.parameterize.underscore.to_sym) }
       it { expect(subject).to include(:individual_gender) }
       it { expect(subject).to include(:individual_nom) }
       it { expect(subject).to include(:individual_prenom) }
