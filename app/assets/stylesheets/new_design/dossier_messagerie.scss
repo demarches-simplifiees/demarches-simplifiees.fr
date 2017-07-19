@@ -1,0 +1,23 @@
+@import "colors";
+@import "common";
+@import "constants";
+
+#dossier-messagerie {
+  li {
+    margin-bottom: 2 * $default-padding;
+  }
+
+  h2 {
+    margin-bottom: $default-spacer;
+  }
+
+  .mail {
+    font-weight: bold;
+  }
+
+  .date {
+    font-size: 12px;
+    color: $grey;
+    float: right;
+  }
+}

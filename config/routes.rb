@@ -242,6 +242,7 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:show], param: :dossier_id do
           member do
             get 'attestation'
+            get 'messagerie'
             patch 'follow'
             patch 'unfollow'
             patch 'archive'
