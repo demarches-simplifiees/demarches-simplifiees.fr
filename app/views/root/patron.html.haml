@@ -1,8 +1,6 @@
 .patron
   .container
-    %h1 Patron
-
-    %h2 Formulaires
+    %h1 Formulaires
 
     %form.form
       %label Nom
@@ -13,7 +11,7 @@
       %input{ type: "password", value: "12345678" }
       %input.button{ type: "submit", value: "Envoyer" }
 
-    %h2 Boutons
+    %h1 Boutons
 
     %p
       = link_to ".button", "#", class: "button"
@@ -42,7 +40,7 @@
     %p
       = link_to ".button.primary.expand", "#", class: "button primary expand"
 
-    %h2 Onglets
+    %h1 Onglets
 
     %ul.tabs
       %li
@@ -52,11 +50,61 @@
       %li
         = link_to "Onglet 3", "#"
 
-    %h2 Labels
+    %h1 Labels
 
     %span.label .label
 
-    %h2 Layout deux colonnes
+    %h1 Cards
+
+    .card
+      .card-title
+        Titre de la carte
+      Et voici le contenu de la carte
+
+    .card.featured
+      .card-title
+        Titre de la carte mise en avant
+      Et voici le contenu de la carte
+
+    %h1 Table
+
+    %table.table
+      %tbody
+        %tr
+          %th Header 1
+          %td Table Data 1
+        %tr
+          %th Header 2
+          %td Table Data 2
+        %tr
+          %th.header-section{ colspan: 2 } Header section
+        %tr
+          %th Header 3
+          %td Table Data 3
+
+    %h1 Header
+  .backoffice-header
+    .container
+      Titre
+      %ul.tabs
+        %li
+          = link_to "Onglet 1", "#", class: "selected"
+        %li
+          = link_to "Onglet 2", "#"
+        %li
+          = link_to "Onglet 3", "#"
+
+  .container
+    %h1 Breadcrumbs
+
+    %ul.breadcrumbs
+      %li
+        = link_to "Procédure 123", "#"
+      %li
+        = "Dossier n° 38"
+
+
+    %h1 Layout deux colonnes
 
   .two-columns
     .columns-container

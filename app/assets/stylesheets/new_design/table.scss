@@ -1,0 +1,28 @@
+@import "colors";
+@import "constants";
+@import "mixins";
+
+.table {
+  width: 100%;
+  font-size: 14px;
+  line-height: 22px;
+
+  th,
+  td {
+    @include vertical-padding($default-spacer)
+  }
+
+  th {
+    text-align: left;
+
+    &.header-section {
+      color: $blue;
+      font-weight: bold;
+      font-size: 20px;
+    }
+  }
+
+  td {
+    font-weight: bold;
+  }
+}

@@ -1,3 +1,4 @@
+@import "colors";
 @import "constants";
 
 .backoffice-title {
@@ -5,4 +6,15 @@
   font-weight: normal;
   margin-top: 3 * $default-spacer;
   margin-bottom: 3 * $default-spacer;
+}
+
+.backoffice-header {
+  background-color: $light-grey;
+  padding-top: $default-padding;
+  margin-bottom: 2 * $default-spacer;
+  border-bottom: 1px solid $border-grey;
+
+  .container {
+    margin-bottom: -1px;
+  }
 }
