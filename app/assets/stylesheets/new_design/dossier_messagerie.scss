@@ -15,9 +15,13 @@
     font-weight: bold;
   }
 
+  .guest,
   .date {
     font-size: 12px;
     color: $grey;
+  }
+
+  .date {
     float: right;
   }
 }
