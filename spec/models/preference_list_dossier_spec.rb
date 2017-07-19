@@ -306,7 +306,7 @@ describe PreferenceListDossier do
         describe 'first champs' do
           subject { super()["type_de_champ_#{procedure.types_de_champ.first.id}"] }
 
-          it { expect(subject[:libelle]).to eq 'Description' }
+          it { expect(subject[:libelle]).to eq procedure.types_de_champ.first.libelle }
           it { expect(subject[:table]).to eq 'champs' }
           it { expect(subject[:attr]).to eq procedure.types_de_champ.first.id }
           it { expect(subject[:attr_decorate]).to eq 'value' }
@@ -324,7 +324,7 @@ describe PreferenceListDossier do
         describe 'first champs' do
           subject { super()["type_de_champ_private_#{procedure.types_de_champ_private.first.id}"] }
 
-          it { expect(subject[:libelle]).to eq 'Description' }
+          it { expect(subject[:libelle]).to eq procedure.types_de_champ_private.first.libelle }
           it { expect(subject[:table]).to eq 'champs_private' }
           it { expect(subject[:attr]).to eq procedure.types_de_champ_private.first.id }
           it { expect(subject[:attr_decorate]).to eq 'value' }
