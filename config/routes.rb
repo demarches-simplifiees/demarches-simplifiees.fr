@@ -243,6 +243,7 @@ Rails.application.routes.draw do
           member do
             get 'attestation'
             get 'messagerie'
+            get 'instruction'
             patch 'follow'
             patch 'unfollow'
             patch 'archive'

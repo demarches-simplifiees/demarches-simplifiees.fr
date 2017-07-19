@@ -1,0 +1,17 @@
+@import "colors";
+@import "common";
+@import "constants";
+
+#dossier-instruction {
+  h1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: $default-padding;
+  }
+
+  .avis-notice {
+    font-size: 12px;
+    color: $grey;
+    margin-bottom: 2 * $default-padding;
+  }
+}
