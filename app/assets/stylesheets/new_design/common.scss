@@ -4,7 +4,9 @@
 @import "placeholders";
 @import "typography";
 
-body {
+body,
+input,
+textarea {
   @extend %new-type;
   font-size: 16px;
   line-height: 1.42857143;
