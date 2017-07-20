@@ -12,7 +12,7 @@ class Admin::AccompagnateursController < AdminController
       array: true
 
     not_assign_scope = current_administrateur.gestionnaires.where.not(id: assign_scope.ids)
-    not_assign_scope = not_assign_scope.where("email LIKE '%#{params[:filter]}%'") if params[:filter]
+    not_assign_scope = not_assign_scope.where("email LIKE ?", "%#{params[:filter]}%") if params[:filter]
 
     @accompagnateurs_not_assign = smart_listing_create :accompagnateurs_not_assign,
       not_assign_scope,
