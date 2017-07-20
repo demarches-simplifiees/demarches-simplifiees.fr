@@ -38,7 +38,7 @@ class DossierFacades
   end
 
   def commentaires
-    @dossier.ordered_commentaires.where(champ_id: @champ_id).decorate
+    @dossier.commentaires.where(champ_id: @champ_id).decorate
   end
 
   def procedure

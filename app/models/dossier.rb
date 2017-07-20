@@ -128,10 +128,6 @@ class Dossier < ActiveRecord::Base
     champs.joins(', types_de_piece_justificative').where("pieces_justificatives.type_de_piece_justificative_id = types_de_piece_justificative.id AND types_de_piece_justificative.procedure_id = #{procedure.id}").order('order_place ASC')
   end
 
-  def ordered_commentaires
-    commentaires.order(created_at: :desc)
-  end
-
   def next_step! role, action, motivation = nil
     unless %w(initiate follow update comment receive refuse without_continuation close).include?(action)
       fail 'action is not valid'
