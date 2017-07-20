@@ -2,7 +2,7 @@
 
 #dossier-messagerie.container
   %ul
-    - @dossier.commentaires.each do |commentaire|
+    - @dossier.commentaires.ordered.each do |commentaire|
       %li
         = render partial: 'commentaire_icon', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
 
