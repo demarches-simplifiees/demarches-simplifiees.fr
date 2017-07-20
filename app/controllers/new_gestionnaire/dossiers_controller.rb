@@ -9,12 +9,16 @@ module NewGestionnaire
     end
 
     def follow
-      current_gestionnaire.followed_dossiers << dossier
+      current_gestionnaire.follow(dossier)
+      dossier.next_step!('gestionnaire', 'follow')
+      flash.notice = 'Dossier suivi'
       redirect_back(fallback_location: procedures_url)
     end
 
     def unfollow
       current_gestionnaire.followed_dossiers.delete(dossier)
+      flash.notice = "Vous ne suivez plus le dossier nº #{dossier.id}"
+
       redirect_back(fallback_location: procedures_url)
     end
 

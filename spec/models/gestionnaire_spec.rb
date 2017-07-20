@@ -37,70 +37,29 @@ describe Gestionnaire, type: :model do
     it { is_expected.to have_many(:preference_list_dossiers) }
   end
 
-  describe '#toggle_follow_dossier' do
-    let!(:dossier) { create :dossier, procedure: procedure }
+  describe 'follow' do
+    let(:dossier) { create :dossier }
+    let(:already_followed_dossier) { create :dossier }
 
-    subject { gestionnaire.toggle_follow_dossier dossier_id }
+    before { gestionnaire.followed_dossiers << already_followed_dossier }
 
-    context 'when dossier id not valid' do
-      let(:dossier_id) { 0 }
+    context 'when a gestionnaire follow a dossier for the first time' do
+      before { gestionnaire.follow(dossier) }
 
-      it { expect(subject).to eq nil }
+      it { expect(gestionnaire.follow?(dossier)).to be true }
     end
 
-    context 'when dossier id is valid' do
-      let(:dossier_id) { dossier.id }
+    context 'when a gestionnaire follows a dossier already followed' do
+      before { gestionnaire.follow(already_followed_dossier) }
 
-      context 'when dossier is not follow by gestionnaire' do
-        it 'value change in database' do
-          expect { subject }.to change(Follow, :count).by(1)
-        end
-
-        it { expect(subject).to be_an_instance_of Follow }
-      end
-
-      context 'when dossier is follow by gestionnaire' do
-        before do
-          create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
-        end
-
-        it 'value change in database' do
-          expect { subject }.to change(Follow, :count).by(-1)
-        end
-
-        it { expect(subject).to eq 1 }
-      end
-    end
-
-    context 'when dossier instance is past' do
-      let(:dossier_id) { dossier }
-
-      context 'when dossier is not follow by gestionnaire' do
-        it 'value change in database' do
-          expect { subject }.to change(Follow, :count).by(1)
-        end
-
-        it { expect(subject).to be_an_instance_of Follow }
-      end
-
-      context 'when dossier is follow by gestionnaire' do
-        before do
-          create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
-        end
-
-        it 'value change in database' do
-          expect { subject }.to change(Follow, :count).by(-1)
-        end
-
-        it { expect(subject).to eq 1 }
-      end
+      it { expect(gestionnaire.follow?(already_followed_dossier)).to be true }
     end
   end
 
   describe '#follow?' do
     let!(:dossier) { create :dossier, procedure: procedure }
 
-    subject { gestionnaire.follow? dossier.id }
+    subject { gestionnaire.follow?(dossier) }
 
     context 'when gestionnaire follow a dossier' do
       before do

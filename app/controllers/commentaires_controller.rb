@@ -44,9 +44,7 @@ class CommentairesController < ApplicationController
     end
 
     if is_gestionnaire?
-      unless current_gestionnaire.follow? @commentaire.dossier
-        current_gestionnaire.toggle_follow_dossier @commentaire.dossier
-      end
+      current_gestionnaire.follow(@commentaire.dossier)
 
       redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
     else

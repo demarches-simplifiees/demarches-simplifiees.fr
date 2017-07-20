@@ -32,9 +32,13 @@ describe NewGestionnaire::DossiersController, type: :controller do
     before { sign_in(gestionnaire) }
 
     describe 'follow' do
-      before { patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+      before do
+        expect_any_instance_of(Dossier).to receive(:next_step!).with('gestionnaire', 'follow')
+        patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      end
 
       it { expect(gestionnaire.followed_dossiers).to match([dossier]) }
+      it { expect(flash.notice).to eq('Dossier suivi') }
       it { expect(response).to redirect_to(procedures_url) }
     end
 
@@ -46,6 +50,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       end
 
       it { expect(gestionnaire.followed_dossiers).to match([]) }
+      it { expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}") }
       it { expect(response).to redirect_to(procedures_url) }
     end
 

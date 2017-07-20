@@ -34,21 +34,14 @@ class Gestionnaire < ActiveRecord::Base
       dossiers.where(id: dossier_id).any?
   end
 
-  def toggle_follow_dossier dossier_id
-    dossier = dossier_id
-    dossier = Dossier.find(dossier_id) unless dossier_id.class == Dossier
+  def follow(dossier)
+    return if follow?(dossier)
 
-    Follow.create!(dossier: dossier, gestionnaire: self)
-  rescue ActiveRecord::RecordInvalid
-    Follow.where(dossier: dossier, gestionnaire: self).delete_all
-  rescue ActiveRecord::RecordNotFound
-    nil
+    followed_dossiers << dossier
   end
 
-  def follow? dossier_id
-    dossier_id = dossier_id.id if dossier_id.class == Dossier
-
-    Follow.where(gestionnaire_id: id, dossier_id: dossier_id).any?
+  def follow?(dossier)
+    followed_dossiers.include?(dossier)
   end
 
   def assigned_on_procedure?(procedure_id)

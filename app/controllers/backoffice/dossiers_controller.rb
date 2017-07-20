@@ -98,6 +98,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier = Dossier.find(params[:dossier_id])
 
     dossier.received!
+    current_gestionnaire.follow(dossier)
     flash.notice = 'Dossier considéré comme reçu.'
 
     redirect_to backoffice_dossier_path(id: dossier.id)
@@ -143,15 +144,6 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
 
     redirect_to backoffice_dossier_path(id: dossier.id)
-  end
-
-  def follow
-    follow = current_gestionnaire.toggle_follow_dossier params[:dossier_id]
-
-    current_gestionnaire.dossiers.find(params[:dossier_id]).next_step! 'gestionnaire', 'follow'
-
-    flash.notice = (follow.class == Follow ? 'Dossier suivi' : 'Dossier relaché')
-    redirect_to request.referer
   end
 
   def reload_smartlisting
