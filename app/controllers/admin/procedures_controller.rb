@@ -192,7 +192,7 @@ class Admin::ProceduresController < AdminController
                      .joins(', procedures')
                      .where("procedures.id = procedure_paths.procedure_id")
                      .where("procedures.archived_at" => nil)
-                     .where("path LIKE '%#{params[:request]}%'")
+                     .where("path LIKE ?", "%#{params[:request]}%")
                      .pluck(:path, :administrateur_id)
                      .inject([]) {
                |acc, value| acc.push({label: value.first, mine: value.second == current_administrateur.id})

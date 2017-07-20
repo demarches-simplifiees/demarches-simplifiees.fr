@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'uri'
 
 describe Admin::ProceduresController, type: :controller do
   let(:admin) { create(:administrateur) }
@@ -476,7 +477,7 @@ describe Admin::ProceduresController, type: :controller do
         subject
       end
 
-      subject { get :path_list, params: {request: procedure2.path} }
+      subject { get :path_list, params: { request: URI.encode(procedure2.path) } }
 
       it { expect(response.status).to eq(200) }
       it { expect(body.size).to eq(1) }
