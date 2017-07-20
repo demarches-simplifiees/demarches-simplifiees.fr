@@ -535,4 +535,25 @@ describe Admin::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe "POST hide" do
+    subject { post :hide, params: { id: procedure.id } }
+
+    context "when procedure is not owned by administrateur" do
+      let!(:procedure) { create :procedure, administrateur: create(:administrateur) }
+
+      it { expect{ subject }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+
+    context "when procedure is owned by administrateur" do
+      let!(:procedure) { create :procedure, administrateur: admin }
+
+      before do
+         subject
+         procedure.reload
+       end
+
+      it { expect(procedure.hidden_at).to_not eq nil }
+    end
+  end
 end
