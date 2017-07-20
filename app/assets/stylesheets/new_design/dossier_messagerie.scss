@@ -4,7 +4,17 @@
 
 #dossier-messagerie {
   li {
+    display: flex;
+    align-items: flex-start;
     margin-bottom: 2 * $default-padding;
+  }
+
+  .right {
+    width: 100%;
+  }
+
+  .person-icon {
+    margin-right: $default-spacer;
   }
 
   h2 {

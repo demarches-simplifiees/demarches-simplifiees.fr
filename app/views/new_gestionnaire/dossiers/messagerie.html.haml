@@ -4,10 +4,13 @@
   %ul
     - @dossier.commentaires.each do |commentaire|
       %li
-        %h2
-          %span.mail
-            = render partial: 'commentaire_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
-          - if ![current_gestionnaire.email, @dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
-            %span.guest  Invité
-          %span.date= I18n.l(commentaire.created_at.localtime, format: '%d/%m/%y')
-        %p= sanitize(commentaire.body)
+        = render partial: 'commentaire_icon', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
+
+        .right
+          %h2
+            %span.mail
+              = render partial: 'commentaire_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
+            - if ![current_gestionnaire.email, @dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
+              %span.guest Invité
+            %span.date= I18n.l(commentaire.created_at.localtime, format: '%d/%m/%y')
+          %p= sanitize(commentaire.body)
