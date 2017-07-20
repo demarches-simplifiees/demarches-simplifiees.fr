@@ -51,7 +51,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def destroy
-    procedure = Procedure.find(params[:id])
+    procedure = current_administrateur.procedures.find(params[:id])
 
     return render json: {}, status: 401 if procedure.publiee_ou_archivee?
 
