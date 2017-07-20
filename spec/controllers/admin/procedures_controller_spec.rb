@@ -54,9 +54,9 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:procedure_draft) { create :procedure, published_at: nil, archived_at: nil }
-    let(:procedure_published) { create :procedure, published_at: Time.now, archived_at: nil }
-    let(:procedure_archived) { create :procedure, published_at: nil, archived_at: Time.now }
+    let(:procedure_draft) { create :procedure, administrateur: admin, published_at: nil, archived_at: nil }
+    let(:procedure_published) { create :procedure, administrateur: admin, published_at: Time.now, archived_at: nil }
+    let(:procedure_archived) { create :procedure, administrateur: admin, published_at: nil, archived_at: Time.now }
 
     subject { delete :destroy, params: {id: procedure.id} }
 
@@ -90,6 +90,14 @@ describe Admin::ProceduresController, type: :controller do
       let(:procedure) { procedure_published }
 
       it { expect(subject.status).to eq 401 }
+    end
+
+    context "when administrateur does not own the procedure" do
+      let(:procedure_not_owned) { create :procedure, administrateur: create(:administrateur), published_at: nil, archived_at: nil }
+
+      subject { delete :destroy, params: {id: procedure_not_owned.id} }
+
+      it { expect{ subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
 
@@ -525,6 +533,27 @@ describe Admin::ProceduresController, type: :controller do
 
         it { expect(Procedure.last.administrateur).to eq new_admin }
       end
+    end
+  end
+
+  describe "POST hide" do
+    subject { post :hide, params: { id: procedure.id } }
+
+    context "when procedure is not owned by administrateur" do
+      let!(:procedure) { create :procedure, administrateur: create(:administrateur) }
+
+      it { expect{ subject }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+
+    context "when procedure is owned by administrateur" do
+      let!(:procedure) { create :procedure, administrateur: admin }
+
+      before do
+         subject
+         procedure.reload
+       end
+
+      it { expect(procedure.hidden_at).to_not eq nil }
     end
   end
 end
