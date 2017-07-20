@@ -14,10 +14,6 @@ class Avis < ApplicationRecord
     gestionnaire.try(:email) || email
   end
 
-  def notify_gestionnaire
-    AvisMailer.avis_invitation(self).deliver_now
-  end
-
   def self.link_avis_to_gestionnaire(gestionnaire)
     Avis.where(email: gestionnaire.email).update_all(email: nil, gestionnaire_id: gestionnaire.id)
   end
@@ -25,5 +21,11 @@ class Avis < ApplicationRecord
   def self.avis_exists_and_email_belongs_to_avis?(avis_id, email)
     avis = Avis.find_by(id: avis_id)
     avis.present? && avis.email == email
+  end
+
+  private
+
+  def notify_gestionnaire
+    AvisMailer.avis_invitation(self).deliver_now
   end
 end

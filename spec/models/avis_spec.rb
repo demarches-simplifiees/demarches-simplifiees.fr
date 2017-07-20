@@ -86,4 +86,16 @@ RSpec.describe Avis, type: :model do
       end
     end
   end
+
+  describe '#notify_gestionnaire' do
+    context 'when an avis is created' do
+      before do
+        avis_invitation_double = double('avis_invitation', deliver_now: true)
+        allow(AvisMailer).to receive(:avis_invitation).and_return(avis_invitation_double)
+        Avis.create(claimant: claimant, email: 'email@l.com')
+      end
+
+      it { expect(AvisMailer).to have_received(:avis_invitation) }
+    end
+  end
 end
