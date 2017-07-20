@@ -10,6 +10,7 @@
   background-color: #FFFFFF;
   color: $black;
   cursor: pointer;
+  -webkit-appearance: none;
 
   &:hover {
     background: $light-grey;
