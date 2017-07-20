@@ -3,6 +3,7 @@ class Avis < ApplicationRecord
   belongs_to :gestionnaire
   belongs_to :claimant, class_name: 'Gestionnaire'
 
+  before_create :try_to_assign_gestionnaire
   after_create :notify_gestionnaire
 
   scope :with_answer, -> { where.not(answer: nil) }
@@ -27,5 +28,13 @@ class Avis < ApplicationRecord
 
   def notify_gestionnaire
     AvisMailer.avis_invitation(self).deliver_now
+  end
+
+  def try_to_assign_gestionnaire
+    gestionnaire = Gestionnaire.find_by(email: email)
+    if gestionnaire
+      self.gestionnaire = gestionnaire
+      self.email = nil
+    end
   end
 end
