@@ -43,7 +43,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def hide
-    procedure = Procedure.find(params[:id])
+    procedure = current_administrateur.procedures.find(params[:id])
     procedure.hide!
 
     flash.notice = "Procédure supprimée, en cas d'erreur contactez nous : contact@tps.apientreprise.fr"
@@ -51,7 +51,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def destroy
-    procedure = Procedure.find(params[:id])
+    procedure = current_administrateur.procedures.find(params[:id])
 
     return render json: {}, status: 401 if procedure.publiee_ou_archivee?
 
@@ -192,7 +192,7 @@ class Admin::ProceduresController < AdminController
                      .joins(', procedures')
                      .where("procedures.id = procedure_paths.procedure_id")
                      .where("procedures.archived_at" => nil)
-                     .where("path LIKE '%#{params[:request]}%'")
+                     .where("path LIKE ?", "%#{params[:request]}%")
                      .pluck(:path, :administrateur_id)
                      .inject([]) {
                |acc, value| acc.push({label: value.first, mine: value.second == current_administrateur.id})

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :type_de_champ_private do
-    libelle 'Description'
-    description 'description de votre projet'
+    sequence(:libelle) { |n| "Libelle champ privé #{n}" }
+    sequence(:description) { |n| "description du champ privé #{n}" }
     type_champ 'text'
     order_place 1
     mandatory false

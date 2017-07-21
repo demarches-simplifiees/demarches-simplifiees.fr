@@ -227,8 +227,8 @@ describe API::V1::DossiersController do
               subject { super()[:type_de_champ] }
 
               it { expect(subject.keys.include?(:id)).to be_truthy }
-              it { expect(subject[:libelle]).to eq('Description') }
-              it { expect(subject[:description]).to eq('description de votre projet') }
+              it { expect(subject[:libelle]).to include('Libelle du champ') }
+              it { expect(subject[:description]).to include('description du champ') }
               it { expect(subject.keys.include?(:order_place)).to be_truthy }
               it { expect(subject[:type_champ]).to eq('text') }
             end
@@ -260,8 +260,8 @@ describe API::V1::DossiersController do
               subject { super()[:type_de_champ] }
 
               it { expect(subject.keys.include?(:id)).to be_truthy }
-              it { expect(subject[:libelle]).to eq('Description') }
-              it { expect(subject[:description]).to eq('description de votre projet') }
+              it { expect(subject[:libelle]).to include('Libelle champ privé') }
+              it { expect(subject[:description]).to include('description du champ privé') }
               it { expect(subject.keys.include?(:order_place)).to be_truthy }
               it { expect(subject[:type_champ]).to eq('text') }
             end

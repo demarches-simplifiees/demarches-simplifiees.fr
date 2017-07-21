@@ -128,10 +128,6 @@ class Dossier < ActiveRecord::Base
     champs.joins(', types_de_piece_justificative').where("pieces_justificatives.type_de_piece_justificative_id = types_de_piece_justificative.id AND types_de_piece_justificative.procedure_id = #{procedure.id}").order('order_place ASC')
   end
 
-  def ordered_commentaires
-    commentaires.order(created_at: :desc)
-  end
-
   def next_step! role, action, motivation = nil
     unless %w(initiate follow update comment receive refuse without_continuation close).include?(action)
       fail 'action is not valid'
@@ -242,8 +238,8 @@ class Dossier < ActiveRecord::Base
   def data_with_champs
     serialized_dossier = DossierTableExportSerializer.new(self)
     data = serialized_dossier.attributes.values
-    data += self.champs.order('type_de_champ_id ASC').map(&:value)
-    data += self.champs_private.order('type_de_champ_id ASC').map(&:value)
+    data += self.ordered_champs.map(&:value)
+    data += self.ordered_champs_private.map(&:value)
     data += self.export_entreprise_data.values
     return data
   end
@@ -251,8 +247,8 @@ class Dossier < ActiveRecord::Base
   def export_headers
     serialized_dossier = DossierTableExportSerializer.new(self)
     headers = serialized_dossier.attributes.keys
-    headers += self.procedure.types_de_champ.order('id ASC').map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
-    headers += self.procedure.types_de_champ_private.order('id ASC').map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
+    headers += self.procedure.types_de_champ.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
+    headers += self.procedure.types_de_champ_private.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
     headers += self.export_entreprise_data.keys
     return headers
   end

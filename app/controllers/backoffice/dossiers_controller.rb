@@ -51,7 +51,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   def download_dossiers_tps
-    procedure = Procedure.find_by(id: params[:procedure_id])
+    procedure = current_gestionnaire.procedures.find_by(id: params[:procedure_id])
     export = procedure.generate_export
 
     respond_to do |format|
