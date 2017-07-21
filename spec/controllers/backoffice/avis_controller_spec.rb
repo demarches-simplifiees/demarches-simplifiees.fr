@@ -2,32 +2,38 @@ require 'spec_helper'
 
 describe Backoffice::AvisController, type: :controller do
   describe '#POST create' do
+    let(:claimant){ create(:gestionnaire) }
     let(:gestionnaire){ create(:gestionnaire) }
-    let!(:dossier){ create(:dossier, state: 'received') }
-    let!(:assign_to){ create(:assign_to, gestionnaire: gestionnaire, procedure: dossier.procedure )}
+    let!(:dossier) do
+      dossier = create(:dossier, state: 'received')
+      claimant.procedures << [dossier.procedure]
+      dossier
+    end
 
-    subject { post :create, params: { dossier_id: dossier.id, avis: { email: gestionnaire.email, introduction: "Bonjour, regardez ce joli dossier." } } }
+    subject do
+      post :create, params: { dossier_id: dossier.id, avis: { email: gestionnaire.email, introduction: "Bonjour, regardez ce joli dossier." } }
+    end
 
     context 'when gestionnaire is not authenticated' do
-      it { is_expected.to redirect_to new_user_session_path }
-      it { expect{ subject }.to_not change(Avis, :count) }
+      before { subject }
+
+      it { expect(response).to redirect_to new_user_session_path }
+      it { expect(Avis.count).to eq(0) }
     end
 
     context 'when gestionnaire is authenticated' do
+      let(:created_avis) { Avis.last }
+
       before do
-        sign_in gestionnaire
+        sign_in claimant
+        subject
       end
 
-      context 'When gestionnaire is known' do
-        it { is_expected.to redirect_to backoffice_dossier_path(dossier.id) }
-        it { expect{ subject }.to change(Avis, :count).by(1) }
-        it do
-          subject
-          expect(gestionnaire.avis.last).to_not eq(nil)
-          expect(gestionnaire.avis.last.email).to eq(nil)
-          expect(gestionnaire.avis.last.dossier_id).to eq(dossier.id)
-        end
-      end
+      it { expect(response).to redirect_to backoffice_dossier_path(dossier.id) }
+      it { expect(Avis.count).to eq(1) }
+      it { expect(created_avis.dossier_id).to eq(dossier.id) }
+      it { expect(created_avis.gestionnaire).to eq(gestionnaire) }
+      it { expect(created_avis.claimant).to eq(claimant) }
     end
   end
 

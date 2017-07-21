@@ -4,18 +4,10 @@ class Backoffice::AvisController < ApplicationController
   before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_gestionnaire]
 
   def create
-    avis = Avis.new(create_params.merge(claimant: current_gestionnaire))
-    avis.dossier = dossier
-
-    email = create_params[:email]
-    gestionnaire = Gestionnaire.find_by(email: email)
-    if gestionnaire
-      avis.gestionnaire = gestionnaire
-      avis.email = nil
-    end
+    avis = Avis.new(create_params.merge(claimant: current_gestionnaire, dossier: dossier))
 
     if avis.save
-      flash[:notice] = "Votre demande d'avis a bien été envoyée à #{email}"
+      flash[:notice] = "Votre demande d'avis a bien été envoyée à #{create_params[:email]}"
     end
 
     redirect_to backoffice_dossier_path(dossier)
