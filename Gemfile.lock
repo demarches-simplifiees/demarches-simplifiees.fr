@@ -448,6 +448,8 @@ GEM
     rack (2.0.1)
     rack-handlers (0.7.3)
       rack
+    rack-mini-profiler (0.10.5)
+      rack (>= 1.2.0)
     rack-oauth2 (1.4.0)
       activesupport (>= 2.3)
       attr_required (>= 0.0.5)
@@ -725,6 +727,7 @@ DEPENDENCIES
   prawn_rails (~> 0.0.11)
   pry-byebug
   rack-handlers
+  rack-mini-profiler
   rails (= 5.0.0.1)
   rails-controller-testing
   redis
