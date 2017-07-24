@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require leaflet.1.1.0
 //= require highcharts
 //= require chartkick
 //= require_tree .
