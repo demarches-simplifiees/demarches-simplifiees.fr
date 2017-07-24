@@ -15,7 +15,7 @@
 //= require turbolinks
 //= require highcharts
 //= require chartkick
-//= require_tree .
+//= require_tree ./old_design
 //= require bootstrap-sprockets
 //= require bootstrap-datepicker/core
 //= require bootstrap-datepicker/locales/bootstrap-datepicker.fr.js
