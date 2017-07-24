@@ -5,6 +5,13 @@ class ApplicationController < ActionController::Base
   before_action :check_browser
   before_action :load_navbar_left_pannel_partial_url
   before_action :set_raven_context
+  before_action :authorize_request_for_profiler
+
+  def authorize_request_for_profiler
+    if Rails.env.production? && administration_signed_in?
+      Rack::MiniProfiler.authorize_request
+    end
+  end
 
   def default_url_options
     return {protocol: 'https'} if Rails.env.staging? || Rails.env.production?
