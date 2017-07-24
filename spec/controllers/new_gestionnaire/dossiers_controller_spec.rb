@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe NewGestionnaire::DossiersController, type: :controller do
   let(:gestionnaire) { create(:gestionnaire) }
-  let(:procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+  let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
   let(:dossier) { create(:dossier, :replied, procedure: procedure) }
 
   describe 'attestation' do
@@ -11,7 +11,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     context 'when a dossier has an attestation' do
       let(:fake_pdf) { double(read: 'pdf content') }
       let!(:dossier) { create(:dossier, :replied, attestation: Attestation.new, procedure: procedure) }
-      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+      let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
       let!(:dossier) { create(:dossier, :replied, attestation: Attestation.new, procedure: procedure) }
 
       it 'returns the attestation pdf' do
@@ -77,7 +77,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
   end
 
   describe "#show" do
-    let(:procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+    let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
     let(:dossier){ create(:dossier, :replied, procedure: procedure) }
 
     subject { get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id } }

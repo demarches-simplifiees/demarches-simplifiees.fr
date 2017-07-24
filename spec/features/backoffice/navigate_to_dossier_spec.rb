@@ -3,8 +3,8 @@ require 'spec_helper'
 feature 'on backoffice page', js: true do
   let(:administrateur) { create(:administrateur) }
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
-  let(:procedure) { create(:procedure, administrateur: administrateur) }
-  let(:procedure_individual) { create :procedure, libelle: 'procedure individual', administrateur: administrateur, for_individual: true }
+  let(:procedure) { create(:procedure, :published, administrateur: administrateur) }
+  let(:procedure_individual) { create :procedure, :published, libelle: 'procedure individual', administrateur: administrateur, for_individual: true }
 
   let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'updated') }
   let!(:dossier_individual) { create :dossier, procedure: procedure_individual, state: 'updated' }

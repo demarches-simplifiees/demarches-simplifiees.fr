@@ -7,7 +7,7 @@ class Gestionnaire < ActiveRecord::Base
   has_one :preference_smart_listing_page, dependent: :destroy
 
   has_many :assign_to, dependent: :destroy
-  has_many :procedures, through: :assign_to
+  has_many :procedures, -> { publiees_ou_archivees }, through: :assign_to
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :follows

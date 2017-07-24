@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Gestionnaire, type: :model do
   let(:admin) { create :administrateur }
-  let!(:procedure) { create :procedure, administrateur: admin }
-  let!(:procedure_2) { create :procedure, administrateur: admin }
-  let!(:procedure_3) { create :procedure, administrateur: admin }
+  let!(:procedure) { create :procedure, :published, administrateur: admin }
+  let!(:procedure_2) { create :procedure, :published, administrateur: admin }
+  let!(:procedure_3) { create :procedure, :published, administrateur: admin }
   let(:gestionnaire) { create :gestionnaire, procedure_filter: procedure_filter, administrateurs: [admin] }
   let(:procedure_filter) { nil }
   let!(:procedure_assign) { create :assign_to, gestionnaire: gestionnaire, procedure: procedure }
@@ -319,7 +319,7 @@ describe Gestionnaire, type: :model do
         expect_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
       end
 
-      it { expect(gestionnaire.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
+      it { expect(gestionnaire2.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
     end
 
     context 'when a procedure not published was active with no notifications' do

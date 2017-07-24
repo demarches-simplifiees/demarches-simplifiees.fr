@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'backoffice: flux de commentaires' do
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, :published) }
   let(:gestionnaire) { create(:gestionnaire) }
   let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'updated') }
   let(:dossier_id) { dossier.id }

@@ -11,7 +11,7 @@ feature 'search file on gestionnaire backoffice' do
   context 'when gestionnaire is logged in' do
     context 'when he click on search button' do
       let(:terms) { '' }
-      let!(:procedure) { create(:procedure, administrateur: administrateur) }
+      let!(:procedure) { create(:procedure, :published, administrateur: administrateur) }
 
       before do
         create :assign_to, gestionnaire: gestionnaire, procedure: procedure
