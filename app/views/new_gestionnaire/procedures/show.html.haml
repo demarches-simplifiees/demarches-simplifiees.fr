@@ -4,7 +4,7 @@
       - if @procedure.logo.present?
         = image_tag @procedure.logo, height: 40, class: 'procedure-logo'
 
-      .right
+      .width-100
         %h1= @procedure.libelle
         %ul.dossiers-categories
           %li{ class: (@statut == 'a-suivre') ? 'active' : nil }>

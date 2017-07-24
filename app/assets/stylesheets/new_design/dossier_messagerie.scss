@@ -9,10 +9,6 @@
     margin-bottom: 2 * $default-padding;
   }
 
-  .right {
-    width: 100%;
-  }
-
   .person-icon {
     margin-right: $default-spacer;
   }
@@ -33,14 +29,5 @@
 
   .date {
     float: right;
-  }
-
-  form {
-    overflow: hidden;
-  }
-
-  .send {
-    float: right;
-    margin-bottom: $default-padding;
   }
 }
