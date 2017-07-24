@@ -41,6 +41,22 @@ module NewGestionnaire
       redirect_to messagerie_dossier_path(dossier.procedure, dossier)
     end
 
+    def position
+      etablissement = dossier.etablissement
+      point = Carto::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse) unless etablissement.nil?
+
+      lon = "2.428462"
+      lat = "46.538192"
+      zoom = "13"
+
+      unless point.nil?
+        lon = point.x.to_s
+        lat = point.y.to_s
+      end
+
+      render json: { lon: lon, lat: lat, zoom: zoom, dossier_id: params[:dossier_id] }
+    end
+
     private
 
     def dossier
