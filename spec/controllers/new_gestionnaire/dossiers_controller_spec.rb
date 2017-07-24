@@ -5,7 +5,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
   let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
   let(:dossier) { create(:dossier, :replied, procedure: procedure) }
 
-  describe 'attestation' do
+  describe '#attestation' do
     before { sign_in(gestionnaire) }
 
     context 'when a dossier has an attestation' do
@@ -31,7 +31,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
   context "when gestionnaire is signed in" do
     before { sign_in(gestionnaire) }
 
-    describe 'follow' do
+    describe '#follow' do
       before do
         expect_any_instance_of(Dossier).to receive(:next_step!).with('gestionnaire', 'follow')
         patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
@@ -42,7 +42,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       it { expect(response).to redirect_to(procedures_url) }
     end
 
-    describe 'unfollow' do
+    describe '#unfollow' do
       before do
         gestionnaire.followed_dossiers << dossier
         patch :unfollow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
@@ -54,7 +54,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       it { expect(response).to redirect_to(procedures_url) }
     end
 
-    describe 'archive' do
+    describe '#archive' do
       before do
         patch :archive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
         dossier.reload
@@ -64,7 +64,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       it { expect(response).to redirect_to(procedures_url) }
     end
 
-    describe 'unarchive' do
+    describe '#unarchive' do
       before do
         dossier.update_attributes(archived: true)
         patch :unarchive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
@@ -102,7 +102,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
   end
 
-  describe "commentaire" do
+  describe "#create_commentaire" do
     let(:saved_commentaire) { dossier.commentaires.first }
 
     before do
