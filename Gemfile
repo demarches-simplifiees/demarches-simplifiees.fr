@@ -109,6 +109,8 @@ gem 'prawn_rails', '~> 0.0.11'
 gem 'chunky_png'
 gem 'sentry-raven'
 
+gem 'rack-mini-profiler'
+
 group :test do
   gem 'capybara'
   gem 'launchy'
