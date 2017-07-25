@@ -3,10 +3,8 @@
     %h1 Formulaires
 
     %form.form
-      %label Nom
-      %input{ type: "text" }
-      %textarea{ placeholder: "Description de votre projet" }
-      %label Mot de passe
+      - @all_champs.each do |champ|
+        = render partial: "new_gestionnaire/dossiers/champs/#{champ.type_champ}", locals: { champ: champ }
       %input{ type: "password", value: "12345678" }
       %input.button.send{ type: "submit", value: "Envoyer" }
 

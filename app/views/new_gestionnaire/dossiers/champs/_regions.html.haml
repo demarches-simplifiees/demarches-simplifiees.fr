@@ -1,0 +1,4 @@
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+
+= select_tag("champs['#{champ.id}']",
+  options_for_select(Champ.regions, selected: champ.value))
