@@ -14,6 +14,10 @@ class DropDownList < ActiveRecord::Base
     champ.object.value.blank? ? [] : multiple ? JSON.parse(champ.object.value) : [champ.object.value]
   end
 
+  def selected_options_without_decorator(champ)
+    champ.value.blank? ? [] : multiple ? JSON.parse(champ.value) : [champ.value]
+  end
+
   def multiple
     type_de_champ.type_champ == 'multiple_drop_down_list'
   end

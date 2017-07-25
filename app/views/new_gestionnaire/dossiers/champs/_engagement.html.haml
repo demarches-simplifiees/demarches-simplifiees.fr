@@ -1,0 +1,8 @@
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+
+%input{ type: 'checkbox',
+  name: "champs['#{champ.id}']",
+  id: "champs_#{champ.id}",
+  checked: ('checked' if champ.value == 'on') }
+
+%br
