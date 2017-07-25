@@ -31,7 +31,7 @@
             %label
               %h4
                 Date de naissance *
-              = ff.date_field :birthdate, { class: 'form-control', placeholder: 'jj/mm/aaaa', required: true }
+              = ff.date_field :birthdate, { value: @facade.individual.birthdate, class: 'form-control', placeholder: 'jj/mm/aaaa', required: true }
 
         %p
           %label{ style: 'font-weight: normal;' }
