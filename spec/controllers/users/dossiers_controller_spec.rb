@@ -358,7 +358,9 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe 'PUT #update' do
-    let(:params) { {id: dossier_id, dossier: {id: dossier_id, autorisation_donnees: autorisation_donnees}} }
+    let(:params) { { id: dossier_id, dossier: { id: dossier_id, autorisation_donnees: autorisation_donnees, individual_attributes: individual_params } } }
+    let(:individual_params) { { gender: 'M.', nom: 'Julien', prenom: 'Xavier', birthdate: birthdate } }
+    let(:birthdate) { '20/01/1991' }
     subject { put :update, params: params }
 
     before do
@@ -367,8 +369,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when procedure is for individual' do
-      let(:params) { {id: dossier_id, dossier: {id: dossier_id, autorisation_donnees: '1', individual_attributes: individual_params}} }
-      let(:individual_params) { {gender: 'M.', nom: 'Julien', prenom: 'Xavier', birthdate: '20/01/1991'} }
+      let(:autorisation_donnees) { "1" }
       let(:procedure) { create(:procedure, :published, for_individual: true) }
 
       before do
@@ -378,8 +379,16 @@ describe Users::DossiersController, type: :controller do
       it { expect(dossier.individual.gender).to eq 'M.' }
       it { expect(dossier.individual.nom).to eq 'Julien' }
       it { expect(dossier.individual.prenom).to eq 'Xavier' }
-      it { expect(dossier.individual.birthdate).to eq '20/01/1991' }
+      it { expect(dossier.individual.birthdate).to eq '1991-01-20' }
       it { expect(dossier.procedure.for_individual).to eq true }
+
+      context "and birthdate is ISO (YYYY-MM-DD) formatted" do
+        let(:birthdate) { "1991-11-01" }
+        before do
+          dossier.reload
+        end
+        it { expect(dossier.individual.birthdate).to eq '1991-11-01' }
+      end
     end
 
     context 'when Checkbox is checked' do
@@ -411,7 +420,7 @@ describe Users::DossiersController, type: :controller do
     context 'when Checkbox is not checked' do
       let(:autorisation_donnees) { '0' }
       it 'uses flash alert to display message' do
-        expect(flash[:alert]).to have_content('Les conditions sont obligatoires.')
+        expect(flash[:alert]).to have_content('La validation des conditions d\'utilisation est obligatoire')
       end
 
       it "doesn't update dossier autorisation_donnees" do

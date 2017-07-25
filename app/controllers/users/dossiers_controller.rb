@@ -191,17 +191,16 @@ class Users::DossiersController < UsersController
   def update_params_with_formatted_birthdate
     editable_params = update_params
 
-    # If the user was shown a date input field (if its browser supports it),
-    # the returned param will follow the YYYY-MM-DD pattern, which we need
-    # do convert to the DD/MM/YYYY pattern we use
     if editable_params &&
       editable_params[:individual_attributes] &&
-      editable_params[:individual_attributes][:birthdate] &&
-      editable_params[:individual_attributes][:birthdate] =~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
+      editable_params[:individual_attributes][:birthdate]
 
-      original_birthdate = editable_params[:individual_attributes][:birthdate]
-      formatted_birthdate = I18n.l(original_birthdate.to_date, format: '%d/%m/%Y')
-      editable_params[:individual_attributes][:birthdate] = formatted_birthdate
+      iso_date = begin
+        Date.parse(editable_params[:individual_attributes][:birthdate]).iso8601
+      rescue
+        nil
+      end
+      editable_params[:individual_attributes][:birthdate] = iso_date
     end
 
     editable_params
