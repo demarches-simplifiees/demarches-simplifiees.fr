@@ -1,0 +1,7 @@
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+
+%textarea{ name: "champs['#{champ.id}']",
+  placeholder: champ.description,
+  id: "champs_#{champ.id}",
+  row: '6' }
+  = sanitize(champ.value)

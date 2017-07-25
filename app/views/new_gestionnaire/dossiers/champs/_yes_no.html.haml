@@ -1,0 +1,10 @@
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+
+%div
+  %label
+    = radio_button_tag "champs['#{champ.id}']", "true", champ.value == 'true'
+    Oui
+
+  %label
+    = radio_button_tag "champs['#{champ.id}']", "false", champ.value == 'false'
+    Non
