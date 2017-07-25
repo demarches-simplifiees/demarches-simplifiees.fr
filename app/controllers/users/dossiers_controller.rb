@@ -131,7 +131,10 @@ class Users::DossiersController < UsersController
   def update
     @facade = facade params[:dossier][:id]
 
-    if checked_autorisation_donnees?
+    if individual_errors.any?
+      flash.alert = individual_errors
+      redirect_to users_dossier_path(id: @facade.dossier.id)
+    else
       unless Dossier.find(@facade.dossier.id).update_attributes update_params_with_formatted_birthdate
         flash.alert = @facade.dossier.errors.full_messages
 
@@ -143,9 +146,6 @@ class Users::DossiersController < UsersController
       else
         redirect_to url_for(controller: :description, action: :show, dossier_id: @facade.dossier.id)
       end
-    else
-      flash.alert = 'Les conditions sont obligatoires.'
-      redirect_to users_dossier_path(id: @facade.dossier.id)
     end
   end
 
@@ -207,8 +207,20 @@ class Users::DossiersController < UsersController
     editable_params
   end
 
-  def checked_autorisation_donnees?
-    update_params[:autorisation_donnees] == '1'
+  def individual_errors
+    errors = []
+
+    if update_params[:autorisation_donnees] != "1"
+      errors << "La validation des conditions d'utilisation est obligatoire"
+    end
+
+    if update_params[:individual_attributes].present? &&
+        !/^\d{4}\-\d{2}\-\d{2}$/.match(update_params[:individual_attributes][:birthdate]) &&
+        !/^\d{2}\/\d{2}\/\d{4}$/.match(update_params[:individual_attributes][:birthdate])
+      errors << "Le format de la date de naissance doit être JJ/MM/AAAA"
+    end
+
+    errors
   end
 
   def siret
