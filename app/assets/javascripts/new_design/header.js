@@ -1,5 +1,3 @@
-window.TPS = window.TPS || {};
-
 $(document).on("click", "body", function () {
   $(".header-menu").removeClass("open fade-in-down");
 });
