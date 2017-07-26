@@ -18,4 +18,5 @@
 //= require highcharts
 //= require chartkick
 //= require select2
+//= require typeahead.bundle
 //= require_tree .
