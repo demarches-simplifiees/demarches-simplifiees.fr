@@ -12,7 +12,7 @@
     display: inline-block;
   }
 
-  input[type=text],
+  input[type=text]:not([data-address='true']),
   input[type=email],
   input[type=password],
   input[type=date],
@@ -114,6 +114,21 @@
       background-color: #FFFFFF;
     }
     // scss-lint:enable
+  }
+
+  .twitter-typeahead {
+    margin-bottom: 2 * $default-padding;
+  }
+
+  input.tt-input,
+  input.tt-hint {
+    border-radius: 4px;
+    border: solid 1px $border-grey;
+    padding: $default-padding;
+  }
+
+  input.tt-hint {
+    color: $grey;
   }
 
   .datetime {

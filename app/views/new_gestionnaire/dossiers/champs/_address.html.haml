@@ -1,6 +1,7 @@
 = render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
 
 %input{ type: 'text',
+  'data-address': 'true',
   name: "champs['#{champ.id}']",
   id: "champs_#{champ.id}",
   placeholder: champ.libelle,
