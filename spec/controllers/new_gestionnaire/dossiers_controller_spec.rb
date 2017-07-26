@@ -5,9 +5,9 @@ describe NewGestionnaire::DossiersController, type: :controller do
   let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
   let(:dossier) { create(:dossier, :replied, procedure: procedure) }
 
-  describe '#attestation' do
-    before { sign_in(gestionnaire) }
+  before { sign_in(gestionnaire) }
 
+  describe '#attestation' do
     context 'when a dossier has an attestation' do
       let(:fake_pdf) { double(read: 'pdf content') }
       let!(:dossier) { create(:dossier, :replied, attestation: Attestation.new, procedure: procedure) }
@@ -28,86 +28,60 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
   end
 
-  context "when gestionnaire is signed in" do
-    before { sign_in(gestionnaire) }
-
-    describe '#follow' do
-      before do
-        expect_any_instance_of(Dossier).to receive(:next_step!).with('gestionnaire', 'follow')
-        patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-      end
-
-      it { expect(gestionnaire.followed_dossiers).to match([dossier]) }
-      it { expect(flash.notice).to eq('Dossier suivi') }
-      it { expect(response).to redirect_to(procedures_url) }
+  describe '#follow' do
+    before do
+      expect_any_instance_of(Dossier).to receive(:next_step!).with('gestionnaire', 'follow')
+      patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
     end
 
-    describe '#unfollow' do
-      before do
-        gestionnaire.followed_dossiers << dossier
-        patch :unfollow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-        gestionnaire.reload
-      end
+    it { expect(gestionnaire.followed_dossiers).to match([dossier]) }
+    it { expect(flash.notice).to eq('Dossier suivi') }
+    it { expect(response).to redirect_to(procedures_url) }
+  end
 
-      it { expect(gestionnaire.followed_dossiers).to match([]) }
-      it { expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}") }
-      it { expect(response).to redirect_to(procedures_url) }
+  describe '#unfollow' do
+    before do
+      gestionnaire.followed_dossiers << dossier
+      patch :unfollow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      gestionnaire.reload
     end
 
-    describe '#archive' do
-      before do
-        patch :archive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-        dossier.reload
-      end
+    it { expect(gestionnaire.followed_dossiers).to match([]) }
+    it { expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}") }
+    it { expect(response).to redirect_to(procedures_url) }
+  end
 
-      it { expect(dossier.archived).to be true }
-      it { expect(response).to redirect_to(procedures_url) }
+  describe '#archive' do
+    before do
+      patch :archive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      dossier.reload
     end
 
-    describe '#unarchive' do
-      before do
-        dossier.update_attributes(archived: true)
-        patch :unarchive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-        dossier.reload
-      end
+    it { expect(dossier.archived).to be true }
+    it { expect(response).to redirect_to(procedures_url) }
+  end
 
-      it { expect(dossier.archived).to be false }
-      it { expect(response).to redirect_to(procedures_url) }
+  describe '#unarchive' do
+    before do
+      dossier.update_attributes(archived: true)
+      patch :unarchive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      dossier.reload
     end
+
+    it { expect(dossier.archived).to be false }
+    it { expect(response).to redirect_to(procedures_url) }
   end
 
   describe "#show" do
-    let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
-    let(:dossier){ create(:dossier, :replied, procedure: procedure) }
+    before { get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
 
-    subject { get :show, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
-
-    context "when gestionnaire is not logged in" do
-      before { subject }
-      it { expect(response).to redirect_to(new_user_session_path) }
-    end
-
-    context "when gestionnaire is logged in" do
-      before { sign_in(gestionnaire) }
-
-      it do
-        subject
-        expect(response).to have_http_status(:success)
-      end
-
-      context "when gestionnaire is not affected on procedure" do
-        let(:dossier){ create(:dossier, :replied) }
-        it { expect{ subject }.to raise_error(ActiveRecord::RecordNotFound) }
-      end
-    end
+    it { expect(response).to have_http_status(:success) }
   end
 
   describe "#create_commentaire" do
     let(:saved_commentaire) { dossier.commentaires.first }
 
     before do
-      sign_in(gestionnaire)
-
       post :create_commentaire, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id,
