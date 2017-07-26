@@ -17,4 +17,5 @@
 //= require leaflet.1.1.0
 //= require highcharts
 //= require chartkick
+//= require select2
 //= require_tree .
