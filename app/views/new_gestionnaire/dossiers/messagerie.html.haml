@@ -17,4 +17,5 @@
 
   = form_for(Commentaire.new, url: commentaire_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' }) do |f|
     = f.text_area :body, rows: 5, placeholder: 'Répondre ici', required: true
-    = f.submit 'Envoyer', class: 'button send'
+    .send-wrapper
+      = f.submit 'Envoyer', class: 'button send'

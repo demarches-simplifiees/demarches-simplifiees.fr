@@ -2,8 +2,6 @@
 @import "colors";
 
 .form {
-  overflow: hidden;
-
   h1 {
     text-align: center;
     margin-bottom: 20px;
@@ -147,8 +145,11 @@
     margin-bottom: 2 * $default-padding;
   }
 
-  .send {
-    float: right;
-    margin-bottom: $default-padding;
+  .send-wrapper {
+    text-align: right;
+
+    .send {
+      margin-bottom: $default-padding;
+    }
   }
 }
