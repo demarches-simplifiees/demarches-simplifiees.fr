@@ -248,6 +248,9 @@ Rails.application.routes.draw do
             patch 'archive'
             patch 'unarchive'
             post 'commentaire' => 'dossiers#create_commentaire'
+            scope :carte do
+              get 'position'
+            end
           end
         end
       end
