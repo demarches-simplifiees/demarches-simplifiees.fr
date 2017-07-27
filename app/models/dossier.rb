@@ -121,7 +121,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def ordered_champs_private
-    champs_private.joins(', types_de_champ').where("champs.type_de_champ_id = types_de_champ.id AND types_de_champ.procedure_id = #{procedure.id}").order('order_place')
+    champs_private.includes(:type_de_champ).order('types_de_champ.order_place')
   end
 
   def ordered_pieces_justificatives
