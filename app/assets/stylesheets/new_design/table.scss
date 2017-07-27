@@ -4,25 +4,28 @@
 
 .table {
   width: 100%;
-  font-size: 14px;
-  line-height: 22px;
 
   th,
   td {
     @include vertical-padding($default-spacer)
   }
 
-  th {
-    text-align: left;
+  &.vertical {
+    font-size: 14px;
+    line-height: 22px;
 
-    &.header-section {
-      color: $blue;
-      font-weight: bold;
-      font-size: 20px;
+    th {
+      text-align: left;
+
+      &.header-section {
+        color: $blue;
+        font-weight: bold;
+        font-size: 20px;
+      }
     }
-  }
 
-  td {
-    font-weight: bold;
+    td {
+      font-weight: bold;
+    }
   }
 }
