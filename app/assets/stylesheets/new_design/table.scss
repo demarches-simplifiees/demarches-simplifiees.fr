@@ -20,6 +20,12 @@
     padding: (3 * $default-spacer) 2px;
   }
 
+  &.hoverable {
+    tbody tr:hover {
+      background: $light-grey;
+    }
+  }
+
   &.vertical {
     font-size: 14px;
     line-height: 22px;
