@@ -1,0 +1,23 @@
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+
+- dossier = Dossier.find_by(id: champ.value)
+- show_text_summary = dossier.present?
+- show_warning = !show_text_summary && champ.value.present?
+- text_summary = dossier.try(:text_summary)
+
+.dossier-link
+  %input{ name: "champs['#{ champ.id }']",
+    placeholder: "Numéro de dossier",
+    id: "champs_#{ champ.id }",
+    value: champ.value,
+    type: 'number',
+    'autocomplete' => 'off',
+    'data-type' => 'dossier-link',
+    required: champ.mandatory }
+
+  .help-block
+    %p.text-info{ style: show_text_summary ? nil : 'display: none;' }
+      %span.dossier-text-summary= text_summary
+
+    %p.text-warning{ style: show_warning ? nil : 'display: none;' }
+      Ce dossier est inconnu
