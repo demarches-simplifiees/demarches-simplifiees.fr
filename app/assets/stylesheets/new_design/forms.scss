@@ -2,8 +2,6 @@
 @import "colors";
 
 .form {
-  overflow: hidden;
-
   h1 {
     text-align: center;
     margin-bottom: 20px;
@@ -14,15 +12,18 @@
     display: inline-block;
   }
 
-  input[type=text],
+  input[type=text]:not([data-address='true']),
   input[type=email],
   input[type=password],
-  textarea {
+  input[type=date],
+  input[type=number],
+  input[type=tel],
+  textarea,
+  select {
     display: block;
-    width: 100%;
     border-radius: 4px;
     border: solid 1px $border-grey;
-    margin-bottom: 4 * $default-spacer;
+    margin-bottom: 2 * $default-padding;
     padding: $default-padding;
 
     &:disabled {
@@ -30,8 +31,140 @@
     }
   }
 
-  .send {
-    float: right;
+  input[type=text],
+  input[type=email],
+  input[type=password],
+  input[type=date],
+  input[type=number],
+  input[type=tel],
+  textarea {
+    width: 100%;
+  }
+
+  input[type=email],
+  input[type=number],
+  input[type=tel], {
+    max-width: 500px;
+  }
+
+  input[type=checkbox],
+  input[type=radio] {
+    margin-bottom: 2 * $default-padding;
+  }
+
+  input[type=date] {
+    max-width: 180px;
+  }
+
+  input:invalid,
+  textarea:invalid {
+    box-shadow: none;
+  }
+
+  input.touched:invalid,
+  textarea.touched:invalid {
+    border-color: $dark-red;
+    box-shadow: 0px 0px 5px $dark-red;
+  }
+
+  select,
+  .select2-selection {
+    // hack found here: https://stackoverflow.com/questions/1895476/how-to-style-a-select-dropdown-with-css-only-without-javascript
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: image-url("icons/chevron-down.svg") no-repeat;
+    background-size: 14px;
+    background-position: right 10px center;
+    padding-right: 3 * $default-spacer;
+
+    // CAUTION: IE hackery ahead
+    &::-ms-expand {
+      display: none; // remove default arrow in IE 10 and 11 */
+     }
+
+    // target Internet Explorer 9 to undo the custom arrow */
+    @media screen and (min-width:0\0) {
+      select {
+        background: none\9;
+      }
+    }
+  }
+
+  .select2 {
+    min-width: 50%;
+  }
+
+  .select2-container {
+    display: block;
+    margin-bottom: 2 * $default-padding;
+
+    &.select2-container--focus {
+      .select2-selection {
+        border-color: $border-grey;
+      }
+    }
+
+    // scss-lint:disable SelectorFormat
+    .select2-selection__rendered {
+      padding: $default-padding;
+    }
+
+    .select2-selection__choice {
+      background-color: #FFFFFF;
+    }
+    // scss-lint:enable
+  }
+
+  .twitter-typeahead {
+    margin-bottom: 2 * $default-padding;
+  }
+
+  input.tt-input,
+  input.tt-hint {
+    border-radius: 4px;
+    border: solid 1px $border-grey;
+    padding: $default-padding;
+  }
+
+  input.tt-hint {
+    color: $grey;
+  }
+
+  .datetime {
+    input[type=date] {
+      display: inline-block;
+    }
+
+    select {
+      display: inline-block;
+    }
+  }
+
+  .header-section {
+    color: #4393F3;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 2 * $default-padding;
+  }
+
+  .explication-libelle {
+    font-weight: bold;
+    font-size: 20px;
     margin-bottom: $default-padding;
+  }
+
+  .explication {
+    background-color: $light-grey;
+    padding: $default-padding;
+    margin-bottom: 2 * $default-padding;
+  }
+
+  .send-wrapper {
+    text-align: right;
+
+    .send {
+      margin-bottom: $default-padding;
+    }
   }
 }

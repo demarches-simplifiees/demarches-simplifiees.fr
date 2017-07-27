@@ -1,0 +1,17 @@
+@import "constants";
+@import "colors";
+
+.dossier-link {
+  .help-block > p {
+    margin-top: - $default-padding;
+    margin-bottom: 2 * $default-padding;
+  }
+
+  .text-info {
+    color: $blue;
+  }
+
+  .text-warning {
+    color: $dark-red;
+  }
+}
