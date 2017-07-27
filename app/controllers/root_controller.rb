@@ -33,7 +33,7 @@ class RootController < ApplicationController
 
   def patron
     @all_champs = TypeDeChamp.type_champs
-      .map { |name, _| TypeDeChamp.new(type_champ: name, libelle: name) }
+      .map { |name, _| TypeDeChamp.new(type_champ: name, libelle: name, mandatory: true) }
       .map { |type_de_champ| Champ.new(type_de_champ: type_de_champ) }
       .map.with_index do |champ, i|
         champ.id = i

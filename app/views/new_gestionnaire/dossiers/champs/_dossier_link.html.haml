@@ -12,7 +12,8 @@
     value: champ.value,
     type: 'number',
     'autocomplete' => 'off',
-    'data-type' => 'dossier-link' }
+    'data-type' => 'dossier-link',
+    required: champ.mandatory }
 
   .help-block
     %p.text-info{ style: show_text_summary ? nil : 'display: none;' }

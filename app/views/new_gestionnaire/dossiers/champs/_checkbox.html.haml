@@ -3,6 +3,7 @@
 %input{ type: 'checkbox',
   name: "champs['#{champ.id}']",
   id: "champs_#{champ.id}",
-  checked: ('checked' if champ.value == 'on') }
+  checked: ('checked' if champ.value == 'on'),
+  required: champ.mandatory }
 
 %br

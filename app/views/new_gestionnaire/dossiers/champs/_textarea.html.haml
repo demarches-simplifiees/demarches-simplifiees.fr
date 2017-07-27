@@ -3,5 +3,6 @@
 %textarea{ name: "champs['#{champ.id}']",
   placeholder: champ.description,
   id: "champs_#{champ.id}",
-  row: '6' }
+  row: '6',
+  required: champ.mandatory }
   = sanitize(champ.value)
