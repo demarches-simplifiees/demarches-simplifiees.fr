@@ -2,20 +2,35 @@
 @import "constants";
 @import "mixins";
 
-.table {
+.table { // TODO : tester de remplacer par l'élément table uniquement
   width: 100%;
 
-  th,
+  tbody tr {
+    border-top: 1px solid $border-grey;
+  }
+
   td {
-    @include vertical-padding($default-spacer)
+    @include vertical-padding($default-spacer);
+    vertical-align: middle;
+  }
+
+  th {
+    text-align: left;
+    font-weight: bold;
+    padding: (3 * $default-spacer) 2px;
   }
 
   &.vertical {
     font-size: 14px;
     line-height: 22px;
 
+    tr {
+      border-top: none;
+    }
+
     th {
-      text-align: left;
+      @include vertical-padding($default-spacer);
+      font-weight: normal;
 
       &.header-section {
         color: $blue;
