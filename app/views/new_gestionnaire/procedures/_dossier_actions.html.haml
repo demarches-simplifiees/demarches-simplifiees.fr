@@ -1,5 +1,5 @@
 - if dossier.en_construction_ou_instruction?
-  - if current_gestionnaire.follow?(dossier)
+  - if dossier_is_followed
     = link_to unfollow_dossier_path(procedure, dossier), method: :patch, class: 'button' do
       %i.unfollow>
       ne plus suivre

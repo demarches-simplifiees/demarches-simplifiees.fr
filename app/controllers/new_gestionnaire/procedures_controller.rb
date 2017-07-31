@@ -37,6 +37,11 @@ module NewGestionnaire
         .where(procedure: @procedure)
         .en_cours
 
+      @followed_dossiers_id = current_gestionnaire
+        .followed_dossiers
+        .where(procedure: @procedure)
+        .pluck(:id)
+
       @termines_dossiers = procedure.dossiers.includes(:user).termine
 
       @all_state_dossiers = procedure.dossiers.includes(:user).all_state
