@@ -14,74 +14,7 @@
   }
 
   .dossiers-table {
-    margin: (2 * $default-padding) auto;
-    width: 100%;
-
-    tr {
-      border-bottom: 1px solid $border-grey;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &:hover {
-        background-color: $light-grey;
-      }
-
-      &:first-child {
-        &:hover {
-          background: #FFFFFF;
-        }
-      }
-    }
-
-    th {
-      font-weight: bold;
-      padding: (1.5 * $default-padding) 2px;
-      text-align: left;
-    }
-
-    td {
-      vertical-align: middle;
-    }
-
-    .number-col {
-      width: 130px;
-
-      a::before {
-        content: "";
-        background-image: image-url("icons/folder.svg");
-        display: inline-block;
-        width: 24px;
-        height: 24px;
-        margin: 0 $default-spacer;
-      }
-    }
-
-    .big-link {
-      color: $black;
-      display: flex;
-      align-items: center;
-      padding: (1.5 * $default-padding) 2px;
-    }
-
-    .status-col {
-      width: 200px;
-    }
-
-    .follow-col {
-      width: 200px;
-    }
-
-    .label {
-      width: 110px;
-      text-align: center;
-    }
-
-    .button {
-      width: 180px;
-      text-align: center;
-    }
+    margin: (3 * $default-spacer) auto;
   }
 
   h2 {
