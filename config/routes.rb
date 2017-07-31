@@ -258,6 +258,7 @@ Rails.application.routes.draw do
         end
       end
     end
+    get "recherche" => "recherches#index"
   end
 
   apipie
