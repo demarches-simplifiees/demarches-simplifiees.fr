@@ -58,7 +58,7 @@ class Champ < ActiveRecord::Base
 
   def format_date_to_iso
     date = begin
-      Date.parse(value).strftime("%F")
+      Date.parse(value).iso8601
     rescue
       nil
     end
