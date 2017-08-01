@@ -82,7 +82,7 @@ class Users::DossiersController < UsersController
       individual.update_column :gender, @facade.dossier.france_connect_information.gender
       individual.update_column :nom, @facade.dossier.france_connect_information.family_name
       individual.update_column :prenom, @facade.dossier.france_connect_information.given_name
-      individual.update_column :birthdate, @facade.dossier.france_connect_information.birthdate.strftime("%d/%m/%Y")
+      individual.update_column :birthdate, @facade.dossier.france_connect_information.birthdate.iso8601
     end
 
   rescue ActiveRecord::RecordNotFound
@@ -131,7 +131,10 @@ class Users::DossiersController < UsersController
   def update
     @facade = facade params[:dossier][:id]
 
-    if checked_autorisation_donnees?
+    if individual_errors.any?
+      flash.alert = individual_errors
+      redirect_to users_dossier_path(id: @facade.dossier.id)
+    else
       unless Dossier.find(@facade.dossier.id).update_attributes update_params_with_formatted_birthdate
         flash.alert = @facade.dossier.errors.full_messages
 
@@ -143,9 +146,6 @@ class Users::DossiersController < UsersController
       else
         redirect_to url_for(controller: :description, action: :show, dossier_id: @facade.dossier.id)
       end
-    else
-      flash.alert = 'Les conditions sont obligatoires.'
-      redirect_to users_dossier_path(id: @facade.dossier.id)
     end
   end
 
@@ -191,24 +191,35 @@ class Users::DossiersController < UsersController
   def update_params_with_formatted_birthdate
     editable_params = update_params
 
-    # If the user was shown a date input field (if its browser supports it),
-    # the returned param will follow the YYYY-MM-DD pattern, which we need
-    # do convert to the DD/MM/YYYY pattern we use
     if editable_params &&
       editable_params[:individual_attributes] &&
-      editable_params[:individual_attributes][:birthdate] &&
-      editable_params[:individual_attributes][:birthdate] =~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
+      editable_params[:individual_attributes][:birthdate]
 
-      original_birthdate = editable_params[:individual_attributes][:birthdate]
-      formatted_birthdate = I18n.l(original_birthdate.to_date, format: '%d/%m/%Y')
-      editable_params[:individual_attributes][:birthdate] = formatted_birthdate
+      iso_date = begin
+        Date.parse(editable_params[:individual_attributes][:birthdate]).iso8601
+      rescue
+        nil
+      end
+      editable_params[:individual_attributes][:birthdate] = iso_date
     end
 
     editable_params
   end
 
-  def checked_autorisation_donnees?
-    update_params[:autorisation_donnees] == '1'
+  def individual_errors
+    errors = []
+
+    if update_params[:autorisation_donnees] != "1"
+      errors << "La validation des conditions d'utilisation est obligatoire"
+    end
+
+    if update_params[:individual_attributes].present? &&
+        !/^\d{4}\-\d{2}\-\d{2}$/.match(update_params[:individual_attributes][:birthdate]) &&
+        !/^\d{2}\/\d{2}\/\d{4}$/.match(update_params[:individual_attributes][:birthdate])
+      errors << "Le format de la date de naissance doit être JJ/MM/AAAA"
+    end
+
+    errors
   end
 
   def siret
