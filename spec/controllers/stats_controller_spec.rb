@@ -8,7 +8,7 @@ describe StatsController, type: :controller do
         FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
         FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
         FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 31.days.ago)
-        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 1.day.ago)
+        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => Time.now)
         @controller = StatsController.new
 
         allow(@controller).to receive(:administration_signed_in?).and_return(false)
@@ -18,7 +18,7 @@ describe StatsController, type: :controller do
 
       subject { @controller.send(:last_four_months_hash, association, :updated_at) }
 
-      it { expect(subject).to eq([
+      it { expect(subject).to match_array([
         [I18n.l(62.days.ago.beginning_of_month, format: "%B %Y"), 2],
         [I18n.l(31.days.ago.beginning_of_month, format: "%B %Y"), 1]
         ])
