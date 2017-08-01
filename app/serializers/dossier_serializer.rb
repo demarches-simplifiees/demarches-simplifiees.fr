@@ -3,6 +3,7 @@ class DossierSerializer < ActiveModel::Serializer
     :created_at,
     :updated_at,
     :archived,
+    :email,
     :mandataire_social,
     :state,
     :simplified_state,
@@ -21,6 +22,10 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :champs_private
   has_many :pieces_justificatives
   has_many :types_de_piece_justificative
+
+  def email
+    object.user.try(:email)
+  end
 
   def simplified_state
     object.decorate.display_state
