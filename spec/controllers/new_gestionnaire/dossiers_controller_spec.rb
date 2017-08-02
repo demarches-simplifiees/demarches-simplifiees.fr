@@ -112,4 +112,50 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(saved_avis.claimant).to eq(gestionnaire) }
     it { expect(response).to redirect_to(instruction_dossier_path(dossier.procedure, dossier)) }
   end
+
+  describe "#update_annotations" do
+    let(:champ_multiple_drop_down_list) do
+      type_de_champ = TypeDeChamp.create(type_champ: 'multiple_drop_down_list', libelle: 'libelle')
+      ChampPrivate.create(type_de_champ: type_de_champ)
+    end
+
+    let(:champ_datetime) do
+      type_de_champ = TypeDeChamp.create(type_champ: 'datetime', libelle: 'libelle')
+      ChampPrivate.create(type_de_champ: type_de_champ)
+    end
+
+    let(:dossier) do
+      create(:dossier, :replied, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_datetime])
+    end
+
+    before do
+      patch :update_annotations, params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id,
+        dossier: {
+          champs_private_attributes: {
+            '0': {
+              id: champ_multiple_drop_down_list.id,
+              value: ['', 'un', 'deux']
+            },
+            '1': {
+              id: champ_datetime.id,
+              'value(1i)': 2019,
+              'value(2i)': 12,
+              'value(3i)': 21,
+              'value(4i)': 13,
+              'value(5i)': 17
+            }
+          }
+        }
+      }
+
+      champ_multiple_drop_down_list.reload
+      champ_datetime.reload
+    end
+
+    it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
+    it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
+    it { expect(response).to redirect_to(instruction_dossier_path(dossier.procedure, dossier)) }
+  end
 end
