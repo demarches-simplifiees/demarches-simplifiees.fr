@@ -1,4 +1,5 @@
-= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
 
-= select_tag("champs['#{champ.id}']",
-  options_for_select(Champ.departements, selected: champ.value))
+= form.select :value,
+  Champ.departements,
+  required: champ.mandatory
