@@ -367,7 +367,7 @@ describe Backoffice::DossiersController, type: :controller do
       expect(dossier.state).to eq('replied')
     end
 
-    it { is_expected.to redirect_to backoffice_dossiers_path }
+    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier_id) }
   end
 
   describe 'POST #archive' do
