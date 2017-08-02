@@ -1,9 +1,9 @@
-= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
 
 - if champ.drop_down_list && champ.drop_down_list.options.any?
-  = select_tag("champs['#{champ.id}']",
-    options_for_select(champ.drop_down_list.options,
-      selected: champ.drop_down_list.selected_options_without_decorator(champ),
-      disabled: champ.drop_down_list.disabled_options),
+  = form.select :value,
+      champ.drop_down_list.options,
+      { selected: champ.drop_down_list.selected_options_without_decorator(champ),
+        disabled: champ.drop_down_list.disabled_options },
       multiple: true,
-      class: 'select2')
+      class: 'select2'

@@ -1,9 +1,8 @@
-= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
 
-%input{ type: 'checkbox',
-  name: "champs['#{champ.id}']",
-  id: "champs_#{champ.id}",
-  checked: ('checked' if champ.value == 'on'),
-  required: champ.mandatory }
+= form.check_box :value,
+  { required: champ.mandatory },
+  'on',
+  'off'
 
 %br

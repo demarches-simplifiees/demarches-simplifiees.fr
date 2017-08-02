@@ -1,9 +1,6 @@
-= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
 
-%input{ type: 'text',
+= form.text_field :value,
   'data-address': 'true',
-  name: "champs['#{champ.id}']",
-  id: "champs_#{champ.id}",
   placeholder: champ.libelle,
-  value: champ.value,
-  required: champ.mandatory }
+  required: champ.mandatory
