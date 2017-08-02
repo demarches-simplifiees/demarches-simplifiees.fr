@@ -32,8 +32,10 @@ class RootController < ApplicationController
   end
 
   def patron
+    description = 'a not so long description'
+
     all_champs = TypeDeChamp.type_champs
-      .map { |name, _| TypeDeChamp.new(type_champ: name, libelle: name, mandatory: true) }
+      .map { |name, _| TypeDeChamp.new(type_champ: name, libelle: name, description: description, mandatory: true) }
       .map { |type_de_champ| ChampPublic.new(type_de_champ: type_de_champ) }
       .map.with_index do |champ, i|
         champ.id = i
