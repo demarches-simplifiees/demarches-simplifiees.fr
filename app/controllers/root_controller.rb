@@ -32,19 +32,19 @@ class RootController < ApplicationController
   end
 
   def patron
-    @all_champs = TypeDeChamp.type_champs
+    all_champs = TypeDeChamp.type_champs
       .map { |name, _| TypeDeChamp.new(type_champ: name, libelle: name, mandatory: true) }
-      .map { |type_de_champ| Champ.new(type_de_champ: type_de_champ) }
+      .map { |type_de_champ| ChampPublic.new(type_de_champ: type_de_champ) }
       .map.with_index do |champ, i|
         champ.id = i
         champ
       end
 
-    @all_champs
+    all_champs
       .select { |champ| champ.type_champ == 'header_section' }
       .each { |champ| champ.type_de_champ.libelle = 'un super titre de section' }
 
-    @all_champs
+    all_champs
       .select { |champ| %w(drop_down_list multiple_drop_down_list).include?(champ.type_champ) }
       .each do |champ|
         champ.type_de_champ.drop_down_list = DropDownList.new(type_de_champ: champ.type_de_champ)
@@ -64,9 +64,11 @@ option C"
     }
 
     type_champ_values.each do |(type_champ, value)|
-      @all_champs
+      all_champs
         .select { |champ| champ.type_champ == type_champ.to_s }
         .each { |champ| champ.value = value }
     end
+
+    @dossier = Dossier.new(champs: all_champs)
   end
 end

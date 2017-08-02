@@ -3,12 +3,16 @@
     %h1 Formulaires
 
     %form.form
-      - @all_champs.each do |champ|
-        = render partial: "new_gestionnaire/dossiers/champs/#{champ.type_champ}", locals: { champ: champ }
-      %input{ type: "password", value: "12345678" }
-      .send-wrapper
-        %input.button.send{ type: "submit", value: "Enregistrer un brouillon (formnovalidate)", formnovalidate: true }
-        %input.button.send{ type: "submit", value: "Envoyer" }
+      = form_for @dossier, url: '', html: { class: 'form' } do |f|
+        = f.fields_for :champs do |champ_form|
+          - champ = champ_form.object
+          = render partial: "new_gestionnaire/dossiers/champs/#{champ.type_champ}",
+            locals: { champ: champ, form: champ_form }
+
+        %input{ type: "password", value: "12345678" }
+        .send-wrapper
+          = f.submit 'Enregistrer un brouillon (formnovalidate)', formnovalidate: true, class: 'button send'
+          = f.submit 'Envoyer', class: 'button send'
 
     %h1 Boutons
 
