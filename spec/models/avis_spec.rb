@@ -86,4 +86,35 @@ RSpec.describe Avis, type: :model do
       end
     end
   end
+
+  describe '#notify_gestionnaire' do
+    context 'when an avis is created' do
+      before do
+        avis_invitation_double = double('avis_invitation', deliver_now: true)
+        allow(AvisMailer).to receive(:avis_invitation).and_return(avis_invitation_double)
+        Avis.create(claimant: claimant, email: 'email@l.com')
+      end
+
+      it { expect(AvisMailer).to have_received(:avis_invitation) }
+    end
+  end
+
+  describe '#try_to_assign_gestionnaire' do
+    let!(:gestionnaire) { create(:gestionnaire) }
+    let(:avis) { Avis.create(claimant: claimant, email: email, dossier: create(:dossier)) }
+
+    context 'when the email belongs to a gestionnaire' do
+      let(:email) { gestionnaire.email }
+
+      it { expect(avis.gestionnaire).to eq(gestionnaire) }
+      it { expect(avis.email).to be_nil }
+    end
+
+    context 'when the email does not belongs to a gestionnaire' do
+      let(:email) { 'unknown@email' }
+
+      it { expect(avis.gestionnaire).to be_nil }
+      it { expect(avis.email).to eq(email) }
+    end
+  end
 end

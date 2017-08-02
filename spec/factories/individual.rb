@@ -3,6 +3,6 @@ FactoryGirl.define do
     gender 'M.'
     nom 'Julien'
     prenom 'Xavier'
-    birthdate '20/01/1991'
+    birthdate '1991-11-01'
   end
 end

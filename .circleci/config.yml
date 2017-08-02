@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    parallelism: 2
+    parallelism: 3
     docker:
       - image: ruby:2.3.1
       - image: postgres:9.4.1
