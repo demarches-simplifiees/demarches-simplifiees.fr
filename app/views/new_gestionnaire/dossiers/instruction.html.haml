@@ -35,3 +35,16 @@
                   - else
                     %span.waiting En attente de réponse
                 %p= avis.answer
+
+  - if @dossier.ordered_champs_private.present?
+    %section
+      %h1.private-annotations Annotations privées
+      .card.featured
+        = form_for @dossier, url: annotations_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' } do |f|
+          = f.fields_for :champs_private, f.object.ordered_champs_private do |champ_form|
+            - champ = champ_form.object
+            = render partial: "new_gestionnaire/dossiers/champs/#{champ.type_champ}",
+              locals: { champ: champ, form: champ_form }
+
+          .send-wrapper
+            = f.submit 'Sauvegarder', class: 'button send'

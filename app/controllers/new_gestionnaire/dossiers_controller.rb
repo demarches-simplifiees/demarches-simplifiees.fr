@@ -66,6 +66,12 @@ module NewGestionnaire
       redirect_to instruction_dossier_path(dossier.procedure, dossier)
     end
 
+    def update_annotations
+      dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
+      dossier.update_attributes(champs_private_params)
+      redirect_to instruction_dossier_path(dossier.procedure, dossier)
+    end
+
     private
 
     def dossier
@@ -78,6 +84,10 @@ module NewGestionnaire
 
     def avis_params
       params.require(:avis).permit(:email, :introduction)
+    end
+
+    def champs_private_params
+      params.require(:dossier).permit(champs_private_attributes: [:id, :value, value: []])
     end
   end
 end
