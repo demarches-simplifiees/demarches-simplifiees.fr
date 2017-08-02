@@ -1,1 +1,5 @@
-= form.label :value, "#{champ.libelle} #{champ.mandatory ? '*' : nil}"
+= form.label :value do
+  #{champ.libelle} #{champ.mandatory ? '*' : nil}
+  - if champ.description.present?
+    %br
+    %span.notice= champ.description

@@ -8,8 +8,15 @@
   }
 
   label {
-    margin-bottom: $default-spacer;
+    margin-bottom: $default-padding;
     display: inline-block;
+
+    .notice {
+      font-size: 14px;
+      display: inline-block;
+      margin-top: 8px;
+      color: $grey;
+    }
   }
 
   input[type=text]:not([data-address='true']),
