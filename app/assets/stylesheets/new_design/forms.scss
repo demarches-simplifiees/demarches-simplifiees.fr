@@ -11,6 +11,10 @@
     margin-bottom: $default-padding;
     display: block;
 
+    .mandatory {
+      color: $dark-red;
+    }
+
     .notice {
       font-size: 14px;
       display: block;
