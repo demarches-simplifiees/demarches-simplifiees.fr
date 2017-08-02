@@ -1,8 +1,7 @@
-= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
 
-%textarea{ name: "champs['#{champ.id}']",
+= form.text_area :value,
+  row: 6,
   placeholder: champ.description,
-  id: "champs_#{champ.id}",
-  row: '6',
-  required: champ.mandatory }
-  = sanitize(champ.value)
+  required: champ.mandatory,
+  value: sanitize(champ.value)
