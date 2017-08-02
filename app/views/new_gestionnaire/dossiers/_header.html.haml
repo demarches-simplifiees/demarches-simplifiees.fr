@@ -1,10 +1,13 @@
 .backoffice-header
   .container
-    %ul.breadcrumbs
-      %li
-        = link_to dossier.procedure.libelle, procedure_path(dossier.procedure)
-      %li
-        = "Dossier n° #{dossier.id}"
+    .flex.justify-between
+      %ul.breadcrumbs
+        %li
+          = link_to dossier.procedure.libelle, procedure_path(dossier.procedure)
+        %li
+          = "Dossier nº #{dossier.id}"
+      %div
+        = render partial: "state_button", locals: { dossier: dossier }
     %ul.tabs
       - notifications_summary = dossier.notifications_summary
       %li{ class: current_page?(dossier_path(dossier.procedure, dossier)) ? 'active' : nil }

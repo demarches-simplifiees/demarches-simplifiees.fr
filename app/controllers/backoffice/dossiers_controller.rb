@@ -99,9 +99,9 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     dossier.received!
     current_gestionnaire.follow(dossier)
-    flash.notice = 'Dossier considéré comme reçu.'
+    flash.notice = 'Dossier passé en instruction.'
 
-    redirect_to backoffice_dossier_path(id: dossier.id)
+    redirect_to_dossier(dossier)
   end
 
   def process_dossier
@@ -186,6 +186,14 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   private
+
+  def redirect_to_dossier(dossier)
+    if URI(request.referer).path == dossier_path(dossier.procedure, dossier)
+      redirect_to dossier_path(dossier.procedure, dossier)
+    else
+      redirect_to backoffice_dossier_path(id: dossier.id)
+    end
+  end
 
   def check_attestation_emailable(dossier)
     if dossier&.attestation&.emailable? == false

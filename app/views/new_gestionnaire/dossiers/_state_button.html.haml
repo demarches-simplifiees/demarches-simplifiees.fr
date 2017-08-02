@@ -1,0 +1,17 @@
+- if dossier.en_construction?
+  %span.button.primary.dropdown
+    = dossier.decorate.display_state
+    .dropdown-content.fade-in-down
+      %ul.dropdown-items
+        - if dossier.en_construction?
+          %li.selected
+            %i.edit
+            .description
+              %h4 En construction
+              Vous permettez à l'usager de modifier ses réponses au formulaire
+          %li
+            = link_to backoffice_dossier_receive_path(dossier), method: :post, data: { confirm: "Confirmer vous le passage en instruction de ce dossier ?" } do
+              %i.in-progress
+              .description
+                %h4 Passer en instruction
+                L'usager ne pourra plus modifier le formulaire
