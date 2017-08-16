@@ -16,50 +16,52 @@
   .dossiers-categories {
     li {
       display: inline-block;
-      height: 56px;
-      width: 130px;
-      line-height: 17px;
+      line-height: 36px;
       position: relative;
       text-align: center;
       font-size: 14px;
+      padding-left: 20px;
+      padding-right: 20px;
+      border-radius: 3px 3px 0 0;
+      border: 1px solid transparent;
 
       a {
         color: $black;
       }
 
-      &::before,
-      &:last-child::after {
-        content: "";
-        position: absolute;
-        height: 36px;
-        width: 1px;
-        background-color: $border-grey;
-        margin-right: $default-padding;
-      }
-
-      &::before {
-        left: 0px;
-      }
-
-      &:last-child::after {
-        right: 0px;
-        top: 0px;
-        margin-right: 0px;
-      }
-
       &.active {
-        border-bottom: 2px solid $blue;
+        background-color: white;
+        border-top: 1px solid $border-grey;
+        border-left: 1px solid $border-grey;
+        border-right: 1px solid $border-grey;
 
         a {
+          color: $blue;
+        }
+
+        .dossiers-count {
+          color: $blue;
+        }
+      }
+
+      &:hover {
+        a {
+          color: $blue;
+        }
+
+        .dossiers-count {
           color: $blue;
         }
       }
 
       .dossiers-count {
-        position: relative;
-        display: block;
-        font-size: 16px;
+        background-color: rgba(0,0,0,0.08);
+        padding-left: 5px;
+        padding-right: 5px;
+        border-radius: 100px;
         font-weight: bold;
+        color: rgba(0,0,0,0.6);
+        font-size: 14px;
       }
     }
   }
