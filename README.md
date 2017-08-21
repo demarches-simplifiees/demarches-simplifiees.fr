@@ -82,6 +82,11 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 - Linter les fichiers HAML : `bundle exec haml-lint app/views/`
 - Linter les fichiers SCSS : `bundle exec scss-lint app/assets/stylesheets/`
 
+## Déploiement
+
+- Tout nouveau commit ajouté à la branche `dev` est automatiquement déployé [en intégration](https://tps-dev.apientreprise.fr/)
+- Tout nouveau commit ajouté à la branche `master` est automatiquement déployé [en production](https://tps.apientreprise.fr/)
+
 ## Régénérer les binstubs
 
     bundle binstub railties --force
