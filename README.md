@@ -48,6 +48,17 @@ Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les c
     rake db:migrate RAILS_ENV=test
 
 
+## Création des comptes initiaux
+
+    rails c
+    > email = "<votre email>"
+    > password = "<votre mot de passe>"
+    > Administration.create(email: email, password: password)
+    > Administrateur.create(email: email, password: password)
+    > Gestionnaire.create(email: email, password: password)
+    > User.create(email: email, password: password)
+
+
 ## Lancement de l'application
 
     redis-server
