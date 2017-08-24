@@ -6,6 +6,7 @@ class Avis < ApplicationRecord
   before_create :try_to_assign_gestionnaire
   after_create :notify_gestionnaire
 
+  default_scope { joins(:dossier) }
   scope :with_answer, -> { where.not(answer: nil) }
   scope :without_answer, -> { where(answer: nil) }
   scope :for_dossier, ->(dossier_id) { where(dossier_id: dossier_id) }
