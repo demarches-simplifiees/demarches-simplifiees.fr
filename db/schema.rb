@@ -384,9 +384,9 @@ ActiveRecord::Schema.define(version: 20170713151123) do
     t.boolean  "individual_with_siret", default: false
     t.date     "auto_archive_on"
     t.datetime "hidden_at"
-    t.index ["hidden_at"], name: "index_procedures_on_hidden_at", using: :btree
     t.datetime "published_at"
     t.datetime "archived_at"
+    t.index ["hidden_at"], name: "index_procedures_on_hidden_at", using: :btree
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|
