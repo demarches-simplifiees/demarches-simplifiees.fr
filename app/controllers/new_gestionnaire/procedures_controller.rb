@@ -27,19 +27,26 @@ module NewGestionnaire
 
       @a_suivre_dossiers = procedure
         .dossiers
+        .includes(:user)
         .without_followers
         .en_cours
 
       @followed_dossiers = current_gestionnaire
         .followed_dossiers
+        .includes(:user)
         .where(procedure: @procedure)
         .en_cours
 
-      @termines_dossiers = procedure.dossiers.termine
+      @followed_dossiers_id = current_gestionnaire
+        .followed_dossiers
+        .where(procedure: @procedure)
+        .pluck(:id)
 
-      @all_state_dossiers = procedure.dossiers.all_state
+      @termines_dossiers = procedure.dossiers.includes(:user).termine
 
-      @archived_dossiers = procedure.dossiers.archived
+      @all_state_dossiers = procedure.dossiers.includes(:user).all_state
+
+      @archived_dossiers = procedure.dossiers.includes(:user).archived
 
       @statut = params[:statut].present? ? params[:statut] : 'a-suivre'
 
