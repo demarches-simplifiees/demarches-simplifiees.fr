@@ -482,18 +482,19 @@ describe Dossier do
       it { expect(subject[1]).to be_a_kind_of(Time) }
       it { expect(subject[2]).to be_a_kind_of(Time) }
       it { expect(subject[3]).to be_in([true, false]) }
-      it { expect(subject[4]).to be_in([true, false]) }
-      it { expect(subject[5]).to eq("draft") }
-      it { expect(subject[6]).to eq(date1) }
-      it { expect(subject[7]).to eq(date2) }
-      it { expect(subject[8]).to eq(date3) }
-      it { expect(subject[9]).to be_a_kind_of(String) }
+      it { expect(subject[4]).to eq(dossier.user.email) }
+      it { expect(subject[5]).to be_in([true, false]) }
+      it { expect(subject[6]).to eq("draft") }
+      it { expect(subject[7]).to eq(date1) }
+      it { expect(subject[8]).to eq(date2) }
+      it { expect(subject[9]).to eq(date3) }
       it { expect(subject[10]).to be_a_kind_of(String) }
-      it { expect(subject[11]).to be_nil }
+      it { expect(subject[11]).to be_a_kind_of(String) }
       it { expect(subject[12]).to be_nil }
       it { expect(subject[13]).to be_nil }
       it { expect(subject[14]).to be_nil }
       it { expect(subject[15]).to be_nil }
+      it { expect(subject[16]).to be_nil }
       it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
         dossier.procedure.types_de_champ.count +
         dossier.procedure.types_de_champ_private.count +
@@ -505,10 +506,10 @@ describe Dossier do
 
         subject { dossier_with_individual.data_with_champs }
 
-        it { expect(subject[11]).to eq(dossier_with_individual.individual.gender) }
-        it { expect(subject[12]).to eq(dossier_with_individual.individual.prenom) }
-        it { expect(subject[13]).to eq(dossier_with_individual.individual.nom) }
-        it { expect(subject[14]).to eq(dossier_with_individual.individual.birthdate) }
+        it { expect(subject[12]).to eq(dossier_with_individual.individual.gender) }
+        it { expect(subject[13]).to eq(dossier_with_individual.individual.prenom) }
+        it { expect(subject[14]).to eq(dossier_with_individual.individual.nom) }
+        it { expect(subject[15]).to eq(dossier_with_individual.individual.birthdate) }
       end
     end
 
@@ -519,6 +520,7 @@ describe Dossier do
           dossier.created_at,
           dossier.updated_at,
           "false",
+          dossier.user.email,
           "false",
           "draft",
           dossier.initiated_at,
