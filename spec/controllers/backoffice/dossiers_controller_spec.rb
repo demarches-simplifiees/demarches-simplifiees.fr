@@ -333,8 +333,6 @@ describe Backoffice::DossiersController, type: :controller do
       end
 
       context 'when the dossier has an attestation' do
-        let(:emailable) { false }
-
         before do
           attestation = Attestation.new
           allow(attestation).to receive(:pdf).and_return(double(read: 'pdf', size: 2.megabytes))
@@ -350,6 +348,8 @@ describe Backoffice::DossiersController, type: :controller do
 
           it 'Notification email is sent with the attestation' do
             subject
+
+            is_expected.to redirect_to backoffice_dossier_path(id: dossier.id)
           end
         end
 
@@ -361,10 +361,10 @@ describe Backoffice::DossiersController, type: :controller do
             expect(controller).to receive(:capture_message)
 
             subject
+
+            is_expected.to redirect_to backoffice_dossier_path(id: dossier.id)
           end
         end
-
-        it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
       end
     end
   end
