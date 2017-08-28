@@ -119,6 +119,22 @@ describe Admin::GestionnairesController, type: :controller do
       it { expect(gestionnaire.administrateurs.size).to eq 2 }
     end
 
+    context 'when an other admin will add the same email with some uppercase in it' do
+      let(:email) { 'Test@Plop.com' }
+      let(:gestionnaire) { Gestionnaire.find_by_email(email.downcase) }
+
+      before do
+        create :gestionnaire, email: email, administrateurs: [admin]
+
+        sign_out admin
+        sign_in admin_2
+
+        subject
+      end
+
+      it { expect(admin_2.gestionnaires).to include gestionnaire }
+    end
+
     context 'Email notification' do
       it 'Notification email is sent when accompagnateur is create' do
         expect(GestionnaireMailer).to receive(:new_gestionnaire).and_return(GestionnaireMailer)
