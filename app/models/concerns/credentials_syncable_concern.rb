@@ -1,5 +1,5 @@
 module CredentialsSyncableConcern
-    extend ActiveSupport::Concern
+  extend ActiveSupport::Concern
 
     included do
       after_update :sync_credentials
