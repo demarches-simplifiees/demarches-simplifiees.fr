@@ -5,7 +5,32 @@
   display: inline-block;
   padding: 4px $default-spacer;
   background: $grey;
+  border: 1px solid transparent;
   color: #FFFFFF;
   border-radius: 4px;
   font-size: 12px;
+
+  &.instruction {
+    background-color: #FFFFFF;
+    color: $blue;
+    border: 1px solid $blue;
+  }
+
+  &.construction {
+    background-color: #FFFFFF;
+    color: $black;
+    border: 1px solid $black;
+  }
+
+  &.closed {
+    background-color: $green;
+  }
+
+  &.refused {
+    background-color: $dark-red;
+  }
+
+  &.without-continuation {
+    background-color: $black;
+  }
 }
