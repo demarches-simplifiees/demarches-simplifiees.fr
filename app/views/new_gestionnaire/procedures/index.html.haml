@@ -4,11 +4,11 @@
   %ul.procedure-list
     - @procedures.each do |p|
       %li.procedure-item.flex.align-start
-        - if p.logo.present?
-          = image_tag p.logo, class: "procedure-logo"
 
         .procedure-details
           %p.procedure-title
+            - if p.logo.present?
+              = image_tag p.logo, class: "procedure-logo"
             = link_to(p.libelle, procedure_path(p))
 
           %ul.procedure-stats.flex
