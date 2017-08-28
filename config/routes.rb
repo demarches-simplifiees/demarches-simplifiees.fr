@@ -252,6 +252,7 @@ Rails.application.routes.draw do
             scope :carte do
               get 'position'
             end
+            post 'avis' => 'dossiers#create_avis'
           end
         end
       end
