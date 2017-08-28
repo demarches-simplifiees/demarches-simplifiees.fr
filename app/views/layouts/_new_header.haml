@@ -6,7 +6,7 @@
         %img{ src: image_url("header/logo-tps.svg") }
 
       - if gestionnaire_signed_in?
-        %ul.header-left-menu
+        %ul.header-tabs
           %li
             = link_to "Procédures", procedures_path, class: "active"
 
