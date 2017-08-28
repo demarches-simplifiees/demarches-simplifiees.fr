@@ -8,8 +8,19 @@
   }
 
   label {
-    margin-bottom: $default-spacer;
-    display: inline-block;
+    margin-bottom: $default-padding;
+    display: block;
+
+    .mandatory {
+      color: $dark-red;
+    }
+
+    .notice {
+      font-size: 14px;
+      display: block;
+      margin-top: $default-spacer;
+      color: $grey;
+    }
   }
 
   input[type=text]:not([data-address='true']),
