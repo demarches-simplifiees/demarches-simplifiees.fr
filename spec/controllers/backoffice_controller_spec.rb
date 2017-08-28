@@ -58,6 +58,17 @@ describe BackofficeController, type: :controller do
         it { expect(response.body).to include("1 avis rendu") }
         it { expect(response.body).to include(dossier.procedure.libelle) }
       end
+
+      context 'when dossier linked to avis is hidden' do
+        before do
+          dossier.update_attributes(hidden_at: Time.now)
+          get :invitations
+        end
+
+        it { expect(response.status).to eq(200) }
+        it { expect(response.body).to include("0 avis à rendre") }
+        it { expect(response.body).to include("0 avis rendu") }
+      end
     end
   end
 end
