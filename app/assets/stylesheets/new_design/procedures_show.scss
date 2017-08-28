@@ -13,59 +13,6 @@
     margin-bottom: 2 * $default-padding;
   }
 
-  .dossiers-categories {
-    li {
-      display: inline-block;
-      line-height: 36px;
-      position: relative;
-      text-align: center;
-      font-size: 14px;
-      padding-left: 20px;
-      padding-right: 20px;
-      border-radius: 3px 3px 0 0;
-      border: 1px solid transparent;
-
-      a {
-        color: $black;
-      }
-
-      &.active {
-        background-color: white;
-        border-top: 1px solid $border-grey;
-        border-left: 1px solid $border-grey;
-        border-right: 1px solid $border-grey;
-
-        a {
-          color: $blue;
-        }
-
-        .dossiers-count {
-          color: $blue;
-        }
-      }
-
-      &:hover {
-        a {
-          color: $blue;
-        }
-
-        .dossiers-count {
-          color: $blue;
-        }
-      }
-
-      .dossiers-count {
-        background-color: rgba(0,0,0,0.08);
-        padding-left: 5px;
-        padding-right: 5px;
-        border-radius: 100px;
-        font-weight: bold;
-        color: rgba(0,0,0,0.6);
-        font-size: 14px;
-      }
-    }
-  }
-
   .dossiers-table {
     margin: (2 * $default-padding) auto;
     width: 100%;

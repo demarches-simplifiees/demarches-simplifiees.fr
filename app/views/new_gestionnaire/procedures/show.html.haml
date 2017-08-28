@@ -6,31 +6,31 @@
 
       .width-100
         %h1= @procedure.libelle
-        %ul.dossiers-categories
+        %ul.tabs
           %li{ class: (@statut == 'a-suivre') ? 'active' : nil }>
             = link_to(procedure_path(@procedure, statut: 'a-suivre')) do
               à suivre
-              %span.dossiers-count= @a_suivre_dossiers.count
+              %span.badge= @a_suivre_dossiers.count
 
           %li{ class: (@statut == 'suivis') ? 'active' : nil }>
             = link_to(procedure_path(@procedure, statut: 'suivis')) do
               = t('pluralize.followed', count: @followed_dossiers.count)
-              %span.dossiers-count= @followed_dossiers.count
+              %span.badge= @followed_dossiers.count
 
           %li{ class: (@statut == 'traites') ? 'active' : nil }>
             = link_to(procedure_path(@procedure, statut: 'traites')) do
               = t('pluralize.processed', count: @termines_dossiers.count)
-              %span.dossiers-count= @termines_dossiers.count
+              %span.badge= @termines_dossiers.count
 
           %li{ class: (@statut == 'tous') ? 'active' : nil }>
             = link_to(procedure_path(@procedure, statut: 'tous')) do
               tous les dossiers
-              %span.dossiers-count= @all_state_dossiers.count
+              %span.badge= @all_state_dossiers.count
 
           %li{ class: (@statut == 'archives') ? 'active' : nil }>
             = link_to(procedure_path(@procedure, statut: 'archives')) do
               = t('pluralize.archived', count: @archived_dossiers.count)
-              %span.dossiers-count= @archived_dossiers.count
+              %span.badge= @archived_dossiers.count
 
   .container
     - if @dossiers.present?
