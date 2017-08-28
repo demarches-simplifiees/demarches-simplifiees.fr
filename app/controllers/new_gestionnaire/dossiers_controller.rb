@@ -12,6 +12,10 @@ module NewGestionnaire
       @dossier = dossier
     end
 
+    def instruction
+      @dossier = dossier
+    end
+
     def follow
       current_gestionnaire.follow(dossier)
       dossier.next_step!('gestionnaire', 'follow')
@@ -57,6 +61,17 @@ module NewGestionnaire
       render json: { lon: lon, lat: lat, zoom: zoom, dossier_id: params[:dossier_id] }
     end
 
+    def create_avis
+      Avis.create(avis_params.merge(claimant: current_gestionnaire, dossier: dossier))
+      redirect_to instruction_dossier_path(dossier.procedure, dossier)
+    end
+
+    def update_annotations
+      dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
+      dossier.update_attributes(champs_private_params)
+      redirect_to instruction_dossier_path(dossier.procedure, dossier)
+    end
+
     private
 
     def dossier
@@ -65,6 +80,14 @@ module NewGestionnaire
 
     def commentaire_params
       params.require(:commentaire).permit(:body)
+    end
+
+    def avis_params
+      params.require(:avis).permit(:email, :introduction)
+    end
+
+    def champs_private_params
+      params.require(:dossier).permit(champs_private_attributes: [:id, :value, value: []])
     end
   end
 end

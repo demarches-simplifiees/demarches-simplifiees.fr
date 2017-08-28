@@ -243,14 +243,17 @@ Rails.application.routes.draw do
           member do
             get 'attestation'
             get 'messagerie'
+            get 'instruction'
             patch 'follow'
             patch 'unfollow'
             patch 'archive'
             patch 'unarchive'
+            patch 'annotations' => 'dossiers#update_annotations'
             post 'commentaire' => 'dossiers#create_commentaire'
             scope :carte do
               get 'position'
             end
+            post 'avis' => 'dossiers#create_avis'
           end
         end
       end
