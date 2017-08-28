@@ -27,12 +27,30 @@
       a {
         color: $blue;
       }
+
+      .badge {
+        color: $blue;
+      }
     }
 
     &:hover {
       a {
         color: $blue;
       }
+
+      .badge {
+        color: $blue;
+      }
+    }
+
+    .badge {
+      background-color: rgba(0, 0, 0, 0.08);
+      padding-left: 5px;
+      padding-right: 5px;
+      border-radius: 100px;
+      font-weight: bold;
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 14px;
     }
   }
 }

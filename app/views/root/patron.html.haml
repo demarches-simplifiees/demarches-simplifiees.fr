@@ -93,12 +93,14 @@
     .container
       Titre
       %ul.tabs
-        %li{ class: "active" }
-          = link_to "Onglet 1", "#"
+        %li.active
+          = link_to "Onglet actif", "#"
         %li
-          = link_to "Onglet 2", "#"
+          = link_to "Onglet inactif", "#"
         %li
-          = link_to "Onglet 3", "#"
+          = link_to "#" do
+            Onglet avec badge
+            %span.badge 2
 
   .container
     %h1 Breadcrumbs
