@@ -4,19 +4,35 @@
 .tabs {
   li {
     display: inline-block;
-    margin-right: 40px;
-  }
+    line-height: 36px;
+    position: relative;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 3px 3px 0 0;
+    border: 1px solid transparent;
 
-  a {
-    @include vertical-padding(14px);
-    display: block;
-    color: $black;
-    font-size: 22px;
+    a {
+      display: block;
+      padding-left: 20px;
+      padding-right: 20px;
+      color: $black;
+    }
 
-    &.selected,
+    &.active {
+      background-color: #FFFFFF;
+      border-top: 1px solid $border-grey;
+      border-left: 1px solid $border-grey;
+      border-right: 1px solid $border-grey;
+
+      a {
+        color: $blue;
+      }
+    }
+
     &:hover {
-      border-bottom: 2px solid $blue;
-      padding-bottom: 12px;
+      a {
+        color: $blue;
+      }
     }
   }
 }
