@@ -1,8 +1,6 @@
-= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { champ: champ }
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
 
-%input{ name: "champs['#{champ.id}']",
-  placeholder: "JJ/MM/AAAA",
-  id: "champs_#{champ.id}",
+= form.date_field :value,
   value: champ.value,
-  type: "date",
-  required: champ.mandatory }
+  placeholder: 'JJ/MM/AAAA',
+  required: champ.mandatory
