@@ -51,16 +51,6 @@
     %p
       = link_to ".button.primary.expand", "#", class: "button primary expand"
 
-    %h1 Onglets
-
-    %ul.tabs
-      %li
-        = link_to "Onglet 1", "#", class: "selected"
-      %li
-        = link_to "Onglet 2", "#"
-      %li
-        = link_to "Onglet 3", "#"
-
     %h1 Labels
 
     %span.label .label
@@ -103,12 +93,14 @@
     .container
       Titre
       %ul.tabs
+        %li.active
+          = link_to "Onglet actif", "#"
         %li
-          = link_to "Onglet 1", "#", class: "selected"
+          = link_to "Onglet inactif", "#"
         %li
-          = link_to "Onglet 2", "#"
-        %li
-          = link_to "Onglet 3", "#"
+          = link_to "#" do
+            Onglet avec badge
+            %span.badge 2
 
   .container
     %h1 Breadcrumbs

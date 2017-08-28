@@ -13,57 +13,6 @@
     margin-bottom: 2 * $default-padding;
   }
 
-  .dossiers-categories {
-    li {
-      display: inline-block;
-      height: 56px;
-      width: 130px;
-      line-height: 17px;
-      position: relative;
-      text-align: center;
-      font-size: 14px;
-
-      a {
-        color: $black;
-      }
-
-      &::before,
-      &:last-child::after {
-        content: "";
-        position: absolute;
-        height: 36px;
-        width: 1px;
-        background-color: $border-grey;
-        margin-right: $default-padding;
-      }
-
-      &::before {
-        left: 0px;
-      }
-
-      &:last-child::after {
-        right: 0px;
-        top: 0px;
-        margin-right: 0px;
-      }
-
-      &.active {
-        border-bottom: 2px solid $blue;
-
-        a {
-          color: $blue;
-        }
-      }
-
-      .dossiers-count {
-        position: relative;
-        display: block;
-        font-size: 16px;
-        font-weight: bold;
-      }
-    }
-  }
-
   .dossiers-table {
     margin: (2 * $default-padding) auto;
     width: 100%;
