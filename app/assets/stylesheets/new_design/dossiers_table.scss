@@ -1,0 +1,33 @@
+@import "colors";
+@import "constants";
+
+.table.dossiers-table {
+  td {
+    padding: 0;
+  }
+
+  .cell-link {
+    color: $black;
+    padding: (3 * $default-spacer) 2px;
+    display: block;
+  }
+
+  i.folder {
+    margin-right: $default-spacer;
+  }
+
+  .number-col,
+  .status-col {
+    width: 130px;
+  }
+
+  .status-col span {
+    width: 110px;
+    text-align: center;
+  }
+
+  .follow-col {
+    width: 200px;
+    text-align: center;
+  }
+}
