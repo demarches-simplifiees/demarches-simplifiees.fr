@@ -6,7 +6,7 @@
       %li
         = "Dossier n° #{dossier.id}"
     %ul.tabs
-      %li{ class: ("active" if current_page?(dossier_path(dossier.procedure, dossier))) }
+      %li{ class: current_page?(dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
         = link_to "Demande", dossier_path(dossier.procedure, dossier)
       %li{ class: current_page?(instruction_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
         = link_to "Instruction", instruction_dossier_path(dossier.procedure, dossier)
