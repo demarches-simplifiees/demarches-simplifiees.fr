@@ -44,6 +44,7 @@ class Dossier < ActiveRecord::Base
   belongs_to :user
 
   accepts_nested_attributes_for :champs
+  accepts_nested_attributes_for :champs_private
 
   default_scope { where(hidden_at: nil) }
   scope :state_brouillon,                      -> { where(state: BROUILLON) }
