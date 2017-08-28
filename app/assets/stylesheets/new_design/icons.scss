@@ -1,5 +1,9 @@
 i {
   display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
+  vertical-align: bottom;
 
   &.follow {
     background-image: image-url("icons/follow-folder.svg");
@@ -15,5 +19,9 @@ i {
 
   &.unarchive {
     background-image: image-url("icons/unarchive.svg");
+  }
+
+  &.folder {
+    background-image: image-url("icons/folder.svg");
   }
 }
