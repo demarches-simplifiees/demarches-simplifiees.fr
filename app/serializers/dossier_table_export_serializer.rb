@@ -3,6 +3,7 @@ class DossierTableExportSerializer < ActiveModel::Serializer
     :created_at,
     :updated_at,
     :archived,
+    :email,
     :mandataire_social,
     :state,
     :initiated_at,
@@ -16,6 +17,10 @@ class DossierTableExportSerializer < ActiveModel::Serializer
     :individual_prenom,
     :individual_nom,
     :individual_birthdate
+
+  def email
+    object.user.try(:email)
+  end
 
   def individual_prenom
     object.individual.try(:prenom)

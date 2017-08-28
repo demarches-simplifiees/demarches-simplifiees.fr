@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170713151123) do
+ActiveRecord::Schema.define(version: 20170801083632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 20170713151123) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "assign_tos", id: false, force: :cascade do |t|
+  create_table "assign_tos", force: :cascade do |t|
     t.integer "gestionnaire_id"
     t.integer "procedure_id"
     t.index ["gestionnaire_id"], name: "index_assign_tos_on_gestionnaire_id", using: :btree
@@ -384,9 +384,9 @@ ActiveRecord::Schema.define(version: 20170713151123) do
     t.boolean  "individual_with_siret", default: false
     t.date     "auto_archive_on"
     t.datetime "hidden_at"
-    t.index ["hidden_at"], name: "index_procedures_on_hidden_at", using: :btree
     t.datetime "published_at"
     t.datetime "archived_at"
+    t.index ["hidden_at"], name: "index_procedures_on_hidden_at", using: :btree
   end
 
   create_table "quartier_prioritaires", force: :cascade do |t|

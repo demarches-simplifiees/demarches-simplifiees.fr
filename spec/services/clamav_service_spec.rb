@@ -7,8 +7,8 @@ describe ClamavService do
     subject { ClamavService.safe_file? path_file }
 
     before do
-      allow_any_instance_of(ClamAV::Client).to receive(:initialize).and_return(ClamAV::Client)
-      allow_any_instance_of(ClamAV::Client).to receive(:execute).and_return([ClamAV::SuccessResponse])
+      client = instance_double("ClamAV::Client", :execute => [ClamAV::SuccessResponse])
+      allow(ClamAV::Client).to receive(:new).and_return(client)
     end
 
     it 'change permission of file path' do

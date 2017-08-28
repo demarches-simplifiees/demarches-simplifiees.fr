@@ -40,8 +40,23 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
 
 Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les commandes suivantes :
 
-    rake db:create db:schema:load db:migrate
-    rake db:create db:schema:load db:migrate RAILS_ENV=test
+    # Create and load the schema for both databases
+    rake db:create db:schema:load
+
+    # Migrate the development database and then the test database
+    rake db:migrate
+    rake db:migrate RAILS_ENV=test
+
+
+## Création des comptes initiaux
+
+    rails c
+    > email = "<votre email>"
+    > password = "<votre mot de passe>"
+    > Administration.create(email: email, password: password)
+    > Administrateur.create(email: email, password: password)
+    > Gestionnaire.create(email: email, password: password)
+    > User.create(email: email, password: password)
 
 
 ## Lancement de l'application
@@ -77,6 +92,11 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 - Faire tourner Brakeman : `bundle exec brakeman -z`
 - Linter les fichiers HAML : `bundle exec haml-lint app/views/`
 - Linter les fichiers SCSS : `bundle exec scss-lint app/assets/stylesheets/`
+
+## Déploiement
+
+- Tout nouveau commit ajouté à la branche `dev` est automatiquement déployé [en intégration](https://tps-dev.apientreprise.fr/)
+- Tout nouveau commit ajouté à la branche `master` est automatiquement déployé [en production](https://tps.apientreprise.fr/)
 
 ## Régénérer les binstubs
 

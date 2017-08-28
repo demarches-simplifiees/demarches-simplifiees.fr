@@ -482,18 +482,19 @@ describe Dossier do
       it { expect(subject[1]).to be_a_kind_of(Time) }
       it { expect(subject[2]).to be_a_kind_of(Time) }
       it { expect(subject[3]).to be_in([true, false]) }
-      it { expect(subject[4]).to be_in([true, false]) }
-      it { expect(subject[5]).to eq("draft") }
-      it { expect(subject[6]).to eq(date1) }
-      it { expect(subject[7]).to eq(date2) }
-      it { expect(subject[8]).to eq(date3) }
-      it { expect(subject[9]).to be_a_kind_of(String) }
+      it { expect(subject[4]).to eq(dossier.user.email) }
+      it { expect(subject[5]).to be_in([true, false]) }
+      it { expect(subject[6]).to eq("draft") }
+      it { expect(subject[7]).to eq(date1) }
+      it { expect(subject[8]).to eq(date2) }
+      it { expect(subject[9]).to eq(date3) }
       it { expect(subject[10]).to be_a_kind_of(String) }
-      it { expect(subject[11]).to be_nil }
+      it { expect(subject[11]).to be_a_kind_of(String) }
       it { expect(subject[12]).to be_nil }
       it { expect(subject[13]).to be_nil }
       it { expect(subject[14]).to be_nil }
       it { expect(subject[15]).to be_nil }
+      it { expect(subject[16]).to be_nil }
       it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
         dossier.procedure.types_de_champ.count +
         dossier.procedure.types_de_champ_private.count +
@@ -505,10 +506,10 @@ describe Dossier do
 
         subject { dossier_with_individual.data_with_champs }
 
-        it { expect(subject[11]).to eq(dossier_with_individual.individual.gender) }
-        it { expect(subject[12]).to eq(dossier_with_individual.individual.prenom) }
-        it { expect(subject[13]).to eq(dossier_with_individual.individual.nom) }
-        it { expect(subject[14]).to eq(dossier_with_individual.individual.birthdate) }
+        it { expect(subject[12]).to eq(dossier_with_individual.individual.gender) }
+        it { expect(subject[13]).to eq(dossier_with_individual.individual.prenom) }
+        it { expect(subject[14]).to eq(dossier_with_individual.individual.nom) }
+        it { expect(subject[15]).to eq(dossier_with_individual.individual.birthdate) }
       end
     end
 
@@ -519,6 +520,7 @@ describe Dossier do
           dossier.created_at,
           dossier.updated_at,
           "false",
+          dossier.user.email,
           "false",
           "draft",
           dossier.initiated_at,
@@ -598,87 +600,29 @@ describe Dossier do
   end
 
   describe '#ordered_champs' do
-    let!(:procedure_1) { create :procedure }
-    let!(:procedure_2) { create :procedure }
-
-    let(:dossier_1) { Dossier.new(id: 0, procedure: procedure_1) }
-    let(:dossier_2) { Dossier.new(id: 0, procedure: procedure_2) }
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { Dossier.create(user: create(:user), procedure: procedure) }
 
     before do
-      create :type_de_champ_public, libelle: 'type_1_1', order_place: 1, procedure: dossier_1.procedure
-      create :type_de_champ_public, libelle: 'type_1_2', order_place: 2, procedure: dossier_1.procedure
-
-      create :type_de_champ_public, libelle: 'type_2_1', order_place: 1, procedure: dossier_2.procedure
-      create :type_de_champ_public, libelle: 'type_2_2', order_place: 2, procedure: dossier_2.procedure
-      create :type_de_champ_public, libelle: 'type_2_3', order_place: 3, procedure: dossier_2.procedure
-
-      dossier_1.build_default_champs
-      dossier_2.build_default_champs
+      create(:type_de_champ_public, libelle: 'l1', order_place: 1, procedure: procedure)
+      create(:type_de_champ_public, libelle: 'l3', order_place: 3, procedure: procedure)
+      create(:type_de_champ_public, libelle: 'l2', order_place: 2, procedure: procedure)
     end
 
-    subject { dossier.ordered_champs }
-
-    it { expect(ChampPublic.where(dossier_id: 0).size).to eq 5 }
-
-    describe 'for dossier 1' do
-      let(:dossier) { dossier_1 }
-
-      it { expect(subject.size).to eq 2 }
-      it { expect(subject.first.type_de_champ.libelle).to eq 'type_1_1' }
-      it { expect(subject.last.type_de_champ.libelle).to eq 'type_1_2' }
-    end
-
-    describe 'for dossier 2' do
-      let(:dossier) { dossier_2 }
-
-      it { expect(subject.size).to eq 3 }
-
-      it { expect(subject.first.type_de_champ.libelle).to eq 'type_2_1' }
-      it { expect(subject.second.type_de_champ.libelle).to eq 'type_2_2' }
-      it { expect(subject.last.type_de_champ.libelle).to eq 'type_2_3' }
-    end
+    it { expect(dossier.ordered_champs.pluck(:libelle)).to match(%w(l1 l2 l3)) }
   end
 
   describe '#ordered_champs_private' do
-    let!(:procedure_1) { create :procedure }
-    let!(:procedure_2) { create :procedure }
-
-    let(:dossier_1) { Dossier.new(id: 0, procedure: procedure_1) }
-    let(:dossier_2) { Dossier.new(id: 0, procedure: procedure_2) }
+    let(:procedure) { create :procedure }
+    let(:dossier) { Dossier.create(user: create(:user), procedure: procedure) }
 
     before do
-      create :type_de_champ_private, libelle: 'type_1_1', order_place: 1, procedure: dossier_1.procedure
-      create :type_de_champ_private, libelle: 'type_1_2', order_place: 2, procedure: dossier_1.procedure
-
-      create :type_de_champ_private, libelle: 'type_2_1', order_place: 1, procedure: dossier_2.procedure
-      create :type_de_champ_private, libelle: 'type_2_2', order_place: 2, procedure: dossier_2.procedure
-      create :type_de_champ_private, libelle: 'type_2_3', order_place: 3, procedure: dossier_2.procedure
-
-      dossier_1.build_default_champs
-      dossier_2.build_default_champs
+      create :type_de_champ_private, libelle: 'l1', order_place: 1, procedure: procedure
+      create :type_de_champ_private, libelle: 'l3', order_place: 3, procedure: procedure
+      create :type_de_champ_private, libelle: 'l2', order_place: 2, procedure: procedure
     end
 
-    subject { dossier.ordered_champs_private }
-
-    it { expect(ChampPrivate.where(dossier_id: 0).size).to eq 5 }
-
-    describe 'for dossier 1' do
-      let(:dossier) { dossier_1 }
-
-      it { expect(subject.size).to eq 2 }
-      it { expect(subject.first.type_de_champ.libelle).to eq 'type_1_1' }
-      it { expect(subject.last.type_de_champ.libelle).to eq 'type_1_2' }
-    end
-
-    describe 'for dossier 2' do
-      let(:dossier) { dossier_2 }
-
-      it { expect(subject.size).to eq 3 }
-
-      it { expect(subject.first.type_de_champ.libelle).to eq 'type_2_1' }
-      it { expect(subject.second.type_de_champ.libelle).to eq 'type_2_2' }
-      it { expect(subject.last.type_de_champ.libelle).to eq 'type_2_3' }
-    end
+    it { expect(dossier.ordered_champs_private.pluck(:libelle)).to match(%w(l1 l2 l3)) }
   end
 
   describe '#total_follow' do

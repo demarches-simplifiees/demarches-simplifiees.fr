@@ -190,7 +190,7 @@ class StatsController < ApplicationController
 
       average = Avis.with_answer
         .where(created_at: min_date..max_date)
-        .average("EXTRACT(EPOCH FROM updated_at - created_at) / 86400")
+        .average("EXTRACT(EPOCH FROM avis.updated_at - avis.created_at) / 86400")
 
       result = average ? average.to_f.round(2) : 0
 
