@@ -16,6 +16,7 @@ select {
 .page-wrapper {
   position: relative;
   padding-bottom: $footer-height;
+  min-height: 100%;
 
   @media (max-width: 1000px) {
     padding-bottom: $footer-height-mobile;
