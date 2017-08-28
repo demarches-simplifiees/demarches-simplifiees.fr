@@ -8,7 +8,7 @@ class PreferenceListDossier < ActiveRecord::Base
   end
 
   def table_with_s_attr
-    return 'dossiers.'+self.attr if table.nil? || table.empty?
+    return 'dossiers.' + self.attr if table.nil? || table.empty?
     table + 's' + '.' + attr
   end
 

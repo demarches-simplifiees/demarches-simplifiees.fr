@@ -137,7 +137,7 @@ class DossiersListGestionnaireService
     filter_preference_list.inject('') do |acc, preference|
       unless preference.filter.blank?
         filter = preference.filter.gsub('*', '%').gsub("'", "''")
-        filter = "%"+filter+"%" unless filter.include? '%'
+        filter = "%" + filter + "%" unless filter.include? '%'
 
         value = preference.table_with_s_attr
 

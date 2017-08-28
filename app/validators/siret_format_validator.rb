@@ -3,7 +3,7 @@ class SiretFormatValidator < ActiveModel::EachValidator
     unless value =~ /^\d{14}$/
       record.errors.add(attribute, :format)
     end
-    unless value!= nil && (luhn_checksum(value) % 10 == 0)
+    unless value != nil && (luhn_checksum(value) % 10 == 0)
       record.errors.add(attribute, :checksum)
     end
   end
