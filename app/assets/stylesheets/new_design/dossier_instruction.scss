@@ -14,4 +14,8 @@
     color: $grey;
     margin-bottom: 2 * $default-padding;
   }
+
+  input[type=email] {
+    max-width: 500px;
+  }
 }
