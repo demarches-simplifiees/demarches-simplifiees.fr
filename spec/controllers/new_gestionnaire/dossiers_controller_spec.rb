@@ -94,4 +94,22 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(saved_commentaire.dossier).to eq(dossier) }
     it { expect(response).to redirect_to(messagerie_dossier_path(dossier.procedure, dossier)) }
   end
+
+  describe "#create_avis" do
+    let(:saved_avis) { dossier.avis.first }
+
+    before do
+      post :create_avis, params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id,
+        avis: { email: 'email@a.com', introduction: 'intro' }
+      }
+    end
+
+    it { expect(saved_avis.email).to eq('email@a.com') }
+    it { expect(saved_avis.introduction).to eq('intro') }
+    it { expect(saved_avis.dossier).to eq(dossier) }
+    it { expect(saved_avis.claimant).to eq(gestionnaire) }
+    it { expect(response).to redirect_to(instruction_dossier_path(dossier.procedure, dossier)) }
+  end
 end
