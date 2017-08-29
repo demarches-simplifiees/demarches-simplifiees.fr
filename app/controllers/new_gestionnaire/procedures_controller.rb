@@ -1,7 +1,5 @@
 module NewGestionnaire
   class ProceduresController < GestionnaireController
-    layout "new_application"
-
     before_action :ensure_ownership!, except: [:index]
 
     def index

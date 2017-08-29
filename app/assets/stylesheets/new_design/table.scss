@@ -2,27 +2,51 @@
 @import "constants";
 @import "mixins";
 
-.table {
+.table { // TODO : tester de remplacer par l'élément table uniquement
   width: 100%;
-  font-size: 14px;
-  line-height: 22px;
 
-  th,
+  tbody tr {
+    border-top: 1px solid $border-grey;
+  }
+
   td {
-    @include vertical-padding($default-spacer)
+    @include vertical-padding($default-spacer);
+    vertical-align: middle;
   }
 
   th {
     text-align: left;
+    font-weight: bold;
+    padding: (3 * $default-spacer) 2px;
+  }
 
-    &.header-section {
-      color: $blue;
-      font-weight: bold;
-      font-size: 20px;
+  &.hoverable {
+    tbody tr:hover {
+      background: $light-grey;
     }
   }
 
-  td {
-    font-weight: bold;
+  &.vertical {
+    font-size: 14px;
+    line-height: 22px;
+
+    tr {
+      border-top: none;
+    }
+
+    th {
+      @include vertical-padding($default-spacer);
+      font-weight: normal;
+
+      &.header-section {
+        color: $blue;
+        font-weight: bold;
+        font-size: 20px;
+      }
+    }
+
+    td {
+      font-weight: bold;
+    }
   }
 }
