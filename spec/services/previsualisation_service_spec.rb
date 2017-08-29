@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe PrevisualisationService do
-  describe '.destroy_all_champs' do
-    subject { described_class.destroy_all_champs dossier }
+  describe '.delete_all_champs' do
+    subject { described_class.delete_all_champs dossier }
 
     let(:procedure_1) { create :procedure, :with_type_de_champ }
     let(:procedure_2) { create :procedure, :with_type_de_champ }
@@ -14,7 +14,7 @@ describe PrevisualisationService do
     it { expect(TypeDeChamp.all.size).to eq 2 }
     it { expect(Champ.all.size).to eq 2 }
 
-    context 'when function destroy_all_champs is call' do
+    context 'when function delete_all_champs is call' do
       let(:dossier) { dossier_1 }
 
       before do

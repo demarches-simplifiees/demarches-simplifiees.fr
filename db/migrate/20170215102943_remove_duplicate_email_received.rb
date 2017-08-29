@@ -1,6 +1,6 @@
 class RemoveDuplicateEmailReceived < ActiveRecord::Migration[5.0]
   def change
-     all_mails = MailReceived.all
+    all_mails = MailReceived.all
      groupped = all_mails.group_by { |m| m.procedure_id }
      filtered = groupped.reject { |k, v| v.length < 2 }
      filtered.each do |k, duplicate_mails|

@@ -248,7 +248,7 @@ shared_examples 'description_controller_spec' do
       it { expect(response).to redirect_to users_dossier_recapitulatif_path }
 
       context 'when champs is type_de_champ datetime' do
-        it { expect(dossier.champs.second.value).to eq(dossier_date_value+' '+dossier_hour_value+':'+dossier_minute_value) }
+        it { expect(dossier.champs.second.value).to eq(dossier_date_value + ' ' + dossier_hour_value + ':' + dossier_minute_value) }
       end
 
       context 'when champs value is empty' do
@@ -270,8 +270,8 @@ shared_examples 'description_controller_spec' do
       let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
       before do
         post :update, params: {dossier_id: dossier_id,
-                               'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
-                               'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
+                               'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
+                               'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1}
         dossier.reload
       end
 
@@ -280,8 +280,8 @@ shared_examples 'description_controller_spec' do
           expect(ClamavService).to receive(:safe_file?).twice
 
           post :update, params: {dossier_id: dossier_id,
-                                 'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
-                                 'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
+                                 'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
+                                 'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1}
         end
       end
 
@@ -318,8 +318,8 @@ shared_examples 'description_controller_spec' do
     let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
 
     subject { patch :pieces_justificatives, params: {dossier_id: dossier.id,
-                                                     'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
-                                                     'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
+                                                     'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
+                                                     'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1}
     }
 
     context 'when user is a guest' do
@@ -394,8 +394,8 @@ shared_examples 'description_controller_spec_POST_piece_justificatives_for_owner
   let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
 
   subject { patch :pieces_justificatives, params: {dossier_id: dossier.id,
-                                                   'piece_justificative_'+all_pj_type[0].to_s => piece_justificative_0,
-                                                   'piece_justificative_'+all_pj_type[1].to_s => piece_justificative_1}
+                                                   'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
+                                                   'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1}
   }
 
   context 'when user is the owner', vcr: {cassette_name: 'controllers_users_description_controller_pieces_justificatives'} do

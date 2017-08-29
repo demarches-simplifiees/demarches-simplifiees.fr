@@ -35,7 +35,7 @@
         - if tpj.api_entreprise
           %span.text-success{ id: "piece_justificative_#{tpj.id}" } Nous l'avons récupéré pour vous.
         - else
-          - if dossier.retrieve_last_piece_justificative_by_type(tpj.id).nil?
+          - if !dossier.was_piece_justificative_uploaded_for_type_id?(tpj.id)
             = file_field_tag "piece_justificative_#{tpj.id}", accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes
           - else
             %span.btn.btn-sm.btn-file.btn-success

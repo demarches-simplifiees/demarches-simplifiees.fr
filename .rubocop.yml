@@ -110,7 +110,7 @@ Layout/IndentationConsistency:
   Enabled: false
 
 Layout/IndentationWidth:
-  Enabled: false
+  Enabled: true
 
 Layout/InitialIndentation:
   Enabled: false
@@ -170,7 +170,7 @@ Layout/SpaceAroundKeyword:
   Enabled: false
 
 Layout/SpaceAroundOperators:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeBlockBraces:
   Enabled: false

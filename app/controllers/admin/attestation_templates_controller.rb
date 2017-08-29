@@ -72,9 +72,9 @@ class Admin::AttestationTemplatesController < AdminController
 
   def uninterlaced_png(uploaded_file)
     if uploaded_file.present? && uploaded_file.content_type == 'image/png'
-       chunky_img = ChunkyPNG::Image.from_io(uploaded_file)
-       chunky_img.save(uploaded_file.tempfile.to_path, interlace: false)
-       uploaded_file.tempfile.reopen(uploaded_file.tempfile.to_path, 'rb')
+      chunky_img = ChunkyPNG::Image.from_io(uploaded_file)
+      chunky_img.save(uploaded_file.tempfile.to_path, interlace: false)
+      uploaded_file.tempfile.reopen(uploaded_file.tempfile.to_path, 'rb')
     end
 
     uploaded_file

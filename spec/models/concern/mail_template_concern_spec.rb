@@ -6,7 +6,7 @@ describe MailTemplateConcern do
     let(:initiated_mail) { Mails::InitiatedMail.default }
 
     it 'works' do
-        initiated_mail.object = '[TPS] --numero_dossier-- --libelle_procedure-- --lien_dossier--'
+      initiated_mail.object = '[TPS] --numero_dossier-- --libelle_procedure-- --lien_dossier--'
         expected =
           "[TPS] #{dossier.id} #{dossier.procedure.libelle} " +
           "<a target=\"_blank\" href=\"http://localhost:3000/users/dossiers/#{dossier.id}/recapitulatif\">http://localhost:3000/users/dossiers/#{dossier.id}/recapitulatif</a>"
