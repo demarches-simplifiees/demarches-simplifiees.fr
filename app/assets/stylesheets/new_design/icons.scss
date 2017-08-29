@@ -24,4 +24,24 @@ i {
   &.folder {
     background-image: image-url("icons/folder.svg");
   }
+
+  &.accept {
+    background-image: image-url("icons/accept.svg");
+  }
+
+  &.close {
+    background-image: image-url("icons/close.svg");
+  }
+
+  &.without-continuation {
+    background-image: image-url("icons/without-continuation.svg");
+  }
+
+  &.edit {
+    background-image: image-url("icons/edit-folder-blue.svg");
+  }
+
+  &.in-progress {
+    background-image: image-url("icons/in-progress-blue.svg");
+  }
 }
