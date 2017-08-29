@@ -28,6 +28,7 @@
 .header-tabs {
   li {
     display: inline-block;
+    padding: $default-padding;
   }
 
   a {
@@ -38,6 +39,10 @@
     &.active {
       color: $blue;
       border-bottom: 2px solid $blue;
+    }
+
+    &:not(.active):hover {
+      background-color: $light-grey;
     }
   }
 }
