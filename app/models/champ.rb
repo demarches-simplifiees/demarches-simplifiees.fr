@@ -71,9 +71,9 @@ class Champ < ActiveRecord::Base
   def serialize_datetime_if_needed
     if (value =~ /=>/).present?
       date = begin
-      hash_date = YAML.safe_load(value.gsub('=>', ': '))
-      year, month, day, hour, minute = hash_date.values_at(1,2,3,4,5)
-      DateTime.new(year, month, day, hour, minute).strftime("%d/%m/%Y %H:%M")
+        hash_date = YAML.safe_load(value.gsub('=>', ': '))
+        year, month, day, hour, minute = hash_date.values_at(1,2,3,4,5)
+        DateTime.new(year, month, day, hour, minute).strftime("%d/%m/%Y %H:%M")
       rescue
         nil
       end
