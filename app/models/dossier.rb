@@ -92,6 +92,10 @@ class Dossier < ActiveRecord::Base
     unreaded_notifications.order("created_at ASC").first
   end
 
+  def was_piece_justificative_uploaded_for_type_id?(type_id)
+    pieces_justificatives.where(type_de_piece_justificative_id: type_id).count > 0
+  end
+
   def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
   end
@@ -101,12 +105,12 @@ class Dossier < ActiveRecord::Base
   end
 
   def build_default_champs
-    procedure.types_de_champ.each do |type_de_champ|
-      ChampPublic.create(type_de_champ_id: type_de_champ.id, dossier_id: id)
+    procedure.types_de_champ.all.each do |type_de_champ|
+      ChampPublic.create(type_de_champ: type_de_champ, dossier: self)
     end
 
-    procedure.types_de_champ_private.each do |type_de_champ|
-      ChampPrivate.create(type_de_champ_id: type_de_champ.id, dossier_id: id)
+    procedure.types_de_champ_private.all.each do |type_de_champ|
+      ChampPrivate.create(type_de_champ: type_de_champ, dossier: self)
     end
   end
 
