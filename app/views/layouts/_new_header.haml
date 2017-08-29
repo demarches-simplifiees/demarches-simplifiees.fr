@@ -9,6 +9,8 @@
         %ul.header-tabs
           %li
             = link_to "Procédures", procedures_path, class: "active"
+          %li
+            = link_to "Ancienne interface", backoffice_dossiers_path
 
     %ul.header-right-content
       - if gestionnaire_signed_in?
