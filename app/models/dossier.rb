@@ -92,6 +92,10 @@ class Dossier < ActiveRecord::Base
     unreaded_notifications.order("created_at ASC").first
   end
 
+  def was_piece_justificative_uploaded_for_type_id?(type_id)
+    pieces_justificatives.where(type_de_piece_justificative_id: type_id).count > 0
+  end
+
   def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
   end
