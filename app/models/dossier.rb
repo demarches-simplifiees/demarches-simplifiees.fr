@@ -101,12 +101,12 @@ class Dossier < ActiveRecord::Base
   end
 
   def build_default_champs
-    procedure.types_de_champ.each do |type_de_champ|
-      ChampPublic.create(type_de_champ_id: type_de_champ.id, dossier_id: id)
+    procedure.types_de_champ.all.each do |type_de_champ|
+      ChampPublic.create(type_de_champ: type_de_champ, dossier: self)
     end
 
-    procedure.types_de_champ_private.each do |type_de_champ|
-      ChampPrivate.create(type_de_champ_id: type_de_champ.id, dossier_id: id)
+    procedure.types_de_champ_private.all.each do |type_de_champ|
+      ChampPrivate.create(type_de_champ: type_de_champ, dossier: self)
     end
   end
 
