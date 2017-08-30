@@ -104,6 +104,16 @@ class Dossier < ActiveRecord::Base
     pieces_justificatives.where(type_de_piece_justificative_id: type_id).count > 0
   end
 
+  def notifications_summary
+    unread_notifications = notifications.unread
+
+    {
+      demande: unread_notifications.select(&:demande?).present?,
+      instruction: unread_notifications.select(&:instruction?).present?,
+      messagerie: unread_notifications.select(&:messagerie?).present?
+    }
+  end
+
   def retrieve_last_piece_justificative_by_type(type)
     pieces_justificatives.where(type_de_piece_justificative_id: type).last
   end

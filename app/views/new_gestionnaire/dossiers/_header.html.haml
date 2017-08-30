@@ -6,11 +6,18 @@
       %li
         = "Dossier n° #{dossier.id}"
     %ul.tabs
+      - notifications_summary = dossier.notifications_summary
       %li{ class: current_page?(dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+        - if notifications_summary[:demande]
+          %span.notifications{ 'aria-label': 'notifications' }
         = link_to "Demande", dossier_path(dossier.procedure, dossier)
       %li{ class: current_page?(instruction_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+        - if notifications_summary[:instruction]
+          %span.notifications{ 'aria-label': 'notifications' }
         = link_to "Instruction", instruction_dossier_path(dossier.procedure, dossier)
       %li{ class: current_page?(messagerie_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+        - if notifications_summary[:messagerie]
+          %span.notifications{ 'aria-label': 'notifications' }
         = link_to "Messagerie", messagerie_dossier_path(dossier.procedure, dossier)
       %li
         = link_to "Historique", "#"
