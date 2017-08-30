@@ -18,6 +18,11 @@
     text-decoration: none;
   }
 
+  &:active,
+  &:focus {
+    outline: none;
+  }
+
   &.primary {
     color: #FFFFFF;
     border-color: $blue;
