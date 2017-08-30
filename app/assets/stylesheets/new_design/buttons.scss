@@ -7,6 +7,7 @@
   border-radius: 30px;
   border: 1px solid $border-grey;
   font-size: 14px;
+  line-height: 20px;
   background-color: #FFFFFF;
   color: $black;
   cursor: pointer;
@@ -40,6 +41,7 @@
 
   &.large {
     font-size: 18px;
+    line-height: 26px;
     padding: 15px 32px;
   }
 
