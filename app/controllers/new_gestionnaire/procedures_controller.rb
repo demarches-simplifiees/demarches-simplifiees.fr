@@ -33,7 +33,7 @@ module NewGestionnaire
 
       @followed_dossiers = current_gestionnaire
         .followed_dossiers
-        .includes(:user)
+        .includes(:user, :notifications)
         .where(procedure: @procedure)
         .en_cours
 
