@@ -143,7 +143,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
 
-    redirect_to backoffice_dossier_path(id: dossier.id)
+    redirect_to_dossier(dossier)
   end
 
   def reload_smartlisting
@@ -180,9 +180,9 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     create_dossier_facade params[:dossier_id]
 
     @facade.dossier.replied!
-    flash.notice = 'Dossier réouvert.'
+    flash.notice = 'Dossier repassé en construction.'
 
-    redirect_to backoffice_dossiers_path
+    redirect_to_dossier(@facade.dossier)
   end
 
   private
