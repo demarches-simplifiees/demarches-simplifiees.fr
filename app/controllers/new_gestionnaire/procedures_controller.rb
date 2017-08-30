@@ -18,6 +18,8 @@ module NewGestionnaire
         .group(:procedure_id)
         .reorder(nil)
         .count
+
+      @notifications_count_per_procedure = current_gestionnaire.notifications_count_per_procedure
     end
 
     def show
