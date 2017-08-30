@@ -93,6 +93,14 @@ class Gestionnaire < ActiveRecord::Base
     Notification.unread.where(dossier_id: followed_dossiers_id).select(:dossier_id).distinct(:dossier_id).count
   end
 
+  def notifications_count_per_procedure
+    followed_dossiers
+      .joins(:notifications)
+      .where(notifications: { already_read: false })
+      .group('procedure_id')
+      .count
+  end
+
   def dossiers_with_notifications_count
     notifications.pluck(:dossier_id).uniq.count
   end

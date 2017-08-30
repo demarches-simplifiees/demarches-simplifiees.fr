@@ -356,4 +356,30 @@ describe Gestionnaire, type: :model do
       it { expect(subject).to be false }
     end
   end
+
+  describe '#notifications_count_per_procedure' do
+    subject { gestionnaire.notifications_count_per_procedure }
+
+    let(:dossier_with_unread_notification) do
+      create(:dossier, notifications: [Notification.create(type_notif: 'champs', already_read: false)])
+    end
+
+    let(:dossier_with_no_unread_notification) do
+      create(:dossier, notifications: [Notification.create(type_notif: 'champs', already_read: true)])
+    end
+
+    before { gestionnaire.followed_dossiers << followed_dossier }
+
+    context 'when a followed dossier has unread notification' do
+      let(:followed_dossier) { dossier_with_unread_notification }
+
+      it { is_expected.to eq({ dossier_with_unread_notification.procedure.id => 1 }) }
+    end
+
+    context 'when a followed dossier has unread notification' do
+      let(:followed_dossier) { dossier_with_no_unread_notification }
+
+      it { is_expected.to eq({ }) }
+    end
+  end
 end
