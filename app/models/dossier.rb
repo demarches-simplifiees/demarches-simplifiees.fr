@@ -64,16 +64,17 @@ class Dossier < ActiveRecord::Base
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
-  scope :all_state,                 -> { not_archived.state_not_brouillon.order_by_updated_at(:asc) }
-  scope :nouveaux,                  -> { not_archived.state_nouveaux.order_by_updated_at(:asc) }
-  scope :ouvert,                    -> { not_archived.state_ouvert.order_by_updated_at(:asc) }
-  scope :waiting_for_gestionnaire,  -> { not_archived.state_waiting_for_gestionnaire.order_by_updated_at(:asc) }
-  scope :waiting_for_user,          -> { not_archived.state_waiting_for_user.order_by_updated_at(:asc) }
-  scope :a_instruire,               -> { not_archived.state_a_instruire.order_by_updated_at(:asc) }
-  scope :termine,                   -> { not_archived.state_termine.order_by_updated_at(:asc) }
-  scope :downloadable,              -> { state_not_brouillon.order_by_updated_at(:asc) }
-  scope :en_cours,                  -> { not_archived.state_en_construction_ou_instruction.order_by_updated_at(:asc) }
-  scope :without_followers,         -> { includes(:follows).where(follows: { id: nil }) }
+  scope :all_state,                   -> { not_archived.state_not_brouillon.order_by_updated_at(:asc) }
+  scope :nouveaux,                    -> { not_archived.state_nouveaux.order_by_updated_at(:asc) }
+  scope :ouvert,                      -> { not_archived.state_ouvert.order_by_updated_at(:asc) }
+  scope :waiting_for_gestionnaire,    -> { not_archived.state_waiting_for_gestionnaire.order_by_updated_at(:asc) }
+  scope :waiting_for_user,            -> { not_archived.state_waiting_for_user.order_by_updated_at(:asc) }
+  scope :a_instruire,                 -> { not_archived.state_a_instruire.order_by_updated_at(:asc) }
+  scope :termine,                     -> { not_archived.state_termine.order_by_updated_at(:asc) }
+  scope :downloadable,                -> { state_not_brouillon.order_by_updated_at(:asc) }
+  scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction.order_by_updated_at(:asc) }
+  scope :without_followers,           -> { includes(:follows).where(follows: { id: nil }) }
+  scope :with_unread_notifications,   -> { where(notifications: { already_read: false }) }
 
   accepts_nested_attributes_for :individual
 

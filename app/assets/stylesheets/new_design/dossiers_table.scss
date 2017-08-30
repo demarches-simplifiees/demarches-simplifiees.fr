@@ -14,6 +14,12 @@
 
   i.folder {
     margin-right: $default-spacer;
+    position: relative;
+
+    .notifications {
+      top: 0px;
+      right: -10px;
+    }
   }
 
   .number-col,
