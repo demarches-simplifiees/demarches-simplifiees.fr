@@ -7,6 +7,7 @@
   border-radius: 30px;
   border: 1px solid $border-grey;
   font-size: 14px;
+  line-height: 20px;
   background-color: #FFFFFF;
   color: $black;
   cursor: pointer;
@@ -15,6 +16,11 @@
   &:hover {
     background: $light-grey;
     text-decoration: none;
+  }
+
+  &:active,
+  &:focus {
+    outline: none;
   }
 
   &.primary {
@@ -40,6 +46,7 @@
 
   &.large {
     font-size: 18px;
+    line-height: 26px;
     padding: 15px 32px;
   }
 
@@ -47,7 +54,7 @@
     width: 100%;
   }
 
-  i {
+  > i {
     width: 18px;
     height: 18px;
     background-size: 18px 18px;
