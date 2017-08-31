@@ -8,6 +8,7 @@
           = "Dossier nº #{dossier.id}"
       %div
         = render partial: "state_button", locals: { dossier: dossier }
+        = render partial: "new_gestionnaire/procedures/dossier_actions", locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: current_gestionnaire&.follow?(dossier) }
     %ul.tabs
       - notifications_summary = dossier.notifications_summary
       %li{ class: current_page?(dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
