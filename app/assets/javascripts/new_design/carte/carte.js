@@ -22,8 +22,10 @@ function initCarto() {
 $(document).on('turbolinks:load', initCarto);
 
 function drawUserSelection(map) {
-  var polygon = L.polygon(dossierJsonLatLngs, { color: 'red', zIndex: 3 }).addTo(map);
-  map.fitBounds(polygon.getBounds());
+  if (dossierJsonLatLngs.length > 0) {
+    var polygon = L.polygon(dossierJsonLatLngs, { color: 'red', zIndex: 3 }).addTo(map);
+    map.fitBounds(polygon.getBounds());
+  }
 }
 
 function defaultGestionnairePosition() {
