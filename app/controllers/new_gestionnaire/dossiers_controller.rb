@@ -6,14 +6,17 @@ module NewGestionnaire
 
     def show
       @dossier = dossier
+      dossier.notifications.demande.mark_as_read
     end
 
     def messagerie
       @dossier = dossier
+      dossier.notifications.messagerie.mark_as_read
     end
 
     def instruction
       @dossier = dossier
+      dossier.notifications.instruction.mark_as_read
     end
 
     def follow
