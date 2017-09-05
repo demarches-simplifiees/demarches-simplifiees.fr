@@ -27,7 +27,11 @@
               %li
                 .menu-item{ title: current_email }
                   = current_email
-
+              - if administration_signed_in?
+                %li
+                  = link_to administrations_path, class: "menu-item menu-link" do
+                    = image_tag "icons/super-admin.svg"
+                    Passer en super-admin
               - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
                 - if user_signed_in?
                   %li
