@@ -108,6 +108,7 @@
   border: 1px solid $border-grey;
   min-width: 270px;
   max-width: 340px;
+  z-index: 10;
 
   &.open {
     display: block;
