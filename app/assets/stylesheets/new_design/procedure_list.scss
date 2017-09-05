@@ -1,13 +1,27 @@
 @import "colors";
+@import "constants";
 @import "mixins";
 
 .procedure-list {
   .procedure-item {
-    @include vertical-padding(24px);
     border-bottom: 1px solid $border-grey;
 
     &:last-child {
       border-bottom: none;
+    }
+
+    a {
+      @include vertical-padding(24px);
+      color: $black;
+      width: 100%;
+
+      &:hover {
+        background-color: $light-grey;
+
+        .procedure-title {
+          text-decoration: underline;
+        }
+      }
     }
   }
 
@@ -21,14 +35,7 @@
     min-height: 40px;
     font-size: 20px;
     margin-bottom: 16px;
-
-    a {
-      color: $black;
-
-      &:hover {
-        color: $blue;
-      }
-    }
+    padding-left: $default-spacer;
   }
 
   .procedure-status {
