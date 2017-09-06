@@ -41,6 +41,14 @@ describe NewGestionnaire::AvisController, type: :controller do
     it { expect(assigns(:dossier)).to eq(dossier) }
   end
 
+  describe '#messagerie' do
+    before { get :messagerie, { id: avis_without_answer.id } }
+
+    it { expect(response).to have_http_status(:success) }
+    it { expect(assigns(:avis)).to eq(avis_without_answer) }
+    it { expect(assigns(:dossier)).to eq(dossier) }
+  end
+
   describe '#update' do
     before do
       patch :update, { id: avis_without_answer.id, avis: { answer: 'answer' } }
@@ -50,5 +58,14 @@ describe NewGestionnaire::AvisController, type: :controller do
     it { expect(response).to redirect_to(instruction_avis_path(avis_without_answer)) }
     it { expect(avis_without_answer.answer).to eq('answer') }
     it { expect(flash.notice).to eq('Votre réponse est enregistrée.') }
+  end
+
+  describe '#create_commentaire' do
+    before do
+      post :create_commentaire, { id: avis_without_answer.id, commentaire: { body: 'commentaire body' } }
+    end
+
+    it { expect(response).to redirect_to(messagerie_avis_path(avis_without_answer)) }
+    it { expect(dossier.commentaires.map(&:body)).to match(['commentaire body']) }
   end
 end

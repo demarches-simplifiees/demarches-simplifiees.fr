@@ -32,14 +32,28 @@ module NewGestionnaire
       redirect_to instruction_avis_path(avis)
     end
 
+    def messagerie
+      @avis = avis
+      @dossier = avis.dossier
+    end
+
+    def create_commentaire
+      Commentaire.create(commentaire_params.merge(email: current_gestionnaire.email, dossier: avis.dossier))
+      redirect_to messagerie_avis_path(avis)
+    end
+
     private
 
     def avis
-      current_gestionnaire.avis.includes(dossier: [:avis]).find(params[:id])
+      current_gestionnaire.avis.includes(dossier: [:avis, :commentaires]).find(params[:id])
     end
 
     def avis_params
       params.require(:avis).permit(:answer)
+    end
+
+    def commentaire_params
+      params.require(:commentaire).permit(:body)
     end
   end
 end
