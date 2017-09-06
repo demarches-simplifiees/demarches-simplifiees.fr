@@ -1,0 +1,35 @@
+#avis-index
+  .backoffice-header
+    .container.flex
+      .width-100
+        %h1 Avis
+        %ul.tabs
+          %li{ class: (@statut == 'a-donner') ? 'active' : nil }>
+            = link_to(avis_index_path(statut: 'a-donner')) do
+              avis à donner
+              %span.badge= @avis_a_donner.count
+
+          %li{ class: (@statut == 'donnes') ? 'active' : nil }>
+            = link_to(avis_index_path(statut: 'donnes')) do
+              avis #{'donné'.pluralize(@avis_donnes.count)}
+              %span.badge= @avis_donnes.count
+
+  .container
+    - if @avis.present?
+      %table.table.dossiers-table.hoverable
+        %thead
+          %tr
+            %th.number-col Nº dossier
+            %th Demandeur
+            %th Procédure
+        %tbody
+          - @avis.each do |avis|
+            %tr
+              %td.number-col
+                = link_to(avis_path(avis), class: 'cell-link') do
+                  %i.folder
+                  #{avis.dossier.id}
+              %td= link_to(avis.dossier.user.email, avis_path(avis), class: 'cell-link')
+              %td= link_to(avis.dossier.procedure.libelle, avis_path(avis), class: 'cell-link')
+    - else
+      %h2 Aucun avis
