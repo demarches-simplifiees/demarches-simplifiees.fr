@@ -26,4 +26,12 @@ describe NewGestionnaire::AvisController, type: :controller do
       it { expect(assigns(:statut)).to eq('donnes') }
     end
   end
+
+  describe '#show' do
+    before { get :show, { id: avis_without_answer.id } }
+
+    it { expect(response).to have_http_status(:success) }
+    it { expect(assigns(:avis)).to eq(avis_without_answer) }
+    it { expect(assigns(:dossier)).to eq(dossier) }
+  end
 end
