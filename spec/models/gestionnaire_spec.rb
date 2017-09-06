@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Gestionnaire, type: :model do
   let(:admin) { create :administrateur }
-  let!(:procedure) { create :procedure, administrateur: admin }
-  let!(:procedure_2) { create :procedure, administrateur: admin }
-  let!(:procedure_3) { create :procedure, administrateur: admin }
+  let!(:procedure) { create :procedure, :published, administrateur: admin }
+  let!(:procedure_2) { create :procedure, :published, administrateur: admin }
+  let!(:procedure_3) { create :procedure, :published, administrateur: admin }
   let(:gestionnaire) { create :gestionnaire, procedure_filter: procedure_filter, administrateurs: [admin] }
   let(:procedure_filter) { nil }
   let!(:procedure_assign) { create :assign_to, gestionnaire: gestionnaire, procedure: procedure }
@@ -13,70 +13,29 @@ describe Gestionnaire, type: :model do
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure_2
   end
 
-  describe '#toggle_follow_dossier' do
-    let!(:dossier) { create :dossier, procedure: procedure }
+  describe 'follow' do
+    let(:dossier) { create :dossier }
+    let(:already_followed_dossier) { create :dossier }
 
-    subject { gestionnaire.toggle_follow_dossier dossier_id }
+    before { gestionnaire.followed_dossiers << already_followed_dossier }
 
-    context 'when dossier id not valid' do
-      let(:dossier_id) { 0 }
+    context 'when a gestionnaire follow a dossier for the first time' do
+      before { gestionnaire.follow(dossier) }
 
-      it { expect(subject).to eq nil }
+      it { expect(gestionnaire.follow?(dossier)).to be true }
     end
 
-    context 'when dossier id is valid' do
-      let(:dossier_id) { dossier.id }
+    context 'when a gestionnaire follows a dossier already followed' do
+      before { gestionnaire.follow(already_followed_dossier) }
 
-      context 'when dossier is not follow by gestionnaire' do
-        it 'value change in database' do
-          expect { subject }.to change(Follow, :count).by(1)
-        end
-
-        it { expect(subject).to be_an_instance_of Follow }
-      end
-
-      context 'when dossier is follow by gestionnaire' do
-        before do
-          create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
-        end
-
-        it 'value change in database' do
-          expect { subject }.to change(Follow, :count).by(-1)
-        end
-
-        it { expect(subject).to eq 1 }
-      end
-    end
-
-    context 'when dossier instance is past' do
-      let(:dossier_id) { dossier }
-
-      context 'when dossier is not follow by gestionnaire' do
-        it 'value change in database' do
-          expect { subject }.to change(Follow, :count).by(1)
-        end
-
-        it { expect(subject).to be_an_instance_of Follow }
-      end
-
-      context 'when dossier is follow by gestionnaire' do
-        before do
-          create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
-        end
-
-        it 'value change in database' do
-          expect { subject }.to change(Follow, :count).by(-1)
-        end
-
-        it { expect(subject).to eq 1 }
-      end
+      it { expect(gestionnaire.follow?(already_followed_dossier)).to be true }
     end
   end
 
   describe '#follow?' do
     let!(:dossier) { create :dossier, procedure: procedure }
 
-    subject { gestionnaire.follow? dossier.id }
+    subject { gestionnaire.follow?(dossier) }
 
     context 'when gestionnaire follow a dossier' do
       before do
@@ -360,7 +319,7 @@ describe Gestionnaire, type: :model do
         expect_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
       end
 
-      it { expect(gestionnaire.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
+      it { expect(gestionnaire2.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
     end
 
     context 'when a procedure not published was active with no notifications' do
@@ -395,6 +354,32 @@ describe Gestionnaire, type: :model do
       let(:dossier){ create(:dossier) }
 
       it { expect(subject).to be false }
+    end
+  end
+
+  describe '#notifications_count_per_procedure' do
+    subject { gestionnaire.notifications_count_per_procedure }
+
+    let(:dossier_with_unread_notification) do
+      create(:dossier, notifications: [Notification.create(type_notif: 'champs', already_read: false)])
+    end
+
+    let(:dossier_with_no_unread_notification) do
+      create(:dossier, notifications: [Notification.create(type_notif: 'champs', already_read: true)])
+    end
+
+    before { gestionnaire.followed_dossiers << followed_dossier }
+
+    context 'when a followed dossier has unread notification' do
+      let(:followed_dossier) { dossier_with_unread_notification }
+
+      it { is_expected.to eq({ dossier_with_unread_notification.procedure.id => 1 }) }
+    end
+
+    context 'when a followed dossier has unread notification' do
+      let(:followed_dossier) { dossier_with_no_unread_notification }
+
+      it { is_expected.to eq({ }) }
     end
   end
 end

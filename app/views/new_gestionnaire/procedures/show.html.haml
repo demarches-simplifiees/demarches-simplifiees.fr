@@ -1,0 +1,63 @@
+#procedure-show
+  .backoffice-header
+    .container.flex
+      - if @procedure.logo.present?
+        = image_tag @procedure.logo, height: 40, class: 'procedure-logo'
+
+      .width-100
+        %h1= @procedure.libelle
+        %ul.tabs
+          %li{ class: (@statut == 'a-suivre') ? 'active' : nil }>
+            = link_to(procedure_path(@procedure, statut: 'a-suivre')) do
+              à suivre
+              %span.badge= @a_suivre_dossiers.count
+
+          %li{ class: (@statut == 'suivis') ? 'active' : nil }>
+            - if @followed_dossiers.with_unread_notifications.present?
+              %span.notifications{ 'aria-label': 'notifications' }
+            = link_to(procedure_path(@procedure, statut: 'suivis')) do
+              = t('pluralize.followed', count: @followed_dossiers.count)
+              %span.badge= @followed_dossiers.count
+
+          %li{ class: (@statut == 'traites') ? 'active' : nil }>
+            = link_to(procedure_path(@procedure, statut: 'traites')) do
+              = t('pluralize.processed', count: @termines_dossiers.count)
+              %span.badge= @termines_dossiers.count
+
+          %li{ class: (@statut == 'tous') ? 'active' : nil }>
+            - if @followed_dossiers.with_unread_notifications.present?
+              %span.notifications{ 'aria-label': 'notifications' }
+            = link_to(procedure_path(@procedure, statut: 'tous')) do
+              tous les dossiers
+              %span.badge= @all_state_dossiers.count
+
+          %li{ class: (@statut == 'archives') ? 'active' : nil }>
+            = link_to(procedure_path(@procedure, statut: 'archives')) do
+              = t('pluralize.archived', count: @archived_dossiers.count)
+              %span.badge= @archived_dossiers.count
+
+  .container
+    - if @dossiers.present?
+      %table.table.dossiers-table.hoverable
+        %thead
+          %tr
+            %th.number-col Nº dossier
+            %th Demandeur
+            %th.status-col Statut
+            %th.follow-col
+        %tbody
+          - @dossiers.each do |dossier|
+            %tr
+              %td.number-col
+                = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
+                  %i.folder
+                    - if @followed_dossiers.with_unread_notifications.include?(dossier)
+                      %span.notifications{ 'aria-label': 'notifications' }
+                  = dossier.id
+              %td= link_to(dossier.user.email, dossier_path(@procedure, dossier), class: 'cell-link')
+              %td.status-col
+                = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
+                  = render partial: 'status', locals: { dossier: dossier }
+              %td.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
+    - else
+      %h2 Aucun dossier

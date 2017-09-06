@@ -1,0 +1,33 @@
+@import "colors";
+@import "common";
+@import "constants";
+
+#dossier-messagerie {
+  li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 2 * $default-padding;
+  }
+
+  .person-icon {
+    margin-right: $default-spacer;
+  }
+
+  h2 {
+    margin-bottom: $default-spacer;
+  }
+
+  .mail {
+    font-weight: bold;
+  }
+
+  .guest,
+  .date {
+    font-size: 12px;
+    color: $grey;
+  }
+
+  .date {
+    float: right;
+  }
+}

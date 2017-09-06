@@ -5,7 +5,7 @@ FactoryGirl.define do
 
     before(:create) do |dossier, _evaluator|
       unless dossier.procedure
-        procedure = create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private)
+        procedure = create(:procedure, :published, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private)
         dossier.procedure = procedure
       end
     end
@@ -62,6 +62,13 @@ FactoryGirl.define do
 
         champ.value = linked_dossier.id
         champ.save!
+      end
+    end
+
+    trait :followed do
+      after(:create) do |dossier, _evaluator|
+        g = create(:gestionnaire)
+        g.followed_dossiers << dossier
       end
     end
 

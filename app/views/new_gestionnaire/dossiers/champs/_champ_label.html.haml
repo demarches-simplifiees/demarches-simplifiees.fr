@@ -1,0 +1,6 @@
+= form.label :value do
+  #{champ.libelle}
+  - if champ.mandatory
+    %span.mandatory *
+  - if champ.description.present?
+    %span.notice= champ.description

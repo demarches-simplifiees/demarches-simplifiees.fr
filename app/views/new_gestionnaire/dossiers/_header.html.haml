@@ -1,0 +1,27 @@
+.backoffice-header
+  .container
+    .flex.justify-between
+      %ul.breadcrumbs
+        %li
+          = link_to dossier.procedure.libelle, procedure_path(dossier.procedure)
+        %li
+          = "Dossier nº #{dossier.id}"
+      %div
+        = render partial: "state_button", locals: { dossier: dossier }
+        = render partial: "new_gestionnaire/procedures/dossier_actions", locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: current_gestionnaire&.follow?(dossier) }
+    %ul.tabs
+      - notifications_summary = dossier.notifications_summary
+      %li{ class: current_page?(dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+        - if notifications_summary[:demande]
+          %span.notifications{ 'aria-label': 'notifications' }
+        = link_to "Demande", dossier_path(dossier.procedure, dossier)
+      %li{ class: current_page?(instruction_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+        - if notifications_summary[:instruction]
+          %span.notifications{ 'aria-label': 'notifications' }
+        = link_to "Instruction", instruction_dossier_path(dossier.procedure, dossier)
+      %li{ class: current_page?(messagerie_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+        - if notifications_summary[:messagerie]
+          %span.notifications{ 'aria-label': 'notifications' }
+        = link_to "Messagerie", messagerie_dossier_path(dossier.procedure, dossier)
+      %li
+        = link_to "Historique", "#"

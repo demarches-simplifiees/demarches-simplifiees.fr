@@ -190,7 +190,6 @@ Rails.application.routes.draw do
         post 'unarchive'
       end
       post 'reopen' => 'dossiers#reopen'
-      put 'follow' => 'dossiers#follow'
       resources :commentaires, only: [:index]
       resources :avis, only: [:create, :update]
     end
@@ -238,11 +237,28 @@ Rails.application.routes.draw do
   end
 
   scope module: 'new_gestionnaire' do
-    resources :procedures, only: [] do
-      resources :dossiers, only: [] do
-        get 'attestation'
+    resources :procedures, only: [:index, :show], param: :procedure_id do
+      member do
+        resources :dossiers, only: [:show], param: :dossier_id do
+          member do
+            get 'attestation'
+            get 'messagerie'
+            get 'instruction'
+            patch 'follow'
+            patch 'unfollow'
+            patch 'archive'
+            patch 'unarchive'
+            patch 'annotations' => 'dossiers#update_annotations'
+            post 'commentaire' => 'dossiers#create_commentaire'
+            scope :carte do
+              get 'position'
+            end
+            post 'avis' => 'dossiers#create_avis'
+          end
+        end
       end
     end
+    get "recherche" => "recherches#index"
   end
 
   apipie

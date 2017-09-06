@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'when gestionnaire come to /backoffice and is not authenticated' do
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, :published) }
   let!(:dossier) { create(:dossier, procedure: procedure) }
   before do
     visit backoffice_path

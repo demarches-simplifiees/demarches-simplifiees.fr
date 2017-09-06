@@ -285,3 +285,24 @@ fr:
       x_seconds:
         one: 1 seconde
         other: "%{count} secondes"
+  pluralize:
+    case:
+      zero: dossier
+      one: dossier
+      other: dossiers
+    processed:
+      zero: traité
+      one: traité
+      other: traités
+    new:
+      zero: nouveau
+      one: nouveau
+      other: nouveaux
+    followed:
+      zero: suivi
+      one: suivi
+      other: suivis
+    archived:
+      zero: archivé
+      one: archivé
+      other: archivés

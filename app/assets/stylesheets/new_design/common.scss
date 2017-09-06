@@ -1,12 +1,39 @@
+@import "colors";
+@import "constants";
+@import "mixins";
+@import "placeholders";
 @import "typography";
 
-body {
+body,
+input,
+textarea,
+select {
   @extend %new-type;
   font-size: 16px;
   line-height: 1.42857143;
 }
 
+.page-wrapper {
+  position: relative;
+  padding-bottom: $footer-height;
+  min-height: 100%;
+
+  @media (max-width: 1000px) {
+    padding-bottom: $footer-height-mobile;
+  }
+}
+
 h1 {
   font-size: 36px;
   font-weight: bold;
+}
+
+a {
+  color: $blue;
+}
+
+.container {
+  @include horizontal-padding($default-padding);
+  max-width: $page-width + 2 * $default-padding;
+  margin: 0 auto;
 }

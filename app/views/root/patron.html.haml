@@ -1,19 +1,33 @@
 .patron
-  .patron-container
-    %h1 Patron
+  .container
+    %h1 Icones
 
-    %h2 Formulaires
+    %i.follow
+    %i.unfollow
+    %i.archive
+    %i.unarchive
+    %i.folder
+    %i.accept
+    %i.close
+    %i.without-continuation
+    %i.edit
+    %i.in-progress
+
+    %h1 Formulaires
 
     %form.form
-      %label Nom
-      %input{ type: "text" }
-      %label Prénom
-      %input{ type: "text", placeholder: "ex : Ivan" }
-      %label Mot de passe
-      %input{ type: "password", value: "12345678" }
-      %input.button{ type: "submit", value: "Envoyer" }
+      = form_for @dossier, url: '', html: { class: 'form' } do |f|
+        = f.fields_for :champs do |champ_form|
+          - champ = champ_form.object
+          = render partial: "new_gestionnaire/dossiers/champs/#{champ.type_champ}",
+            locals: { champ: champ, form: champ_form }
 
-    %h2 Boutons
+        %input{ type: "password", value: "12345678" }
+        .send-wrapper
+          = f.submit 'Enregistrer un brouillon (formnovalidate)', formnovalidate: true, class: 'button send'
+          = f.submit 'Envoyer', class: 'button send'
+
+    %h1 Boutons
 
     %p
       = link_to ".button", "#", class: "button"
@@ -27,9 +41,113 @@
       = link_to ".button.large.primary", "#", class: "button large primary"
 
     %p
+      = link_to "#", class: "button" do
+        %i.follow
+        = "%i.follow"
+      = link_to "#", class: "button" do
+        %i.unfollow
+        = "%i.unfollow"
+      = link_to "#", class: "button" do
+        %i.archive
+        = "%i.archive"
+      = link_to "#", class: "button" do
+        %i.unarchive
+        = "%i.unarchive"
+    %p
       = link_to ".button.primary.expand", "#", class: "button primary expand"
 
-    %h2 Layout deux colonnes
+    %h1 Labels
+
+    %span.label .label
+    %span.label.instruction .label.instruction
+    %span.label.construction .label.construction
+    %span.label.closed .label.closed
+    %span.label.refused .label.refused
+    %span.label.without-continuation .label.without-continuation
+
+    %h1 Cards
+
+    .card
+      .card-title
+        Titre de la carte
+      Et voici le contenu de la carte
+
+    .card.featured
+      .card-title
+        Titre de la carte mise en avant
+      Et voici le contenu de la carte
+
+    %h1 Table
+
+    %table.table
+      %thead
+        %tr
+          %th Header 1
+          %th Header 2
+      %tbody
+        %tr
+          %td Table Data 1
+          %td Table Data 2
+        %tr
+          %td Table Data 3
+          %td Table Data 4
+
+    %h2 Hoverable (.table.hoverable)
+
+    %table.table.hoverable
+      %thead
+        %tr
+          %th Header 1
+          %th Header 2
+      %tbody
+        %tr
+          %td Table Data 1
+          %td Table Data 2
+        %tr
+          %td Table Data 3
+          %td Table Data 4
+
+    %h2 Vertical layout (.table.vertical)
+
+    %table.table.vertical
+      %tbody
+        %tr
+          %th Header 1
+          %td Table Data 1
+        %tr
+          %th Header 2
+          %td Table Data 2
+        %tr
+          %th.header-section{ colspan: 2 } Header section
+        %tr
+          %th Header 3
+          %td Table Data 3
+
+    %h1 Header
+  .backoffice-header
+    .container
+      Titre
+      %ul.tabs
+        %li.active
+          = link_to "Onglet actif", "#"
+        %li
+          = link_to "Onglet inactif", "#"
+        %li
+          = link_to "#" do
+            Onglet avec badge
+            %span.badge 2
+
+  .container
+    %h1 Breadcrumbs
+
+    %ul.breadcrumbs
+      %li
+        = link_to "Procédure 123", "#"
+      %li
+        = "Dossier n° 38"
+
+
+    %h1 Layout deux colonnes
 
   .two-columns
     .columns-container

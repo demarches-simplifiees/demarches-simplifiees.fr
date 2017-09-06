@@ -1,13 +1,22 @@
 .new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
-    = link_to root_path do
-      %img{ src: image_url("header/logo-tps.svg") }
+
+    .flex.align-center
+      = link_to root_path, class: "header-logo" do
+        %img{ src: image_url("header/logo-tps.svg") }
+
+      - if gestionnaire_signed_in?
+        %ul.header-tabs
+          %li
+            = link_to "Procédures", procedures_path, class: "active"
+          %li
+            = link_to "Ancienne interface", backoffice_dossiers_path
 
     %ul.header-right-content
       - if gestionnaire_signed_in?
         %li
           .header-search
-            = form_tag backoffice_dossiers_search_url, method: :get, class: "form" do
+            = form_tag recherche_path, method: :get, class: "form" do
               = text_field_tag "q", "#{@search_terms unless @search_terms.nil?}", placeholder: "Rechercher"
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg"
@@ -18,7 +27,11 @@
               %li
                 .menu-item{ title: current_email }
                   = current_email
-
+              - if administration_signed_in?
+                %li
+                  = link_to administrations_path, class: "menu-item menu-link" do
+                    = image_tag "icons/super-admin.svg"
+                    Passer en super-admin
               - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
                 - if user_signed_in?
                   %li
@@ -27,7 +40,7 @@
                       Passer en usager
                 - if gestionnaire_signed_in?
                   %li
-                    = link_to backoffice_dossiers_path, class: "menu-item menu-link" do
+                    = link_to procedures_path, class: "menu-item menu-link" do
                       = image_tag "icons/switch-profile.svg"
                       Passer en accompagnateur
                 - if administrateur_signed_in?

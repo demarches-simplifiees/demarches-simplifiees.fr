@@ -1,0 +1,10 @@
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
+
+%div
+  %label
+    = form.radio_button :value, 'M.'
+    Monsieur
+
+  %label
+    = form.radio_button :value, 'Mme.'
+    Madame

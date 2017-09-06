@@ -98,9 +98,10 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier = Dossier.find(params[:dossier_id])
 
     dossier.received!
-    flash.notice = 'Dossier considéré comme reçu.'
+    current_gestionnaire.follow(dossier)
+    flash.notice = 'Dossier passé en instruction.'
 
-    redirect_to backoffice_dossier_path(id: dossier.id)
+    redirect_to_dossier(dossier)
   end
 
   def process_dossier
@@ -142,16 +143,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
 
-    redirect_to backoffice_dossier_path(id: dossier.id)
-  end
-
-  def follow
-    follow = current_gestionnaire.toggle_follow_dossier params[:dossier_id]
-
-    current_gestionnaire.dossiers.find(params[:dossier_id]).next_step! 'gestionnaire', 'follow'
-
-    flash.notice = (follow.class == Follow ? 'Dossier suivi' : 'Dossier relaché')
-    redirect_to request.referer
+    redirect_to_dossier(dossier)
   end
 
   def reload_smartlisting
@@ -188,12 +180,20 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     create_dossier_facade params[:dossier_id]
 
     @facade.dossier.replied!
-    flash.notice = 'Dossier réouvert.'
+    flash.notice = 'Dossier repassé en construction.'
 
-    redirect_to backoffice_dossiers_path
+    redirect_to_dossier(@facade.dossier)
   end
 
   private
+
+  def redirect_to_dossier(dossier)
+    if URI(request.referer).path == dossier_path(dossier.procedure, dossier)
+      redirect_to dossier_path(dossier.procedure, dossier)
+    else
+      redirect_to backoffice_dossier_path(id: dossier.id)
+    end
+  end
 
   def check_attestation_emailable(dossier)
     if dossier&.attestation&.emailable? == false

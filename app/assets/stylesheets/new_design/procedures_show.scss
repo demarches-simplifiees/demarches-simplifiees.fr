@@ -1,0 +1,26 @@
+@import "colors";
+@import "common";
+@import "constants";
+
+#procedure-show {
+  .procedure-logo {
+    margin-right: $default-padding;
+  }
+
+  h1 {
+    color: $black;
+    font-size: 22px;
+    margin-bottom: 2 * $default-padding;
+  }
+
+  .dossiers-table {
+    margin: (3 * $default-spacer) auto;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 60px 0;
+  }
+}

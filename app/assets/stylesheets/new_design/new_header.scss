@@ -1,7 +1,7 @@
-@import "constants";
 @import "colors";
+@import "common";
+@import "constants";
 @import "mixins";
-@import "placeholders";
 
 // FIXME: Rename when the header is generalized
 .new-header {
@@ -14,10 +14,37 @@
 }
 
 .header-inner-content {
-  @extend %page-width-container;
+  @extend .container;
   display: flex;
   justify-content: space-between;
-  padding-top: 17px;
+  height: 100%;
+}
+
+.header-logo {
+  display: inline-block;
+  margin-right: 4 * $default-spacer;
+}
+
+.header-tabs {
+  li {
+    display: inline-block;
+    padding: $default-padding;
+  }
+
+  a {
+    @include vertical-padding(23px);
+    font-size: 18px;
+    color: $black;
+
+    &.active {
+      color: $blue;
+      border-bottom: 2px solid $blue;
+    }
+
+    &:not(.active):hover {
+      background-color: $light-grey;
+    }
+  }
 }
 
 .header-right-content {
@@ -41,10 +68,11 @@
     padding-right: 42px;
     float: right;
     width: 300px;
+    margin: 0;
   }
 
   button {
-    padding: 6px 9px;
+    padding: 9px;
     border: none;
     background: none;
     cursor: pointer;
@@ -80,6 +108,7 @@
   border: 1px solid $border-grey;
   min-width: 270px;
   max-width: 340px;
+  z-index: 10;
 
   &.open {
     display: block;
