@@ -1,0 +1,9 @@
+.backoffice-header
+  .container
+    %ul.breadcrumbs
+      %li= link_to('Avis', avis_index_path)
+      %li= "#{dossier.procedure.libelle}, dossier n° #{dossier.id}"
+
+    %ul.tabs
+      %li{ class: current_page?(avis_path(avis)) ? 'active' : nil }
+        = link_to 'Demande', avis_path(avis)
