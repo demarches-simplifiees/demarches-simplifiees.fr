@@ -28,11 +28,10 @@
 .header-tabs {
   li {
     display: inline-block;
-    padding: $default-padding;
   }
 
   a {
-    @include vertical-padding(23px);
+    padding: 23px $default-padding;
     font-size: 18px;
     color: $black;
 
