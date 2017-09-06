@@ -18,5 +18,16 @@ module NewGestionnaire
         @avis_donnes
       end
     end
+
+    def show
+      @avis = avis
+      @dossier = avis.dossier
+    end
+
+    private
+
+    def avis
+      current_gestionnaire.avis.includes(dossier: [:avis]).find(params[:id])
+    end
   end
 end
