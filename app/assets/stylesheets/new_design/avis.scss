@@ -2,6 +2,20 @@
 @import "common";
 @import "constants";
 
+.give-avis {
+  h1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: $default-padding;
+  }
+
+  .avis-notice {
+    font-size: 12px;
+    color: $grey;
+    margin-bottom: 2 * $default-padding;
+  }
+}
+
 .ask-avis {
   h1 {
     font-size: 18px;
