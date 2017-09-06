@@ -1,6 +1,6 @@
 = render partial: "header", locals: { dossier: @dossier }
 
-#dossier-messagerie.container
+.messagerie.container
   %ul
     - @dossier.commentaires.ordered.each do |commentaire|
       %li
