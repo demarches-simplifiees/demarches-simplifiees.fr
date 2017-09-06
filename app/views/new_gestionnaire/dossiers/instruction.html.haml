@@ -1,7 +1,7 @@
 = render partial: "header", locals: { dossier: @dossier }
 
 #dossier-instruction.container
-  %section
+  %section.ask-avis
     %h1 Inviter une personne à donner son avis
     %p.avis-notice Elle pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais elle ne pourra le modifier.
 
@@ -12,7 +12,7 @@
         = f.submit 'Demander un avis', class: 'button send'
 
   - if @dossier.avis.present?
-    %section.avis
+    %section.list-avis
       %h1.title
         Avis des invités
         %span.count= @dossier.avis.count
