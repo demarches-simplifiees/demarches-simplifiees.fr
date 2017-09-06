@@ -32,4 +32,22 @@ describe NewGestionnaire::AvisController, type: :controller do
     it { expect(assigns(:avis)).to eq(avis_without_answer) }
     it { expect(assigns(:dossier)).to eq(dossier) }
   end
+
+  describe '#instruction' do
+    before { get :instruction, { id: avis_without_answer.id } }
+
+    it { expect(response).to have_http_status(:success) }
+    it { expect(assigns(:avis)).to eq(avis_without_answer) }
+    it { expect(assigns(:dossier)).to eq(dossier) }
+  end
+
+  describe '#update' do
+    before do
+      patch :update, { id: avis_without_answer.id, avis: { answer: 'answer' } }
+      avis_without_answer.reload
+    end
+
+    it { expect(response).to redirect_to(instruction_avis_path(avis_without_answer)) }
+    it { expect(avis_without_answer.answer).to eq('answer') }
+  end
 end
