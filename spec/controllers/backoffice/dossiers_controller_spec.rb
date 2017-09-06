@@ -212,8 +212,8 @@ describe Backoffice::DossiersController, type: :controller do
             expect(response).to have_http_status(200)
           end
 
-          it 'returns nothing' do
-            expect(assigns(:dossiers).count).to eq(0)
+          it 'does not return the dossier' do
+            expect(assigns(:dossiers).pluck(:id)).not_to include(dossier2_id)
           end
         end
       end
