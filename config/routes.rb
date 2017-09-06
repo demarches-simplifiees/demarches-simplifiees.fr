@@ -258,7 +258,11 @@ Rails.application.routes.draw do
         end
       end
     end
-    resources :avis, only: [:index, :show]
+    resources :avis, only: [:index, :show, :update] do
+      member do
+        get 'instruction'
+      end
+    end
     get "recherche" => "recherches#index"
   end
 
