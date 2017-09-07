@@ -44,4 +44,8 @@ i {
   &.in-progress {
     background-image: image-url("icons/in-progress-blue.svg");
   }
+
+  &.bubble {
+    background-image: image-url("icons/bubble.svg");
+  }
 }
