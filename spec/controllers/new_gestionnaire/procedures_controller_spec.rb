@@ -42,6 +42,47 @@ describe NewGestionnaire::ProceduresController, type: :controller do
     end
   end
 
+  describe "before_action: redirect_to_avis_if_needed" do
+    it "is present" do
+      before_actions = NewGestionnaire::ProceduresController
+        ._process_action_callbacks
+        .find_all{|process_action_callbacks| process_action_callbacks.kind == :before}
+        .map(&:filter)
+
+      expect(before_actions).to include(:redirect_to_avis_if_needed)
+    end
+  end
+
+  describe "redirect_to_avis_if_needed" do
+    let(:gestionnaire) { create(:gestionnaire) }
+
+    before do
+      expect(@controller).to receive(:current_gestionnaire).at_least(:once).and_return(gestionnaire)
+      allow(@controller).to receive(:redirect_to)
+    end
+
+    context "when a gestionnaire has some procedures" do
+      let!(:some_procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+
+      before { @controller.send(:redirect_to_avis_if_needed) }
+
+      it "does not redirects nor flash" do
+        expect(@controller).not_to have_received(:redirect_to)
+      end
+    end
+
+    context "when a gestionnaire has no procedure and some avis" do
+      before do
+        Avis.create!(dossier: create(:dossier), claimant: create(:gestionnaire), gestionnaire: gestionnaire)
+        @controller.send(:redirect_to_avis_if_needed)
+      end
+
+      it "redirects avis" do
+        expect(@controller).to have_received(:redirect_to).with(avis_index_path)
+      end
+    end
+  end
+
   describe "#index" do
     let(:gestionnaire) { create(:gestionnaire) }
     subject { get :index }
