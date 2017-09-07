@@ -60,4 +60,4 @@
                   = render partial: 'status', locals: { dossier: dossier }
               %td.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
     - else
-      %h2 Aucun dossier
+      %h2.empty-text Aucun dossier
