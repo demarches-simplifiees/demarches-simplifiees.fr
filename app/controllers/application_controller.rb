@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :authorize_request_for_profiler
 
   def authorize_request_for_profiler
-    if Rails.env.production? && administration_signed_in?
+    if administration_signed_in?
       Rack::MiniProfiler.authorize_request
     end
   end
