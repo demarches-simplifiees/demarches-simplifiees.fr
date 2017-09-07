@@ -12,6 +12,7 @@
     %i.without-continuation
     %i.edit
     %i.in-progress
+    %i.bubble
 
     %h1 Formulaires
 
@@ -155,3 +156,34 @@
         Insérer ici le contenu de la colonne 1
       .column
         Insérer ici le contenu de la colonne 2
+
+  .container
+    %section.ask-avis
+      %h1 Inviter une personne à donner son avis
+      %p.avis-notice Elle pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais elle ne pourra le modifier.
+
+      = form_for Avis.new, url: '/', html: { class: 'form' } do |f|
+        = f.email_field :email, placeholder: 'Adresse email', required: true
+        = f.text_area :introduction, rows: 3, value: 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
+        .send-wrapper
+          = f.submit 'Demander un avis', class: 'button send'
+
+    %section.list-avis
+      %h1.title
+        Avis des invités
+        %span.count 1
+
+      %ul
+        %li.one-avis
+          %h2.claimant
+            Vous
+            %span.date Demande d'avis envoyée le 12/01/2012
+          %p Bonjour, merci de me donner votre avis sur ce dossier.
+
+          .answer.flex.align-start
+            %i.bubble.avis-icon
+            .width-100
+              %h2.gestionnaire
+                gestionnnaire@tps.com
+                %span.date Réponse donnée le 13/01/2012
+              %p Je donne un avis favorable

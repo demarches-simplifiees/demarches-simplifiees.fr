@@ -1,0 +1,73 @@
+@import "colors";
+@import "common";
+@import "constants";
+
+.ask-avis {
+  h1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: $default-padding;
+  }
+
+  .avis-notice {
+    font-size: 12px;
+    color: $grey;
+    margin-bottom: 2 * $default-padding;
+  }
+
+  input[type=email] {
+    max-width: 500px;
+  }
+}
+
+.list-avis {
+  .title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: $default-padding;
+
+    .count {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      border: 1px solid $grey;
+      text-align: center;
+      font-size: 12px;
+      font-weight: normal;
+      margin-left: 8px;
+    }
+  }
+
+  .one-avis {
+    border-top: 1px solid $grey;
+    padding: $default-padding 0;
+
+    h2 {
+      font-weight: bold;
+      margin-bottom: $default-spacer;
+
+      span {
+        font-weight: normal;
+      }
+    }
+
+    .answer {
+      margin-top: $default-padding;
+    }
+
+    .avis-icon {
+      margin-right: $default-spacer;
+    }
+  }
+
+  .date,
+  .waiting {
+    font-size: 12px;
+    color: $grey;
+  }
+
+  .date {
+    float: right;
+  }
+}
