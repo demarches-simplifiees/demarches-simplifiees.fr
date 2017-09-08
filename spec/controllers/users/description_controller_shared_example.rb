@@ -223,38 +223,44 @@ shared_examples 'description_controller_spec' do
 
     describe 'Sauvegarde des champs' do
       let(:champs_dossier) { dossier.champs }
-      let(:dossier_champs_first) { 'test value' }
+      let(:dossier_text_value) { 'test value' }
       let(:dossier_date_value) { '23/06/2016' }
       let(:dossier_hour_value) { '17' }
       let(:dossier_minute_value) { '00' }
+      let(:dossier_datetime_champ_id) { dossier.champs.find { |c| c.type_champ == "datetime" }.id }
+      let(:dossier_text_champ_id) { dossier.champs.find { |c| c.type_champ == "text" }.id }
+      let(:params) {
+        {
+          dossier_id: dossier_id,
+          champs: {
+            "'#{dossier_text_champ_id}'" => dossier_text_value, # PARFOIS ce putain de champ est associé à un type datetime, et en plus parfois l'ordre n'est pas le bon
+            "'#{dossier_datetime_champ_id}'" => dossier_date_value
+          },
+          time_hour: {
+            "'#{dossier_datetime_champ_id}'" => dossier_hour_value,
+          },
+          time_minute: {
+            "'#{dossier_datetime_champ_id}'" => dossier_minute_value,
+          }
+        }
+      }
 
       before do
-        post :update, params: {dossier_id: dossier_id,
-                               champs: {
-                                   "'#{dossier.champs.first.id}'" => dossier_champs_first,
-                                   "'#{dossier.champs.second.id}'" => dossier_date_value
-                               },
-                               time_hour: {
-                                   "'#{dossier.champs.second.id}'" => dossier_hour_value,
-                               },
-                               time_minute: {
-                                   "'#{dossier.champs.second.id}'" => dossier_minute_value,
-                               }
-                    }
+        post :update, params: params
         dossier.reload
       end
 
-      it { expect(dossier.champs.first.value).to eq(dossier_champs_first) }
+      it { expect(dossier.champs.find(dossier_text_champ_id).value).to eq(dossier_text_value) }
       it { expect(response).to redirect_to users_dossier_recapitulatif_path }
 
       context 'when champs is type_de_champ datetime' do
-        it { expect(dossier.champs.second.value).to eq(dossier_date_value + ' ' + dossier_hour_value + ':' + dossier_minute_value) }
+        it { expect(dossier.champs.find(dossier_datetime_champ_id).value).to eq(dossier_date_value + ' ' + dossier_hour_value + ':' + dossier_minute_value) }
       end
 
       context 'when champs value is empty' do
-        let(:dossier_champs_first) { '' }
+        let(:dossier_text_value) { '' }
 
-        it { expect(dossier.champs.first.value).to eq(dossier_champs_first) }
+        it { expect(dossier.champs.find(dossier_text_champ_id).value).to eq(dossier_text_value) }
         it { expect(response).to redirect_to users_dossier_recapitulatif_path }
 
         context 'when champs is mandatory' do
