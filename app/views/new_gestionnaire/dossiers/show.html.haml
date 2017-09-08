@@ -11,9 +11,9 @@
 
   .backoffice-title Formulaire
 
-  .card.featured
-    - champs = @dossier.ordered_champs.decorate
-    - if champs.any?
+  - champs = @dossier.ordered_champs.decorate
+  - if champs.any?
+    .card.featured
       = render partial: "champs", locals: { champs: champs }
 
   - if @dossier.procedure.use_api_carto
