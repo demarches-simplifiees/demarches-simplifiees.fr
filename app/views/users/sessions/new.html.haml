@@ -38,7 +38,7 @@
 
         - if devise_mapping.rememberable?
           = f.check_box :remember_me, as: :boolean
-          = f.label :remember_me, "Se souvenir de moi"
+          = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
 
         = f.submit "Se connecter", class: "button large primary expand"
 
