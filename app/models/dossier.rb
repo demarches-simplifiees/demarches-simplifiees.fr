@@ -348,6 +348,18 @@ class Dossier < ActiveRecord::Base
     parts.join
   end
 
+  def avis_for(gestionnaire)
+    if gestionnaire.dossiers.include?(self)
+      avis.order(created_at: :asc)
+    else
+      avis
+        .where(confidentiel: false)
+        .or(avis.where(claimant: gestionnaire))
+        .or(avis.where(gestionnaire: gestionnaire))
+        .order(created_at: :asc)
+    end
+  end
+
   private
 
   def build_attestation

@@ -25,10 +25,10 @@
     %section.list-avis
       %h1.title
         Avis des invités
-        %span.count= @dossier.avis.count
+        %span.count= @dossier.avis_for(current_gestionnaire).count
 
       %ul
-        - @dossier.avis.each do |avis|
+        - @dossier.avis_for(current_gestionnaire).each do |avis|
           %li.one-avis
             %h2.claimant
               = (avis.claimant.email == current_gestionnaire.email) ? 'Vous' : avis.claimant.email
