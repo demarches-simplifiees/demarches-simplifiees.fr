@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170801083632) do
+ActiveRecord::Schema.define(version: 20170908101023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,9 +99,10 @@ ActiveRecord::Schema.define(version: 20170801083632) do
     t.text     "answer"
     t.integer  "gestionnaire_id"
     t.integer  "dossier_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.integer  "claimant_id",     null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.integer  "claimant_id",                     null: false
+    t.boolean  "confidentiel",    default: false, null: false
     t.index ["claimant_id"], name: "index_avis_on_claimant_id", using: :btree
     t.index ["dossier_id"], name: "index_avis_on_dossier_id", using: :btree
     t.index ["gestionnaire_id"], name: "index_avis_on_gestionnaire_id", using: :btree
