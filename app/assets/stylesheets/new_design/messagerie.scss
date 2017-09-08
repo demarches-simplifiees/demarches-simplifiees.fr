@@ -3,6 +3,14 @@
 @import "constants";
 
 .messagerie {
+  ul {
+    max-height: 350px;
+    overflow-y: scroll;
+    border: 1px solid $border-grey;
+    padding: 2 * $default-spacer;
+    margin-bottom: $default-spacer;
+  }
+
   li {
     display: flex;
     align-items: flex-start;
