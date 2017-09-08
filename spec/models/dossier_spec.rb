@@ -695,6 +695,56 @@ describe Dossier do
     end
   end
 
+  describe '#avis_for' do
+    let!(:procedure) { create(:procedure, :published) }
+    let!(:dossier) { create(:dossier, procedure: procedure, state: :initiated) }
+
+    let!(:gestionnaire) { create(:gestionnaire, procedures: [procedure]) }
+    let!(:expert_1) { create(:gestionnaire) }
+    let!(:expert_2) { create(:gestionnaire) }
+
+    context 'when there is a public advice asked from the dossiers gestionnaire' do
+      let!(:avis) { Avis.create(dossier: dossier, claimant: gestionnaire, gestionnaire: expert_1, confidentiel: false) }
+
+      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_2)).to match([avis]) }
+    end
+
+    context 'when there is a private advice asked from the dossiers gestionnaire' do
+      let!(:avis) { Avis.create(dossier: dossier, claimant: gestionnaire, gestionnaire: expert_1, confidentiel: true) }
+
+      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_2)).to match([]) }
+    end
+
+    context 'when there is a public advice asked from one expert to another' do
+      let!(:avis) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false) }
+
+      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_2)).to match([avis]) }
+    end
+
+    context 'when there is a private advice asked from one expert to another' do
+      let!(:avis) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: true) }
+
+      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_2)).to match([avis]) }
+    end
+
+    context 'when they are a lot of advice' do
+      let!(:avis_1) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: DateTime.parse('10/01/2010')) }
+      let!(:avis_2) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: DateTime.parse('9/01/2010')) }
+      let!(:avis_3) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: DateTime.parse('11/01/2010')) }
+
+      it { expect(dossier.avis_for(gestionnaire)).to match([avis_2, avis_1, avis_3]) }
+      it { expect(dossier.avis_for(expert_1)).to match([avis_2, avis_1, avis_3]) }
+    end
+  end
+
   describe '#update_state_dates' do
     let(:state) { 'draft' }
     let(:dossier) { create(:dossier, state: state) }
