@@ -30,7 +30,8 @@
               %th Formulaire :
               %td
                 - if @dossier.cerfa_available?
-                  = link_to "Télécharger", @dossier.cerfa.last.content_url, class: "button", target: :blank
+                  Pièce fournie -
+                  = link_to "Consulter", @dossier.cerfa.last.content_url, class: "link", target: :blank
                 - else
                   Pièce non fournie
 
@@ -40,6 +41,7 @@
               %td
                 - pj = @dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)
                 - if pj.present?
-                  = link_to "Télécharger", pj.content_url, class: "button", target: :blank
+                  Pièce fournie -
+                  = link_to "Consulter", pj.content_url, class: "link", target: :blank
                 - else
                   Pièce non fournie
