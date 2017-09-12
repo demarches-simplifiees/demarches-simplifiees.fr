@@ -117,4 +117,26 @@ RSpec.describe Avis, type: :model do
       it { expect(avis.email).to eq(email) }
     end
   end
+
+  describe "#downcase_email" do
+    subject { Avis.create(claimant: claimant, email: email, dossier: create(:dossier), gestionnaire: create(:gestionnaire)) }
+
+    context "when there is no email" do
+      let(:email) { nil }
+
+      it { expect(subject.email).to be_nil }
+    end
+
+    context "when the email is in lowercase" do
+      let(:email) { "toto@tps.fr" }
+
+      it { expect(subject.email).to eq("toto@tps.fr") }
+    end
+
+    context "when the email is not in lowercase" do
+      let(:email) { "TOTO@tps.fr" }
+
+      it { expect(subject.email).to eq("toto@tps.fr") }
+    end
+  end
 end

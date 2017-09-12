@@ -3,6 +3,7 @@ class Avis < ApplicationRecord
   belongs_to :gestionnaire
   belongs_to :claimant, class_name: 'Gestionnaire'
 
+  before_save :downcase_email
   before_create :try_to_assign_gestionnaire
   after_create :notify_gestionnaire
 
@@ -26,6 +27,12 @@ class Avis < ApplicationRecord
   end
 
   private
+
+  def downcase_email
+    if email.present?
+      email.downcase!
+    end
+  end
 
   def notify_gestionnaire
     AvisMailer.avis_invitation(self).deliver_now
