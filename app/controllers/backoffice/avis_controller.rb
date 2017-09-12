@@ -7,7 +7,7 @@ class Backoffice::AvisController < ApplicationController
     avis = Avis.new(create_params.merge(claimant: current_gestionnaire, dossier: dossier))
 
     if avis.save
-      flash[:notice] = "Votre demande d'avis a bien été envoyée à #{create_params[:email]}"
+      flash[:notice] = "Votre demande d'avis a bien été envoyée à #{avis.email}"
     end
 
     redirect_to backoffice_dossier_path(dossier)
