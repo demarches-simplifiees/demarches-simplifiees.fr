@@ -188,7 +188,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   private
 
   def redirect_to_dossier(dossier)
-    if URI(request.referer).path == dossier_path(dossier.procedure, dossier)
+    if params[:new_ui] # TODO delete new_ui when old UI is no longer used
       redirect_to dossier_path(dossier.procedure, dossier)
     else
       redirect_to backoffice_dossier_path(id: dossier.id)
