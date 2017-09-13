@@ -45,6 +45,7 @@ module NewGestionnaire
 
     def create_commentaire
       Commentaire.create(commentaire_params.merge(email: current_gestionnaire.email, dossier: dossier))
+      flash.notice = "Message envoyé"
       redirect_to messagerie_dossier_path(dossier.procedure, dossier)
     end
 
