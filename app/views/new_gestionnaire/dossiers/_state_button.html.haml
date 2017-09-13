@@ -10,7 +10,7 @@
               %h4 En construction
               Vous permettez à l'usager de modifier ses réponses au formulaire
           %li
-            = link_to backoffice_dossier_receive_path(dossier), method: :post, data: { confirm: "Confirmer vous le passage en instruction de ce dossier ?" } do
+            = link_to backoffice_dossier_receive_path(dossier, new_ui: true), method: :post, data: { confirm: "Confirmer vous le passage en instruction de ce dossier ?" } do
               %i.in-progress
               .description
                 %h4 Passer en instruction
@@ -18,7 +18,7 @@
 
         - if dossier.en_instruction?
           %li
-            = link_to backoffice_dossier_reopen_path(dossier), method: :post, data: { confirm: "Confirmer vous la réouverture de ce dossier ?" } do
+            = link_to backoffice_dossier_reopen_path(dossier, new_ui: true), method: :post, data: { confirm: "Confirmer vous la réouverture de ce dossier ?" } do
               %i.edit
               .description
                 %h4 Repasser en construction
@@ -34,13 +34,13 @@
               %h4 Accepter
               L'usager sera notifié que son dossier a été accepté
           %li
-            = link_to backoffice_dossier_process_dossier_path(dossier, process_action: "without_continuation"), method: :post, data: { confirm: "Confirmer vous le classement sans suite de ce dossier ?" } do
+            = link_to backoffice_dossier_process_dossier_path(dossier, process_action: "without_continuation", new_ui: true), method: :post, data: { confirm: "Confirmer vous le classement sans suite de ce dossier ?" } do
               %i.without-continuation
               .description
                 %h4 Classer sans suite
                 L'usager ne recevra aucune notification
           %li
-            = link_to backoffice_dossier_process_dossier_path(dossier, process_action: "refuse"), method: :post, data: { confirm: "Confirmer vous le refus de ce dossier ?" } do
+            = link_to backoffice_dossier_process_dossier_path(dossier, process_action: "refuse", new_ui: true), method: :post, data: { confirm: "Confirmer vous le refus de ce dossier ?" } do
               %i.close
               .description
                 %h4 Refuser
@@ -51,7 +51,7 @@
           Accepter le dossier
           = "nº #{dossier.id}"
 
-        = form_tag(backoffice_dossier_process_dossier_url(dossier.id), method: :post, class: "form") do
+        = form_tag(backoffice_dossier_process_dossier_url(dossier.id, new_ui: true), method: :post, class: "form") do
           = text_area :dossier, :motivation, class: "motivation-text-area", placeholder: "Rédigez votre motivation ici (facultative)"
           %p.help
             L'acceptation du dossier envoie automatiquement une attestation à l'usager.
