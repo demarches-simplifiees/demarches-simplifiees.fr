@@ -59,9 +59,24 @@
             %span.button{ onclick: "TPS.motivationCancel();" } Annuler
             = button_tag "Valider la décision", name: :process_action, value: "close", class: 'button primary', title: 'Accepter', data: { confirm: "Accepter ce dossier ?" }
 
-- elsif dossier.closed?
-  %span.label.closed Accepté
-- elsif dossier.refused?
-  %span.label.refused Refusé
-- elsif dossier.without_continuation?
-  %span.label.without-continuation Sans suite
+- else
+  %span.button.dropdown{ class: dossier.closed? ? 'success' : nil }
+    = t("activerecord.attributes.dossier.state.#{dossier.state}")
+    .dropdown-content.fade-in-down.terminated
+      %h4
+        - if dossier.closed?
+          %i.accept
+          Dossier nº #{dossier.id} accepté
+        - elsif dossier.without_continuation?
+          %i.without-continuation
+          Dossier nº #{dossier.id} classé sans suite
+        - elsif dossier.refused?
+          %i.close
+          Dossier nº #{dossier.id} refusé
+
+      - if dossier.motivation.present?
+        %p.dossier-motivation= dossier.motivation
+
+      - if dossier.attestation.present?
+        %p.attestation L'acceptation du dossier a envoyé automatiquement une attestation au demandeur
+        = link_to "Voir l'attestation", attestation_dossier_path(dossier.procedure, dossier), target: '_blank', class: 'button'

@@ -44,6 +44,17 @@
     }
   }
 
+  &.success {
+    color: #FFFFFF;
+    border-color: $green;
+    background-color: $green;
+
+    &:hover {
+      color: $green;
+      background-color: #FFFFFF;
+    }
+  }
+
   &.large {
     font-size: 18px;
     line-height: 26px;
@@ -91,6 +102,26 @@
   right: 0;
   top: 5 * $default-spacer;
   cursor: default;
+  z-index: 10;
+
+  &.terminated {
+    width: 600px;
+    color: $black;
+    padding: $default-padding;
+
+    h4 {
+      font-size: 24px;
+    }
+
+    .dossier-motivation {
+      margin-top: 2 * $default-padding;
+    }
+
+    .attestation {
+      margin: $default-padding 0;
+      color: $grey;
+    }
+  }
 }
 
 .dropdown-items {
