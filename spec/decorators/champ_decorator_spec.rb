@@ -20,6 +20,19 @@ describe ChampDecorator do
       end
     end
 
+    describe 'for a engagement' do
+      let(:type_champ) { :engagement }
+
+      context 'when value is on' do
+        before { champ.update value: 'on' }
+        it { is_expected.to eq 'Oui' }
+      end
+
+      context 'when value is other' do
+        it { is_expected.to eq 'Non' }
+      end
+    end
+
     describe 'for a multiple_drop_down_list' do
       let(:type_champ) { :multiple_drop_down_list }
 
