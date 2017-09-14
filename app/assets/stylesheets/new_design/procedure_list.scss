@@ -26,16 +26,15 @@
   }
 
   .procedure-logo {
-    margin-right: 16px;
-    width: 40px;
-    border-bottom: 1px solid $border-grey;
+    height: 93px;
+    width: 93px;
+    margin-right: 3 * $default-spacer;
   }
 
   .procedure-title {
     min-height: 40px;
     font-size: 20px;
     margin-bottom: 16px;
-    padding-left: $default-spacer;
   }
 
   .procedure-status {
