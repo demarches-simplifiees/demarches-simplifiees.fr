@@ -1,10 +1,12 @@
 #procedure-show
   .backoffice-header
     .container.flex
-      - if @procedure.logo.present?
-        = image_tag @procedure.logo, height: 40, class: 'procedure-logo'
 
-      .width-100
+      .procedure-logo
+        - if @procedure.logo.present?
+          = image_tag @procedure.logo, alt: "Logo de la procédure"
+
+      .procedure-header
         %h1= @procedure.libelle
         %ul.tabs
           %li{ class: (@statut == 'a-suivre') ? 'active' : nil }>
