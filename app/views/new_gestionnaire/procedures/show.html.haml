@@ -38,6 +38,18 @@
               = t('pluralize.archived', count: @archived_dossiers.count)
               %span.badge= @archived_dossiers.count
 
+      .procedure-actions
+        %span.button.dropdown
+          Télécharger tous les dossiers
+          .dropdown-content.fade-in-down
+            %ul.dropdown-items
+              %li
+                = link_to "Au format .csv", backoffice_download_dossiers_tps_path(format: :csv, procedure_id: @procedure.id), target: "_blank"
+              %li
+                = link_to "Au format .xls", backoffice_download_dossiers_tps_path(format: :xls, procedure_id: @procedure.id), target: "_blank"
+              %li
+                = link_to "Au format .ods", backoffice_download_dossiers_tps_path(format: :ods, procedure_id: @procedure.id), target: "_blank"
+
   .container
     - if @dossiers.present?
       %table.table.dossiers-table.hoverable
