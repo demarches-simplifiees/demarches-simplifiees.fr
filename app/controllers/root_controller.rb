@@ -2,6 +2,10 @@ class RootController < ApplicationController
   layout 'new_application'
 
   def index
+    if params[:new_ui] && gestionnaire_signed_in? # TODO delete new_ui when old UI is no longer used
+      return redirect_to procedures_path
+    end
+
     if administrateur_signed_in?
       return redirect_to admin_procedures_path
 
