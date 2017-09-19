@@ -2,7 +2,8 @@
   .header-inner-content
 
     .flex.align-center
-      = link_to root_path, class: "header-logo" do
+      -# TODO delete new_ui when old UI is no longer used
+      = link_to root_path(new_ui: 1), class: "header-logo" do
         %img{ src: image_url("header/logo-tps.svg") }
 
       - if gestionnaire_signed_in?
