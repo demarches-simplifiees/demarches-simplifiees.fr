@@ -23,4 +23,12 @@
     text-align: center;
     margin: 60px 0;
   }
+
+  .procedure-actions {
+    margin-left: auto;
+
+    .dropdown-items li {
+      min-width: 150px;
+    }
+  }
 }
