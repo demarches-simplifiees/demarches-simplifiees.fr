@@ -52,4 +52,8 @@ i {
   &.attachment {
     background-image: image-url("icons/attachment.svg");
   }
+
+  &.lock {
+    background-image: image-url("icons/lock.svg");
+  }
 }
