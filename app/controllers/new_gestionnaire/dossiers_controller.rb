@@ -87,7 +87,7 @@ module NewGestionnaire
     end
 
     def avis_params
-      params.require(:avis).permit(:email, :introduction)
+      params.require(:avis).permit(:email, :introduction, :confidentiel)
     end
 
     def champs_private_params
