@@ -14,7 +14,11 @@
               = link_to "Procédures", procedures_path, class: (controller_name != 'avis') ? "active" : nil
           - if current_gestionnaire.avis.count > 0
             %li
-              = link_to "Avis", avis_index_path, class: (controller_name == 'avis') ? "active" : nil
+              = link_to avis_index_path, class: (controller_name == 'avis') ? "active" : nil do
+                Avis
+                - avis_counter = current_gestionnaire.avis.without_answer.count
+                - if avis_counter > 0
+                  %span.badge.warning= avis_counter
           %li
             = link_to "Ancienne interface", backoffice_dossiers_path
 

@@ -8,6 +8,8 @@
             = link_to(avis_index_path(statut: NewGestionnaire::AvisController::A_DONNER_STATUS)) do
               avis à donner
               %span.badge= @avis_a_donner.count
+              - if @avis_a_donner.any?
+                %span.notifications
 
           %li{ class: (@statut == NewGestionnaire::AvisController::DONNES_STATUS) ? 'active' : nil }>
             = link_to(avis_index_path(statut: NewGestionnaire::AvisController::DONNES_STATUS)) do
