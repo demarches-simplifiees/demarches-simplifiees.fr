@@ -190,10 +190,10 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
 
       describe 'statut' do
-        let!(:a_suivre__dossier) { create(:dossier, procedure: procedure, state: 'received') }
-        let!(:new_followed_dossier) { create(:dossier, procedure: procedure, state: 'received') }
-        let!(:termine_dossier) { create(:dossier, procedure: procedure, state: 'closed') }
-        let!(:archived_dossier) { create(:dossier, procedure: procedure, state: 'received', archived: true) }
+        let!(:a_suivre__dossier) { Timecop.freeze(1.day.ago){ create(:dossier, procedure: procedure, state: 'received') } }
+        let!(:new_followed_dossier) { Timecop.freeze(2.day.ago){ create(:dossier, procedure: procedure, state: 'received') } }
+        let!(:termine_dossier) { Timecop.freeze(3.day.ago){ create(:dossier, procedure: procedure, state: 'closed') } }
+        let!(:archived_dossier) { Timecop.freeze(4.day.ago){ create(:dossier, procedure: procedure, state: 'received', archived: true) } }
         before do
           gestionnaire.followed_dossiers << new_followed_dossier
           get :show, params: { procedure_id: procedure.id, statut: statut }
@@ -231,7 +231,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
           let(:statut) { 'tous' }
 
           it { expect(assigns(:statut)).to eq('tous') }
-          it { expect(assigns(:dossiers)).to match([a_suivre__dossier, new_followed_dossier, termine_dossier]) }
+          it { expect(assigns(:dossiers)).to match([a_suivre__dossier, new_followed_dossier, termine_dossier].sort_by(&:updated_at)) }
         end
 
         context 'when statut is archives' do
