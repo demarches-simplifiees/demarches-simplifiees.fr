@@ -258,6 +258,14 @@ Rails.application.routes.draw do
         end
       end
     end
+    resources :avis, only: [:index, :show, :update] do
+      member do
+        get 'instruction'
+        get 'messagerie'
+        post 'commentaire' => 'avis#create_commentaire'
+        post 'avis' => 'avis#create_avis'
+      end
+    end
     get "recherche" => "recherches#index"
   end
 

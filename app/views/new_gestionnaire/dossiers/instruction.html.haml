@@ -3,38 +3,19 @@
 #dossier-instruction.container
   %section.ask-avis
     %h1 Inviter une personne à donner son avis
-    %p.avis-notice Elle pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais elle ne pourra le modifier.
+    %p.avis-notice L'invité pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais il ne pourra le modifier.
 
     = form_for Avis.new, url: avis_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' } do |f|
       = f.email_field :email, placeholder: 'Adresse email', required: true
       = f.text_area :introduction, rows: 3, value: 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
-      .send-wrapper
-        = f.submit 'Demander un avis', class: 'button send'
+      .flex.justify-between.align-baseline
+        .confidentiel-wrapper
+          = f.label :confidentiel, 'Cet avis est'
+          = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]]
+        .send-wrapper
+          = f.submit 'Demander un avis', class: 'button send'
 
-  - if @dossier.avis.present?
-    %section.list-avis
-      %h1.title
-        Avis des invités
-        %span.count= @dossier.avis.count
-
-      %ul
-        - @dossier.avis.each do |avis|
-          %li.one-avis
-            %h2.claimant
-              = (avis.claimant.email == current_gestionnaire.email) ? 'Vous' : avis.claimant.email
-              %span.date Demande d'avis envoyée le #{I18n.l(avis.created_at.localtime, format: '%d/%m/%y')}
-            %p= avis.introduction
-
-            .answer.flex.align-start
-              %i.bubble.avis-icon
-              .width-100
-                %h2.gestionnaire
-                  = avis.gestionnaire.email
-                  - if avis.answer.present?
-                    %span.date Réponse donnée le #{I18n.l(avis.updated_at.localtime, format: '%d/%m/%y')}
-                  - else
-                    %span.waiting En attente de réponse
-                %p= avis.answer
+  = render partial: 'new_gestionnaire/avis/avis_list', locals: { avis: @dossier.avis }
 
   - if @dossier.ordered_champs_private.present?
     %section

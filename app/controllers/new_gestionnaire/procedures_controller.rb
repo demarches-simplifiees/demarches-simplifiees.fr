@@ -1,6 +1,7 @@
 module NewGestionnaire
   class ProceduresController < GestionnaireController
     before_action :ensure_ownership!, except: [:index]
+    before_action :redirect_to_avis_if_needed, only: [:index]
 
     def index
       @procedures = current_gestionnaire.procedures.order(archived_at: :desc, published_at: :desc)
@@ -74,6 +75,12 @@ module NewGestionnaire
       if !procedure.gestionnaires.include?(current_gestionnaire)
         flash[:alert] = "Vous n'avez pas accès à cette procédure"
         redirect_to root_path
+      end
+    end
+
+    def redirect_to_avis_if_needed
+      if current_gestionnaire.procedures.count == 0 && current_gestionnaire.avis.count > 0
+        redirect_to avis_index_path
       end
     end
   end
