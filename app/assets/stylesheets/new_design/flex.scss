@@ -9,6 +9,10 @@
     align-items: flex-start;
   }
 
+  &.align-baseline {
+    align-items: baseline;
+  }
+
   &.justify-between {
     justify-content: space-between;
   }

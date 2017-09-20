@@ -4,21 +4,39 @@
 .container
   %section.give-avis
     %h1 Donner votre avis
-    %p.avis-notice= "#{@avis.claimant.email}: #{@avis.introduction}"
+    %h2.claimant
+      = @avis.claimant.email
+      %span.date Demande d'avis envoyée le #{I18n.l(@avis.created_at.localtime, format: '%d/%m/%y')}
+    %p.introduction= @avis.introduction
 
     = form_for @avis, url: avis_path(@avis), html: { class: 'form' } do |f|
       = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
-      .send-wrapper
-        = f.submit 'Envoyer votre avis', class: 'button send'
+      .flex.justify-between.align-baseline
+        %p.confidentiel
+          %i.lock
+          Cet avis est confidentiel et n'est pas affiché aux autres experts consultés
+        .send-wrapper
+          = f.submit 'Envoyer votre avis', class: 'button send'
 
   %section.ask-avis
     %h1 Inviter une personne à donner son avis
     %p.avis-notice L'invité pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais il ne pourra le modifier.
 
-    = form_for Avis.new, url: avis_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' } do |f|
+    = form_for Avis.new, url: avis_avis_path(@avis), html: { class: 'form' } do |f|
       = f.email_field :email, placeholder: 'Adresse email', required: true
       = f.text_area :introduction, rows: 3, value: 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
-      .send-wrapper
-        = f.submit 'Demander un avis', class: 'button send'
+      .flex.justify-between.align-baseline
+        - if @avis.confidentiel?
+          %p.confidentiel
+            %i.lock
+            Cet avis est confidentiel et n'est pas affiché aux autres experts consultés
+          .send-wrapper
+            = f.submit 'Demander un avis', class: 'button send'
+        - else
+          .confidentiel-wrapper
+            = f.label :confidentiel, 'Cet avis est'
+            = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]]
+          .send-wrapper
+            = f.submit 'Demander un avis', class: 'button send'
 
   = render partial: 'avis_list', locals: { avis: @dossier.avis_for(current_gestionnaire) }

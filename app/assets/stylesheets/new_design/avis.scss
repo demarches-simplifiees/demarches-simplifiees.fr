@@ -9,10 +9,30 @@
     margin-bottom: $default-padding;
   }
 
-  .avis-notice {
+  .lock {
+    margin-right: $default-spacer;
+  }
+
+  h2 {
+    font-weight: bold;
+    margin-bottom: $default-padding;
+  }
+
+  .introduction {
+    margin-bottom: $default-padding;
+  }
+
+  .confidentiel {
+    color: $grey;
+    font-weight: normal;
+    margin-bottom: 2 * $default-padding;
+  }
+
+  .date {
     font-size: 12px;
     color: $grey;
-    margin-bottom: 2 * $default-padding;
+    float: right;
+    font-weight: normal;
   }
 }
 
@@ -24,13 +44,30 @@
   }
 
   .avis-notice {
-    font-size: 12px;
+    font-size: 14px;
     color: $grey;
     margin-bottom: 2 * $default-padding;
   }
 
   input[type=email] {
     max-width: 500px;
+  }
+
+  form > label {
+    display: inline-block;
+  }
+
+  .confidentiel {
+    color: $grey;
+    font-weight: normal;
+    margin-bottom: 2 * $default-padding;
+  }
+
+  .confidentiel-wrapper {
+    label,
+    select {
+      display: inline-block;
+    }
   }
 }
 
@@ -57,6 +94,10 @@
     border-top: 1px solid $grey;
     padding: $default-padding 0;
 
+    .lock {
+      margin-right: $default-spacer;
+    }
+
     h2 {
       font-weight: bold;
       margin-bottom: $default-spacer;
@@ -72,6 +113,18 @@
 
     .avis-icon {
       margin-right: $default-spacer;
+    }
+
+    .confidentiel {
+      color: $grey;
+      font-size: 12px;
+
+      .lock {
+        width: 12px;
+        height: 12px;
+        background-size: 12px 12px;
+        vertical-align: sub;
+      }
     }
   }
 

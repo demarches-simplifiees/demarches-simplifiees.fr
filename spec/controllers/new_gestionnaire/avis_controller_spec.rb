@@ -70,4 +70,46 @@ describe NewGestionnaire::AvisController, type: :controller do
     it { expect(response).to redirect_to(messagerie_avis_path(avis_without_answer)) }
     it { expect(dossier.commentaires.map(&:body)).to match(['commentaire body']) }
   end
+
+  describe '#create_avis' do
+    let!(:previous_avis) { Avis.create(dossier: dossier, claimant: claimant, gestionnaire: gestionnaire, confidentiel: previous_avis_confidentiel) }
+    let(:email) { 'a@b.com' }
+    let(:intro) { 'introduction' }
+    let(:created_avis) { Avis.last }
+
+    before do
+      post :create_avis, { id: previous_avis.id, avis: { email: email, introduction: intro, confidentiel: asked_confidentiel } }
+    end
+
+    context 'when the previous avis is public' do
+      let(:previous_avis_confidentiel) { false }
+
+      context 'when the user asked for a public avis' do
+        let(:asked_confidentiel) { false }
+
+        it { expect(created_avis.confidentiel).to be(false) }
+        it { expect(created_avis.email).to eq(email) }
+        it { expect(created_avis.introduction).to eq(intro) }
+        it { expect(created_avis.dossier).to eq(previous_avis.dossier) }
+        it { expect(created_avis.claimant).to eq(gestionnaire) }
+        it { expect(response).to redirect_to(instruction_avis_path(previous_avis)) }
+      end
+
+      context 'when the user asked for a confidentiel avis' do
+        let(:asked_confidentiel) { true }
+
+        it { expect(created_avis.confidentiel).to be(true) }
+      end
+    end
+
+    context 'when the preivous avis is confidentiel' do
+      let(:previous_avis_confidentiel) { true }
+
+      context 'when the user asked for a public avis' do
+        let(:asked_confidentiel) { false }
+
+        it { expect(created_avis.confidentiel).to be(true) }
+      end
+    end
+  end
 end
