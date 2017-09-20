@@ -14,8 +14,11 @@
   }
 
   h2 {
-    font-weight: bold;
     margin-bottom: $default-padding;
+
+    .email {
+      font-weight: bold;
+    }
   }
 
   .introduction {
@@ -32,7 +35,6 @@
     font-size: 12px;
     color: $grey;
     float: right;
-    font-weight: normal;
   }
 }
 
@@ -99,11 +101,10 @@
     }
 
     h2 {
-      font-weight: bold;
       margin-bottom: $default-spacer;
 
-      span {
-        font-weight: normal;
+      .email {
+        font-weight: bold;
       }
     }
 
