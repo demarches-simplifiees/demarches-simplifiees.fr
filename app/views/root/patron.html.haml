@@ -162,7 +162,7 @@
   .container
     %section.ask-avis
       %h1 Inviter une personne à donner son avis
-      %p.avis-notice Elle pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais elle ne pourra le modifier.
+      %p.avis-notice L'invité pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais elle ne pourra le modifier.
 
       = form_for Avis.new, url: '/', html: { class: 'form' } do |f|
         = f.email_field :email, placeholder: 'Adresse email', required: true
