@@ -263,6 +263,7 @@ Rails.application.routes.draw do
         get 'instruction'
         get 'messagerie'
         post 'commentaire' => 'avis#create_commentaire'
+        post 'avis' => 'avis#create_avis'
       end
     end
     get "recherche" => "recherches#index"

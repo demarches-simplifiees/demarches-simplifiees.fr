@@ -45,6 +45,12 @@ module NewGestionnaire
       redirect_to messagerie_avis_path(avis)
     end
 
+    def create_avis
+      confidentiel = avis.confidentiel || params[:avis][:confidentiel]
+      Avis.create(create_avis_params.merge(claimant: current_gestionnaire, dossier: avis.dossier, confidentiel: confidentiel))
+      redirect_to instruction_avis_path(avis)
+    end
+
     private
 
     def avis
@@ -57,6 +63,10 @@ module NewGestionnaire
 
     def commentaire_params
       params.require(:commentaire).permit(:body)
+    end
+
+    def create_avis_params
+      params.require(:avis).permit(:email, :introduction)
     end
   end
 end
