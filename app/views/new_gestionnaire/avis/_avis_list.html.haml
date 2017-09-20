@@ -1,0 +1,30 @@
+- if avis.present?
+  %section.list-avis
+    %h1.title
+      Avis des invités
+      %span.count= avis.count
+
+    %ul
+      - avis.each do |avis|
+        %li.one-avis.flex.align-start
+          .width-100
+            %h2.claimant
+              Demandeur :
+              %span.email= (avis.claimant.email == current_gestionnaire.email) ? 'Vous' : avis.claimant.email
+              - if avis.confidentiel?
+                %span.confidentiel
+                  confidentiel
+                  %i.lock{ title: "Cet avis n'est pas affiché avec les autres experts consultés" }
+              %span.date Demande d'avis envoyée le #{I18n.l(avis.created_at.localtime, format: '%d/%m/%y')}
+            %p= avis.introduction
+
+            .answer.flex.align-start
+              %i.bubble.avis-icon
+              .width-100
+                %h2.gestionnaire
+                  = (avis.gestionnaire.email == current_gestionnaire.email) ? 'Vous' : avis.gestionnaire.email
+                  - if avis.answer.present?
+                    %span.date Réponse donnée le #{I18n.l(avis.updated_at.localtime, format: '%d/%m/%y')}
+                  - else
+                    %span.waiting En attente de réponse
+                %p= avis.answer
