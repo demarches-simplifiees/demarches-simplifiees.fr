@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe NewGestionnaire::DossiersController, type: :controller do
+  render_views
+
   let(:gestionnaire) { create(:gestionnaire) }
   let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
   let(:dossier) { create(:dossier, :replied, procedure: procedure) }
@@ -122,12 +124,13 @@ describe NewGestionnaire::DossiersController, type: :controller do
       post :create_avis, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id,
-        avis: { email: 'email@a.com', introduction: 'intro' }
+        avis: { email: 'email@a.com', introduction: 'intro', confidentiel: true }
       }
     end
 
     it { expect(saved_avis.email).to eq('email@a.com') }
     it { expect(saved_avis.introduction).to eq('intro') }
+    it { expect(saved_avis.confidentiel).to eq(true) }
     it { expect(saved_avis.dossier).to eq(dossier) }
     it { expect(saved_avis.claimant).to eq(gestionnaire) }
     it { expect(response).to redirect_to(instruction_dossier_path(dossier.procedure, dossier)) }

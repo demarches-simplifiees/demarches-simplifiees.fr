@@ -8,8 +8,12 @@
     = form_for Avis.new, url: avis_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' } do |f|
       = f.email_field :email, placeholder: 'Adresse email', required: true
       = f.text_area :introduction, rows: 3, value: 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
-      .send-wrapper
-        = f.submit 'Demander un avis', class: 'button send'
+      .flex.justify-between.align-baseline
+        .confidentiel-wrapper
+          = f.label :confidentiel, 'Cet avis est'
+          = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]]
+        .send-wrapper
+          = f.submit 'Demander un avis', class: 'button send'
 
   = render partial: 'new_gestionnaire/avis/avis_list', locals: { avis: @dossier.avis }
 
