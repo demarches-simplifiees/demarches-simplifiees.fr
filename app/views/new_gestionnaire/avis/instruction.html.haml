@@ -21,27 +21,4 @@
       .send-wrapper
         = f.submit 'Demander un avis', class: 'button send'
 
-  - if @dossier.avis.present?
-    %section.list-avis
-      %h1.title
-        Avis des invités
-        %span.count= @dossier.avis_for(current_gestionnaire).count
-
-      %ul
-        - @dossier.avis_for(current_gestionnaire).each do |avis|
-          %li.one-avis
-            %h2.claimant
-              = (avis.claimant.email == current_gestionnaire.email) ? 'Vous' : avis.claimant.email
-              %span.date Demande d'avis envoyée le #{I18n.l(avis.created_at.localtime, format: '%d/%m/%y')}
-            %p= avis.introduction
-
-            .answer.flex.align-start
-              %i.bubble.avis-icon
-              .width-100
-                %h2.gestionnaire
-                  = avis.gestionnaire.email
-                  - if avis.answer.present?
-                    %span.date Réponse donnée le #{I18n.l(avis.updated_at.localtime, format: '%d/%m/%y')}
-                  - else
-                    %span.waiting En attente de réponse
-                %p= avis.answer
+  = render partial: 'avis_list', locals: { avis: @dossier.avis_for(current_gestionnaire) }
