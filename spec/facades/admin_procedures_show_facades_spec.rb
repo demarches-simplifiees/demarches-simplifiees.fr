@@ -50,12 +50,6 @@ describe AdminProceduresShowFacades do
     it { is_expected.to eq(4) }
   end
 
-  describe 'dossiers_waiting_gestionnaire_total' do
-    subject { super().dossiers_waiting_gestionnaire_total }
-
-    it { is_expected.to eq(1) }
-  end
-
   describe 'dossiers_termine_total' do
     subject { super().dossiers_termine_total }
 
