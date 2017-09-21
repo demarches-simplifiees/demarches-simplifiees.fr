@@ -8,7 +8,7 @@ class DossiersListGestionnaireService
   def dossiers_to_display
     @dossiers_to_display ||=
         {'nouveaux' => nouveaux,
-         'a_traiter' => ouvert,
+         'a_traiter' => nouveaux,
          'a_instruire' => a_instruire,
          'termine' => termine,
          'archive' => archive,
