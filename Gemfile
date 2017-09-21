@@ -37,6 +37,7 @@ gem 'bootstrap-sass', '~> 3.3.5'
 
 # Pagination
 gem 'will_paginate-bootstrap'
+gem 'kaminari'
 
 # Decorators
 gem 'draper', '~> 3.0.0.pre1'
