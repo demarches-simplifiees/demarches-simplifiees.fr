@@ -23,11 +23,6 @@ describe UserRoutesAuthorizationService do
         it { is_expected.to be_falsey }
       end
 
-      describe 'replied' do
-        let(:state) { 'replied' }
-        it { is_expected.to be_falsey }
-      end
-
       describe 'updated' do
         let(:state) { 'updated' }
         it { is_expected.to be_falsey }
@@ -53,11 +48,6 @@ describe UserRoutesAuthorizationService do
           it { is_expected.to be_falsey }
         end
 
-        describe 'replied' do
-          let(:state) { 'replied' }
-          it { is_expected.to be_falsey }
-        end
-
         describe 'updated' do
           let(:state) { 'updated' }
           it { is_expected.to be_falsey }
@@ -79,11 +69,6 @@ describe UserRoutesAuthorizationService do
 
         describe 'initiated' do
           let(:state) { 'initiated' }
-          it { is_expected.to be_truthy }
-        end
-
-        describe 'replied' do
-          let(:state) { 'replied' }
           it { is_expected.to be_truthy }
         end
 
@@ -112,11 +97,6 @@ describe UserRoutesAuthorizationService do
         it { is_expected.to be_truthy }
       end
 
-      describe 'replied' do
-        let(:state) { 'replied' }
-        it { is_expected.to be_truthy }
-      end
-
       describe 'updated' do
         let(:state) { 'updated' }
         it { is_expected.to be_truthy }
@@ -138,11 +118,6 @@ describe UserRoutesAuthorizationService do
 
       describe 'initiated' do
         let(:state) { 'initiated' }
-        it { is_expected.to be_truthy }
-      end
-
-      describe 'replied' do
-        let(:state) { 'replied' }
         it { is_expected.to be_truthy }
       end
 

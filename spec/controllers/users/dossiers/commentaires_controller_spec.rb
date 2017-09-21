@@ -15,13 +15,11 @@ describe Users::Dossiers::CommentairesController, type: :controller do
 
       before do
         sign_in invite.user
-        dossier.replied!
       end
 
       it do
         subject
         is_expected.to redirect_to users_dossiers_invite_path(invite.id)
-        expect(dossier.state).to eq 'replied'
       end
 
       it 'should notify user' do

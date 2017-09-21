@@ -93,7 +93,7 @@ class Users::DescriptionController < UsersController
 
   def self.route_authorization
     {
-        states: [:draft, :initiated, :replied, :updated]
+        states: [:draft, :initiated, :updated]
     }
   end
 

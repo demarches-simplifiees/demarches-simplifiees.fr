@@ -137,7 +137,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
           let(:state) { "initiated" }
 
           before do
-            create(:dossier, procedure: procedure, state: "replied")
+            create(:dossier, procedure: procedure, state: "initiated")
             create(:dossier, procedure: procedure, state: "received")
             create(:dossier, procedure: procedure, state: "without_continuation", archived: true)
 

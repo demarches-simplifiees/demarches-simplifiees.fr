@@ -5,7 +5,7 @@ describe AdminProceduresShowFacades do
 
   let!(:dossier_0) { create(:dossier,  procedure: procedure, state: 'draft') }
   let!(:dossier_1) { create(:dossier,  procedure: procedure, state: 'initiated') }
-  let!(:dossier_2) { create(:dossier,  procedure: procedure, state: 'replied') }
+  let!(:dossier_2) { create(:dossier,  procedure: procedure, state: 'initiated') }
   let!(:dossier_6) { create(:dossier,  procedure: procedure, archived: true, state: 'initiated') }
   let!(:dossier_7) { create(:dossier,  procedure: procedure, state: 'updated') }
 

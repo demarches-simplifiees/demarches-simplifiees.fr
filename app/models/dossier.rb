@@ -2,7 +2,6 @@ class Dossier < ActiveRecord::Base
   enum state: {
     draft:                'draft',
     initiated:            'initiated',
-    replied:              'replied',              # action utilisateur demandé
     updated:              'updated',              # etude par l'administration en cours
     received:             'received',
     closed:               'closed',
@@ -12,7 +11,7 @@ class Dossier < ActiveRecord::Base
 
   BROUILLON = %w(draft)
   NOUVEAUX = %w(initiated)
-  EN_CONSTRUCTION = %w(initiated updated replied)
+  EN_CONSTRUCTION = %w(initiated updated)
   EN_INSTRUCTION = %w(received)
   EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
   A_INSTRUIRE = %w(received)
@@ -161,22 +160,14 @@ class Dossier < ActiveRecord::Base
         if draft?
           initiated!
         end
-      when 'update'
-        if replied?
-          updated!
-        end
-      when 'comment'
-        if replied?
-          updated!
-        end
       end
     when 'gestionnaire'
       case action
       when 'comment'
         if updated?
-          replied!
+          initiated!
         elsif initiated?
-          replied!
+          initiated!
         end
       when 'follow'
         if initiated?

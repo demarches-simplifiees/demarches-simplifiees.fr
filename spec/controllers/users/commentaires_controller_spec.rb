@@ -102,23 +102,5 @@ describe Users::CommentairesController, type: :controller do
         end
       end
     end
-
-    describe 'change dossier state after post a comment' do
-      context 'when user is connected' do
-        context 'when dossier is at state replied' do
-          before do
-            sign_in dossier.user
-            dossier.replied!
-
-            post :create, params: { dossier_id: dossier_id, texte_commentaire: texte_commentaire }
-            dossier.reload
-          end
-
-          subject { dossier.state }
-
-          it { is_expected.to eq('updated') }
-        end
-      end
-    end
   end
 end

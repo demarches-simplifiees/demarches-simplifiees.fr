@@ -20,16 +20,6 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
       it { expect(rendered).to have_content('En construction') }
     end
 
-    context 'when dossier state is replied' do
-      let(:state) { 'replied' }
-
-      before do
-        render
-      end
-
-      it { expect(rendered).to have_content('En construction') }
-    end
-
     context 'when dossier state is updated' do
       let(:state) { 'updated' }
 

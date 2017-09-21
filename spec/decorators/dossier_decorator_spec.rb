@@ -27,11 +27,6 @@ describe DossierDecorator do
       expect(subject).to eq('En construction')
     end
 
-    it 'replied is repondu' do
-      dossier.replied!
-      expect(subject).to eq('En construction')
-    end
-
     it 'updated is mis à jour' do
       dossier.updated!
       expect(subject).to eq('En construction')

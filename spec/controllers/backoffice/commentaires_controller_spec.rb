@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Backoffice::CommentairesController, type: :controller do
-  let(:dossier) { create(:dossier, :replied) }
+  let(:dossier) { create(:dossier, :initiated) }
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'test@test.com' }
   let(:texte_commentaire) { 'Commentaire de test' }
@@ -124,7 +124,7 @@ describe Backoffice::CommentairesController, type: :controller do
 
             subject { dossier.state }
 
-            it { is_expected.to eq('replied') }
+            it { is_expected.to eq('initiated') }
 
             it 'Notification email is send' do
               expect(NotificationMailer).to receive(:new_answer).and_return(NotificationMailer)
