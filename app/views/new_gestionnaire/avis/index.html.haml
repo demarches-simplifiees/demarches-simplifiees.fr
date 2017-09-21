@@ -33,5 +33,6 @@
                   #{avis.dossier.id}
               %td= link_to(avis.dossier.user.email, avis_path(avis), class: 'cell-link')
               %td= link_to(avis.dossier.procedure.libelle, avis_path(avis), class: 'cell-link')
+      = paginate(@avis)
     - else
       %h2.empty-text Aucun avis

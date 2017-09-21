@@ -7,7 +7,8 @@ module NewGestionnaire
 
     def index
       gestionnaire_avis = current_gestionnaire.avis.includes(dossier: [:procedure, :user])
-      @avis_a_donner, @avis_donnes = gestionnaire_avis.partition { |avis| avis.answer.nil? }
+      @avis_a_donner = gestionnaire_avis.without_answer
+      @avis_donnes = gestionnaire_avis.with_answer
 
       @statut = params[:statut].present? ? params[:statut] : A_DONNER_STATUS
 
@@ -17,6 +18,8 @@ module NewGestionnaire
       when DONNES_STATUS
         @avis_donnes
       end
+
+      @avis = @avis.page([params[:page].to_i, 1].max)
     end
 
     def show
