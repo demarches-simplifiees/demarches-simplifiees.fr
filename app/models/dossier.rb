@@ -12,7 +12,6 @@ class Dossier < ActiveRecord::Base
 
   BROUILLON = %w(draft)
   NOUVEAUX = %w(initiated)
-  OUVERT = %w(updated replied)
   EN_CONSTRUCTION = %w(initiated updated replied)
   EN_INSTRUCTION = %w(received)
   EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
@@ -48,7 +47,6 @@ class Dossier < ActiveRecord::Base
   scope :state_brouillon,                      -> { where(state: BROUILLON) }
   scope :state_not_brouillon,                  -> { where.not(state: BROUILLON) }
   scope :state_nouveaux,                       -> { where(state: NOUVEAUX) }
-  scope :state_ouvert,                         -> { where(state: OUVERT) }
   scope :state_en_construction,                -> { where(state: EN_CONSTRUCTION) }
   scope :state_en_instruction,                 -> { where(state: EN_INSTRUCTION) }
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
@@ -62,7 +60,6 @@ class Dossier < ActiveRecord::Base
 
   scope :all_state,                   -> { not_archived.state_not_brouillon.order_by_updated_at(:asc) }
   scope :nouveaux,                    -> { not_archived.state_nouveaux.order_by_updated_at(:asc) }
-  scope :ouvert,                      -> { not_archived.state_ouvert.order_by_updated_at(:asc) }
   scope :a_instruire,                 -> { not_archived.state_a_instruire.order_by_updated_at(:asc) }
   scope :termine,                     -> { not_archived.state_termine.order_by_updated_at(:asc) }
   scope :downloadable,                -> { state_not_brouillon.order_by_updated_at(:asc) }

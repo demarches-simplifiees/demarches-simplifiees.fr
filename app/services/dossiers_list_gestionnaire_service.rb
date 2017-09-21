@@ -31,10 +31,6 @@ class DossiersListGestionnaireService
     @nouveaux ||= filter_dossiers.nouveaux
   end
 
-  def ouvert
-    @ouvert ||= filter_dossiers.ouvert
-  end
-
   def a_instruire
     @a_instruire ||= filter_dossiers.a_instruire
   end
