@@ -63,6 +63,8 @@ module NewGestionnaire
       when 'archives'
         @archived_dossiers
       end
+
+      @dossiers = @dossiers.page([params[:page].to_i, 1].max)
     end
 
     private

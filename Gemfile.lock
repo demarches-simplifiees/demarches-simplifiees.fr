@@ -710,6 +710,7 @@ DEPENDENCIES
   haml-rails
   hashie
   jquery-rails
+  kaminari
   launchy
   leaflet-draw-rails
   leaflet-markercluster-rails (~> 0.7.0)

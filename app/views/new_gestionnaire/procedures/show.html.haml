@@ -73,5 +73,6 @@
                 = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
                   = render partial: 'status', locals: { dossier: dossier }
               %td.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
+      = paginate @dossiers
     - else
       %h2.empty-text Aucun dossier
