@@ -32,7 +32,7 @@ class DossiersListGestionnaireService
   end
 
   def a_instruire
-    @a_instruire ||= filter_dossiers.a_instruire
+    @a_instruire ||= filter_dossiers.en_instruction
   end
 
   def archive
