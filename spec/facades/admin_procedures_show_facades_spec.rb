@@ -7,7 +7,6 @@ describe AdminProceduresShowFacades do
   let!(:dossier_1) { create(:dossier,  procedure: procedure, state: 'initiated') }
   let!(:dossier_2) { create(:dossier,  procedure: procedure, state: 'initiated') }
   let!(:dossier_6) { create(:dossier,  procedure: procedure, archived: true, state: 'initiated') }
-  let!(:dossier_7) { create(:dossier,  procedure: procedure, state: 'updated') }
 
   subject { AdminProceduresShowFacades.new procedure }
 
@@ -20,13 +19,13 @@ describe AdminProceduresShowFacades do
   describe '.dossiers' do
     subject { super().dossiers }
 
-    it { expect(subject.size).to eq(4) }
+    it { expect(subject.size).to eq(3) }
   end
 
   describe '.dossiers_for_pie_highchart' do
     subject { super().dossiers_for_pie_highchart }
 
-    it { expect(subject).to eq({ 'En construction' => 3 }) }
+    it { expect(subject).to eq({ 'En construction' => 2 }) }
   end
 
   describe '.dossiers_archived_by_state_total' do
@@ -47,7 +46,7 @@ describe AdminProceduresShowFacades do
   describe 'dossiers_total' do
     subject { super().dossiers_total }
 
-    it { is_expected.to eq(4) }
+    it { is_expected.to eq(3) }
   end
 
   describe 'dossiers_termine_total' do

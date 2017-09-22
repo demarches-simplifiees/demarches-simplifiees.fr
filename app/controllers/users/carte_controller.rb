@@ -56,7 +56,7 @@ class Users::CarteController < UsersController
 
   def self.route_authorization
     {
-        states: [:draft, :initiated, :updated],
+        states: [:draft, :initiated],
         api_carto: true
     }
   end

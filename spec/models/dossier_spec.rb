@@ -188,39 +188,7 @@ describe Dossier do
           context 'when is follow' do
             let(:action) { 'follow' }
 
-            it { is_expected.to eq 'updated' }
-          end
-        end
-      end
-
-      context 'when dossier is at state updated' do
-        before do
-          dossier.updated!
-        end
-
-        context 'when user is connect' do
-          let(:role) { 'user' }
-
-          context 'when is post a comment' do
-            let(:action) { 'comment' }
-
-            it { is_expected.to eq('updated') }
-          end
-
-          context 'when is updated dossier informations' do
-            let(:action) { 'update' }
-
-            it { is_expected.to eq('updated') }
-          end
-        end
-
-        context 'when gestionnaire is connect' do
-          let(:role) { 'gestionnaire' }
-
-          context 'when is post a comment' do
-            let(:action) { 'comment' }
-
-            it { is_expected.to eq('initiated') }
+            it { is_expected.to eq 'initiated' }
           end
         end
       end

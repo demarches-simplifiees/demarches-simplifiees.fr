@@ -7,7 +7,6 @@ feature 'on click on tabs button' do
 
   before do
     create(:dossier, :with_entreprise, user: user, state: 'initiated')
-    create(:dossier, :with_entreprise, user: user, state: 'updated')
     create(:dossier, :with_entreprise, user: user, state: 'received')
     create(:dossier, :with_entreprise, user: user, state: 'closed')
     create(:dossier, :with_entreprise, user: user, state: 'refused')
@@ -22,7 +21,7 @@ feature 'on click on tabs button' do
     context 'when he click on tabs en construction' do
       before do
         visit users_dossiers_url(liste: :a_traiter)
-        page.click_on 'En construction 2'
+        page.click_on 'En construction 1'
       end
 
       scenario 'it redirect to users dossier termine' do

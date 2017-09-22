@@ -2,7 +2,6 @@ class Dossier < ActiveRecord::Base
   enum state: {
     draft:                'draft',
     initiated:            'initiated',
-    updated:              'updated',              # etude par l'administration en cours
     received:             'received',
     closed:               'closed',
     refused:              'refused',
@@ -11,7 +10,7 @@ class Dossier < ActiveRecord::Base
 
   BROUILLON = %w(draft)
   NOUVEAUX = %w(initiated)
-  EN_CONSTRUCTION = %w(initiated updated)
+  EN_CONSTRUCTION = %w(initiated)
   EN_INSTRUCTION = %w(received)
   EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
   A_INSTRUIRE = %w(received)
@@ -163,16 +162,6 @@ class Dossier < ActiveRecord::Base
       end
     when 'gestionnaire'
       case action
-      when 'comment'
-        if updated?
-          initiated!
-        elsif initiated?
-          initiated!
-        end
-      when 'follow'
-        if initiated?
-          updated!
-        end
       when 'close'
         if received?
           self.attestation = build_attestation

@@ -40,18 +40,6 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       include_examples 'button Passer en instruction is present'
     end
 
-    context 'when dossier have state update' do
-      let(:state) { 'updated' }
-
-      before do
-        render
-      end
-
-      it { expect(rendered).to have_content('En construction') }
-
-      include_examples 'button Passer en instruction is present'
-    end
-
     context 'when dossier have state received' do
       let(:state) { 'received' }
 

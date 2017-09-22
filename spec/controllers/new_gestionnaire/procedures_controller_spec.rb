@@ -142,7 +142,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
             create(:dossier, procedure: procedure, state: "without_continuation", archived: true)
 
             gestionnaire.procedures << procedure2
-            create(:dossier, :followed, procedure: procedure2, state: "updated")
+            create(:dossier, :followed, procedure: procedure2, state: "initiated")
             create(:dossier, procedure: procedure2, state: "closed")
             gestionnaire.followed_dossiers << create(:dossier, procedure: procedure2, state: "received")
 

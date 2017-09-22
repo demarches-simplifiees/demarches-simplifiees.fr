@@ -7,7 +7,6 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   let!(:procedure) { create(:procedure, :published, administrateur: administrateur) }
 
   let!(:decorate_dossier_initiated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated').decorate }
-  let!(:decorate_dossier_updated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'updated').decorate }
   let!(:decorate_dossier_received) { create(:dossier, :with_entreprise, procedure: procedure, state: 'received').decorate }
   let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, procedure: procedure, state: 'closed').decorate }
   let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, procedure: procedure, state: 'refused').decorate }
@@ -20,7 +19,6 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   let(:all_state_dossiers_list) { dossiers_list_facade.service.all_state }
 
   before do
-    decorate_dossier_updated.entreprise.update_column(:raison_sociale, 'plep')
     decorate_dossier_received.entreprise.update_column(:raison_sociale, 'plup')
     decorate_dossier_closed.entreprise.update_column(:raison_sociale, 'plyp')
     decorate_dossier_refused.entreprise.update_column(:raison_sociale, 'plzp')
@@ -77,14 +75,13 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   it { is_expected.to have_content('Nouveaux dossiers 1 dossier') }
   it { is_expected.to have_content('Dossiers suivis 0 dossiers') }
-  it { is_expected.to have_content('Tous les dossiers 6 dossiers') }
+  it { is_expected.to have_content('Tous les dossiers 5 dossiers') }
 
   it { is_expected.to have_content('État') }
   it { is_expected.to have_content('Libellé procédure') }
   it { is_expected.to have_content('Raison sociale') }
   it { is_expected.to have_content('Mise à jour le') }
 
-  it { is_expected.to have_content('plep') }
   it { is_expected.to have_content('plup') }
   it { is_expected.to have_content('plyp') }
 end

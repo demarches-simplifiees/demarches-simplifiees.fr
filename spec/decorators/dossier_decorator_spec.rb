@@ -27,11 +27,6 @@ describe DossierDecorator do
       expect(subject).to eq('En construction')
     end
 
-    it 'updated is mis à jour' do
-      dossier.updated!
-      expect(subject).to eq('En construction')
-    end
-
     it 'closed is traité' do
       dossier.closed!
       expect(subject).to eq('Accepté')
@@ -74,7 +69,7 @@ describe DossierDecorator do
 
       context "when the dossier is not in brouillon state" do
         before do
-          dossier.state = 'updated'
+          dossier.state = 'initiated'
           dossier.save
         end
 

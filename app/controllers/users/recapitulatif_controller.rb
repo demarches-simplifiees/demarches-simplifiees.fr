@@ -18,7 +18,7 @@ class Users::RecapitulatifController < UsersController
 
   def self.route_authorization
     {
-        states: [:initiated, :updated, :received, :without_continuation, :closed, :refused]
+        states: [:initiated, :received, :without_continuation, :closed, :refused]
     }
   end
 

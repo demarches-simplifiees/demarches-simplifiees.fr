@@ -21,7 +21,7 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
     let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: 'draft', archived: false)}
     let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: 'initiated', archived: false)}
     let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'initiated', archived: false)}
-    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'updated', archived: false)}
+    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'initiated', archived: false)}
     let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: 'received', archived: false)}
     let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: 'closed', archived: false)}
     let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: 'refused', archived: false)}
