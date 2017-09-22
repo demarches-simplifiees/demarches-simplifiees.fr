@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170908101023) do
+ActiveRecord::Schema.define(version: 20170915080151) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -366,6 +366,14 @@ ActiveRecord::Schema.define(version: 20170908101023) do
     t.index ["path"], name: "index_procedure_paths_on_path", using: :btree
   end
 
+  create_table "procedure_presentations", force: :cascade do |t|
+    t.integer "assign_to_id"
+    t.text    "displayed_fields", default: ["{\"label\":\"Demandeur\",\"table\":\"user\",\"column\":\"email\"}"],        null: false, array: true
+    t.json    "sort",             default: "{\"table\":\"self\",\"column\":\"id\",\"order\":\"desc\"}",                  null: false
+    t.json    "filters",          default: "{\"a-suivre\":[],\"suivis\":[],\"traites\":[],\"tous\":[],\"archives\":[]}", null: false
+    t.index ["assign_to_id"], name: "index_procedure_presentations_on_assign_to_id", unique: true, using: :btree
+  end
+
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"
     t.string   "description"
@@ -487,6 +495,7 @@ ActiveRecord::Schema.define(version: 20170908101023) do
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "procedure_paths", "administrateurs"
   add_foreign_key "procedure_paths", "procedures"
+  add_foreign_key "procedure_presentations", "assign_tos"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "without_continuation_mails", "procedures"
