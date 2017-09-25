@@ -55,12 +55,13 @@
       %table.table.dossiers-table.hoverable
         %thead
           %tr
-            %th.number-col Nº dossier
+            = render partial: "header_field", locals: { field: { "label" => "Nº dossier", "table" => "self", "column" => "id" }, classname: "number-col" }
 
             - @displayed_fields.each do |field|
-              %th= field['label']
+              = render partial: "header_field", locals: { field: field, classname: "" }
 
-            %th.status-col Statut
+            = render partial: "header_field", locals: { field: { "label" => "Statut", "table" => "self", "column" => "state" },  classname: "status-col" }
+
             %th.follow-col
               %span.button.dropdown
                 Personnaliser
