@@ -40,6 +40,7 @@ module NewGestionnaire
 
     def archive
       dossier.update_attributes(archived: true)
+      current_gestionnaire.unfollow(dossier)
       redirect_back(fallback_location: procedures_url)
     end
 

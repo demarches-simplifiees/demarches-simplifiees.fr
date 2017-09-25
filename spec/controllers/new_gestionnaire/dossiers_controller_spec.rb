@@ -55,12 +55,15 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   describe '#archive' do
     before do
+      gestionnaire.follow(dossier)
       patch :archive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
       dossier.reload
+      gestionnaire.reload
     end
 
     it { expect(dossier.archived).to be true }
     it { expect(response).to redirect_to(procedures_url) }
+    it { expect(gestionnaire.followed_dossiers).not_to include(dossier) }
   end
 
   describe '#unarchive' do
