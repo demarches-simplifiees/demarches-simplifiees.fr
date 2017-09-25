@@ -121,6 +121,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(saved_commentaire.email).to eq(gestionnaire.email) }
     it { expect(saved_commentaire.dossier).to eq(dossier) }
     it { expect(response).to redirect_to(messagerie_dossier_path(dossier.procedure, dossier)) }
+    it { expect(gestionnaire.followed_dossiers).to include(dossier) }
   end
 
   describe "#create_avis" do
