@@ -103,6 +103,7 @@ gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git', require: false
 
 # Cron jobs
 gem 'delayed_job_active_record'
+gem 'delayed_cron_job'
 
 gem 'select2-rails'
 
