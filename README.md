@@ -67,6 +67,7 @@ Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les c
 ## Lancement des workers
 
     Delayed::Job.enqueue(AutoArchiveProcedureWorker.new, cron: "* * * * *")
+    Delayed::Job.enqueue(WeeklyOverviewWorker.new, cron: "0 8 * * 0")
 
 ## Exécution des tests (RSpec)
 
