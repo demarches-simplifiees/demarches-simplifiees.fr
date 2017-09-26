@@ -126,6 +126,7 @@ GEM
       carrierwave (>= 0.9)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
+    daemons (1.2.4)
     database_cleaner (1.5.3)
     debug_inspector (0.0.2)
     deep_cloneable (2.2.2)
@@ -701,6 +702,7 @@ DEPENDENCIES
   chunky_png
   clamav-client
   copy_carrierwave_file
+  daemons
   database_cleaner
   deep_cloneable (~> 2.2.1)
   delayed_cron_job
