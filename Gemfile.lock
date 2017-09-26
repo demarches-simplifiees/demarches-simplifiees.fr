@@ -138,6 +138,10 @@ GEM
     delayed_job_active_record (4.1.2)
       activerecord (>= 3.0, < 5.2)
       delayed_job (>= 3.0, < 5)
+    delayed_job_web (1.4)
+      activerecord (> 3.0.0)
+      delayed_job (> 2.0.3)
+      sinatra (>= 1.4.4)
     devise (4.2.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -707,6 +711,7 @@ DEPENDENCIES
   deep_cloneable (~> 2.2.1)
   delayed_cron_job
   delayed_job_active_record
+  delayed_job_web
   devise
   dotenv-rails
   draper (~> 3.0.0.pre1)

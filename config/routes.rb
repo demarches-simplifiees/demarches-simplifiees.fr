@@ -50,6 +50,7 @@ Rails.application.routes.draw do
       require 'sidekiq/web'
       require 'sidekiq/cron/web'
       mount Sidekiq::Web => '/sidekiq'
+      match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
   end
 

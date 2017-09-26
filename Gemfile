@@ -105,6 +105,7 @@ gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git', require: false
 gem 'delayed_job_active_record'
 gem "daemons"
 gem 'delayed_cron_job'
+gem "delayed_job_web"
 
 gem 'select2-rails'
 
