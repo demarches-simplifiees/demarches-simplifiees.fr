@@ -179,7 +179,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   def reopen
     create_dossier_facade params[:dossier_id]
 
-    @facade.dossier.replied!
+    @facade.dossier.initiated!
     flash.notice = 'Dossier repassé en construction.'
 
     redirect_to_dossier(@facade.dossier)

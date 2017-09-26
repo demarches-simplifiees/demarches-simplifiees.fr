@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Backoffice::CommentairesController, type: :controller do
-  let(:dossier) { create(:dossier, :replied) }
+  let(:dossier) { create(:dossier, :initiated) }
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'test@test.com' }
   let(:texte_commentaire) { 'Commentaire de test' }
@@ -113,18 +113,14 @@ describe Backoffice::CommentairesController, type: :controller do
 
       describe 'change dossier state after post a comment' do
         context 'gestionnaire is connected' do
-          context 'when dossier is at state updated' do
+          context 'when dossier is at state initiated' do
             before do
               sign_in gestionnaire
-              dossier.updated!
+              dossier.initiated!
 
               post :create, params: {dossier_id: dossier_id, texte_commentaire: texte_commentaire}
               dossier.reload
             end
-
-            subject { dossier.state }
-
-            it { is_expected.to eq('replied') }
 
             it 'Notification email is send' do
               expect(NotificationMailer).to receive(:new_answer).and_return(NotificationMailer)

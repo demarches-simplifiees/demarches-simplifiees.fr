@@ -5,16 +5,16 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   let(:gestionnaire) { create(:gestionnaire) }
   let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
-  let(:dossier) { create(:dossier, :replied, procedure: procedure) }
+  let(:dossier) { create(:dossier, :initiated, procedure: procedure) }
 
   before { sign_in(gestionnaire) }
 
   describe '#attestation' do
     context 'when a dossier has an attestation' do
       let(:fake_pdf) { double(read: 'pdf content') }
-      let!(:dossier) { create(:dossier, :replied, attestation: Attestation.new, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :initiated, attestation: Attestation.new, procedure: procedure) }
       let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
-      let!(:dossier) { create(:dossier, :replied, attestation: Attestation.new, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :initiated, attestation: Attestation.new, procedure: procedure) }
 
       it 'returns the attestation pdf' do
         allow_any_instance_of(Attestation).to receive(:pdf).and_return(fake_pdf)
@@ -148,7 +148,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     let(:dossier) do
-      create(:dossier, :replied, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_datetime])
+      create(:dossier, :initiated, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_datetime])
     end
 
     before do

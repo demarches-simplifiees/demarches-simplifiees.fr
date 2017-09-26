@@ -32,14 +32,6 @@ class AdminProceduresShowFacades
     dossiers.size
   end
 
-  def dossiers_waiting_gestionnaire_total
-    dossiers.waiting_for_gestionnaire.size
-  end
-
-  def dossiers_waiting_user_total
-    dossiers.waiting_for_user.size
-  end
-
   def dossiers_termine_total
     dossiers.where(state: :termine).size
   end

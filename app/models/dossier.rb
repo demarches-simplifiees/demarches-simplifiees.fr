@@ -2,8 +2,6 @@ class Dossier < ActiveRecord::Base
   enum state: {
     draft:                'draft',
     initiated:            'initiated',
-    replied:              'replied',              # action utilisateur demandé
-    updated:              'updated',              # etude par l'administration en cours
     received:             'received',
     closed:               'closed',
     refused:              'refused',
@@ -12,13 +10,9 @@ class Dossier < ActiveRecord::Base
 
   BROUILLON = %w(draft)
   NOUVEAUX = %w(initiated)
-  OUVERT = %w(updated replied)
-  WAITING_FOR_GESTIONNAIRE = %w(updated)
-  WAITING_FOR_USER = %w(replied)
-  EN_CONSTRUCTION = %w(initiated updated replied)
+  EN_CONSTRUCTION = %w(initiated)
   EN_INSTRUCTION = %w(received)
   EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
-  A_INSTRUIRE = %w(received)
   TERMINE = %w(closed refused without_continuation)
 
   has_one :etablissement, dependent: :destroy
@@ -50,13 +44,9 @@ class Dossier < ActiveRecord::Base
   scope :state_brouillon,                      -> { where(state: BROUILLON) }
   scope :state_not_brouillon,                  -> { where.not(state: BROUILLON) }
   scope :state_nouveaux,                       -> { where(state: NOUVEAUX) }
-  scope :state_ouvert,                         -> { where(state: OUVERT) }
-  scope :state_waiting_for_gestionnaire,       -> { where(state: WAITING_FOR_GESTIONNAIRE) }
-  scope :state_waiting_for_user,               -> { where(state: WAITING_FOR_USER) }
   scope :state_en_construction,                -> { where(state: EN_CONSTRUCTION) }
   scope :state_en_instruction,                 -> { where(state: EN_INSTRUCTION) }
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
-  scope :state_a_instruire,                    -> { where(state: A_INSTRUIRE) }
   scope :state_termine,                        -> { where(state: TERMINE) }
 
   scope :archived,      -> { where(archived: true) }
@@ -66,10 +56,7 @@ class Dossier < ActiveRecord::Base
 
   scope :all_state,                   -> { not_archived.state_not_brouillon.order_by_updated_at(:asc) }
   scope :nouveaux,                    -> { not_archived.state_nouveaux.order_by_updated_at(:asc) }
-  scope :ouvert,                      -> { not_archived.state_ouvert.order_by_updated_at(:asc) }
-  scope :waiting_for_gestionnaire,    -> { not_archived.state_waiting_for_gestionnaire.order_by_updated_at(:asc) }
-  scope :waiting_for_user,            -> { not_archived.state_waiting_for_user.order_by_updated_at(:asc) }
-  scope :a_instruire,                 -> { not_archived.state_a_instruire.order_by_updated_at(:asc) }
+  scope :en_instruction,              -> { not_archived.state_en_instruction.order_by_updated_at(:asc) }
   scope :termine,                     -> { not_archived.state_termine.order_by_updated_at(:asc) }
   scope :downloadable,                -> { state_not_brouillon.order_by_updated_at(:asc) }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction.order_by_updated_at(:asc) }
@@ -170,27 +157,9 @@ class Dossier < ActiveRecord::Base
         if draft?
           initiated!
         end
-      when 'update'
-        if replied?
-          updated!
-        end
-      when 'comment'
-        if replied?
-          updated!
-        end
       end
     when 'gestionnaire'
       case action
-      when 'comment'
-        if updated?
-          replied!
-        elsif initiated?
-          replied!
-        end
-      when 'follow'
-        if initiated?
-          updated!
-        end
       when 'close'
         if received?
           self.attestation = build_attestation

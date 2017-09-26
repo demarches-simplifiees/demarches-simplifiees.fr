@@ -72,8 +72,8 @@ FactoryGirl.define do
       end
     end
 
-    trait :replied do
-      state 'replied'
+    trait :initiated do
+      state 'initiated'
     end
   end
 end

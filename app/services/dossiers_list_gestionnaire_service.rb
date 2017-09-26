@@ -8,7 +8,7 @@ class DossiersListGestionnaireService
   def dossiers_to_display
     @dossiers_to_display ||=
         {'nouveaux' => nouveaux,
-         'a_traiter' => ouvert,
+         'a_traiter' => nouveaux,
          'a_instruire' => a_instruire,
          'termine' => termine,
          'archive' => archive,
@@ -31,12 +31,8 @@ class DossiersListGestionnaireService
     @nouveaux ||= filter_dossiers.nouveaux
   end
 
-  def ouvert
-    @ouvert ||= filter_dossiers.ouvert
-  end
-
   def a_instruire
-    @a_instruire ||= filter_dossiers.a_instruire
+    @a_instruire ||= filter_dossiers.en_instruction
   end
 
   def archive

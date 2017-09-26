@@ -4,8 +4,6 @@ describe 'users/dossiers/index.html.haml', type: :view do
   let(:user) { create(:user) }
 
   let!(:decorate_dossier_initiated) { create(:dossier, :with_entreprise, user: user, state: 'initiated').decorate }
-  let!(:decorate_dossier_replied) { create(:dossier, :with_entreprise, user: user, state: 'replied').decorate }
-  let!(:decorate_dossier_updated) { create(:dossier, :with_entreprise, user: user, state: 'updated').decorate }
   let!(:decorate_dossier_received) { create(:dossier, :with_entreprise, user: user, state: 'received').decorate }
   let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, user: user, state: 'closed').decorate }
   let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, user: user, state: 'refused').decorate }
@@ -41,21 +39,13 @@ describe 'users/dossiers/index.html.haml', type: :view do
   end
 
   describe 'on tab en construction' do
-    let(:total_dossiers) { 3 }
+    let(:total_dossiers) { 1 }
     let(:active_class) { '.active .text-danger' }
     let(:dossiers_to_display) { user.dossiers.state_en_construction }
     let(:liste) { 'a_traiter' }
 
     it_behaves_like 'check_tab_content' do
       let(:decorate_dossier_at_check) { decorate_dossier_initiated }
-    end
-
-    it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_replied }
-    end
-
-    it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_updated }
     end
   end
 

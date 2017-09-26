@@ -348,8 +348,6 @@ describe DossiersListGestionnaireService do
     let!(:dossier) { create(:dossier, procedure: procedure, state: 'draft') }
     let!(:dossier2) { create(:dossier, procedure: procedure, state: 'initiated') } #nouveaux
     let!(:dossier3) { create(:dossier, procedure: procedure, state: 'initiated') } #nouveaux
-    let!(:dossier4) { create(:dossier, procedure: procedure, state: 'replied') } #en_attente
-    let!(:dossier5) { create(:dossier, procedure: procedure, state: 'updated') } #a_traiter
     let!(:dossier6) { create(:dossier, procedure: procedure, state: 'received') } #a_instruire
     let!(:dossier7) { create(:dossier, procedure: procedure, state: 'received') } #a_instruire
     let!(:dossier8) { create(:dossier, procedure: procedure, state: 'closed') } #termine
@@ -357,7 +355,6 @@ describe DossiersListGestionnaireService do
     let!(:dossier10) { create(:dossier, procedure: procedure, state: 'without_continuation') } #termine
     let!(:dossier11) { create(:dossier, procedure: procedure, state: 'closed') } #termine
     let!(:dossier12) { create(:dossier, procedure: procedure, state: 'initiated', archived: true) } #a_traiter #archived
-    let!(:dossier13) { create(:dossier, procedure: procedure, state: 'replied', archived: true) } #en_attente #archived
     let!(:dossier14) { create(:dossier, procedure: procedure, state: 'closed', archived: true) } #termine #archived
 
     describe '#termine' do
