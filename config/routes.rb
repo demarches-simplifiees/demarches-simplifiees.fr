@@ -244,6 +244,7 @@ Rails.application.routes.draw do
             get 'attestation'
             get 'messagerie'
             get 'instruction'
+            get 'avis'
             patch 'follow'
             patch 'unfollow'
             patch 'archive'

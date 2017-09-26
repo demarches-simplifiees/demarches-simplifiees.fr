@@ -133,7 +133,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(saved_avis.confidentiel).to eq(true) }
     it { expect(saved_avis.dossier).to eq(dossier) }
     it { expect(saved_avis.claimant).to eq(gestionnaire) }
-    it { expect(response).to redirect_to(instruction_dossier_path(dossier.procedure, dossier)) }
+    it { expect(response).to redirect_to(avis_dossier_path(dossier.procedure, dossier)) }
   end
 
   describe "#update_annotations" do

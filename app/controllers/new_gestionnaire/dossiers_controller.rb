@@ -19,6 +19,11 @@ module NewGestionnaire
       dossier.notifications.instruction.mark_as_read
     end
 
+    def avis
+      @dossier = dossier
+      dossier.notifications.instruction.mark_as_read
+    end
+
     def follow
       current_gestionnaire.follow(dossier)
       dossier.next_step!('gestionnaire', 'follow')
@@ -67,7 +72,7 @@ module NewGestionnaire
 
     def create_avis
       Avis.create(avis_params.merge(claimant: current_gestionnaire, dossier: dossier))
-      redirect_to instruction_dossier_path(dossier.procedure, dossier)
+      redirect_to avis_dossier_path(dossier.procedure, dossier)
     end
 
     def update_annotations
