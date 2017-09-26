@@ -329,6 +329,25 @@ class Dossier < ActiveRecord::Base
     end
   end
 
+  def get_value(table, column)
+    case table
+    when 'self'
+      self.send(column)
+    when 'user'
+      self.user.send(column)
+    when 'france_connect_information'
+      self.user.france_connect_information&.send(column)
+    when 'entreprise'
+      self.entreprise&.send(column)
+    when 'etablissement'
+      self.etablissement&.send(column)
+    when 'type_de_champ'
+      self.champs.find {|c| c.type_de_champ_id == column.to_i }.value
+    when 'type_de_champ_private'
+      self.champs_private.find {|c| c.type_de_champ_id == column.to_i }.value
+    end
+  end
+
   private
 
   def build_attestation
