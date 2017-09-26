@@ -10,7 +10,6 @@ Téléprocédures Simplifiées, ou TPS pour les intimes, est une plateforme 100 
 ### Tous environnements
 
 - postgresql
-- redis
 
 ### Développement
 
@@ -61,11 +60,13 @@ Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les c
 
 ## Lancement de l'application
 
-    redis-server
-    sidekiq
+    bin/delayed_job run
     mailcatcher -f
     rails s
 
+## Lancement des workers
+
+    Delayed::Job.enqueue(AutoArchiveProcedureWorker.new, cron: "* * * * *")
 
 ## Exécution des tests (RSpec)
 
