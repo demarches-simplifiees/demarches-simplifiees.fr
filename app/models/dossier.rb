@@ -54,12 +54,12 @@ class Dossier < ActiveRecord::Base
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
-  scope :all_state,                   -> { not_archived.state_not_brouillon.order_by_updated_at(:asc) }
-  scope :nouveaux,                    -> { not_archived.state_nouveaux.order_by_updated_at(:asc) }
-  scope :en_instruction,              -> { not_archived.state_en_instruction.order_by_updated_at(:asc) }
-  scope :termine,                     -> { not_archived.state_termine.order_by_updated_at(:asc) }
-  scope :downloadable,                -> { state_not_brouillon.order_by_updated_at(:asc) }
-  scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction.order_by_updated_at(:asc) }
+  scope :all_state,                   -> { not_archived.state_not_brouillon }
+  scope :nouveaux,                    -> { not_archived.state_nouveaux }
+  scope :en_instruction,              -> { not_archived.state_en_instruction }
+  scope :termine,                     -> { not_archived.state_termine }
+  scope :downloadable,                -> { state_not_brouillon }
+  scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { includes(:follows).where(follows: { id: nil }) }
   scope :with_unread_notifications,   -> { where(notifications: { already_read: false }) }
 
