@@ -6,6 +6,16 @@
     padding: 0;
   }
 
+  thead a {
+    color: #000000;
+  }
+
+  .caret-icon {
+    vertical-align: top;
+    margin-top: 9px;
+    margin-left: 4px;
+  }
+
   .cell-link {
     color: $black;
     padding: (3 * $default-spacer) 2px;

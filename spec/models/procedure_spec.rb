@@ -472,4 +472,8 @@ describe Procedure do
 
     it { expect(subject.fields_for_select).to eq([["label1", "table1/column1"], ["label2", "table2/column2"]]) }
   end
+
+  describe ".default_sort" do
+    it { expect(Procedure.default_sort).to eq("{\"table\":\"self\",\"column\":\"id\",\"order\":\"desc\"}") }
+  end
 end

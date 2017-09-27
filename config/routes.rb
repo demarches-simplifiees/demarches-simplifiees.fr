@@ -238,6 +238,7 @@ Rails.application.routes.draw do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         patch 'update_displayed_fields'
+        get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
 
         resources :dossiers, only: [:show], param: :dossier_id do
           member do

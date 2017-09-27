@@ -349,6 +349,10 @@ class Dossier < ActiveRecord::Base
     end
   end
 
+  def self.sanitize_for_order(order)
+    sanitize_sql_for_order(order)
+  end
+
   private
 
   def build_attestation
