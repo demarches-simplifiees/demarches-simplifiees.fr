@@ -243,7 +243,8 @@ Rails.application.routes.draw do
           member do
             get 'attestation'
             get 'messagerie'
-            get 'instruction'
+            get 'annotations-privees' => 'dossiers#annotations_privees'
+            get 'avis'
             patch 'follow'
             patch 'unfollow'
             patch 'archive'

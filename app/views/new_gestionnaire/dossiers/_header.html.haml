@@ -15,10 +15,14 @@
         - if notifications_summary[:demande]
           %span.notifications{ 'aria-label': 'notifications' }
         = link_to "Demande", dossier_path(dossier.procedure, dossier)
-      %li{ class: current_page?(instruction_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
-        - if notifications_summary[:instruction]
+      %li{ class: current_page?(annotations_privees_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+        - if notifications_summary[:annotations_privees]
           %span.notifications{ 'aria-label': 'notifications' }
-        = link_to "Instruction", instruction_dossier_path(dossier.procedure, dossier)
+        = link_to "Annotations Privées", annotations_privees_dossier_path(dossier.procedure, dossier)
+      %li{ class: current_page?(avis_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+        - if notifications_summary[:avis]
+          %span.notifications{ 'aria-label': 'notifications' }
+        = link_to "Avis Externes", avis_dossier_path(dossier.procedure, dossier)
       %li{ class: current_page?(messagerie_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
         - if notifications_summary[:messagerie]
           %span.notifications{ 'aria-label': 'notifications' }

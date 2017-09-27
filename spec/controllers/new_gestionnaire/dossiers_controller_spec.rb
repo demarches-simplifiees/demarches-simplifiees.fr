@@ -74,28 +74,34 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(response).to redirect_to(procedures_url) }
   end
 
-  describe '#show #messagerie #instruction' do
+  describe '#show #messagerie #annotations_privees #avis' do
     before do
-      dossier.notifications = %w(champs avis commentaire).map{ |type| Notification.create!(type_notif: type) }
+      dossier.notifications = %w(champs annotations_privees avis commentaire).map{ |type| Notification.create!(type_notif: type) }
       get method, params: { procedure_id: procedure.id, dossier_id: dossier.id }
       dossier.notifications.each(&:reload)
     end
 
     context '#show' do
       let(:method) { :show }
-      it { expect(dossier.notifications.map(&:already_read)).to match([true, false, false]) }
+      it { expect(dossier.notifications.map(&:already_read)).to match([true, false, false, false]) }
       it { expect(response).to have_http_status(:success) }
     end
 
-    context '#instruction' do
-      let(:method) { :instruction }
-      it { expect(dossier.notifications.map(&:already_read)).to match([false, true, false]) }
+    context '#annotations_privees' do
+      let(:method) { :annotations_privees }
+      it { expect(dossier.notifications.map(&:already_read)).to match([false, true, false, false]) }
+      it { expect(response).to have_http_status(:success) }
+    end
+
+    context '#avis' do
+      let(:method) { :avis }
+      it { expect(dossier.notifications.map(&:already_read)).to match([false, false, true, false]) }
       it { expect(response).to have_http_status(:success) }
     end
 
     context '#messagerie' do
       let(:method) { :messagerie }
-      it { expect(dossier.notifications.map(&:already_read)).to match([false, false, true]) }
+      it { expect(dossier.notifications.map(&:already_read)).to match([false, false, false, true]) }
       it { expect(response).to have_http_status(:success) }
     end
   end
@@ -133,7 +139,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(saved_avis.confidentiel).to eq(true) }
     it { expect(saved_avis.dossier).to eq(dossier) }
     it { expect(saved_avis.claimant).to eq(gestionnaire) }
-    it { expect(response).to redirect_to(instruction_dossier_path(dossier.procedure, dossier)) }
+    it { expect(response).to redirect_to(avis_dossier_path(dossier.procedure, dossier)) }
   end
 
   describe "#update_annotations" do
@@ -179,6 +185,6 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
     it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
     it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
-    it { expect(response).to redirect_to(instruction_dossier_path(dossier.procedure, dossier)) }
+    it { expect(response).to redirect_to(annotations_privees_dossier_path(dossier.procedure, dossier)) }
   end
 end

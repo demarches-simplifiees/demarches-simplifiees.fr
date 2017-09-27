@@ -96,8 +96,9 @@ class Dossier < ActiveRecord::Base
 
     {
       demande: unread_notifications.select(&:demande?).present?,
-      instruction: unread_notifications.select(&:instruction?).present?,
-      messagerie: unread_notifications.select(&:messagerie?).present?
+      avis: unread_notifications.select(&:avis?).present?,
+      messagerie: unread_notifications.select(&:messagerie?).present?,
+      annotations_privees: unread_notifications.select(&:annotations_privees?).present?
     }
   end
 

@@ -14,9 +14,14 @@ module NewGestionnaire
       dossier.notifications.messagerie.mark_as_read
     end
 
-    def instruction
+    def annotations_privees
       @dossier = dossier
-      dossier.notifications.instruction.mark_as_read
+      dossier.notifications.annotations_privees.mark_as_read
+    end
+
+    def avis
+      @dossier = dossier
+      dossier.notifications.avis.mark_as_read
     end
 
     def follow
@@ -67,13 +72,13 @@ module NewGestionnaire
 
     def create_avis
       Avis.create(avis_params.merge(claimant: current_gestionnaire, dossier: dossier))
-      redirect_to instruction_dossier_path(dossier.procedure, dossier)
+      redirect_to avis_dossier_path(dossier.procedure, dossier)
     end
 
     def update_annotations
       dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
       dossier.update_attributes(champs_private_params)
-      redirect_to instruction_dossier_path(dossier.procedure, dossier)
+      redirect_to annotations_privees_dossier_path(dossier.procedure, dossier)
     end
 
     private

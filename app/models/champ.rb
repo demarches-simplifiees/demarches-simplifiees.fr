@@ -83,8 +83,12 @@ class Champ < ActiveRecord::Base
   end
 
   def internal_notification
-    unless dossier.state == 'draft'
-      NotificationService.new('champs', self.dossier.id, self.libelle).notify
+    if dossier.state != 'draft'
+      if type == 'ChampPublic'
+        NotificationService.new('champs', self.dossier.id, self.libelle).notify
+      else
+        NotificationService.new('annotations_privees', self.dossier.id, self.libelle).notify
+      end
     end
   end
 
