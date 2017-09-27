@@ -1,6 +1,6 @@
 = render partial: "header", locals: { dossier: @dossier }
 
-#dossier-instruction.container
+#dossier-annotations-privees.container
   - if @dossier.ordered_champs_private.present?
     %section
       %h1.private-annotations Annotations privées

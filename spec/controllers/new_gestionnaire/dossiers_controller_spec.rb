@@ -88,7 +88,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     context '#instruction' do
-      let(:method) { :instruction }
+      let(:method) { :annotations_privees }
       it { expect(dossier.notifications.map(&:already_read)).to match([false, true, false]) }
       it { expect(response).to have_http_status(:success) }
     end
@@ -179,6 +179,6 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
     it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
     it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
-    it { expect(response).to redirect_to(instruction_dossier_path(dossier.procedure, dossier)) }
+    it { expect(response).to redirect_to(annotations_privees_dossier_path(dossier.procedure, dossier)) }
   end
 end

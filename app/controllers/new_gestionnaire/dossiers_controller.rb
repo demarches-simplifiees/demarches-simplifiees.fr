@@ -14,9 +14,8 @@ module NewGestionnaire
       dossier.notifications.messagerie.mark_as_read
     end
 
-    def instruction
+    def annotations_privees
       @dossier = dossier
-      dossier.notifications.instruction.mark_as_read
     end
 
     def avis
@@ -78,7 +77,7 @@ module NewGestionnaire
     def update_annotations
       dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
       dossier.update_attributes(champs_private_params)
-      redirect_to instruction_dossier_path(dossier.procedure, dossier)
+      redirect_to annotations_privees_dossier_path(dossier.procedure, dossier)
     end
 
     private
