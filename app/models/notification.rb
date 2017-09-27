@@ -5,7 +5,8 @@ class Notification < ActiveRecord::Base
     piece_justificative: 'piece_justificative',
     champs: 'champs',
     submitted: 'submitted',
-    avis: 'avis'
+    avis: 'avis',
+    annotations_privees: 'annotations_privees'
   }
 
   DEMANDE = %w(cerfa piece_justificative champs submitted)
@@ -14,11 +15,12 @@ class Notification < ActiveRecord::Base
 
   belongs_to :dossier
 
-  scope :unread,       -> { where(already_read: false) }
-  scope :demande,      -> { where(type_notif: DEMANDE) }
-  scope :avis,         -> { where(type_notif: AVIS) }
-  scope :messagerie,   -> { where(type_notif: MESSAGERIE) }
-  scope :mark_as_read, -> { update_all(already_read: true) }
+  scope :unread,              -> { where(already_read: false) }
+  scope :demande,             -> { where(type_notif: DEMANDE) }
+  scope :avis,                -> { where(type_notif: AVIS) }
+  scope :messagerie,          -> { where(type_notif: MESSAGERIE) }
+  scope :annotations_privees, -> { where(type_notif: annotations_privees) }
+  scope :mark_as_read,        -> { update_all(already_read: true) }
 
   def demande?
     Notification::DEMANDE.include?(type_notif)
