@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe WeeklyOverviewWorker, type: :worker do
+  before { Delayed::Worker.delay_jobs = false }
+  after { Delayed::Worker.delay_jobs = true }
+
   describe 'perform' do
     let!(:gestionnaire) { create(:gestionnaire) }
     let(:overview) { double('overview') }

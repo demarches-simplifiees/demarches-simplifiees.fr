@@ -96,10 +96,11 @@ gem 'newrelic_rpm'
 
 gem 'scenic'
 
-# Sidekiq
-gem 'sidekiq'
-gem 'sidekiq-cron', '~> 0.4.4'
-gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git', require: false
+# Cron jobs
+gem 'delayed_job_active_record'
+gem "daemons"
+gem 'delayed_cron_job'
+gem "delayed_job_web"
 
 gem 'select2-rails'
 
