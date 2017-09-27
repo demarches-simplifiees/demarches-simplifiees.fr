@@ -9,14 +9,14 @@ class Notification < ActiveRecord::Base
   }
 
   DEMANDE = %w(cerfa piece_justificative champs submitted)
-  INSTRUCTION = %w(avis)
+  AVIS = %w(avis)
   MESSAGERIE = %w(commentaire)
 
   belongs_to :dossier
 
   scope :unread,       -> { where(already_read: false) }
   scope :demande,      -> { where(type_notif: DEMANDE) }
-  scope :instruction,  -> { where(type_notif: INSTRUCTION) }
+  scope :avis,         -> { where(type_notif: AVIS) }
   scope :messagerie,   -> { where(type_notif: MESSAGERIE) }
   scope :mark_as_read, -> { update_all(already_read: true) }
 
@@ -24,8 +24,8 @@ class Notification < ActiveRecord::Base
     Notification::DEMANDE.include?(type_notif)
   end
 
-  def instruction?
-    Notification::INSTRUCTION.include?(type_notif)
+  def avis?
+    Notification::AVIS.include?(type_notif)
   end
 
   def messagerie?

@@ -20,7 +20,7 @@ module NewGestionnaire
 
     def avis
       @dossier = dossier
-      dossier.notifications.instruction.mark_as_read
+      dossier.notifications.avis.mark_as_read
     end
 
     def follow
