@@ -16,6 +16,7 @@ module NewGestionnaire
 
     def annotations_privees
       @dossier = dossier
+      dossier.notifications.annotations_privees.mark_as_read
     end
 
     def avis

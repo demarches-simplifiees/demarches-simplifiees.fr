@@ -74,28 +74,34 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(response).to redirect_to(procedures_url) }
   end
 
-  describe '#show #messagerie #instruction' do
+  describe '#show #messagerie #annotations_privees #avis' do
     before do
-      dossier.notifications = %w(champs avis commentaire).map{ |type| Notification.create!(type_notif: type) }
+      dossier.notifications = %w(champs annotations_privees avis commentaire).map{ |type| Notification.create!(type_notif: type) }
       get method, params: { procedure_id: procedure.id, dossier_id: dossier.id }
       dossier.notifications.each(&:reload)
     end
 
     context '#show' do
       let(:method) { :show }
-      it { expect(dossier.notifications.map(&:already_read)).to match([true, false, false]) }
+      it { expect(dossier.notifications.map(&:already_read)).to match([true, false, false, false]) }
       it { expect(response).to have_http_status(:success) }
     end
 
-    context '#instruction' do
+    context '#annotations_privees' do
       let(:method) { :annotations_privees }
-      it { expect(dossier.notifications.map(&:already_read)).to match([false, true, false]) }
+      it { expect(dossier.notifications.map(&:already_read)).to match([false, true, false, false]) }
+      it { expect(response).to have_http_status(:success) }
+    end
+
+    context '#avis' do
+      let(:method) { :avis }
+      it { expect(dossier.notifications.map(&:already_read)).to match([false, false, true, false]) }
       it { expect(response).to have_http_status(:success) }
     end
 
     context '#messagerie' do
       let(:method) { :messagerie }
-      it { expect(dossier.notifications.map(&:already_read)).to match([false, false, true]) }
+      it { expect(dossier.notifications.map(&:already_read)).to match([false, false, false, true]) }
       it { expect(response).to have_http_status(:success) }
     end
   end

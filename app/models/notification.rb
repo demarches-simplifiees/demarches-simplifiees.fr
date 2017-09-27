@@ -12,6 +12,7 @@ class Notification < ActiveRecord::Base
   DEMANDE = %w(cerfa piece_justificative champs submitted)
   AVIS = %w(avis)
   MESSAGERIE = %w(commentaire)
+  ANNOTATIONS_PRIVEES = %w(annotations_privees)
 
   belongs_to :dossier
 
@@ -19,7 +20,7 @@ class Notification < ActiveRecord::Base
   scope :demande,             -> { where(type_notif: DEMANDE) }
   scope :avis,                -> { where(type_notif: AVIS) }
   scope :messagerie,          -> { where(type_notif: MESSAGERIE) }
-  scope :annotations_privees, -> { where(type_notif: annotations_privees) }
+  scope :annotations_privees, -> { where(type_notif: ANNOTATIONS_PRIVEES) }
   scope :mark_as_read,        -> { update_all(already_read: true) }
 
   def demande?
@@ -32,5 +33,9 @@ class Notification < ActiveRecord::Base
 
   def messagerie?
     Notification::MESSAGERIE.include?(type_notif)
+  end
+
+  def annotations_privees?
+    Notification::ANNOTATIONS_PRIVEES.include?(type_notif)
   end
 end
