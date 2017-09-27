@@ -3,11 +3,7 @@ class AssignTo < ActiveRecord::Base
   belongs_to :gestionnaire
   has_one :procedure_presentation, dependent: :destroy
 
-  after_create :create_procedure_presentation
-
-  private
-
-  def create_procedure_presentation
-    ProcedurePresentation.create(assign_to_id: id)
+  def procedure_presentation_or_default
+    self.procedure_presentation ||= ProcedurePresentation.new(assign_to_id: id)
   end
 end

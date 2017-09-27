@@ -26,9 +26,6 @@ module NewGestionnaire
     def show
       @procedure = procedure
 
-      @displayed_fields = procedure_presentation.displayed_fields
-      @displayed_fields_values = displayed_fields_values
-
       @a_suivre_dossiers = procedure
         .dossiers
         .includes(:user)
@@ -67,13 +64,16 @@ module NewGestionnaire
         @archived_dossiers
       end
 
+      @displayed_fields = procedure_presentation.displayed_fields
+      @displayed_fields_values = displayed_fields_values
       eager_load_displayed_fields
 
       @dossiers = @dossiers.page([params[:page].to_i, 1].max)
     end
 
     def update_displayed_fields
-      fields = params[:values].map do |value|
+      values = params[:values] || []
+      fields = values.map do |value|
         table, column = value.split("/")
 
         c = procedure.fields.find do |field|
