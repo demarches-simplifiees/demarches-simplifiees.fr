@@ -6,4 +6,8 @@ class ProcedurePresentation < ActiveRecord::Base
       field = JSON.parse(field)
     end
   end
+
+  def sort
+    JSON.parse(read_attribute(:sort))
+  end
 end

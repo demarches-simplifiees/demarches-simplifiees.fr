@@ -232,6 +232,14 @@ class Procedure < ActiveRecord::Base
     end
   end
 
+  def self.default_sort
+    {
+      'table' => 'self',
+      'column' => 'id',
+      'order' => 'desc'
+    }.to_json
+  end
+
   private
 
   def field_hash(label, table, column)
