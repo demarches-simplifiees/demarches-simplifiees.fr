@@ -4,6 +4,6 @@ class AssignTo < ActiveRecord::Base
   has_one :procedure_presentation, dependent: :destroy
 
   def procedure_presentation_or_default
-    procedure_presentation ||= ProcedurePresentation.new(assign_to_id: id)
+    self.procedure_presentation ||= ProcedurePresentation.new(assign_to_id: id)
   end
 end

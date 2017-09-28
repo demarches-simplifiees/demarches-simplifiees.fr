@@ -26,6 +26,9 @@ module NewGestionnaire
     def show
       @procedure = procedure
 
+      @displayed_fields = procedure_presentation.displayed_fields
+      @displayed_fields_values = displayed_fields_values
+
       @a_suivre_dossiers = procedure
         .dossiers
         .includes(:user)
@@ -64,7 +67,31 @@ module NewGestionnaire
         @archived_dossiers
       end
 
+      eager_load_displayed_fields
+
       @dossiers = @dossiers.page([params[:page].to_i, 1].max)
+    end
+
+    def update_displayed_fields
+      values = params[:values]
+
+      if values.nil?
+        values = []
+      end
+
+      fields = values.map do |value|
+        table, column = value.split("/")
+
+        c = procedure.fields.find do |field|
+          field['table'] == table && field['column'] == column
+        end
+
+        c.to_json
+      end
+
+      procedure_presentation.update_attributes(displayed_fields: fields)
+
+      redirect_back(fallback_location: procedure_url(procedure))
     end
 
     private
@@ -83,6 +110,50 @@ module NewGestionnaire
     def redirect_to_avis_if_needed
       if current_gestionnaire.procedures.count == 0 && current_gestionnaire.avis.count > 0
         redirect_to avis_index_path
+      end
+    end
+
+    def procedure_presentation
+      @procedure_presentation ||= current_gestionnaire.procedure_presentation_for_procedure_id(params[:procedure_id])
+    end
+
+    def displayed_fields_values
+      procedure_presentation.displayed_fields.map do |field|
+        "#{field['table']}/#{field['column']}"
+      end
+    end
+
+    def eager_load_displayed_fields
+      @displayed_fields
+        .reject { |field| field['table'] == 'self' }
+        .group_by do |field|
+          if ['type_de_champ', 'type_de_champ_private'].include?(field['table'])
+            'type_de_champ_group'
+          else
+            field['table']
+          end
+        end.each do |_, fields|
+
+        case fields.first['table']
+        when'france_connect_information'
+          @dossiers = @dossiers.includes({ user: :france_connect_information })
+        when 'type_de_champ', 'type_de_champ_private'
+          if fields.any? { |field| field['table'] == 'type_de_champ' }
+            @dossiers = @dossiers.includes(:champs)
+          end
+
+          if fields.any? { |field| field['table'] == 'type_de_champ_private' }
+            @dossiers = @dossiers.includes(:champs_private)
+          end
+
+          where_conditions = fields.map do |field|
+            "champs.type_de_champ_id = #{field['column']}"
+          end.join(" OR ")
+
+          @dossiers = @dossiers.where(where_conditions)
+        else
+          @dossiers = @dossiers.includes(fields.first['table'])
+        end
       end
     end
   end

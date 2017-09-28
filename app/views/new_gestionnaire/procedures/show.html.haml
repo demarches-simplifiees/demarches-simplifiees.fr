@@ -56,9 +56,23 @@
         %thead
           %tr
             %th.number-col Nº dossier
-            %th Demandeur
+
+            - @displayed_fields.each do |field|
+              %th= field['label']
+
             %th.status-col Statut
             %th.follow-col
+              %span.button.dropdown
+                Personnaliser
+                .dropdown-content.fade-in-down
+                  = form_tag update_displayed_fields_procedure_path(@procedure), method: :patch, class: 'dropdown-form' do
+                    = select_tag :values,
+                      options_for_select(@procedure.fields_for_select,
+                        selected: @displayed_fields_values),
+                      multiple: true,
+                      class: 'select2-limited'
+                    = submit_tag "Enregistrer", class: 'button'
+
         %tbody
           - @dossiers.each do |dossier|
             %tr
@@ -68,7 +82,12 @@
                     - if @followed_dossiers.with_unread_notifications.include?(dossier)
                       %span.notifications{ 'aria-label': 'notifications' }
                   = dossier.id
-              %td= link_to(dossier.user.email, dossier_path(@procedure, dossier), class: 'cell-link')
+
+              - @displayed_fields.each do |field|
+                %td
+                  = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
+                    = dossier.get_value(field['table'], field['column'])
+
               %td.status-col
                 = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
                   = render partial: 'status', locals: { dossier: dossier }
