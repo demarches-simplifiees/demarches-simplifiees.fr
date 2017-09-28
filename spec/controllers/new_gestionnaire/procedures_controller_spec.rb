@@ -172,14 +172,21 @@ describe NewGestionnaire::ProceduresController, type: :controller do
     context "when logged in" do
       before do
         sign_in(gestionnaire)
-        get :show, params: { procedure_id: procedure.id }
       end
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(assigns(:procedure)).to eq(procedure) }
+      context "without anything" do
+        before { get :show, params: { procedure_id: procedure.id } }
+
+        it { expect(response).to have_http_status(:ok) }
+        it { expect(assigns(:procedure)).to eq(procedure) }
+      end
 
       context 'with a new draft dossier' do
         let!(:draft_dossier) { create(:dossier, procedure: procedure, state: 'draft') }
+
+        before do
+          get :show, params: { procedure_id: procedure.id }
+        end
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
         it { expect(assigns(:followed_dossiers)).to be_empty }
@@ -191,6 +198,10 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       context 'with a new dossier without follower' do
         let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: 'received') }
 
+        before do
+          get :show, params: { procedure_id: procedure.id }
+        end
+
         it { expect(assigns(:a_suivre_dossiers)).to match([new_unfollow_dossier]) }
         it { expect(assigns(:followed_dossiers)).to be_empty }
         it { expect(assigns(:termines_dossiers)).to be_empty }
@@ -201,7 +212,10 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       context 'with a new dossier with a follower' do
         let!(:new_followed_dossier) { create(:dossier, procedure: procedure, state: 'received') }
 
-        before { gestionnaire.followed_dossiers << new_followed_dossier }
+        before do
+          gestionnaire.followed_dossiers << new_followed_dossier
+          get :show, params: { procedure_id: procedure.id }
+        end
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
         it { expect(assigns(:followed_dossiers)).to match([new_followed_dossier]) }
@@ -213,6 +227,10 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       context 'with a termine dossier with a follower' do
         let!(:termine_dossier) { create(:dossier, procedure: procedure, state: 'closed') }
 
+        before do
+          get :show, params: { procedure_id: procedure.id }
+        end
+
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
         it { expect(assigns(:followed_dossiers)).to be_empty }
         it { expect(assigns(:termines_dossiers)).to match([termine_dossier]) }
@@ -222,6 +240,10 @@ describe NewGestionnaire::ProceduresController, type: :controller do
 
       context 'with an archived dossier' do
         let!(:archived_dossier) { create(:dossier, procedure: procedure, state: 'received', archived: true) }
+
+        before do
+          get :show, params: { procedure_id: procedure.id }
+        end
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
         it { expect(assigns(:followed_dossiers)).to be_empty }
@@ -235,6 +257,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
         let!(:new_followed_dossier) { Timecop.freeze(2.day.ago){ create(:dossier, procedure: procedure, state: 'received') } }
         let!(:termine_dossier) { Timecop.freeze(3.day.ago){ create(:dossier, procedure: procedure, state: 'closed') } }
         let!(:archived_dossier) { Timecop.freeze(4.day.ago){ create(:dossier, procedure: procedure, state: 'received', archived: true) } }
+
         before do
           gestionnaire.followed_dossiers << new_followed_dossier
           get :show, params: { procedure_id: procedure.id, statut: statut }

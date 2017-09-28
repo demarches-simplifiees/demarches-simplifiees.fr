@@ -54,9 +54,7 @@ module NewGestionnaire
 
       @archived_dossiers = procedure.dossiers.includes(:user).archived
 
-      @statut = params[:statut].present? ? params[:statut] : 'a-suivre'
-
-      @dossiers = case @statut
+      @dossiers = case statut
       when 'a-suivre'
         @a_suivre_dossiers
       when 'suivis'
@@ -137,6 +135,10 @@ module NewGestionnaire
     end
 
     private
+
+    def statut
+      @statut ||= params[:statut].present? ? params[:statut] : 'a-suivre'
+    end
 
     def procedure
       Procedure.find(params[:procedure_id])
