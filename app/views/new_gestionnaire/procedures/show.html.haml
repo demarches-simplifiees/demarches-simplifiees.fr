@@ -51,7 +51,26 @@
                 = link_to "Au format .ods", backoffice_download_dossiers_tps_path(format: :ods, procedure_id: @procedure.id), target: "_blank"
 
   .container
-    - if @dossiers.present?
+    - if @dossiers.present? || @current_filters.count > 0
+      %span.button.dropdown
+        Filtrer
+        .dropdown-content.left-aligned.fade-in-down
+          = form_tag add_filter_procedure_path(@procedure), method: :post, class: 'dropdown-form large' do
+            = label_tag :field,  "Colonne"
+            = select_tag :field, options_for_select(@available_fields_to_filters)
+            %br
+            = label_tag :value, "Valeur"
+            = text_field_tag :value
+            = hidden_field_tag :statut, @statut
+            %br
+            = submit_tag "Ajouter le filtre", class: 'button'
+
+      - @current_filters.each do |filter|
+        %span.filter
+          = "#{filter['label']} : #{filter['value']}"
+          = link_to remove_filter_procedure_path(@procedure, statut: @statut, table: filter['table'], column: filter['column']) do
+            %img.close-icon{ src: image_url("close.svg") }
+
       %table.table.dossiers-table.hoverable
         %thead
           %tr

@@ -104,6 +104,11 @@
   cursor: default;
   z-index: 10;
 
+  &.left-aligned {
+    left: 0;
+    right: unset;
+  }
+
   &.terminated {
     width: 600px;
     color: $black;
@@ -185,6 +190,22 @@
     &.select2-selection--multiple {
       border: 1px solid $border-grey;
     }
+  }
+
+  &.large {
+    width: 340px;
+  }
+
+  label {
+    width: 100px;
+    display: inline-block;
+    margin-bottom: 2 * $default-spacer;
+  }
+
+  input,
+  select {
+    width: 200px;
+    display: inline-block;
   }
 }
 

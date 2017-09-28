@@ -10,4 +10,8 @@ class ProcedurePresentation < ActiveRecord::Base
   def sort
     JSON.parse(read_attribute(:sort))
   end
+
+  def filters
+    JSON.parse(read_attribute(:filters))
+  end
 end
