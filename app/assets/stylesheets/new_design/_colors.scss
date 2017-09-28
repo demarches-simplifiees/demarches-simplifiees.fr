@@ -7,3 +7,8 @@ $border-grey: #CCCCCC;
 $dark-red: #A94442;
 $light-red: #EBCCD1;
 $lighter-red: #F2DEDE;
+$green: #35D49E;
+$lighter-green: lighten($green, 30%);
+$light-green: lighten($green, 25%);
+$dark-green: darken($green, 20%);
+$orange: #F59415;

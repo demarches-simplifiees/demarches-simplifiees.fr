@@ -1,19 +1,36 @@
 .patron
-  .patron-container
-    %h1 Patron
+  .container
+    %h1 Icones
 
-    %h2 Formulaires
+    %i.follow
+    %i.unfollow
+    %i.archive
+    %i.unarchive
+    %i.folder
+    %i.accept
+    %i.close
+    %i.without-continuation
+    %i.edit
+    %i.in-progress
+    %i.bubble
+    %i.attachment
+    %i.lock
+
+    %h1 Formulaires
 
     %form.form
-      %label Nom
-      %input{ type: "text" }
-      %label Prénom
-      %input{ type: "text", placeholder: "ex : Ivan" }
-      %label Mot de passe
-      %input{ type: "password", value: "12345678" }
-      %input.button{ type: "submit", value: "Envoyer" }
+      = form_for @dossier, url: '', html: { class: 'form' } do |f|
+        = f.fields_for :champs do |champ_form|
+          - champ = champ_form.object
+          = render partial: "new_gestionnaire/dossiers/champs/#{champ.type_champ}",
+            locals: { champ: champ, form: champ_form }
 
-    %h2 Boutons
+        %input{ type: "password", value: "12345678" }
+        .send-wrapper
+          = f.submit 'Enregistrer un brouillon (formnovalidate)', formnovalidate: true, class: 'button send'
+          = f.submit 'Envoyer', class: 'button send'
+
+    %h1 Boutons
 
     %p
       = link_to ".button", "#", class: "button"
@@ -22,14 +39,125 @@
 
       = link_to ".button.secondary", "#", class: "button secondary"
 
+      = link_to ".button.success", "#", class: "button success"
+
       = link_to ".button.large", "#", class: "button large"
 
       = link_to ".button.large.primary", "#", class: "button large primary"
 
     %p
+      = link_to "#", class: "button" do
+        %i.follow
+        = "%i.follow"
+      = link_to "#", class: "button" do
+        %i.unfollow
+        = "%i.unfollow"
+      = link_to "#", class: "button" do
+        %i.archive
+        = "%i.archive"
+      = link_to "#", class: "button" do
+        %i.unarchive
+        = "%i.unarchive"
+    %p
       = link_to ".button.primary.expand", "#", class: "button primary expand"
 
-    %h2 Layout deux colonnes
+    %h1 Labels
+
+    %span.label .label
+    %span.label.instruction .label.instruction
+    %span.label.construction .label.construction
+    %span.label.closed .label.closed
+    %span.label.refused .label.refused
+    %span.label.without-continuation .label.without-continuation
+
+    %h1 Badges
+
+    %span.badge 1
+    %span.badge.warning 1
+
+    %h1 Cards
+
+    .card
+      .card-title
+        Titre de la carte
+      Et voici le contenu de la carte
+
+    .card.featured
+      .card-title
+        Titre de la carte mise en avant
+      Et voici le contenu de la carte
+
+    %h1 Table
+
+    %table.table
+      %thead
+        %tr
+          %th Header 1
+          %th Header 2
+      %tbody
+        %tr
+          %td Table Data 1
+          %td Table Data 2
+        %tr
+          %td Table Data 3
+          %td Table Data 4
+
+    %h2 Hoverable (.table.hoverable)
+
+    %table.table.hoverable
+      %thead
+        %tr
+          %th Header 1
+          %th Header 2
+      %tbody
+        %tr
+          %td Table Data 1
+          %td Table Data 2
+        %tr
+          %td Table Data 3
+          %td Table Data 4
+
+    %h2 Vertical layout (.table.vertical)
+
+    %table.table.vertical
+      %tbody
+        %tr
+          %th Header 1
+          %td Table Data 1
+        %tr
+          %th Header 2
+          %td Table Data 2
+        %tr
+          %th.header-section{ colspan: 2 } Header section
+        %tr
+          %th Header 3
+          %td Table Data 3
+
+    %h1 Header
+  .backoffice-header
+    .container
+      Titre
+      %ul.tabs
+        %li.active
+          = link_to "Onglet actif", "#"
+        %li
+          = link_to "Onglet inactif", "#"
+        %li
+          = link_to "#" do
+            Onglet avec badge
+            %span.badge 2
+
+  .container
+    %h1 Breadcrumbs
+
+    %ul.breadcrumbs
+      %li
+        = link_to "Procédure 123", "#"
+      %li
+        = "Dossier n° 38"
+
+
+    %h1 Layout deux colonnes
 
   .two-columns
     .columns-container
@@ -37,3 +165,37 @@
         Insérer ici le contenu de la colonne 1
       .column
         Insérer ici le contenu de la colonne 2
+
+  .container
+    %section.ask-avis
+      %h1 Inviter une personne à donner son avis
+      %p.avis-notice L'invité pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais il ne pourra le modifier.
+
+      = form_for Avis.new, url: '/', html: { class: 'form' } do |f|
+        = f.email_field :email, placeholder: 'Adresse email', required: true
+        = f.text_area :introduction, rows: 3, value: 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
+        .send-wrapper
+          = f.submit 'Demander un avis', class: 'button send'
+
+    %section.list-avis
+      %h1.title
+        Avis des invités
+        %span.count 1
+
+      %ul
+        %li.one-avis
+          %h2.claimant
+            Vous
+            %span.date Demande d'avis envoyée le 12/01/2012
+          %p Bonjour, merci de me donner votre avis sur ce dossier.
+
+          .answer.flex.align-start
+            %i.bubble.avis-icon
+            .width-100
+              %h2.gestionnaire
+                gestionnnaire@tps.com
+                %span.date Réponse donnée le 13/01/2012
+              %p Je donne un avis favorable
+
+  .container
+    %h2.empty-text Aucun dossier

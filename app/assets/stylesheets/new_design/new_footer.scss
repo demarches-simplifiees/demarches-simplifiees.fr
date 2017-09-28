@@ -3,14 +3,18 @@
 @import "mixins";
 @import "placeholders";
 
-.footer {
+footer {
   @include vertical-padding(72px);
   background-color: $light-grey;
   border-top: 1px solid $border-grey;
-}
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: $footer-height;
 
-.footer-inner-content {
-  @extend %page-width-container;
+  @media (max-width: 1000px) {
+    height: $footer-height-mobile;
+  }
 }
 
 .footer-columns {

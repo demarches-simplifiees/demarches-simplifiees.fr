@@ -1,0 +1,19 @@
+.flex {
+  display: flex;
+
+  &.align-center {
+    align-items: center;
+  }
+
+  &.align-start {
+    align-items: flex-start;
+  }
+
+  &.align-baseline {
+    align-items: baseline;
+  }
+
+  &.justify-between {
+    justify-content: space-between;
+  }
+}

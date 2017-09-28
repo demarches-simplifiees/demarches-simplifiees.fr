@@ -3,10 +3,10 @@ require 'spec_helper'
 feature 'usage of pref list dossier lateral panel by procedure', js: true do
   let(:administrateur) { create(:administrateur) }
   let(:gestionnaire) { create(:gestionnaire, administrateurs: [administrateur]) }
-  let(:procedure) { create(:procedure, :with_type_de_champ, administrateur: administrateur) }
+  let(:procedure) { create(:procedure, :published, :with_type_de_champ, administrateur: administrateur) }
 
   before do
-    create(:dossier, :with_entreprise, procedure: procedure, state: 'updated')
+    create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated')
     create :assign_to, procedure: procedure, gestionnaire: gestionnaire
 
     login_as gestionnaire, scope: :gestionnaire

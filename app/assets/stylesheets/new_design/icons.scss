@@ -1,0 +1,59 @@
+i {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
+  vertical-align: bottom;
+
+  &.follow {
+    background-image: image-url("icons/follow-folder.svg");
+  }
+
+  &.unfollow {
+    background-image: image-url("icons/unfollow-folder.svg");
+  }
+
+  &.archive {
+    background-image: image-url("icons/archive.svg");
+  }
+
+  &.unarchive {
+    background-image: image-url("icons/unarchive.svg");
+  }
+
+  &.folder {
+    background-image: image-url("icons/folder.svg");
+  }
+
+  &.accept {
+    background-image: image-url("icons/accept.svg");
+  }
+
+  &.close {
+    background-image: image-url("icons/close.svg");
+  }
+
+  &.without-continuation {
+    background-image: image-url("icons/without-continuation.svg");
+  }
+
+  &.edit {
+    background-image: image-url("icons/edit-folder-blue.svg");
+  }
+
+  &.in-progress {
+    background-image: image-url("icons/in-progress-blue.svg");
+  }
+
+  &.bubble {
+    background-image: image-url("icons/bubble.svg");
+  }
+
+  &.attachment {
+    background-image: image-url("icons/attachment.svg");
+  }
+
+  &.lock {
+    background-image: image-url("icons/lock.svg");
+  }
+}

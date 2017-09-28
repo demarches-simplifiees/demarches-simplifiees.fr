@@ -1,0 +1,77 @@
+@import "colors";
+@import "constants";
+@import "mixins";
+
+.procedure-list {
+  .procedure-item {
+    border-bottom: 1px solid $border-grey;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    a {
+      @include vertical-padding(24px);
+      color: $black;
+      width: 100%;
+
+      &:hover {
+        background-color: $light-grey;
+
+        .procedure-title {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .procedure-logo {
+    height: 93px;
+    width: 93px;
+    margin-right: 3 * $default-spacer;
+    flex-shrink: 0;
+  }
+
+  .procedure-title {
+    min-height: 40px;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .procedure-status {
+    margin-left: auto;
+  }
+
+  .procedure-stats {
+    li {
+      min-height: 36px;
+      border-left: 1px solid $border-grey;
+      width: 90px;
+      position: relative;
+
+      &:last-child {
+        border-right: 1px solid $border-grey;
+      }
+
+      .stats-number,
+      .stats-legend {
+        text-align: center;
+      }
+
+      .stats-number {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .stats-legend {
+        font-size: 12px;
+        color: $grey;
+      }
+    }
+
+    .notifications {
+      top: 3px;
+      right: 18px;
+    }
+  }
+}

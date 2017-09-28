@@ -1,0 +1,6 @@
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
+
+= form.text_field :value,
+  'data-address': 'true',
+  placeholder: champ.libelle,
+  required: champ.mandatory

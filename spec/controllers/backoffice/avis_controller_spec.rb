@@ -34,6 +34,7 @@ describe Backoffice::AvisController, type: :controller do
       it { expect(created_avis.dossier_id).to eq(dossier.id) }
       it { expect(created_avis.gestionnaire).to eq(gestionnaire) }
       it { expect(created_avis.claimant).to eq(claimant) }
+      it { expect(created_avis.confidentiel).to be(true) }
     end
   end
 

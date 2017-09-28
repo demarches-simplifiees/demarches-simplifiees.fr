@@ -309,7 +309,7 @@ describe Procedure do
     before do
       create :dossier, procedure: procedure, state: :initiated
       create :dossier, procedure: procedure, state: :draft
-      create :dossier, procedure: procedure, state: :replied
+      create :dossier, procedure: procedure, state: :initiated
     end
 
     subject { procedure.total_dossier }

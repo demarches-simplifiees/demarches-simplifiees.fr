@@ -1,6 +1,21 @@
+.new-design-button {
+  color: #FFFFFF;
+  display: block;
+  font-size: 20px;
+  margin: 16px 0;
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #FFFFFF;
+  border-radius: 15px;
+
+  &:hover {
+    background-color: #668ABD;
+    color: #FFFFFF;
+  }
+}
+
 #search-block {
   margin: 15px 10px 0 10px;
-  height: 30px;
 }
 
 #search-button {

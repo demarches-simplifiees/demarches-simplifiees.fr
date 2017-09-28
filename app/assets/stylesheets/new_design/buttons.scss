@@ -1,4 +1,5 @@
 @import "colors";
+@import "constants";
 
 .button {
   display: inline-block;
@@ -6,13 +7,20 @@
   border-radius: 30px;
   border: 1px solid $border-grey;
   font-size: 14px;
+  line-height: 20px;
   background-color: #FFFFFF;
   color: $black;
   cursor: pointer;
+  -webkit-appearance: none;
 
   &:hover {
     background: $light-grey;
     text-decoration: none;
+  }
+
+  &:active,
+  &:focus {
+    outline: none;
   }
 
   &.primary {
@@ -36,13 +44,131 @@
     }
   }
 
+  &.success {
+    color: #FFFFFF;
+    border-color: $green;
+    background-color: $green;
+
+    &:hover {
+      color: $green;
+      background-color: #FFFFFF;
+    }
+  }
+
   &.large {
     font-size: 18px;
+    line-height: 26px;
     padding: 15px 32px;
   }
 
   &.expand {
     width: 100%;
+  }
+
+  > i {
+    width: 18px;
+    height: 18px;
+    background-size: 18px 18px;
+    vertical-align: middle;
+    margin-right: $default-spacer;
+  }
+
+  &.dropdown {
+    position: relative;
+
+    &::after {
+      content: "▾";
+      margin-left: $default-spacer;
+      font-weight: bold;
+    }
+
+    .dropdown-content {
+      display: none;
+    }
+
+    &.open {
+      .dropdown-content {
+        display: block;
+      }
+    }
+  }
+}
+
+.dropdown-content {
+  border: 1px solid $border-grey;
+  background: #FFFFFF;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  right: 0;
+  top: 5 * $default-spacer;
+  cursor: default;
+  z-index: 10;
+
+  &.terminated {
+    width: 600px;
+    color: $black;
+    padding: $default-padding;
+
+    h4 {
+      font-size: 24px;
+    }
+
+    .dossier-motivation {
+      margin-top: 2 * $default-padding;
+    }
+
+    .attestation {
+      margin: $default-padding 0;
+      color: $grey;
+    }
+  }
+}
+
+.dropdown-items {
+  li {
+    display: flex;
+    padding: 2 * $default-spacer;
+    color: $grey;
+    border-bottom: 1px solid $border-grey;
+    font-size: 12px;
+    min-width: 300px;
+    cursor: pointer;
+
+    &.selected {
+      cursor: default;
+
+      h4 {
+        color: $blue;
+      }
+    }
+
+    &.selected,
+    &:hover {
+      background: $light-grey;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    a {
+      display: flex;
+      color: $grey;
+    }
+
+    i {
+      flex-shrink: 0;
+    }
+
+    div {
+      padding-left: $default-spacer;
+    }
+  }
+
+  h4 {
+    font-size: 14px;
+    color: $black;
+    margin-bottom: $default-spacer;
   }
 }
 

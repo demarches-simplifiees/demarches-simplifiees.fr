@@ -6,6 +6,9 @@ class Champ < ActiveRecord::Base
   delegate :libelle, :type_champ, :order_place, :mandatory, :description, :drop_down_list, to: :type_de_champ
 
   before_save :format_date_to_iso, if: Proc.new { type_champ == 'date' }
+  before_save :serialize_datetime_if_needed, if: Proc.new { type_champ == 'datetime' }
+  before_save :multiple_select_to_string, if: Proc.new { type_champ == 'multiple_drop_down_list' }
+
   after_save :internal_notification, if: Proc.new { !dossier.nil? }
 
   def mandatory?
@@ -65,9 +68,39 @@ class Champ < ActiveRecord::Base
     self.value = date
   end
 
+  def serialize_datetime_if_needed
+    if (value =~ /=>/).present?
+      date = begin
+        hash_date = YAML.safe_load(value.gsub('=>', ': '))
+        year, month, day, hour, minute = hash_date.values_at(1,2,3,4,5)
+        DateTime.new(year, month, day, hour, minute).strftime("%d/%m/%Y %H:%M")
+      rescue
+        nil
+      end
+
+      self.value = date
+    end
+  end
+
   def internal_notification
-    unless dossier.state == 'draft'
-      NotificationService.new('champs', self.dossier.id, self.libelle).notify
+    if dossier.state != 'draft'
+      if type == 'ChampPublic'
+        NotificationService.new('champs', self.dossier.id, self.libelle).notify
+      else
+        NotificationService.new('annotations_privees', self.dossier.id, self.libelle).notify
+      end
+    end
+  end
+
+  def multiple_select_to_string
+    if value.present?
+      json = JSON.parse(value)
+      if json == ['']
+        self.value = nil
+      else
+        json = json - ['']
+        self.value = json.to_s
+      end
     end
   end
 end

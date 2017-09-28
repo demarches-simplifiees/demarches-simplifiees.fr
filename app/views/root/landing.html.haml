@@ -1,6 +1,6 @@
 .landing
   .landing-panel.hero-panel
-    .landing-panel-inner-content
+    .container
       .hero-wrapper
         .hero-text
           %p.hero-tagline
@@ -8,16 +8,16 @@
             %br
             vos procédures administratives en quelques minutes
 
-          %a.hero-button{ target: "_blank", onclick: "javascript: ga('send', 'pageview', '/demander-une-demo'); $crisp.push(['do', 'chat:open'])" } Demander une démo
+          %a.hero-button{ target: "_blank", onclick: "javascript: ga('send', 'pageview', '/demander-une-demo'); $crisp.push(['do', 'chat:show']); $crisp.push(['do', 'chat:open']);" } Demander une démo
 
           %p.hero-phone-cta
-            ou nous appeler au 01 40 15 68 49
+            ou nous appeler au 09 72 62 57 12
 
         .hero-illustration
           %img{ :src => image_url("landing/hero/dematerialiser.svg") }
 
   .landing-panel.features-panel
-    .landing-panel-inner-content
+    .container
       %h2.landing-panel-title.features-panel-title Un outil dédié aux organismes publics
 
       %ul.features
@@ -47,7 +47,7 @@
             à plusieurs
 
   .landing-panel
-    .landing-panel-inner-content
+    .container
       %h2.landing-panel-title Ce que les utilisateurs pensent du service
 
       %ul.quotes
@@ -75,7 +75,7 @@
 
   - cache "numbers-panel", :expires_in => 3.hours do
     .landing-panel.numbers-panel
-      .landing-panel-inner-content
+      .container
         %h2.landing-panel-title TPS en chiffres
         %ul.numbers
           %li.number
@@ -101,7 +101,7 @@
               des délais de traitement
 
   .landing-panel.users-panel
-    .landing-panel-inner-content
+    .container
       %h2.landing-panel-title Ils nous font confiance
 
       %ul.users
@@ -122,12 +122,12 @@
             %img.user-image{ :src => image_url("landing/users/driea-idf.jpg") }
 
   .landing-panel.cta-panel
-    .landing-panel-inner-content
+    .container
       .cta-panel-wrapper
         %div
           %h1.cta-panel-title Commencez à dématerialiser vos procédures
           %p.cta-panel-explanation Nous vous accompagnons dans la prise en main de l’outil
         %div
-          %a.cta-panel-button{ target: "_blank", onclick: "javascript: ga('send', 'pageview', '/demander-une-demo'); $crisp.push(['do', 'chat:open'])" } Demander une démo
+          %a.cta-panel-button{ target: "_blank", onclick: "javascript: ga('send', 'pageview', '/demander-une-demo'); $crisp.push(['do', 'chat:show']); $crisp.push(['do', 'chat:open']);" } Demander une démo
           %p.cta-panel-phone-cta
-            ou nous appeler au 01 40 15 68 49
+            ou nous appeler au 09 72 62 57 12

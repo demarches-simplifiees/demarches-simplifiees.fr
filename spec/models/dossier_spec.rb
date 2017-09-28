@@ -182,83 +182,13 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('replied') }
+            it { is_expected.to eq('initiated') }
           end
 
           context 'when is follow' do
             let(:action) { 'follow' }
 
-            it { is_expected.to eq 'updated' }
-          end
-        end
-      end
-
-      context 'when dossier is at state replied' do
-        before do
-          dossier.replied!
-        end
-
-        context 'when user is connect' do
-          let(:role) { 'user' }
-
-          context 'when is post a comment' do
-            let(:action) { 'comment' }
-
-            it { is_expected.to eq('updated') }
-          end
-
-          context 'when is updated dossier informations' do
-            let(:action) { 'update' }
-
-            it { is_expected.to eq('updated') }
-          end
-        end
-
-        context 'when gestionnaire is connect' do
-          let(:role) { 'gestionnaire' }
-
-          context 'when is post a comment' do
-            let(:action) { 'comment' }
-
-            it { is_expected.to eq('replied') }
-          end
-
-          context 'when is follow' do
-            let(:action) { 'follow' }
-
-            it { is_expected.to eq 'replied' }
-          end
-        end
-      end
-
-      context 'when dossier is at state updated' do
-        before do
-          dossier.updated!
-        end
-
-        context 'when user is connect' do
-          let(:role) { 'user' }
-
-          context 'when is post a comment' do
-            let(:action) { 'comment' }
-
-            it { is_expected.to eq('updated') }
-          end
-
-          context 'when is updated dossier informations' do
-            let(:action) { 'update' }
-
-            it { is_expected.to eq('updated') }
-          end
-        end
-
-        context 'when gestionnaire is connect' do
-          let(:role) { 'gestionnaire' }
-
-          context 'when is post a comment' do
-            let(:action) { 'comment' }
-
-            it { is_expected.to eq('replied') }
+            it { is_expected.to eq 'initiated' }
           end
         end
       end
@@ -692,6 +622,56 @@ describe Dossier do
       subject { dossier.text_summary }
 
       it { is_expected.to eq("Dossier en brouillon répondant à la procédure Procédure gérée par l'organisme Organisme") }
+    end
+  end
+
+  describe '#avis_for' do
+    let!(:procedure) { create(:procedure, :published) }
+    let!(:dossier) { create(:dossier, procedure: procedure, state: :initiated) }
+
+    let!(:gestionnaire) { create(:gestionnaire, procedures: [procedure]) }
+    let!(:expert_1) { create(:gestionnaire) }
+    let!(:expert_2) { create(:gestionnaire) }
+
+    context 'when there is a public advice asked from the dossiers gestionnaire' do
+      let!(:avis) { Avis.create(dossier: dossier, claimant: gestionnaire, gestionnaire: expert_1, confidentiel: false) }
+
+      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_2)).to match([avis]) }
+    end
+
+    context 'when there is a private advice asked from the dossiers gestionnaire' do
+      let!(:avis) { Avis.create(dossier: dossier, claimant: gestionnaire, gestionnaire: expert_1, confidentiel: true) }
+
+      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_2)).to match([]) }
+    end
+
+    context 'when there is a public advice asked from one expert to another' do
+      let!(:avis) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false) }
+
+      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_2)).to match([avis]) }
+    end
+
+    context 'when there is a private advice asked from one expert to another' do
+      let!(:avis) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: true) }
+
+      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for(expert_2)).to match([avis]) }
+    end
+
+    context 'when they are a lot of advice' do
+      let!(:avis_1) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: DateTime.parse('10/01/2010')) }
+      let!(:avis_2) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: DateTime.parse('9/01/2010')) }
+      let!(:avis_3) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: DateTime.parse('11/01/2010')) }
+
+      it { expect(dossier.avis_for(gestionnaire)).to match([avis_2, avis_1, avis_3]) }
+      it { expect(dossier.avis_for(expert_1)).to match([avis_2, avis_1, avis_3]) }
     end
   end
 

@@ -1,0 +1,52 @@
+@import "colors";
+@import "constants";
+@import "mixins";
+
+.table { // TODO : tester de remplacer par l'élément table uniquement
+  width: 100%;
+
+  tbody tr {
+    border-top: 1px solid $border-grey;
+  }
+
+  td {
+    @include vertical-padding($default-spacer);
+    vertical-align: middle;
+  }
+
+  th {
+    text-align: left;
+    font-weight: bold;
+    padding: (3 * $default-spacer) 2px;
+  }
+
+  &.hoverable {
+    tbody tr:hover {
+      background: $light-grey;
+    }
+  }
+
+  &.vertical {
+    font-size: 14px;
+    line-height: 22px;
+
+    tr {
+      border-top: none;
+    }
+
+    th {
+      @include vertical-padding($default-spacer);
+      font-weight: normal;
+
+      &.header-section {
+        color: $blue;
+        font-weight: bold;
+        font-size: 20px;
+      }
+    }
+
+    td {
+      font-weight: bold;
+    }
+  }
+}

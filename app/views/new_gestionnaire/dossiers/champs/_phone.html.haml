@@ -1,0 +1,5 @@
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
+
+= form.phone_field :value,
+  placeholder: champ.libelle,
+  required: champ.mandatory

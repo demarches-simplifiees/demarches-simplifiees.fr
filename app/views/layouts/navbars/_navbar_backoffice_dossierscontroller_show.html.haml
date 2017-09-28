@@ -4,12 +4,12 @@
   - if current_gestionnaire.assigned_on_procedure?(@facade.dossier.procedure_id)
     .row
       .col-xs-12
-        - if current_gestionnaire.follow?(@facade.dossier.id)
-          = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), "data-method" => :put, class: "button-navbar-action", id: "suivre_dossier_#{@facade.dossier.id}" do
+        - if current_gestionnaire.follow?(@facade.dossier)
+          = link_to unfollow_dossier_path(@facade.dossier.procedure, @facade.dossier), method: :patch, class: "button-navbar-action", id: "suivre_dossier_#{@facade.dossier.id}" do
             %i.fa.fa-user-times
             Ne plus suivre
         - else
-          = link_to backoffice_dossier_follow_path(dossier_id: @facade.dossier.id), 'data-method' => :put, class: 'button-navbar-action', id: "suivre_dossier_#{@facade.dossier.id}" do
+          = link_to follow_dossier_path(@facade.dossier.procedure, @facade.dossier), method: :patch, class: 'button-navbar-action', id: "suivre_dossier_#{@facade.dossier.id}" do
             %i.fa.fa-user-plus
             Suivre le dossier
     .row

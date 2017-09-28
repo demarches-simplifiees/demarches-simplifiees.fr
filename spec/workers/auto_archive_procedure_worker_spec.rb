@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AutoArchiveProcedureWorker, type: :worker do
+  before { Delayed::Worker.delay_jobs = false }
+  after { Delayed::Worker.delay_jobs = true }
+
   let!(:procedure) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: nil )}
   let!(:procedure_hier) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: 1.day.ago )}
   let!(:procedure_aujourdhui) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: Date.today )}
@@ -20,8 +23,8 @@ RSpec.describe AutoArchiveProcedureWorker, type: :worker do
   context "when procedures have auto_archive_on set on yesterday or today" do
     let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: 'draft', archived: false)}
     let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: 'initiated', archived: false)}
-    let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'replied', archived: false)}
-    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'updated', archived: false)}
+    let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'initiated', archived: false)}
+    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'initiated', archived: false)}
     let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: 'received', archived: false)}
     let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: 'closed', archived: false)}
     let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: 'refused', archived: false)}

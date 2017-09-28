@@ -10,8 +10,6 @@ fr:
         state:
           draft: "Brouillon"
           initiated: "En construction"
-          replied: "En construction"
-          updated: "En construction"
           received: "En instruction"
           closed: "Accepté"
           refused: "Refusé"

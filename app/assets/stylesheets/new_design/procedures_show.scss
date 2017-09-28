@@ -1,0 +1,29 @@
+@import "colors";
+@import "common";
+@import "constants";
+
+#procedure-show {
+  .procedure-logo {
+    margin-right: $default-padding;
+    flex-shrink: 0;
+  }
+
+  h1 {
+    color: $black;
+    font-size: 22px;
+    margin-bottom: 2 * $default-padding;
+  }
+
+  .dossiers-table {
+    margin: (3 * $default-spacer) auto;
+  }
+
+  .procedure-actions {
+    margin-left: auto;
+    flex-shrink: 0;
+
+    .dropdown-items li {
+      min-width: 150px;
+    }
+  }
+}

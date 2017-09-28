@@ -10,9 +10,13 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require ./init
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require leaflet.1.1.0
 //= require highcharts
 //= require chartkick
+//= require select2
+//= require typeahead.bundle
 //= require_tree .

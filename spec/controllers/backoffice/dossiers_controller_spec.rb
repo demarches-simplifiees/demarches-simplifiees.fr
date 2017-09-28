@@ -4,8 +4,8 @@ describe Backoffice::DossiersController, type: :controller do
   before do
     @request.env['HTTP_REFERER'] = TPS::Application::URL
   end
-  let(:procedure) { create :procedure }
-  let(:procedure2) { create :procedure }
+  let(:procedure) { create :procedure, :published }
+  let(:procedure2) { create :procedure, :published }
 
   let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
   let(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure2, state: :initiated) }
@@ -38,8 +38,8 @@ describe Backoffice::DossiersController, type: :controller do
 
       context 'when gestionnaire is assign to many proceudure' do
         before do
-          create :assign_to, procedure: create(:procedure), gestionnaire: gestionnaire
-          create :assign_to, procedure: create(:procedure), gestionnaire: gestionnaire
+          create :assign_to, procedure: create(:procedure, :published), gestionnaire: gestionnaire
+          create :assign_to, procedure: create(:procedure, :published), gestionnaire: gestionnaire
         end
 
         it { expect(gestionnaire.procedures.count).to eq 3 }
@@ -212,8 +212,8 @@ describe Backoffice::DossiersController, type: :controller do
             expect(response).to have_http_status(200)
           end
 
-          it 'returns nothing' do
-            expect(assigns(:dossiers).count).to eq(0)
+          it 'does not return the dossier' do
+            expect(assigns(:dossiers).pluck(:id)).not_to include(dossier2_id)
           end
         end
       end
@@ -224,30 +224,13 @@ describe Backoffice::DossiersController, type: :controller do
     before do
       dossier.initiated!
       sign_in gestionnaire
+      post :receive, params: { dossier_id: dossier_id }
+      dossier.reload
     end
 
-    subject { post :receive, params: {dossier_id: dossier_id} }
-
-    context 'when it post a receive instruction' do
-      before do
-        subject
-        dossier.reload
-      end
-
-      it 'change state to received' do
-        expect(dossier.state).to eq('received')
-      end
-    end
-
-    it 'Notification email is send' do
-      expect(NotificationMailer).to receive(:send_notification)
-        .with(dossier, kind_of(Mails::ReceivedMail)).and_return(NotificationMailer)
-      expect(NotificationMailer).to receive(:deliver_now!)
-
-      subject
-    end
-
-    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
+    it { expect(dossier.state).to eq('received') }
+    it { is_expected.to redirect_to backoffice_dossier_path(dossier) }
+    it { expect(gestionnaire.follow?(dossier)).to be true }
   end
 
   describe 'POST #process_dossier' do
@@ -369,46 +352,6 @@ describe Backoffice::DossiersController, type: :controller do
     end
   end
 
-  describe 'PUT #toggle_follow' do
-    before do
-      sign_in gestionnaire
-    end
-
-    subject { put :follow, params: {dossier_id: dossier_id} }
-
-    it { expect(subject.status).to eq 302 }
-
-    context 'when dossier is at state initiated' do
-      let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
-
-      before do
-        subject
-        dossier.reload
-      end
-
-      it 'change state for updated' do
-        expect(dossier.state).to eq 'updated'
-      end
-    end
-
-    describe 'flash alert' do
-      context 'when dossier is not follow by gestionnaire' do
-        before do
-          subject
-        end
-        it { expect(flash[:notice]).to have_content 'Dossier suivi' }
-      end
-
-      context 'when dossier is follow by gestionnaire' do
-        before do
-          create :follow, gestionnaire_id: gestionnaire.id, dossier_id: dossier.id
-          subject
-        end
-        it { expect(flash[:notice]).to have_content 'Dossier relaché' }
-      end
-    end
-  end
-
   describe 'POST #reopen' do
     before do
       dossier.received!
@@ -417,14 +360,14 @@ describe Backoffice::DossiersController, type: :controller do
 
     subject { post :reopen, params: {dossier_id: dossier_id} }
 
-    it 'change state to replied' do
+    it 'change state to initiated' do
       subject
 
       dossier.reload
-      expect(dossier.state).to eq('replied')
+      expect(dossier.state).to eq('initiated')
     end
 
-    it { is_expected.to redirect_to backoffice_dossiers_path }
+    it { is_expected.to redirect_to backoffice_dossier_path(id: dossier_id) }
   end
 
   describe 'POST #archive' do

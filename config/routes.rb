@@ -47,9 +47,7 @@ Rails.application.routes.draw do
   authenticate :administration do
     resources :administrations, only: [:index, :create]
     namespace :administrations do
-      require 'sidekiq/web'
-      require 'sidekiq/cron/web'
-      mount Sidekiq::Web => '/sidekiq'
+      match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
   end
 
@@ -190,7 +188,6 @@ Rails.application.routes.draw do
         post 'unarchive'
       end
       post 'reopen' => 'dossiers#reopen'
-      put 'follow' => 'dossiers#follow'
       resources :commentaires, only: [:index]
       resources :avis, only: [:create, :update]
     end
@@ -238,11 +235,37 @@ Rails.application.routes.draw do
   end
 
   scope module: 'new_gestionnaire' do
-    resources :procedures, only: [] do
-      resources :dossiers, only: [] do
-        get 'attestation'
+    resources :procedures, only: [:index, :show], param: :procedure_id do
+      member do
+        resources :dossiers, only: [:show], param: :dossier_id do
+          member do
+            get 'attestation'
+            get 'messagerie'
+            get 'annotations-privees' => 'dossiers#annotations_privees'
+            get 'avis'
+            patch 'follow'
+            patch 'unfollow'
+            patch 'archive'
+            patch 'unarchive'
+            patch 'annotations' => 'dossiers#update_annotations'
+            post 'commentaire' => 'dossiers#create_commentaire'
+            scope :carte do
+              get 'position'
+            end
+            post 'avis' => 'dossiers#create_avis'
+          end
+        end
       end
     end
+    resources :avis, only: [:index, :show, :update] do
+      member do
+        get 'instruction'
+        get 'messagerie'
+        post 'commentaire' => 'avis#create_commentaire'
+        post 'avis' => 'avis#create_avis'
+      end
+    end
+    get "recherche" => "recherches#index"
   end
 
   apipie

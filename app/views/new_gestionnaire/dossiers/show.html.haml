@@ -1,0 +1,47 @@
+= render partial: "header", locals: { dossier: @dossier }
+
+.container
+  .card
+    .card-title Identité du demandeur
+    - if @dossier.entreprise.present?
+      = render partial: "identite_entreprise", locals: { entreprise: @dossier.entreprise }
+
+    - if @dossier.individual.present?
+      = render partial: "identite_individual", locals: { individual: @dossier.individual }
+
+  .backoffice-title Formulaire
+
+  - champs = @dossier.ordered_champs.decorate
+  - if champs.any?
+    .card.featured
+      = render partial: "champs", locals: { champs: champs }
+
+  - if @dossier.procedure.use_api_carto
+    = render partial: "map", locals: { dossier: @dossier }
+
+  - if @dossier.procedure.cerfa_flag? || @dossier.types_de_piece_justificative.any?
+    .card.featured
+      .card-title Pièces jointes
+
+      %table.table.vertical
+        %tbody
+          - if @dossier.procedure.cerfa_flag?
+            %tr
+              %th Formulaire :
+              %td
+                - if @dossier.cerfa_available?
+                  Pièce fournie -
+                  = link_to "Consulter", @dossier.cerfa.last.content_url, class: "link", target: :blank
+                - else
+                  Pièce non fournie
+
+          - @dossier.procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
+            %tr
+              %th= "#{type_de_piece_justificative.libelle} :"
+              %td
+                - pj = @dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)
+                - if pj.present?
+                  Pièce fournie -
+                  = link_to "Consulter", pj.content_url, class: "link", target: :blank
+                - else
+                  Pièce non fournie

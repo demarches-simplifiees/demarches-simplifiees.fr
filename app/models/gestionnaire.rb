@@ -7,7 +7,7 @@ class Gestionnaire < ActiveRecord::Base
   has_one :preference_smart_listing_page, dependent: :destroy
 
   has_many :assign_to, dependent: :destroy
-  has_many :procedures, through: :assign_to
+  has_many :procedures, -> { publiees_ou_archivees }, through: :assign_to
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :follows
@@ -34,21 +34,14 @@ class Gestionnaire < ActiveRecord::Base
       dossiers.where(id: dossier_id).any?
   end
 
-  def toggle_follow_dossier dossier_id
-    dossier = dossier_id
-    dossier = Dossier.find(dossier_id) unless dossier_id.class == Dossier
+  def follow(dossier)
+    return if follow?(dossier)
 
-    Follow.create!(dossier: dossier, gestionnaire: self)
-  rescue ActiveRecord::RecordInvalid
-    Follow.where(dossier: dossier, gestionnaire: self).delete_all
-  rescue ActiveRecord::RecordNotFound
-    nil
+    followed_dossiers << dossier
   end
 
-  def follow? dossier_id
-    dossier_id = dossier_id.id if dossier_id.class == Dossier
-
-    Follow.where(gestionnaire_id: id, dossier_id: dossier_id).any?
+  def follow?(dossier)
+    followed_dossiers.include?(dossier)
   end
 
   def assigned_on_procedure?(procedure_id)
@@ -98,6 +91,14 @@ class Gestionnaire < ActiveRecord::Base
   def dossiers_with_notifications_count_for_procedure(procedure)
     followed_dossiers_id = followed_dossiers.where(procedure: procedure).pluck(:id)
     Notification.unread.where(dossier_id: followed_dossiers_id).select(:dossier_id).distinct(:dossier_id).count
+  end
+
+  def notifications_count_per_procedure
+    followed_dossiers
+      .joins(:notifications)
+      .where(notifications: { already_read: false })
+      .group('procedure_id')
+      .count
   end
 
   def dossiers_with_notifications_count

@@ -1,0 +1,6 @@
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
+
+- parsed_value = champ.value.present? ? DateTime.parse(champ.value) : DateTime.now
+
+.datetime
+  = form.datetime_select(:value, selected: parsed_value, start_year: 1950, end_year: 2100, minute_step: 5)

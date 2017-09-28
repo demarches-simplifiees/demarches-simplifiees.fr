@@ -1,4 +1,5 @@
 @import "colors";
+@import "constants";
 @import "placeholders";
 @import "mixins";
 
@@ -59,10 +60,13 @@ $auth-breakpoint: 820px;
 }
 
 .auth-form {
-  font-size: 14px;
-
   .reset-password {
-    margin-top: 8px;
+    margin-top: - 3 * $default-spacer;
+    margin-bottom: $default-spacer;
+  }
+
+  .remember-me {
+    display: inline-block;
   }
 
   .separation {

@@ -1,15 +1,14 @@
-- if request.path == root_path
-  :javascript
-    window.$crisp=[];
-    window.CRISP_WEBSITE_ID="779b5050-4cc1-4172-8dd0-bde55716a289";
-    (function(){
-      d=document;
-      s=d.createElement("script");
-      s.src="https://client.crisp.im/l.js";
-      s.async=1;
-      d.getElementsByTagName("head")[0].appendChild(s);
-    })();
-    window.$crisp.push(["do", "chat:show"]);
-- else
-  :javascript
-    window.$crisp && window.$crisp.push(["do", "chat:hide"]);
+:javascript
+  window.$crisp=[];
+  window.CRISP_WEBSITE_ID="779b5050-4cc1-4172-8dd0-bde55716a289";
+  (function(){
+    d=document;
+    s=d.createElement("script");
+    s.src="https://client.crisp.im/l.js";
+    s.async=1;
+    d.getElementsByTagName("head")[0].appendChild(s);
+  })();
+  window.$crisp.push(["do", "chat:hide"]);
+  window.$crisp.push(["on", "chat:closed", function () {
+    window.$crisp.push(["do", "chat:hide"]);
+  }]);
