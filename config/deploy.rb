@@ -130,7 +130,7 @@ desc "Deploys the current version to the server."
 task :deploy => :environment do
   queue 'export PATH=$PATH:/usr/local/rbenv/bin:/usr/local/rbenv/shims'
   deploy do
-    queue %[sudo stop delayed_job_#{user!} || true]
+    queue %[sudo service delayed_job_#{user!} stop || true]
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
     invoke :'git:clone'
@@ -141,7 +141,7 @@ task :deploy => :environment do
 
     to :launch do
       queue "/etc/init.d/#{user} upgrade "
-      queue! %[sudo start delayed_job_#{user!}]
+      queue! %[sudo service delayed_job_#{user!} start]
 
       queue "cd #{deploy_to}/#{current_path}/"
       queue "bundle exec rake db:seed RAILS_ENV=#{rails_env}"
