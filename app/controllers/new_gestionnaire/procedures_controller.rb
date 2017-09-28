@@ -28,6 +28,8 @@ module NewGestionnaire
     def show
       @procedure = procedure
 
+      @current_filters = current_filters
+      @available_fields_to_filters = available_fields_to_filters
       @displayed_fields = procedure_presentation.displayed_fields
       @displayed_fields_values = displayed_fields_values
 
@@ -69,20 +71,27 @@ module NewGestionnaire
 
       sorted_ids = sorted_ids(@dossiers)
 
+      if @current_filters.count > 0
+        filtered_ids = filtered_ids(@dossiers)
+        filtered_sorted_ids = sorted_ids.select { |id| filtered_ids.include?(id) }
+      else
+        filtered_sorted_ids = sorted_ids
+      end
+
       page = params[:page].present? ? params[:page] : 1
 
-      sorted_paginated_ids = Kaminari
-        .paginate_array(sorted_ids)
+      filtered_sorted_paginated_ids = Kaminari
+        .paginate_array(filtered_sorted_ids)
         .page(page)
         .per(ITEMS_PER_PAGE)
 
-      @dossiers = @dossiers.where(id: sorted_paginated_ids)
+      @dossiers = @dossiers.where(id: filtered_sorted_paginated_ids)
 
       eager_load_displayed_fields
 
-      @dossiers = @dossiers.sort_by { |d| sorted_paginated_ids.index(d.id) }
+      @dossiers = @dossiers.sort_by { |d| filtered_sorted_paginated_ids.index(d.id) }
 
-      kaminarize(page, sorted_ids.count)
+      kaminarize(page, filtered_sorted_ids.count)
     end
 
     def update_displayed_fields
@@ -134,6 +143,36 @@ module NewGestionnaire
       redirect_back(fallback_location: procedure_url(procedure))
     end
 
+    def add_filter
+      filters = procedure_presentation.filters
+      table, column = params[:field].split('/')
+      label = procedure.fields.find { |c| c['table'] == table && c['column'] == column }['label']
+
+      filters[statut] << {
+        'label' => label,
+        'table' => table,
+        'column' => column,
+        'value' => params[:value]
+      }
+
+      procedure_presentation.update_attributes(filters: filters.to_json)
+
+      redirect_back(fallback_location: procedure_url(procedure))
+    end
+
+    def remove_filter
+      filters = procedure_presentation.filters
+      filter_to_remove = current_filters.find do |filter|
+        filter['table'] == params[:table] && filter['column'] == params[:column]
+      end
+
+      filters[statut] = filters[statut] - [filter_to_remove]
+
+      procedure_presentation.update_attributes(filters: filters.to_json)
+
+      redirect_back(fallback_location: procedure_url(procedure))
+    end
+
     private
 
     def statut
@@ -167,6 +206,33 @@ module NewGestionnaire
       end
     end
 
+    def filtered_ids(dossiers)
+      current_filters.map do |filter|
+        case filter['table']
+        when 'self'
+          dossiers.where("? LIKE ?", filter['column'], "%#{filter['value']}%")
+
+        when 'france_connect_information'
+          dossiers
+            .includes(user: :france_connect_information)
+            .where("? LIKE ?", "france_connect_informations.#{filter['column']}", "%#{filter['value']}%")
+
+        when 'type_de_champ', 'type_de_champ_private'
+          relation = filter['table'] == 'type_de_champ' ? :champs : :champs_private
+          dossiers
+            .includes(relation)
+            .where("champs.type_de_champ_id = ?", filter['column'].to_i)
+            .where("champs.value LIKE ?", "%#{filter['value']}%")
+
+        when 'user', 'etablissement', 'entreprise'
+          dossiers
+            .includes(filter['table'])
+            .where("#{filter['table'].pluralize}.#{filter['column']} LIKE ?", "%#{filter['value']}%")
+
+        end.pluck(:id)
+      end.reduce(:&)
+    end
+
     def sorted_ids(dossiers)
       table = procedure_presentation.sort['table']
       column = procedure_presentation.sort['column']
@@ -190,6 +256,20 @@ module NewGestionnaire
       end
 
       dossiers.includes(includes).where(where).order(Dossier.sanitize_for_order(order)).pluck(:id)
+    end
+
+    def current_filters
+      @current_filters ||= procedure_presentation.filters[statut]
+    end
+
+    def available_fields_to_filters
+      current_filters_fields_ids = current_filters.map do |field|
+        "#{field['table']}/#{field['column']}"
+      end
+
+      procedure.fields_for_select.reject do |field|
+        current_filters_fields_ids.include?(field[1])
+      end
     end
 
     def eager_load_displayed_fields
