@@ -12,7 +12,7 @@
               locals: { champ: champ, form: champ_form }
 
           .send-wrapper
-            = f.submit 'Sauvegarder', class: 'button send'
+            = f.submit 'Sauvegarder', class: 'button send', data: { disable_with: "Envoi..." }
 
   - else
     %h2.empty-text Aucune annotation privée
