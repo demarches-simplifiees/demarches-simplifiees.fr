@@ -39,11 +39,17 @@ feature "procedure filters" do
     end
   end
 
-  scenario "should add be able to add custom type_de_champ column", js: true do
+  scenario "should add be able to add and remove custom type_de_champ column", js: true do
     add_column(type_de_champ.libelle)
     within ".dossiers-table" do
       expect(page).to have_link(type_de_champ.libelle)
       expect(page).to have_link(champ.value)
+    end
+
+    remove_column(type_de_champ.libelle)
+    within ".dossiers-table" do
+      expect(page).not_to have_link(type_de_champ.libelle)
+      expect(page).not_to have_link(champ.value)
     end
   end
 
@@ -86,6 +92,13 @@ feature "procedure filters" do
     find(:xpath, "//span[contains(text(), 'Personnaliser')]").click
     find("span.select2-container").click
     find(:xpath, "//li[text()='#{column_name}']").click
+    click_button "Enregistrer"
+  end
+
+  def remove_column(column_name)
+    find(:xpath, "//span[contains(text(), 'Personnaliser')]").click
+    find(:xpath, "//li[contains(@title, '#{column_name}')]/span[contains(text(), '×')]").click
+    find(:xpath, "//span[contains(text(), 'Personnaliser')]//span[contains(@class, 'select2-container')]").click
     click_button "Enregistrer"
   end
 end
