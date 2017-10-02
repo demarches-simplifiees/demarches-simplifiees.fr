@@ -382,4 +382,12 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq({ }) }
     end
   end
+
+  describe "procedure_presentation_for_procedure_id" do
+    let!(:procedure_assign_2) { create :assign_to, gestionnaire: gestionnaire, procedure: procedure_2 }
+    let!(:pp) { ProcedurePresentation.create(assign_to: procedure_assign) }
+
+    it { expect(gestionnaire.procedure_presentation_for_procedure_id(procedure.id)).to eq(pp)}
+    it { expect(gestionnaire.procedure_presentation_for_procedure_id(procedure_2.id).persisted?).to be_falsey}
+  end
 end

@@ -123,6 +123,10 @@ class Gestionnaire < ActiveRecord::Base
     end
   end
 
+  def procedure_presentation_for_procedure_id(procedure_id)
+    assign_to.find_by(procedure_id: procedure_id).procedure_presentation_or_default
+  end
+
   private
 
   def valid_couple_table_attr? table, column

@@ -421,4 +421,55 @@ describe Procedure do
       it { expect(Dossier.count).to eq(0) }
     end
   end
+
+  describe "#fields" do
+    subject { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :types_de_champ_count => 2, :types_de_champ_private_count => 2) }
+    let(:tdc_1) { subject.types_de_champ.first }
+    let(:tdc_2) { subject.types_de_champ.last }
+    let(:tdc_private_1) { subject.types_de_champ_private.first }
+    let(:tdc_private_2) { subject.types_de_champ_private.last }
+    let(:expected) {
+      [
+        { "label" => 'Créé le', "table" => 'self', "column" => 'created_at' },
+        { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
+        { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
+        { "label" => 'Civilité (FC)', "table" => 'france_connect_information', "column" => 'gender' },
+        { "label" => 'Prénom (FC)', "table" => 'france_connect_information', "column" => 'given_name' },
+        { "label" => 'Nom (FC)', "table" => 'france_connect_information', "column" => 'family_name' },
+        { "label" => 'SIREN', "table" => 'entreprise', "column" => 'siren' },
+        { "label" => 'Forme juridique', "table" => 'entreprise', "column" => 'forme_juridique' },
+        { "label" => 'Nom commercial', "table" => 'entreprise', "column" => 'nom_commercial' },
+        { "label" => 'Raison sociale', "table" => 'entreprise', "column" => 'raison_sociale' },
+        { "label" => 'SIRET siège social', "table" => 'entreprise', "column" => 'siret_siege_social' },
+        { "label" => 'Date de création', "table" => 'entreprise', "column" => 'date_creation' },
+        { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret' },
+        { "label" => 'Nom établissement', "table" => 'etablissement', "column" => 'libelle_naf' },
+        { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal' },
+        { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.id.to_s },
+        { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.id.to_s },
+        { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.id.to_s },
+        { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.id.to_s }
+      ]
+    }
+
+    it { expect(subject.fields).to eq(expected) }
+  end
+
+  describe "#fields_for_select" do
+    subject { create(:procedure) }
+
+    before do
+      allow(subject).to receive(:fields).and_return([{
+        "label" => "label1",
+        "table" => "table1",
+        "column" => "column1"
+      }, {
+        "label" => "label2",
+        "table" => "table2",
+        "column" => "column2"
+      }])
+    end
+
+    it { expect(subject.fields_for_select).to eq([["label1", "table1/column1"], ["label2", "table2/column2"]]) }
+  end
 end
