@@ -51,14 +51,48 @@
                 = link_to "Au format .ods", backoffice_download_dossiers_tps_path(format: :ods, procedure_id: @procedure.id), target: "_blank"
 
   .container
-    - if @dossiers.present?
+    - if @dossiers.present? || @current_filters.count > 0
+      %span.button.dropdown
+        Filtrer
+        .dropdown-content.left-aligned.fade-in-down
+          = form_tag add_filter_procedure_path(@procedure), method: :post, class: 'dropdown-form large' do
+            = label_tag :field,  "Colonne"
+            = select_tag :field, options_for_select(@available_fields_to_filters)
+            %br
+            = label_tag :value, "Valeur"
+            = text_field_tag :value
+            = hidden_field_tag :statut, @statut
+            %br
+            = submit_tag "Ajouter le filtre", class: 'button'
+
+      - @current_filters.each do |filter|
+        %span.filter
+          = "#{filter['label']} : #{filter['value']}"
+          = link_to remove_filter_procedure_path(@procedure, statut: @statut, table: filter['table'], column: filter['column']) do
+            %img.close-icon{ src: image_url("close.svg") }
+
       %table.table.dossiers-table.hoverable
         %thead
           %tr
-            %th.number-col Nº dossier
-            %th Demandeur
-            %th.status-col Statut
+            = render partial: "header_field", locals: { field: { "label" => "Nº dossier", "table" => "self", "column" => "id" }, classname: "number-col" }
+
+            - @displayed_fields.each do |field|
+              = render partial: "header_field", locals: { field: field, classname: "" }
+
+            = render partial: "header_field", locals: { field: { "label" => "Statut", "table" => "self", "column" => "state" },  classname: "status-col" }
+
             %th.follow-col
+              %span.button.dropdown
+                Personnaliser
+                .dropdown-content.fade-in-down
+                  = form_tag update_displayed_fields_procedure_path(@procedure), method: :patch, class: 'dropdown-form' do
+                    = select_tag :values,
+                      options_for_select(@procedure.fields_for_select,
+                        selected: @displayed_fields_values),
+                      multiple: true,
+                      class: 'select2-limited'
+                    = submit_tag "Enregistrer", class: 'button'
+
         %tbody
           - @dossiers.each do |dossier|
             %tr
@@ -68,7 +102,12 @@
                     - if @followed_dossiers.with_unread_notifications.include?(dossier)
                       %span.notifications{ 'aria-label': 'notifications' }
                   = dossier.id
-              %td= link_to(dossier.user.email, dossier_path(@procedure, dossier), class: 'cell-link')
+
+              - @displayed_fields.each do |field|
+                %td
+                  = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
+                    = dossier.get_value(field['table'], field['column'])
+
               %td.status-col
                 = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
                   = render partial: 'status', locals: { dossier: dossier }

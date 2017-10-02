@@ -184,4 +184,69 @@ class Procedure < ActiveRecord::Base
   def without_continuation_mail_template
     without_continuation_mail || Mails::WithoutContinuationMail.default
   end
+
+  def fields
+    fields = [
+      field_hash('Créé le', 'self', 'created_at'),
+      field_hash('Mis à jour le', 'self', 'updated_at'),
+      field_hash('Demandeur', 'user', 'email')
+    ]
+
+    fields << [
+      field_hash('Civilité (FC)', 'france_connect_information', 'gender'),
+      field_hash('Prénom (FC)', 'france_connect_information', 'given_name'),
+      field_hash('Nom (FC)', 'france_connect_information', 'family_name')
+    ]
+
+    if !for_individual || (for_individual && individual_with_siret)
+      fields << [
+        field_hash('SIREN', 'entreprise', 'siren'),
+        field_hash('Forme juridique', 'entreprise', 'forme_juridique'),
+        field_hash('Nom commercial', 'entreprise', 'nom_commercial'),
+        field_hash('Raison sociale', 'entreprise', 'raison_sociale'),
+        field_hash('SIRET siège social', 'entreprise', 'siret_siege_social'),
+        field_hash('Date de création', 'entreprise', 'date_creation')
+      ]
+
+      fields << [
+        field_hash('SIRET', 'etablissement', 'siret'),
+        field_hash('Nom établissement', 'etablissement', 'libelle_naf'),
+        field_hash('Code postal', 'etablissement', 'code_postal')
+      ]
+    end
+
+    types_de_champ.reject { |tdc| tdc.type_champ == 'header_section' }.each do |type_de_champ|
+      fields << field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.id.to_s)
+    end
+
+    types_de_champ_private.reject { |tdc| tdc.type_champ == 'header_section' }.each do |type_de_champ|
+      fields << field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.id.to_s)
+    end
+
+    fields.flatten
+  end
+
+  def fields_for_select
+    fields.map do |field|
+      [field['label'], "#{field['table']}/#{field['column']}"]
+    end
+  end
+
+  def self.default_sort
+    {
+      'table' => 'self',
+      'column' => 'id',
+      'order' => 'desc'
+    }.to_json
+  end
+
+  private
+
+  def field_hash(label, table, column)
+    {
+      'label' => label,
+      'table' => table,
+      'column' => column
+    }
+  end
 end

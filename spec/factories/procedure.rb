@@ -44,10 +44,16 @@ FactoryGirl.define do
     end
 
     trait :with_type_de_champ_private do
-      after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_private)
+      transient do
+        types_de_champ_private_count 1
+      end
 
-        procedure.types_de_champ_private << type_de_champ
+      after(:build) do |procedure, evaluator|
+        evaluator.types_de_champ_private_count.times do
+          type_de_champ = create(:type_de_champ_private)
+
+          procedure.types_de_champ_private << type_de_champ
+        end
       end
     end
 

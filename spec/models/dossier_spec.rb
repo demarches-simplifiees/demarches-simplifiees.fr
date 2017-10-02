@@ -835,4 +835,28 @@ describe Dossier do
       it { expect(Dossier.count).to eq(0) }
     end
   end
+
+  describe "#get_value" do
+    let(:dossier) { create(:dossier, :with_entreprise, user: user) }
+
+    before do
+      FranceConnectInformation.create(france_connect_particulier_id: 123, user: user, gender: 'male')
+
+      @champ_public = dossier.champs.first
+      @champ_public.value = "kiwi"
+      @champ_public.save
+
+      @champ_private = dossier.champs_private.first
+      @champ_private.value = "banane"
+      @champ_private.save
+    end
+
+    it { expect(dossier.get_value('self', 'created_at')).to eq(dossier.created_at) }
+    it { expect(dossier.get_value('user', 'email')).to eq(user.email) }
+    it { expect(dossier.get_value('france_connect_information', 'gender')).to eq(user.france_connect_information.gender) }
+    it { expect(dossier.get_value('entreprise', 'siren')).to eq(dossier.entreprise.siren) }
+    it { expect(dossier.get_value('etablissement', 'siret')).to eq(dossier.etablissement.siret) }
+    it { expect(dossier.get_value('type_de_champ', @champ_public.type_de_champ.id.to_s)).to eq(dossier.champs.first.value) }
+    it { expect(dossier.get_value('type_de_champ_private', @champ_private.type_de_champ.id.to_s)).to eq(dossier.champs_private.first.value) }
+  end
 end

@@ -20,7 +20,7 @@ class DossiersListGestionnaireService
   end
 
   def all_state
-    @all_state ||= filter_dossiers.all_state
+    @all_state ||= filter_dossiers.all_state.order_by_updated_at('asc')
   end
 
   def suivi
@@ -28,11 +28,11 @@ class DossiersListGestionnaireService
   end
 
   def nouveaux
-    @nouveaux ||= filter_dossiers.nouveaux
+    @nouveaux ||= filter_dossiers.nouveaux.order_by_updated_at('asc')
   end
 
   def a_instruire
-    @a_instruire ||= filter_dossiers.en_instruction
+    @a_instruire ||= filter_dossiers.en_instruction.order_by_updated_at('asc')
   end
 
   def archive
@@ -40,7 +40,7 @@ class DossiersListGestionnaireService
   end
 
   def termine
-    @termine ||= filter_dossiers.termine
+    @termine ||= filter_dossiers.termine.order_by_updated_at('asc')
   end
 
   def filter_dossiers
