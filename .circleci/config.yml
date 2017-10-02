@@ -17,12 +17,12 @@ jobs:
           name: Install System Dependencies
           command: apt-get update -qq && apt-get install -y build-essential nodejs
       - restore_cache:
-          key: bundle-install-v3-{{ checksum "Gemfile.lock" }}
+          key: bundle-install-v3-{{ arch }}-{{ checksum "Gemfile.lock" }}
       - run:
           name: Install Ruby Dependencies
           command: bundle install
       - save_cache:
-          key: bundle-install-v3-{{ checksum "Gemfile.lock" }}
+          key: bundle-install-v3-{{ arch }}-{{ checksum "Gemfile.lock" }}
           paths:
             - /usr/local/bundle
       - restore_cache:
