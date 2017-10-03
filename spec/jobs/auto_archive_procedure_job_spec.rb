@@ -1,15 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe AutoArchiveProcedureWorker, type: :worker do
-  before { Delayed::Worker.delay_jobs = false }
-  after { Delayed::Worker.delay_jobs = true }
-
+RSpec.describe AutoArchiveProcedureJob, type: :job do
   let!(:procedure) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: nil )}
   let!(:procedure_hier) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: 1.day.ago )}
   let!(:procedure_aujourdhui) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: Date.today )}
   let!(:procedure_demain) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: 1.day.from_now )}
 
-  subject { AutoArchiveProcedureWorker.new.perform }
+  subject { AutoArchiveProcedureJob.new.perform }
 
   context "when procedures have no auto_archive_on" do
     before do

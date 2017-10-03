@@ -33,5 +33,7 @@ module TPS
     else
       URL = "http://localhost:3000/"
     end
+
+    config.active_job.queue_adapter = :delayed_job
   end
 end
