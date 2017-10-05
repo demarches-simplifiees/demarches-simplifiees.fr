@@ -79,5 +79,14 @@ FactoryGirl.define do
         dossier.save!
       end
     end
+
+    trait :received do
+      after(:create) do |dossier, _evaluator|
+        dossier.state = 'received'
+        dossier.initiated_at = dossier.created_at + 1.minute
+        dossier.created_at = dossier.created_at + 2.minute
+        dossier.save!
+      end
+    end
   end
 end
