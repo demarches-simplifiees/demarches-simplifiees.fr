@@ -423,11 +423,11 @@ describe Procedure do
   end
 
   describe "#fields" do
-    subject { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :types_de_champ_count => 2, :types_de_champ_private_count => 2) }
-    let(:tdc_1) { subject.types_de_champ.first }
-    let(:tdc_2) { subject.types_de_champ.last }
-    let(:tdc_private_1) { subject.types_de_champ_private.first }
-    let(:tdc_private_2) { subject.types_de_champ_private.last }
+    subject { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :types_de_champ_count => 4, :types_de_champ_private_count => 4) }
+    let(:tdc_1) { subject.types_de_champ[0] }
+    let(:tdc_2) { subject.types_de_champ[1] }
+    let(:tdc_private_1) { subject.types_de_champ_private[0] }
+    let(:tdc_private_2) { subject.types_de_champ_private[1] }
     let(:expected) {
       [
         { "label" => 'Créé le', "table" => 'self', "column" => 'created_at' },
@@ -451,6 +451,13 @@ describe Procedure do
         { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.id.to_s }
       ]
     }
+
+    before do
+      subject.types_de_champ[2].update_attribute(:type_champ, 'header_section')
+      subject.types_de_champ[3].update_attribute(:type_champ, 'explication')
+      subject.types_de_champ_private[2].update_attribute(:type_champ, 'header_section')
+      subject.types_de_champ_private[3].update_attribute(:type_champ, 'explication')
+    end
 
     it { expect(subject.fields).to eq(expected) }
   end

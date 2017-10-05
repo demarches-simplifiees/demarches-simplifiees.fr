@@ -9,5 +9,9 @@ FactoryGirl.define do
     trait :header_section do
       type_de_champ { FactoryGirl.create(:type_de_champ_public, :header_section) }
     end
+
+    trait :explication do
+      type_de_champ { FactoryGirl.create(:type_de_champ_public, :explication) }
+    end
   end
 end

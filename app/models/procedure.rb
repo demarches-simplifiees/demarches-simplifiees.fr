@@ -215,11 +215,17 @@ class Procedure < ActiveRecord::Base
       ]
     end
 
-    types_de_champ.reject { |tdc| tdc.type_champ == 'header_section' }.each do |type_de_champ|
+    types_de_champ
+      .reject { |tdc| ['header_section', 'explication'].include?(tdc.type_champ ) }
+      .each do |type_de_champ|
+
       fields << field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.id.to_s)
     end
 
-    types_de_champ_private.reject { |tdc| tdc.type_champ == 'header_section' }.each do |type_de_champ|
+    types_de_champ_private
+      .reject { |tdc| ['header_section', 'explication'].include?(tdc.type_champ ) }
+      .each do |type_de_champ|
+
       fields << field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.id.to_s)
     end
 

@@ -5,7 +5,7 @@
         - if c.type_champ == "header_section"
           %th.header-section{ colspan: 2 }
             = c.libelle
-        - else
+        - elsif c.type_champ != "explication"
           %th
             = "#{c.libelle} :"
           %td
