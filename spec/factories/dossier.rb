@@ -76,5 +76,11 @@ FactoryGirl.define do
       state 'initiated'
       initiated_at { created_at }
     end
+
+    trait :received do
+      state 'received'
+      initiated_at { created_at }
+      received_at { created_at }
+    end
   end
 end
