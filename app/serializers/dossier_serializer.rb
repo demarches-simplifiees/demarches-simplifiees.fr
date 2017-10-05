@@ -38,4 +38,8 @@ class DossierSerializer < ActiveModel::Serializer
   def invites
     object.invites_gestionnaires.pluck(:email)
   end
+
+  def commentaires
+    object.commentaires.order(created_at: :asc)
+  end
 end
