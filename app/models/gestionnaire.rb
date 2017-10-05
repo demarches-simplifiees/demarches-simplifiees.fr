@@ -131,6 +131,50 @@ class Gestionnaire < ActiveRecord::Base
     assign_to.find_by(procedure_id: procedure_id).procedure_presentation_or_default
   end
 
+  def notifications_for_dossier(dossier)
+    follow = Follow
+      .includes(dossier: [:champs, :avis, :commentaires])
+      .find_by(gestionnaire: self, dossier: dossier)
+
+    if follow.present?
+      #retirer le seen_at.present? une fois la contrainte de presence en base (et les migrations ad hoc)
+      champs_publiques = follow.demande_seen_at.present? &&
+        follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
+
+      pieces_justificatives = follow.demande_seen_at.present? &&
+        follow.dossier.pieces_justificatives.updated_since?(follow.demande_seen_at).any?
+
+      demande = champs_publiques || pieces_justificatives
+
+      annotations_privees = follow.annotations_privees_seen_at.present? &&
+        follow.dossier.champs_private.updated_since?(follow.annotations_privees_seen_at).any?
+
+      avis_notif = follow.avis_seen_at.present? &&
+        follow.dossier.avis.updated_since?(follow.avis_seen_at).any?
+
+      messagerie = follow.messagerie_seen_at.present? &&
+        dossier.commentaires
+        .where.not(email: 'contact@tps.apientreprise.fr')
+        .updated_since?(follow.messagerie_seen_at).any?
+
+      annotations_hash(demande, annotations_privees, avis_notif, messagerie)
+    else
+      annotations_hash(false, false, false, false)
+    end
+  end
+
+  def notifications_for_procedure(procedure)
+    dossiers = procedure.dossiers.en_cours.followed_by(self)
+
+    dossiers_id_with_notifications(dossiers)
+  end
+
+  def notifications_per_procedure
+    dossiers = Dossier.en_cours.followed_by(self)
+
+    Dossier.where(id: dossiers_id_with_notifications(dossiers)).group(:procedure_id).count
+  end
+
   private
 
   def valid_couple_table_attr? table, column
@@ -152,5 +196,43 @@ class Gestionnaire < ActiveRecord::Base
                }]
 
     couples.include?({table: table, column: column})
+  end
+
+  def annotations_hash(demande, annotations_privees, avis, messagerie)
+    {
+      demande: demande,
+      annotations_privees: annotations_privees,
+      avis: avis,
+      messagerie: messagerie
+    }
+  end
+
+  def dossiers_id_with_notifications(dossiers)
+    updated_demandes = dossiers
+      .joins(:champs)
+      .where('champs.updated_at > follows.demande_seen_at')
+
+    updated_pieces_justificatives = dossiers
+      .joins(:pieces_justificatives)
+      .where('pieces_justificatives.updated_at > follows.demande_seen_at')
+
+    updated_annotations = dossiers
+      .joins(:champs_private)
+      .where('champs.updated_at > follows.annotations_privees_seen_at')
+
+    updated_avis = dossiers
+      .joins(:avis)
+      .where('avis.updated_at > follows.avis_seen_at')
+
+    updated_messagerie = dossiers
+      .joins(:commentaires)
+      .where('commentaires.updated_at > follows.messagerie_seen_at')
+      .where.not(commentaires: { email: 'contact@tps.apientreprise.fr' })
+
+    [updated_demandes,
+     updated_pieces_justificatives,
+     updated_annotations,
+     updated_avis,
+     updated_messagerie].map { |query| query.distinct.ids }.flatten.uniq
   end
 end
