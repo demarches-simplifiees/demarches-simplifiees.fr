@@ -32,6 +32,20 @@ describe Gestionnaire, type: :model do
     end
   end
 
+  describe '#unfollow' do
+    let(:already_followed_dossier) { create(:dossier) }
+    before { gestionnaire.followed_dossiers << already_followed_dossier }
+
+    context 'when a gestionnaire unfollow a dossier already followed' do
+      before do
+        gestionnaire.unfollow(already_followed_dossier)
+        already_followed_dossier.reload
+      end
+
+      it { expect(gestionnaire.follow?(already_followed_dossier)).to be false }
+    end
+  end
+
   describe '#follow?' do
     let!(:dossier) { create :dossier, procedure: procedure }
 

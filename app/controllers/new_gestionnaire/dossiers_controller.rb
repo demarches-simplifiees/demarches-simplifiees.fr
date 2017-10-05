@@ -32,7 +32,7 @@ module NewGestionnaire
     end
 
     def unfollow
-      current_gestionnaire.followed_dossiers.delete(dossier)
+      current_gestionnaire.unfollow(dossier)
       flash.notice = "Vous ne suivez plus le dossier nº #{dossier.id}"
 
       redirect_back(fallback_location: procedures_url)
