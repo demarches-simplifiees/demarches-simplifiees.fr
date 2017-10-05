@@ -83,6 +83,11 @@ module NewGestionnaire
       redirect_to annotations_privees_dossier_path(dossier.procedure, dossier)
     end
 
+    def print
+      @dossier = dossier
+      render layout: "print"
+    end
+
     private
 
     def dossier

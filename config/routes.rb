@@ -258,6 +258,7 @@ Rails.application.routes.draw do
               get 'position'
             end
             post 'avis' => 'dossiers#create_avis'
+            get 'print' => 'dossiers#print'
           end
         end
       end

@@ -56,4 +56,8 @@ i {
   &.lock {
     background-image: image-url("icons/lock.svg");
   }
+
+  &.printer {
+    background-image: image-url("icons/printer.svg");
+  }
 }
