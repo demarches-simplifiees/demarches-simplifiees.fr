@@ -318,6 +318,8 @@ describe Gestionnaire, type: :model do
       Timecop.freeze(friday)
     end
 
+    after { Timecop.return }
+
     context 'when no procedure published was active last week' do
       let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure', published_at: Time.now) }
       context 'when the gestionnaire has no notifications' do
@@ -403,5 +405,149 @@ describe Gestionnaire, type: :model do
 
     it { expect(gestionnaire.procedure_presentation_for_procedure_id(procedure.id)).to eq(pp)}
     it { expect(gestionnaire.procedure_presentation_for_procedure_id(procedure_2.id).persisted?).to be_falsey}
+  end
+
+  describe '#notifications_for_dossier' do
+    let!(:dossier) { create(:dossier, :followed, state: 'initiated') }
+    let(:gestionnaire) { dossier.follows.first.gestionnaire }
+
+    subject { gestionnaire.notifications_for_dossier(dossier) }
+
+    context 'when the gestionnaire has just followed the dossier' do
+      it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: false }) }
+    end
+
+    context 'when there is a modification on public champs' do
+      before { dossier.champs.first.update_attribute('value', 'toto') }
+
+      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
+    end
+
+    context 'when there is a modification on a piece jusitificative' do
+      before { dossier.pieces_justificatives << create(:piece_justificative, :contrat) }
+
+      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
+    end
+
+    context 'when there is a modification on private champs' do
+      before { dossier.champs_private.first.update_attribute('value', 'toto') }
+
+      it { is_expected.to match({ demande: false, annotations_privees: true, avis: false, messagerie: false }) }
+    end
+
+    context 'when there is a modification on avis' do
+      before { create(:avis, dossier: dossier) }
+
+      it { is_expected.to match({ demande: false, annotations_privees: false, avis: true, messagerie: false }) }
+    end
+
+    context 'messagerie' do
+      context 'when there is a new commentaire' do
+        before { create(:commentaire, dossier: dossier, email: 'a@b.com') }
+
+        it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: true }) }
+      end
+
+      context 'when there is a new commentaire issued by tps' do
+        before { create(:commentaire, dossier: dossier, email: 'contact@tps.apientreprise.fr') }
+
+        it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: false }) }
+      end
+    end
+  end
+
+  describe '#notification_for_procedure' do
+    let!(:dossier) { create(:dossier, :followed, state: 'initiated') }
+    let(:gestionnaire) { dossier.follows.first.gestionnaire }
+    let(:procedure) { dossier.procedure }
+    let!(:gestionnaire_2) { create(:gestionnaire, procedures: [procedure]) }
+
+    let!(:dossier_on_procedure_2) { create(:dossier, :followed, state: 'initiated') }
+    let!(:gestionnaire_on_procedure_2) { dossier_on_procedure_2.follows.first.gestionnaire }
+
+    before do
+      gestionnaire_2.followed_dossiers << dossier
+    end
+
+    subject { gestionnaire.notifications_for_procedure(procedure) }
+
+    context 'when the gestionnaire has just followed the dossier' do
+      it { is_expected.to match([]) }
+    end
+
+    context 'when there is a modification on public champs' do
+      before { dossier.champs.first.update_attribute('value', 'toto') }
+
+      it { is_expected.to match([dossier.id]) }
+      it { expect(gestionnaire_2.notifications_for_procedure(procedure)).to match([dossier.id]) }
+      it { expect(gestionnaire_on_procedure_2.notifications_for_procedure(procedure)).to match([]) }
+
+      context 'and there is a modification on private champs' do
+        before { dossier.champs_private.first.update_attribute('value', 'toto') }
+
+        it { is_expected.to match([dossier.id]) }
+      end
+
+      context 'when gestionnaire update it s public champs last seen' do
+        let(:follow) { gestionnaire.follows.find_by(dossier: dossier) }
+
+        before { follow.update_attribute('demande_seen_at', DateTime.now) }
+
+        it { is_expected.to match([]) }
+        it { expect(gestionnaire_2.notifications_for_procedure(procedure)).to match([dossier.id]) }
+      end
+    end
+
+    context 'when there is a modification on a piece justificative' do
+      before { dossier.pieces_justificatives << create(:piece_justificative, :contrat) }
+
+      it { is_expected.to match([dossier.id]) }
+    end
+
+    context 'when there is a modification on public champs on a followed dossier from another procedure' do
+      before { dossier_on_procedure_2.champs.first.update_attribute('value', 'toto') }
+
+      it { is_expected.to match([]) }
+    end
+
+    context 'when there is a modification on private champs' do
+      before { dossier.champs_private.first.update_attribute('value', 'toto') }
+
+      it { is_expected.to match([dossier.id]) }
+    end
+
+    context 'when there is a modification on avis' do
+      before { create(:avis, dossier: dossier) }
+
+      it { is_expected.to match([dossier.id]) }
+    end
+
+    context 'the messagerie' do
+      context 'when there is a new commentaire' do
+        before { create(:commentaire, dossier: dossier, email: 'a@b.com') }
+
+        it { is_expected.to match([dossier.id]) }
+      end
+
+      context 'when there is a new commentaire issued by tps' do
+        before { create(:commentaire, dossier: dossier, email: 'contact@tps.apientreprise.fr') }
+
+        it { is_expected.to match([]) }
+      end
+    end
+  end
+
+  describe '#notifications_per_procedure' do
+    let!(:dossier) { create(:dossier, :followed, state: 'initiated') }
+    let(:gestionnaire) { dossier.follows.first.gestionnaire }
+    let(:procedure) { dossier.procedure }
+
+    subject { gestionnaire.notifications_per_procedure }
+
+    context 'when there is a modification on public champs' do
+      before { dossier.champs.first.update_attribute('value', 'toto') }
+
+      it { is_expected.to match({ procedure.id => 1 }) }
+    end
   end
 end

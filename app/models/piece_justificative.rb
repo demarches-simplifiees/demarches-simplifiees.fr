@@ -15,6 +15,8 @@ class PieceJustificative < ActiveRecord::Base
 
   after_save :internal_notification, if: Proc.new { !dossier.nil? }
 
+  scope :updated_since?, -> (date) { where('pieces_justificatives.updated_at > ?', date) }
+
   def empty?
     content.blank?
   end
