@@ -25,7 +25,7 @@ describe API::V1::DossiersController do
     context 'when procedure is found and belongs to admin' do
       let(:procedure_id) { procedure.id }
       let(:date_creation) { Time.utc(2008, 9, 1, 10, 5, 0) }
-      let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') } }
+      let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :initiated, procedure: procedure) } }
       let(:body) { JSON.parse(retour.body, symbolize_names: true) }
 
       it 'return REST code 200', :show_in_doc do
@@ -53,7 +53,8 @@ describe API::V1::DossiersController do
           subject { super().first }
           it { expect(subject[:id]).to eq(dossier.id) }
           it { expect(subject[:updated_at]).to eq("2008-09-01T10:05:00.000Z") }
-          it { expect(subject.keys.size).to eq(2) }
+          it { expect(subject[:initiated_at]).to eq("2008-09-01T10:05:00.000Z") }
+          it { expect(subject.keys.size).to eq(3) }
         end
       end
 

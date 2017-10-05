@@ -74,6 +74,7 @@ FactoryGirl.define do
 
     trait :initiated do
       state 'initiated'
+      initiated_at { created_at }
     end
   end
 end
