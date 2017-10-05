@@ -64,7 +64,7 @@ class DossiersListFacades
   end
 
   def nouveaux_total
-    service.nouveaux.count
+    service.nouveaux.without_followers.count
   end
 
   def suivi_total
