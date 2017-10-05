@@ -40,6 +40,10 @@ class Gestionnaire < ActiveRecord::Base
     followed_dossiers << dossier
   end
 
+  def unfollow(dossier)
+    followed_dossiers.delete(dossier)
+  end
+
   def follow?(dossier)
     followed_dossiers.include?(dossier)
   end

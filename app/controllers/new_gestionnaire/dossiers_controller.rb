@@ -32,7 +32,7 @@ module NewGestionnaire
     end
 
     def unfollow
-      current_gestionnaire.followed_dossiers.delete(dossier)
+      current_gestionnaire.unfollow(dossier)
       flash.notice = "Vous ne suivez plus le dossier nº #{dossier.id}"
 
       redirect_back(fallback_location: procedures_url)
@@ -40,6 +40,7 @@ module NewGestionnaire
 
     def archive
       dossier.update_attributes(archived: true)
+      current_gestionnaire.unfollow(dossier)
       redirect_back(fallback_location: procedures_url)
     end
 
@@ -50,6 +51,7 @@ module NewGestionnaire
 
     def create_commentaire
       Commentaire.create(commentaire_params.merge(email: current_gestionnaire.email, dossier: dossier))
+      current_gestionnaire.follow(dossier)
       flash.notice = "Message envoyé"
       redirect_to messagerie_dossier_path(dossier.procedure, dossier)
     end

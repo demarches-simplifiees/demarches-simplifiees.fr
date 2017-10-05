@@ -55,12 +55,15 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   describe '#archive' do
     before do
+      gestionnaire.follow(dossier)
       patch :archive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
       dossier.reload
+      gestionnaire.reload
     end
 
     it { expect(dossier.archived).to be true }
     it { expect(response).to redirect_to(procedures_url) }
+    it { expect(gestionnaire.followed_dossiers).not_to include(dossier) }
   end
 
   describe '#unarchive' do
@@ -121,6 +124,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(saved_commentaire.email).to eq(gestionnaire.email) }
     it { expect(saved_commentaire.dossier).to eq(dossier) }
     it { expect(response).to redirect_to(messagerie_dossier_path(dossier.procedure, dossier)) }
+    it { expect(gestionnaire.followed_dossiers).to include(dossier) }
   end
 
   describe "#create_avis" do

@@ -408,17 +408,21 @@ describe Procedure do
     let(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, procedure: procedure) }
     let!(:dossier2) { create(:dossier, procedure: procedure) }
+    let(:gestionnaire) { create(:gestionnaire) }
 
     it { expect(Dossier.count).to eq(2) }
     it { expect(Dossier.all).to include(dossier, dossier2) }
 
     context "when hidding procedure" do
       before do
+        gestionnaire.followed_dossiers << dossier
         procedure.hide!
+        gestionnaire.reload
       end
 
       it { expect(procedure.dossiers.count).to eq(0) }
       it { expect(Dossier.count).to eq(0) }
+      it { expect(gestionnaire.followed_dossiers).not_to include(dossier) }
     end
   end
 
