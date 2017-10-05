@@ -3,7 +3,7 @@ module NewGestionnaire
     before_action :ensure_ownership!, except: [:index]
     before_action :redirect_to_avis_if_needed, only: [:index]
 
-    ITEMS_PER_PAGE = 12
+    ITEMS_PER_PAGE = 25
 
     def index
       @procedures = current_gestionnaire.procedures.order(archived_at: :desc, published_at: :desc)
@@ -313,7 +313,7 @@ module NewGestionnaire
         def total_pages
           (#{total} / #{ITEMS_PER_PAGE}.to_f).ceil
         end
-        def limit_value                                                                               
+        def limit_value
           #{ITEMS_PER_PAGE}
         end
         def first_page?
