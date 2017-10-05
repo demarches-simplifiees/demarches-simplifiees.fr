@@ -73,7 +73,11 @@ FactoryGirl.define do
     end
 
     trait :initiated do
-      state 'initiated'
+      after(:create) do |dossier, _evaluator|
+        dossier.state = 'initiated'
+        dossier.initiated_at = dossier.created_at + 1.minute
+        dossier.save!
+      end
     end
   end
 end
