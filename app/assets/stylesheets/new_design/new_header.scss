@@ -38,13 +38,10 @@
     font-size: 18px;
     color: $black;
 
-    &.active {
+    &.active,
+    &:hover {
       color: $blue;
       border-bottom: 2px solid $blue;
-    }
-
-    &:not(.active):hover {
-      background-color: $light-grey;
     }
   }
 }
