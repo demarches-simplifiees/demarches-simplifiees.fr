@@ -64,7 +64,7 @@ feature 'The gestionnaire part' do
     click_on procedure.libelle
     click_on dossier.user.email
 
-    click_on 'Avis Externes'
+    click_on 'Avis externes'
     expect(page).to have_current_path(avis_dossier_path(procedure, dossier))
 
     expert_email = 'expert@tps.com'
