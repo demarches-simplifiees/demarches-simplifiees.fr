@@ -35,7 +35,7 @@ class Backoffice::DossiersListController < ApplicationController
       params[:dossiers_smart_listing] = {page: dossiers_list_facade.service.default_page}
     end
 
-    default_smart_listing_create :new_dossiers, service.nouveaux.order_by_updated_at('asc')
+    default_smart_listing_create :new_dossiers, service.nouveaux.without_followers.order_by_updated_at('asc')
     default_smart_listing_create :follow_dossiers, service.suivi.order_by_updated_at('asc')
     default_smart_listing_create :all_state_dossiers, service.all_state.order_by_updated_at('asc')
     default_smart_listing_create :archived_dossiers, service.archive
