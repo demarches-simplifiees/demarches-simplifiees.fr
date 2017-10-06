@@ -40,7 +40,7 @@ feature 'The gestionnaire part' do
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
     dossier_present?(dossier.id, 'en construction')
 
-    click_on 'suivre le dossier'
+    click_on 'Suivre le dossier'
     expect(page).to have_current_path(procedure_path(procedure))
     test_statut_bar(suivi: 1, tous_les_dossiers: 1)
     expect(page).to have_text('Aucun dossier')
@@ -49,7 +49,7 @@ feature 'The gestionnaire part' do
     expect(page).to have_current_path(procedure_path(procedure, statut: 'suivis'))
     dossier_present?(dossier.id, 'en construction')
 
-    click_on 'ne plus suivre'
+    click_on 'Ne plus suivre'
     expect(page).to have_current_path(procedure_path(procedure, statut: 'suivis'))
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
     expect(page).to have_text('Aucun dossier')
