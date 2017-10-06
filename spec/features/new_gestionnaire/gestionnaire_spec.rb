@@ -85,7 +85,9 @@ feature 'The gestionnaire part' do
     click_on dossier.user.email
     expect(page).to have_current_path(avis_path(dossier.avis.first))
 
-    click_on 'Instruction'
+    within(:css, '.tabs') do
+      click_on 'Avis'
+    end
     expect(page).to have_current_path(instruction_avis_path(dossier.avis.first))
 
     within(:css, '.give-avis') do
@@ -103,7 +105,7 @@ feature 'The gestionnaire part' do
     click_on 'nouvelle interface'
     click_on procedure.libelle
     click_on dossier.user.email
-    click_on 'Avis Externes'
+    click_on 'Avis externes'
 
     expect(page).to have_text('a great answer')
   end
