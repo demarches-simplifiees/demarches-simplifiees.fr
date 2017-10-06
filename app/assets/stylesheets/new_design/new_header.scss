@@ -27,22 +27,21 @@
 
 .header-tabs {
   li {
+    @include horizontal-padding($default-padding);
     display: inline-block;
   }
 
   a {
     display: inline-block;
-    padding: 23px $default-padding;
+    height: 71px;
+    line-height: 71px;
     font-size: 18px;
     color: $black;
 
-    &.active {
+    &.active,
+    &:hover {
       color: $blue;
       border-bottom: 2px solid $blue;
-    }
-
-    &:not(.active):hover {
-      background-color: $light-grey;
     }
   }
 }
