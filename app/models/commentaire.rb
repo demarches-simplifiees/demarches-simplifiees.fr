@@ -4,7 +4,7 @@ class Commentaire < ActiveRecord::Base
 
   belongs_to :piece_justificative
 
-  scope :ordered, -> { order(created_at: :asc) }
+  default_scope { order(created_at: :asc) }
 
   after_create :notify
 
