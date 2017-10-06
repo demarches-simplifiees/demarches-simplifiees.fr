@@ -51,20 +51,42 @@ describe StatsController, type: :controller do
 
   describe '#cumulative_hash' do
     before do
+      Timecop.freeze(Time.new(2016, 10, 2))
+      FactoryGirl.create(:procedure, :created_at => 55.days.ago, :updated_at => 43.days.ago)
+      FactoryGirl.create(:procedure, :created_at => 45.days.ago, :updated_at => 40.days.ago)
       FactoryGirl.create(:procedure, :created_at => 45.days.ago, :updated_at => 20.days.ago)
       FactoryGirl.create(:procedure, :created_at => 15.days.ago, :updated_at => 20.days.ago)
-      FactoryGirl.create(:procedure, :created_at => 15.days.ago, :updated_at => 10.days.ago)
+      FactoryGirl.create(:procedure, :created_at => 15.days.ago, :updated_at => 1.hour.ago)
     end
 
     let (:association) { Procedure.all }
 
-    subject { StatsController.new.send(:cumulative_hash, association, :updated_at) }
+    context "while a super admin is logged in" do
+      before { allow(@controller).to receive(:administration_signed_in?).and_return(true) }
 
-    it { expect(subject).to eq({
-        20.days.ago.beginning_of_month => 2,
-        10.days.ago.beginning_of_month => 3
-      })
-    }
+      subject { @controller.send(:cumulative_hash, association, :updated_at) }
+
+      it { expect(subject).to eq({
+          2.month.ago.beginning_of_month => 2,
+          1.month.ago.beginning_of_month => 4,
+          1.hour.ago.beginning_of_month => 5
+        })
+      }
+    end
+
+    context "while a super admin is not logged in" do
+      before { allow(@controller).to receive(:administration_signed_in?).and_return(false) }
+
+      subject { @controller.send(:cumulative_hash, association, :updated_at) }
+
+      it { expect(subject).to eq({
+          2.month.ago.beginning_of_month => 2,
+          1.month.ago.beginning_of_month => 4
+        })
+      }
+    end
+
+    after { Timecop.return }
   end
 
   describe "#procedures_count_per_administrateur" do
