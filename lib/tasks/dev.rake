@@ -83,4 +83,8 @@ EOF
     Rake::Task["db:migrate"].invoke
     Rake::Task["db:environment:set"].invoke("RAILS_ENV=development")
   end
+
+  task :console do
+    exec("ssh tps@sgmap_production1 -t 'source /etc/profile && cd current && bundle exec rails c production'")
+  end
 end
