@@ -287,11 +287,11 @@ module NewGestionnaire
             @dossiers = @dossiers.includes({ user: :france_connect_information })
           when 'type_de_champ_group'
             if fields.any? { |field| field['table'] == 'type_de_champ' }
-              @dossiers = @dossiers.includes(:champs)
+              @dossiers = @dossiers.includes(:champs).references(:champs)
             end
 
             if fields.any? { |field| field['table'] == 'type_de_champ_private' }
-              @dossiers = @dossiers.includes(:champs_private)
+              @dossiers = @dossiers.includes(:champs_private).references(:champs_private)
             end
 
             where_conditions = fields.map do |field|
