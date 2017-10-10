@@ -3,6 +3,13 @@ require 'spec_helper'
 describe Dossier do
   let(:user) { create(:user) }
 
+  describe "without_followers scope" do
+    let!(:dossier) { create(:dossier, :followed, :with_entreprise, user: user) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, user: user) }
+
+    it { expect(Dossier.without_followers.to_a).to eq([dossier2]) }
+  end
+
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
 
