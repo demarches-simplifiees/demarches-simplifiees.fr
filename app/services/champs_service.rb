@@ -8,7 +8,7 @@ class ChampsService
 
     def build_error_messages(champs)
       champs.select(&:mandatory_and_blank?)
-            .map { |c| "Le champ #{c.libelle} doit être rempli." }
+        .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
     end
 
     private
