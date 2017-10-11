@@ -14,6 +14,10 @@ FactoryGirl.define do
       type_champ 'header_section'
     end
 
+    trait :explication do
+      type_champ 'explication'
+    end
+
     trait :type_dossier_link do
       libelle 'Référence autre dossier'
       type_champ 'dossier_link'

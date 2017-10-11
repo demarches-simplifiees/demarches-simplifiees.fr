@@ -40,6 +40,10 @@ class Gestionnaire < ActiveRecord::Base
     followed_dossiers << dossier
   end
 
+  def unfollow(dossier)
+    followed_dossiers.delete(dossier)
+  end
+
   def follow?(dossier)
     followed_dossiers.include?(dossier)
   end
@@ -121,6 +125,10 @@ class Gestionnaire < ActiveRecord::Base
         procedure_overviews: active_procedure_overviews,
       }
     end
+  end
+
+  def procedure_presentation_for_procedure_id(procedure_id)
+    assign_to.find_by(procedure_id: procedure_id).procedure_presentation_or_default
   end
 
   private

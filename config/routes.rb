@@ -237,6 +237,11 @@ Rails.application.routes.draw do
   scope module: 'new_gestionnaire' do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
+        patch 'update_displayed_fields'
+        get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
+        post 'add_filter'
+        get 'remove_filter/:statut/:table/:column' => 'procedures#remove_filter', as: 'remove_filter'
+
         resources :dossiers, only: [:show], param: :dossier_id do
           member do
             get 'attestation'
