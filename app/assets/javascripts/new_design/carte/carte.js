@@ -6,7 +6,7 @@ function initCarto() {
       scrollWheelZoom: false
     }).setView([position.lat, position.lon], position.zoom);
 
-    L.tileLayer('http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
