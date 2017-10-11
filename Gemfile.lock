@@ -499,7 +499,6 @@ GEM
       nokogiri (~> 1.5)
       trollop (~> 2.1)
     rdoc (4.3.0)
-    redis (3.3.3)
     ref (2.0.0)
     request_store (1.3.1)
     responders (2.3.0)
@@ -672,7 +671,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actioncable (= 5.0.0.1)
   active_model_serializers
   apipie-rails
   bootstrap-datepicker-rails
@@ -728,7 +726,6 @@ DEPENDENCIES
   rack-mini-profiler
   rails (= 5.0.0.1)
   rails-controller-testing
-  redis
   rest-client
   rgeo-geojson
   rspec-rails (~> 3.0)
