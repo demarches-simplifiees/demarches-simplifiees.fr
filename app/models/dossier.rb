@@ -76,6 +76,7 @@ class Dossier < ActiveRecord::Base
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
   after_save :send_dossier_received
+  after_create :send_draft_notification_email
 
   validates :user, presence: true
 
@@ -378,6 +379,12 @@ class Dossier < ActiveRecord::Base
   def send_dossier_received
     if state_changed? && EN_INSTRUCTION.include?(state)
       NotificationMailer.send_dossier_received(id).deliver_later
+    end
+  end
+
+  def send_draft_notification_email
+    if brouillon?
+      NotificationMailer.send_draft_notification(self).deliver_now!
     end
   end
 end

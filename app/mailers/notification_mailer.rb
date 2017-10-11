@@ -21,6 +21,14 @@ class NotificationMailer < ApplicationMailer
     mail(subject: @object) { |format| format.html { @body } }
   end
 
+  def send_draft_notification(dossier)
+    vars_mailer(dossier)
+
+    @object = "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}"
+
+    mail(subject: @object)
+  end
+
   def new_answer(dossier)
     send_mail dossier, "Nouveau message pour votre dossier TPS nº #{dossier.id}"
   end
