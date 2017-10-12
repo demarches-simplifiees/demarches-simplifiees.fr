@@ -49,6 +49,10 @@
       width: 90px;
       position: relative;
 
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
       &:last-child {
         border-right: 1px solid $border-grey;
       }

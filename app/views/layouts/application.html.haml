@@ -15,7 +15,6 @@
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
 
     = csrf_meta_tags
-    = action_cable_meta_tag
   %body
     = render partial: 'layouts/support_navigator_banner'
     #beta{ class: (Rails.env == 'production' ? '' : 'beta-staging') }
