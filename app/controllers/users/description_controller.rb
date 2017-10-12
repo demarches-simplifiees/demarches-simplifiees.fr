@@ -100,7 +100,13 @@ class Users::DescriptionController < UsersController
   private
 
   def redirect_to_description_with_errors(dossier, errors)
-    flash.alert = errors
+    errors_to_display = if errors.count > 3
+      errors.take(3) + ['...']
+    else
+      errors
+    end
+
+    flash.alert = errors_to_display
     redirect_to users_dossier_description_path(dossier_id: dossier.id)
   end
 
