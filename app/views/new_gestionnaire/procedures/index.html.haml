@@ -17,37 +17,47 @@
 
               %ul.procedure-stats.flex
                 %li
-                  - a_suivre_count = @dossiers_a_suivre_count_per_procedure[p.id] || 0
-                  .stats-number
-                    = a_suivre_count
-                  .stats-legend
-                    à suivre
+                  %object
+                    = link_to(procedure_path(p, statut: 'a-suivre')) do
+                      - a_suivre_count = @dossiers_a_suivre_count_per_procedure[p.id] || 0
+                      .stats-number
+                        = a_suivre_count
+                      .stats-legend
+                        à suivre
                 %li
-                  - if @notifications_count_per_procedure[p.id].present?
-                    %span.notifications{ 'aria-label': "notifications" }
-                  - followed_count = @followed_dossiers_count_per_procedure[p.id] || 0
-                  .stats-number
-                    = followed_count
-                  .stats-legend
-                    = t('pluralize.followed', count: followed_count)
+                  %object
+                    = link_to(procedure_path(p, statut: 'suivis')) do
+                      - if @notifications_count_per_procedure[p.id].present?
+                        %span.notifications{ 'aria-label': "notifications" }
+                      - followed_count = @followed_dossiers_count_per_procedure[p.id] || 0
+                      .stats-number
+                        = followed_count
+                      .stats-legend
+                        = t('pluralize.followed', count: followed_count)
                 %li
-                  - termines_count = @dossiers_termines_count_per_procedure[p.id] || 0
-                  .stats-number
-                    = termines_count
-                  .stats-legend
-                    = t('pluralize.processed', count: termines_count)
+                  %object
+                    = link_to(procedure_path(p, statut: 'traites')) do
+                      - termines_count = @dossiers_termines_count_per_procedure[p.id] || 0
+                      .stats-number
+                        = termines_count
+                      .stats-legend
+                        = t('pluralize.processed', count: termines_count)
                 %li
-                  - dossier_count = @dossiers_count_per_procedure[p.id] || 0
-                  .stats-number
-                    = dossier_count
-                  .stats-legend
-                    = t('pluralize.case', count: dossier_count)
+                  %object
+                    = link_to(procedure_path(p, statut: 'tous')) do
+                      - dossier_count = @dossiers_count_per_procedure[p.id] || 0
+                      .stats-number
+                        = dossier_count
+                      .stats-legend
+                        = t('pluralize.case', count: dossier_count)
                 %li
-                  - archived_count = @dossiers_archived_count_per_procedure[p.id] || 0
-                  .stats-number
-                    = archived_count
-                  .stats-legend
-                    = t('pluralize.archived', count: archived_count)
+                  %object
+                    = link_to(procedure_path(p, statut: 'archives')) do
+                      - archived_count = @dossiers_archived_count_per_procedure[p.id] || 0
+                      .stats-number
+                        = archived_count
+                      .stats-legend
+                        = t('pluralize.archived', count: archived_count)
 
             - if p.archivee?
               .procedure-status
