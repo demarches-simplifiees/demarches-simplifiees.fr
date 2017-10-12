@@ -26,8 +26,7 @@ worker_processes 2
 # we use a shorter backlog for quicker failover when busy
 listen "127.0.0.1:3000", :tcp_nopush => true
 
-# nuke workers after 30 seconds instead of 60 seconds (the default)
-timeout 30
+timeout 60
 
 # By default, the Unicorn logger will write to stderr.
 # Additionally, ome applications/frameworks log to stderr or stdout,
