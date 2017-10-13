@@ -377,7 +377,7 @@ class Dossier < ActiveRecord::Base
 
   def send_notification_email
     if state_changed? && EN_INSTRUCTION.include?(state)
-      NotificationMailer.send_notification(self, procedure.received_mail_template).deliver_now!
+      NotificationMailer.send_notification(self, procedure.received_mail_template).deliver_later
     end
   end
 end
