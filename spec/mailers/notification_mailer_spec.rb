@@ -1,17 +1,30 @@
 require "spec_helper"
 
 RSpec.describe NotificationMailer, type: :mailer do
+  shared_examples_for "create a commentaire not notified" do
+    it do
+      expect { subject.deliver_now }.to change { Commentaire.count }.by(1)
+      expect { subject.deliver_now }.to_not change { Notification.count }
+
+      subject.deliver_now
+      commentaire = Commentaire.last
+      expect(commentaire.body).to include(email_template.object_for_dossier(dossier), email_template.body_for_dossier(dossier))
+      expect(commentaire.dossier).to eq(dossier)
+    end
+  end
+
+  let(:user) { create(:user) }
+  let(:dossier) { create(:dossier, user: user) }
+
   describe '.send_notification' do
-    let(:user) { create(:user) }
-    let(:dossier) { create(:dossier, user: user) }
-    let(:email) { instance_double('email', object_for_dossier: 'object', body_for_dossier: 'body') }
+    let(:email_template) { instance_double('email_template', object_for_dossier: 'object', body_for_dossier: 'body') }
     let(:attestation) { nil }
     let(:notifications_count_before) { Notification.count }
 
-    subject { described_class.send_notification(dossier, email, attestation) }
+    subject { described_class.send_notification(dossier, email_template, attestation) }
 
-    it { expect(subject.subject).to eq(email.object_for_dossier) }
-    it { expect(subject.body).to eq(email.body_for_dossier) }
+    it { expect(subject.subject).to eq(email_template.object_for_dossier) }
+    it { expect(subject.body).to eq(email_template.body_for_dossier) }
     it { expect(subject.attachments['attestation.pdf']).to eq(nil) }
 
     context 'when an attestation is provided' do
@@ -25,23 +38,26 @@ RSpec.describe NotificationMailer, type: :mailer do
       end
     end
 
-    it "creates a commentaire, which is not notified" do
-      described_class.send_notification(dossier, email).deliver_now
+    it_behaves_like "create a commentaire not notified"
+  end
 
-      commentaire = Commentaire.last
-      notifications_count_after = Notification.count
+  describe '.send_dossier_received' do
+    subject { described_class.send_dossier_received(dossier.id) }
+    let(:email_template) { create(:received_mail) }
 
-      expect(commentaire.dossier).to eq(dossier)
-      expect(commentaire.email).to eq("contact@tps.apientreprise.fr")
-      expect(commentaire.body).to eq("[object]<br><br>body")
-      expect(notifications_count_before).to eq(notifications_count_after)
+    before do
+      dossier.procedure.received_mail = email_template
     end
+
+    it do
+      expect(subject.subject).to eq(email_template.object)
+      expect(subject.body).to eq(email_template.body)
+    end
+
+    it_behaves_like "create a commentaire not notified"
   end
 
   describe ".new_answer" do
-    let(:user) { create(:user) }
-    let(:dossier) { create(:dossier, user: user) }
-
     subject(:subject) { described_class.new_answer(dossier) }
 
     it { expect(subject.body).to match('Un nouveau message est disponible dans votre espace TPS.') }
