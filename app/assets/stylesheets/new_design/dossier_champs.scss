@@ -1,6 +1,11 @@
 @import "constants";
 
 .dossier-champs {
+  th,
+  td {
+    vertical-align: top;
+  }
+
   .libelle {
     width: 250px;
   }
