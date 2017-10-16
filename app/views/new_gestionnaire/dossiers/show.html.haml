@@ -10,7 +10,6 @@
       = render partial: "identite_individual", locals: { individual: @dossier.individual }
 
   .backoffice-title Formulaire
-
   - champs = @dossier.ordered_champs.decorate
   - if champs.any?
     .card.featured
