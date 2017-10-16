@@ -2,8 +2,8 @@
   = render partial: 'header', locals: { avis: @avis, dossier: @dossier }
 
   .container
+    .backoffice-title Identité du demandeur
     .card
-      .card-title Identité du demandeur
       - if @dossier.entreprise.present?
         = render partial: 'new_gestionnaire/dossiers/identite_entreprise', locals: { entreprise: @dossier.entreprise }
 
