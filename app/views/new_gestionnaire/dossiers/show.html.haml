@@ -20,9 +20,8 @@
     = render partial: "map", locals: { dossier: @dossier }
 
   - if @dossier.procedure.cerfa_flag? || @dossier.types_de_piece_justificative.any?
+    .backoffice-title Pièces jointes
     .card.featured
-      .card-title Pièces jointes
-
       %table.table.vertical
         %tbody
           - if @dossier.procedure.cerfa_flag?
