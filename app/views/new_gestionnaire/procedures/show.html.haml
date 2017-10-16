@@ -98,7 +98,7 @@
             %tr
               %td.number-col
                 = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
-                  %i.folder
+                  %i.icon.folder
                     - if @followed_dossiers.with_unread_notifications.include?(dossier)
                       %span.notifications{ 'aria-label': 'notifications' }
                   = dossier.id
