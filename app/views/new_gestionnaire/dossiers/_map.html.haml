@@ -1,18 +1,17 @@
-.card
-  #map
+#map
 
-  - if dossier.quartier_prioritaires.any?
-    .card-title Quartiers prioritaires
-    %ul
-    - dossier.quartier_prioritaires.each do |q|
-      %li= q.nom
+- if dossier.quartier_prioritaires.any?
+  .card-title Quartiers prioritaires
+  %ul
+  - dossier.quartier_prioritaires.each do |q|
+    %li= q.nom
 
-  - if dossier.cadastres.any?
-    .card-title Parcelles cadastrales
-    %ul
-    - dossier.cadastres.each do |p|
-      %li
-        = "Parcelle n° #{p.numero} - Feuille #{p.code_arr} #{p.section} #{p.feuille}"
+- if dossier.cadastres.any?
+  .card-title Parcelles cadastrales
+  %ul
+  - dossier.cadastres.each do |p|
+    %li
+      = "Parcelle n° #{p.numero} - Feuille #{p.code_arr} #{p.section} #{p.feuille}"
 
 :javascript
   var getPositionUrl = "#{position_dossier_path(dossier.procedure, dossier)}";
