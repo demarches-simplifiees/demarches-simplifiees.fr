@@ -13,7 +13,7 @@
     .backoffice-title Formulaire
     - champs = @dossier.ordered_champs.decorate
     - if champs.any?
-      .card.featured
+      .card
         = render partial: 'new_gestionnaire/dossiers/champs', locals: { champs: champs }
 
     - if @dossier.procedure.use_api_carto
@@ -22,7 +22,7 @@
 
     - if @dossier.procedure.cerfa_flag? || @dossier.types_de_piece_justificative.any?
       .backoffice-title Pièces jointes
-      .card.featured
+      .card
         %table.table.vertical
           %tbody
             - if @dossier.procedure.cerfa_flag?
