@@ -1,0 +1,25 @@
+@import "colors";
+@import "fonts";
+
+body {
+  font-family: "Muli";
+}
+
+.subtitle {
+  margin-top: -20px;
+  color: $grey;
+}
+
+th,
+td {
+  vertical-align: top;
+}
+
+th {
+  text-align: left;
+
+  &.header-section {
+    padding-top: 1.2em;
+    font-size: 1.2em;
+  }
+}

@@ -1,0 +1,106 @@
+%h1= "Dossier nº #{@dossier.id}"
+%h1.subtitle= "Procédure : #{@dossier.procedure.libelle}"
+
+%h2 Identité du demandeur
+
+- if @dossier.entreprise.present?
+  = render partial: "identite_entreprise", locals: { entreprise: @dossier.entreprise }
+
+- if @dossier.individual.present?
+  = render partial: "identite_individual", locals: { individual: @dossier.individual }
+
+%h2 Formulaire
+
+- champs = @dossier.ordered_champs.decorate
+- if champs.any?
+  = render partial: "champs", locals: { champs: champs }
+
+- if @dossier.procedure.use_api_carto
+  %h3 Cartographie
+  - if @dossier.quartier_prioritaires.any?
+    %h4 Quartiers prioritaires
+    %table
+      - @dossier.quartier_prioritaires.each do |q|
+        %tr
+          %td= q.nom
+
+  - if @dossier.cadastres.any?
+    %h4 Parcelles cadastrales
+    %table
+      - @dossier.cadastres.each do |p|
+        %tr
+          %td= "Parcelle n° #{p.numero} - Feuille #{p.code_arr} #{p.section} #{p.feuille}"
+
+- if @dossier.procedure.cerfa_flag? || @dossier.types_de_piece_justificative.any?
+  %h3 Pièces jointes
+
+  %table
+    - if @dossier.procedure.cerfa_flag?
+      %tr
+        %th Formulaire :
+        %td
+          - if @dossier.cerfa_available?
+            Pièce fournie
+          - else
+            Pièce non fournie
+
+    - @dossier.procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
+      %tr
+        %th= "#{type_de_piece_justificative.libelle} :"
+        %td
+          - pj = @dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)
+          - if pj.present?
+            Pièce fournie
+          - else
+            Pièce non fournie
+
+%h2 Annotations privées
+
+- if @dossier.ordered_champs_private.present?
+  %table
+    - @dossier.champs_private.each do |champ|
+      %tr
+        %th
+          = champ.libelle
+        %td
+          = champ.value
+- else
+  Aucune annotation privée
+
+%h2 Avis
+
+- if @dossier.avis.present?
+  %table
+    - @dossier.avis.each do |avis|
+      %tr
+        %th
+          = "Avis de #{avis.email_to_display}"
+          - if avis.confidentiel?
+            (confidentiel)
+        %td
+          - if avis.answer.present?
+            = avis.answer
+          - else
+            En attente de réponse
+- else
+  Aucun avis
+
+%h2 Messagerie
+
+%table
+  - @dossier.commentaires.each do |commentaire|
+    %tr
+      %th
+        = render partial: 'commentaire_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
+        - if ![current_gestionnaire.email, @dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
+          (invité)
+        %br
+        = I18n.l(commentaire.created_at.localtime, format: 'le %d/%m/%Y à %H:%M')
+      %td
+        %p= sanitize(commentaire.body)
+        - if file = commentaire.piece_justificative
+          %br
+          = file.original_filename
+
+%script{ type: "text/javascript" }
+  window.print();
