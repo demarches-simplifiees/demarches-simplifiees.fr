@@ -29,7 +29,7 @@
             %tr
               %td.number-col
                 = link_to(avis_path(avis), class: 'cell-link') do
-                  %i.icon.folder
+                  .icon.folder
                   #{avis.dossier.id}
               %td= link_to(avis.dossier.user.email, avis_path(avis), class: 'cell-link')
               %td= link_to(avis.dossier.procedure.libelle, avis_path(avis), class: 'cell-link')
