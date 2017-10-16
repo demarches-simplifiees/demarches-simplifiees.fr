@@ -57,6 +57,19 @@ class Champ < ActiveRecord::Base
     JSON.parse(Carto::GeoAPI::Driver.pays).inject([]) { |acc, liste| acc.push(liste['nom']) }
   end
 
+  def to_s
+    if value.present?
+      case type_champ
+      when 'date'
+        Date.parse(value).strftime('%d/%m/%Y')
+      else
+        value.to_s
+      end
+    else
+      ''
+    end
+  end
+
   private
 
   def format_date_to_iso
