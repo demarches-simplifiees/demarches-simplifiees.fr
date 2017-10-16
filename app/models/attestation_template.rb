@@ -124,12 +124,11 @@ class AttestationTemplate < ApplicationRecord
 
   def replace_type_de_champ_tags(text, types_de_champ, dossier_champs)
     types_de_champ.inject(text) do |acc, tag|
-      value = dossier_champs
-        .select { |champ| champ.libelle == tag[:libelle] }
+      champ = dossier_champs
+        .select { |dossier_champ| dossier_champ.libelle == tag[:libelle] }
         .first
-        .value
 
-      acc.gsub("--#{tag[:libelle]}--", value.to_s)
+      acc.gsub("--#{tag[:libelle]}--", champ.to_s)
     end
   end
 
