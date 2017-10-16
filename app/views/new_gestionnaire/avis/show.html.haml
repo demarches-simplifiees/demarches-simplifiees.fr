@@ -17,6 +17,7 @@
         = render partial: 'new_gestionnaire/dossiers/champs', locals: { champs: champs }
 
     - if @dossier.procedure.use_api_carto
+      .backoffice-title Cartographie
       = render partial: 'new_gestionnaire/dossiers/map', locals: { dossier: @dossier }
 
     - if @dossier.procedure.cerfa_flag? || @dossier.types_de_piece_justificative.any?
