@@ -62,4 +62,25 @@ EOF
     file.write(content)
     file.close
   end
+
+  def run_and_stop_if_error(cmd)
+    sh cmd do |ok, res|
+      if !ok
+        abort "#{cmd} failed with result : #{res.exitstatus}"
+      end
+    end
+  end
+
+  task :import_db do
+    filename = "tps_prod_#{1.day.ago.strftime("%d-%m-%Y")}.sql"
+    local_file = "/tmp/#{filename}"
+    run_and_stop_if_error "scp deploy@sgmap_backup:/var/backup/production1/db/#{filename} #{local_file}"
+
+    Rake::Task["db:drop"].invoke
+    Rake::Task["db:create"].invoke
+    run_and_stop_if_error "psql tps_development -f #{local_file}"
+
+    Rake::Task["db:migrate"].invoke
+    Rake::Task["db:environment:set"].invoke("RAILS_ENV=development")
+  end
 end
