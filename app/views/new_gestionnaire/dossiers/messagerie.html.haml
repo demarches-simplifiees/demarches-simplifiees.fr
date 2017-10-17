@@ -17,7 +17,7 @@
           - if file = commentaire.piece_justificative
             .attachment-link
               = link_to file.content_url, class: "button", target: "_blank", title: "Télécharger" do
-                %i.icon.attachment
+                .icon.attachment
                 = file.original_filename
 
   = form_for(Commentaire.new, url: commentaire_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' }) do |f|
