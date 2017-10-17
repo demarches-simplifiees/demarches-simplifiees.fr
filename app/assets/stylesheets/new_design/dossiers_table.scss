@@ -34,18 +34,21 @@
     }
   }
 
-  .number-col,
-  .status-col {
-    width: 130px;
+  .number-col {
+    width: 110px;
   }
 
-  .status-col .label {
+  .status-col {
     width: 110px;
-    text-align: center;
+
+    .label {
+      width: 110px;
+      text-align: center;
+    }
   }
 
   .follow-col {
-    width: 200px;
+    width: 190px;
     text-align: center;
   }
 }
