@@ -30,6 +30,6 @@ describe 'new_gestionnaire/dossiers/show.html.haml', type: :view do
     it { expect(rendered).to include(individual.gender) }
     it { expect(rendered).to include(individual.nom) }
     it { expect(rendered).to include(individual.prenom) }
-    it { expect(rendered).to include(individual.birthdate) }
+    it { expect(rendered).to include(Date.parse(individual.birthdate).strftime("%d/%m/%Y")) }
   end
 end
