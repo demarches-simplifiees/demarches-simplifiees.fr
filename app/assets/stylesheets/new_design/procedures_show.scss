@@ -15,7 +15,8 @@
   }
 
   .dossiers-table {
-    margin: (3 * $default-spacer) auto;
+    margin-top: $default-spacer;
+    margin-bottom: 3 * $default-spacer;
   }
 
   .procedure-actions {
