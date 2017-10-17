@@ -62,7 +62,7 @@
         %td= entreprise.rna_information.date_creation.strftime("%d/%m/%Y")
       %tr
         %th Date de publication :
-        %td= entreprise.rna_information.date_publication.strftime("%d/%m/%Y")
+        %td= entreprise.rna_information.date_publication.try(:strftime, "%d/%m/%Y")
       %tr
         %th Date de déclaration :
         %td= entreprise.rna_information.date_declaration.strftime("%d/%m/%Y")
