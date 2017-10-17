@@ -11,4 +11,4 @@
       %td= individual.nom
     %tr
       %th Date de naissance :
-      %td= individual.birthdate
+      %td= Date.parse(individual.birthdate).strftime("%d/%m/%Y")

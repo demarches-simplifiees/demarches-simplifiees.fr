@@ -27,7 +27,7 @@
   }
 
   &.vertical {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 22px;
 
     tr {
@@ -36,17 +36,11 @@
 
     th {
       @include vertical-padding($default-spacer);
-      font-weight: normal;
 
       &.header-section {
         color: $blue;
-        font-weight: bold;
         font-size: 20px;
       }
-    }
-
-    td {
-      font-weight: bold;
     }
   }
 }

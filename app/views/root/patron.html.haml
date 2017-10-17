@@ -2,19 +2,20 @@
   .container
     %h1 Icones
 
-    %i.follow
-    %i.unfollow
-    %i.archive
-    %i.unarchive
-    %i.folder
-    %i.accept
-    %i.close
-    %i.without-continuation
-    %i.edit
-    %i.in-progress
-    %i.bubble
-    %i.attachment
-    %i.lock
+    .icon.follow
+    .icon.unfollow
+    .icon.archive
+    .icon.unarchive
+    .icon.folder
+    .icon.accept
+    .icon.close
+    .icon.without-continuation
+    .icon.edit
+    .icon.in-progress
+    .icon.bubble
+    .icon.attachment
+    .icon.lock
+    .icon.printer
 
     %h1 Formulaires
 
@@ -47,17 +48,17 @@
 
     %p
       = link_to "#", class: "button" do
-        %i.follow
-        = "%i.follow"
+        .icon.follow
+        = ".icon.follow"
       = link_to "#", class: "button" do
-        %i.unfollow
-        = "%i.unfollow"
+        .icon.unfollow
+        = ".icon.unfollow"
       = link_to "#", class: "button" do
-        %i.archive
-        = "%i.archive"
+        .icon.archive
+        = ".icon.archive"
       = link_to "#", class: "button" do
-        %i.unarchive
-        = "%i.unarchive"
+        .icon.unarchive
+        = ".icon.unarchive"
     %p
       = link_to ".button.primary.expand", "#", class: "button primary expand"
 
@@ -190,7 +191,7 @@
           %p Bonjour, merci de me donner votre avis sur ce dossier.
 
           .answer.flex.align-start
-            %i.bubble.avis-icon
+            .icon.bubble.avis-icon
             .width-100
               %h2.gestionnaire
                 gestionnnaire@tps.com

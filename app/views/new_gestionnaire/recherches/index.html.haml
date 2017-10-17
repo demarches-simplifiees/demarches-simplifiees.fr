@@ -16,7 +16,7 @@
         %tr
           %td.number-col
             = link_to(dossier_path(dossier.procedure, dossier), class: 'cell-link') do
-              %i.folder>
+              .icon.folder>
               = dossier.id
           %td= link_to(dossier.procedure.libelle, dossier_path(dossier.procedure, dossier), class: 'cell-link')
           %td= link_to(dossier.user.email, dossier_path(dossier.procedure, dossier), class: 'cell-link')

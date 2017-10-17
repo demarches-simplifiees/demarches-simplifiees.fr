@@ -59,10 +59,10 @@ feature "procedure filters" do
     expect(page).to have_content("#{type_de_champ.libelle} : #{champ.value}")
 
     within ".dossiers-table" do
-      expect(page).to have_link(new_unfollow_dossier.id)
+      expect(page).to have_link(new_unfollow_dossier.id, exact: true)
       expect(page).to have_link(new_unfollow_dossier.user.email)
 
-      expect(page).not_to have_link(new_unfollow_dossier_2.id)
+      expect(page).not_to have_link(new_unfollow_dossier_2.id, exact: true)
       expect(page).not_to have_link(new_unfollow_dossier_2.user.email)
     end
 

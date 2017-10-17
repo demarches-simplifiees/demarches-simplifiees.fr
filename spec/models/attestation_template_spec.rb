@@ -255,5 +255,32 @@ describe AttestationTemplate, type: :model do
         end
       end
     end
+
+    context 'when the procedure has 2 types de champ date and datetime' do
+      let(:types_de_champ) do
+        [create(:type_de_champ_public, libelle: 'date', type_champ: 'date'),
+         create(:type_de_champ_public, libelle: 'datetime', type_champ: 'datetime')]
+      end
+
+      context 'and the are used in the template title' do
+        let(:template_title) { 'title --date-- --datetime--' }
+
+        context 'and its value in the dossier are not nil' do
+          before :each do
+            dossier.champs
+              .select { |champ| champ.type_champ == 'date' }
+              .first
+              .value = '2017-04-15'
+
+            dossier.champs
+              .select { |champ| champ.type_champ == 'datetime' }
+              .first
+              .value = '13/09/2017 09:00'
+          end
+
+          it { expect(view_args[:title]).to eq('title 15/04/2017 13/09/2017 09:00') }
+        end
+      end
+    end
   end
 end

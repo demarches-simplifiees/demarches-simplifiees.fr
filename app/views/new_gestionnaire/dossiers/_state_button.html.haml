@@ -5,13 +5,13 @@
       %ul.dropdown-items
         - if dossier.en_construction?
           %li.selected
-            %i.edit
+            .icon.edit
             .description
               %h4 En construction
               Vous permettez à l'usager de modifier ses réponses au formulaire
           %li
             = link_to backoffice_dossier_receive_path(dossier, new_ui: true), method: :post, data: { confirm: "Confirmer vous le passage en instruction de ce dossier ?" } do
-              %i.in-progress
+              .icon.in-progress
               .description
                 %h4 Passer en instruction
                 L'usager ne pourra plus modifier le formulaire
@@ -19,35 +19,35 @@
         - if dossier.en_instruction?
           %li
             = link_to backoffice_dossier_reopen_path(dossier, new_ui: true), method: :post, data: { confirm: "Confirmer vous la réouverture de ce dossier ?" } do
-              %i.edit
+              .icon.edit
               .description
                 %h4 Repasser en construction
                 Vous permettrez à l'usager de modifier ses réponses au formulaire
           %li.selected
-            %i.in-progress
+            .icon.in-progress
             .description
               %h4 En instruction
               L'usager ne peut modifer son dossier pendant l'instruction
           %li{ onclick: "TPS.acceptDossier();" }
-            %i.accept
+            .icon.accept
             .description
               %h4 Accepter
               L'usager sera notifié que son dossier a été accepté
           %li
             = link_to backoffice_dossier_process_dossier_path(dossier, process_action: "without_continuation", new_ui: true), method: :post, data: { confirm: "Confirmer vous le classement sans suite de ce dossier ?" } do
-              %i.without-continuation
+              .icon.without-continuation
               .description
                 %h4 Classer sans suite
                 L'usager ne recevra aucune notification
           %li
             = link_to backoffice_dossier_process_dossier_path(dossier, process_action: "refuse", new_ui: true), method: :post, data: { confirm: "Confirmer vous le refus de ce dossier ?" } do
-              %i.close
+              .icon.close
               .description
                 %h4 Refuser
                 L'usager sera notifié que son dossier a été refusé
       .motivation
         %h3
-          %i.accept
+          .icon.accept
           Accepter le dossier
           = "nº #{dossier.id}"
 

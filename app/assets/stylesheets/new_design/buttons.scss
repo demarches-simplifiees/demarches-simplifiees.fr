@@ -65,7 +65,7 @@
     width: 100%;
   }
 
-  > i {
+  > .icon {
     width: 18px;
     height: 18px;
     background-size: 18px 18px;
@@ -91,6 +91,10 @@
         display: block;
       }
     }
+  }
+
+  &.icon-only .icon {
+    margin-right: 0;
   }
 }
 
@@ -161,7 +165,7 @@
       color: $grey;
     }
 
-    i {
+    .icon {
       flex-shrink: 0;
     }
 

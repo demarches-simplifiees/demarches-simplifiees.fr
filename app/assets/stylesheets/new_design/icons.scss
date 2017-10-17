@@ -1,4 +1,4 @@
-i {
+.icon {
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -55,5 +55,9 @@ i {
 
   &.lock {
     background-image: image-url("icons/lock.svg");
+  }
+
+  &.printer {
+    background-image: image-url("icons/printer.svg");
   }
 }
