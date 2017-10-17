@@ -4,6 +4,10 @@
 .table.dossiers-table {
   font-size: 14px;
 
+  th {
+    vertical-align: middle;
+  }
+
   td {
     padding: 0;
   }
