@@ -35,5 +35,7 @@ module TPS
     end
 
     config.active_job.queue_adapter = :delayed_job
+
+    config.action_view.sanitized_allowed_tags = ActionView::Base.sanitized_allowed_tags + ['u']
   end
 end
