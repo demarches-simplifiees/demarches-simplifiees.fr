@@ -6,6 +6,7 @@
 
   th {
     vertical-align: middle;
+    padding: (2 * $default-spacer) 2px;
   }
 
   td {
@@ -24,7 +25,10 @@
 
   .cell-link {
     color: $black;
-    padding: (3 * $default-spacer) 2px;
+    // In order to have identical height in the table header and the table rows,
+    // we compensate for the height difference between the biggest element of the header
+    // (the Personnaliser button, 38px) and the biggest cell-link element of the rows (the label, 28px)
+    padding: calc((2 * #{$default-spacer}) + ((38px - 28px) / 2)) 2px;
     display: block;
   }
 
