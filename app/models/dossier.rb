@@ -60,7 +60,7 @@ class Dossier < ActiveRecord::Base
   scope :termine,                     -> { not_archived.state_termine }
   scope :downloadable,                -> { state_not_brouillon.includes(:entreprise, :etablissement, :champs, :champs_private) }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
-  scope :without_followers,           -> { includes(:follows).where(follows: { id: nil }) }
+  scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :with_unread_notifications,   -> { where(notifications: { already_read: false }) }
 
   accepts_nested_attributes_for :individual

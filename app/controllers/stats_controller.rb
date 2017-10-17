@@ -36,13 +36,16 @@ class StatsController < ApplicationController
 
   private
 
+  def max_date
+    if administration_signed_in?
+      Time.now.to_date
+    else
+      Time.now.beginning_of_month - 1.second
+    end
+  end
+
   def last_four_months_hash(association, date_attribute)
     min_date = 3.months.ago.beginning_of_month.to_date
-    if administration_signed_in?
-      max_date = Time.now.to_date
-    else
-      max_date = Time.now.beginning_of_month - 1.second
-    end
 
      association
       .where(date_attribute => min_date..max_date)
@@ -56,6 +59,7 @@ class StatsController < ApplicationController
   def cumulative_hash(association, date_attribute)
     sum = 0
     association
+      .where("#{date_attribute.to_s} < ?", max_date)
       .group("DATE_TRUNC('month', #{date_attribute.to_s})")
       .count
       .to_a
