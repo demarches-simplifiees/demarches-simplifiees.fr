@@ -82,6 +82,7 @@ EOF
 
     Rake::Task["db:migrate"].invoke
     Rake::Task["db:environment:set"].invoke("RAILS_ENV=development")
+    Rake::Task["db:test:prepare"].invoke
   end
 
   task :console do
