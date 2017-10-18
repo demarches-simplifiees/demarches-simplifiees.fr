@@ -142,7 +142,7 @@ describe AttestationTemplate, type: :model do
 
     it 'provides a pseudo file' do
       expect(attestation.pdf.file).to exist
-      expect(attestation.pdf.filename).to eq('attestation')
+      expect(attestation.pdf.filename).to start_with('attestation')
     end
 
     context 'when the dossier and the procedure has an individual' do
