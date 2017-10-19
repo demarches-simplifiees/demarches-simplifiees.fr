@@ -1,4 +1,4 @@
-class AttestationUploader < BaseUploader
+class AttestationTemplateSignatureUploader < BaseUploader
   def root
     File.join(Rails.root, 'public')
   end
@@ -18,13 +18,21 @@ class AttestationUploader < BaseUploader
     end
   end
 
+  # Add a white list of extensions which are allowed to be uploaded.
+  # For images you might use something like this:
+  def extension_white_list
+    %w(jpg jpeg png)
+  end
+
   def filename
-    "attestation-#{secure_token}.pdf"
+    if file.present?
+      "attestation-template-signature-#{secure_token}.#{file.extension.downcase}"
+    end
   end
 
   private
 
   def secure_token
-    model.content_secure_token ||= SecureRandom.uuid
+    model.signature_secure_token ||= SecureRandom.uuid
   end
 end
