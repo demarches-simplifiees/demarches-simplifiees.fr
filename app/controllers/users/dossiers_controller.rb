@@ -161,7 +161,7 @@ class Users::DossiersController < UsersController
       dossier.destroy
       flash.notice = 'Brouillon supprimé'
     end
-    redirect_to url_for users_dossiers_path
+    redirect_to url_for users_dossiers_path(liste: 'brouillon')
   end
 
   def text_summary
