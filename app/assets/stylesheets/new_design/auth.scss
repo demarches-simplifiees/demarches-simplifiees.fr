@@ -65,13 +65,15 @@ $auth-breakpoint: $two-columns-breakpoint;
 }
 
 .auth-form {
-  .reset-password {
-    margin-top: - 3 * $default-spacer;
-    margin-bottom: $default-spacer;
+  .auth-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4 * $default-spacer;
   }
 
   .remember-me {
     display: inline-block;
+    margin-bottom: 0;
   }
 
   .separation {
@@ -125,5 +127,15 @@ $auth-breakpoint: $two-columns-breakpoint;
     input[type=submit] {
       margin-bottom: 2 * $default-padding;
     }
+  }
+}
+
+.sign-in-form .form {
+  input[type="password"] {
+    margin-bottom: $default-spacer;
+  }
+
+  input[type="checkbox"] {
+    margin-bottom: 0;
   }
 }
