@@ -27,7 +27,7 @@
 
         %td{ id: "dossier_#{dossier.id}_state" }= dossier.display_state
         %td= dossier.last_update
-        %td= link_to('X', url_for(controller: 'dossiers', action: :destroy, id: dossier.id), 'data-method' => :delete, class: 'btn-sm btn-danger') if @liste == "brouillon"
+        %td= link_to('X', url_for(controller: 'dossiers', action: :destroy, id: dossier.id), 'data-confirm' => "Voulez-vous supprimer la brouillon ?", 'data-method' => :delete, class: 'btn-sm btn-danger') if @liste == "brouillon"
 
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links
