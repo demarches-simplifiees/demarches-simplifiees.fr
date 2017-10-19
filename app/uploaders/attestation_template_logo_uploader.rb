@@ -1,4 +1,4 @@
-class AttestationTemplateImageUploader < BaseUploader
+class AttestationTemplateLogoUploader < BaseUploader
   def root
     File.join(Rails.root, 'public')
   end
@@ -22,5 +22,17 @@ class AttestationTemplateImageUploader < BaseUploader
   # For images you might use something like this:
   def extension_white_list
     %w(jpg jpeg png)
+  end
+
+  def filename
+    if file.present?
+      "attestation-template-logo-#{secure_token}.#{file.extension.downcase}"
+    end
+  end
+
+  private
+
+  def secure_token
+    model.logo_secure_token ||= SecureRandom.uuid
   end
 end
