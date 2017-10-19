@@ -3,8 +3,8 @@ class AttestationTemplate < ApplicationRecord
 
   belongs_to :procedure
 
-  mount_uploader :logo, AttestationTemplateImageUploader
-  mount_uploader :signature, AttestationTemplateImageUploader
+  mount_uploader :logo, AttestationTemplateLogoUploader
+  mount_uploader :signature, AttestationTemplateSignatureUploader
 
   validate :logo_signature_file_size
   validates :footer, length: { maximum: 190 }
