@@ -76,12 +76,14 @@ EOF
     local_file = "/tmp/#{filename}"
     run_and_stop_if_error "scp deploy@sgmap_backup:/var/backup/production1/db/#{filename} #{local_file}"
 
-    Rake::Task["db:drop"].invoke
-    Rake::Task["db:create"].invoke
+    dev_env_param = "RAILS_ENV=development"
+
+    Rake::Task["db:drop"].invoke(dev_env_param)
+    Rake::Task["db:create"].invoke(dev_env_param)
     run_and_stop_if_error "psql tps_development -f #{local_file}"
 
-    Rake::Task["db:migrate"].invoke
-    Rake::Task["db:environment:set"].invoke("RAILS_ENV=development")
+    Rake::Task["db:migrate"].invoke(dev_env_param)
+    Rake::Task["db:environment:set"].invoke(dev_env_param)
     Rake::Task["db:test:prepare"].invoke
   end
 
