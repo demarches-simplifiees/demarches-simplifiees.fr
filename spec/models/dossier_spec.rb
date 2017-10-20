@@ -792,6 +792,30 @@ describe Dossier do
     end
   end
 
+  describe "#send_draft_notification_email" do
+    let(:procedure) { create(:procedure) }
+    let(:user) { create(:user) }
+
+    before do
+      ActionMailer::Base.deliveries.clear
+    end
+
+    it "send an email when the dossier is created for the very first time" do
+      expect { Dossier.create(procedure: procedure, state: "draft", user: user) }.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
+
+      mail = ActionMailer::Base.deliveries.last
+      expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche : #{procedure.libelle}")
+    end
+
+    it "does not send an email when the dossier is created with a non draft state" do
+      expect { Dossier.create(procedure: procedure, state: "initiated", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "received", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "closed", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "refused", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "without_continuation", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+    end
+  end
+
   describe '.build_attestation' do
     let(:attestation_template) { nil }
     let(:procedure) { create(:procedure, attestation_template: attestation_template) }
