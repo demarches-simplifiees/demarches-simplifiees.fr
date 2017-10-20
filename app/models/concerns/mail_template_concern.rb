@@ -36,7 +36,7 @@ module MailTemplateConcern
 
   def replace_tags(string, dossier)
     TAGS.inject(string) do |acc, tag|
-      acc.gsub!("--#{tag[:name]}--", replace_tag(tag, dossier)) || acc
+      acc.gsub("--#{tag[:name]}--", replace_tag(tag, dossier)) || acc
     end
   end
 
