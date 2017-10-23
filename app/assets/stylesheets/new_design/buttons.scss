@@ -93,8 +93,12 @@
     }
   }
 
-  &.icon-only .icon {
-    margin-right: 0;
+  &.icon-only {
+    padding: 9px 16px;
+
+    .icon {
+      margin-right: 0;
+    }
   }
 }
 
