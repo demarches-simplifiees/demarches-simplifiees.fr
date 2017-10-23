@@ -6,7 +6,7 @@
           = link_to dossier.procedure.libelle.truncate_words(10), procedure_path(dossier.procedure), title: dossier.procedure.libelle
         %li
           = "Dossier nº #{dossier.id}"
-      %div
+      .mixed-buttons-bar
         = link_to print_dossier_path(dossier.procedure, dossier), target: "_blank", class: "button icon-only" do
           .icon.printer>
         = render partial: "new_gestionnaire/procedures/dossier_actions", locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: current_gestionnaire&.follow?(dossier) }
