@@ -80,13 +80,6 @@ $landing-breakpoint: 1040px;
   }
 }
 
-.hero-phone-cta {
-  color: $grey;
-  text-align: center;
-  width: 293px;
-  margin-top: 12px;
-}
-
 .landing-panel-title {
   width: 100%;
   font-size: 30px;
@@ -275,15 +268,15 @@ $cta-panel-button-border-size: 2px;
 
 .cta-panel-button {
   @include horizontal-padding(30px);
-
+  @include vertical-padding(10px);
   display: block;
-  padding: 10px;
   border-radius: 100px;
   border: $cta-panel-button-border-size solid #FFFFFF;
   color: #FFFFFF;
   font-size: 24px;
   text-align: center;
   cursor: pointer;
+  margin-top: 20px;
 
   &:hover {
     color: #FFFFFF;
@@ -295,12 +288,4 @@ $cta-panel-button-border-size: 2px;
     color: #FFFFFF;
     text-decoration: none;
   }
-}
-
-.cta-panel-phone-cta {
-  color: rgba(255, 255, 255, 0.9);
-  text-align: center;
-  width: 293px;
-  margin-top: 12px;
-  margin-bottom: 0;
 }

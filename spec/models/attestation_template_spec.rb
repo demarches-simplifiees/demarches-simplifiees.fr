@@ -102,7 +102,7 @@ describe AttestationTemplate, type: :model do
     let(:entreprise) { create(:entreprise, etablissement: etablissement) }
     let(:types_de_champ) { [] }
     let(:types_de_champ_private) { [] }
-    let(:dossier) { create(:dossier, procedure: procedure, individual: individual, entreprise: entreprise) }
+    let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, entreprise: entreprise) }
     let(:template_title) { 'title' }
     let(:template_body) { 'body' }
     let(:attestation_template) do
