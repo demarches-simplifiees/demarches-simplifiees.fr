@@ -25,7 +25,7 @@
                 %li
                   %object
                     = link_to(procedure_path(p, statut: 'suivis')) do
-                      - if @notifications_count_per_procedure[p.id].present?
+                      - if current_gestionnaire.notifications_per_procedure[p.id].present?
                         %span.notifications{ 'aria-label': "notifications" }
                       - followed_count = @followed_dossiers_count_per_procedure[p.id] || 0
                       .stats-number
