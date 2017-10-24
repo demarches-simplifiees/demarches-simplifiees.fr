@@ -18,3 +18,9 @@
     margin-bottom: -1px;
   }
 }
+
+.mixed-buttons-bar .button {
+  // Needed so that buttons without text
+  // are ligned with those that have text
+  vertical-align: top;
+}
