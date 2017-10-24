@@ -175,6 +175,12 @@ class Gestionnaire < ActiveRecord::Base
     Dossier.where(id: dossiers_id_with_notifications(dossiers)).group(:procedure_id).count
   end
 
+  def mark_tab_as_seen(dossier, tab)
+    attributes = {}
+    attributes["#{tab}_seen_at"] = DateTime.now
+    Follow.where(gestionnaire: self, dossier: dossier).update_all(attributes)
+  end
+
   private
 
   def valid_couple_table_attr? table, column

@@ -550,4 +550,23 @@ describe Gestionnaire, type: :model do
       it { is_expected.to match({ procedure.id => 1 }) }
     end
   end
+
+  describe '#mark_tab_as_seen' do
+    let!(:dossier) { create(:dossier, :followed, state: 'initiated') }
+    let(:gestionnaire) { dossier.follows.first.gestionnaire }
+    let(:freeze_date) { DateTime.parse('12/12/2012') }
+
+    context 'when demande is acknowledged' do
+      let(:follow) { gestionnaire.follows.find_by(dossier: dossier) }
+
+      before do
+        Timecop.freeze(freeze_date)
+        gestionnaire.mark_tab_as_seen(dossier, :demande)
+      end
+
+      it { expect(follow.demande_seen_at).to eq(freeze_date) }
+
+      after { Timecop.return }
+    end
+  end
 end
