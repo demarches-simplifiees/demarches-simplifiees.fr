@@ -1,5 +1,5 @@
 class Cerfa < ActiveRecord::Base
-  belongs_to :dossier
+  belongs_to :dossier, touch: true
   belongs_to :user
 
   mount_uploader :content, CerfaUploader

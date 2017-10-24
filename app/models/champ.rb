@@ -1,5 +1,5 @@
 class Champ < ActiveRecord::Base
-  belongs_to :dossier
+  belongs_to :dossier, touch: true
   belongs_to :type_de_champ
   has_many :commentaires
 
