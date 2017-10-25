@@ -1,5 +1,5 @@
 class Avis < ApplicationRecord
-  belongs_to :dossier
+  belongs_to :dossier, touch: true
   belongs_to :gestionnaire
   belongs_to :claimant, class_name: 'Gestionnaire'
 
