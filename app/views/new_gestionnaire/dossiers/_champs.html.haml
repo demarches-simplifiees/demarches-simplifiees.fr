@@ -8,5 +8,5 @@
         - elsif c.type_champ != "explication"
           %th.libelle
             = "#{c.libelle} :"
-          %td
+          %td.rich-text
             = sanitize(c.value)

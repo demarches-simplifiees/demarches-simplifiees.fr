@@ -3,18 +3,18 @@
 @import "constants";
 
 .messagerie {
-  ul {
+  .messages-list {
     max-height: 350px;
     overflow-y: scroll;
     border: 1px solid $border-grey;
     padding: 2 * $default-spacer;
     margin-bottom: $default-spacer;
-  }
 
-  li {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 2 * $default-padding;
+    > li {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 2 * $default-padding;
+    }
   }
 
   .person-icon {
