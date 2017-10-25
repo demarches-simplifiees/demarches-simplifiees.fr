@@ -7,9 +7,7 @@
         = link_to(procedure_path(p)) do
           .flex
 
-            .procedure-logo
-              - if p.logo.present?
-                = image_tag p.logo, alt: "Logo de la procédure"
+            .procedure-logo{ style: p.logo.present? ? "background-image: url(#{p.logo.url})" : nil }
 
             .procedure-details
               %p.procedure-title
