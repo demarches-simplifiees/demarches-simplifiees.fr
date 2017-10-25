@@ -1,5 +1,5 @@
 class PieceJustificative < ActiveRecord::Base
-  belongs_to :dossier
+  belongs_to :dossier, touch: true
   belongs_to :type_de_piece_justificative
   has_one :commentaire
 

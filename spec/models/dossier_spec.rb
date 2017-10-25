@@ -886,4 +886,62 @@ describe Dossier do
     it { expect(dossier.get_value('type_de_champ', @champ_public.type_de_champ.id.to_s)).to eq(dossier.champs.first.value) }
     it { expect(dossier.get_value('type_de_champ_private', @champ_private.type_de_champ.id.to_s)).to eq(dossier.champs_private.first.value) }
   end
+
+  describe 'updated_at', focus: true do
+    let!(:dossier) { create(:dossier) }
+    let(:modif_date) { DateTime.parse('01/01/2100') }
+
+    before { Timecop.freeze(modif_date) }
+
+    subject do
+      dossier.reload
+      dossier.updated_at
+    end
+
+    it { is_expected.not_to eq(modif_date) }
+
+    context 'when a cerfa is modified' do
+      before { dossier.cerfa << create(:cerfa) }
+
+      it { is_expected.to eq(modif_date) }
+    end
+
+    context 'when a piece justificative is modified' do
+      before { dossier.pieces_justificatives << create(:piece_justificative, :contrat) }
+
+      it { is_expected.to eq(modif_date) }
+    end
+
+    context 'when a champ is modified' do
+      before { dossier.champs.first.update_attribute('value', 'yop') }
+
+      it { is_expected.to eq(modif_date) }
+    end
+
+    context 'when a quartier_prioritaire is modified' do
+      before { dossier.quartier_prioritaires << create(:quartier_prioritaire) }
+
+      it { is_expected.to eq(modif_date) }
+    end
+
+    context 'when a cadastre is modified' do
+      before { dossier.cadastres << create(:cadastre) }
+
+      it { is_expected.to eq(modif_date) }
+    end
+
+    context 'when a commentaire is modified' do
+      before { dossier.commentaires << create(:commentaire) }
+
+      it { is_expected.to eq(modif_date) }
+    end
+
+    context 'when an avis is modified' do
+      before { dossier.avis << create(:avis) }
+
+      it { is_expected.to eq(modif_date) }
+    end
+
+    after { Timecop.return }
+  end
 end
