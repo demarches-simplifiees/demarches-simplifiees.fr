@@ -30,6 +30,10 @@
     width: 93px;
     margin-right: 3 * $default-spacer;
     flex-shrink: 0;
+    background-image: url("your/url/here");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 95% 50%;
   }
 
   .procedure-title {
