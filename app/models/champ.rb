@@ -75,6 +75,8 @@ class Champ < ActiveRecord::Base
       case type_champ
       when 'textarea'
         ActionView::Base.full_sanitizer.sanitize(value)
+      when 'yes_no'
+        value == 'yes' ? 'oui' : 'non'
       else
         value
       end

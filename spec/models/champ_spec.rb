@@ -84,5 +84,20 @@ describe Champ do
       it { expect(champ.for_export).to eq('gras') }
     end
 
+    context 'when type_de_champ is yes_no' do
+      let(:type_champ) { 'yes_no' }
+
+      context 'if yes' do
+        let(:value) { 'yes' }
+
+        it { expect(champ.for_export).to eq('oui') }
+      end
+
+      context 'if no' do
+        let(:value) { 'no' }
+
+        it { expect(champ.for_export).to eq('non') }
+      end
+    end
   end
 end
