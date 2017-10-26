@@ -70,6 +70,19 @@ class Champ < ActiveRecord::Base
     end
   end
 
+  def for_export
+    if value.present?
+      case type_champ
+      when 'textarea'
+        ActionView::Base.full_sanitizer.sanitize(value)
+      else
+        value
+      end
+    else
+      nil
+    end
+  end
+
   private
 
   def format_date_to_iso
