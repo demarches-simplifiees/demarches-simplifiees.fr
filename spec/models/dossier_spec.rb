@@ -887,7 +887,7 @@ describe Dossier do
     it { expect(dossier.get_value('type_de_champ_private', @champ_private.type_de_champ.id.to_s)).to eq(dossier.champs_private.first.value) }
   end
 
-  describe 'updated_at', focus: true do
+  describe 'updated_at' do
     let!(:dossier) { create(:dossier) }
     let(:modif_date) { DateTime.parse('01/01/2100') }
 
