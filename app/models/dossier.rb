@@ -251,8 +251,8 @@ class Dossier < ActiveRecord::Base
   def to_sorted_values
     serialized_dossier = DossierTableExportSerializer.new(self)
     values = serialized_dossier.attributes.values
-    values += self.ordered_champs.map(&:value)
-    values += self.ordered_champs_private.map(&:value)
+    values += self.ordered_champs.map(&:for_export)
+    values += self.ordered_champs_private.map(&:for_export)
     values += self.export_entreprise_data.values
     values
   end

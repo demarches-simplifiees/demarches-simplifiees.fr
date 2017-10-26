@@ -63,4 +63,26 @@ describe Champ do
       end
     end
   end
+
+  describe 'for_export' do
+    let(:type_de_champ) { create(:type_de_champ_public, type_champ: type_champ) }
+    let(:champ) { Champ.new(type_de_champ: type_de_champ, value: value) }
+
+    before { champ.save }
+
+    context 'when type_de_champ is text' do
+      let(:type_champ) { 'text' }
+      let(:value) { '123' }
+
+      it { expect(champ.for_export).to eq('123') }
+    end
+
+    context 'when type_de_champ is textarea' do
+      let(:type_champ) { 'textarea' }
+      let(:value) { '<b>gras<b>' }
+
+      it { expect(champ.for_export).to eq('gras') }
+    end
+
+  end
 end
