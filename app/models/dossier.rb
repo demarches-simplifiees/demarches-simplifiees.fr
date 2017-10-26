@@ -232,7 +232,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def full_data_strings_array
-    data_with_champs.map do |value|
+    to_sorted_values.map do |value|
       serialize_value_for_export(value)
     end
   end
@@ -248,13 +248,13 @@ class Dossier < ActiveRecord::Base
     convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
   end
 
-  def data_with_champs
+  def to_sorted_values
     serialized_dossier = DossierTableExportSerializer.new(self)
-    data = serialized_dossier.attributes.values
-    data += self.ordered_champs.map(&:value)
-    data += self.ordered_champs_private.map(&:value)
-    data += self.export_entreprise_data.values
-    data
+    values = serialized_dossier.attributes.values
+    values += self.ordered_champs.map(&:value)
+    values += self.ordered_champs_private.map(&:value)
+    values += self.export_entreprise_data.values
+    values
   end
 
   def export_headers
