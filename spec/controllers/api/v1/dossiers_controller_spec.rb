@@ -247,6 +247,19 @@ describe API::V1::DossiersController do
             it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'quartier prioritaire', type_champ: 'quartier_prioritaire', order_place: -1, descripton: ''}) }
             it { expect(subject[:value]).to match(dossier.quartier_prioritaires.first.geometry.symbolize_keys) }
           end
+
+          context 'when the dossier includes a cadastre' do
+            before do
+              dossier.cadastres << create(:cadastre)
+            end
+
+            subject do
+              super().find { |champ| champ[:type_de_champ][:type_champ] == 'cadastre' }
+            end
+
+            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'cadastre', type_champ: 'cadastre', order_place: -1, descripton: ''}) }
+            it { expect(subject[:value]).to match(dossier.cadastres.first.geometry.symbolize_keys) }
+          end
         end
 
         describe 'champs_private' do
