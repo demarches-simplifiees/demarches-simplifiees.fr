@@ -23,7 +23,7 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :types_de_piece_justificative
 
   has_many :champs do
-    object.champs + object.quartier_prioritaires
+    object.champs + object.quartier_prioritaires + object.cadastres
   end
 
   def email
