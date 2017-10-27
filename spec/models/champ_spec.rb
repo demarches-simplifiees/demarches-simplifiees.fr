@@ -99,5 +99,14 @@ describe Champ do
         it { expect(champ.for_export).to eq('non') }
       end
     end
+
+    context 'when type_de_champ is multiple_drop_down_list' do
+      let(:type_champ) { 'multiple_drop_down_list' }
+      let(:value) { '["Crétinier", "Mousserie"]' }
+
+      before { type_de_champ.drop_down_list = create(:drop_down_list) }
+
+      it { expect(champ.for_export).to eq('Crétinier, Mousserie') }
+    end
   end
 end
