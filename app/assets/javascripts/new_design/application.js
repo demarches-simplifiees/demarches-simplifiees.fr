@@ -18,5 +18,6 @@
 //= require highcharts
 //= require chartkick
 //= require select2
+//= require select2_locale_fr
 //= require typeahead.bundle
 //= require_tree .
