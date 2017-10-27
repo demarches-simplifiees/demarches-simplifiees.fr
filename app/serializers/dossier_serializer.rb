@@ -18,10 +18,13 @@ class DossierSerializer < ActiveModel::Serializer
   has_one :etablissement
   has_many :cerfa
   has_many :commentaires
-  has_many :champs
   has_many :champs_private
   has_many :pieces_justificatives
   has_many :types_de_piece_justificative
+
+  has_many :champs do
+    object.champs + object.quartier_prioritaires
+  end
 
   def email
     object.user.try(:email)

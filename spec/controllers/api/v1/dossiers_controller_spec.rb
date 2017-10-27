@@ -234,6 +234,19 @@ describe API::V1::DossiersController do
               it { expect(subject[:type_champ]).to eq('text') }
             end
           end
+
+          context 'when the dossier includes a quartier prioritaire' do
+            before do
+              dossier.quartier_prioritaires << create(:quartier_prioritaire)
+            end
+
+            subject do
+              super().find { |champ| champ[:type_de_champ][:type_champ] == 'quartier_prioritaire' }
+            end
+
+            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'quartier prioritaire', type_champ: 'quartier_prioritaire', order_place: -1, descripton: ''}) }
+            it { expect(subject[:value]).to match(dossier.quartier_prioritaires.first.geometry.symbolize_keys) }
+          end
         end
 
         describe 'champs_private' do
