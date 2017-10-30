@@ -60,7 +60,7 @@
               .type= "Un attribut a été changé: #{notification.liste.last}"
           - elsif ['piece_justificative'].include?(notification.type_notif)
             - if notification.liste.size > 1
-              .type= "Plusieurs pièces jointes ont été changés, dont: #{notification.liste.join(" ")}"
+              .type= "Plusieurs pièces jointes ont été changées, dont: #{notification.liste.join(" ")}"
             - else
               .type= "Une pièce jointe a été changée: #{notification.liste.last}"
           - else
