@@ -23,7 +23,11 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :types_de_piece_justificative
 
   has_many :champs do
-    object.champs + object.quartier_prioritaires + object.cadastres
+    champs = object.champs + object.quartier_prioritaires + object.cadastres
+    if object.user_geometry.present?
+      champs << object.user_geometry
+    end
+    champs
   end
 
   def email
@@ -40,5 +44,20 @@ class DossierSerializer < ActiveModel::Serializer
 
   def invites
     object.invites_gestionnaires.pluck(:email)
+  end
+
+  private
+
+  def user_geometry(dossier)
+    {
+      value: dossier.geometry,
+      type_de_champ: {
+        id: -1,
+        libelle: 'user_geometry',
+        type_champ: 'user_geometry',
+        order_place: -1,
+        descripton: ''
+      }
+    }
   end
 end
