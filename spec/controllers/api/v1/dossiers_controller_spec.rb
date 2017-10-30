@@ -260,6 +260,20 @@ describe API::V1::DossiersController do
             it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'cadastre', type_champ: 'cadastre', order_place: -1, descripton: ''}) }
             it { expect(subject[:value]).to match(dossier.cadastres.first.geometry.symbolize_keys) }
           end
+
+          context 'when the dossier includes some user geometry' do
+            before do
+              dossier.json_latlngs = '[[{"lat": 2.0, "lng": 102.0}, {"lat": 3.0, "lng": 103.0}, {"lat": 2.0, "lng": 102.0}]]'
+              dossier.save
+            end
+
+            subject do
+              super().find { |champ| champ[:type_de_champ][:type_champ] == 'user_geometry' }
+            end
+
+            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'user_geometry', type_champ: 'user_geometry', order_place: -1, descripton: ''}) }
+            it { expect(subject[:value]).to match(UserGeometry.new(dossier.json_latlngs).value) }
+          end
         end
 
         describe 'champs_private' do
