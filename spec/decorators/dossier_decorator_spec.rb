@@ -1,7 +1,12 @@
 require 'spec_helper'
 
 describe DossierDecorator do
-  let(:dossier) { create(:dossier, created_at: Time.new(2015, 12, 24, 14, 10), updated_at: Time.new(2015, 12, 24, 14, 10)) }
+  let(:dossier) do
+    dossier = create(:dossier, created_at: Time.new(2015, 12, 24, 14, 10))
+    dossier.update_column('updated_at', Time.new(2015, 12, 24, 14, 10))
+    dossier
+  end
+
   subject { dossier.decorate }
 
   describe 'first_creation' do

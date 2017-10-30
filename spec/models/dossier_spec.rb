@@ -412,8 +412,8 @@ describe Dossier do
       }
     end
 
-    describe '#data_with_champs' do
-      subject { dossier.data_with_champs }
+    describe '#to_sorted_values' do
+      subject { dossier.to_sorted_values }
 
       it { expect(subject[0]).to be_a_kind_of(Integer) }
       it { expect(subject[1]).to be_a_kind_of(Time) }
@@ -441,7 +441,7 @@ describe Dossier do
       context 'dossier for individual' do
         let(:dossier_with_individual) { create(:dossier, :for_individual, user: user, procedure: procedure) }
 
-        subject { dossier_with_individual.data_with_champs }
+        subject { dossier_with_individual.to_sorted_values }
 
         it { expect(subject[12]).to eq(dossier_with_individual.individual.gender) }
         it { expect(subject[13]).to eq(dossier_with_individual.individual.prenom) }
@@ -887,7 +887,7 @@ describe Dossier do
     it { expect(dossier.get_value('type_de_champ_private', @champ_private.type_de_champ.id.to_s)).to eq(dossier.champs_private.first.value) }
   end
 
-  describe 'updated_at', focus: true do
+  describe 'updated_at' do
     let!(:dossier) { create(:dossier) }
     let(:modif_date) { DateTime.parse('01/01/2100') }
 

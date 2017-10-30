@@ -1,7 +1,7 @@
 = render partial: "header", locals: { dossier: @dossier }
 
 .messagerie.container
-  %ul
+  %ul.messages-list
     - @dossier.commentaires.each do |commentaire|
       %li
         = render partial: 'commentaire_icon', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
@@ -13,7 +13,8 @@
             - if ![current_gestionnaire.email, @dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
               %span.guest Invité
             %span.date= I18n.l(commentaire.created_at.localtime, format: '%H:%M le %d/%m/%Y')
-          %p= sanitize(commentaire.body)
+          .rich-text
+            = sanitize(commentaire.body)
           - if file = commentaire.piece_justificative
             .attachment-link
               = link_to file.content_url, class: "button", target: "_blank", title: "Télécharger" do

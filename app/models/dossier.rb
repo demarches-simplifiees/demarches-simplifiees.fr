@@ -228,11 +228,11 @@ class Dossier < ActiveRecord::Base
       value = serialize_value_for_export(value)
       hash.store(key, value)
     end
-    return hash
+    hash
   end
 
   def full_data_strings_array
-    data_with_champs.map do |value|
+    to_sorted_values.map do |value|
       serialize_value_for_export(value)
     end
   end
@@ -245,16 +245,16 @@ class Dossier < ActiveRecord::Base
       etablissement_attr = EtablissementSerializer.new(Etablissement.new).attributes.map { |k, v| ["etablissement.#{k}".parameterize.underscore.to_sym, v] }.to_h
       entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.map { |k, v| ["entreprise.#{k}".parameterize.underscore.to_sym, v] }.to_h
     end
-    return convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
+    convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
   end
 
-  def data_with_champs
+  def to_sorted_values
     serialized_dossier = DossierTableExportSerializer.new(self)
-    data = serialized_dossier.attributes.values
-    data += self.ordered_champs.map(&:value)
-    data += self.ordered_champs_private.map(&:value)
-    data += self.export_entreprise_data.values
-    return data
+    values = serialized_dossier.attributes.values
+    values += self.ordered_champs.map(&:for_export)
+    values += self.ordered_champs_private.map(&:for_export)
+    values += self.export_entreprise_data.values
+    values
   end
 
   def export_headers
@@ -263,7 +263,7 @@ class Dossier < ActiveRecord::Base
     headers += self.procedure.types_de_champ.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
     headers += self.procedure.types_de_champ_private.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
     headers += self.export_entreprise_data.keys
-    return headers
+    headers
   end
 
   def followers_gestionnaires
