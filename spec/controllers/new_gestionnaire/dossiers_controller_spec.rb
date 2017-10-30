@@ -111,12 +111,18 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   describe "#create_commentaire" do
     let(:saved_commentaire) { dossier.commentaires.first }
+    let(:file) { nil }
 
     before do
+      allow(ClamavService).to receive(:safe_file?).and_return(true)
+
       post :create_commentaire, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id,
-        commentaire: { body: 'body' }
+        commentaire: {
+          body: 'body',
+          file: file
+        }
       }
     end
 
@@ -125,6 +131,13 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(saved_commentaire.dossier).to eq(dossier) }
     it { expect(response).to redirect_to(messagerie_dossier_path(dossier.procedure, dossier)) }
     it { expect(gestionnaire.followed_dossiers).to include(dossier) }
+    it { expect(saved_commentaire.file.present?).to eq(false) }
+
+    context "with a file" do
+      let(:file) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
+
+      it { expect(saved_commentaire.file.present?).to eq(true) }
+    end
   end
 
   describe "#create_avis" do

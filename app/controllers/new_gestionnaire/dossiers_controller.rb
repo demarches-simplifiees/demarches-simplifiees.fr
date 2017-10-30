@@ -99,7 +99,7 @@ module NewGestionnaire
     end
 
     def commentaire_params
-      params.require(:commentaire).permit(:body)
+      params.require(:commentaire).permit(:body, :file)
     end
 
     def avis_params
