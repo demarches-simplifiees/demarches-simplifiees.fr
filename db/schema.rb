@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(version: 20171117165748) do
     t.datetime "updated_at",             null: false
     t.integer  "piece_justificative_id"
     t.integer  "champ_id"
+    t.string   "file"
     t.index ["champ_id"], name: "index_commentaires_on_champ_id", using: :btree
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id", using: :btree
   end
