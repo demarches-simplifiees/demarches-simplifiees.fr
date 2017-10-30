@@ -15,15 +15,21 @@
             - if ![current_gestionnaire.email, @dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
               %span.guest Invité
             %span.date= I18n.l(commentaire.created_at.localtime, format: '%H:%M le %d/%m/%Y')
-          .rich-text
-            = sanitize(commentaire.body)
-          - if file = commentaire.piece_justificative
+          %p.rich-text= sanitize(commentaire.body)
+
+          - if commentaire.file.present?
             .attachment-link
-              = link_to file.content_url, class: "button", target: "_blank", title: "Télécharger" do
+              = link_to commentaire.file.url, class: "button", target: "_blank", title: "Télécharger" do
                 .icon.attachment
-                = file.original_filename
+                = commentaire.file_identifier
+          - elsif commentaire.piece_justificative
+            .attachment-link
+              = link_to commentaire.piece_justificative.content_url, class: "button", target: "_blank", title: "Télécharger" do
+                .icon.attachment
+                = commentaire.piece_justificative.original_filename
 
   = form_for(Commentaire.new, url: commentaire_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' }) do |f|
     = f.text_area :body, rows: 5, placeholder: 'Répondre ici', required: true
+    = f.file_field :file
     .send-wrapper
       = f.submit 'Envoyer', class: 'button send', data: { disable_with: "Envoi..." }
