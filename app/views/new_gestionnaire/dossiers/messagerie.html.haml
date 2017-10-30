@@ -28,7 +28,7 @@
                 .icon.attachment
                 = commentaire.piece_justificative.original_filename
 
-  = form_for(Commentaire.new, url: commentaire_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' }) do |f|
+  = form_for(@commentaire, url: commentaire_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' }) do |f|
     = f.text_area :body, rows: 5, placeholder: 'Répondre ici', required: true
     = f.file_field :file
     .send-wrapper
