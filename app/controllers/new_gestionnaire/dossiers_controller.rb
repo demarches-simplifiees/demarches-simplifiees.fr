@@ -5,25 +5,22 @@ module NewGestionnaire
     end
 
     def show
-      @dossier = dossier
       dossier.notifications.demande.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :demande)
     end
 
     def messagerie
-      @dossier = dossier
       dossier.notifications.messagerie.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :messagerie)
+      @commentaire = Commentaire.new
     end
 
     def annotations_privees
-      @dossier = dossier
       dossier.notifications.annotations_privees.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :annotations_privees)
     end
 
     def avis
-      @dossier = dossier
       dossier.notifications.avis.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :avis)
     end
@@ -54,10 +51,16 @@ module NewGestionnaire
     end
 
     def create_commentaire
-      Commentaire.create(commentaire_params.merge(email: current_gestionnaire.email, dossier: dossier))
-      current_gestionnaire.follow(dossier)
-      flash.notice = "Message envoyé"
-      redirect_to messagerie_dossier_path(dossier.procedure, dossier)
+      @commentaire = Commentaire.new(commentaire_params.merge(email: current_gestionnaire.email, dossier: dossier))
+
+      if @commentaire.save
+        current_gestionnaire.follow(dossier)
+        flash.notice = "Message envoyé"
+        redirect_to messagerie_dossier_path(dossier.procedure, dossier)
+      else
+        flash.alert = @commentaire.errors.full_messages
+        render :messagerie
+      end
     end
 
     def position
@@ -95,7 +98,7 @@ module NewGestionnaire
     private
 
     def dossier
-      current_gestionnaire.dossiers.find(params[:dossier_id])
+      @dossier ||= current_gestionnaire.dossiers.find(params[:dossier_id])
     end
 
     def commentaire_params
