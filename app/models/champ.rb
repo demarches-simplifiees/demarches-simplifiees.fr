@@ -70,6 +70,23 @@ class Champ < ActiveRecord::Base
     end
   end
 
+  def for_export
+    if value.present?
+      case type_champ
+      when 'textarea'
+        ActionView::Base.full_sanitizer.sanitize(value)
+      when 'yes_no'
+        value == 'yes' ? 'oui' : 'non'
+      when 'multiple_drop_down_list'
+        drop_down_list.selected_options_without_decorator(self).join(', ')
+      else
+        value
+      end
+    else
+      nil
+    end
+  end
+
   private
 
   def format_date_to_iso
