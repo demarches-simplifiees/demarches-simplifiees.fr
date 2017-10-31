@@ -30,6 +30,12 @@
 
   = form_for(@commentaire, url: commentaire_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' }) do |f|
     = f.text_area :body, rows: 5, placeholder: 'Répondre ici', required: true
-    = f.file_field :file, accept: @commentaire.accept_extension_list
-    .send-wrapper
-      = f.submit 'Envoyer', class: 'button send', data: { disable_with: "Envoi..." }
+    .flex.justify-between
+      %div
+        = f.file_field :file, id: :file, accept: @commentaire.file.accept_extension_list
+        %label{ for: :file }
+          .notice
+            (taille max : 20 Mo)
+
+      .send-wrapper
+        = f.submit 'Envoyer', class: 'button send', data: { disable_with: "Envoi…" }
