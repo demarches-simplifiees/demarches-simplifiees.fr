@@ -26,21 +26,13 @@ class CommentairesController < ApplicationController
       @commentaire.dossier.next_step! 'user', 'comment' if current_user.email == @commentaire.dossier.user.email
     end
 
-    unless params[:piece_justificative].nil?
-      pj = PiecesJustificativesService.upload_one! @commentaire.dossier, current_user, params
-
-      if pj.errors.empty?
-        @commentaire.piece_justificative = pj
-      else
-        flash.alert = pj.errors.full_messages
-      end
-    end
+    @commentaire.file = params["file"]
 
     @commentaire.body = params['texte_commentaire']
-    unless @commentaire.body.blank? && @commentaire.piece_justificative.nil?
-      @commentaire.save unless flash.alert
+    if @commentaire.save
+      flash.notice = "Votre message a été envoyé"
     else
-      flash.alert = "Veuillez rédiger un message ou ajouter une pièce jointe."
+      flash.alert = "Veuillez rédiger un message ou ajouter une pièce jointe (maximum 20 Mo)"
     end
 
     if is_gestionnaire?
