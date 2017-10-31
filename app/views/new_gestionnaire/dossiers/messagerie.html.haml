@@ -30,6 +30,6 @@
 
   = form_for(@commentaire, url: commentaire_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' }) do |f|
     = f.text_area :body, rows: 5, placeholder: 'Répondre ici', required: true
-    = f.file_field :file
+    = f.file_field :file, accept: @commentaire.accept_extension_list
     .send-wrapper
       = f.submit 'Envoyer', class: 'button send', data: { disable_with: "Envoi..." }
