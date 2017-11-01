@@ -33,17 +33,30 @@
   }
 
   .icon.folder {
-    margin-right: $default-spacer;
     position: relative;
 
     .notifications {
-      top: 0px;
-      right: -10px;
+      top: -3px;
+      right: -6px;
+    }
+  }
+
+  .notification-col {
+    width: 30px;
+    text-align: center;
+
+    a {
+      font-size: 16px;
     }
   }
 
   .number-col {
     width: 110px;
+    text-align: center;
+  }
+
+  .folder-col {
+    text-align: center;
   }
 
   .status-col {
