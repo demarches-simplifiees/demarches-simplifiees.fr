@@ -74,6 +74,11 @@
       %table.table.dossiers-table.hoverable
         %thead
           %tr
+            - if @statut == 'suivis' || @statut == 'tous'
+              = render partial: "header_field", locals: { field: { "label" => "●", "table" => "notifications", "column" => "notifications" }, classname: "notification-col" }
+            - else
+              %th.notification-col
+
             = render partial: "header_field", locals: { field: { "label" => "Nº dossier", "table" => "self", "column" => "id" }, classname: "number-col" }
 
             - @displayed_fields.each do |field|
@@ -96,11 +101,13 @@
         %tbody
           - @dossiers.each do |dossier|
             %tr
+              %td.folder-col
+                .icon.folder
+                  - if current_gestionnaire.notifications_for_procedure(@procedure).include?(dossier.id)
+                    %span.notifications{ 'aria-label': 'notifications' }
+
               %td.number-col
                 = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
-                  .icon.folder
-                    - if current_gestionnaire.notifications_for_procedure(@procedure).include?(dossier.id)
-                      %span.notifications{ 'aria-label': 'notifications' }
                   = dossier.id
 
               - @displayed_fields.each do |field|
