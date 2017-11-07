@@ -111,6 +111,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   describe "#create_commentaire" do
     let(:saved_commentaire) { dossier.commentaires.first }
+    let(:body) { "body" }
     let(:file) { nil }
     let(:scan_result) { true }
 
@@ -119,7 +120,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         procedure_id: procedure.id,
         dossier_id: dossier.id,
         commentaire: {
-          body: 'body',
+          body: body,
           file: file
         }
       }
@@ -138,6 +139,14 @@ describe NewGestionnaire::DossiersController, type: :controller do
       expect(response).to redirect_to(messagerie_dossier_path(dossier.procedure, dossier))
       expect(gestionnaire.followed_dossiers).to include(dossier)
       expect(saved_commentaire.file.present?).to eq(false)
+    end
+
+    it { expect { subject }.to change(Commentaire, :count).by(1) }
+
+    context "without a body" do
+      let(:body) { nil }
+
+      it { expect { subject }.not_to change(Commentaire, :count) }
     end
 
     context "with a file" do
