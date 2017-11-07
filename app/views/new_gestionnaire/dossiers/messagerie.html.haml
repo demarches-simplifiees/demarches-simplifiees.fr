@@ -19,7 +19,7 @@
 
           - if commentaire.file.present?
             .attachment-link
-              = link_to commentaire.file.url, class: "button", target: "_blank", title: "Télécharger" do
+              = link_to commentaire.file_url, class: "button", target: "_blank", title: "Télécharger" do
                 .icon.attachment
                 = commentaire.file_identifier
           - elsif commentaire.piece_justificative
