@@ -35,6 +35,7 @@ fr:
       last: Dernier
       previous: Précédent
       first: Premier
+      truncate: '&hellip;'
 
   number:
     currency:
