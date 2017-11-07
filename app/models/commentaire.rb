@@ -17,6 +17,14 @@ class Commentaire < ActiveRecord::Base
     "#{email}, " + I18n.l(created_at.localtime, format: '%d %b %Y %H:%M')
   end
 
+  def file_url
+    if Features.remote_storage
+      RemoteDownloader.new(file.path).url
+    else
+      file.url
+    end
+  end
+
   private
 
   def notify
