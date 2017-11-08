@@ -4,6 +4,7 @@ class Commentaire < ActiveRecord::Base
   belongs_to :piece_justificative
 
   mount_uploader :file, CommentaireFileUploader
+  validate :is_virus_free?
 
   default_scope { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
@@ -43,5 +44,11 @@ class Commentaire < ActiveRecord::Base
 
   def notify_user
     NotificationMailer.new_answer(dossier).deliver_now!
+  end
+
+  def is_virus_free?
+    if file.present? && file_changed? && !ClamavService.safe_file?(file.path)
+      errors.add(:file, "Virus détecté dans le fichier joint, merci de changer de fichier")
+    end
   end
 end
