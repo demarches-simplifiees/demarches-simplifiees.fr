@@ -73,10 +73,6 @@ describe Backoffice::CommentairesController, type: :controller do
           subject
         end
 
-        it 'Internal notification is created' do
-          expect { subject }.to change(Notification, :count).by (1)
-        end
-
         describe 'commentaire created' do
           let(:commentaire) { Commentaire.last }
 
