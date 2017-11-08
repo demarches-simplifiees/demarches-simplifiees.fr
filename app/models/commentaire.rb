@@ -4,6 +4,7 @@ class Commentaire < ActiveRecord::Base
   belongs_to :piece_justificative
 
   mount_uploader :file, CommentaireFileUploader
+  validates :file, file_size: { maximum: 20.megabytes, message: "La taille du fichier doit être inférieure à 20 Mo" }
   validate :is_virus_free?
 
   default_scope { order(created_at: :asc) }
