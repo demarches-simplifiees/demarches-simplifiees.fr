@@ -1,15 +1,6 @@
 class Users::SessionsController < Sessions::SessionsController
   layout "new_application"
 
-  # before_action :configure_sign_in_params, only: [:create]
-
-  def demo
-    return redirect_to root_path if Rails.env.production?
-
-    @user = User.new(email: DemoEmails[:user], password: 'password')
-    render 'new'
-  end
-
   # GET /resource/sign_in
   def new
     unless user_return_to_procedure_id.nil? # WTF ?
