@@ -15,7 +15,7 @@
               %span.badge= @a_suivre_dossiers.count
 
           %li{ class: (@statut == 'suivis') ? 'active' : nil }>
-            - if @followed_dossiers.with_unread_notifications.present?
+            - if current_gestionnaire.notifications_for_procedure(@procedure).present?
               %span.notifications{ 'aria-label': 'notifications' }
             = link_to(procedure_path(@procedure, statut: 'suivis')) do
               = t('pluralize.followed', count: @followed_dossiers.count)
@@ -27,7 +27,7 @@
               %span.badge= @termines_dossiers.count
 
           %li{ class: (@statut == 'tous') ? 'active' : nil }>
-            - if @followed_dossiers.with_unread_notifications.present?
+            - if current_gestionnaire.notifications_for_procedure(@procedure).present?
               %span.notifications{ 'aria-label': 'notifications' }
             = link_to(procedure_path(@procedure, statut: 'tous')) do
               tous les dossiers
@@ -99,7 +99,7 @@
               %td.number-col
                 = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
                   .icon.folder
-                    - if @followed_dossiers.with_unread_notifications.include?(dossier)
+                    - if current_gestionnaire.notifications_for_procedure(@procedure).include?(dossier.id)
                       %span.notifications{ 'aria-label': 'notifications' }
                   = dossier.id
 

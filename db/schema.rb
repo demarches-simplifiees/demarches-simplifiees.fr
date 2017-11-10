@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171019113610) do
+ActiveRecord::Schema.define(version: 20171024135653) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,10 +136,12 @@ ActiveRecord::Schema.define(version: 20171019113610) do
   end
 
   create_table "champs", force: :cascade do |t|
-    t.string  "value"
-    t.integer "type_de_champ_id"
-    t.integer "dossier_id"
-    t.string  "type"
+    t.string   "value"
+    t.integer  "type_de_champ_id"
+    t.integer  "dossier_id"
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id", using: :btree
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id", using: :btree
   end
@@ -250,8 +252,12 @@ ActiveRecord::Schema.define(version: 20171019113610) do
   end
 
   create_table "follows", force: :cascade do |t|
-    t.integer "gestionnaire_id", null: false
-    t.integer "dossier_id",      null: false
+    t.integer  "gestionnaire_id",             null: false
+    t.integer  "dossier_id",                  null: false
+    t.datetime "demande_seen_at"
+    t.datetime "annotations_privees_seen_at"
+    t.datetime "avis_seen_at"
+    t.datetime "messagerie_seen_at"
     t.index ["dossier_id"], name: "index_follows_on_dossier_id", using: :btree
     t.index ["gestionnaire_id", "dossier_id"], name: "index_follows_on_gestionnaire_id_and_dossier_id", unique: true, using: :btree
     t.index ["gestionnaire_id"], name: "index_follows_on_gestionnaire_id", using: :btree
@@ -348,6 +354,7 @@ ActiveRecord::Schema.define(version: 20171019113610) do
     t.integer  "user_id"
     t.string   "original_filename"
     t.string   "content_secure_token"
+    t.datetime "updated_at"
     t.index ["dossier_id"], name: "index_pieces_justificatives_on_dossier_id", using: :btree
     t.index ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
   end
