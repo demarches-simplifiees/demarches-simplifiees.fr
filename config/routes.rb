@@ -19,12 +19,12 @@ Rails.application.routes.draw do
                    }
 
   devise_scope :user do
-    get '/users/sign_in/demo' => 'users/sessions#demo'
+    get '/users/sign_in/demo' => redirect("/users/sign_in")
     get '/users/no_procedure' => 'users/sessions#no_procedure'
   end
 
   devise_scope :gestionnaire do
-    get '/gestionnaires/sign_in/demo' => 'gestionnaires/sessions#demo'
+    get '/gestionnaires/sign_in/demo' => redirect("/users/sign_in")
     get '/gestionnaires/edit' => 'gestionnaires/registrations#edit', :as => 'edit_gestionnaires_registration'
     put '/gestionnaires' => 'gestionnaires/registrations#update', :as => 'gestionnaires_registration'
   end
@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   post 'avis/:id/sign_up/email/:email' => 'backoffice/avis#create_gestionnaire', constraints: { email: /.*/ }
 
   devise_scope :administrateur do
-    get '/administrateurs/sign_in/demo' => 'administrateurs/sessions#demo'
+    get '/administrateurs/sign_in/demo' => redirect("/users/sign_in")
   end
 
   root 'root#index'
