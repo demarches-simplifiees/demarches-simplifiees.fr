@@ -90,6 +90,7 @@ gem 'browser'
 gem 'simple_form'
 
 gem 'newrelic_rpm'
+gem 'skylight'
 
 gem 'scenic'
 

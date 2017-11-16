@@ -581,6 +581,8 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.0)
       tilt (~> 2.0)
+    skylight (1.4.4)
+      activesupport (>= 3.0.0)
     slop (3.6.0)
     smart_listing (1.2.0)
       coffee-rails
@@ -738,6 +740,7 @@ DEPENDENCIES
   sentry-raven
   shoulda-matchers
   simple_form
+  skylight
   smart_listing
   spreadsheet_architect
   spring
