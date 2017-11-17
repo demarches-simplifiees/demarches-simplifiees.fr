@@ -1,10 +1,12 @@
 describe 'new_gestionnaire/dossiers/show.html.haml', type: :view do
+  let(:current_gestionnaire) { create(:gestionnaire) }
   let(:individual) { nil }
   let(:entreprise) { nil }
   let(:dossier) { create(:dossier, :initiated, entreprise: entreprise, individual: individual) }
 
   before do
     assign(:dossier, dossier)
+    view.stub(:current_gestionnaire).and_return(current_gestionnaire)
     render
   end
 

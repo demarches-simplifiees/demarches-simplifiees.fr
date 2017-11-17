@@ -5,6 +5,7 @@ class Commentaire < ActiveRecord::Base
   belongs_to :piece_justificative
 
   default_scope { order(created_at: :asc) }
+  scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
 
   after_create :notify
 
