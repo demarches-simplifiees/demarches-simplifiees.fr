@@ -11,6 +11,8 @@ class Champ < ActiveRecord::Base
 
   after_save :internal_notification, if: Proc.new { !dossier.nil? }
 
+  scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
+
   def mandatory?
     mandatory
   end

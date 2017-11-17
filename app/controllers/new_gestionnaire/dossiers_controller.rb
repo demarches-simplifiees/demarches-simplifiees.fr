@@ -7,21 +7,25 @@ module NewGestionnaire
     def show
       @dossier = dossier
       dossier.notifications.demande.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :demande)
     end
 
     def messagerie
       @dossier = dossier
       dossier.notifications.messagerie.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :messagerie)
     end
 
     def annotations_privees
       @dossier = dossier
       dossier.notifications.annotations_privees.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :annotations_privees)
     end
 
     def avis
       @dossier = dossier
       dossier.notifications.avis.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :avis)
     end
 
     def follow
