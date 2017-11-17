@@ -944,4 +944,27 @@ describe Dossier do
 
     after { Timecop.return }
   end
+
+  describe '#owner_name' do
+    let!(:procedure) { create(:procedure) }
+    subject { dossier.owner_name }
+
+    context 'when there is no entreprise or individual' do
+      let(:dossier) { create(:dossier, individual: nil, entreprise: nil, procedure: procedure) }
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'when there is entreprise' do
+      let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
+
+      it { is_expected.to eq(dossier.entreprise.raison_sociale) }
+    end
+
+    context 'when there is an individual' do
+      let(:dossier) { create(:dossier, :for_individual, procedure: procedure) }
+
+      it { is_expected.to eq("#{dossier.individual.nom} #{dossier.individual.prenom}") }
+    end
+  end
 end
