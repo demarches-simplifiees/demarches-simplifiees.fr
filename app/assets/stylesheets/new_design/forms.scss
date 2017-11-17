@@ -23,6 +23,17 @@
     }
   }
 
+  .radios {
+    label {
+      display: inline;
+      margin-left: $default-padding;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
   input[type=text]:not([data-address='true']),
   input[type=email],
   input[type=password],
