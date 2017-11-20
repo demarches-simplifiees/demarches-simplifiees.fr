@@ -295,7 +295,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
           let(:statut) { 'tous' }
 
           it { expect(assigns(:statut)).to eq('tous') }
-          it { expect(assigns(:dossiers)).to match([a_suivre__dossier, new_followed_dossier, termine_dossier].sort_by(&:updated_at)) }
+          it { expect(assigns(:dossiers)).to match_array([a_suivre__dossier, new_followed_dossier, termine_dossier]) }
         end
 
         context 'when statut is archives' do

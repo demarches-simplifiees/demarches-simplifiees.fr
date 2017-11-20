@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class CerfaUploader < BaseUploader
   before :cache, :set_original_filename
 

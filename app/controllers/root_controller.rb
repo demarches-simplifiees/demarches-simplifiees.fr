@@ -32,11 +32,6 @@ class RootController < ApplicationController
       return redirect_to administrations_path
     end
 
-    # TODO remove me
-    if Date.today <= Date.new(2017, 11, 11)
-      flash.now.notice = ["Une panne nationale de notre hébergeur OVH a rendu le service Téléprocédures Simplifiées inaccessible le jeudi 8 novembre de 7h15 à 11h15.", "Veuillez nous excuser pour la gêne occasionnée."]
-    end
-
     render 'landing'
   end
 
