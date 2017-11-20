@@ -27,7 +27,7 @@ class SIADE::API
   end
 
   def self.call(url, params = {})
-    params.merge!(token: SIADETOKEN)
+    params[:token] = SIADETOKEN
 
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
