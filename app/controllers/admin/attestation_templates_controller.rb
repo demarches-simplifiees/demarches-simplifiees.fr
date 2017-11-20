@@ -63,8 +63,8 @@ class Admin::AttestationTemplatesController < AdminController
         .permit(:title, :body, :footer, :signature)
         .merge(activated: true)
 
-      @activated_attestation_params.merge!(logo: uninterlaced_png(params['attestation_template']['logo']))
-      @activated_attestation_params.merge!(signature: uninterlaced_png(params['attestation_template']['signature']))
+      @activated_attestation_params[:logo] = uninterlaced_png(params['attestation_template']['logo'])
+      @activated_attestation_params[:signature] = uninterlaced_png(params['attestation_template']['signature'])
     end
 
     @activated_attestation_params
