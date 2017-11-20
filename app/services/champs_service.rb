@@ -16,8 +16,21 @@ class ChampsService
     def fill_champs(champs, h)
       datetimes, not_datetimes = champs.partition { |c| c.type_champ == 'datetime' }
 
-      not_datetimes.each { |c| c.value = h[:champs]["'#{c.id}'"] }
       datetimes.each { |c| c.value = parse_datetime(c.id, h) }
+
+      numbers, other = not_datetimes.partition { |c| c.type_champ == 'number' }
+
+      numbers.each { |c| c.value = parse_float(h[:champs]["'#{c.id}'"]) }
+
+      other.each { |c| c.value = h[:champs]["'#{c.id}'"] }
+    end
+
+    def parse_float(value)
+      if value.present?
+        value.gsub(',', '.').to_f.to_s
+      else
+        nil
+      end
     end
 
     def parse_datetime(champ_id, h)
