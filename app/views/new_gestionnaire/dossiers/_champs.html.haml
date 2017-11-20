@@ -6,6 +6,14 @@
         - when "header_section"
           %th.header-section{ colspan: 2 }
             = c.libelle
+        - when "multiple_drop_down_list"
+          %th.libelle
+            = "#{c.libelle} :"
+          %td.rich-text
+            %ul
+              - c.value.split(", ").each do |item|
+                %li
+                  = item
         - else
           %th.libelle
             = "#{c.libelle} :"
