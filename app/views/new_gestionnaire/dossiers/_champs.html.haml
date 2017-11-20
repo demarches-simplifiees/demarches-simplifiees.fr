@@ -1,11 +1,20 @@
 %table.table.vertical.dossier-champs
   %tbody
-    - champs.each do |c|
+    - champs.reject { |c| c.type_champ == "explication" }.each do |c|
       %tr
-        - if c.type_champ == "header_section"
+        - case c.type_champ
+        - when "header_section"
           %th.header-section{ colspan: 2 }
             = c.libelle
-        - elsif c.type_champ != "explication"
+        - when "multiple_drop_down_list"
+          %th.libelle
+            = "#{c.libelle} :"
+          %td.rich-text
+            %ul
+              - c.value.split(", ").each do |item|
+                %li
+                  = item
+        - else
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
