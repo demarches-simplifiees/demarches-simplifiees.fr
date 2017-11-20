@@ -240,7 +240,16 @@ module NewGestionnaire
       includes = ''
       where = ''
 
+      sorted_ids = nil
+
       case table
+      when 'notifications'
+        dossiers_id_with_notification = current_gestionnaire.notifications_for_procedure(procedure)
+        if order == 'desc'
+          sorted_ids = dossiers_id_with_notification + (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
+        else
+          sorted_ids = (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) + dossiers_id_with_notification
+        end
       when 'self'
         order = "dossiers.#{column} #{order}"
       when'france_connect_information'
@@ -255,7 +264,11 @@ module NewGestionnaire
         order = "#{table.pluralize}.#{column} #{order}"
       end
 
-      dossiers.includes(includes).where(where).order(Dossier.sanitize_for_order(order)).pluck(:id)
+      if sorted_ids.nil?
+        sorted_ids = dossiers.includes(includes).where(where).order(Dossier.sanitize_for_order(order)).pluck(:id)
+      end
+
+      sorted_ids
     end
 
     def current_filters

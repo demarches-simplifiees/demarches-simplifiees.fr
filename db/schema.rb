@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171024135653) do
+ActiveRecord::Schema.define(version: 20171117165748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -394,9 +394,9 @@ ActiveRecord::Schema.define(version: 20171024135653) do
 
   create_table "procedure_presentations", force: :cascade do |t|
     t.integer "assign_to_id"
-    t.text    "displayed_fields", default: ["{\"label\":\"Demandeur\",\"table\":\"user\",\"column\":\"email\"}"],        null: false, array: true
-    t.json    "sort",             default: "{\"table\":\"self\",\"column\":\"id\",\"order\":\"desc\"}",                  null: false
-    t.json    "filters",          default: "{\"a-suivre\":[],\"suivis\":[],\"traites\":[],\"tous\":[],\"archives\":[]}", null: false
+    t.text    "displayed_fields", default: ["{\"label\":\"Demandeur\",\"table\":\"user\",\"column\":\"email\"}"],           null: false, array: true
+    t.json    "sort",             default: "{\"table\":\"notifications\",\"column\":\"notifications\",\"order\":\"desc\"}", null: false
+    t.json    "filters",          default: "{\"a-suivre\":[],\"suivis\":[],\"traites\":[],\"tous\":[],\"archives\":[]}",    null: false
     t.index ["assign_to_id"], name: "index_procedure_presentations_on_assign_to_id", unique: true, using: :btree
   end
 
