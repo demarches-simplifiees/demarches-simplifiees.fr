@@ -1,5 +1,3 @@
-var TPS = TPS || {};
-
 TPS.toggleChart = function(event, chartClass) {
   var nextSelectorItem = $(event.target),
       nextChart = $(chartClass),
