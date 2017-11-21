@@ -4,7 +4,7 @@ class ModuleApiCartoService
       qp_list = generate_qp JSON.parse(json_latlngs)
 
       qp_list.each_value do |qp|
-        qp.merge!({dossier_id: dossier.id})
+        qp[:dossier_id] = dossier.id
         qp[:geometry] = qp[:geometry].to_json
         QuartierPrioritaire.create(qp)
       end
@@ -16,7 +16,7 @@ class ModuleApiCartoService
       cadastre_list = generate_cadastre JSON.parse(json_latlngs)
 
       cadastre_list.each do |cadastre|
-        cadastre.merge!({dossier_id: dossier.id})
+        cadastre[:dossier_id] = dossier.id
         cadastre[:geometry] = cadastre[:geometry].to_json
         Cadastre.create(cadastre)
       end

@@ -444,76 +444,76 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 Performance/Caller:
-  Enabled: false
+  Enabled: true
 
 Performance/CaseWhenSplat:
-  Enabled: false
+  Enabled: true
 
 Performance/Casecmp:
-  Enabled: false
+  Enabled: true
 
 Performance/CompareWithBlock:
-  Enabled: false
+  Enabled: true
 
 Performance/Count:
-  Enabled: false
+  Enabled: true
 
 Performance/Detect:
-  Enabled: false
+  Enabled: true
 
 Performance/DoubleStartEndWith:
-  Enabled: false
+  Enabled: true
 
 Performance/EndWith:
-  Enabled: false
+  Enabled: true
 
 Performance/FixedSize:
-  Enabled: false
+  Enabled: true
 
 Performance/FlatMap:
-  Enabled: false
+  Enabled: true
 
 Performance/HashEachMethods:
-  Enabled: false
+  Enabled: true
 
 Performance/LstripRstrip:
-  Enabled: false
+  Enabled: true
 
 Performance/RangeInclude:
-  Enabled: false
+  Enabled: true
 
 Performance/RedundantBlockCall:
-  Enabled: false
+  Enabled: true
 
 Performance/RedundantMatch:
-  Enabled: false
+  Enabled: true
 
 Performance/RedundantMerge:
-  Enabled: false
+  Enabled: true
 
 Performance/RedundantSortBy:
-  Enabled: false
+  Enabled: true
 
 Performance/RegexpMatch:
-  Enabled: false
+  Enabled: true
 
 Performance/ReverseEach:
-  Enabled: false
+  Enabled: true
 
 Performance/Sample:
-  Enabled: false
+  Enabled: true
 
 Performance/Size:
-  Enabled: false
+  Enabled: true
 
 Performance/StartWith:
-  Enabled: false
+  Enabled: true
 
 Performance/StringReplacement:
-  Enabled: false
+  Enabled: true
 
 Performance/TimesMap:
-  Enabled: false
+  Enabled: true
 
 Rails/ActionFilter:
   Enabled: false

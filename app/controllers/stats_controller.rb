@@ -52,7 +52,7 @@ class StatsController < ApplicationController
       .group("DATE_TRUNC('month', #{date_attribute.to_s})")
       .count
       .to_a
-      .sort{ |x, y| x[0] <=> y[0] }
+      .sort_by { |a| a[0] }
       .map { |e| [I18n.l(e.first, format: "%B %Y"), e.last] }
   end
 
@@ -63,7 +63,7 @@ class StatsController < ApplicationController
       .group("DATE_TRUNC('month', #{date_attribute.to_s})")
       .count
       .to_a
-      .sort{ |x, y| x[0] <=> y[0] }
+      .sort_by { |a| a[0] }
       .map { |x, y| { x => (sum += y)} }
       .reduce({}, :merge)
   end
