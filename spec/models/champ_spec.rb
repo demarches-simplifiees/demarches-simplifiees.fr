@@ -88,15 +88,21 @@ describe Champ do
       let(:type_champ) { 'yes_no' }
 
       context 'if yes' do
-        let(:value) { 'yes' }
+        let(:value) { 'true' }
 
         it { expect(champ.for_export).to eq('oui') }
       end
 
       context 'if no' do
-        let(:value) { 'no' }
+        let(:value) { 'false' }
 
         it { expect(champ.for_export).to eq('non') }
+      end
+
+      context 'if nil' do
+        let(:value) { nil }
+
+        it { expect(champ.for_export).to eq(nil) }
       end
     end
 
