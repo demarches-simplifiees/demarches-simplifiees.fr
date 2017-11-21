@@ -10,10 +10,11 @@
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
-            %ul
-              - c.value.split(", ").each do |item|
-                %li
-                  = item
+            - if c.value.present?
+              %ul
+                - c.value.split(", ").each do |item|
+                  %li
+                    = item
         - else
           %th.libelle
             = "#{c.libelle} :"

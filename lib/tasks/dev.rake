@@ -12,7 +12,7 @@ namespace :dev do
 
   task :generate_token_file do
     puts 'creating token.rb file'
-    res = `rake secret`.gsub("\n", '')
+    res = `rake secret`.delete("\n")
     file = File.new('config/initializers/token.rb', 'w+')
     comment = <<EOF
 EOF
