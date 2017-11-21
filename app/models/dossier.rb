@@ -355,6 +355,14 @@ class Dossier < ActiveRecord::Base
     sanitize_sql_for_order(order)
   end
 
+  def owner_name
+    if entreprise.present?
+      entreprise.raison_sociale
+    elsif individual.present?
+      "#{individual.nom} #{individual.prenom}"
+    end
+  end
+
   private
 
   def build_attestation
