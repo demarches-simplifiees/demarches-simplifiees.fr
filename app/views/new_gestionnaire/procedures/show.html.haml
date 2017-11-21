@@ -41,16 +41,7 @@
               %span.badge= @archived_dossiers.count
 
       .procedure-actions
-        %span.button.dropdown
-          Télécharger tous les dossiers
-          .dropdown-content.fade-in-down
-            %ul.dropdown-items
-              %li
-                = link_to "Au format .csv", download_dossiers_procedure_path(format: :csv, procedure_id: @procedure.id), target: "_blank"
-              %li
-                = link_to "Au format .xlsx", download_dossiers_procedure_path(format: :xlsx, procedure_id: @procedure.id), target: "_blank"
-              %li
-                = link_to "Au format .ods", download_dossiers_procedure_path(format: :ods, procedure_id: @procedure.id), target: "_blank"
+        = render partial: "download_dossiers", locals: { procedure: @procedure }
 
   .container
     - if @dossiers.present? || @current_filters.count > 0
