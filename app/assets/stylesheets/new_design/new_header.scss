@@ -41,7 +41,60 @@
     &:hover {
       color: $blue;
       border-bottom: 2px solid $blue;
+
+      &.contact-link {
+        border-bottom: none;
+
+        .contact-details {
+          display: block;
+        }
+      }
     }
+  }
+}
+
+.contact-details {
+  display: none;
+  position: absolute;
+  left: -165px;
+  background: #FFFFFF;
+  border: 2px solid $blue;
+  border-radius: 5px;
+  padding: 15px;
+  width: 400px;
+  color: $black;
+  z-index: 100;
+  font-size: initial;
+  line-height: 1.6;
+
+  &::after,
+  &::before {
+    bottom: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  &::after {
+    border-color: rgba(255, 255, 255, 0);
+    border-bottom-color: #FFFFFF;
+    border-width: 15px;
+    margin-left: -15px;
+  }
+
+  &::before {
+    border-color: rgba(255, 255, 255, 0);
+    border-bottom-color: $blue;
+    border-width: 18px;
+    margin-left: -18px;
+  }
+
+  ul {
+    list-style-type: disc;
   }
 }
 
