@@ -38,6 +38,9 @@
           - if !dossier.was_piece_justificative_uploaded_for_type_id?(tpj.id)
             = file_field_tag "piece_justificative_#{tpj.id}", accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes
           - else
+            - pj = dossier.retrieve_last_piece_justificative_by_type(tpj.id)
+            %a{ href: pj.content_url, target: '_blank' }
+              = pj.original_filename
             %span.btn.btn-sm.btn-file.btn-success
               Modifier
               = file_field_tag "piece_justificative_#{tpj.id}", accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes
