@@ -1,3 +1,6 @@
+- avis_statut = (@statut == NewGestionnaire::AvisController::A_DONNER_STATUS) ? 'à donner' : 'rendus'
+- content_for(:title, "Avis #{avis_statut}")
+
 #avis-index
   .backoffice-header
     .container.flex
