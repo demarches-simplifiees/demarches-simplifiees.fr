@@ -132,7 +132,7 @@ class DossiersListGestionnaireService
   def where_filter
     filter_preference_list.inject('') do |acc, preference|
       unless preference.filter.blank?
-        filter = preference.filter.gsub('*', '%').gsub("'", "''")
+        filter = preference.filter.tr('*', '%').gsub("'", "''")
         filter = "%" + filter + "%" unless filter.include? '%'
 
         value = preference.table_with_s_attr
