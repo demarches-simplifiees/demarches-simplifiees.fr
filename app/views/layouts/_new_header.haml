@@ -21,6 +21,15 @@
                   %span.badge.warning= avis_counter
           %li
             = link_to "Ancienne interface", backoffice_dossiers_path, class: 'tab-link'
+          %li
+            .tab-link.contact-link
+              Contact
+              .contact-details
+                Vous avez besoin d’aide ? Contactez-nous :
+                %br
+                – par téléphone : 09 72 62 57 12
+                %br
+                – par email : <a href="mailto:contact@tps.apientreprise.fr">contact@tps.apientreprise.fr</a>
 
     %ul.header-right-content
       - if gestionnaire_signed_in?
