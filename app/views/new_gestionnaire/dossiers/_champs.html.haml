@@ -15,6 +15,17 @@
                 - c.value.split(", ").each do |item|
                   %li
                     = item
+        - when "dossier_link"
+          %th.libelle
+            = "#{c.libelle} :"
+          %td.rich-text
+            - dossier = Dossier.includes(:procedure).find_by(id: c.value)
+            - if dossier
+              = link_to("Dossier nº #{dossier.id}", dossier_path(dossier.procedure, dossier), target: '_blank')
+              %br
+              = dossier.text_summary
+            - else
+              Pas de dossier associé
         - else
           %th.libelle
             = "#{c.libelle} :"

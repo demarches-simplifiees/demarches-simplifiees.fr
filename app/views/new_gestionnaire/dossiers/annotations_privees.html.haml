@@ -1,3 +1,5 @@
+- content_for(:title, "Annotations privées · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
+
 = render partial: "header", locals: { dossier: @dossier }
 
 #dossier-annotations-privees.container

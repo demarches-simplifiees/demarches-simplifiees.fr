@@ -69,6 +69,7 @@ class Users::SessionsController < Sessions::SessionsController
   private
 
   def error_procedure
+    session["user_return_to"] = nil
     flash.alert = t('errors.messages.procedure_not_found')
     redirect_to url_for root_path
   end
