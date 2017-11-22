@@ -61,20 +61,10 @@
 
 - else
   %span.button.dropdown{ class: dossier.closed? ? 'success' : nil }
-    - if dossier.closed?
-      accepté
-    - elsif dossier.without_continuation?
-      classé sans suite
-    - elsif dossier.refused?
-      refusé
+    = dossier.statut
     .dropdown-content.fade-in-down.terminated
       %h4
-        - if dossier.closed?
-          Dossier nº #{dossier.id} accepté
-        - elsif dossier.without_continuation?
-          Dossier nº #{dossier.id} classé sans suite
-        - elsif dossier.refused?
-          Dossier nº #{dossier.id} refusé
+        = "Dossier nº #{dossier.id} #{dossier.statut}"
 
       %p.dossier-motivation= dossier.motivation.present? ? dossier.motivation : "aucune motivation n'a été fournie"
 
