@@ -46,11 +46,11 @@
           .dropdown-content.fade-in-down
             %ul.dropdown-items
               %li
-                = link_to "Au format .csv", backoffice_download_dossiers_tps_path(format: :csv, procedure_id: @procedure.id), target: "_blank"
+                = link_to "Au format .csv", download_dossiers_procedure_path(format: :csv, procedure_id: @procedure.id), target: "_blank"
               %li
-                = link_to "Au format .xlsx", backoffice_download_dossiers_tps_path(format: :xlsx, procedure_id: @procedure.id), target: "_blank"
+                = link_to "Au format .xlsx", download_dossiers_procedure_path(format: :xlsx, procedure_id: @procedure.id), target: "_blank"
               %li
-                = link_to "Au format .ods", backoffice_download_dossiers_tps_path(format: :ods, procedure_id: @procedure.id), target: "_blank"
+                = link_to "Au format .ods", download_dossiers_procedure_path(format: :ods, procedure_id: @procedure.id), target: "_blank"
 
   .container
     - if @dossiers.present? || @current_filters.count > 0
