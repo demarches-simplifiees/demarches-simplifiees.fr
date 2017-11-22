@@ -173,6 +173,17 @@ module NewGestionnaire
       redirect_back(fallback_location: procedure_url(procedure))
     end
 
+    def download_dossiers
+      export = procedure.generate_export
+      filename = "dossiers_#{procedure.procedure_path.path}_#{Time.now.strftime('%Y-%m-%d_%H-%M')}"
+
+      respond_to do |format|
+        format.csv { send_data(SpreadsheetArchitect.to_csv(data: export[:data], headers: export[:headers]), filename: "#{filename}.csv") }
+        format.xlsx { send_data(SpreadsheetArchitect.to_xlsx(data: export[:data], headers: export[:headers]), filename: "#{filename}.xlsx") }
+        format.ods { send_data(SpreadsheetArchitect.to_ods(data: export[:data], headers: export[:headers]), filename: "#{filename}.ods") }
+      end
+    end
+
     private
 
     def statut
