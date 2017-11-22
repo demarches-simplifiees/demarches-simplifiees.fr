@@ -31,7 +31,12 @@ class Users::CarteController < UsersController
   end
 
   def get_position
-    etablissement = current_user_dossier.etablissement
+    begin
+      etablissement = current_user_dossier.etablissement
+    rescue ActiveRecord::RecordNotFound
+      etablissement = nil
+    end
+
     point = Carto::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse) unless etablissement.nil?
 
     lon = '2.428462'
