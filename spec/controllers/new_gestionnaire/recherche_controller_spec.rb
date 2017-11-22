@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NewGestionnaire::RecherchesController, type: :controller do
+describe NewGestionnaire::RechercheController, type: :controller do
   let(:dossier) { create(:dossier, :initiated) }
   let(:dossier2) { create(:dossier, :initiated, procedure: dossier.procedure) }
   let(:gestionnaire) { create(:gestionnaire) }
