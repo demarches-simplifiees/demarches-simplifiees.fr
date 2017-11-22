@@ -270,7 +270,7 @@ Rails.application.routes.draw do
         post 'avis' => 'avis#create_avis'
       end
     end
-    get "recherche" => "recherches#index"
+    get "recherche" => "recherche#index"
   end
 
   apipie
