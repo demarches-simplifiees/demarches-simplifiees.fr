@@ -1,5 +1,5 @@
 module NewGestionnaire
-  class RecherchesController < GestionnaireController
+  class RechercheController < GestionnaireController
     def index
       @search_terms = params[:q]
 
