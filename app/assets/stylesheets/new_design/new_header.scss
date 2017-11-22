@@ -43,6 +43,7 @@
       border-bottom: 2px solid $blue;
 
       &.contact-link {
+        position: relative;
         border-bottom: none;
 
         .contact-details {
