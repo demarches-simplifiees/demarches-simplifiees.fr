@@ -3,7 +3,7 @@
 - elsif dossier.en_construction?
   %span.label.construction en construction
 - elsif dossier.closed?
-  %span.label.closed accepté
+  %span.label.success accepté
 - elsif dossier.refused?
   %span.label.refused refusé
 - elsif dossier.without_continuation?

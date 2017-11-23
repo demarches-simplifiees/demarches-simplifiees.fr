@@ -60,24 +60,18 @@
             = button_tag "Valider la décision", name: :process_action, value: "close", class: 'button primary', title: 'Accepter', data: { confirm: "Accepter ce dossier ?" }
 
 - else
-  %span.button.dropdown{ class: dossier.closed? ? 'success' : nil }
-    - if dossier.closed?
-      accepté
-    - elsif dossier.without_continuation?
-      classé sans suite
-    - elsif dossier.refused?
-      refusé
-    .dropdown-content.fade-in-down.terminated
-      %h4
-        - if dossier.closed?
-          Dossier nº #{dossier.id} accepté
-        - elsif dossier.without_continuation?
-          Dossier nº #{dossier.id} classé sans suite
-        - elsif dossier.refused?
-          Dossier nº #{dossier.id} refusé
+  - if dossier.motivation.present? || dossier.attestation.present?
+    %span.button.dropdown{ class: dossier.closed? ? 'success' : nil }
+      = dossier.statut
+      .dropdown-content.fade-in-down.terminated
+        - if dossier.motivation.present?
+          %h4 Motivation
+          %p.dossier-motivation= dossier.motivation
 
-      %p.dossier-motivation= dossier.motivation.present? ? dossier.motivation : "aucune motivation n'a été fournie"
-
-      - if dossier.attestation.present?
-        %p.attestation L'acceptation du dossier a envoyé automatiquement une attestation au demandeur
-        = link_to "Voir l'attestation", attestation_dossier_path(dossier.procedure, dossier), target: '_blank', class: 'button'
+        - if dossier.attestation.present?
+          %h4 Attestation
+          %p.attestation L'acceptation du dossier a envoyé automatiquement une attestation au demandeur
+          = link_to "Voir l'attestation", attestation_dossier_path(dossier.procedure, dossier), target: '_blank', class: 'button'
+  - else
+    %span.label{ class: dossier.closed? ? 'success' : nil }
+      = dossier.statut
