@@ -40,6 +40,7 @@ class Procedure < ActiveRecord::Base
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+  validates :organisation, presence: true, allow_blank: false, allow_nil: false
 
   def hide!
     now = DateTime.now
