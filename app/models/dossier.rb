@@ -363,6 +363,16 @@ class Dossier < ActiveRecord::Base
     end
   end
 
+  def statut
+    if closed?
+      'accepté'
+    elsif without_continuation?
+      'classé sans suite'
+    elsif refused?
+      'refusé'
+    end
+  end
+
   private
 
   def build_attestation
