@@ -419,8 +419,8 @@ ActiveRecord::Schema.define(version: 20171123125346) do
     t.boolean  "for_individual",        default: false
     t.boolean  "individual_with_siret", default: false
     t.date     "auto_archive_on"
-    t.datetime "hidden_at"
     t.datetime "published_at"
+    t.datetime "hidden_at"
     t.datetime "archived_at"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at", using: :btree
   end
