@@ -34,8 +34,6 @@ module TPS
       URL = "http://localhost:3000/"
     end
 
-    config.skylight.environments += ["staging"]
-
     config.active_job.queue_adapter = :delayed_job
 
     config.action_view.sanitized_allowed_tags = ActionView::Base.sanitized_allowed_tags + ['u']
