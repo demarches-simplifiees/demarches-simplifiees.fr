@@ -104,6 +104,13 @@
       font-weight: bold;
     }
 
+    &.icon-only {
+      &::after {
+        margin-left: 2px;
+        color: $blue;
+      }
+    }
+
     .dropdown-content {
       display: none;
     }
