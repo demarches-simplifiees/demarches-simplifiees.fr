@@ -9,6 +9,7 @@
     %tr
       %th Nom :
       %td= individual.nom
-    %tr
-      %th Date de naissance :
-      %td= Date.parse(individual.birthdate).strftime("%d/%m/%Y")
+    - if individual.birthdate.present?
+      %tr
+        %th Date de naissance :
+        %td= Date.parse(individual.birthdate).strftime("%d/%m/%Y")
