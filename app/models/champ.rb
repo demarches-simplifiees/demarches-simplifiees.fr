@@ -59,7 +59,7 @@ class Champ < ActiveRecord::Base
     JSON.parse(Carto::GeoAPI::Driver.pays).inject([]) { |acc, liste| acc.push(liste['nom']) }
   end
 
-  def to_s
+  def for_displaying
     if value.present?
       case type_champ
       when 'date'

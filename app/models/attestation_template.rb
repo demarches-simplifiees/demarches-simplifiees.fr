@@ -128,7 +128,7 @@ class AttestationTemplate < ApplicationRecord
         .select { |dossier_champ| dossier_champ.libelle == tag[:libelle] }
         .first
 
-      acc.gsub("--#{tag[:libelle]}--", champ.to_s)
+      acc.gsub("--#{tag[:libelle]}--", champ.for_displaying)
     end
   end
 
