@@ -24,3 +24,9 @@
   // are ligned with those that have text
   vertical-align: top;
 }
+
+.mixed-buttons-bar .label {
+  padding: $default-spacer $default-padding;
+  font-size: 14px;
+  line-height: 20px;
+}
