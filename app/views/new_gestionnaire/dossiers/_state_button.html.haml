@@ -73,5 +73,5 @@
           %p.attestation L'acceptation du dossier a envoyé automatiquement une attestation au demandeur
           = link_to "Voir l'attestation", attestation_dossier_path(dossier.procedure, dossier), target: '_blank', class: 'button'
   - else
-    %span.label{ class: dossier.closed? ? 'accepted' : nil }
+    %span.label{ class: label_class(dossier) }
       = dossier.statut
