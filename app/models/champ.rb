@@ -60,19 +60,23 @@ class Champ < ActiveRecord::Base
   end
 
   def for_displaying
-    if value.present?
-      case type_champ
-      when 'date'
-        Date.parse(value).strftime('%d/%m/%Y')
-      when 'multiple_drop_down_list'
-        drop_down_list.selected_options_without_decorator(self).join(', ')
-      when "checkbox", "engagement"
-        value == 'on' ? 'Oui' : 'Non'
+    case type_champ
+    when 'date'
+      Date.parse(value).strftime('%d/%m/%Y')
+    when 'multiple_drop_down_list'
+      drop_down_list.selected_options_without_decorator(self).join(', ')
+    when "checkbox", "engagement"
+      value == 'on' ? 'Oui' : 'Non'
+    when 'yes_no'
+      if value == 'true'
+        'Oui'
+      elsif value == 'false'
+        'Non'
       else
-        value.to_s
+        ''
       end
     else
-      ''
+      value.to_s
     end
   end
 

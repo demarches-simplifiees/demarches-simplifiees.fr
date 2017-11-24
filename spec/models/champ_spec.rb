@@ -180,7 +180,7 @@ describe Champ do
     it_should_behave_like 'champ_formatter', :address, '35 rue saint dominique 75007 Paris', '35 rue saint dominique 75007 Paris'
     it_should_behave_like 'champ_formatter', :address, nil, ''
 
-    it_should_behave_like 'yes_no_formatter', 'true', 'false', ''
+    it_should_behave_like 'yes_no_formatter', 'Oui', 'Non', ''
 
     it_should_behave_like 'champ_formatter', :drop_down_list, 'Autres activités de services', 'Autres activités de services'
     it_should_behave_like 'champ_formatter', :drop_down_list, nil, ''
