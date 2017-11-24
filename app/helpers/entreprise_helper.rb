@@ -1,6 +1,6 @@
 module EntrepriseHelper
   def raison_sociale_or_name(entreprise)
-    entreprise.raison_sociale.blank? ? entreprise.nom + ' ' + entreprise.prenom : entreprise.raison_sociale
+    entreprise.raison_sociale.blank? ? "#{entreprise.nom} #{entreprise.prenom}" : entreprise.raison_sociale
   end
 
   def effectif(entreprise)
