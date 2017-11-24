@@ -10,8 +10,6 @@ class ChampDecorator < Draper::Decorator
       elsif object.value == 'false'
         'Non'
       end
-    elsif type_champ == 'multiple_drop_down_list' && object.value.present?
-      JSON.parse(object.value).join(', ')
     else
       object.value
     end

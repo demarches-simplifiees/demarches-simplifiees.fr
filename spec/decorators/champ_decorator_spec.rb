@@ -7,20 +7,6 @@ describe ChampDecorator do
   describe 'value' do
     subject { decorator.value }
 
-    describe 'for a multiple_drop_down_list' do
-      let(:type_champ) { :multiple_drop_down_list }
-
-      context 'when value is an array' do
-        before { champ.update value: '["1", "2"]' }
-        it { is_expected.to eq '1, 2' }
-      end
-
-      context 'when value is empty' do
-        before { champ.update value: '' }
-        it { is_expected.to eq '' }
-      end
-    end
-
     describe "for a date" do
       let(:type_champ) { :date }
 
