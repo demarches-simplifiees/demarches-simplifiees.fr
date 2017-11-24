@@ -1,6 +1,6 @@
 - if dossier.en_construction? || dossier.en_instruction?
   %span.button.primary.dropdown
-    = dossier.decorate.display_state
+    = dossier.statut
     .dropdown-content.fade-in-down
       %ul.dropdown-items
         - if dossier.en_construction?

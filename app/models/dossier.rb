@@ -294,11 +294,18 @@ class Dossier < ActiveRecord::Base
   end
 
   def statut
-    if accepte?
+    case state
+    when 'brouillon'
+      'brouillon'
+    when 'en_construction'
+      "en construction"
+    when 'en_instruction'
+      "en instruction"
+    when 'accepte'
       'accepté'
-    elsif sans_suite?
+    when 'sans_suite'
       'classé sans suite'
-    elsif refuse?
+    when 'refuse'
       'refusé'
     end
   end
