@@ -10,13 +10,13 @@ describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
     let(:champs) { [champ1, champ2, champ3, champ4] }
 
     it { expect(rendered).to include(champ1.libelle) }
-    it { expect(rendered).to include(champ1.value) }
+    it { expect(rendered).to include(champ1.for_displaying) }
 
     it { expect(rendered).to have_css(".header-section") }
     it { expect(rendered).to include(champ2.libelle) }
 
     it { expect(rendered).not_to include(champ3.libelle) }
-    it { expect(rendered).not_to include(champ3.value) }
+    it { expect(rendered).not_to include(champ3.for_displaying) }
 
     it { expect(rendered).to have_link("Dossier nº #{dossier.id}") }
     it { expect(rendered).to include(dossier.text_summary) }

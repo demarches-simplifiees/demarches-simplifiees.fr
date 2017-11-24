@@ -12,7 +12,7 @@
           %td.rich-text
             - if c.value.present?
               %ul
-                - c.value.split(", ").each do |item|
+                - c.for_displaying.split(", ").each do |item|
                   %li
                     = item
         - when "dossier_link"
@@ -30,4 +30,4 @@
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
-            = sanitize(c.value)
+            = sanitize(c.for_displaying)

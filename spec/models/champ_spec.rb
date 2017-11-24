@@ -166,7 +166,7 @@ describe Champ do
     it_should_behave_like 'champ_formatter', :number, '', ''
     it_should_behave_like 'champ_formatter', :number, nil, ''
 
-    it_should_behave_like 'checkbox_formatter', 'on', '', ''
+    it_should_behave_like 'checkbox_formatter', 'Oui', 'Non', 'Non'
 
     it_should_behave_like 'civilite_formatter', 'M.', 'Mme', ''
 
@@ -193,7 +193,7 @@ describe Champ do
     it_should_behave_like 'champ_formatter', :departements, '06 - Alpes-Maritimes', '06 - Alpes-Maritimes'
     it_should_behave_like 'champ_formatter', :departements, nil, ''
 
-    it_should_behave_like 'engagement_formatter', 'on', '', ''
+    it_should_behave_like 'engagement_formatter', 'Oui', 'Non', 'Non'
 
     it_should_behave_like 'champ_formatter', :header_section, nil, ''
 

@@ -66,6 +66,8 @@ class Champ < ActiveRecord::Base
         Date.parse(value).strftime('%d/%m/%Y')
       when 'multiple_drop_down_list'
         drop_down_list.selected_options_without_decorator(self).join(', ')
+      when "checkbox", "engagement"
+        value == 'on' ? 'Oui' : 'Non'
       else
         value.to_s
       end

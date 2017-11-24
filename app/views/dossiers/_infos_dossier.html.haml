@@ -47,7 +47,7 @@
                   - else
                     Pas de dossier associé
                 - else
-                  = sanitize(champ.decorate.value)
+                  = sanitize(champ.for_displaying)
 
     - if @facade.dossier.mandataire_social && gestionnaire_signed_in?
       .mandataire_social.text-success.center
