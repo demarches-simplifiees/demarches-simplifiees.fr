@@ -1,6 +1,5 @@
-- entreprise = entreprise.decorate
 - etablissement = entreprise.etablissement
-%h4= entreprise.raison_sociale_or_name
+%h4= raison_sociale_or_name(entreprise)
 
 %table.table.vertical
   %tbody
@@ -22,7 +21,7 @@
       %td= Time.at(entreprise.date_creation).localtime.strftime("%d/%m/%Y")
     %tr
       %th Effectif de l'organisation :
-      %td= entreprise.effectif
+      %td= effectif(entreprise)
     %tr
       %th Code effectif :
       %td= entreprise.code_effectif_entreprise
@@ -38,7 +37,7 @@
             %br
     %tr
       %th Capital social :
-      %td= entreprise.pretty_capital_social
+      %td= pretty_capital_social(entreprise)
     - if etablissement.present?
       %tr
         %th Exercices :

@@ -1,4 +1,6 @@
 describe 'new_gestionnaire/dossiers/identite_entreprise.html.haml', type: :view do
+  helper(EntrepriseHelper)
+
   before { render 'new_gestionnaire/dossiers/identite_entreprise.html.haml', entreprise: entreprise }
 
   context "there is an association" do
