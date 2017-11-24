@@ -2,9 +2,7 @@ class ChampDecorator < Draper::Decorator
   delegate_all
 
   def value
-    if type_champ == "date" && object.value.present?
-      Date.parse(object.value).strftime("%d/%m/%Y")
-    elsif type_champ == 'yes_no'
+    if type_champ == 'yes_no'
       if object.value == 'true'
         'Oui'
       elsif object.value == 'false'
