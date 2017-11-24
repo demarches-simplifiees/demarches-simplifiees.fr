@@ -1,5 +1,5 @@
 module DossierHelper
-  def label_class(dossier)
+  def button_or_label_class(dossier)
     if dossier.closed?
       'accepted'
     elsif dossier.without_continuation?

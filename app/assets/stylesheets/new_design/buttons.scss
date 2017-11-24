@@ -55,6 +55,28 @@
     }
   }
 
+  &.without-continuation {
+    color: #FFFFFF;
+    border-color: $black;
+    background-color: $black;
+
+    &:hover {
+      color: $black;
+      background-color: #FFFFFF;
+    }
+  }
+
+  &.refused {
+    color: #FFFFFF;
+    border-color: $dark-red;
+    background-color: $dark-red;
+
+    &:hover {
+      color: $dark-red;
+      background-color: #FFFFFF;
+    }
+  }
+
   &.large {
     font-size: 18px;
     line-height: 26px;
