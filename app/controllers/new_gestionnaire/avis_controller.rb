@@ -2,6 +2,8 @@ module NewGestionnaire
   class AvisController < ApplicationController
     layout 'new_application'
 
+    before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire]
+
     A_DONNER_STATUS = 'a-donner'
     DONNES_STATUS   = 'donnes'
 
@@ -23,13 +25,9 @@ module NewGestionnaire
     end
 
     def show
-      @avis = avis
-      @dossier = avis.dossier
     end
 
     def instruction
-      @avis = avis
-      @dossier = avis.dossier
     end
 
     def update
@@ -39,13 +37,19 @@ module NewGestionnaire
     end
 
     def messagerie
-      @avis = avis
-      @dossier = avis.dossier
+      @commentaire = Commentaire.new
     end
 
     def create_commentaire
-      Commentaire.create(commentaire_params.merge(email: current_gestionnaire.email, dossier: avis.dossier))
-      redirect_to messagerie_avis_path(avis)
+      @commentaire = Commentaire.new(commentaire_params.merge(email: current_gestionnaire.email, dossier: avis.dossier))
+
+      if @commentaire.save
+        flash.notice = "Message envoyé"
+        redirect_to messagerie_avis_path(avis)
+      else
+        flash.alert = @commentaire.errors.full_messages
+        render :messagerie
+      end
     end
 
     def create_avis
@@ -56,6 +60,11 @@ module NewGestionnaire
 
     private
 
+    def set_avis_and_dossier
+      @avis = avis
+      @dossier = avis.dossier
+    end
+
     def avis
       current_gestionnaire.avis.includes(dossier: [:avis, :commentaires]).find(params[:id])
     end
@@ -65,7 +74,7 @@ module NewGestionnaire
     end
 
     def commentaire_params
-      params.require(:commentaire).permit(:body)
+      params.require(:commentaire).permit(:body, :file)
     end
 
     def create_avis_params

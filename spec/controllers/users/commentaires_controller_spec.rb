@@ -61,32 +61,12 @@ describe Users::CommentairesController, type: :controller do
 
       subject do
         sign_in dossier.user
-        post :create, params: { dossier_id: dossier_id, texte_commentaire: texte_commentaire, piece_justificative: { content: document_upload } }
-      end
-
-      it 'create a new piece justificative' do
-        expect { subject }.to change(PieceJustificative, :count).by(1)
+        post :create, params: { dossier_id: dossier_id, texte_commentaire: texte_commentaire, file: document_upload }
       end
 
       it 'clamav check the pj' do
         expect(ClamavService).to receive(:safe_file?)
         subject
-      end
-
-      describe 'piece justificative created' do
-        let(:pj) { PieceJustificative.last }
-
-        before do
-          subject
-        end
-
-        it 'not have a type de pj' do
-          expect(pj.type_de_piece_justificative).to be_nil
-        end
-
-        it 'content not be nil' do
-          expect(pj.content).not_to be_nil
-        end
       end
 
       describe 'commentaire created' do
@@ -97,8 +77,8 @@ describe Users::CommentairesController, type: :controller do
         end
 
         it 'have a piece justificative reference' do
-          expect(commentaire.piece_justificative).not_to be_nil
-          expect(commentaire.piece_justificative).to eq PieceJustificative.last
+          expect(commentaire.file.present?).to be true
+          expect(commentaire.file.class).to eq CommentaireFileUploader
         end
       end
     end
