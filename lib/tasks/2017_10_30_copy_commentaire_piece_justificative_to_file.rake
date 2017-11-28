@@ -19,6 +19,10 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
         commentaire.file.define_singleton_method(:filename) { commentaire.piece_justificative.original_filename }
       end
 
+      if commentaire.body.blank?
+        commentaire.body = commentaire.piece_justificative.original_filename || "."
+      end
+
       commentaire.save
       if !commentaire.file.present?
         puts "Failed to save file for commentaire #{commentaire.id}"
