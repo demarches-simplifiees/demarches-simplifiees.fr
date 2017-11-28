@@ -11,16 +11,18 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
 
   def process_commentaire commentaire
     puts "Processing commentaire #{commentaire.id}"
-    # https://github.com/carrierwaveuploader/carrierwave#uploading-files-from-a-remote-location
-    commentaire.remote_file_url = commentaire.piece_justificative.content_url
+    if commentaire.piece_justificative.present?
+      # https://github.com/carrierwaveuploader/carrierwave#uploading-files-from-a-remote-location
+      commentaire.remote_file_url = commentaire.piece_justificative.content_url
 
-    if commentaire.piece_justificative.original_filename.present?
-      commentaire.file.define_singleton_method(:filename) { commentaire.piece_justificative.original_filename }
-    end
+      if commentaire.piece_justificative.original_filename.present?
+        commentaire.file.define_singleton_method(:filename) { commentaire.piece_justificative.original_filename }
+      end
 
-    commentaire.save
-    if !commentaire.file.present?
-      puts "Failed to save file for commentaire #{commentaire.id}"
+      commentaire.save
+      if !commentaire.file.present?
+        puts "Failed to save file for commentaire #{commentaire.id}"
+      end
     end
   end
 end
