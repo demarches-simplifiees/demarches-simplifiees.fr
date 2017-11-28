@@ -6,36 +6,6 @@
   %ul.messages-list
     - @dossier.commentaires.each do |commentaire|
       %li
-        = render partial: 'commentaire_icon', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
+        = render partial: "new_gestionnaire/shared/commentaires/commentaire", locals: { commentaire: commentaire }
 
-        .width-100
-          %h2
-            %span.mail
-              = render partial: 'commentaire_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
-            - if ![current_gestionnaire.email, @dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
-              %span.guest Invité
-            %span.date= I18n.l(commentaire.created_at.localtime, format: '%H:%M le %d/%m/%Y')
-          %p.rich-text= sanitize(commentaire.body)
-
-          - if commentaire.file.present?
-            .attachment-link
-              = link_to commentaire.file_url, class: "button", target: "_blank", title: "Télécharger" do
-                .icon.attachment
-                = commentaire.file_identifier
-          - elsif commentaire.piece_justificative
-            .attachment-link
-              = link_to commentaire.piece_justificative.content_url, class: "button", target: "_blank", title: "Télécharger" do
-                .icon.attachment
-                = commentaire.piece_justificative.original_filename
-
-  = form_for(@commentaire, url: commentaire_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' }) do |f|
-    = f.text_area :body, rows: 5, placeholder: 'Répondre ici', required: true
-    .flex.justify-between
-      %div
-        = f.file_field :file, id: :file, accept: @commentaire.file.accept_extension_list
-        %label{ for: :file }
-          .notice
-            (taille max : 20 Mo)
-
-      .send-wrapper
-        = f.submit 'Envoyer', class: 'button send', data: { disable_with: "Envoi…" }
+  = render partial: "new_gestionnaire/shared/commentaires/form", locals: { commentaire: @commentaire, form_url: commentaire_dossier_path(@dossier.procedure, @dossier) }
