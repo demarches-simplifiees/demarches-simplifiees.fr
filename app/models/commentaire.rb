@@ -1,8 +1,12 @@
 class Commentaire < ActiveRecord::Base
   belongs_to :dossier, touch: true
   belongs_to :champ
-
   belongs_to :piece_justificative
+
+  mount_uploader :file, CommentaireFileUploader
+  validates :file, file_size: { maximum: 20.megabytes, message: "La taille du fichier doit être inférieure à 20 Mo" }
+  validate :is_virus_free?
+  validates_presence_of :body, message: "Votre message ne peut être vide"
 
   default_scope { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
@@ -11,6 +15,14 @@ class Commentaire < ActiveRecord::Base
 
   def header
     "#{email}, " + I18n.l(created_at.localtime, format: '%d %b %Y %H:%M')
+  end
+
+  def file_url
+    if Features.remote_storage
+      RemoteDownloader.new(file.path).url
+    else
+      file.url
+    end
   end
 
   private
@@ -42,5 +54,11 @@ class Commentaire < ActiveRecord::Base
 
   def notify_user
     NotificationMailer.new_answer(dossier).deliver_now!
+  end
+
+  def is_virus_free?
+    if file.present? && file_changed? && !ClamavService.safe_file?(file.path)
+      errors.add(:file, "Virus détecté dans le fichier joint, merci de changer de fichier")
+    end
   end
 end
