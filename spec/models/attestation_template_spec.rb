@@ -122,6 +122,7 @@ describe AttestationTemplate, type: :model do
     after do
       @logo.close
       @signature.close
+      Timecop.return
     end
 
     let(:view_args) do

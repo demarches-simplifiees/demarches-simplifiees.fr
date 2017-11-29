@@ -59,6 +59,8 @@ describe StatsController, type: :controller do
       FactoryGirl.create(:procedure, :created_at => 15.days.ago, :updated_at => 1.hour.ago)
     end
 
+    after { Timecop.return }
+
     let (:association) { Procedure.all }
 
     context "while a super admin is logged in" do
@@ -85,8 +87,6 @@ describe StatsController, type: :controller do
         })
       }
     end
-
-    after { Timecop.return }
   end
 
   describe "#procedures_count_per_administrateur" do
@@ -230,9 +230,8 @@ describe StatsController, type: :controller do
     let!(:avis_with_dossier) { create(:avis) }
     let!(:dossier2) { create(:dossier) }
 
-    before do
-      Timecop.freeze(Time.now)
-    end
+    before { Timecop.freeze(Time.now) }
+    after { Timecop.return }
 
     subject { StatsController.new.send(:avis_usage) }
 
@@ -271,9 +270,8 @@ describe StatsController, type: :controller do
 
     subject { StatsController.new.send(:avis_answer_percentages) }
 
-    before do
-      Timecop.freeze(Time.now)
-    end
+    before { Timecop.freeze(Time.now) }
+    after { Timecop.return }
 
     it { is_expected.to match [[3.week.ago.to_i, 0], [2.week.ago.to_i, 0], [1.week.ago.to_i, 66.67]] }
   end
@@ -283,9 +281,8 @@ describe StatsController, type: :controller do
     let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
     let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }
 
-    before do
-      Timecop.freeze(Time.now)
-    end
+    before { Timecop.freeze(Time.now) }
+    after { Timecop.return }
 
     subject { StatsController.new.send(:motivation_usage_dossier) }
 
@@ -298,9 +295,8 @@ describe StatsController, type: :controller do
     let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
     let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }
 
-    before do
-      Timecop.freeze(Time.now)
-    end
+    before { Timecop.freeze(Time.now) }
+    after { Timecop.return }
 
     subject { StatsController.new.send(:motivation_usage_procedure) }
 

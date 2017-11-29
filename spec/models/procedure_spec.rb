@@ -237,16 +237,13 @@ describe Procedure do
       Timecop.freeze(now)
       procedure.publish!("example-path")
     end
+    after { Timecop.return }
 
     it { expect(procedure.archived_at).to eq(nil) }
     it { expect(procedure.published_at).to eq(now) }
     it { expect(ProcedurePath.find_by_path("example-path")).to be }
     it { expect(ProcedurePath.find_by_path("example-path").procedure).to eq(procedure) }
     it { expect(ProcedurePath.find_by_path("example-path").administrateur).to eq(procedure.administrateur) }
-
-    after do
-      Timecop.return
-    end
   end
 
   describe "#brouillon?" do
@@ -300,13 +297,10 @@ describe Procedure do
       procedure.archive
       procedure.reload
     end
+    after { Timecop.return }
 
     it { expect(procedure.archivee?).to be_truthy }
     it { expect(procedure.archived_at).to eq(now) }
-
-    after do
-      Timecop.return
-    end
   end
 
   describe 'total_dossier' do
