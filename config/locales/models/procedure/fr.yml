@@ -1,5 +1,8 @@
 fr:
   activerecord:
+    attributes:
+      procedure:
+        organisation: Organisme
     errors:
       models:
         procedure:
@@ -9,4 +12,6 @@ fr:
             description:
               blank: Attribut manquant
             lien_demarche:
+              blank: Attribut manquant
+            organisation:
               blank: Attribut manquant
