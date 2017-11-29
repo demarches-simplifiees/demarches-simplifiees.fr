@@ -28,36 +28,24 @@
             .description
               %h4 En instruction
               L'usager ne peut modifier son dossier pendant l'instruction
-          %li{ onclick: "TPS.acceptDossier();" }
+          %li{ onclick: "TPS.showMotivation('accept');" }
             .icon.accept
             .description
               %h4 Accepter
               L'usager sera notifié que son dossier a été accepté
-          %li
-            = link_to backoffice_dossier_process_dossier_path(dossier, process_action: "without_continuation", new_ui: true), method: :post, data: { confirm: "Confirmer vous le classement sans suite de ce dossier ?" } do
-              .icon.without-continuation
-              .description
-                %h4 Classer sans suite
-                L'usager ne recevra aucune notification
-          %li
-            = link_to backoffice_dossier_process_dossier_path(dossier, process_action: "refuse", new_ui: true), method: :post, data: { confirm: "Confirmer vous le refus de ce dossier ?" } do
-              .icon.close
-              .description
-                %h4 Refuser
-                L'usager sera notifié que son dossier a été refusé
-      .motivation
-        %h3
-          .icon.accept
-          Accepter le dossier
-          = "nº #{dossier.id}"
-
-        = form_tag(backoffice_dossier_process_dossier_url(dossier.id, new_ui: true), method: :post, class: "form") do
-          = text_area :dossier, :motivation, class: "motivation-text-area", placeholder: "Rédigez votre motivation ici (facultative)"
-          %p.help
-            L'acceptation du dossier envoie automatiquement une attestation à l'usager.
-          .text-right
-            %span.button{ onclick: "TPS.motivationCancel();" } Annuler
-            = button_tag "Valider la décision", name: :process_action, value: "close", class: 'button primary', title: 'Accepter', data: { confirm: "Accepter ce dossier ?" }
+          %li{ onclick: "TPS.showMotivation('without-continuation');" }
+            .icon.without-continuation
+            .description
+              %h4 Classer sans suite
+              L'usager ne recevra aucune notification
+          %li{ onclick: "TPS.showMotivation('close');" }
+            .icon.close
+            .description
+              %h4 Refuser
+              L'usager sera notifié que son dossier a été refusé
+      = render partial: 'new_gestionnaire/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Accepter le dossier',  popup_class: 'accept', process_action: 'close', title: 'Accepter', confirm: 'Accepter ce dossier ?' }
+      = render partial: 'new_gestionnaire/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Classer le dossier sans suite', popup_class: 'without-continuation', process_action: 'without_continuation', title: 'Classer sans suite', confirm: 'Confirmer vous le classement sans suite de ce dossier ?' }
+      = render partial: 'new_gestionnaire/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Refuser le dossier', popup_class: 'close', process_action: 'refuse', title: 'Refuser', confirm: 'Confirmer vous le refus de ce dossier ?' }
 
 - else
   - if dossier.motivation.present? || dossier.attestation.present?
