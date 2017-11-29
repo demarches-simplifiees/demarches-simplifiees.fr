@@ -23,8 +23,10 @@ feature 'The gestionnaire part' do
     dossier.reload
     expect(dossier.state).to eq('received')
 
-    fill_in('dossier_motivation', with: 'a good reason')
-    click_on 'Valider la décision'
+    within('.accept.motivation') do
+      fill_in('dossier_motivation', with: 'a good reason')
+      click_on 'Valider la décision'
+    end
 
     dossier.reload
     expect(dossier.state).to eq('closed')
