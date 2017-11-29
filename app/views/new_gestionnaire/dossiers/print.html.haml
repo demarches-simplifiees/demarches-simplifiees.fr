@@ -91,7 +91,7 @@
   - @dossier.commentaires.each do |commentaire|
     %tr
       %th
-        = render partial: 'commentaire_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
+        = render partial: 'new_gestionnaire/shared/commentaires/commentaire_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
         - if ![current_gestionnaire.email, @dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
           (invité)
         %br
