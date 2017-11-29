@@ -15,7 +15,7 @@ describe Commentaire do
     let(:assign_to) { create(:assign_to, gestionnaire: gestionnaire, procedure: procedure) }
     let(:user) { create(:user) }
     let(:dossier) { create(:dossier, procedure: procedure, user: user) }
-    let(:commentaire) { Commentaire.new(dossier: dossier) }
+    let(:commentaire) { Commentaire.new(dossier: dossier, body: "Mon commentaire") }
 
     context "with a commentaire created by a user" do
       it "calls notify_gestionnaires" do

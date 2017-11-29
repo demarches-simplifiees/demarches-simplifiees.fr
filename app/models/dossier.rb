@@ -373,6 +373,12 @@ class Dossier < ActiveRecord::Base
     end
   end
 
+  def user_geometry
+    if json_latlngs.present?
+      UserGeometry.new(json_latlngs)
+    end
+  end
+
   private
 
   def build_attestation

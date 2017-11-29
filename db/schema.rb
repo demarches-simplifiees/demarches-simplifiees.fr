@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171117165748) do
+ActiveRecord::Schema.define(version: 20171123125346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,8 +78,8 @@ ActiveRecord::Schema.define(version: 20171117165748) do
     t.string   "logo"
     t.string   "signature"
     t.boolean  "activated"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.integer  "procedure_id"
     t.string   "logo_secure_token"
     t.string   "signature_secure_token"
@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(version: 20171117165748) do
     t.datetime "updated_at",             null: false
     t.integer  "piece_justificative_id"
     t.integer  "champ_id"
+    t.string   "file"
     t.index ["champ_id"], name: "index_commentaires_on_champ_id", using: :btree
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id", using: :btree
   end
@@ -403,7 +404,7 @@ ActiveRecord::Schema.define(version: 20171117165748) do
   create_table "procedures", force: :cascade do |t|
     t.string   "libelle"
     t.string   "description"
-    t.string   "organisation"
+    t.string   "organisation",                          null: false
     t.string   "direction"
     t.string   "lien_demarche"
     t.datetime "created_at",                            null: false

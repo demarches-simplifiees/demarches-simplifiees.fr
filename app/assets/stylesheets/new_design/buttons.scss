@@ -44,13 +44,35 @@
     }
   }
 
-  &.success {
+  &.accepted {
     color: #FFFFFF;
     border-color: $green;
     background-color: $green;
 
     &:hover {
       color: $green;
+      background-color: #FFFFFF;
+    }
+  }
+
+  &.without-continuation {
+    color: #FFFFFF;
+    border-color: $black;
+    background-color: $black;
+
+    &:hover {
+      color: $black;
+      background-color: #FFFFFF;
+    }
+  }
+
+  &.refused {
+    color: #FFFFFF;
+    border-color: $dark-red;
+    background-color: $dark-red;
+
+    &:hover {
+      color: $dark-red;
       background-color: #FFFFFF;
     }
   }
@@ -80,6 +102,13 @@
       content: "▾";
       margin-left: $default-spacer;
       font-weight: bold;
+    }
+
+    &.icon-only {
+      &::after {
+        margin-left: 2px;
+        color: $blue;
+      }
     }
 
     .dropdown-content {

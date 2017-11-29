@@ -61,7 +61,7 @@
 
 - else
   - if dossier.motivation.present? || dossier.attestation.present?
-    %span.button.dropdown{ class: dossier.closed? ? 'success' : nil }
+    %span.button.dropdown{ class: button_or_label_class(dossier) }
       = dossier.statut
       .dropdown-content.fade-in-down.terminated
         - if dossier.motivation.present?
@@ -73,5 +73,5 @@
           %p.attestation L'acceptation du dossier a envoyé automatiquement une attestation au demandeur
           = link_to "Voir l'attestation", attestation_dossier_path(dossier.procedure, dossier), target: '_blank', class: 'button'
   - else
-    %span.label{ class: dossier.closed? ? 'success' : nil }
+    %span.label{ class: button_or_label_class(dossier) }
       = dossier.statut

@@ -97,6 +97,108 @@
                 "order_place": 1,
                 "description": "description de votre projet"
               }
+            }, 
+            {
+              "value": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                  [
+                    [
+                      [
+                        2.3050735,
+                        48.8401501
+                      ],
+                      [
+                        2.3052329,
+                        48.8402106
+                      ],
+                      [
+                        2.3053759,
+                        48.8400422
+                      ],
+                      [
+                        2.3050735,
+                        48.8401501
+                      ]
+                    ]
+                  ]
+                ]
+              },
+              "type_de_champ": {
+                "id": -1,
+                "libelle": "cadastre",
+                "type_champ": "cadastre",
+                "order_place": -1,
+                "descripton": ""
+              }
+            },
+            {
+              "value": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                  [
+                    [
+                      [
+                        2.3050735,
+                        48.8401501
+                      ],
+                      [
+                        2.3052329,
+                        48.8402106
+                      ],
+                      [
+                        2.3053759,
+                        48.8400422
+                      ],
+                      [
+                        2.3050735,
+                        48.8401501
+                      ]
+                    ]
+                  ]
+                ]
+              },
+              "type_de_champ": {
+                "id": -1,
+                "libelle": "quartier prioritaire",
+                "type_champ": "quartier_prioritaire",
+                "order_place": -1,
+                "descripton": ""
+              }
+            },
+            {
+              "value": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                  [
+                    [
+                      [
+                        2.3049509525299072,
+                        48.84028511554904
+                      ],
+                      [
+                        2.305165529251098,
+                        48.84014035882062
+                      ],
+                      [
+                        2.3049670457839966,
+                        48.84005562298059
+                      ],
+                      [
+                        2.3049509525299072,
+                        48.84028511554904
+                      ]
+                    ]
+                  ]
+                ]
+              },
+              "type_de_champ": {
+                "id": -1,
+                "libelle": "user_geometry",
+                "type_champ": "user_geometry",
+                "order_place": -1,
+                "descripton": ""
+              }
             }
           ],
           "champs_private": [
@@ -155,9 +257,9 @@
           "direction": "direction SGMAP",
           "archived_at": null,
           "geographic_information": {
-            "use_api_carto": false,
-            "quartiers_prioritaires": false,
-            "cadastre": false
+            "use_api_carto": true,
+            "quartiers_prioritaires": true,
+            "cadastre": true
           },
           "types_de_champ": [
             {

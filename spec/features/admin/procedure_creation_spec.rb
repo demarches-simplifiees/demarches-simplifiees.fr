@@ -37,6 +37,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       page.find_by_id('flash_message').visible?
       fill_in 'procedure_libelle', with: 'libelle de la procedure'
       page.execute_script("$('#procedure_description').data('wysihtml5').editor.setValue('description de la procedure')")
+      fill_in 'procedure_organisation', with: 'organisme de la procedure'
       page.find_by_id('save-procedure').click
       expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.first.id.to_s))
     end
@@ -47,6 +48,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       page.find_by_id('new-procedure').click
       fill_in 'procedure_libelle', with: 'libelle de la procedure'
       page.execute_script("$('#procedure_description').data('wysihtml5').editor.setValue('description de la procedure')")
+      fill_in 'procedure_organisation', with: 'organisme de la procedure'
       page.find_by_id('save-procedure').click
     end
 
