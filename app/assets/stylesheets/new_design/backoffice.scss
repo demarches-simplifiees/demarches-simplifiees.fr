@@ -30,3 +30,58 @@
   font-size: 14px;
   line-height: 20px;
 }
+
+.print-menu-opener {
+  position: relative;
+}
+
+.print-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 45px;
+  font-size: 14px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid $border-grey;
+  min-width: 270px;
+  max-width: 340px;
+  z-index: 20;
+
+  &.open {
+    display: block;
+  }
+
+  li {
+    border-bottom: 1px solid $border-grey;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .menu-item {
+      align-items: center;
+      padding: 14px;
+      color: $grey;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      img {
+        margin-right: 14px;
+      }
+    }
+
+    .menu-link {
+      display: flex;
+      color: $black;
+
+      &:hover {
+        background: $light-grey;
+      }
+    }
+  }
+}
+
+.print-header {
+  display: none;
+}

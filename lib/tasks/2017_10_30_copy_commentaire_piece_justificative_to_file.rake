@@ -1,0 +1,32 @@
+namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
+  task set: :environment do
+    commentaires_to_process = Commentaire.where(file:nil).where.not(piece_justificative_id: nil).reorder(id: :desc)
+
+    puts "#{commentaires_to_process.count} commentaires to process..."
+
+    commentaires_to_process.each do |c|
+      process_commentaire(c)
+    end
+  end
+
+  def process_commentaire commentaire
+    puts "Processing commentaire #{commentaire.id}"
+    if commentaire.piece_justificative.present?
+      # https://github.com/carrierwaveuploader/carrierwave#uploading-files-from-a-remote-location
+      commentaire.remote_file_url = commentaire.piece_justificative.content_url
+
+      if commentaire.piece_justificative.original_filename.present?
+        commentaire.file.define_singleton_method(:filename) { commentaire.piece_justificative.original_filename }
+      end
+
+      if commentaire.body.blank?
+        commentaire.body = commentaire.piece_justificative.original_filename || "."
+      end
+
+      commentaire.save
+      if !commentaire.file.present?
+        puts "Failed to save file for commentaire #{commentaire.id}"
+      end
+    end
+  end
+end

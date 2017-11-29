@@ -63,12 +63,38 @@ describe NewGestionnaire::AvisController, type: :controller do
   end
 
   describe '#create_commentaire' do
+    let(:file) { nil }
+    let(:scan_result) { true }
+
+    subject { post :create_commentaire, { id: avis_without_answer.id, commentaire: { body: 'commentaire body', file: file } } }
+
     before do
-      post :create_commentaire, { id: avis_without_answer.id, commentaire: { body: 'commentaire body' } }
+      allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
     end
 
-    it { expect(response).to redirect_to(messagerie_avis_path(avis_without_answer)) }
-    it { expect(dossier.commentaires.map(&:body)).to match(['commentaire body']) }
+    it do
+      subject
+
+      expect(response).to redirect_to(messagerie_avis_path(avis_without_answer))
+      expect(dossier.commentaires.map(&:body)).to match(['commentaire body'])
+    end
+
+    context "with a file" do
+      let(:file) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
+
+      it do
+        subject
+        expect(Commentaire.last.file.path).to include("piece_justificative_0.pdf")
+      end
+
+      it { expect { subject }.to change(Commentaire, :count).by(1) }
+
+      context "and a virus" do
+        let(:scan_result) { false }
+
+        it { expect { subject }.not_to change(Commentaire, :count) }
+      end
+    end
   end
 
   describe '#create_avis' do

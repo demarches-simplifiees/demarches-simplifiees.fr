@@ -57,6 +57,12 @@ describe Procedure do
       it { is_expected.to allow_value('').for(:lien_demarche) }
       it { is_expected.to allow_value('http://localhost').for(:lien_demarche) }
     end
+
+    context 'organisation' do
+      it { is_expected.not_to allow_value(nil).for(:organisation) }
+      it { is_expected.not_to allow_value('').for(:organisation) }
+      it { is_expected.to allow_value('URRSAF').for(:organisation) }
+    end
   end
 
   describe '#types_de_champ_ordered' do

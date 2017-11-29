@@ -3,21 +3,9 @@
 = render partial: 'header', locals: { avis: @avis, dossier: @dossier }
 
 .messagerie.container
-  %ul
+  %ul.messages-list
     - @dossier.commentaires.each do |commentaire|
       %li
-        = render partial: 'new_gestionnaire/dossiers/commentaire_icon', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
+        = render partial: "new_gestionnaire/shared/commentaires/commentaire", locals: { commentaire: commentaire }
 
-        .width-100
-          %h2
-            %span.mail
-              = render partial: 'new_gestionnaire/dossiers/commentaire_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
-            - if ![current_gestionnaire.email, @dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
-              %span.guest Invité
-            %span.date= I18n.l(commentaire.created_at.localtime, format: '%H:%M le %d/%m/%Y')
-          %p= sanitize(commentaire.body)
-
-  = form_for(Commentaire.new, url: commentaire_avis_path(@avis), html: { class: 'form' }) do |f|
-    = f.text_area :body, rows: 5, placeholder: 'Répondre ici', required: true
-    .send-wrapper
-      = f.submit 'Envoyer', class: 'button send'
+  = render partial: "new_gestionnaire/shared/commentaires/form", locals: { commentaire: @commentaire, form_url: commentaire_avis_path(@avis) }

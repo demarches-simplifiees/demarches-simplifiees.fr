@@ -7,8 +7,14 @@
         %li
           = "Dossier nº #{dossier.id}"
       .mixed-buttons-bar
-        = link_to print_dossier_path(dossier.procedure, dossier), target: "_blank", class: "button icon-only" do
-          .icon.printer>
+        .button.dropdown.icon-only.print-menu-opener{ onclick: "javascript:TPS.togglePrintMenu(event);" }
+          .icon.printer
+          %ul.print-menu
+            %li
+              = link_to "Tout le dossier", print_dossier_path(dossier.procedure, dossier), target: "_blank", class: "menu-item menu-link"
+            %li
+              = link_to "Uniquement cet onglet", "#", onclick: "TPS.togglePrintMenu; window.print()", class: "menu-item menu-link"
+
         = render partial: "new_gestionnaire/procedures/dossier_actions", locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: current_gestionnaire&.follow?(dossier) }
         = render partial: "state_button", locals: { dossier: dossier }
     %ul.tabs
@@ -29,3 +35,9 @@
         - if notifications_summary[:messagerie]
           %span.notifications{ 'aria-label': 'notifications' }
         = link_to "Messagerie", messagerie_dossier_path(dossier.procedure, dossier)
+
+.container
+  .print-header
+    = dossier.procedure.libelle.truncate_words(10)
+    >
+    = "Dossier nº #{dossier.id} (#{dossier.statut})"
