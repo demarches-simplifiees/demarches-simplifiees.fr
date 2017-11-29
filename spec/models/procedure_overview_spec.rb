@@ -5,9 +5,8 @@ describe ProcedureOverview, type: :model do
   let(:friday) { DateTime.new(2017, 5, 12) } # vendredi 12 mai 2017, de la semaine du 8 mai
   let(:monday) { DateTime.new(2017, 5, 8) }
 
-  before :each do
-    Timecop.freeze(friday)
-  end
+  before { Timecop.freeze(friday) }
+  after { Timecop.return }
 
   let(:procedure_overview) { ProcedureOverview.new(procedure, monday) }
 
