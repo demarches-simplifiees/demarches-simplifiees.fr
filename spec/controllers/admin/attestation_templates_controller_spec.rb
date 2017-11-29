@@ -12,6 +12,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
     Timecop.freeze(Time.now)
   end
 
+  after { Timecop.return }
+
   describe 'POST #preview' do
     let(:upload_params) { { title: 't', body: 'b', footer: 'f' } }
 
