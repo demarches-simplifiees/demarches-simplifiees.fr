@@ -60,6 +60,13 @@ module NewGestionnaire
       redirect_to dossier_path(procedure, dossier)
     end
 
+    def repasser_en_construction
+      dossier.initiated!
+      flash.notice = 'Dossier repassé en construction.'
+
+      redirect_to dossier_path(procedure, dossier)
+    end
+
     def create_commentaire
       commentaire_hash = commentaire_params.merge(email: current_gestionnaire.email, dossier: dossier)
 

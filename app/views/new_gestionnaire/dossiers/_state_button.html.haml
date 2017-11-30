@@ -18,7 +18,7 @@
 
         - if dossier.en_instruction?
           %li
-            = link_to backoffice_dossier_reopen_path(dossier, new_ui: true), method: :post, data: { confirm: "Confirmer vous la réouverture de ce dossier ?" } do
+            = link_to repasser_en_construction_dossier_path(dossier.procedure, dossier), method: :post, data: { confirm: "Confirmer vous le passage en construction de ce dossier ?" } do
               .icon.edit
               .description
                 %h4 Repasser en construction
