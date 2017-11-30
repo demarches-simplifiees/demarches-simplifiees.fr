@@ -101,7 +101,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     current_gestionnaire.follow(dossier)
     flash.notice = 'Dossier passé en instruction.'
 
-    redirect_to_dossier(dossier)
+    redirect_to backoffice_dossier_path(id: dossier.id)
   end
 
   def process_dossier
@@ -143,7 +143,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
 
-    redirect_to_dossier(dossier)
+    redirect_to backoffice_dossier_path(id: dossier.id)
   end
 
   def reload_smartlisting
@@ -182,18 +182,10 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     @facade.dossier.initiated!
     flash.notice = 'Dossier repassé en construction.'
 
-    redirect_to_dossier(@facade.dossier)
+    redirect_to backoffice_dossier_path(id: @facade.dossier.id)
   end
 
   private
-
-  def redirect_to_dossier(dossier)
-    if params[:new_ui] # TODO delete new_ui when old UI is no longer used
-      redirect_to dossier_path(dossier.procedure, dossier)
-    else
-      redirect_to backoffice_dossier_path(id: dossier.id)
-    end
-  end
 
   def check_attestation_emailable(dossier)
     if dossier&.attestation&.emailable? == false
