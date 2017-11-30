@@ -90,6 +90,24 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(gestionnaire.follow?(dossier)).to be true }
   end
 
+  describe '#repasser_en_construction' do
+    before do
+      dossier.received!
+      sign_in gestionnaire
+    end
+
+    subject { post :repasser_en_construction, params: { procedure_id: procedure.id, dossier_id: dossier.id} }
+
+    it 'change state to initiated' do
+      subject
+
+      dossier.reload
+      expect(dossier.state).to eq('initiated')
+    end
+
+    it { is_expected.to redirect_to dossier_path(procedure, dossier) }
+  end
+
   describe '#show #messagerie #annotations_privees #avis' do
     before do
       dossier.notifications = %w(champs annotations_privees avis commentaire).map{ |type| Notification.create!(type_notif: type) }
