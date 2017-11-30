@@ -254,6 +254,7 @@ Rails.application.routes.draw do
             patch 'unarchive'
             patch 'annotations' => 'dossiers#update_annotations'
             post 'commentaire' => 'dossiers#create_commentaire'
+            post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
             scope :carte do
               get 'position'
             end

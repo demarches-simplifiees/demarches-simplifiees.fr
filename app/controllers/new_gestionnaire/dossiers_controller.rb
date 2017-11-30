@@ -52,6 +52,14 @@ module NewGestionnaire
       redirect_back(fallback_location: procedures_url)
     end
 
+    def passer_en_instruction
+      dossier.received!
+      current_gestionnaire.follow(dossier)
+      flash.notice = 'Dossier passé en instruction.'
+
+      redirect_to dossier_path(procedure, dossier)
+    end
+
     def create_commentaire
       commentaire_hash = commentaire_params.merge(email: current_gestionnaire.email, dossier: dossier)
 
