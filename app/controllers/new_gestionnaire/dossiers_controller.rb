@@ -74,15 +74,15 @@ module NewGestionnaire
       end
 
       case params[:process_action]
-      when "refuse"
+      when "refuser"
         next_step = "refuse"
         notice = "Dossier considéré comme refusé."
         template = procedure.refused_mail_template
-      when "without_continuation"
+      when "classer_sans_suite"
         next_step = "without_continuation"
         notice = "Dossier considéré comme sans suite."
         template = procedure.without_continuation_mail_template
-      when "close"
+      when "accepter"
         next_step = "close"
         notice = "Dossier traité avec succès."
         template = procedure.closed_mail_template
