@@ -7,7 +7,7 @@
     - if ![current_gestionnaire.email, @dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
       %span.guest Invité
     %span.date= I18n.l(commentaire.created_at.localtime, format: '%H:%M le %d/%m/%Y')
-  %p.rich-text= sanitize(commentaire.body)
+  .rich-text= sanitize(commentaire.body)
 
   - if commentaire.file.present?
     .attachment-link
