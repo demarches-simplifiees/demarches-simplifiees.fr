@@ -109,13 +109,13 @@ describe NewGestionnaire::DossiersController, type: :controller do
   end
 
   describe '#terminer' do
-    context "with refuse" do
+    context "with refuser" do
       before do
         dossier.received!
         sign_in gestionnaire
       end
 
-      subject { post :terminer, params: { process_action: "refuse", procedure_id: procedure.id, dossier_id: dossier.id} }
+      subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id} }
 
       it 'change state to refused' do
         subject
@@ -135,13 +135,13 @@ describe NewGestionnaire::DossiersController, type: :controller do
       it { is_expected.to redirect_to redirect_to dossier_path(procedure, dossier) }
     end
 
-    context "with without_continuation" do
+    context "with classer_sans_suite" do
       before do
         dossier.received!
         sign_in gestionnaire
       end
 
-      subject { post :terminer, params: { process_action: "without_continuation", procedure_id: procedure.id, dossier_id: dossier.id} }
+      subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id} }
 
       it 'change state to without_continuation' do
         subject
@@ -161,7 +161,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       it { is_expected.to redirect_to redirect_to dossier_path(procedure, dossier) }
     end
 
-    context "with close" do
+    context "with accepter" do
       let(:expected_attestation) { nil }
 
       before do
@@ -175,7 +175,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         expect(NotificationMailer).to receive(:deliver_now!)
       end
 
-      subject { post :terminer, params: { process_action: "close", procedure_id: procedure.id, dossier_id: dossier.id} }
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id} }
 
       it 'change state to closed' do
         subject
