@@ -9,6 +9,23 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
     end
   end
 
+  task fix: :environment do
+    commentaires_to_fix = Commentaire.where.not(file: nil).where.not(piece_justificative_id: nil).reorder(id: :desc)
+
+    puts "#{commentaires_to_fix.count} commentaires to fix..."
+
+    commentaires_to_fix.each do |c|
+      process_commentaire(c)
+    end
+  end
+
+  def sanitize_name(name) # from https://github.com/carrierwaveuploader/carrierwave/blob/master/lib/carrierwave/sanitized_file.rb#L323
+    name = name.gsub(/[^[:word:]\.\-\+]/,"_")
+    name = "_#{name}" if name =~ /\A\.+\z/
+    name = "unnamed" if name.size == 0
+    return name.mb_chars.to_s
+  end
+
   def process_commentaire commentaire
     puts "Processing commentaire #{commentaire.id}"
     if commentaire.piece_justificative.present?
@@ -16,7 +33,7 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
       commentaire.remote_file_url = commentaire.piece_justificative.content_url
 
       if commentaire.piece_justificative.original_filename.present?
-        commentaire.file.define_singleton_method(:filename) { commentaire.piece_justificative.original_filename }
+        commentaire.file.define_singleton_method(:filename) { sanitize_name(commentaire.piece_justificative.original_filename) }
       end
 
       if commentaire.body.blank?
