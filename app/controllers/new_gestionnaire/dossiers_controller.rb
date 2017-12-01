@@ -1,5 +1,6 @@
 module NewGestionnaire
   class DossiersController < ProceduresController
+    include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
 
     def attestation
@@ -50,6 +51,59 @@ module NewGestionnaire
     def unarchive
       dossier.update_attributes(archived: false)
       redirect_back(fallback_location: procedures_url)
+    end
+
+    def passer_en_instruction
+      dossier.received!
+      current_gestionnaire.follow(dossier)
+      flash.notice = 'Dossier passé en instruction.'
+
+      redirect_to dossier_path(procedure, dossier)
+    end
+
+    def repasser_en_construction
+      dossier.initiated!
+      flash.notice = 'Dossier repassé en construction.'
+
+      redirect_to dossier_path(procedure, dossier)
+    end
+
+    def terminer
+      if params[:dossier] && params[:dossier][:motivation].present?
+        motivation = params[:dossier][:motivation]
+      end
+
+      case params[:process_action]
+      when "refuser"
+        next_step = "refuse"
+        notice = "Dossier considéré comme refusé."
+        template = procedure.refused_mail_template
+      when "classer_sans_suite"
+        next_step = "without_continuation"
+        notice = "Dossier considéré comme sans suite."
+        template = procedure.without_continuation_mail_template
+      when "accepter"
+        next_step = "close"
+        notice = "Dossier traité avec succès."
+        template = procedure.closed_mail_template
+      end
+
+      dossier.next_step!('gestionnaire', next_step, motivation)
+
+      # needed to force Carrierwave to provide dossier.attestation.pdf.read
+      # when the Feature.remote_storage is true, otherwise pdf.read is a closed stream.
+      dossier.reload
+
+      attestation_pdf = nil
+      if check_attestation_emailable
+        attestation_pdf = dossier.attestation.pdf.read
+      end
+
+      flash.notice = notice
+
+      NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
+
+      redirect_to dossier_path(procedure, dossier)
     end
 
     def create_commentaire
@@ -121,6 +175,16 @@ module NewGestionnaire
 
     def champs_private_params
       params.require(:dossier).permit(champs_private_attributes: [:id, :value, value: []])
+    end
+
+    def check_attestation_emailable
+      if dossier&.attestation&.emailable? == false
+        human_size = number_to_human_size(dossier.attestation.pdf.size)
+        msg = "the attestation of the dossier #{dossier.id} cannot be mailed because it is too heavy: #{human_size}"
+        capture_message(msg, level: 'error')
+      end
+
+      dossier&.attestation&.emailable?
     end
   end
 end

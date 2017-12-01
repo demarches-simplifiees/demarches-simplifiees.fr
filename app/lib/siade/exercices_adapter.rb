@@ -10,14 +10,14 @@ class SIADE::ExercicesAdapter
   end
 
   def to_params
-    data_source[:exercices]
+    data_source[:exercices].map do |exercice|
+      {
+        ca: exercice[:ca],
+        dateFinExercice: exercice[:date_fin_exercice],
+        date_fin_exercice_timestamp: exercice[:date_fin_exercice_timestamp]
+      }
+    end
   rescue
     nil
-  end
-
-  def attr_to_fetch
-    [:ca,
-     :dateFinExercice,
-     :date_fin_exercice_timestamp]
   end
 end
