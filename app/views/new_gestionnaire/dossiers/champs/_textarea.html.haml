@@ -1,6 +1,6 @@
 = render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
 
-= form.text_area :value,
+~ form.text_area :value,
   row: 6,
   placeholder: champ.description,
   required: champ.mandatory,
