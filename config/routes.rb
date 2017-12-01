@@ -256,6 +256,7 @@ Rails.application.routes.draw do
             post 'commentaire' => 'dossiers#create_commentaire'
             post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
             post 'repasser-en-construction' => 'dossiers#repasser_en_construction'
+            post 'terminer'
             scope :carte do
               get 'position'
             end
