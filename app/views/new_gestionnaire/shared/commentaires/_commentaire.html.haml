@@ -9,13 +9,13 @@
     %span.date= I18n.l(commentaire.created_at.localtime, format: '%H:%M le %d/%m/%Y')
   .rich-text= sanitize(commentaire.body)
 
-  - if commentaire.file.present?
-    .attachment-link
-      = link_to commentaire.file_url, class: "button", target: "_blank", title: "Télécharger" do
-        .icon.attachment
-        = commentaire.file_identifier
-  - elsif commentaire.piece_justificative
+  - if commentaire.piece_justificative
     .attachment-link
       = link_to commentaire.piece_justificative.content_url, class: "button", target: "_blank", title: "Télécharger" do
         .icon.attachment
         = commentaire.piece_justificative.original_filename
+  - elsif commentaire.file.present?
+    .attachment-link
+      = link_to commentaire.file_url, class: "button", target: "_blank", title: "Télécharger" do
+        .icon.attachment
+        = commentaire.file_identifier
