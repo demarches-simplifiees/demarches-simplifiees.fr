@@ -187,10 +187,10 @@ describe Users::DossiersController, type: :controller do
       stub_request(:get, "https://api-dev.apientreprise.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
           .to_return(status: status_entreprise_call, body: File.read('spec/support/files/entreprise.json'))
 
-      stub_request(:get, "https://api-dev.apientreprise.fr/v1/etablissements/exercices/#{siret}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://api-dev.apientreprise.fr/v2/exercices/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: exercices_status, body: exercices_body)
 
-      stub_request(:get, "https://api-dev.apientreprise.fr/v1/associations/#{siret}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://api-dev.apientreprise.fr/v2/associations/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: rna_status, body: rna_body)
 
       dossier

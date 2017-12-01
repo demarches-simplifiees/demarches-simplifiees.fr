@@ -2,7 +2,7 @@
 @import "fonts";
 
 .new-header,
-.backoffice-header,
+.accompagnateur-header,
 footer {
   display: none;
 }
@@ -35,5 +35,25 @@ th {
   &.header-section {
     padding-top: 1.2em;
     font-size: 1.2em;
+  }
+}
+
+.messagerie {
+  .messages-list {
+    list-style: none;
+    padding-left: 0;
+    max-height: none;
+
+    li {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: 110%;
+    }
+
+    .person-icon {
+      display: none;
+    }
   }
 }

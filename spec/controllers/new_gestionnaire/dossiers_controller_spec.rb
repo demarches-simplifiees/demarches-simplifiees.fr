@@ -77,6 +77,156 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(response).to redirect_to(procedures_url) }
   end
 
+  describe '#passer_en_instruction' do
+    before do
+      dossier.initiated!
+      sign_in gestionnaire
+      post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      dossier.reload
+    end
+
+    it { expect(dossier.state).to eq('received') }
+    it { is_expected.to redirect_to dossier_path(procedure, dossier) }
+    it { expect(gestionnaire.follow?(dossier)).to be true }
+  end
+
+  describe '#repasser_en_construction' do
+    before do
+      dossier.received!
+      sign_in gestionnaire
+    end
+
+    subject { post :repasser_en_construction, params: { procedure_id: procedure.id, dossier_id: dossier.id} }
+
+    it 'change state to initiated' do
+      subject
+
+      dossier.reload
+      expect(dossier.state).to eq('initiated')
+    end
+
+    it { is_expected.to redirect_to dossier_path(procedure, dossier) }
+  end
+
+  describe '#terminer' do
+    context "with refuser" do
+      before do
+        dossier.received!
+        sign_in gestionnaire
+      end
+
+      subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id} }
+
+      it 'change state to refused' do
+        subject
+
+        dossier.reload
+        expect(dossier.state).to eq('refused')
+      end
+
+      it 'Notification email is sent' do
+        expect(NotificationMailer).to receive(:send_notification)
+          .with(dossier, kind_of(Mails::RefusedMail), nil).and_return(NotificationMailer)
+        expect(NotificationMailer).to receive(:deliver_now!)
+
+        subject
+      end
+
+      it { is_expected.to redirect_to redirect_to dossier_path(procedure, dossier) }
+    end
+
+    context "with classer_sans_suite" do
+      before do
+        dossier.received!
+        sign_in gestionnaire
+      end
+
+      subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id} }
+
+      it 'change state to without_continuation' do
+        subject
+
+        dossier.reload
+        expect(dossier.state).to eq('without_continuation')
+      end
+
+      it 'Notification email is sent' do
+        expect(NotificationMailer).to receive(:send_notification)
+          .with(dossier, kind_of(Mails::WithoutContinuationMail), nil).and_return(NotificationMailer)
+        expect(NotificationMailer).to receive(:deliver_now!)
+
+        subject
+      end
+
+      it { is_expected.to redirect_to redirect_to dossier_path(procedure, dossier) }
+    end
+
+    context "with accepter" do
+      let(:expected_attestation) { nil }
+
+      before do
+        dossier.received!
+        sign_in gestionnaire
+
+        expect(NotificationMailer).to receive(:send_notification)
+          .with(dossier, kind_of(Mails::ClosedMail), expected_attestation)
+          .and_return(NotificationMailer)
+
+        expect(NotificationMailer).to receive(:deliver_now!)
+      end
+
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id} }
+
+      it 'change state to closed' do
+        subject
+
+        dossier.reload
+        expect(dossier.state).to eq('closed')
+      end
+
+      context 'when the dossier does not have any attestation' do
+        it 'Notification email is sent' do
+          subject
+        end
+      end
+
+      context 'when the dossier has an attestation' do
+        before do
+          attestation = Attestation.new
+          allow(attestation).to receive(:pdf).and_return(double(read: 'pdf', size: 2.megabytes))
+          allow(attestation).to receive(:emailable?).and_return(emailable)
+
+          expect_any_instance_of(Dossier).to receive(:reload)
+          allow_any_instance_of(Dossier).to receive(:build_attestation).and_return(attestation)
+        end
+
+        context 'emailable' do
+          let(:emailable) { true }
+          let(:expected_attestation) { 'pdf' }
+
+          it 'Notification email is sent with the attestation' do
+            subject
+
+            is_expected.to redirect_to redirect_to dossier_path(procedure, dossier)
+          end
+        end
+
+        context 'when the dossier has an attestation not emailable' do
+          let(:emailable) { false }
+          let(:expected_attestation) { nil }
+
+          it 'Notification email is sent without the attestation' do
+            expect(controller).to receive(:capture_message)
+
+            subject
+
+            is_expected.to redirect_to redirect_to dossier_path(procedure, dossier)
+          end
+        end
+      end
+    end
+  end
+
   describe '#show #messagerie #annotations_privees #avis' do
     before do
       dossier.notifications = %w(champs annotations_privees avis commentaire).map{ |type| Notification.create!(type_notif: type) }
