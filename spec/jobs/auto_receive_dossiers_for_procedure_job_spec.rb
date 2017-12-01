@@ -5,6 +5,7 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
     let(:date) { Time.utc(2017, 9, 1, 10, 5, 0) }
 
     before { Timecop.freeze(date) }
+    after { Timecop.return }
 
     subject { AutoReceiveDossiersForProcedureJob.new.perform(procedure_id) }
 

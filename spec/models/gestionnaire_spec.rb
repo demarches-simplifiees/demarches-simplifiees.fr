@@ -314,10 +314,7 @@ describe Gestionnaire, type: :model do
     let(:friday) { DateTime.new(2017, 5, 12) }
     let(:monday) { DateTime.now.beginning_of_week }
 
-    before :each do
-      Timecop.freeze(friday)
-    end
-
+    before { Timecop.freeze(friday) }
     after { Timecop.return }
 
     context 'when no procedure published was active last week' do
@@ -563,10 +560,9 @@ describe Gestionnaire, type: :model do
         Timecop.freeze(freeze_date)
         gestionnaire.mark_tab_as_seen(dossier, :demande)
       end
+      after { Timecop.return }
 
       it { expect(follow.demande_seen_at).to eq(freeze_date) }
-
-      after { Timecop.return }
     end
   end
 end
