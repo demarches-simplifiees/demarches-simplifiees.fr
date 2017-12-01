@@ -57,7 +57,7 @@ describe SIADE::API do
 
   describe '.exercices' do
     before do
-      stub_request(:get, /https:\/\/api-dev.apientreprise.fr\/v1\/etablissements\/exercices\/.*token=/)
+      stub_request(:get, /https:\/\/api-dev.apientreprise.fr\/v2\/exercices\/.*token=/)
           .to_return(status: status, body: body)
     end
 
@@ -88,7 +88,7 @@ describe SIADE::API do
 
   describe '.rna' do
     before do
-      stub_request(:get, /https:\/\/api-dev.apientreprise.fr\/v1\/associations\/.*token=/)
+      stub_request(:get, /https:\/\/api-dev.apientreprise.fr\/v2\/associations\/.*token=/)
           .to_return(status: status, body: body)
     end
 
