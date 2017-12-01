@@ -151,7 +151,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def generate_export
-    exportable_dossiers = dossiers.downloadable
+    exportable_dossiers = dossiers.downloadable_sorted
 
     headers = exportable_dossiers.any? ? exportable_dossiers.first.export_headers : []
     data = exportable_dossiers.any? ? exportable_dossiers.map { |d| d.full_data_strings_array } : [[]]

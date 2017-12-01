@@ -758,19 +758,16 @@ describe Dossier do
     end
   end
 
-  describe '.downloadable' do
+  describe '.downloadable_sorted' do
     let(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :draft) }
-    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
-    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :received) }
-    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, archived: true) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated, initiated_at: DateTime.parse('03/01/2010')) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, initiated_at: DateTime.parse('01/01/2010')) }
+    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, archived: true, initiated_at: DateTime.parse('02/01/2010')) }
 
-    subject { procedure.dossiers.downloadable }
+    subject { procedure.dossiers.downloadable_sorted }
 
-    it { is_expected.not_to include(dossier)}
-    it { is_expected.to include(dossier2)}
-    it { is_expected.to include(dossier3)}
-    it { is_expected.to include(dossier4)}
+    it { is_expected.to match([dossier3, dossier4, dossier2])}
   end
 
   describe "#send_dossier_received" do
