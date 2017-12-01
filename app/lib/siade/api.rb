@@ -17,12 +17,12 @@ class SIADE::API
   end
 
   def self.exercices(siret)
-    endpoint = "/v1/etablissements/exercices/#{siret}"
+    endpoint = "/v2/exercices/#{siret}"
     call(base_url + endpoint)
   end
 
   def self.rna(siret)
-    endpoint = "/v1/associations/#{siret}"
+    endpoint = "/v2/associations/#{siret}"
     call(base_url + endpoint)
   end
 

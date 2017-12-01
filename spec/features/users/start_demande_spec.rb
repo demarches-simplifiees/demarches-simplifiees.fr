@@ -30,9 +30,9 @@ feature 'user arrive on siret page' do
               .to_return(status: 200, body: File.read('spec/support/files/etablissement.json'))
           stub_request(:get, "https://api-dev.apientreprise.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
               .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
-          stub_request(:get, "https://api-dev.apientreprise.fr/v1/etablissements/exercices/#{siret}?token=#{SIADETOKEN}")
+          stub_request(:get, "https://api-dev.apientreprise.fr/v2/exercices/#{siret}?token=#{SIADETOKEN}")
               .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
-          stub_request(:get, "https://api-dev.apientreprise.fr/v1/associations/#{siret}?token=#{SIADETOKEN}")
+          stub_request(:get, "https://api-dev.apientreprise.fr/v2/associations/#{siret}?token=#{SIADETOKEN}")
               .to_return(status: 404, body: '')
 
           page.find_by_id('dossier-siret').set siret
