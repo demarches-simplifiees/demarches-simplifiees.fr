@@ -1,0 +1,9 @@
+.accompagnateur-title= title
+
+- if emails_collection.present?
+  %ul
+    - emails_collection.each do |email|
+      %li
+        = email
+- else
+  = blank
