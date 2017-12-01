@@ -3,7 +3,7 @@
     .icon{ class: popup_class }
     #{popup_title} nº #{dossier.id}
 
-  = form_tag(backoffice_dossier_process_dossier_url(dossier.id, new_ui: true), method: :post, class: 'form') do
+  = form_tag(terminer_dossier_path(dossier.procedure, dossier), method: :post, class: 'form') do
     = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: 'Rédigez votre motivation ici (facultative)'
     - if title == 'Accepter'
       %p.help
