@@ -111,7 +111,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   describe "#create_commentaire" do
     let(:saved_commentaire) { dossier.commentaires.first }
-    let(:body) { "body" }
+    let(:body) { "avant\napres" }
     let(:file) { nil }
     let(:scan_result) { true }
 
@@ -133,7 +133,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it do
       subject
 
-      expect(saved_commentaire.body).to eq('body')
+      expect(saved_commentaire.body).to eq("<p>avant\n<br />apres</p>")
       expect(saved_commentaire.email).to eq(gestionnaire.email)
       expect(saved_commentaire.dossier).to eq(dossier)
       expect(response).to redirect_to(messagerie_dossier_path(dossier.procedure, dossier))

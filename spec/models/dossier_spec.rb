@@ -892,6 +892,7 @@ describe Dossier do
     let(:modif_date) { DateTime.parse('01/01/2100') }
 
     before { Timecop.freeze(modif_date) }
+    after { Timecop.return }
 
     subject do
       dossier.reload
@@ -941,8 +942,6 @@ describe Dossier do
 
       it { is_expected.to eq(modif_date) }
     end
-
-    after { Timecop.return }
   end
 
   describe '#owner_name' do
