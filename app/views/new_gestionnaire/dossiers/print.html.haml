@@ -87,20 +87,11 @@
 
 %h2 Messagerie
 
-%table
-  - @dossier.commentaires.each do |commentaire|
-    %tr
-      %th
-        = render partial: 'new_gestionnaire/shared/commentaires/commentaire_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
-        - if ![current_gestionnaire.email, @dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
-          (invité)
-        %br
-        = I18n.l(commentaire.created_at.localtime, format: 'le %d/%m/%Y à %H:%M')
-      %td
-        %p= sanitize(commentaire.body)
-        - if file = commentaire.piece_justificative
-          %br
-          = file.original_filename
+.messagerie
+  %ul.messages-list
+    - @dossier.commentaires.each do |commentaire|
+      %li
+        = render partial: "new_gestionnaire/shared/commentaires/commentaire", locals: { commentaire: commentaire }
 
 %script{ type: "text/javascript" }
   window.print();
