@@ -258,9 +258,9 @@ describe Dossier do
         end
       end
 
-      context 'when dossier is at state without_continuation' do
+      context 'when dossier is at state sans_suite' do
         before do
-          dossier.without_continuation!
+          dossier.sans_suite!
         end
 
         context 'when user is connected' do
@@ -269,7 +269,7 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('without_continuation') }
+            it { is_expected.to eq('sans_suite') }
           end
         end
 
@@ -279,7 +279,7 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('without_continuation') }
+            it { is_expected.to eq('sans_suite') }
           end
         end
       end
@@ -751,10 +751,10 @@ describe Dossier do
       it_behaves_like 'dossier is processed', 'refuse'
     end
 
-    context 'when dossier is without_continuation' do
+    context 'when dossier is sans_suite' do
       let(:state) { 'en_instruction' }
 
-      it_behaves_like 'dossier is processed', 'without_continuation'
+      it_behaves_like 'dossier is processed', 'sans_suite'
     end
   end
 
@@ -809,7 +809,7 @@ describe Dossier do
       expect { Dossier.create(procedure: procedure, state: "en_instruction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "accepte", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "refuse", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "without_continuation", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "sans_suite", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
     end
   end
 

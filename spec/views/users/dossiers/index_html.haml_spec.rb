@@ -7,7 +7,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
   let!(:decorate_dossier_en_instruction) { create(:dossier, :with_entreprise, user: user, state: 'en_instruction').decorate }
   let!(:decorate_dossier_accepte) { create(:dossier, :with_entreprise, user: user, state: 'accepte').decorate }
   let!(:decorate_dossier_refuse) { create(:dossier, :with_entreprise, user: user, state: 'refuse').decorate }
-  let!(:decorate_dossier_without_continuation) { create(:dossier, :with_entreprise, user: user, state: 'without_continuation').decorate }
+  let!(:decorate_dossier_sans_suite) { create(:dossier, :with_entreprise, user: user, state: 'sans_suite').decorate }
   let!(:decorate_dossier_invite) { create(:dossier, :with_entreprise, user: create(:user), state: 'en_construction').decorate }
 
   before do
@@ -75,7 +75,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     end
 
     it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_without_continuation }
+      let(:decorate_dossier_at_check) { decorate_dossier_sans_suite }
     end
   end
 

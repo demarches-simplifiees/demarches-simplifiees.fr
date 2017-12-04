@@ -143,11 +143,11 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
       subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id} }
 
-      it 'change state to without_continuation' do
+      it 'change state to sans_suite' do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('without_continuation')
+        expect(dossier.state).to eq('sans_suite')
       end
 
       it 'Notification email is sent' do
