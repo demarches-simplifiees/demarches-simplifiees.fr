@@ -45,8 +45,8 @@ describe ProcedureOverview, type: :model do
       create(:dossier, procedure: procedure, created_at: monday, state: :received)
     end
 
-    let!(:created_dossier_during_the_week_but_in_draft) do
-      create(:dossier, procedure: procedure, created_at: monday, state: :draft)
+    let!(:created_dossier_during_the_week_but_in_brouillon) do
+      create(:dossier, procedure: procedure, created_at: monday, state: :brouillon)
     end
 
     let!(:created_dossier_before_the_week) do

@@ -5,7 +5,7 @@ class StatsController < ApplicationController
 
   def index
     procedures = Procedure.publiees_ou_archivees
-    dossiers = Dossier.where.not(:state => :draft)
+    dossiers = Dossier.where.not(:state => :brouillon)
 
     @procedures_count = procedures.count
     @dossiers_count = dossiers.count

@@ -134,9 +134,9 @@ describe Dossier do
         it { expect { subject }.to raise_error('role is not valid') }
       end
 
-      context 'when dossier is at state draft' do
+      context 'when dossier is at state brouillon' do
         before do
-          dossier.draft!
+          dossier.brouillon!
         end
 
         context 'when user is connected' do
@@ -145,13 +145,13 @@ describe Dossier do
           context 'when he updates dossier informations' do
             let(:action) { 'update' }
 
-            it { is_expected.to eq('draft') }
+            it { is_expected.to eq('brouillon') }
           end
 
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('draft') }
+            it { is_expected.to eq('brouillon') }
           end
 
           context 'when he initiate a dossier' do
@@ -421,7 +421,7 @@ describe Dossier do
       it { expect(subject[3]).to be_in([true, false]) }
       it { expect(subject[4]).to eq(dossier.user.email) }
       it { expect(subject[5]).to be_in([true, false]) }
-      it { expect(subject[6]).to eq("draft") }
+      it { expect(subject[6]).to eq("brouillon") }
       it { expect(subject[7]).to eq(date1) }
       it { expect(subject[8]).to eq(date2) }
       it { expect(subject[9]).to eq(date3) }
@@ -459,7 +459,7 @@ describe Dossier do
           "false",
           dossier.user.email,
           "false",
-          "draft",
+          "brouillon",
           dossier.en_construction_at,
           dossier.received_at,
           dossier.processed_at,
@@ -624,7 +624,7 @@ describe Dossier do
     end
 
     context 'when the dossier has not been en_construction' do
-      let(:dossier) { create :dossier, procedure: procedure, state: 'draft' }
+      let(:dossier) { create :dossier, procedure: procedure, state: 'brouillon' }
 
       subject { dossier.text_summary }
 
@@ -683,7 +683,7 @@ describe Dossier do
   end
 
   describe '#update_state_dates' do
-    let(:state) { 'draft' }
+    let(:state) { 'brouillon' }
     let(:dossier) { create(:dossier, state: state) }
     let(:beginning_of_day) { Time.now.beginning_of_day }
 
@@ -760,7 +760,7 @@ describe Dossier do
 
   describe '.downloadable_sorted' do
     let(:procedure) { create(:procedure) }
-    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :draft) }
+    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :brouillon) }
     let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_construction, en_construction_at: DateTime.parse('03/01/2010')) }
     let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, en_construction_at: DateTime.parse('01/01/2010')) }
     let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, archived: true, en_construction_at: DateTime.parse('02/01/2010')) }
@@ -798,13 +798,13 @@ describe Dossier do
     end
 
     it "send an email when the dossier is created for the very first time" do
-      expect { Dossier.create(procedure: procedure, state: "draft", user: user) }.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
+      expect { Dossier.create(procedure: procedure, state: "brouillon", user: user) }.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche : #{procedure.libelle}")
     end
 
-    it "does not send an email when the dossier is created with a non draft state" do
+    it "does not send an email when the dossier is created with a non brouillon state" do
       expect { Dossier.create(procedure: procedure, state: "en_construction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "received", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "closed", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)

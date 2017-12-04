@@ -25,7 +25,7 @@ class Users::CarteController < UsersController
     dossier.update_attributes(json_latlngs: params[:json_latlngs])
 
     controller = :recapitulatif
-    controller = :description if dossier.draft?
+    controller = :description if dossier.brouillon?
 
     redirect_to url_for(controller: controller, action: :show, dossier_id: params[:dossier_id])
   end
@@ -61,7 +61,7 @@ class Users::CarteController < UsersController
 
   def self.route_authorization
     {
-        states: [:draft, :en_construction],
+        states: [:brouillon, :en_construction],
         api_carto: true
     }
   end

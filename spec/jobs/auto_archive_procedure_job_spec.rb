@@ -18,7 +18,7 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
   end
 
   context "when procedures have auto_archive_on set on yesterday or today" do
-    let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: 'draft', archived: false)}
+    let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: 'brouillon', archived: false)}
     let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
     let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
     let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
@@ -39,7 +39,7 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
       procedure_aujourdhui.reload
     end
 
-    it { expect(dossier1.state).to eq 'draft' }
+    it { expect(dossier1.state).to eq 'brouillon' }
     it { expect(dossier2.state).to eq 'received' }
     it { expect(dossier3.state).to eq 'received' }
     it { expect(dossier4.state).to eq 'received' }

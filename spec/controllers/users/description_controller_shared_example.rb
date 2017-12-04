@@ -31,8 +31,8 @@ shared_examples 'description_controller_spec' do
         it { expect(response).to have_http_status(:success) }
         it { expect(response.body).to_not have_content(I18n.t('errors.messages.procedure_archived')) }
 
-        context 'dossier is a draft' do
-          let(:state) { 'draft' }
+        context 'dossier is a brouillon' do
+          let(:state) { 'brouillon' }
 
           it { expect(response).to have_http_status(:success) }
           it { expect(response.body).to have_content(I18n.t('errors.messages.procedure_archived')) }
@@ -115,7 +115,7 @@ shared_examples 'description_controller_spec' do
         subject { post :update, params: {dossier_id: dossier_id, submit: submit} }
 
         before do
-          dossier.draft!
+          dossier.brouillon!
           subject
           dossier.reload
         end
@@ -128,7 +128,7 @@ shared_examples 'description_controller_spec' do
           expect(dossier.state).to eq('en_construction')
         end
 
-        context 'when user whould like save just a draft' do
+        context 'when user whould like save just a brouillon' do
           let(:submit) { {brouillon: 'brouillon'} }
 
           it "redirection vers la page recapitulative" do
@@ -136,7 +136,7 @@ shared_examples 'description_controller_spec' do
           end
 
           it 'etat du dossier est soumis' do
-            expect(dossier.state).to eq('draft')
+            expect(dossier.state).to eq('brouillon')
           end
         end
       end
@@ -153,7 +153,7 @@ shared_examples 'description_controller_spec' do
         end
 
         it 'etat du dossier n\'est pas soumis' do
-          expect(dossier.state).not_to eq('draft')
+          expect(dossier.state).not_to eq('brouillon')
         end
       end
     end
@@ -313,7 +313,7 @@ shared_examples 'description_controller_spec' do
       it { expect(response.status).to eq(302) }
 
       context 'Le dossier est en brouillon' do
-        let(:state) { 'draft' }
+        let(:state) { 'brouillon' }
 
         it { expect(response.status).to eq(403) }
       end

@@ -39,7 +39,7 @@
       - if !@dossier.can_be_en_construction?
         .alert.alert-danger
           = t('errors.messages.procedure_archived')
-      - elsif !@dossier.draft?
+      - elsif !@dossier.brouillon?
         = render partial: '/layouts/modifications_terminees'
       - else
         = submit_tag 'Soumettre mon dossier', id: 'suivant', name: 'submit[nouveaux]', class: 'btn btn btn-success', style: 'float: right;', disabled: @procedure.archivee?, data: { disable_with: 'Soumettre votre dossier', submit: true }

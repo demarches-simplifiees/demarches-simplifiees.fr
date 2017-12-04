@@ -22,9 +22,9 @@ describe Users::RecapitulatifController, type: :controller do
     it_behaves_like "not owner of dossier", :show
 
     describe 'before_action authorized_routes?' do
-      context 'when dossier have draft state' do
+      context 'when dossier have brouillon state' do
         before do
-          dossier.state = 'draft'
+          dossier.state = 'brouillon'
           dossier.save
 
           get :show, params: {dossier_id: dossier.id}

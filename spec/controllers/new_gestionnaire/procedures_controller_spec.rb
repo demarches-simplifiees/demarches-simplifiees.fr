@@ -121,8 +121,8 @@ describe NewGestionnaire::ProceduresController, type: :controller do
           dossier
         end
 
-        context "with draft state" do
-          let(:state) { "draft" }
+        context "with brouillon state" do
+          let(:state) { "brouillon" }
           before { subject }
 
           it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
@@ -181,8 +181,8 @@ describe NewGestionnaire::ProceduresController, type: :controller do
         it { expect(assigns(:procedure)).to eq(procedure) }
       end
 
-      context 'with a new draft dossier' do
-        let!(:draft_dossier) { create(:dossier, procedure: procedure, state: 'draft') }
+      context 'with a new brouillon dossier' do
+        let!(:brouillon_dossier) { create(:dossier, procedure: procedure, state: 'draft') }
 
         before do
           get :show, params: { procedure_id: procedure.id }

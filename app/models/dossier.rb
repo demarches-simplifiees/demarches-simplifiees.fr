@@ -1,6 +1,6 @@
 class Dossier < ActiveRecord::Base
   enum state: {
-    draft:                'draft',
+    brouillon:            'brouillon',
     en_construction:      'en_construction',
     received:             'received',
     closed:               'closed',
@@ -8,7 +8,7 @@ class Dossier < ActiveRecord::Base
     without_continuation: 'without_continuation'
   }
 
-  BROUILLON = %w(draft)
+  BROUILLON = %w(brouillon)
   NOUVEAUX = %w(en_construction)
   EN_CONSTRUCTION = %w(en_construction)
   EN_INSTRUCTION = %w(received)
@@ -157,7 +157,7 @@ class Dossier < ActiveRecord::Base
     when 'user'
       case action
       when 'initiate'
-        if draft?
+        if brouillon?
           en_construction!
         end
       end
@@ -295,7 +295,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def can_be_en_construction?
-    !(procedure.archivee? && draft?)
+    !(procedure.archivee? && brouillon?)
   end
 
   def text_summary

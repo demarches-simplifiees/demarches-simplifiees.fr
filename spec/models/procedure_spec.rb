@@ -308,7 +308,7 @@ describe Procedure do
 
     before do
       create :dossier, procedure: procedure, state: :en_construction
-      create :dossier, procedure: procedure, state: :draft
+      create :dossier, procedure: procedure, state: :brouillon
       create :dossier, procedure: procedure, state: :en_construction
     end
 
@@ -371,8 +371,8 @@ describe Procedure do
       end
     end
 
-    context 'when there is a draft dossier' do
-      let!(:dossier_not_exportable){ create(:dossier, procedure: procedure, state: 'draft') }
+    context 'when there is a brouillon dossier' do
+      let!(:dossier_not_exportable){ create(:dossier, procedure: procedure, state: 'brouillon') }
 
       it_behaves_like "export is empty"
     end

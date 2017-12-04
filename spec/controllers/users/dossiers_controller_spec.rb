@@ -254,9 +254,9 @@ describe Users::DossiersController, type: :controller do
           expect(Dossier.last.procedure).to eq(Procedure.last)
         end
 
-        it 'state of dossier is draft' do
+        it 'state of dossier is brouillon' do
           subject
-          expect(Dossier.last.state).to eq('draft')
+          expect(Dossier.last.state).to eq('brouillon')
         end
 
         describe 'Mandataires Sociaux' do
@@ -434,8 +434,8 @@ describe Users::DossiersController, type: :controller do
 
   describe 'DELETE #destroy' do
     let(:user) { create(:user) }
-    let!(:dossier_draft) { create :dossier, state: "draft", user: user }
-    let!(:dossier_not_draft) { create :dossier, state: "en_construction", user: user }
+    let!(:dossier_brouillon) { create :dossier, state: "brouillon", user: user }
+    let!(:dossier_not_brouillon) { create :dossier, state: "en_construction", user: user }
 
     subject { delete :destroy, params: {id: dossier.id} }
 
@@ -443,8 +443,8 @@ describe Users::DossiersController, type: :controller do
       sign_in user
     end
 
-    context 'when dossier is draft' do
-      let(:dossier) { dossier_draft }
+    context 'when dossier is brouillon' do
+      let(:dossier) { dossier_brouillon }
 
       it { expect(subject.status).to eq 302 }
 
@@ -464,8 +464,8 @@ describe Users::DossiersController, type: :controller do
       it { expect { subject }.to change { Dossier.count }.by(-1) }
     end
 
-    context 'when dossier is not a draft' do
-      let(:dossier) { dossier_not_draft }
+    context 'when dossier is not a brouillon' do
+      let(:dossier) { dossier_not_brouillon }
 
       it { expect { subject }.to change { Dossier.count }.by(0) }
     end

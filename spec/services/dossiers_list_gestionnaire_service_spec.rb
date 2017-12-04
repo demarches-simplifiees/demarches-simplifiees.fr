@@ -345,7 +345,7 @@ describe DossiersListGestionnaireService do
 
   describe 'state filter methods' do
     let!(:procedure) { create :procedure }
-    let!(:dossier) { create(:dossier, procedure: procedure, state: 'draft') }
+    let!(:dossier) { create(:dossier, procedure: procedure, state: 'brouillon') }
     let!(:dossier2) { create(:dossier, procedure: procedure, state: 'en_construction') } #nouveaux
     let!(:dossier3) { create(:dossier, procedure: procedure, state: 'en_construction') } #nouveaux
     let!(:dossier6) { create(:dossier, procedure: procedure, state: 'received') } #a_instruire
