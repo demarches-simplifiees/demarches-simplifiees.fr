@@ -41,7 +41,7 @@ describe Users::RecapitulatifController, type: :controller do
         post :initiate, params: {dossier_id: dossier.id}
       end
 
-      it 'dossier change his state for closed' do
+      it 'dossier change his state for accepte' do
         dossier.reload
         expect(dossier.state).to eq('en_construction')
       end

@@ -8,7 +8,7 @@ feature 'on click on tabs button' do
   before do
     create(:dossier, :with_entreprise, user: user, state: 'en_construction')
     create(:dossier, :with_entreprise, user: user, state: 'en_instruction')
-    create(:dossier, :with_entreprise, user: user, state: 'closed')
+    create(:dossier, :with_entreprise, user: user, state: 'accepte')
     create(:dossier, :with_entreprise, user: user, state: 'refused')
     create(:dossier, :with_entreprise, user: user, state: 'without_continuation')
 

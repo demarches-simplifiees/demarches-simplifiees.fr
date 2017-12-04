@@ -332,7 +332,7 @@ describe Procedure do
 
     context 'when there are some dossiers' do
       let!(:dossier){ create(:dossier, procedure: procedure, state: 'en_construction') }
-      let!(:dossier2){ create(:dossier, procedure: procedure, state: 'closed') }
+      let!(:dossier2){ create(:dossier, procedure: procedure, state: 'accepte') }
 
       it { expect(subject[:data].size).to eq(2) }
       it { expect(subject[:headers]).to eq(dossier.export_headers) }

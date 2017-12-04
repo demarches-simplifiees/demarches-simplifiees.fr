@@ -227,7 +227,7 @@ describe Dossier do
           context 'when he closes the dossier' do
             let(:action) { 'close' }
 
-            it { is_expected.to eq('closed') }
+            it { is_expected.to eq('accepte') }
           end
         end
       end
@@ -284,9 +284,9 @@ describe Dossier do
         end
       end
 
-      context 'when dossier is at state closed' do
+      context 'when dossier is at state accepte' do
         before do
-          dossier.closed!
+          dossier.accepte!
         end
 
         context 'when user is connect' do
@@ -295,7 +295,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('closed') }
+            it { is_expected.to eq('accepte') }
           end
         end
 
@@ -305,7 +305,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('closed') }
+            it { is_expected.to eq('accepte') }
           end
         end
       end
@@ -739,10 +739,10 @@ describe Dossier do
       it { expect(dossier.processed_at).to eq(beginning_of_day) }
     end
 
-    context 'when dossier is closed' do
+    context 'when dossier is accepte' do
       let(:state) { 'en_instruction' }
 
-      it_behaves_like 'dossier is processed', 'closed'
+      it_behaves_like 'dossier is processed', 'accepte'
     end
 
     context 'when dossier is refused' do
@@ -783,8 +783,8 @@ describe Dossier do
       expect(NotificationMailer).to have_received(:send_dossier_received).with(dossier.id)
     end
 
-    it "does not an email when the dossier becomes closed" do
-      dossier.closed!
+    it "does not an email when the dossier becomes accepte" do
+      dossier.accepte!
       expect(NotificationMailer).to_not have_received(:send_dossier_received)
     end
   end
@@ -807,7 +807,7 @@ describe Dossier do
     it "does not send an email when the dossier is created with a non brouillon state" do
       expect { Dossier.create(procedure: procedure, state: "en_construction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "en_instruction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "closed", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "accepte", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "refused", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "without_continuation", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
     end

@@ -177,11 +177,11 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
       subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id} }
 
-      it 'change state to closed' do
+      it 'change state to accepte' do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('closed')
+        expect(dossier.state).to eq('accepte')
       end
 
       context 'when the dossier does not have any attestation' do

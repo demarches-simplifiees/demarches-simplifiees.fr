@@ -20,8 +20,8 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
       it { expect(rendered).to have_content('En construction') }
     end
 
-    context 'when dossier state is closed' do
-      let(:state) { 'closed' }
+    context 'when dossier state is accepte' do
+      let(:state) { 'accepte' }
 
       before do
         render

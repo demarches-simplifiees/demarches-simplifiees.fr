@@ -8,7 +8,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   let!(:decorate_dossier_en_construction) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction').decorate }
   let!(:decorate_dossier_en_instruction) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_instruction').decorate }
-  let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, procedure: procedure, state: 'closed').decorate }
+  let!(:decorate_dossier_accepte) { create(:dossier, :with_entreprise, procedure: procedure, state: 'accepte').decorate }
   let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, procedure: procedure, state: 'refused').decorate }
   let!(:decorate_dossier_without_continuation) { create(:dossier, :with_entreprise, procedure: procedure, state: 'without_continuation').decorate }
 
@@ -20,7 +20,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   before do
     decorate_dossier_en_instruction.entreprise.update_column(:raison_sociale, 'plup')
-    decorate_dossier_closed.entreprise.update_column(:raison_sociale, 'plyp')
+    decorate_dossier_accepte.entreprise.update_column(:raison_sociale, 'plyp')
     decorate_dossier_refused.entreprise.update_column(:raison_sociale, 'plzp')
     decorate_dossier_without_continuation.entreprise.update_column(:raison_sociale, 'plnp')
 

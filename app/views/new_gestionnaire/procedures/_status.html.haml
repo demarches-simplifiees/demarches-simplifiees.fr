@@ -2,7 +2,7 @@
   %span.label.instruction en instruction
 - elsif dossier.en_construction?
   %span.label.construction en construction
-- elsif dossier.closed?
+- elsif dossier.accepte?
   %span.label.accepted accepté
 - elsif dossier.refused?
   %span.label.refused refusé

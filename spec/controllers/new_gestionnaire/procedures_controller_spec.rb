@@ -143,7 +143,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
 
             gestionnaire.procedures << procedure2
             create(:dossier, :followed, procedure: procedure2, state: "en_construction")
-            create(:dossier, procedure: procedure2, state: "closed")
+            create(:dossier, procedure: procedure2, state: "accepte")
             gestionnaire.followed_dossiers << create(:dossier, procedure: procedure2, state: "en_instruction")
 
             subject
@@ -225,7 +225,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
 
       context 'with a termine dossier with a follower' do
-        let!(:termine_dossier) { create(:dossier, procedure: procedure, state: 'closed') }
+        let!(:termine_dossier) { create(:dossier, procedure: procedure, state: 'accepte') }
 
         before do
           get :show, params: { procedure_id: procedure.id }
@@ -255,7 +255,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       describe 'statut' do
         let!(:a_suivre__dossier) { Timecop.freeze(1.day.ago){ create(:dossier, procedure: procedure, state: 'en_instruction') } }
         let!(:new_followed_dossier) { Timecop.freeze(2.day.ago){ create(:dossier, procedure: procedure, state: 'en_instruction') } }
-        let!(:termine_dossier) { Timecop.freeze(3.day.ago){ create(:dossier, procedure: procedure, state: 'closed') } }
+        let!(:termine_dossier) { Timecop.freeze(3.day.ago){ create(:dossier, procedure: procedure, state: 'accepte') } }
         let!(:archived_dossier) { Timecop.freeze(4.day.ago){ create(:dossier, procedure: procedure, state: 'en_instruction', archived: true) } }
 
         before do
