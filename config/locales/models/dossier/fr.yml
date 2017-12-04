@@ -12,7 +12,7 @@ fr:
           en_construction: "En construction"
           en_instruction: "En instruction"
           accepte: "Accepté"
-          refused: "Refusé"
+          refuse: "Refusé"
           without_continuation: "Sans suite"
 
     errors:

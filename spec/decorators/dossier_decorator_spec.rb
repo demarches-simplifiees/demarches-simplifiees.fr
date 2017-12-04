@@ -47,8 +47,8 @@ describe DossierDecorator do
       expect(subject).to eq('Sans suite')
     end
 
-    it 'refused is traité' do
-      dossier.refused!
+    it 'refuse is traité' do
+      dossier.refuse!
       expect(subject).to eq('Refusé')
     end
   end

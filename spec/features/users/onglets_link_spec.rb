@@ -9,7 +9,7 @@ feature 'on click on tabs button' do
     create(:dossier, :with_entreprise, user: user, state: 'en_construction')
     create(:dossier, :with_entreprise, user: user, state: 'en_instruction')
     create(:dossier, :with_entreprise, user: user, state: 'accepte')
-    create(:dossier, :with_entreprise, user: user, state: 'refused')
+    create(:dossier, :with_entreprise, user: user, state: 'refuse')
     create(:dossier, :with_entreprise, user: user, state: 'without_continuation')
 
     create :invite, dossier: dossier_invite, user: user

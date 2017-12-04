@@ -34,8 +34,8 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
       end
     end
 
-    context 'when dossier state is refused' do
-      let(:state) { 'refused' }
+    context 'when dossier state is refuse' do
+      let(:state) { 'refuse' }
 
       before do
         render

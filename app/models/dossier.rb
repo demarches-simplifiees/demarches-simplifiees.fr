@@ -4,7 +4,7 @@ class Dossier < ActiveRecord::Base
     en_construction:      'en_construction',
     en_instruction:       'en_instruction',
     accepte:              'accepte',
-    refused:              'refused',
+    refuse:               'refuse',
     without_continuation: 'without_continuation'
   }
 
@@ -13,7 +13,7 @@ class Dossier < ActiveRecord::Base
   EN_CONSTRUCTION = %w(en_construction)
   EN_INSTRUCTION = %w(en_instruction)
   EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
-  TERMINE = %w(accepte refused without_continuation)
+  TERMINE = %w(accepte refuse without_continuation)
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
@@ -177,7 +177,7 @@ class Dossier < ActiveRecord::Base
         end
       when 'refuse'
         if en_instruction?
-          refused!
+          refuse!
 
           if motivation
             self.motivation = motivation
@@ -283,7 +283,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def read_only?
-    en_instruction? || accepte? || refused? || without_continuation?
+    en_instruction? || accepte? || refuse? || without_continuation?
   end
 
   def owner? email
@@ -368,7 +368,7 @@ class Dossier < ActiveRecord::Base
       'accepté'
     elsif without_continuation?
       'classé sans suite'
-    elsif refused?
+    elsif refuse?
       'refusé'
     end
   end

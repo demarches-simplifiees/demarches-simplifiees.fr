@@ -14,4 +14,8 @@ namespace :'2017_12_04_translate_dossier_state_to_french' do
   task accepte: :environment do
     Dossier.unscoped.where(state: 'closed').update_all(state: 'accepte')
   end
+
+  task refuse: :environment do
+    Dossier.unscoped.where(state: 'refused').update_all(state: 'refuse')
+  end
 end
