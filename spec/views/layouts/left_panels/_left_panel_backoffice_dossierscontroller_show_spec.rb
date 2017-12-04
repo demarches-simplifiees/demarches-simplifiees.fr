@@ -88,8 +88,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       end
     end
 
-    context 'when dossier have state refused' do
-      let(:state) { 'refused' }
+    context 'when dossier have state refuse' do
+      let(:state) { 'refuse' }
 
       before do
         render

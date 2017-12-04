@@ -242,11 +242,11 @@ describe Backoffice::DossiersController, type: :controller do
 
       subject { post :process_dossier, params: { process_action: "refuse", dossier_id: dossier_id} }
 
-      it 'change state to refused' do
+      it 'change state to refuse' do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('refused')
+        expect(dossier.state).to eq('refuse')
       end
 
       it 'Notification email is sent' do

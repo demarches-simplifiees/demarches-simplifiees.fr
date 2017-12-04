@@ -232,9 +232,9 @@ describe Dossier do
         end
       end
 
-      context 'when dossier is at state refused' do
+      context 'when dossier is at state refuse' do
         before do
-          dossier.refused!
+          dossier.refuse!
         end
 
         context 'when user is connected' do
@@ -243,7 +243,7 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('refused') }
+            it { is_expected.to eq('refuse') }
           end
         end
 
@@ -253,7 +253,7 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('refused') }
+            it { is_expected.to eq('refuse') }
           end
         end
       end
@@ -745,10 +745,10 @@ describe Dossier do
       it_behaves_like 'dossier is processed', 'accepte'
     end
 
-    context 'when dossier is refused' do
+    context 'when dossier is refuse' do
       let(:state) { 'en_instruction' }
 
-      it_behaves_like 'dossier is processed', 'refused'
+      it_behaves_like 'dossier is processed', 'refuse'
     end
 
     context 'when dossier is without_continuation' do
@@ -808,7 +808,7 @@ describe Dossier do
       expect { Dossier.create(procedure: procedure, state: "en_construction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "en_instruction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "accepte", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "refused", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "refuse", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "without_continuation", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
     end
   end

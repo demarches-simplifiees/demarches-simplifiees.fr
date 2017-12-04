@@ -23,6 +23,12 @@ describe DossierTableExportSerializer do
 
       it { is_expected.to include(state: 'closed') }
     end
+
+    context 'when the dossier is refuse' do
+      let(:dossier) { create(:dossier, state: :refuse) }
+
+      it { is_expected.to include(state: 'refused') }
+    end
   end
 
   describe '#emails_accompagnateurs' do

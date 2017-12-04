@@ -30,6 +30,8 @@ class DossierTableExportSerializer < ActiveModel::Serializer
       'received'
     when 'accepte'
       'closed'
+    when 'refuse'
+      'refused'
     else
       object.state
     end

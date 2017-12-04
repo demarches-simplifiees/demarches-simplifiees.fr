@@ -117,11 +117,11 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
       subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id} }
 
-      it 'change state to refused' do
+      it 'change state to refuse' do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('refused')
+        expect(dossier.state).to eq('refuse')
       end
 
       it 'Notification email is sent' do

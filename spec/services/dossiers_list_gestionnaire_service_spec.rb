@@ -351,7 +351,7 @@ describe DossiersListGestionnaireService do
     let!(:dossier6) { create(:dossier, procedure: procedure, state: 'en_instruction') } #a_instruire
     let!(:dossier7) { create(:dossier, procedure: procedure, state: 'en_instruction') } #a_instruire
     let!(:dossier8) { create(:dossier, procedure: procedure, state: 'accepte') } #termine
-    let!(:dossier9) { create(:dossier, procedure: procedure, state: 'refused') } #termine
+    let!(:dossier9) { create(:dossier, procedure: procedure, state: 'refuse') } #termine
     let!(:dossier10) { create(:dossier, procedure: procedure, state: 'without_continuation') } #termine
     let!(:dossier11) { create(:dossier, procedure: procedure, state: 'accepte') } #termine
     let!(:dossier12) { create(:dossier, procedure: procedure, state: 'en_construction', archived: true) } #a_traiter #archived

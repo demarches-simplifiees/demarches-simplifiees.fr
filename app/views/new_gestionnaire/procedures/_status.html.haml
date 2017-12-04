@@ -4,7 +4,7 @@
   %span.label.construction en construction
 - elsif dossier.accepte?
   %span.label.accepted accepté
-- elsif dossier.refused?
+- elsif dossier.refuse?
   %span.label.refused refusé
 - elsif dossier.without_continuation?
   %span.label.without-continuation sans suite

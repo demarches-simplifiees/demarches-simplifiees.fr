@@ -4,8 +4,8 @@ module DossierHelper
       'accepted'
     elsif dossier.without_continuation?
       'without-continuation'
-    elsif dossier.refused?
-      'refused'
+    elsif dossier.refuse?
+      'refuse'
     end
   end
 
