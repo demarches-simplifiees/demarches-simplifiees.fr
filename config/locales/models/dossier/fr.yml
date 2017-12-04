@@ -13,7 +13,7 @@ fr:
           en_instruction: "En instruction"
           accepte: "Accepté"
           refuse: "Refusé"
-          without_continuation: "Sans suite"
+          sans_suite: "Sans suite"
 
     errors:
       models:

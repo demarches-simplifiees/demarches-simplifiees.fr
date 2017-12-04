@@ -10,7 +10,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
   let!(:decorate_dossier_en_instruction) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_instruction').decorate }
   let!(:decorate_dossier_accepte) { create(:dossier, :with_entreprise, procedure: procedure, state: 'accepte').decorate }
   let!(:decorate_dossier_refuse) { create(:dossier, :with_entreprise, procedure: procedure, state: 'refuse').decorate }
-  let!(:decorate_dossier_without_continuation) { create(:dossier, :with_entreprise, procedure: procedure, state: 'without_continuation').decorate }
+  let!(:decorate_dossier_sans_suite) { create(:dossier, :with_entreprise, procedure: procedure, state: 'sans_suite').decorate }
 
   let(:dossiers_list_facade) { DossiersListFacades.new gestionnaire, nil }
 
@@ -22,7 +22,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
     decorate_dossier_en_instruction.entreprise.update_column(:raison_sociale, 'plup')
     decorate_dossier_accepte.entreprise.update_column(:raison_sociale, 'plyp')
     decorate_dossier_refuse.entreprise.update_column(:raison_sociale, 'plzp')
-    decorate_dossier_without_continuation.entreprise.update_column(:raison_sociale, 'plnp')
+    decorate_dossier_sans_suite.entreprise.update_column(:raison_sociale, 'plnp')
 
     create :preference_list_dossier,
       gestionnaire: gestionnaire,

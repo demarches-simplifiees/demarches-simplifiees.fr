@@ -42,8 +42,8 @@ describe DossierDecorator do
       expect(subject).to eq('En instruction')
     end
 
-    it 'without_continuation is traité' do
-      dossier.without_continuation!
+    it 'sans_suite is traité' do
+      dossier.sans_suite!
       expect(subject).to eq('Sans suite')
     end
 

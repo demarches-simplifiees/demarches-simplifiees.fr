@@ -25,7 +25,7 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
     let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: 'en_instruction', archived: false)}
     let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: 'accepte', archived: false)}
     let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: 'refuse', archived: false)}
-    let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: 'without_continuation', archived: false)}
+    let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: 'sans_suite', archived: false)}
     let!(:dossier9) { create(:dossier, procedure: procedure_aujourdhui, state: 'en_construction', archived: false)}
 
     before do
@@ -46,7 +46,7 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
     it { expect(dossier5.state).to eq 'en_instruction' }
     it { expect(dossier6.state).to eq 'accepte' }
     it { expect(dossier7.state).to eq 'refuse' }
-    it { expect(dossier8.state).to eq 'without_continuation' }
+    it { expect(dossier8.state).to eq 'sans_suite' }
     it { expect(dossier9.state).to eq 'en_instruction' }
 
     it { expect(procedure_hier.archivee?).to eq true }

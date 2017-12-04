@@ -1,11 +1,11 @@
 class Dossier < ActiveRecord::Base
   enum state: {
-    brouillon:            'brouillon',
-    en_construction:      'en_construction',
-    en_instruction:       'en_instruction',
-    accepte:              'accepte',
-    refuse:               'refuse',
-    without_continuation: 'without_continuation'
+    brouillon:       'brouillon',
+    en_construction: 'en_construction',
+    en_instruction:  'en_instruction',
+    accepte:         'accepte',
+    refuse:          'refuse',
+    sans_suite:      'sans_suite'
   }
 
   BROUILLON = %w(brouillon)
@@ -13,7 +13,7 @@ class Dossier < ActiveRecord::Base
   EN_CONSTRUCTION = %w(en_construction)
   EN_INSTRUCTION = %w(en_instruction)
   EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
-  TERMINE = %w(accepte refuse without_continuation)
+  TERMINE = %w(accepte refuse sans_suite)
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
@@ -186,7 +186,7 @@ class Dossier < ActiveRecord::Base
         end
       when 'without_continuation'
         if en_instruction?
-          without_continuation!
+          sans_suite!
 
           if motivation
             self.motivation = motivation
@@ -283,7 +283,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def read_only?
-    en_instruction? || accepte? || refuse? || without_continuation?
+    en_instruction? || accepte? || refuse? || sans_suite?
   end
 
   def owner? email
@@ -366,7 +366,7 @@ class Dossier < ActiveRecord::Base
   def statut
     if accepte?
       'accepté'
-    elsif without_continuation?
+    elsif sans_suite?
       'classé sans suite'
     elsif refuse?
       'refusé'

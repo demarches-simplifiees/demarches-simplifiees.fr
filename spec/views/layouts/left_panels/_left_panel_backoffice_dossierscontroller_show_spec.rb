@@ -72,8 +72,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       end
     end
 
-    context 'when dossier have state without_continuation' do
-      let(:state) { 'without_continuation' }
+    context 'when dossier have state sans_suite' do
+      let(:state) { 'sans_suite' }
 
       before do
         render

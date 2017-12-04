@@ -29,6 +29,12 @@ describe DossierTableExportSerializer do
 
       it { is_expected.to include(state: 'refused') }
     end
+
+    context 'when the dossier is sans_suite' do
+      let(:dossier) { create(:dossier, state: :sans_suite) }
+
+      it { is_expected.to include(state: 'without_continuation') }
+    end
   end
 
   describe '#emails_accompagnateurs' do

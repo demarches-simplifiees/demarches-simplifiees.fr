@@ -139,7 +139,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
           before do
             create(:dossier, procedure: procedure, state: "en_construction")
             create(:dossier, procedure: procedure, state: "en_instruction")
-            create(:dossier, procedure: procedure, state: "without_continuation", archived: true)
+            create(:dossier, procedure: procedure, state: "sans_suite", archived: true)
 
             gestionnaire.procedures << procedure2
             create(:dossier, :followed, procedure: procedure2, state: "en_construction")

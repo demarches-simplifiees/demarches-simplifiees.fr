@@ -48,8 +48,8 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
       end
     end
 
-    context 'when dossier state is without_continuation' do
-      let(:state) { 'without_continuation' }
+    context 'when dossier state is sans_suite' do
+      let(:state) { 'sans_suite' }
 
       before do
         render

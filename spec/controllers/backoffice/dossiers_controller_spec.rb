@@ -260,7 +260,7 @@ describe Backoffice::DossiersController, type: :controller do
       it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
     end
 
-    context "with without_continuation" do
+    context "with sans_suite" do
       before do
         dossier.en_instruction!
         sign_in gestionnaire
@@ -268,11 +268,11 @@ describe Backoffice::DossiersController, type: :controller do
 
       subject { post :process_dossier, params: { process_action: "without_continuation", dossier_id: dossier_id} }
 
-      it 'change state to without_continuation' do
+      it 'change state to sans_suite' do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('without_continuation')
+        expect(dossier.state).to eq('sans_suite')
       end
 
       it 'Notification email is sent' do
