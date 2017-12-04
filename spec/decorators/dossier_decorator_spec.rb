@@ -22,8 +22,8 @@ describe DossierDecorator do
   describe 'state_fr' do
     subject{ super().display_state }
 
-    it 'draft is brouillon' do
-      dossier.draft!
+    it 'brouillon is brouillon' do
+      dossier.brouillon!
       expect(subject).to eq('Brouillon')
     end
 
@@ -63,7 +63,7 @@ describe DossierDecorator do
     context "when a gestionnaire is not signed_in" do
       context "when the dossier is in brouillon state" do
         before do
-          dossier.state = 'draft'
+          dossier.state = 'brouillon'
           dossier.save
         end
 

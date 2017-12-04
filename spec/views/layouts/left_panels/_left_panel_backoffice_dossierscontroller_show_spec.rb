@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.html.haml', type: :view do
   let!(:dossier) { create(:dossier, :with_entreprise,  state: state, archived: archived) }
-  let(:state) { 'draft' }
+  let(:state) { 'brouillon' }
   let(:archived) { false }
   let(:gestionnaire) { create(:gestionnaire) }
   let!(:assign_to) { create(:assign_to, gestionnaire: gestionnaire, procedure: dossier.procedure) }

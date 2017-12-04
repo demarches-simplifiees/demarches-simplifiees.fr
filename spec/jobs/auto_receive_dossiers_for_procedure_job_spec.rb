@@ -13,8 +13,8 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
       let(:nouveau_dossier1) { create(:dossier, :en_construction) }
       let(:nouveau_dossier2) { create(:dossier, :en_construction, procedure: nouveau_dossier1.procedure) }
       let(:dossier_recu) { create(:dossier, :received, procedure: nouveau_dossier2.procedure) }
-      let(:dossier_draft) { create(:dossier, procedure: dossier_recu.procedure) }
-      let(:procedure_id) { dossier_draft.procedure_id }
+      let(:dossier_brouillon) { create(:dossier, procedure: dossier_recu.procedure) }
+      let(:procedure_id) { dossier_brouillon.procedure_id }
 
       it do
         subject
@@ -27,8 +27,8 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
         expect(dossier_recu.reload.received?).to be true
         expect(dossier_recu.reload.received_at).to eq(date)
 
-        expect(dossier_draft.reload.draft?).to be true
-        expect(dossier_draft.reload.received_at).to eq(nil)
+        expect(dossier_brouillon.reload.brouillon?).to be true
+        expect(dossier_brouillon.reload.received_at).to eq(nil)
       end
     end
   end

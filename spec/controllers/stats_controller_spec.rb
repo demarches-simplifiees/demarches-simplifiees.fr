@@ -166,7 +166,7 @@ describe StatsController, type: :controller do
       }
     end
 
-    let (:association) { Dossier.where.not(:state => :draft) }
+    let (:association) { Dossier.where.not(:state => :brouillon) }
 
     subject { StatsController.new.send(:dossier_instruction_mean_time, association) }
 
@@ -218,7 +218,7 @@ describe StatsController, type: :controller do
       }
     end
 
-    let (:association) { Dossier.where.not(:state => :draft) }
+    let (:association) { Dossier.where.not(:state => :brouillon) }
 
     subject { StatsController.new.send(:dossier_filling_mean_time, association) }
 

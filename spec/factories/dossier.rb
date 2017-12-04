@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :dossier do
-    state 'draft'
+    state 'brouillon'
     association :user, factory: [:user]
 
     before(:create) do |dossier, _evaluator|

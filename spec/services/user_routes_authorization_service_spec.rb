@@ -13,8 +13,8 @@ describe UserRoutesAuthorizationService do
     describe 'Users::DossiersController' do
       let(:controller) { Users::DossiersController }
 
-      describe 'draft' do
-        let(:state) { 'draft' }
+      describe 'brouillon' do
+        let(:state) { 'brouillon' }
         it { is_expected.to be_truthy }
       end
 
@@ -33,8 +33,8 @@ describe UserRoutesAuthorizationService do
       let(:controller) { Users::CarteController }
 
       context 'when use_api_carto is false' do
-        describe 'draft' do
-          let(:state) { 'draft' }
+        describe 'brouillon' do
+          let(:state) { 'brouillon' }
           it { is_expected.to be_falsey }
         end
 
@@ -52,8 +52,8 @@ describe UserRoutesAuthorizationService do
       context 'when use_api_carto is true' do
         let(:use_api_carto) { true }
 
-        describe 'draft' do
-          let(:state) { 'draft' }
+        describe 'brouillon' do
+          let(:state) { 'brouillon' }
           it { is_expected.to be_truthy }
         end
 
@@ -72,8 +72,8 @@ describe UserRoutesAuthorizationService do
     describe 'Users::DescriptionController' do
       let(:controller) { Users::DescriptionController }
 
-      describe 'draft' do
-        let(:state) { 'draft' }
+      describe 'brouillon' do
+        let(:state) { 'brouillon' }
         it { is_expected.to be_truthy }
       end
 
@@ -91,8 +91,8 @@ describe UserRoutesAuthorizationService do
     describe 'recapitulatif' do
       let(:controller) { Users::RecapitulatifController }
 
-      describe 'draft' do
-        let(:state) { 'draft' }
+      describe 'brouillon' do
+        let(:state) { 'brouillon' }
         it { is_expected.to be_falsey }
       end
 

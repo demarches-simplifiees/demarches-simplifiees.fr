@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/carte/show.html.haml', type: :view do
-  let(:state) { 'draft' }
+  let(:state) { 'brouillon' }
   let(:dossier) { create(:dossier, state: state) }
   let(:dossier_id) { dossier.id }
 

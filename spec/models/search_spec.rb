@@ -22,7 +22,7 @@ describe Search do
     let(:procedure_1) { create(:procedure, :published, administrateur: administrateur_1) }
     let(:procedure_2) { create(:procedure, :published, administrateur: administrateur_2) }
 
-    let!(:dossier_0) { create(:dossier, state: 'draft', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
+    let!(:dossier_0) { create(:dossier, state: 'brouillon', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
     let!(:dossier_1) { create(:dossier, state: 'en_construction', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
     let!(:dossier_2) { create(:dossier, state: 'en_construction', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
     let!(:dossier_3) { create(:dossier, state: 'en_construction', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
@@ -38,7 +38,7 @@ describe Search do
       it { expect(subject.size).to eq(0) }
     end
 
-    describe 'search draft file' do
+    describe 'search brouillon file' do
       let(:terms) { 'brouillon' }
 
       it { expect(subject.size).to eq(0) }

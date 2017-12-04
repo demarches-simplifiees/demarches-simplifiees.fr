@@ -8,7 +8,7 @@ fr:
         montant_aide_demande: "Le montant d'aide demandée"
         date_previsionnelle: "La date de début prévisionnelle"
         state:
-          draft: "Brouillon"
+          brouillon: "Brouillon"
           en_construction: "En construction"
           received: "En instruction"
           closed: "Accepté"
