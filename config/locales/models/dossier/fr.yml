@@ -11,7 +11,7 @@ fr:
           brouillon: "Brouillon"
           en_construction: "En construction"
           en_instruction: "En instruction"
-          closed: "Accepté"
+          accepte: "Accepté"
           refused: "Refusé"
           without_continuation: "Sans suite"
 

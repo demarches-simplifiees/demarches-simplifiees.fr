@@ -302,11 +302,11 @@ describe Backoffice::DossiersController, type: :controller do
 
       subject { post :process_dossier, params: { process_action: "close", dossier_id: dossier_id} }
 
-      it 'change state to closed' do
+      it 'change state to accepte' do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('closed')
+        expect(dossier.state).to eq('accepte')
       end
 
       context 'when the dossier does not have any attestation' do

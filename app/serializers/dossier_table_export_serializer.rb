@@ -28,6 +28,8 @@ class DossierTableExportSerializer < ActiveModel::Serializer
       'initiated'
     when 'en_instruction'
       'received'
+    when 'accepte'
+      'closed'
     else
       object.state
     end

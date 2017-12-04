@@ -10,4 +10,8 @@ namespace :'2017_12_04_translate_dossier_state_to_french' do
   task en_instruction: :environment do
     Dossier.unscoped.where(state: 'received').update_all(state: 'en_instruction')
   end
+
+  task accepte: :environment do
+    Dossier.unscoped.where(state: 'closed').update_all(state: 'accepte')
+  end
 end

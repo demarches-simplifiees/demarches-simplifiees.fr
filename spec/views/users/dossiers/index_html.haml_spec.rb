@@ -5,7 +5,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
 
   let!(:decorate_dossier_en_construction) { create(:dossier, :with_entreprise, user: user, state: 'en_construction').decorate }
   let!(:decorate_dossier_en_instruction) { create(:dossier, :with_entreprise, user: user, state: 'en_instruction').decorate }
-  let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, user: user, state: 'closed').decorate }
+  let!(:decorate_dossier_accepte) { create(:dossier, :with_entreprise, user: user, state: 'accepte').decorate }
   let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, user: user, state: 'refused').decorate }
   let!(:decorate_dossier_without_continuation) { create(:dossier, :with_entreprise, user: user, state: 'without_continuation').decorate }
   let!(:decorate_dossier_invite) { create(:dossier, :with_entreprise, user: create(:user), state: 'en_construction').decorate }
@@ -67,7 +67,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     let(:liste) { 'termine' }
 
     it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_closed }
+      let(:decorate_dossier_at_check) { decorate_dossier_accepte }
     end
 
     it_behaves_like 'check_tab_content' do

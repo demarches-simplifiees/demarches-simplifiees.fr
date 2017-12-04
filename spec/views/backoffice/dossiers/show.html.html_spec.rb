@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'backoffice/dossiers/show.html.haml', type: :view do
   let!(:dossier) { create(:dossier, :with_entreprise, state: state, motivation: "Motivation de décision") }
-  let(:state) { 'closed' }
+  let(:state) { 'accepte' }
   let(:dossier_id) { dossier.id }
   let(:gestionnaire) { create(:gestionnaire) }
 

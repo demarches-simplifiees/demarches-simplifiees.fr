@@ -158,7 +158,7 @@ describe StatsController, type: :controller do
         :processed_at       => 2.month.ago.beginning_of_month + 4.days)
 
       # Write directly in the DB to avoid the before_validation hook
-      Dossier.update_all(state: "closed")
+      Dossier.update_all(state: "accepte")
 
       @expected_hash = {
         "#{2.months.ago.beginning_of_month}" => 3.0,
@@ -210,7 +210,7 @@ describe StatsController, type: :controller do
         :processed_at => 2.month.ago.beginning_of_month + 1.day)
 
       # Write directly in the DB to avoid the before_validation hook
-      Dossier.update_all(state: "closed")
+      Dossier.update_all(state: "accepte")
 
       @expected_hash = {
         "#{2.months.ago.beginning_of_month}" => 30.0,

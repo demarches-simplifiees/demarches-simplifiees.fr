@@ -29,7 +29,7 @@ feature 'The gestionnaire part' do
     end
 
     dossier.reload
-    expect(dossier.state).to eq('closed')
+    expect(dossier.state).to eq('accepte')
     expect(dossier.motivation).to eq('a good reason')
   end
 

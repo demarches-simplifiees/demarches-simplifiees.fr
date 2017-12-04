@@ -15,5 +15,11 @@ describe DossierSerializer do
       it { is_expected.to include(received_at: dossier.en_instruction_at) }
       it { is_expected.to include(state: 'received') }
     end
+
+    context 'when the dossier is accepte' do
+      let(:dossier) { create(:dossier, state: :accepte) }
+
+      it { is_expected.to include(state: 'closed') }
+    end
   end
 end

@@ -3,7 +3,7 @@ class Dossier < ActiveRecord::Base
     brouillon:            'brouillon',
     en_construction:      'en_construction',
     en_instruction:       'en_instruction',
-    closed:               'closed',
+    accepte:              'accepte',
     refused:              'refused',
     without_continuation: 'without_continuation'
   }
@@ -13,7 +13,7 @@ class Dossier < ActiveRecord::Base
   EN_CONSTRUCTION = %w(en_construction)
   EN_INSTRUCTION = %w(en_instruction)
   EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
-  TERMINE = %w(closed refused without_continuation)
+  TERMINE = %w(accepte refused without_continuation)
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
@@ -168,7 +168,7 @@ class Dossier < ActiveRecord::Base
           self.attestation = build_attestation
           save
 
-          closed!
+          accepte!
 
           if motivation
             self.motivation = motivation
@@ -283,7 +283,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def read_only?
-    en_instruction? || closed? || refused? || without_continuation?
+    en_instruction? || accepte? || refused? || without_continuation?
   end
 
   def owner? email
@@ -364,7 +364,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def statut
-    if closed?
+    if accepte?
       'accepté'
     elsif without_continuation?
       'classé sans suite'

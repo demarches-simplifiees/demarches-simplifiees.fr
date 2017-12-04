@@ -23,8 +23,8 @@ describe UserRoutesAuthorizationService do
         it { is_expected.to be_falsey }
       end
 
-      describe 'closed' do
-        let(:state) { 'closed' }
+      describe 'accepte' do
+        let(:state) { 'accepte' }
         it { is_expected.to be_falsey }
       end
     end
@@ -43,8 +43,8 @@ describe UserRoutesAuthorizationService do
           it { is_expected.to be_falsey }
         end
 
-        describe 'closed' do
-          let(:state) { 'closed' }
+        describe 'accepte' do
+          let(:state) { 'accepte' }
           it { is_expected.to be_falsey }
         end
       end
@@ -62,8 +62,8 @@ describe UserRoutesAuthorizationService do
           it { is_expected.to be_truthy }
         end
 
-        describe 'closed' do
-          let(:state) { 'closed' }
+        describe 'accepte' do
+          let(:state) { 'accepte' }
           it { is_expected.to be_falsey }
         end
       end
@@ -82,8 +82,8 @@ describe UserRoutesAuthorizationService do
         it { is_expected.to be_truthy }
       end
 
-      describe 'closed' do
-        let(:state) { 'closed' }
+      describe 'accepte' do
+        let(:state) { 'accepte' }
         it { is_expected.to be_falsey }
       end
     end
@@ -101,8 +101,8 @@ describe UserRoutesAuthorizationService do
         it { is_expected.to be_truthy }
       end
 
-      describe 'closed' do
-        let(:state) { 'closed' }
+      describe 'accepte' do
+        let(:state) { 'accepte' }
         it { is_expected.to be_truthy }
       end
     end

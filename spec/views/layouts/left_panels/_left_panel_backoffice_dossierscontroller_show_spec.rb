@@ -56,8 +56,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       end
     end
 
-    context 'when dossier have state closed' do
-      let(:state) { 'closed' }
+    context 'when dossier have state accepte' do
+      let(:state) { 'accepte' }
 
       before do
         render
