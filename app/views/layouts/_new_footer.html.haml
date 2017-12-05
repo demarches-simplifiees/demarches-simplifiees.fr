@@ -4,13 +4,13 @@
       %li.footer-column
         %ul.footer-logos
           %li
-            = link_to image_tag("footer/logo-rf.svg",
-                :class => "footer-logo footer-logo-rf"),
-              "http://www.gouvernement.fr/"
+            = link_to "http://www.gouvernement.fr/" do
+              %span.footer-logo.footer-logo-rf{ role: 'img', 'aria-label': 'Logo du gouvernement' }
+
           %li
-            = link_to image_tag("footer/logo-beta-gouv-fr.svg",
-                :class => "footer-logo footer-logo-beta-gouv-fr"),
-              "https://beta.gouv.fr/"
+            = link_to "https://beta.gouv.fr/" do
+              %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': 'Logo de beta.gouv.fr' }
+
 
       %li.footer-column
         %ul.footer-links
