@@ -145,22 +145,15 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action, motivation = nil
-    unless %w(initiate receive refuse without_continuation close).include?(action)
+    unless %w(receive refuse without_continuation close).include?(action)
       fail 'action is not valid'
     end
 
-    unless %w(user gestionnaire).include?(role)
+    unless %w(gestionnaire).include?(role)
       fail 'role is not valid'
     end
 
     case role
-    when 'user'
-      case action
-      when 'initiate'
-        if brouillon?
-          en_construction!
-        end
-      end
     when 'gestionnaire'
       case action
       when 'close'

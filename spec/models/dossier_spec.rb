@@ -120,7 +120,7 @@ describe Dossier do
     describe '#next_step' do
       let(:dossier) { create(:dossier) }
       let(:role) { 'user' }
-      let(:action) { 'initiate' }
+      let(:action) { 'receive' }
 
       subject { dossier.next_step! role, action }
 
@@ -132,22 +132,6 @@ describe Dossier do
       context 'when role is not valid' do
         let(:role) { 'test' }
         it { expect { subject }.to raise_error('role is not valid') }
-      end
-
-      context 'when dossier is at state brouillon' do
-        before do
-          dossier.brouillon!
-        end
-
-        context 'when user is connected' do
-          let(:role) { 'user' }
-
-          context 'when he initiate a dossier' do
-            let(:action) { 'initiate' }
-
-            it { is_expected.to eq('en_construction') }
-          end
-        end
       end
 
       context 'when dossier is at state en_instruction' do
