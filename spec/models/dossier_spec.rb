@@ -142,12 +142,6 @@ describe Dossier do
         context 'when user is connected' do
           let(:role) { 'user' }
 
-          context 'when he updates dossier informations' do
-            let(:action) { 'update' }
-
-            it { is_expected.to eq('brouillon') }
-          end
-
           context 'when he initiate a dossier' do
             let(:action) { 'initiate' }
 
@@ -159,16 +153,6 @@ describe Dossier do
       context 'when dossier is at state en_construction' do
         before do
           dossier.en_construction!
-        end
-
-        context 'when user is connect' do
-          let(:role) { 'user' }
-
-          context 'when is update dossier informations' do
-            let(:action) { 'update' }
-
-            it { is_expected.to eq('en_construction') }
-          end
         end
 
         context 'when gestionnaire is connect' do
