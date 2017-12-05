@@ -55,12 +55,18 @@ footer {
 }
 
 .footer-logo-rf {
+  @include ie-compatible-background-image("footer/logo-rf.svg");
+
   width: 75px;
+  height: 44px;
   margin-bottom: 14px;
 }
 
 .footer-logo-beta-gouv-fr {
+  @include ie-compatible-background-image("footer/logo-beta-gouv-fr.svg");
+
   width: 190px;
+  height: 32px;
 }
 
 .footer-link a {
