@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171123125346) do
+ActiveRecord::Schema.define(version: 20171205151128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -224,6 +224,8 @@ ActiveRecord::Schema.define(version: 20171123125346) do
     t.string   "nom"
     t.string   "prenom"
     t.integer  "dossier_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["dossier_id"], name: "index_entreprises_on_dossier_id", using: :btree
   end
 
@@ -419,8 +421,8 @@ ActiveRecord::Schema.define(version: 20171123125346) do
     t.boolean  "for_individual",        default: false
     t.boolean  "individual_with_siret", default: false
     t.date     "auto_archive_on"
-    t.datetime "hidden_at"
     t.datetime "published_at"
+    t.datetime "hidden_at"
     t.datetime "archived_at"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at", using: :btree
   end
