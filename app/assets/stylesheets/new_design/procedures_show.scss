@@ -3,11 +3,6 @@
 @import "constants";
 
 #procedure-show {
-  .procedure-logo {
-    margin-right: $default-padding;
-    flex-shrink: 0;
-  }
-
   h1 {
     color: $black;
     font-size: 22px;
