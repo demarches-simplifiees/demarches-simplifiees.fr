@@ -4,7 +4,7 @@
       %tr
         - case c.type_champ
         - when "header_section"
-          %th.header-section{ colspan: 2 }
+          %th.header-section{ colspan: 3 }
             = c.libelle
         - when "multiple_drop_down_list"
           %th.libelle
@@ -34,4 +34,10 @@
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
-            = sanitize(c.value)
+            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
+              = sanitize(c.value)
+        - if c.type_champ != "header_section"
+          %td.updated-at
+            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
+              modifié le
+              = c.updated_at.localtime.strftime("%d/%m/%Y à %H:%M")
