@@ -4,6 +4,7 @@ module NewGestionnaire
     include ActionView::Helpers::TextHelper
 
     after_action :mark_demande_as_read, only: :show
+    after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
 
     def attestation
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
@@ -14,9 +15,8 @@ module NewGestionnaire
     end
 
     def messagerie
-      dossier.notifications.messagerie.mark_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :messagerie)
       @commentaire = Commentaire.new
+      @messagerie_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.messagerie_seen_at
     end
 
     def annotations_privees
@@ -197,6 +197,11 @@ module NewGestionnaire
     def mark_demande_as_read
       dossier.notifications.demande.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :demande)
+    end
+
+    def mark_messagerie_as_read
+      dossier.notifications.messagerie.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :messagerie)
     end
   end
 end
