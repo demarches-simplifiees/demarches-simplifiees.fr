@@ -4,7 +4,8 @@
   .accompagnateur-header
     .container.flex
 
-      .procedure-logo{ style: @procedure.logo.present? ? "background-image: url(#{@procedure.logo.url})" : nil }
+      .procedure-logo{ style: @procedure.logo.present? ? "background-image: url(#{@procedure.logo.url})" : nil,
+        role: 'img', 'aria-label': "logo de la procédure #{@procedure.libelle}" }
 
       .procedure-header
         %h1= @procedure.libelle
