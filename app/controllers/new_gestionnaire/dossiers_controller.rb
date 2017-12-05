@@ -37,7 +37,6 @@ module NewGestionnaire
 
     def follow
       current_gestionnaire.follow(dossier)
-      dossier.next_step!('gestionnaire', 'follow')
       flash.notice = 'Dossier suivi'
       redirect_back(fallback_location: procedures_url)
     end
