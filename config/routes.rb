@@ -248,6 +248,7 @@ Rails.application.routes.draw do
             get 'messagerie'
             get 'annotations-privees' => 'dossiers#annotations_privees'
             get 'avis'
+            get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
             patch 'follow'
             patch 'unfollow'
             patch 'archive'
