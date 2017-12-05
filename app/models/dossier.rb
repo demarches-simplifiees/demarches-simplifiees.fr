@@ -39,7 +39,6 @@ class Dossier < ActiveRecord::Base
   default_scope { where(hidden_at: nil) }
   scope :state_brouillon,                      -> { where(state: 'brouillon') }
   scope :state_not_brouillon,                  -> { where.not(state: 'brouillon') }
-  scope :state_nouveaux,                       -> { where(state: 'en_construction') }
   scope :state_en_construction,                -> { where(state: 'en_construction') }
   scope :state_en_instruction,                 -> { where(state: 'en_instruction') }
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
@@ -51,7 +50,7 @@ class Dossier < ActiveRecord::Base
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
   scope :all_state,                   -> { not_archived.state_not_brouillon }
-  scope :nouveaux,                    -> { not_archived.state_nouveaux }
+  scope :nouveaux,                    -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
   scope :downloadable_sorted,         -> { state_not_brouillon.includes(:entreprise, :etablissement, :champs, :champs_private).order(en_construction_at: 'asc') }
