@@ -144,49 +144,32 @@ class Dossier < ActiveRecord::Base
     champs.joins(', types_de_piece_justificative').where("pieces_justificatives.type_de_piece_justificative_id = types_de_piece_justificative.id AND types_de_piece_justificative.procedure_id = #{procedure.id}").order('order_place ASC')
   end
 
-  def next_step! role, action, motivation = nil
+  def next_step!(action, motivation = nil)
     unless %w(receive refuse without_continuation close).include?(action)
       fail 'action is not valid'
     end
 
-    unless %w(gestionnaire).include?(role)
-      fail 'role is not valid'
+    case action
+    when 'close'
+      if en_instruction?
+        self.attestation = build_attestation
+        save
+
+        accepte!
+      end
+    when 'refuse'
+      if en_instruction?
+        refuse!
+      end
+    when 'without_continuation'
+      if en_instruction?
+        sans_suite!
+      end
     end
 
-    case role
-    when 'gestionnaire'
-      case action
-      when 'close'
-        if en_instruction?
-          self.attestation = build_attestation
-          save
-
-          accepte!
-
-          if motivation
-            self.motivation = motivation
-            save
-          end
-        end
-      when 'refuse'
-        if en_instruction?
-          refuse!
-
-          if motivation
-            self.motivation = motivation
-            save
-          end
-        end
-      when 'without_continuation'
-        if en_instruction?
-          sans_suite!
-
-          if motivation
-            self.motivation = motivation
-            save
-          end
-        end
-      end
+    if motivation
+      self.motivation = motivation
+      save
     end
 
     state
