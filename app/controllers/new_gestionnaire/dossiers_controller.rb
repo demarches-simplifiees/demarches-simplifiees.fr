@@ -3,13 +3,14 @@ module NewGestionnaire
     include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
 
+    after_action :mark_demande_as_read, only: :show
+
     def attestation
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
     end
 
     def show
-      dossier.notifications.demande.mark_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :demande)
+      @demande_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.demande_seen_at
     end
 
     def messagerie
@@ -191,6 +192,11 @@ module NewGestionnaire
       end
 
       dossier&.attestation&.emailable?
+    end
+
+    def mark_demande_as_read
+      dossier.notifications.demande.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :demande)
     end
   end
 end

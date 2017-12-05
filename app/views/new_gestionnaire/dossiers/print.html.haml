@@ -13,7 +13,7 @@
 
 - champs = @dossier.ordered_champs.decorate
 - if champs.any?
-  = render partial: "champs", locals: { champs: champs }
+  = render partial: "champs", locals: { champs: champs, dossier: @dossier }
 
 - if @dossier.procedure.use_api_carto
   %h3 Cartographie
