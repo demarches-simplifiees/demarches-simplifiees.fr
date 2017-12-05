@@ -28,7 +28,7 @@ class DossiersListGestionnaireService
   end
 
   def nouveaux
-    @nouveaux ||= filter_dossiers.nouveaux.order_by_updated_at('asc')
+    @nouveaux ||= filter_dossiers.en_construction.order_by_updated_at('asc')
   end
 
   def a_instruire

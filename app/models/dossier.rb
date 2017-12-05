@@ -50,7 +50,7 @@ class Dossier < ActiveRecord::Base
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
   scope :all_state,                   -> { not_archived.state_not_brouillon }
-  scope :nouveaux,                    -> { not_archived.state_en_construction }
+  scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
   scope :downloadable_sorted,         -> { state_not_brouillon.includes(:entreprise, :etablissement, :champs, :champs_private).order(en_construction_at: 'asc') }
