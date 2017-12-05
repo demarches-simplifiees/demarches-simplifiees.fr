@@ -144,37 +144,6 @@ class Dossier < ActiveRecord::Base
     champs.joins(', types_de_piece_justificative').where("pieces_justificatives.type_de_piece_justificative_id = types_de_piece_justificative.id AND types_de_piece_justificative.procedure_id = #{procedure.id}").order('order_place ASC')
   end
 
-  def next_step!(action, motivation = nil)
-    unless %w(receive refuse without_continuation close).include?(action)
-      fail 'action is not valid'
-    end
-
-    case action
-    when 'close'
-      if en_instruction?
-        self.attestation = build_attestation
-        save
-
-        accepte!
-      end
-    when 'refuse'
-      if en_instruction?
-        refuse!
-      end
-    when 'without_continuation'
-      if en_instruction?
-        sans_suite!
-      end
-    end
-
-    if motivation
-      self.motivation = motivation
-      save
-    end
-
-    state
-  end
-
   def brouillon?
     BROUILLON.include?(state)
   end
@@ -355,13 +324,13 @@ class Dossier < ActiveRecord::Base
     end
   end
 
-  private
-
   def build_attestation
     if procedure.attestation_template.present? && procedure.attestation_template.activated?
       procedure.attestation_template.attestation_for(self)
     end
   end
+
+  private
 
   def update_state_dates
     if en_construction? && !self.en_construction_at

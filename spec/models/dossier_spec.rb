@@ -116,40 +116,6 @@ describe Dossier do
         end
       end
     end
-
-    describe '#next_step' do
-      let(:dossier) { create(:dossier) }
-      let(:role) { 'user' }
-      let(:action) { 'receive' }
-
-      subject { dossier.next_step! role, action }
-
-      context 'when action is not valid' do
-        let(:action) { 'test' }
-        it { expect { subject }.to raise_error('action is not valid') }
-      end
-
-      context 'when role is not valid' do
-        let(:role) { 'test' }
-        it { expect { subject }.to raise_error('role is not valid') }
-      end
-
-      context 'when dossier is at state en_instruction' do
-        before do
-          dossier.en_instruction!
-        end
-
-        context 'when gestionnaire is connect' do
-          let(:role) { 'gestionnaire' }
-
-          context 'when he closes the dossier' do
-            let(:action) { 'close' }
-
-            it { is_expected.to eq('accepte') }
-          end
-        end
-      end
-    end
   end
 
   describe '#cerfa_available?' do
@@ -658,7 +624,7 @@ describe Dossier do
     let(:procedure) { create(:procedure, attestation_template: attestation_template) }
 
     before :each do
-      dossier.next_step!('gestionnaire', 'close')
+      dossier.attestation = dossier.build_attestation
       dossier.reload
     end
 

@@ -115,20 +115,25 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
     case params[:process_action]
     when "refuse"
-      next_step = "refuse"
+      dossier.refuse!
       notice = "Dossier considéré comme refusé."
       template = dossier.procedure.refused_mail_template
     when "without_continuation"
-      next_step = "without_continuation"
+      dossier.sans_suite!
       notice = "Dossier considéré comme sans suite."
       template = dossier.procedure.without_continuation_mail_template
     when "close"
-      next_step = "close"
+      dossier.attestation = dossier.build_attestation
+      dossier.accepte!
       notice = "Dossier traité avec succès."
       template = dossier.procedure.closed_mail_template
     end
 
-    dossier.next_step! 'gestionnaire', next_step, motivation
+    if motivation
+      dossier.motivation = motivation
+    end
+
+    dossier.save
 
     # needed to force Carrierwave to provide dossier.attestation.pdf.read
     # when the Feature.remote_storage is true, otherwise pdf.read is a closed stream.
