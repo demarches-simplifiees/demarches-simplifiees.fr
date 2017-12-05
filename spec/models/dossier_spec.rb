@@ -150,22 +150,6 @@ describe Dossier do
         end
       end
 
-      context 'when dossier is at state en_construction' do
-        before do
-          dossier.en_construction!
-        end
-
-        context 'when gestionnaire is connect' do
-          let(:role) { 'gestionnaire' }
-
-          context 'when is follow' do
-            let(:action) { 'follow' }
-
-            it { is_expected.to eq 'en_construction' }
-          end
-        end
-      end
-
       context 'when dossier is at state en_instruction' do
         before do
           dossier.en_instruction!

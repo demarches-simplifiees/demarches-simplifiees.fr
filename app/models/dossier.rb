@@ -145,7 +145,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def next_step! role, action, motivation = nil
-    unless %w(initiate follow receive refuse without_continuation close).include?(action)
+    unless %w(initiate receive refuse without_continuation close).include?(action)
       fail 'action is not valid'
     end
 
