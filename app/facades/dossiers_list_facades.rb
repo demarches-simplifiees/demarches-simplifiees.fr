@@ -22,11 +22,11 @@ class DossiersListFacades
   end
 
   def total_new_dossier
-    current_devise_profil.dossiers.state_en_construction.not_archived.count
+    current_devise_profil.dossiers.en_construction.count
   end
 
   def new_dossier_number procedure_id
-    current_devise_profil.dossiers.state_en_construction.not_archived.where(procedure_id: procedure_id).count
+    current_devise_profil.dossiers.en_construction.where(procedure_id: procedure_id).count
   end
 
   def gestionnaire_procedures_name_and_id_list
