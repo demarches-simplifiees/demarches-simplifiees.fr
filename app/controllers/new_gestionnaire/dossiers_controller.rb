@@ -28,6 +28,12 @@ module NewGestionnaire
       current_gestionnaire.mark_tab_as_seen(dossier, :avis)
     end
 
+    def personnes_impliquees
+      @following_accompagnateurs_emails = dossier.followers_gestionnaires.pluck(:email)
+      @avis_emails = dossier.avis.includes(:gestionnaire).map(&:email_to_display)
+      @invites_emails = dossier.invites.map(&:email)
+    end
+
     def follow
       current_gestionnaire.follow(dossier)
       dossier.next_step!('gestionnaire', 'follow')

@@ -112,6 +112,29 @@ feature 'The gestionnaire part' do
     expect(page).to have_text('a great answer')
   end
 
+  scenario 'A gestionnaire can see the personnes impliquées' do
+    gestionnaire2 = FactoryGirl.create(:gestionnaire, password: password)
+
+    log_in(gestionnaire.email, password)
+
+    click_on 'nouvelle interface'
+    click_on procedure.libelle
+    click_on dossier.user.email
+
+    click_on 'Avis externes'
+    expect(page).to have_current_path(avis_dossier_path(procedure, dossier))
+
+    expert_email = 'expert@tps.com'
+    ask_confidential_avis(expert_email, 'a good introduction')
+
+    expert_email = gestionnaire2.email
+    ask_confidential_avis(expert_email, 'a good introduction')
+
+    click_on 'Personnes impliquées'
+    expect(page).to have_text(expert_email)
+    expect(page).to have_text(gestionnaire2.email)
+  end
+
   def log_in(email, password)
     visit '/'
     click_on 'Connexion'

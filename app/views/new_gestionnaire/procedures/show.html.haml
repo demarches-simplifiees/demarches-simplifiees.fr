@@ -4,9 +4,8 @@
   .accompagnateur-header
     .container.flex
 
-      .procedure-logo
-        - if @procedure.logo.present?
-          = image_tag @procedure.logo, alt: "Logo de la procédure"
+      .procedure-logo{ style: @procedure.logo.present? ? "background-image: url(#{@procedure.logo.url})" : nil,
+        role: 'img', 'aria-label': "logo de la procédure #{@procedure.libelle}" }
 
       .procedure-header
         %h1= @procedure.libelle
