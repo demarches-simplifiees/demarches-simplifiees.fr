@@ -212,7 +212,7 @@ describe PreferenceListDossier do
       describe 'libelle' do
         subject { super()[:libelle] }
 
-        it { expect(subject[:libelle]).to eq 'Nom établissement' }
+        it { expect(subject[:libelle]).to eq 'Libellé NAF' }
         it { expect(subject[:table]).to eq 'etablissement' }
         it { expect(subject[:attr]).to eq 'libelle_naf' }
         it { expect(subject[:attr_decorate]).to eq 'libelle_naf' }
