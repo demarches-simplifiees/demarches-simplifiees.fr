@@ -236,9 +236,15 @@ module NewGestionnaire
             .where("champs.value LIKE ?", "%#{filter['value']}%")
 
         when 'user', 'etablissement', 'entreprise'
-          dossiers
+          if filter['column'] == 'date_creation'
+            dossiers
+            .includes(filter['table'])
+            .where("#{filter['table'].pluralize}.#{filter['column']} = ?", filter['value'].to_date)
+          else
+            dossiers
             .includes(filter['table'])
             .where("#{filter['table'].pluralize}.#{filter['column']} LIKE ?", "%#{filter['value']}%")
+          end
 
         end.pluck(:id)
       end.reduce(:&)
