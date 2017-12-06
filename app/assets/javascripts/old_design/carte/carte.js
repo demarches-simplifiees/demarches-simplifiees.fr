@@ -133,16 +133,12 @@ function get_position() {
 }
 
 function get_address_point(request) {
-  $.ajax({
-    url: '/ban/address_point?request=' + request,
-    dataType: 'json',
-    async: true
-  }).done(function (data) {
-    if (data.lat != null) {
-      map.setView(new L.LatLng(data.lat, data.lon), data.zoom);
-      //L.marker([data.lat, data.lon], {icon: icon}).addTo(map);
-    }
-  });
+  $.get('/ban/address_point', { request: request })
+    .done(function (data) {
+      if (data.lat !== null) {
+        map.setView(new L.LatLng(data.lat, data.lon), data.zoom);
+      }
+    });
 }
 
 function jsObject_to_array(qp_list) {
