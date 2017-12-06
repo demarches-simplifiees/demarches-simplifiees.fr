@@ -144,18 +144,20 @@ module NewGestionnaire
     end
 
     def add_filter
-      filters = procedure_presentation.filters
-      table, column = params[:field].split('/')
-      label = procedure.fields.find { |c| c['table'] == table && c['column'] == column }['label']
+      if params[:value].present?
+        filters = procedure_presentation.filters
+        table, column = params[:field].split('/')
+        label = procedure.fields.find { |c| c['table'] == table && c['column'] == column }['label']
 
-      filters[statut] << {
-        'label' => label,
-        'table' => table,
-        'column' => column,
-        'value' => params[:value]
-      }
+        filters[statut] << {
+          'label' => label,
+          'table' => table,
+          'column' => column,
+          'value' => params[:value]
+        }
 
-      procedure_presentation.update_attributes(filters: filters.to_json)
+        procedure_presentation.update_attributes(filters: filters.to_json)
+      end
 
       redirect_back(fallback_location: procedure_url(procedure))
     end
