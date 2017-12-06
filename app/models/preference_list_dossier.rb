@@ -71,7 +71,7 @@ class PreferenceListDossier < ActiveRecord::Base
 
     {
         siret: create_column('SIRET', table, 'siret', 'siret', 2),
-        libelle: create_column('Nom établissement', table, 'libelle_naf', 'libelle_naf', 3),
+        libelle: create_column('Libellé NAF', table, 'libelle_naf', 'libelle_naf', 3),
         code_postal: create_column('Code postal', table, 'code_postal', 'code_postal', 1)
     }
   end
