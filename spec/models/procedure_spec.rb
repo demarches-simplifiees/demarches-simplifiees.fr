@@ -447,7 +447,7 @@ describe Procedure do
         { "label" => 'SIRET siège social', "table" => 'entreprise', "column" => 'siret_siege_social' },
         { "label" => 'Date de création', "table" => 'entreprise', "column" => 'date_creation' },
         { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret' },
-        { "label" => 'Nom établissement', "table" => 'etablissement', "column" => 'libelle_naf' },
+        { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf' },
         { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal' },
         { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.id.to_s },
         { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.id.to_s },
