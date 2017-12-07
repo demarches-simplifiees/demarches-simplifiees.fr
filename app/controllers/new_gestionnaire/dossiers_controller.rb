@@ -5,6 +5,7 @@ module NewGestionnaire
 
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
+    after_action :mark_avis_as_read, only: [:avis, :create_avis]
 
     def attestation
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
@@ -25,8 +26,7 @@ module NewGestionnaire
     end
 
     def avis
-      dossier.notifications.avis.mark_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :avis)
+      @avis_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.avis_seen_at
     end
 
     def personnes_impliquees
@@ -202,6 +202,11 @@ module NewGestionnaire
     def mark_messagerie_as_read
       dossier.notifications.messagerie.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :messagerie)
+    end
+
+    def mark_avis_as_read
+      dossier.notifications.avis.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :avis)
     end
   end
 end
