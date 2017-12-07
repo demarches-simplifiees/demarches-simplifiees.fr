@@ -6,6 +6,7 @@ module NewGestionnaire
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
+    after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
 
     def attestation
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
@@ -21,8 +22,7 @@ module NewGestionnaire
     end
 
     def annotations_privees
-      dossier.notifications.annotations_privees.mark_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :annotations_privees)
+      @annotations_privees_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.annotations_privees_seen_at
     end
 
     def avis
@@ -207,6 +207,11 @@ module NewGestionnaire
     def mark_avis_as_read
       dossier.notifications.avis.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :avis)
+    end
+
+    def mark_annotations_privees_as_read
+      dossier.notifications.annotations_privees.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :annotations_privees)
     end
   end
 end
