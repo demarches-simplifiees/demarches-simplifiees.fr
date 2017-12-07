@@ -211,7 +211,7 @@ class Procedure < ActiveRecord::Base
 
       fields << [
         field_hash('SIRET', 'etablissement', 'siret'),
-        field_hash('Nom établissement', 'etablissement', 'libelle_naf'),
+        field_hash('Libellé NAF', 'etablissement', 'libelle_naf'),
         field_hash('Code postal', 'etablissement', 'code_postal')
       ]
     end

@@ -1,4 +1,4 @@
-%table.table.vertical
+%table.table.vertical.pj
   %tbody
     - if dossier.procedure.cerfa_flag?
       %tr
@@ -12,9 +12,22 @@
     - dossier.procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
       %tr
         %th= "#{type_de_piece_justificative.libelle} :"
-        %td
-          - pj = dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)
-          - if pj.present?
-            = link_to "Télécharger", pj.content_url, class: "link", target: :blank
-          - else
-            Pièce non fournie
+        - pjs = dossier.retrieve_all_piece_justificative_by_type(type_de_piece_justificative.id).to_ary.dup
+        - if pjs.present?
+          - first_pj = pjs.pop
+          %td= display_pj_filename(first_pj)
+          %td= link_to "Télécharger", first_pj.content_url, class: "link", target: :blank
+          %td
+            - if pjs.present?
+              %span.button.dropdown
+                anciennes versions
+                .dropdown-content.fade-in-down
+                  %ul.dropdown-items
+                    - pjs.each do |pj|
+                      %li
+                        = link_to pj.content_url, { target: :blank } do
+                          %span.filename= display_pj_filename(pj)
+                          %span
+                            ajoutée le #{pj.created_at.localtime.strftime('%d/%m %H:%M')}
+        - else
+          %td Pièce non fournie
