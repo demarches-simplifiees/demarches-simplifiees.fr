@@ -38,7 +38,6 @@ Rails.application.routes.draw do
 
   root 'root#index'
 
-  get 'cgu' => 'cgu#index'
   get 'users' => 'users#index'
   get 'admin' => 'admin#index'
   get 'backoffice' => 'backoffice#index'
