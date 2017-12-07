@@ -15,11 +15,15 @@ select {
 
 .page-wrapper {
   position: relative;
-  padding-bottom: $footer-height;
+  padding-bottom: $small-footer-height;
   min-height: 100%;
 
-  @media (max-width: 1000px) {
-    padding-bottom: $footer-height-mobile;
+  &.with-footer {
+    padding-bottom: $footer-height;
+
+    @media (max-width: 1000px) {
+      padding-bottom: $footer-height-mobile;
+    }
   }
 }
 
