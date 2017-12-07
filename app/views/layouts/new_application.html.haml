@@ -17,7 +17,7 @@
     = stylesheet_link_tag "new_design/print", media: "print", "data-turbolinks-track": true
 
   %body
-    .page-wrapper
+    .page-wrapper{ class: content_for?(:display_footer) ? 'with-footer' : 'nil' }
       = render partial: "layouts/support_navigator_banner"
       = render partial: "layouts/ie_lt_10"
       #beta{ class:(Rails.env == "production" ? "" : "beta_staging") }
@@ -30,7 +30,8 @@
       = render partial: "layouts/flash_messages"
       = yield
 
-      = render partial: "layouts/new_footer"
+      - if content_for?(:display_footer)
+        = render partial: "layouts/new_footer"
       = render partial: "layouts/google_analytics"
       = render partial: "layouts/mailjet_newsletter"
 
