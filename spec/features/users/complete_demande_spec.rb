@@ -30,14 +30,14 @@ feature 'user path for dossier creation' do
       end
       context 'sets siret' do
         before do
-          stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
+          stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
               .to_return(body: File.read('spec/support/files/etablissement.json', status: 200))
-          stub_request(:get, "https://api-dev.apientreprise.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
+          stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
               .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
 
-          stub_request(:get, "https://api-dev.apientreprise.fr/v2/exercices/#{siret}?token=#{SIADETOKEN}")
+          stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/exercices/#{siret}?token=#{SIADETOKEN}")
               .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
-          stub_request(:get, "https://api-dev.apientreprise.fr/v2/associations/#{siret}?token=#{SIADETOKEN}")
+          stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/associations/#{siret}?token=#{SIADETOKEN}")
               .to_return(status: 404, body: '')
 
           page.find_by_id('dossier-siret').set siret
