@@ -8,7 +8,7 @@ describe SIADE::RNAAdapter do
   subject { described_class.new(siret).to_params }
 
   before do
-    stub_request(:get, /https:\/\/api-dev.apientreprise.fr\/v2\/associations\/.*token=/)
+    stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/associations\/.*token=/)
         .to_return(body: body, status: status)
   end
 
