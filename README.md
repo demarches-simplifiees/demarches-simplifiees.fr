@@ -68,7 +68,7 @@ Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les c
 
     AutoArchiveProcedureJob.set(cron: "* * * * *").perform_later
     WeeklyOverviewJob.set(cron: "0 8 * * 0").perform_later
-    AutoReceiveDossiersForProcedureJob.set(cron: "* * * * *").perform_later(procedure_declaratoire_id)
+    AutoReceiveDossiersForProcedureJob.set(cron: "* * * * *").perform_later(procedure_declaratoire_id, "received")
 
 ## Exécution des tests (RSpec)
 
