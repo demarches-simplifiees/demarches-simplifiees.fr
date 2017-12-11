@@ -58,6 +58,10 @@
           "invites": [
             "nom@domaine.fr"
           ],
+          "individual": {
+            "nom": "Monmari",
+            "prenom": "René"
+          },
           "entreprise": {
             "siren": "440117620",
             "capital_social": 537100000,
