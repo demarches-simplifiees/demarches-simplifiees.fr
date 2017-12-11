@@ -14,6 +14,7 @@ class DossierSerializer < ActiveModel::Serializer
     :accompagnateurs,
     :invites
 
+  has_one :individual
   has_one :entreprise
   has_one :etablissement
   has_many :cerfa
