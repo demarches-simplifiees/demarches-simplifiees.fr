@@ -106,19 +106,11 @@
     }
 
     #sign-out {
+      text-align: center;
       height: 60px;
 
-      .fa {
-        color: #003C92;
-        float: right;
-        width: 70px;
-        margin-top: 2%;
-        margin-right: 0.5em;
-        font-size: 40px;
-      }
-
-      .fa:hover {
-        color: #668ABD;
+      a {
+        line-height: 60px;
       }
     }
   }
