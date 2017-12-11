@@ -1,1 +1,3 @@
-= link_to "", "/administrateurs/sign_out", method: :delete, class: "btn btn-md fa fa-sign-out"
+= link_to "/administrateurs/sign_out", method: :delete do
+  %span.fa.fa-sign-out
+  Se déconnecter
