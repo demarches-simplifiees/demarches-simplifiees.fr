@@ -7,7 +7,7 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
     before { Timecop.freeze(date) }
     after { Timecop.return }
 
-    subject { AutoReceiveDossiersForProcedureJob.new.perform(procedure_id) }
+    subject { AutoReceiveDossiersForProcedureJob.new.perform(procedure_id, 'received') }
 
     context "with some dossiers" do
       let(:nouveau_dossier1) { create(:dossier, :initiated) }
