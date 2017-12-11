@@ -1,5 +1,5 @@
 if Rails.env.production?
-  SIADEURL = 'https://api.apientreprise.fr'
+  SIADEURL = 'https://entreprise.api.gouv.fr'
 else
-  SIADEURL = 'https://api-dev.apientreprise.fr'
+  SIADEURL = 'https://staging.entreprise.api.gouv.fr'
 end

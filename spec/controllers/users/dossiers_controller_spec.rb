@@ -178,19 +178,19 @@ describe Users::DossiersController, type: :controller do
     let(:user) { create(:user) }
 
     before do
-      stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{siret_not_found}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/etablissements/#{siret_not_found}?token=#{SIADETOKEN}")
           .to_return(status: 404, body: 'fake body')
 
-      stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: status_entreprise_call, body: File.read('spec/support/files/etablissement.json'))
 
-      stub_request(:get, "https://api-dev.apientreprise.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
           .to_return(status: status_entreprise_call, body: File.read('spec/support/files/entreprise.json'))
 
-      stub_request(:get, "https://api-dev.apientreprise.fr/v2/exercices/#{siret}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/exercices/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: exercices_status, body: exercices_body)
 
-      stub_request(:get, "https://api-dev.apientreprise.fr/v2/associations/#{siret}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/associations/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: rna_status, body: rna_body)
 
       dossier

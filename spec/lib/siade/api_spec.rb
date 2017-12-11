@@ -4,7 +4,7 @@ describe SIADE::API do
   describe '.entreprise' do
     subject { described_class.entreprise(siren) }
     before do
-      stub_request(:get, "https://api-dev.apientreprise.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
           .to_return(status: status, body: body)
     end
     context 'when siren does not exist' do
@@ -30,7 +30,7 @@ describe SIADE::API do
   describe '.etablissement' do
     subject { described_class.etablissement(siret) }
     before do
-      stub_request(:get, "https://api-dev.apientreprise.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
+      stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
           .to_return(status: status, body: body)
     end
 
@@ -57,7 +57,7 @@ describe SIADE::API do
 
   describe '.exercices' do
     before do
-      stub_request(:get, /https:\/\/api-dev.apientreprise.fr\/v2\/exercices\/.*token=/)
+      stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/exercices\/.*token=/)
           .to_return(status: status, body: body)
     end
 
@@ -88,7 +88,7 @@ describe SIADE::API do
 
   describe '.rna' do
     before do
-      stub_request(:get, /https:\/\/api-dev.apientreprise.fr\/v2\/associations\/.*token=/)
+      stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/associations\/.*token=/)
           .to_return(status: status, body: body)
     end
 
