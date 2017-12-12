@@ -1,9 +1,10 @@
 .tab-title= title
 
 - if emails_collection.present?
-  %ul
+  %ul.tab-list
     - emails_collection.each do |email|
       %li
         = email
 - else
-  = blank
+  %p.tab-paragraph
+    = blank
