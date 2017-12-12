@@ -42,23 +42,18 @@
 
       = link_to ".button.accepted", "#", class: "button accepted"
 
+      = link_to "#", class: "button" do
+        %span.icon.follow
+        = "Bouton avec icone et texte"
+
+      = link_to "#", class: "button icon-only" do
+        %span.icon.follow
+
+    %p
       = link_to ".button.large", "#", class: "button large"
 
       = link_to ".button.large.primary", "#", class: "button large primary"
 
-    %p
-      = link_to "#", class: "button" do
-        %span.icon.follow
-        = ".icon.follow"
-      = link_to "#", class: "button" do
-        %span.icon.unfollow
-        = ".icon.unfollow"
-      = link_to "#", class: "button" do
-        %span.icon.archive
-        = ".icon.archive"
-      = link_to "#", class: "button" do
-        %span.icon.unarchive
-        = ".icon.unarchive"
     %p
       = link_to ".button.primary.expand", "#", class: "button primary expand"
 
