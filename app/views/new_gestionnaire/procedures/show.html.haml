@@ -94,7 +94,7 @@
           - @dossiers.each do |dossier|
             %tr
               %td.folder-col
-                .icon.folder
+                %span.icon.folder
                   - if current_gestionnaire.notifications_for_procedure(@procedure).include?(dossier.id)
                     %span.notifications{ 'aria-label': 'notifications' }
 

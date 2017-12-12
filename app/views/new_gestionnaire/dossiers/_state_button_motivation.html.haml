@@ -1,6 +1,6 @@
 .motivation{ class: popup_class }
   %h3
-    .icon{ class: popup_class }
+    %span.icon{ class: popup_class }
     #{popup_title} nº #{dossier.id}
 
   = form_tag(terminer_dossier_path(dossier.procedure, dossier), method: :post, class: 'form') do
