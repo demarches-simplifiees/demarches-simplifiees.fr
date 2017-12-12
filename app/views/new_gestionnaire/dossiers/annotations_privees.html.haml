@@ -5,15 +5,14 @@
 #dossier-annotations-privees.container
   - if @dossier.ordered_champs_private.present?
     %section
-      .card
-        = form_for @dossier, url: annotations_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' } do |f|
-          = f.fields_for :champs_private, f.object.ordered_champs_private do |champ_form|
-            - champ = champ_form.object
-            = render partial: "new_gestionnaire/dossiers/champs/champ",
-              locals: { champ: champ, form: champ_form, seen_at: @annotations_privees_seen_at }
+      = form_for @dossier, url: annotations_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' } do |f|
+        = f.fields_for :champs_private, f.object.ordered_champs_private do |champ_form|
+          - champ = champ_form.object
+          = render partial: "new_gestionnaire/dossiers/champs/champ",
+            locals: { champ: champ, form: champ_form, seen_at: @annotations_privees_seen_at }
 
-          .send-wrapper
-            = f.submit 'Sauvegarder', class: 'button send', data: { disable_with: "Envoi..." }
+        .send-wrapper
+          = f.submit 'Sauvegarder', class: 'button send', data: { disable_with: "Envoi..." }
 
   - else
     %h2.empty-text Aucune annotation privée
