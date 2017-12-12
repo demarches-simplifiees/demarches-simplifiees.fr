@@ -3,7 +3,7 @@
 = render partial: "header", locals: { dossier: @dossier }
 
 .container
-  .page-title Identité du demandeur
+  .tab-title Identité du demandeur
   .card
     - if @dossier.entreprise.present?
       = render partial: "identite_entreprise", locals: { entreprise: @dossier.entreprise }
@@ -11,18 +11,18 @@
     - if @dossier.individual.present?
       = render partial: "identite_individual", locals: { individual: @dossier.individual }
 
-  .page-title Formulaire
+  .tab-title Formulaire
   - champs = @dossier.ordered_champs.includes(:type_de_champ).decorate
   - if champs.any?
     .card
       = render partial: "champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: @demande_seen_at }
 
   - if @dossier.procedure.use_api_carto
-    .page-title Cartographie
+    .tab-title Cartographie
     .card
       = render partial: "map", locals: { dossier: @dossier }
 
   - if @dossier.procedure.cerfa_flag? || @dossier.types_de_piece_justificative.any?
-    .page-title Pièces jointes
+    .tab-title Pièces jointes
     .card
       = render partial: "pieces_jointes", locals: { dossier: @dossier, demande_seen_at: @demande_seen_at }
