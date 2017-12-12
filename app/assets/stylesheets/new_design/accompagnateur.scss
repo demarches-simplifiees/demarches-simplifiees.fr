@@ -8,6 +8,12 @@
   margin-bottom: 3 * $default-spacer;
 }
 
+.tab-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: $default-padding;
+}
+
 .accompagnateur-header {
   background-color: $light-grey;
   padding-top: $default-padding;

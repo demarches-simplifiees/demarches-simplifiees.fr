@@ -5,7 +5,7 @@
   .accompagnateur-header
     .container.flex
       .width-100
-        %h1 Avis
+        %h1.tab-title Avis
         %ul.tabs
           %li{ class: (@statut == NewGestionnaire::AvisController::A_DONNER_STATUS) ? 'active' : nil }>
             = link_to(avis_index_path(statut: NewGestionnaire::AvisController::A_DONNER_STATUS)) do
