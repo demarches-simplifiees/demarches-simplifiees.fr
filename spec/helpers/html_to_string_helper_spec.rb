@@ -4,6 +4,11 @@ describe HtmlToStringHelper do
       it { expect(helper.html_to_string('text')).to eq('text') }
     end
 
+    describe 'deals with empty / nil strings' do
+      it { expect(helper.html_to_string(nil)).to eq(nil) }
+      it { expect(helper.html_to_string('')).to eq("") }
+    end
+
     describe 'deals with <br>' do
       it { expect(helper.html_to_string('new<br>line')).to eq("new\nline") }
       it { expect(helper.html_to_string('new<br/>line')).to eq("new\nline") }
