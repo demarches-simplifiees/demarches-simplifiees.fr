@@ -5,7 +5,6 @@
 #dossier-annotations-privees.container
   - if @dossier.ordered_champs_private.present?
     %section
-      %h1.tab-title Annotations privées
       .card.featured
         = form_for @dossier, url: annotations_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' } do |f|
           = f.fields_for :champs_private, f.object.ordered_champs_private do |champ_form|
