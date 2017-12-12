@@ -5,7 +5,7 @@
 
 .container
   %section.give-avis
-    %h1 Donner votre avis
+    %h1.tab-title Donner votre avis
     %h2.claimant
       Demandeur :
       %span.email= @avis.claimant.email
@@ -22,7 +22,7 @@
           = f.submit 'Envoyer votre avis', class: 'button send'
 
   %section.ask-avis
-    %h1 Inviter une personne à donner son avis
+    %h1.tab-title Inviter une personne à donner son avis
     %p.avis-notice L'invité pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais il ne pourra le modifier.
 
     = form_for Avis.new, url: avis_avis_path(@avis), html: { class: 'form' } do |f|
