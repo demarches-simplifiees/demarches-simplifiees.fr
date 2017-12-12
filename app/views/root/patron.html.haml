@@ -2,20 +2,20 @@
   .container
     %h1 Icones
 
-    .icon.follow
-    .icon.unfollow
-    .icon.archive
-    .icon.unarchive
-    .icon.folder
-    .icon.accept
-    .icon.refuse
-    .icon.without-continuation
-    .icon.edit
-    .icon.in-progress
-    .icon.bubble
-    .icon.attachment
-    .icon.lock
-    .icon.printer
+    %span.icon.follow
+    %span.icon.unfollow
+    %span.icon.archive
+    %span.icon.unarchive
+    %span.icon.folder
+    %span.icon.accept
+    %span.icon.refuse
+    %span.icon.without-continuation
+    %span.icon.edit
+    %span.icon.in-progress
+    %span.icon.bubble
+    %span.icon.attachment
+    %span.icon.lock
+    %span.icon.printer
 
     %h1 Formulaires
 
@@ -42,23 +42,18 @@
 
       = link_to ".button.accepted", "#", class: "button accepted"
 
+      = link_to "#", class: "button" do
+        %span.icon.follow
+        = "Bouton avec icone et texte"
+
+      = link_to "#", class: "button icon-only" do
+        %span.icon.follow
+
+    %p
       = link_to ".button.large", "#", class: "button large"
 
       = link_to ".button.large.primary", "#", class: "button large primary"
 
-    %p
-      = link_to "#", class: "button" do
-        .icon.follow
-        = ".icon.follow"
-      = link_to "#", class: "button" do
-        .icon.unfollow
-        = ".icon.unfollow"
-      = link_to "#", class: "button" do
-        .icon.archive
-        = ".icon.archive"
-      = link_to "#", class: "button" do
-        .icon.unarchive
-        = ".icon.unarchive"
     %p
       = link_to ".button.primary.expand", "#", class: "button primary expand"
 

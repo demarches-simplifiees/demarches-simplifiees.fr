@@ -5,13 +5,13 @@
       %ul.dropdown-items
         - if dossier.en_construction?
           %li.selected
-            .icon.edit
+            %span.icon.edit
             .description
               %h4 En construction
               Vous permettez à l'usager de modifier ses réponses au formulaire
           %li
             = link_to passer_en_instruction_dossier_path(dossier.procedure, dossier), method: :post, data: { confirm: "Confirmer vous le passage en instruction de ce dossier ?" } do
-              .icon.in-progress
+              %span.icon.in-progress
               .description
                 %h4 Passer en instruction
                 L'usager ne pourra plus modifier le formulaire
@@ -19,27 +19,27 @@
         - if dossier.en_instruction?
           %li
             = link_to repasser_en_construction_dossier_path(dossier.procedure, dossier), method: :post, data: { confirm: "Confirmer vous le passage en construction de ce dossier ?" } do
-              .icon.edit
+              %span.icon.edit
               .description
                 %h4 Repasser en construction
                 Vous permettrez à l'usager de modifier ses réponses au formulaire
           %li.selected
-            .icon.in-progress
+            %span.icon.in-progress
             .description
               %h4 En instruction
               L'usager ne peut modifier son dossier pendant l'instruction
           %li{ onclick: "TPS.showMotivation('accept');" }
-            .icon.accept
+            %span.icon.accept
             .description
               %h4 Accepter
               L'usager sera notifié que son dossier a été accepté
           %li{ onclick: "TPS.showMotivation('without-continuation');" }
-            .icon.without-continuation
+            %span.icon.without-continuation
             .description
               %h4 Classer sans suite
               L'usager ne recevra aucune notification
           %li{ onclick: "TPS.showMotivation('refuse');" }
-            .icon.refuse
+            %span.icon.refuse
             .description
               %h4 Refuser
               L'usager sera notifié que son dossier a été refusé
