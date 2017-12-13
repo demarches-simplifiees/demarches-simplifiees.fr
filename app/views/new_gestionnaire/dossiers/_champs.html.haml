@@ -21,7 +21,11 @@
           %td.rich-text
             - dossier = Dossier.includes(:procedure).find_by(id: c.value)
             - if dossier
-              = link_to("Dossier nº #{dossier.id}", dossier_path(dossier.procedure, dossier), target: '_blank')
+              - path = dossier_linked_path(current_gestionnaire, dossier)
+              - if path.present?
+                = link_to("Dossier nº #{dossier.id}", path, target: '_blank')
+              - else
+                Dossier nº #{dossier.id}
               %br
               = dossier.text_summary
             - else
