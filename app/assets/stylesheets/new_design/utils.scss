@@ -1,3 +1,5 @@
+@import "colors";
+
 .pull-left {
   float: left;
 }
@@ -31,4 +33,9 @@
   font-weight: bold;
   text-align: center;
   margin: 60px 0;
+}
+
+.highlighted {
+  background: $orange-bg;
+  color: $black;
 }

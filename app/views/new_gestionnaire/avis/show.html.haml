@@ -16,7 +16,7 @@
     - champs = @dossier.ordered_champs.decorate
     - if champs.any?
       .card
-        = render partial: 'new_gestionnaire/dossiers/champs', locals: { champs: champs }
+        = render partial: 'new_gestionnaire/dossiers/champs', locals: { champs: champs, dossier: @dossier, demande_seen_at: nil }
 
     - if @dossier.procedure.use_api_carto
       .accompagnateur-title Cartographie
@@ -26,4 +26,4 @@
     - if @dossier.procedure.cerfa_flag? || @dossier.types_de_piece_justificative.any?
       .accompagnateur-title Pièces jointes
       .card
-        = render partial: "new_gestionnaire/dossiers/pieces_jointes", locals: { dossier: @dossier }
+        = render partial: "new_gestionnaire/dossiers/pieces_jointes", locals: { dossier: @dossier, demande_seen_at: nil }

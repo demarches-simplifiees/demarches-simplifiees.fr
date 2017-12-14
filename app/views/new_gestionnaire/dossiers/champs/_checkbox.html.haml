@@ -1,4 +1,4 @@
-= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ }
+= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ, seen_at: seen_at }
 
 = form.check_box :value,
   { required: champ.mandatory },
