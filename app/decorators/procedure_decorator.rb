@@ -10,7 +10,9 @@ class ProcedureDecorator < Draper::Decorator
   end
 
   def published_at_fr
-    published_at.localtime.strftime('%d/%m/%Y %H:%M')
+    if published_at.present?
+      published_at.localtime.strftime('%d/%m/%Y %H:%M')
+    end
   end
 
   def logo_img
