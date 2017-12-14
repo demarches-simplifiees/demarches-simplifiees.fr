@@ -9,9 +9,9 @@ class Follow < ActiveRecord::Base
   private
 
   def set_default_date
-    self.demande_seen_at = DateTime.now
-    self.annotations_privees_seen_at = DateTime.now
-    self.avis_seen_at = DateTime.now
-    self.messagerie_seen_at = DateTime.now
+    self.demande_seen_at ||= DateTime.now
+    self.annotations_privees_seen_at ||= DateTime.now
+    self.avis_seen_at ||= DateTime.now
+    self.messagerie_seen_at ||= DateTime.now
   end
 end

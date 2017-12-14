@@ -15,7 +15,7 @@
   - champs = @dossier.ordered_champs.includes(:type_de_champ).decorate
   - if champs.any?
     .card
-      = render partial: "champs", locals: { champs: champs }
+      = render partial: "champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: @demande_seen_at }
 
   - if @dossier.procedure.use_api_carto
     .accompagnateur-title Cartographie
@@ -25,4 +25,4 @@
   - if @dossier.procedure.cerfa_flag? || @dossier.types_de_piece_justificative.any?
     .accompagnateur-title Pièces jointes
     .card
-      = render partial: "pieces_jointes", locals: { dossier: @dossier }
+      = render partial: "pieces_jointes", locals: { dossier: @dossier, demande_seen_at: @demande_seen_at }

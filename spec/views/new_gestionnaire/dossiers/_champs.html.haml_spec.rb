@@ -1,12 +1,14 @@
 describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
   let(:gestionnaire) { create(:gestionnaire) }
+  let(:demande_seen_at) { nil }
 
   before do
+    view.extend DossierHelper
     view.extend DossierLinkHelper
     allow(view).to receive(:current_gestionnaire).and_return(gestionnaire)
   end
 
-  subject { render 'new_gestionnaire/dossiers/champs.html.haml', champs: champs }
+  subject { render 'new_gestionnaire/dossiers/champs.html.haml', champs: champs, demande_seen_at: demande_seen_at }
 
   context "there are some champs" do
     let(:dossier) { create(:dossier) }
@@ -47,5 +49,23 @@ describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
     let(:champs) { [champ] }
 
     it { is_expected.to include("Pas de dossier associé") }
+  end
+
+  context "with seen_at" do
+    let(:dossier) { create(:dossier) }
+    let(:champ1) { create(:champ, :checkbox, value: "true") }
+    let(:champs) { [champ1] }
+
+    context "with a demande_seen_at after champ updated_at" do
+      let(:demande_seen_at) { champ1.updated_at + 1.hour }
+
+      it { is_expected.not_to have_css(".highlighted") }
+    end
+
+    context "with a demande_seen_at after champ updated_at" do
+      let(:demande_seen_at) { champ1.updated_at - 1.hour }
+
+      it { is_expected.to have_css(".highlighted") }
+    end
   end
 end
