@@ -13,7 +13,7 @@
 
 - champs = @dossier.ordered_champs.decorate
 - if champs.any?
-  = render partial: "champs", locals: { champs: champs, dossier: @dossier }
+  = render partial: "champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil }
 
 - if @dossier.procedure.use_api_carto
   %h3 Cartographie
@@ -91,7 +91,7 @@
   %ul.messages-list
     - @dossier.commentaires.each do |commentaire|
       %li
-        = render partial: "new_gestionnaire/shared/commentaires/commentaire", locals: { commentaire: commentaire }
+        = render partial: "new_gestionnaire/shared/commentaires/commentaire", locals: { commentaire: commentaire, messagerie_seen_at: nil }
 
 %script{ type: "text/javascript" }
   window.print();
