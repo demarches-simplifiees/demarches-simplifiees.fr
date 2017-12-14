@@ -21,7 +21,7 @@ feature 'The gestionnaire part' do
 
     click_on 'Passer en instruction'
     dossier.reload
-    expect(dossier.state).to eq('received')
+    expect(dossier.state).to eq('en_instruction')
 
     within('.accept.motivation') do
       fill_in('dossier_motivation', with: 'a good reason')

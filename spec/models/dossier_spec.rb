@@ -200,9 +200,9 @@ describe Dossier do
         end
       end
 
-      context 'when dossier is at state received' do
+      context 'when dossier is at state en_instruction' do
         before do
-          dossier.received!
+          dossier.en_instruction!
         end
 
         context 'when user is connected' do
@@ -211,7 +211,7 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('received') }
+            it { is_expected.to eq('en_instruction') }
           end
         end
 
@@ -221,7 +221,7 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('received') }
+            it { is_expected.to eq('en_instruction') }
           end
 
           context 'when he closes the dossier' do
@@ -394,7 +394,7 @@ describe Dossier do
     let(:date1) { 1.day.ago }
     let(:date2) { 1.hour.ago }
     let(:date3) { 1.minute.ago }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, en_construction_at: date1, received_at: date2, processed_at: date3, motivation: "Motivation") }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, en_construction_at: date1, en_instruction_at: date2, processed_at: date3, motivation: "Motivation") }
     let!(:follow) { create(:follow, gestionnaire: gestionnaire, dossier: dossier) }
 
     describe '#export_headers' do
@@ -461,7 +461,7 @@ describe Dossier do
           "false",
           "brouillon",
           dossier.en_construction_at,
-          dossier.received_at,
+          dossier.en_instruction_at,
           dossier.processed_at,
           "Motivation",
           gestionnaire.email,
@@ -702,30 +702,30 @@ describe Dossier do
 
       it 'should keep first en_construction_at date' do
         Timecop.return
-        dossier.received!
+        dossier.en_instruction!
         dossier.en_construction!
 
         expect(dossier.en_construction_at).to eq(beginning_of_day)
       end
     end
 
-    context 'when dossier is received' do
+    context 'when dossier is en_instruction' do
       let(:state) { 'en_construction' }
 
       before do
-        dossier.received!
+        dossier.en_instruction!
         dossier.reload
       end
 
-      it { expect(dossier.state).to eq('received') }
-      it { expect(dossier.received_at).to eq(beginning_of_day) }
+      it { expect(dossier.state).to eq('en_instruction') }
+      it { expect(dossier.en_instruction_at).to eq(beginning_of_day) }
 
-      it 'should keep first received_at date if dossier is set to en_construction again' do
+      it 'should keep first en_instruction_at date if dossier is set to en_construction again' do
         Timecop.return
         dossier.en_construction!
-        dossier.received!
+        dossier.en_instruction!
 
-        expect(dossier.received_at).to eq(beginning_of_day)
+        expect(dossier.en_instruction_at).to eq(beginning_of_day)
       end
     end
 
@@ -740,19 +740,19 @@ describe Dossier do
     end
 
     context 'when dossier is closed' do
-      let(:state) { 'received' }
+      let(:state) { 'en_instruction' }
 
       it_behaves_like 'dossier is processed', 'closed'
     end
 
     context 'when dossier is refused' do
-      let(:state) { 'received' }
+      let(:state) { 'en_instruction' }
 
       it_behaves_like 'dossier is processed', 'refused'
     end
 
     context 'when dossier is without_continuation' do
-      let(:state) { 'received' }
+      let(:state) { 'en_instruction' }
 
       it_behaves_like 'dossier is processed', 'without_continuation'
     end
@@ -762,8 +762,8 @@ describe Dossier do
     let(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :brouillon) }
     let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_construction, en_construction_at: DateTime.parse('03/01/2010')) }
-    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, en_construction_at: DateTime.parse('01/01/2010')) }
-    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, archived: true, en_construction_at: DateTime.parse('02/01/2010')) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_instruction, en_construction_at: DateTime.parse('01/01/2010')) }
+    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_instruction, archived: true, en_construction_at: DateTime.parse('02/01/2010')) }
 
     subject { procedure.dossiers.downloadable_sorted }
 
@@ -778,8 +778,8 @@ describe Dossier do
       allow(NotificationMailer).to receive(:send_dossier_received).and_return(double(deliver_later: nil))
     end
 
-    it "sends an email when the dossier becomes received" do
-      dossier.received!
+    it "sends an email when the dossier becomes en_instruction" do
+      dossier.en_instruction!
       expect(NotificationMailer).to have_received(:send_dossier_received).with(dossier.id)
     end
 
@@ -806,7 +806,7 @@ describe Dossier do
 
     it "does not send an email when the dossier is created with a non brouillon state" do
       expect { Dossier.create(procedure: procedure, state: "en_construction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "received", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "en_instruction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "closed", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "refused", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
       expect { Dossier.create(procedure: procedure, state: "without_continuation", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
@@ -822,8 +822,8 @@ describe Dossier do
       dossier.reload
     end
 
-    context 'when the dossier is in received state ' do
-      let!(:dossier) { create(:dossier, procedure: procedure, state: :received) }
+    context 'when the dossier is in en_instruction state ' do
+      let!(:dossier) { create(:dossier, procedure: procedure, state: :en_instruction) }
 
       context 'when the procedure has no attestation' do
         it { expect(dossier.attestation).to be_nil }

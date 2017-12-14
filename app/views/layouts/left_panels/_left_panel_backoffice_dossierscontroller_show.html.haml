@@ -7,7 +7,7 @@
     - if !@facade.dossier.read_only? || @facade.dossier.en_construction?
       = link_to 'Passer en instruction', backoffice_dossier_receive_path(@facade.dossier), method: :post, class: 'btn btn-danger btn-block', data: { confirm: "Confirmer vous le passage en instruction de ce dossier ?" }
 
-    - elsif @facade.dossier.received?
+    - elsif @facade.dossier.en_instruction?
       = form_tag(backoffice_dossier_process_dossier_url(@facade.dossier.id), method: :post) do
         = text_area :dossier, :motivation, class: "motivation-text-area", placeholder: "Motivation (facultative)"
 

@@ -39,6 +39,8 @@ class DossierSerializer < ActiveModel::Serializer
     case object.state
     when 'en_construction'
       'initiated'
+    when 'en_instruction'
+      'received'
     else
       object.state
     end
@@ -50,6 +52,10 @@ class DossierSerializer < ActiveModel::Serializer
 
   def initiated_at
     object.en_construction_at
+  end
+
+  def received_at
+    object.en_instruction_at
   end
 
   def accompagnateurs

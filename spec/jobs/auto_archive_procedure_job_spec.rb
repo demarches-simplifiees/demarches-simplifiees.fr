@@ -22,7 +22,7 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
     let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
     let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
     let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
-    let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: 'received', archived: false)}
+    let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: 'en_instruction', archived: false)}
     let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: 'closed', archived: false)}
     let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: 'refused', archived: false)}
     let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: 'without_continuation', archived: false)}
@@ -40,14 +40,14 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
     end
 
     it { expect(dossier1.state).to eq 'brouillon' }
-    it { expect(dossier2.state).to eq 'received' }
-    it { expect(dossier3.state).to eq 'received' }
-    it { expect(dossier4.state).to eq 'received' }
-    it { expect(dossier5.state).to eq 'received' }
+    it { expect(dossier2.state).to eq 'en_instruction' }
+    it { expect(dossier3.state).to eq 'en_instruction' }
+    it { expect(dossier4.state).to eq 'en_instruction' }
+    it { expect(dossier5.state).to eq 'en_instruction' }
     it { expect(dossier6.state).to eq 'closed' }
     it { expect(dossier7.state).to eq 'refused' }
     it { expect(dossier8.state).to eq 'without_continuation' }
-    it { expect(dossier9.state).to eq 'received' }
+    it { expect(dossier9.state).to eq 'en_instruction' }
 
     it { expect(procedure_hier.archivee?).to eq true }
     it { expect(procedure_aujourdhui.archivee?).to eq true }

@@ -10,7 +10,7 @@ fr:
         state:
           brouillon: "Brouillon"
           en_construction: "En construction"
-          received: "En instruction"
+          en_instruction: "En instruction"
           closed: "Accepté"
           refused: "Refusé"
           without_continuation: "Sans suite"

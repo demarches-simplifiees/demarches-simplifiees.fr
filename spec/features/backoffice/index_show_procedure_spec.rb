@@ -13,7 +13,7 @@ feature 'As an Accompagnateur I can navigate and use each functionnality around 
       Dossier.create(procedure_id: procedure_1.id.to_s, user: user, state: 'en_construction')
     end
     22.times do
-      Dossier.create(procedure_id: procedure_2.id.to_s, user: user, state: 'received')
+      Dossier.create(procedure_id: procedure_2.id.to_s, user: user, state: 'en_instruction')
     end
     login_as gestionnaire, scope: :gestionnaire
     visit backoffice_path

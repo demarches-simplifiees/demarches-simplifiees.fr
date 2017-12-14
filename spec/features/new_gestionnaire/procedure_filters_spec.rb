@@ -4,9 +4,9 @@ feature "procedure filters" do
   let(:procedure) { create(:procedure, :published, :with_type_de_champ) }
   let(:gestionnaire) { create(:gestionnaire, procedures: [procedure]) }
   let!(:type_de_champ) { procedure.types_de_champ.first }
-  let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: "received") }
+  let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: "en_instruction") }
   let!(:champ) { Champ.find_by(type_de_champ_id: type_de_champ.id, dossier_id: new_unfollow_dossier.id) }
-  let!(:new_unfollow_dossier_2) { create(:dossier, procedure: procedure, state: "received") }
+  let!(:new_unfollow_dossier_2) { create(:dossier, procedure: procedure, state: "en_instruction") }
 
   before do
     champ.update_attributes(value: "Mon champ rempli")

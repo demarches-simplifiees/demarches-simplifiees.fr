@@ -2,7 +2,7 @@ class Dossier < ActiveRecord::Base
   enum state: {
     brouillon:            'brouillon',
     en_construction:      'en_construction',
-    received:             'received',
+    en_instruction:       'en_instruction',
     closed:               'closed',
     refused:              'refused',
     without_continuation: 'without_continuation'
@@ -11,7 +11,7 @@ class Dossier < ActiveRecord::Base
   BROUILLON = %w(brouillon)
   NOUVEAUX = %w(en_construction)
   EN_CONSTRUCTION = %w(en_construction)
-  EN_INSTRUCTION = %w(received)
+  EN_INSTRUCTION = %w(en_instruction)
   EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
   TERMINE = %w(closed refused without_continuation)
 
@@ -164,7 +164,7 @@ class Dossier < ActiveRecord::Base
     when 'gestionnaire'
       case action
       when 'close'
-        if received?
+        if en_instruction?
           self.attestation = build_attestation
           save
 
@@ -176,7 +176,7 @@ class Dossier < ActiveRecord::Base
           end
         end
       when 'refuse'
-        if received?
+        if en_instruction?
           refused!
 
           if motivation
@@ -185,7 +185,7 @@ class Dossier < ActiveRecord::Base
           end
         end
       when 'without_continuation'
-        if received?
+        if en_instruction?
           without_continuation!
 
           if motivation
@@ -283,7 +283,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def read_only?
-    received? || closed? || refused? || without_continuation?
+    en_instruction? || closed? || refused? || without_continuation?
   end
 
   def owner? email
@@ -390,8 +390,8 @@ class Dossier < ActiveRecord::Base
   def update_state_dates
     if en_construction? && !self.en_construction_at
       self.en_construction_at = DateTime.now
-    elsif received? && !self.received_at
-      self.received_at = DateTime.now
+    elsif en_instruction? && !self.en_instruction_at
+      self.en_instruction_at = DateTime.now
     elsif TERMINE.include?(state)
       self.processed_at = DateTime.now
     end

@@ -61,7 +61,7 @@ module NewGestionnaire
     end
 
     def passer_en_instruction
-      dossier.received!
+      dossier.en_instruction!
       current_gestionnaire.follow(dossier)
       flash.notice = 'Dossier passé en instruction.'
 

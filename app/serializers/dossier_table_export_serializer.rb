@@ -26,6 +26,8 @@ class DossierTableExportSerializer < ActiveModel::Serializer
     case object.state
     when 'en_construction'
       'initiated'
+    when 'en_instruction'
+      'received'
     else
       object.state
     end
@@ -33,6 +35,10 @@ class DossierTableExportSerializer < ActiveModel::Serializer
 
   def initiated_at
     object.en_construction_at
+  end
+
+  def received_at
+    object.en_instruction_at
   end
 
   def individual_prenom
