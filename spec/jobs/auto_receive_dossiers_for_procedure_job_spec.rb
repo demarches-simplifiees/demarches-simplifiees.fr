@@ -10,8 +10,8 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
     subject { AutoReceiveDossiersForProcedureJob.new.perform(procedure_id, 'received') }
 
     context "with some dossiers" do
-      let(:nouveau_dossier1) { create(:dossier, :initiated) }
-      let(:nouveau_dossier2) { create(:dossier, :initiated, procedure: nouveau_dossier1.procedure) }
+      let(:nouveau_dossier1) { create(:dossier, :en_construction) }
+      let(:nouveau_dossier2) { create(:dossier, :en_construction, procedure: nouveau_dossier1.procedure) }
       let(:dossier_recu) { create(:dossier, :received, procedure: nouveau_dossier2.procedure) }
       let(:dossier_draft) { create(:dossier, procedure: dossier_recu.procedure) }
       let(:procedure_id) { dossier_draft.procedure_id }

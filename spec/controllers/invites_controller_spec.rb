@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe InvitesController, type: :controller do
-  let(:dossier) { create(:dossier, :initiated) }
+  let(:dossier) { create(:dossier, :en_construction) }
   let(:email) { 'plop@octo.com' }
 
   describe '#POST create' do

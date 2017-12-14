@@ -5,7 +5,7 @@ feature 'The gestionnaire part' do
   let!(:gestionnaire) { create(:gestionnaire, password: password) }
 
   let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
-  let!(:dossier) { create(:dossier, state: :initiated, procedure: procedure) }
+  let!(:dossier) { create(:dossier, state: :en_construction, procedure: procedure) }
 
   scenario 'A gestionnaire can accept a dossier' do
     log_in(gestionnaire.email, password)

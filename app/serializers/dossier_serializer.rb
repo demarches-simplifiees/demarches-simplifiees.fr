@@ -35,8 +35,21 @@ class DossierSerializer < ActiveModel::Serializer
     object.user.try(:email)
   end
 
+  def state
+    case object.state
+    when 'en_construction'
+      'initiated'
+    else
+      object.state
+    end
+  end
+
   def simplified_state
     object.decorate.display_state
+  end
+
+  def initiated_at
+    object.en_construction_at
   end
 
   def accompagnateurs

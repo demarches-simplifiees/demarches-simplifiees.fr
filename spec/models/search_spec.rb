@@ -23,10 +23,10 @@ describe Search do
     let(:procedure_2) { create(:procedure, :published, administrateur: administrateur_2) }
 
     let!(:dossier_0) { create(:dossier, state: 'draft', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
-    let!(:dossier_1) { create(:dossier, state: 'initiated', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
-    let!(:dossier_2) { create(:dossier, state: 'initiated', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
-    let!(:dossier_3) { create(:dossier, state: 'initiated', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
-    let!(:dossier_archived) { create(:dossier, state: 'initiated', procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
+    let!(:dossier_1) { create(:dossier, state: 'en_construction', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
+    let!(:dossier_2) { create(:dossier, state: 'en_construction', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
+    let!(:dossier_3) { create(:dossier, state: 'en_construction', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
+    let!(:dossier_archived) { create(:dossier, state: 'en_construction', procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
 
     let!(:etablissement_1) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'OCTO Academy', dossier: dossier_1), dossier: dossier_1, siret: '41636169600051') }
     let!(:etablissement_2) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'Plop octo', dossier: dossier_2), dossier: dossier_2, siret: '41816602300012') }

@@ -22,6 +22,19 @@ class DossierTableExportSerializer < ActiveModel::Serializer
     object.user.try(:email)
   end
 
+  def state
+    case object.state
+    when 'en_construction'
+      'initiated'
+    else
+      object.state
+    end
+  end
+
+  def initiated_at
+    object.en_construction_at
+  end
+
   def individual_prenom
     object.individual.try(:prenom)
   end

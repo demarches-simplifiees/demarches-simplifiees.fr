@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::RecapitulatifController, type: :controller do
-  let(:dossier) { create(:dossier, state: 'initiated') }
+  let(:dossier) { create(:dossier, state: 'en_construction') }
   let(:bad_dossier_id) { Dossier.count + 100000 }
 
   before do
@@ -43,10 +43,10 @@ describe Users::RecapitulatifController, type: :controller do
 
       it 'dossier change his state for closed' do
         dossier.reload
-        expect(dossier.state).to eq('initiated')
+        expect(dossier.state).to eq('en_construction')
       end
 
-      it 'a message informe user what his dossier is initiated' do
+      it 'a message informe user what his dossier is en_construction' do
         expect(flash[:notice]).to include('Dossier soumis avec succès.')
       end
     end

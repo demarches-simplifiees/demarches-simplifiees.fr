@@ -19,14 +19,14 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
 
   context "when procedures have auto_archive_on set on yesterday or today" do
     let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: 'draft', archived: false)}
-    let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: 'initiated', archived: false)}
-    let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'initiated', archived: false)}
-    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'initiated', archived: false)}
+    let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
+    let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
+    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
     let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: 'received', archived: false)}
     let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: 'closed', archived: false)}
     let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: 'refused', archived: false)}
     let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: 'without_continuation', archived: false)}
-    let!(:dossier9) { create(:dossier, procedure: procedure_aujourdhui, state: 'initiated', archived: false)}
+    let!(:dossier9) { create(:dossier, procedure: procedure_aujourdhui, state: 'en_construction', archived: false)}
 
     before do
       subject

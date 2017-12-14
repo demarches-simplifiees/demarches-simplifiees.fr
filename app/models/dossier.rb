@@ -1,7 +1,7 @@
 class Dossier < ActiveRecord::Base
   enum state: {
     draft:                'draft',
-    initiated:            'initiated',
+    en_construction:      'en_construction',
     received:             'received',
     closed:               'closed',
     refused:              'refused',
@@ -9,8 +9,8 @@ class Dossier < ActiveRecord::Base
   }
 
   BROUILLON = %w(draft)
-  NOUVEAUX = %w(initiated)
-  EN_CONSTRUCTION = %w(initiated)
+  NOUVEAUX = %w(en_construction)
+  EN_CONSTRUCTION = %w(en_construction)
   EN_INSTRUCTION = %w(received)
   EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
   TERMINE = %w(closed refused without_continuation)
@@ -58,7 +58,7 @@ class Dossier < ActiveRecord::Base
   scope :nouveaux,                    -> { not_archived.state_nouveaux }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
-  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:entreprise, :etablissement, :champs, :champs_private).order(initiated_at: 'asc') }
+  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:entreprise, :etablissement, :champs, :champs_private).order(en_construction_at: 'asc') }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :with_unread_notifications,   -> { where(notifications: { already_read: false }) }
@@ -158,7 +158,7 @@ class Dossier < ActiveRecord::Base
       case action
       when 'initiate'
         if draft?
-          initiated!
+          en_construction!
         end
       end
     when 'gestionnaire'
@@ -294,7 +294,7 @@ class Dossier < ActiveRecord::Base
     (invites_user.pluck :email).include? email
   end
 
-  def can_be_initiated?
+  def can_be_en_construction?
     !(procedure.archivee? && draft?)
   end
 
@@ -309,7 +309,7 @@ class Dossier < ActiveRecord::Base
     else
       parts = [
         "Dossier déposé le ",
-        initiated_at.localtime.strftime("%d/%m/%Y"),
+        en_construction_at.localtime.strftime("%d/%m/%Y"),
         " sur la procédure ",
         procedure.libelle,
         " gérée par l'organisme ",
@@ -388,8 +388,8 @@ class Dossier < ActiveRecord::Base
   end
 
   def update_state_dates
-    if initiated? && !self.initiated_at
-      self.initiated_at = DateTime.now
+    if en_construction? && !self.en_construction_at
+      self.en_construction_at = DateTime.now
     elsif received? && !self.received_at
       self.received_at = DateTime.now
     elsif TERMINE.include?(state)

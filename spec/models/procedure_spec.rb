@@ -307,9 +307,9 @@ describe Procedure do
     let(:procedure) { create :procedure }
 
     before do
-      create :dossier, procedure: procedure, state: :initiated
+      create :dossier, procedure: procedure, state: :en_construction
       create :dossier, procedure: procedure, state: :draft
-      create :dossier, procedure: procedure, state: :initiated
+      create :dossier, procedure: procedure, state: :en_construction
     end
 
     subject { procedure.total_dossier }
@@ -331,7 +331,7 @@ describe Procedure do
     end
 
     context 'when there are some dossiers' do
-      let!(:dossier){ create(:dossier, procedure: procedure, state: 'initiated') }
+      let!(:dossier){ create(:dossier, procedure: procedure, state: 'en_construction') }
       let!(:dossier2){ create(:dossier, procedure: procedure, state: 'closed') }
 
       it { expect(subject[:data].size).to eq(2) }

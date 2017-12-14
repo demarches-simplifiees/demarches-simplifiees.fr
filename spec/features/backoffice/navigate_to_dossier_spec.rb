@@ -6,8 +6,8 @@ feature 'on backoffice page', js: true do
   let(:procedure) { create(:procedure, :published, administrateur: administrateur) }
   let(:procedure_individual) { create :procedure, :published, libelle: 'procedure individual', administrateur: administrateur, for_individual: true }
 
-  let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
-  let!(:dossier_individual) { create :dossier, procedure: procedure_individual, state: 'initiated' }
+  let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction') }
+  let!(:dossier_individual) { create :dossier, procedure: procedure_individual, state: 'en_construction' }
 
   before do
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure
@@ -34,7 +34,7 @@ feature 'on backoffice page', js: true do
     end
 
     context "and goes to the page of a dossier he hasn't access to" do
-      let!(:unauthorized_dossier) { create(:dossier, :with_entreprise, state: 'initiated') }
+      let!(:unauthorized_dossier) { create(:dossier, :with_entreprise, state: 'en_construction') }
 
       before do
         visit backoffice_dossier_path(unauthorized_dossier)

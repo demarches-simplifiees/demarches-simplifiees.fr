@@ -435,7 +435,7 @@ describe Users::DossiersController, type: :controller do
   describe 'DELETE #destroy' do
     let(:user) { create(:user) }
     let!(:dossier_draft) { create :dossier, state: "draft", user: user }
-    let!(:dossier_not_draft) { create :dossier, state: "initiated", user: user }
+    let!(:dossier_not_draft) { create :dossier, state: "en_construction", user: user }
 
     subject { delete :destroy, params: {id: dossier.id} }
 

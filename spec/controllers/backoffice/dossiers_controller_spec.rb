@@ -7,8 +7,8 @@ describe Backoffice::DossiersController, type: :controller do
   let(:procedure) { create :procedure, :published }
   let(:procedure2) { create :procedure, :published }
 
-  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
-  let(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure2, state: :initiated) }
+  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_construction) }
+  let(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure2, state: :en_construction) }
   let(:dossier_archived) { create(:dossier, :with_entreprise, archived: true) }
 
   let(:dossier_id) { dossier.id }
@@ -222,7 +222,7 @@ describe Backoffice::DossiersController, type: :controller do
 
   describe 'POST #receive' do
     before do
-      dossier.initiated!
+      dossier.en_construction!
       sign_in gestionnaire
       post :receive, params: { dossier_id: dossier_id }
       dossier.reload
@@ -360,11 +360,11 @@ describe Backoffice::DossiersController, type: :controller do
 
     subject { post :reopen, params: {dossier_id: dossier_id} }
 
-    it 'change state to initiated' do
+    it 'change state to en_construction' do
       subject
 
       dossier.reload
-      expect(dossier.state).to eq('initiated')
+      expect(dossier.state).to eq('en_construction')
     end
 
     it { is_expected.to redirect_to backoffice_dossier_path(id: dossier_id) }

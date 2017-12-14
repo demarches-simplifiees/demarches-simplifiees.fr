@@ -134,15 +134,15 @@ describe NewGestionnaire::ProceduresController, type: :controller do
 
         context "with not draft state on multiple procedures" do
           let(:procedure2) { create(:procedure, :published) }
-          let(:state) { "initiated" }
+          let(:state) { "en_construction" }
 
           before do
-            create(:dossier, procedure: procedure, state: "initiated")
+            create(:dossier, procedure: procedure, state: "en_construction")
             create(:dossier, procedure: procedure, state: "received")
             create(:dossier, procedure: procedure, state: "without_continuation", archived: true)
 
             gestionnaire.procedures << procedure2
-            create(:dossier, :followed, procedure: procedure2, state: "initiated")
+            create(:dossier, :followed, procedure: procedure2, state: "en_construction")
             create(:dossier, procedure: procedure2, state: "closed")
             gestionnaire.followed_dossiers << create(:dossier, procedure: procedure2, state: "received")
 

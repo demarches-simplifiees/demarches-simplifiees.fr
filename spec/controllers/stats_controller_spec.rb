@@ -141,21 +141,21 @@ describe StatsController, type: :controller do
       procedure_1 = FactoryGirl.create(:procedure)
       procedure_2 = FactoryGirl.create(:procedure)
       dossier_p1_a = FactoryGirl.create(:dossier,
-        :procedure    => procedure_1,
-        :initiated_at => 2.months.ago.beginning_of_month,
-        :processed_at => 2.months.ago.beginning_of_month + 3.days)
+        :procedure          => procedure_1,
+        :en_construction_at => 2.months.ago.beginning_of_month,
+        :processed_at       => 2.months.ago.beginning_of_month + 3.days)
       dossier_p1_b = FactoryGirl.create(:dossier,
-        :procedure    => procedure_1,
-        :initiated_at => 2.months.ago.beginning_of_month,
-        :processed_at => 2.months.ago.beginning_of_month + 1.days)
+        :procedure          => procedure_1,
+        :en_construction_at => 2.months.ago.beginning_of_month,
+        :processed_at       => 2.months.ago.beginning_of_month + 1.days)
       dossier_p1_c = FactoryGirl.create(:dossier,
-        :procedure    => procedure_1,
-        :initiated_at => 1.months.ago.beginning_of_month,
-        :processed_at => 1.months.ago.beginning_of_month + 5.days)
+        :procedure          => procedure_1,
+        :en_construction_at => 1.months.ago.beginning_of_month,
+        :processed_at       => 1.months.ago.beginning_of_month + 5.days)
       dossier_p2_a = FactoryGirl.create(:dossier,
-        :procedure    => procedure_2,
-        :initiated_at => 2.month.ago.beginning_of_month,
-        :processed_at => 2.month.ago.beginning_of_month + 4.days)
+        :procedure          => procedure_2,
+        :en_construction_at => 2.month.ago.beginning_of_month,
+        :processed_at       => 2.month.ago.beginning_of_month + 4.days)
 
       # Write directly in the DB to avoid the before_validation hook
       Dossier.update_all(state: "closed")
@@ -191,22 +191,22 @@ describe StatsController, type: :controller do
       dossier_p1_a = FactoryGirl.create(:dossier,
         :procedure    => procedure_1,
         :created_at   => 2.months.ago.beginning_of_month,
-        :initiated_at => 2.months.ago.beginning_of_month + 30.minutes,
+        :en_construction_at => 2.months.ago.beginning_of_month + 30.minutes,
         :processed_at => 2.months.ago.beginning_of_month + 1.day)
       dossier_p1_b = FactoryGirl.create(:dossier,
         :procedure    => procedure_1,
         :created_at   => 2.months.ago.beginning_of_month,
-        :initiated_at => 2.months.ago.beginning_of_month + 10.minutes,
+        :en_construction_at => 2.months.ago.beginning_of_month + 10.minutes,
         :processed_at => 2.months.ago.beginning_of_month + 1.day)
       dossier_p1_c = FactoryGirl.create(:dossier,
         :procedure    => procedure_1,
         :created_at   => 1.months.ago.beginning_of_month,
-        :initiated_at => 1.months.ago.beginning_of_month + 50.minutes,
+        :en_construction_at => 1.months.ago.beginning_of_month + 50.minutes,
         :processed_at => 1.months.ago.beginning_of_month + 1.day)
       dossier_p2_a = FactoryGirl.create(:dossier,
         :procedure    => procedure_2,
         :created_at   => 2.month.ago.beginning_of_month,
-        :initiated_at => 2.month.ago.beginning_of_month + 80.minutes,
+        :en_construction_at => 2.month.ago.beginning_of_month + 80.minutes,
         :processed_at => 2.month.ago.beginning_of_month + 1.day)
 
       # Write directly in the DB to avoid the before_validation hook
