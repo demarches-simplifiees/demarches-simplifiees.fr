@@ -1,11 +1,17 @@
 @import "colors";
 @import "constants";
 
-.accompagnateur-title {
+.page-title {
   font-size: 30px;
   font-weight: normal;
   margin-top: 3 * $default-spacer;
   margin-bottom: 3 * $default-spacer;
+}
+
+.tab-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: $default-padding;
 }
 
 .accompagnateur-header {
