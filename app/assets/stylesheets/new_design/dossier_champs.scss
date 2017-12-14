@@ -1,6 +1,7 @@
+@import "colors";
 @import "constants";
 
-.dossier-champs {
+.table.dossier-champs {
   th,
   td {
     vertical-align: top;
@@ -8,5 +9,24 @@
 
   .libelle {
     width: 250px;
+  }
+
+  td.updated-at {
+    font-size: 13px;
+    color: $grey;
+    text-align: right;
+    width: 190px;
+
+    > span {
+      opacity: 0;
+
+      &.highlighted {
+        opacity: 1;
+      }
+    }
+  }
+
+  tr:hover .updated-at > span {
+    opacity: 1;
   }
 }

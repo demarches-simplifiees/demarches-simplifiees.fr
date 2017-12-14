@@ -1,0 +1,3 @@
+.champ
+  = render partial: "new_gestionnaire/dossiers/champs/#{champ.type_champ}",
+    locals: { champ: champ, form: form, seen_at: seen_at }
