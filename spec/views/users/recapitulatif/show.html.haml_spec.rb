@@ -59,8 +59,8 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
     end
 
-    context 'when dossier state is initiated' do
-      let(:state) { 'initiated' }
+    context 'when dossier state is en_construction' do
+      let(:state) { 'en_construction' }
       before do
         render
       end

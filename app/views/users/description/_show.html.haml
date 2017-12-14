@@ -36,7 +36,7 @@
       %div{ style: 'text-align: right;' }
         %h6 Tous les champs portant un * sont obligatoires.
 
-      - if !@dossier.can_be_initiated?
+      - if !@dossier.can_be_en_construction?
         .alert.alert-danger
           = t('errors.messages.procedure_archived')
       - elsif !@dossier.draft?

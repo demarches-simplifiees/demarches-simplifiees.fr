@@ -13,8 +13,8 @@ class StatsController < ApplicationController
     @procedures_cumulative = cumulative_hash(procedures, :published_at)
     @procedures_in_the_last_4_months = last_four_months_hash(procedures, :published_at)
 
-    @dossiers_cumulative = cumulative_hash(dossiers, :initiated_at)
-    @dossiers_in_the_last_4_months = last_four_months_hash(dossiers, :initiated_at)
+    @dossiers_cumulative = cumulative_hash(dossiers, :en_construction_at)
+    @dossiers_in_the_last_4_months = last_four_months_hash(dossiers, :en_construction_at)
 
     @procedures_count_per_administrateur = procedures_count_per_administrateur(procedures)
 
@@ -96,7 +96,7 @@ class StatsController < ApplicationController
 
     processed_dossiers = dossiers
       .where(:processed_at => min_date..max_date)
-      .pluck(:procedure_id, :initiated_at, :processed_at)
+      .pluck(:procedure_id, :en_construction_at, :processed_at)
 
     # Group dossiers by month
     processed_dossiers_by_month = processed_dossiers
@@ -137,7 +137,7 @@ class StatsController < ApplicationController
 
     processed_dossiers = dossiers
       .where(:processed_at => min_date..max_date)
-      .pluck(:procedure_id, :created_at, :initiated_at, :processed_at)
+      .pluck(:procedure_id, :created_at, :en_construction_at, :processed_at)
 
     # Group dossiers by month
     processed_dossiers_by_month = processed_dossiers

@@ -125,7 +125,7 @@ shared_examples 'description_controller_spec' do
         end
 
         it 'etat du dossier est soumis' do
-          expect(dossier.state).to eq('initiated')
+          expect(dossier.state).to eq('en_construction')
         end
 
         context 'when user whould like save just a draft' do
@@ -143,7 +143,7 @@ shared_examples 'description_controller_spec' do
 
       context 'En train de manipuler un dossier non brouillon' do
         before do
-          dossier.initiated!
+          dossier.en_construction!
           post :update, params: {dossier_id: dossier_id}
           dossier.reload
         end

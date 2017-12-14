@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Backoffice::CommentairesController, type: :controller do
-  let(:dossier) { create(:dossier, :initiated) }
+  let(:dossier) { create(:dossier, :en_construction) }
   let(:dossier_id) { dossier.id }
   let(:email_commentaire) { 'test@test.com' }
   let(:texte_commentaire) { 'Commentaire de test' }
@@ -89,10 +89,10 @@ describe Backoffice::CommentairesController, type: :controller do
 
       describe 'change dossier state after post a comment' do
         context 'gestionnaire is connected' do
-          context 'when dossier is at state initiated' do
+          context 'when dossier is at state en_construction' do
             before do
               sign_in gestionnaire
-              dossier.initiated!
+              dossier.en_construction!
 
               post :create, params: {dossier_id: dossier_id, texte_commentaire: texte_commentaire}
               dossier.reload

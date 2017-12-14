@@ -28,8 +28,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       it { expect(rendered).to have_link('Passer en instruction') }
     end
 
-    context 'when dossier have state initiated' do
-      let(:state) { 'initiated' }
+    context 'when dossier have state en_construction' do
+      let(:state) { 'en_construction' }
 
       before do
         render

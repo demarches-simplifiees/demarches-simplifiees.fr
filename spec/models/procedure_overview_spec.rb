@@ -34,7 +34,7 @@ describe ProcedureOverview, type: :model do
 
   describe 'dossiers_en_construction_count' do
     let!(:dossier_en_construction) do
-      create(:dossier, procedure: procedure, state: :initiated, created_at: monday)
+      create(:dossier, procedure: procedure, state: :en_construction, created_at: monday)
     end
 
     it { expect(procedure_overview.dossiers_en_construction_count).to eq(1) }

@@ -6,7 +6,7 @@ feature 'usage of pref list dossier lateral panel', js: true do
   let(:procedure) { create(:procedure, :published, administrateur: administrateur) }
 
   before do
-    create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated')
+    create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction')
     create :assign_to, procedure: procedure, gestionnaire: gestionnaire
 
     login_as gestionnaire, scope: :gestionnaire

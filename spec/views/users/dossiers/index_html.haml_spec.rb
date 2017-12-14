@@ -3,12 +3,12 @@ require 'spec_helper'
 describe 'users/dossiers/index.html.haml', type: :view do
   let(:user) { create(:user) }
 
-  let!(:decorate_dossier_initiated) { create(:dossier, :with_entreprise, user: user, state: 'initiated').decorate }
+  let!(:decorate_dossier_en_construction) { create(:dossier, :with_entreprise, user: user, state: 'en_construction').decorate }
   let!(:decorate_dossier_received) { create(:dossier, :with_entreprise, user: user, state: 'received').decorate }
   let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, user: user, state: 'closed').decorate }
   let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, user: user, state: 'refused').decorate }
   let!(:decorate_dossier_without_continuation) { create(:dossier, :with_entreprise, user: user, state: 'without_continuation').decorate }
-  let!(:decorate_dossier_invite) { create(:dossier, :with_entreprise, user: create(:user), state: 'initiated').decorate }
+  let!(:decorate_dossier_invite) { create(:dossier, :with_entreprise, user: create(:user), state: 'en_construction').decorate }
 
   before do
     create :invite, dossier: decorate_dossier_invite, user: user
@@ -45,7 +45,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     let(:liste) { 'a_traiter' }
 
     it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_initiated }
+      let(:decorate_dossier_at_check) { decorate_dossier_en_construction }
     end
   end
 

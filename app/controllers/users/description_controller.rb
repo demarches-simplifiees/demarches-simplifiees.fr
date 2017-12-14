@@ -14,7 +14,7 @@ class Users::DescriptionController < UsersController
 
     @headers = @champs.select { |c| c.type_champ == 'header_section' }
 
-    unless @dossier.can_be_initiated?
+    unless @dossier.can_be_en_construction?
       flash[:alert] = t('errors.messages.procedure_archived')
     end
 
@@ -27,7 +27,7 @@ class Users::DescriptionController < UsersController
     dossier = current_user_dossier
     procedure = dossier.procedure
 
-    return head :forbidden unless dossier.can_be_initiated?
+    return head :forbidden unless dossier.can_be_en_construction?
 
     ChampsService.save_champs(dossier.champs, params) if params[:champs]
 
@@ -51,8 +51,8 @@ class Users::DescriptionController < UsersController
       redirect_to url_for(controller: :dossiers, action: :index, liste: :brouillon)
     else
       if dossier.draft?
-        dossier.initiated!
         NotificationMailer.send_notification(dossier, procedure.initiated_mail_template).deliver_now!
+        dossier.en_construction!
       end
       flash.notice = 'Félicitations, votre demande a bien été enregistrée.'
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: dossier.id)
@@ -93,7 +93,7 @@ class Users::DescriptionController < UsersController
 
   def self.route_authorization
     {
-        states: [:draft, :initiated]
+        states: [:draft, :en_construction]
     }
   end
 

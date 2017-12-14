@@ -20,7 +20,7 @@ class ProcedureOverview
     @old_dossiers_en_construction = procedure
       .dossiers
       .state_en_construction
-      .where('initiated_at < ?', 1.week.ago)
+      .where('en_construction_at < ?', 1.week.ago)
 
     @created_dossiers_count = procedure
       .dossiers

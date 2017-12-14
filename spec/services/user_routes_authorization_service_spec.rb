@@ -18,8 +18,8 @@ describe UserRoutesAuthorizationService do
         it { is_expected.to be_truthy }
       end
 
-      describe 'initiated' do
-        let(:state) { 'initiated' }
+      describe 'en_construction' do
+        let(:state) { 'en_construction' }
         it { is_expected.to be_falsey }
       end
 
@@ -38,8 +38,8 @@ describe UserRoutesAuthorizationService do
           it { is_expected.to be_falsey }
         end
 
-        describe 'initiated' do
-          let(:state) { 'initiated' }
+        describe 'en_construction' do
+          let(:state) { 'en_construction' }
           it { is_expected.to be_falsey }
         end
 
@@ -57,8 +57,8 @@ describe UserRoutesAuthorizationService do
           it { is_expected.to be_truthy }
         end
 
-        describe 'initiated' do
-          let(:state) { 'initiated' }
+        describe 'en_construction' do
+          let(:state) { 'en_construction' }
           it { is_expected.to be_truthy }
         end
 
@@ -77,8 +77,8 @@ describe UserRoutesAuthorizationService do
         it { is_expected.to be_truthy }
       end
 
-      describe 'initiated' do
-        let(:state) { 'initiated' }
+      describe 'en_construction' do
+        let(:state) { 'en_construction' }
         it { is_expected.to be_truthy }
       end
 
@@ -96,8 +96,8 @@ describe UserRoutesAuthorizationService do
         it { is_expected.to be_falsey }
       end
 
-      describe 'initiated' do
-        let(:state) { 'initiated' }
+      describe 'en_construction' do
+        let(:state) { 'en_construction' }
         it { is_expected.to be_truthy }
       end
 

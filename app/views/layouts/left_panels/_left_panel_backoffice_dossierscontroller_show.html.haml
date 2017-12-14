@@ -4,7 +4,7 @@
 
 - if current_gestionnaire && current_gestionnaire.assigned_on_procedure?(@facade.dossier.procedure_id)
   #action-block
-    - if !@facade.dossier.read_only? || @facade.dossier.initiated?
+    - if !@facade.dossier.read_only? || @facade.dossier.en_construction?
       = link_to 'Passer en instruction', backoffice_dossier_receive_path(@facade.dossier), method: :post, class: 'btn btn-danger btn-block', data: { confirm: "Confirmer vous le passage en instruction de ce dossier ?" }
 
     - elsif @facade.dossier.received?

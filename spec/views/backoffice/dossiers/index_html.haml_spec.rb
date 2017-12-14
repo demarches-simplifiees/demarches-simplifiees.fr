@@ -6,7 +6,7 @@ describe 'backoffice/dossiers/index.html.haml', type: :view do
 
   let!(:procedure) { create(:procedure, :published, administrateur: administrateur) }
 
-  let!(:decorate_dossier_initiated) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated').decorate }
+  let!(:decorate_dossier_en_construction) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction').decorate }
   let!(:decorate_dossier_received) { create(:dossier, :with_entreprise, procedure: procedure, state: 'received').decorate }
   let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, procedure: procedure, state: 'closed').decorate }
   let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, procedure: procedure, state: 'refused').decorate }

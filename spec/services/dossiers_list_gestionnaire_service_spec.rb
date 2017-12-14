@@ -346,15 +346,15 @@ describe DossiersListGestionnaireService do
   describe 'state filter methods' do
     let!(:procedure) { create :procedure }
     let!(:dossier) { create(:dossier, procedure: procedure, state: 'draft') }
-    let!(:dossier2) { create(:dossier, procedure: procedure, state: 'initiated') } #nouveaux
-    let!(:dossier3) { create(:dossier, procedure: procedure, state: 'initiated') } #nouveaux
+    let!(:dossier2) { create(:dossier, procedure: procedure, state: 'en_construction') } #nouveaux
+    let!(:dossier3) { create(:dossier, procedure: procedure, state: 'en_construction') } #nouveaux
     let!(:dossier6) { create(:dossier, procedure: procedure, state: 'received') } #a_instruire
     let!(:dossier7) { create(:dossier, procedure: procedure, state: 'received') } #a_instruire
     let!(:dossier8) { create(:dossier, procedure: procedure, state: 'closed') } #termine
     let!(:dossier9) { create(:dossier, procedure: procedure, state: 'refused') } #termine
     let!(:dossier10) { create(:dossier, procedure: procedure, state: 'without_continuation') } #termine
     let!(:dossier11) { create(:dossier, procedure: procedure, state: 'closed') } #termine
-    let!(:dossier12) { create(:dossier, procedure: procedure, state: 'initiated', archived: true) } #a_traiter #archived
+    let!(:dossier12) { create(:dossier, procedure: procedure, state: 'en_construction', archived: true) } #a_traiter #archived
     let!(:dossier14) { create(:dossier, procedure: procedure, state: 'closed', archived: true) } #termine #archived
 
     describe '#termine' do

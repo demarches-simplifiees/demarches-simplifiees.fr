@@ -4,9 +4,9 @@ describe AdminProceduresShowFacades do
   let!(:procedure) { create(:procedure) }
 
   let!(:dossier_0) { create(:dossier,  procedure: procedure, state: 'draft') }
-  let!(:dossier_1) { create(:dossier,  procedure: procedure, state: 'initiated') }
-  let!(:dossier_2) { create(:dossier,  procedure: procedure, state: 'initiated') }
-  let!(:dossier_6) { create(:dossier,  procedure: procedure, archived: true, state: 'initiated') }
+  let!(:dossier_1) { create(:dossier,  procedure: procedure, state: 'en_construction') }
+  let!(:dossier_2) { create(:dossier,  procedure: procedure, state: 'en_construction') }
+  let!(:dossier_6) { create(:dossier,  procedure: procedure, archived: true, state: 'en_construction') }
 
   subject { AdminProceduresShowFacades.new procedure }
 
@@ -33,7 +33,7 @@ describe AdminProceduresShowFacades do
 
     it { expect(subject.size).to eq(1)  }
 
-    it { expect(subject.first.state).to eq('initiated') }
+    it { expect(subject.first.state).to eq('en_construction') }
     it { expect(subject.first.total).to eq(1) }
   end
 

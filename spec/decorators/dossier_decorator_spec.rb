@@ -27,8 +27,8 @@ describe DossierDecorator do
       expect(subject).to eq('Brouillon')
     end
 
-    it 'initiated is initiate' do
-      dossier.initiated!
+    it 'en_construction is En construction' do
+      dossier.en_construction!
       expect(subject).to eq('En construction')
     end
 
@@ -74,7 +74,7 @@ describe DossierDecorator do
 
       context "when the dossier is not in brouillon state" do
         before do
-          dossier.state = 'initiated'
+          dossier.state = 'en_construction'
           dossier.save
         end
 

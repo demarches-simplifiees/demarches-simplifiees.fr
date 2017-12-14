@@ -5,16 +5,16 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   let(:gestionnaire) { create(:gestionnaire) }
   let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
-  let(:dossier) { create(:dossier, :initiated, procedure: procedure) }
+  let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
   before { sign_in(gestionnaire) }
 
   describe '#attestation' do
     context 'when a dossier has an attestation' do
       let(:fake_pdf) { double(read: 'pdf content') }
-      let!(:dossier) { create(:dossier, :initiated, attestation: Attestation.new, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :en_construction, attestation: Attestation.new, procedure: procedure) }
       let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
-      let!(:dossier) { create(:dossier, :initiated, attestation: Attestation.new, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :en_construction, attestation: Attestation.new, procedure: procedure) }
 
       it 'returns the attestation pdf' do
         allow_any_instance_of(Attestation).to receive(:pdf).and_return(fake_pdf)
@@ -79,7 +79,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   describe '#passer_en_instruction' do
     before do
-      dossier.initiated!
+      dossier.en_construction!
       sign_in gestionnaire
       post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }
       dossier.reload
@@ -98,11 +98,11 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
     subject { post :repasser_en_construction, params: { procedure_id: procedure.id, dossier_id: dossier.id} }
 
-    it 'change state to initiated' do
+    it 'change state to en_construction' do
       subject
 
       dossier.reload
-      expect(dossier.state).to eq('initiated')
+      expect(dossier.state).to eq('en_construction')
     end
 
     it { is_expected.to redirect_to dossier_path(procedure, dossier) }
@@ -344,7 +344,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     let(:dossier) do
-      create(:dossier, :initiated, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_datetime])
+      create(:dossier, :en_construction, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_datetime])
     end
 
     before do

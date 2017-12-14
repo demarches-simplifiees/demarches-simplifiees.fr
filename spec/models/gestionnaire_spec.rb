@@ -169,7 +169,7 @@ describe Gestionnaire, type: :model do
     end
 
     context 'when gestionnaire follow a dossier with a notification into the procedure past in params' do
-      let(:dossier) { create(:dossier, procedure: procedure, state: 'initiated') }
+      let(:dossier) { create(:dossier, procedure: procedure, state: 'en_construction') }
 
       before do
         create :follow, gestionnaire: gestionnaire, dossier: dossier
@@ -405,7 +405,7 @@ describe Gestionnaire, type: :model do
   end
 
   describe '#notifications_for_dossier' do
-    let!(:dossier) { create(:dossier, :followed, state: 'initiated') }
+    let!(:dossier) { create(:dossier, :followed, state: 'en_construction') }
     let(:gestionnaire) { dossier.follows.first.gestionnaire }
 
     subject { gestionnaire.notifications_for_dossier(dossier) }
@@ -454,12 +454,12 @@ describe Gestionnaire, type: :model do
   end
 
   describe '#notification_for_procedure' do
-    let!(:dossier) { create(:dossier, :followed, state: 'initiated') }
+    let!(:dossier) { create(:dossier, :followed, state: 'en_construction') }
     let(:gestionnaire) { dossier.follows.first.gestionnaire }
     let(:procedure) { dossier.procedure }
     let!(:gestionnaire_2) { create(:gestionnaire, procedures: [procedure]) }
 
-    let!(:dossier_on_procedure_2) { create(:dossier, :followed, state: 'initiated') }
+    let!(:dossier_on_procedure_2) { create(:dossier, :followed, state: 'en_construction') }
     let!(:gestionnaire_on_procedure_2) { dossier_on_procedure_2.follows.first.gestionnaire }
 
     before do
@@ -535,7 +535,7 @@ describe Gestionnaire, type: :model do
   end
 
   describe '#notifications_per_procedure' do
-    let!(:dossier) { create(:dossier, :followed, state: 'initiated') }
+    let!(:dossier) { create(:dossier, :followed, state: 'en_construction') }
     let(:gestionnaire) { dossier.follows.first.gestionnaire }
     let(:procedure) { dossier.procedure }
 
@@ -549,7 +549,7 @@ describe Gestionnaire, type: :model do
   end
 
   describe '#mark_tab_as_seen' do
-    let!(:dossier) { create(:dossier, :followed, state: 'initiated') }
+    let!(:dossier) { create(:dossier, :followed, state: 'en_construction') }
     let(:gestionnaire) { dossier.follows.first.gestionnaire }
     let(:freeze_date) { DateTime.parse('12/12/2012') }
 
