@@ -8,7 +8,7 @@
           = "Dossier nº #{dossier.id}"
       .mixed-buttons-bar
         .button.dropdown.icon-only.print-menu-opener{ onclick: "javascript:TPS.togglePrintMenu(event);" }
-          .icon.printer
+          %span.icon.printer
           %ul.print-menu
             %li
               = link_to "Tout le dossier", print_dossier_path(dossier.procedure, dossier), target: "_blank", class: "menu-item menu-link"
