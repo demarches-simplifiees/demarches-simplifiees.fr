@@ -1,5 +1,3 @@
-= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ, seen_at: seen_at }
-
 = form.select :value,
   Champ.pays,
   required: champ.mandatory

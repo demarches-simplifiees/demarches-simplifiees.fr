@@ -1,3 +1,6 @@
 .champ
+  - if is_not_header_nor_explication?(champ)
+    = render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ, seen_at: seen_at }
+
   = render partial: "new_gestionnaire/dossiers/champs/#{champ.type_champ}",
-    locals: { champ: champ, form: form, seen_at: seen_at }
+    locals: { champ: champ, form: form }
