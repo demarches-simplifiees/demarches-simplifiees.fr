@@ -128,17 +128,27 @@ class AttestationTemplate < ApplicationRecord
         .select { |dossier_champ| dossier_champ.libelle == tag[:libelle] }
         .first
 
-      acc.gsub("--#{tag[:libelle]}--", champ.to_s)
+      replace_tag(acc, tag, champ)
     end
   end
 
   def replace_tags_with_values_from_data(text, tags, data)
     if data.present?
       tags.inject(text) do |acc, tag|
-        acc.gsub("--#{tag[:libelle]}--", data.send(tag[:target].to_sym).to_s)
+        replace_tag(acc, tag, data.send(tag[:target].to_sym))
       end
     else
       text
     end
+  end
+
+  def replace_tag(text, tag, value)
+    libelle = Regexp.quote(tag[:libelle])
+
+    # allow any kind of space (non-breaking or other) in the tag’s libellé to match any kind of space in the template
+    # (the '\\ |' is there because plain ASCII spaces were escaped by preceding Regexp.quote)
+    libelle.gsub!(/\\ |[[:blank:]]/, "[[:blank:]]")
+
+    text.gsub(/--#{libelle}--/, value.to_s)
   end
 end

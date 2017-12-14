@@ -283,5 +283,45 @@ describe AttestationTemplate, type: :model do
         end
       end
     end
+
+    context "match breaking and non breaking spaces" do
+      before do
+        c = dossier.champs.first
+        c.value = 'valeur'
+        c.save
+      end
+
+      context "when the tag contains a non breaking space" do
+        let(:template_body) { 'body --mon tag--' }
+
+        context 'and the champ contains the non breaking space' do
+          let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'mon tag')] }
+
+          it { expect(view_args[:body]).to eq('body valeur') }
+        end
+
+        context 'and the champ has an ordinary space' do
+          let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'mon tag')] }
+
+          it { expect(view_args[:body]).to eq('body valeur') }
+        end
+      end
+
+      context "when the tag contains an ordinay space" do
+        let(:template_body) { 'body --mon tag--' }
+
+        context 'and the champ contains a non breaking space' do
+          let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'mon tag')] }
+
+          it { expect(view_args[:body]).to eq('body valeur') }
+        end
+
+        context 'and the champ has an ordinary space' do
+          let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'mon tag')] }
+
+          it { expect(view_args[:body]).to eq('body valeur') }
+        end
+      end
+    end
   end
 end
