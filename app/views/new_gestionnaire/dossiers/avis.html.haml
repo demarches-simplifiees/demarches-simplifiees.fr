@@ -4,7 +4,7 @@
 
 .container
   %section.ask-avis
-    %h1 Inviter une personne à donner son avis
+    %h1.tab-title Inviter une personne à donner son avis
     %p.avis-notice L'invité pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais il ne pourra le modifier.
 
     = form_for Avis.new, url: avis_dossier_path(@dossier.procedure, @dossier), html: { class: 'form' } do |f|
