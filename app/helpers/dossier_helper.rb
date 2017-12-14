@@ -8,4 +8,10 @@ module DossierHelper
       'refused'
     end
   end
+
+  def highlight_if_unseen_class(seen_at, updated_at)
+    if seen_at&.<(updated_at)
+      "highlighted"
+    end
+  end
 end

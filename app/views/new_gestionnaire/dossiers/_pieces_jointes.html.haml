@@ -1,4 +1,4 @@
-%table.table.vertical.pj
+%table.table.vertical.pj.dossier-champs
   %tbody
     - if dossier.procedure.cerfa_flag?
       %tr
@@ -8,17 +8,22 @@
             = link_to "Télécharger", @dossier.cerfa.last.content_url, class: "link", target: :blank
           - else
             Pièce non fournie
+        %td
+
 
     - dossier.procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
+      - pjs = dossier.retrieve_all_piece_justificative_by_type(type_de_piece_justificative.id).to_ary.dup
+      - pj = pjs.shift if pjs.present?
       %tr
         %th= "#{type_de_piece_justificative.libelle} :"
-        - pjs = dossier.retrieve_all_piece_justificative_by_type(type_de_piece_justificative.id).to_ary.dup
-        - if pjs.present?
-          - first_pj = pjs.pop
-          %td= display_pj_filename(first_pj)
-          %td= link_to "Télécharger", first_pj.content_url, class: "link", target: :blank
+        - if pj
           %td
+            %span{ class: highlight_if_unseen_class(demande_seen_at, pj.updated_at) }
+              = display_pj_filename(pj)
+            ·
+            = link_to "Télécharger", pj.content_url, class: "link", target: :blank
             - if pjs.present?
+              %br
               %span.button.dropdown
                 anciennes versions
                 .dropdown-content.fade-in-down
@@ -28,6 +33,11 @@
                         = link_to pj.content_url, { target: :blank } do
                           %span.filename= display_pj_filename(pj)
                           %span
-                            ajoutée le #{pj.created_at.localtime.strftime('%d/%m %H:%M')}
+                            ajoutée le #{pj.created_at.localtime.strftime('%d/%m/%Y à %H:%M')}
         - else
           %td Pièce non fournie
+        %td.updated-at
+          - if pj
+            %span{ class: highlight_if_unseen_class(demande_seen_at, pj.updated_at) }
+              modifié le
+              = pj.updated_at.localtime.strftime("%d/%m/%Y à %H:%M")

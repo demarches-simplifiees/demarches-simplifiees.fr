@@ -7,6 +7,11 @@
     margin-bottom: 20px;
   }
 
+  @mixin notice-text-style {
+    font-size: 14px;
+    color: $grey;
+  }
+
   label {
     margin-bottom: $default-padding;
     display: block;
@@ -16,10 +21,24 @@
     }
 
     .notice {
-      font-size: 14px;
+      @include notice-text-style;
       display: block;
       margin-top: $default-spacer;
-      color: $grey;
+    }
+  }
+
+  .champ {
+    .updated-at {
+      @include notice-text-style;
+      float: right;
+      display: inline-block;
+      margin-left: $default-spacer;
+      visibility: hidden;
+    }
+
+    &:hover .updated-at,
+    .updated-at.highlighted {
+      visibility: visible;
     }
   }
 

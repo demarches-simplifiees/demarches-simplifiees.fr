@@ -42,4 +42,4 @@
           .send-wrapper
             = f.submit 'Demander un avis', class: 'button send'
 
-  = render partial: 'avis_list', locals: { avis: @dossier.avis_for(current_gestionnaire) }
+  = render partial: 'avis_list', locals: { avis: @dossier.avis_for(current_gestionnaire), avis_seen_at: nil }

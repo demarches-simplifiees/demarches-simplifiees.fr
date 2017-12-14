@@ -17,4 +17,4 @@
         .send-wrapper
           = f.submit 'Demander un avis', class: 'button send', data: { disable_with: "Envoi..." }
 
-  = render partial: 'new_gestionnaire/avis/avis_list', locals: { avis: @dossier.avis }
+  = render partial: 'new_gestionnaire/avis/avis_list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }

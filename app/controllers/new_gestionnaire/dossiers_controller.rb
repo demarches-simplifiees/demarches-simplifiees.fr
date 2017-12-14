@@ -3,29 +3,30 @@ module NewGestionnaire
     include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
 
+    after_action :mark_demande_as_read, only: :show
+    after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
+    after_action :mark_avis_as_read, only: [:avis, :create_avis]
+    after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
+
     def attestation
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
     end
 
     def show
-      dossier.notifications.demande.mark_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :demande)
+      @demande_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.demande_seen_at
     end
 
     def messagerie
-      dossier.notifications.messagerie.mark_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :messagerie)
       @commentaire = Commentaire.new
+      @messagerie_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.messagerie_seen_at
     end
 
     def annotations_privees
-      dossier.notifications.annotations_privees.mark_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :annotations_privees)
+      @annotations_privees_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.annotations_privees_seen_at
     end
 
     def avis
-      dossier.notifications.avis.mark_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :avis)
+      @avis_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.avis_seen_at
     end
 
     def personnes_impliquees
@@ -191,6 +192,26 @@ module NewGestionnaire
       end
 
       dossier&.attestation&.emailable?
+    end
+
+    def mark_demande_as_read
+      dossier.notifications.demande.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :demande)
+    end
+
+    def mark_messagerie_as_read
+      dossier.notifications.messagerie.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :messagerie)
+    end
+
+    def mark_avis_as_read
+      dossier.notifications.avis.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :avis)
+    end
+
+    def mark_annotations_privees_as_read
+      dossier.notifications.annotations_privees.mark_as_read
+      current_gestionnaire.mark_tab_as_seen(dossier, :annotations_privees)
     end
   end
 end
