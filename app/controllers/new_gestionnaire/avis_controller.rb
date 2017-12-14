@@ -1,7 +1,5 @@
 module NewGestionnaire
-  class AvisController < ApplicationController
-    layout 'new_application'
-
+  class AvisController < GestionnaireController
     before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire]
 
     A_DONNER_STATUS = 'a-donner'
