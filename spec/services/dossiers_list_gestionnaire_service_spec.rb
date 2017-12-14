@@ -348,8 +348,8 @@ describe DossiersListGestionnaireService do
     let!(:dossier) { create(:dossier, procedure: procedure, state: 'brouillon') }
     let!(:dossier2) { create(:dossier, procedure: procedure, state: 'en_construction') } #nouveaux
     let!(:dossier3) { create(:dossier, procedure: procedure, state: 'en_construction') } #nouveaux
-    let!(:dossier6) { create(:dossier, procedure: procedure, state: 'received') } #a_instruire
-    let!(:dossier7) { create(:dossier, procedure: procedure, state: 'received') } #a_instruire
+    let!(:dossier6) { create(:dossier, procedure: procedure, state: 'en_instruction') } #a_instruire
+    let!(:dossier7) { create(:dossier, procedure: procedure, state: 'en_instruction') } #a_instruire
     let!(:dossier8) { create(:dossier, procedure: procedure, state: 'closed') } #termine
     let!(:dossier9) { create(:dossier, procedure: procedure, state: 'refused') } #termine
     let!(:dossier10) { create(:dossier, procedure: procedure, state: 'without_continuation') } #termine

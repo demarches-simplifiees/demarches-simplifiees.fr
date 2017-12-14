@@ -85,14 +85,14 @@ describe NewGestionnaire::DossiersController, type: :controller do
       dossier.reload
     end
 
-    it { expect(dossier.state).to eq('received') }
+    it { expect(dossier.state).to eq('en_instruction') }
     it { is_expected.to redirect_to dossier_path(procedure, dossier) }
     it { expect(gestionnaire.follow?(dossier)).to be true }
   end
 
   describe '#repasser_en_construction' do
     before do
-      dossier.received!
+      dossier.en_instruction!
       sign_in gestionnaire
     end
 
@@ -111,7 +111,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
   describe '#terminer' do
     context "with refuser" do
       before do
-        dossier.received!
+        dossier.en_instruction!
         sign_in gestionnaire
       end
 
@@ -137,7 +137,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
     context "with classer_sans_suite" do
       before do
-        dossier.received!
+        dossier.en_instruction!
         sign_in gestionnaire
       end
 
@@ -165,7 +165,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       let(:expected_attestation) { nil }
 
       before do
-        dossier.received!
+        dossier.en_instruction!
         sign_in gestionnaire
 
         expect(NotificationMailer).to receive(:send_notification)

@@ -12,7 +12,7 @@ describe ProcedureOverview, type: :model do
 
   describe 'dossiers_en_instruction_count' do
     let!(:en_instruction_dossier) do
-      create(:dossier, procedure: procedure, state: :received, created_at: monday)
+      create(:dossier, procedure: procedure, state: :en_instruction, created_at: monday)
     end
 
     it { expect(procedure_overview.dossiers_en_instruction_count).to eq(1) }
@@ -20,11 +20,11 @@ describe ProcedureOverview, type: :model do
 
   describe 'old_dossiers_en_instruction' do
     let!(:old_dossier_en_instruction) do
-      create(:dossier, procedure: procedure, state: :received, received_at: monday - 1.month)
+      create(:dossier, procedure: procedure, state: :en_instruction, en_instruction_at: monday - 1.month)
     end
 
     let!(:dossier_en_instruction) do
-      create(:dossier, procedure: procedure, state: :received, received_at: monday)
+      create(:dossier, procedure: procedure, state: :en_instruction, en_instruction_at: monday)
     end
 
     it do
@@ -42,7 +42,7 @@ describe ProcedureOverview, type: :model do
 
   describe 'created_dossiers_count' do
     let!(:created_dossier_during_the_week) do
-      create(:dossier, procedure: procedure, created_at: monday, state: :received)
+      create(:dossier, procedure: procedure, created_at: monday, state: :en_instruction)
     end
 
     let!(:created_dossier_during_the_week_but_in_brouillon) do
@@ -50,7 +50,7 @@ describe ProcedureOverview, type: :model do
     end
 
     let!(:created_dossier_before_the_week) do
-      create(:dossier, procedure: procedure, created_at: (monday - 1.week), state: :received)
+      create(:dossier, procedure: procedure, created_at: (monday - 1.week), state: :en_instruction)
     end
 
     it { expect(procedure_overview.created_dossiers_count).to eq(1) }

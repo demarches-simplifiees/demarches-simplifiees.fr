@@ -39,7 +39,7 @@ describe Users::DossiersController, type: :controller do
     describe 'before_action authorized_routes?' do
       context 'when dossier does not have a valid state' do
         before do
-          dossier.state = 'received'
+          dossier.state = 'en_instruction'
           dossier.save
 
           get :show, params: {id: dossier.id}

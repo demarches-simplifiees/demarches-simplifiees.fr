@@ -14,7 +14,7 @@ class ProcedureOverview
     @old_dossiers_en_instruction = procedure
       .dossiers
       .state_en_instruction
-      .where('received_at < ?', 1.week.ago)
+      .where('en_instruction_at < ?', 1.week.ago)
 
     @dossiers_en_construction_count = procedure.dossiers.state_en_construction.count
     @old_dossiers_en_construction = procedure

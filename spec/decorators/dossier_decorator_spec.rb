@@ -37,8 +37,8 @@ describe DossierDecorator do
       expect(subject).to eq('Accepté')
     end
 
-    it 'received is reçu' do
-      dossier.received!
+    it 'en_instruction is reçu' do
+      dossier.en_instruction!
       expect(subject).to eq('En instruction')
     end
 

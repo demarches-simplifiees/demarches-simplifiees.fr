@@ -4,7 +4,7 @@ shared_examples 'carte_controller_spec' do
       context 'when dossier’s procedure have api carto actived' do
         context 'when dossier does not have a valid state' do
           before do
-            dossier.state = 'received'
+            dossier.state = 'en_instruction'
             dossier.save
 
             get :show, params: {dossier_id: dossier.id}

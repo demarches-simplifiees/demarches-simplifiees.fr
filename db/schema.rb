@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171214112701) do
+ActiveRecord::Schema.define(version: 20171214155554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -195,7 +195,7 @@ ActiveRecord::Schema.define(version: 20171214112701) do
     t.boolean  "archived",             default: false
     t.boolean  "mandataire_social",    default: false
     t.datetime "en_construction_at"
-    t.datetime "received_at"
+    t.datetime "en_instruction_at"
     t.datetime "processed_at"
     t.text     "motivation"
     t.datetime "hidden_at"

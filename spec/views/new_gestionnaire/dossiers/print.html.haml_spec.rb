@@ -3,7 +3,7 @@ describe 'new_gestionnaire/dossiers/print.html.haml', type: :view do
 
   context "with a dossier" do
     let(:current_gestionnaire) { create(:gestionnaire) }
-    let(:dossier) { create(:dossier, :received) }
+    let(:dossier) { create(:dossier, :en_instruction) }
 
     before do
       assign(:dossier, dossier)

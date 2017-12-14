@@ -228,7 +228,7 @@ describe Backoffice::DossiersController, type: :controller do
       dossier.reload
     end
 
-    it { expect(dossier.state).to eq('received') }
+    it { expect(dossier.state).to eq('en_instruction') }
     it { is_expected.to redirect_to backoffice_dossier_path(dossier) }
     it { expect(gestionnaire.follow?(dossier)).to be true }
   end
@@ -236,7 +236,7 @@ describe Backoffice::DossiersController, type: :controller do
   describe 'POST #process_dossier' do
     context "with refuse" do
       before do
-        dossier.received!
+        dossier.en_instruction!
         sign_in gestionnaire
       end
 
@@ -262,7 +262,7 @@ describe Backoffice::DossiersController, type: :controller do
 
     context "with without_continuation" do
       before do
-        dossier.received!
+        dossier.en_instruction!
         sign_in gestionnaire
       end
 
@@ -290,7 +290,7 @@ describe Backoffice::DossiersController, type: :controller do
       let(:expected_attestation) { nil }
 
       before do
-        dossier.received!
+        dossier.en_instruction!
         sign_in gestionnaire
 
         expect(NotificationMailer).to receive(:send_notification)
@@ -354,7 +354,7 @@ describe Backoffice::DossiersController, type: :controller do
 
   describe 'POST #reopen' do
     before do
-      dossier.received!
+      dossier.en_instruction!
       sign_in gestionnaire
     end
 

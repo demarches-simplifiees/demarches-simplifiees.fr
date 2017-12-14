@@ -268,7 +268,7 @@ describe Gestionnaire, type: :model do
     end
 
     context 'with a followed dossier' do
-      let!(:dossier){create(:dossier, procedure: procedure, state: 'received')}
+      let!(:dossier){create(:dossier, procedure: procedure, state: 'en_instruction')}
       let!(:follow){ create(:follow, dossier: dossier, gestionnaire: gestionnaire) }
 
       context 'with 1 notification' do
@@ -291,7 +291,7 @@ describe Gestionnaire, type: :model do
       end
 
       context 'with another dossier' do
-        let!(:dossier2){create(:dossier, procedure: procedure, state: 'received')}
+        let!(:dossier2){create(:dossier, procedure: procedure, state: 'en_instruction')}
         let!(:follow2){ create(:follow, dossier: dossier2, gestionnaire: gestionnaire) }
 
         context 'and some notifications' do
@@ -351,7 +351,7 @@ describe Gestionnaire, type: :model do
     subject{ gestionnaire.can_view_dossier?(dossier.id) }
 
     context 'when gestionnaire is assigned on dossier' do
-      let!(:dossier){ create(:dossier, procedure: procedure, state: 'received') }
+      let!(:dossier){ create(:dossier, procedure: procedure, state: 'en_instruction') }
 
       it { expect(subject).to be true }
     end

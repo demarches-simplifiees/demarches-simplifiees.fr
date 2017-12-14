@@ -40,8 +40,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       include_examples 'button Passer en instruction is present'
     end
 
-    context 'when dossier have state received' do
-      let(:state) { 'received' }
+    context 'when dossier have state en_instruction' do
+      let(:state) { 'en_instruction' }
 
       before do
         render

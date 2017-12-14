@@ -4,7 +4,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
   let(:user) { create(:user) }
 
   let!(:decorate_dossier_en_construction) { create(:dossier, :with_entreprise, user: user, state: 'en_construction').decorate }
-  let!(:decorate_dossier_received) { create(:dossier, :with_entreprise, user: user, state: 'received').decorate }
+  let!(:decorate_dossier_en_instruction) { create(:dossier, :with_entreprise, user: user, state: 'en_instruction').decorate }
   let!(:decorate_dossier_closed) { create(:dossier, :with_entreprise, user: user, state: 'closed').decorate }
   let!(:decorate_dossier_refused) { create(:dossier, :with_entreprise, user: user, state: 'refused').decorate }
   let!(:decorate_dossier_without_continuation) { create(:dossier, :with_entreprise, user: user, state: 'without_continuation').decorate }
@@ -56,7 +56,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     let(:liste) { 'en_instruction' }
 
     it_behaves_like 'check_tab_content' do
-      let(:decorate_dossier_at_check) { decorate_dossier_received }
+      let(:decorate_dossier_at_check) { decorate_dossier_en_instruction }
     end
   end
 
