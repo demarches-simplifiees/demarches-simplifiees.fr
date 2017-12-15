@@ -1,5 +1,3 @@
-= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ, seen_at: seen_at }
-
 - dossier = Dossier.find_by(id: champ.value)
 - show_text_summary = dossier.present?
 - show_warning = !show_text_summary && champ.value.present?
