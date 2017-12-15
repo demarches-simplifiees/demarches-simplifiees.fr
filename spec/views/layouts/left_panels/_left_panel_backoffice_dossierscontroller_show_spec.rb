@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.html.haml', type: :view do
   let!(:dossier) { create(:dossier, :with_entreprise,  state: state, archived: archived) }
-  let(:state) { 'draft' }
+  let(:state) { 'brouillon' }
   let(:archived) { false }
   let(:gestionnaire) { create(:gestionnaire) }
   let!(:assign_to) { create(:assign_to, gestionnaire: gestionnaire, procedure: dossier.procedure) }
@@ -28,8 +28,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       it { expect(rendered).to have_link('Passer en instruction') }
     end
 
-    context 'when dossier have state initiated' do
-      let(:state) { 'initiated' }
+    context 'when dossier have state en_construction' do
+      let(:state) { 'en_construction' }
 
       before do
         render
@@ -40,8 +40,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       include_examples 'button Passer en instruction is present'
     end
 
-    context 'when dossier have state received' do
-      let(:state) { 'received' }
+    context 'when dossier have state en_instruction' do
+      let(:state) { 'en_instruction' }
 
       before do
         render
@@ -56,8 +56,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       end
     end
 
-    context 'when dossier have state closed' do
-      let(:state) { 'closed' }
+    context 'when dossier have state accepte' do
+      let(:state) { 'accepte' }
 
       before do
         render
@@ -72,8 +72,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       end
     end
 
-    context 'when dossier have state without_continuation' do
-      let(:state) { 'without_continuation' }
+    context 'when dossier have state sans_suite' do
+      let(:state) { 'sans_suite' }
 
       before do
         render
@@ -88,8 +88,8 @@ describe 'layouts/left_panels/_left_panel_backoffice_dossierscontroller_show.htm
       end
     end
 
-    context 'when dossier have state refused' do
-      let(:state) { 'refused' }
+    context 'when dossier have state refuse' do
+      let(:state) { 'refuse' }
 
       before do
         render

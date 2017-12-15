@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe NewGestionnaire::RechercheController, type: :controller do
-  let(:dossier) { create(:dossier, :initiated) }
-  let(:dossier2) { create(:dossier, :initiated, procedure: dossier.procedure) }
+  let(:dossier) { create(:dossier, :en_construction) }
+  let(:dossier2) { create(:dossier, :en_construction, procedure: dossier.procedure) }
   let(:gestionnaire) { create(:gestionnaire) }
 
   before { gestionnaire.procedures << dossier2.procedure }
@@ -26,7 +26,7 @@ describe NewGestionnaire::RechercheController, type: :controller do
       end
 
       context 'when gestionnaire do not own the dossier' do
-        let(:dossier3) { create(:dossier, :initiated) }
+        let(:dossier3) { create(:dossier, :en_construction) }
         let(:query) { dossier3.id }
 
         it { is_expected.to have_http_status(200) }

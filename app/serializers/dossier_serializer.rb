@@ -35,8 +35,33 @@ class DossierSerializer < ActiveModel::Serializer
     object.user.try(:email)
   end
 
+  def state
+    case object.state
+    when 'en_construction'
+      'initiated'
+    when 'en_instruction'
+      'received'
+    when 'accepte'
+      'closed'
+    when 'refuse'
+      'refused'
+    when 'sans_suite'
+      'without_continuation'
+    else
+      object.state
+    end
+  end
+
   def simplified_state
     object.decorate.display_state
+  end
+
+  def initiated_at
+    object.en_construction_at
+  end
+
+  def received_at
+    object.en_instruction_at
   end
 
   def accompagnateurs

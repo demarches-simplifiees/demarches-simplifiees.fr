@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Backoffice::PrivateFormulairesController, type: :controller do
   let(:gestionnaire) { create :gestionnaire }
-  let(:dossier) { create :dossier, state: :initiated }
+  let(:dossier) { create :dossier, state: :en_construction }
   let(:dossier_champs_first) { 'plop' }
 
   before do

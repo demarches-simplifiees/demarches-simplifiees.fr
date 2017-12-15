@@ -24,7 +24,7 @@ class Cerfa < ActiveRecord::Base
   private
 
   def internal_notification
-    unless dossier.state == 'draft'
+    unless dossier.state == 'brouillon'
       NotificationService.new('cerfa', self.dossier.id).notify
     end
   end

@@ -117,7 +117,7 @@ class Champ < ActiveRecord::Base
   end
 
   def internal_notification
-    if dossier.state != 'draft'
+    if dossier.state != 'brouillon'
       if type == 'ChampPublic'
         NotificationService.new('champs', self.dossier.id, self.libelle).notify
       else

@@ -14,7 +14,7 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
     page.find_by_id('etape_suivante').trigger('click')
     page.find_by_id('suivant').trigger('click')
     50.times do
-      Dossier.create(procedure_id: procedure_for_individual.id, user_id: user.id, state: "initiated")
+      Dossier.create(procedure_id: procedure_for_individual.id, user_id: user.id, state: "en_construction")
     end
     visit root_path
   end

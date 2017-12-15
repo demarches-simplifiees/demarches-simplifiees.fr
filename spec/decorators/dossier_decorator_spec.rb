@@ -22,33 +22,33 @@ describe DossierDecorator do
   describe 'state_fr' do
     subject{ super().display_state }
 
-    it 'draft is brouillon' do
-      dossier.draft!
+    it 'brouillon is brouillon' do
+      dossier.brouillon!
       expect(subject).to eq('Brouillon')
     end
 
-    it 'initiated is initiate' do
-      dossier.initiated!
+    it 'en_construction is En construction' do
+      dossier.en_construction!
       expect(subject).to eq('En construction')
     end
 
-    it 'closed is traité' do
-      dossier.closed!
+    it 'accepte is traité' do
+      dossier.accepte!
       expect(subject).to eq('Accepté')
     end
 
-    it 'received is reçu' do
-      dossier.received!
+    it 'en_instruction is reçu' do
+      dossier.en_instruction!
       expect(subject).to eq('En instruction')
     end
 
-    it 'without_continuation is traité' do
-      dossier.without_continuation!
+    it 'sans_suite is traité' do
+      dossier.sans_suite!
       expect(subject).to eq('Sans suite')
     end
 
-    it 'refused is traité' do
-      dossier.refused!
+    it 'refuse is traité' do
+      dossier.refuse!
       expect(subject).to eq('Refusé')
     end
   end
@@ -63,7 +63,7 @@ describe DossierDecorator do
     context "when a gestionnaire is not signed_in" do
       context "when the dossier is in brouillon state" do
         before do
-          dossier.state = 'draft'
+          dossier.state = 'brouillon'
           dossier.save
         end
 
@@ -74,7 +74,7 @@ describe DossierDecorator do
 
       context "when the dossier is not in brouillon state" do
         before do
-          dossier.state = 'initiated'
+          dossier.state = 'en_construction'
           dossier.save
         end
 

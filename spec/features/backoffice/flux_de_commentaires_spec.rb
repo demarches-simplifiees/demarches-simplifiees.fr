@@ -3,7 +3,7 @@ require 'spec_helper'
 feature 'backoffice: flux de commentaires' do
   let(:procedure) { create(:procedure, :published) }
   let(:gestionnaire) { create(:gestionnaire) }
-  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
+  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction') }
   let(:dossier_id) { dossier.id }
 
   let(:champ1) { create(:champ, dossier: dossier, type_de_champ: create(:type_de_champ_public, libelle: "subtitle1")) }

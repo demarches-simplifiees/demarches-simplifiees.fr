@@ -13,18 +13,18 @@ describe UserRoutesAuthorizationService do
     describe 'Users::DossiersController' do
       let(:controller) { Users::DossiersController }
 
-      describe 'draft' do
-        let(:state) { 'draft' }
+      describe 'brouillon' do
+        let(:state) { 'brouillon' }
         it { is_expected.to be_truthy }
       end
 
-      describe 'initiated' do
-        let(:state) { 'initiated' }
+      describe 'en_construction' do
+        let(:state) { 'en_construction' }
         it { is_expected.to be_falsey }
       end
 
-      describe 'closed' do
-        let(:state) { 'closed' }
+      describe 'accepte' do
+        let(:state) { 'accepte' }
         it { is_expected.to be_falsey }
       end
     end
@@ -33,18 +33,18 @@ describe UserRoutesAuthorizationService do
       let(:controller) { Users::CarteController }
 
       context 'when use_api_carto is false' do
-        describe 'draft' do
-          let(:state) { 'draft' }
+        describe 'brouillon' do
+          let(:state) { 'brouillon' }
           it { is_expected.to be_falsey }
         end
 
-        describe 'initiated' do
-          let(:state) { 'initiated' }
+        describe 'en_construction' do
+          let(:state) { 'en_construction' }
           it { is_expected.to be_falsey }
         end
 
-        describe 'closed' do
-          let(:state) { 'closed' }
+        describe 'accepte' do
+          let(:state) { 'accepte' }
           it { is_expected.to be_falsey }
         end
       end
@@ -52,18 +52,18 @@ describe UserRoutesAuthorizationService do
       context 'when use_api_carto is true' do
         let(:use_api_carto) { true }
 
-        describe 'draft' do
-          let(:state) { 'draft' }
+        describe 'brouillon' do
+          let(:state) { 'brouillon' }
           it { is_expected.to be_truthy }
         end
 
-        describe 'initiated' do
-          let(:state) { 'initiated' }
+        describe 'en_construction' do
+          let(:state) { 'en_construction' }
           it { is_expected.to be_truthy }
         end
 
-        describe 'closed' do
-          let(:state) { 'closed' }
+        describe 'accepte' do
+          let(:state) { 'accepte' }
           it { is_expected.to be_falsey }
         end
       end
@@ -72,18 +72,18 @@ describe UserRoutesAuthorizationService do
     describe 'Users::DescriptionController' do
       let(:controller) { Users::DescriptionController }
 
-      describe 'draft' do
-        let(:state) { 'draft' }
+      describe 'brouillon' do
+        let(:state) { 'brouillon' }
         it { is_expected.to be_truthy }
       end
 
-      describe 'initiated' do
-        let(:state) { 'initiated' }
+      describe 'en_construction' do
+        let(:state) { 'en_construction' }
         it { is_expected.to be_truthy }
       end
 
-      describe 'closed' do
-        let(:state) { 'closed' }
+      describe 'accepte' do
+        let(:state) { 'accepte' }
         it { is_expected.to be_falsey }
       end
     end
@@ -91,18 +91,18 @@ describe UserRoutesAuthorizationService do
     describe 'recapitulatif' do
       let(:controller) { Users::RecapitulatifController }
 
-      describe 'draft' do
-        let(:state) { 'draft' }
+      describe 'brouillon' do
+        let(:state) { 'brouillon' }
         it { is_expected.to be_falsey }
       end
 
-      describe 'initiated' do
-        let(:state) { 'initiated' }
+      describe 'en_construction' do
+        let(:state) { 'en_construction' }
         it { is_expected.to be_truthy }
       end
 
-      describe 'closed' do
-        let(:state) { 'closed' }
+      describe 'accepte' do
+        let(:state) { 'accepte' }
         it { is_expected.to be_truthy }
       end
     end

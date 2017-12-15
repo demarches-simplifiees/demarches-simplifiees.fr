@@ -62,7 +62,7 @@ class Users::DossiersController < UsersController
   def new
     procedure = Procedure.publiees.find(params[:procedure_id])
 
-    dossier = Dossier.create(procedure: procedure, user: current_user, state: 'draft')
+    dossier = Dossier.create(procedure: procedure, user: current_user, state: 'brouillon')
     siret = params[:siret] || current_user.siret
 
     update_current_user_siret! siret unless siret.nil?
@@ -151,7 +151,7 @@ class Users::DossiersController < UsersController
 
   def self.route_authorization
     {
-        states: [:draft]
+        states: [:brouillon]
     }
   end
 

@@ -6,7 +6,7 @@ describe NewGestionnaire::AvisController, type: :controller do
   let(:claimant) { create(:gestionnaire) }
   let(:gestionnaire) { create(:gestionnaire) }
   let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
-  let(:dossier) { create(:dossier, :initiated, procedure: procedure) }
+  let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
   let!(:avis_without_answer) { Avis.create(dossier: dossier, claimant: claimant, gestionnaire: gestionnaire) }
   let!(:avis_with_answer) { Avis.create(dossier: dossier, claimant: claimant, gestionnaire: gestionnaire, answer: 'yop') }
 
