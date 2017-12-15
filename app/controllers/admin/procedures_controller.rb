@@ -45,19 +45,9 @@ class Admin::ProceduresController < AdminController
   def hide
     procedure = current_administrateur.procedures.find(params[:id])
     procedure.hide!
+    procedure.procedure_path.destroy
 
     flash.notice = "Procédure supprimée, en cas d'erreur contactez nous : contact@tps.apientreprise.fr"
-    redirect_to admin_procedures_draft_path
-  end
-
-  def destroy
-    procedure = current_administrateur.procedures.find(params[:id])
-
-    return render json: {}, status: 401 if procedure.publiee_ou_archivee?
-
-    procedure.destroy
-
-    flash.notice = 'Procédure supprimée'
     redirect_to admin_procedures_draft_path
   end
 
