@@ -1,41 +1,40 @@
 - avis_statut = (@statut == NewGestionnaire::AvisController::A_DONNER_STATUS) ? 'à donner' : 'rendus'
 - content_for(:title, "Avis #{avis_statut}")
 
-#avis-index
-  .accompagnateur-header
-    .container.flex
-      .width-100
-        %h1.tab-title Avis
-        %ul.tabs
-          %li{ class: (@statut == NewGestionnaire::AvisController::A_DONNER_STATUS) ? 'active' : nil }>
-            = link_to(avis_index_path(statut: NewGestionnaire::AvisController::A_DONNER_STATUS)) do
-              avis à donner
-              %span.badge= @avis_a_donner.count
-              - if @avis_a_donner.any?
-                %span.notifications
+.accompagnateur-header
+  .container.flex
+    .width-100
+      %h1.tab-title Avis
+      %ul.tabs
+        %li{ class: (@statut == NewGestionnaire::AvisController::A_DONNER_STATUS) ? 'active' : nil }>
+          = link_to(avis_index_path(statut: NewGestionnaire::AvisController::A_DONNER_STATUS)) do
+            avis à donner
+            %span.badge= @avis_a_donner.count
+            - if @avis_a_donner.any?
+              %span.notifications
 
-          %li{ class: (@statut == NewGestionnaire::AvisController::DONNES_STATUS) ? 'active' : nil }>
-            = link_to(avis_index_path(statut: NewGestionnaire::AvisController::DONNES_STATUS)) do
-              avis #{'donné'.pluralize(@avis_donnes.count)}
-              %span.badge= @avis_donnes.count
+        %li{ class: (@statut == NewGestionnaire::AvisController::DONNES_STATUS) ? 'active' : nil }>
+          = link_to(avis_index_path(statut: NewGestionnaire::AvisController::DONNES_STATUS)) do
+            avis #{'donné'.pluralize(@avis_donnes.count)}
+            %span.badge= @avis_donnes.count
 
-  .container
-    - if @avis.present?
-      %table.table.dossiers-table.hoverable
-        %thead
+.container
+  - if @avis.present?
+    %table.table.dossiers-table.hoverable
+      %thead
+        %tr
+          %th.number-col Nº dossier
+          %th Demandeur
+          %th Procédure
+      %tbody
+        - @avis.each do |avis|
           %tr
-            %th.number-col Nº dossier
-            %th Demandeur
-            %th Procédure
-        %tbody
-          - @avis.each do |avis|
-            %tr
-              %td.number-col
-                = link_to(avis_path(avis), class: 'cell-link') do
-                  %span.icon.folder
-                  #{avis.dossier.id}
-              %td= link_to(avis.dossier.user.email, avis_path(avis), class: 'cell-link')
-              %td= link_to(avis.dossier.procedure.libelle, avis_path(avis), class: 'cell-link')
-      = paginate(@avis)
-    - else
-      %h2.empty-text Aucun avis
+            %td.number-col
+              = link_to(avis_path(avis), class: 'cell-link') do
+                %span.icon.folder
+                #{avis.dossier.id}
+            %td= link_to(avis.dossier.user.email, avis_path(avis), class: 'cell-link')
+            %td= link_to(avis.dossier.procedure.libelle, avis_path(avis), class: 'cell-link')
+    = paginate(@avis)
+  - else
+    %h2.empty-text Aucun avis
