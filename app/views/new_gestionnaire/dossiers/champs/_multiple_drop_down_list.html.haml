@@ -1,5 +1,3 @@
-= render partial: 'new_gestionnaire/dossiers/champs/champ_label', locals: { form: form, champ: champ, seen_at: seen_at }
-
 - if champ.drop_down_list && champ.drop_down_list.options.any?
   = form.select :value,
       champ.drop_down_list.options,

@@ -3,12 +3,6 @@
 @import "constants";
 
 .give-avis {
-  h1 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: $default-padding;
-  }
-
   .lock {
     margin-right: $default-spacer;
   }
@@ -39,12 +33,6 @@
 }
 
 .ask-avis {
-  h1 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: $default-padding;
-  }
-
   .avis-notice {
     font-size: 14px;
     color: $grey;
@@ -74,22 +62,16 @@
 }
 
 .list-avis {
-  .title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: $default-padding;
-
-    .count {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border-radius: 10px;
-      border: 1px solid $grey;
-      text-align: center;
-      font-size: 12px;
-      font-weight: normal;
-      margin-left: 8px;
-    }
+  .count {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid $grey;
+    text-align: center;
+    font-size: 12px;
+    font-weight: normal;
+    margin-left: 8px;
   }
 
   .one-avis {

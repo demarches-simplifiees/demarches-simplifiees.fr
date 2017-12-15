@@ -4,7 +4,7 @@
   = render partial: 'header', locals: { avis: @avis, dossier: @dossier }
 
   .container
-    .accompagnateur-title Identité du demandeur
+    .tab-title Identité du demandeur
     .card
       - if @dossier.entreprise.present?
         = render partial: 'new_gestionnaire/dossiers/identite_entreprise', locals: { entreprise: @dossier.entreprise }
@@ -12,18 +12,18 @@
       - if @dossier.individual.present?
         = render partial: 'new_gestionnaire/dossiers/identite_individual', locals: { individual: @dossier.individual }
 
-    .accompagnateur-title Formulaire
+    .tab-title Formulaire
     - champs = @dossier.ordered_champs.decorate
     - if champs.any?
       .card
         = render partial: 'new_gestionnaire/dossiers/champs', locals: { champs: champs, dossier: @dossier, demande_seen_at: nil }
 
     - if @dossier.procedure.use_api_carto
-      .accompagnateur-title Cartographie
+      .tab-title Cartographie
       .card
         = render partial: 'new_gestionnaire/dossiers/map', locals: { dossier: @dossier }
 
     - if @dossier.procedure.cerfa_flag? || @dossier.types_de_piece_justificative.any?
-      .accompagnateur-title Pièces jointes
+      .tab-title Pièces jointes
       .card
         = render partial: "new_gestionnaire/dossiers/pieces_jointes", locals: { dossier: @dossier, demande_seen_at: nil }
