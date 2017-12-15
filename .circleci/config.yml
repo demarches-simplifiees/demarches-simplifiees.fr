@@ -58,7 +58,7 @@ jobs:
             - /usr/local/bin/phantomjs
   test:
     <<: *defaults
-    parallelism: 3
+    parallelism: 4
     steps:
       - checkout
       - *install_system_deps
