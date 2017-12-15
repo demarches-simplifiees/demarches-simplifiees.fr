@@ -50,17 +50,6 @@ class Admin::ProceduresController < AdminController
     redirect_to admin_procedures_draft_path
   end
 
-  def destroy
-    procedure = current_administrateur.procedures.find(params[:id])
-
-    return render json: {}, status: 401 if procedure.publiee_ou_archivee?
-
-    procedure.destroy
-
-    flash.notice = 'Procédure supprimée'
-    redirect_to admin_procedures_draft_path
-  end
-
   def new
     @procedure ||= Procedure.new
     @procedure.module_api_carto ||= ModuleAPICarto.new

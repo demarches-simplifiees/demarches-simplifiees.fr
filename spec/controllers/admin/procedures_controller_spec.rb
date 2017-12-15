@@ -54,54 +54,6 @@ describe Admin::ProceduresController, type: :controller do
     it { expect(response.status).to eq(200) }
   end
 
-  describe 'DELETE #destroy' do
-    let(:procedure_draft) { create :procedure, administrateur: admin, published_at: nil, archived_at: nil }
-    let(:procedure_published) { create :procedure, administrateur: admin, published_at: Time.now, archived_at: nil }
-    let(:procedure_archived) { create :procedure, administrateur: admin, published_at: nil, archived_at: Time.now }
-
-    subject { delete :destroy, params: {id: procedure.id} }
-
-    context 'when procedure is draft' do
-      let!(:procedure) { procedure_draft }
-
-      describe 'tech params' do
-        before do
-          subject
-        end
-
-        it { expect(subject.status).to eq 302 }
-        it { expect(flash[:notice]).to be_present }
-      end
-
-      it 'destroy procedure is call' do
-        expect_any_instance_of(Procedure).to receive(:destroy)
-        subject
-      end
-
-      it { expect { subject }.to change { Procedure.count }.by(-1) }
-    end
-
-    context 'when procedure is published' do
-      let(:procedure) { procedure_published }
-
-      it { expect(subject.status).to eq 401 }
-    end
-
-    context 'when procedure is archived' do
-      let(:procedure) { procedure_published }
-
-      it { expect(subject.status).to eq 401 }
-    end
-
-    context "when administrateur does not own the procedure" do
-      let(:procedure_not_owned) { create :procedure, administrateur: create(:administrateur), published_at: nil, archived_at: nil }
-
-      subject { delete :destroy, params: {id: procedure_not_owned.id} }
-
-      it { expect{ subject }.to raise_error(ActiveRecord::RecordNotFound) }
-    end
-  end
-
   describe 'GET #edit' do
     let(:published_at) { nil }
     let(:procedure) { create(:procedure, administrateur: admin, published_at: published_at) }
