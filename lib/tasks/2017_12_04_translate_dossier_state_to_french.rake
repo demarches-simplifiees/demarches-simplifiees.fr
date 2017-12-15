@@ -25,4 +25,13 @@ namespace :'2017_12_04_translate_dossier_state_to_french' do
 
   task all: %i(brouillon en_construction en_instruction accepte refuse sans_suite) do
   end
+
+  task revert: :environment do
+    Dossier.unscoped.where(state: 'brouillon').update_all(state: 'draft')
+    Dossier.unscoped.where(state: 'en_construction').update_all(state: 'initiated')
+    Dossier.unscoped.where(state: 'en_instruction').update_all(state: 'received')
+    Dossier.unscoped.where(state: 'accepte').update_all(state: 'closed')
+    Dossier.unscoped.where(state: 'refuse').update_all(state: 'refused')
+    Dossier.unscoped.where(state: 'sans_suite').update_all(state: 'without_continuation')
+  end
 end
