@@ -1,0 +1,18 @@
+describe 'new_gestionnaire/dossiers/print.html.haml', type: :view do
+  before { view.extend DossierHelper }
+
+  context "with a dossier" do
+    let(:current_gestionnaire) { create(:gestionnaire) }
+    let(:dossier) { create(:dossier, :received) }
+
+    before do
+      assign(:dossier, dossier)
+      view.stub(:current_gestionnaire).and_return(current_gestionnaire)
+
+      render
+    end
+
+    it { expect(rendered).to include("Dossier nº #{dossier.id}") }
+    it { expect(rendered).to include(dossier.procedure.libelle) }
+  end
+end
