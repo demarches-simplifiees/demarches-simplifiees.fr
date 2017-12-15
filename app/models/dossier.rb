@@ -144,61 +144,6 @@ class Dossier < ActiveRecord::Base
     champs.joins(', types_de_piece_justificative').where("pieces_justificatives.type_de_piece_justificative_id = types_de_piece_justificative.id AND types_de_piece_justificative.procedure_id = #{procedure.id}").order('order_place ASC')
   end
 
-  def next_step! role, action, motivation = nil
-    unless %w(initiate follow update comment receive refuse without_continuation close).include?(action)
-      fail 'action is not valid'
-    end
-
-    unless %w(user gestionnaire).include?(role)
-      fail 'role is not valid'
-    end
-
-    case role
-    when 'user'
-      case action
-      when 'initiate'
-        if brouillon?
-          en_construction!
-        end
-      end
-    when 'gestionnaire'
-      case action
-      when 'close'
-        if en_instruction?
-          self.attestation = build_attestation
-          save
-
-          accepte!
-
-          if motivation
-            self.motivation = motivation
-            save
-          end
-        end
-      when 'refuse'
-        if en_instruction?
-          refuse!
-
-          if motivation
-            self.motivation = motivation
-            save
-          end
-        end
-      when 'without_continuation'
-        if en_instruction?
-          sans_suite!
-
-          if motivation
-            self.motivation = motivation
-            save
-          end
-        end
-      end
-    end
-
-    state
-  end
-
   def brouillon?
     BROUILLON.include?(state)
   end
@@ -379,13 +324,13 @@ class Dossier < ActiveRecord::Base
     end
   end
 
-  private
-
   def build_attestation
     if procedure.attestation_template.present? && procedure.attestation_template.activated?
       procedure.attestation_template.attestation_for(self)
     end
   end
+
+  private
 
   def update_state_dates
     if en_construction? && !self.en_construction_at

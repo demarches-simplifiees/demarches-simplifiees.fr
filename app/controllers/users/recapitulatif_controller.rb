@@ -10,7 +10,7 @@ class Users::RecapitulatifController < UsersController
   def initiate
     create_dossier_facade
 
-    @facade.dossier.next_step! 'user', 'initiate'
+    @facade.dossier.en_construction!
     flash.notice = 'Dossier soumis avec succès.'
 
     redirect_to users_dossier_recapitulatif_path

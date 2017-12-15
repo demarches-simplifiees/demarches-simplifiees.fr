@@ -37,7 +37,6 @@ module NewGestionnaire
 
     def follow
       current_gestionnaire.follow(dossier)
-      dossier.next_step!('gestionnaire', 'follow')
       flash.notice = 'Dossier suivi'
       redirect_back(fallback_location: procedures_url)
     end
@@ -82,20 +81,25 @@ module NewGestionnaire
 
       case params[:process_action]
       when "refuser"
-        next_step = "refuse"
+        dossier.refuse!
         notice = "Dossier considéré comme refusé."
         template = procedure.refused_mail_template
       when "classer_sans_suite"
-        next_step = "without_continuation"
+        dossier.sans_suite!
         notice = "Dossier considéré comme sans suite."
         template = procedure.without_continuation_mail_template
       when "accepter"
-        next_step = "close"
+        dossier.attestation = dossier.build_attestation
+        dossier.accepte!
         notice = "Dossier traité avec succès."
         template = procedure.closed_mail_template
       end
 
-      dossier.next_step!('gestionnaire', next_step, motivation)
+      if motivation
+        dossier.motivation = motivation
+      end
+
+      dossier.save
 
       # needed to force Carrierwave to provide dossier.attestation.pdf.read
       # when the Feature.remote_storage is true, otherwise pdf.read is a closed stream.
