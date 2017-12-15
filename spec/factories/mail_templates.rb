@@ -12,7 +12,7 @@ FactoryGirl.define do
       type 'MailRefused'
     end
 
-    trait :dossier_received do
+    trait :dossier_en_instruction do
       object "[TPS] Accusé de réception pour votre dossier nº --numero_dossier--"
       body "Votre administration vous confirme la bonne réception de votre dossier nº --numero_dossier--"
       type 'MailReceived'

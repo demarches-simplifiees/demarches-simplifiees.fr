@@ -112,7 +112,7 @@ describe Dossier do
 
         it 'does not create default champs' do
           expect(subject).not_to receive(:build_default_champs)
-          subject.update_attributes(state: 'initiated')
+          subject.update_attributes(state: 'en_construction')
         end
       end
     end
@@ -134,9 +134,9 @@ describe Dossier do
         it { expect { subject }.to raise_error('role is not valid') }
       end
 
-      context 'when dossier is at state draft' do
+      context 'when dossier is at state brouillon' do
         before do
-          dossier.draft!
+          dossier.brouillon!
         end
 
         context 'when user is connected' do
@@ -145,26 +145,26 @@ describe Dossier do
           context 'when he updates dossier informations' do
             let(:action) { 'update' }
 
-            it { is_expected.to eq('draft') }
+            it { is_expected.to eq('brouillon') }
           end
 
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('draft') }
+            it { is_expected.to eq('brouillon') }
           end
 
           context 'when he initiate a dossier' do
             let(:action) { 'initiate' }
 
-            it { is_expected.to eq('initiated') }
+            it { is_expected.to eq('en_construction') }
           end
         end
       end
 
-      context 'when dossier is at state initiated' do
+      context 'when dossier is at state en_construction' do
         before do
-          dossier.initiated!
+          dossier.en_construction!
         end
 
         context 'when user is connect' do
@@ -173,13 +173,13 @@ describe Dossier do
           context 'when is update dossier informations' do
             let(:action) { 'update' }
 
-            it { is_expected.to eq('initiated') }
+            it { is_expected.to eq('en_construction') }
           end
 
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('initiated') }
+            it { is_expected.to eq('en_construction') }
           end
         end
 
@@ -189,20 +189,20 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('initiated') }
+            it { is_expected.to eq('en_construction') }
           end
 
           context 'when is follow' do
             let(:action) { 'follow' }
 
-            it { is_expected.to eq 'initiated' }
+            it { is_expected.to eq 'en_construction' }
           end
         end
       end
 
-      context 'when dossier is at state received' do
+      context 'when dossier is at state en_instruction' do
         before do
-          dossier.received!
+          dossier.en_instruction!
         end
 
         context 'when user is connected' do
@@ -211,7 +211,7 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('received') }
+            it { is_expected.to eq('en_instruction') }
           end
         end
 
@@ -221,20 +221,20 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('received') }
+            it { is_expected.to eq('en_instruction') }
           end
 
           context 'when he closes the dossier' do
             let(:action) { 'close' }
 
-            it { is_expected.to eq('closed') }
+            it { is_expected.to eq('accepte') }
           end
         end
       end
 
-      context 'when dossier is at state refused' do
+      context 'when dossier is at state refuse' do
         before do
-          dossier.refused!
+          dossier.refuse!
         end
 
         context 'when user is connected' do
@@ -243,7 +243,7 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('refused') }
+            it { is_expected.to eq('refuse') }
           end
         end
 
@@ -253,14 +253,14 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('refused') }
+            it { is_expected.to eq('refuse') }
           end
         end
       end
 
-      context 'when dossier is at state without_continuation' do
+      context 'when dossier is at state sans_suite' do
         before do
-          dossier.without_continuation!
+          dossier.sans_suite!
         end
 
         context 'when user is connected' do
@@ -269,7 +269,7 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('without_continuation') }
+            it { is_expected.to eq('sans_suite') }
           end
         end
 
@@ -279,14 +279,14 @@ describe Dossier do
           context 'when he posts a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('without_continuation') }
+            it { is_expected.to eq('sans_suite') }
           end
         end
       end
 
-      context 'when dossier is at state closed' do
+      context 'when dossier is at state accepte' do
         before do
-          dossier.closed!
+          dossier.accepte!
         end
 
         context 'when user is connect' do
@@ -295,7 +295,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('closed') }
+            it { is_expected.to eq('accepte') }
           end
         end
 
@@ -305,7 +305,7 @@ describe Dossier do
           context 'when is post a comment' do
             let(:action) { 'comment' }
 
-            it { is_expected.to eq('closed') }
+            it { is_expected.to eq('accepte') }
           end
         end
       end
@@ -394,7 +394,7 @@ describe Dossier do
     let(:date1) { 1.day.ago }
     let(:date2) { 1.hour.ago }
     let(:date3) { 1.minute.ago }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, initiated_at: date1, received_at: date2, processed_at: date3, motivation: "Motivation") }
+    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, en_construction_at: date1, en_instruction_at: date2, processed_at: date3, motivation: "Motivation") }
     let!(:follow) { create(:follow, gestionnaire: gestionnaire, dossier: dossier) }
 
     describe '#export_headers' do
@@ -421,7 +421,7 @@ describe Dossier do
       it { expect(subject[3]).to be_in([true, false]) }
       it { expect(subject[4]).to eq(dossier.user.email) }
       it { expect(subject[5]).to be_in([true, false]) }
-      it { expect(subject[6]).to eq("draft") }
+      it { expect(subject[6]).to eq("brouillon") }
       it { expect(subject[7]).to eq(date1) }
       it { expect(subject[8]).to eq(date2) }
       it { expect(subject[9]).to eq(date3) }
@@ -459,9 +459,9 @@ describe Dossier do
           "false",
           dossier.user.email,
           "false",
-          "draft",
-          dossier.initiated_at,
-          dossier.received_at,
+          "brouillon",
+          dossier.en_construction_at,
+          dossier.en_instruction_at,
           dossier.processed_at,
           "Motivation",
           gestionnaire.email,
@@ -615,16 +615,16 @@ describe Dossier do
   describe "#text_summary" do
     let(:procedure) { create(:procedure, libelle: "Procédure", organisation: "Organisme") }
 
-    context 'when the dossier has been initiated' do
-      let(:dossier) { create :dossier, procedure: procedure, state: 'initiated', initiated_at: "31/12/2010".to_date }
+    context 'when the dossier has been en_construction' do
+      let(:dossier) { create :dossier, procedure: procedure, state: 'en_construction', en_construction_at: "31/12/2010".to_date }
 
       subject { dossier.text_summary }
 
       it { is_expected.to eq("Dossier déposé le 31/12/2010 sur la procédure Procédure gérée par l'organisme Organisme") }
     end
 
-    context 'when the dossier has not been initiated' do
-      let(:dossier) { create :dossier, procedure: procedure, state: 'draft' }
+    context 'when the dossier has not been en_construction' do
+      let(:dossier) { create :dossier, procedure: procedure, state: 'brouillon' }
 
       subject { dossier.text_summary }
 
@@ -634,7 +634,7 @@ describe Dossier do
 
   describe '#avis_for' do
     let!(:procedure) { create(:procedure, :published) }
-    let!(:dossier) { create(:dossier, procedure: procedure, state: :initiated) }
+    let!(:dossier) { create(:dossier, procedure: procedure, state: :en_construction) }
 
     let!(:gestionnaire) { create(:gestionnaire, procedures: [procedure]) }
     let!(:expert_1) { create(:gestionnaire) }
@@ -683,7 +683,7 @@ describe Dossier do
   end
 
   describe '#update_state_dates' do
-    let(:state) { 'draft' }
+    let(:state) { 'brouillon' }
     let(:dossier) { create(:dossier, state: state) }
     let(:beginning_of_day) { Time.now.beginning_of_day }
 
@@ -691,41 +691,41 @@ describe Dossier do
       Timecop.freeze(beginning_of_day)
     end
 
-    context 'when dossier is initiated' do
+    context 'when dossier is en_construction' do
       before do
-        dossier.initiated!
+        dossier.en_construction!
         dossier.reload
       end
 
-      it { expect(dossier.state).to eq('initiated') }
-      it { expect(dossier.initiated_at).to eq(beginning_of_day) }
+      it { expect(dossier.state).to eq('en_construction') }
+      it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
 
-      it 'should keep first initiated_at date' do
+      it 'should keep first en_construction_at date' do
         Timecop.return
-        dossier.received!
-        dossier.initiated!
+        dossier.en_instruction!
+        dossier.en_construction!
 
-        expect(dossier.initiated_at).to eq(beginning_of_day)
+        expect(dossier.en_construction_at).to eq(beginning_of_day)
       end
     end
 
-    context 'when dossier is received' do
-      let(:state) { 'initiated' }
+    context 'when dossier is en_instruction' do
+      let(:state) { 'en_construction' }
 
       before do
-        dossier.received!
+        dossier.en_instruction!
         dossier.reload
       end
 
-      it { expect(dossier.state).to eq('received') }
-      it { expect(dossier.received_at).to eq(beginning_of_day) }
+      it { expect(dossier.state).to eq('en_instruction') }
+      it { expect(dossier.en_instruction_at).to eq(beginning_of_day) }
 
-      it 'should keep first received_at date if dossier is set to initiated again' do
+      it 'should keep first en_instruction_at date if dossier is set to en_construction again' do
         Timecop.return
-        dossier.initiated!
-        dossier.received!
+        dossier.en_construction!
+        dossier.en_instruction!
 
-        expect(dossier.received_at).to eq(beginning_of_day)
+        expect(dossier.en_instruction_at).to eq(beginning_of_day)
       end
     end
 
@@ -739,31 +739,31 @@ describe Dossier do
       it { expect(dossier.processed_at).to eq(beginning_of_day) }
     end
 
-    context 'when dossier is closed' do
-      let(:state) { 'received' }
+    context 'when dossier is accepte' do
+      let(:state) { 'en_instruction' }
 
-      it_behaves_like 'dossier is processed', 'closed'
+      it_behaves_like 'dossier is processed', 'accepte'
     end
 
-    context 'when dossier is refused' do
-      let(:state) { 'received' }
+    context 'when dossier is refuse' do
+      let(:state) { 'en_instruction' }
 
-      it_behaves_like 'dossier is processed', 'refused'
+      it_behaves_like 'dossier is processed', 'refuse'
     end
 
-    context 'when dossier is without_continuation' do
-      let(:state) { 'received' }
+    context 'when dossier is sans_suite' do
+      let(:state) { 'en_instruction' }
 
-      it_behaves_like 'dossier is processed', 'without_continuation'
+      it_behaves_like 'dossier is processed', 'sans_suite'
     end
   end
 
   describe '.downloadable_sorted' do
     let(:procedure) { create(:procedure) }
-    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :draft) }
-    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated, initiated_at: DateTime.parse('03/01/2010')) }
-    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, initiated_at: DateTime.parse('01/01/2010')) }
-    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: :received, archived: true, initiated_at: DateTime.parse('02/01/2010')) }
+    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :brouillon) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_construction, en_construction_at: DateTime.parse('03/01/2010')) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_instruction, en_construction_at: DateTime.parse('01/01/2010')) }
+    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_instruction, archived: true, en_construction_at: DateTime.parse('02/01/2010')) }
 
     subject { procedure.dossiers.downloadable_sorted }
 
@@ -772,19 +772,19 @@ describe Dossier do
 
   describe "#send_dossier_received" do
     let(:procedure) { create(:procedure) }
-    let(:dossier) { create(:dossier, procedure: procedure, state: :initiated) }
+    let(:dossier) { create(:dossier, procedure: procedure, state: :en_construction) }
 
     before do
       allow(NotificationMailer).to receive(:send_dossier_received).and_return(double(deliver_later: nil))
     end
 
-    it "sends an email when the dossier becomes received" do
-      dossier.received!
+    it "sends an email when the dossier becomes en_instruction" do
+      dossier.en_instruction!
       expect(NotificationMailer).to have_received(:send_dossier_received).with(dossier.id)
     end
 
-    it "does not an email when the dossier becomes closed" do
-      dossier.closed!
+    it "does not an email when the dossier becomes accepte" do
+      dossier.accepte!
       expect(NotificationMailer).to_not have_received(:send_dossier_received)
     end
   end
@@ -798,18 +798,18 @@ describe Dossier do
     end
 
     it "send an email when the dossier is created for the very first time" do
-      expect { Dossier.create(procedure: procedure, state: "draft", user: user) }.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
+      expect { Dossier.create(procedure: procedure, state: "brouillon", user: user) }.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche : #{procedure.libelle}")
     end
 
-    it "does not send an email when the dossier is created with a non draft state" do
-      expect { Dossier.create(procedure: procedure, state: "initiated", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "received", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "closed", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "refused", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "without_continuation", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+    it "does not send an email when the dossier is created with a non brouillon state" do
+      expect { Dossier.create(procedure: procedure, state: "en_construction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "en_instruction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "accepte", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "refuse", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: "sans_suite", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
     end
   end
 
@@ -822,8 +822,8 @@ describe Dossier do
       dossier.reload
     end
 
-    context 'when the dossier is in received state ' do
-      let!(:dossier) { create(:dossier, procedure: procedure, state: :received) }
+    context 'when the dossier is in en_instruction state ' do
+      let!(:dossier) { create(:dossier, procedure: procedure, state: :en_instruction) }
 
       context 'when the procedure has no attestation' do
         it { expect(dossier.attestation).to be_nil }

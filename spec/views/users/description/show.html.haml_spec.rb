@@ -42,7 +42,7 @@ describe 'users/description/show.html.haml', type: :view do
 
   context 'si la page précédente est recapitularif' do
     before do
-      dossier.initiated!
+      dossier.en_construction!
       dossier.reload
       render
     end

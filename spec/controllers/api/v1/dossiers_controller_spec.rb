@@ -25,7 +25,7 @@ describe API::V1::DossiersController do
     context 'when procedure is found and belongs to admin' do
       let(:procedure_id) { procedure.id }
       let(:date_creation) { Time.utc(2008, 9, 1, 10, 5, 0) }
-      let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :initiated, procedure: procedure) } }
+      let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :en_construction, procedure: procedure) } }
       let(:body) { JSON.parse(retour.body, symbolize_names: true) }
 
       it 'return REST code 200', :show_in_doc do
@@ -61,8 +61,8 @@ describe API::V1::DossiersController do
       context 'when there are multiple pages' do
         let(:retour) { get :index, params: {token: admin.api_token, procedure_id: procedure_id, page: 2} }
 
-        let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
-        let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: 'initiated') }
+        let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction') }
+        let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction') }
 
         before do
           allow(Dossier).to receive(:per_page).and_return(1)

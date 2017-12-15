@@ -5,7 +5,7 @@ describe Backoffice::AvisController, type: :controller do
     let(:claimant){ create(:gestionnaire) }
     let(:gestionnaire){ create(:gestionnaire) }
     let!(:dossier) do
-      dossier = create(:dossier, state: 'received')
+      dossier = create(:dossier, state: 'en_instruction')
       claimant.procedures << [dossier.procedure]
       dossier
     end
@@ -40,7 +40,7 @@ describe Backoffice::AvisController, type: :controller do
 
   describe '#POST update' do
     let(:gestionnaire){ create(:gestionnaire) }
-    let(:dossier){ create(:dossier, state: 'received') }
+    let(:dossier){ create(:dossier, state: 'en_instruction') }
     let(:avis){ create(:avis, dossier: dossier, gestionnaire: gestionnaire )}
 
     subject { post :update, params: { dossier_id: dossier.id, id: avis.id, avis: { answer: "Ok ce dossier est valide." } } }

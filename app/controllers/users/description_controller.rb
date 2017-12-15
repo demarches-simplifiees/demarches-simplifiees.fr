@@ -14,7 +14,7 @@ class Users::DescriptionController < UsersController
 
     @headers = @champs.select { |c| c.type_champ == 'header_section' }
 
-    unless @dossier.can_be_initiated?
+    unless @dossier.can_be_en_construction?
       flash[:alert] = t('errors.messages.procedure_archived')
     end
 
@@ -27,7 +27,7 @@ class Users::DescriptionController < UsersController
     dossier = current_user_dossier
     procedure = dossier.procedure
 
-    return head :forbidden unless dossier.can_be_initiated?
+    return head :forbidden unless dossier.can_be_en_construction?
 
     ChampsService.save_champs(dossier.champs, params) if params[:champs]
 
@@ -39,20 +39,20 @@ class Users::DescriptionController < UsersController
     errors_upload = PiecesJustificativesService.upload!(dossier, current_user, params)
     return redirect_to_description_with_errors(dossier, errors_upload) if errors_upload.any?
 
-    if params[:champs] && !draft_submission?
+    if params[:champs] && !brouillon_submission?
       errors =
         ChampsService.build_error_messages(dossier.champs) +
         PiecesJustificativesService.missing_pj_error_messages(dossier)
       return redirect_to_description_with_errors(dossier, errors) if errors.any?
     end
 
-    if draft_submission?
+    if brouillon_submission?
       flash.notice = 'Votre brouillon a bien été sauvegardé.'
       redirect_to url_for(controller: :dossiers, action: :index, liste: :brouillon)
     else
-      if dossier.draft?
-        dossier.initiated!
+      if dossier.brouillon?
         NotificationMailer.send_notification(dossier, procedure.initiated_mail_template).deliver_now!
+        dossier.en_construction!
       end
       flash.notice = 'Félicitations, votre demande a bien été enregistrée.'
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: dossier.id)
@@ -93,7 +93,7 @@ class Users::DescriptionController < UsersController
 
   def self.route_authorization
     {
-        states: [:draft, :initiated]
+        states: [:brouillon, :en_construction]
     }
   end
 
@@ -110,7 +110,7 @@ class Users::DescriptionController < UsersController
     redirect_to users_dossier_description_path(dossier_id: dossier.id)
   end
 
-  def draft_submission?
+  def brouillon_submission?
     params[:submit] && params[:submit].keys.first == 'brouillon'
   end
 
