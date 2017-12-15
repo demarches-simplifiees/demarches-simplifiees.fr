@@ -14,7 +14,7 @@ describe 'new_gestionnaire/procedures/_download_dossiers.html.haml', type: :view
   end
 
   context "when procedure has at least 1 dossier en construction" do
-    let!(:dossier) { create(:dossier, :initiated, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     it { is_expected.to include("Télécharger tous les dossiers") }
   end
 end

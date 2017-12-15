@@ -4,7 +4,7 @@ describe Backoffice::Dossiers::ProcedureController, type: :controller do
   let(:gestionnaire) { create :gestionnaire }
   let(:procedure) { create :procedure, :published }
   let(:archived) { false }
-  let(:dossier) { create :dossier, procedure: procedure, archived: archived, state: 'initiated'}
+  let(:dossier) { create :dossier, procedure: procedure, archived: archived, state: 'en_construction'}
 
   before do
     create :assign_to, gestionnaire: gestionnaire, procedure: procedure

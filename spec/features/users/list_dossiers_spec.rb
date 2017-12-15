@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe 'user access to the list of his dossier' do
   let(:user) { create(:user) }
-  let!(:last_updated_dossier) { create(:dossier, :with_entreprise, user: user, state: 'initiated')}
-  let!(:dossier1) { create(:dossier, :with_entreprise, user: user, state: 'initiated') }
+  let!(:last_updated_dossier) { create(:dossier, :with_entreprise, user: user, state: 'en_construction')}
+  let!(:dossier1) { create(:dossier, :with_entreprise, user: user, state: 'en_construction') }
   let!(:dossier2) { create(:dossier, :with_entreprise) }
-  let!(:dossier_archived) { create(:dossier, :with_entreprise, user: user, state: 'initiated') }
+  let!(:dossier_archived) { create(:dossier, :with_entreprise, user: user, state: 'en_construction') }
 
   before do
     last_updated_dossier.update_column(:updated_at, "19/07/2052 15:35".to_time)

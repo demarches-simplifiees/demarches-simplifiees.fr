@@ -24,7 +24,7 @@
         %input#quartier_prioritaires{ type: 'hidden', value: "#{@dossier.quartier_prioritaires.to_json}" }
         %input#cadastres{ type: 'hidden', value: "#{@dossier.cadastres.to_json}" }
 
-        - if @dossier.draft?
+        - if @dossier.brouillon?
           = render partial: '/layouts/etape_suivante'
         - else
           = render partial: '/layouts/modifications_terminees'
