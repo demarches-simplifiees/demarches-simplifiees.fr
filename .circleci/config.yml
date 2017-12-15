@@ -1,32 +1,46 @@
 version: 2
+
+defaults: &defaults
+  working_directory: /tps
+  docker:
+    - image: ruby:2.3.5
+    - image: postgres:9.4.1
+      environment:
+        POSTGRES_USER: tps_test
+        POSTGRES_PASSWORD: tps_test
+        POSTGRES_DB: tps_test
+
+install_system_deps: &install_system_deps
+  run:
+    name: Install System Dependencies
+    command: apt-get update -qq && apt-get install -y build-essential nodejs
+
+restore_phantomjs_cache: &restore_phantomjs_cache
+  restore_cache:
+    key: phantomjs-2-1-1
+
+bundle_restore_cache: &bundle_restore_cache
+  restore_cache:
+    key: bundle-install-v4-{{ arch }}-{{ checksum "Gemfile.lock" }}
+
+bundle_install: &bundle_install
+  run:
+    name: Install Ruby Dependencies
+    command: bundle install
+
 jobs:
   build:
-    parallelism: 3
-    docker:
-      - image: ruby:2.3.5
-      - image: postgres:9.4.1
-        environment:
-          POSTGRES_USER: tps_test
-          POSTGRES_PASSWORD: tps_test
-          POSTGRES_DB: tps_test
-
-    working_directory: /tps
+    <<: *defaults
     steps:
       - checkout
-      - run:
-          name: Install System Dependencies
-          command: apt-get update -qq && apt-get install -y build-essential nodejs
-      - restore_cache:
-          key: bundle-install-v3-{{ arch }}-{{ checksum "Gemfile.lock" }}
-      - run:
-          name: Install Ruby Dependencies
-          command: bundle install
+      - *install_system_deps
+      - *bundle_restore_cache
+      - *bundle_install
       - save_cache:
-          key: bundle-install-v3-{{ arch }}-{{ checksum "Gemfile.lock" }}
+          key: bundle-install-v4-{{ arch }}-{{ checksum "Gemfile.lock" }}
           paths:
             - /usr/local/bundle
-      - restore_cache:
-          key: phantomjs-2-1-1
+      - *restore_phantomjs_cache
       - run:
           name: Install PhantomJS Dependencies
           command: |
@@ -42,6 +56,15 @@ jobs:
           key: phantomjs-2-1-1
           paths:
             - /usr/local/bin/phantomjs
+  test:
+    <<: *defaults
+    parallelism: 3
+    steps:
+      - checkout
+      - *install_system_deps
+      - *restore_phantomjs_cache
+      - *bundle_restore_cache
+      - *bundle_install
       - run:
           environment:
             DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
@@ -52,8 +75,20 @@ jobs:
             DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
           name: Run Tests, Splitted by Timings
           command: |
-            TESTFILES=$(circleci tests glob "spec/**/*.rb"| xargs -n 1 echo | grep -v "spec/factories/" | tr " " "\n" | circleci tests split --split-by=timings)
-            bundle exec rspec --color --require spec_helper -- ${TESTFILES}
+            bundle exec rspec --profile 10 \
+              --format RspecJunitFormatter \
+              --out $CIRCLE_TEST_REPORTS/rspec.xml \
+              --format progress \
+              $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+      - store_test_results:
+          path: $CIRCLE_TEST_REPORTS/rspec.xml
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - *install_system_deps
+      - *bundle_restore_cache
+      - *bundle_install
       - run:
           name: Run rubocop
           command: bundle exec rubocop -R
@@ -66,6 +101,13 @@ jobs:
       - run:
           name: Run scss-lint
           command: bundle exec scss-lint app/assets/stylesheets/
+  deploy:
+    <<: *defaults
+    steps:
+      - checkout
+      - *install_system_deps
+      - *bundle_restore_cache
+      - *bundle_install
       - add_ssh_keys:
           fingerprints:
             - "0a:67:42:7d:7e:b7:e1:3c:48:8f:bf:68:10:51:a8:44"
@@ -78,3 +120,19 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               bundle exec rake deploy_ha to=production
             fi
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - lint:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - test
+            - lint
