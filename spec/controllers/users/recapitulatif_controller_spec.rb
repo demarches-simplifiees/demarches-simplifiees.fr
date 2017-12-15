@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::RecapitulatifController, type: :controller do
-  let(:dossier) { create(:dossier, state: 'initiated') }
+  let(:dossier) { create(:dossier, state: 'en_construction') }
   let(:bad_dossier_id) { Dossier.count + 100000 }
 
   before do
@@ -22,9 +22,9 @@ describe Users::RecapitulatifController, type: :controller do
     it_behaves_like "not owner of dossier", :show
 
     describe 'before_action authorized_routes?' do
-      context 'when dossier have draft state' do
+      context 'when dossier have brouillon state' do
         before do
-          dossier.state = 'draft'
+          dossier.state = 'brouillon'
           dossier.save
 
           get :show, params: {dossier_id: dossier.id}
@@ -41,12 +41,12 @@ describe Users::RecapitulatifController, type: :controller do
         post :initiate, params: {dossier_id: dossier.id}
       end
 
-      it 'dossier change his state for closed' do
+      it 'dossier change his state for accepte' do
         dossier.reload
-        expect(dossier.state).to eq('initiated')
+        expect(dossier.state).to eq('en_construction')
       end
 
-      it 'a message informe user what his dossier is initiated' do
+      it 'a message informe user what his dossier is en_construction' do
         expect(flash[:notice]).to include('Dossier soumis avec succès.')
       end
     end

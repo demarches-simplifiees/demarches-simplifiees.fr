@@ -7,8 +7,8 @@ describe Backoffice::DossiersController, type: :controller do
   let(:procedure) { create :procedure, :published }
   let(:procedure2) { create :procedure, :published }
 
-  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :initiated) }
-  let(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure2, state: :initiated) }
+  let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_construction) }
+  let(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure2, state: :en_construction) }
   let(:dossier_archived) { create(:dossier, :with_entreprise, archived: true) }
 
   let(:dossier_id) { dossier.id }
@@ -222,13 +222,13 @@ describe Backoffice::DossiersController, type: :controller do
 
   describe 'POST #receive' do
     before do
-      dossier.initiated!
+      dossier.en_construction!
       sign_in gestionnaire
       post :receive, params: { dossier_id: dossier_id }
       dossier.reload
     end
 
-    it { expect(dossier.state).to eq('received') }
+    it { expect(dossier.state).to eq('en_instruction') }
     it { is_expected.to redirect_to backoffice_dossier_path(dossier) }
     it { expect(gestionnaire.follow?(dossier)).to be true }
   end
@@ -236,17 +236,17 @@ describe Backoffice::DossiersController, type: :controller do
   describe 'POST #process_dossier' do
     context "with refuse" do
       before do
-        dossier.received!
+        dossier.en_instruction!
         sign_in gestionnaire
       end
 
       subject { post :process_dossier, params: { process_action: "refuse", dossier_id: dossier_id} }
 
-      it 'change state to refused' do
+      it 'change state to refuse' do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('refused')
+        expect(dossier.state).to eq('refuse')
       end
 
       it 'Notification email is sent' do
@@ -260,19 +260,19 @@ describe Backoffice::DossiersController, type: :controller do
       it { is_expected.to redirect_to backoffice_dossier_path(id: dossier.id) }
     end
 
-    context "with without_continuation" do
+    context "with sans_suite" do
       before do
-        dossier.received!
+        dossier.en_instruction!
         sign_in gestionnaire
       end
 
       subject { post :process_dossier, params: { process_action: "without_continuation", dossier_id: dossier_id} }
 
-      it 'change state to without_continuation' do
+      it 'change state to sans_suite' do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('without_continuation')
+        expect(dossier.state).to eq('sans_suite')
       end
 
       it 'Notification email is sent' do
@@ -290,7 +290,7 @@ describe Backoffice::DossiersController, type: :controller do
       let(:expected_attestation) { nil }
 
       before do
-        dossier.received!
+        dossier.en_instruction!
         sign_in gestionnaire
 
         expect(NotificationMailer).to receive(:send_notification)
@@ -302,11 +302,11 @@ describe Backoffice::DossiersController, type: :controller do
 
       subject { post :process_dossier, params: { process_action: "close", dossier_id: dossier_id} }
 
-      it 'change state to closed' do
+      it 'change state to accepte' do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('closed')
+        expect(dossier.state).to eq('accepte')
       end
 
       context 'when the dossier does not have any attestation' do
@@ -354,17 +354,17 @@ describe Backoffice::DossiersController, type: :controller do
 
   describe 'POST #reopen' do
     before do
-      dossier.received!
+      dossier.en_instruction!
       sign_in gestionnaire
     end
 
     subject { post :reopen, params: {dossier_id: dossier_id} }
 
-    it 'change state to initiated' do
+    it 'change state to en_construction' do
       subject
 
       dossier.reload
-      expect(dossier.state).to eq('initiated')
+      expect(dossier.state).to eq('en_construction')
     end
 
     it { is_expected.to redirect_to backoffice_dossier_path(id: dossier_id) }

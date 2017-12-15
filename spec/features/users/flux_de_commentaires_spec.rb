@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'users: flux de commentaires' do
   let(:user) { create(:user) }
-  let(:dossier) { create(:dossier, :with_entreprise, user: user, state: "initiated") }
+  let(:dossier) { create(:dossier, :with_entreprise, user: user, state: "en_construction") }
   let(:dossier_id) { dossier.id }
 
   let(:champ1) { dossier.champs.first }

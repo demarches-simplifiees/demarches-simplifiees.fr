@@ -3,14 +3,14 @@ require 'spec_helper'
 feature 'on click on tabs button' do
   let(:user) { create :user }
 
-  let(:dossier_invite) { create(:dossier, :with_entreprise, user: create(:user), state: 'initiated') }
+  let(:dossier_invite) { create(:dossier, :with_entreprise, user: create(:user), state: 'en_construction') }
 
   before do
-    create(:dossier, :with_entreprise, user: user, state: 'initiated')
-    create(:dossier, :with_entreprise, user: user, state: 'received')
-    create(:dossier, :with_entreprise, user: user, state: 'closed')
-    create(:dossier, :with_entreprise, user: user, state: 'refused')
-    create(:dossier, :with_entreprise, user: user, state: 'without_continuation')
+    create(:dossier, :with_entreprise, user: user, state: 'en_construction')
+    create(:dossier, :with_entreprise, user: user, state: 'en_instruction')
+    create(:dossier, :with_entreprise, user: user, state: 'accepte')
+    create(:dossier, :with_entreprise, user: user, state: 'refuse')
+    create(:dossier, :with_entreprise, user: user, state: 'sans_suite')
 
     create :invite, dossier: dossier_invite, user: user
 

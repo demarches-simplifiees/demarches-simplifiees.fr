@@ -59,7 +59,7 @@ class PieceJustificative < ActiveRecord::Base
   private
 
   def internal_notification
-    unless self.type_de_piece_justificative.nil? && dossier.state == 'draft'
+    unless self.type_de_piece_justificative.nil? && dossier.state == 'brouillon'
       NotificationService.new('piece_justificative', self.dossier.id, self.libelle).notify
     end
   end

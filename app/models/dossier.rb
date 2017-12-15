@@ -1,19 +1,19 @@
 class Dossier < ActiveRecord::Base
   enum state: {
-    draft:                'draft',
-    initiated:            'initiated',
-    received:             'received',
-    closed:               'closed',
-    refused:              'refused',
-    without_continuation: 'without_continuation'
+    brouillon:       'brouillon',
+    en_construction: 'en_construction',
+    en_instruction:  'en_instruction',
+    accepte:         'accepte',
+    refuse:          'refuse',
+    sans_suite:      'sans_suite'
   }
 
-  BROUILLON = %w(draft)
-  NOUVEAUX = %w(initiated)
-  EN_CONSTRUCTION = %w(initiated)
-  EN_INSTRUCTION = %w(received)
+  BROUILLON = %w(brouillon)
+  NOUVEAUX = %w(en_construction)
+  EN_CONSTRUCTION = %w(en_construction)
+  EN_INSTRUCTION = %w(en_instruction)
   EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
-  TERMINE = %w(closed refused without_continuation)
+  TERMINE = %w(accepte refuse sans_suite)
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy
@@ -58,7 +58,7 @@ class Dossier < ActiveRecord::Base
   scope :nouveaux,                    -> { not_archived.state_nouveaux }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
-  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:entreprise, :etablissement, :champs, :champs_private).order(initiated_at: 'asc') }
+  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:entreprise, :etablissement, :champs, :champs_private).order(en_construction_at: 'asc') }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :with_unread_notifications,   -> { where(notifications: { already_read: false }) }
@@ -157,18 +157,18 @@ class Dossier < ActiveRecord::Base
     when 'user'
       case action
       when 'initiate'
-        if draft?
-          initiated!
+        if brouillon?
+          en_construction!
         end
       end
     when 'gestionnaire'
       case action
       when 'close'
-        if received?
+        if en_instruction?
           self.attestation = build_attestation
           save
 
-          closed!
+          accepte!
 
           if motivation
             self.motivation = motivation
@@ -176,8 +176,8 @@ class Dossier < ActiveRecord::Base
           end
         end
       when 'refuse'
-        if received?
-          refused!
+        if en_instruction?
+          refuse!
 
           if motivation
             self.motivation = motivation
@@ -185,8 +185,8 @@ class Dossier < ActiveRecord::Base
           end
         end
       when 'without_continuation'
-        if received?
-          without_continuation!
+        if en_instruction?
+          sans_suite!
 
           if motivation
             self.motivation = motivation
@@ -283,7 +283,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def read_only?
-    received? || closed? || refused? || without_continuation?
+    en_instruction? || accepte? || refuse? || sans_suite?
   end
 
   def owner? email
@@ -294,8 +294,8 @@ class Dossier < ActiveRecord::Base
     (invites_user.pluck :email).include? email
   end
 
-  def can_be_initiated?
-    !(procedure.archivee? && draft?)
+  def can_be_en_construction?
+    !(procedure.archivee? && brouillon?)
   end
 
   def text_summary
@@ -309,7 +309,7 @@ class Dossier < ActiveRecord::Base
     else
       parts = [
         "Dossier déposé le ",
-        initiated_at.localtime.strftime("%d/%m/%Y"),
+        en_construction_at.localtime.strftime("%d/%m/%Y"),
         " sur la procédure ",
         procedure.libelle,
         " gérée par l'organisme ",
@@ -364,11 +364,11 @@ class Dossier < ActiveRecord::Base
   end
 
   def statut
-    if closed?
+    if accepte?
       'accepté'
-    elsif without_continuation?
+    elsif sans_suite?
       'classé sans suite'
-    elsif refused?
+    elsif refuse?
       'refusé'
     end
   end
@@ -388,10 +388,10 @@ class Dossier < ActiveRecord::Base
   end
 
   def update_state_dates
-    if initiated? && !self.initiated_at
-      self.initiated_at = DateTime.now
-    elsif received? && !self.received_at
-      self.received_at = DateTime.now
+    if en_construction? && !self.en_construction_at
+      self.en_construction_at = DateTime.now
+    elsif en_instruction? && !self.en_instruction_at
+      self.en_instruction_at = DateTime.now
     elsif TERMINE.include?(state)
       self.processed_at = DateTime.now
     end

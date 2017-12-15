@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'users/recapitulatif/show.html.haml', type: :view do
   let(:dossier) { create(:dossier, :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto, :with_two_type_de_piece_justificative, for_individual: true, individual_with_siret: true)) }
   let(:dossier_id) { dossier.id }
-  let(:state) { 'draft' }
+  let(:state) { 'brouillon' }
 
   before do
     sign_in dossier.user
@@ -59,8 +59,8 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
     end
 
-    context 'when dossier state is initiated' do
-      let(:state) { 'initiated' }
+    context 'when dossier state is en_construction' do
+      let(:state) { 'en_construction' }
       before do
         render
       end

@@ -5,7 +5,7 @@ feature 'The gestionnaire part' do
   let!(:gestionnaire) { create(:gestionnaire, password: password) }
 
   let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
-  let!(:dossier) { create(:dossier, state: :initiated, procedure: procedure) }
+  let!(:dossier) { create(:dossier, state: :en_construction, procedure: procedure) }
 
   scenario 'A gestionnaire can accept a dossier' do
     log_in(gestionnaire.email, password)
@@ -21,7 +21,7 @@ feature 'The gestionnaire part' do
 
     click_on 'Passer en instruction'
     dossier.reload
-    expect(dossier.state).to eq('received')
+    expect(dossier.state).to eq('en_instruction')
 
     within('.accept.motivation') do
       fill_in('dossier_motivation', with: 'a good reason')
@@ -29,7 +29,7 @@ feature 'The gestionnaire part' do
     end
 
     dossier.reload
-    expect(dossier.state).to eq('closed')
+    expect(dossier.state).to eq('accepte')
     expect(dossier.motivation).to eq('a good reason')
   end
 

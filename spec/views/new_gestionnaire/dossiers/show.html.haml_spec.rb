@@ -4,7 +4,7 @@ describe 'new_gestionnaire/dossiers/show.html.haml', type: :view do
   let(:current_gestionnaire) { create(:gestionnaire) }
   let(:individual) { nil }
   let(:entreprise) { nil }
-  let(:dossier) { create(:dossier, :initiated, entreprise: entreprise, individual: individual) }
+  let(:dossier) { create(:dossier, :en_construction, entreprise: entreprise, individual: individual) }
 
   before do
     assign(:dossier, dossier)
