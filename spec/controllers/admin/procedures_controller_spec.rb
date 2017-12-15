@@ -499,14 +499,15 @@ describe Admin::ProceduresController, type: :controller do
     end
 
     context "when procedure is owned by administrateur" do
-      let!(:procedure) { create :procedure, administrateur: admin }
+      let!(:procedure) { create :procedure, :published, administrateur: admin }
 
       before do
          subject
          procedure.reload
        end
 
-      it { expect(procedure.hidden_at).to_not eq nil }
+      it { expect(procedure.hidden_at).not_to be_nil }
+      it { expect(procedure.procedure_path).to be_nil }
     end
   end
 end
