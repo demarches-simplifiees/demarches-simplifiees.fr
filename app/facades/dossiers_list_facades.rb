@@ -21,14 +21,6 @@ class DossiersListFacades
     @current_devise_profil.followed_dossiers.count
   end
 
-  def total_new_dossier
-    current_devise_profil.dossiers.state_nouveaux.not_archived.count
-  end
-
-  def new_dossier_number procedure_id
-    current_devise_profil.dossiers.state_nouveaux.not_archived.where(procedure_id: procedure_id).count
-  end
-
   def gestionnaire_procedures_name_and_id_list
     @current_devise_profil.procedures.order('libelle ASC').inject([]) { |acc, procedure| acc.push({id: procedure.id, libelle: procedure.libelle, unread_notifications: @current_devise_profil.dossiers_with_notifications_count_for_procedure(procedure)}) }
   end

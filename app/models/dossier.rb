@@ -8,11 +8,7 @@ class Dossier < ActiveRecord::Base
     sans_suite:      'sans_suite'
   }
 
-  BROUILLON = %w(brouillon)
-  NOUVEAUX = %w(en_construction)
-  EN_CONSTRUCTION = %w(en_construction)
-  EN_INSTRUCTION = %w(en_instruction)
-  EN_CONSTRUCTION_OU_INSTRUCTION = EN_CONSTRUCTION + EN_INSTRUCTION
+  EN_CONSTRUCTION_OU_INSTRUCTION = %w(en_construction en_instruction)
   TERMINE = %w(accepte refuse sans_suite)
 
   has_one :etablissement, dependent: :destroy
@@ -41,11 +37,10 @@ class Dossier < ActiveRecord::Base
   accepts_nested_attributes_for :champs_private
 
   default_scope { where(hidden_at: nil) }
-  scope :state_brouillon,                      -> { where(state: BROUILLON) }
-  scope :state_not_brouillon,                  -> { where.not(state: BROUILLON) }
-  scope :state_nouveaux,                       -> { where(state: NOUVEAUX) }
-  scope :state_en_construction,                -> { where(state: EN_CONSTRUCTION) }
-  scope :state_en_instruction,                 -> { where(state: EN_INSTRUCTION) }
+  scope :state_brouillon,                      -> { where(state: 'brouillon') }
+  scope :state_not_brouillon,                  -> { where.not(state: 'brouillon') }
+  scope :state_en_construction,                -> { where(state: 'en_construction') }
+  scope :state_en_instruction,                 -> { where(state: 'en_instruction') }
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
   scope :state_termine,                        -> { where(state: TERMINE) }
 
@@ -55,7 +50,7 @@ class Dossier < ActiveRecord::Base
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
 
   scope :all_state,                   -> { not_archived.state_not_brouillon }
-  scope :nouveaux,                    -> { not_archived.state_nouveaux }
+  scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
   scope :downloadable_sorted,         -> { state_not_brouillon.includes(:entreprise, :etablissement, :champs, :champs_private).order(en_construction_at: 'asc') }
@@ -142,18 +137,6 @@ class Dossier < ActiveRecord::Base
 
   def ordered_pieces_justificatives
     champs.joins(', types_de_piece_justificative').where("pieces_justificatives.type_de_piece_justificative_id = types_de_piece_justificative.id AND types_de_piece_justificative.procedure_id = #{procedure.id}").order('order_place ASC')
-  end
-
-  def brouillon?
-    BROUILLON.include?(state)
-  end
-
-  def en_construction?
-    EN_CONSTRUCTION.include?(state)
-  end
-
-  def en_instruction?
-    EN_INSTRUCTION.include?(state)
   end
 
   def en_construction_ou_instruction?
@@ -347,7 +330,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def send_dossier_received
-    if state_changed? && EN_INSTRUCTION.include?(state)
+    if state_changed? && en_instruction?
       NotificationMailer.send_dossier_received(id).deliver_later
     end
   end
