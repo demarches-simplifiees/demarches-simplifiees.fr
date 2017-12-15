@@ -23,7 +23,7 @@
       = form_for @dossier, url: '', html: { class: 'form' } do |f|
         = f.fields_for :champs do |champ_form|
           - champ = champ_form.object
-          = render partial: "new_gestionnaire/dossiers/champs/champ",
+          = render partial: "new_gestionnaire/dossiers/editable_champs/editable_champ",
             locals: { champ: champ, form: champ_form, seen_at: nil }
 
         %input{ type: "password", value: "12345678" }
