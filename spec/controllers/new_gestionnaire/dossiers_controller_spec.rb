@@ -32,7 +32,6 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   describe '#follow' do
     before do
-      expect_any_instance_of(Dossier).to receive(:next_step!).with('gestionnaire', 'follow')
       patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
     end
 

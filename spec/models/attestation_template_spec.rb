@@ -209,16 +209,16 @@ describe AttestationTemplate, type: :model do
         end
 
         context 'and their value in the dossier are not nil' do
-          before :each do
+          before do
             dossier.champs
               .select { |champ| champ.libelle == 'libelleA' }
               .first
-              .value = 'libelle1'
+              .update_attributes(value: 'libelle1')
 
             dossier.champs
               .select { |champ| champ.libelle == 'libelleB' }
               .first
-              .value = 'libelle2'
+              .update_attributes(value: 'libelle2')
           end
 
           it { expect(view_args[:title]).to eq('title libelle1') }
@@ -245,12 +245,7 @@ describe AttestationTemplate, type: :model do
         let(:template_title) { 'title --libelleA--' }
 
         context 'and its value in the dossier are not nil' do
-          before :each do
-            dossier.champs_private
-              .select { |champ| champ.libelle == 'libelleA' }
-              .first
-              .value = 'libelle1'
-          end
+          before { dossier.champs_private.first.update_attributes(value: 'libelle1') }
 
           it { expect(view_args[:title]).to eq('title libelle1') }
         end
@@ -267,16 +262,16 @@ describe AttestationTemplate, type: :model do
         let(:template_title) { 'title --date-- --datetime--' }
 
         context 'and its value in the dossier are not nil' do
-          before :each do
+          before do
             dossier.champs
               .select { |champ| champ.type_champ == 'date' }
               .first
-              .value = '2017-04-15'
+              .update_attributes(value: '2017-04-15')
 
             dossier.champs
               .select { |champ| champ.type_champ == 'datetime' }
               .first
-              .value = '13/09/2017 09:00'
+              .update_attributes(value: '13/09/2017 09:00')
           end
 
           it { expect(view_args[:title]).to eq('title 15/04/2017 13/09/2017 09:00') }
@@ -285,11 +280,7 @@ describe AttestationTemplate, type: :model do
     end
 
     context "match breaking and non breaking spaces" do
-      before do
-        c = dossier.champs.first
-        c.value = 'valeur'
-        c.save
-      end
+      before { dossier.champs.first.update_attributes(value: 'valeur') }
 
       context "when the tag contains a non breaking space" do
         let(:template_body) { 'body --mon tag--' }

@@ -3,7 +3,7 @@
     .count= current_gestionnaire.followed_dossiers.count
     .text SUIVIS
   .nouveaux-dossiers
-    .count= current_gestionnaire.dossiers.nouveaux.count
+    .count= current_gestionnaire.dossiers.en_construction.count
     .text NOUVEAUX
   .nouvelles-notifications
     .count= current_gestionnaire.dossiers_with_notifications_count
@@ -28,7 +28,7 @@
       = link_to backoffice_dossiers_procedure_path(procedure.id), { title: procedure.libelle } do
         .procedure-list-element{ class: ('active' if procedure.id.to_s == params[:id]) }
           = procedure.libelle.truncate(50)
-          - total_new = procedure.dossiers.nouveaux.count
+          - total_new = procedure.dossiers.en_construction.count
           - if total_new > 0
             .badge.progress-bar-success{ title: 'Nouveaux dossiers' }
               = total_new
