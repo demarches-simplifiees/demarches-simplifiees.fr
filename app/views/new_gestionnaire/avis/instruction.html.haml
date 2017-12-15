@@ -1,7 +1,6 @@
 - content_for(:title, "Avis · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
 
-#avis-show
-  = render partial: 'header', locals: { avis: @avis, dossier: @dossier }
+= render partial: 'header', locals: { avis: @avis, dossier: @dossier }
 
 .container
   %section.give-avis
