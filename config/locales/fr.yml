@@ -93,7 +93,7 @@ fr:
         attestation_template:
           attributes:
             footer:
-              too_long: ": l'adresse en bas de page est trop longue."
+              too_long: ": le pied de page est trop long."
         piece_justificative:
           attributes:
             content:
