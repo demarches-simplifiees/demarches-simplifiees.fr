@@ -14,4 +14,26 @@ module DossierHelper
       "highlighted"
     end
   end
+
+  def text_summary(dossier)
+    if dossier.brouillon?
+      parts = [
+        "Dossier en brouillon répondant à la procédure ",
+        dossier.procedure.libelle,
+        " gérée par l'organisme ",
+        dossier.procedure.organisation
+      ]
+    else
+      parts = [
+        "Dossier déposé le ",
+        dossier.en_construction_at.localtime.strftime("%d/%m/%Y"),
+        " sur la procédure ",
+        dossier.procedure.libelle,
+        " gérée par l'organisme ",
+        dossier.procedure.organisation
+      ]
+    end
+
+    parts.join
+  end
 end

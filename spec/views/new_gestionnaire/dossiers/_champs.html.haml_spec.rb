@@ -31,7 +31,7 @@ describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
     it { is_expected.not_to include(champ3.value) }
 
     it { is_expected.to have_link("Dossier nº #{dossier.id}") }
-    it { is_expected.to include(dossier.text_summary) }
+    it { is_expected.to include(text_summary(dossier)) }
   end
 
   context "with a dossier champ, but we are not authorized to acces the dossier" do
@@ -41,7 +41,7 @@ describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
 
     it { is_expected.not_to have_link("Dossier nº #{dossier.id}") }
     it { is_expected.to include("Dossier nº #{dossier.id}") }
-    it { is_expected.to include(dossier.text_summary) }
+    it { is_expected.to include(text_summary(dossier)) }
   end
 
   context "with a dossier_link champ but without value" do
