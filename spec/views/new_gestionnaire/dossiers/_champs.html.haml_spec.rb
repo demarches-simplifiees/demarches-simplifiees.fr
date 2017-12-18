@@ -1,10 +1,10 @@
 describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
+  helper(ChampHelper, DossierHelper, DossierLinkHelper)
+
   let(:gestionnaire) { create(:gestionnaire) }
   let(:demande_seen_at) { nil }
 
   before do
-    view.extend DossierHelper
-    view.extend DossierLinkHelper
     allow(view).to receive(:current_gestionnaire).and_return(gestionnaire)
   end
 
@@ -13,8 +13,8 @@ describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
   context "there are some champs" do
     let(:dossier) { create(:dossier) }
     let(:avis) { create :avis, dossier: dossier, gestionnaire: gestionnaire }
-    let(:champ1) { create(:champ, :checkbox, value: "true") }
-    let(:champ2) { create(:champ, :header_section, value: "Section") }
+    let(:champ1) { create(:champ, :checkbox, value: "on") }
+    let(:champ2) { create(:champ, :header_section) }
     let(:champ3) { create(:champ, :explication, value: "mazette") }
     let(:champ4) { create(:champ, :dossier_link, value: dossier.id) }
     let(:champs) { [champ1, champ2, champ3, champ4] }
@@ -22,7 +22,7 @@ describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
     before { dossier.avis << avis }
 
     it { is_expected.to include(champ1.libelle) }
-    it { is_expected.to include(champ1.value) }
+    it { is_expected.to include("Oui") }
 
     it { is_expected.to have_css(".header-section") }
     it { is_expected.to include(champ2.libelle) }

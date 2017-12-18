@@ -1,5 +1,5 @@
 describe 'new_gestionnaire/dossiers/show.html.haml', type: :view do
-  helper(DossierHelper, EntrepriseHelper)
+  helper(ChampHelper, DossierHelper, EntrepriseHelper)
 
   let(:current_gestionnaire) { create(:gestionnaire) }
   let(:individual) { nil }
