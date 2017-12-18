@@ -166,7 +166,7 @@ class Users::DossiersController < UsersController
 
   def text_summary
     dossier = Dossier.find(params[:dossier_id])
-    render json: { textSummary: dossier.text_summary }
+    render json: { textSummary: helpers.text_summary(dossier) }
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: 404
   end

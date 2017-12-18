@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe 'users/description/champs/dossier_link.html.haml', type: :view do
+  helper(DossierHelper)
+
   let(:type_champ) { create(:type_de_champ_public, type_champ: :dossier_link) }
 
   before do

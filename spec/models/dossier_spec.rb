@@ -420,26 +420,6 @@ describe Dossier do
     end
   end
 
-  describe "#text_summary" do
-    let(:procedure) { create(:procedure, libelle: "Procédure", organisation: "Organisme") }
-
-    context 'when the dossier has been en_construction' do
-      let(:dossier) { create :dossier, procedure: procedure, state: 'en_construction', en_construction_at: "31/12/2010".to_date }
-
-      subject { dossier.text_summary }
-
-      it { is_expected.to eq("Dossier déposé le 31/12/2010 sur la procédure Procédure gérée par l'organisme Organisme") }
-    end
-
-    context 'when the dossier has not been en_construction' do
-      let(:dossier) { create :dossier, procedure: procedure, state: 'brouillon' }
-
-      subject { dossier.text_summary }
-
-      it { is_expected.to eq("Dossier en brouillon répondant à la procédure Procédure gérée par l'organisme Organisme") }
-    end
-  end
-
   describe '#avis_for' do
     let!(:procedure) { create(:procedure, :published) }
     let!(:dossier) { create(:dossier, procedure: procedure, state: :en_construction) }

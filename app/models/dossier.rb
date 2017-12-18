@@ -228,28 +228,6 @@ class Dossier < ActiveRecord::Base
     !(procedure.archivee? && brouillon?)
   end
 
-  def text_summary
-    if brouillon?
-      parts = [
-        "Dossier en brouillon répondant à la procédure ",
-        procedure.libelle,
-        " gérée par l'organisme ",
-        procedure.organisation
-      ]
-    else
-      parts = [
-        "Dossier déposé le ",
-        en_construction_at.localtime.strftime("%d/%m/%Y"),
-        " sur la procédure ",
-        procedure.libelle,
-        " gérée par l'organisme ",
-        procedure.organisation
-      ]
-    end
-
-    parts.join
-  end
-
   def avis_for(gestionnaire)
     if gestionnaire.dossiers.include?(self)
       avis.order(created_at: :asc)
