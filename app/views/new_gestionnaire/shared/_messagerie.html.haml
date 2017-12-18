@@ -2,6 +2,6 @@
   %ul.messages-list
     - dossier.commentaires.each do |commentaire|
       %li{ class: commentaire_is_from_me_class(commentaire, current_gestionnaire.email) }
-        = render partial: "new_gestionnaire/shared/commentaires/commentaire", locals: { commentaire: commentaire, messagerie_seen_at: messagerie_seen_at }
+        = render partial: "new_gestionnaire/shared/messages/message", locals: { commentaire: commentaire, messagerie_seen_at: messagerie_seen_at }
 
-  = render partial: "new_gestionnaire/shared/commentaires/form", locals: { commentaire: new_commentaire, form_url: form_url }
+  = render partial: "new_gestionnaire/shared/messages/form", locals: { commentaire: new_commentaire, form_url: form_url }
