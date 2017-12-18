@@ -50,21 +50,6 @@ class Champ < ActiveRecord::Base
     JSON.parse(Carto::GeoAPI::Driver.pays).pluck("nom")
   end
 
-  def to_s
-    if value.present?
-      case type_champ
-      when 'date'
-        Date.parse(value).strftime('%d/%m/%Y')
-      when 'multiple_drop_down_list'
-        drop_down_list.selected_options_without_decorator(self).join(', ')
-      else
-        value.to_s
-      end
-    else
-      ''
-    end
-  end
-
   def for_export
     if value.present?
       case type_champ
