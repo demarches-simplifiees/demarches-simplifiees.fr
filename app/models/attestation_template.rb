@@ -11,14 +11,15 @@ class AttestationTemplate < ApplicationRecord
 
   FILE_MAX_SIZE_IN_MB = 0.5
 
-  def tags
+  def tags(reject_legacy: true)
     if procedure.for_individual?
       identity_tags = individual_tags
     else
       identity_tags = entreprise_tags + etablissement_tags
     end
 
-    identity_tags + dossier_tags + procedure_type_de_champ_public_private_tags
+    tags = identity_tags + dossier_tags + procedure_type_de_champ_public_private_tags
+    tags.reject { |tag| reject_legacy and tag[:is_legacy] }
   end
 
   def attestation_for(dossier)
@@ -60,7 +61,8 @@ class AttestationTemplate < ApplicationRecord
 
   def dossier_tags
     [{ libelle: 'motivation', description: '', target: 'motivation' },
-     { libelle: 'numéro du dossier', description: '', target: 'id' }]
+     { libelle: 'numéro du dossier', description: '', target: 'id' },
+     { libelle: 'numero_dossier', description:  '', target: 'id', is_legacy: true }]
   end
 
   def individual_tags
