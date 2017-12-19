@@ -1,7 +1,7 @@
-describe 'new_gestionnaire/shared/commentaires/commentaire.html.haml', type: :view do
+describe 'new_gestionnaire/shared/messages/message.html.haml', type: :view do
   before { view.extend DossierHelper }
 
-  subject { render 'new_gestionnaire/shared/commentaires/commentaire.html.haml', commentaire: commentaire, messagerie_seen_at: seen_at, current_gestionnaire: current_gestionnaire }
+  subject { render 'new_gestionnaire/shared/messages/message.html.haml', commentaire: commentaire, messagerie_seen_at: seen_at, current_gestionnaire: current_gestionnaire }
 
   let(:dossier) { create(:dossier) }
   let(:commentaire) { create(:commentaire, dossier: dossier) }

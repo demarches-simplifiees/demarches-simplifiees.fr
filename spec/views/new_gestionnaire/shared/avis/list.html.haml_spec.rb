@@ -1,7 +1,7 @@
-describe 'new_gestionnaire/avis/avis_list.html.haml', type: :view do
+describe 'new_gestionnaire/shared/avis/_list.html.haml', type: :view do
   before { view.extend DossierHelper }
 
-  subject { render 'new_gestionnaire/avis/avis_list.html.haml', avis: avis, avis_seen_at: seen_at, current_gestionnaire: gestionnaire }
+  subject { render 'new_gestionnaire/shared/avis/list.html.haml', avis: avis, avis_seen_at: seen_at, current_gestionnaire: gestionnaire }
 
   let(:gestionnaire) { create(:gestionnaire) }
   let(:avis) { [create(:avis, claimant: gestionnaire)] }

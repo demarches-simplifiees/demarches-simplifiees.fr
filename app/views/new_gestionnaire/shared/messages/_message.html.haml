@@ -1,9 +1,9 @@
-= render partial: 'new_gestionnaire/shared/commentaires/commentaire_icon', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
+= render partial: 'new_gestionnaire/shared/messages/message_icon', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
 
 .width-100
   %h2
     %span.mail
-      = render partial: 'new_gestionnaire/shared/commentaires/commentaire_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
+      = render partial: 'new_gestionnaire/shared/messages/message_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
     - if ![current_gestionnaire.email, commentaire.dossier.user.email, 'contact@tps.apientreprise.fr'].include?(commentaire.email)
       %span.guest Invité
     %span.date{ class: highlight_if_unseen_class(messagerie_seen_at, commentaire.created_at) }

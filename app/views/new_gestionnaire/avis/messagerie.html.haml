@@ -2,10 +2,4 @@
 
 = render partial: 'header', locals: { avis: @avis, dossier: @dossier }
 
-.messagerie.container
-  %ul.messages-list
-    - @dossier.commentaires.each do |commentaire|
-      %li{ class: commentaire_is_from_me_class(commentaire, current_gestionnaire.email) }
-        = render partial: "new_gestionnaire/shared/commentaires/commentaire", locals: { commentaire: commentaire, messagerie_seen_at: nil }
-
-  = render partial: "new_gestionnaire/shared/commentaires/form", locals: { commentaire: @commentaire, form_url: commentaire_avis_path(@avis) }
+= render partial: "new_gestionnaire/shared/messagerie", locals: { dossier: @dossier, messagerie_seen_at: nil, new_commentaire: @commentaire, form_url: commentaire_avis_path(@avis) }
