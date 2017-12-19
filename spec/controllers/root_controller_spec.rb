@@ -13,27 +13,20 @@ describe RootController, type: :controller do
 
   context 'when Gestionnaire is connected' do
     let(:gestionnaire) { create(:gestionnaire) }
+    let(:procedure) { create(:procedure, :published) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     before do
+      gestionnaire.procedures << procedure
       sign_in gestionnaire
     end
 
-    context 'when gestionnaire is affect to a procedure' do
-      before do
-        create :assign_to, procedure: (create :procedure, :published), gestionnaire: gestionnaire
-      end
+    it { expect(subject).to redirect_to(procedures_path) }
 
-      it { expect(subject).to redirect_to(backoffice_dossiers_procedure_path(id: Procedure.all.first.id)) }
-    end
+    context 'and coming with old_ui param' do
+      subject { get :index, params: { old_ui: 1 } }
 
-    context 'when gestionnaire is not affect to a procedure' do
-      render_views
-
-      before do
-        subject
-      end
-
-      it { expect(response.body).to have_css('.landing') }
+      it { expect(subject).to redirect_to(backoffice_path) }
     end
   end
 

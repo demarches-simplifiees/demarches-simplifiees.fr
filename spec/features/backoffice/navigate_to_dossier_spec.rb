@@ -22,6 +22,7 @@ feature 'on backoffice page', js: true do
       page.find_by_id(:user_email).set gestionnaire.email
       page.find_by_id(:user_password).set gestionnaire.password
       page.click_on 'Se connecter'
+      page.click_on 'Ancienne interface'
     end
     context 'when he click on first dossier' do
       before do
