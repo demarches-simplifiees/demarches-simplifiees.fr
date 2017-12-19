@@ -6,24 +6,24 @@ module MailTemplateConcern
 
   TAGS = []
   TAGS << TAG_NUMERO_DOSSIER = {
-    name:         "numero_dossier",
-    description:  "Permet d'afficher le numéro de dossier de l'utilisateur."
+    libelle:     "numero_dossier",
+    description: "Permet d'afficher le numéro de dossier de l'utilisateur."
   }
   TAGS << TAG_LIEN_DOSSIER = {
-    name:         "lien_dossier",
-    description:  "Permet d'afficher un lien vers le dossier de l'utilisateur."
+    libelle:     "lien_dossier",
+    description: "Permet d'afficher un lien vers le dossier de l'utilisateur."
   }
   TAGS << TAG_LIBELLE_PROCEDURE = {
-    name:         "libelle_procedure",
-    description:  "Permet d'afficher le libellé de la procédure."
+    libelle:     "libelle_procedure",
+    description: "Permet d'afficher le libellé de la procédure."
   }
   TAGS << TAG_DATE_DE_DECISION = {
-    name:         "date_de_decision",
-    description:  "Permet d'afficher la date à laquelle la décision finale (acceptation, refus, classement sans suite) sur le dossier a été prise."
+    libelle:     "date_de_decision",
+    description: "Permet d'afficher la date à laquelle la décision finale (acceptation, refus, classement sans suite) sur le dossier a été prise."
   }
   TAGS << TAG_MOTIVATION = {
-    name:         "motivation",
-    description:  "Permet d'afficher la motivation associée à la décision finale (acceptation, refus, classement sans suite) sur le dossier. Attention, elle est facultative."
+    libelle:     "motivation",
+    description: "Permet d'afficher la motivation associée à la décision finale (acceptation, refus, classement sans suite) sur le dossier. Attention, elle est facultative."
   }
 
   def object_for_dossier(dossier)
@@ -36,7 +36,7 @@ module MailTemplateConcern
 
   def replace_tags(string, dossier)
     TAGS.inject(string) do |acc, tag|
-      acc.gsub("--#{tag[:name]}--", replace_tag(tag, dossier)) || acc
+      acc.gsub("--#{tag[:libelle]}--", replace_tag(tag, dossier)) || acc
     end
   end
 
