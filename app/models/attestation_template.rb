@@ -1,5 +1,7 @@
 class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
+  include Rails.application.routes.url_helpers
+  include ActionView::Helpers::UrlHelper
 
   belongs_to :procedure
 
@@ -18,7 +20,7 @@ class AttestationTemplate < ApplicationRecord
       identity_tags = entreprise_tags + etablissement_tags
     end
 
-    tags = identity_tags + dossier_tags + procedure_type_de_champ_public_private_tags
+    tags = identity_tags + dossier_tags + lambda_tags + procedure_type_de_champ_public_private_tags
     tags.reject { |tag| reject_legacy and tag[:is_legacy] }
   end
 
@@ -60,9 +62,12 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def dossier_tags
-    [{ libelle: 'motivation', description: '', target: 'motivation' },
-     { libelle: 'numéro du dossier', description: '', target: 'id' },
-     { libelle: 'numero_dossier', description:  '', target: 'id', is_legacy: true }]
+    [{ libelle: 'numéro du dossier', description: '', target: 'id' },
+     # TODO remove legacy tag after data migration
+     { libelle: 'numero_dossier', description: '', target: 'id', is_legacy: true },
+     { libelle: 'motivation',
+       description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
+       target: 'motivation' }]
   end
 
   def individual_tags
@@ -80,6 +85,17 @@ class AttestationTemplate < ApplicationRecord
 
   def etablissement_tags
     [{ libelle: 'adresse', description: '', target: 'inline_adresse' }]
+  end
+
+  def lambda_tags
+    [{ libelle: 'date_de_decision', description: '', is_legacy: true ,
+       lambda: -> (d) { d.processed_at.present? ? d.processed_at.localtime.strftime('%d/%m/%Y') : '' } },
+     { libelle: 'libelle_procedure', description: '', lambda: -> (d) { d.procedure.libelle }, is_legacy: true },
+     { libelle: 'lien_dossier', description: '', lambda: -> (d) { format_link(users_dossier_recapitulatif_url(d)) }, is_legacy: true }]
+  end
+
+  def format_link(url)
+    url
   end
 
   def build_pdf(dossier)
@@ -114,6 +130,8 @@ class AttestationTemplate < ApplicationRecord
 
     text = replace_type_de_champ_tags(text, procedure.types_de_champ, dossier.champs)
     text = replace_type_de_champ_tags(text, procedure.types_de_champ_private, dossier.champs_private)
+
+    text = lambda_tags.inject(text) { |acc, tag | replace_tag(acc, tag, tag[:lambda].(dossier)) }
 
     tags_and_datas = [
       [dossier_tags, dossier],

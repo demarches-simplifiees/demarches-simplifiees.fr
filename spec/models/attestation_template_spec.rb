@@ -92,6 +92,7 @@ describe AttestationTemplate, type: :model do
   describe 'attestation_for' do
     let(:procedure) do
       create(:procedure,
+        libelle: 'Une magnifique procédure',
         types_de_champ: types_de_champ,
         types_de_champ_private: types_de_champ_private,
         for_individual: for_individual)
@@ -277,6 +278,32 @@ describe AttestationTemplate, type: :model do
           it { expect(view_args[:title]).to eq('title 15/04/2017 13/09/2017 09:00') }
         end
       end
+    end
+
+    context "when the template has a libellé procédure tag" do
+      let(:template_body) { 'body --libelle_procedure--' }
+
+      it { expect(view_args[:body]).to eq('body Une magnifique procédure') }
+    end
+
+    context "when the template has a date de décision tag" do
+      let(:template_body) { 'body --date_de_decision--' }
+
+      context "and the dossier has a date de décision" do
+        let!(:dossier) { create(:dossier, processed_at: DateTime.new(2005, 3, 12), procedure: procedure, individual: individual, entreprise: entreprise) }
+
+        it { expect(view_args[:body]).to eq('body 12/03/2005') }
+      end
+
+      context "and the dossier has no date de décision" do
+        it { expect(view_args[:body]).to eq('body ') }
+      end
+    end
+
+    context "when the template has a lien_dossier tag" do
+      let(:template_body) { '--lien_dossier--' }
+
+      it { expect(view_args[:body]).to include("/users/dossiers/#{dossier.id}/recapitulatif") }
     end
 
     context "match breaking and non breaking spaces" do
