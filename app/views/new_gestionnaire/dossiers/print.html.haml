@@ -91,7 +91,7 @@
   %ul.messages-list
     - @dossier.commentaires.each do |commentaire|
       %li
-        = render partial: "new_gestionnaire/shared/commentaires/commentaire", locals: { commentaire: commentaire, messagerie_seen_at: nil }
+        = render partial: "new_gestionnaire/shared/messages/message", locals: { commentaire: commentaire, messagerie_seen_at: nil }
 
 %script{ type: "text/javascript" }
   window.print();
