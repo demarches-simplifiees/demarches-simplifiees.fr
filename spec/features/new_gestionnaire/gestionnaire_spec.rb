@@ -10,7 +10,6 @@ feature 'The gestionnaire part' do
   scenario 'A gestionnaire can accept a dossier' do
     log_in(gestionnaire.email, password)
 
-    click_on 'nouvelle interface'
     expect(page).to have_current_path(procedures_path)
 
     click_on procedure.libelle
@@ -36,8 +35,6 @@ feature 'The gestionnaire part' do
   scenario 'A gestionnaire can follow/unfollow a dossier' do
     log_in(gestionnaire.email, password)
 
-    click_on 'nouvelle interface'
-
     click_on procedure.libelle
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
     dossier_present?(dossier.id, 'en construction')
@@ -62,7 +59,6 @@ feature 'The gestionnaire part' do
 
     log_in(gestionnaire.email, password)
 
-    click_on 'nouvelle interface'
     click_on procedure.libelle
     click_on dossier.user.email
 
@@ -79,7 +75,6 @@ feature 'The gestionnaire part' do
 
     avis_sign_up(avis, expert_email, 'a good password')
 
-    click_on 'nouvelle interface'
     expect(page).to have_current_path(avis_index_path)
     expect(page).to have_text('avis à donner 1')
     expect(page).to have_text('avis donnés 0')
@@ -104,7 +99,6 @@ feature 'The gestionnaire part' do
 
     log_in(gestionnaire.email, password)
 
-    click_on 'nouvelle interface'
     click_on procedure.libelle
     click_on dossier.user.email
     click_on 'Avis externes'
@@ -117,7 +111,6 @@ feature 'The gestionnaire part' do
 
     log_in(gestionnaire.email, password)
 
-    click_on 'nouvelle interface'
     click_on procedure.libelle
     click_on dossier.user.email
 
@@ -143,7 +136,7 @@ feature 'The gestionnaire part' do
     fill_in 'user_email', with: email
     fill_in 'user_password', with: password
     click_on 'Se connecter'
-    expect(page).to have_current_path(backoffice_dossiers_procedure_path(procedure))
+    expect(page).to have_current_path(procedures_path)
   end
 
   def log_out
@@ -178,7 +171,7 @@ feature 'The gestionnaire part' do
     visit avis_sign_up_path(avis, email)
     fill_in 'gestionnaire_password', with: 'a good password'
     click_on 'Créer un compte'
-    expect(page).to have_current_path(backoffice_dossier_path(dossier))
+    expect(page).to have_current_path(avis_index_path)
   end
 
   def dossier_present?(id, statut)

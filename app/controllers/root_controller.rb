@@ -2,32 +2,19 @@ class RootController < ApplicationController
   layout 'new_application'
 
   def index
-    if params[:new_ui] && gestionnaire_signed_in? # TODO delete new_ui when old UI is no longer used
+    # TODO delete new_ui when old UI is no longer used
+    if params[:new_ui].present? && gestionnaire_signed_in?
       return redirect_to procedures_path
-    end
-
-    if administrateur_signed_in?
+    elsif administrateur_signed_in?
       return redirect_to admin_procedures_path
-
     elsif gestionnaire_signed_in?
-      return redirect_to backoffice_invitations_path if current_gestionnaire.avis.any?
-
-      procedure_id = current_gestionnaire.procedure_filter
-      if procedure_id.nil?
-        procedure_list = current_gestionnaire.procedures
-
-        if procedure_list.count > 0
-          return redirect_to backoffice_dossiers_procedure_path(id: procedure_list.first.id)
-        else
-          flash.alert = "Vous n'avez aucune procédure d'affectée"
-        end
-      else
-        return redirect_to backoffice_dossiers_procedure_path(id: procedure_id)
+      # to be removed when old ui is deleted
+      if params[:old_ui].present?
+        return redirect_to backoffice_path
       end
-
+      return redirect_to procedures_path
     elsif user_signed_in?
       return redirect_to users_dossiers_path
-
     elsif administration_signed_in?
       return redirect_to administrations_path
     end

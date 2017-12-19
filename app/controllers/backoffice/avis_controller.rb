@@ -39,7 +39,7 @@ class Backoffice::AvisController < ApplicationController
       sign_in(gestionnaire, scope: :gestionnaire)
       Avis.link_avis_to_gestionnaire(gestionnaire)
       avis = Avis.find(params[:id])
-      redirect_to url_for(backoffice_dossier_path(avis.dossier_id))
+      redirect_to url_for(avis_index_path)
     else
       flash[:alert] = gestionnaire.errors.full_messages
       redirect_to url_for(avis_sign_up_path(params[:id], email))
