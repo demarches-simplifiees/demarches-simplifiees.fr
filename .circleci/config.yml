@@ -133,6 +133,11 @@ workflows:
           requires:
             - build
       - deploy:
+          filters:
+            branches:
+              only:
+                - dev
+                - master
           requires:
             - test
             - lint
