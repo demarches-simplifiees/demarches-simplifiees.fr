@@ -153,4 +153,5 @@ group :development, :test do
 
   # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
   gem 'dotenv-rails'
+  gem 'rspec_junit_formatter'
 end
