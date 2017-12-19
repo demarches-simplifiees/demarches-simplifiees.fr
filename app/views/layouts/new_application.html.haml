@@ -20,10 +20,8 @@
     .page-wrapper{ class: content_for?(:display_footer) ? 'with-footer' : 'nil' }
       = render partial: "layouts/support_navigator_banner"
       = render partial: "layouts/ie_lt_10"
-      #beta{ class:(Rails.env == "production" ? "" : "beta_staging") }
-        - if Rails.env == "production"
-          Beta
-        - else
+      - if Rails.env == "staging"
+        #beta
           Env Test
 
       = render partial: "layouts/new_header"
