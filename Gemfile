@@ -44,6 +44,7 @@ gem 'unicode_utils'
 # Gestion des comptes utilisateurs
 gem 'devise'
 gem 'openid_connect'
+gem 'omniauth-github'
 
 gem 'rest-client'
 
