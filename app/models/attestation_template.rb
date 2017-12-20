@@ -59,25 +59,25 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def dossier_tags
-    [{ libelle: 'motivation', description: '', target: 'motivation' },
-     { libelle: 'numéro du dossier', description: '', target: 'id' }]
+    [{ libelle: 'motivation', description: '', target: :motivation },
+     { libelle: 'numéro du dossier', description: '', target: :id }]
   end
 
   def individual_tags
-    [{ libelle: 'civilité', description: 'M., Mme', target: 'gender' },
-     { libelle: 'nom', description: "nom de l'usager", target: 'nom' },
-     { libelle: 'prénom', description: "prénom de l'usager", target: 'prenom' }]
+    [{ libelle: 'civilité', description: 'M., Mme', target: :gender },
+     { libelle: 'nom', description: "nom de l'usager", target: :nom },
+     { libelle: 'prénom', description: "prénom de l'usager", target: :prenom }]
   end
 
   def entreprise_tags
-    [{ libelle: 'SIREN', description: '', target: 'siren' },
-     { libelle: 'numéro de TVA intracommunautaire', description: '', target: 'numero_tva_intracommunautaire' },
-     { libelle: 'SIRET du siège social', description: '', target: 'siret_siege_social' },
-     { libelle: 'raison sociale', description: '', target: 'raison_sociale' }]
+    [{ libelle: 'SIREN', description: '', target: :siren },
+     { libelle: 'numéro de TVA intracommunautaire', description: '', target: :numero_tva_intracommunautaire },
+     { libelle: 'SIRET du siège social', description: '', target: :siret_siege_social },
+     { libelle: 'raison sociale', description: '', target: :raison_sociale }]
   end
 
   def etablissement_tags
-    [{ libelle: 'adresse', description: '', target: 'inline_adresse' }]
+    [{ libelle: 'adresse', description: '', target: :inline_adresse }]
   end
 
   def build_pdf(dossier)
@@ -135,7 +135,7 @@ class AttestationTemplate < ApplicationRecord
   def replace_tags_with_values_from_data(text, tags, data)
     if data.present?
       tags.inject(text) do |acc, tag|
-        replace_tag(acc, tag, data.send(tag[:target].to_sym))
+        replace_tag(acc, tag, data.send(tag[:target]))
       end
     else
       text
