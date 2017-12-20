@@ -147,67 +147,15 @@ describe AttestationTemplate, type: :model do
       expect(attestation.pdf.filename).to start_with('attestation')
     end
 
-    context 'when the dossier and the procedure has an individual' do
-      let(:for_individual) { true }
-      let(:individual) { Individual.create(nom: 'nom', prenom: 'prenom', gender: 'Mme') }
-
-      context 'and the template title use the individual tags' do
-        let(:template_title) { '--civilité-- --nom-- --prénom--' }
-
-        it { expect(view_args[:title]).to eq('Mme nom prenom') }
-      end
-    end
-
-    context 'when the dossier and the procedure has an entreprise' do
-      let(:for_individual) { false }
-
-      context 'and the template title use the entreprise tags' do
-        let(:template_title) do
-          '--SIREN-- --numéro de TVA intracommunautaire-- --SIRET du siège social-- --raison sociale-- --adresse--'
-        end
-
-        let(:expected_title) do
-          "#{entreprise.siren} #{entreprise.numero_tva_intracommunautaire} #{entreprise.siret_siege_social} #{entreprise.raison_sociale} --adresse--"
-        end
-
-        it { expect(view_args[:title]).to eq(expected_title) }
-
-        context 'and the entreprise has a etablissement with an adresse' do
-          let(:etablissement) { create(:etablissement, adresse: 'adresse') }
-          let(:template_title) { '--adresse--' }
-
-          it { expect(view_args[:title]).to eq(etablissement.inline_adresse) }
-        end
-      end
-    end
-
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
         [create(:type_de_champ_public, libelle: 'libelleA'),
          create(:type_de_champ_public, libelle: 'libelleB')]
       end
 
-      context 'and the template title is nil' do
-        let(:template_title) { nil }
-
-        it { expect(view_args[:title]).to eq('') }
-      end
-
-      context 'and it is not used in the template title nor body' do
-        it { expect(view_args[:title]).to eq('title') }
-        it { expect(view_args[:body]).to eq('body') }
-        it { expect(view_args[:created_at]).to eq(Time.now) }
-        it { expect(view_args[:logo]).to eq(attestation_template.logo) }
-        it { expect(view_args[:signature]).to eq(attestation_template.signature) }
-      end
-
       context 'and the are used in the template title and body' do
         let(:template_title) { 'title --libelleA--' }
         let(:template_body) { 'body --libelleB--' }
-
-        context 'and their value in the dossier are nil' do
-          it { expect(view_args[:title]).to eq('title ') }
-        end
 
         context 'and their value in the dossier are not nil' do
           before do
@@ -227,142 +175,6 @@ describe AttestationTemplate, type: :model do
           it { expect(attestation.title).to eq('title libelle1') }
         end
       end
-    end
-
-    context 'when the dossier has a motivation' do
-      let(:dossier) { create(:dossier, motivation: 'motivation') }
-
-      context 'and the title has some dossier tags' do
-        let(:template_title) { 'title --motivation-- --numéro du dossier--' }
-
-        it { expect(view_args[:title]).to eq("title motivation #{dossier.id}") }
-      end
-    end
-
-    context 'when the procedure has a type de champ prive named libelleA' do
-      let(:types_de_champ_private) { [create(:type_de_champ_private, libelle: 'libelleA')] }
-
-      context 'and the are used in the template title' do
-        let(:template_title) { 'title --libelleA--' }
-
-        context 'and its value in the dossier are not nil' do
-          before { dossier.champs_private.first.update_attributes(value: 'libelle1') }
-
-          it { expect(view_args[:title]).to eq('title libelle1') }
-        end
-      end
-    end
-
-    context 'when the procedure has 2 types de champ date and datetime' do
-      let(:types_de_champ) do
-        [create(:type_de_champ_public, libelle: 'date', type_champ: 'date'),
-         create(:type_de_champ_public, libelle: 'datetime', type_champ: 'datetime')]
-      end
-
-      context 'and the are used in the template title' do
-        let(:template_title) { 'title --date-- --datetime--' }
-
-        context 'and its value in the dossier are not nil' do
-          before do
-            dossier.champs
-              .select { |champ| champ.type_champ == 'date' }
-              .first
-              .update_attributes(value: '2017-04-15')
-
-            dossier.champs
-              .select { |champ| champ.type_champ == 'datetime' }
-              .first
-              .update_attributes(value: '13/09/2017 09:00')
-          end
-
-          it { expect(view_args[:title]).to eq('title 15/04/2017 13/09/2017 09:00') }
-        end
-      end
-    end
-
-    context "when the template has a libellé procédure tag" do
-      let(:template_body) { 'body --libelle_procedure--' }
-
-      it { expect(view_args[:body]).to eq('body Une magnifique procédure') }
-    end
-
-    context "when the template has a date de décision tag" do
-      let(:template_body) { 'body --date_de_decision--' }
-
-      context "and the dossier has a date de décision" do
-        let!(:dossier) { create(:dossier, processed_at: DateTime.new(2005, 3, 12), procedure: procedure, individual: individual, entreprise: entreprise) }
-
-        it { expect(view_args[:body]).to eq('body 12/03/2005') }
-      end
-
-      context "and the dossier has no date de décision" do
-        it { expect(view_args[:body]).to eq('body ') }
-      end
-    end
-
-    context "when the template has a lien_dossier tag" do
-      let(:template_body) { '--lien_dossier--' }
-
-      it { expect(view_args[:body]).to include("/users/dossiers/#{dossier.id}/recapitulatif") }
-    end
-
-    context "match breaking and non breaking spaces" do
-      before { dossier.champs.first.update_attributes(value: 'valeur') }
-
-      shared_examples "treat all kinds of space as equivalent" do
-        context 'and the champ has a non breaking space' do
-          let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'mon tag')] }
-
-          it { expect(view_args[:body]).to eq('body valeur') }
-        end
-
-        context 'and the champ has an ordinary space' do
-          let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'mon tag')] }
-
-          it { expect(view_args[:body]).to eq('body valeur') }
-        end
-      end
-
-      context "when the tag has a non breaking space" do
-        let(:template_body) { 'body --mon tag--' }
-
-        it_behaves_like "treat all kinds of space as equivalent"
-      end
-
-      context "when the tag has an ordinary space" do
-        let(:template_body) { 'body --mon tag--' }
-
-        it_behaves_like "treat all kinds of space as equivalent"
-      end
-    end
-
-    context 'when generating a document for a dossier before closing it' do
-      let(:dossier) { create(:dossier) }
-      let(:template) { '--motivation-- --date de décision--' }
-
-      subject { template_concern.replace_tags(template, dossier, for_closed_dossier: false) }
-
-      it "does not treat motivation and date de decision as tags" do
-        is_expected.to eq('--motivation-- --date de décision--')
-      end
-    end
-  end
-
-  describe 'tags' do
-    let(:attestation_template) { create(:attestation_template, procedure: create(:procedure)) }
-
-    context 'when generating an attestation for a closed dossier' do
-      subject { attestation_template.tags }
-
-      it { is_expected.to include(include({ libelle: 'motivation' })) }
-      it { is_expected.to include(include({ libelle: 'date_de_decision' })) }
-    end
-
-    context 'when generating an attestation for a dossier that is still open' do
-      subject { attestation_template.tags(for_closed_dossier: false) }
-
-      it { is_expected.not_to include(include({ libelle: 'motivation' })) }
-      it { is_expected.not_to include(include({ libelle: 'date_de_decision' })) }
     end
   end
 end
