@@ -1,7 +1,7 @@
 .motivation{ class: popup_class }
   %h3
     %span.icon{ class: popup_class }
-    #{popup_title} nº #{dossier.id}
+    #{popup_title}
 
   = form_tag(terminer_dossier_path(dossier.procedure, dossier), method: :post, class: 'form') do
     = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: 'Rédigez votre motivation ici (facultative)'
