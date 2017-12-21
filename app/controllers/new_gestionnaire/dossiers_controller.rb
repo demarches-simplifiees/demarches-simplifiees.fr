@@ -76,7 +76,7 @@ module NewGestionnaire
 
     def terminer
       if params[:dossier] && params[:dossier][:motivation].present?
-        motivation = params[:dossier][:motivation]
+        dossier.motivation = params[:dossier][:motivation]
       end
 
       case params[:process_action]
@@ -93,10 +93,6 @@ module NewGestionnaire
         dossier.accepte!
         notice = "Dossier traité avec succès."
         template = procedure.closed_mail_template
-      end
-
-      if motivation
-        dossier.motivation = motivation
       end
 
       dossier.save
