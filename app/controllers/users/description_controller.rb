@@ -39,7 +39,7 @@ class Users::DescriptionController < UsersController
     errors_upload = PiecesJustificativesService.upload!(dossier, current_user, params)
     return redirect_to_description_with_errors(dossier, errors_upload) if errors_upload.any?
 
-    if params[:champs] && !brouillon_submission?
+    if params[:champs] && !(brouillon_submission? || brouillon_then_dashboard_submission?)
       errors =
         ChampsService.build_error_messages(dossier.champs) +
         PiecesJustificativesService.missing_pj_error_messages(dossier)
@@ -48,6 +48,8 @@ class Users::DescriptionController < UsersController
 
     if brouillon_submission?
       flash.notice = 'Votre brouillon a bien été sauvegardé.'
+      redirect_to users_dossier_description_path(dossier.id)
+    elsif brouillon_then_dashboard_submission?
       redirect_to url_for(controller: :dossiers, action: :index, liste: :brouillon)
     else
       if dossier.brouillon?
@@ -110,7 +112,11 @@ class Users::DescriptionController < UsersController
   end
 
   def brouillon_submission?
-    params[:submit] && params[:submit].keys.first == 'brouillon'
+    params[:submit] && params[:submit]['brouillon'].present?
+  end
+
+  def brouillon_then_dashboard_submission?
+    params[:submit] && params[:submit]['brouillon_then_dashboard'].present?
   end
 
   def check_autorisation_donnees

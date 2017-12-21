@@ -110,8 +110,6 @@ shared_examples 'description_controller_spec' do
 
     context 'Tous les attributs sont bons' do
       describe 'Premier enregistrement des données' do
-        let(:submit) { {nouveaux: 'nouveaux'} }
-
         subject { post :update, params: {dossier_id: dossier_id, submit: submit} }
 
         before do
@@ -120,22 +118,38 @@ shared_examples 'description_controller_spec' do
           dossier.reload
         end
 
-        it "redirection vers la page recapitulative" do
-          expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
-        end
-
-        it 'etat du dossier est soumis' do
-          expect(dossier.state).to eq('en_construction')
-        end
-
-        context 'when user whould like save just a brouillon' do
-          let(:submit) { {brouillon: 'brouillon'} }
+        context "when the user submits the dossier" do
+          let(:submit) { {nouveaux: 'nouveaux'} }
 
           it "redirection vers la page recapitulative" do
+            expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
+          end
+
+          it 'etat du dossier est en construction' do
+            expect(dossier.state).to eq('en_construction')
+          end
+        end
+
+        context 'when user saves a brouillon' do
+          let(:submit) { {brouillon: 'brouillon'} }
+
+          it "reste sur la page du dossier" do
+            expect(response).to redirect_to("/users/dossiers/#{dossier_id}/description")
+          end
+
+          it 'etat du dossier est brouillon' do
+            expect(dossier.state).to eq('brouillon')
+          end
+        end
+
+        context 'when user saves a brouillon and goes to dashboard' do
+          let(:submit) { {brouillon_then_dashboard: 'brouillon_then_dashboard'} }
+
+          it "goes to dashboard" do
             expect(response).to redirect_to("/users/dossiers?liste=brouillon")
           end
 
-          it 'etat du dossier est soumis' do
+          it 'etat du dossier est brouillon' do
             expect(dossier.state).to eq('brouillon')
           end
         end
