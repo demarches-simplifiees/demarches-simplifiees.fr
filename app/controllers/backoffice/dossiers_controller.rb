@@ -123,8 +123,8 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       notice = "Dossier considéré comme sans suite."
       template = dossier.procedure.without_continuation_mail_template
     when "close"
-      dossier.attestation = dossier.build_attestation
       dossier.accepte!
+      dossier.attestation = dossier.build_attestation
       notice = "Dossier traité avec succès."
       template = dossier.procedure.closed_mail_template
     end
