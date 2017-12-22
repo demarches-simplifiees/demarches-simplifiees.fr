@@ -15,14 +15,14 @@ describe MailTemplateConcern do
     end
 
     describe 'with one token to replace' do
-      let(:template) { '[TPS] Dossier : --numero_dossier--' }
+      let(:template) { '[TPS] Dossier : --numéro du dossier--' }
       it do
         is_expected.to eq("[TPS] Dossier : #{dossier.id}")
       end
     end
 
     describe 'with multiples tokens to replace' do
-      let(:template) { '[TPS] --numero_dossier-- --libelle_procedure-- --lien_dossier--' }
+      let(:template) { '[TPS] --numéro du dossier-- --libellé procédure-- --lien dossier--' }
       it do
         expected =
           "[TPS] #{dossier.id} #{dossier.procedure.libelle} " +
@@ -48,10 +48,10 @@ describe MailTemplateConcern do
   end
 
   describe '.replace_tags' do
+    before { initiated_mail.body = "n --numéro du dossier--" }
     it "avoids side effects" do
-      subject = "n --numero_dossier--"
-      expect(initiated_mail.replace_tags(subject, dossier)).to eq("n #{dossier.id}")
-      expect(initiated_mail.replace_tags(subject, dossier2)).to eq("n #{dossier2.id}")
+      expect(initiated_mail.body_for_dossier(dossier)).to eq("n #{dossier.id}")
+      expect(initiated_mail.body_for_dossier(dossier2)).to eq("n #{dossier2.id}")
     end
   end
 end

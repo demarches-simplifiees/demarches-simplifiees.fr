@@ -166,13 +166,13 @@ describe AttestationTemplate, type: :model do
     end
 
     context "when the template has a libellé procédure tag" do
-      let(:template) { '--libelle_procedure--' }
+      let(:template) { '--libellé procédure--' }
 
       it { is_expected.to eq('Une magnifique procédure') }
     end
 
     context "when the template has a date de décision tag" do
-      let(:template) { '--date_de_decision--' }
+      let(:template) { '--date de décision--' }
 
       context "and the dossier has a date de décision" do
         let!(:dossier) { create(:dossier, processed_at: DateTime.new(2005, 3, 12), procedure: procedure, individual: individual, entreprise: entreprise) }
@@ -185,8 +185,8 @@ describe AttestationTemplate, type: :model do
       end
     end
 
-    context "when the template has a lien_dossier tag" do
-      let(:template) { '--lien_dossier--' }
+    context "when the template has a lien dossier tag" do
+      let(:template) { '--lien dossier--' }
 
       it { is_expected.to include("/users/dossiers/#{dossier.id}/recapitulatif") }
     end
@@ -238,14 +238,14 @@ describe AttestationTemplate, type: :model do
       subject { template_concern.tags }
 
       it { is_expected.to include(include({ libelle: 'motivation' })) }
-      it { is_expected.to include(include({ libelle: 'date_de_decision' })) }
+      it { is_expected.to include(include({ libelle: 'date de décision' })) }
     end
 
     context 'when generating an attestation for a dossier that is still open' do
       subject { template_concern.tags(for_closed_dossier: false) }
 
       it { is_expected.not_to include(include({ libelle: 'motivation' })) }
-      it { is_expected.not_to include(include({ libelle: 'date_de_decision' })) }
+      it { is_expected.not_to include(include({ libelle: 'date de décision' })) }
     end
   end
 end
