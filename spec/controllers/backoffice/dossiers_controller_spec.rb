@@ -349,6 +349,22 @@ describe Backoffice::DossiersController, type: :controller do
           end
         end
       end
+
+      context 'when the attestation template uses the motivation field', focus: true do
+        let(:emailable) { false }
+        let(:template) { create(:attestation_template) }
+        let(:procedure) { create(:procedure, :published, attestation_template: template, gestionnaires: [gestionnaire]) }
+
+        subject { post :process_dossier, params: { process_action: "close", dossier_id: dossier_id, dossier: { motivation: "Yallah" }}}
+
+        before do
+          expect_any_instance_of(AttestationTemplate)
+            .to receive(:attestation_for)
+            .with(have_attributes(motivation: "Yallah"))
+        end
+
+        it { subject }
+      end
     end
   end
 
