@@ -59,6 +59,18 @@
       display: inline-block;
     }
   }
+
+  .lock {
+    margin-right: $default-spacer;
+  }
+
+  .confidentiel-explanation {
+    display: none;
+    font-size: 14px;
+    color: $grey;
+    margin-top: -$default-padding;
+    margin-bottom: 2 * $default-padding;
+  }
 }
 
 .list-avis {

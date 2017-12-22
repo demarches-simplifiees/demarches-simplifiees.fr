@@ -14,9 +14,10 @@
     = form_for @avis, url: avis_path(@avis), html: { class: 'form' } do |f|
       = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
       .flex.justify-between.align-baseline
-        %p.confidentiel
+        %p.confidentiel.flex
           %span.icon.lock
-          Cet avis est confidentiel et n'est pas affiché aux autres experts consultés
+          %span
+            Cet avis est confidentiel et n'est pas affiché aux autres experts consultés
         .send-wrapper
           = f.submit 'Envoyer votre avis', class: 'button send'
 
