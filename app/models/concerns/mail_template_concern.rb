@@ -45,9 +45,9 @@ module MailTemplateConcern
   end
 
   module ClassMethods
-    def default
+    def default_for(procedure)
       body = ActionController::Base.new.render_to_string(template: self.const_get(:TEMPLATE_NAME))
-      self.new(object: self.const_get(:DEFAULT_OBJECT), body: body)
+      self.new(object: self.const_get(:DEFAULT_OBJECT), body: body, procedure: procedure)
     end
   end
 
