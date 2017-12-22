@@ -177,7 +177,7 @@ describe Backoffice::AvisController, type: :controller do
         it { expect(Avis).to have_received(:link_avis_to_gestionnaire) }
 
         it { expect(subject.current_gestionnaire).to eq(created_gestionnaire) }
-        it { is_expected.to redirect_to backoffice_dossier_path(dossier) }
+        it { is_expected.to redirect_to avis_index_path }
       end
 
       context 'when the gestionnaire creation fails' do
