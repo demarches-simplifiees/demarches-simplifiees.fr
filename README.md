@@ -46,6 +46,27 @@ Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les c
     rake db:migrate
     rake db:migrate RAILS_ENV=test
 
+## Bouchonnage de l’authentification
+
+Créer le fichier `config/france_connect.yml` avec le contenu
+
+```yaml
+particulier_identifier: ''
+particulier_secret: ''
+
+particulier_redirect_uri: ''
+particulier_authorization_endpoint: ''
+particulier_token_endpoint: ''
+particulier_userinfo_endpoint: ''
+particulier_logout_endpoint: ''
+```
+
+Créer le fichier `config/github_secrets.yml` avec le contenu
+
+```yaml
+client_id: ''
+client_secret: ''
+```
 
 ## Création des comptes initiaux
 
