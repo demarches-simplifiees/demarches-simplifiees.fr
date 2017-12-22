@@ -1,30 +1,6 @@
 module MailTemplateConcern
   extend ActiveSupport::Concern
-
-  include Rails.application.routes.url_helpers
-  include ActionView::Helpers::UrlHelper
-
-  TAGS = []
-  TAGS << TAG_NUMERO_DOSSIER = {
-    libelle:     "numero_dossier",
-    description: "Permet d'afficher le numéro de dossier de l'utilisateur."
-  }
-  TAGS << TAG_LIEN_DOSSIER = {
-    libelle:     "lien_dossier",
-    description: "Permet d'afficher un lien vers le dossier de l'utilisateur."
-  }
-  TAGS << TAG_LIBELLE_PROCEDURE = {
-    libelle:     "libelle_procedure",
-    description: "Permet d'afficher le libellé de la procédure."
-  }
-  TAGS << TAG_DATE_DE_DECISION = {
-    libelle:     "date_de_decision",
-    description: "Permet d'afficher la date à laquelle la décision finale (acceptation, refus, classement sans suite) sur le dossier a été prise."
-  }
-  TAGS << TAG_MOTIVATION = {
-    libelle:     "motivation",
-    description: "Permet d'afficher la motivation associée à la décision finale (acceptation, refus, classement sans suite) sur le dossier. Attention, elle est facultative."
-  }
+  include DocumentTemplateConcern
 
   def object_for_dossier(dossier)
     replace_tags(object, dossier)
@@ -35,13 +11,7 @@ module MailTemplateConcern
   end
 
   def tags()
-    self.class.const_get(:ALLOWED_TAGS)
-  end
-
-  def replace_tags(string, dossier)
-    TAGS.inject(string) do |acc, tag|
-      acc.gsub("--#{tag[:libelle]}--", replace_tag(tag, dossier)) || acc
-    end
+    super(for_closed_dossier: self.class.const_get(:IS_FOR_CLOSED_DOSSIER))
   end
 
   module ClassMethods
@@ -53,20 +23,7 @@ module MailTemplateConcern
 
   private
 
-  def replace_tag(tag, dossier)
-    case tag
-    when TAG_NUMERO_DOSSIER
-      dossier.id.to_s
-    when TAG_LIEN_DOSSIER
-      link_to users_dossier_recapitulatif_url(dossier), users_dossier_recapitulatif_url(dossier), target: '_blank'
-    when TAG_LIBELLE_PROCEDURE
-      dossier.procedure.libelle
-    when TAG_DATE_DE_DECISION
-      dossier.processed_at.present? ? dossier.processed_at.localtime.strftime("%d/%m/%Y") : ""
-    when TAG_MOTIVATION
-      dossier.motivation || ""
-    else
-      '--BALISE_NON_RECONNUE--'
-    end
+  def replace_tags(string, dossier)
+    super(string, dossier, for_closed_dossier: self.class.const_get(:IS_FOR_CLOSED_DOSSIER))
   end
 end
