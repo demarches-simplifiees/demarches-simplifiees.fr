@@ -34,6 +34,10 @@ module MailTemplateConcern
     replace_tags(body, dossier)
   end
 
+  def tags
+    self.class.const_get(:ALLOWED_TAGS)
+  end
+
   def replace_tags(string, dossier)
     TAGS.inject(string) do |acc, tag|
       acc.gsub("--#{tag[:libelle]}--", replace_tag(tag, dossier)) || acc
