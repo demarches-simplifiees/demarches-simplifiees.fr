@@ -89,8 +89,8 @@ module NewGestionnaire
         notice = "Dossier considéré comme sans suite."
         template = procedure.without_continuation_mail_template
       when "accepter"
-        dossier.attestation = dossier.build_attestation
         dossier.accepte!
+        dossier.attestation = dossier.build_attestation
         notice = "Dossier traité avec succès."
         template = procedure.closed_mail_template
       end
