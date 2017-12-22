@@ -350,7 +350,7 @@ describe Backoffice::DossiersController, type: :controller do
         end
       end
 
-      context 'when the attestation template uses the motivation field', focus: true do
+      context 'when the attestation template uses the motivation field' do
         let(:emailable) { false }
         let(:template) { create(:attestation_template) }
         let(:procedure) { create(:procedure, :published, attestation_template: template, gestionnaires: [gestionnaire]) }
