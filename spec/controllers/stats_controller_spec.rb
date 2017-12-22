@@ -240,6 +240,8 @@ describe StatsController, type: :controller do
 
   describe "#avis_average_answer_time" do
     before do
+      Timecop.freeze(Time.now)
+
       # 1 week ago
       create(:avis, answer: "voila ma réponse", created_at: 1.week.ago + 1.day, updated_at: 1.week.ago + 2.days) # 1 day
       create(:avis, created_at: 1.week.ago + 2.days)
@@ -254,6 +256,8 @@ describe StatsController, type: :controller do
       create(:avis, answer: "voila ma réponse2", created_at: 3.weeks.ago + 1.day, updated_at: 3.weeks.ago + 2.days) # 1 day
       create(:avis, answer: "voila ma réponse2", created_at: 3.weeks.ago + 1.day, updated_at: 1.week.ago + 5.days) # 18 day
     end
+
+    after { Timecop.return }
 
     subject { StatsController.new.send(:avis_average_answer_time) }
 
