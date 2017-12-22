@@ -7,14 +7,17 @@
     = f.text_area :introduction, rows: 3, value: 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
     .flex.justify-between.align-baseline
       - if must_be_confidentiel
-        %p.confidentiel
+        %p.confidentiel.flex
           %span.icon.lock
-          Cet avis est confidentiel et n'est pas affiché aux autres experts consultés
+          %span
+            Cet avis est confidentiel et n'est pas affiché aux autres experts consultés mais est visible par tous les accompagnateurs
         .send-wrapper
           = f.submit 'Demander un avis', class: 'button send'
       - else
         .confidentiel-wrapper
           = f.label :confidentiel, 'Cet avis est'
-          = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]]
+          = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]], {}, onchange: "javascript:TPS.toggleCondidentielExplanation(event);"
+          .confidentiel-explanation
+            Il ne sera pas affiché aux autres experts consultés mais sera visible par les accompagnateurs
         .send-wrapper
           = f.submit 'Demander un avis', class: 'button send'
