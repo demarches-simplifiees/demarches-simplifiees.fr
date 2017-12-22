@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe MailTemplateConcern do
-  let(:dossier) { create :dossier }
-  let(:dossier2) { create :dossier }
-  let(:initiated_mail) { Mails::InitiatedMail.default }
+  let(:procedure) { create(:procedure)}
+  let(:dossier) { create(:dossier, procedure: procedure) }
+  let(:dossier2) { create(:dossier, procedure: procedure) }
+  let(:initiated_mail) { Mails::InitiatedMail.default_for_procedure(procedure) }
 
   shared_examples "can replace tokens in template" do
     describe 'with no token to replace' do
