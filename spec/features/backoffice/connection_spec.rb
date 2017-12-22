@@ -29,8 +29,8 @@ feature 'when gestionnaire come to /backoffice and is not authenticated' do
       page.find_by_id(:user_password).set gestionnaire.password
       page.click_on 'Se connecter'
     end
-    scenario 'he is redirected to /backoffice' do
-      expect(page).to have_css('#backoffice-index')
+    scenario 'he is redirected to /procedures' do
+      expect(current_path).to eq(procedures_path)
     end
   end
 end
