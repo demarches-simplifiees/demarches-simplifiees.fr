@@ -50,7 +50,14 @@ module DocumentTemplateConcern
   end
 
   def lambda_tags
-    [{ libelle: 'date_de_decision', description: '', is_legacy: true , only_closed_dossier: true,
+    [{ libelle: 'date de décision',
+       description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
+       lambda: -> (d) { d.processed_at.present? ? d.processed_at.localtime.strftime('%d/%m/%Y') : '' },
+       only_closed_dossier: true },
+     { libelle: 'libellé procédure', description: '', lambda: -> (d) { d.procedure.libelle } },
+     { libelle: 'lien dossier', description: '', lambda: -> (d) { format_link(users_dossier_recapitulatif_url(d)) } },
+     # TODO remove legacy tag after data migration
+     { libelle: 'date_de_decision', description: '', is_legacy: true , only_closed_dossier: true,
        lambda: -> (d) { d.processed_at.present? ? d.processed_at.localtime.strftime('%d/%m/%Y') : '' } },
      { libelle: 'libelle_procedure', description: '', lambda: -> (d) { d.procedure.libelle }, is_legacy: true },
      { libelle: 'lien_dossier', description: '', lambda: -> (d) { format_link(users_dossier_recapitulatif_url(d)) }, is_legacy: true }]
