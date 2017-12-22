@@ -2,6 +2,8 @@ module Mails
   class WithoutContinuationMail < ApplicationRecord
     include MailTemplateConcern
 
+    belongs_to :procedure
+
     SLUG = "without_continuation"
     TEMPLATE_NAME = "mails/without_continuation_mail"
     DISPLAYED_NAME = 'Accusé de classement sans suite'
