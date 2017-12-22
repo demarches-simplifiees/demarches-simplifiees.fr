@@ -27,6 +27,7 @@ config/initializers/token.rb
 config/initializers/super_admin.rb
 doc/*.svg
 config/france_connect.yml
+config/github_secrets.yml
 config/initializers/mailjet.rb
 config/fog_credentials.yml
 uploads/*
