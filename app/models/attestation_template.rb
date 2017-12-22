@@ -13,7 +13,7 @@ class AttestationTemplate < ApplicationRecord
 
   FILE_MAX_SIZE_IN_MB = 0.5
 
-  def tags(reject_legacy: true)
+  def tags(for_closed_dossier: true, reject_legacy: true)
     if procedure.for_individual?
       identity_tags = individual_tags
     else
@@ -21,7 +21,12 @@ class AttestationTemplate < ApplicationRecord
     end
 
     tags = identity_tags + dossier_tags + lambda_tags + procedure_type_de_champ_public_private_tags
-    tags.reject { |tag| reject_legacy and tag[:is_legacy] }
+    filter_tags(tags, for_closed_dossier)
+      .reject { |tag| reject_legacy and tag[:is_legacy] }
+  end
+
+  def filter_tags(tags, for_closed_dossier)
+    tags.select { |tag| for_closed_dossier or not tag[:only_closed_dossier] }
   end
 
   def attestation_for(dossier)
@@ -67,7 +72,8 @@ class AttestationTemplate < ApplicationRecord
      { libelle: 'numero_dossier', description: '', target: 'id', is_legacy: true },
      { libelle: 'motivation',
        description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
-       target: 'motivation' }]
+       target: 'motivation',
+       only_closed_dossier: true }]
   end
 
   def individual_tags
@@ -88,7 +94,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def lambda_tags
-    [{ libelle: 'date_de_decision', description: '', is_legacy: true ,
+    [{ libelle: 'date_de_decision', description: '', is_legacy: true, only_closed_dossier: true,
        lambda: -> (d) { d.processed_at.present? ? d.processed_at.localtime.strftime('%d/%m/%Y') : '' } },
      { libelle: 'libelle_procedure', description: '', lambda: -> (d) { d.procedure.libelle }, is_legacy: true },
      { libelle: 'lien_dossier', description: '', lambda: -> (d) { format_link(users_dossier_recapitulatif_url(d)) }, is_legacy: true }]
@@ -123,7 +129,7 @@ class AttestationTemplate < ApplicationRecord
     pdf
   end
 
-  def replace_tags(text, dossier)
+  def replace_tags(text, dossier, for_closed_dossier: true)
     if text.nil?
       return ''
     end
@@ -131,7 +137,8 @@ class AttestationTemplate < ApplicationRecord
     text = replace_type_de_champ_tags(text, procedure.types_de_champ, dossier.champs)
     text = replace_type_de_champ_tags(text, procedure.types_de_champ_private, dossier.champs_private)
 
-    text = lambda_tags.inject(text) { |acc, tag | replace_tag(acc, tag, tag[:lambda].(dossier)) }
+    text = filter_tags(lambda_tags, for_closed_dossier)
+      .inject(text) { |acc, tag | replace_tag(acc, tag, tag[:lambda].(dossier)) }
 
     tags_and_datas = [
       [dossier_tags, dossier],
@@ -139,7 +146,9 @@ class AttestationTemplate < ApplicationRecord
       [entreprise_tags, dossier.entreprise],
       [etablissement_tags, dossier.entreprise&.etablissement]]
 
-    tags_and_datas.inject(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
+    tags_and_datas
+      .map { |(tags, data)| [filter_tags(tags, for_closed_dossier), data]}
+      .inject(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
   end
 
   def replace_type_de_champ_tags(text, types_de_champ, dossier_champs)

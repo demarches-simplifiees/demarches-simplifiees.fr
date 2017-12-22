@@ -335,5 +335,34 @@ describe AttestationTemplate, type: :model do
         it_behaves_like "treat all kinds of space as equivalent"
       end
     end
+
+    context 'when generating a document for a dossier before closing it' do
+      let(:dossier) { create(:dossier) }
+      let(:template) { '--motivation-- --date de décision--' }
+
+      subject { template_concern.replace_tags(template, dossier, for_closed_dossier: false) }
+
+      it "does not treat motivation and date de decision as tags" do
+        is_expected.to eq('--motivation-- --date de décision--')
+      end
+    end
+  end
+
+  describe 'tags' do
+    let(:attestation_template) { create(:attestation_template, procedure: create(:procedure)) }
+
+    context 'when generating an attestation for a closed dossier' do
+      subject { attestation_template.tags }
+
+      it { is_expected.to include(include({ libelle: 'motivation' })) }
+      it { is_expected.to include(include({ libelle: 'date_de_decision' })) }
+    end
+
+    context 'when generating an attestation for a dossier that is still open' do
+      subject { attestation_template.tags(for_closed_dossier: false) }
+
+      it { is_expected.not_to include(include({ libelle: 'motivation' })) }
+      it { is_expected.not_to include(include({ libelle: 'date_de_decision' })) }
+    end
   end
 end
