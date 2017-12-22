@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
 
-  devise_for :administrations, skip: [:password, :registrations]
+  devise_for :administrations,
+    skip: [:password, :registrations, :sessions],
+    controllers: {
+      omniauth_callbacks: 'administrations/omniauth_callbacks'
+    }
 
   devise_for :administrateurs, controllers: {
                                  sessions: 'administrateurs/sessions'
@@ -42,6 +46,8 @@ Rails.application.routes.draw do
   get 'admin' => 'admin#index'
   get 'backoffice' => 'backoffice#index'
 
+  get 'administrations/sign_in' => 'administrations/sessions#new'
+  delete 'administrations/sign_out' => 'administrations/sessions#destroy'
   authenticate :administration do
     resources :administrations, only: [:index, :create]
     namespace :administrations do
