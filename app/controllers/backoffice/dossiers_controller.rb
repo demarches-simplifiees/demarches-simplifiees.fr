@@ -107,11 +107,11 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   def process_dossier
     create_dossier_facade params[:dossier_id]
 
-    if params[:dossier] && params[:dossier][:motivation].present?
-      motivation = params[:dossier][:motivation]
-    end
-
     dossier = @facade.dossier
+
+    if params[:dossier] && params[:dossier][:motivation].present?
+      dossier.motivation = params[:dossier][:motivation]
+    end
 
     case params[:process_action]
     when "refuse"
@@ -127,10 +127,6 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
       dossier.accepte!
       notice = "Dossier traité avec succès."
       template = dossier.procedure.closed_mail_template
-    end
-
-    if motivation
-      dossier.motivation = motivation
     end
 
     dossier.save
