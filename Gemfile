@@ -135,6 +135,7 @@ group :development do
   gem 'rack-handlers'
   gem 'xray-rails'
   gem 'rubocop', require: false
+  gem 'rubocop-rspec-focused', require: false
   gem 'haml-lint'
   gem 'scss_lint', require: false
 end
