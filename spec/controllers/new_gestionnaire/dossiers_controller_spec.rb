@@ -223,6 +223,27 @@ describe NewGestionnaire::DossiersController, type: :controller do
           end
         end
       end
+
+      context 'when the attestation template uses the motivation field', focus: true do
+        let(:emailable) { false }
+        let(:template) { create(:attestation_template) }
+        let(:procedure) { create(:procedure, :published, attestation_template: template, gestionnaires: [gestionnaire]) }
+
+        subject do
+          post :terminer, params: { process_action: "accepter",
+                                    procedure_id: procedure.id,
+                                    dossier_id: dossier.id,
+                                    dossier: { motivation: "Yallah" }}
+        end
+
+        before do
+          expect_any_instance_of(AttestationTemplate)
+            .to receive(:attestation_for)
+            .with(have_attributes(motivation: "Yallah"))
+        end
+
+        it { subject }
+      end
     end
   end
 
