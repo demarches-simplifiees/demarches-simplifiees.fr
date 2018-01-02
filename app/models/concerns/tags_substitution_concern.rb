@@ -1,17 +1,26 @@
 module TagsSubstitutionConcern
   extend ActiveSupport::Concern
 
-  def tags
+  def tags(is_dossier_termine: true)
     if procedure.for_individual?
       identity_tags = individual_tags
     else
       identity_tags = entreprise_tags + etablissement_tags
     end
 
-    identity_tags + dossier_tags + procedure_type_de_champ_public_private_tags
+    tags = identity_tags + dossier_tags + procedure_type_de_champ_public_private_tags
+    filter_tags(tags, is_dossier_termine)
   end
 
   private
+
+  def filter_tags(tags, is_dossier_termine)
+    if !is_dossier_termine
+      tags.reject { |tag| tag[:dossier_termine_only] }
+    else
+      tags
+    end
+  end
 
   def procedure_type_de_champ_public_private_tags
     (procedure.types_de_champ + procedure.types_de_champ_private)
@@ -21,10 +30,12 @@ module TagsSubstitutionConcern
   def dossier_tags
     [{ libelle: 'motivation',
        description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
-       target: :motivation },
+       target: :motivation,
+       dossier_termine_only: true },
      { libelle: 'date de décision',
        description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
-       lambda: -> (d) { d.processed_at.present? ? d.processed_at.localtime.strftime('%d/%m/%Y') : '' } },
+       lambda: -> (d) { d.processed_at.present? ? d.processed_at.localtime.strftime('%d/%m/%Y') : '' },
+       dossier_termine_only: true },
      { libelle: 'libellé procédure', description: '', lambda: -> (d) { d.procedure.libelle } },
      { libelle: 'numéro du dossier', description: '', target: :id }]
   end
@@ -60,8 +71,10 @@ module TagsSubstitutionConcern
       [entreprise_tags, dossier.entreprise],
       [etablissement_tags, dossier.entreprise&.etablissement]]
 
-    tags_and_datas.inject(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
-  end
+    tags_and_datas
+      .map { |(tags, data)| [filter_tags(tags, dossier.termine?), data] }
+      .inject(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
+   end
 
   def replace_type_de_champ_tags(text, types_de_champ, dossier_champs)
     types_de_champ.inject(text) do |acc, tag|

@@ -117,6 +117,8 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the dossier has a motivation' do
       let(:dossier) { create(:dossier, motivation: 'motivation') }
 
+      before { dossier.accepte! }
+
       context 'and the template has some dossier tags' do
         let(:template) { '--motivation-- --numéro du dossier--' }
 
@@ -208,11 +210,32 @@ describe TagsSubstitutionConcern, type: :model do
         it_behaves_like "treat all kinds of space as equivalent"
       end
     end
+
+    context 'when generating a document for a dossier that is not termine' do
+      let(:dossier) { create(:dossier) }
+      let(:template) { '--motivation-- --date de décision--' }
+
+      subject { template_concern.replace_tags(template, dossier) }
+
+      it "does not treat motivation or date de décision as tags" do
+        is_expected.to eq('--motivation-- --date de décision--')
+      end
+    end
   end
 
   describe 'tags' do
-    subject { template_concern.tags }
+    context 'when generating a document for a dossier terminé' do
+      subject { template_concern.tags }
 
-    it { is_expected.to include(include({ libelle: 'date de décision' })) }
+      it { is_expected.to include(include({ libelle: 'motivation' })) }
+      it { is_expected.to include(include({ libelle: 'date de décision' })) }
+    end
+
+    context 'when generating a document for a dossier that is not terminé' do
+      subject { template_concern.tags(is_dossier_termine: false) }
+
+      it { is_expected.not_to include(include({ libelle: 'motivation' })) }
+      it { is_expected.not_to include(include({ libelle: 'date de décision' })) }
+    end
   end
 end
