@@ -164,6 +164,14 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
+    context "when the template has a date de décision tag" do
+      let(:template) { '--date de décision--' }
+
+       before { dossier.accepte! }
+
+       it { is_expected.to eq(DateTime.now.localtime.strftime('%d/%m/%Y')) }
+    end
+
     context "match breaking and non breaking spaces" do
       before { dossier.champs.first.update_attributes(value: 'valeur') }
 
@@ -193,5 +201,11 @@ describe TagsSubstitutionConcern, type: :model do
         it_behaves_like "treat all kinds of space as equivalent"
       end
     end
+  end
+
+  describe 'tags' do
+    subject { template_concern.tags }
+
+    it { is_expected.to include(include({ libelle: 'date de décision' })) }
   end
 end
