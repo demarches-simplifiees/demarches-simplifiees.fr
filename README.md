@@ -81,9 +81,8 @@ client_secret: ''
 
 ## Lancement de l'application
 
-    bin/delayed_job run
-    mailcatcher -f
-    rails s
+    brew install hivemind # Avec Linux voir https://github.com/DarthSim/hivemind#installation
+    hivemind
 
 ## Programmation des jobs
 
