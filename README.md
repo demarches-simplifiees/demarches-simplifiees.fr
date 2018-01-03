@@ -68,6 +68,8 @@ client_id: ''
 client_secret: ''
 ```
 
+*Note : les valeurs pour ces deux paramètres sont renseignées dans le Keepass*
+
 ## Création des comptes initiaux
 
     rails c
