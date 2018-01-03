@@ -9,4 +9,19 @@ namespace :admin do
       puts "An error occured : #{a.errors.full_messages}"
     end
   end
+
+  task list: :environment do
+    puts "All Administrations :"
+    Administration.all.pluck(:email).each do |a|
+      puts a
+    end
+  end
+
+  task :delete_admin, [:email] => :environment do |t, args|
+    email = args[:email]
+    puts "Deleting Administration for #{email}"
+    a = Administration.find_by(email: email)
+    a.destroy
+    puts "#{a.email} deleted"
+  end
 end
