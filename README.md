@@ -14,6 +14,9 @@ Téléprocédures Simplifiées, ou TPS pour les intimes, est une plateforme 100 
 ### Développement
 
 - Mailcatcher : `gem install mailcatcher`
+- Hivemind :
+  * Mac : `brew install hivemind`
+  * Linux : voir https://github.com/DarthSim/hivemind#installation
 
 ### Tests
 
@@ -83,7 +86,6 @@ client_secret: ''
 
 ## Lancement de l'application
 
-    brew install hivemind # Avec Linux voir https://github.com/DarthSim/hivemind#installation
     hivemind
 
 ## Programmation des jobs
