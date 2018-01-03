@@ -129,3 +129,14 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
     bundle binstub railties --force
     rake rails:update:bin
+
+## Tâches Super Admin
+
+- ajouter un compte super admin :
+  `bundle exec rake admin:create_admin[email-du-compte-github@exemple.com]`
+
+- lister les comptes super admin :
+  `bundle exec rake admin:list`
+
+- supprimer un compte super admin : 
+  `bundle exec rake admin:delete_admin[email-du-compte-github@exemple.com]`
