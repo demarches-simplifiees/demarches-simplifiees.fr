@@ -65,6 +65,7 @@ set :shared_paths, [
                      "config/unicorn.rb",
                      "config/initializers/raven.rb",
                      'config/france_connect.yml',
+                     'config/github_secrets.yml',
                      'config/initializers/mailjet.rb',
                      'config/initializers/storage_url.rb'
                  ]

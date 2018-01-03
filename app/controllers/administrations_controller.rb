@@ -18,7 +18,7 @@ class AdministrationsController < ApplicationController
 
     if admin.save
       flash.notice = "Administrateur créé"
-      NewAdminMailer.new_admin_email(admin).deliver_now!
+      NewAdminMailer.new_admin_email(admin, current_administration).deliver_now!
     else
       flash.alert = admin.errors.full_messages
     end

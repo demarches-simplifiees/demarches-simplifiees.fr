@@ -44,6 +44,7 @@ gem 'unicode_utils'
 # Gestion des comptes utilisateurs
 gem 'devise'
 gem 'openid_connect'
+gem 'omniauth-github'
 
 gem 'rest-client'
 
@@ -134,6 +135,7 @@ group :development do
   gem 'rack-handlers'
   gem 'xray-rails'
   gem 'rubocop', require: false
+  gem 'rubocop-rspec-focused', require: false
   gem 'haml-lint'
   gem 'scss_lint', require: false
 end
