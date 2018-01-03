@@ -1,3 +1,6 @@
+require:
+  - rubocop/rspec/focused
+
 AllCops:
   Exclude:
     - "db/schema.rb"
@@ -613,6 +616,9 @@ Rails/Validation:
 
 Rails:
   Enabled: false
+
+RSpec/Focused:
+  Enabled: true
 
 Security/Eval:
   Enabled: false
