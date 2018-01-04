@@ -5,6 +5,7 @@ describe TagsSubstitutionConcern, type: :model do
 
   let(:procedure) do
     create(:procedure,
+      libelle: 'Une magnifique procédure',
       types_de_champ: types_de_champ,
       types_de_champ_private: types_de_champ_private,
       for_individual: for_individual)
@@ -170,6 +171,12 @@ describe TagsSubstitutionConcern, type: :model do
        before { dossier.accepte! }
 
        it { is_expected.to eq(DateTime.now.localtime.strftime('%d/%m/%Y')) }
+    end
+
+    context "when the template has a libellé procédure tag" do
+      let(:template) { 'body --libellé procédure--' }
+
+      it { is_expected.to eq('body Une magnifique procédure') }
     end
 
     context "match breaking and non breaking spaces" do

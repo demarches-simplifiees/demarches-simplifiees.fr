@@ -25,6 +25,7 @@ module TagsSubstitutionConcern
      { libelle: 'date de décision',
        description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
        lambda: -> (d) { d.processed_at.present? ? d.processed_at.localtime.strftime('%d/%m/%Y') : '' } },
+     { libelle: 'libellé procédure', description: '', lambda: -> (d) { d.procedure.libelle } },
      { libelle: 'numéro du dossier', description: '', target: :id }]
   end
 
