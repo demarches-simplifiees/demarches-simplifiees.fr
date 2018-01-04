@@ -120,7 +120,7 @@ group :test do
   gem 'database_cleaner'
   gem 'webmock'
   gem 'shoulda-matchers', require: false
-  gem 'poltergeist'
+  gem 'capybara-selenium'
   gem 'timecop'
   gem 'guard'
   gem 'guard-rspec', require: false
