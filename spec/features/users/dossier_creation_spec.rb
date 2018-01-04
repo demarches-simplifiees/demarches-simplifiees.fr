@@ -55,14 +55,14 @@ feature 'As a User I wanna create a dossier' do
       stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/associations/#{siret}?token=#{SIADETOKEN}")
         .to_return(status: 404, body: '')
       page.find_by_id('dossier-siret').set siret
-      page.find_by_id('submit-siret').trigger('click')
+      page.find_by_id('submit-siret').click
       expect(page).to have_css('#recap-info-entreprise')
       find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
-      page.find_by_id('etape_suivante').trigger('click')
+      page.find_by_id('etape_suivante').click
       expect(page).to have_current_path(users_dossier_carte_path(procedure_with_siret.dossiers.last.id.to_s), only_path: true)
-      page.find_by_id('etape_suivante').trigger('click')
+      page.find_by_id('etape_suivante').click
       fill_in "champs_#{procedure_with_siret.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
-      page.find_by_id('suivant').trigger('click')
+      page.find_by_id('suivant').click
       expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_with_siret.dossiers.last.id.to_s), only_path: true)
     end
   end

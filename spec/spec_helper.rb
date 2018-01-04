@@ -28,11 +28,22 @@ require 'shoulda-matchers'
 require 'devise'
 require 'factory_girl'
 
-require 'capybara/poltergeist'
-Capybara.javascript_driver = :poltergeist
+require 'selenium/webdriver'
+Capybara.javascript_driver = :headless_chrome
 Capybara.ignore_hidden_elements = false
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, js_errors: true, port: 44_678, phantomjs_options: ['--proxy-type=none'], timeout: 180)
+
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
+end
+
+Capybara.register_driver :headless_chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w(headless disable-gpu window-size=2560,1600) }
+  )
+
+  Capybara::Selenium::Driver.new app,
+    browser: :chrome,
+    desired_capabilities: capabilities
 end
 
 ActiveSupport::Deprecation.silenced = true
