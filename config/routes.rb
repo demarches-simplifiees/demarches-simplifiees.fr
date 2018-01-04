@@ -117,6 +117,10 @@ Rails.application.routes.draw do
     patch 'change_dossier_state' => 'change_dossier_state#change'
 
     resources :procedures do
+      collection do
+        get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
+      end
+
       member do
         post :hide
       end

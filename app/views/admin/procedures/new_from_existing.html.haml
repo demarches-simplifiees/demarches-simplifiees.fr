@@ -1,0 +1,21 @@
+.row.white-back
+  %h2
+    Créer une nouvelle procédure à partir d'une procédure existante
+
+  .section.section-label
+    Pour rechercher dans cette liste, utilisez la fonction "Recherche" de votre navigateur (CTRL+F ou command+F)
+    %br
+    %br
+    - @grouped_procedures.each do |_, procedures|
+      %b
+        = procedures.first.organisation
+      %table{ style: 'margin-bottom: 40px;' }
+        - procedures.sort_by(&:id).each do |procedure|
+          %tr{ style: 'height: 36px;' }
+            %td{ style: 'width: 750px;' }
+              = procedure.libelle
+            %td{ style: 'padding-right: 10px; padding-left: 10px; width: 60px;' }
+              - if !procedure.archivee?
+                = link_to('Tester', commencer_path(procedure_path: procedure.path), target: "_blank")
+            %td
+              = link_to('Cloner', admin_procedure_clone_path(procedure.id), 'data-method' => :put, class: 'btn-sm btn-primary clone-btn')
