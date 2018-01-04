@@ -1,7 +1,7 @@
 class DossierDecorator < Draper::Decorator
   include Rails.application.routes.url_helpers
 
-  delegate :current_page, :per_page, :offset, :total_entries, :total_pages
+  delegate :current_page, :limit_value, :total_pages
   delegate_all
 
   def first_creation
