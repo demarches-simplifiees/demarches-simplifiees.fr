@@ -65,7 +65,7 @@ describe API::V1::DossiersController do
         let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction') }
 
         before do
-          allow(Dossier).to receive(:per_page).and_return(1)
+          allow(controller).to receive(:per_page).and_return(1)
         end
 
         describe 'pagination' do

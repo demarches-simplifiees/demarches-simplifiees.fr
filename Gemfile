@@ -33,7 +33,6 @@ gem 'haml-rails'
 gem 'bootstrap-sass', '~> 3.3.5'
 
 # Pagination
-gem 'will_paginate-bootstrap'
 gem 'kaminari'
 
 # Decorators
