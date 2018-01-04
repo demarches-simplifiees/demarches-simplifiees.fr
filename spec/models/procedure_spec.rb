@@ -12,10 +12,12 @@ describe Procedure do
   end
 
   describe 'initiated_mail' do
-    subject { create(:procedure) }
+    let(:procedure) { create(:procedure) }
+
+    subject { procedure }
 
     context 'when initiated_mail is not customize' do
-      it { expect(subject.initiated_mail_template.body).to eq(Mails::InitiatedMail.default.body) }
+      it { expect(subject.initiated_mail_template.body).to eq(Mails::InitiatedMail.default_for(procedure).body) }
     end
 
     context 'when initiated_mail is customize' do
@@ -209,7 +211,7 @@ describe Procedure do
     end
 
     it 'should not duplicate default mail_template' do
-      expect(subject.initiated_mail_template.attributes).to eq Mails::InitiatedMail.default.attributes
+      expect(subject.initiated_mail_template.attributes).to eq Mails::InitiatedMail.default_for(subject).attributes
     end
 
     it 'should not duplicate specific related objects' do

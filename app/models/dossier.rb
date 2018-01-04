@@ -67,8 +67,6 @@ class Dossier < ActiveRecord::Base
   delegate :types_de_champ, to: :procedure
   delegate :france_connect_information, to: :user
 
-  before_validation :update_state_dates, if: -> { state_changed? }
-
   after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
   after_save :send_dossier_received
@@ -311,6 +309,11 @@ class Dossier < ActiveRecord::Base
     if procedure.attestation_template.present? && procedure.attestation_template.activated?
       procedure.attestation_template.attestation_for(self)
     end
+  end
+
+  def state=(state)
+    super(state)
+    update_state_dates
   end
 
   private

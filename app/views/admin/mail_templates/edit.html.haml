@@ -22,9 +22,9 @@
             Balise
           %th
             Description
-        - @mail_template.class.const_get(:ALLOWED_TAGS).each do |tag|
+        - @mail_template.tags.each do |tag|
           %tr
             %td.center
-              = "--#{tag[:name]}--"
+              = "--#{tag[:libelle]}--"
             %td
               = tag[:description]
