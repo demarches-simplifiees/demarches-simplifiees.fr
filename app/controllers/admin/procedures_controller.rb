@@ -175,6 +175,20 @@ class Admin::ProceduresController < AdminController
     redirect_to admin_procedures_path
   end
 
+  def new_from_existing
+    procedures_with_more_than_30_dossiers_ids = Procedure
+      .publiees_ou_archivees
+      .joins(:dossiers)
+      .group("procedures.id")
+      .having("count(dossiers.id) > ?", 30)
+      .pluck('procedures.id')
+
+    @grouped_procedures = Procedure
+      .where(id: procedures_with_more_than_30_dossiers_ids)
+      .group_by(&:administrateur)
+      .sort_by { |a, _| a.created_at }
+  end
+
   def active_class
     @active_class = 'active'
   end
