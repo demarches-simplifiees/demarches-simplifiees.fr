@@ -19,7 +19,13 @@ module TagsSubstitutionConcern
   end
 
   def dossier_tags
-    [{ libelle: 'motivation', description: '', target: :motivation },
+    [{ libelle: 'motivation',
+       description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
+       target: :motivation },
+     { libelle: 'date de décision',
+       description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
+       lambda: -> (d) { d.processed_at.present? ? d.processed_at.localtime.strftime('%d/%m/%Y') : '' } },
+     { libelle: 'libellé procédure', description: '', lambda: -> (d) { d.procedure.libelle } },
      { libelle: 'numéro du dossier', description: '', target: :id }]
   end
 
@@ -70,7 +76,12 @@ module TagsSubstitutionConcern
   def replace_tags_with_values_from_data(text, tags, data)
     if data.present?
       tags.inject(text) do |acc, tag|
-        replace_tag(acc, tag, data.send(tag[:target]))
+        if tag.key?(:target)
+          value = data.send(tag[:target])
+        else
+          value = tag[:lambda].(data)
+        end
+        replace_tag(acc, tag, value)
       end
     else
       text

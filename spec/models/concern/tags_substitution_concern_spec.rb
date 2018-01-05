@@ -5,6 +5,7 @@ describe TagsSubstitutionConcern, type: :model do
 
   let(:procedure) do
     create(:procedure,
+      libelle: 'Une magnifique procédure',
       types_de_champ: types_de_champ,
       types_de_champ_private: types_de_champ_private,
       for_individual: for_individual)
@@ -164,6 +165,20 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
+    context "when the template has a date de décision tag" do
+      let(:template) { '--date de décision--' }
+
+       before { dossier.accepte! }
+
+       it { is_expected.to eq(DateTime.now.localtime.strftime('%d/%m/%Y')) }
+    end
+
+    context "when the template has a libellé procédure tag" do
+      let(:template) { 'body --libellé procédure--' }
+
+      it { is_expected.to eq('body Une magnifique procédure') }
+    end
+
     context "match breaking and non breaking spaces" do
       before { dossier.champs.first.update_attributes(value: 'valeur') }
 
@@ -193,5 +208,11 @@ describe TagsSubstitutionConcern, type: :model do
         it_behaves_like "treat all kinds of space as equivalent"
       end
     end
+  end
+
+  describe 'tags' do
+    subject { template_concern.tags }
+
+    it { is_expected.to include(include({ libelle: 'date de décision' })) }
   end
 end
