@@ -27,6 +27,12 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
           .with([[procedure, forbidden_tdcs]])
       end
 
+      context 'and a whitelisted procedure' do
+        let(:procedure) { create(:procedure, whitelisted_at: DateTime.now) }
+
+        it { expect(AdministrationMailer).not_to have_received(:dubious_procedures) }
+      end
+
       context 'and a archived procedure' do
         let(:procedure) { create(:procedure, archived_at: DateTime.now) }
 
