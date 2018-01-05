@@ -2,6 +2,8 @@ module Mails
   class InitiatedMail < ApplicationRecord
     include MailTemplateConcern
 
+    belongs_to :procedure
+
     SLUG = "initiated_mail"
     TEMPLATE_NAME = "mails/initiated_mail"
     DISPLAYED_NAME = 'Accusé de réception'
