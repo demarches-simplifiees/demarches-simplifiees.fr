@@ -16,7 +16,7 @@ class FindDubiousProceduresJob < ApplicationJob
       .joins(:procedure)
       .where("types_de_champ.libelle ~* '#{forbidden_regexp}'")
       .where(type_champ: %w(text textarea))
-      .where(procedures: { archived_at: nil })
+      .where(procedures: { archived_at: nil, whitelisted_at: nil })
 
     dubious_procedures_and_tdcs = forbidden_tdcs
       .group_by(&:procedure_id)
