@@ -136,9 +136,8 @@ class Admin::ProceduresController < AdminController
       render '/admin/procedures/transfer', formats: 'js', status: 404
     else
       procedure = current_administrateur.procedures.find(params[:procedure_id])
-      clone_procedure = procedure.clone
+      clone_procedure = procedure.clone(admin)
 
-      clone_procedure.administrateur = admin
       clone_procedure.save
 
       flash.now.notice = "La procédure a correctement été clonée vers le nouvel administrateur."
@@ -162,7 +161,7 @@ class Admin::ProceduresController < AdminController
   def clone
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
-    new_procedure = procedure.clone
+    new_procedure = procedure.clone(current_administrateur)
     if new_procedure
       flash.notice = 'Procédure clonée'
       redirect_to edit_admin_procedure_path(id: new_procedure.id)

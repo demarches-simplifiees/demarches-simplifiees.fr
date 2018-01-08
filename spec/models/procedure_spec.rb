@@ -174,7 +174,7 @@ describe Procedure do
       @signature.close
     end
 
-    subject { procedure.clone }
+    subject { procedure.clone(procedure.administrateur) }
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
