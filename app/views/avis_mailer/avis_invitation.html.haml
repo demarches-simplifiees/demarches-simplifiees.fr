@@ -12,10 +12,10 @@
 
     - if @avis.gestionnaire.present?
       %p
-        = link_to "Connectez-vous pour donner votre avis", backoffice_dossier_url(@avis.dossier)
+        = link_to "Connectez-vous pour donner votre avis", dossier_url(@avis.dossier.procedure, @avis.dossier)
     - else
       %p
-        = link_to "Inscrivez-vous pour donner votre avis", avis_sign_up_url(@avis.id, @avis.email)
+        = link_to "Inscrivez-vous pour donner votre avis", sign_up_avis_url(@avis.id, @avis.email)
 
     Bonne journée,
     %br

@@ -33,9 +33,6 @@ Rails.application.routes.draw do
     put '/gestionnaires' => 'gestionnaires/registrations#update', :as => 'gestionnaires_registration'
   end
 
-  get 'avis/:id/sign_up/email/:email' => 'backoffice/avis#sign_up', constraints: { email: /.*/ }, as: 'avis_sign_up'
-  post 'avis/:id/sign_up/email/:email' => 'backoffice/avis#create_gestionnaire', constraints: { email: /.*/ }
-
   devise_scope :administrateur do
     get '/administrateurs/sign_in/demo' => redirect("/users/sign_in")
   end
@@ -283,6 +280,9 @@ Rails.application.routes.draw do
         get 'messagerie'
         post 'commentaire' => 'avis#create_commentaire'
         post 'avis' => 'avis#create_avis'
+
+        get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
+        post 'sign_up/email/:email' => 'avis#create_gestionnaire', constraints: { email: /.*/ }
       end
     end
     get "recherche" => "recherche#index"
