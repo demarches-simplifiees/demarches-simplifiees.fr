@@ -98,7 +98,7 @@ class Procedure < ActiveRecord::Base
     publiee_ou_archivee?
   end
 
-  def clone
+  def clone(admin)
     procedure = self.deep_clone(include:
       {
         types_de_piece_justificative: nil,
@@ -112,6 +112,7 @@ class Procedure < ActiveRecord::Base
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
 
+    procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail.try(:dup)
     procedure.received_mail = received_mail.try(:dup)
     procedure.closed_mail = closed_mail.try(:dup)
