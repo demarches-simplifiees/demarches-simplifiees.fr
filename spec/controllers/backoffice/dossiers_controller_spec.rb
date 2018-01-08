@@ -358,10 +358,14 @@ describe Backoffice::DossiersController, type: :controller do
         subject { post :process_dossier, params: { process_action: "close", dossier_id: dossier_id, dossier: { motivation: "Yallah" }}}
 
         before do
+          Timecop.freeze(DateTime.now)
+
           expect_any_instance_of(AttestationTemplate)
             .to receive(:attestation_for)
-            .with(have_attributes(motivation: "Yallah"))
+            .with(have_attributes(motivation: "Yallah", processed_at: DateTime.now))
         end
+
+        after { Timecop.return }
 
         it { subject }
       end

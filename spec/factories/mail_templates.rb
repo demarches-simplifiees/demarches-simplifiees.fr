@@ -1,21 +1,15 @@
 FactoryGirl.define do
-  factory :mail_template do
+  factory :mail_template, class: Mails::ClosedMail do
     object "Object, voila voila"
     body "Blabla ceci est mon body"
-    type 'MailValidated'
 
-    trait :dossier_submitted do
-      type 'MailSubmitted'
-    end
+    factory :dossier_submitted_mail_template, class: Mails::ReceivedMail
 
-    trait :dossier_refused do
-      type 'MailRefused'
-    end
+    factory :dossier_refused_mail_template, class: Mails::RefusedMail
 
-    trait :dossier_en_instruction do
-      object "[TPS] Accusé de réception pour votre dossier nº --numero_dossier--"
-      body "Votre administration vous confirme la bonne réception de votre dossier nº --numero_dossier--"
-      type 'MailReceived'
+    factory :dossier_en_instruction_mail_template, class: Mails::InitiatedMail do
+      object "[TPS] Accusé de réception pour votre dossier nº --numéro du dossier--"
+      body "Votre administration vous confirme la bonne réception de votre dossier nº --numéro du dossier--"
     end
   end
 end
