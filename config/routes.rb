@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   namespace :manager do
     resources :procedures, only: [:index, :show]
+    resources :administrateurs, only: [:index, :show]
 
     root to: "procedures#index"
   end
