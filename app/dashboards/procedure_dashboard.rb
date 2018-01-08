@@ -9,7 +9,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     types_de_piece_justificative: Field::HasMany,
-    types_de_champ: Field::HasMany.with_options(class_name: "TypeDeChampPublic"),
+    types_de_champ: TypesDeChampCollectionField,
     dossiers: Field::HasMany,
     procedure_path: Field::HasOne,
     administrateur: Field::BelongsTo,
