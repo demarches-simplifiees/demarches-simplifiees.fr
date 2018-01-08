@@ -1,5 +1,8 @@
 module NewGestionnaire
   class AvisController < GestionnaireController
+    before_action :authenticate_gestionnaire!, except: [:sign_up, :create_gestionnaire]
+    before_action :redirect_if_no_sign_up_needed, only: [:sign_up]
+    before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_gestionnaire]
     before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire]
 
     A_DONNER_STATUS = 'a-donner'
@@ -56,11 +59,55 @@ module NewGestionnaire
       redirect_to instruction_avis_path(avis)
     end
 
+    def sign_up
+      @email = params[:email]
+      @dossier = Avis.includes(:dossier).find(params[:id]).dossier
+
+      render layout: 'new_application'
+    end
+
+    def create_gestionnaire
+      email = params[:email]
+      password = params['gestionnaire']['password']
+
+      gestionnaire = Gestionnaire.new(email: email, password: password)
+
+      if gestionnaire.save
+        sign_in(gestionnaire, scope: :gestionnaire)
+        Avis.link_avis_to_gestionnaire(gestionnaire)
+        avis = Avis.find(params[:id])
+        redirect_to url_for(avis_index_path)
+      else
+        flash[:alert] = gestionnaire.errors.full_messages
+        redirect_to url_for(sign_up_avis_path(params[:id], email))
+      end
+    end
+
     private
 
     def set_avis_and_dossier
       @avis = avis
       @dossier = avis.dossier
+    end
+
+    def redirect_if_no_sign_up_needed
+      avis = Avis.find(params[:id])
+
+      if current_gestionnaire.present?
+        # a gestionnaire is authenticated ... lets see if it can view the dossier
+
+        redirect_to avis_url(avis)
+      elsif avis.gestionnaire.present? && avis.gestionnaire.email == params[:email]
+        # the avis gestionnaire has already signed up and it sould sign in
+
+        redirect_to new_gestionnaire_session_url
+      end
+    end
+
+    def check_avis_exists_and_email_belongs_to_avis
+      if !Avis.avis_exists_and_email_belongs_to_avis?(params[:id], params[:email])
+        redirect_to url_for(root_path)
+      end
     end
 
     def avis
