@@ -167,6 +167,8 @@ describe Procedure do
       @logo = File.open('spec/fixtures/white.png')
       @signature = File.open('spec/fixtures/black.png')
       @attestation_template = create(:attestation_template, procedure: procedure, logo: @logo, signature: @signature)
+      @procedure = procedure.clone(procedure.administrateur)
+      @procedure.save
     end
 
     after do
@@ -174,7 +176,7 @@ describe Procedure do
       @signature.close
     end
 
-    subject { procedure.clone(procedure.administrateur) }
+    subject { @procedure }
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
