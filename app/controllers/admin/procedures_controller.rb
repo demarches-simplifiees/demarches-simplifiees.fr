@@ -166,8 +166,13 @@ class Admin::ProceduresController < AdminController
       flash.notice = 'Procédure clonée'
       redirect_to edit_admin_procedure_path(id: new_procedure.id)
     else
-      flash.now.alert = new_procedure.errors.full_messages
-      render 'index'
+      if params[:from_new_from_existing].present?
+        flash.alert = new_procedure.errors.full_messages
+        redirect_to new_from_existing_admin_procedures_path
+      else
+        flash.now.alert = new_procedure.errors.full_messages
+        render 'index'
+      end
     end
 
   rescue ActiveRecord::RecordNotFound

@@ -18,4 +18,4 @@
               - if !procedure.archivee?
                 = link_to('Tester', commencer_path(procedure_path: procedure.path), target: "_blank")
             %td
-              = link_to('Cloner', admin_procedure_clone_path(procedure.id), 'data-method' => :put, class: 'btn-sm btn-primary clone-btn')
+              = link_to('Cloner', admin_procedure_clone_path(procedure.id, from_new_from_existing: true), 'data-method' => :put, class: 'btn-sm btn-primary clone-btn')
