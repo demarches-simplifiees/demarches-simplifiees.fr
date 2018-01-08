@@ -444,8 +444,10 @@ describe Admin::ProceduresController, type: :controller do
         subject
       end
 
-      it { expect(response).to redirect_to :admin_procedures }
-      it { expect(flash[:alert]).to have_content 'Procédure inexistante' }
+      it 'creates a new procedure and redirect to it' do
+        expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
+        expect(flash[:notice]).to have_content 'Procédure clonée'
+      end
     end
   end
 

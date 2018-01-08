@@ -159,7 +159,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def clone
-    procedure = current_administrateur.procedures.find(params[:procedure_id])
+    procedure = Procedure.find(params[:procedure_id])
 
     new_procedure = procedure.clone(current_administrateur)
     if new_procedure
