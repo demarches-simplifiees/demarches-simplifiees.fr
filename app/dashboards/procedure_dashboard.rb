@@ -8,7 +8,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   # which determines how the attribute is displayed
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
-    types_de_piece_justificative: Field::HasMany,
+    types_de_piece_justificative: TypesDePieceJustificativeCollectionField,
     types_de_champ: TypesDeChampCollectionField,
     dossiers: Field::HasMany,
     procedure_path: Field::HasOne,
@@ -56,6 +56,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :hidden_at,
     :archived_at,
     :types_de_champ,
+    :types_de_piece_justificative,
     :for_individual,
     :individual_with_siret,
     :auto_archive_on,
