@@ -34,7 +34,7 @@ class Admin::MailTemplatesController < AdminController
   def update_params
     {
       procedure_id: params[:procedure_id],
-      object: params[:mail_template][:object],
+      subject: params[:mail_template][:subject],
       body: params[:mail_template][:body],
     }
   end
