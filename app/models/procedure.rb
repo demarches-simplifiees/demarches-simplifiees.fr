@@ -167,23 +167,23 @@ class Procedure < ActiveRecord::Base
   end
 
   def initiated_mail_template
-    initiated_mail || Mails::InitiatedMail.default
+    initiated_mail || Mails::InitiatedMail.default_for_procedure(self)
   end
 
   def received_mail_template
-    received_mail || Mails::ReceivedMail.default
+    received_mail || Mails::ReceivedMail.default_for_procedure(self)
   end
 
   def closed_mail_template
-    closed_mail || Mails::ClosedMail.default
+    closed_mail || Mails::ClosedMail.default_for_procedure(self)
   end
 
   def refused_mail_template
-    refused_mail || Mails::RefusedMail.default
+    refused_mail || Mails::RefusedMail.default_for_procedure(self)
   end
 
   def without_continuation_mail_template
-    without_continuation_mail || Mails::WithoutContinuationMail.default
+    without_continuation_mail || Mails::WithoutContinuationMail.default_for_procedure(self)
   end
 
   def fields

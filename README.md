@@ -14,6 +14,9 @@ Téléprocédures Simplifiées, ou TPS pour les intimes, est une plateforme 100 
 ### Développement
 
 - Mailcatcher : `gem install mailcatcher`
+- Hivemind :
+  * Mac : `brew install hivemind`
+  * Linux : voir https://github.com/DarthSim/hivemind#installation
 
 ### Tests
 
@@ -68,6 +71,8 @@ client_id: ''
 client_secret: ''
 ```
 
+*Note : les valeurs pour ces deux paramètres sont renseignées dans le Keepass*
+
 ## Création des comptes initiaux
 
     rails c
@@ -81,7 +86,6 @@ client_secret: ''
 
 ## Lancement de l'application
 
-    brew install hivemind # Avec Linux voir https://github.com/DarthSim/hivemind#installation
     hivemind
 
 ## Programmation des jobs
@@ -125,3 +129,14 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
     bundle binstub railties --force
     rake rails:update:bin
+
+## Tâches Super Admin
+
+- ajouter un compte super admin :
+  `bundle exec rake admin:create_admin[email-du-compte-github@exemple.com]`
+
+- lister les comptes super admin :
+  `bundle exec rake admin:list`
+
+- supprimer un compte super admin : 
+  `bundle exec rake admin:delete_admin[email-du-compte-github@exemple.com]`
