@@ -1,0 +1,29 @@
+-# # Show
+-#
+-# This view is the template for the show page.
+-# It renders the attributes of a resource,
+-# as well as a link to its edit page.
+-#
+-# ## Local variables:
+-#
+-# - `page`:
+-#   An instance of [Administrate::Page::Show][1].
+-#   Contains methods for accessing the resource to be displayed on the page,
+-#   as well as helpers for describing how each attribute of the resource
+-#   should be displayed.
+-#
+-# [1]: http://www.rubydoc.info/gems/administrate/Administrate/Page/Show
+
+- content_for(:title) { page.page_title }
+
+%header.header
+  %h1.header__heading= content_for(:title)
+  .header__actions
+
+%dl
+  - page.attributes.each do |attribute|
+    %dt.attribute-label
+      = t("helpers.label.#{resource_name}.#{attribute.name}", default: attribute.name.titleize)
+
+    %dd.attribute-data{ class: "attribute-data--#{attribute.html_class}" }
+      = render_field attribute
