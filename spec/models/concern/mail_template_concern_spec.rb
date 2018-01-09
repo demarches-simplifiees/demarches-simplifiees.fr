@@ -4,7 +4,7 @@ describe MailTemplateConcern do
   let(:procedure) { create(:procedure) }
   let(:dossier) { create(:dossier, procedure: procedure) }
   let(:dossier2) { create(:dossier, procedure: procedure) }
-  let(:initiated_mail) { Mails::InitiatedMail.default_for_procedure(procedure) }
+  let(:initiated_mail) { create(:initiated_mail, procedure: procedure) }
 
   shared_examples "can replace tokens in template" do
     describe 'with no token to replace' do
