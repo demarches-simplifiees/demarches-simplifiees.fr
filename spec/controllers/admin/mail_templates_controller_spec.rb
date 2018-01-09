@@ -19,14 +19,14 @@ describe Admin::MailTemplatesController, type: :controller do
   end
 
   describe 'PATCH update' do
-    let(:object) { 'plop modif' }
-    let(:body) { 'plip modif' }
+    let(:mail_subject) { 'plop modif' }
+    let(:mail_body) { 'plip modif' }
 
     before :each do
       patch :update,
         params: { procedure_id: procedure.id,
                   id: initiated_mail.class.const_get(:SLUG),
-                  mail_template: { object: object, body: body }
+                  mail_template: { subject: mail_subject, body: mail_body }
                 }
     end
 
@@ -35,8 +35,8 @@ describe Admin::MailTemplatesController, type: :controller do
     context 'the mail template' do
       subject { procedure.reload ; procedure.initiated_mail_template }
 
-      it { expect(subject.object).to eq(object) }
-      it { expect(subject.body).to eq(body) }
+      it { expect(subject.subject).to eq(mail_subject) }
+      it { expect(subject.body).to eq(mail_body) }
     end
   end
 end

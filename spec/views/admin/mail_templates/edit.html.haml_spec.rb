@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'admin/mail_templates/edit.html.haml', type: :view do
   let(:procedure) { create(:procedure) }
-  let(:mail_template) { create(:mail_template, procedure: procedure) }
+  let(:mail_template) { create(:received_mail, procedure: procedure) }
   let(:all_tags) { mail_template.tags }
 
   before do
