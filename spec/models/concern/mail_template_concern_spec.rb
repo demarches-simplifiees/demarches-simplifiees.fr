@@ -33,9 +33,9 @@ describe MailTemplateConcern do
     end
   end
 
-  describe '.object_for_dossier' do
-    before { initiated_mail.object = template }
-    subject { initiated_mail.object_for_dossier(dossier) }
+  describe '.subject_for_dossier' do
+    before { initiated_mail.subject = template }
+    subject { initiated_mail.subject_for_dossier(dossier) }
 
     it_behaves_like "can replace tokens in template"
   end

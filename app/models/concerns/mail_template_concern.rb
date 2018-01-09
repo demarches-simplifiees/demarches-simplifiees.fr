@@ -5,8 +5,8 @@ module MailTemplateConcern
   include ActionView::Helpers::UrlHelper
   include TagsSubstitutionConcern
 
-  def object_for_dossier(dossier)
-    replace_tags(object, dossier)
+  def subject_for_dossier(dossier)
+    replace_tags(subject, dossier)
   end
 
   def body_for_dossier(dossier)
@@ -20,7 +20,7 @@ module MailTemplateConcern
   module ClassMethods
     def default_for_procedure(procedure)
       body = ActionController::Base.new.render_to_string(template: self.const_get(:TEMPLATE_NAME))
-      self.new(object: self.const_get(:DEFAULT_OBJECT), body: body, procedure: procedure)
+      self.new(subject: self.const_get(:DEFAULT_SUBJECT), body: body, procedure: procedure)
     end
   end
 

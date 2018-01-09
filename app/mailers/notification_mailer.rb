@@ -11,22 +11,22 @@ class NotificationMailer < ApplicationMailer
   def send_notification(dossier, mail_template, attestation = nil)
     vars_mailer(dossier)
 
-    @object = mail_template.object_for_dossier dossier
+    @subject = mail_template.subject_for_dossier dossier
     @body = mail_template.body_for_dossier dossier
 
     if attestation.present?
       attachments['attestation.pdf'] = attestation
     end
 
-    mail(subject: @object) { |format| format.html { @body } }
+    mail(subject: @subject) { |format| format.html { @body } }
   end
 
   def send_draft_notification(dossier)
     vars_mailer(dossier)
 
-    @object = "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}"
+    @subject = "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}"
 
-    mail(subject: @object)
+    mail(subject: @subject)
   end
 
   def new_answer(dossier)
@@ -39,7 +39,7 @@ class NotificationMailer < ApplicationMailer
     Commentaire.create(
       dossier: @dossier,
       email: I18n.t("dynamics.contact_email"),
-      body: ["[#{@object}]", @body].join("<br><br>")
+      body: ["[#{@subject}]", @body].join("<br><br>")
     )
   end
 
