@@ -93,7 +93,7 @@ client_secret: ''
     AutoArchiveProcedureJob.set(cron: "* * * * *").perform_later
     WeeklyOverviewJob.set(cron: "0 8 * * 0").perform_later
     AutoReceiveDossiersForProcedureJob.set(cron: "* * * * *").perform_later(procedure_declaratoire_id, "received")
-    FindDubiousProcedureJob.set(cron: "0 0 * * *").perform_later
+    FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
 
 ## Exécution des tests (RSpec)
 
