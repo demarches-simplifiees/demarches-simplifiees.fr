@@ -1,0 +1,7 @@
+- content_for(:title, 'Liste de procédures douteuses')
+
+%ul
+  - @procedures_and_type_de_champs.each do |procedure, type_de_champs|
+    %li
+      Nº #{procedure.id}, #{procedure.libelle} :
+      %b= type_de_champs.map(&:libelle).join(', ')

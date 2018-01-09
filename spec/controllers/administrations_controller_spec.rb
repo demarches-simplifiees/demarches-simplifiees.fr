@@ -35,8 +35,8 @@ describe AdministrationsController, type: :controller do
       end
 
       it 'alert new mail are send' do
-        expect(NewAdminMailer).to receive(:new_admin_email).and_return(NewAdminMailer)
-        expect(NewAdminMailer).to receive(:deliver_now!)
+        expect(AdministrationMailer).to receive(:new_admin_email).and_return(AdministrationMailer)
+        expect(AdministrationMailer).to receive(:deliver_now!)
         subject
       end
     end
