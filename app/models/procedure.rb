@@ -119,7 +119,7 @@ class Procedure < ActiveRecord::Base
     procedure.refused_mail = refused_mail.try(:dup)
     procedure.without_continuation_mail = without_continuation_mail.try(:dup)
 
-    return procedure if procedure.save
+    procedure
   end
 
   def brouillon?
