@@ -136,9 +136,8 @@ class Admin::ProceduresController < AdminController
       render '/admin/procedures/transfer', formats: 'js', status: 404
     else
       procedure = current_administrateur.procedures.find(params[:procedure_id])
-      clone_procedure = procedure.clone
+      clone_procedure = procedure.clone(admin)
 
-      clone_procedure.administrateur = admin
       clone_procedure.save
 
       flash.now.notice = "La procédure a correctement été clonée vers le nouvel administrateur."
@@ -160,20 +159,39 @@ class Admin::ProceduresController < AdminController
   end
 
   def clone
-    procedure = current_administrateur.procedures.find(params[:procedure_id])
+    procedure = Procedure.find(params[:procedure_id])
+    new_procedure = procedure.clone(current_administrateur)
 
-    new_procedure = procedure.clone
-    if new_procedure
+    if new_procedure.save
       flash.notice = 'Procédure clonée'
       redirect_to edit_admin_procedure_path(id: new_procedure.id)
     else
-      flash.now.alert = procedure.errors.full_messages
-      render 'index'
+      if params[:from_new_from_existing].present?
+        flash.alert = new_procedure.errors.full_messages
+        redirect_to new_from_existing_admin_procedures_path
+      else
+        flash.now.alert = new_procedure.errors.full_messages
+        render 'index'
+      end
     end
 
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path
+  end
+
+  def new_from_existing
+    procedures_with_more_than_30_dossiers_ids = Procedure
+      .publiees_ou_archivees
+      .joins(:dossiers)
+      .group("procedures.id")
+      .having("count(dossiers.id) > ?", 30)
+      .pluck('procedures.id')
+
+    @grouped_procedures = Procedure
+      .where(id: procedures_with_more_than_30_dossiers_ids)
+      .group_by(&:administrateur)
+      .sort_by { |a, _| a.created_at }
   end
 
   def active_class
