@@ -39,6 +39,10 @@
         = ff.object.button_down(index: ff.index, url: @types_de_champ_facade.move_down_url(ff), private: @types_de_champ_facade.private)
 
     .form-group
+      %h4 position
+      = ff.number_field :custom_order_place, value: (ff.index + 1), length: 999, class: 'form-control', style: 'width: 100px;'
+
+    .form-group
       %br &nbsp;
       - if ff.object.id.nil?
         = f.submit "Ajouter le champ", class: 'btn btn-success', id: @types_de_champ_facade.add_button_id
