@@ -8,7 +8,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
       subject.deliver_now
       commentaire = Commentaire.last
-      expect(commentaire.body).to include(email_template.object_for_dossier(dossier), email_template.body_for_dossier(dossier))
+      expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))
       expect(commentaire.dossier).to eq(dossier)
     end
   end
@@ -17,13 +17,13 @@ RSpec.describe NotificationMailer, type: :mailer do
   let(:dossier) { create(:dossier, user: user) }
 
   describe '.send_notification' do
-    let(:email_template) { instance_double('email_template', object_for_dossier: 'object', body_for_dossier: 'body') }
+    let(:email_template) { instance_double('email_template', subject_for_dossier: 'subject', body_for_dossier: 'body') }
     let(:attestation) { nil }
     let(:notifications_count_before) { Notification.count }
 
     subject { described_class.send_notification(dossier, email_template, attestation) }
 
-    it { expect(subject.subject).to eq(email_template.object_for_dossier) }
+    it { expect(subject.subject).to eq(email_template.subject_for_dossier) }
     it { expect(subject.body).to eq(email_template.body_for_dossier) }
     it { expect(subject.attachments['attestation.pdf']).to eq(nil) }
 
@@ -50,7 +50,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
 
     it do
-      expect(subject.subject).to eq(email_template.object)
+      expect(subject.subject).to eq(email_template.subject)
       expect(subject.body).to eq(email_template.body)
     end
 

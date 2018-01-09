@@ -8,7 +8,7 @@
     method: :put do |f|
     .row
       .col-md-6
-        = f.input :object, label: "Objet de l'email"
+        = f.input :subject, label: "Objet de l'email"
     = f.input :body, label: "Corps de l'email", input_html: { class: 'wysihtml5' }
     .text-right
       = link_to "Annuler", admin_procedure_mail_templates_path(@procedure), class: "btn btn-default"
