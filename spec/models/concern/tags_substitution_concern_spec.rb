@@ -167,12 +167,31 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
-    context "when the template has a date de décision tag" do
-      let(:template) { '--date de décision--' }
+    context "when using a date tag" do
+      before do
+        dossier.accepte!
+        dossier.en_construction_at = DateTime.new(2001, 2, 3)
+        dossier.en_instruction_at = DateTime.new(2004, 5, 6)
+        dossier.processed_at = DateTime.new(2007, 8, 9)
+      end
 
-       before { dossier.accepte! }
+      context "with date de dépôt" do
+        let(:template) { '--date de dépôt--' }
 
-       it { is_expected.to eq(DateTime.now.localtime.strftime('%d/%m/%Y')) }
+         it { is_expected.to eq('03/02/2001') }
+      end
+
+      context "with date de passage en instruction" do
+        let(:template) { '--date de passage en instruction--' }
+
+         it { is_expected.to eq('06/05/2004') }
+      end
+
+      context "with date de décision" do
+        let(:template) { '--date de décision--' }
+
+         it { is_expected.to eq('09/08/2007') }
+      end
     end
 
     context "when the template has a libellé procédure tag" do
