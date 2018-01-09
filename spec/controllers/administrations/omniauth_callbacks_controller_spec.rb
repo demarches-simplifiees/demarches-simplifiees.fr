@@ -8,7 +8,7 @@ describe Administrations::OmniauthCallbacksController, type: :controller do
   describe 'POST #github' do
     let(:params) { { "info" => { "email" => email } } }
     before do
-      controller.stub(:sign_in).and_return true
+      allow(controller).to receive(:sign_in).and_return true
       @request.env["omniauth.auth"] = params
     end
     subject { post :github }
