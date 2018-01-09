@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171214155554) do
+ActiveRecord::Schema.define(version: 20180108144114) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "unaccent"
 
   create_table "administrateurs", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -322,15 +323,6 @@ ActiveRecord::Schema.define(version: 20171214155554) do
     t.string  "type",         default: "InviteGestionnaire"
   end
 
-  create_table "mail_templates", force: :cascade do |t|
-    t.string   "object"
-    t.text     "body"
-    t.string   "type"
-    t.integer  "procedure_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "module_api_cartos", force: :cascade do |t|
     t.integer "procedure_id"
     t.boolean "use_api_carto",          default: false
@@ -424,6 +416,7 @@ ActiveRecord::Schema.define(version: 20171214155554) do
     t.datetime "published_at"
     t.datetime "hidden_at"
     t.datetime "archived_at"
+    t.datetime "whitelisted_at"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at", using: :btree
   end
 

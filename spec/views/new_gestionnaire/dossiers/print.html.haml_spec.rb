@@ -7,7 +7,7 @@ describe 'new_gestionnaire/dossiers/print.html.haml', type: :view do
 
     before do
       assign(:dossier, dossier)
-      view.stub(:current_gestionnaire).and_return(current_gestionnaire)
+      allow(view).to receive(:current_gestionnaire).and_return(current_gestionnaire)
 
       render
     end
