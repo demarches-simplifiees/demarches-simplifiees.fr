@@ -16,6 +16,6 @@
               = procedure.libelle
             %td{ style: 'padding-right: 10px; padding-left: 10px; width: 60px;' }
               - if !procedure.archivee?
-                = link_to('Tester', commencer_path(procedure_path: procedure.path), target: "_blank")
+                = link_to('Consulter', commencer_path(procedure_path: procedure.path), target: "_blank")
             %td
               = link_to('Cloner', admin_procedure_clone_path(procedure.id, from_new_from_existing: true), 'data-method' => :put, class: 'btn-sm btn-primary clone-btn')
