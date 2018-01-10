@@ -26,6 +26,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     published_at: Field::DateTime,
     hidden_at: Field::DateTime,
     archived_at: Field::DateTime,
+    whitelisted_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -54,6 +55,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :created_at,
     :updated_at,
     :published_at,
+    :whitelisted_at,
     :hidden_at,
     :archived_at,
     :types_de_champ,
