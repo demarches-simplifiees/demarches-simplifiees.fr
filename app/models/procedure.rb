@@ -248,6 +248,10 @@ class Procedure < ActiveRecord::Base
     }.to_json
   end
 
+  def whitelist!
+    update_attribute('whitelisted_at', DateTime.now)
+  end
+
   private
 
   def field_hash(label, table, column)
