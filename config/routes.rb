@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   namespace :manager do
-    resources :procedures, only: [:index, :show]
+    resources :procedures, only: [:index, :show] do
+      post 'whitelist', on: :member
+    end
+
     resources :administrateurs, only: [:index, :show]
 
     root to: "procedures#index"

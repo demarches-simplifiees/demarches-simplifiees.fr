@@ -3,5 +3,6 @@
 %ul
   - @procedures_and_type_de_champs.each do |procedure, type_de_champs|
     %li
-      Nº #{procedure.id}, #{procedure.libelle} :
+      = link_to "Nº #{procedure.id},", manager_procedure_url(procedure)
+       #{procedure.libelle} :
       %b= type_de_champs.map(&:libelle).join(', ')

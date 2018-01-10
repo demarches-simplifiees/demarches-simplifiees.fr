@@ -1,21 +1,10 @@
 module Manager
   class ProceduresController < Manager::ApplicationController
-    # To customize the behavior of this controller,
-    # simply overwrite any of the RESTful actions. For example:
-    #
-    # def index
-    #   super
-    #   @resources = Procedure.
-    #     page(params[:page]).
-    #     per(10)
-    # end
-
-    # Define a custom finder by overriding the `find_resource` method:
-    # def find_resource(param)
-    #   Procedure.find_by!(slug: param)
-    # end
-
-    # See https://administrate-prototype.herokuapp.com/customizing_controller_actions
-    # for more information
+    def whitelist
+      procedure = Procedure.find(params[:id])
+      procedure.whitelist!
+      flash[:notice] = "Procédure whitelistée."
+      redirect_to manager_procedure_path(procedure)
+    end
   end
 end
