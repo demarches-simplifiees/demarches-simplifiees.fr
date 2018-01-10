@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  namespace :manager do
+    resources :procedures, only: [:index, :show]
+    resources :administrateurs, only: [:index, :show]
+
+    root to: "procedures#index"
+  end
+
   get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
 
   devise_for :administrations,

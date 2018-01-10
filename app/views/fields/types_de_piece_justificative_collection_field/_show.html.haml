@@ -1,0 +1,12 @@
+- if field.data.any?
+  %table.collection-data{ "aria-labelledby": "page-title" }
+    %thead
+      %tr
+        %td.cell-label Libelle
+    %tbody
+      - field.data.order(:order_place).each do |f|
+        %tr
+          %td.cell-data
+            = f.libelle
+- else
+  Aucun
