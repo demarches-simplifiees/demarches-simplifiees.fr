@@ -147,6 +147,10 @@ class Procedure < ActiveRecord::Base
     publiee? || archivee?
   end
 
+  def whitelisted?
+    whitelisted_at.present?
+  end
+
   def total_dossier
     self.dossiers.state_not_brouillon.size
   end
