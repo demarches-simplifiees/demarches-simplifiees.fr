@@ -20,7 +20,7 @@
 %header.header
   %h1.header__heading= content_for(:title)
   .header__actions
-    - if procedure.whitelisted_at.nil?
+    - if !procedure.whitelisted?
       = link_to 'whitelister', manager_procedure_whitelist_path(procedure), method: :post, class: 'button'
 
 %dl
