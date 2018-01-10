@@ -1,25 +1,33 @@
 module TagsSubstitutionConcern
   extend ActiveSupport::Concern
 
-  def tags(is_dossier_termine: true)
+  def tags
     if procedure.for_individual?
       identity_tags = individual_tags
     else
       identity_tags = entreprise_tags + etablissement_tags
     end
 
-    tags = identity_tags + dossier_tags + procedure_type_de_champ_public_private_tags
-    filter_tags(tags, is_dossier_termine)
+    filter_tags(identity_tags + dossier_tags + procedure_type_de_champ_public_private_tags)
   end
 
   private
 
-  def filter_tags(tags, is_dossier_termine)
-    if !is_dossier_termine
-      tags.reject { |tag| tag[:dossier_termine_only] }
-    else
-      tags
+  def filter_tags(tags)
+    # Implementation note: emails and attestation generations are generally
+    # triggerred by changes to the dossier’s state. The email or attestation
+    # is generated right after the dossier has reached its new state.
+    #
+    # DOSSIER_STATE should be equal to this new state.
+    #
+    # For instance, for an email that gets generated for the brouillon->en_construction
+    # transition, DOSSIER_STATE should equal 'en_construction'.
+
+    if !defined?(self.class::DOSSIER_STATE)
+      raise NameError.new("The class #{self.class.name} includes TagsSubstitutionConcern, it should define the DOSSIER_STATE constant but it does not", :DOSSIER_STATE)
     end
+
+    tags.select { |tag| (tag[:available_for_states] || Dossier::SOUMIS).include?(self.class::DOSSIER_STATE) }
   end
 
   def procedure_type_de_champ_public_private_tags
@@ -33,7 +41,7 @@ module TagsSubstitutionConcern
         libelle: 'motivation',
         description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
         target: :motivation,
-        dossier_termine_only: true
+        available_for_states: Dossier::TERMINE
       },
       {
         libelle: 'date de dépôt',
@@ -49,7 +57,7 @@ module TagsSubstitutionConcern
         libelle: 'date de décision',
         description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
         lambda: -> (d) { format_date(d.processed_at) },
-        dossier_termine_only: true
+        available_for_states: Dossier::TERMINE
       },
       { libelle: 'libellé procédure', description: '', lambda: -> (d) { d.procedure.libelle } },
       { libelle: 'numéro du dossier', description: '', target: :id }
@@ -101,7 +109,7 @@ module TagsSubstitutionConcern
     ]
 
     tags_and_datas
-      .map { |(tags, data)| [filter_tags(tags, dossier.termine?), data] }
+      .map { |(tags, data)| [filter_tags(tags), data] }
       .inject(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
    end
 
