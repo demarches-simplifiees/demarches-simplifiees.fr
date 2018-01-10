@@ -1,0 +1,38 @@
+-# # Collection
+-#
+-# This partial is used on the `index` and `show` pages
+-# to display a collection of resources in an HTML table.
+-#
+-# ## Local variables:
+-#
+-# - `collection_presenter`:
+-#   An instance of [Administrate::Page::Collection][1].
+-#   The table presenter uses `ResourceDashboard::COLLECTION_ATTRIBUTES` to determine
+-#   the columns displayed in the table
+-# - `resources`:
+-#   An ActiveModel::Relation collection of resources to be displayed in the table.
+-#   By default, the number of resources is limited by pagination
+-#   or by a hard limit to prevent excessive page load times
+-#
+-# [1]: http://www.rubydoc.info/gems/administrate/Administrate/Page/Collection
+
+%table.collection-data{ "aria-labelledby": "page-title" }
+  %thead
+    %tr
+      - collection_presenter.attribute_types.each do |attr_name, attr_type|
+        %th.cell-label{ class: "cell-label--#{attr_type.html_class} cell-label--#{collection_presenter.ordered_html_class(attr_name)}", scope: "col" }
+          = link_to(sanitized_order_params.merge(collection_presenter.order_params_for(attr_name))) do
+            = t("helpers.label.#{resource_name}.#{attr_name}", default: attr_name.to_s).titleize
+
+            - if collection_presenter.ordered_by?(attr_name)
+              %span.cell-label__sort-indicator{ class: "cell-label__sort-indicator--#{collection_presenter.ordered_html_class(attr_name)}" }
+                = svg_tag("administrate/sort_arrow.svg", "sort_arrow", width: "13", height: "13")
+      %th{ colspan: "2", scope: "col" }
+
+  %tbody
+    - resources.each do |resource|
+      %tr.table__row{ role: "link", tabindex: "0", "data-url": polymorphic_path([namespace, resource]) }
+        - collection_presenter.attributes_for(resource).each do |attribute|
+          %td.cell-data{ class: "cell-data--#{attribute.html_class}" }
+            = link_to polymorphic_path([namespace, resource]), class: "action-show table__link-plain" do
+              = render_field attribute
