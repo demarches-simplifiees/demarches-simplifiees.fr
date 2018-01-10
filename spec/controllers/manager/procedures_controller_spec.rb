@@ -5,7 +5,7 @@ describe Manager::ProceduresController, type: :controller do
 
     before do
       sign_in administration
-      post :whitelist, procedure_id: procedure.id
+      post :whitelist, id: procedure.id
       procedure.reload
     end
 
