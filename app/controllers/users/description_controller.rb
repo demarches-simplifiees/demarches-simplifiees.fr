@@ -53,8 +53,9 @@ class Users::DescriptionController < UsersController
       redirect_to url_for(controller: :dossiers, action: :index, liste: :brouillon)
     else
       if dossier.brouillon?
-        NotificationMailer.send_notification(dossier, procedure.initiated_mail_template).deliver_now!
         dossier.en_construction!
+        # TODO move to model
+        NotificationMailer.send_notification(dossier, procedure.initiated_mail_template).deliver_now!
       end
       flash.notice = 'Félicitations, votre demande a bien été enregistrée.'
       redirect_to url_for(controller: :recapitulatif, action: :show, dossier_id: dossier.id)
