@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.github.com/repos/sgmap/tps/releases/latest
+    uri: https://api.github.com/repos/betagouv/tps/releases/latest
     body:
       encoding: US-ASCII
       string: ''
