@@ -11,7 +11,7 @@ class AdministrationMailer < ApplicationMailer
 
   def dubious_procedures(procedures_and_type_de_champs)
     @procedures_and_type_de_champs = procedures_and_type_de_champs
-    mail(to: 'tech@tps.apientreprise.fr',
+    mail(to: 'equipe@tps.apientreprise.fr',
          subject: "[RGS] De nouvelles procédures comportent des champs interdits")
   end
 end
