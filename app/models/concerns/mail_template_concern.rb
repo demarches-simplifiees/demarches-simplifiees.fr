@@ -13,10 +13,6 @@ module MailTemplateConcern
     replace_tags(body, dossier)
   end
 
-  def tags(is_dossier_termine: self.class.const_get(:IS_DOSSIER_TERMINE))
-    super
-  end
-
   module ClassMethods
     def default_for_procedure(procedure)
       body = ActionController::Base.new.render_to_string(template: self.const_get(:TEMPLATE_NAME))
