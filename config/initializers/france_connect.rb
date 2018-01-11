@@ -3,12 +3,12 @@ FRANCE_CONNECT = if !Rails.env.test?
   Hashie::Mash.load(file_path)
 else
   Hashie::Mash.new({
-    particulier_identifier: 'plop',
-    particulier_secret: 'plip',
-    particulier_redirect_uri: 'https://bidon.com/endpoint',
-    particulier_authorization_endpoint: 'https://bidon.com/endpoint',
-    particulier_token_endpoint: 'https://bidon.com/endpoint',
-    particulier_userinfo_endpoint: 'https://bidon.com/endpoint',
-    particulier_logout_endpoint: 'https://bidon.com/endpoint',
+    identifier: 'plop',
+    secret: 'plip',
+    redirect_uri: 'https://bidon.com/endpoint',
+    authorization_endpoint: 'https://bidon.com/endpoint',
+    token_endpoint: 'https://bidon.com/endpoint',
+    userinfo_endpoint: 'https://bidon.com/endpoint',
+    logout_endpoint: 'https://bidon.com/endpoint',
   })
 end

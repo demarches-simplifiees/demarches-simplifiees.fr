@@ -50,7 +50,7 @@ class Users::SessionsController < Sessions::SessionsController
 
       case connected_with_france_connect
       when 'particulier'
-        redirect_to FRANCE_CONNECT.particulier_logout_endpoint
+        redirect_to FRANCE_CONNECT.logout_endpoint
         return
       end
     end
