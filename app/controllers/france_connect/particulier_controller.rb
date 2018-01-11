@@ -11,7 +11,8 @@ class FranceConnect::ParticulierController < ApplicationController
     user_infos = FranceConnectService.retrieve_user_informations_particulier(params[:code])
 
     if user_infos.present?
-      france_connect_information = FranceConnectInformation.find_by_france_connect_particulier(user_infos)
+      france_connect_information = FranceConnectInformation
+        .find_by(france_connect_particulier_id: user_infos[:france_connect_particulier_id])
 
       if france_connect_information.nil?
         france_connect_information = FranceConnectInformation.create(
