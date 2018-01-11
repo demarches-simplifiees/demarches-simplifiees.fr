@@ -20,7 +20,7 @@
       #liste-champs
         = render partial: 'users/description/champs', locals: { private: false }
 
-    - if !@procedure.lien_demarche.blank? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0
+    - if @procedure.lien_demarche.present? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0
       %br
       %h3 Pièces jointes
 
