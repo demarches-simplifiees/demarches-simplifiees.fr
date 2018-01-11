@@ -9,7 +9,7 @@ shared_examples 'description_controller_spec' do
       end
 
       it 'redirects to users/sign_in' do
-        get :show, params: {dossier_id: dossier_id}
+        get :show, params: { dossier_id: dossier_id }
         expect(response).to redirect_to('/users/sign_in')
       end
     end
@@ -17,7 +17,7 @@ shared_examples 'description_controller_spec' do
     context 'when all is ok' do
       before do
         dossier.entreprise = create :entreprise
-        get :show, params: {dossier_id: dossier_id}
+        get :show, params: { dossier_id: dossier_id }
       end
 
       it 'returns http success' do
@@ -41,7 +41,7 @@ shared_examples 'description_controller_spec' do
     end
 
     it 'redirection vers start si mauvais dossier ID' do
-      get :show, params: {dossier_id: bad_dossier_id}
+      get :show, params: { dossier_id: bad_dossier_id }
 
       expect(flash[:alert]).to be_present
       expect(response).to redirect_to(root_path)
@@ -55,7 +55,7 @@ shared_examples 'description_controller_spec' do
           dossier.state = 'en_instruction'
           dossier.save
 
-          get :show, params: {dossier_id: dossier.id}
+          get :show, params: { dossier_id: dossier.id }
         end
 
         it { is_expected.to redirect_to root_path }
@@ -63,7 +63,7 @@ shared_examples 'description_controller_spec' do
     end
 
     describe 'before action check_autorisation_donnees' do
-      subject { get :show, params: {dossier_id: dossier_id} }
+      subject { get :show, params: { dossier_id: dossier_id } }
 
       context 'when dossier does not have a valid autorisations_donness (nil)' do
         before do
@@ -83,12 +83,9 @@ shared_examples 'description_controller_spec' do
     end
 
     describe 'before action check_starter_dossier_informations' do
-      subject { get :show, params: {dossier_id: dossier_id} }
+      subject { get :show, params: { dossier_id: dossier_id } }
 
       context 'when dossier does not have an enterprise datas' do
-        before do
-        end
-
         it { expect(dossier.entreprise).to be_nil }
         it { expect(subject).to redirect_to "/users/dossiers/#{dossier.id}" }
       end
@@ -105,51 +102,69 @@ shared_examples 'description_controller_spec' do
   end
 
   describe 'POST #update' do
-    let(:timestamp) { Time.now }
-    let(:description) { 'Description de test Coucou, je suis un saut à la ligne Je suis un double saut  la ligne.' }
-
     context 'Tous les attributs sont bons' do
       describe 'Premier enregistrement des données' do
-        subject { post :update, params: {dossier_id: dossier_id, submit: submit} }
+        let(:state) { 'brouillon' }
 
-        before do
-          dossier.brouillon!
-          subject
+        def submit_dossier
+          post :update, params: { dossier_id: dossier_id, submit: submit }
           dossier.reload
         end
 
         context "when the user submits the dossier" do
-          let(:submit) { {nouveaux: 'nouveaux'} }
+          let(:submit) { { nouveaux: 'nouveaux' } }
 
           it "redirection vers la page recapitulative" do
+            submit_dossier
+
             expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
           end
 
           it 'etat du dossier est en construction' do
+            submit_dossier
+
             expect(dossier.state).to eq('en_construction')
+          end
+
+          context 'sending the accusé de réception mail' do
+            before { Timecop.freeze(DateTime.now) }
+
+            after { Timecop.return }
+
+            it 'sets the state of the dossier before sending the mail' do
+              expect_any_instance_of(Mails::InitiatedMail)
+                .to receive(:subject_for_dossier)
+                .with(have_attributes(en_construction_at: DateTime.now))
+
+              submit_dossier
+            end
           end
         end
 
         context 'when user saves a brouillon' do
-          let(:submit) { {brouillon: 'brouillon'} }
+          let(:submit) { { brouillon: 'brouillon' } }
 
           it "reste sur la page du dossier" do
+            submit_dossier
             expect(response).to redirect_to("/users/dossiers/#{dossier_id}/description")
           end
 
           it 'etat du dossier est brouillon' do
+            submit_dossier
             expect(dossier.state).to eq('brouillon')
           end
         end
 
         context 'when user saves a brouillon and goes to dashboard' do
-          let(:submit) { {brouillon_then_dashboard: 'brouillon_then_dashboard'} }
+          let(:submit) { { brouillon_then_dashboard: 'brouillon_then_dashboard' } }
 
           it "goes to dashboard" do
+            submit_dossier
             expect(response).to redirect_to("/users/dossiers?liste=brouillon")
           end
 
           it 'etat du dossier est brouillon' do
+            submit_dossier
             expect(dossier.state).to eq('brouillon')
           end
         end
@@ -158,7 +173,7 @@ shared_examples 'description_controller_spec' do
       context 'En train de manipuler un dossier non brouillon' do
         before do
           dossier.en_construction!
-          post :update, params: {dossier_id: dossier_id}
+          post :update, params: { dossier_id: dossier_id }
           dossier.reload
         end
 
@@ -173,22 +188,19 @@ shared_examples 'description_controller_spec' do
     end
 
     context 'Quand la procédure accepte les CERFA' do
-      subject { post :update, params: {dossier_id: dossier_id,
-                                       cerfa_pdf: cerfa_pdf}
-      }
+      subject { post :update, params: { dossier_id: dossier_id, cerfa_pdf: cerfa_pdf } }
 
       it 'Notification interne is create' do
         expect { subject }.to change(Notification, :count).by (1)
       end
 
-      context 'Sauvegarde du CERFA PDF', vcr: {cassette_name: 'controllers_users_description_controller_save_cerfa'} do
+      context 'Sauvegarde du CERFA PDF', vcr: { cassette_name: 'controllers_users_description_controller_save_cerfa' } do
         before do
-          post :update, params: {dossier_id: dossier_id,
-                                 cerfa_pdf: cerfa_pdf}
+          post :update, params: { dossier_id: dossier_id, cerfa_pdf: cerfa_pdf }
           dossier.reload
         end
 
-        context 'when a CERFA PDF is sent', vcr: {cassette_name: 'controllers_users_description_controller_cerfa_is_sent'} do
+        context 'when a CERFA PDF is sent', vcr: { cassette_name: 'controllers_users_description_controller_cerfa_is_sent' } do
           subject { dossier.cerfa.first }
 
           it 'content' do
@@ -210,7 +222,7 @@ shared_examples 'description_controller_spec' do
           let(:cerfas) { Cerfa.where(dossier_id: dossier_id) }
 
           before do
-            post :update, params: {dossier_id: dossier_id, cerfa_pdf: cerfa_pdf}
+            post :update, params: { dossier_id: dossier_id, cerfa_pdf: cerfa_pdf }
           end
 
           it "il y a deux CERFA PDF pour ce dossier" do
@@ -224,8 +236,7 @@ shared_examples 'description_controller_spec' do
       context 'Sauvegarde du CERFA PDF' do
         let!(:procedure) { create(:procedure) }
         before do
-          post :update, params: {dossier_id: dossier_id,
-                                 cerfa_pdf: cerfa_pdf}
+          post :update, params: { dossier_id: dossier_id, cerfa_pdf: cerfa_pdf }
           dossier.reload
         end
 
@@ -247,7 +258,7 @@ shared_examples 'description_controller_spec' do
         {
           dossier_id: dossier_id,
           champs: {
-            "'#{dossier_text_champ_id}'" => dossier_text_value, # PARFOIS ce putain de champ est associé à un type datetime, et en plus parfois l'ordre n'est pas le bon
+            "'#{dossier_text_champ_id}'" => dossier_text_value,
             "'#{dossier_datetime_champ_id}'" => dossier_date_value
           },
           time_hour: {
@@ -286,22 +297,22 @@ shared_examples 'description_controller_spec' do
       end
     end
 
-    context 'Sauvegarde des pièces justificatives', vcr: {cassette_name: 'controllers_users_description_controller_sauvegarde_pj'} do
+    context 'Sauvegarde des pièces justificatives', vcr: { cassette_name: 'controllers_users_description_controller_sauvegarde_pj' } do
       let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
       before do
-        post :update, params: {dossier_id: dossier_id,
-                               'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
-                               'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1}
+        post :update, params: { dossier_id: dossier_id,
+                                'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
+                                'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1 }
         dossier.reload
       end
 
-      describe 'clamav anti-virus presence', vcr: {cassette_name: 'controllers_users_description_controller_clamav_presence'} do
+      describe 'clamav anti-virus presence', vcr: { cassette_name: 'controllers_users_description_controller_clamav_presence' } do
         it 'ClamavService safe_file? is call' do
           expect(ClamavService).to receive(:safe_file?).twice
 
-          post :update, params: {dossier_id: dossier_id,
-                                 'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
-                                 'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1}
+          post :update, params: { dossier_id: dossier_id,
+                                  'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
+                                  'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1 }
         end
       end
 
@@ -334,12 +345,12 @@ shared_examples 'description_controller_spec' do
     end
   end
 
-  describe 'POST #pieces_justificatives', vcr: {cassette_name: 'controllers_users_description_controller_pieces_justificatives'} do
+  describe 'POST #pieces_justificatives', vcr: { cassette_name: 'controllers_users_description_controller_pieces_justificatives' } do
     let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
 
-    subject { patch :pieces_justificatives, params: {dossier_id: dossier.id,
-                                                     'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
-                                                     'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1}
+    subject { patch :pieces_justificatives, params: { dossier_id: dossier.id,
+                                                      'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
+                                                      'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1 }
     }
 
     context 'when user is a guest' do
@@ -378,7 +389,7 @@ shared_examples 'description_controller_spec' do
 
         it { expect(dossier.pieces_justificatives.size).to eq 2 }
 
-        context 'when upload two PJ', vcr: {cassette_name: 'controllers_users_description_controller_upload_2pj'} do
+        context 'when upload two PJ', vcr: { cassette_name: 'controllers_users_description_controller_upload_2pj' } do
           before do
             subject
             dossier.reload
@@ -413,12 +424,12 @@ end
 shared_examples 'description_controller_spec_POST_piece_justificatives_for_owner' do
   let(:all_pj_type) { dossier.procedure.type_de_piece_justificative_ids }
 
-  subject { patch :pieces_justificatives, params: {dossier_id: dossier.id,
-                                                   'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
-                                                   'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1}
+  subject { patch :pieces_justificatives, params: { dossier_id: dossier.id,
+                                                    'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
+                                                    'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1 }
   }
 
-  context 'when user is the owner', vcr: {cassette_name: 'controllers_users_description_controller_pieces_justificatives'} do
+  context 'when user is the owner', vcr: { cassette_name: 'controllers_users_description_controller_pieces_justificatives' } do
     before do
       sign_in user
     end
@@ -438,7 +449,7 @@ shared_examples 'description_controller_spec_POST_piece_justificatives_for_owner
       end
     end
 
-    context 'when PJ have already a document', vcr: {cassette_name: 'controllers_users_description_controller_pj_already_exist'} do
+    context 'when PJ have already a document', vcr: { cassette_name: 'controllers_users_description_controller_pj_already_exist' } do
       before do
         create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative_id: all_pj_type[0]
         create :piece_justificative, :contrat, dossier: dossier, type_de_piece_justificative_id: all_pj_type[1]
@@ -446,7 +457,7 @@ shared_examples 'description_controller_spec_POST_piece_justificatives_for_owner
 
       it { expect(dossier.pieces_justificatives.size).to eq 2 }
 
-      context 'when upload two PJ', vcr: {cassette_name: 'controllers_users_description_controller_pj_already_exist_upload_2pj'} do
+      context 'when upload two PJ', vcr: { cassette_name: 'controllers_users_description_controller_pj_already_exist_upload_2pj' } do
         before do
           subject
           dossier.reload
