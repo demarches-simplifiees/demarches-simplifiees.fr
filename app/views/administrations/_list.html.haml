@@ -4,6 +4,7 @@
       %thead
         %th.col-xs-4= smart_listing.sortable 'Email', :email
         %th.col-xs-4= smart_listing.sortable 'Date de dernière connexion', :last_sign_in_at
+        %th.col-xs-2 État
         %th.col-xs-2 Procédure active
         %th.col-xs-2 Dossier en cours
 
@@ -17,6 +18,11 @@
               (
               = admin.last_sign_in_at.localtime.strftime('%d/%m/%Y')
               )
+          %td
+            - if admin.invitation_expired?
+              = link_to admin.registration_state, administration_path(admin), remote: true, method: :patch
+            - else
+              = admin.registration_state
           %td
             = admin.procedures.publiees.count
           %td
