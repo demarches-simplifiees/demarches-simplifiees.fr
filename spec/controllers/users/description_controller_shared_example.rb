@@ -104,8 +104,9 @@ shared_examples 'description_controller_spec' do
   describe 'POST #update' do
     context 'Tous les attributs sont bons' do
       describe 'Premier enregistrement des données' do
+        let(:state) { 'brouillon' }
+
         def submit_dossier
-          dossier.brouillon!
           post :update, params: { dossier_id: dossier_id, submit: submit }
           dossier.reload
         end
