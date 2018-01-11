@@ -220,7 +220,7 @@ module TagsSubstitutionConcern
 
     # allow any kind of space (non-breaking or other) in the tag’s libellé to match any kind of space in the template
     # (the '\\ |' is there because plain ASCII spaces were escaped by preceding Regexp.quote)
-    libelle.gsub!(/\\ |[[:blank:]]/, "[[:blank:]]")
+    libelle.gsub!(/\\ |[[:space:]]+/, "[[:space:]]+")
 
     text.gsub(/--#{libelle}--/, value.to_s)
   end
