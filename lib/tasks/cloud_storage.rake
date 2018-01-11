@@ -25,7 +25,7 @@ namespace :cloudstorage do
     [Cerfa, PieceJustificative, Procedure].each { |c|
       c.all.each { |entry|
         content = (c == Procedure) ? entry.logo : entry.content
-        unless content.current_path.nil? || File.exist?(File.dirname(content.current_path) + '/uploaded')
+        if !(content.current_path.nil? || File.exist?(File.dirname(content.current_path) + '/uploaded'))
           secure_token = SecureRandom.uuid
           filename = "#{entry.class.to_s.underscore}-#{secure_token}#{File.extname(content.current_path)}"
           puts "Uploading #{content.current_path}"
@@ -70,7 +70,7 @@ namespace :cloudstorage do
     [Cerfa, PieceJustificative, Procedure].each { |c|
       c.all.each { |entry|
         content = (c == Procedure) ? entry.logo : entry.content
-        unless content.current_path.nil?
+        if content.current_path.present?
           if File.exist?(File.dirname(content.current_path) + '/uploaded')
             previous_filename = File.read(File.dirname(content.current_path) + '/uploaded')
 
@@ -105,7 +105,7 @@ namespace :cloudstorage do
 
     @cont.objects_detail.each { |object, details|
       last_modified = DateTime.parse(details[:last_modified])
-      @cont.delete_object(object) unless last_modified.utc > (Time.now - 2.year).utc
+      @cont.delete_object(object) if last_modified.utc <= (Time.now - 2.year).utc
     }
   end
 end

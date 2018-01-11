@@ -12,7 +12,7 @@ class Cerfa < ActiveRecord::Base
   end
 
   def content_url
-    unless content.url.nil?
+    if content.url.present?
       if Features.remote_storage
         (RemoteDownloader.new content.filename).url
       else
@@ -24,7 +24,7 @@ class Cerfa < ActiveRecord::Base
   private
 
   def internal_notification
-    unless dossier.state == 'brouillon'
+    if dossier.state != 'brouillon'
       NotificationService.new('cerfa', self.dossier.id).notify
     end
   end

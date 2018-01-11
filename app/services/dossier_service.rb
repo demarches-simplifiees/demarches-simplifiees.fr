@@ -40,7 +40,7 @@ class DossierService
   private
 
   def mandataire_social? mandataires_list
-    unless @france_connect_information.nil?
+    if @france_connect_information.present?
 
       mandataires_list.each do |mandataire|
         return true if mandataire[:nom].casecmp(@france_connect_information.family_name).zero? &&

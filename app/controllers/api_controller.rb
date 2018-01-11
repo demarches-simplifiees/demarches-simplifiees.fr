@@ -3,7 +3,7 @@ class APIController < ApplicationController
   before_action :default_format_json
 
   def authenticate_user
-    render json: {}, status: 401 unless valid_token?
+    render json: {}, status: 401 if !valid_token?
   end
 
   protected
@@ -17,6 +17,6 @@ class APIController < ApplicationController
   end
 
   def default_format_json
-    request.format = "json" unless request.params[:format]
+    request.format = "json" if !request.params[:format]
   end
 end

@@ -2,7 +2,7 @@
 - @champs = @champs_private if private
 - @headers = @headers_private if private
 
-- unless @headers.blank?
+- if @headers.present?
   - if @champs.first.type_champ != 'header_section'
     = render partial: render_partial_url, locals: { libelle: 'Dossier', order_place: -1, champs: @champs }
   - @headers.each do |header|

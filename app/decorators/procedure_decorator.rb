@@ -2,7 +2,7 @@ class ProcedureDecorator < Draper::Decorator
   delegate_all
 
   def lien
-    h.commencer_url(procedure_path: path) unless path.nil?
+    h.commencer_url(procedure_path: path) if path.present?
   end
 
   def created_at_fr

@@ -13,7 +13,7 @@
           Vous vous apprêtez à
           = @procedure.archivee? ? 'republier' : 'publier'
           votre procédure au public.
-          - unless @procedure.archivee?
+          - if !@procedure.archivee?
             %b
               Elle ne pourra plus être modifiée à l'issue de cette publication.
           %br

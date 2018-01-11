@@ -5,7 +5,7 @@
   %button.btn.btn-primary{ type: :submit }
     %span.fa.fa-search
 
-- unless smart_listing.empty?
+- if smart_listing.present?
 
   %table.table#liste-gestionnaire
     %thead

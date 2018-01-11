@@ -7,12 +7,12 @@ class Backoffice::DossiersListController < ApplicationController
   def index
     cookies[:liste] = param_liste
 
-    unless DossiersListGestionnaireService.dossiers_liste_libelle.include?(param_liste)
+    if !DossiersListGestionnaireService.dossiers_liste_libelle.include?(param_liste)
       cookies[:liste] = 'all_state'
     end
 
     dossiers_list_facade param_liste
-    dossiers_list_facade.service.change_sort! param_sort unless param_smart_listing.nil?
+    dossiers_list_facade.service.change_sort! param_sort if param_smart_listing.present?
     dossiers_list_facade.service.change_page! param_page
 
     smartlisting_dossier
@@ -58,14 +58,14 @@ class Backoffice::DossiersListController < ApplicationController
   end
 
   def param_page
-    unless param_smart_listing.nil?
+    if param_smart_listing.present?
       return 1 if params[:dossiers_smart_listing][:page].blank?
       params[:dossiers_smart_listing][:page]
     end
   end
 
   def param_sort
-    params[:dossiers_smart_listing][:sort] unless param_smart_listing.nil?
+    params[:dossiers_smart_listing][:sort] if param_smart_listing.present?
   end
 
   def param_filter

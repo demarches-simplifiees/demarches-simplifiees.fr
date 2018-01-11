@@ -29,7 +29,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     dossier_id = params[:id]
     create_dossier_facade dossier_id
 
-    unless @facade.nil?
+    if @facade.present?
       @champs_private = @facade.champs_private
 
       @headers_private = @champs_private.select { |champ| champ.type_champ == 'header_section' }
@@ -72,7 +72,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
     @dossiers = Dossier.none if @dossiers.nil?
 
     # full text search
-    unless @dossiers.any?
+    if !@dossiers.any?
       @dossiers = Search.new(
           gestionnaire: current_gestionnaire,
           query: @search_terms,
@@ -161,7 +161,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
 
   def archive
     facade = create_dossier_facade params[:id]
-    unless facade.dossier.archived
+    if !facade.dossier.archived
       facade.dossier.update(archived: true)
       flash.notice = 'Dossier archivé'
     end
@@ -205,7 +205,7 @@ class Backoffice::DossiersController < Backoffice::DossiersListController
   end
 
   def ensure_gestionnaire_is_authorized
-    unless current_gestionnaire.can_view_dossier?(params[:id])
+    if !current_gestionnaire.can_view_dossier?(params[:id])
       flash.alert = t('errors.messages.dossier_not_found')
       redirect_to url_for(controller: '/backoffice')
     end

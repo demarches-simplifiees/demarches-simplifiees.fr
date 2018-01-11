@@ -4,7 +4,7 @@ class Backoffice::PrivateFormulairesController < ApplicationController
   def update
     dossier = current_gestionnaire.dossiers.find(params[:dossier_id])
 
-    unless params[:champs].nil?
+    if params[:champs].present?
       ChampsService.save_champs dossier.champs_private, params
       champs_service_errors = ChampsService.build_error_messages(dossier.champs_private)
 

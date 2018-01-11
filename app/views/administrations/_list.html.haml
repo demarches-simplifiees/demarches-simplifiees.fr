@@ -1,5 +1,5 @@
 .card
-  - unless smart_listing.empty?
+  - if smart_listing.present?
     %table.table
       %thead
         %th.col-xs-4= smart_listing.sortable 'Email', :email
@@ -12,7 +12,7 @@
           %td
             = admin.email
           %td
-            - unless admin.last_sign_in_at.nil?
+            - if admin.last_sign_in_at.present?
               = time_ago_in_words(l(admin.last_sign_in_at, format: "%d/%m/%Y %H:%M UTC +02:00"))
               (
               = admin.last_sign_in_at.localtime.strftime('%d/%m/%Y')
