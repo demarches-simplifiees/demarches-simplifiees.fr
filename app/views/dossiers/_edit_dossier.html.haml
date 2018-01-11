@@ -1,4 +1,4 @@
-- unless @facade.dossier.read_only?
+- if !@facade.dossier.read_only?
   - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
     %a#maj_infos.action{ href: "/users/dossiers/#{@facade.dossier.id}/description" }
       #edit-dossier.col-lg-2.col-md-2.col-sm-2.col-xs-2.action

@@ -23,7 +23,7 @@
         .col-xs-5.depositaire-info= @facade.individual.birthdate
       .row.margin-top-20
 
-    - unless @facade.champs.nil?
+    - if @facade.champs.present?
       - @facade.champs.each do |champ|
         - next if champ.type_champ == 'explication'
         - if champ.type_champ == 'header_section'
@@ -37,7 +37,7 @@
             .col-xs-1.comments-off
               = "-"
             .col-xs-5.depositaire-info{ id: "champ-#{champ.id}-value" }
-              - unless champ.decorate.value.blank?
+              - if champ.decorate.value.present?
                 - if champ.type_champ == 'dossier_link'
                   - dossier = Dossier.includes(:procedure).find_by(id: champ.decorate.value)
                   - if dossier
@@ -101,7 +101,7 @@
                   - else
                     Pièce non fournie
 
-    - unless @facade.dossier.read_only?
+    - if !@facade.dossier.read_only?
       - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
           .row

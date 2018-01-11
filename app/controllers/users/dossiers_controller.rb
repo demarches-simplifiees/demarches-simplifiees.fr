@@ -36,7 +36,7 @@ class Users::DossiersController < UsersController
   end
 
   def commencer
-    unless params[:procedure_path].nil?
+    if params[:procedure_path].present?
       procedure_path = ProcedurePath.where(path: params[:procedure_path]).last
 
       if procedure_path.nil? || procedure_path.procedure.nil?
@@ -65,7 +65,7 @@ class Users::DossiersController < UsersController
     dossier = Dossier.create(procedure: procedure, user: current_user, state: 'brouillon')
     siret = params[:siret] || current_user.siret
 
-    update_current_user_siret! siret unless siret.nil?
+    update_current_user_siret! siret if siret.present?
 
     redirect_to users_dossier_path(id: dossier.id)
   rescue ActiveRecord::RecordNotFound
@@ -74,7 +74,7 @@ class Users::DossiersController < UsersController
 
   def show
     @facade = facade
-    @siret = current_user.siret unless current_user.siret.nil?
+    @siret = current_user.siret if current_user.siret.present?
 
     if @facade.procedure.for_individual? && current_user.loged_in_with_france_connect?
       individual = @facade.dossier.individual
@@ -135,7 +135,7 @@ class Users::DossiersController < UsersController
       flash.alert = individual_errors
       redirect_to users_dossier_path(id: @facade.dossier.id)
     else
-      unless Dossier.find(@facade.dossier.id).update_attributes update_params_with_formatted_birthdate
+      if !Dossier.find(@facade.dossier.id).update_attributes update_params_with_formatted_birthdate
         flash.alert = @facade.dossier.errors.full_messages
 
         return redirect_to users_dossier_path(id: @facade.dossier.id)
@@ -174,7 +174,7 @@ class Users::DossiersController < UsersController
   private
 
   def check_siret
-    errors_valid_siret unless Siret.new(siret: siret).valid?
+    errors_valid_siret if !Siret.new(siret: siret).valid?
   end
 
   def errors_valid_siret

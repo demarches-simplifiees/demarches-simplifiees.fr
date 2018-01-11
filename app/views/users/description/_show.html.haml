@@ -1,5 +1,5 @@
 .container#description-page
-  - unless @dossier.procedure.lien_notice.blank?
+  - if @dossier.procedure.lien_notice.present?
     #lien_notice_panel.row{ style: 'width: 280px; position: fixed; background-color: white; right: 5%; top: 80px; z-index: 200;' }
       .panel.panel-info{ style: 'margin-bottom: 0;' }
         .panel-body.center
@@ -16,7 +16,7 @@
 
   -# TODO use form_for
   = form_tag(url_for({ controller: 'users/description', action: :update, dossier_id: @dossier.id }), class: 'form', method: 'POST', multipart: true) do
-    - unless @champs.nil?
+    - if @champs.present?
       #liste-champs
         = render partial: 'users/description/champs', locals: { private: false }
 
@@ -32,7 +32,7 @@
 
     -# WTF ?
     - route = Rails.application.routes.recognize_path(request.referrer)
-    - unless route[:controller].match('admin')
+    - if !route[:controller].match('admin')
       %div{ style: 'text-align: right;' }
         %h6 Tous les champs portant un * sont obligatoires.
 

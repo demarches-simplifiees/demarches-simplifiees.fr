@@ -14,7 +14,7 @@ class Users::DescriptionController < UsersController
 
     @headers = @champs.select { |c| c.type_champ == 'header_section' }
 
-    unless @dossier.can_be_en_construction?
+    if !@dossier.can_be_en_construction?
       flash[:alert] = t('errors.messages.procedure_archived')
     end
 
@@ -27,13 +27,13 @@ class Users::DescriptionController < UsersController
     dossier = current_user_dossier
     procedure = dossier.procedure
 
-    return head :forbidden unless dossier.can_be_en_construction?
+    return head :forbidden if !dossier.can_be_en_construction?
 
     ChampsService.save_champs(dossier.champs, params) if params[:champs]
 
     if procedure.cerfa_flag? && params[:cerfa_pdf]
       cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: dossier, user: current_user)
-      return redirect_to_description_with_errors(dossier, cerfa.errors.full_messages) unless cerfa.save
+      return redirect_to_description_with_errors(dossier, cerfa.errors.full_messages) if !cerfa.save
     end
 
     errors_upload = PiecesJustificativesService.upload!(dossier, current_user, params)
@@ -69,9 +69,9 @@ class Users::DescriptionController < UsersController
     @dossier ||= current_user_dossier
 
     if @dossier.procedure.cerfa_flag?
-      unless params[:cerfa_pdf].nil?
+      if params[:cerfa_pdf].present?
         cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
-        unless cerfa.save
+        if !cerfa.save
           flash.alert = cerfa.errors.full_messages
         end
       end

@@ -1,6 +1,6 @@
 #first-block
   .en-cours
-    - unless @procedure.logo.blank?
+    - if @procedure.logo.present?
       = image_tag @procedure.decorate.logo_img, style: 'width: 30px;'
     %b
       = @procedure.libelle
@@ -22,17 +22,17 @@
       .procedure-list-element{ class: ('active' if active == 'Description') }
         Description
 
-    - unless @procedure.locked?
+    - if !@procedure.locked?
       %a#onglet-champs{ :href => "#{url_for admin_procedure_types_de_champ_path(@procedure)}" }
         .procedure-list-element{ class: ('active' if active == 'Champs') }
           Champs
 
-    - unless @procedure.locked?
+    - if !@procedure.locked?
       %a#onglet-pieces{ :href => "#{url_for admin_procedure_pieces_justificatives_path(@procedure)}" }
         .procedure-list-element{ class: ('active' if active == 'Pieces') }
           Pièces jointes
 
-    - unless @procedure.locked?
+    - if !@procedure.locked?
       %a#onglet-private-champs{ :href => "#{url_for admin_procedure_types_de_champ_private_path(@procedure)}" }
         .procedure-list-element{ class: ('active' if active == 'Annotations privées') }
           Annotations privées

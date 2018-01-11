@@ -104,7 +104,7 @@
 
         %h4 Archivé
 
-        - unless @facade.dossiers_archived_total == 0
+        - if @facade.dossiers_archived_total != 0
           %ul
             - @facade.dossiers_archived_by_state_total.each do |dossier|
               %li

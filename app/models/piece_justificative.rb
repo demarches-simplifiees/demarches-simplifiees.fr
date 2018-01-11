@@ -30,7 +30,7 @@ class PieceJustificative < ActiveRecord::Base
   end
 
   def content_url
-    unless content.url.nil?
+    if content.url.present?
       if Features.remote_storage
         (RemoteDownloader.new content.filename).url
       else
@@ -59,7 +59,7 @@ class PieceJustificative < ActiveRecord::Base
   private
 
   def internal_notification
-    unless self.type_de_piece_justificative.nil? && dossier.state == 'brouillon'
+    if self.type_de_piece_justificative.present? || dossier.state != 'brouillon'
       NotificationService.new('piece_justificative', self.dossier.id, self.libelle).notify
     end
   end

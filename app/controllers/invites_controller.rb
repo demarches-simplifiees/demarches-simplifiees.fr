@@ -13,8 +13,11 @@ class InvitesController < ApplicationController
     invite = class_var.create(dossier: dossier, user: user, email: email, email_sender: email_sender)
 
     if invite.valid?
-      InviteMailer.invite_user(invite).deliver_now!   unless invite.user.nil?
-      InviteMailer.invite_guest(invite).deliver_now!  if     invite.user.nil?
+      if invite.user.present?
+        InviteMailer.invite_user(invite).deliver_now!
+      else
+        InviteMailer.invite_guest(invite).deliver_now!
+      end
 
       flash.notice = "Invitation envoyée (#{invite.email})"
     else
@@ -31,7 +34,9 @@ class InvitesController < ApplicationController
   private
 
   def gestionnaire_or_user?
-    return redirect_to root_path unless user_signed_in? || gestionnaire_signed_in?
+    if !user_signed_in? && !gestionnaire_signed_in?
+      return redirect_to root_path
+    end
 
     @current_devise_profil = current_user if user_signed_in?
     @current_devise_profil = current_gestionnaire if gestionnaire_signed_in?

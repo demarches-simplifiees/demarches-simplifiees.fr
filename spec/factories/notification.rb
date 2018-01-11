@@ -4,7 +4,7 @@ FactoryGirl.define do
     liste []
 
     before(:create) do |notification, _evaluator|
-      unless notification.dossier
+      if !notification.dossier
         notification.dossier = create :dossier
       end
     end

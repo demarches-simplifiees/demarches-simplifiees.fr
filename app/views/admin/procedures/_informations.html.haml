@@ -15,7 +15,7 @@
 .row
   .col-md-6
     %h4 Logo de la procédure
-    - unless @procedure.logo.blank?
+    - if @procedure.logo.present?
       = image_tag @procedure.decorate.logo_img, { style: 'height: 40px; display: inline; margin-right: 6px;', id: 'preview_procedure_logo' }
     = f.file_field :logo, accept: 'image/png, image/jpg, image/jpeg', style: 'display: inline'
 
@@ -29,7 +29,7 @@
         = f.check_box :euro_flag
         Afficher le drapeau européen
 
-- unless @procedure.locked?
+- if !@procedure.locked?
   .row
     .col-md-6
       %h4 Cartographie

@@ -24,7 +24,7 @@ class CreateFranceConnectInformation < ActiveRecord::Migration
                                        birthdate: user.birthdate,
                                        birthplace: user.birthplace,
                                        france_connect_particulier_id: user.france_connect_particulier_id,
-                                       user_id: user.id}) unless user.france_connect_particulier_id.nil?
+                                       user_id: user.id}) if user.france_connect_particulier_id.present?
     end
 
     remove_column :users, :gender
