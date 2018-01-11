@@ -11,6 +11,6 @@ class FranceConnectSaltService
   end
 
   def salt
-    Digest::MD5.hexdigest(model.france_connect_particulier_id + model.given_name + model.family_name + FRANCE_CONNECT.particulier.secret + DateTime.now.to_date.to_s)
+    Digest::MD5.hexdigest(model.france_connect_particulier_id + model.given_name + model.family_name + FRANCE_CONNECT[:particulier][:secret] + DateTime.now.to_date.to_s)
   end
 end

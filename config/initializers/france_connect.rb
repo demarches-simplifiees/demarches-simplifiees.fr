@@ -2,10 +2,11 @@ FRANCE_CONNECT = if !Rails.env.test?
   file_path = "#{Rails.root}/config/france_connect.yml"
   config_hash = YAML.safe_load(File.read(file_path))
     .reduce({}) { |acc, (key, value)| acc[key.gsub('particulier_', '')] = value, acc }
+    .symbolize_keys
 
-  Hashie::Mash.new(particulier: config_hash)
+  { particulier: config_hash }
 else
-  Hashie::Mash.new({
+  {
     particulier: {
       identifier: 'plop',
       secret: 'plip',
@@ -15,5 +16,5 @@ else
       userinfo_endpoint: 'https://bidon.com/endpoint',
       logout_endpoint: 'https://bidon.com/endpoint',
     }
-  })
+  }
 end
