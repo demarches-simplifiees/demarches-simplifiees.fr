@@ -77,7 +77,7 @@ class Users::DescriptionController < UsersController
       end
     end
 
-    if !((errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)).empty?)
+    if (errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)).present?
       if flash.alert.nil?
         flash.alert = errors_upload
       else
