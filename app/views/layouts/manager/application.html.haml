@@ -20,6 +20,7 @@
       = content_for(:title)
       | #{Rails.application.class.parent_name.titlecase}
     = render "stylesheet"
+    = stylesheet_link_tag "new_design/manager", media: "all", "data-turbolinks-track": true
     = csrf_meta_tags
   %body
     .app-container
