@@ -94,6 +94,8 @@ gem 'skylight'
 
 gem 'scenic'
 
+gem 'sanitize-url'
+
 # Cron jobs
 gem 'delayed_job_active_record'
 gem "daemons"

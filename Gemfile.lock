@@ -593,6 +593,7 @@ GEM
       sexp_processor (~> 4.9)
     rubyzip (1.0.0)
     safe_yaml (1.0.4)
+    sanitize-url (0.1.4)
     sass (3.4.22)
     sass-rails (5.0.6)
       railties (>= 4.0.0, < 6)
@@ -782,6 +783,7 @@ DEPENDENCIES
   rspec_junit_formatter
   rubocop
   rubocop-rspec-focused
+  sanitize-url
   sass-rails (~> 5.0)
   scenic
   scss_lint

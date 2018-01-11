@@ -20,5 +20,4 @@
 
         - if @facade.procedure.lien_site_web.present?
           .center
-            %a{ href: @facade.procedure.lien_site_web, target: '_blank' }
-              En savoir plus ...
+            = link_to "En savoir plus ...", sanitize_url(@facade.procedure.lien_site_web), target: '_blank'

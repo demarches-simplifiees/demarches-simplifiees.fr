@@ -68,7 +68,7 @@ jobs:
           command: bundle exec rubocop -R
       - run:
           name: Run brakeman
-          command: bundle exec brakeman --no-exit-on-warn
+          command: bundle exec brakeman -z
       - run:
           name: Run haml-lint
           command: bundle exec haml-lint app/views/
