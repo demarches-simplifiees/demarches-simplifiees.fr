@@ -51,7 +51,8 @@ module TagsSubstitutionConcern
       {
         libelle: 'date de passage en instruction',
         description: '',
-        lambda: -> (d) { format_date(d.en_instruction_at) }
+        lambda: -> (d) { format_date(d.en_instruction_at) },
+        available_for_states: Dossier::INSTRUCTION_COMMENCEE
       },
       {
         libelle: 'date de décision',
