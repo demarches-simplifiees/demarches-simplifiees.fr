@@ -1,0 +1,16 @@
+- content_for(:title, 'Activation du compte administrateur')
+
+Bonjour,
+%br
+%br
+L'équipe TPS vous invite à activer votre compte administrateur sur TPS.
+%br
+%br
+Pour le faire, merci de cliquer sur le lien suivant :
+= link_to admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token)
+%br
+%br
+Bonne journée,
+%br
+%br
+L'équipe Téléprocédures Simplifiées
