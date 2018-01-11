@@ -7,10 +7,10 @@ describe FranceConnectParticulierClient do
     end
     context 'when given code in params' do
       let(:code) { 'plop' }
-      subject { described_class.new(code: code) }
+      subject { described_class.new(code) }
       it 'set authorisation code' do
         expect_any_instance_of(described_class).to receive(:authorization_code=).with(code)
-        described_class.new(code: code)
+        described_class.new(code)
       end
     end
   end

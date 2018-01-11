@@ -1,5 +1,5 @@
 class FranceConnectParticulierClient < OpenIDConnect::Client
-  def initialize params={}
+  def initialize(code=nil)
     super(
         identifier: FRANCE_CONNECT.particulier_identifier,
         secret: FRANCE_CONNECT.particulier_secret,
@@ -11,6 +11,9 @@ class FranceConnectParticulierClient < OpenIDConnect::Client
         userinfo_endpoint: FRANCE_CONNECT.particulier_userinfo_endpoint,
         logout_endpoint: FRANCE_CONNECT.particulier_logout_endpoint
     )
-    self.authorization_code = params[:code] if params.has_key? :code
+
+    if code.present?
+      self.authorization_code = code
+    end
   end
 end
