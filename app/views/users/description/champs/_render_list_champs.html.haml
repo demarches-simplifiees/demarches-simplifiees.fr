@@ -58,6 +58,6 @@
                             type: champ.type_champ }
 
 
-          - if !champ.description.empty?
+          - if champ.description.present?
             %div{ id: "description_champs_#{champ.id}", class: ('help-block' if champ.type_champ != 'engagement') }
               = simple_format(sanitize(champ.description_with_links, attributes: %w(href target)))
