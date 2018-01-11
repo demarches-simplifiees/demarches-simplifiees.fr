@@ -44,7 +44,7 @@ namespace :cloudstorage do
             error_count += 1
           end
         else
-          if !content.current_path.nil? && File.exist?(File.dirname(content.current_path) + '/uploaded')
+          if content.current_path.present? && File.exist?(File.dirname(content.current_path) + '/uploaded')
             filename = File.open(File.dirname(content.current_path) + '/filename_cloudstorage', "r").read
             secure_token = File.open(File.dirname(content.current_path) + '/secure_token_cloudstorage', "r").read
 
@@ -52,7 +52,7 @@ namespace :cloudstorage do
             entry.update_column(c == Procedure ? :logo_secure_token : :content_secure_token, secure_token)
 
             puts "RESTORE IN DATABASE: #{filename} "
-          elsif !content.current_path.nil?
+          elsif content.current_path.present?
             puts "Skipping #{content.current_path}"
           end
         end

@@ -9,7 +9,7 @@ class APIController < ApplicationController
   protected
 
   def valid_token?
-    !current_administrateur.nil?
+    current_administrateur.present?
   end
 
   def current_administrateur

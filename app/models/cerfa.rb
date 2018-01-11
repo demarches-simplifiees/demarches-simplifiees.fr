@@ -5,7 +5,7 @@ class Cerfa < ActiveRecord::Base
   mount_uploader :content, CerfaUploader
   validates :content, :file_size => {:maximum => 20.megabytes}
 
-  after_save :internal_notification, if: Proc.new { !dossier.nil? }
+  after_save :internal_notification, if: Proc.new { dossier.present? }
 
   def empty?
     content.blank?

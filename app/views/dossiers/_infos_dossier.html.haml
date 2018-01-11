@@ -91,7 +91,7 @@
                 .col-xs-5.despositaire-info
                   - if type_de_piece_justificative.api_entreprise
                     %span.text-success Nous l'avons récupéré pour vous.
-                  - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?
+                  - elsif (@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).present?
                     %a{ href: "#{@pj.content_url}", target: '_blank' } Consulter
                     %span{ style: 'margin-left: 12px;' }
                       \-

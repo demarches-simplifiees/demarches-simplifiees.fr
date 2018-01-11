@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   end
 
   def loged_in_with_france_connect?
-    !loged_in_with_france_connect.nil?
+    loged_in_with_france_connect.present?
   end
 
   def invite? dossier_id
