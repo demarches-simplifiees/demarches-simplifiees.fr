@@ -104,11 +104,9 @@ shared_examples 'description_controller_spec' do
   describe 'POST #update' do
     context 'Tous les attributs sont bons' do
       describe 'Premier enregistrement des données' do
-        subject { post :update, params: { dossier_id: dossier_id, submit: submit } }
-
-        before do
+        def submit_dossier
           dossier.brouillon!
-          subject
+          post :update, params: { dossier_id: dossier_id, submit: submit }
           dossier.reload
         end
 
@@ -116,10 +114,14 @@ shared_examples 'description_controller_spec' do
           let(:submit) { { nouveaux: 'nouveaux' } }
 
           it "redirection vers la page recapitulative" do
+            submit_dossier
+
             expect(response).to redirect_to("/users/dossiers/#{dossier_id}/recapitulatif")
           end
 
           it 'etat du dossier est en construction' do
+            submit_dossier
+
             expect(dossier.state).to eq('en_construction')
           end
         end
@@ -128,10 +130,12 @@ shared_examples 'description_controller_spec' do
           let(:submit) { { brouillon: 'brouillon' } }
 
           it "reste sur la page du dossier" do
+            submit_dossier
             expect(response).to redirect_to("/users/dossiers/#{dossier_id}/description")
           end
 
           it 'etat du dossier est brouillon' do
+            submit_dossier
             expect(dossier.state).to eq('brouillon')
           end
         end
@@ -140,10 +144,12 @@ shared_examples 'description_controller_spec' do
           let(:submit) { { brouillon_then_dashboard: 'brouillon_then_dashboard' } }
 
           it "goes to dashboard" do
+            submit_dossier
             expect(response).to redirect_to("/users/dossiers?liste=brouillon")
           end
 
           it 'etat du dossier est brouillon' do
+            submit_dossier
             expect(dossier.state).to eq('brouillon')
           end
         end
