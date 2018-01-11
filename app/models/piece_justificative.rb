@@ -13,7 +13,7 @@ class PieceJustificative < ActiveRecord::Base
   validates :content, :file_size => {:maximum => 20.megabytes}
   validates :content, presence: true, allow_blank: false, allow_nil: false
 
-  after_save :internal_notification, if: Proc.new { !dossier.nil? }
+  after_save :internal_notification, if: Proc.new { dossier.present? }
 
   scope :updated_since?, -> (date) { where('pieces_justificatives.updated_at > ?', date) }
 
