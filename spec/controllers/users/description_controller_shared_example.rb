@@ -86,9 +86,6 @@ shared_examples 'description_controller_spec' do
       subject { get :show, params: {dossier_id: dossier_id} }
 
       context 'when dossier does not have an enterprise datas' do
-        before do
-        end
-
         it { expect(dossier.entreprise).to be_nil }
         it { expect(subject).to redirect_to "/users/dossiers/#{dossier.id}" }
       end
@@ -105,9 +102,6 @@ shared_examples 'description_controller_spec' do
   end
 
   describe 'POST #update' do
-    let(:timestamp) { Time.now }
-    let(:description) { 'Description de test Coucou, je suis un saut à la ligne Je suis un double saut  la ligne.' }
-
     context 'Tous les attributs sont bons' do
       describe 'Premier enregistrement des données' do
         subject { post :update, params: {dossier_id: dossier_id, submit: submit} }
