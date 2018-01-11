@@ -1,6 +1,6 @@
 class FranceConnectParticulierClient < OpenIDConnect::Client
   def initialize(code = nil)
-    super(FRANCE_CONNECT.particulier)
+    super(FRANCE_CONNECT[:particulier])
 
     if code.present?
       self.authorization_code = code

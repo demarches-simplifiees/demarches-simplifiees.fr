@@ -10,14 +10,17 @@ feature 'France Connect Particulier  Connexion' do
   let(:email) { 'plop@plop.com' }
   let(:france_connect_particulier_id) { 'blabla' }
 
-  let(:user_info) { Hashie::Mash.new(france_connect_particulier_id: france_connect_particulier_id,
-                                     given_name: given_name,
-                                     family_name: family_name,
-                                     birthdate: birthdate,
-                                     birthplace: birthplace,
-                                     gender: gender,
-                                     email: email)
-  }
+  let(:user_info) do
+    {
+      france_connect_particulier_id: france_connect_particulier_id,
+      given_name: given_name,
+      family_name: family_name,
+      birthdate: birthdate,
+      birthplace: birthplace,
+      gender: gender,
+      email_france_connect: email
+    }
+  end
 
   context 'when user is on login page' do
     before do
