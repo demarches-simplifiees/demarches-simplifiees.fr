@@ -1,8 +1,8 @@
 FRANCE_CONNECT = if !Rails.env.test?
   file_path = "#{Rails.root}/config/france_connect.yml"
-  Hashie::Mash.load(file_path)
+  YAML.safe_load(File.read(file_path)).symbolize_key
 else
-  Hashie::Mash.new({
+  {
     identifier: 'plop',
     secret: 'plip',
     redirect_uri: 'https://bidon.com/endpoint',
@@ -10,5 +10,5 @@ else
     token_endpoint: 'https://bidon.com/endpoint',
     userinfo_endpoint: 'https://bidon.com/endpoint',
     logout_endpoint: 'https://bidon.com/endpoint',
-  })
+  }
 end
