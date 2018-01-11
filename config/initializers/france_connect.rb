@@ -1,11 +1,4 @@
-FRANCE_CONNECT = if !Rails.env.test?
-  file_path = "#{Rails.root}/config/france_connect.yml"
-  config_hash = YAML.safe_load(File.read(file_path))
-    .reduce({}) { |acc, (key, value)| acc[key.gsub('particulier_', '')] = value, acc }
-    .symbolize_keys
-
-  { particulier: config_hash }
-else
+FRANCE_CONNECT = if Rails.env.test?
   {
     particulier: {
       identifier: 'plop',
@@ -17,4 +10,13 @@ else
       logout_endpoint: 'https://bidon.com/endpoint',
     }
   }
+else
+  fc_config_file_path = "#{Rails.root}/config/france_connect.yml"
+
+  # FIXME: with a yaml with a { particulier: {} } structure
+  config_hash = YAML.safe_load(File.read(fc_config_file_path))
+    .reduce({}) { |acc, (key, value)| acc[key.gsub('particulier_', '')] = value; acc }
+    .symbolize_keys
+
+  { particulier: config_hash }
 end
