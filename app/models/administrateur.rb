@@ -9,6 +9,16 @@ class Administrateur < ActiveRecord::Base
 
   include CredentialsSyncableConcern
 
+  scope :inactive, -> { where(active: false) }
+
+  def self.find_inactive_by_token(reset_password_token)
+    self.inactive.with_reset_password_token(reset_password_token)
+  end
+
+  def self.find_inactive_by_id(id)
+    self.inactive.find(id)
+  end
+
   def ensure_api_token
     if api_token.nil?
       self.api_token = generate_api_token
@@ -17,6 +27,46 @@ class Administrateur < ActiveRecord::Base
 
   def renew_api_token
     update_attributes(api_token: generate_api_token)
+  end
+
+  def registration_state
+    if active?
+      'Actif'
+    elsif reset_password_period_valid?
+      'En attente'
+    else
+      'Expiré'
+    end
+  end
+
+  def invite!
+    if active?
+      raise "Impossible d'inviter un utilisateur déjà actif !"
+    end
+    
+    reset_password_token = set_reset_password_token
+  
+    AdministrationMailer.invite_admin(self, reset_password_token).deliver_now!
+
+    reset_password_token
+  end
+
+  def invitation_expired?
+    !active && !reset_password_period_valid?
+  end
+
+  def self.reset_password(reset_password_token, password)
+    administrateur = self.reset_password_by_token({
+      password: password,
+      password_confirmation: password,
+      reset_password_token: reset_password_token
+    })
+
+    if administrateur && administrateur.errors.empty?
+      administrateur.update_column(:active, true)
+    end
+
+    administrateur
   end
 
   private
