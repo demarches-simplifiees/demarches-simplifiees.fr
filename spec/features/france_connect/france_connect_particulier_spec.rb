@@ -47,7 +47,7 @@ feature 'France Connect Particulier  Connexion' do
 
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(user_info)
+          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(FranceConnectInformation.new(user_info))
         end
 
         context 'when is the first connexion' do

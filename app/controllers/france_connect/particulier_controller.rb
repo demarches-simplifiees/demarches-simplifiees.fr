@@ -8,22 +8,15 @@ class FranceConnect::ParticulierController < ApplicationController
       return redirect_to new_user_session_path
     end
 
-    user_infos = FranceConnectService.retrieve_user_informations_particulier(params[:code])
+    fetched_fc_information = FranceConnectService.retrieve_user_informations_particulier(params[:code])
 
-    if user_infos.present?
+    if fetched_fc_information.present?
       france_connect_information = FranceConnectInformation
-        .find_by(france_connect_particulier_id: user_infos[:france_connect_particulier_id])
+        .find_by(france_connect_particulier_id: fetched_fc_information[:france_connect_particulier_id])
 
       if france_connect_information.nil?
-        france_connect_information = FranceConnectInformation.create(
-          {gender: user_infos[:gender],
-           given_name: user_infos[:given_name],
-           family_name: user_infos[:family_name],
-           email_france_connect: user_infos[:email],
-           birthdate: user_infos[:birthdate],
-           birthplace: user_infos[:birthplace],
-           france_connect_particulier_id: user_infos[:france_connect_particulier_id]}
-        )
+        fetched_fc_information.save
+        france_connect_information = fetched_fc_information
       end
 
       user = france_connect_information.user
