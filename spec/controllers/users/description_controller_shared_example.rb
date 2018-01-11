@@ -125,6 +125,20 @@ shared_examples 'description_controller_spec' do
 
             expect(dossier.state).to eq('en_construction')
           end
+
+          context 'sending the accusé de réception mail' do
+            before { Timecop.freeze(DateTime.now) }
+
+            after { Timecop.return }
+
+            it 'sets the state of the dossier before sending the mail' do
+              expect_any_instance_of(Mails::InitiatedMail)
+                .to receive(:subject_for_dossier)
+                .with(have_attributes(en_construction_at: DateTime.now))
+
+              submit_dossier
+            end
+          end
         end
 
         context 'when user saves a brouillon' do
