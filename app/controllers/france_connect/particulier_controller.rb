@@ -4,14 +4,17 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def callback
-    return redirect_to new_user_session_path unless params.has_key?(:code)
+    if params[:code].nil?
+      return redirect_to new_user_session_path
+    end
 
     user_infos = FranceConnectService.retrieve_user_informations_particulier(params[:code])
 
-    unless user_infos.nil?
-      france_connect_information = FranceConnectInformation.find_by_france_connect_particulier user_infos
+    if user_infos.present?
+      france_connect_information = FranceConnectInformation.find_by_france_connect_particulier(user_infos)
 
-      france_connect_information = FranceConnectInformation.create(
+      if france_connect_information.nil?
+        france_connect_information = FranceConnectInformation.create(
           {gender: user_infos[:gender],
            given_name: user_infos[:given_name],
            family_name: user_infos[:family_name],
@@ -19,14 +22,17 @@ class FranceConnect::ParticulierController < ApplicationController
            birthdate: user_infos[:birthdate],
            birthplace: user_infos[:birthplace],
            france_connect_particulier_id: user_infos[:france_connect_particulier_id]}
-      ) if france_connect_information.nil?
+        )
+      end
 
       user = france_connect_information.user
       salt = FranceConnectSaltService.new(france_connect_information).salt
 
-      return redirect_to france_connect_particulier_new_path(fci_id: france_connect_information.id, salt: salt) if user.nil?
+      if user.nil?
+        return redirect_to france_connect_particulier_new_path(fci_id: france_connect_information.id, salt: salt)
+      end
 
-      connect_france_connect_particulier user
+      connect_france_connect_particulier(user)
     end
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
