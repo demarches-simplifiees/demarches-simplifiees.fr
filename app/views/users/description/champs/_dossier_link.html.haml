@@ -1,7 +1,10 @@
-- dossier = Dossier.find_by(id: champ.value)
-- show_text_summary = dossier.present?
-- show_warning = !show_text_summary && champ.value.present?
-- text_summary = dossier.try(:text_summary)
+:ruby
+  dossier = Dossier.find_by(id: champ.value)
+  show_text_summary = dossier.present?
+  show_warning = !show_text_summary && champ.value.present?
+  if dossier
+    text_summary = text_summary(dossier)
+  end
 
 .dossier-link
   %input.form-control{ name: "champs['#{ champ.id }']",

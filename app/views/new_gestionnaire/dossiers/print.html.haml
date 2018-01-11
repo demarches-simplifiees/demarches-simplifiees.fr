@@ -11,7 +11,7 @@
 
 %h2 Formulaire
 
-- champs = @dossier.ordered_champs.decorate
+- champs = @dossier.ordered_champs
 - if champs.any?
   = render partial: "champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil }
 
@@ -63,7 +63,7 @@
         %th
           = champ.libelle
         %td
-          = champ.value
+          = formatted_value(champ)
 - else
   Aucune annotation privée
 

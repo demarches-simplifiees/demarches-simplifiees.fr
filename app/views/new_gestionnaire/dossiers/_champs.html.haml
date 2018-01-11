@@ -10,16 +10,16 @@
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
-            - if c.value.present?
+            - if formatted_value(c).present?
               %ul
-                - c.value.split(", ").each do |item|
+                - formatted_value(c).split(", ").each do |item|
                   %li
                     = item
         - when "dossier_link"
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
-            - dossier = Dossier.includes(:procedure).find_by(id: c.value)
+            - dossier = Dossier.includes(:procedure).find_by(id: formatted_value(c))
             - if dossier
               - path = dossier_linked_path(current_gestionnaire, dossier)
               - if path.present?
@@ -27,7 +27,7 @@
               - else
                 Dossier nº #{dossier.id}
               %br
-              = dossier.text_summary
+              = text_summary(dossier)
             - else
               Pas de dossier associé
         - else
@@ -35,7 +35,7 @@
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = sanitize(c.value)
+              = sanitize(formatted_value(c))
         - if c.type_champ != "header_section"
           %td.updated-at
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }

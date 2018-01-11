@@ -1,5 +1,7 @@
 class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
+  include ChampHelper
+
   include TagsSubstitutionConcern
 
   belongs_to :procedure

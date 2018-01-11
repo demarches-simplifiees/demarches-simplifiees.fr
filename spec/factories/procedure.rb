@@ -75,7 +75,7 @@ FactoryGirl.define do
 
     trait :with_dossier_link do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_public, :type_dossier_link)
+        type_de_champ = create(:type_de_champ_public, :dossier_link)
 
         procedure.types_de_champ << type_de_champ
       end
@@ -83,7 +83,7 @@ FactoryGirl.define do
 
     trait :with_yes_no do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_public, :type_yes_no)
+        type_de_champ = create(:type_de_champ_public, :yes_no)
 
         procedure.types_de_champ << type_de_champ
       end

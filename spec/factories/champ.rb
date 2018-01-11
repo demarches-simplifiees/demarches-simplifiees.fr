@@ -15,7 +15,7 @@ FactoryGirl.define do
     end
 
     trait :dossier_link do
-      type_de_champ { FactoryGirl.create(:type_de_champ_public, :type_dossier_link) }
+      type_de_champ { FactoryGirl.create(:type_de_champ_public, :dossier_link) }
     end
   end
 end

@@ -1,5 +1,5 @@
 describe 'new_gestionnaire/dossiers/print.html.haml', type: :view do
-  before { view.extend DossierHelper }
+  helper(ChampHelper, DossierHelper)
 
   context "with a dossier" do
     let(:current_gestionnaire) { create(:gestionnaire) }
