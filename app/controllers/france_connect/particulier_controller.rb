@@ -1,16 +1,6 @@
 class FranceConnect::ParticulierController < ApplicationController
   def login
-    client = FranceConnectParticulierClient.new
-
-    session[:state] = SecureRandom.hex(16)
-    session[:nonce] = SecureRandom.hex(16)
-
-    authorization_uri = client.authorization_uri(
-        scope: [:profile, :email],
-        state: session[:state],
-        nonce: session[:nonce]
-    )
-    redirect_to authorization_uri
+    redirect_to FranceConnectService.authorization_uri
   end
 
   def callback
