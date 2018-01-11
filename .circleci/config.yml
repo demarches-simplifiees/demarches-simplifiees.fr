@@ -1,67 +1,61 @@
 version: 2
 
 defaults: &defaults
-  working_directory: /tps
+  working_directory: ~/tps
   docker:
-    - image: ruby:2.3.5
-    - image: postgres:9.4.1
+    - image: circleci/ruby:2.3.6-node-browsers
+    - image: circleci/postgres:9.5
       environment:
         POSTGRES_USER: tps_test
         POSTGRES_PASSWORD: tps_test
         POSTGRES_DB: tps_test
 
-install_system_deps: &install_system_deps
-  run:
-    name: Install System Dependencies
-    command: apt-get update -qq && apt-get install -y build-essential nodejs
-
 restore_phantomjs_cache: &restore_phantomjs_cache
   restore_cache:
-    key: phantomjs-2-1-1
+    key: phantomjs-2-1-1-t
 
 bundle_restore_cache: &bundle_restore_cache
   restore_cache:
-    key: bundle-install-v4-{{ arch }}-{{ checksum "Gemfile.lock" }}
+    key: bundle-install-v4t2-{{ arch }}-{{ checksum "Gemfile.lock" }}
 
 bundle_install: &bundle_install
   run:
     name: Install Ruby Dependencies
-    command: bundle install
+    command: bundle install --path ~/vendor/bundle
 
 jobs:
   build:
     <<: *defaults
     steps:
       - checkout
-      - *install_system_deps
       - *bundle_restore_cache
       - *bundle_install
       - save_cache:
-          key: bundle-install-v4-{{ arch }}-{{ checksum "Gemfile.lock" }}
+          key: bundle-install-v4t2-{{ arch }}-{{ checksum "Gemfile.lock" }}
           paths:
-            - /usr/local/bundle
+            - ~/vendor/bundle
       - *restore_phantomjs_cache
       - run:
           name: Install PhantomJS Dependencies
           command: |
-            [ -f /usr/local/bin/phantomjs ] || apt-get update
-            [ -f /usr/local/bin/phantomjs ] || apt-get install -y fontconfig wget
+            [ -f ~/bin/phantomjs ] || apt-get update
+            [ -f ~/bin/phantomjs ] || apt-get install -y fontconfig wget
       - run:
           name: Install PhantomJS
           command: |
-            [ -f /usr/local/bin/phantomjs ] || wget -O /tmp/phantomjs.tar.bz2 https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
-            [ -f /usr/local/bin/phantomjs ] || tar -xjf /tmp/phantomjs.tar.bz2 -C /tmp
-            [ -f /usr/local/bin/phantomjs ] || mv /tmp/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs
+            [ -f ~/bin/phantomjs ] || mkdir ~/bin
+            [ -f ~/bin/phantomjs ] || wget -O /tmp/phantomjs.tar.bz2 https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
+            [ -f ~/bin/phantomjs ] || tar -xjf /tmp/phantomjs.tar.bz2 -C /tmp
+            [ -f ~/bin/phantomjs ] || mv /tmp/phantomjs-2.1.1-linux-x86_64/bin/phantomjs ~/bin/phantomjs
       - save_cache:
-          key: phantomjs-2-1-1
+          key: phantomjs-2-1-1-t
           paths:
-            - /usr/local/bin/phantomjs
+            - ~/bin/phantomjs
   test:
     <<: *defaults
     parallelism: 4
     steps:
       - checkout
-      - *install_system_deps
       - *restore_phantomjs_cache
       - *bundle_restore_cache
       - *bundle_install
@@ -77,16 +71,15 @@ jobs:
           command: |
             bundle exec rspec --profile 10 \
               --format RspecJunitFormatter \
-              --out $CIRCLE_TEST_REPORTS/rspec.xml \
+              --out ~/test_results/rspec.xml \
               --format progress \
               $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
       - store_test_results:
-          path: $CIRCLE_TEST_REPORTS/rspec.xml
+          path: ~/test_results/rspec.xml
   lint:
     <<: *defaults
     steps:
       - checkout
-      - *install_system_deps
       - *bundle_restore_cache
       - *bundle_install
       - run:
@@ -105,7 +98,6 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - *install_system_deps
       - *bundle_restore_cache
       - *bundle_install
       - add_ssh_keys:
