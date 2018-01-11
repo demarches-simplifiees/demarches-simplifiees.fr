@@ -13,7 +13,14 @@ class FranceConnectService
     user_info = access_token.userinfo!
     hash = Hashie::Mash.new(user_info.raw_attributes)
 
-    hash.france_connect_particulier_id = hash.sub
-    hash
+    {
+      gender: hash[:gender],
+      given_name: hash[:given_name],
+      family_name: hash[:family_name],
+      email_france_connect: hash[:email],
+      birthdate: hash[:birthdate],
+      birthplace: hash[:birthplace],
+      france_connect_particulier_id: hash.sub
+    }
   end
 end

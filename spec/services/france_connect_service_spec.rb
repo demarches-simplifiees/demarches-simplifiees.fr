@@ -29,15 +29,8 @@ describe FranceConnectService do
       subject
     end
 
-    it 'returns user informations in a object' do
-      expect(subject.given_name).to eq(given_name)
-      expect(subject.family_name).to eq(family_name)
-      expect(subject.birthdate).to eq(birthdate)
-      expect(subject.gender).to eq(gender)
-      expect(subject.email).to eq(email)
-      expect(subject.phone).to eq(phone)
-      expect(subject.birthplace).to eq(birthplace)
-      expect(subject.france_connect_particulier_id).to eq(france_connect_particulier_id)
+    it 'returns user informations' do
+      expect(subject).to match({ given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email_france_connect: email, france_connect_particulier_id: france_connect_particulier_id })
     end
   end
 end

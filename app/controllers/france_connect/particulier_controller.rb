@@ -14,15 +14,7 @@ class FranceConnect::ParticulierController < ApplicationController
       france_connect_information = FranceConnectInformation.find_by_france_connect_particulier(user_infos)
 
       if france_connect_information.nil?
-        france_connect_information = FranceConnectInformation.create(
-          {gender: user_infos[:gender],
-           given_name: user_infos[:given_name],
-           family_name: user_infos[:family_name],
-           email_france_connect: user_infos[:email],
-           birthdate: user_infos[:birthdate],
-           birthplace: user_infos[:birthplace],
-           france_connect_particulier_id: user_infos[:france_connect_particulier_id]}
-        )
+        france_connect_information = FranceConnectInformation.create(user_infos)
       end
 
       user = france_connect_information.user
