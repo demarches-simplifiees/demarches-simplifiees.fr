@@ -47,6 +47,22 @@ describe MailTemplateConcern do
     it_behaves_like "can replace tokens in template"
   end
 
+  describe 'tags' do
+    describe 'in initiated mail' do
+      it "does not treat date de passage en instruction as a tag" do
+        expect(initiated_mail.tags).not_to include(include({ libelle: 'date de passage en instruction' }))
+      end
+    end
+
+    describe 'in received mail' do
+      let(:received_mail) { create(:received_mail, procedure: procedure) }
+
+      it "treats date de passage en instruction as a tag" do
+        expect(received_mail.tags).to include(include({ libelle: 'date de passage en instruction' }))
+      end
+    end
+  end
+
   describe '.replace_tags' do
     before { initiated_mail.body = "n --numéro du dossier--" }
     it "avoids side effects" do
