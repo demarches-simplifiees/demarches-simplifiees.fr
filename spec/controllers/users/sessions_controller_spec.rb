@@ -118,7 +118,7 @@ describe Users::SessionsController, type: :controller do
       let(:loged_in_with_france_connect) { 'particulier' }
 
       it 'redirect to france connect logout page' do
-        expect(response).to redirect_to(FRANCE_CONNECT.particulier_logout_endpoint)
+        expect(response).to redirect_to(FRANCE_CONNECT[:logout_endpoint])
       end
     end
 
@@ -161,7 +161,7 @@ describe Users::SessionsController, type: :controller do
         user.update_attributes(loged_in_with_france_connect: 'particulier')
         sign_in user
         delete :destroy
-        expect(@response.headers["Location"]).to eq(FRANCE_CONNECT.particulier_logout_endpoint)
+        expect(@response.headers["Location"]).to eq(FRANCE_CONNECT[:logout_endpoint])
       end
 
       context "when associated administrateur" do

@@ -1,14 +1,14 @@
-FRANCE_CONNECT = if !Rails.env.test?
-  file_path = "#{Rails.root}/config/france_connect.yml"
-  Hashie::Mash.load(file_path)
+FRANCE_CONNECT = if Rails.env.test?
+  {
+    identifier: 'plop',
+    secret: 'plip',
+    redirect_uri: 'https://bidon.com/endpoint',
+    authorization_endpoint: 'https://bidon.com/endpoint',
+    token_endpoint: 'https://bidon.com/endpoint',
+    userinfo_endpoint: 'https://bidon.com/endpoint',
+    logout_endpoint: 'https://bidon.com/endpoint',
+  }
 else
-  Hashie::Mash.new({
-    particulier_identifier: 'plop',
-    particulier_secret: 'plip',
-    particulier_redirect_uri: 'https://bidon.com/endpoint',
-    particulier_authorization_endpoint: 'https://bidon.com/endpoint',
-    particulier_token_endpoint: 'https://bidon.com/endpoint',
-    particulier_userinfo_endpoint: 'https://bidon.com/endpoint',
-    particulier_logout_endpoint: 'https://bidon.com/endpoint',
-  })
+  fc_config_file_path = "#{Rails.root}/config/france_connect.yml"
+  YAML.safe_load(File.read(fc_config_file_path)).symbolize_keys
 end

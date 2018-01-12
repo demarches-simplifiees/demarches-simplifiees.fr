@@ -11,7 +11,7 @@ describe FranceConnect::ParticulierController, type: :controller do
   let(:email) { 'test@test.com' }
   let(:password) { '' }
 
-  let(:user_info) { Hashie::Mash.new(france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email: email, password: password) }
+  let(:user_info) { { france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email_france_connect: email } }
 
   describe '.auth' do
     it 'redirect to france connect serveur' do
