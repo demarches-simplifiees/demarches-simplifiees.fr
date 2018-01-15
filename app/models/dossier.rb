@@ -273,9 +273,9 @@ class Dossier < ActiveRecord::Base
     when 'etablissement'
       self.etablissement&.send(column)
     when 'type_de_champ'
-      self.champs.find {|c| c.type_de_champ_id == column.to_i }.value
+      self.champs.find { |c| c.type_de_champ_id == column.to_i }.value
     when 'type_de_champ_private'
-      self.champs_private.find {|c| c.type_de_champ_id == column.to_i }.value
+      self.champs_private.find { |c| c.type_de_champ_id == column.to_i }.value
     end
   end
 
