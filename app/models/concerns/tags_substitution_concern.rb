@@ -29,20 +29,28 @@ module TagsSubstitutionConcern
 
   def dossier_tags
     [
-      { libelle: 'motivation',
+      {
+        libelle: 'motivation',
         description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
         target: :motivation,
-        dossier_termine_only: true },
-      { libelle: 'date de dépôt',
+        dossier_termine_only: true
+      },
+      {
+        libelle: 'date de dépôt',
         description: 'Date du passage en construction du dossier par l’usager',
-        lambda: -> (d) { format_date(d.en_construction_at) } },
-      { libelle: 'date de passage en instruction',
+        lambda: -> (d) { format_date(d.en_construction_at) }
+      },
+      {
+        libelle: 'date de passage en instruction',
         description: '',
-        lambda: -> (d) { format_date(d.en_instruction_at) } },
-      { libelle: 'date de décision',
+        lambda: -> (d) { format_date(d.en_instruction_at) }
+      },
+      {
+        libelle: 'date de décision',
         description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
         lambda: -> (d) { format_date(d.processed_at) },
-        dossier_termine_only: true },
+        dossier_termine_only: true
+      },
       { libelle: 'libellé procédure', description: '', lambda: -> (d) { d.procedure.libelle } },
       { libelle: 'numéro du dossier', description: '', target: :id }
     ]

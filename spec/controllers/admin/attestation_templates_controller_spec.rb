@@ -19,8 +19,10 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
     before do
       post :preview,
-        params: { procedure_id: procedure.id,
-                  attestation_template: upload_params }
+        params: {
+          procedure_id: procedure.id,
+          attestation_template: upload_params
+        }
     end
 
     context 'with an interlaced png' do
@@ -73,8 +75,10 @@ describe Admin::AttestationTemplatesController, type: :controller do
     context 'nominal' do
       before do
         post :create,
-          params: { procedure_id: procedure.id,
-                    attestation_template: attestation_params.merge(logo: logo, signature: signature) }
+          params: {
+            procedure_id: procedure.id,
+            attestation_template: attestation_params.merge(logo: logo, signature: signature)
+          }
         procedure.reload
       end
 
@@ -96,8 +100,10 @@ describe Admin::AttestationTemplatesController, type: :controller do
           .and_return(double(full_messages: ['nop']))
 
         post :create,
-          params: { procedure_id: procedure.id,
-                    attestation_template: attestation_params }
+          params: {
+            procedure_id: procedure.id,
+            attestation_template: attestation_params
+          }
         procedure.reload
       end
 
@@ -113,8 +119,10 @@ describe Admin::AttestationTemplatesController, type: :controller do
     context 'nominal' do
       before do
         patch :update,
-          params: { procedure_id: procedure.id,
-                    attestation_template: attestation_params_with_images }
+          params: {
+            procedure_id: procedure.id,
+            attestation_template: attestation_params_with_images
+          }
         procedure.reload
       end
 
@@ -134,8 +142,10 @@ describe Admin::AttestationTemplatesController, type: :controller do
           .and_return(double(full_messages: ['nop']))
 
         patch :update,
-          params: { procedure_id: procedure.id,
-                    attestation_template: attestation_params_with_images }
+          params: {
+            procedure_id: procedure.id,
+            attestation_template: attestation_params_with_images
+          }
         procedure.reload
       end
 
