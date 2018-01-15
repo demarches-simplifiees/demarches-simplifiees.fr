@@ -54,8 +54,7 @@ class Gestionnaire < ActiveRecord::Base
     procedure_ids = followed_dossiers.pluck(:procedure_id)
 
     if procedure_ids.include?(procedure.id)
-      return followed_dossiers.where(procedure_id: procedure.id)
-                 .inject(0) do |acc, dossier|
+      return followed_dossiers.where(procedure_id: procedure.id).inject(0) do |acc, dossier|
         acc += dossier.notifications.where(already_read: false).count
       end
     end
@@ -83,9 +82,9 @@ class Gestionnaire < ActiveRecord::Base
     start_date = DateTime.now.beginning_of_week
 
     active_procedure_overviews = procedures
-                            .publiees
-                            .map { |procedure| procedure.procedure_overview(start_date) }
-                            .select(&:had_some_activities?)
+      .publiees
+      .map { |procedure| procedure.procedure_overview(start_date) }
+      .select(&:had_some_activities?)
 
     if active_procedure_overviews.count == 0
       nil
@@ -124,8 +123,8 @@ class Gestionnaire < ActiveRecord::Base
 
       messagerie = follow.messagerie_seen_at.present? &&
         dossier.commentaires
-        .where.not(email: 'contact@tps.apientreprise.fr')
-        .updated_since?(follow.messagerie_seen_at).any?
+          .where.not(email: 'contact@tps.apientreprise.fr')
+          .updated_since?(follow.messagerie_seen_at).any?
 
       annotations_hash(demande, annotations_privees, avis_notif, messagerie)
     else

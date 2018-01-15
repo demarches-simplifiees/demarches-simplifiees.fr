@@ -47,13 +47,13 @@ feature 'As a User I wanna create a dossier' do
       expect(page).to have_current_path(users_dossier_path(procedure_with_siret.dossiers.last.id.to_s), only_path: true)
       fill_in 'dossier-siret', with: siret
       stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
-          .to_return(status: 200, body: File.read('spec/support/files/etablissement.json'))
+        .to_return(status: 200, body: File.read('spec/support/files/etablissement.json'))
       stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
-          .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
+        .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
       stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/exercices/#{siret}?token=#{SIADETOKEN}")
-          .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
+        .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
       stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/associations/#{siret}?token=#{SIADETOKEN}")
-          .to_return(status: 404, body: '')
+        .to_return(status: 404, body: '')
       page.find_by_id('dossier-siret').set siret
       page.find_by_id('submit-siret').trigger('click')
       expect(page).to have_css('#recap-info-entreprise')
