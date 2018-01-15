@@ -5,7 +5,7 @@ class UsersController < ApplicationController
     redirect_to root_path
   end
 
-  def current_user_dossier dossier_id=nil
+  def current_user_dossier dossier_id = nil
     dossier_id ||= params[:dossier_id] || params[:id]
 
     dossier = Dossier.find(dossier_id)
