@@ -8,7 +8,7 @@ describe DossierLinkHelper do
     end
 
     context "when access as gestionnaire" do
-      let(:dossier) { create(:dossier ) }
+      let(:dossier) { create(:dossier) }
       let(:gestionnaire) { create(:gestionnaire) }
 
       before { dossier.procedure.gestionnaires << gestionnaire }
@@ -17,7 +17,7 @@ describe DossierLinkHelper do
     end
 
     context "when access as expert" do
-      let(:dossier) { create(:dossier ) }
+      let(:dossier) { create(:dossier) }
       let(:gestionnaire) { create(:gestionnaire) }
       let!(:avis) { create(:avis, dossier: dossier, gestionnaire: gestionnaire) }
 

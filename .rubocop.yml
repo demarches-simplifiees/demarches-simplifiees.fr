@@ -216,7 +216,7 @@ Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: false
 
 Layout/SpaceInsideParens:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsidePercentLiteralDelimiters:
   Enabled: false
