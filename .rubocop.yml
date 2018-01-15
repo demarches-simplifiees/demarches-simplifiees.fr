@@ -201,7 +201,7 @@ Layout/SpaceInLambdaLiteral:
   EnforcedStyle: require_space
 
 Layout/SpaceInsideArrayPercentLiteral:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideBlockBraces:
   Enabled: false
