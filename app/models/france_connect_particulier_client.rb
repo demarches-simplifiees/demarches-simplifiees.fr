@@ -1,15 +1,13 @@
 class FranceConnectParticulierClient < OpenIDConnect::Client
   def initialize(code = nil)
     super(
-        identifier: FRANCE_CONNECT.particulier_identifier,
-        secret: FRANCE_CONNECT.particulier_secret,
-
-        redirect_uri: FRANCE_CONNECT.particulier_redirect_uri,
-
-        authorization_endpoint: FRANCE_CONNECT.particulier_authorization_endpoint,
-        token_endpoint: FRANCE_CONNECT.particulier_token_endpoint,
-        userinfo_endpoint: FRANCE_CONNECT.particulier_userinfo_endpoint,
-        logout_endpoint: FRANCE_CONNECT.particulier_logout_endpoint
+      identifier: FRANCE_CONNECT.particulier.identifier,
+      secret: FRANCE_CONNECT.particulier.secret,
+      redirect_uri: FRANCE_CONNECT.particulier.redirect_uri,
+      authorization_endpoint: FRANCE_CONNECT.particulier.authorization_endpoint,
+      token_endpoint: FRANCE_CONNECT.particulier.token_endpoint,
+      userinfo_endpoint: FRANCE_CONNECT.particulier.userinfo_endpoint,
+      logout_endpoint: FRANCE_CONNECT.particulier.logout_endpoint
     )
 
     if code.present?
