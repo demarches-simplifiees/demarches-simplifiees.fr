@@ -207,7 +207,7 @@ Layout/SpaceInsideBlockBraces:
   Enabled: true
 
 Layout/SpaceInsideBrackets:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
