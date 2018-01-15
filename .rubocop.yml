@@ -112,7 +112,7 @@ Layout/IndentHeredoc:
   Enabled: true
 
 Layout/IndentationConsistency:
-  Enabled: false
+  Enabled: true
 
 Layout/IndentationWidth:
   Enabled: true

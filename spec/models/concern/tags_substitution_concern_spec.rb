@@ -182,19 +182,19 @@ describe TagsSubstitutionConcern, type: :model do
       context "with date de dépôt" do
         let(:template) { '--date de dépôt--' }
 
-         it { is_expected.to eq('03/02/2001') }
+        it { is_expected.to eq('03/02/2001') }
       end
 
       context "with date de passage en instruction" do
         let(:template) { '--date de passage en instruction--' }
 
-         it { is_expected.to eq('06/05/2004') }
+        it { is_expected.to eq('06/05/2004') }
       end
 
       context "with date de décision" do
         let(:template) { '--date de décision--' }
 
-         it { is_expected.to eq('09/08/2007') }
+        it { is_expected.to eq('09/08/2007') }
       end
     end
 
