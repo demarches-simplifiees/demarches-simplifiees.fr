@@ -164,7 +164,7 @@ Layout/SpaceAfterMethodName:
   Enabled: true
 
 Layout/SpaceAfterNot:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterSemicolon:
   Enabled: false
