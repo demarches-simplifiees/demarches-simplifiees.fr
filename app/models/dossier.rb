@@ -57,7 +57,7 @@ class Dossier < ActiveRecord::Base
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :with_unread_notifications,   -> { where(notifications: { already_read: false }) }
-  scope :followed_by ,                -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
+  scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
 
   accepts_nested_attributes_for :individual
 

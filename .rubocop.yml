@@ -185,7 +185,7 @@ Layout/SpaceBeforeBlockBraces:
   Enabled: false
 
 Layout/SpaceBeforeComma:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeComment:
   Enabled: false
