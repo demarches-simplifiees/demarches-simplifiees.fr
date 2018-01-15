@@ -124,7 +124,8 @@ Layout/LeadingCommentSpace:
   Enabled: true
 
 Layout/MultilineArrayBraceLayout:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: new_line
 
 Layout/MultilineAssignmentLayout:
   Enabled: false

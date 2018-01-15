@@ -97,7 +97,8 @@ module TagsSubstitutionConcern
       [dossier_tags, dossier],
       [individual_tags, dossier.individual],
       [entreprise_tags, dossier.entreprise],
-      [etablissement_tags, dossier.entreprise&.etablissement]]
+      [etablissement_tags, dossier.entreprise&.etablissement]
+    ]
 
     tags_and_datas
       .map { |(tags, data)| [filter_tags(tags, dossier.termine?), data] }
