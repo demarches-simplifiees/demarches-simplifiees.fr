@@ -64,6 +64,8 @@ class FranceConnect::ParticulierController < ApplicationController
     @user = User.new(france_connect_information: france_connect_information).decorate
   end
 
+  private
+
   def create
     user = User.new email: params[:user][:email_france_connect]
     user.password = Devise.friendly_token[0, 20]
@@ -79,8 +81,6 @@ class FranceConnect::ParticulierController < ApplicationController
 
     connect_france_connect_particulier user
   end
-
-  private
 
   def connect_france_connect_particulier user
     sign_out :user if user_signed_in?

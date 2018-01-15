@@ -67,7 +67,6 @@ Rails.application.routes.draw do
     get 'particulier/callback' => 'particulier#callback'
 
     get 'particulier/new' => 'particulier#new'
-    post 'particulier/create' => 'particulier#create'
     post 'particulier/check_email' => 'particulier#check_email'
   end
 
