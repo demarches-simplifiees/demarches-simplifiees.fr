@@ -32,10 +32,10 @@ class ModuleApiCartoService
   end
 
   def self.generate_cadastre coordinates
-    (coordinates.inject([]) { |acc, coordinate|
-      acc << CARTO::SGMAP::Cadastre::Adapter.new(
+    coordinates.flat_map do |coordinate|
+      CARTO::SGMAP::Cadastre::Adapter.new(
         coordinate.map { |element| [element['lng'], element['lat']] }
       ).to_params
-    }).flatten
+    end
   end
 end
