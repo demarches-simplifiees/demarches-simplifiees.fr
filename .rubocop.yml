@@ -134,7 +134,8 @@ Layout/MultilineBlockLayout:
   Enabled: true
 
 Layout/MultilineHashBraceLayout:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: new_line
 
 Layout/MultilineMethodCallBraceLayout:
   Enabled: false
