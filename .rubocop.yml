@@ -231,7 +231,7 @@ Layout/Tab:
   Enabled: true
 
 Layout/TrailingBlankLines:
-  Enabled: false
+  Enabled: true
 
 Layout/TrailingWhitespace:
   Enabled: false
