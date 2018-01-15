@@ -32,7 +32,7 @@ RSpec.describe Avis, type: :model do
 
       subject { Avis.by_latest }
 
-      it { expect(subject).to eq([avis, avis3, avis2])}
+      it { expect(subject).to eq([avis, avis3, avis2]) }
     end
   end
 

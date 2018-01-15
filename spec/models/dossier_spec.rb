@@ -308,7 +308,7 @@ describe Dossier do
 
       subject { dossier }
 
-      it { expect(dossier.full_data_strings_array).to eq(expected_string)}
+      it { expect(dossier.full_data_strings_array).to eq(expected_string) }
     end
   end
 
@@ -575,7 +575,7 @@ describe Dossier do
 
     subject { procedure.dossiers.downloadable_sorted }
 
-    it { is_expected.to match([dossier3, dossier4, dossier2])}
+    it { is_expected.to match([dossier3, dossier4, dossier2]) }
   end
 
   describe "#send_dossier_received" do

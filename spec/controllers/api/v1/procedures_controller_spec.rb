@@ -6,17 +6,17 @@ describe API::V1::ProceduresController, type: :controller do
 
   describe 'GET show' do
     context 'when procedure does not exist' do
-      subject { get :show, params: {id: 999_999_999, token: admin.api_token }}
+      subject { get :show, params: { id: 999_999_999, token: admin.api_token } }
       it { expect(subject.status).to eq(404) }
     end
     context 'when procedure does not belong to administrateur' do
       let(:procedure) { create(:procedure, administrateur: create(:administrateur)) }
-      subject { get :show, params: {id: procedure, token: admin.api_token }}
+      subject { get :show, params: { id: procedure, token: admin.api_token } }
       it { expect(subject.status).to eq(404) }
     end
     context 'when procedure exist' do
       let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, administrateur: admin) }
-      subject { get :show, params: {id: procedure, token: admin.api_token }}
+      subject { get :show, params: { id: procedure, token: admin.api_token } }
 
       it 'return REST code 200', :show_in_doc do
         expect(subject.status).to eq(200)
@@ -25,7 +25,7 @@ describe API::V1::ProceduresController, type: :controller do
       describe 'body' do
         let(:module_api_carto) { create(:module_api_carto, use_api_carto: true, quartiers_prioritaires: true, cadastre: true) }
         let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, module_api_carto: module_api_carto, administrateur: admin) }
-        let(:response) { get :show, params: {id: procedure.id, token: admin.api_token }}
+        let(:response) { get :show, params: { id: procedure.id, token: admin.api_token } }
         subject { JSON.parse(response.body, symbolize_names: true)[:procedure] }
 
         it { expect(subject[:id]).to eq(procedure.id) }

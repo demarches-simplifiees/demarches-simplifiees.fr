@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'user access to the list of his dossier' do
   let(:user) { create(:user) }
-  let!(:last_updated_dossier) { create(:dossier, :with_entreprise, user: user, state: 'en_construction')}
+  let!(:last_updated_dossier) { create(:dossier, :with_entreprise, user: user, state: 'en_construction') }
   let!(:dossier1) { create(:dossier, :with_entreprise, user: user, state: 'en_construction') }
   let!(:dossier2) { create(:dossier, :with_entreprise) }
   let!(:dossier_archived) { create(:dossier, :with_entreprise, user: user, state: 'en_construction') }

@@ -204,7 +204,7 @@ Layout/SpaceInsideArrayPercentLiteral:
   Enabled: true
 
 Layout/SpaceInsideBlockBraces:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideBrackets:
   Enabled: false

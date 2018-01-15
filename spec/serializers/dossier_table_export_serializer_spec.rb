@@ -39,7 +39,7 @@ describe DossierTableExportSerializer do
 
   describe '#emails_accompagnateurs' do
     let(:gestionnaire){ create(:gestionnaire) }
-    let(:gestionnaire2) { create :gestionnaire}
+    let(:gestionnaire2) { create :gestionnaire }
     let(:dossier) { create(:dossier) }
 
     subject { DossierTableExportSerializer.new(dossier).emails_accompagnateurs }
