@@ -200,8 +200,7 @@ describe API::V1::DossiersController do
         end
 
         describe 'champs' do
-          let(:field_list) { [:url]
-          }
+          let(:field_list) { [:url] }
           subject { super()[:champs] }
 
           it { expect(subject.length).to eq 1 }

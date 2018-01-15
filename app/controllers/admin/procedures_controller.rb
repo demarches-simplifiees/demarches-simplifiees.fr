@@ -208,15 +208,20 @@ class Admin::ProceduresController < AdminController
   end
 
   def path_list
-    render json: ProcedurePath
-                     .joins(', procedures')
-                     .where("procedures.id = procedure_paths.procedure_id")
-                     .where("procedures.archived_at" => nil)
-                     .where("path LIKE ?", "%#{params[:request]}%")
-                     .pluck(:path, :administrateur_id)
-                     .inject([]) {
-               |acc, value| acc.push({label: value.first, mine: value.second == current_administrateur.id})
-           }.to_json
+    json_path_list = ProcedurePath
+      .joins(', procedures')
+      .where("procedures.id = procedure_paths.procedure_id")
+      .where("procedures.archived_at" => nil)
+      .where("path LIKE ?", "%#{params[:request]}%")
+      .pluck(:path, :administrateur_id)
+      .map do |value|
+        {
+          label: value.first,
+          mine: value.second == current_administrateur.id
+        }
+      end.to_json
+
+    render json: json_path_list
   end
 
   private
