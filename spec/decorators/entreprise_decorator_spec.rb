@@ -7,12 +7,11 @@ describe EntrepriseDecorator do
   let(:prenom) { 'mon prenom' }
   let(:entreprise_params) do
     {
-        capital_social: 123_000,
-        code_effectif_entreprise: code_effectif,
-        raison_sociale: raison_sociale,
-        nom: nom,
-        prenom: prenom
-
+      capital_social: 123_000,
+      code_effectif_entreprise: code_effectif,
+      raison_sociale: raison_sociale,
+      nom: nom,
+      prenom: prenom
     }
   end
   let(:entreprise) { create(:entreprise, entreprise_params) }

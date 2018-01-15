@@ -18,21 +18,25 @@ describe Users::PasswordsController, type: :controller do
       end
 
       it "also signs gestionnaire in" do
-        put :update, params: {user: {
-                       reset_password_token: @token,
-                       password: "supersecret",
-                       password_confirmation: "supersecret",
-                   }}
+        put :update, params: {
+          user: {
+            reset_password_token: @token,
+            password: "supersecret",
+            password_confirmation: "supersecret",
+          }
+        }
         expect(subject.current_user).to eq(user)
         expect(subject.current_gestionnaire).to eq(gestionnaire)
       end
 
       it "also signs administrateur in" do
-        put :update, params: {user: {
-                       reset_password_token: @token,
-                       password: "supersecret",
-                       password_confirmation: "supersecret",
-                   }}
+        put :update, params: {
+          user: {
+            reset_password_token: @token,
+            password: "supersecret",
+            password_confirmation: "supersecret",
+          }
+        }
         expect(subject.current_user).to eq(user)
         expect(subject.current_administrateur).to eq(administrateur)
       end
