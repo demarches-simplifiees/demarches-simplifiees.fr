@@ -5,14 +5,14 @@ class BuildDefaultPreferenceListDossier < ActiveRecord::Migration
         table.second.each do |column|
           if valid_couple_table_attr? table.first, column.first
             PreferenceListDossier.create(
-                libelle: column.second[:libelle],
-                table: column.second[:table],
-                attr: column.second[:attr],
-                attr_decorate: column.second[:attr_decorate],
-                bootstrap_lg: column.second[:bootstrap_lg],
-                order: nil,
-                filter: nil,
-                gestionnaire_id: self.id
+              libelle: column.second[:libelle],
+              table: column.second[:table],
+              attr: column.second[:attr],
+              attr_decorate: column.second[:attr_decorate],
+              bootstrap_lg: column.second[:bootstrap_lg],
+              order: nil,
+              filter: nil,
+              gestionnaire_id: self.id
             )
           end
         end

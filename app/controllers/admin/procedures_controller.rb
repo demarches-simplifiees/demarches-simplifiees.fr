@@ -96,11 +96,12 @@ class Admin::ProceduresController < AdminController
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
     new_procedure_path = ProcedurePath.new(
-        {
-            path: params[:procedure_path],
-            procedure: procedure,
-            administrateur: procedure.administrateur
-        })
+      {
+        path: params[:procedure_path],
+        procedure: procedure,
+        administrateur: procedure.administrateur
+      })
+
     if new_procedure_path.validate
       new_procedure_path.delete
     else

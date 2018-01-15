@@ -100,15 +100,15 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
         table.second.each do |column|
           if valid_couple_table_attr? table.first, column.first
             PreferenceListDossier.create(
-                libelle: column.second[:libelle],
-                table: column.second[:table],
-                attr: column.second[:attr],
-                attr_decorate: column.second[:attr_decorate],
-                bootstrap_lg: column.second[:bootstrap_lg],
-                order: nil,
-                filter: nil,
-                procedure_id: procedure_id,
-                gestionnaire: self
+              libelle: column.second[:libelle],
+              table: column.second[:table],
+              attr: column.second[:attr],
+              attr_decorate: column.second[:attr_decorate],
+              bootstrap_lg: column.second[:bootstrap_lg],
+              order: nil,
+              filter: nil,
+              procedure_id: procedure_id,
+              gestionnaire: self
             )
           end
         end
