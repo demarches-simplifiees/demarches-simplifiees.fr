@@ -28,22 +28,24 @@ module TagsSubstitutionConcern
   end
 
   def dossier_tags
-    [{ libelle: 'motivation',
-       description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
-       target: :motivation,
-       dossier_termine_only: true },
-     { libelle: 'date de dépôt',
-       description: 'Date du passage en construction du dossier par l’usager',
-       lambda: -> (d) { format_date(d.en_construction_at) } },
-     { libelle: 'date de passage en instruction',
-       description: '',
-       lambda: -> (d) { format_date(d.en_instruction_at) } },
-     { libelle: 'date de décision',
-       description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
-       lambda: -> (d) { format_date(d.processed_at) },
-       dossier_termine_only: true },
-     { libelle: 'libellé procédure', description: '', lambda: -> (d) { d.procedure.libelle } },
-     { libelle: 'numéro du dossier', description: '', target: :id }]
+    [
+      { libelle: 'motivation',
+        description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
+        target: :motivation,
+        dossier_termine_only: true },
+      { libelle: 'date de dépôt',
+        description: 'Date du passage en construction du dossier par l’usager',
+        lambda: -> (d) { format_date(d.en_construction_at) } },
+      { libelle: 'date de passage en instruction',
+        description: '',
+        lambda: -> (d) { format_date(d.en_instruction_at) } },
+      { libelle: 'date de décision',
+        description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
+        lambda: -> (d) { format_date(d.processed_at) },
+        dossier_termine_only: true },
+      { libelle: 'libellé procédure', description: '', lambda: -> (d) { d.procedure.libelle } },
+      { libelle: 'numéro du dossier', description: '', target: :id }
+    ]
   end
 
   def format_date(date)
@@ -55,16 +57,20 @@ module TagsSubstitutionConcern
   end
 
   def individual_tags
-    [{ libelle: 'civilité', description: 'M., Mme', target: :gender },
-     { libelle: 'nom', description: "nom de l'usager", target: :nom },
-     { libelle: 'prénom', description: "prénom de l'usager", target: :prenom }]
+    [
+      { libelle: 'civilité', description: 'M., Mme', target: :gender },
+      { libelle: 'nom', description: "nom de l'usager", target: :nom },
+      { libelle: 'prénom', description: "prénom de l'usager", target: :prenom }
+    ]
   end
 
   def entreprise_tags
-    [{ libelle: 'SIREN', description: '', target: :siren },
-     { libelle: 'numéro de TVA intracommunautaire', description: '', target: :numero_tva_intracommunautaire },
-     { libelle: 'SIRET du siège social', description: '', target: :siret_siege_social },
-     { libelle: 'raison sociale', description: '', target: :raison_sociale }]
+    [
+      { libelle: 'SIREN', description: '', target: :siren },
+      { libelle: 'numéro de TVA intracommunautaire', description: '', target: :numero_tva_intracommunautaire },
+      { libelle: 'SIRET du siège social', description: '', target: :siret_siege_social },
+      { libelle: 'raison sociale', description: '', target: :raison_sociale }
+    ]
   end
 
   def etablissement_tags

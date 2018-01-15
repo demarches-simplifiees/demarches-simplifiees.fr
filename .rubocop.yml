@@ -83,7 +83,7 @@ Layout/ExtraSpacing:
     - "Guardfile"
 
 Layout/FirstArrayElementLineBreak:
-  Enabled: false
+  Enabled: true
 
 Layout/FirstHashElementLineBreak:
   Enabled: false

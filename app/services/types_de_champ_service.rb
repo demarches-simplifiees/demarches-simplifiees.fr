@@ -6,8 +6,16 @@ class TypesDeChampService
 
     parameters = params_with_ordered_champs
         .require(:procedure)
-        .permit("#{attributes}" => [:libelle, :description, :order_place, :type_champ, :id, :mandatory, :type,
-                                    drop_down_list_attributes: [:value, :id]])
+        .permit("#{attributes}" => [
+          :libelle,
+          :description,
+          :order_place,
+          :type_champ,
+          :id,
+          :mandatory,
+          :type,
+          drop_down_list_attributes: [:value, :id]
+        ])
 
     parameters[attributes].each do |param_first, param_second|
       if param_second[:libelle].empty?

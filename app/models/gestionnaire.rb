@@ -154,22 +154,28 @@ class Gestionnaire < ActiveRecord::Base
   private
 
   def valid_couple_table_attr? table, column
-    couples = [{
-                   table: :dossier,
-                   column: :dossier_id
-               }, {
-                   table: :procedure,
-                   column: :libelle
-               }, {
-                   table: :etablissement,
-                   column: :siret
-               }, {
-                   table: :entreprise,
-                   column: :raison_sociale
-               }, {
-                   table: :dossier,
-                   column: :state
-               }]
+    couples = [
+      {
+        table: :dossier,
+        column: :dossier_id
+      },
+      {
+        table: :procedure,
+        column: :libelle
+      },
+      {
+        table: :etablissement,
+        column: :siret
+      },
+      {
+        table: :entreprise,
+        column: :raison_sociale
+      },
+      {
+        table: :dossier,
+        column: :state
+      }
+    ]
 
     couples.include?({table: table, column: column})
   end
@@ -205,10 +211,12 @@ class Gestionnaire < ActiveRecord::Base
       .where('commentaires.updated_at > follows.messagerie_seen_at')
       .where.not(commentaires: { email: 'contact@tps.apientreprise.fr' })
 
-    [updated_demandes,
-     updated_pieces_justificatives,
-     updated_annotations,
-     updated_avis,
-     updated_messagerie].map { |query| query.distinct.ids }.flatten.uniq
+    [
+      updated_demandes,
+      updated_pieces_justificatives,
+      updated_annotations,
+      updated_avis,
+      updated_messagerie
+     ].map { |query| query.distinct.ids }.flatten.uniq
   end
 end
