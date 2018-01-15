@@ -7,7 +7,7 @@ describe SIADE::EtablissementAdapter do
 
     before do
       stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
-          .to_return(body: File.read('spec/support/files/etablissement.json', status: 200))
+        .to_return(body: File.read('spec/support/files/etablissement.json', status: 200))
     end
 
     it '#to_params class est une Hash ?' do
@@ -74,7 +74,7 @@ describe SIADE::EtablissementAdapter do
 
     before do
       stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/etablissements/#{bad_siret}?token=#{SIADETOKEN}")
-          .to_return(body: 'Fake body', status: 404)
+        .to_return(body: 'Fake body', status: 404)
     end
 
     it { expect(subject).to be_nil }
