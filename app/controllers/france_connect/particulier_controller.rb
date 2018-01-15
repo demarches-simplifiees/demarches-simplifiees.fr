@@ -22,10 +22,10 @@ class FranceConnect::ParticulierController < ApplicationController
     salt = FranceConnectSaltService.new(france_connect_information).salt
 
     if user.nil?
-      return redirect_to france_connect_particulier_new_path(fci_id: france_connect_information.id, salt: salt)
+      redirect_to france_connect_particulier_new_path(fci_id: france_connect_information.id, salt: salt)
+    else
+      connect_france_connect_particulier(user)
     end
-
-    connect_france_connect_particulier(user)
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
     redirect_france_connect_error_connection
