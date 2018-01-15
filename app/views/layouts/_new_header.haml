@@ -2,8 +2,7 @@
   .header-inner-content
 
     .flex.align-center
-      -# TODO delete new_ui when old UI is no longer used
-      = link_to root_path(new_ui: 1), class: "header-logo" do
+      = link_to root_path, class: "header-logo" do
         %img{ src: image_url("header/logo-tps.svg") }
 
       - if gestionnaire_signed_in?
@@ -20,8 +19,6 @@
                 - if avis_counter > 0
                   %span.badge.warning= avis_counter
           %li
-            = link_to "Ancienne interface", backoffice_dossiers_path, class: 'tab-link'
-          %li
             .tab-link.contact-link
               Contact
               .contact-details
@@ -36,7 +33,7 @@
         %li
           .header-search
             = form_tag recherche_path, method: :get, class: "form" do
-              = text_field_tag "q", "#{@search_terms unless @search_terms.nil?}", placeholder: "Rechercher un dossier"
+              = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg"
         %li

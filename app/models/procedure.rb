@@ -14,8 +14,6 @@ class Procedure < ActiveRecord::Base
   has_many :assign_to, dependent: :destroy
   has_many :gestionnaires, through: :assign_to
 
-  has_many :preference_list_dossiers
-
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
   has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy
   has_one :closed_mail, class_name: "Mails::ClosedMail", dependent: :destroy
@@ -49,7 +47,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def path
-    procedure_path.path unless procedure_path.nil?
+    procedure_path.path if procedure_path.present?
   end
 
   def default_path

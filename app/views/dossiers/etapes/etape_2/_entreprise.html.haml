@@ -2,7 +2,7 @@
   %h3
     Mes informations
   %br
-  - unless @facade.entreprise.nil?
+  - if @facade.entreprise.present?
     .center{ style: 'margin-left: -5%;' }
       Vous êtes authentifié avec le SIRET
 

@@ -1,7 +1,7 @@
 .two-columns.auth
   .columns-container
     .column.preview
-      - unless @dossier
+      - if !@dossier
         = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo"
         .baseline.center
           %h3 Un outil simple

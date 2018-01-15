@@ -2,7 +2,7 @@ class FranceConnectSaltService
   attr_reader :model
 
   def initialize france_connect_information
-    raise 'Not a FranceConnectInformation class' unless france_connect_information.class == FranceConnectInformation
+    raise 'Not a FranceConnectInformation class' if france_connect_information.class != FranceConnectInformation
     @model = france_connect_information
   end
 

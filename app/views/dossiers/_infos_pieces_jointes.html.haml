@@ -29,7 +29,7 @@
               .col-xs-6
                 - if type_de_piece_justificative.api_entreprise
                   %span.text-success Nous l'avons récupéré pour vous.
-                - elsif !(@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).nil?
+                - elsif (@pj = @facade.dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)).present?
                   -# - if user_signed_in?
                   -#   = 'Pièce fournie'
                   -# - elsif gestionnaire_signed_in?

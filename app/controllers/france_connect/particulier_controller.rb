@@ -14,11 +14,11 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def callback
-    return redirect_to new_user_session_path unless params.has_key?(:code)
+    return redirect_to new_user_session_path if !params.has_key?(:code)
 
     user_infos = FranceConnectService.retrieve_user_informations_particulier(params[:code])
 
-    unless user_infos.nil?
+    if user_infos.present?
       france_connect_information = FranceConnectInformation.find_by_france_connect_particulier user_infos
 
       france_connect_information = FranceConnectInformation.create(
@@ -44,7 +44,7 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def new
-    return redirect_france_connect_error_connection unless valid_salt_and_fci_id_params?
+    return redirect_france_connect_error_connection if !valid_salt_and_fci_id_params?
 
     france_connect_information = FranceConnectInformation.find(params[:fci_id])
     @user = User.new(france_connect_information: france_connect_information).decorate
@@ -53,13 +53,13 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def check_email
-    return redirect_france_connect_error_connection unless valid_salt_and_fci_id_params?
+    return redirect_france_connect_error_connection if !valid_salt_and_fci_id_params?
 
     user = User.find_by_email(params[:user][:email_france_connect])
 
     return create if user.nil?
 
-    unless params[:user][:password].nil?
+    if params[:user][:password].present?
 
       if user.valid_password?(params[:user][:password])
         user.france_connect_information = FranceConnectInformation.find(params[:fci_id])
@@ -80,7 +80,7 @@ class FranceConnect::ParticulierController < ApplicationController
     user = User.new email: params[:user][:email_france_connect]
     user.password = Devise.friendly_token[0, 20]
 
-    unless user.valid?
+    if !user.valid?
       flash.alert = 'Email non valide'
 
       return redirect_to france_connect_particulier_new_path fci_id: params[:fci_id], salt: params[:salt], user: {email_france_connect: params[:user]['email_france_connect']}

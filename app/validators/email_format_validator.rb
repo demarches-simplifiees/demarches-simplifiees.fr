@@ -5,6 +5,6 @@ class EmailFormatValidator < ActiveModel::Validator
 
   def validate(record)
     return if record.email.blank?
-    record.errors[:base] << "Email invalide" unless email_regex.match(record.email)
+    record.errors[:base] << "Email invalide" if !email_regex.match(record.email)
   end
 end
