@@ -11,7 +11,7 @@ class Etablissement < ActiveRecord::Base
   end
 
   def inline_adresse
-    #squeeze needed because of space in excess in the data
+    # squeeze needed because of space in excess in the data
     "#{numero_voie} #{type_voie} #{nom_voie}, #{complement_adresse}, #{code_postal} #{localite}".squeeze(' ')
   end
 end

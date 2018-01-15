@@ -12,7 +12,7 @@ class Users::SessionsController < Sessions::SessionsController
     error_procedure
   end
 
-  #POST /resource/sign_in
+  # POST /resource/sign_in
   def create
     remember_me = params[:user][:remember_me] == '1'
     try_to_authenticate(User, remember_me)

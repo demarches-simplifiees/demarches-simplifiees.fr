@@ -121,7 +121,7 @@ Layout/InitialIndentation:
   Enabled: true
 
 Layout/LeadingCommentSpace:
-  Enabled: false
+  Enabled: true
 
 Layout/MultilineArrayBraceLayout:
   Enabled: false

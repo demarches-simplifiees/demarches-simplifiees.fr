@@ -61,7 +61,7 @@ class Admin::GestionnairesController < AdminController
     else
       @gestionnaire.administrateurs.push current_administrateur
       flash.notice = 'Accompagnateur ajouté'
-      #TODO Mailer no assign_to
+      # TODO Mailer no assign_to
     end
   end
 end

@@ -171,7 +171,7 @@ Rails.application.routes.draw do
     end
 
     namespace :accompagnateurs do
-      get 'show' #delete after fixed tests admin/accompagnateurs/show_spec without this line
+      get 'show' # delete after fixed tests admin/accompagnateurs/show_spec without this line
     end
 
     resources :gestionnaires, only: [:index, :create, :destroy]
