@@ -228,7 +228,7 @@ Layout/SpaceInsideStringInterpolation:
   Enabled: true
 
 Layout/Tab:
-  Enabled: false
+  Enabled: true
 
 Layout/TrailingBlankLines:
   Enabled: false
