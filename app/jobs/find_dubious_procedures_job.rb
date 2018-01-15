@@ -1,8 +1,10 @@
 class FindDubiousProceduresJob < ApplicationJob
   queue_as :cron
 
-  FORBIDDEN_KEYWORDS = ['IBAN', 'NIR', 'NIRPP', 'race', 'religion',
-                        'carte bancaire', 'carte bleue', 'sécurité sociale']
+  FORBIDDEN_KEYWORDS = [
+    'IBAN', 'NIR', 'NIRPP', 'race', 'religion',
+    'carte bancaire', 'carte bleue', 'sécurité sociale'
+  ]
 
   def perform(*args)
     # \\y is a word boundary
