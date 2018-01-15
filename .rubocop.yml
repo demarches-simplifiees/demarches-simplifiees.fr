@@ -98,7 +98,8 @@ Layout/FirstParameterIndentation:
   Enabled: true
 
 Layout/IndentArray:
-  Enabled: false
+  Enabled: true
+    EnforcedStyle: consistent
 
 Layout/IndentAssignment:
   Enabled: false
