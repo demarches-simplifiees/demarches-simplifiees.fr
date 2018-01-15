@@ -222,7 +222,7 @@ Layout/SpaceInsidePercentLiteralDelimiters:
   Enabled: true
 
 Layout/SpaceInsideRangeLiteral:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideStringInterpolation:
   Enabled: false
