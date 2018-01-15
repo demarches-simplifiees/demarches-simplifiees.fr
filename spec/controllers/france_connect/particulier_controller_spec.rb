@@ -200,26 +200,4 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
     end
   end
-
-  describe 'POST #create' do
-    let!(:france_connect_information) { create(:france_connect_information, email_france_connect: email) }
-    let(:france_connect_information_id) { france_connect_information.id }
-    let(:salt) { FranceConnectSaltService.new(france_connect_information).salt }
-
-    subject { post :create, params: {fci_id: france_connect_information_id, salt: salt, user: {email_france_connect: france_connect_information.email_france_connect}} }
-
-    context 'when email is filled' do
-      let(:email) { 'plop@gmail.com' }
-
-      it { expect { subject }.to change { User.count }.by(1) }
-      it { expect(subject).to redirect_to(root_path) }
-    end
-
-    context 'when email is incorrect' do
-      let(:email) { '' }
-
-      it { expect { subject }.not_to change { User.count } }
-      it { expect(subject).to redirect_to(france_connect_particulier_new_path(fci_id: france_connect_information_id, salt: salt, user: {email_france_connect: france_connect_information.email_france_connect})) }
-    end
-  end
 end
