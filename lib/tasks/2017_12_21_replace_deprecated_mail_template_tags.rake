@@ -7,7 +7,7 @@ namespace :'2017_12_21_replace_deprecated_mail_template_tags' do
   end
 
   def replace_tag(old_tag, new_tag)
-    mails = [ Mails::ClosedMail, Mails::InitiatedMail, Mails::ReceivedMail, Mails::RefusedMail, Mails::WithoutContinuationMail]
+    mails = [Mails::ClosedMail, Mails::InitiatedMail, Mails::ReceivedMail, Mails::RefusedMail, Mails::WithoutContinuationMail]
     mails.each do |mail|
       replace_tag_in(mail, 'object', old_tag, new_tag)
       replace_tag_in(mail, 'body', old_tag, new_tag)
