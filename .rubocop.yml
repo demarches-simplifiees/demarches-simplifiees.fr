@@ -579,7 +579,7 @@ Rails/PluralizationGrammar:
   Enabled: false
 
 Rails/Present:
-  Enabled: false
+  Enabled: true
 
 Rails/ReadWriteAttribute:
   Enabled: false
