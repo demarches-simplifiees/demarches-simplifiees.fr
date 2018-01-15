@@ -18,11 +18,13 @@ describe Gestionnaires::PasswordsController, type: :controller do
       end
 
       it "also signs user in" do
-        put :update, params: {gestionnaire: {
-          reset_password_token: @token,
-          password: "supersecret",
-          password_confirmation: "supersecret"
-        }}
+        put :update, params: {
+          gestionnaire: {
+            reset_password_token: @token,
+            password: "supersecret",
+            password_confirmation: "supersecret"
+          }
+        }
         expect(subject.current_gestionnaire).to eq(gestionnaire)
         expect(subject.current_user).to eq(user)
       end
