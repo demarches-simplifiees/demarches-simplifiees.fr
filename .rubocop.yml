@@ -191,7 +191,7 @@ Layout/SpaceBeforeComment:
   Enabled: true
 
 Layout/SpaceBeforeFirstArg:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeSemicolon:
   Enabled: false
