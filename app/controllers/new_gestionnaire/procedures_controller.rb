@@ -271,7 +271,7 @@ module NewGestionnaire
         end
       when 'self'
         order = "dossiers.#{column} #{order}"
-      when'france_connect_information'
+      when 'france_connect_information'
         includes = { user: :france_connect_information }
         order = "france_connect_informations.#{column} #{order}"
       when 'type_de_champ', 'type_de_champ_private'
@@ -315,7 +315,7 @@ module NewGestionnaire
           end
         end.each do |group_key, fields|
           case group_key
-          when'france_connect_information'
+          when 'france_connect_information'
             @dossiers = @dossiers.includes({ user: :france_connect_information })
           when 'type_de_champ_group'
             if fields.any? { |field| field['table'] == 'type_de_champ' }

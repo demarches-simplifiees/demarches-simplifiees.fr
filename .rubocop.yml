@@ -176,7 +176,7 @@ Layout/SpaceAroundEqualsInParameterDefault:
   Enabled: true
 
 Layout/SpaceAroundKeyword:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundOperators:
   Enabled: true
