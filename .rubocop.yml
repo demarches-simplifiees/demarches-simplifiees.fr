@@ -138,7 +138,8 @@ Layout/MultilineHashBraceLayout:
   EnforcedStyle: new_line
 
 Layout/MultilineMethodCallBraceLayout:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: symmetrical
 
 Layout/MultilineMethodCallIndentation:
   Enabled: false
