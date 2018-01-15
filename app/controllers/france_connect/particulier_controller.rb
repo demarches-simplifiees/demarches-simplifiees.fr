@@ -1,13 +1,11 @@
 class FranceConnect::ParticulierController < ApplicationController
+  before_action :redirect_to_login_if_fc_aborted, only: [:callback]
+
   def login
     redirect_to FranceConnectService.authorization_uri
   end
 
   def callback
-    if params[:code].nil?
-      return redirect_to new_user_session_path
-    end
-
     fetched_fci = FranceConnectService.retrieve_user_informations_particulier(params[:code])
 
     fci = FranceConnectInformation
@@ -60,6 +58,12 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   private
+
+  def redirect_to_login_if_fc_aborted
+    if params[:code].nil?
+      redirect_to new_user_session_path
+    end
+  end
 
   def create
     user = User.new email: params[:user][:email_france_connect]
