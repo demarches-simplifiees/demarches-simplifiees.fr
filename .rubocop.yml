@@ -234,7 +234,7 @@ Layout/TrailingBlankLines:
   Enabled: true
 
 Layout/TrailingWhitespace:
-  Enabled: false
+  Enabled: true
 
 Lint/AmbiguousBlockAssociation:
   Enabled: false
