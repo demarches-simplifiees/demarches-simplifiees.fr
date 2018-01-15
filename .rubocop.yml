@@ -131,7 +131,7 @@ Layout/MultilineAssignmentLayout:
   Enabled: false
 
 Layout/MultilineBlockLayout:
-  Enabled: false
+  Enabled: true
 
 Layout/MultilineHashBraceLayout:
   Enabled: false
