@@ -167,7 +167,7 @@ Layout/SpaceAfterNot:
   Enabled: true
 
 Layout/SpaceAfterSemicolon:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundBlockParameters:
   Enabled: false
