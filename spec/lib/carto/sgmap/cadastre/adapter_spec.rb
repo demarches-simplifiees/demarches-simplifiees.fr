@@ -23,18 +23,20 @@ describe CARTO::SGMAP::Cadastre::Adapter do
       subject { adapter.filter_properties adapter.data_source }
 
       it { expect(subject.size).to eq 9 }
-      it { expect(subject.keys).to eq [
-          :surface_intersection,
-          :surface_parcelle,
-          :numero,
-          :feuille,
-          :section,
-          :code_dep,
-          :nom_com,
-          :code_com,
-          :code_arr
-        ]
-      }
+      it do
+        expect(subject.keys).to eq
+          [
+            :surface_intersection,
+            :surface_parcelle,
+            :numero,
+            :feuille,
+            :section,
+            :code_dep,
+            :nom_com,
+            :code_com,
+            :code_arr
+          ]
+      end
     end
 
     describe 'Attributes' do

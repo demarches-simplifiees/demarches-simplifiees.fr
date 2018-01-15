@@ -132,7 +132,8 @@ describe API::V1::DossiersController do
         it { expect(subject.keys).to match_array(field_list) }
 
         describe 'entreprise' do
-          let(:field_list) { [
+          let(:field_list) {
+            [
               :siren,
               :capital_social,
               :numero_tva_intracommunautaire,
@@ -144,7 +145,8 @@ describe API::V1::DossiersController do
               :code_effectif_entreprise,
               :date_creation,
               :nom,
-              :prenom]
+              :prenom
+            ]
           }
           subject { super()[:entreprise] }
 
@@ -162,11 +164,7 @@ describe API::V1::DossiersController do
         end
 
         describe 'types_de_piece_justificative' do
-          let(:field_list) { [
-              :id,
-              :libelle,
-              :description]
-          }
+          let(:field_list) { [:id, :libelle, :description] }
           subject { super()[:types_de_piece_justificative] }
 
           it { expect(subject.length).to eq 2 }
@@ -185,9 +183,7 @@ describe API::V1::DossiersController do
             create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: dossier.procedure.types_de_piece_justificative.first, user: dossier.user
           end
 
-          let(:field_list) { [
-              :url, :created_at, :type_de_piece_justificative_id]
-          }
+          let(:field_list) { [:url, :created_at, :type_de_piece_justificative_id] }
           subject { super()[:pieces_justificatives].first }
 
           it { expect(subject.keys.include?(:content_url)).to be_truthy }
@@ -204,8 +200,7 @@ describe API::V1::DossiersController do
         end
 
         describe 'champs' do
-          let(:field_list) { [
-              :url]
+          let(:field_list) { [:url]
           }
           subject { super()[:champs] }
 
@@ -218,12 +213,14 @@ describe API::V1::DossiersController do
             it { expect(subject.keys.include?(:type_de_champ)).to be_truthy }
 
             describe 'type de champ' do
-              let(:field_list) { [
+              let(:field_list) {
+                [
                   :id,
                   :libelle,
                   :description,
                   :order_place,
-                  :type]
+                  :type
+                ]
               }
               subject { super()[:type_de_champ] }
 
@@ -277,9 +274,7 @@ describe API::V1::DossiersController do
         end
 
         describe 'champs_private' do
-          let(:field_list) { [
-              :url]
-          }
+          let(:field_list) { [:url] }
           subject { super()[:champs_private] }
 
           it { expect(subject.length).to eq 1 }
@@ -291,12 +286,14 @@ describe API::V1::DossiersController do
             it { expect(subject.keys.include?(:type_de_champ)).to be_truthy }
 
             describe 'type de champ' do
-              let(:field_list) { [
+              let(:field_list) {
+                [
                   :id,
                   :libelle,
                   :description,
                   :order_place,
-                  :type]
+                  :type
+                ]
               }
               subject { super()[:type_de_champ] }
 
@@ -343,9 +340,7 @@ describe API::V1::DossiersController do
           end
 
           describe 'user' do
-            let(:field_list) { [
-                :url, :created_at, :type_de_piece_justificative_id]
-            }
+            let(:field_list) { [:url, :created_at, :type_de_piece_justificative_id] }
             subject { super()[:user] }
 
             it { expect(subject[:email]).not_to be_nil }
@@ -353,7 +348,8 @@ describe API::V1::DossiersController do
         end
 
         describe 'etablissement' do
-          let(:field_list) { [
+          let(:field_list) {
+            [
               :siret,
               :siege_social,
               :naf,

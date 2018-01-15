@@ -217,6 +217,6 @@ class Gestionnaire < ActiveRecord::Base
       updated_annotations,
       updated_avis,
       updated_messagerie
-     ].map { |query| query.distinct.ids }.flatten.uniq
+    ].map { |query| query.distinct.ids }.flatten.uniq
   end
 end

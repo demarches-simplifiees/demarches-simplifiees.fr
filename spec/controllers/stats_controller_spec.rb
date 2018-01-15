@@ -18,11 +18,12 @@ describe StatsController, type: :controller do
 
       subject { @controller.send(:last_four_months_hash, association, :updated_at) }
 
-      it { expect(subject).to match_array([
-        [I18n.l(62.days.ago.beginning_of_month, format: "%B %Y"), 2],
-        [I18n.l(31.days.ago.beginning_of_month, format: "%B %Y"), 1]
+      it do
+        expect(subject).to match_array([
+          [I18n.l(62.days.ago.beginning_of_month, format: "%B %Y"), 2],
+          [I18n.l(31.days.ago.beginning_of_month, format: "%B %Y"), 1]
         ])
-      }
+      end
     end
 
     context "while a super admin is logged in" do
@@ -41,11 +42,12 @@ describe StatsController, type: :controller do
 
       subject { @controller.send(:last_four_months_hash, association, :updated_at) }
 
-      it { expect(subject).to eq([
-        [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 1],
-        [I18n.l(1.days.ago.beginning_of_month, format: "%B %Y"), 2]
+      it do
+        expect(subject).to eq([
+          [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 1],
+          [I18n.l(1.days.ago.beginning_of_month, format: "%B %Y"), 2]
         ])
-      }
+      end
     end
   end
 

@@ -45,30 +45,30 @@ set :rails_env, ENV["to"]
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, [
-                     'log',
-                     'bin',
-                     'uploads',
-                     'tmp/pids',
-                     'tmp/cache',
-                     'tmp/sockets',
-                     'public/system',
-                     'public/uploads',
-                     'config/database.yml',
-                     "config/skylight.yml",
-                     "config/fog_credentials.yml",
-                     'config/initializers/secret_token.rb',
-                     'config/initializers/features.yml',
-                     "config/environments/#{rails_env}.rb",
-                     "config/initializers/token.rb",
-                     "config/initializers/urls.rb",
-                     "config/initializers/super_admin.rb",
-                     "config/unicorn.rb",
-                     "config/initializers/raven.rb",
-                     'config/france_connect.yml',
-                     'config/github_secrets.yml',
-                     'config/initializers/mailjet.rb',
-                     'config/initializers/storage_url.rb'
-                 ]
+  'log',
+  'bin',
+  'uploads',
+  'tmp/pids',
+  'tmp/cache',
+  'tmp/sockets',
+  'public/system',
+  'public/uploads',
+  'config/database.yml',
+  "config/skylight.yml",
+  "config/fog_credentials.yml",
+  'config/initializers/secret_token.rb',
+  'config/initializers/features.yml',
+  "config/environments/#{rails_env}.rb",
+  "config/initializers/token.rb",
+  "config/initializers/urls.rb",
+  "config/initializers/super_admin.rb",
+  "config/unicorn.rb",
+  "config/initializers/raven.rb",
+  'config/france_connect.yml',
+  'config/github_secrets.yml',
+  'config/initializers/mailjet.rb',
+  'config/initializers/storage_url.rb'
+]
 
 set :rbenv_path, "/usr/local/rbenv/bin/rbenv"
 
