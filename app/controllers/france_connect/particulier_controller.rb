@@ -11,12 +11,8 @@ class FranceConnect::ParticulierController < ApplicationController
     fetched_fc_information = FranceConnectService.retrieve_user_informations_particulier(params[:code])
 
     france_connect_information = FranceConnectInformation
-      .find_by(france_connect_particulier_id: fetched_fc_information[:france_connect_particulier_id])
-
-    if france_connect_information.nil?
-      fetched_fc_information.save
-      france_connect_information = fetched_fc_information
-    end
+      .find_by(france_connect_particulier_id: fetched_fc_information[:france_connect_particulier_id]) ||
+        fetched_fc_information.tap { |object| object.save }
 
     user = france_connect_information.user
     salt = FranceConnectSaltService.new(france_connect_information).salt
