@@ -173,7 +173,7 @@ Layout/SpaceAroundBlockParameters:
   Enabled: true
 
 Layout/SpaceAroundEqualsInParameterDefault:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundKeyword:
   Enabled: false
