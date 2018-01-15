@@ -219,7 +219,7 @@ Layout/SpaceInsideParens:
   Enabled: true
 
 Layout/SpaceInsidePercentLiteralDelimiters:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideRangeLiteral:
   Enabled: false
