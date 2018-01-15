@@ -170,7 +170,7 @@ Layout/SpaceAfterSemicolon:
   Enabled: true
 
 Layout/SpaceAroundBlockParameters:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundEqualsInParameterDefault:
   Enabled: false
