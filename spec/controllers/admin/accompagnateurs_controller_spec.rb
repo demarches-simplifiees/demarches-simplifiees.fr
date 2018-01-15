@@ -25,10 +25,6 @@ describe Admin::AccompagnateursController, type: :controller do
       end
 
       it { expect(flash[:notice]).to be_present }
-
-      it 'default pref list dossier procedure columns are created' do
-        expect(procedure.preference_list_dossiers.size).to eq gestionnaire.preference_list_dossiers.where('procedure_id IS NULL').size
-      end
     end
   end
 end

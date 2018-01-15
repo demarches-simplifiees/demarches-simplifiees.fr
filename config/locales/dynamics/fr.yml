@@ -5,22 +5,6 @@ fr:
     users:
       connexion_title: Connexion
       mes_dossiers: 'Mes dossiers'
-
-    backoffice:
-      title: Gestion des dossiers
-      dossiers: Dossiers
-      pref_list:
-        title: 'Gestion de colonnes affichées'
-        description: 'Ce menu vous permet de choisir les différentes colonnes que vous souhaitez voir apparaître dans votre interface de suivi des dossiers.'
-      format_csv: 'Au format CSV'
-      format_xlsx: 'Au format XLSX'
-      format_ods: 'Au format ODS'
-      research:
-        placeholder: 'Rechercher un dossier ...'
-      filter_procedure:
-        title: "Voir qu'une procédure :"
-        first: ''
-
     dossiers:
       depositaite: "Dépositaire"
       numéro: 'Dossier nº '
@@ -31,7 +15,6 @@ fr:
         title: "Personnes invitées à voir ce dossier"
         empty: "Aucune personne invitée"
       liste_champs: "Champs du dossier"
-
     admin:
       connexion_title: Administration
       dossiers:

@@ -64,63 +64,6 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#build_default_preferences_list_dossier' do
-    subject { gestionnaire.preference_list_dossiers }
-
-    context 'when gestionnaire is created' do
-      it 'build default 5 pref list dossier object' do
-        expect(subject.size).to eq 5
-      end
-
-      it 'build dossier_id column' do
-        expect(subject.first.table).to be_nil
-        expect(subject.first.attr).to eq 'id'
-      end
-
-      it 'build dossier state column' do
-        expect(subject[1].table).to be_nil
-        expect(subject[1].attr).to eq 'state'
-      end
-
-      it 'build procedure libelle column' do
-        expect(subject[2].table).to eq 'procedure'
-        expect(subject[2].attr).to eq 'libelle'
-      end
-
-      it 'build entreprise raison_sociale column' do
-        expect(subject[3].table).to eq 'entreprise'
-        expect(subject[3].attr).to eq 'raison_sociale'
-      end
-
-      it 'build entreprise raison_sociale column' do
-        expect(subject.last.table).to eq 'etablissement'
-        expect(subject.last.attr).to eq 'siret'
-      end
-    end
-  end
-
-  describe '#build_default_preferences_smart_listing_page' do
-    subject { gestionnaire.preference_smart_listing_page }
-
-    context 'when gestionnaire is created' do
-      it 'build page column' do
-        expect(subject.page).to eq 1
-      end
-
-      it 'build liste column' do
-        expect(subject.liste).to eq 'a_traiter'
-      end
-
-      it 'build procedure_id column' do
-        expect(subject.procedure).to eq nil
-      end
-
-      it 'build gestionnaire column' do
-        expect(subject.gestionnaire).to eq gestionnaire
-      end
-    end
-  end
-
   context 'unified login' do
     it 'syncs credentials to associated user' do
       gestionnaire = create(:gestionnaire)
