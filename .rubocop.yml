@@ -152,7 +152,7 @@ Layout/MultilineOperationIndentation:
   Enabled: false
 
 Layout/RescueEnsureAlignment:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterColon:
   Enabled: false
