@@ -55,5 +55,5 @@
 
     .row.split-row
       .col-xs-12.split-hr
-- unless @facade.entreprise.rna_information.nil?
+- if @facade.entreprise.rna_information.present?
   = render partial: '/dossiers/infos_rna'

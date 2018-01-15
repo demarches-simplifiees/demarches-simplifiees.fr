@@ -71,7 +71,7 @@ class Admin::ProceduresController < AdminController
     @procedure = Procedure.new(procedure_params)
     @procedure.module_api_carto = ModuleAPICarto.new(create_module_api_carto_params) if @procedure.valid?
 
-    unless @procedure.save
+    if !@procedure.save
       flash.now.alert = @procedure.errors.full_messages
       return render 'new'
     end
@@ -83,7 +83,7 @@ class Admin::ProceduresController < AdminController
   def update
     @procedure = current_administrateur.procedures.find(params[:id])
 
-    unless @procedure.update_attributes(procedure_params)
+    if !@procedure.update_attributes(procedure_params)
       flash.now.alert = @procedure.errors.full_messages
       return render 'edit'
     end

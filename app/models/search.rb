@@ -38,7 +38,7 @@ class Search < ActiveRecord::Base
   belongs_to :dossier
 
   def results
-    unless @query.present?
+    if @query.blank?
       return Search.none
     end
 

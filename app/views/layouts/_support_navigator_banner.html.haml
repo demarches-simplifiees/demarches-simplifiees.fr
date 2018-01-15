@@ -1,4 +1,4 @@
-- unless BrowserService.recommended_browser?
+- if !BrowserService.recommended_browser?
   #support-navigator-banner.row
     .col-xs-12
       = BROWSER.value.name

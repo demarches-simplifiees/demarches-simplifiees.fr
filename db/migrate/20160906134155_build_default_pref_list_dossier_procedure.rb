@@ -33,7 +33,7 @@ class BuildDefaultPrefListDossierProcedure < ActiveRecord::Migration
         base_object = gestionnaire.preference_list_dossiers.where(procedure: nil).size
         created_object = gestionnaire.preference_list_dossiers.where(procedure: procedure).size
 
-        raise "ERROR nb object (#{base_object} != #{created_object})" unless created_object == base_object
+        raise "ERROR nb object (#{base_object} != #{created_object})" if created_object != base_object
       end
     end
   end

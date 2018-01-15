@@ -7,7 +7,7 @@ FactoryGirl.define do
         invite.dossier = create(:dossier)
       end
 
-      unless invite.user.nil?
+      if invite.user.present?
         invite.email = invite.user.email
       end
     end

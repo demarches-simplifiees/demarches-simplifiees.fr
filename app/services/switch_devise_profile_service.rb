@@ -12,14 +12,14 @@ class SwitchDeviseProfileService
   private
 
   def user_signed_in?
-    !@warden.authenticate(:scope => :user).nil?
+    @warden.authenticate(:scope => :user).present?
   end
 
   def gestionnaire_signed_in?
-    !@warden.authenticate(:scope => :gestionnaire).nil?
+    @warden.authenticate(:scope => :gestionnaire).present?
   end
 
   def administrateur_signed_in?
-    !@warden.authenticate(:scope => :administrateur).nil?
+    @warden.authenticate(:scope => :administrateur).present?
   end
 end

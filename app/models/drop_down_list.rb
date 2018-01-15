@@ -7,7 +7,7 @@ class DropDownList < ActiveRecord::Base
   end
 
   def disabled_options
-    options.select{ |v| !(v =~ /^--.*--$/).nil? }
+    options.select{ |v| (v =~ /^--.*--$/).present? }
   end
 
   def selected_options(champ)

@@ -24,7 +24,7 @@ class Administrateur < ActiveRecord::Base
   def generate_api_token
     loop do
       token = SecureRandom.hex(20)
-      break token unless Administrateur.find_by(api_token: token)
+      break token if !Administrateur.find_by(api_token: token)
     end
   end
 end

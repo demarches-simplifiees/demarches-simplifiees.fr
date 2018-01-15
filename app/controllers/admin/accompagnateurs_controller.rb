@@ -30,7 +30,6 @@ class Admin::AccompagnateursController < AdminController
     accompagnateur_service = AccompagnateurService.new gestionnaire, procedure, to
 
     accompagnateur_service.change_assignement!
-    accompagnateur_service.build_default_column
 
     flash.notice = "Assignement effectué"
     redirect_to admin_procedure_accompagnateurs_path, procedure_id: params[:procedure_id]
