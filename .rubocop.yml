@@ -155,7 +155,7 @@ Layout/RescueEnsureAlignment:
   Enabled: true
 
 Layout/SpaceAfterColon:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterComma:
   Enabled: false
