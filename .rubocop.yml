@@ -99,10 +99,10 @@ Layout/FirstParameterIndentation:
 
 Layout/IndentArray:
   Enabled: true
-    EnforcedStyle: consistent
+  EnforcedStyle: consistent
 
 Layout/IndentAssignment:
-  Enabled: false
+  Enabled: true
 
 Layout/IndentHash:
   Enabled: false
