@@ -6,7 +6,7 @@ describe Users::Dossiers::CommentairesController, type: :controller do
 
   describe '#POST create' do
     subject {
-      post :create, params:{dossier_id: dossier.id, texte_commentaire: texte_commentaire}
+      post :create, params: {dossier_id: dossier.id, texte_commentaire: texte_commentaire}
       dossier.reload
     }
 
