@@ -13,9 +13,9 @@ module NewGestionnaire
       # full text search
       if @dossiers.empty?
         @dossiers = Search.new(
-            gestionnaire: current_gestionnaire,
-            query: @search_terms,
-            page: params[:page]
+          gestionnaire: current_gestionnaire,
+          query: @search_terms,
+          page: params[:page]
         ).results
       end
     end

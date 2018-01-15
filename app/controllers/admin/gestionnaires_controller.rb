@@ -40,9 +40,11 @@ class Admin::GestionnairesController < AdminController
     attributes = params.require(:gestionnaire).permit(:email)
       .merge(password: SecureRandom.hex(5))
 
-    @gestionnaire = Gestionnaire.create(attributes.merge(
-      administrateurs: [current_administrateur]
-    ))
+    @gestionnaire = Gestionnaire.create(
+      attributes.merge(
+        administrateurs: [current_administrateur]
+      )
+    )
 
     if @gestionnaire.errors.messages.empty?
       User.create(attributes)

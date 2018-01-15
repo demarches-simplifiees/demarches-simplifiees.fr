@@ -95,7 +95,7 @@ Layout/FirstMethodParameterLineBreak:
   Enabled: false
 
 Layout/FirstParameterIndentation:
-  Enabled: false
+  Enabled: true
 
 Layout/IndentArray:
   Enabled: false
