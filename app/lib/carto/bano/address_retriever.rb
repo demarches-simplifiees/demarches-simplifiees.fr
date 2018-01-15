@@ -25,8 +25,8 @@ module Carto
           return []
         end
 
-        result['features'].inject([]) do |acc, feature|
-          acc.push feature['properties']['label']
+        result['features'].map do |feature|
+          feature['properties']['label']
         end
       rescue TypeError, JSON::ParserError
         []
