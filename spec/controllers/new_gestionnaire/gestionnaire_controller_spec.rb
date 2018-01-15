@@ -12,4 +12,3 @@ describe NewGestionnaire::GestionnaireController, type: :controller do
     end
   end
 end
-
