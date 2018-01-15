@@ -4,7 +4,7 @@
       %th
         Formulaire de demande ou CERFA (complété et numérisé)
       %td
-        - unless dossier.procedure.lien_demarche.blank?
+        - if dossier.procedure.lien_demarche.present?
           %em
             Récupérer le formulaire de demande ou CERFA vierge pour mon dossier :
             = link_to "Télécharger", "#{dossier.procedure.lien_demarche}", target: :blank, id: :lien_cerfa
@@ -26,7 +26,7 @@
         .piece-description= tpj.description
 
       %td
-        - unless tpj.lien_demarche.blank?
+        - if tpj.lien_demarche.present?
           %em
             Récupérer le formulaire vierge pour mon dossier :
             = link_to "Télécharger", tpj.lien_demarche, target: :blank

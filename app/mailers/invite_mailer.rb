@@ -2,7 +2,7 @@ class InviteMailer < ApplicationMailer
   def invite_user invite
     vars_mailer invite
 
-    send_mail invite.email, "TPS - Participez à l'élaboration d'un dossier", invite.email_sender unless invite.user.nil?
+    send_mail invite.email, "TPS - Participez à l'élaboration d'un dossier", invite.email_sender if invite.user.present?
   end
 
   def invite_guest invite

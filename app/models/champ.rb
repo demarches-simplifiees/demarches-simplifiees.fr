@@ -9,7 +9,7 @@ class Champ < ActiveRecord::Base
   before_save :serialize_datetime_if_needed, if: Proc.new { type_champ == 'datetime' }
   before_save :multiple_select_to_string, if: Proc.new { type_champ == 'multiple_drop_down_list' }
 
-  after_save :internal_notification, if: Proc.new { !dossier.nil? }
+  after_save :internal_notification, if: Proc.new { dossier.present? }
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
 
@@ -39,7 +39,7 @@ class Champ < ActiveRecord::Base
   end
 
   def same_date? num, compare
-    if type_champ == 'datetime' && !value.nil?
+    if type_champ == 'datetime' && value.present?
       if value.to_datetime.strftime(compare) == num
         return true
       end

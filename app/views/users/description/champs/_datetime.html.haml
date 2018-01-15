@@ -1,7 +1,7 @@
 %input.form-control{ name: "champs['#{champ.id}']",
                   placeholder: champ.libelle,
                   id: "champs_#{champ.id}",
-                  value: (champ.value.split(/[ ][0-9]*:[0-9]*/).first unless champ.value.nil?),
+                  value: (champ.value.split(/[ ][0-9]*:[0-9]*/).first if champ.value.present?),
                   type: champ.type_champ,
                   'data-provide' => champ.data_provide,
                   'data-date-format' => champ.data_date_format }

@@ -46,7 +46,7 @@ class DossiersListFacades
   end
 
   def active_filter? preference
-    return true if @procedure.nil? || preference.table != 'champs' || (preference.table == 'champs' && !preference.filter.blank?)
+    return true if @procedure.nil? || preference.table != 'champs' || (preference.table == 'champs' && preference.filter.present?)
 
     preference_list_dossiers_filter.where(table: :champs).where.not(filter: '').size == 0
   end

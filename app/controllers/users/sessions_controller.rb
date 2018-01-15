@@ -3,7 +3,7 @@ class Users::SessionsController < Sessions::SessionsController
 
   # GET /resource/sign_in
   def new
-    unless user_return_to_procedure_id.nil? # WTF ?
+    if user_return_to_procedure_id.present? # WTF ?
       @dossier = Dossier.new(procedure: Procedure.active(user_return_to_procedure_id))
     end
 

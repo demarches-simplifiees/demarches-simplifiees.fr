@@ -10,6 +10,6 @@ class Siret
   before_validation :remove_whitespace
 
   def remove_whitespace
-    siret.delete!(' ') unless siret.nil?
+    siret.delete!(' ') if siret.present?
   end
 end

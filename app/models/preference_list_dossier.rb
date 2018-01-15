@@ -25,7 +25,7 @@ class PreferenceListDossier < ActiveRecord::Base
     columns = columns.merge({
                       champs: columns_champs_procedure(procedure_id),
                       champs_private: columns_champs_private_procedure(procedure_id)
-                  }) unless procedure_id.nil?
+                  }) if procedure_id.present?
 
     columns
   end

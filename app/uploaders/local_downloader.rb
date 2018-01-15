@@ -27,11 +27,11 @@ class LocalDownloader
         self.random_folder_name = SecureRandom.hex
         base_path = File.join(BASE_PATH_DISK, self.random_folder_name)
 
-        unless File.directory?(BASE_PATH_DISK)
+        if !File.directory?(BASE_PATH_DISK)
           Dir.mkdir(BASE_PATH_DISK)
         end
 
-        unless File.directory?(base_path)
+        if !File.directory?(base_path)
           Dir.mkdir(base_path)
           break base_path
         end

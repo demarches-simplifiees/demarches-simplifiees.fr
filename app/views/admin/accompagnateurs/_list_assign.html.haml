@@ -1,6 +1,6 @@
 .row{ style: 'height: 34px;' }
 
-- unless smart_listing.empty?
+- if smart_listing.present?
   %table.table#liste-gestionnaire
     %thead
       %th Enlever
