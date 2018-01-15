@@ -16,13 +16,8 @@ class CommentairesController < ApplicationController
     @commentaire.champ = @commentaire.dossier.champs.find(params[:champ_id]) if params[:champ_id]
 
     dossier_id = params['dossier_id']
-    if is_gestionnaire?
-      @commentaire.email = current_gestionnaire.email
-      @commentaire.dossier = current_gestionnaire.dossiers.find_by(id: dossier_id) || current_gestionnaire.avis.find_by!(dossier_id: dossier_id).dossier
-    else
-      @commentaire.email = current_user.email
-      @commentaire.dossier = current_user.dossiers.find_by(id: dossier_id) || current_user.invites.find_by!(dossier_id: dossier_id).dossier
-    end
+    @commentaire.email = current_user.email
+    @commentaire.dossier = current_user.dossiers.find_by(id: dossier_id) || current_user.invites.find_by!(dossier_id: dossier_id).dossier
 
     @commentaire.file = params["file"]
 
@@ -33,21 +28,11 @@ class CommentairesController < ApplicationController
       flash.alert = "Veuillez rédiger un message ou ajouter une pièce jointe (maximum 20 Mo)"
     end
 
-    if is_gestionnaire?
-      current_gestionnaire.follow(@commentaire.dossier)
-
-      redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
+    if current_user.email != @commentaire.dossier.user.email
+      invite = Invite.where(dossier: @commentaire.dossier, email: current_user.email).first
+      redirect_to url_for(controller: 'users/dossiers/invites', action: :show, id: invite.id)
     else
-      if current_user.email != @commentaire.dossier.user.email
-        invite = Invite.where(dossier: @commentaire.dossier, email: current_user.email).first
-        redirect_to url_for(controller: 'users/dossiers/invites', action: :show, id: invite.id)
-      else
-        redirect_to users_dossier_recapitulatif_path(params['dossier_id'])
-      end
+      redirect_to users_dossier_recapitulatif_path(params['dossier_id'])
     end
-  end
-
-  def is_gestionnaire?
-    false
   end
 end

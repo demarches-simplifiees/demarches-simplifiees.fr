@@ -22,12 +22,6 @@ describe RootController, type: :controller do
     end
 
     it { expect(subject).to redirect_to(procedures_path) }
-
-    context 'and coming with old_ui param' do
-      subject { get :index, params: { old_ui: 1 } }
-
-      it { expect(subject).to redirect_to(backoffice_path) }
-    end
   end
 
   context 'when Administrateur is connected' do
