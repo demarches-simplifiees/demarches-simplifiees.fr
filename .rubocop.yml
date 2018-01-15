@@ -225,7 +225,7 @@ Layout/SpaceInsideRangeLiteral:
   Enabled: true
 
 Layout/SpaceInsideStringInterpolation:
-  Enabled: false
+  Enabled: true
 
 Layout/Tab:
   Enabled: false
