@@ -49,7 +49,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def path
-    procedure_path.path unless procedure_path.nil?
+    procedure_path.path if procedure_path.present?
   end
 
   def default_path

@@ -81,7 +81,7 @@ class DossiersListGestionnaireService
     pref = current_preference_smart_listing_page
 
     if pref
-      unless pref.liste == @liste && pref.procedure == @procedure
+      if pref.liste != @liste || pref.procedure != @procedure
         pref.liste = @liste
         pref.procedure = @procedure
 
@@ -91,7 +91,7 @@ class DossiersListGestionnaireService
         end
       end
 
-      unless new_page.nil?
+      if new_page.present?
         pref.page = new_page
         pref.save
       end
@@ -112,7 +112,7 @@ class DossiersListGestionnaireService
     preference = @current_devise_profil.preference_list_dossiers
                      .find_by(table: table, attr: attr, procedure: @procedure)
 
-    preference.update order: order unless (preference.nil?)
+    preference.update order: order if preference.present?
   end
 
   def reset_sort!
@@ -124,16 +124,16 @@ class DossiersListGestionnaireService
 
   def joins_filter
     filter_preference_list.inject([]) do |acc, preference|
-      acc.push(preference.table.to_sym) unless preference.table.blank? || preference.filter.blank?
+      acc.push(preference.table.to_sym) if preference.table.present? && preference.filter.present?
       acc
     end
   end
 
   def where_filter
     filter_preference_list.inject('') do |acc, preference|
-      unless preference.filter.blank?
+      if preference.filter.present?
         filter = preference.filter.tr('*', '%').gsub("'", "''")
-        filter = "%" + filter + "%" unless filter.include? '%'
+        filter = "%" + filter + "%" if !filter.include? '%'
 
         value = preference.table_with_s_attr
 

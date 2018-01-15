@@ -12,14 +12,14 @@
       .dropdown-menu.dropdown-menu-right.dropdown-pannel
         %h4= t('dynamics.dossiers.followers.title')
         %ul
-          - unless @facade.followers.empty?
+          - if @facade.followers.present?
             - @facade.followers.each do |follower|
               %li= follower.email
           - else
             = t('dynamics.dossiers.followers.empty')
         %h4= t('dynamics.dossiers.invites.title')
         %ul
-          - unless @facade.invites.empty?
+          - if @facade.invites.present?
             - @facade.invites.each do |invite|
               %li= invite.email
           - else

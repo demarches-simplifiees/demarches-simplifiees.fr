@@ -18,7 +18,7 @@ class DossierFacades
   end
 
   def entreprise
-    @dossier.entreprise.decorate unless @dossier.entreprise.nil? || @dossier.entreprise.siren.blank?
+    @dossier.entreprise.decorate if @dossier.entreprise.present? && @dossier.entreprise.siren.present?
   end
 
   def etablissement

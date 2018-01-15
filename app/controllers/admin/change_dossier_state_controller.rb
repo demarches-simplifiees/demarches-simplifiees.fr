@@ -11,7 +11,7 @@ class Admin::ChangeDossierStateController < AdminController
   def check
     @dossier = Dossier.find(params[:dossier][:id])
 
-    unless @dossier.procedure.administrateur.email == current_administrateur.email
+    if @dossier.procedure.administrateur.email != current_administrateur.email
       flash.alert = 'Dossier introuvable'
       return redirect_to admin_change_dossier_state_path
     end

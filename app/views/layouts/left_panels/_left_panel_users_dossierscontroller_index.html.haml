@@ -10,7 +10,7 @@
 #menu-block
   .split-hr-left
   #procedure-list
-    - unless current_user.dossiers.count == 0
+    - if current_user.dossiers.count != 0
       %a{ :href => "#{url_for users_dossiers_path(liste: 'brouillon')}", 'data-toggle' => :tooltip, title: 'Les dossiers jamais proposés à la relecture.' }
         .procedure-list-element#brouillon{ class: ('active' if @liste == 'brouillon') }
           Brouillons

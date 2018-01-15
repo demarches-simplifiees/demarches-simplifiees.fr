@@ -579,7 +579,7 @@ Rails/PluralizationGrammar:
   Enabled: false
 
 Rails/Present:
-  Enabled: false
+  Enabled: true
 
 Rails/ReadWriteAttribute:
   Enabled: false
@@ -1029,7 +1029,7 @@ Style/TrivialAccessors:
   Enabled: false
 
 Style/UnlessElse:
-  Enabled: false
+  Enabled: true
 
 Style/UnneededCapitalW:
   Enabled: false

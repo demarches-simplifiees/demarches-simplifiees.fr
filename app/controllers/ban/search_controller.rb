@@ -10,7 +10,7 @@ class Ban::SearchController < ApplicationController
   def get_address_point
     point = Carto::Geocodeur.convert_adresse_to_point(params[:request])
 
-    unless point.nil?
+    if point.present?
       lon = point.x.to_s
       lat = point.y.to_s
     end

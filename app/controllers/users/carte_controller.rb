@@ -17,7 +17,7 @@ class Users::CarteController < UsersController
     dossier.quartier_prioritaires.each(&:destroy)
     dossier.cadastres.each(&:destroy)
 
-    unless params[:json_latlngs].blank?
+    if params[:json_latlngs].present?
       ModuleApiCartoService.save_qp! dossier, params[:json_latlngs]
       ModuleApiCartoService.save_cadastre! dossier, params[:json_latlngs]
     end
@@ -37,13 +37,13 @@ class Users::CarteController < UsersController
       etablissement = nil
     end
 
-    point = Carto::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse) unless etablissement.nil?
+    point = Carto::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse) if etablissement.present?
 
     lon = '2.428462'
     lat = '46.538192'
     zoom = '13'
 
-    unless point.nil?
+    if point.present?
       lon = point.x.to_s
       lat = point.y.to_s
     end

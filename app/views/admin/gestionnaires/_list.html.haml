@@ -1,4 +1,4 @@
-- unless smart_listing.empty?
+- if smart_listing.present?
   %table.table#liste-gestionnaire
     %thead
       %th#libelle= smart_listing.sortable 'Email', 'email'

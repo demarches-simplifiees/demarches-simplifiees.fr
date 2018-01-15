@@ -7,7 +7,7 @@
       État
 
     - @facade_data_view.preference_list_dossiers_filter.each do |preference|
-      - unless preference.libelle == 'Statut' || preference.libelle == 'État'
+      - if preference.libelle != 'Statut' && preference.libelle != 'État'
         %th{ class: "col-md-#{preference.bootstrap_lg} col-lg-#{preference.bootstrap_lg}" }
           - if preference.table.to_s.include? 'champs'
             = preference.libelle
@@ -20,7 +20,7 @@
     %th.col-xs-1.center Actions
     %th.col-xs-1.center Abonnés
 
-  - unless smart_listing.empty?
+  - if smart_listing.present?
     - smart_listing.collection.each do |dossier|
       %tr.dossier-row{ id: "tr_dossier_#{dossier.id}", 'data-dossier_url' => backoffice_dossier_url(id: dossier.id) }
         - if smart_listing.name.to_s == 'follow_dossiers'
@@ -35,7 +35,7 @@
         %td.col-xs-1
           = dossier.decorate.display_state
         - @facade_data_view.preference_list_dossiers_filter.each_with_index do |preference, index|
-          - unless preference.libelle == 'Statut' || preference.libelle == 'État'
+          - if preference.libelle != 'Statut' && preference.libelle != 'État'
             %td
               - if preference.table.nil? || preference.table.empty?
                 - value = dossier.decorate.public_send(preference.attr_decorate)

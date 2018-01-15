@@ -32,7 +32,7 @@
       = ff.hidden_field :type
       = ff.hidden_field :id
 
-    - unless ff.object.id.nil?
+    - if ff.object.id.present?
       .form-group
         %br &nbsp;
         = ff.object.button_up(index: ff.index, url: @types_de_champ_facade.move_up_url(ff), private: @types_de_champ_facade.private)

@@ -36,7 +36,7 @@
         %li
           .header-search
             = form_tag recherche_path, method: :get, class: "form" do
-              = text_field_tag "q", "#{@search_terms unless @search_terms.nil?}", placeholder: "Rechercher un dossier"
+              = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg"
         %li
