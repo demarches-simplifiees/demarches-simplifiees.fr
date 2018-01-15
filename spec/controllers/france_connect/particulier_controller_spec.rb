@@ -11,7 +11,7 @@ describe FranceConnect::ParticulierController, type: :controller do
   let(:email) { 'test@test.com' }
   let(:password) { '' }
 
-  let(:user_info) { Hashie::Mash.new(france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email: email, password: password) }
+  let(:user_info) { { france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email_france_connect: email } }
 
   describe '.auth' do
     it 'redirect to france connect serveur' do
@@ -31,7 +31,8 @@ describe FranceConnect::ParticulierController, type: :controller do
     context 'when params code is present' do
       context 'when code is correct' do
         before do
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(user_info)
+          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier)
+            .and_return(FranceConnectInformation.new(user_info))
         end
 
         context 'when france_connect_particulier_id exist in database' do

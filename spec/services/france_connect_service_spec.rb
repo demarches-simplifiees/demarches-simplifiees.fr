@@ -7,7 +7,7 @@ describe FranceConnectService do
 
     let(:given_name) { 'plop1' }
     let(:family_name) { 'plop2' }
-    let(:birthdate) { 'plop3' }
+    let(:birthdate) { '2012-12-31' }
     let(:gender) { 'plop4' }
     let(:birthplace) { 'plop5' }
     let(:email) { 'plop@emaiL.com' }
@@ -29,15 +29,15 @@ describe FranceConnectService do
       subject
     end
 
-    it 'returns user informations in a object' do
-      expect(subject.given_name).to eq(given_name)
-      expect(subject.family_name).to eq(family_name)
-      expect(subject.birthdate).to eq(birthdate)
-      expect(subject.gender).to eq(gender)
-      expect(subject.email).to eq(email)
-      expect(subject.phone).to eq(phone)
-      expect(subject.birthplace).to eq(birthplace)
-      expect(subject.france_connect_particulier_id).to eq(france_connect_particulier_id)
+    it 'returns user informations' do
+      expect(subject).to have_attributes({
+        given_name: given_name,
+        family_name: family_name,
+        birthdate: DateTime.parse(birthdate),
+        birthplace: birthplace,
+        gender: gender,
+        email_france_connect: email,
+        france_connect_particulier_id: france_connect_particulier_id })
     end
   end
 end

@@ -1,42 +1,30 @@
 class FranceConnect::ParticulierController < ApplicationController
   def login
-    client = FranceConnectParticulierClient.new
-
-    session[:state] = SecureRandom.hex(16)
-    session[:nonce] = SecureRandom.hex(16)
-
-    authorization_uri = client.authorization_uri(
-        scope: [:profile, :email],
-        state: session[:state],
-        nonce: session[:nonce]
-    )
-    redirect_to URI.parse(authorization_uri).to_s
+    redirect_to FranceConnectService.authorization_uri
   end
 
   def callback
-    return redirect_to new_user_session_path if !params.has_key?(:code)
+    if params[:code].nil?
+      return redirect_to new_user_session_path
+    end
 
-    user_infos = FranceConnectService.retrieve_user_informations_particulier(params[:code])
+    fetched_fc_information = FranceConnectService.retrieve_user_informations_particulier(params[:code])
 
-    if user_infos.present?
-      france_connect_information = FranceConnectInformation.find_by_france_connect_particulier user_infos
+    france_connect_information = FranceConnectInformation
+      .find_by(france_connect_particulier_id: fetched_fc_information[:france_connect_particulier_id])
 
-      france_connect_information = FranceConnectInformation.create(
-          {gender: user_infos[:gender],
-           given_name: user_infos[:given_name],
-           family_name: user_infos[:family_name],
-           email_france_connect: user_infos[:email],
-           birthdate: user_infos[:birthdate],
-           birthplace: user_infos[:birthplace],
-           france_connect_particulier_id: user_infos[:france_connect_particulier_id]}
-      ) if france_connect_information.nil?
+    if france_connect_information.nil?
+      fetched_fc_information.save
+      france_connect_information = fetched_fc_information
+    end
 
-      user = france_connect_information.user
-      salt = FranceConnectSaltService.new(france_connect_information).salt
+    user = france_connect_information.user
+    salt = FranceConnectSaltService.new(france_connect_information).salt
 
-      return redirect_to france_connect_particulier_new_path(fci_id: france_connect_information.id, salt: salt) if user.nil?
-
-      connect_france_connect_particulier user
+    if user.nil?
+      redirect_to france_connect_particulier_new_path(fci_id: france_connect_information.id, salt: salt)
+    else
+      connect_france_connect_particulier(user)
     end
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message

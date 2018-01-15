@@ -10,14 +10,17 @@ feature 'France Connect Particulier  Connexion' do
   let(:email) { 'plop@plop.com' }
   let(:france_connect_particulier_id) { 'blabla' }
 
-  let(:user_info) { Hashie::Mash.new(france_connect_particulier_id: france_connect_particulier_id,
-                                     given_name: given_name,
-                                     family_name: family_name,
-                                     birthdate: birthdate,
-                                     birthplace: birthplace,
-                                     gender: gender,
-                                     email: email)
-  }
+  let(:user_info) do
+    {
+      france_connect_particulier_id: france_connect_particulier_id,
+      given_name: given_name,
+      family_name: family_name,
+      birthdate: birthdate,
+      birthplace: birthplace,
+      gender: gender,
+      email_france_connect: email
+    }
+  end
 
   context 'when user is on login page' do
     before do
@@ -44,7 +47,7 @@ feature 'France Connect Particulier  Connexion' do
 
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(user_info)
+          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(FranceConnectInformation.new(user_info))
         end
 
         context 'when is the first connexion' do

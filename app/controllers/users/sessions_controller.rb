@@ -49,11 +49,8 @@ class Users::SessionsController < Sessions::SessionsController
       sign_out :user
 
       case connected_with_france_connect
-      when 'entreprise'
-        redirect_to FRANCE_CONNECT.entreprise_logout_endpoint
-        return
       when 'particulier'
-        redirect_to FRANCE_CONNECT.particulier_logout_endpoint
+        redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint]
         return
       end
     end
