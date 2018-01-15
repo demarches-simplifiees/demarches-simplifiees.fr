@@ -24,11 +24,7 @@ class InvitesController < ApplicationController
       flash.alert = invite.errors.full_messages
     end
 
-    if gestionnaire_signed_in?
-      redirect_to url_for(controller: 'backoffice/dossiers', action: :show, id: params['dossier_id'])
-    else
-      redirect_to url_for(controller: 'users/recapitulatif', action: :show, dossier_id: params['dossier_id'])
-    end
+    redirect_to url_for(controller: 'users/recapitulatif', action: :show, dossier_id: params['dossier_id'])
   end
 
   private

@@ -51,7 +51,6 @@ Rails.application.routes.draw do
 
   get 'users' => 'users#index'
   get 'admin' => 'admin#index'
-  get 'backoffice' => 'backoffice#index'
 
   get 'administrations/sign_in' => 'administrations/sessions#new'
   delete 'administrations/sign_out' => 'administrations/sessions#destroy'
@@ -187,45 +186,6 @@ Rails.application.routes.draw do
     post 'dossier/:dossier_id' => '/invites#create', as: 'dossier'
   end
 
-  namespace :backoffice do
-    get 'sign_in' => '/gestionnaires/sessions#new'
-    get 'dossiers/search' => 'dossiers#search'
-    get 'download_dossiers_tps' => 'dossiers#download_dossiers_tps'
-
-    resource :private_formulaire
-
-    get 'invitations'
-
-    resources :dossiers do
-      post 'receive' => 'dossiers#receive'
-      post 'process_dossier' => 'dossiers#process_dossier'
-      member do
-        post 'archive'
-        post 'unarchive'
-      end
-      post 'reopen' => 'dossiers#reopen'
-      resources :commentaires, only: [:index]
-      resources :avis, only: [:create, :update]
-    end
-
-    namespace :dossiers do
-      post 'filter'
-
-      get 'procedure/:id' => 'procedure#index', as: 'procedure'
-      post 'procedure/:id/filter' => 'procedure#filter', as: 'procedure_filter'
-    end
-
-    resources :commentaires, only: [:create]
-
-    namespace :preference_list_dossier do
-      post 'add'
-      delete 'delete'
-
-      get 'reload_smartlisting' => '/backoffice/dossiers#reload_smartlisting'
-      get 'reload_pref_list'
-    end
-  end
-
   namespace :api do
     namespace :v1 do
       resources :procedures, only: [:index, :show] do
@@ -299,4 +259,9 @@ Rails.application.routes.draw do
   end
 
   apipie
+
+  # Legacy routes
+  get 'backoffice' => redirect('/procedures')
+  get 'backoffice/sign_in' => redirect('/users/sign_in')
+  get 'backoffice/dossiers/procedure/:id' => redirect('/procedures/:id')
 end

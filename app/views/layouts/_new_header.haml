@@ -2,8 +2,7 @@
   .header-inner-content
 
     .flex.align-center
-      -# TODO delete new_ui when old UI is no longer used
-      = link_to root_path(new_ui: 1), class: "header-logo" do
+      = link_to root_path, class: "header-logo" do
         %img{ src: image_url("header/logo-tps.svg") }
 
       - if gestionnaire_signed_in?
@@ -19,8 +18,6 @@
                 - avis_counter = current_gestionnaire.avis.without_answer.count
                 - if avis_counter > 0
                   %span.badge.warning= avis_counter
-          %li
-            = link_to "Ancienne interface", backoffice_dossiers_path, class: 'tab-link'
           %li
             .tab-link.contact-link
               Contact
