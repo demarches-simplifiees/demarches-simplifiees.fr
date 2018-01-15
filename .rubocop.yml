@@ -194,7 +194,7 @@ Layout/SpaceBeforeFirstArg:
   Enabled: true
 
 Layout/SpaceBeforeSemicolon:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInLambdaLiteral:
   Enabled: false
