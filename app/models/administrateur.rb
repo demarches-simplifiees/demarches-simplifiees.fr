@@ -43,9 +43,9 @@ class Administrateur < ActiveRecord::Base
     if active?
       raise "Impossible d'inviter un utilisateur déjà actif !"
     end
-    
+
     reset_password_token = set_reset_password_token
-  
+
     AdministrationMailer.invite_admin(self, reset_password_token).deliver_now!
 
     reset_password_token
