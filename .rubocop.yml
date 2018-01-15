@@ -118,7 +118,7 @@ Layout/IndentationWidth:
   Enabled: true
 
 Layout/InitialIndentation:
-  Enabled: false
+  Enabled: true
 
 Layout/LeadingCommentSpace:
   Enabled: false
