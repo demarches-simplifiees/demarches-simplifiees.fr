@@ -17,9 +17,7 @@ class DossierDecorator < Draper::Decorator
   end
 
   def url(gestionnaire_signed_in)
-    if gestionnaire_signed_in
-      backoffice_dossier_path(id)
-    elsif brouillon?
+    if brouillon?
       users_dossier_description_path(id)
     else
       users_dossier_recapitulatif_path(id)

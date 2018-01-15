@@ -16,11 +16,4 @@ class AccompagnateurService
       AssignTo.where(gestionnaire: @accompagnateur, procedure: @procedure).delete_all
     end
   end
-
-  def build_default_column
-    return if @to != ASSIGN
-    return if PreferenceListDossier.where(gestionnaire: @accompagnateur, procedure: @procedure).present?
-
-    @accompagnateur.build_default_preferences_list_dossier @procedure.id
-  end
 end

@@ -14,8 +14,6 @@ class Procedure < ActiveRecord::Base
   has_many :assign_to, dependent: :destroy
   has_many :gestionnaires, through: :assign_to
 
-  has_many :preference_list_dossiers
-
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
   has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy
   has_one :closed_mail, class_name: "Mails::ClosedMail", dependent: :destroy

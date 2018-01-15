@@ -54,12 +54,6 @@ describe DossierDecorator do
   end
 
   describe '#url' do
-    context "when a gestionnaire is signed_in" do
-      subject { super().url(true) }
-
-      it { is_expected.to eq("/backoffice/dossiers/#{dossier.id}") }
-    end
-
     context "when a gestionnaire is not signed_in" do
       context "when the dossier is in brouillon state" do
         before do
