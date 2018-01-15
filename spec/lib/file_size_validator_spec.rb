@@ -24,8 +24,8 @@ describe FileSizeValidator, lib: true do
   describe 'options uses a symbol' do
     let(:options) do
       {
-          maximum: :test,
-          attributes: { content: attachment }
+        maximum: :test,
+        attributes: { content: attachment }
       }
     end
 

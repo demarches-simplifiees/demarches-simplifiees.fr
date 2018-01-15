@@ -70,12 +70,13 @@ describe StatsController, type: :controller do
 
       subject { @controller.send(:cumulative_hash, association, :updated_at) }
 
-      it { expect(subject).to eq({
+      it do
+        expect(subject).to eq({
           2.month.ago.beginning_of_month => 2,
           1.month.ago.beginning_of_month => 4,
           1.hour.ago.beginning_of_month => 5
         })
-      }
+      end
     end
 
     context "while a super admin is not logged in" do
@@ -83,11 +84,12 @@ describe StatsController, type: :controller do
 
       subject { @controller.send(:cumulative_hash, association, :updated_at) }
 
-      it { expect(subject).to eq({
+      it do
+        expect(subject).to eq({
           2.month.ago.beginning_of_month => 2,
           1.month.ago.beginning_of_month => 4
         })
-      }
+      end
     end
   end
 

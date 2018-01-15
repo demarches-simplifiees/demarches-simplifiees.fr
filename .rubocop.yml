@@ -105,7 +105,8 @@ Layout/IndentAssignment:
   Enabled: true
 
 Layout/IndentHash:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: consistent
 
 Layout/IndentHeredoc:
   Enabled: false

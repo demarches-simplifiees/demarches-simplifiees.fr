@@ -1,9 +1,9 @@
 class API::StatistiquesController < ApplicationController
   def dossiers_stats
     render json: {
-               total: total_dossiers,
-               mois: dossiers_mois
-           }
+      total: total_dossiers,
+      mois: dossiers_mois
+    }
   end
 
   private

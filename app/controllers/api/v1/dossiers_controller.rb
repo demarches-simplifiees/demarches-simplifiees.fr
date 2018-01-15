@@ -34,9 +34,9 @@ class API::V1::DossiersController < APIController
 
   def pagination(dossiers)
     {
-        page: dossiers.current_page,
-        resultats_par_page: dossiers.limit_value,
-        nombre_de_page: dossiers.total_pages
+      page: dossiers.current_page,
+      resultats_par_page: dossiers.limit_value,
+      nombre_de_page: dossiers.total_pages
     }
   end
 

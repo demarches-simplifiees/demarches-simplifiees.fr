@@ -18,19 +18,19 @@ Rails.application.routes.draw do
     }
 
   devise_for :administrateurs, controllers: {
-                                 sessions: 'administrateurs/sessions'
-                             }, skip: [:password, :registrations]
+    sessions: 'administrateurs/sessions'
+  }, skip: [:password, :registrations]
 
   devise_for :gestionnaires, controllers: {
-                               sessions: 'gestionnaires/sessions',
-                               passwords: 'gestionnaires/passwords'
-                           }, skip: [:registrations]
+    sessions: 'gestionnaires/sessions',
+    passwords: 'gestionnaires/passwords'
+  }, skip: [:registrations]
 
   devise_for :users, controllers: {
-                       sessions: 'users/sessions',
-                       registrations: 'users/registrations',
-                       passwords: 'users/passwords'
-                   }
+    sessions: 'users/sessions',
+    registrations: 'users/registrations',
+    passwords: 'users/passwords'
+  }
 
   devise_scope :user do
     get '/users/sign_in/demo' => redirect("/users/sign_in")
