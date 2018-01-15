@@ -10,7 +10,7 @@ class Avis < ApplicationRecord
   default_scope { joins(:dossier) }
   scope :with_answer, -> { where.not(answer: nil) }
   scope :without_answer, -> { where(answer: nil) }
-  scope :for_dossier, ->(dossier_id) { where(dossier_id: dossier_id) }
+  scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
   scope :by_latest, -> { order(updated_at: :desc) }
   scope :updated_since?, -> (date) { where('avis.updated_at > ?', date) }
 

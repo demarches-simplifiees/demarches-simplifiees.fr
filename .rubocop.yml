@@ -197,7 +197,8 @@ Layout/SpaceBeforeSemicolon:
   Enabled: true
 
 Layout/SpaceInLambdaLiteral:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: require_space
 
 Layout/SpaceInsideArrayPercentLiteral:
   Enabled: false
