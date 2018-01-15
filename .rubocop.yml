@@ -188,7 +188,7 @@ Layout/SpaceBeforeComma:
   Enabled: true
 
 Layout/SpaceBeforeComment:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeFirstArg:
   Enabled: false
