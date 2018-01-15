@@ -146,7 +146,7 @@ Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
 Layout/MultilineMethodDefinitionBraceLayout:
-  Enabled: false
+  Enabled: true
 
 Layout/MultilineOperationIndentation:
   Enabled: false
