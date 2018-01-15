@@ -109,7 +109,7 @@ Layout/IndentHash:
   EnforcedStyle: consistent
 
 Layout/IndentHeredoc:
-  Enabled: false
+  Enabled: true
 
 Layout/IndentationConsistency:
   Enabled: false
