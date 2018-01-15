@@ -14,13 +14,12 @@ class FranceConnect::ParticulierController < ApplicationController
       .find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) ||
         fetched_fci.tap { |object| object.save }
 
-    user = fci.user
     salt = FranceConnectSaltService.new(fci).salt
 
-    if user.nil?
+    if fci.user.nil?
       redirect_to france_connect_particulier_new_path(fci_id: fci.id, salt: salt)
     else
-      connect_france_connect_particulier(user)
+      connect_france_connect_particulier(fci.user)
     end
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
