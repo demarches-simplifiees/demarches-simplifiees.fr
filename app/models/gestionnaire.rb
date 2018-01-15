@@ -107,7 +107,7 @@ class Gestionnaire < ActiveRecord::Base
       .find_by(gestionnaire: self, dossier: dossier)
 
     if follow.present?
-      #retirer le seen_at.present? une fois la contrainte de presence en base (et les migrations ad hoc)
+      # retirer le seen_at.present? une fois la contrainte de presence en base (et les migrations ad hoc)
       champs_publiques = follow.demande_seen_at.present? &&
         follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
 
