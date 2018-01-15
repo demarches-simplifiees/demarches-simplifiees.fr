@@ -8,8 +8,8 @@ require 'yaml'
 # ansible config
 class Features
   class << self
-    if File.exist?(File.dirname(__FILE__) + '/features.yml')
-      features_map = YAML.load_file(File.dirname(__FILE__) + '/features.yml')
+    if File.exist?("#{File.dirname(__FILE__)}/features.yml")
+      features_map = YAML.load_file("#{File.dirname(__FILE__)}/features.yml")
       if features_map
         features_map.each do |feature, is_active|
           define_method("#{feature}") do

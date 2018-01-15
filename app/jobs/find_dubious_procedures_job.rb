@@ -9,7 +9,7 @@ class FindDubiousProceduresJob < ApplicationJob
   def perform(*args)
     # \\y is a word boundary
     forbidden_regexp = FORBIDDEN_KEYWORDS
-      .map { |keyword| '\\y' + keyword + '\\y' }
+      .map { |keyword| "\\y#{keyword}\\y" }
       .join('|')
 
     # ~* -> case insensitive regexp match
