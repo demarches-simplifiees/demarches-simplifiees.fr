@@ -8,17 +8,17 @@ class FranceConnect::ParticulierController < ApplicationController
       return redirect_to new_user_session_path
     end
 
-    fetched_fc_information = FranceConnectService.retrieve_user_informations_particulier(params[:code])
+    fetched_fci = FranceConnectService.retrieve_user_informations_particulier(params[:code])
 
-    france_connect_information = FranceConnectInformation
-      .find_by(france_connect_particulier_id: fetched_fc_information[:france_connect_particulier_id]) ||
-        fetched_fc_information.tap { |object| object.save }
+    fci = FranceConnectInformation
+      .find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) ||
+        fetched_fci.tap { |object| object.save }
 
-    user = france_connect_information.user
-    salt = FranceConnectSaltService.new(france_connect_information).salt
+    user = fci.user
+    salt = FranceConnectSaltService.new(fci).salt
 
     if user.nil?
-      redirect_to france_connect_particulier_new_path(fci_id: france_connect_information.id, salt: salt)
+      redirect_to france_connect_particulier_new_path(fci_id: fci.id, salt: salt)
     else
       connect_france_connect_particulier(user)
     end
