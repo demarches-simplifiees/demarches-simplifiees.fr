@@ -86,7 +86,7 @@ Layout/FirstArrayElementLineBreak:
   Enabled: true
 
 Layout/FirstHashElementLineBreak:
-  Enabled: false
+  Enabled: true
 
 Layout/FirstMethodArgumentLineBreak:
   Enabled: false

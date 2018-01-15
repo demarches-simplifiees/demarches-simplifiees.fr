@@ -18,13 +18,15 @@ class CreateFranceConnectInformation < ActiveRecord::Migration
     add_reference :france_connect_informations, :user, references: :users
 
     User.all.each do |user|
-      FranceConnectInformation.create({gender: user.gender,
-                                       given_name: user.given_name,
-                                       family_name: user.family_name,
-                                       birthdate: user.birthdate,
-                                       birthplace: user.birthplace,
-                                       france_connect_particulier_id: user.france_connect_particulier_id,
-                                       user_id: user.id}) if user.france_connect_particulier_id.present?
+      FranceConnectInformation.create({
+        gender: user.gender,
+        given_name: user.given_name,
+        family_name: user.family_name,
+        birthdate: user.birthdate,
+        birthplace: user.birthplace,
+        france_connect_particulier_id: user.france_connect_particulier_id,
+        user_id: user.id
+      }) if user.france_connect_particulier_id.present?
     end
 
     remove_column :users, :gender
@@ -44,12 +46,14 @@ class CreateFranceConnectInformation < ActiveRecord::Migration
     add_column :users, :france_connect_particulier_id, :string
 
     FranceConnectInformation.all.each do |fci|
-      User.find(fci.user_id).update_attributes({gender: fci.gender,
-                                                given_name: fci.given_name,
-                                                family_name: fci.family_name,
-                                                birthdate: fci.birthdate,
-                                                birthplace: fci.birthplace,
-                                                france_connect_particulier_id: fci.france_connect_particulier_id})
+      User.find(fci.user_id).update_attributes({
+        gender: fci.gender,
+        given_name: fci.given_name,
+        family_name: fci.family_name,
+        birthdate: fci.birthdate,
+        birthplace: fci.birthplace,
+        france_connect_particulier_id: fci.france_connect_particulier_id
+      })
     end
 
     drop_table :france_connect_informations

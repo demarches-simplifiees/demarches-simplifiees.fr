@@ -24,10 +24,11 @@ describe Admin::MailTemplatesController, type: :controller do
 
     before :each do
       patch :update,
-        params: { procedure_id: procedure.id,
-                  id: initiated_mail.class.const_get(:SLUG),
-                  mail_template: { subject: mail_subject, body: mail_body }
-                }
+        params: {
+          procedure_id: procedure.id,
+          id: initiated_mail.class.const_get(:SLUG),
+          mail_template: { subject: mail_subject, body: mail_body }
+        }
     end
 
     it { expect(response).to redirect_to admin_procedure_mail_templates_path(procedure) }
