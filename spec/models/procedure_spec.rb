@@ -474,15 +474,18 @@ describe Procedure do
     subject { create(:procedure) }
 
     before do
-      allow(subject).to receive(:fields).and_return([{
-        "label" => "label1",
-        "table" => "table1",
-        "column" => "column1"
-      }, {
-        "label" => "label2",
-        "table" => "table2",
-        "column" => "column2"
-      }])
+      allow(subject).to receive(:fields).and_return([
+        {
+          "label" => "label1",
+          "table" => "table1",
+          "column" => "column1"
+        },
+        {
+          "label" => "label2",
+          "table" => "table2",
+          "column" => "column2"
+        }
+      ])
     end
 
     it { expect(subject.fields_for_select).to eq([["label1", "table1/column1"], ["label2", "table2/column2"]]) }

@@ -35,15 +35,16 @@ feature 'France Connect Particulier  Connexion' do
       let(:code) { 'plop' }
 
       context 'when authentification is ok' do
-        let(:france_connect_information) { create(:france_connect_information,
-          france_connect_particulier_id: france_connect_particulier_id,
-          given_name: given_name,
-          family_name: family_name,
-          birthdate: birthdate,
-          birthplace: birthplace,
-          gender: gender,
-          email_france_connect: email)
-        }
+        let(:france_connect_information) do
+          create(:france_connect_information,
+            france_connect_particulier_id: france_connect_particulier_id,
+            given_name: given_name,
+            family_name: family_name,
+            birthdate: birthdate,
+            birthplace: birthplace,
+            gender: gender,
+            email_france_connect: email)
+        end
 
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))

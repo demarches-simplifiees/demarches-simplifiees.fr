@@ -54,8 +54,7 @@ class Gestionnaire < ActiveRecord::Base
     procedure_ids = followed_dossiers.pluck(:procedure_id)
 
     if procedure_ids.include?(procedure.id)
-      return followed_dossiers.where(procedure_id: procedure.id)
-                 .inject(0) do |acc, dossier|
+      return followed_dossiers.where(procedure_id: procedure.id).inject(0) do |acc, dossier|
         acc += dossier.notifications.where(already_read: false).count
       end
     end
@@ -83,9 +82,9 @@ class Gestionnaire < ActiveRecord::Base
     start_date = DateTime.now.beginning_of_week
 
     active_procedure_overviews = procedures
-                            .publiees
-                            .map { |procedure| procedure.procedure_overview(start_date) }
-                            .select(&:had_some_activities?)
+      .publiees
+      .map { |procedure| procedure.procedure_overview(start_date) }
+      .select(&:had_some_activities?)
 
     if active_procedure_overviews.count == 0
       nil
@@ -107,7 +106,7 @@ class Gestionnaire < ActiveRecord::Base
       .find_by(gestionnaire: self, dossier: dossier)
 
     if follow.present?
-      #retirer le seen_at.present? une fois la contrainte de presence en base (et les migrations ad hoc)
+      # retirer le seen_at.present? une fois la contrainte de presence en base (et les migrations ad hoc)
       champs_publiques = follow.demande_seen_at.present? &&
         follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
 
@@ -124,8 +123,8 @@ class Gestionnaire < ActiveRecord::Base
 
       messagerie = follow.messagerie_seen_at.present? &&
         dossier.commentaires
-        .where.not(email: 'contact@tps.apientreprise.fr')
-        .updated_since?(follow.messagerie_seen_at).any?
+          .where.not(email: 'contact@tps.apientreprise.fr')
+          .updated_since?(follow.messagerie_seen_at).any?
 
       annotations_hash(demande, annotations_privees, avis_notif, messagerie)
     else
@@ -154,22 +153,28 @@ class Gestionnaire < ActiveRecord::Base
   private
 
   def valid_couple_table_attr? table, column
-    couples = [{
-                   table: :dossier,
-                   column: :dossier_id
-               }, {
-                   table: :procedure,
-                   column: :libelle
-               }, {
-                   table: :etablissement,
-                   column: :siret
-               }, {
-                   table: :entreprise,
-                   column: :raison_sociale
-               }, {
-                   table: :dossier,
-                   column: :state
-               }]
+    couples = [
+      {
+        table: :dossier,
+        column: :dossier_id
+      },
+      {
+        table: :procedure,
+        column: :libelle
+      },
+      {
+        table: :etablissement,
+        column: :siret
+      },
+      {
+        table: :entreprise,
+        column: :raison_sociale
+      },
+      {
+        table: :dossier,
+        column: :state
+      }
+    ]
 
     couples.include?({table: table, column: column})
   end
@@ -205,10 +210,12 @@ class Gestionnaire < ActiveRecord::Base
       .where('commentaires.updated_at > follows.messagerie_seen_at')
       .where.not(commentaires: { email: 'contact@tps.apientreprise.fr' })
 
-    [updated_demandes,
-     updated_pieces_justificatives,
-     updated_annotations,
-     updated_avis,
-     updated_messagerie].map { |query| query.distinct.ids }.flatten.uniq
+    [
+      updated_demandes,
+      updated_pieces_justificatives,
+      updated_annotations,
+      updated_avis,
+      updated_messagerie
+    ].map { |query| query.distinct.ids }.flatten.uniq
   end
 end

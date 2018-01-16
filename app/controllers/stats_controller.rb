@@ -47,7 +47,7 @@ class StatsController < ApplicationController
   def last_four_months_hash(association, date_attribute)
     min_date = 3.months.ago.beginning_of_month.to_date
 
-     association
+    association
       .where(date_attribute => min_date..max_date)
       .group("DATE_TRUNC('month', #{date_attribute.to_s})")
       .count

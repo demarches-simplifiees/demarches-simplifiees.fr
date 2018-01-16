@@ -2,15 +2,15 @@ namespace :cloudstorage do
   task init: :environment do
     os_config = (YAML.load_file(Fog.credentials_path))['default']
     @os = OpenStack::Connection.create(
-        {
-            username: os_config['openstack_username'],
-            api_key: os_config['openstack_api_key'],
-            auth_method: "password",
-            auth_url: "https://auth.cloud.ovh.net/v2.0/",
-            authtenant_name: os_config['openstack_tenant'],
-            service_type: "object-store",
-            region: os_config['openstack_region']
-        }
+      {
+        username: os_config['openstack_username'],
+        api_key: os_config['openstack_api_key'],
+        auth_method: "password",
+        auth_url: "https://auth.cloud.ovh.net/v2.0/",
+        authtenant_name: os_config['openstack_tenant'],
+        service_type: "object-store",
+        region: os_config['openstack_region']
+      }
     )
     @cont = @os.container(CarrierWave::Uploader::Base.fog_directory)
   end

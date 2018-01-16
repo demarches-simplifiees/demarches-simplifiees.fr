@@ -230,10 +230,12 @@ describe NewGestionnaire::DossiersController, type: :controller do
         let(:procedure) { create(:procedure, :published, attestation_template: template, gestionnaires: [gestionnaire]) }
 
         subject do
-          post :terminer, params: { process_action: "accepter",
-                                    procedure_id: procedure.id,
-                                    dossier_id: dossier.id,
-                                    dossier: { motivation: "Yallah" }}
+          post :terminer, params: {
+            process_action: "accepter",
+            procedure_id: procedure.id,
+            dossier_id: dossier.id,
+            dossier: { motivation: "Yallah" }
+          }
         end
 
         before do

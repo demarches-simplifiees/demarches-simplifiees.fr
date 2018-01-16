@@ -48,10 +48,10 @@ describe TypesDeChampService do
 
         it do
           is_expected.to match({
-          '0' => { 'libelle' => 'a', 'order_place' => '0' },
-          '1' => { 'libelle' => 'c', 'order_place' => '1' },
-          '2' => { 'libelle' => 'b', 'order_place' => '2' }
-        })
+            '0' => { 'libelle' => 'a', 'order_place' => '0' },
+            '1' => { 'libelle' => 'c', 'order_place' => '1' },
+            '2' => { 'libelle' => 'b', 'order_place' => '2' }
+          })
         end
       end
 
@@ -66,10 +66,10 @@ describe TypesDeChampService do
 
         it do
           is_expected.to match({
-          '0' => { 'libelle' => 'b', 'order_place' => '0' },
-          '1' => { 'libelle' => 'a', 'order_place' => '1' },
-          '2' => { 'libelle' => 'c', 'order_place' => '2' }
-        })
+            '0' => { 'libelle' => 'b', 'order_place' => '0' },
+            '1' => { 'libelle' => 'a', 'order_place' => '1' },
+            '2' => { 'libelle' => 'c', 'order_place' => '2' }
+          })
         end
       end
 
@@ -85,11 +85,11 @@ describe TypesDeChampService do
 
         it 'does not change the natural order' do
           is_expected.to match({
-          '0' => { 'libelle' => 'a', 'order_place' => '0' },
-          '1' => { 'libelle' => 'b', 'order_place' => '1' },
-          '2' => { 'libelle' => 'c', 'order_place' => '2' },
-          '3' => { 'libelle' => 'd', 'order_place' => '3' }
-        })
+            '0' => { 'libelle' => 'a', 'order_place' => '0' },
+            '1' => { 'libelle' => 'b', 'order_place' => '1' },
+            '2' => { 'libelle' => 'c', 'order_place' => '2' },
+            '3' => { 'libelle' => 'd', 'order_place' => '3' }
+          })
         end
       end
     end

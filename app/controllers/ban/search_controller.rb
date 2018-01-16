@@ -2,9 +2,11 @@ class Ban::SearchController < ApplicationController
   def get
     request = params[:request]
 
-    render json: Carto::Bano::AddressRetriever.new(request).list.inject([]) {
-               |acc, value| acc.push({label: value})
-           }.to_json
+    json = Carto::Bano::AddressRetriever.new(request).list.map do |value|
+      { label: value }
+    end.to_json
+
+    render json: json
   end
 
   def get_address_point

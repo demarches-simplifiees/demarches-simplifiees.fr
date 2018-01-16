@@ -16,8 +16,10 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
 
     context 'with suspicious champs' do
       let(:forbidden_tdcs) do
-        [create(:type_de_champ_public, libelle: 'num de securite sociale, stp'),
-         create(:type_de_champ_public, libelle: "t'aurais une carte bancaire ?")]
+        [
+          create(:type_de_champ_public, libelle: 'num de securite sociale, stp'),
+          create(:type_de_champ_public, libelle: "t'aurais une carte bancaire ?")
+        ]
       end
 
       let(:tdcs) { forbidden_tdcs + [allowed_tdc] }
