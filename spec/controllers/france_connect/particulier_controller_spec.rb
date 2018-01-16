@@ -44,9 +44,7 @@ describe FranceConnect::ParticulierController, type: :controller do
 
         subject { get :callback, params: {code: code} }
 
-        it 'does not create a new france_connect_information in database' do
-          expect { subject }.not_to change { FranceConnectInformation.count }
-        end
+        it { expect { subject }.not_to change { FranceConnectInformation.count } }
 
         context 'when france_connect_particulier_id have an associate user' do
           before do
