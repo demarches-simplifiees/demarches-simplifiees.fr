@@ -59,11 +59,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         end
 
         context 'when france_connect_particulier_id does not have an associate user' do
-          before do
-            get :callback, params: {code: code}
-          end
-
-          it {expect(response).to redirect_to(root_path)}
+          it { is_expected.to redirect_to(root_path) }
         end
       end
 
