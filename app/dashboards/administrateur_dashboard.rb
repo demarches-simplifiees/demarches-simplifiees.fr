@@ -12,7 +12,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     email: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    procedures: Field::HasMany,
+    procedures: Field::HasMany.with_options(limit: 20),
   }.freeze
 
   # COLLECTION_ATTRIBUTES
