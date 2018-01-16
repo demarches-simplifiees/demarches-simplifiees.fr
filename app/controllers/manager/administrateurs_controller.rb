@@ -13,6 +13,11 @@ module Manager
       end
     end
 
+    def update
+      Administrateur.find_inactive_by_id(params[:id]).invite!
+      redirect_to manager_administrateur_path(params[:id])
+    end
+
     private
 
     def create_administrateur_params
