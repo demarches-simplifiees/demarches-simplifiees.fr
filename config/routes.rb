@@ -55,8 +55,7 @@ Rails.application.routes.draw do
   get 'administrations/sign_in' => 'administrations/sessions#new'
   delete 'administrations/sign_out' => 'administrations/sessions#destroy'
   authenticate :administration do
-    resources :administrations, only: [:index, :create]
-    namespace :administrations do
+    resources :administrations, only: [:index, :create, :update] do
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
   end
@@ -111,6 +110,8 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get 'activate' => '/administrateurs/activate#new'
+    patch 'activate' => '/administrateurs/activate#create'
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
