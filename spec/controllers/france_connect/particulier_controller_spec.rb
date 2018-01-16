@@ -38,7 +38,7 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
 
       context 'when france_connect_particulier_id exist in database' do
-        let!(:france_connect_information) { create(:france_connect_information, france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, gender: gender, birthplace: birthplace) }
+        let!(:france_connect_information) { create(:france_connect_information, user_info) }
 
         it { expect { subject }.not_to change { FranceConnectInformation.count } }
 
@@ -60,6 +60,11 @@ describe FranceConnect::ParticulierController, type: :controller do
 
         context 'when france_connect_particulier_id does not have an associate user' do
           it { is_expected.to redirect_to(root_path) }
+
+          it do
+            subject
+            expect(User.find_by(email: email)).not_to be_nil
+          end
         end
       end
 
