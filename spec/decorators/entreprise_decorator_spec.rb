@@ -27,7 +27,7 @@ describe EntrepriseDecorator do
     context 'when raison_sociale is nil' do
       let(:raison_sociale) { nil }
       it 'display nom and prenom' do
-        expect(subject).to eq(nom + ' ' + prenom)
+        expect(subject).to eq("#{nom} #{prenom}")
       end
     end
   end
