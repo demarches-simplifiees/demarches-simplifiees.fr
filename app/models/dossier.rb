@@ -154,12 +154,9 @@ class Dossier < ActiveRecord::Base
   end
 
   def convert_specific_hash_values_to_string(hash_to_convert)
-    hash = {}
-    hash_to_convert.each do |key, value|
-      value = serialize_value_for_export(value)
-      hash.store(key, value)
+    hash_to_convert.transform_values do |value|
+      serialize_value_for_export(value)
     end
-    hash
   end
 
   def full_data_strings_array
