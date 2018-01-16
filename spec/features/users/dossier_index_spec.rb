@@ -11,8 +11,8 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
     fill_in 'dossier_individual_attributes_prenom',    with: 'Prenom'
     fill_in 'dossier_individual_attributes_birthdate', with: '14/10/1987'
     find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
-    page.find_by_id('etape_suivante').trigger('click')
-    page.find_by_id('suivant').trigger('click')
+    page.find_by_id('etape_suivante').click
+    page.find_by_id('suivant').click
     50.times do
       Dossier.create(procedure_id: procedure_for_individual.id, user_id: user.id, state: "en_construction")
     end
@@ -35,15 +35,15 @@ feature 'As a User I want to sort and paginate dossiers', js: true do
     scenario 'Using pagination' do
       visit "/users/dossiers?dossiers_smart_listing[sort][id]=asc"
       expect(page.all(:css, '#dossiers-list tr')[1].text.split(" ").first).to eq(user.dossiers.first.id.to_s)
-      page.find('.next_page a').trigger('click')
+      page.find('.next_page a').click
       wait_for_ajax
       expect(page.all(:css, '#dossiers-list tr')[1].text.split(" ").first).to eq((user.dossiers.first.id + 10).to_s)
-      page.find('.next_page a').trigger('click')
+      page.find('.next_page a').click
       wait_for_ajax
       expect(page.all(:css, '#dossiers-list tr')[1].text.split(" ").first).to eq((user.dossiers.first.id + 20).to_s)
-      page.find('.prev a').trigger('click')
+      page.find('.prev a').click
       wait_for_ajax
-      page.find('.prev a').trigger('click')
+      page.find('.prev a').click
       wait_for_ajax
       expect(page.all(:css, '#dossiers-list tr')[1].text.split(" ").first).to eq((user.dossiers.first.id).to_s)
     end

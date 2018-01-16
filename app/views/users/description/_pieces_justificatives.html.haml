@@ -7,7 +7,7 @@
         - if dossier.procedure.lien_demarche.present?
           %em
             Récupérer le formulaire de demande ou CERFA vierge pour mon dossier :
-            = link_to "Télécharger", "#{dossier.procedure.lien_demarche}", target: :blank, id: :lien_cerfa
+            = link_to "Télécharger", sanitize_url(dossier.procedure.lien_demarche), target: :blank, id: :lien_cerfa
             -# %a#lien_cerfa{ href: "#{dossier.procedure.lien_demarche}", target: '_blank' } Télécharger
 
       %td
