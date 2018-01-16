@@ -42,13 +42,11 @@ describe FranceConnect::ParticulierController, type: :controller do
       context 'when france_connect_particulier_id exist in database' do
         let!(:france_connect_information) { create(:france_connect_information, france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, gender: gender, birthplace: birthplace) }
 
-        context {
-          subject { get :callback, params: {code: code} }
+        subject { get :callback, params: {code: code} }
 
-          it 'does not create a new france_connect_information in database' do
-            expect { subject }.not_to change { FranceConnectInformation.count }
-          end
-        }
+        it 'does not create a new france_connect_information in database' do
+          expect { subject }.not_to change { FranceConnectInformation.count }
+        end
 
         context 'when france_connect_particulier_id have an associate user' do
           before do
