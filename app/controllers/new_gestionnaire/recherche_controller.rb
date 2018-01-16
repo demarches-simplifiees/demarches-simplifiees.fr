@@ -5,7 +5,9 @@ module NewGestionnaire
 
       # exact id match?
       if @search_terms.to_i != 0
-        @dossiers = current_gestionnaire.dossiers.where(id: @search_terms.to_i)
+        @dossiers = current_gestionnaire.dossiers.where(id: @search_terms.to_i) +
+          current_gestionnaire.dossiers_from_avis.where(id: @search_terms.to_i)
+        @dossiers.uniq!
       end
 
       if @dossiers.nil?
