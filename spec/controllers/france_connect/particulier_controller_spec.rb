@@ -16,12 +16,21 @@ describe FranceConnect::ParticulierController, type: :controller do
     it { is_expected.to have_http_status(:redirect) }
   end
 
-  describe '.callback' do
+  describe '#callback' do
     context 'when param code is missing' do
-      it 'redirect to login page' do
-        get :callback
-        expect(response).to redirect_to(new_user_session_path)
-      end
+      subject { get :callback, params: { code: code } }
+
+      let(:code) { nil }
+
+      it { is_expected.to redirect_to(new_user_session_path) }
+    end
+
+    context 'when param code is empty' do
+      subject { get :callback, params: { code: code } }
+
+      let(:code) { '' }
+
+      it { is_expected.to redirect_to(new_user_session_path) }
     end
 
     context 'when params code is present' do
