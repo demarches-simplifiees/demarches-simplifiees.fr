@@ -141,7 +141,7 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
         }
       ]
 
-      couples.include?({table: table, column: column})
+      couples.include?({ table: table, column: column })
     end
   end
 

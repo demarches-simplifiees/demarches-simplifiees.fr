@@ -10,12 +10,12 @@ describe Users::RecapitulatifController, type: :controller do
 
   describe 'GET #show' do
     it 'returns http success' do
-      get :show, params: {dossier_id: dossier.id}
+      get :show, params: { dossier_id: dossier.id }
       expect(response).to have_http_status(:success)
     end
 
     it 'redirection vers siret si mauvais dossier ID' do
-      get :show, params: {dossier_id: bad_dossier_id}
+      get :show, params: { dossier_id: bad_dossier_id }
       expect(response).to redirect_to('/')
     end
 
@@ -27,7 +27,7 @@ describe Users::RecapitulatifController, type: :controller do
           dossier.state = 'brouillon'
           dossier.save
 
-          get :show, params: {dossier_id: dossier.id}
+          get :show, params: { dossier_id: dossier.id }
         end
 
         it { is_expected.to redirect_to root_path }
@@ -38,7 +38,7 @@ describe Users::RecapitulatifController, type: :controller do
   describe 'POST #initiate' do
     context 'when an user initiate his dossier' do
       before do
-        post :initiate, params: {dossier_id: dossier.id}
+        post :initiate, params: { dossier_id: dossier.id }
       end
 
       it 'dossier change his state for accepte' do
