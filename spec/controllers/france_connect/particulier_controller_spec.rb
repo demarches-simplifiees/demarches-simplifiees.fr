@@ -69,43 +69,29 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
 
       context 'when france_connect_particulier_id does not exist in database' do
-        let(:last_france_connect_information) { FranceConnectInformation.last }
-
         it { expect { subject }.to change { FranceConnectInformation.count }.by(1) }
 
         describe 'FranceConnectInformation attributs' do
-          before do
-            get :callback, params: {code: code}
-          end
+          let(:stored_fci) { FranceConnectInformation.last }
 
-          subject { last_france_connect_information }
+          before { subject }
 
-          it { expect(subject.gender).to eq gender }
-          it { expect(subject.given_name).to eq given_name }
-          it { expect(subject.family_name).to eq family_name }
-          it { expect(subject.email_france_connect).to eq email }
-          it { expect(subject.birthdate.to_time.to_i).to eq birthdate.to_time.to_i }
-          it { expect(subject.birthplace).to eq birthplace }
-          it { expect(subject.france_connect_particulier_id).to eq france_connect_particulier_id }
+          it { expect(stored_fci).to have_attributes(user_info.merge(birthdate: DateTime.parse(birthdate))) }
         end
 
-        it { expect(subject).to redirect_to(root_path) }
+        it { is_expected.to redirect_to(root_path) }
       end
     end
 
     context 'when code is not correct' do
       before do
         allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
-        get :callback, params: {code: code}
+        subject
       end
 
-      it 'redirect to login page' do
-        expect(response).to redirect_to(new_user_session_path)
-      end
+      it { expect(response).to redirect_to(new_user_session_path) }
 
-      it 'display error message' do
-        expect(flash[:alert]).to be_present
-      end
+      it { expect(flash[:alert]).to be_present }
     end
   end
 end
