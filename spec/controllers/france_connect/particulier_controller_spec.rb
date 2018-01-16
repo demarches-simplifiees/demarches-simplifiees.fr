@@ -9,7 +9,6 @@ describe FranceConnect::ParticulierController, type: :controller do
   let(:birthplace) { '1234' }
   let(:france_connect_particulier_id) { 'blabla' }
   let(:email) { 'test@test.com' }
-  let(:password) { '' }
 
   let(:user_info) { { france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email_france_connect: email } }
 
@@ -70,21 +69,16 @@ describe FranceConnect::ParticulierController, type: :controller do
           end
 
           context 'when france_connect_particulier_id does not have an associate user' do
-            let(:salt) { FranceConnectSaltService.new(france_connect_information).salt }
-
             before do
               get :callback, params: {code: code}
             end
 
-            it 'redirects to check email FC page' do
-              expect(response).to redirect_to(france_connect_particulier_new_path(fci_id: france_connect_information.id, salt: salt))
-            end
+            it {expect(response).to redirect_to(root_path)}
           end
         end
 
         context 'when france_connect_particulier_id does not exist in database' do
           let(:last_france_connect_information) { FranceConnectInformation.last }
-          let(:salt) { FranceConnectSaltService.new(last_france_connect_information).salt }
           subject { get :callback, params: {code: code} }
 
           it { expect { subject }.to change { FranceConnectInformation.count }.by(1) }
@@ -105,9 +99,7 @@ describe FranceConnect::ParticulierController, type: :controller do
             it { expect(subject.france_connect_particulier_id).to eq france_connect_particulier_id }
           end
 
-          it 'redirects to check email FC page' do
-            expect(subject).to redirect_to(france_connect_particulier_new_path(fci_id: last_france_connect_information.id, salt: salt))
-          end
+          it { expect(subject).to redirect_to(root_path) }
         end
       end
 
@@ -123,79 +115,6 @@ describe FranceConnect::ParticulierController, type: :controller do
 
         it 'display error message' do
           expect(flash[:alert]).to be_present
-        end
-      end
-    end
-  end
-
-  describe 'POST #check_email' do
-    let(:email) { 'plop@gmail.com' }
-
-    let!(:france_connect_information) { create(:france_connect_information) }
-    let(:france_connect_information_id) { france_connect_information.id }
-    let(:salt) { FranceConnectSaltService.new(france_connect_information).salt }
-
-    subject { post :check_email, params: {fci_id: france_connect_information_id, salt: salt, user: {email_france_connect: email}} }
-
-    context 'when salt and fci_id does not matches' do
-      let(:france_connect_information_fake) { create(:france_connect_information, france_connect_particulier_id: 'iugfjh') }
-      let(:france_connect_information_id) { france_connect_information_fake.id }
-
-      it { is_expected.to redirect_to new_user_session_path }
-    end
-
-    context 'when salt and fci_id matches' do
-      context 'when email is not used' do
-        context 'when email is valid' do
-          it { expect { subject }.to change { User.count }.by(1) }
-
-          describe 'New user attributs' do
-            before do
-              subject
-            end
-
-            let(:user) { User.last }
-
-            it { expect(user.email).to eq email }
-            it { expect(user.france_connect_information).to eq france_connect_information }
-          end
-        end
-
-        context 'when email is not valid' do
-          let(:email) { 'kdjizjflk' }
-
-          it { expect { subject }.not_to change { User.count } }
-          it { is_expected.to redirect_to(france_connect_particulier_new_path fci_id: france_connect_information.id, salt: salt, user: {email_france_connect: email}) }
-        end
-      end
-
-      context 'when email is used' do
-        let!(:user) { create(:user, email: france_connect_information.email_france_connect) }
-        let(:email) { france_connect_information.email_france_connect }
-        let(:password) { user.password }
-
-        before do
-          subject
-        end
-
-        subject { post :check_email, params: {fci_id: france_connect_information_id, salt: salt, user: {email_france_connect: email, password: password}} }
-
-        context 'when email and password couple is valid' do
-          it { expect { subject }.not_to change { User.count } }
-
-          describe 'Update user attributs' do
-            before do
-              subject
-            end
-
-            it { expect(user.france_connect_information).to eq france_connect_information }
-          end
-        end
-
-        context 'when email and password couple is not valid' do
-          let(:password) { 'fake' }
-
-          it { expect(flash.alert).to eq 'Mot de passe invalide' }
         end
       end
     end
