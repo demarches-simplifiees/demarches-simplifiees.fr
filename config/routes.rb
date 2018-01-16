@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
 
-    root to: "procedures#index"
+    root to: "administrateurs#index"
   end
 
   get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
