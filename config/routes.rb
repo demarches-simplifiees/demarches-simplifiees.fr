@@ -58,10 +58,6 @@ Rails.application.routes.draw do
 
   get 'administrations/sign_in' => 'administrations/sessions#new'
   delete 'administrations/sign_out' => 'administrations/sessions#destroy'
-  authenticate :administration do
-    resources :administrations, only: [:index, :create, :update] do
-    end
-  end
 
   resources :stats, only: [:index]
 
