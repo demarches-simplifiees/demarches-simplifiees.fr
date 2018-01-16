@@ -17,17 +17,15 @@ describe FranceConnect::ParticulierController, type: :controller do
   end
 
   describe '#callback' do
-    context 'when param code is missing' do
-      subject { get :callback, params: { code: code } }
+    subject { get :callback, params: {code: code} }
 
+    context 'when param code is missing' do
       let(:code) { nil }
 
       it { is_expected.to redirect_to(new_user_session_path) }
     end
 
     context 'when param code is empty' do
-      subject { get :callback, params: { code: code } }
-
       let(:code) { '' }
 
       it { is_expected.to redirect_to(new_user_session_path) }
@@ -41,8 +39,6 @@ describe FranceConnect::ParticulierController, type: :controller do
 
       context 'when france_connect_particulier_id exist in database' do
         let!(:france_connect_information) { create(:france_connect_information, france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, gender: gender, birthplace: birthplace) }
-
-        subject { get :callback, params: {code: code} }
 
         it { expect { subject }.not_to change { FranceConnectInformation.count } }
 
@@ -80,7 +76,6 @@ describe FranceConnect::ParticulierController, type: :controller do
 
       context 'when france_connect_particulier_id does not exist in database' do
         let(:last_france_connect_information) { FranceConnectInformation.last }
-        subject { get :callback, params: {code: code} }
 
         it { expect { subject }.to change { FranceConnectInformation.count }.by(1) }
 
