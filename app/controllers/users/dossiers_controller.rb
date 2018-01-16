@@ -181,7 +181,7 @@ class Users::DossiersController < UsersController
     flash.alert = t('errors.messages.invalid_siret')
     @facade = facade params[:dossier_id]
 
-    render '/dossiers/new_siret', formats: :js, locals: {invalid_siret: siret}
+    render '/dossiers/new_siret', formats: :js, locals: { invalid_siret: siret }
   end
 
   def update_params

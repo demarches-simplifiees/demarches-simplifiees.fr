@@ -177,7 +177,7 @@ class Gestionnaire < ActiveRecord::Base
       }
     ]
 
-    couples.include?({table: table, column: column})
+    couples.include?({ table: table, column: column })
   end
 
   def annotations_hash(demande, annotations_privees, avis, messagerie)

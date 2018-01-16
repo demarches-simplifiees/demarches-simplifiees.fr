@@ -18,12 +18,12 @@ describe APIController, type: :controller do
     end
     context 'when token does not exist' do
       let(:token) { 'invalid_token' }
-      subject { get :index, params: {token: token} }
+      subject { get :index, params: { token: token } }
       it { expect(subject.status).to eq(401) }
     end
     context 'when token exist' do
       let(:administrateur) { create(:administrateur) }
-      subject { get :index, params: {token: administrateur.api_token} }
+      subject { get :index, params: { token: administrateur.api_token } }
       it { expect(subject.status).to eq(200) }
     end
   end

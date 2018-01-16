@@ -338,7 +338,7 @@ describe Gestionnaire, type: :model do
     context 'when a followed dossier has unread notification' do
       let(:followed_dossier) { dossier_with_no_unread_notification }
 
-      it { is_expected.to eq({ }) }
+      it { is_expected.to eq({}) }
     end
   end
 

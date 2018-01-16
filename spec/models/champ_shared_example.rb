@@ -48,7 +48,7 @@ shared_examples 'champ_spec' do
     end
   end
 
-  describe '.departement', vcr: {cassette_name: 'call_geo_api_departements'} do
+  describe '.departement', vcr: { cassette_name: 'call_geo_api_departements' } do
     subject { Champ.departements }
 
     it { expect(subject).to include '99 - Étranger' }

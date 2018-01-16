@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   end
 
   def default_url_options
-    return {protocol: 'https'} if Rails.env.staging? || Rails.env.production?
+    return { protocol: 'https' } if Rails.env.staging? || Rails.env.production?
     {}
   end
 

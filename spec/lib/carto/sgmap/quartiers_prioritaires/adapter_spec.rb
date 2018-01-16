@@ -6,7 +6,7 @@ describe CARTO::SGMAP::QuartiersPrioritaires::Adapter do
   before do
     stub_request(:post, "https://apicarto.sgmap.fr/quartiers-prioritaires/search")
       .with(:body => /.*/,
-        :headers => {'Content-Type' => 'application/json'})
+        :headers => { 'Content-Type' => 'application/json' })
       .to_return(status: status, body: body)
   end
 
@@ -26,7 +26,7 @@ describe CARTO::SGMAP::QuartiersPrioritaires::Adapter do
       it { expect(subject[:nom]).to eq('Hauts De Vallières') }
       it { expect(subject[:commune]).to eq('Metz') }
 
-      it { expect(subject[:geometry]).to eq({:type => "MultiPolygon", :coordinates => [[[[6.2136923480551, 49.1342109827851], [6.21416055031881, 49.1338823553928]]]]}) }
+      it { expect(subject[:geometry]).to eq({ :type => "MultiPolygon", :coordinates => [[[[6.2136923480551, 49.1342109827851], [6.21416055031881, 49.1338823553928]]]] }) }
     end
   end
 

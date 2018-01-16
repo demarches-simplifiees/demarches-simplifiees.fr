@@ -7,7 +7,7 @@ class Admin::TypesDeChampPrivateController < AdminController
     create_facade
     render 'admin/types_de_champ/show', format: :js
   rescue ActiveRecord::RecordNotFound
-    render json: {message: 'Champ not found'}, status: 404
+    render json: { message: 'Champ not found' }, status: 404
   end
 
   def show

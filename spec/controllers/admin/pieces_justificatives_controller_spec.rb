@@ -11,7 +11,7 @@ describe Admin::PiecesJustificativesController, type: :controller do
   describe 'GET #show' do
     let(:procedure_id) { procedure.id }
 
-    subject { get :show, params: {procedure_id: procedure_id} }
+    subject { get :show, params: { procedure_id: procedure_id } }
 
     context 'when procedure is not found' do
       let(:procedure_id) { 9_999_999 }
@@ -47,7 +47,7 @@ describe Admin::PiecesJustificativesController, type: :controller do
       }
     end
 
-    let(:request) { put :update, params: {procedure_id: procedure_id, format: :js, procedure: update_params} }
+    let(:request) { put :update, params: { procedure_id: procedure_id, format: :js, procedure: update_params } }
     subject { request }
 
     it { is_expected.to render_template('show') }
@@ -75,7 +75,7 @@ describe Admin::PiecesJustificativesController, type: :controller do
     let!(:pj) { create(:type_de_piece_justificative, procedure: procedure) }
     let(:procedure_id) { procedure.id }
     let(:pj_id) { pj.id }
-    let(:request) { delete :destroy, params: {procedure_id: procedure_id, id: pj_id} }
+    let(:request) { delete :destroy, params: { procedure_id: procedure_id, id: pj_id } }
     subject { request }
     context 'when procedure is not found' do
       let(:procedure_id) { 9_999_999 }
@@ -98,7 +98,7 @@ describe Admin::PiecesJustificativesController, type: :controller do
   end
 
   describe 'POST #move_up' do
-    subject { post :move_up, params: {procedure_id: procedure.id, index: index, format: :js} }
+    subject { post :move_up, params: { procedure_id: procedure.id, index: index, format: :js } }
 
     context 'when procedure have no type de champ' do
       let(:index) { 0 }
@@ -124,7 +124,7 @@ describe Admin::PiecesJustificativesController, type: :controller do
         it { expect(subject.status).to eq(200) }
         it { expect(subject).to render_template('show') }
         it 'changes order places' do
-          post :move_up, params: {procedure_id: procedure.id, index: index, format: :js}
+          post :move_up, params: { procedure_id: procedure.id, index: index, format: :js }
           type_de_piece_justificative_0.reload
           type_de_piece_justificative_1.reload
           expect(type_de_piece_justificative_0.order_place).to eq(1)
@@ -135,7 +135,7 @@ describe Admin::PiecesJustificativesController, type: :controller do
   end
 
   describe 'POST #move_down' do
-    let(:request) { post :move_down, params: {procedure_id: procedure.id, index: index, format: :js} }
+    let(:request) { post :move_down, params: { procedure_id: procedure.id, index: index, format: :js } }
     let(:index) { 0 }
 
     subject { request }
