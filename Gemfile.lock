@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/hassox/warden.git
+  revision: a4b197e0b28e7b576b0745b0f6aeaed8dbb774a4
+  branch: master
+  specs:
+    warden (1.2.8)
+      rack (>= 1.0)
+
+GIT
   remote: https://github.com/mina-deploy/mina.git
   revision: 343a7ab672d8b4f0ddb84ec240cde7d94b46397a
   ref: 343a7
@@ -692,8 +700,6 @@ GEM
       activemodel (>= 3.0.0)
       addressable
     vcr (3.0.3)
-    warden (1.2.6)
-      rack (>= 1.0)
     web-console (3.4.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
@@ -804,6 +810,7 @@ DEPENDENCIES
   unicode_utils
   unicorn
   vcr
+  warden!
   web-console
   webmock
   xray-rails
