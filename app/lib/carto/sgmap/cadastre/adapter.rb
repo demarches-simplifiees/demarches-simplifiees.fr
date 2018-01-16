@@ -8,11 +8,11 @@ class CARTO::SGMAP::Cadastre::Adapter
   end
 
   def to_params
-    data_source[:features].inject([]) do |acc, feature|
+    data_source[:features].map do |feature|
       tmp = filter_properties feature[:properties]
       tmp[:geometry] = feature[:geometry]
 
-      acc << tmp
+      tmp
     end
   end
 

@@ -279,7 +279,7 @@ shared_examples 'description_controller_spec' do
       it { expect(response).to redirect_to users_dossier_recapitulatif_path }
 
       context 'when champs is type_de_champ datetime' do
-        it { expect(dossier.champs.find(dossier_datetime_champ_id).value).to eq(dossier_date_value + ' ' + dossier_hour_value + ':' + dossier_minute_value) }
+        it { expect(dossier.champs.find(dossier_datetime_champ_id).value).to eq("#{dossier_date_value} #{dossier_hour_value}:#{dossier_minute_value}") }
       end
 
       context 'when champs value is empty' do

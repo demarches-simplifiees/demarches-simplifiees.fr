@@ -48,15 +48,15 @@ class Champ < ActiveRecord::Base
   end
 
   def self.regions
-    JSON.parse(Carto::GeoAPI::Driver.regions).sort_by { |e| e['nom'] }.inject([]) { |acc, liste| acc.push(liste['nom']) }
+    JSON.parse(Carto::GeoAPI::Driver.regions).sort_by { |e| e['nom'] }.pluck("nom")
   end
 
   def self.departements
-    JSON.parse(Carto::GeoAPI::Driver.departements).inject([]) { |acc, liste| acc.push(liste['code'] + ' - ' + liste['nom']) }.push('99 - Étranger')
+    JSON.parse(Carto::GeoAPI::Driver.departements).map { |liste| "#{liste['code']} - #{liste['nom']}" }.push('99 - Étranger')
   end
 
   def self.pays
-    JSON.parse(Carto::GeoAPI::Driver.pays).inject([]) { |acc, liste| acc.push(liste['nom']) }
+    JSON.parse(Carto::GeoAPI::Driver.pays).pluck("nom")
   end
 
   def to_s
