@@ -8,7 +8,9 @@ module NewGestionnaire
         @dossiers = current_gestionnaire.dossiers.where(id: @search_terms.to_i)
       end
 
-      @dossiers = Dossier.none if @dossiers.nil?
+      if @dossiers.nil?
+        @dossiers = Dossier.none
+      end
 
       # full text search
       if @dossiers.empty?
