@@ -18,19 +18,19 @@ Rails.application.routes.draw do
     }
 
   devise_for :administrateurs, controllers: {
-                                 sessions: 'administrateurs/sessions'
-                             }, skip: [:password, :registrations]
+    sessions: 'administrateurs/sessions'
+  }, skip: [:password, :registrations]
 
   devise_for :gestionnaires, controllers: {
-                               sessions: 'gestionnaires/sessions',
-                               passwords: 'gestionnaires/passwords'
-                           }, skip: [:registrations]
+    sessions: 'gestionnaires/sessions',
+    passwords: 'gestionnaires/passwords'
+  }, skip: [:registrations]
 
   devise_for :users, controllers: {
-                       sessions: 'users/sessions',
-                       registrations: 'users/registrations',
-                       passwords: 'users/passwords'
-                   }
+    sessions: 'users/sessions',
+    registrations: 'users/registrations',
+    passwords: 'users/passwords'
+  }
 
   devise_scope :user do
     get '/users/sign_in/demo' => redirect("/users/sign_in")
@@ -55,8 +55,7 @@ Rails.application.routes.draw do
   get 'administrations/sign_in' => 'administrations/sessions#new'
   delete 'administrations/sign_out' => 'administrations/sessions#destroy'
   authenticate :administration do
-    resources :administrations, only: [:index, :create]
-    namespace :administrations do
+    resources :administrations, only: [:index, :create, :update] do
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
   end
@@ -111,6 +110,8 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get 'activate' => '/administrateurs/activate#new'
+    patch 'activate' => '/administrateurs/activate#create'
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
@@ -171,7 +172,7 @@ Rails.application.routes.draw do
     end
 
     namespace :accompagnateurs do
-      get 'show' #delete after fixed tests admin/accompagnateurs/show_spec without this line
+      get 'show' # delete after fixed tests admin/accompagnateurs/show_spec without this line
     end
 
     resources :gestionnaires, only: [:index, :create, :destroy]

@@ -5,7 +5,8 @@ describe ProcedurePresentation do
     ProcedurePresentation.create(
       displayed_fields: [
         { "label" => "test1", "table" => "user" }.to_json,
-        { "label" => "test2", "table" => "champs" }.to_json],
+        { "label" => "test2", "table" => "champs" }.to_json
+      ],
       sort: { "table" => "user","column" => "email","order" => "asc" }.to_json,
       filters: { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "table1", "column" => "column1" }] }.to_json
     ).id

@@ -23,12 +23,13 @@ class SIADE::RNAAdapter
   end
 
   def attr_to_fetch
-    [:id,
-     :titre,
-     :objet,
-     :date_creation,
-     :date_declaration,
-     :date_publication
+    [
+      :id,
+      :titre,
+      :objet,
+      :date_creation,
+      :date_declaration,
+      :date_publication
     ]
   end
 end

@@ -18,17 +18,17 @@ describe Admin::ProceduresController, type: :controller do
 
   let(:procedure_params) {
     {
-        libelle: libelle,
-        description: description,
-        organisation: organisation,
-        direction: direction,
-        lien_demarche: lien_demarche,
-        cerfa_flag: cerfa_flag,
-        module_api_carto_attributes: {
-            use_api_carto: use_api_carto,
-            quartiers_prioritaires: quartiers_prioritaires,
-            cadastre: cadastre
-        }
+      libelle: libelle,
+      description: description,
+      organisation: organisation,
+      direction: direction,
+      lien_demarche: lien_demarche,
+      cerfa_flag: cerfa_flag,
+      module_api_carto_attributes: {
+        use_api_carto: use_api_carto,
+        quartiers_prioritaires: quartiers_prioritaires,
+        cadastre: cadastre
+      }
     }
   }
 

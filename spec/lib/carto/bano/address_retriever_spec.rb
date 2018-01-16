@@ -10,7 +10,7 @@ describe Carto::Bano::AddressRetriever do
 
     before do
       stub_request(:get, "http://api-adresse.data.gouv.fr/search?&q=#{request}&limit=5")
-          .to_return(status: status, body: response, headers: {})
+        .to_return(status: status, body: response, headers: {})
     end
 
     context 'when address return a list of address' do

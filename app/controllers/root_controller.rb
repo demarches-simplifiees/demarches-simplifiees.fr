@@ -35,10 +35,10 @@ class RootController < ApplicationController
       .each do |champ|
         champ.type_de_champ.drop_down_list = DropDownList.new(type_de_champ: champ.type_de_champ)
         champ.drop_down_list.value =
-"option A
-option B
--- avant l'option C --
-option C"
+          "option A
+          option B
+          -- avant l'option C --
+          option C"
         champ.value = '["option B", "option C"]'
       end
 

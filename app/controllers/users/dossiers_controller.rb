@@ -151,7 +151,7 @@ class Users::DossiersController < UsersController
 
   def self.route_authorization
     {
-        states: [:brouillon]
+      states: [:brouillon]
     }
   end
 

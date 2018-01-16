@@ -96,11 +96,13 @@ class Admin::ProceduresController < AdminController
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
     new_procedure_path = ProcedurePath.new(
-        {
-            path: params[:procedure_path],
-            procedure: procedure,
-            administrateur: procedure.administrateur
-        })
+      {
+        path: params[:procedure_path],
+        procedure: procedure,
+        administrateur: procedure.administrateur
+      }
+    )
+
     if new_procedure_path.validate
       new_procedure_path.delete
     else
@@ -207,15 +209,20 @@ class Admin::ProceduresController < AdminController
   end
 
   def path_list
-    render json: ProcedurePath
-                     .joins(', procedures')
-                     .where("procedures.id = procedure_paths.procedure_id")
-                     .where("procedures.archived_at" => nil)
-                     .where("path LIKE ?", "%#{params[:request]}%")
-                     .pluck(:path, :administrateur_id)
-                     .inject([]) {
-               |acc, value| acc.push({label: value.first, mine: value.second == current_administrateur.id})
-           }.to_json
+    json_path_list = ProcedurePath
+      .joins(', procedures')
+      .where("procedures.id = procedure_paths.procedure_id")
+      .where("procedures.archived_at" => nil)
+      .where("path LIKE ?", "%#{params[:request]}%")
+      .pluck(:path, :administrateur_id)
+      .map do |value|
+        {
+          label: value.first,
+          mine: value.second == current_administrateur.id
+        }
+      end.to_json
+
+    render json: json_path_list
   end
 
   private

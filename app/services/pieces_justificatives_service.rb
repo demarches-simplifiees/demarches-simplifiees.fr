@@ -1,32 +1,32 @@
 class PiecesJustificativesService
   def self.upload!(dossier, user, params)
     tpj_contents = dossier.types_de_piece_justificative
-                          .map { |tpj| [tpj, params["piece_justificative_#{tpj.id}"]] }
-                          .select { |_, content| content.present? }
+      .map { |tpj| [tpj, params["piece_justificative_#{tpj.id}"]] }
+      .select { |_, content| content.present? }
 
     without_virus, with_virus = tpj_contents
-                                .partition { |_, content| ClamavService.safe_file?(content.path) }
+      .partition { |_, content| ClamavService.safe_file?(content.path) }
 
     errors = with_virus
-             .map { |_, content| content.original_filename + ' : virus détecté' }
+      .map { |_, content| "#{content.original_filename} : virus détecté" }
 
     errors += without_virus
-              .map { |tpj, content| save_pj(content, dossier, tpj, user) }
-              .compact()
+      .map { |tpj, content| save_pj(content, dossier, tpj, user) }
+      .compact()
   end
 
   def self.upload_one! dossier, user, params
     content = params[:piece_justificative][:content]
     if ClamavService.safe_file? content.path
       pj = PieceJustificative.new(content: content,
-                                  dossier: dossier,
-                                  type_de_piece_justificative: nil,
-                                  user: user)
+        dossier: dossier,
+        type_de_piece_justificative: nil,
+        user: user)
 
       pj.save
     else
       pj = PieceJustificative.new
-      pj.errors.add(:content, content.original_filename + ': <b>Virus détecté !!</b>')
+      pj.errors.add(:content, "#{content.original_filename} : <b>Virus détecté !!</b>")
     end
 
     pj
@@ -34,9 +34,9 @@ class PiecesJustificativesService
 
   def self.save_pj(content, dossier, tpj, user)
     pj = PieceJustificative.new(content: content,
-                                dossier: dossier,
-                                type_de_piece_justificative: tpj,
-                                user: user)
+      dossier: dossier,
+      type_de_piece_justificative: tpj,
+      user: user)
 
     pj.save ? nil : "le fichier #{content.original_filename} (#{pj.libelle.truncate(200)}) n'a pas pu être sauvegardé"
   end

@@ -95,7 +95,7 @@ class Users::DescriptionController < UsersController
 
   def self.route_authorization
     {
-        states: [:brouillon, :en_construction]
+      states: [:brouillon, :en_construction]
     }
   end
 
