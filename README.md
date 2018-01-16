@@ -142,5 +142,5 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 - lister les comptes super admin :
   `bundle exec rake admin:list`
 
-- supprimer un compte super admin : 
+- supprimer un compte super admin :
   `bundle exec rake admin:delete_admin[email-du-compte-github@exemple.com]`
