@@ -5,11 +5,12 @@ module Manager
 
       if administrateur.errors.empty?
         flash.notice = "Administrateur créé"
+        redirect_to manager_administrateurs_path
       else
-        flash.alert = administrateur.errors.full_messages
+        render :new, locals: {
+          page: Administrate::Page::Form.new(dashboard, administrateur),
+        }
       end
-
-      redirect_to manager_administrateurs_path
     end
 
     private
