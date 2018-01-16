@@ -37,7 +37,7 @@ feature 'As a User I want to edit a dossier I own' do
       linked_dossier_id = dossier.champs.find { |c| c.type_de_champ.type_champ == 'dossier_link' }.value
       expect(page).to have_link("Dossier #{linked_dossier_id}")
 
-      page.find_by_id('maj_infos').trigger('click')
+      page.find_by_id('edit-dossier').click
       expect(page).to have_current_path(users_dossier_description_path(dossier.id.to_s), only_path: true)
       champ_id = dossier.champs.find { |t| t.type_champ == "text" }.id
       fill_in "champs_#{champ_id.to_s}", with: 'Contenu du champ 1'

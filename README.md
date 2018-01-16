@@ -20,7 +20,7 @@ Téléprocédures Simplifiées, ou TPS pour les intimes, est une plateforme 100 
 
 ### Tests
 
-- PhantomJS
+- Chrome
 
 
 ## Initialisation de l'environnement de développement
