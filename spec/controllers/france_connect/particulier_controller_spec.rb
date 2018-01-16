@@ -66,7 +66,7 @@ describe FranceConnect::ParticulierController, type: :controller do
           end
 
           it 'redirect to stored location' do
-            subject.store_location_for(:user, stored_location)
+            controller.store_location_for(:user, stored_location)
 
             get :callback, params: {code: code}
             expect(response).to redirect_to(stored_location)
