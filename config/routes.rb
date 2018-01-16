@@ -86,7 +86,6 @@ Rails.application.routes.draw do
       post '/recapitulatif/initiate' => 'recapitulatif#initiate'
 
       post '/commentaire' => 'commentaires#create'
-      resources :commentaires, only: [:index]
 
       get '/carte/position' => 'carte#get_position'
       post '/carte/qp' => 'carte#get_qp'
