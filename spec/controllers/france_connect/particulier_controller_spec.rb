@@ -43,25 +43,18 @@ describe FranceConnect::ParticulierController, type: :controller do
         it { expect { subject }.not_to change { FranceConnectInformation.count } }
 
         context 'when france_connect_particulier_id have an associate user' do
-          before do
-            create(:user, email: email, france_connect_information: france_connect_information)
+          let!(:user) { create(:user, email: 'plop@plop.com', france_connect_information: france_connect_information) }
 
-            get :callback, params: {code: code}
+          it do
+            subject
+            expect(user.reload.loged_in_with_france_connect?).to be_truthy
           end
 
-          let(:email) { 'plop@plop.com' }
-          let(:current_user) { User.find_by_email(email) }
-          let(:stored_location) { '/plip/plop' }
+          context 'and the user has a stored location' do
+            let(:stored_location) { '/plip/plop' }
+            before { controller.store_location_for(:user, stored_location) }
 
-          it 'current user have attribut loged_in_with_france_connect? at true' do
-            expect(current_user.loged_in_with_france_connect?).to be_truthy
-          end
-
-          it 'redirect to stored location' do
-            controller.store_location_for(:user, stored_location)
-
-            get :callback, params: {code: code}
-            expect(response).to redirect_to(stored_location)
+            it { is_expected.to redirect_to(stored_location) }
           end
         end
 
