@@ -21,6 +21,9 @@ Téléprocédures Simplifiées, ou TPS pour les intimes, est une plateforme 100 
 ### Tests
 
 - Chrome
+- chromedriver :
+  * Mac : `brew install chromedriver`
+  * Linux : voir https://sites.google.com/a/chromium.org/chromedriver/downloads
 
 
 ## Initialisation de l'environnement de développement
