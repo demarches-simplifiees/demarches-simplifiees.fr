@@ -621,7 +621,7 @@ Rails/Validation:
   Enabled: false
 
 Rails:
-  Enabled: false
+  Enabled: true
 
 RSpec/Focused:
   Enabled: true
