@@ -264,5 +264,5 @@ Rails.application.routes.draw do
   # Legacy routes
   get 'backoffice' => redirect('/procedures')
   get 'backoffice/sign_in' => redirect('/users/sign_in')
-  get 'backoffice/dossiers/procedure/:id' => redirect('/procedures/:id')
+  get 'backoffice/dossiers/procedure/:procedure_id' => redirect('/procedures/%{procedure_id}')
 end

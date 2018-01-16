@@ -47,7 +47,7 @@
       %h3 Lien procédure
       %div{ style: 'margin-left: 3%;' }
         - if @facade.procedure.publiee_ou_archivee?
-          = link_to @facade.procedure.lien, @facade.procedure.lien, target: '_blank'
+          = link_to @facade.procedure.lien, sanitize_url(@facade.procedure.lien), target: :blank
         - else
           %b
             Cette procédure n'a pas encore été publiée et n'est donc pas accessible par le public.
