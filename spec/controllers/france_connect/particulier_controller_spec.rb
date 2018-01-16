@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FranceConnect::ParticulierController, type: :controller do
   let(:code) { 'plop' }
   let(:given_name) { 'titi' }
@@ -12,11 +10,10 @@ describe FranceConnect::ParticulierController, type: :controller do
 
   let(:user_info) { { france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email_france_connect: email } }
 
-  describe '.auth' do
-    it 'redirect to france connect serveur' do
-      get :login
-      expect(response.status).to eq(302)
-    end
+  describe '#auth' do
+    subject { get :login }
+
+    it { is_expected.to have_http_status(:redirect) }
   end
 
   describe '.callback' do
