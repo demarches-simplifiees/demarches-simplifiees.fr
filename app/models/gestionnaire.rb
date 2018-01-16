@@ -10,6 +10,7 @@ class Gestionnaire < ActiveRecord::Base
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :follows
   has_many :avis
+  has_many :dossiers_from_avis, through: :avis, source: :dossier
 
   include CredentialsSyncableConcern
 
