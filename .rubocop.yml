@@ -83,10 +83,10 @@ Layout/ExtraSpacing:
     - "Guardfile"
 
 Layout/FirstArrayElementLineBreak:
-  Enabled: false
+  Enabled: true
 
 Layout/FirstHashElementLineBreak:
-  Enabled: false
+  Enabled: true
 
 Layout/FirstMethodArgumentLineBreak:
   Enabled: false
@@ -95,58 +95,64 @@ Layout/FirstMethodParameterLineBreak:
   Enabled: false
 
 Layout/FirstParameterIndentation:
-  Enabled: false
+  Enabled: true
 
 Layout/IndentArray:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: consistent
 
 Layout/IndentAssignment:
-  Enabled: false
+  Enabled: true
 
 Layout/IndentHash:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: consistent
 
 Layout/IndentHeredoc:
-  Enabled: false
+  Enabled: true
 
 Layout/IndentationConsistency:
-  Enabled: false
+  Enabled: true
 
 Layout/IndentationWidth:
   Enabled: true
 
 Layout/InitialIndentation:
-  Enabled: false
+  Enabled: true
 
 Layout/LeadingCommentSpace:
-  Enabled: false
+  Enabled: true
 
 Layout/MultilineArrayBraceLayout:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: new_line
 
 Layout/MultilineAssignmentLayout:
   Enabled: false
 
 Layout/MultilineBlockLayout:
-  Enabled: false
+  Enabled: true
 
 Layout/MultilineHashBraceLayout:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: new_line
 
 Layout/MultilineMethodCallBraceLayout:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: symmetrical
 
 Layout/MultilineMethodCallIndentation:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: indented
 
 Layout/MultilineMethodDefinitionBraceLayout:
-  Enabled: false
+  Enabled: true
 
 Layout/MultilineOperationIndentation:
   Enabled: false
 
 Layout/RescueEnsureAlignment:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterColon:
   Enabled: false

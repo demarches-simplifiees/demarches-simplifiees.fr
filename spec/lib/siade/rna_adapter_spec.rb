@@ -9,7 +9,7 @@ describe SIADE::RNAAdapter do
 
   before do
     stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/associations\/.*token=/)
-        .to_return(body: body, status: status)
+      .to_return(body: body, status: status)
   end
 
   context 'when siret is not valid' do

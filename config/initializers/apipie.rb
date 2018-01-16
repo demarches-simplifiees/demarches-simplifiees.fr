@@ -10,8 +10,8 @@ Apipie.configure do |config|
   config.namespaced_resources    = true
   config.show_all_examples       = true
 
-  config.app_info                = <<-EOS
-Description
+  config.app_info                = <<~EOS
+    Description
 
   EOS
 end

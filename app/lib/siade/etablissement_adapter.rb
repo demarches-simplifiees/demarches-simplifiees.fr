@@ -23,10 +23,11 @@ class SIADE::EtablissementAdapter
   end
 
   def attr_to_fetch
-    [:siret,
-     :siege_social,
-     :naf,
-     :libelle_naf
+    [
+      :siret,
+      :siege_social,
+      :naf,
+      :libelle_naf
     ]
   end
 
@@ -41,12 +42,14 @@ class SIADE::EtablissementAdapter
   end
 
   def address_attribut_to_fetch
-    [:numero_voie,
-     :type_voie,
-     :nom_voie,
-     :complement_adresse,
-     :code_postal,
-     :localite,
-     :code_insee_localite]
+    [
+      :numero_voie,
+      :type_voie,
+      :nom_voie,
+      :complement_adresse,
+      :code_postal,
+      :localite,
+      :code_insee_localite
+    ]
   end
 end

@@ -15,11 +15,11 @@ class NotificationService
 
   def notification
     @notification ||=
-        begin
-          Notification.find_by! dossier_id: @dossier_id, already_read: false, type_notif: @type_notif
-        rescue ActiveRecord::RecordNotFound
-          Notification.new dossier_id: @dossier_id, type_notif: @type_notif, liste: []
-        end
+      begin
+        Notification.find_by! dossier_id: @dossier_id, already_read: false, type_notif: @type_notif
+      rescue ActiveRecord::RecordNotFound
+        Notification.new dossier_id: @dossier_id, type_notif: @type_notif, liste: []
+      end
   end
 
   def text_for_notif attribut=''

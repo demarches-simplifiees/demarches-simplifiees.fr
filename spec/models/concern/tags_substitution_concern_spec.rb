@@ -74,8 +74,10 @@ describe TagsSubstitutionConcern, type: :model do
 
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
-        [create(:type_de_champ_public, libelle: 'libelleA'),
-         create(:type_de_champ_public, libelle: 'libelleB')]
+        [
+          create(:type_de_champ_public, libelle: 'libelleA'),
+          create(:type_de_champ_public, libelle: 'libelleB')
+        ]
       end
 
       context 'and the template is nil' do
@@ -142,8 +144,10 @@ describe TagsSubstitutionConcern, type: :model do
 
     context 'when the procedure has 2 types de champ date and datetime' do
       let(:types_de_champ) do
-        [create(:type_de_champ_public, libelle: 'date', type_champ: 'date'),
-         create(:type_de_champ_public, libelle: 'datetime', type_champ: 'datetime')]
+        [
+          create(:type_de_champ_public, libelle: 'date', type_champ: 'date'),
+          create(:type_de_champ_public, libelle: 'datetime', type_champ: 'datetime')
+        ]
       end
 
       context 'and the are used in the template' do
@@ -178,19 +182,19 @@ describe TagsSubstitutionConcern, type: :model do
       context "with date de dépôt" do
         let(:template) { '--date de dépôt--' }
 
-         it { is_expected.to eq('03/02/2001') }
+        it { is_expected.to eq('03/02/2001') }
       end
 
       context "with date de passage en instruction" do
         let(:template) { '--date de passage en instruction--' }
 
-         it { is_expected.to eq('06/05/2004') }
+        it { is_expected.to eq('06/05/2004') }
       end
 
       context "with date de décision" do
         let(:template) { '--date de décision--' }
 
-         it { is_expected.to eq('09/08/2007') }
+        it { is_expected.to eq('09/08/2007') }
       end
     end
 

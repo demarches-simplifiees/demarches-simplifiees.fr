@@ -23,18 +23,20 @@ class SIADE::EntrepriseAdapter
   end
 
   def attr_to_fetch
-    [:siren,
-     :capital_social,
-     :numero_tva_intracommunautaire,
-     :forme_juridique,
-     :forme_juridique_code,
-     :nom_commercial,
-     :raison_sociale,
-     :siret_siege_social,
-     :code_effectif_entreprise,
-     :date_creation,
-     :nom,
-     :prenom]
+    [
+      :siren,
+      :capital_social,
+      :numero_tva_intracommunautaire,
+      :forme_juridique,
+      :forme_juridique_code,
+      :nom_commercial,
+      :raison_sociale,
+      :siret_siege_social,
+      :code_effectif_entreprise,
+      :date_creation,
+      :nom,
+      :prenom
+    ]
   end
 
   def mandataires_sociaux

@@ -1,5 +1,5 @@
 class DossierFacades
-  #TODO rechercher en fonction de la personne/email
+  # TODO rechercher en fonction de la personne/email
   def initialize(dossier_id, email, champ_id = nil)
     @dossier = Dossier.find(dossier_id)
     @champ_id = champ_id

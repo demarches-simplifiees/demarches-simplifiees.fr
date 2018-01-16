@@ -41,28 +41,27 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
     let(:mandatory) { 'on' }
 
     let(:procedure_params) do
-      {types_de_champ_private_attributes:
-           {'0' =>
-                {
-                    libelle: libelle,
-                    type_champ: type_champ,
-                    description: description,
-                    order_place: order_place,
-                    id: types_de_champ_id,
-                    mandatory: mandatory,
-                    type: 'TypeDeChampPrivate'
-                },
-            '1' =>
-                {
-                    libelle: '',
-                    type_champ: 'text',
-                    description: '',
-                    order_place: '1',
-                    id: '',
-                    mandatory: false,
-                    type: 'TypeDeChampPrivate'
-                }
-           }
+      {
+        types_de_champ_private_attributes: {
+          '0' => {
+            libelle: libelle,
+            type_champ: type_champ,
+            description: description,
+            order_place: order_place,
+            id: types_de_champ_id,
+            mandatory: mandatory,
+            type: 'TypeDeChampPrivate'
+          },
+          '1' => {
+            libelle: '',
+            type_champ: 'text',
+            description: '',
+            order_place: '1',
+            id: '',
+            mandatory: false,
+            type: 'TypeDeChampPrivate'
+          }
+        }
       }
     end
 
