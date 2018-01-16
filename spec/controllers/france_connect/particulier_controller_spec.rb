@@ -1,14 +1,18 @@
 describe FranceConnect::ParticulierController, type: :controller do
-  let(:code) { 'plop' }
-  let(:given_name) { 'titi' }
-  let(:family_name) { 'toto' }
   let(:birthdate) { '20150821' }
-  let(:gender) { 'M' }
-  let(:birthplace) { '1234' }
-  let(:france_connect_particulier_id) { 'blabla' }
   let(:email) { 'test@test.com' }
 
-  let(:user_info) { { france_connect_particulier_id: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, birthplace: birthplace, gender: gender, email_france_connect: email } }
+  let(:user_info) do
+    {
+      france_connect_particulier_id: 'blablabla',
+      given_name: 'titi',
+      family_name: 'toto',
+      birthdate: birthdate,
+      birthplace: '1234',
+      gender: 'M',
+      email_france_connect: email
+    }
+  end
 
   describe '#auth' do
     subject { get :login }
@@ -17,6 +21,8 @@ describe FranceConnect::ParticulierController, type: :controller do
   end
 
   describe '#callback' do
+    let(:code) { 'plop' }
+
     subject { get :callback, params: {code: code} }
 
     context 'when param code is missing' do
