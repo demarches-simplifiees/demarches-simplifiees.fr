@@ -148,8 +148,10 @@ describe AttestationTemplate, type: :model do
 
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
-        [create(:type_de_champ_public, libelle: 'libelleA'),
-         create(:type_de_champ_public, libelle: 'libelleB')]
+        [
+          create(:type_de_champ_public, libelle: 'libelleA'),
+          create(:type_de_champ_public, libelle: 'libelleB')
+        ]
       end
 
       context 'and the are used in the template title and body' do

@@ -65,11 +65,11 @@ class Search < ActiveRecord::Base
     Results.new(q)
   end
 
-  #def self.refresh
-  #  # TODO: could be executed concurrently
-  #  # See https://github.com/thoughtbot/scenic#what-about-materialized-views
-  #  Scenic.database.refresh_materialized_view(table_name, concurrently: false)
-  #end
+  # def self.refresh
+  #   # TODO: could be executed concurrently
+  #   # See https://github.com/thoughtbot/scenic#what-about-materialized-views
+  #   Scenic.database.refresh_materialized_view(table_name, concurrently: false)
+  # end
 
   private
 

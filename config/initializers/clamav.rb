@@ -1,4 +1,4 @@
 CLAMAV = Hashie::Mash.new ({
-                              mock?: true,
-                              response: true
-                          })
+  mock?: true,
+  response: true
+})

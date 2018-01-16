@@ -10,19 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180108152958) do
+ActiveRecord::Schema.define(version: 20180111153308) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
 
   create_table "administrateurs", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20180108152958) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "api_token"
+    t.boolean  "active",                 default: false
     t.index ["email"], name: "index_administrateurs_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true, using: :btree
   end
@@ -352,32 +353,6 @@ ActiveRecord::Schema.define(version: 20180108152958) do
     t.datetime "updated_at"
     t.index ["dossier_id"], name: "index_pieces_justificatives_on_dossier_id", using: :btree
     t.index ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id", using: :btree
-  end
-
-  create_table "preference_devise_profils", force: :cascade do |t|
-    t.string  "last_current_devise_profil"
-    t.integer "administrateurs_id"
-    t.integer "gestionnaires_id"
-    t.integer "users_id"
-  end
-
-  create_table "preference_list_dossiers", force: :cascade do |t|
-    t.string  "libelle"
-    t.string  "table"
-    t.string  "attr"
-    t.string  "attr_decorate"
-    t.string  "bootstrap_lg"
-    t.string  "order"
-    t.string  "filter"
-    t.integer "gestionnaire_id"
-    t.integer "procedure_id"
-  end
-
-  create_table "preference_smart_listing_pages", force: :cascade do |t|
-    t.string  "liste"
-    t.integer "page"
-    t.integer "procedure_id"
-    t.integer "gestionnaire_id"
   end
 
   create_table "procedure_paths", force: :cascade do |t|

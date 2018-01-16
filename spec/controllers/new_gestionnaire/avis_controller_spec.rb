@@ -220,11 +220,13 @@ describe NewGestionnaire::AvisController, type: :controller do
           .with(avis_id.to_s, invited_email)
           .and_return(invitations_email)
 
-        post :create_gestionnaire, params: { id: avis_id,
-                                             email: invited_email,
-                                             gestionnaire: {
-                                               password: password
-                                             } }
+        post :create_gestionnaire, params: {
+          id: avis_id,
+          email: invited_email,
+          gestionnaire: {
+            password: password
+          }
+        }
       end
 
       context 'when the email does not belong to the invitation' do

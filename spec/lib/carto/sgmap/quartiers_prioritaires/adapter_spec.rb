@@ -5,9 +5,9 @@ describe CARTO::SGMAP::QuartiersPrioritaires::Adapter do
 
   before do
     stub_request(:post, "https://apicarto.sgmap.fr/quartiers-prioritaires/search")
-        .with(:body => /.*/,
-             :headers => {'Content-Type' => 'application/json'})
-        .to_return(status: status, body: body)
+      .with(:body => /.*/,
+        :headers => {'Content-Type' => 'application/json'})
+      .to_return(status: status, body: body)
   end
 
   context 'coordinates are filled' do

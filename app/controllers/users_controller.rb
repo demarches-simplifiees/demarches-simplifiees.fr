@@ -16,9 +16,10 @@ class UsersController < ApplicationController
   end
 
   def authorized_routes? controller
-    redirect_to_root_path 'Le statut de votre dossier n\'autorise pas cette URL' if !UserRoutesAuthorizationService.authorized_route?(
-      controller,
-      current_user_dossier)
+    if !UserRoutesAuthorizationService.authorized_route?(controller, current_user_dossier)
+      redirect_to_root_path 'Le statut de votre dossier n\'autorise pas cette URL'
+    end
+
   rescue ActiveRecord::RecordNotFound
     redirect_to_root_path 'Vous n’avez pas accès à ce dossier.'
   end

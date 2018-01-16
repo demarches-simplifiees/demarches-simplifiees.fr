@@ -240,12 +240,12 @@ module NewGestionnaire
         when 'user', 'etablissement', 'entreprise'
           if filter['column'] == 'date_creation'
             dossiers
-            .includes(filter['table'])
-            .where("#{filter['table'].pluralize}.#{filter['column']} = ?", filter['value'].to_date)
+              .includes(filter['table'])
+              .where("#{filter['table'].pluralize}.#{filter['column']} = ?", filter['value'].to_date)
           else
             dossiers
-            .includes(filter['table'])
-            .where("#{filter['table'].pluralize}.#{filter['column']} LIKE ?", "%#{filter['value']}%")
+              .includes(filter['table'])
+              .where("#{filter['table'].pluralize}.#{filter['column']} LIKE ?", "%#{filter['value']}%")
           end
 
         end.pluck(:id)

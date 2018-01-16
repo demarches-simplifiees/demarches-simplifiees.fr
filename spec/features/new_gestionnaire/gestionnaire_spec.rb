@@ -162,7 +162,8 @@ feature 'The gestionnaire part' do
       "suivi #{suivi}",
       "traité #{traite}",
       "tous les dossiers #{tous_les_dossiers}",
-      "archivé #{archive}"]
+      "archivé #{archive}"
+    ]
 
     texts.each { |text| expect(page).to have_text(text) }
   end

@@ -5,7 +5,7 @@ describe SIADE::EntrepriseAdapter do
 
   before do
     stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/entreprises/418166096?token=#{SIADETOKEN}")
-        .to_return(body: File.read('spec/support/files/entreprise.json', status: 200))
+      .to_return(body: File.read('spec/support/files/entreprise.json', status: 200))
   end
 
   it '#to_params class est une Hash ?' do

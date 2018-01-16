@@ -30,9 +30,11 @@ class ProcedureOverview
   end
 
   def had_some_activities?
-    [@dossiers_en_instruction_count,
-     @dossiers_en_construction_count,
-     @created_dossiers_count].reduce(:+) > 0
+    [
+      @dossiers_en_instruction_count,
+      @dossiers_en_construction_count,
+      @created_dossiers_count
+    ].reduce(:+) > 0
   end
 
   def dossiers_en_construction_description

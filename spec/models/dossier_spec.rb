@@ -211,11 +211,12 @@ describe Dossier do
       it { expect(subject).to include(:individual_nom) }
       it { expect(subject).to include(:individual_prenom) }
       it { expect(subject).to include(:individual_birthdate) }
-      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
-        dossier.procedure.types_de_champ.count +
-        dossier.procedure.types_de_champ_private.count +
-        dossier.export_entreprise_data.count)
-      }
+      it do
+        expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
+          dossier.procedure.types_de_champ.count +
+          dossier.procedure.types_de_champ_private.count +
+          dossier.export_entreprise_data.count)
+      end
     end
 
     describe '#to_sorted_values' do
@@ -238,11 +239,12 @@ describe Dossier do
       it { expect(subject[14]).to be_nil }
       it { expect(subject[15]).to be_nil }
       it { expect(subject[16]).to be_nil }
-      it { expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
-        dossier.procedure.types_de_champ.count +
-        dossier.procedure.types_de_champ_private.count +
-        dossier.export_entreprise_data.count)
-      }
+      it do
+        expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
+          dossier.procedure.types_de_champ.count +
+          dossier.procedure.types_de_champ_private.count +
+          dossier.export_entreprise_data.count)
+      end
 
       context 'dossier for individual' do
         let(:dossier_with_individual) { create(:dossier, :for_individual, user: user, procedure: procedure) }

@@ -12,7 +12,7 @@ class Users::SessionsController < Sessions::SessionsController
     error_procedure
   end
 
-  #POST /resource/sign_in
+  # POST /resource/sign_in
   def create
     remember_me = params[:user][:remember_me] == '1'
     try_to_authenticate(User, remember_me)
@@ -49,11 +49,8 @@ class Users::SessionsController < Sessions::SessionsController
       sign_out :user
 
       case connected_with_france_connect
-      when 'entreprise'
-        redirect_to FRANCE_CONNECT.entreprise_logout_endpoint
-        return
       when 'particulier'
-        redirect_to FRANCE_CONNECT.particulier_logout_endpoint
+        redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint]
         return
       end
     end

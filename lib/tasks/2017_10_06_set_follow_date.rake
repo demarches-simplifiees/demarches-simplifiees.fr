@@ -23,7 +23,8 @@ namespace :'2017_10_06_set_follow_date' do
         demande_seen_at: gestionnaire.current_sign_in_at,
         annotations_privees_seen_at: gestionnaire.current_sign_in_at,
         avis_seen_at: gestionnaire.current_sign_in_at,
-        messagerie_seen_at: gestionnaire.current_sign_in_at)
+        messagerie_seen_at: gestionnaire.current_sign_in_at
+      )
     end
   end
 
