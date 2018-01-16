@@ -50,4 +50,20 @@ describe Administrateur, type: :model do
       expect(gestionnaire.valid_password?('super secret')).to be(true)
     end
   end
+
+  describe '#find_inactive_by_token' do
+    let(:administrateur) { create(:administration).invite_admin('paul@tps.fr') }
+    let(:reset_password_token) { administrateur.invite! }
+
+    it { expect(Administrateur.find_inactive_by_token(reset_password_token)).not_to be_nil }
+  end
+
+  describe '#reset_password' do
+    let(:administrateur) { create(:administration).invite_admin('paul@tps.fr') }
+    let(:reset_password_token) { administrateur.invite! }
+
+    it { expect(Administrateur.reset_password(reset_password_token, '12345678').errors).to be_empty }
+    it { expect(Administrateur.reset_password('123', '12345678').errors).not_to be_empty }
+    it { expect(Administrateur.reset_password(reset_password_token, '').errors).not_to be_empty }
+  end
 end

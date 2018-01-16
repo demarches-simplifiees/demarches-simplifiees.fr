@@ -14,21 +14,26 @@ class AdministrationsController < ApplicationController
   end
 
   def create
-    admin = Administrateur.new create_administrateur_params
+    administrateur = current_administration.invite_admin(create_administrateur_params[:email])
 
-    if admin.save
+    if administrateur.errors.empty?
       flash.notice = "Administrateur créé"
-      AdministrationMailer.new_admin_email(admin, current_administration).deliver_now!
     else
-      flash.alert = admin.errors.full_messages
+      flash.alert = administrateur.errors.full_messages
     end
 
+    redirect_to administrations_path
+  end
+
+  def update
+    Administrateur.find_inactive_by_id(params[:id]).invite!
+  
     redirect_to administrations_path
   end
 
   private
 
   def create_administrateur_params
-    params.require(:administrateur).permit(:email, :password)
+    params.require(:administrateur).permit(:email)
   end
 end

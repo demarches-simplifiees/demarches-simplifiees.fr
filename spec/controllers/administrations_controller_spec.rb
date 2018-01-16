@@ -27,7 +27,7 @@ describe AdministrationsController, type: :controller do
       sign_in administration
     end
 
-    subject { post :create, administrateur: {email: email, password: password} }
+    subject { post :create, administrateur: {email: email } }
 
     context 'when email and password are correct' do
       it 'add new administrateur in database' do
@@ -36,6 +36,8 @@ describe AdministrationsController, type: :controller do
 
       it 'alert new mail are send' do
         expect(AdministrationMailer).to receive(:new_admin_email).and_return(AdministrationMailer)
+        expect(AdministrationMailer).to receive(:deliver_now!)
+        expect(AdministrationMailer).to receive(:invite_admin).and_return(AdministrationMailer)
         expect(AdministrationMailer).to receive(:deliver_now!)
         subject
       end
