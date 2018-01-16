@@ -41,8 +41,7 @@ class FranceConnect::ParticulierController < ApplicationController
 
     sign_in user
 
-    user.loged_in_with_france_connect = 'particulier'
-    user.save
+    user.update_attribute('loged_in_with_france_connect', 'particulier')
 
     redirect_to stored_location_for(current_user) || signed_in_root_path(current_user)
   end
