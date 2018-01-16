@@ -48,7 +48,7 @@ class Champ < ActiveRecord::Base
   end
 
   def self.regions
-    JSON.parse(Carto::GeoAPI::Driver.regions).sort_by { |e| e['nom'] }.map { |liste| liste['nom'] }
+    JSON.parse(Carto::GeoAPI::Driver.regions).sort_by { |e| e['nom'] }.pluck("nom")
   end
 
   def self.departements
@@ -56,7 +56,7 @@ class Champ < ActiveRecord::Base
   end
 
   def self.pays
-    JSON.parse(Carto::GeoAPI::Driver.pays).map { |liste| liste['nom'] }
+    JSON.parse(Carto::GeoAPI::Driver.pays).pluck("nom")
   end
 
   def to_s
