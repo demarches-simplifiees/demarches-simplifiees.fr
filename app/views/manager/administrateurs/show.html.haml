@@ -1,0 +1,15 @@
+- content_for(:title) { page.page_title }
+
+%header.header
+  %h1.header__heading= content_for(:title)
+  .header__actions
+    - if page.resource.invitation_expired?
+      = link_to "renvoyer l'invitation", manager_administrateur_path(page.resource), method: :patch, class: "button"
+
+%dl
+  - page.attributes.each do |attribute|
+    %dt.attribute-label
+      = t("helpers.label.#{resource_name}.#{attribute.name}", default: attribute.name.titleize)
+
+    %dd.attribute-data{ class: "attribute-data--#{attribute.html_class}" }
+      = render_field attribute

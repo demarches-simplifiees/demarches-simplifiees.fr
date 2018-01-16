@@ -12,10 +12,4 @@ class AdministrationsController < ApplicationController
       partial: "administrations/list",
       array: true
   end
-
-  def update
-    Administrateur.find_inactive_by_id(params[:id]).invite!
-
-    redirect_to administrations_path
-  end
 end

@@ -4,7 +4,7 @@ Rails.application.routes.draw do
       post 'whitelist', on: :member
     end
 
-    resources :administrateurs, only: [:index, :show, :new, :create]
+    resources :administrateurs, only: [:index, :show, :new, :create, :update]
 
     root to: "procedures#index"
   end
