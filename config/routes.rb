@@ -6,6 +6,10 @@ Rails.application.routes.draw do
 
     resources :administrateurs, only: [:index, :show, :new, :create, :update]
 
+    authenticate :administration do
+      match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
+    end
+
     root to: "procedures#index"
   end
 
@@ -56,7 +60,6 @@ Rails.application.routes.draw do
   delete 'administrations/sign_out' => 'administrations/sessions#destroy'
   authenticate :administration do
     resources :administrations, only: [:index, :create, :update] do
-      match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
   end
 
