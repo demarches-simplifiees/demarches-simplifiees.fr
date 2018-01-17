@@ -55,19 +55,9 @@ feature 'France Connect Particulier  Connexion' do
           before do
             page.find('.login-with-fc').click
           end
-          scenario 'he is redirected to france connect particulier page' do
-            expect(page).to have_content('Nouvelle connexion')
-          end
 
-          context 'when he fill an email and valid' do
-            before do
-              page.find_by_id('user_email_france_connect').set email
-              page.find_by_id('valid_new_fcp').click
-            end
-
-            scenario 'he is redirected to user dossiers page' do
-              expect(page).to have_content('Dossiers')
-            end
+          scenario 'he is redirected to user dossiers page' do
+            expect(page).to have_content('Dossiers')
           end
         end
 
