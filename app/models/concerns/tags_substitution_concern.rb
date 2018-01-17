@@ -63,8 +63,16 @@ module TagsSubstitutionConcern
         lambda: -> (d) { format_date(d.processed_at) },
         available_for_states: Dossier::TERMINE
       },
-      { libelle: 'libellé procédure', description: '', lambda: -> (d) { d.procedure.libelle } },
-      { libelle: 'numéro du dossier', description: '', target: :id }
+      {
+        libelle: 'libellé procédure',
+        description: '',
+        lambda: -> (d) { d.procedure.libelle }
+      },
+      {
+        libelle: 'numéro du dossier',
+        description: '',
+        target: :id
+      }
     ]
   end
 
@@ -77,7 +85,13 @@ module TagsSubstitutionConcern
   end
 
   def dossier_tags_for_mail
-    [{ libelle: 'lien dossier', description: '', lambda: -> (d) { users_dossier_recapitulatif_link(d) } }]
+    [
+      {
+        libelle: 'lien dossier',
+        description: '',
+        lambda: -> (d) { users_dossier_recapitulatif_link(d) }
+      }
+    ]
   end
 
   def users_dossier_recapitulatif_link(dossier)
@@ -87,23 +101,57 @@ module TagsSubstitutionConcern
 
   def individual_tags
     [
-      { libelle: 'civilité', description: 'M., Mme', target: :gender },
-      { libelle: 'nom', description: "nom de l'usager", target: :nom },
-      { libelle: 'prénom', description: "prénom de l'usager", target: :prenom }
+      {
+        libelle: 'civilité',
+        description: 'M., Mme',
+        target: :gender
+      },
+      {
+        libelle: 'nom',
+        description: "nom de l'usager",
+        target: :nom
+      },
+      {
+        libelle: 'prénom',
+        description: "prénom de l'usager",
+        target: :prenom
+      }
     ]
   end
 
   def entreprise_tags
     [
-      { libelle: 'SIREN', description: '', target: :siren },
-      { libelle: 'numéro de TVA intracommunautaire', description: '', target: :numero_tva_intracommunautaire },
-      { libelle: 'SIRET du siège social', description: '', target: :siret_siege_social },
-      { libelle: 'raison sociale', description: '', target: :raison_sociale }
+      {
+        libelle: 'SIREN',
+        description: '',
+        target: :siren
+      },
+      {
+        libelle: 'numéro de TVA intracommunautaire',
+        description: '',
+        target: :numero_tva_intracommunautaire
+      },
+      {
+        libelle: 'SIRET du siège social',
+        description: '',
+        target: :siret_siege_social
+      },
+      {
+        libelle: 'raison sociale',
+        description: '',
+        target: :raison_sociale
+      }
     ]
   end
 
   def etablissement_tags
-    [{ libelle: 'adresse', description: '', target: :inline_adresse }]
+    [
+      {
+       libelle: 'adresse',
+       description: '',
+       target: :inline_adresse
+      }
+    ]
   end
 
   def replace_tags(text, dossier)
