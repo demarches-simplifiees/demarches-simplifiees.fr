@@ -13,6 +13,8 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     procedures: Field::HasMany.with_options(limit: 20),
+    registration_state: Field::String.with_options(searchable: false),
+    current_sign_in_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -24,6 +26,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :email,
     :created_at,
     :procedures,
+    :registration_state,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -33,6 +36,8 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :email,
     :created_at,
     :updated_at,
+    :registration_state,
+    :current_sign_in_at,
     :procedures,
   ].freeze
 
