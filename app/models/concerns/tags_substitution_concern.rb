@@ -97,14 +97,11 @@ module TagsSubstitutionConcern
       description: '',
       target: :raison_sociale,
       available_for_states: Dossier::SOUMIS
-    }
-  ]
-
-  ETABLISSEMENT_TAGS = [
+    },
     {
       libelle: 'adresse',
       description: '',
-      target: :inline_adresse,
+      lambda: -> (e) { e&.etablissement&.inline_adresse },
       available_for_states: Dossier::SOUMIS
     }
   ]
@@ -113,7 +110,7 @@ module TagsSubstitutionConcern
     if procedure.for_individual?
       identity_tags = INDIVIDUAL_TAGS
     else
-      identity_tags = ENTREPRISE_TAGS + ETABLISSEMENT_TAGS
+      identity_tags = ENTREPRISE_TAGS
     end
 
     filter_tags(identity_tags + dossier_tags + champ_public_tags + champ_private_tags)
@@ -185,8 +182,7 @@ module TagsSubstitutionConcern
     tags_and_datas = [
       [dossier_tags, dossier],
       [INDIVIDUAL_TAGS, dossier.individual],
-      [ENTREPRISE_TAGS, dossier.entreprise],
-      [ETABLISSEMENT_TAGS, dossier.entreprise&.etablissement]
+      [ENTREPRISE_TAGS, dossier.entreprise]
     ]
 
     tags_and_datas
