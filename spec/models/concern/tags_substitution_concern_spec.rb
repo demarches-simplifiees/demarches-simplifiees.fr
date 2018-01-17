@@ -58,19 +58,13 @@ describe TagsSubstitutionConcern, type: :model do
         let(:template) do
           '--SIREN-- --numéro de TVA intracommunautaire-- --SIRET du siège social-- --raison sociale-- --adresse--'
         end
+        let(:etablissement) { create(:etablissement) }
 
         let(:expected_text) do
-          "#{entreprise.siren} #{entreprise.numero_tva_intracommunautaire} #{entreprise.siret_siege_social} #{entreprise.raison_sociale} --adresse--"
+          "#{entreprise.siren} #{entreprise.numero_tva_intracommunautaire} #{entreprise.siret_siege_social} #{entreprise.raison_sociale} #{etablissement.inline_adresse}"
         end
 
         it { is_expected.to eq(expected_text) }
-
-        context 'and the entreprise has a etablissement with an adresse' do
-          let(:etablissement) { create(:etablissement, adresse: 'adresse') }
-          let(:template) { '--adresse--' }
-
-          it { is_expected.to eq(etablissement.inline_adresse) }
-        end
       end
     end
 
