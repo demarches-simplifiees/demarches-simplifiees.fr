@@ -2,11 +2,11 @@ class FranceConnect::ParticulierController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
 
   def login
-    redirect_to FranceConnectService.authorization_uri
+    redirect_to FranceConnectService.authorization_uri(FRANCE_CONNECT[:particulier])
   end
 
   def callback
-    fetched_fci = FranceConnectService.fetch_info(params[:code])
+    fetched_fci = FranceConnectService.fetch_info(FRANCE_CONNECT[:particulier], params[:code])
 
     fci = FranceConnectInformation
       .find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) ||

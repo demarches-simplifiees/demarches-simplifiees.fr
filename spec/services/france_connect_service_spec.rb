@@ -17,7 +17,7 @@ describe FranceConnectService do
     let(:user_info_hash) { {sub: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, gender: gender, birthplace: birthplace, email: email, phone: phone} }
     let(:user_info) { instance_double('OpenIDConnect::ResponseObject::UserInfo', raw_attributes: user_info_hash) }
 
-    subject { described_class.fetch_info code }
+    subject { described_class.fetch_info(FRANCE_CONNECT[:particulier], code) }
 
     before do
       allow_any_instance_of(OpenIDConnect::Client).to receive(:access_token!).and_return(access_token)
