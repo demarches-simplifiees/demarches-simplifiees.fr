@@ -1,6 +1,6 @@
 class FranceConnectService
   def self.authorization_uri
-    client = FranceConnectParticulierClient.new
+    client = OpenIDConnect::Client.new(FRANCE_CONNECT[:particulier])
 
     client.authorization_uri(
       scope: [:profile, :email],
@@ -10,7 +10,8 @@ class FranceConnectService
   end
 
   def self.retrieve_user_informations_particulier(code)
-    client = FranceConnectParticulierClient.new(code)
+    client = OpenIDConnect::Client.new(FRANCE_CONNECT[:particulier])
+    client.authorization_code = code
 
     user_info = client.access_token!(client_auth_method: :secret)
       .userinfo!

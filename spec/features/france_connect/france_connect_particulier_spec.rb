@@ -47,7 +47,7 @@ feature 'France Connect Particulier  Connexion' do
         end
 
         before do
-          allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
+          allow(FranceConnectService).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
           allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(FranceConnectInformation.new(user_info))
         end
 
@@ -75,7 +75,7 @@ feature 'France Connect Particulier  Connexion' do
 
       context 'when authentification is not ok' do
         before do
-          allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
+          allow(FranceConnectService).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
           allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
           page.find('.login-with-fc').click
         end

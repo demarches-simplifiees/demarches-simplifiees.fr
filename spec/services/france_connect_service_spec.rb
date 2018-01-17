@@ -20,12 +20,12 @@ describe FranceConnectService do
     subject { described_class.retrieve_user_informations_particulier code }
 
     before do
-      allow_any_instance_of(FranceConnectParticulierClient).to receive(:access_token!).and_return(access_token)
+      allow_any_instance_of(OpenIDConnect::Client).to receive(:access_token!).and_return(access_token)
       allow(access_token).to receive(:userinfo!).and_return(user_info)
     end
 
     it 'set code for FranceConnectEntrepriseClient' do
-      expect_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_code=).with(code)
+      expect_any_instance_of(OpenIDConnect::Client).to receive(:authorization_code=).with(code)
       subject
     end
 
