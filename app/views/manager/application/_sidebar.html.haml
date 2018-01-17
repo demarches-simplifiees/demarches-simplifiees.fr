@@ -1,10 +1,3 @@
--# # Sidebar
--#
--# This partial is used to display the sidebar in Administrate.
--# By default, the sidebar contains navigation links
--# for all resources in the admin dashboard,
--# as defined by the routes in the `admin/` namespace
-
 %ul.sidebar__list
   %li
     = link_to "Se déconnecter", administrations_sign_out_path, method: :delete, class: "sidebar__link"
