@@ -9,7 +9,7 @@ class FranceConnectService
     )
   end
 
-  def self.retrieve_user_informations_particulier(code)
+  def self.fetch_info(code)
     client = OpenIDConnect::Client.new(FRANCE_CONNECT[:particulier])
     client.authorization_code = code
 

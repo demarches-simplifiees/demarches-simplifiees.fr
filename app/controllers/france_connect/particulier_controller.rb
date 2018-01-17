@@ -6,7 +6,7 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def callback
-    fetched_fci = FranceConnectService.retrieve_user_informations_particulier(params[:code])
+    fetched_fci = FranceConnectService.fetch_info(params[:code])
 
     fci = FranceConnectInformation
       .find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) ||

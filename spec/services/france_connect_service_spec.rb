@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe FranceConnectService do
-  describe '.retrieve_user_informations_particulier' do
+  describe '.fetch_info' do
     let(:code) { 'plop' }
     let(:access_token) { 'my access_token' }
 
@@ -17,7 +17,7 @@ describe FranceConnectService do
     let(:user_info_hash) { {sub: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, gender: gender, birthplace: birthplace, email: email, phone: phone} }
     let(:user_info) { instance_double('OpenIDConnect::ResponseObject::UserInfo', raw_attributes: user_info_hash) }
 
-    subject { described_class.retrieve_user_informations_particulier code }
+    subject { described_class.fetch_info code }
 
     before do
       allow_any_instance_of(OpenIDConnect::Client).to receive(:access_token!).and_return(access_token)

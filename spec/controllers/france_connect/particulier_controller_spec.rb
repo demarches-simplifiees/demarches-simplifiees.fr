@@ -39,7 +39,7 @@ describe FranceConnect::ParticulierController, type: :controller do
 
     context 'when code is correct' do
       before do
-        allow(FranceConnectService).to receive(:retrieve_user_informations_particulier)
+        allow(FranceConnectService).to receive(:fetch_info)
           .and_return(FranceConnectInformation.new(user_info))
       end
 
@@ -91,7 +91,7 @@ describe FranceConnect::ParticulierController, type: :controller do
 
     context 'when code is not correct' do
       before do
-        allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
+        allow(FranceConnectService).to receive(:fetch_info) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
         subject
       end
 
