@@ -45,7 +45,11 @@ class Admin::ProceduresController < AdminController
   def hide
     procedure = current_administrateur.procedures.find(params[:id])
     procedure.hide!
-    procedure.procedure_path.destroy
+    # procedure should no longer be reachable so we delete its procedure_path
+    # that way it is also available for another procedure
+    # however, sometimes the path has already been deleted (ex: stolen by another procedure),
+    # so we're not certain the procedure has a procedure_path anymore
+    procedure.procedure_path.try(:destroy)
 
     flash.notice = "Procédure supprimée, en cas d'erreur contactez nous : contact@tps.apientreprise.fr"
     redirect_to admin_procedures_draft_path
