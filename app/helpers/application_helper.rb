@@ -2,7 +2,9 @@ module ApplicationHelper
   include SanitizeUrl
 
   def sanitize_url(url)
-    super(url, schemes: ['http', 'https'], replace_evil_with: root_url)
+    if !url.nil?
+      super(url, schemes: ['http', 'https'], replace_evil_with: root_url)
+    end
   end
 
   def flash_class(level)
