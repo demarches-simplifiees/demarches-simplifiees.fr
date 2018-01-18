@@ -4,8 +4,8 @@ FactoryGirl.define do
     lien_demarche 'http://localhost'
     sequence(:libelle) { |n| "Procedure #{n}" }
     description "Demande de subvention à l'intention des associations"
-    organisation "Orga SGMAP"
-    direction "direction SGMAP"
+    organisation "Orga DINSIC"
+    direction "direction DINSIC"
     published_at nil
     cerfa_flag false
     administrateur { create(:administrateur) }
