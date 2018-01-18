@@ -51,22 +51,54 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def set_raven_context
-    context = { ip_address: request.ip }
-
-    logged_models = [
+  def logged_users
+    @logged_users ||= [
       current_user,
       current_gestionnaire,
       current_administrateur,
       current_administration
     ].compact
+  end
 
-    context[:email] = logged_models.first&.email
-    context[:id]    = logged_models.first&.id
+  def logged_user_roles
+    roles = logged_users.map { |logged_user| logged_user.class.name }
+    roles.any? ? roles.join(', ') : 'Guest'
+  end
 
-    class_names = logged_models.map { |model| model.class.name }
-    context[:classes] = class_names.any? ? class_names.join(', ') : 'Guest'
+  def logged_user_info
+    logged_user = logged_users.first
+
+    if logged_user
+      {
+        id: logged_user.id,
+        email: logged_user.email
+      }
+    end
+  end
+
+  def set_raven_context
+    context = {
+      ip_address: request.ip,
+      roles: logged_user_roles
+    }
+    context.merge!(logged_user_info || {})
 
     Raven.user_context(context)
+  end
+
+  def append_info_to_payload(payload)
+    payload.merge!({
+      user_agent: request.user_agent,
+      current_user: logged_user_info,
+      current_user_roles: logged_user_roles
+    }.compact)
+
+    if browser.known?
+      payload.merge!({
+        browser: browser.name,
+        browser_version: browser.version.to_s,
+        platform: browser.platform.name,
+      })
+    end
   end
 end
