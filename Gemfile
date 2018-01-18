@@ -64,8 +64,6 @@ gem 'leaflet-rails'
 gem 'leaflet-markercluster-rails', '~> 0.7.0'
 gem 'leaflet-draw-rails'
 
-gem 'bootstrap-datepicker-rails'
-
 gem 'chartkick'
 
 gem 'logstasher'
