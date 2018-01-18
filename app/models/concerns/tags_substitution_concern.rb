@@ -4,17 +4,140 @@ module TagsSubstitutionConcern
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
 
+  DOSSIER_TAGS = [
+    {
+      libelle: 'motivation',
+      description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
+      target: :motivation,
+      available_for_states: Dossier::TERMINE
+    },
+    {
+      libelle: 'date de dépôt',
+      description: 'Date du passage en construction du dossier par l’usager',
+      lambda: -> (d) { format_date(d.en_construction_at) },
+      available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'date de passage en instruction',
+      description: '',
+      lambda: -> (d) { format_date(d.en_instruction_at) },
+      available_for_states: Dossier::INSTRUCTION_COMMENCEE
+    },
+    {
+      libelle: 'date de décision',
+      description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
+      lambda: -> (d) { format_date(d.processed_at) },
+      available_for_states: Dossier::TERMINE
+    },
+    {
+      libelle: 'libellé procédure',
+      description: '',
+      lambda: -> (d) { d.procedure.libelle },
+      available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'numéro du dossier',
+      description: '',
+      target: :id,
+      available_for_states: Dossier::SOUMIS
+    }
+  ]
+
+  DOSSIER_TAGS_FOR_MAIL = [
+    {
+      libelle: 'lien dossier',
+      description: '',
+      lambda: -> (d) { users_dossier_recapitulatif_link(d) },
+      available_for_states: Dossier::SOUMIS
+    }
+  ]
+
+  INDIVIDUAL_TAGS = [
+    {
+      libelle: 'civilité',
+      description: 'M., Mme',
+      target: :gender,
+      available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'nom',
+      description: "nom de l'usager",
+      target: :nom,
+      available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'prénom',
+      description: "prénom de l'usager",
+      target: :prenom,
+      available_for_states: Dossier::SOUMIS
+    }
+  ]
+
+  ENTREPRISE_TAGS = [
+    {
+      libelle: 'SIREN',
+      description: '',
+      target: :siren,
+      available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'numéro de TVA intracommunautaire',
+      description: '',
+      target: :numero_tva_intracommunautaire,
+      available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'SIRET du siège social',
+      description: '',
+      target: :siret_siege_social,
+      available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'raison sociale',
+      description: '',
+      target: :raison_sociale,
+      available_for_states: Dossier::SOUMIS
+    }
+  ]
+
+  ETABLISSEMENT_TAGS = [
+    {
+      libelle: 'adresse',
+      description: '',
+      target: :inline_adresse,
+      available_for_states: Dossier::SOUMIS
+    }
+  ]
+
   def tags
     if procedure.for_individual?
-      identity_tags = individual_tags
+      identity_tags = INDIVIDUAL_TAGS
     else
-      identity_tags = entreprise_tags + etablissement_tags
+      identity_tags = ENTREPRISE_TAGS + ETABLISSEMENT_TAGS
     end
 
     filter_tags(identity_tags + dossier_tags) + procedure_type_de_champ_public_private_tags
   end
 
   private
+
+  def format_date(date)
+    if date.present?
+      date.localtime.strftime('%d/%m/%Y')
+    else
+      ''
+    end
+  end
+
+  def users_dossier_recapitulatif_link(dossier)
+    url = users_dossier_recapitulatif_url(dossier)
+    link_to(url, url, target: '_blank')
+  end
+
+  def dossier_tags
+    # Overridden by MailTemplateConcern
+    DOSSIER_TAGS
+  end
 
   def filter_tags(tags)
     # Implementation note: emails and attestation generations are generally
@@ -38,134 +161,6 @@ module TagsSubstitutionConcern
       .map { |tdc| { libelle: tdc.libelle, description: tdc.description } }
   end
 
-  def dossier_tags
-    [
-      {
-        libelle: 'motivation',
-        description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
-        target: :motivation,
-        available_for_states: Dossier::TERMINE
-      },
-      {
-        libelle: 'date de dépôt',
-        description: 'Date du passage en construction du dossier par l’usager',
-        lambda: -> (d) { format_date(d.en_construction_at) },
-        available_for_states: Dossier::SOUMIS
-      },
-      {
-        libelle: 'date de passage en instruction',
-        description: '',
-        lambda: -> (d) { format_date(d.en_instruction_at) },
-        available_for_states: Dossier::INSTRUCTION_COMMENCEE
-      },
-      {
-        libelle: 'date de décision',
-        description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
-        lambda: -> (d) { format_date(d.processed_at) },
-        available_for_states: Dossier::TERMINE
-      },
-      {
-        libelle: 'libellé procédure',
-        description: '',
-        lambda: -> (d) { d.procedure.libelle },
-        available_for_states: Dossier::SOUMIS
-      },
-      {
-        libelle: 'numéro du dossier',
-        description: '',
-        target: :id,
-        available_for_states: Dossier::SOUMIS
-      }
-    ]
-  end
-
-  def format_date(date)
-    if date.present?
-      date.localtime.strftime('%d/%m/%Y')
-    else
-      ''
-    end
-  end
-
-  def dossier_tags_for_mail
-    [
-      {
-        libelle: 'lien dossier',
-        description: '',
-        lambda: -> (d) { users_dossier_recapitulatif_link(d) },
-        available_for_states: Dossier::SOUMIS
-      }
-    ]
-  end
-
-  def users_dossier_recapitulatif_link(dossier)
-    url = users_dossier_recapitulatif_url(dossier)
-    link_to(url, url, target: '_blank')
-  end
-
-  def individual_tags
-    [
-      {
-        libelle: 'civilité',
-        description: 'M., Mme',
-        target: :gender,
-        available_for_states: Dossier::SOUMIS
-      },
-      {
-        libelle: 'nom',
-        description: "nom de l'usager",
-        target: :nom,
-        available_for_states: Dossier::SOUMIS
-      },
-      {
-        libelle: 'prénom',
-        description: "prénom de l'usager",
-        target: :prenom,
-        available_for_states: Dossier::SOUMIS
-      }
-    ]
-  end
-
-  def entreprise_tags
-    [
-      {
-        libelle: 'SIREN',
-        description: '',
-        target: :siren,
-        available_for_states: Dossier::SOUMIS
-      },
-      {
-        libelle: 'numéro de TVA intracommunautaire',
-        description: '',
-        target: :numero_tva_intracommunautaire,
-        available_for_states: Dossier::SOUMIS
-      },
-      {
-        libelle: 'SIRET du siège social',
-        description: '',
-        target: :siret_siege_social,
-        available_for_states: Dossier::SOUMIS
-      },
-      {
-        libelle: 'raison sociale',
-        description: '',
-        target: :raison_sociale,
-        available_for_states: Dossier::SOUMIS
-      }
-    ]
-  end
-
-  def etablissement_tags
-    [
-      {
-        libelle: 'adresse',
-        description: '',
-        target: :inline_adresse,
-        available_for_states: Dossier::SOUMIS
-      }
-    ]
-  end
-
   def replace_tags(text, dossier)
     if text.nil?
       return ''
@@ -176,9 +171,9 @@ module TagsSubstitutionConcern
 
     tags_and_datas = [
       [dossier_tags, dossier],
-      [individual_tags, dossier.individual],
-      [entreprise_tags, dossier.entreprise],
-      [etablissement_tags, dossier.entreprise&.etablissement]
+      [INDIVIDUAL_TAGS, dossier.individual],
+      [ENTREPRISE_TAGS, dossier.entreprise],
+      [ETABLISSEMENT_TAGS, dossier.entreprise&.etablissement]
     ]
 
     tags_and_datas
@@ -202,7 +197,7 @@ module TagsSubstitutionConcern
         if tag.key?(:target)
           value = data.send(tag[:target])
         else
-          value = tag[:lambda].(data)
+          value = instance_exec(data, &tag[:lambda])
         end
         replace_tag(acc, tag, value)
       end
