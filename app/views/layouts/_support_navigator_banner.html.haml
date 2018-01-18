@@ -1,7 +1,7 @@
-- if !BrowserService.recommended_browser?
+- if !browser.modern?
   #support-navigator-banner.row
     .col-xs-12
-      = BROWSER.value.name
-      = BROWSER.value.version
+      = browser.name
+      = browser.version
       \-
       Attention, votre navigateur n'est pas recommandé pour la navigation sur ce site internet. Aucun support ne pourra vous être prodigué en cas de dysfonctionnement.
