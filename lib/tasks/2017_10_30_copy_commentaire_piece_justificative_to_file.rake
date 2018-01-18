@@ -1,6 +1,6 @@
 namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
   task set: :environment do
-    commentaires_to_process = Commentaire.where(file:nil).where.not(piece_justificative_id: nil).reorder(id: :desc)
+    commentaires_to_process = Commentaire.where(file: nil).where.not(piece_justificative_id: nil).reorder(id: :desc)
 
     puts "#{commentaires_to_process.count} commentaires to process..."
 

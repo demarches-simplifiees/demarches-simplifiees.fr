@@ -41,7 +41,7 @@ feature 'As a User I wanna create a dossier' do
       end
     end
 
-    scenario 'Identification through siret', vcr: {cassette_name: 'search_ban_paris'}, js: true do
+    scenario 'Identification through siret', vcr: { cassette_name: 'search_ban_paris' }, js: true do
       login_as user, scope: :user
       visit commencer_path(procedure_path: procedure_with_siret.path)
       expect(page).to have_current_path(users_dossier_path(procedure_with_siret.dossiers.last.id.to_s), only_path: true)

@@ -10,7 +10,7 @@ class PieceJustificative < ActiveRecord::Base
   alias_attribute :type, :type_de_piece_justificative_id
 
   mount_uploader :content, PieceJustificativeUploader
-  validates :content, :file_size => {:maximum => 20.megabytes}
+  validates :content, :file_size => { :maximum => 20.megabytes }
   validates :content, presence: true, allow_blank: false, allow_nil: false
 
   after_save :internal_notification, if: Proc.new { dossier.present? }

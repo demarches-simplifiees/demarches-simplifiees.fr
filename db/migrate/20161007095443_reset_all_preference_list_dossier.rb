@@ -95,7 +95,7 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
     has_many :assign_to, dependent: :destroy
     has_many :procedures, through: :assign_to
 
-    def build_default_preferences_list_dossier procedure_id=nil
+    def build_default_preferences_list_dossier procedure_id = nil
       PreferenceListDossier.available_columns_for(procedure_id).each do |table|
         table.second.each do |column|
           if valid_couple_table_attr? table.first, column.first
@@ -141,7 +141,7 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
         }
       ]
 
-      couples.include?({table: table, column: column})
+      couples.include?({ table: table, column: column })
     end
   end
 

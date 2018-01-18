@@ -8,7 +8,7 @@ describe API::V1::DossiersController do
   it { expect(described_class).to be < APIController }
 
   describe 'GET index' do
-    let(:retour) { get :index, params: {token: admin.api_token, procedure_id: procedure_id} }
+    let(:retour) { get :index, params: { token: admin.api_token, procedure_id: procedure_id } }
 
     subject { retour }
 
@@ -59,7 +59,7 @@ describe API::V1::DossiersController do
       end
 
       context 'when there are multiple pages' do
-        let(:retour) { get :index, params: {token: admin.api_token, procedure_id: procedure_id, page: 2} }
+        let(:retour) { get :index, params: { token: admin.api_token, procedure_id: procedure_id, page: 2 } }
 
         let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction') }
         let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction') }
@@ -80,7 +80,7 @@ describe API::V1::DossiersController do
   end
 
   describe 'GET show' do
-    let(:retour) { get :show, params: {token: admin.api_token, procedure_id: procedure_id, id: dossier_id} }
+    let(:retour) { get :show, params: { token: admin.api_token, procedure_id: procedure_id, id: dossier_id } }
     subject { retour }
 
     context 'when procedure is not found' do
@@ -178,7 +178,7 @@ describe API::V1::DossiersController do
           end
         end
 
-        describe 'piece justificative', vcr: {cassette_name: 'controllers_api_v1_dossiers_controller_piece_justificative'} do
+        describe 'piece justificative', vcr: { cassette_name: 'controllers_api_v1_dossiers_controller_piece_justificative' } do
           before do
             create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: dossier.procedure.types_de_piece_justificative.first, user: dossier.user
           end
@@ -240,7 +240,7 @@ describe API::V1::DossiersController do
               super().find { |champ| champ[:type_de_champ][:type_champ] == 'quartier_prioritaire' }
             end
 
-            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'quartier prioritaire', type_champ: 'quartier_prioritaire', order_place: -1, descripton: ''}) }
+            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'quartier prioritaire', type_champ: 'quartier_prioritaire', order_place: -1, descripton: '' }) }
             it { expect(subject[:value]).to match(dossier.quartier_prioritaires.first.geometry.symbolize_keys) }
           end
 
@@ -253,7 +253,7 @@ describe API::V1::DossiersController do
               super().find { |champ| champ[:type_de_champ][:type_champ] == 'cadastre' }
             end
 
-            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'cadastre', type_champ: 'cadastre', order_place: -1, descripton: ''}) }
+            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'cadastre', type_champ: 'cadastre', order_place: -1, descripton: '' }) }
             it { expect(subject[:value]).to match(dossier.cadastres.first.geometry.symbolize_keys) }
           end
 
@@ -267,7 +267,7 @@ describe API::V1::DossiersController do
               super().find { |champ| champ[:type_de_champ][:type_champ] == 'user_geometry' }
             end
 
-            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'user_geometry', type_champ: 'user_geometry', order_place: -1, descripton: ''}) }
+            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'user_geometry', type_champ: 'user_geometry', order_place: -1, descripton: '' }) }
             it { expect(subject[:value]).to match(UserGeometry.new(dossier.json_latlngs).value) }
           end
         end
@@ -318,7 +318,7 @@ describe API::V1::DossiersController do
           it { expect(subject.first[:email]).to eq 'plop@plip.com' }
         end
 
-        describe 'cerfa', vcr: {cassette_name: 'controllers_api_v1_dossiers_controller_cerfa'} do
+        describe 'cerfa', vcr: { cassette_name: 'controllers_api_v1_dossiers_controller_cerfa' } do
           let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :with_cerfa_upload, procedure: procedure) } }
           let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
 

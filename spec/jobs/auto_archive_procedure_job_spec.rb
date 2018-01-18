@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe AutoArchiveProcedureJob, type: :job do
-  let!(:procedure) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: nil )}
-  let!(:procedure_hier) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: 1.day.ago )}
-  let!(:procedure_aujourdhui) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: Date.today )}
-  let!(:procedure_demain) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: 1.day.from_now )}
+  let!(:procedure) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: nil) }
+  let!(:procedure_hier) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: 1.day.ago) }
+  let!(:procedure_aujourdhui) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: Date.today) }
+  let!(:procedure_demain) { create(:procedure, published_at: Time.now, archived_at: nil, auto_archive_on: 1.day.from_now) }
 
   subject { AutoArchiveProcedureJob.new.perform }
 
@@ -18,15 +18,15 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
   end
 
   context "when procedures have auto_archive_on set on yesterday or today" do
-    let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: 'brouillon', archived: false)}
-    let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
-    let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
-    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false)}
-    let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: 'en_instruction', archived: false)}
-    let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: 'accepte', archived: false)}
-    let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: 'refuse', archived: false)}
-    let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: 'sans_suite', archived: false)}
-    let!(:dossier9) { create(:dossier, procedure: procedure_aujourdhui, state: 'en_construction', archived: false)}
+    let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: 'brouillon', archived: false) }
+    let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false) }
+    let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false) }
+    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false) }
+    let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: 'en_instruction', archived: false) }
+    let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: 'accepte', archived: false) }
+    let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: 'refuse', archived: false) }
+    let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: 'sans_suite', archived: false) }
+    let!(:dossier9) { create(:dossier, procedure: procedure_aujourdhui, state: 'en_construction', archived: false) }
 
     before do
       subject

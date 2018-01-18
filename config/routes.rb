@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     root to: "administrateurs#index"
   end
 
-  get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
+  get "/ping" => "ping#index", :constraints => { :ip => /127.0.0.1/ }
 
   devise_for :administrations,
     skip: [:password, :registrations, :sessions],

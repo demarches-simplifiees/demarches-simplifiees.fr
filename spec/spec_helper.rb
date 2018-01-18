@@ -123,7 +123,7 @@ RSpec.configure do |config|
     if Features.remote_storage
       VCR.use_cassette("ovh_storage_init") do
         CarrierWave.configure do |config|
-          config.fog_credentials = {provider: 'OpenStack'}
+          config.fog_credentials = { provider: 'OpenStack' }
         end
       end
     end

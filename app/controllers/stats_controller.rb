@@ -64,7 +64,7 @@ class StatsController < ApplicationController
       .count
       .to_a
       .sort_by { |a| a[0] }
-      .map { |x, y| { x => (sum += y)} }
+      .map { |x, y| { x => (sum += y) } }
       .reduce({}, :merge)
   end
 
