@@ -12,11 +12,12 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'set_raven_context' do
+  describe 'set_raven_context and append_info_to_payload' do
     let(:current_user) { nil }
     let(:current_gestionnaire) { nil }
     let(:current_administrateur) { nil }
     let(:current_administration) { nil }
+    let(:payload) { {} }
 
     before do
       expect(@controller).to receive(:current_user).and_return(current_user)
@@ -26,13 +27,16 @@ describe ApplicationController, type: :controller do
       allow(Raven).to receive(:user_context)
 
       @controller.send(:set_raven_context)
+      @controller.send(:append_info_to_payload, payload)
     end
 
     context 'when no one is logged in' do
       it do
         expect(Raven).to have_received(:user_context)
-          .with({ ip_address: '0.0.0.0', email: nil, id: nil, classes: 'Guest' })
+          .with({ ip_address: '0.0.0.0', roles: 'Guest' })
       end
+
+      it { expect(payload).to eq({ user_agent: 'Rails Testing', current_user_roles: 'Guest' }) }
     end
 
     context 'when a user is logged in' do
@@ -40,7 +44,18 @@ describe ApplicationController, type: :controller do
 
       it do
         expect(Raven).to have_received(:user_context)
-          .with({ ip_address: '0.0.0.0', email: current_user.email, id: current_user.id, classes: 'User' })
+          .with({ ip_address: '0.0.0.0', email: current_user.email, id: current_user.id, roles: 'User' })
+      end
+
+      it do
+        expect(payload).to eq({
+          user_agent: 'Rails Testing',
+          current_user: {
+            id: current_user.id,
+            email: current_user.email
+          },
+          current_user_roles: 'User'
+        })
       end
     end
 
@@ -52,7 +67,18 @@ describe ApplicationController, type: :controller do
 
       it do
         expect(Raven).to have_received(:user_context)
-          .with({ ip_address: '0.0.0.0', email: current_user.email, id: current_user.id, classes: 'User, Gestionnaire, Administrateur, Administration' })
+          .with({ ip_address: '0.0.0.0', email: current_user.email, id: current_user.id, roles: 'User, Gestionnaire, Administrateur, Administration' })
+      end
+
+      it do
+        expect(payload).to eq({
+          user_agent: 'Rails Testing',
+          current_user: {
+            id: current_user.id,
+            email: current_user.email
+          },
+          current_user_roles: 'User, Gestionnaire, Administrateur, Administration'
+        })
       end
     end
   end
