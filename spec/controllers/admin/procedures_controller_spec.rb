@@ -559,5 +559,15 @@ describe Admin::ProceduresController, type: :controller do
       it { expect(procedure.hidden_at).not_to be_nil }
       it { expect(procedure.procedure_path).to be_nil }
     end
+
+    context "when procedure has no path" do
+      let!(:procedure) { create :procedure, administrateur: admin }
+
+      it { expect{ subject }.not_to raise_error }
+      it do
+        subject
+        expect(procedure.reload.hidden_at).not_to be_nil
+      end
+    end
   end
 end
