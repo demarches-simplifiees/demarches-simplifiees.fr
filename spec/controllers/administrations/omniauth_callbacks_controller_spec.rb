@@ -18,7 +18,7 @@ describe Administrations::OmniauthCallbacksController, type: :controller do
       let(:administration) { create(:administration, email: email) }
       before { administration }
 
-      it { is_expected.to redirect_to(administrations_path) }
+      it { is_expected.to redirect_to(manager_administrateurs_path) }
       it do
         expect(controller).to receive(:sign_in).with(administration)
         subject

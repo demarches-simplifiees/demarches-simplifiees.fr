@@ -9,7 +9,7 @@ class RootController < ApplicationController
     elsif user_signed_in?
       return redirect_to users_dossiers_path
     elsif administration_signed_in?
-      return redirect_to administrations_path
+      return redirect_to manager_root_path
     end
 
     render 'landing'

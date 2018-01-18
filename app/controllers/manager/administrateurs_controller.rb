@@ -1,21 +1,28 @@
 module Manager
   class AdministrateursController < Manager::ApplicationController
-    # To customize the behavior of this controller,
-    # simply overwrite any of the RESTful actions. For example:
-    #
-    # def index
-    #   super
-    #   @resources = Administrateur.
-    #     page(params[:page]).
-    #     per(10)
-    # end
+    def create
+      administrateur = current_administration.invite_admin(create_administrateur_params[:email])
 
-    # Define a custom finder by overriding the `find_resource` method:
-    # def find_resource(param)
-    #   Administrateur.find_by!(slug: param)
-    # end
+      if administrateur.errors.empty?
+        flash.notice = "Administrateur créé"
+        redirect_to manager_administrateurs_path
+      else
+        render :new, locals: {
+          page: Administrate::Page::Form.new(dashboard, administrateur),
+        }
+      end
+    end
 
-    # See https://administrate-prototype.herokuapp.com/customizing_controller_actions
-    # for more information
+    def reinvite
+      Administrateur.find_inactive_by_id(params[:id]).invite!
+      flash.notice = "Invitation renvoyée"
+      redirect_to manager_administrateur_path(params[:id])
+    end
+
+    private
+
+    def create_administrateur_params
+      params.require(:administrateur).permit(:email)
+    end
   end
 end

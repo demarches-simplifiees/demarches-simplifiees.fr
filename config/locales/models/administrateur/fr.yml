@@ -1,0 +1,8 @@
+fr:
+  activerecord:
+    errors:
+      models:
+        administrateur:
+          attributes:
+            email:
+              blank: 'doit être rempli'

@@ -1,12 +1,20 @@
 Rails.application.routes.draw do
+  get 'manager/sign_in' => 'administrations/sessions#new'
+  delete 'manager/sign_out' => 'administrations/sessions#destroy'
   namespace :manager do
     resources :procedures, only: [:index, :show] do
       post 'whitelist', on: :member
     end
 
-    resources :administrateurs, only: [:index, :show]
+    resources :administrateurs, only: [:index, :show, :new, :create] do
+      post 'reinvite', on: :member
+    end
 
-    root to: "procedures#index"
+    authenticate :administration do
+      match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
+    end
+
+    root to: "administrateurs#index"
   end
 
   get "/ping" => "ping#index", :constraints => {:ip => /127.0.0.1/}
@@ -51,14 +59,6 @@ Rails.application.routes.draw do
 
   get 'users' => 'users#index'
   get 'admin' => 'admin#index'
-
-  get 'administrations/sign_in' => 'administrations/sessions#new'
-  delete 'administrations/sign_out' => 'administrations/sessions#destroy'
-  authenticate :administration do
-    resources :administrations, only: [:index, :create, :update] do
-      match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
-    end
-  end
 
   resources :stats, only: [:index]
 
