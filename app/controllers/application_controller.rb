@@ -7,6 +7,14 @@ class ApplicationController < ActionController::Base
   before_action :set_raven_context
   before_action :authorize_request_for_profiler
 
+  before_action :staging_authenticate
+
+  def staging_authenticate
+    if StagingAuthService.enabled? && !authenticate_with_http_basic { |username, password| StagingAuthService.authenticate(username, password) }
+      request_http_basic_authentication
+    end
+  end
+
   def authorize_request_for_profiler
     if administration_signed_in?
       Rack::MiniProfiler.authorize_request
