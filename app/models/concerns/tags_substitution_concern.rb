@@ -116,7 +116,7 @@ module TagsSubstitutionConcern
       identity_tags = ENTREPRISE_TAGS + ETABLISSEMENT_TAGS
     end
 
-    filter_tags(identity_tags + dossier_tags) + procedure_type_de_champ_public_private_tags
+    filter_tags(identity_tags + dossier_tags + champ_public_tags + champ_private_tags)
   end
 
   private
@@ -156,9 +156,22 @@ module TagsSubstitutionConcern
     tags.select { |tag| tag[:available_for_states].include?(self.class::DOSSIER_STATE) }
   end
 
-  def procedure_type_de_champ_public_private_tags
-    (procedure.types_de_champ + procedure.types_de_champ_private)
-      .map { |tdc| { libelle: tdc.libelle, description: tdc.description } }
+  def champ_public_tags
+    types_de_champ_tags(procedure.types_de_champ, Dossier::SOUMIS)
+  end
+
+  def champ_private_tags
+    types_de_champ_tags(procedure.types_de_champ_private, Dossier::INSTRUCTION_COMMENCEE)
+  end
+
+  def types_de_champ_tags(types_de_champ, available_for_states)
+    types_de_champ.map { |tdc|
+      {
+        libelle: tdc.libelle,
+        description: tdc.description,
+        available_for_states: available_for_states
+      }
+    }
   end
 
   def replace_tags(text, dossier)
@@ -166,8 +179,8 @@ module TagsSubstitutionConcern
       return ''
     end
 
-    text = replace_type_de_champ_tags(text, procedure.types_de_champ, dossier.champs)
-    text = replace_type_de_champ_tags(text, procedure.types_de_champ_private, dossier.champs_private)
+    text = replace_type_de_champ_tags(text, filter_tags(champ_public_tags), dossier.champs)
+    text = replace_type_de_champ_tags(text, filter_tags(champ_private_tags), dossier.champs_private)
 
     tags_and_datas = [
       [dossier_tags, dossier],
