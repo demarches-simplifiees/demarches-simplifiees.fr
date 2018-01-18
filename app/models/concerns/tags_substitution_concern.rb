@@ -1,6 +1,9 @@
 module TagsSubstitutionConcern
   extend ActiveSupport::Concern
 
+  include Rails.application.routes.url_helpers
+  include ActionView::Helpers::UrlHelper
+
   def tags
     if procedure.for_individual?
       identity_tags = individual_tags
@@ -71,6 +74,15 @@ module TagsSubstitutionConcern
     else
       ''
     end
+  end
+
+  def dossier_tags_for_mail
+    [{ libelle: 'lien dossier', description: '', lambda: -> (d) { users_dossier_recapitulatif_link(d) } }]
+  end
+
+  def users_dossier_recapitulatif_link(dossier)
+    url = users_dossier_recapitulatif_url(dossier)
+    link_to(url, url, target: '_blank')
   end
 
   def individual_tags
