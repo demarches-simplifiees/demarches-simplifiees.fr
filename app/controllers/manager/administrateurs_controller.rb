@@ -13,7 +13,7 @@ module Manager
       end
     end
 
-    def update
+    def reinvite
       Administrateur.find_inactive_by_id(params[:id]).invite!
       flash.notice = "Invitation renvoyée"
       redirect_to manager_administrateur_path(params[:id])

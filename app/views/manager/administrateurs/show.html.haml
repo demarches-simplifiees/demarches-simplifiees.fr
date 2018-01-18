@@ -4,7 +4,7 @@
   %h1.header__heading= content_for(:title)
   .header__actions
     - if page.resource.invitation_expired?
-      = link_to "renvoyer l'invitation", manager_administrateur_path(page.resource), method: :patch, class: "button"
+      = link_to "renvoyer l'invitation", reinvite_manager_administrateur_path(page.resource), method: :post, class: "button"
 
 %dl
   - page.attributes.each do |attribute|

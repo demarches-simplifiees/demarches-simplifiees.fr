@@ -6,7 +6,9 @@ Rails.application.routes.draw do
       post 'whitelist', on: :member
     end
 
-    resources :administrateurs, only: [:index, :show, :new, :create, :update]
+    resources :administrateurs, only: [:index, :show, :new, :create] do
+      post 'reinvite', on: :member
+    end
 
     authenticate :administration do
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
