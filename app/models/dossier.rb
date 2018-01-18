@@ -11,6 +11,7 @@ class Dossier < ActiveRecord::Base
   EN_CONSTRUCTION_OU_INSTRUCTION = %w(en_construction en_instruction)
   TERMINE = %w(accepte refuse sans_suite)
   INSTRUCTION_COMMENCEE = TERMINE + %w(en_instruction)
+  SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
 
   has_one :etablissement, dependent: :destroy
   has_one :entreprise, dependent: :destroy

@@ -11,7 +11,7 @@ module TagsSubstitutionConcern
       identity_tags = entreprise_tags + etablissement_tags
     end
 
-    filter_tags(identity_tags + dossier_tags + procedure_type_de_champ_public_private_tags)
+    filter_tags(identity_tags + dossier_tags) + procedure_type_de_champ_public_private_tags
   end
 
   private
@@ -30,7 +30,7 @@ module TagsSubstitutionConcern
       raise NameError.new("The class #{self.class.name} includes TagsSubstitutionConcern, it should define the DOSSIER_STATE constant but it does not", :DOSSIER_STATE)
     end
 
-    tags.select { |tag| (tag[:available_for_states] || Dossier::SOUMIS).include?(self.class::DOSSIER_STATE) }
+    tags.select { |tag| tag[:available_for_states].include?(self.class::DOSSIER_STATE) }
   end
 
   def procedure_type_de_champ_public_private_tags
@@ -49,7 +49,8 @@ module TagsSubstitutionConcern
       {
         libelle: 'date de dépôt',
         description: 'Date du passage en construction du dossier par l’usager',
-        lambda: -> (d) { format_date(d.en_construction_at) }
+        lambda: -> (d) { format_date(d.en_construction_at) },
+        available_for_states: Dossier::SOUMIS
       },
       {
         libelle: 'date de passage en instruction',
@@ -66,12 +67,14 @@ module TagsSubstitutionConcern
       {
         libelle: 'libellé procédure',
         description: '',
-        lambda: -> (d) { d.procedure.libelle }
+        lambda: -> (d) { d.procedure.libelle },
+        available_for_states: Dossier::SOUMIS
       },
       {
         libelle: 'numéro du dossier',
         description: '',
-        target: :id
+        target: :id,
+        available_for_states: Dossier::SOUMIS
       }
     ]
   end
@@ -89,7 +92,8 @@ module TagsSubstitutionConcern
       {
         libelle: 'lien dossier',
         description: '',
-        lambda: -> (d) { users_dossier_recapitulatif_link(d) }
+        lambda: -> (d) { users_dossier_recapitulatif_link(d) },
+        available_for_states: Dossier::SOUMIS
       }
     ]
   end
@@ -104,17 +108,20 @@ module TagsSubstitutionConcern
       {
         libelle: 'civilité',
         description: 'M., Mme',
-        target: :gender
+        target: :gender,
+        available_for_states: Dossier::SOUMIS
       },
       {
         libelle: 'nom',
         description: "nom de l'usager",
-        target: :nom
+        target: :nom,
+        available_for_states: Dossier::SOUMIS
       },
       {
         libelle: 'prénom',
         description: "prénom de l'usager",
-        target: :prenom
+        target: :prenom,
+        available_for_states: Dossier::SOUMIS
       }
     ]
   end
@@ -124,22 +131,26 @@ module TagsSubstitutionConcern
       {
         libelle: 'SIREN',
         description: '',
-        target: :siren
+        target: :siren,
+        available_for_states: Dossier::SOUMIS
       },
       {
         libelle: 'numéro de TVA intracommunautaire',
         description: '',
-        target: :numero_tva_intracommunautaire
+        target: :numero_tva_intracommunautaire,
+        available_for_states: Dossier::SOUMIS
       },
       {
         libelle: 'SIRET du siège social',
         description: '',
-        target: :siret_siege_social
+        target: :siret_siege_social,
+        available_for_states: Dossier::SOUMIS
       },
       {
         libelle: 'raison sociale',
         description: '',
-        target: :raison_sociale
+        target: :raison_sociale,
+        available_for_states: Dossier::SOUMIS
       }
     ]
   end
@@ -147,9 +158,10 @@ module TagsSubstitutionConcern
   def etablissement_tags
     [
       {
-       libelle: 'adresse',
-       description: '',
-       target: :inline_adresse
+        libelle: 'adresse',
+        description: '',
+        target: :inline_adresse,
+        available_for_states: Dossier::SOUMIS
       }
     ]
   end
