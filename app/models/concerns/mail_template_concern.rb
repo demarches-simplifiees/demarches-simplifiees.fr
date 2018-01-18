@@ -1,8 +1,6 @@
 module MailTemplateConcern
   extend ActiveSupport::Concern
 
-  include Rails.application.routes.url_helpers
-  include ActionView::Helpers::UrlHelper
   include TagsSubstitutionConcern
 
   def subject_for_dossier(dossier)
@@ -20,14 +18,7 @@ module MailTemplateConcern
     end
   end
 
-  private
-
   def dossier_tags
-    super + [{ libelle: 'lien dossier', description: '', lambda: -> (d) { users_dossier_recapitulatif_link(d) } }]
-  end
-
-  def users_dossier_recapitulatif_link(dossier)
-    url = users_dossier_recapitulatif_url(dossier)
-    link_to(url, url, target: '_blank')
+    super + dossier_tags_for_mail
   end
 end
