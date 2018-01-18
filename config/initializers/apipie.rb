@@ -6,7 +6,6 @@ Apipie.configure do |config|
   config.markup                  = Apipie::Markup::Markdown.new
   config.default_version         = '1.0'
   config.validate                = false
-  config.copyright               = "© SGMAP"
   config.namespaced_resources    = true
   config.show_all_examples       = true
 
