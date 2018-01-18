@@ -69,7 +69,6 @@ end
 DatabaseCleaner.strategy = :transaction
 
 SIADETOKEN = :valid_token if !defined? SIADETOKEN
-BROWSER.value = Browser.new('Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Win64; x64; Trident/6.0)')
 
 include Warden::Test::Helpers
 
