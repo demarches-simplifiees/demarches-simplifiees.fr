@@ -9,6 +9,7 @@
   %h1.header__heading#page-title
     = content_for(:title)
   .header__actions
+    = link_to 'nouveau', new_manager_administrateur_path, class: 'button'
 
 = render "collection", collection_presenter: page, resources: resources
 

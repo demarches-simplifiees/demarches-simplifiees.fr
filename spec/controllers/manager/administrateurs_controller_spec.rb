@@ -1,23 +1,5 @@
-require 'spec_helper'
-
-describe AdministrationsController, type: :controller do
-  let(:administration) { create :administration }
-
-  describe 'GET #index' do
-    subject { get :index }
-
-    context 'when administration user is not connect' do
-      it { expect(subject.status).to eq 302 }
-    end
-
-    context 'when administration user is connect' do
-      before do
-        sign_in administration
-      end
-
-      it { expect(subject.status).to eq 200 }
-    end
-  end
+describe Manager::AdministrateursController, type: :controller do
+  let(:administration){ create(:administration) }
 
   describe 'POST #create' do
     let(:email) { 'plop@plop.com' }
@@ -27,7 +9,7 @@ describe AdministrationsController, type: :controller do
       sign_in administration
     end
 
-    subject { post :create, administrateur: {email: email } }
+    subject { post :create, administrateur: { email: email } }
 
     context 'when email and password are correct' do
       it 'add new administrateur in database' do

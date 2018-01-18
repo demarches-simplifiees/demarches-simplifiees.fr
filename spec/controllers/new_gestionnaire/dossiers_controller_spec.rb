@@ -95,7 +95,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
-    subject { post :repasser_en_construction, params: { procedure_id: procedure.id, dossier_id: dossier.id} }
+    subject { post :repasser_en_construction, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
 
     it 'change state to en_construction' do
       subject
@@ -114,7 +114,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         sign_in gestionnaire
       end
 
-      subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id} }
+      subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id } }
 
       it 'change state to refuse' do
         subject
@@ -140,7 +140,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         sign_in gestionnaire
       end
 
-      subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id} }
+      subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id } }
 
       it 'change state to sans_suite' do
         subject
@@ -174,7 +174,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         expect(NotificationMailer).to receive(:deliver_now!)
       end
 
-      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id} }
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id } }
 
       it 'change state to accepte' do
         subject

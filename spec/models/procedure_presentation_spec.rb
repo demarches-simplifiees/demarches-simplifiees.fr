@@ -14,7 +14,7 @@ describe ProcedurePresentation do
   let (:procedure_presentation) { ProcedurePresentation.find(procedure_presentation_id) }
 
   describe "#displayed_fields" do
-    it { expect(procedure_presentation.displayed_fields).to eq([{"label" => "test1", "table" => "user"}, {"label" => "test2", "table" => "champs"}]) }
+    it { expect(procedure_presentation.displayed_fields).to eq([{ "label" => "test1", "table" => "user" }, { "label" => "test2", "table" => "champs" }]) }
   end
 
   describe "#sort" do

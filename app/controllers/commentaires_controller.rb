@@ -1,16 +1,4 @@
 class CommentairesController < ApplicationController
-  def index
-    @facade = DossierFacades.new(
-      params[:dossier_id],
-      (current_gestionnaire || current_user).email,
-      params[:champs_id]
-    )
-    render layout: false
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for(controller: '/')
-  end
-
   def create
     @commentaire = Commentaire.new
     @commentaire.champ = @commentaire.dossier.champs.find(params[:champ_id]) if params[:champ_id]

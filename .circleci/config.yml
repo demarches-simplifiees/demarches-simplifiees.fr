@@ -65,7 +65,7 @@ jobs:
       - *bundle_install
       - run:
           name: Run rubocop
-          command: bundle exec rubocop -R
+          command: bundle exec rubocop
       - run:
           name: Run brakeman
           command: bundle exec brakeman -z

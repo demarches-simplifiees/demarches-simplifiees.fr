@@ -13,7 +13,7 @@ describe Users::SessionsController, type: :controller do
 
     describe 'France Connect attribut' do
       before do
-        post :create, params: {user: {email: user.email, password: user.password}}
+        post :create, params: { user: { email: user.email, password: user.password } }
         user.reload
       end
 
@@ -31,7 +31,7 @@ describe Users::SessionsController, type: :controller do
       let(:administrateur) { create(:administrateur, email: email, password: password) }
 
       it 'signs user in' do
-        post :create, params: {user: {email: user.email, password: user.password}}
+        post :create, params: { user: { email: user.email, password: user.password } }
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to eq(user)
         expect(subject.current_gestionnaire).to be(nil)
@@ -40,7 +40,7 @@ describe Users::SessionsController, type: :controller do
       end
 
       it 'signs gestionnaire in' do
-        post :create, params: {user: {email: gestionnaire.email, password: gestionnaire.password}}
+        post :create, params: { user: { email: gestionnaire.email, password: gestionnaire.password } }
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to be(nil)
         expect(subject.current_gestionnaire).to eq(gestionnaire)
@@ -48,7 +48,7 @@ describe Users::SessionsController, type: :controller do
       end
 
       it 'signs administrateur in' do
-        post :create, params: {user: {email: administrateur.email, password: administrateur.password}}
+        post :create, params: { user: { email: administrateur.email, password: administrateur.password } }
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to be(nil)
         expect(subject.current_gestionnaire).to be(nil)
@@ -62,7 +62,7 @@ describe Users::SessionsController, type: :controller do
         end
 
         it 'signs user + gestionnaire + administrateur in' do
-          post :create, params: {user: {email: administrateur.email, password: administrateur.password}}
+          post :create, params: { user: { email: administrateur.email, password: administrateur.password } }
           expect(@response.redirect?).to be(true)
           expect(subject.current_user).to eq(user)
           expect(subject.current_gestionnaire).to eq(gestionnaire)
@@ -72,7 +72,7 @@ describe Users::SessionsController, type: :controller do
       }
 
       it 'fails to sign in with bad credentials' do
-        post :create, params: {user: {email: user.email, password: 'wrong_password'}}
+        post :create, params: { user: { email: user.email, password: 'wrong_password' } }
         expect(@response.unauthorized?).to be(true)
         expect(subject.current_user).to be(nil)
         expect(subject.current_gestionnaire).to be(nil)

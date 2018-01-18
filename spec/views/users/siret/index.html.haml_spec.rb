@@ -25,7 +25,7 @@ describe 'users/siret/index.html.haml', type: :view do
     end
 
     context 'stockage de l\'ID de la procédure dans un champs hidden' do
-      it {expect(rendered).to have_selector("input[type=hidden][id=procedure_id][name=procedure_id][value='#{procedure.id}']", visible: false)}
+      it { expect(rendered).to have_selector("input[type=hidden][id=procedure_id][name=procedure_id][value='#{procedure.id}']", visible: false) }
     end
 
     it 'le titre de la procédure est présent sur la page' do

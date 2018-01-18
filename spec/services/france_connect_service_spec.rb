@@ -14,7 +14,7 @@ describe FranceConnectService do
     let(:phone) { '012345678' }
     let(:france_connect_particulier_id) { 'izhikziogjuziegj' }
 
-    let(:user_info_hash) { {sub: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, gender: gender, birthplace: birthplace, email: email, phone: phone} }
+    let(:user_info_hash) { { sub: france_connect_particulier_id, given_name: given_name, family_name: family_name, birthdate: birthdate, gender: gender, birthplace: birthplace, email: email, phone: phone } }
     let(:user_info) { instance_double('OpenIDConnect::ResponseObject::UserInfo', raw_attributes: user_info_hash) }
 
     subject { described_class.retrieve_user_informations_particulier code }

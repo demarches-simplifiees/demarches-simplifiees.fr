@@ -17,6 +17,6 @@ class Ban::SearchController < ApplicationController
       lat = point.y.to_s
     end
 
-    render json: {lon: lon, lat: lat, zoom: '14', dossier_id: params[:dossier_id]}
+    render json: { lon: lon, lat: lat, zoom: '14', dossier_id: params[:dossier_id] }
   end
 end

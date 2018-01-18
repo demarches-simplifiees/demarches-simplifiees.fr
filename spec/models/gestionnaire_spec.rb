@@ -214,7 +214,7 @@ describe Gestionnaire, type: :model do
     end
 
     context 'with a followed dossier' do
-      let!(:dossier){create(:dossier, procedure: procedure, state: 'en_instruction')}
+      let!(:dossier){ create(:dossier, procedure: procedure, state: 'en_instruction') }
       let!(:follow){ create(:follow, dossier: dossier, gestionnaire: gestionnaire) }
 
       context 'with 1 notification' do
@@ -237,7 +237,7 @@ describe Gestionnaire, type: :model do
       end
 
       context 'with another dossier' do
-        let!(:dossier2){create(:dossier, procedure: procedure, state: 'en_instruction')}
+        let!(:dossier2){ create(:dossier, procedure: procedure, state: 'en_instruction') }
         let!(:follow2){ create(:follow, dossier: dossier2, gestionnaire: gestionnaire) }
 
         context 'and some notifications' do
@@ -338,7 +338,7 @@ describe Gestionnaire, type: :model do
     context 'when a followed dossier has unread notification' do
       let(:followed_dossier) { dossier_with_no_unread_notification }
 
-      it { is_expected.to eq({ }) }
+      it { is_expected.to eq({}) }
     end
   end
 
@@ -346,8 +346,8 @@ describe Gestionnaire, type: :model do
     let!(:procedure_assign_2) { create :assign_to, gestionnaire: gestionnaire, procedure: procedure_2 }
     let!(:pp) { ProcedurePresentation.create(assign_to: procedure_assign) }
 
-    it { expect(gestionnaire.procedure_presentation_for_procedure_id(procedure.id)).to eq(pp)}
-    it { expect(gestionnaire.procedure_presentation_for_procedure_id(procedure_2.id).persisted?).to be_falsey}
+    it { expect(gestionnaire.procedure_presentation_for_procedure_id(procedure.id)).to eq(pp) }
+    it { expect(gestionnaire.procedure_presentation_for_procedure_id(procedure_2.id).persisted?).to be_falsey }
   end
 
   describe '#notifications_for_dossier' do
