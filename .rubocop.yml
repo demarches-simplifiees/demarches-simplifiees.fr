@@ -155,28 +155,28 @@ Layout/RescueEnsureAlignment:
   Enabled: true
 
 Layout/SpaceAfterColon:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterComma:
   Enabled: false
 
 Layout/SpaceAfterMethodName:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterNot:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterSemicolon:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundBlockParameters:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundEqualsInParameterDefault:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundKeyword:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundOperators:
   Enabled: true
@@ -185,52 +185,56 @@ Layout/SpaceBeforeBlockBraces:
   Enabled: false
 
 Layout/SpaceBeforeComma:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeComment:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeFirstArg:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeSemicolon:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInLambdaLiteral:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: require_space
 
 Layout/SpaceInsideArrayPercentLiteral:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideBlockBraces:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideBrackets:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideHashLiteralBraces:
+  Enabled: true
+
+Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: false
 
 Layout/SpaceInsideParens:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsidePercentLiteralDelimiters:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideRangeLiteral:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideStringInterpolation:
-  Enabled: false
+  Enabled: true
 
 Layout/Tab:
-  Enabled: false
+  Enabled: true
 
 Layout/TrailingBlankLines:
-  Enabled: false
+  Enabled: true
 
 Layout/TrailingWhitespace:
-  Enabled: false
+  Enabled: true
 
 Lint/AmbiguousBlockAssociation:
   Enabled: false
@@ -317,9 +321,6 @@ Lint/IneffectiveAccessModifier:
 Lint/InheritException:
   Enabled: false
 
-Lint/InvalidCharacterLiteral:
-  Enabled: false
-
 Lint/LiteralInCondition:
   Enabled: false
 
@@ -381,7 +382,7 @@ Lint/StringConversionInInterpolation:
   Enabled: false
 
 Lint/Syntax:
-  Enabled: false
+  Enabled: true
 
 Lint/UnderscorePrefixedVariableName:
   Enabled: false
@@ -402,6 +403,12 @@ Lint/UnusedBlockArgument:
   Enabled: false
 
 Lint/UnusedMethodArgument:
+  Enabled: false
+
+Lint/UriEscapeUnescape:
+  Enabled: false
+
+Lint/UriRegexp:
   Enabled: false
 
 Lint/UselessAccessModifier:
@@ -450,6 +457,39 @@ Metrics/ParameterLists:
   Enabled: false
 
 Metrics/PerceivedComplexity:
+  Enabled: false
+
+Naming/AccessorMethodName:
+  Enabled: false
+
+Naming/AsciiIdentifiers:
+  Enabled: false
+
+Naming/BinaryOperatorParameterName:
+  Enabled: false
+
+Naming/ClassAndModuleCamelCase:
+  Enabled: false
+
+Naming/ConstantName:
+  Enabled: false
+
+Naming/FileName:
+  Enabled: false
+
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+
+Naming/MethodName:
+  Enabled: false
+
+Naming/PredicateName:
+  Enabled: false
+
+Naming/VariableName:
+  Enabled: false
+
+Naming/VariableNumber:
   Enabled: false
 
 Performance/Caller:
@@ -539,6 +579,9 @@ Rails/ApplicationRecord:
 Rails/Blank:
   Enabled: false
 
+Rails/CreateTableWithTimestamps:
+  Enabled: false
+
 Rails/Date:
   Enabled: false
 
@@ -552,6 +595,9 @@ Rails/DynamicFindBy:
   Enabled: false
 
 Rails/EnumUniqueness:
+  Enabled: false
+
+Rails/EnvironmentComparison:
   Enabled: false
 
 Rails/Exit:
@@ -569,7 +615,16 @@ Rails/FindEach:
 Rails/HasAndBelongsToMany:
   Enabled: false
 
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
 Rails/HttpPositionalArguments:
+  Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
+
+Rails/LexicallyScopedActionFilter:
   Enabled: false
 
 Rails/NotNullColumn:
@@ -582,6 +637,9 @@ Rails/OutputSafety:
   Enabled: true
 
 Rails/PluralizationGrammar:
+  Enabled: false
+
+Rails/Presence:
   Enabled: false
 
 Rails/Present:
@@ -617,11 +675,14 @@ Rails/TimeZone:
 Rails/UniqBeforePluck:
   Enabled: false
 
+Rails/UnknownEnv:
+  Enabled: false
+
 Rails/Validation:
   Enabled: false
 
 Rails:
-  Enabled: false
+  Enabled: true
 
 RSpec/Focused:
   Enabled: true
@@ -638,9 +699,6 @@ Security/MarshalLoad:
 Security/YAMLLoad:
   Enabled: false
 
-Style/AccessorMethodName:
-  Enabled: false
-
 Style/Alias:
   Enabled: false
 
@@ -651,9 +709,6 @@ Style/ArrayJoin:
   Enabled: false
 
 Style/AsciiComments:
-  Enabled: false
-
-Style/AsciiIdentifiers:
   Enabled: false
 
 Style/Attr:
@@ -683,9 +738,6 @@ Style/CaseEquality:
 Style/CharacterLiteral:
   Enabled: false
 
-Style/ClassAndModuleCamelCase:
-  Enabled: false
-
 Style/ClassAndModuleChildren:
   Enabled: false
 
@@ -710,13 +762,16 @@ Style/CommandLiteral:
 Style/CommentAnnotation:
   Enabled: false
 
+Style/CommentedKeyword:
+  Enabled: false
+
 Style/ConditionalAssignment:
   Enabled: false
 
-Style/ConstantName:
+Style/Copyright:
   Enabled: false
 
-Style/Copyright:
+Style/DateTime:
   Enabled: false
 
 Style/DefWithParentheses:
@@ -755,10 +810,10 @@ Style/Encoding:
 Style/EndBlock:
   Enabled: false
 
-Style/EvenOdd:
+Style/EvalWithLocation:
   Enabled: false
 
-Style/FileName:
+Style/EvenOdd:
   Enabled: false
 
 Style/FlipFlop:
@@ -839,13 +894,13 @@ Style/MethodDefParentheses:
 Style/MethodMissing:
   Enabled: false
 
-Style/MethodName:
-  Enabled: false
-
 Style/MissingElse:
   Enabled: false
 
 Style/MixinGrouping:
+  Enabled: false
+
+Style/MixinUsage:
   Enabled: false
 
 Style/ModuleFunction:
@@ -911,9 +966,6 @@ Style/NumericPredicate:
 Style/OneLineConditional:
   Enabled: false
 
-Style/OpMethod:
-  Enabled: false
-
 Style/OptionHash:
   Enabled: false
 
@@ -935,9 +987,6 @@ Style/PercentQLiterals:
 Style/PerlBackrefs:
   Enabled: false
 
-Style/PredicateName:
-  Enabled: false
-
 Style/PreferredHashMethods:
   Enabled: false
 
@@ -945,6 +994,9 @@ Style/Proc:
   Enabled: false
 
 Style/RaiseArgs:
+  Enabled: false
+
+Style/RandomWithOffset:
   Enabled: false
 
 Style/RedundantBegin:
@@ -969,6 +1021,9 @@ Style/RegexpLiteral:
   Enabled: false
 
 Style/RescueModifier:
+  Enabled: false
+
+Style/RescueStandardError:
   Enabled: false
 
 Style/SafeNavigation:
@@ -1047,12 +1102,6 @@ Style/UnneededPercentQ:
   Enabled: false
 
 Style/VariableInterpolation:
-  Enabled: false
-
-Style/VariableName:
-  Enabled: false
-
-Style/VariableNumber:
   Enabled: false
 
 Style/WhenThen:

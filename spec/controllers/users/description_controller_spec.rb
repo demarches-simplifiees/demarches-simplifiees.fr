@@ -2,7 +2,7 @@ require 'spec_helper'
 
 require 'controllers/users/description_controller_shared_example'
 
-describe Users::DescriptionController, type: :controller, vcr: {cassette_name: 'controllers_users_description_controller'} do
+describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 'controllers_users_description_controller' } do
   let(:owner_user) { create(:user) }
   let(:invite_by_user) { create :user, email: 'invite@plop.com' }
   let(:archived_at) { nil }

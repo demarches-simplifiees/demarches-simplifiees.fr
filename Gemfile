@@ -20,6 +20,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Enable deep clone of active record models
 gem 'deep_cloneable', '~> 2.2.1'
 
+gem 'warden', git: 'https://github.com/hassox/warden.git', branch: 'master'
+
 # Use Unicorn as the app server
 gem 'unicorn'
 

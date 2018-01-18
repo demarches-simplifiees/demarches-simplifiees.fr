@@ -298,7 +298,7 @@ describe StatsController, type: :controller do
   end
 
   describe '#motivation_usage_procedure' do
-    let!(:dossier) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation" ) }
+    let!(:dossier) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation") }
     let!(:dossier1) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation", procedure: dossier.procedure) }
     let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
     let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }

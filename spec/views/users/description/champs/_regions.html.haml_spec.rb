@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'users/description/champs/regions.html.haml', vcr: {cassette_name: 'geoapi_regions'}, type: :view do
+describe 'users/description/champs/regions.html.haml', vcr: { cassette_name: 'geoapi_regions' }, type: :view do
   let(:champ) { create(:champ) }
 
   before do

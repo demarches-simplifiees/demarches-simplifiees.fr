@@ -9,7 +9,7 @@ describe Admin::PrevisualisationsController, type: :controller do
   end
 
   describe 'GET #show' do
-    subject { get :show, params: {procedure_id: procedure.id} }
+    subject { get :show, params: { procedure_id: procedure.id } }
     it { expect(subject.status).to eq(200) }
   end
 end

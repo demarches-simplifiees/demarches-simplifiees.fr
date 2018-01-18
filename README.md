@@ -21,6 +21,9 @@ Téléprocédures Simplifiées, ou TPS pour les intimes, est une plateforme 100 
 ### Tests
 
 - Chrome
+- chromedriver :
+  * Mac : `brew install chromedriver`
+  * Linux : voir https://sites.google.com/a/chromium.org/chromedriver/downloads
 
 
 ## Initialisation de l'environnement de développement
@@ -116,7 +119,7 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
 ## Linting
 
-- Faire tourner RuboCop : `bundle exec rubocop -R`
+- Faire tourner RuboCop : `bundle exec rubocop`
 - Faire tourner Brakeman : `bundle exec brakeman -z`
 - Linter les fichiers HAML : `bundle exec haml-lint app/views/`
 - Linter les fichiers SCSS : `bundle exec scss-lint app/assets/stylesheets/`
@@ -139,5 +142,5 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 - lister les comptes super admin :
   `bundle exec rake admin:list`
 
-- supprimer un compte super admin : 
+- supprimer un compte super admin :
   `bundle exec rake admin:delete_admin[email-du-compte-github@exemple.com]`

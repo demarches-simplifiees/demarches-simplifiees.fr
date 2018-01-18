@@ -1,6 +1,6 @@
 namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
   task set: :environment do
-    commentaires_to_process = Commentaire.where(file:nil).where.not(piece_justificative_id: nil).reorder(id: :desc)
+    commentaires_to_process = Commentaire.where(file: nil).where.not(piece_justificative_id: nil).reorder(id: :desc)
 
     puts "#{commentaires_to_process.count} commentaires to process..."
 
@@ -21,7 +21,7 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
 
   def sanitize_name(name) # from https://github.com/carrierwaveuploader/carrierwave/blob/master/lib/carrierwave/sanitized_file.rb#L323
     name = name.gsub(/[^[:word:]\.\-\+]/,"_")
-    name = "_#{name}" if name =~ /\A\.+\z/
+    name = "_#{name}" if name.match?(/\A\.+\z/)
     name = "unnamed" if name.size == 0
     return name.mb_chars.to_s
   end

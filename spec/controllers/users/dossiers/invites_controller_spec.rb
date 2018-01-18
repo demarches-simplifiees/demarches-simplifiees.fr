@@ -6,7 +6,7 @@ describe Users::Dossiers::InvitesController, type: :controller do
     context 'when email is not set' do
       context 'when user is not connected' do
         before do
-          get :show, params: {id: invite.id}
+          get :show, params: { id: invite.id }
         end
 
         it { is_expected.to redirect_to new_user_session_path }
@@ -18,7 +18,7 @@ describe Users::Dossiers::InvitesController, type: :controller do
         before do
           sign_in invite.user
 
-          get :show, params: {id: invite.id}
+          get :show, params: { id: invite.id }
         end
 
         it { expect(response.status).to eq 200 }
@@ -27,7 +27,7 @@ describe Users::Dossiers::InvitesController, type: :controller do
 
     context 'when email is set' do
       before do
-        get :show, params: {id: invite.id, email: email}
+        get :show, params: { id: invite.id, email: email }
       end
 
       context 'when email is blank' do
@@ -57,7 +57,7 @@ describe Users::Dossiers::InvitesController, type: :controller do
 
     let(:invite) { create :invite, email: email, dossier: (create :dossier) }
 
-    subject { get :show, params: {id: invite.id} }
+    subject { get :show, params: { id: invite.id } }
 
     before do
       sign_in user

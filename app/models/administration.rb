@@ -10,7 +10,7 @@ class Administration < ActiveRecord::Base
   def invite_admin(email)
     administrateur = Administrateur.new({
       email: email,
-      active: false 
+      active: false
     })
     administrateur.password = administrateur.password_confirmation = SecureRandom.hex
 

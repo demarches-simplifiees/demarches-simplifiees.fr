@@ -1,11 +1,10 @@
 - content_for(:title) { page.page_title }
-- procedure = page.resource
 
 %header.header
   %h1.header__heading= content_for(:title)
   .header__actions
-    - if !procedure.whitelisted?
-      = link_to 'whitelister', whitelist_manager_procedure_path(procedure), method: :post, class: 'button'
+    - if page.resource.invitation_expired?
+      = link_to "renvoyer l'invitation", reinvite_manager_administrateur_path(page.resource), method: :post, class: "button"
 
 %dl
   - page.attributes.each do |attribute|
