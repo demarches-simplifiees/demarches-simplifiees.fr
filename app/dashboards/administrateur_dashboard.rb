@@ -12,7 +12,9 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     email: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    procedures: Field::HasMany,
+    procedures: Field::HasMany.with_options(limit: 20),
+    registration_state: Field::String.with_options(searchable: false),
+    current_sign_in_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -24,6 +26,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :email,
     :created_at,
     :procedures,
+    :registration_state,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -33,13 +36,17 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :email,
     :created_at,
     :updated_at,
+    :registration_state,
+    :current_sign_in_at,
     :procedures,
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [].freeze
+  FORM_ATTRIBUTES = [
+    :email
+  ].freeze
 
   # Overwrite this method to customize how procedures are displayed
   # across all pages of the admin dashboard.

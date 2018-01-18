@@ -37,7 +37,7 @@ describe RootController, type: :controller do
       sign_in create(:administration)
     end
 
-    it { expect(subject).to redirect_to(administrations_path) }
+    it { expect(subject).to redirect_to(manager_root_path) }
   end
 
   context 'when nobody is connected' do
