@@ -131,14 +131,36 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has a type de champ prive named libelleA' do
       let(:types_de_champ_private) { [create(:type_de_champ_private, libelle: 'libelleA')] }
 
-      context 'and the are used in the template' do
+      context 'and it is used in the template' do
         let(:template) { '--libelleA--' }
 
-        context 'and its value in the dossier are not nil' do
+        context 'and its value in the dossier is not nil' do
           before { dossier.champs_private.first.update_attributes(value: 'libelle1') }
 
           it { is_expected.to eq('libelle1') }
         end
+      end
+    end
+
+    context 'when the dossier is en construction' do
+      let(:state) { 'en_construction' }
+      let(:template) { '--libelleA--' }
+
+      context 'champs privés are not valid tags' do
+        # The dossier just transitionned from brouillon to en construction,
+        # so champs private are not valid tags yet
+
+        let(:types_de_champ_private) { [create(:type_de_champ_private, libelle: 'libelleA')] }
+
+        it { is_expected.to eq('--libelleA--') }
+      end
+
+      context 'champs publics are valid tags' do
+        let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'libelleA')] }
+
+        before { dossier.champs.first.update_attributes(value: 'libelle1') }
+
+        it { is_expected.to eq('libelle1') }
       end
     end
 
@@ -249,16 +271,34 @@ describe TagsSubstitutionConcern, type: :model do
   describe 'tags' do
     subject { template_concern.tags }
 
+    let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'public')] }
+    let(:types_de_champ_private) { [create(:type_de_champ_private, libelle: 'privé')] }
+
     context 'when generating a document for a dossier terminé' do
       it { is_expected.to include(include({ libelle: 'motivation' })) }
       it { is_expected.to include(include({ libelle: 'date de décision' })) }
+      it { is_expected.to include(include({ libelle: 'public' })) }
+      it { is_expected.to include(include({ libelle: 'privé' })) }
     end
 
-    context 'when generating a document for a dossier that is not terminé' do
+    context 'when generating a document for a dossier en instruction' do
       let(:state) { 'en_instruction' }
 
       it { is_expected.not_to include(include({ libelle: 'motivation' })) }
       it { is_expected.not_to include(include({ libelle: 'date de décision' })) }
+
+      it { is_expected.to include(include({ libelle: 'public' })) }
+      it { is_expected.to include(include({ libelle: 'privé' })) }
+    end
+
+    context 'when generating a document for a dossier en construction' do
+      let(:state) { 'en_construction' }
+
+      it { is_expected.not_to include(include({ libelle: 'motivation' })) }
+      it { is_expected.not_to include(include({ libelle: 'date de décision' })) }
+      it { is_expected.not_to include(include({ libelle: 'privé' })) }
+
+      it { is_expected.to include(include({ libelle: 'public' })) }
     end
   end
 end
