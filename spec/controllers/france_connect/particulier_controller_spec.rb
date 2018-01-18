@@ -23,7 +23,7 @@ describe FranceConnect::ParticulierController, type: :controller do
   describe '#callback' do
     let(:code) { 'plop' }
 
-    subject { get :callback, params: {code: code} }
+    subject { get :callback, params: { code: code } }
 
     context 'when param code is missing' do
       let(:code) { nil }

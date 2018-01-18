@@ -1,5 +1,5 @@
 class TypesDeChampService
-  def self.create_update_procedure_params(params, private=false)
+  def self.create_update_procedure_params(params, private = false)
     attributes = (private ? 'types_de_champ_private_attributes' : 'types_de_champ_attributes')
 
     params_with_ordered_champs = order_champs(params, attributes)

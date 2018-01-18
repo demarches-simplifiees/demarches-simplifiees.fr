@@ -12,7 +12,7 @@ feature 'As a User I want to edit a dossier I own' do
 
   context 'After sign_in, I can navigate through dossiers indexes and edit a dossier' do
     scenario 'After sign_in, I can see dossiers "à traiter" (default), and other indexes' do
-      expect(page.find('#a_traiter')['class'] ).to eq('active procedure-list-element')
+      expect(page.find('#a_traiter')['class']).to eq('active procedure-list-element')
       page.find_by_id('brouillon').click
       page.find_by_id('a_traiter').click
       page.find_by_id('en_instruction').click

@@ -48,15 +48,15 @@ class Users::CarteController < UsersController
       lat = point.y.to_s
     end
 
-    render json: {lon: lon, lat: lat, zoom: zoom, dossier_id: params[:dossier_id]}
+    render json: { lon: lon, lat: lat, zoom: zoom, dossier_id: params[:dossier_id] }
   end
 
   def get_qp
-    render json: {quartier_prioritaires: ModuleApiCartoService.generate_qp(JSON.parse(params[:coordinates]))}
+    render json: { quartier_prioritaires: ModuleApiCartoService.generate_qp(JSON.parse(params[:coordinates])) }
   end
 
   def get_cadastre
-    render json: {cadastres: ModuleApiCartoService.generate_cadastre(JSON.parse(params[:coordinates]))}
+    render json: { cadastres: ModuleApiCartoService.generate_cadastre(JSON.parse(params[:coordinates])) }
   end
 
   def self.route_authorization

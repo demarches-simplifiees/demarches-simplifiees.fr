@@ -48,14 +48,14 @@ shared_examples 'champ_spec' do
     end
   end
 
-  describe '.departement', vcr: {cassette_name: 'call_geo_api_departements'} do
+  describe '.departement', vcr: { cassette_name: 'call_geo_api_departements' } do
     subject { Champ.departements }
 
     it { expect(subject).to include '99 - Étranger' }
   end
 
   context "when type_champ=date" do
-    let(:type_de_champ) { create(:type_de_champ_public, type_champ: "date")}
+    let(:type_de_champ) { create(:type_de_champ_public, type_champ: "date") }
     let(:champ) { create(:champ, type_de_champ: type_de_champ) }
 
     it "should convert %d/%m/%Y format to ISO" do

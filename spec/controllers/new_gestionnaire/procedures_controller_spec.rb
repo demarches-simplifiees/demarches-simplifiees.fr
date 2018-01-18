@@ -5,7 +5,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
     it "is present" do
       before_actions = NewGestionnaire::ProceduresController
         ._process_action_callbacks
-        .find_all{|process_action_callbacks| process_action_callbacks.kind == :before}
+        .find_all{ |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
       expect(before_actions).to include(:ensure_ownership!)
@@ -46,7 +46,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
     it "is present" do
       before_actions = NewGestionnaire::ProceduresController
         ._process_action_callbacks
-        .find_all{|process_action_callbacks| process_action_callbacks.kind == :before}
+        .find_all{ |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
       expect(before_actions).to include(:redirect_to_avis_if_needed)
@@ -89,7 +89,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
 
     context "when not logged" do
       before { subject }
-      it { expect(response).to redirect_to(new_user_session_path)}
+      it { expect(response).to redirect_to(new_user_session_path) }
     end
 
     context "when logged in" do

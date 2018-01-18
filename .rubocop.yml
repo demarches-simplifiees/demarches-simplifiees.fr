@@ -155,28 +155,28 @@ Layout/RescueEnsureAlignment:
   Enabled: true
 
 Layout/SpaceAfterColon:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterComma:
   Enabled: false
 
 Layout/SpaceAfterMethodName:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterNot:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterSemicolon:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundBlockParameters:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundEqualsInParameterDefault:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundKeyword:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundOperators:
   Enabled: true
@@ -185,55 +185,56 @@ Layout/SpaceBeforeBlockBraces:
   Enabled: false
 
 Layout/SpaceBeforeComma:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeComment:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeFirstArg:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeSemicolon:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInLambdaLiteral:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: require_space
 
 Layout/SpaceInsideArrayPercentLiteral:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideBlockBraces:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideBrackets:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideHashLiteralBraces:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: false
 
 Layout/SpaceInsideParens:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsidePercentLiteralDelimiters:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideRangeLiteral:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceInsideStringInterpolation:
-  Enabled: false
+  Enabled: true
 
 Layout/Tab:
-  Enabled: false
+  Enabled: true
 
 Layout/TrailingBlankLines:
-  Enabled: false
+  Enabled: true
 
 Layout/TrailingWhitespace:
-  Enabled: false
+  Enabled: true
 
 Lint/AmbiguousBlockAssociation:
   Enabled: false

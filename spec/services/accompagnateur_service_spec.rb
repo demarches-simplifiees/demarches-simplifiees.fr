@@ -4,7 +4,7 @@ describe AccompagnateurService do
   let(:procedure) { create :procedure, :published }
   let(:accompagnateur) { create :gestionnaire }
 
-  let(:accompagnateur_service) { AccompagnateurService.new accompagnateur, procedure, to}
+  let(:accompagnateur_service) { AccompagnateurService.new accompagnateur, procedure, to }
 
   describe '#change_assignement!' do
     subject { accompagnateur_service.change_assignement! }

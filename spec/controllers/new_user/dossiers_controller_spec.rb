@@ -7,7 +7,7 @@ describe NewUser::DossiersController, type: :controller do
     it 'is present' do
       before_actions = NewUser::DossiersController
         ._process_action_callbacks
-        .find_all{|process_action_callbacks| process_action_callbacks.kind == :before}
+        .find_all{ |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
       expect(before_actions).to include(:ensure_ownership!)

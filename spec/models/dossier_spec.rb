@@ -51,7 +51,7 @@ describe Dossier do
       end
     end
 
-    describe '#retrieve_last_piece_justificative_by_type', vcr: {cassette_name: 'models_dossier_retrieve_last_piece_justificative_by_type'} do
+    describe '#retrieve_last_piece_justificative_by_type', vcr: { cassette_name: 'models_dossier_retrieve_last_piece_justificative_by_type' } do
       let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
 
       subject { dossier.retrieve_last_piece_justificative_by_type types_de_pj_dossier.first }
@@ -308,7 +308,7 @@ describe Dossier do
 
       subject { dossier }
 
-      it { expect(dossier.full_data_strings_array).to eq(expected_string)}
+      it { expect(dossier.full_data_strings_array).to eq(expected_string) }
     end
   end
 
@@ -575,7 +575,7 @@ describe Dossier do
 
     subject { procedure.dossiers.downloadable_sorted }
 
-    it { is_expected.to match([dossier3, dossier4, dossier2])}
+    it { is_expected.to match([dossier3, dossier4, dossier2]) }
   end
 
   describe "#send_dossier_received" do
