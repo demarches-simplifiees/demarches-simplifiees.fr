@@ -24,7 +24,7 @@ class ChampDecorator < Draper::Decorator
       if type_champ == "date"
         object.value
       elsif type_champ == "datetime" && object.value != ' 00:00'
-        DateTime.parse(object.value, "%d/%m/%Y %H:%M").strftime("%d/%m/%Y")
+        DateTime.parse(object.value, "%Y-%m-%d %H:%M").strftime("%Y-%m-%d")
       end
     end
   end
