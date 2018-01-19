@@ -17,6 +17,8 @@
 //= require chartkick
 //= require_tree ./old_design
 //= require bootstrap-sprockets
+//= require bootstrap-datepicker/core
+//= require bootstrap-datepicker/locales/bootstrap-datepicker.fr.js
 
 //= require leaflet.js
 //= require d3.min

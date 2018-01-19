@@ -1,13 +1,18 @@
-= render partial: 'users/description/champs/date', locals: { champ: champ }
+%input.form-control{ name: "champs['#{champ.id}']",
+                  placeholder: champ.libelle,
+                  id: "champs_#{champ.id}",
+                  value: (champ.value.split(/[ ][0-9]*:[0-9]*/).first if champ.value.present?),
+                  type: champ.type_champ,
+                  'data-provide' => champ.data_provide,
+                  'data-date-format' => champ.data_date_format }
 
-%br
-%select.form-control{ name: "time_hour['#{champ.id}']", style: 'width:50px;display:inline;', id: "time_hour_#{champ.id}" }
+%select.form-control{ name: "time_hour['#{champ.id}']", style: 'margin-left: 5px;', id: "time_hour_#{champ.id}" }
   - (0..23).each do |num|
     - num = "%.2i" %num
     %option{ value: num, selected: (:selected if champ.same_hour?(num)) }
       = num
 h
-%select.form-control{ name: "time_minute['#{champ.id}']", style: 'width:50px;display:inline;', id: "time_minute_#{champ.id}" }
+%select.form-control{ name: "time_minute['#{champ.id}']", id: "time_minute_#{champ.id}" }
   - (0..59).each do |num|
     - num = "%.2i" %num
     - if num.to_i%5 == 0

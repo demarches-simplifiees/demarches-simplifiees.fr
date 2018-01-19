@@ -1,5 +1,5 @@
 %input.form-control{ name: "champs['#{champ.id}']",
   placeholder: "JJ/MM/AAAA",
   id: "champs_#{champ.id}",
-  value: champ.date_for_input,
+  value: champ.value ? champ.object.value : champ.value,
   type: "date" }
