@@ -28,7 +28,7 @@ describe ChampsService do
     end
 
     it 'parses and save the date' do
-      expect(champ_datetime.value).to eq('d 12:24')
+      expect(champ_datetime.value).to eq(nil)
     end
   end
 
