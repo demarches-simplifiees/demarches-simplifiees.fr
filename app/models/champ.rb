@@ -6,7 +6,7 @@ class Champ < ActiveRecord::Base
   delegate :libelle, :type_champ, :order_place, :mandatory, :description, :drop_down_list, to: :type_de_champ
 
   before_save :format_date_to_iso, if: Proc.new { type_champ == 'date' }
-  before_save :serialize_datetime_if_needed, if: Proc.new { type_champ == 'datetime' }
+  before_save :format_datetime, if: Proc.new { type_champ == 'datetime' }
   before_save :multiple_select_to_string, if: Proc.new { type_champ == 'multiple_drop_down_list' }
 
   after_save :internal_notification, if: Proc.new { dossier.present? }
@@ -93,7 +93,7 @@ class Champ < ActiveRecord::Base
     self.value = date
   end
 
-  def serialize_datetime_if_needed
+  def format_datetime
     if (value =~ /=>/).present?
       date = begin
         hash_date = YAML.safe_load(value.gsub('=>', ': '))
@@ -102,8 +102,11 @@ class Champ < ActiveRecord::Base
       rescue
         nil
       end
-
       self.value = date
+    elsif /^\d{2}\/\d{2}\/\d{4}\s\d{2}:\d{2}$/ =~ value # old browsers can send with dd/mm/yyyy hh:mm format
+      self.value = DateTime.parse(value, "%d/%m/%Y %H:%M").strftime("%Y-%m-%d %H:%M")
+    elsif !(/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}$/ =~ value) # a datetime not correctly formatted should not be stored
+      self.value = nil
     end
   end
 
