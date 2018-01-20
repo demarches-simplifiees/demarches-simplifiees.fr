@@ -18,7 +18,7 @@ gem 'turbolinks', '~> 5.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Enable deep clone of active record models
-gem 'deep_cloneable', '~> 2.2.1'
+gem 'deep_cloneable'
 
 gem 'warden', git: 'https://github.com/hassox/warden.git', branch: 'master'
 
