@@ -803,7 +803,7 @@ DEPENDENCIES
   openstack
   pg
   prawn
-  prawn_rails (~> 0.0.11)
+  prawn_rails
   pry-byebug
   rack-handlers
   rack-mini-profiler
