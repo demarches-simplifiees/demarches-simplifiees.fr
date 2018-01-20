@@ -27,7 +27,7 @@
               - else
                 Dossier nº #{dossier.id}
               %br
-              = dossier.text_summary
+              = sanitize(dossier.text_summary)
             - else
               Pas de dossier associé
         - else
