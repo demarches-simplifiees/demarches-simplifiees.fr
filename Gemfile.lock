@@ -500,12 +500,12 @@ GEM
     parallel (1.12.1)
     parser (2.4.0.2)
       ast (~> 2.3)
-    pdf-core (0.6.1)
+    pdf-core (0.7.0)
     pg (0.19.0)
     powerpack (0.1.1)
-    prawn (2.0.2)
-      pdf-core (~> 0.6.0)
-      ttfunk (~> 1.4.0)
+    prawn (2.2.2)
+      pdf-core (~> 0.7.0)
+      ttfunk (~> 1.5)
     prawn_rails (0.0.11)
       prawn (>= 0.11.1)
       railties (>= 3.0.0)
@@ -703,7 +703,7 @@ GEM
     tilt (2.0.8)
     timecop (0.9.1)
     trollop (2.1.2)
-    ttfunk (1.4.0)
+    ttfunk (1.5.1)
     turbolinks (5.0.1)
       turbolinks-source (~> 5)
     turbolinks-source (5.0.0)
@@ -802,7 +802,7 @@ DEPENDENCIES
   openid_connect
   openstack
   pg
-  prawn (~> 2.0.1)
+  prawn
   prawn_rails (~> 0.0.11)
   pry-byebug
   rack-handlers
