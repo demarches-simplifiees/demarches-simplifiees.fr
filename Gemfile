@@ -38,7 +38,7 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'kaminari'
 
 # Decorators
-gem 'draper', '~> 3.0.0.pre1'
+gem 'draper'
 
 gem 'unicode_utils'
 
