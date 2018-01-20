@@ -107,7 +107,7 @@ gem "delayed_job_web"
 gem 'select2-rails'
 
 # PDF Generation
-gem 'prawn', '~> 2.0.1'
+gem 'prawn'
 gem 'prawn_rails', '~> 0.0.11'
 
 gem 'chunky_png'
