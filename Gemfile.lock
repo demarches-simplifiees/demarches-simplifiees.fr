@@ -813,7 +813,7 @@ DEPENDENCIES
   rails-controller-testing
   rest-client
   rgeo-geojson
-  rspec-rails (~> 3.0)
+  rspec-rails
   rspec_junit_formatter
   rubocop
   rubocop-rspec-focused
