@@ -108,7 +108,7 @@ gem 'select2-rails'
 
 # PDF Generation
 gem 'prawn'
-gem 'prawn_rails', '~> 0.0.11'
+gem 'prawn_rails'
 
 gem 'chunky_png'
 gem 'sentry-raven'
