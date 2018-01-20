@@ -818,7 +818,7 @@ DEPENDENCIES
   rubocop
   rubocop-rspec-focused
   sanitize-url
-  sass-rails (~> 5.0)
+  sass-rails
   scenic
   scss_lint
   sdoc (~> 0.4.0)
