@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :attestation_template do
     title 'title'
     body 'body'

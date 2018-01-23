@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :france_connect_information do
     given_name 'plop'
     family_name 'plip'

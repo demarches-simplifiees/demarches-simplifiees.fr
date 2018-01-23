@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :dossier do
     state 'brouillon'
     association :user, factory: [:user]
