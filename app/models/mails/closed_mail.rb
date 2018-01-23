@@ -8,6 +8,6 @@ module Mails
     TEMPLATE_NAME = "mails/closed_mail"
     DISPLAYED_NAME = "Accusé d'acceptation"
     DEFAULT_SUBJECT = 'Votre dossier TPS nº --numéro du dossier-- a été accepté'
-    IS_DOSSIER_TERMINE = true
+    DOSSIER_STATE = 'accepte'
   end
 end

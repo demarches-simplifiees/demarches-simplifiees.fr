@@ -101,7 +101,7 @@
                 "order_place": 1,
                 "description": "description de votre projet"
               }
-            }, 
+            },
             {
               "value": {
                 "type": "MultiPolygon",
@@ -257,8 +257,8 @@
           "link": "http://localhost",
           "id": 3,
           "description": "Demande de subvention à l'intention des associations",
-          "organisation": "Orga SGMAP",
-          "direction": "direction SGMAP",
+          "organisation": "Orga DINSIC",
+          "direction": "direction DINSIC",
           "archived_at": null,
           "geographic_information": {
             "use_api_carto": true,

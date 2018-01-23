@@ -8,6 +8,6 @@ module Mails
     TEMPLATE_NAME = "mails/initiated_mail"
     DISPLAYED_NAME = 'Accusé de réception'
     DEFAULT_SUBJECT = 'Votre dossier TPS nº --numéro du dossier-- a bien été reçu'
-    IS_DOSSIER_TERMINE = false
+    DOSSIER_STATE = 'en_construction'
   end
 end
