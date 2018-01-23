@@ -17,6 +17,15 @@ class Champ < ActiveRecord::Base
     mandatory
   end
 
+  def data_provide
+    return 'datepicker' if (type_champ == 'datetime') && !(BROWSER.value.chrome? || BROWSER.value.edge?)
+    return 'typeahead' if type_champ == 'address'
+  end
+
+  def data_date_format
+    ('dd/mm/yyyy' if type_champ == 'datetime')
+  end
+
   def same_hour? num
     same_date? num, '%H'
   end
