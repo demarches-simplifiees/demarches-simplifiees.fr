@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:published_path) { |n| "fake_path#{n}" }
   factory :procedure do
     lien_demarche 'http://localhost'

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:administrateur_email) { |n| "admin#{n}@admin.com" }
   factory :administrateur do
     email { generate(:administrateur_email) }

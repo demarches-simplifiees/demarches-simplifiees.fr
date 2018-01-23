@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :avis do
     introduction 'Bonjour, merci de me donner votre avis sur ce dossier'
 

@@ -4,11 +4,11 @@ describe StatsController, type: :controller do
   describe "#last_four_months_hash" do
     context "while a regular user is logged in" do
       before do
-        FactoryGirl.create(:procedure, :created_at => 6.months.ago, :updated_at => 6.months.ago)
-        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
-        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
-        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => 31.days.ago)
-        FactoryGirl.create(:procedure, :created_at => 2.months.ago, :updated_at => Time.now)
+        FactoryBot.create(:procedure, :created_at => 6.months.ago, :updated_at => 6.months.ago)
+        FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
+        FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
+        FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => 31.days.ago)
+        FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => Time.now)
         @controller = StatsController.new
 
         allow(@controller).to receive(:administration_signed_in?).and_return(false)
@@ -28,10 +28,10 @@ describe StatsController, type: :controller do
 
     context "while a super admin is logged in" do
       before do
-        FactoryGirl.create(:procedure, :updated_at => 6.months.ago)
-        FactoryGirl.create(:procedure, :updated_at => 45.days.ago)
-        FactoryGirl.create(:procedure, :updated_at => 1.day.ago)
-        FactoryGirl.create(:procedure, :updated_at => 1.day.ago)
+        FactoryBot.create(:procedure, :updated_at => 6.months.ago)
+        FactoryBot.create(:procedure, :updated_at => 45.days.ago)
+        FactoryBot.create(:procedure, :updated_at => 1.day.ago)
+        FactoryBot.create(:procedure, :updated_at => 1.day.ago)
 
         @controller = StatsController.new
 
@@ -54,11 +54,11 @@ describe StatsController, type: :controller do
   describe '#cumulative_hash' do
     before do
       Timecop.freeze(Time.new(2016, 10, 2))
-      FactoryGirl.create(:procedure, :created_at => 55.days.ago, :updated_at => 43.days.ago)
-      FactoryGirl.create(:procedure, :created_at => 45.days.ago, :updated_at => 40.days.ago)
-      FactoryGirl.create(:procedure, :created_at => 45.days.ago, :updated_at => 20.days.ago)
-      FactoryGirl.create(:procedure, :created_at => 15.days.ago, :updated_at => 20.days.ago)
-      FactoryGirl.create(:procedure, :created_at => 15.days.ago, :updated_at => 1.hour.ago)
+      FactoryBot.create(:procedure, :created_at => 55.days.ago, :updated_at => 43.days.ago)
+      FactoryBot.create(:procedure, :created_at => 45.days.ago, :updated_at => 40.days.ago)
+      FactoryBot.create(:procedure, :created_at => 45.days.ago, :updated_at => 20.days.ago)
+      FactoryBot.create(:procedure, :created_at => 15.days.ago, :updated_at => 20.days.ago)
+      FactoryBot.create(:procedure, :created_at => 15.days.ago, :updated_at => 1.hour.ago)
     end
 
     after { Timecop.return }
@@ -142,21 +142,21 @@ describe StatsController, type: :controller do
     #     dossier_p1_c: 5 days
 
     before do
-      procedure_1 = FactoryGirl.create(:procedure)
-      procedure_2 = FactoryGirl.create(:procedure)
-      dossier_p1_a = FactoryGirl.create(:dossier,
+      procedure_1 = FactoryBot.create(:procedure)
+      procedure_2 = FactoryBot.create(:procedure)
+      dossier_p1_a = FactoryBot.create(:dossier,
         :procedure          => procedure_1,
         :en_construction_at => 2.months.ago.beginning_of_month,
         :processed_at       => 2.months.ago.beginning_of_month + 3.days)
-      dossier_p1_b = FactoryGirl.create(:dossier,
+      dossier_p1_b = FactoryBot.create(:dossier,
         :procedure          => procedure_1,
         :en_construction_at => 2.months.ago.beginning_of_month,
         :processed_at       => 2.months.ago.beginning_of_month + 1.days)
-      dossier_p1_c = FactoryGirl.create(:dossier,
+      dossier_p1_c = FactoryBot.create(:dossier,
         :procedure          => procedure_1,
         :en_construction_at => 1.months.ago.beginning_of_month,
         :processed_at       => 1.months.ago.beginning_of_month + 5.days)
-      dossier_p2_a = FactoryGirl.create(:dossier,
+      dossier_p2_a = FactoryBot.create(:dossier,
         :procedure          => procedure_2,
         :en_construction_at => 2.month.ago.beginning_of_month,
         :processed_at       => 2.month.ago.beginning_of_month + 4.days)
@@ -190,24 +190,24 @@ describe StatsController, type: :controller do
     #     dossier_p1_c: 50 minutes
 
     before do
-      procedure_1 = FactoryGirl.create(:procedure, :with_type_de_champ, :types_de_champ_count => 24)
-      procedure_2 = FactoryGirl.create(:procedure, :with_type_de_champ, :types_de_champ_count => 48)
-      dossier_p1_a = FactoryGirl.create(:dossier,
+      procedure_1 = FactoryBot.create(:procedure, :with_type_de_champ, :types_de_champ_count => 24)
+      procedure_2 = FactoryBot.create(:procedure, :with_type_de_champ, :types_de_champ_count => 48)
+      dossier_p1_a = FactoryBot.create(:dossier,
         :procedure    => procedure_1,
         :created_at   => 2.months.ago.beginning_of_month,
         :en_construction_at => 2.months.ago.beginning_of_month + 30.minutes,
         :processed_at => 2.months.ago.beginning_of_month + 1.day)
-      dossier_p1_b = FactoryGirl.create(:dossier,
+      dossier_p1_b = FactoryBot.create(:dossier,
         :procedure    => procedure_1,
         :created_at   => 2.months.ago.beginning_of_month,
         :en_construction_at => 2.months.ago.beginning_of_month + 10.minutes,
         :processed_at => 2.months.ago.beginning_of_month + 1.day)
-      dossier_p1_c = FactoryGirl.create(:dossier,
+      dossier_p1_c = FactoryBot.create(:dossier,
         :procedure    => procedure_1,
         :created_at   => 1.months.ago.beginning_of_month,
         :en_construction_at => 1.months.ago.beginning_of_month + 50.minutes,
         :processed_at => 1.months.ago.beginning_of_month + 1.day)
-      dossier_p2_a = FactoryGirl.create(:dossier,
+      dossier_p2_a = FactoryBot.create(:dossier,
         :procedure    => procedure_2,
         :created_at   => 2.month.ago.beginning_of_month,
         :en_construction_at => 2.month.ago.beginning_of_month + 80.minutes,
