@@ -30,7 +30,7 @@ describe Commentaire do
       let(:user_invite) { create(:user) }
 
       before do
-        FactoryGirl.create(:invite_user, email: "invite@tps.apientreprise.fr", dossier: dossier, user: user_invite)
+        FactoryBot.create(:invite_user, email: "invite@tps.apientreprise.fr", dossier: dossier, user: user_invite)
       end
 
       it "calls notify_gestionnaires" do

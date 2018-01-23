@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :type_de_champ_private do
     sequence(:libelle) { |n| "Libelle champ privé #{n}" }
     sequence(:description) { |n| "description du champ privé #{n}" }

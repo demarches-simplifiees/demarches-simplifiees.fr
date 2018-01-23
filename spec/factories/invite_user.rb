@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :invite_user do
     email 'plop@octo.com'
 
