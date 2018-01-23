@@ -9,7 +9,7 @@ describe Manager::AdministrateursController, type: :controller do
       sign_in administration
     end
 
-    subject { post :create, administrateur: { email: email } }
+    subject { post :create, params: { administrateur: { email: email } } }
 
     context 'when email and password are correct' do
       it 'add new administrateur in database' do
