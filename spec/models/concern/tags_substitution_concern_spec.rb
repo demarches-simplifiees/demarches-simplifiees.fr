@@ -247,6 +247,12 @@ describe TagsSubstitutionConcern, type: :model do
 
         it_behaves_like "treat all kinds of space as equivalent"
       end
+
+      context "allow newline characters in lieu of spaces" do
+        let(:template) { "--mon\r\ntag--" }
+
+        it_behaves_like "treat all kinds of space as equivalent"
+      end
     end
 
     context 'when generating a document for a dossier that is not termine' do
