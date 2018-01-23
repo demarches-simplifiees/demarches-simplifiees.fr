@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :closed_mail, class: Mails::ClosedMail do
     subject "Subject, voila voila"
     body "Blabla ceci est mon body"

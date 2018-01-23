@@ -107,7 +107,7 @@ feature 'The gestionnaire part' do
   end
 
   scenario 'A gestionnaire can see the personnes impliquées' do
-    gestionnaire2 = FactoryGirl.create(:gestionnaire, password: password)
+    gestionnaire2 = FactoryBot.create(:gestionnaire, password: password)
 
     log_in(gestionnaire.email, password)
 

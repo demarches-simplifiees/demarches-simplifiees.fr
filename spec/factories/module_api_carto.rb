@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :module_api_carto do
     use_api_carto false
     quartiers_prioritaires false

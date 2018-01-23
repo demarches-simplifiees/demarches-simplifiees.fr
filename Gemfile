@@ -120,7 +120,7 @@ gem 'rack-mini-profiler'
 group :test do
   gem 'capybara'
   gem 'launchy'
-  gem 'factory_girl'
+  gem 'factory_bot'
   gem 'database_cleaner'
   gem 'webmock'
   gem 'shoulda-matchers', require: false

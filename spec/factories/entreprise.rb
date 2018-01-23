@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :entreprise do
     siren '440117620'
     capital_social 537_100_000
