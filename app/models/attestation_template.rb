@@ -11,6 +11,7 @@ class AttestationTemplate < ApplicationRecord
   validates :footer, length: { maximum: 190 }
 
   FILE_MAX_SIZE_IN_MB = 0.5
+  DOSSIER_STATE = 'accepte'
 
   def attestation_for(dossier)
     Attestation.new(title: replace_tags(title, dossier), pdf: build_pdf(dossier))
