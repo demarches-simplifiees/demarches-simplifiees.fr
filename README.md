@@ -120,7 +120,7 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 ## Linting
 
 - Faire tourner RuboCop : `bundle exec rubocop`
-- Faire tourner Brakeman : `bundle exec brakeman -z`
+- Faire tourner Brakeman : `bundle exec brakeman`
 - Linter les fichiers HAML : `bundle exec haml-lint app/views/`
 - Linter les fichiers SCSS : `bundle exec scss-lint app/assets/stylesheets/`
 

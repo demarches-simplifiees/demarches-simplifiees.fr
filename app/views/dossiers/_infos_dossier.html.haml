@@ -43,7 +43,7 @@
                   - if dossier
                     = link_to("Dossier #{dossier.id}", dossier.decorate.url(gestionnaire_signed_in?), target: '_blank')
                     %br
-                    = dossier.text_summary
+                    = sanitize(dossier.text_summary)
                   - else
                     Pas de dossier associé
                 - else

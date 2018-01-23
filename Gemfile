@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.0.0.1'
+gem 'rails'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
@@ -13,12 +13,12 @@ gem 'therubyracer', platforms: :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks', '~> 5.0'
+gem 'turbolinks'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Enable deep clone of active record models
-gem 'deep_cloneable', '~> 2.2.1'
+gem 'deep_cloneable'
 
 gem 'warden', git: 'https://github.com/hassox/warden.git', branch: 'master'
 
@@ -38,7 +38,7 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'kaminari'
 
 # Decorators
-gem 'draper', '~> 3.0.0.pre1'
+gem 'draper'
 
 gem 'unicode_utils'
 
@@ -107,8 +107,8 @@ gem "delayed_job_web"
 gem 'select2-rails'
 
 # PDF Generation
-gem 'prawn', '~> 2.0.1'
-gem 'prawn_rails', '~> 0.0.11'
+gem 'prawn'
+gem 'prawn_rails'
 
 gem 'chunky_png'
 gem 'sentry-raven'
@@ -153,7 +153,7 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-commands-rspec'
-  gem 'rspec-rails', '~> 3.0'
+  gem 'rspec-rails'
 
   # Deploy
   gem 'mina', ref: '343a7', git: 'https://github.com/mina-deploy/mina.git'
