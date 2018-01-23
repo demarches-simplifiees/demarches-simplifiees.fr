@@ -9,7 +9,7 @@
       %td= entreprise.siret_siege_social
     %tr
       %th Forme juridique :
-      %td= entreprise.forme_juridique
+      %td= sanitize(entreprise.forme_juridique)
     - if etablissement.present?
       %tr
         %th Libellé NAF :
