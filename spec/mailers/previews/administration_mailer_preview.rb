@@ -6,4 +6,8 @@ class AdministrationMailerPreview < ActionMailer::Preview
     ]
     AdministrationMailer.dubious_procedures(procedures_and_champs)
   end
+
+  def invite_admin
+    AdministrationMailer.invite_admin(Administrateur.last, "12345678")
+  end
 end
