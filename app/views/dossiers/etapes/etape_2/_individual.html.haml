@@ -36,7 +36,8 @@
         %p
           %label{ style: 'font-weight: normal;' }
             = f.check_box :autorisation_donnees
-             J'accepte <a href="https://tps.gitbooks.io/tps-documentation/content/conditions-generales-dutilisation.html" target="_blank">les CGU</a>.
+             J'accepte
+            = link_to "les CGU", CGU_URL, target: :blank
     .row
       .col-xs-5.col-xs-5
       .col-xs-2.col-xs-2
