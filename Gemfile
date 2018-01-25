@@ -76,7 +76,10 @@ gem 'hashie'
 
 gem 'mailjet'
 
-gem 'smart_listing'
+# FIXME: this is a fork, go back to official version
+# once https://github.com/Sology/smart_listing/pull/139
+# has been merged and released
+gem 'smart_listing', git: 'https://github.com/mizinsky/smart_listing.git', branch: 'kaminari-update'
 
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 
