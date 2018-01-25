@@ -17,6 +17,17 @@ class Administrateur < ApplicationRecord
 
   scope :inactive, -> { where(active: false) }
 
+  validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
+
+  def password_complexity
+    if password.present?
+      score = Zxcvbn.test(password, [], ZXCVBN_DICTIONNARIES).score
+      if score < 4
+        errors.add(:password, :not_strength)
+      end
+    end
+  end
+
   def self.find_inactive_by_token(reset_password_token)
     self.inactive.with_reset_password_token(reset_password_token)
   end
