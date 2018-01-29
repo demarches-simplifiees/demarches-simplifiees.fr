@@ -14,17 +14,6 @@ describe Admin::GestionnairesController, type: :controller do
     it { expect(subject.status).to eq(200) }
   end
 
-  describe 'GET #index with sorting and pagination' do
-    subject {
-      get :index,
-        'gestionnaires_smart_listing[page]': 1,
-        'gestionnaires_smart_listing[per_page]': 10,
-        'gestionnaires_smart_listing[sort][email]': 'asc'
-    }
-
-    it { expect(subject.status).to eq(200) }
-  end
-
   describe 'POST #create' do
     let(:email) { 'test@plop.com' }
     let(:procedure_id) { nil }
