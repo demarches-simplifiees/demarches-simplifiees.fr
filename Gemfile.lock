@@ -15,17 +15,6 @@ GIT
       open4 (~> 1.3.4)
       rake
 
-GIT
-  remote: https://github.com/mizinsky/smart_listing.git
-  revision: bcdd4f25954fc6f4faa3d6ea6ea9a69c65da678b
-  branch: kaminari-update
-  specs:
-    smart_listing (1.2.1)
-      coffee-rails
-      jquery-rails
-      kaminari (>= 0.17)
-      rails (>= 3.2)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -101,9 +90,6 @@ GEM
       htmlentities (~> 4.3.1)
       nokogiri (>= 1.4.1)
       rubyzip (~> 1.0.0)
-    axlsx_styler (0.1.7)
-      activesupport (>= 3.1)
-      axlsx (~> 2.0)
     bcrypt (3.1.11)
     bindata (2.4.1)
     bindex (0.5.0)
@@ -596,10 +582,10 @@ GEM
     rgeo (1.0.0)
     rgeo-geojson (2.0.0)
       rgeo (~> 1.0)
-    rodf (1.0.0)
-      activesupport (>= 3.0)
-      builder (>= 3.0)
-      rubyzip (>= 1.0)
+    rodf (0.3.7)
+      activesupport (>= 3.0, < 6.0)
+      builder (~> 3.0)
+      rubyzip (~> 1.0)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -682,10 +668,14 @@ GEM
       tilt (~> 2.0)
     skylight (1.5.0)
       activesupport (>= 3.0.0)
-    spreadsheet_architect (2.0.2)
+    smart_listing (1.2.0)
+      coffee-rails
+      jquery-rails
+      kaminari (~> 0.17)
+      rails (>= 3.2)
+    spreadsheet_architect (1.4.8)
       axlsx (>= 2.0)
-      axlsx_styler (>= 0.1.7)
-      rodf (>= 1.0.0)
+      rodf (= 0.3.7)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-commands-rspec (1.0.4)
@@ -833,8 +823,8 @@ DEPENDENCIES
   shoulda-matchers
   simple_form
   skylight
-  smart_listing!
-  spreadsheet_architect
+  smart_listing
+  spreadsheet_architect (~> 1.4.8)
   spring
   spring-commands-rspec
   therubyracer
