@@ -11,7 +11,7 @@ module FeatureHelpers
   end
 
   def create_dossier
-    dossier = FactoryGirl.create(:dossier)
+    dossier = FactoryBot.create(:dossier)
     dossier
   end
 end

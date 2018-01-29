@@ -22,7 +22,7 @@ feature 'As a User I want to edit a dossier I own' do
 
     scenario 'Getting a dossier, I want to create a new message on', js: true do
       page.find_by_id('tr_dossier_' + dossier.id.to_s).click
-      expect(page).to have_current_path(users_dossier_recapitulatif_path(Dossier.first.id.to_s), only_path: true)
+      expect(page).to have_current_path(users_dossier_recapitulatif_path(Dossier.first.id.to_s))
       page.find_by_id('open-message').click
       page.execute_script("$('#texte_commentaire').data('wysihtml5').editor.setValue('Contenu du nouveau message')")
       page.find_by_id('save-message').click
@@ -31,18 +31,18 @@ feature 'As a User I want to edit a dossier I own' do
 
     scenario 'On the same dossier, I want to edit informations', js: true do
       page.find_by_id('tr_dossier_' + dossier.id.to_s).click
-      expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier.id.to_s), only_path: true)
+      expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier.id.to_s))
 
       # Linked Dossier
       linked_dossier_id = dossier.champs.find { |c| c.type_de_champ.type_champ == 'dossier_link' }.value
       expect(page).to have_link("Dossier #{linked_dossier_id}")
 
       page.find_by_id('edit-dossier').click
-      expect(page).to have_current_path(users_dossier_description_path(dossier.id.to_s), only_path: true)
+      expect(page).to have_current_path(users_dossier_description_path(dossier.id.to_s))
       champ_id = dossier.champs.find { |t| t.type_champ == "text" }.id
       fill_in "champs_#{champ_id.to_s}", with: 'Contenu du champ 1'
       page.find_by_id('modification_terminee').click
-      expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier.id.to_s), only_path: true)
+      expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier.id.to_s))
       expect(page.find("#champ-#{champ_id}-value").text).to eq('Contenu du champ 1')
     end
   end

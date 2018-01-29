@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :quartier_prioritaire do
     code 'QPcode'
     commune 'Paris'

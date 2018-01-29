@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :exercice do
     ca '12345678'
     dateFinExercice "2014-12-30 23:00:00"

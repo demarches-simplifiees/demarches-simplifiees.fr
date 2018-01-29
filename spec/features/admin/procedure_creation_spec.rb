@@ -11,24 +11,24 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   context 'Right after sign_in I shall see all procedure states links' do
     scenario 'Finding draft procedures' do
       page.find_by_id('draft-procedures').click
-      expect(page).to have_current_path(admin_procedures_draft_path, only_path: true)
+      expect(page).to have_current_path(admin_procedures_draft_path)
     end
 
     scenario 'Finding active procedures' do
       page.find_by_id('active-procedures').click
-      expect(page).to have_current_path(admin_procedures_path, only_path: true)
+      expect(page).to have_current_path(admin_procedures_path)
     end
 
     scenario 'Finding archived procedures' do
       page.find_by_id('archived-procedures').click
-      expect(page).to have_current_path(admin_procedures_archived_path, only_path: true)
+      expect(page).to have_current_path(admin_procedures_archived_path)
     end
   end
 
   context 'Creating a new procedure' do
     scenario 'Finding new procedure link' do
       page.find_by_id('new-procedure').click
-      expect(page).to have_current_path(new_admin_procedure_path, only_path: true)
+      expect(page).to have_current_path(new_admin_procedure_path)
     end
 
     scenario 'Finding save button for new procedure, libelle and description required' do

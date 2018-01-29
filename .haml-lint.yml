@@ -43,6 +43,10 @@ linters:
     character: space # or tab
     width: 2 # ignored if character == tab
 
+  # TODO: enable once we got rid of the legacy UIs
+  InlineStyles:
+    enabled: false
+
   InstanceVariables:
     enabled: false
     file_types: partials
@@ -116,4 +120,9 @@ linters:
   # Disabled because too agressive, but to enable
   # locally from time to time
   UnnecessaryStringOutput:
+    enabled: false
+
+  # Disabled because too agress ive, but to enable
+  # locally from time to time
+  ViewLength:
     enabled: false

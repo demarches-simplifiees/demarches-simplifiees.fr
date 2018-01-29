@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :etablissement do
     siret '44011762001530'
     siege_social true

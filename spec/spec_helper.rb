@@ -26,7 +26,7 @@ require 'database_cleaner'
 require 'webmock/rspec'
 require 'shoulda-matchers'
 require 'devise'
-require 'factory_girl'
+require 'factory_bot'
 
 require 'selenium/webdriver'
 Capybara.javascript_driver = :headless_chrome
@@ -109,7 +109,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.before(:each) do
     allow_any_instance_of(PieceJustificativeUploader).to receive(:generate_secure_token).and_return("3dbb3535-5388-4a37-bc2d-778327b9f997")
