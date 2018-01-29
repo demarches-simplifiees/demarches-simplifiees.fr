@@ -80,7 +80,7 @@ gem 'smart_listing'
 
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 
-gem 'spreadsheet_architect'
+gem 'spreadsheet_architect', '~> 1.4.8' # https://github.com/westonganger/spreadsheet_architect/issues/14
 
 gem 'apipie-rails'
 # For Markdown support in apipie
