@@ -15,17 +15,6 @@ GIT
       open4 (~> 1.3.4)
       rake
 
-GIT
-  remote: https://github.com/mizinsky/smart_listing.git
-  revision: bcdd4f25954fc6f4faa3d6ea6ea9a69c65da678b
-  branch: kaminari-update
-  specs:
-    smart_listing (1.2.1)
-      coffee-rails
-      jquery-rails
-      kaminari (>= 0.17)
-      rails (>= 3.2)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -682,6 +671,11 @@ GEM
       tilt (~> 2.0)
     skylight (1.5.0)
       activesupport (>= 3.0.0)
+    smart_listing (1.2.0)
+      coffee-rails
+      jquery-rails
+      kaminari (~> 0.17)
+      rails (>= 3.2)
     spreadsheet_architect (2.0.2)
       axlsx (>= 2.0)
       axlsx_styler (>= 0.1.7)
@@ -833,7 +827,7 @@ DEPENDENCIES
   shoulda-matchers
   simple_form
   skylight
-  smart_listing!
+  smart_listing
   spreadsheet_architect
   spring
   spring-commands-rspec
