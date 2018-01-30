@@ -21,7 +21,7 @@ feature 'As a User I want to edit a dossier I own' do
     end
 
     scenario 'Getting a dossier, I want to create a new message on', js: true do
-      page.find_by_id('tr_dossier_' + dossier.id.to_s).click
+      page.find_by_id("tr_dossier_#{dossier.id.to_s}").click
       expect(page).to have_current_path(users_dossier_recapitulatif_path(Dossier.first.id.to_s))
       page.find_by_id('open-message').click
       page.execute_script("$('#texte_commentaire').data('wysihtml5').editor.setValue('Contenu du nouveau message')")
@@ -30,7 +30,7 @@ feature 'As a User I want to edit a dossier I own' do
     end
 
     scenario 'On the same dossier, I want to edit informations', js: true do
-      page.find_by_id('tr_dossier_' + dossier.id.to_s).click
+      page.find_by_id("tr_dossier_#{dossier.id.to_s}").click
       expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier.id.to_s))
 
       # Linked Dossier
