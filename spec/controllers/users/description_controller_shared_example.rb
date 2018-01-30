@@ -249,7 +249,7 @@ shared_examples 'description_controller_spec' do
     describe 'Sauvegarde des champs' do
       let(:champs_dossier) { dossier.champs }
       let(:dossier_text_value) { 'test value' }
-      let(:dossier_date_value) { '23/06/2016' }
+      let(:dossier_date_value) { '2018-01-31' }
       let(:dossier_hour_value) { '17' }
       let(:dossier_minute_value) { '00' }
       let(:dossier_datetime_champ_id) { dossier.champs.find { |c| c.type_champ == "datetime" }.id }
