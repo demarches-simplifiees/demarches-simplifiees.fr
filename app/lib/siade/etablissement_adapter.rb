@@ -32,13 +32,9 @@ class SIADE::EtablissementAdapter
   end
 
   def adresse
-    adresse = ''
-    [:l1, :l2, :l3, :l4, :l5, :l6, :l7].each do |line|
-      if data_source[:etablissement][:adresse][line].present?
-        adresse = adresse + data_source[:etablissement][:adresse][line] + "\r\n"
-      end
-    end
-    adresse
+    [:l1, :l2, :l3, :l4, :l5, :l6, :l7].map do |line|
+      data_source[:etablissement][:adresse][line]
+    end.compact.join("\r\n")
   end
 
   def address_attribut_to_fetch

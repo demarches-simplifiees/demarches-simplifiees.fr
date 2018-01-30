@@ -33,7 +33,7 @@ describe SIADE::EtablissementAdapter do
 
       context 'Concaténation lignes adresse' do
         it 'L\'entreprise contient bien une adresse sur plusieurs lignes' do
-          expect(subject[:adresse]).to eq("OCTO TECHNOLOGY\r\n50 AVENUE DES CHAMPS ELYSEES\r\n75008 PARIS\r\nFRANCE\r\n")
+          expect(subject[:adresse]).to eq("OCTO TECHNOLOGY\r\n50 AVENUE DES CHAMPS ELYSEES\r\n75008 PARIS\r\nFRANCE")
         end
       end
 
