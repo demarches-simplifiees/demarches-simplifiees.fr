@@ -66,7 +66,7 @@ describe 'users/description/show.html.haml', type: :view do
     let(:champ_datetime) { champs.where(type_de_champ_id: types_de_champ.id).first }
 
     before do
-      champ_datetime.value = "22/06/2016 12:05"
+      champ_datetime.value = "2016-06-22 12:05"
       champ_datetime.save
       render
     end
@@ -82,7 +82,7 @@ describe 'users/description/show.html.haml', type: :view do
     end
 
     describe 'datetime value is correctly setup when is not nil' do
-      it { expect(rendered).to have_css("input[type='datetime'][id='champs_#{champ_datetime.id}'][value='22/06/2016']") }
+      it { expect(rendered).to have_css("input[type='date'][id='champs_#{champ_datetime.id}'][value='2016-06-22']") }
       it { expect(rendered).to have_css("option[value='12'][selected='selected']") }
       it { expect(rendered).to have_css("option[value='05'][selected='selected']") }
     end

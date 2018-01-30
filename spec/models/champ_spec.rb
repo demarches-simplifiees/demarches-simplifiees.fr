@@ -5,24 +5,22 @@ describe Champ do
 
   it_should_behave_like "champ_spec"
 
-  describe '#serialize_datetime_if_needed' do
+  describe '#format_datetime' do
     let(:type_de_champ) { TypeDeChamp.new(type_champ: 'datetime') }
     let(:champ) { Champ.new(type_de_champ: type_de_champ, value: value) }
 
     before { champ.save }
 
-    # when using the old form, and the ChampsService Class
-    # TODO: to remove
-    context 'when the value is already serialized' do
-      let(:value) { '12/01/2017 10:23' }
+    context 'when the value is sent by a modern browser' do
+      let(:value) { '2017-12-31 10:23' }
 
       it { expect(champ.value).to eq(value) }
     end
 
-    context 'when the value is not already serialized' do
-      let(:value) { '{ 1=>2017, 2=>01, 3=>12, 4=>10, 5=>23  }' }
+    context 'when the value is sent by a old browser' do
+      let(:value) { '31/12/2018 09:26' }
 
-      it { expect(champ.value).to eq('12/01/2017 10:23') }
+      it { expect(champ.value).to eq('2018-12-31 09:26') }
     end
   end
 

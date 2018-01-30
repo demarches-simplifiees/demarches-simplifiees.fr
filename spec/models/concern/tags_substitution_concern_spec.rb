@@ -179,10 +179,10 @@ describe TagsSubstitutionConcern, type: :model do
             dossier.champs
               .select { |champ| champ.type_champ == 'datetime' }
               .first
-              .update_attributes(value: '13/09/2017 09:00')
+              .update_attributes(value: '2017-09-13 09:00')
           end
 
-          it { is_expected.to eq('15/04/2017 13/09/2017 09:00') }
+          it { is_expected.to eq('15/04/2017 2017-09-13 09:00') }
         end
       end
     end
