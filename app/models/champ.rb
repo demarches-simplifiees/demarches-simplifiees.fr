@@ -3,7 +3,7 @@ class Champ < ActiveRecord::Base
   belongs_to :type_de_champ
   has_many :commentaires
 
-  delegate :libelle, :type_champ, :order_place, :mandatory, :description, :drop_down_list, to: :type_de_champ
+  delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, to: :type_de_champ
 
   before_save :format_date_to_iso, if: Proc.new { type_champ == 'date' }
   before_save :format_datetime, if: Proc.new { type_champ == 'datetime' }
@@ -12,10 +12,6 @@ class Champ < ActiveRecord::Base
   after_save :internal_notification, if: Proc.new { dossier.present? }
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
-
-  def mandatory?
-    mandatory
-  end
 
   def same_hour? num
     same_date? num, '%H'
@@ -51,7 +47,9 @@ class Champ < ActiveRecord::Base
   end
 
   def to_s
-    if value.present?
+    if typed?
+      typed_string_value
+    elsif value.present?
       case type_champ
       when 'date'
         Date.parse(value).strftime('%d/%m/%Y')
@@ -66,7 +64,9 @@ class Champ < ActiveRecord::Base
   end
 
   def for_export
-    if value.present?
+    if typed?
+      typed_for_export
+    elsif value.present?
       case type_champ
       when 'textarea'
         ActionView::Base.full_sanitizer.sanitize(value)
@@ -82,7 +82,114 @@ class Champ < ActiveRecord::Base
     end
   end
 
+  def value
+    if typed?
+      cast_typed_value
+    else
+      read_attribute(:value)
+    end
+  end
+
+  def value=(value)
+    write_attribute(:value, value)
+
+    case type_champ
+    when 'checkbox', 'engagement'
+      self.boolean_value = value === 'on'
+      self.typed = true
+    when 'yes_no'
+      if value == 'true'
+        self.boolean_value = true
+      elsif value == 'false'
+        self.boolean_value = false
+      end
+      self.typed = true
+    end
+  end
+
+  def typed_value
+    case type_champ
+    when 'yes_no', 'checkbox', 'engagement'
+      boolean_value
+    else
+      value
+    end
+  end
+
+  def formatted_typed_value
+    if boolean? || non_nil_trivalent?
+      typed_value ? 'Oui' : 'Non'
+    else
+      typed_string_value
+    end
+  end
+
+  def boolean?
+    type_champ.in? ['checkbox', 'engagement']
+  end
+
+  def trivalent?
+    type_champ == 'yes_no'
+  end
+
+  def yes?
+    if trivalent?
+      typed? ? typed_value == true : value == 'true'
+    end
+  end
+
+  def no?
+    if trivalent?
+      typed? ? typed_value == false : value == 'false'
+    end
+  end
+
+  def checked?
+    if boolean?
+      typed? ? typed_value : value == 'on'
+    end
+  end
+
   private
+
+  def non_nil_trivalent?
+    trivalent? && !read_attribute(:value).nil?
+  end
+
+  def cast_typed_value
+    case type_champ
+    when 'yes_no'
+      if boolean_value.nil?
+        nil
+      else
+        boolean_value ? 'true' : 'false'
+      end
+    when 'checkbox', 'engagement'
+      boolean_value ? 'on' : nil
+    else
+      read_attribute(:value)
+    end
+  end
+
+  def typed_string_value
+    if boolean? || non_nil_trivalent?
+      typed_value.to_s
+    elsif value.present?
+      typed_value.to_s
+    else
+      ''
+    end
+  end
+
+  def typed_for_export
+    if boolean? || non_nil_trivalent?
+      typed_value ? 'oui' : 'non'
+    elsif value.present?
+      typed_value
+    else
+      nil
+    end
+  end
 
   def format_date_to_iso
     date = begin

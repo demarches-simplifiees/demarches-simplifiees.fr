@@ -39,11 +39,13 @@ class TypeDeChamp < ActiveRecord::Base
   end
 
   def field_for_list?
-    !(type_champ == 'textarea' || type_champ == 'header_section')
+    !type_champ.in? ['textarea', 'header_section']
   end
 
   def check_mandatory
-    self.mandatory = false if %w(header_section explication).include?(self.type_champ)
+    if type_champ.in? ['header_section', 'explication']
+      self.mandatory = false
+    end
     true
   end
 end
