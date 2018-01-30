@@ -10,6 +10,14 @@ class GestionnaireMailer < ApplicationMailer
     send_mail gestionnaire.email, overview, 'Vos activités sur TPS'
   end
 
+  def send_dossier(sender, dossier, recipient)
+    @sender = sender
+    @dossier = dossier
+    subject = "#{sender.email} vous a envoyé le dossier nº #{dossier.id}"
+
+    mail(to: recipient.email, subject: subject)
+  end
+
   private
 
   def vars_mailer email, args
