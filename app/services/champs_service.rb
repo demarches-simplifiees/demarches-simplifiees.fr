@@ -11,12 +11,25 @@ class ChampsService
         .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
     end
 
+    def check_piece_justificative_files(champs)
+      champs.select do |champ|
+        champ.type_champ == 'piece_justificative'
+      end.map { |c| c.piece_justificative_file_errors }.flatten
+    end
+
     private
 
     def fill_champs(champs, h)
       datetimes, not_datetimes = champs.partition { |c| c.type_champ == 'datetime' }
 
-      not_datetimes.each { |c| c.value = h[:champs]["'#{c.id}'"] }
+      not_datetimes.each do |c|
+        if c.type_champ == 'piece_justificative' && h["champs"]["'#{c.id}'"].present?
+          c.piece_justificative_file.attach(h["champs"]["'#{c.id}'"])
+        else
+          c.value = h[:champs]["'#{c.id}'"]
+        end
+      end
+
       datetimes.each { |c| c.value = parse_datetime(c.id, h) }
     end
 
