@@ -23,11 +23,11 @@ class RenderPartialService
   private
 
   def retrieve_navbar
-    'layouts/navbars/navbar_' + retrieve_name
+    "layouts/navbars/navbar_#{retrieve_name}"
   end
 
   def retrieve_left_panel
-    'layouts/left_panels/left_panel_' + retrieve_name
+    "layouts/left_panels/left_panel_#{retrieve_name}"
   end
 
   def retrieve_name

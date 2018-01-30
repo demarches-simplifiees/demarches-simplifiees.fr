@@ -249,7 +249,7 @@ shared_examples 'description_controller_spec' do
     describe 'Sauvegarde des champs' do
       let(:champs_dossier) { dossier.champs }
       let(:dossier_text_value) { 'test value' }
-      let(:dossier_date_value) { '23/06/2016' }
+      let(:dossier_date_value) { '2018-01-31' }
       let(:dossier_hour_value) { '17' }
       let(:dossier_minute_value) { '00' }
       let(:dossier_datetime_champ_id) { dossier.champs.find { |c| c.type_champ == "datetime" }.id }
@@ -302,8 +302,8 @@ shared_examples 'description_controller_spec' do
       before do
         post :update, params: {
           dossier_id: dossier_id,
-          'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
-          'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1
+          "piece_justificative_#{all_pj_type[0].to_s}" => piece_justificative_0,
+          "piece_justificative_#{all_pj_type[1].to_s}" => piece_justificative_1
         }
         dossier.reload
       end
@@ -314,8 +314,8 @@ shared_examples 'description_controller_spec' do
 
           post :update, params: {
             dossier_id: dossier_id,
-            'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
-            'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1
+            "piece_justificative_#{all_pj_type[0].to_s}" => piece_justificative_0,
+            "piece_justificative_#{all_pj_type[1].to_s}" => piece_justificative_1
           }
         end
       end
@@ -355,8 +355,8 @@ shared_examples 'description_controller_spec' do
     subject {
       patch :pieces_justificatives, params: {
         dossier_id: dossier.id,
-        'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
-        'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1
+        "piece_justificative_#{all_pj_type[0].to_s}" => piece_justificative_0,
+        "piece_justificative_#{all_pj_type[1].to_s}" => piece_justificative_1
       }
     }
 
@@ -434,8 +434,8 @@ shared_examples 'description_controller_spec_POST_piece_justificatives_for_owner
   subject {
     patch :pieces_justificatives, params: {
       dossier_id: dossier.id,
-      'piece_justificative_' + all_pj_type[0].to_s => piece_justificative_0,
-      'piece_justificative_' + all_pj_type[1].to_s => piece_justificative_1
+      "piece_justificative_#{all_pj_type[0].to_s}" => piece_justificative_0,
+      "piece_justificative_#{all_pj_type[1].to_s}" => piece_justificative_1
     }
   }
 
