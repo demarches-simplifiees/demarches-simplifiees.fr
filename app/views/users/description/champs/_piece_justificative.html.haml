@@ -1,0 +1,15 @@
+- pj = champ.piece_justificative_file
+
+- if !pj.attached?
+  = file_field_tag "champs['#{champ.id}']",
+    id: "champs_#{champ.id}",
+    direct_upload: true,
+    mandatory: champ.mandatory
+- else
+  %a{ href: url_for(pj), target: '_blank' }
+    = pj.filename.to_s
+  %br
+  Modifier :
+  = file_field_tag "champs['#{champ.id}']",
+    id: "champs_#{champ.id}",
+    direct_upload: true
