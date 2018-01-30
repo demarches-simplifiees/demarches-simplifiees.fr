@@ -14,7 +14,7 @@ class Commentaire < ActiveRecord::Base
   after_create :notify
 
   def header
-    "#{email}, " + I18n.l(created_at.localtime, format: '%d %b %Y %H:%M')
+    "#{email}, #{I18n.l(created_at.localtime, format: '%d %b %Y %H:%M')}"
   end
 
   def file_url

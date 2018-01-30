@@ -95,7 +95,7 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq 0 }
       it { expect(gestionnaire.follows.count).to eq 0 }
       it do
-        expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:inject)
+        expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:sum)
         subject
       end
     end
@@ -108,7 +108,7 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq 0 }
       it { expect(gestionnaire.follows.count).to eq 1 }
       it do
-        expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:inject)
+        expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:sum)
         subject
       end
     end
@@ -124,7 +124,7 @@ describe Gestionnaire, type: :model do
       it { is_expected.to eq 1 }
       it { expect(gestionnaire.follows.count).to eq 1 }
       it do
-        expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).to receive(:inject)
+        expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).to receive(:sum)
         subject
       end
     end
