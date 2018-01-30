@@ -51,17 +51,6 @@ class Gestionnaire < ActiveRecord::Base
     Notification.where(already_read: false, dossier_id: follows.pluck(:dossier_id)).order("updated_at DESC")
   end
 
-  def notifications_for procedure
-    procedure_ids = followed_dossiers.pluck(:procedure_id)
-
-    if procedure_ids.include?(procedure.id)
-      return followed_dossiers.where(procedure_id: procedure.id).sum do |dossier|
-        dossier.notifications.where(already_read: false).count
-      end
-    end
-    0
-  end
-
   def dossiers_with_notifications_count_for_procedure(procedure)
     followed_dossiers_id = followed_dossiers.where(procedure: procedure).pluck(:id)
     Notification.unread.where(dossier_id: followed_dossiers_id).select(:dossier_id).distinct(:dossier_id).count
