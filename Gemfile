@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails'
+gem 'rails', '~> 5.2.0.rc1'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
