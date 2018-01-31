@@ -30,9 +30,7 @@
       .col-lg-8
         = render partial: 'users/description/pieces_justificatives', locals: { dossier: @dossier }
 
-    -# WTF ?
-    - route = Rails.application.routes.recognize_path(request.referrer)
-    - if !route[:controller].match('admin')
+    - if !previsualisation
       %div{ style: 'text-align: right;' }
         %h6 Tous les champs portant un * sont obligatoires.
 

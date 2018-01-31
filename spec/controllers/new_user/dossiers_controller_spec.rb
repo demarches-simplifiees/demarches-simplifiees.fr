@@ -18,7 +18,7 @@ describe NewUser::DossiersController, type: :controller do
     let(:user) { create(:user) }
 
     before do
-      @controller.params[:dossier_id] = asked_dossier.id
+      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id)
       expect(@controller).to receive(:current_user).and_return(user)
       allow(@controller).to receive(:redirect_to)
 
@@ -56,7 +56,7 @@ describe NewUser::DossiersController, type: :controller do
 
         expect(controller).to receive(:send_data)
           .with('pdf content', filename: 'attestation.pdf', type: 'application/pdf') do
-            controller.render nothing: true
+            controller.head :ok
           end
 
         get :attestation, params: { dossier_id: dossier.id }

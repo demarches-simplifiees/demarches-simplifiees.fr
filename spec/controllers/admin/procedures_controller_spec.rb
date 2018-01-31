@@ -44,10 +44,11 @@ describe Admin::ProceduresController, type: :controller do
 
   describe 'GET #index with sorting and pagination' do
     subject {
-      get :index,
+      get :index, params: {
         'procedures_smart_listing[page]': 1,
         'procedures_smart_listing[per_page]': 10,
         'procedures_smart_listing[sort][id]': 'asc'
+      }
     }
 
     it { expect(subject.status).to eq(200) }
@@ -61,10 +62,11 @@ describe Admin::ProceduresController, type: :controller do
 
   describe 'GET #archived with sorting and pagination' do
     subject {
-      get :archived,
+      get :archived, params: {
         'procedures_smart_listing[page]': 1,
         'procedures_smart_listing[per_page]': 10,
         'procedures_smart_listing[sort][libelle]': 'asc'
+      }
     }
 
     it { expect(subject.status).to eq(200) }
@@ -78,10 +80,11 @@ describe Admin::ProceduresController, type: :controller do
 
   describe 'GET #draft with sorting and pagination' do
     subject {
-      get :draft,
+      get :draft, params: {
         'procedures_smart_listing[page]': 1,
         'procedures_smart_listing[per_page]': 10,
         'procedures_smart_listing[sort][published_at]': 'asc'
+      }
     }
 
     it { expect(subject.status).to eq(200) }
