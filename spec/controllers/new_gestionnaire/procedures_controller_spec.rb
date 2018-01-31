@@ -16,7 +16,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
     let(:gestionnaire) { create(:gestionnaire) }
 
     before do
-      @controller.params[:procedure_id] = asked_procedure.id
+      @controller.params = @controller.params.merge(procedure_id: asked_procedure.id)
       expect(@controller).to receive(:current_gestionnaire).and_return(gestionnaire)
       allow(@controller).to receive(:redirect_to)
 
