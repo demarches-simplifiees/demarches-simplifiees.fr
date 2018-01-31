@@ -1,0 +1,4057 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/reset.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+/* line 28, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/reset.scss */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+/* line 32, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/reset.scss */
+body {
+  line-height: 1;
+}
+
+/* line 35, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/reset.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 38, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/reset.scss */
+blockquote, q {
+  quotes: none;
+}
+
+/* line 41, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/reset.scss */
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+/* line 46, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/reset.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+/* line 1, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/custom_reset.scss */
+html,
+body {
+  height: 100%;
+}
+
+/* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/custom_reset.scss */
+html {
+  box-sizing: border-box;
+}
+
+/* line 10, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/custom_reset.scss */
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/custom_reset.scss */
+a {
+  text-decoration: none;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_typography.scss */
+body,
+input,
+textarea,
+select {
+  font-family: "Muli";
+  color: #333333;
+}
+
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+body,
+input,
+textarea,
+select {
+  font-size: 16px;
+  line-height: 1.42857143;
+}
+
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper {
+  position: relative;
+  padding-bottom: 32px;
+  min-height: 100%;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper.with-footer {
+  padding-bottom: 267px;
+}
+@media (max-width: 1000px) {
+  /* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+  .page-wrapper.with-footer {
+    padding-bottom: 531px;
+  }
+}
+
+/* line 30, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+/* line 35, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+a {
+  color: #4393F3;
+}
+
+/* line 39, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.container {
+  padding-left: 16px;
+  padding-right: 16px;
+  max-width: 1072px;
+  margin: 0 auto;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/utils.scss */
+.pull-left {
+  float: left;
+}
+
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/utils.scss */
+.pull-right {
+  float: right;
+}
+
+/* line 11, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/utils.scss */
+.clearfix {
+  clear: both;
+}
+
+/* line 15, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/utils.scss */
+.center {
+  text-align: center;
+}
+
+/* line 19, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/utils.scss */
+.text-right {
+  text-align: right;
+}
+
+/* line 23, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/utils.scss */
+.hidden {
+  display: none;
+}
+
+/* line 27, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/utils.scss */
+.width-100 {
+  width: 100%;
+}
+
+/* line 31, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/utils.scss */
+.empty-text {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin: 60px 0;
+}
+
+/* line 38, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/utils.scss */
+.highlighted {
+  background: #fce2c0;
+  color: #333333;
+}
+@font-face {
+  font-family: "Muli";
+  src: url(/assets/Muli-Regular-ef0d8f2534859ae4ba68ce53ded9904aba07377c57902bbf1d07d7a101b69ecd.woff) format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Muli";
+  src: url(/assets/Muli-Bold-559777c2764fa0a380ec454477234241ee0c67b29754d172f38468c8a9179f9d.woff) format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+/* required styles */
+
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg,
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer {
+	max-width: none !important;
+	}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-tile {
+	will-change: opacity;
+	}
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	     -o-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	will-change: transform;
+	}
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	     -o-transition:      -o-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	     -o-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline: 0;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-container a.leaflet-active {
+	outline: 2px solid orange;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a,
+.leaflet-bar a:hover {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path {
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.7);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover {
+	text-decoration: underline;
+	}
+.leaflet-container .leaflet-control-attribution,
+.leaflet-container .leaflet-control-scale {
+	font-size: 11px;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	font-size: 11px;
+	white-space: nowrap;
+	overflow: hidden;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+
+	background: #fff;
+	background: rgba(255, 255, 255, 0.5);
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 19px;
+	line-height: 1.4;
+	}
+.leaflet-popup-content p {
+	margin: 18px 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	     -o-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 4px 4px 0 0;
+	border: none;
+	text-align: center;
+	width: 18px;
+	height: 14px;
+	font: 16px/14px Tahoma, Verdana, sans-serif;
+	color: #c3c3c3;
+	text-decoration: none;
+	font-weight: bold;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover {
+	color: #999;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	border-bottom: 1px solid #ddd;
+	border-top: 1px solid #ddd;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+.leaflet-oldie .leaflet-popup-tip-container {
+	margin-top: -1px;
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-clickable {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+.select2-container {
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 0;
+  position: relative;
+  vertical-align: middle; }
+  .select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 28px;
+    user-select: none;
+    -webkit-user-select: none; }
+    .select2-container .select2-selection--single .select2-selection__rendered {
+      display: block;
+      padding-left: 8px;
+      padding-right: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+    .select2-container .select2-selection--single .select2-selection__clear {
+      position: relative; }
+  .select2-container[dir="rtl"] .select2-selection--single .select2-selection__rendered {
+    padding-right: 8px;
+    padding-left: 20px; }
+  .select2-container .select2-selection--multiple {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    min-height: 32px;
+    user-select: none;
+    -webkit-user-select: none; }
+    .select2-container .select2-selection--multiple .select2-selection__rendered {
+      display: inline-block;
+      overflow: hidden;
+      padding-left: 8px;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+  .select2-container .select2-search--inline {
+    float: left; }
+    .select2-container .select2-search--inline .select2-search__field {
+      box-sizing: border-box;
+      border: none;
+      font-size: 100%;
+      margin-top: 5px;
+      padding: 0; }
+      .select2-container .select2-search--inline .select2-search__field::-webkit-search-cancel-button {
+        -webkit-appearance: none; }
+
+.select2-dropdown {
+  background-color: white;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  left: -100000px;
+  width: 100%;
+  z-index: 1051; }
+
+.select2-results {
+  display: block; }
+
+.select2-results__options {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+
+.select2-results__option {
+  padding: 6px;
+  user-select: none;
+  -webkit-user-select: none; }
+  .select2-results__option[aria-selected] {
+    cursor: pointer; }
+
+.select2-container--open .select2-dropdown {
+  left: 0; }
+
+.select2-container--open .select2-dropdown--above {
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+.select2-container--open .select2-dropdown--below {
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0; }
+
+.select2-search--dropdown {
+  display: block;
+  padding: 4px; }
+  .select2-search--dropdown .select2-search__field {
+    padding: 4px;
+    width: 100%;
+    box-sizing: border-box; }
+    .select2-search--dropdown .select2-search__field::-webkit-search-cancel-button {
+      -webkit-appearance: none; }
+  .select2-search--dropdown.select2-search--hide {
+    display: none; }
+
+.select2-close-mask {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  min-height: 100%;
+  min-width: 100%;
+  height: auto;
+  width: auto;
+  opacity: 0;
+  z-index: 99;
+  background-color: #fff;
+  filter: alpha(opacity=0); }
+
+.select2-hidden-accessible {
+  border: 0 !important;
+  clip: rect(0 0 0 0) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important; }
+
+.select2-container--default .select2-selection--single {
+  background-color: #fff;
+  border: 1px solid #aaa;
+  border-radius: 4px; }
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 28px; }
+  .select2-container--default .select2-selection--single .select2-selection__clear {
+    cursor: pointer;
+    float: right;
+    font-weight: bold; }
+  .select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #999; }
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 26px;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 20px; }
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+      border-color: #888 transparent transparent transparent;
+      border-style: solid;
+      border-width: 5px 4px 0 4px;
+      height: 0;
+      left: 50%;
+      margin-left: -4px;
+      margin-top: -2px;
+      position: absolute;
+      top: 50%;
+      width: 0; }
+
+.select2-container--default[dir="rtl"] .select2-selection--single .select2-selection__clear {
+  float: left; }
+
+.select2-container--default[dir="rtl"] .select2-selection--single .select2-selection__arrow {
+  left: 1px;
+  right: auto; }
+
+.select2-container--default.select2-container--disabled .select2-selection--single {
+  background-color: #eee;
+  cursor: default; }
+  .select2-container--default.select2-container--disabled .select2-selection--single .select2-selection__clear {
+    display: none; }
+
+.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+  border-color: transparent transparent #888 transparent;
+  border-width: 0 4px 5px 4px; }
+
+.select2-container--default .select2-selection--multiple {
+  background-color: white;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  cursor: text; }
+  .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    box-sizing: border-box;
+    list-style: none;
+    margin: 0;
+    padding: 0 5px;
+    width: 100%; }
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+      list-style: none; }
+  .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    color: #999;
+    margin-top: 5px;
+    float: left; }
+  .select2-container--default .select2-selection--multiple .select2-selection__clear {
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-right: 10px; }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #e4e4e4;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    cursor: default;
+    float: left;
+    margin-right: 5px;
+    margin-top: 5px;
+    padding: 0 5px; }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #999;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    margin-right: 2px; }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+      color: #333; }
+
+.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice, .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__placeholder, .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-search--inline {
+  float: right; }
+
+.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice {
+  margin-left: 5px;
+  margin-right: auto; }
+
+.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice__remove {
+  margin-left: 2px;
+  margin-right: auto; }
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+  border: solid black 1px;
+  outline: 0; }
+
+.select2-container--default.select2-container--disabled .select2-selection--multiple {
+  background-color: #eee;
+  cursor: default; }
+
+.select2-container--default.select2-container--disabled .select2-selection__choice__remove {
+  display: none; }
+
+.select2-container--default.select2-container--open.select2-container--above .select2-selection--single, .select2-container--default.select2-container--open.select2-container--above .select2-selection--multiple {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0; }
+
+.select2-container--default.select2-container--open.select2-container--below .select2-selection--single, .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  border: 1px solid #aaa; }
+
+.select2-container--default .select2-search--inline .select2-search__field {
+  background: transparent;
+  border: none;
+  outline: 0;
+  box-shadow: none;
+  -webkit-appearance: textfield; }
+
+.select2-container--default .select2-results > .select2-results__options {
+  max-height: 200px;
+  overflow-y: auto; }
+
+.select2-container--default .select2-results__option[role=group] {
+  padding: 0; }
+
+.select2-container--default .select2-results__option[aria-disabled=true] {
+  color: #999; }
+
+.select2-container--default .select2-results__option[aria-selected=true] {
+  background-color: #ddd; }
+
+.select2-container--default .select2-results__option .select2-results__option {
+  padding-left: 1em; }
+  .select2-container--default .select2-results__option .select2-results__option .select2-results__group {
+    padding-left: 0; }
+  .select2-container--default .select2-results__option .select2-results__option .select2-results__option {
+    margin-left: -1em;
+    padding-left: 2em; }
+    .select2-container--default .select2-results__option .select2-results__option .select2-results__option .select2-results__option {
+      margin-left: -2em;
+      padding-left: 3em; }
+      .select2-container--default .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option {
+        margin-left: -3em;
+        padding-left: 4em; }
+        .select2-container--default .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option {
+          margin-left: -4em;
+          padding-left: 5em; }
+          .select2-container--default .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option .select2-results__option {
+            margin-left: -5em;
+            padding-left: 6em; }
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: #5897fb;
+  color: white; }
+
+.select2-container--default .select2-results__group {
+  cursor: default;
+  display: block;
+  padding: 6px; }
+
+.select2-container--classic .select2-selection--single {
+  background-color: #f7f7f7;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  outline: 0;
+  background-image: -webkit-linear-gradient(top, white 50%, #eeeeee 100%);
+  background-image: -o-linear-gradient(top, white 50%, #eeeeee 100%);
+  background-image: linear-gradient(to bottom, white 50%, #eeeeee 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFEEEEEE', GradientType=0); }
+  .select2-container--classic .select2-selection--single:focus {
+    border: 1px solid #5897fb; }
+  .select2-container--classic .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 28px; }
+  .select2-container--classic .select2-selection--single .select2-selection__clear {
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    margin-right: 10px; }
+  .select2-container--classic .select2-selection--single .select2-selection__placeholder {
+    color: #999; }
+  .select2-container--classic .select2-selection--single .select2-selection__arrow {
+    background-color: #ddd;
+    border: none;
+    border-left: 1px solid #aaa;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    height: 26px;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 20px;
+    background-image: -webkit-linear-gradient(top, #eeeeee 50%, #cccccc 100%);
+    background-image: -o-linear-gradient(top, #eeeeee 50%, #cccccc 100%);
+    background-image: linear-gradient(to bottom, #eeeeee 50%, #cccccc 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEEEEEE', endColorstr='#FFCCCCCC', GradientType=0); }
+    .select2-container--classic .select2-selection--single .select2-selection__arrow b {
+      border-color: #888 transparent transparent transparent;
+      border-style: solid;
+      border-width: 5px 4px 0 4px;
+      height: 0;
+      left: 50%;
+      margin-left: -4px;
+      margin-top: -2px;
+      position: absolute;
+      top: 50%;
+      width: 0; }
+
+.select2-container--classic[dir="rtl"] .select2-selection--single .select2-selection__clear {
+  float: left; }
+
+.select2-container--classic[dir="rtl"] .select2-selection--single .select2-selection__arrow {
+  border: none;
+  border-right: 1px solid #aaa;
+  border-radius: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  left: 1px;
+  right: auto; }
+
+.select2-container--classic.select2-container--open .select2-selection--single {
+  border: 1px solid #5897fb; }
+  .select2-container--classic.select2-container--open .select2-selection--single .select2-selection__arrow {
+    background: transparent;
+    border: none; }
+    .select2-container--classic.select2-container--open .select2-selection--single .select2-selection__arrow b {
+      border-color: transparent transparent #888 transparent;
+      border-width: 0 4px 5px 4px; }
+
+.select2-container--classic.select2-container--open.select2-container--above .select2-selection--single {
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background-image: -webkit-linear-gradient(top, white 0%, #eeeeee 50%);
+  background-image: -o-linear-gradient(top, white 0%, #eeeeee 50%);
+  background-image: linear-gradient(to bottom, white 0%, #eeeeee 50%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFEEEEEE', GradientType=0); }
+
+.select2-container--classic.select2-container--open.select2-container--below .select2-selection--single {
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background-image: -webkit-linear-gradient(top, #eeeeee 50%, white 100%);
+  background-image: -o-linear-gradient(top, #eeeeee 50%, white 100%);
+  background-image: linear-gradient(to bottom, #eeeeee 50%, white 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEEEEEE', endColorstr='#FFFFFFFF', GradientType=0); }
+
+.select2-container--classic .select2-selection--multiple {
+  background-color: white;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  cursor: text;
+  outline: 0; }
+  .select2-container--classic .select2-selection--multiple:focus {
+    border: 1px solid #5897fb; }
+  .select2-container--classic .select2-selection--multiple .select2-selection__rendered {
+    list-style: none;
+    margin: 0;
+    padding: 0 5px; }
+  .select2-container--classic .select2-selection--multiple .select2-selection__clear {
+    display: none; }
+  .select2-container--classic .select2-selection--multiple .select2-selection__choice {
+    background-color: #e4e4e4;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    cursor: default;
+    float: left;
+    margin-right: 5px;
+    margin-top: 5px;
+    padding: 0 5px; }
+  .select2-container--classic .select2-selection--multiple .select2-selection__choice__remove {
+    color: #888;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    margin-right: 2px; }
+    .select2-container--classic .select2-selection--multiple .select2-selection__choice__remove:hover {
+      color: #555; }
+
+.select2-container--classic[dir="rtl"] .select2-selection--multiple .select2-selection__choice {
+  float: right; }
+
+.select2-container--classic[dir="rtl"] .select2-selection--multiple .select2-selection__choice {
+  margin-left: 5px;
+  margin-right: auto; }
+
+.select2-container--classic[dir="rtl"] .select2-selection--multiple .select2-selection__choice__remove {
+  margin-left: 2px;
+  margin-right: auto; }
+
+.select2-container--classic.select2-container--open .select2-selection--multiple {
+  border: 1px solid #5897fb; }
+
+.select2-container--classic.select2-container--open.select2-container--above .select2-selection--multiple {
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0; }
+
+.select2-container--classic.select2-container--open.select2-container--below .select2-selection--multiple {
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+.select2-container--classic .select2-search--dropdown .select2-search__field {
+  border: 1px solid #aaa;
+  outline: 0; }
+
+.select2-container--classic .select2-search--inline .select2-search__field {
+  outline: 0;
+  box-shadow: none; }
+
+.select2-container--classic .select2-dropdown {
+  background-color: white;
+  border: 1px solid transparent; }
+
+.select2-container--classic .select2-dropdown--above {
+  border-bottom: none; }
+
+.select2-container--classic .select2-dropdown--below {
+  border-top: none; }
+
+.select2-container--classic .select2-results > .select2-results__options {
+  max-height: 200px;
+  overflow-y: auto; }
+
+.select2-container--classic .select2-results__option[role=group] {
+  padding: 0; }
+
+.select2-container--classic .select2-results__option[aria-disabled=true] {
+  color: grey; }
+
+.select2-container--classic .select2-results__option--highlighted[aria-selected] {
+  background-color: #3875d7;
+  color: white; }
+
+.select2-container--classic .select2-results__group {
+  cursor: default;
+  display: block;
+  padding: 6px; }
+
+.select2-container--classic.select2-container--open .select2-dropdown {
+  border-color: #5897fb; }
+/* line 1, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/typeahead.scss */
+.twitter-typeahead {
+  width: 100%;
+}
+
+/* line 5, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/typeahead.scss */
+.tt-menu {
+  padding: 8px 0;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* line 13, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/typeahead.scss */
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+/* line 19, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/typeahead.scss */
+.tt-suggestion:hover {
+  cursor: pointer;
+  color: #FFFFFF;
+  background-color: #0097CF;
+}
+
+/* line 25, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/typeahead.scss */
+.tt-suggestion.tt-cursor {
+  color: #FFFFFF;
+  background-color: #0097CF;
+}
+/* line 5, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_tabs.scss */
+.tabs li {
+  display: inline-block;
+  line-height: 36px;
+  position: relative;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 3px 3px 0 0;
+  border: 1px solid transparent;
+}
+/* line 14, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_tabs.scss */
+.tabs li a {
+  display: block;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: #333333;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_tabs.scss */
+.tabs li.active {
+  background-color: #FFFFFF;
+  border-top: 1px solid #CCCCCC;
+  border-left: 1px solid #CCCCCC;
+  border-right: 1px solid #CCCCCC;
+}
+/* line 27, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_tabs.scss */
+.tabs li.active a {
+  color: #4393F3;
+}
+/* line 31, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_tabs.scss */
+.tabs li.active .badge {
+  color: #4393F3;
+}
+/* line 37, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_tabs.scss */
+.tabs li:hover a {
+  color: #4393F3;
+}
+/* line 41, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_tabs.scss */
+.tabs li:hover .badge {
+  color: #4393F3;
+}
+/* line 46, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_tabs.scss */
+.tabs li .notifications {
+  top: 3px;
+  right: 3px;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.page-title {
+  font-size: 30px;
+  font-weight: normal;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+/* line 11, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.tab-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* line 17, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.tab-list,
+.tab-paragraph {
+  margin-bottom: 32px;
+}
+
+/* line 22, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.accompagnateur-header {
+  background-color: #F8F8F8;
+  padding-top: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #CCCCCC;
+}
+/* line 28, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.accompagnateur-header .container {
+  margin-bottom: -1px;
+}
+
+/* line 33, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.mixed-buttons-bar .button {
+  vertical-align: top;
+}
+
+/* line 39, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.mixed-buttons-bar .label {
+  padding: 8px 16px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* line 45, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.print-menu-opener {
+  position: relative;
+}
+
+/* line 49, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.print-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 45px;
+  font-size: 14px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid #CCCCCC;
+  min-width: 270px;
+  max-width: 340px;
+  z-index: 20;
+}
+/* line 62, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.print-menu.open {
+  display: block;
+}
+/* line 66, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.print-menu li {
+  border-bottom: 1px solid #CCCCCC;
+}
+/* line 69, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.print-menu li:last-child {
+  border-bottom: none;
+}
+/* line 73, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.print-menu li .menu-item {
+  align-items: center;
+  padding: 14px;
+  color: #999999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 80, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.print-menu li .menu-item img {
+  margin-right: 14px;
+}
+/* line 85, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.print-menu li .menu-link {
+  display: flex;
+  color: #333333;
+}
+/* line 89, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.print-menu li .menu-link:hover {
+  background: #F8F8F8;
+}
+
+/* line 96, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/accompagnateur.scss */
+.print-header {
+  display: none;
+}
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_placeholders.scss */
+.fade-in-down {
+  animation-fill-mode: forwards;
+  animation-duration: 0.3s;
+}
+
+@keyframes fade-in-down {
+  0% {
+    opacity: 0;
+    margin-top: -10px;
+  }
+  100% {
+    opacity: 1;
+    margin-top: 0;
+  }
+}
+/* line 15, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/animations.scss */
+.fade-in-down {
+  animation-name: fade-in-down;
+}
+@media (max-width: 820px) {
+  /* line 9, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+  .preview {
+    display: none;
+  }
+
+  /* line 13, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+  .two-columns .column.auth-form {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+  }
+}
+@media (max-width: 820px) {
+  /* line 20, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+  .two-columns.auth {
+    background: #FFFFFF;
+  }
+}
+/* line 25, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.preview {
+  font-size: 24px;
+}
+/* line 28, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.preview .paperless-logo {
+  width: 100%;
+  margin-bottom: 60px;
+}
+/* line 33, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.preview h3 {
+  color: #4393F3;
+  font-weight: bold;
+}
+/* line 38, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.preview .close-procedure {
+  font-size: 12px;
+}
+/* line 42, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.preview .procedure-title {
+  font-size: 30px;
+  margin: 50px 0 32px;
+}
+/* line 47, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.preview .procedure-description {
+  font-size: 14px;
+}
+/* line 51, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.preview .procedure-logos {
+  display: flex;
+  justify-content: space-around;
+}
+/* line 55, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.preview .procedure-logos img {
+  max-height: 130px;
+  margin: 0 10px;
+}
+
+/* line 63, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.auth-form .reset-password {
+  margin-top: -24px;
+  margin-bottom: 8px;
+}
+/* line 68, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.auth-form .remember-me {
+  display: inline-block;
+}
+/* line 72, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.auth-form .separation {
+  font-size: 14px;
+  color: #999999;
+  margin: 24px 0;
+}
+/* line 78, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.auth-form .login-with-fc {
+  display: inline-block;
+  height: 52px;
+  width: 186px;
+  margin: auto;
+  margin-bottom: 8px;
+  background-image: url(/assets/login-with-fc-0ad3a946482d8625b98639048b4a1176675a1683ff72ae883a26e02e1148cb07.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+/* line 89, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.auth-form .login-with-fc:hover {
+  background-image: url(/assets/login-with-fc-hover-c2556edadc5c6d1f448973c2e8130dfa9b047c1cbdb51aa73fc3d5c969ee7523.svg);
+}
+/* line 94, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.auth-form hr {
+  margin-top: 60px;
+  margin-bottom: 20px;
+  background-color: #999999;
+  border: none;
+  height: 1px;
+}
+/* line 102, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.auth-form .register {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* line 107, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/auth.scss */
+.auth-form .register span {
+  font-size: 18px;
+  font-weight: bold;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_typography.scss */
+body,
+input,
+textarea,
+select {
+  font-family: "Muli";
+  color: #333333;
+}
+
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+body,
+input,
+textarea,
+select {
+  font-size: 16px;
+  line-height: 1.42857143;
+}
+
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper {
+  position: relative;
+  padding-bottom: 32px;
+  min-height: 100%;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper.with-footer {
+  padding-bottom: 267px;
+}
+@media (max-width: 1000px) {
+  /* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+  .page-wrapper.with-footer {
+    padding-bottom: 531px;
+  }
+}
+
+/* line 30, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+/* line 35, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+a {
+  color: #4393F3;
+}
+
+/* line 39, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.container {
+  padding-left: 16px;
+  padding-right: 16px;
+  max-width: 1072px;
+  margin: 0 auto;
+}
+
+/* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.give-avis .lock {
+  margin-right: 8px;
+}
+/* line 10, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.give-avis h2 {
+  margin-bottom: 16px;
+}
+/* line 13, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.give-avis h2 .email {
+  font-weight: bold;
+}
+/* line 18, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.give-avis .introduction {
+  margin-bottom: 16px;
+}
+/* line 22, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.give-avis .confidentiel {
+  color: #999999;
+  font-weight: normal;
+  margin-bottom: 32px;
+}
+/* line 28, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.give-avis .date {
+  font-size: 12px;
+  color: #999999;
+  float: right;
+}
+
+/* line 36, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.ask-avis .avis-notice {
+  font-size: 14px;
+  color: #999999;
+  margin-bottom: 32px;
+}
+/* line 42, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.ask-avis input[type=email] {
+  max-width: 500px;
+}
+/* line 46, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.ask-avis form > label {
+  display: inline-block;
+}
+/* line 50, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.ask-avis .confidentiel {
+  color: #999999;
+  font-weight: normal;
+  margin-bottom: 32px;
+}
+/* line 57, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.ask-avis .confidentiel-wrapper label,
+.ask-avis .confidentiel-wrapper select {
+  display: inline-block;
+}
+/* line 63, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.ask-avis .lock {
+  margin-right: 8px;
+}
+/* line 67, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.ask-avis .confidentiel-explanation {
+  display: none;
+  font-size: 14px;
+  color: #999999;
+  margin-top: -16px;
+  margin-bottom: 32px;
+}
+
+/* line 77, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .count {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: 1px solid #999999;
+  text-align: center;
+  font-size: 12px;
+  font-weight: normal;
+  margin-left: 8px;
+}
+/* line 89, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .one-avis {
+  border-top: 1px solid #999999;
+  padding: 16px 0;
+}
+/* line 93, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .one-avis .lock {
+  margin-right: 8px;
+}
+/* line 97, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .one-avis h2 {
+  margin-bottom: 8px;
+}
+/* line 100, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .one-avis h2 .email {
+  font-weight: bold;
+}
+/* line 105, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .one-avis .answer {
+  margin-top: 16px;
+}
+/* line 109, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .one-avis .avis-icon {
+  margin-right: 8px;
+}
+/* line 113, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .one-avis .confidentiel {
+  color: #999999;
+  font-size: 12px;
+}
+/* line 117, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .one-avis .confidentiel .lock {
+  width: 12px;
+  height: 12px;
+  background-size: 12px 12px;
+  vertical-align: sub;
+}
+/* line 126, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .date,
+.list-avis .waiting {
+  font-size: 12px;
+  color: #999999;
+}
+/* line 132, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis.scss */
+.list-avis .date {
+  float: right;
+}
+/* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis_sign_up.scss */
+.avis-sign-up .left p {
+  margin: auto;
+  max-width: 410px;
+  text-align: center;
+}
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis_sign_up.scss */
+.avis-sign-up .left .description {
+  font-size: 30px;
+  line-height: 1.3;
+}
+/* line 17, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/avis_sign_up.scss */
+.avis-sign-up .left .dossier {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/badges.scss */
+.badge {
+  padding: 0 5px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: 100px;
+  background-color: rgba(0, 0, 0, 0.08);
+  vertical-align: top;
+}
+/* line 14, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/badges.scss */
+.badge.warning {
+  background-color: #F59415;
+  color: #FFFFFF;
+}
+/* line 1, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/beta.scss */
+#beta {
+  text-align: center;
+  text-transform: uppercase;
+  position: fixed;
+  bottom: 26px;
+  right: -35px;
+  transform: rotate(-45deg);
+  width: 150px;
+  background-color: #008CBA;
+  color: #FFFFFF;
+  padding: 5px;
+  font-size: 15px;
+  font-weight: 700;
+  z-index: 10;
+}
+@charset "UTF-8";
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/breadcrumb.scss */
+.breadcrumbs {
+  margin: 8px 0 24px;
+}
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/breadcrumb.scss */
+.breadcrumbs li {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 14px;
+}
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/breadcrumb.scss */
+.breadcrumbs li a {
+  color: #333333;
+}
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/breadcrumb.scss */
+.breadcrumbs li::after {
+  content: " > ";
+}
+/* line 20, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/breadcrumb.scss */
+.breadcrumbs li:last-child {
+  color: #4393F3;
+}
+/* line 23, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/breadcrumb.scss */
+.breadcrumbs li:last-child::after {
+  content: none;
+}
+@charset "UTF-8";
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 1px solid #CCCCCC;
+  font-size: 14px;
+  line-height: 20px;
+  background-color: #FFFFFF;
+  color: #333333;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button:hover {
+  background: #F8F8F8;
+  text-decoration: none;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button:active, .button:focus {
+  outline: none;
+}
+/* line 26, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.primary {
+  color: #FFFFFF;
+  border-color: #4393F3;
+  background-color: #4393F3;
+}
+/* line 31, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.primary:hover {
+  background: rgba(61, 149, 236, 0.8);
+}
+/* line 36, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.secondary {
+  color: #4393F3;
+  border-color: #4393F3;
+  background-color: #FFFFFF;
+}
+/* line 41, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.secondary:hover {
+  color: #FFFFFF;
+  background: rgba(61, 149, 236, 0.8);
+}
+/* line 47, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.accepted {
+  color: #FFFFFF;
+  border-color: #35D49E;
+  background-color: #35D49E;
+}
+/* line 52, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.accepted:hover {
+  color: #35D49E;
+  background-color: #FFFFFF;
+}
+/* line 58, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.without-continuation {
+  color: #FFFFFF;
+  border-color: #333333;
+  background-color: #333333;
+}
+/* line 63, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.without-continuation:hover {
+  color: #333333;
+  background-color: #FFFFFF;
+}
+/* line 69, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.refused {
+  color: #FFFFFF;
+  border-color: #A94442;
+  background-color: #A94442;
+}
+/* line 74, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.refused:hover {
+  color: #A94442;
+  background-color: #FFFFFF;
+}
+/* line 80, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.large {
+  font-size: 18px;
+  line-height: 26px;
+  padding: 15px 32px;
+}
+/* line 86, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.expand {
+  width: 100%;
+}
+/* line 90, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button > .icon {
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+/* line 98, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.dropdown {
+  position: relative;
+}
+/* line 101, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.dropdown::after {
+  content: "▾";
+  margin-left: 8px;
+  font-weight: bold;
+}
+/* line 108, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.dropdown.icon-only::after {
+  margin-left: 2px;
+  color: #4393F3;
+}
+/* line 114, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.dropdown .dropdown-content {
+  display: none;
+}
+/* line 119, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.dropdown.open .dropdown-content {
+  display: block;
+}
+/* line 125, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.icon-only {
+  padding: 9px 16px;
+}
+/* line 128, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.button.icon-only .icon {
+  margin-right: 0;
+}
+
+/* line 134, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-content {
+  border: 1px solid #CCCCCC;
+  background: #FFFFFF;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  right: 0;
+  top: 40px;
+  cursor: default;
+  z-index: 10;
+}
+/* line 144, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-content.left-aligned {
+  left: 0;
+  right: unset;
+}
+/* line 149, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-content.terminated {
+  width: 600px;
+  color: #333333;
+  padding: 16px;
+}
+/* line 154, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-content.terminated h4 {
+  font-size: 24px;
+}
+/* line 158, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-content.terminated .dossier-motivation {
+  margin: 16px 0;
+}
+/* line 162, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-content.terminated .attestation {
+  margin: 16px 0;
+  color: #999999;
+}
+
+/* line 170, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-items li {
+  display: flex;
+  padding: 16px;
+  color: #999999;
+  border-bottom: 1px solid #CCCCCC;
+  font-size: 12px;
+  min-width: 300px;
+  cursor: pointer;
+}
+/* line 179, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-items li.selected {
+  cursor: default;
+}
+/* line 182, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-items li.selected h4 {
+  color: #4393F3;
+}
+/* line 187, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-items li.selected, .dropdown-items li:hover {
+  background: #F8F8F8;
+}
+/* line 192, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-items li:last-child {
+  border-bottom: none;
+}
+/* line 196, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-items li a {
+  display: flex;
+  color: #999999;
+}
+/* line 201, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-items li .icon {
+  flex-shrink: 0;
+}
+/* line 205, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-items li div {
+  padding-left: 8px;
+}
+/* line 210, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-items h4 {
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 8px;
+}
+
+/* line 217, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-form {
+  padding: 16px;
+}
+/* line 220, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-form .select2-container {
+  margin-bottom: 16px;
+}
+/* line 224, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-form .select2-selection {
+  border: 1px solid #CCCCCC;
+}
+/* line 227, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-form .select2-selection.select2-selection--multiple {
+  border: 1px solid #CCCCCC;
+}
+/* line 232, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-form.large {
+  width: 340px;
+}
+/* line 236, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-form label {
+  width: 100px;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+/* line 242, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.dropdown-form input,
+.dropdown-form select {
+  width: 200px;
+  display: inline-block;
+}
+
+/* line 249, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.select2-dropdown {
+  border: 1px solid #CCCCCC;
+}
+
+/* line 253, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/buttons.scss */
+.link {
+  color: #4393F3;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/card.scss */
+.card {
+  padding: 24px 16px;
+  border: 1px solid #CCCCCC;
+  margin-bottom: 16px;
+}
+/* line 9, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/card.scss */
+.card.featured {
+  border-top: 8px solid #4393F3;
+}
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/card.scss */
+.card.featured .card-title {
+  color: #4393F3;
+}
+/* line 17, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/card.scss */
+.card .card-title {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_typography.scss */
+body,
+input,
+textarea,
+select {
+  font-family: "Muli";
+  color: #333333;
+}
+
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+body,
+input,
+textarea,
+select {
+  font-size: 16px;
+  line-height: 1.42857143;
+}
+
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper {
+  position: relative;
+  padding-bottom: 32px;
+  min-height: 100%;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper.with-footer {
+  padding-bottom: 267px;
+}
+@media (max-width: 1000px) {
+  /* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+  .page-wrapper.with-footer {
+    padding-bottom: 531px;
+  }
+}
+
+/* line 30, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+/* line 35, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+a {
+  color: #4393F3;
+}
+
+/* line 39, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.container {
+  padding-left: 16px;
+  padding-right: 16px;
+  max-width: 1072px;
+  margin: 0 auto;
+}
+
+/* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossier_annotations_privees.scss */
+#dossier-annotations-privees h1 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+/* line 5, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossier_champs.scss */
+.table.dossier-champs th,
+.table.dossier-champs td {
+  vertical-align: top;
+}
+/* line 10, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossier_champs.scss */
+.table.dossier-champs .libelle {
+  width: 250px;
+}
+/* line 14, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossier_champs.scss */
+.table.dossier-champs td.updated-at {
+  font-size: 13px;
+  color: #999999;
+  text-align: right;
+  width: 190px;
+}
+/* line 20, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossier_champs.scss */
+.table.dossier-champs td.updated-at > span {
+  opacity: 0;
+}
+/* line 23, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossier_champs.scss */
+.table.dossier-champs td.updated-at > span.highlighted {
+  opacity: 1;
+}
+/* line 29, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossier_champs.scss */
+.table.dossier-champs tr:hover .updated-at > span {
+  opacity: 1;
+}
+/* line 5, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossier_link.scss */
+.dossier-link .help-block > p {
+  margin-top: -16px;
+  margin-bottom: 32px;
+}
+/* line 10, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossier_link.scss */
+.dossier-link .text-info {
+  color: #4393F3;
+}
+/* line 14, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossier_link.scss */
+.dossier-link .text-warning {
+  color: #A94442;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table {
+  font-size: 14px;
+}
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table th {
+  vertical-align: middle;
+  padding: 16px 8px;
+}
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table td {
+  padding: 0;
+}
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table thead a {
+  color: #000000;
+}
+/* line 20, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .caret-icon {
+  vertical-align: top;
+  margin-top: 9px;
+  margin-left: 4px;
+}
+/* line 26, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .cell-link {
+  color: #333333;
+  padding: calc((2 * 8px) + ((38px - 28px) / 2)) 8px;
+  display: block;
+}
+/* line 35, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .icon.folder {
+  position: relative;
+}
+/* line 38, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .icon.folder .notifications {
+  top: -3px;
+  right: -6px;
+}
+/* line 44, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .notification-col {
+  width: 45px;
+}
+/* line 47, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .notification-col a {
+  font-size: 16px;
+}
+/* line 52, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .number-col {
+  width: 110px;
+}
+/* line 56, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .folder-col {
+  text-align: center;
+}
+/* line 60, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .status-col {
+  width: 110px;
+}
+/* line 63, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .status-col .label {
+  width: 110px;
+  text-align: center;
+}
+/* line 69, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/dossiers_table.scss */
+.table.dossiers-table .follow-col {
+  width: 200px;
+  text-align: right;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+/* line 1, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/flex.scss */
+.flex {
+  display: flex;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/flex.scss */
+.flex.align-center {
+  align-items: center;
+}
+/* line 8, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/flex.scss */
+.flex.align-start {
+  align-items: flex-start;
+}
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/flex.scss */
+.flex.align-baseline {
+  align-items: baseline;
+}
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/flex.scss */
+.flex.justify-between {
+  justify-content: space-between;
+}
+/* line 20, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/flex.scss */
+.flex.justify-center {
+  justify-content: center;
+}
+/* line 5, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+/* line 15, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form label {
+  margin-bottom: 16px;
+  display: block;
+}
+/* line 19, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form label .mandatory {
+  color: #A94442;
+}
+/* line 23, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form label .notice {
+  font-size: 14px;
+  color: #999999;
+  display: block;
+  margin-top: 8px;
+}
+/* line 31, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .editable-champ .updated-at {
+  font-size: 14px;
+  color: #999999;
+  float: right;
+  display: inline-block;
+  margin-left: 8px;
+  visibility: hidden;
+}
+/* line 39, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .editable-champ:hover .updated-at,
+.form .editable-champ .updated-at.highlighted {
+  visibility: visible;
+}
+/* line 46, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .radios label {
+  display: inline;
+  margin-left: 16px;
+}
+/* line 50, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .radios label:first-child {
+  margin-left: 0;
+}
+/* line 56, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form input[type=text]:not([data-address='true']),
+.form input[type=email],
+.form input[type=password],
+.form input[type=date],
+.form input[type=number],
+.form input[type=tel],
+.form textarea,
+.form select {
+  display: block;
+  border-radius: 4px;
+  border: solid 1px #CCCCCC;
+  margin-bottom: 32px;
+  padding: 16px;
+}
+/* line 70, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form input[type=text]:not([data-address='true']):disabled,
+.form input[type=email]:disabled,
+.form input[type=password]:disabled,
+.form input[type=date]:disabled,
+.form input[type=number]:disabled,
+.form input[type=tel]:disabled,
+.form textarea:disabled,
+.form select:disabled {
+  background-color: #CCCCCC;
+}
+/* line 75, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form input[type=text],
+.form input[type=email],
+.form input[type=password],
+.form input[type=date],
+.form input[type=number],
+.form input[type=tel],
+.form textarea {
+  width: 100%;
+}
+/* line 85, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form input[type=email],
+.form input[type=number],
+.form input[type=tel] {
+  max-width: 500px;
+}
+/* line 91, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form input[type=checkbox],
+.form input[type=radio] {
+  margin-bottom: 32px;
+}
+/* line 96, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form input[type=date] {
+  max-width: 180px;
+}
+/* line 100, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form input:invalid,
+.form textarea:invalid {
+  box-shadow: none;
+}
+/* line 105, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form input.touched:invalid,
+.form textarea.touched:invalid {
+  border-color: #A94442;
+  box-shadow: 0px 0px 5px #A94442;
+}
+/* line 111, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form select,
+.form .select2-selection {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(/assets/icons/chevron-down-4696654bf9deb0cf00e4c0ab058ff3324f073a192c0f032e46fb2d4aa41910be.svg) no-repeat;
+  background-size: 14px;
+  background-position: right 10px center;
+  padding-right: 32px;
+}
+/* line 123, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form select::-ms-expand,
+.form .select2-selection::-ms-expand {
+  display: none;
+}
+@media screen and (min-width: 0\0) {
+  /* line 129, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+  .form select select,
+  .form .select2-selection select {
+    background: none\9;
+  }
+}
+/* line 135, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .select2 {
+  min-width: 50%;
+}
+/* line 139, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .select2-container {
+  display: block;
+  margin-bottom: 32px;
+}
+/* line 144, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .select2-container.select2-container--focus .select2-selection {
+  border-color: #CCCCCC;
+}
+/* line 150, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .select2-container .select2-selection__rendered {
+  padding: 16px;
+}
+/* line 154, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .select2-container .select2-selection__choice {
+  background-color: #FFFFFF;
+}
+/* line 160, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .twitter-typeahead {
+  margin-bottom: 32px;
+}
+/* line 164, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form input.tt-input,
+.form input.tt-hint {
+  border-radius: 4px;
+  border: solid 1px #CCCCCC;
+  padding: 16px;
+}
+/* line 171, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form input.tt-hint {
+  color: #999999;
+}
+/* line 176, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .datetime input[type=date] {
+  display: inline-block;
+}
+/* line 180, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .datetime select {
+  display: inline-block;
+}
+/* line 185, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .header-section {
+  color: #4393F3;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 32px;
+}
+/* line 192, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .explication-libelle {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+/* line 198, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .explication {
+  background-color: #F8F8F8;
+  padding: 16px;
+  margin-bottom: 32px;
+}
+/* line 204, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .send-wrapper {
+  text-align: right;
+}
+/* line 207, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/forms.scss */
+.form .send-wrapper .send {
+  margin-bottom: 16px;
+}
+/* line 1, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
+  vertical-align: bottom;
+}
+/* line 8, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.follow {
+  background-image: url(/assets/icons/follow-folder-c860c009aaa40a9ad34efb9ef831be27962a6dd9075e49f0dcd7e69b13a6edec.svg);
+}
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.unfollow {
+  background-image: url(/assets/icons/unfollow-folder-5429742b3bd2db5ffd50b29ac8200859691fb6bf9fb0ab7bf60a1d94eac8d445.svg);
+}
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.archive {
+  background-image: url(/assets/icons/archive-95e013a0731b9482bcaa94995510faedb80fe7b86dfcc4ff81dcc252ccc28e3e.svg);
+}
+/* line 20, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.unarchive {
+  background-image: url(/assets/icons/unarchive-03d56cd5e3bca06f1acfc441a1e8a30adc16c6192eca3f37e35008f2783b8662.svg);
+}
+/* line 24, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.folder {
+  background-image: url(/assets/icons/folder-358bd65e51722052cb3f2e3ba3bee6fbd166211f09cd9dea6f6ecc022690e807.svg);
+}
+/* line 28, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.accept {
+  background-image: url(/assets/icons/accept-32488a0abae92ea0edba6da9b9f62db8995ae3550ce69e810c0137e5ce3a1c93.svg);
+}
+/* line 32, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.refuse {
+  background-image: url(/assets/icons/refuse-cad1321f3da404abf57f7b85b733bb2f92826f9c9464bb6080e921517c45cb28.svg);
+}
+/* line 36, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.without-continuation {
+  background-image: url(/assets/icons/without-continuation-bf832736cbd891588b56d4aee1ee2aae0a07861c9c737aa19f93b5020d770d55.svg);
+}
+/* line 40, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.edit {
+  background-image: url(/assets/icons/edit-folder-blue-533551429bb99bbfec7bdfedec7635077e811a3d0a7507685ee13630e79952e6.svg);
+}
+/* line 44, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.in-progress {
+  background-image: url(/assets/icons/in-progress-blue-a1084287df801290018cf4350cb3627fb3e1300274c1c347ef437cea0a70afd3.svg);
+}
+/* line 48, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.bubble {
+  background-image: url(/assets/icons/bubble-b33c387393473c1669a384449fe1196657332632d16d57b2e4ec9767237ccd37.svg);
+}
+/* line 52, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.attachment {
+  background-image: url(/assets/icons/attachment-8b60227a90cb5f77f90483453a6662ab1ba61a68807aa3eca1b21982e262bd40.svg);
+}
+/* line 56, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.lock {
+  background-image: url(/assets/icons/lock-c9cb635a7e8d9c9313b80cba816ee34cf517651985a72cccbaba974531268e81.svg);
+}
+/* line 60, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/icons.scss */
+.icon.printer {
+  background-image: url(/assets/icons/printer-c73c16c8785f0ccf2b7a00cbf30181e9dafc1edc60be720dca5e07867413bb14.svg);
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/labels.scss */
+.label {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #999999;
+  border: 1px solid transparent;
+  color: #FFFFFF;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 18px;
+}
+/* line 14, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/labels.scss */
+.label.instruction {
+  background-color: #FFFFFF;
+  color: #4393F3;
+  border: 1px solid #4393F3;
+}
+/* line 20, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/labels.scss */
+.label.construction {
+  background-color: #FFFFFF;
+  color: #333333;
+  border: 1px solid #333333;
+}
+/* line 26, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/labels.scss */
+.label.accepted {
+  background-color: #35D49E;
+}
+/* line 30, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/labels.scss */
+.label.refused {
+  background-color: #A94442;
+}
+/* line 34, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/labels.scss */
+.label.without-continuation {
+  background-color: #333333;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_placeholders.scss */
+.features, .quotes, .numbers, .users {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_placeholders.scss */
+.feature, .quote, .number, .user {
+  display: inline-block;
+}
+
+/* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.landing {
+  background-color: #FFFFFF;
+}
+
+/* line 10, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.landing-panel {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.hero-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+@media (max-width: 1040px) {
+  /* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+  .hero-wrapper {
+    justify-content: center;
+  }
+}
+
+/* line 26, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.hero-text {
+  max-width: 500px;
+}
+@media (max-width: 1040px) {
+  /* line 26, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+  .hero-text {
+    margin: auto;
+  }
+}
+
+/* line 34, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.hero-tagline {
+  font-size: 30px;
+  margin-bottom: 0px;
+}
+
+/* line 39, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.hero-tagline-em {
+  color: #4393F3;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: bold;
+}
+
+/* line 46, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.hero-illustration {
+  max-width: 500px;
+}
+/* line 49, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.hero-illustration img {
+  max-width: 100%;
+}
+@media (max-width: 1030px) {
+  /* line 46, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+  .hero-illustration {
+    margin: auto;
+  }
+}
+
+/* line 58, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.hero-button {
+  padding-left: 30px;
+  padding-right: 30px;
+  display: inline-block;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 60px;
+  background-color: #4393F3;
+  color: #FFFFFF;
+  font-size: 24px;
+  margin-top: 30px;
+  cursor: pointer;
+}
+/* line 71, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.hero-button:hover {
+  color: #FFFFFF;
+  text-decoration: none;
+  background-color: rgba(61, 149, 236, 0.8);
+}
+/* line 77, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.hero-button:focus {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+/* line 83, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.landing-panel-title {
+  width: 100%;
+  font-size: 30px;
+  font-weight: normal;
+  text-align: center;
+  margin-bottom: 40px;
+  margin-top: 0;
+}
+
+/* line 92, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.features-panel {
+  background-color: #4393F3;
+}
+
+/* line 96, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.features-panel-title {
+  color: #FFFFFF;
+}
+
+/* line 100, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.features {
+  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
+}
+@media (max-width: 1040px) {
+  /* line 100, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+  .features {
+    justify-content: center;
+  }
+}
+
+/* line 111, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.feature {
+  width: 320px;
+}
+@media (max-width: 1040px) {
+  /* line 111, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+  .feature {
+    margin: 15px 20px;
+  }
+}
+
+/* line 120, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.feature-text {
+  text-align: center;
+  color: #FFFFFF;
+  font-size: 20px;
+}
+
+/* line 126, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.feature-text-em {
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* line 131, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.feature-image {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 24px;
+}
+
+/* line 137, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.quotes {
+  width: 100%;
+  justify-content: space-between;
+}
+@media (max-width: 1040px) {
+  /* line 137, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+  .quotes {
+    justify-content: center;
+  }
+}
+
+/* line 147, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.quote {
+  max-width: 500px;
+  background-color: #FFFFFF;
+  box-shadow: 0 4px 16px 0 rgba(153, 153, 153, 0.2);
+  padding: 24px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+@media (max-width: 1040px) {
+  /* line 147, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+  .quote {
+    margin: 15px 0;
+  }
+}
+
+/* line 162, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.quote-quotation-mark {
+  margin-top: 12px;
+}
+
+/* line 166, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.quote-content {
+  font-size: 18px;
+  margin-bottom: 24px;
+}
+
+/* line 171, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.quote-content-wrapper {
+  margin-left: 20px;
+  width: 100%;
+}
+
+/* line 176, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.quote-author {
+  font-size: 14px;
+}
+
+/* line 180, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.quote-author-name {
+  font-weight: bold;
+}
+
+/* line 184, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.numbers-panel {
+  background-color: #F8F8F8;
+}
+
+/* line 188, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.numbers {
+  justify-content: space-around;
+  width: 100%;
+}
+
+/* line 194, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.number {
+  width: 320px;
+  text-align: center;
+}
+@media (max-width: 1040px) {
+  /* line 194, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+  .number {
+    margin-bottom: 15px;
+  }
+}
+
+/* line 204, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.number-value {
+  color: #4393F3;
+  font-weight: bold;
+  font-size: 36px;
+}
+
+/* line 210, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.number-label {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+/* line 217, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.users {
+  justify-content: space-between;
+  width: 100%;
+}
+@media (max-width: 950px) {
+  /* line 217, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+  .users {
+    justify-content: space-around;
+  }
+}
+
+/* line 227, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.user {
+  width: 170px;
+}
+/* line 231, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.user:hover {
+  opacity: 0.6;
+}
+@media (max-width: 950px) {
+  /* line 227, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+  .user {
+    margin: 0 15px 15px;
+  }
+}
+
+/* line 240, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.user-image {
+  width: 170px;
+}
+
+/* line 244, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.cta-panel {
+  background-color: #4393F3;
+  color: #FFFFFF;
+}
+
+/* line 249, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.cta-panel-wrapper {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* line 256, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.cta-panel-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 13px;
+}
+
+/* line 262, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.cta-panel-explanation {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* line 269, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.cta-panel-button {
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: block;
+  border-radius: 100px;
+  border: 2px solid #FFFFFF;
+  color: #FFFFFF;
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 20px;
+}
+/* line 281, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.cta-panel-button:hover {
+  color: #FFFFFF;
+  text-decoration: none;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+/* line 287, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/landing.scss */
+.cta-panel-button:focus {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_typography.scss */
+body,
+input,
+textarea,
+select {
+  font-family: "Muli";
+  color: #333333;
+}
+
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+body,
+input,
+textarea,
+select {
+  font-size: 16px;
+  line-height: 1.42857143;
+}
+
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper {
+  position: relative;
+  padding-bottom: 32px;
+  min-height: 100%;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper.with-footer {
+  padding-bottom: 267px;
+}
+@media (max-width: 1000px) {
+  /* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+  .page-wrapper.with-footer {
+    padding-bottom: 531px;
+  }
+}
+
+/* line 30, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+/* line 35, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+a {
+  color: #4393F3;
+}
+
+/* line 39, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.container, .two-columns .columns-container {
+  padding-left: 16px;
+  padding-right: 16px;
+  max-width: 1072px;
+  margin: 0 auto;
+}
+
+/* line 5, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/layouts.scss */
+.two-columns {
+  background: linear-gradient(to right, #FFFFFF 0%, #FFFFFF 50%, #F8F8F8 50%, #F8F8F8 100%);
+}
+/* line 11, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/layouts.scss */
+.two-columns .columns-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+/* line 18, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/layouts.scss */
+.two-columns .column {
+  width: 50%;
+  padding: 60px;
+}
+@media (min-width: 1160px) {
+  /* line 23, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/layouts.scss */
+  .two-columns .column:first-child {
+    padding-left: 0;
+  }
+  /* line 27, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/layouts.scss */
+  .two-columns .column:last-child {
+    padding-right: 0;
+  }
+}
+/* line 1, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/manager.scss */
+.types-de-champs-table {
+  table-layout: fixed;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/manager.scss */
+.types-de-champs-table td {
+  white-space: normal;
+  vertical-align: top;
+}
+/* line 1, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/map.scss */
+#map {
+  height: 400px;
+  margin-bottom: 16px;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_typography.scss */
+body,
+input,
+textarea,
+select {
+  font-family: "Muli";
+  color: #333333;
+}
+
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+body,
+input,
+textarea,
+select {
+  font-size: 16px;
+  line-height: 1.42857143;
+}
+
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper {
+  position: relative;
+  padding-bottom: 32px;
+  min-height: 100%;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper.with-footer {
+  padding-bottom: 267px;
+}
+@media (max-width: 1000px) {
+  /* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+  .page-wrapper.with-footer {
+    padding-bottom: 531px;
+  }
+}
+
+/* line 30, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+/* line 35, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+a {
+  color: #4393F3;
+}
+
+/* line 39, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.container {
+  padding-left: 16px;
+  padding-right: 16px;
+  max-width: 1072px;
+  margin: 0 auto;
+}
+
+/* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/messagerie.scss */
+.messagerie .messages-list {
+  max-height: 350px;
+  overflow-y: scroll;
+  border: 1px solid #CCCCCC;
+  background: #F8F8F8;
+  padding: 16px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+/* line 15, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/messagerie.scss */
+.messagerie .messages-list > li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: #FFFFFF;
+  width: 80%;
+  border-radius: 3px;
+}
+/* line 24, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/messagerie.scss */
+.messagerie .messages-list > li.from-me {
+  margin-left: auto;
+}
+/* line 30, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/messagerie.scss */
+.messagerie .person-icon {
+  margin-right: 8px;
+}
+/* line 34, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/messagerie.scss */
+.messagerie h2 {
+  margin-bottom: 8px;
+}
+/* line 38, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/messagerie.scss */
+.messagerie .mail {
+  font-weight: bold;
+}
+/* line 42, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/messagerie.scss */
+.messagerie .guest,
+.messagerie .date {
+  font-size: 12px;
+  color: #999999;
+}
+/* line 48, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/messagerie.scss */
+.messagerie .date {
+  float: right;
+}
+/* line 52, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/messagerie.scss */
+.messagerie .attachment-link {
+  margin-top: 8px;
+}
+/* line 56, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/messagerie.scss */
+.messagerie .message-textarea {
+  margin-bottom: 8px;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/motivation.scss */
+.motivation {
+  display: none;
+  padding: 16px;
+  color: #333333;
+  width: 450px;
+}
+/* line 10, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/motivation.scss */
+.motivation h3 {
+  font-size: 22px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+/* line 15, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/motivation.scss */
+.motivation h3 .icon {
+  vertical-align: sub;
+  margin-right: 8px;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/motivation.scss */
+.motivation textarea {
+  margin-bottom: 8px;
+}
+/* line 25, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/motivation.scss */
+.motivation .help {
+  color: #999999;
+  font-size: 11px;
+  margin-bottom: 16px;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_alert.scss */
+.alert {
+  padding: 15px;
+  border: 1px solid transparent;
+}
+
+/* line 8, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_alert.scss */
+.alert-danger {
+  background-color: #F2DEDE;
+  border-color: #EBCCD1;
+  color: #A94442;
+}
+
+/* line 14, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_alert.scss */
+.alert-success {
+  background-color: #b3efdb;
+  border-color: #9eead0;
+  color: #1d8662;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_placeholders.scss */
+.footer-columns {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_placeholders.scss */
+.footer-column {
+  display: inline-block;
+}
+
+/* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+footer {
+  padding-top: 72px;
+  padding-bottom: 72px;
+  background-color: #F8F8F8;
+  border-top: 1px solid #CCCCCC;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 267px;
+}
+@media (max-width: 1000px) {
+  /* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+  footer {
+    height: 531px;
+  }
+}
+
+/* line 20, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+.footer-columns {
+  justify-content: flex-start;
+}
+
+/* line 25, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+.footer-column {
+  font-size: 14px;
+  vertical-align: top;
+  flex-grow: 1;
+  min-width: 320px;
+}
+@media (max-width: 1000px) {
+  /* line 25, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+  .footer-column {
+    width: 100%;
+    margin-bottom: 14px;
+  }
+}
+
+/* line 38, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+.footer-logos,
+.footer-links {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* line 45, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+.footer-link {
+  margin-bottom: 14px;
+}
+/* line 48, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+.footer-link:last-of-type {
+  margin-bottom: 0;
+}
+
+/* line 53, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+.footer-logo:hover {
+  opacity: 0.8;
+}
+
+/* line 57, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+.footer-logo-rf {
+  display: block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url(/assets/footer/logo-rf-bcf6cb0600b2bba1cd3ea563824342081d66f1d3861681e96deb0d99459ea1e5.svg);
+  width: 75px;
+  height: 44px;
+  margin-bottom: 14px;
+}
+
+/* line 65, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+.footer-logo-beta-gouv-fr {
+  display: block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url(/assets/footer/logo-beta-gouv-fr-eebbdcf7c1b4acc652c8ac58c78de3802971d9945d64ee4b9b134fe6fce65ddd.svg);
+  width: 190px;
+  height: 32px;
+}
+
+/* line 72, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+.footer-link a {
+  color: #333333;
+  text-decoration: none;
+}
+/* line 76, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_footer.scss */
+.footer-link a:hover, .footer-link a:focus {
+  color: #4393F3;
+  text-decoration: none;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_typography.scss */
+body,
+input,
+textarea,
+select {
+  font-family: "Muli";
+  color: #333333;
+}
+
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+body,
+input,
+textarea,
+select {
+  font-size: 16px;
+  line-height: 1.42857143;
+}
+
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper {
+  position: relative;
+  padding-bottom: 32px;
+  min-height: 100%;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper.with-footer {
+  padding-bottom: 267px;
+}
+@media (max-width: 1000px) {
+  /* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+  .page-wrapper.with-footer {
+    padding-bottom: 531px;
+  }
+}
+
+/* line 30, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+/* line 35, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+a {
+  color: #4393F3;
+}
+
+/* line 39, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.container, .header-inner-content {
+  padding-left: 16px;
+  padding-right: 16px;
+  max-width: 1072px;
+  margin: 0 auto;
+}
+
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.new-header {
+  background-color: #FFFFFF;
+}
+
+/* line 11, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.new-header-with-border {
+  border-bottom: 1px solid #CCCCCC;
+}
+
+/* line 15, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-inner-content {
+  display: flex;
+  justify-content: space-between;
+  min-height: 72px;
+}
+
+/* line 22, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-logo {
+  display: inline-block;
+  margin-right: 32px;
+}
+
+/* line 28, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-tabs li {
+  padding-left: 16px;
+  padding-right: 16px;
+  display: inline-block;
+}
+/* line 33, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-tabs .tab-link {
+  display: inline-block;
+  height: 72px;
+  line-height: 72px;
+  font-size: 18px;
+  color: #333333;
+}
+/* line 40, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-tabs .tab-link.active, .header-tabs .tab-link:hover {
+  color: #4393F3;
+  border-bottom: 2px solid #4393F3;
+}
+/* line 45, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-tabs .tab-link.active.contact-link, .header-tabs .tab-link:hover.contact-link {
+  position: relative;
+  border-bottom: none;
+}
+/* line 49, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-tabs .tab-link.active.contact-link .contact-details, .header-tabs .tab-link:hover.contact-link .contact-details {
+  display: block;
+}
+
+/* line 57, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.contact-details {
+  display: none;
+  position: absolute;
+  left: -165px;
+  background: #FFFFFF;
+  border: 2px solid #4393F3;
+  border-radius: 5px;
+  padding: 15px;
+  width: 400px;
+  color: #333333;
+  z-index: 100;
+  font-size: initial;
+  line-height: 1.6;
+}
+/* line 71, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.contact-details::after, .contact-details::before {
+  bottom: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+/* line 83, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.contact-details::after {
+  border-color: rgba(255, 255, 255, 0);
+  border-bottom-color: #FFFFFF;
+  border-width: 15px;
+  margin-left: -15px;
+}
+/* line 90, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.contact-details::before {
+  border-color: rgba(255, 255, 255, 0);
+  border-bottom-color: #4393F3;
+  border-width: 18px;
+  margin-left: -18px;
+}
+/* line 97, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.contact-details ul {
+  list-style-type: disc;
+}
+
+/* line 102, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-right-content {
+  display: flex;
+  align-items: center;
+}
+/* line 106, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-right-content > li {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+/* line 109, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-right-content > li:last-child {
+  padding-right: 0;
+}
+
+/* line 115, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-search {
+  position: relative;
+}
+/* line 118, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-search .form input[type=text] {
+  padding: 9px;
+  padding-right: 42px;
+  float: right;
+  width: 300px;
+  margin: 0;
+}
+/* line 126, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-search button {
+  padding: 9px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+}
+/* line 134, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-search button:hover {
+  opacity: 0.8;
+}
+
+/* line 140, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu-opener {
+  position: relative;
+}
+/* line 143, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu-opener img {
+  cursor: pointer;
+}
+/* line 146, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu-opener img:hover {
+  opacity: 0.8;
+}
+
+/* line 152, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 34px;
+  font-size: 14px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid #CCCCCC;
+  min-width: 270px;
+  max-width: 340px;
+  z-index: 20;
+}
+/* line 165, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu.open {
+  display: block;
+}
+/* line 169, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu li {
+  border-bottom: 1px solid #CCCCCC;
+}
+/* line 172, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu li:last-child {
+  border-bottom: none;
+}
+/* line 176, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu li .menu-item {
+  align-items: center;
+  padding: 14px;
+  color: #999999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 183, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu li .menu-item img {
+  margin-right: 14px;
+}
+/* line 188, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu li .menu-link {
+  display: flex;
+  color: #333333;
+}
+/* line 192, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/new_header.scss */
+.header-menu li .menu-link:hover {
+  background: #F8F8F8;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/notifications.scss */
+span.notifications {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #F59415;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/pagination.scss */
+.pagination {
+  text-align: center;
+  margin-bottom: 24px;
+}
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/pagination.scss */
+.pagination > span {
+  margin: 0 8px;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/patron.scss */
+.patron p {
+  margin-bottom: 20px;
+}
+/* line 1, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/personnes_impliquees.scss */
+.personnes-impliquees {
+  padding-bottom: 50px;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/personnes_impliquees.scss */
+.personnes-impliquees ul {
+  list-style-type: disc;
+  margin-left: 16px;
+}
+/* line 2, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/pj.scss */
+.pj th {
+  vertical-align: middle;
+}
+/* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/pj.scss */
+.pj .dropdown-items a {
+  flex-direction: column;
+}
+/* line 10, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/pj.scss */
+.pj .filename {
+  font-weight: bold;
+}
+/* line 5, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure-logo.scss */
+.procedure-logo {
+  display: block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #FFFFFF;
+  background-position: 95% 50%;
+  border: 1px solid #CCCCCC;
+  height: 84px;
+  width: 84px;
+  margin-right: 16px;
+}
+/* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-item {
+  border-bottom: 1px solid #CCCCCC;
+}
+/* line 9, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-item:last-child {
+  border-bottom: none;
+}
+/* line 13, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-item a {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  color: #333333;
+  width: 100%;
+}
+/* line 18, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-item a:hover {
+  background-color: #F8F8F8;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-item a:hover .procedure-title {
+  text-decoration: underline;
+}
+/* line 28, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-logo {
+  display: block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 93px;
+  width: 93px;
+  margin-right: 24px;
+  background-position: 95% 50%;
+}
+/* line 37, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-title {
+  min-height: 40px;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+/* line 43, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-status {
+  margin-left: auto;
+}
+/* line 48, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-stats li {
+  min-height: 36px;
+  border-left: 1px solid #CCCCCC;
+  width: 90px;
+  position: relative;
+}
+/* line 54, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-stats li:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+/* line 58, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-stats li:last-child {
+  border-right: 1px solid #CCCCCC;
+}
+/* line 62, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-stats li .stats-number,
+.procedure-list .procedure-stats li .stats-legend {
+  text-align: center;
+}
+/* line 67, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-stats li .stats-number {
+  font-size: 14px;
+  font-weight: bold;
+}
+/* line 72, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-stats li .stats-legend {
+  font-size: 12px;
+  color: #999999;
+}
+/* line 78, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedure_list.scss */
+.procedure-list .procedure-stats .notifications {
+  top: 3px;
+  right: 18px;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/_typography.scss */
+body,
+input,
+textarea,
+select {
+  font-family: "Muli";
+  color: #333333;
+}
+
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+body,
+input,
+textarea,
+select {
+  font-size: 16px;
+  line-height: 1.42857143;
+}
+
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper {
+  position: relative;
+  padding-bottom: 32px;
+  min-height: 100%;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.page-wrapper.with-footer {
+  padding-bottom: 267px;
+}
+@media (max-width: 1000px) {
+  /* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+  .page-wrapper.with-footer {
+    padding-bottom: 531px;
+  }
+}
+
+/* line 30, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+/* line 35, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+a {
+  color: #4393F3;
+}
+
+/* line 39, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/common.scss */
+.container {
+  padding-left: 16px;
+  padding-right: 16px;
+  max-width: 1072px;
+  margin: 0 auto;
+}
+
+/* line 6, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedures_show.scss */
+#procedure-show h1 {
+  color: #333333;
+  font-size: 22px;
+  margin-bottom: 32px;
+}
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedures_show.scss */
+#procedure-show .dossiers-table {
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+/* line 17, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedures_show.scss */
+#procedure-show .procedure-actions {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedures_show.scss */
+#procedure-show .procedure-actions .dropdown-items li {
+  min-width: 150px;
+}
+/* line 26, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedures_show.scss */
+#procedure-show .filter {
+  display: inline-block;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: rgba(61, 149, 236, 0.8);
+  border-radius: 4px;
+  color: #FFFFFF;
+  height: 36px;
+  line-height: 36px;
+}
+/* line 37, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/procedures_show.scss */
+#procedure-show .close-icon {
+  vertical-align: top;
+  margin-top: 12px;
+  margin-left: 6px;
+  display: inline-block;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text i {
+  font-style: italic;
+}
+/* line 8, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text b {
+  font-weight: bold;
+}
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text small {
+  font-size: 14px;
+}
+/* line 16, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text ol,
+.rich-text ul {
+  list-style: inside;
+}
+/* line 21, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text ol {
+  list-style-type: decimal;
+}
+/* line 25, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text blockquote {
+  margin: 16px 0 16px 16px;
+}
+/* line 29, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text p {
+  margin-bottom: 16px;
+}
+/* line 33, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text h1,
+.rich-text h2,
+.rich-text h3,
+.rich-text h4,
+.rich-text h5,
+.rich-text h6 {
+  margin-bottom: 16px;
+  line-height: 1;
+}
+/* line 43, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text h2 {
+  font-size: 32px;
+}
+/* line 47, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text h3 {
+  font-size: 28px;
+}
+/* line 51, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text h4 {
+  font-size: 24px;
+}
+/* line 55, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text h5 {
+  font-size: 20px;
+}
+/* line 59, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/rich-text.scss */
+.rich-text h6 {
+  font-size: 16px;
+}
+/* line 11, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.new-h1,
+.new-h2 {
+  color: #333333;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* line 18, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.new-h1 {
+  margin-bottom: 60px;
+  font-size: 41px;
+}
+
+/* line 23, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.new-h2 {
+  margin-bottom: 45px;
+  font-size: 36px;
+}
+
+/* line 30, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.statistiques {
+  width: 1040px;
+  margin: 0 auto;
+  padding-top: 30px;
+}
+
+/* line 37, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.stat-cards .stat-card:nth-of-type(even) {
+  margin-right: 0px;
+}
+
+/* line 44, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.stat-card {
+  padding: 15px;
+  margin-bottom: 45px;
+  border-radius: 5px;
+  box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+/* line 54, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.stat-card-half {
+  width: calc((100% - 60px) / 2);
+  margin-right: 45px;
+}
+
+/* line 59, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.stat-card-title {
+  color: #333333;
+  font-size: 26px;
+  font-weight: bold;
+  width: 200px;
+}
+
+/* line 68, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.segmented-control {
+  border-radius: 36px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 0;
+  padding: 0;
+  display: inline-block;
+  margin-top: 15px;
+}
+
+/* line 81, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.segmented-control-item {
+  display: inline-block;
+  font-size: 15px;
+  border: 2px solid #3d95ec;
+  margin-right: -2px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #3d95ec;
+}
+/* line 90, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.segmented-control-item:first-of-type {
+  border-radius: 30px 0px 0px 30px;
+}
+/* line 94, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.segmented-control-item:last-of-type {
+  border-radius: 0px 30px 30px 0px;
+  margin-right: 0;
+}
+/* line 99, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.segmented-control-item:hover {
+  background-color: rgba(61, 149, 236, 0.8);
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+/* line 106, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.segmented-control-item-active {
+  background-color: #3d95ec;
+  color: #FFFFFF;
+}
+
+/* line 111, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.chart-container {
+  margin-top: 36px;
+}
+
+/* line 115, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.chart {
+  width: 100%;
+}
+
+/* line 121, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.big-number-card {
+  padding: 60px;
+}
+
+/* line 125, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.big-number-card-title {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+  color: #999999;
+}
+
+/* line 132, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/stats.scss */
+.big-number-card-number {
+  display: block;
+  text-align: center;
+  font-size: 90px;
+  line-height: 90px;
+  font-weight: bold;
+  color: #3d95ec;
+}
+/* line 3, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/super_admin.scss */
+.super-admin {
+  margin-top: 40px;
+  text-align: center;
+}
+/* line 7, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/super_admin.scss */
+.super-admin h2 {
+  font-size: 24px;
+  margin-bottom: 32px;
+}
+/* line 5, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/table.scss */
+.table {
+  width: 100%;
+}
+/* line 8, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/table.scss */
+.table tbody tr {
+  border-top: 1px solid #CCCCCC;
+}
+/* line 12, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/table.scss */
+.table td {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  vertical-align: middle;
+}
+/* line 17, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/table.scss */
+.table th {
+  text-align: left;
+  font-weight: bold;
+  padding: 24px 2px;
+}
+/* line 24, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/table.scss */
+.table.hoverable tbody tr:hover {
+  background: #F8F8F8;
+}
+/* line 29, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/table.scss */
+.table.vertical {
+  font-size: 16px;
+  line-height: 22px;
+}
+/* line 33, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/table.scss */
+.table.vertical tr {
+  border-top: none;
+}
+/* line 37, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/table.scss */
+.table.vertical th {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+/* line 40, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/table.scss */
+.table.vertical th.header-section {
+  color: #4393F3;
+  font-size: 20px;
+}
