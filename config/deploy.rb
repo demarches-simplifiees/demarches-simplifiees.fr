@@ -134,7 +134,7 @@ task :deploy => :environment do
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
-    # invoke :'rails:assets_precompile:force'
+    invoke :'rails:assets_precompile:force'
 
     to :launch do
       queue "/etc/init.d/#{user} upgrade "
