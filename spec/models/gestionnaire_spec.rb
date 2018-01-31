@@ -88,48 +88,6 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#notifications_for' do
-    subject { gestionnaire.notifications_for procedure }
-
-    context 'when gestionnaire follow any dossier' do
-      it { is_expected.to eq 0 }
-      it { expect(gestionnaire.follows.count).to eq 0 }
-      it do
-        expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:sum)
-        subject
-      end
-    end
-
-    context 'when gestionnaire follow any dossier into the procedure past in params' do
-      before do
-        create :follow, gestionnaire: gestionnaire, dossier: create(:dossier, procedure: procedure_2)
-      end
-
-      it { is_expected.to eq 0 }
-      it { expect(gestionnaire.follows.count).to eq 1 }
-      it do
-        expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).not_to receive(:sum)
-        subject
-      end
-    end
-
-    context 'when gestionnaire follow a dossier with a notification into the procedure past in params' do
-      let(:dossier) { create(:dossier, procedure: procedure, state: 'en_construction') }
-
-      before do
-        create :follow, gestionnaire: gestionnaire, dossier: dossier
-        create :notification, dossier: dossier
-      end
-
-      it { is_expected.to eq 1 }
-      it { expect(gestionnaire.follows.count).to eq 1 }
-      it do
-        expect_any_instance_of(Dossier::ActiveRecord_AssociationRelation).to receive(:sum)
-        subject
-      end
-    end
-  end
-
   describe '#procedure_filter' do
     subject { gestionnaire.procedure_filter }
 
