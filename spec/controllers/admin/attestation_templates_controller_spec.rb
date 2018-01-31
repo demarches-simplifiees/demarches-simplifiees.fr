@@ -1,9 +1,12 @@
+include ActionDispatch::TestProcess
 describe Admin::AttestationTemplatesController, type: :controller do
   let!(:attestation_template) { create(:attestation_template) }
   let(:admin) { create(:administrateur) }
   let!(:procedure) { create :procedure, administrateur: admin, attestation_template: attestation_template }
   let(:logo) { fixture_file_upload('spec/fixtures/white.png', 'image/png') }
+  let(:logo2) { fixture_file_upload('spec/fixtures/white.png', 'image/png') }
   let(:signature) { fixture_file_upload('spec/fixtures/black.png', 'image/png') }
+  let(:signature2) { fixture_file_upload('spec/fixtures/black.png', 'image/png') }
   let(:interlaced_logo) { fixture_file_upload('spec/fixtures/interlaced-black.png', 'image/png') }
   let(:uninterlaced_logo) { fixture_file_upload('spec/fixtures/uninterlaced-black.png', 'image/png') }
 
@@ -84,8 +87,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
       it { expect(procedure.attestation_template).to have_attributes(attestation_params) }
       it { expect(procedure.attestation_template.activated).to be true }
-      it { expect(procedure.attestation_template.logo.read).to eq(logo.read) }
-      it { expect(procedure.attestation_template.signature.read).to eq(signature.read) }
+      it { expect(procedure.attestation_template.logo.read).to eq(logo2.read) }
+      it { expect(procedure.attestation_template.signature.read).to eq(signature2.read) }
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.notice).to eq("L'attestation a bien été sauvegardée") }
 
@@ -127,8 +130,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
       end
 
       it { expect(procedure.attestation_template).to have_attributes(attestation_params) }
-      it { expect(procedure.attestation_template.logo.read).to eq(logo.read) }
-      it { expect(procedure.attestation_template.signature.read).to eq(signature.read) }
+      it { expect(procedure.attestation_template.logo.read).to eq(logo2.read) }
+      it { expect(procedure.attestation_template.signature.read).to eq(signature2.read) }
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.notice).to eq("L'attestation a bien été modifiée") }
 

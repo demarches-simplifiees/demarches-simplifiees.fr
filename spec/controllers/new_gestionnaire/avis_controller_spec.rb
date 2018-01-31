@@ -22,14 +22,14 @@ describe NewGestionnaire::AvisController, type: :controller do
       it { expect(assigns(:statut)).to eq('a-donner') }
 
       context 'with a statut equal to donnes' do
-        before { get :index, statut: 'donnes' }
+        before { get :index, params: { statut: 'donnes' } }
 
         it { expect(assigns(:statut)).to eq('donnes') }
       end
     end
 
     describe '#show' do
-      before { get :show, { id: avis_without_answer.id } }
+      before { get :show, params: { id: avis_without_answer.id } }
 
       it { expect(response).to have_http_status(:success) }
       it { expect(assigns(:avis)).to eq(avis_without_answer) }
@@ -37,7 +37,7 @@ describe NewGestionnaire::AvisController, type: :controller do
     end
 
     describe '#instruction' do
-      before { get :instruction, { id: avis_without_answer.id } }
+      before { get :instruction, params: { id: avis_without_answer.id } }
 
       it { expect(response).to have_http_status(:success) }
       it { expect(assigns(:avis)).to eq(avis_without_answer) }
@@ -45,7 +45,7 @@ describe NewGestionnaire::AvisController, type: :controller do
     end
 
     describe '#messagerie' do
-      before { get :messagerie, { id: avis_without_answer.id } }
+      before { get :messagerie, params: { id: avis_without_answer.id } }
 
       it { expect(response).to have_http_status(:success) }
       it { expect(assigns(:avis)).to eq(avis_without_answer) }
@@ -54,7 +54,7 @@ describe NewGestionnaire::AvisController, type: :controller do
 
     describe '#update' do
       before do
-        patch :update, { id: avis_without_answer.id, avis: { answer: 'answer' } }
+        patch :update, params: { id: avis_without_answer.id, avis: { answer: 'answer' } }
         avis_without_answer.reload
       end
 
@@ -67,7 +67,7 @@ describe NewGestionnaire::AvisController, type: :controller do
       let(:file) { nil }
       let(:scan_result) { true }
 
-      subject { post :create_commentaire, { id: avis_without_answer.id, commentaire: { body: 'commentaire body', file: file } } }
+      subject { post :create_commentaire, params: { id: avis_without_answer.id, commentaire: { body: 'commentaire body', file: file } } }
 
       before do
         allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
@@ -105,7 +105,7 @@ describe NewGestionnaire::AvisController, type: :controller do
       let(:created_avis) { Avis.last }
 
       before do
-        post :create_avis, { id: previous_avis.id, avis: { email: email, introduction: intro, confidentiel: asked_confidentiel } }
+        post :create_avis, params: { id: previous_avis.id, avis: { email: email, introduction: intro, confidentiel: asked_confidentiel } }
       end
 
       context 'when the previous avis is public' do

@@ -7,8 +7,8 @@ class Gestionnaire < ActiveRecord::Base
   has_many :assign_to, dependent: :destroy
   has_many :procedures, -> { publiees_ou_archivees }, through: :assign_to
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
-  has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :follows
+  has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :avis
   has_many :dossiers_from_avis, through: :avis, source: :dossier
 
@@ -49,17 +49,6 @@ class Gestionnaire < ActiveRecord::Base
 
   def notifications
     Notification.where(already_read: false, dossier_id: follows.pluck(:dossier_id)).order("updated_at DESC")
-  end
-
-  def notifications_for procedure
-    procedure_ids = followed_dossiers.pluck(:procedure_id)
-
-    if procedure_ids.include?(procedure.id)
-      return followed_dossiers.where(procedure_id: procedure.id).sum do |dossier|
-        dossier.notifications.where(already_read: false).count
-      end
-    end
-    0
   end
 
   def dossiers_with_notifications_count_for_procedure(procedure)

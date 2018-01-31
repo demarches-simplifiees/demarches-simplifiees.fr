@@ -2,9 +2,9 @@ class PingController < ApplicationController
   def index
     Rails.logger.silence do
       if (ActiveRecord::Base.connected?)
-        render nothing: true, status: 200, content_type: "application/json"
+        head :ok
       else
-        render nothing: true, status: 500, content_type: "application/json"
+        head :internal_server_error
       end
     end
   end

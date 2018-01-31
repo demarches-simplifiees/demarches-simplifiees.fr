@@ -21,7 +21,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
         expect(controller).to receive(:send_data)
           .with('pdf content', filename: 'attestation.pdf', type: 'application/pdf') do
-            controller.render nothing: true
+            controller.head :ok
           end
 
         get :attestation, params: { procedure_id: procedure.id, dossier_id: dossier.id }
