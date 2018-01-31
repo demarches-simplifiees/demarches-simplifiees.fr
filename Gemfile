@@ -43,7 +43,7 @@ gem 'draper'
 gem 'unicode_utils'
 
 # Gestion des comptes utilisateurs
-gem 'devise', git: 'https://github.com/jcoyne/devise.git', ref: '6e7b20b248b4d9eb8ed04674a9c1ce0a74f06cf2'
+gem 'devise', git: 'https://github.com/gregoirenovel/devise', ref: 'b637b93623ab2fc0fe392385f14a973ca7688200'
 gem 'openid_connect'
 gem 'omniauth-github'
 
