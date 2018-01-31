@@ -1,0 +1,9 @@
+/* line 1, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/manager.scss */
+.types-de-champs-table {
+  table-layout: fixed;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/manager.scss */
+.types-de-champs-table td {
+  white-space: normal;
+  vertical-align: top;
+}

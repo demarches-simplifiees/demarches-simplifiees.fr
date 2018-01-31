@@ -1,0 +1,78 @@
+@font-face {
+  font-family: "Muli";
+  src: url(/assets/Muli-Regular-ef0d8f2534859ae4ba68ce53ded9904aba07377c57902bbf1d07d7a101b69ecd.woff) format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Muli";
+  src: url(/assets/Muli-Bold-559777c2764fa0a380ec454477234241ee0c67b29754d172f38468c8a9179f9d.woff) format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+/* line 4, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+.new-header,
+.accompagnateur-header,
+footer {
+  display: none;
+}
+
+/* line 10, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+.print-header {
+  display: block;
+  margin-top: 30px;
+  font-size: 30px;
+  line-height: 50px;
+  font-weight: bold;
+}
+
+/* line 18, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+body {
+  font-family: "Muli";
+}
+
+/* line 22, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+.subtitle {
+  margin-top: -20px;
+  color: #999999;
+}
+
+/* line 27, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+th,
+td {
+  vertical-align: top;
+}
+
+/* line 32, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+th {
+  text-align: left;
+}
+/* line 35, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+th.header-section {
+  padding-top: 1.2em;
+  font-size: 1.2em;
+}
+
+/* line 42, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+.messagerie .messages-list {
+  list-style: none;
+  padding-left: 0;
+  max-height: none;
+}
+/* line 47, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+.messagerie .messages-list li {
+  margin-bottom: 40px;
+}
+/* line 51, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+.messagerie .messages-list h2 {
+  font-size: 110%;
+}
+/* line 55, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+.messagerie .messages-list .person-icon {
+  display: none;
+}
+
+/* line 61, /Users/tchak/git/github/sgmap/tps/app/assets/stylesheets/new_design/print.scss */
+.updated-at {
+  display: none;
+}
