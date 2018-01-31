@@ -12,11 +12,11 @@ defaults: &defaults
 
 bundle_restore_cache: &bundle_restore_cache
   restore_cache:
-    key: bundle-install-v7-{{ arch }}-{{ checksum "Gemfile.lock" }}
+    key: bundle-install-v8-{{ arch }}-{{ checksum "Gemfile.lock" }}
 
 bundle_save_cache: &bundle_save_cache
   save_cache:
-    key: bundle-install-v7-{{ arch }}-{{ checksum "Gemfile.lock" }}
+    key: bundle-install-v8-{{ arch }}-{{ checksum "Gemfile.lock" }}
     paths:
       - ~/vendor/bundle
 
