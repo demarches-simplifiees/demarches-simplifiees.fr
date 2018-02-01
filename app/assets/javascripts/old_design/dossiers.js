@@ -1,20 +1,4 @@
 $(document).on('turbolinks:load', the_terms);
-$(document).on('turbolinks:load', pannel_switch);
-
-function pannel_switch() {
-  $('#switch-notifications').click(function () {
-    $('#procedure-list').addClass('hidden');
-    $('#notifications-list').removeClass('hidden');
-    $(this).addClass('active');
-    $('#switch-procedures').removeClass('active');
-  })
-  $('#switch-procedures').click(function () {
-    $('#notifications-list').addClass('hidden');
-    $('#procedure-list').removeClass('hidden');
-    $(this).addClass('active');
-    $('#switch-notifications').removeClass('active');
-  })
-}
 
 function the_terms() {
   var the_terms = $("#dossier_autorisation_donnees");

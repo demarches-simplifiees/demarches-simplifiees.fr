@@ -36,8 +36,7 @@ h5 span {
   cursor: pointer;
 }
 
-#procedure-list,
-#notifications-list {
+#procedure-list {
   margin-left: -10px;
   margin-top: 20px;
 
@@ -47,13 +46,11 @@ h5 span {
     text-decoration: none;
   }
 
-  .procedure-list-element.active,
-  .notification.active {
+  .procedure-list-element.active {
     background-color: #668ABD;
   }
 
-  .procedure-list-element,
-  .notification {
+  .procedure-list-element {
     padding: 15px 40px 15px 20px;
     cursor: pointer;
     line-height: 1.8em;
@@ -63,8 +60,7 @@ h5 span {
     }
   }
 
-  .procedure-list-element:hover,
-  .notification:hover {
+  .procedure-list-element:hover {
     background-color: #668ABD;
     cursor: pointer;
   }
