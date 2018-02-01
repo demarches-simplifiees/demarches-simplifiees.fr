@@ -1,15 +1,7 @@
 GIT
-  remote: https://github.com/hassox/warden.git
-  revision: a4b197e0b28e7b576b0745b0f6aeaed8dbb774a4
-  branch: master
-  specs:
-    warden (1.2.8)
-      rack (>= 1.0)
-
-GIT
-  remote: https://github.com/jcoyne/devise.git
-  revision: 6e7b20b248b4d9eb8ed04674a9c1ce0a74f06cf2
-  ref: 6e7b20b248b4d9eb8ed04674a9c1ce0a74f06cf2
+  remote: https://github.com/gregoirenovel/devise
+  revision: b637b93623ab2fc0fe392385f14a973ca7688200
+  ref: b637b93623ab2fc0fe392385f14a973ca7688200
   specs:
     devise (4.4.1)
       bcrypt (~> 3.0)
@@ -17,6 +9,14 @@ GIT
       railties (>= 4.1.0, < 5.2)
       responders
       warden (~> 1.2.3)
+
+GIT
+  remote: https://github.com/hassox/warden.git
+  revision: a4b197e0b28e7b576b0745b0f6aeaed8dbb774a4
+  branch: master
+  specs:
+    warden (1.2.8)
+      rack (>= 1.0)
 
 GIT
   remote: https://github.com/mina-deploy/mina.git
