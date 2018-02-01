@@ -203,22 +203,18 @@ module NewGestionnaire
     end
 
     def mark_demande_as_read
-      dossier.notifications.demande.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :demande)
     end
 
     def mark_messagerie_as_read
-      dossier.notifications.messagerie.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :messagerie)
     end
 
     def mark_avis_as_read
-      dossier.notifications.avis.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :avis)
     end
 
     def mark_annotations_privees_as_read
-      dossier.notifications.annotations_privees.mark_as_read
       current_gestionnaire.mark_tab_as_seen(dossier, :annotations_privees)
     end
   end

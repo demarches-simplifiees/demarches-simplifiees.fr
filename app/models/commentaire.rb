@@ -35,21 +35,17 @@ class Commentaire < ActiveRecord::Base
     when I18n.t("dynamics.contact_email")
       # The commentaire is a copy of an automated notification email
       # we sent to a user, so do nothing
+
     when dossier_user_email, *invited_users_emails
       # A user or an inved user posted a commentaire,
-      # we need to notify the gestionnaires
+      # do nothing, the notification system will properly
 
-      notify_gestionnaires
     else
       # A gestionnaire posted a commentaire,
       # we need to notify the user
 
       notify_user
     end
-  end
-
-  def notify_gestionnaires
-    NotificationService.new('commentaire', self.dossier.id).notify
   end
 
   def notify_user

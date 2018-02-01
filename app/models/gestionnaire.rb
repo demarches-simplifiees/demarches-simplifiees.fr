@@ -47,27 +47,6 @@ class Gestionnaire < ActiveRecord::Base
     procedures.find_by(id: procedure_id).present?
   end
 
-  def notifications
-    Notification.where(already_read: false, dossier_id: follows.pluck(:dossier_id)).order("updated_at DESC")
-  end
-
-  def dossiers_with_notifications_count_for_procedure(procedure)
-    followed_dossiers_id = followed_dossiers.where(procedure: procedure).pluck(:id)
-    Notification.unread.where(dossier_id: followed_dossiers_id).select(:dossier_id).distinct(:dossier_id).count
-  end
-
-  def notifications_count_per_procedure
-    followed_dossiers
-      .joins(:notifications)
-      .where(notifications: { already_read: false })
-      .group('procedure_id')
-      .count
-  end
-
-  def dossiers_with_notifications_count
-    notifications.pluck(:dossier_id).uniq.count
-  end
-
   def last_week_overview
     start_date = DateTime.now.beginning_of_week
 
