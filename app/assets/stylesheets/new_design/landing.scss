@@ -85,7 +85,7 @@ $landing-breakpoint: 1040px;
 
 .feature {
   @extend %horizontal-list-item;
-  width: 320px;
+  width: 260px;
 
   @media (max-width: $landing-breakpoint) {
     margin: 15px 20px;
@@ -93,9 +93,9 @@ $landing-breakpoint: 1040px;
 }
 
 .feature-text {
-  text-align: center;
   color: #FFFFFF;
   font-size: 20px;
+  text-align: center;
 }
 
 .feature-text-em {
