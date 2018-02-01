@@ -70,11 +70,11 @@
         %ul.numbers
           %li.number
             .number-value
-              = number_with_delimiter(Procedure.publiees_ou_archivees.count, :locale => :fr)
+              = number_with_delimiter(Procedure.includes(:administrateur).publiees_ou_archivees.map(&:administrateur).uniq.count, :locale => :fr)
             .number-label<
-              procédures
+              administrations
               %br<>
-              dématérialisées
+              partenaires
           %li.number
             .number-value
               = number_with_delimiter(Dossier.where.not(:state => :brouillon).count, :locale => :fr)
