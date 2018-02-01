@@ -113,6 +113,7 @@ $landing-breakpoint: 1040px;
   @extend %horizontal-list;
   width: 100%;
   justify-content: space-between;
+  margin-bottom: 30px;
 
   @media (max-width: $landing-breakpoint) {
     justify-content: center;
@@ -122,6 +123,7 @@ $landing-breakpoint: 1040px;
 .quote {
   @extend %horizontal-list-item;
   max-width: 500px;
+  width: 100%;
   background-color: #FFFFFF;
   box-shadow: 0 4px 16px 0 rgba(153, 153, 153, 0.2);
   padding: 24px;
