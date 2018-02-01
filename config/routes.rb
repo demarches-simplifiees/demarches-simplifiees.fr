@@ -231,6 +231,7 @@ Rails.application.routes.draw do
             post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
             post 'repasser-en-construction' => 'dossiers#repasser_en_construction'
             post 'terminer'
+            post 'envoyer-a-accompagnateur' => 'dossiers#envoyer_a_accompagnateur'
             scope :carte do
               get 'position'
             end
