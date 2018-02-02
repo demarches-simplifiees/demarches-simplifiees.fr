@@ -1,0 +1,9 @@
+Bonjour,
+
+<%= @sender.email %> vous a envoyé le dossier nº <%= @dossier.id %>, cliquez sur le lien ci-dessous pour y accéder :
+
+<%= dossier_url(@dossier.procedure, @dossier) %>
+
+Bonne journée,
+
+L'équipe Téléprocédures Simplifiées

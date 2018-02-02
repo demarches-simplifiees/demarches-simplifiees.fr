@@ -4,7 +4,8 @@ describe NewGestionnaire::DossiersController, type: :controller do
   render_views
 
   let(:gestionnaire) { create(:gestionnaire) }
-  let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
+  let(:gestionnaires) { [gestionnaire] }
+  let(:procedure) { create(:procedure, :published, gestionnaires: gestionnaires) }
   let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
   before { sign_in(gestionnaire) }
@@ -28,6 +29,32 @@ describe NewGestionnaire::DossiersController, type: :controller do
         expect(response).to have_http_status(:success)
       end
     end
+  end
+
+  describe '#envoyer_a_accompagnateur' do
+    let(:recipient) { create(:gestionnaire) }
+    let(:gestionnaires) { [gestionnaire, recipient] }
+    let(:mail) { double("mail") }
+
+    before do
+      expect(mail).to receive(:deliver_later)
+
+      expect(GestionnaireMailer)
+        .to receive(:send_dossier)
+        .with(gestionnaire, dossier, recipient)
+        .and_return(mail)
+
+      post(
+        :envoyer_a_accompagnateur,
+        params: {
+          recipient: recipient,
+          procedure_id: procedure.id,
+          dossier_id: dossier.id
+        }
+      )
+    end
+
+    it { expect(response).to redirect_to(personnes_impliquees_dossier_url) }
   end
 
   describe '#follow' do
