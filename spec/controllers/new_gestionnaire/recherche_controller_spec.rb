@@ -36,6 +36,17 @@ describe NewGestionnaire::RechercheController, type: :controller do
           expect(assigns(:dossiers).count).to eq(0)
         end
       end
+
+      context 'with an id out of range' do
+        let(:query) { 123456789876543234567 }
+
+        it { is_expected.to have_http_status(200) }
+
+        it 'does not return the dossier' do
+          subject
+          expect(assigns(:dossiers).count).to eq(0)
+        end
+      end
     end
   end
 end
