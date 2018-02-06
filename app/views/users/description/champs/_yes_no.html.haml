@@ -1,8 +1,8 @@
 %div
   %label.radio-inline
-    = radio_button_tag "champs['#{champ.id}']", "true", champ.object.value == 'true'
+    = radio_button_tag "champs['#{champ.id}']", "true", champ.yes?
     Oui
 
   %label.radio-inline
-    = radio_button_tag "champs['#{champ.id}']", "false", champ.object.value == 'false'
+    = radio_button_tag "champs['#{champ.id}']", "false", champ.no?
     Non

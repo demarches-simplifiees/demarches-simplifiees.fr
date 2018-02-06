@@ -2,7 +2,9 @@ class ChampDecorator < Draper::Decorator
   delegate_all
 
   def value
-    if type_champ == "date" && object.value.present?
+    if object.typed?
+      object.formatted_typed_value
+    elsif type_champ == "date" && object.value.present?
       Date.parse(object.value).strftime("%d/%m/%Y")
     elsif type_champ.in? ["checkbox", "engagement"]
       object.value == 'on' ? 'Oui' : 'Non'
