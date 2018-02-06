@@ -9,8 +9,4 @@ class UserDecorator < Draper::Decorator
       'Mme'
     end
   end
-
-  def birthdate_fr
-    birthdate.strftime('%d/%m/%Y')
-  end
 end
