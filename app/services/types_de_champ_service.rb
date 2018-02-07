@@ -34,7 +34,7 @@ class TypesDeChampService
 
   def self.order_champs(params, attributes)
     # It's OK to use an unsafe hash here because the params will then go through
-    # require / permit methods in the method before this one
+    # require / permit methods in #create_update_procedure_params
     tdcas = params[:procedure][attributes].to_unsafe_hash.to_a
       .map { |_hash_index, tdca| tdca }
 
