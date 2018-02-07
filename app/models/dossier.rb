@@ -69,7 +69,7 @@ class Dossier < ActiveRecord::Base
 
   before_validation :update_state_dates, if: -> { state_changed? }
 
-  after_save :build_default_champs, if: Proc.new { procedure_id_changed? }
+  after_save :build_default_champs, if: Proc.new { saved_change_to_procedure_id? }
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
   after_save :send_dossier_received
   after_create :send_draft_notification_email
@@ -308,7 +308,7 @@ class Dossier < ActiveRecord::Base
   end
 
   def send_dossier_received
-    if state_changed? && en_instruction?
+    if saved_change_to_state? && en_instruction?
       NotificationMailer.send_dossier_received(id).deliver_later
     end
   end
