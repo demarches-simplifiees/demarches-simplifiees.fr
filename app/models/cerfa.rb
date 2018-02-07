@@ -5,8 +5,6 @@ class Cerfa < ActiveRecord::Base
   mount_uploader :content, CerfaUploader
   validates :content, :file_size => { :maximum => 20.megabytes }
 
-  after_save :internal_notification, if: Proc.new { dossier.present? }
-
   def empty?
     content.blank?
   end
@@ -18,14 +16,6 @@ class Cerfa < ActiveRecord::Base
       else
         (LocalDownloader.new content.path, 'CERFA').url
       end
-    end
-  end
-
-  private
-
-  def internal_notification
-    if dossier.state != 'brouillon'
-      NotificationService.new('cerfa', self.dossier.id).notify
     end
   end
 end

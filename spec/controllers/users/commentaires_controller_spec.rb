@@ -50,10 +50,6 @@ describe Users::CommentairesController, type: :controller do
 
         subject
       end
-
-      it 'Notification interne is create' do
-        expect { subject }.to change(Notification, :count).by (1)
-      end
     end
 
     context 'when document is upload whith a commentaire', vcr: { cassette_name: 'controllers_sers_commentaires_controller_upload_doc' } do
