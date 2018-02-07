@@ -220,6 +220,7 @@ class Users::DossiersController < UsersController
     end
 
     if update_params[:individual_attributes].present? &&
+        update_params[:individual_attributes][:birthdate] &&
         !/^\d{4}\-\d{2}\-\d{2}$/.match(update_params[:individual_attributes][:birthdate]) &&
         !/^\d{2}\/\d{2}\/\d{4}$/.match(update_params[:individual_attributes][:birthdate])
       errors << "Le format de la date de naissance doit être JJ/MM/AAAA"

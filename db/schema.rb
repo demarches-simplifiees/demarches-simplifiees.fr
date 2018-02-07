@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180201163642) do
+ActiveRecord::Schema.define(version: 20180206153121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -382,6 +382,7 @@ ActiveRecord::Schema.define(version: 20180201163642) do
     t.datetime "hidden_at"
     t.datetime "archived_at"
     t.datetime "whitelisted_at"
+    t.boolean  "ask_birthday",          default: false, null: false
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at", using: :btree
   end
 
