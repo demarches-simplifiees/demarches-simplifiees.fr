@@ -17,30 +17,6 @@ describe Commentaire do
     let(:dossier) { create(:dossier, procedure: procedure, user: user) }
     let(:commentaire) { Commentaire.new(dossier: dossier, body: "Mon commentaire") }
 
-    context "with a commentaire created by a user" do
-      it "calls notify_gestionnaires" do
-        expect(commentaire).to receive(:notify_gestionnaires)
-
-        commentaire.email = user.email
-        commentaire.save
-      end
-    end
-
-    context "with a commentaire created by an invited user" do
-      let(:user_invite) { create(:user) }
-
-      before do
-        FactoryBot.create(:invite_user, email: "invite@tps.apientreprise.fr", dossier: dossier, user: user_invite)
-      end
-
-      it "calls notify_gestionnaires" do
-        expect(commentaire).to receive(:notify_gestionnaires)
-
-        commentaire.email = user_invite.email
-        commentaire.save
-      end
-    end
-
     context "with a commentaire created by a gestionnaire" do
       it "calls notify_user" do
         expect(commentaire).to receive(:notify_user)

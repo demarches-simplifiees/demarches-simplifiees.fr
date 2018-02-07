@@ -9,10 +9,6 @@ class DossierFacades
     @dossier.decorate
   end
 
-  def last_notifications
-    @dossier.notifications.order("updated_at DESC").limit(5)
-  end
-
   def champs
     @dossier.ordered_champs
   end

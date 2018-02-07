@@ -13,8 +13,6 @@ class PieceJustificative < ActiveRecord::Base
   validates :content, :file_size => { :maximum => 20.megabytes }
   validates :content, presence: true, allow_blank: false, allow_nil: false
 
-  after_save :internal_notification, if: Proc.new { dossier.present? }
-
   scope :updated_since?, -> (date) { where('pieces_justificatives.updated_at > ?', date) }
 
   def empty?
@@ -54,13 +52,5 @@ class PieceJustificative < ActiveRecord::Base
       image/png,
       image/jpeg
     "
-  end
-
-  private
-
-  def internal_notification
-    if self.type_de_piece_justificative.present? || dossier.state != 'brouillon'
-      NotificationService.new('piece_justificative', self.dossier.id, self.libelle).notify
-    end
   end
 end
