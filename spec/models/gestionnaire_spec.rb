@@ -125,93 +125,6 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#dossiers_with_notifications_count' do
-    subject { gestionnaire.dossiers_with_notifications_count }
-
-    context 'when there is no notifications' do
-      it { is_expected.to eq(0) }
-    end
-
-    context 'when there is one notification for one dossier' do
-      let(:notification){ create(:notification, already_read: false) }
-      let!(:follow){ create(:follow, dossier: notification.dossier, gestionnaire: gestionnaire) }
-
-      it { is_expected.to eq(1) }
-    end
-
-    context 'when there is one notification read' do
-      let(:notification){ create(:notification, already_read: true) }
-      let!(:follow){ create(:follow, dossier: notification.dossier, gestionnaire: gestionnaire) }
-
-      it { is_expected.to eq(0) }
-    end
-
-    context 'when there are many notifications for one dossier' do
-      let(:notification){ create(:notification, already_read: false) }
-      let(:notification2){ create(:notification, already_read: false, dossier: notification.dossier) }
-      let!(:follow){ create(:follow, dossier: notification.dossier, gestionnaire: gestionnaire) }
-
-      it { is_expected.to eq(1) }
-    end
-
-    context 'when there are many notifications for many dossiers' do
-      let(:notification){ create(:notification, already_read: false) }
-      let(:notification2){ create(:notification, already_read: false) }
-      let!(:follow){ create(:follow, dossier: notification.dossier, gestionnaire: gestionnaire) }
-      let!(:follow2){ create(:follow, dossier: notification2.dossier, gestionnaire: gestionnaire) }
-
-      it { is_expected.to eq(2) }
-    end
-  end
-
-  describe '#dossiers_with_notifications_count_for_procedure' do
-    subject { gestionnaire.dossiers_with_notifications_count_for_procedure(procedure) }
-
-    context 'without notifications' do
-      it { is_expected.to eq(0) }
-    end
-
-    context 'with a followed dossier' do
-      let!(:dossier){ create(:dossier, procedure: procedure, state: 'en_instruction') }
-      let!(:follow){ create(:follow, dossier: dossier, gestionnaire: gestionnaire) }
-
-      context 'with 1 notification' do
-        let!(:notification){ create(:notification, already_read: false, dossier: dossier) }
-
-        it { is_expected.to eq(1) }
-      end
-
-      context 'with 1 read notification' do
-        let!(:notification){ create(:notification, already_read: true, dossier: dossier) }
-
-        it { is_expected.to eq(0) }
-      end
-
-      context 'with 2 notifications' do
-        let!(:notification){ create(:notification, already_read: false, dossier: dossier) }
-        let!(:notification2){ create(:notification, already_read: false, dossier: dossier) }
-
-        it { is_expected.to eq(1) }
-      end
-
-      context 'with another dossier' do
-        let!(:dossier2){ create(:dossier, procedure: procedure, state: 'en_instruction') }
-        let!(:follow2){ create(:follow, dossier: dossier2, gestionnaire: gestionnaire) }
-
-        context 'and some notifications' do
-          let!(:notification){ create(:notification, already_read: false, dossier: dossier) }
-          let!(:notification2){ create(:notification, already_read: false, dossier: dossier) }
-          let!(:notification3){ create(:notification, already_read: false, dossier: dossier) }
-
-          let!(:notification4){ create(:notification, already_read: false, dossier: dossier2) }
-          let!(:notification5){ create(:notification, already_read: false, dossier: dossier2) }
-
-          it { is_expected.to eq(2) }
-        end
-      end
-    end
-  end
-
   describe 'last_week_overview' do
     let!(:gestionnaire2) { create(:gestionnaire) }
     subject { gestionnaire2.last_week_overview }
@@ -271,32 +184,6 @@ describe Gestionnaire, type: :model do
       let(:dossier){ create(:dossier) }
 
       it { expect(subject).to be false }
-    end
-  end
-
-  describe '#notifications_count_per_procedure' do
-    subject { gestionnaire.notifications_count_per_procedure }
-
-    let(:dossier_with_unread_notification) do
-      create(:dossier, notifications: [Notification.create(type_notif: 'champs', already_read: false)])
-    end
-
-    let(:dossier_with_no_unread_notification) do
-      create(:dossier, notifications: [Notification.create(type_notif: 'champs', already_read: true)])
-    end
-
-    before { gestionnaire.followed_dossiers << followed_dossier }
-
-    context 'when a followed dossier has unread notification' do
-      let(:followed_dossier) { dossier_with_unread_notification }
-
-      it { is_expected.to eq({ dossier_with_unread_notification.procedure.id => 1 }) }
-    end
-
-    context 'when a followed dossier has unread notification' do
-      let(:followed_dossier) { dossier_with_no_unread_notification }
-
-      it { is_expected.to eq({}) }
     end
   end
 

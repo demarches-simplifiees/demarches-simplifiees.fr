@@ -29,7 +29,6 @@ class Dossier < ActiveRecord::Base
   has_many :invites_user, class_name: 'InviteUser', dependent: :destroy
   has_many :invites_gestionnaires, class_name: 'InviteGestionnaire', dependent: :destroy
   has_many :follows
-  has_many :notifications, dependent: :destroy
   has_many :avis, dependent: :destroy
 
   belongs_to :procedure
@@ -58,7 +57,6 @@ class Dossier < ActiveRecord::Base
   scope :downloadable_sorted,         -> { state_not_brouillon.includes(:entreprise, :etablissement, :champs, :champs_private).order(en_construction_at: 'asc') }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
-  scope :with_unread_notifications,   -> { where(notifications: { already_read: false }) }
   scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
 
   accepts_nested_attributes_for :individual
@@ -78,27 +76,8 @@ class Dossier < ActiveRecord::Base
 
   validates :user, presence: true
 
-  def unreaded_notifications
-    @unreaded_notif ||= notifications.where(already_read: false)
-  end
-
-  def first_unread_notification
-    unreaded_notifications.order("created_at ASC").first
-  end
-
   def was_piece_justificative_uploaded_for_type_id?(type_id)
     pieces_justificatives.where(type_de_piece_justificative_id: type_id).count > 0
-  end
-
-  def notifications_summary
-    unread_notifications = notifications.unread
-
-    {
-      demande: unread_notifications.select(&:demande?).present?,
-      avis: unread_notifications.select(&:avis?).present?,
-      messagerie: unread_notifications.select(&:messagerie?).present?,
-      annotations_privees: unread_notifications.select(&:annotations_privees?).present?
-    }
   end
 
   def retrieve_last_piece_justificative_by_type(type)

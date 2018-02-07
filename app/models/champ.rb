@@ -9,8 +9,6 @@ class Champ < ActiveRecord::Base
   before_save :format_datetime, if: Proc.new { type_champ == 'datetime' }
   before_save :multiple_select_to_string, if: Proc.new { type_champ == 'multiple_drop_down_list' }
 
-  after_save :internal_notification, if: Proc.new { dossier.present? }
-
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
 
   def mandatory?
@@ -107,16 +105,6 @@ class Champ < ActiveRecord::Base
       self.value = DateTime.parse(value, "%d/%m/%Y %H:%M").strftime("%Y-%m-%d %H:%M")
     elsif !(/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}$/ =~ value) # a datetime not correctly formatted should not be stored
       self.value = nil
-    end
-  end
-
-  def internal_notification
-    if dossier.state != 'brouillon'
-      if type == 'ChampPublic'
-        NotificationService.new('champs', self.dossier.id, self.libelle).notify
-      else
-        NotificationService.new('annotations_privees', self.dossier.id, self.libelle).notify
-      end
     end
   end
 
