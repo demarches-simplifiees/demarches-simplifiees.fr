@@ -94,9 +94,10 @@
           - @dossiers.each do |dossier|
             %tr
               %td.folder-col
-                %span.icon.folder
-                  - if current_gestionnaire.notifications_for_procedure(@procedure).include?(dossier.id)
-                    %span.notifications{ 'aria-label': 'notifications' }
+                = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
+                  %span.icon.folder
+                    - if current_gestionnaire.notifications_for_procedure(@procedure).include?(dossier.id)
+                      %span.notifications{ 'aria-label': 'notifications' }
 
               %td.number-col
                 = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
