@@ -27,11 +27,13 @@
               %h4
                 Prénom *
               = ff.text_field :prenom, { class: 'form-control', required: true }
-          .form-group
-            %label
-              %h4
-                Date de naissance *
-              = ff.date_field :birthdate, { value: @facade.individual.birthdate, class: 'form-control', placeholder: 'jj/mm/aaaa', required: true }
+
+          - if @facade.procedure.ask_birthday?
+            .form-group
+              %label
+                %h4
+                  Date de naissance *
+                = ff.date_field :birthdate, { value: @facade.individual.birthdate, class: 'form-control', placeholder: 'jj/mm/aaaa', required: true }
 
         %p
           %label{ style: 'font-weight: normal;' }
