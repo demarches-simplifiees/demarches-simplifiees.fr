@@ -10,6 +10,8 @@ fr:
       models:
         individual:
           attributes:
+            gender:
+              blank: 'doit être rempli'
             nom:
               blank: 'doit être rempli'
             prenom:
