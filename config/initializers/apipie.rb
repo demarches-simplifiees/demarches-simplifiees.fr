@@ -9,6 +9,9 @@ Apipie.configure do |config|
   config.namespaced_resources    = true
   config.show_all_examples       = true
 
+  config.languages               = ['fr']
+  config.default_locale          = 'fr'
+
   config.app_info                = <<~EOS
     Description
 
