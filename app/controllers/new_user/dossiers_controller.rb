@@ -6,10 +6,15 @@ module NewUser
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
     end
 
+    def identite
+      @dossier = dossier
+      @user = current_user
+    end
+
     private
 
     def dossier
-      Dossier.find(params[:dossier_id])
+      Dossier.find(params[:id] || params[:dossier_id])
     end
 
     def ensure_ownership!
