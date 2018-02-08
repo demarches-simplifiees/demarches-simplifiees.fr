@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :dossier do
+    autorisation_donnees true
     state 'brouillon'
     association :user, factory: [:user]
 

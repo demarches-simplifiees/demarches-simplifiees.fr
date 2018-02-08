@@ -37,6 +37,8 @@ class Dossier < ActiveRecord::Base
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_private
 
+  validates :autorisation_donnees, acceptance: { message: 'doit être coché' }, allow_nil: false, on: :update
+
   default_scope { where(hidden_at: nil) }
   scope :state_brouillon,                      -> { where(state: 'brouillon') }
   scope :state_not_brouillon,                  -> { where.not(state: 'brouillon') }
@@ -177,7 +179,7 @@ class Dossier < ActiveRecord::Base
     etablissement.destroy
     entreprise.destroy
 
-    update_attributes(autorisation_donnees: false)
+    update_columns(autorisation_donnees: false)
   end
 
   def total_follow
