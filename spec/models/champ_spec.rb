@@ -5,9 +5,17 @@ describe Champ do
 
   it_should_behave_like "champ_spec"
 
+  describe '#public?' do
+    let(:type_de_champ) { build(:type_de_champ_public) }
+    let(:champ) { type_de_champ.champ.build }
+
+    it { expect(champ.public?).to be_truthy }
+    it { expect(champ.private?).to be_falsey }
+  end
+
   describe '#format_datetime' do
-    let(:type_de_champ) { TypeDeChamp.new(type_champ: 'datetime') }
-    let(:champ) { Champ.new(type_de_champ: type_de_champ, value: value) }
+    let(:type_de_champ) { build(:type_de_champ_public, type_champ: 'datetime') }
+    let(:champ) { type_de_champ.champ.build(value: value) }
 
     before { champ.save }
 
@@ -25,8 +33,8 @@ describe Champ do
   end
 
   describe '#multiple_select_to_string' do
-    let(:type_de_champ) { TypeDeChamp.new(type_champ: 'multiple_drop_down_list') }
-    let(:champ) { Champ.new(type_de_champ: type_de_champ, value: value) }
+    let(:type_de_champ) { build(:type_de_champ_public, type_champ: 'multiple_drop_down_list') }
+    let(:champ) { type_de_champ.champ.build(value: value) }
 
     before { champ.save }
 
@@ -64,7 +72,7 @@ describe Champ do
 
   describe 'for_export' do
     let(:type_de_champ) { create(:type_de_champ_public, type_champ: type_champ) }
-    let(:champ) { Champ.new(type_de_champ: type_de_champ, value: value) }
+    let(:champ) { type_de_champ.champ.build(value: value) }
 
     before { champ.save }
 

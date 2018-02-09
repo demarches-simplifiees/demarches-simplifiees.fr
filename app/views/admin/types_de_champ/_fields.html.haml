@@ -21,7 +21,7 @@
         = fff.hidden_field :id
 
 
-    - hide_mandatory = (ff.object.object.class == TypeDeChampPrivate || type_champ == 'explication')
+    - hide_mandatory = (ff.object.object.private? || type_champ == 'explication')
     .form-group.mandatory{ style: hide_mandatory ? 'visibility: hidden;' : nil }
       %h4 Obligatoire ?
       .center

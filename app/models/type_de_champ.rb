@@ -24,7 +24,23 @@ class TypeDeChamp < ActiveRecord::Base
 
   belongs_to :procedure
 
-  has_many :champ, dependent: :destroy
+  has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
+    def build_params(params)
+      if proxy_association.owner.public?
+        params.merge(type: 'ChampPublic')
+      else
+        params.merge(type: 'ChampPrivate')
+      end
+    end
+
+    def build(params = {})
+      super(build_params(params))
+    end
+
+    def create(params = {})
+      super(build_params(params))
+    end
+  end
   has_one :drop_down_list
 
   accepts_nested_attributes_for :drop_down_list
@@ -45,5 +61,13 @@ class TypeDeChamp < ActiveRecord::Base
   def check_mandatory
     self.mandatory = false if %w(header_section explication).include?(self.type_champ)
     true
+  end
+
+  def private?
+    type == 'TypeDeChampPrivate'
+  end
+
+  def public?
+    !private?
   end
 end
