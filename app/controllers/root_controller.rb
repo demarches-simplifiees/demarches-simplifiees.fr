@@ -20,11 +20,7 @@ class RootController < ApplicationController
 
     all_champs = TypeDeChamp.type_champs
       .map { |name, _| TypeDeChamp.new(type_champ: name, libelle: name, description: description, mandatory: true) }
-      .map { |type_de_champ| ChampPublic.new(type_de_champ: type_de_champ) }
-      .map.with_index do |champ, i|
-        champ.id = i
-        champ
-      end
+      .map.with_index { |type_de_champ, i| type_de_champ.champ.build(id: i) }
 
     all_champs
       .select { |champ| champ.type_champ == 'header_section' }

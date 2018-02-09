@@ -1,6 +1,8 @@
 class Champ < ActiveRecord::Base
+  self.inheritance_column = :_type_disabled
+
   belongs_to :dossier, touch: true
-  belongs_to :type_de_champ
+  belongs_to :type_de_champ, inverse_of: :champ
   has_many :commentaires
 
   delegate :libelle, :type_champ, :order_place, :mandatory, :description, :drop_down_list, to: :type_de_champ
@@ -10,9 +12,19 @@ class Champ < ActiveRecord::Base
   before_save :multiple_select_to_string, if: Proc.new { type_champ == 'multiple_drop_down_list' }
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
+  scope :public_only, -> { where('champs.type != ?', 'ChampPrivate') }
+  scope :private_only, -> { where(type: 'ChampPrivate') }
 
   def mandatory?
     mandatory
+  end
+
+  def public?
+    !private?
+  end
+
+  def private?
+    type == 'ChampPrivate'
   end
 
   def same_hour? num
