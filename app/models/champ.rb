@@ -12,8 +12,8 @@ class Champ < ActiveRecord::Base
   before_save :multiple_select_to_string, if: Proc.new { type_champ == 'multiple_drop_down_list' }
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
-  scope :public_only, -> { where('champs.type != ?', 'ChampPrivate') }
-  scope :private_only, -> { where(type: 'ChampPrivate') }
+  scope :public_only, -> { where.not(type: 'ChampPrivate').or(where(private: [false, nil])) }
+  scope :private_only, -> { where(type: 'ChampPrivate').or(where(private: true)) }
 
   def mandatory?
     mandatory
@@ -24,7 +24,7 @@ class Champ < ActiveRecord::Base
   end
 
   def private?
-    type == 'ChampPrivate'
+    super || type == 'ChampPrivate'
   end
 
   def same_hour? num
