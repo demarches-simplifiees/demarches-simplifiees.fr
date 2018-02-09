@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe ChampsService do
-  let!(:champ) { Champ.create(value: 'toto', type_de_champ: TypeDeChamp.new) }
-  let!(:champ_mandatory_empty) { Champ.create(type_de_champ: TypeDeChamp.new(libelle: 'mandatory', mandatory: true)) }
-  let!(:champ_datetime) do
-    champ_datetime = TypeDeChamp.new(type_champ: 'datetime')
-    Champ.create(type_de_champ: champ_datetime)
-  end
+  let(:type_de_champ) { create(:type_de_champ_public) }
+  let(:type_de_champ_mandatory) { create(:type_de_champ_public, libelle: 'mandatory', mandatory: true) }
+  let(:type_de_champ_datetime) { create(:type_de_champ_public, type_champ: :datetime) }
+  let!(:champ) { type_de_champ.champ.create(value: 'toto') }
+  let!(:champ_mandatory_empty) { type_de_champ_mandatory.champ.create }
+  let!(:champ_datetime) { type_de_champ_datetime.champ.create }
   let!(:champs) { [champ, champ_mandatory_empty, champ_datetime] }
 
   describe 'save_champs' do
