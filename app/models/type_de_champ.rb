@@ -52,13 +52,16 @@ class TypeDeChamp < ActiveRecord::Base
     type_champs.map { |champ| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{champ.last}"), champ.first] }
   end
 
-  def field_for_list?
-    !(type_champ == 'textarea' || type_champ == 'header_section')
+  def check_mandatory
+    if non_fillable?
+      self.mandatory = false
+    else
+      true
+    end
   end
 
-  def check_mandatory
-    self.mandatory = false if %w(header_section explication).include?(self.type_champ)
-    true
+  def non_fillable?
+    type_champ.in?(['header_section', 'explication'])
   end
 
   def private?
