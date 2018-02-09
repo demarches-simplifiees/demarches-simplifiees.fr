@@ -25,20 +25,12 @@ class TypeDeChamp < ActiveRecord::Base
   belongs_to :procedure
 
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
-    def build_params(params)
-      if proxy_association.owner.public?
-        params.merge(type: 'ChampPublic')
-      else
-        params.merge(type: 'ChampPrivate')
-      end
-    end
-
     def build(params = {})
-      super(build_params(params))
+      super(params.merge(proxy_association.owner.params_for_champ))
     end
 
     def create(params = {})
-      super(build_params(params))
+      super(params.merge(proxy_association.owner.params_for_champ))
     end
   end
   has_one :drop_down_list
@@ -49,6 +41,12 @@ class TypeDeChamp < ActiveRecord::Base
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
 
   before_validation :check_mandatory
+
+  def params_for_champ
+    {
+      private: private?
+    }
+  end
 
   def self.type_de_champs_list_fr
     type_champs.map { |champ| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{champ.last}"), champ.first] }

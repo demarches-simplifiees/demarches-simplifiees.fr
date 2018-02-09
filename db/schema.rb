@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_02_06_153121) do
+ActiveRecord::Schema.define(version: 2018_02_09_133452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,7 +138,9 @@ ActiveRecord::Schema.define(version: 2018_02_06_153121) do
     t.string "type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean "private"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
+    t.index ["private"], name: "index_champs_on_private"
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
   end
 
@@ -425,6 +427,8 @@ ActiveRecord::Schema.define(version: 2018_02_06_153121) do
     t.text "description"
     t.boolean "mandatory", default: false
     t.string "type"
+    t.boolean "private"
+    t.index ["private"], name: "index_types_de_champ_on_private"
   end
 
   create_table "types_de_piece_justificative", id: :serial, force: :cascade do |t|
