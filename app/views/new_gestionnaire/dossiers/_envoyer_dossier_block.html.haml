@@ -1,6 +1,10 @@
 .tab-title= "Envoyer ce dossier à un autre accompagnateur"
 
-= form_for dossier, url: envoyer_a_accompagnateur_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form' } do |f|
-  .flex.justify-start.align-baseline
-    = select_tag(:recipient, options_from_collection_for_select(potential_recipients, :id, :email))
-    = f.submit "Envoyer", class: "button large send gap-left"
+- if potential_recipients.empty?
+  %p.tab-paragraph
+    Vous êtes le seul accompagnateur assigné sur cette procédure
+- else
+  = form_for dossier, url: envoyer_a_accompagnateur_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form' } do |f|
+    .flex.justify-start.align-baseline
+      = select_tag(:recipient, options_from_collection_for_select(potential_recipients, :id, :email))
+      = f.submit "Envoyer", class: "button large send gap-left"
