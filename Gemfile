@@ -17,8 +17,8 @@ gem 'deep_cloneable'
 
 gem 'warden', git: 'https://github.com/hassox/warden.git', branch: 'master'
 
-# Use Unicorn as the app server
-gem 'unicorn'
+# Use Puma as the app server
+gem 'puma'
 
 # serializer
 gem 'active_model_serializers'
