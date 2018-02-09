@@ -235,8 +235,7 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   if !Rails.env.test?
-    github_secrets = YAML::load_file(File.join(__dir__, '../github_secrets.yml'))
-    config.omniauth :github, github_secrets['client_id'], github_secrets['client_secret'], scope: 'user:email'
+    config.omniauth :github, Rails.application.secrets.github[:client_id], Rails.application.secrets.github[:client_secret], scope: 'user:email'
   end
 
   # ==> Warden configuration
