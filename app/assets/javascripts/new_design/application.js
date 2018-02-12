@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require ./init
+//= require activestorage
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
