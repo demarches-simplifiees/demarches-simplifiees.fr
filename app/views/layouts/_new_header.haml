@@ -1,3 +1,5 @@
+- nav_bar_profile = controller.try(:nav_bar_profile)
+
 .new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
 
@@ -5,7 +7,7 @@
       = link_to root_path, class: "header-logo" do
         %img{ src: image_url("header/logo-tps.svg") }
 
-      - if gestionnaire_signed_in?
+      - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
         - current_url = request.path_info
         %ul.header-tabs
           - if current_gestionnaire.procedures.count > 0
@@ -29,13 +31,15 @@
                 – par email : <a href="mailto:contact@tps.apientreprise.fr">contact@tps.apientreprise.fr</a>
 
     %ul.header-right-content
-      - if gestionnaire_signed_in?
+      - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
         %li
           .header-search
             = form_tag recherche_path, method: :get, class: "form" do
               = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg"
+
+      - if gestionnaire_signed_in? || user_signed_in?
         %li
           .header-menu-opener
             = image_tag "icons/account-circle.svg", onclick: "javascript:TPS.toggleHeaderMenu(event);", title: "Mon compte"
