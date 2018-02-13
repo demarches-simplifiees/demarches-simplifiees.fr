@@ -49,8 +49,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
             description: description,
             order_place: order_place,
             id: types_de_champ_id,
-            mandatory: mandatory,
-            type: 'TypeDeChampPrivate'
+            mandatory: mandatory
           },
           '1' => {
             libelle: '',
@@ -58,8 +57,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
             description: '',
             order_place: '1',
             id: '',
-            mandatory: false,
-            type: 'TypeDeChampPrivate'
+            mandatory: false
           }
         }
       }

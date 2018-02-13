@@ -1,7 +1,7 @@
 class Procedure < ActiveRecord::Base
   has_many :types_de_piece_justificative, -> { order "order_place ASC" }, dependent: :destroy
-  has_many :types_de_champ, class_name: 'TypeDeChampPublic', dependent: :destroy
-  has_many :types_de_champ_private, dependent: :destroy
+  has_many :types_de_champ, -> { public_only }, dependent: :destroy
+  has_many :types_de_champ_private, -> { private_only }, class_name: 'TypeDeChamp', dependent: :destroy
   has_many :dossiers
 
   has_one :procedure_path, dependent: :destroy
