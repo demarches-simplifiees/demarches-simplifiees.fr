@@ -129,7 +129,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
       end
     end
     context 'when procedure and type de champs are not linked' do
-      let(:type_de_champ) { create(:type_de_champ_public) }
+      let(:type_de_champ) { create(:type_de_champ) }
       let(:type_de_champ_id) { type_de_champ.id }
       it { expect(subject.status).to eq(404) }
     end
@@ -144,20 +144,20 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
     end
     context 'when procedure have only one type de champ' do
       let(:index) { 1 }
-      let!(:type_de_champ) { create(:type_de_champ_private, procedure: procedure) }
+      let!(:type_de_champ) { create(:type_de_champ, :private, procedure: procedure) }
       it { expect(subject.status).to eq(400) }
     end
     context 'when procedure have tow type de champs' do
       context 'when index == 0' do
         let(:index) { 0 }
-        let!(:type_de_champ_1) { create(:type_de_champ_private, procedure: procedure) }
-        let!(:type_de_champ_2) { create(:type_de_champ_private, procedure: procedure) }
+        let!(:type_de_champ_1) { create(:type_de_champ, :private, procedure: procedure) }
+        let!(:type_de_champ_2) { create(:type_de_champ, :private, procedure: procedure) }
         it { expect(subject.status).to eq(400) }
       end
       context 'when index > 0' do
         let(:index) { 1 }
-        let!(:type_de_champ_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
-        let!(:type_de_champ_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
+        let!(:type_de_champ_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
+        let!(:type_de_champ_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
 
         it { expect(subject.status).to eq(200) }
         it { expect(subject).to render_template('show') }
@@ -182,12 +182,12 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
       it { expect(subject.status).to eq(400) }
     end
     context 'when procedure have only one type de champ' do
-      let!(:type_de_champ_0) { create(:type_de_champ_private, procedure: procedure) }
+      let!(:type_de_champ_0) { create(:type_de_champ, :private, procedure: procedure) }
       it { expect(subject.status).to eq(400) }
     end
     context 'when procedure have 2 type de champ' do
-      let!(:type_de_champ_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
-      let!(:type_de_champ_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
+      let!(:type_de_champ_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
+      let!(:type_de_champ_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
       context 'when index represent last type_de_champ' do
         let(:index) { 1 }
         it { expect(subject.status).to eq(400) }
