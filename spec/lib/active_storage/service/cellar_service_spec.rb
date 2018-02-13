@@ -1,5 +1,6 @@
 require 'active_storage/service/cellar_service'
 require 'cgi'
+require 'net/http'
 require 'uri'
 
 describe 'CellarService' do
@@ -19,18 +20,31 @@ describe 'CellarService' do
   after { Timecop.return }
 
   describe 'signature generation' do
-    subject do
-      cellar_service.send(
-        :signature,
-        {
-          http_verb: 'GET',
-          key: 'fichier',
-          expires: 5.minutes.from_now.to_i
-        }
-      )
+    context 'for presigned URLs' do
+      subject do
+        cellar_service.send(
+          :signature,
+          {
+            method: 'GET',
+            key: 'fichier',
+            expires: 5.minutes.from_now.to_i
+          }
+        )
+      end
+
+      it { is_expected.to eq('nzCsB6cip8oofkuOdvvJs6FafkA=') }
     end
 
-    it { is_expected.to eq('nzCsB6cip8oofkuOdvvJs6FafkA=') }
+    context 'for server-side requests' do
+      subject do
+        Net::HTTP::Delete.new('https://rogets.cellar.services.clever-cloud.com/fichier')
+      end
+
+      before { cellar_service.send(:sign, subject, 'fichier') }
+
+      it { expect(subject['date']).to eq(Time.now.httpdate) }
+      it { expect(subject['authorization']).to eq('AWS AKIAJFTRSGRH3RXX6D5Q:nkvviwZYb1V9HDrKyJZmY3Z8sSA=') }
+    end
   end
 
   describe 'presigned url for download' do
