@@ -1,2 +1,0 @@
-class ChampPublic < Champ
-end

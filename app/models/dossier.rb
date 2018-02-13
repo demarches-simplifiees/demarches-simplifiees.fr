@@ -20,8 +20,8 @@ class Dossier < ActiveRecord::Base
   has_many :cerfa, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
-  has_many :champs, class_name: 'ChampPublic', dependent: :destroy
-  has_many :champs_private, class_name: 'ChampPrivate', dependent: :destroy
+  has_many :champs, -> { public_only }, dependent: :destroy
+  has_many :champs_private, -> { private_only }, class_name: 'Champ', dependent: :destroy
   has_many :quartier_prioritaires, dependent: :destroy
   has_many :cadastres, dependent: :destroy
   has_many :commentaires, dependent: :destroy
@@ -89,12 +89,8 @@ class Dossier < ActiveRecord::Base
   end
 
   def build_default_champs
-    procedure.types_de_champ.all.each do |type_de_champ|
-      ChampPublic.create(type_de_champ: type_de_champ, dossier: self)
-    end
-
-    procedure.types_de_champ_private.all.each do |type_de_champ|
-      ChampPrivate.create(type_de_champ: type_de_champ, dossier: self)
+    procedure.all_types_de_champ.each do |type_de_champ|
+      type_de_champ.champ.create(dossier: self)
     end
   end
 
