@@ -89,7 +89,7 @@ client_secret: ''
 
 ## Lancement de l'application
 
-    overmind
+    overmind s
 
 ## Programmation des jobs
 
