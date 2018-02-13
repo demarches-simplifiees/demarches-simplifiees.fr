@@ -1,4 +1,6 @@
 class TypeDeChamp < ActiveRecord::Base
+  self.inheritance_column = :_type_disabled
+
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
@@ -23,6 +25,9 @@ class TypeDeChamp < ActiveRecord::Base
   }
 
   belongs_to :procedure
+
+  scope :public_only, -> { where.not(type: 'TypeDeChampPrivate').or(where(private: [false, nil])) }
+  scope :private_only, -> { where(type: 'TypeDeChampPrivate').or(where(private: true)) }
 
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
     def build(params = {})
@@ -65,7 +70,7 @@ class TypeDeChamp < ActiveRecord::Base
   end
 
   def private?
-    type == 'TypeDeChampPrivate'
+    super || type == 'TypeDeChampPrivate'
   end
 
   def public?

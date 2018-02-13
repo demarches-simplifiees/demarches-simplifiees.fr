@@ -57,8 +57,7 @@ describe Admin::TypesDeChampController, type: :controller do
             description: '',
             order_place: '1',
             id: '',
-            mandatory: false,
-            type: 'TypeDeChampPublic'
+            mandatory: false
           }
         }
       }

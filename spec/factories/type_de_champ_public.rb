@@ -1,5 +1,6 @@
 FactoryBot.define do
-  factory :type_de_champ_public do
+  factory :type_de_champ_public, class: 'TypeDeChamp' do
+    private false
     sequence(:libelle) { |n| "Libelle du champ #{n}" }
     sequence(:description) { |n| "description du champ #{n}" }
     type_champ 'text'
