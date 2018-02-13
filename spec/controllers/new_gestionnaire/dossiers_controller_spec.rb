@@ -355,11 +355,11 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   describe "#update_annotations" do
     let(:champ_multiple_drop_down_list) do
-      create(:type_de_champ_private, type_champ: 'multiple_drop_down_list', libelle: 'libelle').champ.create
+      create(:type_de_champ, :private, type_champ: 'multiple_drop_down_list', libelle: 'libelle').champ.create
     end
 
     let(:champ_datetime) do
-      create(:type_de_champ_private, type_champ: 'datetime', libelle: 'libelle').champ.create
+      create(:type_de_champ, :private, type_champ: 'datetime', libelle: 'libelle').champ.create
     end
 
     let(:dossier) do

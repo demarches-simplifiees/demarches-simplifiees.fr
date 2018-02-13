@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :type_de_champ_public, class: 'TypeDeChamp' do
+  factory :type_de_champ do
     private false
     sequence(:libelle) { |n| "Libelle du champ #{n}" }
     sequence(:description) { |n| "description du champ #{n}" }
@@ -33,6 +33,12 @@ FactoryBot.define do
       libelle 'Menu déroulant'
       type_champ 'drop_down_list'
       drop_down_list { create(:drop_down_list) }
+    end
+
+    trait :private do
+      private true
+      sequence(:libelle) { |n| "Libelle champ privé #{n}" }
+      sequence(:description) { |n| "description du champ privé #{n}" }
     end
   end
 end

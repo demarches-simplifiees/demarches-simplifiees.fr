@@ -6,7 +6,7 @@ feature 'users: flux de commentaires' do
   let(:dossier_id) { dossier.id }
 
   let(:champ1) { dossier.champs.first }
-  let(:champ2) { create(:champ, dossier: dossier, type_de_champ: create(:type_de_champ_public, libelle: "subtitle")) }
+  let(:champ2) { create(:champ, dossier: dossier, type_de_champ: create(:type_de_champ, libelle: "subtitle")) }
 
   let!(:commentaire1) { create(:commentaire, dossier: dossier, champ: champ1) }
   let!(:commentaire2) { create(:commentaire, dossier: dossier) }

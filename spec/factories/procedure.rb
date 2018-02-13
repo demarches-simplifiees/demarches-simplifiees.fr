@@ -36,7 +36,7 @@ FactoryBot.define do
 
       after(:build) do |procedure, evaluator|
         evaluator.types_de_champ_count.times do
-          type_de_champ = create(:type_de_champ_public)
+          type_de_champ = create(:type_de_champ)
 
           procedure.types_de_champ << type_de_champ
         end
@@ -50,7 +50,7 @@ FactoryBot.define do
 
       after(:build) do |procedure, evaluator|
         evaluator.types_de_champ_private_count.times do
-          type_de_champ = create(:type_de_champ_private)
+          type_de_champ = create(:type_de_champ, :private)
 
           procedure.types_de_champ_private << type_de_champ
         end
@@ -59,7 +59,7 @@ FactoryBot.define do
 
     trait :with_type_de_champ_mandatory do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_public, mandatory: true)
+        type_de_champ = create(:type_de_champ, mandatory: true)
 
         procedure.types_de_champ << type_de_champ
       end
@@ -67,7 +67,7 @@ FactoryBot.define do
 
     trait :with_datetime do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_public, mandatory: true, type_champ: :datetime)
+        type_de_champ = create(:type_de_champ, mandatory: true, type_champ: :datetime)
 
         procedure.types_de_champ << type_de_champ
       end
@@ -75,7 +75,7 @@ FactoryBot.define do
 
     trait :with_dossier_link do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_public, :type_dossier_link)
+        type_de_champ = create(:type_de_champ, :type_dossier_link)
 
         procedure.types_de_champ << type_de_champ
       end
@@ -83,7 +83,7 @@ FactoryBot.define do
 
     trait :with_yes_no do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_public, :type_yes_no)
+        type_de_champ = create(:type_de_champ, :type_yes_no)
 
         procedure.types_de_champ << type_de_champ
       end
