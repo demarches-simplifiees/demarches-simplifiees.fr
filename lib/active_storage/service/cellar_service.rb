@@ -1,6 +1,6 @@
 require 'base64'
+require 'net/http'
 require 'openssl'
-require 'uri'
 
 module ActiveStorage
   class Service::CellarService < Service
@@ -9,6 +9,16 @@ module ActiveStorage
       @access_key_id = access_key_id
       @secret_access_key = secret_access_key
       @bucket = bucket
+    end
+
+    def delete(key)
+      instrument :delete, key: key do
+        Net::HTTP.start(@endpoint.host, @endpoint.port, use_ssl: true) do |http|
+          request = Net::HTTP::Delete.new(URI::join(@endpoint, "/#{key}"))
+          sign(request, key)
+          http.request(request)
+        end
+      end
     end
 
     def url(key, expires_in:, filename:, disposition:, content_type:)
@@ -45,6 +55,13 @@ module ActiveStorage
 
     private
 
+    def sign(request, key, checksum: '')
+      date = Time.now.httpdate
+      sig = signature(method: request.method, key: key, date: date, checksum: checksum)
+      request['date'] = date
+      request['authorization'] = "AWS #{@access_key_id}:#{sig}"
+    end
+
     def presigned_url(method:, key:, expires_in:, content_type: '', checksum: '', **query_params)
       expires = expires_in.from_now.to_i
 
@@ -57,10 +74,10 @@ module ActiveStorage
       generated_url = URI::join(@endpoint, "/#{key}","?#{query.to_query}").to_s
     end
 
-    def signature(method:, key:, expires:, content_type: '', checksum: '')
+    def signature(method:, key:, expires: '', date: '', content_type: '', checksum: '')
       canonicalized_amz_headers = ""
       canonicalized_resource = "/#{@bucket}/#{key}"
-      string_to_sign = "#{method}\n#{checksum}\n#{content_type}\n#{expires}\n" +
+      string_to_sign = "#{method}\n#{checksum}\n#{content_type}\n#{expires}#{date}\n" +
                        "#{canonicalized_amz_headers}#{canonicalized_resource}"
       Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), @secret_access_key, string_to_sign)).strip
     end
