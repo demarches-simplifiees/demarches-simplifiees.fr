@@ -11,9 +11,9 @@ class Features
     if File.exist?("#{File.dirname(__FILE__)}/features.yml")
       features_map = YAML.load_file("#{File.dirname(__FILE__)}/features.yml")
       if features_map
-        features_map.each do |feature, is_active|
+        features_map.each do |feature, value|
           define_method("#{feature}") do
-            is_active
+            value
           end
         end
       end
