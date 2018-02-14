@@ -13,8 +13,8 @@ class Champ < ApplicationRecord
   before_save :multiple_select_to_string, if: Proc.new { type_champ == 'multiple_drop_down_list' }
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
-  scope :public_only, -> { where(type: 'ChampPublic').or(where(private: false)) }
-  scope :private_only, -> { where(type: 'ChampPrivate').or(where(private: true)) }
+  scope :public_only, -> { where(private: false) }
+  scope :private_only, -> { where(private: true) }
 
   PIECE_JUSTIFICATIVE_FILE_MAX_SIZE = 200.megabytes
 
@@ -35,10 +35,6 @@ class Champ < ApplicationRecord
 
   def public?
     !private?
-  end
-
-  def private?
-    super || type == 'ChampPrivate'
   end
 
   def same_hour? num
