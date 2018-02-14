@@ -23,7 +23,7 @@ class AdminTypesDeChampFacades
   end
 
   def new_type_de_champ
-    @private ? TypeDeChampPrivate.new.decorate : TypeDeChampPublic.new.decorate
+    TypeDeChamp.new(private: @private).decorate
   end
 
   def fields_for_var

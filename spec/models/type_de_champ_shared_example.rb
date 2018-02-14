@@ -29,14 +29,4 @@ shared_examples 'type_de_champ_spec' do
       it { is_expected.to allow_value('blabla').for(:description) }
     end
   end
-
-  describe 'field_for_list?' do
-    let(:type_de_champ_yes) { create :type_de_champ_public, type_champ: 'text' }
-    let(:type_de_champ_no_1) { create :type_de_champ_public, type_champ: 'textarea' }
-    let(:type_de_champ_no_2) { create :type_de_champ_public, type_champ: 'header_section' }
-
-    it { expect(type_de_champ_yes.field_for_list?).to be_truthy }
-    it { expect(type_de_champ_no_1.field_for_list?).to be_falsey }
-    it { expect(type_de_champ_no_2.field_for_list?).to be_falsey }
-  end
 end
