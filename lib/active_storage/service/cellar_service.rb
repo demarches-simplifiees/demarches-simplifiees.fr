@@ -11,9 +11,22 @@ module ActiveStorage
       @bucket = bucket
     end
 
+    def download(key)
+      instrument :download, key: key do
+        http_start do |http|
+          request = Net::HTTP::Get.new(URI::join(@endpoint, "/#{key}"))
+          sign(request, key)
+          response = http.request(request)
+          if response.is_a?(Net::HTTPSuccess)
+            response.body
+          end
+        end
+      end
+    end
+
     def delete(key)
       instrument :delete, key: key do
-        Net::HTTP.start(@endpoint.host, @endpoint.port, use_ssl: true) do |http|
+        http_start do |http|
           request = Net::HTTP::Delete.new(URI::join(@endpoint, "/#{key}"))
           sign(request, key)
           http.request(request)
@@ -54,6 +67,10 @@ module ActiveStorage
     end
 
     private
+
+    def http_start(&block)
+      Net::HTTP.start(@endpoint.host, @endpoint.port, use_ssl: true, &block)
+    end
 
     def sign(request, key, checksum: '')
       date = Time.now.httpdate
