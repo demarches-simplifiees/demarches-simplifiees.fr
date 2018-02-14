@@ -50,7 +50,8 @@ class TypeDeChamp < ActiveRecord::Base
 
   def params_for_champ
     {
-      private: private?
+      private: private?,
+      type: "Champs::#{type_champ.classify}Champ"
     }
   end
 
@@ -76,5 +77,9 @@ class TypeDeChamp < ActiveRecord::Base
 
   def public?
     !private?
+  end
+
+  def self.type_champ_to_class_name(type_champ)
+    "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
   end
 end
