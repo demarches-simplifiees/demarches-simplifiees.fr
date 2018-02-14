@@ -23,7 +23,7 @@ describe Champ do
   end
 
   describe '#format_datetime' do
-    let(:type_de_champ) { build(:type_de_champ, type_champ: 'datetime') }
+    let(:type_de_champ) { build(:type_de_champ_datetime) }
     let(:champ) { type_de_champ.champ.build(value: value) }
 
     before { champ.save }
@@ -42,7 +42,7 @@ describe Champ do
   end
 
   describe '#multiple_select_to_string' do
-    let(:type_de_champ) { build(:type_de_champ, type_champ: 'multiple_drop_down_list') }
+    let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list) }
     let(:champ) { type_de_champ.champ.build(value: value) }
 
     before { champ.save }
@@ -80,27 +80,26 @@ describe Champ do
   end
 
   describe 'for_export' do
-    let(:type_de_champ) { create(:type_de_champ, type_champ: type_champ) }
+    let(:type_de_champ) { create(:type_de_champ) }
     let(:champ) { type_de_champ.champ.build(value: value) }
 
     before { champ.save }
 
     context 'when type_de_champ is text' do
-      let(:type_champ) { 'text' }
       let(:value) { '123' }
 
       it { expect(champ.for_export).to eq('123') }
     end
 
     context 'when type_de_champ is textarea' do
-      let(:type_champ) { 'textarea' }
+      let(:type_de_champ) { create(:type_de_champ_textarea) }
       let(:value) { '<b>gras<b>' }
 
       it { expect(champ.for_export).to eq('gras') }
     end
 
     context 'when type_de_champ is yes_no' do
-      let(:type_champ) { 'yes_no' }
+      let(:type_de_champ) { create(:type_de_champ_yes_no) }
 
       context 'if yes' do
         let(:value) { 'true' }
@@ -122,10 +121,8 @@ describe Champ do
     end
 
     context 'when type_de_champ is multiple_drop_down_list' do
-      let(:type_champ) { 'multiple_drop_down_list' }
+      let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list) }
       let(:value) { '["Crétinier", "Mousserie"]' }
-
-      before { type_de_champ.drop_down_list = create(:drop_down_list) }
 
       it { expect(champ.for_export).to eq('Crétinier, Mousserie') }
     end
