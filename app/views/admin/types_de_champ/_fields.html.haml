@@ -8,7 +8,8 @@
 
     .form-group.type
       %h4 Type
-      = ff.select :type_champ, TypeDeChamp.type_de_champs_list_fr, {}, { class: 'form-control type-champ' }
+      - tdc_options = tdc_options(current_administrateur)
+      = ff.select :type_champ, tdc_options, {}, { class: 'form-control type-champ' }
 
     .form-group.description
       %h4 Description
