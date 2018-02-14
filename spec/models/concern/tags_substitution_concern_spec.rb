@@ -71,8 +71,8 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
         [
-          create(:type_de_champ_public, libelle: 'libelleA'),
-          create(:type_de_champ_public, libelle: 'libelleB')
+          create(:type_de_champ, libelle: 'libelleA'),
+          create(:type_de_champ, libelle: 'libelleB')
         ]
       end
 
@@ -123,7 +123,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when the procedure has a type de champ prive named libelleA' do
-      let(:types_de_champ_private) { [create(:type_de_champ_private, libelle: 'libelleA')] }
+      let(:types_de_champ_private) { [create(:type_de_champ, :private, libelle: 'libelleA')] }
 
       context 'and it is used in the template' do
         let(:template) { '--libelleA--' }
@@ -144,13 +144,13 @@ describe TagsSubstitutionConcern, type: :model do
         # The dossier just transitionned from brouillon to en construction,
         # so champs private are not valid tags yet
 
-        let(:types_de_champ_private) { [create(:type_de_champ_private, libelle: 'libelleA')] }
+        let(:types_de_champ_private) { [create(:type_de_champ, :private, libelle: 'libelleA')] }
 
         it { is_expected.to eq('--libelleA--') }
       end
 
       context 'champs publics are valid tags' do
-        let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'libelleA')] }
+        let(:types_de_champ) { [create(:type_de_champ, libelle: 'libelleA')] }
 
         before { dossier.champs.first.update_attributes(value: 'libelle1') }
 
@@ -161,8 +161,8 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has 2 types de champ date and datetime' do
       let(:types_de_champ) do
         [
-          create(:type_de_champ_public, libelle: 'date', type_champ: 'date'),
-          create(:type_de_champ_public, libelle: 'datetime', type_champ: 'datetime')
+          create(:type_de_champ, libelle: 'date', type_champ: 'date'),
+          create(:type_de_champ, libelle: 'datetime', type_champ: 'datetime')
         ]
       end
 
@@ -224,13 +224,13 @@ describe TagsSubstitutionConcern, type: :model do
 
       shared_examples "treat all kinds of space as equivalent" do
         context 'and the champ has a non breaking space' do
-          let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'mon tag')] }
+          let(:types_de_champ) { [create(:type_de_champ, libelle: 'mon tag')] }
 
           it { is_expected.to eq('valeur') }
         end
 
         context 'and the champ has an ordinary space' do
-          let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'mon tag')] }
+          let(:types_de_champ) { [create(:type_de_champ, libelle: 'mon tag')] }
 
           it { is_expected.to eq('valeur') }
         end
@@ -265,8 +265,8 @@ describe TagsSubstitutionConcern, type: :model do
   describe 'tags' do
     subject { template_concern.tags }
 
-    let(:types_de_champ) { [create(:type_de_champ_public, libelle: 'public')] }
-    let(:types_de_champ_private) { [create(:type_de_champ_private, libelle: 'privé')] }
+    let(:types_de_champ) { [create(:type_de_champ, libelle: 'public')] }
+    let(:types_de_champ_private) { [create(:type_de_champ, :private, libelle: 'privé')] }
 
     context 'when generating a document for a dossier terminé' do
       it { is_expected.to include(include({ libelle: 'motivation' })) }

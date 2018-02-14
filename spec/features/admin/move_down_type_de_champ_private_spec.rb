@@ -8,10 +8,10 @@ feature 'move down button type de champs', js: true do
   end
 
   let(:procedure) { create(:procedure, administrateur: administrateur) }
-  let!(:type_de_champ_0) { create(:type_de_champ_private, procedure: procedure, order_place: 0) }
-  let!(:type_de_champ_1) { create(:type_de_champ_private, procedure: procedure, order_place: 1) }
-  let!(:type_de_champ_2) { create(:type_de_champ_private, procedure: procedure, order_place: 2) }
-  let!(:type_de_champ_3) { create(:type_de_champ_private, procedure: procedure, order_place: 3) }
+  let!(:type_de_champ_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
+  let!(:type_de_champ_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
+  let!(:type_de_champ_2) { create(:type_de_champ, :private, procedure: procedure, order_place: 2) }
+  let!(:type_de_champ_3) { create(:type_de_champ, :private, procedure: procedure, order_place: 3) }
 
   context 'when clicking on move down for type de champ 1' do
     before do

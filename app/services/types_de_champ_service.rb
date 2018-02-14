@@ -13,17 +13,17 @@ class TypesDeChampService
         :type_champ,
         :id,
         :mandatory,
-        :type,
         drop_down_list_attributes: [:value, :id]
       ])
 
-    parameters[attributes].each do |param_first, param_second|
-      if param_second[:libelle].empty?
-        parameters[attributes].delete(param_first.to_s)
+    parameters[attributes].each do |index, param|
+      param[:private] = private
+      if param[:libelle].empty?
+        parameters[attributes].delete(index.to_s)
       end
 
-      if param_second['drop_down_list_attributes'] && param_second['drop_down_list_attributes']['value']
-        param_second['drop_down_list_attributes']['value'] = self.clean_value (param_second['drop_down_list_attributes']['value'])
+      if param['drop_down_list_attributes'] && param['drop_down_list_attributes']['value']
+        param['drop_down_list_attributes']['value'] = self.clean_value (param['drop_down_list_attributes']['value'])
       end
     end
 

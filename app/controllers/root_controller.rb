@@ -19,7 +19,7 @@ class RootController < ApplicationController
     description = 'a not so long description'
 
     all_champs = TypeDeChamp.type_champs
-      .map { |name, _| TypeDeChamp.new(type_champ: name, libelle: name, description: description, mandatory: true) }
+      .map { |name, _| TypeDeChamp.new(type_champ: name, private: false, libelle: name, description: description, mandatory: true) }
       .map.with_index { |type_de_champ, i| type_de_champ.champ.build(id: i) }
 
     all_champs
