@@ -1,2 +1,0 @@
-class ChampPrivate < Champ
-end

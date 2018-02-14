@@ -13,7 +13,7 @@ describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
   context "there are some champs" do
     let(:dossier) { create(:dossier) }
     let(:avis) { create :avis, dossier: dossier, gestionnaire: gestionnaire }
-    let(:champ1) { create(:champ, :checkbox, value: "true") }
+    let(:champ1) { create(:champ, :checkbox, value: "on") }
     let(:champ2) { create(:champ, :header_section, value: "Section") }
     let(:champ3) { create(:champ, :explication, value: "mazette") }
     let(:champ4) { create(:champ, :dossier_link, value: dossier.id) }
@@ -53,7 +53,7 @@ describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
 
   context "with seen_at" do
     let(:dossier) { create(:dossier) }
-    let(:champ1) { create(:champ, :checkbox, value: "true") }
+    let(:champ1) { create(:champ, :checkbox, value: "on") }
     let(:champs) { [champ1] }
 
     context "with a demande_seen_at after champ updated_at" do

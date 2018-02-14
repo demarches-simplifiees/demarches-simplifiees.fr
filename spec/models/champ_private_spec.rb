@@ -1,7 +1,11 @@
 require 'spec_helper'
 
-describe ChampPrivate do
-  require 'models/champ_shared_example.rb'
+describe Champ do
+  describe '#private?' do
+    let(:type_de_champ) { build(:type_de_champ, :private) }
+    let(:champ) { type_de_champ.champ.build }
 
-  it_should_behave_like "champ_spec"
+    it { expect(champ.private?).to be_truthy }
+    it { expect(champ.public?).to be_falsey }
+  end
 end

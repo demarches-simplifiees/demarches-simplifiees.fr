@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/description/champs/date.html.haml', type: :view do
-  let(:type_champ) { create(:type_de_champ_public, type_champ: :date) }
+  let(:type_champ) { create(:type_de_champ, type_champ: :date) }
 
   before do
     render 'users/description/champs/date.html.haml', champ: champ

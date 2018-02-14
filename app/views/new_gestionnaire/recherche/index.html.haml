@@ -9,23 +9,26 @@
     %table.table.dossiers-table.hoverable
       %thead
         %tr
-          %th Nº
+          %th.notification-col
+          %th.number-col Nº dossier
           %th Procédure
           %th Demandeur
-          %th Statut
+          %th.status-col Statut
       %tbody
-      - @dossiers.each do |dossier|
-        / # FIXME: here we have a n+1, we fire a request
-        / (due to dossier_linked_path) per result
-        %tr
-          %td.number-col
-            = link_to(dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link') do
-              %span.icon.folder>
-              = dossier.id
-          %td= link_to(dossier.procedure.libelle, dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link')
-          %td= link_to(dossier.user.email, dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link')
-          %td.status-col
-            = link_to(dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link') do
-              = render partial: 'new_gestionnaire/procedures/status', locals: { dossier: dossier }
+        - @dossiers.each do |dossier|
+          / # FIXME: here we have a n+1, we fire a request
+          / (due to dossier_linked_path) per result
+          %tr
+            %td.folder-col
+              = link_to(dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link') do
+                %span.icon.folder
+            %td.number-col
+              = link_to(dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link') do
+                = dossier.id
+            %td= link_to(dossier.procedure.libelle, dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link')
+            %td= link_to(dossier.user.email, dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link')
+            %td.status-col
+              = link_to(dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link') do
+                = render partial: 'new_gestionnaire/procedures/status', locals: { dossier: dossier }
   - else
     %h2 Aucun dossier correspondant à votre recherche n'a été trouvé

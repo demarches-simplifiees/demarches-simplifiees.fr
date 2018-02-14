@@ -14,9 +14,9 @@ Téléprocédures Simplifiées, ou TPS pour les intimes, est une plateforme 100 
 ### Développement
 
 - Mailcatcher : `gem install mailcatcher`
-- Hivemind :
-  * Mac : `brew install hivemind`
-  * Linux : voir https://github.com/DarthSim/hivemind#installation
+- Overmind :
+  * Mac : `brew install overmind`
+  * Linux : voir https://github.com/DarthSim/overmind#installation
 
 ### Tests
 
@@ -89,7 +89,7 @@ client_secret: ''
 
 ## Lancement de l'application
 
-    hivemind
+    overmind s
 
 ## Programmation des jobs
 
@@ -116,6 +116,12 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
         rake spec SPEC=file_path/file_name_spec.rb
         rspec file_path/file_name_spec.rb
+
+## Debug
+
+Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il faut se connecter au process `server` dans un nouveau terminal afin d'intéragir avec byebug :
+
+    overmind connect server
 
 ## Linting
 

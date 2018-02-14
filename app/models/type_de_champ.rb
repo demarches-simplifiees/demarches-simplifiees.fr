@@ -1,4 +1,6 @@
 class TypeDeChamp < ActiveRecord::Base
+  self.inheritance_column = :_type_disabled
+
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
@@ -24,7 +26,18 @@ class TypeDeChamp < ActiveRecord::Base
 
   belongs_to :procedure
 
-  has_many :champ, dependent: :destroy
+  scope :public_only, -> { where.not(type: 'TypeDeChampPrivate').or(where(private: [false, nil])) }
+  scope :private_only, -> { where(type: 'TypeDeChampPrivate').or(where(private: true)) }
+
+  has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
+    def build(params = {})
+      super(params.merge(proxy_association.owner.params_for_champ))
+    end
+
+    def create(params = {})
+      super(params.merge(proxy_association.owner.params_for_champ))
+    end
+  end
   has_one :drop_down_list
 
   accepts_nested_attributes_for :drop_down_list
@@ -34,16 +47,33 @@ class TypeDeChamp < ActiveRecord::Base
 
   before_validation :check_mandatory
 
+  def params_for_champ
+    {
+      private: private?
+    }
+  end
+
   def self.type_de_champs_list_fr
     type_champs.map { |champ| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{champ.last}"), champ.first] }
   end
 
-  def field_for_list?
-    !(type_champ == 'textarea' || type_champ == 'header_section')
+  def check_mandatory
+    if non_fillable?
+      self.mandatory = false
+    else
+      true
+    end
   end
 
-  def check_mandatory
-    self.mandatory = false if %w(header_section explication).include?(self.type_champ)
-    true
+  def non_fillable?
+    type_champ.in?(['header_section', 'explication'])
+  end
+
+  def private?
+    super || type == 'TypeDeChampPrivate'
+  end
+
+  def public?
+    !private?
   end
 end

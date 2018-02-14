@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe ChampDecorator do
-  let(:champ) { create :champ, type_de_champ: (create :type_de_champ_public, type_champ: type_champ) }
+  let(:type_de_champ) { create(:type_de_champ, type_champ: type_champ) }
+  let(:champ) { type_de_champ.champ.create }
   let(:decorator) { champ.decorate }
 
   describe 'value' do

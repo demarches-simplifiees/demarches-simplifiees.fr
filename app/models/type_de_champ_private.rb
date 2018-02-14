@@ -1,2 +1,0 @@
-class TypeDeChampPrivate < TypeDeChamp
-end
