@@ -12,12 +12,11 @@ module ActiveStorage
     end
 
     def download(key)
+      # TODO: error handling
       if block_given?
         instrument :streaming_download, key: key do
           http_start do |http|
-            request = Net::HTTP::Get.new(URI::join(@endpoint, "/#{key}"))
-            sign(request, key)
-            http.request(request) do |response|
+            http.request(get_request(key)) do |response|
               response.read_body do |chunk|
                 yield(chunk.force_encoding(Encoding::BINARY))
               end
@@ -27,9 +26,7 @@ module ActiveStorage
       else
         instrument :download, key: key do
           http_start do |http|
-            request = Net::HTTP::Get.new(URI::join(@endpoint, "/#{key}"))
-            sign(request, key)
-            response = http.request(request)
+            response = http.request(get_request(key))
             if response.is_a?(Net::HTTPSuccess)
               response.body.force_encoding(Encoding::BINARY)
             end
@@ -39,11 +36,23 @@ module ActiveStorage
     end
 
     def delete(key)
+      # TODO: error handling
       instrument :delete, key: key do
         http_start do |http|
-          request = Net::HTTP::Delete.new(URI::join(@endpoint, "/#{key}"))
-          sign(request, key)
-          http.request(request)
+          perform_delete(http, key)
+        end
+      end
+    end
+
+    def delete_prefixed(prefix)
+      # TODO: error handling
+      # TODO: handle pagination if more than 1000 keys
+      instrument :delete_prefixed, prefix: prefix do
+        http_start do |http|
+          list_prefixed(http, prefix).each do |key|
+            # TODO: use bulk delete instead
+            perform_delete(http, key)
+          end
         end
       end
     end
@@ -111,6 +120,48 @@ module ActiveStorage
       string_to_sign = "#{method}\n#{checksum}\n#{content_type}\n#{expires}#{date}\n" +
                        "#{canonicalized_amz_headers}#{canonicalized_resource}"
       Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), @secret_access_key, string_to_sign)).strip
+    end
+
+    def list_prefixed(http, prefix)
+      request = Net::HTTP::Get.new(URI::join(@endpoint, "/?list-type=2&prefix=#{prefix}"))
+      sign(request, "")
+      response = http.request(request)
+      if response.is_a?(Net::HTTPSuccess)
+        parse_bucket_listing(response.body)
+      end
+    end
+
+    def parse_bucket_listing(bucket_listing_xml)
+      doc = Nokogiri::XML(bucket_listing_xml)
+      doc
+        .xpath('//xmlns:Contents/xmlns:Key')
+        .map{ |k| k.text }
+    end
+
+    def get_request(key)
+      request = Net::HTTP::Get.new(URI::join(@endpoint, "/#{key}"))
+      sign(request, key)
+      request
+    end
+
+    def bulk_deletion_request_body(keys)
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.Delete do
+          xml.Quiet("true")
+          keys.each do |k|
+            xml.Object do
+              xml.Key(k)
+            end
+          end
+        end
+      end
+      builder.to_xml
+    end
+
+    def perform_delete(http, key)
+      request = Net::HTTP::Delete.new(URI::join(@endpoint, "/#{key}"))
+      sign(request, key)
+      http.request(request)
     end
   end
 end
