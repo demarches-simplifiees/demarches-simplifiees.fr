@@ -349,9 +349,9 @@ describe Dossier do
     let(:dossier) { Dossier.create(user: create(:user), procedure: procedure) }
 
     before do
-      create(:type_de_champ_public, libelle: 'l1', order_place: 1, procedure: procedure)
-      create(:type_de_champ_public, libelle: 'l3', order_place: 3, procedure: procedure)
-      create(:type_de_champ_public, libelle: 'l2', order_place: 2, procedure: procedure)
+      create(:type_de_champ, libelle: 'l1', order_place: 1, procedure: procedure)
+      create(:type_de_champ, libelle: 'l3', order_place: 3, procedure: procedure)
+      create(:type_de_champ, libelle: 'l2', order_place: 2, procedure: procedure)
     end
 
     it { expect(dossier.ordered_champs.pluck(:libelle)).to match(%w(l1 l2 l3)) }
@@ -362,9 +362,9 @@ describe Dossier do
     let(:dossier) { Dossier.create(user: create(:user), procedure: procedure) }
 
     before do
-      create :type_de_champ_private, libelle: 'l1', order_place: 1, procedure: procedure
-      create :type_de_champ_private, libelle: 'l3', order_place: 3, procedure: procedure
-      create :type_de_champ_private, libelle: 'l2', order_place: 2, procedure: procedure
+      create :type_de_champ, :private, libelle: 'l1', order_place: 1, procedure: procedure
+      create :type_de_champ, :private, libelle: 'l3', order_place: 3, procedure: procedure
+      create :type_de_champ, :private, libelle: 'l2', order_place: 2, procedure: procedure
     end
 
     it { expect(dossier.ordered_champs_private.pluck(:libelle)).to match(%w(l1 l2 l3)) }
