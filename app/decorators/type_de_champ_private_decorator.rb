@@ -1,2 +1,0 @@
-class TypeDeChampPrivateDecorator < TypeDeChampDecorator
-end

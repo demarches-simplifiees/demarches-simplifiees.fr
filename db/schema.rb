@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_03_07_101545) do
+ActiveRecord::Schema.define(version: 2018_03_08_110811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(version: 2018_03_07_101545) do
     t.string "type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean "private"
+    t.boolean "private", default: false, null: false
     t.integer "etablissement_id"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["private"], name: "index_champs_on_private"
@@ -468,7 +468,7 @@ ActiveRecord::Schema.define(version: 2018_03_07_101545) do
     t.text "description"
     t.boolean "mandatory", default: false
     t.string "type"
-    t.boolean "private"
+    t.boolean "private", default: false, null: false
     t.index ["private"], name: "index_types_de_champ_on_private"
   end
 
