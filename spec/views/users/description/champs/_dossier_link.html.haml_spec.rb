@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/description/champs/dossier_link.html.haml', type: :view do
-  let(:type_champ) { create(:type_de_champ, type_champ: :dossier_link) }
+  let(:type_champ) { create(:type_de_champ_dossier_link) }
 
   before do
     render 'users/description/champs/dossier_link.html.haml', champ: champ

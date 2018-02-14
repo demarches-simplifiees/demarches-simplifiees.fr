@@ -161,8 +161,8 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has 2 types de champ date and datetime' do
       let(:types_de_champ) do
         [
-          create(:type_de_champ, libelle: 'date', type_champ: 'date'),
-          create(:type_de_champ, libelle: 'datetime', type_champ: 'datetime')
+          create(:type_de_champ_date, libelle: 'date'),
+          create(:type_de_champ_datetime, libelle: 'datetime')
         ]
       end
 

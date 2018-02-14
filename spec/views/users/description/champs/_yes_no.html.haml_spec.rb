@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/description/champs/yes_no.html.haml', type: :view do
-  let(:type_champ) { create(:type_de_champ, type_champ: :yes_no) }
+  let(:type_champ) { create(:type_de_champ_yes_no) }
 
   before do
     render 'users/description/champs/yes_no.html.haml', champ: champ

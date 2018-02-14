@@ -33,7 +33,7 @@ shared_examples 'champ_spec' do
   end
 
   context "when type_champ=date" do
-    let(:type_de_champ) { create(:type_de_champ, type_champ: "date") }
+    let(:type_de_champ) { create(:type_de_champ_date) }
     let(:champ) { type_de_champ.champ.create }
 
     it "should convert %d/%m/%Y format to ISO" do
