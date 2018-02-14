@@ -13,6 +13,15 @@ describe Champ do
     it { expect(champ.private?).to be_falsey }
   end
 
+  describe '#public_only' do
+    let(:dossier) { create(:dossier) }
+
+    it 'partition public and private' do
+      expect(dossier.champs.count).to eq(1)
+      expect(dossier.champs_private.count).to eq(1)
+    end
+  end
+
   describe '#format_datetime' do
     let(:type_de_champ) { build(:type_de_champ, type_champ: 'datetime') }
     let(:champ) { type_de_champ.champ.build(value: value) }
