@@ -12,7 +12,7 @@ class Champ < ActiveRecord::Base
   before_save :multiple_select_to_string, if: Proc.new { type_champ == 'multiple_drop_down_list' }
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
-  scope :public_only, -> { where.not(type: 'ChampPrivate').or(where(private: [false, nil])) }
+  scope :public_only, -> { where(type: 'ChampPublic').or(where(private: false)) }
   scope :private_only, -> { where(type: 'ChampPrivate').or(where(private: true)) }
 
   def public?
