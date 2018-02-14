@@ -12,13 +12,27 @@ module ActiveStorage
     end
 
     def download(key)
-      instrument :download, key: key do
-        http_start do |http|
-          request = Net::HTTP::Get.new(URI::join(@endpoint, "/#{key}"))
-          sign(request, key)
-          response = http.request(request)
-          if response.is_a?(Net::HTTPSuccess)
-            response.body
+      if block_given?
+        instrument :streaming_download, key: key do
+          http_start do |http|
+            request = Net::HTTP::Get.new(URI::join(@endpoint, "/#{key}"))
+            sign(request, key)
+            http.request(request) do |response|
+              response.read_body do |chunk|
+                yield(chunk.force_encoding(Encoding::BINARY))
+              end
+            end
+          end
+        end
+      else
+        instrument :download, key: key do
+          http_start do |http|
+            request = Net::HTTP::Get.new(URI::join(@endpoint, "/#{key}"))
+            sign(request, key)
+            response = http.request(request)
+            if response.is_a?(Net::HTTPSuccess)
+              response.body.force_encoding(Encoding::BINARY)
+            end
           end
         end
       end
