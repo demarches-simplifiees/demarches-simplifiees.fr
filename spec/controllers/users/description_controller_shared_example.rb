@@ -107,12 +107,12 @@ shared_examples 'description_controller_spec' do
         let(:state) { 'brouillon' }
 
         def submit_dossier
-          post :update, params: { dossier_id: dossier_id, submit: submit }
+          post :update, params: { dossier_id: dossier_id, submit_action: submit }
           dossier.reload
         end
 
         context "when the user submits the dossier" do
-          let(:submit) { { nouveaux: 'nouveaux' } }
+          let(:submit) { 'nouveaux' }
 
           it "redirection vers la page recapitulative" do
             submit_dossier
@@ -142,7 +142,7 @@ shared_examples 'description_controller_spec' do
         end
 
         context 'when user saves a brouillon' do
-          let(:submit) { { brouillon: 'brouillon' } }
+          let(:submit) { 'brouillon' }
 
           it "reste sur la page du dossier" do
             submit_dossier
@@ -156,7 +156,7 @@ shared_examples 'description_controller_spec' do
         end
 
         context 'when user saves a brouillon and goes to dashboard' do
-          let(:submit) { { brouillon_then_dashboard: 'brouillon_then_dashboard' } }
+          let(:submit) { 'brouillon_then_dashboard' }
 
           it "goes to dashboard" do
             submit_dossier

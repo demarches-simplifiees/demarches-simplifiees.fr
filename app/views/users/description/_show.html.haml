@@ -40,6 +40,26 @@
       - elsif !@dossier.brouillon?
         = render partial: '/layouts/modifications_terminees'
       - else
-        = submit_tag 'Soumettre mon dossier', id: 'suivant', name: 'submit[nouveaux]', class: 'btn btn btn-success', style: 'float: right;', disabled: @procedure.archivee?, data: { disable_with: 'Soumettre votre dossier', submit: true }
-        = submit_tag 'Enregistrer un brouillon', id: 'brouillon', name: 'submit[brouillon]', class: 'btn btn-xs btn-default', style: 'float: right; margin-right: 10px; margin-top: 6px;', disabled: @procedure.archivee?, data: { disable_with: 'Enregistrer un brouillon', submit: true }
-        = submit_tag "Enregistrer et voir mes dossiers", id: 'brouillon_then_dashboard', name: 'submit[brouillon_then_dashboard]', class: 'btn btn-xs btn-default', style: 'float: right; margin-right: 10px; margin-top: 6px;', disabled: @procedure.archivee?, data: { disable_with: 'Voir mes brouillons et dossiers', submit: true }
+        = hidden_field_tag 'submit_action', 'brouillon'
+        = submit_tag 'Bonjour Active Storage !', style: 'display: none;'
+        = button_tag 'Soumettre mon dossier',
+          id: 'suivant',
+          type: 'submit',
+          class: 'btn btn btn-success',
+          style: 'float: right;',
+          disabled: @procedure.archivee?,
+          data: { disable: true, action: 'nouveaux' }
+        = button_tag 'Enregistrer un brouillon',
+          id: 'brouillon',
+          type: 'submit',
+          class: 'btn btn-xs btn-default',
+          style: 'float: right; margin-right: 10px; margin-top: 6px;',
+          disabled: @procedure.archivee?,
+          data: { disable: true, action: 'brouillon' }
+        = button_tag "Enregistrer et voir mes dossiers",
+          id: 'brouillon_then_dashboard',
+          type: 'submit',
+          class: 'btn btn-xs btn-default',
+          style: 'float: right; margin-right: 10px; margin-top: 6px;',
+          disabled: @procedure.archivee?,
+          data: { disable: true, action: 'brouillon_then_dashboard' }
