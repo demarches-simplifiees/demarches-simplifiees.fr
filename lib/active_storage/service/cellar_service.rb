@@ -12,13 +12,16 @@ module ActiveStorage
     end
 
     def download(key)
-      # TODO: error handling
       if block_given?
         instrument :streaming_download, key: key do
           http_start do |http|
             http.request(get_request(key)) do |response|
-              response.read_body do |chunk|
-                yield(chunk.force_encoding(Encoding::BINARY))
+              if response.is_a?(Net::HTTPSuccess)
+                response.read_body do |chunk|
+                  yield(chunk.force_encoding(Encoding::BINARY))
+                end
+              else
+                # TODO: error handling
               end
             end
           end
@@ -29,6 +32,8 @@ module ActiveStorage
             response = http.request(get_request(key))
             if response.is_a?(Net::HTTPSuccess)
               response.body.force_encoding(Encoding::BINARY)
+            else
+              # TODO: error handling
             end
           end
         end
