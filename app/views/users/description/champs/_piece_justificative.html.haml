@@ -4,7 +4,7 @@
   = file_field_tag "champs['#{champ.id}']",
     id: "champs_#{champ.id}",
     direct_upload: true,
-    mandatory: champ.mandatory
+    mandatory: champ.mandatory?
 - else
   %a{ href: url_for(pj), target: '_blank' }
     = pj.filename.to_s
