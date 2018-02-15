@@ -1,2 +1,4 @@
 remote_storage: false
 weekly_overview: false
+champ_pj_allowed_for_admin_ids:
+  - 0

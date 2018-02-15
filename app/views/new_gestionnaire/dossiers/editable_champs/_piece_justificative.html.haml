@@ -1,0 +1,14 @@
+- pj = champ.piece_justificative_file
+
+- if !pj.attached?
+  = form.file_field :piece_justificative_file,
+    id: "champs_#{champ.id}",
+    direct_upload: true
+- else
+  %a{ href: url_for(pj), target: '_blank' }
+    = pj.filename.to_s
+  %br
+  Modifier :
+  = form.file_field :piece_justificative_file,
+    id: "champs_#{champ.id}",
+    direct_upload: true

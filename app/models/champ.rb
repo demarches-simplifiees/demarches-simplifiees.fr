@@ -4,6 +4,7 @@ class Champ < ActiveRecord::Base
   belongs_to :dossier, touch: true
   belongs_to :type_de_champ, inverse_of: :champ
   has_many :commentaires
+  has_one_attached :piece_justificative_file
 
   delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, to: :type_de_champ
 
@@ -14,6 +15,23 @@ class Champ < ActiveRecord::Base
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(type: 'ChampPublic').or(where(private: false)) }
   scope :private_only, -> { where(type: 'ChampPrivate').or(where(private: true)) }
+
+  PIECE_JUSTIFICATIVE_FILE_MAX_SIZE = 200.megabytes
+
+  PIECE_JUSTIFICATIVE_FILE_ACCEPTED_FORMATS = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/vnd.oasis.opendocument.text",
+    "application/vnd.oasis.opendocument.presentation",
+    "application/vnd.oasis.opendocument.spreadsheet",
+    "image/png",
+    "image/jpeg"
+  ]
 
   def public?
     !private?
@@ -32,7 +50,11 @@ class Champ < ActiveRecord::Base
   end
 
   def mandatory_and_blank?
-    mandatory? && value.blank?
+    if type_champ == 'piece_justificative'
+      mandatory? && !piece_justificative_file.attached?
+    else
+      mandatory? && value.blank?
+    end
   end
 
   def same_date? num, compare
@@ -86,6 +108,28 @@ class Champ < ActiveRecord::Base
     else
       nil
     end
+  end
+
+  def piece_justificative_file_errors
+    errors = []
+
+    if piece_justificative_file.attached? && piece_justificative_file.previous_changes.present?
+      if piece_justificative_file.blob.byte_size > PIECE_JUSTIFICATIVE_FILE_MAX_SIZE
+        errors << "Le fichier #{piece_justificative_file.filename.to_s} est trop lourd, il doit faire au plus #{PIECE_JUSTIFICATIVE_FILE_MAX_SIZE.to_s(:human_size, precision: 2)}"
+      end
+
+      if !piece_justificative_file.blob.content_type.in?(PIECE_JUSTIFICATIVE_FILE_ACCEPTED_FORMATS)
+        errors << "Le fichier #{piece_justificative_file.filename.to_s} est dans un format que nous n'acceptons pas"
+      end
+
+      # FIXME: add Clamav check
+    end
+
+    if errors.present?
+      piece_justificative_file.purge
+    end
+
+    errors
   end
 
   private

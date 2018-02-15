@@ -36,7 +36,7 @@ class Users::DescriptionController < UsersController
       return redirect_to_description_with_errors(dossier, cerfa.errors.full_messages) if !cerfa.save
     end
 
-    errors_upload = PiecesJustificativesService.upload!(dossier, current_user, params)
+    errors_upload = PiecesJustificativesService.upload!(dossier, current_user, params) + ChampsService.check_piece_justificative_files(dossier.champs)
     return redirect_to_description_with_errors(dossier, errors_upload) if errors_upload.any?
 
     if params[:champs] && !(brouillon_submission? || brouillon_then_dashboard_submission?)
