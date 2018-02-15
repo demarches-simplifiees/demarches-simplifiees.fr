@@ -123,7 +123,7 @@ module ActiveStorage
     end
 
     def list_prefixed(http, prefix)
-      request = Net::HTTP::Get.new(URI::join(@endpoint, "/?list-type=2&prefix=#{prefix}"))
+      request = Net::HTTP::Get.new(URI::join(@endpoint, "/?prefix=#{prefix}"))
       sign(request, "")
       response = http.request(request)
       if response.is_a?(Net::HTTPSuccess)
@@ -147,7 +147,6 @@ module ActiveStorage
     def bulk_deletion_request_body(keys)
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.Delete do
-          xml.Quiet("true")
           keys.each do |k|
             xml.Object do
               xml.Key(k)
