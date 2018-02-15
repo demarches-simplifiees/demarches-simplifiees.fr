@@ -165,6 +165,7 @@ module NewGestionnaire
 
     def update_annotations
       dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
+      # FIXME: add attachements validation, cf. Champ#piece_justificative_file_errors
       dossier.update_attributes(champs_private_params)
       redirect_to annotations_privees_dossier_path(procedure, dossier)
     end
@@ -189,7 +190,7 @@ module NewGestionnaire
     end
 
     def champs_private_params
-      params.require(:dossier).permit(champs_private_attributes: [:id, :value, value: []])
+      params.require(:dossier).permit(champs_private_attributes: [:id, :piece_justificative_file, :value, value: []])
     end
 
     def check_attestation_emailable

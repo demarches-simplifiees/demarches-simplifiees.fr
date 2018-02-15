@@ -56,6 +56,7 @@ set :shared_paths, [
   'config/database.yml',
   "config/skylight.yml",
   "config/fog_credentials.yml",
+  'config/storage.yml',
   'config/initializers/secret_token.rb',
   'config/initializers/features.yml',
   "config/environments/#{rails_env}.rb",
