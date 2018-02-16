@@ -113,11 +113,11 @@ class Users::DescriptionController < UsersController
   end
 
   def brouillon_submission?
-    params[:submit] && params[:submit]['brouillon'].present?
+    params[:submit_action] == 'brouillon'
   end
 
   def brouillon_then_dashboard_submission?
-    params[:submit] && params[:submit]['brouillon_then_dashboard'].present?
+    params[:submit_action] == 'brouillon_then_dashboard'
   end
 
   def check_autorisation_donnees
