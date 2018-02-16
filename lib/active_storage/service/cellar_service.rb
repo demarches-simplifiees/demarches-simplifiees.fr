@@ -62,6 +62,19 @@ module ActiveStorage
       end
     end
 
+    def exist?(key)
+      instrument :exist, key: key do |payload|
+        http_start do |http|
+          request = Net::HTTP::Head.new(URI::join(@endpoint, "/#{key}"))
+          sign(request, key)
+          response = http.request(request)
+          answer = response.is_a?(Net::HTTPSuccess)
+          payload[:exist] = answer
+          answer
+        end
+      end
+    end
+
     def url(key, expires_in:, filename:, disposition:, content_type:)
       instrument :url, key: key do |payload|
         generated_url = presigned_url(
