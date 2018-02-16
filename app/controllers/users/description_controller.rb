@@ -36,7 +36,7 @@ class Users::DescriptionController < UsersController
       return redirect_to_description_with_errors(dossier, cerfa.errors.full_messages) if !cerfa.save
     end
 
-    errors_upload = PiecesJustificativesService.upload!(dossier, current_user, params)
+    errors_upload = PiecesJustificativesService.upload!(dossier, current_user, params) + ChampsService.check_piece_justificative_files(dossier.champs)
     return redirect_to_description_with_errors(dossier, errors_upload) if errors_upload.any?
 
     if params[:champs] && !(brouillon_submission? || brouillon_then_dashboard_submission?)
@@ -113,11 +113,11 @@ class Users::DescriptionController < UsersController
   end
 
   def brouillon_submission?
-    params[:submit] && params[:submit]['brouillon'].present?
+    params[:submit_action] == 'brouillon'
   end
 
   def brouillon_then_dashboard_submission?
-    params[:submit] && params[:submit]['brouillon_then_dashboard'].present?
+    params[:submit_action] == 'brouillon_then_dashboard'
   end
 
   def check_autorisation_donnees

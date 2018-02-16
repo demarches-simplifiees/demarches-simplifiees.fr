@@ -27,6 +27,7 @@ feature 'As a User I wanna create a dossier' do
           expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id.to_s))
           page.find_by_id('etape_suivante').click
           fill_in "champs_#{procedure_for_individual.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
+          find(:css, '[name=submit_action]').set('nouveaux')
           page.find_by_id('suivant').click
           expect(user.dossiers.first.individual.birthdate).to eq("1987-10-14")
           expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_for_individual.dossiers.last.id.to_s))
@@ -38,6 +39,7 @@ feature 'As a User I wanna create a dossier' do
           expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id.to_s))
           page.find_by_id('etape_suivante').click
           fill_in "champs_#{procedure_for_individual.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
+          find(:css, '[name=submit_action]').set('nouveaux')
           page.find_by_id('suivant').click
           expect(user.dossiers.first.individual.birthdate).to eq("1987-10-14")
           expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_for_individual.dossiers.last.id.to_s))
@@ -52,6 +54,7 @@ feature 'As a User I wanna create a dossier' do
           expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id.to_s))
           page.find_by_id('etape_suivante').click
           fill_in "champs_#{procedure_for_individual.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
+          find(:css, '[name=submit_action]').set('nouveaux')
           page.find_by_id('suivant').click
           expect(user.dossiers.first.individual.birthdate).to eq(nil)
           expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_for_individual.dossiers.last.id.to_s))

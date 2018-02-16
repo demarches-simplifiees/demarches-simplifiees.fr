@@ -37,7 +37,7 @@
             .col-xs-1.comments-off
               = "-"
             .col-xs-5.depositaire-info{ id: "champ-#{champ.id}-value" }
-              - if champ.decorate.value.present?
+              - if champ.decorate.value.present? || champ.piece_justificative_file.attached?
                 - if champ.type_champ == 'dossier_link'
                   - dossier = Dossier.includes(:procedure).find_by(id: champ.decorate.value)
                   - if dossier
@@ -46,6 +46,10 @@
                     = sanitize(dossier.text_summary)
                   - else
                     Pas de dossier associé
+                - elsif champ.type_champ == 'piece_justificative'
+                  - pj = champ.piece_justificative_file
+                  %a{ href: url_for(pj), target: '_blank' }
+                    = pj.filename.to_s
                 - else
                   = sanitize(champ.decorate.value)
 

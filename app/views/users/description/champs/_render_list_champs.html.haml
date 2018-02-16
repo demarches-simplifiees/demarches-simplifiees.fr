@@ -50,6 +50,9 @@
           - when 'date'
             = render partial: 'users/description/champs/date', locals: { champ: champ }
 
+          - when 'piece_justificative'
+            = render partial: 'users/description/champs/piece_justificative', locals: { champ: champ }
+
           - else
             %input.form-control{ name: "champs['#{champ.id}']",
                             placeholder: champ.libelle,
