@@ -3,6 +3,9 @@ require 'spec_helper'
 describe 'admin/types_de_champ/show.html.haml', type: :view do
   let(:procedure) { create(:procedure) }
 
+  # FIXME: delete this when support for pj champ is generalized
+  before { allow(view).to receive(:current_administrateur).and_return(create(:administrateur)) }
+
   describe 'fields sorted' do
     let(:first_libelle) { 'salut la compagnie' }
     let(:last_libelle) { 'je suis bien sur la page' }
