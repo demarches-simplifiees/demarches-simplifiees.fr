@@ -47,6 +47,14 @@ class Gestionnaire < ActiveRecord::Base
     procedures.find_by(id: procedure_id).present?
   end
 
+  def assign_to_procedure(procedure)
+    AssignTo.create(gestionnaire: self, procedure: procedure)
+  end
+
+  def remove_from_procedure(procedure)
+    AssignTo.where(gestionnaire: self, procedure: procedure).delete_all
+  end
+
   def last_week_overview
     start_date = DateTime.now.beginning_of_week
 

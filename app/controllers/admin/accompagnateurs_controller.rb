@@ -46,9 +46,12 @@ class Admin::AccompagnateursController < AdminController
     procedure = Procedure.find(params[:procedure_id])
     to = params[:to]
 
-    accompagnateur_service = AccompagnateurService.new gestionnaire, procedure, to
-
-    accompagnateur_service.change_assignement!
+    case to
+    when 'assign'
+      gestionnaire.assign_to_procedure(procedure)
+    when 'not_assign'
+      gestionnaire.remove_from_procedure(procedure)
+    end
 
     flash.notice = "Assignement effectué"
     redirect_to admin_procedure_accompagnateurs_path, procedure_id: params[:procedure_id]
