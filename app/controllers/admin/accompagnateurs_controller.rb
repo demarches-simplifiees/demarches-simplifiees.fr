@@ -4,6 +4,9 @@ class Admin::AccompagnateursController < AdminController
 
   before_action :retrieve_procedure
 
+  ASSIGN = 'assign'
+  NOT_ASSIGN = 'not_assign'
+
   def show
     assign_scope = @procedure.gestionnaires
 
@@ -47,10 +50,10 @@ class Admin::AccompagnateursController < AdminController
     to = params[:to]
 
     case to
-    when 'assign'
+    when ASSIGN
       gestionnaire.assign_to_procedure(procedure)
       flash.notice = "L'accompagnateur a bien été affecté"
-    when 'not_assign'
+    when NOT_ASSIGN
       gestionnaire.remove_from_procedure(procedure)
       flash.notice = "L'accompagnateur a bien été désaffecté"
     end
