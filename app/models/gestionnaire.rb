@@ -5,7 +5,7 @@ class Gestionnaire < ActiveRecord::Base
   has_and_belongs_to_many :administrateurs
 
   has_many :assign_to, dependent: :destroy
-  has_many :procedures, -> { publiees_ou_archivees }, through: :assign_to
+  has_many :procedures, through: :assign_to
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
   has_many :follows
   has_many :followed_dossiers, through: :follows, source: :dossier
@@ -13,6 +13,10 @@ class Gestionnaire < ActiveRecord::Base
   has_many :dossiers_from_avis, through: :avis, source: :dossier
 
   include CredentialsSyncableConcern
+
+  def visible_procedures
+    procedures.publiees_ou_archivees
+  end
 
   def procedure_filter
     procedure_id = self[:procedure_filter]
