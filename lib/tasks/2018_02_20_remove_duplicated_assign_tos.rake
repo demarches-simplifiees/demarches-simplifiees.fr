@@ -1,4 +1,4 @@
-namespace :'2018_02_14_remove_duplicated_assign_tos' do
+namespace :'2018_02_20_remove_duplicated_assign_tos' do
   task remove: :environment do
     duplicates = AssignTo.group(:gestionnaire_id, :procedure_id)
       .having("COUNT(*) > 1")
