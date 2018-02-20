@@ -64,6 +64,54 @@ describe Gestionnaire, type: :model do
     end
   end
 
+  describe "#assign_to_procedure" do
+    subject { gestionnaire.assign_to_procedure(procedure_to_assign) }
+
+    context "with a procedure not already assigned" do
+      let(:procedure_to_assign) { procedure_3 }
+
+      it { is_expected.to be_truthy }
+      it { expect{ subject }.to change(gestionnaire.procedures, :count) }
+    end
+
+    context "with an already assigned procedure" do
+      let(:procedure_to_assign) { procedure }
+
+      it { is_expected.to be_falsey }
+      it { expect{ subject }.not_to change(gestionnaire.procedures, :count) }
+    end
+  end
+
+  describe "#remove_from_procedure" do
+    subject { gestionnaire.remove_from_procedure(procedure_to_remove) }
+
+    context "with an assigned procedure" do
+      let(:procedure_to_remove) { procedure }
+      let!(:procedure_presentation) { procedure_assign.procedure_presentation }
+
+      it { is_expected.to be_truthy }
+
+      describe "consequences" do
+        before do
+          procedure_assign.build_procedure_presentation
+          procedure_assign.save
+          subject
+        end
+
+        it "removes the assign_to and procedure_presentation" do
+          expect(AssignTo.where(id: procedure_assign).count).to eq(0)
+          expect(ProcedurePresentation.where(assign_to_id: procedure_assign.id).count).to eq(0)
+        end
+      end
+    end
+
+    context "with an already unassigned procedure" do
+      let(:procedure_to_remove) { procedure_3 }
+
+      it { is_expected.to be_falsey }
+    end
+  end
+
   context 'unified login' do
     it 'syncs credentials to associated user' do
       gestionnaire = create(:gestionnaire)

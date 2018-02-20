@@ -52,11 +52,16 @@ class Gestionnaire < ActiveRecord::Base
   end
 
   def assign_to_procedure(procedure)
-    AssignTo.create(gestionnaire: self, procedure: procedure)
+    begin
+      procedures << procedure
+      true
+    rescue ActiveRecord::RecordNotUnique
+      false
+    end
   end
 
   def remove_from_procedure(procedure)
-    AssignTo.where(gestionnaire: self, procedure: procedure).delete_all
+    !!(procedure.in?(procedures) && procedures.destroy(procedure))
   end
 
   def last_week_overview
