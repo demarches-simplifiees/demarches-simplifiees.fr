@@ -11,6 +11,23 @@ module ActiveStorage
       @bucket = bucket
     end
 
+    def upload(key, io, checksum: nil)
+      instrument :upload, key: key, checksum: checksum do
+        with_io_length(io) do |io, length|
+          http_start do |http|
+            request = Net::HTTP::Put.new(URI::join(@endpoint, "/#{key}"))
+            request.content_type = 'application/octet-stream'
+            request['Content-MD5'] = checksum
+            request['Content-Length'] = length
+            sign(request, key, checksum: checksum)
+            request.body_stream = io
+            http.request(request)
+            # TODO: error handling
+          end
+        end
+      end
+    end
+
     def download(key)
       if block_given?
         instrument :streaming_download, key: key do
@@ -115,7 +132,13 @@ module ActiveStorage
 
     def sign(request, key, checksum: '')
       date = Time.now.httpdate
-      sig = signature(method: request.method, key: key, date: date, checksum: checksum)
+      sig = signature(
+        method: request.method,
+        key: key,
+        date: date,
+        checksum: checksum,
+        content_type: request.content_type || ''
+      )
       request['date'] = date
       request['authorization'] = "AWS #{@access_key_id}:#{sig}"
     end
@@ -179,6 +202,22 @@ module ActiveStorage
       request = Net::HTTP::Delete.new(URI::join(@endpoint, "/#{key}"))
       sign(request, key)
       http.request(request)
+    end
+
+    def with_io_length(io)
+      if io.respond_to?(:size) && io.respond_to?(:pos)
+        yield(io, io.size - io.pos)
+      else
+        tmp_file = Tempfile.new('cellar_io_lengt')
+        begin
+          IO.copy_stream(io, tmp_file)
+          length = tmp_file.pos
+          tmp_file.rewind
+          yield(tmp_file, length)
+        ensure
+          tmp_file.close!
+        end
+      end
     end
   end
 end
