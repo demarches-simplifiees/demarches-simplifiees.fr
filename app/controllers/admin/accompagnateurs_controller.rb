@@ -51,11 +51,17 @@ class Admin::AccompagnateursController < AdminController
 
     case to
     when ASSIGN
-      gestionnaire.assign_to_procedure(procedure)
-      flash.notice = "L'accompagnateur a bien été affecté"
+      if gestionnaire.assign_to_procedure(procedure)
+        flash.notice = "L'accompagnateur a bien été affecté"
+      else
+        flash.alert = "L'accompagnateur a déjà été affecté"
+      end
     when NOT_ASSIGN
-      gestionnaire.remove_from_procedure(procedure)
-      flash.notice = "L'accompagnateur a bien été désaffecté"
+      if gestionnaire.remove_from_procedure(procedure)
+        flash.notice = "L'accompagnateur a bien été désaffecté"
+      else
+        flash.alert = "L'accompagnateur a déjà été désaffecté"
+      end
     end
 
     redirect_to admin_procedure_accompagnateurs_path, procedure_id: params[:procedure_id]
