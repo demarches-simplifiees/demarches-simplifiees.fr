@@ -23,6 +23,8 @@
               %span.badge= @followed_dossiers.count
 
           %li{ class: (@statut == 'traites') ? 'active' : nil }>
+            - if current_gestionnaire.notifications_for_procedure(@procedure, :termine).present?
+              %span.notifications{ 'aria-label': 'notifications' }
             = link_to(procedure_path(@procedure, statut: 'traites')) do
               = t('pluralize.processed', count: @termines_dossiers.count)
               %span.badge= @termines_dossiers.count
@@ -94,7 +96,7 @@
               %td.folder-col
                 = link_to(dossier_path(@procedure, dossier), class: 'cell-link') do
                   %span.icon.folder
-                    - if current_gestionnaire.notifications_for_procedure(@procedure).include?(dossier.id)
+                    - if current_gestionnaire.notifications_for_procedure(@procedure, :not_archived).include?(dossier.id)
                       %span.notifications{ 'aria-label': 'notifications' }
 
               %td.number-col
