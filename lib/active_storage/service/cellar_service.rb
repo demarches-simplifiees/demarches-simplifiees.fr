@@ -61,7 +61,9 @@ module ActiveStorage
       # TODO: error handling
       instrument :delete, key: key do
         http_start do |http|
-          perform_delete(http, key)
+          request = Net::HTTP::Delete.new(URI::join(@endpoint, "/#{key}"))
+          sign(request, key)
+          http.request(request)
         end
       end
     end
@@ -71,10 +73,16 @@ module ActiveStorage
       # TODO: handle pagination if more than 1000 keys
       instrument :delete_prefixed, prefix: prefix do
         http_start do |http|
-          list_prefixed(http, prefix).each do |key|
-            # TODO: use bulk delete instead
-            perform_delete(http, key)
-          end
+          keys = list_prefixed(http, prefix)
+          request_body = bulk_deletion_request_body(keys)
+          checksum = Digest::MD5.base64digest(request_body)
+          request = Net::HTTP::Post.new(URI::join(@endpoint, "/?delete"))
+          request.content_type = 'text/xml'
+          request['Content-MD5'] = checksum
+          request['Content-Length'] = request_body.length
+          request.body = request_body
+          sign(request, "?delete", checksum: checksum)
+          http.request(request)
         end
       end
     end
@@ -196,12 +204,6 @@ module ActiveStorage
         end
       end
       builder.to_xml
-    end
-
-    def perform_delete(http, key)
-      request = Net::HTTP::Delete.new(URI::join(@endpoint, "/#{key}"))
-      sign(request, key)
-      http.request(request)
     end
 
     def with_io_length(io)
