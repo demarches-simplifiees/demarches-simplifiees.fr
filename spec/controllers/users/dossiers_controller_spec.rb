@@ -365,6 +365,8 @@ describe Users::DossiersController, type: :controller do
 
     before do
       sign_in dossier.user
+      dossier.update_columns(autorisation_donnees: nil)
+      dossier.reload
       subject
     end
 

@@ -73,7 +73,11 @@ class Users::DossiersController < UsersController
 
     update_current_user_siret! siret if siret.present?
 
-    redirect_to users_dossier_path(id: dossier.id)
+    if dossier.procedure.for_individual
+      redirect_to identite_dossier_path(dossier)
+    else
+      redirect_to users_dossier_path(id: dossier.id)
+    end
   rescue ActiveRecord::RecordNotFound
     error_procedure
   end
