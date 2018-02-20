@@ -28,8 +28,6 @@
               %span.badge= @termines_dossiers.count
 
           %li{ class: (@statut == 'tous') ? 'active' : nil }>
-            - if current_gestionnaire.notifications_for_procedure(@procedure).present?
-              %span.notifications{ 'aria-label': 'notifications' }
             = link_to(procedure_path(@procedure, statut: 'tous')) do
               tous les dossiers
               %span.badge= @all_state_dossiers.count
