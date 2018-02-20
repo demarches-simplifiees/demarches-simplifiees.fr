@@ -37,6 +37,8 @@
                 %li
                   %object
                     = link_to(procedure_path(p, statut: 'traites')) do
+                      - if current_gestionnaire.notifications_per_procedure(:termine)[p.id].present?
+                        %span.notifications{ 'aria-label': "notifications" }
                       - termines_count = @dossiers_termines_count_per_procedure[p.id] || 0
                       .stats-number
                         = termines_count
