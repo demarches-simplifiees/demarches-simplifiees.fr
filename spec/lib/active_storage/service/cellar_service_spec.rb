@@ -148,7 +148,6 @@ describe 'CellarService' do
     let(:expected_response) do
       '<?xml version="1.0" encoding="UTF-8"?>
 <Delete>
-  <Quiet>true</Quiet>
   <Object>
     <Key>chapi</Key>
   </Object>
