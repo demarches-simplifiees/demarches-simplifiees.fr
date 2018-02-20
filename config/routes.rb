@@ -202,6 +202,10 @@ Rails.application.routes.draw do
 
   scope module: 'new_user' do
     resources :dossiers, only: [] do
+      member do
+        get 'identite'
+        patch 'update_identite'
+      end
       get 'attestation'
     end
   end

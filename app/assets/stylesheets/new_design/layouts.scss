@@ -3,23 +3,34 @@
 @import "constants";
 
 .two-columns {
-  $column-padding: 60px;
-  $two-columns-breakpoint: $page-width + (2 * $column-padding);
+  background-color: #FFFFFF;
 
-  background: linear-gradient(to right, #FFFFFF 0%, #FFFFFF 50%, $light-grey 50%, $light-grey 100%);
+  @media (min-width: $two-columns-breakpoint) {
+    background: linear-gradient(to right, #FFFFFF 0%, #FFFFFF 50%, $light-grey 50%, $light-grey 100%);
+  }
 
   .columns-container {
     @extend .container;
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+
+    @media (min-width: $two-columns-breakpoint) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   .column {
-    width: 50%;
-    padding: $column-padding;
+    padding: $two-columns-padding 0 0;
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
 
     @media (min-width: $two-columns-breakpoint) {
+      padding: $two-columns-padding;
+      width: 50%;
+
       &:first-child {
         padding-left: 0;
       }

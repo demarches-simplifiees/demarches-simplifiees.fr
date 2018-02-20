@@ -2,6 +2,7 @@ fr:
   activerecord:
     attributes:
       individual:
+        gender: Civilité
         nom: Nom
         prenom: Prénom
         birthdate: Date de naissance
@@ -9,6 +10,8 @@ fr:
       models:
         individual:
           attributes:
+            gender:
+              blank: 'doit être rempli'
             nom:
               blank: 'doit être rempli'
             prenom:
