@@ -1,10 +1,10 @@
 - if dossier.en_construction_ou_instruction?
   - if dossier_is_followed
-    = link_to unfollow_dossier_path(procedure, dossier), method: :patch, class: 'button' do
+    = link_to unfollow_gestionnaire_dossier_path(procedure, dossier), method: :patch, class: 'button' do
       %span.icon.unfollow>
       Ne plus suivre
   - else
-    = link_to follow_dossier_path(procedure, dossier), method: :patch, class: 'button' do
+    = link_to follow_gestionnaire_dossier_path(procedure, dossier), method: :patch, class: 'button' do
       %span.icon.follow>
       Suivre le dossier
 
