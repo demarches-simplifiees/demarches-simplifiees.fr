@@ -586,7 +586,6 @@ GEM
       json (>= 1.8)
       nokogiri (~> 1.5)
       trollop (~> 2.1)
-    rdoc (4.3.0)
     ref (2.0.0)
     request_store (1.4.0)
       rack (>= 1.4)
@@ -660,9 +659,6 @@ GEM
     scss_lint (0.56.0)
       rake (>= 0.9, < 13)
       sass (~> 3.5.3)
-    sdoc (0.4.2)
-      json (~> 1.7, >= 1.7.7)
-      rdoc (~> 4.0)
     securecompare (1.0.0)
     select2-rails (4.0.3)
       thor (~> 0.14)
@@ -830,7 +826,6 @@ DEPENDENCIES
   sass-rails
   scenic
   scss_lint
-  sdoc (~> 0.4.0)
   select2-rails
   sentry-raven
   shoulda-matchers
