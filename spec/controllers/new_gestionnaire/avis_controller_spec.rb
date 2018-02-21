@@ -179,7 +179,7 @@ describe NewGestionnaire::AvisController, type: :controller do
             get :sign_up, params: { id: avis.id, email: invited_email }
           end
 
-          it { is_expected.to redirect_to avis_url(avis) }
+          it { is_expected.to redirect_to gestionnaire_avis_url(avis) }
         end
 
         context 'when the gestionnaire is not authenticated' do
@@ -201,7 +201,7 @@ describe NewGestionnaire::AvisController, type: :controller do
         end
 
         # redirected to dossier but then the gestionnaire gonna be banished !
-        it { is_expected.to redirect_to avis_url(avis) }
+        it { is_expected.to redirect_to gestionnaire_avis_url(avis) }
       end
     end
 
@@ -243,7 +243,7 @@ describe NewGestionnaire::AvisController, type: :controller do
           it { expect(Avis).to have_received(:link_avis_to_gestionnaire) }
 
           it { expect(subject.current_gestionnaire).to eq(created_gestionnaire) }
-          it { is_expected.to redirect_to avis_index_path }
+          it { is_expected.to redirect_to gestionnaire_avis_index_path }
         end
 
         context 'when the gestionnaire creation fails' do
