@@ -40,7 +40,7 @@ module NewGestionnaire
       recipient = Gestionnaire.find(params[:recipient])
       GestionnaireMailer.send_dossier(current_gestionnaire, dossier, recipient).deliver_later
       flash.notice = "Dossier envoyé"
-      redirect_to(personnes_impliquees_dossier_path(procedure, dossier))
+      redirect_to(personnes_impliquees_gestionnaire_dossier_path(procedure, dossier))
     end
 
     def follow

@@ -35,8 +35,8 @@
         - if notifications_summary[:messagerie]
           %span.notifications{ 'aria-label': 'notifications' }
         = link_to "Messagerie", messagerie_gestionnaire_dossier_path(dossier.procedure, dossier)
-      %li{ class: current_page?(personnes_impliquees_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
-        = link_to "Personnes impliquées", personnes_impliquees_dossier_path(dossier.procedure, dossier)
+      %li{ class: current_page?(personnes_impliquees_gestionnaire_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+        = link_to "Personnes impliquées", personnes_impliquees_gestionnaire_dossier_path(dossier.procedure, dossier)
 
 .container
   .print-header
