@@ -24,10 +24,7 @@ class Users::CarteController < UsersController
 
     dossier.update_attributes(json_latlngs: params[:json_latlngs])
 
-    controller = :recapitulatif
-    controller = :description if dossier.brouillon?
-
-    redirect_to url_for(controller: controller, action: :show, dossier_id: params[:dossier_id])
+    redirect_to modifier_dossier_path(dossier)
   end
 
   def get_position

@@ -59,21 +59,14 @@ shared_examples 'carte_controller_spec' do
   end
 
   describe 'POST #save' do
-    context 'Aucune localisation n\'a jamais été enregistrée' do
-      it do
-        post :save, params: { dossier_id: dossier.id, json_latlngs: '' }
-        expect(response).to redirect_to("/users/dossiers/#{dossier.id}/description")
-      end
-    end
-
     context 'En train de modifier la localisation' do
       let(:dossier) { create(:dossier, state: 'en_construction') }
       before do
         post :save, params: { dossier_id: dossier.id, json_latlngs: '' }
       end
 
-      it 'Redirection vers la page récapitulatif' do
-        expect(response).to redirect_to("/users/dossiers/#{dossier.id}/recapitulatif")
+      it 'Redirection vers le formulaire de la procedure' do
+        expect(response).to redirect_to(modifier_dossier_path(dossier))
       end
     end
 
