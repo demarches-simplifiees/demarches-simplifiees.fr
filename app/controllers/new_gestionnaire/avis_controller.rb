@@ -76,7 +76,7 @@ module NewGestionnaire
         sign_in(gestionnaire, scope: :gestionnaire)
         Avis.link_avis_to_gestionnaire(gestionnaire)
         avis = Avis.find(params[:id])
-        redirect_to url_for(avis_index_path)
+        redirect_to url_for(gestionnaire_avis_index_path)
       else
         flash[:alert] = gestionnaire.errors.full_messages
         redirect_to url_for(sign_up_gestionnaire_avis_path(params[:id], email))
@@ -96,7 +96,7 @@ module NewGestionnaire
       if current_gestionnaire.present?
         # a gestionnaire is authenticated ... lets see if it can view the dossier
 
-        redirect_to avis_url(avis)
+        redirect_to gestionnaire_avis_url(avis)
       elsif avis.gestionnaire.present? && avis.gestionnaire.email == params[:email]
         # the avis gestionnaire has already signed up and it sould sign in
 

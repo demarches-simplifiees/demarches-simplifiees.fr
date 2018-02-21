@@ -203,7 +203,7 @@ module NewGestionnaire
 
     def redirect_to_avis_if_needed
       if current_gestionnaire.procedures.count == 0 && current_gestionnaire.avis.count > 0
-        redirect_to avis_index_path
+        redirect_to gestionnaire_avis_index_path
       end
     end
 

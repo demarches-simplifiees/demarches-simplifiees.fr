@@ -75,7 +75,7 @@ feature 'The gestionnaire part' do
 
     avis_sign_up(avis, expert_email, 'a good password')
 
-    expect(page).to have_current_path(avis_index_path)
+    expect(page).to have_current_path(gestionnaire_avis_index_path)
     expect(page).to have_text('avis à donner 1')
     expect(page).to have_text('avis donnés 0')
 
@@ -172,7 +172,7 @@ feature 'The gestionnaire part' do
     visit sign_up_gestionnaire_avis_path(avis, email)
     fill_in 'gestionnaire_password', with: 'a good password'
     click_on 'Créer un compte'
-    expect(page).to have_current_path(avis_index_path)
+    expect(page).to have_current_path(gestionnaire_avis_index_path)
   end
 
   def dossier_present?(id, statut)
