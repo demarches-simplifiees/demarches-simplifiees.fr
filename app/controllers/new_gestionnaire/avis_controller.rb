@@ -79,7 +79,7 @@ module NewGestionnaire
         redirect_to url_for(avis_index_path)
       else
         flash[:alert] = gestionnaire.errors.full_messages
-        redirect_to url_for(sign_up_avis_path(params[:id], email))
+        redirect_to url_for(sign_up_gestionnaire_avis_path(params[:id], email))
       end
     end
 
