@@ -3,7 +3,7 @@
   - if champ.mandatory?
     %span.mandatory *
 
-  - if champ.updated_at.present?
+  - if champ.updated_at.present? && seen_at.present?
     %span.updated-at{ class: highlight_if_unseen_class(seen_at, champ.updated_at) }
       = "modifié le #{champ.updated_at.strftime('%d/%m/%Y à %H:%M')}"
 
