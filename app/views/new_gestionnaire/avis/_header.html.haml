@@ -11,5 +11,5 @@
         = link_to 'Avis', instruction_gestionnaire_avis_path(avis)
         - if avis.answer == nil
           %span.notifications{ 'aria-label': 'notifications' }
-      %li{ class: current_page?(messagerie_avis_path(avis)) ? 'active' : nil }
-        = link_to 'Messagerie', messagerie_avis_path(avis)
+      %li{ class: current_page?(messagerie_gestionnaire_avis_path(avis)) ? 'active' : nil }
+        = link_to 'Messagerie', messagerie_gestionnaire_avis_path(avis)
