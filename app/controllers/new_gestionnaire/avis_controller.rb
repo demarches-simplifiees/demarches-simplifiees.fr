@@ -34,7 +34,7 @@ module NewGestionnaire
     def update
       avis.update_attributes(avis_params)
       flash.notice = 'Votre réponse est enregistrée.'
-      redirect_to instruction_avis_path(avis)
+      redirect_to instruction_gestionnaire_avis_path(avis)
     end
 
     def messagerie
@@ -56,7 +56,7 @@ module NewGestionnaire
     def create_avis
       confidentiel = avis.confidentiel || params[:avis][:confidentiel]
       Avis.create(create_avis_params.merge(claimant: current_gestionnaire, dossier: avis.dossier, confidentiel: confidentiel))
-      redirect_to instruction_avis_path(avis)
+      redirect_to instruction_gestionnaire_avis_path(avis)
     end
 
     def sign_up
