@@ -9,18 +9,28 @@ class SIADE::EntrepriseAdapter
     @data_source = nil
   end
 
+  def success?
+    data_source
+  rescue
+    false
+  end
+
   def to_params
-    params = {}
-
-    data_source[:entreprise].each do |k, v|
-      params[k] = v if attr_to_fetch.include?(k)
-    end
+    params = data_source[:entreprise].slice(*attr_to_fetch)
     params[:date_creation] = Time.at(params[:date_creation]).to_datetime
-
     params
   rescue
     nil
   end
+
+
+  def mandataires_sociaux
+    data_source[:entreprise].fetch(:mandataires_sociaux)
+  rescue
+    nil
+  end
+
+  private
 
   def attr_to_fetch
     [
@@ -37,11 +47,5 @@ class SIADE::EntrepriseAdapter
       :nom,
       :prenom
     ]
-  end
-
-  def mandataires_sociaux
-    data_source[:entreprise][:mandataires_sociaux]
-  rescue
-    nil
   end
 end
