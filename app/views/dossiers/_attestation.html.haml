@@ -14,4 +14,4 @@
         - if user_signed_in? && current_user == dossier.user
           = link_to 'Télécharger', dossier_attestation_path(dossier), target: '_blank', class: 'btn btn-primary'
         - else
-          = link_to 'Télécharger', attestation_dossier_path(dossier.procedure, dossier), target: '_blank', class: 'btn btn-primary'
+          = link_to 'Télécharger', attestation_gestionnaire_dossier_path(dossier.procedure, dossier), target: '_blank', class: 'btn btn-primary'
