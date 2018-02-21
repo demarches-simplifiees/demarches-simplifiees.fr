@@ -13,7 +13,7 @@ describe DossierLinkHelper do
 
       before { dossier.procedure.gestionnaires << gestionnaire }
 
-      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to eq(dossier_path(dossier.procedure, dossier)) }
+      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to eq(gestionnaire_dossier_path(dossier.procedure, dossier)) }
     end
 
     context "when access as expert" do

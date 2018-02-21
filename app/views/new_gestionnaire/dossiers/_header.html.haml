@@ -19,10 +19,10 @@
         = render partial: "state_button", locals: { dossier: dossier }
     %ul.tabs
       - notifications_summary = current_gestionnaire.notifications_for_dossier(dossier)
-      %li{ class: current_page?(dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+      %li{ class: current_page?(gestionnaire_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
         - if notifications_summary[:demande]
           %span.notifications{ 'aria-label': 'notifications' }
-        = link_to "Demande", dossier_path(dossier.procedure, dossier)
+        = link_to "Demande", gestionnaire_dossier_path(dossier.procedure, dossier)
       %li{ class: current_page?(annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
         - if notifications_summary[:annotations_privees]
           %span.notifications{ 'aria-label': 'notifications' }
