@@ -10,7 +10,7 @@ feature 'The gestionnaire part' do
   scenario 'A gestionnaire can accept a dossier' do
     log_in(gestionnaire.email, password)
 
-    expect(page).to have_current_path(procedures_path)
+    expect(page).to have_current_path(gestionnaire_procedures_path)
 
     click_on procedure.libelle
     expect(page).to have_current_path(gestionnaire_procedure_path(procedure))
@@ -136,7 +136,7 @@ feature 'The gestionnaire part' do
     fill_in 'user_email', with: email
     fill_in 'user_password', with: password
     click_on 'Se connecter'
-    expect(page).to have_current_path(procedures_path)
+    expect(page).to have_current_path(gestionnaire_procedures_path)
   end
 
   def log_out
