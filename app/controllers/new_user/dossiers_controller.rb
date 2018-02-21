@@ -31,10 +31,60 @@ module NewUser
       end
     end
 
+    def modifier
+      @dossier = dossier_with_champs
+
+      # TODO: remove when the champs are unifed
+      if !@dossier.autorisation_donnees
+        if dossier.procedure.for_individual
+          redirect_to identite_dossier_path(@dossier)
+        else
+          redirect_to users_dossier_path(@dossier)
+        end
+      end
+    end
+
+    # FIXME: remove PiecesJustificativesService
+    # delegate draft save logic to champ ?
+    def update
+      @dossier = dossier_with_champs
+
+      errors = PiecesJustificativesService.upload!(@dossier, current_user, params)
+
+      if !@dossier.update(champs_params)
+        errors += @dossier.errors.full_messages
+      end
+
+      if !draft?
+        errors += @dossier.champs.select(&:mandatory_and_blank?)
+          .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
+        errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
+      end
+
+      if errors.present?
+        flash.now.alert = errors
+        render :modifier
+      elsif draft?
+        flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
+        render :modifier
+      else
+        @dossier.en_construction!
+        redirect_to users_dossier_recapitulatif_path(@dossier)
+      end
+    end
+
     private
+
+    def champs_params
+      params.require(:dossier).permit(champs_attributes: [:id, :value, :piece_justificative_file, value: []])
+    end
 
     def dossier
       Dossier.find(params[:id] || params[:dossier_id])
+    end
+
+    def dossier_with_champs
+      @dossier_with_champs ||= current_user.dossiers.includes(champs: :type_de_champ).find(params[:id])
     end
 
     def ensure_ownership!
@@ -50,6 +100,10 @@ module NewUser
 
     def dossier_params
       params.require(:dossier).permit(:autorisation_donnees)
+    end
+
+    def draft?
+      params[:submit_action] == 'draft'
     end
   end
 end
