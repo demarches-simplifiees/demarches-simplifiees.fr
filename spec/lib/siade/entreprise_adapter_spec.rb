@@ -1,10 +1,12 @@
 require 'spec_helper'
 
 describe SIADE::EntrepriseAdapter do
-  subject { described_class.new('418166096').to_params }
+  let(:siren) { '418166096' }
+  let(:adapter) { described_class.new(siren) }
+  subject { adapter.to_params }
 
   before do
-    stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/entreprises/418166096?token=#{SIADETOKEN}")
+    stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
       .to_return(body: File.read('spec/support/files/entreprise.json', status: 200))
   end
 
@@ -14,7 +16,7 @@ describe SIADE::EntrepriseAdapter do
 
   context 'Attributs Entreprises' do
     it 'L\'entreprise contient bien un siren' do
-      expect(subject[:siren]).to eq('418166096')
+      expect(subject[:siren]).to eq(siren)
     end
 
     it 'L\'entreprise contient bien un capital_social' do
@@ -60,10 +62,14 @@ describe SIADE::EntrepriseAdapter do
     it 'L\'entreprise contient bien un prenom' do
       expect(subject[:prenom]).to eq('test_prenom')
     end
+
+    it 'L\'entreprise contient bien les mandataires_sociaux' do
+      expect(subject[:mandataires_sociaux]).to be_an_instance_of(Array)
+    end
   end
 
   context 'Mandataire sociaux' do
-    subject { described_class.new('418166096').mandataires_sociaux }
+    subject { described_class.new(siren).to_params[:mandataires_sociaux] }
 
     it '#to_params class est une Hash ?' do
       expect(subject).to be_an_instance_of(Array)
