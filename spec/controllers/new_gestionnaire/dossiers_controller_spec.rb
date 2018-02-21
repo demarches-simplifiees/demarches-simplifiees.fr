@@ -54,7 +54,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       )
     end
 
-    it { expect(response).to redirect_to(personnes_impliquees_dossier_url) }
+    it { expect(response).to redirect_to(personnes_impliquees_gestionnaire_dossier_url) }
   end
 
   describe '#follow' do
@@ -64,7 +64,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
     it { expect(gestionnaire.followed_dossiers).to match([dossier]) }
     it { expect(flash.notice).to eq('Dossier suivi') }
-    it { expect(response).to redirect_to(procedures_url) }
+    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
   end
 
   describe '#unfollow' do
@@ -76,7 +76,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
     it { expect(gestionnaire.followed_dossiers).to match([]) }
     it { expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}") }
-    it { expect(response).to redirect_to(procedures_url) }
+    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
   end
 
   describe '#archive' do
@@ -88,7 +88,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     it { expect(dossier.archived).to be true }
-    it { expect(response).to redirect_to(procedures_url) }
+    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
     it { expect(gestionnaire.followed_dossiers).not_to include(dossier) }
   end
 
@@ -100,7 +100,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     it { expect(dossier.archived).to be false }
-    it { expect(response).to redirect_to(procedures_url) }
+    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
   end
 
   describe '#passer_en_instruction' do

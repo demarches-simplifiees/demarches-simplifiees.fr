@@ -116,7 +116,7 @@ module NewGestionnaire
         procedure_presentation.update_attributes(sort: Procedure.default_sort)
       end
 
-      redirect_back(fallback_location: procedure_url(procedure))
+      redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
     end
 
     def update_sort
@@ -138,7 +138,7 @@ module NewGestionnaire
 
       procedure_presentation.update_attributes(sort: sort)
 
-      redirect_back(fallback_location: procedure_url(procedure))
+      redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
     end
 
     def add_filter
@@ -157,7 +157,7 @@ module NewGestionnaire
         procedure_presentation.update_attributes(filters: filters.to_json)
       end
 
-      redirect_back(fallback_location: procedure_url(procedure))
+      redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
     end
 
     def remove_filter
@@ -170,7 +170,7 @@ module NewGestionnaire
 
       procedure_presentation.update_attributes(filters: filters.to_json)
 
-      redirect_back(fallback_location: procedure_url(procedure))
+      redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
     end
 
     def download_dossiers

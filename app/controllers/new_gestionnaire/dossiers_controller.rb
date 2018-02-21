@@ -46,25 +46,25 @@ module NewGestionnaire
     def follow
       current_gestionnaire.follow(dossier)
       flash.notice = 'Dossier suivi'
-      redirect_back(fallback_location: procedures_url)
+      redirect_back(fallback_location: gestionnaire_procedures_url)
     end
 
     def unfollow
       current_gestionnaire.unfollow(dossier)
       flash.notice = "Vous ne suivez plus le dossier nº #{dossier.id}"
 
-      redirect_back(fallback_location: procedures_url)
+      redirect_back(fallback_location: gestionnaire_procedures_url)
     end
 
     def archive
       dossier.update_attributes(archived: true)
       current_gestionnaire.unfollow(dossier)
-      redirect_back(fallback_location: procedures_url)
+      redirect_back(fallback_location: gestionnaire_procedures_url)
     end
 
     def unarchive
       dossier.update_attributes(archived: false)
-      redirect_back(fallback_location: procedures_url)
+      redirect_back(fallback_location: gestionnaire_procedures_url)
     end
 
     def passer_en_instruction
