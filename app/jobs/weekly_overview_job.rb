@@ -7,7 +7,7 @@ class WeeklyOverviewJob < ApplicationJob
       Gestionnaire.all
         .map { |gestionnaire| [gestionnaire, gestionnaire.last_week_overview] }
         .reject { |_, overview| overview.nil? }
-        .each { |gestionnaire, overview| GestionnaireMailer.last_week_overview(gestionnaire, overview).deliver_now }
+        .each { |gestionnaire, _| GestionnaireMailer.last_week_overview(gestionnaire).deliver_later }
     end
   end
 end
