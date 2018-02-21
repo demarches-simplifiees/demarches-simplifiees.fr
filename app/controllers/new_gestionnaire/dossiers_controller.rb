@@ -72,14 +72,14 @@ module NewGestionnaire
       current_gestionnaire.follow(dossier)
       flash.notice = 'Dossier passé en instruction.'
 
-      redirect_to dossier_path(procedure, dossier)
+      redirect_to gestionnaire_dossier_path(procedure, dossier)
     end
 
     def repasser_en_construction
       dossier.en_construction!
       flash.notice = 'Dossier repassé en construction.'
 
-      redirect_to dossier_path(procedure, dossier)
+      redirect_to gestionnaire_dossier_path(procedure, dossier)
     end
 
     def terminer
@@ -118,7 +118,7 @@ module NewGestionnaire
 
       NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
 
-      redirect_to dossier_path(procedure, dossier)
+      redirect_to gestionnaire_dossier_path(procedure, dossier)
     end
 
     def create_commentaire

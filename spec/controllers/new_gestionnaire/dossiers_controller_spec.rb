@@ -112,7 +112,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     it { expect(dossier.state).to eq('en_instruction') }
-    it { is_expected.to redirect_to dossier_path(procedure, dossier) }
+    it { is_expected.to redirect_to gestionnaire_dossier_path(procedure, dossier) }
     it { expect(gestionnaire.follow?(dossier)).to be true }
   end
 
@@ -131,7 +131,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       expect(dossier.state).to eq('en_construction')
     end
 
-    it { is_expected.to redirect_to dossier_path(procedure, dossier) }
+    it { is_expected.to redirect_to gestionnaire_dossier_path(procedure, dossier) }
   end
 
   describe '#terminer' do
@@ -158,7 +158,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         subject
       end
 
-      it { is_expected.to redirect_to redirect_to dossier_path(procedure, dossier) }
+      it { is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier) }
     end
 
     context "with classer_sans_suite" do
@@ -184,7 +184,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         subject
       end
 
-      it { is_expected.to redirect_to redirect_to dossier_path(procedure, dossier) }
+      it { is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier) }
     end
 
     context "with accepter" do
@@ -233,7 +233,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
           it 'Notification email is sent with the attestation' do
             subject
 
-            is_expected.to redirect_to redirect_to dossier_path(procedure, dossier)
+            is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
           end
         end
 
@@ -246,7 +246,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
             subject
 
-            is_expected.to redirect_to redirect_to dossier_path(procedure, dossier)
+            is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
           end
         end
       end

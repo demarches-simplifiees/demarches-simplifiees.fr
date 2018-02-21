@@ -16,7 +16,7 @@ feature 'The gestionnaire part' do
     expect(page).to have_current_path(procedure_path(procedure))
 
     click_on dossier.user.email
-    expect(page).to have_current_path(dossier_path(procedure, dossier))
+    expect(page).to have_current_path(gestionnaire_dossier_path(procedure, dossier))
 
     click_on 'Passer en instruction'
     dossier.reload
