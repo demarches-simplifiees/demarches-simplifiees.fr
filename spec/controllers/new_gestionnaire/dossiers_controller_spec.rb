@@ -394,6 +394,6 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
     it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
     it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
-    it { expect(response).to redirect_to(annotations_privees_dossier_path(dossier.procedure, dossier)) }
+    it { expect(response).to redirect_to(annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)) }
   end
 end

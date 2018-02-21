@@ -23,10 +23,10 @@
         - if notifications_summary[:demande]
           %span.notifications{ 'aria-label': 'notifications' }
         = link_to "Demande", dossier_path(dossier.procedure, dossier)
-      %li{ class: current_page?(annotations_privees_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+      %li{ class: current_page?(annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
         - if notifications_summary[:annotations_privees]
           %span.notifications{ 'aria-label': 'notifications' }
-        = link_to "Annotations privées", annotations_privees_dossier_path(dossier.procedure, dossier)
+        = link_to "Annotations privées", annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)
       %li{ class: current_page?(avis_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
         - if notifications_summary[:avis]
           %span.notifications{ 'aria-label': 'notifications' }

@@ -167,7 +167,7 @@ module NewGestionnaire
       dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
       # FIXME: add attachements validation, cf. Champ#piece_justificative_file_errors
       dossier.update_attributes(champs_private_params)
-      redirect_to annotations_privees_dossier_path(procedure, dossier)
+      redirect_to annotations_privees_gestionnaire_dossier_path(procedure, dossier)
     end
 
     def print
