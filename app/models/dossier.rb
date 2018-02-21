@@ -108,6 +108,10 @@ class Dossier < ActiveRecord::Base
     champs.joins(', types_de_champ').where("champs.type_de_champ_id = types_de_champ.id AND types_de_champ.procedure_id = #{procedure.id}").order('order_place')
   end
 
+  def ordered_champs_v2
+    champs.includes(:type_de_champ).order('types_de_champ.order_place')
+  end
+
   def ordered_champs_private
     # TODO: use the line below when the procedure preview does not leak champ with dossier_id == 0
     # champs_private.includes(:type_de_champ).order('types_de_champ.order_place')
