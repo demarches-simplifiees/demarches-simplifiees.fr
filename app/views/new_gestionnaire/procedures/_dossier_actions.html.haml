@@ -10,10 +10,10 @@
 
 - elsif dossier.termine?
   - if dossier.archived
-    = link_to unarchive_dossier_path(procedure, dossier), method: :patch, class: 'button' do
+    = link_to unarchive_gestionnaire_dossier_path(procedure, dossier), method: :patch, class: 'button' do
       %span.icon.unarchive>
       Désarchiver le dossier
   - else
-    = link_to archive_dossier_path(procedure, dossier), method: :patch, class: 'button' do
+    = link_to archive_gestionnaire_dossier_path(procedure, dossier), method: :patch, class: 'button' do
       %span.icon.archive>
       Archiver le dossier
