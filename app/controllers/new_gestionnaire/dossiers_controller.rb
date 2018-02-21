@@ -160,7 +160,7 @@ module NewGestionnaire
 
     def create_avis
       Avis.create(avis_params.merge(claimant: current_gestionnaire, dossier: dossier))
-      redirect_to avis_dossier_path(procedure, dossier)
+      redirect_to avis_gestionnaire_dossier_path(procedure, dossier)
     end
 
     def update_annotations
