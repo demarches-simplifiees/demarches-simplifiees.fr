@@ -398,7 +398,7 @@ describe Users::DossiersController, type: :controller do
 
       context 'procedure not use api carto' do
         it 'redirects to demande' do
-          expect(response).to redirect_to(controller: :description, action: :show, dossier_id: dossier.id)
+          expect(response).to redirect_to(modifier_dossier_path(dossier))
         end
       end
 

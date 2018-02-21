@@ -23,7 +23,7 @@ module NewUser
         if @dossier.procedure.module_api_carto.use_api_carto
           redirect_to users_dossier_carte_path(@dossier.id)
         else
-          redirect_to users_dossier_description_path(@dossier) # Simon should replace this with dossier_path when done
+          redirect_to modifier_dossier_path(@dossier)
         end
       else
         flash.now.alert = @dossier.errors.full_messages

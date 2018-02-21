@@ -81,7 +81,7 @@ describe NewUser::DossiersController, type: :controller do
       let(:dossier_params) { { autorisation_donnees: true } }
 
       it do
-        expect(response).to redirect_to(users_dossier_description_path(dossier))
+        expect(response).to redirect_to(modifier_dossier_path(dossier))
       end
 
       context 'on a procedure with carto' do
