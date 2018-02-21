@@ -34,7 +34,7 @@
       - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
         %li
           .header-search
-            = form_tag recherche_path, method: :get, class: "form" do
+            = form_tag gestionnaire_recherche_path, method: :get, class: "form" do
               = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg"
