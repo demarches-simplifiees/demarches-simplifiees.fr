@@ -10,7 +10,7 @@
               %h4 En construction
               Vous permettez à l'usager de modifier ses réponses au formulaire
           %li
-            = link_to passer_en_instruction_dossier_path(dossier.procedure, dossier), method: :post, data: { confirm: "Confirmer vous le passage en instruction de ce dossier ?" } do
+            = link_to passer_en_instruction_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, data: { confirm: "Confirmer vous le passage en instruction de ce dossier ?" } do
               %span.icon.in-progress
               .description
                 %h4 Passer en instruction
