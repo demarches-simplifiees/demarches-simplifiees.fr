@@ -250,7 +250,7 @@ describe NewGestionnaire::AvisController, type: :controller do
           let(:password) { '' }
 
           it { expect(created_gestionnaire).to be_nil }
-          it { is_expected.to redirect_to sign_up_avis_path(avis_id, invited_email) }
+          it { is_expected.to redirect_to sign_up_gestionnaire_avis_path(avis_id, invited_email) }
           it { expect(flash.alert).to eq(['Password : Le mot de passe est vide']) }
         end
       end

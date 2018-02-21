@@ -71,7 +71,7 @@ feature 'The gestionnaire part' do
     log_out
 
     avis = dossier.avis.first
-    test_mail(expert_email, sign_up_avis_path(avis, expert_email))
+    test_mail(expert_email, sign_up_gestionnaire_avis_path(avis, expert_email))
 
     avis_sign_up(avis, expert_email, 'a good password')
 
@@ -169,7 +169,7 @@ feature 'The gestionnaire part' do
   end
 
   def avis_sign_up(avis, email, password)
-    visit sign_up_avis_path(avis, email)
+    visit sign_up_gestionnaire_avis_path(avis, email)
     fill_in 'gestionnaire_password', with: 'a good password'
     click_on 'Créer un compte'
     expect(page).to have_current_path(avis_index_path)
