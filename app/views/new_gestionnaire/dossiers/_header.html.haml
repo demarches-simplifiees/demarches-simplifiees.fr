@@ -11,7 +11,7 @@
           %span.icon.printer
           %ul.print-menu
             %li
-              = link_to "Tout le dossier", print_dossier_path(dossier.procedure, dossier), target: "_blank", class: "menu-item menu-link"
+              = link_to "Tout le dossier", print_gestionnaire_dossier_path(dossier.procedure, dossier), target: "_blank", class: "menu-item menu-link"
             %li
               = link_to "Uniquement cet onglet", "#", onclick: "TPS.togglePrintMenu; window.print()", class: "menu-item menu-link"
 
