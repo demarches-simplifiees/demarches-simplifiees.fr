@@ -135,7 +135,7 @@ module NewGestionnaire
       if @commentaire.save
         current_gestionnaire.follow(dossier)
         flash.notice = "Message envoyé"
-        redirect_to messagerie_dossier_path(procedure, dossier)
+        redirect_to messagerie_gestionnaire_dossier_path(procedure, dossier)
       else
         flash.alert = @commentaire.errors.full_messages
         render :messagerie

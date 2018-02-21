@@ -31,10 +31,10 @@
         - if notifications_summary[:avis]
           %span.notifications{ 'aria-label': 'notifications' }
         = link_to "Avis externes", avis_dossier_path(dossier.procedure, dossier)
-      %li{ class: current_page?(messagerie_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
+      %li{ class: current_page?(messagerie_gestionnaire_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
         - if notifications_summary[:messagerie]
           %span.notifications{ 'aria-label': 'notifications' }
-        = link_to "Messagerie", messagerie_dossier_path(dossier.procedure, dossier)
+        = link_to "Messagerie", messagerie_gestionnaire_dossier_path(dossier.procedure, dossier)
       %li{ class: current_page?(personnes_impliquees_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
         = link_to "Personnes impliquées", personnes_impliquees_dossier_path(dossier.procedure, dossier)
 
