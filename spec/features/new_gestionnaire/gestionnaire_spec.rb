@@ -80,7 +80,7 @@ feature 'The gestionnaire part' do
     expect(page).to have_text('avis donnés 0')
 
     click_on dossier.user.email
-    expect(page).to have_current_path(avis_path(dossier.avis.first))
+    expect(page).to have_current_path(gestionnaire_avis_path(dossier.avis.first))
 
     within(:css, '.tabs') do
       click_on 'Avis'

@@ -30,11 +30,11 @@
         - @avis.each do |avis|
           %tr
             %td.number-col
-              = link_to(avis_path(avis), class: 'cell-link') do
+              = link_to(gestionnaire_avis_path(avis), class: 'cell-link') do
                 %span.icon.folder
                 #{avis.dossier.id}
-            %td= link_to(avis.dossier.user.email, avis_path(avis), class: 'cell-link')
-            %td= link_to(avis.dossier.procedure.libelle, avis_path(avis), class: 'cell-link')
+            %td= link_to(avis.dossier.user.email, gestionnaire_avis_path(avis), class: 'cell-link')
+            %td= link_to(avis.dossier.procedure.libelle, gestionnaire_avis_path(avis), class: 'cell-link')
     = paginate(@avis)
   - else
     %h2.empty-text Aucun avis

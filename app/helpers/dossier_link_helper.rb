@@ -5,7 +5,7 @@ module DossierLinkHelper
     else
       avis = dossier.avis.find_by(gestionnaire: gestionnaire)
       if avis.present?
-        avis_path(avis)
+        gestionnaire_avis_path(avis)
       end
     end
   end

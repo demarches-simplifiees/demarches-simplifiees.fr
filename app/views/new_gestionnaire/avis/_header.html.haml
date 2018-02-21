@@ -5,8 +5,8 @@
       %li= "#{dossier.procedure.libelle}, dossier nº #{dossier.id}"
 
     %ul.tabs
-      %li{ class: current_page?(avis_path(avis)) ? 'active' : nil }
-        = link_to 'Demande', avis_path(avis)
+      %li{ class: current_page?(gestionnaire_avis_path(avis)) ? 'active' : nil }
+        = link_to 'Demande', gestionnaire_avis_path(avis)
       %li{ class: current_page?(instruction_gestionnaire_avis_path(avis)) ? 'active' : nil }
         = link_to 'Avis', instruction_gestionnaire_avis_path(avis)
         - if avis.answer == nil
