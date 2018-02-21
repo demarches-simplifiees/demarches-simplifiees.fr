@@ -53,17 +53,17 @@
                     = image_tag "icons/super-admin.svg"
                     Passer en super-admin
               - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
-                - if user_signed_in?
+                - if user_signed_in? && nav_bar_profile != :usager
                   %li
                     = link_to users_dossiers_path, class: "menu-item menu-link" do
                       = image_tag "icons/switch-profile.svg"
                       Passer en usager
-                - if gestionnaire_signed_in?
+                - if gestionnaire_signed_in? && nav_bar_profile != :gestionnaire
                   %li
                     = link_to procedures_path, class: "menu-item menu-link" do
                       = image_tag "icons/switch-profile.svg"
                       Passer en accompagnateur
-                - if administrateur_signed_in?
+                - if administrateur_signed_in? && nav_bar_profile != :administrateur
                   %li
                     = link_to admin_procedures_path, class: "menu-item menu-link" do
                       = image_tag "icons/switch-profile.svg"
