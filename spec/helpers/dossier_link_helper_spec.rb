@@ -21,7 +21,7 @@ describe DossierLinkHelper do
       let(:gestionnaire) { create(:gestionnaire) }
       let!(:avis) { create(:avis, dossier: dossier, gestionnaire: gestionnaire) }
 
-      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to eq(avis_path(avis)) }
+      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to eq(gestionnaire_avis_path(avis)) }
     end
   end
 end
