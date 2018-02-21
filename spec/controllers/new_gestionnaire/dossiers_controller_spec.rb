@@ -307,7 +307,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       expect(saved_commentaire.body).to eq("<p>avant\n<br />apres</p>")
       expect(saved_commentaire.email).to eq(gestionnaire.email)
       expect(saved_commentaire.dossier).to eq(dossier)
-      expect(response).to redirect_to(messagerie_dossier_path(dossier.procedure, dossier))
+      expect(response).to redirect_to(messagerie_gestionnaire_dossier_path(dossier.procedure, dossier))
       expect(gestionnaire.followed_dossiers).to include(dossier)
       expect(saved_commentaire.file.present?).to eq(false)
     end
