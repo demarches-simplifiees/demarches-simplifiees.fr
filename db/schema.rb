@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_162351) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "private"
+    t.integer "etablissement_id"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
@@ -264,6 +265,24 @@ ActiveRecord::Schema.define(version: 2018_02_26_162351) do
     t.string "code_insee_localite"
     t.integer "dossier_id"
     t.integer "entreprise_id"
+    t.string "entreprise_siren"
+    t.integer "entreprise_capital_social"
+    t.string "entreprise_numero_tva_intracommunautaire"
+    t.string "entreprise_forme_juridique"
+    t.string "entreprise_forme_juridique_code"
+    t.string "entreprise_nom_commercial"
+    t.string "entreprise_raison_sociale"
+    t.string "entreprise_siret_siege_social"
+    t.string "entreprise_code_effectif_entreprise"
+    t.date "entreprise_date_creation"
+    t.string "entreprise_nom"
+    t.string "entreprise_prenom"
+    t.string "association_rna"
+    t.string "association_titre"
+    t.text "association_objet"
+    t.date "association_date_creation"
+    t.date "association_date_declaration"
+    t.date "association_date_publication"
     t.index ["dossier_id"], name: "index_etablissements_on_dossier_id"
   end
 
@@ -272,6 +291,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_162351) do
     t.datetime "dateFinExercice"
     t.integer "date_fin_exercice_timestamp"
     t.integer "etablissement_id"
+    t.datetime "date_fin_exercice"
   end
 
   create_table "follows", id: :serial, force: :cascade do |t|
