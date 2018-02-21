@@ -76,7 +76,7 @@ describe NewGestionnaire::AvisController, type: :controller do
       it do
         subject
 
-        expect(response).to redirect_to(messagerie_avis_path(avis_without_answer))
+        expect(response).to redirect_to(messagerie_gestionnaire_avis_path(avis_without_answer))
         expect(dossier.commentaires.map(&:body)).to match(['commentaire body'])
       end
 
