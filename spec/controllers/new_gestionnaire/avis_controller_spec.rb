@@ -58,7 +58,7 @@ describe NewGestionnaire::AvisController, type: :controller do
         avis_without_answer.reload
       end
 
-      it { expect(response).to redirect_to(instruction_avis_path(avis_without_answer)) }
+      it { expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer)) }
       it { expect(avis_without_answer.answer).to eq('answer') }
       it { expect(flash.notice).to eq('Votre réponse est enregistrée.') }
     end
@@ -119,7 +119,7 @@ describe NewGestionnaire::AvisController, type: :controller do
           it { expect(created_avis.introduction).to eq(intro) }
           it { expect(created_avis.dossier).to eq(previous_avis.dossier) }
           it { expect(created_avis.claimant).to eq(gestionnaire) }
-          it { expect(response).to redirect_to(instruction_avis_path(previous_avis)) }
+          it { expect(response).to redirect_to(instruction_gestionnaire_avis_path(previous_avis)) }
         end
 
         context 'when the user asked for a confidentiel avis' do

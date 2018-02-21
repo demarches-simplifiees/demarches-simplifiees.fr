@@ -85,7 +85,7 @@ feature 'The gestionnaire part' do
     within(:css, '.tabs') do
       click_on 'Avis'
     end
-    expect(page).to have_current_path(instruction_avis_path(dossier.avis.first))
+    expect(page).to have_current_path(instruction_gestionnaire_avis_path(dossier.avis.first))
 
     within(:css, '.give-avis') do
       expect(page).to have_text("Demandeur : #{gestionnaire.email}")
