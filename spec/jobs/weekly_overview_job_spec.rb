@@ -4,7 +4,7 @@ RSpec.describe WeeklyOverviewJob, type: :job do
   describe 'perform' do
     let!(:gestionnaire) { create(:gestionnaire) }
     let(:overview) { double('overview') }
-    let(:mailer_double) { double('mailer', deliver_now: true) }
+    let(:mailer_double) { double('mailer', deliver_later: true) }
 
     context 'if the feature is enabled' do
       before { allow(Features).to receive(:weekly_overview).and_return(true) }
@@ -16,8 +16,8 @@ RSpec.describe WeeklyOverviewJob, type: :job do
           WeeklyOverviewJob.new.perform
         end
 
-        it { expect(GestionnaireMailer).to have_received(:last_week_overview).with(gestionnaire, overview) }
-        it { expect(mailer_double).to have_received(:deliver_now) }
+        it { expect(GestionnaireMailer).to have_received(:last_week_overview).with(gestionnaire) }
+        it { expect(mailer_double).to have_received(:deliver_later) }
       end
 
       context 'with one gestionnaire with no overviews' do

@@ -523,7 +523,7 @@ Performance/FlatMap:
   Enabled: true
 
 Performance/HashEachMethods:
-  Enabled: true
+  Enabled: false
 
 Performance/LstripRstrip:
   Enabled: true
