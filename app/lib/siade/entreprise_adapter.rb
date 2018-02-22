@@ -23,13 +23,6 @@ class SIADE::EntrepriseAdapter
     nil
   end
 
-
-  def mandataires_sociaux
-    data_source[:entreprise].fetch(:mandataires_sociaux)
-  rescue
-    nil
-  end
-
   private
 
   def attr_to_fetch
@@ -39,6 +32,7 @@ class SIADE::EntrepriseAdapter
       :numero_tva_intracommunautaire,
       :forme_juridique,
       :forme_juridique_code,
+      :mandataires_sociaux,
       :nom_commercial,
       :raison_sociale,
       :siret_siege_social,
