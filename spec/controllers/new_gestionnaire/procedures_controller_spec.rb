@@ -78,7 +78,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
 
       it "redirects avis" do
-        expect(@controller).to have_received(:redirect_to).with(avis_index_path)
+        expect(@controller).to have_received(:redirect_to).with(gestionnaire_avis_index_path)
       end
     end
   end

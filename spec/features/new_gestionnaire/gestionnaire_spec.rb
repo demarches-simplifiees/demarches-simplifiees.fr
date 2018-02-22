@@ -10,13 +10,13 @@ feature 'The gestionnaire part' do
   scenario 'A gestionnaire can accept a dossier' do
     log_in(gestionnaire.email, password)
 
-    expect(page).to have_current_path(procedures_path)
+    expect(page).to have_current_path(gestionnaire_procedures_path)
 
     click_on procedure.libelle
-    expect(page).to have_current_path(procedure_path(procedure))
+    expect(page).to have_current_path(gestionnaire_procedure_path(procedure))
 
     click_on dossier.user.email
-    expect(page).to have_current_path(dossier_path(procedure, dossier))
+    expect(page).to have_current_path(gestionnaire_dossier_path(procedure, dossier))
 
     click_on 'Passer en instruction'
     dossier.reload
@@ -40,16 +40,16 @@ feature 'The gestionnaire part' do
     dossier_present?(dossier.id, 'en construction')
 
     click_on 'Suivre le dossier'
-    expect(page).to have_current_path(procedure_path(procedure))
+    expect(page).to have_current_path(gestionnaire_procedure_path(procedure))
     test_statut_bar(suivi: 1, tous_les_dossiers: 1)
     expect(page).to have_text('Aucun dossier')
 
     click_on 'suivi'
-    expect(page).to have_current_path(procedure_path(procedure, statut: 'suivis'))
+    expect(page).to have_current_path(gestionnaire_procedure_path(procedure, statut: 'suivis'))
     dossier_present?(dossier.id, 'en construction')
 
     click_on 'Ne plus suivre'
-    expect(page).to have_current_path(procedure_path(procedure, statut: 'suivis'))
+    expect(page).to have_current_path(gestionnaire_procedure_path(procedure, statut: 'suivis'))
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
     expect(page).to have_text('Aucun dossier')
   end
@@ -63,7 +63,7 @@ feature 'The gestionnaire part' do
     click_on dossier.user.email
 
     click_on 'Avis externes'
-    expect(page).to have_current_path(avis_dossier_path(procedure, dossier))
+    expect(page).to have_current_path(avis_gestionnaire_dossier_path(procedure, dossier))
 
     expert_email = 'expert@tps.com'
     ask_confidential_avis(expert_email, 'a good introduction')
@@ -71,21 +71,21 @@ feature 'The gestionnaire part' do
     log_out
 
     avis = dossier.avis.first
-    test_mail(expert_email, sign_up_avis_path(avis, expert_email))
+    test_mail(expert_email, sign_up_gestionnaire_avis_path(avis, expert_email))
 
     avis_sign_up(avis, expert_email, 'a good password')
 
-    expect(page).to have_current_path(avis_index_path)
+    expect(page).to have_current_path(gestionnaire_avis_index_path)
     expect(page).to have_text('avis à donner 1')
     expect(page).to have_text('avis donnés 0')
 
     click_on dossier.user.email
-    expect(page).to have_current_path(avis_path(dossier.avis.first))
+    expect(page).to have_current_path(gestionnaire_avis_path(dossier.avis.first))
 
     within(:css, '.tabs') do
       click_on 'Avis'
     end
-    expect(page).to have_current_path(instruction_avis_path(dossier.avis.first))
+    expect(page).to have_current_path(instruction_gestionnaire_avis_path(dossier.avis.first))
 
     within(:css, '.give-avis') do
       expect(page).to have_text("Demandeur : #{gestionnaire.email}")
@@ -115,7 +115,7 @@ feature 'The gestionnaire part' do
     click_on dossier.user.email
 
     click_on 'Avis externes'
-    expect(page).to have_current_path(avis_dossier_path(procedure, dossier))
+    expect(page).to have_current_path(avis_gestionnaire_dossier_path(procedure, dossier))
 
     expert_email = 'expert@tps.com'
     ask_confidential_avis(expert_email, 'a good introduction')
@@ -136,7 +136,7 @@ feature 'The gestionnaire part' do
     fill_in 'user_email', with: email
     fill_in 'user_password', with: password
     click_on 'Se connecter'
-    expect(page).to have_current_path(procedures_path)
+    expect(page).to have_current_path(gestionnaire_procedures_path)
   end
 
   def log_out
@@ -169,10 +169,10 @@ feature 'The gestionnaire part' do
   end
 
   def avis_sign_up(avis, email, password)
-    visit sign_up_avis_path(avis, email)
+    visit sign_up_gestionnaire_avis_path(avis, email)
     fill_in 'gestionnaire_password', with: 'a good password'
     click_on 'Créer un compte'
-    expect(page).to have_current_path(avis_index_path)
+    expect(page).to have_current_path(gestionnaire_avis_index_path)
   end
 
   def dossier_present?(id, statut)

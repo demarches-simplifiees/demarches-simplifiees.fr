@@ -1,5 +1,5 @@
 %th{ class: classname }
-  = link_to update_sort_procedure_path(@procedure, table: field['table'], column: field['column']) do
+  = link_to update_sort_gestionnaire_procedure_path(@procedure, table: field['table'], column: field['column']) do
     = field['label']
     - if @procedure_presentation.sort['table'] == field['table'] && @procedure_presentation.sort['column'] == field['column']
       - if @procedure_presentation.sort['order'] == 'asc'
