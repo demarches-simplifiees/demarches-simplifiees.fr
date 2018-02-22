@@ -19,34 +19,6 @@ describe 'CellarService' do
   before { Timecop.freeze(Time.gm(2016, 10, 2)) }
   after { Timecop.return }
 
-  describe 'signature generation' do
-    context 'for presigned URLs' do
-      subject do
-        cellar_service.send(
-          :signature,
-          {
-            method: 'GET',
-            key: 'fichier',
-            expires: 5.minutes.from_now.to_i
-          }
-        )
-      end
-
-      it { is_expected.to eq('nzCsB6cip8oofkuOdvvJs6FafkA=') }
-    end
-
-    context 'for server-side requests' do
-      subject do
-        Net::HTTP::Delete.new('https://rogets.cellar.services.clever-cloud.com/fichier')
-      end
-
-      before { cellar_service.send(:sign, subject, 'fichier') }
-
-      it { expect(subject['date']).to eq(Time.now.httpdate) }
-      it { expect(subject['authorization']).to eq('AWS AKIAJFTRSGRH3RXX6D5Q:nkvviwZYb1V9HDrKyJZmY3Z8sSA=') }
-    end
-  end
-
   describe 'presigned url for download' do
     subject do
       URI.parse(
@@ -111,55 +83,5 @@ describe 'CellarService' do
         }
       )
     end
-  end
-
-  describe 'parse_bucket_listing' do
-    let(:response) do
-      '<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-         <Name>example-bucket</Name>
-         <Prefix></Prefix>
-         <KeyCount>2</KeyCount>
-         <MaxKeys>1000</MaxKeys>
-         <Delimiter>/</Delimiter>
-         <IsTruncated>false</IsTruncated>
-         <Contents>
-           <Key>sample1.jpg</Key>
-           <LastModified>2011-02-26T01:56:20.000Z</LastModified>
-           <ETag>&quot;bf1d737a4d46a19f3bced6905cc8b902&quot;</ETag>
-           <Size>142863</Size>
-           <StorageClass>STANDARD</StorageClass>
-         </Contents>
-         <Contents>
-           <Key>sample2.jpg</Key>
-           <LastModified>2011-02-26T01:56:20.000Z</LastModified>
-           <ETag>&quot;bf1d737a4d46a19f3bced6905cc8b902&quot;</ETag>
-           <Size>142863</Size>
-           <StorageClass>STANDARD</StorageClass>
-         </Contents>
-       </ListBucketResult>'
-    end
-
-    subject { cellar_service.send(:parse_bucket_listing, response) }
-
-    it { is_expected.to eq(["sample1.jpg", "sample2.jpg"]) }
-  end
-
-  describe 'bulk_deletion_request_body' do
-    let(:expected_response) do
-      '<?xml version="1.0" encoding="UTF-8"?>
-<Delete>
-  <Object>
-    <Key>chapi</Key>
-  </Object>
-  <Object>
-    <Key>chapo</Key>
-  </Object>
-</Delete>
-'
-    end
-
-    subject { cellar_service.send(:bulk_deletion_request_body, ['chapi', 'chapo']) }
-
-    it { is_expected.to eq(expected_response) }
   end
 end
