@@ -21,7 +21,7 @@ describe RootController, type: :controller do
       sign_in gestionnaire
     end
 
-    it { expect(subject).to redirect_to(procedures_path) }
+    it { expect(subject).to redirect_to(gestionnaire_procedures_path) }
   end
 
   context 'when Administrateur is connected' do

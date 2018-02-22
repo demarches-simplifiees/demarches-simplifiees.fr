@@ -11,7 +11,7 @@ feature "procedure filters" do
   before do
     champ.update_attributes(value: "Mon champ rempli")
     login_as gestionnaire, scope: :gestionnaire
-    visit procedure_path(procedure)
+    visit gestionnaire_procedure_path(procedure)
   end
 
   scenario "should display demandeur by default" do

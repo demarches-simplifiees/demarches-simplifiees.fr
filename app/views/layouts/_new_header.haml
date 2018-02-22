@@ -12,10 +12,10 @@
         %ul.header-tabs
           - if current_gestionnaire.procedures.count > 0
             %li
-              = link_to "Procédures", procedures_path, class: (controller_name != 'avis') ? "tab-link active" : 'tab-link'
+              = link_to "Procédures", gestionnaire_procedures_path, class: (controller_name != 'avis') ? "tab-link active" : 'tab-link'
           - if current_gestionnaire.avis.count > 0
             %li
-              = link_to avis_index_path, class: (controller_name == 'avis') ? "tab-link active" : 'tab-link' do
+              = link_to gestionnaire_avis_index_path, class: (controller_name == 'avis') ? "tab-link active" : 'tab-link' do
                 Avis
                 - avis_counter = current_gestionnaire.avis.without_answer.count
                 - if avis_counter > 0
@@ -34,7 +34,7 @@
       - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
         %li
           .header-search
-            = form_tag recherche_path, method: :get, class: "form" do
+            = form_tag gestionnaire_recherche_path, method: :get, class: "form" do
               = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg"
@@ -60,7 +60,7 @@
                       Passer en usager
                 - if gestionnaire_signed_in? && nav_bar_profile != :gestionnaire
                   %li
-                    = link_to procedures_path, class: "menu-item menu-link" do
+                    = link_to gestionnaire_procedures_path, class: "menu-item menu-link" do
                       = image_tag "icons/switch-profile.svg"
                       Passer en accompagnateur
                 - if administrateur_signed_in? && nav_bar_profile != :administrateur
