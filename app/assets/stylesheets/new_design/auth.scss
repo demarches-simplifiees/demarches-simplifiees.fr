@@ -3,24 +3,7 @@
 @import "placeholders";
 @import "mixins";
 
-$auth-breakpoint: 820px;
-
-@media (max-width: $auth-breakpoint) {
-  .preview {
-    display: none;
-  }
-
-  .two-columns .column.auth-form {
-    @include horizontal-padding(0);
-    width: 100%;
-  }
-}
-
-@media (max-width: $auth-breakpoint) {
-  .two-columns.auth {
-    background: #FFFFFF;
-  }
-}
+$auth-breakpoint: $two-columns-breakpoint;
 
 .preview {
   font-size: 24px;
@@ -28,6 +11,10 @@ $auth-breakpoint: 820px;
   .paperless-logo {
     width: 100%;
     margin-bottom: 60px;
+
+    @media (max-width: $auth-breakpoint) {
+      display: none;
+    }
   }
 
   h3 {
@@ -41,11 +28,19 @@ $auth-breakpoint: 820px;
 
   .procedure-title {
     font-size: 30px;
-    margin: 50px 0 32px;
+    margin: 20px 0 0;
+
+    @media (min-width: $auth-breakpoint) {
+      margin: 50px 0 32px;
+    }
   }
 
   .procedure-description {
     font-size: 14px;
+
+    @media (max-width: $auth-breakpoint) {
+      display: none; // TO FIX : make this description available for small devices
+    }
   }
 
   .procedure-logos {
@@ -53,8 +48,14 @@ $auth-breakpoint: 820px;
     justify-content: space-around;
 
     img {
-      max-height: 130px;
+      max-height: 50px;
+      max-width: 100%;
       margin: 0 10px;
+
+      @media (min-width: $auth-breakpoint) {
+        max-height: 130px;
+        max-width: 500px;
+      }
     }
   }
 }

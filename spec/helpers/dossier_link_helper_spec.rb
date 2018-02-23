@@ -13,7 +13,7 @@ describe DossierLinkHelper do
 
       before { dossier.procedure.gestionnaires << gestionnaire }
 
-      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to eq(dossier_path(dossier.procedure, dossier)) }
+      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to eq(gestionnaire_dossier_path(dossier.procedure, dossier)) }
     end
 
     context "when access as expert" do
@@ -21,7 +21,7 @@ describe DossierLinkHelper do
       let(:gestionnaire) { create(:gestionnaire) }
       let!(:avis) { create(:avis, dossier: dossier, gestionnaire: gestionnaire) }
 
-      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to eq(avis_path(avis)) }
+      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to eq(gestionnaire_avis_path(avis)) }
     end
   end
 end

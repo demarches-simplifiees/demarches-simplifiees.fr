@@ -7,3 +7,7 @@ $footer-height: 267px;
 $footer-height-mobile: 531px;
 
 $small-footer-height: 2 * $default-padding;
+
+// layouts
+$two-columns-padding: 60px;
+$two-columns-breakpoint: $page-width + (2 * $two-columns-padding);

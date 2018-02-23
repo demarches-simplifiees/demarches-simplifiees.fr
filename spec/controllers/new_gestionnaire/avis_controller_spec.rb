@@ -58,7 +58,7 @@ describe NewGestionnaire::AvisController, type: :controller do
         avis_without_answer.reload
       end
 
-      it { expect(response).to redirect_to(instruction_avis_path(avis_without_answer)) }
+      it { expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer)) }
       it { expect(avis_without_answer.answer).to eq('answer') }
       it { expect(flash.notice).to eq('Votre réponse est enregistrée.') }
     end
@@ -76,7 +76,7 @@ describe NewGestionnaire::AvisController, type: :controller do
       it do
         subject
 
-        expect(response).to redirect_to(messagerie_avis_path(avis_without_answer))
+        expect(response).to redirect_to(messagerie_gestionnaire_avis_path(avis_without_answer))
         expect(dossier.commentaires.map(&:body)).to match(['commentaire body'])
       end
 
@@ -119,7 +119,7 @@ describe NewGestionnaire::AvisController, type: :controller do
           it { expect(created_avis.introduction).to eq(intro) }
           it { expect(created_avis.dossier).to eq(previous_avis.dossier) }
           it { expect(created_avis.claimant).to eq(gestionnaire) }
-          it { expect(response).to redirect_to(instruction_avis_path(previous_avis)) }
+          it { expect(response).to redirect_to(instruction_gestionnaire_avis_path(previous_avis)) }
         end
 
         context 'when the user asked for a confidentiel avis' do
@@ -179,7 +179,7 @@ describe NewGestionnaire::AvisController, type: :controller do
             get :sign_up, params: { id: avis.id, email: invited_email }
           end
 
-          it { is_expected.to redirect_to avis_url(avis) }
+          it { is_expected.to redirect_to gestionnaire_avis_url(avis) }
         end
 
         context 'when the gestionnaire is not authenticated' do
@@ -201,7 +201,7 @@ describe NewGestionnaire::AvisController, type: :controller do
         end
 
         # redirected to dossier but then the gestionnaire gonna be banished !
-        it { is_expected.to redirect_to avis_url(avis) }
+        it { is_expected.to redirect_to gestionnaire_avis_url(avis) }
       end
     end
 
@@ -243,14 +243,14 @@ describe NewGestionnaire::AvisController, type: :controller do
           it { expect(Avis).to have_received(:link_avis_to_gestionnaire) }
 
           it { expect(subject.current_gestionnaire).to eq(created_gestionnaire) }
-          it { is_expected.to redirect_to avis_index_path }
+          it { is_expected.to redirect_to gestionnaire_avis_index_path }
         end
 
         context 'when the gestionnaire creation fails' do
           let(:password) { '' }
 
           it { expect(created_gestionnaire).to be_nil }
-          it { is_expected.to redirect_to sign_up_avis_path(avis_id, invited_email) }
+          it { is_expected.to redirect_to sign_up_gestionnaire_avis_path(avis_id, invited_email) }
           it { expect(flash.alert).to eq(['Password : Le mot de passe est vide']) }
         end
       end

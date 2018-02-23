@@ -5,8 +5,9 @@ class GestionnaireMailer < ApplicationMailer
     send_mail email, password, "Vous avez été nommé accompagnateur sur la plateforme TPS"
   end
 
-  def last_week_overview(gestionnaire, overview)
+  def last_week_overview(gestionnaire)
     headers['X-mailjet-campaign'] = 'last_week_overview'
+    overview = gestionnaire.last_week_overview
     send_mail gestionnaire.email, overview, 'Vos activités sur TPS'
   end
 

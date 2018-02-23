@@ -14,6 +14,7 @@ fr:
           accepte: "Accepté"
           refuse: "Refusé"
           sans_suite: "Sans suite"
+        autorisation_donnees: Acceptation des CGU
 
     errors:
       models:

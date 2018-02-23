@@ -101,14 +101,28 @@ class Gestionnaire < ActiveRecord::Base
     end
   end
 
-  def notifications_for_procedure(procedure)
-    dossiers = procedure.dossiers.en_cours.followed_by(self)
+  def notifications_for_procedure(procedure, state = :en_cours)
+    dossiers = case state
+    when :termine
+      procedure.dossiers.termine
+    when :not_archived
+      procedure.dossiers.not_archived
+    else
+      procedure.dossiers.en_cours
+    end.followed_by(self)
 
     dossiers_id_with_notifications(dossiers)
   end
 
-  def notifications_per_procedure
-    dossiers = Dossier.en_cours.followed_by(self)
+  def notifications_per_procedure(state = :en_cours)
+    dossiers = case state
+    when :termine
+      Dossier.termine
+    when :not_archived
+      Dossier.not_archived
+    else
+      Dossier.en_cours
+    end.followed_by(self)
 
     Dossier.where(id: dossiers_id_with_notifications(dossiers)).group(:procedure_id).count
   end

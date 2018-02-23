@@ -34,7 +34,7 @@ module NewGestionnaire
     def update
       avis.update_attributes(avis_params)
       flash.notice = 'Votre réponse est enregistrée.'
-      redirect_to instruction_avis_path(avis)
+      redirect_to instruction_gestionnaire_avis_path(avis)
     end
 
     def messagerie
@@ -46,7 +46,7 @@ module NewGestionnaire
 
       if @commentaire.save
         flash.notice = "Message envoyé"
-        redirect_to messagerie_avis_path(avis)
+        redirect_to messagerie_gestionnaire_avis_path(avis)
       else
         flash.alert = @commentaire.errors.full_messages
         render :messagerie
@@ -56,7 +56,7 @@ module NewGestionnaire
     def create_avis
       confidentiel = avis.confidentiel || params[:avis][:confidentiel]
       Avis.create(create_avis_params.merge(claimant: current_gestionnaire, dossier: avis.dossier, confidentiel: confidentiel))
-      redirect_to instruction_avis_path(avis)
+      redirect_to instruction_gestionnaire_avis_path(avis)
     end
 
     def sign_up
@@ -76,10 +76,10 @@ module NewGestionnaire
         sign_in(gestionnaire, scope: :gestionnaire)
         Avis.link_avis_to_gestionnaire(gestionnaire)
         avis = Avis.find(params[:id])
-        redirect_to url_for(avis_index_path)
+        redirect_to url_for(gestionnaire_avis_index_path)
       else
         flash[:alert] = gestionnaire.errors.full_messages
-        redirect_to url_for(sign_up_avis_path(params[:id], email))
+        redirect_to url_for(sign_up_gestionnaire_avis_path(params[:id], email))
       end
     end
 
@@ -96,7 +96,7 @@ module NewGestionnaire
       if current_gestionnaire.present?
         # a gestionnaire is authenticated ... lets see if it can view the dossier
 
-        redirect_to avis_url(avis)
+        redirect_to gestionnaire_avis_url(avis)
       elsif avis.gestionnaire.present? && avis.gestionnaire.email == params[:email]
         # the avis gestionnaire has already signed up and it sould sign in
 

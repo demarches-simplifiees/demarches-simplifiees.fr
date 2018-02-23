@@ -202,11 +202,15 @@ Rails.application.routes.draw do
 
   scope module: 'new_user' do
     resources :dossiers, only: [] do
+      member do
+        get 'identite'
+        patch 'update_identite'
+      end
       get 'attestation'
     end
   end
 
-  scope module: 'new_gestionnaire' do
+  scope module: 'new_gestionnaire', as: 'gestionnaire' do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         patch 'update_displayed_fields'

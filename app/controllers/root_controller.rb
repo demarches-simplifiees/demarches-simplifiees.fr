@@ -5,7 +5,7 @@ class RootController < ApplicationController
     if administrateur_signed_in?
       return redirect_to admin_procedures_path
     elsif gestionnaire_signed_in?
-      return redirect_to procedures_path
+      return redirect_to gestionnaire_procedures_path
     elsif user_signed_in?
       return redirect_to users_dossiers_path
     elsif administration_signed_in?
