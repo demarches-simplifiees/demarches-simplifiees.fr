@@ -4,6 +4,9 @@ class Admin::AccompagnateursController < AdminController
 
   before_action :retrieve_procedure
 
+  ASSIGN = 'assign'
+  NOT_ASSIGN = 'not_assign'
+
   def show
     assign_scope = @procedure.gestionnaires
 
@@ -46,11 +49,21 @@ class Admin::AccompagnateursController < AdminController
     procedure = Procedure.find(params[:procedure_id])
     to = params[:to]
 
-    accompagnateur_service = AccompagnateurService.new gestionnaire, procedure, to
+    case to
+    when ASSIGN
+      if gestionnaire.assign_to_procedure(procedure)
+        flash.notice = "L'accompagnateur a bien été affecté"
+      else
+        flash.alert = "L'accompagnateur a déjà été affecté"
+      end
+    when NOT_ASSIGN
+      if gestionnaire.remove_from_procedure(procedure)
+        flash.notice = "L'accompagnateur a bien été désaffecté"
+      else
+        flash.alert = "L'accompagnateur a déjà été désaffecté"
+      end
+    end
 
-    accompagnateur_service.change_assignement!
-
-    flash.notice = "Assignement effectué"
     redirect_to admin_procedure_accompagnateurs_path, procedure_id: params[:procedure_id]
   end
 end
