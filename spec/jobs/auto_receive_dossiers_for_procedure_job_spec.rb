@@ -17,7 +17,7 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
       let(:procedure_id) { dossier_brouillon.procedure_id }
 
       context "en_construction" do
-        let(:state) { :en_instruction }
+        let(:state) { 'en_instruction' }
 
         it do
           subject
@@ -36,7 +36,7 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
       end
 
       context "accepte" do
-        let(:state) { :accepte }
+        let(:state) { 'accepte' }
 
         it do
           subject
