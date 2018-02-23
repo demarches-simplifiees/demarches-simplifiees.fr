@@ -6,7 +6,7 @@ module NewGestionnaire
     ITEMS_PER_PAGE = 25
 
     def index
-      @procedures = current_gestionnaire.procedures.order(archived_at: :desc, published_at: :desc)
+      @procedures = current_gestionnaire.visible_procedures.order(archived_at: :desc, published_at: :desc)
 
       dossiers = current_gestionnaire.dossiers
       @dossiers_count_per_procedure = dossiers.all_state.group(:procedure_id).reorder(nil).count
@@ -202,7 +202,7 @@ module NewGestionnaire
     end
 
     def redirect_to_avis_if_needed
-      if current_gestionnaire.procedures.count == 0 && current_gestionnaire.avis.count > 0
+      if current_gestionnaire.visible_procedures.count == 0 && current_gestionnaire.avis.count > 0
         redirect_to gestionnaire_avis_index_path
       end
     end
