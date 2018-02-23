@@ -7,7 +7,7 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
     before { Timecop.freeze(date) }
     after { Timecop.return }
 
-    subject { AutoReceiveDossiersForProcedureJob.new.perform(procedure_id, 'en_instruction') }
+    subject { AutoReceiveDossiersForProcedureJob.new.perform(procedure_id, state) }
 
     context "with some dossiers" do
       let(:nouveau_dossier1) { create(:dossier, :en_construction) }
@@ -16,19 +16,46 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
       let(:dossier_brouillon) { create(:dossier, procedure: dossier_recu.procedure) }
       let(:procedure_id) { dossier_brouillon.procedure_id }
 
-      it do
-        subject
-        expect(nouveau_dossier1.reload.en_instruction?).to be true
-        expect(nouveau_dossier1.reload.en_instruction_at).to eq(date)
+      context "en_construction" do
+        let(:state) { :en_instruction }
 
-        expect(nouveau_dossier2.reload.en_instruction?).to be true
-        expect(nouveau_dossier2.reload.en_instruction_at).to eq(date)
+        it do
+          subject
+          expect(nouveau_dossier1.reload.en_instruction?).to be true
+          expect(nouveau_dossier1.reload.en_instruction_at).to eq(date)
 
-        expect(dossier_recu.reload.en_instruction?).to be true
-        expect(dossier_recu.reload.en_instruction_at).to eq(date)
+          expect(nouveau_dossier2.reload.en_instruction?).to be true
+          expect(nouveau_dossier2.reload.en_instruction_at).to eq(date)
 
-        expect(dossier_brouillon.reload.brouillon?).to be true
-        expect(dossier_brouillon.reload.en_instruction_at).to eq(nil)
+          expect(dossier_recu.reload.en_instruction?).to be true
+          expect(dossier_recu.reload.en_instruction_at).to eq(date)
+
+          expect(dossier_brouillon.reload.brouillon?).to be true
+          expect(dossier_brouillon.reload.en_instruction_at).to eq(nil)
+        end
+      end
+
+      context "accepte" do
+        let(:state) { :accepte }
+
+        it do
+          subject
+          expect(nouveau_dossier1.reload.accepte?).to be true
+          expect(nouveau_dossier1.reload.en_instruction_at).to eq(date)
+          expect(nouveau_dossier1.reload.processed_at).to eq(date)
+
+          expect(nouveau_dossier2.reload.accepte?).to be true
+          expect(nouveau_dossier2.reload.en_instruction_at).to eq(date)
+          expect(nouveau_dossier2.reload.processed_at).to eq(date)
+
+          expect(dossier_recu.reload.en_instruction?).to be true
+          expect(dossier_recu.reload.en_instruction_at).to eq(date)
+          expect(dossier_recu.reload.processed_at).to eq(nil)
+
+          expect(dossier_brouillon.reload.brouillon?).to be true
+          expect(dossier_brouillon.reload.en_instruction_at).to eq(nil)
+          expect(dossier_brouillon.reload.processed_at).to eq(nil)
+        end
       end
     end
   end

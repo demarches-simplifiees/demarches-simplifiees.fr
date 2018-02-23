@@ -40,31 +40,31 @@ module NewGestionnaire
       recipient = Gestionnaire.find(params[:recipient])
       GestionnaireMailer.send_dossier(current_gestionnaire, dossier, recipient).deliver_later
       flash.notice = "Dossier envoyé"
-      redirect_to(personnes_impliquees_dossier_path(procedure, dossier))
+      redirect_to(personnes_impliquees_gestionnaire_dossier_path(procedure, dossier))
     end
 
     def follow
       current_gestionnaire.follow(dossier)
       flash.notice = 'Dossier suivi'
-      redirect_back(fallback_location: procedures_url)
+      redirect_back(fallback_location: gestionnaire_procedures_url)
     end
 
     def unfollow
       current_gestionnaire.unfollow(dossier)
       flash.notice = "Vous ne suivez plus le dossier nº #{dossier.id}"
 
-      redirect_back(fallback_location: procedures_url)
+      redirect_back(fallback_location: gestionnaire_procedures_url)
     end
 
     def archive
       dossier.update_attributes(archived: true)
       current_gestionnaire.unfollow(dossier)
-      redirect_back(fallback_location: procedures_url)
+      redirect_back(fallback_location: gestionnaire_procedures_url)
     end
 
     def unarchive
       dossier.update_attributes(archived: false)
-      redirect_back(fallback_location: procedures_url)
+      redirect_back(fallback_location: gestionnaire_procedures_url)
     end
 
     def passer_en_instruction
@@ -72,14 +72,14 @@ module NewGestionnaire
       current_gestionnaire.follow(dossier)
       flash.notice = 'Dossier passé en instruction.'
 
-      redirect_to dossier_path(procedure, dossier)
+      redirect_to gestionnaire_dossier_path(procedure, dossier)
     end
 
     def repasser_en_construction
       dossier.en_construction!
       flash.notice = 'Dossier repassé en construction.'
 
-      redirect_to dossier_path(procedure, dossier)
+      redirect_to gestionnaire_dossier_path(procedure, dossier)
     end
 
     def terminer
@@ -118,7 +118,7 @@ module NewGestionnaire
 
       NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
 
-      redirect_to dossier_path(procedure, dossier)
+      redirect_to gestionnaire_dossier_path(procedure, dossier)
     end
 
     def create_commentaire
@@ -135,7 +135,7 @@ module NewGestionnaire
       if @commentaire.save
         current_gestionnaire.follow(dossier)
         flash.notice = "Message envoyé"
-        redirect_to messagerie_dossier_path(procedure, dossier)
+        redirect_to messagerie_gestionnaire_dossier_path(procedure, dossier)
       else
         flash.alert = @commentaire.errors.full_messages
         render :messagerie
@@ -160,14 +160,14 @@ module NewGestionnaire
 
     def create_avis
       Avis.create(avis_params.merge(claimant: current_gestionnaire, dossier: dossier))
-      redirect_to avis_dossier_path(procedure, dossier)
+      redirect_to avis_gestionnaire_dossier_path(procedure, dossier)
     end
 
     def update_annotations
       dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
       # FIXME: add attachements validation, cf. Champ#piece_justificative_file_errors
       dossier.update_attributes(champs_private_params)
-      redirect_to annotations_privees_dossier_path(procedure, dossier)
+      redirect_to annotations_privees_gestionnaire_dossier_path(procedure, dossier)
     end
 
     def print

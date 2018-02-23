@@ -54,7 +54,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       )
     end
 
-    it { expect(response).to redirect_to(personnes_impliquees_dossier_url) }
+    it { expect(response).to redirect_to(personnes_impliquees_gestionnaire_dossier_url) }
   end
 
   describe '#follow' do
@@ -64,7 +64,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
     it { expect(gestionnaire.followed_dossiers).to match([dossier]) }
     it { expect(flash.notice).to eq('Dossier suivi') }
-    it { expect(response).to redirect_to(procedures_url) }
+    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
   end
 
   describe '#unfollow' do
@@ -76,7 +76,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
     it { expect(gestionnaire.followed_dossiers).to match([]) }
     it { expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}") }
-    it { expect(response).to redirect_to(procedures_url) }
+    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
   end
 
   describe '#archive' do
@@ -88,7 +88,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     it { expect(dossier.archived).to be true }
-    it { expect(response).to redirect_to(procedures_url) }
+    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
     it { expect(gestionnaire.followed_dossiers).not_to include(dossier) }
   end
 
@@ -100,7 +100,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     it { expect(dossier.archived).to be false }
-    it { expect(response).to redirect_to(procedures_url) }
+    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
   end
 
   describe '#passer_en_instruction' do
@@ -112,7 +112,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     it { expect(dossier.state).to eq('en_instruction') }
-    it { is_expected.to redirect_to dossier_path(procedure, dossier) }
+    it { is_expected.to redirect_to gestionnaire_dossier_path(procedure, dossier) }
     it { expect(gestionnaire.follow?(dossier)).to be true }
   end
 
@@ -131,7 +131,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       expect(dossier.state).to eq('en_construction')
     end
 
-    it { is_expected.to redirect_to dossier_path(procedure, dossier) }
+    it { is_expected.to redirect_to gestionnaire_dossier_path(procedure, dossier) }
   end
 
   describe '#terminer' do
@@ -158,7 +158,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         subject
       end
 
-      it { is_expected.to redirect_to redirect_to dossier_path(procedure, dossier) }
+      it { is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier) }
     end
 
     context "with classer_sans_suite" do
@@ -184,7 +184,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         subject
       end
 
-      it { is_expected.to redirect_to redirect_to dossier_path(procedure, dossier) }
+      it { is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier) }
     end
 
     context "with accepter" do
@@ -233,7 +233,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
           it 'Notification email is sent with the attestation' do
             subject
 
-            is_expected.to redirect_to redirect_to dossier_path(procedure, dossier)
+            is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
           end
         end
 
@@ -246,7 +246,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
             subject
 
-            is_expected.to redirect_to redirect_to dossier_path(procedure, dossier)
+            is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
           end
         end
       end
@@ -307,7 +307,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       expect(saved_commentaire.body).to eq("<p>avant\n<br />apres</p>")
       expect(saved_commentaire.email).to eq(gestionnaire.email)
       expect(saved_commentaire.dossier).to eq(dossier)
-      expect(response).to redirect_to(messagerie_dossier_path(dossier.procedure, dossier))
+      expect(response).to redirect_to(messagerie_gestionnaire_dossier_path(dossier.procedure, dossier))
       expect(gestionnaire.followed_dossiers).to include(dossier)
       expect(saved_commentaire.file.present?).to eq(false)
     end
@@ -350,7 +350,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(saved_avis.confidentiel).to eq(true) }
     it { expect(saved_avis.dossier).to eq(dossier) }
     it { expect(saved_avis.claimant).to eq(gestionnaire) }
-    it { expect(response).to redirect_to(avis_dossier_path(dossier.procedure, dossier)) }
+    it { expect(response).to redirect_to(avis_gestionnaire_dossier_path(dossier.procedure, dossier)) }
   end
 
   describe "#update_annotations" do
@@ -394,6 +394,6 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
     it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
     it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
-    it { expect(response).to redirect_to(annotations_privees_dossier_path(dossier.procedure, dossier)) }
+    it { expect(response).to redirect_to(annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)) }
   end
 end

@@ -6,7 +6,7 @@
   %ul.procedure-list
     - @procedures.each do |p|
       %li.procedure-item.flex.align-start
-        = link_to(procedure_path(p)) do
+        = link_to(gestionnaire_procedure_path(p)) do
           .flex
 
             .procedure-logo{ style: p.logo.present? ? "background-image: url(#{p.logo.url})" : nil }
@@ -18,7 +18,7 @@
               %ul.procedure-stats.flex
                 %li
                   %object
-                    = link_to(procedure_path(p, statut: 'a-suivre')) do
+                    = link_to(gestionnaire_procedure_path(p, statut: 'a-suivre')) do
                       - a_suivre_count = @dossiers_a_suivre_count_per_procedure[p.id] || 0
                       .stats-number
                         = a_suivre_count
@@ -26,7 +26,7 @@
                         à suivre
                 %li
                   %object
-                    = link_to(procedure_path(p, statut: 'suivis')) do
+                    = link_to(gestionnaire_procedure_path(p, statut: 'suivis')) do
                       - if current_gestionnaire.notifications_per_procedure[p.id].present?
                         %span.notifications{ 'aria-label': "notifications" }
                       - followed_count = @followed_dossiers_count_per_procedure[p.id] || 0
@@ -36,7 +36,9 @@
                         = t('pluralize.followed', count: followed_count)
                 %li
                   %object
-                    = link_to(procedure_path(p, statut: 'traites')) do
+                    = link_to(gestionnaire_procedure_path(p, statut: 'traites')) do
+                      - if current_gestionnaire.notifications_per_procedure(:termine)[p.id].present?
+                        %span.notifications{ 'aria-label': "notifications" }
                       - termines_count = @dossiers_termines_count_per_procedure[p.id] || 0
                       .stats-number
                         = termines_count
@@ -44,7 +46,7 @@
                         = t('pluralize.processed', count: termines_count)
                 %li
                   %object
-                    = link_to(procedure_path(p, statut: 'tous')) do
+                    = link_to(gestionnaire_procedure_path(p, statut: 'tous')) do
                       - dossier_count = @dossiers_count_per_procedure[p.id] || 0
                       .stats-number
                         = dossier_count
@@ -52,7 +54,7 @@
                         = t('pluralize.case', count: dossier_count)
                 %li
                   %object
-                    = link_to(procedure_path(p, statut: 'archives')) do
+                    = link_to(gestionnaire_procedure_path(p, statut: 'archives')) do
                       - archived_count = @dossiers_archived_count_per_procedure[p.id] || 0
                       .stats-number
                         = archived_count

@@ -13,34 +13,41 @@ feature 'As a User I wanna create a dossier' do
       before do
         login_as user, scope: :user
         visit commencer_path(procedure_path: procedure_for_individual.path)
-        fill_in 'dossier_individual_attributes_nom',       with: 'Nom'
-        fill_in 'dossier_individual_attributes_prenom',    with: 'Prenom'
-        find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
+        fill_in 'individual_nom',       with: 'Nom'
+        fill_in 'individual_prenom',    with: 'Prenom'
+        check "dossier_autorisation_donnees"
       end
 
       context "when birthday is asked" do
         let(:ask_birthday) { true }
 
         scenario "with a proper date input field for birthdate (type='date' supported)" do
-          fill_in 'dossier_individual_attributes_birthdate', with: '1987-10-14'
-          page.find_by_id('etape_suivante').click
-          expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id.to_s))
-          page.find_by_id('etape_suivante').click
+          fill_in 'individual_birthdate', with: '1987-10-14'
+          click_button('Continuer')
+
+          expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id))
+          click_button('Etape suivante')
+
+          expect(page).to have_current_path(users_dossier_description_path(procedure_for_individual.dossiers.last.id))
           fill_in "champs_#{procedure_for_individual.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
           find(:css, '[name=submit_action]').set('nouveaux')
-          page.find_by_id('suivant').click
+          click_button('suivant')
+
           expect(user.dossiers.first.individual.birthdate).to eq("1987-10-14")
           expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_for_individual.dossiers.last.id.to_s))
         end
 
         scenario "with a basic text input field for birthdate (type='date' unsupported)" do
-          fill_in 'dossier_individual_attributes_birthdate', with: '14/10/1987'
-          page.find_by_id('etape_suivante').click
+          fill_in 'individual_birthdate', with: '14/10/1987'
+          click_button('Continuer')
+
           expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id.to_s))
-          page.find_by_id('etape_suivante').click
+          click_button('Etape suivante')
+
           fill_in "champs_#{procedure_for_individual.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
           find(:css, '[name=submit_action]').set('nouveaux')
           page.find_by_id('suivant').click
+
           expect(user.dossiers.first.individual.birthdate).to eq("1987-10-14")
           expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_for_individual.dossiers.last.id.to_s))
         end
@@ -50,12 +57,15 @@ feature 'As a User I wanna create a dossier' do
         let(:ask_birthday) { false }
 
         scenario "no need for birthday" do
-          page.find_by_id('etape_suivante').click
+          click_button('Continuer')
+
           expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id.to_s))
-          page.find_by_id('etape_suivante').click
+          click_button('Etape suivante')
+
           fill_in "champs_#{procedure_for_individual.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
           find(:css, '[name=submit_action]').set('nouveaux')
-          page.find_by_id('suivant').click
+          click_button('suivant')
+
           expect(user.dossiers.first.individual.birthdate).to eq(nil)
           expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_for_individual.dossiers.last.id.to_s))
         end
