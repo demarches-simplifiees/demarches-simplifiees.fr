@@ -4,7 +4,7 @@
 
   %h2{ style: 'font-size: 20px; font-weight: 300; margin: 25px 0 5px;' }
     #{procedure_overview.procedure.libelle}
-    = link_to 'voir', gestionnaire_procedure_url(procedure_overview.procedure), style: 'color: #4393F3; font-size: 14px;'
+    = link_to 'voir', gestionnaire_procedure_url(procedure_overview.procedure), style: 'color: #0069CC; font-size: 14px;'
   %table{ cellpadding: '0', cellspacing: '0', style: 'width: 100%; padding-bottom: 20px;' }
     %tbody
 
@@ -24,7 +24,7 @@
               - if procedure_overview.old_dossiers_en_construction.count < 6
                 \:
                 - old_dossiers_en_construction = procedure_overview.old_dossiers_en_construction.map do |old_dossier|
-                  - link_to "nº #{old_dossier.id}", gestionnaire_dossier_url(procedure_overview.procedure, old_dossier), style: 'color: #4393F3;'
+                  - link_to "nº #{old_dossier.id}", gestionnaire_dossier_url(procedure_overview.procedure, old_dossier), style: 'color: #0069CC;'
                 - end.join(', ')
                 = sanitize(old_dossiers_en_construction, attributes: %w(href style))
 
@@ -38,7 +38,7 @@
               - if procedure_overview.old_dossiers_en_instruction.count < 6
                 \:
                 - old_dossiers_en_instruction = procedure_overview.old_dossiers_en_instruction.map do |old_dossier|
-                  - link_to "nº #{old_dossier.id}", gestionnaire_dossier_url(procedure_overview.procedure, old_dossier), style: 'color: #4393F3;'
+                  - link_to "nº #{old_dossier.id}", gestionnaire_dossier_url(procedure_overview.procedure, old_dossier), style: 'color: #0069CC;'
                 - end.join(', ')
                 = sanitize(old_dossiers_en_instruction, attributes: %w(href style))
 
