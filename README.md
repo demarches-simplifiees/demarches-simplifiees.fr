@@ -150,3 +150,11 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 
 - supprimer un compte super admin :
   `bundle exec rake admin:delete_admin[email-du-compte-github@exemple.com]`
+
+## Compatibilité navigateurs
+
+L'application supporte les navigateurs récents Firefox, Chrome, Internet Explorer (Edge, 11).
+
+La compatibilité est testée par Browserstack.
+
+[<img src="app/assets/images/browserstack-logo-600x315.png" width="300">](https://www.browserstack.com/)

@@ -36,3 +36,4 @@ coverage/**/*
 .byebug_history
 .env
 Procfile.dev
+storage/
