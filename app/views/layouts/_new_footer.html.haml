@@ -4,12 +4,11 @@
       %li.footer-column
         %ul.footer-logos
           %li
-            = link_to "http://www.gouvernement.fr/" do
-              %span.footer-logo.footer-logo-rf{ role: 'img', 'aria-label': 'Logo du gouvernement' }
-
-          %li
             = link_to "https://beta.gouv.fr/" do
               %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': 'Logo de beta.gouv.fr' }
+          %li
+            = link_to "http://www.modernisation.gouv.fr/" do
+              %span.footer-logo.footer-logo-dinsic{ role: 'img', 'aria-label': 'Logo de la DINSIC' }
 
 
       %li.footer-column
@@ -38,4 +37,4 @@
           %li.footer-link
             = link_to "FAQ", "http://tps.helpscoutdocs.com/", :class => "footer-link", :target => "_blank"
           %li.footer-link
-            = link_to "Accessibilité", "", :class => "footer-link"
+            = link_to "Accessibilité", accessibilite_index_path, :class => "footer-link"

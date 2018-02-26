@@ -54,19 +54,19 @@ footer {
   opacity: 0.8;
 }
 
-.footer-logo-rf {
-  @include ie-compatible-background-image("footer/logo-rf.svg");
-
-  width: 75px;
-  height: 44px;
-  margin-bottom: 14px;
-}
-
 .footer-logo-beta-gouv-fr {
   @include ie-compatible-background-image("footer/logo-beta-gouv-fr.svg");
 
   width: 190px;
   height: 32px;
+  margin-bottom: 14px;
+}
+
+.footer-logo-dinsic {
+  @include ie-compatible-background-image("footer/logo-dinsic.svg");
+
+  height: 85px;
+  width: 74px;
 }
 
 .footer-link a {
