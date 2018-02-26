@@ -5,8 +5,7 @@ describe Gestionnaire, type: :model do
   let!(:procedure) { create :procedure, :published, administrateur: admin }
   let!(:procedure_2) { create :procedure, :published, administrateur: admin }
   let!(:procedure_3) { create :procedure, :published, administrateur: admin }
-  let(:gestionnaire) { create :gestionnaire, procedure_filter: procedure_filter, administrateurs: [admin] }
-  let(:procedure_filter) { nil }
+  let(:gestionnaire) { create :gestionnaire, administrateurs: [admin] }
   let!(:procedure_assign) { create :assign_to, gestionnaire: gestionnaire, procedure: procedure }
 
   before do
@@ -133,43 +132,6 @@ describe Gestionnaire, type: :model do
       admin.reload
       expect(admin.email).to eq('whoami@plop.com')
       expect(admin.valid_password?('super secret')).to be(true)
-    end
-  end
-
-  describe '#procedure_filter' do
-    subject { gestionnaire.procedure_filter }
-
-    context 'when procedure_filter_id is nil' do
-      it { is_expected.to eq nil }
-    end
-
-    context 'when procedure_filter is not nil' do
-      context 'when gestionnaire is assign_to the procedure filter id' do
-        before do
-          gestionnaire.update_column :procedure_filter, procedure.id
-        end
-
-        it { expect(AssignTo.where(gestionnaire: gestionnaire, procedure: procedure).count).to eq 1 }
-        it { is_expected.to eq procedure_assign.procedure.id }
-      end
-
-      context 'when gestionnaire is not any more assign to the procedure filter id' do
-        before do
-          gestionnaire.update_column :procedure_filter, procedure_3.id
-        end
-
-        it { expect(AssignTo.where(gestionnaire: gestionnaire, procedure: procedure_3).count).to eq 0 }
-        it { is_expected.to be_nil }
-      end
-
-      context "when procedure is hidden clear procedure_filter" do
-        before do
-          gestionnaire.update_column :procedure_filter, procedure_3.id
-          procedure_3.hide!
-        end
-
-        it { is_expected.to be_nil }
-      end
     end
   end
 
