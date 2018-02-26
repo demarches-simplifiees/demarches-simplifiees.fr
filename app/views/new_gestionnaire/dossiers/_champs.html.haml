@@ -35,8 +35,11 @@
             = "#{c.libelle} :"
           %td.rich-text
             - pj = c.piece_justificative_file
-            %a{ href: url_for(pj), target: '_blank' }
-              = pj.filename.to_s
+            - if pj.attached?
+              %a{ href: url_for(pj), target: '_blank' }
+                = pj.filename.to_s
+            - else
+              Pièce justificative non fournie
         - else
           %th.libelle
             = "#{c.libelle} :"
