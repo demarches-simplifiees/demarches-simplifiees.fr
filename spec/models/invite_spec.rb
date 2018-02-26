@@ -24,5 +24,36 @@ describe Invite do
 
       it { expect{ subject }.to raise_error ActiveRecord::RecordInvalid }
     end
+
+    context "email validation" do
+      let(:invite) { build(:invite, email: email, dossier: dossier1) }
+
+      context 'when an email is invalid' do
+        let(:email) { 'toto.fr' }
+
+        it do
+          expect(invite.save).to be false
+          expect(invite.errors.full_messages).to eq(["Email n'est pas valide"])
+        end
+
+        context 'when an email is empty' do
+          let(:email) { nil }
+
+          it do
+            expect(invite.save).to be false
+            expect(invite.errors.full_messages).to eq(["Email est vide"])
+          end
+        end
+      end
+
+      context 'when an email is valid' do
+        let(:email) { 'toto@toto.fr' }
+
+        it do
+          expect(invite.save).to be true
+          expect(invite.errors.full_messages).to eq([])
+        end
+      end
+    end
   end
 end
