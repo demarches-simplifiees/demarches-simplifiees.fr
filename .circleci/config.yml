@@ -35,7 +35,7 @@ jobs:
       - *bundle_save_cache
   test:
     <<: *defaults
-    parallelism: 4
+    parallelism: 3
     steps:
       - checkout
       - *bundle_restore_cache
