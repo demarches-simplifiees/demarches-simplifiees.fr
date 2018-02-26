@@ -1,5 +1,5 @@
 class StagingAuthService
-  CONFIG_PATH = Rails.root.join("/config/basic_auth.yml")
+  CONFIG_PATH = Rails.root.join("config/basic_auth.yml")
 
   def self.authenticate(username, password)
     if enabled?
