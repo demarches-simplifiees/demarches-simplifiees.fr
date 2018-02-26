@@ -158,3 +158,9 @@ L'application supporte les navigateurs récents Firefox, Chrome, Internet Explor
 La compatibilité est testée par Browserstack.
 
 [<img src="app/assets/images/browserstack-logo-600x315.png" width="300">](https://www.browserstack.com/)
+
+## Performance
+
+[![View performance data on Skylight](https://badges.skylight.io/status/zAvWTaqO0mu1.svg)](https://oss.skylight.io/app/applications/zAvWTaqO0mu1)
+
+Nous utilisons Skylight pour suivre les performances de notre application.
