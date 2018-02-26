@@ -12,7 +12,8 @@ class Individual < ActiveRecord::Base
   private
 
   def set_iso_date
-    if birthdate.present?
+    if birthdate.present? &&
+        birthdate =~ /\A\d{2}\/\d{2}\/\d{4}\z/
       self.birthdate = Date.parse(birthdate).iso8601
     end
   end
