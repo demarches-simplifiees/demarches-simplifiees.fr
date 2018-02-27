@@ -44,7 +44,7 @@
         %th Exercices :
         %td
           - etablissement.exercices.each_with_index do |exercice, index|
-            = "#{exercice.dateFinExercice.year} : "
+            = "#{exercice.date_fin_exercice.year} : "
             = number_to_currency(exercice.ca)
             %br
     - if entreprise.rna_information.present?
