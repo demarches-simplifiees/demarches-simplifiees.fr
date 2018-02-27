@@ -207,6 +207,7 @@ Rails.application.routes.draw do
         get 'identite'
         patch 'update_identite'
         get 'modifier'
+        get 'merci'
       end
       get 'attestation'
     end
