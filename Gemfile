@@ -121,6 +121,7 @@ gem 'rack-mini-profiler'
 
 group :test do
   gem 'capybara'
+  gem "chromedriver-helper"
   gem 'launchy'
   gem 'factory_bot'
   gem 'database_cleaner'
