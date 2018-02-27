@@ -1,0 +1,62 @@
+.dossier-edit
+  .dossier-header
+    .container
+      %h1= @dossier.procedure.libelle
+
+  .container
+    %p.thanks Les champs avec une asterisque (*) sont obligatoires.
+
+    = form_for @dossier, html: { class: 'form', multipart: true } do |f|
+      = f.fields_for :champs, @dossier.ordered_champs_v2 do |champ_form|
+        - champ = champ_form.object
+        = render partial: "new_gestionnaire/dossiers/editable_champs/editable_champ",
+          locals: { champ: champ, form: champ_form }
+
+      - tpjs = @dossier.types_de_piece_justificative.order('order_place ASC')
+      - if tpjs.present?
+        .card.featured
+          .card-title
+            Pièces-jointes
+
+          - tpjs.each do |tpj|
+            .pj-input
+              %label{ for: "piece_justificative_#{tpj.id}" }
+                = tpj.libelle
+                - if tpj.mandatory?
+                  %span.mandatory *
+
+              %p.piece-description= tpj.description
+
+              - if tpj.lien_demarche.present?
+                %p.piece-description
+                  Récupérer le formulaire vierge pour mon dossier :
+                  = link_to "Télécharger", tpj.lien_demarche, target: :blank
+
+              - if @dossier.was_piece_justificative_uploaded_for_type_id?(tpj.id)
+                - pj = @dossier.retrieve_last_piece_justificative_by_type(tpj.id)
+                %p
+                  Pièce-jointe déjà importée :
+                  = link_to pj.original_filename, pj.content_url, target: :blank
+
+              = file_field_tag "piece_justificative_#{tpj.id}",
+                accept: PieceJustificative.accept_format,
+                max_file_size: 6.megabytes,
+                required: (tpj.mandatory? && !@dossier.was_piece_justificative_uploaded_for_type_id?(tpj.id))
+
+      .send-wrapper
+        = hidden_field_tag 'submit_action', 'draft'
+
+        - if @dossier.brouillon?
+          = f.button 'Enregistrer le brouillon',
+            formnovalidate: true,
+            class: 'button send',
+            data: { action: 'draft', disable_with: 'Envoi...' }
+
+          = f.button 'Soumettre le dossier',
+            class: 'button send primary',
+            data: { action: 'submit', disable_with: 'Envoi...' }
+
+        - else
+          = f.button 'Modifier le dossier',
+            class: 'button send primary',
+            data: { action: 'submit', disable_with: 'Envoi...' }
