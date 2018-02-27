@@ -18,16 +18,6 @@ class Gestionnaire < ActiveRecord::Base
     procedures.publiees_ou_archivees
   end
 
-  def procedure_filter
-    procedure_id = self[:procedure_filter]
-    if procedures.find_by(id: procedure_id).present?
-      procedure_id
-    else
-      self.update_column(:procedure_filter, nil)
-      nil
-    end
-  end
-
   def can_view_dossier?(dossier_id)
     avis.where(dossier_id: dossier_id).any? ||
       dossiers.where(id: dossier_id).any?
