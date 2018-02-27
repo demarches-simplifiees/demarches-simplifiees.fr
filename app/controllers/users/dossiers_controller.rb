@@ -154,7 +154,7 @@ class Users::DossiersController < UsersController
       if @facade.dossier.procedure.module_api_carto.use_api_carto
         redirect_to url_for(controller: :carte, action: :show, dossier_id: @facade.dossier.id)
       else
-        redirect_to url_for(controller: :description, action: :show, dossier_id: @facade.dossier.id)
+        redirect_to modifier_dossier_path(@facade.dossier)
       end
     end
   end
