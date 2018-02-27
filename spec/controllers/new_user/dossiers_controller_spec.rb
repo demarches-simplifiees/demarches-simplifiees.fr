@@ -212,5 +212,15 @@ describe NewUser::DossiersController, type: :controller do
         it { expect(dossier.reload.state).to eq('brouillon') }
       end
     end
+
+    context 'when dossier has no champ' do
+      let(:submit_payload) { { id: dossier.id } }
+
+      it 'does not raise any errors' do
+        subject
+
+        expect(response).to redirect_to(users_dossier_recapitulatif_path(dossier))
+      end
+    end
   end
 end

@@ -51,7 +51,7 @@ module NewUser
 
       errors = PiecesJustificativesService.upload!(@dossier, current_user, params)
 
-      if !@dossier.update(champs_params)
+      if champs_params[:dossier] && !@dossier.update(champs_params[:dossier])
         errors += @dossier.errors.full_messages
       end
 
@@ -75,8 +75,9 @@ module NewUser
 
     private
 
+    # FIXME: require(:dossier) when all the champs are united
     def champs_params
-      params.require(:dossier).permit(champs_attributes: [:id, :value, :piece_justificative_file, value: []])
+      params.permit(dossier: { champs_attributes: [:id, :value, :piece_justificative_file, value: []] })
     end
 
     def dossier
