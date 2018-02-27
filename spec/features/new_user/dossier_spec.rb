@@ -105,7 +105,7 @@ feature 'The user' do
     click_on 'Soumettre le dossier'
     expect(user_dossier.reload.en_construction?).to be(true)
     expect(champ_value_for('text')).to eq('super texte')
-    expect(page).to have_current_path(users_dossier_recapitulatif_path(user_dossier))
+    expect(page).to have_current_path(merci_dossier_path(user_dossier))
   end
 
   private

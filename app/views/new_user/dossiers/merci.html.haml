@@ -1,0 +1,19 @@
+.merci
+  .container
+    = image_tag('user/envoi-dossier.svg')
+    %h1 Merci !
+    %p.send
+      Votre dossier sur la procédure
+      %b= @dossier.procedure.libelle
+      a bien été envoyé.
+    %p
+      Vous avez désormais accès à votre
+      %b dossier en ligne.
+    %p
+      Vous pouvez
+      %b le modifier
+      et
+      %b échanger avec un instructeur
+      lors de sa construction et de son instruction
+
+    = link_to 'Accéder à votre dossier', users_dossier_recapitulatif_path(@dossier), class: 'button large primary'
