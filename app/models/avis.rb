@@ -3,6 +3,8 @@ class Avis < ApplicationRecord
   belongs_to :gestionnaire
   belongs_to :claimant, class_name: 'Gestionnaire'
 
+  validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
+
   before_save :clean_email
   before_create :try_to_assign_gestionnaire
   after_create :notify_gestionnaire
