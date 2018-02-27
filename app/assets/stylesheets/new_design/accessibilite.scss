@@ -1,0 +1,11 @@
+$default-space: 15px;
+
+.accessibilite {
+  width: 1040px;
+  margin: 0 auto;
+  padding-top: $default-space * 2;
+
+  ul {
+    list-style-type: disc;
+  }
+}

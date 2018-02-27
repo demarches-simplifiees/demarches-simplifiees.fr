@@ -61,6 +61,7 @@ Rails.application.routes.draw do
   get 'admin' => 'admin#index'
 
   resources :stats, only: [:index]
+  resources :accessibilite, only: [:index]
 
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
