@@ -49,7 +49,7 @@
       .col-xs-8.entreprise-info
         - @facade.etablissement.exercices.each_with_index do |exercice, index|
           %strong
-            = "#{exercice.dateFinExercice.year} : "
+            = "#{exercice.date_fin_exercice.year} : "
             = number_to_currency(exercice.ca)
           %br
 

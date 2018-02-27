@@ -23,7 +23,7 @@ describe SIADE::ExercicesAdapter do
     end
 
     it 'L\'exercice contient bien une date de fin d\'exercice' do
-      expect(subject[0][:dateFinExercice]).to eq("2013-12-31T00:00:00+01:00")
+      expect(subject[0][:date_fin_exercice]).to eq("2013-12-31T00:00:00+01:00")
     end
 
     it 'L\'exercice contient bien une date_fin_exercice_timestamp' do

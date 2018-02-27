@@ -103,11 +103,13 @@ class Users::DossiersController < UsersController
   def siret_informations
     @facade = facade params[:dossier_id]
 
-    update_current_user_siret! siret
+    update_current_user_siret!(siret)
 
-    dossier = DossierService.new(@facade.dossier, siret, current_user.france_connect_information).dossier_informations!
+    etablissement_attributes = SIRETService.fetch(siret, @facade.dossier)
 
-    if dossier.entreprise.nil? || dossier.etablissement.nil?
+    if etablissement_attributes.present? && @facade.dossier.create_etablissement(etablissement_attributes)
+      @facade.dossier.mandataire_social!(current_user.france_connect_information)
+    else
       return errors_valid_siret
     end
 

@@ -4,8 +4,9 @@ describe SIADE::RNAAdapter do
   let(:siret) { '50480511000013' }
   let(:body) { File.read('spec/support/files/rna.json') }
   let(:status) { 200 }
+  let(:adapter) { described_class.new(siret) }
 
-  subject { described_class.new(siret).to_params }
+  subject { adapter.to_params }
 
   before do
     stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/associations\/.*token=/)
@@ -23,7 +24,7 @@ describe SIADE::RNAAdapter do
   it { expect(subject).to be_an_instance_of(Hash) }
 
   describe 'Attributs Associations' do
-    it { expect(subject[:association_id]).to eq('W595001988') }
+    it { expect(subject[:rna]).to eq('W595001988') }
 
     it { expect(subject[:titre]).to eq('UN SUR QUATRE') }
 
