@@ -1,8 +1,8 @@
-# TPS - Téléprocédures Simplifiées
+# demarches-simplifiees.fr
 
 ## Context
 
-Téléprocédures Simplifiées, ou TPS pour les intimes, est une plateforme 100 % web et 0 % email, conçue afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % démat' à l'horizon 2018 pour les procédures administratives.
+demarches-simplifiees.fr est un site web conçue afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % dématérialisation pour les procédures administratives.
 
 
 ## Dépendances
