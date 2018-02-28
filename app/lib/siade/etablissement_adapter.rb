@@ -9,7 +9,7 @@ class SIADE::EtablissementAdapter
 
   def success?
     data_source
-  rescue => e
+  rescue
     false
   end
 
