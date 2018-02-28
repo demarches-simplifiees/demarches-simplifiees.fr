@@ -246,7 +246,7 @@ describe Gestionnaire, type: :model do
       end
 
       context 'when there is a new commentaire issued by tps' do
-        before { create(:commentaire, dossier: dossier, email: 'contact@tps.apientreprise.fr') }
+        before { create(:commentaire, dossier: dossier, email: 'contact@demarches-simplifiees.fr') }
 
         it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: false }) }
       end
@@ -327,7 +327,7 @@ describe Gestionnaire, type: :model do
       end
 
       context 'when there is a new commentaire issued by tps' do
-        before { create(:commentaire, dossier: dossier, email: 'contact@tps.apientreprise.fr') }
+        before { create(:commentaire, dossier: dossier, email: 'contact@demarches-simplifiees.fr') }
 
         it { is_expected.to match([]) }
       end

@@ -5,7 +5,7 @@ class AdministrationMailer < ApplicationMailer
     @admin = admin
     @administration = administration
 
-    mail(to: 'tech@tps.apientreprise.fr',
+    mail(to: 'tech@demarches-simplifiees.fr',
          subject: "Création d'un compte Admin demarches-simplifiees.fr")
   end
 
@@ -13,12 +13,12 @@ class AdministrationMailer < ApplicationMailer
     @reset_password_token = reset_password_token
     mail(to: admin.email,
          subject: "demarches-simplifiees.fr - Activez votre compte administrateur",
-         reply_to: "equipe@tps.apientreprise.fr")
+         reply_to: "equipe@demarches-simplifiees.fr")
   end
 
   def dubious_procedures(procedures_and_type_de_champs)
     @procedures_and_type_de_champs = procedures_and_type_de_champs
-    mail(to: 'equipe@tps.apientreprise.fr',
+    mail(to: 'equipe@demarches-simplifiees.fr',
          subject: "[RGS] De nouvelles procédures comportent des champs interdits")
   end
 end
