@@ -6,14 +6,8 @@
       .hero-wrapper
         .hero-text
           %p.hero-tagline
-            %em.hero-tagline-em Dématérialisez
-            %br
-            vos procédures administratives en quelques minutes
-          = link_to "Demander une démo",
-            "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo demarches-simplifiees.fr",
-            class: "hero-button",
-            target: "_blank",
-            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
+            %em.hero-tagline-em Dématérialiser et simplifier
+            les démarches administratives
 
         .hero-illustration
           %img{ :src => image_url("landing/hero/dematerialiser.svg") }

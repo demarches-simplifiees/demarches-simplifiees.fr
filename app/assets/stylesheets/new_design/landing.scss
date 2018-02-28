@@ -32,13 +32,13 @@ $landing-breakpoint: 1040px;
 }
 
 .hero-tagline {
-  font-size: 30px;
+  font-size: 40px;
   margin-bottom: 0px;
 }
 
 .hero-tagline-em {
   color: $blue;
-  font-size: 36px;
+  font-size: 40px;
   font-style: normal;
   font-weight: bold;
 }
@@ -52,31 +52,6 @@ $landing-breakpoint: 1040px;
 
   @media (max-width: 1030px) {
     margin: auto;
-  }
-}
-
-.hero-button {
-  @include horizontal-padding(30px);
-
-  display: inline-block;
-  height: 60px;
-  line-height: 60px;
-  border-radius: 60px;
-  background-color: $blue;
-  color: #FFFFFF;
-  font-size: 24px;
-  margin-top: 30px;
-  cursor: pointer;
-
-  &:hover {
-    color: #FFFFFF;
-    text-decoration: none;
-    background-color: $light-blue;
-  }
-
-  &:focus {
-    color: #FFFFFF;
-    text-decoration: none;
   }
 }
 
