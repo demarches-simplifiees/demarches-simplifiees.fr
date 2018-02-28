@@ -22,6 +22,10 @@
 .header-logo {
   display: inline-block;
   margin-right: 4 * $default-spacer;
+
+  img {
+    height: 36px;
+  }
 }
 
 .header-tabs {
