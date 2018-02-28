@@ -38,6 +38,41 @@
 
   .landing-panel
     .container
+      .role-panel-wrapper.role-administrations-panel
+        .role-panel-30.role-administrations-image
+          %img.role-image{ :src => image_url("landing/roles/administrations.svg") }
+
+        .role-panel-70
+          %h1.role-panel-title Administrations
+          %p.role-panel-explanation Créez des formulaires en ligne en quelques minutes et instruisez les demandes des usagers sur une plateforme dédiée
+
+          = link_to "Demander un compte",
+            "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo demarches-simplifiees.fr",
+            class: "role-panel-button-primary",
+            target: "_blank",
+            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
+
+          = link_to "Voir la documentation",
+            "https://tps.gitbooks.io/tps-documentation/content/",
+            target: "_blank",
+            class: "role-panel-button-secondary"
+
+  .landing-panel.admins-panel
+    .container
+      .role-panel-wrapper
+        .role-panel-30.role-usagers-image
+          %img.role-image{ :src => image_url("landing/roles/usagers.svg") }
+
+        .role-panel-70
+          %h1.role-panel-title Usagers
+          %p.role-panel-explanation Déposez des demandes en toute simplicité et retrouvez vos dossiers en ligne
+
+          = link_to "Se connecter",
+            new_user_session_path,
+            class: "role-panel-button-primary"
+
+  .landing-panel
+    .container
       %h2.landing-panel-title Ce que les utilisateurs pensent du service
 
       %ul.quotes
@@ -162,6 +197,6 @@
         %div
           = link_to "Demander une démo",
             "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo demarches-simplifiees.fr",
-            class: "cta-panel-button",
+            class: "cta-panel-button-white",
             target: "_blank",
             onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
