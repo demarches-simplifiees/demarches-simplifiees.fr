@@ -1,4 +1,4 @@
-# demarches-simplifiees.fr
+# demarches-simplifiees.fr (anciennement Téléprocédures Simplifiées)
 
 ## Context
 
