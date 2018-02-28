@@ -1,0 +1,32 @@
+@import "colors";
+@import "common";
+@import "constants";
+
+.merci {
+  text-align: center;
+
+  img {
+    margin-top: 4 * $default-padding;
+  }
+
+  h1 {
+    margin: (2 * $default-padding) 0;
+  }
+
+  b {
+    font-weight: bold;
+  }
+
+  .send {
+    margin-bottom: 2 * $default-padding;
+    font-size: 20px;
+  }
+
+  p {
+    margin: $default-padding;
+  }
+
+  a {
+    margin-top: 40px;
+  }
+}

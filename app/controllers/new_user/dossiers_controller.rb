@@ -68,9 +68,17 @@ module NewUser
         flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
         render :modifier
       else
+        if @dossier.brouillon?
+          redirect_to merci_dossier_path(@dossier)
+        else
+          redirect_to users_dossier_recapitulatif_path(@dossier)
+        end
         @dossier.en_construction!
-        redirect_to users_dossier_recapitulatif_path(@dossier)
       end
+    end
+
+    def merci
+      @dossier = current_user.dossiers.includes(:procedure).find(params[:id])
     end
 
     private
