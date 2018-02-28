@@ -1,4 +1,4 @@
-TPS.toggleChart = function(event, chartClass) {
+DS.toggleChart = function(event, chartClass) {
   var nextSelectorItem = $(event.target),
       nextChart = $(chartClass),
       nextChartId = nextChart.children().first().attr("id"),

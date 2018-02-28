@@ -47,7 +47,7 @@
       - if gestionnaire_signed_in? || user_signed_in?
         %li
           .header-menu-opener
-            = image_tag "icons/account-circle.svg", onclick: "javascript:TPS.toggleHeaderMenu(event);", title: "Mon compte"
+            = image_tag "icons/account-circle.svg", onclick: "javascript:DS.toggleHeaderMenu(event);", title: "Mon compte"
             %ul.header-menu
               %li
                 .menu-item{ title: current_email }

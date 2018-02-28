@@ -1,4 +1,4 @@
-TPS.scrollMessagerie = function () {
+DS.scrollMessagerie = function () {
   var scrollTo = function ($container, $scrollTo) {
     $container.scrollTop(
       $scrollTo.offset().top - $container.offset().top + $container.scrollTop()
@@ -21,4 +21,4 @@ TPS.scrollMessagerie = function () {
   }
 };
 
-document.addEventListener("turbolinks:load", TPS.scrollMessagerie);
+document.addEventListener("turbolinks:load", DS.scrollMessagerie);
