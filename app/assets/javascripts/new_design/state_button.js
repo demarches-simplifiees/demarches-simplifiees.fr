@@ -1,9 +1,9 @@
-TPS.showMotivation = function (state) {
+DS.showMotivation = function (state) {
   $(".motivation." + state).show();
   $(".dropdown-items").hide();
 };
 
-TPS.motivationCancel = function () {
+DS.motivationCancel = function () {
   $(".motivation").hide();
   $(".dropdown-items").show();
 };

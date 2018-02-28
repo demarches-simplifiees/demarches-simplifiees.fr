@@ -9,5 +9,5 @@
       %p.help
         L'acceptation du dossier envoie automatiquement une attestation à l'usager.
     .text-right
-      %span.button{ onclick: 'TPS.motivationCancel();' } Annuler
+      %span.button{ onclick: 'DS.motivationCancel();' } Annuler
       = button_tag 'Valider la décision', name: :process_action, value: process_action, class: 'button primary', title: title, data: { confirm: confirm }
