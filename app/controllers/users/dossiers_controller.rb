@@ -107,8 +107,14 @@ class Users::DossiersController < UsersController
 
     etablissement_attributes = SIRETService.fetch(siret, @facade.dossier)
 
-    if etablissement_attributes.present? && @facade.dossier.create_etablissement(etablissement_attributes)
-      @facade.dossier.mandataire_social!(current_user.france_connect_information)
+    if etablissement_attributes.present?
+      etablissement_attributes = ActionController::Parameters.new(etablissement_attributes).permit!
+      etablissement = @facade.dossier.create_etablissement(etablissement_attributes)
+      if etablissement.save
+        @facade.dossier.mandataire_social!(current_user.france_connect_information)
+      else
+        return errors_valid_siret
+      end
     else
       return errors_valid_siret
     end
