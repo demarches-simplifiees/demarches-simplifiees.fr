@@ -210,6 +210,9 @@ Rails.application.routes.draw do
       end
       get 'attestation'
     end
+    # FIXME: to remove when show is implemeted
+    # needed to fix refresh after dossier draft save
+    get 'dossiers/:id', to: redirect('/dossiers/%{id}/modifier')
   end
 
   scope module: 'new_gestionnaire', as: 'gestionnaire' do
