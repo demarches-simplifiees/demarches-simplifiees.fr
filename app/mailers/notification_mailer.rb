@@ -1,7 +1,5 @@
 class NotificationMailer < ApplicationMailer
-  default to: Proc.new { @user.email }
-
-  after_action :create_commentaire_for_notification, only: [:send_notification, :send_dossier_received]
+  default to: Proc.new { @dossier.user.email }
 
   def send_dossier_received(dossier_id)
     dossier = Dossier.find(dossier_id)
@@ -9,48 +7,39 @@ class NotificationMailer < ApplicationMailer
   end
 
   def send_notification(dossier, mail_template, attestation = nil)
-    vars_mailer(dossier)
+    @dossier = dossier
 
-    @subject = mail_template.subject_for_dossier dossier
-    @body = mail_template.body_for_dossier dossier
+    subject = mail_template.subject_for_dossier dossier
+    body = mail_template.body_for_dossier dossier
 
     if attestation.present?
       attachments['attestation.pdf'] = attestation
     end
 
-    mail(subject: @subject) { |format| format.html { @body } }
+    create_commentaire_for_notification(dossier, subject, body)
+
+    mail(subject: subject) { |format| format.html { body } }
   end
 
   def send_draft_notification(dossier)
-    vars_mailer(dossier)
+    @dossier = dossier
 
-    @subject = "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}"
-
-    mail(subject: @subject)
+    mail(subject: "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}")
   end
 
   def new_answer(dossier)
-    send_mail dossier, "Nouveau message pour votre dossier TPS nº #{dossier.id}"
+    @dossier = dossier
+
+    mail(subject: "Nouveau message pour votre dossier TPS nº #{dossier.id}")
   end
 
   private
 
-  def create_commentaire_for_notification
+  def create_commentaire_for_notification(dossier, subject, body)
     Commentaire.create(
-      dossier: @dossier,
+      dossier: dossier,
       email: I18n.t("dynamics.contact_email"),
-      body: ["[#{@subject}]", @body].join("<br><br>")
+      body: ["[#{subject}]", body].join("<br><br>")
     )
-  end
-
-  def vars_mailer(dossier)
-    @dossier = dossier
-    @user = dossier.user
-  end
-
-  def send_mail(dossier, subject)
-    vars_mailer dossier
-
-    mail(subject: subject)
   end
 end
