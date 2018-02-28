@@ -192,11 +192,10 @@
     .container
       .cta-panel-wrapper
         %div
-          %h1.cta-panel-title Commencez à dématérialiser vos procédures
-          %p.cta-panel-explanation Nous vous accompagnons dans la prise en main de l’outil
+          %h1.cta-panel-title Une question, un problème ?
+          %p.cta-panel-explanation Nous équipe est disponible pour vous renseigner et vous aider
         %div
-          = link_to "Demander une démo",
-            "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo demarches-simplifiees.fr",
+          = link_to "Contactez-nous",
+            "mailto:#{t("dynamics.contact_email")}?subject=Question à propos de demarches-simplifiees.fr",
             class: "cta-panel-button-white",
-            target: "_blank",
-            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
+            target: "_blank"
