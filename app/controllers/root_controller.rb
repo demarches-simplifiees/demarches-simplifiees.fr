@@ -20,7 +20,7 @@ class RootController < ApplicationController
   end
 
   def patron
-    description = 'a not so long description'
+    description = 'aller voir le super site : https://demarches-simplifiees.fr'
 
     all_champs = TypeDeChamp.type_champs
       .map { |name, _| TypeDeChamp.new(type_champ: name, private: false, libelle: name, description: description, mandatory: true) }
@@ -45,8 +45,7 @@ class RootController < ApplicationController
     type_champ_values = {
       'date': '2016-07-26',
       'datetime': '26/07/2016 07:35',
-      'textarea': 'Une description de mon projet',
-      'explication': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In erat mauris, faucibus quis pharetra sit amet, pretium ac libero. Etiam vehicula eleifend bibendum. Morbi gravida metus ut sapien condimentum sodales mollis augue sodales. Vestibulum quis quam at sem placerat aliquet',
+      'textarea': 'Une description de mon projet'
     }
 
     type_champ_values.each do |(type_champ, value)|
