@@ -44,26 +44,32 @@ footer {
   }
 }
 
-.footer-logo:hover {
-  opacity: 0.8;
+.footer-text {
+  font-style: italic;
+  margin-bottom: 14px;
 }
 
-.footer-logo-beta-gouv-fr {
-  @include ie-compatible-background-image("footer/logo-beta-gouv-fr.svg");
-
-  width: 190px;
-  height: 32px;
-  margin-bottom: 14px;
+.footer-logo:hover {
+  opacity: 0.8;
 }
 
 .footer-logo-dinsic {
   @include ie-compatible-background-image("footer/logo-dinsic.svg");
 
-  height: 115px;
-  width: 100px;
+  height: 104px;
+  width: 90px;
+  margin-bottom: 14px;
 }
 
-.footer-link a {
+.footer-logo-beta-gouv-fr {
+  @include ie-compatible-background-image("footer/logo-beta-gouv-fr.svg");
+
+  width: 150px;
+  height: 25px;
+}
+
+.footer-link a,
+.footer-text a {
   color: $black;
   text-decoration: none;
 
