@@ -6,13 +6,13 @@ class AdministrationMailer < ApplicationMailer
     @administration = administration
 
     mail(to: 'tech@tps.apientreprise.fr',
-         subject: "Création d'un compte Admin TPS")
+         subject: "Création d'un compte Admin demarches-simplifiees.fr")
   end
 
   def invite_admin(admin, reset_password_token)
     @reset_password_token = reset_password_token
     mail(to: admin.email,
-         subject: "TPS - Activez votre compte administrateur",
+         subject: "demarches-simplifiees.fr - Activez votre compte administrateur",
          reply_to: "equipe@tps.apientreprise.fr")
   end
 
