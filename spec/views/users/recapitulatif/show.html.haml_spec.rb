@@ -30,8 +30,8 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
             expect(rendered).to have_css('#maj_infos')
           end
 
-          it 'le lien vers description est correct' do
-            expect(rendered).to have_selector("a[id=maj_infos][href='/users/dossiers/#{dossier_id}/description']")
+          it 'le lien vers l édition est correct' do
+            expect(rendered).to have_selector("a[id=maj_infos][href='/dossiers/#{dossier_id}/modifier']")
           end
         end
 

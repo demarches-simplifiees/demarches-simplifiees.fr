@@ -8,23 +8,20 @@ class SIADE::RNAAdapter
   end
 
   def to_params
-    params = {}
-
-    data_source[:association].each do |k, v|
-      params[k] = v if attr_to_fetch.include?(k)
+    if data_source[:association][:id].nil?
+      return nil
     end
-
-    params[:association_id] = params[:id]
-    params.delete(:id)
-
+    params = data_source[:association].slice(*attr_to_fetch)
+    params[:rna] = data_source[:association][:id]
     params
   rescue
     nil
   end
 
+  private
+
   def attr_to_fetch
     [
-      :id,
       :titre,
       :objet,
       :date_creation,

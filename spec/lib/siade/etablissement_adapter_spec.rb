@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SIADE::EtablissementAdapter do
   context 'SIRET valide' do
-    let(:siret) { 41_816_609_600_051 }
+    let(:siret) { '41816609600051' }
     subject { described_class.new(siret).to_params }
 
     before do
@@ -16,7 +16,7 @@ describe SIADE::EtablissementAdapter do
 
     context 'Attributs Etablissements' do
       it 'L\'entreprise contient bien un siret' do
-        expect(subject[:siret]).to eq('41816609600051')
+        expect(subject[:siret]).to eq(siret)
       end
 
       it 'L\'entreprise contient bien un siege_social' do

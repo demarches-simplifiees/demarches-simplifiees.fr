@@ -202,13 +202,18 @@ Rails.application.routes.draw do
   get "patron" => "root#patron"
 
   scope module: 'new_user' do
-    resources :dossiers, only: [] do
+    resources :dossiers, only: [:update] do
       member do
         get 'identite'
         patch 'update_identite'
+        get 'modifier'
+        get 'merci'
       end
       get 'attestation'
     end
+    # FIXME: to remove when show is implemeted
+    # needed to fix refresh after dossier draft save
+    get 'dossiers/:id', to: redirect('/dossiers/%{id}/modifier')
   end
 
   scope module: 'new_gestionnaire', as: 'gestionnaire' do

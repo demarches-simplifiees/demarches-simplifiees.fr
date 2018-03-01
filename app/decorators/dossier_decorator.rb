@@ -16,14 +16,6 @@ class DossierDecorator < Draper::Decorator
     DossierDecorator.case_state_fr state
   end
 
-  def url(gestionnaire_signed_in)
-    if brouillon?
-      users_dossier_description_path(id)
-    else
-      users_dossier_recapitulatif_path(id)
-    end
-  end
-
   def self.case_state_fr state = self.state
     h.t("activerecord.attributes.dossier.state.#{state}")
   end

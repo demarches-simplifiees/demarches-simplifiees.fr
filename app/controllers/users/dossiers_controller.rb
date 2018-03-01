@@ -103,11 +103,19 @@ class Users::DossiersController < UsersController
   def siret_informations
     @facade = facade params[:dossier_id]
 
-    update_current_user_siret! siret
+    update_current_user_siret!(siret)
 
-    dossier = DossierService.new(@facade.dossier, siret, current_user.france_connect_information).dossier_informations!
+    etablissement_attributes = SIRETService.fetch(siret, @facade.dossier)
 
-    if dossier.entreprise.nil? || dossier.etablissement.nil?
+    if etablissement_attributes.present?
+      etablissement_attributes = ActionController::Parameters.new(etablissement_attributes).permit!
+      etablissement = @facade.dossier.create_etablissement(etablissement_attributes)
+      if etablissement.save
+        @facade.dossier.mandataire_social!(current_user.france_connect_information)
+      else
+        return errors_valid_siret
+      end
+    else
       return errors_valid_siret
     end
 
@@ -154,7 +162,7 @@ class Users::DossiersController < UsersController
       if @facade.dossier.procedure.module_api_carto.use_api_carto
         redirect_to url_for(controller: :carte, action: :show, dossier_id: @facade.dossier.id)
       else
-        redirect_to url_for(controller: :description, action: :show, dossier_id: @facade.dossier.id)
+        redirect_to modifier_dossier_path(@facade.dossier)
       end
     end
   end
