@@ -1,8 +1,8 @@
-# TPS - Téléprocédures Simplifiées
+# demarches-simplifiees.fr (anciennement Téléprocédures Simplifiées)
 
 ## Context
 
-Téléprocédures Simplifiées, ou TPS pour les intimes, est une plateforme 100 % web et 0 % email, conçue afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % démat' à l'horizon 2018 pour les procédures administratives.
+demarches-simplifiees.fr est un site web conçue afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % dématérialisation pour les procédures administratives.
 
 
 ## Dépendances
@@ -132,8 +132,8 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 
 ## Déploiement
 
-- Tout nouveau commit ajouté à la branche `dev` est automatiquement déployé [en intégration](https://tps-dev.apientreprise.fr/)
-- Tout nouveau commit ajouté à la branche `master` est automatiquement déployé [en production](https://tps.apientreprise.fr/)
+- Tout nouveau commit ajouté à la branche `dev` est automatiquement déployé [en intégration](https://dev.demarches-simplifiees.fr/)
+- Tout nouveau commit ajouté à la branche `master` est automatiquement déployé [en production](https://www.demarches-simplifiees.fr/)
 
 ## Régénérer les binstubs
 

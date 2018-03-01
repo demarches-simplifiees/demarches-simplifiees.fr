@@ -3,6 +3,6 @@ class WelcomeMailer < ApplicationMailer
     @user = user
 
     mail(to: user.email,
-         subject: "Création de votre compte TPS")
+         subject: "Création de votre compte demarches-simplifiees.fr")
   end
 end

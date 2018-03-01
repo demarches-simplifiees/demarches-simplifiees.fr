@@ -34,7 +34,7 @@ fr:
       first: Premier
       truncate: '&hellip;'
   apipie:
-    api_documentation: "Documentation de l'API Téléprocédures Simplifiées"
+    api_documentation: "Documentation de l'API demarches-simplifiees.fr"
 
   number:
     currency:

@@ -3,6 +3,8 @@
 @import "constants";
 @import "mixins";
 
+$landing-breakpoint: 1040px;
+
 // FIXME: Rename when the header is generalized
 .new-header {
   background-color: #FFFFFF;
@@ -22,6 +24,14 @@
 .header-logo {
   display: inline-block;
   margin-right: 4 * $default-spacer;
+
+  img {
+    height: 36px;
+
+    @media (max-width: $landing-breakpoint) {
+      height: 18px;
+    }
+  }
 }
 
 .header-tabs {

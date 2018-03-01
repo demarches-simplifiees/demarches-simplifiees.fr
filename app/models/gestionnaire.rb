@@ -100,6 +100,7 @@ class Gestionnaire < ActiveRecord::Base
       messagerie = follow.messagerie_seen_at.present? &&
         dossier.commentaires
           .where.not(email: 'contact@tps.apientreprise.fr')
+          .where.not(email: 'contact@demarches-simplifiees.fr')
           .updated_since?(follow.messagerie_seen_at).any?
 
       annotations_hash(demande, annotations_privees, avis_notif, messagerie)
@@ -199,6 +200,7 @@ class Gestionnaire < ActiveRecord::Base
       .joins(:commentaires)
       .where('commentaires.updated_at > follows.messagerie_seen_at')
       .where.not(commentaires: { email: 'contact@tps.apientreprise.fr' })
+      .where.not(commentaires: { email: 'contact@demarches-simplifiees.fr' })
 
     [
       updated_demandes,
