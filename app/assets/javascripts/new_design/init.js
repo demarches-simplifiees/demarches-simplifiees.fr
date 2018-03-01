@@ -1,2 +1,2 @@
 // namespace
-window.TPS = window.TPS || {};
+window.DS = window.DS || {};
