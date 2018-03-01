@@ -30,7 +30,7 @@ class NotificationMailer < ApplicationMailer
   end
 
   def new_answer(dossier)
-    send_mail dossier, "Nouveau message pour votre dossier TPS nº #{dossier.id}"
+    send_mail dossier, "Nouveau message pour votre dossier demarches-simplifiees.fr nº #{dossier.id}"
   end
 
   private

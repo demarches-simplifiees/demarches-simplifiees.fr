@@ -15,9 +15,9 @@
 
     .stat-card.stat-card-half.pull-left
       %ul.segmented-control.pull-right
-        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.monthly-procedures-chart');" }
+        %li.segmented-control-item.segmented-control-item-active{ :onclick => "DS.toggleChart(event, '.monthly-procedures-chart');" }
           Par mois
-        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.cumulative-procedures-chart');" }
+        %li.segmented-control-item{ :onclick => "DS.toggleChart(event, '.cumulative-procedures-chart');" }
           Cumul
       %span.stat-card-title.pull-left Procédures dématérialisées
       .clearfix
@@ -30,9 +30,9 @@
 
     .stat-card.stat-card-half.pull-left
       %ul.segmented-control.pull-right
-        %li.segmented-control-item.segmented-control-item-active{ :onclick => "TPS.toggleChart(event, '.monthly-dossiers-chart');" }
+        %li.segmented-control-item.segmented-control-item-active{ :onclick => "DS.toggleChart(event, '.monthly-dossiers-chart');" }
           Par mois
-        %li.segmented-control-item{ :onclick => "TPS.toggleChart(event, '.cumulative-dossiers-chart');" }
+        %li.segmented-control-item{ :onclick => "DS.toggleChart(event, '.cumulative-dossiers-chart');" }
           Cumul
       %span.stat-card-title.pull-left Dossiers déposés
       .clearfix

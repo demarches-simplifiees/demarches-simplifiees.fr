@@ -5,7 +5,7 @@
 
     .flex.align-center
       = link_to root_path, class: "header-logo" do
-        %img{ src: image_url("header/logo-tps.svg") }
+        %img{ src: image_url("header/logo-ds.svg") }
 
       - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
         - current_url = request.path_info
@@ -28,7 +28,7 @@
                 %br
                 – par téléphone : 09 72 62 57 12
                 %br
-                – par email : <a href="mailto:contact@tps.apientreprise.fr">contact@tps.apientreprise.fr</a>
+                – par email : <a href="mailto:contact@demarches-simplifiees.fr">contact@demarches-simplifiees.fr</a>
 
       - if nav_bar_profile == :user
         %ul.header-tabs
@@ -47,7 +47,7 @@
       - if gestionnaire_signed_in? || user_signed_in?
         %li
           .header-menu-opener
-            = image_tag "icons/account-circle.svg", onclick: "javascript:TPS.toggleHeaderMenu(event);", title: "Mon compte"
+            = image_tag "icons/account-circle.svg", onclick: "javascript:DS.toggleHeaderMenu(event);", title: "Mon compte"
             %ul.header-menu
               %li
                 .menu-item{ title: current_email }

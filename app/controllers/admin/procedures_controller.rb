@@ -69,7 +69,7 @@ class Admin::ProceduresController < AdminController
     # so we're not certain the procedure has a procedure_path anymore
     procedure.procedure_path.try(:destroy)
 
-    flash.notice = "Procédure supprimée, en cas d'erreur contactez nous : contact@tps.apientreprise.fr"
+    flash.notice = "Procédure supprimée, en cas d'erreur contactez nous : contact@demarches-simplifiees.fr"
     redirect_to admin_procedures_draft_path
   end
 

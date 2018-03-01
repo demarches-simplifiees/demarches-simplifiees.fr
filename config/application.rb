@@ -28,9 +28,9 @@ module TPS
     config.assets.precompile += %w(.woff)
 
     if Rails.env.production?
-      URL = "https://tps.apientreprise.fr/"
+      URL = "https://www.demarches-simplifiees.fr/"
     elsif Rails.env.staging?
-      URL = "https://tps-dev.apientreprise.fr/"
+      URL = "https://dev.demarches-simplifiees.fr/"
     else
       URL = "http://localhost:3000/"
     end

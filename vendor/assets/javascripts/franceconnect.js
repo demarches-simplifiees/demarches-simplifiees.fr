@@ -12,7 +12,7 @@ var franceConnectKit = {};
 
         fconnect.currentHost = 'fcp.integ01.dev-franceconnect.fr';
 
-        if (window.location.hostname == 'tps.apientreprise.fr')
+        if (window.location.hostname == 'www.demarches-simplifiees.fr')
             fconnect.currentHost = 'app.franceconnect.gouv.fr';
 
         var fconnectProfile = document.getElementById('fconnect-profile');
