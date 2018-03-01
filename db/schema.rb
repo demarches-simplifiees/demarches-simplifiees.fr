@@ -453,6 +453,7 @@ ActiveRecord::Schema.define(version: 2018_04_04_113409) do
     t.datetime "archived_at"
     t.datetime "whitelisted_at"
     t.boolean "ask_birthday", default: false, null: false
+    t.string "web_hook_url"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
   end
 
