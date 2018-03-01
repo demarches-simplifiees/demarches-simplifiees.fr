@@ -1,3 +1,3 @@
-TPS.toggleCondidentielExplanation = function(event) {
+DS.toggleCondidentielExplanation = function(event) {
   $(".confidentiel-explanation").toggle();
 }

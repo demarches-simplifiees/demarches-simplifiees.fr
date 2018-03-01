@@ -1,1 +1,1 @@
-LOGO_NAME = 'logos/logo-tps.png'
+LOGO_NAME = 'logos/logo-ds.png'

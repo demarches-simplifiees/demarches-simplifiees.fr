@@ -16,7 +16,7 @@
       - else
         .confidentiel-wrapper
           = f.label :confidentiel, 'Cet avis est'
-          = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]], {}, onchange: "javascript:TPS.toggleCondidentielExplanation(event);"
+          = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]], {}, onchange: "javascript:DS.toggleCondidentielExplanation(event);"
           .confidentiel-explanation
             Il ne sera pas affiché aux autres experts consultés mais sera visible par les accompagnateurs
         .send-wrapper

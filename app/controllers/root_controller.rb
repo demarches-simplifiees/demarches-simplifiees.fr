@@ -12,11 +12,15 @@ class RootController < ApplicationController
       return redirect_to manager_root_path
     end
 
+    if Date.today < Date.new(2018, 03, 31)
+      flash.now.notice = ["Téléprocédures Simplifiées change de nom et devient demarches-simplifiees.fr, <a href='https://tps.gitbooks.io/tps-documentation/content/changement-de-nom.html' target='_blank'>en savoir plus</a>."]
+    end
+
     render 'landing'
   end
 
   def patron
-    description = 'a not so long description'
+    description = 'aller voir le super site : https://demarches-simplifiees.fr'
 
     all_champs = TypeDeChamp.type_champs
       .map { |name, _| TypeDeChamp.new(type_champ: name, private: false, libelle: name, description: description, mandatory: true) }
@@ -41,8 +45,7 @@ class RootController < ApplicationController
     type_champ_values = {
       'date': '2016-07-26',
       'datetime': '26/07/2016 07:35',
-      'textarea': 'Une description de mon projet',
-      'explication': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In erat mauris, faucibus quis pharetra sit amet, pretium ac libero. Etiam vehicula eleifend bibendum. Morbi gravida metus ut sapien condimentum sodales mollis augue sodales. Vestibulum quis quam at sem placerat aliquet',
+      'textarea': 'Une description de mon projet'
     }
 
     type_champ_values.each do |(type_champ, value)|
