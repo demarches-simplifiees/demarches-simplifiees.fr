@@ -6,47 +6,70 @@
       .hero-wrapper
         .hero-text
           %p.hero-tagline
-            %em.hero-tagline-em Dématérialisez
-            %br
-            vos procédures administratives en quelques minutes
-          = link_to "Demander une démo",
-            "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo demarches-simplifiees.fr",
-            class: "hero-button",
-            target: "_blank",
-            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
+            %em.hero-tagline-em Dématérialiser et simplifier
+            les démarches administratives
 
         .hero-illustration
           %img{ :src => image_url("landing/hero/dematerialiser.svg") }
 
   .landing-panel.features-panel
     .container
-      %h2.landing-panel-title.features-panel-title Un outil dédié aux organismes publics
-
       %ul.features
         %li.feature
-          %img.feature-image{ :src => image_url("landing/features/creer.svg") }
+          %img.feature-image{ :src => image_url("landing/features/messagerie.svg") }
           %p.feature-text
-            %em.feature-text-em Créer
+            %em.feature-text-em Dialogue
             %br
-            des procédures en ligne
-            %br
-            en toute simplicité
-        %li.feature
-          %img.feature-image{ :src => image_url("landing/features/gerer.svg") }
-          %p.feature-text
-            %em.feature-text-em Gérer
-            %br
-            les demandes des usagers
-            %br
-            sur la plateforme
+            entre usagers et services plus simple
+
         %li.feature
           %img.feature-image{ :src => image_url("landing/features/collaborer.svg") }
           %p.feature-text
-            %em.feature-text-em Collaborer
+            %em.feature-text-em Collaboration
             %br
-            pour instruire les demandes
+            pour un traitement des dossiers plus fluide
+
+        %li.feature
+          %img.feature-image{ :src => image_url("landing/features/gerer.svg") }
+          %p.feature-text
+            %em.feature-text-em Intégration
             %br
-            à plusieurs
+            à l'ensemble des services l'État plateforme
+
+  .landing-panel
+    .container
+      .role-panel-wrapper.role-administrations-panel
+        .role-panel-30.role-administrations-image
+          %img.role-image{ :src => image_url("landing/roles/administrations.svg") }
+
+        .role-panel-70
+          %h1.role-panel-title Administrations
+          %p.role-panel-explanation Créez des formulaires en ligne en quelques minutes et instruisez les demandes des usagers sur une plateforme dédiée
+
+          = link_to "Demander un compte",
+            "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo demarches-simplifiees.fr",
+            class: "role-panel-button-primary",
+            target: "_blank",
+            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
+
+          = link_to "Voir la documentation",
+            "https://tps.gitbooks.io/tps-documentation/content/",
+            target: "_blank",
+            class: "role-panel-button-secondary"
+
+  .landing-panel.admins-panel
+    .container
+      .role-panel-wrapper
+        .role-panel-30.role-usagers-image
+          %img.role-image{ :src => image_url("landing/roles/usagers.svg") }
+
+        .role-panel-70
+          %h1.role-panel-title Usagers
+          %p.role-panel-explanation Déposez des demandes en toute simplicité et retrouvez vos dossiers en ligne
+
+          = link_to "Se connecter",
+            new_user_session_path,
+            class: "role-panel-button-primary"
 
   .landing-panel
     .container
@@ -57,7 +80,7 @@
           %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg") }
           .quote-content-wrapper
             %p.quote-content
-              demarches-simplifiees.fr est un outil de dématérialisation adapté au dépôt de dossiers de demande d’inscription au registre des transporteurs routiers en Ile-de-France. Les échanges avec les usagers sont facilités, ce qui permet de réduire les délais d’instructions et de gagner en efficacité.
+              Les échanges avec les usagers sont facilités, ce qui permet de réduire les délais d’instructions et de gagner en efficacité.
 
             %p.quote-author
               %span.quote-author-name Elodie Le Rhun
@@ -68,12 +91,37 @@
           %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg") }
           .quote-content-wrapper
             %p.quote-content
-              demarches-simplifiees.fr c’est surtout l’assurance d’un dialogue en toute fluidité et en toute transparence entre les porteurs de projet et l’administration. Un service qui garantit une économie de temps et beaucoup moins de manipulations des dossiers.
+              Un service qui garantit une économie de temps et beaucoup moins de manipulations des dossiers.
 
             %p.quote-author
               %span.quote-author-name Nadja Briki
               %br
               Déléguée de la Préfète du Pas-de-Calais
+
+      %ul.quotes
+        %li.quote
+          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg") }
+          .quote-content-wrapper
+            %p.quote-content
+              Parfait, cela fonctionne très bien ! Merci encore pour votre réactivité.
+
+            %p.quote-author
+              %span.quote-author-name Max A.
+              %br
+              à notre service support
+
+        %li.quote
+          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg") }
+          .quote-content-wrapper
+            %p.quote-content
+              ★★★★★
+              %br
+              Eh les cocos, il y a la télé-procédure
+
+            %p.quote-author
+              %span.quote-author-name Hisham M.
+              %br
+              sur le site de la DRIEA
 
   - cache "numbers-panel", :expires_in => 3.hours do
     .landing-panel.numbers-panel
@@ -82,11 +130,11 @@
         %ul.numbers
           %li.number
             .number-value
-              = number_with_delimiter(Procedure.publiees_ou_archivees.count, :locale => :fr)
+              = number_with_delimiter(Procedure.includes(:administrateur).publiees_ou_archivees.map(&:administrateur).uniq.count, :locale => :fr)
             .number-label<
-              procédures
+              administrations
               %br<>
-              dématérialisées
+              partenaires
           %li.number
             .number-value
               = number_with_delimiter(Dossier.where.not(:state => :brouillon).count, :locale => :fr)
@@ -104,7 +152,7 @@
 
   .landing-panel.users-panel
     .container
-      %h2.landing-panel-title Ils nous font confiance
+      %h2.landing-panel-title Ils utilisent déjà demarches-simplifiees.fr
 
       %ul.users
         %li.user
@@ -123,15 +171,31 @@
           %a{ :href => "http://www.driea.ile-de-france.developpement-durable.gouv.fr/", :target => "_blank " }
             %img.user-image{ :src => image_url("landing/users/driea-idf.jpg") }
 
+      %ul.users
+        %li.user
+          %a{ :href => "https://www.debatpublic.fr/", :target => "_blank " }
+            %img.user-image{ :src => image_url("landing/users/cndp.jpg") }
+        %li.user
+          %a{ :href => "https://www.iledefrance.ars.sante.fr/", :target => "_blank " }
+            %img.user-image{ :src => image_url("landing/users/ars-idf.jpg") }
+        %li.user
+          %a{ :href => "http://www.franceagrimer.fr/", :target => "_blank " }
+            %img.user-image{ :src => image_url("landing/users/france-agrimer.jpg") }
+        %li.user
+          %a{ :href => "http://www.rhone.gouv.fr/", :target => "_blank " }
+            %img.user-image{ :src => image_url("landing/users/prefecture-rhone.jpg") }
+        %li.user
+          %a{ :href => "http://www.lillemetropole.fr/", :target => "_blank " }
+            %img.user-image{ :src => image_url("landing/users/mel.jpg") }
+
   .landing-panel.cta-panel
     .container
       .cta-panel-wrapper
         %div
-          %h1.cta-panel-title Commencez à dématérialiser vos procédures
-          %p.cta-panel-explanation Nous vous accompagnons dans la prise en main de l’outil
+          %h1.cta-panel-title Une question, un problème ?
+          %p.cta-panel-explanation Nous équipe est disponible pour vous renseigner et vous aider
         %div
-          = link_to "Demander une démo",
-            "mailto:#{t("dynamics.contact_email")}?subject=Demande de démo demarches-simplifiees.fr",
-            class: "cta-panel-button",
-            target: "_blank",
-            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
+          = link_to "Contactez-nous",
+            "mailto:#{t("dynamics.contact_email")}?subject=Question à propos de demarches-simplifiees.fr",
+            class: "cta-panel-button-white",
+            target: "_blank"
