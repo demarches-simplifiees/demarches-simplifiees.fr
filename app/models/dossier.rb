@@ -108,6 +108,10 @@ class Dossier < ActiveRecord::Base
     champs.joins(', types_de_champ').where("champs.type_de_champ_id = types_de_champ.id AND types_de_champ.procedure_id = #{procedure.id}").order('order_place')
   end
 
+  def ordered_champs_v2
+    champs.includes(:type_de_champ).order('types_de_champ.order_place')
+  end
+
   def ordered_champs_private
     # TODO: use the line below when the procedure preview does not leak champ with dossier_id == 0
     # champs_private.includes(:type_de_champ).order('types_de_champ.order_place')
@@ -286,6 +290,12 @@ class Dossier < ActiveRecord::Base
   def build_attestation
     if procedure.attestation_template.present? && procedure.attestation_template.activated?
       procedure.attestation_template.attestation_for(self)
+    end
+  end
+
+  def mandataire_social!(france_connect_information)
+    if etablissement.mandataire_social?(france_connect_information)
+      update_column(:mandataire_social, true)
     end
   end
 

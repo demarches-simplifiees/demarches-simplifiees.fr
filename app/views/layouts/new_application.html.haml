@@ -17,7 +17,7 @@
     = stylesheet_link_tag "new_design/print", media: "print", "data-turbolinks-track": true
 
   %body
-    .page-wrapper{ class: content_for?(:display_footer) ? 'with-footer' : 'nil' }
+    .page-wrapper
       = render partial: "layouts/support_navigator_banner"
       = render partial: "layouts/ie_lt_10"
       - if Rails.env == "staging"

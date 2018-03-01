@@ -110,5 +110,33 @@ FactoryBot.define do
         procedure.archived_at = Time.now
       end
     end
+
+    trait :with_all_champs_mandatory do
+      after(:build) do |procedure, _evaluator|
+        tdcs = []
+        tdcs << create(:type_de_champ, type_champ: 'text', mandatory: true, libelle: 'text')
+        tdcs << create(:type_de_champ, type_champ: 'textarea', mandatory: true, libelle: 'textarea')
+        tdcs << create(:type_de_champ, type_champ: 'date', mandatory: true, libelle: 'date')
+        tdcs << create(:type_de_champ, type_champ: 'datetime', mandatory: true, libelle: 'datetime')
+        tdcs << create(:type_de_champ, type_champ: 'number', mandatory: true, libelle: 'number')
+        tdcs << create(:type_de_champ, type_champ: 'checkbox', mandatory: true, libelle: 'checkbox')
+        tdcs << create(:type_de_champ, type_champ: 'civilite', mandatory: true, libelle: 'civilite')
+        tdcs << create(:type_de_champ, type_champ: 'email', mandatory: true, libelle: 'email')
+        tdcs << create(:type_de_champ, type_champ: 'phone', mandatory: true, libelle: 'phone')
+        tdcs << create(:type_de_champ, type_champ: 'yes_no', mandatory: true, libelle: 'yes_no')
+        tdcs << create(:type_de_champ, :type_drop_down_list, mandatory: true, libelle: 'simple_drop_down_list')
+        tdcs << create(:type_de_champ, :type_drop_down_list, type_champ: 'multiple_drop_down_list', mandatory: true, libelle: 'multiple_drop_down_list')
+        tdcs << create(:type_de_champ, type_champ: 'pays', mandatory: true, libelle: 'pays')
+        tdcs << create(:type_de_champ, type_champ: 'regions', mandatory: true, libelle: 'regions')
+        tdcs << create(:type_de_champ, type_champ: 'departements', mandatory: true, libelle: 'departements')
+        tdcs << create(:type_de_champ, type_champ: 'engagement', mandatory: true, libelle: 'engagement')
+        tdcs << create(:type_de_champ, type_champ: 'header_section', mandatory: true, libelle: 'header_section')
+        tdcs << create(:type_de_champ, type_champ: 'explication', mandatory: true, libelle: 'explication')
+        tdcs << create(:type_de_champ, :type_dossier_link, mandatory: true, libelle: 'dossier_link')
+        tdcs << create(:type_de_champ, type_champ: 'piece_justificative', mandatory: true, libelle: 'piece_justificative')
+
+        procedure.types_de_champ = tdcs
+      end
+    end
   end
 end

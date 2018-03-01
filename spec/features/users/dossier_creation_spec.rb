@@ -28,13 +28,9 @@ feature 'As a User I wanna create a dossier' do
           expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id))
           click_button('Etape suivante')
 
-          expect(page).to have_current_path(users_dossier_description_path(procedure_for_individual.dossiers.last.id))
-          fill_in "champs_#{procedure_for_individual.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
-          find(:css, '[name=submit_action]').set('nouveaux')
-          click_button('suivant')
+          expect(page).to have_current_path(modifier_dossier_path(procedure_for_individual.dossiers.last))
 
           expect(user.dossiers.first.individual.birthdate).to eq("1987-10-14")
-          expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_for_individual.dossiers.last.id.to_s))
         end
 
         scenario "with a basic text input field for birthdate (type='date' unsupported)" do
@@ -44,12 +40,9 @@ feature 'As a User I wanna create a dossier' do
           expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id.to_s))
           click_button('Etape suivante')
 
-          fill_in "champs_#{procedure_for_individual.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
-          find(:css, '[name=submit_action]').set('nouveaux')
-          page.find_by_id('suivant').click
+          expect(page).to have_current_path(modifier_dossier_path(procedure_for_individual.dossiers.last))
 
           expect(user.dossiers.first.individual.birthdate).to eq("1987-10-14")
-          expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_for_individual.dossiers.last.id.to_s))
         end
       end
 
@@ -59,15 +52,12 @@ feature 'As a User I wanna create a dossier' do
         scenario "no need for birthday" do
           click_button('Continuer')
 
-          expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id.to_s))
+          expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last))
           click_button('Etape suivante')
 
-          fill_in "champs_#{procedure_for_individual.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
-          find(:css, '[name=submit_action]').set('nouveaux')
-          click_button('suivant')
+          expect(page).to have_current_path(modifier_dossier_path(procedure_for_individual.dossiers.last))
 
           expect(user.dossiers.first.individual.birthdate).to eq(nil)
-          expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_for_individual.dossiers.last.id.to_s))
         end
       end
     end
@@ -92,9 +82,7 @@ feature 'As a User I wanna create a dossier' do
       page.find_by_id('etape_suivante').click
       expect(page).to have_current_path(users_dossier_carte_path(procedure_with_siret.dossiers.last.id.to_s))
       page.find_by_id('etape_suivante').click
-      fill_in "champs_#{procedure_with_siret.dossiers.last.champs.first.id}", with: 'contenu du champ 1'
-      page.find_by_id('suivant').click
-      expect(page).to have_current_path(users_dossier_recapitulatif_path(procedure_with_siret.dossiers.last.id.to_s))
+      expect(page).to have_current_path(modifier_dossier_path(procedure_with_siret.dossiers.last))
     end
   end
 end

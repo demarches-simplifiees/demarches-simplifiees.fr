@@ -11,3 +11,10 @@
   font-weight: bold;
   font-style: normal;
 }
+
+@font-face {
+  font-family: "Muli";
+  src: asset-url("Muli-Italic.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+}
