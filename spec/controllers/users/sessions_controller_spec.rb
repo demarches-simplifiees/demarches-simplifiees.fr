@@ -158,7 +158,7 @@ describe Users::SessionsController, type: :controller do
       end
 
       it 'signs user out from france connect' do
-        user.update_attributes(loged_in_with_france_connect: 'particulier')
+        user.update(loged_in_with_france_connect: 'particulier')
         sign_in user
         delete :destroy
         expect(@response.headers["Location"]).to eq(FRANCE_CONNECT[:particulier][:logout_endpoint])
