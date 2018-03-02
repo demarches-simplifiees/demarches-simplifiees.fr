@@ -22,7 +22,7 @@ class Users::CarteController < UsersController
       ModuleApiCartoService.save_cadastre! dossier, params[:json_latlngs]
     end
 
-    dossier.update_attributes(json_latlngs: params[:json_latlngs])
+    dossier.update(json_latlngs: params[:json_latlngs])
 
     redirect_to modifier_dossier_path(dossier)
   end

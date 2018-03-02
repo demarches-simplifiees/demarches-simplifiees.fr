@@ -145,7 +145,7 @@ describe InvitesController, type: :controller do
 
       context 'when user has access to dossier' do
         before do
-          dossier.update_attributes(user: signed_in_profile)
+          dossier.update(user: signed_in_profile)
         end
 
         it { expect { subject }.to change(InviteUser, :count).by(1) }
