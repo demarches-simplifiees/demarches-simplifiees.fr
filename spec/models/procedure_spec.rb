@@ -352,16 +352,16 @@ describe Procedure do
           procedure.types_de_champ_private << tcp_2 << tcp_1
 
           dossier.build_default_champs
-          dossier.champs.find_by(type_de_champ: tc_1).update_attributes(value: "value 1")
-          dossier.champs.find_by(type_de_champ: tc_2).update_attributes(value: "value 2")
-          dossier.champs_private.find_by(type_de_champ: tcp_1).update_attributes(value: "private value 1")
-          dossier.champs_private.find_by(type_de_champ: tcp_2).update_attributes(value: "private value 2")
+          dossier.champs.find_by(type_de_champ: tc_1).update(value: "value 1")
+          dossier.champs.find_by(type_de_champ: tc_2).update(value: "value 2")
+          dossier.champs_private.find_by(type_de_champ: tcp_1).update(value: "private value 1")
+          dossier.champs_private.find_by(type_de_champ: tcp_2).update(value: "private value 2")
 
           dossier2.build_default_champs
-          dossier2.champs.find_by(type_de_champ: tc_1).update_attributes(value: "value 1")
-          dossier2.champs.find_by(type_de_champ: tc_2).update_attributes(value: "value 2")
-          dossier2.champs_private.find_by(type_de_champ: tcp_1).update_attributes(value: "private value 1")
-          dossier2.champs_private.find_by(type_de_champ: tcp_2).update_attributes(value: "private value 2")
+          dossier2.champs.find_by(type_de_champ: tc_1).update(value: "value 1")
+          dossier2.champs.find_by(type_de_champ: tc_2).update(value: "value 2")
+          dossier2.champs_private.find_by(type_de_champ: tcp_1).update(value: "private value 1")
+          dossier2.champs_private.find_by(type_de_champ: tcp_2).update(value: "private value 2")
         end
 
         it { expect(subject[:headers].index(tc_1.libelle.parameterize.underscore.to_sym)).to be < subject[:headers].index(tc_2.libelle.parameterize.underscore.to_sym) }
