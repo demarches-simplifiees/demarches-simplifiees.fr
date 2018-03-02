@@ -26,7 +26,7 @@ class Administrateur < ActiveRecord::Base
   end
 
   def renew_api_token
-    update_attributes(api_token: generate_api_token)
+    update(api_token: generate_api_token)
   end
 
   def registration_state

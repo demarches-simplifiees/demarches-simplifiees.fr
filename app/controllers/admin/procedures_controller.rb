@@ -105,7 +105,7 @@ class Admin::ProceduresController < AdminController
   def update
     @procedure = current_administrateur.procedures.find(params[:id])
 
-    if !@procedure.update_attributes(procedure_params)
+    if !@procedure.update(procedure_params)
       flash.now.alert = @procedure.errors.full_messages
       return render 'edit'
     end

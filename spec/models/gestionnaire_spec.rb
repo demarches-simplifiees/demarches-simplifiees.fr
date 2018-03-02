@@ -116,7 +116,7 @@ describe Gestionnaire, type: :model do
       gestionnaire = create(:gestionnaire)
       user = create(:user, email: gestionnaire.email)
 
-      gestionnaire.update_attributes(email: 'whoami@plop.com', password: 'super secret')
+      gestionnaire.update(email: 'whoami@plop.com', password: 'super secret')
 
       user.reload
       expect(user.email).to eq('whoami@plop.com')
@@ -127,7 +127,7 @@ describe Gestionnaire, type: :model do
       gestionnaire = create(:gestionnaire)
       admin = create(:administrateur, email: gestionnaire.email)
 
-      gestionnaire.update_attributes(email: 'whoami@plop.com', password: 'super secret')
+      gestionnaire.update(email: 'whoami@plop.com', password: 'super secret')
 
       admin.reload
       expect(admin.email).to eq('whoami@plop.com')
