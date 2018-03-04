@@ -99,7 +99,7 @@ module NewUser
     end
 
     def ensure_ownership!
-      if dossier.user != current_user
+      if dossier.user_id != current_user.id
         flash[:alert] = "Vous n'avez pas accès à ce dossier"
         redirect_to root_path
       end
