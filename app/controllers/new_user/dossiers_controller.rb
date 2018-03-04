@@ -95,7 +95,7 @@ module NewUser
     end
 
     def dossier_with_champs
-      @dossier_with_champs ||= current_user.dossiers.includes(champs: :type_de_champ).find(params[:id])
+      @dossier_with_champs ||= current_user.dossiers.with_ordered_champs.find(params[:id])
     end
 
     def ensure_ownership!

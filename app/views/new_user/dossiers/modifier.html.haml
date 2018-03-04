@@ -7,7 +7,7 @@
     %p.thanks Les champs avec une asterisque (*) sont obligatoires.
 
     = form_for @dossier, html: { class: 'form', multipart: true } do |f|
-      = f.fields_for :champs, @dossier.ordered_champs_v2 do |champ_form|
+      = f.fields_for :champs, @dossier.champs do |champ_form|
         - champ = champ_form.object
         = render partial: "shared/dossiers/editable_champs/editable_champ",
           locals: { champ: champ, form: champ_form }
