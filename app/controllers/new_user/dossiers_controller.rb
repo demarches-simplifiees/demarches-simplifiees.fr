@@ -69,11 +69,13 @@ module NewUser
         render :modifier
       else
         if @dossier.brouillon?
+          @dossier.en_construction!
+          NotificationMailer.send_notification(@dossier, @dossier.procedure.initiated_mail_template).deliver_now!
           redirect_to merci_dossier_path(@dossier)
         else
+          @dossier.en_construction!
           redirect_to users_dossier_recapitulatif_path(@dossier)
         end
-        @dossier.en_construction!
       end
     end
 

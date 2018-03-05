@@ -167,6 +167,20 @@ describe NewUser::DossiersController, type: :controller do
       expect(dossier.reload.state).to eq('en_construction')
     end
 
+    it 'sends an email only on the first #update' do
+      delivery = double
+      expect(delivery).to receive(:deliver_now!).with(no_args)
+
+      expect(NotificationMailer).to receive(:send_notification)
+        .and_return(delivery)
+
+      subject
+
+      expect(NotificationMailer).not_to receive(:send_notification)
+
+      subject
+    end
+
     context 'when the update fails' do
       before do
         expect_any_instance_of(Dossier).to receive(:update).and_return(false)
@@ -178,6 +192,12 @@ describe NewUser::DossiersController, type: :controller do
 
       it { expect(response).to render_template(:modifier) }
       it { expect(flash.alert).to eq(['nop']) }
+
+      it 'does not send an email' do
+        expect(NotificationMailer).not_to receive(:send_notification)
+
+        subject
+      end
     end
 
     context 'when the pj service returns an error' do
