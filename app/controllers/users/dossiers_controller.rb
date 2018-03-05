@@ -106,13 +106,16 @@ class Users::DossiersController < UsersController
     update_current_user_siret!(siret)
 
     etablissement_attributes = SIRETService.fetch(siret, @facade.dossier)
+    Rails.logger.info("etablissement_attributes for siret: #{siret}, present?: #{etablissement_attributes.present?}")
 
     if etablissement_attributes.present?
       etablissement_attributes = ActionController::Parameters.new(etablissement_attributes).permit!
       etablissement = @facade.dossier.create_etablissement(etablissement_attributes)
       if etablissement.save
+        Rails.logger.info("etablissement saved, siret: #{siret}, id: #{etablissement.id}")
         @facade.dossier.mandataire_social!(current_user.france_connect_information)
       else
+        Rails.logger.info("etablissement not saved, siret: #{siret}, errors: #{etablissement.errors.full_messages}")
         return errors_valid_siret
       end
     else
