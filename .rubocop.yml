@@ -769,19 +769,19 @@ RSpec/Focused:
   Enabled: true
 
 Security/Eval:
-  Enabled: false
+  Enabled: true
 
 Security/JSONLoad:
-  Enabled: false
+  Enabled: true
 
 Security/MarshalLoad:
-  Enabled: false
+  Enabled: true
 
 Security/Open:
   Enabled: true
 
 Security/YAMLLoad:
-  Enabled: false
+  Enabled: true
 
 Style/Alias:
   Enabled: false
