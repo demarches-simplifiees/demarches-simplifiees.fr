@@ -156,7 +156,7 @@ class Users::DossiersController < UsersController
       flash.alert = individual_errors
       redirect_to users_dossier_path(id: @facade.dossier.id)
     else
-      if !Dossier.find(@facade.dossier.id).update update_params_with_formatted_birthdate
+      if !Dossier.find(@facade.dossier.id).update_attributes update_params_with_formatted_birthdate
         flash.alert = @facade.dossier.errors.full_messages
 
         return redirect_to users_dossier_path(id: @facade.dossier.id)
@@ -259,7 +259,7 @@ class Users::DossiersController < UsersController
   end
 
   def update_current_user_siret! siret
-    current_user.update(siret: siret)
+    current_user.update_attributes(siret: siret)
   end
 
   def facade id = params[:id]

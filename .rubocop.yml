@@ -24,9 +24,6 @@ Layout/AlignParameters:
   Enabled: true
   EnforcedStyle: with_fixed_indentation
 
-Layout/BlockAlignment:
-  Enabled: false
-
 Layout/BlockEndNewline:
   Enabled: true
 
@@ -39,12 +36,6 @@ Layout/ClosingParenthesisIndentation:
 
 Layout/CommentIndentation:
   Enabled: true
-
-Layout/ConditionPosition:
-  Enabled: false
-
-Layout/DefEndAlignment:
-  Enabled: false
 
 Layout/DotPosition:
   Enabled: true
@@ -81,10 +72,6 @@ Layout/EmptyLinesAroundMethodBody:
 
 Layout/EmptyLinesAroundModuleBody:
   Enabled: true
-
-Layout/EndAlignment:
-  Enabled: true
-  EnforcedStyleAlignWith: variable
 
 Layout/EndOfLine:
   Enabled: true
@@ -261,10 +248,19 @@ Lint/AmbiguousRegexpLiteral:
 Lint/AssignmentInCondition:
   Enabled: false
 
+Lint/BlockAlignment:
+  Enabled: false
+
 Lint/CircularArgumentReference:
   Enabled: false
 
+Lint/ConditionPosition:
+  Enabled: false
+
 Lint/Debugger:
+  Enabled: false
+
+Lint/DefEndAlignment:
   Enabled: false
 
 Lint/DeprecatedClassMethods:
@@ -296,6 +292,10 @@ Lint/EmptyInterpolation:
 
 Lint/EmptyWhen:
   Enabled: false
+
+Lint/EndAlignment:
+  Enabled: true
+  EnforcedStyleAlignWith: variable
 
 Lint/EndInMethod:
   Enabled: false
@@ -480,16 +480,10 @@ Naming/FileName:
 Naming/HeredocDelimiterNaming:
   Enabled: false
 
-Naming/MemoizedInstanceVariableName:
-  Enabled: false
-
 Naming/MethodName:
   Enabled: false
 
 Naming/PredicateName:
-  Enabled: false
-
-Naming/UncommunicativeMethodParamName:
   Enabled: false
 
 Naming/VariableName:
@@ -527,6 +521,9 @@ Performance/FixedSize:
 
 Performance/FlatMap:
   Enabled: true
+
+Performance/HashEachMethods:
+  Enabled: false
 
 Performance/LstripRstrip:
   Enabled: true
@@ -1083,10 +1080,7 @@ Style/TernaryParentheses:
 Style/TrailingCommaInArguments:
   Enabled: false
 
-Style/TrailingCommaInArrayLiteral:
-  Enabled: false
-
-Style/TrailingCommaInHashLiteral:
+Style/TrailingCommaInLiteral:
   Enabled: false
 
 Style/TrailingUnderscoreVariable:

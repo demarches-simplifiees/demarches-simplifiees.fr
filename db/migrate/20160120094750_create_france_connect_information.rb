@@ -46,7 +46,7 @@ class CreateFranceConnectInformation < ActiveRecord::Migration
     add_column :users, :france_connect_particulier_id, :string
 
     FranceConnectInformation.all.each do |fci|
-      User.find(fci.user_id).update({
+      User.find(fci.user_id).update_attributes({
         gender: fci.gender,
         given_name: fci.given_name,
         family_name: fci.family_name,

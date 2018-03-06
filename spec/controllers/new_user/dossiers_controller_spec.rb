@@ -122,7 +122,7 @@ describe NewUser::DossiersController, type: :controller do
       end
 
       context 'when the dossier is for an personne physique' do
-        before { dossier.procedure.update(for_individual: true) }
+        before { dossier.procedure.update_attributes(for_individual: true) }
 
         it { is_expected.to redirect_to(identite_dossier_path(dossier)) }
       end
@@ -215,7 +215,7 @@ describe NewUser::DossiersController, type: :controller do
       let(:value) { nil }
 
       before do
-        first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
+        first_champ.type_de_champ.update_attributes(mandatory: true, libelle: 'l')
         allow(PiecesJustificativesService).to receive(:missing_pj_error_messages).and_return(['pj'])
 
         subject

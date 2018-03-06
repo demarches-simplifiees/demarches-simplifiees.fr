@@ -8,7 +8,7 @@ class Admin::AttestationTemplatesController < AdminController
   def update
     attestation_template = @procedure.attestation_template
 
-    if attestation_template.update(activated_attestation_params)
+    if attestation_template.update_attributes(activated_attestation_params)
       flash.notice = "L'attestation a bien été modifiée"
     else
       flash.alert = attestation_template.errors.full_messages.join('<br>')
