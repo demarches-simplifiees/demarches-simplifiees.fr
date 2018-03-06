@@ -1,9 +1,9 @@
 class InitiatedAllReceivedMailForProcedure < ActiveRecord::Migration
-  class Procedure < ActiveRecord::Base
+  class Procedure < ApplicationRecord
     has_one :mail_received
   end
 
-  class MailTemplate < ActiveRecord::Base
+  class MailTemplate < ApplicationRecord
   end
 
   class ::MailReceived < MailTemplate

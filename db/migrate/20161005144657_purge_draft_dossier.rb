@@ -1,5 +1,5 @@
 class PurgeDraftDossier < ActiveRecord::Migration
-  class Dossier < ActiveRecord::Base
+  class Dossier < ApplicationRecord
     BROUILLON = %w(draft)
 
     def brouillon?
@@ -7,11 +7,11 @@ class PurgeDraftDossier < ActiveRecord::Migration
     end
   end
 
-  class Commentaire < ActiveRecord::Base
+  class Commentaire < ApplicationRecord
     belongs_to :dossier
   end
 
-  class Cerfa < ActiveRecord::Base
+  class Cerfa < ApplicationRecord
     belongs_to :dossier
     belongs_to :user
   end

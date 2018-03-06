@@ -376,7 +376,7 @@ shared_examples 'description_controller_spec' do
 
           it { expect(dossier.pieces_justificatives.size).to eq 2 }
           it { expect(flash[:notice]).to be_present }
-          it { is_expected.to redirect_to users_dossiers_invite_path(id: guest.invites.find_by_dossier_id(dossier.id).id) }
+          it { is_expected.to redirect_to users_dossiers_invite_path(id: guest.invites.find_by(dossier_id: dossier.id).id) }
         end
       end
 
@@ -396,7 +396,7 @@ shared_examples 'description_controller_spec' do
 
           it { expect(dossier.pieces_justificatives.size).to eq 4 }
           it { expect(flash[:notice]).to be_present }
-          it { is_expected.to redirect_to users_dossiers_invite_path(id: guest.invites.find_by_dossier_id(dossier.id).id) }
+          it { is_expected.to redirect_to users_dossiers_invite_path(id: guest.invites.find_by(dossier_id: dossier.id).id) }
         end
       end
 
@@ -413,7 +413,7 @@ shared_examples 'description_controller_spec' do
 
           it { expect(dossier.pieces_justificatives.size).to eq 1 }
           it { expect(flash[:alert]).to be_present }
-          it { is_expected.to redirect_to users_dossiers_invite_path(id: guest.invites.find_by_dossier_id(dossier.id).id) }
+          it { is_expected.to redirect_to users_dossiers_invite_path(id: guest.invites.find_by(dossier_id: dossier.id).id) }
         end
       end
     end

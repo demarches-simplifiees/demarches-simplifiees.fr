@@ -1,8 +1,8 @@
 class SetOriginalFilenameForUploaders < ActiveRecord::Migration
-  class PieceJustificative < ActiveRecord::Base
+  class PieceJustificative < ApplicationRecord
   end
 
-  class Cerfa < ActiveRecord::Base
+  class Cerfa < ApplicationRecord
   end
 
   def change

@@ -1,10 +1,10 @@
-class Entreprise < ActiveRecord::Base
+class Entreprise < ApplicationRecord
   belongs_to :dossier
   has_one :etablissement, dependent: :destroy
   has_one :rna_information, dependent: :destroy
 
-  validates_presence_of :siren
-  validates_uniqueness_of :dossier_id
+  validates :siren, presence: true
+  validates :dossier_id, uniqueness: true
 
   accepts_nested_attributes_for :rna_information
 

@@ -1,6 +1,6 @@
 class CommentaireFileUploader < BaseUploader
   def root
-    File.join(Rails.root, 'public')
+    Rails.root.join("public")
   end
 
   if Features.remote_storage

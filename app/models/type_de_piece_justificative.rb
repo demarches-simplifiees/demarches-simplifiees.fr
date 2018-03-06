@@ -1,4 +1,4 @@
-class TypeDePieceJustificative < ActiveRecord::Base
+class TypeDePieceJustificative < ApplicationRecord
   has_many :pieces_justificatives, dependent: :destroy
 
   belongs_to :procedure

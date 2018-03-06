@@ -1,4 +1,4 @@
-class QuartierPrioritaire < ActiveRecord::Base
+class QuartierPrioritaire < ApplicationRecord
   belongs_to :dossier, touch: true
 
   def geometry

@@ -1,4 +1,4 @@
-class Etablissement < ActiveRecord::Base
+class Etablissement < ApplicationRecord
   belongs_to :dossier
   belongs_to :entreprise
 
@@ -7,7 +7,7 @@ class Etablissement < ActiveRecord::Base
   accepts_nested_attributes_for :exercices
   accepts_nested_attributes_for :entreprise
 
-  validates_uniqueness_of :dossier_id
+  validates :dossier_id, uniqueness: true
 
   def geo_adresse
     [numero_voie, type_voie, nom_voie, complement_adresse, code_postal, localite].join(' ')

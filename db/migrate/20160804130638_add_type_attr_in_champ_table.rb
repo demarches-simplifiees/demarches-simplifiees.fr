@@ -1,9 +1,9 @@
 class AddTypeAttrInChampTable < ActiveRecord::Migration
-  class TypeDeChamp < ActiveRecord::Base
+  class TypeDeChamp < ApplicationRecord
     has_many :champs
   end
 
-  class Champ < ActiveRecord::Base
+  class Champ < ApplicationRecord
     belongs_to :type_de_champ
   end
 

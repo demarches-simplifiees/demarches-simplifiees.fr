@@ -1,14 +1,14 @@
 class DeleteDefaultDescriptionToDossier < ActiveRecord::Migration
-  class Dossier < ActiveRecord::Base
+  class Dossier < ApplicationRecord
   end
 
-  class Champ < ActiveRecord::Base
+  class Champ < ApplicationRecord
   end
 
-  class Procedure < ActiveRecord::Base
+  class Procedure < ApplicationRecord
   end
 
-  class TypeDeChamp < ActiveRecord::Base
+  class TypeDeChamp < ApplicationRecord
   end
 
   def up

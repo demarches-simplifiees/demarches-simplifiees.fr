@@ -1,4 +1,4 @@
-class DropDownList < ActiveRecord::Base
+class DropDownList < ApplicationRecord
   belongs_to :type_de_champ
 
   def options
