@@ -1,6 +1,6 @@
 class AttestationUploader < BaseUploader
   def root
-    File.join(Rails.root, 'public')
+    Rails.root.join("public")
   end
 
   # Choose what kind of storage to use for this uploader:

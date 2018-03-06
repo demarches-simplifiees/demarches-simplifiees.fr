@@ -19,7 +19,7 @@ namespace :'2017_07_26_clean_birthdate_on_individual' do
       puts "cleaning #{i.birthdate}"
       new_date = Date.strptime(i.birthdate, "%d/%m/%y")
       if new_date.year > 2017
-        new_date = new_date - 100.year
+        new_date = new_date - 100.years
       end
       i.update(birthdate: new_date.iso8601)
     end

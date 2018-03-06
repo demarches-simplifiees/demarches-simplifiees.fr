@@ -1,4 +1,4 @@
-class Procedure < ActiveRecord::Base
+class Procedure < ApplicationRecord
   has_many :types_de_piece_justificative, -> { order "order_place ASC" }, dependent: :destroy
   has_many :types_de_champ, -> { public_only }, dependent: :destroy
   has_many :types_de_champ_private, -> { private_only }, class_name: 'TypeDeChamp', dependent: :destroy

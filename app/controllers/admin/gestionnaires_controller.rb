@@ -19,7 +19,7 @@ class Admin::GestionnairesController < AdminController
 
   def create
     email = params[:gestionnaire][:email].downcase
-    @gestionnaire = Gestionnaire.find_by_email(email)
+    @gestionnaire = Gestionnaire.find_by(email: email)
     procedure_id = params[:procedure_id]
 
     if @gestionnaire.nil?

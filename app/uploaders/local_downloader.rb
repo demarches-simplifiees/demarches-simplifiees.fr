@@ -1,7 +1,7 @@
 require 'securerandom'
 
 class LocalDownloader
-  BASE_PATH_DISK = File.join(Rails.root, "public/downloads/")
+  BASE_PATH_DISK = Rails.root.join("public", "downloads")
 
   def initialize(filename, filename_suffix = '')
     @filename = filename.to_s

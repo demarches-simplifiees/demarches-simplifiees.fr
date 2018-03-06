@@ -1,8 +1,8 @@
 class CreateFranceConnectInformation < ActiveRecord::Migration
-  class User < ActiveRecord::Base
+  class User < ApplicationRecord
   end
 
-  class FranceConnectInformation < ActiveRecord::Base
+  class FranceConnectInformation < ApplicationRecord
   end
 
   def up
