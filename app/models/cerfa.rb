@@ -1,4 +1,4 @@
-class Cerfa < ActiveRecord::Base
+class Cerfa < ApplicationRecord
   belongs_to :dossier, touch: true
   belongs_to :user
 

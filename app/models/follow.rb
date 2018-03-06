@@ -1,8 +1,8 @@
-class Follow < ActiveRecord::Base
+class Follow < ApplicationRecord
   belongs_to :gestionnaire
   belongs_to :dossier
 
-  validates_uniqueness_of :gestionnaire_id, :scope => :dossier_id
+  validates :gestionnaire_id, uniqueness: { scope: :dossier_id }
 
   before_create :set_default_date
 

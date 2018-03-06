@@ -1,4 +1,4 @@
-class ProcedurePresentation < ActiveRecord::Base
+class ProcedurePresentation < ApplicationRecord
   belongs_to :assign_to
 
   def displayed_fields

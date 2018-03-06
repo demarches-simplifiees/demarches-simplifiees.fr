@@ -4,7 +4,7 @@ class Siret
 
   attr_accessor :siret
 
-  validates_presence_of :siret
+  validates :siret, presence: true
   validates :siret, siret_format: true
 
   before_validation :remove_whitespace

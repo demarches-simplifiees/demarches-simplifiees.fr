@@ -640,22 +640,22 @@ Performance/UriDefaultParser:
   Enabled: true
 
 Rails/ActionFilter:
-  Enabled: false
+  Enabled: true
 
 Rails/ActiveRecordAliases:
   Enabled: true
 
 Rails/ActiveSupportAliases:
-  Enabled: false
+  Enabled: true
 
 Rails/ApplicationJob:
-  Enabled: false
+  Enabled: true
 
 Rails/ApplicationRecord:
-  Enabled: false
+  Enabled: true
 
 Rails/Blank:
-  Enabled: false
+  Enabled: true
 
 Rails/CreateTableWithTimestamps:
   Enabled: false
@@ -667,28 +667,30 @@ Rails/Delegate:
   Enabled: false
 
 Rails/DelegateAllowBlank:
-  Enabled: false
+  Enabled: true
 
 Rails/DynamicFindBy:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - "spec/features/**/*.rb"
 
 Rails/EnumUniqueness:
-  Enabled: false
+  Enabled: true
 
 Rails/EnvironmentComparison:
   Enabled: false
 
 Rails/Exit:
-  Enabled: false
+  Enabled: true
 
 Rails/FilePath:
-  Enabled: false
+  Enabled: true
 
 Rails/FindBy:
-  Enabled: false
+  Enabled: true
 
 Rails/FindEach:
-  Enabled: false
+  Enabled: true
 
 Rails/HasAndBelongsToMany:
   Enabled: false
@@ -697,7 +699,7 @@ Rails/HasManyOrHasOneDependent:
   Enabled: false
 
 Rails/HttpPositionalArguments:
-  Enabled: false
+  Enabled: true
 
 Rails/InverseOf:
   Enabled: false
@@ -715,10 +717,10 @@ Rails/OutputSafety:
   Enabled: true
 
 Rails/PluralizationGrammar:
-  Enabled: false
+  Enabled: true
 
 Rails/Presence:
-  Enabled: false
+  Enabled: true
 
 Rails/Present:
   Enabled: true
@@ -730,22 +732,22 @@ Rails/RedundantReceiverInWithOptions:
   Enabled: true
 
 Rails/RelativeDateConstant:
-  Enabled: false
+  Enabled: true
 
 Rails/RequestReferer:
-  Enabled: false
+  Enabled: true
 
 Rails/ReversibleMigration:
   Enabled: false
 
 Rails/SafeNavigation:
-  Enabled: false
+  Enabled: true
 
 Rails/SaveBang:
   Enabled: false
 
 Rails/ScopeArgs:
-  Enabled: false
+  Enabled: true
 
 Rails/SkipsModelValidations:
   Enabled: false
@@ -754,13 +756,13 @@ Rails/TimeZone:
   Enabled: false
 
 Rails/UniqBeforePluck:
-  Enabled: false
+  Enabled: true
 
 Rails/UnknownEnv:
   Enabled: false
 
 Rails/Validation:
-  Enabled: false
+  Enabled: true
 
 Rails:
   Enabled: true

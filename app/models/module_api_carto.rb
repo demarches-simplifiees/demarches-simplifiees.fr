@@ -1,4 +1,4 @@
-class ModuleAPICarto < ActiveRecord::Base
+class ModuleAPICarto < ApplicationRecord
   belongs_to :procedure
 
   validates :use_api_carto, presence: true, allow_blank: true, allow_nil: false

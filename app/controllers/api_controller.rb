@@ -13,7 +13,7 @@ class APIController < ApplicationController
   end
 
   def current_administrateur
-    @administrateur ||= Administrateur.find_by_api_token(params[:token])
+    @administrateur ||= Administrateur.find_by(api_token: params[:token])
   end
 
   def default_format_json

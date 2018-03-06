@@ -11,7 +11,7 @@ FRANCE_CONNECT = if Rails.env.test?
     }
   }
 else
-  fc_config_file_path = "#{Rails.root}/config/france_connect.yml"
+  fc_config_file_path = Rails.root.join("config", "france_connect.yml")
 
   # FIXME: with a yaml with a { particulier: {} } structure
   config_hash = YAML.safe_load(File.read(fc_config_file_path))

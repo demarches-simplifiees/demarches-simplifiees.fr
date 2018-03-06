@@ -45,7 +45,7 @@ describe StatsController, type: :controller do
       it do
         expect(subject).to eq([
           [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 1],
-          [I18n.l(1.days.ago.beginning_of_month, format: "%B %Y"), 2]
+          [I18n.l(1.day.ago.beginning_of_month, format: "%B %Y"), 2]
         ])
       end
     end
@@ -72,7 +72,7 @@ describe StatsController, type: :controller do
 
       it do
         expect(subject).to eq({
-          2.month.ago.beginning_of_month => 2,
+          2.months.ago.beginning_of_month => 2,
           1.month.ago.beginning_of_month => 4,
           1.hour.ago.beginning_of_month => 5
         })
@@ -86,7 +86,7 @@ describe StatsController, type: :controller do
 
       it do
         expect(subject).to eq({
-          2.month.ago.beginning_of_month => 2,
+          2.months.ago.beginning_of_month => 2,
           1.month.ago.beginning_of_month => 4
         })
       end
@@ -151,22 +151,22 @@ describe StatsController, type: :controller do
       dossier_p1_b = FactoryBot.create(:dossier,
         :procedure          => procedure_1,
         :en_construction_at => 2.months.ago.beginning_of_month,
-        :processed_at       => 2.months.ago.beginning_of_month + 1.days)
+        :processed_at       => 2.months.ago.beginning_of_month + 1.day)
       dossier_p1_c = FactoryBot.create(:dossier,
         :procedure          => procedure_1,
-        :en_construction_at => 1.months.ago.beginning_of_month,
-        :processed_at       => 1.months.ago.beginning_of_month + 5.days)
+        :en_construction_at => 1.month.ago.beginning_of_month,
+        :processed_at       => 1.month.ago.beginning_of_month + 5.days)
       dossier_p2_a = FactoryBot.create(:dossier,
         :procedure          => procedure_2,
-        :en_construction_at => 2.month.ago.beginning_of_month,
-        :processed_at       => 2.month.ago.beginning_of_month + 4.days)
+        :en_construction_at => 2.months.ago.beginning_of_month,
+        :processed_at       => 2.months.ago.beginning_of_month + 4.days)
 
       # Write directly in the DB to avoid the before_validation hook
       Dossier.update_all(state: "accepte")
 
       @expected_hash = {
         "#{2.months.ago.beginning_of_month}" => 3.0,
-        "#{1.months.ago.beginning_of_month}" => 5.0
+        "#{1.month.ago.beginning_of_month}" => 5.0
       }
     end
 
@@ -204,21 +204,21 @@ describe StatsController, type: :controller do
         :processed_at => 2.months.ago.beginning_of_month + 1.day)
       dossier_p1_c = FactoryBot.create(:dossier,
         :procedure    => procedure_1,
-        :created_at   => 1.months.ago.beginning_of_month,
-        :en_construction_at => 1.months.ago.beginning_of_month + 50.minutes,
-        :processed_at => 1.months.ago.beginning_of_month + 1.day)
+        :created_at   => 1.month.ago.beginning_of_month,
+        :en_construction_at => 1.month.ago.beginning_of_month + 50.minutes,
+        :processed_at => 1.month.ago.beginning_of_month + 1.day)
       dossier_p2_a = FactoryBot.create(:dossier,
         :procedure    => procedure_2,
-        :created_at   => 2.month.ago.beginning_of_month,
-        :en_construction_at => 2.month.ago.beginning_of_month + 80.minutes,
-        :processed_at => 2.month.ago.beginning_of_month + 1.day)
+        :created_at   => 2.months.ago.beginning_of_month,
+        :en_construction_at => 2.months.ago.beginning_of_month + 80.minutes,
+        :processed_at => 2.months.ago.beginning_of_month + 1.day)
 
       # Write directly in the DB to avoid the before_validation hook
       Dossier.update_all(state: "accepte")
 
       @expected_hash = {
         "#{2.months.ago.beginning_of_month}" => 30.0,
-        "#{1.months.ago.beginning_of_month}" => 50.0
+        "#{1.month.ago.beginning_of_month}" => 50.0
       }
     end
 
@@ -239,7 +239,7 @@ describe StatsController, type: :controller do
 
     subject { StatsController.new.send(:avis_usage) }
 
-    it { expect(subject).to match([[3.week.ago.to_i, 0], [2.week.ago.to_i, 0], [1.week.ago.to_i, 33.33]]) }
+    it { expect(subject).to match([[3.weeks.ago.to_i, 0], [2.weeks.ago.to_i, 0], [1.week.ago.to_i, 33.33]]) }
   end
 
   describe "#avis_average_answer_time" do
@@ -251,10 +251,10 @@ describe StatsController, type: :controller do
       create(:avis, created_at: 1.week.ago + 2.days)
 
       # 2 weeks ago
-      create(:avis, answer: "voila ma réponse", created_at: 2.week.ago + 1.day, updated_at: 2.week.ago + 2.days) # 1 day
-      create(:avis, answer: "voila ma réponse2", created_at: 2.week.ago + 3.days, updated_at: 1.week.ago + 6.days) # 10 days
-      create(:avis, answer: "voila ma réponse2", created_at: 2.week.ago + 2.days, updated_at: 1.week.ago + 6.days) # 11 days
-      create(:avis, created_at: 2.week.ago + 1.day, updated_at: 2.week.ago + 2.days)
+      create(:avis, answer: "voila ma réponse", created_at: 2.weeks.ago + 1.day, updated_at: 2.weeks.ago + 2.days) # 1 day
+      create(:avis, answer: "voila ma réponse2", created_at: 2.weeks.ago + 3.days, updated_at: 1.week.ago + 6.days) # 10 days
+      create(:avis, answer: "voila ma réponse2", created_at: 2.weeks.ago + 2.days, updated_at: 1.week.ago + 6.days) # 11 days
+      create(:avis, created_at: 2.weeks.ago + 1.day, updated_at: 2.weeks.ago + 2.days)
 
       # 3 weeks ago
       create(:avis, answer: "voila ma réponse2", created_at: 3.weeks.ago + 1.day, updated_at: 3.weeks.ago + 2.days) # 1 day
@@ -267,8 +267,8 @@ describe StatsController, type: :controller do
 
     it { expect(subject.count).to eq(3) }
     it { is_expected.to include [1.week.ago.to_i, 1.0] }
-    it { is_expected.to include [2.week.ago.to_i, 7.33] }
-    it { is_expected.to include [3.week.ago.to_i, 9.5] }
+    it { is_expected.to include [2.weeks.ago.to_i, 7.33] }
+    it { is_expected.to include [3.weeks.ago.to_i, 9.5] }
   end
 
   describe '#avis_answer_percentages' do
@@ -281,7 +281,7 @@ describe StatsController, type: :controller do
     before { Timecop.freeze(Time.now) }
     after { Timecop.return }
 
-    it { is_expected.to match [[3.week.ago.to_i, 0], [2.week.ago.to_i, 0], [1.week.ago.to_i, 66.67]] }
+    it { is_expected.to match [[3.weeks.ago.to_i, 0], [2.weeks.ago.to_i, 0], [1.week.ago.to_i, 66.67]] }
   end
 
   describe '#motivation_usage_dossier' do
@@ -294,7 +294,7 @@ describe StatsController, type: :controller do
 
     subject { StatsController.new.send(:motivation_usage_dossier) }
 
-    it { expect(subject).to match([[I18n.l(3.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
+    it { expect(subject).to match([[I18n.l(3.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
   end
 
   describe '#motivation_usage_procedure' do
@@ -308,6 +308,6 @@ describe StatsController, type: :controller do
 
     subject { StatsController.new.send(:motivation_usage_procedure) }
 
-    it { expect(subject).to match([[I18n.l(3.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.week.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
+    it { expect(subject).to match([[I18n.l(3.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
   end
 end

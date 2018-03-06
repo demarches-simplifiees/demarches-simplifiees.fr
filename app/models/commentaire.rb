@@ -1,4 +1,4 @@
-class Commentaire < ActiveRecord::Base
+class Commentaire < ApplicationRecord
   belongs_to :dossier, touch: true
   belongs_to :champ
   belongs_to :piece_justificative
@@ -6,7 +6,7 @@ class Commentaire < ActiveRecord::Base
   mount_uploader :file, CommentaireFileUploader
   validates :file, file_size: { maximum: 20.megabytes, message: "La taille du fichier doit être inférieure à 20 Mo" }
   validate :is_virus_free?
-  validates_presence_of :body, message: "Votre message ne peut être vide"
+  validates :body, presence: { message: "Votre message ne peut être vide" }
 
   default_scope { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }

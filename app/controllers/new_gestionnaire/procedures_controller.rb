@@ -76,7 +76,7 @@ module NewGestionnaire
         filtered_sorted_ids = sorted_ids
       end
 
-      page = params[:page].present? ? params[:page] : 1
+      page = params[:page].presence || 1
 
       filtered_sorted_paginated_ids = Kaminari
         .paginate_array(filtered_sorted_ids)
@@ -187,7 +187,7 @@ module NewGestionnaire
     private
 
     def statut
-      @statut ||= params[:statut].present? ? params[:statut] : 'a-suivre'
+      @statut ||= (params[:statut].presence || 'a-suivre')
     end
 
     def procedure
