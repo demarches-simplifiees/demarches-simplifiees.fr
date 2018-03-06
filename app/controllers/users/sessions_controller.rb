@@ -78,7 +78,9 @@ class Users::SessionsController < Sessions::SessionsController
   end
 
   def try_to_authenticate(klass, remember_me = false)
-    if resource = klass.find_for_database_authentication(email: params[:user][:email])
+    resource = klass.find_for_database_authentication(email: params[:user][:email])
+
+    if resource.present?
       if resource.valid_password?(params[:user][:password])
         resource.remember_me = remember_me
         sign_in resource
