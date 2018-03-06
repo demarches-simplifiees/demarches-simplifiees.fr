@@ -109,11 +109,11 @@ module NewGestionnaire
         c.to_json
       end
 
-      procedure_presentation.update(displayed_fields: fields)
+      procedure_presentation.update_attributes(displayed_fields: fields)
 
       current_sort = procedure_presentation.sort
       if !values.include?("#{current_sort['table']}/#{current_sort['column']}")
-        procedure_presentation.update(sort: Procedure.default_sort)
+        procedure_presentation.update_attributes(sort: Procedure.default_sort)
       end
 
       redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
@@ -136,7 +136,7 @@ module NewGestionnaire
         'order' => order
       }.to_json
 
-      procedure_presentation.update(sort: sort)
+      procedure_presentation.update_attributes(sort: sort)
 
       redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
     end
@@ -154,7 +154,7 @@ module NewGestionnaire
           'value' => params[:value]
         }
 
-        procedure_presentation.update(filters: filters.to_json)
+        procedure_presentation.update_attributes(filters: filters.to_json)
       end
 
       redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
@@ -168,7 +168,7 @@ module NewGestionnaire
 
       filters[statut] = filters[statut] - [filter_to_remove]
 
-      procedure_presentation.update(filters: filters.to_json)
+      procedure_presentation.update_attributes(filters: filters.to_json)
 
       redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
     end
@@ -245,6 +245,7 @@ module NewGestionnaire
               .includes(filter['table'])
               .where("#{filter['table'].pluralize}.#{filter['column']} LIKE ?", "%#{filter['value']}%")
           end
+
         end.pluck(:id)
       end.reduce(:&)
     end

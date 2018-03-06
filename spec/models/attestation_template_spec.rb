@@ -163,12 +163,12 @@ describe AttestationTemplate, type: :model do
             dossier.champs
               .select { |champ| champ.libelle == 'libelleA' }
               .first
-              .update(value: 'libelle1')
+              .update_attributes(value: 'libelle1')
 
             dossier.champs
               .select { |champ| champ.libelle == 'libelleB' }
               .first
-              .update(value: 'libelle2')
+              .update_attributes(value: 'libelle2')
           end
 
           it { expect(view_args[:title]).to eq('title libelle1') }

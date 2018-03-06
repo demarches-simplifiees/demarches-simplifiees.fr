@@ -94,7 +94,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   describe '#unarchive' do
     before do
-      dossier.update(archived: true)
+      dossier.update_attributes(archived: true)
       patch :unarchive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
       dossier.reload
     end

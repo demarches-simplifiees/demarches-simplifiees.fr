@@ -57,13 +57,13 @@ module NewGestionnaire
     end
 
     def archive
-      dossier.update(archived: true)
+      dossier.update_attributes(archived: true)
       current_gestionnaire.unfollow(dossier)
       redirect_back(fallback_location: gestionnaire_procedures_url)
     end
 
     def unarchive
-      dossier.update(archived: false)
+      dossier.update_attributes(archived: false)
       redirect_back(fallback_location: gestionnaire_procedures_url)
     end
 
@@ -166,7 +166,7 @@ module NewGestionnaire
     def update_annotations
       dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
       # FIXME: add attachements validation, cf. Champ#piece_justificative_file_errors
-      dossier.update(champs_private_params)
+      dossier.update_attributes(champs_private_params)
       redirect_to annotations_privees_gestionnaire_dossier_path(procedure, dossier)
     end
 

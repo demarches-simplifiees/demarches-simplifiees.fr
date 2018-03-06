@@ -112,7 +112,7 @@ describe Dossier do
 
         it 'does not create default champs' do
           expect(subject).not_to receive(:build_default_champs)
-          subject.update(state: 'en_construction')
+          subject.update_attributes(state: 'en_construction')
         end
       end
     end

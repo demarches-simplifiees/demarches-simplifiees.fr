@@ -32,7 +32,7 @@ module NewGestionnaire
     end
 
     def update
-      avis.update(avis_params)
+      avis.update_attributes(avis_params)
       flash.notice = 'Votre réponse est enregistrée.'
       redirect_to instruction_gestionnaire_avis_path(avis)
     end
