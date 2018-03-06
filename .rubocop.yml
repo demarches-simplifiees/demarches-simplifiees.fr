@@ -219,9 +219,6 @@ Layout/SpaceInsideArrayPercentLiteral:
 Layout/SpaceInsideBlockBraces:
   Enabled: true
 
-Layout/SpaceInsideBrackets:
-  Enabled: true
-
 Layout/SpaceInsideHashLiteralBraces:
   Enabled: true
 
@@ -235,6 +232,9 @@ Layout/SpaceInsidePercentLiteralDelimiters:
   Enabled: true
 
 Layout/SpaceInsideRangeLiteral:
+  Enabled: true
+
+Layout/SpaceInsideReferenceBrackets:
   Enabled: true
 
 Layout/SpaceInsideStringInterpolation:
@@ -321,7 +321,7 @@ Lint/IneffectiveAccessModifier:
 Lint/InheritException:
   Enabled: false
 
-Lint/LiteralInCondition:
+Lint/LiteralAsCondition:
   Enabled: false
 
 Lint/LiteralInInterpolation:
@@ -390,7 +390,7 @@ Lint/UnderscorePrefixedVariableName:
 Lint/UnifiedInteger:
   Enabled: false
 
-Lint/UnneededDisable:
+Lint/UnneededCopDisableDirective:
   Enabled: false
 
 Lint/UnneededSplatExpansion:
@@ -843,7 +843,7 @@ Style/GuardClause:
 Style/HashSyntax:
   Enabled: false
 
-Style/HeredocDelimiters:
+Style/HeredocDelimiterNaming:
   Enabled: false
 
 Style/IdenticalConditionalBranches:
