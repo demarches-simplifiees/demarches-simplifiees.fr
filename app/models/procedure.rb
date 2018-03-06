@@ -42,7 +42,7 @@ class Procedure < ActiveRecord::Base
 
   def hide!
     now = DateTime.now
-    self.update_attributes(hidden_at: now)
+    self.update(hidden_at: now)
     self.dossiers.update_all(hidden_at: now)
   end
 
@@ -89,8 +89,8 @@ class Procedure < ActiveRecord::Base
 
       false
     else
-      list[index_of_first_element].update_attributes(order_place: index_of_first_element + 1)
-      list[index_of_first_element + 1].update_attributes(order_place: index_of_first_element)
+      list[index_of_first_element].update(order_place: index_of_first_element + 1)
+      list[index_of_first_element + 1].update(order_place: index_of_first_element)
 
       true
     end
@@ -129,7 +129,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def publish!(path)
-    self.update_attributes!({ published_at: Time.now, archived_at: nil })
+    self.update!({ published_at: Time.now, archived_at: nil })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
   end
 
@@ -138,7 +138,7 @@ class Procedure < ActiveRecord::Base
   end
 
   def archive
-    self.update_attributes!(archived_at: Time.now)
+    self.update!(archived_at: Time.now)
   end
 
   def archivee?

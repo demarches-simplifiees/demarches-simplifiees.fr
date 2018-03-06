@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
     if user.nil?
       return User.create(email: email, password: Devise.friendly_token[0, 20], siret: siret)
     else
-      user.update_attributes(siret: siret)
+      user.update(siret: siret)
       user
     end
   end
