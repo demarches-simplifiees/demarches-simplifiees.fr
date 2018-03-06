@@ -116,7 +116,7 @@ GEM
     bootstrap-wysihtml5-rails (0.3.3.8)
       railties (>= 3.0)
     brakeman (4.2.0)
-    browser (2.5.3)
+    browser (2.5.2)
     builder (3.2.3)
     byebug (10.0.0)
     capybara (2.18.0)
