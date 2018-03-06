@@ -15,7 +15,7 @@ class Admin::TypesDeChampController < AdminController
   end
 
   def update
-    @procedure.update_attributes(TypesDeChampService.create_update_procedure_params params)
+    @procedure.update(TypesDeChampService.create_update_procedure_params params)
     create_facade
     flash.now.notice = 'Modifications sauvegardées'
     render 'show', format: :js

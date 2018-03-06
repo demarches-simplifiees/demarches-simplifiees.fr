@@ -20,7 +20,7 @@ class Users::SessionsController < Sessions::SessionsController
     try_to_authenticate(Administrateur, remember_me)
 
     if user_signed_in?
-      current_user.update_attributes(loged_in_with_france_connect: '')
+      current_user.update(loged_in_with_france_connect: '')
     end
 
     if user_signed_in?
@@ -44,7 +44,7 @@ class Users::SessionsController < Sessions::SessionsController
 
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
-      current_user.update_attributes(loged_in_with_france_connect: '')
+      current_user.update(loged_in_with_france_connect: '')
 
       sign_out :user
 

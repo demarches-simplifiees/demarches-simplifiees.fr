@@ -99,12 +99,12 @@ describe TagsSubstitutionConcern, type: :model do
             dossier.champs
               .select { |champ| champ.libelle == 'libelleA' }
               .first
-              .update_attributes(value: 'libelle1')
+              .update(value: 'libelle1')
 
             dossier.champs
               .select { |champ| champ.libelle == 'libelleB' }
               .first
-              .update_attributes(value: 'libelle2')
+              .update(value: 'libelle2')
           end
 
           it { is_expected.to eq('libelle1 libelle2') }
@@ -129,7 +129,7 @@ describe TagsSubstitutionConcern, type: :model do
         let(:template) { '--libelleA--' }
 
         context 'and its value in the dossier is not nil' do
-          before { dossier.champs_private.first.update_attributes(value: 'libelle1') }
+          before { dossier.champs_private.first.update(value: 'libelle1') }
 
           it { is_expected.to eq('libelle1') }
         end
@@ -152,7 +152,7 @@ describe TagsSubstitutionConcern, type: :model do
       context 'champs publics are valid tags' do
         let(:types_de_champ) { [create(:type_de_champ, libelle: 'libelleA')] }
 
-        before { dossier.champs.first.update_attributes(value: 'libelle1') }
+        before { dossier.champs.first.update(value: 'libelle1') }
 
         it { is_expected.to eq('libelle1') }
       end
@@ -174,12 +174,12 @@ describe TagsSubstitutionConcern, type: :model do
             dossier.champs
               .select { |champ| champ.type_champ == 'date' }
               .first
-              .update_attributes(value: '2017-04-15')
+              .update(value: '2017-04-15')
 
             dossier.champs
               .select { |champ| champ.type_champ == 'datetime' }
               .first
-              .update_attributes(value: '2017-09-13 09:00')
+              .update(value: '2017-09-13 09:00')
           end
 
           it { is_expected.to eq('15/04/2017 2017-09-13 09:00') }
@@ -220,7 +220,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context "match breaking and non breaking spaces" do
-      before { dossier.champs.first.update_attributes(value: 'valeur') }
+      before { dossier.champs.first.update(value: 'valeur') }
 
       shared_examples "treat all kinds of space as equivalent" do
         context 'and the champ has a non breaking space' do

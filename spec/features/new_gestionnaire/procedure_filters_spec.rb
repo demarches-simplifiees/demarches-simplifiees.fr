@@ -9,7 +9,7 @@ feature "procedure filters" do
   let!(:new_unfollow_dossier_2) { create(:dossier, procedure: procedure, state: "en_instruction") }
 
   before do
-    champ.update_attributes(value: "Mon champ rempli")
+    champ.update(value: "Mon champ rempli")
     login_as gestionnaire, scope: :gestionnaire
     visit gestionnaire_procedure_path(procedure)
   end
