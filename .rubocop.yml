@@ -280,7 +280,7 @@ Lint/AmbiguousRegexpLiteral:
   Enabled: true
 
 Lint/AssignmentInCondition:
-  Enabled: false
+  Enabled: true
 
 Lint/BigDecimalNew:
   Enabled: true
