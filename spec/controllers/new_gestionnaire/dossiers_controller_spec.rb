@@ -152,7 +152,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
       it 'Notification email is sent' do
         expect(NotificationMailer).to receive(:send_notification)
-          .with(dossier, kind_of(Mails::RefusedMail), nil).and_return(NotificationMailer)
+          .with(dossier, kind_of(Mails::RefusedMail)).and_return(NotificationMailer)
         expect(NotificationMailer).to receive(:deliver_now!)
 
         subject
@@ -178,7 +178,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
       it 'Notification email is sent' do
         expect(NotificationMailer).to receive(:send_notification)
-          .with(dossier, kind_of(Mails::WithoutContinuationMail), nil).and_return(NotificationMailer)
+          .with(dossier, kind_of(Mails::WithoutContinuationMail)).and_return(NotificationMailer)
         expect(NotificationMailer).to receive(:deliver_now!)
 
         subject
@@ -188,14 +188,12 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     context "with accepter" do
-      let(:expected_attestation) { nil }
-
       before do
         dossier.en_instruction!
         sign_in gestionnaire
 
         expect(NotificationMailer).to receive(:send_notification)
-          .with(dossier, kind_of(Mails::ClosedMail), expected_attestation)
+          .with(dossier, kind_of(Mails::ClosedMail))
           .and_return(NotificationMailer)
 
         expect(NotificationMailer).to receive(:deliver_now!)
@@ -210,45 +208,26 @@ describe NewGestionnaire::DossiersController, type: :controller do
         expect(dossier.state).to eq('accepte')
       end
 
-      context 'when the dossier does not have any attestation' do
-        it 'Notification email is sent' do
-          subject
-        end
+      it 'Notification email is sent' do
+        subject
       end
 
-      context 'when the dossier has an attestation' do
-        before do
-          attestation = Attestation.new
-          allow(attestation).to receive(:pdf).and_return(double(read: 'pdf', size: 2.megabytes))
-          allow(attestation).to receive(:emailable?).and_return(emailable)
+      it 'reloads the dossier to make the attestation readable' do
+        expect_any_instance_of(Dossier).to receive(:reload)
 
-          expect_any_instance_of(Dossier).to receive(:reload)
-          allow_any_instance_of(Dossier).to receive(:build_attestation).and_return(attestation)
-        end
+        subject
+      end
 
-        context 'emailable' do
-          let(:emailable) { true }
-          let(:expected_attestation) { 'pdf' }
+      it 'builds the attestation' do
+        expect_any_instance_of(Dossier).to receive(:build_attestation)
 
-          it 'Notification email is sent with the attestation' do
-            subject
+        subject
+      end
 
-            is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
-          end
-        end
+      it 'redircts to the dossier page' do
+        subject
 
-        context 'when the dossier has an attestation not emailable' do
-          let(:emailable) { false }
-          let(:expected_attestation) { nil }
-
-          it 'Notification email is sent without the attestation' do
-            expect(controller).to receive(:capture_message)
-
-            subject
-
-            is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
-          end
-        end
+        is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
       end
 
       context 'when the attestation template uses the motivation field' do

@@ -13,20 +13,25 @@ RSpec.describe NotificationMailer, type: :mailer do
   end
 
   let(:user) { create(:user) }
-  let(:dossier) { create(:dossier, user: user) }
+  let(:attestation) { nil }
+  let(:dossier) { create(:dossier, user: user, attestation: attestation) }
 
   describe '.send_notification' do
     let(:email_template) { instance_double('email_template', subject_for_dossier: 'subject', body_for_dossier: 'body') }
-    let(:attestation) { nil }
 
-    subject { described_class.send_notification(dossier, email_template, attestation) }
+    subject { described_class.send_notification(dossier, email_template) }
 
     it { expect(subject.subject).to eq(email_template.subject_for_dossier) }
     it { expect(subject.body).to eq(email_template.body_for_dossier) }
     it { expect(subject.attachments['attestation.pdf']).to eq(nil) }
 
     context 'when an attestation is provided' do
-      let(:attestation) { 'attestation' }
+      let(:attestation) do
+        content = 'attestation'
+        attestation = Attestation.new
+        allow(attestation).to receive(:pdf).and_return(double(size: content.size, read: content))
+        attestation
+      end
 
       it do
         expect(subject.attachments['attestation.pdf'].content_type)
