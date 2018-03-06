@@ -31,19 +31,12 @@ class Commentaire < ActiveRecord::Base
     dossier_user_email = dossier.user.email
     invited_users_emails = dossier.invites_user.pluck(:email).to_a
 
-    case email
-    when I18n.t("dynamics.contact_email")
-      # The commentaire is a copy of an automated notification email
-      # we sent to a user, so do nothing
-
-    when dossier_user_email, *invited_users_emails
-      # A user or an inved user posted a commentaire,
-      # do nothing, the notification system will properly
-
-    else
-      # A gestionnaire posted a commentaire,
-      # we need to notify the user
-
+    # - If the email is the contact email, the commentaire is a copy
+    #   of an automated notification email we sent to a user, so do nothing.
+    # - If a user or an invited user posted a commentaire, do nothing,
+    #   the notification system will properly
+    # - Otherwise, a gestionnaire posted a commentaire, we need to notify the user
+    if !email.in?([I18n.t("dynamics.contact_email"), dossier_user_email, *invited_users_emails])
       notify_user
     end
   end

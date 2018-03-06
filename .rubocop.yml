@@ -289,43 +289,43 @@ Lint/BooleanSymbol:
   Enabled: true
 
 Lint/CircularArgumentReference:
-  Enabled: false
+  Enabled: true
 
 Lint/Debugger:
-  Enabled: false
+  Enabled: true
 
 Lint/DeprecatedClassMethods:
-  Enabled: false
+  Enabled: true
 
 Lint/DuplicateCaseCondition:
-  Enabled: false
+  Enabled: true
 
 Lint/DuplicateMethods:
-  Enabled: false
+  Enabled: true
 
 Lint/DuplicatedKey:
-  Enabled: false
+  Enabled: true
 
 Lint/EachWithObjectArgument:
-  Enabled: false
+  Enabled: true
 
 Lint/ElseLayout:
-  Enabled: false
+  Enabled: true
 
 Lint/EmptyEnsure:
-  Enabled: false
+  Enabled: true
 
 Lint/EmptyExpression:
-  Enabled: false
+  Enabled: true
 
 Lint/EmptyInterpolation:
-  Enabled: false
+  Enabled: true
 
 Lint/EmptyWhen:
-  Enabled: false
+  Enabled: true
 
 Lint/EndInMethod:
-  Enabled: false
+  Enabled: true
 
 Lint/EnsureReturn:
   Enabled: false
