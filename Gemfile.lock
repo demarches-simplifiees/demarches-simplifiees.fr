@@ -523,7 +523,7 @@ GEM
       validate_email
       validate_url
       webfinger (>= 1.0.1)
-    openstack (3.3.17)
+    openstack (3.3.15)
       json
     orm_adapter (0.5.0)
     parallel (1.12.1)
