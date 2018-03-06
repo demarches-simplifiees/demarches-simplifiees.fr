@@ -132,7 +132,7 @@ class Admin::ProceduresController < AdminController
       return redirect_to admin_procedures_path
     end
 
-    procedure_path = ProcedurePath.find_by_path(params[:procedure_path])
+    procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
     if procedure_path
       if procedure_path.administrateur_id == current_administrateur.id
         procedure_path.procedure.archive
@@ -154,7 +154,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def transfer
-    admin = Administrateur.find_by_email(params[:email_admin].downcase)
+    admin = Administrateur.find_by(email: params[:email_admin].downcase)
 
     if admin.nil?
       render '/admin/procedures/transfer', formats: 'js', status: 404

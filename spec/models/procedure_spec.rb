@@ -245,9 +245,9 @@ describe Procedure do
 
     it { expect(procedure.archived_at).to eq(nil) }
     it { expect(procedure.published_at).to eq(now) }
-    it { expect(ProcedurePath.find_by_path("example-path")).to be }
-    it { expect(ProcedurePath.find_by_path("example-path").procedure).to eq(procedure) }
-    it { expect(ProcedurePath.find_by_path("example-path").administrateur).to eq(procedure.administrateur) }
+    it { expect(ProcedurePath.find_by(path: "example-path")).to be }
+    it { expect(ProcedurePath.find_by(path: "example-path").procedure).to eq(procedure) }
+    it { expect(ProcedurePath.find_by(path: "example-path").administrateur).to eq(procedure.administrateur) }
   end
 
   describe "#brouillon?" do

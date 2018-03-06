@@ -1,4 +1,4 @@
-class Administrateur < ActiveRecord::Base
+class Administrateur < ApplicationRecord
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable, :validatable
 

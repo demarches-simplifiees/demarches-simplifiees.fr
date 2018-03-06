@@ -13,7 +13,7 @@ module NewGestionnaire
       @avis_a_donner = gestionnaire_avis.without_answer
       @avis_donnes = gestionnaire_avis.with_answer
 
-      @statut = params[:statut].present? ? params[:statut] : A_DONNER_STATUS
+      @statut = params[:statut].presence || A_DONNER_STATUS
 
       @avis = case @statut
       when A_DONNER_STATUS

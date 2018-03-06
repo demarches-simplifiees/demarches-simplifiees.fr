@@ -1,9 +1,9 @@
 require_relative 'features'
 
 if Rails.env.test?
-  Fog.credentials_path = Rails.root.join('config/fog_credentials.test.yml')
+  Fog.credentials_path = Rails.root.join('config', 'fog_credentials.test.yml')
 else
-  Fog.credentials_path = Rails.root.join('config/fog_credentials.yml')
+  Fog.credentials_path = Rails.root.join('config', 'fog_credentials.yml')
 end
 
 CarrierWave.configure do |config|
@@ -20,7 +20,7 @@ CarrierWave.configure do |config|
   # they will not be available for public (non-authenticated) downloading
   config.root = Rails.root
 
-  config.cache_dir = "#{Rails.root}/uploads"
+  config.cache_dir = Rails.root.join("uploads")
 
   config.fog_public = true
 

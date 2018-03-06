@@ -2,7 +2,7 @@ class EntrepriseDecorator < Draper::Decorator
   delegate_all
 
   def raison_sociale_or_name
-    raison_sociale.blank? ? "#{nom} #{prenom}" : raison_sociale
+    raison_sociale.presence || "#{nom} #{prenom}"
   end
 
   def effectif

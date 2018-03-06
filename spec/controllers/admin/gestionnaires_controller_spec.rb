@@ -112,7 +112,7 @@ describe Admin::GestionnairesController, type: :controller do
     end
 
     context 'when an other admin will add the same email' do
-      let(:gestionnaire) { Gestionnaire.find_by_email(email) }
+      let(:gestionnaire) { Gestionnaire.find_by(email: email) }
 
       before do
         create :gestionnaire, email: email, administrateurs: [admin]
@@ -133,7 +133,7 @@ describe Admin::GestionnairesController, type: :controller do
 
     context 'when an other admin will add the same email with some uppercase in it' do
       let(:email) { 'Test@Plop.com' }
-      let(:gestionnaire) { Gestionnaire.find_by_email(email.downcase) }
+      let(:gestionnaire) { Gestionnaire.find_by(email: email.downcase) }
 
       before do
         create :gestionnaire, email: email, administrateurs: [admin]

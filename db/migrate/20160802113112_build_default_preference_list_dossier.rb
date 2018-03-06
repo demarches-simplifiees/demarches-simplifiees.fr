@@ -1,5 +1,5 @@
 class BuildDefaultPreferenceListDossier < ActiveRecord::Migration
-  class Gestionnaire < ActiveRecord::Base
+  class Gestionnaire < ApplicationRecord
     def build_default_preferences_list_dossier
       PreferenceListDossier.available_columns.each do |table|
         table.second.each do |column|
@@ -47,7 +47,7 @@ class BuildDefaultPreferenceListDossier < ActiveRecord::Migration
     end
   end
 
-  class PreferenceListDossier < ActiveRecord::Base
+  class PreferenceListDossier < ApplicationRecord
     def self.available_columns
       {
         dossier: columns_dossier,

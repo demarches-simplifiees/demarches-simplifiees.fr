@@ -41,7 +41,7 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
       end
 
       commentaire.save
-      if !commentaire.file.present?
+      if commentaire.file.blank?
         puts "Failed to save file for commentaire #{commentaire.id}"
       end
     end
