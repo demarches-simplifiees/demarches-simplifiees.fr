@@ -5,7 +5,7 @@ class Etablissement < ApplicationRecord
   has_many :exercices, dependent: :destroy
 
   accepts_nested_attributes_for :exercices
-  accepts_nested_attributes_for :entreprise
+  accepts_nested_attributes_for :entreprise, update_only: true
 
   validates :dossier_id, uniqueness: true
 
