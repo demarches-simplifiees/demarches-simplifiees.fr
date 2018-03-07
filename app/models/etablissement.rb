@@ -1,6 +1,6 @@
 class Etablissement < ApplicationRecord
   belongs_to :dossier
-  belongs_to :entreprise
+  belongs_to :entreprise, dependent: :destroy
 
   has_many :exercices, dependent: :destroy
 
