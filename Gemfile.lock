@@ -1,4 +1,14 @@
 GIT
+  remote: https://github.com/breckenedge/delayed_job_web.git
+  revision: 6bcb10e61ea2b9a44ffa16be8536dff46ad51449
+  branch: cve_2017_12097
+  specs:
+    delayed_job_web (1.4)
+      activerecord (> 3.0.0)
+      delayed_job (> 2.0.3)
+      sinatra (>= 1.4.4)
+
+GIT
   remote: https://github.com/hassox/warden.git
   revision: a4b197e0b28e7b576b0745b0f6aeaed8dbb774a4
   branch: master
@@ -172,10 +182,6 @@ GEM
     delayed_job_active_record (4.1.2)
       activerecord (>= 3.0, < 5.2)
       delayed_job (>= 3.0, < 5)
-    delayed_job_web (1.4)
-      activerecord (> 3.0.0)
-      delayed_job (> 2.0.3)
-      sinatra (>= 1.4.4)
     devise (4.4.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -796,7 +802,7 @@ DEPENDENCIES
   deep_cloneable
   delayed_cron_job
   delayed_job_active_record
-  delayed_job_web
+  delayed_job_web!
   devise
   dotenv-rails
   draper
