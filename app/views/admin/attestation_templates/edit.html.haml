@@ -41,7 +41,8 @@
           - @attestation_template.tags.each do |tag|
             %tr
               %td
-                = "--#{tag[:libelle]}--"
+                %code{ style: "white-space: pre-wrap;" }
+                  = "--#{tag[:libelle]}--"
               %td
                 = tag[:description]
 
