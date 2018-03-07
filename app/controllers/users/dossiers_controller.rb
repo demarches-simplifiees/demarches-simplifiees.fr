@@ -110,7 +110,7 @@ class Users::DossiersController < UsersController
 
     if etablissement_attributes.present?
       etablissement_attributes = ActionController::Parameters.new(etablissement_attributes).permit!
-      etablissement = @facade.dossier.create_etablissement(etablissement_attributes)
+      etablissement = @facade.dossier.build_etablissement(etablissement_attributes)
       if etablissement.save
         Rails.logger.info("etablissement saved, siret: #{siret}, id: #{etablissement.id}")
         @facade.dossier.mandataire_social!(current_user.france_connect_information)
