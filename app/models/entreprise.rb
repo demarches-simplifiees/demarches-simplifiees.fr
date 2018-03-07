@@ -6,7 +6,7 @@ class Entreprise < ApplicationRecord
   validates :siren, presence: true
   validates :dossier_id, uniqueness: true
 
-  accepts_nested_attributes_for :rna_information
+  accepts_nested_attributes_for :rna_information, update_only: true
 
   before_save :default_values
 
