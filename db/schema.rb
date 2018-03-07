@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_02_26_162351) do
+ActiveRecord::Schema.define(version: 2018_03_07_101545) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -233,7 +233,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_162351) do
 
   create_table "entreprises", id: :serial, force: :cascade do |t|
     t.string "siren"
-    t.integer "capital_social"
+    t.bigint "capital_social"
     t.string "numero_tva_intracommunautaire"
     t.string "forme_juridique"
     t.string "forme_juridique_code"
@@ -266,7 +266,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_162351) do
     t.integer "dossier_id"
     t.integer "entreprise_id"
     t.string "entreprise_siren"
-    t.integer "entreprise_capital_social"
+    t.bigint "entreprise_capital_social"
     t.string "entreprise_numero_tva_intracommunautaire"
     t.string "entreprise_forme_juridique"
     t.string "entreprise_forme_juridique_code"
