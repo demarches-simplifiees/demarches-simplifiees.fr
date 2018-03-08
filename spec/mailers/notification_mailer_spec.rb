@@ -17,25 +17,11 @@ RSpec.describe NotificationMailer, type: :mailer do
 
   describe '.send_notification' do
     let(:email_template) { instance_double('email_template', subject_for_dossier: 'subject', body_for_dossier: 'body') }
-    let(:attestation) { nil }
 
-    subject { described_class.send_notification(dossier, email_template, attestation) }
+    subject { described_class.send_notification(dossier, email_template) }
 
     it { expect(subject.subject).to eq(email_template.subject_for_dossier) }
     it { expect(subject.body).to eq(email_template.body_for_dossier) }
-    it { expect(subject.attachments['attestation.pdf']).to eq(nil) }
-
-    context 'when an attestation is provided' do
-      let(:attestation) { 'attestation' }
-
-      it do
-        expect(subject.attachments['attestation.pdf'].content_type)
-          .to eq('application/pdf; filename=attestation.pdf')
-
-        expect(subject.attachments['attestation.pdf'].body).to eq('attestation')
-      end
-    end
-
     it_behaves_like "create a commentaire not notified"
   end
 
