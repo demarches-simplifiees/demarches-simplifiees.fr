@@ -181,7 +181,6 @@ class Dossier < ApplicationRecord
 
   def reset!
     etablissement.destroy
-    entreprise.destroy
 
     update_columns(autorisation_donnees: false)
   end
