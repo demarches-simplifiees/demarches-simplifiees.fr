@@ -7,6 +7,21 @@ describe API::V1::DossiersController do
 
   it { expect(described_class).to be < APIController }
 
+  describe 'GET index (with bearer token)' do
+    let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(admin.api_token) }
+    let(:retour) do
+      request.env['HTTP_AUTHORIZATION'] = authorization_header
+      get :index, params: { procedure_id: procedure_id }
+    end
+
+    subject { retour }
+
+    context 'when procedure is not found' do
+      let(:procedure_id) { 99_999_999 }
+      it { expect(subject.code).to eq('404') }
+    end
+  end
+
   describe 'GET index' do
     let(:retour) { get :index, params: { token: admin.api_token, procedure_id: procedure_id } }
 
