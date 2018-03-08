@@ -1,7 +1,16 @@
 class API::V1::DossiersController < APIController
+  resource_description do
+    description <<-EOS
+      L'Authentification de l'API se fait via un Header HTTP :
+
+      ```
+        Authorization: Bearer <Token Administrateur>
+      ```
+    EOS
+  end
+
   api :GET, '/procedures/:procedure_id/dossiers/', 'Liste de tous les dossiers d\'une procédure'
   param :procedure_id, Integer, desc: "L'identifiant de la procédure", required: true
-  param :token, String, desc: "Token administrateur", required: true
   error code: 401, desc: "Non authorisé"
   error code: 404, desc: "Procédure inconnue"
 
@@ -17,7 +26,6 @@ class API::V1::DossiersController < APIController
   api :GET, '/procedures/:procedure_id/dossiers/:id', 'Informations du dossier d\'une procédure'
   param :procedure_id, Integer, desc: "L'identifiant de la procédure", required: true
   param :dossier_id, Integer, desc: "L'identifiant du dossier", required: true
-  param :token, String, desc: "Token administrateur", required: true
   error code: 401, desc: "Non authorisé"
   error code: 404, desc: "Procédure ou dossier inconnu"
 
