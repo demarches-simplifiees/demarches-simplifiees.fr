@@ -56,7 +56,7 @@ describe API::V1::DossiersController do
         it { is_expected.to have_key(:page) }
         it { expect(subject[:page]).to eq(1) }
         it { is_expected.to have_key(:resultats_par_page) }
-        it { expect(subject[:resultats_par_page]).to eq(12) }
+        it { expect(subject[:resultats_par_page]).to eq(described_class.const_get(:DEFAULT_PAGE_SIZE)) }
         it { is_expected.to have_key(:nombre_de_page) }
         it { expect(subject[:nombre_de_page]).to eq(1) }
       end
