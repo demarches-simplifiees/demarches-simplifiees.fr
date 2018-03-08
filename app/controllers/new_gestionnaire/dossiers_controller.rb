@@ -1,6 +1,5 @@
 module NewGestionnaire
   class DossiersController < ProceduresController
-    include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
 
     after_action :mark_demande_as_read, only: :show
@@ -109,14 +108,8 @@ module NewGestionnaire
       # when the Feature.remote_storage is true, otherwise pdf.read is a closed stream.
       dossier.reload
 
-      attestation_pdf = nil
-      if check_attestation_emailable
-        attestation_pdf = dossier.attestation.pdf.read
-      end
-
       flash.notice = notice
-
-      NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
+      NotificationMailer.send_notification(dossier, template).deliver_now!
 
       redirect_to gestionnaire_dossier_path(procedure, dossier)
     end
@@ -191,16 +184,6 @@ module NewGestionnaire
 
     def champs_private_params
       params.require(:dossier).permit(champs_private_attributes: [:id, :piece_justificative_file, :value, value: []])
-    end
-
-    def check_attestation_emailable
-      if dossier&.attestation&.emailable? == false
-        human_size = number_to_human_size(dossier.attestation.pdf.size)
-        msg = "the attestation of the dossier #{dossier.id} cannot be mailed because it is too heavy: #{human_size}"
-        capture_message(msg, level: 'error')
-      end
-
-      dossier&.attestation&.emailable?
     end
 
     def mark_demande_as_read

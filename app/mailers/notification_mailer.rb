@@ -8,15 +8,17 @@ class NotificationMailer < ApplicationMailer
     send_notification(dossier, dossier.procedure.received_mail_template)
   end
 
-  def send_notification(dossier, mail_template, attestation = nil)
+  def send_notification(dossier, mail_template)
     vars_mailer(dossier)
 
     @subject = mail_template.subject_for_dossier dossier
     @body = mail_template.body_for_dossier dossier
 
-    if attestation.present?
-      attachments['attestation.pdf'] = attestation
-    end
+    add_attachment(
+      'attestation.pdf',
+      dossier.attestation&.pdf,
+      "the attestation of the dossier #{dossier.id}"
+    )
 
     mail(subject: @subject) { |format| format.html { @body } }
   end
