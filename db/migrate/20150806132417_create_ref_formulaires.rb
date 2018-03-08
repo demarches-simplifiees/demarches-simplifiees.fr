@@ -1,4 +1,4 @@
-class CreateRefFormulaires < ActiveRecord::Migration
+class CreateRefFormulaires < ActiveRecord::Migration[5.2]
   def change
     create_table :ref_formulaires do |t|
       t.string :ref_demarche

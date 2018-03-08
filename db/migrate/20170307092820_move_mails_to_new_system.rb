@@ -1,4 +1,4 @@
-class MoveMailsToNewSystem < ActiveRecord::Migration[5.0]
+class MoveMailsToNewSystem < ActiveRecord::Migration[5.2]
   def up
     execute 'INSERT INTO received_mails (object, body, procedure_id, created_at, updated_at)
       SELECT object, body, procedure_id, mail_templates.created_at, mail_templates.updated_at from mail_templates inner join procedures on mail_templates.procedure_id = procedures.id;'

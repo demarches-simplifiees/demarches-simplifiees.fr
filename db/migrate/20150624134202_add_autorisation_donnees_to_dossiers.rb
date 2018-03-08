@@ -1,4 +1,4 @@
-class AddAutorisationDonneesToDossiers < ActiveRecord::Migration
+class AddAutorisationDonneesToDossiers < ActiveRecord::Migration[5.2]
   def change
     add_column :dossiers, :autorisation_donnees, :boolean
   end

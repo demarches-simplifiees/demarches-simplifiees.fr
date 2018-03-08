@@ -1,4 +1,4 @@
-class CreateInitiatedMails < ActiveRecord::Migration[5.0]
+class CreateInitiatedMails < ActiveRecord::Migration[5.2]
   def change
     create_table :initiated_mails do |t|
       t.string :object

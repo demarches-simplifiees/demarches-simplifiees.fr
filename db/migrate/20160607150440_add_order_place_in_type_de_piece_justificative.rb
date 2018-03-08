@@ -1,4 +1,4 @@
-class AddOrderPlaceInTypeDePieceJustificative < ActiveRecord::Migration
+class AddOrderPlaceInTypeDePieceJustificative < ActiveRecord::Migration[5.2]
   def up
     add_column :types_de_piece_justificative, :order_place, :integer
   end

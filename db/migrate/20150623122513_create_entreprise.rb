@@ -1,4 +1,4 @@
-class CreateEntreprise < ActiveRecord::Migration
+class CreateEntreprise < ActiveRecord::Migration[5.2]
   def change
     create_table :entreprises do |t|
       t.string :siren

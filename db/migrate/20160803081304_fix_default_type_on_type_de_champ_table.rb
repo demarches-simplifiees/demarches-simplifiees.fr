@@ -1,4 +1,4 @@
-class FixDefaultTypeOnTypeDeChampTable < ActiveRecord::Migration
+class FixDefaultTypeOnTypeDeChampTable < ActiveRecord::Migration[5.2]
   class TypeDeChamp < ApplicationRecord
   end
 

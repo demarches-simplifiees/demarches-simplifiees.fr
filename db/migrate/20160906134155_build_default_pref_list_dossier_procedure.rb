@@ -1,4 +1,4 @@
-class BuildDefaultPrefListDossierProcedure < ActiveRecord::Migration
+class BuildDefaultPrefListDossierProcedure < ActiveRecord::Migration[5.2]
   class Gestionnaire < ApplicationRecord
     has_many :assign_to, dependent: :destroy
     has_many :procedures, through: :assign_to

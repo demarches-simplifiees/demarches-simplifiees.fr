@@ -1,4 +1,4 @@
-class CreateRNAInformationTable < ActiveRecord::Migration
+class CreateRNAInformationTable < ActiveRecord::Migration[5.2]
   def change
     create_table :rna_informations do |t|
       t.string :association_id

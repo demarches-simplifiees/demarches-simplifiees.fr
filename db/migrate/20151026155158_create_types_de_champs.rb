@@ -1,4 +1,4 @@
-class CreateTypesDeChamps < ActiveRecord::Migration
+class CreateTypesDeChamps < ActiveRecord::Migration[5.2]
   def change
     create_table :types_de_champs do |t|
       t.string :libelle

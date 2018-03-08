@@ -1,4 +1,4 @@
-class ChangeEmptytoNilInPreferenceListDossierTable < ActiveRecord::Migration
+class ChangeEmptytoNilInPreferenceListDossierTable < ActiveRecord::Migration[5.2]
   class PreferenceListDossier < ApplicationRecord
   end
 

@@ -1,4 +1,4 @@
-class AddProcedurePathMappingTable < ActiveRecord::Migration
+class AddProcedurePathMappingTable < ActiveRecord::Migration[5.2]
   class ProcedurePath < ApplicationRecord
   end
 

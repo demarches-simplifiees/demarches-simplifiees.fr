@@ -1,4 +1,4 @@
-class CreateProcedurePresentations < ActiveRecord::Migration[5.0]
+class CreateProcedurePresentations < ActiveRecord::Migration[5.2]
   def change
     create_table :procedure_presentations do |t|
       t.references :assign_to, index: { unique: true }, foreign_key: true

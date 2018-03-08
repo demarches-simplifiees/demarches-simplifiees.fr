@@ -1,4 +1,4 @@
-class CreateAvis < ActiveRecord::Migration[5.0]
+class CreateAvis < ActiveRecord::Migration[5.2]
   def change
     create_table :avis do |t|
       t.string :email

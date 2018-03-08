@@ -1,4 +1,4 @@
-class CreateWithoutContinuationMails < ActiveRecord::Migration[5.0]
+class CreateWithoutContinuationMails < ActiveRecord::Migration[5.2]
   def change
     create_table :without_continuation_mails do |t|
       t.text :body

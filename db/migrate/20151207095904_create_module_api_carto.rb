@@ -1,4 +1,4 @@
-class CreateModuleAPICarto < ActiveRecord::Migration
+class CreateModuleAPICarto < ActiveRecord::Migration[5.2]
   def change
     create_table :module_api_cartos do |t|
       t.string :name

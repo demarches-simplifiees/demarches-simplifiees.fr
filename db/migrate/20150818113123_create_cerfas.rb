@@ -1,4 +1,4 @@
-class CreateCerfas < ActiveRecord::Migration
+class CreateCerfas < ActiveRecord::Migration[5.2]
   def change
     create_table :cerfas do |t|
       t.string :content

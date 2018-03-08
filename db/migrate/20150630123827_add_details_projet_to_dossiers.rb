@@ -1,4 +1,4 @@
-class AddDetailsProjetToDossiers < ActiveRecord::Migration
+class AddDetailsProjetToDossiers < ActiveRecord::Migration[5.2]
   def change
     add_column :dossiers, :nom_projet, :string
     add_column :dossiers, :montant_projet, :string

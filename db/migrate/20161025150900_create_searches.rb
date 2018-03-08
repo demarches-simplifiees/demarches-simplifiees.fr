@@ -1,4 +1,4 @@
-class CreateSearches < ActiveRecord::Migration
+class CreateSearches < ActiveRecord::Migration[5.2]
   def up
     add_index :champs, :dossier_id
     add_index :champs, :type_de_champ_id

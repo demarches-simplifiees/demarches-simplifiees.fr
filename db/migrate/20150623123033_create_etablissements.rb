@@ -1,4 +1,4 @@
-class CreateEtablissements < ActiveRecord::Migration
+class CreateEtablissements < ActiveRecord::Migration[5.2]
   def change
     create_table :etablissements do |t|
       t.string :siret

@@ -1,4 +1,4 @@
-class DeleteValueOfFilterProcedure < ActiveRecord::Migration
+class DeleteValueOfFilterProcedure < ActiveRecord::Migration[5.2]
   class Gestionnaire < ApplicationRecord
   end
 

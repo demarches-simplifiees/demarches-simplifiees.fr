@@ -1,4 +1,4 @@
-class RemoveDepositDatetimeFromDossiers < ActiveRecord::Migration[5.0]
+class RemoveDepositDatetimeFromDossiers < ActiveRecord::Migration[5.2]
   def change
     remove_column :dossiers, :deposit_datetime, :datetime
   end

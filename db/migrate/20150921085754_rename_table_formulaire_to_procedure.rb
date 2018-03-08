@@ -1,4 +1,4 @@
-class RenameTableFormulaireToProcedure < ActiveRecord::Migration
+class RenameTableFormulaireToProcedure < ActiveRecord::Migration[5.2]
   def change
     remove_column :formulaires, :demarche_id
     remove_column :formulaires, :cigle_ministere

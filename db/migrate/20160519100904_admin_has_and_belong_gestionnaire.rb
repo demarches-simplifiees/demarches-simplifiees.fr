@@ -1,4 +1,4 @@
-class AdminHasAndBelongGestionnaire < ActiveRecord::Migration
+class AdminHasAndBelongGestionnaire < ActiveRecord::Migration[5.2]
   class Gestionnaire < ApplicationRecord
   end
 

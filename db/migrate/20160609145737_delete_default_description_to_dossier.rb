@@ -1,4 +1,4 @@
-class DeleteDefaultDescriptionToDossier < ActiveRecord::Migration
+class DeleteDefaultDescriptionToDossier < ActiveRecord::Migration[5.2]
   class Dossier < ApplicationRecord
   end
 

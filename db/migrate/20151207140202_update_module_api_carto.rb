@@ -1,4 +1,4 @@
-class UpdateModuleAPICarto < ActiveRecord::Migration
+class UpdateModuleAPICarto < ActiveRecord::Migration[5.2]
   class Procedure < ApplicationRecord
   end
 

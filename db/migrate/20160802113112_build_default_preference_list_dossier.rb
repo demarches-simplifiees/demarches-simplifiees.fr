@@ -1,4 +1,4 @@
-class BuildDefaultPreferenceListDossier < ActiveRecord::Migration
+class BuildDefaultPreferenceListDossier < ActiveRecord::Migration[5.2]
   class Gestionnaire < ApplicationRecord
     def build_default_preferences_list_dossier
       PreferenceListDossier.available_columns.each do |table|
