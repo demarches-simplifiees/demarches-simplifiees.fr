@@ -129,6 +129,7 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 - Faire tourner Brakeman : `bundle exec brakeman`
 - Linter les fichiers HAML : `bundle exec haml-lint app/views/`
 - Linter les fichiers SCSS : `bundle exec scss-lint app/assets/stylesheets/`
+- [AccessLint](http://accesslint.com/) tourne automatiquement sur les PRs
 
 ## Déploiement
 
