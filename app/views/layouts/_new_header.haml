@@ -4,7 +4,7 @@
   .header-inner-content
 
     .flex.align-center
-      = link_to root_path, class: "header-logo" do
+      = link_to root_path_for_profile(nav_bar_profile), class: "header-logo" do
         %img{ src: image_url("header/logo-ds.svg"), alt: "Logo de demarches-simplifiees.fr" }
 
       - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
