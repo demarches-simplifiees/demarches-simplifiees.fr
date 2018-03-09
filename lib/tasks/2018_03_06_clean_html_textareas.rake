@@ -5,12 +5,17 @@ namespace :'2018_03_06_clean_html_textareas' do
     include ActionView::Helpers::TextHelper
     include HtmlToStringHelper
 
-    types_de_champ = TypeDeChamp.joins(:champ)
-      .where(type_champ: "textarea")
-      .where("champs.value LIKE '%<%'")
+    champs = Champ.joins(:type_de_champ)
+      .where(types_de_champ: { type_champ: "textarea" })
+      .where("value LIKE '%<%'")
 
-    types_de_champ.find_each do |tdc|
-      tdc.champ.each { |c| c.update_column(:value, html_to_string(c.value)) }
+    total = champs.count
+
+    champs.find_each(batch_size: 100).with_index do |c, i|
+      if (i % 100) == 0
+        print "Champ #{i}/#{total}\n"
+      end
+      c.update_column(:value, html_to_string(c.value))
     end
   end
 end
