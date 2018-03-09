@@ -15,7 +15,9 @@ namespace :'2018_03_08_send_missing_accuse_reception' do
     # For dossiers that have moved on, other mails have been sent since, and a late
     # accusé de réception would add more confusion than it’s worth
     problem_dossiers = Dossier.where(en_construction_at: bug_date..fix_date)
-    problem_dossiers.find_each do |dossier|
+    total = problem_dossiers.count
+    problem_dossiers.find_each(batch_size: 100).with_index do |dossier, i|
+      print "Dossier #{i}/#{total}\n"
       template = dossier.procedure.initiated_mail_template
       date_depot = dossier.en_construction_at.in_time_zone("Paris").strftime('%d/%m/%Y à %H:%M')
       body_prefix = "<p>Suite à une difficulté technique, veuillez recevoir par la présente l’accusé de réception pour votre dossier déposé le #{date_depot}.<br>L’équipe demarches-simplifiees.fr vous présente ses excuses pour la gène occasionnée.</p><hr>\n"
