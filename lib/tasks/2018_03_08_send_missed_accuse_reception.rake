@@ -16,7 +16,11 @@ namespace :'2018_03_08_send_missing_accuse_reception' do
     # accusé de réception would add more confusion than it’s worth
     problem_dossiers = Dossier.where(en_construction_at: bug_date..fix_date)
     problem_dossiers.find_each do |dossier|
-      NotificationMailer.send_notification(dossier, dossier.procedure.initiated_mail_template).deliver_now!
+      template = dossier.procedure.initiated_mail_template
+      date_depot = dossier.en_construction_at.in_time_zone("Paris").strftime('%d/%m/%Y à %H:%M')
+      body_prefix = "<p>Suite à une difficulté technique, veuillez recevoir par la présente l’accusé de réception pour votre dossier déposé le #{date_depot}.<br>L’équipe demarches-simplifiees.fr vous présente ses excuses pour la gène occasionnée.</p><hr>\n"
+      template.body = body_prefix + template.body
+      NotificationMailer.send_notification(dossier, template).deliver_now!
     end
   end
 end
