@@ -1,5 +1,5 @@
 class AddProcedurePathMappingTable < ActiveRecord::Migration
-  class ProcedurePath < ActiveRecord::Base
+  class ProcedurePath < ApplicationRecord
   end
 
   def change

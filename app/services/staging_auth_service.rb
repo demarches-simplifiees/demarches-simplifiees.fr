@@ -1,5 +1,5 @@
 class StagingAuthService
-  CONFIG_PATH = Rails.root.join("config/basic_auth.yml")
+  CONFIG_PATH = Rails.root.join("config", "basic_auth.yml")
 
   def self.authenticate(username, password)
     if enabled?
@@ -14,7 +14,7 @@ class StagingAuthService
   end
 
   def self.config
-    if File.exists?(CONFIG_PATH)
+    if File.exist?(CONFIG_PATH)
       YAML.safe_load(File.read(CONFIG_PATH)).symbolize_keys
     else
       {}

@@ -9,7 +9,7 @@ class InvitesController < ApplicationController
 
     email = params[:email].downcase
 
-    user = User.find_by_email(email)
+    user = User.find_by(email: email)
     invite = class_var.create(dossier: dossier, user: user, email: email, email_sender: email_sender)
 
     if invite.valid?

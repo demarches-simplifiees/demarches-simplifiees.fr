@@ -20,7 +20,7 @@ class Users::SessionsController < Sessions::SessionsController
     try_to_authenticate(Administrateur, remember_me)
 
     if user_signed_in?
-      current_user.update_attributes(loged_in_with_france_connect: '')
+      current_user.update(loged_in_with_france_connect: '')
     end
 
     if user_signed_in?
@@ -44,7 +44,7 @@ class Users::SessionsController < Sessions::SessionsController
 
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
-      current_user.update_attributes(loged_in_with_france_connect: '')
+      current_user.update(loged_in_with_france_connect: '')
 
       sign_out :user
 
@@ -78,7 +78,9 @@ class Users::SessionsController < Sessions::SessionsController
   end
 
   def try_to_authenticate(klass, remember_me = false)
-    if resource = klass.find_for_database_authentication(email: params[:user][:email])
+    resource = klass.find_for_database_authentication(email: params[:user][:email])
+
+    if resource.present?
       if resource.valid_password?(params[:user][:password])
         resource.remember_me = remember_me
         sign_in resource

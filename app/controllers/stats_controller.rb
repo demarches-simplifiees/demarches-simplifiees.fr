@@ -170,7 +170,7 @@ class StatsController < ApplicationController
   end
 
   def avis_usage
-    [3.week.ago, 2.week.ago, 1.week.ago].map do |min_date|
+    [3.weeks.ago, 2.weeks.ago, 1.week.ago].map do |min_date|
       max_date = min_date + 1.week
 
       weekly_dossiers = Dossier.includes(:avis).where(created_at: min_date..max_date).to_a
@@ -189,7 +189,7 @@ class StatsController < ApplicationController
   end
 
   def avis_average_answer_time
-    [3.week.ago, 2.week.ago, 1.week.ago].map do |min_date|
+    [3.weeks.ago, 2.weeks.ago, 1.week.ago].map do |min_date|
       max_date = min_date + 1.week
 
       average = Avis.with_answer
@@ -203,7 +203,7 @@ class StatsController < ApplicationController
   end
 
   def avis_answer_percentages
-    [3.week.ago, 2.week.ago, 1.week.ago].map do |min_date|
+    [3.weeks.ago, 2.weeks.ago, 1.week.ago].map do |min_date|
       max_date = min_date + 1.week
 
       weekly_avis = Avis.where(created_at: min_date..max_date)
@@ -222,7 +222,7 @@ class StatsController < ApplicationController
   end
 
   def motivation_usage_dossier
-    [3.week.ago, 2.week.ago, 1.week.ago].map do |date|
+    [3.weeks.ago, 2.weeks.ago, 1.week.ago].map do |date|
       min_date = date.beginning_of_week
       max_date = date.end_of_week
 
@@ -241,7 +241,7 @@ class StatsController < ApplicationController
   end
 
   def motivation_usage_procedure
-    [3.week.ago, 2.week.ago, 1.week.ago].map do |date|
+    [3.weeks.ago, 2.weeks.ago, 1.week.ago].map do |date|
       min_date = date.beginning_of_week
       max_date = date.end_of_week
 

@@ -333,9 +333,9 @@ describe API::V1::DossiersController do
 
           it { expect(subject[:created_at]).not_to be_nil }
           if Features.remote_storage
-            it { expect(subject[:content_url]).to match /^https:\/\/storage.apientreprise.fr\/tps_dev\/cerfa-.*\.pdf$/ }
+            it { expect(subject[:content_url]).to match(/^https:\/\/storage.apientreprise.fr\/tps_dev\/cerfa-.*\.pdf$/) }
           else
-            it { expect(subject[:content_url]).to match /^http:\/\/.*downloads.*_CERFA\.pdf$/ }
+            it { expect(subject[:content_url]).to match(/^http:\/\/.*downloads.*_CERFA\.pdf$/) }
           end
 
           describe 'user' do

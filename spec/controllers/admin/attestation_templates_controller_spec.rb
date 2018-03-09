@@ -140,7 +140,7 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
     context 'when something wrong happens in the attestation template creation' do
       before do
-        expect_any_instance_of(AttestationTemplate).to receive(:update_attributes).and_return(false)
+        expect_any_instance_of(AttestationTemplate).to receive(:update).and_return(false)
         expect_any_instance_of(AttestationTemplate).to receive(:errors)
           .and_return(double(full_messages: ['nop']))
 

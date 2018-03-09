@@ -104,8 +104,10 @@ gem 'sanitize-url'
 gem 'delayed_job_active_record'
 gem "daemons"
 gem 'delayed_cron_job'
-gem "delayed_job_web"
-
+# FIXME: this is a fork, go back to official version
+# once https://github.com/ejschmitt/delayed_job_web/issues/101
+# has been merged and released
+gem "delayed_job_web", git: 'https://github.com/breckenedge/delayed_job_web.git', branch: 'cve_2017_12097'
 gem 'select2-rails'
 
 # PDF Generation

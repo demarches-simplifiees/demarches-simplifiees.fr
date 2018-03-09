@@ -1,20 +1,20 @@
 class GestionnaireIsAssignToProcedure < ActiveRecord::Migration
-  class AssignTo < ActiveRecord::Base
+  class AssignTo < ApplicationRecord
     belongs_to :gestionnaire
     belongs_to :procedure
   end
 
-  class Gestionnaire < ActiveRecord::Base
+  class Gestionnaire < ApplicationRecord
     has_and_belongs_to_many :administrateurs
     has_many :procedures, through: :assign_to
   end
 
-  class Administrateur < ActiveRecord::Base
+  class Administrateur < ApplicationRecord
     has_and_belongs_to_many :gestionnaires
     has_many :procedures
   end
 
-  class Procedure < ActiveRecord::Base
+  class Procedure < ApplicationRecord
     belongs_to :administrateur
     has_many :gestionnaires, through: :assign_to
   end

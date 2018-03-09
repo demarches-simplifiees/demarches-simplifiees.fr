@@ -254,9 +254,9 @@ describe NewGestionnaire::ProceduresController, type: :controller do
 
       describe 'statut' do
         let!(:a_suivre__dossier) { Timecop.freeze(1.day.ago){ create(:dossier, procedure: procedure, state: 'en_instruction') } }
-        let!(:new_followed_dossier) { Timecop.freeze(2.day.ago){ create(:dossier, procedure: procedure, state: 'en_instruction') } }
-        let!(:termine_dossier) { Timecop.freeze(3.day.ago){ create(:dossier, procedure: procedure, state: 'accepte') } }
-        let!(:archived_dossier) { Timecop.freeze(4.day.ago){ create(:dossier, procedure: procedure, state: 'en_instruction', archived: true) } }
+        let!(:new_followed_dossier) { Timecop.freeze(2.days.ago){ create(:dossier, procedure: procedure, state: 'en_instruction') } }
+        let!(:termine_dossier) { Timecop.freeze(3.days.ago){ create(:dossier, procedure: procedure, state: 'accepte') } }
+        let!(:archived_dossier) { Timecop.freeze(4.days.ago){ create(:dossier, procedure: procedure, state: 'en_instruction', archived: true) } }
 
         before do
           gestionnaire.followed_dossiers << new_followed_dossier

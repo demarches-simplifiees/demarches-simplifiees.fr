@@ -1,8 +1,8 @@
 class AdminHasAndBelongGestionnaire < ActiveRecord::Migration
-  class Gestionnaire < ActiveRecord::Base
+  class Gestionnaire < ApplicationRecord
   end
 
-  class AdministrateursGestionnaire < ActiveRecord::Base
+  class AdministrateursGestionnaire < ApplicationRecord
   end
 
   def up

@@ -1,8 +1,8 @@
 class UpdateModuleAPICarto < ActiveRecord::Migration
-  class Procedure < ActiveRecord::Base
+  class Procedure < ApplicationRecord
   end
 
-  class ModuleAPICarto < ActiveRecord::Base
+  class ModuleAPICarto < ApplicationRecord
   end
 
   def up

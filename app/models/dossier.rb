@@ -1,4 +1,4 @@
-class Dossier < ActiveRecord::Base
+class Dossier < ApplicationRecord
   enum state: {
     brouillon:       'brouillon',
     en_construction: 'en_construction',
@@ -181,7 +181,6 @@ class Dossier < ActiveRecord::Base
 
   def reset!
     etablissement.destroy
-    entreprise.destroy
 
     update_columns(autorisation_donnees: false)
   end

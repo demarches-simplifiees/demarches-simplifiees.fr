@@ -1,5 +1,5 @@
 class CreatePreferenceSmartListingPage < ActiveRecord::Migration
-  class Gestionnaire < ActiveRecord::Base
+  class Gestionnaire < ApplicationRecord
     has_one :preference_smart_listing_page, dependent: :destroy
 
     def build_default_preferences_smart_listing_page
@@ -7,7 +7,7 @@ class CreatePreferenceSmartListingPage < ActiveRecord::Migration
     end
   end
 
-  class PreferenceSmartListingPage < ActiveRecord::Base
+  class PreferenceSmartListingPage < ApplicationRecord
     belongs_to :gestionnaire
     belongs_to :procedure
 

@@ -1,5 +1,5 @@
 class DBremovePieceJustificativeEmpty < ActiveRecord::Migration
-  class PieceJustificative < ActiveRecord::Base
+  class PieceJustificative < ApplicationRecord
   end
 
   def change

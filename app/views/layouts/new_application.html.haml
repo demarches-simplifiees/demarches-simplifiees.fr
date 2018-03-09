@@ -1,4 +1,5 @@
-%html
+!!! 5
+%html{ lang: "fr" }
   %head
     %meta{ "http-equiv": "Content-Type", content: "text/html; charset=UTF-8" }
     %meta{ "http-equiv": "X-UA-Compatible", content: "IE=edge" }
@@ -7,7 +8,7 @@
     = csrf_meta_tags
 
     %title
-      = content_for?(:title) ? yield(:title) : "demarches-simplifiees.fr"
+      = content_for?(:title) ? "#{yield(:title)} · demarches-simplifiees.fr" : "demarches-simplifiees.fr"
 
     = favicon_link_tag(image_url("favicons/16x16.png"), type: "image/png", sizes: "16x16")
     = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")

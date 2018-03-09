@@ -1,5 +1,5 @@
 class ResetAllPreferenceListDossier < ActiveRecord::Migration
-  class PreferenceListDossier < ActiveRecord::Base
+  class PreferenceListDossier < ApplicationRecord
     belongs_to :gestionnaire
     belongs_to :procedure
 
@@ -91,7 +91,7 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
     end
   end
 
-  class Gestionnaire < ActiveRecord::Base
+  class Gestionnaire < ApplicationRecord
     has_many :assign_to, dependent: :destroy
     has_many :procedures, through: :assign_to
 
@@ -145,7 +145,7 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
     end
   end
 
-  class Procedure < ActiveRecord::Base
+  class Procedure < ApplicationRecord
     has_many :assign_to, dependent: :destroy
     has_many :gestionnaires, through: :assign_to
   end

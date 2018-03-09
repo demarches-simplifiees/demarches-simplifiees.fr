@@ -13,7 +13,7 @@ module NewGestionnaire
       @avis_a_donner = gestionnaire_avis.without_answer
       @avis_donnes = gestionnaire_avis.with_answer
 
-      @statut = params[:statut].present? ? params[:statut] : A_DONNER_STATUS
+      @statut = params[:statut].presence || A_DONNER_STATUS
 
       @avis = case @statut
       when A_DONNER_STATUS
@@ -32,7 +32,7 @@ module NewGestionnaire
     end
 
     def update
-      avis.update_attributes(avis_params)
+      avis.update(avis_params)
       flash.notice = 'Votre réponse est enregistrée.'
       redirect_to instruction_gestionnaire_avis_path(avis)
     end

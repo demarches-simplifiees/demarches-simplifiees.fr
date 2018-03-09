@@ -1,7 +1,7 @@
 # See:
 # - https://robots.thoughtbot.com/implementing-multi-table-full-text-search-with-postgres
 # - http://calebthompson.io/talks/search.html
-class Search < ActiveRecord::Base
+class Search < ApplicationRecord
   # :nodoc:
   #
   # Englobs a search result (actually a collection of Search objects) so it acts
