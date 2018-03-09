@@ -1,4 +1,4 @@
-class Cadastre < ActiveRecord::Base
+class Cadastre < ApplicationRecord
   belongs_to :dossier, touch: true
 
   def geometry

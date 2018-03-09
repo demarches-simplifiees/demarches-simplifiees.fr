@@ -1,4 +1,4 @@
-class AssignTo < ActiveRecord::Base
+class AssignTo < ApplicationRecord
   belongs_to :procedure
   belongs_to :gestionnaire
   has_one :procedure_presentation, dependent: :destroy

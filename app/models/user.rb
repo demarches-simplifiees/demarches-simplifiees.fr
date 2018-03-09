@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   enum loged_in_with_france_connect: {
     particulier: 'particulier',
     entreprise: 'entreprise'
@@ -21,11 +21,11 @@ class User < ActiveRecord::Base
   include CredentialsSyncableConcern
 
   def self.find_for_france_connect email, siret
-    user = User.find_by_email(email)
+    user = User.find_by(email: email)
     if user.nil?
       return User.create(email: email, password: Devise.friendly_token[0, 20], siret: siret)
     else
-      user.update_attributes(siret: siret)
+      user.update(siret: siret)
       user
     end
   end

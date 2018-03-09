@@ -1,13 +1,13 @@
 class PieceJustificativeHaveUser < ActiveRecord::Migration
-  class PieceJustificative < ActiveRecord::Base
+  class PieceJustificative < ApplicationRecord
     belongs_to :dossier
   end
 
-  class Dossier < ActiveRecord::Base
+  class Dossier < ApplicationRecord
     belongs_to :user
   end
 
-  class User < ActiveRecord::Base
+  class User < ApplicationRecord
   end
 
   def change

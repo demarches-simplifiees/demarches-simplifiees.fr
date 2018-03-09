@@ -11,7 +11,7 @@ class Admin::MailTemplatesController < AdminController
 
   def update
     mail_template = find_mail_template_by_slug(params[:id])
-    mail_template.update_attributes(update_params)
+    mail_template.update(update_params)
     redirect_to admin_procedure_mail_templates_path
   end
 

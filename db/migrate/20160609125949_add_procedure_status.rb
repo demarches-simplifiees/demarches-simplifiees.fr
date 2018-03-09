@@ -1,5 +1,5 @@
 class AddProcedureStatus < ActiveRecord::Migration
-  class Procedure < ActiveRecord::Base
+  class Procedure < ApplicationRecord
   end
 
   def change

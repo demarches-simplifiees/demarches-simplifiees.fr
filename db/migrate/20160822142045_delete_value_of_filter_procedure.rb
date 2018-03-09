@@ -1,5 +1,5 @@
 class DeleteValueOfFilterProcedure < ActiveRecord::Migration
-  class Gestionnaire < ActiveRecord::Base
+  class Gestionnaire < ApplicationRecord
   end
 
   def change

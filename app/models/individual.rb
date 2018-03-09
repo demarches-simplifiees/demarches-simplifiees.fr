@@ -1,7 +1,7 @@
-class Individual < ActiveRecord::Base
+class Individual < ApplicationRecord
   belongs_to :dossier
 
-  validates_uniqueness_of :dossier_id
+  validates :dossier_id, uniqueness: true
   validates :gender, presence: true, allow_nil: false, on: :update
   validates :nom, presence: true, allow_blank: false, allow_nil: false, on: :update
   validates :prenom, presence: true, allow_blank: false, allow_nil: false, on: :update

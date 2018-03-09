@@ -31,9 +31,7 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
     before do
       subject
 
-      (1..9).each do |i|
-        eval "dossier#{i}.reload"
-      end
+      [dossier1, dossier2, dossier3, dossier4, dossier5, dossier6, dossier7, dossier8, dossier9].each(&:reload)
 
       procedure_hier.reload
       procedure_aujourdhui.reload

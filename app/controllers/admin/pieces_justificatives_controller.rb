@@ -6,7 +6,7 @@ class Admin::PiecesJustificativesController < AdminController
   end
 
   def update
-    if @procedure.update_attributes(update_params)
+    if @procedure.update(update_params)
       flash.now.notice = 'Modifications sauvegardées'
     else
       flash.now.notice = 'Une erreur est survenue'

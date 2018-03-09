@@ -110,7 +110,7 @@ class Users::DossiersController < UsersController
 
     if etablissement_attributes.present?
       etablissement_attributes = ActionController::Parameters.new(etablissement_attributes).permit!
-      etablissement = @facade.dossier.create_etablissement(etablissement_attributes)
+      etablissement = @facade.dossier.build_etablissement(etablissement_attributes)
       if etablissement.save
         Rails.logger.info("etablissement saved, siret: #{siret}, id: #{etablissement.id}")
         @facade.dossier.mandataire_social!(current_user.france_connect_information)
@@ -156,7 +156,7 @@ class Users::DossiersController < UsersController
       flash.alert = individual_errors
       redirect_to users_dossier_path(id: @facade.dossier.id)
     else
-      if !Dossier.find(@facade.dossier.id).update_attributes update_params_with_formatted_birthdate
+      if !Dossier.find(@facade.dossier.id).update update_params_with_formatted_birthdate
         flash.alert = @facade.dossier.errors.full_messages
 
         return redirect_to users_dossier_path(id: @facade.dossier.id)
@@ -259,7 +259,7 @@ class Users::DossiersController < UsersController
   end
 
   def update_current_user_siret! siret
-    current_user.update_attributes(siret: siret)
+    current_user.update(siret: siret)
   end
 
   def facade id = params[:id]

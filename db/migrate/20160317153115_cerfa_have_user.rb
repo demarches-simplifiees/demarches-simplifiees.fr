@@ -1,13 +1,13 @@
 class CerfaHaveUser < ActiveRecord::Migration
-  class Cerfa < ActiveRecord::Base
+  class Cerfa < ApplicationRecord
     belongs_to :dossier
   end
 
-  class Dossier < ActiveRecord::Base
+  class Dossier < ApplicationRecord
     belongs_to :user
   end
 
-  class User < ActiveRecord::Base
+  class User < ApplicationRecord
   end
 
   def change
