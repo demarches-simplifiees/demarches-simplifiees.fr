@@ -1,23 +1,13 @@
 class StagingAuthService
-  CONFIG_PATH = Rails.root.join("config", "basic_auth.yml")
-
   def self.authenticate(username, password)
     if enabled?
-      username == config[:username] && password == config[:password]
+      username == Rails.application.secrets.basic_auth[:username] && password == Rails.application.secrets.basic_auth[:password]
     else
       true
     end
   end
 
   def self.enabled?
-    !!config[:enabled]
-  end
-
-  def self.config
-    if File.exist?(CONFIG_PATH)
-      YAML.safe_load(File.read(CONFIG_PATH)).symbolize_keys
-    else
-      {}
-    end
+    ENV['BASIC_AUTH_ENABLED'] == 'enabled'
   end
 end
