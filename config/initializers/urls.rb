@@ -3,5 +3,3 @@ if Rails.env.production?
 else
   SIADEURL = 'https://staging.entreprise.api.gouv.fr'
 end
-
-CGU_URL = "https://demarches-simplifiees.gitbooks.io/demarches-simplifiees/content/conditions-generales-dutilisation.html"
