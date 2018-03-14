@@ -22,9 +22,9 @@
           %li.footer-link
             = link_to "Statistiques", stats_path, :class => "footer-link"
           %li.footer-link
-            = link_to "CGU", CGU_URL, :class => "footer-link", :target => "_blank"
+            = link_to "CGU", CGU_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "Mentions légales", "https://tps.gitbooks.io/tps-documentation/content/conditions-generales-dutilisation.html#4-mentions-l%C3%A9gales",  :class => "footer-link", :target => "_blank"
+            = link_to "Mentions légales", "https://demarches-simplifiees.gitbooks.io/demarches-simplifiees/content/conditions-generales-dutilisation.html#4-mentions-l%C3%A9gales",  :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
 
       %li.footer-column
         %ul.footer-links
@@ -33,10 +33,10 @@
               "mailto:#{t('dynamics.contact_email')}",
               :class => "footer-link"
           %li.footer-link
-            = link_to "Documentation", "https://tps.gitbooks.io/tps-documentation/content/", :class => "footer-link", :target => "_blank"
+            = link_to "Documentation", "https://demarches-simplifiees.gitbooks.io/demarches-simplifiees/content/", :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "Documentation de l'API", "/docs", :class => "footer-link", :target => "_blank"
+            = link_to "Documentation de l'API", "/docs", :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "FAQ", "http://demarches-simplifiees.helpscoutdocs.com/", :class => "footer-link", :target => "_blank"
+            = link_to "FAQ", "http://demarches-simplifiees.helpscoutdocs.com/", :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link
             = link_to "Accessibilité", accessibilite_index_path, :class => "footer-link"
