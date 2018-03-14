@@ -1,4 +1,4 @@
-class ConvertAllDatetimeToDateOnDatabase < ActiveRecord::Migration
+class ConvertAllDatetimeToDateOnDatabase < ActiveRecord::Migration[5.2]
   class TypeDeChamp < ApplicationRecord
   end
 

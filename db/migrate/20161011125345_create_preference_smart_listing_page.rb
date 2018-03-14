@@ -1,4 +1,4 @@
-class CreatePreferenceSmartListingPage < ActiveRecord::Migration
+class CreatePreferenceSmartListingPage < ActiveRecord::Migration[5.2]
   class Gestionnaire < ApplicationRecord
     has_one :preference_smart_listing_page, dependent: :destroy
 

@@ -1,4 +1,4 @@
-class UpdateModuleAPICarto < ActiveRecord::Migration
+class UpdateModuleAPICarto < ActiveRecord::Migration[5.2]
   class Procedure < ApplicationRecord
   end
 
@@ -7,7 +7,7 @@ class UpdateModuleAPICarto < ActiveRecord::Migration
 
   def up
     remove_column :module_api_cartos, :name
-    add_index :module_api_cartos, [:procedure_id], unique: true
+    # add_index :module_api_cartos, [:procedure_id], unique: true
 
     add_column :module_api_cartos, :use_api_carto, :boolean, default: false
     add_column :module_api_cartos, :quartiers_prioritaires, :boolean, default: false

@@ -1,4 +1,4 @@
-class CreateRefPiecesJointes < ActiveRecord::Migration
+class CreateRefPiecesJointes < ActiveRecord::Migration[5.2]
   def change
     create_table :ref_pieces_jointes do |t|
       t.string :CERFA

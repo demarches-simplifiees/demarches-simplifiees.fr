@@ -1,4 +1,4 @@
-class CreateRefusedMails < ActiveRecord::Migration[5.0]
+class CreateRefusedMails < ActiveRecord::Migration[5.2]
   def change
     create_table :refused_mails do |t|
       t.text :body

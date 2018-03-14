@@ -1,4 +1,4 @@
-class CreateReceivedMails < ActiveRecord::Migration[5.0]
+class CreateReceivedMails < ActiveRecord::Migration[5.2]
   def change
     create_table :received_mails do |t|
       t.text :body

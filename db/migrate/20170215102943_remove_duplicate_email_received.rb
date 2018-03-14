@@ -1,4 +1,4 @@
-class RemoveDuplicateEmailReceived < ActiveRecord::Migration[5.0]
+class RemoveDuplicateEmailReceived < ActiveRecord::Migration[5.2]
   def change
     all_mails = MailReceived.all
     groupped = all_mails.group_by { |m| m.procedure_id }

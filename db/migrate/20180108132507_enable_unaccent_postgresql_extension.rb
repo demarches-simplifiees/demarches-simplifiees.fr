@@ -1,4 +1,4 @@
-class EnableUnaccentPostgresqlExtension < ActiveRecord::Migration[5.0]
+class EnableUnaccentPostgresqlExtension < ActiveRecord::Migration[5.2]
   def up
     execute 'CREATE EXTENSION IF NOT EXISTS unaccent;'
   end

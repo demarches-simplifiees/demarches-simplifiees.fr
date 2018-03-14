@@ -1,4 +1,4 @@
-class CerfaHaveUser < ActiveRecord::Migration
+class CerfaHaveUser < ActiveRecord::Migration[5.2]
   class Cerfa < ApplicationRecord
     belongs_to :dossier
   end

@@ -1,4 +1,4 @@
-class GestionnaireIsAssignToProcedure < ActiveRecord::Migration
+class GestionnaireIsAssignToProcedure < ActiveRecord::Migration[5.2]
   class AssignTo < ApplicationRecord
     belongs_to :gestionnaire
     belongs_to :procedure

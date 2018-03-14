@@ -1,4 +1,4 @@
-class PurgeDraftDossier < ActiveRecord::Migration
+class PurgeDraftDossier < ActiveRecord::Migration[5.2]
   class Dossier < ApplicationRecord
     BROUILLON = %w(draft)
 

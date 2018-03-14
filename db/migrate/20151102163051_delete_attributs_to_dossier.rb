@@ -1,4 +1,4 @@
-class DeleteAttributsToDossier < ActiveRecord::Migration
+class DeleteAttributsToDossier < ActiveRecord::Migration[5.2]
   def change
     remove_column :dossiers, :montant_projet
     remove_column :dossiers, :montant_aide_demande

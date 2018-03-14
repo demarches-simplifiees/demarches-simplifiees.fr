@@ -1,4 +1,4 @@
-class CreateCadastreTable < ActiveRecord::Migration
+class CreateCadastreTable < ActiveRecord::Migration[5.2]
   def change
     create_table :cadastres do |t|
       t.string :surface_intersection

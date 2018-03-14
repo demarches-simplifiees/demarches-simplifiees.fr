@@ -1,4 +1,4 @@
-class CreateTablePreferenceDeviseProfil < ActiveRecord::Migration
+class CreateTablePreferenceDeviseProfil < ActiveRecord::Migration[5.2]
   def change
     create_table :preference_devise_profils do |t|
       t.string :last_current_devise_profil

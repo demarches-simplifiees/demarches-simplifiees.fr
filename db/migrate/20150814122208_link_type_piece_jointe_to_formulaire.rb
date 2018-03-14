@@ -1,4 +1,4 @@
-class LinkTypePieceJointeToFormulaire < ActiveRecord::Migration
+class LinkTypePieceJointeToFormulaire < ActiveRecord::Migration[5.2]
   # def up
   #   TypePieceJointe.find_each do |type_piece_jointe|
   #     forms = Formulaire.find_by_demarche_id(type_piece_jointe.CERFA)

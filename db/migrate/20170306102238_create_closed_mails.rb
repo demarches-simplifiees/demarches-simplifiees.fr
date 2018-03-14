@@ -1,4 +1,4 @@
-class CreateClosedMails < ActiveRecord::Migration[5.0]
+class CreateClosedMails < ActiveRecord::Migration[5.2]
   def change
     create_table :closed_mails do |t|
       t.text :body

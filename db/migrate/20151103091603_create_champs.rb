@@ -1,4 +1,4 @@
-class CreateChamps < ActiveRecord::Migration
+class CreateChamps < ActiveRecord::Migration[5.2]
   def change
     create_table :champs do |t|
       t.string :value

@@ -1,4 +1,4 @@
-class AddUniqConstraintOnGestionnaireDossierCouple < ActiveRecord::Migration[5.0]
+class AddUniqConstraintOnGestionnaireDossierCouple < ActiveRecord::Migration[5.2]
   def up
     change_column_null :follows, :gestionnaire_id, false
     change_column_null :follows, :dossier_id, false

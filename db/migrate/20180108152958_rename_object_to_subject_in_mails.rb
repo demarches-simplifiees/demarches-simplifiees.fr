@@ -1,4 +1,4 @@
-class RenameObjectToSubjectInMails < ActiveRecord::Migration[5.0]
+class RenameObjectToSubjectInMails < ActiveRecord::Migration[5.2]
   def change
     rename_column :closed_mails, :object, :subject
     rename_column :initiated_mails, :object, :subject

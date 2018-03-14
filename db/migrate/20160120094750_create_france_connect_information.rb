@@ -1,4 +1,4 @@
-class CreateFranceConnectInformation < ActiveRecord::Migration
+class CreateFranceConnectInformation < ActiveRecord::Migration[5.2]
   class User < ApplicationRecord
   end
 

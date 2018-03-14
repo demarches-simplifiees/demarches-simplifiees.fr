@@ -1,4 +1,4 @@
-class PieceJustificativeHaveUser < ActiveRecord::Migration
+class PieceJustificativeHaveUser < ActiveRecord::Migration[5.2]
   class PieceJustificative < ApplicationRecord
     belongs_to :dossier
   end

@@ -1,4 +1,4 @@
-class ChangeAttributsToDossier < ActiveRecord::Migration
+class ChangeAttributsToDossier < ActiveRecord::Migration[5.2]
   def change
     remove_column :dossiers, :lien_plus_infos
     remove_column :dossiers, :mail_contact

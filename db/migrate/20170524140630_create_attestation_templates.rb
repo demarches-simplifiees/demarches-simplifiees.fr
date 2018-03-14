@@ -1,4 +1,4 @@
-class CreateAttestationTemplates < ActiveRecord::Migration[5.0]
+class CreateAttestationTemplates < ActiveRecord::Migration[5.2]
   def change
     create_table :attestation_templates do |t|
       t.text :title

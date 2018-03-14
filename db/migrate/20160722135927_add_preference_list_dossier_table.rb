@@ -1,4 +1,4 @@
-class AddPreferenceListDossierTable < ActiveRecord::Migration
+class AddPreferenceListDossierTable < ActiveRecord::Migration[5.2]
   def change
     create_table :preference_list_dossiers do |t|
       t.string :libelle

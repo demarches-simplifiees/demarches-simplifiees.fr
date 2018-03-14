@@ -1,4 +1,4 @@
-class SetOriginalFilenameForUploaders < ActiveRecord::Migration
+class SetOriginalFilenameForUploaders < ActiveRecord::Migration[5.2]
   class PieceJustificative < ApplicationRecord
   end
 

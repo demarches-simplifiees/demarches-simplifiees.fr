@@ -1,4 +1,4 @@
-class FixTypeDeChampHeaderSectionWithMandatoryTrue < ActiveRecord::Migration
+class FixTypeDeChampHeaderSectionWithMandatoryTrue < ActiveRecord::Migration[5.2]
   class TypeDeChamp < ApplicationRecord
   end
 

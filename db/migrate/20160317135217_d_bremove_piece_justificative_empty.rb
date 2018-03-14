@@ -1,4 +1,4 @@
-class DBremovePieceJustificativeEmpty < ActiveRecord::Migration
+class DBremovePieceJustificativeEmpty < ActiveRecord::Migration[5.2]
   class PieceJustificative < ApplicationRecord
   end
 

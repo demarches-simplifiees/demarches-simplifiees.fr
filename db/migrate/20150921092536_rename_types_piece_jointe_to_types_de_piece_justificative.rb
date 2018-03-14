@@ -1,4 +1,4 @@
-class RenameTypesPieceJointeToTypesDePieceJustificative < ActiveRecord::Migration
+class RenameTypesPieceJointeToTypesDePieceJustificative < ActiveRecord::Migration[5.2]
   def change
     remove_column :types_piece_jointe, :CERFA
     remove_column :types_piece_jointe, :nature

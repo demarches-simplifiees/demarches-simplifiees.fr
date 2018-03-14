@@ -1,4 +1,4 @@
-class AddProcedureStatus < ActiveRecord::Migration
+class AddProcedureStatus < ActiveRecord::Migration[5.2]
   class Procedure < ApplicationRecord
   end
 

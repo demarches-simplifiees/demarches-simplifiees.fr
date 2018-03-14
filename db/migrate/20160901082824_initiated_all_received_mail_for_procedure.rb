@@ -1,4 +1,4 @@
-class InitiatedAllReceivedMailForProcedure < ActiveRecord::Migration
+class InitiatedAllReceivedMailForProcedure < ActiveRecord::Migration[5.2]
   class Procedure < ApplicationRecord
     has_one :mail_received
   end

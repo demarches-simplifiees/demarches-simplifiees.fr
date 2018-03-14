@@ -1,4 +1,4 @@
-class AddMotivationToDossier < ActiveRecord::Migration[5.0]
+class AddMotivationToDossier < ActiveRecord::Migration[5.2]
   def change
     add_column :dossiers, :motivation, :text
   end

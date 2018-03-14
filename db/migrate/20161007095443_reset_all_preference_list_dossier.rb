@@ -1,4 +1,4 @@
-class ResetAllPreferenceListDossier < ActiveRecord::Migration
+class ResetAllPreferenceListDossier < ActiveRecord::Migration[5.2]
   class PreferenceListDossier < ApplicationRecord
     belongs_to :gestionnaire
     belongs_to :procedure

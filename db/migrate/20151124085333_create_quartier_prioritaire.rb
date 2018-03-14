@@ -1,4 +1,4 @@
-class CreateQuartierPrioritaire < ActiveRecord::Migration
+class CreateQuartierPrioritaire < ActiveRecord::Migration[5.2]
   def change
     create_table :quartier_prioritaires do |t|
       t.string :code
