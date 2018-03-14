@@ -802,7 +802,6 @@ DEPENDENCIES
   dotenv-rails
   draper
   factory_bot
-  ffi (= 1.9.18)
   fog
   fog-openstack
   font-awesome-rails
