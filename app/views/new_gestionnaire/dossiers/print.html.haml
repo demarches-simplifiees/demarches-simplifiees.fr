@@ -3,6 +3,8 @@
 
 %h2 Identité du demandeur
 
+= render partial: "new_gestionnaire/dossiers/user_infos", locals: { user: @dossier.user }
+
 - if @dossier.entreprise.present?
   = render partial: "identite_entreprise", locals: { entreprise: @dossier.entreprise }
 
