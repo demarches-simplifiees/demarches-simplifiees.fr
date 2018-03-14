@@ -1,15 +1,15 @@
-%table.table.vertical
+%table.table.vertical.dossier-champs
   %tbody
     %tr
-      %th Civilité :
+      %th.libelle Civilité :
       %td= individual.gender
     %tr
-      %th Prénom :
+      %th.libelle Prénom :
       %td= individual.prenom
     %tr
-      %th Nom :
+      %th.libelle Nom :
       %td= individual.nom
     - if individual.birthdate.present?
       %tr
-        %th Date de naissance :
+        %th.libelle Date de naissance :
         %td= Date.parse(individual.birthdate).strftime("%d/%m/%Y")

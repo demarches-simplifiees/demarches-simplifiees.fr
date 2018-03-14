@@ -1,6 +1,8 @@
 .container
   .tab-title Identité du demandeur
   .card
+    = render partial: "new_gestionnaire/dossiers/user_infos", locals: { user: dossier.user }
+
     - if dossier.entreprise.present?
       = render partial: "new_gestionnaire/dossiers/identite_entreprise", locals: { entreprise: dossier.entreprise }
 
