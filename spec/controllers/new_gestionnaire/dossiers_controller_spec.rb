@@ -337,13 +337,19 @@ describe NewGestionnaire::DossiersController, type: :controller do
   describe "#create_avis" do
     let(:saved_avis) { dossier.avis.first }
 
-    before do
+    subject do
       post :create_avis, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id,
-        avis: { email: 'email@a.com', introduction: 'intro', confidentiel: true }
+        avis: { email: email, introduction: 'intro', confidentiel: true }
       }
     end
+
+    before do
+      subject
+    end
+
+    let(:email) { 'email@a.com' }
 
     it { expect(saved_avis.email).to eq('email@a.com') }
     it { expect(saved_avis.introduction).to eq('intro') }
@@ -351,6 +357,14 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(saved_avis.dossier).to eq(dossier) }
     it { expect(saved_avis.claimant).to eq(gestionnaire) }
     it { expect(response).to redirect_to(avis_gestionnaire_dossier_path(dossier.procedure, dossier)) }
+
+    context "with an invalid email" do
+      let(:email) { 'emaila.com' }
+
+      it { expect(response).to render_template :avis }
+      it { expect(flash.alert).to eq(["Email n'est pas valide"]) }
+      it { expect { subject }.not_to change(Avis, :count) }
+    end
   end
 
   describe "#update_annotations" do

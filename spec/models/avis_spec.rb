@@ -118,7 +118,7 @@ RSpec.describe Avis, type: :model do
     end
   end
 
-  describe "#clean_email" do
+  describe "email sanitization" do
     subject { Avis.create(claimant: claimant, email: email, dossier: create(:dossier), gestionnaire: create(:gestionnaire)) }
 
     context "when there is no email" do

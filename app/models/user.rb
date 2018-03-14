@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  include CredentialsSyncableConcern
+  include EmailSanitizableConcern
+
   enum loged_in_with_france_connect: {
     particulier: 'particulier',
     entreprise: 'entreprise'
@@ -18,7 +21,7 @@ class User < ApplicationRecord
   delegate :given_name, :family_name, :email_france_connect, :gender, :birthdate, :birthplace, :france_connect_particulier_id, to: :france_connect_information
   accepts_nested_attributes_for :france_connect_information
 
-  include CredentialsSyncableConcern
+  before_validation -> { sanitize_email(:email) }
 
   def self.find_for_france_connect email, siret
     user = User.find_by(email: email)

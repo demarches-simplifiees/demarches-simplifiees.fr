@@ -1,13 +1,15 @@
 class Administrateur < ApplicationRecord
+  include CredentialsSyncableConcern
+  include EmailSanitizableConcern
+
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable, :validatable
 
   has_and_belongs_to_many :gestionnaires
   has_many :procedures
 
+  before_validation -> { sanitize_email(:email) }
   before_save :ensure_api_token
-
-  include CredentialsSyncableConcern
 
   scope :inactive, -> { where(active: false) }
 

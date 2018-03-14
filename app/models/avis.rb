@@ -1,9 +1,13 @@
 class Avis < ApplicationRecord
+  include EmailSanitizableConcern
+
   belongs_to :dossier, touch: true
   belongs_to :gestionnaire
   belongs_to :claimant, class_name: 'Gestionnaire'
 
-  before_save :clean_email
+  validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
+
+  before_validation -> { sanitize_email(:email) }
   before_create :try_to_assign_gestionnaire
   after_create :notify_gestionnaire
 
@@ -28,12 +32,6 @@ class Avis < ApplicationRecord
   end
 
   private
-
-  def clean_email
-    if email.present?
-      self.email = email.downcase.strip
-    end
-  end
 
   def notify_gestionnaire
     AvisMailer.avis_invitation(self).deliver_now
