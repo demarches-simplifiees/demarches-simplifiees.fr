@@ -2,9 +2,6 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.0.rc1'
 
-# Temporary lock ffi version. Read more: https://github.com/ffi/ffi/commit/0fef6d44d09018d03c24af7fa4f9fcd38f36b642
-gem 'ffi', '1.9.18'
-
 # Use SCSS for stylesheets
 gem 'sass-rails'
 # Use Uglifier as compressor for JavaScript assets
