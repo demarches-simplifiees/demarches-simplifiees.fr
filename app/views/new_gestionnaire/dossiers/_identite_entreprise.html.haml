@@ -1,47 +1,49 @@
 - entreprise = entreprise.decorate
 - etablissement = entreprise.etablissement
-%h4= entreprise.raison_sociale_or_name
 
-%table.table.vertical
+%table.table.vertical.dossier-champs
   %tbody
     %tr
-      %th SIRET :
+      %th.libelle Dénomination :
+      %td= entreprise.raison_sociale_or_name
+    %tr
+      %th.libelle SIRET :
       %td= entreprise.siret_siege_social
     %tr
-      %th Forme juridique :
+      %th.libelle Forme juridique :
       %td= sanitize(entreprise.forme_juridique)
     - if etablissement.present?
       %tr
-        %th Libellé NAF :
+        %th.libelle Libellé NAF :
         %td= etablissement.libelle_naf
       %tr
-        %th Code NAF :
+        %th.libelle Code NAF :
         %td= etablissement.naf
     %tr
-      %th Date de création :
+      %th.libelle Date de création :
       %td= Time.at(entreprise.date_creation).localtime.strftime("%d/%m/%Y")
     %tr
-      %th Effectif de l'organisation :
+      %th.libelle Effectif de l'organisation :
       %td= entreprise.effectif
     %tr
-      %th Code effectif :
+      %th.libelle Code effectif :
       %td= entreprise.code_effectif_entreprise
     %tr
-      %th Numéro de TVA intracommunautaire :
+      %th.libelle Numéro de TVA intracommunautaire :
       %td= entreprise.numero_tva_intracommunautaire
     - if etablissement.present?
       %tr
-        %th Adresse :
+        %th.libelle Adresse :
         %td
           - etablissement.adresse.split("\n").each do |line|
             = line
             %br
     %tr
-      %th Capital social :
+      %th.libelle Capital social :
       %td= entreprise.pretty_capital_social
     - if etablissement.present?
       %tr
-        %th Exercices :
+        %th.libelle Exercices :
         %td
           - etablissement.exercices.each_with_index do |exercice, index|
             = "#{exercice.date_fin_exercice.year} : "
@@ -49,20 +51,20 @@
             %br
     - if entreprise.rna_information.present?
       %tr
-        %th Numéro RNA :
+        %th.libelle Numéro RNA :
         %td= entreprise.rna_information.association_id
       %tr
-        %th Titre :
+        %th.libelle Titre :
         %td= entreprise.rna_information.titre
       %tr
-        %th Objet :
+        %th.libelle Objet :
         %td= entreprise.rna_information.objet
       %tr
-        %th Date de création :
+        %th.libelle Date de création :
         %td= entreprise.rna_information.date_creation&.strftime("%d/%m/%Y")
       %tr
-        %th Date de publication :
+        %th.libelle Date de publication :
         %td= entreprise.rna_information.date_publication&.strftime("%d/%m/%Y")
       %tr
-        %th Date de déclaration :
+        %th.libelle Date de déclaration :
         %td= entreprise.rna_information.date_declaration&.strftime("%d/%m/%Y")
