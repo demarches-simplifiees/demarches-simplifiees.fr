@@ -24,7 +24,8 @@
             Description
         - @mail_template.tags.each do |tag|
           %tr
-            %td.center
-              = "--#{tag[:libelle]}--"
+            %td
+              %code{ style: "white-space: pre-wrap;" }
+                = "--#{tag[:libelle]}--"
             %td
               = tag[:description]
