@@ -13,7 +13,7 @@ class AdministrationMailer < ApplicationMailer
     @reset_password_token = reset_password_token
     mail(to: admin.email,
          subject: "demarches-simplifiees.fr - Activez votre compte administrateur",
-         reply_to: "equipe@demarches-simplifiees.fr")
+         reply_to: "contact@demarches-simplifiees.fr")
   end
 
   def dubious_procedures(procedures_and_type_de_champs)
