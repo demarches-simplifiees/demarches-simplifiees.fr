@@ -30,16 +30,20 @@
   }
 }
 
-.mixed-buttons-bar .button {
-  // Needed so that buttons without text
-  // are ligned with those that have text
-  vertical-align: top;
-}
+.mixed-buttons-bar {
+  flex-shrink: 0;
 
-.mixed-buttons-bar .label {
-  padding: $default-spacer $default-padding;
-  font-size: 14px;
-  line-height: 20px;
+  .button {
+    // Needed so that buttons without text
+    // are ligned with those that have text
+    vertical-align: top;
+  }
+
+  .label {
+    padding: $default-spacer $default-padding;
+    font-size: 14px;
+    line-height: 20px;
+  }
 }
 
 .print-menu-opener {
