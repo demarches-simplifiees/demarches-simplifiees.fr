@@ -27,6 +27,7 @@ module NewGestionnaire
 
     def avis
       @avis_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.avis_seen_at
+      @avis = Avis.new
     end
 
     def personnes_impliquees
@@ -159,8 +160,15 @@ module NewGestionnaire
     end
 
     def create_avis
-      Avis.create(avis_params.merge(claimant: current_gestionnaire, dossier: dossier))
-      redirect_to avis_gestionnaire_dossier_path(procedure, dossier)
+      @avis = Avis.new(avis_params.merge(claimant: current_gestionnaire, dossier: dossier))
+      if @avis.save
+        flash.notice = "Une demande d'avis a été envoyée à #{@avis.email_to_display}"
+        redirect_to avis_gestionnaire_dossier_path(procedure, dossier)
+      else
+        flash.now.alert = @avis.errors.full_messages
+        @avis_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.avis_seen_at
+        render :avis
+      end
     end
 
     def update_annotations
