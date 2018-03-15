@@ -34,9 +34,13 @@ class SIADE::API
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
     RestClient::Resource.new(
-      base_url + "/v2/" + resource_name + "/#{siret_or_siren}",
+      url(resource_name, siret_or_siren),
       verify_ssl: verify_ssl_mode
     ).get(params: params)
+  end
+
+  def self.url(resource_name, siret_or_siren)
+    base_url + "/v2/" + resource_name + "/#{siret_or_siren}"
   end
 
   def self.mandatory_params(siret_or_siren, procedure_id)
