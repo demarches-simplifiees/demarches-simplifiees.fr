@@ -5,7 +5,7 @@ class SIADE::RNAAdapter
   end
 
   def data_source
-    @data_source ||= JSON.parse(SIADE::API.rna(@siret, @procedure_id), symbolize_names: true)
+    @data_source ||= SIADE::API.rna(@siret, @procedure_id)
   end
 
   def to_params

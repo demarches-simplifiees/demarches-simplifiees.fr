@@ -5,7 +5,7 @@ class SIADE::ExercicesAdapter
   end
 
   def data_source
-    @data_source ||= JSON.parse(SIADE::API.exercices(@siret, @procedure_id), symbolize_names: true)
+    @data_source ||= SIADE::API.exercices(@siret, @procedure_id)
   rescue
     @data_source = nil
   end

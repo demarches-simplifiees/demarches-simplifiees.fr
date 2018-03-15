@@ -32,7 +32,9 @@ class SIADE::API
     params = params(siret_or_siren, procedure_id)
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
-    RestClient::Resource.new(url, verify_ssl: verify_ssl_mode).get(params: params)
+    result = RestClient::Resource.new(url, verify_ssl: verify_ssl_mode).get(params: params)
+
+    JSON.parse(result, symbolize_names: true)
   end
 
   def self.url(resource_name, siret_or_siren)

@@ -23,7 +23,7 @@ describe SIADE::API do
       let(:body) { File.read('spec/support/files/entreprise.json') }
 
       it 'returns response body' do
-        expect(subject).to eq(body)
+        expect(subject).to eq(JSON.parse(body, symbolize_names: true))
       end
     end
   end
@@ -51,7 +51,7 @@ describe SIADE::API do
       let(:body) { File.read('spec/support/files/etablissement.json') }
 
       it 'returns body' do
-        expect(subject).to eq(body)
+        expect(subject).to eq(JSON.parse(body, symbolize_names: true))
       end
     end
   end
@@ -82,7 +82,7 @@ describe SIADE::API do
       let(:body) { File.read('spec/support/files/exercices.json') }
 
       it 'raises RestClient::Unauthorized' do
-        expect(subject).to eq(body)
+        expect(subject).to eq(JSON.parse(body, symbolize_names: true))
       end
     end
   end
@@ -110,7 +110,7 @@ describe SIADE::API do
       let(:status) { 200 }
       let(:body) { File.read('spec/support/files/rna.json') }
 
-      it{ expect(subject).to eq(body) }
+      it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
     end
   end
 end

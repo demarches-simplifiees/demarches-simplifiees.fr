@@ -5,7 +5,7 @@ class SIADE::EtablissementAdapter
   end
 
   def data_source
-    @data_source ||= JSON.parse(SIADE::API.etablissement(@siret, @procedure_id), symbolize_names: true)
+    @data_source ||= SIADE::API.etablissement(@siret, @procedure_id)
   end
 
   def success?

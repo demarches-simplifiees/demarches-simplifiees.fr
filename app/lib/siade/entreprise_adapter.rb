@@ -5,7 +5,7 @@ class SIADE::EntrepriseAdapter
   end
 
   def data_source
-    @data_source ||= JSON.parse(SIADE::API.entreprise(@siren, @procedure_id), symbolize_names: true)
+    @data_source ||= SIADE::API.entreprise(@siren, @procedure_id)
   rescue
     @data_source = nil
   end
