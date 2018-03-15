@@ -40,7 +40,7 @@ class SIADE::API
   end
 
   def self.url(resource_name, siret_or_siren)
-    base_url + "/v2/" + resource_name + "/#{siret_or_siren}"
+    SIADEURL + "/v2/" + resource_name + "/#{siret_or_siren}"
   end
 
   def self.mandatory_params(siret_or_siren, procedure_id)
@@ -49,9 +49,5 @@ class SIADE::API
       recipient: siret_or_siren,
       object: "procedure_id: #{procedure_id}"
     }
-  end
-
-  def self.base_url
-    SIADEURL
   end
 end
