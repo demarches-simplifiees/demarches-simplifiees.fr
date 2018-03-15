@@ -40,6 +40,12 @@
                 = pj.filename.to_s
             - else
               Pièce justificative non fournie
+        - when "textarea"
+          %th.libelle
+            = "#{c.libelle} :"
+          %td.rich-text
+            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
+              = simple_format(c.value)
         - else
           %th.libelle
             = "#{c.libelle} :"
