@@ -1,7 +1,16 @@
 class API::V1::ProceduresController < APIController
+  resource_description do
+    description <<-EOS
+      L'Authentification de l'API se fait via un Header HTTP :
+
+      ```
+        Authorization: Bearer <Token Administrateur>
+      ```
+    EOS
+  end
+
   api :GET, '/procedures/:id', 'Informations concernant une procédure'
   param :id, Integer, desc: "L'identifiant de la procédure", required: true
-  param :token, String, desc: "Token administrateur", required: true
   error code: 401, desc: "Non authorisé"
   error code: 404, desc: "Procédure inconnue"
 
