@@ -50,6 +50,8 @@
                   - pj = champ.piece_justificative_file
                   %a{ href: url_for(pj), target: '_blank' }
                     = pj.filename.to_s
+                - elsif champ.type_champ == 'textarea'
+                  = simple_format(champ.decorate.value)
                 - else
                   = sanitize(champ.decorate.value)
 
