@@ -2,9 +2,10 @@ require 'spec_helper'
 
 describe SIADE::RNAAdapter do
   let(:siret) { '50480511000013' }
+  let(:procedure_id) { 22 }
   let(:body) { File.read('spec/support/files/rna.json') }
   let(:status) { 200 }
-  let(:adapter) { described_class.new(siret) }
+  let(:adapter) { described_class.new(siret, procedure_id) }
 
   subject { adapter.to_params }
 
