@@ -56,4 +56,22 @@ describe Invite do
       end
     end
   end
+
+  describe "#default_scope" do
+    let(:dossier) { create(:dossier, hidden_at: hidden_at) }
+    let!(:invite) { create(:invite, email: "email@totor.com", dossier: dossier) }
+
+    context "when dossier is not hidden" do
+      let(:hidden_at) { nil }
+
+      it { expect(Invite.count).to eq(1) }
+      it { expect(Invite.all).to include(invite) }
+    end
+
+    context "when dossier is hidden" do
+      let(:hidden_at) { 1.day.ago }
+
+      it { expect(Invite.count).to eq(0) }
+    end
+  end
 end
