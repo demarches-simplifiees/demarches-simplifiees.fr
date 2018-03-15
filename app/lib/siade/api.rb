@@ -26,7 +26,7 @@ class SIADE::API
     call(base_url + endpoint, mandatory_params(siret, procedure_id))
   end
 
-  def self.call(url, params = {})
+  def self.call(url, params)
     params[:token] = SIADETOKEN
 
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
