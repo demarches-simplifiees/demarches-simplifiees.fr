@@ -28,9 +28,7 @@ class SIADE::API
   end
 
   def self.call(resource_name, siret_or_siren, procedure_id)
-    params = mandatory_params(siret_or_siren, procedure_id)
-    params[:token] = SIADETOKEN
-
+    params = params(siret_or_siren, procedure_id)
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
     RestClient::Resource.new(
@@ -43,11 +41,12 @@ class SIADE::API
     [SIADEURL, "v2", resource_name, siret_or_siren].join("/")
   end
 
-  def self.mandatory_params(siret_or_siren, procedure_id)
+  def self.params(siret_or_siren, procedure_id)
     {
       context: "demarches-simplifiees.fr",
       recipient: siret_or_siren,
-      object: "procedure_id: #{procedure_id}"
+      object: "procedure_id: #{procedure_id}",
+      token: SIADETOKEN
     }
   end
 end
