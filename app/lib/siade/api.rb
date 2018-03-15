@@ -3,37 +3,38 @@ class SIADE::API
     attr_accessor :token
   end
 
+  ENTREPRISE_RESOURCE_NAME = "entreprises"
+  ETABLISSEMENT_RESOURCE_NAME = "etablissements"
+  EXERCICES_RESOURCE_NAME = "exercices"
+  RNA_RESOURCE_NAME = "associations"
+
   def initialize
   end
 
   def self.entreprise(siren, procedure_id)
-    endpoint = "entreprises/#{siren}"
-    call(endpoint, siren, procedure_id)
+    call(ENTREPRISE_RESOURCE_NAME, siren, procedure_id)
   end
 
   def self.etablissement(siret, procedure_id)
-    endpoint = "etablissements/#{siret}"
-    call(endpoint, siret, procedure_id)
+    call(ETABLISSEMENT_RESOURCE_NAME, siret, procedure_id)
   end
 
   def self.exercices(siret, procedure_id)
-    endpoint = "exercices/#{siret}"
-    call(endpoint, siret, procedure_id)
+    call(EXERCICES_RESOURCE_NAME, siret, procedure_id)
   end
 
   def self.rna(siret, procedure_id)
-    endpoint = "associations/#{siret}"
-    call(endpoint, siret, procedure_id)
+    call(RNA_RESOURCE_NAME, siret, procedure_id)
   end
 
-  def self.call(url, siret_or_siren, procedure_id)
+  def self.call(resource_name, siret_or_siren, procedure_id)
     params = mandatory_params(siret_or_siren, procedure_id)
     params[:token] = SIADETOKEN
 
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
     RestClient::Resource.new(
-      base_url + "/v2/" + url,
+      base_url + "/v2/" + resource_name + "/#{siret_or_siren}",
       verify_ssl: verify_ssl_mode
     ).get(params: params)
   end
