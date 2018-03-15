@@ -1,4 +1,4 @@
-class SIADE::ExercicesAdapter
+class ApiEntreprise::ExercicesAdapter
   def initialize(siret, procedure_id)
     @siret = siret
     @procedure_id = procedure_id
@@ -15,7 +15,7 @@ class SIADE::ExercicesAdapter
   private
 
   def data_source
-    @data_source ||= SIADE::API.exercices(@siret, @procedure_id)
+    @data_source ||= ApiEntreprise::API.exercices(@siret, @procedure_id)
   rescue
     @data_source = nil
   end
