@@ -1,7 +1,10 @@
 class API::V1::DossiersController < APIController
+  DEFAULT_PAGE_SIZE = 100
+
   api :GET, '/procedures/:procedure_id/dossiers/', 'Liste de tous les dossiers d\'une procédure'
   param :procedure_id, Integer, desc: "L'identifiant de la procédure", required: true
-  param :token, String, desc: "Token administrateur", required: true
+  param :page, String, desc: "Numéro de la page", required: false
+  param :resultats_par_page, String, desc: "Nombre de résultats par page (#{DEFAULT_PAGE_SIZE} par défaut, maximum 1 000)", required: false
   error code: 401, desc: "Non authorisé"
   error code: 404, desc: "Procédure inconnue"
 
@@ -17,7 +20,6 @@ class API::V1::DossiersController < APIController
   api :GET, '/procedures/:procedure_id/dossiers/:id', 'Informations du dossier d\'une procédure'
   param :procedure_id, Integer, desc: "L'identifiant de la procédure", required: true
   param :dossier_id, Integer, desc: "L'identifiant du dossier", required: true
-  param :token, String, desc: "Token administrateur", required: true
   error code: 401, desc: "Non authorisé"
   error code: 404, desc: "Procédure ou dossier inconnu"
 
@@ -41,6 +43,6 @@ class API::V1::DossiersController < APIController
   end
 
   def per_page # inherited value from will_paginate
-    12
+    [params[:resultats_par_page] || DEFAULT_PAGE_SIZE, 1000].min
   end
 end
