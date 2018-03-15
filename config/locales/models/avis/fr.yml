@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      avis: 'Avis'
+    attributes:
+      avis:
+        answer: "Réponse"
