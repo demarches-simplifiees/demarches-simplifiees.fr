@@ -5,11 +5,13 @@ class ApiEntreprise::ExercicesAdapter
   end
 
   def to_array
-    data_source[:exercices].map do |exercice|
-      exercice.slice(*attr_to_fetch)
+    if data_source.present?
+      data_source[:exercices].map do |exercice|
+        exercice.slice(*attr_to_fetch)
+      end
+    else
+      []
     end
-  rescue
-    []
   end
 
   private

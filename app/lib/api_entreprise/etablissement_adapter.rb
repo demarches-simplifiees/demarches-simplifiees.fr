@@ -11,13 +11,15 @@ class ApiEntreprise::EtablissementAdapter
   end
 
   def to_params
-    params = data_source[:etablissement].slice(*attr_to_fetch)
-    adresse_line = params[:adresse].slice(*address_lines_to_fetch).values.compact.join("\r\n")
-    params.merge!(params[:adresse].slice(*address_attr_to_fetch))
-    params[:adresse] = adresse_line
-    params
-  rescue
-    nil
+    if data_source.present?
+      params = data_source[:etablissement].slice(*attr_to_fetch)
+      adresse_line = params[:adresse].slice(*address_lines_to_fetch).values.compact.join("\r\n")
+      params.merge!(params[:adresse].slice(*address_attr_to_fetch))
+      params[:adresse] = adresse_line
+      params
+    else
+      nil
+    end
   end
 
   private
