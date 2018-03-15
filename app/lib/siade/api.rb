@@ -7,22 +7,22 @@ class SIADE::API
   end
 
   def self.entreprise(siren, procedure_id)
-    endpoint = "/v2/entreprises/#{siren}"
+    endpoint = "entreprises/#{siren}"
     call(endpoint, siren, procedure_id)
   end
 
   def self.etablissement(siret, procedure_id)
-    endpoint = "/v2/etablissements/#{siret}"
+    endpoint = "etablissements/#{siret}"
     call(endpoint, siret, procedure_id)
   end
 
   def self.exercices(siret, procedure_id)
-    endpoint = "/v2/exercices/#{siret}"
+    endpoint = "exercices/#{siret}"
     call(endpoint, siret, procedure_id)
   end
 
   def self.rna(siret, procedure_id)
-    endpoint = "/v2/associations/#{siret}"
+    endpoint = "associations/#{siret}"
     call(endpoint, siret, procedure_id)
   end
 
@@ -33,7 +33,7 @@ class SIADE::API
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
     RestClient::Resource.new(
-      base_url + url,
+      base_url + "/v2/" + url,
       verify_ssl: verify_ssl_mode
     ).get(params: params)
   end
