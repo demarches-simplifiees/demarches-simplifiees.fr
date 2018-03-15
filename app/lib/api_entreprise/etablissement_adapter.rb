@@ -1,4 +1,4 @@
-class SIADE::EtablissementAdapter
+class ApiEntreprise::EtablissementAdapter
   def initialize(siret, procedure_id)
     @siret = siret
     @procedure_id = procedure_id
@@ -23,7 +23,7 @@ class SIADE::EtablissementAdapter
   private
 
   def data_source
-    @data_source ||= SIADE::API.etablissement(@siret, @procedure_id)
+    @data_source ||= ApiEntreprise::API.etablissement(@siret, @procedure_id)
   end
 
   def attr_to_fetch

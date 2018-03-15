@@ -1,4 +1,4 @@
-class SIADE::API
+class ApiEntreprise::API
   class << self
     attr_accessor :token
   end

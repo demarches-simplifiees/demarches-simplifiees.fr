@@ -1,4 +1,4 @@
-class SIADE::EntrepriseAdapter
+class ApiEntreprise::EntrepriseAdapter
   def initialize(siren, procedure_id)
     @siren = siren
     @procedure_id = procedure_id
@@ -21,7 +21,7 @@ class SIADE::EntrepriseAdapter
   private
 
   def data_source
-    @data_source ||= SIADE::API.entreprise(@siren, @procedure_id)
+    @data_source ||= ApiEntreprise::API.entreprise(@siren, @procedure_id)
   rescue
     @data_source = nil
   end

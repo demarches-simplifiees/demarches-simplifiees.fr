@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SIADE::API do
+describe ApiEntreprise::API do
   let(:procedure_id) { 12 }
   describe '.entreprise' do
     subject { described_class.entreprise(siren, procedure_id) }

@@ -1,4 +1,4 @@
-class SIADE::RNAAdapter
+class ApiEntreprise::RNAAdapter
   def initialize(siret, procedure_id)
     @siret = siret
     @procedure_id = procedure_id
@@ -18,7 +18,7 @@ class SIADE::RNAAdapter
   private
 
   def data_source
-    @data_source ||= SIADE::API.rna(@siret, @procedure_id)
+    @data_source ||= ApiEntreprise::API.rna(@siret, @procedure_id)
   end
 
   def attr_to_fetch
