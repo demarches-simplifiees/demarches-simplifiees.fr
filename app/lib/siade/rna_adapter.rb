@@ -4,10 +4,6 @@ class SIADE::RNAAdapter
     @procedure_id = procedure_id
   end
 
-  def data_source
-    @data_source ||= SIADE::API.rna(@siret, @procedure_id)
-  end
-
   def to_params
     if data_source[:association][:id].nil?
       return nil
@@ -20,6 +16,10 @@ class SIADE::RNAAdapter
   end
 
   private
+
+  def data_source
+    @data_source ||= SIADE::API.rna(@siret, @procedure_id)
+  end
 
   def attr_to_fetch
     [

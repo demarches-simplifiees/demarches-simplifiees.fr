@@ -4,10 +4,6 @@ class SIADE::EtablissementAdapter
     @procedure_id = procedure_id
   end
 
-  def data_source
-    @data_source ||= SIADE::API.etablissement(@siret, @procedure_id)
-  end
-
   def success?
     data_source
   rescue
@@ -25,6 +21,10 @@ class SIADE::EtablissementAdapter
   end
 
   private
+
+  def data_source
+    @data_source ||= SIADE::API.etablissement(@siret, @procedure_id)
+  end
 
   def attr_to_fetch
     [
