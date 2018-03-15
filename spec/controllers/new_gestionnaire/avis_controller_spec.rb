@@ -108,6 +108,16 @@ describe NewGestionnaire::AvisController, type: :controller do
         post :create_avis, params: { id: previous_avis.id, avis: { email: email, introduction: intro, confidentiel: asked_confidentiel } }
       end
 
+      context 'when an invalid email' do
+        let(:previous_avis_confidentiel) { false }
+        let(:asked_confidentiel) { false }
+        let(:email) { "toto.fr" }
+
+        it { expect(response).to render_template :instruction }
+        it { expect(flash.alert).to eq(["Email n'est pas valide"]) }
+        it { expect(Avis.last).to eq(previous_avis) }
+      end
+
       context 'when the previous avis is public' do
         let(:previous_avis_confidentiel) { false }
 

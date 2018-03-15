@@ -1,1 +1,1 @@
-CGU_URL = "https://demarches-simplifiees.gitbooks.io/demarches-simplifiees/content/conditions-generales-dutilisation.html"
+CGU_URL = "https://demarches-simplifiees.gitbook.io/demarches-simplifiees/cgu"

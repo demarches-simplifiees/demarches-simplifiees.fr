@@ -3,7 +3,7 @@ module NewGestionnaire
     before_action :authenticate_gestionnaire!, except: [:sign_up, :create_gestionnaire]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up]
     before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_gestionnaire]
-    before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire]
+    before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :update]
 
     A_DONNER_STATUS = 'a-donner'
     DONNES_STATUS   = 'donnes'
@@ -29,12 +29,18 @@ module NewGestionnaire
     end
 
     def instruction
+      @new_avis = Avis.new
     end
 
     def update
-      avis.update(avis_params)
-      flash.notice = 'Votre réponse est enregistrée.'
-      redirect_to instruction_gestionnaire_avis_path(avis)
+      if @avis.update(avis_params)
+        flash.notice = 'Votre réponse est enregistrée.'
+        redirect_to instruction_gestionnaire_avis_path(@avis)
+      else
+        flash.now.alert = @avis.errors.full_messages
+        @new_avis = Avis.new
+        render :instruction
+      end
     end
 
     def messagerie
@@ -55,8 +61,16 @@ module NewGestionnaire
 
     def create_avis
       confidentiel = avis.confidentiel || params[:avis][:confidentiel]
-      Avis.create(create_avis_params.merge(claimant: current_gestionnaire, dossier: avis.dossier, confidentiel: confidentiel))
-      redirect_to instruction_gestionnaire_avis_path(avis)
+      @new_avis = Avis.new(create_avis_params.merge(claimant: current_gestionnaire, dossier: avis.dossier, confidentiel: confidentiel))
+
+      if @new_avis.save
+        flash.notice = "Une demande d'avis a été envoyée à #{@new_avis.email_to_display}"
+        redirect_to instruction_gestionnaire_avis_path(avis)
+      else
+        flash.now.alert = @new_avis.errors.full_messages
+        set_avis_and_dossier
+        render :instruction
+      end
     end
 
     def sign_up
