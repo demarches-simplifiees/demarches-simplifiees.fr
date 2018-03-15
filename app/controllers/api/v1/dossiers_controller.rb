@@ -13,7 +13,7 @@ class API::V1::DossiersController < APIController
   error code: 404, desc: "Procédure inconnue"
 
   def index
-    procedure = current_administrateur.procedures.find(params[:procedure_id])
+    procedure = administrateur.procedures.find(params[:procedure_id])
     dossiers = procedure.dossiers.state_not_brouillon.page(params[:page]).per(per_page)
 
     render json: { dossiers: dossiers.map{ |dossier| DossiersSerializer.new(dossier) }, pagination: pagination(dossiers) }, status: 200
@@ -28,7 +28,7 @@ class API::V1::DossiersController < APIController
   error code: 404, desc: "Procédure ou dossier inconnu"
 
   def show
-    procedure = current_administrateur.procedures.find(params[:procedure_id])
+    procedure = administrateur.procedures.find(params[:procedure_id])
     dossier = procedure.dossiers.find(params[:id])
 
     respond_to do |format|
