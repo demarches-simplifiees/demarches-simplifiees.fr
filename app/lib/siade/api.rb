@@ -36,7 +36,7 @@ class SIADE::API
   end
 
   def self.url(resource_name, siret_or_siren)
-    [SIADEURL, "v2", resource_name, siret_or_siren].join("/")
+    [SIADEURL, resource_name, siret_or_siren].join("/")
   end
 
   def self.params(siret_or_siren, procedure_id)
