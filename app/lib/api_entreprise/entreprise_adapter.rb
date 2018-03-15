@@ -5,9 +5,7 @@ class ApiEntreprise::EntrepriseAdapter
   end
 
   def success?
-    data_source
-  rescue
-    false
+    data_source.present?
   end
 
   def to_params
