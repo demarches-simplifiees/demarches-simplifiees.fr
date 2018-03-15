@@ -28,13 +28,11 @@ class SIADE::API
   end
 
   def self.call(resource_name, siret_or_siren, procedure_id)
+    url = url(resource_name, siret_or_siren)
     params = params(siret_or_siren, procedure_id)
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
-    RestClient::Resource.new(
-      url(resource_name, siret_or_siren),
-      verify_ssl: verify_ssl_mode
-    ).get(params: params)
+    RestClient::Resource.new(url, verify_ssl: verify_ssl_mode).get(params: params)
   end
 
   def self.url(resource_name, siret_or_siren)
