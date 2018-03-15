@@ -2,11 +2,12 @@ require 'spec_helper'
 
 describe SIADE::EntrepriseAdapter do
   let(:siren) { '418166096' }
-  let(:adapter) { described_class.new(siren) }
+  let(:procedure_id) { 22 }
+  let(:adapter) { described_class.new(siren, procedure_id) }
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
+    stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
       .to_return(body: File.read('spec/support/files/entreprise.json', status: 200))
   end
 
@@ -69,7 +70,7 @@ describe SIADE::EntrepriseAdapter do
   end
 
   context 'Mandataire sociaux' do
-    subject { described_class.new(siren).to_params[:mandataires_sociaux] }
+    subject { described_class.new(siren, procedure_id).to_params[:mandataires_sociaux] }
 
     it '#to_params class est une Hash ?' do
       expect(subject).to be_an_instance_of(Array)

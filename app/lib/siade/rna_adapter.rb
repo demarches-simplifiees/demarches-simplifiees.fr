@@ -1,10 +1,11 @@
 class SIADE::RNAAdapter
-  def initialize(siret)
+  def initialize(siret, procedure_id)
     @siret = siret
+    @procedure_id = procedure_id
   end
 
   def data_source
-    @data_source ||= JSON.parse(SIADE::API.rna(@siret), symbolize_names: true)
+    @data_source ||= JSON.parse(SIADE::API.rna(@siret, @procedure_id), symbolize_names: true)
   end
 
   def to_params

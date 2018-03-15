@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe SIADE::ExercicesAdapter do
   let(:siret) { '41816609600051' }
-  subject { described_class.new(siret).to_params }
+  let(:procedure_id) { 11 }
+  subject { described_class.new(siret, procedure_id).to_params }
 
   before do
     stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/exercices\/.*token=/)

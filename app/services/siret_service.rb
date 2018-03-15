@@ -1,11 +1,11 @@
 class SIRETService
   def self.fetch(siret, dossier = nil)
-    etablissement = SIADE::EtablissementAdapter.new(siret)
-    entreprise = SIADE::EntrepriseAdapter.new(siren(siret))
+    etablissement = SIADE::EtablissementAdapter.new(siret, dossier&.procedure_id)
+    entreprise = SIADE::EntrepriseAdapter.new(siren(siret), dossier&.procedure_id)
 
     if etablissement.success? && entreprise.success?
-      association = SIADE::RNAAdapter.new(siret)
-      exercices = SIADE::ExercicesAdapter.new(siret)
+      association = SIADE::RNAAdapter.new(siret, dossier&.procedure_id)
+      exercices = SIADE::ExercicesAdapter.new(siret, dossier&.procedure_id)
 
       params = etablissement.to_params
         .merge(entreprise.to_params.map { |k,v| ["entreprise_#{k}", v] }.to_h)
