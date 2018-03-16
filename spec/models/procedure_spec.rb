@@ -41,6 +41,32 @@ describe Procedure do
     end
   end
 
+  describe 'closed mail template body' do
+    let(:procedure) { create(:procedure) }
+
+    subject { procedure.closed_mail_template.body }
+
+    context 'for procedures without an attestation' do
+      it { is_expected.not_to include('lien attestation') }
+    end
+
+    context 'for procedures with an attestation' do
+      before { create(:attestation_template, procedure: procedure, activated: activated) }
+
+      context 'when the attestation is inactive' do
+        let(:activated) { false }
+
+        it { is_expected.not_to include('lien attestation') }
+      end
+
+      context 'when the attestation is inactive' do
+        let(:activated) { true }
+
+        it { is_expected.to include('lien attestation') }
+      end
+    end
+  end
+
   describe 'validation' do
     context 'libelle' do
       it { is_expected.not_to allow_value(nil).for(:libelle) }
