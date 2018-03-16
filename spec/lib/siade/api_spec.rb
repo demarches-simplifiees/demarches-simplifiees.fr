@@ -1,10 +1,11 @@
 require 'spec_helper'
 
 describe SIADE::API do
+  let(:procedure_id) { 12 }
   describe '.entreprise' do
-    subject { described_class.entreprise(siren) }
+    subject { described_class.entreprise(siren, procedure_id) }
     before do
-      stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/entreprises/#{siren}?token=#{SIADETOKEN}")
+      stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
         .to_return(status: status, body: body)
     end
     context 'when siren does not exist' do
@@ -28,9 +29,9 @@ describe SIADE::API do
   end
 
   describe '.etablissement' do
-    subject { described_class.etablissement(siret) }
+    subject { described_class.etablissement(siret, procedure_id) }
     before do
-      stub_request(:get, "https://staging.entreprise.api.gouv.fr/v2/etablissements/#{siret}?token=#{SIADETOKEN}")
+      stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
         .to_return(status: status, body: body)
     end
 
@@ -62,7 +63,7 @@ describe SIADE::API do
     end
 
     context 'when siret does not exist' do
-      subject { described_class.exercices(siret) }
+      subject { described_class.exercices(siret, procedure_id) }
 
       let(:siret) { '11111111111111' }
       let(:status) { 404 }
@@ -74,7 +75,7 @@ describe SIADE::API do
     end
 
     context 'when siret exists' do
-      subject { described_class.exercices(siret) }
+      subject { described_class.exercices(siret, procedure_id) }
 
       let(:siret) { '41816609600051' }
       let(:status) { 200 }
@@ -92,7 +93,7 @@ describe SIADE::API do
         .to_return(status: status, body: body)
     end
 
-    subject { described_class.rna(siren) }
+    subject { described_class.rna(siren, procedure_id) }
 
     context 'when siren does not exist' do
       let(:siren) { '111111111' }

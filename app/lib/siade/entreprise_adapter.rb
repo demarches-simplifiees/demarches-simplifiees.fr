@@ -1,10 +1,11 @@
 class SIADE::EntrepriseAdapter
-  def initialize(siren)
+  def initialize(siren, procedure_id)
     @siren = siren
+    @procedure_id = procedure_id
   end
 
   def data_source
-    @data_source ||= JSON.parse(SIADE::API.entreprise(@siren), symbolize_names: true)
+    @data_source ||= JSON.parse(SIADE::API.entreprise(@siren, @procedure_id), symbolize_names: true)
   rescue
     @data_source = nil
   end
