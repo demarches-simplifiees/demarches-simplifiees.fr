@@ -1,16 +1,14 @@
 class APIController < ApplicationController
+  AUTHENTICATION_TOKEN_DESCRIPTION = <<-EOS
+    L'authentification de l'API se fait via un header HTTP :
+
+    ```
+      Authorization: Bearer &lt;Token administrateur&gt;
+    ```
+  EOS
+
   before_action :authenticate_user
   before_action :default_format_json
-
-  resource_description do
-    description <<-EOS
-      L'authentification de l'API se fait via un header HTTP :
-
-      ```
-        Authorization: Bearer &lt;Token administrateur&gt;
-      ```
-    EOS
-  end
 
   def authenticate_user
     if !valid_token?
