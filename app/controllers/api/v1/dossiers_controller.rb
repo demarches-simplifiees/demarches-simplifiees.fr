@@ -1,6 +1,10 @@
 class API::V1::DossiersController < APIController
   DEFAULT_PAGE_SIZE = 100
 
+  resource_description do
+    description AUTHENTICATION_TOKEN_DESCRIPTION
+  end
+
   api :GET, '/procedures/:procedure_id/dossiers/', 'Liste de tous les dossiers d\'une procédure'
   param :procedure_id, Integer, desc: "L'identifiant de la procédure", required: true
   param :page, String, desc: "Numéro de la page", required: false
