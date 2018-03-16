@@ -49,6 +49,12 @@ module TagsSubstitutionConcern
       description: '',
       lambda: -> (d) { external_link(users_dossier_recapitulatif_url(d)) },
       available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'lien attestation',
+      description: '',
+      lambda: -> (d) { external_link(dossier_attestation_url(d)) },
+      available_for_states: ['accepte']
     }
   ]
 
