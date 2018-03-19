@@ -24,6 +24,8 @@ class ApiEntreprise::EtablissementAdapter
 
   def data_source
     @data_source ||= ApiEntreprise::API.etablissement(@siret, @procedure_id)
+  rescue
+    @data_source = nil
   end
 
   def attr_to_fetch
