@@ -23,6 +23,10 @@ class ApiEntreprise::ExercicesAdapter
   end
 
   def attr_to_fetch
-    [:ca, :date_fin_exercice, :date_fin_exercice_timestamp]
+    [
+      :ca,
+      :date_fin_exercice,
+      :date_fin_exercice_timestamp
+    ]
   end
 end
