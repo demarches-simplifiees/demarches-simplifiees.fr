@@ -1,11 +1,13 @@
 class SIRETService
   def self.fetch(siret, dossier = nil)
-    etablissement_params = ApiEntreprise::EtablissementAdapter.new(siret, dossier&.procedure_id).to_params
-    entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siren(siret), dossier&.procedure_id).to_params
+    procedure_id = dossier&.procedure_id
+
+    etablissement_params = ApiEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
+    entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siren(siret), procedure_id).to_params
 
     if etablissement_params.present? && entreprise_params.present?
-      association = ApiEntreprise::RNAAdapter.new(siret, dossier&.procedure_id)
-      exercices = ApiEntreprise::ExercicesAdapter.new(siret, dossier&.procedure_id)
+      association = ApiEntreprise::RNAAdapter.new(siret, procedure_id)
+      exercices = ApiEntreprise::ExercicesAdapter.new(siret, procedure_id)
 
       params = etablissement_params
         .merge(entreprise_params.map { |k,v| ["entreprise_#{k}", v] }.to_h)
