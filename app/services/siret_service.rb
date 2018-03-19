@@ -7,12 +7,12 @@ class SIRETService
 
     if etablissement_params.present? && entreprise_params.present?
       association_params = ApiEntreprise::RNAAdapter.new(siret, procedure_id).to_params
-      exercices_array = ApiEntreprise::ExercicesAdapter.new(siret, procedure_id).to_array
+      exercices_params = ApiEntreprise::ExercicesAdapter.new(siret, procedure_id).to_params
 
       params = etablissement_params
         .merge(entreprise_params.transform_keys { |k| "entreprise_#{k}" })
         .merge(association_params.transform_keys { |k| "association_#{k}" })
-        .merge(exercices_attributes: exercices_array)
+        .merge(exercices_params)
 
       # This is to fill legacy models and relationships
       if dossier.present?
