@@ -4,10 +4,6 @@ class ApiEntreprise::EtablissementAdapter
     @procedure_id = procedure_id
   end
 
-  def success?
-    data_source.present?
-  end
-
   def to_params
     if data_source.present?
       params = data_source[:etablissement].slice(*attr_to_fetch)
