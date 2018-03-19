@@ -9,7 +9,7 @@ class ApiEntreprise::RNAAdapter < ApiEntreprise::Adapter
     if data_source[:association][:id].present?
       params = data_source[:association].slice(*attr_to_fetch)
       params[:rna] = data_source[:association][:id]
-      params
+      params.transform_keys { |k| "association_#{k}" }
     else
       {}
     end
