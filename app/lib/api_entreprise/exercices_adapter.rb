@@ -1,11 +1,13 @@
 class ApiEntreprise::ExercicesAdapter < ApiEntreprise::Adapter
-  def to_array
+  def to_params
     if data_source.present?
-      data_source[:exercices].map do |exercice|
+      exercices_array = data_source[:exercices].map do |exercice|
         exercice.slice(*attr_to_fetch)
       end
+
+      { exercices_attributes: exercices_array }
     else
-      []
+      {}
     end
   end
 
