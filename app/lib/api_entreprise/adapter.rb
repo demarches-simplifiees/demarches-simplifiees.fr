@@ -9,4 +9,12 @@ class ApiEntreprise::Adapter
   rescue
     @data_source = nil
   end
+
+  def to_params
+    if data_source.present?
+      process_params
+    else
+      {}
+    end
+  end
 end
