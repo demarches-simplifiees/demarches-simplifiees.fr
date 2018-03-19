@@ -157,6 +157,11 @@ class Procedure < ApplicationRecord
     self.dossiers.state_not_brouillon.size
   end
 
+  def export_filename
+    procedure_identifier = procedure_path&.path || "procedure-#{id}"
+    "dossiers_#{procedure_identifier}_#{Time.now.strftime('%Y-%m-%d_%H-%M')}"
+  end
+
   def generate_export
     exportable_dossiers = dossiers.downloadable_sorted
 

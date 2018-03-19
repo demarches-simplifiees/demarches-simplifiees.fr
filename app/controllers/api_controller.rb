@@ -19,10 +19,10 @@ class APIController < ApplicationController
   protected
 
   def valid_token?
-    current_administrateur.present?
+    administrateur.present?
   end
 
-  def current_administrateur
+  def administrateur
     @administrateur ||= (authenticate_with_bearer_token || authenticate_with_param_token)
   end
 

@@ -9,7 +9,7 @@ class API::V1::ProceduresController < APIController
   error code: 404, desc: "Procédure inconnue"
 
   def show
-    procedure = current_administrateur.procedures.find(params[:id]).decorate
+    procedure = administrateur.procedures.find(params[:id]).decorate
 
     render json: { procedure: ProcedureSerializer.new(procedure).as_json }
   rescue ActiveRecord::RecordNotFound => e
