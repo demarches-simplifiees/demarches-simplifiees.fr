@@ -8,8 +8,8 @@ class ApiEntrepriseService
       exercices_params = ApiEntreprise::ExercicesAdapter.new(siret, procedure_id).to_params
 
       params = etablissement_params
-        .merge(entreprise_params.transform_keys { |k| "entreprise_#{k}" })
-        .merge(association_params.transform_keys { |k| "association_#{k}" })
+        .merge(entreprise_params)
+        .merge(association_params)
         .merge(exercices_params)
 
       params
