@@ -10,8 +10,8 @@ class SIRETService
       exercices_array = ApiEntreprise::ExercicesAdapter.new(siret, procedure_id).to_array
 
       params = etablissement_params
-        .merge(entreprise_params.map { |k,v| ["entreprise_#{k}", v] }.to_h)
-        .merge(association_params&.map { |k,v| ["association_#{k}", v] }.to_h)
+        .merge(entreprise_params.map { |k, v| ["entreprise_#{k}", v] }.to_h)
+        .merge(association_params&.map { |k, v| ["association_#{k}", v] }.to_h)
         .merge(exercices_attributes: exercices_array)
 
       # This is to fill legacy models and relationships
