@@ -11,7 +11,7 @@ class SIRETService
 
       params = etablissement_params
         .merge(entreprise_params.transform_keys { |k| "entreprise_#{k}" })
-        .merge((association_params || {}).transform_keys { |k| "association_#{k}" })
+        .merge(association_params.transform_keys { |k| "association_#{k}" })
         .merge(exercices_attributes: exercices_array)
 
       # This is to fill legacy models and relationships
@@ -19,7 +19,7 @@ class SIRETService
         params[:entreprise_attributes] = entreprise_params.merge(
           {
             dossier: dossier,
-            rna_information_attributes: association_params
+            rna_information_attributes: association_params.presence
           }.compact
         )
       end

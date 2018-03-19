@@ -12,7 +12,7 @@ class ApiEntreprise::EtablissementAdapter
       params[:adresse] = adresse_line
       params
     else
-      nil
+      {}
     end
   end
 

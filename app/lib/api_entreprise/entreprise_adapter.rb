@@ -10,7 +10,7 @@ class ApiEntreprise::EntrepriseAdapter
       params[:date_creation] = Time.at(params[:date_creation]).to_datetime
       params
     else
-      nil
+      {}
     end
   end
 
