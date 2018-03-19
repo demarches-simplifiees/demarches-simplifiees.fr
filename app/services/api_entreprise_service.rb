@@ -1,5 +1,5 @@
 class ApiEntrepriseService
-  def self.get_etablissement_params_for_siret(siret, procedure_id, dossier = nil)
+  def self.get_etablissement_params_for_siret(siret, procedure_id)
     etablissement_params = ApiEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
     entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siret, procedure_id).to_params
 
@@ -12,21 +12,7 @@ class ApiEntrepriseService
         .merge(association_params.transform_keys { |k| "association_#{k}" })
         .merge(exercices_params)
 
-      # This is to fill legacy models and relationships
-      if dossier.present?
-        handle_legacy_models!(params, entreprise_params, dossier, association_params)
-      end
-
       params
     end
-  end
-
-  def self.handle_legacy_models!(params, entreprise_params, dossier, association_params)
-    params[:entreprise_attributes] = entreprise_params.merge(
-      {
-        dossier: dossier,
-        rna_information_attributes: association_params.presence
-      }.compact
-    )
   end
 end
