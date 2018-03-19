@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SIADE::RNAAdapter do
+describe ApiEntreprise::RNAAdapter do
   let(:siret) { '50480511000013' }
   let(:procedure_id) { 22 }
   let(:body) { File.read('spec/support/files/rna.json') }

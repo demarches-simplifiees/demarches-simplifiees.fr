@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SIADE::ExercicesAdapter do
+describe ApiEntreprise::ExercicesAdapter do
   let(:siret) { '41816609600051' }
   let(:procedure_id) { 11 }
   subject { described_class.new(siret, procedure_id).to_params }

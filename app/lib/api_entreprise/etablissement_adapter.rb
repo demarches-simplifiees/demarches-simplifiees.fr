@@ -1,11 +1,7 @@
-class SIADE::EtablissementAdapter
+class ApiEntreprise::EtablissementAdapter
   def initialize(siret, procedure_id)
     @siret = siret
     @procedure_id = procedure_id
-  end
-
-  def data_source
-    @data_source ||= JSON.parse(SIADE::API.etablissement(@siret, @procedure_id), symbolize_names: true)
   end
 
   def success?
@@ -25,6 +21,10 @@ class SIADE::EtablissementAdapter
   end
 
   private
+
+  def data_source
+    @data_source ||= ApiEntreprise::API.etablissement(@siret, @procedure_id)
+  end
 
   def attr_to_fetch
     [
