@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SIADE::EntrepriseAdapter do
+describe ApiEntreprise::EntrepriseAdapter do
   let(:siren) { '418166096' }
   let(:procedure_id) { 22 }
   let(:adapter) { described_class.new(siren, procedure_id) }

@@ -1,13 +1,7 @@
-class SIADE::ExercicesAdapter
+class ApiEntreprise::ExercicesAdapter
   def initialize(siret, procedure_id)
     @siret = siret
     @procedure_id = procedure_id
-  end
-
-  def data_source
-    @data_source ||= JSON.parse(SIADE::API.exercices(@siret, @procedure_id), symbolize_names: true)
-  rescue
-    @data_source = nil
   end
 
   def to_params
@@ -19,6 +13,12 @@ class SIADE::ExercicesAdapter
   end
 
   private
+
+  def data_source
+    @data_source ||= ApiEntreprise::API.exercices(@siret, @procedure_id)
+  rescue
+    @data_source = nil
+  end
 
   def attr_to_fetch
     [:ca, :date_fin_exercice, :date_fin_exercice_timestamp]
