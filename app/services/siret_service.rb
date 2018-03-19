@@ -16,7 +16,7 @@ class SIRETService
 
       # This is to fill legacy models and relationships
       if dossier.present?
-        return params.merge(
+        params.merge(
           entreprise_attributes: entreprise_params
             .merge({
               dossier: dossier,
@@ -24,7 +24,7 @@ class SIRETService
             }.compact)
         )
       else
-        return params
+        params
       end
     end
   end
