@@ -130,7 +130,7 @@ describe API::V1::DossiersController do
         let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, motivation: "Motivation") } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
-        let(:field_list) { [:id, :created_at, :updated_at, :archived, :mandataire_social, :individual, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :champs_private, :commentaires, :state, :simplified_state, :initiated_at, :processed_at, :received_at, :motivation, :email, :accompagnateurs, :invites] }
+        let(:field_list) { [:id, :created_at, :updated_at, :archived, :individual, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :champs_private, :commentaires, :state, :simplified_state, :initiated_at, :processed_at, :received_at, :motivation, :email, :accompagnateurs, :invites] }
         subject { body[:dossier] }
 
         it 'return REST code 200', :show_in_doc do
@@ -142,7 +142,6 @@ describe API::V1::DossiersController do
         it { expect(subject[:created_at]).to eq('2008-09-01T10:05:00.000Z') }
         it { expect(subject[:updated_at]).to eq('2008-09-01T10:05:00.000Z') }
         it { expect(subject[:archived]).to eq(dossier.archived) }
-        it { expect(subject[:mandataire_social]).to eq(dossier.mandataire_social) }
 
         it { expect(subject.keys).to match_array(field_list) }
 
