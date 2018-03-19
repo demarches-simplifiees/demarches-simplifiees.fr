@@ -13,7 +13,7 @@ class ApiEntreprise::RNAAdapter
       params[:rna] = data_source[:association][:id]
       params
     else
-      nil
+      {}
     end
   end
 
