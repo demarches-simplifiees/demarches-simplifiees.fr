@@ -19,6 +19,8 @@ class ApiEntreprise::RNAAdapter
 
   def data_source
     @data_source ||= ApiEntreprise::API.rna(@siret, @procedure_id)
+  rescue
+    @data_source = nil
   end
 
   def attr_to_fetch
