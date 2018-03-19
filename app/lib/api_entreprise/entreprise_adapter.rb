@@ -1,18 +1,14 @@
 class ApiEntreprise::EntrepriseAdapter < ApiEntreprise::Adapter
-  def to_params
-    if data_source.present?
-      params = data_source[:entreprise].slice(*attr_to_fetch)
-      params[:date_creation] = Time.at(params[:date_creation]).to_datetime
-      params
-    else
-      {}
-    end
-  end
-
   private
 
   def get_resource
     ApiEntreprise::API.entreprise(@siret_or_siren, @procedure_id)
+  end
+
+  def process_params
+    params = data_source[:entreprise].slice(*attr_to_fetch)
+    params[:date_creation] = Time.at(params[:date_creation]).to_datetime
+    params
   end
 
   def attr_to_fetch
