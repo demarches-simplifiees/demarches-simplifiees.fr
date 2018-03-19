@@ -16,16 +16,15 @@ class SIRETService
 
       # This is to fill legacy models and relationships
       if dossier.present?
-        params.merge(
-          entreprise_attributes: entreprise_params
-            .merge({
-              dossier: dossier,
-              rna_information_attributes: association_params
-            }.compact)
+        params[:entreprise_attributes] = entreprise_params.merge(
+          {
+            dossier: dossier,
+            rna_information_attributes: association_params
+          }.compact
         )
-      else
-        params
       end
+
+      params
     end
   end
 
