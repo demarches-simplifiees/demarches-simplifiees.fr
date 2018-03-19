@@ -175,7 +175,7 @@ module NewGestionnaire
 
     def download_dossiers
       export = procedure.generate_export
-      filename = "dossiers_#{procedure.procedure_path.path}_#{Time.now.strftime('%Y-%m-%d_%H-%M')}"
+      filename = procedure.export_filename
 
       respond_to do |format|
         format.csv { send_data(SpreadsheetArchitect.to_csv(data: export[:data], headers: export[:headers]), filename: "#{filename}.csv") }

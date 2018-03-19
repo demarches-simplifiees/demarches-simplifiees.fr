@@ -494,4 +494,22 @@ describe Procedure do
   describe ".default_sort" do
     it { expect(Procedure.default_sort).to eq("{\"table\":\"self\",\"column\":\"id\",\"order\":\"desc\"}") }
   end
+
+  describe ".export_filename" do
+    before { Timecop.freeze(Time.new(2018, 1, 2, 23, 11, 14)) }
+
+    subject { procedure.export_filename }
+
+    context "with a path" do
+      let(:procedure) { create(:procedure, :published) }
+
+      it { is_expected.to eq("dossiers_#{procedure.procedure_path.path}_2018-01-02_23-11") }
+    end
+
+    context "without a path" do
+      let(:procedure) { create(:procedure) }
+
+      it { is_expected.to eq("dossiers_procedure-#{procedure.id}_2018-01-02_23-11") }
+    end
+  end
 end
