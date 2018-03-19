@@ -13,10 +13,8 @@ class ApiEntreprise::EtablissementAdapter < ApiEntreprise::Adapter
 
   private
 
-  def data_source
-    @data_source ||= ApiEntreprise::API.etablissement(@siret_or_siren, @procedure_id)
-  rescue
-    @data_source = nil
+  def get_resource
+    ApiEntreprise::API.etablissement(@siret_or_siren, @procedure_id)
   end
 
   def attr_to_fetch
