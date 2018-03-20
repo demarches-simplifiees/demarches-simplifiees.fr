@@ -1,5 +1,5 @@
 class SyncCredentialsService
-  def initialize klass, email_before_last_save, email, encrypted_password
+  def initialize(klass, email_before_last_save, email, encrypted_password)
     @klass = klass
     @email_before_last_save = email_before_last_save
     @email = email
