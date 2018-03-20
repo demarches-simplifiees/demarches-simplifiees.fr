@@ -5,7 +5,7 @@ describe Administrateurs::SessionsController, type: :controller do
     @request.env["devise.mapping"] = Devise.mappings[:administrateur]
   end
 
-  describe '.create' do
+  describe '#create' do
     it { expect(described_class).to be < Sessions::SessionsController }
   end
 end

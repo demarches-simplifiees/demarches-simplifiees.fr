@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Avis, type: :model do
   let(:claimant) { create(:gestionnaire) }
 
-  describe '.email_to_display' do
+  describe '#email_to_display' do
     let(:invited_email) { 'invited@avis.com' }
     let!(:avis) do
       avis = create(:avis, email: invited_email, dossier: create(:dossier))
@@ -58,7 +58,7 @@ RSpec.describe Avis, type: :model do
     end
   end
 
-  describe '.avis_exists_and_email_belongs_to_avis' do
+  describe '.avis_exists_and_email_belongs_to_avis?' do
     let(:dossier) { create(:dossier) }
     let(:invited_email) { 'invited@avis.com' }
     let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }

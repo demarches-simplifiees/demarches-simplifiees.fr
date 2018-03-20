@@ -621,7 +621,7 @@ describe Dossier do
     end
   end
 
-  describe '.build_attestation' do
+  describe '#build_attestation' do
     let(:attestation_template) { nil }
     let(:procedure) { create(:procedure, attestation_template: attestation_template) }
 

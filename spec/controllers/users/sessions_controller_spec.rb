@@ -8,7 +8,7 @@ describe Users::SessionsController, type: :controller do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
 
-  describe '.create' do
+  describe '#create' do
     it { expect(described_class).to be < Sessions::SessionsController }
 
     describe 'France Connect attribut' do
@@ -99,7 +99,7 @@ describe Users::SessionsController, type: :controller do
     end
   end
 
-  describe '.destroy' do
+  describe '#destroy' do
     before do
       sign_in user
       delete :destroy
@@ -181,7 +181,7 @@ describe Users::SessionsController, type: :controller do
     end
   end
 
-  describe '.new' do
+  describe '#new' do
     subject { get :new }
 
     context 'when procedure_id is not present in user_return_to session params' do

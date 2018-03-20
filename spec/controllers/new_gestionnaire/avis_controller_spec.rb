@@ -152,7 +152,7 @@ describe NewGestionnaire::AvisController, type: :controller do
   end
 
   context 'without a gestionnaire signed in' do
-    describe '.sign_up' do
+    describe '#sign_up' do
       let(:invited_email) { 'invited@avis.com' }
       let(:dossier) { create(:dossier) }
       let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
@@ -215,7 +215,7 @@ describe NewGestionnaire::AvisController, type: :controller do
       end
     end
 
-    describe '.create_gestionnaire' do
+    describe '#create_gestionnaire' do
       let(:invited_email) { 'invited@avis.com' }
       let(:dossier) { create(:dossier) }
       let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
