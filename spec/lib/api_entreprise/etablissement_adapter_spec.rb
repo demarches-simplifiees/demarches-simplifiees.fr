@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SIADE::EtablissementAdapter do
+describe ApiEntreprise::EtablissementAdapter do
   let(:procedure_id) { 33 }
 
   context 'SIRET valide' do
