@@ -1,10 +1,10 @@
 class TypeDePieceJustificativeDecorator < Draper::Decorator
   delegate_all
-  def button_up params
+  def button_up(params)
     h.link_to '', params[:url], class: up_classes, id: "btn_up_#{params[:index]}", remote: true, method: :post if display_up_button?(params[:index])
   end
 
-  def button_down params
+  def button_down(params)
     h.link_to '', params[:url], class: down_classes, id: "btn_down_#{params[:index]}", remote: true, method: :post if display_down_button?(params[:index])
   end
 

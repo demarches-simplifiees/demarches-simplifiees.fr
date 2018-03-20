@@ -23,7 +23,7 @@ class User < ApplicationRecord
 
   before_validation -> { sanitize_email(:email) }
 
-  def self.find_for_france_connect email, siret
+  def self.find_for_france_connect(email, siret)
     user = User.find_by(email: email)
     if user.nil?
       return User.create(email: email, password: Devise.friendly_token[0, 20], siret: siret)
@@ -37,7 +37,7 @@ class User < ApplicationRecord
     loged_in_with_france_connect.present?
   end
 
-  def invite? dossier_id
+  def invite?(dossier_id)
     invites.pluck(:dossier_id).include?(dossier_id.to_i)
   end
 end

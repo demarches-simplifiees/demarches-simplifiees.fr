@@ -193,11 +193,11 @@ class Dossier < ApplicationRecord
     en_instruction? || accepte? || refuse? || sans_suite?
   end
 
-  def owner? email
+  def owner?(email)
     user.email == email
   end
 
-  def invite_by_user? email
+  def invite_by_user?(email)
     (invites_user.pluck :email).include? email
   end
 

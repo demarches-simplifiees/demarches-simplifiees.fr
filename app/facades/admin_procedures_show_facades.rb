@@ -1,5 +1,5 @@
 class AdminProceduresShowFacades
-  def initialize procedure
+  def initialize(procedure)
     @procedure = procedure
   end
 

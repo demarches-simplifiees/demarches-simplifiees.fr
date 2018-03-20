@@ -257,11 +257,11 @@ class Users::DossiersController < UsersController
     redirect_to url_for users_dossiers_path
   end
 
-  def update_current_user_siret! siret
+  def update_current_user_siret!(siret)
     current_user.update(siret: siret)
   end
 
-  def facade id = params[:id]
+  def facade(id = params[:id])
     DossierFacades.new id, current_user.email
   end
 end
