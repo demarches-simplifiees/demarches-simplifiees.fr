@@ -4,7 +4,6 @@ class DossierSerializer < ActiveModel::Serializer
     :updated_at,
     :archived,
     :email,
-    :mandataire_social,
     :state,
     :simplified_state,
     :initiated_at,

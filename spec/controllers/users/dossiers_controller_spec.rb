@@ -259,31 +259,6 @@ describe Users::DossiersController, type: :controller do
           expect(Dossier.last.state).to eq('brouillon')
         end
 
-        describe 'Mandataires Sociaux' do
-          let(:france_connect_information) { create(:france_connect_information, given_name: given_name, family_name: family_name, birthdate: birthdate, france_connect_particulier_id: '1234567') }
-          let(:user) { create(:user, france_connect_information: france_connect_information) }
-
-          before do
-            subject
-          end
-
-          context 'when user is present in mandataires sociaux' do
-            let(:given_name) { 'GERARD' }
-            let(:family_name) { 'DEGONSE' }
-            let(:birthdate) { '1947-07-03' }
-
-            it { expect(Dossier.last.mandataire_social).to be_truthy }
-          end
-
-          context 'when user is not present in mandataires sociaux' do
-            let(:given_name) { 'plop' }
-            let(:family_name) { 'plip' }
-            let(:birthdate) { '1965-01-27' }
-
-            it { expect(Dossier.last.mandataire_social).to be_falsey }
-          end
-        end
-
         describe 'get rna informations' do
           context 'when siren have not rna informations' do
             let(:rna_status) { 404 }

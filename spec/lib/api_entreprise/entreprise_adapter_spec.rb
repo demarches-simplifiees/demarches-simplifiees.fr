@@ -63,40 +63,5 @@ describe ApiEntreprise::EntrepriseAdapter do
     it 'L\'entreprise contient bien un prenom' do
       expect(subject[:prenom]).to eq('test_prenom')
     end
-
-    it 'L\'entreprise contient bien les mandataires_sociaux' do
-      expect(subject[:mandataires_sociaux]).to be_an_instance_of(Array)
-    end
-  end
-
-  context 'Mandataire sociaux' do
-    subject { described_class.new(siren, procedure_id).to_params[:mandataires_sociaux] }
-
-    it '#to_params class est une Hash ?' do
-      expect(subject).to be_an_instance_of(Array)
-    end
-
-    it { expect(subject.size).to eq(8) }
-
-    describe 'Attributs' do
-      it 'Un mandataire social possède bien un nom' do
-        expect(subject[0][:nom]).to eq('HISQUIN')
-      end
-      it 'Un mandataire social possède bien un prenom' do
-        expect(subject[0][:prenom]).to eq('FRANCOIS')
-      end
-
-      it 'Un mandataire social possède bien une fonction' do
-        expect(subject[0][:fonction]).to eq('PRESIDENT DU DIRECTOIRE')
-      end
-
-      it 'Un mandataire social possède bien une date de naissance' do
-        expect(subject[0][:date_naissance]).to eq('1965-01-27')
-      end
-
-      it 'Un mandataire social possède bien une date de naissance au format timestamp' do
-        expect(subject[0][:date_naissance_timestamp]).to eq(-155523600)
-      end
-    end
   end
 end
