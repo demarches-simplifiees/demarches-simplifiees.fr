@@ -149,14 +149,12 @@ describe Dossier do
     it { expect(dossier_serialized_attributes[:created_at]).to be_a(Time) }
     it { expect(dossier_serialized_attributes[:updated_at]).to be_a(Time) }
     it { expect(dossier_serialized_attributes[:archived]).to be_in([true, false]) }
-    it { expect(dossier_serialized_attributes[:mandataire_social]).to be_in([true, false]) }
     it { expect(dossier_serialized_attributes[:state]).to be_a(String) }
 
     it { expect(subject[:id]).to be_a(String) }
     it { expect(subject[:created_at]).to be_a(Time) }
     it { expect(subject[:updated_at]).to be_a(Time) }
     it { expect(subject[:archived]).to be_a(String) }
-    it { expect(subject[:mandataire_social]).to be_a(String) }
     it { expect(subject[:state]).to be_a(String) }
   end
 
@@ -227,18 +225,17 @@ describe Dossier do
       it { expect(subject[2]).to be_a_kind_of(Time) }
       it { expect(subject[3]).to be_in([true, false]) }
       it { expect(subject[4]).to eq(dossier.user.email) }
-      it { expect(subject[5]).to be_in([true, false]) }
-      it { expect(subject[6]).to eq("brouillon") }
-      it { expect(subject[7]).to eq(date1) }
-      it { expect(subject[8]).to eq(date2) }
-      it { expect(subject[9]).to eq(date3) }
+      it { expect(subject[5]).to eq("brouillon") }
+      it { expect(subject[6]).to eq(date1) }
+      it { expect(subject[7]).to eq(date2) }
+      it { expect(subject[8]).to eq(date3) }
+      it { expect(subject[9]).to be_a_kind_of(String) }
       it { expect(subject[10]).to be_a_kind_of(String) }
-      it { expect(subject[11]).to be_a_kind_of(String) }
+      it { expect(subject[11]).to be_nil }
       it { expect(subject[12]).to be_nil }
       it { expect(subject[13]).to be_nil }
       it { expect(subject[14]).to be_nil }
       it { expect(subject[15]).to be_nil }
-      it { expect(subject[16]).to be_nil }
       it do
         expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
           dossier.procedure.types_de_champ.count +
@@ -251,10 +248,10 @@ describe Dossier do
 
         subject { dossier_with_individual.to_sorted_values }
 
-        it { expect(subject[12]).to eq(dossier_with_individual.individual.gender) }
-        it { expect(subject[13]).to eq(dossier_with_individual.individual.prenom) }
-        it { expect(subject[14]).to eq(dossier_with_individual.individual.nom) }
-        it { expect(subject[15]).to eq(dossier_with_individual.individual.birthdate) }
+        it { expect(subject[11]).to eq(dossier_with_individual.individual.gender) }
+        it { expect(subject[12]).to eq(dossier_with_individual.individual.prenom) }
+        it { expect(subject[13]).to eq(dossier_with_individual.individual.nom) }
+        it { expect(subject[14]).to eq(dossier_with_individual.individual.birthdate) }
       end
     end
 
@@ -266,7 +263,6 @@ describe Dossier do
           dossier.updated_at,
           "false",
           dossier.user.email,
-          "false",
           "brouillon",
           dossier.en_construction_at,
           dossier.en_instruction_at,
@@ -621,7 +617,7 @@ describe Dossier do
     end
   end
 
-  describe '.build_attestation' do
+  describe '#build_attestation' do
     let(:attestation_template) { nil }
     let(:procedure) { create(:procedure, attestation_template: attestation_template) }
 

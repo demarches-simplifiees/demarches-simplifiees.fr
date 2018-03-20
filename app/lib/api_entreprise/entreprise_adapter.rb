@@ -33,7 +33,6 @@ class ApiEntreprise::EntrepriseAdapter
       :numero_tva_intracommunautaire,
       :forme_juridique,
       :forme_juridique_code,
-      :mandataires_sociaux,
       :nom_commercial,
       :raison_sociale,
       :siret_siege_social,
