@@ -990,7 +990,7 @@ Style/MethodCalledOnDoEndBlock:
   Enabled: false
 
 Style/MethodDefParentheses:
-  Enabled: false
+  Enabled: true
 
 Style/MethodMissing:
   Enabled: false
