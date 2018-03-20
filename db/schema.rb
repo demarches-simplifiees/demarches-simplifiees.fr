@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_03_08_110811) do
+ActiveRecord::Schema.define(version: 2018_03_19_214757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
   create_table "assign_tos", id: :serial, force: :cascade do |t|
     t.integer "gestionnaire_id"
     t.integer "procedure_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["gestionnaire_id", "procedure_id"], name: "index_assign_tos_on_gestionnaire_id_and_procedure_id", unique: true
     t.index ["gestionnaire_id"], name: "index_assign_tos_on_gestionnaire_id"
     t.index ["procedure_id"], name: "index_assign_tos_on_procedure_id"
@@ -141,6 +143,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.string "code_arr"
     t.text "geometry"
     t.integer "dossier_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "cerfas", id: :serial, force: :cascade do |t|
@@ -214,7 +218,6 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.integer "user_id"
     t.text "json_latlngs"
     t.boolean "archived", default: false
-    t.boolean "mandataire_social", default: false
     t.datetime "en_construction_at"
     t.datetime "en_instruction_at"
     t.datetime "processed_at"
@@ -228,6 +231,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
   create_table "drop_down_lists", id: :serial, force: :cascade do |t|
     t.string "value"
     t.integer "type_de_champ_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id"
   end
 
@@ -283,6 +288,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.date "association_date_creation"
     t.date "association_date_declaration"
     t.date "association_date_publication"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["dossier_id"], name: "index_etablissements_on_dossier_id"
   end
 
@@ -292,6 +299,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.integer "date_fin_exercice_timestamp"
     t.integer "etablissement_id"
     t.datetime "date_fin_exercice"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "follows", id: :serial, force: :cascade do |t|
@@ -301,6 +310,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.datetime "annotations_privees_seen_at"
     t.datetime "avis_seen_at"
     t.datetime "messagerie_seen_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["dossier_id"], name: "index_follows_on_dossier_id"
     t.index ["gestionnaire_id", "dossier_id"], name: "index_follows_on_gestionnaire_id_and_dossier_id", unique: true
     t.index ["gestionnaire_id"], name: "index_follows_on_gestionnaire_id"
@@ -315,6 +326,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.string "france_connect_particulier_id"
     t.integer "user_id"
     t.string "email_france_connect"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["user_id"], name: "index_france_connect_informations_on_user_id"
   end
 
@@ -341,6 +354,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.string "birthdate"
     t.integer "dossier_id"
     t.string "gender"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["dossier_id"], name: "index_individuals_on_dossier_id"
   end
 
@@ -359,6 +374,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.integer "dossier_id"
     t.integer "user_id"
     t.string "type", default: "InviteGestionnaire"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "module_api_cartos", id: :serial, force: :cascade do |t|
@@ -366,6 +383,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.boolean "use_api_carto", default: false
     t.boolean "quartiers_prioritaires", default: false
     t.boolean "cadastre", default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true
   end
 
@@ -386,6 +405,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.string "path"
     t.integer "procedure_id"
     t.integer "administrateur_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["path"], name: "index_procedure_paths_on_path"
   end
 
@@ -394,6 +415,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.text "displayed_fields", default: ["{\"label\":\"Demandeur\",\"table\":\"user\",\"column\":\"email\"}"], null: false, array: true
     t.json "sort", default: "{\"table\":\"notifications\",\"column\":\"notifications\",\"order\":\"desc\"}", null: false
     t.json "filters", default: "{\"a-suivre\":[],\"suivis\":[],\"traites\":[],\"tous\":[],\"archives\":[]}", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["assign_to_id"], name: "index_procedure_presentations_on_assign_to_id", unique: true
   end
 
@@ -429,6 +452,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.string "commune"
     t.text "geometry"
     t.integer "dossier_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "received_mails", id: :serial, force: :cascade do |t|
@@ -457,6 +482,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.date "date_declaration"
     t.date "date_publication"
     t.integer "entreprise_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["entreprise_id"], name: "index_rna_informations_on_entreprise_id"
   end
 
@@ -469,6 +496,8 @@ ActiveRecord::Schema.define(version: 2018_03_08_110811) do
     t.boolean "mandatory", default: false
     t.string "type"
     t.boolean "private", default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["private"], name: "index_types_de_champ_on_private"
   end
 
