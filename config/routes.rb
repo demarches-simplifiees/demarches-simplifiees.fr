@@ -10,6 +10,8 @@ Rails.application.routes.draw do
       post 'reinvite', on: :member
     end
 
+    resources :demandes, only: [:index]
+
     authenticate :administration do
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end

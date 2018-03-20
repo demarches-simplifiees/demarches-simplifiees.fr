@@ -74,7 +74,13 @@ client_id: ''
 client_secret: ''
 ```
 
-*Note : les valeurs pour ces deux paramètres sont renseignées dans le Keepass*
+## Connexion a Pipedrive
+
+Dans le fichier `config/intializers/token.rb`, ajouter
+
+`PIPEDRIVE_TOKEN = 'token'`
+
+*Note : les valeurs pour ces paramètres sont renseignées dans le Keepass*
 
 ## Création des comptes initiaux
 
