@@ -72,7 +72,7 @@ class TypesDeChampService
     (tdca[:order_place].to_i + 1) != tdca[:custom_order_place].to_i
   end
 
-  def self.clean_value value
+  def self.clean_value(value)
     value.split("\r\n").map{ |v| v.strip }.join("\r\n")
   end
 end

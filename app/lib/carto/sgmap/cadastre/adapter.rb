@@ -16,7 +16,7 @@ class CARTO::SGMAP::Cadastre::Adapter
     end
   end
 
-  def filter_properties properties
+  def filter_properties(properties)
     {
       surface_intersection: properties[:surface_intersection],
       surface_parcelle:  properties[:surface_parcelle],

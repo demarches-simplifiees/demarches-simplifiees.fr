@@ -1,7 +1,7 @@
 class GestionnaireMailer < ApplicationMailer
   layout 'mailers/layout'
 
-  def new_gestionnaire email, password
+  def new_gestionnaire(email, password)
     send_mail email, password, "Vous avez été nommé accompagnateur sur demarches-simplifiees.fr"
   end
 
@@ -21,12 +21,12 @@ class GestionnaireMailer < ApplicationMailer
 
   private
 
-  def vars_mailer email, args
+  def vars_mailer(email, args)
     @args = args
     @email = email
   end
 
-  def send_mail email, args, subject
+  def send_mail(email, args, subject)
     vars_mailer email, args
 
     mail(to: email, subject: subject)

@@ -1,7 +1,7 @@
 class RenderPartialService
   attr_accessor :controller, :method
 
-  def initialize controller, method
+  def initialize(controller, method)
     @controller = controller
     @method = method
   end
@@ -14,7 +14,7 @@ class RenderPartialService
     retrieve_left_panel
   end
 
-  def self.left_panel_exist? left_panel_url
+  def self.left_panel_exist?(left_panel_url)
     file = left_panel_url.split('/').last
 
     File.exist?(Rails.root.join('app','views', 'layouts', 'left_panels', "_#{file}.html.haml"))
