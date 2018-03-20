@@ -11,7 +11,7 @@ describe Sessions::SessionsController, type: :controller do
   let(:gestionnaire) { create(:gestionnaire) }
   let(:administrateur) { create(:administrateur) }
 
-  describe '.create' do
+  describe '#create' do
     before do
       @request.env["devise.mapping"] = Devise.mappings[:user]
     end
@@ -22,7 +22,7 @@ describe Sessions::SessionsController, type: :controller do
     end
   end
 
-  describe '.create with user connected' do
+  describe '#create with user connected' do
     before do
       @request.env["devise.mapping"] = Devise.mappings[:user]
 
@@ -35,7 +35,7 @@ describe Sessions::SessionsController, type: :controller do
     end
   end
 
-  describe '.create with gestionnaire connected' do
+  describe '#create with gestionnaire connected' do
     before do
       @request.env["devise.mapping"] = Devise.mappings[:gestionnaire]
 
@@ -48,7 +48,7 @@ describe Sessions::SessionsController, type: :controller do
     end
   end
 
-  describe '.create with administrateur connected' do
+  describe '#create with administrateur connected' do
     before do
       @request.env["devise.mapping"] = Devise.mappings[:administrateur]
 

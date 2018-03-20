@@ -113,7 +113,6 @@ class Users::DossiersController < UsersController
       etablissement = @facade.dossier.build_etablissement(etablissement_attributes)
       if etablissement.save
         Rails.logger.info("etablissement saved, siret: #{siret}, id: #{etablissement.id}")
-        @facade.dossier.mandataire_social!(current_user.france_connect_information)
       else
         Rails.logger.info("etablissement not saved, siret: #{siret}, errors: #{etablissement.errors.full_messages}")
         return errors_valid_siret

@@ -495,7 +495,7 @@ describe Procedure do
     it { expect(Procedure.default_sort).to eq("{\"table\":\"self\",\"column\":\"id\",\"order\":\"desc\"}") }
   end
 
-  describe ".export_filename" do
+  describe "#export_filename" do
     before { Timecop.freeze(Time.new(2018, 1, 2, 23, 11, 14)) }
 
     subject { procedure.export_filename }
