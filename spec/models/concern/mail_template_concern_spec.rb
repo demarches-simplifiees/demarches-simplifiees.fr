@@ -33,14 +33,14 @@ describe MailTemplateConcern do
     end
   end
 
-  describe '.subject_for_dossier' do
+  describe '#subject_for_dossier' do
     before { initiated_mail.subject = template }
     subject { initiated_mail.subject_for_dossier(dossier) }
 
     it_behaves_like "can replace tokens in template"
   end
 
-  describe '.body_for_dossier' do
+  describe '#body_for_dossier' do
     before { initiated_mail.body = template }
     subject { initiated_mail.body_for_dossier(dossier) }
 
@@ -63,7 +63,7 @@ describe MailTemplateConcern do
     end
   end
 
-  describe '.replace_tags' do
+  describe '#replace_tags' do
     before { initiated_mail.body = "n --numéro du dossier--" }
     it "avoids side effects" do
       expect(initiated_mail.body_for_dossier(dossier)).to eq("n #{dossier.id}")

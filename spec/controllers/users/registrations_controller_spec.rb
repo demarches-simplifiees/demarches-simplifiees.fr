@@ -10,7 +10,7 @@ describe Users::RegistrationsController, type: :controller do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
 
-  describe '.create' do
+  describe '#create' do
     subject { post :create, params: { user: user } }
 
     context 'when user is correct' do

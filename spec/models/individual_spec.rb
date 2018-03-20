@@ -7,7 +7,7 @@ describe Individual do
   it { is_expected.to have_db_column(:birthdate) }
   it { is_expected.to belong_to(:dossier) }
 
-  describe ".save" do
+  describe "#save" do
     let(:individual) { build(:individual) }
 
     subject { individual.save }

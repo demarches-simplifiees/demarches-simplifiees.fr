@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe FranceConnectParticulierClient do
-  describe '.initialize' do
+  describe '#initialize' do
     subject { FranceConnectParticulierClient.new(code) }
 
     context 'when given code in params' do

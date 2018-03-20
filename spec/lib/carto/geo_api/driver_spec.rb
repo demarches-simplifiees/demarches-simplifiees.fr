@@ -19,13 +19,13 @@ describe Carto::GeoAPI::Driver do
     it { is_expected.to eq File.open('app/lib/carto/geo_api/pays.json').read }
   end
 
-  describe 'departements_url' do
+  describe '.departements_url' do
     subject { described_class.departements_url }
 
     it { is_expected.to eq 'https://geo.api.gouv.fr/departements' }
   end
 
-  describe 'regions_url' do
+  describe '.regions_url' do
     subject { described_class.regions_url }
 
     it { is_expected.to eq 'https://geo.api.gouv.fr/regions' }

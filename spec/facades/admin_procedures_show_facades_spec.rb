@@ -10,25 +10,25 @@ describe AdminProceduresShowFacades do
 
   subject { AdminProceduresShowFacades.new procedure }
 
-  describe '.procedure' do
+  describe '#procedure' do
     subject { super().procedure }
 
     it { is_expected.to eq(procedure) }
   end
 
-  describe '.dossiers' do
+  describe '#dossiers' do
     subject { super().dossiers }
 
     it { expect(subject.size).to eq(3) }
   end
 
-  describe '.dossiers_for_pie_highchart' do
+  describe '#dossiers_for_pie_highchart' do
     subject { super().dossiers_for_pie_highchart }
 
     it { expect(subject).to eq({ 'En construction' => 2 }) }
   end
 
-  describe '.dossiers_archived_by_state_total' do
+  describe '#dossiers_archived_by_state_total' do
     subject { super().dossiers_archived_by_state_total }
 
     it { expect(subject.size).to eq(1)  }
@@ -37,19 +37,19 @@ describe AdminProceduresShowFacades do
     it { expect(subject.first.total).to eq(1) }
   end
 
-  describe 'dossiers_archived_total' do
+  describe '#dossiers_archived_total' do
     subject { super().dossiers_archived_total }
 
     it { is_expected.to eq(1) }
   end
 
-  describe 'dossiers_total' do
+  describe '#dossiers_total' do
     subject { super().dossiers_total }
 
     it { is_expected.to eq(3) }
   end
 
-  describe 'dossiers_termine_total' do
+  describe '#dossiers_termine_total' do
     subject { super().dossiers_termine_total }
 
     it { is_expected.to eq(0) }
