@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Search do
-  describe '.results' do
+  describe '#results' do
     subject { liste_dossiers }
 
     let(:liste_dossiers) do

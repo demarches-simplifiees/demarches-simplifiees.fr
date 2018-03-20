@@ -174,7 +174,7 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '.can_view_dossier?' do
+  describe '#can_view_dossier?' do
     subject{ gestionnaire.can_view_dossier?(dossier.id) }
 
     context 'when gestionnaire is assigned on dossier' do
