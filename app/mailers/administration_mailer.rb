@@ -1,7 +1,7 @@
 class AdministrationMailer < ApplicationMailer
   layout 'mailers/layout'
 
-  def new_admin_email admin, administration
+  def new_admin_email(admin, administration)
     @admin = admin
     @administration = administration
 

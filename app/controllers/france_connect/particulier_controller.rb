@@ -34,7 +34,7 @@ class FranceConnect::ParticulierController < ApplicationController
     end
   end
 
-  def connect_france_connect_particulier user
+  def connect_france_connect_particulier(user)
     sign_out :user if user_signed_in?
     sign_out :gestionnaire if gestionnaire_signed_in?
     sign_out :administrateur if administrateur_signed_in?

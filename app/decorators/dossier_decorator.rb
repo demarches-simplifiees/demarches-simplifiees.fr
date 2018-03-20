@@ -16,7 +16,7 @@ class DossierDecorator < Draper::Decorator
     DossierDecorator.case_state_fr state
   end
 
-  def self.case_state_fr state = self.state
+  def self.case_state_fr(state = self.state)
     h.t("activerecord.attributes.dossier.state.#{state}")
   end
 end

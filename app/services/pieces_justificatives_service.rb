@@ -15,7 +15,7 @@ class PiecesJustificativesService
       .compact()
   end
 
-  def self.upload_one! dossier, user, params
+  def self.upload_one!(dossier, user, params)
     content = params[:piece_justificative][:content]
     if ClamavService.safe_file? content.path
       pj = PieceJustificative.new(content: content,

@@ -37,11 +37,11 @@ class Champ < ApplicationRecord
     !private?
   end
 
-  def same_hour? num
+  def same_hour?(num)
     same_date? num, '%H'
   end
 
-  def same_minute? num
+  def same_minute?(num)
     same_date? num, '%M'
   end
 
@@ -53,7 +53,7 @@ class Champ < ApplicationRecord
     end
   end
 
-  def same_date? num, compare
+  def same_date?(num, compare)
     if type_champ == 'datetime' && value.present?
       if value.to_datetime.strftime(compare) == num
         return true

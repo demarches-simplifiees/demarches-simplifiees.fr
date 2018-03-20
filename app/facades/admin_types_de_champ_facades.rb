@@ -1,7 +1,7 @@
 class AdminTypesDeChampFacades
   include Rails.application.routes.url_helpers
 
-  def initialize private, procedure
+  def initialize(private, procedure)
     @private = private
     @procedure = procedure
   end
@@ -30,15 +30,15 @@ class AdminTypesDeChampFacades
     @private ? :types_de_champ_private : :types_de_champ
   end
 
-  def move_up_url ff
+  def move_up_url(ff)
     @private ? move_up_admin_procedure_types_de_champ_private_path(@procedure, ff.index) : move_up_admin_procedure_types_de_champ_path(@procedure, ff.index)
   end
 
-  def move_down_url ff
+  def move_down_url(ff)
     @private ? move_down_admin_procedure_types_de_champ_private_path(@procedure, ff.index) : move_down_admin_procedure_types_de_champ_path(@procedure, ff.index)
   end
 
-  def delete_url ff
+  def delete_url(ff)
     @private ? admin_procedure_type_de_champ_private_path(@procedure, ff.object.id) : admin_procedure_type_de_champ_path(@procedure, ff.object.id)
   end
 
