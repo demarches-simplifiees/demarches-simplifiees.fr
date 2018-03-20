@@ -13,6 +13,4 @@ class Entreprise < ApplicationRecord
   def default_values
     self.raison_sociale ||= ''
   end
-
-  attr_writer :mandataires_sociaux
 end

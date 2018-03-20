@@ -292,12 +292,6 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def mandataire_social!(france_connect_information)
-    if etablissement.mandataire_social?(france_connect_information)
-      update_column(:mandataire_social, true)
-    end
-  end
-
   private
 
   def update_state_dates

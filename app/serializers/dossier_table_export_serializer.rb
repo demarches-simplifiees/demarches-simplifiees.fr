@@ -4,7 +4,6 @@ class DossierTableExportSerializer < ActiveModel::Serializer
     :updated_at,
     :archived,
     :email,
-    :mandataire_social,
     :state,
     :initiated_at,
     :received_at,
