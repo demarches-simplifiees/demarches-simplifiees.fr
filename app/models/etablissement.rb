@@ -17,6 +17,4 @@ class Etablissement < ApplicationRecord
     # squeeze needed because of space in excess in the data
     "#{numero_voie} #{type_voie} #{nom_voie}, #{complement_adresse}, #{code_postal} #{localite}".squeeze(' ')
   end
-
-  attr_accessor :entreprise_mandataires_sociaux
 end
