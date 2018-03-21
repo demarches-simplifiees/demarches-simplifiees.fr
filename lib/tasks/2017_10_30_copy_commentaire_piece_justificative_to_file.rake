@@ -26,7 +26,7 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
     return name.mb_chars.to_s
   end
 
-  def process_commentaire commentaire
+  def process_commentaire(commentaire)
     puts "Processing commentaire #{commentaire.id}"
     if commentaire.piece_justificative.present?
       # https://github.com/carrierwaveuploader/carrierwave#uploading-files-from-a-remote-location
