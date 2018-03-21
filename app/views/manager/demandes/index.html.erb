@@ -18,6 +18,8 @@
             <%= key %>
           </th>
         <% end %>
+          <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
+          </th>
     </thead>
     <tbody>
       <% @pending_demandes.each do |demande| %>
@@ -27,6 +29,11 @@
               <%= demande[key] %>
             </td>
           <% end %>
+            <td class="cell-data cell-data--string">
+              <%= button_to('Créer', 
+                            manager_demandes_create_administrateur_path,
+                            params: { administrateur: { email: demande[:email], person_id: demande[:person_id] } }) %>
+            </td>
         </tr>
       <% end %>
     </tbody>
