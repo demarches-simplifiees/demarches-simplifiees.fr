@@ -17,8 +17,7 @@ describe InvitesController, type: :controller do
       let(:signed_in_profile) { create(:gestionnaire) }
 
       shared_examples_for "he can not create invitation" do
-        it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
-        it { expect { subject rescue nil }.to change(InviteGestionnaire, :count).by(0) }
+        it { expect { subject rescue nil }.to change(Invite, :count).by(0) }
       end
 
       context 'when gestionnaire has no access to dossier' do
@@ -36,18 +35,47 @@ describe InvitesController, type: :controller do
           signed_in_profile.procedures << dossier.procedure
         end
 
-        it { expect { subject }.to change(InviteGestionnaire, :count).by(1) }
+        it_behaves_like "he can not create invitation"
 
         context 'when is a user who is loged' do
+          let(:user) { create(:user) }
           before do
-            sign_in create(:user)
+            dossier.update(user: user)
+            sign_in(user)
           end
 
-          it { expect { subject }.to change(InviteGestionnaire, :count).by(1) }
+          it { expect { subject }.to change(InviteUser, :count).by(1) }
+        end
+      end
+    end
+
+    context "when user is signed_in" do
+      let(:signed_in_profile) { create(:user) }
+
+      shared_examples_for "he can not create a invite" do
+        it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+        it { expect { subject rescue nil }.to change(InviteUser, :count).by(0) }
+      end
+
+      context 'when user has no access to dossier' do
+        it_behaves_like "he can not create a invite"
+      end
+
+      context 'when user is invited on dossier' do
+        before { Invite.create(user: signed_in_profile, email: signed_in_profile.email, dossier: dossier) }
+
+        it_behaves_like "he can not create a invite"
+      end
+
+      context 'when user has access to dossier' do
+        before do
+          dossier.update(user: signed_in_profile)
         end
 
+        it { expect { subject }.to change(InviteUser, :count).by(1) }
+
         context 'when email is assign to an user' do
-          let! (:user) { create(:user, email: email) }
+          let! (:user_invite) { create(:user, email: email) }
 
           before do
             subject
@@ -62,7 +90,7 @@ describe InvitesController, type: :controller do
             end
           end
 
-          it { expect(invite.user).to eq user }
+          it { expect(invite.user).to eq user_invite }
           it { expect(flash[:notice]).to be_present }
         end
 
@@ -122,33 +150,6 @@ describe InvitesController, type: :controller do
             end
           end
         end
-      end
-    end
-
-    context "when user is signed_in" do
-      let(:signed_in_profile) { create(:user) }
-
-      shared_examples_for "he can not create a invite" do
-        it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
-        it { expect { subject rescue nil }.to change(InviteUser, :count).by(0) }
-      end
-
-      context 'when user has no access to dossier' do
-        it_behaves_like "he can not create a invite"
-      end
-
-      context 'when user is invited on dossier' do
-        before { Invite.create(user: signed_in_profile, email: signed_in_profile.email, dossier: dossier) }
-
-        it_behaves_like "he can not create a invite"
-      end
-
-      context 'when user has access to dossier' do
-        before do
-          dossier.update(user: signed_in_profile)
-        end
-
-        it { expect { subject }.to change(InviteUser, :count).by(1) }
       end
     end
   end
