@@ -1,16 +1,15 @@
 class InvitesController < ApplicationController
-  before_action :gestionnaire_or_user?
+  before_action :ensure_user_signed_in
 
   def create
-    email_sender = @current_devise_profil.email
-
-    class_var = @current_devise_profil.class == User ? InviteUser : InviteGestionnaire
-    dossier = @current_devise_profil.dossiers.find(params[:dossier_id])
-
     email = params[:email].downcase
 
-    user = User.find_by(email: email)
-    invite = class_var.create(dossier: dossier, user: user, email: email, email_sender: email_sender)
+    invite = InviteUser.create(
+      dossier: current_user.dossiers.find(params[:dossier_id]),
+      user: User.find_by(email: email),
+      email: email,
+      email_sender: current_user.email
+    )
 
     if invite.valid?
       if invite.user.present?
@@ -29,11 +28,9 @@ class InvitesController < ApplicationController
 
   private
 
-  def gestionnaire_or_user?
+  def ensure_user_signed_in
     if !user_signed_in?
       return redirect_to root_path
     end
-
-    @current_devise_profil = current_user if user_signed_in?
   end
 end
