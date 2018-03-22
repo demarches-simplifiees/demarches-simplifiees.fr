@@ -30,11 +30,10 @@ class InvitesController < ApplicationController
   private
 
   def gestionnaire_or_user?
-    if !user_signed_in? && !gestionnaire_signed_in?
+    if !user_signed_in?
       return redirect_to root_path
     end
 
     @current_devise_profil = current_user if user_signed_in?
-    @current_devise_profil = current_gestionnaire if gestionnaire_signed_in?
   end
 end
