@@ -1,0 +1,41 @@
+<% content_for(:title) do %>
+  <%= display_resource_name('Demandes') %>
+<% end %>
+
+<header class="main-content__header" role="banner">
+  <h1 class="main-content__page-title" id="page-title">
+    <%= content_for(:title) %>
+  </h1>
+</header>
+
+<section class="main-content__body main-content__body--flush">
+  <table>
+    <thead>
+      <% keys = @pending_demandes.first.keys %>
+      <tr>
+        <% keys.each do |key| %>
+          <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
+            <%= key %>
+          </th>
+        <% end %>
+          <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
+          </th>
+    </thead>
+    <tbody>
+      <% @pending_demandes.each do |demande| %>
+        <tr>
+          <% keys.each do |key| %>
+            <td class="cell-data cell-data--string">
+              <%= demande[key] %>
+            </td>
+          <% end %>
+            <td class="cell-data cell-data--string">
+              <%= button_to('Créer', 
+                            manager_demandes_create_administrateur_path,
+                            params: { administrateur: { email: demande[:email], person_id: demande[:person_id] } }) %>
+            </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
