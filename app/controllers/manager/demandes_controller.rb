@@ -11,7 +11,7 @@ module Manager
         PipedriveAcceptsDealsJob.perform_later(
           create_administrateur_params[:person_id],
           PipedriveService::PIPEDRIVE_CAMILLE_ID,
-          PipedriveService::PIPEDRIVE_ADMIN_CENTRAL_STOCK_STAGE_ID
+          create_administrateur_params[:stage_id]
         )
 
         flash.notice = "Administrateur créé"
@@ -26,7 +26,7 @@ module Manager
     private
 
     def create_administrateur_params
-      params.require(:administrateur).permit(:email, :person_id)
+      params.permit(:email, :person_id, :stage_id)
     end
 
     def pending_demandes
