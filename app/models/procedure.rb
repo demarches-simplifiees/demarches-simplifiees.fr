@@ -12,6 +12,8 @@ class Procedure < ApplicationRecord
   belongs_to :administrateur
 
   has_many :assign_to, dependent: :destroy
+  has_many :administrateurs_procedures
+  has_many :administrateurs, through: :administrateurs_procedures
   has_many :gestionnaires, through: :assign_to
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy

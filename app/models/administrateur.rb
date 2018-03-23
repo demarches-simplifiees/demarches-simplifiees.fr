@@ -7,6 +7,8 @@ class Administrateur < ApplicationRecord
 
   has_and_belongs_to_many :gestionnaires
   has_many :procedures
+  has_many :administrateurs_procedures
+  has_many :admin_procedures, through: :administrateurs_procedures, source: :procedure
 
   before_validation -> { sanitize_email(:email) }
   before_save :ensure_api_token
