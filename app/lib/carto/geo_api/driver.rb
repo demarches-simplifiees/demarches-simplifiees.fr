@@ -23,7 +23,7 @@ module Carto
 
       private
 
-      def self.call api_url
+      def self.call(api_url)
         RestClient.get api_url, params: { fields: :nom }
       rescue RestClient::ServiceUnavailable
         nil

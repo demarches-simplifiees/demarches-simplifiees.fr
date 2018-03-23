@@ -146,7 +146,7 @@ class Gestionnaire < ApplicationRecord
 
   private
 
-  def valid_couple_table_attr? table, column
+  def valid_couple_table_attr?(table, column)
     couples = [
       {
         table: :dossier,

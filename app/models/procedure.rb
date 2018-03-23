@@ -66,19 +66,19 @@ class Procedure < ApplicationRecord
     types_de_champ + types_de_champ_private
   end
 
-  def self.active id
+  def self.active(id)
     publiees.find(id)
   end
 
-  def switch_types_de_champ index_of_first_element
+  def switch_types_de_champ(index_of_first_element)
     switch_list_order(types_de_champ_ordered, index_of_first_element)
   end
 
-  def switch_types_de_champ_private index_of_first_element
+  def switch_types_de_champ_private(index_of_first_element)
     switch_list_order(types_de_champ_private_ordered, index_of_first_element)
   end
 
-  def switch_types_de_piece_justificative index_of_first_element
+  def switch_types_de_piece_justificative(index_of_first_element)
     switch_list_order(types_de_piece_justificative, index_of_first_element)
   end
 

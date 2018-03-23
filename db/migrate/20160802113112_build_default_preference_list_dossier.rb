@@ -19,7 +19,7 @@ class BuildDefaultPreferenceListDossier < ActiveRecord::Migration
       end
     end
 
-    def valid_couple_table_attr? table, column
+    def valid_couple_table_attr?(table, column)
       couples = [
         {
           table: :dossier,
@@ -110,7 +110,7 @@ class BuildDefaultPreferenceListDossier < ActiveRecord::Migration
       }
     end
 
-    def self.create_column libelle, table, attr, attr_decorate, bootstrap_lg
+    def self.create_column(libelle, table, attr, attr_decorate, bootstrap_lg)
       {
         libelle: libelle,
         table: table,
