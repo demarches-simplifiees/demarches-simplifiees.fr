@@ -1,5 +1,5 @@
 class SwitchDeviseProfileService
-  def initialize warden
+  def initialize(warden)
     @warden = warden
   end
 

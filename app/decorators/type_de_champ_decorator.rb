@@ -1,7 +1,7 @@
 class TypeDeChampDecorator < Draper::Decorator
   delegate_all
 
-  def button_up params
+  def button_up(params)
     h.link_to '', params[:url], class: up_classes,
                                 id: "btn_up_#{params[:index]}",
                                 remote: true,
@@ -9,7 +9,7 @@ class TypeDeChampDecorator < Draper::Decorator
                                 style: display_up_button?(params[:index], params[:private]) ? '' : 'visibility: hidden;'
   end
 
-  def button_down params
+  def button_down(params)
     h.link_to '', params[:url], class: down_classes,
                                 id: "btn_down_#{params[:index]}",
                                 remote: true,
@@ -39,7 +39,7 @@ class TypeDeChampDecorator < Draper::Decorator
     (index + 1) < count_type_de_champ(private)
   end
 
-  def count_type_de_champ private
+  def count_type_de_champ(private)
     if private
       @count_type_de_champ ||= procedure.types_de_champ_private.count
     else
