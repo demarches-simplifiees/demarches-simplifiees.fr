@@ -1,0 +1,38 @@
+class PipedriveService
+  PIPEDRIVE_POSTE_ATTRIBUTE_ID = '33a790746f1713d712fe97bcce9ac1ca6374a4d6'
+
+  PIPEDRIVE_DEV_ID = '2748449'
+  PIPEDRIVE_CAMILLE_ID = '3189424'
+
+  class << self
+    def update_person_owner(person_id, owner_id)
+      url = PIPEDRIVE_PEOPLE_URL + "/#{person_id}?api_token=#{PIPEDRIVE_TOKEN}"
+
+      params = { owner_id: owner_id }
+
+      RestClient.put(url, params.to_json, { content_type: :json })
+    end
+
+    def fetch_people_demandes
+      params = {
+        start: 0,
+        limit: 500,
+        user_id: PIPEDRIVE_DEV_ID,
+        api_token: PIPEDRIVE_TOKEN
+      }
+
+      response = RestClient.get(PIPEDRIVE_PEOPLE_URL, { params: params })
+      json = JSON.parse(response.body)
+
+      json['data'].map do |datum|
+        {
+          person_id: datum['id'],
+          nom: datum['name'],
+          poste: datum[PIPEDRIVE_POSTE_ATTRIBUTE_ID],
+          email: datum.dig('email', 0, 'value'),
+          organisation: datum['org_name']
+        }
+      end
+    end
+  end
+end
