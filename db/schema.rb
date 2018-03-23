@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_03_19_214757) do
+ActiveRecord::Schema.define(version: 2018_03_23_101837) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,16 @@ ActiveRecord::Schema.define(version: 2018_03_19_214757) do
     t.index ["administrateur_id"], name: "index_administrateurs_gestionnaires_on_administrateur_id"
     t.index ["gestionnaire_id", "administrateur_id"], name: "unique_couple_administrateur_gestionnaire", unique: true
     t.index ["gestionnaire_id"], name: "index_administrateurs_gestionnaires_on_gestionnaire_id"
+  end
+
+  create_table "administrateurs_procedures", id: false, force: :cascade do |t|
+    t.bigint "administrateur_id", null: false
+    t.bigint "procedure_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["administrateur_id", "procedure_id"], name: "index_unique_admin_proc_couple", unique: true
+    t.index ["administrateur_id"], name: "index_administrateurs_procedures_on_administrateur_id"
+    t.index ["procedure_id"], name: "index_administrateurs_procedures_on_procedure_id"
   end
 
   create_table "administrations", id: :serial, force: :cascade do |t|
