@@ -30,11 +30,17 @@ class ApiEntreprise::API
   def self.call(resource_name, siret_or_siren, procedure_id)
     url = url(resource_name, siret_or_siren)
     params = params(siret_or_siren, procedure_id)
-    verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
-    result = RestClient::Resource.new(url, verify_ssl: verify_ssl_mode).get(params: params)
+    response = Typhoeus.get(url,
+      ssl_verifypeer: false,
+      params: params,
+      timeout: 20)
 
-    JSON.parse(result, symbolize_names: true)
+    if response.success?
+      JSON.parse(response.body, symbolize_names: true)
+    else
+      raise RestClient::ResourceNotFound
+    end
   end
 
   def self.url(resource_name, siret_or_siren)
