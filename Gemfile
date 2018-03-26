@@ -46,6 +46,7 @@ gem 'openid_connect'
 gem 'omniauth-github'
 
 gem 'rest-client'
+gem 'typhoeus'
 
 gem 'clamav-client', require: 'clamav/client'
 
