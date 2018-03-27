@@ -8,6 +8,8 @@ class ApiEntreprise::API
   EXERCICES_RESOURCE_NAME = "exercices"
   RNA_RESOURCE_NAME = "associations"
 
+  TIMEOUT = 10
+
   def initialize
   end
 
@@ -34,7 +36,7 @@ class ApiEntreprise::API
     response = Typhoeus.get(url,
       ssl_verifypeer: false,
       params: params,
-      timeout: 20)
+      timeout: TIMEOUT)
 
     if response.success? && response.code != 206
       JSON.parse(response.body, symbolize_names: true)
