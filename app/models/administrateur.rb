@@ -73,6 +73,11 @@ class Administrateur < ApplicationRecord
     administrateur
   end
 
+  def feature_enabled?(feature)
+    ids = Features.send(:"#{feature}_for_admin_ids")
+    ids.present? ? id.in?(ids) : false
+  end
+
   private
 
   def generate_api_token

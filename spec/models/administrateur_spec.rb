@@ -66,4 +66,16 @@ describe Administrateur, type: :model do
     it { expect(Administrateur.reset_password('123', '12345678').errors).not_to be_empty }
     it { expect(Administrateur.reset_password(reset_password_token, '').errors).not_to be_empty }
   end
+
+  describe '#feature_enabled?' do
+    let(:administrateur) { create(:administrateur) }
+
+    before do
+      allow(Features).to receive(:champ_pj_allowed_for_admin_ids)
+        .and_return([administrateur.id])
+    end
+
+    it { expect(administrateur.feature_enabled?(:yolo)).to be_falsey }
+    it { expect(administrateur.feature_enabled?(:champ_pj_allowed)).to be_truthy }
+  end
 end
