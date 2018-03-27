@@ -8,7 +8,7 @@ class ApiEntreprise::API
   EXERCICES_RESOURCE_NAME = "exercices"
   RNA_RESOURCE_NAME = "associations"
 
-  TIMEOUT = 10
+  TIMEOUT = 15
 
   def initialize
   end
