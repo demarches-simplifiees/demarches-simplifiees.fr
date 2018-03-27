@@ -36,7 +36,7 @@ class ApiEntreprise::API
       params: params,
       timeout: 20)
 
-    if response.success?
+    if response.success? && response.code != 206
       JSON.parse(response.body, symbolize_names: true)
     else
       raise RestClient::ResourceNotFound

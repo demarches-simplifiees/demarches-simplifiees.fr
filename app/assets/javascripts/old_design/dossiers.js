@@ -1,4 +1,6 @@
-$(document).on('turbolinks:load', the_terms);
+$(document)
+  .on('turbolinks:load', the_terms)
+  .on('turbolinks:load', handle_siret_form_errors);
 
 function the_terms() {
   var the_terms = $("#dossier_autorisation_donnees");
@@ -40,4 +42,14 @@ function reset_form_siret() {
 function toggle_etape_1() {
   $('.row.etape.etape_1 .etapes-menu #logos').toggle(100);
   $('.row.etape.etape_1 .etapes-informations #description_procedure').toggle(100);
+}
+
+function handle_siret_form_errors() {
+  $(".form-inline[data-remote]").on("ajax:error", function(event) {
+    var input = $('#dossier-siret', event.target);
+    if (input.length) {
+      var invalid_siret = input.val();
+      error_form_siret(invalid_siret);
+    }
+  });
 }
