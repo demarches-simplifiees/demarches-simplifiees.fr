@@ -1,7 +1,7 @@
 class PipedriveService
   PIPEDRIVE_POSTE_ATTRIBUTE_ID = '33a790746f1713d712fe97bcce9ac1ca6374a4d6'
 
-  PIPEDRIVE_DEV_ID = '2748449'
+  PIPEDRIVE_ROBOT_ID = '2748449'
   PIPEDRIVE_CAMILLE_ID = '3189424'
 
   class << self
@@ -17,7 +17,7 @@ class PipedriveService
       params = {
         start: 0,
         limit: 500,
-        user_id: PIPEDRIVE_DEV_ID,
+        user_id: PIPEDRIVE_ROBOT_ID,
         api_token: PIPEDRIVE_TOKEN
       }
 
