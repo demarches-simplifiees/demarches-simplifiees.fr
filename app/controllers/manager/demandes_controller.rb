@@ -23,10 +23,28 @@ module Manager
       end
     end
 
+    def refuse_administrateur
+      PipedriveRefusesDealsJob.perform_later(
+        refuse_administrateur_params[:person_id],
+        PipedriveService::PIPEDRIVE_CAMILLE_ID
+      )
+
+      AdministrationMailer
+        .refuse_admin(refuse_administrateur_params[:email])
+        .deliver_later
+
+      flash.notice = "La demande de #{refuse_administrateur_params[:email]} va être refusée"
+      redirect_to manager_demandes_path
+    end
+
     private
 
     def create_administrateur_params
       params.permit(:email, :person_id, :stage_id)
+    end
+
+    def refuse_administrateur_params
+      params.permit(:email, :person_id)
     end
 
     def pending_demandes
