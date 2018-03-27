@@ -7,8 +7,9 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
     let(:allowed_tdc) { create(:type_de_champ, libelle: 'fournir') }
 
     before do
-      allow(AdministrationMailer).to receive(:dubious_procedures)
-        .and_return(mailer_double)
+      allow(AdministrationMailer).to receive(:dubious_procedures) do |arg|
+        @dubious_procedures_args = arg
+      end.and_return(mailer_double)
 
       procedure.types_de_champ << tdcs
       FindDubiousProceduresJob.new.perform
@@ -25,8 +26,10 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
       let(:tdcs) { forbidden_tdcs + [allowed_tdc] }
 
       it 'mails tech about the dubious procedure' do
-        expect(AdministrationMailer).to have_received(:dubious_procedures)
-          .with([[procedure, forbidden_tdcs]])
+        receive_procedure, receive_forbidden_tdcs = @dubious_procedures_args[0]
+
+        expect(receive_procedure).to eq(procedure)
+        expect(receive_forbidden_tdcs).to match(forbidden_tdcs)
       end
 
       context 'and a whitelisted procedure' do
