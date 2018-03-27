@@ -48,6 +48,12 @@
                 <%= submit_tag 'Créer' %>
               <% end -%>
             </td>
+            <td class="cell-data cell-data--string" style="text-align: center;">
+              <%= button_to('Refuser',  
+                            manager_demandes_refuse_administrateur_path, 
+                            params: { person_id: demande[:person_id] },
+                            style: 'background-color: #FFFFFF; color: #293f54; border: 1px solid #dfe0e1') %> 
+            </td>
         </tr>
       <% end %>
     </tbody>
