@@ -124,9 +124,6 @@ class Users::DossiersController < UsersController
     else
       render '/dossiers/new_siret', formats: 'js'
     end
-  rescue RestClient::ResourceNotFound, RestClient::BadRequest
-    errors_valid_siret
-
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for users_dossiers_path
