@@ -3,11 +3,19 @@
 Bonjour,
 %br
 %br
-Nous vous invitons à activer votre compte administrateur sur demarches-simplifiees.fr.
+Nous vous invitons à activer votre compte administrateur sur demarches-simplifiees.fr en cliquant sur le lien suivant :
+= link_to(admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token))
 %br
 %br
-Pour le faire, merci de cliquer sur le lien suivant :
-= link_to admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token)
+Vous retrouverez des tutoriels d'utilisation sur notre site de documentation accessible via le lien suivant :
+= link_to('https://demarches-simplifiees.gitbook.io/demarches-simplifiees/', 'https://demarches-simplifiees.gitbook.io/demarches-simplifiees/')
+%br
+%br
+Des tutoriels vidéos sont égalements disponibles via le lien suivant :
+= link_to('https://vimeo.com/demarchessimplifiees', 'https://vimeo.com/demarchessimplifiees')
+%br
+%br
+Nous nous tenons à votre disposition pour toute autre question.
 %br
 %br
 Bonne journée,
