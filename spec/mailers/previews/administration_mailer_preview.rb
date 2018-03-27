@@ -10,4 +10,8 @@ class AdministrationMailerPreview < ActionMailer::Preview
   def invite_admin
     AdministrationMailer.invite_admin(Administrateur.last, "12345678")
   end
+
+  def refuse_admin
+    AdministrationMailer.refuse_admin('bad_admin@pipo.com')
+  end
 end
