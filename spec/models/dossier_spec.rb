@@ -10,6 +10,21 @@ describe Dossier do
     it { expect(Dossier.without_followers.to_a).to eq([dossier2]) }
   end
 
+  describe 'with_ordered_champs' do
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { Dossier.create(user: create(:user), procedure: procedure) }
+
+    before do
+      create(:type_de_champ, libelle: 'l1', order_place: 1, procedure: procedure)
+      create(:type_de_champ, libelle: 'l3', order_place: 3, procedure: procedure)
+      create(:type_de_champ, libelle: 'l2', order_place: 2, procedure: procedure)
+    end
+
+    it do
+      expect(Dossier.with_ordered_champs.find(dossier.id).champs.map(&:libelle)).to match(%w(l1 l2 l3))
+    end
+  end
+
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
 
