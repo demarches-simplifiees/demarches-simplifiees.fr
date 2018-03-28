@@ -79,6 +79,6 @@ describe ApiEntreprise::EtablissementAdapter do
         .to_return(body: 'Fake body', status: 404)
     end
 
-    it { expect(subject).to be_nil }
+    it { expect(subject).to eq({}) }
   end
 end

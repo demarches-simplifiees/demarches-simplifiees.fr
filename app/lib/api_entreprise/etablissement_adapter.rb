@@ -4,26 +4,24 @@ class ApiEntreprise::EtablissementAdapter
     @procedure_id = procedure_id
   end
 
-  def success?
-    data_source
-  rescue
-    false
-  end
-
   def to_params
-    params = data_source[:etablissement].slice(*attr_to_fetch)
-    adresse_line = params[:adresse].slice(*address_lines_to_fetch).values.compact.join("\r\n")
-    params.merge!(params[:adresse].slice(*address_attr_to_fetch))
-    params[:adresse] = adresse_line
-    params
-  rescue
-    nil
+    if data_source.present?
+      params = data_source[:etablissement].slice(*attr_to_fetch)
+      adresse_line = params[:adresse].slice(*address_lines_to_fetch).values.compact.join("\r\n")
+      params.merge!(params[:adresse].slice(*address_attr_to_fetch))
+      params[:adresse] = adresse_line
+      params
+    else
+      {}
+    end
   end
 
   private
 
   def data_source
     @data_source ||= ApiEntreprise::API.etablissement(@siret, @procedure_id)
+  rescue
+    @data_source = nil
   end
 
   def attr_to_fetch
