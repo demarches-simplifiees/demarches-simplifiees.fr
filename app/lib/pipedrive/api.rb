@@ -40,7 +40,8 @@ class Pipedrive::API
   private
 
   def self.get(url, params)
-    RestClient.get(url, params: params)
+    response = RestClient.get(url, params: params)
+    JSON.parse(response.body)['data']
   end
 
   def self.put(url, params)
