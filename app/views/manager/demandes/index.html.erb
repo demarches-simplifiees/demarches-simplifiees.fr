@@ -31,10 +31,10 @@
           <% end %>
             <td class="cell-data cell-data--string" style="text-align: center;">
               <%= form_tag(manager_demandes_create_administrateur_path) do -%>
-                <%= select_tag "stage_id", 
+                <%= select_tag "stage_id",
                   options_for_select({
-                  "administration centrale" => PipedriveService::PIPEDRIVE_ADMIN_CENTRAL_STOCK_STAGE_ID, 
-                  "région" => PipedriveService::PIPEDRIVE_REGIONS_STOCK_STAGE_ID, 
+                  "administration centrale" => PipedriveService::PIPEDRIVE_ADMIN_CENTRAL_STOCK_STAGE_ID,
+                  "région" => PipedriveService::PIPEDRIVE_REGIONS_STOCK_STAGE_ID,
                   "préfecture" => PipedriveService::PIPEDRIVE_PREFECTURES_STOCK_STAGE_ID,
                   "département" =>PipedriveService::PIPEDRIVE_DEPARTEMENTS_STOCK_STAGE_ID,
                   "commune" => PipedriveService::PIPEDRIVE_COMMUNES_STOCK_STAGE_ID,
@@ -49,10 +49,10 @@
               <% end -%>
             </td>
             <td class="cell-data cell-data--string" style="text-align: center;">
-              <%= button_to('Refuser',  
-                            manager_demandes_refuse_administrateur_path, 
+              <%= button_to('Refuser',
+                            manager_demandes_refuse_administrateur_path,
                             params: { person_id: demande[:person_id], email: demande[:email] },
-                            style: 'background-color: #FFFFFF; color: #293f54; border: 1px solid #dfe0e1') %> 
+                            style: 'background-color: #FFFFFF; color: #293f54; border: 1px solid #dfe0e1') %>
             </td>
         </tr>
       <% end %>
