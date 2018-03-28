@@ -1,6 +1,6 @@
 module NewUser
   class DossiersController < UserController
-    before_action :ensure_ownership!
+    before_action :ensure_ownership!, except: [:index]
 
     def attestation
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
@@ -81,6 +81,10 @@ module NewUser
 
     def merci
       @dossier = current_user.dossiers.includes(:procedure).find(params[:id])
+    end
+
+    def index
+      @dossiers = current_user.dossiers.includes(:procedure).page([params[:page].to_i, 1].max)
     end
 
     private
