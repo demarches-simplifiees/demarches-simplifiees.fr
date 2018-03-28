@@ -1,5 +1,7 @@
 class Pipedrive::API
   PIPEDRIVE_ALL_NOT_DELETED_DEALS = 'all_not_deleted'
+  PIPEDRIVE_DEALS_URL = [PIPEDRIVE_API_URL, 'deals'].join("/")
+  PIPEDRIVE_PEOPLE_URL = [PIPEDRIVE_API_URL, 'persons'].join("/")
 
   def self.get_persons_owned_by_user(user_id)
     params = { user_id: user_id }
@@ -16,13 +18,13 @@ class Pipedrive::API
   end
 
   def self.put_deal(deal_id, params)
-    url = PIPEDRIVE_DEALS_URL + "/#{deal_id}"
+    url = [PIPEDRIVE_DEALS_URL, deal_id].join("/")
 
     self.put(url, params)
   end
 
   def self.put_person(person_id, params)
-    url = PIPEDRIVE_PEOPLE_URL + "/#{person_id}"
+    url = [PIPEDRIVE_PEOPLE_URL, person_id].join("/")
 
     self.put(url, params)
   end
