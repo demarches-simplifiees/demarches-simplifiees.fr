@@ -19,7 +19,7 @@ describe ApiEntreprise::RNAAdapter do
     let(:body) { '' }
     let(:status) { '404' }
 
-    it { is_expected.to eq(nil) }
+    it { is_expected.to eq({}) }
   end
 
   it { expect(subject).to be_an_instance_of(Hash) }

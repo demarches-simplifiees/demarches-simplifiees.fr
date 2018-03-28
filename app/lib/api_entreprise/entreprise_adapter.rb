@@ -4,18 +4,14 @@ class ApiEntreprise::EntrepriseAdapter
     @procedure_id = procedure_id
   end
 
-  def success?
-    data_source
-  rescue
-    false
-  end
-
   def to_params
-    params = data_source[:entreprise].slice(*attr_to_fetch)
-    params[:date_creation] = Time.at(params[:date_creation]).to_datetime
-    params
-  rescue
-    nil
+    if data_source.present?
+      params = data_source[:entreprise].slice(*attr_to_fetch)
+      params[:date_creation] = Time.at(params[:date_creation]).to_datetime
+      params
+    else
+      {}
+    end
   end
 
   private

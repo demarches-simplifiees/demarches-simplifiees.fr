@@ -4,12 +4,14 @@ class ApiEntreprise::ExercicesAdapter
     @procedure_id = procedure_id
   end
 
-  def to_params
-    data_source[:exercices].map do |exercice|
-      exercice.slice(*attr_to_fetch)
+  def to_array
+    if data_source.present?
+      data_source[:exercices].map do |exercice|
+        exercice.slice(*attr_to_fetch)
+      end
+    else
+      []
     end
-  rescue
-    []
   end
 
   private
@@ -21,6 +23,10 @@ class ApiEntreprise::ExercicesAdapter
   end
 
   def attr_to_fetch
-    [:ca, :date_fin_exercice, :date_fin_exercice_timestamp]
+    [
+      :ca,
+      :date_fin_exercice,
+      :date_fin_exercice_timestamp
+    ]
   end
 end
