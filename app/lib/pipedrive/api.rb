@@ -16,13 +16,13 @@ class Pipedrive::API
   end
 
   def self.put_deal(deal_id, params)
-    url = PIPEDRIVE_DEALS_URL + "/#{deal_id}?api_token=#{PIPEDRIVE_TOKEN}"
+    url = PIPEDRIVE_DEALS_URL + "/#{deal_id}"
 
     self.put(url, params)
   end
 
   def self.put_person(person_id, params)
-    url = PIPEDRIVE_PEOPLE_URL + "/#{person_id}?api_token=#{PIPEDRIVE_TOKEN}"
+    url = PIPEDRIVE_PEOPLE_URL + "/#{person_id}"
 
     self.put(url, params)
   end
@@ -41,6 +41,8 @@ class Pipedrive::API
   end
 
   def self.put(url, params)
+    url = "#{url}?api_token=#{PIPEDRIVE_TOKEN}"
+
     RestClient.put(url, params.to_json, { content_type: :json })
   end
 end
