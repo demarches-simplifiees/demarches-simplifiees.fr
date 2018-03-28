@@ -3,18 +3,32 @@
 Bonjour,
 %br
 %br
-Nous vous invitons à activer votre compte administrateur sur demarches-simplifiees.fr.
+Je vous remercie de l’intérêt que vous portez à notre outil de dématérialisation de démarches.
 %br
 %br
-Pour le faire, merci de cliquer sur le lien suivant :
-= link_to admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token)
+Votre compte administrateur a été créé pour l'adresse email #{@admin.email}. Pour l’activer, je vous invite à cliquer sur le lien suivant :
+= link_to(admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token))
 %br
 %br
-Bonne journée,
+Afin de vous accompagner dans la découverte de demarches-simplifiees.fr, je vous propose de m’appeler pour faire un point sur vos besoins de dématérialisation.
+%br
+Vous pouvez me joindre au numéro suivant : 01 76 42 02 87.
 %br
 %br
-L'équipe demarches-simplifiees.fr (anciennement Téléprocédures Simplifiées)
+Je vous invite également à consulter notre site de documentation qui regroupe l'ensemble des informations relatives à demarches-simplifiees.fr ainsi que des tutoriels d’utilisation :
+= link_to('https://demarches-simplifiees.gitbook.io/demarches-simplifiees/', 'https://demarches-simplifiees.gitbook.io/demarches-simplifiees/')
 %br
 %br
-Nous vous rappelons qu'en utilisant notre service, vous vous engagez à respecter nos
-= link_to "conditions générales d'utilisation", CGU_URL
+Cordialement,
+%br
+%br
+Camille Garrigue
+%br
+%br
+Équipe demarches-simplifiees.fr
+%br
+Téléphone (standard) : 01 76 42 02 87​
+%br
+Incubateur de Services Numériques / beta.gouv.fr
+%br
+Services du Premier Ministre, 20 avenue de Ségur, 75007 Paris
