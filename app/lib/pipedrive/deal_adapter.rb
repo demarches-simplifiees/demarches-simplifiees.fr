@@ -22,7 +22,7 @@ class Pipedrive::DealAdapter
       lost_reason: PIPEDRIVE_LOST_REASON
     }
 
-    Pipedrive::API.put_deal(deal_id, params.to_json)
+    Pipedrive::API.put_deal(deal_id, params)
   end
 
   def self.fetch_waiting_deal_ids(person_id)
@@ -44,6 +44,6 @@ class Pipedrive::DealAdapter
   def self.update_deal_owner_and_stage(deal_id, owner_id, stage_id)
     params = { user_id: owner_id, stage_id: stage_id }
 
-    Pipedrive::API.put_deal(deal_id, params.to_json)
+    Pipedrive::API.put_deal(deal_id, params)
   end
 end
