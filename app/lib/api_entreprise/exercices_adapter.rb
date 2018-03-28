@@ -4,7 +4,7 @@ class ApiEntreprise::ExercicesAdapter
     @procedure_id = procedure_id
   end
 
-  def to_params
+  def to_array
     data_source[:exercices].map do |exercice|
       exercice.slice(*attr_to_fetch)
     end

@@ -10,7 +10,7 @@ class SIRETService
       params = etablissement.to_params
         .merge(entreprise.to_params.map { |k,v| ["entreprise_#{k}", v] }.to_h)
         .merge(association.to_params&.map { |k,v| ["association_#{k}", v] }.to_h)
-        .merge(exercices_attributes: exercices.to_params)
+        .merge(exercices_attributes: exercices.to_array)
 
       # This is to fill legacy models and relationships
       if dossier.present?
