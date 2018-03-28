@@ -15,8 +15,6 @@ class Pipedrive::DealAdapter
   PIPEDRIVE_CAMILLE_ID = '3189424'
 
   def self.refuse_deal(deal_id, owner_id)
-    url = PIPEDRIVE_DEALS_URL + "/#{deal_id}?api_token=#{PIPEDRIVE_TOKEN}"
-
     params = {
       user_id: owner_id,
       stage_id: PIPEDRIVE_ORGANISMES_REFUSES_STOCK_STAGE_ID,
@@ -24,7 +22,7 @@ class Pipedrive::DealAdapter
       lost_reason: PIPEDRIVE_LOST_REASON
     }
 
-    Pipedrive::API.put(url, params.to_json)
+    Pipedrive::API.put_deal(deal_id, params.to_json)
   end
 
   def self.fetch_waiting_deal_ids(person_id)
@@ -44,10 +42,8 @@ class Pipedrive::DealAdapter
   end
 
   def self.update_deal_owner_and_stage(deal_id, owner_id, stage_id)
-    url = PIPEDRIVE_DEALS_URL + "/#{deal_id}?api_token=#{PIPEDRIVE_TOKEN}"
-
     params = { user_id: owner_id, stage_id: stage_id }
 
-    Pipedrive::API.put(url, params.to_json)
+    Pipedrive::API.put_deal(deal_id, params.to_json)
   end
 end
