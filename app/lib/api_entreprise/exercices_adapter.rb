@@ -1,9 +1,4 @@
-class ApiEntreprise::ExercicesAdapter
-  def initialize(siret, procedure_id)
-    @siret = siret
-    @procedure_id = procedure_id
-  end
-
+class ApiEntreprise::ExercicesAdapter < ApiEntreprise::Adapter
   def to_array
     if data_source.present?
       data_source[:exercices].map do |exercice|
@@ -17,7 +12,7 @@ class ApiEntreprise::ExercicesAdapter
   private
 
   def data_source
-    @data_source ||= ApiEntreprise::API.exercices(@siret, @procedure_id)
+    @data_source ||= ApiEntreprise::API.exercices(@siret_or_siren, @procedure_id)
   rescue
     @data_source = nil
   end
