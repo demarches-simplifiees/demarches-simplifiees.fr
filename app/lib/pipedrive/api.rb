@@ -2,12 +2,7 @@ class Pipedrive::API
   PIPEDRIVE_ALL_NOT_DELETED_DEALS = 'all_not_deleted'
 
   def self.get_persons_owned_by_user(user_id)
-    params = {
-      start: 0,
-      limit: 500,
-      user_id: user_id,
-      api_token: PIPEDRIVE_TOKEN
-    }
+    params = { user_id: user_id }
 
     self.get(PIPEDRIVE_PEOPLE_URL, params)
   end
@@ -15,12 +10,7 @@ class Pipedrive::API
   def self.get_deals_for_person(person_id)
     url = [PIPEDRIVE_PEOPLE_URL, person_id, "deals"].join('/')
 
-    params = {
-      start: 0,
-      limit: 500,
-      status: PIPEDRIVE_ALL_NOT_DELETED_DEALS,
-      api_token: PIPEDRIVE_TOKEN
-    }
+    params = { status: PIPEDRIVE_ALL_NOT_DELETED_DEALS }
 
     self.get(url, params)
   end
@@ -40,6 +30,12 @@ class Pipedrive::API
   private
 
   def self.get(url, params)
+    params.merge!({
+      start: 0,
+      limit: 500,
+      api_token: PIPEDRIVE_TOKEN
+    })
+
     response = RestClient.get(url, params: params)
     JSON.parse(response.body)['data']
   end
