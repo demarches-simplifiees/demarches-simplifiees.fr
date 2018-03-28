@@ -7,8 +7,6 @@ class Pipedrive::DealAdapter
   PIPEDRIVE_ORGANISMES_STOCK_STAGE_ID = 1
   PIPEDRIVE_ORGANISMES_REFUSES_STOCK_STAGE_ID = 45
 
-  PIPEDRIVE_ALL_NOT_DELETED_DEALS = 'all_not_deleted'
-
   PIPEDRIVE_LOST_STATUS = "lost"
   PIPEDRIVE_LOST_REASON = "refusé depuis DS"
 
@@ -26,16 +24,7 @@ class Pipedrive::DealAdapter
   end
 
   def self.fetch_waiting_deal_ids(person_id)
-    url = [PIPEDRIVE_PEOPLE_URL, person_id, "deals"].join('/')
-
-    params = {
-      start: 0,
-      limit: 500,
-      status: PIPEDRIVE_ALL_NOT_DELETED_DEALS,
-      api_token: PIPEDRIVE_TOKEN
-    }
-
-    response = Pipedrive::API.get(url, params)
+    response = Pipedrive::API.get_deals_for_person(person_id)
     json_data = JSON.parse(response.body)['data']
 
     json_data.map { |datum| datum['id'] }
