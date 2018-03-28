@@ -29,10 +29,30 @@
               <%= demande[key] %>
             </td>
           <% end %>
-            <td class="cell-data cell-data--string">
-              <%= button_to('Créer', 
-                            manager_demandes_create_administrateur_path,
-                            params: { administrateur: { email: demande[:email], person_id: demande[:person_id] } }) %>
+            <td class="cell-data cell-data--string" style="text-align: center;">
+              <%= form_tag(manager_demandes_create_administrateur_path) do -%>
+                <%= select_tag "stage_id", 
+                  options_for_select({
+                  "administration centrale" => PipedriveService::PIPEDRIVE_ADMIN_CENTRAL_STOCK_STAGE_ID, 
+                  "région" => PipedriveService::PIPEDRIVE_REGIONS_STOCK_STAGE_ID, 
+                  "préfecture" => PipedriveService::PIPEDRIVE_PREFECTURES_STOCK_STAGE_ID,
+                  "département" =>PipedriveService::PIPEDRIVE_DEPARTEMENTS_STOCK_STAGE_ID,
+                  "commune" => PipedriveService::PIPEDRIVE_COMMUNES_STOCK_STAGE_ID,
+                  "organisme" => PipedriveService::PIPEDRIVE_ORGANISMES_STOCK_STAGE_ID
+                }),
+                style: 'margin-bottom: 20px; width: inherit;' %>
+
+                <%= hidden_field_tag 'email', demande[:email] %>
+                <%= hidden_field_tag 'person_id', demande[:person_id] %>
+
+                <%= submit_tag 'Créer' %>
+              <% end -%>
+            </td>
+            <td class="cell-data cell-data--string" style="text-align: center;">
+              <%= button_to('Refuser',  
+                            manager_demandes_refuse_administrateur_path, 
+                            params: { person_id: demande[:person_id], email: demande[:email] },
+                            style: 'background-color: #FFFFFF; color: #293f54; border: 1px solid #dfe0e1') %> 
             </td>
         </tr>
       <% end %>

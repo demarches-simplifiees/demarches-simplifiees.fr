@@ -11,8 +11,15 @@ class AdministrationMailer < ApplicationMailer
 
   def invite_admin(admin, reset_password_token)
     @reset_password_token = reset_password_token
+    @admin = admin
     mail(to: admin.email,
          subject: "demarches-simplifiees.fr - Activez votre compte administrateur",
+         reply_to: "contact@demarches-simplifiees.fr")
+  end
+
+  def refuse_admin(admin_email)
+    mail(to: admin_email,
+         subject: "demarches-simplifiees.fr - Votre demande de compte a été refusée",
          reply_to: "contact@demarches-simplifiees.fr")
   end
 

@@ -106,15 +106,11 @@ class Users::DossiersController < UsersController
     update_current_user_siret!(siret)
 
     etablissement_attributes = SIRETService.fetch(siret, @facade.dossier)
-    Rails.logger.info("etablissement_attributes for siret: #{siret}, present?: #{etablissement_attributes.present?}")
 
     if etablissement_attributes.present?
       etablissement_attributes = ActionController::Parameters.new(etablissement_attributes).permit!
       etablissement = @facade.dossier.build_etablissement(etablissement_attributes)
-      if etablissement.save
-        Rails.logger.info("etablissement saved, siret: #{siret}, id: #{etablissement.id}")
-      else
-        Rails.logger.info("etablissement not saved, siret: #{siret}, errors: #{etablissement.errors.full_messages}")
+      if !etablissement.save
         return errors_valid_siret
       end
     else
@@ -128,9 +124,6 @@ class Users::DossiersController < UsersController
     else
       render '/dossiers/new_siret', formats: 'js'
     end
-  rescue RestClient::ResourceNotFound, RestClient::BadRequest
-    errors_valid_siret
-
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for users_dossiers_path
