@@ -4,14 +4,14 @@ class Pipedrive::API
   PIPEDRIVE_PEOPLE_URL = [PIPEDRIVE_API_URL, 'persons'].join("/")
 
   def self.get_persons_owned_by_user(user_id)
+    url = PIPEDRIVE_PEOPLE_URL
     params = { user_id: user_id }
 
-    self.get(PIPEDRIVE_PEOPLE_URL, params)
+    self.get(url, params)
   end
 
   def self.get_deals_for_person(person_id)
     url = [PIPEDRIVE_PEOPLE_URL, person_id, "deals"].join('/')
-
     params = { status: PIPEDRIVE_ALL_NOT_DELETED_DEALS }
 
     self.get(url, params)
