@@ -1,9 +1,4 @@
-class ApiEntreprise::EntrepriseAdapter
-  def initialize(siren, procedure_id)
-    @siren = siren
-    @procedure_id = procedure_id
-  end
-
+class ApiEntreprise::EntrepriseAdapter < ApiEntreprise::Adapter
   def to_params
     if data_source.present?
       params = data_source[:entreprise].slice(*attr_to_fetch)
@@ -17,7 +12,7 @@ class ApiEntreprise::EntrepriseAdapter
   private
 
   def data_source
-    @data_source ||= ApiEntreprise::API.entreprise(@siren, @procedure_id)
+    @data_source ||= ApiEntreprise::API.entreprise(@siret_or_siren, @procedure_id)
   rescue
     @data_source = nil
   end
