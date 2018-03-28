@@ -8,6 +8,8 @@ class ApiEntreprise::API
   EXERCICES_RESOURCE_NAME = "exercices"
   RNA_RESOURCE_NAME = "associations"
 
+  TIMEOUT = 15
+
   def initialize
   end
 
@@ -30,11 +32,17 @@ class ApiEntreprise::API
   def self.call(resource_name, siret_or_siren, procedure_id)
     url = url(resource_name, siret_or_siren)
     params = params(siret_or_siren, procedure_id)
-    verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
-    result = RestClient::Resource.new(url, verify_ssl: verify_ssl_mode).get(params: params)
+    response = Typhoeus.get(url,
+      ssl_verifypeer: false,
+      params: params,
+      timeout: TIMEOUT)
 
-    JSON.parse(result, symbolize_names: true)
+    if response.success? && response.code != 206
+      JSON.parse(response.body, symbolize_names: true)
+    else
+      raise RestClient::ResourceNotFound
+    end
   end
 
   def self.url(resource_name, siret_or_siren)

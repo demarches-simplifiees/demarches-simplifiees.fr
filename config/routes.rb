@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 
     resources :demandes, only: [:index]
     post 'demandes/create_administrateur'
+    post 'demandes/refuse_administrateur'
 
     authenticate :administration do
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
