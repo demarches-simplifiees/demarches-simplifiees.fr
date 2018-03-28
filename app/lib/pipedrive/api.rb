@@ -18,6 +18,6 @@ class Pipedrive::API
   private
 
   def self.put(url, params)
-    RestClient.put(url, params, { content_type: :json })
+    RestClient.put(url, params.to_json, { content_type: :json })
   end
 end
