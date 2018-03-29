@@ -190,12 +190,8 @@ class Dossier < ApplicationRecord
     en_instruction? || accepte? || refuse? || sans_suite?
   end
 
-  def owner?(email)
-    user.email == email
-  end
-
-  def invite_by_user?(email)
-    (invites_user.pluck :email).include? email
+  def owner_or_invite?(user)
+    self.user == user || invites_user.find_by(user_id: user.id).present?
   end
 
   def can_be_en_construction?

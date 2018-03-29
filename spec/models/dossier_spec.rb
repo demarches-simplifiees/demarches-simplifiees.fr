@@ -404,28 +404,39 @@ describe Dossier do
     end
   end
 
-  describe '#invite_by_user?' do
-    let(:dossier) { create :dossier }
-    let(:invite_user) { create :user, email: user_invite_email }
-    let(:invite_gestionnaire) { create :user, email: gestionnaire_invite_email }
-    let(:user_invite_email) { 'plup@plop.com' }
-    let(:gestionnaire_invite_email) { 'plap@plip.com' }
+  describe '#owner_or_invite?' do
+    let(:owner) { create(:user) }
+    let(:dossier) { create(:dossier, user: owner) }
+    let(:invite_user) { create(:user) }
+    let(:invite_gestionnaire) { create(:user) }
 
     before do
-      create :invite, dossier: dossier, user: invite_user, email: invite_user.email, type: 'InviteUser'
-      create :invite, dossier: dossier, user: invite_gestionnaire, email: invite_gestionnaire.email, type: 'InviteGestionnaire'
+      create(:invite, dossier: dossier, user: invite_user, type: 'InviteUser')
+      create(:invite, dossier: dossier, user: invite_gestionnaire, type: 'InviteGestionnaire')
     end
 
-    subject { dossier.invite_by_user? email }
+    subject { dossier.owner_or_invite?(user) }
 
-    context 'when email is present on invite list' do
-      let(:email) { user_invite_email }
+    context 'when user is owner' do
+      let(:user) { owner }
 
       it { is_expected.to be_truthy }
     end
 
-    context 'when email is present on invite list' do
-      let(:email) { gestionnaire_invite_email }
+    context 'when user was invited by user' do
+      let(:user) { invite_user }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when user was invited by gestionnaire (legacy, no new invitations happen)' do
+      let(:user) { invite_gestionnaire }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when user is quidam' do
+      let(:user) { create(:user) }
 
       it { is_expected.to be_falsey }
     end
