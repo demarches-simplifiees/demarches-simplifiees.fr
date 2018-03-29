@@ -2,7 +2,7 @@ class ApiEntreprise::EtablissementAdapter < ApiEntreprise::Adapter
   private
 
   def get_resource
-    ApiEntreprise::API.etablissement(@siret_or_siren, @procedure_id)
+    ApiEntreprise::API.etablissement(@siret, @procedure_id)
   end
 
   def process_params
