@@ -206,7 +206,7 @@ Rails.application.routes.draw do
   get "patron" => "root#patron"
 
   scope module: 'new_user' do
-    resources :dossiers, only: [:update] do
+    resources :dossiers, only: [:index, :update] do
       member do
         get 'identite'
         patch 'update_identite'
