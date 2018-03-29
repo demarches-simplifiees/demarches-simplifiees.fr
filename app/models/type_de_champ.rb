@@ -1,6 +1,4 @@
 class TypeDeChamp < ApplicationRecord
-  self.inheritance_column = :_type_disabled
-
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',

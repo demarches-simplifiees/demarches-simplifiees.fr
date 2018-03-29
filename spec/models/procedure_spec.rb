@@ -155,10 +155,10 @@ describe Procedure do
     let(:procedure) { create(:procedure, archived_at: archived_at, published_at: published_at, received_mail: received_mail) }
     let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
-    let!(:type_de_champ_2) { create(:type_de_champ, :type_drop_down_list, procedure: procedure, order_place: 2) }
+    let!(:type_de_champ_2) { create(:type_de_champ_drop_down_list, procedure: procedure, order_place: 2) }
     let!(:type_de_champ_private_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_private_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
-    let!(:type_de_champ_private_2) { create(:type_de_champ, :private, :type_drop_down_list, procedure: procedure, order_place: 2) }
+    let!(:type_de_champ_private_2) { create(:type_de_champ_drop_down_list, :private, procedure: procedure, order_place: 2) }
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
     let(:received_mail){ create(:received_mail) }

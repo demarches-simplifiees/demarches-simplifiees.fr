@@ -84,7 +84,7 @@ feature 'The user' do
   end
 
   let(:simple_procedure) do
-    tdcs = [create(:type_de_champ, type_champ: 'text', mandatory: true, libelle: 'text')]
+    tdcs = [create(:type_de_champ, mandatory: true, libelle: 'text')]
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end
 

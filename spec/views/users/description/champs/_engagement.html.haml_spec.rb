@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/description/champs/engagement.html.haml', type: :view do
-  let(:type_champ) { create(:type_de_champ, type_champ: :engagement) }
+  let(:type_champ) { create(:type_de_champ_engagement) }
 
   subject { render 'users/description/champs/engagement.html.haml', champ: champ }
 

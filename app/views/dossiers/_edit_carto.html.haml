@@ -1,5 +1,5 @@
 - if !@facade.dossier.read_only?
-  - if user_signed_in? && (@facade.dossier.owner?(current_user.email) || @facade.dossier.invite_by_user?(current_user.email))
+  - if user_signed_in? && (@facade.dossier.owner_or_invite?(current_user))
     %a#maj_carte.action{ href: "/users/dossiers/#{@facade.dossier.id}/carte" }
       .col-lg-2.col-md-2.col-sm-2.col-xs-2.action
         = 'éditer'.upcase
