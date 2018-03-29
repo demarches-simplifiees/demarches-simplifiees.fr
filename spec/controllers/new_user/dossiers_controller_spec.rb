@@ -294,5 +294,36 @@ describe NewUser::DossiersController, type: :controller do
         expect(response).to redirect_to(merci_dossier_path(dossier))
       end
     end
+
+    context 'when the user has an invitation but is not the owner' do
+      let(:dossier) { create(:dossier) }
+      let!(:invite) { create(:invite, dossier: dossier, user: user, type: 'InviteUser') }
+
+      context 'and the invite saves a draft' do
+        let(:payload) { submit_payload.merge(submit_action: 'draft') }
+
+        before do
+          first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
+          allow(PiecesJustificativesService).to receive(:missing_pj_error_messages).and_return(['pj'])
+
+          subject
+        end
+
+        it { expect(response).to render_template(:modifier) }
+        it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
+        it { expect(dossier.reload.state).to eq('brouillon') }
+      end
+
+      context 'and the invite updates a dossier en constructions' do
+        before do
+          dossier.en_construction!
+          subject
+        end
+
+        it { expect(first_champ.reload.value).to eq('beautiful value') }
+        it { expect(dossier.reload.state).to eq('en_construction') }
+        it { expect(response).to redirect_to(users_dossiers_invite_path(invite)) }
+      end
+    end
   end
 end
