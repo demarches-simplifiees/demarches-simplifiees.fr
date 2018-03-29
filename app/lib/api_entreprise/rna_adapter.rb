@@ -5,20 +5,21 @@ class ApiEntreprise::RNAAdapter
   end
 
   def to_params
-    if data_source[:association][:id].nil?
-      return nil
+    if data_source.present? && data_source[:association][:id].present?
+      params = data_source[:association].slice(*attr_to_fetch)
+      params[:rna] = data_source[:association][:id]
+      params
+    else
+      {}
     end
-    params = data_source[:association].slice(*attr_to_fetch)
-    params[:rna] = data_source[:association][:id]
-    params
-  rescue
-    nil
   end
 
   private
 
   def data_source
     @data_source ||= ApiEntreprise::API.rna(@siret, @procedure_id)
+  rescue
+    @data_source = nil
   end
 
   def attr_to_fetch
