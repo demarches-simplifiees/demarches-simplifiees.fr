@@ -3,14 +3,14 @@ require 'spec_helper'
 describe NewUser::DossiersController, type: :controller do
   let(:user) { create(:user) }
 
-  describe 'before_actions: ensure_ownership, ensure_ownership_or_invitation!' do
-    it 'is present' do
+  describe 'before_actions' do
+    it 'are present' do
       before_actions = NewUser::DossiersController
         ._process_action_callbacks
         .find_all{ |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
-      expect(before_actions).to include(:ensure_ownership!, :ensure_ownership_or_invitation!)
+      expect(before_actions).to include(:ensure_ownership!, :ensure_ownership_or_invitation!, :forbid_invite_submission!)
     end
   end
 
@@ -312,6 +312,13 @@ describe NewUser::DossiersController, type: :controller do
         it { expect(response).to render_template(:modifier) }
         it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
         it { expect(dossier.reload.state).to eq('brouillon') }
+      end
+
+      context 'and the invite tries to submit the dossier' do
+        before { subject }
+
+        it { expect(response).to redirect_to(root_path) }
+        it { expect(flash.alert).to eq("Vous n'avez pas accès à ce dossier") }
       end
 
       context 'and the invite updates a dossier en constructions' do
