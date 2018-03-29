@@ -7,7 +7,7 @@
     %h4
       = value
     - if key == :description
-      = f.text_area key, rows: '6', placeholder: 'Description du projet', class: 'form-control wysihtml5'
+      = f.text_area key, rows: '6', placeholder: 'Description du projet', class: 'form-control'
 
     - else
       = f.text_field key, class: 'form-control', placeholder: value
