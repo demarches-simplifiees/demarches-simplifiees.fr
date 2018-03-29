@@ -1,27 +1,16 @@
-class ApiEntreprise::EtablissementAdapter
-  def initialize(siret, procedure_id)
-    @siret = siret
-    @procedure_id = procedure_id
-  end
-
-  def to_params
-    if data_source.present?
-      params = data_source[:etablissement].slice(*attr_to_fetch)
-      adresse_line = params[:adresse].slice(*address_lines_to_fetch).values.compact.join("\r\n")
-      params.merge!(params[:adresse].slice(*address_attr_to_fetch))
-      params[:adresse] = adresse_line
-      params
-    else
-      {}
-    end
-  end
-
+class ApiEntreprise::EtablissementAdapter < ApiEntreprise::Adapter
   private
 
-  def data_source
-    @data_source ||= ApiEntreprise::API.etablissement(@siret, @procedure_id)
-  rescue
-    @data_source = nil
+  def get_resource
+    ApiEntreprise::API.etablissement(@siret_or_siren, @procedure_id)
+  end
+
+  def process_params
+    params = data_source[:etablissement].slice(*attr_to_fetch)
+    adresse_line = params[:adresse].slice(*address_lines_to_fetch).values.compact.join("\r\n")
+    params.merge!(params[:adresse].slice(*address_attr_to_fetch))
+    params[:adresse] = adresse_line
+    params
   end
 
   def attr_to_fetch

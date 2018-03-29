@@ -1,25 +1,16 @@
-class ApiEntreprise::ExercicesAdapter
-  def initialize(siret, procedure_id)
-    @siret = siret
-    @procedure_id = procedure_id
-  end
-
-  def to_array
-    if data_source.present?
-      data_source[:exercices].map do |exercice|
-        exercice.slice(*attr_to_fetch)
-      end
-    else
-      []
-    end
-  end
-
+class ApiEntreprise::ExercicesAdapter < ApiEntreprise::Adapter
   private
 
-  def data_source
-    @data_source ||= ApiEntreprise::API.exercices(@siret, @procedure_id)
-  rescue
-    @data_source = nil
+  def get_resource
+    ApiEntreprise::API.exercices(@siret_or_siren, @procedure_id)
+  end
+
+  def process_params
+    exercices_array = data_source[:exercices].map do |exercice|
+      exercice.slice(*attr_to_fetch)
+    end
+
+    { exercices_attributes: exercices_array }
   end
 
   def attr_to_fetch
