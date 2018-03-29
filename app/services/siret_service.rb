@@ -3,7 +3,7 @@ class SIRETService
     procedure_id = dossier&.procedure_id
 
     etablissement_params = ApiEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
-    entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siren(siret), procedure_id).to_params
+    entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siret, procedure_id).to_params
 
     if etablissement_params.present? && entreprise_params.present?
       association_params = ApiEntreprise::RNAAdapter.new(siret, procedure_id).to_params
@@ -21,10 +21,6 @@ class SIRETService
 
       params
     end
-  end
-
-  def self.siren(siret)
-    siret[0..8]
   end
 
   def self.handle_legacy_models!(params, entreprise_params, dossier, association_params)

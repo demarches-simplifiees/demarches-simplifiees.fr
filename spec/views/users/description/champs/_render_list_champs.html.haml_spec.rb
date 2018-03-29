@@ -1,5 +1,5 @@
 describe 'users/description/champs/render_list_champs.html.haml', type: :view do
-  let(:type_champ) { create(:type_de_champ, :checkbox) }
+  let(:type_champ) { create(:type_de_champ_checkbox) }
 
   context "with any champ" do
     let!(:champ) { create(:champ, type_de_champ: type_champ, value: nil) }
@@ -40,7 +40,7 @@ describe 'users/description/champs/render_list_champs.html.haml', type: :view do
   end
 
   context 'with a dossier_link' do
-    let(:type_champ) { create(:type_de_champ, type_champ: :dossier_link) }
+    let(:type_champ) { create(:type_de_champ_dossier_link) }
     let!(:champ) { create(:champ, type_de_champ: type_champ, value: nil) }
 
     before do

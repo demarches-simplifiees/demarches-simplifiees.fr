@@ -15,6 +15,16 @@ shared_examples 'type_de_champ_spec' do
       it { is_expected.to allow_value('datetime').for(:type_champ) }
       it { is_expected.to allow_value('number').for(:type_champ) }
       it { is_expected.to allow_value('checkbox').for(:type_champ) }
+
+      it do
+        TypeDeChamp.type_champs.each do |(type_champ, _)|
+          type_de_champ = create(:"type_de_champ_#{type_champ}")
+          champ = type_de_champ.champ.create
+
+          expect(type_de_champ.class.name).to match(/^TypesDeChamp::/)
+          expect(champ.class.name).to match(/^Champs::/)
+        end
+      end
     end
 
     context 'order_place' do

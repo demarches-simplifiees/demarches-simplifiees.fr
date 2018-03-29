@@ -1,6 +1,8 @@
 module NewUser
   class DossiersController < UserController
-    before_action :ensure_ownership!
+    before_action :ensure_ownership!, except: [:index, :modifier, :update]
+    before_action :ensure_ownership_or_invitation!, only: [:modifier, :update]
+    before_action :forbid_invite_submission!, only: [:update]
 
     def attestation
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
@@ -67,20 +69,23 @@ module NewUser
       elsif draft?
         flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
         render :modifier
+      elsif @dossier.brouillon?
+        @dossier.en_construction!
+        NotificationMailer.send_notification(@dossier, @dossier.procedure.initiated_mail_template).deliver_now!
+        redirect_to merci_dossier_path(@dossier)
+      elsif owns_dossier?
+        redirect_to users_dossier_recapitulatif_path(@dossier)
       else
-        if @dossier.brouillon?
-          @dossier.en_construction!
-          NotificationMailer.send_notification(@dossier, @dossier.procedure.initiated_mail_template).deliver_now!
-          redirect_to merci_dossier_path(@dossier)
-        else
-          @dossier.en_construction!
-          redirect_to users_dossier_recapitulatif_path(@dossier)
-        end
+        redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
       end
     end
 
     def merci
       @dossier = current_user.dossiers.includes(:procedure).find(params[:id])
+    end
+
+    def index
+      @dossiers = current_user.dossiers.includes(:procedure).page([params[:page].to_i, 1].max)
     end
 
     private
@@ -95,14 +100,30 @@ module NewUser
     end
 
     def dossier_with_champs
-      @dossier_with_champs ||= current_user.dossiers.with_ordered_champs.find(params[:id])
+      @dossier_with_champs ||= Dossier.with_ordered_champs.find(params[:id])
     end
 
     def ensure_ownership!
-      if dossier.user_id != current_user.id
-        flash[:alert] = "Vous n'avez pas accès à ce dossier"
-        redirect_to root_path
+      if !owns_dossier?
+        forbidden!
       end
+    end
+
+    def ensure_ownership_or_invitation!
+      if !dossier.owner_or_invite?(current_user)
+        forbidden!
+      end
+    end
+
+    def forbid_invite_submission!
+      if passage_en_construction? && !owns_dossier?
+        forbidden!
+      end
+    end
+
+    def forbidden!
+      flash[:alert] = "Vous n'avez pas accès à ce dossier"
+      redirect_to root_path
     end
 
     def individual_params
@@ -111,6 +132,14 @@ module NewUser
 
     def dossier_params
       params.require(:dossier).permit(:autorisation_donnees)
+    end
+
+    def owns_dossier?
+      dossier.user_id == current_user.id
+    end
+
+    def passage_en_construction?
+      dossier.brouillon? && !draft?
     end
 
     def draft?

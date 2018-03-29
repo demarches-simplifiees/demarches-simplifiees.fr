@@ -10,9 +10,11 @@ class UsersController < ApplicationController
 
     dossier = Dossier.find(dossier_id)
 
-    return dossier if dossier.owner?(current_user.email) || dossier.invite_by_user?(current_user.email)
+    if !dossier.owner_or_invite?(current_user)
+      raise ActiveRecord::RecordNotFound
+    end
 
-    raise ActiveRecord::RecordNotFound
+    dossier
   end
 
   def authorized_routes?(controller)
