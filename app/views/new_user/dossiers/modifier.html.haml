@@ -52,9 +52,10 @@
             class: 'button send',
             data: { action: 'draft', disable_with: 'Envoi...' }
 
-          = f.button 'Soumettre le dossier',
-            class: 'button send primary',
-            data: { action: 'submit', disable_with: 'Envoi...' }
+          - if @dossier.user == current_user
+            = f.button 'Soumettre le dossier',
+              class: 'button send primary',
+              data: { action: 'submit', disable_with: 'Envoi...' }
 
         - else
           = f.button 'Modifier le dossier',
