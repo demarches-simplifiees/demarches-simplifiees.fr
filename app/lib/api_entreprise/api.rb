@@ -38,6 +38,9 @@ class ApiEntreprise::API
       params: params,
       timeout: TIMEOUT)
 
+    # Responses with a 206 codes are sometimes not useable,
+    # as the RNA calls often return a 206 with an error message,
+    # not a partial response
     if response.success? && response.code != 206
       JSON.parse(response.body, symbolize_names: true)
     else
