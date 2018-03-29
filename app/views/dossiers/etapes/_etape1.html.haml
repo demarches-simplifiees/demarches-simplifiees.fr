@@ -16,7 +16,7 @@
         = @facade.procedure.libelle
 
       #description_procedure{ style: 'width: 95%;', class: (@facade.entreprise.nil? ? '' : 'mask') }
-        = h sanitize(@facade.procedure.description)
+        = h simple_format(@facade.procedure.description)
 
         - if @facade.procedure.lien_site_web.present?
           .center
