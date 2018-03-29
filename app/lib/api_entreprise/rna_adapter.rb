@@ -2,7 +2,7 @@ class ApiEntreprise::RNAAdapter < ApiEntreprise::Adapter
   private
 
   def get_resource
-    ApiEntreprise::API.rna(@siret_or_siren, @procedure_id)
+    ApiEntreprise::API.rna(@siret, @procedure_id)
   end
 
   def process_params
