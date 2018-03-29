@@ -20,7 +20,7 @@
         %h2.procedure-title
           = @dossier.procedure.libelle
         .procedure-description
-          = h sanitize(@dossier.procedure.description)
+          = h simple_format(@dossier.procedure.description)
 
     .column.auth-form
       = form_for @user, url: user_session_path, html: { class: "form" } do |f|
