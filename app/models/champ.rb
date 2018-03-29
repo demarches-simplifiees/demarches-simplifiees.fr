@@ -1,6 +1,4 @@
 class Champ < ApplicationRecord
-  self.inheritance_column = :_type_disabled
-
   belongs_to :dossier, touch: true
   belongs_to :type_de_champ, inverse_of: :champ
   has_many :commentaires

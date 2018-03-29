@@ -47,14 +47,14 @@ describe DropDownList do
     end
 
     context 'when multiple' do
-      let(:type_de_champ) { build(:type_de_champ, type_champ: 'multiple_drop_down_list') }
+      let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list) }
       let(:champ) { type_de_champ.champ.build(value: '["1","2"]').decorate }
 
       it { expect(dropdownlist.selected_options(champ)).to match(['1', '2']) }
     end
 
     context 'when simple' do
-      let(:type_de_champ) { build(:type_de_champ, type_champ: 'drop_down_list') }
+      let(:type_de_champ) { build(:type_de_champ_drop_down_list) }
       let(:champ) { type_de_champ.champ.build(value: '1').decorate }
 
       it { expect(dropdownlist.selected_options(champ)).to match(['1']) }

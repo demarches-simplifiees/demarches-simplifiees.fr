@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ChampDecorator do
-  let(:type_de_champ) { create(:type_de_champ, type_champ: type_champ) }
+  let(:type_de_champ) { create(:type_de_champ) }
   let(:champ) { type_de_champ.champ.create }
   let(:decorator) { champ.decorate }
 
@@ -9,7 +9,7 @@ describe ChampDecorator do
     subject { decorator.value }
 
     describe 'for a checkbox' do
-      let(:type_champ) { :checkbox }
+      let(:type_de_champ) { create(:type_de_champ_checkbox) }
 
       context 'when value is on' do
         before { champ.update value: 'on' }
@@ -22,7 +22,7 @@ describe ChampDecorator do
     end
 
     describe 'for a engagement' do
-      let(:type_champ) { :engagement }
+      let(:type_de_champ) { create(:type_de_champ_engagement) }
 
       context 'when value is on' do
         before { champ.update value: 'on' }
@@ -35,7 +35,7 @@ describe ChampDecorator do
     end
 
     describe 'for a multiple_drop_down_list' do
-      let(:type_champ) { :multiple_drop_down_list }
+      let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list) }
 
       context 'when value is an array' do
         before { champ.update value: '["1", "2"]' }
@@ -49,7 +49,7 @@ describe ChampDecorator do
     end
 
     describe "for a date" do
-      let(:type_champ) { :date }
+      let(:type_de_champ) { create(:type_de_champ_date) }
 
       context "when value is an ISO date" do
         before { champ.update value: "2017-12-31" }
@@ -67,7 +67,7 @@ describe ChampDecorator do
     subject { decorator.date_for_input }
 
     describe "for a date" do
-      let(:type_champ) { :date }
+      let(:type_de_champ) { create(:type_de_champ_date) }
 
       context "when value is an ISO date" do
         before { champ.update value: "2017-12-31" }
@@ -81,7 +81,7 @@ describe ChampDecorator do
     end
 
     describe "for a datetime" do
-      let(:type_champ) { :date }
+      let(:type_de_champ) { create(:type_de_champ_date) }
 
       context "when value is an formatted datetime" do
         before { champ.update value: "2017-12-30 23:17" }
