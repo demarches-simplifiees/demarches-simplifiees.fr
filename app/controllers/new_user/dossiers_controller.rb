@@ -2,6 +2,7 @@ module NewUser
   class DossiersController < UserController
     before_action :ensure_ownership!, except: [:index, :modifier, :update]
     before_action :ensure_ownership_or_invitation!, only: [:modifier, :update]
+    before_action :forbid_invite_submission!, only: [:update]
 
     def attestation
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
@@ -114,6 +115,12 @@ module NewUser
       end
     end
 
+    def forbid_invite_submission!
+      if passage_en_construction? && !owns_dossier?
+        forbidden!
+      end
+    end
+
     def forbidden!
       flash[:alert] = "Vous n'avez pas accès à ce dossier"
       redirect_to root_path
@@ -129,6 +136,10 @@ module NewUser
 
     def owns_dossier?
       dossier.user_id == current_user.id
+    end
+
+    def passage_en_construction?
+      dossier.brouillon? && !draft?
     end
 
     def draft?
