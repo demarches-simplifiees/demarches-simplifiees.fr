@@ -9,7 +9,7 @@
       %h2.procedure-title
         = @dossier.procedure.libelle
       .procedure-description
-        = h sanitize(@dossier.procedure.description)
+        = h simple_format(@dossier.procedure.description)
 
     .column
       = form_for @dossier.individual, url: update_identite_dossier_path(@dossier), html: { class: "form" } do |f|
