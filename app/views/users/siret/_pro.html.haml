@@ -5,8 +5,8 @@
   %h2#titre-procedure.text-info
     = @procedure.libelle
 
-  %p
-    = sanitize(@procedure.description)
+  %div
+    = simple_format(@procedure.description)
 
   %br
   = form_tag(url_for({ controller: :dossiers, action: :create }), class: 'form-inline', method: 'POST') do |f|

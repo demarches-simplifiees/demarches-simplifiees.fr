@@ -3,14 +3,14 @@ require 'spec_helper'
 describe ApiEntreprise::ExercicesAdapter do
   let(:siret) { '41816609600051' }
   let(:procedure_id) { 11 }
-  subject { described_class.new(siret, procedure_id).to_params }
+  subject { described_class.new(siret, procedure_id).to_array }
 
   before do
     stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/exercices\/.*token=/)
       .to_return(body: File.read('spec/support/files/exercices.json', status: 200))
   end
 
-  it '#to_params class est une Hash ?' do
+  it '#to_array class est un Array ?' do
     expect(subject).to be_an_instance_of(Array)
   end
 
