@@ -1,6 +1,7 @@
 module NewUser
   class DossiersController < UserController
-    before_action :ensure_ownership!, except: [:index]
+    before_action :ensure_ownership!, except: [:index, :modifier, :update]
+    before_action :ensure_ownership_or_invitation!, only: [:modifier, :update]
 
     def attestation
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
@@ -99,14 +100,24 @@ module NewUser
     end
 
     def dossier_with_champs
-      @dossier_with_champs ||= current_user.dossiers.with_ordered_champs.find(params[:id])
+      @dossier_with_champs ||= Dossier.with_ordered_champs.find(params[:id])
     end
 
     def ensure_ownership!
       if dossier.user_id != current_user.id
-        flash[:alert] = "Vous n'avez pas accès à ce dossier"
-        redirect_to root_path
+        forbidden!
       end
+    end
+
+    def ensure_ownership_or_invitation!
+      if !dossier.owner_or_invite?(current_user)
+        forbidden!
+      end
+    end
+
+    def forbidden!
+      flash[:alert] = "Vous n'avez pas accès à ce dossier"
+      redirect_to root_path
     end
 
     def individual_params

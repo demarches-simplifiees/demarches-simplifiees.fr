@@ -3,44 +3,96 @@ require 'spec_helper'
 describe NewUser::DossiersController, type: :controller do
   let(:user) { create(:user) }
 
-  describe 'before_action: ensure_ownership!' do
+  describe 'before_actions: ensure_ownership, ensure_ownership_or_invitation!' do
     it 'is present' do
       before_actions = NewUser::DossiersController
         ._process_action_callbacks
         .find_all{ |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
-      expect(before_actions).to include(:ensure_ownership!)
+      expect(before_actions).to include(:ensure_ownership!, :ensure_ownership_or_invitation!)
     end
   end
 
-  describe 'ensure_ownership!' do
+  shared_examples_for 'does not redirect nor flash' do
+    before { @controller.send(ensure_authorized) }
+
+    it { expect(@controller).not_to have_received(:redirect_to) }
+    it { expect(flash.alert).to eq(nil) }
+  end
+
+  shared_examples_for 'redirects and flashes' do
+    before { @controller.send(ensure_authorized) }
+
+    it { expect(@controller).to have_received(:redirect_to).with(root_path) }
+    it { expect(flash.alert).to eq("Vous n'avez pas accès à ce dossier") }
+  end
+
+  describe '#ensure_ownership!' do
     let(:user) { create(:user) }
+    let(:asked_dossier) { create(:dossier) }
+    let(:ensure_authorized) { :ensure_ownership! }
 
     before do
       @controller.params = @controller.params.merge(dossier_id: asked_dossier.id)
       expect(@controller).to receive(:current_user).and_return(user)
       allow(@controller).to receive(:redirect_to)
-
-      @controller.send(:ensure_ownership!)
     end
 
-    context 'when a user asks for its dossier' do
+    context 'when a user asks for their own dossier' do
       let(:asked_dossier) { create(:dossier, user: user) }
 
-      it 'does not redirects nor flash' do
-        expect(@controller).not_to have_received(:redirect_to)
-        expect(flash.alert).to eq(nil)
-      end
+      it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when a user asks for another dossier' do
-      let(:asked_dossier) { create(:dossier) }
+      it_behaves_like 'redirects and flashes'
+    end
 
-      it 'redirects and flash' do
-        expect(@controller).to have_received(:redirect_to).with(root_path)
-        expect(flash.alert).to eq("Vous n'avez pas accès à ce dossier")
-      end
+    context 'when an invite asks for a dossier where they were invited' do
+      before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
+
+      it_behaves_like 'redirects and flashes'
+    end
+
+    context 'when an invite asks for another dossier' do
+      before { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+
+      it_behaves_like 'redirects and flashes'
+    end
+  end
+
+  describe '#ensure_ownership_or_invitation!' do
+    let(:user) { create(:user) }
+    let(:asked_dossier) { create(:dossier) }
+    let(:ensure_authorized) { :ensure_ownership_or_invitation! }
+
+    before do
+      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id)
+      expect(@controller).to receive(:current_user).and_return(user)
+      allow(@controller).to receive(:redirect_to)
+    end
+
+    context 'when a user asks for their own dossier' do
+      let(:asked_dossier) { create(:dossier, user: user) }
+
+      it_behaves_like 'does not redirect nor flash'
+    end
+
+    context 'when a user asks for another dossier' do
+      it_behaves_like 'redirects and flashes'
+    end
+
+    context 'when an invite asks for a dossier where they were invited' do
+      before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
+
+      it_behaves_like 'does not redirect nor flash'
+    end
+
+    context 'when an invite asks for another dossier' do
+      before { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+
+      it_behaves_like 'redirects and flashes'
     end
   end
 
