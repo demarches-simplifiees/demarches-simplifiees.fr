@@ -12,7 +12,7 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
     before 'Create procedure' do
       page.find_by_id('new-procedure').click
       fill_in 'procedure_libelle', with: 'libelle de la procedure'
-      page.execute_script("$('#procedure_description').data('wysihtml5').editor.setValue('description de la procedure')")
+      page.execute_script("$('#procedure_description').val('description de la procedure')")
       fill_in 'procedure_organisation', with: 'organisme de la procedure'
       page.find_by_id('save-procedure').click
     end
