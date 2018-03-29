@@ -103,7 +103,7 @@ module NewUser
     end
 
     def ensure_ownership!
-      if dossier.user_id != current_user.id
+      if !owns_dossier?
         forbidden!
       end
     end
@@ -125,6 +125,10 @@ module NewUser
 
     def dossier_params
       params.require(:dossier).permit(:autorisation_donnees)
+    end
+
+    def owns_dossier?
+      dossier.user_id == current_user.id
     end
 
     def draft?
