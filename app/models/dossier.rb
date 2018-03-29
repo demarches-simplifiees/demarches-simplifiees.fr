@@ -191,7 +191,11 @@ class Dossier < ApplicationRecord
   end
 
   def owner_or_invite?(user)
-    self.user == user || invites_user.find_by(user_id: user.id).present?
+    self.user == user || invite_for_user(user).present?
+  end
+
+  def invite_for_user(user)
+    invites_user.find_by(user_id: user.id)
   end
 
   def can_be_en_construction?
