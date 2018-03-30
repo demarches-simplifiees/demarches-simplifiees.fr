@@ -59,6 +59,45 @@ shared_examples 'carte_controller_spec' do
   end
 
   describe 'POST #save' do
+    context 'it cleans json_latlngs' do
+      let(:dossier) { create(:dossier, state: 'en_construction') }
+      let(:json_latlngs) { multipolygon.to_json }
+
+      before do
+        post :save, params: { dossier_id: dossier.id, json_latlngs: json_latlngs }
+        dossier.reload
+      end
+
+      context 'when json_latlngs is invalid' do
+        let(:multipolygon) do
+          [
+            [
+              { lat: 1, lng: 1 },
+              { lat: 1, lng: 2 },
+              { lat: 1, lng: 1 }
+            ]
+          ]
+        end
+
+        it { expect(dossier.json_latlngs).to be_nil }
+      end
+
+      context 'when json_latlngs is valid' do
+        let(:multipolygon) do
+          [
+            [
+              { lat: 1, lng: 1 },
+              { lat: 1, lng: 2 },
+              { lat: 2, lng: 2 },
+              { lat: 1, lng: 1 }
+            ]
+          ]
+        end
+
+        it { expect(dossier.json_latlngs).to eq(json_latlngs) }
+      end
+    end
+
     context 'En train de modifier la localisation' do
       let(:dossier) { create(:dossier, state: 'en_construction') }
       before do
