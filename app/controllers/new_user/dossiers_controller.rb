@@ -85,8 +85,8 @@ module NewUser
     end
 
     def index
-      @user_dossiers = current_user.dossiers.includes(:procedure).page([params[:page].to_i, 1].max)
-      @dossiers_invites = current_user.dossiers_invites.includes(:procedure).page([params[:page].to_i, 1].max)
+      @user_dossiers = current_user.dossiers.includes(:procedure).page(page)
+      @dossiers_invites = current_user.dossiers_invites.includes(:procedure).page(page)
 
       @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
 
@@ -99,6 +99,10 @@ module NewUser
     end
 
     private
+
+    def page
+      [params[:page].to_i, 1].max
+    end
 
     def current_tab(mes_dossiers_count, dossiers_invites_count)
       if dossiers_invites_count == 0
