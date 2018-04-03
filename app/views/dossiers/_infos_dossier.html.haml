@@ -20,7 +20,7 @@
       .row
         .col-xs-6.depositaire-label Date de naissance
         .col-xs-1.comments-off= "-"
-        .col-xs-5.depositaire-info= @facade.individual.birthdate
+        .col-xs-4.depositaire-info= @facade.individual.birthdate&.strftime("%d/%m/%Y")
       .row.margin-top-20
 
     - if @facade.champs.present?

@@ -3,6 +3,6 @@ FactoryBot.define do
     gender 'M.'
     nom 'Julien'
     prenom 'Xavier'
-    birthdate '1991-11-01'
+    birthdate Date.new(1991, 11, 01)
   end
 end
