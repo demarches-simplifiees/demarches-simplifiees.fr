@@ -75,6 +75,9 @@ FactoryBot.define do
     factory :type_de_champ_piece_justificative, class: 'TypesDeChamp::PieceJustificativeTypeDeChamp' do
       type_champ 'piece_justificative'
     end
+    factory :type_de_champ_siret, class: 'TypesDeChamp::SiretTypeDeChamp' do
+      type_champ 'siret'
+    end
 
     trait :private do
       private true
