@@ -58,6 +58,8 @@ gem 'fog-openstack'
 
 gem 'pg'
 
+gem 'rbnacl-libsodium'
+
 gem 'rgeo-geojson'
 gem 'leaflet-rails'
 gem 'leaflet-markercluster-rails', '~> 0.7.0'
