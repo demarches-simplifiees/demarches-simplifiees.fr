@@ -12,10 +12,6 @@ class RootController < ApplicationController
       return redirect_to manager_root_path
     end
 
-    if Date.today < Date.new(2018, 03, 31)
-      flash.now.notice = ["Téléprocédures Simplifiées change de nom et devient demarches-simplifiees.fr, <a href='https://demarches-simplifiees.gitbook.io/demarches-simplifiees/changement-de-nom' target='_blank' rel='noopener noreferrer'>en savoir plus</a>."]
-    end
-
     render 'landing'
   end
 
