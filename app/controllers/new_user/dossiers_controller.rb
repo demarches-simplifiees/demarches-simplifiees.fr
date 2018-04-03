@@ -85,10 +85,34 @@ module NewUser
     end
 
     def index
-      @dossiers = current_user.dossiers.includes(:procedure).page([params[:page].to_i, 1].max)
+      @user_dossiers = current_user.dossiers.includes(:procedure).page(page)
+      @dossiers_invites = current_user.dossiers_invites.includes(:procedure).page(page)
+
+      @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
+
+      @dossiers = case @current_tab
+      when 'mes-dossiers'
+        @user_dossiers
+      when 'dossiers-invites'
+        @dossiers_invites
+      end
     end
 
     private
+
+    def page
+      [params[:page].to_i, 1].max
+    end
+
+    def current_tab(mes_dossiers_count, dossiers_invites_count)
+      if dossiers_invites_count == 0
+        'mes-dossiers'
+      elsif mes_dossiers_count == 0
+        'dossiers-invites'
+      else
+        params[:current_tab].presence || 'mes-dossiers'
+      end
+    end
 
     # FIXME: require(:dossier) when all the champs are united
     def champs_params

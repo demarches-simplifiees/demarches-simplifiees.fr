@@ -1,10 +1,22 @@
-.container
-  %h1.page-title Mes dossiers
+.dossiers-headers.accompagnateur-header
+  .container
+    %h1.page-title Les dossiers
 
+    %ul.tabs
+      - if @user_dossiers.count > 0
+        %li{ class: (@current_tab == 'mes-dossiers') ? 'active' : nil }>
+          = link_to(dossiers_path(current_tab: 'mes-dossiers')) do
+            mes dossiers
+      - if @dossiers_invites.count > 0
+        %li{ class: (@current_tab == 'dossiers-invites') ? 'active' : nil }>
+          = link_to(dossiers_path(current_tab: 'dossiers-invites')) do
+            dossiers invités
+
+.container
   %table.table.dossiers-table.hoverable
     %thead
       %tr
-        %th
+        %th.notification-col
         %th.number-col Nº dossier
         %th Procédure
         %th.status-col Statut
