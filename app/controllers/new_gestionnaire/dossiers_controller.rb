@@ -198,7 +198,10 @@ module NewGestionnaire
     end
 
     def champs_private_params
-      params.require(:dossier).permit(champs_private_attributes: [:id, :piece_justificative_file, :value, value: []])
+      params.require(:dossier).permit(champs_private_attributes: [
+        :id, :piece_justificative_file, :value, value: [],
+        etablissement_attributes: Champs::SiretChamp::ETABLISSEMENT_ATTRIBUTES
+      ])
     end
 
     def check_attestation_emailable
