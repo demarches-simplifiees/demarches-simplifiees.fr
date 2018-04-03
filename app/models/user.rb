@@ -14,6 +14,7 @@ class User < ApplicationRecord
 
   has_many :dossiers, dependent: :destroy
   has_many :invites, dependent: :destroy
+  has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :piece_justificative, dependent: :destroy
   has_many :cerfa, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
