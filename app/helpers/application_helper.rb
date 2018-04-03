@@ -30,4 +30,11 @@ module ApplicationHelper
       root_path
     end
   end
+
+  def ensure_safe_json(json)
+    JSON.parse(json).to_json
+  rescue Exception => e
+    Raven.capture_exception(e)
+    {}
+  end
 end
