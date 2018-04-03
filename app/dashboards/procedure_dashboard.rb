@@ -10,6 +10,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     types_de_piece_justificative: TypesDePieceJustificativeCollectionField,
     types_de_champ: TypesDeChampCollectionField,
+    path: ProcedureLinkField,
     dossiers: Field::HasMany,
     procedure_path: Field::HasOne,
     administrateur: Field::BelongsTo,
@@ -47,6 +48,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
     :id,
+    :path,
     :administrateur,
     :libelle,
     :description,
