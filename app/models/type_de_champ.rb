@@ -20,7 +20,8 @@ class TypeDeChamp < ApplicationRecord
     header_section: 'header_section',
     explication: 'explication',
     dossier_link: 'dossier_link',
-    piece_justificative: 'piece_justificative'
+    piece_justificative: 'piece_justificative',
+    siret: 'siret'
   }
 
   belongs_to :procedure

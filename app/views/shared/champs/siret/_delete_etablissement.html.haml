@@ -1,0 +1,6 @@
+= message
+- if etablissement.present?
+  - champ_attributes = etablissement.champ.private? ? 'champs_private_attributes' : 'champs_attributes'
+  = fields_for "dossier[#{champ_attributes}][#{position}][etablissement_attributes]", etablissement do |form|
+    = form.hidden_field :_destroy
+

@@ -48,6 +48,10 @@
     .updated-at.highlighted {
       visibility: visible;
     }
+
+    .etablissement-titre {
+      margin-bottom: 2 * $default-padding;
+    }
   }
 
   .radios {
@@ -81,6 +85,10 @@
 
     &.small {
       padding: $default-padding / 2;
+    }
+
+    &.small-margin {
+      margin-bottom: $default-padding / 2;
     }
   }
 

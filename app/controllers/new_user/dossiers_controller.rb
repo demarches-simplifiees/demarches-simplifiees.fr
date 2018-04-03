@@ -116,7 +116,12 @@ module NewUser
 
     # FIXME: require(:dossier) when all the champs are united
     def champs_params
-      params.permit(dossier: { champs_attributes: [:id, :value, :piece_justificative_file, value: []] })
+      params.permit(dossier: {
+        champs_attributes: [
+          :id, :value, :piece_justificative_file, value: [],
+          etablissement_attributes: Champs::SiretChamp::ETABLISSEMENT_ATTRIBUTES
+        ]
+      })
     end
 
     def dossier
