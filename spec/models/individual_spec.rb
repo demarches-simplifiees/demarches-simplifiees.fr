@@ -23,6 +23,7 @@ describe Individual do
 
         it { expect(individual.valid?).to be true }
         it { expect(individual.birthdate).to eq("1980-11-12") }
+        it { expect(individual.second_birthdate).to eq(Date.new(1980, 11, 12)) }
       end
 
       context "and the format is ISO" do
@@ -30,6 +31,7 @@ describe Individual do
 
         it { expect(individual.valid?).to be true }
         it { expect(individual.birthdate).to eq("1980-11-12") }
+        it { expect(individual.second_birthdate).to eq(Date.new(1980, 11, 12)) }
       end
 
       context "and the format is WTF" do
@@ -37,6 +39,7 @@ describe Individual do
 
         it { expect(individual.valid?).to be false }
         it { expect(individual.birthdate).to eq("1980 1 12") }
+        it { expect(individual.second_birthdate).to be_nil }
       end
     end
   end
