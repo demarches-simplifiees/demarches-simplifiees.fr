@@ -333,4 +333,55 @@ describe NewUser::DossiersController, type: :controller do
       end
     end
   end
+
+  describe '#index' do
+    before { sign_in(user) }
+
+    context 'when the user does not have any dossiers' do
+      before { get(:index) }
+
+      it { expect(assigns(:current_tab)).to eq('mes-dossiers') }
+    end
+
+    context 'when the user only have its own dossiers' do
+      let!(:own_dossier) { create(:dossier, user: user) }
+
+      before { get(:index) }
+
+      it { expect(assigns(:current_tab)).to eq('mes-dossiers') }
+      it { expect(assigns(:dossiers)).to match([own_dossier]) }
+    end
+
+    context 'when the user only have some dossiers invites' do
+      let!(:invite) { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+
+      before { get(:index) }
+
+      it { expect(assigns(:current_tab)).to eq('dossiers-invites') }
+      it { expect(assigns(:dossiers)).to match([invite.dossier]) }
+    end
+
+    context 'when the user has both' do
+      let!(:own_dossier) { create(:dossier, user: user) }
+      let!(:invite) { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+
+      context 'and there is no current_tab param' do
+        before { get(:index) }
+
+        it { expect(assigns(:current_tab)).to eq('mes-dossiers') }
+      end
+
+      context 'and there is "dossiers-invites" param' do
+        before { get(:index, params: { current_tab: 'dossiers-invites' }) }
+
+        it { expect(assigns(:current_tab)).to eq('dossiers-invites') }
+      end
+
+      context 'and there is "mes-dossiers" param' do
+        before { get(:index, params: { current_tab: 'mes-dossiers' }) }
+
+        it { expect(assigns(:current_tab)).to eq('mes-dossiers') }
+      end
+    end
+  end
 end
