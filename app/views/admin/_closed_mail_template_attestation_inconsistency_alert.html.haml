@@ -1,0 +1,22 @@
+- case @procedure.closed_mail_template_attestation_inconsistency_state
+- when :missing_tag
+  .center
+    .alert{ class: flash_class('alert') }
+      Cette procédure comporte une attestation, mais l’accusé d’acceptation ne la mentionne pas :
+      - if !@procedure.locked?
+        = link_to('désactivez l’attestation', edit_admin_procedure_attestation_template_path(@procedure))
+        ou
+      = link_to('ajoutez la balise', edit_admin_procedure_mail_template_path(@procedure, Mails::ClosedMail::SLUG))
+      %code{ style: "white-space: pre-wrap;" }
+        \--lien attestation--
+      à l’accusé d’acceptation
+- when :extraneous_tag
+  .center
+    .alert{ class: flash_class('alert') }
+      Cette procédure ne comporte pas d’attestation, mais l’accusé d’acceptation en mentionne une :
+      = link_to('activez l’attestation', edit_admin_procedure_attestation_template_path(@procedure))
+      ou
+      = link_to('enlevez la balise', edit_admin_procedure_mail_template_path(@procedure, Mails::ClosedMail::SLUG))
+      %code{ style: "white-space: pre-wrap;" }
+        \--lien attestation--
+      de l’accusé d’acceptation
