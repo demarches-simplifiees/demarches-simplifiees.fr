@@ -198,7 +198,7 @@ class Users::DossiersController < UsersController
   end
 
   def update_params
-    params.require(:dossier).permit(:id, :autorisation_donnees, individual_attributes: [:gender, :nom, :prenom, :birthdate])
+    params.require(:dossier).permit(:id, :autorisation_donnees)
   end
 
   def individual_errors
