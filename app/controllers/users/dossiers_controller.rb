@@ -92,7 +92,9 @@ class Users::DossiersController < UsersController
       individual.update_column :gender, @facade.dossier.france_connect_information.gender
       individual.update_column :nom, @facade.dossier.france_connect_information.family_name
       individual.update_column :prenom, @facade.dossier.france_connect_information.given_name
-      individual.update_column :birthdate, @facade.dossier.france_connect_information.birthdate.iso8601
+
+      individual.birthdate = @facade.dossier.france_connect_information.birthdate
+      individual.save
     end
 
   rescue ActiveRecord::RecordNotFound

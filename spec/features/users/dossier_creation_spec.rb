@@ -30,7 +30,7 @@ feature 'As a User I wanna create a dossier' do
 
           expect(page).to have_current_path(modifier_dossier_path(procedure_for_individual.dossiers.last))
 
-          expect(user.dossiers.first.individual.birthdate).to eq("1987-10-14")
+          expect(user.dossiers.first.individual.birthdate).to eq(Date.new(1987, 10, 14))
         end
 
         scenario "with a basic text input field for birthdate (type='date' unsupported)" do
@@ -42,7 +42,7 @@ feature 'As a User I wanna create a dossier' do
 
           expect(page).to have_current_path(modifier_dossier_path(procedure_for_individual.dossiers.last))
 
-          expect(user.dossiers.first.individual.birthdate).to eq("1987-10-14")
+          expect(user.dossiers.first.individual.birthdate).to eq(Date.new(1987, 10, 14))
         end
       end
 
