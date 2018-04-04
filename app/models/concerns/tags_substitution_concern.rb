@@ -47,8 +47,14 @@ module TagsSubstitutionConcern
     {
       libelle: 'lien dossier',
       description: '',
-      lambda: -> (d) { users_dossier_recapitulatif_link(d) },
+      lambda: -> (d) { external_link(users_dossier_recapitulatif_url(d)) },
       available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'lien attestation',
+      description: '',
+      lambda: -> (d) { external_link(dossier_attestation_url(d)) },
+      available_for_states: ['accepte']
     }
   ]
 
@@ -126,8 +132,7 @@ module TagsSubstitutionConcern
     end
   end
 
-  def users_dossier_recapitulatif_link(dossier)
-    url = users_dossier_recapitulatif_url(dossier)
+  def external_link(url)
     link_to(url, url, target: '_blank')
   end
 

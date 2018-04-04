@@ -345,29 +345,6 @@ describe Users::DossiersController, type: :controller do
       subject
     end
 
-    context 'when procedure is for individual' do
-      let(:autorisation_donnees) { "1" }
-      let(:procedure) { create(:procedure, :published, for_individual: true) }
-
-      before do
-        dossier.reload
-      end
-
-      it { expect(dossier.individual.gender).to eq 'M.' }
-      it { expect(dossier.individual.nom).to eq 'Julien' }
-      it { expect(dossier.individual.prenom).to eq 'Xavier' }
-      it { expect(dossier.individual.birthdate).to eq '1991-01-20' }
-      it { expect(dossier.procedure.for_individual).to eq true }
-
-      context "and birthdate is ISO (YYYY-MM-DD) formatted" do
-        let(:birthdate) { "1991-11-01" }
-        before do
-          dossier.reload
-        end
-        it { expect(dossier.individual.birthdate).to eq '1991-11-01' }
-      end
-    end
-
     context 'when Checkbox is checked' do
       let(:autorisation_donnees) { '1' }
 
