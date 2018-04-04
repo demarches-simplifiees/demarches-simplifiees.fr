@@ -1,20 +1,23 @@
-#map
+- if dossier.json_latlngs.nil?
+  %h2.empty-text Non renseigné
+- else
+  #map
 
-- if dossier.quartier_prioritaires.any?
-  .card-title Quartiers prioritaires
-  %ul
-  - dossier.quartier_prioritaires.each do |q|
-    %li= q.nom
+  - if dossier.quartier_prioritaires.any?
+    .card-title Quartiers prioritaires
+    %ul
+    - dossier.quartier_prioritaires.each do |q|
+      %li= q.nom
 
-- if dossier.cadastres.any?
-  .card-title Parcelles cadastrales
-  %ul
-  - dossier.cadastres.each do |p|
-    %li
-      = "Parcelle n° #{p.numero} - Feuille #{p.code_arr} #{p.section} #{p.feuille}"
+  - if dossier.cadastres.any?
+    .card-title Parcelles cadastrales
+    %ul
+    - dossier.cadastres.each do |p|
+      %li
+        = "Parcelle n° #{p.numero} - Feuille #{p.code_arr} #{p.section} #{p.feuille}"
 
-:javascript
-  var getPositionUrl = "#{position_gestionnaire_dossier_path(dossier.procedure, dossier)}";
-  var dossierJsonLatLngs = #{raw(ensure_safe_json(dossier.json_latlngs))};
-  var dossierCadastres = #{raw(ensure_safe_json(dossier.cadastres.to_json))};
-  var dossierQuartiersPrioritaires = #{raw(ensure_safe_json(dossier.quartier_prioritaires.to_json))};
+  :javascript
+    var getPositionUrl = "#{position_gestionnaire_dossier_path(dossier.procedure, dossier)}";
+    var dossierJsonLatLngs = #{raw(ensure_safe_json(dossier.json_latlngs))};
+    var dossierCadastres = #{raw(ensure_safe_json(dossier.cadastres.to_json))};
+    var dossierQuartiersPrioritaires = #{raw(ensure_safe_json(dossier.quartier_prioritaires.to_json))};
