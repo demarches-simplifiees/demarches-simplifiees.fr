@@ -12,4 +12,4 @@
     - if individual.birthdate.present?
       %tr
         %th.libelle Date de naissance :
-        %td= Date.parse(individual.birthdate).strftime("%d/%m/%Y")
+        %td= individual.birthdate&.strftime("%d/%m/%Y")
