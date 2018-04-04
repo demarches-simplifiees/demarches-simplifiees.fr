@@ -148,7 +148,7 @@ class Users::DossiersController < UsersController
       flash.alert = individual_errors
       redirect_to users_dossier_path(id: @facade.dossier.id)
     else
-      if !Dossier.find(@facade.dossier.id).update update_params_with_formatted_birthdate
+      if !Dossier.find(@facade.dossier.id).update(update_params)
         flash.alert = @facade.dossier.errors.full_messages
 
         return redirect_to users_dossier_path(id: @facade.dossier.id)
@@ -201,36 +201,11 @@ class Users::DossiersController < UsersController
     params.require(:dossier).permit(:id, :autorisation_donnees, individual_attributes: [:gender, :nom, :prenom, :birthdate])
   end
 
-  def update_params_with_formatted_birthdate
-    editable_params = update_params
-
-    if editable_params &&
-      editable_params[:individual_attributes] &&
-      editable_params[:individual_attributes][:birthdate]
-
-      iso_date = begin
-        Date.parse(editable_params[:individual_attributes][:birthdate]).iso8601
-      rescue
-        nil
-      end
-      editable_params[:individual_attributes][:birthdate] = iso_date
-    end
-
-    editable_params
-  end
-
   def individual_errors
     errors = []
 
     if update_params[:autorisation_donnees] != "1"
       errors << "La validation des conditions d'utilisation est obligatoire"
-    end
-
-    if update_params[:individual_attributes].present? &&
-        update_params[:individual_attributes][:birthdate] &&
-        !/^\d{4}\-\d{2}\-\d{2}$/.match(update_params[:individual_attributes][:birthdate]) &&
-        !/^\d{2}\/\d{2}\/\d{4}$/.match(update_params[:individual_attributes][:birthdate])
-      errors << "Le format de la date de naissance doit être JJ/MM/AAAA"
     end
 
     errors
