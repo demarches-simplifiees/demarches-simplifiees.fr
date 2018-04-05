@@ -23,7 +23,7 @@ class Pipedrive::DealAdapter
     Pipedrive::API.put_deal(deal_id, params)
   end
 
-  def self.fetch_waiting_deal_ids(person_id)
+  def self.get_deals_ids_for_person(person_id)
     Pipedrive::API.get_deals_for_person(person_id)
       .map { |datum| datum['id'] }
   end
