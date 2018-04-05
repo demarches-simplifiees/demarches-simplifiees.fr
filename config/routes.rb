@@ -72,6 +72,10 @@ Rails.application.routes.draw do
     get 'particulier/callback' => 'particulier#callback'
   end
 
+  namespace :champs do
+    get ':champ_id/siret' => 'siret#index', as: 'siret'
+  end
+
   namespace :users do
     namespace :dossiers do
       resources :invites, only: [:index, :show]
