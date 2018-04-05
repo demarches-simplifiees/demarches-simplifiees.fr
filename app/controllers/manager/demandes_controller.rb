@@ -10,7 +10,7 @@ module Manager
       if administrateur.errors.empty?
         PipedriveAcceptsDealsJob.perform_later(
           create_administrateur_params[:person_id],
-          PipedriveService::PIPEDRIVE_CAMILLE_ID,
+          Pipedrive::DealAdapter::PIPEDRIVE_CAMILLE_ID,
           create_administrateur_params[:stage_id]
         )
 
@@ -26,7 +26,7 @@ module Manager
     def refuse_administrateur
       PipedriveRefusesDealsJob.perform_later(
         refuse_administrateur_params[:person_id],
-        PipedriveService::PIPEDRIVE_CAMILLE_ID
+        Pipedrive::DealAdapter::PIPEDRIVE_CAMILLE_ID
       )
 
       AdministrationMailer
