@@ -235,7 +235,7 @@ describe NewUser::DossiersController, type: :controller do
 
     context 'when the update fails' do
       before do
-        expect_any_instance_of(Dossier).to receive(:update).and_return(false)
+        expect_any_instance_of(Dossier).to receive(:save).and_return(false)
         expect_any_instance_of(Dossier).to receive(:errors)
           .and_return(double(full_messages: ['nop']))
 

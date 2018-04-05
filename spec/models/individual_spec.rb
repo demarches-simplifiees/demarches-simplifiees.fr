@@ -21,21 +21,18 @@ describe Individual do
         let(:birthdate_from_user) { "12/11/1980" }
 
         it { expect(individual.birthdate).to eq(Date.new(1980, 11, 12)) }
-        it { expect(individual.second_birthdate).to eq(Date.new(1980, 11, 12)) }
       end
 
       context "and the format is ISO" do
         let(:birthdate_from_user) { "1980-11-12" }
 
         it { expect(individual.birthdate).to eq(Date.new(1980, 11, 12)) }
-        it { expect(individual.second_birthdate).to eq(Date.new(1980, 11, 12)) }
       end
 
       context "and the format is WTF" do
         let(:birthdate_from_user) { "1980 1 12" }
 
         it { expect(individual.birthdate).to be_nil }
-        it { expect(individual.second_birthdate).to be_nil }
       end
     end
   end
