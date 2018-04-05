@@ -1,0 +1,6 @@
+.etablissement-titre
+  = etablissement.titre
+  = etablissement.entreprise_forme_juridique
+  - if etablissement.entreprise_capital_social.present?
+    au capital social de
+    = number_to_currency(etablissement.entreprise_capital_social)

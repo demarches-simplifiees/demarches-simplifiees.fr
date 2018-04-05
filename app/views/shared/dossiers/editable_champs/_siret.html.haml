@@ -1,0 +1,10 @@
+= form.text_field :value,
+  placeholder: champ.libelle,
+  class: 'small-margin',
+  data: { siret: champs_siret_path(format: :js, champ_id: champ) },
+  required: champ.mandatory?
+%div{ id: "etablissement-for-#{champ.id}" }
+  - if champ.etablissement.present?
+    = render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: champ.etablissement }
+  = form.fields_for :etablissement do |form|
+    = render partial: 'shared/dossiers/editable_champs/etablissement', locals: { form: form, signature: champ.etablissement.sign }
