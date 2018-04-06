@@ -56,7 +56,7 @@ module Manager
     end
 
     def demandes
-      @demandes ||= PipedriveService.fetch_people_demandes
+      @demandes ||= PipedriveService.get_demandes
     end
   end
 end

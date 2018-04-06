@@ -30,7 +30,11 @@ class PipedriveService
       update_person_owner(person_id, owner_id)
     end
 
-    def fetch_people_demandes
+    def get_demandes
+      get_demandes_from_persons_owned_by_robot
+    end
+
+    def get_demandes_from_persons_owned_by_robot
       params = {
         start: 0,
         limit: 500,
@@ -39,9 +43,9 @@ class PipedriveService
       }
 
       response = RestClient.get(PIPEDRIVE_PEOPLE_URL, { params: params })
-      json = JSON.parse(response.body)
+      json_data = JSON.parse(response.body)['data']
 
-      json['data'].map do |datum|
+      json_data.map do |datum|
         {
           person_id: datum['id'],
           nom: datum['name'],
