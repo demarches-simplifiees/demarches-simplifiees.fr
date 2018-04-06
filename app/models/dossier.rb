@@ -286,7 +286,7 @@ class Dossier < ApplicationRecord
   def unspecified_attestation_champs
     attestation_template = procedure.attestation_template
 
-    if attestation_template.present? && attestation_template.activated?
+    if attestation_template&.activated?
       attestation_template.unspecified_champs_for_dossier(self)
     else
       []
@@ -294,7 +294,7 @@ class Dossier < ApplicationRecord
   end
 
   def build_attestation
-    if procedure.attestation_template.present? && procedure.attestation_template.activated?
+    if procedure.attestation_template&.activated?
       procedure.attestation_template.attestation_for(self)
     end
   end
