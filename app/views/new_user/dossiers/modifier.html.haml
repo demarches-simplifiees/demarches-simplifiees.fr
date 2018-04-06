@@ -4,9 +4,10 @@
       %h1= @dossier.procedure.libelle
 
   .container
-    %p
-      Pour vous aider à remplir votre dossier, vous pouvez consulter
-      = link_to 'le guide de cette démarche', @dossier.procedure.lien_notice, { target: '_blank'  }
+    - if @dossier.procedure.lien_notice.present?
+      %p
+        Pour vous aider à remplir votre dossier, vous pouvez consulter
+        = link_to 'le guide de cette démarche', @dossier.procedure.lien_notice, { target: '_blank'  }
 
     %p.thanks Les champs avec une asterisque (*) sont obligatoires.
 
