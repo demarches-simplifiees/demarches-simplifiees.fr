@@ -27,7 +27,9 @@ class AttestationTemplate < ApplicationRecord
     used_tags.map do |used_tag|
       corresponding_champ = all_champs_with_libelle_index[used_tag]
 
-      corresponding_champ.value.blank? ? corresponding_champ : nil
+      if corresponding_champ && corresponding_champ.value.blank?
+        corresponding_champ
+      end
     end.compact
   end
 
