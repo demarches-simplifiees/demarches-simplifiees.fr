@@ -265,6 +265,18 @@ class Procedure < ApplicationRecord
     update_attribute('whitelisted_at', DateTime.now)
   end
 
+  def closed_mail_template_attestation_inconsistency_state
+    # As an optimization, don’t check the predefined templates (they are presumed correct)
+    if closed_mail.present?
+      tag_present = closed_mail.body.include?("--lien attestation--")
+      if attestation_template&.activated? && !tag_present
+        :missing_tag
+      elsif !attestation_template&.activated? && tag_present
+        :extraneous_tag
+      end
+    end
+  end
+
   private
 
   def field_hash(label, table, column)
