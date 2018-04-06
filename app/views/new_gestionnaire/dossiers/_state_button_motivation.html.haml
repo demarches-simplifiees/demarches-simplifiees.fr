@@ -8,6 +8,25 @@
     - if title == 'Accepter'
       %p.help
         L'acceptation du dossier envoie automatiquement une attestation à l'usager.
+
+      - unspecified_attestation_champs = dossier.unspecified_attestation_champs
+      - if unspecified_attestation_champs.present?
+        .warning
+          Attention, les valeurs suivantes n'ont pas été renseignées mais sont nécessaires pour pouvoir envoyer une attestation valide :
+          - unspecified_champs, unspecified_annotations_privees = unspecified_attestation_champs.partition(&:private)
+
+          - if unspecified_champs.present?
+            %h4 Champs de la demande
+            %ul
+              - unspecified_attestation_champs.each do |unspecified_champ|
+                %li= unspecified_champ.libelle
+
+          - if unspecified_annotations_privees.present?
+            %h4 Annotations privées
+            %ul
+              - unspecified_annotations_privees.each do |unspecified_annotations_privee|
+                %li= unspecified_annotations_privee.libelle
+
     .text-right
       %span.button{ onclick: 'DS.motivationCancel();' } Annuler
       = button_tag 'Valider la décision', name: :process_action, value: process_action, class: 'button primary', title: title, data: { confirm: confirm }
