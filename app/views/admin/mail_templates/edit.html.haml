@@ -1,3 +1,5 @@
+- if params[:id] == 'closed_mail'
+  = render partial: 'admin/closed_mail_template_attestation_inconsistency_alert'
 .white-back
   %h3
     = @mail_template.class.const_get(:DISPLAYED_NAME)

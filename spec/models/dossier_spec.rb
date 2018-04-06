@@ -643,6 +643,64 @@ describe Dossier do
     end
   end
 
+  describe "#unspecified_attestation_champs" do
+    let(:procedure) { create(:procedure, attestation_template: attestation_template) }
+    let(:dossier) { create(:dossier, procedure: procedure, state: :en_instruction) }
+
+    subject { dossier.unspecified_attestation_champs.map(&:libelle) }
+
+    context "without attestation template" do
+      let(:attestation_template) { nil }
+
+      it { is_expected.to eq([]) }
+    end
+
+    context "with attestation template" do
+      # Test all combinations:
+      # - with tag specified and unspecified
+      # - with tag in body and tag in title
+      # - with tag correponsing to a champ and an annotation privée
+      # - with a dash in the champ libelle / tag
+      let(:title) { "voici --specified champ-in-title-- un --unspecified champ-in-title-- beau --specified annotation privée-in-title-- titre --unspecified annotation privée-in-title-- non" }
+      let(:body) { "voici --specified champ-in-body-- un --unspecified champ-in-body-- beau --specified annotation privée-in-body-- body --unspecified annotation privée-in-body-- non ?" }
+      let(:attestation_template) { create(:attestation_template, title: title, body: body, activated: activated) }
+
+      context "which is disabled" do
+        let(:activated) { false }
+
+        it { is_expected.to eq([]) }
+      end
+
+      context "wich is enabled" do
+        let(:activated) { true }
+
+        let!(:tdc_1) { create(:type_de_champ, libelle: "specified champ-in-title", procedure: procedure) }
+        let!(:tdc_2) { create(:type_de_champ, libelle: "unspecified champ-in-title", procedure: procedure) }
+        let!(:tdc_3) { create(:type_de_champ, libelle: "specified champ-in-body", procedure: procedure) }
+        let!(:tdc_4) { create(:type_de_champ, libelle: "unspecified champ-in-body", procedure: procedure) }
+        let!(:tdc_5) { create(:type_de_champ, private: true, libelle: "specified annotation privée-in-title", procedure: procedure) }
+        let!(:tdc_6) { create(:type_de_champ, private: true, libelle: "unspecified annotation privée-in-title", procedure: procedure) }
+        let!(:tdc_7) { create(:type_de_champ, private: true, libelle: "specified annotation privée-in-body", procedure: procedure) }
+        let!(:tdc_8) { create(:type_de_champ, private: true, libelle: "unspecified annotation privée-in-body", procedure: procedure) }
+
+        before do
+          (dossier.champs + dossier.champs_private)
+            .select { |c| c.libelle.match?(/^specified/) }
+            .each { |c| c.update_attribute(:value, "specified") }
+        end
+
+        it do
+          is_expected.to eq([
+            "unspecified champ-in-title",
+            "unspecified annotation privée-in-title",
+            "unspecified champ-in-body",
+            "unspecified annotation privée-in-body"
+          ])
+        end
+      end
+    end
+  end
+
   describe '#build_attestation' do
     let(:attestation_template) { nil }
     let(:procedure) { create(:procedure, attestation_template: attestation_template) }

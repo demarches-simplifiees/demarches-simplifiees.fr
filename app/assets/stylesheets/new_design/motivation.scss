@@ -27,4 +27,21 @@
     font-size: 11px;
     margin-bottom: $default-spacer * 2;
   }
+
+  .warning {
+    background-color: $orange-bg;
+    padding: $default-spacer;
+    margin-bottom: $default-spacer * 2;
+    border-radius: 3px;
+
+    h4 {
+      margin-top: $default-spacer;
+      font-weight: bold;
+    }
+
+    ul {
+      list-style: disc;
+      padding-left: $default-spacer * 1.5;
+    }
+  }
 }
