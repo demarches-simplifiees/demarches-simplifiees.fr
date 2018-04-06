@@ -17,6 +17,20 @@ class AttestationTemplate < ApplicationRecord
     Attestation.new(title: replace_tags(title, dossier), pdf: build_pdf(dossier))
   end
 
+  def unspecified_champs_for_dossier(dossier)
+    all_champs_with_libelle_index = (dossier.champs + dossier.champs_private)
+      .reduce({}) do |acc, champ|
+        acc[champ.libelle] = champ
+        acc
+      end
+
+    used_tags.map do |used_tag|
+      corresponding_champ = all_champs_with_libelle_index[used_tag]
+
+      corresponding_champ.value.blank? ? corresponding_champ : nil
+    end.compact
+  end
+
   def dup
     result = AttestationTemplate.new(title: title, body: body, footer: footer, activated: activated)
 
@@ -32,6 +46,14 @@ class AttestationTemplate < ApplicationRecord
   end
 
   private
+
+  def used_tags
+    delimiters_regex = /--(?<capture>((?!--).)*)--/
+
+    [title, body]
+      .map { |str| str.scan(delimiters_regex) }
+      .flatten
+  end
 
   def logo_signature_file_size
     %i[logo signature]
