@@ -661,7 +661,7 @@ describe Dossier do
       # - with tag in body and tag in title
       # - with tag correponsing to a champ and an annotation privée
       # - with a dash in the champ libelle / tag
-      let(:title) { "voici --specified champ-in-title-- un --unspecified champ-in-title-- beau --specified annotation privée-in-title-- titre --unspecified annotation privée-in-title-- non" }
+      let(:title) { "voici --specified champ-in-title-- un --unspecified champ-in-title-- beau --specified annotation privée-in-title-- titre --unspecified annotation privée-in-title-- non --numéro du dossier--" }
       let(:body) { "voici --specified champ-in-body-- un --unspecified champ-in-body-- beau --specified annotation privée-in-body-- body --unspecified annotation privée-in-body-- non ?" }
       let(:attestation_template) { create(:attestation_template, title: title, body: body, activated: activated) }
 
