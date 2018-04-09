@@ -896,4 +896,34 @@ describe Dossier do
       it { is_expected.to eq(expected) }
     end
   end
+
+  describe 'webhook' do
+    let(:dossier) { create(:dossier) }
+
+    it 'should not call webhook' do
+      expect {
+        dossier.accepte!
+      }.to_not have_enqueued_job(WebHookJob)
+    end
+
+    it 'should call webhook' do
+      dossier.procedure.update_column(:web_hook_url, '/webhook.json')
+
+      expect {
+        dossier.update_column(:motivation, 'bonjour')
+      }.to_not have_enqueued_job(WebHookJob)
+
+      expect {
+        dossier.en_construction!
+      }.to have_enqueued_job(WebHookJob)
+
+      expect {
+        dossier.update_column(:motivation, 'bonjour2')
+      }.to_not have_enqueued_job(WebHookJob)
+
+      expect {
+        dossier.en_instruction!
+      }.to have_enqueued_job(WebHookJob)
+    end
+  end
 end
