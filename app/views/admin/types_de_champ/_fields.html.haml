@@ -21,6 +21,23 @@
         ~ fff.text_area :value, class: 'form-control drop_down_list', placeholder: "Ecrire une valeur par ligne et --valeur-- pour un séparateur.", rows: 3, cols: 30
         = fff.hidden_field :id
 
+    .form-group.pj-template{ class: (type_champ == 'piece_justificative') ? 'show-inline' : nil }
+      %h4 Modèle
+      - if type_champ == 'piece_justificative'
+        - template = ff.object.object.piece_justificative_template
+
+        - if !template.attached?
+          = ff.file_field :piece_justificative_template,
+            direct_upload: true
+        - else
+          = link_to template.filename.to_s, url_for(template), target: '_blank'
+          %br
+          Modifier :
+          = ff.file_field :piece_justificative_template,
+            direct_upload: true
+      - else
+        = ff.file_field :piece_justificative_template,
+          direct_upload: true
 
     - hide_mandatory = (ff.object.object.private? || type_champ == 'explication')
     .form-group.mandatory{ style: hide_mandatory ? 'visibility: hidden;' : nil }
@@ -46,7 +63,10 @@
     .form-group
       %br &nbsp;
       - if ff.object.id.nil?
-        = f.submit "Ajouter le champ", class: 'btn btn-success', id: @types_de_champ_facade.add_button_id
+        = f.button 'Ajouter le champ',
+          id: @types_de_champ_facade.add_button_id,
+          class: 'btn btn-success',
+          data: { disable_with: 'Envoi...' }
       - else
         = link_to("", @types_de_champ_facade.delete_url(ff), method: :delete, remote: true, id: "delete_type_de_champ_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
 
