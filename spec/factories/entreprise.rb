@@ -10,11 +10,5 @@ FactoryBot.define do
     siret_siege_social '44011762001530'
     code_effectif_entreprise '51'
     date_creation Time.at(1453976189).to_datetime
-
-    trait :is_association do
-      after(:create) do |entreprise, _evaluator|
-        create(:rna_information, entreprise: entreprise)
-      end
-    end
   end
 end

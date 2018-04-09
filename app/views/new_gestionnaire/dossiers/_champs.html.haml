@@ -46,6 +46,12 @@
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
               = simple_format(c.value)
+        - when "siret"
+          %th.libelle
+            = "#{c.libelle} :"
+          %td.rich-text
+            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
+              = render partial: "new_gestionnaire/dossiers/identite_entreprise", locals: { etablissement: c.etablissement }
         - else
           %th.libelle
             = "#{c.libelle} :"
