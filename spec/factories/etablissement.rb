@@ -12,5 +12,25 @@ FactoryBot.define do
     code_postal '92270'
     localite 'BOIS COLOMBES'
     code_insee_localite '92009'
+
+    entreprise_siren '440117620'
+    entreprise_capital_social 537_100_000
+    entreprise_numero_tva_intracommunautaire 'FR27440117620'
+    entreprise_forme_juridique 'SA à conseil d\'administration (s.a.i.)'
+    entreprise_forme_juridique_code '5599'
+    entreprise_nom_commercial 'GRTGAZ'
+    entreprise_raison_sociale 'GRTGAZ'
+    entreprise_siret_siege_social '44011762001530'
+    entreprise_code_effectif_entreprise '51'
+    entreprise_date_creation "1990-04-24"
+  end
+
+  trait :is_association do
+    association_rna "W072000535"
+    association_titre "ASSOCIATION POUR LA PROMOTION DE SPECTACLES AU CHATEAU DE ROCHEMAURE"
+    association_objet "mise en oeuvre et réalisation de spectacles au chateau de rochemaure"
+    association_date_creation "1990-04-24"
+    association_date_declaration "2014-11-28"
+    association_date_publication "1990-05-16"
   end
 end
