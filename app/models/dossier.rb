@@ -75,6 +75,7 @@ class Dossier < ApplicationRecord
   after_save :build_default_champs, if: Proc.new { saved_change_to_procedure_id? }
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
   after_save :send_dossier_received
+  after_save :send_web_hook
   after_create :send_draft_notification_email
 
   validates :user, presence: true
@@ -324,6 +325,15 @@ class Dossier < ApplicationRecord
   def send_draft_notification_email
     if brouillon?
       NotificationMailer.send_draft_notification(self).deliver_now!
+    end
+  end
+
+  def send_web_hook
+    if saved_change_to_state? && !brouillon? && procedure.web_hook_url
+      WebHookJob.perform_later(
+        procedure,
+        self
+      )
     end
   end
 end
