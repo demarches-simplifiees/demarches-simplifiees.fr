@@ -28,6 +28,8 @@ function on_change_type_de_champ_select (){
 
     parent.removeClass('header-section');
     parent.children(".drop-down-list").removeClass('show-inline');
+    parent.children(".pj-template").removeClass('show-inline');
+
     $('.mandatory', parent).show();
 
     switch(this.value){
@@ -37,6 +39,9 @@ function on_change_type_de_champ_select (){
       case 'drop_down_list':
       case 'multiple_drop_down_list':
         parent.children(".drop-down-list").addClass('show-inline');
+        break;
+      case 'piece_justificative':
+        parent.children(".pj-template").addClass('show-inline');
         break;
       case 'explication':
         $('.mandatory', parent).hide();
