@@ -1,6 +1,11 @@
 = form_for [:admin, @procedure], url: @types_de_champ_facade.url, remote: true do |f|
   = render partial: 'admin/types_de_champ/fields', locals: { types_de_champ: @types_de_champ_facade.types_de_champ, f: f }
-  = f.submit "Enregistrer", class: 'btn btn-success', id: :save
+
+  = f.button 'Enregistrer',
+    id: :save,
+    class: 'btn btn-success',
+    data: { disable_with: 'Envoi...' }
+
   %hr
   #new_type_de_champ
     = render partial: 'admin/types_de_champ/fields', locals: { types_de_champ: @types_de_champ_facade.new_type_de_champ, f: f }

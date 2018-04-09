@@ -40,12 +40,15 @@ class TypeDeChamp < ApplicationRecord
   end
   has_one :drop_down_list
 
+  has_one_attached :piece_justificative_template
+
   accepts_nested_attributes_for :drop_down_list
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
 
   before_validation :check_mandatory
+  before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
 
   def params_for_champ
     {
@@ -76,5 +79,13 @@ class TypeDeChamp < ApplicationRecord
 
   def self.type_champ_to_class_name(type_champ)
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
+  end
+
+  private
+
+  def remove_piece_justificative_template
+    if type_champ != 'piece_justificative' && piece_justificative_template.attached?
+      piece_justificative_template.purge_later
+    end
   end
 end
