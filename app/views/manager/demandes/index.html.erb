@@ -33,12 +33,12 @@
               <%= form_tag(manager_demandes_create_administrateur_path) do -%>
                 <%= select_tag "stage_id",
                   options_for_select({
-                  "administration centrale" => PipedriveService::PIPEDRIVE_ADMIN_CENTRAL_STOCK_STAGE_ID,
-                  "région" => PipedriveService::PIPEDRIVE_REGIONS_STOCK_STAGE_ID,
-                  "préfecture" => PipedriveService::PIPEDRIVE_PREFECTURES_STOCK_STAGE_ID,
-                  "département" =>PipedriveService::PIPEDRIVE_DEPARTEMENTS_STOCK_STAGE_ID,
-                  "commune" => PipedriveService::PIPEDRIVE_COMMUNES_STOCK_STAGE_ID,
-                  "organisme" => PipedriveService::PIPEDRIVE_ORGANISMES_STOCK_STAGE_ID
+                  "administration centrale" => Pipedrive::DealAdapter::PIPEDRIVE_ADMIN_CENTRAL_STOCK_STAGE_ID,
+                  "région" => Pipedrive::DealAdapter::PIPEDRIVE_REGIONS_STOCK_STAGE_ID,
+                  "préfecture" => Pipedrive::DealAdapter::PIPEDRIVE_PREFECTURES_STOCK_STAGE_ID,
+                  "département" =>Pipedrive::DealAdapter::PIPEDRIVE_DEPARTEMENTS_STOCK_STAGE_ID,
+                  "commune" => Pipedrive::DealAdapter::PIPEDRIVE_COMMUNES_STOCK_STAGE_ID,
+                  "organisme" => Pipedrive::DealAdapter::PIPEDRIVE_ORGANISMES_STOCK_STAGE_ID
                 }),
                 style: 'margin-bottom: 20px; width: inherit;' %>
 
