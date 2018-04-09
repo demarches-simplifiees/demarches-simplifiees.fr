@@ -13,6 +13,7 @@ class TypesDeChampService
         :type_champ,
         :id,
         :mandatory,
+        :piece_justificative_template,
         drop_down_list_attributes: [:value, :id]
       ])
 
