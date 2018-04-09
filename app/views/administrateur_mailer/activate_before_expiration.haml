@@ -1,0 +1,17 @@
+- content_for(:title, "N'oubliez pas d'activer votre compte")
+
+Bonjour,
+%br
+%br
+Vous avez fait la demande d’un compte administrateur sur demarches-simplifiees.fr.
+Votre compte a été créé mais reste inactif, il arrivera à expiration le #{@expiration_date.strftime("%d/%m/%Y")}
+%br
+%br
+Afin d’activer votre compte, veuillez cliquer sur le lien ci-dessous :
+= link_to(admin_activate_url(token: @administrateur.reset_password_token), admin_activate_url(token: @administrateur.reset_password_token))
+%br
+%br
+Nous restons à votre disposition si vous avez besoin d’accompagnement.
+%br
+%br
+= render partial: "layouts/mailers/bizdev_signature"
