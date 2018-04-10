@@ -1,5 +1,5 @@
 class ApiEntrepriseService
-  def self.fetch(siret, procedure_id, dossier = nil)
+  def self.get_etablissement_params_for_siret(siret, procedure_id, dossier = nil)
     etablissement_params = ApiEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
     entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siret, procedure_id).to_params
 
