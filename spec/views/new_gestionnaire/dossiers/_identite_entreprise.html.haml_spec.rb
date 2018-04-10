@@ -1,12 +1,11 @@
 describe 'new_gestionnaire/dossiers/identite_entreprise.html.haml', type: :view do
-  before { render 'new_gestionnaire/dossiers/identite_entreprise.html.haml', entreprise: entreprise }
+  before { render 'new_gestionnaire/dossiers/identite_entreprise.html.haml', etablissement: etablissement }
 
   context "there is an association" do
-    let(:rna_information) { create(:rna_information) }
-    let(:entreprise) { rna_information.entreprise }
+    let(:etablissement) { create(:etablissement, :is_association) }
 
     context "date_publication is missing on rna" do
-      before { rna_information.update(date_publication: nil) }
+      before { etablissement.update(association_date_publication: nil) }
 
       it "can render without error" do
         expect(rendered).to include("Date de publication :")

@@ -1,5 +1,10 @@
 - pj = champ.piece_justificative_file
 
+- if champ.type_de_champ.piece_justificative_template.attached?
+  %p.edit-pj-template.mb-1
+    Veuillez télécharger, remplir et joindre le
+    = link_to('le modèle suivant', url_for(champ.type_de_champ.piece_justificative_template), target: '_blank')
+
 - if !pj.attached?
   = form.file_field :piece_justificative_file,
     id: "champs_#{champ.id}",

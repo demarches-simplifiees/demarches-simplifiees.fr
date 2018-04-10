@@ -3,8 +3,8 @@ describe 'new_gestionnaire/dossiers/show.html.haml', type: :view do
 
   let(:current_gestionnaire) { create(:gestionnaire) }
   let(:individual) { nil }
-  let(:entreprise) { nil }
-  let(:dossier) { create(:dossier, :en_construction, entreprise: entreprise, individual: individual) }
+  let(:etablissement) { nil }
+  let(:dossier) { create(:dossier, :en_construction, etablissement: etablissement, individual: individual) }
 
   before do
     assign(:dossier, dossier)
@@ -12,19 +12,19 @@ describe 'new_gestionnaire/dossiers/show.html.haml', type: :view do
     render
   end
 
-  context "when dossier was created by an entreprise" do
-    let(:entreprise) { create(:entreprise) }
+  context "when dossier was created by an etablissement" do
+    let(:etablissement) { create(:etablissement) }
 
-    it { expect(rendered).to include(entreprise.decorate.raison_sociale_or_name) }
-    it { expect(rendered).to include(entreprise.decorate.siret_siege_social) }
-    it { expect(rendered).to include(entreprise.decorate.forme_juridique) }
+    it { expect(rendered).to include(etablissement.entreprise_raison_sociale_or_name) }
+    it { expect(rendered).to include(etablissement.entreprise_siret_siege_social) }
+    it { expect(rendered).to include(etablissement.entreprise_forme_juridique) }
 
     context "and entreprise is an association" do
-      let(:entreprise) { create(:entreprise, :is_association) }
+      let(:etablissement) { create(:etablissement, :is_association) }
 
-      it { expect(rendered).to include(entreprise.rna_information.association_id) }
-      it { expect(rendered).to include(entreprise.rna_information.titre) }
-      it { expect(rendered).to include(entreprise.rna_information.objet) }
+      it { expect(rendered).to include(etablissement.association_rna) }
+      it { expect(rendered).to include(etablissement.association_titre) }
+      it { expect(rendered).to include(etablissement.association_objet) }
     end
   end
 

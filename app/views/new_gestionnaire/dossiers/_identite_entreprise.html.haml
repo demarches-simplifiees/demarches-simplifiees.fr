@@ -1,70 +1,64 @@
-- entreprise = entreprise.decorate
-- etablissement = entreprise.etablissement
-
 %table.table.vertical.dossier-champs
   %tbody
     %tr
       %th.libelle Dénomination :
-      %td= entreprise.raison_sociale_or_name
+      %td= etablissement.entreprise_raison_sociale_or_name
     %tr
       %th.libelle SIRET :
-      %td= entreprise.siret_siege_social
+      %td= etablissement.entreprise_siret_siege_social
     %tr
       %th.libelle Forme juridique :
-      %td= sanitize(entreprise.forme_juridique)
-    - if etablissement.present?
-      %tr
-        %th.libelle Libellé NAF :
-        %td= etablissement.libelle_naf
-      %tr
-        %th.libelle Code NAF :
-        %td= etablissement.naf
+      %td= sanitize(etablissement.entreprise_forme_juridique)
+    %tr
+      %th.libelle Libellé NAF :
+      %td= etablissement.libelle_naf
+    %tr
+      %th.libelle Code NAF :
+      %td= etablissement.naf
     %tr
       %th.libelle Date de création :
-      %td= Time.at(entreprise.date_creation).localtime.strftime("%d/%m/%Y")
+      %td= etablissement.entreprise_date_creation&.strftime("%d/%m/%Y")
     %tr
       %th.libelle Effectif de l'organisation :
-      %td= entreprise.effectif
+      %td= etablissement.entreprise_effectif
     %tr
       %th.libelle Code effectif :
-      %td= entreprise.code_effectif_entreprise
+      %td= etablissement.entreprise_code_effectif_entreprise
     %tr
       %th.libelle Numéro de TVA intracommunautaire :
-      %td= entreprise.numero_tva_intracommunautaire
-    - if etablissement.present?
-      %tr
-        %th.libelle Adresse :
-        %td
-          - etablissement.adresse.split("\n").each do |line|
-            = line
-            %br
+      %td= etablissement.entreprise_numero_tva_intracommunautaire
+    %tr
+      %th.libelle Adresse :
+      %td
+        - etablissement.adresse.split("\n").each do |line|
+          = line
+          %br
     %tr
       %th.libelle Capital social :
-      %td= entreprise.pretty_capital_social
-    - if etablissement.present?
-      %tr
-        %th.libelle Exercices :
-        %td
-          - etablissement.exercices.each_with_index do |exercice, index|
-            = "#{exercice.date_fin_exercice.year} : "
-            = number_to_currency(exercice.ca)
-            %br
-    - if entreprise.rna_information.present?
+      %td= pretty_currency(etablissement.entreprise_capital_social)
+    %tr
+      %th.libelle Exercices :
+      %td
+        - etablissement.exercices.each_with_index do |exercice, index|
+          = "#{exercice.date_fin_exercice.year} : "
+          = pretty_currency(exercice.ca)
+          %br
+    - if etablissement.association_rna.present?
       %tr
         %th.libelle Numéro RNA :
-        %td= entreprise.rna_information.association_id
+        %td= etablissement.association_rna
       %tr
         %th.libelle Titre :
-        %td= entreprise.rna_information.titre
+        %td= etablissement.association_titre
       %tr
         %th.libelle Objet :
-        %td= entreprise.rna_information.objet
+        %td= etablissement.association_objet
       %tr
         %th.libelle Date de création :
-        %td= entreprise.rna_information.date_creation&.strftime("%d/%m/%Y")
+        %td= etablissement.association_date_creation&.strftime("%d/%m/%Y")
       %tr
         %th.libelle Date de publication :
-        %td= entreprise.rna_information.date_publication&.strftime("%d/%m/%Y")
+        %td= etablissement.association_date_publication&.strftime("%d/%m/%Y")
       %tr
         %th.libelle Date de déclaration :
-        %td= entreprise.rna_information.date_declaration&.strftime("%d/%m/%Y")
+        %td= etablissement.association_date_declaration&.strftime("%d/%m/%Y")
