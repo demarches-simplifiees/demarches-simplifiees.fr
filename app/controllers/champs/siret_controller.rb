@@ -14,7 +14,7 @@ class Champs::SiretController < ApplicationController
       end
       @error = "SIRET invalide"
     else
-      etablissement_attributes = SIRETService.fetch(siret, @champ.dossier.procedure_id)
+      etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(siret, @champ.dossier.procedure_id)
       if etablissement_attributes.present?
         @etablissement = @champ.build_etablissement(etablissement_attributes)
         @etablissement.champ = @champ
