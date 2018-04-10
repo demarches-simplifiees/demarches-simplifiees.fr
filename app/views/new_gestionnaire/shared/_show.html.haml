@@ -3,8 +3,8 @@
   .card
     = render partial: "new_gestionnaire/dossiers/user_infos", locals: { user: dossier.user }
 
-    - if dossier.entreprise.present?
-      = render partial: "new_gestionnaire/dossiers/identite_entreprise", locals: { entreprise: dossier.entreprise }
+    - if dossier.etablissement.present?
+      = render partial: "new_gestionnaire/dossiers/identite_entreprise", locals: { etablissement: dossier.etablissement }
 
     - if dossier.individual.present?
       = render partial: "new_gestionnaire/dossiers/identite_individual", locals: { individual: dossier.individual }

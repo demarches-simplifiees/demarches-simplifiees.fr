@@ -103,6 +103,7 @@ Dans le fichier `config/intializers/token.rb`, ajouter
     WeeklyOverviewJob.set(cron: "0 8 * * 0").perform_later
     AutoReceiveDossiersForProcedureJob.set(cron: "* * * * *").perform_later(procedure_declaratoire_id, 'en_instruction')
     FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
+    Administrateurs::ActivateBeforeExpirationJob.set(cron: "0 8 * * *").perform_later
 
 ## Exécution des tests (RSpec)
 
