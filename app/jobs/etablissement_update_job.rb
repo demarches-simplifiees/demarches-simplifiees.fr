@@ -2,7 +2,7 @@ class EtablissementUpdateJob < ApplicationJob
   queue_as :default
 
   def perform(dossier, siret)
-    etablissement_attributes = SIRETService.fetch(siret, dossier.procedure_id, dossier)
+    etablissement_attributes = ApiEntrepriseService.fetch(siret, dossier.procedure_id, dossier)
 
     if etablissement_attributes.present?
       if dossier.entreprise.present?
