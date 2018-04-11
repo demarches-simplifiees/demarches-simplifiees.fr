@@ -2,7 +2,11 @@ class GestionnaireMailer < ApplicationMailer
   layout 'mailers/layout'
 
   def new_gestionnaire(email, password)
-    send_mail email, password, "Vous avez été nommé accompagnateur sur demarches-simplifiees.fr"
+    send_mail(email, password, "Vous avez été nommé accompagnateur sur demarches-simplifiees.fr")
+  end
+
+  def user_to_gestionnaire(email)
+    send_mail(email, nil, "Vous avez été nommé accompagnateur sur demarches-simplifiees.fr")
   end
 
   def last_week_overview(gestionnaire)

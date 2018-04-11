@@ -53,9 +53,13 @@ class Admin::GestionnairesController < AdminController
     )
 
     if @gestionnaire.errors.messages.empty?
-      User.create(attributes)
+      if User.exists?(email: @gestionnaire.email)
+        GestionnaireMailer.user_to_gestionnaire(@gestionnaire.email).deliver_now!
+      else
+        User.create(attributes)
+        GestionnaireMailer.new_gestionnaire(@gestionnaire.email, @gestionnaire.password).deliver_now!
+      end
       flash.notice = 'Accompagnateur ajouté'
-      GestionnaireMailer.new_gestionnaire(@gestionnaire.email, @gestionnaire.password).deliver_now!
     else
       flash.alert = @gestionnaire.errors.full_messages
     end
