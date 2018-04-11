@@ -11,13 +11,16 @@ class Administrateurs::ActivateController < ApplicationController
   end
 
   def create
+    password = update_administrateur_params[:password]
     administrateur = Administrateur.reset_password(
       update_administrateur_params[:reset_password_token],
-      update_administrateur_params[:password]
+      password
     )
 
     if administrateur && administrateur.errors.empty?
       sign_in(administrateur, scope: :administrateur)
+      try_to_authenticate(User, administrateur.email, password)
+      try_to_authenticate(Gestionnaire, administrateur.email, password)
       flash.notice = "Mot de passe enregistré"
       redirect_to admin_procedures_path
     else
@@ -30,5 +33,14 @@ class Administrateurs::ActivateController < ApplicationController
 
   def update_administrateur_params
     params.require(:administrateur).permit(:reset_password_token, :password)
+  end
+
+  def try_to_authenticate(klass, email, password)
+    resource = klass.find_for_database_authentication(email: email)
+
+    if resource&.valid_password?(password)
+      sign_in resource
+      resource.force_sync_credentials
+    end
   end
 end
