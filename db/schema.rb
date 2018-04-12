@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_05_131207) do
+ActiveRecord::Schema.define(version: 2018_04_11_152844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -462,6 +462,7 @@ ActiveRecord::Schema.define(version: 2018_04_05_131207) do
     t.datetime "whitelisted_at"
     t.boolean "ask_birthday", default: false, null: false
     t.string "web_hook_url"
+    t.boolean "cloned_from_library", default: false
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
   end
 
