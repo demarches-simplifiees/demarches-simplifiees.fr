@@ -104,7 +104,7 @@ class Procedure < ApplicationRecord
     publiee_ou_archivee?
   end
 
-  def clone(admin)
+  def clone(admin, from_library)
     procedure = self.deep_clone(include:
       {
         types_de_piece_justificative: nil,
@@ -124,6 +124,8 @@ class Procedure < ApplicationRecord
     procedure.closed_mail = closed_mail.try(:dup)
     procedure.refused_mail = refused_mail.try(:dup)
     procedure.without_continuation_mail = without_continuation_mail.try(:dup)
+
+    procedure.cloned_from_library = from_library
 
     procedure
   end
