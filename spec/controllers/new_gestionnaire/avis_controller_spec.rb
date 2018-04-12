@@ -216,6 +216,8 @@ describe NewGestionnaire::AvisController, type: :controller do
     end
 
     describe '#create_gestionnaire' do
+      let(:existing_user_mail) { 'dummy@example.org' }
+      let!(:existing_user) { create(:user, email: existing_user_mail) }
       let(:invited_email) { 'invited@avis.com' }
       let(:dossier) { create(:dossier) }
       let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
@@ -254,6 +256,19 @@ describe NewGestionnaire::AvisController, type: :controller do
 
           it { expect(subject.current_gestionnaire).to eq(created_gestionnaire) }
           it { is_expected.to redirect_to gestionnaire_avis_index_path }
+
+          it 'creates a corresponding user account for the email' do
+            user = User.find_by(email: invited_email)
+            expect(user).to be_present
+          end
+
+          context 'when there already is a user account with the same email' do
+            let(:existing_user_mail) { invited_email }
+
+            it 'still creates a gestionnaire account' do
+              expect(created_gestionnaire).to be_present
+            end
+          end
         end
 
         context 'when the gestionnaire creation fails' do
