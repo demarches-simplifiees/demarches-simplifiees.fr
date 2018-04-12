@@ -456,18 +456,24 @@ describe Admin::ProceduresController, type: :controller do
 
   describe 'PUT #clone' do
     let!(:procedure) { create(:procedure, administrateur: admin) }
-    subject { put :clone, params: { procedure_id: procedure.id } }
+    let(:params) { { procedure_id: procedure.id } }
+    subject { put :clone, params: params }
 
     it { expect { subject }.to change(Procedure, :count).by(1) }
 
     context 'when admin is the owner of the procedure' do
-      before do
-        subject
-      end
+      before { subject }
 
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
+        expect(Procedure.last.cloned_from_library).to be(false)
         expect(flash[:notice]).to have_content 'Procédure clonée'
+      end
+
+      context 'when the procedure is cloned from the library' do
+        let(:params) { { procedure_id: procedure.id, from_new_from_existing: true } }
+
+        it { expect(Procedure.last.cloned_from_library).to be(true) }
       end
     end
 
