@@ -87,7 +87,14 @@ module NewGestionnaire
       gestionnaire = Gestionnaire.new(email: email, password: password)
 
       if gestionnaire.save
+        user = User.find_by(email: email)
+        if user.blank?
+          user = User.create(email: email, password: password)
+        end
+
+        sign_in(user)
         sign_in(gestionnaire, scope: :gestionnaire)
+
         Avis.link_avis_to_gestionnaire(gestionnaire)
         avis = Avis.find(params[:id])
         redirect_to url_for(gestionnaire_avis_index_path)
