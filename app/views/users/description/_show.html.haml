@@ -1,5 +1,5 @@
 .container#description-page
-  - if @dossier.procedure.lien_notice.present?
+  - if notice_url(@dossier.procedure).present?
     #lien_notice_panel.row{ style: 'width: 280px; position: fixed; background-color: white; right: 5%; top: 80px; z-index: 200;' }
       .panel.panel-info{ style: 'margin-bottom: 0;' }
         .panel-body.center
@@ -8,7 +8,7 @@
               .fa.fa-info-circle.text-info{ style: 'font-size: 2em; margin-top: 20%;' }
             .col-xs-10{ style: 'padding-right: 0px;' }
               %b
-                = link_to 'Accéder au guide', @dossier.procedure.lien_notice, { target: '_blank' }
+                = link_to 'Accéder au guide', notice_url(@dossier.procedure), { target: '_blank' }
               pour remplir pour votre dossier
 
   %h2.text-info
