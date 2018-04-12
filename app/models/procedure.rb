@@ -39,6 +39,8 @@ class Procedure < ApplicationRecord
   scope :archivees,             -> { where.not(archived_at: nil) }
   scope :publiees_ou_archivees, -> { where.not(published_at: nil) }
   scope :by_libelle,            -> { order(libelle: :asc) }
+  scope :created_during,        -> (range) { where(created_at: range) }
+  scope :cloned_from_library,   -> { where(cloned_from_library: true) }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false

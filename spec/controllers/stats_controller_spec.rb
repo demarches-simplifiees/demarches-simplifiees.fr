@@ -310,4 +310,25 @@ describe StatsController, type: :controller do
 
     it { expect(subject).to match([[I18n.l(3.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
   end
+
+  describe "#cloned_from_library_procedures_ratio" do
+    let!(:procedure1) { create(:procedure, created_at: 3.weeks.ago) }
+    let!(:procedure2) { create(:procedure, created_at: 2.weeks.ago) }
+    let!(:procedure3) { create(:procedure, created_at: 2.weeks.ago, cloned_from_library: true) }
+
+    before { Timecop.freeze(Time.now) }
+    after { Timecop.return }
+
+    subject { StatsController.new.send(:cloned_from_library_procedures_ratio) }
+
+    let(:result) do
+      [
+        [I18n.l(3.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0],
+        [I18n.l(2.weeks.ago.end_of_week, format: '%d/%m/%Y'), 50.0],
+        [I18n.l(1.week.ago.end_of_week,  format: '%d/%m/%Y'), 0]
+      ]
+    end
+
+    it { expect(subject).to match(result) }
+  end
 end

@@ -32,9 +32,27 @@ class StatsController < ApplicationController
 
     @motivation_usage_dossier = motivation_usage_dossier
     @motivation_usage_procedure = motivation_usage_procedure
+
+    @cloned_from_library_procedures_ratio = cloned_from_library_procedures_ratio
   end
 
   private
+
+  def cloned_from_library_procedures_ratio
+    [3.weeks.ago, 2.weeks.ago, 1.week.ago].map do |date|
+      min_date = date.beginning_of_week
+      max_date = min_date.end_of_week
+
+      all_procedures = Procedure.created_during(min_date..max_date)
+      cloned_from_library_procedures = all_procedures.cloned_from_library
+
+      denominator = [1, all_procedures.count].max
+
+      ratio = percentage(cloned_from_library_procedures.count, denominator)
+
+      [l(max_date, format: '%d/%m/%Y'), ratio]
+    end
+  end
 
   def max_date
     if administration_signed_in?
