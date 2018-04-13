@@ -274,6 +274,14 @@ Rails.application.routes.draw do
     get "recherche" => "recherche#index"
   end
 
+  scope module: 'new_administrateur' do
+    resources :procedures, only: [] do
+      member do
+        get 'apercu'
+      end
+    end
+  end
+
   apipie
 
   # Legacy routes

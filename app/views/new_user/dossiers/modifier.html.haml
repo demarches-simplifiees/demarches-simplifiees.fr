@@ -3,4 +3,4 @@
     .container
       %h1= @dossier.procedure.libelle
 
-  = render partial: "shared/dossiers/edit", locals: { dossier: @dossier }
+  = render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: false }
