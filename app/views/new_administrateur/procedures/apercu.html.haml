@@ -1,6 +1,22 @@
-.dossier-edit
-  .dossier-header
-    .container
-      %h1 Prévisualisation de la procédure #{@dossier.procedure.libelle}
+.dossiers-headers.accompagnateur-header
+  .container
+    %h1.page-title Prévisualisation de la procédure #{@dossier.procedure.libelle}
 
-= render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: true }
+    %ul.tabs
+      %li{ class: (@tab == 'dossier') ? 'active' : nil }>
+        = link_to(apercu_procedure_path(@dossier.procedure, tab: 'dossier')) do
+          le dossier
+      - if @dossier.champs_private.size > 0
+        %li{ class: (@tab == 'annotations-privees') ? 'active' : nil }>
+          = link_to(apercu_procedure_path(@dossier.procedure, tab: 'annotations-privees')) do
+            les annotations privees
+
+- if @tab == 'dossier'
+  = render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: true }
+- else
+  .container
+    = form_for @dossier, url: '', method: :get, html: { class: 'form' } do |f|
+      = f.fields_for :champs_private, @dossier.champs_private do |champ_form|
+        - champ = champ_form.object
+        = render partial: "shared/dossiers/editable_champs/editable_champ",
+          locals: { champ: champ, form: champ_form }
