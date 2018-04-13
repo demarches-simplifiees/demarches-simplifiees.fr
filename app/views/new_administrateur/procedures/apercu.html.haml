@@ -1,0 +1,6 @@
+.dossier-edit
+  .dossier-header
+    .container
+      %h1 Prévisualisation de la procédure #{@dossier.procedure.libelle}
+
+= render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: true }
