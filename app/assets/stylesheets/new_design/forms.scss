@@ -36,6 +36,8 @@
   }
 
   .editable-champ {
+    position: relative;
+
     .updated-at {
       @include notice-text-style;
       float: right;
