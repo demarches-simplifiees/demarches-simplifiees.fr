@@ -8,15 +8,21 @@ class Administration < ApplicationRecord
   end
 
   def invite_admin(email)
+    password = SecureRandom.hex
     administrateur = Administrateur.new({
       email: email,
-      active: false
+      active: false,
+      password: password,
+      password_confirmation: password
     })
-    administrateur.password = administrateur.password_confirmation = SecureRandom.hex
 
     if administrateur.save
       AdministrationMailer.new_admin_email(administrateur, self).deliver_now!
       administrateur.invite!
+      User.create({
+        email: email,
+        password: password
+      })
     end
 
     administrateur

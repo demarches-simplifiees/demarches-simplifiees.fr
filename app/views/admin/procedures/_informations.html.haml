@@ -2,7 +2,7 @@
   .alert.alert-info
     Cette procédure est publiée, certains éléments de la description ne sont plus modifiables
 
-- { libelle: 'Libellé*', description: 'Description*', organisation: 'Organisme*', direction: 'Direction', lien_site_web: 'Lien site internet', lien_notice: 'Lien notice', web_hook_url: 'Lien de rappel HTTP' }.each do |key, value|
+- { libelle: 'Libellé*', description: 'Description*', organisation: 'Organisme*', direction: 'Direction', lien_site_web: 'Lien site internet', web_hook_url: 'Lien de rappel HTTP' }.each do |key, value|
   - if key != :web_hook_url || current_administrateur&.feature_enabled?(:web_hook_allowed)
     .form-group
       %h4
@@ -15,6 +15,20 @@
 
       - else
         = f.text_field key, class: 'form-control', placeholder: value
+
+.form-group
+  %h4 Notice explicative de la procédure
+  - notice = @procedure.notice
+  - if !notice.attached?
+    = f.file_field :notice,
+      direct_upload: true
+  - else
+    %a{ href: url_for(notice), target: '_blank' }
+      = notice.filename.to_s
+    %br
+    Modifier :
+    = f.file_field :notice,
+      direct_upload: true
 
 .row
   .col-md-6

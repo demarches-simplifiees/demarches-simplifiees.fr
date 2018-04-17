@@ -9,12 +9,15 @@ document.addEventListener('turbolinks:load', function() {
       break;
     case 14:
       input.attr('disabled', 'disabled');
+      $('.spinner').show();
       $.get(url+'?siret='+value).then(function() {
         input.removeAttr('data-invalid');
         input.removeAttr('disabled');
+        $('.spinner').hide();
       }, function() {
         input.removeAttr('disabled');
         input.attr('data-invalid', true);
+        $('.spinner').hide();
       });
       break;
     default:
