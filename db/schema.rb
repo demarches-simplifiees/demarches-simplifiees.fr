@@ -466,8 +466,10 @@ ActiveRecord::Schema.define(version: 2018_05_15_135415) do
     t.bigint "parent_procedure_id"
     t.datetime "test_started_at"
     t.string "aasm_state", default: "brouillon"
+    t.bigint "service_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
+    t.index ["service_id"], name: "index_procedures_on_service_id"
   end
 
   create_table "quartier_prioritaires", id: :serial, force: :cascade do |t|
@@ -509,6 +511,16 @@ ActiveRecord::Schema.define(version: 2018_05_15_135415) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["entreprise_id"], name: "index_rna_informations_on_entreprise_id"
+  end
+
+  create_table "services", force: :cascade do |t|
+    t.string "type_organisme", null: false
+    t.string "nom", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "administrateur_id"
+    t.index ["administrateur_id", "nom"], name: "index_services_on_administrateur_id_and_nom", unique: true
+    t.index ["administrateur_id"], name: "index_services_on_administrateur_id"
   end
 
   create_table "types_de_champ", id: :serial, force: :cascade do |t|
@@ -576,8 +588,10 @@ ActiveRecord::Schema.define(version: 2018_05_15_135415) do
   add_foreign_key "procedure_paths", "administrateurs"
   add_foreign_key "procedure_paths", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
+  add_foreign_key "procedures", "services"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
+  add_foreign_key "services", "administrateurs"
   add_foreign_key "without_continuation_mails", "procedures"
 
   create_view "searches",  sql_definition: <<-SQL

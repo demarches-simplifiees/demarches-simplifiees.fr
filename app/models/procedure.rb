@@ -11,6 +11,7 @@ class Procedure < ApplicationRecord
 
   belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
+  belongs_to :service
 
   has_many :assign_to, dependent: :destroy
   has_many :administrateurs_procedures
