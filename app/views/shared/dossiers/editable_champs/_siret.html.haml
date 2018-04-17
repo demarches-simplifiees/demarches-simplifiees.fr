@@ -3,6 +3,7 @@
   class: 'small-margin',
   data: { siret: champs_siret_path(format: :js, champ_id: champ) },
   required: champ.mandatory?
+.spinner.right-spinner
 %div{ id: "etablissement-for-#{champ.id}" }
   - if champ.etablissement.present?
     = render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: champ.etablissement }
