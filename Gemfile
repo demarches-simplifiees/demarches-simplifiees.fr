@@ -97,6 +97,8 @@ gem 'scenic'
 
 gem 'sanitize-url'
 
+gem 'flipflop'
+
 # Cron jobs
 gem 'delayed_job_active_record'
 gem "daemons"

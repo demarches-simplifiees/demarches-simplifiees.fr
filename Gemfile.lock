@@ -203,6 +203,8 @@ GEM
     ffi (1.9.23)
     fission (0.5.0)
       CFPropertyList (~> 2.2)
+    flipflop (2.3.1)
+      activesupport (>= 4.0)
     fog (1.42.0)
       fog-aliyun (>= 0.1.0)
       fog-atmos
@@ -803,6 +805,7 @@ DEPENDENCIES
   dotenv-rails
   draper
   factory_bot
+  flipflop
   fog
   fog-openstack
   font-awesome-rails
