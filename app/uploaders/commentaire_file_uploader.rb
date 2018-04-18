@@ -3,7 +3,7 @@ class CommentaireFileUploader < BaseUploader
     Rails.root.join("public")
   end
 
-  if Features.remote_storage
+  if Flipflop.remote_storage?
     storage :fog
   else
     storage :file

@@ -7,10 +7,12 @@ RSpec.describe WeeklyOverviewJob, type: :job do
     let(:mailer_double) { double('mailer', deliver_later: true) }
 
     context 'if the feature is enabled' do
-      before { allow(Features).to receive(:weekly_overview).and_return(true) }
+      before do
+        Flipflop::FeatureSet.current.test!.switch!(:weekly_overview, true)
+      end
 
       context 'with one gestionnaire with one overview' do
-        before :each do
+        before do
           expect_any_instance_of(Gestionnaire).to receive(:last_week_overview).and_return(overview)
           allow(GestionnaireMailer).to receive(:last_week_overview).and_return(mailer_double)
           WeeklyOverviewJob.new.perform
@@ -21,7 +23,7 @@ RSpec.describe WeeklyOverviewJob, type: :job do
       end
 
       context 'with one gestionnaire with no overviews' do
-        before :each do
+        before do
           expect_any_instance_of(Gestionnaire).to receive(:last_week_overview).and_return(nil)
           allow(GestionnaireMailer).to receive(:last_week_overview)
           WeeklyOverviewJob.new.perform
@@ -32,8 +34,8 @@ RSpec.describe WeeklyOverviewJob, type: :job do
     end
 
     context 'if the feature is disabled' do
-      before { allow(Features).to receive(:weekly_overview).and_return(false) }
-      before :each do
+      before do
+        Flipflop::FeatureSet.current.test!.switch!(:weekly_overview, false)
         allow(Gestionnaire).to receive(:all)
         WeeklyOverviewJob.new.perform
       end
