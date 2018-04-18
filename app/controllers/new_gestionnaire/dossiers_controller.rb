@@ -107,7 +107,7 @@ module NewGestionnaire
       dossier.save
 
       # needed to force Carrierwave to provide dossier.attestation.pdf.read
-      # when the Feature.remote_storage is true, otherwise pdf.read is a closed stream.
+      # when the Flipflop.remote_storage? is true, otherwise pdf.read is a closed stream.
       dossier.reload
 
       attestation_pdf = nil

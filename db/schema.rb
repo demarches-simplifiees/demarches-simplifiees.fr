@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_04_113409) do
+ActiveRecord::Schema.define(version: 2018_04_05_131207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2018_04_04_113409) do
     t.datetime "updated_at"
     t.string "api_token"
     t.boolean "active", default: false
+    t.jsonb "features", default: {}, null: false
     t.index ["email"], name: "index_administrateurs_on_email", unique: true
     t.index ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true
   end
@@ -311,6 +312,13 @@ ActiveRecord::Schema.define(version: 2018_04_04_113409) do
     t.datetime "date_fin_exercice"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "flipflop_features", force: :cascade do |t|
+    t.string "key", null: false
+    t.boolean "enabled", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "follows", id: :serial, force: :cascade do |t|
