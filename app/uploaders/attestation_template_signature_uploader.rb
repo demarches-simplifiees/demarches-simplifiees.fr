@@ -4,7 +4,7 @@ class AttestationTemplateSignatureUploader < BaseUploader
   end
 
   # Choose what kind of storage to use for this uploader:
-  if Features.remote_storage
+  if Flipflop.remote_storage?
     storage :fog
   else
     storage :file
@@ -13,7 +13,7 @@ class AttestationTemplateSignatureUploader < BaseUploader
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    if !Features.remote_storage
+    if !Flipflop.remote_storage?
       "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
     end
   end

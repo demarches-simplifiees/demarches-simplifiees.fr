@@ -19,7 +19,7 @@ class ProcedureDecorator < Draper::Decorator
     if logo.blank?
       h.image_url(LOGO_NAME)
     else
-      if Features.remote_storage
+      if Flipflop.remote_storage?
         (RemoteDownloader.new logo.filename).url
       else
         (LocalDownloader.new logo.path, 'logo').url

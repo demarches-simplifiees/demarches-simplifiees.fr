@@ -119,7 +119,7 @@ RSpec.configure do |config|
   config.before(:all) {
     Warden.test_mode!
 
-    if Features.remote_storage
+    if Flipflop.remote_storage?
       VCR.use_cassette("ovh_storage_init") do
         CarrierWave.configure do |config|
           config.fog_credentials = { provider: 'OpenStack' }
