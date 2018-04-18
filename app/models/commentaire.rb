@@ -18,7 +18,7 @@ class Commentaire < ApplicationRecord
   end
 
   def file_url
-    if Features.remote_storage
+    if Flipflop.remote_storage?
       RemoteDownloader.new(file.path).url
     else
       file.url

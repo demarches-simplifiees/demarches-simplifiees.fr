@@ -71,11 +71,10 @@ describe Administrateur, type: :model do
     let(:administrateur) { create(:administrateur) }
 
     before do
-      allow(Features).to receive(:champ_pj_allowed_for_admin_ids)
-        .and_return([administrateur.id])
+      administrateur.enable_feature(:champ_pj)
     end
 
-    it { expect(administrateur.feature_enabled?(:yolo)).to be_falsey }
-    it { expect(administrateur.feature_enabled?(:champ_pj_allowed)).to be_truthy }
+    it { expect(administrateur.feature_enabled?(:champ_siret)).to be_falsey }
+    it { expect(administrateur.feature_enabled?(:champ_pj)).to be_truthy }
   end
 end

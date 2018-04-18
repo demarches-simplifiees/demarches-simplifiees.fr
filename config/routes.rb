@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     post 'demandes/refuse_administrateur'
 
     authenticate :administration do
+      mount Flipflop::Engine => "/features"
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
 
