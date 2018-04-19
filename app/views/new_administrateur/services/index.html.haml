@@ -1,12 +1,12 @@
 .container
   %h1 Liste des Services
 
-  %table.table
+  %table.table.table-service.hoverable
     %thead
       %tr
         %th
           nom
-        %th
+        %th.change
           = link_to('Nouveau service', new_service_path, class: 'button')
 
     %tbody
@@ -14,4 +14,5 @@
         %tr
           %td
             = service.nom
-          %td
+          %td.change
+            = link_to('modifier', edit_service_path(service))
