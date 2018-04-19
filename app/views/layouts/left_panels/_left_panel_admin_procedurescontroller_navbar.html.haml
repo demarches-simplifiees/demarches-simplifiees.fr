@@ -14,7 +14,11 @@
       .procedure-list-element{ class: ('active' if active == 'Informations') }
         Informations
 
-    %a#onglet-accompagnateurs{ :href => "#{url_for admin_procedure_accompagnateurs_path(@procedure)}" }
+    %a#onglet-services{ href: url_for(services_path(procedure_id: @procedure.id)) }
+      .procedure-list-element
+        Services
+
+    %a#onglet-accompagnateurs{ href: url_for(admin_procedure_accompagnateurs_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'Accompagnateurs') }
         = t('dynamics.admin.procedure.onglets.accompagnateurs')
 
