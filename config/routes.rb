@@ -287,7 +287,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :services, only: [:index]
+    resources :services, only: [:index, :new, :create]
   end
 
   apipie
