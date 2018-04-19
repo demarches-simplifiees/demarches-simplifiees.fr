@@ -11,5 +11,8 @@
 
   = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }
 
+  - if procedure_id.present?
+    = hidden_field_tag :procedure_id, procedure_id
+
   .send-wrapper
     = f.submit "Valider", class: 'button send'

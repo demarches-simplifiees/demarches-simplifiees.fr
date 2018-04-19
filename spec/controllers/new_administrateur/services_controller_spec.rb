@@ -8,13 +8,21 @@ describe NewAdministrateur::ServicesController, type: :controller do
     end
 
     context 'when submitting a new service' do
-      let(:params) { { service: { nom: 'super service', type_organisme: 'region' } } }
+      let(:params) do
+        {
+          service: {
+            nom: 'super service',
+            type_organisme: 'region'
+          },
+          procedure_id: 12
+        }
+      end
 
       it { expect(flash.alert).to be_nil }
       it { expect(flash.notice).to eq('super service créé') }
       it { expect(Service.last.nom).to eq('super service') }
       it { expect(Service.last.type_organisme).to eq('region') }
-      it { expect(response).to redirect_to(services_path) }
+      it { expect(response).to redirect_to(services_path(procedure_id: 12)) }
     end
 
     context 'when submitting an invalid service' do
@@ -31,7 +39,12 @@ describe NewAdministrateur::ServicesController, type: :controller do
 
     before do
       sign_in admin
-      patch :update, params: { id: service.id, service: service_params }
+      params = {
+        id: service.id,
+        service: service_params,
+        procedure_id: 12
+      }
+      patch :update, params: params
     end
 
     context 'when updating a service' do
@@ -39,7 +52,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect(flash.notice).to eq('nom modifié') }
       it { expect(Service.last.nom).to eq('nom') }
       it { expect(Service.last.type_organisme).to eq('region') }
-      it { expect(response).to redirect_to(services_path) }
+      it { expect(response).to redirect_to(services_path(procedure_id: 12)) }
     end
 
     context 'when updating a service with invalid data' do

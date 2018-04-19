@@ -7,7 +7,7 @@
         %th
           nom
         %th.change
-          = link_to('Nouveau service', new_service_path, class: 'button')
+          = link_to('Nouveau service', new_service_path(procedure_id: params[:procedure_id]), class: 'button')
 
     %tbody
       - @services.each do |service|
@@ -15,4 +15,4 @@
           %td
             = service.nom
           %td.change
-            = link_to('modifier', edit_service_path(service))
+            = link_to('modifier', edit_service_path(service, procedure_id: params[:procedure_id]))
