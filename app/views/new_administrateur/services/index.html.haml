@@ -1,0 +1,14 @@
+.container
+  %h1 Liste des Services
+
+  %table.table
+    %thead
+      %tr
+        %th
+          nom
+
+    %tbody
+      - @services.each do |service|
+        %tr
+          %td
+            = service.nom

@@ -286,6 +286,8 @@ Rails.application.routes.draw do
         get 'apercu'
       end
     end
+
+    resources :services, only: [:index]
   end
 
   apipie
