@@ -2,4 +2,4 @@
   %h1 Modifier le service
 
   = render partial: 'form',
-    locals: { service: @service }
+    locals: { service: @service, procedure_id: params[:procedure_id] }

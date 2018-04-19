@@ -12,7 +12,8 @@ module NewAdministrateur
       new_service.administrateur = current_administrateur
 
       if new_service.save
-        redirect_to services_path, notice: "#{new_service.nom} créé"
+        redirect_to services_path(procedure_id: params[:procedure_id]),
+          notice: "#{new_service.nom} créé"
       else
         flash[:alert] = new_service.errors.full_messages
         render :new
@@ -27,7 +28,8 @@ module NewAdministrateur
       @service = service
 
       if @service.update(service_params)
-        redirect_to services_path, notice: "#{@service.nom} modifié"
+        redirect_to services_path(procedure_id: params[:procedure_id]),
+          notice: "#{@service.nom} modifié"
       else
         flash[:alert] = @service.errors.full_messages
         render :edit

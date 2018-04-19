@@ -2,4 +2,4 @@
   %h1 Nouveau Service
 
   = render partial: 'form',
-    locals: { service: Service.new }
+    locals: { service: Service.new, procedure_id: params[:procedure_id] }
