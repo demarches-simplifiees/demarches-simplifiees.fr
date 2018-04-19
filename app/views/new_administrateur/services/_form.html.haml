@@ -1,0 +1,15 @@
+= form_for service, html: { class: 'form' } do |f|
+
+  = f.label :nom do
+    Nom
+    %span.mandatory *
+  = f.text_field :nom, placeholder: 'service jeunesse et prévention, direction des affaires maritimes', required: true
+
+  = f.label :type_organisme do
+    Type d’organisme
+    %span.mandatory *
+
+  = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }
+
+  .send-wrapper
+    = f.submit "Valider", class: 'button send'

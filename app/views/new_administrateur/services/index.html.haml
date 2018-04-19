@@ -6,9 +6,12 @@
       %tr
         %th
           nom
+        %th
+          = link_to('Nouveau service', new_service_path, class: 'button')
 
     %tbody
       - @services.each do |service|
         %tr
           %td
             = service.nom
+          %td
