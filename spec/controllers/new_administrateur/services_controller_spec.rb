@@ -62,4 +62,36 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect(response).to render_template(:edit) }
     end
   end
+
+  describe '#add_to_procedure' do
+    let!(:procedure) { create(:procedure, administrateur: admin) }
+    let!(:service) { create(:service, administrateur: admin) }
+
+    def post_add_to_procedure
+      sign_in admin
+      params = {
+        procedure: {
+          id: procedure.id,
+          service_id: service.id
+        }
+      }
+      patch :add_to_procedure, params: params
+      procedure.reload
+    end
+
+    context 'when adding a service to a procedure' do
+      before { post_add_to_procedure }
+
+      it { expect(flash.alert).to be_nil }
+      it { expect(flash.notice).to eq("service affecté : #{service.nom}") }
+      it { expect(procedure.service_id).to eq(service.id) }
+      it { expect(response).to redirect_to(admin_procedure_path(procedure.id)) }
+    end
+
+    context 'when stealing a service to add it to a procedure' do
+      let!(:service) { create(:service) }
+
+      it { expect { post_add_to_procedure }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+  end
 end

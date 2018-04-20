@@ -287,7 +287,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :services, except: [:destroy, :show]
+    resources :services, except: [:destroy, :show] do
+      collection do
+        patch 'add_to_procedure'
+      end
+    end
   end
 
   apipie
