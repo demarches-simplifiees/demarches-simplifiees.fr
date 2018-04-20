@@ -2,6 +2,7 @@ module NewAdministrateur
   class ServicesController < AdministrateurController
     def index
       @services = services.ordered
+      @procedure = procedure
     end
 
     def new
@@ -36,6 +37,16 @@ module NewAdministrateur
       end
     end
 
+    def add_to_procedure
+      procedure = current_administrateur.procedures.find(procedure_params[:id])
+      service = services.find(procedure_params[:service_id])
+
+      procedure.update(service: service)
+
+      redirect_to admin_procedure_path(procedure.id),
+        notice: "service affecté : #{procedure.service.nom}"
+    end
+
     private
 
     def service_params
@@ -48,6 +59,14 @@ module NewAdministrateur
 
     def services
       current_administrateur.services
+    end
+
+    def procedure_params
+      params.require(:procedure).permit(:id, :service_id)
+    end
+
+    def procedure
+      current_administrateur.procedures.find(params[:procedure_id])
     end
   end
 end
