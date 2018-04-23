@@ -1,7 +1,7 @@
 module NewAdministrateur
   class ServicesController < AdministrateurController
     def index
-      @services = services
+      @services = services.ordered
     end
 
     private

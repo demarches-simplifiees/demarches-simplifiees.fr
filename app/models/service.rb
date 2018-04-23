@@ -2,6 +2,8 @@ class Service < ApplicationRecord
   has_many :procedures
   belongs_to :administrateur
 
+  scope :ordered, -> { order(nom: :asc) }
+
   enum type_organisme: {
     administration_centrale: 'administration_centrale',
     association: 'association',
