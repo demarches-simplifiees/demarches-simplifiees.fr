@@ -4,8 +4,13 @@
 .row.white-back
   #procedure_show
     - if procedure.brouillon?
-      - if procedure.gestionnaires.size == 0
-        %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.' }
+      - if procedure.gestionnaires.empty? || procedure.service.nil?
+        - message = ''
+        - if procedure.gestionnaires.empty?
+          - message += 'Affectez des accompagnateurs à votre procédure.'
+        - if procedure.service.nil?
+          - message += 'Affectez un service à votre procédure.'
+        %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, title: message }
           %i.fa.fa-eraser
           Publier
       - else
