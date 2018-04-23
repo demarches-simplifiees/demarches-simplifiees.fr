@@ -105,9 +105,6 @@ Rails.application.routes.draw do
     resources :dossiers do
       get '/add_siret' => 'dossiers/add_siret#show'
 
-      get 'description' => 'description#show'
-      post 'description' => 'description#update'
-
       patch 'pieces_justificatives' => 'description#pieces_justificatives'
 
       get '/recapitulatif' => 'recapitulatif#show'
