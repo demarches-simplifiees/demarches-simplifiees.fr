@@ -13,10 +13,6 @@ class DossierFacades
     @dossier.ordered_champs
   end
 
-  def entreprise
-    @dossier.entreprise.decorate if @dossier.entreprise.present? && @dossier.entreprise.siren.present?
-  end
-
   def etablissement
     @dossier.etablissement
   end
