@@ -262,7 +262,8 @@ describe Procedure do
   describe 'clone' do
     let(:archived_at) { nil }
     let(:published_at) { nil }
-    let(:procedure) { create(:procedure, archived_at: archived_at, published_at: published_at, received_mail: received_mail) }
+    let!(:service) { create(:service) }
+    let(:procedure) { create(:procedure, archived_at: archived_at, published_at: published_at, received_mail: received_mail, service: service) }
     let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_2) { create(:type_de_champ_drop_down_list, procedure: procedure, order_place: 2) }
@@ -326,6 +327,10 @@ describe Procedure do
       let(:from_library) { true }
 
       it { expect(subject.cloned_from_library).to be(true) }
+    end
+
+    it 'should keep service_id' do
+      expect(subject.service).to eq(service)
     end
 
     it 'should duplicate existing mail_templates' do
