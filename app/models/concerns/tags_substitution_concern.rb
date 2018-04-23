@@ -107,7 +107,7 @@ module TagsSubstitutionConcern
     {
       libelle: 'adresse',
       description: '',
-      lambda: -> (e) { e&.etablissement&.inline_adresse },
+      target: :inline_adresse,
       available_for_states: Dossier::SOUMIS
     }
   ]
@@ -187,7 +187,7 @@ module TagsSubstitutionConcern
     tags_and_datas = [
       [dossier_tags, dossier],
       [INDIVIDUAL_TAGS, dossier.individual],
-      [ENTREPRISE_TAGS, dossier.entreprise]
+      [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
     ]
 
     tags_and_datas

@@ -30,9 +30,8 @@ describe TagsSubstitutionConcern, type: :model do
 
   describe 'replace_tags' do
     let(:individual) { nil }
-    let(:etablissement) { nil }
-    let(:entreprise) { create(:entreprise, etablissement: etablissement) }
-    let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, entreprise: entreprise) }
+    let(:etablissement) { create(:etablissement) }
+    let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
 
     before { Timecop.freeze(Time.now) }
 
@@ -61,7 +60,7 @@ describe TagsSubstitutionConcern, type: :model do
         let(:etablissement) { create(:etablissement) }
 
         let(:expected_text) do
-          "#{entreprise.siren} #{entreprise.numero_tva_intracommunautaire} #{entreprise.siret_siege_social} #{entreprise.raison_sociale} #{etablissement.inline_adresse}"
+          "#{etablissement.entreprise_siren} #{etablissement.entreprise_numero_tva_intracommunautaire} #{etablissement.entreprise_siret_siege_social} #{etablissement.entreprise_raison_sociale} #{etablissement.inline_adresse}"
         end
 
         it { is_expected.to eq(expected_text) }

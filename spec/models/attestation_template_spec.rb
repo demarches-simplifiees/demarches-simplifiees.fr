@@ -98,11 +98,10 @@ describe AttestationTemplate, type: :model do
     end
     let(:for_individual) { false }
     let(:individual) { nil }
-    let(:etablissement) { nil }
-    let(:entreprise) { create(:entreprise, etablissement: etablissement) }
+    let(:etablissement) { create(:etablissement) }
     let(:types_de_champ) { [] }
     let(:types_de_champ_private) { [] }
-    let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, entreprise: entreprise) }
+    let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
     let(:template_title) { 'title' }
     let(:template_body) { 'body' }
     let(:attestation_template) do
