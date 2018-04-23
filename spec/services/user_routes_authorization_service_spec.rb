@@ -69,25 +69,6 @@ describe UserRoutesAuthorizationService do
       end
     end
 
-    describe 'Users::DescriptionController' do
-      let(:controller) { Users::DescriptionController }
-
-      describe 'brouillon' do
-        let(:state) { 'brouillon' }
-        it { is_expected.to be_truthy }
-      end
-
-      describe 'en_construction' do
-        let(:state) { 'en_construction' }
-        it { is_expected.to be_truthy }
-      end
-
-      describe 'accepte' do
-        let(:state) { 'accepte' }
-        it { is_expected.to be_falsey }
-      end
-    end
-
     describe 'recapitulatif' do
       let(:controller) { Users::RecapitulatifController }
 
