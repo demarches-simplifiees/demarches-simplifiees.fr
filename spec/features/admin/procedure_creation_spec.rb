@@ -53,6 +53,9 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       page.execute_script("$('#procedure_description').val('description de la procedure')")
       fill_in 'procedure_organisation', with: 'organisme de la procedure'
       page.find_by_id('save-procedure').click
+
+      procedure = Procedure.last
+      procedure.update(service: create(:service))
     end
 
     scenario 'Add champ, add file, visualize them in procedure preview' do
