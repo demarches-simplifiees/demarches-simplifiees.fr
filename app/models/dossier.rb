@@ -14,7 +14,6 @@ class Dossier < ApplicationRecord
   SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
 
   has_one :etablissement, dependent: :destroy
-  has_one :entreprise, dependent: :destroy
   has_one :individual, dependent: :destroy
   has_one :attestation
   has_many :cerfa, dependent: :destroy
@@ -56,7 +55,7 @@ class Dossier < ApplicationRecord
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
-  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:entreprise, :etablissement, :champs, :champs_private).order(en_construction_at: 'asc') }
+  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:etablissement, :champs, :champs_private).order(en_construction_at: 'asc') }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
@@ -64,8 +63,7 @@ class Dossier < ApplicationRecord
 
   accepts_nested_attributes_for :individual
 
-  delegate :siren, to: :entreprise
-  delegate :siret, to: :etablissement, allow_nil: true
+  delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :types_de_piece_justificative, to: :procedure
   delegate :types_de_champ, to: :procedure
   delegate :france_connect_information, to: :user
@@ -220,7 +218,7 @@ class Dossier < ApplicationRecord
     when 'france_connect_information'
       self.user.france_connect_information&.send(column)
     when 'entreprise'
-      self.entreprise&.send(column)
+      self.etablissement&.send(:"entreprise_#{column}")
     when 'etablissement'
       self.etablissement&.send(column)
     when 'type_de_champ'
@@ -235,8 +233,8 @@ class Dossier < ApplicationRecord
   end
 
   def owner_name
-    if entreprise.present?
-      entreprise.raison_sociale
+    if etablissement.present?
+      etablissement.entreprise_raison_sociale
     elsif individual.present?
       "#{individual.nom} #{individual.prenom}"
     end
@@ -298,8 +296,8 @@ class Dossier < ApplicationRecord
 
   def export_etablissement_data
     if etablissement.present?
-      etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
-      entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
+      etablissement_attr = EtablissementCsvSerializer.new(etablissement).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
+      entreprise_attr = EntrepriseSerializer.new(etablissement.entreprise).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
     else
       etablissement_attr = EtablissementSerializer.new(Etablissement.new).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
       entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }

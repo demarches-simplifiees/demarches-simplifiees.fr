@@ -34,6 +34,10 @@ class DossierSerializer < ActiveModel::Serializer
     object.user.try(:email)
   end
 
+  def entreprise
+    object.etablissement&.entreprise
+  end
+
   def state
     case object.state
     when 'en_construction'
