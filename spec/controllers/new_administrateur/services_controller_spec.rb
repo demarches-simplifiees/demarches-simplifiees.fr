@@ -94,4 +94,34 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect { post_add_to_procedure }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
+
+  describe '#destroy' do
+    let!(:service) { create(:service, administrateur: admin) }
+
+    context 'when a service has no related procedure' do
+      before do
+        sign_in admin
+        delete :destroy, params: { id: service.id, procedure_id: 12 }
+      end
+
+      it { expect{ service.reload }.to raise_error(ActiveRecord::RecordNotFound) }
+      it { expect(flash.alert).to be_nil }
+      it { expect(flash.notice).to eq("#{service.nom} est supprimé") }
+      it { expect(response).to redirect_to(services_path(procedure_id: 12)) }
+    end
+
+    context 'when a service still has some related procedures' do
+      let!(:procedure) { create(:procedure, service: service) }
+
+      before do
+        sign_in admin
+        delete :destroy, params: { id: service.id, procedure_id: 12 }
+      end
+
+      it { expect(service.reload).not_to be_nil }
+      it { expect(flash.alert).to eq("la procédure #{procedure.libelle} utilise encore le service service. Veuillez l'affecter à un autre service avant de pouvoir le supprimer") }
+      it { expect(flash.notice).to be_nil }
+      it { expect(response).to redirect_to(services_path(procedure_id: 12)) }
+    end
+  end
 end
