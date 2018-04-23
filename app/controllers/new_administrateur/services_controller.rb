@@ -47,6 +47,24 @@ module NewAdministrateur
         notice: "service affecté : #{procedure.service.nom}"
     end
 
+    def destroy
+      service_to_destroy = service
+
+      if service_to_destroy.procedures.present?
+        if service_to_destroy.procedures.count == 1
+          message = "la procédure #{service_to_destroy.procedures.first.libelle} utilise encore le service #{service_to_destroy.nom}. Veuillez l'affecter à un autre service avant de pouvoir le supprimer"
+        else
+          message = "les procédures #{service_to_destroy.procedures.map(&:libelle).join(', ')} utilisent encore le service #{service.nom}. Veuillez les affecter à un autre service avant de pouvoir le supprimer"
+        end
+        flash[:alert] = message
+        redirect_to services_path(procedure_id: params[:procedure_id])
+      else
+        service_to_destroy.destroy
+        redirect_to services_path(procedure_id: params[:procedure_id]),
+          notice: "#{service_to_destroy.nom} est supprimé"
+      end
+    end
+
     private
 
     def service_params

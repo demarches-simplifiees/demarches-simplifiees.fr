@@ -28,3 +28,7 @@
             = service.nom
           %td.change
             = link_to('modifier', edit_service_path(service, procedure_id: params[:procedure_id]))
+            = link_to 'supprimer',
+              service_path(service, procedure_id: params[:procedure_id]),
+              method: :delete,
+              data: { confirm: "Confirmez vous la suppression de #{service.nom}" }
