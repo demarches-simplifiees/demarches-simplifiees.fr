@@ -22,6 +22,12 @@ module ActiveStorage
       end
     end
 
+    def download_chunk(key, range)
+      instrument :download_chunk, key: key, range: range do
+        @adapter.session { |s| s.download(key, range: range) }
+      end
+    end
+
     def delete(key)
       instrument :delete, key: key do
         @adapter.session { |s| s.delete(key) }

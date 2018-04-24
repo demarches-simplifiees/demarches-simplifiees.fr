@@ -47,8 +47,11 @@ module Cellar
         end
       end
 
-      def download(key)
+      def download(key, range: nil)
         request = Net::HTTP::Get.new("/#{key}")
+        if range.present?
+          add_range_header(request, range)
+        end
         @signer.sign(request, key)
         if block_given?
           @http.request(request) do |response|
@@ -105,6 +108,12 @@ module Cellar
       end
 
       private
+
+      def add_range_header(request, range)
+        bytes_end = range.exclude_end? ? range.end - 1 : range.end
+
+        request['range'] = "bytes=#{range.begin}-#{bytes_end}"
+      end
 
       def parse_bucket_listing(bucket_listing_xml)
         doc = Nokogiri::XML(bucket_listing_xml)
