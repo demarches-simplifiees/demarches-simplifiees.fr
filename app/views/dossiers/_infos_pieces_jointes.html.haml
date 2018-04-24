@@ -1,25 +1,5 @@
 #pieces-justificatives
   .row
-    - if @facade.procedure.cerfa_flag?
-      .col-xs-12#piece_justificative_0
-        .row.piece-row
-          .col-xs-6.piece-label= 'Formulaire'
-          .col-md-1.col-lg-1.col-sm-1.col-xs-1.comments-off= "-"
-          .col-xs-5
-            - if @facade.dossier.cerfa_available?
-              %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
-              %span{ style: 'margin-left: 12px;' }
-                \-
-              %a.btn.fa.fa-timer{ style: 'color: black; padding-top: 0;',
-                                                "data-target" => "#pj-modal",
-                                                "data-toggle" => "modal",
-                                                :type => "button",
-                                                "data-modal_title" => 'formulaires',
-                                                "data-modal_index" => 'cerfa' }
-            - else
-              = 'Pièce non fournie'
-
-  .row
     .col-xs-12
       - @facade.dossier.types_de_piece_justificative.order('order_place ASC').each do |type_de_piece_justificative|
         .row.piece-row

@@ -9,9 +9,9 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
   let(:state) { 'en_construction' }
   let(:procedure) do
     if archived
-      create(:procedure, :archived, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: true)
+      create(:procedure, :archived, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime)
     else
-      create(:procedure, :published, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: true)
+      create(:procedure, :published, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime)
     end
   end
   let(:dossier) { create(:dossier, procedure: procedure, user: owner_user, state: state) }
@@ -23,7 +23,6 @@ describe Users::DescriptionController, type: :controller, vcr: { cassette_name: 
   let(:name_piece_justificative_0) { 'piece_justificative_0.pdf' }
   let(:name_piece_justificative_1) { 'piece_justificative_1.pdf' }
 
-  let(:cerfa_pdf) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative}", 'application/pdf') }
   let(:piece_justificative_0) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative_0}", 'application/pdf') }
   let(:piece_justificative_1) { Rack::Test::UploadedFile.new("./spec/support/files/#{name_piece_justificative_1}", 'application/pdf') }
 
