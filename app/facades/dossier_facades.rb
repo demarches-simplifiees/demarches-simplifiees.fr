@@ -37,10 +37,6 @@ class DossierFacades
     @dossier.procedure
   end
 
-  def cerfas_ordered
-    @dossier.cerfa.order('created_at DESC')
-  end
-
   def invites
     @dossier.invites
   end

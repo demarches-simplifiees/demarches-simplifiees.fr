@@ -190,61 +190,6 @@ shared_examples 'description_controller_spec' do
       end
     end
 
-    context 'Quand la procédure accepte les CERFA' do
-      subject { post :update, params: { dossier_id: dossier_id, cerfa_pdf: cerfa_pdf } }
-
-      context 'Sauvegarde du CERFA PDF', vcr: { cassette_name: 'controllers_users_description_controller_save_cerfa' } do
-        before do
-          post :update, params: { dossier_id: dossier_id, cerfa_pdf: cerfa_pdf }
-          dossier.reload
-        end
-
-        context 'when a CERFA PDF is sent', vcr: { cassette_name: 'controllers_users_description_controller_cerfa_is_sent' } do
-          subject { dossier.cerfa.first }
-
-          it 'content' do
-            if Flipflop.remote_storage?
-              expect(subject['content']).to eq('cerfa-3dbb3535-5388-4a37-bc2d-778327b9f999.pdf')
-            else
-              expect(subject['content']).to eq('cerfa.pdf')
-            end
-          end
-
-          it 'dossier_id' do
-            expect(subject.dossier_id).to eq(dossier_id)
-          end
-
-          it { expect(subject.user).to eq user }
-        end
-
-        context 'les anciens CERFA PDF ne sont pas écrasées' do
-          let(:cerfas) { Cerfa.where(dossier_id: dossier_id) }
-
-          before do
-            post :update, params: { dossier_id: dossier_id, cerfa_pdf: cerfa_pdf }
-          end
-
-          it "il y a deux CERFA PDF pour ce dossier" do
-            expect(cerfas.size).to eq 2
-          end
-        end
-      end
-    end
-
-    context 'Quand la procédure n\'accepte pas les CERFA' do
-      context 'Sauvegarde du CERFA PDF' do
-        let!(:procedure) { create(:procedure) }
-        before do
-          post :update, params: { dossier_id: dossier_id, cerfa_pdf: cerfa_pdf }
-          dossier.reload
-        end
-
-        context 'un CERFA PDF est envoyé' do
-          it { expect(dossier.cerfa_available?).to be_falsey }
-        end
-      end
-    end
-
     describe 'Sauvegarde des champs' do
       let(:champs_dossier) { dossier.champs }
       let(:dossier_text_value) { 'test value' }
@@ -288,7 +233,7 @@ shared_examples 'description_controller_spec' do
         it { expect(response).to redirect_to users_dossier_recapitulatif_path }
 
         context 'when champs is mandatory' do
-          let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ_mandatory, :with_datetime, cerfa_flag: true) }
+          let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ_mandatory, :with_datetime) }
 
           it { expect(response).not_to redirect_to users_dossier_recapitulatif_path }
           it { expect(flash[:alert]).to be_present }

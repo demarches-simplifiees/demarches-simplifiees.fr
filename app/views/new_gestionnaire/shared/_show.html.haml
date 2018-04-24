@@ -20,7 +20,7 @@
     .card
       = render partial: "new_gestionnaire/dossiers/map", locals: { dossier: dossier }
 
-  - if dossier.procedure.cerfa_flag? || dossier.types_de_piece_justificative.any?
+  - if dossier.types_de_piece_justificative.any?
     .tab-title Pièces jointes
     .card
       = render partial: "new_gestionnaire/dossiers/pieces_jointes", locals: { dossier: dossier, demande_seen_at: demande_seen_at }

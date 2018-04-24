@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin, cerfa_flag: true) }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
   let(:wrong_procedure) { create(:procedure) }
 
   it { expect(described_class).to be < APIController }
@@ -330,34 +330,6 @@ describe API::V1::DossiersController do
           it { expect(subject.first[:body]).to eq 'plop' }
           it { expect(subject.first[:created_at]).to eq '2016-03-14T14:00:00.000Z' }
           it { expect(subject.first[:email]).to eq 'plop@plip.com' }
-        end
-
-        describe 'cerfa', vcr: { cassette_name: 'controllers_api_v1_dossiers_controller_cerfa' } do
-          let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :with_cerfa_upload, procedure: procedure) } }
-          let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
-
-          before do
-            tmp_cerfa = dossier.cerfa.first
-            tmp_cerfa.content = content
-            tmp_cerfa.user = dossier.user
-            tmp_cerfa.save
-          end
-
-          subject { super()[:cerfa].first }
-
-          it { expect(subject[:created_at]).not_to be_nil }
-          if Flipflop.remote_storage?
-            it { expect(subject[:content_url]).to match(/^https:\/\/storage.apientreprise.fr\/tps_dev\/cerfa-.*\.pdf$/) }
-          else
-            it { expect(subject[:content_url]).to match(/^http:\/\/.*downloads.*_CERFA\.pdf$/) }
-          end
-
-          describe 'user' do
-            let(:field_list) { [:url, :created_at, :type_de_piece_justificative_id] }
-            subject { super()[:user] }
-
-            it { expect(subject[:email]).not_to be_nil }
-          end
         end
 
         describe 'etablissement' do

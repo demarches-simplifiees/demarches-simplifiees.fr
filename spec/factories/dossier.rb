@@ -45,12 +45,6 @@ FactoryBot.define do
       end
     end
 
-    trait :with_cerfa_upload do
-      after(:build) do |dossier, _evaluator|
-        dossier.cerfa << create(:cerfa)
-      end
-    end
-
     trait :archived do
       archived true
     end
