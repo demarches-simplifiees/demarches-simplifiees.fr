@@ -10,6 +10,7 @@ class Procedure < ApplicationRecord
   has_one :attestation_template, dependent: :destroy
 
   belongs_to :administrateur
+  belongs_to :parent_procedure, class_name: 'Procedure'
 
   has_many :assign_to, dependent: :destroy
   has_many :administrateurs_procedures
@@ -128,6 +129,7 @@ class Procedure < ApplicationRecord
     procedure.without_continuation_mail = without_continuation_mail.try(:dup)
 
     procedure.cloned_from_library = from_library
+    procedure.parent_procedure = self
 
     procedure
   end
