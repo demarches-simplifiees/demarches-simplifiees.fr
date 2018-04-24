@@ -4,6 +4,26 @@ describe 'CellarAdapter' do
   before { Timecop.freeze(Time.gm(2016, 10, 2)) }
   after { Timecop.return }
 
+  describe 'add_range_header' do
+    let(:request) { Net::HTTP::Get.new('/whatever') }
+
+    before { session.send(:add_range_header, request, range) }
+
+    subject { request['range'] }
+
+    context 'with end included' do
+      let(:range) { 100..500 }
+
+      it { is_expected.to eq('bytes=100-500') }
+    end
+
+    context 'with end excluded' do
+      let(:range) { 10...50 }
+
+      it { is_expected.to eq('bytes=10-49') }
+    end
+  end
+
   describe 'parse_bucket_listing' do
     let(:response) do
       <<~EOS
