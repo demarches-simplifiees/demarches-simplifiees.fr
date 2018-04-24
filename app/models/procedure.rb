@@ -47,6 +47,20 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :organisation, presence: true, allow_blank: false, allow_nil: false
 
+  # Warning: dossier after_save build_default_champs must be removed
+  # to save a dossier created from this method
+  def new_dossier
+    champs = types_de_champ
+      .ordered
+      .map { |tdc| tdc.champ.build }
+
+    champs_private = types_de_champ_private
+      .ordered
+      .map { |tdc| tdc.champ.build }
+
+    Dossier.new(procedure: self, champs: champs, champs_private: champs_private)
+  end
+
   def hide!
     now = DateTime.now
     self.update(hidden_at: now)
