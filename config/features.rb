@@ -13,6 +13,6 @@ Flipflop.configure do
     feature :remote_storage,
       default: Rails.env.production? || Rails.env.staging?
     feature :weekly_overview,
-      default: Rails.env.production? || Rails.env.staging?
+      default: Rails.env.production?
   end
 end
