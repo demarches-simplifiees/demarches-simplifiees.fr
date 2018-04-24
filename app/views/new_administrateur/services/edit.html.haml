@@ -1,5 +1,11 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Procedures', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    link_to('choix du service', services_path(procedure_id: @procedure.id)),
+                    'modifier le service'] }
+
 .container
   %h1 Modifier le service
 
   = render partial: 'form',
-    locals: { service: @service, procedure_id: params[:procedure_id] }
+    locals: { service: @service, procedure_id: @procedure.id }
