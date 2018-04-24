@@ -636,4 +636,28 @@ describe Procedure do
       it { is_expected.to eq("dossiers_procedure-#{procedure.id}_2018-01-02_23-11") }
     end
   end
+
+  describe '#new_dossier' do
+    let(:procedure) do
+      procedure = create(:procedure)
+
+      create(:type_de_champ_text, procedure: procedure, order_place: 1)
+      create(:type_de_champ_number, procedure: procedure, order_place: 2)
+      create(:type_de_champ_textarea, :private, procedure: procedure)
+
+      procedure
+    end
+
+    let(:dossier) { procedure.new_dossier }
+
+    it { expect(dossier.procedure).to eq(procedure) }
+
+    it { expect(dossier.champs.size).to eq(2) }
+    it { expect(dossier.champs[0].type).to eq("Champs::TextChamp") }
+
+    it { expect(dossier.champs_private.size).to eq(1) }
+    it { expect(dossier.champs_private[0].type).to eq("Champs::TextareaChamp") }
+
+    it { expect(Champ.count).to eq(0) }
+  end
 end
