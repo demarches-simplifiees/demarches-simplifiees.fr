@@ -1,12 +1,12 @@
 module TypeDeChampHelper
-  def tdc_options(current_administrateur)
+  def tdc_options
     tdcs = TypeDeChamp.type_de_champs_list_fr
 
-    if !current_administrateur.feature_enabled?(:champ_pj_allowed)
+    if !Flipflop.champ_pj?
       tdcs.reject! { |tdc| tdc.last == "piece_justificative" }
     end
 
-    if !current_administrateur.feature_enabled?(:champ_siret_allowed)
+    if !Flipflop.champ_siret?
       tdcs.reject! { |tdc| tdc.last == "siret" }
     end
 

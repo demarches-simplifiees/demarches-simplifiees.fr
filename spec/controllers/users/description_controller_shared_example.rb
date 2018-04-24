@@ -200,7 +200,7 @@ shared_examples 'description_controller_spec' do
           subject { dossier.cerfa.first }
 
           it 'content' do
-            if Features.remote_storage
+            if Flipflop.remote_storage?
               expect(subject['content']).to eq('cerfa-3dbb3535-5388-4a37-bc2d-778327b9f999.pdf')
             else
               expect(subject['content']).to eq('cerfa.pdf')

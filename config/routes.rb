@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     post 'demandes/refuse_administrateur'
 
     authenticate :administration do
+      mount Flipflop::Engine => "/features"
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
 
@@ -271,6 +272,14 @@ Rails.application.routes.draw do
       end
     end
     get "recherche" => "recherche#index"
+  end
+
+  scope module: 'new_administrateur' do
+    resources :procedures, only: [] do
+      member do
+        get 'apercu'
+      end
+    end
   end
 
   apipie

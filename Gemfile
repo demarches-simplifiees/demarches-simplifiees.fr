@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.2.0.rc1'
+gem 'rails', '~> 5.2.0'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -97,6 +97,8 @@ gem 'scenic'
 
 gem 'sanitize-url'
 
+gem 'flipflop'
+
 # Cron jobs
 gem 'delayed_job_active_record'
 gem "daemons"
@@ -120,7 +122,6 @@ gem 'rack-mini-profiler'
 
 group :test do
   gem 'capybara'
-  gem "chromedriver-helper"
   gem 'launchy'
   gem 'factory_bot'
   gem 'database_cleaner'

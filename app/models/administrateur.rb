@@ -74,8 +74,20 @@ class Administrateur < ApplicationRecord
   end
 
   def feature_enabled?(feature)
-    ids = Features.send(:"#{feature}_for_admin_ids")
-    ids.present? ? id.in?(ids) : false
+    Flipflop.feature_set.feature(feature)
+    features[feature.to_s]
+  end
+
+  def disable_feature(feature)
+    Flipflop.feature_set.feature(feature)
+    features.delete(feature.to_s)
+    save
+  end
+
+  def enable_feature(feature)
+    Flipflop.feature_set.feature(feature)
+    features[feature.to_s] = true
+    save
   end
 
   private

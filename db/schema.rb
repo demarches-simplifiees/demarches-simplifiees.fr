@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_04_113409) do
+ActiveRecord::Schema.define(version: 2018_04_24_130548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2018_04_04_113409) do
     t.datetime "updated_at"
     t.string "api_token"
     t.boolean "active", default: false
+    t.jsonb "features", default: {}, null: false
     t.index ["email"], name: "index_administrateurs_on_email", unique: true
     t.index ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true
   end
@@ -313,6 +314,13 @@ ActiveRecord::Schema.define(version: 2018_04_04_113409) do
     t.datetime "updated_at"
   end
 
+  create_table "flipflop_features", force: :cascade do |t|
+    t.string "key", null: false
+    t.boolean "enabled", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "follows", id: :serial, force: :cascade do |t|
     t.integer "gestionnaire_id", null: false
     t.integer "dossier_id", null: false
@@ -454,7 +462,10 @@ ActiveRecord::Schema.define(version: 2018_04_04_113409) do
     t.datetime "whitelisted_at"
     t.boolean "ask_birthday", default: false, null: false
     t.string "web_hook_url"
+    t.boolean "cloned_from_library", default: false
+    t.bigint "parent_procedure_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
+    t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
   end
 
   create_table "quartier_prioritaires", id: :serial, force: :cascade do |t|
@@ -563,6 +574,7 @@ ActiveRecord::Schema.define(version: 2018_04_04_113409) do
   add_foreign_key "procedure_paths", "administrateurs"
   add_foreign_key "procedure_paths", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
+  add_foreign_key "procedures", "procedures", column: "parent_procedure_id"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "without_continuation_mails", "procedures"

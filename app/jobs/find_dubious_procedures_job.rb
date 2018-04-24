@@ -16,7 +16,7 @@ class FindDubiousProceduresJob < ApplicationJob
     # https://www.postgresql.org/docs/current/static/functions-matching.html#FUNCTIONS-POSIX-REGEXP
     forbidden_tdcs = TypeDeChamp
       .joins(:procedure)
-      .where("unaccent(types_de_champ.libelle) ~* unaccent('#{forbidden_regexp}')")
+      .where("unaccent(types_de_champ.libelle) ~* unaccent(?)", forbidden_regexp)
       .where(type_champ: %w(text textarea))
       .where(procedures: { archived_at: nil, whitelisted_at: nil })
 

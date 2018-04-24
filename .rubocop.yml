@@ -701,6 +701,9 @@ Rails/HasManyOrHasOneDependent:
 Rails/HttpPositionalArguments:
   Enabled: true
 
+Rails/HttpStatus:
+  Enabled: false
+
 Rails/InverseOf:
   Enabled: false
 
