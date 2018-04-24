@@ -6,6 +6,7 @@ module NewAdministrateur
     end
 
     def new
+      @procedure = procedure
     end
 
     def create
@@ -23,6 +24,7 @@ module NewAdministrateur
 
     def edit
       @service = service
+      @procedure = procedure
     end
 
     def update

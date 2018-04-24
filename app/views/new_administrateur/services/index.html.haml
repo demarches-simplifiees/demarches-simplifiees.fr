@@ -1,3 +1,8 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Procedures', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'choix du service'] }
+
 #services-index.container
   %h1 Choix du service pour la procédure
 
@@ -19,7 +24,7 @@
         %th
           nom
         %th.change
-          = link_to('Nouveau service', new_service_path(procedure_id: params[:procedure_id]), class: 'button')
+          = link_to('Nouveau service', new_service_path(procedure_id: @procedure.id), class: 'button')
 
     %tbody
       - @services.each do |service|
@@ -27,8 +32,8 @@
           %td
             = service.nom
           %td.change
-            = link_to('modifier', edit_service_path(service, procedure_id: params[:procedure_id]))
+            = link_to('modifier', edit_service_path(service, procedure_id: @procedure.id))
             = link_to 'supprimer',
-              service_path(service, procedure_id: params[:procedure_id]),
+              service_path(service, procedure_id: @procedure.id),
               method: :delete,
               data: { confirm: "Confirmez vous la suppression de #{service.nom}" }
