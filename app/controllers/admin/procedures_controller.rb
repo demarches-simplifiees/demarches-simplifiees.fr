@@ -160,7 +160,7 @@ class Admin::ProceduresController < AdminController
       render '/admin/procedures/transfer', formats: 'js', status: 404
     else
       procedure = current_administrateur.procedures.find(params[:procedure_id])
-      clone_procedure = procedure.clone(admin)
+      clone_procedure = procedure.clone(admin, false)
 
       clone_procedure.save
 
@@ -184,13 +184,13 @@ class Admin::ProceduresController < AdminController
 
   def clone
     procedure = Procedure.find(params[:procedure_id])
-    new_procedure = procedure.clone(current_administrateur)
+    new_procedure = procedure.clone(current_administrateur, cloned_from_library?)
 
     if new_procedure.save
       flash.notice = 'Procédure clonée'
       redirect_to edit_admin_procedure_path(id: new_procedure.id)
     else
-      if params[:from_new_from_existing].present?
+      if cloned_from_library?
         flash.alert = new_procedure.errors.full_messages
         redirect_to new_from_existing_admin_procedures_path
       else
@@ -248,6 +248,10 @@ class Admin::ProceduresController < AdminController
   end
 
   private
+
+  def cloned_from_library?
+    params[:from_new_from_existing].present?
+  end
 
   def procedure_params
     editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on]
