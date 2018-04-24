@@ -272,12 +272,13 @@ describe Procedure do
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
     let(:received_mail){ create(:received_mail) }
+    let(:from_library) { false }
 
     before do
       @logo = File.open('spec/fixtures/white.png')
       @signature = File.open('spec/fixtures/black.png')
       @attestation_template = create(:attestation_template, procedure: procedure, logo: @logo, signature: @signature)
-      @procedure = procedure.clone(procedure.administrateur)
+      @procedure = procedure.clone(procedure.administrateur, from_library)
       @procedure.save
     end
 
@@ -288,9 +289,10 @@ describe Procedure do
 
     subject { @procedure }
 
+    it { expect(subject.parent_procedure).to eq(procedure) }
+
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
-      expect(subject).to have_same_attributes_as(procedure)
       expect(subject.module_api_carto).to have_same_attributes_as(procedure.module_api_carto)
 
       expect(subject.types_de_piece_justificative.size).to eq procedure.types_de_piece_justificative.size
@@ -312,6 +314,18 @@ describe Procedure do
       end
 
       expect(subject.attestation_template.title).to eq(procedure.attestation_template.title)
+
+      expect(subject.cloned_from_library).to be(false)
+
+      cloned_procedure = subject
+      cloned_procedure.parent_procedure_id = nil
+      expect(cloned_procedure).to have_same_attributes_as(procedure)
+    end
+
+    context 'when the procedure is clone from the library' do
+      let(:from_library) { true }
+
+      it { expect(subject.cloned_from_library).to be(true) }
     end
 
     it 'should duplicate existing mail_templates' do

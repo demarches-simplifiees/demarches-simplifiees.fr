@@ -103,3 +103,12 @@
         = column_chart @motivation_usage_procedure, ytitle: 'procedures avec motivation / total procedures', xtitle: 'semaines'
 
       .clearfix
+
+    %h2.new-h2 Utilisation de la bibliothèque
+
+    .stat-cards
+      .stat-card.stat-card-half.pull-left
+        %span.stat-card-title Taux d'utilisation de la bibliothèque
+        = column_chart @cloned_from_library_procedures_ratio, ytitle: 'procédures clonées / total procédure', xtitle: 'semaines'
+
+      .clearfix

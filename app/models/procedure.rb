@@ -10,6 +10,7 @@ class Procedure < ApplicationRecord
   has_one :attestation_template, dependent: :destroy
 
   belongs_to :administrateur
+  belongs_to :parent_procedure, class_name: 'Procedure'
 
   has_many :assign_to, dependent: :destroy
   has_many :administrateurs_procedures
@@ -39,6 +40,8 @@ class Procedure < ApplicationRecord
   scope :archivees,             -> { where.not(archived_at: nil) }
   scope :publiees_ou_archivees, -> { where.not(published_at: nil) }
   scope :by_libelle,            -> { order(libelle: :asc) }
+  scope :created_during,        -> (range) { where(created_at: range) }
+  scope :cloned_from_library,   -> { where(cloned_from_library: true) }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
@@ -104,7 +107,7 @@ class Procedure < ApplicationRecord
     publiee_ou_archivee?
   end
 
-  def clone(admin)
+  def clone(admin, from_library)
     procedure = self.deep_clone(include:
       {
         types_de_piece_justificative: nil,
@@ -124,6 +127,9 @@ class Procedure < ApplicationRecord
     procedure.closed_mail = closed_mail.try(:dup)
     procedure.refused_mail = refused_mail.try(:dup)
     procedure.without_continuation_mail = without_continuation_mail.try(:dup)
+
+    procedure.cloned_from_library = from_library
+    procedure.parent_procedure = self
 
     procedure
   end
