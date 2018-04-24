@@ -9,7 +9,7 @@ class ApiEntreprise::EntrepriseAdapter < ApiEntreprise::Adapter
   def process_params
     params = data_source[:entreprise].slice(*attr_to_fetch)
     params[:date_creation] = Time.at(params[:date_creation]).to_datetime
-    params
+    params.transform_keys { |k| "entreprise_#{k}" }
   end
 
   def attr_to_fetch
