@@ -28,6 +28,7 @@ class TypeDeChamp < ApplicationRecord
 
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
+  scope :ordered, -> { order(order_place: :asc) }
 
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
     def build(params = {})

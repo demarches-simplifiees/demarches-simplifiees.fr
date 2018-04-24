@@ -11,7 +11,7 @@ class Cerfa < ApplicationRecord
 
   def content_url
     if content.url.present?
-      if Features.remote_storage
+      if Flipflop.remote_storage?
         (RemoteDownloader.new content.filename).url
       else
         (LocalDownloader.new content.path, 'CERFA').url

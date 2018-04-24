@@ -1,5 +1,3 @@
-require_relative 'features'
-
 if Rails.env.test?
   Fog.credentials_path = Rails.root.join('config', 'fog_credentials.test.yml')
 else
@@ -12,7 +10,7 @@ CarrierWave.configure do |config|
   config.permissions = 0664
   config.directory_permissions = 0775
 
-  if Features.remote_storage and not Rails.env.test?
+  if Rails.env.production? || Rails.env.staging?
     config.fog_credentials = { provider: 'OpenStack' }
   end
 
