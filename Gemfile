@@ -97,7 +97,7 @@ gem 'scenic'
 
 gem 'sanitize-url'
 
-gem 'flipflop'
+gem 'flipflop', github: 'voormedia/flipflop'
 
 # Cron jobs
 gem 'delayed_job_active_record'
