@@ -1,0 +1,7 @@
+%table
+  - Flipflop.feature_set.features.each do |feature|
+    - if !feature.group || feature.group.key != :production
+      %tr
+        %td= feature.title
+        %td
+          = check_box_tag "Enabled", "enabled", field.data[feature.name], disabled: true
