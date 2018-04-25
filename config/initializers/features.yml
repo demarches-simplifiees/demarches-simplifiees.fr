@@ -1,8 +1,0 @@
-remote_storage: false
-weekly_overview: false
-champ_pj_allowed_for_admin_ids:
-  - 0
-champ_siret_allowed_for_admin_ids:
-  - 0
-web_hook_allowed_for_admin_ids:
-  - 0
