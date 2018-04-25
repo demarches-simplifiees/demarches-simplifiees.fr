@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/voormedia/flipflop.git
+  revision: a6e639c6c631cdb5e74cb84a1a2a314ca3420579
+  specs:
+    flipflop (2.3.1)
+      activesupport (>= 4.0)
+
+GIT
   remote: https://github.com/breckenedge/delayed_job_web.git
   revision: 6bcb10e61ea2b9a44ffa16be8536dff46ad51449
   branch: cve_2017_12097
@@ -203,8 +210,6 @@ GEM
     ffi (1.9.23)
     fission (0.5.0)
       CFPropertyList (~> 2.2)
-    flipflop (2.3.1)
-      activesupport (>= 4.0)
     fog (1.42.0)
       fog-aliyun (>= 0.1.0)
       fog-atmos
@@ -805,7 +810,7 @@ DEPENDENCIES
   dotenv-rails
   draper
   factory_bot
-  flipflop
+  flipflop!
   fog
   fog-openstack
   font-awesome-rails
