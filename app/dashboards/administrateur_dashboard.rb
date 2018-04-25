@@ -15,6 +15,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     procedures: Field::HasMany.with_options(limit: 20),
     registration_state: Field::String.with_options(searchable: false),
     current_sign_in_at: Field::DateTime,
+    features: FeaturesField
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -38,6 +39,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :updated_at,
     :registration_state,
     :current_sign_in_at,
+    :features,
     :procedures,
   ].freeze
 
