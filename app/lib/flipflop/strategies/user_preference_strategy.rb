@@ -35,8 +35,8 @@ module Flipflop::Strategies
     end
 
     def find_current_administrateur
-      if request.session["warden.user.user.key"]
-        administrateur_id = request.session["warden.user.user.key"][0][0]
+      if request.session["warden.user.administrateur.key"]
+        administrateur_id = request.session["warden.user.administrateur.key"][0][0]
         Administrateur.find_by(id: administrateur_id)
       end
     end
