@@ -173,11 +173,11 @@ describe Dossier do
     it { expect(subject[:state]).to be_a(String) }
   end
 
-  describe '#export_entreprise_data' do
+  describe '#export_etablissement_data' do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
 
-    subject { dossier.export_entreprise_data }
+    subject { dossier.export_etablissement_data }
 
     it { expect(subject[:etablissement_siret]).to eq('44011762001530') }
     it { expect(subject[:etablissement_siege_social]).to eq('true') }
@@ -228,7 +228,7 @@ describe Dossier do
         expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
           dossier.procedure.types_de_champ.count +
           dossier.procedure.types_de_champ_private.count +
-          dossier.export_entreprise_data.count)
+          dossier.export_etablissement_data.count)
       end
     end
 
@@ -255,7 +255,7 @@ describe Dossier do
         expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
           dossier.procedure.types_de_champ.count +
           dossier.procedure.types_de_champ_private.count +
-          dossier.export_entreprise_data.count)
+          dossier.export_etablissement_data.count)
       end
 
       context 'dossier for individual' do
