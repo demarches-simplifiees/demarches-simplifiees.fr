@@ -319,7 +319,7 @@ describe Dossier do
 
       subject { dossier }
 
-      it { expect(dossier.full_data_strings_array).to eq(expected_string) }
+      it { expect(dossier.export_values).to eq(expected_string) }
     end
   end
 
