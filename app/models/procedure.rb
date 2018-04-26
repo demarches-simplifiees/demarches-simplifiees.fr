@@ -135,6 +135,16 @@ class Procedure < ApplicationRecord
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
 
+    if notice.attached?
+      response = Typhoeus.get(notice.service_url, timeout: 5)
+      if response.success?
+        procedure.notice.attach(
+          io: StringIO.new(response.body),
+          filename: notice.filename
+        )
+      end
+    end
+
     procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail.try(:dup)
     procedure.received_mail = received_mail.try(:dup)
