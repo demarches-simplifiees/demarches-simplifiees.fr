@@ -145,7 +145,7 @@ class Dossier < ApplicationRecord
   end
 
   def export_etablissement_data
-    if entreprise.present?
+    if etablissement.present?
       etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
       entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
     else
