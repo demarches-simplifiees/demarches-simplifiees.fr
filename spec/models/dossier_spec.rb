@@ -158,7 +158,7 @@ describe Dossier do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
     let(:dossier_serialized_attributes) { DossierSerializer.new(dossier).attributes }
 
-    subject { dossier.convert_specific_hash_values_to_string(dossier_serialized_attributes) }
+    subject { dossier.send(:convert_specific_hash_values_to_string, dossier_serialized_attributes) }
 
     it { expect(dossier_serialized_attributes[:id]).to be_an(Integer) }
     it { expect(dossier_serialized_attributes[:created_at]).to be_a(Time) }
@@ -177,7 +177,7 @@ describe Dossier do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure) }
 
-    subject { dossier.export_etablissement_data }
+    subject { dossier.send(:export_etablissement_data) }
 
     it { expect(subject[:etablissement_siret]).to eq('44011762001530') }
     it { expect(subject[:etablissement_siege_social]).to eq('true') }
@@ -228,12 +228,12 @@ describe Dossier do
         expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
           dossier.procedure.types_de_champ.count +
           dossier.procedure.types_de_champ_private.count +
-          dossier.export_etablissement_data.count)
+          dossier.send(:export_etablissement_data).count)
       end
     end
 
     describe '#to_sorted_values' do
-      subject { dossier.to_sorted_values }
+      subject { dossier.send(:to_sorted_values) }
 
       it { expect(subject[0]).to be_a_kind_of(Integer) }
       it { expect(subject[1]).to be_a_kind_of(Time) }
@@ -255,13 +255,13 @@ describe Dossier do
         expect(subject.count).to eq(DossierTableExportSerializer.new(dossier).attributes.count +
           dossier.procedure.types_de_champ.count +
           dossier.procedure.types_de_champ_private.count +
-          dossier.export_etablissement_data.count)
+          dossier.send(:export_etablissement_data).count)
       end
 
       context 'dossier for individual' do
         let(:dossier_with_individual) { create(:dossier, :for_individual, user: user, procedure: procedure) }
 
-        subject { dossier_with_individual.to_sorted_values }
+        subject { dossier_with_individual.send(:to_sorted_values) }
 
         it { expect(subject[11]).to eq(dossier_with_individual.individual.gender) }
         it { expect(subject[12]).to eq(dossier_with_individual.individual.prenom) }

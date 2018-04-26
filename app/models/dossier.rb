@@ -132,32 +132,6 @@ class Dossier < ApplicationRecord
     procedure.cerfa_flag? && cerfa.size != 0
   end
 
-  def convert_specific_hash_values_to_string(hash_to_convert)
-    hash_to_convert.transform_values do |value|
-      serialize_value_for_export(value)
-    end
-  end
-
-  def export_etablissement_data
-    if etablissement.present?
-      etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
-      entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
-    else
-      etablissement_attr = EtablissementSerializer.new(Etablissement.new).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
-      entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
-    end
-    convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
-  end
-
-  def to_sorted_values
-    serialized_dossier = DossierTableExportSerializer.new(self)
-    values = serialized_dossier.attributes.values
-    values += ordered_champs.map(&:for_export)
-    values += ordered_champs_private.map(&:for_export)
-    values += export_etablissement_data.values
-    values
-  end
-
   def export_headers
     serialized_dossier = DossierTableExportSerializer.new(self)
     headers = serialized_dossier.attributes.keys
@@ -314,6 +288,32 @@ class Dossier < ApplicationRecord
 
   def serialize_value_for_export(value)
     value.nil? || value.kind_of?(Time) ? value : value.to_s
+  end
+
+  def convert_specific_hash_values_to_string(hash_to_convert)
+    hash_to_convert.transform_values do |value|
+      serialize_value_for_export(value)
+    end
+  end
+
+  def export_etablissement_data
+    if etablissement.present?
+      etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
+      entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
+    else
+      etablissement_attr = EtablissementSerializer.new(Etablissement.new).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
+      entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
+    end
+    convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
+  end
+
+  def to_sorted_values
+    serialized_dossier = DossierTableExportSerializer.new(self)
+    values = serialized_dossier.attributes.values
+    values += ordered_champs.map(&:for_export)
+    values += ordered_champs_private.map(&:for_export)
+    values += export_etablissement_data.values
+    values
   end
 
   def send_dossier_received
