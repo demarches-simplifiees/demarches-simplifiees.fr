@@ -82,4 +82,57 @@ describe ApplicationController, type: :controller do
       end
     end
   end
+
+  describe 'reject before action' do
+    let(:path_info) { '/one_path' }
+
+    before do
+      allow(@controller).to receive(:redirect_to)
+      allow(@controller).to receive(:sign_out)
+      allow(@controller).to receive(:render)
+      @request.path_info = path_info
+    end
+
+    context 'when no administration is logged in' do
+      before { @controller.send(:reject) }
+
+      it { expect(@controller).to have_received(:sign_out).with(:user) }
+      it { expect(@controller).to have_received(:sign_out).with(:gestionnaire) }
+      it { expect(@controller).to have_received(:sign_out).with(:administrateur) }
+      it { expect(flash[:alert]).to eq(ApplicationController::MAINTENANCE_MESSAGE) }
+      it { expect(@controller).to have_received(:redirect_to).with(root_path) }
+
+      context 'when the path is safe' do
+        %w(/ /manager /administrations).each do |path|
+          let(:path_info) { path }
+
+          it { expect(@controller).not_to have_received(:sign_out) }
+          it { expect(@controller).not_to have_received(:redirect_to) }
+          it { expect(flash.alert).to eq(ApplicationController::MAINTENANCE_MESSAGE) }
+        end
+      end
+
+      context 'when the path is api related' do
+        let(:path_info) { '/api/some-stuff' }
+        let(:json_error) { { error: ApplicationController::MAINTENANCE_MESSAGE }.to_json }
+        it { expect(@controller).not_to have_received(:sign_out) }
+        it { expect(@controller).not_to have_received(:redirect_to) }
+        it { expect(flash.alert).to be_nil }
+        it { expect(@controller).to have_received(:render).with({ json: json_error, status: :service_unavailable }) }
+      end
+    end
+
+    context 'when a administration is logged in' do
+      let(:current_administration) { create(:administration) }
+
+      before do
+        sign_in(current_administration)
+        @controller.send(:reject)
+      end
+
+      it { expect(@controller).not_to have_received(:sign_out) }
+      it { expect(@controller).not_to have_received(:redirect_to) }
+      it { expect(flash[:alert]).to eq(ApplicationController::MAINTENANCE_MESSAGE) }
+    end
+  end
 end
