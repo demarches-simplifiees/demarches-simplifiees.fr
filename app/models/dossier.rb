@@ -142,7 +142,7 @@ class Dossier < ApplicationRecord
   end
 
   def export_values
-    to_sorted_values.map do |value|
+    sorted_values.map do |value|
       serialize_value_for_export(value)
     end
   end
@@ -307,7 +307,7 @@ class Dossier < ApplicationRecord
     convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
   end
 
-  def to_sorted_values
+  def sorted_values
     serialized_dossier = DossierTableExportSerializer.new(self)
     values = serialized_dossier.attributes.values
     values += ordered_champs.map(&:for_export)
