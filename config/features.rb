@@ -21,4 +21,6 @@ Flipflop.configure do
     feature :weekly_overview,
       default: Rails.env.production?
   end
+
+  feature :maintenance_mode
 end
