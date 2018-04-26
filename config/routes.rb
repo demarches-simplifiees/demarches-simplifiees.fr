@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
     resources :administrateurs, only: [:index, :show, :new, :create] do
       post 'reinvite', on: :member
+      put 'enable_feature', on: :member
     end
 
     resources :demandes, only: [:index]

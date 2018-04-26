@@ -19,6 +19,20 @@ module Manager
       redirect_to manager_administrateur_path(params[:id])
     end
 
+    def enable_feature
+      administrateur = Administrateur.find(params[:id])
+
+      params[:features].each do |key, enable|
+        if enable
+          administrateur.enable_feature(key.to_sym)
+        else
+          administrateur.disable_feature(key.to_sym)
+        end
+      end
+
+      head :ok
+    end
+
     private
 
     def create_administrateur_params
