@@ -232,8 +232,8 @@ describe Dossier do
       end
     end
 
-    describe '#to_sorted_values' do
-      subject { dossier.send(:to_sorted_values) }
+    describe '#sorted_values' do
+      subject { dossier.send(:sorted_values) }
 
       it { expect(subject[0]).to be_a_kind_of(Integer) }
       it { expect(subject[1]).to be_a_kind_of(Time) }
@@ -261,7 +261,7 @@ describe Dossier do
       context 'dossier for individual' do
         let(:dossier_with_individual) { create(:dossier, :for_individual, user: user, procedure: procedure) }
 
-        subject { dossier_with_individual.send(:to_sorted_values) }
+        subject { dossier_with_individual.send(:sorted_values) }
 
         it { expect(subject[11]).to eq(dossier_with_individual.individual.gender) }
         it { expect(subject[12]).to eq(dossier_with_individual.individual.prenom) }
