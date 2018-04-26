@@ -1,10 +1,13 @@
 class ApplicationController < ActionController::Base
+  MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :load_navbar_left_pannel_partial_url
   before_action :set_raven_context
   before_action :authorize_request_for_profiler
+  before_action :reject, if: -> { Flipflop.maintenance_mode? }
 
   before_action :staging_authenticate
 
@@ -134,5 +137,24 @@ class ApplicationController < ActionController::Base
         ]
     )
     # END OF FIXME
+  end
+
+  def reject
+    authorized_request =
+      request.path_info == '/' ||
+      request.path_info.start_with?('/manager') ||
+      request.path_info.start_with?('/administrations')
+
+    api_request = request.path_info.start_with?('/api/')
+
+    if administration_signed_in? || authorized_request
+      flash.now.alert = MAINTENANCE_MESSAGE
+    elsif api_request
+      render json: { error: MAINTENANCE_MESSAGE }.to_json, status: :service_unavailable
+    else
+      %i(user gestionnaire administrateur).each { |role| sign_out(role) }
+      flash[:alert] = MAINTENANCE_MESSAGE
+      redirect_to root_path
+    end
   end
 end
