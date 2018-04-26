@@ -144,7 +144,7 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def export_entreprise_data
+  def export_etablissement_data
     if entreprise.present?
       etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
       entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
@@ -160,7 +160,7 @@ class Dossier < ApplicationRecord
     values = serialized_dossier.attributes.values
     values += self.ordered_champs.map(&:for_export)
     values += self.ordered_champs_private.map(&:for_export)
-    values += self.export_entreprise_data.values
+    values += self.export_etablissement_data.values
     values
   end
 
@@ -169,7 +169,7 @@ class Dossier < ApplicationRecord
     headers = serialized_dossier.attributes.keys
     headers += self.procedure.types_de_champ.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
     headers += self.procedure.types_de_champ_private.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
-    headers += self.export_entreprise_data.keys
+    headers += self.export_etablissement_data.keys
     headers
   end
 
