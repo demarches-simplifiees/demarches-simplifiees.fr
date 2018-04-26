@@ -41,28 +41,38 @@ class Users::DossiersController < UsersController
       array: true
   end
 
-  def commencer
-    if params[:procedure_path].present?
-      procedure_path = ProcedurePath.where(path: params[:procedure_path]).last
+  def commencer_test
+    procedure = find_procedure_for_path(true, params[:procedure_path])
 
-      if procedure_path.nil? || procedure_path.procedure.nil?
-        flash.alert = "Procédure inconnue"
-        return redirect_to root_path
+    if procedure.present?
+      if procedure.archivee?
+        @dossier = Dossier.new(procedure: procedure)
+  
+        render 'commencer/archived'
       else
-        procedure = procedure_path.procedure
+        redirect_to new_users_dossier_path(procedure_id: procedure.id)
       end
+    else
+      flash.alert = "Procédure inconnue"
+      redirect_to root_path
     end
+  end
 
-    if procedure.archivee?
+  def commencer
+    procedure = find_procedure_for_path(false, params[:procedure_path])
 
-      @dossier = Dossier.new(procedure: procedure)
-
-      return render 'commencer/archived'
+    if procedure.present?
+      if procedure.archivee?
+        @dossier = Dossier.new(procedure: procedure)
+  
+        render 'commencer/archived'
+      else
+        redirect_to new_users_dossier_path(procedure_id: procedure.id)
+      end
+    else
+      flash.alert = "Procédure inconnue"
+      redirect_to root_path
     end
-
-    redirect_to new_users_dossier_path(procedure_id: procedure.id)
-  rescue ActiveRecord::RecordNotFound
-    error_procedure
   end
 
   def new
@@ -187,6 +197,20 @@ class Users::DossiersController < UsersController
   end
 
   private
+
+  def find_procedure_for_path(test, path)
+    if path.present?
+      procedures = Procedure.includes(:procedure_paths).where(procedure_path: {
+        path: path
+      })
+
+      if test
+        procedures.en_test.last
+      else
+        procedures.publiees_ou_archivees.last
+      end
+    end
+  end
 
   def check_siret
     errors_valid_siret if !Siret.new(siret: siret).valid?

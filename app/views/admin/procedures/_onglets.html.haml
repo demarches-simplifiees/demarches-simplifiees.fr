@@ -5,6 +5,11 @@
         %h5.text-primary
           Brouillons
 
+    %li{ class: @testing_class }
+      %a{ :href => "#{url_for :admin_procedures_testing}" }
+        %h5.text-primary
+          En test
+
     %li{ class: @active_class }
       %a{ :href => "#{url_for :admin_procedures}" }
         %h5.text-success

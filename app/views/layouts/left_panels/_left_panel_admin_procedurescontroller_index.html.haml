@@ -15,6 +15,12 @@
         .badge.progress-bar-default
           = current_administrateur.procedures.brouillons.count
 
+    %a#draft-procedures{ :href => "#{url_for :admin_procedures_testing}" }
+      .procedure-list-element{ class: @testing_class }
+        En test
+        .badge.progress-bar-default
+          = current_administrateur.procedures.en_test.count
+
     %a#active-procedures{ :href => "#{url_for :admin_procedures}" }
       .procedure-list-element{ class: @active_class }
         Actives

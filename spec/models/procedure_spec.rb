@@ -357,13 +357,31 @@ describe Procedure do
     end
   end
 
-  describe '#publish!' do
+  describe '#publish_test!' do
     let(:procedure) { create(:procedure) }
     let(:now) { Time.now.beginning_of_minute }
 
     before do
       Timecop.freeze(now)
-      procedure.publish!("example-path")
+      procedure.publish_test!("example-path")
+    end
+    after { Timecop.return }
+
+    it { expect(procedure.archived_at).to eq(nil) }
+    it { expect(procedure.test_started_at).to eq(now) }
+    it { expect(ProcedurePath.find_by(path: "example-path")).to be }
+    it { expect(ProcedurePath.find_by(path: "example-path").procedure).to eq(procedure) }
+    it { expect(ProcedurePath.find_by(path: "example-path").administrateur).to eq(procedure.administrateur) }
+  end
+
+  describe '#publish!' do
+    let(:procedure) { create(:procedure) }
+    let(:now) { Time.now.beginning_of_minute }
+
+    before do
+      procedure.publish_test!("example-path")
+      Timecop.freeze(now)
+      procedure.publish!
     end
     after { Timecop.return }
 
