@@ -138,12 +138,6 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def full_data_strings_array
-    to_sorted_values.map do |value|
-      serialize_value_for_export(value)
-    end
-  end
-
   def export_etablissement_data
     if etablissement.present?
       etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
@@ -171,6 +165,12 @@ class Dossier < ApplicationRecord
     headers += self.procedure.types_de_champ_private.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
     headers += self.export_etablissement_data.keys
     headers
+  end
+
+  def export_values
+    to_sorted_values.map do |value|
+      serialize_value_for_export(value)
+    end
   end
 
   def followers_gestionnaires

@@ -190,7 +190,7 @@ class Procedure < ApplicationRecord
     exportable_dossiers = dossiers.downloadable_sorted
 
     headers = exportable_dossiers&.first&.export_headers || []
-    data = exportable_dossiers.any? ? exportable_dossiers.map { |d| d.full_data_strings_array } : [[]]
+    data = exportable_dossiers.any? ? exportable_dossiers.map(&:export_values) : [[]]
 
     {
       headers: headers,
