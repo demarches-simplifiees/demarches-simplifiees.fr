@@ -115,6 +115,11 @@ Rails.application.routes.draw do
     resource :dossiers
   end
 
+  namespace :gestionnaire do
+    get 'activate' => '/gestionnaires/activate#new'
+    patch 'activate' => '/gestionnaires/activate#create'
+  end
+
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'

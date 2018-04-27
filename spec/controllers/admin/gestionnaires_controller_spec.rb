@@ -149,8 +149,7 @@ describe Admin::GestionnairesController, type: :controller do
 
     context 'Email notification' do
       it 'Notification email is sent when accompagnateur is create' do
-        expect(GestionnaireMailer).to receive(:new_gestionnaire).and_return(GestionnaireMailer)
-        expect(GestionnaireMailer).to receive(:deliver_now!)
+        expect_any_instance_of(Gestionnaire).to receive(:invite!)
         subject
       end
     end
