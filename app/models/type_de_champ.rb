@@ -82,6 +82,10 @@ class TypeDeChamp < ApplicationRecord
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
   end
 
+  def libelle_for_export
+    libelle.parameterize.underscore.to_sym
+  end
+
   private
 
   def remove_piece_justificative_template

@@ -4,7 +4,7 @@ class Champ < ApplicationRecord
   has_many :commentaires
   has_one_attached :piece_justificative_file
 
-  delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, to: :type_de_champ
+  delegate :libelle, :libelle_for_export, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, to: :type_de_champ
 
   before_save :format_date_to_iso, if: Proc.new { type_champ == 'date' }
   before_save :format_datetime, if: Proc.new { type_champ == 'datetime' }

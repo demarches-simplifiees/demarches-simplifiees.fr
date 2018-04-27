@@ -135,8 +135,8 @@ class Dossier < ApplicationRecord
   def export_headers
     serialized_dossier = DossierTableExportSerializer.new(self)
     headers = serialized_dossier.attributes.keys
-    headers += procedure.types_de_champ.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
-    headers += procedure.types_de_champ_private.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
+    headers += ordered_champs.map(&:libelle_for_export)
+    headers += ordered_champs_private.map(&:libelle_for_export)
     headers += export_etablissement_data.keys
     headers
   end
