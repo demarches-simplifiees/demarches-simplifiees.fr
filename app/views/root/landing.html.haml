@@ -38,6 +38,20 @@
 
   .landing-panel
     .container
+      .role-panel-wrapper
+        .role-panel-30.role-usagers-image
+          %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: "" }
+
+        .role-panel-70
+          %h1.role-panel-title Usagers
+          %p.role-panel-explanation Déposez des demandes en toute simplicité et retrouvez vos dossiers en ligne
+
+          = link_to "Se connecter",
+            new_user_session_path,
+            class: "role-panel-button-primary"
+
+  .landing-panel.admins-panel
+    .container
       .role-panel-wrapper.role-administrations-panel
         .role-panel-30.role-administrations-image
           %img.role-image{ :src => image_url("landing/roles/administrations.svg"), alt: "" }
@@ -58,20 +72,6 @@
             target: "_blank",
             rel: "noopener noreferrer",
             class: "role-panel-button-secondary"
-
-  .landing-panel.admins-panel
-    .container
-      .role-panel-wrapper
-        .role-panel-30.role-usagers-image
-          %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: "" }
-
-        .role-panel-70
-          %h1.role-panel-title Usagers
-          %p.role-panel-explanation Déposez des demandes en toute simplicité et retrouvez vos dossiers en ligne
-
-          = link_to "Se connecter",
-            new_user_session_path,
-            class: "role-panel-button-primary"
 
   .landing-panel
     .container
