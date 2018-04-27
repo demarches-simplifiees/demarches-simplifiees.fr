@@ -290,21 +290,17 @@ class Dossier < ApplicationRecord
     value.nil? || value.kind_of?(Time) ? value : value.to_s
   end
 
-  def convert_specific_hash_values_to_string(hash_to_convert)
-    hash_to_convert.transform_values do |value|
-      serialize_value_for_export(value)
-    end
-  end
-
   def export_etablissement_data
     if etablissement.present?
       etablissement_attr = EtablissementCsvSerializer.new(self.etablissement).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
       entreprise_attr = EntrepriseSerializer.new(self.entreprise).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
+
+      etablissement_attr.merge(entreprise_attr).transform_values do |value|
+        serialize_value_for_export(value)
+      end
     else
-      etablissement_attr = EtablissementSerializer.new(Etablissement.new).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
-      entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
+      {}
     end
-    convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
   end
 
   def sorted_values

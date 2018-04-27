@@ -488,14 +488,21 @@ describe Procedure do
           dossier2.champs_private.find_by(type_de_champ: tcp_2).update(value: "private value 2")
         end
 
-        it { expect(subject[:headers].index(tc_1.libelle.parameterize.underscore.to_sym)).to be < subject[:headers].index(tc_2.libelle.parameterize.underscore.to_sym) }
-        it { expect(subject[:headers].index(tcp_1.libelle.parameterize.underscore.to_sym)).to be < subject[:headers].index(tcp_2.libelle.parameterize.underscore.to_sym) }
+        it do
+          expect(subject[:headers].last(4)).to eq([
+            tc_1.libelle_for_export,
+            tc_2.libelle_for_export,
+            tcp_1.libelle_for_export,
+            tcp_2.libelle_for_export
+          ])
+        end
 
-        it { expect(subject[:data][0].index("value 1")).to be < subject[:data].first.index("value 2") }
-        it { expect(subject[:data][0].index("private value 1")).to be < subject[:data].first.index("private value 2") }
-
-        it { expect(subject[:data][1].index("value 1")).to be < subject[:data].first.index("value 2") }
-        it { expect(subject[:data][1].index("private value 1")).to be < subject[:data].first.index("private value 2") }
+        it do
+          expect(subject[:data].map { |d| d.last(4) }).to eq([
+            ["value 1", "value 2", "private value 1", "private value 2"],
+            ["value 1", "value 2", "private value 1", "private value 2"]
+          ])
+        end
       end
     end
 
