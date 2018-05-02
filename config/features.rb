@@ -22,5 +22,6 @@ Flipflop.configure do
       default: Rails.env.production?
   end
 
+  feature :pre_maintenance_mode
   feature :maintenance_mode
 end
