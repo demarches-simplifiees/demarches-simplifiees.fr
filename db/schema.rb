@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_24_130548) do
+ActiveRecord::Schema.define(version: 2018_05_02_092852) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -574,7 +574,6 @@ ActiveRecord::Schema.define(version: 2018_04_24_130548) do
   add_foreign_key "procedure_paths", "administrateurs"
   add_foreign_key "procedure_paths", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
-  add_foreign_key "procedures", "procedures", column: "parent_procedure_id"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "without_continuation_mails", "procedures"

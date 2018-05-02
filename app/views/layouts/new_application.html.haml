@@ -21,6 +21,7 @@
     .page-wrapper
       = render partial: "layouts/support_navigator_banner"
       = render partial: "layouts/ie_lt_10"
+      = render partial: 'layouts/pre_maintenance'
       - if Rails.env == "staging"
         #beta
           Env Test
