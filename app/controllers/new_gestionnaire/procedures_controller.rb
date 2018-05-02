@@ -237,9 +237,10 @@ module NewGestionnaire
 
         when 'user', 'etablissement', 'entreprise'
           if filter['column'] == 'date_creation'
+            date = filter['value'].to_date rescue nil
             dossiers
               .includes(filter['table'])
-              .where("#{filter['table'].pluralize}.#{filter['column']} = ?", filter['value'].to_date)
+              .where("#{filter['table'].pluralize}.#{filter['column']} = ?", date)
           else
             dossiers
               .includes(filter['table'])

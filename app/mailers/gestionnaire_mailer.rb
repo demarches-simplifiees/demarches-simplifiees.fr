@@ -1,8 +1,12 @@
 class GestionnaireMailer < ApplicationMailer
   layout 'mailers/layout'
 
-  def new_gestionnaire(email, password)
-    send_mail(email, password, "Vous avez été nommé accompagnateur sur demarches-simplifiees.fr")
+  def invite_gestionnaire(gestionnaire, reset_password_token)
+    @reset_password_token = reset_password_token
+    @gestionnaire = gestionnaire
+    mail(to: gestionnaire.email,
+         subject: "demarches-simplifiees.fr - Activez votre compte accompagnateur",
+         reply_to: "contact@demarches-simplifiees.fr")
   end
 
   def user_to_gestionnaire(email)

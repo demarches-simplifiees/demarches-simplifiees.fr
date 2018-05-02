@@ -1,0 +1,26 @@
+%table#features
+  - Flipflop.feature_set.features.each do |feature|
+    - if !feature.group || feature.group.key != :production
+      %tr
+        %td= feature.title
+        %td
+          = check_box_tag "enable-feature", "enable", field.data[feature.name], data: { url: enable_feature_manager_administrateur_path(field.resource.id), key: feature.key }
+
+:javascript
+  window.onload = function() {
+    $('#features input[type=checkbox]').on('change', function(evt) {
+      let url = $(evt.target).data('url');
+      let key = $(evt.target).data('key');
+      let features = {};
+      features[key] = $(evt.target).prop('checked');
+      $.ajax(url, {
+        method: 'put',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify({
+          features: features
+        })
+      });
+    });
+  };
+
