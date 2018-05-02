@@ -15,6 +15,7 @@ describe Admin::ProceduresController, type: :controller do
   let(:quartiers_prioritaires) { '0' }
   let(:cadastre) { '0' }
   let(:cerfa_flag) { true }
+  let(:cadre_juridique) { 'cadre juridique' }
 
   let(:procedure_params) {
     {
@@ -24,6 +25,7 @@ describe Admin::ProceduresController, type: :controller do
       direction: direction,
       lien_demarche: lien_demarche,
       cerfa_flag: cerfa_flag,
+      cadre_juridique: cadre_juridique,
       module_api_carto_attributes: {
         use_api_carto: use_api_carto,
         quartiers_prioritaires: quartiers_prioritaires,
