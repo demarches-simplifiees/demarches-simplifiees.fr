@@ -144,6 +144,12 @@ class Gestionnaire < ApplicationRecord
     Follow.where(gestionnaire: self, dossier: dossier).update_all(attributes)
   end
 
+  def invite!
+    reset_password_token = set_reset_password_token
+
+    GestionnaireMailer.invite_gestionnaire(self, reset_password_token).deliver_now!
+  end
+
   private
 
   def valid_couple_table_attr?(table, column)

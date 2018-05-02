@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
     resources :administrateurs, only: [:index, :show, :new, :create] do
       post 'reinvite', on: :member
+      put 'enable_feature', on: :member
     end
 
     resources :demandes, only: [:index]
@@ -112,6 +113,11 @@ Rails.application.routes.draw do
       get 'text_summary' => 'dossiers#text_summary'
     end
     resource :dossiers
+  end
+
+  namespace :gestionnaire do
+    get 'activate' => '/gestionnaires/activate#new'
+    patch 'activate' => '/gestionnaires/activate#create'
   end
 
   namespace :admin do

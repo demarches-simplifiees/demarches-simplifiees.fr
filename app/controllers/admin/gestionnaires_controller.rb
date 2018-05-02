@@ -23,7 +23,7 @@ class Admin::GestionnairesController < AdminController
     procedure_id = params[:procedure_id]
 
     if @gestionnaire.nil?
-      new_gestionnaire!
+      invite_gestionnaire(params[:gestionnaire][:email])
     else
       assign_gestionnaire!
     end
@@ -42,22 +42,23 @@ class Admin::GestionnairesController < AdminController
 
   private
 
-  def new_gestionnaire!
-    attributes = params.require(:gestionnaire).permit(:email)
-      .merge(password: SecureRandom.hex(5))
+  def invite_gestionnaire(email)
+    password = SecureRandom.hex
 
     @gestionnaire = Gestionnaire.create(
-      attributes.merge(
-        administrateurs: [current_administrateur]
-      )
+      email: email,
+      password: password,
+      password_confirmation: password,
+      administrateurs: [current_administrateur]
     )
 
     if @gestionnaire.errors.messages.empty?
+      @gestionnaire.invite!
+
       if User.exists?(email: @gestionnaire.email)
         GestionnaireMailer.user_to_gestionnaire(@gestionnaire.email).deliver_now!
       else
-        User.create(attributes)
-        GestionnaireMailer.new_gestionnaire(@gestionnaire.email, @gestionnaire.password).deliver_now!
+        User.create(email: email, password: password)
       end
       flash.notice = 'Accompagnateur ajouté'
     else
