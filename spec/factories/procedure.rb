@@ -6,6 +6,7 @@ FactoryBot.define do
     description "Demande de subvention à l'intention des associations"
     organisation "Orga DINSIC"
     direction "direction DINSIC"
+    cadre_juridique "un cadre juridique important"
     published_at nil
     cerfa_flag false
     administrateur { create(:administrateur) }

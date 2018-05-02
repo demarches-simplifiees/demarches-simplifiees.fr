@@ -45,6 +45,7 @@ class Procedure < ApplicationRecord
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+  validates :cadre_juridique, presence: true, allow_blank: false, allow_nil: false
 
   include AASM
 

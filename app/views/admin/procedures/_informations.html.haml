@@ -22,6 +22,10 @@
       = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 
 .form-group
+  %h4 Cadre juridique : indiquez la référence ou l'URL du texte juridique ou chargez la délibération qui justifie cette procédure *
+  = f.text_field :cadre_juridique, class: 'form-control', placeholder: 'https://www.legifrance.gouv.fr/'
+
+.form-group
   %h4 Notice explicative de la procédure
   - notice = @procedure.notice
   - if !notice.attached?

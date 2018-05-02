@@ -224,7 +224,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def procedure_params
-    editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on]
+    editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on]
     if @procedure&.locked?
       params.require(:procedure).permit(*editable_params)
     else
