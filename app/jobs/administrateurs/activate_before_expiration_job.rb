@@ -3,7 +3,7 @@ class Administrateurs::ActivateBeforeExpirationJob < ApplicationJob
 
   def perform(*args)
     Administrateur.inactive.where(created_at: 2.days.ago.all_day).each do |a|
-      AdministrateurMailer.activate_before_expiration(a).deliver_later
+      a.remind_invitation!
     end
   end
 end
