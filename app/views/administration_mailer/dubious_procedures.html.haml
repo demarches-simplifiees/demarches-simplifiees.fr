@@ -1,8 +1,11 @@
 - content_for(:title, 'Liste de procédures douteuses')
 
-%ul
-  - @procedures_and_type_de_champs.each do |procedure, type_de_champs|
-    %li
-      = link_to "Nº #{procedure.id},", manager_procedure_url(procedure)
-       #{procedure.libelle} :
-      %b= type_de_champs.map(&:libelle).join(', ')
+- if @procedures_and_type_de_champs.any?
+  %ul
+    - @procedures_and_type_de_champs.each do |procedure, type_de_champs|
+      %li
+        = link_to "Nº #{procedure.id},", manager_procedure_url(procedure)
+         #{procedure.libelle} :
+        %b= type_de_champs.map(&:libelle).join(', ')
+- else
+  Il n'y a aucune procédure douteuse aujourd'hui

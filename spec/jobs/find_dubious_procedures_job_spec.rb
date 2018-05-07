@@ -30,25 +30,27 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
 
         expect(receive_procedure).to eq(procedure)
         expect(receive_forbidden_tdcs).to match(forbidden_tdcs)
+
+        expect(AdministrationMailer).to have_received(:dubious_procedures).with(@dubious_procedures_args)
       end
 
       context 'and a whitelisted procedure' do
         let(:procedure) { create(:procedure, whitelisted_at: DateTime.now) }
 
-        it { expect(AdministrationMailer).not_to have_received(:dubious_procedures) }
+        it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
       end
 
       context 'and a archived procedure' do
         let(:procedure) { create(:procedure, archived_at: DateTime.now) }
 
-        it { expect(AdministrationMailer).not_to have_received(:dubious_procedures) }
+        it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
       end
     end
 
     context 'with no suspicious champs' do
       let(:tdcs) { [allowed_tdc] }
 
-      it { expect(AdministrationMailer).not_to receive(:dubious_procedures) }
+      it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
     end
   end
 end
