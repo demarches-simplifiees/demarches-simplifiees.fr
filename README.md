@@ -2,7 +2,7 @@
 
 ## Context
 
-demarches-simplifiees.fr est un site web conçue afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % dématérialisation pour les procédures administratives.
+demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % dématérialisation pour les procédures administratives.
 
 
 ## Dépendances
