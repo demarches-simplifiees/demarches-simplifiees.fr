@@ -47,7 +47,7 @@
     %div
       %h3 Lien procédure
       %div{ style: 'margin-left: 3%;' }
-        - if @facade.procedure.publiee_ou_archivee?
+        - if @facade.procedure.en_test_publiee_ou_archivee?
           = link_to @facade.procedure.lien, sanitize_url(@facade.procedure.lien), target: :blank
         - else
           %b
