@@ -30,14 +30,14 @@ feature 'user path for dossier creation' do
       end
       context 'sets siret' do
         before do
-          stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+          stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
             .to_return(body: File.read('spec/support/files/etablissement.json', status: 200))
-          stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
+          stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
             .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
 
-          stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/exercices\/#{siret}?.*token=/)
+          stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/#{siret}?.*token=/)
             .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
-          stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/associations\/#{siret}?.*token=/)
+          stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/#{siret}?.*token=/)
             .to_return(status: 404, body: '')
 
           page.find_by_id('dossier-siret').set siret
