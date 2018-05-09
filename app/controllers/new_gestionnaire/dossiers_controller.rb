@@ -106,18 +106,9 @@ module NewGestionnaire
 
       dossier.save
 
-      # needed to force Carrierwave to provide dossier.attestation.pdf.read
-      # when the Flipflop.remote_storage? is true, otherwise pdf.read is a closed stream.
-      dossier.reload
-
-      attestation_pdf = nil
-      if check_attestation_emailable
-        attestation_pdf = dossier.attestation.pdf.read
-      end
-
       flash.notice = notice
 
-      NotificationMailer.send_notification(dossier, template, attestation_pdf).deliver_now!
+      NotificationMailer.send_notification(dossier, template).deliver_now!
 
       redirect_to gestionnaire_dossier_path(procedure, dossier)
     end
@@ -202,16 +193,6 @@ module NewGestionnaire
         :id, :piece_justificative_file, :value, value: [],
         etablissement_attributes: Champs::SiretChamp::ETABLISSEMENT_ATTRIBUTES
       ])
-    end
-
-    def check_attestation_emailable
-      if dossier&.attestation&.emailable? == false
-        human_size = number_to_human_size(dossier.attestation.pdf.size)
-        msg = "the attestation of the dossier #{dossier.id} cannot be mailed because it is too heavy: #{human_size}"
-        capture_message(msg, level: 'error')
-      end
-
-      dossier&.attestation&.emailable?
     end
 
     def mark_demande_as_read
