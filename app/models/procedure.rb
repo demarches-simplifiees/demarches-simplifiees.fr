@@ -153,7 +153,8 @@ class Procedure < ApplicationRecord
   end
 
   def publish!(path)
-    self.update!({ published_at: Time.now, archived_at: nil })
+    now = Time.now
+    self.update!({ test_started_at: now, published_at: now, archived_at: nil })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
   end
 
