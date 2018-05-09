@@ -6,7 +6,7 @@ describe ApiEntreprise::ExercicesAdapter do
   subject { described_class.new(siret, procedure_id).to_params }
 
   before do
-    stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/exercices\/.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/.*token=/)
       .to_return(body: File.read('spec/support/files/exercices.json', status: 200))
   end
 
