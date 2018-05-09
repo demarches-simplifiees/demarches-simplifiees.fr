@@ -344,7 +344,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'publish the given procedure' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
-          expect(response.status).to eq 200
+          expect(response.status).to eq 302
           expect(flash[:notice]).to have_content 'Procédure publiée'
         end
       end
@@ -355,7 +355,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'publish the given procedure' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
-          expect(response.status).to eq 200
+          expect(response.status).to eq 302
           expect(flash[:notice]).to have_content 'Procédure publiée'
         end
 
@@ -433,7 +433,7 @@ describe Admin::ProceduresController, type: :controller do
         end
 
         it { expect(procedure.archivee?).to be_falsey }
-        it { expect(response.status).to eq 200 }
+        it { expect(response.status).to eq 302 }
         it { expect(flash[:notice]).to have_content 'Procédure publiée' }
       end
     end
