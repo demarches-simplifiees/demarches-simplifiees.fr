@@ -7,7 +7,7 @@ describe ApiEntreprise::EntrepriseAdapter do
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
       .to_return(body: File.read('spec/support/files/entreprise.json', status: 200))
   end
 
