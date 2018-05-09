@@ -29,7 +29,7 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
         receive_procedure, receive_forbidden_tdcs = @dubious_procedures_args[0]
 
         expect(receive_procedure).to eq(procedure)
-        expect(receive_forbidden_tdcs).to match(forbidden_tdcs)
+        expect(receive_forbidden_tdcs).to match_array(forbidden_tdcs)
 
         expect(AdministrationMailer).to have_received(:dubious_procedures).with(@dubious_procedures_args)
       end
