@@ -32,13 +32,13 @@ RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
         it { expect(AdministrateurMailer).not_to have_received(:activate_before_expiration) }
       end
 
-      context "created 2 days ago" do
+      context "created 3 days ago" do
         before do
-          administrateur.update_columns(created_at: DateTime.new(2018, 03, 18, 20, 00))
+          administrateur.update_columns(created_at: DateTime.new(2018, 03, 17, 20, 00))
           subject
         end
 
-        it { expect(AdministrateurMailer).to have_received(:activate_before_expiration).with(administrateur) }
+        it { expect(AdministrateurMailer).to have_received(:activate_before_expiration).with(administrateur, kind_of(String)) }
       end
     end
 
