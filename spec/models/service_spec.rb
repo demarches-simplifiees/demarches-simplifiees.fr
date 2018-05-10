@@ -4,7 +4,12 @@ describe Service, type: :model do
     let(:params) do
       {
         nom: 'service des jardins',
+        organisme: 'mairie des iles',
         type_organisme: 'commune',
+        email: 'super@email.com',
+        telephone: '1212202',
+        horaires: 'du lundi au vendredi',
+        adresse: '12 rue des schtroumpfs',
         administrateur_id: administrateur.id
       }
     end
