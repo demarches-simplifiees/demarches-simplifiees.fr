@@ -12,7 +12,12 @@ describe NewAdministrateur::ServicesController, type: :controller do
         {
           service: {
             nom: 'super service',
-            type_organisme: 'region'
+            organisme: 'organisme',
+            type_organisme: 'region',
+            email: 'email@toto.com',
+            telephone: '1234',
+            horaires: 'horaires',
+            adresse: 'adresse'
           },
           procedure_id: 12
         }
@@ -21,7 +26,12 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect(flash.alert).to be_nil }
       it { expect(flash.notice).to eq('super service créé') }
       it { expect(Service.last.nom).to eq('super service') }
+      it { expect(Service.last.organisme).to eq('organisme') }
       it { expect(Service.last.type_organisme).to eq('region') }
+      it { expect(Service.last.email).to eq('email@toto.com') }
+      it { expect(Service.last.telephone).to eq('1234') }
+      it { expect(Service.last.horaires).to eq('horaires') }
+      it { expect(Service.last.adresse).to eq('adresse') }
       it { expect(response).to redirect_to(services_path(procedure_id: 12)) }
     end
 

@@ -70,7 +70,7 @@ module NewAdministrateur
     private
 
     def service_params
-      params.require(:service).permit(:nom, :type_organisme)
+      params.require(:service).permit(:nom, :organisme, :type_organisme, :email, :telephone, :horaires, :adresse)
     end
 
     def service

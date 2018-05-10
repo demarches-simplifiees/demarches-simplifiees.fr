@@ -519,6 +519,11 @@ ActiveRecord::Schema.define(version: 2018_05_15_135415) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "administrateur_id"
+    t.string "organisme"
+    t.string "email"
+    t.string "telephone"
+    t.text "horaires"
+    t.text "adresse"
     t.index ["administrateur_id", "nom"], name: "index_services_on_administrateur_id_and_nom", unique: true
     t.index ["administrateur_id"], name: "index_services_on_administrateur_id"
   end
