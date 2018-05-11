@@ -441,7 +441,7 @@ ActiveRecord::Schema.define(version: 2018_05_15_135415) do
   create_table "procedures", id: :serial, force: :cascade do |t|
     t.string "libelle"
     t.string "description"
-    t.string "organisation", null: false
+    t.string "organisation"
     t.string "direction"
     t.string "lien_demarche"
     t.datetime "created_at", null: false
