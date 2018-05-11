@@ -35,13 +35,15 @@ class Procedure < ApplicationRecord
   mount_uploader :logo, ProcedureLogoUploader
 
   default_scope { where(hidden_at: nil) }
-  scope :brouillons,            -> { where(published_at: nil).where(archived_at: nil) }
-  scope :publiees,              -> { where.not(published_at: nil).where(archived_at: nil) }
-  scope :archivees,             -> { where.not(archived_at: nil) }
-  scope :publiees_ou_archivees, -> { where.not(published_at: nil) }
-  scope :by_libelle,            -> { order(libelle: :asc) }
-  scope :created_during,        -> (range) { where(created_at: range) }
-  scope :cloned_from_library,   -> { where(cloned_from_library: true) }
+  scope :brouillons,                    -> { where(test_started_at: nil) }
+  scope :en_test,                       -> { where.not(test_started_at: nil).where(published_at: nil) }
+  scope :publiees,                      -> { where.not(published_at: nil).where(archived_at: nil) }
+  scope :archivees,                     -> { where.not(archived_at: nil) }
+  scope :en_test_publiees_ou_archivees, -> { where.not(test_started_at: nil) }
+  scope :publiees_ou_archivees,         -> { where.not(published_at: nil) }
+  scope :by_libelle,                    -> { order(libelle: :asc) }
+  scope :created_during,                -> (range) { where(created_at: range) }
+  scope :cloned_from_library,           -> { where(cloned_from_library: true) }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
@@ -118,7 +120,7 @@ class Procedure < ApplicationRecord
   end
 
   def locked?
-    publiee_ou_archivee?
+    en_test_publiee_ou_archivee?
   end
 
   def clone(admin, from_library)
@@ -149,12 +151,17 @@ class Procedure < ApplicationRecord
   end
 
   def brouillon?
-    published_at.nil?
+    published_at.nil? && test_started_at.nil?
   end
 
   def publish!(path)
-    self.update!({ published_at: Time.now, archived_at: nil })
+    now = Time.now
+    self.update!({ test_started_at: now, published_at: now, archived_at: nil })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
+  end
+
+  def en_test?
+    test_started_at.present? && published_at.nil?
   end
 
   def publiee?
@@ -162,11 +169,15 @@ class Procedure < ApplicationRecord
   end
 
   def archive
-    self.update!(archived_at: Time.now)
+    update!(archived_at: Time.now)
   end
 
   def archivee?
     published_at.present? && archived_at.present?
+  end
+
+  def en_test_publiee_ou_archivee?
+    !brouillon? || archivee?
   end
 
   def publiee_ou_archivee?

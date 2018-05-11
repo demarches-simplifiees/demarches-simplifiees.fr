@@ -18,7 +18,7 @@ class Gestionnaire < ApplicationRecord
   has_many :dossiers_from_avis, through: :avis, source: :dossier
 
   def visible_procedures
-    procedures.publiees_ou_archivees
+    procedures.en_test_publiees_ou_archivees
   end
 
   def can_view_dossier?(dossier_id)

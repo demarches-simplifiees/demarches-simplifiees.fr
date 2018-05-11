@@ -464,6 +464,7 @@ ActiveRecord::Schema.define(version: 2018_05_02_092852) do
     t.string "web_hook_url"
     t.boolean "cloned_from_library", default: false
     t.bigint "parent_procedure_id"
+    t.datetime "test_started_at"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
   end

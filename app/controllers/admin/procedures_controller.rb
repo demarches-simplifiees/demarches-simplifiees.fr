@@ -134,7 +134,7 @@ class Admin::ProceduresController < AdminController
 
     procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
     if procedure_path
-      if procedure_path.administrateur_id == current_administrateur.id
+      if procedure_path.owner?(current_administrateur)
         procedure_path.procedure.archive
         procedure_path.delete
       else
@@ -146,8 +146,7 @@ class Admin::ProceduresController < AdminController
     procedure.publish!(params[:procedure_path])
 
     flash.notice = "Procédure publiée"
-    render js: "window.location = '#{admin_procedures_path}'"
-
+    redirect_to admin_procedures_path
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path
@@ -175,10 +174,9 @@ class Admin::ProceduresController < AdminController
     procedure.archive
 
     flash.notice = "Procédure archivée"
-    redirect_to admin_procedures_path
-
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inexistante'
+  ensure
     redirect_to admin_procedures_path
   end
 
@@ -237,10 +235,10 @@ class Admin::ProceduresController < AdminController
       .where("procedures.archived_at" => nil)
       .where("path LIKE ?", "%#{params[:request]}%")
       .pluck(:path, :administrateur_id)
-      .map do |value|
+      .map do |path,administrateur_id|
         {
-          label: value.first,
-          mine: value.second == current_administrateur.id
+          label: path,
+          mine: administrateur_id == current_administrateur.id
         }
       end.to_json
 

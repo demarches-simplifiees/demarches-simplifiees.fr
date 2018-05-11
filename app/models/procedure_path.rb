@@ -5,4 +5,8 @@ class ProcedurePath < ApplicationRecord
 
   belongs_to :procedure
   belongs_to :administrateur
+
+  def owner?(administrateur)
+    administrateur_id == administrateur.id
+  end
 end
