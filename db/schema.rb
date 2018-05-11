@@ -594,6 +594,16 @@ ActiveRecord::Schema.define(version: 2018_06_01_084546) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "virus_scans", force: :cascade do |t|
+    t.datetime "scanned_at"
+    t.string "status"
+    t.bigint "champ_id"
+    t.string "blob_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["champ_id"], name: "index_virus_scans_on_champ_id"
+  end
+
   create_table "without_continuation_mails", id: :serial, force: :cascade do |t|
     t.text "body"
     t.string "subject"
