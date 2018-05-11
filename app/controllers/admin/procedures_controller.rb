@@ -36,6 +36,23 @@ class Admin::ProceduresController < AdminController
     render 'index'
   end
 
+  def testing
+    # FIXME: remove when
+    # https://github.com/Sology/smart_listing/issues/134
+    # is fixed
+    permit_smart_listing_params
+    # END OF FIXME
+
+    @procedures = smart_listing_create :procedures,
+      current_administrateur.procedures.en_test.order(test_started_at: :desc),
+      partial: "admin/procedures/list",
+      array: true
+
+    testing_class
+
+    render 'index'
+  end
+
   def draft
     # FIXME: remove when
     # https://github.com/Sology/smart_listing/issues/134
@@ -114,7 +131,7 @@ class Admin::ProceduresController < AdminController
     redirect_to edit_admin_procedure_path(id: @procedure.id)
   end
 
-  def publish
+  def publish_test
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
     new_procedure_path = ProcedurePath.new(
@@ -132,24 +149,47 @@ class Admin::ProceduresController < AdminController
       return redirect_to admin_procedures_path
     end
 
-    procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
+    procedure_path = procedure.existing_procedure_path(params[:procedure_path])
+
     if procedure_path
-      if procedure_path.administrateur_id == current_administrateur.id
-        procedure_path.procedure.archive
-        procedure_path.delete
+      if procedure_path.owner?(current_administrateur)
+        if procedure_path.procedure.en_test?
+          procedure_path.procedure.archive
+          procedure_path.delete
+        end
       else
         @mine = false
         return render '/admin/procedures/publish', formats: 'js'
       end
     end
 
-    procedure.publish!(params[:procedure_path])
+    procedure.publish_test!(params[:procedure_path])
 
+    flash.notice = "Procédure en test"
+    redirect_to admin_procedures_path
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = "Procédure inexistante"
+    redirect_to admin_procedures_path
+  end
+
+  def publish
+    procedure = current_administrateur.procedures.find(params[:procedure_id])
+    procedure_path = procedure.existing_procedure_path(procedure.path)
+
+    if procedure_path
+      if procedure_path.owner?(current_administrateur)
+        procedure_path.procedure.archive
+        procedure_path.delete
+      else
+        raise "Procedure path conflict"
+      end
+    end
+
+    procedure.publish!
     flash.notice = "Procédure publiée"
-    render js: "window.location = '#{admin_procedures_path}'"
-
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inexistante'
+  ensure
     redirect_to admin_procedures_path
   end
 
@@ -175,10 +215,9 @@ class Admin::ProceduresController < AdminController
     procedure.archive
 
     flash.notice = "Procédure archivée"
-    redirect_to admin_procedures_path
-
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inexistante'
+  ensure
     redirect_to admin_procedures_path
   end
 
@@ -205,15 +244,8 @@ class Admin::ProceduresController < AdminController
   end
 
   def new_from_existing
-    procedures_with_more_than_30_dossiers_ids = Procedure
-      .publiees_ou_archivees
-      .joins(:dossiers)
-      .group("procedures.id")
-      .having("count(dossiers.id) > ?", 30)
-      .pluck('procedures.id')
-
     @grouped_procedures = Procedure
-      .where(id: procedures_with_more_than_30_dossiers_ids)
+      .publiees_ou_archivees
       .group_by(&:administrateur)
       .sort_by { |a, _| a.created_at }
   end
@@ -230,6 +262,10 @@ class Admin::ProceduresController < AdminController
     @draft_class = 'active'
   end
 
+  def testing_class
+    @testing_class = 'active'
+  end
+
   def path_list
     json_path_list = ProcedurePath
       .joins(', procedures')
@@ -237,10 +273,10 @@ class Admin::ProceduresController < AdminController
       .where("procedures.archived_at" => nil)
       .where("path LIKE ?", "%#{params[:request]}%")
       .pluck(:path, :administrateur_id)
-      .map do |value|
+      .map do |path,administrateur_id|
         {
-          label: value.first,
-          mine: value.second == current_administrateur.id
+          label: path,
+          mine: administrateur_id == current_administrateur.id
         }
       end.to_json
 

@@ -124,6 +124,7 @@ Rails.application.routes.draw do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
     get 'sign_in' => '/administrateurs/sessions#new'
+    get 'procedures/testing' => 'procedures#testing'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
     get 'procedures/path_list' => 'procedures#path_list'
@@ -166,6 +167,7 @@ Rails.application.routes.draw do
 
       put 'archive' => 'procedures#archive', as: :archive
       put 'publish' => 'procedures#publish', as: :publish
+      put 'publish' => 'procedures#publish_test', as: :publish_test
       post 'transfer' => 'procedures#transfer', as: :transfer
       put 'clone' => 'procedures#clone', as: :clone
 
@@ -211,6 +213,7 @@ Rails.application.routes.draw do
   end
 
   namespace :commencer do
+    get '/test/:procedure_path' => '/users/dossiers#commencer_test'
     get '/:procedure_path' => '/users/dossiers#commencer'
   end
 

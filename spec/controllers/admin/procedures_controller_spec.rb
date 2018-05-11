@@ -326,14 +326,14 @@ describe Admin::ProceduresController, type: :controller do
     end
   end
 
-  describe 'PUT #publish' do
+  describe 'PUT #publish_test' do
     let(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure2) { create(:procedure, :published, administrateur: admin) }
     let(:procedure3) { create(:procedure, :published) }
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :publish, params: { procedure_id: procedure.id, procedure_path: procedure_path }
+        put :publish_test, params: { procedure_id: procedure.id, procedure_path: procedure_path }
         procedure.reload
         procedure2.reload
       end
@@ -341,35 +341,36 @@ describe Admin::ProceduresController, type: :controller do
       context 'procedure path does not exist' do
         let(:procedure_path) { 'new_path' }
 
-        it 'publish the given procedure' do
-          expect(procedure.publiee?).to be_truthy
+        it 'publish as test the given procedure' do
+          expect(procedure.en_test?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
-          expect(response.status).to eq 200
-          expect(flash[:notice]).to have_content 'Procédure publiée'
+          expect(response.status).to eq 302
+          expect(flash[:notice]).to have_content 'Procédure en test'
         end
       end
 
       context 'procedure path exists and is owned by current administrator' do
         let(:procedure_path) { procedure2.path }
 
-        it 'publish the given procedure' do
-          expect(procedure.publiee?).to be_truthy
+        it 'publish as test the given procedure' do
+          expect(procedure.en_test?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
-          expect(response.status).to eq 200
-          expect(flash[:notice]).to have_content 'Procédure publiée'
+          expect(response.status).to eq 302
+          expect(flash[:notice]).to have_content 'Procédure en test'
         end
 
-        it 'archive previous procedure' do
-          expect(procedure2.archivee?).to be_truthy
-          expect(procedure2.path).to be_nil
+        it 'previous procedure remains published' do
+          expect(procedure2.publiee?).to be_truthy
+          expect(procedure2.archivee?).to be_falsey
+          expect(procedure2.path).to match(procedure_path)
         end
       end
 
       context 'procedure path exists and is not owned by current administrator' do
         let(:procedure_path) { procedure3.path }
 
-        it 'does not publish the given procedure' do
-          expect(procedure.publiee?).to be_falsey
+        it 'does not publish as test the given procedure' do
+          expect(procedure.en_test?).to be_falsey
           expect(procedure.path).to be_nil
           expect(response.status).to eq 200
         end
@@ -384,8 +385,8 @@ describe Admin::ProceduresController, type: :controller do
       context 'procedure path is invalid' do
         let(:procedure_path) { 'Invalid Procedure Path' }
 
-        it 'does not publish the given procedure' do
-          expect(procedure.publiee?).to be_falsey
+        it 'does not publish as test the given procedure' do
+          expect(procedure.en_test?).to be_falsey
           expect(procedure.path).to be_nil
           expect(response).to redirect_to :admin_procedures
           expect(flash[:alert]).to have_content 'Lien de la procédure invalide'
@@ -400,13 +401,54 @@ describe Admin::ProceduresController, type: :controller do
         sign_out admin
         sign_in admin_2
 
-        put :publish, params: { procedure_id: procedure.id, procedure_path: 'fake_path' }
+        put :publish_test, params: { procedure_id: procedure.id, procedure_path: 'fake_path' }
         procedure.reload
       end
 
       it 'fails' do
         expect(response).to redirect_to :admin_procedures
         expect(flash[:alert]).to have_content 'Procédure inexistante'
+      end
+    end
+  end
+
+  describe 'PUT #publish' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+    let(:procedure2) { create(:procedure, :published, administrateur: admin) }
+
+    context 'when admin is the owner of the procedure' do
+      before do
+        procedure.publish_test!(procedure_path)
+        put :publish, params: { procedure_id: procedure.id }
+        procedure.reload
+        procedure2.reload
+      end
+
+      context 'procedure path does not exist' do
+        let(:procedure_path) { 'new_path' }
+
+        it 'publish the given procedure' do
+          expect(procedure.publiee?).to be_truthy
+          expect(procedure.path).to eq(procedure_path)
+          expect(response.status).to eq 302
+          expect(flash[:notice]).to have_content 'Procédure publiée'
+        end
+      end
+
+      context 'procedure path exists and is owned by current administrator' do
+        let(:procedure_path) { procedure2.path }
+
+        it 'publish the given procedure' do
+          expect(procedure.publiee?).to be_truthy
+          expect(procedure.path).to eq(procedure_path)
+          expect(response.status).to eq 302
+          expect(flash[:notice]).to have_content 'Procédure publiée'
+        end
+
+        it 'archive previous procedure' do
+          expect(procedure2.archivee?).to be_truthy
+          expect(procedure2.path).to be_nil
+        end
       end
     end
   end
@@ -433,7 +475,7 @@ describe Admin::ProceduresController, type: :controller do
         end
 
         it { expect(procedure.archivee?).to be_falsey }
-        it { expect(response.status).to eq 200 }
+        it { expect(response.status).to eq 302 }
         it { expect(flash[:notice]).to have_content 'Procédure publiée' }
       end
     end

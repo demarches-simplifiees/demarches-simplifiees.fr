@@ -3,13 +3,20 @@
   #procedure_show
     - if @facade.procedure.brouillon?
       - if @facade.procedure.gestionnaires.size == 0
-        %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure sans qu\'aucun accompagnateur ne soit affecté à celle-ci.' }
+        %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, title: 'Vous ne pouvez pas publier une procédure en test sans qu\'aucun accompagnateur ne soit affecté à celle-ci.' }
           %i.fa.fa-eraser
-          Publier
+          Publier en test
       - else
-        %a.btn.btn-success#publish-procedure{ "data-target" => "#publish-modal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px;' }
+        %a.btn.btn-success#publish-procedure{ "data-target" => "#testing-modal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px;' }
           %i.fa.fa-eraser
-          Publier
+          Publier en test
+
+      = render partial: '/admin/procedures/modal_testing'
+
+    - if @facade.procedure.en_test?
+      %a.btn.btn-success#publish-procedure{ "data-target" => "#publish-modal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px;' }
+        %i.fa.fa-rocket
+        Publier
 
       = render partial: '/admin/procedures/modal_publish'
 
@@ -21,7 +28,7 @@
 
     - if @facade.procedure.archivee?
       %a#reenable.btn.btn-small.btn-default.text-info{ "data-target" => "#publish-modal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px;' }
-        %i.fa.fa-eraser
+        %i.fa.fa-rocket
         Réactiver
 
       = render partial: '/admin/procedures/modal_publish'
@@ -47,7 +54,7 @@
     %div
       %h3 Lien procédure
       %div{ style: 'margin-left: 3%;' }
-        - if @facade.procedure.publiee_ou_archivee?
+        - if @facade.procedure.en_test_publiee_ou_archivee?
           = link_to @facade.procedure.lien, sanitize_url(@facade.procedure.lien), target: :blank
         - else
           %b
