@@ -171,8 +171,6 @@ describe Procedure do
     end
 
     context 'organisation' do
-      it { is_expected.not_to allow_value(nil).for(:organisation) }
-      it { is_expected.not_to allow_value('').for(:organisation) }
       it { is_expected.to allow_value('URRSAF').for(:organisation) }
     end
   end

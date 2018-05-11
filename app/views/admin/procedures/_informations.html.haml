@@ -2,7 +2,7 @@
   .alert.alert-info
     Cette procédure est publiée, certains éléments de la description ne sont plus modifiables
 
-- { libelle: 'Libellé*', description: 'Description*', organisation: 'Organisme*', direction: 'Direction', lien_site_web: 'Lien site internet', web_hook_url: 'Lien de rappel HTTP' }.each do |key, value|
+- { libelle: 'Libellé*', description: 'Description*', lien_site_web: 'Lien site internet', web_hook_url: 'Lien de rappel HTTP' }.each do |key, value|
   - if key != :web_hook_url || Flipflop.web_hook?
     .form-group
       %h4

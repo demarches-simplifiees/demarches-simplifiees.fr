@@ -46,7 +46,6 @@ class Procedure < ApplicationRecord
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
-  validates :organisation, presence: true, allow_blank: false, allow_nil: false
 
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
