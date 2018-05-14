@@ -2,6 +2,9 @@ class Users::DossiersController < UsersController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
+  SESSION_USER_RETURN_LOCATION = 'user_return_to'
+
+  before_action :store_user_location!, only: :new
   before_action :authenticate_user!, except: :commencer
   before_action :check_siret, only: :siret_informations
 
@@ -72,6 +75,8 @@ class Users::DossiersController < UsersController
   end
 
   def new
+    erase_user_location!
+
     procedure = Procedure.publiees.find(params[:procedure_id])
 
     dossier = Dossier.create(procedure: procedure, user: current_user, state: 'brouillon')
@@ -239,5 +244,13 @@ class Users::DossiersController < UsersController
 
   def facade(id = params[:id])
     DossierFacades.new id, current_user.email
+  end
+
+  def store_user_location!
+    store_location_for(:user, request.fullpath)
+  end
+
+  def erase_user_location!
+    session.delete(SESSION_USER_RETURN_LOCATION)
   end
 end

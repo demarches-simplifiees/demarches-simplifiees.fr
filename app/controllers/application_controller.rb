@@ -56,6 +56,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def after_sign_out_path_for(_resource_or_scope)
+    stored_location_for(:user) || super
+  end
+
   private
 
   def set_active_storage_host
