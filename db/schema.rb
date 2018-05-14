@@ -571,6 +571,10 @@ ActiveRecord::Schema.define(version: 2018_05_16_155238) do
     t.datetime "updated_at"
     t.string "siret"
     t.string "loged_in_with_france_connect", default: "false"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
