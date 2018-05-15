@@ -99,6 +99,8 @@ gem 'sanitize-url'
 
 gem 'flipflop'
 
+gem 'aasm'
+
 # Cron jobs
 gem 'delayed_job_active_record'
 gem "daemons"
