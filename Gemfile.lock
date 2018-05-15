@@ -29,6 +29,8 @@ GEM
   remote: https://rubygems.org/
   specs:
     CFPropertyList (2.3.6)
+    aasm (4.12.3)
+      concurrent-ruby (~> 1.0)
     actioncable (5.2.0)
       actionpack (= 5.2.0)
       nio4r (~> 2.0)
@@ -779,6 +781,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aasm
   active_model_serializers
   administrate
   apipie-rails
