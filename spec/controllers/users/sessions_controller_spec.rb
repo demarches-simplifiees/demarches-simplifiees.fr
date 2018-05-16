@@ -199,7 +199,7 @@ describe Users::SessionsController, type: :controller do
       end
 
       context 'when procedure is not published' do
-        let(:procedure) { create :procedure, published_at: nil }
+        let(:procedure) { create :procedure }
         before do
           session["user_return_to"] = "?procedure_id=#{procedure.id}"
         end
@@ -209,7 +209,7 @@ describe Users::SessionsController, type: :controller do
       end
 
       context 'when procedure_id exist' do
-        let(:procedure) { create :procedure, published_at: Time.now }
+        let(:procedure) { create :procedure, :published }
 
         before do
           session["user_return_to"] = "?procedure_id=#{procedure.id}"

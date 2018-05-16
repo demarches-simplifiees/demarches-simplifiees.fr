@@ -34,10 +34,10 @@ class Procedure < ApplicationRecord
   mount_uploader :logo, ProcedureLogoUploader
 
   default_scope { where(hidden_at: nil) }
-  scope :brouillons,            -> { where(published_at: nil).where(archived_at: nil) }
-  scope :publiees,              -> { where.not(published_at: nil).where(archived_at: nil) }
-  scope :archivees,             -> { where.not(archived_at: nil) }
-  scope :publiees_ou_archivees, -> { where.not(published_at: nil) }
+  scope :brouillons,            -> { where(aasm_state: :brouillon) }
+  scope :publiees,              -> { where(aasm_state: :publiee) }
+  scope :archivees,             -> { where(aasm_state: :archivee) }
+  scope :publiees_ou_archivees, -> { where(aasm_state: [:publiee, :archivee]) }
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
