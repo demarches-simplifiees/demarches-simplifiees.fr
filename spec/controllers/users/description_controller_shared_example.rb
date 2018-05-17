@@ -26,7 +26,7 @@ shared_examples 'description_controller_spec' do
 
       context 'procedure is archived' do
         render_views
-        let(:archived_at) { Time.now }
+        let(:archived) { true }
 
         it { expect(response).to have_http_status(:success) }
         it { expect(response.body).to_not have_content(I18n.t('errors.messages.procedure_archived')) }
@@ -329,7 +329,7 @@ shared_examples 'description_controller_spec' do
     end
 
     context 'La procédure est archivée' do
-      let(:archived_at) { Time.now }
+      let(:archived) { true }
 
       before do
         post :update, params: { dossier_id: dossier.id }
