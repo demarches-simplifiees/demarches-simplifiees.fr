@@ -99,6 +99,14 @@ class Procedure < ApplicationRecord
     dossiers.update_all(hidden_at: now)
   end
 
+  def locked?
+    publiee_ou_archivee?
+  end
+
+  def publiee_ou_archivee?
+    publiee? || archivee?
+  end
+
   def can_publish?(path)
     procedure_path = ProcedurePath.find_by(path: path)
     if procedure_path.present?
@@ -176,10 +184,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def locked?
-    publiee_ou_archivee?
-  end
-
   def clone(admin, from_library)
     procedure = self.deep_clone(include:
       {
@@ -215,32 +219,6 @@ class Procedure < ApplicationRecord
     procedure.parent_procedure = self
 
     procedure
-  end
-
-  def brouillon?
-    published_at.nil?
-  end
-
-  def publish!(path)
-    now = Time.now
-    self.update!({ test_started_at: now, published_at: now, archived_at: nil, aasm_state: :publiee })
-    ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
-  end
-
-  def publiee?
-    published_at.present? && archived_at.nil?
-  end
-
-  def archive
-    self.update!(archived_at: Time.now, aasm_state: :archivee)
-  end
-
-  def archivee?
-    published_at.present? && archived_at.present?
-  end
-
-  def publiee_ou_archivee?
-    publiee? || archivee?
   end
 
   def whitelisted?
