@@ -109,22 +109,15 @@ class Admin::ProceduresController < AdminController
       return redirect_to admin_procedures_path
     end
 
-    procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
-    if procedure_path
-      if procedure_path.administrateur_id == current_administrateur.id
-        procedure_path.procedure.archive
-        procedure_path.delete
-      else
-        @mine = false
-        return render '/admin/procedures/publish', formats: 'js'
-      end
+    if procedure.may_publish?(params[:procedure_path])
+      procedure.publish!(params[:procedure_path])
+
+      flash.notice = "Procédure publiée"
+      redirect_to admin_procedures_path
+    else
+      @mine = false
+      render '/admin/procedures/publish', formats: 'js'
     end
-
-    procedure.publish!(params[:procedure_path])
-
-    flash.notice = "Procédure publiée"
-    render js: "window.location = '#{admin_procedures_path}'"
-
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path
@@ -149,7 +142,7 @@ class Admin::ProceduresController < AdminController
 
   def archive
     procedure = current_administrateur.procedures.find(params[:procedure_id])
-    procedure.archive
+    procedure.archive!
 
     flash.notice = "Procédure archivée"
     redirect_to admin_procedures_path
