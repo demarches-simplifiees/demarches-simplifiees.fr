@@ -68,6 +68,46 @@ class Procedure < ApplicationRecord
       transitions from: :archivee, to: :hidden
     end
   end
+
+  def after_publish(path)
+    now = Time.now
+    update(
+      test_started_at: now,
+      archived_at: nil,
+      published_at: now
+    )
+    procedure_path = ProcedurePath.find_by(path: path)
+
+    if procedure_path.present?
+      if procedure_path.procedure != self
+        procedure_path.procedure.archive!
+        procedure_path.update(procedure: self)
+      end
+    else
+      ProcedurePath.create(procedure: self, administrateur: administrateur, path: path)
+    end
+  end
+
+  def after_archive
+    update(archived_at: Time.now)
+  end
+
+  def after_hide
+    now = Time.now
+    update(hidden_at: now)
+    procedure_path&.hide!(self)
+    dossiers.update_all(hidden_at: now)
+  end
+
+  def can_publish?(path)
+    procedure_path = ProcedurePath.find_by(path: path)
+    if procedure_path.present?
+      administrateur.owns?(procedure_path)
+    else
+      true
+    end
+  end
+
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
@@ -84,13 +124,6 @@ class Procedure < ApplicationRecord
 
   def procedure_path
     ProcedurePath.find_with_procedure(self)
-  end
-
-  def hide!
-    now = DateTime.now
-    update(hidden_at: now, aasm_state: :hidden)
-    procedure_path&.hide!(self)
-    dossiers.update_all(hidden_at: now)
   end
 
   def path
