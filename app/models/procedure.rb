@@ -45,6 +45,29 @@ class Procedure < ApplicationRecord
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
 
+  include AASM
+
+  aasm whiny_persistence: true do
+    state :brouillon, initial: true
+    state :publiee
+    state :archivee
+    state :hidden
+
+    event :publish, after: :after_publish, guard: :can_publish? do
+      transitions from: :brouillon, to: :publiee
+      transitions from: :archivee, to: :publiee
+    end
+
+    event :archive, after: :after_archive do
+      transitions from: :publiee, to: :archivee
+    end
+
+    event :hide, after: :after_hide do
+      transitions from: :brouillon, to: :hidden
+      transitions from: :publiee, to: :hidden
+      transitions from: :archivee, to: :hidden
+    end
+  end
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
