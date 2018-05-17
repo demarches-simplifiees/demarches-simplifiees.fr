@@ -28,11 +28,13 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   context 'Creating a new procedure' do
     scenario 'Finding new procedure link' do
       page.find_by_id('new-procedure').click
+      page.find_by_id('from-scratch').click
       expect(page).to have_current_path(new_admin_procedure_path)
     end
 
     scenario 'Finding save button for new procedure, libelle and description required' do
       page.find_by_id('new-procedure').click
+      page.find_by_id('from-scratch').click
       page.find_by_id('save-procedure').click
       page.find_by_id('flash_message').visible?
       fill_in 'procedure_libelle', with: 'libelle de la procedure'
@@ -46,6 +48,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   context 'Editing a new procedure' do
     before 'Create procedure' do
       page.find_by_id('new-procedure').click
+      page.find_by_id('from-scratch').click
       fill_in 'procedure_libelle', with: 'libelle de la procedure'
       page.execute_script("$('#procedure_description').val('description de la procedure')")
       fill_in 'procedure_organisation', with: 'organisme de la procedure'
