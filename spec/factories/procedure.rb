@@ -100,14 +100,22 @@ FactoryBot.define do
     end
 
     trait :published do
-      after(:create) do |procedure, _evaluator|
+      after(:build) do |procedure, _evaluator|
         procedure.publish!(generate(:published_path))
       end
     end
 
     trait :archived do
       after(:build) do |procedure, _evaluator|
-        procedure.archived_at = Time.now
+        procedure.publish!(generate(:published_path))
+        procedure.archive!
+      end
+    end
+
+    trait :hidden do
+      after(:build) do |procedure, _evaluator|
+        procedure.publish!(generate(:published_path))
+        procedure.hide!
       end
     end
 
