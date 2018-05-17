@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_15_135415) do
+ActiveRecord::Schema.define(version: 2018_05_16_155238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -425,7 +425,9 @@ ActiveRecord::Schema.define(version: 2018_05_15_135415) do
     t.integer "administrateur_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.bigint "test_procedure_id"
     t.index ["path"], name: "index_procedure_paths_on_path"
+    t.index ["test_procedure_id"], name: "index_procedure_paths_on_test_procedure_id"
   end
 
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
