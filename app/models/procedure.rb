@@ -4,8 +4,6 @@ class Procedure < ApplicationRecord
   has_many :types_de_champ_private, -> { private_only }, class_name: 'TypeDeChamp', dependent: :destroy
   has_many :dossiers
 
-  has_one :procedure_path, dependent: :destroy
-
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
 
@@ -59,6 +57,10 @@ class Procedure < ApplicationRecord
       .map { |tdc| tdc.champ.build }
 
     Dossier.new(procedure: self, champs: champs, champs_private: champs_private)
+  end
+
+  def procedure_path
+    ProcedurePath.find_with_procedure(self)
   end
 
   def hide!

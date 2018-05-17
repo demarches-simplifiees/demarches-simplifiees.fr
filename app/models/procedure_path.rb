@@ -6,4 +6,8 @@ class ProcedurePath < ApplicationRecord
   belongs_to :test_procedure, class_name: 'Procedure'
   belongs_to :procedure
   belongs_to :administrateur
+
+  def self.find_with_procedure(procedure)
+    where(procedure: procedure).or(where(test_procedure: procedure)).last
+  end
 end
