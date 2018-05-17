@@ -547,7 +547,7 @@ describe Admin::ProceduresController, type: :controller do
     end
   end
 
-  describe 'POST transfer' do
+  describe 'POST #transfer' do
     let!(:procedure) { create :procedure, administrateur: admin }
 
     subject { post :transfer, params: { email_admin: email_admin, procedure_id: procedure.id } }
@@ -587,17 +587,17 @@ describe Admin::ProceduresController, type: :controller do
     end
   end
 
-  describe "POST hide" do
+  describe "POST #hide" do
     subject { post :hide, params: { id: procedure.id } }
 
     context "when procedure is not owned by administrateur" do
-      let!(:procedure) { create :procedure, administrateur: create(:administrateur) }
+      let(:procedure) { create :procedure, administrateur: create(:administrateur) }
 
       it { expect{ subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
 
     context "when procedure is owned by administrateur" do
-      let!(:procedure) { create :procedure, :published, administrateur: admin }
+      let(:procedure) { create :procedure, :published, administrateur: admin }
 
       before do
          subject
@@ -605,11 +605,11 @@ describe Admin::ProceduresController, type: :controller do
        end
 
       it { expect(procedure.hidden_at).not_to be_nil }
-      it { expect(procedure.procedure_path).to be_nil }
+      it { expect(procedure.procedure_path.procedure).to be_nil }
     end
 
     context "when procedure has no path" do
-      let!(:procedure) { create :procedure, administrateur: admin }
+      let(:procedure) { create :procedure, administrateur: admin }
 
       it { expect{ subject }.not_to raise_error }
       it do

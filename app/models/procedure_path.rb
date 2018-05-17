@@ -10,4 +10,16 @@ class ProcedurePath < ApplicationRecord
   def self.find_with_procedure(procedure)
     where(procedure: procedure).or(where(test_procedure: procedure)).last
   end
+
+  def hide!(procedure)
+    if self.procedure == procedure
+      update(procedure: nil)
+    end
+    if self.test_procedure == procedure
+      update(test_procedure: nil)
+    end
+    if procedure.nil? && test_procedure.nil?
+      destroy
+    end
+  end
 end
