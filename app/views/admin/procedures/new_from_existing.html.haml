@@ -1,4 +1,8 @@
 .row.white-back
+  %a#from-scratch{ href: new_admin_procedure_path, class: 'btn-sm btn-primary' }
+    Créer une nouvelle procédure de zéro
+
+.row.white-back
   %h2
     Créer une nouvelle procédure à partir d'une procédure existante
 
@@ -15,8 +19,7 @@
             %td{ style: 'width: 750px;' }
               = procedure.libelle
             %td{ style: 'padding-right: 10px; padding-left: 10px; width: 60px;' }
-              - if !procedure.archivee?
-                = link_to('Consulter', apercu_procedure_path(id: procedure.id), target: "_blank")
+              = link_to('Consulter', apercu_procedure_path(id: procedure.id), target: "_blank")
             %td
               = link_to('Cloner', admin_procedure_clone_path(procedure.id, from_new_from_existing: true), 'data-method' => :put, class: 'btn-sm btn-primary clone-btn')
             %td{ style: 'padding-left: 10px;' }

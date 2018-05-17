@@ -5,7 +5,7 @@ describe ApiEntreprise::API do
   describe '.entreprise' do
     subject { described_class.entreprise(siren, procedure_id) }
     before do
-      stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
         .to_return(status: status, body: body)
     end
     context 'when siren does not exist' do
@@ -31,7 +31,7 @@ describe ApiEntreprise::API do
   describe '.etablissement' do
     subject { described_class.etablissement(siret, procedure_id) }
     before do
-      stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
         .to_return(status: status, body: body)
     end
 
@@ -58,7 +58,7 @@ describe ApiEntreprise::API do
 
   describe '.exercices' do
     before do
-      stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/exercices\/.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/.*token=/)
         .to_return(status: status, body: body)
     end
 
@@ -89,7 +89,7 @@ describe ApiEntreprise::API do
 
   describe '.rna' do
     before do
-      stub_request(:get, /https:\/\/staging.entreprise.api.gouv.fr\/v2\/associations\/.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/.*token=/)
         .to_return(status: status, body: body)
     end
 
