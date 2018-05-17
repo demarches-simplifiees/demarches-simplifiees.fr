@@ -7,7 +7,7 @@ class AutoArchiveProcedureJob < ApplicationJob
         dossier.en_instruction!
       end
 
-      procedure.archive
+      procedure.archive!
     end
   end
 end
