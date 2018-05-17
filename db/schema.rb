@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_02_092852) do
+ActiveRecord::Schema.define(version: 2018_05_15_135415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -465,6 +465,7 @@ ActiveRecord::Schema.define(version: 2018_05_02_092852) do
     t.boolean "cloned_from_library", default: false
     t.bigint "parent_procedure_id"
     t.datetime "test_started_at"
+    t.string "aasm_state", default: "brouillon"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
   end
