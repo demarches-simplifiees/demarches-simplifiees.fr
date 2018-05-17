@@ -65,8 +65,9 @@ class Procedure < ApplicationRecord
 
   def hide!
     now = DateTime.now
-    self.update(hidden_at: now, aasm_state: :hidden)
-    self.dossiers.update_all(hidden_at: now)
+    update(hidden_at: now, aasm_state: :hidden)
+    procedure_path&.hide!(self)
+    dossiers.update_all(hidden_at: now)
   end
 
   def path
