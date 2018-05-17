@@ -63,7 +63,7 @@ class Procedure < ApplicationRecord
 
   def hide!
     now = DateTime.now
-    self.update(hidden_at: now)
+    self.update(hidden_at: now, aasm_state: :hidden)
     self.dossiers.update_all(hidden_at: now)
   end
 
@@ -154,7 +154,7 @@ class Procedure < ApplicationRecord
 
   def publish!(path)
     now = Time.now
-    self.update!({ test_started_at: now, published_at: now, archived_at: nil })
+    self.update!({ test_started_at: now, published_at: now, archived_at: nil, aasm_state: :publiee })
     ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
   end
 
@@ -163,7 +163,7 @@ class Procedure < ApplicationRecord
   end
 
   def archive
-    self.update!(archived_at: Time.now)
+    self.update!(archived_at: Time.now, aasm_state: :archivee)
   end
 
   def archivee?
