@@ -95,7 +95,7 @@ GEM
       sass-rails (~> 5.0)
       selectize-rails (~> 0.6)
     aes_key_wrap (1.0.1)
-    apipie-rails (0.5.7)
+    apipie-rails (0.5.8)
       rails (>= 4.1)
     arel (9.0.0)
     ast (2.4.0)
@@ -114,7 +114,7 @@ GEM
       sass (>= 3.3.4)
     bootstrap-wysihtml5-rails (0.3.3.8)
       railties (>= 3.0)
-    brakeman (4.2.1)
+    brakeman (4.3.0)
     browser (2.5.3)
     builder (3.2.3)
     byebug (10.0.2)
@@ -178,9 +178,9 @@ GEM
     diff-lcs (1.3)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
-    dotenv (2.3.0)
-    dotenv-rails (2.3.0)
-      dotenv (= 2.3.0)
+    dotenv (2.4.0)
+    dotenv-rails (2.4.0)
+      dotenv (= 2.4.0)
       railties (>= 3.2, < 6.0)
     draper (3.0.1)
       actionpack (~> 5.0)
@@ -420,12 +420,10 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (2.1.0)
-    json-jwt (1.9.2)
+    json-jwt (1.9.4)
       activesupport
       aes_key_wrap
       bindata
-      securecompare
-      url_safe_base64
     jsonapi-renderer (0.2.0)
     jwt (1.5.6)
     kaminari (1.1.1)
@@ -486,7 +484,7 @@ GEM
     mustermann (1.0.2)
     nenv (0.3.0)
     netrc (0.11.0)
-    nio4r (2.3.0)
+    nio4r (2.3.1)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     notiffany (0.1.1)
@@ -508,7 +506,7 @@ GEM
       oauth2 (~> 1.1)
       omniauth (~> 1.2)
     open4 (1.3.4)
-    openid_connect (1.1.5)
+    openid_connect (1.1.6)
       activemodel
       attr_required (>= 1.0.0)
       json-jwt (>= 1.5.0)
@@ -518,7 +516,7 @@ GEM
       validate_email
       validate_url
       webfinger (>= 1.0.1)
-    openstack (3.3.17)
+    openstack (3.3.18)
       json
     orm_adapter (0.5.0)
     parallel (1.12.1)
@@ -540,12 +538,12 @@ GEM
       byebug (~> 10.0)
       pry (~> 0.10)
     public_suffix (3.0.2)
-    rack (2.0.4)
+    rack (2.0.5)
     rack-handlers (0.7.3)
       rack
-    rack-mini-profiler (0.10.7)
+    rack-mini-profiler (1.0.0)
       rack (>= 1.2.0)
-    rack-oauth2 (1.9.0)
+    rack-oauth2 (1.9.2)
       activesupport
       attr_required
       httpclient
@@ -641,7 +639,7 @@ GEM
     rspec-support (3.7.1)
     rspec_junit_formatter (0.3.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (0.55.0)
+    rubocop (0.56.0)
       parallel (~> 1.10)
       parser (>= 2.5)
       powerpack (~> 0.1)
@@ -674,14 +672,13 @@ GEM
     scss_lint (0.57.0)
       rake (>= 0.9, < 13)
       sass (~> 3.5.5)
-    securecompare (1.0.0)
     select2-rails (4.0.3)
       thor (~> 0.14)
     selectize-rails (0.12.4.1)
     selenium-webdriver (3.8.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
-    sentry-raven (2.7.2)
+    sentry-raven (2.7.3)
       faraday (>= 0.7.6, < 1.0)
     sexp_processor (4.11.0)
     shellany (0.0.1)
@@ -745,12 +742,11 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.5)
-    unicode-display_width (1.3.0)
+    unicode-display_width (1.3.2)
     unicode_utils (1.4.0)
     unicorn (5.4.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    url_safe_base64 (0.2.2)
     validate_email (0.1.6)
       activemodel (>= 3.0)
       mail (>= 2.2.5)
@@ -758,7 +754,7 @@ GEM
       activemodel (>= 3.0.0)
       addressable
     vcr (4.0.0)
-    web-console (3.6.1)
+    web-console (3.6.2)
       actionview (>= 5.0)
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
@@ -766,7 +762,7 @@ GEM
     webfinger (1.1.0)
       activesupport
       httpclient (>= 2.4)
-    webmock (3.3.0)
+    webmock (3.4.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff

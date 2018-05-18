@@ -79,6 +79,9 @@ Layout/EmptyLineBetweenDefs:
 Layout/EmptyLines:
   Enabled: true
 
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
 Layout/EmptyLinesAroundAccessModifier:
   Enabled: true
 
@@ -899,9 +902,6 @@ Style/EmptyElse:
 Style/EmptyLambdaParameter:
   Enabled: true
 
-Style/EmptyLineAfterGuardClause:
-  Enabled: false
-
 Style/EmptyLiteral:
   Enabled: false
 
@@ -995,13 +995,16 @@ Style/MethodCalledOnDoEndBlock:
 Style/MethodDefParentheses:
   Enabled: true
 
-Style/MethodMissing:
+Style/MethodMissingSuper:
   Enabled: false
 
 Style/MinMax:
   Enabled: true
 
 Style/MissingElse:
+  Enabled: false
+
+Style/MissingRespondToMissing:
   Enabled: false
 
 Style/MixinGrouping:
