@@ -186,7 +186,7 @@ describe API::V1::DossiersController do
           describe 'first type de piece justificative' do
             subject { super().first }
 
-            it { expect(subject.keys.include?(:id)).to be_truthy }
+            it { expect(subject.key?(:id)).to be_truthy }
             it { expect(subject[:libelle]).to eq('RIB') }
             it { expect(subject[:description]).to eq('Releve identité bancaire') }
           end
@@ -200,11 +200,11 @@ describe API::V1::DossiersController do
           let(:field_list) { [:url, :created_at, :type_de_piece_justificative_id] }
           subject { super()[:pieces_justificatives].first }
 
-          it { expect(subject.keys.include?(:content_url)).to be_truthy }
+          it { expect(subject.key?(:content_url)).to be_truthy }
           it { expect(subject[:created_at]).not_to be_nil }
           it { expect(subject[:type_de_piece_justificative_id]).not_to be_nil }
 
-          it { expect(subject.keys.include?(:user)).to be_truthy }
+          it { expect(subject.key?(:user)).to be_truthy }
 
           describe 'user' do
             subject { super()[:user] }
@@ -222,8 +222,8 @@ describe API::V1::DossiersController do
           describe 'first champs' do
             subject { super().first }
 
-            it { expect(subject.keys.include?(:value)).to be_truthy }
-            it { expect(subject.keys.include?(:type_de_champ)).to be_truthy }
+            it { expect(subject.key?(:value)).to be_truthy }
+            it { expect(subject.key?(:type_de_champ)).to be_truthy }
 
             describe 'type de champ' do
               let(:field_list) {
@@ -237,10 +237,10 @@ describe API::V1::DossiersController do
               }
               subject { super()[:type_de_champ] }
 
-              it { expect(subject.keys.include?(:id)).to be_truthy }
+              it { expect(subject.key?(:id)).to be_truthy }
               it { expect(subject[:libelle]).to include('Libelle du champ') }
               it { expect(subject[:description]).to include('description du champ') }
-              it { expect(subject.keys.include?(:order_place)).to be_truthy }
+              it { expect(subject.key?(:order_place)).to be_truthy }
               it { expect(subject[:type_champ]).to eq('text') }
             end
           end
@@ -295,8 +295,8 @@ describe API::V1::DossiersController do
           describe 'first champs' do
             subject { super().first }
 
-            it { expect(subject.keys.include?(:value)).to be_truthy }
-            it { expect(subject.keys.include?(:type_de_champ)).to be_truthy }
+            it { expect(subject.key?(:value)).to be_truthy }
+            it { expect(subject.key?(:type_de_champ)).to be_truthy }
 
             describe 'type de champ' do
               let(:field_list) {
@@ -310,10 +310,10 @@ describe API::V1::DossiersController do
               }
               subject { super()[:type_de_champ] }
 
-              it { expect(subject.keys.include?(:id)).to be_truthy }
+              it { expect(subject.key?(:id)).to be_truthy }
               it { expect(subject[:libelle]).to include('Libelle champ privé') }
               it { expect(subject[:description]).to include('description du champ privé') }
-              it { expect(subject.keys.include?(:order_place)).to be_truthy }
+              it { expect(subject.key?(:order_place)).to be_truthy }
               it { expect(subject[:type_champ]).to eq('text') }
             end
           end
