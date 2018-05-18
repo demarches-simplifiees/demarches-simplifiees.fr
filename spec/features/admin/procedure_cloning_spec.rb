@@ -14,7 +14,6 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
       page.find_by_id('from-scratch').click
       fill_in 'procedure_libelle', with: 'libelle de la procedure'
       page.execute_script("$('#procedure_description').val('description de la procedure')")
-      fill_in 'procedure_organisation', with: 'organisme de la procedure'
       page.find_by_id('save-procedure').click
     end
 

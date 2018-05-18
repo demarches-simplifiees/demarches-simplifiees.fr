@@ -1,0 +1,10 @@
+fr:
+  type_organisme:
+    administration_centrale: 'administration centrale'
+    association: 'association'
+    commune: 'commune'
+    departement: 'département'
+    etablissement_enseignement: 'établissement d’enseignement'
+    prefecture: 'préfecture'
+    region: 'région'
+    autre: 'autre'
