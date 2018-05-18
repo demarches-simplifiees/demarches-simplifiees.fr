@@ -286,6 +286,12 @@ Rails.application.routes.draw do
         get 'apercu'
       end
     end
+
+    resources :services, except: [:show] do
+      collection do
+        patch 'add_to_procedure'
+      end
+    end
   end
 
   apipie
