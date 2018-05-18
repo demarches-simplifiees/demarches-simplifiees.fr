@@ -695,8 +695,10 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.1)
       tilt (~> 2.0)
-    skylight (1.6.1)
-      activesupport (>= 3.0.0)
+    skylight (2.0.1)
+      skylight-core (= 2.0.1)
+    skylight-core (2.0.1)
+      activesupport (>= 4.2.0)
     smart_listing (1.2.2)
       coffee-rails
       jquery-rails
