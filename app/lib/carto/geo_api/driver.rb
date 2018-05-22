@@ -2,23 +2,17 @@ module Carto
   module GeoAPI
     class Driver
       def self.regions
-        call regions_url
+        url = [API_GEO_URL, "regions"].join("/")
+        call url
       end
 
       def self.departements
-        call departements_url
+        url = [API_GEO_URL, "departements"].join("/")
+        call url
       end
 
       def self.pays
         File.open('app/lib/carto/geo_api/pays.json').read
-      end
-
-      def self.departements_url
-        'https://geo.api.gouv.fr/departements'
-      end
-
-      def self.regions_url
-        'https://geo.api.gouv.fr/regions'
       end
 
       private
