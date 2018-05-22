@@ -2,19 +2,24 @@
   .alert.alert-info
     Cette procédure est publiée, certains éléments de la description ne sont plus modifiables
 
-- { libelle: 'Libellé*', description: 'Description*', lien_site_web: 'Lien site internet', web_hook_url: 'Lien de rappel HTTP' }.each do |key, value|
-  - if key != :web_hook_url || Flipflop.web_hook?
-    .form-group
-      %h4
-        = value
-      - if key == :web_hook_url
-        %p
-          Un lien de rappel HTTP (aussi appelé webhook) est utilisé pour notifier un service tiers du changement de l'état d’un dossier sur demarches-simplifiees.fr. À chaque changement d’état d'un dossier, notre site va effectuer une requête sur le lien renseigné avec en paramètres : le nouvel état du dossier, l’identifiant de la procédure, l'identifiant dossier et la date du changement. Vous pourrez alors utiliser notre API pour récupérer les nouvelles informations du dossier concerné.
-      - if key == :description
-        = f.text_area key, rows: '6', placeholder: 'Description du projet', class: 'form-control'
+.form-group
+  %h4 Libellé*
+  = f.text_field :libelle, class: 'form-control', placeholder: 'Libellé de la procédure'
 
-      - else
-        = f.text_field key, class: 'form-control', placeholder: value
+.form-group
+  %h4 Description*
+  = f.text_area :description, rows: '6', placeholder: 'Description du projet', class: 'form-control'
+
+.form-group
+  %h4 Lien site internet
+  = f.text_field :lien_site_web, class: 'form-control', placeholder: 'https://www.exemple.fr/'
+
+- if  Flipflop.web_hook?
+  .form-group
+    %h4 Lien de rappel HTTP
+    %p
+      Un lien de rappel HTTP (aussi appelé webhook) est utilisé pour notifier un service tiers du changement de l'état d’un dossier sur demarches-simplifiees.fr. À chaque changement d’état d'un dossier, notre site va effectuer une requête sur le lien renseigné avec en paramètres : le nouvel état du dossier, l’identifiant de la procédure, l'identifiant dossier et la date du changement. Vous pourrez alors utiliser notre API pour récupérer les nouvelles informations du dossier concerné.
+      = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 
 .form-group
   %h4 Notice explicative de la procédure
