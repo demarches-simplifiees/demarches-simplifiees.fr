@@ -232,15 +232,15 @@ class Admin::ProceduresController < AdminController
 
   def path_list
     json_path_list = ProcedurePath
-      .joins(', procedures')
-      .where("procedures.id = procedure_paths.procedure_id")
-      .where("procedures.archived_at" => nil)
+      .joins(:procedure)
+      .where(procedures: { archived_at: nil })
       .where("path LIKE ?", "%#{params[:request]}%")
+      .order(:id)
       .pluck(:path, :administrateur_id)
-      .map do |value|
+      .map do |path, administrateur_id|
         {
-          label: value.first,
-          mine: value.second == current_administrateur.id
+          label: path,
+          mine: administrateur_id == current_administrateur.id
         }
       end.to_json
 
