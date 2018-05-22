@@ -455,9 +455,14 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'PUT #clone' do
-    let!(:procedure) { create(:procedure, administrateur: admin) }
+    let!(:procedure) { create(:procedure, :with_notice, administrateur: admin) }
     let(:params) { { procedure_id: procedure.id } }
     subject { put :clone, params: params }
+
+    before do
+      response = Typhoeus::Response.new(code: 200, body: 'Hello world')
+      Typhoeus.stub(/active_storage\/disk/).and_return(response)
+    end
 
     it { expect { subject }.to change(Procedure, :count).by(1) }
 
@@ -466,7 +471,8 @@ describe Admin::ProceduresController, type: :controller do
 
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
-        expect(Procedure.last.cloned_from_library).to be(false)
+        expect(Procedure.last.cloned_from_library).to be_falsey
+        expect(Procedure.last.notice.attached?).to be_truthy
         expect(flash[:notice]).to have_content 'Procédure clonée'
       end
 
