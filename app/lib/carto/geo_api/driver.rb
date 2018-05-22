@@ -3,12 +3,12 @@ module Carto
     class Driver
       def self.regions
         url = [API_GEO_URL, "regions"].join("/")
-        call url
+        call(url)
       end
 
       def self.departements
         url = [API_GEO_URL, "departements"].join("/")
-        call url
+        call(url)
       end
 
       def self.pays
