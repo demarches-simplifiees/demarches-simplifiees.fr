@@ -46,7 +46,6 @@ describe Users::CommentairesController, type: :controller do
 
       it 'Notification email is not send' do
         expect(NotificationMailer).not_to receive(:new_answer)
-        expect(WelcomeMailer).not_to receive(:deliver_now!)
 
         subject
       end
