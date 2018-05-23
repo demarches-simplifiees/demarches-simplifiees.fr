@@ -86,6 +86,8 @@ fr:
         delimiter: ''
   activerecord:
     errors:
+      messages:
+        blank: "doit être rempli"
       models:
         attestation_template:
           attributes:
