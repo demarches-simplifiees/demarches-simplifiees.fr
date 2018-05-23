@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   before_action :reject, if: -> { Flipflop.maintenance_mode? }
 
   before_action :staging_authenticate
+  before_action :set_active_storage_host
 
   def staging_authenticate
     if StagingAuthService.enabled? && !authenticate_with_http_basic { |username, password| StagingAuthService.authenticate(username, password) }
@@ -56,6 +57,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def set_active_storage_host
+    ActiveStorage::Current.host = request.base_url
+  end
 
   def logged_users
     @logged_users ||= [

@@ -211,6 +211,7 @@ Rails.application.routes.draw do
   end
 
   namespace :commencer do
+    get '/test/:procedure_path' => '/users/dossiers#commencer_test', as: :test
     get '/:procedure_path' => '/users/dossiers#commencer'
   end
 
@@ -284,6 +285,12 @@ Rails.application.routes.draw do
     resources :procedures, only: [] do
       member do
         get 'apercu'
+      end
+    end
+
+    resources :services, except: [:show] do
+      collection do
+        patch 'add_to_procedure'
       end
     end
   end

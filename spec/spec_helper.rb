@@ -64,6 +64,7 @@ VCR.configure do |c|
   c.hook_into :webmock
   c.cassette_library_dir = 'spec/fixtures/cassettes'
   c.configure_rspec_metadata!
+  c.ignore_hosts 'test.host'
 end
 
 DatabaseCleaner.strategy = :transaction
@@ -118,6 +119,8 @@ RSpec.configure do |config|
 
   config.before(:all) {
     Warden.test_mode!
+
+    Typhoeus::Expectation.clear
 
     if Flipflop.remote_storage?
       VCR.use_cassette("ovh_storage_init") do

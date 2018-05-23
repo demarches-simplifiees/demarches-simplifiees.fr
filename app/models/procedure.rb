@@ -4,13 +4,12 @@ class Procedure < ApplicationRecord
   has_many :types_de_champ_private, -> { private_only }, class_name: 'TypeDeChamp', dependent: :destroy
   has_many :dossiers
 
-  has_one :procedure_path, dependent: :destroy
-
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
 
   belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
+  belongs_to :service
 
   has_many :assign_to, dependent: :destroy
   has_many :administrateurs_procedures
@@ -45,7 +44,6 @@ class Procedure < ApplicationRecord
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
-  validates :organisation, presence: true, allow_blank: false, allow_nil: false
 
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
@@ -61,10 +59,15 @@ class Procedure < ApplicationRecord
     Dossier.new(procedure: self, champs: champs, champs_private: champs_private)
   end
 
+  def procedure_path
+    ProcedurePath.find_with_procedure(self)
+  end
+
   def hide!
     now = DateTime.now
-    self.update(hidden_at: now, aasm_state: :hidden)
-    self.dossiers.update_all(hidden_at: now)
+    update(hidden_at: now, aasm_state: :hidden)
+    procedure_path&.hide!(self)
+    dossiers.update_all(hidden_at: now)
   end
 
   def path
@@ -134,6 +137,16 @@ class Procedure < ApplicationRecord
     procedure.published_at = nil
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
+
+    if notice.attached?
+      response = Typhoeus.get(notice.service_url, timeout: 5)
+      if response.success?
+        procedure.notice.attach(
+          io: StringIO.new(response.body),
+          filename: notice.filename
+        )
+      end
+    end
 
     procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail.try(:dup)
