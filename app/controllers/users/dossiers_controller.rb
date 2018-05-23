@@ -43,7 +43,7 @@ class Users::DossiersController < UsersController
 
   def commencer_test
     procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
-    procedure = procedure_path.test_procedure
+    procedure = procedure_path&.test_procedure
 
     if procedure.present?
       redirect_to new_users_dossier_path(procedure_id: procedure.id)
@@ -55,7 +55,7 @@ class Users::DossiersController < UsersController
 
   def commencer
     procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
-    procedure = procedure_path.procedure
+    procedure = procedure_path&.procedure
 
     if procedure.present?
       if procedure.archivee?
