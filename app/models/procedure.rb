@@ -4,8 +4,6 @@ class Procedure < ApplicationRecord
   has_many :types_de_champ_private, -> { private_only }, class_name: 'TypeDeChamp', dependent: :destroy
   has_many :dossiers
 
-  has_one :procedure_path, dependent: :destroy
-
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
 
@@ -61,10 +59,15 @@ class Procedure < ApplicationRecord
     Dossier.new(procedure: self, champs: champs, champs_private: champs_private)
   end
 
+  def procedure_path
+    ProcedurePath.find_with_procedure(self)
+  end
+
   def hide!
     now = DateTime.now
-    self.update(hidden_at: now, aasm_state: :hidden)
-    self.dossiers.update_all(hidden_at: now)
+    update(hidden_at: now, aasm_state: :hidden)
+    procedure_path&.hide!(self)
+    dossiers.update_all(hidden_at: now)
   end
 
   def path
