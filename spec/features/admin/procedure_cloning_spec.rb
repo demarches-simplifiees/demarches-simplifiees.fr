@@ -1,6 +1,9 @@
 require 'spec_helper'
+require 'features/admin/procedure_spec_helper'
 
 feature 'As an administrateur I wanna clone a procedure', js: true do
+  include ProcedureFeatureSpecHelper
+
   let(:administrateur) { create(:administrateur) }
 
   before do
@@ -12,8 +15,7 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
     before 'Create procedure' do
       page.find_by_id('new-procedure').click
       page.find_by_id('from-scratch').click
-      fill_in 'procedure_libelle', with: 'libelle de la procedure'
-      page.execute_script("$('#procedure_description').val('description de la procedure')")
+      fill_in_dummy_procedure_details
       page.find_by_id('save-procedure').click
     end
 
