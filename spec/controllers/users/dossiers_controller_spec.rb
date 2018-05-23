@@ -152,7 +152,8 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe 'GET #commencer' do
-    subject { get :commencer, params: { procedure_path: procedure.path } }
+    subject { get :commencer, params: { procedure_path: path } }
+    let(:path) { procedure.path }
 
     it { expect(subject.status).to eq 302 }
     it { expect(subject).to redirect_to new_users_dossier_path(procedure_id: procedure.id) }
@@ -169,6 +170,12 @@ describe Users::DossiersController, type: :controller do
 
     context 'when procedure is hidden' do
       let(:procedure) { create(:procedure, :published, hidden_at: DateTime.now) }
+
+      it { expect(subject).to redirect_to(root_path) }
+    end
+
+    context 'when procedure path dose not exist' do
+      let(:path) { 'hello' }
 
       it { expect(subject).to redirect_to(root_path) }
     end
