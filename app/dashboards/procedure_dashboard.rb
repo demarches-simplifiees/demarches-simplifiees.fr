@@ -12,7 +12,6 @@ class ProcedureDashboard < Administrate::BaseDashboard
     types_de_champ: TypesDeChampCollectionField,
     path: ProcedureLinkField,
     dossiers: Field::HasMany,
-    procedure_path: Field::HasOne,
     administrateur: Field::BelongsTo,
     id: Field::Number,
     libelle: Field::String,
