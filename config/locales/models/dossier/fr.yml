@@ -15,17 +15,3 @@ fr:
           refuse: "Refusé"
           sans_suite: "Sans suite"
         autorisation_donnees: Acceptation des CGU
-
-    errors:
-      models:
-        dossier:
-          attributes:
-            mail_contact:
-              blank: 'doit être rempli'
-              invalid: 'est incorrect'
-            montant_projet:
-              blank: 'doit être rempli'
-            montant_aide_demande:
-              blank: 'doit être rempli'
-            date_previsionnelle:
-              blank: 'doit être remplie'
