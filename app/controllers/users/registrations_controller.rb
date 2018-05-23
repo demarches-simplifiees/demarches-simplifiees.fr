@@ -15,7 +15,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    super
+    user = User.find_by(email: params[:user][:email])
+    if user.present?
+      UserMailer.new_account_warning(user).deliver
+      flash.notice = t('devise.registrations.signed_up_but_unconfirmed')
+      redirect_to root_path
+    else
+      super
+    end
   end
 
   # GET /resource/edit

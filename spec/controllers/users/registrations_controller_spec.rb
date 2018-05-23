@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Users::RegistrationsController, type: :controller do
   let(:email) { 'test@octo.com' }
   let(:password) { 'password' }
@@ -32,6 +30,19 @@ describe Users::RegistrationsController, type: :controller do
 
         subject
       end
+    end
+
+    context 'when the user already exists' do
+      let!(:existing_user) { create(:user, email: email, password: password) }
+
+      before do
+        allow(UserMailer).to receive(:new_account_warning).and_return(double(deliver: 'deliver'))
+        subject
+      end
+
+      it { expect(response).to redirect_to(root_path) }
+      it { expect(flash.notice).to eq(I18n.t('devise.registrations.signed_up_but_unconfirmed')) }
+      it { expect(UserMailer).to have_received(:new_account_warning) }
     end
   end
 end
