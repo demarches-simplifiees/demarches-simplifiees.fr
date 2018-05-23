@@ -99,7 +99,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
 
       context "with procedures assigned" do
         let(:procedure1) { create(:procedure, :published) }
-        let(:procedure2) { create(:procedure, :published, :archived) }
+        let(:procedure2) { create(:procedure, :archived) }
         let(:procedure3) { create(:procedure) }
 
         before do

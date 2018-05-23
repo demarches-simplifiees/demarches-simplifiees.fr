@@ -101,6 +101,10 @@ class Administrateur < ApplicationRecord
     save
   end
 
+  def owns?(procedure)
+    id == procedure.administrateur_id
+  end
+
   private
 
   def generate_api_token
