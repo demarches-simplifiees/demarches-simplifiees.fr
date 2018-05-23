@@ -44,6 +44,8 @@ class Procedure < ApplicationRecord
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+  validates :duree_conservation_dossiers_dans_ds, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 16 }
+  validates :duree_conservation_dossiers_hors_ds, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   include AASM
 
