@@ -113,37 +113,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def permit_smart_listing_params
-    # FIXME: remove when
-    # https://github.com/Sology/smart_listing/issues/134
-    # is fixed
-    self.params = params.permit(
-      # Dossiers
-      :liste,
-      dossiers_smart_listing:
-        [
-          :page,
-          :per_page,
-          { sort: [:id, :'procedure.libelle', :state, :updated_at] }
-        ],
-      # Gestionnaires
-      gestionnaires_smart_listing:
-        [
-          :page,
-          :per_page,
-          { sort: [:email] }
-        ],
-      # Procédures
-      procedures_smart_listing:
-        [
-          :page,
-          :per_page,
-          { sort: [:id, :libelle, :published_at] }
-        ]
-    )
-    # END OF FIXME
-  end
-
   def reject
     authorized_request =
       request.path_info == '/' ||

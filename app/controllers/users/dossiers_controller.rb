@@ -29,12 +29,6 @@ class Users::DossiersController < UsersController
       return redirect_to users_dossiers_path
     end
 
-    # FIXME: remove when
-    # https://github.com/Sology/smart_listing/issues/134
-    # is fixed
-    permit_smart_listing_params
-    # END OF FIXME
-
     @dossiers = smart_listing_create :dossiers,
       @dossiers_filtered,
       partial: "users/dossiers/list",

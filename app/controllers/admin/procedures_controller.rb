@@ -5,12 +5,6 @@ class Admin::ProceduresController < AdminController
   before_action :retrieve_procedure, only: [:show, :edit]
 
   def index
-    # FIXME: remove when
-    # https://github.com/Sology/smart_listing/issues/134
-    # is fixed
-    permit_smart_listing_params
-    # END OF FIXME
-
     @procedures = smart_listing_create :procedures,
       current_administrateur.procedures.publiees.order(published_at: :desc),
       partial: "admin/procedures/list",
@@ -20,12 +14,6 @@ class Admin::ProceduresController < AdminController
   end
 
   def archived
-    # FIXME: remove when
-    # https://github.com/Sology/smart_listing/issues/134
-    # is fixed
-    permit_smart_listing_params
-    # END OF FIXME
-
     @procedures = smart_listing_create :procedures,
       current_administrateur.procedures.archivees.order(published_at: :desc),
       partial: "admin/procedures/list",
@@ -37,12 +25,6 @@ class Admin::ProceduresController < AdminController
   end
 
   def draft
-    # FIXME: remove when
-    # https://github.com/Sology/smart_listing/issues/134
-    # is fixed
-    permit_smart_listing_params
-    # END OF FIXME
-
     @procedures = smart_listing_create :procedures,
       current_administrateur.procedures.brouillons.order(created_at: :desc),
       partial: "admin/procedures/list",
