@@ -10,6 +10,15 @@
   %h4 Description*
   = f.text_area :description, rows: '6', placeholder: 'Description du projet', class: 'form-control'
 
+- if !@procedure.locked?
+  .form-group
+    %h4 Conservation des données
+    = f.label :duree_conservation_dossiers_dans_ds, "Sur demarches-simplifiees.fr* (durée en mois après le début de l’instruction)"
+    = f.text_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6'
+
+    = f.label :duree_conservation_dossiers_hors_ds, "Hors demarches-simplifiees.fr* (durée en mois)"
+    = f.text_field :duree_conservation_dossiers_hors_ds, class: 'form-control', placeholder: '6'
+
 .form-group
   %h4 Lien site internet
   = f.text_field :lien_site_web, class: 'form-control', placeholder: 'https://www.exemple.fr/'
