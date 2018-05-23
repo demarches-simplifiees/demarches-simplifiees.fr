@@ -88,6 +88,7 @@ fr:
     errors:
       messages:
         blank: "doit être rempli"
+        not_a_number: 'doit être un nombre'
       models:
         attestation_template:
           attributes:

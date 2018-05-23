@@ -15,6 +15,8 @@ describe Admin::ProceduresController, type: :controller do
   let(:quartiers_prioritaires) { '0' }
   let(:cadastre) { '0' }
   let(:cerfa_flag) { true }
+  let(:duree_conservation_dossiers_dans_ds) { 3 }
+  let(:duree_conservation_dossiers_hors_ds) { 6 }
 
   let(:procedure_params) {
     {
@@ -24,6 +26,8 @@ describe Admin::ProceduresController, type: :controller do
       direction: direction,
       lien_demarche: lien_demarche,
       cerfa_flag: cerfa_flag,
+      duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
+      duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_dans_ds,
       module_api_carto_attributes: {
         use_api_carto: use_api_carto,
         quartiers_prioritaires: quartiers_prioritaires,
