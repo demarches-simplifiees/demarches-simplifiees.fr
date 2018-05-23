@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe Admin::PiecesJustificativesController, type: :controller do
   let(:admin) { create(:administrateur) }
-  let(:published_at) { nil }
-  let(:procedure) { create(:procedure, administrateur: admin, published_at: published_at) }
+  let(:procedure) { create(:procedure, administrateur: admin) }
   before do
     sign_in admin
   end
@@ -19,7 +18,7 @@ describe Admin::PiecesJustificativesController, type: :controller do
     end
 
     context 'when procedure is published' do
-      let(:published_at) { Time.now }
+      let(:procedure) { create(:procedure, :published, administrateur: admin) }
       it { is_expected.to redirect_to admin_procedure_path id: procedure_id }
     end
 
