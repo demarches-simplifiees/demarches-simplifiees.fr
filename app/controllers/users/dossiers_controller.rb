@@ -41,28 +41,34 @@ class Users::DossiersController < UsersController
       array: true
   end
 
+  def commencer_test
+    procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
+    procedure = procedure_path.test_procedure
+
+    if procedure.present?
+      redirect_to new_users_dossier_path(procedure_id: procedure.id)
+    else
+      flash.alert = "Procédure inconnue"
+      redirect_to root_path
+    end
+  end
+
   def commencer
-    if params[:procedure_path].present?
-      procedure_path = ProcedurePath.where(path: params[:procedure_path]).last
+    procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
+    procedure = procedure_path.procedure
 
-      if procedure_path.nil? || procedure_path.procedure.nil?
-        flash.alert = "Procédure inconnue"
-        return redirect_to root_path
+    if procedure.present?
+      if procedure.archivee?
+        @dossier = Dossier.new(procedure: procedure)
+
+        render 'commencer/archived'
       else
-        procedure = procedure_path.procedure
+        redirect_to new_users_dossier_path(procedure_id: procedure.id)
       end
+    else
+      flash.alert = "Procédure inconnue"
+      redirect_to root_path
     end
-
-    if procedure.archivee?
-
-      @dossier = Dossier.new(procedure: procedure)
-
-      return render 'commencer/archived'
-    end
-
-    redirect_to new_users_dossier_path(procedure_id: procedure.id)
-  rescue ActiveRecord::RecordNotFound
-    error_procedure
   end
 
   def new
