@@ -1,4 +1,8 @@
+API_CARTO_URL = "https://apicarto.sgmap.fr"
+
 API_ENTREPRISE_URL = 'https://entreprise.api.gouv.fr/v2'
+
+API_GEO_URL = "https://geo.api.gouv.fr"
 
 PIPEDRIVE_API_URL = 'https://api.pipedrive.com/v1'
 

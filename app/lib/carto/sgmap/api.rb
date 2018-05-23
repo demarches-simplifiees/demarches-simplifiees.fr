@@ -3,13 +3,13 @@ class CARTO::SGMAP::API
   end
 
   def self.search_qp(geojson)
-    endpoint = "/quartiers-prioritaires/search"
-    call(base_url + endpoint, { geojson: geojson.to_s })
+    url = [API_CARTO_URL, "quartiers-prioritaires", "search"].join("/")
+    call(url, { geojson: geojson.to_s })
   end
 
   def self.search_cadastre(geojson)
-    endpoint = "/cadastre/geometrie"
-    call(base_url + endpoint, { geojson: geojson.to_s })
+    url = [API_CARTO_URL, "cadastre", "geometrie"].join("/")
+    call(url, { geojson: geojson.to_s })
   end
 
   private
@@ -24,9 +24,5 @@ class CARTO::SGMAP::API
 
   rescue RestClient::InternalServerError
     raise RestClient::ResourceNotFound
-  end
-
-  def self.base_url
-    'https://apicarto.sgmap.fr'
   end
 end
