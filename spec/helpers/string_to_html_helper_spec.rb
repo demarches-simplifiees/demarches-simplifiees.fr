@@ -1,6 +1,6 @@
-RSpec.describe ChampHelper, type: :helper do
-  describe "#html_formatted_description" do
-    subject { html_formatted_description(description) }
+RSpec.describe StringToHtmlHelper, type: :helper do
+  describe "#string_to_html" do
+    subject { string_to_html(description) }
 
     context "with some simple texte" do
       let(:description) { "1er ligne \n 2ieme ligne" }
