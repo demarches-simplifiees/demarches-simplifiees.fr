@@ -33,4 +33,15 @@ class Pipedrive::DealAdapter
 
     Pipedrive::API.put_deal(deal_id, params)
   end
+
+  def self.add_deal(organisation_id, person_id, title)
+    params = {
+      org_id: organisation_id,
+      person_id: person_id,
+      title: title,
+      user_id: Pipedrive::PersonAdapter::PIPEDRIVE_ROBOT_ID
+    }
+
+    Pipedrive::API.post_deal(params)
+  end
 end
