@@ -835,7 +835,7 @@ DEPENDENCIES
   pry-byebug
   rack-handlers
   rack-mini-profiler
-  rails (~> 5.2.0)
+  rails
   rails-controller-testing
   rbnacl-libsodium
   rest-client
