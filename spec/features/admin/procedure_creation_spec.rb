@@ -38,6 +38,8 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
     scenario 'Finding save button for new procedure, libelle, description and cadre_juridique required' do
       page.find_by_id('new-procedure').click
       page.find_by_id('from-scratch').click
+      fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
+      fill_in 'procedure_duree_conservation_dossiers_hors_ds', with: '6'
       page.find_by_id('save-procedure').click
       page.find_by_id('flash_message').visible?
       fill_in_dummy_procedure_details
