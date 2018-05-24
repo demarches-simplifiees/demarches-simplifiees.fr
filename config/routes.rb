@@ -69,6 +69,7 @@ Rails.application.routes.draw do
 
   resources :stats, only: [:index]
   resources :accessibilite, only: [:index]
+  resources :demandes, only: [:new, :create]
 
   namespace :france_connect do
     get 'particulier' => 'particulier#login'

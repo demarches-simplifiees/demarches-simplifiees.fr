@@ -1,0 +1,43 @@
+.container
+  %h1 Demande de compte administrateur
+  %p Pour obtenir un compte administrateur sur demarches-simplifiees.fr, veuillez remplir le formulaire ci-dessous et un membre de notre équipe vous contactera très prochainement.
+  %p Tous les champs sont obligatoires.
+
+  = form_tag({ controller: 'demandes', action: 'create' }, class: 'form') do
+
+    = label_tag :organization_name do
+      Quel est le nom de votre organisme ?
+      %span.mandatory *
+    = text_field_tag :organization_name, nil, placeholder: 'service jeunesse et prévention, direction des affaires maritimes', required: true
+
+    = label_tag :poste do
+      Quel est votre poste ?
+      %span.mandatory *
+    = text_field_tag :poste, nil, required: true
+
+    = label_tag :name do
+      Quel est votre prénom et votre nom ?
+      %span.mandatory *
+    = text_field_tag :name, nil, required: true
+
+    = label_tag :email do
+      Quelle est l'adresse email pour laquelle vous souhaitez un compte ?
+      %span.mandatory *
+    = email_field_tag :email, nil, required: true
+
+    = label_tag :phone do
+      Quel est votre numéro de téléphone ?
+      %span.mandatory *
+    = text_field_tag :phone, nil, required: true
+
+    = label_tag :source do
+      Comment avez-vous entendu parlé de demarches-simplifiees.fr ?
+      %span.mandatory *
+    = text_field_tag :source, nil, required: true
+
+    = label_tag :address do
+      Quel est le code postal de votre institution ?
+      %span.mandatory *
+    = text_field_tag :address, nil, required: true
+
+    = submit_tag 'Envoyer', class: 'button',  data: { disable_with: "Envoi..."  }
