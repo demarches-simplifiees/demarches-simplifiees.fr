@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Users::RegistrationsController, type: :controller do
   let(:email) { 'test@octo.com' }
   let(:password) { 'password' }
@@ -11,38 +9,40 @@ describe Users::RegistrationsController, type: :controller do
   end
 
   describe '#create' do
-    subject { post :create, params: { user: user } }
+    subject do
+      post :create, params: { user: user }
+    end
 
     context 'when user is correct' do
-      it 'sends welcome email' do
-        expect(WelcomeMailer).to receive(:welcome_email).and_return(WelcomeMailer)
-        expect(WelcomeMailer).to receive(:deliver_now!)
+      it 'sends confirmation instruction' do
+        expect(DeviseUserMailer).to receive(:confirmation_instructions).and_return(DeviseUserMailer)
+        expect(DeviseUserMailer).to receive(:deliver)
 
         subject
-      end
-
-      describe '#check_invite!' do
-        let!(:invite) { create :invite, email: email }
-        let!(:invite2) { create :invite, email: email }
-
-        before do
-          subject
-        end
-
-        it 'the new user is connect at his two invite' do
-          expect(User.last.invites.size).to eq 2
-        end
       end
     end
 
     context 'when user is not correct' do
       let(:user) { { email: '', password: password } }
 
-      it 'not sends welcome email' do
-        expect(WelcomeMailer).not_to receive(:welcome_email)
+      it 'not sends confirmation instruction' do
+        expect(DeviseUserMailer).not_to receive(:confirmation_instructions)
 
         subject
       end
+    end
+
+    context 'when the user already exists' do
+      let!(:existing_user) { create(:user, email: email, password: password) }
+
+      before do
+        allow(UserMailer).to receive(:new_account_warning).and_return(double(deliver: 'deliver'))
+        subject
+      end
+
+      it { expect(response).to redirect_to(root_path) }
+      it { expect(flash.notice).to eq(I18n.t('devise.registrations.signed_up_but_unconfirmed')) }
+      it { expect(UserMailer).to have_received(:new_account_warning) }
     end
   end
 end

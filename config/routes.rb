@@ -43,7 +43,8 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations',
-    passwords: 'users/passwords'
+    passwords: 'users/passwords',
+    confirmations: 'users/confirmations'
   }
 
   devise_scope :user do
@@ -68,6 +69,7 @@ Rails.application.routes.draw do
 
   resources :stats, only: [:index]
   resources :accessibilite, only: [:index]
+  resources :demandes, only: [:new, :create]
 
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
@@ -224,6 +226,7 @@ Rails.application.routes.draw do
         patch 'update_identite'
         get 'modifier'
         get 'merci'
+        post 'ask_deletion'
       end
       get 'attestation'
     end

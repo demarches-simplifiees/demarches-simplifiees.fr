@@ -45,6 +45,77 @@ class Procedure < ApplicationRecord
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
 
+  include AASM
+
+  aasm whiny_persistence: true do
+    state :brouillon, initial: true
+    state :publiee
+    state :archivee
+    state :hidden
+
+    event :publish, after: :after_publish, guard: :can_publish? do
+      transitions from: :brouillon, to: :publiee
+      transitions from: :archivee, to: :publiee
+    end
+
+    event :archive, after: :after_archive do
+      transitions from: :publiee, to: :archivee
+    end
+
+    event :hide, after: :after_hide do
+      transitions from: :brouillon, to: :hidden
+      transitions from: :publiee, to: :hidden
+      transitions from: :archivee, to: :hidden
+    end
+  end
+
+  def after_publish(path)
+    now = Time.now
+    update(
+      test_started_at: now,
+      archived_at: nil,
+      published_at: now
+    )
+    procedure_path = ProcedurePath.find_by(path: path)
+
+    if procedure_path.present?
+      if procedure_path.procedure != self
+        procedure_path.procedure.archive!
+        procedure_path.update(procedure: self)
+      end
+    else
+      ProcedurePath.create(procedure: self, administrateur: administrateur, path: path)
+    end
+  end
+
+  def after_archive
+    update(archived_at: Time.now)
+  end
+
+  def after_hide
+    now = Time.now
+    update(hidden_at: now)
+    procedure_path&.hide!(self)
+    dossiers.update_all(hidden_at: now)
+  end
+
+  def locked?
+    publiee_ou_archivee?
+  end
+
+  def publiee_ou_archivee?
+    publiee? || archivee?
+  end
+
+  def can_publish?(path)
+    procedure_path = ProcedurePath.find_by(path: path)
+    if procedure_path.present?
+      administrateur.owns?(procedure_path)
+    else
+      true
+    end
+  end
+
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
@@ -61,13 +132,6 @@ class Procedure < ApplicationRecord
 
   def procedure_path
     ProcedurePath.find_with_procedure(self)
-  end
-
-  def hide!
-    now = DateTime.now
-    update(hidden_at: now, aasm_state: :hidden)
-    procedure_path&.hide!(self)
-    dossiers.update_all(hidden_at: now)
   end
 
   def path
@@ -120,10 +184,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def locked?
-    publiee_ou_archivee?
-  end
-
   def clone(admin, from_library)
     procedure = self.deep_clone(include:
       {
@@ -159,32 +219,6 @@ class Procedure < ApplicationRecord
     procedure.parent_procedure = self
 
     procedure
-  end
-
-  def brouillon?
-    published_at.nil?
-  end
-
-  def publish!(path)
-    now = Time.now
-    self.update!({ test_started_at: now, published_at: now, archived_at: nil, aasm_state: :publiee })
-    ProcedurePath.create!(path: path, procedure: self, administrateur: self.administrateur)
-  end
-
-  def publiee?
-    published_at.present? && archived_at.nil?
-  end
-
-  def archive
-    self.update!(archived_at: Time.now, aasm_state: :archivee)
-  end
-
-  def archivee?
-    published_at.present? && archived_at.present?
-  end
-
-  def publiee_ou_archivee?
-    publiee? || archivee?
   end
 
   def whitelisted?

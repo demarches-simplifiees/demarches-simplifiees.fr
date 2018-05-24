@@ -3,15 +3,3 @@ fr:
     attributes:
       procedure:
         organisation: Organisme
-    errors:
-      models:
-        procedure:
-          attributes:
-            libelle:
-              blank: Attribut manquant
-            description:
-              blank: Attribut manquant
-            lien_demarche:
-              blank: Attribut manquant
-            organisation:
-              blank: Attribut manquant

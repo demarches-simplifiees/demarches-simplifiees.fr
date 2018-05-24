@@ -92,8 +92,8 @@ describe Admin::ProceduresController, type: :controller do
 
   describe 'DELETE #destroy' do
     let(:procedure_draft) { create :procedure, administrateur: admin, published_at: nil, archived_at: nil }
-    let(:procedure_published) { create :procedure, administrateur: admin, published_at: Time.now, archived_at: nil }
-    let(:procedure_archived) { create :procedure, administrateur: admin, published_at: nil, archived_at: Time.now }
+    let(:procedure_published) { create :procedure, administrateur: admin, aasm_state: :publiee, published_at: Time.now, archived_at: nil }
+    let(:procedure_archived) { create :procedure, administrateur: admin, aasm_state: :archivee, published_at: nil, archived_at: Time.now }
 
     subject { delete :destroy, params: { id: procedure.id } }
 
@@ -344,7 +344,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'publish the given procedure' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
-          expect(response.status).to eq 200
+          expect(response.status).to eq 302
           expect(flash[:notice]).to have_content 'Procédure publiée'
         end
       end
@@ -355,7 +355,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'publish the given procedure' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
-          expect(response.status).to eq 200
+          expect(response.status).to eq 302
           expect(flash[:notice]).to have_content 'Procédure publiée'
         end
 
@@ -432,8 +432,8 @@ describe Admin::ProceduresController, type: :controller do
           procedure.reload
         end
 
-        it { expect(procedure.archivee?).to be_falsey }
-        it { expect(response.status).to eq 200 }
+        it { expect(procedure.publiee?).to be_truthy }
+        it { expect(response.status).to eq 302 }
         it { expect(flash[:notice]).to have_content 'Procédure publiée' }
       end
     end

@@ -4,12 +4,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
-  def after_sign_up_path_for(resource_or_scope)
-    WelcomeMailer.welcome_email(resource_or_scope).deliver_now!
-    check_invite! resource_or_scope
-
-    super
-  end
+  # def after_sign_up_path_for(resource_or_scope)
+  #   super
+  # end
 
   # GET /resource/sign_up
   # def new
@@ -18,7 +15,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    super
+    user = User.find_by(email: params[:user][:email])
+    if user.present?
+      UserMailer.new_account_warning(user).deliver
+      flash.notice = t('devise.registrations.signed_up_but_unconfirmed')
+      redirect_to root_path
+    else
+      super
+    end
   end
 
   # GET /resource/edit
@@ -66,10 +70,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
-
-  private
-
-  def check_invite!(user)
-    Invite.where(email: user.email).update_all user_id: user.id
-  end
 end

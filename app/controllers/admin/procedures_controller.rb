@@ -5,12 +5,6 @@ class Admin::ProceduresController < AdminController
   before_action :retrieve_procedure, only: [:show, :edit]
 
   def index
-    # FIXME: remove when
-    # https://github.com/Sology/smart_listing/issues/134
-    # is fixed
-    permit_smart_listing_params
-    # END OF FIXME
-
     @procedures = smart_listing_create :procedures,
       current_administrateur.procedures.publiees.order(published_at: :desc),
       partial: "admin/procedures/list",
@@ -20,12 +14,6 @@ class Admin::ProceduresController < AdminController
   end
 
   def archived
-    # FIXME: remove when
-    # https://github.com/Sology/smart_listing/issues/134
-    # is fixed
-    permit_smart_listing_params
-    # END OF FIXME
-
     @procedures = smart_listing_create :procedures,
       current_administrateur.procedures.archivees.order(published_at: :desc),
       partial: "admin/procedures/list",
@@ -37,12 +25,6 @@ class Admin::ProceduresController < AdminController
   end
 
   def draft
-    # FIXME: remove when
-    # https://github.com/Sology/smart_listing/issues/134
-    # is fixed
-    permit_smart_listing_params
-    # END OF FIXME
-
     @procedures = smart_listing_create :procedures,
       current_administrateur.procedures.brouillons.order(created_at: :desc),
       partial: "admin/procedures/list",
@@ -127,22 +109,15 @@ class Admin::ProceduresController < AdminController
       return redirect_to admin_procedures_path
     end
 
-    procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
-    if procedure_path
-      if procedure_path.administrateur_id == current_administrateur.id
-        procedure_path.procedure.archive
-        procedure_path.delete
-      else
-        @mine = false
-        return render '/admin/procedures/publish', formats: 'js'
-      end
+    if procedure.may_publish?(params[:procedure_path])
+      procedure.publish!(params[:procedure_path])
+
+      flash.notice = "Procédure publiée"
+      redirect_to admin_procedures_path
+    else
+      @mine = false
+      render '/admin/procedures/publish', formats: 'js'
     end
-
-    procedure.publish!(params[:procedure_path])
-
-    flash.notice = "Procédure publiée"
-    render js: "window.location = '#{admin_procedures_path}'"
-
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Procédure inexistante'
     redirect_to admin_procedures_path
@@ -167,7 +142,7 @@ class Admin::ProceduresController < AdminController
 
   def archive
     procedure = current_administrateur.procedures.find(params[:procedure_id])
-    procedure.archive
+    procedure.archive!
 
     flash.notice = "Procédure archivée"
     redirect_to admin_procedures_path
