@@ -16,7 +16,7 @@
         = @facade.procedure.libelle
 
       #description_procedure{ style: 'width: 95%;', class: (@facade.etablissement.nil? ? '' : 'mask') }
-        = h simple_format(@facade.procedure.description)
+        = h string_to_html(@facade.procedure.description)
 
         - if @facade.procedure.lien_site_web.present?
           .center
