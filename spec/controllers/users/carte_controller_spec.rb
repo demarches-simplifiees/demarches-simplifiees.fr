@@ -12,7 +12,6 @@ RSpec.describe Users::CarteController, type: :controller do
   let(:invite_by_user) { create :user, email: 'invite@plop.com' }
 
   let(:dossier_with_no_carto) { create(:dossier) }
-  let!(:entreprise) { create(:entreprise, dossier: dossier) }
   let!(:etablissement) { create(:etablissement, dossier: dossier) }
   let(:bad_dossier_id) { Dossier.count + 1000 }
   let(:adresse) { etablissement.geo_adresse }

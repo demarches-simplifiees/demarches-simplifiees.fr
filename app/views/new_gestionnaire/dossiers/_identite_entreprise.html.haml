@@ -2,13 +2,13 @@
   %tbody
     %tr
       %th.libelle Dénomination :
-      %td= etablissement.entreprise_raison_sociale_or_name
+      %td= raison_sociale_or_name(etablissement)
     %tr
       %th.libelle SIRET :
-      %td= etablissement.entreprise_siret_siege_social
+      %td= etablissement.entreprise.siret_siege_social
     %tr
       %th.libelle Forme juridique :
-      %td= sanitize(etablissement.entreprise_forme_juridique)
+      %td= sanitize(etablissement.entreprise.forme_juridique)
     %tr
       %th.libelle Libellé NAF :
       %td= etablissement.libelle_naf
@@ -17,16 +17,16 @@
       %td= etablissement.naf
     %tr
       %th.libelle Date de création :
-      %td= etablissement.entreprise_date_creation&.strftime("%d/%m/%Y")
+      %td= etablissement.entreprise.date_creation&.strftime("%d/%m/%Y")
     %tr
       %th.libelle Effectif de l'organisation :
-      %td= etablissement.entreprise_effectif
+      %td= effectif(etablissement)
     %tr
       %th.libelle Code effectif :
-      %td= etablissement.entreprise_code_effectif_entreprise
+      %td= etablissement.entreprise.code_effectif_entreprise
     %tr
       %th.libelle Numéro de TVA intracommunautaire :
-      %td= etablissement.entreprise_numero_tva_intracommunautaire
+      %td= etablissement.entreprise.numero_tva_intracommunautaire
     %tr
       %th.libelle Adresse :
       %td
@@ -35,7 +35,7 @@
           %br
     %tr
       %th.libelle Capital social :
-      %td= pretty_currency(etablissement.entreprise_capital_social)
+      %td= pretty_currency(etablissement.entreprise.capital_social)
     %tr
       %th.libelle Exercices :
       %td
@@ -43,7 +43,7 @@
           = "#{exercice.date_fin_exercice.year} : "
           = pretty_currency(exercice.ca)
           %br
-    - if etablissement.association_rna.present?
+    - if etablissement.association?
       %tr
         %th.libelle Numéro RNA :
         %td= etablissement.association_rna

@@ -1,6 +1,6 @@
 .col-md-12.col-sm-12.col-xs-12.col-xs-12
   %h4
-    = @facade.entreprise.raison_sociale_or_name
+    = raison_sociale_or_name(@facade.etablissement)
   .row.split-row
     .col-xs-12.split-hr
 .row
@@ -9,13 +9,13 @@
     .row
       .col-xs-4.entreprise-label Siret :
       .col-xs-8.entreprise-info= @facade.etablissement.siret
-    - if @facade.etablissement.siret != @facade.entreprise.siret_siege_social
+    - if @facade.etablissement.siret != @facade.etablissement.entreprise.siret_siege_social
       .row
         .col-xs-4.entreprise-label SIRET siège social :
-        .col-xs-8.entreprise-info= @facade.entreprise.siret_siege_social
+        .col-xs-8.entreprise-info= @facade.etablissement.entreprise.siret_siege_social
     .row
       .col-xs-4.entreprise-label Forme juridique :
-      .col-xs-8.entreprise-info= @facade.entreprise.forme_juridique
+      .col-xs-8.entreprise-info= @facade.etablissement.entreprise.forme_juridique
     .row
       .col-xs-4.entreprise-label Libellé naf :
       .col-xs-8.entreprise-info= @facade.etablissement.libelle_naf
@@ -24,16 +24,16 @@
       .col-xs-8.entreprise-info= @facade.etablissement.naf
     .row
       .col-xs-4.entreprise-label Date de création :
-      .col-xs-8.entreprise-info= Time.at(@facade.entreprise.date_creation).localtime.strftime "%d-%m-%Y"
+      .col-xs-8.entreprise-info= @facade.etablissement.entreprise.date_creation&.strftime("%d-%m-%Y")
     .row
       .col-xs-4.entreprise-label Effectif organisation :
-      .col-xs-8.entreprise-info= @facade.entreprise.effectif
+      .col-xs-8.entreprise-info= effectif(@facade.etablissement)
     .row
       .col-xs-4.entreprise-label Code effectif :
-      .col-xs-8.entreprise-info= @facade.entreprise.code_effectif_entreprise
+      .col-xs-8.entreprise-info= @facade.etablissement.entreprise.code_effectif_entreprise
     .row
       .col-xs-4.entreprise-label Numéro TVA intracommunautaire :
-      .col-xs-8.entreprise-info= @facade.entreprise.numero_tva_intracommunautaire
+      .col-xs-8.entreprise-info= @facade.etablissement.entreprise.numero_tva_intracommunautaire
 
     .row
       .col-xs-4.entreprise-label Adresse :
@@ -42,7 +42,7 @@
           = line
     .row
       .col-xs-4.entreprise-label Capital social :
-      .col-xs-8.entreprise-info= @facade.entreprise.pretty_capital_social
+      .col-xs-8.entreprise-info= pretty_currency(@facade.etablissement.entreprise.capital_social)
 
     .row
       .col-xs-4.entreprise-label Exercices :
@@ -55,5 +55,5 @@
 
     .row.split-row
       .col-xs-12.split-hr
-- if @facade.entreprise.rna_information.present?
+- if @facade.etablissement.association?
   = render partial: '/dossiers/infos_rna'

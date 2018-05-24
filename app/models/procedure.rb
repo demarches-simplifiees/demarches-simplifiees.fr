@@ -285,12 +285,12 @@ class Procedure < ApplicationRecord
 
     if !for_individual || (for_individual && individual_with_siret)
       fields << [
-        field_hash('SIREN', 'entreprise', 'siren'),
-        field_hash('Forme juridique', 'entreprise', 'forme_juridique'),
-        field_hash('Nom commercial', 'entreprise', 'nom_commercial'),
-        field_hash('Raison sociale', 'entreprise', 'raison_sociale'),
-        field_hash('SIRET siège social', 'entreprise', 'siret_siege_social'),
-        field_hash('Date de création', 'entreprise', 'date_creation')
+        field_hash('SIREN', 'etablissement', 'entreprise_siren'),
+        field_hash('Forme juridique', 'etablissement', 'entreprise_forme_juridique'),
+        field_hash('Nom commercial', 'etablissement', 'entreprise_nom_commercial'),
+        field_hash('Raison sociale', 'etablissement', 'entreprise_raison_sociale'),
+        field_hash('SIRET siège social', 'etablissement', 'entreprise_siret_siege_social'),
+        field_hash('Date de création', 'etablissement', 'entreprise_date_creation')
       ]
 
       fields << [

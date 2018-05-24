@@ -234,18 +234,22 @@ module NewGestionnaire
             .includes(relation)
             .where("champs.type_de_champ_id = ?", filter['column'].to_i)
             .where("champs.value LIKE ?", "%#{filter['value']}%")
-
-        when 'user', 'etablissement', 'entreprise'
+        when 'entreprise'
+          table = 'etablissement'
           if filter['column'] == 'date_creation'
             date = filter['value'].to_date rescue nil
             dossiers
-              .includes(filter['table'])
-              .where("#{filter['table'].pluralize}.#{filter['column']} = ?", date)
+              .includes(table)
+              .where("#{table.pluralize}.entreprise_#{filter['column']} = ?", date)
           else
             dossiers
-              .includes(filter['table'])
-              .where("#{filter['table'].pluralize}.#{filter['column']} LIKE ?", "%#{filter['value']}%")
+              .includes(table)
+              .where("#{table.pluralize}.entreprise_#{filter['column']} LIKE ?", "%#{filter['value']}%")
           end
+        when 'user', 'etablissement'
+          dossiers
+            .includes(filter['table'])
+            .where("#{filter['table'].pluralize}.#{filter['column']} LIKE ?", "%#{filter['value']}%")
         end.pluck(:id)
       end.reduce(:&)
     end
