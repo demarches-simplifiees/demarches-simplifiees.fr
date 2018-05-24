@@ -98,6 +98,13 @@ module NewUser
       end
     end
 
+    def ask_deletion
+      @dossier = current_user.dossiers.find(params[:id])
+      DossierMailer.ask_deletion(@dossier).deliver_later
+      flash.notice = 'Une demande de suppression de votre dossier a été envoyée, elle sera traitée dans les plus brefs délais.'
+      redirect_to users_dossier_recapitulatif_path(@dossier)
+    end
+
     private
 
     def page

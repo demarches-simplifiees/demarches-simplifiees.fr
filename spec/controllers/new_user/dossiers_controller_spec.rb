@@ -384,4 +384,33 @@ describe NewUser::DossiersController, type: :controller do
       end
     end
   end
+
+  describe '#ask_deletion' do
+    before { sign_in(user) }
+
+    subject { post :ask_deletion, params: { id: dossier.id } }
+
+    context 'when dossier is owned by signed in user' do
+      let(:dossier) { create(:dossier, user: user, autorisation_donnees: true) }
+
+      it do
+        expect(DossierMailer).to receive(:ask_deletion).and_return(double(deliver_later: nil))
+        subject
+      end
+
+      it { is_expected.to redirect_to(users_dossier_recapitulatif_path(dossier)) }
+    end
+
+    context 'when dossier is not owned by signed in user' do
+      let(:user2) { create(:user) }
+      let(:dossier) { create(:dossier, user: user2, autorisation_donnees: true) }
+
+      it do
+        expect(DossierMailer).not_to receive(:ask_deletion)
+        subject
+      end
+
+      it { is_expected.to redirect_to(root_path) }
+    end
+  end
 end
