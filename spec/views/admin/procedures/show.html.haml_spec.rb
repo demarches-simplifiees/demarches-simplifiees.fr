@@ -61,7 +61,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
   describe 'procedure is archived' do
     before do
       procedure.publish!('fake_path')
-      procedure.archive
+      procedure.archive!
       procedure.reload
       render
     end

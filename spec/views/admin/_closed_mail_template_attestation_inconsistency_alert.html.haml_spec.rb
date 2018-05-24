@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 describe 'admin/_closed_mail_template_attestation_inconsistency_alert.html.haml', type: :view do
-  let(:procedure) { create(:procedure, closed_mail: closed_mail, published_at: published_at) }
-  let(:published_at) { nil }
+  let(:procedure) { create(:procedure, closed_mail: closed_mail) }
 
   def alert
     assign(:procedure, procedure)
@@ -32,7 +31,7 @@ describe 'admin/_closed_mail_template_attestation_inconsistency_alert.html.haml'
     it { expect(alert).to include(edit_admin_procedure_mail_template_path(procedure, Mails::ClosedMail::SLUG)) }
 
     context 'when the procedure has been published, the attestation cannot be deactivated' do
-      let(:published_at) { Time.now }
+      let(:procedure) { create(:procedure, :published, closed_mail: closed_mail) }
 
       it { expect(procedure.locked?).to be_truthy }
       it { expect(alert).not_to include(edit_admin_procedure_attestation_template_path(procedure)) }

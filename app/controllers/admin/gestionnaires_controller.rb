@@ -3,12 +3,6 @@ class Admin::GestionnairesController < AdminController
   helper SmartListing::Helper
 
   def index
-    # FIXME: remove when
-    # https://github.com/Sology/smart_listing/issues/134
-    # is fixed
-    permit_smart_listing_params
-    # END OF FIXME
-
     @gestionnaires = smart_listing_create :gestionnaires,
       current_administrateur.gestionnaires,
       partial: "admin/gestionnaires/list",
