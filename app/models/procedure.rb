@@ -1,4 +1,6 @@
 class Procedure < ApplicationRecord
+  MAX_DUREE_CONSERVATION = 36
+
   has_many :types_de_piece_justificative, -> { order "order_place ASC" }, dependent: :destroy
   has_many :types_de_champ, -> { public_only }, dependent: :destroy
   has_many :types_de_champ_private, -> { private_only }, class_name: 'TypeDeChamp', dependent: :destroy
@@ -47,6 +49,11 @@ class Procedure < ApplicationRecord
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validate :check_juridique
+  # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
+  validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, if: :durees_conservation_required
+  validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
+  validates :duree_conservation_dossiers_dans_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, unless: :durees_conservation_required
+  validates :duree_conservation_dossiers_hors_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, unless: :durees_conservation_required
 
   before_save :update_juridique_required
 
