@@ -225,6 +225,7 @@ Rails.application.routes.draw do
         patch 'update_identite'
         get 'modifier'
         get 'merci'
+        post 'ask_deletion'
       end
       get 'attestation'
     end
