@@ -233,6 +233,31 @@ describe Procedure do
     end
   end
 
+  describe '#duree_de_conservation_required' do
+    it 'automatically jumps to true once both durees de conservation have been set' do
+      p = build(
+        :procedure,
+        durees_conservation_required: false,
+        duree_conservation_dossiers_dans_ds: nil,
+        duree_conservation_dossiers_hors_ds: nil
+      )
+      p.save
+      expect(p.durees_conservation_required).to be_falsey
+
+      p.duree_conservation_dossiers_hors_ds = 3
+      p.save
+      expect(p.durees_conservation_required).to be_falsey
+
+      p.duree_conservation_dossiers_dans_ds = 6
+      p.save
+      expect(p.durees_conservation_required).to be_truthy
+
+      p.duree_conservation_dossiers_dans_ds = nil
+      p.save
+      expect(p.durees_conservation_required).to be_truthy
+    end
+  end
+
   describe '#types_de_champ_ordered' do
     let(:procedure) { create(:procedure) }
     let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 1) }
