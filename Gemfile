@@ -133,7 +133,7 @@ group :test do
   gem 'timecop'
   gem 'guard'
   gem 'guard-rspec', require: false
-  gem 'guard-livereload', '~> 2.4', require: false
+  gem 'guard-livereload', require: false
   gem 'vcr'
   gem 'rails-controller-testing'
 end
