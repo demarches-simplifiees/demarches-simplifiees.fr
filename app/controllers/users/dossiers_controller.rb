@@ -112,7 +112,7 @@ class Users::DossiersController < UsersController
 
     update_current_user_siret!(siret)
 
-    etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(siret, @facade.dossier.procedure_id, @facade.dossier)
+    etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(siret, @facade.dossier.procedure_id)
 
     if etablissement_attributes.present?
       etablissement_attributes = ActionController::Parameters.new(etablissement_attributes).permit!

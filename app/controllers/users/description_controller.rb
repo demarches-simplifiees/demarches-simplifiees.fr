@@ -130,7 +130,7 @@ class Users::DescriptionController < UsersController
     @dossier ||= current_user_dossier
 
     if (@dossier.procedure.for_individual? && @dossier.individual.nil?) ||
-        (!@dossier.procedure.for_individual? && @dossier.entreprise.nil?)
+        (!@dossier.procedure.for_individual? && @dossier.etablissement.nil?)
       redirect_to url_for(users_dossier_path(@dossier.id))
     end
   end

@@ -212,15 +212,6 @@ describe Users::DossiersController, type: :controller do
           expect { subject }.to change { Dossier.count }.by(0)
         end
 
-        it 'creates entreprise' do
-          expect { subject }.to change { Entreprise.count }.by(1)
-        end
-
-        it 'links entreprise to dossier' do
-          subject
-          expect(Entreprise.last.dossier).to eq(Dossier.last)
-        end
-
         it "links dossier to user" do
           subject
           expect(Dossier.last.user).to eq(user)
@@ -237,7 +228,7 @@ describe Users::DossiersController, type: :controller do
 
         it 'links etablissement to entreprise' do
           subject
-          expect(Etablissement.last.entreprise).to eq(Entreprise.last)
+          expect(Etablissement.last.entreprise).to be_truthy
         end
 
         it 'creates exercices for dossier' do
@@ -267,8 +258,9 @@ describe Users::DossiersController, type: :controller do
             let(:rna_status) { 404 }
             let(:rna_body) { '' }
 
-            it 'not creates rna information for entreprise' do
-              expect { subject }.to change { RNAInformation.count }.by(0)
+            it 'not creates association information for etablissement' do
+              subject
+              expect(Dossier.last.etablissement.association?).to be_falsey
             end
           end
 
@@ -277,12 +269,8 @@ describe Users::DossiersController, type: :controller do
             let(:rna_body) { File.read('spec/support/files/rna.json') }
 
             it 'creates rna information for entreprise' do
-              expect { subject }.to change { RNAInformation.count }.by(1)
-            end
-
-            it 'links rna informations to entreprise' do
               subject
-              expect(RNAInformation.last.entreprise).to eq(Entreprise.last)
+              expect(Dossier.last.etablissement.association?).to be_truthy
             end
           end
         end

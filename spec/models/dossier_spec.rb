@@ -27,8 +27,6 @@ describe Dossier do
 
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
-
-    let(:entreprise) { dossier.entreprise }
     let(:etablissement) { dossier.etablissement }
 
     subject { dossier }
@@ -200,7 +198,7 @@ describe Dossier do
     it { expect(subject[:entreprise_raison_sociale]).to eq('GRTGAZ') }
     it { expect(subject[:entreprise_siret_siege_social]).to eq('44011762001530') }
     it { expect(subject[:entreprise_code_effectif_entreprise]).to eq('51') }
-    it { expect(subject[:entreprise_date_creation]).to eq('Thu, 28 Jan 2016 10:16:29 UTC +00:0') }
+    it { expect(subject[:entreprise_date_creation]).to eq('1990-04-24T00:00:00+00:00') }
     it { expect(subject[:entreprise_nom]).to be_nil }
     it { expect(subject[:entreprise_prenom]).to be_nil }
 
@@ -311,7 +309,7 @@ describe Dossier do
           "GRTGAZ",
           "44011762001530",
           "51",
-          dossier.entreprise.date_creation,
+          "1990-04-24T00:00:00+00:00",
           nil,
           nil
         ]
@@ -325,22 +323,16 @@ describe Dossier do
 
   describe '#reset!' do
     let!(:dossier) { create :dossier, :with_entreprise, autorisation_donnees: true }
-    let!(:rna_information) { create :rna_information, entreprise: dossier.entreprise }
     let!(:exercice) { create :exercice, etablissement: dossier.etablissement }
 
     subject { dossier.reset! }
 
-    it { expect(dossier.entreprise).not_to be_nil }
     it { expect(dossier.etablissement).not_to be_nil }
     it { expect(dossier.etablissement.exercices).not_to be_empty }
     it { expect(dossier.etablissement.exercices.size).to eq 1 }
-    it { expect(dossier.entreprise.rna_information).not_to be_nil }
     it { expect(dossier.autorisation_donnees).to be_truthy }
 
-    it { expect { subject }.to change(RNAInformation, :count).by(-1) }
     it { expect { subject }.to change(Exercice, :count).by(-1) }
-
-    it { expect { subject }.to change(Entreprise, :count).by(-1) }
     it { expect { subject }.to change(Etablissement, :count).by(-1) }
 
     context 'when method reset! is call' do
@@ -349,7 +341,6 @@ describe Dossier do
         dossier.reload
       end
 
-      it { expect(dossier.entreprise).to be_nil }
       it { expect(dossier.etablissement).to be_nil }
       it { expect(dossier.autorisation_donnees).to be_falsey }
     end
@@ -766,7 +757,7 @@ describe Dossier do
     it { expect(dossier.get_value('self', 'created_at')).to eq(dossier.created_at) }
     it { expect(dossier.get_value('user', 'email')).to eq(user.email) }
     it { expect(dossier.get_value('france_connect_information', 'gender')).to eq(user.france_connect_information.gender) }
-    it { expect(dossier.get_value('entreprise', 'siren')).to eq(dossier.entreprise.siren) }
+    it { expect(dossier.get_value('entreprise', 'siren')).to eq(dossier.etablissement.entreprise_siren) }
     it { expect(dossier.get_value('etablissement', 'siret')).to eq(dossier.etablissement.siret) }
     it { expect(dossier.get_value('type_de_champ', @champ_public.type_de_champ.id.to_s)).to eq(dossier.champs.first.value) }
     it { expect(dossier.get_value('type_de_champ_private', @champ_private.type_de_champ.id.to_s)).to eq(dossier.champs_private.first.value) }
@@ -834,7 +825,7 @@ describe Dossier do
     subject { dossier.owner_name }
 
     context 'when there is no entreprise or individual' do
-      let(:dossier) { create(:dossier, individual: nil, entreprise: nil, procedure: procedure) }
+      let(:dossier) { create(:dossier, individual: nil, procedure: procedure) }
 
       it { is_expected.to be_nil }
     end
@@ -842,7 +833,7 @@ describe Dossier do
     context 'when there is entreprise' do
       let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
 
-      it { is_expected.to eq(dossier.entreprise.raison_sociale) }
+      it { is_expected.to eq(dossier.etablissement.entreprise_raison_sociale) }
     end
 
     context 'when there is an individual' do
