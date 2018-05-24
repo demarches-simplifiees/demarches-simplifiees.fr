@@ -199,6 +199,38 @@ describe Procedure do
 
       it { expect(procedure.valid?).to eq(true) }
     end
+
+    shared_examples 'duree de conservation' do
+      context 'duree_conservation_required it true, the field gets validated' do
+        before { subject.durees_conservation_required = true }
+
+        it { is_expected.not_to allow_value(nil).for(field_name) }
+        it { is_expected.not_to allow_value('').for(field_name) }
+        it { is_expected.not_to allow_value('trois').for(field_name) }
+        it { is_expected.to allow_value(3).for(field_name) }
+      end
+
+      context 'duree_conservation_required is false, the field doesn’t get validated' do
+        before { subject.durees_conservation_required = false }
+
+        it { is_expected.to allow_value(nil).for(field_name) }
+        it { is_expected.to allow_value('').for(field_name) }
+        it { is_expected.not_to allow_value('trois').for(field_name) }
+        it { is_expected.to allow_value(3).for(field_name) }
+      end
+    end
+
+    describe 'duree de conservation dans ds' do
+      let(:field_name) { :duree_conservation_dossiers_dans_ds }
+
+      it_behaves_like 'duree de conservation'
+    end
+
+    describe 'duree de conservation hors ds' do
+      let(:field_name) { :duree_conservation_dossiers_hors_ds }
+
+      it_behaves_like 'duree de conservation'
+    end
   end
 
   describe '#types_de_champ_ordered' do
