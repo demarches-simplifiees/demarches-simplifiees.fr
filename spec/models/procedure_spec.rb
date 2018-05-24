@@ -229,30 +229,20 @@ describe Procedure do
   end
 
   describe 'active' do
-    let(:procedure) { create(:procedure, published_at: published_at, archived_at: archived_at) }
+    let(:procedure) { create(:procedure) }
     subject { Procedure.active(procedure.id) }
 
     context 'when procedure is in draft status and not archived' do
-      let(:published_at) { nil }
-      let(:archived_at) { nil }
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
 
     context 'when procedure is published and not archived' do
-      let(:published_at) { Time.now }
-      let(:archived_at) { nil }
+      let(:procedure) { create(:procedure, :published) }
       it { is_expected.to be_truthy }
     end
 
     context 'when procedure is published and archived' do
-      let(:published_at) { Time.now }
-      let(:archived_at) { Time.now }
-      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
-    end
-
-    context 'when procedure is in draft status and archived' do
-      let(:published_at) { nil }
-      let(:archived_at) { Time.now }
+      let(:procedure) { create(:procedure, :archived) }
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
