@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.2.0'
+gem 'rails'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
@@ -133,7 +133,7 @@ group :test do
   gem 'timecop'
   gem 'guard'
   gem 'guard-rspec', require: false
-  gem 'guard-livereload', '~> 2.4', require: false
+  gem 'guard-livereload', require: false
   gem 'vcr'
   gem 'rails-controller-testing'
 end
