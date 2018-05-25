@@ -93,18 +93,18 @@ module NewGestionnaire
         dossier.refuse!
         dossier.save
         flash.notice = "Dossier considéré comme refusé."
-        NotificationMailer.send_refused_notification(dossier).deliver_now!
+        NotificationMailer.send_refused_notification(dossier).deliver_later
       when "classer_sans_suite"
         dossier.sans_suite!
         dossier.save
         flash.notice = "Dossier considéré comme sans suite."
-        NotificationMailer.send_without_continuation_notification(dossier).deliver_now!
+        NotificationMailer.send_without_continuation_notification(dossier).deliver_later
       when "accepter"
         dossier.accepte!
         dossier.attestation = dossier.build_attestation
         dossier.save
         flash.notice = "Dossier traité avec succès."
-        NotificationMailer.send_closed_notification(dossier).deliver_now!
+        NotificationMailer.send_closed_notification(dossier).deliver_later
       end
 
       redirect_to gestionnaire_dossier_path(procedure, dossier)

@@ -133,7 +133,7 @@ shared_examples 'description_controller_spec' do
 
             it 'sets the state of the dossier before sending the mail' do
               sender = double("notification sender")
-              allow(sender).to receive(:deliver_now!)
+              allow(sender).to receive(:deliver_later)
               expect(NotificationMailer)
                 .to receive(:send_initiated_notification)
                 .with(have_attributes(en_construction_at: DateTime.now))

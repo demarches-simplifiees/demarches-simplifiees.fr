@@ -147,7 +147,7 @@ class Gestionnaire < ApplicationRecord
   def invite!
     reset_password_token = set_reset_password_token
 
-    GestionnaireMailer.invite_gestionnaire(self, reset_password_token).deliver_now!
+    GestionnaireMailer.invite_gestionnaire(self, reset_password_token).deliver_later
   end
 
   private
