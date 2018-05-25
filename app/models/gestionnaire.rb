@@ -2,7 +2,7 @@ class Gestionnaire < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable
 
   has_and_belongs_to_many :administrateurs
