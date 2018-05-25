@@ -7,5 +7,12 @@
         = link_to "Nº #{procedure.id},", manager_procedure_url(procedure)
          #{procedure.libelle} :
         %b= type_de_champs.map(&:libelle).join(', ')
+        %br
+        État : #{procedure.aasm_state}
+        %br
+        Nombre de dossier : #{procedure.dossiers.count}
+        %br
+          Admin :
+          = link_to "#{procedure.administrateur.email}", "mailto:#{procedure.administrateur.email}"
 - else
   Il n'y a aucune procédure douteuse aujourd'hui
