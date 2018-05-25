@@ -91,24 +91,21 @@ module NewGestionnaire
       case params[:process_action]
       when "refuser"
         dossier.refuse!
-        notice = "Dossier considéré comme refusé."
-        template = procedure.refused_mail_template
+        dossier.save
+        flash.notice = "Dossier considéré comme refusé."
+        NotificationMailer.send_refused_notification(dossier).deliver_now!
       when "classer_sans_suite"
         dossier.sans_suite!
-        notice = "Dossier considéré comme sans suite."
-        template = procedure.without_continuation_mail_template
+        dossier.save
+        flash.notice = "Dossier considéré comme sans suite."
+        NotificationMailer.send_without_continuation_notification(dossier).deliver_now!
       when "accepter"
         dossier.accepte!
         dossier.attestation = dossier.build_attestation
-        notice = "Dossier traité avec succès."
-        template = procedure.closed_mail_template
+        dossier.save
+        flash.notice = "Dossier traité avec succès."
+        NotificationMailer.send_closed_notification(dossier).deliver_now!
       end
-
-      dossier.save
-
-      flash.notice = notice
-
-      NotificationMailer.send_notification(dossier, template).deliver_now!
 
       redirect_to gestionnaire_dossier_path(procedure, dossier)
     end

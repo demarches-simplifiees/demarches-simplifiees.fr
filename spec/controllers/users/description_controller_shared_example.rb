@@ -132,9 +132,12 @@ shared_examples 'description_controller_spec' do
             after { Timecop.return }
 
             it 'sets the state of the dossier before sending the mail' do
-              expect_any_instance_of(Mails::InitiatedMail)
-                .to receive(:subject_for_dossier)
+              sender = double("notification sender")
+              allow(sender).to receive(:deliver_now!)
+              expect(NotificationMailer)
+                .to receive(:send_initiated_notification)
                 .with(have_attributes(en_construction_at: DateTime.now))
+                .and_return(sender)
 
               submit_dossier
             end
