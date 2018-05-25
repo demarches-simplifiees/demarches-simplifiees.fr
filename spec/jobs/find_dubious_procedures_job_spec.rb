@@ -45,6 +45,12 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
 
         it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
       end
+
+      context 'and a hidden procedure' do
+        let(:procedure) { create(:procedure, :hidden) }
+
+        it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
+      end
     end
 
     context 'with no suspicious champs' do
