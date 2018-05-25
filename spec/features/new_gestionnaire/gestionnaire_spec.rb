@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 feature 'The gestionnaire part' do
+  include ActiveJob::TestHelper
+
   let(:password) { 'secret_password' }
   let!(:gestionnaire) { create(:gestionnaire, password: password) }
 
@@ -56,6 +58,7 @@ feature 'The gestionnaire part' do
 
   scenario 'A gestionnaire can use avis' do
     ActionMailer::Base.deliveries = []
+    ActiveJob::Base.queue_adapter = :test
 
     log_in(gestionnaire.email, password)
 
@@ -66,7 +69,10 @@ feature 'The gestionnaire part' do
     expect(page).to have_current_path(avis_gestionnaire_dossier_path(procedure, dossier))
 
     expert_email = 'expert@tps.com'
-    ask_confidential_avis(expert_email, 'a good introduction')
+
+    perform_enqueued_jobs do
+      ask_confidential_avis(expert_email, 'a good introduction')
+    end
 
     log_out
 

@@ -153,7 +153,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       it 'Notification email is sent' do
         expect(NotificationMailer).to receive(:send_refused_notification)
           .with(dossier).and_return(NotificationMailer)
-        expect(NotificationMailer).to receive(:deliver_now!)
+        expect(NotificationMailer).to receive(:deliver_later)
 
         subject
       end
@@ -179,7 +179,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       it 'Notification email is sent' do
         expect(NotificationMailer).to receive(:send_without_continuation_notification)
           .with(dossier).and_return(NotificationMailer)
-        expect(NotificationMailer).to receive(:deliver_now!)
+        expect(NotificationMailer).to receive(:deliver_later)
 
         subject
       end
@@ -196,7 +196,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
           .with(dossier)
           .and_return(NotificationMailer)
 
-        expect(NotificationMailer).to receive(:deliver_now!)
+        expect(NotificationMailer).to receive(:deliver_later)
       end
 
       subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id } }

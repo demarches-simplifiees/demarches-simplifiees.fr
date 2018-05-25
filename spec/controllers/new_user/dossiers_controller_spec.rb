@@ -221,7 +221,7 @@ describe NewUser::DossiersController, type: :controller do
 
     it 'sends an email only on the first #update' do
       delivery = double
-      expect(delivery).to receive(:deliver_now!).with(no_args)
+      expect(delivery).to receive(:deliver_later).with(no_args)
 
       expect(NotificationMailer).to receive(:send_initiated_notification)
         .and_return(delivery)

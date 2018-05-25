@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe FindDubiousProceduresJob, type: :job do
   describe 'perform' do
-    let(:mailer_double) { double('mailer', deliver_now: true) }
+    let(:mailer_double) { double('mailer', deliver_later: true) }
     let(:procedure) { create(:procedure) }
     let(:allowed_tdc) { create(:type_de_champ, libelle: 'fournir') }
 

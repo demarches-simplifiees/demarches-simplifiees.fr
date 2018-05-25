@@ -24,7 +24,7 @@ describe Users::Dossiers::CommentairesController, type: :controller do
 
       it 'should notify user' do
         expect(NotificationMailer).to receive(:new_answer).and_return(NotificationMailer)
-        expect(NotificationMailer).to receive(:deliver_now!)
+        expect(NotificationMailer).to receive(:deliver_later)
 
         subject
       end
