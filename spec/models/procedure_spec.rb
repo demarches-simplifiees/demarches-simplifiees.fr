@@ -248,10 +248,8 @@ describe Procedure do
   end
 
   describe 'clone' do
-    let(:archived_at) { nil }
-    let(:published_at) { nil }
     let!(:service) { create(:service) }
-    let(:procedure) { create(:procedure, archived_at: archived_at, published_at: published_at, received_mail: received_mail, service: service) }
+    let(:procedure) { create(:procedure, received_mail: received_mail, service: service) }
     let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_2) { create(:type_de_champ_drop_down_list, procedure: procedure, order_place: 2) }
@@ -340,11 +338,13 @@ describe Procedure do
     end
 
     describe 'procedure status is reset' do
-      let(:archived_at) { Time.now }
-      let(:published_at) { Time.now }
+      let(:procedure) { create(:procedure, :archived, received_mail: received_mail, service: service) }
+
       it 'Not published nor archived' do
         expect(subject.archived_at).to be_nil
         expect(subject.published_at).to be_nil
+        expect(subject.test_started_at).to be_nil
+        expect(subject.aasm_state).to eq "brouillon"
         expect(subject.path).to be_nil
       end
     end
