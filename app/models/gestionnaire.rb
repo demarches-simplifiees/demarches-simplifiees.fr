@@ -2,7 +2,7 @@ class Gestionnaire < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable
 
   has_and_belongs_to_many :administrateurs
@@ -147,7 +147,7 @@ class Gestionnaire < ApplicationRecord
   def invite!
     reset_password_token = set_reset_password_token
 
-    GestionnaireMailer.invite_gestionnaire(self, reset_password_token).deliver_now!
+    GestionnaireMailer.invite_gestionnaire(self, reset_password_token).deliver_later
   end
 
   private

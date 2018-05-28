@@ -42,6 +42,7 @@ gem 'unicode_utils'
 
 # Gestion des comptes utilisateurs
 gem 'devise'
+gem 'devise-async'
 gem 'openid_connect'
 gem 'omniauth-github'
 

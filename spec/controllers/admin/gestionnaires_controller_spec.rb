@@ -71,7 +71,7 @@ describe Admin::GestionnairesController, type: :controller do
       describe 'Email Notification' do
         it {
           expect(GestionnaireMailer).not_to receive(:new_gestionnaire)
-          expect(GestionnaireMailer).not_to receive(:deliver_now!)
+          expect(GestionnaireMailer).not_to receive(:deliver_later)
           subject
         }
       end
@@ -87,7 +87,7 @@ describe Admin::GestionnairesController, type: :controller do
 
       it 'Notification email is not send' do
         expect(GestionnaireMailer).not_to receive(:new_gestionnaire)
-        expect(GestionnaireMailer).not_to receive(:deliver_now!)
+        expect(GestionnaireMailer).not_to receive(:deliver_later)
       end
     end
 
@@ -104,7 +104,7 @@ describe Admin::GestionnairesController, type: :controller do
       describe 'Email notification' do
         it 'is not sent when email already exists' do
           expect(GestionnaireMailer).not_to receive(:new_gestionnaire)
-          expect(GestionnaireMailer).not_to receive(:deliver_now!)
+          expect(GestionnaireMailer).not_to receive(:deliver_later)
 
           subject
         end

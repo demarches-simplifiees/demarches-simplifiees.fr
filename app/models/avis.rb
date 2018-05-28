@@ -34,7 +34,7 @@ class Avis < ApplicationRecord
   private
 
   def notify_gestionnaire
-    AvisMailer.avis_invitation(self).deliver_now
+    AvisMailer.avis_invitation(self).deliver_later
   end
 
   def try_to_assign_gestionnaire

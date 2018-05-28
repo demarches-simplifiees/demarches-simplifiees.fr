@@ -71,7 +71,7 @@ module NewUser
         render :modifier
       elsif @dossier.brouillon?
         @dossier.en_construction!
-        NotificationMailer.send_notification(@dossier, @dossier.procedure.initiated_mail_template).deliver_now!
+        NotificationMailer.send_initiated_notification(@dossier).deliver_later
         redirect_to merci_dossier_path(@dossier)
       elsif owns_dossier?
         redirect_to users_dossier_recapitulatif_path(@dossier)

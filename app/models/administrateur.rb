@@ -2,7 +2,7 @@ class Administrateur < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable
 
   has_and_belongs_to_many :gestionnaires
@@ -51,7 +51,7 @@ class Administrateur < ApplicationRecord
 
     reset_password_token = set_reset_password_token
 
-    AdministrationMailer.invite_admin(self, reset_password_token).deliver_now!
+    AdministrationMailer.invite_admin(self, reset_password_token).deliver_later
 
     reset_password_token
   end
