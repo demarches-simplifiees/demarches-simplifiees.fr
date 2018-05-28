@@ -11,4 +11,8 @@ class EntrepriseSerializer < ActiveModel::Serializer
     :date_creation,
     :nom,
     :prenom
+
+  def date_creation
+    object.date_creation ? object.date_creation.to_datetime : nil
+  end
 end

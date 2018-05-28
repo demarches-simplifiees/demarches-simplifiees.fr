@@ -2,7 +2,7 @@
   %h3
     Mes informations
   %br
-  - if @facade.entreprise.present?
+  - if @facade.etablissement.present?
     .center{ style: 'margin-left: -5%;' }
       Vous êtes authentifié avec le SIRET
 
@@ -14,7 +14,7 @@
 
 .etape.etapes-informations.col-xs-9
   .row
-    - if @facade.entreprise.nil?
+    - if @facade.etablissement.nil?
       #new_siret{ style: 'margin-left: 20%; margin-top: 5%;' }
         = form_for @facade.dossier, html: { class: 'form-inline' }, url: users_dossier_siret_informations_path(dossier_id: @facade.dossier.id), method: :post, remote: true do |f|
           .form-group.form-group-lg

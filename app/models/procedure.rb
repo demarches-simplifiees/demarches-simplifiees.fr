@@ -34,10 +34,10 @@ class Procedure < ApplicationRecord
   mount_uploader :logo, ProcedureLogoUploader
 
   default_scope { where(hidden_at: nil) }
-  scope :brouillons,            -> { where(published_at: nil).where(archived_at: nil) }
-  scope :publiees,              -> { where.not(published_at: nil).where(archived_at: nil) }
-  scope :archivees,             -> { where.not(archived_at: nil) }
-  scope :publiees_ou_archivees, -> { where.not(published_at: nil) }
+  scope :brouillons,            -> { where(aasm_state: :brouillon) }
+  scope :publiees,              -> { where(aasm_state: :publiee) }
+  scope :archivees,             -> { where(aasm_state: :archivee) }
+  scope :publiees_ou_archivees, -> { where(aasm_state: [:publiee, :archivee]) }
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
@@ -193,6 +193,8 @@ class Procedure < ApplicationRecord
         types_de_champ: :drop_down_list,
         types_de_champ_private: :drop_down_list
       })
+    procedure.aasm_state = :brouillon
+    procedure.test_started_at = nil
     procedure.archived_at = nil
     procedure.published_at = nil
     procedure.logo_secure_token = nil
@@ -285,12 +287,12 @@ class Procedure < ApplicationRecord
 
     if !for_individual || (for_individual && individual_with_siret)
       fields << [
-        field_hash('SIREN', 'entreprise', 'siren'),
-        field_hash('Forme juridique', 'entreprise', 'forme_juridique'),
-        field_hash('Nom commercial', 'entreprise', 'nom_commercial'),
-        field_hash('Raison sociale', 'entreprise', 'raison_sociale'),
-        field_hash('SIRET siège social', 'entreprise', 'siret_siege_social'),
-        field_hash('Date de création', 'entreprise', 'date_creation')
+        field_hash('SIREN', 'etablissement', 'entreprise_siren'),
+        field_hash('Forme juridique', 'etablissement', 'entreprise_forme_juridique'),
+        field_hash('Nom commercial', 'etablissement', 'entreprise_nom_commercial'),
+        field_hash('Raison sociale', 'etablissement', 'entreprise_raison_sociale'),
+        field_hash('SIRET siège social', 'etablissement', 'entreprise_siret_siege_social'),
+        field_hash('Date de création', 'etablissement', 'entreprise_date_creation')
       ]
 
       fields << [

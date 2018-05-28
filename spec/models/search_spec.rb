@@ -28,9 +28,9 @@ describe Search do
     let!(:dossier_3) { create(:dossier, state: 'en_construction', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
     let!(:dossier_archived) { create(:dossier, state: 'en_construction', procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
 
-    let!(:etablissement_1) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'OCTO Academy', dossier: dossier_1), dossier: dossier_1, siret: '41636169600051') }
-    let!(:etablissement_2) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'Plop octo', dossier: dossier_2), dossier: dossier_2, siret: '41816602300012') }
-    let!(:etablissement_3) { create(:etablissement, entreprise: create(:entreprise, raison_sociale: 'OCTO Technology', dossier: dossier_3), dossier: dossier_3, siret: '41816609600051') }
+    let!(:etablissement_1) { create(:etablissement, entreprise_raison_sociale: 'OCTO Academy', dossier: dossier_1, siret: '41636169600051') }
+    let!(:etablissement_2) { create(:etablissement, entreprise_raison_sociale: 'Plop octo', dossier: dossier_2, siret: '41816602300012') }
+    let!(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', dossier: dossier_3, siret: '41816609600051') }
 
     describe 'search is empty' do
       let(:terms) { '' }

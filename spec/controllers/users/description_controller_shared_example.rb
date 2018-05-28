@@ -16,7 +16,7 @@ shared_examples 'description_controller_spec' do
 
     context 'when all is ok' do
       before do
-        dossier.entreprise = create :entreprise
+        dossier.etablissement = create(:etablissement)
         get :show, params: { dossier_id: dossier_id }
       end
 
@@ -85,8 +85,8 @@ shared_examples 'description_controller_spec' do
     describe 'before action check_starter_dossier_informations' do
       subject { get :show, params: { dossier_id: dossier_id } }
 
-      context 'when dossier does not have an enterprise datas' do
-        it { expect(dossier.entreprise).to be_nil }
+      context 'when dossier does not have an etablissement datas' do
+        it { expect(dossier.etablissement).to be_nil }
         it { expect(subject).to redirect_to "/users/dossiers/#{dossier.id}" }
       end
 
@@ -132,9 +132,12 @@ shared_examples 'description_controller_spec' do
             after { Timecop.return }
 
             it 'sets the state of the dossier before sending the mail' do
-              expect_any_instance_of(Mails::InitiatedMail)
-                .to receive(:subject_for_dossier)
+              sender = double("notification sender")
+              allow(sender).to receive(:deliver_later)
+              expect(NotificationMailer)
+                .to receive(:send_initiated_notification)
                 .with(have_attributes(en_construction_at: DateTime.now))
+                .and_return(sender)
 
               submit_dossier
             end

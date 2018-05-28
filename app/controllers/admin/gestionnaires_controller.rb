@@ -50,7 +50,7 @@ class Admin::GestionnairesController < AdminController
       @gestionnaire.invite!
 
       if User.exists?(email: @gestionnaire.email)
-        GestionnaireMailer.user_to_gestionnaire(@gestionnaire.email).deliver_now!
+        GestionnaireMailer.user_to_gestionnaire(@gestionnaire.email).deliver_later
       else
         User.create(email: email, password: password)
       end

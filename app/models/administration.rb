@@ -1,7 +1,7 @@
 class Administration < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: [:github]
+  devise :database_authenticatable, :rememberable, :trackable, :validatable, :omniauthable, :async, omniauth_providers: [:github]
 
   def self.from_omniauth(params)
     find_by(email: params["info"]["email"])
@@ -17,7 +17,7 @@ class Administration < ApplicationRecord
     })
 
     if administrateur.save
-      AdministrationMailer.new_admin_email(administrateur, self).deliver_now!
+      AdministrationMailer.new_admin_email(administrateur, self).deliver_later
       administrateur.invite!
       User.create({
         email: email,

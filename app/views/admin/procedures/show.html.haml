@@ -68,7 +68,7 @@
         %h4.text-info
           = procedure.libelle
 
-        = h sanitize(procedure.description)
+        = h string_to_html(procedure.description)
 
       .champs.col-xs-6.col-md-3
         %h4.text-info

@@ -8,4 +8,4 @@
       = "modifié le #{champ.updated_at.strftime('%d/%m/%Y à %H:%M')}"
 
   - if champ.description.present?
-    %span.notice= html_formatted_description(champ.description)
+    %span.notice= string_to_html(champ.description)
