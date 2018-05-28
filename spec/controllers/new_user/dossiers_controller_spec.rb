@@ -221,14 +221,14 @@ describe NewUser::DossiersController, type: :controller do
 
     it 'sends an email only on the first #update' do
       delivery = double
-      expect(delivery).to receive(:deliver_now!).with(no_args)
+      expect(delivery).to receive(:deliver_later).with(no_args)
 
-      expect(NotificationMailer).to receive(:send_notification)
+      expect(NotificationMailer).to receive(:send_initiated_notification)
         .and_return(delivery)
 
       subject
 
-      expect(NotificationMailer).not_to receive(:send_notification)
+      expect(NotificationMailer).not_to receive(:send_initiated_notification)
 
       subject
     end
@@ -246,7 +246,7 @@ describe NewUser::DossiersController, type: :controller do
       it { expect(flash.alert).to eq(['nop']) }
 
       it 'does not send an email' do
-        expect(NotificationMailer).not_to receive(:send_notification)
+        expect(NotificationMailer).not_to receive(:send_received_notification)
 
         subject
       end

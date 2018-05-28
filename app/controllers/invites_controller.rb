@@ -13,9 +13,9 @@ class InvitesController < ApplicationController
 
     if invite.valid?
       if invite.user.present?
-        InviteMailer.invite_user(invite).deliver_now!
+        InviteMailer.invite_user(invite).deliver_later
       else
-        InviteMailer.invite_guest(invite).deliver_now!
+        InviteMailer.invite_guest(invite).deliver_later
       end
 
       flash.notice = "Invitation envoyée (#{invite.email})"

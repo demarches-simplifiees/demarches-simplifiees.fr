@@ -1,6 +1,6 @@
 class NotificationMailerPreview < ActionMailer::Preview
   def send_notification
-    NotificationMailer.send_notification(Dossier.last, Dossier.last.procedure.initiated_mail_template)
+    NotificationMailer.send_initiated_notification(Dossier.last)
   end
 
   def send_draft_notification

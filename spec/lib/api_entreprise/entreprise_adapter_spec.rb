@@ -17,51 +17,51 @@ describe ApiEntreprise::EntrepriseAdapter do
 
   context 'Attributs Entreprises' do
     it 'L\'entreprise contient bien un siren' do
-      expect(subject[:siren]).to eq(siren)
+      expect(subject[:entreprise_siren]).to eq(siren)
     end
 
     it 'L\'entreprise contient bien un capital_social' do
-      expect(subject[:capital_social]).to eq(462308)
+      expect(subject[:entreprise_capital_social]).to eq(462308)
     end
 
     it 'L\'entreprise contient bien un numero_tva_intracommunautaire' do
-      expect(subject[:numero_tva_intracommunautaire]).to eq('FR16418166096')
+      expect(subject[:entreprise_numero_tva_intracommunautaire]).to eq('FR16418166096')
     end
 
     it 'L\'entreprise contient bien une forme_juridique' do
-      expect(subject[:forme_juridique]).to eq('SA à directoire (s.a.i.)')
+      expect(subject[:entreprise_forme_juridique]).to eq('SA à directoire (s.a.i.)')
     end
 
     it 'L\'entreprise contient bien un forme_juridique_code' do
-      expect(subject[:forme_juridique_code]).to eq('5699')
+      expect(subject[:entreprise_forme_juridique_code]).to eq('5699')
     end
 
     it 'L\'entreprise contient bien un nom_commercial' do
-      expect(subject[:nom_commercial]).to eq('OCTO-TECHNOLOGY')
+      expect(subject[:entreprise_nom_commercial]).to eq('OCTO-TECHNOLOGY')
     end
 
     it 'L\'entreprise contient bien une raison_sociale' do
-      expect(subject[:raison_sociale]).to eq('OCTO-TECHNOLOGY')
+      expect(subject[:entreprise_raison_sociale]).to eq('OCTO-TECHNOLOGY')
     end
 
     it 'L\'entreprise contient bien un siret_siege_social' do
-      expect(subject[:siret_siege_social]).to eq('41816609600051')
+      expect(subject[:entreprise_siret_siege_social]).to eq('41816609600051')
     end
 
     it 'L\'entreprise contient bien un code_effectif_entreprise' do
-      expect(subject[:code_effectif_entreprise]).to eq('31')
+      expect(subject[:entreprise_code_effectif_entreprise]).to eq('31')
     end
 
     it 'L\'entreprise contient bien une date_creation' do
-      expect(subject[:date_creation]).to eq('Wed, 01 Apr 1998 00:00:00.000000000 +0200')
+      expect(subject[:entreprise_date_creation]).to eq('Wed, 01 Apr 1998 00:00:00.000000000 +0200')
     end
 
     it 'L\'entreprise contient bien un nom' do
-      expect(subject[:nom]).to eq('test_nom')
+      expect(subject[:entreprise_nom]).to eq('test_nom')
     end
 
     it 'L\'entreprise contient bien un prenom' do
-      expect(subject[:prenom]).to eq('test_prenom')
+      expect(subject[:entreprise_prenom]).to eq('test_prenom')
     end
   end
 end

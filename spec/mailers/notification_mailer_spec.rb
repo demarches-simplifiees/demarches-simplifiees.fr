@@ -18,7 +18,19 @@ RSpec.describe NotificationMailer, type: :mailer do
   describe '.send_notification' do
     let(:email_template) { instance_double('email_template', subject_for_dossier: 'subject', body_for_dossier: 'body') }
 
-    subject { described_class.send_notification(dossier, email_template) }
+    subject do
+      klass = Class.new(described_class) do
+        # We’re testing the (private) method `NotificationMailer#send_notification`.
+        #
+        # The standard trick to test a private method would be to `send(:send_notification`, but doesn’t work here,
+        # because ActionMailer does some magic to expose public instace methods as class methods.
+        # So, we use inheritance instead to make the private method public for testing purposes.
+        def send_notification(dossier, template)
+          super
+        end
+      end
+      klass.send_notification(dossier, email_template)
+    end
 
     it { expect(subject.subject).to eq(email_template.subject_for_dossier) }
     it { expect(subject.body).to eq(email_template.body_for_dossier) }

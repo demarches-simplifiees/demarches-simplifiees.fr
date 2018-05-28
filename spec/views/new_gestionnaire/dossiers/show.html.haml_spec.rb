@@ -15,7 +15,7 @@ describe 'new_gestionnaire/dossiers/show.html.haml', type: :view do
   context "when dossier was created by an etablissement" do
     let(:etablissement) { create(:etablissement) }
 
-    it { expect(rendered).to include(etablissement.entreprise_raison_sociale_or_name) }
+    it { expect(rendered).to include(etablissement.entreprise_raison_sociale) }
     it { expect(rendered).to include(etablissement.entreprise_siret_siege_social) }
     it { expect(rendered).to include(etablissement.entreprise_forme_juridique) }
 

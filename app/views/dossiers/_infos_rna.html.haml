@@ -2,21 +2,21 @@
   .col-lg-6.col-md-6.col-sm-6.col-xs-6
     %dl.dl-horizontal
       %dt Association ID :
-      %dd.text-success= @facade.entreprise.rna_information.association_id
+      %dd.text-success= @facade.etablissement.association_rna
 
       %dt Titre :
-      %dd= @facade.entreprise.rna_information.titre
+      %dd= @facade.etablissement.association_titre
 
       %dt Objet :
-      %dd= @facade.entreprise.rna_information.objet
+      %dd= @facade.etablissement.association_objet
 
   .col-lg-6.col-md-6.col-sm-6.col-xs-6
     %dl.dl-horizontal
       %dt Date création :
-      %dd= @facade.entreprise.rna_information.date_creation
+      %dd= @facade.etablissement.association_date_creation&.strftime("%d/%m/%Y")
 
       %dt Capital publication :
-      %dd= @facade.entreprise.rna_information.date_publication
+      %dd= @facade.etablissement.association_date_publication&.strftime("%d/%m/%Y")
 
       %dt Capital déclaration :
-      %dd= @facade.entreprise.rna_information.date_declaration
+      %dd= @facade.etablissement.association_date_declaration&.strftime("%d/%m/%Y")

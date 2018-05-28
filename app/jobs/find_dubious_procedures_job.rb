@@ -24,6 +24,6 @@ class FindDubiousProceduresJob < ApplicationJob
       .group_by(&:procedure_id)
       .map { |_procedure_id, tdcs| [tdcs[0].procedure, tdcs] }
 
-    AdministrationMailer.dubious_procedures(dubious_procedures_and_tdcs).deliver_now
+    AdministrationMailer.dubious_procedures(dubious_procedures_and_tdcs).deliver_later
   end
 end

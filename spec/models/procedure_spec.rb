@@ -229,39 +229,27 @@ describe Procedure do
   end
 
   describe 'active' do
-    let(:procedure) { create(:procedure, published_at: published_at, archived_at: archived_at) }
+    let(:procedure) { create(:procedure) }
     subject { Procedure.active(procedure.id) }
 
     context 'when procedure is in draft status and not archived' do
-      let(:published_at) { nil }
-      let(:archived_at) { nil }
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
 
     context 'when procedure is published and not archived' do
-      let(:published_at) { Time.now }
-      let(:archived_at) { nil }
+      let(:procedure) { create(:procedure, :published) }
       it { is_expected.to be_truthy }
     end
 
     context 'when procedure is published and archived' do
-      let(:published_at) { Time.now }
-      let(:archived_at) { Time.now }
-      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
-    end
-
-    context 'when procedure is in draft status and archived' do
-      let(:published_at) { nil }
-      let(:archived_at) { Time.now }
+      let(:procedure) { create(:procedure, :archived) }
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
 
   describe 'clone' do
-    let(:archived_at) { nil }
-    let(:published_at) { nil }
     let!(:service) { create(:service) }
-    let(:procedure) { create(:procedure, archived_at: archived_at, published_at: published_at, received_mail: received_mail, service: service) }
+    let(:procedure) { create(:procedure, received_mail: received_mail, service: service) }
     let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_2) { create(:type_de_champ_drop_down_list, procedure: procedure, order_place: 2) }
@@ -350,11 +338,13 @@ describe Procedure do
     end
 
     describe 'procedure status is reset' do
-      let(:archived_at) { Time.now }
-      let(:published_at) { Time.now }
+      let(:procedure) { create(:procedure, :archived, received_mail: received_mail, service: service) }
+
       it 'Not published nor archived' do
         expect(subject.archived_at).to be_nil
         expect(subject.published_at).to be_nil
+        expect(subject.test_started_at).to be_nil
+        expect(subject.aasm_state).to eq "brouillon"
         expect(subject.path).to be_nil
       end
     end
@@ -569,12 +559,12 @@ describe Procedure do
         { "label" => 'Civilité (FC)', "table" => 'france_connect_information', "column" => 'gender' },
         { "label" => 'Prénom (FC)', "table" => 'france_connect_information', "column" => 'given_name' },
         { "label" => 'Nom (FC)', "table" => 'france_connect_information', "column" => 'family_name' },
-        { "label" => 'SIREN', "table" => 'entreprise', "column" => 'siren' },
-        { "label" => 'Forme juridique', "table" => 'entreprise', "column" => 'forme_juridique' },
-        { "label" => 'Nom commercial', "table" => 'entreprise', "column" => 'nom_commercial' },
-        { "label" => 'Raison sociale', "table" => 'entreprise', "column" => 'raison_sociale' },
-        { "label" => 'SIRET siège social', "table" => 'entreprise', "column" => 'siret_siege_social' },
-        { "label" => 'Date de création', "table" => 'entreprise', "column" => 'date_creation' },
+        { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren' },
+        { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique' },
+        { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial' },
+        { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale' },
+        { "label" => 'SIRET siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social' },
+        { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation' },
         { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret' },
         { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf' },
         { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal' },

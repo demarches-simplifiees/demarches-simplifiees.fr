@@ -13,7 +13,7 @@
       %h2#titre-procedure.text-info
         = @dossier.procedure.libelle
       %p.procedure-description
-        = h sanitize(@dossier.procedure.description)
+        = h string_to_html(@dossier.procedure.description)
 
 - else
   #logo_procedure.flag
