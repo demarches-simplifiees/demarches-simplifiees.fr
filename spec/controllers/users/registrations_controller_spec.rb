@@ -15,8 +15,9 @@ describe Users::RegistrationsController, type: :controller do
 
     context 'when user is correct' do
       it 'sends confirmation instruction' do
-        expect(DeviseUserMailer).to receive(:confirmation_instructions).and_return(DeviseUserMailer)
-        expect(DeviseUserMailer).to receive(:deliver)
+        message = double()
+        expect(DeviseUserMailer).to receive(:confirmation_instructions).and_return(message)
+        expect(message).to receive(:deliver_later)
 
         subject
       end

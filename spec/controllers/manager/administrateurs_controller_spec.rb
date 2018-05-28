@@ -18,9 +18,9 @@ describe Manager::AdministrateursController, type: :controller do
 
       it 'alert new mail are send' do
         expect(AdministrationMailer).to receive(:new_admin_email).and_return(AdministrationMailer)
-        expect(AdministrationMailer).to receive(:deliver_now!)
+        expect(AdministrationMailer).to receive(:deliver_later)
         expect(AdministrationMailer).to receive(:invite_admin).and_return(AdministrationMailer)
-        expect(AdministrationMailer).to receive(:deliver_now!)
+        expect(AdministrationMailer).to receive(:deliver_later)
         subject
       end
     end

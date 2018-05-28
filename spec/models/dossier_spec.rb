@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Dossier do
+  include ActiveJob::TestHelper
+
   let(:user) { create(:user) }
 
   describe "without_followers scope" do
@@ -619,7 +621,12 @@ describe Dossier do
     end
 
     it "send an email when the dossier is created for the very first time" do
-      expect { Dossier.create(procedure: procedure, state: "brouillon", user: user) }.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
+      ActiveJob::Base.queue_adapter = :test
+      expect do
+        perform_enqueued_jobs do
+          Dossier.create(procedure: procedure, state: "brouillon", user: user)
+        end
+      end.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche : #{procedure.libelle}")
