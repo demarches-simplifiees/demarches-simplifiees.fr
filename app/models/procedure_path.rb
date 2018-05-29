@@ -11,15 +11,24 @@ class ProcedurePath < ApplicationRecord
     where(procedure: procedure).or(where(test_procedure: procedure)).last
   end
 
-  def hide!(procedure)
-    if self.procedure == procedure
+  def hide!(new_procedure)
+    if procedure == new_procedure
       update(procedure: nil)
     end
-    if self.test_procedure == procedure
+    if test_procedure == new_procedure
       update(test_procedure: nil)
     end
     if procedure.nil? && test_procedure.nil?
       destroy
+    end
+  end
+
+  def publish!(new_procedure)
+    if procedure != new_procedure
+      if procedure&.publiee?
+        procedure.archive!
+      end
+      update(procedure: new_procedure)
     end
   end
 end
