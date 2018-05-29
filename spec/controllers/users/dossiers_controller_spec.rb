@@ -164,12 +164,6 @@ describe Users::DossiersController, type: :controller do
       it { expect(subject.status).to eq 200 }
     end
 
-    context 'when procedure is hidden' do
-      let(:procedure) { create(:procedure, :hidden) }
-
-      it { expect(subject).to redirect_to(root_path) }
-    end
-
     context 'when procedure path dose not exist' do
       let(:path) { 'hello' }
 
