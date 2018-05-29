@@ -3,10 +3,8 @@
 %h1 Bonjour
 
 %p
-  Une demande de suppression a été effectuée pour le dossier
-  = @dossier.id
-  par l'utilisateur
-  = @dossier.user.email
-  \.
+  Une demande de suppression a été effectuée pour le dossier #{@dossier.id}
+  (état : #{@dossier.state})
+  par l'utilisateur #{@dossier.user.email}.
 %p
   Merci de le notifier quand cela est fait.
