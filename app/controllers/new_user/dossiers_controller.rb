@@ -148,7 +148,7 @@ module NewUser
     end
 
     def ensure_ownership_or_invitation!
-      if !dossier.owner_or_invite?(current_user)
+      if !current_user.owns_or_invite?(dossier)
         forbidden!
       end
     end

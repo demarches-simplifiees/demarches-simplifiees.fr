@@ -45,4 +45,8 @@ class User < ApplicationRecord
   def invite?(dossier_id)
     invites.pluck(:dossier_id).include?(dossier_id.to_i)
   end
+
+  def owns_or_invite?(dossier)
+    owns?(dossier) || invite?(dossier.id)
+  end
 end
