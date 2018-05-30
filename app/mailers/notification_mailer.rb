@@ -9,9 +9,9 @@ class NotificationMailer < ApplicationMailer
   def send_draft_notification(dossier)
     vars_mailer(dossier)
 
-    @subject = "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}"
+    subject = "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}"
 
-    mail(subject: @subject)
+    mail(subject: subject)
   end
 
   def send_initiated_notification(dossier)
