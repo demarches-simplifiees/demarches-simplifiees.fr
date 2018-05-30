@@ -3,7 +3,7 @@
     - if @facade.procedure.for_individual?
       .row.title-row
         .col-xs-4.split-hr
-        .col-xs-4.dossier-title= t('utils.depositaire').upcase
+        .col-xs-4.dossier-title= t('utils.depositaire')
         .col-xs-4.split-hr
       .row
         .col-xs-6.depositaire-label Civilité
@@ -29,7 +29,7 @@
         - if champ.type_champ == 'header_section'
           .row.title-row.margin-top-40
             .col-xs-3.split-hr
-            .col-xs-6.dossier-title= champ.libelle.upcase
+            .col-xs-6.dossier-title= champ.libelle
             .col-xs-3.split-hr
         - else
           .row
@@ -60,7 +60,7 @@
     .col-xs-12
       .row.title-row
         .col-xs-4.split-hr
-        .col-xs-4.dossier-title= t('utils.pieces').upcase
+        .col-xs-4.dossier-title= t('utils.pieces')
         .col-xs-4.split-hr
 
   .col-xs-12#pieces-justificatives.margin-bot-40
