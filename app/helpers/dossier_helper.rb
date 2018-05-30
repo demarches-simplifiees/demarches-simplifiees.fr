@@ -16,10 +16,12 @@ module DossierHelper
   end
 
   def delete_dossier_confirm(dossier)
-    message = "Vous vous apprêtez à supprimer votre dossier ainsi que les informations qu’il contient. "
+    message = ["Vous vous apprêtez à supprimer votre dossier ainsi que les informations qu’il contient."]
     if dossier.en_construction_ou_instruction?
-      message += "Nous vous rappelons que toute suppression entraine l’annulation de la démarche en cours. "
+      message << "Nous vous rappelons que toute suppression entraine l’annulation de la démarche en cours."
     end
-    message += "Confirmer la suppression ?"
+    message << "Confirmer la suppression ?"
+
+    message.join(" ")
   end
 end
