@@ -6,11 +6,7 @@ class NotificationMailer < ApplicationMailer
   end
 
   def send_draft_notification(dossier)
-    vars_mailer(dossier)
-
-    subject = "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}"
-
-    mail(subject: subject)
+    send_mail(dossier, "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}")
   end
 
   def send_dossier_received(dossier)
