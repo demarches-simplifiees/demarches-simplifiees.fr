@@ -15,7 +15,7 @@
   .split-hr-left
 
   .text-center.mt-1
-    = link_to ask_deletion_dossier_path(@facade.dossier), method: :post, class:"btn btn-danger", data: { confirm: "Confirmez-vous la demande de suppression de ce dossier ?" } do
-      Demander la suppression
+    = link_to ask_deletion_dossier_path(@facade.dossier), method: :post, class: "btn btn-danger", data: { confirm: delete_dossier_confirm(@facade.dossier) } do
+      Supprimer définitivement
       %br
-      du dossier
+      ce dossier
