@@ -31,7 +31,7 @@ class NotificationMailer < ApplicationMailer
   end
 
   def new_answer(dossier)
-    send_mail dossier, "Nouveau message pour votre dossier demarches-simplifiees.fr nº #{dossier.id}"
+    send_mail(dossier, "Nouveau message pour votre dossier demarches-simplifiees.fr nº #{dossier.id}")
   end
 
   private
@@ -39,8 +39,8 @@ class NotificationMailer < ApplicationMailer
   def send_notification(dossier, mail_template)
     vars_mailer(dossier)
 
-    @subject = mail_template.subject_for_dossier dossier
-    @body = mail_template.body_for_dossier dossier
+    @subject = mail_template.subject_for_dossier(dossier)
+    @body = mail_template.body_for_dossier(dossier)
 
     create_commentaire_for_notification
 
@@ -61,7 +61,7 @@ class NotificationMailer < ApplicationMailer
   end
 
   def send_mail(dossier, subject)
-    vars_mailer dossier
+    vars_mailer(dossier)
 
     mail(subject: subject)
   end
