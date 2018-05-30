@@ -3,6 +3,7 @@ class Procedure < ApplicationRecord
   has_many :types_de_champ, -> { public_only }, dependent: :destroy
   has_many :types_de_champ_private, -> { private_only }, class_name: 'TypeDeChamp', dependent: :destroy
   has_many :dossiers
+  has_many :deleted_dossiers, dependent: :destroy
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
