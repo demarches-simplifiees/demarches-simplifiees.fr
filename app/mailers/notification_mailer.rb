@@ -1,8 +1,8 @@
 class NotificationMailer < ApplicationMailer
   default to: Proc.new { @user.email }
 
-  def send_dossier_received(dossier)
-    send_notification(dossier, dossier.procedure.received_mail_template)
+  def new_answer(dossier)
+    send_mail(dossier, "Nouveau message pour votre dossier demarches-simplifiees.fr nº #{dossier.id}")
   end
 
   def send_draft_notification(dossier)
@@ -11,6 +11,10 @@ class NotificationMailer < ApplicationMailer
     subject = "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}"
 
     mail(subject: subject)
+  end
+
+  def send_dossier_received(dossier)
+    send_notification(dossier, dossier.procedure.received_mail_template)
   end
 
   def send_initiated_notification(dossier)
@@ -29,11 +33,18 @@ class NotificationMailer < ApplicationMailer
     send_notification(dossier, dossier.procedure.without_continuation_mail_template)
   end
 
-  def new_answer(dossier)
-    send_mail(dossier, "Nouveau message pour votre dossier demarches-simplifiees.fr nº #{dossier.id}")
+  private
+
+  def vars_mailer(dossier)
+    @dossier = dossier
+    @user = dossier.user
   end
 
-  private
+  def send_mail(dossier, subject)
+    vars_mailer(dossier)
+
+    mail(subject: subject)
+  end
 
   def send_notification(dossier, mail_template)
     vars_mailer(dossier)
@@ -52,16 +63,5 @@ class NotificationMailer < ApplicationMailer
       email: I18n.t("dynamics.contact_email"),
       body: ["[#{@subject}]", @body].join("<br><br>")
     )
-  end
-
-  def vars_mailer(dossier)
-    @dossier = dossier
-    @user = dossier.user
-  end
-
-  def send_mail(dossier, subject)
-    vars_mailer(dossier)
-
-    mail(subject: subject)
   end
 end
