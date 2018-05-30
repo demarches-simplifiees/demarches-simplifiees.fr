@@ -2,8 +2,9 @@ class FindDubiousProceduresJob < ApplicationJob
   queue_as :cron
 
   FORBIDDEN_KEYWORDS = [
-    'IBAN', 'NIR', 'NIRPP', 'race', 'religion',
-    'carte bancaire', 'carte bleue', 'sécurité sociale'
+    'NIR', 'NIRPP', 'race', 'religion',
+    'carte bancaire', 'carte bleue', 'sécurité sociale', 'nationalité',
+    'agdref', 'handicap', 'syndicat', 'politique'
   ]
 
   def perform(*args)

@@ -119,6 +119,12 @@ FactoryBot.define do
       end
     end
 
+    trait :whitelisted do
+      after(:build) do |procedure, _evaluator|
+        procedure.update(whitelisted_at: DateTime.now)
+      end
+    end
+
     trait :with_notice do
       after(:create) do |procedure, _evaluator|
         procedure.notice.attach(

@@ -35,13 +35,19 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
       end
 
       context 'and a whitelisted procedure' do
-        let(:procedure) { create(:procedure, whitelisted_at: DateTime.now) }
+        let(:procedure) { create(:procedure, :whitelisted) }
 
         it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
       end
 
       context 'and a archived procedure' do
-        let(:procedure) { create(:procedure, archived_at: DateTime.now) }
+        let(:procedure) { create(:procedure, :archived) }
+
+        it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
+      end
+
+      context 'and a hidden procedure' do
+        let(:procedure) { create(:procedure, :hidden) }
 
         it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
       end
