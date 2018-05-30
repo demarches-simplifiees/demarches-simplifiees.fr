@@ -19,7 +19,7 @@ class Avis < ApplicationRecord
   scope :updated_since?, -> (date) { where('avis.updated_at > ?', date) }
 
   def email_to_display
-    gestionnaire.try(:email) || email
+    gestionnaire&.email || email
   end
 
   def self.link_avis_to_gestionnaire(gestionnaire)
@@ -27,8 +27,7 @@ class Avis < ApplicationRecord
   end
 
   def self.avis_exists_and_email_belongs_to_avis?(avis_id, email)
-    avis = Avis.find_by(id: avis_id)
-    avis.present? && avis.email == email
+    Avis.find_by(id: avis_id)&.email == email
   end
 
   private
