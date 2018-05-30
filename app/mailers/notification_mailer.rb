@@ -1,8 +1,6 @@
 class NotificationMailer < ApplicationMailer
   default to: Proc.new { @user.email }
 
-  after_action :create_commentaire_for_notification, only: [:send_notification, :send_dossier_received]
-
   def send_dossier_received(dossier_id)
     dossier = Dossier.find(dossier_id)
     send_notification(dossier, dossier.procedure.received_mail_template)
@@ -43,6 +41,8 @@ class NotificationMailer < ApplicationMailer
 
     @subject = mail_template.subject_for_dossier dossier
     @body = mail_template.body_for_dossier dossier
+
+    create_commentaire_for_notification
 
     mail(subject: @subject) { |format| format.html { @body } }
   end
