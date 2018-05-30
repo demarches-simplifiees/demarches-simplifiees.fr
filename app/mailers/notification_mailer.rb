@@ -1,8 +1,7 @@
 class NotificationMailer < ApplicationMailer
   default to: Proc.new { @user.email }
 
-  def send_dossier_received(dossier_id)
-    dossier = Dossier.find(dossier_id)
+  def send_dossier_received(dossier)
     send_notification(dossier, dossier.procedure.received_mail_template)
   end
 
