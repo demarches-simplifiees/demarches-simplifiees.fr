@@ -51,7 +51,8 @@
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = render partial: "new_gestionnaire/dossiers/identite_entreprise", locals: { etablissement: c.etablissement }
+              - if c.etablissement.present?
+                = render partial: "new_gestionnaire/dossiers/identite_entreprise", locals: { etablissement: c.etablissement }
         - else
           %th.libelle
             = "#{c.libelle} :"
