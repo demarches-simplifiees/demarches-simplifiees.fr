@@ -38,6 +38,10 @@ class User < ApplicationRecord
     loged_in_with_france_connect.present?
   end
 
+  def owns?(dossier)
+    dossier.user_id == id
+  end
+
   def invite?(dossier_id)
     invites.pluck(:dossier_id).include?(dossier_id.to_i)
   end
