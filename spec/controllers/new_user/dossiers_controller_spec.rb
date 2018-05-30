@@ -246,7 +246,7 @@ describe NewUser::DossiersController, type: :controller do
       it { expect(flash.alert).to eq(['nop']) }
 
       it 'does not send an email' do
-        expect(NotificationMailer).not_to receive(:send_received_notification)
+        expect(NotificationMailer).not_to receive(:send_initiated_notification)
 
         subject
       end
