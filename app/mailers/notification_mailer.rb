@@ -20,10 +20,6 @@ class NotificationMailer < ApplicationMailer
     send_notification(dossier, dossier.procedure.initiated_mail_template)
   end
 
-  def send_received_notification(dossier)
-    send_notification(dossier, dossier.procedure.received_mail_template)
-  end
-
   def send_closed_notification(dossier)
     send_notification(dossier, dossier.procedure.closed_mail_template)
   end
