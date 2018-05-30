@@ -2,11 +2,15 @@ class NotificationMailer < ApplicationMailer
   default to: Proc.new { @user.email }
 
   def new_answer(dossier)
-    send_mail(dossier, "Nouveau message pour votre dossier demarches-simplifiees.fr nº #{dossier.id}")
+    subject = "Nouveau message pour votre dossier demarches-simplifiees.fr nº #{dossier.id}"
+
+    send_mail(dossier, subject)
   end
 
   def send_draft_notification(dossier)
-    send_mail(dossier, "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}")
+    subject = "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}"
+
+    send_mail(dossier, subject)
   end
 
   def send_dossier_received(dossier)
