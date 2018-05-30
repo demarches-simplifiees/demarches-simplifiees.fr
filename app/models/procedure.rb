@@ -79,10 +79,7 @@ class Procedure < ApplicationRecord
     procedure_path = ProcedurePath.find_by(path: path)
 
     if procedure_path.present?
-      if procedure_path.procedure != self
-        procedure_path.procedure.archive!
-        procedure_path.update(procedure: self)
-      end
+      procedure_path.publish!(self)
     else
       ProcedurePath.create(procedure: self, administrateur: administrateur, path: path)
     end
