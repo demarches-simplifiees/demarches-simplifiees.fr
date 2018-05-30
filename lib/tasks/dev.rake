@@ -71,7 +71,7 @@ namespace :dev do
   task :import_db do
     filename = "tps_prod_#{1.day.ago.strftime("%d-%m-%Y")}.sql"
     local_file = "/tmp/#{filename}"
-    run_and_stop_if_error "scp deploy@sgmap_backup:/var/backup/production1/db/#{filename} #{local_file}"
+    run_and_stop_if_error "scp -C deploy@sgmap_backup:/var/backup/production1/db/#{filename} #{local_file}"
 
     dev_env_param = "RAILS_ENV=development"
 
