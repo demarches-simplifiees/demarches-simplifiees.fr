@@ -72,61 +72,30 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
     end
 
     context 'when invite is logged' do
-      context 'when invite is by Gestionnaire' do
-        let!(:invite_user) { create(:user, email: 'invite@octo.com') }
+      let!(:invite_user) { create(:user, email: 'invite@octo.com') }
 
-        before do
-          create(:invite) { create(:invite, email: invite_user.email, user: invite_user, dossier: dossier) }
-          sign_out dossier.user
-          sign_in invite_user
-          render
-        end
-
-        describe 'les liens de modifications' do
-          it 'describe link is not present' do
-            expect(rendered).not_to have_css('#maj_infos')
-          end
-
-          it 'map link is not present' do
-            expect(rendered).not_to have_css('#maj_carte')
-          end
-
-          it 'PJ link is not present' do
-            expect(rendered).not_to have_css('#maj_pj')
-          end
-
-          it 'archive link is not present' do
-            expect(rendered).not_to have_content('Archiver')
-          end
-        end
+      before do
+        create(:invite) { create(:invite, email: invite_user.email, user: invite_user, dossier: dossier, type: 'InviteUser') }
+        sign_out dossier.user
+        sign_in invite_user
+        render
       end
 
-      context 'invite is by User' do
-        let!(:invite_user) { create(:user, email: 'invite@octo.com') }
-
-        before do
-          create(:invite) { create(:invite, email: invite_user.email, user: invite_user, dossier: dossier, type: 'InviteUser') }
-          sign_out dossier.user
-          sign_in invite_user
-          render
+      describe 'les liens de modifications' do
+        it 'describe link is not present' do
+          expect(rendered).to have_css('#maj_infos')
         end
 
-        describe 'les liens de modifications' do
-          it 'describe link is not present' do
-            expect(rendered).to have_css('#maj_infos')
-          end
+        it 'map link is present' do
+          expect(rendered).to have_css('#maj_carte')
+        end
 
-          it 'map link is present' do
-            expect(rendered).to have_css('#maj_carte')
-          end
+        it 'PJ link is present' do
+          expect(rendered).to have_css('#maj_pj')
+        end
 
-          it 'PJ link is present' do
-            expect(rendered).to have_css('#maj_pj')
-          end
-
-          it 'archive link is present' do
-            expect(rendered).not_to have_content('Archiver')
-          end
+        it 'archive link is present' do
+          expect(rendered).not_to have_content('Archiver')
         end
       end
     end
