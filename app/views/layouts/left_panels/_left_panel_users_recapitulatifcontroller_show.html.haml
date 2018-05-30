@@ -14,8 +14,9 @@
   .dossier-state= @facade.dossier.display_state
   .split-hr-left
 
-  .text-center.mt-1
-    = link_to ask_deletion_dossier_path(@facade.dossier), method: :post, class: "btn btn-danger", data: { confirm: delete_dossier_confirm(@facade.dossier) } do
-      Supprimer définitivement
-      %br
-      ce dossier
+  - if @facade.dossier.user == current_user
+    .text-center.mt-1
+      = link_to ask_deletion_dossier_path(@facade.dossier), method: :post, class: "btn btn-danger", data: { confirm: delete_dossier_confirm(@facade.dossier) } do
+        Supprimer définitivement
+        %br
+        ce dossier
