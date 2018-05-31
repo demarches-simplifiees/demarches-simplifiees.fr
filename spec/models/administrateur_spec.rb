@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Administrateur, type: :model do
+  let(:administration) { create(:administration) }
+
   describe 'assocations' do
     it { is_expected.to have_and_belong_to_many(:gestionnaires) }
     it { is_expected.to have_many(:procedures) }
@@ -53,14 +55,14 @@ describe Administrateur, type: :model do
 
   describe '#find_inactive_by_token' do
     let(:administrateur) { create(:administration).invite_admin('paul@tps.fr') }
-    let(:reset_password_token) { administrateur.invite! }
+    let(:reset_password_token) { administrateur.invite!(administration.id) }
 
     it { expect(Administrateur.find_inactive_by_token(reset_password_token)).not_to be_nil }
   end
 
   describe '#reset_password' do
     let(:administrateur) { create(:administration).invite_admin('paul@tps.fr') }
-    let(:reset_password_token) { administrateur.invite! }
+    let(:reset_password_token) { administrateur.invite!(administration.id) }
 
     it { expect(Administrateur.reset_password(reset_password_token, '12345678').errors).to be_empty }
     it { expect(Administrateur.reset_password('123', '12345678').errors).not_to be_empty }

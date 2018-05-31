@@ -10,9 +10,10 @@ class AdministrationMailer < ApplicationMailer
          subject: subject)
   end
 
-  def invite_admin(admin, reset_password_token)
+  def invite_admin(admin, reset_password_token, administration_id)
     @reset_password_token = reset_password_token
     @admin = admin
+    @author_name = BizDev.full_name(administration_id)
     subject = "Activez votre compte administrateur"
 
     mail(to: admin.email,
