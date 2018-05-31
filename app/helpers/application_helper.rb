@@ -15,9 +15,9 @@ module ApplicationHelper
   end
 
   def current_email
-    current_user.try(:email) ||
-      current_gestionnaire.try(:email) ||
-      current_administrateur.try(:email)
+    current_user&.email ||
+      current_gestionnaire&.email ||
+      current_administrateur&.email
   end
 
   def root_path_for_profile(nav_bar_profile)

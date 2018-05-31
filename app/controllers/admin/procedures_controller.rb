@@ -225,7 +225,7 @@ class Admin::ProceduresController < AdminController
 
   def procedure_params
     editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on]
-    if @procedure.try(:locked?)
+    if @procedure&.locked?
       params.require(:procedure).permit(*editable_params)
     else
       params.require(:procedure).permit(*editable_params, :lien_demarche, :cerfa_flag, :for_individual, :individual_with_siret, :ask_birthday, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)

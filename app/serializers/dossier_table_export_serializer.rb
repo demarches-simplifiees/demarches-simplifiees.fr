@@ -18,7 +18,7 @@ class DossierTableExportSerializer < ActiveModel::Serializer
     :individual_birthdate
 
   def email
-    object.user.try(:email)
+    object.user&.email
   end
 
   def state
@@ -47,19 +47,19 @@ class DossierTableExportSerializer < ActiveModel::Serializer
   end
 
   def individual_prenom
-    object.individual.try(:prenom)
+    object.individual&.prenom
   end
 
   def individual_nom
-    object.individual.try(:nom)
+    object.individual&.nom
   end
 
   def individual_birthdate
-    object.individual.try(:birthdate)
+    object.individual&.birthdate
   end
 
   def individual_gender
-    object.individual.try(:gender)
+    object.individual&.gender
   end
 
   def emails_accompagnateurs

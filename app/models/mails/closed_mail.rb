@@ -11,7 +11,7 @@ module Mails
 
     def self.default_template_name_for_procedure(procedure)
       attestation_template = procedure.attestation_template
-      if attestation_template.present? && attestation_template.activated?
+      if attestation_template&.activated?
         "mails/closed_mail_with_attestation"
       else
         "mails/closed_mail"

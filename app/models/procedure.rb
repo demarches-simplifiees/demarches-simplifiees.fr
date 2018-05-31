@@ -209,11 +209,11 @@ class Procedure < ApplicationRecord
     end
 
     procedure.administrateur = admin
-    procedure.initiated_mail = initiated_mail.try(:dup)
-    procedure.received_mail = received_mail.try(:dup)
-    procedure.closed_mail = closed_mail.try(:dup)
-    procedure.refused_mail = refused_mail.try(:dup)
-    procedure.without_continuation_mail = without_continuation_mail.try(:dup)
+    procedure.initiated_mail = initiated_mail&.dup
+    procedure.received_mail = received_mail&.dup
+    procedure.closed_mail = closed_mail&.dup
+    procedure.refused_mail = refused_mail&.dup
+    procedure.without_continuation_mail = without_continuation_mail&.dup
 
     procedure.cloned_from_library = from_library
     procedure.parent_procedure = self

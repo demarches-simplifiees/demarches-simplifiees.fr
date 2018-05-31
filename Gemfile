@@ -38,8 +38,6 @@ gem 'kaminari'
 # Decorators
 gem 'draper'
 
-gem 'unicode_utils'
-
 # Gestion des comptes utilisateurs
 gem 'devise'
 gem 'devise-async'
