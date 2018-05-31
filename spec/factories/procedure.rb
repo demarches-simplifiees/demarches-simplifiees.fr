@@ -135,6 +135,15 @@ FactoryBot.define do
       end
     end
 
+    trait :with_deliberation do
+      after(:create) do |procedure, _evaluator|
+        procedure.deliberation.attach(
+          io: StringIO.new('Hello World'),
+          filename: 'hello.txt'
+        )
+      end
+    end
+
     trait :with_all_champs_mandatory do
       after(:build) do |procedure, _evaluator|
         tdcs = []
