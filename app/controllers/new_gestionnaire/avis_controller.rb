@@ -118,7 +118,7 @@ module NewGestionnaire
         # a gestionnaire is authenticated ... lets see if it can view the dossier
 
         redirect_to gestionnaire_avis_url(avis)
-      elsif avis.gestionnaire.present? && avis.gestionnaire.email == params[:email]
+      elsif avis.gestionnaire&.email == params[:email]
         # the avis gestionnaire has already signed up and it sould sign in
 
         redirect_to new_gestionnaire_session_url
