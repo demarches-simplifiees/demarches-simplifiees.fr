@@ -18,7 +18,7 @@ class GestionnaireMailer < ApplicationMailer
     headers['X-mailjet-campaign'] = 'last_week_overview'
     overview = gestionnaire.last_week_overview
 
-    send_mail gestionnaire.email, overview, 'Vos activités sur demarches-simplifiees.fr'
+    send_mail(gestionnaire.email, overview, 'Vos activités sur demarches-simplifiees.fr')
   end
 
   def send_dossier(sender, dossier, recipient)
