@@ -8,7 +8,7 @@ class AdministrationMailerPreview < ActionMailer::Preview
   end
 
   def invite_admin
-    AdministrationMailer.invite_admin(Administrateur.last, "12345678")
+    AdministrationMailer.invite_admin(Administrateur.last, "12345678", 0)
   end
 
   def refuse_admin
