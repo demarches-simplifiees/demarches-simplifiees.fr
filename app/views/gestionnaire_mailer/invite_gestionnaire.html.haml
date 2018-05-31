@@ -1,19 +1,21 @@
 - content_for(:title, 'Activation de votre compte accompagnateur')
 
-Bonjour,
-%br
-%br
-Vous venez d'être nommé accompagnateur sur demarches-simplifiees.fr.
-%br
-Votre compte a été créé pour l'adresse email #{@gestionnaire.email}. Pour l’activer, je vous invite à cliquer sur le lien suivant : 
-= link_to(gestionnaire_activate_url(token: @reset_password_token), gestionnaire_activate_url(token: @reset_password_token))
-%br
-%br
-Par ailleurs, notre site de documentation qui regroupe l'ensemble des informations relatives à demarches-simplifiees.fr ainsi que des tutoriels d’utilisation est à votre disposition : 
-= link_to(DOC_URL, DOC_URL)
-%br
-%br
-Bonne journée,
-%br
-%br
-L'équipe demarches-simplifiees.fr
+%p
+  Bonjour,
+
+%p
+  Vous venez d'être nommé accompagnateur sur demarches-simplifiees.fr.
+
+%p
+  Votre compte a été créé pour l'adresse email #{@gestionnaire.email}. Pour l’activer, je vous invite à cliquer sur le lien suivant : 
+  = link_to(gestionnaire_activate_url(token: @reset_password_token), gestionnaire_activate_url(token: @reset_password_token))
+
+%p
+  Par ailleurs, notre site de documentation qui regroupe l'ensemble des informations relatives à demarches-simplifiees.fr ainsi que des tutoriels d’utilisation est à votre disposition : 
+  = link_to(DOC_URL, DOC_URL)
+
+%p
+  Bonne journée,
+
+%p
+  L'équipe demarches-simplifiees.fr
