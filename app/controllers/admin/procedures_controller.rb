@@ -217,6 +217,15 @@ class Admin::ProceduresController < AdminController
     render json: json_path_list
   end
 
+  def delete_deliberation
+    procedure = Procedure.find(params[:id])
+
+    procedure.deliberation.purge_later
+
+    flash.notice = 'la délibération a bien été supprimée'
+    redirect_to edit_admin_procedure_path(procedure)
+  end
+
   private
 
   def cloned_from_library?
