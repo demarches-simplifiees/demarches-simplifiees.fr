@@ -1,7 +1,7 @@
 #first-block
   .en-cours
     = dossier_count = current_user.dossiers.count
-    = ("Dossier".pluralize(dossier_count)).upcase
+    = "Dossier".pluralize(dossier_count)
     %br
     EN COURS
 

@@ -31,7 +31,7 @@ class DossierSerializer < ActiveModel::Serializer
   end
 
   def email
-    object.user.try(:email)
+    object.user&.email
   end
 
   def entreprise
