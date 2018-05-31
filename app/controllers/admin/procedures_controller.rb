@@ -164,8 +164,8 @@ class Admin::ProceduresController < AdminController
         flash.alert = new_procedure.errors.full_messages
         redirect_to new_from_existing_admin_procedures_path
       else
-        flash.now.alert = new_procedure.errors.full_messages
-        render 'index'
+        flash.alert = new_procedure.errors.full_messages
+        redirect_to admin_procedures_path
       end
     end
 
