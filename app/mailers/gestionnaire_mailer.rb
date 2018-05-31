@@ -35,13 +35,9 @@ class GestionnaireMailer < ApplicationMailer
 
   private
 
-  def vars_mailer(email, args)
+  def send_mail(email, args, subject)
     @args = args
     @email = email
-  end
-
-  def send_mail(email, args, subject)
-    vars_mailer email, args
 
     mail(to: email, subject: subject)
   end
