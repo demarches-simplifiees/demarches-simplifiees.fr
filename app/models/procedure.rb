@@ -24,6 +24,7 @@ class Procedure < ApplicationRecord
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
   has_one_attached :notice
+  has_one_attached :deliberation
 
   delegate :use_api_carto, to: :module_api_carto
 
@@ -45,7 +46,7 @@ class Procedure < ApplicationRecord
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
-  validates :cadre_juridique, presence: true, allow_blank: false, allow_nil: false
+  validate :check_juridique
 
   include AASM
 
@@ -349,6 +350,12 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def check_juridique
+    if cadre_juridique.blank? && !deliberation.attached?
+      errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
+    end
+  end
 
   def field_hash(label, table, column)
     {
