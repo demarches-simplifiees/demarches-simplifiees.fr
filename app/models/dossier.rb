@@ -163,10 +163,6 @@ class Dossier < ApplicationRecord
     en_instruction? || accepte? || refuse? || sans_suite?
   end
 
-  def owner_or_invite?(user)
-    self.user == user || invite_for_user(user).present?
-  end
-
   def invite_for_user(user)
     invites_user.find_by(user_id: user.id)
   end

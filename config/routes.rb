@@ -11,6 +11,10 @@ Rails.application.routes.draw do
       put 'enable_feature', on: :member
     end
 
+    resources :users, only: [:index, :show]
+    resources :gestionnaires, only: [:index, :show]
+    resources :dossiers, only: [:show]
+
     resources :demandes, only: [:index]
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
@@ -143,6 +147,7 @@ Rails.application.routes.draw do
 
       member do
         post :hide
+        delete :delete_deliberation
       end
 
       resources :types_de_champ, only: [:destroy]

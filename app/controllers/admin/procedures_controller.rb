@@ -217,6 +217,15 @@ class Admin::ProceduresController < AdminController
     render json: json_path_list
   end
 
+  def delete_deliberation
+    procedure = Procedure.find(params[:id])
+
+    procedure.deliberation.purge_later
+
+    flash.notice = 'la délibération a bien été supprimée'
+    redirect_to edit_admin_procedure_path(procedure)
+  end
+
   private
 
   def cloned_from_library?
@@ -224,7 +233,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def procedure_params
-    editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on]
+    editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on]
     if @procedure&.locked?
       params.require(:procedure).permit(*editable_params)
     else

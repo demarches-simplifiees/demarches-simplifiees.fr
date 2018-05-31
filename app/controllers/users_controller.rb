@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 
     dossier = Dossier.find(dossier_id)
 
-    if !dossier.owner_or_invite?(current_user)
+    if !current_user.owns_or_invite?(dossier)
       raise ActiveRecord::RecordNotFound
     end
 
