@@ -74,7 +74,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   # Overwrite this method to customize how procedures are displayed
   # across all pages of the admin dashboard.
   #
-  # def display_resource(procedure)
-  #   "Procedure ##{procedure.id}"
-  # end
+  def display_resource(procedure)
+    "#{procedure.libelle} ##{procedure.id}"
+  end
 end
