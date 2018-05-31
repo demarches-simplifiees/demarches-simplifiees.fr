@@ -58,7 +58,7 @@
             class: 'button send',
             data: { action: 'draft', disable_with: 'Envoi...' }
 
-          - if dossier.user == current_user
+          - if current_user.owns?(dossier)
             = f.button 'Soumettre le dossier',
               class: 'button send primary',
               data: { action: 'submit', disable_with: 'Envoi...' }
