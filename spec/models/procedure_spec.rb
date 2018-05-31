@@ -173,6 +173,26 @@ describe Procedure do
     context 'organisation' do
       it { is_expected.to allow_value('URRSAF').for(:organisation) }
     end
+
+    context 'juridique' do
+      it { is_expected.not_to allow_value(nil).for(:cadre_juridique) }
+      it { is_expected.to allow_value('text').for(:cadre_juridique) }
+
+      context 'with deliberation' do
+        let(:procedure) { build(:procedure, cadre_juridique: nil) }
+
+        it { expect(procedure.valid?).to eq(false) }
+
+        context 'when the deliberation is uploaded ' do
+          before do
+            allow(procedure).to receive(:deliberation)
+              .and_return(double('attached?': true))
+          end
+
+          it { expect(procedure.valid?).to eq(true) }
+        end
+      end
+    end
   end
 
   describe '#types_de_champ_ordered' do
