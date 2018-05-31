@@ -394,11 +394,20 @@ describe NewUser::DossiersController, type: :controller do
       let(:dossier) { create(:dossier, user: user, autorisation_donnees: true) }
 
       it do
-        expect(DossierMailer).to receive(:ask_deletion).and_return(double(deliver_later: nil))
+        expect(DossierMailer).to receive(:notify_deletion_to_administration).with(kind_of(DeletedDossier), dossier.procedure.administrateur.email).and_return(double(deliver_later: nil))
+        expect(DossierMailer).to receive(:notify_deletion_to_user).with(kind_of(DeletedDossier), dossier.user.email).and_return(double(deliver_later: nil))
         subject
       end
 
-      it { is_expected.to redirect_to(users_dossier_recapitulatif_path(dossier)) }
+      it do
+        procedure = dossier.procedure
+        dossier_id = dossier.id
+        subject
+        expect(Dossier.find_by(id: dossier_id)).to eq(nil)
+        expect(procedure.deleted_dossiers.count).to eq(1)
+        expect(procedure.deleted_dossiers.first.dossier_id).to eq(dossier_id)
+      end
+      it { is_expected.to redirect_to(users_dossiers_path) }
     end
 
     context 'when dossier is not owned by signed in user' do
@@ -406,8 +415,15 @@ describe NewUser::DossiersController, type: :controller do
       let(:dossier) { create(:dossier, user: user2, autorisation_donnees: true) }
 
       it do
-        expect(DossierMailer).not_to receive(:ask_deletion)
+        expect(DossierMailer).not_to receive(:notify_deletion_to_administration)
+        expect(DossierMailer).not_to receive(:notify_deletion_to_user)
         subject
+      end
+
+      it do
+        subject
+        expect(Dossier.find_by(id: dossier.id)).not_to eq(nil)
+        expect(dossier.procedure.deleted_dossiers.count).to eq(0)
       end
 
       it { is_expected.to redirect_to(root_path) }
