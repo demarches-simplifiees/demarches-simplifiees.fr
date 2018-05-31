@@ -15,6 +15,7 @@ describe Admin::ProceduresController, type: :controller do
   let(:quartiers_prioritaires) { '0' }
   let(:cadastre) { '0' }
   let(:cerfa_flag) { true }
+  let(:cadre_juridique) { 'cadre juridique' }
 
   let(:procedure_params) {
     {
@@ -24,6 +25,7 @@ describe Admin::ProceduresController, type: :controller do
       direction: direction,
       lien_demarche: lien_demarche,
       cerfa_flag: cerfa_flag,
+      cadre_juridique: cadre_juridique,
       module_api_carto_attributes: {
         use_api_carto: use_api_carto,
         quartiers_prioritaires: quartiers_prioritaires,
@@ -471,7 +473,7 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'PUT #clone' do
-    let!(:procedure) { create(:procedure, :with_notice, administrateur: admin) }
+    let!(:procedure) { create(:procedure, :with_notice, :with_deliberation, administrateur: admin) }
     let(:params) { { procedure_id: procedure.id } }
     subject { put :clone, params: params }
 
@@ -489,6 +491,7 @@ describe Admin::ProceduresController, type: :controller do
         expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
         expect(Procedure.last.cloned_from_library).to be_falsey
         expect(Procedure.last.notice.attached?).to be_truthy
+        expect(Procedure.last.deliberation.attached?).to be_truthy
         expect(flash[:notice]).to have_content 'Procédure clonée'
       end
 
@@ -633,5 +636,17 @@ describe Admin::ProceduresController, type: :controller do
         expect(procedure.reload.hidden_at).not_to be_nil
       end
     end
+  end
+
+  describe "DELETE #delete_deliberation" do
+    let(:procedure) { create(:procedure, :with_deliberation) }
+
+    before do
+      delete :delete_deliberation, params: { id: procedure.id }
+      procedure.reload
+    end
+
+    it { expect(procedure.deliberation.attached?).to eq(false) }
+    it { expect(response).to redirect_to(edit_admin_procedure_path(procedure)) }
   end
 end
