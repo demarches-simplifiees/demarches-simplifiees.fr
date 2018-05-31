@@ -49,19 +49,19 @@ class NotificationMailer < ApplicationMailer
   def send_notification(dossier, mail_template)
     vars_mailer(dossier)
 
-    @subject = mail_template.subject_for_dossier(dossier)
-    @body = mail_template.body_for_dossier(dossier)
+    subject = mail_template.subject_for_dossier(dossier)
+    body = mail_template.body_for_dossier(dossier)
 
-    create_commentaire_for_notification
+    create_commentaire_for_notification(dossier, subject, body)
 
-    mail(subject: @subject) { |format| format.html { @body } }
+    mail(subject: subject) { |format| format.html { body } }
   end
 
-  def create_commentaire_for_notification
+  def create_commentaire_for_notification(dossier, subject, body)
     Commentaire.create(
-      dossier: @dossier,
+      dossier: dossier,
       email: I18n.t("dynamics.contact_email"),
-      body: ["[#{@subject}]", @body].join("<br><br>")
+      body: ["[#{subject}]", body].join("<br><br>")
     )
   end
 end
