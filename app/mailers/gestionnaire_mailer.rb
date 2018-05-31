@@ -4,6 +4,7 @@ class GestionnaireMailer < ApplicationMailer
   def invite_gestionnaire(gestionnaire, reset_password_token)
     @reset_password_token = reset_password_token
     @gestionnaire = gestionnaire
+
     mail(to: gestionnaire.email,
          subject: "demarches-simplifiees.fr - Activez votre compte accompagnateur",
          reply_to: "contact@demarches-simplifiees.fr")
@@ -16,6 +17,7 @@ class GestionnaireMailer < ApplicationMailer
   def last_week_overview(gestionnaire)
     headers['X-mailjet-campaign'] = 'last_week_overview'
     overview = gestionnaire.last_week_overview
+
     send_mail gestionnaire.email, overview, 'Vos activités sur demarches-simplifiees.fr'
   end
 
