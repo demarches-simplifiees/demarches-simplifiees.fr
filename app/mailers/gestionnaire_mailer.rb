@@ -12,17 +12,19 @@ class GestionnaireMailer < ApplicationMailer
   end
 
   def user_to_gestionnaire(email)
+    @email = email
     subject = "Vous avez été nommé accompagnateur"
 
-    send_mail(email, nil, subject)
+    mail(to: @email, subject: subject)
   end
 
   def last_week_overview(gestionnaire)
+    email = gestionnaire.email
+    @overview = gestionnaire.last_week_overview
     headers['X-mailjet-campaign'] = 'last_week_overview'
-    overview = gestionnaire.last_week_overview
     subject = 'Votre activité hebdomadaire'
 
-    send_mail(gestionnaire.email, overview, subject)
+    mail(to: email, subject: subject)
   end
 
   def send_dossier(sender, dossier, recipient)
@@ -31,14 +33,5 @@ class GestionnaireMailer < ApplicationMailer
     subject = "#{sender.email} vous a envoyé le dossier nº #{dossier.id}"
 
     mail(to: recipient.email, subject: subject)
-  end
-
-  private
-
-  def send_mail(email, args, subject)
-    @args = args
-    @email = email
-
-    mail(to: email, subject: subject)
   end
 end
