@@ -4,7 +4,7 @@ class GestionnaireMailer < ApplicationMailer
   def invite_gestionnaire(gestionnaire, reset_password_token)
     @reset_password_token = reset_password_token
     @gestionnaire = gestionnaire
-    subject = "demarches-simplifiees.fr - Activez votre compte accompagnateur"
+    subject = "Activez votre compte accompagnateur"
 
     mail(to: gestionnaire.email,
          subject: subject,
