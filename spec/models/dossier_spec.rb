@@ -603,7 +603,7 @@ describe Dossier do
 
     it "sends an email when the dossier becomes en_instruction" do
       dossier.en_instruction!
-      expect(NotificationMailer).to have_received(:send_dossier_received).with(dossier.id)
+      expect(NotificationMailer).to have_received(:send_dossier_received).with(dossier)
     end
 
     it "does not an email when the dossier becomes accepte" do
