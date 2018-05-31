@@ -101,7 +101,7 @@
                     Pièce non fournie
 
     - if !@facade.dossier.read_only?
-      - if user_signed_in? && (@facade.dossier.owner_or_invite?(current_user))
+      - if user_signed_in? && (current_user.owns_or_invite?(@facade.dossier))
         - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
           .row
             .col-xs-4

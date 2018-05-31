@@ -73,7 +73,7 @@ module NewUser
         @dossier.en_construction!
         NotificationMailer.send_initiated_notification(@dossier).deliver_later
         redirect_to merci_dossier_path(@dossier)
-      elsif owns_dossier?
+      elsif current_user.owns?(dossier)
         redirect_to users_dossier_recapitulatif_path(@dossier)
       else
         redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
@@ -142,19 +142,19 @@ module NewUser
     end
 
     def ensure_ownership!
-      if !owns_dossier?
+      if !current_user.owns?(dossier)
         forbidden!
       end
     end
 
     def ensure_ownership_or_invitation!
-      if !dossier.owner_or_invite?(current_user)
+      if !current_user.owns_or_invite?(dossier)
         forbidden!
       end
     end
 
     def forbid_invite_submission!
-      if passage_en_construction? && !owns_dossier?
+      if passage_en_construction? && !current_user.owns?(dossier)
         forbidden!
       end
     end
@@ -170,10 +170,6 @@ module NewUser
 
     def dossier_params
       params.require(:dossier).permit(:autorisation_donnees)
-    end
-
-    def owns_dossier?
-      dossier.user_id == current_user.id
     end
 
     def passage_en_construction?
