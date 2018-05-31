@@ -5,9 +5,10 @@ class AdministrateurMailer < ApplicationMailer
     @administrateur = administrateur
     @reset_password_token = reset_password_token
     @expiration_date = @administrateur.reset_password_sent_at + Devise.reset_password_within
+    subject = "demarches-simplifiees.fr - N'oubliez pas d'activer votre compte administrateur"
 
     mail(to: administrateur.email,
-         subject: "demarches-simplifiees.fr - N'oubliez pas d'activer votre compte administrateur",
+         subject: subject,
          reply_to: "contact@demarches-simplifiees.fr")
   end
 end
