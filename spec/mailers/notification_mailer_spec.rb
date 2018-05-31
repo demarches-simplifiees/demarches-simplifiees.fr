@@ -38,7 +38,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   end
 
   describe '.send_dossier_received' do
-    subject { described_class.send_dossier_received(dossier.id) }
+    subject { described_class.send_dossier_received(dossier) }
     let(:email_template) { create(:received_mail) }
 
     before do
