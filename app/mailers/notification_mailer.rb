@@ -36,12 +36,12 @@ class NotificationMailer < ApplicationMailer
   private
 
   def vars_mailer(dossier)
-    @dossier = dossier
     @user = dossier.user
   end
 
   def send_mail(dossier, subject)
     vars_mailer(dossier)
+    @dossier = dossier
 
     mail(subject: subject)
   end
