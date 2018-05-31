@@ -8,7 +8,7 @@ class InviteMailer < ApplicationMailer
 
   def invite_guest(invite)
     vars_mailer(invite)
-    subject = "Invitation - #{invite.email_sender} vous invite à consulter un dossier sur demarches-simplifiees.fr"
+    subject = "#{invite.email_sender} vous invite à consulter un dossier"
 
     send_mail(invite.email, subject, invite.email_sender)
   end

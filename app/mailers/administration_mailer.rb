@@ -4,7 +4,7 @@ class AdministrationMailer < ApplicationMailer
   def new_admin_email(admin, administration)
     @admin = admin
     @administration = administration
-    subject = "Création d'un compte Admin demarches-simplifiees.fr"
+    subject = "Création d'un compte admininistrateur"
 
     mail(to: TECH_EMAIL,
          subject: subject)

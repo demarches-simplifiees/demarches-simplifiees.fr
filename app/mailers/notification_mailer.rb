@@ -1,12 +1,12 @@
 class NotificationMailer < ApplicationMailer
   def new_answer(dossier)
-    subject = "Nouveau message pour votre dossier demarches-simplifiees.fr nº #{dossier.id}"
+    subject = "Nouveau message pour votre dossier nº #{dossier.id}"
 
     send_mail(dossier, subject)
   end
 
   def send_draft_notification(dossier)
-    subject = "Retrouvez votre brouillon pour la démarche : #{dossier.procedure.libelle}"
+    subject = "Retrouvez votre brouillon pour la démarche \"#{dossier.procedure.libelle}\""
 
     send_mail(dossier, subject)
   end

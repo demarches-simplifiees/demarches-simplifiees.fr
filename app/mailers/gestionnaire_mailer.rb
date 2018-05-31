@@ -12,7 +12,7 @@ class GestionnaireMailer < ApplicationMailer
   end
 
   def user_to_gestionnaire(email)
-    subject = "Vous avez été nommé accompagnateur sur demarches-simplifiees.fr"
+    subject = "Vous avez été nommé accompagnateur"
 
     send_mail(email, nil, subject)
   end
@@ -20,7 +20,7 @@ class GestionnaireMailer < ApplicationMailer
   def last_week_overview(gestionnaire)
     headers['X-mailjet-campaign'] = 'last_week_overview'
     overview = gestionnaire.last_week_overview
-    subject = 'Vos activités sur demarches-simplifiees.fr'
+    subject = 'Votre activité hebdomadaire'
 
     send_mail(gestionnaire.email, overview, subject)
   end
