@@ -8,54 +8,58 @@
   </h1>
 </header>
 
-<section class="main-content__body main-content__body--flush">
-  <table>
-    <thead>
-      <% keys = @pending_demandes.first.keys %>
-      <tr>
-        <% keys.each do |key| %>
-          <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
-            <%= key %>
-          </th>
-        <% end %>
-          <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
-          </th>
-    </thead>
-    <tbody>
-      <% @pending_demandes.each do |demande| %>
+<% if @pending_demandes.present? %>
+  <section class="main-content__body main-content__body--flush">
+    <table>
+      <thead>
+        <% keys = @pending_demandes.first.keys %>
         <tr>
           <% keys.each do |key| %>
-            <td class="cell-data cell-data--string">
-              <%= demande[key] %>
-            </td>
+            <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
+              <%= key %>
+            </th>
           <% end %>
-            <td class="cell-data cell-data--string" style="text-align: center;">
-              <%= form_tag(manager_demandes_create_administrateur_path) do -%>
-                <%= select_tag "stage_id",
-                  options_for_select({
-                  "administration centrale" => Pipedrive::DealAdapter::PIPEDRIVE_ADMIN_CENTRAL_STOCK_STAGE_ID,
-                  "région" => Pipedrive::DealAdapter::PIPEDRIVE_REGIONS_STOCK_STAGE_ID,
-                  "préfecture" => Pipedrive::DealAdapter::PIPEDRIVE_PREFECTURES_STOCK_STAGE_ID,
-                  "département" =>Pipedrive::DealAdapter::PIPEDRIVE_DEPARTEMENTS_STOCK_STAGE_ID,
-                  "commune" => Pipedrive::DealAdapter::PIPEDRIVE_COMMUNES_STOCK_STAGE_ID,
-                  "organisme" => Pipedrive::DealAdapter::PIPEDRIVE_ORGANISMES_STOCK_STAGE_ID
-                }),
-                style: 'margin-bottom: 20px; width: inherit;' %>
+            <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
+            </th>
+      </thead>
+      <tbody>
+        <% @pending_demandes.each do |demande| %>
+          <tr>
+            <% keys.each do |key| %>
+              <td class="cell-data cell-data--string">
+                <%= demande[key] %>
+              </td>
+            <% end %>
+              <td class="cell-data cell-data--string" style="text-align: center;">
+                <%= form_tag(manager_demandes_create_administrateur_path) do -%>
+                  <%= select_tag "stage_id",
+                    options_for_select({
+                    "administration centrale" => Pipedrive::DealAdapter::PIPEDRIVE_ADMIN_CENTRAL_STOCK_STAGE_ID,
+                    "région" => Pipedrive::DealAdapter::PIPEDRIVE_REGIONS_STOCK_STAGE_ID,
+                    "préfecture" => Pipedrive::DealAdapter::PIPEDRIVE_PREFECTURES_STOCK_STAGE_ID,
+                    "département" =>Pipedrive::DealAdapter::PIPEDRIVE_DEPARTEMENTS_STOCK_STAGE_ID,
+                    "commune" => Pipedrive::DealAdapter::PIPEDRIVE_COMMUNES_STOCK_STAGE_ID,
+                    "organisme" => Pipedrive::DealAdapter::PIPEDRIVE_ORGANISMES_STOCK_STAGE_ID
+                  }),
+                  style: 'margin-bottom: 20px; width: inherit;' %>
 
-                <%= hidden_field_tag 'email', demande[:email] %>
-                <%= hidden_field_tag 'person_id', demande[:person_id] %>
+                  <%= hidden_field_tag 'email', demande[:email] %>
+                  <%= hidden_field_tag 'person_id', demande[:person_id] %>
 
-                <%= submit_tag 'Créer' %>
-              <% end -%>
-            </td>
-            <td class="cell-data cell-data--string" style="text-align: center;">
-              <%= button_to('Refuser',
-                            manager_demandes_refuse_administrateur_path,
-                            params: { person_id: demande[:person_id], email: demande[:email] },
-                            style: 'background-color: #FFFFFF; color: #293f54; border: 1px solid #dfe0e1') %>
-            </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</section>
+                  <%= submit_tag 'Créer' %>
+                <% end -%>
+              </td>
+              <td class="cell-data cell-data--string" style="text-align: center;">
+                <%= button_to('Refuser',
+                              manager_demandes_refuse_administrateur_path,
+                              params: { person_id: demande[:person_id], email: demande[:email] },
+                              style: 'background-color: #FFFFFF; color: #293f54; border: 1px solid #dfe0e1') %>
+              </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% else %>
+  <h1>Aucune demande</h1>
+<% end %>

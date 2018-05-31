@@ -323,7 +323,7 @@ class Dossier < ApplicationRecord
 
   def send_dossier_received
     if saved_change_to_state? && en_instruction?
-      NotificationMailer.send_dossier_received(id).deliver_later
+      NotificationMailer.send_dossier_received(self).deliver_later
     end
   end
 
