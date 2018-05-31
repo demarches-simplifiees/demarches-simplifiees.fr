@@ -24,6 +24,7 @@ class Procedure < ApplicationRecord
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
   has_one_attached :notice
+  has_one_attached :deliberation
 
   delegate :use_api_carto, to: :module_api_carto
 
@@ -45,6 +46,7 @@ class Procedure < ApplicationRecord
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+  validate :check_juridique
 
   include AASM
 
@@ -198,15 +200,7 @@ class Procedure < ApplicationRecord
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
 
-    if notice.attached?
-      response = Typhoeus.get(notice.service_url, timeout: 5)
-      if response.success?
-        procedure.notice.attach(
-          io: StringIO.new(response.body),
-          filename: notice.filename
-        )
-      end
-    end
+    %i(notice deliberation).each { |attachment| clone_attachment(procedure, attachment) }
 
     procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail&.dup
@@ -348,6 +342,25 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def clone_attachment(cloned_procedure, attachment_symbol)
+    attachment = send(attachment_symbol)
+    if attachment.attached?
+      response = Typhoeus.get(attachment.service_url, timeout: 5)
+      if response.success?
+        cloned_procedure.send(attachment_symbol).attach(
+          io: StringIO.new(response.body),
+          filename: attachment.filename
+        )
+      end
+    end
+  end
+
+  def check_juridique
+    if cadre_juridique.blank? && !deliberation.attached?
+      errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
+    end
+  end
 
   def field_hash(label, table, column)
     {
