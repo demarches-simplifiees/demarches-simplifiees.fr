@@ -99,10 +99,12 @@ module NewUser
     end
 
     def ask_deletion
-      @dossier = current_user.dossiers.find(params[:id])
-      DossierMailer.ask_deletion(@dossier).deliver_later
-      flash.notice = 'Une demande de suppression de votre dossier a été envoyée, elle sera traitée dans les plus brefs délais.'
-      redirect_to users_dossier_recapitulatif_path(@dossier)
+      dossier = current_user.dossiers.includes(:user, procedure: :administrateur).find(params[:id])
+      deleted_dossier = dossier.delete_and_keep_track
+      DossierMailer.notify_deletion_to_user(deleted_dossier, dossier.user.email).deliver_later
+      DossierMailer.notify_deletion_to_administration(deleted_dossier, dossier.procedure.administrateur.email).deliver_later
+      flash.notice = 'Votre dossier a bien été supprimé.'
+      redirect_to users_dossiers_path
     end
 
     private

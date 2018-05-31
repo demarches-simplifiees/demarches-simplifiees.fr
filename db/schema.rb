@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_22_142109) do
+ActiveRecord::Schema.define(version: 2018_05_30_095508) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -218,6 +218,16 @@ ActiveRecord::Schema.define(version: 2018_05_22_142109) do
     t.datetime "updated_at"
     t.string "cron"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "deleted_dossiers", force: :cascade do |t|
+    t.bigint "procedure_id"
+    t.bigint "dossier_id"
+    t.datetime "deleted_at"
+    t.string "state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
   end
 
   create_table "dossiers", id: :serial, force: :cascade do |t|
