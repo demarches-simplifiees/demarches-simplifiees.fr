@@ -3,8 +3,9 @@ class FindDubiousProceduresJob < ApplicationJob
 
   FORBIDDEN_KEYWORDS = [
     'NIR', 'NIRPP', 'race', 'religion',
-    'carte bancaire', 'carte bleue', 'sécurité sociale', 'nationalité',
-    'agdref', 'handicap', 'syndicat', 'politique'
+    'carte bancaire', 'carte bleue', 'sécurité sociale',
+    'agdref', 'handicap', 'syndicat', 'syndical',
+    'parti politique', 'opinion politique', 'bord politique', 'courant politique'
   ]
 
   def perform(*args)
