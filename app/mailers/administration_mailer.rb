@@ -6,7 +6,7 @@ class AdministrationMailer < ApplicationMailer
     @administration = administration
     subject = "Création d'un compte Admin demarches-simplifiees.fr"
 
-    mail(to: 'tech@demarches-simplifiees.fr',
+    mail(to: TECH_EMAIL,
          subject: subject)
   end
 
@@ -17,7 +17,7 @@ class AdministrationMailer < ApplicationMailer
 
     mail(to: admin.email,
          subject: subject,
-         reply_to: "contact@demarches-simplifiees.fr")
+         reply_to: CONTACT_EMAIL)
   end
 
   def refuse_admin(admin_email)
@@ -25,14 +25,14 @@ class AdministrationMailer < ApplicationMailer
 
     mail(to: admin_email,
          subject: subject,
-         reply_to: "contact@demarches-simplifiees.fr")
+         reply_to: CONTACT_EMAIL)
   end
 
   def dubious_procedures(procedures_and_type_de_champs)
     @procedures_and_type_de_champs = procedures_and_type_de_champs
     subject = "[RGS] De nouvelles procédures comportent des champs interdits"
 
-    mail(to: 'equipe@demarches-simplifiees.fr',
+    mail(to: EQUIPE_EMAIL,
          subject: subject)
   end
 end

@@ -8,7 +8,7 @@ class GestionnaireMailer < ApplicationMailer
 
     mail(to: gestionnaire.email,
          subject: subject,
-         reply_to: "contact@demarches-simplifiees.fr")
+         reply_to: CONTACT_EMAIL)
   end
 
   def user_to_gestionnaire(email)

@@ -31,7 +31,7 @@ describe Commentaire do
         expect(commentaire).not_to receive(:notify_user)
         expect(commentaire).not_to receive(:notify_gestionnaires)
 
-        commentaire.email = "contact@demarches-simplifiees.fr"
+        commentaire.email = CONTACT_EMAIL
         commentaire.save
       end
     end

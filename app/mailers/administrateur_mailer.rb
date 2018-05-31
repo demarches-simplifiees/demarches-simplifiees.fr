@@ -9,6 +9,6 @@ class AdministrateurMailer < ApplicationMailer
 
     mail(to: administrateur.email,
          subject: subject,
-         reply_to: "contact@demarches-simplifiees.fr")
+         reply_to: CONTACT_EMAIL)
   end
 end

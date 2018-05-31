@@ -102,8 +102,8 @@ class Gestionnaire < ApplicationRecord
 
       messagerie = follow.messagerie_seen_at.present? &&
         dossier.commentaires
-          .where.not(email: 'contact@tps.apientreprise.fr')
-          .where.not(email: 'contact@demarches-simplifiees.fr')
+          .where.not(email: OLD_CONTACT_EMAIL)
+          .where.not(email: CONTACT_EMAIL)
           .updated_since?(follow.messagerie_seen_at).any?
 
       annotations_hash(demande, annotations_privees, avis_notif, messagerie)
@@ -208,8 +208,8 @@ class Gestionnaire < ApplicationRecord
     updated_messagerie = dossiers
       .joins(:commentaires)
       .where('commentaires.updated_at > follows.messagerie_seen_at')
-      .where.not(commentaires: { email: 'contact@tps.apientreprise.fr' })
-      .where.not(commentaires: { email: 'contact@demarches-simplifiees.fr' })
+      .where.not(commentaires: { email: OLD_CONTACT_EMAIL })
+      .where.not(commentaires: { email: CONTACT_EMAIL })
 
     [
       updated_demandes,
