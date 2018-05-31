@@ -147,6 +147,7 @@ Rails.application.routes.draw do
 
       member do
         post :hide
+        delete :delete_deliberation
       end
 
       resources :types_de_champ, only: [:destroy]

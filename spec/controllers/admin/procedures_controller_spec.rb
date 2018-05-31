@@ -637,4 +637,16 @@ describe Admin::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe "DELETE #delete_deliberation" do
+    let(:procedure) { create(:procedure, :with_deliberation) }
+
+    before do
+      delete :delete_deliberation, params: { id: procedure.id }
+      procedure.reload
+    end
+
+    it { expect(procedure.deliberation.attached?).to eq(false) }
+    it { expect(response).to redirect_to(edit_admin_procedure_path(procedure)) }
+  end
 end
