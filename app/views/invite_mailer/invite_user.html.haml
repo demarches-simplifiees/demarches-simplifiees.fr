@@ -1,0 +1,17 @@
+%p
+  Bonjour,
+
+%p
+  L'utilisateur
+  = @invite.email_sender
+  souhaite que vous participiez à l'élaboration d'un dossier sur demarches-simplifiees.fr.
+
+%p
+  Pour le consulter, merci de suivre ce lien :
+  = users_dossiers_invite_url(@invite.id)
+
+%p
+  Bonne journée,
+
+%p
+  L'équipe demarches-simplifiees.fr
