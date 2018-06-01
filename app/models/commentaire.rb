@@ -36,7 +36,7 @@ class Commentaire < ApplicationRecord
     # - If a user or an invited user posted a commentaire, do nothing,
     #   the notification system will properly
     # - Otherwise, a gestionnaire posted a commentaire, we need to notify the user
-    if !email.in?([I18n.t("dynamics.contact_email"), dossier_user_email, *invited_users_emails])
+    if !email.in?([CONTACT_EMAIL, dossier_user_email, *invited_users_emails])
       notify_user
     end
   end

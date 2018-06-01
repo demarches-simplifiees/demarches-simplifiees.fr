@@ -54,7 +54,7 @@ class NotificationMailer < ApplicationMailer
   def create_commentaire_for_notification(dossier, subject, body)
     Commentaire.create(
       dossier: dossier,
-      email: I18n.t("dynamics.contact_email"),
+      email: CONTACT_EMAIL,
       body: ["[#{subject}]", body].join("<br><br>")
     )
   end
