@@ -46,7 +46,7 @@ class Admin::ProceduresController < AdminController
     procedure = current_administrateur.procedures.find(params[:id])
     procedure.hide!
 
-    flash.notice = "Procédure supprimée, en cas d'erreur contactez nous : contact@demarches-simplifiees.fr"
+    flash.notice = "Procédure supprimée, en cas d'erreur contactez nous : #{CONTACT_EMAIL}"
     redirect_to admin_procedures_draft_path
   end
 
@@ -164,8 +164,8 @@ class Admin::ProceduresController < AdminController
         flash.alert = new_procedure.errors.full_messages
         redirect_to new_from_existing_admin_procedures_path
       else
-        flash.now.alert = new_procedure.errors.full_messages
-        render 'index'
+        flash.alert = new_procedure.errors.full_messages
+        redirect_to admin_procedures_path
       end
     end
 
