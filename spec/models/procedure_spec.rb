@@ -193,6 +193,12 @@ describe Procedure do
         end
       end
     end
+
+    context 'when juridique_required is false' do
+      let(:procedure) { build(:procedure, juridique_required: false, cadre_juridique: nil) }
+
+      it { expect(procedure.valid?).to eq(true) }
+    end
   end
 
   describe '#types_de_champ_ordered' do
@@ -670,5 +676,31 @@ describe Procedure do
     it { expect(dossier.champs_private[0].type).to eq("Champs::TextareaChamp") }
 
     it { expect(Champ.count).to eq(0) }
+  end
+
+  describe '#juridique_required' do
+    it 'automatically jumps to true once cadre_juridique or deliberation have been set' do
+      p = create(
+        :procedure,
+        juridique_required: false,
+        cadre_juridique: nil,
+      )
+
+      expect(p.juridique_required).to be_falsey
+
+      p.update(cadre_juridique: 'cadre')
+      expect(p.juridique_required).to be_truthy
+
+      p.update(cadre_juridique: nil)
+      expect(p.juridique_required).to be_truthy
+
+      p.update_columns(cadre_juridique: nil, juridique_required: false)
+      p.reload
+      expect(p.juridique_required).to be_falsey
+
+      allow(p).to receive(:deliberation).and_return(double('attached?': true))
+      p.save
+      expect(p.juridique_required).to be_truthy
+    end
   end
 end

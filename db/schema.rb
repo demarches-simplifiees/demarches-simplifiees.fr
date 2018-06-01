@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_30_095508) do
+ActiveRecord::Schema.define(version: 2018_06_01_084546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -482,6 +482,7 @@ ActiveRecord::Schema.define(version: 2018_05_30_095508) do
     t.integer "duree_conservation_dossiers_dans_ds"
     t.integer "duree_conservation_dossiers_hors_ds"
     t.string "cadre_juridique"
+    t.boolean "juridique_required", default: true
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
