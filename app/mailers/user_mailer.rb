@@ -3,6 +3,8 @@ class UserMailer < ApplicationMailer
 
   def new_account_warning(user)
     @user = user
-    mail(to: user.email, subject: "Création de compte")
+    subject = "Création de compte"
+
+    mail(to: user.email, subject: subject)
   end
 end

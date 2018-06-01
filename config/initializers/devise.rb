@@ -1,3 +1,5 @@
+require_relative "emails"
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -10,7 +12,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = "demarches-simplifiees.fr <#{I18n.t('dynamics.contact_email')}>"
+  config.mailer_sender = "demarches-simplifiees.fr <#{CONTACT_EMAIL}>"
 
   # Configure the class responsible to send e-mails.
   config.mailer = 'DeviseUserMailer'

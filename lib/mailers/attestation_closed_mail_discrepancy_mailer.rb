@@ -35,7 +35,7 @@ module Mailers
         #{detail_procedures(procedures)}
 
         Pour toute question vous pouvez nous joindre par téléphone au 01 76 42 02 87
-        ou sur l’adresse email contact@demarches-simplifiees.fr.
+        ou sur l’adresse email #{CONTACT_EMAIL}.
         -- \nL’équipe demarches-simplifiees.fr
       HEREDOC
     end
