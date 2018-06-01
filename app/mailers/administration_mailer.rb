@@ -4,28 +4,35 @@ class AdministrationMailer < ApplicationMailer
   def new_admin_email(admin, administration)
     @admin = admin
     @administration = administration
+    subject = "Création d'un compte Admin demarches-simplifiees.fr"
 
-    mail(to: 'tech@demarches-simplifiees.fr',
-         subject: "Création d'un compte Admin demarches-simplifiees.fr")
+    mail(to: TECH_EMAIL,
+         subject: subject)
   end
 
   def invite_admin(admin, reset_password_token)
     @reset_password_token = reset_password_token
     @admin = admin
+    subject = "demarches-simplifiees.fr - Activez votre compte administrateur"
+
     mail(to: admin.email,
-         subject: "demarches-simplifiees.fr - Activez votre compte administrateur",
-         reply_to: "contact@demarches-simplifiees.fr")
+         subject: subject,
+         reply_to: CONTACT_EMAIL)
   end
 
   def refuse_admin(admin_email)
+    subject = "demarches-simplifiees.fr - Votre demande de compte a été refusée"
+
     mail(to: admin_email,
-         subject: "demarches-simplifiees.fr - Votre demande de compte a été refusée",
-         reply_to: "contact@demarches-simplifiees.fr")
+         subject: subject,
+         reply_to: CONTACT_EMAIL)
   end
 
   def dubious_procedures(procedures_and_type_de_champs)
     @procedures_and_type_de_champs = procedures_and_type_de_champs
-    mail(to: 'equipe@demarches-simplifiees.fr',
-         subject: "[RGS] De nouvelles procédures comportent des champs interdits")
+    subject = "[RGS] De nouvelles procédures comportent des champs interdits"
+
+    mail(to: EQUIPE_EMAIL,
+         subject: subject)
   end
 end

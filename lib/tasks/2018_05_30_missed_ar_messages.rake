@@ -21,7 +21,7 @@ namespace :'2018_05_30_missed_ar_messages' do
 
     Commentaire.create(
       dossier: dossier,
-      email: I18n.t("dynamics.contact_email"),
+      email: CONTACT_EMAIL,
       body: "[#{subject}]<br><br>#{body}",
       created_at: date
     )

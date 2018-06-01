@@ -1,14 +1,16 @@
 class InviteMailer < ApplicationMailer
   def invite_user(invite)
-    vars_mailer invite
+    vars_mailer(invite)
+    subject = "demarches-simplifiees.fr - Participez à l'élaboration d'un dossier"
 
-    send_mail invite.email, "demarches-simplifiees.fr - Participez à l'élaboration d'un dossier", invite.email_sender if invite.user.present?
+    send_mail(invite.email, subject, invite.email_sender) if invite.user.present?
   end
 
   def invite_guest(invite)
-    vars_mailer invite
+    vars_mailer(invite)
+    subject = "Invitation - #{invite.email_sender} vous invite à consulter un dossier sur demarches-simplifiees.fr"
 
-    send_mail invite.email, "Invitation - #{invite.email_sender} vous invite à consulter un dossier sur demarches-simplifiees.fr", invite.email_sender
+    send_mail(invite.email, subject, invite.email_sender)
   end
 
   private
