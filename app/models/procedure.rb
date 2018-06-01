@@ -48,6 +48,8 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validate :check_juridique
 
+  before_save :update_juridique_required
+
   include AASM
 
   aasm whiny_persistence: true do
@@ -342,6 +344,11 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def update_juridique_required
+    self.juridique_required ||= (cadre_juridique.present? || deliberation.attached?)
+    true
+  end
 
   def clone_attachment(cloned_procedure, attachment_symbol)
     attachment = send(attachment_symbol)
