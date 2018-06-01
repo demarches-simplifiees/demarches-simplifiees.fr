@@ -357,7 +357,7 @@ class Procedure < ApplicationRecord
   end
 
   def check_juridique
-    if cadre_juridique.blank? && !deliberation.attached?
+    if juridique_required? && (cadre_juridique.blank? && !deliberation.attached?)
       errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
     end
   end
