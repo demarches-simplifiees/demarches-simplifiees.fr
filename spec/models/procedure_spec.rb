@@ -193,6 +193,12 @@ describe Procedure do
         end
       end
     end
+
+    context 'when juridique_required is false' do
+      let(:procedure) { build(:procedure, juridique_required: false, cadre_juridique: nil) }
+
+      it { expect(procedure.valid?).to eq(true) }
+    end
   end
 
   describe '#types_de_champ_ordered' do
