@@ -48,6 +48,8 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validate :check_juridique
 
+  before_save :update_juridique_required
+
   include AASM
 
   aasm whiny_persistence: true do
@@ -343,6 +345,11 @@ class Procedure < ApplicationRecord
 
   private
 
+  def update_juridique_required
+    self.juridique_required ||= (cadre_juridique.present? || deliberation.attached?)
+    true
+  end
+
   def clone_attachment(cloned_procedure, attachment_symbol)
     attachment = send(attachment_symbol)
     if attachment.attached?
@@ -357,7 +364,7 @@ class Procedure < ApplicationRecord
   end
 
   def check_juridique
-    if cadre_juridique.blank? && !deliberation.attached?
+    if juridique_required? && (cadre_juridique.blank? && !deliberation.attached?)
       errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
     end
   end
