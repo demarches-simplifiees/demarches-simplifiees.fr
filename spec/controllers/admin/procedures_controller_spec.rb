@@ -16,6 +16,8 @@ describe Admin::ProceduresController, type: :controller do
   let(:cadastre) { '0' }
   let(:cerfa_flag) { true }
   let(:cadre_juridique) { 'cadre juridique' }
+  let(:duree_conservation_dossiers_dans_ds) { 3 }
+  let(:duree_conservation_dossiers_hors_ds) { 6 }
 
   let(:procedure_params) {
     {
@@ -26,6 +28,8 @@ describe Admin::ProceduresController, type: :controller do
       lien_demarche: lien_demarche,
       cerfa_flag: cerfa_flag,
       cadre_juridique: cadre_juridique,
+      duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
+      duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_hors_ds,
       module_api_carto_attributes: {
         use_api_carto: use_api_carto,
         quartiers_prioritaires: quartiers_prioritaires,
@@ -196,6 +200,8 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.direction).to eq(direction) }
           it { expect(subject.lien_demarche).to eq(lien_demarche) }
           it { expect(subject.administrateur_id).to eq(admin.id) }
+          it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
+          it { expect(subject.duree_conservation_dossiers_hors_ds).to eq(duree_conservation_dossiers_hors_ds) }
         end
 
         describe 'procedure module api carto attributs in database' do
@@ -267,6 +273,8 @@ describe Admin::ProceduresController, type: :controller do
         let(:lien_demarche) { 'http://plip.com' }
         let(:use_api_carto) { '1' }
         let(:cadastre) { '1' }
+        let(:duree_conservation_dossiers_dans_ds) { 7 }
+        let(:duree_conservation_dossiers_hors_ds) { 5 }
 
         describe 'procedure attributs in database' do
           subject { procedure }
@@ -276,6 +284,8 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.organisation).to eq(organisation) }
           it { expect(subject.direction).to eq(direction) }
           it { expect(subject.lien_demarche).to eq(lien_demarche) }
+          it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
+          it { expect(subject.duree_conservation_dossiers_hors_ds).to eq(duree_conservation_dossiers_hors_ds) }
         end
 
         describe 'procedure module api carto attributs in database' do
