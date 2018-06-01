@@ -1,30 +1,29 @@
-%html
-  %body
-    %p
-      Bonjour,
+%p
+  Bonjour,
 
-    %p
-      = "Vous avez été invité par #{@avis.claimant.email} à donner votre avis sur le dossier nº #{@avis.dossier.id} de la procédure : #{@avis.dossier.procedure.libelle}."
+%p
+  = "Vous avez été invité par #{@avis.claimant.email} à donner votre avis sur le dossier nº #{@avis.dossier.id} de la procédure \"#{@avis.dossier.procedure.libelle}\"."
 
-    %p
-      Message de votre interlocuteur :
-      %br
-      %span{ style: 'font-style: italic;' }
-        = @avis.introduction
+%p
+  Message de votre interlocuteur :
+  %br
+  %span{ style: 'font-style: italic;' }
+    = @avis.introduction
 
-    - if @avis.gestionnaire.present?
-      %p
-        = link_to "Connectez-vous pour donner votre avis", gestionnaire_dossier_url(@avis.dossier.procedure, @avis.dossier)
-    - else
-      %p
-        = link_to "Inscrivez-vous pour donner votre avis", sign_up_gestionnaire_avis_url(@avis.id, @avis.email)
+- if @avis.gestionnaire.present?
+  %p
+    = link_to "Connectez-vous pour donner votre avis", gestionnaire_dossier_url(@avis.dossier.procedure, @avis.dossier)
+- else
+  %p
+    = link_to "Inscrivez-vous pour donner votre avis", sign_up_gestionnaire_avis_url(@avis.id, @avis.email)
 
-    Bonne journée,
-    %br
-    %br
-    L'équipe demarches-simplifiees.fr
-    %br
-    %br
-    %hr
-    %br
-    Merci de ne pas répondre à cet email. Postez directement vos questions dans votre dossier sur la plateforme.
+%p
+  Bonne journée,
+
+%p
+  L'équipe demarches-simplifiees.fr
+
+%hr
+
+%p
+  Merci de ne pas répondre à cet email. Postez directement vos questions dans votre dossier sur la plateforme.
