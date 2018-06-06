@@ -21,7 +21,8 @@ class Administration < ApplicationRecord
       administrateur.invite!(id)
       User.create({
         email: email,
-        password: password
+        password: password,
+        confirmed_at: DateTime.now
       })
     end
 
