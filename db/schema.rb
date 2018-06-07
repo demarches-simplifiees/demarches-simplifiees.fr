@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_01_084546) do
+ActiveRecord::Schema.define(version: 2018_06_07_133644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -484,6 +484,9 @@ ActiveRecord::Schema.define(version: 2018_06_01_084546) do
     t.string "cadre_juridique"
     t.boolean "juridique_required", default: true
     t.boolean "durees_conservation_required", default: true
+    t.string "silence_vaut_decision_status"
+    t.integer "silence_vaut_decision_delais"
+    t.boolean "silence_vaut_decision_enabled", default: false
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
