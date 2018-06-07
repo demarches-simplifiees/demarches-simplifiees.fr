@@ -29,7 +29,7 @@ namespace :'2018_06_05_send_new_attestation' do
       41103
     ]
 
-    dossiers = ids.map { |id| Dossier.Dossier.find_by(id: id) }.compact
+    dossiers = ids.map { |id| Dossier.find_by(id: id) }.compact
 
     dossiers.each do |dossier|
       attestation = dossier.attestation
