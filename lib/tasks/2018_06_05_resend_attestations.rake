@@ -11,7 +11,7 @@ namespace :'2018_06_05_resend_attestations' do
 
       dossier.attestation = dossier.build_attestation
 
-      Mailers::ResendAttestationMailer.resend_attestation(dossier).deliver_later
+      ResendAttestationMailer.resend_attestation(dossier).deliver_later
       puts "Email envoyé à #{email} pour le dossier #{dossier.id}"
     end
   end

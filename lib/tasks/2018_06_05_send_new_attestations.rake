@@ -33,12 +33,18 @@ namespace :'2018_06_05_send_new_attestation' do
 
     dossiers.each do |dossier|
       attestation = dossier.attestation
-      attestation.destroy
+
+      if attestation
+        id = attestation.id
+        attestation.destroy
+        puts "Attestation #{id} détruite"
+      end
 
       dossier.attestation = dossier.build_attestation
 
-      Mailers::NewAttestationMailer.new_attestation(dossier).deliver_later
-      puts "Email envoyé à #{email} pour le dossier #{dossier.id}"
+      NewAttestationMailer.new_attestation(dossier).deliver_later
+      puts "Email envoyé à #{dossier.user.email} pour le dossier #{dossier.id}"
+      puts
     end
   end
 end
