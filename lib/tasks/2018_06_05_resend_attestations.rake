@@ -12,7 +12,7 @@ namespace :'2018_06_05_resend_attestations' do
       dossier.attestation = dossier.build_attestation
 
       ResendAttestationMailer.resend_attestation(dossier).deliver_later
-      puts "Email envoyé à #{email} pour le dossier #{dossier.id}"
+      puts "Email envoyé à #{dossier.user.email} pour le dossier #{dossier.id}"
     end
   end
 end
