@@ -1,4 +1,4 @@
-namespace :'2018_06_05_resend_attestation' do
+namespace :'2018_06_05_resend_attestations' do
   task set: :environment do
     procedure = Procedure.find(4247)
     dossiers = procedure.dossiers.includes(:attestation).where(state: 'accepte').select do |d|
