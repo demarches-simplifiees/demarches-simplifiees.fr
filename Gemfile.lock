@@ -546,7 +546,7 @@ GEM
       httpclient
       json-jwt (>= 1.9.0)
       rack
-    rack-protection (2.0.1)
+    rack-protection (2.0.2)
       rack
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
@@ -684,10 +684,10 @@ GEM
     simple_form (4.0.0)
       actionpack (> 4)
       activemodel (> 4)
-    sinatra (2.0.1)
+    sinatra (2.0.2)
       mustermann (~> 1.0)
       rack (~> 2.0)
-      rack-protection (= 2.0.1)
+      rack-protection (= 2.0.2)
       tilt (~> 2.0)
     skylight (2.0.1)
       skylight-core (= 2.0.1)

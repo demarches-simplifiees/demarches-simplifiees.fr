@@ -18,10 +18,11 @@ class Administration < ApplicationRecord
 
     if administrateur.save
       AdministrationMailer.new_admin_email(administrateur, self).deliver_later
-      administrateur.invite!
+      administrateur.invite!(id)
       User.create({
         email: email,
-        password: password
+        password: password,
+        confirmed_at: DateTime.now
       })
     end
 

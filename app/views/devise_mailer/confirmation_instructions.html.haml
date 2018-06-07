@@ -1,10 +1,14 @@
 - content_for(:title, 'Activez votre compte')
 
-%p Bonjour #{@user.email},
+%p
+  Bonjour #{@user.email},
 
 %p
   Pour activer votre compte sur demarches-simplifiees.fr, veuillez cliquer sur le lien suivant :
   = link_to(confirmation_url(@user, confirmation_token: @token), confirmation_url(@user, confirmation_token: @token))
 
-%p Bonne journée,
-%p L'équipe demarches-simplifiees.fr
+%p
+  Bonne journée,
+
+%p
+  L'équipe demarches-simplifiees.fr

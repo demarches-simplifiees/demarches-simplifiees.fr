@@ -1,6 +1,6 @@
-- content_for(:title, 'Vos activités sur demarches-simplifiees.fr')
+- content_for(:title, @subject)
 
-- @args[:procedure_overviews].each_with_index do |procedure_overview, index|
+- @overview[:procedure_overviews].each_with_index do |procedure_overview, index|
 
   %h2{ style: 'font-size: 20px; font-weight: 300; margin: 25px 0 5px;' }
     #{procedure_overview.procedure.libelle}
@@ -42,5 +42,5 @@
                 - end.join(', ')
                 = sanitize(old_dossiers_en_instruction, attributes: %w(href style))
 
-  - if index != (@args[:procedure_overviews].count - 1)
+  - if index != (@overview[:procedure_overviews].count - 1)
     .spacer{ style: 'border-bottom: 1px solid #CCC; margin: 25px 0 30px;' }

@@ -96,6 +96,15 @@
         - procedure.types_de_piece_justificative.each do |piece_justificative|
           = piece_justificative.libelle
           %br
+
+    - durees_de_conservation = politiques_conservation_de_donnees(procedure)
+    - if durees_de_conservation.present?
+      .row{ style: 'margin-right: 3%; margin-left: 3%;' }
+        .col-xs-6.col-md-3
+          %h4.text-info Conservation des données
+          - durees_de_conservation.each do |text|
+            %p = text
+
     %br
     %h3
       = t('dynamics.admin.procedure.stats.title')
