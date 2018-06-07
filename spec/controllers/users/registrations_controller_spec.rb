@@ -37,7 +37,7 @@ describe Users::RegistrationsController, type: :controller do
       let!(:existing_user) { create(:user, email: email, password: password) }
 
       before do
-        allow(UserMailer).to receive(:new_account_warning).and_return(double(deliver: 'deliver'))
+        allow(UserMailer).to receive(:new_account_warning).and_return(double(deliver_later: 'deliver'))
         subject
       end
 
