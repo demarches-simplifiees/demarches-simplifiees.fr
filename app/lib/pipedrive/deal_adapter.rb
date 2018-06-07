@@ -10,8 +10,6 @@ class Pipedrive::DealAdapter
   PIPEDRIVE_LOST_STATUS = "lost"
   PIPEDRIVE_LOST_REASON = "refusé depuis DS"
 
-  PIPEDRIVE_CAMILLE_ID = '3189424'
-
   def self.refuse_deal(deal_id, owner_id)
     params = {
       user_id: owner_id,
