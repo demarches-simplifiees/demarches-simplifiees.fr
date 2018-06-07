@@ -1,19 +1,20 @@
-Bonjour,
-%br
-%br
-Vous pouvez retrouver et compléter le brouillon que vous avez créé pour la démarche
-%strong= @dossier.procedure.libelle
-à l'adresse suivante :
-= link_to users_dossiers_url(liste: 'brouillon'), users_dossiers_url(liste: 'brouillon'), target: '_blank'
-%br
-%br
-Bonne journée,
-%br
-%br
-L'équipe demarches-simplifiees.fr
-%br
-%br
-—
-%br
-%br
-Merci de ne pas répondre à cet email. Postez directement vos questions dans votre dossier sur la plateforme.
+%p
+  Bonjour,
+
+%p
+  Vous pouvez retrouver et compléter le brouillon que vous avez créé pour la démarche
+  %strong= @dossier.procedure.libelle
+  à l'adresse suivante :
+  = link_to users_dossiers_url(liste: 'brouillon'), users_dossiers_url(liste: 'brouillon'), target: '_blank'
+
+%p
+  Bonne journée,
+
+%p
+  L'équipe demarches-simplifiees.fr
+
+%p
+  —
+
+%p
+  Merci de ne pas répondre à cet email. Postez directement vos questions dans votre dossier sur la plateforme.

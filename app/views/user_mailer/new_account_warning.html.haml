@@ -1,12 +1,16 @@
-- content_for(:title, 'Demande de création de compte')
+- content_for(:title, @subject)
 
 %h1 Bonjour
 
-%p Une demande de création de compte a été réalisée sur le site demarches-simplifiees.fr pour l'email #{@user.email}.
+%p
+  Une demande de création de compte a été réalisée sur le site demarches-simplifiees.fr pour l'email #{@user.email}.
+
 %p
   Votre compte existe déjà. Si vous souhaitez changer votre mot de passe, veuillez suivre les instructions à l'adresse suivante
   #{link_to(new_password_url(@user), new_password_url(@user))}.
-%p Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer ce mail.
+
+%p
+  Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer ce mail.
 
 %p
   Cordialement,

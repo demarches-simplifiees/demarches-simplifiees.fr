@@ -41,7 +41,7 @@ describe Invite do
 
           it do
             expect(invite.save).to be false
-            expect(invite.errors.full_messages).to eq(["Email est vide"])
+            expect(invite.errors.full_messages).to eq(["Email doit être rempli"])
           end
         end
       end

@@ -1,22 +1,23 @@
 - content_for(:title, 'Activation du compte administrateur')
 
-Bonjour,
-%br
-%br
-Je vous remercie de l’intérêt que vous portez à notre outil de dématérialisation de démarches.
-%br
-%br
-Votre compte administrateur a été créé pour l'adresse email #{@admin.email}. Pour l’activer, je vous invite à cliquer sur le lien suivant :
-= link_to(admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token))
-%br
-%br
-Afin de vous accompagner dans la découverte de demarches-simplifiees.fr, je vous propose de m’appeler pour faire un point sur vos besoins de dématérialisation.
-%br
-Vous pouvez me joindre au numéro suivant : 01 76 42 02 87.
-%br
-%br
-Je vous invite également à consulter notre site de documentation qui regroupe l'ensemble des informations relatives à demarches-simplifiees.fr ainsi que des tutoriels d’utilisation :
-= link_to(DOC_URL, DOC_URL)
-%br
-%br
-= render partial: "layouts/mailers/bizdev_signature"
+%p
+  Bonjour,
+
+%p
+  Je vous remercie de l’intérêt que vous portez à notre outil de dématérialisation de démarches.
+
+%p
+  Votre compte administrateur a été créé pour l'adresse email #{@admin.email}. Pour l’activer, je vous invite à cliquer sur le lien suivant :
+  = link_to(admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token))
+
+%p
+  Afin de vous accompagner dans la découverte de demarches-simplifiees.fr, je vous propose de m’appeler pour faire un point sur vos besoins de dématérialisation.
+  %br
+  Vous pouvez me joindre au numéro suivant : 01 76 42 02 87.
+
+%p
+  Je vous invite également à consulter notre site de documentation qui regroupe l'ensemble des informations relatives à demarches-simplifiees.fr ainsi que des tutoriels d’utilisation :
+  = link_to(DOC_URL, DOC_URL)
+
+%p
+  = render partial: "layouts/mailers/bizdev_signature", locals: { author_name: @author_name }

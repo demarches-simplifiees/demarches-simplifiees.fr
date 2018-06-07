@@ -52,7 +52,7 @@ class Admin::GestionnairesController < AdminController
       if User.exists?(email: @gestionnaire.email)
         GestionnaireMailer.user_to_gestionnaire(@gestionnaire.email).deliver_later
       else
-        User.create(email: email, password: password)
+        User.create(email: email, password: password, confirmed_at: DateTime.now)
       end
       flash.notice = 'Accompagnateur ajouté'
     else

@@ -34,6 +34,6 @@ RSpec.describe GestionnaireMailer, type: :mailer do
 
     subject { described_class.last_week_overview(gestionnaire) }
 
-    it { expect(subject.body).to include('Vos activités') }
+    it { expect(subject.body).to include('Votre activité hebdomadaire') }
   end
 end

@@ -88,6 +88,7 @@ fr:
     errors:
       messages:
         blank: "doit être rempli"
+        not_a_number: 'doit être un nombre'
       models:
         attestation_template:
           attributes:
@@ -108,25 +109,20 @@ fr:
             email:
               invalid: invalide
               taken: déjà utilisé
-              blank: est vide
             password:
               too_short: ': Le mot de passe est trop court'
-              blank: ': Le mot de passe est vide'
             password_confirmation:
               confirmation: ': Les deux mots de passe ne correspondent pas'
         invite:
           attributes:
             email:
-              blank: est vide
               taken: ': Invitation déjà envoyée'
         gestionnaire:
           attributes:
             email:
               invalid: invalide
               taken: déjà utilisé
-              blank: est vide
             password:
-              blank: ': Le mot de passe est vide'
               too_short: ': Le mot de passe est trop court'
 
   devise:
