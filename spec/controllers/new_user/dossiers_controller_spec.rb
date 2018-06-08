@@ -145,6 +145,17 @@ describe NewUser::DossiersController, type: :controller do
       end
     end
 
+    context 'when the identite cannot be updated by the user' do
+      let(:dossier) { create(:dossier, :for_individual, :en_instruction, user: user, procedure: procedure) }
+      let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
+      let(:dossier_params) { { autorisation_donnees: true } }
+
+      it 'redirects to user_dossiers_path' do
+        expect(response).to redirect_to(users_dossiers_path)
+        expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
+      end
+    end
+
     context 'with incorrect individual and dossier params' do
       let(:individual_params) { { gender: '', nom: '', prenom: '' } }
       let(:dossier_params) { { autorisation_donnees: nil } }
@@ -210,6 +221,17 @@ describe NewUser::DossiersController, type: :controller do
     let(:payload) { submit_payload }
 
     subject { patch :update, params: payload }
+
+    context 'when the dossier cannot be updated by the user' do
+      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+
+      it 'redirects to user_dossiers_path' do
+        subject
+
+        expect(response).to redirect_to(users_dossiers_path)
+        expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
+      end
+    end
 
     it 'updates the champs' do
       subject
