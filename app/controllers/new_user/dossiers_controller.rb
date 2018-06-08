@@ -2,6 +2,7 @@ module NewUser
   class DossiersController < UserController
     before_action :ensure_ownership!, except: [:index, :modifier, :update]
     before_action :ensure_ownership_or_invitation!, only: [:modifier, :update]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update]
     before_action :forbid_invite_submission!, only: [:update]
 
     def attestation
@@ -108,6 +109,13 @@ module NewUser
     end
 
     private
+
+    def ensure_dossier_can_be_updated
+      if !dossier.can_be_updated_by_the_user?
+        flash.alert = 'Votre dossier ne peut plus être modifié'
+        redirect_to users_dossiers_path
+      end
+    end
 
     def page
       [params[:page].to_i, 1].max
