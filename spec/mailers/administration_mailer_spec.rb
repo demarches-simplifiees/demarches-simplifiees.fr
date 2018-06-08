@@ -18,7 +18,7 @@ RSpec.describe AdministrationMailer, type: :mailer do
     it { expect(subject.subject).not_to be_empty }
   end
 
-  describe '#refuse_amin' do
+  describe '#refuse_admin' do
     let(:mail) { "l33t-4dm1n@h4x0r.com" }
 
     subject { described_class.refuse_admin(mail) }
