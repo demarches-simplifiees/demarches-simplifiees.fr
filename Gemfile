@@ -163,3 +163,5 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'rspec_junit_formatter'
 end
+
+gem "premailer-rails"
