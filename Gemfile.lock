@@ -146,6 +146,8 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.4)
+    css_parser (1.6.0)
+      addressable
     daemons (1.2.6)
     database_cleaner (1.7.0)
     datetime_picker_rails (0.0.7)
@@ -528,6 +530,13 @@ GEM
     prawn_rails (0.0.11)
       prawn (>= 0.11.1)
       railties (>= 3.0.0)
+    premailer (1.11.1)
+      addressable
+      css_parser (>= 1.6.0)
+      htmlentities (>= 4.0.0)
+    premailer-rails (1.10.2)
+      actionmailer (>= 3, < 6)
+      premailer (~> 1.7, >= 1.7.9)
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -829,6 +838,7 @@ DEPENDENCIES
   pg
   prawn
   prawn_rails
+  premailer-rails
   pry-byebug
   rack-handlers
   rack-mini-profiler
