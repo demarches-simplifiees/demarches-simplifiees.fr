@@ -159,7 +159,7 @@ feature 'The gestionnaire part' do
   def test_mail(to, content)
     mail = ActionMailer::Base.deliveries.first
     expect(mail.to).to match([to])
-    expect(mail.body.raw_source).to include(content)
+    expect(mail.body.parts.map(&:to_s)).to all(include(content))
   end
 
   def test_statut_bar(a_suivre: 0, suivi: 0, traite: 0, tous_les_dossiers: 0, archive: 0)
