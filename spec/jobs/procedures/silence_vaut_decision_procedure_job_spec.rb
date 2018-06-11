@@ -16,7 +16,7 @@ RSpec.describe Procedures::SilenceVautDecisionProcedureJob, type: :job do
   let(:created_at){ now - 10.days }
 
   subject do
-    Timecop.freeze now do
+    Timecop.freeze(now) do
       Procedures::SilenceVautDecisionProcedureJob.new.perform
     end
     [procedure, dossier1, dossier2, dossier3, dossier4, dossier5, dossier6].each(&:reload)
@@ -26,6 +26,13 @@ RSpec.describe Procedures::SilenceVautDecisionProcedureJob, type: :job do
     let(:silence_vaut_decision_enabled){ false }
 
     let(:silence_vaut_decision_status){ "accepte" }
+
+    it do
+      d1_attributes = dossier1.attributes
+      subject
+
+      expect(d1_attributes). to eq(dossier1.attributes)
+    end
 
     it { expect{ subject }.to_not change(dossier1, :attributes) }
     it { expect{ subject }.to_not change(dossier2, :attributes) }
