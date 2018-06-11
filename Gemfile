@@ -74,6 +74,8 @@ gem 'hashie'
 
 gem 'mailjet'
 
+gem "premailer-rails"
+
 gem 'smart_listing'
 
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
