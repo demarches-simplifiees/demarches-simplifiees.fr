@@ -46,11 +46,11 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
 Afin de générer la BDD de l'application, il est nécessaire d'exécuter les commandes suivantes :
 
     # Create and load the schema for both databases
-    rake db:create db:schema:load
+    bin/rails db:create db:schema:load
 
     # Migrate the development database and then the test database
-    rake db:migrate
-    rake db:migrate RAILS_ENV=test
+    bin/rails db:migrate
+    bin/rails db:migrate RAILS_ENV=test
 
 ## Bouchonnage de l’authentification
 
