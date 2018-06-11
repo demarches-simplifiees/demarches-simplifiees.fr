@@ -48,9 +48,8 @@ Afin de générer la BDD de l'application, il est nécessaire d'exécuter les co
     # Create and load the schema for both databases
     bin/rails db:create db:schema:load
 
-    # Migrate the development database and then the test database
-    bin/rails db:migrate
-    bin/rails db:migrate RAILS_ENV=test
+    # Migrate the development database and the test database
+    rails db:migrate
 
 ## Bouchonnage de l’authentification
 
