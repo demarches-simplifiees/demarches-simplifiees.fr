@@ -81,16 +81,9 @@ Dans le fichier `config/intializers/token.rb`, ajouter
 
 *Note : les valeurs pour ces paramètres sont renseignées dans le Keepass*
 
-## Création des comptes initiaux
+## Création d'un compte de test initial en local
 
-    bin/rails console
-    > email = "<votre email>"
-    > password = "<votre mot de passe>"
-    > Administration.create(email: email, password: password)
-    > Administrateur.create(email: email, password: password)
-    > Gestionnaire.create(email: email, password: password)
-    > User.create(email: email, password: password)
-
+    bin/rake create_test_account -- --email=EMAIL --password=PASSWORD
 
 ## Lancement de l'application
 
