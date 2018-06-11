@@ -83,7 +83,16 @@ FactoryBot.define do
       after(:create) do |dossier, _evaluator|
         dossier.state = 'en_instruction'
         dossier.en_construction_at = dossier.created_at + 1.minute
-        dossier.created_at = dossier.created_at + 2.minutes
+        dossier.en_instruction_at = dossier.created_at + 2.minutes
+        dossier.save!
+      end
+    end
+
+    trait :processed do
+      after(:create) do |dossier, _evaluator|
+        dossier.en_construction_at = dossier.created_at + 1.minute
+        dossier.en_instruction_at = dossier.created_at + 2.minutes
+        dossier.processed_at = dossier.created_at + 3.minutes
         dossier.save!
       end
     end
