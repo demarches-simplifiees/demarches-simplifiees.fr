@@ -5,12 +5,12 @@ RSpec.describe Procedures::SilenceVautDecisionProcedureJob, type: :job do
 
   let(:silence_vaut_decision_delais) { 6 }
 
-  let!(:dossier1) { create(:dossier, procedure: procedure, created_at: created_at) }
-  let!(:dossier2) { create(:dossier, :en_construction, procedure: procedure, created_at: created_at) }
-  let!(:dossier3) { create(:dossier, :en_instruction, procedure: procedure, created_at: created_at) }
-  let!(:dossier4) { create(:dossier, :processed, procedure: procedure, state: 'accepte', created_at: created_at) }
-  let!(:dossier5) { create(:dossier, :processed, procedure: procedure, state: 'refuse', created_at: created_at) }
-  let!(:dossier6) { create(:dossier, :processed, procedure: procedure, state: 'sans_suite', created_at: created_at) }
+  let!(:dossier1) { create(:dossier, procedure: procedure, created_at: created_at, updated_at: created_at) }
+  let!(:dossier2) { create(:dossier, :en_construction, procedure: procedure, created_at: created_at, updated_at: created_at) }
+  let!(:dossier3) { create(:dossier, :en_instruction, procedure: procedure, created_at: created_at, updated_at: created_at) }
+  let!(:dossier4) { create(:dossier, :processed, procedure: procedure, state: 'accepte', created_at: created_at, updated_at: created_at) }
+  let!(:dossier5) { create(:dossier, :processed, procedure: procedure, state: 'refuse', created_at: created_at, updated_at: created_at) }
+  let!(:dossier6) { create(:dossier, :processed, procedure: procedure, state: 'sans_suite', created_at: created_at, updated_at: created_at) }
 
   let(:now) { DateTime.now.beginning_of_hour }
   let(:created_at){ now - 10.days }
