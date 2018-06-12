@@ -14,6 +14,7 @@ RSpec.describe Procedures::SilenceVautDecisionProcedureJob, type: :job do
 
   let(:now) { DateTime.now.beginning_of_hour }
   let(:created_at){ now - 10.days }
+  let(:silence_vaut_decision_status){ "accepte" }
 
   subject do
     Timecop.freeze(now) do
@@ -24,8 +25,6 @@ RSpec.describe Procedures::SilenceVautDecisionProcedureJob, type: :job do
 
   context "when silence_vaut_decision_enabled is false" do
     let(:silence_vaut_decision_enabled){ false }
-
-    let(:silence_vaut_decision_status){ "accepte" }
 
     it do
       d1_attributes = dossier1.attributes
@@ -40,11 +39,24 @@ RSpec.describe Procedures::SilenceVautDecisionProcedureJob, type: :job do
     it { expect{ subject }.to_not change(dossier4, :attributes) }
     it { expect{ subject }.to_not change(dossier5, :attributes) }
     it { expect{ subject }.to_not change(dossier6, :attributes) }
+
+    it { expect{ subject }.to_not change(dossier1, :created_at) }
+    it { expect{ subject }.to_not change(dossier2, :created_at) }
+    it { expect{ subject }.to_not change(dossier3, :created_at) }
+    it { expect{ subject }.to_not change(dossier4, :created_at) }
+    it { expect{ subject }.to_not change(dossier5, :created_at) }
+    it { expect{ subject }.to_not change(dossier6, :created_at) }
+
+    it { expect{ subject }.to_not change(dossier1, :updated_at) }
+    it { expect{ subject }.to_not change(dossier2, :updated_at) }
+    it { expect{ subject }.to_not change(dossier3, :updated_at) }
+    it { expect{ subject }.to_not change(dossier4, :updated_at) }
+    it { expect{ subject }.to_not change(dossier5, :updated_at) }
+    it { expect{ subject }.to_not change(dossier6, :updated_at) }
   end
 
   context "when silence_vaut_decision_enabled is true" do
     let(:silence_vaut_decision_enabled){ true }
-    let(:silence_vaut_decision_status){ "accepte" }
 
     it { expect{ subject }.to_not change(dossier1, :attributes) }
     it { expect{ subject }.to_not change(dossier2, :attributes) }
