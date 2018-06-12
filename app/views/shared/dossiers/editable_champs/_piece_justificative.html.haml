@@ -10,8 +10,7 @@
     id: "champs_#{champ.id}",
     direct_upload: true
 - else
-  %a{ href: url_for(pj), target: '_blank' }
-    = pj.filename.to_s
+  = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: champ, user_can_upload: true }
   %br
   Modifier :
   = form.file_field :piece_justificative_file,
