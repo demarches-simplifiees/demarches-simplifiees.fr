@@ -1,3 +1,5 @@
+require Rails.root.join("lib", "tasks", "task_helper")
+
 namespace :'2018_06_05_resend_attestations' do
   task set: :environment do
     procedure = Procedure.find(4247)
@@ -12,7 +14,7 @@ namespace :'2018_06_05_resend_attestations' do
       dossier.attestation = dossier.build_attestation
 
       ResendAttestationMailer.resend_attestation(dossier).deliver_later
-      puts "Email envoyé à #{dossier.user.email} pour le dossier #{dossier.id}"
+      rake_puts "Email envoyé à #{dossier.user.email} pour le dossier #{dossier.id}"
     end
   end
 end
