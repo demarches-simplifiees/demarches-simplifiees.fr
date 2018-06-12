@@ -1,3 +1,5 @@
+require Rails.root.join("lib", "tasks", "task_helper")
+
 namespace :'2018_04_04_fetch_etablissement_with_no_entreprise' do
   task fetch: :environment do
     dossiers = Entreprise.joins('LEFT JOIN etablissements et ON entreprises.id = et.entreprise_id')
@@ -7,7 +9,7 @@ namespace :'2018_04_04_fetch_etablissement_with_no_entreprise' do
     dossiers.each do |dossier|
       siret = dossier.entreprise.siret_siege_social
 
-      puts "Fetch siret: #{siret} for dossier: #{dossier.id}"
+      rake_puts "Fetch siret: #{siret} for dossier: #{dossier.id}"
 
       if siret
         EtablissementUpdateJob.perform_later(dossier, siret)
