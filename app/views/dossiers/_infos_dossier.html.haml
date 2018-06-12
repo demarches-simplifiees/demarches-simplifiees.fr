@@ -47,9 +47,7 @@
                   - else
                     Pas de dossier associé
                 - elsif champ.type_champ == 'piece_justificative'
-                  - pj = champ.piece_justificative_file
-                  %a{ href: url_for(pj), target: '_blank' }
-                    = pj.filename.to_s
+                  = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: champ, user_can_upload: true }
                 - elsif champ.type_champ == 'textarea'
                   = simple_format(champ.decorate.value)
                 - else
