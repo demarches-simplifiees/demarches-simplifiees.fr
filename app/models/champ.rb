@@ -3,6 +3,7 @@ class Champ < ApplicationRecord
   belongs_to :type_de_champ, inverse_of: :champ
   has_many :commentaires
   has_one_attached :piece_justificative_file
+  has_one :virus_scan
 
   delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, to: :type_de_champ
 

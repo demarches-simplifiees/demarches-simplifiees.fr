@@ -28,7 +28,7 @@ demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urge
 
 ## Initialisation de l'environnement de développement
 
-Afin d'initialiser l'environnement de développement, éxécutez la commande suivante :
+Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
 
     bundle install
 
@@ -43,14 +43,13 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
     > create user tps_test with password 'tps_test' superuser;
     > \q
 
-Afin de générer la BDD de l'application, il est nécessaire d'éxécuter les commandes suivantes :
+Afin de générer la BDD de l'application, il est nécessaire d'exécuter les commandes suivantes :
 
     # Create and load the schema for both databases
-    rake db:create db:schema:load
+    bin/rails db:create db:schema:load
 
-    # Migrate the development database and then the test database
-    rake db:migrate
-    rake db:migrate RAILS_ENV=test
+    # Migrate the development database and the test database
+    rails db:migrate
 
 ## Bouchonnage de l’authentification
 
