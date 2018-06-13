@@ -103,9 +103,7 @@ module NewUser
       dossier = current_user.dossiers.includes(:user, procedure: :administrateur).find(params[:id])
 
       if !dossier.instruction_commencee?
-        deleted_dossier = dossier.delete_and_keep_track
-        DossierMailer.notify_deletion_to_user(deleted_dossier, dossier.user.email).deliver_later
-        DossierMailer.notify_deletion_to_administration(deleted_dossier, dossier.procedure.administrateur.email).deliver_later
+        dossier.delete_and_keep_track
         flash.notice = 'Votre dossier a bien été supprimé.'
         redirect_to users_dossiers_path
       else
