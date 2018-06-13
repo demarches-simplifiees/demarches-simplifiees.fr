@@ -44,6 +44,7 @@ class Dossier < ApplicationRecord
   scope :state_en_construction,                -> { where(state: 'en_construction') }
   scope :state_en_instruction,                 -> { where(state: 'en_instruction') }
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
+  scope :state_instruction_commencee,          -> { where(state: INSTRUCTION_COMMENCEE) }
   scope :state_termine,                        -> { where(state: TERMINE) }
 
   scope :archived,      -> { where(archived: true) }
