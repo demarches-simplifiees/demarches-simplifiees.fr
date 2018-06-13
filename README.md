@@ -134,6 +134,12 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 - supprimer un compte super admin :
   `bin/rake admin:delete_admin[email-du-compte-github@exemple.com]`
 
+
+## Tâches d’aide au support
+
+Des tâches d’aide au support sont prévues dans le namespace `support`.
+Pour les lister: `bin/rake -D support:`.
+
 ## Compatibilité navigateurs
 
 L'application supporte les navigateurs récents Firefox, Chrome, Internet Explorer (Edge, 11).
