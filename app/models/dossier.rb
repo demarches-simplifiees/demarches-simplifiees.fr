@@ -280,7 +280,8 @@ class Dossier < ApplicationRecord
     now = Time.now
     deleted_dossier = DeletedDossier.create!(dossier_id: id, procedure: procedure, state: state, deleted_at: now)
     update(hidden_at: now)
-    deleted_dossier
+    DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
+    DossierMailer.notify_deletion_to_administration(deleted_dossier, procedure.administrateur.email).deliver_later
   end
 
   private
