@@ -45,8 +45,8 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
 
 Afin de générer la BDD de l'application, il est nécessaire d'exécuter les commandes suivantes :
 
-    # Create and load the schema for both databases
-    bin/rails db:create db:schema:load
+    # Create and initialize the database
+    bin/rails db:create db:schema:load db:seed
 
     # Migrate the development database and the test database
     bin/rails db:migrate
@@ -81,20 +81,11 @@ Dans le fichier `config/intializers/token.rb`, ajouter
 
 *Note : les valeurs pour ces paramètres sont renseignées dans le Keepass*
 
-## Création des comptes initiaux
-
-    bin/rails console
-    > email = "<votre email>"
-    > password = "<votre mot de passe>"
-    > Administration.create(email: email, password: password)
-    > Administrateur.create(email: email, password: password)
-    > Gestionnaire.create(email: email, password: password)
-    > User.create(email: email, password: password)
-
-
 ## Lancement de l'application
 
     overmind s
+
+Un utilisateur de test est disponible, avec les identifiants `test@exemple.fr`/`testpassword`.
 
 ## Programmation des jobs
 
