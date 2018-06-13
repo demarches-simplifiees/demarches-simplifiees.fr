@@ -23,6 +23,8 @@ fr:
         subject: "Instructions pour changer le mot de passe"
       unlock_instructions:
         subject: "Instructions pour déverrouiller le compte"
+      email_changed:
+        subject: "Changement d’adresse mail"
       password_change:
         subject: "Votre mot de passe a été modifié avec succés."
     omniauth_callbacks:
