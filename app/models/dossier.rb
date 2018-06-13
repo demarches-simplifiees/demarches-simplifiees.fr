@@ -126,6 +126,10 @@ class Dossier < ApplicationRecord
     TERMINE.include?(state)
   end
 
+  def instruction_commencee?
+    INSTRUCTION_COMMENCEE.include?(state)
+  end
+
   def cerfa_available?
     procedure.cerfa_flag? && cerfa.size != 0
   end

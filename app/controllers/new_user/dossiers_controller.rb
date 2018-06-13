@@ -101,11 +101,17 @@ module NewUser
 
     def ask_deletion
       dossier = current_user.dossiers.includes(:user, procedure: :administrateur).find(params[:id])
-      deleted_dossier = dossier.delete_and_keep_track
-      DossierMailer.notify_deletion_to_user(deleted_dossier, dossier.user.email).deliver_later
-      DossierMailer.notify_deletion_to_administration(deleted_dossier, dossier.procedure.administrateur.email).deliver_later
-      flash.notice = 'Votre dossier a bien été supprimé.'
-      redirect_to users_dossiers_path
+
+      if !dossier.instruction_commencee?
+        deleted_dossier = dossier.delete_and_keep_track
+        DossierMailer.notify_deletion_to_user(deleted_dossier, dossier.user.email).deliver_later
+        DossierMailer.notify_deletion_to_administration(deleted_dossier, dossier.procedure.administrateur.email).deliver_later
+        flash.notice = 'Votre dossier a bien été supprimé.'
+        redirect_to users_dossiers_path
+      else
+        flash.notice = "L'instruction de votre dossier a commencé, il n'est plus possible de supprimer votre dossier. Si vous souhaitez annuler l'instruction contactez votre administration par la messagerie de votre dossier."
+        redirect_to users_dossier_path(dossier)
+      end
     end
 
     private
