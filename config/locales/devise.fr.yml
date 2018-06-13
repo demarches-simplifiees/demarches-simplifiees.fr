@@ -4,7 +4,7 @@ fr:
   devise:
     confirmations:
       confirmed: "Votre compte a été validé."
-      send_instructions: "Vous allez recevoir les instructions nécessaires à la confirmation de votre compte dans quelques minutes."
+      send_instructions: 'Vous allez recevoir un e-mail avec les instructions nécessaires à la confirmation de votre compte dans quelques minutes.'
       send_paranoid_instructions: "Si votre e-mail existe dans notre base de données, vous allez bientôt recevoir un e-mail contenant les instructions de confirmation de votre compte."
     failure:
       already_authenticated: "Vous êtes déjà connecté"
