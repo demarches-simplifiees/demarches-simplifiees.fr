@@ -10,7 +10,7 @@
           - message += 'Affectez des accompagnateurs à votre procédure.'
         - if procedure.service.nil?
           - message += 'Affectez un service à votre procédure.'
-        %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, title: message }
+        %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, 'data-placement' => :bottom, title: message }
           %i.fa.fa-eraser
           Publier
       - else
