@@ -5,11 +5,12 @@
   #procedure_show
     - if procedure.brouillon?
       - if procedure.gestionnaires.empty? || procedure.service.nil?
-        - message = ''
+        - missing_elements = []
         - if procedure.gestionnaires.empty?
-          - message += 'Affectez des accompagnateurs à votre procédure.'
+          - missing_elements << 'des accompagnateurs'
         - if procedure.service.nil?
-          - message += 'Affectez un service à votre procédure.'
+          - missing_elements << 'un service'
+        - message = "Affectez #{missing_elements.join(' et ')} à votre procédure."
         %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, 'data-placement' => :bottom, title: message }
           %i.fa.fa-eraser
           Publier
