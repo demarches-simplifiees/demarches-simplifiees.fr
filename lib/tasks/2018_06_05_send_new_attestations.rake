@@ -1,3 +1,5 @@
+require Rails.root.join("lib", "tasks", "task_helper")
+
 namespace :'2018_06_05_send_new_attestation' do
   task set: :environment do
     ids = [
@@ -37,14 +39,14 @@ namespace :'2018_06_05_send_new_attestation' do
       if attestation
         id = attestation.id
         attestation.destroy
-        puts "Attestation #{id} détruite"
+        rake_puts "Attestation #{id} détruite"
       end
 
       dossier.attestation = dossier.build_attestation
 
       NewAttestationMailer.new_attestation(dossier).deliver_later
-      puts "Email envoyé à #{dossier.user.email} pour le dossier #{dossier.id}"
-      puts
+      rake_puts "Email envoyé à #{dossier.user.email} pour le dossier #{dossier.id}"
+      rake_puts
     end
   end
 end
