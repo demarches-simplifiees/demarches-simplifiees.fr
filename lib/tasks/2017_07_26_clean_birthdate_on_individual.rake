@@ -1,3 +1,5 @@
+require Rails.root.join("lib", "tasks", "task_helper")
+
 namespace :'2017_07_26_clean_birthdate_on_individual' do
   task clean: :environment do
     # remove duplicates
@@ -10,13 +12,13 @@ namespace :'2017_07_26_clean_birthdate_on_individual' do
     individuals_with_date = Individual.where.not(birthdate: nil)
     # Match 31/12/2017 => 2017-12-31
     individuals_with_date.select { |i| /^\d{2}\/\d{2}\/\d{4}$/.match(i.birthdate) }.each do |i|
-      puts "cleaning #{i.birthdate}"
+      rake_puts "cleaning #{i.birthdate}"
       i.update(birthdate: Date.parse(i.birthdate).iso8601) rescue nil
     end
 
     # Match 31/12/17 => 2017-12-31
     individuals_with_date.select { |i| /^\d{2}\/\d{2}\/\d{2}$/.match(i.birthdate) }.each do |i|
-      puts "cleaning #{i.birthdate}"
+      rake_puts "cleaning #{i.birthdate}"
       new_date = Date.strptime(i.birthdate, "%d/%m/%y")
       if new_date.year > 2017
         new_date = new_date - 100.years
