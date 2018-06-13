@@ -16,4 +16,9 @@
   .tt-menu {
     width: 300px;
   }
+
+  // Fix the input not being displayed on the same line than the text before
+  .tt-input {
+    vertical-align: initial !important;
+  }
 }
