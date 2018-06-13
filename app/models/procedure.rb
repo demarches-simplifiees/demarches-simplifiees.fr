@@ -1,6 +1,11 @@
 class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
 
+  enum silence_vaut_decision_status: {
+    accepte: 'accepte',
+    refuse:  'refuse'
+  }
+
   has_many :types_de_piece_justificative, -> { order "order_place ASC" }, dependent: :destroy
   has_many :types_de_champ, -> { public_only }, dependent: :destroy
   has_many :types_de_champ_private, -> { private_only }, class_name: 'TypeDeChamp', dependent: :destroy
@@ -54,6 +59,7 @@ class Procedure < ApplicationRecord
   validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
   validates :duree_conservation_dossiers_dans_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, unless: :durees_conservation_required
   validates :duree_conservation_dossiers_hors_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, unless: :durees_conservation_required
+  validates :silence_vaut_decision_delais, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   before_save :update_juridique_required
   before_save :update_durees_conservation_required
