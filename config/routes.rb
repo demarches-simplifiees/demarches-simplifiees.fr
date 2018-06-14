@@ -12,7 +12,10 @@ Rails.application.routes.draw do
     end
 
     resources :users, only: [:index, :show]
-    resources :gestionnaires, only: [:index, :show]
+    resources :gestionnaires, only: [:index, :show] do
+      post 'reinvite', on: :member
+    end
+
     resources :dossiers, only: [:show]
 
     resources :demandes, only: [:index]
