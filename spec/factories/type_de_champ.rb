@@ -50,6 +50,10 @@ FactoryBot.define do
       type_champ 'multiple_drop_down_list'
       drop_down_list { create(:drop_down_list) }
     end
+    factory :type_de_champ_linked_drop_down_list, class: 'TypesDeChamp::LinkedDropDownListTypeDeChamp' do
+      type_champ 'linked_drop_down_list'
+      drop_down_list { create(:drop_down_list) }
+    end
     factory :type_de_champ_pays, class: 'TypesDeChamp::PaysTypeDeChamp' do
       type_champ 'pays'
     end
