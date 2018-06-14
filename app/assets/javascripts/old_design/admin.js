@@ -38,6 +38,7 @@ function on_change_type_de_champ_select (){
         break;
       case 'drop_down_list':
       case 'multiple_drop_down_list':
+      case 'linked_drop_down_list':
         parent.children(".drop-down-list").addClass('show-inline');
         break;
       case 'piece_justificative':

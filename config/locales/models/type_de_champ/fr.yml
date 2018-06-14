@@ -18,6 +18,7 @@ fr:
           yes_no: 'Oui/Non'
           drop_down_list: 'Menu déroulant'
           multiple_drop_down_list: 'Menu déroulant à choix multiples'
+          linked_drop_down_list: 'Deux menus déroulants liés'
           pays: 'Pays'
           regions: 'Régions'
           departements: 'Départements'

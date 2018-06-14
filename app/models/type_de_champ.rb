@@ -13,6 +13,7 @@ class TypeDeChamp < ApplicationRecord
     yes_no: 'yes_no',
     drop_down_list: 'drop_down_list',
     multiple_drop_down_list: 'multiple_drop_down_list',
+    linked_drop_down_list: 'linked_drop_down_list',
     pays: 'pays',
     regions: 'regions',
     departements: 'departements',
