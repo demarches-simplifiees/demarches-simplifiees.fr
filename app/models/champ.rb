@@ -41,11 +41,7 @@ class Champ < ApplicationRecord
   end
 
   def mandatory_and_blank?
-    if type_champ == 'piece_justificative'
-      mandatory? && !piece_justificative_file.attached?
-    else
-      mandatory? && value.blank?
-    end
+    mandatory? && value.blank?
   end
 
   def same_date?(num, compare)
