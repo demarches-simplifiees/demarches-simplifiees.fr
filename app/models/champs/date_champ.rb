@@ -11,4 +11,8 @@ class Champs::DateChamp < Champ
         nil
       end
   end
+
+  def string_value
+    Date.parse(value).strftime('%d/%m/%Y')
+  end
 end

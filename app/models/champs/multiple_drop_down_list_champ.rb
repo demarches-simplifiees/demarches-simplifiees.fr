@@ -14,4 +14,8 @@ class Champs::MultipleDropDownListChamp < Champ
       end
     end
   end
+
+  def string_value
+    drop_down_list.selected_options_without_decorator(self).join(', ')
+  end
 end
