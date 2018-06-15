@@ -19,10 +19,6 @@ class Champ < ApplicationRecord
     mandatory? && value.blank?
   end
 
-  def self.regions
-    JSON.parse(Carto::GeoAPI::Driver.regions).sort_by { |e| e['nom'] }.pluck("nom")
-  end
-
   def self.departements
     JSON.parse(Carto::GeoAPI::Driver.departements).map { |liste| "#{liste['code']} - #{liste['nom']}" }.push('99 - Étranger')
   end
