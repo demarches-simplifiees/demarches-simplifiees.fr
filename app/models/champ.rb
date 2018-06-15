@@ -19,10 +19,6 @@ class Champ < ApplicationRecord
     mandatory? && value.blank?
   end
 
-  def self.pays
-    JSON.parse(Carto::GeoAPI::Driver.pays).pluck("nom")
-  end
-
   def to_s
     if value.present?
       string_value
