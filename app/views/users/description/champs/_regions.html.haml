@@ -1,2 +1,2 @@
 = select_tag("champs['#{champ.id}']",
-  options_for_select(Champ.regions, selected: champ.object.value))
+  options_for_select(Champs::RegionChamp.regions, selected: champ.object.value))
