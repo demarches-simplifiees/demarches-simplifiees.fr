@@ -32,25 +32,8 @@ class Champ < ApplicationRecord
     !private?
   end
 
-  def same_hour?(num)
-    same_date? num, '%H'
-  end
-
-  def same_minute?(num)
-    same_date? num, '%M'
-  end
-
   def mandatory_and_blank?
     mandatory? && value.blank?
-  end
-
-  def same_date?(num, compare)
-    if type_champ == 'datetime' && value.present?
-      if value.to_datetime.strftime(compare) == num
-        return true
-      end
-    end
-    false
   end
 
   def self.regions
