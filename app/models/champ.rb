@@ -19,10 +19,6 @@ class Champ < ApplicationRecord
     mandatory? && value.blank?
   end
 
-  def self.departements
-    JSON.parse(Carto::GeoAPI::Driver.departements).map { |liste| "#{liste['code']} - #{liste['nom']}" }.push('99 - Étranger')
-  end
-
   def self.pays
     JSON.parse(Carto::GeoAPI::Driver.pays).pluck("nom")
   end

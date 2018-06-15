@@ -13,7 +13,7 @@ feature 'The user' do
   # attached file works
   scenario 'fill a dossier', js: true do
     allow(Champs::RegionChamp).to receive(:regions).and_return(['region1', 'region2']).at_least(:once)
-    allow(Champ).to receive(:departements).and_return(['dep1', 'dep2']).at_least(:once)
+    allow(Champs::DepartementChamp).to receive(:departements).and_return(['dep1', 'dep2']).at_least(:once)
 
     log_in(user.email, password, procedure)
 
