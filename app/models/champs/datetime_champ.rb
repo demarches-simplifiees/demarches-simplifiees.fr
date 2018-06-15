@@ -1,7 +1,19 @@
 class Champs::DatetimeChamp < Champ
   before_save :format_before_save
 
+  def same_hour?(num)
+    same_date?(num, '%H')
+  end
+
+  def same_minute?(num)
+    same_date?(num, '%M')
+  end
+
   private
+
+  def same_date?(num, compare)
+    return value.present? && value.to_datetime.strftime(compare) == num
+  end
 
   def format_before_save
     if (value =~ /=>/).present?
