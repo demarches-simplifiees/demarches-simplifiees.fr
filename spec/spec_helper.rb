@@ -118,6 +118,8 @@ RSpec.configure do |config|
   end
 
   config.before(:all) {
+    Rake.verbose false
+
     Warden.test_mode!
 
     Typhoeus::Expectation.clear
