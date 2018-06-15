@@ -18,4 +18,8 @@ class Champs::MultipleDropDownListChamp < Champ
   def string_value
     drop_down_list.selected_options_without_decorator(self).join(', ')
   end
+
+  def value_for_export
+    drop_down_list.selected_options_without_decorator(self).join(', ')
+  end
 end

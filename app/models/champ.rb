@@ -75,16 +75,7 @@ class Champ < ApplicationRecord
 
   def for_export
     if value.present?
-      case type_champ
-      when 'textarea'
-        ActionView::Base.full_sanitizer.sanitize(value)
-      when 'yes_no'
-        value == 'true' ? 'oui' : 'non'
-      when 'multiple_drop_down_list'
-        drop_down_list.selected_options_without_decorator(self).join(', ')
-      else
-        value
-      end
+      value_for_export
     else
       nil
     end
@@ -116,5 +107,9 @@ class Champ < ApplicationRecord
 
   def string_value
     value.to_s
+  end
+
+  def value_for_export
+    value
   end
 end
