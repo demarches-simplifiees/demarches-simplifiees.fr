@@ -45,11 +45,11 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
 
 Afin de générer la BDD de l'application, il est nécessaire d'exécuter les commandes suivantes :
 
-    # Create and load the schema for both databases
-    bin/rails db:create db:schema:load
+    # Create and initialize the database
+    bin/rails db:create db:schema:load db:seed
 
     # Migrate the development database and the test database
-    rails db:migrate
+    bin/rails db:migrate
 
 ## Bouchonnage de l’authentification
 
@@ -81,20 +81,11 @@ Dans le fichier `config/intializers/token.rb`, ajouter
 
 *Note : les valeurs pour ces paramètres sont renseignées dans le Keepass*
 
-## Création des comptes initiaux
-
-    rails c
-    > email = "<votre email>"
-    > password = "<votre mot de passe>"
-    > Administration.create(email: email, password: password)
-    > Administrateur.create(email: email, password: password)
-    > Gestionnaire.create(email: email, password: password)
-    > User.create(email: email, password: password)
-
-
 ## Lancement de l'application
 
     overmind s
+
+Un utilisateur de test est disponible, avec les identifiants `test@exemple.fr`/`testpassword`.
 
 ## Programmation des jobs
 
@@ -110,18 +101,18 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
 - Lancer tous les tests
 
-        rake spec
-        rspec
+        bin/rake spec
+        bin/rspec
 
 - Lancer un test en particulier
 
-        rake spec SPEC=file_path/file_name_spec.rb:line_number
-        rspec file_path/file_name_spec.rb:line_number
+        bin/rake spec SPEC=file_path/file_name_spec.rb:line_number
+        bin/rspec file_path/file_name_spec.rb:line_number
 
 - Lancer tous les tests d'un fichier
 
-        rake spec SPEC=file_path/file_name_spec.rb
-        rspec file_path/file_name_spec.rb
+        bin/rake spec SPEC=file_path/file_name_spec.rb
+        bin/rspec file_path/file_name_spec.rb
 
 ## Debug
 
@@ -145,18 +136,18 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 ## Régénérer les binstubs
 
     bundle binstub railties --force
-    rake rails:update:bin
+    bin/rake rails:update:bin
 
 ## Tâches Super Admin
 
 - ajouter un compte super admin :
-  `bundle exec rake admin:create_admin[email-du-compte-github@exemple.com]`
+  `bin/rake admin:create_admin[email-du-compte-github@exemple.com]`
 
 - lister les comptes super admin :
-  `bundle exec rake admin:list`
+  `bin/rake admin:list`
 
 - supprimer un compte super admin :
-  `bundle exec rake admin:delete_admin[email-du-compte-github@exemple.com]`
+  `bin/rake admin:delete_admin[email-du-compte-github@exemple.com]`
 
 ## Compatibilité navigateurs
 
