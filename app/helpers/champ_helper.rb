@@ -1,5 +1,6 @@
 module ChampHelper
-  def is_not_header_nor_explication?(champ)
-    !['header_section', 'explication'].include?(champ.type_champ)
+  def has_label?(champ)
+    types_without_label = ['header_section', 'explication']
+    !types_without_label.include?(champ.type_champ)
   end
 end
