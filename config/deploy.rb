@@ -140,9 +140,8 @@ task :deploy => :environment do
       queue "/etc/init.d/#{user} upgrade "
       queue! %[sudo service delayed_job_#{user!} start]
 
-      queue "cd #{deploy_to}/#{current_path}/"
-      queue "bundle exec rake db:seed RAILS_ENV=#{rails_env}"
-      queue %[echo "-----> Rake Seeding Completed."]
+      # If you are deploying a review app on a fresh testing environment,
+      # now can be a good time to seed the database.
     end
   end
 end
