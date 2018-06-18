@@ -1,8 +1,10 @@
+require Rails.root.join("lib", "tasks", "task_helper")
+
 namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
   task set: :environment do
     commentaires_to_process = Commentaire.where(file: nil).where.not(piece_justificative_id: nil).reorder(id: :desc)
 
-    puts "#{commentaires_to_process.count} commentaires to process..."
+    rake_puts "#{commentaires_to_process.count} commentaires to process..."
 
     commentaires_to_process.each do |c|
       process_commentaire(c)
@@ -12,7 +14,7 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
   task fix: :environment do
     commentaires_to_fix = Commentaire.where.not(file: nil).where.not(piece_justificative_id: nil).reorder(id: :desc)
 
-    puts "#{commentaires_to_fix.count} commentaires to fix..."
+    rake_puts "#{commentaires_to_fix.count} commentaires to fix..."
 
     commentaires_to_fix.each do |c|
       process_commentaire(c)
@@ -27,7 +29,7 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
   end
 
   def process_commentaire(commentaire)
-    puts "Processing commentaire #{commentaire.id}"
+    rake_puts "Processing commentaire #{commentaire.id}"
     if commentaire.piece_justificative.present?
       # https://github.com/carrierwaveuploader/carrierwave#uploading-files-from-a-remote-location
       commentaire.remote_file_url = commentaire.piece_justificative.content_url
@@ -42,7 +44,7 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
 
       commentaire.save
       if commentaire.file.blank?
-        puts "Failed to save file for commentaire #{commentaire.id}"
+        rake_puts "Failed to save file for commentaire #{commentaire.id}"
       end
     end
   end
