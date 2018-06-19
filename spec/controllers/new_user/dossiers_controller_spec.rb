@@ -412,6 +412,20 @@ describe NewUser::DossiersController, type: :controller do
 
     subject { post :ask_deletion, params: { id: dossier.id } }
 
+    shared_examples_for "the dossier can not be deleted" do
+      it do
+        expect(DossierMailer).not_to receive(:notify_deletion_to_administration)
+        expect(DossierMailer).not_to receive(:notify_deletion_to_user)
+        subject
+      end
+
+      it do
+        subject
+        expect(Dossier.find_by(id: dossier.id)).not_to eq(nil)
+        expect(dossier.procedure.deleted_dossiers.count).to eq(0)
+      end
+    end
+
     context 'when dossier is owned by signed in user' do
       let(:dossier) { create(:dossier, user: user, autorisation_donnees: true) }
 
@@ -429,25 +443,22 @@ describe NewUser::DossiersController, type: :controller do
         expect(procedure.deleted_dossiers.count).to eq(1)
         expect(procedure.deleted_dossiers.first.dossier_id).to eq(dossier_id)
       end
+
       it { is_expected.to redirect_to(users_dossiers_path) }
+
+      context "and the instruction has started" do
+        let(:dossier) { create(:dossier, :en_instruction, user: user, autorisation_donnees: true) }
+
+        it_behaves_like "the dossier can not be deleted"
+        it { is_expected.to redirect_to(users_dossier_path(dossier)) }
+      end
     end
 
     context 'when dossier is not owned by signed in user' do
       let(:user2) { create(:user) }
       let(:dossier) { create(:dossier, user: user2, autorisation_donnees: true) }
 
-      it do
-        expect(DossierMailer).not_to receive(:notify_deletion_to_administration)
-        expect(DossierMailer).not_to receive(:notify_deletion_to_user)
-        subject
-      end
-
-      it do
-        subject
-        expect(Dossier.find_by(id: dossier.id)).not_to eq(nil)
-        expect(dossier.procedure.deleted_dossiers.count).to eq(0)
-      end
-
+      it_behaves_like "the dossier can not be deleted"
       it { is_expected.to redirect_to(root_path) }
     end
   end

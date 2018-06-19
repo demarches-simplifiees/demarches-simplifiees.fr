@@ -14,4 +14,11 @@ class DossierMailer < ApplicationMailer
 
     mail(to: to_email, subject: subject)
   end
+
+  def notify_unhide_to_user(dossier)
+    @dossier = dossier
+    subject = "Votre dossier n° #{@dossier.id} n'a pas pu être supprimé"
+
+    mail(to: dossier.user.email, subject: subject)
+  end
 end

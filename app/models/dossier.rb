@@ -44,6 +44,7 @@ class Dossier < ApplicationRecord
   scope :state_en_construction,                -> { where(state: 'en_construction') }
   scope :state_en_instruction,                 -> { where(state: 'en_instruction') }
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
+  scope :state_instruction_commencee,          -> { where(state: INSTRUCTION_COMMENCEE) }
   scope :state_termine,                        -> { where(state: TERMINE) }
 
   scope :archived,      -> { where(archived: true) }
@@ -124,6 +125,10 @@ class Dossier < ApplicationRecord
 
   def termine?
     TERMINE.include?(state)
+  end
+
+  def instruction_commencee?
+    INSTRUCTION_COMMENCEE.include?(state)
   end
 
   def cerfa_available?
@@ -276,7 +281,8 @@ class Dossier < ApplicationRecord
     now = Time.now
     deleted_dossier = DeletedDossier.create!(dossier_id: id, procedure: procedure, state: state, deleted_at: now)
     update(hidden_at: now)
-    deleted_dossier
+    DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
+    DossierMailer.notify_deletion_to_administration(deleted_dossier, procedure.administrateur.email).deliver_later
   end
 
   private
