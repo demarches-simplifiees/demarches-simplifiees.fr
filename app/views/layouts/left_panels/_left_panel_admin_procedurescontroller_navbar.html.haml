@@ -45,7 +45,7 @@
       .procedure-list-element{ class: ('active' if active == 'E-mails') }
         E-mails
 
-    %a#onglet-preview{ href: url_for(admin_procedure_previsualisation_path(@procedure)) }
+    %a#onglet-preview{ href: url_for(apercu_procedure_path(@procedure)), target: "_blank" }
       .procedure-list-element{ class: ('active' if active == 'Prévisualisation') }
         Prévisualisation
 

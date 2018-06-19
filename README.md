@@ -53,25 +53,10 @@ Afin de générer la BDD de l'application, il est nécessaire d'exécuter les co
 
 ## Bouchonnage de l’authentification
 
-Créer le fichier `config/france_connect.yml` avec le contenu
+Créer les fichiers de configuration avec les valeurs par défaut :
 
-```yaml
-particulier_identifier: ''
-particulier_secret: ''
-
-particulier_redirect_uri: ''
-particulier_authorization_endpoint: ''
-particulier_token_endpoint: ''
-particulier_userinfo_endpoint: ''
-particulier_logout_endpoint: ''
-```
-
-Créer le fichier `config/github_secrets.yml` avec le contenu
-
-```yaml
-client_id: ''
-client_secret: ''
-```
+    cp config/france_connect.example.yml config/france_connect.yml
+    cp config/github_secrets.example.yml config/github_secrets.yml
 
 ## Connexion a Pipedrive
 
@@ -148,6 +133,12 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 
 - supprimer un compte super admin :
   `bin/rake admin:delete_admin[email-du-compte-github@exemple.com]`
+
+
+## Tâches d’aide au support
+
+Des tâches d’aide au support sont prévues dans le namespace `support`.
+Pour les lister: `bin/rake -D support:`.
 
 ## Compatibilité navigateurs
 
