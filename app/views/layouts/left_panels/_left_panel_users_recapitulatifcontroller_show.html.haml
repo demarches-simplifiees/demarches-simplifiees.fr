@@ -14,9 +14,9 @@
   .dossier-state= @facade.dossier.display_state
   .split-hr-left
 
-  - if current_user.owns?(@facade.dossier)
+  - if current_user.owns?(@facade.dossier) && !@facade.dossier.instruction_commencee?
     .text-center.mt-1
-      = link_to ask_deletion_dossier_path(@facade.dossier), method: :post, class: "btn btn-danger", data: { confirm: delete_dossier_confirm(@facade.dossier) } do
+      = link_to ask_deletion_dossier_path(@facade.dossier), method: :post, class: "btn btn-danger", data: { confirm: "Vous vous apprêtez à supprimer votre dossier ainsi que les informations qu’il contient. Nous vous rappelons que toute suppression entraine l’annulation de la démarche en cours. Confirmer la suppression ?" } do
         Supprimer définitivement
         %br
         ce dossier
