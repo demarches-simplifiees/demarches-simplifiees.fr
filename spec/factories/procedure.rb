@@ -20,6 +20,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_service do
+      after(:build) do |procedure, _evaluator|
+        procedure.service = create(:service)
+      end
+    end
+
     trait :with_api_carto do
       after(:build) do |procedure, _evaluator|
         procedure.module_api_carto.use_api_carto = true

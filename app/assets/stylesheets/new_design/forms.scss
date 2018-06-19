@@ -254,9 +254,11 @@
 
   .send-wrapper {
     text-align: right;
+    margin-top: 2 * $default-padding;
+    margin-bottom: 2 * $default-padding;
 
-    .send {
-      margin-bottom: $default-padding;
+    .button {
+      margin-bottom: 0;
     }
   }
 

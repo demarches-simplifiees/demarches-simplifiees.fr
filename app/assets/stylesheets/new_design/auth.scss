@@ -111,3 +111,11 @@ $auth-breakpoint: $two-columns-breakpoint;
     }
   }
 }
+
+.identity-form {
+  @media (max-width: $two-columns-breakpoint) {
+    input[type=submit] {
+      margin-bottom: 2 * $default-padding;
+    }
+  }
+}
