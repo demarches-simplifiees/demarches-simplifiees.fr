@@ -71,10 +71,12 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       page.find_by_id('add_piece_justificative').click
       page.find_by_id('procedure_types_de_piece_justificative_attributes_1_libelle')
 
-      page.find_by_id('onglet-preview').click
-      expect(page).to have_current_path(admin_procedure_previsualisation_path(Procedure.first.id.to_s))
-      expect(page.find("input[type='text']")['placeholder']).to eq('libelle de champ')
-      expect(page.first('.piece-libelle').text).to eq('libelle de piece')
+      preview_window = window_opened_by { page.find_by_id('onglet-preview').click }
+      within_window(preview_window) do
+        expect(page).to have_current_path(apercu_procedure_path(Procedure.first))
+        expect(page.find("input[type='text']")['placeholder']).to eq('libelle de champ')
+        expect(page.first('.pj-input label').text).to eq('libelle de piece')
+      end
     end
 
     scenario 'After adding champ and file, check impossibility to publish procedure, add accompagnateur and make publication' do
