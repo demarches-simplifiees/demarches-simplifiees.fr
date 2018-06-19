@@ -23,6 +23,16 @@ h1 {
   font-weight: bold;
 }
 
+h2 {
+  font-size: 30px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid $border-grey;
+}
+
+strong {
+  font-weight: bold;
+}
+
 a {
   color: $blue;
 }

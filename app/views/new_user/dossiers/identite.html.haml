@@ -1,3 +1,6 @@
+- content_for :footer do
+  = render partial: "new_user/dossiers/footer", locals: { dossier: @dossier }
+
 .two-columns
   .columns-container
     .column.preview
@@ -11,7 +14,7 @@
       .procedure-description
         = h string_to_html(@dossier.procedure.description)
 
-    .column
+    .column.identity-form
       = form_for @dossier.individual, url: update_identite_dossier_path(@dossier), html: { class: "form" } do |f|
         %h1 Données d'identité
 
