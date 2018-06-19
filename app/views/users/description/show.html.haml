@@ -1,1 +1,64 @@
-= render partial: 'show', locals: { previsualisation: false }
+.container#description-page
+  - if notice_url(@dossier.procedure).present?
+    #lien_notice_panel.row{ style: 'width: 280px; position: fixed; background-color: white; right: 5%; top: 80px; z-index: 200;' }
+      .panel.panel-info{ style: 'margin-bottom: 0;' }
+        .panel-body.center
+          .row
+            .col-xs-1
+              .fa.fa-info-circle.text-info{ style: 'font-size: 2em; margin-top: 20%;' }
+            .col-xs-10{ style: 'padding-right: 0px;' }
+              %b
+                = link_to 'Accéder au guide', notice_url(@dossier.procedure), { target: '_blank' }
+              pour remplir pour votre dossier
+
+  %h2.text-info
+    = @dossier.procedure.libelle
+
+  -# TODO use form_for
+  = form_tag(url_for({ controller: 'users/description', action: :update, dossier_id: @dossier.id }), class: 'form', method: 'POST', multipart: true) do
+    - if @champs.present?
+      #liste-champs
+        = render partial: 'users/description/champs', locals: { private: false }
+
+    - if @procedure.lien_demarche.present? || @procedure.cerfa_flag || @dossier.types_de_piece_justificative.size > 0
+      %br
+      %h3 Pièces jointes
+
+
+    -# TODO a refactorer
+    .row
+      .col-lg-8
+        = render partial: 'users/description/pieces_justificatives', locals: { dossier: @dossier }
+
+    %div{ style: 'text-align: right;' }
+      %h6 Tous les champs portant un * sont obligatoires.
+
+    - if !@dossier.can_be_en_construction?
+      .alert.alert-danger
+        = t('errors.messages.procedure_archived')
+    - elsif !@dossier.brouillon?
+      = render partial: '/layouts/modifications_terminees'
+    - else
+      = hidden_field_tag 'submit_action', 'brouillon'
+      = submit_tag 'Bonjour Active Storage !', style: 'display: none;'
+      = button_tag 'Soumettre mon dossier',
+        id: 'suivant',
+        type: 'submit',
+        class: 'btn btn btn-success',
+        style: 'float: right;',
+        disabled: @procedure.archivee?,
+        data: { disable: true, action: 'nouveaux' }
+      = button_tag 'Enregistrer un brouillon',
+        id: 'brouillon',
+        type: 'submit',
+        class: 'btn btn-xs btn-default',
+        style: 'float: right; margin-right: 10px; margin-top: 6px;',
+        disabled: @procedure.archivee?,
+        data: { disable: true, action: 'brouillon' }
+      = button_tag "Enregistrer et voir mes dossiers",
+        id: 'brouillon_then_dashboard',
+        type: 'submit',
+        class: 'btn btn-xs btn-default',
+        style: 'float: right; margin-right: 10px; margin-top: 6px;',
+        disabled: @procedure.archivee?,
+        data: { disable: true, action: 'brouillon_then_dashboard' }
