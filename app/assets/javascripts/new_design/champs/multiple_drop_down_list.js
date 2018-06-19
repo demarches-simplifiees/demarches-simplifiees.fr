@@ -1,6 +1,7 @@
 document.addEventListener('turbolinks:load', function() {
   $('select.select2').select2({
-    'language': 'fr'
+    'language': 'fr',
+    'width': '100%'
   });
 
   $('select.select2-limited').select2({
