@@ -16,6 +16,10 @@
 
   = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }
 
+  %h2 Informations de contact
+
+  %p.explication Ces informations seront visibles par les utilisateurs du formulaire.
+
   = f.label :email do
     Courriel
     %span.mandatory *

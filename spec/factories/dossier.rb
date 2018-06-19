@@ -18,9 +18,15 @@ FactoryBot.define do
       end
     end
 
+    trait :with_service do
+      after(:build) do |dossier, _evaluator|
+        dossier.procedure.service = create(:service)
+      end
+    end
+
     trait :for_individual do
       after(:build) do |dossier, _evaluator|
-        dossier.individual = create :individual
+        dossier.individual = create(:individual)
         dossier.save
       end
     end
