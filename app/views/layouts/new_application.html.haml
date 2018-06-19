@@ -30,8 +30,8 @@
       = render partial: "layouts/flash_messages"
       = yield
 
-      - if content_for?(:display_footer)
-        = render partial: "layouts/new_footer"
+      - if content_for?(:footer)
+        = content_for(:footer)
       = render partial: "layouts/mailjet_newsletter"
 
       = javascript_include_tag "new_design/application", "data-turbolinks-eval": false
