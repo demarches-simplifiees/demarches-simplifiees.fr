@@ -44,6 +44,9 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    active_link_to (1.0.5)
+      actionpack
+      addressable
     active_model_serializers (0.10.7)
       actionpack (>= 4.1, < 6)
       activemodel (>= 4.1, < 6)
@@ -785,6 +788,7 @@ PLATFORMS
 
 DEPENDENCIES
   aasm
+  active_link_to
   active_model_serializers
   administrate
   apipie-rails
@@ -877,4 +881,4 @@ DEPENDENCIES
   xray-rails
 
 BUNDLED WITH
-   1.16.1
+   1.16.2

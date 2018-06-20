@@ -13,10 +13,10 @@
         %ul.header-tabs
           - if current_gestionnaire.visible_procedures.count > 0
             %li
-              = link_to "Procédures", gestionnaire_procedures_path, class: (controller_name != 'avis') ? "tab-link active" : 'tab-link'
+              = active_link_to "Procédures", gestionnaire_procedures_path, active: :inclusive, class: 'tab-link'
           - if current_gestionnaire.avis.count > 0
             %li
-              = link_to gestionnaire_avis_index_path, class: (controller_name == 'avis') ? "tab-link active" : 'tab-link' do
+              = active_link_to gestionnaire_avis_index_path, active: :inclusive, class: 'tab-link' do
                 Avis
                 - avis_counter = current_gestionnaire.avis.without_answer.count
                 - if avis_counter > 0
