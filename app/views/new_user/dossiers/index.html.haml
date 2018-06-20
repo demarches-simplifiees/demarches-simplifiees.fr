@@ -1,13 +1,14 @@
 .dossiers-headers.sub-header
   .container
-    %h1.page-title Les dossiers
+    - if @dossiers_invites.count == 0
+      %h1.page-title Mes dossiers
 
-    %ul.tabs
-      - if @user_dossiers.count > 0
+    - else
+      %h1.page-title Dossiers
+      %ul.tabs
         %li{ class: (@current_tab == 'mes-dossiers') ? 'active' : nil }>
           = link_to(dossiers_path(current_tab: 'mes-dossiers')) do
             mes dossiers
-      - if @dossiers_invites.count > 0
         %li{ class: (@current_tab == 'dossiers-invites') ? 'active' : nil }>
           = link_to(dossiers_path(current_tab: 'dossiers-invites')) do
             dossiers invités
