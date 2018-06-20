@@ -4,6 +4,7 @@ require:
 AllCops:
   Exclude:
     - "db/schema.rb"
+    - "bin/*"
 
 Bundler/DuplicatedGem:
   Enabled: true
