@@ -17,7 +17,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     user = User.find_by(email: params[:user][:email])
     if user.present?
-      UserMailer.new_account_warning(user).deliver_later
+      if user.confirmed?
+        UserMailer.new_account_warning(user).deliver_later
+      else
+        user.resend_confirmation_instructions
+      end
       flash.notice = t('devise.registrations.signed_up_but_unconfirmed')
       redirect_to root_path
     else

@@ -152,33 +152,6 @@ class Gestionnaire < ApplicationRecord
 
   private
 
-  def valid_couple_table_attr?(table, column)
-    couples = [
-      {
-        table: :dossier,
-        column: :dossier_id
-      },
-      {
-        table: :procedure,
-        column: :libelle
-      },
-      {
-        table: :etablissement,
-        column: :siret
-      },
-      {
-        table: :entreprise,
-        column: :raison_sociale
-      },
-      {
-        table: :dossier,
-        column: :state
-      }
-    ]
-
-    couples.include?({ table: table, column: column })
-  end
-
   def annotations_hash(demande, annotations_privees, avis, messagerie)
     {
       demande: demande,

@@ -5,7 +5,7 @@
       %td= raison_sociale_or_name(etablissement)
     %tr
       %th.libelle SIRET :
-      %td= etablissement.entreprise.siret_siege_social
+      %td= etablissement.siret
     %tr
       %th.libelle Forme juridique :
       %td= sanitize(etablissement.entreprise.forme_juridique)

@@ -24,8 +24,6 @@ describe '2018_05_14_add_annotation_privee_to_procedure' do
   let!(:dossier) { Dossier.create(procedure: procedure, user: user, state: 'brouillon') }
   let(:rake_task) { Rake::Task['2018_05_14_add_annotation_privee_to_procedure:add'] }
 
-  before(:all) { TPS::Application.load_tasks }
-
   before do
     ENV['PROCEDURE_ID'] = procedure.id.to_s
     rake_task.invoke
