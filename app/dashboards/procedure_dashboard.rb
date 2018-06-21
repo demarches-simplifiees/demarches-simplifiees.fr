@@ -12,6 +12,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     types_de_champ: TypesDeChampCollectionField,
     path: ProcedureLinkField,
     dossiers: Field::HasMany,
+    gestionnaires: Field::HasMany,
     administrateur: Field::BelongsTo,
     id: Field::Number,
     libelle: Field::String,
@@ -64,6 +65,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :for_individual,
     :individual_with_siret,
     :auto_archive_on,
+    :gestionnaires
   ].freeze
 
   # FORM_ATTRIBUTES
