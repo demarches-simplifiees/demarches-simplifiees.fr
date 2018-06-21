@@ -10,7 +10,6 @@ describe '2018_03_06_clean_html_textareas#clean' do
 
   before do
     Timecop.freeze(champ_date) { champ }
-    TPS::Application.load_tasks
     Timecop.freeze(rake_date) { rake_task.invoke }
     champ.reload
   end
