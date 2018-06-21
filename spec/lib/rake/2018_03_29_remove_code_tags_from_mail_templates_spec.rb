@@ -10,7 +10,6 @@ describe '2018_03_29_remove_code_tags_from_mail_templates#clean' do
   let!(:dirty_without_continuation_mail) { create(:without_continuation_mail, body: "<h1>Salut</h1><br>Voici ton email avec une balise <code>--balise--</code>") }
 
   before do
-    TPS::Application.load_tasks
     rake_task.invoke
     dirty_closed_mail.reload
     dirty_initiated_mail.reload
