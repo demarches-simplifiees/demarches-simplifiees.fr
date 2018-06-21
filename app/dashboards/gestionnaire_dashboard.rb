@@ -14,6 +14,7 @@ class GestionnaireDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     current_sign_in_at: Field::DateTime,
     dossiers: Field::HasMany,
+    procedures: Field::HasMany
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -29,6 +30,7 @@ class GestionnaireDashboard < Administrate::BaseDashboard
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
+    :procedures,
     :dossiers,
     :id,
     :email,
