@@ -24,6 +24,10 @@ class Champs::LinkedDropDownListChamp < Champ
     pack_value
   end
 
+  def main_value_name
+    :master_value
+  end
+
   private
 
   def pack_value
