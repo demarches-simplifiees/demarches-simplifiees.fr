@@ -34,16 +34,34 @@ describe Users::RegistrationsController, type: :controller do
     end
 
     context 'when the user already exists' do
-      let!(:existing_user) { create(:user, email: email, password: password) }
+      let!(:existing_user) { create(:user, email: email, password: password, confirmed_at: confirmed_at) }
 
       before do
         allow(UserMailer).to receive(:new_account_warning).and_return(double(deliver_later: 'deliver'))
-        subject
       end
 
-      it { expect(response).to redirect_to(root_path) }
-      it { expect(flash.notice).to eq(I18n.t('devise.registrations.signed_up_but_unconfirmed')) }
-      it { expect(UserMailer).to have_received(:new_account_warning) }
+      context 'and the user is confirmed' do
+        let(:confirmed_at) { DateTime.now }
+
+        before { subject }
+
+        it { expect(response).to redirect_to(root_path) }
+        it { expect(flash.notice).to eq(I18n.t('devise.registrations.signed_up_but_unconfirmed')) }
+        it { expect(UserMailer).to have_received(:new_account_warning) }
+      end
+
+      context 'and the user is not confirmed' do
+        let(:confirmed_at) { nil }
+
+        before do
+          expect_any_instance_of(User).to receive(:resend_confirmation_instructions)
+          subject
+        end
+
+        it { expect(response).to redirect_to(root_path) }
+        it { expect(flash.notice).to eq(I18n.t('devise.registrations.signed_up_but_unconfirmed')) }
+        it { expect(UserMailer).not_to have_received(:new_account_warning) }
+      end
     end
   end
 end
