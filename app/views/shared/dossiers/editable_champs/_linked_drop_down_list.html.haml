@@ -1,0 +1,10 @@
+- if champ.drop_down_list && champ.drop_down_list.options.any?
+  - champ_id = champ.object_id
+  = form.select :master_value,
+    champ.master_options,
+    { required: champ.mandatory? },
+    { data: { "slave-options" => champ.slave_options, "master-id" => champ_id } }
+  = form.select :slave_value,
+    champ.slave_options[champ.master_value],
+    { required: champ.mandatory? },
+    { data: { "slave-id" => champ_id } }
