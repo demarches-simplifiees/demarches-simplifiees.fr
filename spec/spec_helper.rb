@@ -69,6 +69,8 @@ end
 
 DatabaseCleaner.strategy = :transaction
 
+TPS::Application.load_tasks
+
 SIADETOKEN = :valid_token if !defined? SIADETOKEN
 
 include Warden::Test::Helpers
