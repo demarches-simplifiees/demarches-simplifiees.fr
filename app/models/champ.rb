@@ -35,6 +35,10 @@ class Champ < ApplicationRecord
     end
   end
 
+  def main_value_name
+    :value
+  end
+
   private
 
   def string_value
