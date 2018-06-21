@@ -145,7 +145,7 @@ module NewUser
     def champs_params
       params.permit(dossier: {
         champs_attributes: [
-          :id, :value, :piece_justificative_file, value: [],
+          :id, :value, :master_value, :slave_value, :piece_justificative_file, value: [],
           etablissement_attributes: Champs::SiretChamp::ETABLISSEMENT_ATTRIBUTES
         ]
       })
