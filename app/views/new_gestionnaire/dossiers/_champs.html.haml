@@ -15,6 +15,10 @@
                 - c.value.split(", ").each do |item|
                   %li
                     = item
+        - when "linked_drop_down_list"
+          %th.libelle
+            = "#{c.libelle} :"
+          %td= c.for_display
         - when "dossier_link"
           %th.libelle
             = "#{c.libelle} :"
