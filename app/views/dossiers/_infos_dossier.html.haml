@@ -50,6 +50,8 @@
                   = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: champ, user_can_upload: true }
                 - elsif champ.type_champ == 'textarea'
                   = simple_format(champ.decorate.value)
+                - elsif champ.type_champ == 'linked_drop_down_list'
+                  = champ.for_display
                 - else
                   = sanitize(champ.decorate.value)
 
