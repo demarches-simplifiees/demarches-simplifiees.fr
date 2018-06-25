@@ -27,7 +27,8 @@
               .contact-details
                 Vous avez besoin d’aide ? Contactez-nous :
                 %br
-                – par téléphone : 01 76 42 02 87
+                – par téléphone :
+                = link_to CONTACT_PHONE, "tel:#{CONTACT_PHONE}"
                 %br
                 – par email :
                 = link_to CONTACT_EMAIL, "mailto:#{CONTACT_EMAIL}"
