@@ -18,6 +18,13 @@ describe 'new_user/dossiers/index.html.haml', type: :view do
     expect(rendered).to have_selector('.dossiers-table tbody tr', count: 2)
   end
 
+  it 'affiche les informations des dossiers' do
+    dossier = user_dossiers.first
+    expect(rendered).to have_text(dossier.id)
+    expect(rendered).to have_text(dossier.procedure.libelle)
+    expect(rendered).to have_link(dossier.id, href: users_dossier_recapitulatif_path(dossier))
+  end
+
   context 'quand il n’y a pas de dossiers invités' do
     let(:dossiers_invites) { [] }
 

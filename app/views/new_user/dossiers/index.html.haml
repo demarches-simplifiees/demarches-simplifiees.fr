@@ -26,19 +26,19 @@
         - @dossiers.each do |dossier|
           %tr
             %td.folder-col
-              = link_to(modifier_dossier_path(dossier), class: 'cell-link') do
+              = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
                 %span.icon.folder
             %td.number-col
-              = link_to(modifier_dossier_path(dossier), class: 'cell-link') do
+              = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
                 = dossier.id
             %td
-              = link_to(modifier_dossier_path(dossier), class: 'cell-link') do
+              = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
                 = dossier.procedure.libelle
             %td.status-col
-              = link_to(modifier_dossier_path(dossier), class: 'cell-link') do
+              = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
                 = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
             %td.updated-at-col
-              = link_to(modifier_dossier_path(dossier), class: 'cell-link') do
+              = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
                 = dossier.updated_at.localtime.strftime("%d/%m/%Y")
 
   = paginate(@dossiers)
