@@ -36,7 +36,7 @@
       - if nav_bar_profile == :user
         %ul.header-tabs
           %li
-            = link_to "Mes dossiers", users_dossiers_path, class: 'tab-link'
+            = active_link_to "Dossiers", dossiers_path, active: :inclusive, class: 'tab-link'
 
     %ul.header-right-content
       - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
