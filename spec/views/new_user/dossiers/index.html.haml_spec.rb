@@ -25,6 +25,19 @@ describe 'new_user/dossiers/index.html.haml', type: :view do
     expect(rendered).to have_link(dossier.id, href: users_dossier_recapitulatif_path(dossier))
   end
 
+  context 'quand il n’y a aucun dossier' do
+    let(:user_dossiers)    { [] }
+    let(:dossiers_invites) { [] }
+
+    it 'n’affiche pas la table' do
+      expect(rendered).not_to have_selector('.dossiers-table')
+    end
+
+    it 'affiche un message' do
+      expect(rendered).to have_text('Aucun dossier')
+    end
+  end
+
   context 'quand il n’y a pas de dossiers invités' do
     let(:dossiers_invites) { [] }
 
@@ -37,7 +50,7 @@ describe 'new_user/dossiers/index.html.haml', type: :view do
     end
   end
 
-  context 'avec des dossiers invités' do
+  context 'quand il y a des dossiers invités' do
     let(:dossiers_invites) { create_list(:dossier, 1) }
 
     it 'affiche un titre adapté' do
