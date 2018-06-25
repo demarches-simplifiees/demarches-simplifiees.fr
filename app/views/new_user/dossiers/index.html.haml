@@ -14,31 +14,34 @@
             dossiers invités
 
 .container
-  %table.table.dossiers-table.hoverable
-    %thead
-      %tr
-        %th.notification-col
-        %th.number-col Nº dossier
-        %th Procédure
-        %th.status-col Statut
-        %th.updated-at-col Mis à jour
-      %tbody
-        - @dossiers.each do |dossier|
-          %tr
-            %td.folder-col
-              = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
-                %span.icon.folder
-            %td.number-col
-              = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
-                = dossier.id
-            %td
-              = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
-                = dossier.procedure.libelle
-            %td.status-col
-              = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
-                = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
-            %td.updated-at-col
-              = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
-                = dossier.updated_at.localtime.strftime("%d/%m/%Y")
+  - if @dossiers.present?
+    %table.table.dossiers-table.hoverable
+      %thead
+        %tr
+          %th.notification-col
+          %th.number-col Nº dossier
+          %th Procédure
+          %th.status-col Statut
+          %th.updated-at-col Mis à jour
+        %tbody
+          - @dossiers.each do |dossier|
+            %tr
+              %td.folder-col
+                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                  %span.icon.folder
+              %td.number-col
+                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                  = dossier.id
+              %td
+                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                  = dossier.procedure.libelle
+              %td.status-col
+                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                  = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
+              %td.updated-at-col
+                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                  = dossier.updated_at.localtime.strftime("%d/%m/%Y")
+    = paginate(@dossiers)
 
-  = paginate(@dossiers)
+  - else
+    %h2.empty-text Aucun dossier.
