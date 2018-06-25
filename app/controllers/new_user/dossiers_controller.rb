@@ -72,7 +72,7 @@ module NewUser
       elsif draft?
         flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
         render :modifier
-      elsif @dossier.brouillon?
+      elsif @dossier.can_transition_to_en_construction?
         @dossier.en_construction!
         NotificationMailer.send_initiated_notification(@dossier).deliver_later
         redirect_to merci_dossier_path(@dossier)

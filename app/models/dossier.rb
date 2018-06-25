@@ -167,6 +167,10 @@ class Dossier < ApplicationRecord
     !(procedure.archivee? && brouillon?)
   end
 
+  def can_transition_to_en_construction?
+    !procedure.archivee? && brouillon?
+  end
+
   def can_be_updated_by_the_user?
     brouillon? || en_construction?
   end
