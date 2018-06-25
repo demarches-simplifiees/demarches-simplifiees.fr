@@ -27,14 +27,16 @@ describe 'users/dossiers/index.html.haml', type: :view do
 
     subject { rendered }
 
-    describe 'columns' do
-      it { is_expected.to have_content(decorate_dossier_at_check.id) }
-      it { is_expected.to have_content(decorate_dossier_at_check.procedure.libelle) }
-      it { is_expected.to have_content(decorate_dossier_at_check.display_state) }
-      it { is_expected.to have_content(decorate_dossier_at_check.last_update) }
+    it 'displays the total count' do
+      expect(dossiers_to_display.count).to eq total_dossiers
     end
 
-    it { expect(dossiers_to_display.count).to eq total_dossiers }
+    it 'displays data in columns' do
+      expect(rendered).to have_content(decorate_dossier_at_check.id)
+      expect(rendered).to have_content(decorate_dossier_at_check.procedure.libelle)
+      expect(rendered).to have_content(decorate_dossier_at_check.display_state)
+      expect(rendered).to have_content(decorate_dossier_at_check.last_update)
+    end
   end
 
   describe 'on tab en construction' do
