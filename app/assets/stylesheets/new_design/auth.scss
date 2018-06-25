@@ -110,6 +110,10 @@ $auth-breakpoint: $two-columns-breakpoint;
       font-weight: bold;
     }
   }
+
+  .auth-signup-button {
+    white-space: nowrap;
+  }
 }
 
 .identity-form {

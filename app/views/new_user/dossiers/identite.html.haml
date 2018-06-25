@@ -44,5 +44,6 @@
             = df.check_box :autorisation_donnees, required: true
             J'accepte
             = link_to "les CGU", CGU_URL, target: :blank
+            %span.mandatory *
 
         = f.submit "Continuer", class: "button large primary expand"
