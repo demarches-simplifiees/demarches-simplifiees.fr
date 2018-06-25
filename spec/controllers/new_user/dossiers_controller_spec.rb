@@ -233,12 +233,25 @@ describe NewUser::DossiersController, type: :controller do
       end
     end
 
-    it 'updates the champs' do
-      subject
+    context 'when dossier can be updated by the owner' do
+      it 'updates the champs' do
+        subject
 
-      expect(response).to redirect_to(merci_dossier_path(dossier))
-      expect(first_champ.reload.value).to eq('beautiful value')
-      expect(dossier.reload.state).to eq('en_construction')
+        expect(response).to redirect_to(merci_dossier_path(dossier))
+        expect(first_champ.reload.value).to eq('beautiful value')
+        expect(dossier.reload.state).to eq('en_construction')
+      end
+
+      context "on an archived procedure" do
+        before { dossier.procedure.archive }
+
+        it "it does not change state" do
+          subject
+
+          expect(response).not_to redirect_to(merci_dossier_path(dossier))
+          expect(dossier.reload.state).to eq('brouillon')
+        end
+      end
     end
 
     it 'sends an email only on the first #update' do
