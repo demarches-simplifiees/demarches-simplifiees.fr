@@ -6,6 +6,11 @@
     %tr
       %th.libelle SIRET :
       %td= etablissement.siret
+
+    - if etablissement.siret != etablissement.entreprise.siret_siege_social
+      %tr
+        %th.libelle SIRET du siège social:
+        %td= etablissement.entreprise.siret_siege_social
     %tr
       %th.libelle Forme juridique :
       %td= sanitize(etablissement.entreprise.forme_juridique)
