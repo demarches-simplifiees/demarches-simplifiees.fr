@@ -1,43 +1,59 @@
 .dossiers-headers.sub-header
   .container
-    %h1.page-title Les dossiers
+    = link_to "Commencer une nouvelle démarche", new_demarche_url, class: "button secondary new-demarche"
 
-    %ul.tabs
-      - if @user_dossiers.count > 0
+    - if @dossiers_invites.count == 0
+      %h1.page-title Mes dossiers
+
+    - else
+      %h1.page-title Dossiers
+      %ul.tabs
         %li{ class: (@current_tab == 'mes-dossiers') ? 'active' : nil }>
           = link_to(dossiers_path(current_tab: 'mes-dossiers')) do
             mes dossiers
-      - if @dossiers_invites.count > 0
         %li{ class: (@current_tab == 'dossiers-invites') ? 'active' : nil }>
           = link_to(dossiers_path(current_tab: 'dossiers-invites')) do
             dossiers invités
 
 .container
-  %table.table.dossiers-table.hoverable
-    %thead
-      %tr
-        %th.notification-col
-        %th.number-col Nº dossier
-        %th Procédure
-        %th.status-col Statut
-        %th.updated-at-col Mis à jour
-      %tbody
-        - @dossiers.each do |dossier|
-          %tr
-            %td.folder-col
-              = link_to(modifier_dossier_path(dossier), class: 'cell-link') do
-                %span.icon.folder
-            %td.number-col
-              = link_to(modifier_dossier_path(dossier), class: 'cell-link') do
-                = dossier.id
-            %td
-              = link_to(modifier_dossier_path(dossier), class: 'cell-link') do
-                = dossier.procedure.libelle
-            %td.status-col
-              = link_to(modifier_dossier_path(dossier), class: 'cell-link') do
-                = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
-            %td.updated-at-col
-              = link_to(modifier_dossier_path(dossier), class: 'cell-link') do
-                = dossier.updated_at.localtime.strftime("%d/%m/%Y")
+  - if @dossiers.present?
+    - if @dossiers.total_pages >= 2
+      .card.feedback
+        .card-title Nous avons redesigné la liste des dossiers.
+        %p
+          Une suggestion pour améliorer cette page&nbsp;? Votre avis nous intéresse&nbsp;! Écrivez-nous à
+          = mail_to CONTACT_EMAIL, CONTACT_EMAIL, subject: "Amélioration de la liste des dossiers"
+          \.
 
-  = paginate(@dossiers)
+    %table.table.dossiers-table.hoverable
+      %thead
+        %tr
+          %th.notification-col
+          %th.number-col Nº dossier
+          %th Procédure
+          %th.status-col Statut
+          %th.updated-at-col Mis à jour
+        %tbody
+          - @dossiers.each do |dossier|
+            %tr
+              %td.folder-col
+                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                  %span.icon.folder
+              %td.number-col
+                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                  = dossier.id
+              %td
+                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                  = dossier.procedure.libelle
+              %td.status-col
+                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                  = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
+              %td.updated-at-col
+                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                  = dossier.updated_at.localtime.strftime("%d/%m/%Y")
+    = paginate(@dossiers)
+
+  - else
+    .dossiers-table-empty
+      %h2.empty-text Aucun dossier.
+      = link_to "Commencer une nouvelle démarche", new_demarche_url, class: "button primary"
