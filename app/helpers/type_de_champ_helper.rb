@@ -1,13 +1,16 @@
 module TypeDeChampHelper
+  TOGGLES = {
+    'piece_justificative' => :champ_pj?,
+    'siret' => :champ_siret?,
+    'linked_drop_down_list' => :champ_linked_dropdown?
+  }
+
   def tdc_options
     tdcs = TypeDeChamp.type_de_champs_list_fr
 
-    if !Flipflop.champ_pj?
-      tdcs.reject! { |tdc| tdc.last == "piece_justificative" }
-    end
-
-    if !Flipflop.champ_siret?
-      tdcs.reject! { |tdc| tdc.last == "siret" }
+    tdcs.select! do |tdc|
+      toggle = TOGGLES[tdc.last]
+      toggle.blank? || Flipflop.send(toggle)
     end
 
     tdcs
