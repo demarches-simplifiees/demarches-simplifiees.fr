@@ -7,6 +7,7 @@ describe 'new_user/dossiers/index.html.haml', type: :view do
   let(:current_tab) { 'mes-dossiers' }
 
   before do
+    allow(view).to receive(:new_demarche_url).and_return('#')
     assign(:user_dossiers, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_invites, Kaminari.paginate_array(dossiers_invites).page(1))
     assign(:dossiers, Kaminari.paginate_array(user_dossiers).page(1))

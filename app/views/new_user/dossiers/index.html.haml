@@ -1,5 +1,7 @@
 .dossiers-headers.sub-header
   .container
+    = link_to "Commencer une nouvelle démarche", new_demarche_url, class: "button secondary new-demarche"
+
     - if @dossiers_invites.count == 0
       %h1.page-title Mes dossiers
 
@@ -52,4 +54,6 @@
     = paginate(@dossiers)
 
   - else
-    %h2.empty-text Aucun dossier.
+    .dossiers-table-empty
+      %h2.empty-text Aucun dossier.
+      = link_to "Commencer une nouvelle démarche", new_demarche_url, class: "button primary"
