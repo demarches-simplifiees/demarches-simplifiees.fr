@@ -32,6 +32,9 @@ gem 'haml-rails'
 # bootstrap saas
 gem 'bootstrap-sass', '~> 3.3.5'
 
+# Automatically set a class on active links
+gem 'active_link_to'
+
 # Pagination
 gem 'kaminari'
 
