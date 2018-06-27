@@ -88,8 +88,8 @@ module NewUser
     end
 
     def index
-      @user_dossiers = current_user.dossiers.includes(:procedure).page(page)
-      @dossiers_invites = current_user.dossiers_invites.includes(:procedure).page(page)
+      @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
+      @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
 
       @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
 
