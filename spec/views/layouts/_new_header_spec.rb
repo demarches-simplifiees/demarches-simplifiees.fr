@@ -15,7 +15,7 @@ describe 'layouts/_new_header.html.haml', type: :view do
       let(:profile) { :user }
 
       it { is_expected.to have_css("a.header-logo[href=\"#{users_dossiers_path}\"]") }
-      it { is_expected.to have_link("Dossiers", href: dossiers_path) }
+      it { is_expected.to have_link("Dossiers", href: users_dossiers_path) }
     end
 
     context 'when rendering for gestionnaire' do
