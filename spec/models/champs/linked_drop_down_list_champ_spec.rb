@@ -4,12 +4,12 @@ describe Champs::LinkedDropDownListChamp do
   describe '#unpack_value' do
     let(:champ) { described_class.new(value: '["tata", "tutu"]') }
 
-    it { expect(champ.master_value).to eq('tata') }
-    it { expect(champ.slave_value).to eq('tutu') }
+    it { expect(champ.primary_value).to eq('tata') }
+    it { expect(champ.secondary_value).to eq('tutu') }
   end
 
   describe '#pack_value' do
-    let(:champ) { described_class.new(master_value: 'tata', slave_value: 'tutu') }
+    let(:champ) { described_class.new(primary_value: 'tata', secondary_value: 'tutu') }
 
     before { champ.save }
 

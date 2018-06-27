@@ -1,31 +1,31 @@
 class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypeDeChamp
-  MASTER_PATTERN = /^--(.*)--$/
+  PRIMARY_PATTERN = /^--(.*)--$/
 
-  def master_options
-    master_options = unpack_options.map(&:first)
-    if master_options.present?
-      master_options.unshift('')
+  def primary_options
+    primary_options = unpack_options.map(&:first)
+    if primary_options.present?
+      primary_options.unshift('')
     end
-    master_options
+    primary_options
   end
 
-  def slave_options
-    slave_options = unpack_options.to_h
-    if slave_options.present?
-      slave_options[''] = []
+  def secondary_options
+    secondary_options = unpack_options.to_h
+    if secondary_options.present?
+      secondary_options[''] = []
     end
-    slave_options
+    secondary_options
   end
 
   private
 
   def unpack_options
     _, *options = drop_down_list.options
-    chunked = options.slice_before(MASTER_PATTERN)
+    chunked = options.slice_before(PRIMARY_PATTERN)
     chunked.map do |chunk|
-      master, *slave = chunk
-      slave.unshift('')
-      [MASTER_PATTERN.match(master)[1], slave]
+      primary, *secondary = chunk
+      secondary.unshift('')
+      [PRIMARY_PATTERN.match(primary)[1], secondary]
     end
   end
 end

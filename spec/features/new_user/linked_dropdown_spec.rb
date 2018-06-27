@@ -6,13 +6,13 @@ feature 'linked dropdown lists' do
 
   let(:list_items) do
     <<~END_OF_LIST
-      --Master 1--
-      Slave 1.1
-      Slave 1.2
-      --Master 2--
-      Slave 2.1
-      Slave 2.2
-      Slave 2.3
+      --Primary 1--
+      Secondary 1.1
+      Secondary 1.2
+      --Primary 2--
+      Secondary 2.1
+      Secondary 2.2
+      Secondary 2.3
     END_OF_LIST
   end
   let(:drop_down_list) { create(:drop_down_list, value: list_items) }
@@ -26,22 +26,22 @@ feature 'linked dropdown lists' do
 
   let(:user_dossier) { user.dossiers.first }
 
-  scenario 'change master value, slave options are updated', js: true do
+  scenario 'change primary value, secondary options are updated', js: true do
     log_in(user.email, password, procedure)
 
     fill_individual
 
-    # Select a master value
-    select('Master 2', from: master_id_for('linked dropdown'))
+    # Select a primary value
+    select('Primary 2', from: primary_id_for('linked dropdown'))
 
-    # Slave menu reflects chosen master value
-    expect(page).to have_select(slave_id_for('linked dropdown'), options: ['', 'Slave 2.1', 'Slave 2.2', 'Slave 2.3'])
+    # Secondary menu reflects chosen primary value
+    expect(page).to have_select(secondary_id_for('linked dropdown'), options: ['', 'Secondary 2.1', 'Secondary 2.2', 'Secondary 2.3'])
 
-    # Select another master value
-    select('Master 1', from: master_id_for('linked dropdown'))
+    # Select another primary value
+    select('Primary 1', from: primary_id_for('linked dropdown'))
 
-    # Slave menu gets updated
-    expect(page).to have_select(slave_id_for('linked dropdown'), options: ['', 'Slave 1.1', 'Slave 1.2'])
+    # Secondary menu gets updated
+    expect(page).to have_select(secondary_id_for('linked dropdown'), options: ['', 'Secondary 1.1', 'Secondary 1.2'])
   end
 
   private
@@ -64,13 +64,13 @@ feature 'linked dropdown lists' do
     expect(page).to have_current_path(modifier_dossier_path(user_dossier))
   end
 
-  def master_id_for(libelle)
+  def primary_id_for(libelle)
     find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
   end
 
-  def slave_id_for(libelle)
-    master_id = master_id_for(libelle)
-    link = find("\##{master_id}")['data-master-id']
-    find("[data-slave-id=\"#{link}\"]")['id']
+  def secondary_id_for(libelle)
+    primary_id = primary_id_for(libelle)
+    link = find("\##{primary_id}")['data-primary-id']
+    find("[data-secondary-id=\"#{link}\"]")['id']
   end
 end

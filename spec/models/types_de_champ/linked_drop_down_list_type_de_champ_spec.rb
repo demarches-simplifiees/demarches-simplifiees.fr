@@ -7,34 +7,34 @@ describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
 
     context 'with no options' do
       let(:menu_options) { '' }
-      it { expect(type_de_champ.slave_options).to eq({}) }
-      it { expect(type_de_champ.master_options).to eq([]) }
+      it { expect(type_de_champ.secondary_options).to eq({}) }
+      it { expect(type_de_champ.primary_options).to eq([]) }
     end
 
-    context 'with two master options' do
+    context 'with two primary options' do
       let(:menu_options) do
         <<~END_OPTIONS
-          --Master 1--
-          slave 1.1
-          slave 1.2
-          --Master 2--
-          slave 2.1
-          slave 2.2
-          slave 2.3
+          --Primary 1--
+          secondary 1.1
+          secondary 1.2
+          --Primary 2--
+          secondary 2.1
+          secondary 2.2
+          secondary 2.3
         END_OPTIONS
       end
 
       it do
-        expect(type_de_champ.slave_options).to eq(
+        expect(type_de_champ.secondary_options).to eq(
           {
             '' => [],
-            'Master 1' => [ '', 'slave 1.1', 'slave 1.2'],
-            'Master 2' => [ '', 'slave 2.1', 'slave 2.2', 'slave 2.3']
+            'Primary 1' => [ '', 'secondary 1.1', 'secondary 1.2'],
+            'Primary 2' => [ '', 'secondary 2.1', 'secondary 2.2', 'secondary 2.3']
           }
         )
       end
 
-      it { expect(type_de_champ.master_options).to eq([ '', 'Master 1', 'Master 2' ]) }
+      it { expect(type_de_champ.primary_options).to eq([ '', 'Primary 1', 'Primary 2' ]) }
     end
   end
 end
