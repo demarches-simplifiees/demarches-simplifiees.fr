@@ -6,6 +6,12 @@
   border: 1px solid $border-grey;
   margin-bottom: $default-spacer * 2;
 
+  .card-title {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: $default-spacer * 2;
+  }
+
   &.featured {
     border-top: 8px solid $blue;
 
@@ -14,9 +20,16 @@
     }
   }
 
-  .card-title {
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: $default-spacer * 2;
+  &.feedback {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: ($default-spacer * 2) ($default-spacer * 4);
+    font-size: small;
+    border: 1px dashed $border-grey;
+    background: $light-yellow;
+
+    .card-title {
+      margin-bottom: $default-spacer;
+    }
   }
 }
