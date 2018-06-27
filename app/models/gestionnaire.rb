@@ -125,19 +125,6 @@ class Gestionnaire < ApplicationRecord
     dossiers_id_with_notifications(dossiers)
   end
 
-  def notifications_per_procedure(state = :en_cours)
-    dossiers = case state
-    when :termine
-      Dossier.termine
-    when :not_archived
-      Dossier.not_archived
-    else
-      Dossier.en_cours
-    end.followed_by(self)
-
-    Dossier.where(id: dossiers_id_with_notifications(dossiers)).group(:procedure_id).count
-  end
-
   def mark_tab_as_seen(dossier, tab)
     attributes = {}
     attributes["#{tab}_seen_at"] = DateTime.now
