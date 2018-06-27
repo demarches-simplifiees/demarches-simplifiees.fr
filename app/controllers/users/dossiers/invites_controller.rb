@@ -12,6 +12,6 @@ class Users::Dossiers::InvitesController < UsersController
     render 'users/recapitulatif/show'
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for users_dossiers_path
+    redirect_to url_for dossiers_path
   end
 end
