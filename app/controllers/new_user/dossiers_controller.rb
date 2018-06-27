@@ -1,5 +1,7 @@
 module NewUser
   class DossiersController < UserController
+    helper_method :new_demarche_url
+
     before_action :ensure_ownership!, except: [:index, :modifier, :update]
     before_action :ensure_ownership_or_invitation!, only: [:modifier, :update]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update]
@@ -110,6 +112,10 @@ module NewUser
         flash.notice = "L'instruction de votre dossier a commencé, il n'est plus possible de supprimer votre dossier. Si vous souhaitez annuler l'instruction contactez votre administration par la messagerie de votre dossier."
         redirect_to users_dossier_path(dossier)
       end
+    end
+
+    def new_demarche_url
+      "https://doc.demarches-simplifiees.fr/listes-des-demarches"
     end
 
     private
