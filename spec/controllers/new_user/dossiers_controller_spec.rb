@@ -418,6 +418,23 @@ describe NewUser::DossiersController, type: :controller do
         it { expect(assigns(:current_tab)).to eq('mes-dossiers') }
       end
     end
+
+    describe 'sort order' do
+      before do
+        Timecop.freeze(4.days.ago) { create(:dossier, user: user) }
+        Timecop.freeze(2.days.ago) { create(:dossier, user: user) }
+        Timecop.freeze(4.days.ago) { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+        Timecop.freeze(2.days.ago) { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+        get(:index)
+      end
+
+      it 'displays the most recently updated dossiers first' do
+        expect(assigns(:user_dossiers).first.updated_at.to_date).to eq(2.days.ago.to_date)
+        expect(assigns(:user_dossiers).second.updated_at.to_date).to eq(4.days.ago.to_date)
+        expect(assigns(:dossiers_invites).first.updated_at.to_date).to eq(2.days.ago.to_date)
+        expect(assigns(:dossiers_invites).second.updated_at.to_date).to eq(4.days.ago.to_date)
+      end
+    end
   end
 
   describe '#ask_deletion' do
