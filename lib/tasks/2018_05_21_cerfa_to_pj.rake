@@ -3,9 +3,9 @@ namespace :'2018_05_21_cerfa_to_pj' do
     dossiers = Cerfa.includes(dossier: [:procedure]).all.reject(&:empty?).map(&:dossier).compact.uniq
 
     dossiers.group_by(&:procedure).each do |procedure, dossiers|
-      if !procedure.type_de_champs.find_by(libelle: 'CERFA')
+      if !procedure.types_de_champ.find_by(libelle: 'CERFA')
         procedure.administrateur.enable_feature(:champ_pj)
-        type_de_champ = procedure.type_de_champs.create(
+        type_de_champ = procedure.types_de_champ.create(
           type_champ: 'piece_justificative',
           libelle: 'CERFA'
         )
