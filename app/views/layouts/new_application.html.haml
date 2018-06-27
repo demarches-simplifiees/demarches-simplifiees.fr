@@ -17,6 +17,9 @@
     = stylesheet_link_tag "new_design/new_application", media: "all", "data-turbolinks-track": "reload"
     = stylesheet_link_tag "new_design/print", media: "print", "data-turbolinks-track": true
 
+    - if Rails.env.development?
+      = stylesheet_link_tag :xray
+
   %body
     .page-wrapper
       = render partial: "layouts/support_navigator_banner"
@@ -35,6 +38,10 @@
       = render partial: "layouts/mailjet_newsletter"
 
       = javascript_include_tag "new_design/application", "data-turbolinks-eval": false
+
+      - if Rails.env.development?
+        = javascript_include_tag :xray
+
       = yield :charts_js
       - if Rails.env == "test"
         %script{ type: "text/javascript" }
