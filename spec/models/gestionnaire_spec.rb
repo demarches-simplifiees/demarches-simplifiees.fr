@@ -334,20 +334,6 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#notifications_per_procedure' do
-    let!(:dossier) { create(:dossier, :followed, state: 'en_construction') }
-    let(:gestionnaire) { dossier.follows.first.gestionnaire }
-    let(:procedure) { dossier.procedure }
-
-    subject { gestionnaire.notifications_per_procedure }
-
-    context 'when there is a modification on public champs' do
-      before { dossier.champs.first.update_attribute('value', 'toto') }
-
-      it { is_expected.to match({ procedure.id => 1 }) }
-    end
-  end
-
   describe '#mark_tab_as_seen' do
     let!(:dossier) { create(:dossier, :followed, state: 'en_construction') }
     let(:gestionnaire) { dossier.follows.first.gestionnaire }
