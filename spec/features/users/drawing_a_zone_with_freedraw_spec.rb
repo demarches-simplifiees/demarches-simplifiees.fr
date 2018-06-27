@@ -45,7 +45,7 @@ feature 'drawing a zone with freedraw' do
         let(:module_api_carto) { create(:module_api_carto) }
 
         scenario 'he is redirect to user dossiers index' do
-          expect(page).to have_css('#users-index')
+          expect(page).to have_css('.dossiers-table')
         end
 
         scenario 'alert message is present' do
