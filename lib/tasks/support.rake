@@ -31,4 +31,21 @@ namespace :support do
       pp.update(administrateur: new_owner)
     end
   end
+
+  desc <<~EOD
+    Delete the user account for a given USER_MAIL.
+    Only works if the user has no dossier where the instruction has started.
+  EOD
+  task delete_user_account: :environment do
+    user_mail = ENV['USER_MAIL']
+    if user_mail.nil?
+      fail "Must specify a USER_MAIL"
+    end
+    user = User.find_by(email: user_mail)
+    if user.dossiers.state_instruction_commencee.any?
+      fail "Cannot delete this user because instruction has started for some dossiers"
+    end
+    user.dossiers.each { |d| d.delete_and_keep_track }
+    user.destroy
+  end
 end
