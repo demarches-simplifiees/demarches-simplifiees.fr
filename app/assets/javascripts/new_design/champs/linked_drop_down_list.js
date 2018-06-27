@@ -1,30 +1,30 @@
 document.addEventListener('turbolinks:load', function() {
-  var masters, i, master, slave, slaveOptions;
+  var primaries, i, primary, secondary, secondaryOptions;
 
-  masters = document.querySelectorAll('select[data-slave-options]');
-  for (i = 0; i < masters.length; i++) {
-    master = masters[i];
-    slave = document.querySelector('select[data-slave-id="' + master.dataset.masterId + '"]');
-    slaveOptions = JSON.parse(master.dataset.slaveOptions);
+  primaries = document.querySelectorAll('select[data-secondary-options]');
+  for (i = 0; i < primaries.length; i++) {
+    primary = primaries[i];
+    secondary = document.querySelector('select[data-secondary-id="' + primary.dataset.primaryId + '"]');
+    secondaryOptions = JSON.parse(primary.dataset.secondaryOptions);
 
-    master.addEventListener('change', function(e) {
+    primary.addEventListener('change', function(e) {
       var option, options, element;
 
-      while ((option = slave.firstChild)) {
-        slave.removeChild(option);
+      while ((option = secondary.firstChild)) {
+        secondary.removeChild(option);
       }
 
-      options = slaveOptions[e.target.value];
+      options = secondaryOptions[e.target.value];
 
       for (i = 0; i < options.length; i++) {
         option = options[i];
         element = document.createElement("option");
         element.textContent = option;
         element.value = option;
-        slave.appendChild(element);
+        secondary.appendChild(element);
       }
 
-      slave.selectedIndex = 0;
+      secondary.selectedIndex = 0;
     });
   }
 });
