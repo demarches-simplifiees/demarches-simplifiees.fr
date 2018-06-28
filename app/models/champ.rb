@@ -10,6 +10,7 @@ class Champ < ApplicationRecord
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
+  scope :ordered, -> { includes(:type_de_champ).order('types_de_champ.order_place') }
 
   def public?
     !private?
@@ -33,6 +34,10 @@ class Champ < ApplicationRecord
     else
       nil
     end
+  end
+
+  def main_value_name
+    :value
   end
 
   private
