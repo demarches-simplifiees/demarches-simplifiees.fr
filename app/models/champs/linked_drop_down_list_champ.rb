@@ -29,7 +29,7 @@ class Champs::LinkedDropDownListChamp < Champ
   end
 
   def for_display
-    [primary_value, secondary_value].compact.join(' / ')
+    string_value
   end
 
   def mandatory_and_blank?
@@ -37,6 +37,10 @@ class Champs::LinkedDropDownListChamp < Champ
   end
 
   private
+
+  def string_value
+    [primary_value, secondary_value].compact.join(' / ')
+  end
 
   def value_for_export
     "#{primary_value || ''};#{secondary_value || ''}"
