@@ -40,4 +40,26 @@ describe Champs::LinkedDropDownListChamp do
       it { is_expected.to eq('primary / secondary') }
     end
   end
+
+  describe 'for_export' do
+    subject { champ.for_export }
+
+    context 'with no value' do
+      let(:champ) { described_class.new }
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'with primary value' do
+      let(:champ) { described_class.new(primary_value: 'primary') }
+
+      it { is_expected.to eq('primary;') }
+    end
+
+    context 'with secondary value' do
+      let(:champ) { described_class.new(primary_value: 'primary', secondary_value: 'secondary') }
+
+      it { is_expected.to eq('primary;secondary') }
+    end
+  end
 end
