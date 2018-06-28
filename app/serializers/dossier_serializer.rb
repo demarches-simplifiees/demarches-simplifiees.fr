@@ -30,6 +30,10 @@ class DossierSerializer < ActiveModel::Serializer
     champs
   end
 
+  def cerfa
+    []
+  end
+
   def email
     object.user&.email
   end

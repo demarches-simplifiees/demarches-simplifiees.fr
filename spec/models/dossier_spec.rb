@@ -41,31 +41,6 @@ describe Dossier do
       end
     end
 
-    describe 'creation' do
-      describe 'Procedure accepts cerfa upload' do
-        let(:procedure) { create(:procedure, cerfa_flag: true) }
-        let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, user: user) }
-        it 'create default cerfa' do
-          expect { subject.to change(Cerfa.count).by(1) }
-          expect { subject.cerfa_available.to be_truthy }
-        end
-
-        it 'link cerfa to dossier' do
-          expect { subject.cerfa.to eq(Cerfa.last) }
-        end
-      end
-
-      describe 'Procedure does not accept cerfa upload' do
-        let(:procedure) { create(:procedure, cerfa_flag: false) }
-        let(:dossier) { create(:dossier, :with_entreprise, user: user) }
-        it 'default cerfa is not created' do
-          expect { subject.to change(Cerfa.count).by(0) }
-          expect { subject.cerfa.to eq(nil) }
-          expect { subject.cerfa_available.to be_falsey }
-        end
-      end
-    end
-
     describe '#retrieve_last_piece_justificative_by_type', vcr: { cassette_name: 'models_dossier_retrieve_last_piece_justificative_by_type' } do
       let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
 
@@ -130,26 +105,6 @@ describe Dossier do
           subject.update(state: 'en_construction')
         end
       end
-    end
-  end
-
-  describe '#cerfa_available?' do
-    let(:procedure) { create(:procedure, cerfa_flag: cerfa_flag) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
-
-    context 'Procedure accepts CERFA' do
-      let(:cerfa_flag) { true }
-      context 'when cerfa is not uploaded' do
-        it { expect(dossier.cerfa_available?).to be_falsey }
-      end
-      context 'when cerfa is uploaded' do
-        let(:dossier) { create :dossier, :with_cerfa_upload, procedure: procedure }
-        it { expect(dossier.cerfa_available?).to be_truthy }
-      end
-    end
-    context 'Procedure does not accept CERFA' do
-      let(:cerfa_flag) { false }
-      it { expect(dossier.cerfa_available?).to be_falsey }
     end
   end
 
@@ -745,12 +700,6 @@ describe Dossier do
     end
 
     it { is_expected.not_to eq(modif_date) }
-
-    context 'when a cerfa is modified' do
-      before { dossier.cerfa << create(:cerfa) }
-
-      it { is_expected.to eq(modif_date) }
-    end
 
     context 'when a piece justificative is modified' do
       before { dossier.pieces_justificatives << create(:piece_justificative, :contrat) }

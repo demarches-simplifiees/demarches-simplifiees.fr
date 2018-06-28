@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'user is on description page' do
-  let!(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, cerfa_flag: true) }
+  let!(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ) }
   let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, autorisation_donnees: true) }
 
   before do
@@ -23,23 +23,10 @@ feature 'user is on description page' do
       find_by_id("champs_#{dossier.champs.first.id}").set 'mon nom'
     end
     context 'before submit' do
-      it 'dossier cerfa is empty' do
-        expect(dossier.cerfa).to be_empty
-      end
       it 'pieces_justificatives are empty' do
         dossier.pieces_justificatives.each do |piece_justificative|
           expect(piece_justificative).to be_empty
         end
-      end
-    end
-    context 'he adds cerfa', vcr: { cassette_name: 'description_page_upload_piece_justificative_adds_cerfa' } do
-      before do
-        attach_file('cerfa_pdf', File.path('spec/support/files/dossierPDF.pdf'))
-        click_on("Soumettre mon dossier")
-        dossier.reload
-      end
-      it 'fills dossier cerfa' do
-        expect(dossier.cerfa).not_to be_empty
       end
     end
     context 'when he adds a piece_justificative and submit form', vcr: { cassette_name: 'description_page_upload_piece_justificative_adds_cerfa_and_submit' } do
