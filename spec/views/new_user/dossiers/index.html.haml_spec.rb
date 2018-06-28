@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe 'new_user/dossiers/index.html.haml', type: :view do
   let(:user) { create(:user) }
-  let(:user_dossiers) { create_list(:dossier, 2, state: 'brouillon', user: user) }
+  let(:dossier_brouillon) { create(:dossier, state: 'brouillon', user: user) }
+  let(:dossier_en_construction) { create(:dossier, state: 'en_construction', user: user) }
+  let(:user_dossiers) { [dossier_brouillon, dossier_en_construction] }
   let(:dossiers_invites) { [] }
   let(:current_tab) { 'mes-dossiers' }
 
@@ -21,9 +23,13 @@ describe 'new_user/dossiers/index.html.haml', type: :view do
 
   it 'affiche les informations des dossiers' do
     dossier = user_dossiers.first
-    expect(rendered).to have_text(dossier.id)
-    expect(rendered).to have_text(dossier.procedure.libelle)
-    expect(rendered).to have_link(dossier.id, href: users_dossier_recapitulatif_path(dossier))
+    expect(rendered).to have_text(dossier_brouillon.id)
+    expect(rendered).to have_text(dossier_brouillon.procedure.libelle)
+    expect(rendered).to have_link(dossier_brouillon.id, href: modifier_dossier_path(dossier_brouillon))
+
+    expect(rendered).to have_text(dossier_en_construction.id)
+    expect(rendered).to have_text(dossier_en_construction.procedure.libelle)
+    expect(rendered).to have_link(dossier_en_construction.id, href: users_dossier_recapitulatif_path(dossier_en_construction))
   end
 
   context 'quand il n’y a aucun dossier' do
