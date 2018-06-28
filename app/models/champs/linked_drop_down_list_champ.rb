@@ -28,6 +28,10 @@ class Champs::LinkedDropDownListChamp < Champ
     :primary_value
   end
 
+  def for_display
+    [primary_value, secondary_value].compact.join(' / ')
+  end
+
   private
 
   def pack_value
