@@ -32,6 +32,10 @@ class Champs::LinkedDropDownListChamp < Champ
     [primary_value, secondary_value].compact.join(' / ')
   end
 
+  def mandatory_and_blank?
+    mandatory? && (primary_value.blank? || secondary_value.blank?)
+  end
+
   private
 
   def value_for_export
