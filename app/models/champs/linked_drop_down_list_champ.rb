@@ -28,7 +28,23 @@ class Champs::LinkedDropDownListChamp < Champ
     :primary_value
   end
 
+  def for_display
+    string_value
+  end
+
+  def mandatory_and_blank?
+    mandatory? && (primary_value.blank? || secondary_value.blank?)
+  end
+
   private
+
+  def string_value
+    [primary_value, secondary_value].compact.join(' / ')
+  end
+
+  def value_for_export
+    "#{primary_value || ''};#{secondary_value || ''}"
+  end
 
   def pack_value
     self.value = JSON.generate([ primary_value, secondary_value ])
