@@ -50,20 +50,24 @@
 
     - if !apercu
       .send-wrapper
-        = hidden_field_tag 'submit_action', 'draft'
-
         - if dossier.brouillon?
           = f.button 'Enregistrer le brouillon',
             formnovalidate: true,
             class: 'button send',
-            data: { action: 'draft', disable_with: 'Envoi...' }
+            name: 'submit_action',
+            value: 'draft',
+            data: { disable_with: 'Envoi...' }
 
           - if current_user.owns?(dossier)
             = f.button 'Soumettre le dossier',
               class: 'button send primary',
-              data: { action: 'submit', disable_with: 'Envoi...' }
+              name: 'submit_action',
+              value: 'submit',
+              data: { disable_with: 'Envoi...' }
 
         - else
           = f.button 'Enregistrer les modifications du dossier',
             class: 'button send primary',
-            data: { action: 'submit', disable_with: 'Envoi...' }
+            name: 'submit_action',
+            value: 'submit',
+            data: { disable_with: 'Envoi...' }
