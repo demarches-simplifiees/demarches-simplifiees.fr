@@ -222,6 +222,10 @@ class Procedure < ApplicationRecord
     procedure.cloned_from_library = from_library
     procedure.parent_procedure = self
 
+    if from_library
+      procedure.service = nil
+    end
+
     procedure
   end
 
