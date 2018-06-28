@@ -1,16 +1,5 @@
 %table.table.vertical.pj.dossier-champs
   %tbody
-    - if dossier.procedure.cerfa_flag?
-      %tr
-        %th Formulaire :
-        %td
-          - if @dossier.cerfa_available?
-            = link_to "Télécharger", @dossier.cerfa.last.content_url, class: "link", target: :blank
-          - else
-            Pièce non fournie
-        %td
-
-
     - dossier.procedure.types_de_piece_justificative.each do |type_de_piece_justificative|
       - pjs = dossier.retrieve_all_piece_justificative_by_type(type_de_piece_justificative.id).to_ary.dup
       - pj = pjs.shift if pjs.present?
