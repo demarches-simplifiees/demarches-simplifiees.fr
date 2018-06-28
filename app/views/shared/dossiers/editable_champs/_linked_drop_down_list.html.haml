@@ -1,0 +1,10 @@
+- if champ.drop_down_list && champ.drop_down_list.options.any?
+  - champ_id = champ.object_id
+  = form.select :primary_value,
+    champ.primary_options,
+    { required: champ.mandatory? },
+    { data: { "secondary-options" => champ.secondary_options, "primary-id" => champ_id } }
+  = form.select :secondary_value,
+    champ.secondary_options[champ.primary_value],
+    { required: champ.mandatory? },
+    { data: { "secondary-id" => champ_id } }
