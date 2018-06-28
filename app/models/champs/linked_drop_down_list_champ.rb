@@ -34,6 +34,10 @@ class Champs::LinkedDropDownListChamp < Champ
 
   private
 
+  def value_for_export
+    "#{primary_value || ''};#{secondary_value || ''}"
+  end
+
   def pack_value
     self.value = JSON.generate([ primary_value, secondary_value ])
   end
