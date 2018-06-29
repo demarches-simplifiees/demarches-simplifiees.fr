@@ -47,6 +47,6 @@ class API::V1::DossiersController < APIController
   end
 
   def per_page # inherited value from will_paginate
-    [params[:resultats_par_page] || DEFAULT_PAGE_SIZE, 1000].min
+    [params[:resultats_par_page]&.to_i || DEFAULT_PAGE_SIZE, 1000].min
   end
 end
