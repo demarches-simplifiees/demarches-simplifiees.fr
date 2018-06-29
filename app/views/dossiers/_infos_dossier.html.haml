@@ -50,11 +50,13 @@
                   = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: champ, user_can_upload: true }
                 - elsif champ.type_champ == 'textarea'
                   = simple_format(champ.decorate.value)
+                - elsif champ.type_champ == 'linked_drop_down_list'
+                  = champ.for_display
                 - else
                   = sanitize(champ.decorate.value)
 
 .row
-  - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.count > 0
+  - if @facade.dossier.types_de_piece_justificative.count > 0
     .col-xs-12
       .row.title-row
         .col-xs-4.split-hr
@@ -62,21 +64,6 @@
         .col-xs-4.split-hr
 
   .col-xs-12#pieces-justificatives.margin-bot-40
-    .row
-      - if @facade.procedure.cerfa_flag?
-        .col-xs-12#piece_justificative_0
-          .row.piece-row
-            .col-xs-6.depositaire-label= 'Formulaire'
-            .col-xs-1.comments-off= "-"
-            .col-xs-5.despositaire-info
-              - if @facade.dossier.cerfa_available?
-                %a{ href: "#{@facade.dossier.cerfa.last.content_url}", target: '_blank' } Consulter
-                %span{ style: 'margin-left: 12px;' }
-                  \-
-                = link_to "", class: "historique", "data-toggle" => "modal", "data-target" => "#pj-modal", :type => "button", "data-modal_title" => 'formulaires', "data-modal_index" => 'cerfa' do
-                  %span.fa.fa-clock-o
-              - else
-                Pièce non fournie
     .row
       .col-xs-12
         - @facade.types_de_pieces_justificatives.each do |type_de_piece_justificative|
@@ -100,7 +87,7 @@
 
     - if !@facade.dossier.read_only?
       - if user_signed_in? && (current_user.owns_or_invite?(@facade.dossier))
-        - if @facade.procedure.cerfa_flag? || @facade.dossier.types_de_piece_justificative.size > 0
+        - if @facade.dossier.types_de_piece_justificative.size > 0
           .row
             .col-xs-4
             %a#maj_pj.action{ "data-target" => "#upload-pj-modal", "data-toggle" => "modal", :type => "button" }
@@ -130,16 +117,6 @@
                   %th
                     Lien
                 %thead.tr-content#cerfa
-                  - if @facade.procedure.cerfa_flag?
-                    - if @facade.dossier.cerfa_available?
-                      - @facade.cerfas_ordered.each do |cerfa|
-                        %tr
-                          %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
-                            = cerfa.user.email
-                          %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
-                            = cerfa.created_at
-                          %td.col-md-6.col-sm-6.col-xs-6.col-lg-4
-                            = link_to 'Récupérer', cerfa.content_url, { target: :blank }
                 - @facade.dossier.types_de_piece_justificative.each do |type_de_piece_justificative|
                   %tbody.tr-content{ id: "type_de_pj_#{type_de_piece_justificative.id}" }
                     - @facade.dossier.retrieve_all_piece_justificative_by_type(type_de_piece_justificative.id).each do |piece_justificative|

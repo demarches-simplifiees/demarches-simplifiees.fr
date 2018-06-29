@@ -11,11 +11,10 @@ describe Admin::ProceduresController, type: :controller do
   let(:organisation) { 'Organisation de test' }
   let(:direction) { 'Direction de test' }
   let(:lien_demarche) { 'http://localhost.com' }
+  let(:cadre_juridique) { 'cadre juridique' }
   let(:use_api_carto) { '0' }
   let(:quartiers_prioritaires) { '0' }
   let(:cadastre) { '0' }
-  let(:cerfa_flag) { true }
-  let(:cadre_juridique) { 'cadre juridique' }
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:duree_conservation_dossiers_hors_ds) { 6 }
 
@@ -26,7 +25,6 @@ describe Admin::ProceduresController, type: :controller do
       organisation: organisation,
       direction: direction,
       lien_demarche: lien_demarche,
-      cerfa_flag: cerfa_flag,
       cadre_juridique: cadre_juridique,
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_hors_ds,
@@ -328,7 +326,6 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.organisation).to eq procedure_params[:organisation] }
           it { expect(subject.direction).to eq procedure_params[:direction] }
 
-          it { expect(subject.cerfa_flag).not_to eq procedure_params[:cerfa_flag] }
           it { expect(subject.lien_demarche).not_to eq procedure_params[:lien_demarche] }
           it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
           it { expect(subject.individual_with_siret).not_to eq procedure_params[:individual_with_siret] }

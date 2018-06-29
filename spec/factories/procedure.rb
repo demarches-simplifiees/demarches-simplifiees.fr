@@ -8,7 +8,6 @@ FactoryBot.define do
     direction "direction DINSIC"
     cadre_juridique "un cadre juridique important"
     published_at nil
-    cerfa_flag false
     administrateur { create(:administrateur) }
     duree_conservation_dossiers_dans_ds 3
     duree_conservation_dossiers_hors_ds 6

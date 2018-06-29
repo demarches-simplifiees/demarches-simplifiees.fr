@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe 'users/description/show.html.haml', type: :view do
   let(:user) { create(:user) }
-  let(:cerfa_flag) { true }
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime, cerfa_flag: cerfa_flag) }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_datetime) }
   let(:dossier) { create(:dossier, procedure: procedure, user: user) }
   let(:dossier_id) { dossier.id }
 
@@ -20,14 +19,6 @@ describe 'users/description/show.html.haml', type: :view do
     end
     it 'Le formulaire envoie vers /users/dossiers/:dossier_id/description en #POST' do
       expect(rendered).to have_selector("form[action='/users/dossiers/#{dossier_id}/description'][method=post]")
-    end
-
-    it 'Charger votre CERFA (PDF)' do
-      expect(rendered).to have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]')
-    end
-
-    it 'Lien CERFA' do
-      expect(rendered).to have_selector('#lien_cerfa')
     end
   end
 
@@ -102,17 +93,6 @@ describe 'users/description/show.html.haml', type: :view do
     end
   end
 
-  context 'Envoi des CERFA désactivé' do
-    let!(:cerfa_flag) { false }
-
-    before do
-      render
-    end
-
-    it { expect(rendered).to_not have_css("#cerfa_flag") }
-    it { expect(rendered).to_not have_selector('input[type=file][name=cerfa_pdf][id=cerfa_pdf]') }
-  end
-
   describe 'display title Documents administratifs' do
     before do
       render
@@ -121,7 +101,7 @@ describe 'users/description/show.html.haml', type: :view do
     let(:procedure) { create :procedure, lien_demarche: '' }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
-    context 'when dossier not have cerfa, piece justificative and demarche link' do
+    context 'when dossier not have piece justificative and demarche link' do
       it { expect(rendered).not_to have_content 'Documents administratifs' }
     end
   end

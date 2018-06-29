@@ -31,11 +31,6 @@ class Users::DescriptionController < UsersController
 
     ChampsService.save_champs(dossier.champs, params) if params[:champs]
 
-    if procedure.cerfa_flag? && params[:cerfa_pdf]
-      cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: dossier, user: current_user)
-      return redirect_to_description_with_errors(dossier, cerfa.errors.full_messages) if !cerfa.save
-    end
-
     errors_upload = PiecesJustificativesService.upload!(dossier, current_user, params) + ChampsService.check_piece_justificative_files(dossier.champs)
     return redirect_to_description_with_errors(dossier, errors_upload) if errors_upload.any?
 
@@ -67,15 +62,6 @@ class Users::DescriptionController < UsersController
 
     @dossier ||= Dossier.find(params[:dossier_id]) if invite
     @dossier ||= current_user_dossier
-
-    if @dossier.procedure.cerfa_flag?
-      if params[:cerfa_pdf].present?
-        cerfa = Cerfa.new(content: params[:cerfa_pdf], dossier: @dossier, user: current_user)
-        if !cerfa.save
-          flash.alert = cerfa.errors.full_messages
-        end
-      end
-    end
 
     if (errors_upload = PiecesJustificativesService.upload!(@dossier, current_user, params)).present?
       if flash.alert.nil?
