@@ -16,7 +16,6 @@ class Dossier < ApplicationRecord
   has_one :etablissement, dependent: :destroy
   has_one :individual, dependent: :destroy
   has_one :attestation
-  has_many :cerfa, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
   has_many :champs, -> { public_only }, dependent: :destroy
@@ -125,10 +124,6 @@ class Dossier < ApplicationRecord
 
   def instruction_commencee?
     INSTRUCTION_COMMENCEE.include?(state)
-  end
-
-  def cerfa_available?
-    procedure.cerfa_flag? && cerfa.size != 0
   end
 
   def export_headers

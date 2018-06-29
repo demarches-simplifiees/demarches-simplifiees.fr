@@ -1,23 +1,4 @@
 %table.table
-  - if dossier.procedure.cerfa_flag
-    %tr
-      %th
-        Formulaire de demande ou CERFA (complété et numérisé)
-      %td
-        - if dossier.procedure.lien_demarche.present?
-          %em
-            Récupérer le formulaire de demande ou CERFA vierge pour mon dossier :
-            = link_to "Télécharger", sanitize_url(dossier.procedure.lien_demarche), target: :blank, id: :lien_cerfa
-            -# %a#lien_cerfa{ href: "#{dossier.procedure.lien_demarche}", target: '_blank' } Télécharger
-
-      %td
-        - if dossier.cerfa_available?
-          %span.btn.btn-sm.btn-file.btn-success
-            Modifier
-            %input#cerfa_pdf{ type: 'file', name: 'cerfa_pdf', accept: PieceJustificative.accept_format, :max_file_size => 6.megabytes }
-        - else
-          %input#cerfa_pdf{ type: 'file', name: 'cerfa_pdf', accept:  PieceJustificative.accept_format, :max_file_size => 6.megabytes }
-
   - dossier.types_de_piece_justificative.order('order_place ASC').each do |tpj|
     %tr
       %th.piece-libelle
