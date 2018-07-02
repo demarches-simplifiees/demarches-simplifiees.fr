@@ -25,7 +25,7 @@ module ApplicationHelper
     when :gestionnaire
       gestionnaire_procedures_path
     when :user
-      users_dossiers_path
+      dossiers_path
     else
       root_path
     end

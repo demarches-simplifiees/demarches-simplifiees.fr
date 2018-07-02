@@ -11,7 +11,7 @@ describe Users::Dossiers::AddSiretController, type: :controller do
     subject { get :show, params: { dossier_id: dossier.id } }
 
     context 'when dossier is not attached at a procedure with individual siret attribut' do
-      it { is_expected.to redirect_to users_dossiers_path }
+      it { is_expected.to redirect_to dossiers_path }
     end
 
     context 'when dossier is  attached at a procedure with individual siret attribut' do
