@@ -44,13 +44,17 @@ addEventListener("direct-upload:end", function (event) {
   element.classList.add("direct-upload--complete");
 });
 
-addEventListener('load', function() {
+addEventListener('turbolinks:load', function() {
     var submitButtons = document.querySelectorAll('form button[type=submit][data-action]');
     var hiddenInput = document.querySelector('form input[type=hidden][name=submit_action]');
     submitButtons = [].slice.call(submitButtons);
 
     submitButtons.forEach(function(button) {
       button.addEventListener('click', function() {
+        // Active Storage will intercept the form.submit event to upload
+        // the attached files, and then fire the submit action again – but forgetting
+        // which button was clicked. So we manually set the type of action that trigerred
+        // the form submission.
         hiddenInput.value = button.getAttribute('data-action');
       });
     });
