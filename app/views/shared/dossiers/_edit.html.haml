@@ -11,7 +11,7 @@
   - if apercu
     - form_options = { url: '', method: :get, html: { class: 'form', multipart: true } }
   - else
-    - form_options = { html: { class: 'form', multipart: true } }
+    - form_options = { html: { class: 'form', multipart: true, novalidate: dossier.brouillon? } }
 
   = form_for dossier, form_options do |f|
     = f.fields_for :champs, dossier.champs do |champ_form|
