@@ -15,35 +15,38 @@
         = h string_to_html(@dossier.procedure.description)
 
     .column.identity-form
-      = form_for @dossier.individual, url: update_identite_dossier_path(@dossier), html: { class: "form" } do |f|
-        %h1 Données d'identité
+      = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
 
-        %p.mb-1 Merci de remplir vos informations personnelles pour accéder à la démarche.
+      - if !dossier_submission_is_closed?(@dossier)
+        = form_for @dossier.individual, url: update_identite_dossier_path(@dossier), html: { class: "form" } do |f|
+          %h1 Données d'identité
 
-        %label
-          %span.mandatory *
-          champs requis
+          %p.mb-1 Merci de remplir vos informations personnelles pour accéder à la démarche.
 
-        = f.label :gender, class: "required"
-        = f.select :gender, ['M.', 'Mme'], {}, class: "small"
-
-        .flex
-          .inline-champ
-            = f.label :prenom, class: "required"
-            = f.text_field :prenom, class: "small", required: true
-          .inline-champ
-            = f.label :nom, class: "required"
-            = f.text_field :nom, class: "small", required: true
-
-        - if @dossier.procedure.ask_birthday?
-          = f.label :birthdate, class: "required"
-          = f.date_field :birthdate, value: @dossier.individual.birthdate, placeholder: 'format : AAAA-MM-JJ', required: true, class: "small"
-
-        = fields_for :dossier, @dossier do |df|
-          = label_tag do
-            = df.check_box :autorisation_donnees, required: true
-            J'accepte
-            = link_to "les CGU", CGU_URL, target: :blank
+          %label
             %span.mandatory *
+            champs requis
 
-        = f.submit "Continuer", class: "button large primary expand"
+          = f.label :gender, class: "required"
+          = f.select :gender, ['M.', 'Mme'], {}, class: "small"
+
+          .flex
+            .inline-champ
+              = f.label :prenom, class: "required"
+              = f.text_field :prenom, class: "small", required: true
+            .inline-champ
+              = f.label :nom, class: "required"
+              = f.text_field :nom, class: "small", required: true
+
+          - if @dossier.procedure.ask_birthday?
+            = f.label :birthdate, class: "required"
+            = f.date_field :birthdate, value: @dossier.individual.birthdate, placeholder: 'format : AAAA-MM-JJ', required: true, class: "small"
+
+          = fields_for :dossier, @dossier do |df|
+            = label_tag do
+              = df.check_box :autorisation_donnees, required: true
+              J'accepte
+              = link_to "les CGU", CGU_URL, target: :blank
+              %span.mandatory *
+
+          = f.submit "Continuer", class: "button large primary expand"

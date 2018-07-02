@@ -14,4 +14,8 @@ module DossierHelper
       "highlighted"
     end
   end
+
+  def dossier_submission_is_closed?(dossier)
+    dossier.brouillon? && dossier.procedure.archivee?
+  end
 end
