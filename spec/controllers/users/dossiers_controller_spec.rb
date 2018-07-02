@@ -120,7 +120,7 @@ describe Users::DossiersController, type: :controller do
           context 'when procedure is archived' do
             let(:procedure) { create(:procedure, archived_at: Time.now) }
 
-            it { is_expected.to redirect_to users_dossiers_path }
+            it { is_expected.to redirect_to dossiers_path }
           end
         end
         context 'when user is not logged' do
@@ -136,7 +136,7 @@ describe Users::DossiersController, type: :controller do
           sign_in user
         end
 
-        it { is_expected.to redirect_to users_dossiers_path }
+        it { is_expected.to redirect_to dossiers_path }
       end
 
       context 'when procedure is not published' do
@@ -146,7 +146,7 @@ describe Users::DossiersController, type: :controller do
           sign_in user
         end
 
-        it { is_expected.to redirect_to users_dossiers_path }
+        it { is_expected.to redirect_to dossiers_path }
       end
     end
   end

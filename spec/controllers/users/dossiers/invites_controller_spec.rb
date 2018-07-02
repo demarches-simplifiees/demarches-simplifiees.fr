@@ -72,7 +72,7 @@ describe Users::Dossiers::InvitesController, type: :controller do
       let(:email) { 'fake@email.com' }
 
       it { expect(subject.status).to eq 302 }
-      it { is_expected.to redirect_to users_dossiers_path }
+      it { is_expected.to redirect_to dossiers_path }
     end
   end
 end

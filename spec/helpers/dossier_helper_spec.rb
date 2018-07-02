@@ -26,6 +26,25 @@ RSpec.describe DossierHelper, type: :helper do
     end
   end
 
+  describe ".url_for_dossier" do
+    subject { url_for_dossier(dossier) }
+
+    context "when the dossier is an invitation" do
+      let(:dossier) { create(:invite) }
+      it { is_expected.to eq "/users/dossiers/invites/#{dossier.id}" }
+    end
+
+    context "when the dossier is in the brouillon state" do
+      let(:dossier) { create(:dossier, state: 'brouillon') }
+      it { is_expected.to eq "/dossiers/#{dossier.id}/modifier" }
+    end
+
+    context "when the dossier is any other state" do
+      let(:dossier) { create(:dossier, state: 'en_construction') }
+      it { is_expected.to eq "/users/dossiers/#{dossier.id}/recapitulatif" }
+    end
+  end
+
   describe ".dossier_submission_is_closed?" do
     let(:dossier) { create(:dossier, state: state) }
     let(:state) { "brouillon" }

@@ -88,8 +88,8 @@ module NewUser
     end
 
     def index
-      @user_dossiers = current_user.dossiers.includes(:procedure).page(page)
-      @dossiers_invites = current_user.dossiers_invites.includes(:procedure).page(page)
+      @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
+      @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
 
       @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
 
@@ -107,7 +107,7 @@ module NewUser
       if !dossier.instruction_commencee?
         dossier.delete_and_keep_track
         flash.notice = 'Votre dossier a bien été supprimé.'
-        redirect_to users_dossiers_path
+        redirect_to dossiers_path
       else
         flash.notice = "L'instruction de votre dossier a commencé, il n'est plus possible de supprimer votre dossier. Si vous souhaitez annuler l'instruction contactez votre administration par la messagerie de votre dossier."
         redirect_to users_dossier_path(dossier)
@@ -123,7 +123,7 @@ module NewUser
     def ensure_dossier_can_be_updated
       if !dossier.can_be_updated_by_the_user?
         flash.alert = 'Votre dossier ne peut plus être modifié'
-        redirect_to users_dossiers_path
+        redirect_to dossiers_path
       end
     end
 
