@@ -43,15 +43,3 @@ addEventListener("direct-upload:end", function (event) {
 
   element.classList.add("direct-upload--complete");
 });
-
-addEventListener('load', function() {
-    var submitButtons = document.querySelectorAll('form button[type=submit][data-action]');
-    var hiddenInput = document.querySelector('form input[type=hidden][name=submit_action]');
-    submitButtons = [].slice.call(submitButtons);
-
-    submitButtons.forEach(function(button) {
-      button.addEventListener('click', function() {
-        hiddenInput.value = button.getAttribute('data-action');
-      });
-    });
-});
