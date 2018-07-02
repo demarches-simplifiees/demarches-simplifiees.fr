@@ -55,7 +55,15 @@ addEventListener('turbolinks:load', function() {
         // the attached files, and then fire the submit action again – but forgetting
         // which button was clicked. So we manually set the type of action that trigerred
         // the form submission.
-        hiddenInput.value = button.getAttribute('data-action');
+        var action = button.getAttribute('data-action');
+        hiddenInput.value = action;
+        // Some form fields are marked as mandatory, but when saving a draft we don't want them
+        // to be enforced by the browser.
+        if (action === 'submit') {
+          button.form.removeAttribute('novalidate');
+        } else {
+          button.form.setAttribute('novalidate', 'novalidate');
+        }
       });
     });
 });
