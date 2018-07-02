@@ -44,14 +44,20 @@ addEventListener("direct-upload:end", function (event) {
   element.classList.add("direct-upload--complete");
 });
 
-addEventListener('load', function() {
+addEventListener('turbolinks:load', function() {
     var submitButtons = document.querySelectorAll('form button[type=submit][data-action]');
     var hiddenInput = document.querySelector('form input[type=hidden][name=submit_action]');
     submitButtons = [].slice.call(submitButtons);
 
     submitButtons.forEach(function(button) {
       button.addEventListener('click', function() {
-        hiddenInput.value = button.getAttribute('data-action');
+        var action = button.getAttribute('data-action');
+        if (action === 'submit') {
+          button.form.removeAttribute('novalidate');
+        } else {
+          button.form.setAttribute('novalidate', 'novalidate');
+        }
+        hiddenInput.value = action;
       });
     });
 });
