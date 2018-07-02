@@ -84,7 +84,7 @@ feature 'The user' do
   end
 
   let(:simple_procedure) do
-    tdcs = [create(:type_de_champ, mandatory: true, libelle: 'text')]
+    tdcs = [create(:type_de_champ, mandatory: true, libelle: 'texte obligatoire')]
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end
 
@@ -92,19 +92,23 @@ feature 'The user' do
     log_in(user.email, password, simple_procedure)
     fill_individual
 
+    # Check an incomplete dossier can be saved as a draft, even when mandatory fields are missing
     click_on 'Enregistrer le brouillon'
+    expect(user_dossier.reload.brouillon?).to be(true)
     expect(page).to have_content('Votre brouillon a bien été sauvegardé')
     expect(page).to have_current_path(dossier_path(user_dossier))
 
+    # Check an incomplete dossier cannot be submitted when mandatory fields are missing
     click_on 'Soumettre le dossier'
     expect(user_dossier.reload.brouillon?).to be(true)
     expect(page).to have_current_path(dossier_path(user_dossier))
 
-    fill_in('text', with: 'super texte')
+    # Check a dossier can be submitted when all mandatory fields are filled
+    fill_in('texte obligatoire', with: 'super texte')
 
     click_on 'Soumettre le dossier'
     expect(user_dossier.reload.en_construction?).to be(true)
-    expect(champ_value_for('text')).to eq('super texte')
+    expect(champ_value_for('texte obligatoire')).to eq('super texte')
     expect(page).to have_current_path(merci_dossier_path(user_dossier))
   end
 
