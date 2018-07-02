@@ -22,6 +22,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 require 'rspec/rails'
 require 'capybara/rspec'
+require 'capybara-screenshot/rspec'
 require 'database_cleaner'
 require 'webmock/rspec'
 require 'shoulda-matchers'
@@ -49,6 +50,15 @@ end
 ActiveSupport::Deprecation.silenced = true
 
 Capybara.default_max_wait_time = 1
+
+# Save a snapshot of the HTML page when an integration test fails
+Capybara::Screenshot.autosave_on_failure = true
+# Keep only the screenshots generated from the last failing test suite
+Capybara::Screenshot.prune_strategy = :keep_last_run
+# Tell Capybara::Screenshot how to take screenshots when using the headless_chrome driver
+Capybara::Screenshot.register_driver :headless_chrome do |driver, path|
+  driver.browser.save_screenshot(path)
+end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

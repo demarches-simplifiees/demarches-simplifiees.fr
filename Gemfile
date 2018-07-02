@@ -124,19 +124,23 @@ gem "administrate"
 gem 'rack-mini-profiler'
 
 group :test do
-  gem 'capybara'
   gem 'launchy'
   gem 'factory_bot'
   gem 'database_cleaner'
   gem 'webmock'
   gem 'shoulda-matchers', require: false
-  gem 'capybara-selenium'
   gem 'timecop'
   gem 'guard'
   gem 'guard-rspec', require: false
   gem 'guard-livereload', require: false
   gem 'vcr'
   gem 'rails-controller-testing'
+
+  # Integration testing
+  gem 'capybara'
+  gem 'capybara-selenium'
+  # Save a dump of the page when an integration test fails
+  gem 'capybara-screenshot'
 end
 
 group :development do
