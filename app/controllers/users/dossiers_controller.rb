@@ -104,7 +104,7 @@ class Users::DossiersController < UsersController
 
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for users_dossiers_path
+    redirect_to url_for dossiers_path
   end
 
   def siret_informations
@@ -133,7 +133,7 @@ class Users::DossiersController < UsersController
     end
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for users_dossiers_path
+    redirect_to url_for dossiers_path
   end
 
   def change_siret
@@ -181,7 +181,7 @@ class Users::DossiersController < UsersController
       dossier.destroy
       flash.notice = 'Brouillon supprimé'
     end
-    redirect_to url_for users_dossiers_path(liste: 'brouillon')
+    redirect_to url_for dossiers_path
   end
 
   def text_summary
@@ -229,7 +229,7 @@ class Users::DossiersController < UsersController
   def error_procedure
     flash.alert = t('errors.messages.procedure_not_found')
 
-    redirect_to url_for users_dossiers_path
+    redirect_to url_for dossiers_path
   end
 
   def update_current_user_siret!(siret)

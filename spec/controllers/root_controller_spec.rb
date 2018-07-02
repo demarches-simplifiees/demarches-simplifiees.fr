@@ -8,7 +8,7 @@ describe RootController, type: :controller do
       sign_in create(:user)
     end
 
-    it { expect(subject).to redirect_to(users_dossiers_path) }
+    it { expect(subject).to redirect_to(dossiers_path) }
   end
 
   context 'when Gestionnaire is connected' do

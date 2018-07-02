@@ -37,23 +37,24 @@
           - @dossiers.each do |dossier|
             %tr
               %td.folder-col
-                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   %span.icon.folder
               %td.number-col
-                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   = dossier.id
               %td
-                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   = dossier.procedure.libelle
               %td.status-col
-                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
               %td.updated-at-col
-                = link_to(users_dossier_recapitulatif_path(dossier), class: 'cell-link') do
+                = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   = dossier.updated_at.localtime.strftime("%d/%m/%Y")
     = paginate(@dossiers)
 
   - else
     .dossiers-table-empty
       %h2.empty-text Aucun dossier.
+      %p.empty-text-details Pour l’instant vous n’avez commencé aucune démarche.
       = link_to "Commencer une nouvelle démarche", new_demarche_url, class: "button primary"
