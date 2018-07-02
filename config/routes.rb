@@ -6,6 +6,10 @@ Rails.application.routes.draw do
       post 'whitelist', on: :member
     end
 
+    resources :dossiers, only: [:index, :show] do
+      post 'change_state_to_instruction', on: :member
+    end
+
     resources :administrateurs, only: [:index, :show, :new, :create] do
       post 'reinvite', on: :member
       put 'enable_feature', on: :member
