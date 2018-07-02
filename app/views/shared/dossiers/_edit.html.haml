@@ -1,4 +1,6 @@
 .container
+  = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
+
   - if notice_url(dossier.procedure).present?
     %p
       Pour vous aider à remplir votre dossier, vous pouvez consulter
@@ -9,7 +11,7 @@
   - if apercu
     - form_options = { url: '', method: :get, html: { class: 'form', multipart: true } }
   - else
-    - form_options = { html: { class: 'form', multipart: true } }
+    - form_options = { html: { class: 'form', multipart: true, novalidate: dossier.brouillon? } }
 
   = form_for dossier, form_options do |f|
     = f.fields_for :champs, dossier.champs do |champ_form|
@@ -58,7 +60,7 @@
             class: 'button send',
             data: { action: 'draft', disable_with: 'Envoi...' }
 
-          - if current_user.owns?(dossier)
+          - if current_user.owns?(dossier) && dossier.can_transition_to_en_construction?
             = f.button 'Soumettre le dossier',
               class: 'button send primary',
               data: { action: 'submit', disable_with: 'Envoi...' }
@@ -67,3 +69,5 @@
           = f.button 'Enregistrer les modifications du dossier',
             class: 'button send primary',
             data: { action: 'submit', disable_with: 'Envoi...' }
+
+      = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }

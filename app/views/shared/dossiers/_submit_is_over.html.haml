@@ -1,0 +1,8 @@
+- if dossier_submission_is_closed?(dossier)
+  .card.featured
+    .card-title
+      Le dépôt de dossier est fermé
+    - if dossier.procedure.archived_at.present?
+      Il n'est plus possible de déposer de dossier pour cette démarche en ligne depuis le #{dossier.procedure.archived_at.strftime("%d/%m/%Y")}.
+    - else
+      Il n'est plus possible de déposer de dossier pour cette démarche en ligne.

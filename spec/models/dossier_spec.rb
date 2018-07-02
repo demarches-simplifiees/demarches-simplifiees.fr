@@ -835,4 +835,46 @@ describe Dossier do
       }.to have_enqueued_job(WebHookJob)
     end
   end
+
+  describe "#can_transition_to_en_construction?" do
+    let(:procedure) { create(:procedure, :published) }
+    let(:dossier) { create(:dossier, state: state, procedure: procedure) }
+
+    subject { dossier.can_transition_to_en_construction? }
+
+    context "dossier state is brouillon" do
+      let(:state) { "brouillon" }
+      it { is_expected.to be true }
+
+      context "procedure is archived" do
+        before { procedure.archive }
+        it { is_expected.to be false }
+      end
+    end
+
+    context "dossier state is en_construction" do
+      let(:state) { "en_construction" }
+      it { is_expected.to be false }
+    end
+
+    context "dossier state is en_instruction" do
+      let(:state) { "en_instruction" }
+      it { is_expected.to be false }
+    end
+
+    context "dossier state is en_instruction" do
+      let(:state) { "accepte" }
+      it { is_expected.to be false }
+    end
+
+    context "dossier state is en_instruction" do
+      let(:state) { "refuse" }
+      it { is_expected.to be false }
+    end
+
+    context "dossier state is en_instruction" do
+      let(:state) { "sans_suite" }
+      it { is_expected.to be false }
+    end
+  end
 end

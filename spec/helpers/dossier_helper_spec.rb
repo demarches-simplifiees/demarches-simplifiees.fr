@@ -25,4 +25,80 @@ RSpec.describe DossierHelper, type: :helper do
       it { is_expected.to eq nil }
     end
   end
+
+  describe ".url_for_dossier" do
+    subject { url_for_dossier(dossier) }
+
+    context "when the dossier is an invitation" do
+      let(:dossier) { create(:invite) }
+      it { is_expected.to eq "/users/dossiers/invites/#{dossier.id}" }
+    end
+
+    context "when the dossier is in the brouillon state" do
+      let(:dossier) { create(:dossier, state: 'brouillon') }
+      it { is_expected.to eq "/dossiers/#{dossier.id}/modifier" }
+    end
+
+    context "when the dossier is any other state" do
+      let(:dossier) { create(:dossier, state: 'en_construction') }
+      it { is_expected.to eq "/users/dossiers/#{dossier.id}/recapitulatif" }
+    end
+  end
+
+  describe ".dossier_submission_is_closed?" do
+    let(:dossier) { create(:dossier, state: state) }
+    let(:state) { "brouillon" }
+
+    subject { dossier_submission_is_closed?(dossier) }
+
+    context "when dossier state is brouillon" do
+      it { is_expected.to be false }
+
+      context "when dossier state is brouillon and procedure is archivee" do
+        before { dossier.procedure.archive }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    shared_examples_for "returns false" do
+      it { is_expected.to be false }
+
+      context "and procedure is archivee" do
+        before { dossier.procedure.archive }
+
+        it { is_expected.to be false }
+      end
+    end
+
+    context "when dossier state is en_construction" do
+      let(:state) { "en_construction" }
+
+      it_behaves_like "returns false"
+    end
+
+    context "when dossier state is en_construction" do
+      let(:state) { "en_instruction" }
+
+      it_behaves_like "returns false"
+    end
+
+    context "when dossier state is en_construction" do
+      let(:state) { "accepte" }
+
+      it_behaves_like "returns false"
+    end
+
+    context "when dossier state is en_construction" do
+      let(:state) { "refuse" }
+
+      it_behaves_like "returns false"
+    end
+
+    context "when dossier state is en_construction" do
+      let(:state) { "sans_suite" }
+
+      it_behaves_like "returns false"
+    end
+  end
 end

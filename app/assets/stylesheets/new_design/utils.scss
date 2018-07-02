@@ -35,6 +35,16 @@
   margin: 60px 0;
 }
 
+.empty-text-details {
+  margin-bottom: 60px;
+  text-align: center;
+
+  .empty-text + & {
+    margin-top: -50px;
+  }
+}
+
+
 .highlighted {
   background: $orange-bg;
   color: $black;

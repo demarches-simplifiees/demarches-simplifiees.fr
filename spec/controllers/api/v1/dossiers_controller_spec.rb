@@ -61,6 +61,13 @@ describe API::V1::DossiersController do
         it { expect(subject[:nombre_de_page]).to eq(1) }
       end
 
+      describe 'with custom resultats_par_page' do
+        let(:retour) { get :index, params: { token: admin.api_token, procedure_id: procedure_id, resultats_par_page: 18 } }
+        subject { body[:pagination] }
+        it { is_expected.to have_key(:resultats_par_page) }
+        it { expect(subject[:resultats_par_page]).to eq(18) }
+      end
+
       describe 'dossiers' do
         subject { body[:dossiers] }
         it { expect(subject).to be_an(Array) }

@@ -150,8 +150,8 @@ describe NewUser::DossiersController, type: :controller do
       let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
       let(:dossier_params) { { autorisation_donnees: true } }
 
-      it 'redirects to user_dossiers_path' do
-        expect(response).to redirect_to(users_dossiers_path)
+      it 'redirects to the dossiers list' do
+        expect(response).to redirect_to(dossiers_path)
         expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
       end
     end
@@ -225,20 +225,33 @@ describe NewUser::DossiersController, type: :controller do
     context 'when the dossier cannot be updated by the user' do
       let!(:dossier) { create(:dossier, :en_instruction, user: user) }
 
-      it 'redirects to user_dossiers_path' do
+      it 'redirects to the dossiers list' do
         subject
 
-        expect(response).to redirect_to(users_dossiers_path)
+        expect(response).to redirect_to(dossiers_path)
         expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
       end
     end
 
-    it 'updates the champs' do
-      subject
+    context 'when dossier can be updated by the owner' do
+      it 'updates the champs' do
+        subject
 
-      expect(response).to redirect_to(merci_dossier_path(dossier))
-      expect(first_champ.reload.value).to eq('beautiful value')
-      expect(dossier.reload.state).to eq('en_construction')
+        expect(response).to redirect_to(merci_dossier_path(dossier))
+        expect(first_champ.reload.value).to eq('beautiful value')
+        expect(dossier.reload.state).to eq('en_construction')
+      end
+
+      context "on an archived procedure" do
+        before { dossier.procedure.archive }
+
+        it "it does not change state" do
+          subject
+
+          expect(response).not_to redirect_to(merci_dossier_path(dossier))
+          expect(dossier.reload.state).to eq('brouillon')
+        end
+      end
     end
 
     it 'sends an email only on the first #update' do
@@ -405,6 +418,23 @@ describe NewUser::DossiersController, type: :controller do
         it { expect(assigns(:current_tab)).to eq('mes-dossiers') }
       end
     end
+
+    describe 'sort order' do
+      before do
+        Timecop.freeze(4.days.ago) { create(:dossier, user: user) }
+        Timecop.freeze(2.days.ago) { create(:dossier, user: user) }
+        Timecop.freeze(4.days.ago) { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+        Timecop.freeze(2.days.ago) { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+        get(:index)
+      end
+
+      it 'displays the most recently updated dossiers first' do
+        expect(assigns(:user_dossiers).first.updated_at.to_date).to eq(2.days.ago.to_date)
+        expect(assigns(:user_dossiers).second.updated_at.to_date).to eq(4.days.ago.to_date)
+        expect(assigns(:dossiers_invites).first.updated_at.to_date).to eq(2.days.ago.to_date)
+        expect(assigns(:dossiers_invites).second.updated_at.to_date).to eq(4.days.ago.to_date)
+      end
+    end
   end
 
   describe '#ask_deletion' do
@@ -444,7 +474,7 @@ describe NewUser::DossiersController, type: :controller do
         expect(procedure.deleted_dossiers.first.dossier_id).to eq(dossier_id)
       end
 
-      it { is_expected.to redirect_to(users_dossiers_path) }
+      it { is_expected.to redirect_to(dossiers_path) }
 
       context "and the instruction has started" do
         let(:dossier) { create(:dossier, :en_instruction, user: user, autorisation_donnees: true) }
