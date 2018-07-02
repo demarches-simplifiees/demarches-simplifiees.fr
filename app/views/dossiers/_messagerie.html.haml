@@ -20,7 +20,7 @@
         = render partial: 'dossiers/commentaires/form', locals: { dossier_facade: @facade }
 
     .last-commentaire.clearfix.hidden-print
-      - if last_comment = dossier_facade.commentaires.first
+      - if last_comment = dossier_facade.commentaires.last
         %div
           DERNIER MESSAGE
           = render partial: 'dossiers/commentaires/commentaire', object: last_comment
