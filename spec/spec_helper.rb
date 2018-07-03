@@ -72,6 +72,7 @@ DatabaseCleaner.strategy = :transaction
 TPS::Application.load_tasks
 
 SIADETOKEN = :valid_token if !defined? SIADETOKEN
+PIPEDRIVE_TOKEN = :pipedrive_test_token if !defined? PIPEDRIVE_TOKEN
 
 include Warden::Test::Helpers
 
