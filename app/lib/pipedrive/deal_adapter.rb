@@ -22,8 +22,8 @@ class Pipedrive::DealAdapter
   end
 
   def self.get_deals_ids_for_person(person_id)
-    Pipedrive::API.get_deals_for_person(person_id)
-      .map { |datum| datum['id'] }
+    deals = Pipedrive::API.get_deals_for_person(person_id) || []
+    deals.map { |datum| datum['id'] }
   end
 
   def self.update_deal_owner_and_stage(deal_id, owner_id, stage_id)
