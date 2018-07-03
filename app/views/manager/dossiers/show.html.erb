@@ -26,7 +26,7 @@ as well as a link to its edit page.
 
   <div>
     <% if dossier.termine? %>
-      <%= link_to 'repasser en instruction', change_state_to_instruction_manager_dossier_path(dossier), method: :post, class: 'button' %>
+      <%= link_to 'Repasser en instruction', change_state_to_instruction_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Repasser en instruction ?" } %>
     <% end %>
   <div>
 </header>
