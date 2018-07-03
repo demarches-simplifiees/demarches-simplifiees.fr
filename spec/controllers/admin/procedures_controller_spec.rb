@@ -553,6 +553,20 @@ describe Admin::ProceduresController, type: :controller do
         expect(response_procedures).not_to include(large_draft_procedure)
       end
     end
+
+    describe 'grouping' do
+      let(:service_1) { create(:service, nom: 'DDT des Vosges') }
+      let(:service_2) { create(:service, nom: 'DDT du Loiret') }
+      let!(:procedure_with_service_1)  { create(:procedure_with_dossiers, :published, organisation: nil, service: service_1, dossiers_count: 2) }
+      let!(:procedure_with_service_2)  { create(:procedure_with_dossiers, :published, organisation: nil, service: service_2, dossiers_count: 2) }
+      let!(:procedure_without_service) { create(:procedure_with_dossiers, :published, organisation: 'DDT du Loiret', dossiers_count: 2) }
+
+      it 'groups procedures with services as well as procedures with organisations' do
+        expect(grouped_procedures.length).to eq 2
+        expect(grouped_procedures.find{ |o, p| o == 'DDT des Vosges' }.last).to contain_exactly(procedure_with_service_1)
+        expect(grouped_procedures.find{ |o, p| o == 'DDT du Loiret'  }.last).to contain_exactly(procedure_with_service_2, procedure_without_service)
+      end
+    end
   end
 
   describe 'GET #path_list' do
