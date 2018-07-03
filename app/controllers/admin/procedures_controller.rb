@@ -185,6 +185,7 @@ class Admin::ProceduresController < AdminController
       .pluck('procedures.id')
 
     @grouped_procedures = Procedure
+      .includes(:administrateur, :service)
       .where(id: significant_procedure_ids)
       .group_by(&:organisation_name)
       .sort_by { |_, procedures| procedures.first.created_at }
