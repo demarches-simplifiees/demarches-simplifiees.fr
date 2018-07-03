@@ -186,8 +186,8 @@ class Admin::ProceduresController < AdminController
 
     @grouped_procedures = Procedure
       .where(id: significant_procedure_ids)
-      .group_by(&:administrateur)
-      .sort_by { |a, _| a.created_at }
+      .group_by(&:organisation_name)
+      .sort_by { |_, procedures| procedures.first.created_at }
   end
 
   def active_class
