@@ -152,6 +152,10 @@ class Procedure < ApplicationRecord
     libelle.parameterize.first(50)
   end
 
+  def organisation_name
+    service&.nom || organisation
+  end
+
   def types_de_champ_ordered
     types_de_champ.order(:order_place)
   end

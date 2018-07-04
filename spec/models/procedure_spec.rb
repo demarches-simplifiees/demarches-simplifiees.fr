@@ -735,6 +735,19 @@ describe Procedure do
     it { expect(Champ.count).to eq(0) }
   end
 
+  describe "#organisation_name" do
+    subject { procedure.organisation_name }
+    context 'when the procedure has a service (and no organization)' do
+      let(:procedure) { create(:procedure, :with_service, organisation: nil) }
+      it { is_expected.to eq procedure.service.nom }
+    end
+
+    context 'when the procedure has an organization (and no service)' do
+      let(:procedure) { create(:procedure, organisation: 'DDT des Vosges', service: nil) }
+      it { is_expected.to eq procedure.organisation }
+    end
+  end
+
   describe '#juridique_required' do
     it 'automatically jumps to true once cadre_juridique or deliberation have been set' do
       p = create(
