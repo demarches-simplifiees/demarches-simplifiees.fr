@@ -23,7 +23,7 @@
     - if tpjs.present?
       .card.featured
         .card-title
-          Pièces-jointes
+          Pièces jointes
 
         - tpjs.each do |tpj|
           .pj-input
@@ -42,7 +42,7 @@
             - if dossier.was_piece_justificative_uploaded_for_type_id?(tpj.id)
               - pj = dossier.retrieve_last_piece_justificative_by_type(tpj.id)
               %p
-                Pièce-jointe déjà importée :
+                Pièce jointe déjà importée :
                 = link_to pj.original_filename, pj.content_url, target: :blank
 
             = file_field_tag "piece_justificative_#{tpj.id}",
