@@ -525,6 +525,50 @@ describe Admin::ProceduresController, type: :controller do
     end
   end
 
+  describe 'GET #new_from_existing' do
+    before do
+      stub_const("Admin::ProceduresController::SIGNIFICANT_DOSSIERS_THRESHOLD", 2)
+    end
+
+    subject { get :new_from_existing }
+    let(:grouped_procedures) { subject; assigns(:grouped_procedures) }
+    let(:response_procedures) { grouped_procedures.map{ |o, procedures| procedures }.flatten }
+
+    describe 'selecting' do
+      let!(:large_draft_procedure)     { create(:procedure_with_dossiers, dossiers_count: 2) }
+      let!(:large_published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2) }
+      let!(:large_archived_procedure)  { create(:procedure_with_dossiers, :archived,  dossiers_count: 2) }
+      let!(:small_archived_procedure)  { create(:procedure_with_dossiers, :archived,  dossiers_count: 1) }
+
+      it 'displays published and archived procedures' do
+        expect(response_procedures).to include(large_published_procedure)
+        expect(response_procedures).to include(large_archived_procedure)
+      end
+
+      it 'doesn’t display procedures without a significant number of dossiers' do
+        expect(response_procedures).not_to include(small_archived_procedure)
+      end
+
+      it 'doesn’t display draft procedures' do
+        expect(response_procedures).not_to include(large_draft_procedure)
+      end
+    end
+
+    describe 'grouping' do
+      let(:service_1) { create(:service, nom: 'DDT des Vosges') }
+      let(:service_2) { create(:service, nom: 'DDT du Loiret') }
+      let!(:procedure_with_service_1)  { create(:procedure_with_dossiers, :published, organisation: nil, service: service_1, dossiers_count: 2) }
+      let!(:procedure_with_service_2)  { create(:procedure_with_dossiers, :published, organisation: nil, service: service_2, dossiers_count: 2) }
+      let!(:procedure_without_service) { create(:procedure_with_dossiers, :published, organisation: 'DDT du Loiret', dossiers_count: 2) }
+
+      it 'groups procedures with services as well as procedures with organisations' do
+        expect(grouped_procedures.length).to eq 2
+        expect(grouped_procedures.find{ |o, p| o == 'DDT des Vosges' }.last).to contain_exactly(procedure_with_service_1)
+        expect(grouped_procedures.find{ |o, p| o == 'DDT du Loiret'  }.last).to contain_exactly(procedure_with_service_2, procedure_without_service)
+      end
+    end
+  end
+
   describe 'GET #path_list' do
     let!(:procedure) { create(:procedure, :published, administrateur: admin) }
     let(:admin2) { create(:administrateur) }

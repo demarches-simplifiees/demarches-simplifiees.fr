@@ -174,18 +174,21 @@ class Admin::ProceduresController < AdminController
     redirect_to admin_procedures_path
   end
 
+  SIGNIFICANT_DOSSIERS_THRESHOLD = 30
+
   def new_from_existing
-    procedures_with_more_than_30_dossiers_ids = Procedure
+    significant_procedure_ids = Procedure
       .publiees_ou_archivees
       .joins(:dossiers)
       .group("procedures.id")
-      .having("count(dossiers.id) > ?", 30)
+      .having("count(dossiers.id) >= ?", SIGNIFICANT_DOSSIERS_THRESHOLD)
       .pluck('procedures.id')
 
     @grouped_procedures = Procedure
-      .where(id: procedures_with_more_than_30_dossiers_ids)
-      .group_by(&:administrateur)
-      .sort_by { |a, _| a.created_at }
+      .includes(:administrateur, :service)
+      .where(id: significant_procedure_ids)
+      .group_by(&:organisation_name)
+      .sort_by { |_, procedures| procedures.first.created_at }
   end
 
   def active_class
