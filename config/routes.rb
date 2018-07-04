@@ -125,7 +125,11 @@ Rails.application.routes.draw do
 
       get 'text_summary' => 'dossiers#text_summary'
     end
-    resource :dossiers
+
+    resource 'dossiers'
+
+    # Redirection of legacy "/users/dossiers" route to "/dossiers"
+    get 'dossiers', to: redirect('/dossiers')
   end
 
   namespace :gestionnaire do
