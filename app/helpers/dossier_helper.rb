@@ -16,9 +16,7 @@ module DossierHelper
   end
 
   def url_for_dossier(dossier)
-    if dossier.kind_of? Invite
-      users_dossiers_invite_path(id: dossier.id)
-    elsif dossier.brouillon?
+    if dossier.brouillon?
       modifier_dossier_path(dossier)
     else
       users_dossier_recapitulatif_path(dossier)
