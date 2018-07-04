@@ -7,6 +7,20 @@ module NewUser
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update]
     before_action :forbid_invite_submission!, only: [:update]
 
+    def index
+      @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
+      @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
+
+      @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
+
+      @dossiers = case @current_tab
+      when 'mes-dossiers'
+        @user_dossiers
+      when 'dossiers-invites'
+        @dossiers_invites
+      end
+    end
+
     def attestation
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
     end
@@ -85,20 +99,6 @@ module NewUser
 
     def merci
       @dossier = current_user.dossiers.includes(:procedure).find(params[:id])
-    end
-
-    def index
-      @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
-      @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
-
-      @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
-
-      @dossiers = case @current_tab
-      when 'mes-dossiers'
-        @user_dossiers
-      when 'dossiers-invites'
-        @dossiers_invites
-      end
     end
 
     def ask_deletion

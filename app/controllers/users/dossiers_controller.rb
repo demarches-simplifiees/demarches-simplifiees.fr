@@ -12,32 +12,6 @@ class Users::DossiersController < UsersController
     authorized_routes? self.class
   end
 
-  def index
-    @liste ||= params[:liste] || 'a_traiter'
-
-    @user_dossiers = current_user.dossiers
-
-    @dossiers_filtered = case @liste
-    when 'brouillon'
-      @user_dossiers.state_brouillon.order_by_updated_at
-    when 'a_traiter'
-      @user_dossiers.state_en_construction.order_by_updated_at
-    when 'en_instruction'
-      @user_dossiers.state_en_instruction.order_by_updated_at
-    when 'termine'
-      @user_dossiers.state_termine.order_by_updated_at
-    when 'invite'
-      current_user.invites
-    else
-      return redirect_to users_dossiers_path
-    end
-
-    @dossiers = smart_listing_create :dossiers,
-      @dossiers_filtered,
-      partial: "users/dossiers/list",
-      array: true
-  end
-
   def commencer_test
     procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
     procedure = procedure_path&.test_procedure
