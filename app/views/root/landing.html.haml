@@ -47,14 +47,14 @@
           %h1.role-panel-title Vous souhaitez effectuer une demande auprès d'une administration ?
           %p.role-panel-explanation Déposez des demandes en toute simplicité et retrouvez vos dossiers en ligne
 
-          = link_to "Se connecter",
-            new_user_session_path,
-            class: "role-panel-button-primary"
-
           = link_to "Voir les démarches disponibles",
             LISTE_DES_DEMARCHES_URL,
             target: "_blank",
             rel: "noopener noreferrer",
+            class: "role-panel-button-primary"
+
+          = link_to "Se connecter",
+            new_user_session_path,
             class: "role-panel-button-secondary"
 
   .landing-panel.admins-panel
