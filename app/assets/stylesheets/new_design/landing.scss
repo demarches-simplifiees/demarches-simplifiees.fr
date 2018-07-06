@@ -158,7 +158,7 @@ $landing-breakpoint: 1040px;
   font-weight: bold;
 }
 
-.admins-panel,
+.users-panel,
 .numbers-panel {
   background-color: $light-grey;
 }
@@ -298,6 +298,8 @@ $users-breakpoint: 950px;
 .role-panel-title {
   font-size: 30px;
   font-weight: bold;
+  line-height: 36px;
+  margin-bottom: 15px;
 }
 
 .role-panel-explanation {
