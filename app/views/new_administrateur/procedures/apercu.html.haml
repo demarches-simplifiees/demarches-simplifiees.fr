@@ -9,7 +9,7 @@
       - if @dossier.champs_private.size > 0
         %li{ class: (@tab == 'annotations-privees') ? 'active' : nil }>
           = link_to(apercu_procedure_path(@dossier.procedure, tab: 'annotations-privees')) do
-            les annotations privees
+            les annotations privées
 
 - if @tab == 'dossier'
   = render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: true }
