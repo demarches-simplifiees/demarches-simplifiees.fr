@@ -251,8 +251,9 @@
   }
 
   .explication {
-    background-color: $light-grey;
+    margin-bottom: 2 * $default-padding;
     padding: $default-padding;
+    background-color: $light-grey;
 
     p:not(:last-child) {
       margin-bottom: $default-padding;
