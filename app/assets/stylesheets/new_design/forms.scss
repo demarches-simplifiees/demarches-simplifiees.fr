@@ -12,14 +12,14 @@
     color: $grey;
   }
 
+  .mandatory {
+    color: $dark-red;
+  }
+
   label {
     margin-bottom: $default-padding;
     display: block;
     font-weight: bold;
-
-    .mandatory {
-      color: $dark-red;
-    }
 
     .notice {
       @include notice-text-style;

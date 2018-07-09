@@ -1,19 +1,23 @@
 .container
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
-  - if notice_url(dossier.procedure).present?
-    %p
-      Pour vous aider à remplir votre dossier, vous pouvez consulter
-      = link_to 'le guide de cette démarche', notice_url(dossier.procedure), { target: '_blank'  }
-
-  %p.thanks Les champs avec une astérisque (*) sont obligatoires.
-
   - if apercu
     - form_options = { url: '', method: :get, html: { class: 'form', multipart: true } }
   - else
     - form_options = { html: { class: 'form', multipart: true, novalidate: dossier.brouillon? } }
 
   = form_for dossier, form_options do |f|
+
+    - if notice_url(dossier.procedure).present?
+      %p
+        Pour vous aider à remplir votre dossier, vous pouvez consulter
+        = link_to 'le guide de cette démarche', notice_url(dossier.procedure), { target: '_blank'  }
+
+    %p.thanks
+      Les champs avec une astérisque (
+      %span.mandatory> *
+      ) sont obligatoires.
+
     = f.fields_for :champs, dossier.champs do |champ_form|
       - champ = champ_form.object
       = render partial: "shared/dossiers/editable_champs/editable_champ",
