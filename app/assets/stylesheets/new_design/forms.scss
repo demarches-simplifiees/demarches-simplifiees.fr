@@ -25,6 +25,10 @@
       @include notice-text-style;
       display: block;
       margin-top: $default-spacer;
+
+      p {
+        margin-bottom: $default-spacer;
+      }
     }
 
     &.required {
@@ -247,9 +251,13 @@
   }
 
   .explication {
-    background-color: $light-grey;
-    padding: $default-padding;
     margin-bottom: 2 * $default-padding;
+    padding: $default-padding;
+    background-color: $light-grey;
+
+    p:not(:last-child) {
+      margin-bottom: $default-padding;
+    }
   }
 
   .send-wrapper {
