@@ -15,7 +15,20 @@
     }
   }
 
-  .thanks {
-    padding: (1.5 * $default-padding) 0;
+  .prologue {
+    margin: (1.5 * $default-padding) 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+
+    .mandatory-explanation {
+      flex-grow: 1;   // Push the "notice" button to the right
+      flex-shrink: 1; // Allow the text to shrink
+      margin-bottom: $default-spacer; // Leave space when the "notice" button wraps under the text
+    }
+
+    .button.notice {
+      flex-shrink: 0; // Display the button label on a single line
+    }
   }
 }

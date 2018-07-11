@@ -8,15 +8,18 @@
 
   = form_for dossier, form_options do |f|
 
-    - if notice_url(dossier.procedure).present?
-      %p
-        Pour vous aider à remplir votre dossier, vous pouvez consulter
-        = link_to 'le guide de cette démarche', notice_url(dossier.procedure), { target: '_blank'  }
+    .prologue
+      .mandatory-explanation
+        Les champs avec une astérisque (
+        %span.mandatory> *
+        ) sont obligatoires.
 
-    %p.thanks
-      Les champs avec une astérisque (
-      %span.mandatory> *
-      ) sont obligatoires.
+      - if notice_url(dossier.procedure).present?
+        = link_to notice_url(dossier.procedure), class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
+          %span.icon.info>
+          Guide de la démarche
+
+    %hr
 
     = f.fields_for :champs, dossier.champs do |champ_form|
       - champ = champ_form.object
