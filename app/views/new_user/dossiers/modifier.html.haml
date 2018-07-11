@@ -4,6 +4,8 @@
 .dossier-edit
   .dossier-header
     .container
-      %h1= @dossier.procedure.libelle
+      %h1
+        %span.icon.folder
+        = @dossier.procedure.libelle
 
   = render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: false }
