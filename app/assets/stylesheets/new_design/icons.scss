@@ -84,4 +84,9 @@
   &.sign-out {
     background-image: image-url("icons/sign-out.svg");
   }
+
+  &.info {
+    background-image: image-url("icons/info-blue.svg");
+    object-fit: contain;
+  }
 }
