@@ -1,27 +1,28 @@
 class Champs::LinkedDropDownListChamp < Champ
-  attr_reader :primary_value, :secondary_value
   delegate :primary_options, :secondary_options, to: :type_de_champ
 
-  after_initialize :unpack_value
-
-  def unpack_value
+  def primary_value
     if value.present?
-      primary, secondary = JSON.parse(value)
+      JSON.parse(value)[0]
     else
-      primary = secondary = ''
+      ''
     end
-    @primary_value ||= primary
-    @secondary_value ||= secondary
+  end
+
+  def secondary_value
+    if value.present?
+      JSON.parse(value)[1]
+    else
+      ''
+    end
   end
 
   def primary_value=(value)
-    @primary_value = value
-    pack_value
+    pack_value(value, secondary_value)
   end
 
   def secondary_value=(value)
-    @secondary_value = value
-    pack_value
+    pack_value(primary_value, value)
   end
 
   def main_value_name
@@ -46,7 +47,7 @@ class Champs::LinkedDropDownListChamp < Champ
     "#{primary_value || ''};#{secondary_value || ''}"
   end
 
-  def pack_value
-    self.value = JSON.generate([ primary_value, secondary_value ])
+  def pack_value(primary, secondary)
+    self.value = JSON.generate([ primary, secondary ])
   end
 end
