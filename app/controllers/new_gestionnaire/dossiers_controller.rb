@@ -187,7 +187,7 @@ module NewGestionnaire
 
     def champs_private_params
       params.require(:dossier).permit(champs_private_attributes: [
-        :id, :piece_justificative_file, :value, value: [],
+        :id, :primary_value, :secondary_value, :piece_justificative_file, :value, value: [],
         etablissement_attributes: Champs::SiretChamp::ETABLISSEMENT_ATTRIBUTES
       ])
     end

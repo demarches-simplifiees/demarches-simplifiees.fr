@@ -350,12 +350,16 @@ describe NewGestionnaire::DossiersController, type: :controller do
       create(:type_de_champ_multiple_drop_down_list, :private, libelle: 'libelle').champ.create
     end
 
+    let(:champ_linked_drop_down_list) do
+      create(:type_de_champ_linked_drop_down_list, :private, libelle: 'libelle').champ.create
+    end
+
     let(:champ_datetime) do
       create(:type_de_champ_datetime, :private, libelle: 'libelle').champ.create
     end
 
     let(:dossier) do
-      create(:dossier, :en_construction, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_datetime])
+      create(:dossier, :en_construction, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_linked_drop_down_list, champ_datetime])
     end
 
     before do
@@ -375,16 +379,24 @@ describe NewGestionnaire::DossiersController, type: :controller do
               'value(3i)': 21,
               'value(4i)': 13,
               'value(5i)': 17
+            },
+            '2': {
+              id: champ_linked_drop_down_list.id,
+              primary_value: 'primary',
+              secondary_value: 'secondary'
             }
           }
         }
       }
 
       champ_multiple_drop_down_list.reload
+      champ_linked_drop_down_list.reload
       champ_datetime.reload
     end
 
     it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
+    it { expect(champ_linked_drop_down_list.primary_value).to eq('primary') }
+    it { expect(champ_linked_drop_down_list.secondary_value).to eq('secondary') }
     it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
     it { expect(response).to redirect_to(annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)) }
   end
