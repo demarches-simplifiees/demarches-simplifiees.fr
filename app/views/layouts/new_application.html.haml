@@ -14,12 +14,15 @@
     = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")
     = favicon_link_tag(image_url("favicons/96x96.png"), type: "image/png", sizes: "96x96")
 
-    = stylesheet_link_tag "new_design/new_application", media: "all", "data-turbolinks-track": "reload"
-    = stylesheet_link_tag "new_design/print", media: "print", "data-turbolinks-track": true
+    = javascript_pack_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag 'new_design/new_application', media: 'all', 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag 'new_design/print', media: 'print', 'data-turbolinks-track': 'reload'
 
     - if Rails.env.development?
       = stylesheet_link_tag :xray
 
+    :javascript
+      DATA = [];
   %body
     .page-wrapper
       = render partial: "layouts/support_navigator_banner"
@@ -36,8 +39,6 @@
       - if content_for?(:footer)
         = content_for(:footer)
       = render partial: "layouts/mailjet_newsletter"
-
-      = javascript_include_tag "new_design/application", "data-turbolinks-eval": false
 
       - if Rails.env.development?
         = javascript_include_tag :xray
