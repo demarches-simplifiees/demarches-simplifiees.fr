@@ -1,14 +1,14 @@
 document.addEventListener('turbolinks:load', function() {
-  var primaries, i, primary, secondary, secondaryOptions;
+  var primaries, i;
 
   primaries = document.querySelectorAll('select[data-secondary-options]');
   for (i = 0; i < primaries.length; i++) {
-    primary = primaries[i];
-    secondary = document.querySelector('select[data-secondary-id="' + primary.dataset.primaryId + '"]');
-    secondaryOptions = JSON.parse(primary.dataset.secondaryOptions);
+    primaries[i].addEventListener('change', function(e) {
+      var option, options, element, primary, secondary, secondaryOptions;
 
-    primary.addEventListener('change', function(e) {
-      var option, options, element;
+      primary = e.target;
+      secondary = document.querySelector('select[data-secondary-id="' + primary.dataset.primaryId + '"]');
+      secondaryOptions = JSON.parse(primary.dataset.secondaryOptions);
 
       while ((option = secondary.firstChild)) {
         secondary.removeChild(option);
