@@ -60,4 +60,33 @@
   &.printer {
     background-image: image-url("icons/printer.svg");
   }
+
+  &.account {
+    background-image: image-url("icons/account-circle.svg");
+  }
+
+  &.person {
+    background-image: image-url("icons/blue-person.svg");
+  }
+
+  &.super-admin {
+    background-image: image-url("icons/super-admin.svg");
+  }
+
+  &.mail {
+    background-image: image-url("icons/mail.svg");
+  }
+
+  &.search {
+    background-image: image-url("icons/search-blue.svg");
+  }
+
+  &.sign-out {
+    background-image: image-url("icons/sign-out.svg");
+  }
+
+  &.info {
+    background-image: image-url("icons/info-blue.svg");
+    object-fit: contain;
+  }
 }
