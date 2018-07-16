@@ -1,6 +1,6 @@
 .dossiers-headers.sub-header
   .container
-    %h1.page-title Prévisualisation de la procédure #{@dossier.procedure.libelle}
+    %h1.page-title Prévisualisation de la procédure «&nbsp;#{@dossier.procedure.libelle}&nbsp;»
 
     %ul.tabs
       %li{ class: (@tab == 'dossier') ? 'active' : nil }>
@@ -9,7 +9,7 @@
       - if @dossier.champs_private.size > 0
         %li{ class: (@tab == 'annotations-privees') ? 'active' : nil }>
           = link_to(apercu_procedure_path(@dossier.procedure, tab: 'annotations-privees')) do
-            les annotations privees
+            les annotations privées
 
 - if @tab == 'dossier'
   = render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: true }
