@@ -12,6 +12,7 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include("Votre dossier") }
     it { expect(subject.body).to include(deleted_dossier.dossier_id) }
     it { expect(subject.body).to include("a bien été supprimé") }
+    it { expect(subject.body).to include(deleted_dossier.procedure.libelle) }
   end
 
   describe '.notify_deletion_to_administration' do
@@ -22,6 +23,7 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.subject).to eq("Le dossier n° #{deleted_dossier.dossier_id} a été supprimé à la demande de l'usager") }
     it { expect(subject.body).to include("À la demande de l'usager") }
     it { expect(subject.body).to include(deleted_dossier.dossier_id) }
+    it { expect(subject.body).to include(deleted_dossier.procedure.libelle) }
   end
 
   describe '.notify_unhide_to_user' do
@@ -32,5 +34,6 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.subject).to eq("Votre dossier n° #{dossier.id} n'a pas pu être supprimé") }
     it { expect(subject.body).to include(dossier.id) }
     it { expect(subject.body).to include("n'a pas pu être supprimé") }
+    it { expect(subject.body).to include(dossier.procedure.libelle) }
   end
 end
