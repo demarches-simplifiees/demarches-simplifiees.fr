@@ -1,8 +1,10 @@
 module NewUser
   class DossiersController < UserController
+    include DossierHelper
+
     helper_method :new_demarche_url
 
-    before_action :ensure_ownership!, except: [:index, :modifier, :update]
+    before_action :ensure_ownership!, except: [:index, :modifier, :update, :recherche]
     before_action :ensure_ownership_or_invitation!, only: [:modifier, :update]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update]
     before_action :forbid_invite_submission!, only: [:update]
@@ -111,6 +113,18 @@ module NewUser
       else
         flash.notice = "L'instruction de votre dossier a commencé, il n'est plus possible de supprimer votre dossier. Si vous souhaitez annuler l'instruction contactez votre administration par la messagerie de votre dossier."
         redirect_to users_dossier_path(dossier)
+      end
+    end
+
+    def recherche
+      @dossier_id = params[:dossier_id]
+      dossier = current_user.dossiers.find_by(id: @dossier_id)
+
+      if dossier
+        redirect_to url_for_dossier(dossier)
+      else
+        flash.alert = "Vous n’avez pas de dossier avec le nº #{@dossier_id}."
+        redirect_to dossiers_path
       end
     end
 
