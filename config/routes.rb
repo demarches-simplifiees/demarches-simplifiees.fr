@@ -247,10 +247,13 @@ Rails.application.routes.draw do
         post 'ask_deletion'
         get 'attestation'
       end
+
+      collection do
+        # FIXME: to remove when show is implemeted
+        # needed to fix refresh after dossier draft save
+        get ':id', to: redirect('/dossiers/%{id}/modifier')
+      end
     end
-    # FIXME: to remove when show is implemeted
-    # needed to fix refresh after dossier draft save
-    get 'dossiers/:id', to: redirect('/dossiers/%{id}/modifier')
   end
 
   scope module: 'new_gestionnaire', as: 'gestionnaire' do
