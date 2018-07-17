@@ -1,7 +1,7 @@
 = form.text_field :value,
   placeholder: champ.libelle,
   class: 'small-margin',
-  data: { siret: champs_siret_path(format: :js, champ_id: champ) },
+  data: { siret: champ.persisted? ? champs_siret_path(format: :js, champ_id: champ) : nil },
   required: champ.mandatory?
 .spinner.right-spinner
 %div{ id: "etablissement-for-#{champ.id}" }
