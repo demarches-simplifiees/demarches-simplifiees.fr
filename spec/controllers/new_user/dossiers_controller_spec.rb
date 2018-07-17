@@ -111,7 +111,7 @@ describe NewUser::DossiersController, type: :controller do
             controller.head :ok
           end
 
-        get :attestation, params: { dossier_id: dossier.id }
+        get :attestation, params: { id: dossier.id }
         expect(response).to have_http_status(:success)
       end
     end

@@ -245,8 +245,8 @@ Rails.application.routes.draw do
         get 'modifier'
         get 'merci'
         post 'ask_deletion'
+        get 'attestation'
       end
-      get 'attestation'
     end
     # FIXME: to remove when show is implemeted
     # needed to fix refresh after dossier draft save
