@@ -17,7 +17,7 @@ class ResendAttestationMailer < ApplicationMailer
       L'attestation de votre dossier nº #{dossier.id} (procédure "#{dossier.procedure.libelle}") a été modifiée.
 
       Votre nouvelle attestation est disponible à l'adresse suivante :
-      #{dossier_attestation_url(dossier)}
+      #{attestation_dossier_url(dossier)}
 
       Cordialement,
 
