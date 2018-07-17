@@ -249,6 +249,7 @@ Rails.application.routes.draw do
       end
 
       collection do
+        post 'recherche'
         # FIXME: to remove when show is implemeted
         # needed to fix refresh after dossier draft save
         get ':id', to: redirect('/dossiers/%{id}/modifier')
