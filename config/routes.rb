@@ -15,7 +15,11 @@ Rails.application.routes.draw do
       put 'enable_feature', on: :member
     end
 
-    resources :users, only: [:index, :show]
+    resources :users, only: [:index, :show] do
+      post 'resend_confirmation_instructions', on: :member
+      post 'confirm', on: :member
+    end
+
     resources :gestionnaires, only: [:index, :show] do
       post 'reinvite', on: :member
     end
