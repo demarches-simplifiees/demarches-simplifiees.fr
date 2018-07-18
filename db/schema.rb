@@ -548,6 +548,10 @@ ActiveRecord::Schema.define(version: 2018_08_27_111451) do
     t.index ["administrateur_id"], name: "index_services_on_administrateur_id"
   end
 
+  create_table "task_records", id: false, force: :cascade do |t|
+    t.string "version", null: false
+  end
+
   create_table "types_de_champ", id: :serial, force: :cascade do |t|
     t.string "libelle"
     t.string "type_champ"

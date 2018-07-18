@@ -91,6 +91,10 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
         bin/rake spec SPEC=file_path/file_name_spec.rb
         bin/rspec file_path/file_name_spec.rb
 
+## Ajout de taches à exécuter au déploiement
+
+        rails generate after_party:task task_name
+
 ## Debug
 
 Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il faut se connecter au process `server` dans un nouveau terminal afin d'intéragir avec byebug :
