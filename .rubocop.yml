@@ -661,6 +661,9 @@ Rails/ApplicationRecord:
 Rails/Blank:
   Enabled: true
 
+Rails/BulkChangeTable:
+  Enabled: false
+
 Rails/CreateTableWithTimestamps:
   Enabled: false
 
@@ -791,6 +794,9 @@ Security/Open:
 
 Security/YAMLLoad:
   Enabled: true
+
+Style/AccessModifierDeclarations:
+  Enabled: false
 
 Style/Alias:
   Enabled: false

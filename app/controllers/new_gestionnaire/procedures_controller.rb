@@ -356,7 +356,7 @@ module NewGestionnaire
         def last_page?
           current_page == total_pages
         end
-EVAL
+      EVAL
     end
   end
 end
