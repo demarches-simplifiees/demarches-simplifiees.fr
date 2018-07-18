@@ -158,11 +158,20 @@ describe Users::DossiersController, type: :controller do
     it { expect(subject.status).to eq 302 }
     it { expect(subject).to redirect_to new_users_dossier_path(procedure_id: procedure.id) }
 
-    context 'when procedure is archived' do
-      let(:procedure) { create(:procedure, :archived) }
+    context 'when procedure path dose not exist' do
+      let(:path) { 'hello' }
 
-      it { expect(subject.status).to eq 200 }
+      it { expect(subject).to redirect_to(root_path) }
     end
+  end
+
+  describe 'GET #commencer_test' do
+    subject { get :commencer_test, params: { procedure_path: path } }
+    let(:procedure) { create(:procedure, :testing) }
+    let(:path) { procedure.path }
+
+    it { expect(subject.status).to eq 302 }
+    it { expect(subject).to redirect_to new_users_dossier_path(procedure_id: procedure.id, en_test: true) }
 
     context 'when procedure path dose not exist' do
       let(:path) { 'hello' }

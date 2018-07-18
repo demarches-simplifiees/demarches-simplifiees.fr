@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 describe 'admin/procedures/show.html.haml', type: :view do
-  let(:archived_at) { nil }
-  let(:procedure) { create(:procedure, archived_at: archived_at) }
+  let(:procedure) { create(:procedure, :with_service) }
 
   before do
     assign(:facade, AdminProceduresShowFacades.new(procedure.decorate))
@@ -15,10 +14,11 @@ describe 'admin/procedures/show.html.haml', type: :view do
         render
       end
 
-      describe 'publish button is not visible' do
-        it { expect(rendered).not_to have_css('a#publish') }
-        it { expect(rendered).not_to have_css('button#archive') }
-        it { expect(rendered).not_to have_css('a#reenable') }
+      describe 'test button is not visible' do
+        it { expect(rendered).to have_css('a#test-procedure[disabled]') }
+        it { expect(rendered).not_to have_css('a#publish-procedure') }
+        it { expect(rendered).not_to have_css('button#archive-procedure') }
+        it { expect(rendered).not_to have_css('a#reopen-procedure') }
       end
     end
 
@@ -28,29 +28,51 @@ describe 'admin/procedures/show.html.haml', type: :view do
         render
       end
 
-      describe 'publish button is visible' do
-        it { expect(rendered).to have_css('a#publish-procedure') }
-        it { expect(rendered).not_to have_css('button#archive') }
-        it { expect(rendered).not_to have_css('a#reenable') }
+      describe 'test button is visible' do
+        it {
+          expect(rendered).not_to have_css('a#test-procedure[disabled]')
+          expect(rendered).to have_css('a#test-procedure')
+        }
+        it { expect(rendered).not_to have_css('a#publish-procedure') }
+        it { expect(rendered).not_to have_css('button#archive-procedure') }
+        it { expect(rendered).not_to have_css('a#reopen-procedure') }
       end
 
       describe 'procedure link is not present' do
-        it { expect(rendered).to have_content('Cette procédure n\'a pas encore été publiée et n\'est donc pas accessible par le public.') }
+        it { expect(rendered).to have_content('Cette procédure n’a pas encore été publiée et n’est donc pas accessible par le public.') }
       end
     end
   end
 
-  describe 'procedure is published' do
+  describe 'procedure is testing' do
+    let(:procedure) { create(:procedure, :testing) }
     before do
-      procedure.publish!('fake_path')
-      procedure.reload
+      render
+    end
+
+    describe 'publish button is visible' do
+      it { expect(rendered).not_to have_css('a#test-procedure') }
+      it { expect(rendered).to have_css('a#publish-procedure') }
+      it { expect(rendered).not_to have_css('button#archive-procedure') }
+      it { expect(rendered).not_to have_css('a#reopen-procedure') }
+    end
+
+    describe 'procedure link is present' do
+      it { expect(rendered).to have_content(commencer_test_url(procedure_path: procedure.path)) }
+    end
+  end
+
+  describe 'procedure is published' do
+    let(:procedure) { create(:procedure, :published) }
+    before do
       render
     end
 
     describe 'archive button is visible', js: true do
-      it { expect(rendered).not_to have_css('a#publish') }
-      it { expect(rendered).to have_css('button#archive') }
-      it { expect(rendered).not_to have_css('a#reenable') }
+      it { expect(rendered).not_to have_css('a#test-procedure') }
+      it { expect(rendered).not_to have_css('a#publish-procedure') }
+      it { expect(rendered).to have_css('button#archive-procedure') }
+      it { expect(rendered).not_to have_css('a#reopen-procedure') }
     end
 
     describe 'procedure link is present' do
@@ -59,21 +81,20 @@ describe 'admin/procedures/show.html.haml', type: :view do
   end
 
   describe 'procedure is archived' do
+    let(:procedure) { create(:procedure, :archived) }
     before do
-      procedure.publish!('fake_path')
-      procedure.archive!
-      procedure.reload
       render
     end
 
     describe 'Re-enable button is visible' do
-      it { expect(rendered).not_to have_css('a#publish') }
-      it { expect(rendered).not_to have_css('button#archive') }
-      it { expect(rendered).to have_css('a#reenable') }
+      it { expect(rendered).not_to have_css('a#test-procedure') }
+      it { expect(rendered).not_to have_css('a#publish-procedure') }
+      it { expect(rendered).not_to have_css('button#archive-procedure') }
+      it { expect(rendered).to have_css('a#reopen-procedure') }
     end
 
     describe 'procedure link is present' do
-      it { expect(rendered).to have_content(commencer_url(procedure_path: procedure.path)) }
+      it { expect(rendered).to have_content('Cette procédure est archivée et n’est donc pas accessible par le public.') }
     end
   end
 end

@@ -433,59 +433,124 @@ describe Procedure do
     end
   end
 
-  describe '#publish!' do
+  describe '#publish_for_test!' do
     let(:procedure) { create(:procedure) }
+    let(:path) { "example-path" }
+    let(:procedure_path) { ProcedurePath.find_by(path: path) }
     let(:now) { Time.now.beginning_of_minute }
 
     before do
       Timecop.freeze(now)
-      procedure.publish!("example-path")
+      procedure.publish_for_test!(path)
+    end
+    after { Timecop.return }
+
+    it { expect(procedure.archived_at).to eq(nil) }
+    it { expect(procedure.test_started_at).to eq(now) }
+    it { expect(procedure_path).to be }
+    it { expect(procedure_path.test_procedure).to eq(procedure) }
+    it { expect(procedure_path.procedure).to be_nil }
+    it { expect(procedure_path.administrateur).to eq(procedure.administrateur) }
+  end
+
+  describe '#publish!' do
+    let(:procedure) { create(:procedure, :testing) }
+    let(:path) { procedure.path }
+    let(:procedure_path) { ProcedurePath.find_by(path: path) }
+    let(:now) { Time.now.beginning_of_minute }
+
+    before do
+      Timecop.freeze(now)
+      procedure.publish!(path)
     end
     after { Timecop.return }
 
     it { expect(procedure.archived_at).to eq(nil) }
     it { expect(procedure.published_at).to eq(now) }
-    it { expect(ProcedurePath.find_by(path: "example-path")).to be }
-    it { expect(ProcedurePath.find_by(path: "example-path").procedure).to eq(procedure) }
-    it { expect(ProcedurePath.find_by(path: "example-path").administrateur).to eq(procedure.administrateur) }
+    it { expect(procedure_path).to be }
+    it { expect(procedure_path.test_procedure).to be_nil }
+    it { expect(procedure_path.procedure).to eq(procedure) }
+    it { expect(procedure_path.administrateur).to eq(procedure.administrateur) }
+  end
+
+  describe '#reopen!' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:path) { procedure.path }
+    let(:procedure_path) { ProcedurePath.find_by(path: path) }
+    let(:now) { Time.now.beginning_of_minute }
+
+    before do
+      Timecop.freeze(now)
+      old_path = path
+      procedure.archive!
+      procedure.reopen!(old_path)
+    end
+    after { Timecop.return }
+
+    it { expect(procedure.archived_at).to eq(nil) }
+    it { expect(procedure.published_at).to eq(now) }
+    it { expect(procedure_path).to be }
+    it { expect(procedure_path.test_procedure).to be_nil }
+    it { expect(procedure_path.procedure).to eq(procedure) }
+    it { expect(procedure_path.administrateur).to eq(procedure.administrateur) }
   end
 
   describe "#brouillon?" do
     let(:procedure_brouillon) { Procedure.new() }
+    let(:procedure_en_test) { Procedure.new(aasm_state: :en_test, test_started_at: Time.now) }
     let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.now) }
     let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.now, archived_at: Time.now) }
 
     it { expect(procedure_brouillon.brouillon?).to be_truthy }
+    it { expect(procedure_en_test.brouillon?).to be_falsey }
     it { expect(procedure_publiee.brouillon?).to be_falsey }
     it { expect(procedure_archivee.brouillon?).to be_falsey }
   end
 
+  describe "#en_test?" do
+    let(:procedure_brouillon) { Procedure.new() }
+    let(:procedure_en_test) { Procedure.new(aasm_state: :en_test, test_started_at: Time.now) }
+    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.now) }
+    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.now, archived_at: Time.now) }
+
+    it { expect(procedure_brouillon.en_test?).to be_falsey }
+    it { expect(procedure_en_test.en_test?).to be_truthy }
+    it { expect(procedure_publiee.en_test?).to be_falsey }
+    it { expect(procedure_archivee.en_test?).to be_falsey }
+  end
+
   describe "#publiee?" do
     let(:procedure_brouillon) { Procedure.new() }
+    let(:procedure_en_test) { Procedure.new(aasm_state: :en_test, test_started_at: Time.now) }
     let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.now) }
     let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.now, archived_at: Time.now) }
 
     it { expect(procedure_brouillon.publiee?).to be_falsey }
+    it { expect(procedure_en_test.publiee?).to be_falsey }
     it { expect(procedure_publiee.publiee?).to be_truthy }
     it { expect(procedure_archivee.publiee?).to be_falsey }
   end
 
   describe "#archivee?" do
     let(:procedure_brouillon) { Procedure.new() }
+    let(:procedure_en_test) { Procedure.new(aasm_state: :en_test, test_started_at: Time.now) }
     let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.now) }
     let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.now, archived_at: Time.now) }
 
     it { expect(procedure_brouillon.archivee?).to be_falsey }
+    it { expect(procedure_en_test.archivee?).to be_falsey }
     it { expect(procedure_publiee.archivee?).to be_falsey }
     it { expect(procedure_archivee.archivee?).to be_truthy }
   end
 
   describe "#publiee_ou_archivee?" do
     let(:procedure_brouillon) { Procedure.new() }
+    let(:procedure_en_test) { Procedure.new(aasm_state: :en_test, test_started_at: Time.now) }
     let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.now) }
     let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.now, archived_at: Time.now) }
 
     it { expect(procedure_brouillon.publiee_ou_archivee?).to be_falsey }
+    it { expect(procedure_en_test.publiee_ou_archivee?).to be_falsey }
     it { expect(procedure_publiee.publiee_ou_archivee?).to be_truthy }
     it { expect(procedure_archivee.publiee_ou_archivee?).to be_truthy }
   end

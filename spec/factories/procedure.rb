@@ -117,22 +117,31 @@ FactoryBot.define do
       end
     end
 
+    trait :testing do
+      after(:build) do |procedure, _evaluator|
+        procedure.publish_for_test!(generate(:published_path))
+      end
+    end
+
     trait :published do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish_for_test!(generate(:published_path))
+        procedure.publish!(procedure.path, false)
       end
     end
 
     trait :archived do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish_for_test!(generate(:published_path))
+        procedure.publish!(procedure.path, false)
         procedure.archive!
       end
     end
 
     trait :hidden do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish_for_test!(generate(:published_path))
+        procedure.publish!(procedure.path, false)
         procedure.hide!
       end
     end

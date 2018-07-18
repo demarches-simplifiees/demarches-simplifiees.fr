@@ -145,6 +145,7 @@ Rails.application.routes.draw do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
     get 'sign_in' => '/administrateurs/sessions#new'
+    get 'procedures/testing' => 'procedures#testing'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
     get 'procedures/path_list' => 'procedures#path_list'

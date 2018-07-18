@@ -7,6 +7,18 @@ feature 'The user' do
   let!(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs_mandatory) }
   let(:user_dossier) { user.dossiers.first }
 
+  context 'Procedure en test' do
+    let(:procedure) { create(:procedure, :testing, :for_individual, :with_all_champs_mandatory) }
+
+    before do
+      log_in_test(user.email, password, procedure)
+    end
+
+    scenario 'he is redirected to procedure' do
+      expect(page).to have_content(procedure.libelle)
+    end
+  end
+
   # TODO: check
   # the order
   # there are no extraneous input
@@ -130,6 +142,16 @@ feature 'The user' do
 
   def log_in(email, password, procedure)
     visit "/commencer/#{procedure.procedure_path.path}"
+    expect(page).to have_current_path(new_user_session_path)
+
+    fill_in 'user_email', with: email
+    fill_in 'user_password', with: password
+    click_on 'Se connecter'
+    expect(page).to have_current_path(identite_dossier_path(user_dossier))
+  end
+
+  def log_in_test(email, password, procedure)
+    visit "/commencer/test/#{procedure.procedure_path.path}"
     expect(page).to have_current_path(new_user_session_path)
 
     fill_in 'user_email', with: email
