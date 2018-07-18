@@ -21,7 +21,7 @@ class NewAttestationMailer < ApplicationMailer
 
       Suite à cette opération, l'attestation liée à votre dossier n'a pas été regénérée.
       Ce problème est désormais reglé, votre nouvelle attestation est disponible à l'adresse suivante :
-      #{dossier_attestation_url(dossier)}
+      #{attestation_dossier_url(dossier)}
 
       Cordialement,
 

@@ -65,4 +65,41 @@ describe 'user access to the list of his dossier' do
       expect(page).to have_content(CONTACT_EMAIL)
     end
   end
+
+  describe "recherche" do
+    context "when the dossier does not exist" do
+      before do
+        page.find_by_id('dossier_id').set(10000000)
+        click_button("Rechercher")
+      end
+
+      it "shows an error message on the dossiers page" do
+        expect(current_path).to eq(dossiers_path)
+        expect(page).to have_content("Vous n’avez pas de dossier avec le nº 10000000.")
+      end
+    end
+
+    context "when the dossier does not belong to the user" do
+      before do
+        page.find_by_id('dossier_id').set(dossier2.id)
+        click_button("Rechercher")
+      end
+
+      it "shows an error message on the dossiers page" do
+        expect(current_path).to eq(dossiers_path)
+        expect(page).to have_content("Vous n’avez pas de dossier avec le nº #{dossier2.id}.")
+      end
+    end
+
+    context "when the dossier belongs to the user" do
+      before do
+        page.find_by_id('dossier_id').set(dossier1.id)
+        click_button("Rechercher")
+      end
+
+      it "redirects to the dossier page" do
+        expect(current_path).to eq(users_dossier_recapitulatif_path(dossier1))
+      end
+    end
+  end
 end

@@ -15,7 +15,11 @@ Rails.application.routes.draw do
       put 'enable_feature', on: :member
     end
 
-    resources :users, only: [:index, :show]
+    resources :users, only: [:index, :show] do
+      post 'resend_confirmation_instructions', on: :member
+      post 'confirm', on: :member
+    end
+
     resources :gestionnaires, only: [:index, :show] do
       post 'reinvite', on: :member
     end
@@ -241,12 +245,16 @@ Rails.application.routes.draw do
         get 'modifier'
         get 'merci'
         post 'ask_deletion'
+        get 'attestation'
       end
-      get 'attestation'
+
+      collection do
+        post 'recherche'
+        # FIXME: to remove when show is implemeted
+        # needed to fix refresh after dossier draft save
+        get ':id', to: redirect('/dossiers/%{id}/modifier')
+      end
     end
-    # FIXME: to remove when show is implemeted
-    # needed to fix refresh after dossier draft save
-    get 'dossiers/:id', to: redirect('/dossiers/%{id}/modifier')
   end
 
   scope module: 'new_gestionnaire', as: 'gestionnaire' do

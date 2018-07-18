@@ -47,6 +47,14 @@
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg"
 
+      - if nav_bar_profile == :user && user_signed_in? && current_user.dossiers.count > 2
+        %li
+          .header-search
+            = form_tag recherche_dossiers_path, method: :post, class: "form" do
+              = text_field_tag :dossier_id, "", placeholder: "Numéro de dossier"
+              %button{ title: "Rechercher" }
+                = image_tag "icons/search-blue.svg"
+
       - if gestionnaire_signed_in? || user_signed_in?
         %li
           .header-menu-opener

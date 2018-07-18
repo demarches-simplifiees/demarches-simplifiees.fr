@@ -10,6 +10,7 @@ class UserDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     email: Field::String,
+    confirmed?: Field::Boolean,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     current_sign_in_at: Field::DateTime,
@@ -32,6 +33,7 @@ class UserDashboard < Administrate::BaseDashboard
     :dossiers,
     :id,
     :email,
+    :confirmed?,
     :current_sign_in_at,
     :created_at,
   ].freeze
