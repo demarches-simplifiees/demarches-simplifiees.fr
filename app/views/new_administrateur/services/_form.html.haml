@@ -10,6 +10,16 @@
     %span.mandatory *
   = f.text_field :organisme, placeholder: "mairie de Mours, préfecture de l'Oise, ministère de la Culture", required: true
 
+  = f.label :siret do
+    SIRET
+    %span.mandatory *
+  %p
+    Pour trouver votre numéro SIRET, utilisez
+    %a{ href: 'https://entreprise.data.gouv.fr/', target: '_blank' }
+      entreprise.data.gouv.fr
+    ou renseignez-vous auprès de votre service comptable
+  = f.number_field :siret, required: true
+
   = f.label :type_organisme do
     Type d’organisme
     %span.mandatory *
