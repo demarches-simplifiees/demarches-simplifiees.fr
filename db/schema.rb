@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_27_092237) do
+ActiveRecord::Schema.define(version: 2018_07_19_125038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -541,6 +541,7 @@ ActiveRecord::Schema.define(version: 2018_06_27_092237) do
     t.string "telephone"
     t.text "horaires"
     t.text "adresse"
+    t.string "siret"
     t.index ["administrateur_id", "nom"], name: "index_services_on_administrateur_id_and_nom", unique: true
     t.index ["administrateur_id"], name: "index_services_on_administrateur_id"
   end
