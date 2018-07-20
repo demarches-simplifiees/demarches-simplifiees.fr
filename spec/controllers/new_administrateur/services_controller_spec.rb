@@ -13,6 +13,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
           service: {
             nom: 'super service',
             organisme: 'organisme',
+            siret: '01234567891234',
             type_organisme: 'region',
             email: 'email@toto.com',
             telephone: '1234',
@@ -27,6 +28,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect(flash.notice).to eq('super service créé') }
       it { expect(Service.last.nom).to eq('super service') }
       it { expect(Service.last.organisme).to eq('organisme') }
+      it { expect(Service.last.siret).to eq('01234567891234') }
       it { expect(Service.last.type_organisme).to eq('region') }
       it { expect(Service.last.email).to eq('email@toto.com') }
       it { expect(Service.last.telephone).to eq('1234') }
