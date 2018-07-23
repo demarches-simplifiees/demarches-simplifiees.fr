@@ -806,6 +806,34 @@ describe Dossier do
     end
   end
 
+  describe "#delete_and_keep_track" do
+    let(:dossier) { create(:dossier) }
+    let(:deleted_dossier) { DeletedDossier.find_by!(dossier_id: dossier.id) }
+
+    before do
+      allow(DossierMailer).to receive(:notify_deletion_to_user).and_return(double(deliver_later: nil))
+      allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
+    end
+
+    subject! { dossier.delete_and_keep_track }
+
+    it 'hides the dossier' do
+      expect(dossier.hidden_at).to be_present
+    end
+
+    it 'creates a DeletedDossier record' do
+      expect(deleted_dossier.dossier_id).to eq dossier.id
+      expect(deleted_dossier.procedure).to eq dossier.procedure
+      expect(deleted_dossier.state).to eq dossier.state
+      expect(deleted_dossier.deleted_at).to be_present
+    end
+
+    it 'sends notification emails' do
+      expect(DossierMailer).to have_received(:notify_deletion_to_user).with(deleted_dossier, dossier.user.email)
+      expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateur.email)
+    end
+  end
+
   describe 'webhook' do
     let(:dossier) { create(:dossier) }
 
