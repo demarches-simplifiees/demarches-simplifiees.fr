@@ -100,12 +100,27 @@
   input[type=date],
   input[type=number],
   input[type=tel],
+  input[type=file],
   textarea,
   select {
     display: block;
+    margin-bottom: 2 * $default-padding;
+
+    &.small-margin {
+      margin-bottom: $default-padding / 2;
+    }
+  }
+
+  input[type=text]:not([data-address='true']),
+  input[type=email],
+  input[type=password],
+  input[type=date],
+  input[type=number],
+  input[type=tel],
+  textarea,
+  select {
     border-radius: 4px;
     border: solid 1px $border-grey;
-    margin-bottom: 2 * $default-padding;
     padding: $default-padding;
 
     &:disabled {
@@ -114,10 +129,6 @@
 
     &.small {
       padding: $default-padding / 2;
-    }
-
-    &.small-margin {
-      margin-bottom: $default-padding / 2;
     }
   }
 
