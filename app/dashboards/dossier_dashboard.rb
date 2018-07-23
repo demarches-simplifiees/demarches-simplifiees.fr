@@ -8,7 +8,7 @@ class DossierDashboard < Administrate::BaseDashboard
   # which determines how the attribute is displayed
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
-    id: Field::Number,
+    id: Field::Number.with_options(searchable: true),
     procedure: Field::HasOne,
     state: Field::String,
     text_summary: Field::String.with_options(searchable: false),
