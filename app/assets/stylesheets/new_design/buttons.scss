@@ -45,6 +45,18 @@
     }
   }
 
+  &.danger {
+    color: $black;
+    border-color: $border-grey;
+    background-color: #FFFFFF;
+
+    &:hover {
+      color: #FFFFFF;
+      border-color: $medium-red;
+      background-color: $medium-red;
+    }
+  }
+
   &.accepted {
     color: #FFFFFF;
     border-color: $green;
