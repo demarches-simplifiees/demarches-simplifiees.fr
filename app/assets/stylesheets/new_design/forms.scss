@@ -281,15 +281,43 @@
   }
 
   .send-wrapper {
-    text-align: right;
-    margin-top: 2 * $default-padding;
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: $default-padding;
     margin-bottom: 2 * $default-padding;
 
     .button {
+      margin-top: $default-padding;
       margin-bottom: 0;
     }
-    .button.danger {
-      float:left;
+
+    // Wide layout: align buttons on a single row
+    @media (min-width: 550px) {
+      flex-direction: row;
+
+      .button:not(:first-of-type) {
+        margin-left: $default-spacer;
+      }
+
+      .button.danger {
+        margin-right: auto;
+      }
+    }
+
+    // Narrow layout: stack buttons vertically
+    @media (max-width: 550px) {
+      flex-direction: column-reverse;
+      align-items: center;
+
+      .button,
+      .button.danger {
+        width: 100%;
+        max-width: 350px;
+        line-height: 30px;
+        margin-left: none;
+        margin-right: none;
+      }
     }
   }
 
