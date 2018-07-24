@@ -14,7 +14,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     dossiers: Field::HasMany,
     gestionnaires: Field::HasMany,
     administrateur: Field::BelongsTo,
-    id: Field::Number,
+    id: Field::Number.with_options(searchable: true),
     libelle: Field::String,
     description: Field::String,
     organisation: Field::String,
