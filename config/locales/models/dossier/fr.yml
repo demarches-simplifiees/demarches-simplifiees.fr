@@ -1,7 +1,9 @@
 fr:
   activerecord:
     models:
-      dossier: 'Dossier'
+      dossier:
+        one: "Dossier"
+        other: "Dossiers"
     attributes:
       dossier:
         montant_projet: 'Le montant du projet'
