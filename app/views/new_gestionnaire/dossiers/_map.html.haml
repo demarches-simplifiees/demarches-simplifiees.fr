@@ -17,7 +17,11 @@
         = "Parcelle n° #{p.numero} - Feuille #{p.code_arr} #{p.section} #{p.feuille}"
 
   :javascript
-    var getPositionUrl = "#{position_gestionnaire_dossier_path(dossier.procedure, dossier)}";
-    var dossierJsonLatLngs = #{raw(ensure_safe_json(dossier.json_latlngs))};
-    var dossierCadastres = #{raw(ensure_safe_json(dossier.cadastres.to_json))};
-    var dossierQuartiersPrioritaires = #{raw(ensure_safe_json(dossier.quartier_prioritaires.to_json))};
+    DATA.push({
+      carto: {
+        getPositionUrl: "#{position_gestionnaire_dossier_path(dossier.procedure, dossier)}",
+        dossierJsonLatLngs: #{raw(ensure_safe_json(dossier.json_latlngs))},
+        dossierCadastres: #{raw(ensure_safe_json(dossier.cadastres.to_json))},
+        dossierQuartiersPrioritaires: #{raw(ensure_safe_json(dossier.quartier_prioritaires.to_json))}
+      }
+    });

@@ -5,6 +5,7 @@ AllCops:
   Exclude:
     - "db/schema.rb"
     - "bin/*"
+    - "node_modules/**/*"
 
 Bundler/DuplicatedGem:
   Enabled: true

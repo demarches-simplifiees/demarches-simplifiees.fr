@@ -25,6 +25,21 @@ bundle_install: &bundle_install
     name: Install Ruby Dependencies
     command: bundle install --path ~/vendor/bundle
 
+yarn_restore_cache: &yarn_restore_cache
+  restore_cache:
+    key: yarn-install-v8-{{ arch }}-{{ checksum "yarn.lock" }}
+
+yarn_save_cache: &yarn_save_cache
+  save_cache:
+    key: yarn-install-v8-{{ arch }}-{{ checksum "yarn.lock" }}
+    paths:
+      - ~/node_modules
+
+yarn_install: &yarn_install
+  run:
+    name: Install JS Dependencies
+    command: yarn install --non-interactive
+
 jobs:
   build:
     <<: *defaults
@@ -33,6 +48,9 @@ jobs:
       - *bundle_restore_cache
       - *bundle_install
       - *bundle_save_cache
+      - *yarn_restore_cache
+      - *yarn_save_cache
+      - *yarn_install
   test:
     <<: *defaults
     parallelism: 3
@@ -40,6 +58,8 @@ jobs:
       - checkout
       - *bundle_restore_cache
       - *bundle_install
+      - *yarn_restore_cache
+      - *yarn_install
       - run:
           environment:
             DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
@@ -63,6 +83,11 @@ jobs:
       - checkout
       - *bundle_restore_cache
       - *bundle_install
+      - *yarn_restore_cache
+      - *yarn_install
+      - run:
+          name: Run eslint
+          command: yarn lint:js
       - run:
           name: Run rubocop
           command: bundle exec rubocop
@@ -81,6 +106,8 @@ jobs:
       - checkout
       - *bundle_restore_cache
       - *bundle_install
+      - *yarn_restore_cache
+      - *yarn_install
       - add_ssh_keys:
           fingerprints:
             - "0a:67:42:7d:7e:b7:e1:3c:48:8f:bf:68:10:51:a8:44"
