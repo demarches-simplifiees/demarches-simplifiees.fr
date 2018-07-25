@@ -1,5 +1,6 @@
 describe NewAdministrateur::ServicesController, type: :controller do
   let(:admin) { create(:administrateur) }
+  let(:procedure) { create(:procedure, administrateur: admin) }
 
   describe '#create' do
     before do
@@ -38,7 +39,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
     end
 
     context 'when submitting an invalid service' do
-      let(:params) { { service: { nom: 'super service' } } }
+      let(:params) { { service: { nom: 'super service' }, procedure_id: procedure.id } }
 
       it { expect(flash.alert).not_to be_nil }
       it { expect(response).to render_template(:new) }
@@ -54,7 +55,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       params = {
         id: service.id,
         service: service_params,
-        procedure_id: 12
+        procedure_id: procedure.id
       }
       patch :update, params: params
     end
@@ -64,7 +65,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect(flash.notice).to eq('nom modifié') }
       it { expect(Service.last.nom).to eq('nom') }
       it { expect(Service.last.type_organisme).to eq('region') }
-      it { expect(response).to redirect_to(services_path(procedure_id: 12)) }
+      it { expect(response).to redirect_to(services_path(procedure_id: procedure.id)) }
     end
 
     context 'when updating a service with invalid data' do
