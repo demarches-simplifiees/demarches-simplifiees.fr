@@ -10,12 +10,6 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require activestorage
-//= require jquery
-//= require jquery_ujs
-//= require turbolinks
-//= require highcharts
-//= require chartkick
 //= require_tree ./old_design
 //= require bootstrap-sprockets
 
@@ -31,11 +25,8 @@
 //= require bootstrap-wysihtml5
 //= require bootstrap-wysihtml5/locales/fr-FR
 //= require handlebars
-//= require typeahead.bundle
-//= require select2
 
 $(document).on('turbolinks:load', application_init);
-
 
 function application_init(){
   tooltip_init();

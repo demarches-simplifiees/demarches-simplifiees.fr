@@ -5,7 +5,7 @@ $(document)
 function the_terms() {
   var the_terms = $("#dossier_autorisation_donnees");
 
-  if (the_terms.size() == 0)
+  if (the_terms.length == 0)
     return;
 
   check_value(the_terms);
