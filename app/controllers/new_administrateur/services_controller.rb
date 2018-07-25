@@ -17,6 +17,7 @@ module NewAdministrateur
         redirect_to services_path(procedure_id: params[:procedure_id]),
           notice: "#{new_service.nom} créé"
       else
+        @procedure = procedure
         flash[:alert] = new_service.errors.full_messages
         render :new
       end
@@ -34,6 +35,7 @@ module NewAdministrateur
         redirect_to services_path(procedure_id: params[:procedure_id]),
           notice: "#{@service.nom} modifié"
       else
+        @procedure = procedure
         flash[:alert] = @service.errors.full_messages
         render :edit
       end
