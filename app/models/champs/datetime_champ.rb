@@ -9,6 +9,10 @@ class Champs::DatetimeChamp < Champ
     same_date?(num, '%M')
   end
 
+  def search_terms
+    # Text search is pretty useless for datetimes so we’re not including these champs
+  end
+
   private
 
   def same_date?(num, compare)

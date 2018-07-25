@@ -37,6 +37,10 @@ class Champs::LinkedDropDownListChamp < Champ
     mandatory? && (primary_value.blank? || secondary_value.blank?)
   end
 
+  def search_terms
+    [ primary_value, secondary_value ]
+  end
+
   private
 
   def string_value
