@@ -11,6 +11,7 @@
   background-color: #FFFFFF;
   color: $black;
   cursor: pointer;
+  text-align: center;
   -webkit-appearance: none;
 
   &:hover {
@@ -41,6 +42,18 @@
     &:hover {
       color: #FFFFFF;
       background: $light-blue;
+    }
+  }
+
+  &.danger {
+    color: $black;
+    border-color: $border-grey;
+    background-color: #FFFFFF;
+
+    &:hover {
+      color: #FFFFFF;
+      border-color: $medium-red;
+      background-color: $medium-red;
     }
   }
 
