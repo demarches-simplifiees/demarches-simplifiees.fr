@@ -33,6 +33,24 @@ describe Dossier do
 
     subject { dossier }
 
+    describe '#update_search_terms' do
+      let(:etablissement) { build(:etablissement, entreprise_nom: 'Dupont', entreprise_prenom: 'Thomas', association_rna: '12345', association_titre: 'asso de test', association_objet: 'tests unitaires') }
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
+      let(:dossier) { create(:dossier, etablissement: etablissement, user: user, procedure: procedure) }
+      let(:france_connect_information) { build(:france_connect_information, given_name: 'Chris', family_name: 'Harrisson') }
+      let(:user) { build(:user, france_connect_information: france_connect_information) }
+
+      before do
+        dossier.champs.each { |c| c.update_attribute(:value, "champ public") }
+        dossier.champs_private.each { |c| c.update_attribute(:value, "champ privé") }
+
+        dossier.update_search_terms
+      end
+
+      it { expect(dossier.search_terms).to eq("#{user.email} #{france_connect_information.given_name} #{france_connect_information.family_name} champ public #{etablissement.entreprise_siren} #{etablissement.entreprise_numero_tva_intracommunautaire} #{etablissement.entreprise_forme_juridique} #{etablissement.entreprise_forme_juridique_code} #{etablissement.entreprise_nom_commercial} #{etablissement.entreprise_raison_sociale} #{etablissement.entreprise_siret_siege_social} #{etablissement.entreprise_nom} #{etablissement.entreprise_prenom} #{etablissement.association_rna} #{etablissement.association_titre} #{etablissement.association_objet} #{etablissement.siret} #{etablissement.naf} #{etablissement.libelle_naf} #{etablissement.adresse} #{etablissement.code_postal} #{etablissement.localite} #{etablissement.code_insee_localite}") }
+      it { expect(dossier.private_search_terms).to eq('champ privé') }
+    end
+
     describe '#types_de_piece_justificative' do
       subject { dossier.types_de_piece_justificative }
       it 'returns list of required piece justificative' do
