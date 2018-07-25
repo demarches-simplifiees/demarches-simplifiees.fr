@@ -62,9 +62,16 @@
         = hidden_field_tag 'submit_action', 'draft'
 
         - if dossier.brouillon?
+          - if current_user.owns?(dossier)
+            = link_to ask_deletion_dossier_path(dossier),
+              method: :post,
+              class: 'button danger',
+              data: { confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" } do
+              Supprimer le brouillon
+
           = f.button 'Enregistrer le brouillon',
             formnovalidate: true,
-            class: 'button send',
+            class: 'button send secondary',
             data: { action: 'draft', disable_with: 'Envoi...' }
 
           - if current_user.owns?(dossier) && dossier.can_transition_to_en_construction?
