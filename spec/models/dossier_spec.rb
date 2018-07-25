@@ -806,6 +806,54 @@ describe Dossier do
     end
   end
 
+  describe "#delete_and_keep_track" do
+    let(:dossier) { create(:dossier) }
+    let(:deleted_dossier) { DeletedDossier.find_by!(dossier_id: dossier.id) }
+
+    before do
+      allow(DossierMailer).to receive(:notify_deletion_to_user).and_return(double(deliver_later: nil))
+      allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
+    end
+
+    subject! { dossier.delete_and_keep_track }
+
+    it 'hides the dossier' do
+      expect(dossier.hidden_at).to be_present
+    end
+
+    it 'creates a DeletedDossier record' do
+      expect(deleted_dossier.dossier_id).to eq dossier.id
+      expect(deleted_dossier.procedure).to eq dossier.procedure
+      expect(deleted_dossier.state).to eq dossier.state
+      expect(deleted_dossier.deleted_at).to be_present
+    end
+
+    it 'notifies the user' do
+      expect(DossierMailer).to have_received(:notify_deletion_to_user).with(deleted_dossier, dossier.user.email)
+    end
+
+    context 'where gestionnaires are following the dossier' do
+      let(:dossier) { create(:dossier, :followed) }
+      let!(:non_following_gestionnaire) do
+        non_following_gestionnaire = create(:gestionnaire)
+        non_following_gestionnaire.procedures << dossier.procedure
+        non_following_gestionnaire
+      end
+
+      it 'notifies the following gestionnaires' do
+        expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
+        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.followers_gestionnaires.first.email)
+      end
+    end
+
+    context 'when there are no following gestionnaires' do
+      it 'notifies the procedure administrateur' do
+        expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
+        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateur.email)
+      end
+    end
+  end
+
   describe 'webhook' do
     let(:dossier) { create(:dossier) }
 
