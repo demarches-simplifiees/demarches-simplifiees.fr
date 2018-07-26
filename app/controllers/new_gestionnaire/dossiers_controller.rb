@@ -101,8 +101,10 @@ module NewGestionnaire
         NotificationMailer.send_without_continuation_notification(dossier).deliver_later
       when "accepter"
         dossier.accepte!
-        dossier.attestation = dossier.build_attestation
-        dossier.save
+        if dossier.attestation.nil?
+          dossier.attestation = dossier.build_attestation
+          dossier.save
+        end
         flash.notice = "Dossier traité avec succès."
         NotificationMailer.send_closed_notification(dossier).deliver_later
       end
