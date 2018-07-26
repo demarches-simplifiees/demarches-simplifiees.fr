@@ -46,7 +46,6 @@ set :rails_env, ENV["to"]
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, [
   'log',
-  'bin',
   'uploads',
   'tmp/pids',
   'tmp/cache',
