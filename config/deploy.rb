@@ -123,6 +123,16 @@ task :setup => :environment do
   queue %[echo "-----> Be sure to edit 'shared/environments/staging.rb'."]
 end
 
+namespace :yarn do
+  desc "Install package dependencies using yarn."
+  task :install do
+    queue %{
+      echo "-----> Installing package dependencies using yarn"
+      #{echo_cmd %[yarn install --non-interactive]}
+    }
+  end
+end
+
 desc "Deploys the current version to the server."
 task :deploy => :environment do
   queue 'export PATH=$PATH:/usr/local/rbenv/bin:/usr/local/rbenv/shims'
@@ -133,6 +143,7 @@ task :deploy => :environment do
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
+    invoke :'yarn:install'
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile:force'
 
