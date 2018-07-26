@@ -106,8 +106,6 @@ jobs:
       - checkout
       - *bundle_restore_cache
       - *bundle_install
-      - *yarn_restore_cache
-      - *yarn_install
       - add_ssh_keys:
           fingerprints:
             - "0a:67:42:7d:7e:b7:e1:3c:48:8f:bf:68:10:51:a8:44"
