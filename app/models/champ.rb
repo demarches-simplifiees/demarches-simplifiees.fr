@@ -20,6 +20,10 @@ class Champ < ApplicationRecord
     mandatory? && value.blank?
   end
 
+  def search_terms
+    [ to_s ]
+  end
+
   def to_s
     if value.present?
       string_value
