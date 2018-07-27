@@ -11,6 +11,30 @@ class Etablissement < ApplicationRecord
 
   validate :validate_signature
 
+  def search_terms
+    [
+      entreprise_siren,
+      entreprise_numero_tva_intracommunautaire,
+      entreprise_forme_juridique,
+      entreprise_forme_juridique_code,
+      entreprise_nom_commercial,
+      entreprise_raison_sociale,
+      entreprise_siret_siege_social,
+      entreprise_nom,
+      entreprise_prenom,
+      association_rna,
+      association_titre,
+      association_objet,
+      siret,
+      naf,
+      libelle_naf,
+      adresse,
+      code_postal,
+      localite,
+      code_insee_localite
+    ]
+  end
+
   def siren
     entreprise_siren
   end

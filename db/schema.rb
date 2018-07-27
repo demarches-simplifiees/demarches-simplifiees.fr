@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_19_125038) do
+ActiveRecord::Schema.define(version: 2018_07_24_153247) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -244,6 +244,10 @@ ActiveRecord::Schema.define(version: 2018_07_19_125038) do
     t.datetime "processed_at"
     t.text "motivation"
     t.datetime "hidden_at"
+    t.text "search_terms"
+    t.text "private_search_terms"
+    t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
+    t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
     t.index ["procedure_id"], name: "index_dossiers_on_procedure_id"
     t.index ["user_id"], name: "index_dossiers_on_user_id"
