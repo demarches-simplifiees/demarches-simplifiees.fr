@@ -6,6 +6,7 @@ addEventListener('turbolinks:load', () => {
 
     switch (value.length) {
       case 0:
+        input.removeAttr('data-invalid');
         $.get(`${url}?siret=blank`);
         break;
       case 14:
