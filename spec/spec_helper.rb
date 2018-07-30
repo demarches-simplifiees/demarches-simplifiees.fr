@@ -118,6 +118,9 @@ RSpec.configure do |config|
   config.filter_run :focus => true
 
   config.order = 'random'
+  # Fix the seed not changing between runs when using Spring
+  # See https://github.com/rails/spring/issues/113
+  config.seed = srand % 0xFFFF unless ARGV.any? { |arg| arg =~ /seed/ || arg =~ /rand:/ }
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
