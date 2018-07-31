@@ -31,12 +31,10 @@ class DossierSearchService
   end
 
   def self.id_compatible?(number)
-    begin
-      ActiveRecord::Type::Integer.new.serialize(number)
-      true
-    rescue ActiveModel::RangeError
-      false
-    end
+    ActiveRecord::Type::Integer.new.serialize(number)
+    true
+  rescue ActiveModel::RangeError
+    false
   end
 
   def self.dossier_by_full_text_for_gestionnaire(search_terms, gestionnaire)
