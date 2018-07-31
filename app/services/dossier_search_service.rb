@@ -1,14 +1,7 @@
 class DossierSearchService
   def self.matching_dossiers_for_gestionnaire(search_terms, gestionnaire)
     # exact id match?
-    id = search_terms.to_i
-    if id != 0 && id_compatible?(id) # Sometimes gestionnaire is searching dossiers with a big number (ex: SIRET), ActiveRecord can't deal with them and throws ActiveModel::RangeError. id_compatible? prevents this.
-      dossiers = dossiers_by_id(id, gestionnaire)
-    end
-
-    if dossiers.nil?
-      dossiers = Dossier.none
-    end
+    dossiers = dossier_by_exact_id_for_gestionnaire(search_terms, gestionnaire)
 
     # full text search
     if dossiers.empty?
@@ -22,6 +15,17 @@ class DossierSearchService
   end
 
   private
+
+  def self.dossier_by_exact_id_for_gestionnaire(search_terms, gestionnaire)
+    id = search_terms.to_i
+    if id != 0 && id_compatible?(id) # Sometimes gestionnaire is searching dossiers with a big number (ex: SIRET), ActiveRecord can't deal with them and throws ActiveModel::RangeError. id_compatible? prevents this.
+      dossiers = dossiers_by_id(id, gestionnaire)
+    end
+
+    if dossiers.nil?
+      dossiers = Dossier.none
+    end
+  end
 
   def self.dossiers_by_id(id, gestionnaire)
     dossiers = gestionnaire.dossiers.where(id: id) +
