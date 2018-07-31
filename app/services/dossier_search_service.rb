@@ -25,9 +25,7 @@ class DossierSearchService
   end
 
   def self.dossiers_by_id(id, gestionnaire)
-    dossiers = gestionnaire.dossiers.where(id: id) +
-               gestionnaire.dossiers_from_avis.where(id: id)
-    dossiers.uniq
+    (gestionnaire.dossiers.where(id: id) + gestionnaire.dossiers_from_avis.where(id: id)).uniq
   end
 
   def self.id_compatible?(number)
