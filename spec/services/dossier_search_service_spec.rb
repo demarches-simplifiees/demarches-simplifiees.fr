@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Search do
-  describe '#results' do
+describe DossierSearchService do
+  describe '#matching_dossiers_for_gestionnaire' do
     subject { liste_dossiers }
 
     let(:liste_dossiers) do
-      described_class.new(gestionnaire: gestionnaire_1, query: terms).results
+      described_class.matching_dossiers_for_gestionnaire(terms, gestionnaire_1)
     end
 
     let(:administrateur_1) { create(:administrateur) }
@@ -23,14 +23,17 @@ describe Search do
     let(:procedure_2) { create(:procedure, :published, administrateur: administrateur_2) }
 
     let!(:dossier_0) { create(:dossier, state: 'brouillon', procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
-    let!(:dossier_1) { create(:dossier, state: 'en_construction', procedure: procedure_1, user: create(:user, email: 'contact@test.com')) }
-    let!(:dossier_2) { create(:dossier, state: 'en_construction', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com')) }
-    let!(:dossier_3) { create(:dossier, state: 'en_construction', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr')) }
-    let!(:dossier_archived) { create(:dossier, state: 'en_construction', procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
 
-    let!(:etablissement_1) { create(:etablissement, entreprise_raison_sociale: 'OCTO Academy', dossier: dossier_1, siret: '41636169600051') }
-    let!(:etablissement_2) { create(:etablissement, entreprise_raison_sociale: 'Plop octo', dossier: dossier_2, siret: '41816602300012') }
-    let!(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', dossier: dossier_3, siret: '41816609600051') }
+    let!(:etablissement_1) { create(:etablissement, entreprise_raison_sociale: 'OCTO Academy', siret: '41636169600051') }
+    let!(:dossier_1) { create(:dossier, state: 'en_construction', procedure: procedure_1, user: create(:user, email: 'contact@test.com'), etablissement: etablissement_1) }
+
+    let!(:etablissement_2) { create(:etablissement, entreprise_raison_sociale: 'Plop octo', siret: '41816602300012') }
+    let!(:dossier_2) { create(:dossier, state: 'en_construction', procedure: procedure_1, user: create(:user, email: 'plop@gmail.com'), etablissement: etablissement_2) }
+
+    let!(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', siret: '41816609600051') }
+    let!(:dossier_3) { create(:dossier, state: 'en_construction', procedure: procedure_2, user: create(:user, email: 'peace@clap.fr'), etablissement: etablissement_3) }
+
+    let!(:dossier_archived) { create(:dossier, state: 'en_construction', procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
 
     describe 'search is empty' do
       let(:terms) { '' }
