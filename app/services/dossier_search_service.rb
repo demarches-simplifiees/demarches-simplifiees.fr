@@ -27,9 +27,21 @@ class DossierSearchService
   end
 
   def self.dossier_by_full_text_for_gestionnaire(search_terms, gestionnaire)
-    Search.new(
-      gestionnaire: gestionnaire,
-      query: search_terms
-    ).results
+    ts_vector = "to_tsvector('french', search_terms || private_search_terms)"
+    ts_query = "to_tsquery('french', #{Dossier.connection.quote(to_tsquery(search_terms))})"
+
+    gestionnaire
+      .dossiers
+      .not_archived
+      .state_not_brouillon
+      .where("#{ts_vector} @@ #{ts_query}")
+      .order("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC")
+  end
+
+  def self.to_tsquery(search_terms)
+    search_terms.gsub(/['?\\:&|!]/, "") # drop disallowed characters
+      .split(/\s+/)                     # split words
+      .map { |x| "#{x}:*" }             # enable prefix matching
+      .join(" & ")
   end
 end
