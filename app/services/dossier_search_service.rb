@@ -5,10 +5,7 @@ class DossierSearchService
 
     # full text search
     if dossiers.empty?
-      dossiers = Search.new(
-        gestionnaire: gestionnaire,
-        query: search_terms
-      ).results
+      dossier = dossier_by_full_text_for_gestionnaire(search_terms, gestionnaire)
     end
 
     dossiers
@@ -40,5 +37,12 @@ class DossierSearchService
     rescue ActiveModel::RangeError
       false
     end
+  end
+
+  def self.dossier_by_full_text_for_gestionnaire(search_terms, gestionnaire)
+    Search.new(
+      gestionnaire: gestionnaire,
+      query: search_terms
+    ).results
   end
 end
