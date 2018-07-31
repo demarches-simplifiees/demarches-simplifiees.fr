@@ -1,14 +1,7 @@
 class DossierSearchService
   def self.matching_dossiers_for_gestionnaire(search_terms, gestionnaire)
-    # exact id match?
-    dossiers = dossier_by_exact_id_for_gestionnaire(search_terms, gestionnaire)
-
-    # full text search
-    if dossiers.empty?
-      dossier = dossier_by_full_text_for_gestionnaire(search_terms, gestionnaire)
-    end
-
-    dossiers
+    dossier_by_exact_id_for_gestionnaire(search_terms, gestionnaire)
+      .presence || dossier_by_full_text_for_gestionnaire(search_terms, gestionnaire)
   end
 
   private
