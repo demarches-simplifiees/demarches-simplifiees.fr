@@ -13,11 +13,15 @@ feature 'Invitations' do
       log_in(user)
       navigate_to_brouillon(dossier)
 
+      fill_in 'Libelle du champ', with: 'Some edited value'
       send_invite_to "user_invite@exemple.fr"
 
       expect(page).to have_current_path(modifier_dossier_path(dossier))
       expect(page).to have_text("Une invitation a été envoyée à user_invite@exemple.fr.")
       expect(page).to have_text("user_invite@exemple.fr")
+
+      # Ensure unsaved edits to the form are not lost
+      expect(page).to have_field('Libelle du champ', with: 'Some edited value')
     end
 
     scenario 'an invited user can see and edit the draft', js: true do

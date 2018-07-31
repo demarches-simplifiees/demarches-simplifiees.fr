@@ -1,11 +1,12 @@
-- if flash.any?
-  #flash_message.center
-    - flash.each do |key, value|
-      - if value.class == Array
-        .alert{ class: flash_class(key) }
-          - value.each do |message|
-            = sanitize(message)
-            %br
-      - else
-        .alert{ class: flash_class(key) }
-          = sanitize(value)
+#flash_messages
+  - if flash.any?
+    #flash_message.center
+      - flash.each do |key, value|
+        - if value.class == Array
+          .alert{ class: flash_class(key) }
+            - value.each do |message|
+              = sanitize(message)
+              %br
+        - else
+          .alert{ class: flash_class(key) }
+            = sanitize(value)
