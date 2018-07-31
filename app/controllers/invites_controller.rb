@@ -24,7 +24,10 @@ class InvitesController < ApplicationController
       flash.alert = invite.errors.full_messages
     end
 
-    redirect_back(fallback_location: helpers.url_for_dossier(dossier))
+    respond_to do |format|
+      format.html { redirect_back(fallback_location: helpers.url_for_dossier(dossier)) }
+      format.js { @dossier = dossier }
+    end
   end
 
   private
