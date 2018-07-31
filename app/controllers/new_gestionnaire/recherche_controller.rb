@@ -17,8 +17,7 @@ module NewGestionnaire
       if @dossiers.empty?
         @dossiers = Search.new(
           gestionnaire: current_gestionnaire,
-          query: @search_terms,
-          page: params[:page]
+          query: @search_terms
         ).results
       end
     end

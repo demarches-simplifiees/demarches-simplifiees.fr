@@ -33,7 +33,6 @@ class Search < ApplicationRecord
 
   attr_accessor :gestionnaire
   attr_accessor :query
-  attr_accessor :page
 
   belongs_to :dossier
 
@@ -57,10 +56,6 @@ class Search < ApplicationRecord
       .where("to_tsvector('french', searches.term::text) @@ to_tsquery('french', #{search_term})")
       .order("rank DESC")
       .preload(:dossier)
-
-    if @page.present?
-      q = q.paginate(page: @page)
-    end
 
     Results.new(q)
   end
