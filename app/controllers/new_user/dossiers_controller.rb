@@ -55,8 +55,12 @@ module NewUser
     def modifier
       @dossier = dossier_with_champs
 
-      # TODO: remove when the champs are unifed
-      if !@dossier.autorisation_donnees
+      if current_user.invite?(@dossier.id) && !@dossier.brouillon?
+        flash.alert = "En tant qu’invité sur ce dossier, vous ne pouvez pas le modifier une fois qu’il a été soumis."
+        redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
+
+      elsif !@dossier.autorisation_donnees
+        # TODO: remove when the champs are unified
         if dossier.procedure.for_individual
           redirect_to identite_dossier_path(@dossier)
         else
@@ -186,7 +190,7 @@ module NewUser
     end
 
     def forbid_invite_submission!
-      if passage_en_construction? && !current_user.owns?(dossier)
+      if !current_user.owns?(dossier) && !draft?
         forbidden!
       end
     end
@@ -202,10 +206,6 @@ module NewUser
 
     def dossier_params
       params.require(:dossier).permit(:autorisation_donnees)
-    end
-
-    def passage_en_construction?
-      dossier.brouillon? && !draft?
     end
 
     def draft?

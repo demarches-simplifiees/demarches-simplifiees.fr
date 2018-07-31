@@ -82,8 +82,8 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
       end
 
       describe 'les liens de modifications' do
-        it 'describe link is not present' do
-          expect(rendered).to have_css('#maj_infos')
+        it 'edition link is not present' do
+          expect(rendered).not_to have_css('#maj_infos')
         end
 
         it 'map link is present' do

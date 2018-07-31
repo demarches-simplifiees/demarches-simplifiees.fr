@@ -137,6 +137,47 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
+  describe "#forbid_invite_submission!" do
+    let(:user) { create(:user) }
+    let(:asked_dossier) { create(:dossier) }
+    let(:ensure_authorized) { :forbid_invite_submission! }
+    let(:submit_action) { 'submit' }
+
+    before do
+      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id, submit_action: submit_action)
+      expect(@controller).to receive(:current_user).and_return(user)
+      allow(@controller).to receive(:redirect_to)
+    end
+
+    context 'when a user save their own draft' do
+      let(:asked_dossier) { create(:dossier, user: user) }
+      let(:submit_action) { 'draft' }
+
+      it_behaves_like 'does not redirect nor flash'
+    end
+
+    context 'when a user submit their own dossier' do
+      let(:asked_dossier) { create(:dossier, user: user) }
+      let(:submit_action) { 'submit' }
+
+      it_behaves_like 'does not redirect nor flash'
+    end
+
+    context 'when an invite save the draft for a dossier where they where invited' do
+      before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
+      let(:submit_action) { 'draft' }
+
+      it_behaves_like 'does not redirect nor flash'
+    end
+
+    context 'when an invite submit a dossier where they where invited' do
+      before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
+      let(:submit_action) { 'submit' }
+
+      it_behaves_like 'redirects and flashes'
+    end
+  end
+
   describe 'attestation' do
     before { sign_in(user) }
 
@@ -214,20 +255,34 @@ describe NewUser::DossiersController, type: :controller do
 
     subject { get :modifier, params: { id: dossier.id } }
 
-    context 'when autorisation_donnees is checked' do
+    context 'when the user owns the dossier' do
       it { is_expected.to render_template(:modifier) }
+    end
+
+    context 'when the user is invited on the dossier' do
+      before { create(:invite, dossier: dossier, user: user, type: 'InviteUser') }
+
+      it { is_expected.to render_template(:modifier) }
+
+      context 'and the dossier has already been submitted' do
+        before { dossier.update_columns(state: 'en_construction') }
+
+        it do
+          is_expected.to redirect_to(users_dossiers_invite_path(dossier.invite_for_user(user)))
+          expect(flash[:alert]).to be_present
+        end
+      end
     end
 
     context 'when autorisation_donnees is not checked' do
       before { dossier.update_columns(autorisation_donnees: false) }
 
-      context 'when the dossier is for personne morale' do
+      context 'when the dossier is for a personne morale' do
         it { is_expected.to redirect_to(users_dossier_path(dossier)) }
       end
 
-      context 'when the dossier is for an personne physique' do
+      context 'when the dossier is for a personne physique' do
         before { dossier.procedure.update(for_individual: true) }
-
         it { is_expected.to redirect_to(identite_dossier_path(dossier)) }
       end
     end
@@ -403,9 +458,8 @@ describe NewUser::DossiersController, type: :controller do
           subject
         end
 
-        it { expect(first_champ.reload.value).to eq('beautiful value') }
-        it { expect(dossier.reload.state).to eq('en_construction') }
-        it { expect(response).to redirect_to(users_dossiers_invite_path(invite)) }
+        it { expect(response).to redirect_to(root_path) }
+        it { expect(flash.alert).to eq("Vous n'avez pas accès à ce dossier") }
       end
     end
   end

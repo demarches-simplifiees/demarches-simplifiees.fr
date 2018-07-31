@@ -53,18 +53,18 @@ feature 'Invitations' do
   context 'when the dossier is en_construction' do
     let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: user, procedure: procedure) }
 
-    scenario 'on dossier details, a user can invite another user to collaborate on the dossier', js: true do
+    scenario 'on dossier details, a user can see other users invited to collaborate on the dossier', js: true do
+      invite
+
       log_in(user)
       navigate_to_recapitulatif(dossier)
 
-      legacy_send_invite_to "user_invite@exemple.fr"
-
-      expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier))
-      expect(page).to have_text("Une invitation a été envoyée à user_invite@exemple.fr.")
-      expect(page).to have_text("user_invite@exemple.fr")
+      find('.dropdown-toggle', text: "Voir les personnes impliquées").click()
+      expect(page).to have_text("Personnes invitées à voir ce dossier")
+      expect(page).to have_text(invited_user.email)
     end
 
-    scenario 'an invited user can see and edit the dossier', js: true do
+    scenario 'an invited user can see the dossier' do
       visit users_dossiers_invite_path(invite)
       expect(page).to have_current_path(new_user_session_path)
 
@@ -72,18 +72,21 @@ feature 'Invitations' do
       expect(page).to have_current_path(users_dossiers_invite_path(invite))
       expect(page).to have_no_selector('.button.invite-user-action')
       expect(page).to have_text("Dossier nº #{dossier.id}")
+      expect(page).to have_text("Libelle du champ")
+    end
 
-      # We should be able to just click() the link, but Capybara detects that the
-      # enclosing div would be clicked instead.
-      expect(page).to have_link("MODIFIER", href: modifier_dossier_path(dossier))
-      visit modifier_dossier_path(dossier)
+    scenario 'an invited user cannot edit a submitted dossier' do
+      visit users_dossiers_invite_path(invite)
+      expect(page).to have_current_path(new_user_session_path)
 
-      expect(page).to have_current_path(modifier_dossier_path(dossier))
-      fill_in "Libelle du champ", with: "Some edited value"
-      click_button "Enregistrer les modifications du dossier"
-
+      submit_login_form(invited_user)
       expect(page).to have_current_path(users_dossiers_invite_path(invite))
-      expect(page).to have_text("Some edited value")
+
+      expect(page).to have_no_link("MODIFIER", href: modifier_dossier_path(dossier))
+
+      visit modifier_dossier_path(dossier)
+      expect(page).to have_current_path(users_dossiers_invite_path(invite))
+      expect(page).to have_text("En tant qu’invité sur ce dossier, vous ne pouvez pas le modifier une fois qu’il a été soumis.")
     end
   end
 
@@ -120,16 +123,5 @@ feature 'Invitations' do
 
     fill_in 'invite_email', with: invited_email
     click_on "Envoyer une invitation"
-  end
-
-  def legacy_send_invite_to(invited_email)
-    find('.dropdown-toggle', text: "Voir les personnes impliquées").click()
-    expect(page).to have_button("Ajouter", visible: true)
-
-    fill_in 'invite_email', with: invited_email
-
-    page.accept_alert "Envoyer l'invitation ?" do
-      click_on "Ajouter"
-    end
   end
 end
