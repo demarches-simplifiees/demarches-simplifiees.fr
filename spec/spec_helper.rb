@@ -47,8 +47,6 @@ Capybara.register_driver :headless_chrome do |app|
     desired_capabilities: capabilities
 end
 
-ActiveSupport::Deprecation.silenced = true
-
 Capybara.default_max_wait_time = 1
 
 # Save a snapshot of the HTML page when an integration test fails
@@ -68,6 +66,8 @@ Dir[Rails.root.join('spec', 'factories', '**', '*.rb')].each { |f| require f }
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
+
+ActiveSupport::Deprecation.silenced = true
 
 VCR.configure do |c|
   c.ignore_localhost = true
