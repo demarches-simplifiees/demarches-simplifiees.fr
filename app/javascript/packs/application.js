@@ -4,6 +4,7 @@ import * as ActiveStorage from 'activestorage';
 
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
+import jQuery from 'jquery';
 
 import 'select2';
 import 'typeahead.js';
@@ -44,6 +45,11 @@ Chartkick.addAdapter(Highcharts);
 Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
+
+// Disable jQuery-driven animations during tests
+if (process.env['RAILS_ENV'] === 'test') {
+  jQuery.fx.off = true;
+}
 
 // Expose globals
 window.DS = window.DS || DS;
