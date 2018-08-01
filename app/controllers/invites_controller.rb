@@ -3,9 +3,10 @@ class InvitesController < ApplicationController
 
   def create
     email = params[:invite_email].downcase
+    dossier = current_user.dossiers.find(params[:dossier_id])
 
     invite = InviteUser.create(
-      dossier: current_user.dossiers.find(params[:dossier_id]),
+      dossier: dossier,
       user: User.find_by(email: email),
       email: email,
       email_sender: current_user.email
@@ -18,12 +19,12 @@ class InvitesController < ApplicationController
         InviteMailer.invite_guest(invite).deliver_later
       end
 
-      flash.notice = "Invitation envoyée (#{invite.email})"
+      flash.notice = "Une invitation a été envoyée à #{invite.email}."
     else
       flash.alert = invite.errors.full_messages
     end
 
-    redirect_to url_for(controller: 'users/recapitulatif', action: :show, dossier_id: params['dossier_id'])
+    redirect_back(fallback_location: helpers.url_for_dossier(dossier))
   end
 
   private

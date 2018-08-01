@@ -9,7 +9,11 @@ class Users::Dossiers::InvitesController < UsersController
   def show
     @facade = InviteDossierFacades.new params[:id].to_i, current_user.email
 
-    render 'users/recapitulatif/show'
+    if @facade.dossier.brouillon?
+      redirect_to modifier_dossier_path(@facade.dossier)
+    else
+      render 'users/recapitulatif/show'
+    end
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for dossiers_path
