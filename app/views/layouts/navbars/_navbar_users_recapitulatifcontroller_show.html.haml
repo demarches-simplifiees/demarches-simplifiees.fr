@@ -10,13 +10,6 @@
         .badge.progress-bar-info
           = @facade.dossier.invites.count
       .dropdown-menu.dropdown-menu-right.dropdown-pannel
-        %h4= t('dynamics.dossiers.followers.title')
-        %ul
-          - if @facade.followers.present?
-            - @facade.followers.each do |follower|
-              %li= follower.email
-          - else
-            = t('dynamics.dossiers.followers.empty')
         %h4= t('dynamics.dossiers.invites.title')
         %ul
           - if @facade.invites.present?
