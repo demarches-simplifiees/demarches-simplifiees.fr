@@ -10,11 +10,14 @@
     = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")
     = favicon_link_tag(image_url("favicons/96x96.png"), type: "image/png", sizes: "96x96")
 
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => "reload"
-    = stylesheet_link_tag    'print', media: 'print', 'data-turbolinks-track' => "reload"
-    = javascript_include_tag 'application', 'data-turbolinks-track' => true
-
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': "reload"
+    = stylesheet_link_tag    'print', media: 'print', 'data-turbolinks-track': "reload"
+    = javascript_pack_tag    'application-old', defer: true, 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
     = csrf_meta_tags
+
+    :javascript
+      DATA = [];
   %body
     = render partial: 'layouts/support_navigator_banner'
     = render partial: 'layouts/pre_maintenance'
@@ -22,13 +25,7 @@
       #beta
         Env Test
 
-    - if Rails.env == 'test'
-      %script{ type: 'text/javascript' }
-        (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
-
-
     = render partial: 'layouts/ie_lt_10'
-
 
     #wrap
       .row

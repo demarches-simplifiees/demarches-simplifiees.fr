@@ -1,6 +1,10 @@
 class Champs::MultipleDropDownListChamp < Champ
   before_save :format_before_save
 
+  def search_terms
+    drop_down_list.selected_options_without_decorator(self)
+  end
+
   private
 
   def format_before_save

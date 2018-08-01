@@ -105,6 +105,8 @@ gem 'flipflop'
 
 gem 'aasm'
 
+gem 'webpacker', '>= 4.0.x'
+
 # Cron jobs
 gem 'delayed_job_active_record'
 gem "daemons"

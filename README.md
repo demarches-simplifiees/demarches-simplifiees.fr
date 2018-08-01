@@ -17,6 +17,7 @@ demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urge
 - Overmind :
   * Mac : `brew install overmind`
   * Linux : voir https://github.com/DarthSim/overmind#installation
+- Yarn : voir https://yarnpkg.com/en/docs/install
 
 ### Tests
 
@@ -31,6 +32,7 @@ demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urge
 Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
 
     bundle install
+    yarn install
 
 
 ## Création de la base de données
@@ -111,6 +113,7 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 - Faire tourner Brakeman : `bundle exec brakeman`
 - Linter les fichiers HAML : `bundle exec haml-lint app/views/`
 - Linter les fichiers SCSS : `bundle exec scss-lint app/assets/stylesheets/`
+- Linter les fichiers JavaScript : `yarn lint:js` (`yarn lint:js --fix`)
 - [AccessLint](http://accesslint.com/) tourne automatiquement sur les PRs
 
 ## Déploiement

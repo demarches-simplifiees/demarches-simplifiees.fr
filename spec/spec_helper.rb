@@ -39,15 +39,13 @@ end
 
 Capybara.register_driver :headless_chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w(headless disable-gpu window-size=2560,1600) }
+    chromeOptions: { args: %w(headless disable-gpu disable-dev-shm-usage disable-software-rasterizer mute-audio window-size=1440,900) }
   )
 
   Capybara::Selenium::Driver.new app,
     browser: :chrome,
     desired_capabilities: capabilities
 end
-
-ActiveSupport::Deprecation.silenced = true
 
 Capybara.default_max_wait_time = 1
 
@@ -68,6 +66,8 @@ Dir[Rails.root.join('spec', 'factories', '**', '*.rb')].each { |f| require f }
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
+
+ActiveSupport::Deprecation.silenced = true
 
 VCR.configure do |c|
   c.ignore_localhost = true
@@ -118,6 +118,9 @@ RSpec.configure do |config|
   config.filter_run :focus => true
 
   config.order = 'random'
+  # Fix the seed not changing between runs when using Spring
+  # See https://github.com/rails/spring/issues/113
+  config.seed = srand % 0xFFFF unless ARGV.any? { |arg| arg =~ /seed/ || arg =~ /rand:/ }
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view

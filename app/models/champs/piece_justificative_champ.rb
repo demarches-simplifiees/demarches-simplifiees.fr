@@ -18,6 +18,10 @@ class Champs::PieceJustificativeChamp < Champ
     "image/jpeg"
   ]
 
+  def search_terms
+    # We don’t know how to search inside documents yet
+  end
+
   def mandatory_and_blank?
     mandatory? && !piece_justificative_file.attached?
   end

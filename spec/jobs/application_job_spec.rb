@@ -1,12 +1,16 @@
 require 'rails_helper'
 include ActiveJob::TestHelper
 
-RSpec.describe ApplicationJob, type: :job, skip: true do
+RSpec.describe ApplicationJob, type: :job do
   describe 'perform' do
-    it do
-      expect(Rails.logger).to receive(:info).with(/.+started at.+/)
-      expect(Rails.logger).to receive(:info).with(/.+ended at.+/)
+    before do
+      allow(Rails.logger).to receive(:info)
+    end
+
+    it 'logs start time and end time' do
       perform_enqueued_jobs { ChildJob.perform_later }
+      expect(Rails.logger).to have_received(:info).with(/started at/).once
+      expect(Rails.logger).to have_received(:info).with(/ended at/).once
     end
   end
 
