@@ -2,7 +2,7 @@ class InvitesController < ApplicationController
   before_action :ensure_user_signed_in
 
   def create
-    email = params[:email].downcase
+    email = params[:invite_email].downcase
 
     invite = InviteUser.create(
       dossier: current_user.dossiers.find(params[:dossier_id]),
