@@ -11,7 +11,7 @@ describe InvitesController, type: :controller do
       sign_in signed_in_profile
     end
 
-    subject { post :create, params: { dossier_id: dossier.id, email: email } }
+    subject { post :create, params: { dossier_id: dossier.id, invite_email: email } }
 
     context "when gestionnaire is signed_in" do
       let(:signed_in_profile) { create(:gestionnaire) }
