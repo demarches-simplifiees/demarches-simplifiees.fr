@@ -69,6 +69,7 @@ class Dossier < ApplicationRecord
   delegate :france_connect_information, to: :user
 
   before_validation :update_state_dates, if: -> { state_changed? }
+  before_save :update_search_terms
 
   after_save :build_default_champs, if: Proc.new { saved_change_to_procedure_id? }
   after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
@@ -77,6 +78,19 @@ class Dossier < ApplicationRecord
   after_create :send_draft_notification_email
 
   validates :user, presence: true
+
+  def update_search_terms
+    self.search_terms = [
+      user&.email,
+      france_connect_information&.given_name,
+      france_connect_information&.family_name,
+      *ordered_champs.flat_map(&:search_terms),
+      *etablissement&.search_terms,
+      individual&.nom,
+      individual&.prenom
+    ].compact.join(' ')
+    self.private_search_terms = ordered_champs_private.flat_map(&:search_terms).compact.join(' ')
+  end
 
   def was_piece_justificative_uploaded_for_type_id?(type_id)
     pieces_justificatives.where(type_de_piece_justificative_id: type_id).count > 0

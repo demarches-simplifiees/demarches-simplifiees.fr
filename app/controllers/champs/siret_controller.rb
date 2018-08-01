@@ -12,14 +12,16 @@ class Champs::SiretController < ApplicationController
       if @etablissement
         @etablissement.mark_for_destruction
       end
-      @error = "SIRET invalide"
+      @error = "Le numéro de SIRET doit comporter exactement 14 chiffres."
     else
       etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(siret, @champ.dossier.procedure_id)
       if etablissement_attributes.present?
         @etablissement = @champ.build_etablissement(etablissement_attributes)
         @etablissement.champ = @champ
       else
-        @error = "SIRET invalide"
+        message = ['Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.']
+        message << helpers.link_to('Plus d’informations', "https://faq.demarches-simplifiees.fr/article/4-erreur-siret", target: '_blank')
+        @error = helpers.safe_join(message, ' ')
       end
     end
     respond_to do |format|

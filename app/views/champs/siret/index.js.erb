@@ -4,5 +4,5 @@
   <% else %>
     var html = "<%= escape_javascript(render partial: 'shared/champs/siret/etablissement', locals: { position: @champ.order_place, etablissement: @etablissement }) %>";
   <% end %>
-  $("#etablissement-for-<%= @champ.id %>").html(html);
+  document.querySelector("#etablissement-for-<%= @champ.id %>").innerHTML = html;
 })();

@@ -227,6 +227,14 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
           is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
         end
+
+        context 'and the dossier has already an attestation' do
+          it 'should not crash' do
+            dossier.attestation = Attestation.new
+            dossier.save
+            expect(subject).to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
+          end
+        end
       end
 
       context 'when the attestation template uses the motivation field' do

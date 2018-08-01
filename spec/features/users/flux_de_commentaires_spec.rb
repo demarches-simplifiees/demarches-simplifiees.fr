@@ -9,7 +9,7 @@ feature 'users: flux de commentaires' do
   let(:champ2) { create(:champ, dossier: dossier, type_de_champ: create(:type_de_champ, libelle: "subtitle")) }
 
   let!(:commentaire1) { create(:commentaire, dossier: dossier, champ: champ1) }
-  let!(:commentaire2) { create(:commentaire, dossier: dossier) }
+  let!(:commentaire2) { create(:commentaire, dossier: dossier, email: 'paul.chavard@beta.gouv.fr') }
   let!(:commentaire3) { create(:commentaire, dossier: dossier, champ: champ2) }
   let!(:commentaire4) { create(:commentaire, dossier: dossier, champ: champ1) }
 
@@ -21,5 +21,7 @@ feature 'users: flux de commentaires' do
   scenario "seuls les commentaires généraux sont affichés" do
     comments = find(".commentaires")
     expect(comments).to have_selector(".content", count: 1)
+    expect(comments).to have_content('paul.chavard')
+    expect(comments).not_to have_content('paul.chavard@beta.gouv.fr')
   end
 end
