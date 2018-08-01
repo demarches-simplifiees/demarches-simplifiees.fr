@@ -7,9 +7,6 @@ fr:
     dossiers:
       depositaite: "Dépositaire"
       numéro: 'Dossier nº '
-      followers:
-        title: "Personnes suivant l'activité de ce dossier"
-        empty: "Aucune personne ne suit ce dossier"
       invites:
         title: "Personnes invitées à voir ce dossier"
         empty: "Aucune personne invitée"
