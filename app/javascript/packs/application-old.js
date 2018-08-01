@@ -18,8 +18,14 @@ Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
 
+// Disable jQuery-driven animations during tests
+if (process.env['RAILS_ENV'] === 'test') {
+  jQuery.fx.off = true;
+}
+
 // Expose globals
 window.Bloodhound = Bloodhound;
 window.Chartkick = Chartkick;
+// Export jQuery globally for legacy Javascript files used in the old design
 window.$ = jQuery;
 window.jQuery = jQuery;
