@@ -38,7 +38,7 @@ yarn_save_cache: &yarn_save_cache
 yarn_install: &yarn_install
   run:
     name: Install JS Dependencies
-    command: yarn install --non-interactive
+    command: yarn install --non-interactive || yarn install --non-interactive
 
 jobs:
   build:
