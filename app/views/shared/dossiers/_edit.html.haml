@@ -74,14 +74,19 @@
             class: 'button send secondary',
             data: { action: 'draft', disable_with: 'Envoi...' }
 
-          - if current_user.owns?(dossier) && dossier.can_transition_to_en_construction?
+          - if dossier.can_transition_to_en_construction?
             = f.button 'Soumettre le dossier',
               class: 'button send primary',
+              disabled: !current_user.owns?(dossier),
               data: { action: 'submit', disable_with: 'Envoi...' }
 
         - else
           = f.button 'Enregistrer les modifications du dossier',
             class: 'button send primary',
             data: { action: 'submit', disable_with: 'Envoi...' }
+
+      - if dossier.brouillon? && !current_user.owns?(dossier)
+        .send-notice.invite-cannot-submit
+          En tant qu’invité, vous pouvez remplir ce formulaire – mais le titulaire du dossier doit le soumettre lui-même.
 
       = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
