@@ -14,7 +14,6 @@
     = stylesheet_link_tag    'print', media: 'print', 'data-turbolinks-track': "reload"
     = javascript_pack_tag    'application-old', defer: true, 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
-
     = csrf_meta_tags
 
     :javascript
@@ -26,13 +25,7 @@
       #beta
         Env Test
 
-    - if Rails.env == 'test'
-      %script{ type: 'text/javascript' }
-        (typeof jQuery !== 'undefined') && (jQuery.fx.off = true);
-
-
     = render partial: 'layouts/ie_lt_10'
-
 
     #wrap
       .row
