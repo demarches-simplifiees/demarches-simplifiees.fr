@@ -189,6 +189,14 @@ describe Dossier do
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, en_construction_at: date1, en_instruction_at: date2, processed_at: date3, motivation: "Motivation") }
     let!(:follow) { create(:follow, gestionnaire: gestionnaire, dossier: dossier) }
 
+    describe "followers_gestionnaires" do
+      let(:non_following_gestionnaire) { create(:gestionnaire) }
+      subject { dossier.followers_gestionnaires }
+
+      it { expect(subject).to eq [gestionnaire] }
+      it { expect(subject).not_to include(non_following_gestionnaire) }
+    end
+
     describe '#export_headers' do
       subject { dossier.export_headers }
 

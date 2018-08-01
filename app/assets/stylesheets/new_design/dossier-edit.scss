@@ -1,24 +1,27 @@
 @import "colors";
 @import "constants";
 
-.dossier-edit {
-  .dossier-header {
-    background-color: $light-grey;
-    margin-bottom: $default-padding;
+.dossier-header {
+  .container {
+    padding-bottom: $default-padding;
+  }
 
-    .container {
-      padding: $default-padding;
-    }
+  h1 {
+    font-size: 22px;
 
-    h1 {
-      font-size: 22px;
-
-      .icon.folder {
-        vertical-align: -3px;
-      }
+    .icon.folder {
+      vertical-align: -3px;
     }
   }
 
+  .dossier-form-actions {
+    margin-top: $default-padding;
+    margin-bottom: $default-padding;
+    text-align: right;
+  }
+}
+
+.dossier-edit {
   .prologue {
     margin: (1.5 * $default-padding) 0;
     display: flex;

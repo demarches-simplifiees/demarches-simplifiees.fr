@@ -54,6 +54,6 @@ class DossierFacades
   end
 
   def followers
-    Gestionnaire.joins(:follows).where("follows.dossier_id=#{@dossier.id}")
+    @dossier.followers_gestionnaires
   end
 end
