@@ -11,7 +11,7 @@ describe InvitesController, type: :controller do
       sign_in signed_in_profile
     end
 
-    subject { post :create, params: { dossier_id: dossier.id, email: email } }
+    subject { post :create, params: { dossier_id: dossier.id, invite_email: email } }
 
     context "when gestionnaire is signed_in" do
       let(:signed_in_profile) { create(:gestionnaire) }
@@ -69,10 +69,15 @@ describe InvitesController, type: :controller do
 
       context 'when user has access to dossier' do
         before do
+          request.env["HTTP_REFERER"] = "/dossiers/#{dossier.id}/modifier"
           dossier.update(user: signed_in_profile)
         end
 
         it { expect { subject }.to change(InviteUser, :count).by(1) }
+
+        it "redirects to the previous URL" do
+          expect(subject).to redirect_to("/dossiers/#{dossier.id}/modifier")
+        end
 
         context 'when email is assign to an user' do
           let! (:user_invite) { create(:user, email: email) }
