@@ -124,6 +124,7 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 ## Régénérer les binstubs
 
     bundle binstub railties --force
+    bundle binstub unicorn --force
     bin/rake rails:update:bin
 
 ## Tâches Super Admin
