@@ -12,10 +12,12 @@ defaults: &defaults
 
 bundle_restore_cache: &bundle_restore_cache
   restore_cache:
+    name: Restore Bundler Package Cache
     key: bundle-install-v8-{{ arch }}-{{ checksum "Gemfile.lock" }}
 
 bundle_save_cache: &bundle_save_cache
   save_cache:
+    name: Save Bundler Package Cache
     key: bundle-install-v8-{{ arch }}-{{ checksum "Gemfile.lock" }}
     paths:
       - ~/vendor/bundle
@@ -27,13 +29,15 @@ bundle_install: &bundle_install
 
 yarn_restore_cache: &yarn_restore_cache
   restore_cache:
-    key: yarn-install-v8-{{ arch }}-{{ checksum "yarn.lock" }}
+    name: Restore Yarn Package Cache
+    key: yarn-install-v1-{{ arch }}-{{ checksum "yarn.lock" }}
 
 yarn_save_cache: &yarn_save_cache
   save_cache:
-    key: yarn-install-v8-{{ arch }}-{{ checksum "yarn.lock" }}
+    name: Save Yarn Package Cache
+    key: yarn-install-v1-{{ arch }}-{{ checksum "yarn.lock" }}
     paths:
-      - ~/node_modules
+      - ~/.cache/yarn
 
 yarn_install: &yarn_install
   run:
