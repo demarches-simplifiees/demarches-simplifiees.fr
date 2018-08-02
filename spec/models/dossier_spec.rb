@@ -859,7 +859,7 @@ describe Dossier do
     end
 
     context 'where gestionnaires are following the dossier' do
-      let(:dossier) { create(:dossier, :followed) }
+      let(:dossier) { create(:dossier, :en_construction, :followed) }
       let!(:non_following_gestionnaire) do
         non_following_gestionnaire = create(:gestionnaire)
         non_following_gestionnaire.procedures << dossier.procedure
@@ -873,9 +873,17 @@ describe Dossier do
     end
 
     context 'when there are no following gestionnaires' do
+      let(:dossier) { create(:dossier, :en_construction) }
       it 'notifies the procedure administrateur' do
         expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
         expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateur.email)
+      end
+    end
+
+    context 'when dossier is brouillon' do
+      let(:dossier) { create(:dossier) }
+      it 'do not notifies the procedure administrateur' do
+        expect(DossierMailer).not_to have_received(:notify_deletion_to_administration)
       end
     end
   end
