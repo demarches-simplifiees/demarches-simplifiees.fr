@@ -36,6 +36,21 @@ fr:
   apipie:
     api_documentation: "Documentation de l'API demarches-simplifiees.fr"
 
+  modal:
+    publish:
+      title:
+        testing: Passer la procédure en test
+        publish: Publier la procédure
+        reopen: Réactiver la procédure
+      body:
+        testing: Vous vous apprêtez à passer votre procédure en test.
+        publish: Vous vous apprêtez à publier votre procédure au public.
+        reopen: Vous vous apprêtez à republier votre procédure.
+      submit:
+        testing: Passer en test
+        publish: Publier
+        reopen: Réactiver
+
   number:
     currency:
       format:

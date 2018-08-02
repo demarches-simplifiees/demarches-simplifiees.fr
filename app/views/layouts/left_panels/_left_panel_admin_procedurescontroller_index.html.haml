@@ -9,19 +9,26 @@
 #menu-block
   .split-hr-left
   #procedure-list
-    %a#draft-procedures{ :href => "#{url_for :admin_procedures_draft}" }
+    %a#draft-procedures{ href: "#{url_for :admin_procedures_draft}" }
       .procedure-list-element{ class: @draft_class }
         Brouillons
         .badge.progress-bar-default
           = current_administrateur.procedures.brouillons.count
 
-    %a#active-procedures{ :href => "#{url_for :admin_procedures}" }
+    - if Flipflop.test_procedure?
+      %a#testing-procedures{ href: "#{url_for :admin_procedures_testing}" }
+        .procedure-list-element{ class: @testing_class }
+          En test
+          .badge.progress-bar-default
+            = current_administrateur.procedures.en_test.count
+
+    %a#active-procedures{ href: "#{url_for :admin_procedures}" }
       .procedure-list-element{ class: @active_class }
         Actives
         .badge.progress-bar-success
           = current_administrateur.procedures.publiees.count
 
-    %a#archived-procedures{ :href => "#{url_for :admin_procedures_archived}" }
+    %a#archived-procedures{ href: "#{url_for :admin_procedures_archived}" }
       .procedure-list-element{ class: @archived_class }
         Archivées
         .badge.progress-bar-purple

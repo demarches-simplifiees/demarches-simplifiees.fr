@@ -39,9 +39,11 @@ class Procedure < ApplicationRecord
 
   default_scope { where(hidden_at: nil) }
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
+  scope :en_test,               -> { where(aasm_state: :en_test) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
   scope :archivees,             -> { where(aasm_state: :archivee) }
   scope :publiees_ou_archivees, -> { where(aasm_state: [:publiee, :archivee]) }
+  scope :non_brouillon,         -> { where.not(aasm_state: :brouillon) }
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
@@ -62,12 +64,20 @@ class Procedure < ApplicationRecord
 
   aasm whiny_persistence: true do
     state :brouillon, initial: true
+    state :en_test
     state :publiee
     state :archivee
     state :hidden
 
+    event :publish_for_test, after: :after_publish_for_test, guard: :can_publish? do
+      transitions from: :brouillon, to: :en_test
+    end
+
     event :publish, after: :after_publish, guard: :can_publish? do
-      transitions from: :brouillon, to: :publiee
+      transitions from: :en_test, to: :publiee
+    end
+
+    event :reopen, after: :after_reopen, guard: :can_publish? do
       transitions from: :archivee, to: :publiee
     end
 
@@ -77,53 +87,100 @@ class Procedure < ApplicationRecord
 
     event :hide, after: :after_hide do
       transitions from: :brouillon, to: :hidden
+      transitions from: :en_test, to: :hidden
       transitions from: :publiee, to: :hidden
       transitions from: :archivee, to: :hidden
     end
   end
 
-  def after_publish(path)
-    now = Time.now
-    update(
-      test_started_at: now,
-      archived_at: nil,
-      published_at: now
-    )
+  def publish_action
+    if !Flipflop.test_procedure?
+      if archivee?
+        return :reopen
+      else
+        return :publish
+      end
+    elsif brouillon?
+      return :testing
+    elsif en_test?
+      return :publish
+    elsif archivee?
+      return :reopen
+    end
+  end
+
+  def after_publish_for_test(path)
+    update(test_started_at: Time.now)
+
+    with_procedure_path(administrateur, path) do |procedure_path|
+      procedure_path.publish_for_test!(self)
+    end
+  end
+
+  def after_publish(path, drop_dossiers = true)
+    update!(published_at: Time.now)
+
+    if procedure_path.path == path
+      procedure_path.publish_test_procedure!
+    else
+      with_procedure_path(administrateur, path) do |procedure_path|
+        procedure_path.publish!(self)
+      end
+    end
+
+    if drop_dossiers
+      dossiers.delete_all
+    end
+  end
+
+  def after_reopen(path)
+    update!(published_at: Time.now, archived_at: nil)
+
+    with_procedure_path(administrateur, path) do |procedure_path|
+      procedure_path.publish!(self)
+    end
+  end
+
+  def with_procedure_path(administrateur, path)
     procedure_path = ProcedurePath.find_by(path: path)
 
     if procedure_path.present?
-      procedure_path.publish!(self)
+      yield procedure_path
+    elsif en_test?
+      ProcedurePath.create!(test_procedure: self, administrateur: administrateur, path: path)
     else
-      ProcedurePath.create(procedure: self, administrateur: administrateur, path: path)
+      ProcedurePath.create!(procedure: self, administrateur: administrateur, path: path)
     end
   end
 
   def after_archive
-    update(archived_at: Time.now)
+    procedure_path.archive!
+    update!(archived_at: Time.now)
   end
 
   def after_hide
     now = Time.now
-    update(hidden_at: now)
+    update!(hidden_at: now)
     procedure_path&.hide!(self)
     dossiers.update_all(hidden_at: now)
   end
 
   def locked?
-    publiee_ou_archivee?
+    non_brouillon?
   end
 
   def publiee_ou_archivee?
     publiee? || archivee?
   end
 
-  def can_publish?(path)
+  def non_brouillon?
+    !brouillon?
+  end
+
+  def can_publish?(path, _ = nil)
     procedure_path = ProcedurePath.find_by(path: path)
-    if procedure_path.present?
-      administrateur.owns?(procedure_path)
-    else
-      true
-    end
+    procedures = [procedure_path&.procedure, procedure_path&.test_procedure].compact
+    procedures.all? { |procedure| administrateur.owns?(procedure) }
   end
 
   # Warning: dossier after_save build_default_champs must be removed
@@ -149,7 +206,7 @@ class Procedure < ApplicationRecord
   end
 
   def default_path
-    libelle.parameterize.first(50)
+    path || libelle.parameterize.first(50)
   end
 
   def organisation_name

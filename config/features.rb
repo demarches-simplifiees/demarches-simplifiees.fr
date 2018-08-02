@@ -16,6 +16,7 @@ Flipflop.configure do
   end
 
   feature :web_hook
+  feature :test_procedure
 
   group :production do
     feature :remote_storage,

@@ -24,6 +24,17 @@ class Admin::ProceduresController < AdminController
     render 'index'
   end
 
+  def testing
+    @procedures = smart_listing_create :procedures,
+      current_administrateur.procedures.en_test.order(test_started_at: :desc),
+      partial: "admin/procedures/list",
+      array: true
+
+    testing_class
+
+    render 'index'
+  end
+
   def draft
     @procedures = smart_listing_create :procedures,
       current_administrateur.procedures.brouillons.order(created_at: :desc),
@@ -97,29 +108,31 @@ class Admin::ProceduresController < AdminController
     new_procedure_path = ProcedurePath.new(
       {
         path: params[:procedure_path],
-        procedure: procedure,
         administrateur: procedure.administrateur
       }
     )
 
     if new_procedure_path.validate
       new_procedure_path.delete
+
+      case procedure.publish_action
+      when :testing
+        en_test_procedure(procedure, params[:procedure_path])
+      when :publish
+        if Flipflop.test_procedure?
+          publish_procedure(procedure, params[:procedure_path])
+        elsif procedure.brouillon?
+          legacy_publish_procedure(procedure, params[:procedure_path])
+        end
+      when :reopen
+        reopen_procedure(procedure, params[:procedure_path])
+      end
     else
       flash.alert = 'Lien de la procédure invalide'
-      return redirect_to admin_procedures_path
-    end
-
-    if procedure.may_publish?(params[:procedure_path])
-      procedure.publish!(params[:procedure_path])
-
-      flash.notice = "Procédure publiée"
       redirect_to admin_procedures_path
-    else
-      @mine = false
-      render '/admin/procedures/publish', formats: 'js'
     end
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inexistante'
+    flash.alert = "Procédure inexistante"
     redirect_to admin_procedures_path
   end
 
@@ -185,6 +198,7 @@ class Admin::ProceduresController < AdminController
       .pluck('procedures.id')
 
     @grouped_procedures = Procedure
+      .publiees_ou_archivees
       .includes(:administrateur, :service)
       .where(id: significant_procedure_ids)
       .group_by(&:organisation_name)
@@ -203,16 +217,18 @@ class Admin::ProceduresController < AdminController
     @draft_class = 'active'
   end
 
+  def testing_class
+    @testing_class = 'active'
+  end
+
   def path_list
     json_path_list = ProcedurePath
-      .joins(:procedure)
-      .where(procedures: { archived_at: nil })
-      .where("path LIKE ?", "%#{params[:request]}%")
-      .order(:id)
-      .pluck(:path, :administrateur_id)
-      .map do |path, administrateur_id|
+      .find_with_path(params[:request])
+      .pluck(:path, :administrateur_id, :procedure_id)
+      .map do |path, administrateur_id, procedure_id|
         {
           label: path,
+          published: !!procedure_id,
           mine: administrateur_id == current_administrateur.id
         }
       end.to_json
@@ -230,6 +246,51 @@ class Admin::ProceduresController < AdminController
   end
 
   private
+
+  def en_test_procedure(procedure, link)
+    if procedure.may_publish_for_test?(link)
+      procedure.publish_for_test!(link)
+      flash.notice = "Procédure en test"
+      redirect_to admin_procedures_testing_path
+    else
+      @mine = false
+      render '/admin/procedures/publish', formats: 'js'
+    end
+  end
+
+  def legacy_publish_procedure(procedure, link)
+    if procedure.may_publish_for_test?(link)
+      procedure.publish_for_test!(link)
+      procedure.publish!(link)
+      flash.notice = "Procédure publiée"
+      redirect_to admin_procedures_path
+    else
+      @mine = false
+      render '/admin/procedures/publish', formats: 'js'
+    end
+  end
+
+  def publish_procedure(procedure, link)
+    if procedure.may_publish?(link)
+      procedure.publish!(link)
+      flash.notice = "Procédure publiée"
+      redirect_to admin_procedures_path
+    else
+      @mine = false
+      render '/admin/procedures/publish', formats: 'js'
+    end
+  end
+
+  def reopen_procedure(procedure, link)
+    if procedure.may_reopen?(link)
+      procedure.reopen!(link)
+      flash.notice = "Procédure réactivée"
+      redirect_to admin_procedures_path
+    else
+      @mine = false
+      render '/admin/procedures/publish', formats: 'js'
+    end
+  end
 
   def cloned_from_library?
     params[:from_new_from_existing].present?

@@ -7,6 +7,10 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   let(:administrateur) { create(:administrateur) }
 
   before do
+    Flipflop::FeatureSet.current.test!.switch!(:test_procedure, true)
+  end
+
+  before do
     login_as administrateur, scope: :administrateur
     visit root_path
   end
@@ -15,6 +19,11 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
     scenario 'Finding draft procedures' do
       page.find_by_id('draft-procedures').click
       expect(page).to have_current_path(admin_procedures_draft_path)
+    end
+
+    scenario 'Finding testing procedures' do
+      page.find_by_id('testing-procedures').click
+      expect(page).to have_current_path(admin_procedures_testing_path)
     end
 
     scenario 'Finding active procedures' do
@@ -88,7 +97,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
       page.find_by_id('onglet-infos').click
       expect(page).to have_current_path(admin_procedure_path(Procedure.first.id.to_s))
-      expect(page.find_by_id('publish-procedure')['disabled']).to eq('true')
+      expect(page.find_by_id('test-procedure')['disabled']).to eq('true')
 
       page.find_by_id('onglet-accompagnateurs').click
       expect(page).to have_current_path(admin_procedure_accompagnateurs_path(Procedure.first.id.to_s))
@@ -97,12 +106,19 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       page.first('.gestionnaire-affectation').click
 
       page.find_by_id('onglet-infos').click
-      expect(page).to have_selector('#publish-procedure', visible: true)
-      page.find_by_id('publish-procedure').click
+      expect(page).to have_selector('#test-procedure', visible: true)
+      page.find_by_id('test-procedure').click
 
       expect(page.find_by_id('procedure_path')['value']).to eq('libelle-de-la-procedure')
       page.find_by_id('publish').click
-      expect(page).to have_selector('.procedure-lien')
+      expect(page).to have_current_path(admin_procedures_testing_path)
+
+      page.find('tr[data-dossier_url]').click
+      expect(page).to have_current_path(admin_procedure_path(Procedure.first.id.to_s))
+      page.find_by_id('publish-procedure').click
+      expect(page.find_by_id('procedure_path')['value']).to eq('libelle-de-la-procedure')
+      page.find_by_id('publish').click
+      expect(page).to have_current_path(admin_procedures_path)
     end
   end
 end
