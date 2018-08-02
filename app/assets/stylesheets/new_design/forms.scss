@@ -316,6 +316,15 @@
     }
   }
 
+  .send-notice {
+    @include notice-text-style;
+    margin-bottom: $default-padding;
+  }
+
+  .send-wrapper + .send-notice {
+    margin-top: - $default-padding;
+  }
+
   .inline-champ {
     margin-left: $default-spacer;
     margin-right: $default-spacer;
