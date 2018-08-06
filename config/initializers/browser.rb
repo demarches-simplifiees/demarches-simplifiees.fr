@@ -1,3 +1,4 @@
+# See .babelrc
 Browser.modern_rules.clear
 Browser.modern_rules << -> b { b.chrome? && b.version.to_i >= 40 }
 Browser.modern_rules << -> b { b.ie?([">=11"]) }
