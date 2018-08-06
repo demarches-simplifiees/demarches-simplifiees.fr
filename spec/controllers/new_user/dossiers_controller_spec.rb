@@ -498,7 +498,7 @@ describe NewUser::DossiersController, type: :controller do
     end
 
     context 'when dossier is owned by signed in user' do
-      let(:dossier) { create(:dossier, user: user, autorisation_donnees: true) }
+      let(:dossier) { create(:dossier, :en_construction, user: user, autorisation_donnees: true) }
 
       it do
         expect(DossierMailer).to receive(:notify_deletion_to_administration).with(kind_of(DeletedDossier), dossier.procedure.administrateur.email).and_return(double(deliver_later: nil))

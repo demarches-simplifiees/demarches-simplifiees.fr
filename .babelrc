@@ -3,7 +3,16 @@
     ["env", {
       "modules": false,
       "targets": {
-        "browsers": "> 1%",
+        // See config/browser.rb
+        "browsers": [
+          "> 1%",
+          "Chrome 40",
+          "IE 11",
+          "Edge 12",
+          "Firefox 45",
+          "Safari 8",
+          "iOS 8"
+        ],
         "uglify": true
       },
       "useBuiltIns": true
