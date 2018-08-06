@@ -291,9 +291,11 @@ class Dossier < ApplicationRecord
     deleted_dossier = DeletedDossier.create!(dossier_id: id, procedure: procedure, state: state, deleted_at: now)
     update(hidden_at: now)
 
-    administration_emails = followers_gestionnaires.present? ? followers_gestionnaires.pluck(:email) : [procedure.administrateur.email]
-    administration_emails.each do |email|
-      DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
+    if en_construction?
+      administration_emails = followers_gestionnaires.present? ? followers_gestionnaires.pluck(:email) : [procedure.administrateur.email]
+      administration_emails.each do |email|
+        DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
+      end
     end
     DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
   end
