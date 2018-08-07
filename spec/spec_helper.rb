@@ -47,7 +47,7 @@ Capybara.register_driver :headless_chrome do |app|
     desired_capabilities: capabilities
 end
 
-Capybara.default_max_wait_time = 1
+Capybara.default_max_wait_time = 2
 
 # Save a snapshot of the HTML page when an integration test fails
 Capybara::Screenshot.autosave_on_failure = true

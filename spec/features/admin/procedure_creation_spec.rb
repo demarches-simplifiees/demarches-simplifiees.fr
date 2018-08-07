@@ -13,95 +13,107 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
   context 'Right after sign_in I shall see all procedure states links' do
     scenario 'Finding draft procedures' do
-      page.find_by_id('draft-procedures').click
+      click_on 'draft-procedures'
       expect(page).to have_current_path(admin_procedures_draft_path)
     end
 
     scenario 'Finding active procedures' do
-      page.find_by_id('active-procedures').click
+      click_on 'active-procedures'
       expect(page).to have_current_path(admin_procedures_path)
     end
 
     scenario 'Finding archived procedures' do
-      page.find_by_id('archived-procedures').click
+      click_on 'archived-procedures'
       expect(page).to have_current_path(admin_procedures_archived_path)
     end
   end
 
   context 'Creating a new procedure' do
-    scenario 'Finding new procedure link' do
-      page.find_by_id('new-procedure').click
-      page.find_by_id('from-scratch').click
-      expect(page).to have_current_path(new_admin_procedure_path)
-    end
-
     scenario 'Finding save button for new procedure, libelle, description and cadre_juridique required' do
-      page.find_by_id('new-procedure').click
-      page.find_by_id('from-scratch').click
+      expect(page).to have_selector('#new-procedure')
+      find('#new-procedure').click
+      click_on 'from-scratch'
+
+      expect(page).to have_current_path(new_admin_procedure_path)
       fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
       fill_in 'procedure_duree_conservation_dossiers_hors_ds', with: '6'
-      page.find_by_id('save-procedure').click
-      page.find_by_id('flash_message').visible?
+      click_on 'save-procedure'
+
+      expect(page).to have_text('Libelle doit être rempli')
       fill_in_dummy_procedure_details
-      page.find_by_id('save-procedure').click
-      expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.first.id.to_s))
+      click_on 'save-procedure'
+
+      expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.first))
     end
   end
 
   context 'Editing a new procedure' do
     before 'Create procedure' do
-      page.find_by_id('new-procedure').click
-      page.find_by_id('from-scratch').click
+      expect(page).to have_selector('#new-procedure')
+      find('#new-procedure').click
+      click_on 'from-scratch'
+
+      expect(page).to have_current_path(new_admin_procedure_path)
       fill_in_dummy_procedure_details
-      page.find_by_id('save-procedure').click
+      click_on 'save-procedure'
 
       procedure = Procedure.last
       procedure.update(service: create(:service))
     end
 
     scenario 'Add champ, add file, visualize them in procedure preview' do
-      page.find_by_id('procedure_types_de_champ_attributes_0_libelle').set 'libelle de champ'
-      page.find_by_id('add_type_de_champ').click
-      page.find_by_id('procedure_types_de_champ_attributes_1_libelle')
+      fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
+      click_on 'add_type_de_champ'
+      expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.first))
+      expect(page).to have_selector('#procedure_types_de_champ_attributes_1_libelle')
       expect(Procedure.first.types_de_champ.first.libelle).to eq('libelle de champ')
 
-      page.find_by_id('onglet-pieces').click
-      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.first.id.to_s))
-      page.find_by_id('procedure_types_de_piece_justificative_attributes_0_libelle').set 'libelle de piece'
-      page.find_by_id('add_piece_justificative').click
-      page.find_by_id('procedure_types_de_piece_justificative_attributes_1_libelle')
+      click_on 'onglet-pieces'
+      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.first))
+      fill_in 'procedure_types_de_piece_justificative_attributes_0_libelle', with: 'libelle de piece'
+      click_on 'add_piece_justificative'
+      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.first))
+      expect(page).to have_selector('#procedure_types_de_piece_justificative_attributes_1_libelle')
 
-      preview_window = window_opened_by { page.find_by_id('onglet-preview').click }
+      preview_window = window_opened_by { click_on 'onglet-preview' }
       within_window(preview_window) do
         expect(page).to have_current_path(apercu_procedure_path(Procedure.first))
-        expect(page.find("input[type='text']")['placeholder']).to eq('libelle de champ')
-        expect(page.first('.pj-input label').text).to eq('libelle de piece')
+        expect(page).to have_field('libelle de champ')
+        expect(page).to have_field('libelle de piece')
       end
     end
 
     scenario 'After adding champ and file, check impossibility to publish procedure, add accompagnateur and make publication' do
-      page.find_by_id('procedure_types_de_champ_attributes_0_libelle').set 'libelle de champ'
-      page.find_by_id('add_type_de_champ').click
-      page.find_by_id('onglet-pieces').click
-      page.find_by_id('procedure_types_de_piece_justificative_attributes_0_libelle').set 'libelle de piece'
-      page.find_by_id('add_piece_justificative').click
+      fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
+      click_on 'add_type_de_champ'
+      click_on 'onglet-pieces'
 
-      page.find_by_id('onglet-infos').click
-      expect(page).to have_current_path(admin_procedure_path(Procedure.first.id.to_s))
-      expect(page.find_by_id('publish-procedure')['disabled']).to eq('true')
+      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.first))
+      fill_in 'procedure_types_de_piece_justificative_attributes_0_libelle', with: 'libelle de piece'
+      click_on 'add_piece_justificative'
 
-      page.find_by_id('onglet-accompagnateurs').click
-      expect(page).to have_current_path(admin_procedure_accompagnateurs_path(Procedure.first.id.to_s))
-      page.find_by_id('gestionnaire_email').set 'gestionnaire@apientreprise.fr'
-      page.find_by_id('add-gestionnaire-email').click
+      click_on 'onglet-infos'
+      expect(page).to have_current_path(admin_procedure_path(Procedure.first))
+      expect(page).to have_selector('#publish-procedure')
+      expect(page.find_by_id('publish-procedure')[:disabled]).to eq('true')
+
+      click_on 'onglet-accompagnateurs'
+      expect(page).to have_current_path(admin_procedure_accompagnateurs_path(Procedure.first))
+      fill_in 'gestionnaire_email', with: 'gestionnaire@apientreprise.fr'
+      click_on 'add-gestionnaire-email'
       page.first('.gestionnaire-affectation').click
 
-      page.find_by_id('onglet-infos').click
+      click_on 'onglet-infos'
+      expect(page).to have_current_path(admin_procedure_path(Procedure.first))
       expect(page).to have_selector('#publish-procedure', visible: true)
-      page.find_by_id('publish-procedure').click
+      find('#publish-procedure').click
 
-      expect(page.find_by_id('procedure_path')['value']).to eq('libelle-de-la-procedure')
-      page.find_by_id('publish').click
+      within '#publish-modal' do
+        expect(page).to have_field('procedure_path', with: 'libelle-de-la-procedure')
+        click_on 'publish'
+      end
+
+      expect(page).to have_text('Procédure publiée')
       expect(page).to have_selector('.procedure-lien')
     end
   end

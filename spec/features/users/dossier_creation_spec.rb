@@ -81,7 +81,7 @@ feature 'As a User I wanna create a dossier' do
       wait_for_ajax
 
       expect(page).to have_css('#recap-info-entreprise')
-      find(:css, "#dossier_autorisation_donnees[value='1']").set(true)
+      check 'dossier_autorisation_donnees'
       page.find_by_id('etape_suivante').click
       expect(page).to have_current_path(users_dossier_carte_path(procedure_with_siret.dossiers.last.id.to_s))
       page.find_by_id('etape_suivante').click
