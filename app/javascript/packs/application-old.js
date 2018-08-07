@@ -11,7 +11,6 @@ import jQuery from 'jquery';
 // required by the browsers we support will be included.
 import 'babel-polyfill';
 
-import 'select2';
 import 'typeahead.js';
 
 import '../shared/rails-ujs-fix';
