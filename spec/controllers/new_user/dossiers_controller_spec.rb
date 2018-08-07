@@ -100,38 +100,38 @@ describe NewUser::DossiersController, type: :controller do
     let(:user) { create(:user) }
     let(:asked_dossier) { create(:dossier) }
     let(:ensure_authorized) { :forbid_invite_submission! }
-    let(:submit_action) { 'submit' }
+    let(:draft) { false }
 
     before do
-      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id, submit_action: submit_action)
+      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id, save_draft: draft)
       allow(@controller).to receive(:current_user).and_return(user)
       allow(@controller).to receive(:redirect_to)
     end
 
     context 'when a user save their own draft' do
       let(:asked_dossier) { create(:dossier, user: user) }
-      let(:submit_action) { 'draft' }
+      let(:draft) { true }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when a user submit their own dossier' do
       let(:asked_dossier) { create(:dossier, user: user) }
-      let(:submit_action) { 'submit' }
+      let(:draft) { false }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when an invite save the draft for a dossier where they where invited' do
       before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
-      let(:submit_action) { 'draft' }
+      let(:draft) { true }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when an invite submit a dossier where they where invited' do
       before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
-      let(:submit_action) { 'submit' }
+      let(:draft) { false }
 
       it_behaves_like 'redirects and flashes'
     end
@@ -353,7 +353,7 @@ describe NewUser::DossiersController, type: :controller do
       it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
 
       context 'and the user saves a draft' do
-        let(:payload) { submit_payload.merge(submit_action: 'draft') }
+        let(:payload) { submit_payload.merge(save_draft: true) }
 
         it { expect(response).to render_template(:modifier) }
         it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
@@ -376,7 +376,7 @@ describe NewUser::DossiersController, type: :controller do
       let!(:invite) { create(:invite, dossier: dossier, user: user, type: 'InviteUser') }
 
       context 'and the invite saves a draft' do
-        let(:payload) { submit_payload.merge(submit_action: 'draft') }
+        let(:payload) { submit_payload.merge(save_draft: true) }
 
         before do
           first_champ.type_de_champ.update(mandatory: true, libelle: 'l')

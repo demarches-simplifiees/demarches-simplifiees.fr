@@ -47,30 +47,3 @@ addEventListener('direct-upload:end', event => {
 
   element.classList.add('direct-upload--complete');
 });
-
-addEventListener('turbolinks:load', () => {
-  const submitButtons = document.querySelectorAll(
-    'form button[type=submit][data-action]'
-  );
-  const hiddenInput = document.querySelector(
-    'form input[type=hidden][name=submit_action]'
-  );
-
-  for (let button of submitButtons) {
-    button.addEventListener('click', () => {
-      // Active Storage will intercept the form.submit event to upload
-      // the attached files, and then fire the submit action again – but forgetting
-      // which button was clicked. So we manually set the type of action that trigerred
-      // the form submission.
-      const action = button.getAttribute('data-action');
-      hiddenInput.value = action;
-      // Some form fields are marked as mandatory, but when saving a draft we don't want them
-      // to be enforced by the browser.
-      if (action === 'submit') {
-        button.form.removeAttribute('novalidate');
-      } else {
-        button.form.setAttribute('novalidate', 'novalidate');
-      }
-    });
-  }
-});

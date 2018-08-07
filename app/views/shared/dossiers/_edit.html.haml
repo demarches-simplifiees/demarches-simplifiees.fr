@@ -4,7 +4,7 @@
   - if apercu
     - form_options = { url: '', method: :get, html: { class: 'form', multipart: true } }
   - else
-    - form_options = { url: modifier_dossier_url(dossier), method: :patch, html: { class: 'form', multipart: true, novalidate: dossier.brouillon? } }
+    - form_options = { url: modifier_dossier_url(dossier), method: :patch, html: { class: 'form', multipart: true } }
 
   = form_for dossier, form_options do |f|
 
@@ -59,8 +59,6 @@
 
     - if !apercu
       .send-wrapper
-        = hidden_field_tag 'submit_action', 'draft'
-
         - if dossier.brouillon?
           - if current_user.owns?(dossier)
             = link_to ask_deletion_dossier_path(dossier),
@@ -71,19 +69,21 @@
 
           = f.button 'Enregistrer le brouillon',
             formnovalidate: true,
+            name: :save_draft,
+            value: true,
             class: 'button send secondary',
-            data: { action: 'draft', disable_with: 'Envoi...' }
+            data: { disable_with: 'Envoi...' }
 
           - if dossier.can_transition_to_en_construction?
             = f.button 'Soumettre le dossier',
               class: 'button send primary',
               disabled: !current_user.owns?(dossier),
-              data: { action: 'submit', disable_with: 'Envoi...' }
+              data: { disable_with: 'Envoi...' }
 
         - else
           = f.button 'Enregistrer les modifications du dossier',
             class: 'button send primary',
-            data: { action: 'submit', disable_with: 'Envoi...' }
+            data: { disable_with: 'Envoi...' }
 
       - if dossier.brouillon? && !current_user.owns?(dossier)
         .send-notice.invite-cannot-submit
