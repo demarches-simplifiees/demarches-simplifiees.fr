@@ -4,7 +4,7 @@
   - if apercu
     - form_options = { url: '', method: :get, html: { class: 'form', multipart: true } }
   - else
-    - form_options = { html: { class: 'form', multipart: true, novalidate: dossier.brouillon? } }
+    - form_options = { url: modifier_dossier_url(dossier), method: :patch, html: { class: 'form', multipart: true, novalidate: dossier.brouillon? } }
 
   = form_for dossier, form_options do |f|
 
