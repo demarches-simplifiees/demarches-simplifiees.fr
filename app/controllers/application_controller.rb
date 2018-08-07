@@ -75,38 +75,37 @@ class ApplicationController < ActionController::Base
     ].compact
   end
 
+  def logged_user
+    logged_users.first
+  end
+
   def logged_user_roles
     roles = logged_users.map { |logged_user| logged_user.class.name }
     roles.any? ? roles.join(', ') : 'Guest'
   end
 
-  def logged_user_info
-    logged_user = logged_users.first
-
-    if logged_user
-      {
-        id: logged_user.id,
-        email: logged_user.email
-      }
-    end
-  end
-
   def set_raven_context
+    user = logged_user
+
     context = {
       ip_address: request.ip,
+      id: user&.id,
+      email: user&.email,
       roles: logged_user_roles
-    }
-    context.merge!(logged_user_info || {})
+    }.compact
 
     Raven.user_context(context)
   end
 
-  def append_info_to_payload(payload)
-    payload.merge!({
+  def session_info_payload
+    user = logged_user
+
+    payload = {
       user_agent: request.user_agent,
-      current_user: logged_user_info,
+      current_user_id: user&.id,
+      current_user_email: user&.email,
       current_user_roles: logged_user_roles
-    }.compact)
+    }.compact
 
     if browser.known?
       payload.merge!({
@@ -115,6 +114,8 @@ class ApplicationController < ActionController::Base
         platform: browser.platform.name,
       })
     end
+
+    payload
   end
 
   def reject
