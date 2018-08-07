@@ -478,6 +478,21 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
+  describe '#show' do
+    before { sign_in(user) }
+    subject! { get(:show, params: { id: dossier.id }) }
+
+    context 'when the dossier is a brouillon' do
+      let(:dossier) { create(:dossier, user: user) }
+      it { is_expected.to redirect_to(modifier_dossier_path(dossier)) }
+    end
+
+    context 'when the dossier has been submitted' do
+      let(:dossier) { create(:dossier, :en_construction, user: user) }
+      it { is_expected.to redirect_to(users_dossier_recapitulatif_path(dossier)) }
+    end
+  end
+
   describe '#ask_deletion' do
     before { sign_in(user) }
 

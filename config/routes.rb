@@ -267,7 +267,7 @@ Rails.application.routes.draw do
   #
 
   scope module: 'new_user' do
-    resources :dossiers, only: [:index, :update] do
+    resources :dossiers, only: [:index, :show, :update] do
       member do
         get 'identite'
         patch 'update_identite'
