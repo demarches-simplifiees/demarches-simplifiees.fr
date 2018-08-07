@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  #
+  # Manager
+  #
+
   get 'manager/sign_in' => 'administrations/sessions#new'
   delete 'manager/sign_out' => 'administrations/sessions#destroy'
   namespace :manager do
@@ -38,7 +42,15 @@ Rails.application.routes.draw do
     root to: "administrateurs#index"
   end
 
+  #
+  # Monitoring
+  #
+
   get "/ping" => "ping#index", :constraints => { :ip => /127.0.0.1/ }
+
+  #
+  # Authentication
+  #
 
   devise_for :administrations,
     skip: [:password, :registrations, :sessions],
@@ -77,6 +89,10 @@ Rails.application.routes.draw do
     get '/administrateurs/sign_in/demo' => redirect("/users/sign_in")
   end
 
+  #
+  # Main routes
+  #
+
   root 'root#index'
 
   get 'users' => 'users#index'
@@ -95,6 +111,17 @@ Rails.application.routes.draw do
     get ':champ_id/siret' => 'siret#index', as: 'siret'
   end
 
+  namespace :commencer do
+    get '/test/:procedure_path' => '/users/dossiers#commencer_test', as: :test
+    get '/:procedure_path' => '/users/dossiers#commencer'
+  end
+
+  get "patron" => "root#patron"
+
+  #
+  # Deprecated UI
+  #
+
   namespace :users do
     namespace :dossiers do
       resources :invites, only: [:index, :show]
@@ -104,9 +131,6 @@ Rails.application.routes.draw do
 
     resources :dossiers do
       get '/add_siret' => 'dossiers/add_siret#show'
-
-      get 'description' => 'description#show'
-      post 'description' => 'description#update'
 
       patch 'pieces_justificatives' => 'description#pieces_justificatives'
 
@@ -209,6 +233,10 @@ Rails.application.routes.draw do
     resources :gestionnaires, only: [:index, :create, :destroy]
   end
 
+  #
+  # Addresses
+  #
+
   namespace :ban do
     get 'search' => 'search#get'
     get 'address_point' => 'search#get_address_point'
@@ -217,6 +245,10 @@ Rails.application.routes.draw do
   namespace :invites do
     post 'dossier/:dossier_id' => '/invites#create', as: 'dossier'
   end
+
+  #
+  # API
+  #
 
   namespace :api do
     namespace :v1 do
@@ -230,12 +262,9 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :commencer do
-    get '/test/:procedure_path' => '/users/dossiers#commencer_test', as: :test
-    get '/:procedure_path' => '/users/dossiers#commencer'
-  end
-
-  get "patron" => "root#patron"
+  #
+  # User
+  #
 
   scope module: 'new_user' do
     resources :dossiers, only: [:index, :update] do
@@ -243,6 +272,7 @@ Rails.application.routes.draw do
         get 'identite'
         patch 'update_identite'
         get 'modifier'
+        patch 'modifier', to: 'dossiers#update'
         get 'merci'
         post 'ask_deletion'
         get 'attestation'
@@ -250,12 +280,13 @@ Rails.application.routes.draw do
 
       collection do
         post 'recherche'
-        # FIXME: to remove when show is implemeted
-        # needed to fix refresh after dossier draft save
-        get ':id', to: redirect('/dossiers/%{id}/modifier')
       end
     end
   end
+
+  #
+  # Gestionnaire
+  #
 
   scope module: 'new_gestionnaire', as: 'gestionnaire' do
     resources :procedures, only: [:index, :show], param: :procedure_id do
@@ -306,6 +337,10 @@ Rails.application.routes.draw do
     get "recherche" => "recherche#index"
   end
 
+  #
+  # Administrateur
+  #
+
   scope module: 'new_administrateur' do
     resources :procedures, only: [] do
       member do
@@ -322,7 +357,10 @@ Rails.application.routes.draw do
 
   apipie
 
+  #
   # Legacy routes
+  #
+
   get 'backoffice' => redirect('/procedures')
   get 'backoffice/sign_in' => redirect('/users/sign_in')
   get 'backoffice/dossiers/procedure/:procedure_id' => redirect('/procedures/%{procedure_id}')
