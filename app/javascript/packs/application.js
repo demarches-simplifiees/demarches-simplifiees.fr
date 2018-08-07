@@ -1,7 +1,6 @@
 import Turbolinks from 'turbolinks';
 import Rails from 'rails-ujs';
-import * as ActiveStorage from 'activestorage';
-
+import ActiveStorage from '../shared/activestorage/ujs';
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
 import jQuery from 'jquery';
@@ -15,7 +14,6 @@ import 'select2';
 import 'typeahead.js';
 
 import '../shared/rails-ujs-fix';
-import '../shared/direct-uploads';
 
 import '../new_design/buttons';
 import '../new_design/form-validation';

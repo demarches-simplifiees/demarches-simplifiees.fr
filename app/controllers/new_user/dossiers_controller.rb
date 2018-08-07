@@ -209,7 +209,7 @@ module NewUser
     end
 
     def draft?
-      params[:submit_action] == 'draft'
+      params[:save_draft]
     end
   end
 end
