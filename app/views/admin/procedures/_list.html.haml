@@ -13,22 +13,20 @@
 
     - @procedures.each do |procedure|
       - procedure = procedure.decorate
-      %tr{ id: "tr_dossier_#{procedure.id}", 'data-dossier_url' => admin_procedure_path(id: procedure.id) }
-        %td= procedure.id
-        %td.col-xs-6
-          = procedure.libelle
-        - if @active_class
-          %td.procedure-lien= link_to procedure.lien, procedure.lien, 'data-method' => :get
-        - if @active_class || @archived_class
-          %td
-            = procedure.published_at_fr
+      - admin_procedure_href = admin_procedure_path(procedure)
+      %tr{ id: "tr_dossier_#{procedure.id}", data: { href: admin_procedure_href } }
+        %td= link_to(procedure.id, admin_procedure_href)
+        %td.col-xs-6= link_to(procedure.libelle, admin_procedure_href)
+        - if procedure.publiee?
+          %td.procedure-lien= link_to(procedure.lien, procedure.lien)
+        - if procedure.publiee_ou_archivee?
+          %td= link_to(procedure.published_at_fr, admin_procedure_href)
         - else
-          %td
-            = procedure.created_at_fr
+          %td= link_to(procedure.created_at_fr, admin_procedure_href)
         %td
-          = link_to('Cloner', admin_procedure_clone_path(procedure.id), 'data-method' => :put, class: 'btn-sm btn-primary clone-btn')
+          = link_to('Cloner', admin_procedure_clone_path(procedure.id), data: { method: :put }, class: 'btn-sm btn-primary clone-btn')
           - if !procedure.publiee_ou_archivee?
-            = link_to('X', url_for(controller: 'admin/procedures', action: :destroy, id: procedure.id), 'data-method' => :delete, class: 'btn-sm btn-danger')
+            = link_to('X', url_for(controller: 'admin/procedures', action: :destroy, id: procedure.id), data: { method: :delete }, class: 'btn-sm btn-danger')
 
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links
