@@ -26,9 +26,12 @@ module NewUser
     def show
       if dossier.brouillon?
         redirect_to modifier_dossier_path(dossier)
-      else
+
+      elsif !Flipflop.new_dossier_details?
         redirect_to users_dossier_recapitulatif_path(dossier)
       end
+
+      @dossier = dossier
     end
 
     def attestation
