@@ -96,7 +96,6 @@ module NewGestionnaire
         sign_in(gestionnaire, scope: :gestionnaire)
 
         Avis.link_avis_to_gestionnaire(gestionnaire)
-        avis = Avis.find(params[:id])
         redirect_to url_for(gestionnaire_avis_index_path)
       else
         flash[:alert] = gestionnaire.errors.full_messages
