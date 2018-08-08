@@ -64,7 +64,7 @@
             = link_to ask_deletion_dossier_path(dossier),
               method: :post,
               class: 'button danger',
-              data: { confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" } do
+              data: { disable_with: 'Supprimer le brouillon', confirm: 'En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?' } do
               Supprimer le brouillon
 
           = f.button 'Enregistrer le brouillon',
@@ -72,18 +72,18 @@
             name: :save_draft,
             value: true,
             class: 'button send secondary',
-            data: { disable_with: 'Envoi...' }
+            data: { disable_with: 'Enregistrer le brouillon' }
 
           - if dossier.can_transition_to_en_construction?
             = f.button 'Soumettre le dossier',
               class: 'button send primary',
               disabled: !current_user.owns?(dossier),
-              data: { disable_with: 'Envoi...' }
+              data: { disable_with: 'Soumettre le dossier' }
 
         - else
           = f.button 'Enregistrer les modifications du dossier',
             class: 'button send primary',
-            data: { disable_with: 'Envoi...' }
+            data: { disable_with: 'Enregistrer les modifications du dossier' }
 
       - if dossier.brouillon? && !current_user.owns?(dossier)
         .send-notice.invite-cannot-submit
