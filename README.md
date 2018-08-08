@@ -69,9 +69,9 @@ Dans le fichier `config/intializers/token.rb`, ajouter
 
 ## Lancement de l'application
 
-    overmind s
+    overmind start
 
-Un utilisateur de test est disponible, avec les identifiants `test@exemple.fr`/`testpassword`.
+L'application tourne à l'adresse `http://localhost:3000`. Un utilisateur de test est disponible, avec les identifiants `test@exemple.fr`/`testpassword`.
 
 ## Programmation des jobs
 
