@@ -16,7 +16,7 @@ const bloodhound = new Bloodhound({
 bloodhound.initialize();
 
 function bindTypeahead() {
-  $('input[data-address="true"]').typeahead(
+  $('input[data-address="true"], input[type="address"]').typeahead(
     {
       minLength: 1
     },
