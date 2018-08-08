@@ -1,0 +1,25 @@
+@import "colors";
+@import "constants";
+
+#dossier-show {
+  h1 {
+    color: $black;
+    font-size: 22px;
+    margin-bottom: 0;
+
+    .icon.folder {
+      vertical-align: -3px;
+    }
+  }
+
+  h2 {
+    margin-left: 31px;
+    margin-bottom: $default-padding;
+    color: $grey;
+    font-weight: bold;
+  }
+
+  .sub-header .label {
+    flex-shrink: 0;
+  }
+}
