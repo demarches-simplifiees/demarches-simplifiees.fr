@@ -478,6 +478,37 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
+  describe '#show' do
+    let(:new_dossier_details_enabled) { false }
+
+    before do
+      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, new_dossier_details_enabled)
+      sign_in(user)
+    end
+
+    subject! { get(:show, params: { id: dossier.id }) }
+
+    context 'when the dossier is a brouillon' do
+      let(:dossier) { create(:dossier, user: user) }
+      it { is_expected.to redirect_to(modifier_dossier_path(dossier)) }
+    end
+
+    context 'when the dossier has been submitted' do
+      let(:dossier) { create(:dossier, :en_construction, user: user) }
+
+      context 'and the new dossier details page is disabled' do
+        let(:new_dossier_details_enabled) { false }
+        it { is_expected.to redirect_to(users_dossier_recapitulatif_path(dossier)) }
+      end
+
+      context 'and the new dossier details page is enabled' do
+        let(:new_dossier_details_enabled) { true }
+        it { expect(assigns(:dossier)).to eq(dossier) }
+        it { is_expected.to render_template(:show) }
+      end
+    end
+  end
+
   describe '#ask_deletion' do
     before { sign_in(user) }
 

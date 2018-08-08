@@ -17,6 +17,9 @@ Flipflop.configure do
 
   feature :web_hook
 
+  feature :new_dossier_details,
+    title: "Nouvelle page « Dossier »"
+
   group :production do
     feature :remote_storage,
       default: Rails.env.production? || Rails.env.staging?
