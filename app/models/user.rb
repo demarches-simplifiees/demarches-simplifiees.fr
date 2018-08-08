@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :invites, dependent: :destroy
   has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :piece_justificative, dependent: :destroy
+  has_many :feedbacks, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
 
   delegate :given_name, :family_name, :email_france_connect, :gender, :birthdate, :birthplace, :france_connect_particulier_id, to: :france_connect_information
