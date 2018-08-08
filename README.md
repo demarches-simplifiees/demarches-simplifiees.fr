@@ -34,6 +34,12 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
     bundle install
     yarn install
 
+## Bouchonnage de l’authentification
+
+Créer les fichiers de configuration avec les valeurs par défaut :
+
+    cp config/france_connect.example.yml config/france_connect.yml
+    cp config/github_secrets.example.yml config/github_secrets.yml
 
 ## Création de la base de données
 
@@ -53,13 +59,6 @@ Afin de générer la BDD de l'application, il est nécessaire d'exécuter les co
     # Migrate the development database and the test database
     bin/rails db:migrate
 
-## Bouchonnage de l’authentification
-
-Créer les fichiers de configuration avec les valeurs par défaut :
-
-    cp config/france_connect.example.yml config/france_connect.yml
-    cp config/github_secrets.example.yml config/github_secrets.yml
-
 ## Connexion a Pipedrive
 
 Dans le fichier `config/intializers/token.rb`, ajouter
@@ -70,9 +69,9 @@ Dans le fichier `config/intializers/token.rb`, ajouter
 
 ## Lancement de l'application
 
-    overmind s
+    overmind start
 
-Un utilisateur de test est disponible, avec les identifiants `test@exemple.fr`/`testpassword`.
+L'application tourne à l'adresse `http://localhost:3000`. Un utilisateur de test est disponible, avec les identifiants `test@exemple.fr`/`testpassword`.
 
 ## Programmation des jobs
 
