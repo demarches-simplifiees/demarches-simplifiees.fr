@@ -1,0 +1,4 @@
+document.querySelector('#user-satisfaction').innerHTML = '';
+var flashMessagesView = "<%= escape_javascript(render partial: 'layouts/flash_messages') %>";
+document.querySelector("#flash_messages").outerHTML = flashMessagesView;
+<% flash.clear %>
