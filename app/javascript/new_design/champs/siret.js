@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 addEventListener('turbolinks:load', () => {
   $('[data-siret]').on('input', evt => {
     const input = $(evt.target);

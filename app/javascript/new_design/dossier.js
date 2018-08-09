@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 $(document).on('click', 'body', () => {
   $('.print-menu').removeClass('open fade-in-down');
 });
