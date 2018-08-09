@@ -13,6 +13,7 @@ import 'babel-polyfill';
 
 import 'typeahead.js';
 
+import '../shared/sentry';
 import '../shared/rails-ujs-fix';
 
 // Start Rails helpers

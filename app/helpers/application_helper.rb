@@ -67,4 +67,17 @@ module ApplicationHelper
     Raven.capture_exception(e)
     {}
   end
+
+  def sentry_config
+    sentry = Rails.application.secrets.sentry
+    if sentry
+      {
+        dsn: sentry[:browser],
+        id: current_user&.id,
+        email: current_email
+      }.to_json
+    else
+      {}
+    end
+  end
 end

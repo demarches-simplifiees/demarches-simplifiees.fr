@@ -13,6 +13,7 @@ import 'babel-polyfill';
 import 'select2';
 import 'typeahead.js';
 
+import '../shared/sentry';
 import '../shared/rails-ujs-fix';
 
 import '../new_design/buttons';
