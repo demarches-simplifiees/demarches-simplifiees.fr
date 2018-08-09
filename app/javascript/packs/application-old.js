@@ -31,5 +31,6 @@ if (process.env['RAILS_ENV'] === 'test') {
 window.Bloodhound = Bloodhound;
 window.Chartkick = Chartkick;
 // Export jQuery globally for legacy Javascript files used in the old design
+jQuery.rails = Rails;
 window.$ = jQuery;
 window.jQuery = jQuery;

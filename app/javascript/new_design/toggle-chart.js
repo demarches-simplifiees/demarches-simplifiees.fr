@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import Chartkick from 'chartkick';
 
 export function toggleChart(event, chartClass) {
