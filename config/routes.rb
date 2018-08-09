@@ -282,6 +282,7 @@ Rails.application.routes.draw do
         post 'recherche'
       end
     end
+    resource :feedback, only: [:create]
   end
 
   #
