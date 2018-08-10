@@ -7,8 +7,11 @@
       .hero-wrapper
         .hero-text
           %p.hero-tagline
-            %em.hero-tagline-em Dématérialiser et simplifier
-            les démarches administratives
+            %em.hero-tagline-em Effectuer
+            %br<>
+            %em.hero-tagline-em une démarche administrative
+            %br<>
+            %em.hero-tagline-em en ligne
 
         .hero-illustration
           %img{ :src => image_url("landing/hero/dematerialiser.svg"), alt: "" }
@@ -21,7 +24,7 @@
 
         .role-panel-70
           %h1.role-panel-title Vous souhaitez effectuer une demande auprès d'une administration ?
-          %p.role-panel-explanation Déposez des demandes en toute simplicité et retrouvez vos dossiers en ligne
+          %p.role-panel-explanation Réalisez vos demandes en toute simplicité et retrouvez vos dossiers en ligne
 
           = link_to "Voir les démarches disponibles",
             LISTE_DES_DEMARCHES_URL,
@@ -33,107 +36,8 @@
             new_user_session_path,
             class: "role-panel-button-secondary"
 
-  .landing-panel
-    .container
-      .role-panel-wrapper.role-administrations-panel
-        .role-panel-30.role-administrations-image
-          %img.role-image{ :src => image_url("landing/roles/administrations.svg"), alt: "" }
-
-        .role-panel-70
-          %h1.role-panel-title Vous souhaitez dématérialiser une démarche papier et réduire vos temps d'instruction ?
-          %p.role-panel-explanation Créez des formulaires en ligne en quelques minutes et instruisez les demandes des usagers sur une plateforme dédiée
-
-          = link_to "Demander un compte administrateur",
-            new_demande_path,
-            class: "role-panel-button-primary",
-            target: "_blank",
-            rel: "noopener noreferrer",
-            onclick: "javascript: ga('send', 'pageview', '/demander-une-demo')"
-
-          = link_to "Voir la documentation",
-            DOC_URL,
-            target: "_blank",
-            rel: "noopener noreferrer",
-            class: "role-panel-button-secondary"
-
-  .landing-panel.features-panel
-    .container
-      %ul.features
-        %li.feature
-          %img.feature-image{ :src => image_url("landing/features/messagerie.svg"), alt: "" }
-          %p.feature-text
-            %em.feature-text-em Dialogue
-            %br
-            simplifié entre usagers et services
-
-        %li.feature
-          %img.feature-image{ :src => image_url("landing/features/collaborer.svg"), alt: "" }
-          %p.feature-text
-            %em.feature-text-em Collaboration
-            %br
-            pour un traitement des dossiers plus fluide
-
-        %li.feature
-          %img.feature-image{ :src => image_url("landing/features/gerer.svg"), alt: "" }
-          %p.feature-text
-            %em.feature-text-em Intégration
-            %br
-            à l'ensemble des services de l'État plateforme
-
-  .landing-panel
-    .container
-      %h2.landing-panel-title Ce que les utilisateurs pensent du service
-
-      %ul.quotes
-        %li.quote
-          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
-          .quote-content-wrapper
-            %p.quote-content
-              Les échanges avec les usagers sont facilités, ce qui permet de réduire les délais d’instructions et de gagner en efficacité.
-
-            %p.quote-author
-              %span.quote-author-name Elodie Le Rhun
-              %br
-              Chef de bureau, DRIEA Ile-de-France
-
-        %li.quote
-          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
-          .quote-content-wrapper
-            %p.quote-content
-              Un service qui garantit une économie de temps et beaucoup moins de manipulations des dossiers.
-
-            %p.quote-author
-              %span.quote-author-name Nadja Briki
-              %br
-              Déléguée de la Préfète du Pas-de-Calais
-
-      %ul.quotes
-        %li.quote
-          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
-          .quote-content-wrapper
-            %p.quote-content
-              Parfait, cela fonctionne très bien ! Merci encore pour votre réactivité.
-
-            %p.quote-author
-              %span.quote-author-name Max A.
-              %br
-              à notre service support
-
-        %li.quote
-          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
-          .quote-content-wrapper
-            %p.quote-content
-              ★★★★★
-              %br
-              Eh les cocos, il y a la télé-procédure
-
-            %p.quote-author
-              %span.quote-author-name Hisham M.
-              %br
-              sur le site de la DRIEA
-
   - cache "numbers-panel", :expires_in => 3.hours do
-    .landing-panel.numbers-panel
+    .landing-panel
       .container
         %h2.landing-panel-title demarches-simplifiees.fr en chiffres
         %ul.numbers
@@ -159,44 +63,6 @@
               %br<>
               des délais de traitement
 
-  .landing-panel.users-panel
-    .container
-      %h2.landing-panel-title Ils utilisent déjà demarches-simplifiees.fr
-
-      %ul.users
-        %li.user
-          = link_to "https://www.ecologique-solidaire.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/mtes.jpg"), alt: "Ministère de la Transition Écologique et Solidaire" }
-        %li.user
-          = link_to "https://www.iledefrance.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/region-idf.jpg"), alt: "Région Île-de-France" }
-        %li.user
-          = link_to "http://www.artisanat.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/chambres-de-metiers.jpg"), alt: "Chambres des Métiers et de l'Artisanat" }
-        %li.user
-          = link_to "http://www.cci.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/cci.jpg"), alt: "CCI de France" }
-        %li.user
-          = link_to "http://www.driea.ile-de-france.developpement-durable.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/driea-idf.jpg"), alt: "Direction Régionale et Interdépartementale de l'Équipement et de l'Aménagement" }
-
-      %ul.users
-        %li.user
-          = link_to "https://www.debatpublic.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/cndp.jpg"), alt: "Commission Nationale du Débat Public" }
-        %li.user
-          = link_to "https://www.iledefrance.ars.sante.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/ars-idf.jpg"), alt: "Agence Régionale de Santé d'Île-de-France" }
-        %li.user
-          = link_to "http://www.franceagrimer.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/france-agrimer.jpg"), alt: "FranceAgrimer" }
-        %li.user
-          = link_to "http://www.rhone.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/prefecture-rhone.jpg"), alt: "Préfecture de la région Rhône-Alpes" }
-        %li.user
-          = link_to "http://www.lillemetropole.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_url("landing/users/mel.jpg"), alt: "Métropole Européenne de Lille" }
-
   .landing-panel.cta-panel
     .container
       .cta-panel-wrapper
@@ -206,6 +72,17 @@
         %div
           = link_to "Contactez-nous",
             "mailto:#{CONTACT_EMAIL}?subject=Question%20à%20propos%20de%20demarches-simplifiees.fr",
-            class: "cta-panel-button-white",
+            class: "cta-panel-button white",
             target: "_blank",
             rel: "noopener noreferrer"
+
+  .landing-panel
+    .container
+      .cta-panel-wrapper
+        %div
+          %h1.cta-panel-title Vous êtes une administration ?
+          %p.cta-panel-explanation Vous souhaitez dématerialiser une démarche administrative ?
+        %div
+          = link_to "Découvrez notre outil",
+            administration_path,
+            class: "cta-panel-button black"
