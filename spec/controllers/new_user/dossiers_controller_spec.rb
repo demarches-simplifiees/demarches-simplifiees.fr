@@ -100,38 +100,38 @@ describe NewUser::DossiersController, type: :controller do
     let(:user) { create(:user) }
     let(:asked_dossier) { create(:dossier) }
     let(:ensure_authorized) { :forbid_invite_submission! }
-    let(:submit_action) { 'submit' }
+    let(:draft) { false }
 
     before do
-      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id, submit_action: submit_action)
+      @controller.params = @controller.params.merge(dossier_id: asked_dossier.id, save_draft: draft)
       allow(@controller).to receive(:current_user).and_return(user)
       allow(@controller).to receive(:redirect_to)
     end
 
     context 'when a user save their own draft' do
       let(:asked_dossier) { create(:dossier, user: user) }
-      let(:submit_action) { 'draft' }
+      let(:draft) { true }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when a user submit their own dossier' do
       let(:asked_dossier) { create(:dossier, user: user) }
-      let(:submit_action) { 'submit' }
+      let(:draft) { false }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when an invite save the draft for a dossier where they where invited' do
       before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
-      let(:submit_action) { 'draft' }
+      let(:draft) { true }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when an invite submit a dossier where they where invited' do
       before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
-      let(:submit_action) { 'submit' }
+      let(:draft) { false }
 
       it_behaves_like 'redirects and flashes'
     end
@@ -353,7 +353,7 @@ describe NewUser::DossiersController, type: :controller do
       it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
 
       context 'and the user saves a draft' do
-        let(:payload) { submit_payload.merge(submit_action: 'draft') }
+        let(:payload) { submit_payload.merge(save_draft: true) }
 
         it { expect(response).to render_template(:modifier) }
         it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
@@ -376,7 +376,7 @@ describe NewUser::DossiersController, type: :controller do
       let!(:invite) { create(:invite, dossier: dossier, user: user, type: 'InviteUser') }
 
       context 'and the invite saves a draft' do
-        let(:payload) { submit_payload.merge(submit_action: 'draft') }
+        let(:payload) { submit_payload.merge(save_draft: true) }
 
         before do
           first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
@@ -474,6 +474,37 @@ describe NewUser::DossiersController, type: :controller do
         expect(assigns(:user_dossiers).second.updated_at.to_date).to eq(4.days.ago.to_date)
         expect(assigns(:dossiers_invites).first.updated_at.to_date).to eq(2.days.ago.to_date)
         expect(assigns(:dossiers_invites).second.updated_at.to_date).to eq(4.days.ago.to_date)
+      end
+    end
+  end
+
+  describe '#show' do
+    let(:new_dossier_details_enabled) { false }
+
+    before do
+      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, new_dossier_details_enabled)
+      sign_in(user)
+    end
+
+    subject! { get(:show, params: { id: dossier.id }) }
+
+    context 'when the dossier is a brouillon' do
+      let(:dossier) { create(:dossier, user: user) }
+      it { is_expected.to redirect_to(modifier_dossier_path(dossier)) }
+    end
+
+    context 'when the dossier has been submitted' do
+      let(:dossier) { create(:dossier, :en_construction, user: user) }
+
+      context 'and the new dossier details page is disabled' do
+        let(:new_dossier_details_enabled) { false }
+        it { is_expected.to redirect_to(users_dossier_recapitulatif_path(dossier)) }
+      end
+
+      context 'and the new dossier details page is enabled' do
+        let(:new_dossier_details_enabled) { true }
+        it { expect(assigns(:dossier)).to eq(dossier) }
+        it { is_expected.to render_template(:show) }
       end
     end
   end

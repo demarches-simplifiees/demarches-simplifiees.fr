@@ -1,6 +1,6 @@
 import Turbolinks from 'turbolinks';
 import Rails from 'rails-ujs';
-import * as ActiveStorage from 'activestorage';
+import ActiveStorage from '../shared/activestorage/ujs';
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
 import Bloodhound from 'bloodhound-js';
@@ -14,7 +14,6 @@ import 'babel-polyfill';
 import 'typeahead.js';
 
 import '../shared/rails-ujs-fix';
-import '../shared/direct-uploads';
 
 // Start Rails helpers
 Chartkick.addAdapter(Highcharts);
