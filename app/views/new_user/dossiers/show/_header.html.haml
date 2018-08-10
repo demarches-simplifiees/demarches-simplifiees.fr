@@ -1,14 +1,11 @@
 .sub-header
   .container
-    .flex.justify-between.align-baseline
-      .title-container
-        %h1
-          %span.icon.folder
-          = dossier.procedure.libelle
-        %h2
-          Dossier nº #{dossier.id}
+    = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
 
-      = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
+    .title-container
+      %span.icon.folder
+      %h1= dossier.procedure.libelle
+      %h2 Dossier nº #{dossier.id}
 
     %ul.tabs
       %li.active
