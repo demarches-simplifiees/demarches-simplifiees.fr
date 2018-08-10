@@ -4,4 +4,8 @@ class Champs::CheckboxChamp < Champ
       [ libelle ]
     end
   end
+
+  def to_s
+    value == 'on' ? 'oui' : 'non'
+  end
 end
