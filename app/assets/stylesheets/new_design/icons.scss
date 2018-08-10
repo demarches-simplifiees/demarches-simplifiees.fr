@@ -89,4 +89,16 @@
     background-image: image-url("icons/info-blue.svg");
     object-fit: contain;
   }
+
+  &.smile {
+    background-image: image-url("icons/smile-regular.svg");
+  }
+
+  &.frown {
+    background-image: image-url("icons/frown-regular.svg");
+  }
+
+  &.meh {
+    background-image: image-url("icons/meh-regular.svg");
+  }
 }

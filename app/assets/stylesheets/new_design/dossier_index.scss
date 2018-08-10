@@ -1,0 +1,15 @@
+@import "colors";
+@import "constants";
+
+#user-satisfaction {
+  text-align: center;
+  padding: 20px;
+
+  .icon {
+    padding: 10px 5px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

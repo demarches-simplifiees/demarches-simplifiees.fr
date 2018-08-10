@@ -10,7 +10,7 @@ fr:
           date: 'Date'
           datetime: 'Date et Heure'
           number: 'Nombre'
-          checkbox: 'Checkbox'
+          checkbox: 'Case à cocher'
           civilite: 'Civilité'
           email: 'Email'
           phone: 'Téléphone'

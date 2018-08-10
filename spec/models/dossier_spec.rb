@@ -556,6 +556,8 @@ describe Dossier do
   end
 
   describe "#send_draft_notification_email" do
+    include Rails.application.routes.url_helpers
+
     let(:procedure) { create(:procedure) }
     let(:user) { create(:user) }
 
@@ -564,15 +566,17 @@ describe Dossier do
     end
 
     it "send an email when the dossier is created for the very first time" do
+      dossier = nil
       ActiveJob::Base.queue_adapter = :test
       expect do
         perform_enqueued_jobs do
-          Dossier.create(procedure: procedure, state: "brouillon", user: user)
+          dossier = Dossier.create(procedure: procedure, state: "brouillon", user: user)
         end
       end.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche \"#{procedure.libelle}\"")
+      expect(mail.html_part.body).to include(dossier_url(dossier))
     end
 
     it "does not send an email when the dossier is created with a non brouillon state" do
