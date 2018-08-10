@@ -1,0 +1,63 @@
+.status-progress
+  - if !dossier.termine?
+    %ul.status-timeline
+      %li.brouillon{ class: dossier.brouillon? ? 'active' : nil }
+        brouillon
+      %li.en-construction{ class: dossier.en_construction? ? 'active' : nil }
+        en construction
+      %li.en-instruction{ class: dossier.en_instruction? ? 'active' : nil }
+        en instruction
+      %li.termine{ class: dossier.termine? ? 'active' : nil }
+        terminé
+
+  .status-explanation
+    - if dossier.brouillon?
+      .brouillon
+        %p Vous pouvez remplir votre dossier tranquillement : il n’est pas encore visible par l’administration.
+        %p Quand vous aurez terminé, soumettez votre dossier pour qu’il soit examiné.
+
+    - elsif dossier.en_construction?
+      .en-construction
+        %p Un accompagnant de l’administration est en train de vérifier que votre dossier est bien complet.
+        %p Si des modifications sont nécessaires, vous recevrez un email avec les modifications à effectuer. Et sinon, dès que votre dossier sera complet, il passera automatiquement en instruction.
+
+    - elsif dossier.en_instruction?
+      .en-instruction
+        %p Votre dossier est complet. Il est en cours d’examen par les agent·e·s de l’administration.
+        %p Dès que l’administration aura statué sur votre dossier, vous recevrez un email avec le résultat.
+
+    - elsif dossier.accepte?
+      .accepte
+        %p
+          %span.icon.accept
+          Votre dossier a été
+          = succeed '.' do
+            %strong accepté
+
+          - if dossier.motivation.present?
+            %h3 Motif de l’acceptation
+            %blockquote= dossier.motivation
+
+    - elsif dossier.refuse?
+      .refuse
+        %p
+          %span.icon.refuse
+          Nous sommes désolés, votre dossier a malheureusement été
+          = succeed '.' do
+            %strong refusé
+
+        - if dossier.motivation.present?
+          %h3 Motif du refus
+          %blockquote= dossier.motivation
+
+    - elsif dossier.sans_suite?
+      .sans-suite
+        %p
+          %span.icon.without-continuation
+          Votre dossier a été classé
+          = succeed '.' do
+            %strong sans suite
+
+          - if dossier.motivation.present?
+            %h3 Motif du classement sans suite
+            %blockquote= dossier.motivation
