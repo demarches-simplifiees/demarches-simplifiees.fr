@@ -2,24 +2,32 @@
 @import "constants";
 
 #dossier-show {
-  h1 {
-    color: $black;
-    font-size: 22px;
-    margin-bottom: 0;
-
-    .icon.folder {
-      vertical-align: -3px;
+  .sub-header {
+    .label {
+      float: right;
+      margin-left: $default-spacer;
     }
-  }
 
-  h2 {
-    margin-left: 31px;
-    margin-bottom: $default-padding;
-    color: $grey;
-    font-weight: bold;
-  }
+    .title-container {
+      margin-bottom: $default-padding * 2;
+      padding-left: 32px;
 
-  .sub-header .label {
-    flex-shrink: 0;
+      .icon.folder {
+        float: left;
+        margin-left: -32px;
+        margin-top: 3px;
+      }
+    }
+
+    h1 {
+      color: $black;
+      font-size: 22px;
+      margin-bottom: 0;
+    }
+
+    h2 {
+      color: $grey;
+      font-weight: bold;
+    }
   }
 }
