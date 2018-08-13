@@ -108,11 +108,9 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 
 ## Linting
 
-- Faire tourner RuboCop : `bundle exec rubocop`
-- Faire tourner Brakeman : `bundle exec brakeman`
-- Linter les fichiers HAML : `bundle exec haml-lint app/views/`
-- Linter les fichiers SCSS : `bundle exec scss-lint app/assets/stylesheets/`
-- Linter les fichiers JavaScript : `yarn lint:js` (`yarn lint:js --fix`)
+Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité code.
+
+- Faire tourner tous les linters : `bin/rake lint`
 - [AccessLint](http://accesslint.com/) tourne automatiquement sur les PRs
 
 ## Déploiement
