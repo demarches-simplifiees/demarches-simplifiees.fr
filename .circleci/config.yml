@@ -90,20 +90,8 @@ jobs:
       - *yarn_restore_cache
       - *yarn_install
       - run:
-          name: Run eslint
-          command: yarn lint:js
-      - run:
-          name: Run rubocop
-          command: bundle exec rubocop
-      - run:
-          name: Run brakeman
-          command: bundle exec brakeman
-      - run:
-          name: Run haml-lint
-          command: bundle exec haml-lint app/views/
-      - run:
-          name: Run scss-lint
-          command: bundle exec scss-lint app/assets/stylesheets/
+          name: Run linters
+          command: bundle exec rake lint
   deploy:
     <<: *defaults
     steps:
