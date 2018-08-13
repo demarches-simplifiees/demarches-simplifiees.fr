@@ -6,6 +6,7 @@ Rails.application.configure do
   # injected by ansible.
   if !config.lograge.custom_options
     config.lograge.custom_options = lambda do |event|
+      exception_object = event.payload[:exception_object]
       {
         type: 'tps',
         user_id: event.payload[:user_id],
@@ -14,13 +15,14 @@ Rails.application.configure do
         user_agent: event.payload[:user_agent],
         browser: event.payload[:browser],
         browser_version: event.payload[:browser_version],
-        platform: event.payload[:platform]
+        platform: event.payload[:platform],
+        backtrace: exception_object ? exception_object.backtrace.join("\n") : nil
       }.compact
     end
 
     config.lograge.custom_payload do |controller|
       {
-        xhr: !!controller.request.xhr?
+        xhr: !!controller&.request&.xhr?
       }
     end
   end
