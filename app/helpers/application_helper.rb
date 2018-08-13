@@ -7,11 +7,41 @@ module ApplicationHelper
     end
   end
 
-  def flash_class(level)
+  def flash_class(level, sticky = false)
     case level
-    when "notice" then "alert-success"
-    when "alert" then "alert-danger"
+    when "notice" then "alert-success#{sticky ? ' sticky' : ''}"
+    when "alert" then "alert-danger#{sticky ? ' sticky' : ''}"
     end
+  end
+
+  def render_to_element(selector, partial:, outer: false, locals: {})
+    method = outer ? 'outerHTML' : 'innerHTML'
+    html = escape_javascript(render partial: partial, locals: locals)
+    # rubocop:disable Rails/OutputSafety
+    raw("document.querySelector('#{selector}').#{method} = \"#{html}\";")
+    # rubocop:enable Rails/OutputSafety
+  end
+
+  def render_flash(timeout: false, sticky: false)
+    if flash.any?
+      html = render_to_element('#flash_messages', partial: 'layouts/flash_messages', locals: { sticky: sticky }, outer: true)
+      flash.clear
+      if timeout
+        html += remove_element('#flash_messages', timeout: timeout, inner: true)
+      end
+      html
+    end
+  end
+
+  def remove_element(selector, timeout: 0, inner: false)
+    script = "(function() {";
+    script << "var el = document.querySelector('#{selector}');"
+    method = (inner ? "el.innerHTML = ''" : "el.parentNode.removeChild(el)")
+    script << "setTimeout(function() { #{method}; }, #{timeout});";
+    script << "})();"
+    # rubocop:disable Rails/OutputSafety
+    raw(script);
+    # rubocop:enable Rails/OutputSafety
   end
 
   def current_email
