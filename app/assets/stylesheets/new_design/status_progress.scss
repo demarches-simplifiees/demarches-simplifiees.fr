@@ -1,0 +1,82 @@
+@import "colors";
+@import "constants";
+
+.status-progress {
+  text-align: center;
+}
+
+.status-timeline {
+  display: inline-block;
+  margin-top: $default-padding * 2;
+  margin-bottom: $default-padding * 2;
+  border: 1px solid #808080;
+  border-radius: 3px;
+
+  li {
+    display: inline-block;
+    padding-top: $default-spacer;
+    padding-bottom: $default-spacer;
+
+    &:first-child {
+      padding-left: 20px;
+    }
+
+    &:last-child {
+      padding-right: 20px;
+    }
+
+    &.active {
+      font-weight: bold;
+    }
+
+    &.active ~ li {
+      color: $grey;
+    }
+
+    // Arrows
+    &:not(:last-child)::after {
+      content: "▸";
+      display: inline-block;
+      margin-left: 10px;
+      margin-right: 10px;
+      vertical-align: top;
+    }
+  }
+}
+
+.status-explanation {
+  text-align: left;
+
+  &.brouillon,
+  &.en-construction,
+  &.en-instruction {
+    max-width: 600px;
+    margin: auto;
+  }
+
+  h3 {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: $default-spacer;
+  }
+
+  p {
+    margin-bottom: $default-padding;
+  }
+
+  blockquote {
+    quotes: "« " " »" "‘" "’";
+  }
+
+  blockquote::before {
+    content: open-quote;
+  }
+
+  blockquote::after {
+    content: close-quote;
+  }
+
+  .icon {
+    margin-right: $default-spacer;
+  }
+}
