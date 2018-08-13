@@ -87,5 +87,48 @@ FactoryBot.define do
         dossier.save!
       end
     end
+
+    trait :accepte do
+      after(:create) do |dossier, _evaluator|
+        dossier.state = 'accepte'
+        dossier.processed_at = dossier.created_at + 1.minute
+        dossier.en_construction_at = dossier.created_at + 2.minutes
+        dossier.created_at = dossier.created_at + 3.minutes
+        dossier.save!
+      end
+    end
+
+    trait :refuse do
+      after(:create) do |dossier, _evaluator|
+        dossier.state = 'refuse'
+        dossier.processed_at = dossier.created_at + 1.minute
+        dossier.en_construction_at = dossier.created_at + 2.minutes
+        dossier.created_at = dossier.created_at + 3.minutes
+        dossier.save!
+      end
+    end
+
+    trait :sans_suite do
+      after(:create) do |dossier, _evaluator|
+        dossier.state = 'sans_suite'
+        dossier.processed_at = dossier.created_at + 1.minute
+        dossier.en_construction_at = dossier.created_at + 2.minutes
+        dossier.created_at = dossier.created_at + 3.minutes
+        dossier.save!
+      end
+    end
+
+    trait :with_motivation do
+      after(:create) do |dossier, _evaluator|
+        dossier.motivation = case dossier.state
+        when 'refuse'
+          'L’entreprise concernée n’est pas agréée.'
+        when 'sans_suite'
+          'Le département n’est pas éligible. Veuillez remplir un nouveau dossier auprès de la DDT du 93.'
+        else
+          'Vous avez validé les conditions.'
+        end
+      end
+    end
   end
 end
