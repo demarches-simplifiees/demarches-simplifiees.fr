@@ -17,17 +17,6 @@
 
 .container
   - if @dossiers.present?
-    - if current_user.feedbacks.empty?
-      #user-satisfaction
-        %h3 Que pensez-vous de ce service ?
-        .icons
-          = link_to feedback_path(mark: 0), data: { remote: true, method: :post } do
-            %span.icon.frown
-          = link_to feedback_path(mark: 1), data: { remote: true, method: :post } do
-            %span.icon.meh
-          = link_to feedback_path(mark: 2), data: { remote: true, method: :post } do
-            %span.icon.smile
-
     - if @dossiers.total_pages >= 2
       .card.feedback
         .card-title Nous avons redesigné la liste des dossiers.
@@ -63,6 +52,17 @@
                 = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   = dossier.updated_at.localtime.strftime("%d/%m/%Y")
     = paginate(@dossiers)
+
+    - if current_user.feedbacks.empty?
+      #user-satisfaction
+        %h3 Que pensez-vous de ce service ?
+        .icons
+          = link_to feedback_path(mark: 0), data: { remote: true, method: :post } do
+            %span.icon.frown
+          = link_to feedback_path(mark: 1), data: { remote: true, method: :post } do
+            %span.icon.meh
+          = link_to feedback_path(mark: 2), data: { remote: true, method: :post } do
+            %span.icon.smile
 
   - else
     .dossiers-table-empty
