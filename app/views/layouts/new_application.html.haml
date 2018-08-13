@@ -22,7 +22,9 @@
       = stylesheet_link_tag :xray
 
     :javascript
-      DATA = [];
+      DATA = [{
+        sentry: #{raw(sentry_config)}
+      }];
   %body
     .page-wrapper
       = render partial: "layouts/support_navigator_banner"
