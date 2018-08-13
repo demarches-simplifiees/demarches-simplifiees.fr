@@ -112,3 +112,7 @@
         = column_chart @cloned_from_library_procedures_ratio, ytitle: 'procédures clonées / total procédure', xtitle: 'semaines'
 
       .clearfix
+
+    %h2.new-h2 Téléchargement
+
+    = link_to "Télécharger les statistiques (CSV)", stats_download_path(format: :csv), class: 'button secondary'

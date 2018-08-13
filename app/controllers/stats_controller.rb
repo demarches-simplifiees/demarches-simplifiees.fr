@@ -1,6 +1,8 @@
 class StatsController < ApplicationController
   layout "new_application"
 
+  before_action :authenticate_administration!, only: [:download]
+
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
   def index
@@ -34,6 +36,41 @@ class StatsController < ApplicationController
     @motivation_usage_procedure = motivation_usage_procedure
 
     @cloned_from_library_procedures_ratio = cloned_from_library_procedures_ratio
+  end
+
+  def download
+    headers = [
+      'ID du dossier',
+      'ID de la procédure',
+      'Nom de la procédure',
+      'ID utilisateur',
+      'Etat du fichier',
+      'Durée en brouillon',
+      'Durée en construction',
+      'Durée en instruction'
+    ]
+
+    data = Dossier
+      .includes(:procedure, :user)
+      .in_batches
+      .flat_map do |dossiers|
+
+      dossiers
+        .pluck(
+          "dossiers.id",
+          "procedures.id",
+          "procedures.libelle",
+          "users.id",
+          "dossiers.state",
+          "dossiers.en_construction_at - dossiers.created_at",
+          "dossiers.en_instruction_at - dossiers.en_construction_at",
+          "dossiers.processed_at - dossiers.en_instruction_at"
+        )
+    end
+
+    respond_to do |format|
+      format.csv { send_data(SpreadsheetArchitect.to_xlsx(headers: headers, data: data), filename: "statistiques.csv") }
+    end
   end
 
   private
