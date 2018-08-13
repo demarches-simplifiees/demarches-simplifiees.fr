@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 function showNotFound() {
   $('.dossier-link .text-info').hide();
   $('.dossier-link .text-warning').show();

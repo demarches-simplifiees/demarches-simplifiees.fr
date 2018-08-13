@@ -5,7 +5,6 @@ module.exports = {
     sourceType: 'module'
   },
   globals: {
-    '$': true,
     'process': true
   },
   plugins: ['prettier'],

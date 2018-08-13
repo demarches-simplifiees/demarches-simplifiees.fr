@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 $(document).on('click', 'body', () => {
   $('.button.dropdown').removeClass('open');
 });
