@@ -1,6 +1,2 @@
-var formView = "<%= escape_javascript(render partial: 'invites/form', locals: { dossier: @dossier }) %>";
-document.querySelector("#invites-form").outerHTML = formView;
-
-var flashMessagesView = "<%= escape_javascript(render partial: 'layouts/flash_messages') %>";
-document.querySelector("#flash_messages").outerHTML = flashMessagesView;
-<% flash.clear %>
+<%= render_to_element('#invites-form', partial: 'invites/form', locals: { dossier: @dossier }, outer: true) %>
+<%= render_flash %>

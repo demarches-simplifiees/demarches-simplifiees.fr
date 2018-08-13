@@ -17,7 +17,7 @@ describe ApplicationController, type: :controller do
     let(:current_gestionnaire) { nil }
     let(:current_administrateur) { nil }
     let(:current_administration) { nil }
-    let(:payload) { @controller.send(:session_info_payload) }
+    let(:payload) { {} }
 
     before do
       expect(@controller).to receive(:current_user).and_return(current_user)
@@ -27,6 +27,7 @@ describe ApplicationController, type: :controller do
       allow(Raven).to receive(:user_context)
 
       @controller.send(:set_raven_context)
+      @controller.send(:append_info_to_payload, payload)
     end
 
     context 'when no one is logged in' do
@@ -35,7 +36,16 @@ describe ApplicationController, type: :controller do
           .with({ ip_address: '0.0.0.0', roles: 'Guest' })
       end
 
-      it { expect(payload).to eq({ user_agent: 'Rails Testing', current_user_roles: 'Guest' }) }
+      it do
+        [:db_runtime, :view_runtime, :variant, :rendered_format].each do |key|
+          payload.delete(key)
+        end
+        expect(payload).to eq({
+          user_agent: 'Rails Testing',
+          user_roles: 'Guest',
+          xhr: false
+        })
+      end
     end
 
     context 'when a user is logged in' do
@@ -47,11 +57,15 @@ describe ApplicationController, type: :controller do
       end
 
       it do
+        [:db_runtime, :view_runtime, :variant, :rendered_format].each do |key|
+          payload.delete(key)
+        end
         expect(payload).to eq({
           user_agent: 'Rails Testing',
-          current_user_id: current_user.id,
-          current_user_email: current_user.email,
-          current_user_roles: 'User'
+          user_id: current_user.id,
+          user_email: current_user.email,
+          user_roles: 'User',
+          xhr: false
         })
       end
     end
@@ -68,11 +82,15 @@ describe ApplicationController, type: :controller do
       end
 
       it do
+        [:db_runtime, :view_runtime, :variant, :rendered_format].each do |key|
+          payload.delete(key)
+        end
         expect(payload).to eq({
           user_agent: 'Rails Testing',
-          current_user_id: current_user.id,
-          current_user_email: current_user.email,
-          current_user_roles: 'User, Gestionnaire, Administrateur, Administration'
+          user_id: current_user.id,
+          user_email: current_user.email,
+          user_roles: 'User, Gestionnaire, Administrateur, Administration',
+          xhr: false
         })
       end
     end

@@ -1,5 +1,2 @@
-<% flash.each do |type, message| %>
-$("#flash_message").html("<div class=\"alert alert-success move-up\" style=\"display: block:\"> <%= sanitize(message) %></div>").children().fadeOut(5000)
-<%  end %>
-$('#liste-champ').html("<%= escape_javascript(render partial: 'admin/types_de_champ/form', locals: { procedure: @procedure, types_de_champ: @types_de_champ } ) %>");
-on_change_type_de_champ_select ();
+<%= render_flash(timeout: 3000, sticky: true) %>
+<%= render_to_element('#liste-champ', partial: 'admin/types_de_champ/form', locals: { procedure: @procedure, types_de_champ: @types_de_champ }) %>
