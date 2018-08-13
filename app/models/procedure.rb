@@ -109,6 +109,14 @@ class Procedure < ApplicationRecord
     dossiers.update_all(hidden_at: now)
   end
 
+  def reset!
+    if locked?
+      raise "Can not reset a locked procedure."
+    else
+      dossiers.delete_all
+    end
+  end
+
   def locked?
     publiee_ou_archivee?
   end
