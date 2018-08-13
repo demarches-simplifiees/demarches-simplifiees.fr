@@ -97,15 +97,18 @@ class ApplicationController < ActionController::Base
     Raven.user_context(context)
   end
 
-  def session_info_payload
+  def append_info_to_payload(payload)
+    super
     user = logged_user
 
-    payload = {
+    payload[:xhr] = !!request.xhr?
+
+    payload.merge!({
       user_agent: request.user_agent,
-      current_user_id: user&.id,
-      current_user_email: user&.email,
-      current_user_roles: logged_user_roles
-    }.compact
+      user_id: user&.id,
+      user_email: user&.email,
+      user_roles: logged_user_roles
+    }.compact)
 
     if browser.known?
       payload.merge!({
