@@ -20,7 +20,7 @@ Rails.application.configure do
 
     config.lograge.custom_payload do |controller|
       {
-        xhr: !!controller.request.xhr?
+        xhr: !!controller&.request&.xhr?
       }
     end
   end
