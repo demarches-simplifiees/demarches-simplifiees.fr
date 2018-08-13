@@ -6,11 +6,12 @@ describe 'Dossier details:' do
     Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
   end
 
-  scenario 'the user can see the details of their dossier' do
+  scenario 'the user can see the summary of the dossier status' do
     visit_dossier dossier
 
     expect(page).to have_current_path(dossier_path(dossier))
     expect(page).to have_content(dossier.id)
+    expect(page).to have_selector('.status-explanation')
   end
 
   private

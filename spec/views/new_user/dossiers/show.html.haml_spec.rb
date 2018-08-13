@@ -11,6 +11,7 @@ describe 'new_user/dossiers/show.html.haml', type: :view do
   subject! { render }
 
   it 'affiche les informations du dossier' do
-    expect(rendered).to have_text("Dossier #{dossier.id}")
+    expect(rendered).to have_text(dossier.procedure.libelle)
+    expect(rendered).to have_text("Dossier nº #{dossier.id}")
   end
 end

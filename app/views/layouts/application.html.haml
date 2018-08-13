@@ -17,7 +17,9 @@
     = csrf_meta_tags
 
     :javascript
-      DATA = [];
+      DATA = [{
+        sentry: #{raw(sentry_config)}
+      }];
   %body
     = render partial: 'layouts/support_navigator_banner'
     = render partial: 'layouts/pre_maintenance'

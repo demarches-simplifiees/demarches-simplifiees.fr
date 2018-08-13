@@ -1,9 +1,7 @@
 <%- if response.status == 404 %>
   transfer_errors_message(true);
 <%- else %>
-  $("#main-container").prepend("<div class='row'><div id='flash_message'></div></div>");
-  $("#flash_message").prepend("<div class=\"alert alert-success\"> <%= sanitize(flash.notice) %></div>");
-  <% flash.clear %>
+  <%= render_flash %>
 
   transfer_errors_message(false);
   $("#email_admin").val('');

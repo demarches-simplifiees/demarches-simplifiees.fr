@@ -49,6 +49,49 @@
   dependencies:
     any-observable "^0.3.0"
 
+"@sentry/browser@^4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-4.0.0-beta.12.tgz#dff44c7a3732577057844b1643e0ba38c644138b"
+  dependencies:
+    "@sentry/core" "4.0.0-beta.12"
+    "@sentry/hub" "4.0.0-beta.12"
+    "@sentry/minimal" "4.0.0-beta.12"
+    "@sentry/types" "4.0.0-beta.12"
+    "@sentry/utils" "4.0.0-beta.12"
+
+"@sentry/core@4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-4.0.0-beta.12.tgz#c821e41b02c1d66e48fbef16da744f0173575558"
+  dependencies:
+    "@sentry/hub" "4.0.0-beta.12"
+    "@sentry/minimal" "4.0.0-beta.12"
+    "@sentry/types" "4.0.0-beta.12"
+    "@sentry/utils" "4.0.0-beta.12"
+
+"@sentry/hub@4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-4.0.0-beta.12.tgz#85267cec47c0bbf1094a537f7d14d19495c77234"
+  dependencies:
+    "@sentry/types" "4.0.0-beta.12"
+    "@sentry/utils" "4.0.0-beta.12"
+
+"@sentry/minimal@4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-4.0.0-beta.12.tgz#534e8edd065646e0e5f8d71443a63f6ce7187573"
+  dependencies:
+    "@sentry/hub" "4.0.0-beta.12"
+    "@sentry/types" "4.0.0-beta.12"
+
+"@sentry/types@4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-4.0.0-beta.12.tgz#0abd303692e48c0fc11afbfea8cbad87e625357a"
+
+"@sentry/utils@4.0.0-beta.12":
+  version "4.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-4.0.0-beta.12.tgz#9d51e88634843232b6c6f0edb6df3d3fba83071e"
+  dependencies:
+    "@sentry/types" "4.0.0-beta.12"
+
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"

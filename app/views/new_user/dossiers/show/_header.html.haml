@@ -1,0 +1,12 @@
+.sub-header
+  .container
+    = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
+
+    .title-container
+      %span.icon.folder
+      %h1= dossier.procedure.libelle
+      %h2 Dossier nº #{dossier.id}
+
+    %ul.tabs
+      %li.active
+        = link_to "Résumé", dossier_path(dossier)
