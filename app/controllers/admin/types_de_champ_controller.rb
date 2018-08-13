@@ -1,6 +1,7 @@
 class Admin::TypesDeChampController < AdminController
   before_action :retrieve_procedure
   before_action :procedure_locked?
+  before_action :reset_procedure, only: [:update, :destroy, :move_up, :move_down]
 
   def destroy
     @procedure.types_de_champ.destroy(params[:id])

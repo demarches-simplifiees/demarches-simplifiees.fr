@@ -1,6 +1,7 @@
 class Admin::PiecesJustificativesController < AdminController
   before_action :retrieve_procedure
   before_action :procedure_locked?
+  before_action :reset_procedure, only: [:update, :destroy, :move_up, :move_down]
 
   def show
   end
@@ -22,12 +23,6 @@ class Admin::PiecesJustificativesController < AdminController
     render json: { message: 'Type de piece justificative not found' }, status: 404
   end
 
-  def update_params
-    params
-      .require(:procedure)
-      .permit(types_de_piece_justificative_attributes: [:libelle, :description, :id, :order_place, :mandatory, :lien_demarche])
-  end
-
   def move_up
     index = params[:index].to_i - 1
     if @procedure.switch_types_de_piece_justificative index
@@ -43,5 +38,13 @@ class Admin::PiecesJustificativesController < AdminController
     else
       render json: {}, status: 400
     end
+  end
+
+  private
+
+  def update_params
+    params
+      .require(:procedure)
+      .permit(types_de_piece_justificative_attributes: [:libelle, :description, :id, :order_place, :mandatory, :lien_demarche])
   end
 end
