@@ -113,6 +113,11 @@ class Procedure < ApplicationRecord
     publiee_ou_archivee?
   end
 
+  # This method is needed for transition. Eventually this will be the same as brouillon?.
+  def brouillon_avec_lien?
+    Flipflop.publish_draft? && brouillon? && procedure_path.present?
+  end
+
   def publiee_ou_archivee?
     publiee? || archivee?
   end
