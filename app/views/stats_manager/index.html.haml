@@ -1,0 +1,7 @@
+.wrapper
+  .container
+    .row
+      .col-sm-10.col-offset-1
+        %h1 Statistiques
+        %br<>
+        = link_to "Telecharger au format CSV", manager_stats_download_path(format: :csv), class: 'btn btn-primary'
