@@ -15,19 +15,19 @@
           = link_to(dossiers_path(current_tab: 'dossiers-invites')) do
             dossiers invités
 
-- if current_user.feedbacks.empty?
-  .container#user-satisfaction
-    %h3 Que pensez-vous de ce service ?
-    .icons
-      = link_to feedback_path(mark: 0), data: { remote: true, method: :post } do
-        %span.icon.frown
-      = link_to feedback_path(mark: 1), data: { remote: true, method: :post } do
-        %span.icon.meh
-      = link_to feedback_path(mark: 2), data: { remote: true, method: :post } do
-        %span.icon.smile
-
 .container
   - if @dossiers.present?
+    - if current_user.feedbacks.empty?
+      #user-satisfaction
+        %h3 Que pensez-vous de ce service ?
+        .icons
+          = link_to feedback_path(mark: 0), data: { remote: true, method: :post } do
+            %span.icon.frown
+          = link_to feedback_path(mark: 1), data: { remote: true, method: :post } do
+            %span.icon.meh
+          = link_to feedback_path(mark: 2), data: { remote: true, method: :post } do
+            %span.icon.smile
+
     - if @dossiers.total_pages >= 2
       .card.feedback
         .card-title Nous avons redesigné la liste des dossiers.
