@@ -178,7 +178,8 @@ div.pagination {
 }
 
 .alert.alert-success.move-up,
-.alert.alert-danger.siret {
+.alert.alert-danger.siret,
+.alert.sticky {
   position: fixed;
   top: 0px;
   left: 0;

@@ -1,4 +1,2 @@
-<% flash.each do |type, message| %>
-$("#flash_message").html("<div class=\"alert alert-success move-up\" style=\"display: block:\"> <%= sanitize(message) %></div>").children().fadeOut(5000)
-<%  end %>
-$('#piece_justificative_form').html("<%= escape_javascript(render partial: 'form', locals: { procedure: @procedure } ) %>");
+<%= render_flash(timeout: 3000, sticky: true) %>
+<%= render_to_element('#piece_justificative_form', partial: 'admin/pieces_justificatives/form', locals: { procedure: @procedure }) %>
