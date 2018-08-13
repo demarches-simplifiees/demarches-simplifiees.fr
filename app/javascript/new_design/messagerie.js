@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 export function scrollMessagerie() {
   const $ul = $('.messagerie ul').first();
 

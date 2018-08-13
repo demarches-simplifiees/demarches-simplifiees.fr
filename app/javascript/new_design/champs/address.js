@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import Bloodhound from 'bloodhound-js';
 
 const display = 'label';

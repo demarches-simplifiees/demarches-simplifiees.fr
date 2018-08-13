@@ -19,8 +19,8 @@ Rails.delegate(document, '[data-remote]', 'ajax:send', ({ target }) => {
 // jQuery-less version of rails-ujs it breaks.
 // https://github.com/Sology/smart_listing/blob/master/app/assets/javascripts/smart_listing.coffee.erb#L9
 addEventListener('load', () => {
-  const { href } = $.rails;
-  $.rails.href = function(element) {
+  const { href } = Rails;
+  Rails.href = function(element) {
     return element.href || href(element);
   };
 });

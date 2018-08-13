@@ -1,6 +1,5 @@
-// Administrate injects its own copy of jQuery, and it is the one
-// configured by rails to send csrf-token
-const $ = window.$;
+// Administrate injects its own copy of jQuery
+/* globals $ */
 
 $(document).on('change', '#features input[type=checkbox]', ({ target }) => {
   target = $(target);

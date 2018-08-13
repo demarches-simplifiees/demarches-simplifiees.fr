@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 addEventListener('turbolinks:load', () => {
   $('select.select2').select2({
     language: 'fr',
