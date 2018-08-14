@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe 'new_gestionnaire/dossiers/_map.html.haml', type: :view do
+describe 'shared/dossiers/map.html.haml', type: :view do
   subject do
-    render(partial: 'new_gestionnaire/dossiers/map.html.haml', locals: { dossier: dossier })
+    render(partial: 'shared/dossiers/map.html.haml', locals: { dossier: dossier })
   end
 
   describe "javascript variables printing" do
