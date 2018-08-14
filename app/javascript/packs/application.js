@@ -15,12 +15,12 @@ import 'typeahead.js';
 
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
+import '../shared/champs/address';
 
 import '../new_design/buttons';
 import '../new_design/form-validation';
 import '../new_design/carto';
 
-import '../new_design/champs/address';
 import '../new_design/champs/dossier-link';
 import '../new_design/champs/linked-drop-down-list';
 import '../new_design/champs/multiple-drop-down-list';
