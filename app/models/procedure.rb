@@ -109,8 +109,21 @@ class Procedure < ApplicationRecord
     dossiers.update_all(hidden_at: now)
   end
 
+  def reset!
+    if locked?
+      raise "Can not reset a locked procedure."
+    else
+      dossiers.delete_all
+    end
+  end
+
   def locked?
     publiee_ou_archivee?
+  end
+
+  # This method is needed for transition. Eventually this will be the same as brouillon?.
+  def brouillon_avec_lien?
+    Flipflop.publish_draft? && brouillon? && procedure_path.present?
   end
 
   def publiee_ou_archivee?

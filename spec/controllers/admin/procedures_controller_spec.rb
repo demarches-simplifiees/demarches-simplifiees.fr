@@ -258,7 +258,7 @@ describe Admin::ProceduresController, type: :controller do
     end
 
     context 'when administrateur is connected' do
-      before do
+      def update_procedure
         put :update, params: { id: procedure.id, procedure: procedure_params }
         procedure.reload
       end
@@ -273,6 +273,8 @@ describe Admin::ProceduresController, type: :controller do
         let(:cadastre) { '1' }
         let(:duree_conservation_dossiers_dans_ds) { 7 }
         let(:duree_conservation_dossiers_hors_ds) { 5 }
+
+        before { update_procedure }
 
         describe 'procedure attributs in database' do
           subject { procedure }
@@ -299,6 +301,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when many attributs are not valid' do
+        before { update_procedure }
         let(:libelle) { '' }
         let(:description) { '' }
 
@@ -315,12 +318,30 @@ describe Admin::ProceduresController, type: :controller do
         end
       end
 
+      context 'when procedure is brouillon' do
+        let(:procedure) { create(:procedure_with_dossiers, :with_path, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
+        let!(:dossiers_count) { procedure.dossiers.count }
+
+        describe 'dossiers are dropped' do
+          before do
+            Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
+          end
+
+          subject { update_procedure }
+
+          it {
+            expect(dossiers_count).to eq(1)
+            expect(subject.dossiers.count).to eq(0)
+          }
+        end
+      end
+
       context 'when procedure is published' do
-        let!(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, :published, administrateur: admin) }
+        let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, :published, administrateur: admin) }
+
+        subject { update_procedure }
 
         describe 'only some properties can be updated' do
-          subject { procedure }
-
           it { expect(subject.libelle).to eq procedure_params[:libelle] }
           it { expect(subject.description).to eq procedure_params[:description] }
           it { expect(subject.organisation).to eq procedure_params[:organisation] }
