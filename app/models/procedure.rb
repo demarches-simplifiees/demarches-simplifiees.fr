@@ -9,6 +9,7 @@ class Procedure < ApplicationRecord
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
+  has_one :procedure_path
 
   belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
@@ -105,7 +106,7 @@ class Procedure < ApplicationRecord
   def after_hide
     now = Time.now
     update(hidden_at: now)
-    procedure_path&.hide!(self)
+    procedure_path&.hide!
     dossiers.update_all(hidden_at: now)
   end
 
@@ -151,10 +152,6 @@ class Procedure < ApplicationRecord
       .map { |tdc| tdc.champ.build }
 
     Dossier.new(procedure: self, champs: champs, champs_private: champs_private)
-  end
-
-  def procedure_path
-    ProcedurePath.find_with_procedure(self)
   end
 
   def path
