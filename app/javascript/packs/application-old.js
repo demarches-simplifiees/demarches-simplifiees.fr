@@ -15,6 +15,7 @@ import 'typeahead.js';
 
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
+import '../shared/champs/address';
 
 // Start Rails helpers
 Chartkick.addAdapter(Highcharts);
