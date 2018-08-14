@@ -7,11 +7,6 @@ describe ProcedureDecorator do
 
   subject { procedure.decorate }
 
-  describe 'lien' do
-    subject { super().lien }
-    it { is_expected.to match(/fake_path/) }
-  end
-
   describe 'created_at_fr' do
     subject { super().created_at_fr }
     it { is_expected.to eq('24/12/2015 14:10') }
