@@ -29,6 +29,15 @@ FactoryBot.define do
       end
     end
 
+    trait :with_path do
+      after(:create) do |procedure|
+        create(:procedure_path,
+          procedure: procedure,
+          administrateur: procedure.administrateur,
+          path: generate(:published_path))
+      end
+    end
+
     trait :with_service do
       after(:build) do |procedure, _evaluator|
         procedure.service = create(:service)
