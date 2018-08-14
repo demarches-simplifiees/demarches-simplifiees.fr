@@ -627,8 +627,8 @@ describe Admin::ProceduresController, type: :controller do
     end
 
     context 'when procedure is archived' do
+      let!(:procedure3) { create(:procedure, :archived, administrateur: admin2) }
       before do
-        procedure3.update_attribute :archived_at, Time.now
         subject
       end
 

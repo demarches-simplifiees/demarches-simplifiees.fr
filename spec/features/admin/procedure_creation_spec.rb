@@ -94,8 +94,8 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
       click_on 'onglet-infos'
       expect(page).to have_current_path(admin_procedure_path(Procedure.first))
-      expect(page).to have_selector('#publish-procedure')
-      expect(page.find_by_id('publish-procedure')[:disabled]).to eq('true')
+      expect(page).to have_selector('#disabled-publish-procedure')
+      expect(page.find_by_id('disabled-publish-procedure')[:disabled]).to eq('true')
 
       click_on 'onglet-accompagnateurs'
       expect(page).to have_current_path(admin_procedure_accompagnateurs_path(Procedure.first))
