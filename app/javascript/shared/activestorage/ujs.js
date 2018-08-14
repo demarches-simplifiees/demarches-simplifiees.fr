@@ -1,5 +1,5 @@
-import { DirectUploadsController } from './direct_uploads_controller';
-import { findElement } from './helpers';
+import { DirectUploadsController } from 'activestorage/src/direct_uploads_controller';
+import { findElement } from 'activestorage/src/helpers';
 import './progress';
 
 // This is a patched copy of https://github.com/rails/rails/blob/master/activestorage/app/javascript/activestorage/ujs.js
