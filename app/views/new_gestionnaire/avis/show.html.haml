@@ -2,5 +2,5 @@
 
 = render partial: 'header', locals: { avis: @avis, dossier: @dossier }
 
-= render partial: 'new_gestionnaire/shared/show', locals: { dossier: @dossier, demande_seen_at: nil }
+= render partial: 'shared/dossiers/show', locals: { dossier: @dossier, demande_seen_at: nil }
 

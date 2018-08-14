@@ -1,4 +1,4 @@
-describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
+describe 'shared/dossiers/champs.html.haml', type: :view do
   let(:gestionnaire) { create(:gestionnaire) }
   let(:demande_seen_at) { nil }
 
@@ -8,7 +8,7 @@ describe 'new_gestionnaire/dossiers/champs.html.haml', type: :view do
     allow(view).to receive(:current_gestionnaire).and_return(gestionnaire)
   end
 
-  subject { render 'new_gestionnaire/dossiers/champs.html.haml', champs: champs, demande_seen_at: demande_seen_at }
+  subject { render 'shared/dossiers/champs.html.haml', champs: champs, demande_seen_at: demande_seen_at }
 
   context "there are some champs" do
     let(:dossier) { create(:dossier) }

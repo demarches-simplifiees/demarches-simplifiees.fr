@@ -47,9 +47,9 @@
 .status-explanation {
   text-align: left;
 
-  &.brouillon,
-  &.en-construction,
-  &.en-instruction {
+  .brouillon,
+  .en-construction,
+  .en-instruction {
     max-width: 600px;
     margin: auto;
   }

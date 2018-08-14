@@ -4,8 +4,8 @@ module NewUser
 
     helper_method :new_demarche_url
 
-    before_action :ensure_ownership!, except: [:index, :show, :modifier, :update, :recherche]
-    before_action :ensure_ownership_or_invitation!, only: [:show, :modifier, :update]
+    before_action :ensure_ownership!, except: [:index, :show, :formulaire, :modifier, :update, :recherche]
+    before_action :ensure_ownership_or_invitation!, only: [:show, :formulaire, :modifier, :update]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update]
     before_action :forbid_invite_submission!, only: [:update]
 
@@ -31,6 +31,10 @@ module NewUser
         redirect_to users_dossier_recapitulatif_path(dossier)
       end
 
+      @dossier = dossier
+    end
+
+    def formulaire
       @dossier = dossier
     end
 
@@ -104,7 +108,11 @@ module NewUser
         NotificationMailer.send_initiated_notification(@dossier).deliver_later
         redirect_to merci_dossier_path(@dossier)
       elsif current_user.owns?(dossier)
-        redirect_to users_dossier_recapitulatif_path(@dossier)
+        if Flipflop.new_dossier_details?
+          redirect_to formulaire_dossier_path(@dossier)
+        else
+          redirect_to users_dossier_recapitulatif_path(@dossier)
+        end
       else
         redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
       end
