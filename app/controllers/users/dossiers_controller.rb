@@ -5,7 +5,7 @@ class Users::DossiersController < UsersController
   SESSION_USER_RETURN_LOCATION = 'user_return_to'
 
   before_action :store_user_location!, only: :new
-  before_action :authenticate_user!, except: :commencer
+  before_action :authenticate_user!, except: [:commencer, :commencer_test]
   before_action :check_siret, only: :siret_informations
 
   before_action only: [:show] do
@@ -14,12 +14,12 @@ class Users::DossiersController < UsersController
 
   def commencer_test
     procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
-    procedure = procedure_path&.test_procedure
+    procedure = procedure_path&.procedure
 
-    if procedure.present?
-      redirect_to new_users_dossier_path(procedure_id: procedure.id)
+    if procedure&.brouillon_avec_lien?
+      redirect_to new_users_dossier_path(procedure_id: procedure.id, brouillon: true)
     else
-      flash.alert = "Procédure inconnue"
+      flash.alert = "La procédure est inconnue."
       redirect_to root_path
     end
   end
@@ -37,7 +37,7 @@ class Users::DossiersController < UsersController
         redirect_to new_users_dossier_path(procedure_id: procedure.id)
       end
     else
-      flash.alert = "Procédure inconnue"
+      flash.alert = "La procédure est inconnue, ou la création de nouveaux dossiers pour cette procédure est terminée."
       redirect_to root_path
     end
   end
@@ -45,9 +45,13 @@ class Users::DossiersController < UsersController
   def new
     erase_user_location!
 
-    procedure = Procedure.publiees.find(params[:procedure_id])
+    if params[:brouillon]
+      procedure = Procedure.brouillon.find(params[:procedure_id])
+    else
+      procedure = Procedure.publiees.find(params[:procedure_id])
+    end
 
-    dossier = Dossier.create(procedure: procedure, user: current_user, state: 'brouillon')
+    dossier = Dossier.create!(procedure: procedure, user: current_user, state: 'brouillon')
     siret = params[:siret] || current_user.siret
 
     update_current_user_siret! siret if siret.present?
