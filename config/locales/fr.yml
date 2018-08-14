@@ -36,6 +36,18 @@ fr:
   apipie:
     api_documentation: "Documentation de l'API demarches-simplifiees.fr"
 
+  modal:
+    publish:
+      title:
+        publish: Publier la procédure
+        reopen: Réactiver la procédure
+      body:
+        publish: Vous vous apprêtez à publier votre procédure au public.
+        reopen: Vous vous apprêtez à réactiver votre procédure.
+      submit:
+        publish: Publier
+        reopen: Réactiver
+
   number:
     currency:
       format:

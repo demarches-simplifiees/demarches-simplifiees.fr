@@ -6,24 +6,21 @@
           %button.close{ "aria-label" => "Close", "data-dismiss" => "modal", :type => "button" }
             %span{ "aria-hidden" => "true" } ×
           %h4#myModalLabel.modal-title
-            = @procedure.archivee? ? 'Réactiver' : 'Publier'
-            la procédure
+            = procedure_modal_text(@procedure, :title)
             %span#publish-modal-title
         .modal-body
-          Vous vous apprêtez à
-          = @procedure.archivee? ? 'republier' : 'publier'
-          votre procédure au public.
+          = procedure_modal_text(@procedure, :body)
           - if !@procedure.archivee?
             %b
-              Elle ne pourra plus être modifiée à l'issue de cette publication.
+              Elle ne pourra plus être modifiée à l’issue de cette publication.
           %br
-          Afin de faciliter l'accès à la procédure, vous êtes invité à personnaliser l'adresse d'accès si vous le souhaitez.
+          Afin de faciliter l’accès à la procédure, vous êtes invité à personnaliser l’adresse d'accès si vous le souhaitez.
           %br
           .form-group
             %br
             %h4 Lien de la procédure
             %p.center
-              = "#{root_url}commencer/"
+              = commencer_url(procedure_path: '')
               = text_field_tag('procedure_path', @procedure.default_path,
                                 id: 'procedure_path',
                                 placeholder: 'Chemin vers la procédure',
@@ -34,15 +31,13 @@
               #path_is_mine.text-warning.center.message
                 Ce lien est déjà utilisé par une de vos procédure.
                 %br
-                Si vous voulez l'utiliser, l'ancienne procédure sera archivée (plus accessible du public).
+                Si vous voulez l’utiliser, l’ancienne procédure sera archivée (plus accessible du public).
               #path_is_not_mine.text-danger.center.message
                 Ce lien est déjà utilisé par une procédure.
                 %br
-                Vous ne pouvez pas l'utiliser car il appartient à un autre administrateur.
+                Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               #path_is_invalid.text-danger.center.message
                 = t('activerecord.errors.models.procedure_path.attributes.path.format')
         .modal-footer
-          = submit_tag "#{@procedure.archivee? ? 'Réactiver' : 'Publier'}", class: %w(btn btn btn-success),
-                                  id: 'publish',
-                                  disabled: :disabled
-          = button_tag 'Annuler', class: %w(btn btn btn-default), id: 'cancel', data: { dismiss: 'modal' }
+          = submit_tag procedure_modal_text(@procedure, :submit), class: %w(btn btn btn-success), disabled: :disabled, id: 'publish'
+          = button_tag "Annuler", class: %w(btn btn btn-default), data: { dismiss: :modal }, id: 'cancel'

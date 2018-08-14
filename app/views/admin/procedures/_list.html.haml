@@ -18,7 +18,7 @@
         %td= link_to(procedure.id, admin_procedure_href)
         %td.col-xs-6= link_to(procedure.libelle, admin_procedure_href)
         - if procedure.publiee?
-          %td.procedure-lien= link_to(procedure.lien, procedure.lien)
+          %td.procedure-lien= link_to(procedure_lien(procedure), procedure_lien(procedure))
         - if procedure.publiee_ou_archivee?
           %td= link_to(procedure.published_at_fr, admin_procedure_href)
         - else

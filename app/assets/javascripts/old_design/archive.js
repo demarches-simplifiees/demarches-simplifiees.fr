@@ -1,13 +1,9 @@
-$(document).on('turbolinks:load', buttons_archived);
+$(document).on('click', 'button#archive-procedure', function() {
+  $('button#archive-procedure').hide();
+  $('#confirm').show();
+});
 
-function buttons_archived(){
-  $("button#archive").on('click', function(){
-    $("button#archive").hide();
-    $("#confirm").show();
-  });
-
-  $("#confirm #cancel").on('click', function(){
-    $("button#archive").show();
-    $("#confirm").hide();
-  });
-}
+$(document).on('click', '#confirm #cancel', function() {
+  $('button#archive-procedure').show();
+  $('#confirm').hide();
+});

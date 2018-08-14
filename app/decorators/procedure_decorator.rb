@@ -1,10 +1,6 @@
 class ProcedureDecorator < Draper::Decorator
   delegate_all
 
-  def lien
-    h.commencer_url(procedure_path: path) if path.present?
-  end
-
   def created_at_fr
     created_at.localtime.strftime('%d/%m/%Y %H:%M')
   end
