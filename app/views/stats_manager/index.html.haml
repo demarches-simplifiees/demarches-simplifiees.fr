@@ -1,7 +1,23 @@
-.wrapper
-  .container
-    .row
-      .col-sm-10.col-offset-1
-        %h1 Statistiques
-        %br<>
-        = link_to "Telecharger au format CSV", manager_stats_download_path(format: :csv), class: 'btn btn-primary'
+.container
+  %h1 Statistiques
+  %br<>
+  = link_to "Telecharger au format CSV", manager_stats_download_path(format: :csv), class: 'button secondary'
+
+.statistiques
+  .stat-cards
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title
+        Indice de satisfaction usager
+
+      .chart-container
+        .chart
+          = pie_chart @indice_satisfaction,
+            colors: ["rgba(191, 220, 249, 1)", "rgba(113, 176, 239, 1)", "rgba(61, 149, 236, 1)"]
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title.pull-left Dossiers par état
+      .clearfix
+
+      .chart-container
+        .chart
+          = line_chart @dossiers, colors: ["#429331", "#CD4728", "#000000", "#3C67C5", "#8D2194", "#F39D39"]
+
