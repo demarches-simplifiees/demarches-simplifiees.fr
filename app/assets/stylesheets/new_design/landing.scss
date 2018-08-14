@@ -349,6 +349,48 @@ $cta-panel-button-border-size: 2px;
   }
 }
 
+.cta-panel-button {
+  @include horizontal-padding(40px);
+  @include vertical-padding(15px);
+  display: block;
+  border-radius: 100px;
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 20px;
+
+  &.black {
+    border: $cta-panel-button-border-size solid #000000;
+    color: #000000;
+
+    &:hover {
+      text-decoration: none;
+      background-color: #F8F8F8;
+    }
+
+    &:focus {
+      color: #F8F8F8;
+      text-decoration: none;
+    }
+  }
+
+  &.white {
+    border: $cta-panel-button-border-size solid #FFFFFF;
+    color: #FFFFFF;
+
+    &:hover {
+      color: #FFFFFF;
+      text-decoration: none;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &:focus {
+      color: #FFFFFF;
+      text-decoration: none;
+    }
+  }
+}
+
 @mixin role-button {
   @include horizontal-padding(30px);
   display: inline-block;
