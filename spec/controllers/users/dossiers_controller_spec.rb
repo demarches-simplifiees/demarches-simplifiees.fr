@@ -118,7 +118,7 @@ describe Users::DossiersController, type: :controller do
           end
 
           context 'when procedure is archived' do
-            let(:procedure) { create(:procedure, archived_at: Time.now) }
+            let(:procedure) { create(:procedure, :archived) }
 
             it { is_expected.to redirect_to dossiers_path }
           end
@@ -140,13 +140,20 @@ describe Users::DossiersController, type: :controller do
       end
 
       context 'when procedure is not published' do
-        let(:procedure) { create(:procedure, published_at: nil) }
+        let(:procedure) { create(:procedure) }
 
         before do
           sign_in user
         end
 
         it { is_expected.to redirect_to dossiers_path }
+
+        context 'and brouillon param is passed' do
+          subject { get :new, params: { procedure_id: procedure_id, brouillon: true } }
+
+          it { is_expected.to have_http_status(302) }
+          it { is_expected.to redirect_to users_dossier_path(id: Dossier.last) }
+        end
       end
     end
   end
@@ -158,13 +165,26 @@ describe Users::DossiersController, type: :controller do
     it { expect(subject.status).to eq 302 }
     it { expect(subject).to redirect_to new_users_dossier_path(procedure_id: procedure.id) }
 
-    context 'when procedure is archived' do
-      let(:procedure) { create(:procedure, :archived) }
+    context 'when procedure path does not exist' do
+      let(:path) { 'hello' }
 
-      it { expect(subject.status).to eq 200 }
+      it { expect(subject).to redirect_to(root_path) }
+    end
+  end
+
+  describe 'GET #commencer_test' do
+    before do
+      Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
     end
 
-    context 'when procedure path dose not exist' do
+    subject { get :commencer_test, params: { procedure_path: path } }
+    let(:procedure) { create(:procedure, :with_path) }
+    let(:path) { procedure.path }
+
+    it { expect(subject.status).to eq 302 }
+    it { expect(subject).to redirect_to new_users_dossier_path(procedure_id: procedure.id, brouillon: true) }
+
+    context 'when procedure path does not exist' do
       let(:path) { 'hello' }
 
       it { expect(subject).to redirect_to(root_path) }
