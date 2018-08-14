@@ -274,6 +274,7 @@ Rails.application.routes.draw do
         get 'modifier'
         patch 'modifier', to: 'dossiers#update'
         get 'merci'
+        get 'formulaire'
         post 'ask_deletion'
         get 'attestation'
       end

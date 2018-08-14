@@ -509,6 +509,20 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
+  describe '#formulaire' do
+    let(:dossier) { create(:dossier, :en_construction, user: user) }
+
+    before do
+      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
+      sign_in(user)
+    end
+
+    subject! { get(:formulaire, params: { id: dossier.id }) }
+
+    it { expect(assigns(:dossier)).to eq(dossier) }
+    it { is_expected.to render_template(:formulaire) }
+  end
+
   describe '#ask_deletion' do
     before { sign_in(user) }
 

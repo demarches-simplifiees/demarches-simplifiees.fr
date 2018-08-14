@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'new_user/dossiers/show.html.haml', type: :view do
-  let(:dossier) { create(:dossier, :with_service, state: 'brouillon', procedure: create(:procedure)) }
+  let(:dossier) { create(:dossier, :en_construction, procedure: create(:procedure)) }
 
   before do
     sign_in dossier.user
@@ -10,8 +10,8 @@ describe 'new_user/dossiers/show.html.haml', type: :view do
 
   subject! { render }
 
-  it 'affiche les informations du dossier' do
-    expect(rendered).to have_text(dossier.procedure.libelle)
+  it 'renders a summary of the dossier state' do
     expect(rendered).to have_text("Dossier nº #{dossier.id}")
+    expect(rendered).to have_selector('.status-progress')
   end
 end
