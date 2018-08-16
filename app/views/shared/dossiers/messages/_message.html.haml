@@ -1,10 +1,10 @@
-= render partial: 'shared/dossiers/messages/message_icon', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
+= render partial: 'shared/dossiers/messages/message_icon', locals: { commentaire: commentaire, user_email: user_email }
 
 .width-100
   %h2
     %span.mail
-      = render partial: 'shared/dossiers/messages/message_issuer', locals: { commentaire: commentaire, current_gestionnaire: current_gestionnaire }
-    - if ![current_gestionnaire.email, commentaire.dossier.user.email, OLD_CONTACT_EMAIL, CONTACT_EMAIL].include?(commentaire.email)
+      = render partial: 'shared/dossiers/messages/message_issuer', locals: { commentaire: commentaire, user_email: user_email }
+    - if ![user_email, commentaire.dossier.user.email, OLD_CONTACT_EMAIL, CONTACT_EMAIL].include?(commentaire.email)
       %span.guest Invité
     %span.date{ class: highlight_if_unseen_class(messagerie_seen_at, commentaire.created_at) }
       = I18n.l(commentaire.created_at.localtime, format: '%d/%m/%Y à %H:%M ')
