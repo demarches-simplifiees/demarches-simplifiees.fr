@@ -17,26 +17,28 @@
 
         = render partial: "new_gestionnaire/procedures/dossier_actions", locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: current_gestionnaire&.follow?(dossier) }
         = render partial: "state_button", locals: { dossier: dossier }
+
     %ul.tabs
       - notifications_summary = current_gestionnaire.notifications_for_dossier(dossier)
-      %li{ class: current_page?(gestionnaire_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
-        - if notifications_summary[:demande]
-          %span.notifications{ 'aria-label': 'notifications' }
-        = link_to "Demande", gestionnaire_dossier_path(dossier.procedure, dossier)
-      %li{ class: current_page?(annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
-        - if notifications_summary[:annotations_privees]
-          %span.notifications{ 'aria-label': 'notifications' }
-        = link_to "Annotations privées", annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)
-      %li{ class: current_page?(avis_gestionnaire_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
-        - if notifications_summary[:avis]
-          %span.notifications{ 'aria-label': 'notifications' }
-        = link_to "Avis externes", avis_gestionnaire_dossier_path(dossier.procedure, dossier)
-      %li{ class: current_page?(messagerie_gestionnaire_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
-        - if notifications_summary[:messagerie]
-          %span.notifications{ 'aria-label': 'notifications' }
-        = link_to "Messagerie", messagerie_gestionnaire_dossier_path(dossier.procedure, dossier)
-      %li{ class: current_page?(personnes_impliquees_gestionnaire_dossier_path(dossier.procedure, dossier)) ? 'active' : nil }
-        = link_to "Personnes impliquées", personnes_impliquees_gestionnaire_dossier_path(dossier.procedure, dossier)
+
+      = active_tab_item('Demande',
+        gestionnaire_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:demande])
+
+      = active_tab_item('Annotations privées',
+        annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:annotations_privees])
+
+      = active_tab_item('Avis externes',
+        avis_gestionnaire_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:avis])
+
+      = active_tab_item('Messagerie',
+        messagerie_gestionnaire_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:messagerie])
+
+      = active_tab_item('Personnes impliquées',
+        personnes_impliquees_gestionnaire_dossier_path(dossier.procedure, dossier))
 
 .container
   .print-header
