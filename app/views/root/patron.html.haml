@@ -168,14 +168,10 @@
     .container
       Titre
       %ul.tabs
-        %li.active
-          = link_to "Onglet actif", "#"
-        %li
-          = link_to "Onglet inactif", "#"
-        %li
-          = link_to "#" do
-            Onglet avec badge
-            %span.badge 2
+        = tab_item("Onglet actif", "#", active: true)
+        = tab_item("Onglet inactif", "#")
+        = tab_item("Onglet avec badge", "#", badge: 2)
+        = tab_item("Onglet avec notification", "#", notification: true)
 
   .container
     %h1 Breadcrumbs

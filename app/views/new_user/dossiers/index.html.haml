@@ -8,12 +8,13 @@
     - else
       %h1.page-title Dossiers
       %ul.tabs
-        %li{ class: (@current_tab == 'mes-dossiers') ? 'active' : nil }>
-          = link_to(dossiers_path(current_tab: 'mes-dossiers')) do
-            mes dossiers
-        %li{ class: (@current_tab == 'dossiers-invites') ? 'active' : nil }>
-          = link_to(dossiers_path(current_tab: 'dossiers-invites')) do
-            dossiers invités
+        = tab_item('mes dossiers',
+          dossiers_path(current_tab: 'mes-dossiers'),
+          active: @current_tab == 'mes-dossiers')
+
+        = tab_item('dossiers invités',
+          dossiers_path(current_tab: 'dossiers-invites'),
+          active: @current_tab == 'dossiers-invites')
 
 .container
   - if @dossiers.present?
