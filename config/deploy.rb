@@ -45,6 +45,7 @@ set :rails_env, ENV["to"]
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, [
+  '.env',
   'log',
   'uploads',
   'tmp/pids',
