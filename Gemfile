@@ -69,7 +69,6 @@ gem 'leaflet-draw-rails'
 
 gem 'chartkick'
 
-gem 'logstasher'
 gem 'lograge'
 gem 'logstash-event'
 

@@ -463,10 +463,6 @@ GEM
       railties (>= 4)
       request_store (~> 1.0)
     logstash-event (1.2.02)
-    logstasher (1.2.2)
-      activesupport (>= 4.0)
-      logstash-event (~> 1.2.0)
-      request_store
     loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -852,7 +848,6 @@ DEPENDENCIES
   leaflet-rails
   lograge
   logstash-event
-  logstasher
   mailjet
   maruku
   mina!
