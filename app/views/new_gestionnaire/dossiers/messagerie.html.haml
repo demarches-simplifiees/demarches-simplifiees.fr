@@ -2,4 +2,4 @@
 
 = render partial: "header", locals: { dossier: @dossier }
 
-= render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, messagerie_seen_at: @messagerie_seen_at , new_commentaire: @commentaire, form_url: commentaire_gestionnaire_dossier_path(@dossier.procedure, @dossier) }
+= render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, user_email: current_gestionnaire.email, messagerie_seen_at: @messagerie_seen_at , new_commentaire: @commentaire, form_url: commentaire_gestionnaire_dossier_path(@dossier.procedure, @dossier) }
