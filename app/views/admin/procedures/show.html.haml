@@ -3,6 +3,9 @@
 = render partial: 'admin/closed_mail_template_attestation_inconsistency_alert'
 .row.white-back
   #procedure_show
+    = render partial: '/admin/procedures/modal_publish'
+    = render partial: '/admin/procedures/modal_transfer'
+
     - if procedure.brouillon?
       - if procedure.gestionnaires.empty? || procedure.service.nil?
         - missing_elements = []
@@ -11,32 +14,26 @@
         - if procedure.service.nil?
           - missing_elements << 'un service'
         - message = "Affectez #{missing_elements.join(' et ')} à votre procédure."
-        %a.action_button.btn.btn-success#publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: 'disabled', 'data-toggle' => :tooltip, 'data-placement' => :bottom, title: message }
+        %a.action_button.btn.btn-success#disabled-publish-procedure{ data: { toggle: :tooltip, placement: :bottom }, style: 'float: right; margin-top: 10px;', disabled: true, title: message }
           %i.fa.fa-eraser
           Publier
       - else
-        %a.btn.btn-success#publish-procedure{ "data-target" => "#publish-modal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px;' }
+        %a.btn.btn-success#publish-procedure{ data: { target: '#publish-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px;' }
           %i.fa.fa-eraser
           Publier
 
-      = render partial: '/admin/procedures/modal_publish'
-
-    %a#transfer.btn.btn-small.btn-default{ "data-target" => "#transferModal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px; margin-right: 10px;' }
+    %a.btn.btn-default#transfer-procedure{ data: { target: '#transfer-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px; margin-right: 10px;' }
       %i.fa.fa-exchange
       Envoyer une copie
 
-    = render partial: '/admin/procedures/modal_transfer'
-
     - if procedure.archivee?
-      %a#reenable.btn.btn-small.btn-default.text-info{ "data-target" => "#publish-modal", "data-toggle" => "modal", :type => "button", style: 'float: right; margin-top: 10px;' }
-        %i.fa.fa-eraser
+      %a.btn.btn-default#reopen-procedure{ data: { target: '#publish-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px; margin-right: 10px;' }
+        %i.fa.fa-rocket
         Réactiver
 
-      = render partial: '/admin/procedures/modal_publish'
-
     - elsif procedure.publiee?
-      = form_tag admin_procedure_archive_path(procedure_id: procedure.id, archive: !procedure.archivee?), method: :put, style: 'float: right; margin-top: 10px;' do
-        %button#archive.btn.btn-small.btn-default.text-info{ type: :button }
+      = form_tag admin_procedure_archive_path(procedure_id: procedure.id), method: :put, style: 'float: right; margin-top: 10px;' do
+        %button#archive-procedure.btn.btn-small.btn-default.text-info{ type: :button }
           %i.fa.fa-eraser
           Archiver
         #confirm
@@ -55,11 +52,14 @@
     %div
       %h3 Lien procédure
       %div{ style: 'margin-left: 3%;' }
-        - if procedure.publiee_ou_archivee?
-          = link_to procedure.lien, sanitize_url(procedure.lien), target: :blank
+        - if procedure.archivee?
+          %b
+            Cette procédure est archivée et n’est donc pas accessible par le public.
+        - elsif procedure.brouillon_avec_lien? || procedure.publiee?
+          = link_to procedure_lien(procedure), sanitize_url(procedure_lien(procedure)), target: :blank
         - else
           %b
-            Cette procédure n'a pas encore été publiée et n'est donc pas accessible par le public.
+            Cette procédure n’a pas encore de lien, et n’est donc pas accessible par le public.
 
     %br
     %h3 Détails
@@ -144,7 +144,7 @@
       %h3 Supprimer la procédure
       .alert.alert-danger
         %p
-          Attention : la suppression d'une procédure est définitive.
+          Attention : la suppression d’une procédure est définitive.
         - dossiers_count = procedure.dossiers.count
         - if dossiers_count > 0
           %p

@@ -16,6 +16,7 @@ Flipflop.configure do
   end
 
   feature :web_hook
+  feature :publish_draft
 
   feature :new_dossier_details,
     title: "Nouvelle page « Dossier »"

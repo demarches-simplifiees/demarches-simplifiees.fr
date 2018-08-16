@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 $(document).on('click', 'body', () => {
   $('.header-menu').removeClass('open fade-in-down');
 });

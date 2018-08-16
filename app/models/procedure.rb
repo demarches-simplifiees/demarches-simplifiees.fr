@@ -9,6 +9,7 @@ class Procedure < ApplicationRecord
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
+  has_one :procedure_path
 
   belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
@@ -105,12 +106,25 @@ class Procedure < ApplicationRecord
   def after_hide
     now = Time.now
     update(hidden_at: now)
-    procedure_path&.hide!(self)
+    procedure_path&.hide!
     dossiers.update_all(hidden_at: now)
+  end
+
+  def reset!
+    if locked?
+      raise "Can not reset a locked procedure."
+    else
+      dossiers.delete_all
+    end
   end
 
   def locked?
     publiee_ou_archivee?
+  end
+
+  # This method is needed for transition. Eventually this will be the same as brouillon?.
+  def brouillon_avec_lien?
+    Flipflop.publish_draft? && brouillon? && procedure_path.present?
   end
 
   def publiee_ou_archivee?
@@ -138,10 +152,6 @@ class Procedure < ApplicationRecord
       .map { |tdc| tdc.champ.build }
 
     Dossier.new(procedure: self, champs: champs, champs_private: champs_private)
-  end
-
-  def procedure_path
-    ProcedurePath.find_with_procedure(self)
   end
 
   def path

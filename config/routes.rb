@@ -94,6 +94,7 @@ Rails.application.routes.draw do
   #
 
   root 'root#index'
+  get '/administration' => 'root#administration'
 
   get 'users' => 'users#index'
   get 'admin' => 'admin#index'
@@ -274,6 +275,7 @@ Rails.application.routes.draw do
         get 'modifier'
         patch 'modifier', to: 'dossiers#update'
         get 'merci'
+        get 'formulaire'
         post 'ask_deletion'
         get 'attestation'
       end
