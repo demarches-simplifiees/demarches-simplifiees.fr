@@ -1,3 +1,5 @@
+require_relative './active_job_log_subscriber'
+
 Rails.application.configure do
   config.lograge.formatter = Lograge::Formatters::Logstash.new
   config.lograge.base_controller_class = ['ActionController::Base', 'Manager::ApplicationController']
@@ -6,17 +8,16 @@ Rails.application.configure do
   # injected by ansible.
   if !config.lograge.custom_options
     config.lograge.custom_options = lambda do |event|
-      exception_object = event.payload[:exception_object]
       {
         type: 'tps',
+        tags: ['request', event.payload[:exception] ? 'exception' : nil].compact,
         user_id: event.payload[:user_id],
         user_email: event.payload[:user_email],
         user_roles: event.payload[:user_roles],
         user_agent: event.payload[:user_agent],
         browser: event.payload[:browser],
         browser_version: event.payload[:browser_version],
-        platform: event.payload[:platform],
-        backtrace: exception_object ? exception_object.backtrace.join("\n") : nil
+        platform: event.payload[:platform]
       }.compact
     end
 
@@ -29,4 +30,8 @@ Rails.application.configure do
 
   config.lograge.keep_original_rails_log = true
   config.lograge.logger = ActiveSupport::Logger.new Rails.root.join('log', "logstash_#{Rails.env}.log")
+
+  if config.lograge.enabled
+    ActiveJobLogSubscriber.attach_to :active_job
+  end
 end
