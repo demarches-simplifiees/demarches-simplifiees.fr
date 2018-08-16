@@ -6,17 +6,16 @@
     .width-100
       %h1.tab-title Avis
       %ul.tabs
-        %li{ class: (@statut == NewGestionnaire::AvisController::A_DONNER_STATUS) ? 'active' : nil }>
-          = link_to(gestionnaire_avis_index_path(statut: NewGestionnaire::AvisController::A_DONNER_STATUS)) do
-            avis à donner
-            %span.badge= @avis_a_donner.count
-            - if @avis_a_donner.any?
-              %span.notifications
+        = tab_item('avis à donner',
+          gestionnaire_avis_index_path(statut: NewGestionnaire::AvisController::A_DONNER_STATUS),
+          active: @statut == NewGestionnaire::AvisController::A_DONNER_STATUS,
+          badge: @avis_a_donner.count,
+          notification: @avis_a_donner.any?)
 
-        %li{ class: (@statut == NewGestionnaire::AvisController::DONNES_STATUS) ? 'active' : nil }>
-          = link_to(gestionnaire_avis_index_path(statut: NewGestionnaire::AvisController::DONNES_STATUS)) do
-            avis #{'donné'.pluralize(@avis_donnes.count)}
-            %span.badge= @avis_donnes.count
+        = tab_item("avis #{'donné'.pluralize(@avis_donnes.count)}",
+          gestionnaire_avis_index_path(statut: NewGestionnaire::AvisController::DONNES_STATUS),
+          active: @statut == NewGestionnaire::AvisController::DONNES_STATUS,
+          badge: @avis_donnes.count)
 
 .container
   - if @avis.present?
