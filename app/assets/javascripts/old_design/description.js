@@ -16,8 +16,6 @@ function action_type_de_champs() {
 
     toggleErrorClass(this, validatePhone(val));
   });
-
-  address_type_init();
 }
 
 function toggleErrorClass(node, boolean) {
