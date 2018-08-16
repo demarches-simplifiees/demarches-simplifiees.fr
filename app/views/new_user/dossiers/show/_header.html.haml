@@ -8,7 +8,5 @@
       %h2 Dossier nº #{dossier.id}
 
     %ul.tabs
-      %li{ class: current_page?(dossier_path(dossier)) ? 'active' : nil }
-        = link_to "Résumé", dossier_path(dossier)
-      %li{ class: current_page?(formulaire_dossier_path(dossier)) ? 'active' : nil }
-        = link_to "Formulaire", formulaire_dossier_path(dossier)
+      = active_tab_item('Résumé', dossier_path(dossier))
+      = active_tab_item('Formulaire', formulaire_dossier_path(dossier))
