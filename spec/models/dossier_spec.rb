@@ -453,9 +453,8 @@ describe Dossier do
     let(:dossier) { create(:dossier, state: state) }
     let(:beginning_of_day) { Time.now.beginning_of_day }
 
-    before do
-      Timecop.freeze(beginning_of_day)
-    end
+    before { Timecop.freeze(beginning_of_day) }
+    after { Timecop.return }
 
     context 'when dossier is en_construction' do
       before do

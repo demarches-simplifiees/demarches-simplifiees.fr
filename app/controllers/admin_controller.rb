@@ -21,4 +21,10 @@ class AdminController < ApplicationController
       redirect_to admin_procedure_path(id: @procedure.id)
     end
   end
+
+  def reset_procedure
+    if @procedure.brouillon_avec_lien?
+      @procedure.reset!
+    end
+  end
 end

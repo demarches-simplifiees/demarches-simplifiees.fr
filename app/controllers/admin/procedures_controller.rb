@@ -83,11 +83,12 @@ class Admin::ProceduresController < AdminController
     @procedure = current_administrateur.procedures.find(params[:id])
 
     if !@procedure.update(procedure_params)
-      flash.now.alert = @procedure.errors.full_messages
-      return render 'edit'
+      flash.alert = @procedure.errors.full_messages
+    else
+      reset_procedure
+      flash.notice = 'Procédure modifiée'
     end
 
-    flash.notice = 'Procédure modifiée'
     redirect_to edit_admin_procedure_path(id: @procedure.id)
   end
 

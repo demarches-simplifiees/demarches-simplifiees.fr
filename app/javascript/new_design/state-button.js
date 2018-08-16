@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 export function showMotivation(state) {
   $(`.motivation.${state}`).show();
   $('.dropdown-items').hide();

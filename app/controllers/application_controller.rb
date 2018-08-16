@@ -101,8 +101,6 @@ class ApplicationController < ActionController::Base
     super
     user = logged_user
 
-    payload[:xhr] = !!request.xhr?
-
     payload.merge!({
       user_agent: request.user_agent,
       user_id: user&.id,

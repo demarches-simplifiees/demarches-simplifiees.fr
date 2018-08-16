@@ -15,6 +15,9 @@ class RootController < ApplicationController
     render 'landing'
   end
 
+  def administration
+  end
+
   def patron
     description = 'aller voir le super site : https://demarches-simplifiees.fr'
 

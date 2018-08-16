@@ -1,5 +1,5 @@
-describe 'new_gestionnaire/dossiers/identite_entreprise.html.haml', type: :view do
-  before { render 'new_gestionnaire/dossiers/identite_entreprise.html.haml', etablissement: etablissement }
+describe 'shared/dossiers/identite_entreprise.html.haml', type: :view do
+  before { render 'shared/dossiers/identite_entreprise.html.haml', etablissement: etablissement }
 
   context "there is an association" do
     let(:etablissement) { create(:etablissement, :is_association) }

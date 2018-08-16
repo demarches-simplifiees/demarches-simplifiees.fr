@@ -3,19 +3,19 @@
 
 %h2 Identité du demandeur
 
-= render partial: "new_gestionnaire/dossiers/user_infos", locals: { user: @dossier.user }
+= render partial: "shared/dossiers/user_infos", locals: { user: @dossier.user }
 
 - if @dossier.etablissement.present?
-  = render partial: "identite_entreprise", locals: { etablissement: @dossier.etablissement }
+  = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: @dossier.etablissement }
 
 - if @dossier.individual.present?
-  = render partial: "identite_individual", locals: { individual: @dossier.individual }
+  = render partial: "shared/dossiers/identite_individual", locals: { individual: @dossier.individual }
 
 %h2 Formulaire
 
 - champs = @dossier.ordered_champs.decorate
 - if champs.any?
-  = render partial: "champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil }
+  = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil }
 
 - if @dossier.procedure.use_api_carto
   %h3 Cartographie

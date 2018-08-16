@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 $(document).on('blur keydown', 'input, textarea', () => {
   $(this).addClass('touched');
 });
