@@ -1,0 +1,17 @@
+@import "constants";
+
+.demande {
+  padding-bottom: $default-padding;
+
+  h1 {
+    margin-bottom: $default-padding;
+  }
+
+  .intro {
+    margin: $default-padding 0;
+  }
+
+  b {
+    font-weight: bold;
+  }
+}
