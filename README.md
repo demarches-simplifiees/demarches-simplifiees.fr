@@ -67,6 +67,12 @@ Dans le fichier `config/intializers/token.rb`, ajouter
 
 *Note : les valeurs pour ces paramètres sont renseignées dans le Keepass*
 
+## Bouchonnage de la configuration
+
+Créer le fichier de configuration avec les valeurs par défaut :
+
+    cp config/env.example .env
+
 ## Lancement de l'application
 
     overmind start
