@@ -29,13 +29,7 @@ module TPS
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     config.assets.precompile += %w(.woff)
 
-    if Rails.env.production?
-      URL = "https://www.demarches-simplifiees.fr/"
-    elsif Rails.env.staging?
-      URL = "https://dev.demarches-simplifiees.fr/"
-    else
-      URL = "http://localhost:3000/"
-    end
+    URL = ENV['APP_HOST'] || "http://localhost:3000/"
 
     config.active_job.queue_adapter = :delayed_job
 
