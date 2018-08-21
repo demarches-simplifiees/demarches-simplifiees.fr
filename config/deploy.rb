@@ -58,7 +58,6 @@ set :shared_paths, [
   "config/fog_credentials.yml",
   'config/storage.yml',
   'config/initializers/secret_token.rb',
-  'config/initializers/features.yml',
   "config/environments/#{rails_env}.rb",
   "config/initializers/token.rb",
   "config/unicorn.rb",
