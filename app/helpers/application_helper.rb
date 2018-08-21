@@ -50,6 +50,10 @@ module ApplicationHelper
       current_administrateur&.email
   end
 
+  def staging?
+    ENV['APP_NAME'] == 'tps_dev'
+  end
+
   def root_path_for_profile(nav_bar_profile)
     case nav_bar_profile
     when :gestionnaire
