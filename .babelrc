@@ -10,6 +10,7 @@
           "IE >= 11",
           "Edge >= 12",
           "Firefox >= 45",
+          "Opera >= 19",
           "Safari >= 8",
           "iOS >= 8"
         ],
