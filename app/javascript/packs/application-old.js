@@ -1,7 +1,6 @@
 import Turbolinks from 'turbolinks';
 import Rails from 'rails-ujs';
 import ActiveStorage from '../shared/activestorage/ujs';
-import Bloodhound from 'bloodhound-js';
 import jQuery from 'jquery';
 
 // Include runtime-polyfills for older browsers.
@@ -9,11 +8,9 @@ import jQuery from 'jquery';
 // required by the browsers we support will be included.
 import 'babel-polyfill';
 
-import 'typeahead.js';
-
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
-import '../shared/champs/address';
+import '../shared/autocomplete';
 
 // Start Rails helpers
 Rails.start();
@@ -25,8 +22,6 @@ if (process.env['RAILS_ENV'] === 'test') {
   jQuery.fx.off = true;
 }
 
-// Expose globals
-window.Bloodhound = Bloodhound;
 // Export jQuery globally for legacy Javascript files used in the old design
 jQuery.rails = Rails;
 window.$ = jQuery;

@@ -148,8 +148,8 @@ function jsObject_to_array(qp_list) {
 }
 
 function add_event_search_address() {
-  $("#search-by-address input[type='address']").bind('typeahead:select', function (ev, seggestion) {
-    get_address_point(seggestion['label']);
+  $("#search-by-address input[type='address']").bind('autocomplete:select', function (ev, suggestion) {
+    get_address_point(suggestion['label']);
   });
 
   $("#search-by-address input[type='address']").keypress(function (e) {
