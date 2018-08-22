@@ -1,8 +1,6 @@
 import Turbolinks from 'turbolinks';
 import Rails from 'rails-ujs';
 import ActiveStorage from '../shared/activestorage/ujs';
-import Chartkick from 'chartkick';
-import Highcharts from 'highcharts';
 import Bloodhound from 'bloodhound-js';
 import jQuery from 'jquery';
 
@@ -18,7 +16,6 @@ import '../shared/rails-ujs-fix';
 import '../shared/champs/address';
 
 // Start Rails helpers
-Chartkick.addAdapter(Highcharts);
 Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
@@ -30,7 +27,6 @@ if (process.env['RAILS_ENV'] === 'test') {
 
 // Expose globals
 window.Bloodhound = Bloodhound;
-window.Chartkick = Chartkick;
 // Export jQuery globally for legacy Javascript files used in the old design
 jQuery.rails = Rails;
 window.$ = jQuery;
