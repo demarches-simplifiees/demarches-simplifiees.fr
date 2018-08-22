@@ -1,6 +1,4 @@
 class SignatureService
-  CONFIG_PATH = Rails.root.join("config", "signing_key.yml")
-
   class << self
     def generate
       RbNaCl::Util.bin2hex(RbNaCl::SigningKey.generate)
@@ -24,15 +22,7 @@ class SignatureService
     private
 
     def signing_key
-      @@signing_key ||= RbNaCl::SigningKey.new(RbNaCl::Util.hex2bin(config[:key]))
-    end
-
-    def config
-      if File.exist?(CONFIG_PATH)
-        YAML.safe_load(File.read(CONFIG_PATH)).symbolize_keys
-      else
-        {}
-      end
+      @@signing_key ||= RbNaCl::SigningKey.new(RbNaCl::Util.hex2bin(Rails.application.secrets.signing_key))
     end
   end
 end
