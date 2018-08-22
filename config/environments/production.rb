@@ -105,4 +105,6 @@ Rails.application.configure do
     protocol: :https,
     host: ENV['APP_HOST']
   }
+
+  config.lograge.enabled = ENV['LOGRAGE_ENABLED'] == 'enabled'
 end
