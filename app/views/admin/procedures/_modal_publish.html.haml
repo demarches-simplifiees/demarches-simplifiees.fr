@@ -24,6 +24,7 @@
               = text_field_tag('procedure_path', @procedure.default_path,
                                 id: 'procedure_path',
                                 placeholder: 'Chemin vers la procédure',
+                                data: { autocomplete: 'path' },
                                 class: 'form-control',
                                 maxlength: 50,
                                 style: 'width: 300px; display: inline;')

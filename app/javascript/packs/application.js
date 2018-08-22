@@ -10,11 +10,9 @@ import jQuery from 'jquery';
 // required by the browsers we support will be included.
 import 'babel-polyfill';
 
-import 'typeahead.js';
-
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
-import '../shared/champs/address';
+import '../shared/autocomplete';
 
 import '../new_design/buttons';
 import '../new_design/form-validation';

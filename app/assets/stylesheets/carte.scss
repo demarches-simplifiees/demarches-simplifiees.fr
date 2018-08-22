@@ -121,11 +121,11 @@
 }
 
 #search-by-address {
-  .twitter-typeahead {
+  .algolia-autocomplete {
     width: 555px;
   }
 
-  .tt-menu {
+  .aa-dropdown-menu {
     width: 555px;
   }
 }
