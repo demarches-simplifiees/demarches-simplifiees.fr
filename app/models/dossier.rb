@@ -85,12 +85,12 @@ class Dossier < ApplicationRecord
       user&.email,
       france_connect_information&.given_name,
       france_connect_information&.family_name,
-      *ordered_champs.flat_map(&:search_terms),
+      *champs.flat_map(&:search_terms),
       *etablissement&.search_terms,
       individual&.nom,
       individual&.prenom
     ].compact.join(' ')
-    self.private_search_terms = ordered_champs_private.flat_map(&:search_terms).compact.join(' ')
+    self.private_search_terms = champs_private.flat_map(&:search_terms).compact.join(' ')
   end
 
   def was_piece_justificative_uploaded_for_type_id?(type_id)
