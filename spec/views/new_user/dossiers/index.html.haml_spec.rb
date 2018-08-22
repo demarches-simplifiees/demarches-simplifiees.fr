@@ -71,17 +71,4 @@ describe 'new_user/dossiers/index.html.haml', type: :view do
       expect(rendered).to have_selector('ul.tabs li.active', count: 1)
     end
   end
-
-  context "quand le user n'a aucun feedback" do
-    it "affiche le formulaire de satisfaction" do
-      expect(rendered).to have_selector('#user-satisfaction', text: 'Que pensez-vous de ce service ?')
-    end
-  end
-
-  context "quand le user a un feedback" do
-    let(:user) { create(:user, feedbacks: [build(:feedback)]) }
-    it "n'affiche pas le formulaire de satisfaction" do
-      expect(rendered).to_not have_selector('#user-satisfaction')
-    end
-  end
 end

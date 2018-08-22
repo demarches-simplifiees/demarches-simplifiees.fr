@@ -54,17 +54,6 @@
                   = dossier.updated_at.localtime.strftime("%d/%m/%Y")
     = paginate(@dossiers)
 
-    - if current_user.feedbacks.empty?
-      #user-satisfaction
-        %h3 Que pensez-vous de ce service ?
-        .icons
-          = link_to feedback_path(mark: 0), data: { remote: true, method: :post } do
-            %span.icon.frown
-          = link_to feedback_path(mark: 1), data: { remote: true, method: :post } do
-            %span.icon.meh
-          = link_to feedback_path(mark: 2), data: { remote: true, method: :post } do
-            %span.icon.smile
-
   - else
     .dossiers-table-empty
       %h2.empty-text Aucun dossier.
