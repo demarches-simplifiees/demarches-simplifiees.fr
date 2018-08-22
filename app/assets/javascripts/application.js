@@ -23,7 +23,6 @@
 //= require franceconnect
 //= require bootstrap-wysihtml5
 //= require bootstrap-wysihtml5/locales/fr-FR
-//= require handlebars
 
 $(document).on('turbolinks:load', application_init);
 

@@ -57,32 +57,7 @@ function validatePath(path) {
 }
 
 function path_type_init() {
-  display = 'label';
-
-  var bloodhound = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace(display),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-
-    remote: {
-      url: '/admin/procedures/path_list?request=%QUERY',
-      wildcard: '%QUERY'
-    }
-  });
-  bloodhound.initialize();
-
-  $("#procedure_path").typeahead({
-    minLength: 1
-  }, {
-    display: display,
-    source: bloodhound,
-    templates: {
-      empty: 'Ce lien est disponible !',
-      suggestion: Handlebars.compile("<div class='path-mine-{{mine}}'>{{label}}</div>")
-    },
-    limit: 5
-  });
-
-  $('#procedure_path').bind('typeahead:select', function(ev, suggestion) {
+  $('#procedure_path').bind('autocomplete:select', function(ev, suggestion) {
     togglePathMessage(true, suggestion['mine']);
   });
 }

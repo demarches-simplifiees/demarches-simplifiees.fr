@@ -10,20 +10,17 @@ import jQuery from 'jquery';
 // required by the browsers we support will be included.
 import 'babel-polyfill';
 
-import 'select2';
-import 'typeahead.js';
-
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
-import '../shared/champs/address';
+import '../shared/autocomplete';
 
 import '../new_design/buttons';
 import '../new_design/form-validation';
 import '../new_design/carto';
+import '../new_design/select2';
 
 import '../new_design/champs/dossier-link';
 import '../new_design/champs/linked-drop-down-list';
-import '../new_design/champs/multiple-drop-down-list';
 import '../new_design/champs/siret';
 
 import { toggleCondidentielExplanation } from '../new_design/avis';
