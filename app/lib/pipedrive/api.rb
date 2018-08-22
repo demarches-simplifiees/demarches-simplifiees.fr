@@ -48,7 +48,7 @@ class Pipedrive::API
     params.merge!({
       start: 0,
       limit: 500,
-      api_token: PIPEDRIVE_TOKEN
+      api_token: token
     })
 
     response = RestClient.get(url, params: params)
@@ -56,14 +56,18 @@ class Pipedrive::API
   end
 
   def self.put(url, params)
-    url = "#{url}?api_token=#{PIPEDRIVE_TOKEN}"
+    url = "#{url}?api_token=#{token}"
 
     RestClient.put(url, params.to_json, { content_type: :json })
   end
 
   def self.post(url, params)
-    url = "#{url}?api_token=#{PIPEDRIVE_TOKEN}"
+    url = "#{url}?api_token=#{token}"
 
     RestClient.post(url, params.to_json, { content_type: :json })
+  end
+
+  def self.token
+    Rails.application.secrets.pipedrive[:key]
   end
 end
