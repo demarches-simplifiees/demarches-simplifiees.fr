@@ -73,6 +73,12 @@ describe DossierSearchService do
       it { expect(subject.size).to eq(2) }
     end
 
+    describe 'search terms surrounded with spurious spaces' do
+      let(:terms) { ' OCTO ' }
+
+      it { expect(subject.size).to eq(2) }
+    end
+
     describe 'search on multiple fields' do
       let(:terms) { 'octo plop' }
 
