@@ -40,6 +40,7 @@ class ActiveJobLogSubscriber < ::ActiveJob::Logging::LogSubscriber
     tags.push('exception') if data[:exception]
     data[:tags] = tags
     data[:type] = 'tps'
+    data[:source] = ENV['SOURCE']
 
     log(data)
   end
