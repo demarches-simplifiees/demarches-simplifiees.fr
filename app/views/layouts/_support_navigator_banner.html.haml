@@ -2,10 +2,7 @@
 - if !browser.modern?
   #support-navigator-banner.row
     .col-xs-12
-      = browser.name
-      = browser.version
-      \-
-      Attention, votre navigateur est trop ancien pour utiliser demarches-simplifiees.fr : certaines parties du site ne fonctionneront pas correctement.
+      Attention, votre navigateur (#{browser.name} #{browser.version}) est trop ancien pour utiliser demarches-simplifiees.fr : certaines parties du site ne fonctionneront pas correctement.
       %br/
       %br/
       Nous vous recommendons fortement de
