@@ -81,8 +81,6 @@ DatabaseCleaner.strategy = :transaction
 
 TPS::Application.load_tasks
 
-PIPEDRIVE_TOKEN = :pipedrive_test_token if !defined? PIPEDRIVE_TOKEN
-
 include Warden::Test::Helpers
 
 include SmartListing::Helper
