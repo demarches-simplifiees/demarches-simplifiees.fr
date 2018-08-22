@@ -81,6 +81,11 @@ Rails.application.configure do
     config.action_mailer.delivery_method = :mailjet
   end
 
+  config.action_mailer.default_url_options = {
+    protocol: :https,
+    host: ENV['APP_HOST']
+  }
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
@@ -97,6 +102,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   Rails.application.routes.default_url_options = {
-    protocol: :https
+    protocol: :https,
+    host: ENV['APP_HOST']
   }
 end
