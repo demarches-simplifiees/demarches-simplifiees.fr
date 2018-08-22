@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import 'select2';
 
 addEventListener('turbolinks:load', () => {
   $('select.select2').select2({
