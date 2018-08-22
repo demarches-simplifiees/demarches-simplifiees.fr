@@ -34,13 +34,6 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
     bundle install
     yarn install
 
-## Bouchonnage de l’authentification
-
-Créer les fichiers de configuration avec les valeurs par défaut :
-
-    cp config/france_connect.example.yml config/france_connect.yml
-    cp config/github_secrets.example.yml config/github_secrets.yml
-
 ## Création de la base de données
 
 Les informations nécessaire à l'initialisation de la base doivent être pré-configurées à la main grâce à la procédure suivante :
@@ -58,12 +51,6 @@ Afin de générer la BDD de l'application, il est nécessaire d'exécuter les co
 
     # Migrate the development database and the test database
     bin/rails db:migrate
-
-## Connexion a Pipedrive
-
-Dans le fichier `config/intializers/token.rb`, ajouter
-
-`PIPEDRIVE_TOKEN = 'token'`
 
 *Note : les valeurs pour ces paramètres sont renseignées dans le Keepass*
 
