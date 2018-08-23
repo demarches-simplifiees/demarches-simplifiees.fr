@@ -43,7 +43,7 @@ feature 'Administrator connection' do
           page.find_by_id('profile').click
         end
         scenario 'it redirects to profile page' do
-          expect(page).to have_css('#profile_page')
+          expect(page).to have_css('#profil-page')
         end
         context 'when clicking on procedure' do
           before do

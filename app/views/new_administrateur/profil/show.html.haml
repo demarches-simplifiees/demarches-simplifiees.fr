@@ -1,0 +1,11 @@
+#profil-page.container
+  %h1 Profil
+
+  %p API TOKEN : #{@administrateur.api_token}
+
+  = link_to "Regénérer mon token",
+    renew_api_token_path,
+    method: :post,
+    class: "button primary",
+    data: { confirm: "Confirmez-vous la regénération de votre token ? Les applications qui l'utilisent actuellement seront bloquées.",
+            disable: true }
