@@ -17,9 +17,9 @@ class PipedriveService
     Pipedrive::PersonAdapter.get_demandes_from_persons_owned_by_robot
   end
 
-  def self.add_demande(email, phone, name, poste, source, organization_name, address)
+  def self.add_demande(email, phone, name, poste, source, organization_name, address, nb_of_procedures, nb_of_dossiers, deadline)
     organization_id = Pipedrive::OrganizationAdapter.add_organization(organization_name, address)
     person_id = Pipedrive::PersonAdapter.add_person(email, phone, name, organization_id, poste, source)
-    Pipedrive::DealAdapter.add_deal(organization_id, person_id, organization_name)
+    Pipedrive::DealAdapter.add_deal(organization_id, person_id, organization_name, nb_of_procedures, nb_of_dossiers, deadline)
   end
 end
