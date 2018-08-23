@@ -45,7 +45,7 @@
   @extend .col-md-6;
   @extend .col-lg-6;
 
-  .twitter-typeahead {
+  .algolia-autocomplete {
     width: 100%;
 
     input {
@@ -54,7 +54,7 @@
     }
   }
 
-  .tt-menu {
+  .aa-dropdown-menu {
     width: 100%;
   }
 }

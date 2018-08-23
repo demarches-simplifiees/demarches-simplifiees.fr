@@ -3,13 +3,13 @@
     %h1.page-title Prévisualisation de la procédure «&nbsp;#{@dossier.procedure.libelle}&nbsp;»
 
     %ul.tabs
-      %li{ class: (@tab == 'dossier') ? 'active' : nil }>
-        = link_to(apercu_procedure_path(@dossier.procedure, tab: 'dossier')) do
-          le dossier
+      = tab_item('le dossier',
+        apercu_procedure_path(@dossier.procedure, tab: 'dossier'),
+        active: @tab == 'dossier')
       - if @dossier.champs_private.size > 0
-        %li{ class: (@tab == 'annotations-privees') ? 'active' : nil }>
-          = link_to(apercu_procedure_path(@dossier.procedure, tab: 'annotations-privees')) do
-            les annotations privées
+        = tab_item('les annotations privées',
+          apercu_procedure_path(@dossier.procedure, tab: 'annotations-privees'),
+          active: @tab == 'annotations-privees')
 
 - if @tab == 'dossier'
   = render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: true }

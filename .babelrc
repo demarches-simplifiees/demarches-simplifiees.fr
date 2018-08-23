@@ -6,12 +6,13 @@
         // See config/browser.rb
         "browsers": [
           "> 1%",
-          "Chrome 40",
-          "IE 11",
-          "Edge 12",
-          "Firefox 45",
-          "Safari 8",
-          "iOS 8"
+          "Chrome >= 50",
+          "IE >= 11",
+          "Edge >= 14",
+          "Firefox >= 50",
+          "Opera >= 40",
+          "Safari >= 8",
+          "iOS >= 8"
         ],
         "uglify": true
       },

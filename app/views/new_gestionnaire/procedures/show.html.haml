@@ -9,35 +9,34 @@
 
       .procedure-header
         %h1= procedure_libelle @procedure
+
         %ul.tabs
-          %li{ class: (@statut == 'a-suivre') ? 'active' : nil }>
-            = link_to(gestionnaire_procedure_path(@procedure, statut: 'a-suivre')) do
-              à suivre
-              %span.badge= @a_suivre_dossiers.count
+          = tab_item('à suivre',
+            gestionnaire_procedure_path(@procedure, statut: 'a-suivre'),
+            active: @statut == 'a-suivre',
+            badge: @a_suivre_dossiers.count)
 
-          %li{ class: (@statut == 'suivis') ? 'active' : nil }>
-            - if current_gestionnaire.notifications_for_procedure(@procedure).present?
-              %span.notifications{ 'aria-label': 'notifications' }
-            = link_to(gestionnaire_procedure_path(@procedure, statut: 'suivis')) do
-              = t('pluralize.followed', count: @followed_dossiers.count)
-              %span.badge= @followed_dossiers.count
+          = tab_item(t('pluralize.followed', count: @followed_dossiers.count),
+            gestionnaire_procedure_path(@procedure, statut: 'suivis'),
+            active: @statut == 'suivis',
+            badge: @followed_dossiers.count,
+            notification: current_gestionnaire.notifications_for_procedure(@procedure).present?)
 
-          %li{ class: (@statut == 'traites') ? 'active' : nil }>
-            - if current_gestionnaire.notifications_for_procedure(@procedure, :termine).present?
-              %span.notifications{ 'aria-label': 'notifications' }
-            = link_to(gestionnaire_procedure_path(@procedure, statut: 'traites')) do
-              = t('pluralize.processed', count: @termines_dossiers.count)
-              %span.badge= @termines_dossiers.count
+          = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
+            gestionnaire_procedure_path(@procedure, statut: 'traites'),
+            active: @statut == 'traites',
+            badge: @termines_dossiers.count,
+            notification: current_gestionnaire.notifications_for_procedure(@procedure, :termine).present?)
 
-          %li{ class: (@statut == 'tous') ? 'active' : nil }>
-            = link_to(gestionnaire_procedure_path(@procedure, statut: 'tous')) do
-              tous les dossiers
-              %span.badge= @all_state_dossiers.count
+          = tab_item('tous les dossiers',
+            gestionnaire_procedure_path(@procedure, statut: 'tous'),
+            active: @statut == 'tous',
+            badge: @all_state_dossiers.count)
 
-          %li{ class: (@statut == 'archives') ? 'active' : nil }>
-            = link_to(gestionnaire_procedure_path(@procedure, statut: 'archives')) do
-              = t('pluralize.archived', count: @archived_dossiers.count)
-              %span.badge= @archived_dossiers.count
+          = tab_item(t('pluralize.archived', count: @archived_dossiers.count),
+            gestionnaire_procedure_path(@procedure, statut: 'archives'),
+            active: @statut == 'archives',
+            badge: @archived_dossiers.count)
 
       .procedure-actions
         = render partial: "download_dossiers", locals: { procedure: @procedure }

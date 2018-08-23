@@ -228,18 +228,18 @@
     // scss-lint:enable
   }
 
-  .twitter-typeahead {
+  .algolia-autocomplete {
     margin-bottom: 2 * $default-padding;
   }
 
-  input.tt-input,
-  input.tt-hint {
+  input.aa-input,
+  input.aa-hint {
     border-radius: 4px;
     border: solid 1px $border-grey;
     padding: $default-padding;
   }
 
-  input.tt-hint {
+  input.aa-hint {
     color: $grey;
   }
 
