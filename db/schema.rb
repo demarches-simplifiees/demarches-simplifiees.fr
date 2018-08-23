@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_08_142237) do
+ActiveRecord::Schema.define(version: 2018_08_22_162952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,16 +156,6 @@ ActiveRecord::Schema.define(version: 2018_08_08_142237) do
     t.integer "dossier_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "cerfas", id: :serial, force: :cascade do |t|
-    t.string "content"
-    t.integer "dossier_id"
-    t.datetime "created_at"
-    t.integer "user_id"
-    t.string "original_filename"
-    t.string "content_secure_token"
-    t.index ["dossier_id"], name: "index_cerfas_on_dossier_id"
   end
 
   create_table "champs", id: :serial, force: :cascade do |t|
@@ -629,7 +619,6 @@ ActiveRecord::Schema.define(version: 2018_08_08_142237) do
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "gestionnaires", column: "claimant_id"
-  add_foreign_key "cerfas", "dossiers"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossiers", "users"

@@ -9,16 +9,16 @@
 }
 
 #publish-modal {
-  .twitter-typeahead {
+  .algolia-autocomplete {
     width: 300px;
   }
 
-  .tt-menu {
+  .aa-dropdown-menu {
     width: 300px;
   }
 
   // Fix the input not being displayed on the same line than the text before
-  .tt-input {
+  .aa-input {
     vertical-align: initial !important;
   }
 }

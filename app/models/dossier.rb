@@ -69,10 +69,11 @@ class Dossier < ApplicationRecord
   delegate :france_connect_information, to: :user
 
   before_validation :update_state_dates, if: -> { state_changed? }
+
+  before_save :build_default_champs, if: Proc.new { procedure_id_changed? }
+  before_save :build_default_individual, if: Proc.new { procedure.for_individual? }
   before_save :update_search_terms
 
-  after_save :build_default_champs, if: Proc.new { saved_change_to_procedure_id? }
-  after_save :build_default_individual, if: Proc.new { procedure.for_individual? }
   after_save :send_dossier_received
   after_save :send_web_hook
   after_create :send_draft_notification_email
@@ -84,12 +85,12 @@ class Dossier < ApplicationRecord
       user&.email,
       france_connect_information&.given_name,
       france_connect_information&.family_name,
-      *ordered_champs.flat_map(&:search_terms),
+      *champs.flat_map(&:search_terms),
       *etablissement&.search_terms,
       individual&.nom,
       individual&.prenom
     ].compact.join(' ')
-    self.private_search_terms = ordered_champs_private.flat_map(&:search_terms).compact.join(' ')
+    self.private_search_terms = champs_private.flat_map(&:search_terms).compact.join(' ')
   end
 
   def was_piece_justificative_uploaded_for_type_id?(type_id)
@@ -105,14 +106,17 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs
-    procedure.all_types_de_champ.each do |type_de_champ|
-      type_de_champ.champ.create(dossier: self)
+    procedure.types_de_champ.each do |type_de_champ|
+      champs << type_de_champ.champ.build
+    end
+    procedure.types_de_champ_private.each do |type_de_champ|
+      champs_private << type_de_champ.champ.build
     end
   end
 
   def build_default_individual
     if Individual.where(dossier_id: self.id).count == 0
-      Individual.create(dossier: self)
+      build_individual
     end
   end
 

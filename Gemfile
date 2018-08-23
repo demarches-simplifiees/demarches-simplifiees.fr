@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+# dotenv should always be loaded before rails
+gem 'dotenv-rails', require: 'dotenv/rails-now'
 gem 'rails'
 
 # Use SCSS for stylesheets
@@ -171,7 +173,5 @@ group :development, :test do
   # Deploy
   gem 'mina', ref: '343a7', git: 'https://github.com/mina-deploy/mina.git'
 
-  # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-  gem 'dotenv-rails'
   gem 'rspec_junit_formatter'
 end
