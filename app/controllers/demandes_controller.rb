@@ -12,7 +12,10 @@ class DemandesController < ApplicationController
       demande_params[:poste],
       demande_params[:source],
       demande_params[:organization_name],
-      demande_params[:address]
+      demande_params[:address],
+      demande_params[:nb_of_procedures],
+      demande_params[:nb_of_dossiers],
+      demande_params[:deadline]
     )
     flash.notice = 'Votre demande a bien été enregistrée, nous vous contacterons rapidement.'
     redirect_to root_path
@@ -21,6 +24,17 @@ class DemandesController < ApplicationController
   private
 
   def demande_params
-    params.permit(:organization_name, :poste, :name, :email, :phone, :source, :address)
+    params.permit(
+      :organization_name,
+      :poste,
+      :name,
+      :email,
+      :phone,
+      :source,
+      :address,
+      :nb_of_procedures,
+      :nb_of_dossiers,
+      :deadline
+    )
   end
 end

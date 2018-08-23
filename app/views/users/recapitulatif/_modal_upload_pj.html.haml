@@ -14,4 +14,4 @@
           = render partial: 'users/description/pieces_justificatives', locals: { dossier: @dossier }
 
         .modal-footer
-          = submit_tag 'Modification terminée', class: %w(btn btn btn-info), id: 'modification_terminee', data: { disable_with: 'Modification terminée', submit: true }
+          = submit_tag 'Modification terminée', class: %w(btn btn btn-info), id: 'modification_terminee', data: { disable: true, submit: true }
