@@ -65,7 +65,7 @@
         = f.button 'Ajouter le champ',
           id: @types_de_champ_facade.add_button_id,
           class: 'btn btn-success',
-          data: { disable_with: 'Envoi...' }
+          data: { disable: true }
       - else
         = link_to("", @types_de_champ_facade.delete_url(ff), method: :delete, remote: true, id: "delete_type_de_champ_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
 
