@@ -1,4 +1,4 @@
-#transferModal.modal.fade{ "aria-labelledby" => "TransferProcedureModal", :role => "dialog", :tabindex => "-1" }
+#transfer-modal.modal.fade{ "aria-labelledby" => "TransferProcedureModal", :role => "dialog", :tabindex => "-1" }
   .modal-dialog.modal-md{ :role => "document" }
     = form_tag admin_procedure_transfer_path(procedure_id: @procedure.id), method: :post, remote: true do
       .modal-content
