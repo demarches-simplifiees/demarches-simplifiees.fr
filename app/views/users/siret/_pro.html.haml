@@ -13,5 +13,5 @@
     .form-group.form-group-lg
       = text_field_tag :siret, nil, :class => "form-control", :placeholder => "Entrez votre Siret", :id => "siret", :name => "siret", :maxlength => 14, :style => 'margin-bottom: 10px', value: @siret
       %br
-      = submit_tag "Commencer", class: %w(btn btn-lg btn-success), style: 'margin-top: 20px;', data: { disable_with: "Commencer", submit: true }
+      = submit_tag "Commencer", class: %w(btn btn-lg btn-success), style: 'margin-top: 20px;', data: { disable: true, submit: true }
       %input{ type: 'hidden', value: "#{@procedure.id}", name: 'procedure_id', id: 'procedure_id' }

@@ -7,4 +7,4 @@
       %h4.text-primary{ style: 'margin-top: 0px;' } Ajouter un fichier
       = file_field_tag "file", accept:  Commentaire.new.file.accept_extension_list, style: 'float: left; margin-left: 20px;'
     .col-md-6.text-right
-      = submit_tag 'Envoyer', id: 'save-message', class: 'form-control btn btn-danger', data: { disable_with: 'Envoi...' }
+      = submit_tag 'Envoyer', id: 'save-message', class: 'form-control btn btn-danger', data: { disable: true }
