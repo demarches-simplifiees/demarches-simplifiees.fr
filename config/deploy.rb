@@ -37,7 +37,7 @@ end
 
 print "Deploy to #{ENV['to']} environment branch #{branch}\n"
 
-set :rails_env, ENV["to"]
+set :rails_env, 'production'
 
 # For system-wide RVM install.
 #   set :rvm_path, '/usr/local/rvm/bin/rvm'
