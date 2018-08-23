@@ -2,20 +2,11 @@ namespace :dev do
   desc 'Initialise dev environment'
   task :init do
     puts 'start initialisation'
-    Rake::Task['dev:generate_token_file'].invoke
     Rake::Task['dev:generate_franceconnect_file'].invoke
     Rake::Task['dev:generate_fog_credentials_file'].invoke
     Rake::Task['dev:generate_features_file'].invoke
 
     puts 'end initialisation'
-  end
-
-  task :generate_token_file do
-    puts 'creating token.rb file'
-    res = `rake secret`.delete("\n")
-    file = File.new('config/initializers/token.rb', 'w+')
-    file.write("TPS::Application.config.SIADETOKEN = '#{res}'")
-    file.close
   end
 
   task :generate_franceconnect_file do

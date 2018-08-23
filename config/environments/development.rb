@@ -47,17 +47,15 @@ Rails.application.configure do
   # Action Mailer settings
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-  config.action_mailer.asset_host = 'http://localhost:3000'
   # Config for mailcatcher https://mailcatcher.me/
   config.action_mailer.smtp_settings = {
-    :address => "localhost",
-    :port => 1025,
-    :locale => 'fr'
+    address: 'localhost',
+    port: 1025,
+    locale: 'fr'
   }
 
   Rails.application.routes.default_url_options = {
-    host: 'localhost:3000',
-    protocol: :http
+    host: 'localhost:3000'
   }
 
   # Raises error for missing translations

@@ -53,20 +53,7 @@ set :shared_paths, [
   'tmp/sockets',
   'public/system',
   'public/uploads',
-  'config/database.yml',
-  "config/skylight.yml",
-  "config/fog_credentials.yml",
-  'config/storage.yml',
-  'config/initializers/secret_token.rb',
-  "config/environments/#{rails_env}.rb",
-  "config/initializers/token.rb",
-  "config/unicorn.rb",
-  "config/initializers/raven.rb",
-  'config/france_connect.yml',
-  'config/github_secrets.yml',
-  'config/basic_auth.yml',
-  'config/initializers/mailjet.rb',
-  'config/initializers/storage_url.rb'
+  'config/unicorn.rb'
 ]
 
 set :rbenv_path, "/usr/local/rbenv/bin/rbenv"
@@ -111,15 +98,6 @@ task :setup => :environment do
 
   queue! %[mkdir -p "#{deploy_to}/shared/config/locales/dynamics"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config/locales/dynamics"]
-
-  queue! %[touch "#{deploy_to}/shared/config/database.yml"]
-  queue %[echo "-----> Be sure to edit 'shared/config/database.yml'."]
-
-  queue! %[touch "#{deploy_to}/shared/environments/production.rb"]
-  queue %[echo "-----> Be sure to edit 'shared/environments/production.rb'."]
-
-  queue! %[touch "#{deploy_to}/shared/environments/staging.rb"]
-  queue %[echo "-----> Be sure to edit 'shared/environments/staging.rb'."]
 end
 
 namespace :yarn do

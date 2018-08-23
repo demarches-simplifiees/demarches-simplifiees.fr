@@ -24,11 +24,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def default_url_options
-    return { protocol: 'https' } if Rails.env.staging? || Rails.env.production?
-    {}
-  end
-
   def load_navbar_left_pannel_partial_url
     controller = request.controller_class
     method = params[:action]
