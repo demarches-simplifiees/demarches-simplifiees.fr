@@ -13,7 +13,6 @@ class Administrateur < ApplicationRecord
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
   before_validation -> { sanitize_email(:email) }
-  before_save :ensure_api_token
 
   scope :inactive, -> { where(active: false) }
 
@@ -34,12 +33,6 @@ class Administrateur < ApplicationRecord
 
   def self.find_inactive_by_id(id)
     self.inactive.find(id)
-  end
-
-  def ensure_api_token
-    if api_token.nil?
-      self.api_token = generate_api_token
-    end
   end
 
   def renew_api_token
