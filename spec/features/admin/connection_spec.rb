@@ -47,8 +47,7 @@ feature 'Administrator connection' do
         end
         context 'when clicking on procedure' do
           before do
-            page.find_by_id('admin_menu').click
-            page.find_by_id('menu_item_procedure').click
+            page.click_on('Tableau de bord').click
           end
 
           scenario 'it redirects to procedure page' do
