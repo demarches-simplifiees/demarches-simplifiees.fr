@@ -12,6 +12,8 @@ class StatsController < ApplicationController
     @procedures_count = procedures.count
     @dossiers_count = dossiers.count
 
+    @dossiers_states = dossiers_states
+
     @procedures_cumulative = cumulative_hash(procedures, :published_at)
     @procedures_in_the_last_4_months = last_four_months_hash(procedures, :published_at)
 
@@ -74,6 +76,15 @@ class StatsController < ApplicationController
   end
 
   private
+
+  def dossiers_states
+    {
+      'Brouilllon'      => Dossier.state_brouillon.count,
+      'En construction' => Dossier.state_en_construction.count,
+      'En instruction'  => Dossier.state_en_instruction.count,
+      'Terminé'         => Dossier.state_termine.count
+    }
+  end
 
   def cloned_from_library_procedures_ratio
     [3.weeks.ago, 2.weeks.ago, 1.week.ago].map do |date|

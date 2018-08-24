@@ -16,6 +16,15 @@
         = number_with_delimiter(@dossiers_count)
 
     .stat-card.stat-card-half.pull-left
+      %span.stat-card-title
+        Répartition des dossiers
+
+      .chart-container
+        .chart
+          = pie_chart @dossiers_states,
+            colors: ["rgba(222, 238, 265, 1)", "rgba(191, 220, 249, 1)", "rgba(113, 176, 239, 1)", "rgba(61, 149, 236, 1)"]
+
+    .stat-card.stat-card-half.pull-left
       %ul.segmented-control.pull-right
         %li.segmented-control-item.segmented-control-item-active{ :onclick => "DS.toggleChart(event, '.monthly-procedures-chart');" }
           Par mois
