@@ -1,8 +1,4 @@
 class ApiEntreprise::API
-  class << self
-    attr_accessor :token
-  end
-
   ENTREPRISE_RESOURCE_NAME = "entreprises"
   ETABLISSEMENT_RESOURCE_NAME = "etablissements"
   EXERCICES_RESOURCE_NAME = "exercices"
@@ -49,7 +45,7 @@ class ApiEntreprise::API
   end
 
   def self.url(resource_name, siret_or_siren)
-    [API_ENTREPRISE_URL, resource_name, siret_or_siren].join("/")
+    [base_url, resource_name, siret_or_siren].join("/")
   end
 
   def self.params(siret_or_siren, procedure_id)
@@ -57,7 +53,17 @@ class ApiEntreprise::API
       context: "demarches-simplifiees.fr",
       recipient: siret_or_siren,
       object: "procedure_id: #{procedure_id}",
-      token: SIADETOKEN
+      token: token
     }
+  end
+
+  private
+
+  def self.token
+    Rails.application.secrets.api_entreprise[:key]
+  end
+
+  def self.base_url
+    Rails.application.secrets.api_entreprise[:base_url]
   end
 end
