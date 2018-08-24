@@ -52,13 +52,13 @@ Afin de générer la BDD de l'application, il est nécessaire d'exécuter les co
     # Migrate the development database and the test database
     bin/rails db:migrate
 
-*Note : les valeurs pour ces paramètres sont renseignées dans le Keepass*
-
 ## Bouchonnage de la configuration
 
 Créer le fichier de configuration avec les valeurs par défaut :
 
     cp config/env.example .env
+
+*Note : les vraies valeurs pour ces paramètres sont renseignées dans le Keepass*
 
 ## Lancement de l'application
 

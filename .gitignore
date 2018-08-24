@@ -23,12 +23,7 @@
 
 public/uploads
 public/downloads
-config/initializers/token.rb
-config/initializers/super_admin.rb
 doc/*.svg
-config/france_connect.yml
-config/github_secrets.yml
-config/fog_credentials.yml
 uploads/*
 coverage/**/*
 .DS_Store
