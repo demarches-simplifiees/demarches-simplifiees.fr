@@ -1,17 +1,30 @@
-development:
+default: &default
   adapter: postgresql
   encoding: unicode
+  pool: <%= ENV.fetch("DB_POOL") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
   database: tps_development
   host: localhost
-  pool: 5
   username: tps_development
   password: tps_development
 
 test:
-  adapter: postgresql
-  encoding: unicode
+  <<: *default
   database: tps_test
   host: localhost
-  pool: 5
   username: tps_test
   password: tps_test
+
+production: &production
+  <<: *default
+  database: <%= ENV["DB_DATABASE"] %>
+  host: <%= ENV["DB_HOST"] %>
+  username: <%= ENV["DB_USERNAME"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
+
+# Alias for production
+staging:
+  <<: *production
