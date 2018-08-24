@@ -17,6 +17,15 @@
 
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title
+        Satisfaction usager
+
+      .chart-container
+        .chart
+          = line_chart @satisfaction_usagers,
+            colors: ["#F28900", "rgba(161, 0, 5, 0.9)", "#15AD70"]
+
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title
         Répartition des dossiers
 
       .chart-container

@@ -12,6 +12,7 @@ class StatsController < ApplicationController
     @procedures_count = procedures.count
     @dossiers_count = dossiers.count
 
+    @satisfaction_usagers = satisfaction_usagers
     @dossiers_states = dossiers_states
 
     @procedures_cumulative = cumulative_hash(procedures, :published_at)
@@ -84,6 +85,37 @@ class StatsController < ApplicationController
       'En instruction'  => Dossier.state_en_instruction.count,
       'Terminé'         => Dossier.state_termine.count
     }
+  end
+
+  def satisfaction_usagers
+    legend = {
+      "0" => "Mécontents",
+      "1" => "Neutres",
+      "2" => "Satisfaits"
+    }
+
+    totals = Feedback.where(created_at: 5.weeks.ago..Time.now).group_by_week(:created_at).count
+
+    (0..2).map do |mark|
+      data = Feedback
+        .where(created_at: 5.weeks.ago..Time.now, mark: mark)
+        .group_by_week(:created_at)
+        .count
+        .map do |week, count|
+          total = totals[week]
+
+          if total > 0
+            [week, (count.to_f / total).round(2)]
+          else
+            0
+          end
+        end.to_h
+
+      {
+        name: legend[mark.to_s],
+        data: data
+      }
+    end
   end
 
   def cloned_from_library_procedures_ratio
