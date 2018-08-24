@@ -32,6 +32,25 @@ describe Administrateur, type: :model do
     end
   end
 
+  describe "#renew_api_token" do
+    let(:administrateur) { create(:administrateur) }
+
+    before do
+      administrateur.renew_api_token
+      administrateur.reload
+    end
+
+    it { expect(administrateur.api_token).to be_present }
+    it { expect(administrateur.api_token).not_to eq(administrateur.encrypted_token) }
+    it { expect(BCrypt::Password.new(administrateur.encrypted_token)).to eq(administrateur.api_token) }
+
+    context 'when it s called twice' do
+      let!(:previous_token) { administrateur.api_token }
+
+      it { expect(previous_token).not_to eq(administrateur.renew_api_token) }
+    end
+  end
+
   describe '#find_inactive_by_token' do
     let(:administrateur) { create(:administration).invite_admin('paul@tps.fr') }
     let(:reset_password_token) { administrateur.invite!(administration.id) }
