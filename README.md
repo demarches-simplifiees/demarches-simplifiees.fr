@@ -1,9 +1,8 @@
 # demarches-simplifiees.fr
 
-## Context
+## Contexte
 
 demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % dématérialisation pour les procédures administratives.
-
 
 ## Dépendances
 
@@ -25,7 +24,6 @@ demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urge
 - chromedriver :
   * Mac : `brew install chromedriver`
   * Linux : voir https://sites.google.com/a/chromium.org/chromedriver/downloads
-
 
 ## Initialisation de l'environnement de développement
 
@@ -128,11 +126,10 @@ Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité
 - supprimer un compte super admin :
   `bin/rake admin:delete_admin[email-du-compte-github@exemple.com]`
 
-
 ## Tâches d’aide au support
 
 Des tâches d’aide au support sont prévues dans le namespace `support`.
-Pour les lister: `bin/rake -D support:`.
+Pour les lister : `bin/rake -D support:`.
 
 ## Compatibilité navigateurs
 
