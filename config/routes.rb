@@ -42,6 +42,9 @@ Rails.application.routes.draw do
     root to: "administrateurs#index"
   end
 
+  get '/manager/stats' => 'stats_manager#index'
+  get '/manager/stats/download' => 'stats_manager#download'
+
   #
   # Monitoring
   #
