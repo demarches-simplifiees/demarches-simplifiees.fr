@@ -325,7 +325,7 @@ $users-breakpoint: 950px;
 
 $cta-panel-button-border-size: 2px;
 
-.cta-panel-button-white {
+@mixin cta-panel-button {
   @include horizontal-padding(40px);
   @include vertical-padding(15px);
   display: block;
@@ -334,6 +334,10 @@ $cta-panel-button-border-size: 2px;
   text-align: center;
   cursor: pointer;
   margin-top: 20px;
+}
+
+.cta-panel-button-white {
+  @include cta-panel-button;
   border: $cta-panel-button-border-size solid #FFFFFF;
   color: #FFFFFF;
 
@@ -349,45 +353,24 @@ $cta-panel-button-border-size: 2px;
   }
 }
 
-.cta-panel-button {
-  @include horizontal-padding(40px);
-  @include vertical-padding(15px);
-  display: block;
-  border-radius: 100px;
-  font-size: 24px;
-  text-align: center;
-  cursor: pointer;
-  margin-top: 20px;
+.cta-panel-button-blue {
+  @include cta-panel-button;
+  border: $cta-panel-button-border-size solid $light-blue;
+  color: $light-blue;
 
-  &.black {
-    border: $cta-panel-button-border-size solid #000000;
-    color: #000000;
-
-    &:hover {
-      text-decoration: none;
-      background-color: #F8F8F8;
-    }
+  &:hover {
+    color: #FFFFFF;
+    background-color: $light-blue;
+    text-decoration: none;
 
     &:focus {
-      color: #F8F8F8;
-      text-decoration: none;
+      color: #FFFFFF;
     }
   }
 
-  &.white {
-    border: $cta-panel-button-border-size solid #FFFFFF;
-    color: #FFFFFF;
-
-    &:hover {
-      color: #FFFFFF;
-      text-decoration: none;
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-
-    &:focus {
-      color: #FFFFFF;
-      text-decoration: none;
-    }
+  &:focus {
+    color: $light-blue;
+    text-decoration: none;
   }
 }
 

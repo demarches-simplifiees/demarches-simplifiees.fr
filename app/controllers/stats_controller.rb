@@ -1,6 +1,8 @@
 class StatsController < ApplicationController
   layout "new_application"
 
+  before_action :authenticate_administration!, only: [:download]
+
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
   def index
@@ -9,6 +11,9 @@ class StatsController < ApplicationController
 
     @procedures_count = procedures.count
     @dossiers_count = dossiers.count
+
+    @satisfaction_usagers = satisfaction_usagers
+    @dossiers_states = dossiers_states
 
     @procedures_cumulative = cumulative_hash(procedures, :published_at)
     @procedures_in_the_last_4_months = last_four_months_hash(procedures, :published_at)
@@ -36,7 +41,82 @@ class StatsController < ApplicationController
     @cloned_from_library_procedures_ratio = cloned_from_library_procedures_ratio
   end
 
+  def download
+    headers = [
+      'ID du dossier',
+      'ID de la procédure',
+      'Nom de la procédure',
+      'ID utilisateur',
+      'Etat du fichier',
+      'Durée en brouillon',
+      'Durée en construction',
+      'Durée en instruction'
+    ]
+
+    data = Dossier
+      .includes(:procedure, :user)
+      .in_batches
+      .flat_map do |dossiers|
+
+      dossiers
+        .pluck(
+          "dossiers.id",
+          "procedures.id",
+          "procedures.libelle",
+          "users.id",
+          "dossiers.state",
+          "dossiers.en_construction_at - dossiers.created_at",
+          "dossiers.en_instruction_at - dossiers.en_construction_at",
+          "dossiers.processed_at - dossiers.en_instruction_at"
+        )
+    end
+
+    respond_to do |format|
+      format.csv { send_data(SpreadsheetArchitect.to_xlsx(headers: headers, data: data), filename: "statistiques.csv") }
+    end
+  end
+
   private
+
+  def dossiers_states
+    {
+      'Brouilllon'      => Dossier.state_brouillon.count,
+      'En construction' => Dossier.state_en_construction.count,
+      'En instruction'  => Dossier.state_en_instruction.count,
+      'Terminé'         => Dossier.state_termine.count
+    }
+  end
+
+  def satisfaction_usagers
+    legend = {
+      Feedback.ratings.fetch(:unhappy)  => "Mécontents",
+      Feedback.ratings.fetch(:neutral)  => "Neutres",
+      Feedback.ratings.fetch(:happy)    => "Satisfaits"
+    }
+
+    totals = Feedback.where(created_at: 5.weeks.ago..Time.now).group_by_week(:created_at).count
+
+    Feedback::rating.values.map do |rating|
+      data = Feedback
+        .where(created_at: 5.weeks.ago..Time.now, rating: rating)
+        .group_by_week(:created_at)
+        .count
+        .map do |week, count|
+          total = totals[week]
+
+          if total > 0
+            [week, (count.to_f / total).round(2)]
+          else
+            0
+          end
+        end.to_h
+
+      {
+        name: legend[rating],
+        data: data
+      }
+    end
+  end
 
   def cloned_from_library_procedures_ratio
     [3.weeks.ago, 2.weeks.ago, 1.week.ago].map do |date|
