@@ -59,11 +59,6 @@ describe 'user access to the list of his dossier' do
       page.click_link("Suivant")
       expect(page).to have_content(dossier_archived.procedure.libelle)
     end
-
-    scenario 'the user sees a card asking for feedback' do
-      expect(page).to have_css('.card.feedback')
-      expect(page).to have_content(CONTACT_EMAIL)
-    end
   end
 
   describe "recherche" do
