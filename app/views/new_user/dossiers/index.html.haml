@@ -54,7 +54,7 @@
                   = dossier.updated_at.localtime.strftime("%d/%m/%Y")
     = paginate(@dossiers)
 
-    - if current_user.feedbacks.empty?
+    - if current_user.feedbacks.empty? || current_user.feedbacks.last.created_at < 1.month.ago
       #user-satisfaction
         %h3 Que pensez-vous de ce service ?
         .icons
