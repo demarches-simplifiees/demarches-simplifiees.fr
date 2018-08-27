@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :feedback do
-    mark 3
+    rating Feedback.ratings.fetch(:happy)
   end
 end
