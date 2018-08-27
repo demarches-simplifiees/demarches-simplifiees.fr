@@ -56,7 +56,7 @@
 
     - if current_user.feedbacks.empty? || current_user.feedbacks.last.created_at < 1.month.ago
       #user-satisfaction
-        %h3 Que pensez-vous de ce service ?
+        %h3 Que pensez-vous de la facilité d'utilisation de ce service ?
         .icons
           = link_to feedback_path(mark: 0), data: { remote: true, method: :post } do
             %span.icon.frown

@@ -74,7 +74,7 @@ describe 'new_user/dossiers/index.html.haml', type: :view do
 
   context "quand le user n'a aucun feedback" do
     it "affiche le formulaire de satisfaction" do
-      expect(rendered).to have_selector('#user-satisfaction', text: 'Que pensez-vous de ce service ?')
+      expect(rendered).to have_selector('#user-satisfaction', text: 'Que pensez-vous de la facilité d\'utilisation de ce service ?')
     end
   end
 
