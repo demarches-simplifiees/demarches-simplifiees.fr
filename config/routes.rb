@@ -99,7 +99,8 @@ Rails.application.routes.draw do
   get 'users' => 'users#index'
   get 'admin' => 'admin#index'
 
-  resources :stats, only: [:index]
+  get '/stats' => 'stats#index'
+  get '/stats/download' => 'stats#download'
   resources :accessibilite, only: [:index]
   resources :demandes, only: [:new, :create]
 
