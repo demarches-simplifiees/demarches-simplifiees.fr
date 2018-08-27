@@ -6,4 +6,6 @@ class Feedback < ApplicationRecord
     neutral:  'neutral',
     unhappy:  'unhappy'
   }
+
+  validates :rating, presence: true
 end
