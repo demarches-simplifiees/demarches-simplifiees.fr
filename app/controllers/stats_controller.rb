@@ -198,7 +198,7 @@ class StatsController < ApplicationController
     count_per_administrateur = procedures.group(:administrateur_id).count.values
     {
       'Une procédure' => count_per_administrateur.select { |count| count == 1 }.count,
-      'Entre deux et cinq procédures' => count_per_administrateur.select { |count| 2 <= count && count <= 5 }.count,
+      'Entre deux et cinq procédures' => count_per_administrateur.select { |count| count.in?(2..5) }.count,
       'Plus de cinq procédures' => count_per_administrateur.select { |count| 5 < count }.count
     }
   end
