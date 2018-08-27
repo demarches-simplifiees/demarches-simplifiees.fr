@@ -89,9 +89,9 @@ class StatsController < ApplicationController
 
   def satisfaction_usagers
     legend = {
-      Feedback.ratings.fetch(:unhappy)  => "Mécontents",
+      Feedback.ratings.fetch(:happy)    => "Satisfaits",
       Feedback.ratings.fetch(:neutral)  => "Neutres",
-      Feedback.ratings.fetch(:happy)    => "Satisfaits"
+      Feedback.ratings.fetch(:unhappy)  => "Mécontents"
     }
 
     totals = Feedback.where(created_at: 5.weeks.ago..Time.now).group_by_week(:created_at).count
