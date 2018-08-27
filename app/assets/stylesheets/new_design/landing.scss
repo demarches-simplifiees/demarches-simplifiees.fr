@@ -353,18 +353,23 @@ $cta-panel-button-border-size: 2px;
   }
 }
 
-.cta-panel-button-black {
+.cta-panel-button-blue {
   @include cta-panel-button;
-  border: $cta-panel-button-border-size solid #000000;
-  color: #000000;
+  border: $cta-panel-button-border-size solid $light-blue;
+  color: $light-blue;
 
   &:hover {
+    color: #FFFFFF;
+    background-color: $light-blue;
     text-decoration: none;
-    background-color: #F8F8F8;
+
+    &:focus {
+      color: #FFFFFF;
+    }
   }
 
   &:focus {
-    color: #000000;
+    color: $light-blue;
     text-decoration: none;
   }
 }
