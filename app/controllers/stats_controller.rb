@@ -89,16 +89,16 @@ class StatsController < ApplicationController
 
   def satisfaction_usagers
     legend = {
-      "0" => "Mécontents",
-      "1" => "Neutres",
-      "2" => "Satisfaits"
+      Feedback.ratings.fetch(:unhappy)  => "Mécontents",
+      Feedback.ratings.fetch(:neutral)  => "Neutres",
+      Feedback.ratings.fetch(:happy)    => "Satisfaits"
     }
 
     totals = Feedback.where(created_at: 5.weeks.ago..Time.now).group_by_week(:created_at).count
 
-    (0..2).map do |mark|
+    Feedback::rating.values.map do |rating|
       data = Feedback
-        .where(created_at: 5.weeks.ago..Time.now, mark: mark)
+        .where(created_at: 5.weeks.ago..Time.now, rating: rating)
         .group_by_week(:created_at)
         .count
         .map do |week, count|
@@ -112,7 +112,7 @@ class StatsController < ApplicationController
         end.to_h
 
       {
-        name: legend[mark.to_s],
+        name: legend[rating],
         data: data
       }
     end

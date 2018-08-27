@@ -58,11 +58,11 @@
       #user-satisfaction
         %h3 Que pensez-vous de la facilité d'utilisation de ce service ?
         .icons
-          = link_to feedback_path(mark: 0), data: { remote: true, method: :post } do
+          = link_to feedback_path(rating: Feedback.ratings.fetch(:unhappy)), data: { remote: true, method: :post } do
             %span.icon.frown
-          = link_to feedback_path(mark: 1), data: { remote: true, method: :post } do
+          = link_to feedback_path(rating: Feedback.ratings.fetch(:neutral)), data: { remote: true, method: :post } do
             %span.icon.meh
-          = link_to feedback_path(mark: 2), data: { remote: true, method: :post } do
+          = link_to feedback_path(rating: Feedback.ratings.fetch(:happy)), data: { remote: true, method: :post } do
             %span.icon.smile
 
   - else
