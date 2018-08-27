@@ -84,6 +84,8 @@ gem "premailer-rails"
 
 gem 'smart_listing'
 
+gem 'groupdate'
+
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 
 gem 'spreadsheet_architect', '~> 1.4.8' # https://github.com/westonganger/spreadsheet_architect/issues/14

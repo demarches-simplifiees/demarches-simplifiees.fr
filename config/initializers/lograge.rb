@@ -33,6 +33,6 @@ Rails.application.configure do
   config.lograge.logger = ActiveSupport::Logger.new Rails.root.join('log', "logstash_#{Rails.env}.log")
 
   if config.lograge.enabled
-    ActiveJobLogSubscriber.attach_to :active_job
+    ActiveJobLogSubscriber.attach_to(:active_job)
   end
 end
