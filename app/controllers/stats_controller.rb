@@ -96,7 +96,7 @@ class StatsController < ApplicationController
 
     totals = Feedback.where(created_at: 5.weeks.ago..Time.now).group_by_week(:created_at).count
 
-    Feedback::rating.values.map do |rating|
+    Feedback.ratings.values.map do |rating|
       data = Feedback
         .where(created_at: 5.weeks.ago..Time.now, rating: rating)
         .group_by_week(:created_at)
