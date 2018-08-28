@@ -1,7 +1,7 @@
 = f.fields_for @types_de_champ_facade.fields_for_var, types_de_champ, remote: true do |ff|
   - type_champ = ff.object.object.type_champ
 
-  .form-inline{ class: (type_champ == 'header_section' ? 'header-section' : nil) }
+  .form-inline{ class: (type_champ == TypeDeChamp.type_champs.fetch(:header_section) ? 'header-section' : nil) }
     .form-group.libelle
       %h4 Libellé
       = ff.text_field :libelle, class: 'form-control libelle', placeholder: 'Libellé'
@@ -20,9 +20,9 @@
         ~ fff.text_area :value, class: 'form-control drop_down_list', placeholder: "Ecrire une valeur par ligne et --valeur-- pour un séparateur.", rows: 3, cols: 30
         = fff.hidden_field :id
 
-    .form-group.pj-template{ class: (type_champ == 'piece_justificative') ? 'show-inline' : nil }
+    .form-group.pj-template{ class: (type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative)) ? 'show-inline' : nil }
       %h4 Modèle
-      - if type_champ == 'piece_justificative'
+      - if type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative)
         - template = ff.object.object.piece_justificative_template
 
         - if !template.attached?
@@ -38,7 +38,7 @@
         = ff.file_field :piece_justificative_template,
           direct_upload: true
 
-    - hide_mandatory = (ff.object.object.private? || type_champ == 'explication')
+    - hide_mandatory = (ff.object.object.private? || type_champ == TypeDeChamp.type_champs.fetch(:explication))
     .form-group.mandatory{ style: hide_mandatory ? 'visibility: hidden;' : nil }
       %h4 Obligatoire ?
       .center

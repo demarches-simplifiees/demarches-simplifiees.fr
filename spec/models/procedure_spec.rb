@@ -659,10 +659,10 @@ describe Procedure do
     }
 
     before do
-      subject.types_de_champ[2].update_attribute(:type_champ, 'header_section')
-      subject.types_de_champ[3].update_attribute(:type_champ, 'explication')
-      subject.types_de_champ_private[2].update_attribute(:type_champ, 'header_section')
-      subject.types_de_champ_private[3].update_attribute(:type_champ, 'explication')
+      subject.types_de_champ[2].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:header_section))
+      subject.types_de_champ[3].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:explication))
+      subject.types_de_champ_private[2].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:header_section))
+      subject.types_de_champ_private[3].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:explication))
     end
 
     it { expect(subject.fields).to eq(expected) }

@@ -13,17 +13,17 @@ class ChampsService
 
     def check_piece_justificative_files(champs)
       champs.select do |champ|
-        champ.type_champ == 'piece_justificative'
+        champ.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative)
       end.map { |c| c.piece_justificative_file_errors }.flatten
     end
 
     private
 
     def fill_champs(champs, h)
-      datetimes, not_datetimes = champs.partition { |c| c.type_champ == 'datetime' }
+      datetimes, not_datetimes = champs.partition { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:datetime) }
 
       not_datetimes.each do |c|
-        if c.type_champ == 'piece_justificative' && h["champs"]["'#{c.id}'"].present?
+        if c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) && h["champs"]["'#{c.id}'"].present?
           c.piece_justificative_file.attach(h["champs"]["'#{c.id}'"])
         else
           c.value = h[:champs]["'#{c.id}'"]
