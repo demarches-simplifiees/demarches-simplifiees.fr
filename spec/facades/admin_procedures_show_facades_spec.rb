@@ -21,37 +21,4 @@ describe AdminProceduresShowFacades do
 
     it { expect(subject.size).to eq(3) }
   end
-
-  describe '#dossiers_for_pie_highchart' do
-    subject { super().dossiers_for_pie_highchart }
-
-    it { expect(subject).to eq({ 'En construction' => 2 }) }
-  end
-
-  describe '#dossiers_archived_by_state_total' do
-    subject { super().dossiers_archived_by_state_total }
-
-    it { expect(subject.size).to eq(1)  }
-
-    it { expect(subject.first.state).to eq('en_construction') }
-    it { expect(subject.first.total).to eq(1) }
-  end
-
-  describe '#dossiers_archived_total' do
-    subject { super().dossiers_archived_total }
-
-    it { is_expected.to eq(1) }
-  end
-
-  describe '#dossiers_total' do
-    subject { super().dossiers_total }
-
-    it { is_expected.to eq(3) }
-  end
-
-  describe '#dossiers_termine_total' do
-    subject { super().dossiers_termine_total }
-
-    it { is_expected.to eq(0) }
-  end
 end
