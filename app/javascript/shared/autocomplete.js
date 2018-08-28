@@ -38,10 +38,12 @@ function source(url) {
 
 addEventListener('turbolinks:load', function() {
   for (let { type, url } of sources) {
-    let select = autocomplete(selector(type), options, [source(url)]);
-    select.on('autocomplete:selected', ({ target }, suggestion) => {
-      $(target).trigger('autocomplete:select', suggestion);
-      select.autocomplete.setVal(suggestion.label);
-    });
+    for (let target of document.querySelectorAll(selector(type))) {
+      let select = autocomplete(target, options, [source(url)]);
+      select.on('autocomplete:selected', ({ target }, suggestion) => {
+        $(target).trigger('autocomplete:select', suggestion);
+        select.autocomplete.setVal(suggestion.label);
+      });
+    }
   }
 });
