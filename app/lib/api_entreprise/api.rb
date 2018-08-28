@@ -45,7 +45,7 @@ class ApiEntreprise::API
   end
 
   def self.url(resource_name, siret_or_siren)
-    [base_url, resource_name, siret_or_siren].join("/")
+    [API_ENTREPRISE_URL, resource_name, siret_or_siren].join("/")
   end
 
   def self.params(siret_or_siren, procedure_id)
@@ -61,9 +61,5 @@ class ApiEntreprise::API
 
   def self.token
     Rails.application.secrets.api_entreprise[:key]
-  end
-
-  def self.base_url
-    Rails.application.secrets.api_entreprise[:base_url]
   end
 end
