@@ -106,40 +106,6 @@
           - durees_de_conservation.each do |text|
             %p= text
 
-    %br
-    %h3
-      = t('dynamics.admin.procedure.stats.title')
-
-    .row
-      .col-xs-6{ style: 'margin-left: 3%;' }
-        %h4 Total
-        %div
-          = @facade.dossiers_total
-
-        %h4.text-success Terminé
-        %div
-          = @facade.dossiers_termine_total
-
-        %h4 Archivé
-
-        - if @facade.dossiers_archived_total != 0
-          %ul
-            - @facade.dossiers_archived_by_state_total.each do |dossier|
-              %li
-                = dossier.display_state
-                \:
-                = dossier.total
-        - else
-          %p
-            0
-
-      .col-xs-5
-        %h4 Non archivés
-        - if @facade.dossiers_for_pie_highchart.blank?
-          Aucune statistique pour le moment
-        - else
-          = pie_chart @facade.dossiers_for_pie_highchart
-
     - if procedure.publiee_ou_archivee?
       %h3 Supprimer la procédure
       .alert.alert-danger
