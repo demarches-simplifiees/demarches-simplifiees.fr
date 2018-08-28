@@ -72,7 +72,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def non_fillable?
-    type_champ.in?(['header_section', 'explication'])
+    type_champ.in?([TypeDeChamp.type_champs.fetch(:header_section), TypeDeChamp.type_champs.fetch(:explication)])
   end
 
   def public?
@@ -86,7 +86,7 @@ class TypeDeChamp < ApplicationRecord
   private
 
   def remove_piece_justificative_template
-    if type_champ != 'piece_justificative' && piece_justificative_template.attached?
+    if type_champ != TypeDeChamp.type_champs.fetch(:piece_justificative) && piece_justificative_template.attached?
       piece_justificative_template.purge_later
     end
   end

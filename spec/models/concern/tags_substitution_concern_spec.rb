@@ -160,8 +160,8 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has 2 types de champ date and datetime' do
       let(:types_de_champ) do
         [
-          create(:type_de_champ_date, libelle: 'date'),
-          create(:type_de_champ_datetime, libelle: 'datetime')
+          create(:type_de_champ_date, libelle: TypeDeChamp.type_champs.fetch(:date)),
+          create(:type_de_champ_datetime, libelle: TypeDeChamp.type_champs.fetch(:datetime))
         ]
       end
 
@@ -171,12 +171,12 @@ describe TagsSubstitutionConcern, type: :model do
         context 'and its value in the dossier are not nil' do
           before do
             dossier.champs
-              .select { |champ| champ.type_champ == 'date' }
+              .select { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:date) }
               .first
               .update(value: '2017-04-15')
 
             dossier.champs
-              .select { |champ| champ.type_champ == 'datetime' }
+              .select { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) }
               .first
               .update(value: '2017-09-13 09:00')
           end

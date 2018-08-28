@@ -2,17 +2,17 @@ class ChampDecorator < Draper::Decorator
   delegate_all
 
   def value
-    if type_champ == "date" && object.value.present?
+    if type_champ == TypeDeChamp.type_champs.fetch(:date) && object.value.present?
       Date.parse(object.value).strftime("%d/%m/%Y")
-    elsif type_champ.in? ["checkbox", "engagement"]
+    elsif type_champ.in? [TypeDeChamp.type_champs.fetch(:checkbox), TypeDeChamp.type_champs.fetch(:engagement)]
       object.value == 'on' ? 'Oui' : 'Non'
-    elsif type_champ == 'yes_no'
+    elsif type_champ == TypeDeChamp.type_champs.fetch(:yes_no)
       if object.value == 'true'
         'Oui'
       elsif object.value == 'false'
         'Non'
       end
-    elsif type_champ == 'multiple_drop_down_list' && object.value.present?
+    elsif type_champ == TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) && object.value.present?
       JSON.parse(object.value).join(', ')
     else
       object.value
@@ -21,9 +21,9 @@ class ChampDecorator < Draper::Decorator
 
   def date_for_input
     if object.value.present?
-      if type_champ == "date"
+      if type_champ == TypeDeChamp.type_champs.fetch(:date)
         object.value
-      elsif type_champ == "datetime" && object.value != ' 00:00'
+      elsif type_champ == TypeDeChamp.type_champs.fetch(:datetime) && object.value != ' 00:00'
         DateTime.parse(object.value, "%Y-%m-%d %H:%M").strftime("%Y-%m-%d")
       end
     end
