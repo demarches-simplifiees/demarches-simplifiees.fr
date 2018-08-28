@@ -18,14 +18,6 @@
 
 .container
   - if @dossiers.present?
-    - if @dossiers.total_pages >= 2
-      .card.feedback
-        .card-title Nous avons redesigné la liste des dossiers.
-        %p
-          Une suggestion pour améliorer cette page&nbsp;? Votre avis nous intéresse&nbsp;! Écrivez-nous à
-          = mail_to CONTACT_EMAIL, CONTACT_EMAIL, subject: "Amélioration de la liste des dossiers"
-          \.
-
     %table.table.dossiers-table.hoverable
       %thead
         %tr
