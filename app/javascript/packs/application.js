@@ -14,6 +14,7 @@ import '../shared/sentry';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';
+import '../shared/remote-input';
 
 import '../new_design/buttons';
 import '../new_design/form-validation';
