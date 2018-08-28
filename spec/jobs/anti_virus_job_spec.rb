@@ -4,7 +4,7 @@ RSpec.describe AntiVirusJob, type: :job do
     champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
     champ
   end
-  let(:virus_scan) { create(:virus_scan, status: "pending", champ: champ, blob_key: champ.piece_justificative_file.blob.key) }
+  let(:virus_scan) { create(:virus_scan, status: VirusScan.statuses.fetch(:pending), champ: champ, blob_key: champ.piece_justificative_file.blob.key) }
 
   subject { AntiVirusJob.new.perform(virus_scan) }
 
@@ -16,7 +16,7 @@ RSpec.describe AntiVirusJob, type: :job do
       subject
     end
 
-    it { expect(virus_scan.reload.status).to eq("safe") }
+    it { expect(virus_scan.reload.status).to eq(VirusScan.statuses.fetch(:safe)) }
   end
 
   context "when a virus is found" do
@@ -27,6 +27,6 @@ RSpec.describe AntiVirusJob, type: :job do
       subject
     end
 
-    it { expect(virus_scan.reload.status).to eq("infected") }
+    it { expect(virus_scan.reload.status).to eq(VirusScan.statuses.fetch(:infected)) }
   end
 end
