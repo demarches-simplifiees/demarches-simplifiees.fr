@@ -2,7 +2,7 @@ describe TagsSubstitutionConcern, type: :model do
   let(:types_de_champ) { [] }
   let(:types_de_champ_private) { [] }
   let(:for_individual) { false }
-  let(:state) { 'accepte' }
+  let(:state) { Dossier.states.fetch(:accepte) }
 
   let(:procedure) do
     create(:procedure,
@@ -136,7 +136,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when the dossier is en construction' do
-      let(:state) { 'en_construction' }
+      let(:state) { Dossier.states.fetch(:en_construction) }
       let(:template) { '--libelleA--' }
 
       context 'champs privés are not valid tags' do
@@ -251,7 +251,7 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when generating a document for a dossier that is not termine' do
       let(:dossier) { create(:dossier) }
       let(:template) { '--motivation-- --date de décision--' }
-      let(:state) { 'en_instruction' }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
 
       subject { template_concern.replace_tags(template, dossier) }
 
@@ -275,7 +275,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when generating a document for a dossier en instruction' do
-      let(:state) { 'en_instruction' }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
 
       it { is_expected.not_to include(include({ libelle: 'motivation' })) }
       it { is_expected.not_to include(include({ libelle: 'date de décision' })) }
@@ -285,7 +285,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when generating a document for a dossier en construction' do
-      let(:state) { 'en_construction' }
+      let(:state) { Dossier.states.fetch(:en_construction) }
 
       it { is_expected.not_to include(include({ libelle: 'motivation' })) }
       it { is_expected.not_to include(include({ libelle: 'date de décision' })) }

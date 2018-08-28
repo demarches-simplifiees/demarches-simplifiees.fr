@@ -54,7 +54,7 @@ module TagsSubstitutionConcern
       libelle: 'lien attestation',
       description: '',
       lambda: -> (d) { external_link(attestation_dossier_url(d)) },
-      available_for_states: ['accepte']
+      available_for_states: [Dossier.states.fetch(:accepte)]
     }
   ]
 

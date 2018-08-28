@@ -51,7 +51,7 @@ class Users::DossiersController < UsersController
       procedure = Procedure.publiees.find(params[:procedure_id])
     end
 
-    dossier = Dossier.create!(procedure: procedure, user: current_user, state: 'brouillon')
+    dossier = Dossier.create!(procedure: procedure, user: current_user, state: Dossier.states.fetch(:brouillon))
     siret = params[:siret] || current_user.siret
 
     update_current_user_siret! siret if siret.present?

@@ -39,7 +39,7 @@ describe Users::DossiersController, type: :controller do
     describe 'before_action authorized_routes?' do
       context 'when dossier does not have a valid state' do
         before do
-          dossier.state = 'en_instruction'
+          dossier.state = Dossier.states.fetch(:en_instruction)
           dossier.save
 
           get :show, params: { id: dossier.id }
@@ -264,7 +264,7 @@ describe Users::DossiersController, type: :controller do
 
         it 'state of dossier is brouillon' do
           subject
-          expect(Dossier.last.state).to eq('brouillon')
+          expect(Dossier.last.state).to eq(Dossier.states.fetch(:brouillon))
         end
 
         describe 'get rna informations' do
@@ -393,8 +393,8 @@ describe Users::DossiersController, type: :controller do
 
   describe 'DELETE #destroy' do
     let(:user) { create(:user) }
-    let!(:dossier_brouillon) { create :dossier, state: "brouillon", user: user }
-    let!(:dossier_not_brouillon) { create :dossier, state: "en_construction", user: user }
+    let!(:dossier_brouillon) { create :dossier, state: Dossier.states.fetch(:brouillon), user: user }
+    let!(:dossier_not_brouillon) { create :dossier, state: Dossier.states.fetch(:en_construction), user: user }
 
     subject { delete :destroy, params: { id: dossier.id } }
 

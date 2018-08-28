@@ -7,7 +7,7 @@ feature 'Invitations' do
   let(:invite) { create(:invite_user, user: invited_user, dossier: dossier) }
 
   context 'when the dossier is a brouillon' do
-    let!(:dossier) { create(:dossier, :for_individual, state: 'brouillon', user: user, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :for_individual, state: Dossier.states.fetch(:brouillon), user: user, procedure: procedure) }
 
     scenario 'on the form, a user can invite another user to collaborate on the dossier', js: true do
       log_in(user)

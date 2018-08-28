@@ -44,15 +44,15 @@ class DossierSerializer < ActiveModel::Serializer
 
   def state
     case object.state
-    when 'en_construction'
+    when Dossier.states.fetch(:en_construction)
       'initiated'
-    when 'en_instruction'
+    when Dossier.states.fetch(:en_instruction)
       'received'
-    when 'accepte'
+    when Dossier.states.fetch(:accepte)
       'closed'
-    when 'refuse'
+    when Dossier.states.fetch(:refuse)
       'refused'
-    when 'sans_suite'
+    when Dossier.states.fetch(:sans_suite)
       'without_continuation'
     else
       object.state
