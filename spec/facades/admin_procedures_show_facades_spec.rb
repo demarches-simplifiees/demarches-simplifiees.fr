@@ -15,10 +15,4 @@ describe AdminProceduresShowFacades do
 
     it { is_expected.to eq(procedure) }
   end
-
-  describe '#dossiers' do
-    subject { super().dossiers }
-
-    it { expect(subject.size).to eq(3) }
-  end
 end

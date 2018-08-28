@@ -6,8 +6,4 @@ class AdminProceduresShowFacades
   def procedure
     @procedure
   end
-
-  def dossiers
-    @procedure.dossiers.state_not_brouillon
-  end
 end
