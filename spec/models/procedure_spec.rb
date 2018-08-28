@@ -509,9 +509,9 @@ describe Procedure do
     let(:procedure) { create :procedure }
 
     before do
-      create :dossier, procedure: procedure, state: :en_construction
-      create :dossier, procedure: procedure, state: :brouillon
-      create :dossier, procedure: procedure, state: :en_construction
+      create :dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)
+      create :dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon)
+      create :dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)
     end
 
     subject { procedure.total_dossier }
@@ -533,8 +533,8 @@ describe Procedure do
     end
 
     context 'when there are some dossiers' do
-      let!(:dossier){ create(:dossier, procedure: procedure, state: 'en_construction') }
-      let!(:dossier2){ create(:dossier, procedure: procedure, state: 'accepte') }
+      let!(:dossier){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
+      let!(:dossier2){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) }
 
       it { expect(subject[:data].size).to eq(2) }
       it { expect(subject[:headers]).to eq(dossier.export_headers) }
@@ -574,7 +574,7 @@ describe Procedure do
     end
 
     context 'when there is a brouillon dossier' do
-      let!(:dossier_not_exportable){ create(:dossier, procedure: procedure, state: 'brouillon') }
+      let!(:dossier_not_exportable){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
 
       it_behaves_like "export is empty"
     end

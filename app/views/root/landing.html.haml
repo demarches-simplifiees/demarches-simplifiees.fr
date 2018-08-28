@@ -50,7 +50,7 @@
               partenaires
           %li.number
             .number-value
-              = number_with_delimiter(Dossier.where.not(:state => :brouillon).count, :locale => :fr)
+              = number_with_delimiter(Dossier.where.not(:state => Dossier.states.fetch(:brouillon)).count, :locale => :fr)
             .number-label<
               dossiers
               %br<>

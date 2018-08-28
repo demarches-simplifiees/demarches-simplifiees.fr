@@ -280,7 +280,7 @@ describe NewUser::DossiersController, type: :controller do
 
         expect(response).to redirect_to(merci_dossier_path(dossier))
         expect(first_champ.reload.value).to eq('beautiful value')
-        expect(dossier.reload.state).to eq('en_construction')
+        expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
 
       context "on an archived procedure" do
@@ -290,7 +290,7 @@ describe NewUser::DossiersController, type: :controller do
           subject
 
           expect(response).not_to redirect_to(merci_dossier_path(dossier))
-          expect(dossier.reload.state).to eq('brouillon')
+          expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon))
         end
       end
     end
@@ -357,7 +357,7 @@ describe NewUser::DossiersController, type: :controller do
 
         it { expect(response).to render_template(:modifier) }
         it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
-        it { expect(dossier.reload.state).to eq('brouillon') }
+        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
       end
     end
 
@@ -387,7 +387,7 @@ describe NewUser::DossiersController, type: :controller do
 
         it { expect(response).to render_template(:modifier) }
         it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
-        it { expect(dossier.reload.state).to eq('brouillon') }
+        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
       end
 
       context 'and the invite tries to submit the dossier' do
@@ -404,7 +404,7 @@ describe NewUser::DossiersController, type: :controller do
         end
 
         it { expect(first_champ.reload.value).to eq('beautiful value') }
-        it { expect(dossier.reload.state).to eq('en_construction') }
+        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
         it { expect(response).to redirect_to(users_dossiers_invite_path(invite)) }
       end
     end
