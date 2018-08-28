@@ -42,9 +42,9 @@ class RootController < ApplicationController
       end
 
     type_champ_values = {
-      TypeDeChamp.type_champs.fetch(:date) => '2016-07-26',
-      TypeDeChamp.type_champs.fetch(:datetime) => '26/07/2016 07:35',
-      TypeDeChamp.type_champs.fetch(:textarea) => 'Une description de mon projet'
+      TypeDeChamp.type_champs.fetch(:date)      => '2016-07-26',
+      TypeDeChamp.type_champs.fetch(:datetime)  => '26/07/2016 07:35',
+      TypeDeChamp.type_champs.fetch(:textarea)  => 'Une description de mon projet'
     }
 
     type_champ_values.each do |(type_champ, value)|
