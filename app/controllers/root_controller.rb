@@ -49,7 +49,7 @@ class RootController < ApplicationController
 
     type_champ_values.each do |(type_champ, value)|
       all_champs
-        .select { |champ| champ.type_champ == type_champ.to_s }
+        .select { |champ| champ.type_champ == type_champ }
         .each { |champ| champ.value = value }
     end
 
