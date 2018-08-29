@@ -9,8 +9,8 @@ class StatsController < ApplicationController
     procedures = Procedure.publiees_ou_archivees
     dossiers = Dossier.where.not(:state => :brouillon)
 
-    @procedures_count = procedures.count
-    @dossiers_count = dossiers.count
+    @procedures_numbers = procedures_numbers(procedures)
+    @dossiers_numbers = dossiers_numbers(dossiers)
 
     @satisfaction_usagers = satisfaction_usagers
     @dossiers_states = dossiers_states
@@ -77,6 +77,34 @@ class StatsController < ApplicationController
   end
 
   private
+
+  def procedures_numbers(procedures)
+    total = procedures.count
+    last_30_days_count = procedures.where(published_at: 1.month.ago..Time.now).count
+    previous_count = procedures.where(published_at: 2.months.ago..1.month.ago).count
+    evolution = (((last_30_days_count.to_f / previous_count) - 1) * 100).round(0)
+    formatted_evolution = sprintf("%+d", evolution)
+
+    {
+      total: total.to_s,
+      last_30_days_count: last_30_days_count.to_s,
+      evolution: formatted_evolution
+    }
+  end
+
+  def dossiers_numbers(dossiers)
+    total = dossiers.count
+    last_30_days_count = dossiers.where(en_construction_at: 1.month.ago..Time.now).count
+    previous_count = dossiers.where(en_construction_at: 2.months.ago..1.month.ago).count
+    evolution = (((last_30_days_count.to_f / previous_count) - 1) * 100).round(0)
+    formatted_evolution = sprintf("%+d", evolution)
+
+    {
+      total: total.to_s,
+      last_30_days_count: last_30_days_count.to_s,
+      evolution: formatted_evolution
+    }
+  end
 
   def dossiers_states
     {
