@@ -120,8 +120,11 @@ Rails.application.routes.draw do
 
   get "patron" => "root#patron"
 
-  get "contact" => "support#index"
-  post "contact" => "support#create"
+  get "contact", to: "support#index"
+  post "contact", to: "support#create"
+
+  post "webhooks/helpscout", to: "webhook#helpscout"
+  match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
   #
   # Deprecated UI
