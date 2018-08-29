@@ -261,10 +261,6 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:index, :show]
       end
     end
-
-    namespace :statistiques do
-      get 'dossiers' => '/api/statistiques#dossiers_stats'
-    end
   end
 
   #
