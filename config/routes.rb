@@ -120,6 +120,9 @@ Rails.application.routes.draw do
 
   get "patron" => "root#patron"
 
+  get "contact" => "support#index"
+  post "contact" => "support#create"
+
   #
   # Deprecated UI
   #
