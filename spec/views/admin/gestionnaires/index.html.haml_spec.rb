@@ -16,10 +16,10 @@ describe 'admin/gestionnaires/index.html.haml', type: :view do
     before do
       render
     end
-    it { expect(rendered).to have_content('Aucun accompagnateur') }
+    it { expect(rendered).to have_content('Aucun instructeur') }
   end
 
-  context 'Ajout d\'un accompagnateur' do
+  context 'Ajout d\'un instructeur' do
     before do
       create(:gestionnaire, administrateurs: [admin])
       admin.reload
