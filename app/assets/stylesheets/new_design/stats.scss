@@ -126,6 +126,7 @@ $big-number-card-padding: 2 * $segmented-control-item-border-radius;
   display: block;
   text-align: center;
   margin: 0 auto;
+  margin-bottom: 20px;
   color: $light-grey;
 }
 
@@ -137,3 +138,10 @@ $big-number-card-padding: 2 * $segmented-control-item-border-radius;
   font-weight: bold;
   color: $blue;
 }
+
+.big-number-card-detail {
+  display: block;
+  text-align: center;
+  color: $blue;
+}
+
