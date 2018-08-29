@@ -20,7 +20,7 @@
         = label_tag :type do
           Votre problème
           %span.mandatory *
-        = select_tag :type, options_for_select(@options)
+        = select_tag :type, options_for_select(@options, @type)
 
       .contact-champ
         = label_tag :dossier_id, 'Numéro du dossier concerné'
