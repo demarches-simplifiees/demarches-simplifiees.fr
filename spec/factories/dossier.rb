@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :dossier do
     autorisation_donnees true
-    state 'brouillon'
+    state Dossier.states.fetch(:brouillon)
     association :user, factory: [:user]
 
     before(:create) do |dossier, _evaluator|
@@ -56,7 +56,7 @@ FactoryBot.define do
     trait :with_dossier_link do
       after(:create) do |dossier, _evaluator|
         linked_dossier = create(:dossier)
-        type_de_champ = dossier.procedure.types_de_champ.find { |t| t.type_champ == 'dossier_link' }
+        type_de_champ = dossier.procedure.types_de_champ.find { |t| t.type_champ == TypeDeChamp.type_champs.fetch(:dossier_link) }
         champ = dossier.champs.find { |c| c.type_de_champ == type_de_champ }
 
         champ.value = linked_dossier.id
@@ -73,7 +73,7 @@ FactoryBot.define do
 
     trait :en_construction do
       after(:create) do |dossier, _evaluator|
-        dossier.state = 'en_construction'
+        dossier.state = Dossier.states.fetch(:en_construction)
         dossier.en_construction_at = dossier.created_at + 1.minute
         dossier.save!
       end
@@ -81,7 +81,7 @@ FactoryBot.define do
 
     trait :en_instruction do
       after(:create) do |dossier, _evaluator|
-        dossier.state = 'en_instruction'
+        dossier.state = Dossier.states.fetch(:en_instruction)
         dossier.en_construction_at = dossier.created_at + 1.minute
         dossier.created_at = dossier.created_at + 2.minutes
         dossier.save!
@@ -90,7 +90,7 @@ FactoryBot.define do
 
     trait :accepte do
       after(:create) do |dossier, _evaluator|
-        dossier.state = 'accepte'
+        dossier.state = Dossier.states.fetch(:accepte)
         dossier.processed_at = dossier.created_at + 1.minute
         dossier.en_construction_at = dossier.created_at + 2.minutes
         dossier.created_at = dossier.created_at + 3.minutes
@@ -100,7 +100,7 @@ FactoryBot.define do
 
     trait :refuse do
       after(:create) do |dossier, _evaluator|
-        dossier.state = 'refuse'
+        dossier.state = Dossier.states.fetch(:refuse)
         dossier.processed_at = dossier.created_at + 1.minute
         dossier.en_construction_at = dossier.created_at + 2.minutes
         dossier.created_at = dossier.created_at + 3.minutes
@@ -110,7 +110,7 @@ FactoryBot.define do
 
     trait :sans_suite do
       after(:create) do |dossier, _evaluator|
-        dossier.state = 'sans_suite'
+        dossier.state = Dossier.states.fetch(:sans_suite)
         dossier.processed_at = dossier.created_at + 1.minute
         dossier.en_construction_at = dossier.created_at + 2.minutes
         dossier.created_at = dossier.created_at + 3.minutes
@@ -121,9 +121,9 @@ FactoryBot.define do
     trait :with_motivation do
       after(:create) do |dossier, _evaluator|
         dossier.motivation = case dossier.state
-        when 'refuse'
+        when Dossier.states.fetch(:refuse)
           'L’entreprise concernée n’est pas agréée.'
-        when 'sans_suite'
+        when Dossier.states.fetch(:sans_suite)
           'Le département n’est pas éligible. Veuillez remplir un nouveau dossier auprès de la DDT du 93.'
         else
           'Vous avez validé les conditions.'

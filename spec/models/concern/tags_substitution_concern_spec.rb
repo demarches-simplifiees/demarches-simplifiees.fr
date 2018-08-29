@@ -2,7 +2,7 @@ describe TagsSubstitutionConcern, type: :model do
   let(:types_de_champ) { [] }
   let(:types_de_champ_private) { [] }
   let(:for_individual) { false }
-  let(:state) { 'accepte' }
+  let(:state) { Dossier.states.fetch(:accepte) }
 
   let(:procedure) do
     create(:procedure,
@@ -136,7 +136,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when the dossier is en construction' do
-      let(:state) { 'en_construction' }
+      let(:state) { Dossier.states.fetch(:en_construction) }
       let(:template) { '--libelleA--' }
 
       context 'champs privés are not valid tags' do
@@ -160,8 +160,8 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has 2 types de champ date and datetime' do
       let(:types_de_champ) do
         [
-          create(:type_de_champ_date, libelle: 'date'),
-          create(:type_de_champ_datetime, libelle: 'datetime')
+          create(:type_de_champ_date, libelle: TypeDeChamp.type_champs.fetch(:date)),
+          create(:type_de_champ_datetime, libelle: TypeDeChamp.type_champs.fetch(:datetime))
         ]
       end
 
@@ -171,12 +171,12 @@ describe TagsSubstitutionConcern, type: :model do
         context 'and its value in the dossier are not nil' do
           before do
             dossier.champs
-              .select { |champ| champ.type_champ == 'date' }
+              .select { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:date) }
               .first
               .update(value: '2017-04-15')
 
             dossier.champs
-              .select { |champ| champ.type_champ == 'datetime' }
+              .select { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) }
               .first
               .update(value: '2017-09-13 09:00')
           end
@@ -251,7 +251,7 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when generating a document for a dossier that is not termine' do
       let(:dossier) { create(:dossier) }
       let(:template) { '--motivation-- --date de décision--' }
-      let(:state) { 'en_instruction' }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
 
       subject { template_concern.replace_tags(template, dossier) }
 
@@ -275,7 +275,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when generating a document for a dossier en instruction' do
-      let(:state) { 'en_instruction' }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
 
       it { is_expected.not_to include(include({ libelle: 'motivation' })) }
       it { is_expected.not_to include(include({ libelle: 'date de décision' })) }
@@ -285,7 +285,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when generating a document for a dossier en construction' do
-      let(:state) { 'en_construction' }
+      let(:state) { Dossier.states.fetch(:en_construction) }
 
       it { is_expected.not_to include(include({ libelle: 'motivation' })) }
       it { is_expected.not_to include(include({ libelle: 'date de décision' })) }

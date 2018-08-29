@@ -32,7 +32,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
 
   describe '#update' do
     let(:libelle) { 'mon libelle' }
-    let(:type_champ) { 'text' }
+    let(:type_champ) { TypeDeChamp.type_champs.fetch(:text) }
     let(:description) { 'titi' }
     let(:order_place) { '' }
     let(:types_de_champ_id) { '' }
@@ -84,7 +84,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
         let(:type_de_champ) { procedure.types_de_champ_private.first }
         let(:types_de_champ_id) { type_de_champ.id }
         let(:libelle) { 'toto' }
-        let(:type_champ) { 'text' }
+        let(:type_champ) { TypeDeChamp.type_champs.fetch(:text) }
         let(:description) { 'citrouille' }
         let(:order_place) { '0' }
         let(:mandatory) { 'on' }
@@ -94,7 +94,7 @@ describe Admin::TypesDeChampPrivateController, type: :controller do
         end
         subject { procedure.types_de_champ_private.first }
         it { expect(subject.libelle).to eq('toto') }
-        it { expect(subject.type_champ).to eq('text') }
+        it { expect(subject.type_champ).to eq(TypeDeChamp.type_champs.fetch(:text)) }
         it { expect(subject.description).to eq('citrouille') }
         it { expect(subject.order_place).to eq(0) }
         it { expect(subject.order_place).to be_truthy }

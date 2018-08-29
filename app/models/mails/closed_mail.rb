@@ -7,7 +7,7 @@ module Mails
     SLUG = "closed_mail"
     DISPLAYED_NAME = "Accusé d'acceptation"
     DEFAULT_SUBJECT = 'Votre dossier demarches-simplifiees.fr nº --numéro du dossier-- a été accepté'
-    DOSSIER_STATE = 'accepte'
+    DOSSIER_STATE = Dossier.states.fetch(:accepte)
 
     def self.default_template_name_for_procedure(procedure)
       attestation_template = procedure.attestation_template

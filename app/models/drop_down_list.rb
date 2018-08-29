@@ -19,6 +19,6 @@ class DropDownList < ApplicationRecord
   end
 
   def multiple
-    type_de_champ.type_champ == 'multiple_drop_down_list'
+    type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
   end
 end

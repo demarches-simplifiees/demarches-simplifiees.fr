@@ -19,19 +19,19 @@ describe DossierTableExportSerializer do
     end
 
     context 'when the dossier is accepte' do
-      let(:dossier) { create(:dossier, state: :accepte) }
+      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:accepte)) }
 
       it { is_expected.to include(state: 'closed') }
     end
 
     context 'when the dossier is refuse' do
-      let(:dossier) { create(:dossier, state: :refuse) }
+      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:refuse)) }
 
       it { is_expected.to include(state: 'refused') }
     end
 
     context 'when the dossier is sans_suite' do
-      let(:dossier) { create(:dossier, state: :sans_suite) }
+      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:sans_suite)) }
 
       it { is_expected.to include(state: 'without_continuation') }
     end

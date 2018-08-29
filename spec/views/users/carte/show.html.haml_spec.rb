@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/carte/show.html.haml', type: :view do
-  let(:state) { 'brouillon' }
+  let(:state) { Dossier.states.fetch(:brouillon) }
   let(:dossier) { create(:dossier, state: state) }
   let(:dossier_id) { dossier.id }
 
@@ -38,7 +38,7 @@ describe 'users/carte/show.html.haml', type: :view do
     end
 
     context 'si la page précédente est recapitularif' do
-      let(:state) { 'en_construction' }
+      let(:state) { Dossier.states.fetch(:en_construction) }
 
       it 'le bouton "Etape suivante" n\'est pas présent' do
         expect(rendered).to_not have_selector('#etape_suivante')

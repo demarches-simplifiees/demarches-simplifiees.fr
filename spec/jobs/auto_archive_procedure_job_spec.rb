@@ -18,15 +18,15 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
   end
 
   context "when procedures have auto_archive_on set on yesterday or today" do
-    let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: 'brouillon', archived: false) }
-    let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false) }
-    let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false) }
-    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: 'en_construction', archived: false) }
-    let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: 'en_instruction', archived: false) }
-    let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: 'accepte', archived: false) }
-    let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: 'refuse', archived: false) }
-    let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: 'sans_suite', archived: false) }
-    let!(:dossier9) { create(:dossier, procedure: procedure_aujourdhui, state: 'en_construction', archived: false) }
+    let!(:dossier1) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:brouillon), archived: false) }
+    let!(:dossier2) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:en_construction), archived: false) }
+    let!(:dossier3) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:en_construction), archived: false) }
+    let!(:dossier4) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:en_construction), archived: false) }
+    let!(:dossier5) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:en_instruction), archived: false) }
+    let!(:dossier6) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:accepte), archived: false) }
+    let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:refuse), archived: false) }
+    let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:sans_suite), archived: false) }
+    let!(:dossier9) { create(:dossier, procedure: procedure_aujourdhui, state: Dossier.states.fetch(:en_construction), archived: false) }
 
     before do
       subject
@@ -37,15 +37,15 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
       procedure_aujourdhui.reload
     end
 
-    it { expect(dossier1.state).to eq 'brouillon' }
-    it { expect(dossier2.state).to eq 'en_instruction' }
-    it { expect(dossier3.state).to eq 'en_instruction' }
-    it { expect(dossier4.state).to eq 'en_instruction' }
-    it { expect(dossier5.state).to eq 'en_instruction' }
-    it { expect(dossier6.state).to eq 'accepte' }
-    it { expect(dossier7.state).to eq 'refuse' }
-    it { expect(dossier8.state).to eq 'sans_suite' }
-    it { expect(dossier9.state).to eq 'en_instruction' }
+    it { expect(dossier1.state).to eq Dossier.states.fetch(:brouillon) }
+    it { expect(dossier2.state).to eq Dossier.states.fetch(:en_instruction) }
+    it { expect(dossier3.state).to eq Dossier.states.fetch(:en_instruction) }
+    it { expect(dossier4.state).to eq Dossier.states.fetch(:en_instruction) }
+    it { expect(dossier5.state).to eq Dossier.states.fetch(:en_instruction) }
+    it { expect(dossier6.state).to eq Dossier.states.fetch(:accepte) }
+    it { expect(dossier7.state).to eq Dossier.states.fetch(:refuse) }
+    it { expect(dossier8.state).to eq Dossier.states.fetch(:sans_suite) }
+    it { expect(dossier9.state).to eq Dossier.states.fetch(:en_instruction) }
 
     it { expect(procedure_hier.archivee?).to eq true }
     it { expect(procedure_aujourdhui.archivee?).to eq true }

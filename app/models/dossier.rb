@@ -8,9 +8,9 @@ class Dossier < ApplicationRecord
     sans_suite:      'sans_suite'
   }
 
-  EN_CONSTRUCTION_OU_INSTRUCTION = %w(en_construction en_instruction)
-  TERMINE = %w(accepte refuse sans_suite)
-  INSTRUCTION_COMMENCEE = TERMINE + %w(en_instruction)
+  EN_CONSTRUCTION_OU_INSTRUCTION = [states.fetch(:en_construction), states.fetch(:en_instruction)]
+  TERMINE = [states.fetch(:accepte), states.fetch(:refuse), states.fetch(:sans_suite)]
+  INSTRUCTION_COMMENCEE = TERMINE + [states.fetch(:en_instruction)]
   SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
 
   has_one :etablissement, dependent: :destroy
@@ -38,10 +38,10 @@ class Dossier < ApplicationRecord
   validates :autorisation_donnees, acceptance: { message: 'doit être coché' }, allow_nil: false, on: :update
 
   default_scope { where(hidden_at: nil) }
-  scope :state_brouillon,                      -> { where(state: 'brouillon') }
-  scope :state_not_brouillon,                  -> { where.not(state: 'brouillon') }
-  scope :state_en_construction,                -> { where(state: 'en_construction') }
-  scope :state_en_instruction,                 -> { where(state: 'en_instruction') }
+  scope :state_brouillon,                      -> { where(state: states.fetch(:brouillon)) }
+  scope :state_not_brouillon,                  -> { where.not(state: states.fetch(:brouillon)) }
+  scope :state_en_construction,                -> { where(state: states.fetch(:en_construction)) }
+  scope :state_en_instruction,                 -> { where(state: states.fetch(:en_instruction)) }
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
   scope :state_instruction_commencee,          -> { where(state: INSTRUCTION_COMMENCEE) }
   scope :state_termine,                        -> { where(state: TERMINE) }
