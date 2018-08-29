@@ -24,8 +24,6 @@ fr:
       procedure:
         onglets:
           accompagnateurs: Accompagnateurs
-        stats:
-          title: Dossiers
         onglet_accompagnateurs:
           add:
             title: 'Ajouter un accompagnateur'

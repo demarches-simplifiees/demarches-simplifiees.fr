@@ -1,17 +1,15 @@
-- procedure = @facade.procedure
-
 = render partial: 'admin/closed_mail_template_attestation_inconsistency_alert'
 .row.white-back
   #procedure_show
     = render partial: '/admin/procedures/modal_publish'
     = render partial: '/admin/procedures/modal_transfer'
 
-    - if procedure.brouillon?
-      - if procedure.gestionnaires.empty? || procedure.service.nil?
+    - if @procedure.brouillon?
+      - if @procedure.gestionnaires.empty? || @procedure.service.nil?
         - missing_elements = []
-        - if procedure.gestionnaires.empty?
+        - if @procedure.gestionnaires.empty?
           - missing_elements << 'des accompagnateurs'
-        - if procedure.service.nil?
+        - if @procedure.service.nil?
           - missing_elements << 'un service'
         - message = "Affectez #{missing_elements.join(' et ')} à votre procédure."
         %a.action_button.btn.btn-success#disabled-publish-procedure{ data: { toggle: :tooltip, placement: :bottom }, style: 'float: right; margin-top: 10px;', disabled: true, title: message }
@@ -26,13 +24,13 @@
       %i.fa.fa-exchange
       Envoyer une copie
 
-    - if procedure.archivee?
+    - if @procedure.archivee?
       %a.btn.btn-default#reopen-procedure{ data: { target: '#publish-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px; margin-right: 10px;' }
         %i.fa.fa-rocket
         Réactiver
 
-    - elsif procedure.publiee?
-      = form_tag admin_procedure_archive_path(procedure_id: procedure.id), method: :put, style: 'float: right; margin-top: 10px;' do
+    - elsif @procedure.publiee?
+      = form_tag admin_procedure_archive_path(procedure_id: @procedure.id), method: :put, style: 'float: right; margin-top: 10px;' do
         %button#archive-procedure.btn.btn-small.btn-default.text-info{ type: :button }
           %i.fa.fa-eraser
           Archiver
@@ -44,7 +42,7 @@
             %i.fa.fa-remove
             Annuler
 
-    - if procedure.locked?
+    - if @procedure.locked?
       #procedure_locked
         .alert.alert-info
           Cette procédure a été publiée, certains éléments ne peuvent plus être modifiés.
@@ -52,11 +50,11 @@
     %div
       %h3 Lien procédure
       %div{ style: 'margin-left: 3%;' }
-        - if procedure.archivee?
+        - if @procedure.archivee?
           %b
             Cette procédure est archivée et n’est donc pas accessible par le public.
-        - elsif procedure.brouillon_avec_lien? || procedure.publiee?
-          = link_to procedure_lien(procedure), sanitize_url(procedure_lien(procedure)), target: :blank
+        - elsif @procedure.brouillon_avec_lien? || @procedure.publiee?
+          = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
         - else
           %b
             Cette procédure n’a pas encore de lien, et n’est donc pas accessible par le public.
@@ -67,38 +65,38 @@
     .row{ style: 'margin-right: 3%; margin-left: 3%;' }
       .description.col-xs-6.col-md-3.procedure-description
         %h4.text-info
-          = procedure.libelle
+          = @procedure.libelle
 
-        = h string_to_html(procedure.description)
+        = h string_to_html(@procedure.description)
 
       .champs.col-xs-6.col-md-3
         %h4.text-info
           Champs
           .badge.progress-bar-info
-            = procedure.types_de_champ.size
+            = @procedure.types_de_champ.size
         %ul
-          - procedure.types_de_champ.order(:order_place).each do |champ|
+          - @procedure.types_de_champ.order(:order_place).each do |champ|
             %li= champ.libelle
 
       .champs_private.col-xs-6.col-md-3
         %h4.text-info
           Annotations privées
           .badge.progress-bar-info
-            = procedure.types_de_champ_private.size
+            = @procedure.types_de_champ_private.size
         %ul
-          - procedure.types_de_champ_private.order(:order_place).each do |champ|
+          - @procedure.types_de_champ_private.order(:order_place).each do |champ|
             %li= champ.libelle
 
       .pieces-justificatives.col-xs-6.col-md-3
         %h4.text-info
           Pièces jointes
           .badge.progress-bar-info
-            = procedure.types_de_piece_justificative.size
-        - procedure.types_de_piece_justificative.each do |piece_justificative|
+            = @procedure.types_de_piece_justificative.size
+        - @procedure.types_de_piece_justificative.each do |piece_justificative|
           = piece_justificative.libelle
           %br
 
-    - durees_de_conservation = politiques_conservation_de_donnees(procedure)
+    - durees_de_conservation = politiques_conservation_de_donnees(@procedure)
     - if durees_de_conservation.present?
       .row{ style: 'margin-right: 3%; margin-left: 3%;' }
         .col-xs-6.col-md-3
@@ -106,53 +104,19 @@
           - durees_de_conservation.each do |text|
             %p= text
 
-    %br
-    %h3
-      = t('dynamics.admin.procedure.stats.title')
-
-    .row
-      .col-xs-6{ style: 'margin-left: 3%;' }
-        %h4 Total
-        %div
-          = @facade.dossiers_total
-
-        %h4.text-success Terminé
-        %div
-          = @facade.dossiers_termine_total
-
-        %h4 Archivé
-
-        - if @facade.dossiers_archived_total != 0
-          %ul
-            - @facade.dossiers_archived_by_state_total.each do |dossier|
-              %li
-                = dossier.display_state
-                \:
-                = dossier.total
-        - else
-          %p
-            0
-
-      .col-xs-5
-        %h4 Non archivés
-        - if @facade.dossiers_for_pie_highchart.blank?
-          Aucune statistique pour le moment
-        - else
-          = pie_chart @facade.dossiers_for_pie_highchart
-
-    - if procedure.publiee_ou_archivee?
+    - if @procedure.publiee_ou_archivee?
       %h3 Supprimer la procédure
       .alert.alert-danger
         %p
           Attention : la suppression d’une procédure est définitive.
-        - dossiers_count = procedure.dossiers.count
+        - dossiers_count = @procedure.dossiers.count
         - if dossiers_count > 0
           %p
             = pluralize(dossiers_count, "dossier est rattaché", "dossiers sont rattachés")
             à cette procédure, la suppression de cette procédure entrainera également leur suppression.
         %p.text-right
           = link_to "J'ai compris, je supprime la procédure",
-            hide_admin_procedure_path(procedure),
+            hide_admin_procedure_path(@procedure),
             method: :post,
             class: "btn btn-danger",
             data: { confirm: "Voulez-vous supprimer la procédure ?", disable: true }

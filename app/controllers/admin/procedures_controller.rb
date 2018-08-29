@@ -36,7 +36,6 @@ class Admin::ProceduresController < AdminController
   end
 
   def show
-    @facade = AdminProceduresShowFacades.new @procedure.decorate
   end
 
   def edit
