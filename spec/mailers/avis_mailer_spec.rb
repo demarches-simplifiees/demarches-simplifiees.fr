@@ -13,7 +13,7 @@ RSpec.describe AvisMailer, type: :mailer do
 
     context 'when the recipient is not already registered' do
       before do
-        avis.email = 'accompagnateur@email.com'
+        avis.email = 'instructeur@email.com'
         avis.gestionnaire = nil
       end
 

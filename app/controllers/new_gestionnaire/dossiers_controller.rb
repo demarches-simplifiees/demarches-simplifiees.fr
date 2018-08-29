@@ -31,13 +31,13 @@ module NewGestionnaire
     end
 
     def personnes_impliquees
-      @following_accompagnateurs_emails = dossier.followers_gestionnaires.pluck(:email)
+      @following_instructeurs_emails = dossier.followers_gestionnaires.pluck(:email)
       @avis_emails = dossier.avis.includes(:gestionnaire).map(&:email_to_display)
       @invites_emails = dossier.invites.map(&:email)
       @potential_recipients = procedure.gestionnaires.reject { |g| g == current_gestionnaire }
     end
 
-    def envoyer_a_accompagnateur
+    def envoyer_a_instructeur
       recipient = Gestionnaire.find(params[:recipient])
       GestionnaireMailer.send_dossier(current_gestionnaire, dossier, recipient).deliver_later
       flash.notice = "Dossier envoyé"

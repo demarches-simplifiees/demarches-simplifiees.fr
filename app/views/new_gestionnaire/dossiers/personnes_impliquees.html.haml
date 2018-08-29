@@ -5,7 +5,7 @@
 .personnes-impliquees.container
   = render partial: 'new_gestionnaire/dossiers/envoyer_dossier_block', locals: { dossier: @dossier, potential_recipients: @potential_recipients }
 
-  = render partial: 'new_gestionnaire/dossiers/personnes_impliquees_block', locals: { emails_collection: @following_accompagnateurs_emails, title: "Accompagnateurs qui suivent le dossier", blank: "Aucun accompagnateur ne suit ce dossier" }
+  = render partial: 'new_gestionnaire/dossiers/personnes_impliquees_block', locals: { emails_collection: @following_instructeurs_emails, title: "Instructeurs qui suivent le dossier", blank: "Aucun instructeur ne suit ce dossier" }
 
   = render partial: 'new_gestionnaire/dossiers/personnes_impliquees_block', locals: { emails_collection: @avis_emails, title: "Personnes à qui un avis a été demandé", blank: "Aucun avis n'a été demandé" }
 
