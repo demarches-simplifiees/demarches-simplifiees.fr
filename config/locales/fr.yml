@@ -48,6 +48,13 @@ fr:
         publish: Publier
         reopen: Réactiver
 
+  support:
+    info demarche: J'ai un problème lors du remplissage de mon dossier
+    info instruction: J'ai une question sur l'instruction de mon dossier
+    produit: J'ai une idée d'amélioration pour votre site
+    usager perdu: Je ne trouve pas la démarche que je veux faire
+    autre: Autre sujet
+
   number:
     currency:
       format:

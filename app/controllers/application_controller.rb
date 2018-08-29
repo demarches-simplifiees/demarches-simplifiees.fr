@@ -33,6 +33,12 @@ class ApplicationController < ActionController::Base
     @facade_data_view = nil
   end
 
+  def logged_in?
+    logged_user.present?
+  end
+
+  helper_method :logged_in?
+
   protected
 
   def authenticate_gestionnaire!
