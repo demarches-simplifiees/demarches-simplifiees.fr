@@ -31,7 +31,7 @@
                 = link_to CONTACT_PHONE, "tel:#{CONTACT_PHONE}"
                 %br
                 – par email :
-                = link_to CONTACT_EMAIL, "mailto:#{CONTACT_EMAIL}"
+                = contact_link CONTACT_EMAIL
 
       - if nav_bar_profile == :user
         %ul.header-tabs
