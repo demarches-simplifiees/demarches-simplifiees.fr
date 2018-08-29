@@ -4,14 +4,14 @@ class AutoReceiveDossiersForProcedureJob < ApplicationJob
   def perform(procedure_id, state)
     procedure = Procedure.find(procedure_id)
     attrs = case state
-    when 'en_instruction'
+    when Dossier.states.fetch(:en_instruction)
       {
-        state: :en_instruction,
+        state: Dossier.states.fetch(:en_instruction),
         en_instruction_at: DateTime.now
       }
-    when 'accepte'
+    when Dossier.states.fetch(:accepte)
       {
-        state: :accepte,
+        state: Dossier.states.fetch(:accepte),
         en_instruction_at: DateTime.now,
         processed_at: DateTime.now
       }

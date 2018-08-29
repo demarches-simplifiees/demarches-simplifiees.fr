@@ -49,7 +49,7 @@ class Users::SessionsController < Sessions::SessionsController
       sign_out :user
 
       case connected_with_france_connect
-      when 'particulier'
+      when User.loged_in_with_france_connects.fetch(:particulier)
         redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint]
         return
       end

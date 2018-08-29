@@ -10,11 +10,11 @@ shared_examples 'type_de_champ_spec' do
       it { is_expected.not_to allow_value(nil).for(:type_champ) }
       it { is_expected.not_to allow_value('').for(:type_champ) }
 
-      it { is_expected.to allow_value('text').for(:type_champ) }
-      it { is_expected.to allow_value('textarea').for(:type_champ) }
-      it { is_expected.to allow_value('datetime').for(:type_champ) }
-      it { is_expected.to allow_value('number').for(:type_champ) }
-      it { is_expected.to allow_value('checkbox').for(:type_champ) }
+      it { is_expected.to allow_value(TypeDeChamp.type_champs.fetch(:text)).for(:type_champ) }
+      it { is_expected.to allow_value(TypeDeChamp.type_champs.fetch(:textarea)).for(:type_champ) }
+      it { is_expected.to allow_value(TypeDeChamp.type_champs.fetch(:datetime)).for(:type_champ) }
+      it { is_expected.to allow_value(TypeDeChamp.type_champs.fetch(:number)).for(:type_champ) }
+      it { is_expected.to allow_value(TypeDeChamp.type_champs.fetch(:checkbox)).for(:type_champ) }
 
       it do
         TypeDeChamp.type_champs.each do |(type_champ, _)|
@@ -53,7 +53,7 @@ shared_examples 'type_de_champ_spec' do
         end
 
         context 'when the target type_champ is not pj' do
-          let(:target_type_champ) { 'text' }
+          let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
           context 'calls template.purge_later when a file is attached' do
             let(:attached) { true }
@@ -69,7 +69,7 @@ shared_examples 'type_de_champ_spec' do
         end
 
         context 'when the target type_champ is pj' do
-          let(:target_type_champ) { 'piece_justificative' }
+          let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:piece_justificative) }
 
           context 'does not call template.purge_later when a file is attached' do
             let(:attached) { true }

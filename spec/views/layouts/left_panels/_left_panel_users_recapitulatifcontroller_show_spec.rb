@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.html.haml', type: :view do
   let(:dossier) { create(:dossier, :with_entreprise, state: state, procedure: create(:procedure, :with_api_carto, :with_two_type_de_piece_justificative, for_individual: true, individual_with_siret: true)) }
   let(:dossier_id) { dossier.id }
-  let(:state) { 'brouillon' }
+  let(:state) { Dossier.states.fetch(:brouillon) }
 
   before do
     sign_in dossier.user
@@ -12,7 +12,7 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
 
   context 'buttons to change dossier state' do
     context 'when dossier state is en_construction' do
-      let(:state) { 'en_construction' }
+      let(:state) { Dossier.states.fetch(:en_construction) }
       before do
         render
       end
@@ -21,7 +21,7 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
     end
 
     context 'when dossier state is accepte' do
-      let(:state) { 'accepte' }
+      let(:state) { Dossier.states.fetch(:accepte) }
 
       before do
         render
@@ -35,7 +35,7 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
     end
 
     context 'when dossier state is refuse' do
-      let(:state) { 'refuse' }
+      let(:state) { Dossier.states.fetch(:refuse) }
 
       before do
         render
@@ -49,7 +49,7 @@ describe 'layouts/left_panels/_left_panel_users_recapitulatifcontroller_show.htm
     end
 
     context 'when dossier state is sans_suite' do
-      let(:state) { 'sans_suite' }
+      let(:state) { Dossier.states.fetch(:sans_suite) }
 
       before do
         render

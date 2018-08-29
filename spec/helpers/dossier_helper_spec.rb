@@ -30,19 +30,19 @@ RSpec.describe DossierHelper, type: :helper do
     subject { url_for_dossier(dossier) }
 
     context "when the dossier is in the brouillon state" do
-      let(:dossier) { create(:dossier, state: 'brouillon') }
+      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:brouillon)) }
       it { is_expected.to eq "/dossiers/#{dossier.id}/modifier" }
     end
 
     context "when the dossier is any other state" do
-      let(:dossier) { create(:dossier, state: 'en_construction') }
+      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction)) }
       it { is_expected.to eq "/users/dossiers/#{dossier.id}/recapitulatif" }
     end
   end
 
   describe ".dossier_submission_is_closed?" do
     let(:dossier) { create(:dossier, state: state) }
-    let(:state) { "brouillon" }
+    let(:state) { Dossier.states.fetch(:brouillon) }
 
     subject { dossier_submission_is_closed?(dossier) }
 
@@ -67,31 +67,31 @@ RSpec.describe DossierHelper, type: :helper do
     end
 
     context "when dossier state is en_construction" do
-      let(:state) { "en_construction" }
+      let(:state) { Dossier.states.fetch(:en_construction) }
 
       it_behaves_like "returns false"
     end
 
     context "when dossier state is en_construction" do
-      let(:state) { "en_instruction" }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
 
       it_behaves_like "returns false"
     end
 
     context "when dossier state is en_construction" do
-      let(:state) { "accepte" }
+      let(:state) { Dossier.states.fetch(:accepte) }
 
       it_behaves_like "returns false"
     end
 
     context "when dossier state is en_construction" do
-      let(:state) { "refuse" }
+      let(:state) { Dossier.states.fetch(:refuse) }
 
       it_behaves_like "returns false"
     end
 
     context "when dossier state is en_construction" do
-      let(:state) { "sans_suite" }
+      let(:state) { Dossier.states.fetch(:sans_suite) }
 
       it_behaves_like "returns false"
     end

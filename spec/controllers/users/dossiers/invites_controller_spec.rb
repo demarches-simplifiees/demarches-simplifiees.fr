@@ -53,7 +53,7 @@ describe Users::Dossiers::InvitesController, type: :controller do
       let(:email) { user.email }
 
       context 'and dossier is a brouillon' do
-        let(:dossier) { create :dossier, state: 'brouillon' }
+        let(:dossier) { create :dossier, state: Dossier.states.fetch(:brouillon) }
 
         it { is_expected.to have_http_status(302) }
         it { is_expected.to redirect_to modifier_dossier_path(dossier) }

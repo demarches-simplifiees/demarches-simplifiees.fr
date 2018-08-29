@@ -9,9 +9,9 @@ class AntiVirusJob < ApplicationJob
     if @blob.present?
       download_blob_to_tempfile do |file|
         if ClamavService.safe_file?(file.path)
-          status = "safe"
+          status = VirusScan.statuses.fetch(:safe)
         else
-          status = "infected"
+          status = VirusScan.statuses.fetch(:infected)
         end
         virus_scan.update(scanned_at: Time.now, status: status)
       end

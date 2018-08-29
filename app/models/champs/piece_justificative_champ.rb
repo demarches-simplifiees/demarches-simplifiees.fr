@@ -54,7 +54,7 @@ class Champs::PieceJustificativeChamp < Champ
     if self.piece_justificative_file&.attachment&.blob.present?
       VirusScan.where(champ: self).where.not(blob_key: self.piece_justificative_file.blob.key).delete_all
       VirusScan.find_or_create_by!(champ: self, blob_key: self.piece_justificative_file.blob.key) do |virus_scan|
-        virus_scan.status = "pending"
+        virus_scan.status = VirusScan.statuses.fetch(:pending)
       end
     end
   end

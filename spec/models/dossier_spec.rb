@@ -134,7 +134,7 @@ describe Dossier do
 
         it 'does not create default champs' do
           expect(subject).not_to receive(:build_default_champs)
-          subject.update(state: 'en_construction')
+          subject.update(state: Dossier.states.fetch(:en_construction))
         end
       end
     end
@@ -235,7 +235,7 @@ describe Dossier do
       it { expect(subject[2]).to be_a_kind_of(Time) }
       it { expect(subject[3]).to be_in([true, false]) }
       it { expect(subject[4]).to eq(dossier.user.email) }
-      it { expect(subject[5]).to eq("brouillon") }
+      it { expect(subject[5]).to eq(Dossier.states.fetch(:brouillon)) }
       it { expect(subject[6]).to eq(date1) }
       it { expect(subject[7]).to eq(date2) }
       it { expect(subject[8]).to eq(date3) }
@@ -273,7 +273,7 @@ describe Dossier do
           dossier.updated_at,
           "false",
           dossier.user.email,
-          "brouillon",
+          Dossier.states.fetch(:brouillon),
           dossier.en_construction_at,
           dossier.en_instruction_at,
           dossier.processed_at,
@@ -396,7 +396,7 @@ describe Dossier do
     let(:procedure) { create(:procedure, libelle: "Procédure", organisation: "Organisme") }
 
     context 'when the dossier has been en_construction' do
-      let(:dossier) { create :dossier, procedure: procedure, state: 'en_construction', en_construction_at: "31/12/2010".to_date }
+      let(:dossier) { create :dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: "31/12/2010".to_date }
 
       subject { dossier.text_summary }
 
@@ -404,7 +404,7 @@ describe Dossier do
     end
 
     context 'when the dossier has not been en_construction' do
-      let(:dossier) { create :dossier, procedure: procedure, state: 'brouillon' }
+      let(:dossier) { create :dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon) }
 
       subject { dossier.text_summary }
 
@@ -414,7 +414,7 @@ describe Dossier do
 
   describe '#avis_for' do
     let!(:procedure) { create(:procedure, :published) }
-    let!(:dossier) { create(:dossier, procedure: procedure, state: :en_construction) }
+    let!(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
 
     let!(:gestionnaire) { create(:gestionnaire, procedures: [procedure]) }
     let!(:expert_1) { create(:gestionnaire) }
@@ -463,7 +463,7 @@ describe Dossier do
   end
 
   describe '#update_state_dates' do
-    let(:state) { 'brouillon' }
+    let(:state) { Dossier.states.fetch(:brouillon) }
     let(:dossier) { create(:dossier, state: state) }
     let(:beginning_of_day) { Time.now.beginning_of_day }
 
@@ -476,7 +476,7 @@ describe Dossier do
         dossier.reload
       end
 
-      it { expect(dossier.state).to eq('en_construction') }
+      it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
       it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
 
       it 'should keep first en_construction_at date' do
@@ -489,14 +489,14 @@ describe Dossier do
     end
 
     context 'when dossier is en_instruction' do
-      let(:state) { 'en_construction' }
+      let(:state) { Dossier.states.fetch(:en_construction) }
 
       before do
         dossier.en_instruction!
         dossier.reload
       end
 
-      it { expect(dossier.state).to eq('en_instruction') }
+      it { expect(dossier.state).to eq(Dossier.states.fetch(:en_instruction)) }
       it { expect(dossier.en_instruction_at).to eq(beginning_of_day) }
 
       it 'should keep first en_instruction_at date if dossier is set to en_construction again' do
@@ -519,30 +519,30 @@ describe Dossier do
     end
 
     context 'when dossier is accepte' do
-      let(:state) { 'en_instruction' }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
 
-      it_behaves_like 'dossier is processed', 'accepte'
+      it_behaves_like 'dossier is processed', Dossier.states.fetch(:accepte)
     end
 
     context 'when dossier is refuse' do
-      let(:state) { 'en_instruction' }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
 
-      it_behaves_like 'dossier is processed', 'refuse'
+      it_behaves_like 'dossier is processed', Dossier.states.fetch(:refuse)
     end
 
     context 'when dossier is sans_suite' do
-      let(:state) { 'en_instruction' }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
 
-      it_behaves_like 'dossier is processed', 'sans_suite'
+      it_behaves_like 'dossier is processed', Dossier.states.fetch(:sans_suite)
     end
   end
 
   describe '.downloadable_sorted' do
     let(:procedure) { create(:procedure) }
-    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: :brouillon) }
-    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_construction, en_construction_at: DateTime.parse('03/01/2010')) }
-    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_instruction, en_construction_at: DateTime.parse('01/01/2010')) }
-    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: :en_instruction, archived: true, en_construction_at: DateTime.parse('02/01/2010')) }
+    let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: DateTime.parse('03/01/2010')) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), en_construction_at: DateTime.parse('01/01/2010')) }
+    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true, en_construction_at: DateTime.parse('02/01/2010')) }
 
     subject { procedure.dossiers.downloadable_sorted }
 
@@ -551,7 +551,7 @@ describe Dossier do
 
   describe "#send_dossier_received" do
     let(:procedure) { create(:procedure) }
-    let(:dossier) { create(:dossier, procedure: procedure, state: :en_construction) }
+    let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
 
     before do
       allow(NotificationMailer).to receive(:send_dossier_received).and_return(double(deliver_later: nil))
@@ -583,7 +583,7 @@ describe Dossier do
       ActiveJob::Base.queue_adapter = :test
       expect do
         perform_enqueued_jobs do
-          dossier = Dossier.create(procedure: procedure, state: "brouillon", user: user)
+          dossier = Dossier.create(procedure: procedure, state: Dossier.states.fetch(:brouillon), user: user)
         end
       end.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
 
@@ -593,17 +593,17 @@ describe Dossier do
     end
 
     it "does not send an email when the dossier is created with a non brouillon state" do
-      expect { Dossier.create(procedure: procedure, state: "en_construction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "en_instruction", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "accepte", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "refuse", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(procedure: procedure, state: "sans_suite", user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: Dossier.states.fetch(:en_construction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: Dossier.states.fetch(:en_instruction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: Dossier.states.fetch(:accepte), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: Dossier.states.fetch(:refuse), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { Dossier.create(procedure: procedure, state: Dossier.states.fetch(:sans_suite), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
     end
   end
 
   describe "#unspecified_attestation_champs" do
     let(:procedure) { create(:procedure, attestation_template: attestation_template) }
-    let(:dossier) { create(:dossier, procedure: procedure, state: :en_instruction) }
+    let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
 
     subject { dossier.unspecified_attestation_champs.map(&:libelle) }
 
@@ -669,7 +669,7 @@ describe Dossier do
     end
 
     context 'when the dossier is in en_instruction state ' do
-      let!(:dossier) { create(:dossier, procedure: procedure, state: :en_instruction) }
+      let!(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
 
       context 'when the procedure has no attestation' do
         it { expect(dossier.attestation).to be_nil }
@@ -942,7 +942,7 @@ describe Dossier do
     subject { dossier.can_transition_to_en_construction? }
 
     context "dossier state is brouillon" do
-      let(:state) { "brouillon" }
+      let(:state) { Dossier.states.fetch(:brouillon) }
       it { is_expected.to be true }
 
       context "procedure is archived" do
@@ -952,27 +952,27 @@ describe Dossier do
     end
 
     context "dossier state is en_construction" do
-      let(:state) { "en_construction" }
+      let(:state) { Dossier.states.fetch(:en_construction) }
       it { is_expected.to be false }
     end
 
     context "dossier state is en_instruction" do
-      let(:state) { "en_instruction" }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
       it { is_expected.to be false }
     end
 
     context "dossier state is en_instruction" do
-      let(:state) { "accepte" }
+      let(:state) { Dossier.states.fetch(:accepte) }
       it { is_expected.to be false }
     end
 
     context "dossier state is en_instruction" do
-      let(:state) { "refuse" }
+      let(:state) { Dossier.states.fetch(:refuse) }
       it { is_expected.to be false }
     end
 
     context "dossier state is en_instruction" do
-      let(:state) { "sans_suite" }
+      let(:state) { Dossier.states.fetch(:sans_suite) }
       it { is_expected.to be false }
     end
   end
