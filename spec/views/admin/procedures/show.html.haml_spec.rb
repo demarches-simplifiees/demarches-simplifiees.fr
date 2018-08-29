@@ -5,7 +5,6 @@ describe 'admin/procedures/show.html.haml', type: :view do
   let(:procedure) { create(:procedure, :with_service, archived_at: archived_at) }
 
   before do
-    assign(:facade, AdminProceduresShowFacades.new(procedure.decorate))
     assign(:procedure, procedure)
   end
 
