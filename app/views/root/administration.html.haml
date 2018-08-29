@@ -182,8 +182,8 @@
           %h1.cta-panel-title Une question, un problème ?
           %p.cta-panel-explanation Notre équipe est disponible pour vous renseigner et vous aider
         %div
-          = link_to "Contactez-nous",
-            "mailto:#{CONTACT_EMAIL}?subject=Question%20à%20propos%20de%20demarches-simplifiees.fr",
+          = contact_link "Contactez-nous",
+            tags: 'administration',
             class: "cta-panel-button-white",
             target: "_blank",
             rel: "noopener noreferrer"
