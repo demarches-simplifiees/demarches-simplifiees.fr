@@ -3,6 +3,7 @@ require 'spec_helper'
 describe 'layouts/_new_header.html.haml', type: :view do
   describe 'logo link' do
     before do
+      Flipflop::FeatureSet.current.test!.switch!(:support_form, true)
       sign_in user
       allow(controller).to receive(:nav_bar_profile).and_return(profile)
       render
@@ -26,7 +27,7 @@ describe 'layouts/_new_header.html.haml', type: :view do
 
       it "displays the contact infos" do
         expect(rendered).to have_text("Contact")
-        expect(rendered).to have_link(CONTACT_EMAIL, href: "mailto:#{CONTACT_EMAIL}")
+        expect(rendered).to have_link(CONTACT_EMAIL, href: contact_url)
       end
     end
   end

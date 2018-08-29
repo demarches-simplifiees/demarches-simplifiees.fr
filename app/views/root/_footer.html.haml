@@ -30,9 +30,7 @@
       %li.footer-column
         %ul.footer-links
           %li.footer-link
-            = link_to "Contact",
-              "mailto:#{CONTACT_EMAIL}",
-              :class => "footer-link"
+            = contact_link "Contact", class: "footer-link"
           %li.footer-link
             = link_to "Documentation", DOC_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link
