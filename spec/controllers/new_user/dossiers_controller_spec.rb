@@ -517,10 +517,10 @@ describe NewUser::DossiersController, type: :controller do
       sign_in(user)
     end
 
-    subject! { get(:formulaire, params: { id: dossier.id }) }
+    subject! { get(:demande, params: { id: dossier.id }) }
 
     it { expect(assigns(:dossier)).to eq(dossier) }
-    it { is_expected.to render_template(:formulaire) }
+    it { is_expected.to render_template(:demande) }
   end
 
   describe '#ask_deletion' do

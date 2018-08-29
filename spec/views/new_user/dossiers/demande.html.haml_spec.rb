@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'new_user/dossiers/formulaire.html.haml', type: :view do
+describe 'new_user/dossiers/demande.html.haml', type: :view do
   let(:procedure) { create(:procedure, :published, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private) }
   let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
 
@@ -16,7 +16,7 @@ describe 'new_user/dossiers/formulaire.html.haml', type: :view do
 
   it 'renders the dossier infos' do
     expect(rendered).to have_text('Identité')
-    expect(rendered).to have_text('Formulaire')
+    expect(rendered).to have_text('Demande')
     expect(rendered).to have_text('Pièces jointes')
   end
 
