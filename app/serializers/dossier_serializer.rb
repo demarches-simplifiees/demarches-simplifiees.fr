@@ -10,7 +10,7 @@ class DossierSerializer < ActiveModel::Serializer
     :received_at,
     :processed_at,
     :motivation,
-    :accompagnateurs,
+    :instructeurs,
     :invites
 
   has_one :individual
@@ -71,7 +71,7 @@ class DossierSerializer < ActiveModel::Serializer
     object.en_instruction_at
   end
 
-  def accompagnateurs
+  def instructeurs
     object.followers_gestionnaires.pluck(:email)
   end
 

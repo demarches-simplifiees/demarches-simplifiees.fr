@@ -46,7 +46,7 @@ describe Admin::GestionnairesController, type: :controller do
         let(:procedure_id) { procedure.id }
 
         it { expect(response.status).to eq(302) }
-        it { expect(response).to redirect_to admin_procedure_accompagnateurs_path(procedure_id: procedure_id) }
+        it { expect(response).to redirect_to admin_procedure_instructeurs_path(procedure_id: procedure_id) }
       end
 
       describe 'Gestionnaire attributs in database' do
@@ -148,7 +148,7 @@ describe Admin::GestionnairesController, type: :controller do
     end
 
     context 'Email notification' do
-      it 'Notification email is sent when accompagnateur is create' do
+      it 'Notification email is sent when instructeur is create' do
         expect_any_instance_of(Gestionnaire).to receive(:invite!)
         subject
       end
