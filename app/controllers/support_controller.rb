@@ -26,8 +26,6 @@ class SupportController < ApplicationController
 
   def setup_context
     @dossier_id = dossier&.id
-    @type = params[:type]
-    @tags = params[:tags]
     @options = Helpscout::FormAdapter::OPTIONS
   end
 
