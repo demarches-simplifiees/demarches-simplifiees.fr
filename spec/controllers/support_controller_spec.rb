@@ -9,6 +9,13 @@ describe SupportController, type: :controller do
     end
     let(:user) { create(:user) }
 
+    it 'should not have email field' do
+      get :index
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to have_content("Email *")
+    end
+
     describe "with dossier" do
       let(:user) { dossier.user }
       let(:dossier) { create(:dossier) }
@@ -19,16 +26,9 @@ describe SupportController, type: :controller do
         expect(response.status).to eq(200)
         expect(response.body).to include("#{dossier.id}")
       end
-
-      it 'should not have email field' do
-        get :index
-
-        expect(response.status).to eq(200)
-        expect(response.body).not_to have_content("Email *")
-      end
     end
 
-    describe "with dossier" do
+    describe "with tag" do
       let(:tag) { 'yolo' }
 
       it 'should fill tags' do
