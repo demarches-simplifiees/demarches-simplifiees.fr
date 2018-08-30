@@ -88,6 +88,7 @@ GEM
       sass-rails (~> 5.0)
       selectize-rails (~> 0.6)
     aes_key_wrap (1.0.1)
+    after_party (1.10.0)
     apipie-rails (0.5.10)
       rails (>= 4.1)
     arel (9.0.0)
@@ -806,6 +807,7 @@ DEPENDENCIES
   active_link_to
   active_model_serializers
   administrate
+  after_party
   apipie-rails
   bootstrap-sass (~> 3.3.5)
   bootstrap-wysihtml5-rails (~> 0.3.3.8)
