@@ -10,7 +10,7 @@ class DossierTableExportSerializer < ActiveModel::Serializer
     :processed_at,
     :motivation
 
-  attribute :emails_accompagnateurs
+  attribute :emails_instructeurs
 
   attributes :individual_gender,
     :individual_prenom,
@@ -62,7 +62,7 @@ class DossierTableExportSerializer < ActiveModel::Serializer
     object.individual&.gender
   end
 
-  def emails_accompagnateurs
+  def emails_instructeurs
     object.followers_gestionnaires.pluck(:email).join(' ')
   end
 end

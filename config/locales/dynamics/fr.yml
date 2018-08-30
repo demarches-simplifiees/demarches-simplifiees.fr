@@ -19,11 +19,11 @@ fr:
           nouvelle_procedure: 'Nouvelle procédure'
       menu:
         title: Mes procédures
-        accompagnateurs: Accompagnateurs
+        instructeurs: Instructeurs
         procedures: Procédures
       procedure:
         onglets:
-          accompagnateurs: Accompagnateurs
-        onglet_accompagnateurs:
+          instructeurs: Instructeurs
+        onglet_instructeurs:
           add:
-            title: 'Ajouter un accompagnateur'
+            title: 'Ajouter un instructeur'

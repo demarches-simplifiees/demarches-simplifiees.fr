@@ -9,4 +9,7 @@
     \-
     = link_to 'CGU / Mentions légales', CGU_URL
     \-
-    = contact_link 'Contact'
+    - if @facade.present? && @facade.respond_to?(:dossier)
+      = contact_link 'Contact', dossier_id: @facade.dossier&.id
+    - else
+      = contact_link 'Contact'

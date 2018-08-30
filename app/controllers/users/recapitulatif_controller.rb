@@ -18,7 +18,13 @@ class Users::RecapitulatifController < UsersController
 
   def self.route_authorization
     {
-      states: [:en_construction, :en_instruction, :sans_suite, :accepte, :refuse]
+      states: [
+        Dossier.states.fetch(:en_construction),
+        Dossier.states.fetch(:en_instruction),
+        Dossier.states.fetch(:sans_suite),
+        Dossier.states.fetch(:accepte),
+        Dossier.states.fetch(:refuse)
+      ]
     }
   end
 

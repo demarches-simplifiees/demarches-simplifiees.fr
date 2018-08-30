@@ -16,7 +16,7 @@ class SupportController < ApplicationController
       redirect_to root_path
     else
       setup_context
-      flash.now.alert = "Une erreur est survenue. Vous pouvez nous contactez à #{CONTACT_EMAIL}."
+      flash.now.alert = "Une erreur est survenue. Vous pouvez nous contactez à #{view_context.mail_to(CONTACT_EMAIL)}."
 
       render :index
     end
@@ -26,8 +26,7 @@ class SupportController < ApplicationController
 
   def setup_context
     @dossier_id = dossier&.id
-    @type = params[:type]
-    @tags = params[:tags]
+    @tags = tags
     @options = Helpscout::FormAdapter::OPTIONS
   end
 
@@ -53,6 +52,9 @@ class SupportController < ApplicationController
 
   def tags
     [params[:tags], params[:type]].flatten.compact
+      .map { |tag| tag.split(',') }
+      .flatten
+      .reject(&:blank?).uniq
   end
 
   def browser_name
@@ -62,7 +64,7 @@ class SupportController < ApplicationController
   end
 
   def direct_message?
-    user_signed_in? && params[:type] == Helpscout::FormAdapter::TYPE_INSTRUCTION && dossier.present?
+    user_signed_in? && params[:type] == Helpscout::FormAdapter::TYPE_INSTRUCTION && dossier.present? && !dossier.brouillon?
   end
 
   def dossier

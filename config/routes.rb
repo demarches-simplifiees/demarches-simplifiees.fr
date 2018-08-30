@@ -223,7 +223,7 @@ Rails.application.routes.draw do
       post 'transfer' => 'procedures#transfer', as: :transfer
       put 'clone' => 'procedures#clone', as: :clone
 
-      resource :accompagnateurs, only: [:show, :update]
+      resource :instructeurs, only: [:show, :update]
 
       resource :attestation_template, only: [:edit, :update, :create]
 
@@ -234,8 +234,8 @@ Rails.application.routes.draw do
       patch 'attestation_template/preview' => 'attestation_templates#preview'
     end
 
-    namespace :accompagnateurs do
-      get 'show' # delete after fixed tests admin/accompagnateurs/show_spec without this line
+    namespace :instructeurs do
+      get 'show' # delete after fixed tests admin/instructeurs/show_spec without this line
     end
 
     resources :gestionnaires, only: [:index, :create, :destroy]
@@ -319,7 +319,7 @@ Rails.application.routes.draw do
             post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
             post 'repasser-en-construction' => 'dossiers#repasser_en_construction'
             post 'terminer'
-            post 'envoyer-a-accompagnateur' => 'dossiers#envoyer_a_accompagnateur'
+            post 'envoyer-a-instructeur' => 'dossiers#envoyer_a_instructeur'
             scope :carte do
               get 'position'
             end

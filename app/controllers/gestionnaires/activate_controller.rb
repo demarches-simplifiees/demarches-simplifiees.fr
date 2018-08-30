@@ -5,7 +5,7 @@ class Gestionnaires::ActivateController < ApplicationController
     @gestionnaire = Gestionnaire.with_reset_password_token(params[:token])
 
     if !@gestionnaire
-      flash.alert = "Le lien de validation du compte accompagnateur a expiré, #{view_context.contact_link('contactez-nous', tags: 'lien expiré')} pour obtenir un nouveau lien."
+      flash.alert = "Le lien de validation du compte instructeur a expiré, #{view_context.contact_link('contactez-nous', tags: 'lien expiré')} pour obtenir un nouveau lien."
       redirect_to root_path
     end
   end

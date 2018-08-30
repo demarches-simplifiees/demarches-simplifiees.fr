@@ -59,7 +59,7 @@ class Users::CarteController < UsersController
 
   def self.route_authorization
     {
-      states: [:brouillon, :en_construction],
+      states: [Dossier.states.fetch(:brouillon), Dossier.states.fetch(:en_construction)],
       api_carto: true
     }
   end

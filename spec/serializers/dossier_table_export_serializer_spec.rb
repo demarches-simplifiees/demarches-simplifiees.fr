@@ -37,18 +37,18 @@ describe DossierTableExportSerializer do
     end
   end
 
-  describe '#emails_accompagnateurs' do
+  describe '#emails_instructeurs' do
     let(:gestionnaire){ create(:gestionnaire) }
     let(:gestionnaire2) { create :gestionnaire }
     let(:dossier) { create(:dossier) }
 
-    subject { DossierTableExportSerializer.new(dossier).emails_accompagnateurs }
+    subject { DossierTableExportSerializer.new(dossier).emails_instructeurs }
 
-    context 'when there is no accompagnateurs' do
+    context 'when there is no instructeurs' do
       it { is_expected.to eq('') }
     end
 
-    context 'when there one accompagnateur' do
+    context 'when there one instructeur' do
       before { gestionnaire.followed_dossiers << dossier }
 
       it { is_expected.to eq(gestionnaire.email) }

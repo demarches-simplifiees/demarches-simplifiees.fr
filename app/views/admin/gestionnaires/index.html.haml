@@ -1,10 +1,10 @@
-%h1 Accompagnateurs disponibles
+%h1 Instructeurs disponibles
 
 %p
-  Cette page vous permet de gérer la liste des accompagnateurs disponibles pour être affectés à une procédure.
+  Cette page vous permet de gérer la liste des instructeurs disponibles pour être affectés à une procédure.
 
 %p{ style: 'font-style: italic' }
-  N.B. : cette page ne concerne que la liste des personnes disponibles. Si vous souhaitez affecter ou enlever un accompagnateur d'une procédure particulière,
+  N.B. : cette page ne concerne que la liste des personnes disponibles. Si vous souhaitez affecter ou enlever un instructeur d'une procédure particulière,
   utilisez plutôt la
   = link_to "page de la procédure", admin_procedures_path
   concernée.
@@ -16,7 +16,7 @@
   .col-xs-1
     &nbsp;
   .col-xs-6
-    %h3 Ajouter un accompagnateur
+    %h3 Ajouter un instructeur
     #procedure_new.section.section-label
       = form_for @gestionnaire, url: { controller: 'admin/gestionnaires', action: :create } do |f|
         .row

@@ -10,7 +10,7 @@ class DossierFacades
   end
 
   def champs
-    @dossier.ordered_champs
+    @dossier.champs
   end
 
   def etablissement
@@ -42,7 +42,7 @@ class DossierFacades
   end
 
   def champs_private
-    @dossier.ordered_champs_private
+    @dossier.champs_private
   end
 
   def individual
