@@ -64,7 +64,7 @@ class SupportController < ApplicationController
   end
 
   def direct_message?
-    user_signed_in? && params[:type] == Helpscout::FormAdapter::TYPE_INSTRUCTION && dossier.present?
+    user_signed_in? && params[:type] == Helpscout::FormAdapter::TYPE_INSTRUCTION && dossier.present? && !dossier.brouillon?
   end
 
   def dossier
