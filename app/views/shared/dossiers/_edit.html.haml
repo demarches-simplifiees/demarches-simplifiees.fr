@@ -32,6 +32,11 @@
         .card-title
           Pièces jointes
 
+        .warning
+          Pour éviter toute erreur, nous vous conseillons de limiter la taille de chaque pièce jointe à 20 Mo, et de les ajouter une par une, en enregistrant votre
+          = dossier.brouillon? ? "brouillon" : "dossier"
+          après chaque ajout.
+
         - tpjs.each do |tpj|
           .pj-input
             %label{ for: "piece_justificative_#{tpj.id}" }
