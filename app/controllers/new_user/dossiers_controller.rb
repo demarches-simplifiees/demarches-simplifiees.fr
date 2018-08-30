@@ -189,7 +189,7 @@ module NewUser
     end
 
     def dossier_with_champs
-      Dossier.with_ordered_champs.find(params[:id])
+      Dossier.with_champs.find(params[:id])
     end
 
     def ensure_ownership!
