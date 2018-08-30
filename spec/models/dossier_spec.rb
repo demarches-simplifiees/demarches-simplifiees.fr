@@ -12,7 +12,7 @@ describe Dossier do
     it { expect(Dossier.without_followers.to_a).to eq([dossier2]) }
   end
 
-  describe 'with_ordered_champs' do
+  describe 'with_champs' do
     let(:procedure) { create(:procedure) }
     let(:dossier) { Dossier.create(user: create(:user), procedure: procedure) }
 
@@ -23,7 +23,7 @@ describe Dossier do
     end
 
     it do
-      expect(Dossier.with_ordered_champs.find(dossier.id).champs.map(&:libelle)).to match(%w(l1 l2 l3))
+      expect(Dossier.with_champs.find(dossier.id).champs.map(&:libelle)).to match(%w(l1 l2 l3))
     end
   end
 
@@ -343,7 +343,7 @@ describe Dossier do
     end
   end
 
-  describe '#ordered_champs' do
+  describe '#champs' do
     let(:procedure) { create(:procedure) }
     let(:dossier) { Dossier.create(user: create(:user), procedure: procedure) }
 
@@ -353,10 +353,10 @@ describe Dossier do
       create(:type_de_champ, libelle: 'l2', order_place: 2, procedure: procedure)
     end
 
-    it { expect(dossier.ordered_champs.pluck(:libelle)).to match(%w(l1 l2 l3)) }
+    it { expect(dossier.champs.pluck(:libelle)).to match(%w(l1 l2 l3)) }
   end
 
-  describe '#ordered_champs_private' do
+  describe '#champs_private' do
     let(:procedure) { create :procedure }
     let(:dossier) { Dossier.create(user: create(:user), procedure: procedure) }
 
@@ -366,7 +366,7 @@ describe Dossier do
       create :type_de_champ, :private, libelle: 'l2', order_place: 2, procedure: procedure
     end
 
-    it { expect(dossier.ordered_champs_private.pluck(:libelle)).to match(%w(l1 l2 l3)) }
+    it { expect(dossier.champs_private.pluck(:libelle)).to match(%w(l1 l2 l3)) }
   end
 
   describe '#total_follow' do

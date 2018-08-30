@@ -18,8 +18,8 @@ class Dossier < ApplicationRecord
   has_one :attestation
 
   has_many :pieces_justificatives, dependent: :destroy
-  has_many :champs, -> { public_only }, dependent: :destroy
-  has_many :champs_private, -> { private_only }, class_name: 'Champ', dependent: :destroy
+  has_many :champs, -> { public_only.ordered }, dependent: :destroy
+  has_many :champs_private, -> { private_only.ordered }, class_name: 'Champ', dependent: :destroy
   has_many :quartier_prioritaires, dependent: :destroy
   has_many :cadastres, dependent: :destroy
   has_many :commentaires, dependent: :destroy
@@ -59,7 +59,7 @@ class Dossier < ApplicationRecord
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
-  scope :with_ordered_champs,         -> { includes(champs: :type_de_champ).order('types_de_champ.order_place') }
+  scope :with_champs,                 -> { includes(champs: :type_de_champ) }
 
   accepts_nested_attributes_for :individual
 
@@ -118,14 +118,6 @@ class Dossier < ApplicationRecord
     if Individual.where(dossier_id: self.id).count == 0
       build_individual
     end
-  end
-
-  def ordered_champs
-    champs.ordered
-  end
-
-  def ordered_champs_private
-    champs_private.ordered
   end
 
   def ordered_pieces_justificatives
@@ -340,8 +332,8 @@ class Dossier < ApplicationRecord
   def sorted_values
     serialized_dossier = DossierTableExportSerializer.new(self)
     values = serialized_dossier.attributes.values
-    values += ordered_champs.map(&:for_export)
-    values += ordered_champs_private.map(&:for_export)
+    values += champs.map(&:for_export)
+    values += champs_private.map(&:for_export)
     values += export_etablissement_data.values
     values
   end
