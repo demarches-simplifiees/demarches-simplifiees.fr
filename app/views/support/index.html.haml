@@ -14,13 +14,13 @@
           = label_tag :email do
             Email
             %span.mandatory *
-          = text_field_tag :email, '', required: true
+          = text_field_tag :email, params[:email], required: true
 
       .contact-champ
         = label_tag :type do
           Votre problème
           %span.mandatory *
-        = select_tag :type, options_for_select(@options, @type)
+        = select_tag :type, options_for_select(@options, params[:type])
 
       .contact-champ
         = label_tag :dossier_id, 'Numéro du dossier concerné'
@@ -30,19 +30,19 @@
         = label_tag :subject do
           Sujet
           %span.mandatory *
-        = text_field_tag :subject, '', required: true
+        = text_field_tag :subject, params[:subject], required: true
 
       .contact-champ
         = label_tag :text do
           Message
           %span.mandatory *
-        = text_area_tag :text, '', rows: 6, required: true
+        = text_area_tag :text, params[:text], rows: 6, required: true
 
       .contact-champ
         = label_tag :text, 'Pièce jointe'
         = file_field_tag :file
 
-      = hidden_field_tag :tags, @tags
+      = hidden_field_tag :tags, @tags&.join(',')
 
       .send-wrapper
         = button_tag 'Envoyer le message', type: :submit, class: 'button send primary'
