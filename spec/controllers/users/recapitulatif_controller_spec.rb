@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::RecapitulatifController, type: :controller do
-  let(:dossier) { create(:dossier, state: 'en_construction') }
+  let(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction)) }
   let(:bad_dossier_id) { Dossier.count + 100000 }
 
   before do
@@ -24,7 +24,7 @@ describe Users::RecapitulatifController, type: :controller do
     describe 'before_action authorized_routes?' do
       context 'when dossier have brouillon state' do
         before do
-          dossier.state = 'brouillon'
+          dossier.state = Dossier.states.fetch(:brouillon)
           dossier.save
 
           get :show, params: { dossier_id: dossier.id }
@@ -43,7 +43,7 @@ describe Users::RecapitulatifController, type: :controller do
 
       it 'dossier change his state for accepte' do
         dossier.reload
-        expect(dossier.state).to eq('en_construction')
+        expect(dossier.state).to eq(Dossier.states.fetch(:en_construction))
       end
 
       it 'a message informe user what his dossier is en_construction' do

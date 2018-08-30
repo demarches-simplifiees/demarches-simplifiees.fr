@@ -111,7 +111,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       dossier.reload
     end
 
-    it { expect(dossier.state).to eq('en_instruction') }
+    it { expect(dossier.state).to eq(Dossier.states.fetch(:en_instruction)) }
     it { is_expected.to redirect_to gestionnaire_dossier_path(procedure, dossier) }
     it { expect(gestionnaire.follow?(dossier)).to be true }
   end
@@ -128,7 +128,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       subject
 
       dossier.reload
-      expect(dossier.state).to eq('en_construction')
+      expect(dossier.state).to eq(Dossier.states.fetch(:en_construction))
     end
 
     it { is_expected.to redirect_to gestionnaire_dossier_path(procedure, dossier) }
@@ -147,7 +147,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('refuse')
+        expect(dossier.state).to eq(Dossier.states.fetch(:refuse))
       end
 
       it 'Notification email is sent' do
@@ -173,7 +173,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('sans_suite')
+        expect(dossier.state).to eq(Dossier.states.fetch(:sans_suite))
       end
 
       it 'Notification email is sent' do
@@ -205,7 +205,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         subject
 
         dossier.reload
-        expect(dossier.state).to eq('accepte')
+        expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
       end
 
       context 'when the dossier does not have any attestation' do

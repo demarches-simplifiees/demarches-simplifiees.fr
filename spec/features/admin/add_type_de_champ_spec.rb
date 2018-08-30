@@ -18,7 +18,7 @@ feature 'add a new type de champs', js: true do
 
   context 'user fill a new type de champ', js: true do
     let(:libelle) { 'mon libelle' }
-    let(:type_champ) { 'text' }
+    let(:type_champ) { TypeDeChamp.type_champs.fetch(:text) }
     let(:description) { 'ma super histoire' }
     before do
       page.find_by_id('procedure_types_de_champ_attributes_0_libelle').set libelle
@@ -39,7 +39,7 @@ feature 'add a new type de champs', js: true do
 
     context 'user fill another one' do
       let(:libelle) { 'coucou' }
-      let(:type_champ_value) { 'textarea' }
+      let(:type_champ_value) { TypeDeChamp.type_champs.fetch(:textarea) }
       let(:type_champ_label) { 'Zone de texte' }
       let(:description) { 'to be or not to be' }
       before do

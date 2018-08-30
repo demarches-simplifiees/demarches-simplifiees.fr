@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::SessionsController, type: :controller do
-  let(:loged_in_with_france_connect) { 'particulier' }
+  let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
   let(:user) { create(:user, loged_in_with_france_connect: loged_in_with_france_connect) }
 
   before do
@@ -115,7 +115,7 @@ describe Users::SessionsController, type: :controller do
     end
 
     context 'when user is connect with france connect particulier' do
-      let(:loged_in_with_france_connect) { 'particulier' }
+      let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
 
       it 'redirect to france connect logout page' do
         expect(response).to redirect_to(FRANCE_CONNECT[:particulier][:logout_endpoint])
@@ -158,7 +158,7 @@ describe Users::SessionsController, type: :controller do
       end
 
       it 'signs user out from france connect' do
-        user.update(loged_in_with_france_connect: 'particulier')
+        user.update(loged_in_with_france_connect: User.loged_in_with_france_connects.fetch(:particulier))
         sign_in user
         delete :destroy
         expect(@response.headers["Location"]).to eq(FRANCE_CONNECT[:particulier][:logout_endpoint])

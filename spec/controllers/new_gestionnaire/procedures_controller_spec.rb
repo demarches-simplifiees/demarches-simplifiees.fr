@@ -122,7 +122,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
         end
 
         context "with brouillon state" do
-          let(:state) { "brouillon" }
+          let(:state) { Dossier.states.fetch(:brouillon) }
           before { subject }
 
           it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
@@ -134,17 +134,17 @@ describe NewGestionnaire::ProceduresController, type: :controller do
 
         context "with not draft state on multiple procedures" do
           let(:procedure2) { create(:procedure, :published) }
-          let(:state) { "en_construction" }
+          let(:state) { Dossier.states.fetch(:en_construction) }
 
           before do
-            create(:dossier, procedure: procedure, state: "en_construction")
-            create(:dossier, procedure: procedure, state: "en_instruction")
-            create(:dossier, procedure: procedure, state: "sans_suite", archived: true)
+            create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction))
+            create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction))
+            create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), archived: true)
 
             gestionnaire.procedures << procedure2
-            create(:dossier, :followed, procedure: procedure2, state: "en_construction")
-            create(:dossier, procedure: procedure2, state: "accepte")
-            gestionnaire.followed_dossiers << create(:dossier, procedure: procedure2, state: "en_instruction")
+            create(:dossier, :followed, procedure: procedure2, state: Dossier.states.fetch(:en_construction))
+            create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:accepte))
+            gestionnaire.followed_dossiers << create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:en_instruction))
 
             subject
           end
@@ -182,7 +182,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
 
       context 'with a new brouillon dossier' do
-        let!(:brouillon_dossier) { create(:dossier, procedure: procedure, state: 'brouillon') }
+        let!(:brouillon_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
 
         before do
           get :show, params: { procedure_id: procedure.id }
@@ -196,7 +196,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
 
       context 'with a new dossier without follower' do
-        let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: 'en_instruction') }
+        let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
 
         before do
           get :show, params: { procedure_id: procedure.id }
@@ -210,7 +210,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
 
       context 'with a new dossier with a follower' do
-        let!(:new_followed_dossier) { create(:dossier, procedure: procedure, state: 'en_instruction') }
+        let!(:new_followed_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
 
         before do
           gestionnaire.followed_dossiers << new_followed_dossier
@@ -225,7 +225,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
 
       context 'with a termine dossier with a follower' do
-        let!(:termine_dossier) { create(:dossier, procedure: procedure, state: 'accepte') }
+        let!(:termine_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) }
 
         before do
           get :show, params: { procedure_id: procedure.id }
@@ -239,7 +239,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
 
       context 'with an archived dossier' do
-        let!(:archived_dossier) { create(:dossier, procedure: procedure, state: 'en_instruction', archived: true) }
+        let!(:archived_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) }
 
         before do
           get :show, params: { procedure_id: procedure.id }
@@ -253,10 +253,10 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
 
       describe 'statut' do
-        let!(:a_suivre__dossier) { Timecop.freeze(1.day.ago){ create(:dossier, procedure: procedure, state: 'en_instruction') } }
-        let!(:new_followed_dossier) { Timecop.freeze(2.days.ago){ create(:dossier, procedure: procedure, state: 'en_instruction') } }
-        let!(:termine_dossier) { Timecop.freeze(3.days.ago){ create(:dossier, procedure: procedure, state: 'accepte') } }
-        let!(:archived_dossier) { Timecop.freeze(4.days.ago){ create(:dossier, procedure: procedure, state: 'en_instruction', archived: true) } }
+        let!(:a_suivre__dossier) { Timecop.freeze(1.day.ago){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) } }
+        let!(:new_followed_dossier) { Timecop.freeze(2.days.ago){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) } }
+        let!(:termine_dossier) { Timecop.freeze(3.days.ago){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) } }
+        let!(:archived_dossier) { Timecop.freeze(4.days.ago){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) } }
 
         before do
           gestionnaire.followed_dossiers << new_followed_dossier

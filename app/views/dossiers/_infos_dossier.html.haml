@@ -25,8 +25,8 @@
 
     - if @facade.champs.present?
       - @facade.champs.each do |champ|
-        - next if champ.type_champ == 'explication'
-        - if champ.type_champ == 'header_section'
+        - next if champ.type_champ == TypeDeChamp.type_champs.fetch(:explication)
+        - if champ.type_champ == TypeDeChamp.type_champs.fetch(:header_section)
           .row.title-row.margin-top-40
             .col-xs-3.split-hr
             .col-xs-6.dossier-title= champ.libelle
@@ -38,7 +38,7 @@
               = "-"
             .col-xs-5.depositaire-info{ id: "champ-#{champ.id}-value" }
               - if champ.decorate.value.present? || champ.piece_justificative_file.attached?
-                - if champ.type_champ == 'dossier_link'
+                - if champ.type_champ == TypeDeChamp.type_champs.fetch(:dossier_link)
                   - dossier = Dossier.includes(:procedure).find_by(id: champ.decorate.value)
                   - if dossier
                     = link_to("Dossier #{dossier.id}", modifier_dossier_path(dossier), target: '_blank')
@@ -46,11 +46,11 @@
                     = sanitize(dossier.text_summary)
                   - else
                     Pas de dossier associé
-                - elsif champ.type_champ == 'piece_justificative'
+                - elsif champ.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative)
                   = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: champ, user_can_upload: true }
-                - elsif champ.type_champ == 'textarea'
+                - elsif champ.type_champ == TypeDeChamp.type_champs.fetch(:textarea)
                   = simple_format(champ.decorate.value)
-                - elsif champ.type_champ == 'linked_drop_down_list'
+                - elsif champ.type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
                   = champ.for_display
                 - else
                   = sanitize(champ.decorate.value)

@@ -1,12 +1,12 @@
 %table.table.vertical.dossier-champs
   %tbody
-    - champs.reject { |c| c.type_champ == "explication" }.each do |c|
+    - champs.reject { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:explication) }.each do |c|
       %tr
         - case c.type_champ
-        - when "header_section"
+        - when TypeDeChamp.type_champs.fetch(:header_section)
           %th.header-section{ colspan: 3 }
             = c.libelle
-        - when "multiple_drop_down_list"
+        - when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
@@ -15,11 +15,11 @@
                 - c.value.split(", ").each do |item|
                   %li
                     = item
-        - when "linked_drop_down_list"
+        - when TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
           %th.libelle
             = "#{c.libelle} :"
           %td= c.for_display
-        - when "dossier_link"
+        - when TypeDeChamp.type_champs.fetch(:dossier_link)
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
@@ -34,7 +34,7 @@
               = sanitize(dossier.text_summary)
             - else
               Pas de dossier associé
-        - when "piece_justificative"
+        - when TypeDeChamp.type_champs.fetch(:piece_justificative)
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
@@ -43,13 +43,13 @@
               = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: c, user_can_upload: false }
             - else
               Pièce justificative non fournie
-        - when "textarea"
+        - when TypeDeChamp.type_champs.fetch(:textarea)
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
               = simple_format(c.value)
-        - when "siret"
+        - when TypeDeChamp.type_champs.fetch(:siret)
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
@@ -62,7 +62,7 @@
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
               = sanitize(c.value)
-        - if c.type_champ != "header_section"
+        - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section)
           %td.updated-at
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
               modifié le

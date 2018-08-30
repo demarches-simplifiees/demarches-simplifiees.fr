@@ -14,17 +14,17 @@ describe UserRoutesAuthorizationService do
       let(:controller) { Users::DossiersController }
 
       describe 'brouillon' do
-        let(:state) { 'brouillon' }
+        let(:state) { Dossier.states.fetch(:brouillon) }
         it { is_expected.to be_truthy }
       end
 
       describe 'en_construction' do
-        let(:state) { 'en_construction' }
+        let(:state) { Dossier.states.fetch(:en_construction) }
         it { is_expected.to be_falsey }
       end
 
       describe 'accepte' do
-        let(:state) { 'accepte' }
+        let(:state) { Dossier.states.fetch(:accepte) }
         it { is_expected.to be_falsey }
       end
     end
@@ -34,17 +34,17 @@ describe UserRoutesAuthorizationService do
 
       context 'when use_api_carto is false' do
         describe 'brouillon' do
-          let(:state) { 'brouillon' }
+          let(:state) { Dossier.states.fetch(:brouillon) }
           it { is_expected.to be_falsey }
         end
 
         describe 'en_construction' do
-          let(:state) { 'en_construction' }
+          let(:state) { Dossier.states.fetch(:en_construction) }
           it { is_expected.to be_falsey }
         end
 
         describe 'accepte' do
-          let(:state) { 'accepte' }
+          let(:state) { Dossier.states.fetch(:accepte) }
           it { is_expected.to be_falsey }
         end
       end
@@ -53,17 +53,17 @@ describe UserRoutesAuthorizationService do
         let(:use_api_carto) { true }
 
         describe 'brouillon' do
-          let(:state) { 'brouillon' }
+          let(:state) { Dossier.states.fetch(:brouillon) }
           it { is_expected.to be_truthy }
         end
 
         describe 'en_construction' do
-          let(:state) { 'en_construction' }
+          let(:state) { Dossier.states.fetch(:en_construction) }
           it { is_expected.to be_truthy }
         end
 
         describe 'accepte' do
-          let(:state) { 'accepte' }
+          let(:state) { Dossier.states.fetch(:accepte) }
           it { is_expected.to be_falsey }
         end
       end
@@ -73,17 +73,17 @@ describe UserRoutesAuthorizationService do
       let(:controller) { Users::RecapitulatifController }
 
       describe 'brouillon' do
-        let(:state) { 'brouillon' }
+        let(:state) { Dossier.states.fetch(:brouillon) }
         it { is_expected.to be_falsey }
       end
 
       describe 'en_construction' do
-        let(:state) { 'en_construction' }
+        let(:state) { Dossier.states.fetch(:en_construction) }
         it { is_expected.to be_truthy }
       end
 
       describe 'accepte' do
-        let(:state) { 'accepte' }
+        let(:state) { Dossier.states.fetch(:accepte) }
         it { is_expected.to be_truthy }
       end
     end
