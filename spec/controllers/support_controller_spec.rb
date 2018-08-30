@@ -49,6 +49,60 @@ describe SupportController, type: :controller do
         expect(response.body).to include(tags.join(','))
       end
     end
+
+    describe "send form" do
+      it 'should create conversation' do
+        expect(subject).not_to receive(:create_commentaire)
+        allow(subject).to receive(:create_conversation).and_return(true)
+
+        post :create, params: {
+          subject: 'bonjour',
+          text: 'un message'
+        }
+
+        expect(flash[:notice]).to match('Votre message a été envoyé.')
+        expect(response).to redirect_to root_path
+      end
+
+      context "with dossier" do
+        let(:user) { dossier.user }
+        let(:dossier) { create(:dossier) }
+
+        it 'should create conversation' do
+          expect(subject).not_to receive(:create_commentaire)
+          allow(subject).to receive(:create_conversation).and_return(true)
+
+          post :create, params: {
+            dossier_id: dossier.id,
+            type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
+            subject: 'bonjour',
+            text: 'un message'
+          }
+
+          expect(flash[:notice]).to match('Votre message a été envoyé.')
+          expect(response).to redirect_to root_path
+        end
+
+        context "en_construction" do
+          let(:dossier) { create(:dossier, :en_construction) }
+
+          it 'should create commentaire' do
+            allow(subject).to receive(:create_commentaire).and_return(true)
+            expect(subject).not_to receive(:create_conversation)
+
+            post :create, params: {
+              dossier_id: dossier.id,
+              type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
+              subject: 'bonjour',
+              text: 'un message'
+            }
+
+            expect(flash[:notice]).to match('Votre message a été envoyé sur la messagerie de votre dossier.')
+            expect(response).to redirect_to users_dossier_recapitulatif_path(dossier)
+          end
+        end
+      end
+    end
   end
 
   context 'signed out' do
