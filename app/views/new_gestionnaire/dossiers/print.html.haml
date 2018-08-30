@@ -13,7 +13,7 @@
 
 %h2 Formulaire
 
-- champs = @dossier.ordered_champs.decorate
+- champs = @dossier.champs.decorate
 - if champs.any?
   = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil }
 
@@ -49,7 +49,7 @@
 
 %h2 Annotations privées
 
-- if @dossier.ordered_champs_private.present?
+- if @dossier.champs_private.present?
   %table
     - @dossier.champs_private.each do |champ|
       %tr

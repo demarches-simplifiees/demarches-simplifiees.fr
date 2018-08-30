@@ -1,4 +1,4 @@
-class Admin::AccompagnateursController < AdminController
+class Admin::InstructeursController < AdminController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
@@ -10,42 +10,42 @@ class Admin::AccompagnateursController < AdminController
   def show
     assign_scope = @procedure.gestionnaires
 
-    @accompagnateurs_assign = smart_listing_create :accompagnateurs_assign,
+    @instructeurs_assign = smart_listing_create :instructeurs_assign,
       assign_scope,
-      partial: "admin/accompagnateurs/list_assign",
+      partial: "admin/instructeurs/list_assign",
       array: true
 
     not_assign_scope = current_administrateur.gestionnaires.where.not(id: assign_scope.ids)
     not_assign_scope = not_assign_scope.where("email LIKE ?", "%#{params[:filter]}%") if params[:filter]
 
-    @accompagnateurs_not_assign = smart_listing_create :accompagnateurs_not_assign,
+    @instructeurs_not_assign = smart_listing_create :instructeurs_not_assign,
       not_assign_scope,
-      partial: "admin/accompagnateurs/list_not_assign",
+      partial: "admin/instructeurs/list_not_assign",
       array: true
 
     @gestionnaire ||= Gestionnaire.new
   end
 
   def update
-    gestionnaire = Gestionnaire.find(params[:accompagnateur_id])
+    gestionnaire = Gestionnaire.find(params[:instructeur_id])
     procedure = Procedure.find(params[:procedure_id])
     to = params[:to]
 
     case to
     when ASSIGN
       if gestionnaire.assign_to_procedure(procedure)
-        flash.notice = "L'accompagnateur a bien été affecté"
+        flash.notice = "L'instructeur a bien été affecté"
       else
-        flash.alert = "L'accompagnateur a déjà été affecté"
+        flash.alert = "L'instructeur a déjà été affecté"
       end
     when NOT_ASSIGN
       if gestionnaire.remove_from_procedure(procedure)
-        flash.notice = "L'accompagnateur a bien été désaffecté"
+        flash.notice = "L'instructeur a bien été désaffecté"
       else
-        flash.alert = "L'accompagnateur a déjà été désaffecté"
+        flash.alert = "L'instructeur a déjà été désaffecté"
       end
     end
 
-    redirect_to admin_procedure_accompagnateurs_path, procedure_id: params[:procedure_id]
+    redirect_to admin_procedure_instructeurs_path, procedure_id: params[:procedure_id]
   end
 end

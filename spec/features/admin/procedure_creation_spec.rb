@@ -83,7 +83,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       end
     end
 
-    scenario 'After adding champ and file, check impossibility to publish procedure, add accompagnateur and make publication' do
+    scenario 'After adding champ and file, check impossibility to publish procedure, add instructeur and make publication' do
       fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
       click_on 'add_type_de_champ'
       click_on 'onglet-pieces'
@@ -97,8 +97,8 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       expect(page).to have_selector('#disabled-publish-procedure')
       expect(page.find_by_id('disabled-publish-procedure')[:disabled]).to eq('true')
 
-      click_on 'onglet-accompagnateurs'
-      expect(page).to have_current_path(admin_procedure_accompagnateurs_path(Procedure.first))
+      click_on 'onglet-instructeurs'
+      expect(page).to have_current_path(admin_procedure_instructeurs_path(Procedure.first))
       fill_in 'gestionnaire_email', with: 'gestionnaire@apientreprise.fr'
       click_on 'add-gestionnaire-email'
       page.first('.gestionnaire-affectation').click

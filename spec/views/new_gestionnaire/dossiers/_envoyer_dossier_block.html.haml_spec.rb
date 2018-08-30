@@ -22,6 +22,6 @@ describe 'new_gestionnaire/dossiers/envoyer_dossier_block.html.haml', type: :vie
 
     it { is_expected.not_to have_css("select") }
     it { is_expected.not_to have_css(".button.send") }
-    it { is_expected.to have_content("Vous êtes le seul accompagnateur assigné sur cette procédure") }
+    it { is_expected.to have_content("Vous êtes le seul instructeur assigné sur cette procédure") }
   end
 end

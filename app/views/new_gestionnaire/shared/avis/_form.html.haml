@@ -10,7 +10,7 @@
         %p.confidentiel.flex
           %span.icon.lock
           %span
-            Cet avis est confidentiel et n'est pas affiché aux autres experts consultés mais est visible par tous les accompagnateurs
+            Cet avis est confidentiel et n'est pas affiché aux autres experts consultés mais est visible par tous les instructeurs
         .send-wrapper
           = f.submit 'Demander un avis', class: 'button send'
       - else
@@ -18,6 +18,6 @@
           = f.label :confidentiel, 'Cet avis est'
           = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]], {}, onchange: "javascript:DS.toggleCondidentielExplanation(event);"
           .confidentiel-explanation
-            Il ne sera pas affiché aux autres experts consultés mais sera visible par les accompagnateurs
+            Il ne sera pas affiché aux autres experts consultés mais sera visible par les instructeurs
         .send-wrapper
           = f.submit 'Demander un avis', class: 'button send'

@@ -50,7 +50,7 @@
               partenaires
           %li.number
             .number-value
-              = number_with_delimiter(Dossier.where.not(:state => Dossier.states.fetch(:brouillon)).count, :locale => :fr)
+              = number_with_delimiter(Dossier.state_not_brouillon.count, :locale => :fr)
             .number-label<
               dossiers
               %br<>
@@ -72,7 +72,7 @@
         %div
           = contact_link "Contactez-nous",
             tags: 'landing',
-            class: "cta-panel-button white",
+            class: "cta-panel-button-white",
             target: "_blank",
             rel: "noopener noreferrer"
 

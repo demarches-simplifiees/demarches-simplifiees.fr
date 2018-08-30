@@ -51,7 +51,7 @@
           "received_at": null,
           "processed_at": null,
           "motivation": null,
-          "accompagnateurs": [
+          "instructeurs": [
             "gestionnaire@apientreprise.fr"
           ],
           "invites": [
