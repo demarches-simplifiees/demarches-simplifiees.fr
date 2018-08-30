@@ -26,6 +26,7 @@ class SupportController < ApplicationController
 
   def setup_context
     @dossier_id = dossier&.id
+    @tags = tags
     @options = Helpscout::FormAdapter::OPTIONS
   end
 
@@ -51,6 +52,9 @@ class SupportController < ApplicationController
 
   def tags
     [params[:tags], params[:type]].flatten.compact
+      .map { |tag| tag.split(',') }
+      .flatten
+      .reject(&:blank?).uniq
   end
 
   def browser_name
