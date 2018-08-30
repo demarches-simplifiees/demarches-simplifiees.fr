@@ -8,6 +8,11 @@
 .alert-danger {
   background-color: $medium-red;
   color: #FFFFFF;
+
+  a {
+    color: #FFFFFF;
+    text-decoration: underline;
+  }
 }
 
 .alert-success {
