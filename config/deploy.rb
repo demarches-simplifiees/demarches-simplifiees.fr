@@ -110,6 +110,16 @@ namespace :yarn do
   end
 end
 
+namespace :rails do
+  desc "Run deploy tasks."
+  task :after_party do
+    queue %{
+      echo "-----> Running deploy tasks"
+      #{echo_cmd %[bin/rake after_party:run]}
+    }
+  end
+end
+
 desc "Deploys the current version to the server."
 task :deploy => :environment do
   queue 'export PATH=$PATH:/usr/local/rbenv/bin:/usr/local/rbenv/shims'
@@ -122,6 +132,7 @@ task :deploy => :environment do
     invoke :'bundle:install'
     invoke :'yarn:install'
     invoke :'rails:db_migrate'
+    invoke :'rails:after_party'
     invoke :'rails:assets_precompile:force'
 
     to :launch do
