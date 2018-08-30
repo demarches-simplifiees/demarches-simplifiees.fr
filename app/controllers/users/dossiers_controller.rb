@@ -149,7 +149,7 @@ class Users::DossiersController < UsersController
 
   def self.route_authorization
     {
-      states: [:brouillon]
+      states: [Dossier.states.fetch(:brouillon)]
     }
   end
 

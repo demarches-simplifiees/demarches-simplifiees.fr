@@ -16,7 +16,6 @@ public/uploads
 public/downloads
 doc/*.svg
 uploads/*
-.DS_Store
 .byebug_history
 .env
 Procfile.dev
