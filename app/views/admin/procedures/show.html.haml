@@ -8,7 +8,7 @@
       - if @procedure.gestionnaires.empty? || @procedure.service.nil?
         - missing_elements = []
         - if @procedure.gestionnaires.empty?
-          - missing_elements << 'des accompagnateurs'
+          - missing_elements << 'des instructeurs'
         - if @procedure.service.nil?
           - missing_elements << 'un service'
         - message = "Affectez #{missing_elements.join(' et ')} à votre procédure."

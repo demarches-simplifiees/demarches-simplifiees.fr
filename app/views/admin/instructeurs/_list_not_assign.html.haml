@@ -1,4 +1,4 @@
-= smart_listing_controls_for(:accompagnateurs_not_assign, { class: "form-inline text-right" }) do
+= smart_listing_controls_for(:instructeurs_not_assign, { class: "form-inline text-right" }) do
   .form-group.filter.input-append
     = text_field_tag :filter, '', class: "search form-control",
                               placeholder: "Recherche...", autocomplete: :off
@@ -12,11 +12,11 @@
       %th#email Email
       %th Ajouter
 
-    - @accompagnateurs_not_assign.each do |accompagnateur|
+    - @instructeurs_not_assign.each do |instructeur|
       %tr
-        %td.col-xs-11{ style: 'padding-top: 11px; font-size: 15px;' }= accompagnateur.email
+        %td.col-xs-11{ style: 'padding-top: 11px; font-size: 15px;' }= instructeur.email
         %td.center
-          = link_to "#{admin_procedure_accompagnateurs_path(procedure_id: @procedure.id, accompagnateur_id: accompagnateur.id, to: Admin::AccompagnateursController::ASSIGN)}", class: "btn btn-success gestionnaire-affectation", 'data-method' => 'put' do
+          = link_to "#{admin_procedure_instructeurs_path(procedure_id: @procedure.id, instructeur_id: instructeur.id, to: Admin::InstructeursController::ASSIGN)}", class: "btn btn-success gestionnaire-affectation", 'data-method' => 'put' do
             .fa.fa-arrow-right
 
 

@@ -23,7 +23,7 @@ class Admin::GestionnairesController < AdminController
     end
 
     if procedure_id.present?
-      redirect_to admin_procedure_accompagnateurs_path(procedure_id: procedure_id)
+      redirect_to admin_procedure_instructeurs_path(procedure_id: procedure_id)
     else
       redirect_to admin_gestionnaires_path
     end
@@ -54,7 +54,7 @@ class Admin::GestionnairesController < AdminController
       else
         User.create(email: email, password: password, confirmed_at: DateTime.now)
       end
-      flash.notice = 'Accompagnateur ajouté'
+      flash.notice = 'Instructeur ajouté'
     else
       flash.alert = @gestionnaire.errors.full_messages
     end
@@ -62,10 +62,10 @@ class Admin::GestionnairesController < AdminController
 
   def assign_gestionnaire!
     if current_administrateur.gestionnaires.include? @gestionnaire
-      flash.alert = 'Accompagnateur déjà ajouté'
+      flash.alert = 'Instructeur déjà ajouté'
     else
       @gestionnaire.administrateurs.push current_administrateur
-      flash.notice = 'Accompagnateur ajouté'
+      flash.notice = 'Instructeur ajouté'
       # TODO Mailer no assign_to
     end
   end
