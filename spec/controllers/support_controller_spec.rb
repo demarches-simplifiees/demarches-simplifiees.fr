@@ -38,6 +38,17 @@ describe SupportController, type: :controller do
         expect(response.body).to include(tag)
       end
     end
+
+    describe "with multiple tags" do
+      let(:tags) { ['yolo', 'toto'] }
+
+      it 'should fill tags' do
+        get :index, params: { tags: tags }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(tags.join(','))
+      end
+    end
   end
 
   context 'signed out' do

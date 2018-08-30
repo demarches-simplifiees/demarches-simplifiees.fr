@@ -42,7 +42,7 @@
         = label_tag :text, 'Pièce jointe'
         = file_field_tag :file
 
-      = hidden_field_tag :tags, params[:tags]
+      = hidden_field_tag :tags, @tags&.join(',')
 
       .send-wrapper
         = button_tag 'Envoyer le message', type: :submit, class: 'button send primary'
