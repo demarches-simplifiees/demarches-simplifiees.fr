@@ -19,8 +19,8 @@
         Services
 
     %a#onglet-instructeurs{ href: url_for(admin_procedure_instructeurs_path(@procedure)) }
-      .procedure-list-element{ class: ('active' if active == 'instructeurs') }
-        = t('dynamics.admin.procedure.onglets.instructeurs')
+      .procedure-list-element{ class: ('active' if active == 'Instructeurs') }
+        Instructeurs
 
     %a#onglet-description{ href: url_for(edit_admin_procedure_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'Description') }
