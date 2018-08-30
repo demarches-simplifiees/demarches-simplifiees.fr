@@ -53,7 +53,7 @@ describe FranceConnect::ParticulierController, type: :controller do
 
           it do
             subject
-            expect(user.reload.loged_in_with_france_connect).to eq('particulier')
+            expect(user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
           end
 
           context 'and the user has a stored location' do

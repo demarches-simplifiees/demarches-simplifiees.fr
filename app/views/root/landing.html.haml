@@ -50,7 +50,7 @@
               partenaires
           %li.number
             .number-value
-              = number_with_delimiter(Dossier.where.not(:state => :brouillon).count, :locale => :fr)
+              = number_with_delimiter(Dossier.where.not(:state => Dossier.states.fetch(:brouillon)).count, :locale => :fr)
             .number-label<
               dossiers
               %br<>
@@ -70,9 +70,9 @@
           %h1.cta-panel-title Une question, un problème ?
           %p.cta-panel-explanation Notre équipe est disponible pour vous renseigner et vous aider
         %div
-          = link_to "Contactez-nous",
-            "mailto:#{CONTACT_EMAIL}?subject=Question%20à%20propos%20de%20demarches-simplifiees.fr",
-            class: "cta-panel-button-white",
+          = contact_link "Contactez-nous",
+            tags: 'landing',
+            class: "cta-panel-button white",
             target: "_blank",
             rel: "noopener noreferrer"
 

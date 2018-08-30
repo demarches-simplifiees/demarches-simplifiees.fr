@@ -32,7 +32,7 @@ describe Admin::TypesDeChampController, type: :controller do
 
   describe '#update' do
     let(:libelle) { 'mon libelle' }
-    let(:type_champ) { 'header_section' }
+    let(:type_champ) { TypeDeChamp.type_champs.fetch(:header_section) }
     let(:description) { 'titi' }
     let(:order_place) { '' }
     let(:types_de_champ_id) { '' }
@@ -74,12 +74,12 @@ describe Admin::TypesDeChampController, type: :controller do
         subject { procedure.types_de_champ.first }
 
         it { expect(subject.libelle).to eq('mon libelle') }
-        it { expect(subject.type_champ).to eq('header_section') }
+        it { expect(subject.type_champ).to eq(TypeDeChamp.type_champs.fetch(:header_section)) }
         it { expect(subject.description).to eq('titi') }
       end
 
       context 'when type_champ is header_section and mandatory is true' do
-        let(:type_champ) { 'header_section' }
+        let(:type_champ) { TypeDeChamp.type_champs.fetch(:header_section) }
         let(:mandatory) { 'on' }
 
         before do
@@ -98,7 +98,7 @@ describe Admin::TypesDeChampController, type: :controller do
         let(:type_de_champ) { procedure.types_de_champ.first }
         let(:types_de_champ_id) { type_de_champ.id }
         let(:libelle) { 'toto' }
-        let(:type_champ) { 'header_section' }
+        let(:type_champ) { TypeDeChamp.type_champs.fetch(:header_section) }
         let(:description) { 'citrouille' }
         let(:order_place) { '0' }
         let(:mandatory) { 'on' }
@@ -111,7 +111,7 @@ describe Admin::TypesDeChampController, type: :controller do
         subject { procedure.types_de_champ.first }
 
         it { expect(subject.libelle).to eq('toto') }
-        it { expect(subject.type_champ).to eq('header_section') }
+        it { expect(subject.type_champ).to eq(TypeDeChamp.type_champs.fetch(:header_section)) }
         it { expect(subject.description).to eq('citrouille') }
         it { expect(subject.order_place).to eq(0) }
         it { expect(subject.order_place).to be_truthy }

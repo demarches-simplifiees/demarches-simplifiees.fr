@@ -4,7 +4,7 @@ shared_examples 'carte_controller_spec' do
       context 'when dossier’s procedure have api carto actived' do
         context 'when dossier does not have a valid state' do
           before do
-            dossier.state = 'en_instruction'
+            dossier.state = Dossier.states.fetch(:en_instruction)
             dossier.save
 
             get :show, params: { dossier_id: dossier.id }
@@ -60,7 +60,7 @@ shared_examples 'carte_controller_spec' do
 
   describe 'POST #save' do
     context 'it cleans json_latlngs' do
-      let(:dossier) { create(:dossier, state: 'en_construction') }
+      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction)) }
       let(:json_latlngs) { multipolygon.to_json }
 
       before do
@@ -99,7 +99,7 @@ shared_examples 'carte_controller_spec' do
     end
 
     context 'En train de modifier la localisation' do
-      let(:dossier) { create(:dossier, state: 'en_construction') }
+      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction)) }
       before do
         post :save, params: { dossier_id: dossier.id, json_latlngs: '' }
       end

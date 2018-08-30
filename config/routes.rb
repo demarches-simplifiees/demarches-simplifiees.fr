@@ -120,6 +120,12 @@ Rails.application.routes.draw do
 
   get "patron" => "root#patron"
 
+  get "contact", to: "support#index"
+  post "contact", to: "support#create"
+
+  post "webhooks/helpscout", to: "webhook#helpscout"
+  match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
+
   #
   # Deprecated UI
   #
@@ -257,10 +263,6 @@ Rails.application.routes.draw do
       resources :procedures, only: [:index, :show] do
         resources :dossiers, only: [:index, :show]
       end
-    end
-
-    namespace :statistiques do
-      get 'dossiers' => '/api/statistiques#dossiers_stats'
     end
   end
 

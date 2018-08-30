@@ -323,14 +323,14 @@ class Procedure < ApplicationRecord
     end
 
     types_de_champ
-      .reject { |tdc| ['header_section', 'explication'].include?(tdc.type_champ) }
+      .reject { |tdc| [TypeDeChamp.type_champs.fetch(:header_section), TypeDeChamp.type_champs.fetch(:explication)].include?(tdc.type_champ) }
       .each do |type_de_champ|
 
       fields << field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.id.to_s)
     end
 
     types_de_champ_private
-      .reject { |tdc| ['header_section', 'explication'].include?(tdc.type_champ) }
+      .reject { |tdc| [TypeDeChamp.type_champs.fetch(:header_section), TypeDeChamp.type_champs.fetch(:explication)].include?(tdc.type_champ) }
       .each do |type_de_champ|
 
       fields << field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.id.to_s)

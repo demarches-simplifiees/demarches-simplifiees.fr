@@ -1,0 +1,48 @@
+- content_for(:title, 'Contact')
+
+#contact-form
+  .container
+    %h1.new-h1 Contact
+
+    .description
+      Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.
+      Pensez bien à nous donner le plus d'informations possible pour que nous puissions vous aider au mieux.
+
+    = form_tag contact_path, method: :post, multipart: true, class: 'form' do |f|
+      - if !logged_in?
+        .contact-champ
+          = label_tag :email do
+            Email
+            %span.mandatory *
+          = text_field_tag :email, '', required: true
+
+      .contact-champ
+        = label_tag :type do
+          Votre problème
+          %span.mandatory *
+        = select_tag :type, options_for_select(@options, @type)
+
+      .contact-champ
+        = label_tag :dossier_id, 'Numéro du dossier concerné'
+        = text_field_tag :dossier_id, @dossier_id
+
+      .contact-champ
+        = label_tag :subject do
+          Sujet
+          %span.mandatory *
+        = text_field_tag :subject, '', required: true
+
+      .contact-champ
+        = label_tag :text do
+          Message
+          %span.mandatory *
+        = text_area_tag :text, '', rows: 6, required: true
+
+      .contact-champ
+        = label_tag :text, 'Pièce jointe'
+        = file_field_tag :file
+
+      = hidden_field_tag :tags, @tags
+
+      .send-wrapper
+        = button_tag 'Envoyer le message', type: :submit, class: 'button send primary'

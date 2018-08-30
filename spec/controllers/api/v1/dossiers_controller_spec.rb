@@ -83,8 +83,8 @@ describe API::V1::DossiersController do
       context 'when there are multiple pages' do
         let(:retour) { get :index, params: { token: admin.api_token, procedure_id: procedure_id, page: 2 } }
 
-        let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction') }
-        let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: 'en_construction') }
+        let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
+        let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
 
         before do
           allow(controller).to receive(:per_page).and_return(1)

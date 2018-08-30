@@ -54,6 +54,16 @@ module ApplicationHelper
     ENV['APP_NAME'] == 'tps_dev'
   end
 
+  def contact_link(title, options = {})
+    if Flipflop.support_form?
+      params = { tags: options[:tags], type: options[:type] }.compact
+      link_to title, contact_url(params), options
+    else
+      mail_to CONTACT_EMAIL, title,
+        options.merge(subject: "Question à propos de demarches-simplifiees.fr")
+    end
+  end
+
   def root_path_for_profile(nav_bar_profile)
     case nav_bar_profile
     when :gestionnaire

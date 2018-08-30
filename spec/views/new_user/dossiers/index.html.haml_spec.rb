@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe 'new_user/dossiers/index.html.haml', type: :view do
   let(:user) { create(:user) }
-  let(:dossier_brouillon) { create(:dossier, state: 'brouillon', user: user) }
-  let(:dossier_en_construction) { create(:dossier, state: 'en_construction', user: user) }
+  let(:dossier_brouillon) { create(:dossier, state: Dossier.states.fetch(:brouillon), user: user) }
+  let(:dossier_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), user: user) }
   let(:user_dossiers) { [dossier_brouillon, dossier_en_construction] }
   let(:dossiers_invites) { [] }
   let(:current_tab) { 'mes-dossiers' }

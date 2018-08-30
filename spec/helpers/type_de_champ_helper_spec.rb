@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe TypeDeChampHelper, type: :helper do
   describe ".tdc_options" do
-    let(:pj_option) { ["Pièce justificative", "piece_justificative"] }
+    let(:pj_option) { ["Pièce justificative", TypeDeChamp.type_champs.fetch(:piece_justificative)] }
 
     subject { tdc_options }
 

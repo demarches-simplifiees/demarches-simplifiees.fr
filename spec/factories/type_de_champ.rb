@@ -3,84 +3,84 @@ FactoryBot.define do
     private false
     sequence(:libelle) { |n| "Libelle du champ #{n}" }
     sequence(:description) { |n| "description du champ #{n}" }
-    type_champ 'text'
+    type_champ TypeDeChamp.type_champs.fetch(:text)
     order_place 1
     mandatory false
 
     factory :type_de_champ_text, class: 'TypesDeChamp::TextTypeDeChamp' do
-      type_champ 'text'
+      type_champ TypeDeChamp.type_champs.fetch(:text)
     end
     factory :type_de_champ_textarea, class: 'TypesDeChamp::TextareaTypeDeChamp' do
-      type_champ 'textarea'
+      type_champ TypeDeChamp.type_champs.fetch(:textarea)
     end
     factory :type_de_champ_number, class: 'TypesDeChamp::NumberTypeDeChamp' do
-      type_champ 'number'
+      type_champ TypeDeChamp.type_champs.fetch(:number)
     end
     factory :type_de_champ_checkbox, class: 'TypesDeChamp::CheckboxTypeDeChamp' do
-      type_champ 'checkbox'
+      type_champ TypeDeChamp.type_champs.fetch(:checkbox)
     end
     factory :type_de_champ_civilite, class: 'TypesDeChamp::CiviliteTypeDeChamp' do
-      type_champ 'civilite'
+      type_champ TypeDeChamp.type_champs.fetch(:civilite)
     end
     factory :type_de_champ_email, class: 'TypesDeChamp::EmailTypeDeChamp' do
-      type_champ 'email'
+      type_champ TypeDeChamp.type_champs.fetch(:email)
     end
     factory :type_de_champ_phone, class: 'TypesDeChamp::PhoneTypeDeChamp' do
-      type_champ 'phone'
+      type_champ TypeDeChamp.type_champs.fetch(:phone)
     end
     factory :type_de_champ_address, class: 'TypesDeChamp::AddressTypeDeChamp' do
-      type_champ 'address'
+      type_champ TypeDeChamp.type_champs.fetch(:address)
     end
     factory :type_de_champ_yes_no, class: 'TypesDeChamp::YesNoTypeDeChamp' do
       libelle 'Yes/no'
-      type_champ 'yes_no'
+      type_champ TypeDeChamp.type_champs.fetch(:yes_no)
     end
     factory :type_de_champ_date, class: 'TypesDeChamp::DateTypeDeChamp' do
-      type_champ 'date'
+      type_champ TypeDeChamp.type_champs.fetch(:date)
     end
     factory :type_de_champ_datetime, class: 'TypesDeChamp::DatetimeTypeDeChamp' do
-      type_champ 'datetime'
+      type_champ TypeDeChamp.type_champs.fetch(:datetime)
     end
     factory :type_de_champ_drop_down_list, class: 'TypesDeChamp::DropDownListTypeDeChamp' do
       libelle 'Menu déroulant'
-      type_champ 'drop_down_list'
+      type_champ TypeDeChamp.type_champs.fetch(:drop_down_list)
       drop_down_list { create(:drop_down_list) }
     end
     factory :type_de_champ_multiple_drop_down_list, class: 'TypesDeChamp::MultipleDropDownListTypeDeChamp' do
-      type_champ 'multiple_drop_down_list'
+      type_champ TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
       drop_down_list { create(:drop_down_list) }
     end
     factory :type_de_champ_linked_drop_down_list, class: 'TypesDeChamp::LinkedDropDownListTypeDeChamp' do
-      type_champ 'linked_drop_down_list'
+      type_champ TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
       drop_down_list { create(:drop_down_list) }
     end
     factory :type_de_champ_pays, class: 'TypesDeChamp::PaysTypeDeChamp' do
-      type_champ 'pays'
+      type_champ TypeDeChamp.type_champs.fetch(:pays)
     end
     factory :type_de_champ_regions, class: 'TypesDeChamp::RegionTypeDeChamp' do
-      type_champ 'regions'
+      type_champ TypeDeChamp.type_champs.fetch(:regions)
     end
     factory :type_de_champ_departements, class: 'TypesDeChamp::DepartementTypeDeChamp' do
-      type_champ 'departements'
+      type_champ TypeDeChamp.type_champs.fetch(:departements)
     end
     factory :type_de_champ_engagement, class: 'TypesDeChamp::EngagementTypeDeChamp' do
-      type_champ 'engagement'
+      type_champ TypeDeChamp.type_champs.fetch(:engagement)
     end
     factory :type_de_champ_header_section, class: 'TypesDeChamp::HeaderSectionTypeDeChamp' do
-      type_champ 'header_section'
+      type_champ TypeDeChamp.type_champs.fetch(:header_section)
     end
     factory :type_de_champ_explication, class: 'TypesDeChamp::ExplicationTypeDeChamp' do
-      type_champ 'explication'
+      type_champ TypeDeChamp.type_champs.fetch(:explication)
     end
     factory :type_de_champ_dossier_link, class: 'TypesDeChamp::DossierLinkTypeDeChamp' do
       libelle 'Référence autre dossier'
-      type_champ 'dossier_link'
+      type_champ TypeDeChamp.type_champs.fetch(:dossier_link)
     end
     factory :type_de_champ_piece_justificative, class: 'TypesDeChamp::PieceJustificativeTypeDeChamp' do
-      type_champ 'piece_justificative'
+      type_champ TypeDeChamp.type_champs.fetch(:piece_justificative)
     end
     factory :type_de_champ_siret, class: 'TypesDeChamp::SiretTypeDeChamp' do
-      type_champ 'siret'
+      type_champ TypeDeChamp.type_champs.fetch(:siret)
     end
 
     trait :private do

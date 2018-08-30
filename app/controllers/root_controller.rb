@@ -26,11 +26,11 @@ class RootController < ApplicationController
       .map.with_index { |type_de_champ, i| type_de_champ.champ.build(id: i) }
 
     all_champs
-      .select { |champ| champ.type_champ == 'header_section' }
+      .select { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
       .each { |champ| champ.type_de_champ.libelle = 'un super titre de section' }
 
     all_champs
-      .select { |champ| %w(drop_down_list multiple_drop_down_list).include?(champ.type_champ) }
+      .select { |champ| [TypeDeChamp.type_champs.fetch(:drop_down_list), TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)].include?(champ.type_champ) }
       .each do |champ|
         champ.type_de_champ.drop_down_list = DropDownList.new(type_de_champ: champ.type_de_champ)
         champ.drop_down_list.value =
@@ -42,9 +42,9 @@ class RootController < ApplicationController
       end
 
     type_champ_values = {
-      'date': '2016-07-26',
-      'datetime': '26/07/2016 07:35',
-      'textarea': 'Une description de mon projet'
+      TypeDeChamp.type_champs.fetch(:date) => '2016-07-26',
+      TypeDeChamp.type_champs.fetch(:datetime) => '26/07/2016 07:35',
+      TypeDeChamp.type_champs.fetch(:textarea) => 'Une description de mon projet'
     }
 
     type_champ_values.each do |(type_champ, value)|
