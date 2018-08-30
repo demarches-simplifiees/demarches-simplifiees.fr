@@ -115,7 +115,7 @@ namespace :rails do
   task :after_party do
     queue %{
       echo "-----> Running deploy tasks"
-      #{echo_cmd %[bin/rake after_party:run]}
+      #{echo_cmd %[bundle exec rake after_party:run]}
     }
   end
 end
