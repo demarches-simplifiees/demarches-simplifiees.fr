@@ -56,7 +56,11 @@ module ApplicationHelper
 
   def contact_link(title, options = {})
     if Flipflop.support_form?
-      params = { tags: options[:tags], type: options[:type] }.compact
+      params = {
+        tags: options[:tags],
+        type: options[:type],
+        dossier_id: options[:dossier_id]
+      }.compact
       link_to title, contact_url(params), options
     else
       mail_to CONTACT_EMAIL, title,
