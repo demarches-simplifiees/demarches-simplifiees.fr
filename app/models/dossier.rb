@@ -61,6 +61,7 @@ class Dossier < ApplicationRecord
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
+  scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
 
   accepts_nested_attributes_for :individual
 
