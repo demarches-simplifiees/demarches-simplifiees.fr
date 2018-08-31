@@ -10,21 +10,21 @@ RSpec.describe ConservationDeDonneesHelper, type: :helper do
       let(:dans_ds) { 3 }
       let(:hors_ds) { 6 }
 
-      it { is_expected.to eq([ "dans demarches-simplifiees.fr 3 mois après le début de l’instruction du dossier", "hors demarches-simplifiees.fr pendant 6 mois" ]) }
+      it { is_expected.to eq([ "Dans demarches-simplifiees.fr : 3 mois", "Par l’administration : 6 mois" ]) }
     end
 
     context "when only in-app retention time is set" do
       let(:dans_ds) { 3 }
       let(:hors_ds) { nil }
 
-      it { is_expected.to eq([ "dans demarches-simplifiees.fr 3 mois après le début de l’instruction du dossier" ]) }
+      it { is_expected.to eq([ "Dans demarches-simplifiees.fr : 3 mois" ]) }
     end
 
     context "when only out of app retention time is set" do
       let(:dans_ds) { nil }
       let(:hors_ds) { 6 }
 
-      it { is_expected.to eq([ "hors demarches-simplifiees.fr pendant 6 mois" ]) }
+      it { is_expected.to eq([ "Par l’administration : 6 mois" ]) }
     end
 
     context "when the retention time is not set" do
