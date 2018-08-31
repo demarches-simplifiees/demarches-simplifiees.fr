@@ -27,6 +27,32 @@ describe Dossier do
     end
   end
 
+  describe 'nearing_end_of_retention' do
+    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:young_dossier) { create(:dossier, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, :en_instruction, en_instruction_at: 170.days.ago, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: (6.months + 1.second).ago, procedure: procedure) }
+    let!(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
+
+    context 'with default delay to end of retention' do
+      subject { Dossier.nearing_end_of_retention }
+
+      it { is_expected.not_to include(young_dossier) }
+      it { is_expected.to include(expiring_dossier) }
+      it { is_expected.to include(just_expired_dossier) }
+      it { is_expected.to include(long_expired_dossier) }
+    end
+
+    context 'with custom delay to end of retention' do
+      subject { Dossier.nearing_end_of_retention('0') }
+
+      it { is_expected.not_to include(young_dossier) }
+      it { is_expected.not_to include(expiring_dossier) }
+      it { is_expected.to include(just_expired_dossier) }
+      it { is_expected.to include(long_expired_dossier) }
+    end
+  end
+
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
     let(:etablissement) { dossier.etablissement }
