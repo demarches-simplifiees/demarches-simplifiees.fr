@@ -36,4 +36,22 @@ class AdministrationMailer < ApplicationMailer
     mail(to: EQUIPE_EMAIL,
       subject: subject)
   end
+
+  def dossier_expiration_summary(expiring_dossiers, expired_dossiers)
+    subject =
+      if expired_dossiers.present? && expiring_dossiers.present?
+        "Des dossiers ont dépassé leur délai de conservation, et d’autres en approchent"
+      elsif expired_dossiers.present?
+        "Des dossiers ont dépassé leur délai de conservation"
+      elsif expiring_dossiers.present?
+        "Des dossiers approchent de la fin de leur délai de conservation"
+      else
+        "Aucun dossier en fin de délai de conservation"
+      end
+
+    @expiring_dossiers = expiring_dossiers
+    @expired_dossiers = expired_dossiers
+
+    mail(to: TECH_EMAIL, subject: subject)
+  end
 end
