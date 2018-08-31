@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
   describe "perform" do
     let(:date) { Time.utc(2017, 9, 1, 10, 5, 0) }
+    let(:instruction_date) { date + 120 }
 
     before do
       Timecop.freeze(date)
@@ -28,7 +29,7 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
         it { expect(nouveau_dossier2.reload.en_instruction_at).to eq(date) }
 
         it { expect(dossier_recu.reload.en_instruction?).to be true }
-        it { expect(dossier_recu.reload.en_instruction_at).to eq(date) }
+        it { expect(dossier_recu.reload.en_instruction_at).to eq(instruction_date) }
 
         it { expect(dossier_brouillon.reload.brouillon?).to be true }
         it { expect(dossier_brouillon.reload.en_instruction_at).to eq(nil) }
@@ -46,7 +47,7 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
         it { expect(nouveau_dossier2.reload.processed_at).to eq(date) }
 
         it { expect(dossier_recu.reload.en_instruction?).to be true }
-        it { expect(dossier_recu.reload.en_instruction_at).to eq(date) }
+        it { expect(dossier_recu.reload.en_instruction_at).to eq(instruction_date) }
         it { expect(dossier_recu.reload.processed_at).to eq(nil) }
 
         it { expect(dossier_brouillon.reload.brouillon?).to be true }
