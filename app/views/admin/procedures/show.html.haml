@@ -109,11 +109,12 @@
       .alert.alert-danger
         %p
           Attention : la suppression d’une procédure est définitive.
+
         - dossiers_count = @procedure.dossiers.count
         - if dossiers_count > 0
           %p
-            = pluralize(dossiers_count, "dossier est rattaché", "dossiers sont rattachés")
-            à cette procédure, la suppression de cette procédure entrainera également leur suppression.
+            = dossiers_deletion_warning(@procedure)
+
         %p.text-right
           = link_to "J'ai compris, je supprime la procédure",
             hide_admin_procedure_path(@procedure),
