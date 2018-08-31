@@ -38,4 +38,11 @@
       flex-shrink: 0; // Display the button label on a single line
     }
   }
+
+  .warning {
+    margin-bottom: 20px;
+    background-color: #f9b91666;
+    padding: 20px;
+    border-radius: 4px;
+  }
 }
