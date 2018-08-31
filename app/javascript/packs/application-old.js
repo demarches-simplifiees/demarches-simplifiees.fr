@@ -10,6 +10,7 @@ import 'babel-polyfill';
 
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
+import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';
 
 // Start Rails helpers
