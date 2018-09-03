@@ -10,6 +10,6 @@ class RemoteDownloader
   protected
 
   def base_url
-    Rails.application.secrets.fog[:base_url]
+    FOG_BASE_URL
   end
 end
