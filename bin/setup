@@ -36,6 +36,6 @@ chdir APP_ROOT do
   puts "\n== Removing old logs and tempfiles =="
   system! 'bin/rails log:clear tmp:clear'
 
-  puts "\n== Restarting application server =="
-  system! 'bin/rails restart'
+  puts "\n== Done =="
+  puts "You can now start the application server with `overmind start`."
 end
