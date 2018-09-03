@@ -5,6 +5,9 @@ API_GEO_URL = "https://geo.api.gouv.fr"
 HELPSCOUT_API_URL = 'https://api.helpscout.net/v2'
 PIPEDRIVE_API_URL = 'https://api.pipedrive.com/v1'
 
+# Internal URLs
+FOG_BASE_URL = 'https://storage.apientreprise.fr'
+
 # External services URLs
 DOC_URL = "https://doc.demarches-simplifiees.fr"
 LISTE_DES_DEMARCHES_URL = [DOC_URL, "listes-des-demarches"].join("/")
