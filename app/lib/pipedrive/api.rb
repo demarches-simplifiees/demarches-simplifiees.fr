@@ -68,6 +68,6 @@ class Pipedrive::API
   end
 
   def self.token
-    Rails.application.secrets.pipedrive[:key]
+    ENV['PIPEDRIVE_KEY']
   end
 end
