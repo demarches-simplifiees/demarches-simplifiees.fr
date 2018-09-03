@@ -12,11 +12,10 @@ demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urge
 
 ### Développement
 
-- Mailcatcher : `gem install mailcatcher`
+- Yarn : voir https://yarnpkg.com/en/docs/install
 - Overmind :
   * Mac : `brew install overmind`
   * Linux : voir https://github.com/DarthSim/overmind#installation
-- Yarn : voir https://yarnpkg.com/en/docs/install
 
 ### Tests
 
