@@ -2,16 +2,13 @@
 @import "constants";
 
 #support-navigator-banner {
-  position: fixed;
   width: 100%;
   bottom: 0;
   left: 0;
   margin: 0;
   padding: $default-padding;
-  text-align: center;
   color: #FFFFFF;
   background-color: $medium-red;
-  z-index: 1000;
 
   a {
     color: $lighter-blue;
