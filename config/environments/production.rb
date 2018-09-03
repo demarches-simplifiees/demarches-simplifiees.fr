@@ -70,8 +70,8 @@ Rails.application.configure do
   if ENV['MAILTRAP_ENABLED'] == 'enabled'
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-      user_name: Rails.application.secrets.mailtrap[:username],
-      password: Rails.application.secrets.mailtrap[:password],
+      user_name: ENV['MAILTRAP_USERNAME'],
+      password: ENV['MAILTRAP_PASSWORD'],
       address: 'smtp.mailtrap.io',
       domain: 'smtp.mailtrap.io',
       port: '2525',
