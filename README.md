@@ -12,11 +12,10 @@ demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urge
 
 ### Développement
 
-- Mailcatcher : `gem install mailcatcher`
+- Yarn : voir https://yarnpkg.com/en/docs/install
 - Overmind :
   * Mac : `brew install overmind`
   * Linux : voir https://github.com/DarthSim/overmind#installation
-- Yarn : voir https://yarnpkg.com/en/docs/install
 
 ### Tests
 
@@ -25,14 +24,7 @@ demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urge
   * Mac : `brew install chromedriver`
   * Linux : voir https://sites.google.com/a/chromium.org/chromedriver/downloads
 
-## Initialisation de l'environnement de développement
-
-Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
-
-    bundle install
-    yarn install
-
-## Création de la base de données
+## Création des rôles de la base de données
 
 Les informations nécessaire à l'initialisation de la base doivent être pré-configurées à la main grâce à la procédure suivante :
 
@@ -42,21 +34,11 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
     > create user tps_test with password 'tps_test' superuser;
     > \q
 
-Afin de générer la BDD de l'application, il est nécessaire d'exécuter les commandes suivantes :
+## Initialisation de l'environnement de développement
 
-    # Create and initialize the database
-    bin/rails db:create db:schema:load db:seed
+Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
 
-    # Migrate the development database and the test database
-    bin/rails db:migrate
-
-## Bouchonnage de la configuration
-
-Créer le fichier de configuration avec les valeurs par défaut :
-
-    cp config/env.example .env
-
-*Note : les vraies valeurs pour ces paramètres sont renseignées dans le Keepass*
+    bin/setup
 
 ## Lancement de l'application
 
@@ -71,6 +53,12 @@ L'application tourne à l'adresse `http://localhost:3000`. Un utilisateur de tes
     AutoReceiveDossiersForProcedureJob.set(cron: "* * * * *").perform_later(procedure_declaratoire_id, Dossier.states.fetch(:en_instruction))
     FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
     Administrateurs::ActivateBeforeExpirationJob.set(cron: "0 8 * * *").perform_later
+
+## Mise à jour de l'application
+
+Pour mettre à jour votre environnement de développement, installer les nouvelles dépendances et faire jouer les migrations, exécutez :
+
+    bin/update
 
 ## Exécution des tests (RSpec)
 
