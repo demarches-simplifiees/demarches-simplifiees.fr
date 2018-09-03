@@ -54,6 +54,12 @@ L'application tourne à l'adresse `http://localhost:3000`. Un utilisateur de tes
     FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
     Administrateurs::ActivateBeforeExpirationJob.set(cron: "0 8 * * *").perform_later
 
+## Mise à jour de l'application
+
+Pour mettre à jour votre environnement de développement, installer les nouvelles dépendances et faire jouer les migrations, exécutez :
+
+    bin/update
+
 ## Exécution des tests (RSpec)
 
 Pour exécuter les tests de l'application, plusieurs possibilités :
