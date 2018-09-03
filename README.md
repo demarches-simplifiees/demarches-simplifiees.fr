@@ -24,14 +24,7 @@ demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urge
   * Mac : `brew install chromedriver`
   * Linux : voir https://sites.google.com/a/chromium.org/chromedriver/downloads
 
-## Initialisation de l'environnement de développement
-
-Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
-
-    bundle install
-    yarn install
-
-## Création de la base de données
+## Création des rôles de la base de données
 
 Les informations nécessaire à l'initialisation de la base doivent être pré-configurées à la main grâce à la procédure suivante :
 
@@ -41,15 +34,11 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
     > create user tps_test with password 'tps_test' superuser;
     > \q
 
-Afin de générer la BDD de l'application, il est nécessaire d'exécuter les commandes suivantes :
+## Initialisation de l'environnement de développement
 
-    # Create and initialize the database
-    bin/rails db:create db:schema:load db:seed
+Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
 
-    # Migrate the development database and the test database
-    bin/rails db:migrate
-
-
+    bin/setup
 
 ## Lancement de l'application
 
