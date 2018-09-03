@@ -205,7 +205,7 @@ GEM
     eventmachine (1.2.7)
     excon (0.62.0)
     execjs (2.7.0)
-    factory_bot (4.10.0)
+    factory_bot (4.11.0)
       activesupport (>= 3.0.0)
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
