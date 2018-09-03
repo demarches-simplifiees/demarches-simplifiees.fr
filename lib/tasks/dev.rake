@@ -1,5 +1,5 @@
 namespace :dev do
-  def run_and_stop_if_error(cmd)
+  def sh!(cmd)
     sh cmd do |ok, res|
       if !ok
         abort "#{cmd} failed with result : #{res.exitstatus}"
@@ -12,14 +12,14 @@ namespace :dev do
     local_file = "/tmp/#{filename}"
 
     if !File.exist?(local_file)
-      run_and_stop_if_error "scp -C deploy@sgmap_backup:/var/backup/production1/db/#{filename} #{local_file}"
+      sh! "scp -C deploy@sgmap_backup:/var/backup/production1/db/#{filename} #{local_file}"
     end
 
     dev_env_param = "RAILS_ENV=development"
 
     Rake::Task["db:drop"].invoke(dev_env_param)
     Rake::Task["db:create"].invoke(dev_env_param)
-    run_and_stop_if_error "psql tps_development -f #{local_file}"
+    sh! "psql tps_development -f #{local_file}"
 
     Rake::Task["db:migrate"].invoke(dev_env_param)
     Rake::Task["db:environment:set"].invoke(dev_env_param)
