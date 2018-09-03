@@ -22,7 +22,7 @@ class SignatureService
     private
 
     def signing_key
-      @@signing_key ||= RbNaCl::SigningKey.new(RbNaCl::Util.hex2bin(Rails.application.secrets.signing_key))
+      @@signing_key ||= RbNaCl::SigningKey.new(RbNaCl::Util.hex2bin(ENV["SIGNING_KEY"]))
     end
   end
 end
