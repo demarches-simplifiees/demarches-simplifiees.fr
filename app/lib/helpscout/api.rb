@@ -105,7 +105,7 @@ class Helpscout::API
   end
 
   def mailbox_id
-    Rails.application.secrets.helpscout[:mailbox_id]
+    ENV['HELPSCOUT_MAILBOX_ID']
   end
 
   def headers
@@ -126,8 +126,8 @@ class Helpscout::API
   def fetch_access_token
     Typhoeus.post("#{HELPSCOUT_API_URL}/#{OAUTH2_TOKEN}", body: {
       grant_type: 'client_credentials',
-      client_id: Rails.application.secrets.helpscout[:client_id],
-      client_secret: Rails.application.secrets.helpscout[:client_secret]
+      client_id: ENV['HELPSCOUT_CLIENT_ID'],
+      client_secret: ENV['HELPSCOUT_CLIENT_SECRET']
     })
   end
 end

@@ -44,7 +44,7 @@ class WebhookController < ActionController::Base
 
   def generate_body_signature(body)
     Base64.strict_encode64(OpenSSL::HMAC.digest('sha1',
-      Rails.application.secrets.helpscout[:webhook_secret],
+      ENV['HELPSCOUT_WEBHOOK_SECRET'],
       body))
   end
 end
