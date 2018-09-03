@@ -6,10 +6,10 @@ default: &default
 
 development:
   <<: *default
-  database: tps_development
-  host: localhost
-  username: tps_development
-  password: tps_development
+  database: <%= ENV["DB_DATABASE"] %>
+  host: <%= ENV["DB_HOST"] %>
+  username: <%= ENV["DB_USERNAME"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
 
 test:
   <<: *default
