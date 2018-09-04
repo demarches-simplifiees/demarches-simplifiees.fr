@@ -144,7 +144,7 @@ module NewUser
       @commentaire = CommentaireService.create(current_user, dossier, commentaire_params)
 
       if @commentaire.save
-        flash.notice = "Message envoyé"
+        flash.notice = "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
         redirect_to messagerie_dossier_path(dossier)
       else
         flash.now.alert = @commentaire.errors.full_messages
