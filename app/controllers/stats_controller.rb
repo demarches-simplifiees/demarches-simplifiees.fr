@@ -82,7 +82,11 @@ class StatsController < ApplicationController
     total = procedures.count
     last_30_days_count = procedures.where(published_at: 1.month.ago..Time.now).count
     previous_count = procedures.where(published_at: 2.months.ago..1.month.ago).count
-    evolution = (((last_30_days_count.to_f / previous_count) - 1) * 100).round(0)
+    if previous_count != 0
+      evolution = (((last_30_days_count.to_f / previous_count) - 1) * 100).round(0)
+    else
+      evolution = 0
+    end
     formatted_evolution = sprintf("%+d", evolution)
 
     {
@@ -96,7 +100,11 @@ class StatsController < ApplicationController
     total = dossiers.count
     last_30_days_count = dossiers.where(en_construction_at: 1.month.ago..Time.now).count
     previous_count = dossiers.where(en_construction_at: 2.months.ago..1.month.ago).count
-    evolution = (((last_30_days_count.to_f / previous_count) - 1) * 100).round(0)
+    if previous_count != 0
+      evolution = (((last_30_days_count.to_f / previous_count) - 1) * 100).round(0)
+    else
+      evolution = 0
+    end
     formatted_evolution = sprintf("%+d", evolution)
 
     {
