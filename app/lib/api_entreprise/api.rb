@@ -60,6 +60,6 @@ class ApiEntreprise::API
   private
 
   def self.token
-    Rails.application.secrets.api_entreprise[:key]
+    ENV['API_ENTREPRISE_KEY']
   end
 end

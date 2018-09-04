@@ -86,10 +86,9 @@ module ApplicationHelper
   end
 
   def sentry_config
-    sentry = Rails.application.secrets.sentry
-    if sentry
+    if ENV["SENTRY_ENABLED"] == "enabled"
       {
-        dsn: sentry[:browser],
+        dsn: ENV["SENTRY_DSN_JS"],
         id: current_user&.id,
         email: current_email
       }.to_json

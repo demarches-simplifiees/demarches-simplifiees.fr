@@ -1,7 +1,7 @@
 class StagingAuthService
   def self.authenticate(username, password)
     if enabled?
-      username == Rails.application.secrets.basic_auth[:username] && password == Rails.application.secrets.basic_auth[:password]
+      username == ENV['BASIC_AUTH_USERNAME'] && password == ENV['BASIC_AUTH_PASSWORD']
     else
       true
     end
