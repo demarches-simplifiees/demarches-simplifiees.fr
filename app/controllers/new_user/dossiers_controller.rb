@@ -185,7 +185,7 @@ module NewUser
     end
 
     def dossier
-      Dossier.find(params[:id] || params[:dossier_id])
+      @dossier ||= Dossier.find(params[:id] || params[:dossier_id])
     end
 
     def dossier_with_champs
