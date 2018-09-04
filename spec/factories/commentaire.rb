@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :commentaire do
-    body 'plop'
+    body { 'plop' }
 
     before(:create) do |commentaire, _evaluator|
       if !commentaire.dossier
