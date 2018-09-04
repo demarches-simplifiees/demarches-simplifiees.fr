@@ -171,7 +171,7 @@ group :development, :test do
   gem 'rspec-rails'
 
   # Deploy
-  gem 'mina', ref: '343a7', git: 'https://github.com/mina-deploy/mina.git'
+  gem 'mina', git: 'https://github.com/mina-deploy/mina.git'
 
   gem 'rspec_junit_formatter'
 end
