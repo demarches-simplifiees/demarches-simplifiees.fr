@@ -1,26 +1,9 @@
-default: &default
+default:
   adapter: postgresql
   encoding: unicode
+  database: <%= ENV["DB_DATABASE"] %>
+  host: <%= ENV["DB_HOST"] %>
+  username: <%= ENV["DB_USERNAME"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
   pool: <%= ENV.fetch("DB_POOL") { 5 } %>
   timeout: 5000
-
-development:
-  <<: *default
-  database: <%= ENV["DB_DATABASE"] %>
-  host: <%= ENV["DB_HOST"] %>
-  username: <%= ENV["DB_USERNAME"] %>
-  password: <%= ENV["DB_PASSWORD"] %>
-
-test:
-  <<: *default
-  database: tps_test
-  host: localhost
-  username: tps_test
-  password: tps_test
-
-production: &production
-  <<: *default
-  database: <%= ENV["DB_DATABASE"] %>
-  host: <%= ENV["DB_HOST"] %>
-  username: <%= ENV["DB_USERNAME"] %>
-  password: <%= ENV["DB_PASSWORD"] %>
