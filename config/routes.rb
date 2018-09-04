@@ -179,6 +179,7 @@ Rails.application.routes.draw do
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
     get 'procedures/path_list' => 'procedures#path_list'
+    get 'procedures/available' => 'procedures#check_availability'
     get 'profile' => 'profile#show', as: :profile
     post 'renew_api_token' => 'profile#renew_api_token', as: :renew_api_token
 

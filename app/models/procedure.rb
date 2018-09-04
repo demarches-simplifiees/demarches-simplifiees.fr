@@ -120,6 +120,14 @@ class Procedure < ApplicationRecord
     publiee_ou_archivee?
   end
 
+  def path_available?(path)
+    !ProcedurePath.where.not(procedure: self).exists?(path: path)
+  end
+
+  def path_is_mine?(path)
+    ProcedurePath.where.not(procedure: self).mine?(administrateur, path)
+  end
+
   # This method is needed for transition. Eventually this will be the same as brouillon?.
   def brouillon_avec_lien?
     Flipflop.publish_draft? && brouillon? && procedure_path.present?
