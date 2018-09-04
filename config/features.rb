@@ -26,7 +26,7 @@ Flipflop.configure do
     feature :remote_storage,
       default: ENV['FOG_ENABLED'] == 'enabled'
     feature :weekly_overview,
-      default: Rails.env.production?
+      default: ENV['APP_NAME'] == 'tps'
   end
 
   feature :pre_maintenance_mode
