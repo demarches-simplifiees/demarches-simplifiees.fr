@@ -721,4 +721,52 @@ describe Admin::ProceduresController, type: :controller do
     it { expect(procedure.deliberation.attached?).to eq(false) }
     it { expect(response).to redirect_to(edit_admin_procedure_path(procedure)) }
   end
+
+  describe "GET #check_availability" do
+    render_views
+    let(:procedure) { create(:procedure, :with_path, administrateur: admin) }
+    let(:params) {
+      {
+        procedure: {
+          path: path,
+          id: procedure.id
+        }
+      }
+    }
+    let(:path) { generate(:published_path) }
+
+    before do
+      get :check_availability, params: params, format: 'js'
+    end
+
+    context 'self path' do
+      let(:path) { procedure.path }
+
+      it { expect(response.body).to include("innerHTML = ''") }
+    end
+
+    context 'available path' do
+      it { expect(response.body).to include("innerHTML = ''") }
+    end
+
+    context 'my path' do
+      let(:procedure_owned) { create(:procedure, :with_path, administrateur: admin) }
+      let(:path) { procedure_owned.path }
+
+      it {
+        expect(response.body).to include('Ce lien est déjà utilisé par une de vos procédure.')
+        expect(response.body).to include('Si vous voulez l’utiliser, l’ancienne procédure sera archivée')
+      }
+    end
+
+    context 'unavailable path' do
+      let(:procedure_not_owned) { create(:procedure, :with_path, administrateur: create(:administrateur)) }
+      let(:path) { procedure_not_owned.path }
+
+      it {
+        expect(response.body).to include('Ce lien est déjà utilisé par une procédure.')
+        expect(response.body).to include('Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.')
+      }
+    end
+  end
 end
