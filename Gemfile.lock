@@ -8,10 +8,9 @@ GIT
 
 GIT
   remote: https://github.com/mina-deploy/mina.git
-  revision: 343a7ab672d8b4f0ddb84ec240cde7d94b46397a
-  ref: 343a7
+  revision: 0dd5fdb8bb82a180d35e1fc033de2fac48257e30
   specs:
-    mina (0.3.8)
+    mina (1.2.3)
       open4 (~> 1.3.4)
       rake
 
