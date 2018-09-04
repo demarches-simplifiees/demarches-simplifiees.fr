@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :invite do
-    email 'plop@octo.com'
+    email { 'plop@octo.com' }
 
     after(:build) do |invite, _evaluator|
       if invite.dossier.nil?
