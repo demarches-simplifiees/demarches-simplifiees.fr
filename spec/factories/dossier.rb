@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :dossier do
-    autorisation_donnees true
-    state Dossier.states.fetch(:brouillon)
+    autorisation_donnees { true }
+    state { Dossier.states.fetch(:brouillon) }
     association :user, factory: [:user]
 
     before(:create) do |dossier, _evaluator|
@@ -46,11 +46,11 @@ FactoryBot.define do
     end
 
     trait :archived do
-      archived true
+      archived { true }
     end
 
     trait :not_archived do
-      archived false
+      archived { false }
     end
 
     trait :with_dossier_link do
