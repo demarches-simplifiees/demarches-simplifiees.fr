@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :avis do
-    introduction 'Bonjour, merci de me donner votre avis sur ce dossier'
+    introduction { 'Bonjour, merci de me donner votre avis sur ce dossier' }
 
     before(:create) do |avis, _evaluator|
       if !avis.gestionnaire
