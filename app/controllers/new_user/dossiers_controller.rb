@@ -85,8 +85,9 @@ module NewUser
       end
     end
 
-    # FIXME: remove PiecesJustificativesService
-    # delegate draft save logic to champ ?
+    # FIXME:
+    # - remove PiecesJustificativesService
+    # - delegate draft save logic to champ ?
     def update_brouillon
       @dossier = dossier_with_champs
 
@@ -112,12 +113,8 @@ module NewUser
         @dossier.en_construction!
         NotificationMailer.send_initiated_notification(@dossier).deliver_later
         redirect_to merci_dossier_path(@dossier)
-      elsif current_user.owns?(dossier)
-        if Flipflop.new_dossier_details?
-          redirect_to demande_dossier_path(@dossier)
-        else
-          redirect_to users_dossier_recapitulatif_path(@dossier)
-        end
+      elsif !draft? && !@dossier.can_transition_to_en_construction?
+        render :brouillon
       else
         redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
       end
@@ -127,8 +124,8 @@ module NewUser
       @dossier = dossier_with_champs
     end
 
-    # FIXME: remove PiecesJustificativesService
-    # delegate draft save logic to champ ?
+    # FIXME:
+    # - remove PiecesJustificativesService
     def update
       @dossier = dossier_with_champs
 
@@ -138,22 +135,13 @@ module NewUser
         errors += @dossier.errors.full_messages
       end
 
-      if !draft?
-        errors += @dossier.champs.select(&:mandatory_and_blank?)
-          .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
-        errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
-      end
+      errors += @dossier.champs.select(&:mandatory_and_blank?)
+        .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
+      errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
 
       if errors.present?
         flash.now.alert = errors
         render :modifier
-      elsif draft?
-        flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
-        render :modifier
-      elsif @dossier.can_transition_to_en_construction?
-        @dossier.en_construction!
-        NotificationMailer.send_initiated_notification(@dossier).deliver_later
-        redirect_to merci_dossier_path(@dossier)
       elsif current_user.owns?(dossier)
         if Flipflop.new_dossier_details?
           redirect_to demande_dossier_path(@dossier)
