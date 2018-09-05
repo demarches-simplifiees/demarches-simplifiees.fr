@@ -29,6 +29,6 @@
             %td= link_to(dossier.user.email, dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link')
             %td.status-col
               = link_to(dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link') do
-                = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
+                = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
   - else
     %h2 Aucun dossier correspondant à votre recherche n'a été trouvé
