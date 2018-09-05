@@ -1,5 +1,5 @@
-describe 'new_user/dossiers/show/_status_progress.html.haml', type: :view do
-  subject! { render 'new_user/dossiers/show/status_progress.html.haml', dossier: dossier }
+describe 'new_user/dossiers/show/_status_overview.html.haml', type: :view do
+  subject! { render 'new_user/dossiers/show/status_overview.html.haml', dossier: dossier }
 
   matcher :have_timeline_item do |selector|
     match do |rendered|
