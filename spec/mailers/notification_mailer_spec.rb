@@ -18,11 +18,11 @@ RSpec.describe NotificationMailer, type: :mailer do
   describe '.send_notification' do
     let(:email_template) { instance_double('email_template', subject_for_dossier: 'subject', body_for_dossier: 'body') }
 
-    subject do
+    subject(:mail) do
       klass = Class.new(described_class) do
         # We’re testing the (private) method `NotificationMailer#send_notification`.
         #
-        # The standard trick to test a private method would be to `send(:send_notification`, but doesn’t work here,
+        # The standard trick to test a private method would be to `send(:send_notification)`, but doesn’t work here,
         # because ActionMailer does some magic to expose public instace methods as class methods.
         # So, we use inheritance instead to make the private method public for testing purposes.
         def send_notification(dossier, template)
@@ -32,13 +32,15 @@ RSpec.describe NotificationMailer, type: :mailer do
       klass.send_notification(dossier, email_template)
     end
 
-    it { expect(subject.subject).to eq(email_template.subject_for_dossier) }
-    it { expect(subject.body).to eq(email_template.body_for_dossier) }
+    it { expect(mail.subject).to eq(email_template.subject_for_dossier) }
+    it { expect(mail.body).to include(email_template.body_for_dossier) }
+    it { expect(mail.body).to have_selector('.footer') }
+
     it_behaves_like "create a commentaire not notified"
   end
 
   describe '.send_dossier_received' do
-    subject { described_class.send_dossier_received(dossier) }
+    subject(:mail) { described_class.send_dossier_received(dossier) }
     let(:email_template) { create(:received_mail) }
 
     before do
@@ -46,8 +48,9 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
 
     it do
-      expect(subject.subject).to eq(email_template.subject)
-      expect(subject.body).to eq(email_template.body)
+      expect(mail.subject).to eq(email_template.subject)
+      expect(mail.body).to include(email_template.body)
+      expect(mail.body).to have_selector('.footer')
     end
 
     it_behaves_like "create a commentaire not notified"
