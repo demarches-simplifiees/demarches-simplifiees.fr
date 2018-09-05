@@ -279,6 +279,8 @@ Rails.application.routes.draw do
         patch 'modifier', to: 'dossiers#update'
         get 'merci'
         get 'demande'
+        get 'messagerie'
+        post 'commentaire' => 'dossiers#create_commentaire'
         post 'ask_deletion'
         get 'attestation'
       end

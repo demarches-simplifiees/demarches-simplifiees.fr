@@ -4,8 +4,8 @@ module NewUser
 
     helper_method :new_demarche_url
 
-    before_action :ensure_ownership!, except: [:index, :show, :demande, :modifier, :update, :recherche]
-    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :modifier, :update]
+    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :modifier, :update, :recherche]
+    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :modifier, :update, :create_commentaire]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update]
     before_action :forbid_invite_submission!, only: [:update]
 
@@ -36,6 +36,11 @@ module NewUser
 
     def demande
       @dossier = dossier
+    end
+
+    def messagerie
+      @dossier = dossier
+      @commentaire = Commentaire.new
     end
 
     def attestation
@@ -122,6 +127,18 @@ module NewUser
       @dossier = current_user.dossiers.includes(:procedure).find(params[:id])
     end
 
+    def create_commentaire
+      @commentaire = CommentaireService.create(current_user, dossier, commentaire_params)
+
+      if @commentaire.save
+        flash.notice = "Message envoyé"
+        redirect_to messagerie_dossier_path(dossier)
+      else
+        flash.now.alert = @commentaire.errors.full_messages
+        render :messagerie
+      end
+    end
+
     def ask_deletion
       dossier = current_user.dossiers.includes(:user, procedure: :administrateur).find(params[:id])
 
@@ -185,7 +202,7 @@ module NewUser
     end
 
     def dossier
-      Dossier.find(params[:id] || params[:dossier_id])
+      @dossier ||= Dossier.find(params[:id] || params[:dossier_id])
     end
 
     def dossier_with_champs
@@ -221,6 +238,10 @@ module NewUser
 
     def dossier_params
       params.require(:dossier).permit(:autorisation_donnees)
+    end
+
+    def commentaire_params
+      params.require(:commentaire).permit(:body, :file)
     end
 
     def passage_en_construction?
