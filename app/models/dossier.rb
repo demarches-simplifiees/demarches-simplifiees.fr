@@ -185,7 +185,7 @@ class Dossier < ApplicationRecord
   def text_summary
     if brouillon?
       parts = [
-        "Dossier en brouillon répondant à la procédure ",
+        "Dossier en brouillon répondant à la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
         procedure.organisation
@@ -194,7 +194,7 @@ class Dossier < ApplicationRecord
       parts = [
         "Dossier déposé le ",
         en_construction_at.localtime.strftime("%d/%m/%Y"),
-        " sur la procédure ",
+        " sur la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
         procedure.organisation

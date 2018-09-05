@@ -11,9 +11,9 @@ module Mailers
 
     def subject(procedures)
       if procedures.count == 1
-        procedure_ids = "votre procédure nº #{procedures.first.id}"
+        procedure_ids = "votre démarche nº #{procedures.first.id}"
       else
-        procedure_ids = 'vos procédures nº ' + procedures.map{ |p| p.id }.join(', ')
+        procedure_ids = 'vos démarches nº ' + procedures.map{ |p| p.id }.join(', ')
       end
       "demarches-simplifiees.fr – mise à jour nécessaire de l’accusé d’acceptation de #{procedure_ids}"
     end
@@ -45,10 +45,10 @@ module Mailers
         p = procedures.first
 
         <<~HEREDOC.chomp
-          Vous êtes administrateur de la procédure suivante :
+          Vous êtes administrateur de la démarche suivante :
           #{p.libelle} (nº #{p.id})
 
-          Cette procédure donne lieu à l’émission d’une attestation, et son accusé
+          Cette démarche donne lieu à l’émission d’une attestation, et son accusé
           d’acceptation a été personnalisé. Pour respecter la rédaction de votre accusé
           d’acceptation, nous ne prendrons pas l’initiative d’y ajouter la balise --lien attestation--.
 
@@ -63,7 +63,7 @@ module Mailers
         liste_procedures = procedures.map { |p| "- #{p.libelle} (nº #{p.id}) – #{edit_admin_procedure_mail_template_url(p, Mails::ClosedMail::SLUG)}" }.join("\n")
 
         <<~HEREDOC.chomp
-          Vous êtes administrateur sur plusieurs procédures qui donnent lieu à l’émission
+          Vous êtes administrateur sur plusieurs démarches qui donnent lieu à l’émission
           d’une attestation, et dont l’accusé d’acceptation a été personnalisé. Pour respecter
           la rédaction de vos accusés d’acceptation, nous ne prendrons pas l’initiative d’y
           ajouter de balise --lien attestation--.

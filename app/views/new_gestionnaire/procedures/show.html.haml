@@ -5,7 +5,7 @@
     .container.flex
 
       .procedure-logo{ style: @procedure.logo.present? ? "background-image: url(#{@procedure.logo.url})" : nil,
-        role: 'img', 'aria-label': "logo de la procédure #{@procedure.libelle}" }
+        role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
 
       .procedure-header
         %h1= procedure_libelle @procedure

@@ -22,7 +22,7 @@ describe MailTemplateConcern do
     end
 
     describe 'with multiples tokens to replace' do
-      let(:template) { '[demarches-simplifiees.fr] --numéro du dossier-- --libellé procédure-- --lien dossier--' }
+      let(:template) { '[demarches-simplifiees.fr] --numéro du dossier-- --libellé démarche-- --lien dossier--' }
       it do
         expected =
           "[demarches-simplifiees.fr] #{dossier.id} #{dossier.procedure.libelle} " +

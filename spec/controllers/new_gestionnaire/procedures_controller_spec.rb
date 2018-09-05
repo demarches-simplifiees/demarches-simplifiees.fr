@@ -37,7 +37,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
 
       it "redirects and flash" do
         expect(@controller).to have_received(:redirect_to).with(root_path)
-        expect(flash.alert).to eq("Vous n'avez pas accès à cette procédure")
+        expect(flash.alert).to eq("Vous n'avez pas accès à cette démarche")
       end
     end
   end

@@ -18,7 +18,7 @@ describe 'admin/_closed_mail_template_attestation_inconsistency_alert.html.haml'
   context 'when there is no active attestation but the closed mail template mentions one' do
     let(:closed_mail) { create(:closed_mail, body: '--lien attestation--') }
 
-    it { expect(alert).to include("Cette procédure ne comporte pas d’attestation, mais l’accusé d’acceptation en mentionne une") }
+    it { expect(alert).to include("Cette démarche ne comporte pas d’attestation, mais l’accusé d’acceptation en mentionne une") }
     it { expect(alert).to include(edit_admin_procedure_attestation_template_path(procedure)) }
     it { expect(alert).to include(edit_admin_procedure_mail_template_path(procedure, Mails::ClosedMail::SLUG)) }
   end
@@ -27,7 +27,7 @@ describe 'admin/_closed_mail_template_attestation_inconsistency_alert.html.haml'
     let(:closed_mail) { create(:closed_mail) }
     let!(:attestation_template) { create(:attestation_template, procedure: procedure, activated: true) }
 
-    it { expect(alert).to include("Cette procédure comporte une attestation, mais l’accusé d’acceptation ne la mentionne pas") }
+    it { expect(alert).to include("Cette démarche comporte une attestation, mais l’accusé d’acceptation ne la mentionne pas") }
     it { expect(alert).to include(edit_admin_procedure_mail_template_path(procedure, Mails::ClosedMail::SLUG)) }
 
     context 'when the procedure has been published, the attestation cannot be deactivated' do

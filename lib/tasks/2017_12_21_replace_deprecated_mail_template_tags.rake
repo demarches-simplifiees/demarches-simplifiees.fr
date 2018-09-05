@@ -2,7 +2,7 @@ namespace :'2017_12_21_replace_deprecated_mail_template_tags' do
   task set: :environment do
     replace_tag('numero_dossier', 'numéro du dossier')
     replace_tag('date_de_decision', 'date de décision')
-    replace_tag('libelle_procedure', 'libellé procédure')
+    replace_tag('libelle_procedure', 'libellé démarche')
     replace_tag('lien_dossier', 'lien dossier')
   end
 

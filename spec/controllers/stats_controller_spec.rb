@@ -122,9 +122,9 @@ describe StatsController, type: :controller do
 
     it do
       is_expected.to eq({
-        'Une procédure' => 1,
-        'Entre deux et cinq procédures' => 2,
-        'Plus de cinq procédures' => 1
+        'Une démarche' => 1,
+        'Entre deux et cinq démarches' => 2,
+        'Plus de cinq démarches' => 1
       })
     end
   end
