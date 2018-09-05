@@ -11,13 +11,13 @@ class AdminController < ApplicationController
     @procedure = current_administrateur.procedures.find(id)
 
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inexistante'
+    flash.alert = 'Démarche inexistante'
     redirect_to admin_procedures_path, status: 404
   end
 
   def procedure_locked?
     if @procedure.locked?
-      flash.alert = 'Procédure verrouillée'
+      flash.alert = 'Démarche verrouillée'
       redirect_to admin_procedure_path(id: @procedure.id)
     end
   end
