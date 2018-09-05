@@ -113,15 +113,7 @@ module NewGestionnaire
     end
 
     def create_commentaire
-      commentaire_hash = commentaire_params.merge(email: current_gestionnaire.email, dossier: dossier)
-
-      # avoid simple_format replacing '' by '<p></p>'
-      # and thus skipping the not empty constraint on commentaire's body
-      if commentaire_hash[:body].present?
-        commentaire_hash[:body] = simple_format(commentaire_hash[:body])
-      end
-
-      @commentaire = Commentaire.new(commentaire_hash)
+      @commentaire = CommentaireService.create(current_gestionnaire, dossier, commentaire_params)
 
       if @commentaire.save
         current_gestionnaire.follow(dossier)
