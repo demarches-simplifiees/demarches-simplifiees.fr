@@ -4,9 +4,9 @@ module NewUser
 
     helper_method :new_demarche_url
 
-    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :brouillon, :update_brouillon, :recherche]
-    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update_brouillon, :create_commentaire]
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon]
+    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :recherche]
+    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :create_commentaire]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier]
     before_action :forbid_invite_submission!, only: [:update_brouillon]
 
     def index
@@ -121,6 +121,10 @@ module NewUser
       else
         redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
       end
+    end
+
+    def modifier
+      @dossier = dossier_with_champs
     end
 
     def merci

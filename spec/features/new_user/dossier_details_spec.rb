@@ -25,7 +25,7 @@ describe 'Dossier details:' do
     expect(page).to have_current_path(demande_dossier_path(dossier))
     click_on 'Modifier le dossier'
 
-    expect(page).to have_current_path(brouillon_dossier_path(dossier))
+    expect(page).to have_current_path(modifier_dossier_path(dossier))
     fill_in('texte obligatoire', with: 'Nouveau texte')
     click_on 'Enregistrer les modifications du dossier'
 
