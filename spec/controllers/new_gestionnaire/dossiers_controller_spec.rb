@@ -269,7 +269,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
   describe "#create_commentaire" do
     let(:saved_commentaire) { dossier.commentaires.first }
     let(:body) { "avant\napres" }
-    let(:file) { nil }
+    let(:file) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
     let(:scan_result) { true }
 
     subject {
@@ -287,35 +287,23 @@ describe NewGestionnaire::DossiersController, type: :controller do
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
     end
 
-    it do
-      subject
-
-      expect(saved_commentaire.body).to eq("<p>avant\n<br />apres</p>")
-      expect(saved_commentaire.email).to eq(gestionnaire.email)
-      expect(saved_commentaire.dossier).to eq(dossier)
-      expect(response).to redirect_to(messagerie_gestionnaire_dossier_path(dossier.procedure, dossier))
+    it "creates a commentaire" do
+      expect { subject }.to change(Commentaire, :count).by(1)
       expect(gestionnaire.followed_dossiers).to include(dossier)
-      expect(saved_commentaire.file.present?).to eq(false)
+
+      expect(response).to redirect_to(messagerie_gestionnaire_dossier_path(dossier.procedure, dossier))
+      expect(flash.notice).to be_present
     end
 
-    it { expect { subject }.to change(Commentaire, :count).by(1) }
+    context "when the commentaire creation fails" do
+      let(:scan_result) { false }
 
-    context "without a body" do
-      let(:body) { nil }
+      it "renders the messagerie page with the invalid commentaire" do
+        expect { subject }.not_to change(Commentaire, :count)
 
-      it { expect { subject }.not_to change(Commentaire, :count) }
-    end
-
-    context "with a file" do
-      let(:file) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
-
-      it { subject; expect(saved_commentaire.file.present?).to eq(true) }
-      it { expect { subject }.to change(Commentaire, :count).by(1) }
-
-      context "and a virus" do
-        let(:scan_result) { false }
-
-        it { expect { subject }.not_to change(Commentaire, :count) }
+        expect(response).to render_template :messagerie
+        expect(flash.alert).to be_present
+        expect(assigns(:commentaire).body).to eq("<p>avant\n<br />apres</p>")
       end
     end
   end
