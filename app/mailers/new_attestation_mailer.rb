@@ -14,7 +14,7 @@ class NewAttestationMailer < ApplicationMailer
     <<~HEREDOC
       Bonjour,
 
-      Votre dossier nº #{dossier.id} (procédure "#{dossier.procedure.libelle}") a subi, à un moment, un "aller-retour" :
+      Votre dossier nº #{dossier.id} (démarche "#{dossier.procedure.libelle}") a subi, à un moment, un "aller-retour" :
       - Acceptation de votre dossier
       - Passage en instruction du dossier car besoin de le modifier
       - Seconde acceptation de votre dossier

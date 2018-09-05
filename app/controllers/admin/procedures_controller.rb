@@ -45,7 +45,7 @@ class Admin::ProceduresController < AdminController
     procedure = current_administrateur.procedures.find(params[:id])
     procedure.hide!
 
-    flash.notice = "Procédure supprimée, en cas d'erreur #{view_context.contact_link('contactez nous', tags: 'procédure supprimée')}"
+    flash.notice = "Démarche supprimée, en cas d'erreur #{view_context.contact_link('contactez nous', tags: 'démarche supprimée')}"
     redirect_to admin_procedures_draft_path
   end
 
@@ -56,7 +56,7 @@ class Admin::ProceduresController < AdminController
 
     procedure.destroy
 
-    flash.notice = 'Procédure supprimée'
+    flash.notice = 'Démarche supprimée'
     redirect_to admin_procedures_draft_path
   end
 
@@ -74,7 +74,7 @@ class Admin::ProceduresController < AdminController
       return render 'new'
     end
 
-    flash.notice = 'Procédure enregistrée'
+    flash.notice = 'Démarche enregistrée'
     redirect_to admin_procedure_types_de_champ_path(procedure_id: @procedure.id)
   end
 
@@ -85,7 +85,7 @@ class Admin::ProceduresController < AdminController
       flash.alert = @procedure.errors.full_messages
     else
       reset_procedure
-      flash.notice = 'Procédure modifiée'
+      flash.notice = 'Démarche modifiée'
     end
 
     redirect_to edit_admin_procedure_path(id: @procedure.id)
@@ -105,21 +105,21 @@ class Admin::ProceduresController < AdminController
     if new_procedure_path.validate
       new_procedure_path.delete
     else
-      flash.alert = 'Lien de la procédure invalide'
+      flash.alert = 'Lien de la démarche invalide'
       return redirect_to admin_procedures_path
     end
 
     if procedure.may_publish?(params[:procedure_path])
       procedure.publish!(params[:procedure_path])
 
-      flash.notice = "Procédure publiée"
+      flash.notice = "Démarche publiée"
       redirect_to admin_procedures_path
     else
       @mine = false
       render '/admin/procedures/publish', formats: 'js'
     end
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inexistante'
+    flash.alert = 'Démarche inexistante'
     redirect_to admin_procedures_path
   end
 
@@ -134,7 +134,7 @@ class Admin::ProceduresController < AdminController
 
       clone_procedure.save
 
-      flash.now.notice = "La procédure a correctement été clonée vers le nouvel administrateur."
+      flash.now.notice = "La démarche a correctement été clonée vers le nouvel administrateur."
 
       render '/admin/procedures/transfer', formats: 'js', status: 200
     end
@@ -144,11 +144,11 @@ class Admin::ProceduresController < AdminController
     procedure = current_administrateur.procedures.find(params[:procedure_id])
     procedure.archive!
 
-    flash.notice = "Procédure archivée"
+    flash.notice = "Démarche archivée"
     redirect_to admin_procedures_path
 
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inexistante'
+    flash.alert = 'Démarche inexistante'
     redirect_to admin_procedures_path
   end
 
@@ -157,7 +157,7 @@ class Admin::ProceduresController < AdminController
     new_procedure = procedure.clone(current_administrateur, cloned_from_library?)
 
     if new_procedure.save
-      flash.notice = 'Procédure clonée'
+      flash.notice = 'Démarche clonée'
       redirect_to edit_admin_procedure_path(id: new_procedure.id)
     else
       if cloned_from_library?
@@ -170,7 +170,7 @@ class Admin::ProceduresController < AdminController
     end
 
   rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Procédure inexistante'
+    flash.alert = 'Démarche inexistante'
     redirect_to admin_procedures_path
   end
 

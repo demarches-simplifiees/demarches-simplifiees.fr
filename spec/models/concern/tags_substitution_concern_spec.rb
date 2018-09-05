@@ -6,7 +6,7 @@ describe TagsSubstitutionConcern, type: :model do
 
   let(:procedure) do
     create(:procedure,
-      libelle: 'Une magnifique procédure',
+      libelle: 'Une magnifique démarche',
       types_de_champ: types_de_champ,
       types_de_champ_private: types_de_champ_private,
       for_individual: for_individual)
@@ -212,10 +212,10 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
-    context "when the template has a libellé procédure tag" do
-      let(:template) { 'body --libellé procédure--' }
+    context "when the template has a libellé démarche tag" do
+      let(:template) { 'body --libellé démarche--' }
 
-      it { is_expected.to eq('body Une magnifique procédure') }
+      it { is_expected.to eq('body Une magnifique démarche') }
     end
 
     context "match breaking and non breaking spaces" do

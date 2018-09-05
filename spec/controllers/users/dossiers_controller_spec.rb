@@ -456,7 +456,7 @@ describe Users::DossiersController, type: :controller do
       context 'when the dossier exist' do
         before { get :text_summary, params: { dossier_id: dossier.id } }
         it 'returns the procedure name' do
-          expect(JSON.parse(response.body)).to eq("textSummary" => "Dossier en brouillon répondant à la procédure #{procedure.libelle} gérée par l'organisme #{procedure.organisation}")
+          expect(JSON.parse(response.body)).to eq("textSummary" => "Dossier en brouillon répondant à la démarche #{procedure.libelle} gérée par l'organisme #{procedure.organisation}")
         end
       end
 

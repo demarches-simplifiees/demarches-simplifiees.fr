@@ -43,7 +43,7 @@
     = text_field_tag :address, nil, required: true
 
     = label_tag :nb_of_procedures do
-      Combien de procédures souhaitez-vous dématerialiser ?
+      Combien de démarches souhaitez-vous dématerialiser ?
       %span.mandatory *
       = select_tag :nb_of_procedures,
         options_for_select({ 'je ne sais pas' => Pipedrive::DealAdapter::PIPEDRIVE_NB_OF_PROCEDURES_DO_NOT_KNOW_VALUE,

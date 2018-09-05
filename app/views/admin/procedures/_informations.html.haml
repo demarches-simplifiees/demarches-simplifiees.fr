@@ -1,10 +1,10 @@
 - if @procedure.locked?
   .alert.alert-info
-    Cette procédure est publiée, certains éléments de la description ne sont plus modifiables
+    Cette démarche est publiée, certains éléments de la description ne sont plus modifiables
 
 .form-group
   %h4 Libellé*
-  = f.text_field :libelle, class: 'form-control', placeholder: 'Libellé de la procédure'
+  = f.text_field :libelle, class: 'form-control', placeholder: 'Libellé de la démarche'
 
 .form-group
   %h4 Description*
@@ -27,12 +27,12 @@
   .form-group
     %h4 Lien de rappel HTTP
     %p
-      Un lien de rappel HTTP (aussi appelé webhook) est utilisé pour notifier un service tiers du changement de l'état d’un dossier sur demarches-simplifiees.fr. À chaque changement d’état d'un dossier, notre site va effectuer une requête sur le lien renseigné avec en paramètres : le nouvel état du dossier, l’identifiant de la procédure, l'identifiant dossier et la date du changement. Vous pourrez alors utiliser notre API pour récupérer les nouvelles informations du dossier concerné.
+      Un lien de rappel HTTP (aussi appelé webhook) est utilisé pour notifier un service tiers du changement de l'état d’un dossier sur demarches-simplifiees.fr. À chaque changement d’état d'un dossier, notre site va effectuer une requête sur le lien renseigné avec en paramètres : le nouvel état du dossier, l’identifiant de la démarche, l'identifiant dossier et la date du changement. Vous pourrez alors utiliser notre API pour récupérer les nouvelles informations du dossier concerné.
       = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 
 .form-group
   %h4 Cadre juridique *
-  %p Indiquez la référence ou l'URL du texte juridique ou chargez la délibération qui justifie cette procédure
+  %p Indiquez la référence ou l'URL du texte juridique ou chargez la délibération qui justifie cette démarche
   = f.label :cadre_juridique, 'Référence ou texte de loi'
   = f.text_field :cadre_juridique, class: 'form-control', placeholder: 'https://www.legifrance.gouv.fr/'
 
@@ -52,7 +52,7 @@
       direct_upload: true
 
 .form-group
-  %h4 Notice explicative de la procédure
+  %h4 Notice explicative de la démarche
   - notice = @procedure.notice
   - if !notice.attached?
     = f.file_field :notice,
@@ -67,7 +67,7 @@
 
 .row
   .col-md-6
-    %h4 Logo de la procédure
+    %h4 Logo de la démarche
     - if @procedure.logo.present?
       = image_tag @procedure.decorate.logo_img, { style: 'height: 40px; display: inline; margin-right: 6px;', id: 'preview_procedure_logo' }
     = f.file_field :logo, accept: 'image/png, image/jpg, image/jpeg', style: 'display: inline'
@@ -113,7 +113,7 @@
       .checkbox
         %label
           = f.check_box :for_individual
-          Cette procédure s'adresse à un public qui
+          Cette démarche s'adresse à un public qui
           %b
             ne possède pas (ou pas encore) de numéro SIRET,
           qui doivent donc s'identifier en tant que personne physique.
@@ -138,4 +138,4 @@
     (à 00h00)
     %p.help-block
       %i.fa.fa-info-circle
-      L'archivage automatique de la procédure entrainera le passage en instruction de tous les dossiers en construction.
+      L'archivage automatique de la démarche entrainera le passage en instruction de tous les dossiers en construction.

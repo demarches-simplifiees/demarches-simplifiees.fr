@@ -19,7 +19,7 @@ class Users::DossiersController < UsersController
     if procedure&.brouillon_avec_lien?
       redirect_to new_users_dossier_path(procedure_id: procedure.id, brouillon: true)
     else
-      flash.alert = "La procédure est inconnue."
+      flash.alert = "La démarche est inconnue."
       redirect_to root_path
     end
   end
@@ -37,7 +37,7 @@ class Users::DossiersController < UsersController
         redirect_to new_users_dossier_path(procedure_id: procedure.id)
       end
     else
-      flash.alert = "La procédure est inconnue, ou la création de nouveaux dossiers pour cette procédure est terminée."
+      flash.alert = "La démarche est inconnue, ou la création de nouveaux dossiers pour cette démarche est terminée."
       redirect_to root_path
     end
   end

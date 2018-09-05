@@ -52,7 +52,7 @@ feature 'Administrator connection' do
           end
 
           scenario 'it redirects to procedure page' do
-            expect(page).to have_content('Procédures')
+            expect(page).to have_content('Démarches')
           end
         end
       end

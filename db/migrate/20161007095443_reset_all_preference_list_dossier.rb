@@ -32,7 +32,7 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
       table = 'procedure'
 
       {
-        libelle: create_column('Libellé procédure', table, 'libelle', 'libelle', 4),
+        libelle: create_column('Libellé démarche', table, 'libelle', 'libelle', 4),
         organisation: create_column('Organisation', table, 'organisation', 'organisation', 3),
         direction: create_column('Direction', table, 'direction', 'direction', 3)
       }
