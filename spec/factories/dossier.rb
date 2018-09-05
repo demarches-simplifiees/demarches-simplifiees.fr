@@ -64,6 +64,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_commentaires do
+      after(:create) do |dossier, _evaluator|
+        dossier.commentaires += create_list(:commentaire, 2)
+      end
+    end
+
     trait :followed do
       after(:create) do |dossier, _evaluator|
         g = create(:gestionnaire)
