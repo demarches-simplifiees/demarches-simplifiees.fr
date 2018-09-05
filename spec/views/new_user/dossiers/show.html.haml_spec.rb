@@ -12,6 +12,6 @@ describe 'new_user/dossiers/show.html.haml', type: :view do
 
   it 'renders a summary of the dossier state' do
     expect(rendered).to have_text("Dossier nº #{dossier.id}")
-    expect(rendered).to have_selector('.status-progress')
+    expect(rendered).to have_selector('.status-overview')
   end
 end

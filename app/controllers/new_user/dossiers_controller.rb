@@ -4,8 +4,8 @@ module NewUser
 
     helper_method :new_demarche_url
 
-    before_action :ensure_ownership!, except: [:index, :show, :formulaire, :modifier, :update, :recherche]
-    before_action :ensure_ownership_or_invitation!, only: [:show, :formulaire, :modifier, :update]
+    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :modifier, :update, :recherche]
+    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :modifier, :update, :create_commentaire]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update]
     before_action :forbid_invite_submission!, only: [:update]
 
@@ -34,8 +34,13 @@ module NewUser
       @dossier = dossier
     end
 
-    def formulaire
+    def demande
       @dossier = dossier
+    end
+
+    def messagerie
+      @dossier = dossier
+      @commentaire = Commentaire.new
     end
 
     def attestation
@@ -109,7 +114,7 @@ module NewUser
         redirect_to merci_dossier_path(@dossier)
       elsif current_user.owns?(dossier)
         if Flipflop.new_dossier_details?
-          redirect_to formulaire_dossier_path(@dossier)
+          redirect_to demande_dossier_path(@dossier)
         else
           redirect_to users_dossier_recapitulatif_path(@dossier)
         end
@@ -120,6 +125,18 @@ module NewUser
 
     def merci
       @dossier = current_user.dossiers.includes(:procedure).find(params[:id])
+    end
+
+    def create_commentaire
+      @commentaire = CommentaireService.create(current_user, dossier, commentaire_params)
+
+      if @commentaire.save
+        flash.notice = "Message envoyé"
+        redirect_to messagerie_dossier_path(dossier)
+      else
+        flash.now.alert = @commentaire.errors.full_messages
+        render :messagerie
+      end
     end
 
     def ask_deletion
@@ -185,7 +202,7 @@ module NewUser
     end
 
     def dossier
-      Dossier.find(params[:id] || params[:dossier_id])
+      @dossier ||= Dossier.find(params[:id] || params[:dossier_id])
     end
 
     def dossier_with_champs
@@ -221,6 +238,10 @@ module NewUser
 
     def dossier_params
       params.require(:dossier).permit(:autorisation_donnees)
+    end
+
+    def commentaire_params
+      params.require(:commentaire).permit(:body, :file)
     end
 
     def passage_en_construction?

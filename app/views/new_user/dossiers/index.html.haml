@@ -1,3 +1,5 @@
+- content_for(:title, "Dossiers")
+
 .dossiers-headers.sub-header
   .container
     = link_to "Commencer une nouvelle démarche", new_demarche_url, class: "button secondary new-demarche"
@@ -40,7 +42,7 @@
                   = dossier.procedure.libelle
               %td.status-col
                 = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                  = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
+                  = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
               %td.updated-at-col
                 = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   = dossier.updated_at.localtime.strftime("%d/%m/%Y")
