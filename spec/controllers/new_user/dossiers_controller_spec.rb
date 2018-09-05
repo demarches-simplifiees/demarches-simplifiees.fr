@@ -523,6 +523,48 @@ describe NewUser::DossiersController, type: :controller do
     it { is_expected.to render_template(:demande) }
   end
 
+  describe "#create_commentaire" do
+    let(:dossier) { create(:dossier, :en_construction, user: user) }
+    let(:saved_commentaire) { dossier.commentaires.first }
+    let(:body) { "avant\napres" }
+    let(:file) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
+    let(:scan_result) { true }
+
+    subject {
+      post :create_commentaire, params: {
+        id: dossier.id,
+        commentaire: {
+          body: body,
+          file: file
+        }
+      }
+    }
+
+    before do
+      sign_in(user)
+      allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
+    end
+
+    it "creates a commentaire" do
+      expect { subject }.to change(Commentaire, :count).by(1)
+
+      expect(response).to redirect_to(messagerie_dossier_path(dossier))
+      expect(flash.notice).to be_present
+    end
+
+    context "when the commentaire creation fails" do
+      let(:scan_result) { false }
+
+      it "renders the messagerie page with the invalid commentaire" do
+        expect { subject }.not_to change(Commentaire, :count)
+
+        expect(response).to render_template :messagerie
+        expect(flash.alert).to be_present
+        expect(assigns(:commentaire).body).to eq("<p>avant\n<br />apres</p>")
+      end
+    end
+  end
+
   describe '#ask_deletion' do
     before { sign_in(user) }
 
