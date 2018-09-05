@@ -12,7 +12,7 @@ describe 'new_user/dossiers/modifier.html.haml', type: :view do
 
   subject! { render }
 
-  it 'affiche le libellé de la procédure' do
+  it 'affiche le libellé de la démarche' do
     expect(rendered).to have_text(dossier.procedure.libelle)
   end
 
@@ -28,7 +28,7 @@ describe 'new_user/dossiers/modifier.html.haml', type: :view do
     expect(footer).to have_selector('footer')
   end
 
-  context 'quand la procédure ne comporte pas de notice' do
+  context 'quand la démarche ne comporte pas de notice' do
     let(:procedure) { create(:procedure) }
     it { is_expected.not_to have_link("Guide de la démarche") }
   end

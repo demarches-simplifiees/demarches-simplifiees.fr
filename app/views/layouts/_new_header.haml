@@ -13,7 +13,7 @@
         %ul.header-tabs
           - if current_gestionnaire.visible_procedures.count > 0
             %li
-              = active_link_to "Procédures", gestionnaire_procedures_path, active: :inclusive, class: 'tab-link'
+              = active_link_to "Démarches", gestionnaire_procedures_path, active: :inclusive, class: 'tab-link'
           - if current_gestionnaire.avis.count > 0
             %li
               = active_link_to gestionnaire_avis_index_path, active: :inclusive, class: 'tab-link' do

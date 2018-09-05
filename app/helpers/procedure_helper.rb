@@ -43,7 +43,7 @@ module ProcedureHelper
     [
       formatted_combination,
       dossiers_count + brouillons_count == 1 ? "est rattaché" : "sont rattachés",
-      "à cette procédure, la suppression de cette procédure entrainera également leur suppression."
+      "à cette démarche, la suppression de cette démarche entrainera également leur suppression."
     ].join(" ")
   end
 end

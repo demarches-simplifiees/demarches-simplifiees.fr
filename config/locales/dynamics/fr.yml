@@ -15,12 +15,12 @@ fr:
       connexion_title: Administration
       dossiers:
         tableau_de_bord:
-          title: 'Gestion des procédures'
-          nouvelle_procedure: 'Nouvelle procédure'
+          title: 'Gestion des démarches'
+          nouvelle_procedure: 'Nouvelle démarche'
       menu:
-        title: Mes procédures
+        title: Mes démarches
         instructeurs: Instructeurs
-        procedures: Procédures
+        procedures: Démarches
       procedure:
         onglets:
           instructeurs: Instructeurs
