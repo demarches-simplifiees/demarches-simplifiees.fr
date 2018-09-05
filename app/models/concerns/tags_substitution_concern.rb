@@ -30,7 +30,7 @@ module TagsSubstitutionConcern
       available_for_states: Dossier::TERMINE
     },
     {
-      libelle: 'libellé procédure',
+      libelle: 'libellé démarche',
       description: '',
       lambda: -> (d) { d.procedure.libelle },
       available_for_states: Dossier::SOUMIS

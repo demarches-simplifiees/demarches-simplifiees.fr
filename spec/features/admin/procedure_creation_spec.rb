@@ -113,7 +113,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         click_on 'publish'
       end
 
-      expect(page).to have_text('Procédure publiée')
+      expect(page).to have_text('Démarche publiée')
       expect(page).to have_selector('.procedure-lien')
     end
   end

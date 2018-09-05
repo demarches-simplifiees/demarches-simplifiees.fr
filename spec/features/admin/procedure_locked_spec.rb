@@ -12,7 +12,7 @@ feature 'procedure locked' do
 
   context 'when procedure is not published' do
     scenario 'info label is not present' do
-      expect(page).not_to have_content('Cette procédure a été publiée, certains éléments ne peuvent plus être modifiés')
+      expect(page).not_to have_content('Cette démarche a été publiée, certains éléments ne peuvent plus être modifiés')
     end
   end
 end

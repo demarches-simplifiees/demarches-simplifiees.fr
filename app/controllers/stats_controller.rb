@@ -44,8 +44,8 @@ class StatsController < ApplicationController
   def download
     headers = [
       'ID du dossier',
-      'ID de la procédure',
-      'Nom de la procédure',
+      'ID de la démarche',
+      'Nom de la démarche',
       'ID utilisateur',
       'Etat du fichier',
       'Durée en brouillon',
@@ -205,9 +205,9 @@ class StatsController < ApplicationController
   def procedures_count_per_administrateur(procedures)
     count_per_administrateur = procedures.group(:administrateur_id).count.values
     {
-      'Une procédure' => count_per_administrateur.select { |count| count == 1 }.count,
-      'Entre deux et cinq procédures' => count_per_administrateur.select { |count| count.in?(2..5) }.count,
-      'Plus de cinq procédures' => count_per_administrateur.select { |count| 5 < count }.count
+      'Une démarche' => count_per_administrateur.select { |count| count == 1 }.count,
+      'Entre deux et cinq démarches' => count_per_administrateur.select { |count| count.in?(2..5) }.count,
+      'Plus de cinq démarches' => count_per_administrateur.select { |count| 5 < count }.count
     }
   end
 

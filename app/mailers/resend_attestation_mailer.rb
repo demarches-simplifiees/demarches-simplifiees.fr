@@ -14,7 +14,7 @@ class ResendAttestationMailer < ApplicationMailer
     <<~HEREDOC
       Bonjour,
 
-      L'attestation de votre dossier nº #{dossier.id} (procédure "#{dossier.procedure.libelle}") a été modifiée.
+      L'attestation de votre dossier nº #{dossier.id} (démarche "#{dossier.procedure.libelle}") a été modifiée.
 
       Votre nouvelle attestation est disponible à l'adresse suivante :
       #{attestation_dossier_url(dossier)}

@@ -11,7 +11,7 @@
           - missing_elements << 'des instructeurs'
         - if @procedure.service.nil?
           - missing_elements << 'un service'
-        - message = "Affectez #{missing_elements.join(' et ')} à votre procédure."
+        - message = "Affectez #{missing_elements.join(' et ')} à votre démarche."
         %a.action_button.btn.btn-success#disabled-publish-procedure{ data: { toggle: :tooltip, placement: :bottom }, style: 'float: right; margin-top: 10px;', disabled: true, title: message }
           %i.fa.fa-eraser
           Publier
@@ -45,19 +45,19 @@
     - if @procedure.locked?
       #procedure_locked
         .alert.alert-info
-          Cette procédure a été publiée, certains éléments ne peuvent plus être modifiés.
+          Cette démarche a été publiée, certains éléments ne peuvent plus être modifiés.
 
     %div
-      %h3 Lien procédure
+      %h3 Lien démarche
       %div{ style: 'margin-left: 3%;' }
         - if @procedure.archivee?
           %b
-            Cette procédure est archivée et n’est donc pas accessible par le public.
+            Cette démarche est archivée et n’est donc pas accessible par le public.
         - elsif @procedure.brouillon_avec_lien? || @procedure.publiee?
           = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
         - else
           %b
-            Cette procédure n’a pas encore de lien, et n’est donc pas accessible par le public.
+            Cette démarche n’a pas encore de lien, et n’est donc pas accessible par le public.
 
     %br
     %h3 Détails
@@ -105,10 +105,10 @@
             %p= text
 
     - if @procedure.publiee_ou_archivee?
-      %h3 Supprimer la procédure
+      %h3 Supprimer la démarche
       .alert.alert-danger
         %p
-          Attention : la suppression d’une procédure est définitive.
+          Attention : la suppression d’une démarche est définitive.
 
         - dossiers_count = @procedure.dossiers.count
         - if dossiers_count > 0
@@ -116,8 +116,8 @@
             = dossiers_deletion_warning(@procedure)
 
         %p.text-right
-          = link_to "J'ai compris, je supprime la procédure",
+          = link_to "J'ai compris, je supprime la démarche",
             hide_admin_procedure_path(@procedure),
             method: :post,
             class: "btn btn-danger",
-            data: { confirm: "Voulez-vous supprimer la procédure ?", disable: true }
+            data: { confirm: "Voulez-vous supprimer la démarche ?", disable: true }

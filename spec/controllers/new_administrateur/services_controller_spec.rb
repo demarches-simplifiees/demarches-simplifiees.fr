@@ -132,7 +132,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       end
 
       it { expect(service.reload).not_to be_nil }
-      it { expect(flash.alert).to eq("la procédure #{procedure.libelle} utilise encore le service service. Veuillez l'affecter à un autre service avant de pouvoir le supprimer") }
+      it { expect(flash.alert).to eq("la démarche #{procedure.libelle} utilise encore le service service. Veuillez l'affecter à un autre service avant de pouvoir le supprimer") }
       it { expect(flash.notice).to be_nil }
       it { expect(response).to redirect_to(services_path(procedure_id: 12)) }
     end
