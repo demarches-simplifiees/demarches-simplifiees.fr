@@ -1,20 +1,20 @@
 FactoryBot.define do
   sequence(:published_path) { |n| "fake_path#{n}" }
   factory :procedure do
-    lien_demarche 'http://localhost'
+    lien_demarche { 'http://localhost' }
     sequence(:libelle) { |n| "Procedure #{n}" }
-    description "Demande de subvention à l'intention des associations"
-    organisation "Orga DINSIC"
-    direction "direction DINSIC"
-    cadre_juridique "un cadre juridique important"
-    published_at nil
+    description { "Demande de subvention à l'intention des associations" }
+    organisation { "Orga DINSIC" }
+    direction { "direction DINSIC" }
+    cadre_juridique { "un cadre juridique important" }
+    published_at { nil }
     administrateur { create(:administrateur) }
-    duree_conservation_dossiers_dans_ds 3
-    duree_conservation_dossiers_hors_ds 6
+    duree_conservation_dossiers_dans_ds { 3 }
+    duree_conservation_dossiers_hors_ds { 6 }
 
     factory :procedure_with_dossiers do
       transient do
-        dossiers_count 1
+        dossiers_count { 1 }
       end
 
       after(:build) do |procedure, _evaluator|
@@ -58,7 +58,7 @@ FactoryBot.define do
 
     trait :with_type_de_champ do
       transient do
-        types_de_champ_count 1
+        types_de_champ_count { 1 }
       end
 
       after(:build) do |procedure, evaluator|
@@ -72,7 +72,7 @@ FactoryBot.define do
 
     trait :with_type_de_champ_private do
       transient do
-        types_de_champ_private_count 1
+        types_de_champ_private_count { 1 }
       end
 
       after(:build) do |procedure, evaluator|
