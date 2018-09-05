@@ -1,6 +1,6 @@
 .sub-header
   .container
-    = render partial: 'shared/dossiers/status', locals: { dossier: dossier }
+    = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
 
     .title-container
       %span.icon.folder
@@ -9,4 +9,5 @@
 
     %ul.tabs
       = active_tab_item('Résumé', dossier_path(dossier))
-      = active_tab_item('Formulaire', formulaire_dossier_path(dossier))
+      = active_tab_item('Demande', demande_dossier_path(dossier))
+      = active_tab_item('Messagerie', messagerie_dossier_path(dossier))
