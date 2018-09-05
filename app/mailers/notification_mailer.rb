@@ -48,7 +48,13 @@ class NotificationMailer < ApplicationMailer
 
     create_commentaire_for_notification(dossier, subject, body)
 
-    mail(subject: subject, to: email) { |format| format.html { body } }
+    @dossier = dossier
+
+    mail(subject: subject, to: email) do |format|
+      # rubocop:disable Rails/OutputSafety
+      format.html { render(html: body.html_safe, layout: 'mailers/notification') }
+      # rubocop:enable Rails/OutputSafety
+    end
   end
 
   def create_commentaire_for_notification(dossier, subject, body)
