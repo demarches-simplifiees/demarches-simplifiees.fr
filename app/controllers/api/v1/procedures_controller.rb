@@ -3,10 +3,10 @@ class API::V1::ProceduresController < APIController
     description AUTHENTICATION_TOKEN_DESCRIPTION
   end
 
-  api :GET, '/procedures/:id', 'Informations concernant une procédure'
-  param :id, Integer, desc: "L'identifiant de la procédure", required: true
+  api :GET, '/procedures/:id', 'Informations concernant une démarche'
+  param :id, Integer, desc: "L'identifiant de la démarche", required: true
   error code: 401, desc: "Non authorisé"
-  error code: 404, desc: "Procédure inconnue"
+  error code: 404, desc: "Démarche inconnue"
 
   def show
     procedure = administrateur.procedures.find(params[:id]).decorate

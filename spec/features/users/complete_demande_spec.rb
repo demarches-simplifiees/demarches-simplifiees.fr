@@ -87,7 +87,7 @@ feature 'user path for dossier creation' do
     end
 
     scenario 'user is on home page', vcr: { cassette_name: 'complete_demande_spec' } do
-      expect(page).to have_content('La procédure n\'existe pas')
+      expect(page).to have_content('La démarche n\'existe pas')
     end
   end
 end

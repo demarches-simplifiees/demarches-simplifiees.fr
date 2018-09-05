@@ -14,7 +14,7 @@ describe 'new_user/dossiers/identite.html.haml', type: :view do
       render
     end
 
-    it 'affiche les informations de la procédure' do
+    it 'affiche les informations de la démarche' do
       expect(rendered).to have_text(dossier.procedure.libelle)
     end
 

@@ -196,7 +196,7 @@ module NewGestionnaire
 
     def ensure_ownership!
       if !procedure.gestionnaires.include?(current_gestionnaire)
-        flash[:alert] = "Vous n'avez pas accès à cette procédure"
+        flash[:alert] = "Vous n'avez pas accès à cette démarche"
         redirect_to root_path
       end
     end

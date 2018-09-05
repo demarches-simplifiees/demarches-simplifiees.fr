@@ -14,27 +14,27 @@
             %b
               Elle ne pourra plus être modifiée à l’issue de cette publication.
           %br
-          Afin de faciliter l’accès à la procédure, vous êtes invité à personnaliser l’adresse d'accès si vous le souhaitez.
+          Afin de faciliter l’accès à la démarche, vous êtes invité à personnaliser l’adresse d'accès si vous le souhaitez.
           %br
           .form-group
             %br
-            %h4 Lien de la procédure
+            %h4 Lien de la démarche
             %p.center
               = commencer_url(procedure_path: '')
               = text_field_tag('procedure_path', @procedure.default_path,
                                 id: 'procedure_path',
-                                placeholder: 'Chemin vers la procédure',
+                                placeholder: 'Chemin vers la démarche',
                                 data: { autocomplete: 'path' },
                                 class: 'form-control',
                                 maxlength: 50,
                                 style: 'width: 300px; display: inline;')
             #path-messages
               #path_is_mine.text-warning.center.message
-                Ce lien est déjà utilisé par une de vos procédure.
+                Ce lien est déjà utilisé par une de vos démarche.
                 %br
-                Si vous voulez l’utiliser, l’ancienne procédure sera archivée (plus accessible du public).
+                Si vous voulez l’utiliser, l’ancienne démarche sera archivée (plus accessible du public).
               #path_is_not_mine.text-danger.center.message
-                Ce lien est déjà utilisé par une procédure.
+                Ce lien est déjà utilisé par une démarche.
                 %br
                 Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               #path_is_invalid.text-danger.center.message

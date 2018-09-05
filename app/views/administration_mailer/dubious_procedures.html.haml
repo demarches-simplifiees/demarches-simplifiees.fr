@@ -1,4 +1,4 @@
-- content_for(:title, 'Liste de procédures douteuses')
+- content_for(:title, 'Liste de démarches douteuses')
 
 - if @procedures_and_type_de_champs.any?
   %ul
@@ -15,4 +15,4 @@
           Admin :
           = link_to "#{procedure.administrateur.email}", "mailto:#{procedure.administrateur.email}"
 - else
-  Il n'y a aucune procédure douteuse aujourd'hui
+  Il n'y a aucune démarche douteuse aujourd'hui

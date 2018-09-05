@@ -2,7 +2,7 @@
 
 - if potential_recipients.empty?
   %p.tab-paragraph
-    Vous êtes le seul instructeur assigné sur cette procédure
+    Vous êtes le seul instructeur assigné sur cette démarche
 - else
   = form_for dossier, url: envoyer_a_instructeur_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form' } do |f|
     .flex.justify-start.align-baseline

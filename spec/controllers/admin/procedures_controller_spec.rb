@@ -6,7 +6,7 @@ describe Admin::ProceduresController, type: :controller do
 
   let(:bad_procedure_id) { 100000 }
 
-  let(:libelle) { 'Procédure de test' }
+  let(:libelle) { 'Démarche de test' }
   let(:description) { 'Description de test' }
   let(:organisation) { 'Organisation de test' }
   let(:direction) { 'Direction de test' }
@@ -375,7 +375,7 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
           expect(response.status).to eq 302
-          expect(flash[:notice]).to have_content 'Procédure publiée'
+          expect(flash[:notice]).to have_content 'Démarche publiée'
         end
       end
 
@@ -386,7 +386,7 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
           expect(response.status).to eq 302
-          expect(flash[:notice]).to have_content 'Procédure publiée'
+          expect(flash[:notice]).to have_content 'Démarche publiée'
         end
 
         it 'archive previous procedure' do
@@ -403,7 +403,7 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(procedure_path)
           expect(response.status).to eq 302
-          expect(flash[:notice]).to have_content 'Procédure publiée'
+          expect(flash[:notice]).to have_content 'Démarche publiée'
         end
 
         it 'archive previous procedure' do
@@ -434,7 +434,7 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).to be_nil
           expect(response).to redirect_to :admin_procedures
-          expect(flash[:alert]).to have_content 'Lien de la procédure invalide'
+          expect(flash[:alert]).to have_content 'Lien de la démarche invalide'
         end
       end
     end
@@ -452,7 +452,7 @@ describe Admin::ProceduresController, type: :controller do
 
       it 'fails' do
         expect(response).to redirect_to :admin_procedures
-        expect(flash[:alert]).to have_content 'Procédure inexistante'
+        expect(flash[:alert]).to have_content 'Démarche inexistante'
       end
     end
   end
@@ -469,7 +469,7 @@ describe Admin::ProceduresController, type: :controller do
       context 'when owner want archive procedure' do
         it { expect(procedure.archivee?).to be_truthy }
         it { expect(response).to redirect_to :admin_procedures }
-        it { expect(flash[:notice]).to have_content 'Procédure archivée' }
+        it { expect(flash[:notice]).to have_content 'Démarche archivée' }
       end
 
       context 'when owner want to re-enable procedure' do
@@ -480,7 +480,7 @@ describe Admin::ProceduresController, type: :controller do
 
         it { expect(procedure.publiee?).to be_truthy }
         it { expect(response.status).to eq 302 }
-        it { expect(flash[:notice]).to have_content 'Procédure publiée' }
+        it { expect(flash[:notice]).to have_content 'Démarche publiée' }
       end
     end
 
@@ -496,7 +496,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       it { expect(response).to redirect_to :admin_procedures }
-      it { expect(flash[:alert]).to have_content 'Procédure inexistante' }
+      it { expect(flash[:alert]).to have_content 'Démarche inexistante' }
     end
   end
 
@@ -520,7 +520,7 @@ describe Admin::ProceduresController, type: :controller do
         expect(Procedure.last.cloned_from_library).to be_falsey
         expect(Procedure.last.notice.attached?).to be_truthy
         expect(Procedure.last.deliberation.attached?).to be_truthy
-        expect(flash[:notice]).to have_content 'Procédure clonée'
+        expect(flash[:notice]).to have_content 'Démarche clonée'
       end
 
       context 'when the procedure is cloned from the library' do
@@ -541,7 +541,7 @@ describe Admin::ProceduresController, type: :controller do
 
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
-        expect(flash[:notice]).to have_content 'Procédure clonée'
+        expect(flash[:notice]).to have_content 'Démarche clonée'
       end
     end
   end

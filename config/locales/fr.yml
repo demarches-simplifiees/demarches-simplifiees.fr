@@ -39,11 +39,11 @@ fr:
   modal:
     publish:
       title:
-        publish: Publier la procédure
-        reopen: Réactiver la procédure
+        publish: Publier la démarche
+        reopen: Réactiver la démarche
       body:
-        publish: Vous vous apprêtez à publier votre procédure au public.
-        reopen: Vous vous apprêtez à réactiver votre procédure.
+        publish: Vous vous apprêtez à publier votre démarche au public.
+        reopen: Vous vous apprêtez à réactiver votre démarche.
       submit:
         publish: Publier
         reopen: Réactiver
@@ -157,11 +157,11 @@ fr:
       dossier_not_found: "Le dossier n'existe pas ou vous n'y avez pas accès."
       dossier_map_not_activated: "Le dossier n'a pas accès à la cartographie."
       invalid_siret: "Le siret est incorrect"
-      procedure_not_found: "La procédure n'existe pas"
+      procedure_not_found: "La démarche n'existe pas"
       france_connect:
        connexion: "Erreur lors de la connexion à France Connect."
       extension_white_list_error: "Le format de fichier de la pièce jointe n'est pas valide."
-      procedure_archived: "Cette procédure en ligne a été fermée, il n'est plus possible de déposer de dossier."
+      procedure_archived: "Cette démarche en ligne a été fermée, il n'est plus possible de déposer de dossier."
 
   date:
     abbr_day_names:
