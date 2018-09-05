@@ -396,17 +396,6 @@ describe NewUser::DossiersController, type: :controller do
         it { expect(response).to redirect_to(root_path) }
         it { expect(flash.alert).to eq("Vous n'avez pas accès à ce dossier") }
       end
-
-      context 'and the invite updates a dossier en constructions' do
-        before do
-          dossier.en_construction!
-          subject
-        end
-
-        it { expect(first_champ.reload.value).to eq('beautiful value') }
-        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
-        it { expect(response).to redirect_to(users_dossiers_invite_path(invite)) }
-      end
     end
   end
 
