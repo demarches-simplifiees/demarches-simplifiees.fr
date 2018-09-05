@@ -97,7 +97,7 @@ module NewUser
         errors += @dossier.errors.full_messages
       end
 
-      if !draft?
+      if !save_draft?
         errors += @dossier.champs.select(&:mandatory_and_blank?)
           .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
         errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
@@ -106,14 +106,14 @@ module NewUser
       if errors.present?
         flash.now.alert = errors
         render :brouillon
-      elsif draft?
+      elsif save_draft?
         flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
         render :brouillon
       elsif @dossier.can_transition_to_en_construction?
         @dossier.en_construction!
         NotificationMailer.send_initiated_notification(@dossier).deliver_later
         redirect_to merci_dossier_path(@dossier)
-      elsif !draft? && !@dossier.can_transition_to_en_construction?
+      elsif !save_draft? && !@dossier.can_transition_to_en_construction?
         render :brouillon
       else
         redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
@@ -275,10 +275,10 @@ module NewUser
     end
 
     def passage_en_construction?
-      dossier.brouillon? && !draft?
+      dossier.brouillon? && !save_draft?
     end
 
-    def draft?
+    def save_draft?
       params[:save_draft]
     end
   end
