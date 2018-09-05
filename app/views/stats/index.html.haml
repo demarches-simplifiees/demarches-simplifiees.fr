@@ -6,7 +6,7 @@
 
   .stat-cards
     .stat-card.stat-card-half.big-number-card.pull-left
-      %span.big-number-card-title TOTAL PROCÉDURES DÉMATÉRIALISÉES
+      %span.big-number-card-title TOTAL DÉMARCHES DÉMATÉRIALISÉES
       %span.big-number-card-number
         = number_with_delimiter(@procedures_numbers[:total])
       %span.big-number-card-detail
@@ -43,7 +43,7 @@
           Par mois
         %li.segmented-control-item{ :onclick => "DS.toggleChart(event, '.cumulative-procedures-chart');" }
           Cumul
-      %span.stat-card-title.pull-left Procédures dématérialisées
+      %span.stat-card-title.pull-left Démarches dématérialisées
       .clearfix
 
       .chart-container
@@ -69,7 +69,7 @@
 
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title
-        Nombre d'administrations ayant dématérialisé N procédures
+        Nombre d'administrations ayant dématérialisé N démarches
 
       .chart-container
         .chart
@@ -121,8 +121,8 @@
         = column_chart @motivation_usage_dossier, ytitle: 'dossiers avec motivation / total dossiers', xtitle: 'semaines'
 
       .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Taux d'utilisation des motivations (par procédure)
-        = column_chart @motivation_usage_procedure, ytitle: 'procedures avec motivation / total procedures', xtitle: 'semaines'
+        %span.stat-card-title Taux d'utilisation des motivations (par démarche)
+        = column_chart @motivation_usage_procedure, ytitle: 'démarches avec motivation / total démarches', xtitle: 'semaines'
 
       .clearfix
 
@@ -131,7 +131,7 @@
     .stat-cards
       .stat-card.stat-card-half.pull-left
         %span.stat-card-title Taux d'utilisation de la bibliothèque
-        = column_chart @cloned_from_library_procedures_ratio, ytitle: 'procédures clonées / total procédure', xtitle: 'semaines'
+        = column_chart @cloned_from_library_procedures_ratio, ytitle: 'démarches clonées / total démarche', xtitle: 'semaines'
 
       .clearfix
 
