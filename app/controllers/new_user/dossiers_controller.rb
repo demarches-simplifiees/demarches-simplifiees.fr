@@ -4,8 +4,8 @@ module NewUser
 
     helper_method :new_demarche_url
 
-    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :modifier, :update, :recherche]
-    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :modifier, :update, :create_commentaire]
+    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :brouillon, :update, :recherche]
+    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update, :create_commentaire]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update]
     before_action :forbid_invite_submission!, only: [:update]
 
@@ -25,7 +25,7 @@ module NewUser
 
     def show
       if dossier.brouillon?
-        redirect_to modifier_dossier_path(dossier)
+        redirect_to brouillon_dossier_path(dossier)
 
       elsif !Flipflop.new_dossier_details?
         redirect_to users_dossier_recapitulatif_path(dossier)
@@ -64,7 +64,7 @@ module NewUser
         if @dossier.procedure.module_api_carto.use_api_carto
           redirect_to users_dossier_carte_path(@dossier.id)
         else
-          redirect_to modifier_dossier_path(@dossier)
+          redirect_to brouillon_dossier_path(@dossier)
         end
       else
         flash.now.alert = @dossier.errors.full_messages
@@ -72,7 +72,7 @@ module NewUser
       end
     end
 
-    def modifier
+    def brouillon
       @dossier = dossier_with_champs
 
       # TODO: remove when the champs are unifed
@@ -104,10 +104,10 @@ module NewUser
 
       if errors.present?
         flash.now.alert = errors
-        render :modifier
+        render :brouillon
       elsif draft?
         flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
-        render :modifier
+        render :brouillon
       elsif @dossier.can_transition_to_en_construction?
         @dossier.en_construction!
         NotificationMailer.send_initiated_notification(@dossier).deliver_later

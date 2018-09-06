@@ -355,7 +355,7 @@ describe Users::DossiersController, type: :controller do
 
       context 'procedure not use api carto' do
         it 'redirects to demande' do
-          expect(response).to redirect_to(modifier_dossier_path(dossier))
+          expect(response).to redirect_to(brouillon_dossier_path(dossier))
         end
       end
 

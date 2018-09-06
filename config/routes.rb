@@ -275,8 +275,8 @@ Rails.application.routes.draw do
       member do
         get 'identite'
         patch 'update_identite'
-        get 'modifier'
-        patch 'modifier', to: 'dossiers#update'
+        get 'brouillon'
+        patch 'modifier', to: 'dossiers#update', as: 'modifier'
         get 'merci'
         get 'demande'
         get 'messagerie'
