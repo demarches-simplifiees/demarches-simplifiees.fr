@@ -8,6 +8,7 @@ module NewUser
     before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update]
     before_action :forbid_invite_submission!, only: [:update_brouillon]
+    before_action :forbid_closed_submission!, only: [:update_brouillon]
 
     def index
       @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
@@ -106,17 +107,15 @@ module NewUser
       if errors.present?
         flash.now.alert = errors
         render :brouillon
-      elsif save_draft?
-        flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
-        render :brouillon
-      elsif @dossier.can_transition_to_en_construction?
-        @dossier.en_construction!
-        NotificationMailer.send_initiated_notification(@dossier).deliver_later
-        redirect_to merci_dossier_path(@dossier)
-      elsif !save_draft? && !@dossier.can_transition_to_en_construction?
-        render :brouillon
       else
-        redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
+        if save_draft?
+          flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
+          render :brouillon
+        else
+          @dossier.en_construction!
+          NotificationMailer.send_initiated_notification(@dossier).deliver_later
+          redirect_to merci_dossier_path(@dossier)
+        end
       end
     end
 
@@ -253,6 +252,12 @@ module NewUser
 
     def forbid_invite_submission!
       if passage_en_construction? && !current_user.owns?(dossier)
+        forbidden!
+      end
+    end
+
+    def forbid_closed_submission!
+      if passage_en_construction? && !dossier.can_transition_to_en_construction?
         forbidden!
       end
     end
