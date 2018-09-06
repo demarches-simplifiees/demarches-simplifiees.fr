@@ -276,7 +276,7 @@ Rails.application.routes.draw do
         get 'identite'
         patch 'update_identite'
         get 'brouillon'
-        patch 'modifier', to: 'dossiers#update', as: 'modifier'
+        patch 'brouillon', to: 'dossiers#update_brouillon'
         get 'merci'
         get 'demande'
         get 'messagerie'
