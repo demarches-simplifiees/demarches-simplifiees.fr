@@ -69,14 +69,14 @@ describe InvitesController, type: :controller do
 
       context 'when user has access to dossier' do
         before do
-          request.env["HTTP_REFERER"] = "/dossiers/#{dossier.id}/modifier"
+          request.env["HTTP_REFERER"] = "/dossiers/#{dossier.id}/brouillon"
           dossier.update(user: signed_in_profile)
         end
 
         it { expect { subject }.to change(InviteUser, :count).by(1) }
 
         it "redirects to the previous URL" do
-          expect(subject).to redirect_to("/dossiers/#{dossier.id}/modifier")
+          expect(subject).to redirect_to("/dossiers/#{dossier.id}/brouillon")
         end
 
         context 'when email is assign to an user' do

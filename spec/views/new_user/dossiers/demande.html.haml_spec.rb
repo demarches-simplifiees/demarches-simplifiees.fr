@@ -21,7 +21,7 @@ describe 'new_user/dossiers/demande.html.haml', type: :view do
   end
 
   context 'when the dossier is editable' do
-    it { is_expected.to have_link('Modifier le dossier', href: modifier_dossier_path(dossier)) }
+    it { is_expected.to have_link('Modifier le dossier', href: brouillon_dossier_path(dossier)) }
   end
 
   context 'when the dossier is read-only' do

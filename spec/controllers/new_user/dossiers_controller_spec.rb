@@ -174,7 +174,7 @@ describe NewUser::DossiersController, type: :controller do
       let(:dossier_params) { { autorisation_donnees: true } }
 
       it do
-        expect(response).to redirect_to(modifier_dossier_path(dossier))
+        expect(response).to redirect_to(brouillon_dossier_path(dossier))
       end
 
       context 'on a procedure with carto' do
@@ -208,14 +208,14 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
-  describe '#modifier' do
+  describe '#brouillon' do
     before { sign_in(user) }
     let!(:dossier) { create(:dossier, user: user, autorisation_donnees: true) }
 
-    subject { get :modifier, params: { id: dossier.id } }
+    subject { get :brouillon, params: { id: dossier.id } }
 
     context 'when autorisation_donnees is checked' do
-      it { is_expected.to render_template(:modifier) }
+      it { is_expected.to render_template(:brouillon) }
     end
 
     context 'when autorisation_donnees is not checked' do
@@ -238,7 +238,7 @@ describe NewUser::DossiersController, type: :controller do
     let!(:dossier) { create(:dossier, user: user) }
 
     it 'returns the edit page' do
-      get :modifier, params: { id: dossier.id }
+      get :brouillon, params: { id: dossier.id }
       expect(response).to have_http_status(:success)
     end
   end
@@ -318,7 +318,7 @@ describe NewUser::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(response).to render_template(:modifier) }
+      it { expect(response).to render_template(:brouillon) }
       it { expect(flash.alert).to eq(['nop']) }
 
       it 'does not send an email' do
@@ -335,7 +335,7 @@ describe NewUser::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(response).to render_template(:modifier) }
+      it { expect(response).to render_template(:brouillon) }
       it { expect(flash.alert).to eq(['nop']) }
     end
 
@@ -349,13 +349,13 @@ describe NewUser::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(response).to render_template(:modifier) }
+      it { expect(response).to render_template(:brouillon) }
       it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
 
       context 'and the user saves a draft' do
         let(:payload) { submit_payload.merge(save_draft: true) }
 
-        it { expect(response).to render_template(:modifier) }
+        it { expect(response).to render_template(:brouillon) }
         it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
         it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
       end
@@ -385,7 +385,7 @@ describe NewUser::DossiersController, type: :controller do
           subject
         end
 
-        it { expect(response).to render_template(:modifier) }
+        it { expect(response).to render_template(:brouillon) }
         it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
         it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
       end
@@ -490,7 +490,7 @@ describe NewUser::DossiersController, type: :controller do
 
     context 'when the dossier is a brouillon' do
       let(:dossier) { create(:dossier, user: user) }
-      it { is_expected.to redirect_to(modifier_dossier_path(dossier)) }
+      it { is_expected.to redirect_to(brouillon_dossier_path(dossier)) }
     end
 
     context 'when the dossier has been submitted' do
