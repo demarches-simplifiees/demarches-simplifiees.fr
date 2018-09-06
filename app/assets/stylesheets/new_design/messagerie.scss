@@ -12,46 +12,6 @@
   border-radius: 4px;
 }
 
-.message {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: $default-padding;
-  padding: $default-padding;
-  background: #FFFFFF;
-  width: 80%;
-  border-radius: 3px;
-
-  &.from-me {
-    margin-left: auto;
-  }
-
-  .person-icon {
-    margin-right: $default-spacer;
-  }
-
-  h2 {
-    margin-bottom: $default-spacer;
-  }
-
-  .mail {
-    font-weight: bold;
-  }
-
-  .guest,
-  .date {
-    font-size: 12px;
-    color: $grey;
-  }
-
-  .date {
-    float: right;
-  }
-
-  .attachment-link {
-    margin-top: $default-spacer;
-  }
-}
-
 .messagerie {
   .message-textarea {
     margin-bottom: $default-spacer;
