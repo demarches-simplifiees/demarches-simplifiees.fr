@@ -410,6 +410,116 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
+  describe '#update' do
+    before { sign_in(user) }
+    let!(:dossier) { create(:dossier, :en_construction, user: user) }
+    let(:first_champ) { dossier.champs.first }
+    let(:value) { 'beautiful value' }
+    let(:submit_payload) do
+      {
+        id: dossier.id,
+        dossier: {
+          champs_attributes: {
+            id: first_champ.id,
+            value: value
+          }
+        }
+      }
+    end
+    let(:payload) { submit_payload }
+
+    subject { patch :update, params: payload }
+
+    context 'when the dossier cannot be updated by the user' do
+      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+
+      it 'redirects to the dossiers list' do
+        subject
+
+        expect(response).to redirect_to(dossiers_path)
+        expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
+      end
+    end
+
+    context 'when dossier can be updated by the owner' do
+      it 'updates the champs' do
+        subject
+
+        expect(response).to redirect_to(users_dossier_recapitulatif_path(dossier))
+        expect(first_champ.reload.value).to eq('beautiful value')
+        expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
+      end
+    end
+
+    context 'when the update fails' do
+      before do
+        expect_any_instance_of(Dossier).to receive(:save).and_return(false)
+        expect_any_instance_of(Dossier).to receive(:errors)
+          .and_return(double(full_messages: ['nop']))
+
+        subject
+      end
+
+      it { expect(response).to render_template(:modifier) }
+      it { expect(flash.alert).to eq(['nop']) }
+
+      it 'does not send an email' do
+        expect(NotificationMailer).not_to receive(:send_initiated_notification)
+
+        subject
+      end
+    end
+
+    context 'when the pj service returns an error' do
+      before do
+        expect(PiecesJustificativesService).to receive(:upload!).and_return(['nop'])
+
+        subject
+      end
+
+      it { expect(response).to render_template(:modifier) }
+      it { expect(flash.alert).to eq(['nop']) }
+    end
+
+    context 'when a mandatory champ is missing' do
+      let(:value) { nil }
+
+      before do
+        first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
+        allow(PiecesJustificativesService).to receive(:missing_pj_error_messages).and_return(['pj'])
+
+        subject
+      end
+
+      it { expect(response).to render_template(:modifier) }
+      it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
+    end
+
+    context 'when dossier has no champ' do
+      let(:submit_payload) { { id: dossier.id } }
+
+      it 'does not raise any errors' do
+        subject
+
+        expect(response).to redirect_to(users_dossier_recapitulatif_path(dossier))
+      end
+    end
+
+    context 'when the user has an invitation but is not the owner' do
+      let(:dossier) { create(:dossier) }
+      let!(:invite) { create(:invite, dossier: dossier, user: user, type: 'InviteUser') }
+
+      before do
+        dossier.en_construction!
+        subject
+      end
+
+      it { expect(first_champ.reload.value).to eq('beautiful value') }
+      it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
+      it { expect(response).to redirect_to(users_dossiers_invite_path(invite)) }
+    end
+  end
+
   describe '#index' do
     before { sign_in(user) }
 

@@ -4,9 +4,9 @@ module NewUser
 
     helper_method :new_demarche_url
 
-    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :recherche]
-    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :create_commentaire]
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier]
+    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :recherche]
+    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update]
     before_action :forbid_invite_submission!, only: [:update_brouillon]
 
     def index
@@ -125,6 +125,44 @@ module NewUser
 
     def modifier
       @dossier = dossier_with_champs
+    end
+
+    # FIXME: remove PiecesJustificativesService
+    # delegate draft save logic to champ ?
+    def update
+      @dossier = dossier_with_champs
+
+      errors = PiecesJustificativesService.upload!(@dossier, current_user, params)
+
+      if champs_params[:dossier] && !@dossier.update(champs_params[:dossier])
+        errors += @dossier.errors.full_messages
+      end
+
+      if !draft?
+        errors += @dossier.champs.select(&:mandatory_and_blank?)
+          .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
+        errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
+      end
+
+      if errors.present?
+        flash.now.alert = errors
+        render :modifier
+      elsif draft?
+        flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
+        render :modifier
+      elsif @dossier.can_transition_to_en_construction?
+        @dossier.en_construction!
+        NotificationMailer.send_initiated_notification(@dossier).deliver_later
+        redirect_to merci_dossier_path(@dossier)
+      elsif current_user.owns?(dossier)
+        if Flipflop.new_dossier_details?
+          redirect_to demande_dossier_path(@dossier)
+        else
+          redirect_to users_dossier_recapitulatif_path(@dossier)
+        end
+      else
+        redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
+      end
     end
 
     def merci
