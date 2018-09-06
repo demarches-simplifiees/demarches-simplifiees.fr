@@ -10,19 +10,19 @@
   padding: 2 * $default-spacer;
   margin-bottom: $default-spacer;
   border-radius: 4px;
+}
 
-  > li {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: $default-padding;
-    padding: $default-padding;
-    background: #FFFFFF;
-    width: 80%;
-    border-radius: 3px;
+.message {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: $default-padding;
+  padding: $default-padding;
+  background: #FFFFFF;
+  width: 80%;
+  border-radius: 3px;
 
-    &.from-me {
-      margin-left: auto;
-    }
+  &.from-me {
+    margin-left: auto;
   }
 }
 
