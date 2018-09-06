@@ -1,5 +1,8 @@
 - content_for(:title, "Demande · Dossier nº #{@dossier.id} (#{@dossier.procedure.libelle})")
 
+- content_for :footer do
+  = render partial: "new_user/dossiers/footer", locals: { dossier: @dossier }
+
 #dossier-show
   = render partial: 'new_user/dossiers/show/header', locals: { dossier: @dossier }
 
