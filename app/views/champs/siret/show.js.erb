@@ -1,0 +1,6 @@
+<%= render_to_element(".siret-info-#{@position}",
+  partial: 'shared/champs/siret/etablissement',
+  locals: {
+    siret: @siret,
+    attribute: @attribute,
+    etablissement: @etablissement }) %>
