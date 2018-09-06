@@ -19,6 +19,23 @@ RSpec.describe CommentaireHelper, type: :helper do
     end
   end
 
+  describe '.commentaire_is_from_guest' do
+    let(:dossier) { create(:dossier) }
+    let!(:guest) { create(:invite_user, dossier: dossier) }
+
+    subject { commentaire_is_from_guest(commentaire) }
+
+    context 'when the commentaire sender is not a guest' do
+      let(:commentaire) { create(:commentaire, dossier: dossier, email: "michel@pref.fr") }
+      it { is_expected.to be false }
+    end
+
+    context 'when the commentaire sender is a guest on this dossier' do
+      let(:commentaire) { create(:commentaire, dossier: dossier, email: guest.email) }
+      it { is_expected.to be true }
+    end
+  end
+
   describe '.commentaire_date' do
     let(:present_date) { Time.local(2018, 9, 2, 10, 5, 0) }
     let(:creation_date) { present_date }
