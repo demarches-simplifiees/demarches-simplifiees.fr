@@ -9,7 +9,7 @@ module TabsHelper
     }
   end
 
-  def active_tab_item(label, url, badge: nil, notification: false)
+  def dynamic_tab_item(label, url, badge: nil, notification: false)
     tab_item(label, url, active: current_page?(url), badge: badge, notification: notification)
   end
 end
