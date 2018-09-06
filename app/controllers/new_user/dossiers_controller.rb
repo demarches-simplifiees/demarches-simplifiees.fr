@@ -141,14 +141,16 @@ module NewUser
       if errors.present?
         flash.now.alert = errors
         render :modifier
-      elsif current_user.owns?(dossier)
-        if Flipflop.new_dossier_details?
-          redirect_to demande_dossier_path(@dossier)
-        else
-          redirect_to users_dossier_recapitulatif_path(@dossier)
-        end
       else
-        redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
+        if current_user.owns?(dossier)
+          if Flipflop.new_dossier_details?
+            redirect_to demande_dossier_path(@dossier)
+          else
+            redirect_to users_dossier_recapitulatif_path(@dossier)
+          end
+        else
+          redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
+        end
       end
     end
 
