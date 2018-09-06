@@ -4,10 +4,10 @@ module NewUser
 
     helper_method :new_demarche_url
 
-    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :brouillon, :update, :recherche]
-    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update, :create_commentaire]
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update]
-    before_action :forbid_invite_submission!, only: [:update]
+    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :brouillon, :update_brouillon, :recherche]
+    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update_brouillon, :create_commentaire]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon]
+    before_action :forbid_invite_submission!, only: [:update_brouillon]
 
     def index
       @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
@@ -87,7 +87,7 @@ module NewUser
 
     # FIXME: remove PiecesJustificativesService
     # delegate draft save logic to champ ?
-    def update
+    def update_brouillon
       @dossier = dossier_with_champs
 
       errors = PiecesJustificativesService.upload!(@dossier, current_user, params)

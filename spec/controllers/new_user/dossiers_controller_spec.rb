@@ -243,7 +243,7 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
-  describe '#update' do
+  describe '#update_brouillon' do
     before { sign_in(user) }
     let!(:dossier) { create(:dossier, user: user) }
     let(:first_champ) { dossier.champs.first }
@@ -261,7 +261,7 @@ describe NewUser::DossiersController, type: :controller do
     end
     let(:payload) { submit_payload }
 
-    subject { patch :update, params: payload }
+    subject { patch :update_brouillon, params: payload }
 
     context 'when the dossier cannot be updated by the user' do
       let!(:dossier) { create(:dossier, :en_instruction, user: user) }
@@ -295,7 +295,7 @@ describe NewUser::DossiersController, type: :controller do
       end
     end
 
-    it 'sends an email only on the first #update' do
+    it 'sends an email only on the first #update_brouillon' do
       delivery = double
       expect(delivery).to receive(:deliver_later).with(no_args)
 
