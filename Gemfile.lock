@@ -96,10 +96,14 @@ GEM
     attr_required (1.0.1)
     autoprefixer-rails (8.3.0)
       execjs
-    axlsx (2.0.1)
-      htmlentities (~> 4.3.1)
-      nokogiri (>= 1.4.1)
-      rubyzip (~> 1.0.0)
+    axlsx (3.0.0.pre)
+      htmlentities (~> 4.3, >= 4.3.4)
+      mimemagic (~> 0.3)
+      nokogiri (~> 1.8, >= 1.8.2)
+      rubyzip (~> 1.2, >= 1.2.1)
+    axlsx_styler (0.2.0)
+      activesupport (>= 3.1)
+      axlsx (>= 2.0, < 4)
     bcrypt (3.1.12)
     bindata (2.4.3)
     bindex (0.5.0)
@@ -632,10 +636,10 @@ GEM
     rgeo (1.0.0)
     rgeo-geojson (2.0.0)
       rgeo (~> 1.0)
-    rodf (0.3.7)
-      activesupport (>= 3.0, < 6.0)
-      builder (~> 3.0)
-      rubyzip (~> 1.0)
+    rodf (1.0.0)
+      activesupport (>= 3.0)
+      builder (>= 3.0)
+      rubyzip (>= 1.0)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
@@ -673,7 +677,7 @@ GEM
     ruby_dep (1.5.0)
     ruby_parser (3.11.0)
       sexp_processor (~> 4.9)
-    rubyzip (1.0.0)
+    rubyzip (1.2.2)
     safe_yaml (1.0.4)
     sanitize-url (0.1.4)
     sass (3.5.6)
@@ -722,9 +726,10 @@ GEM
       jquery-rails
       kaminari (>= 0.17)
       rails (>= 3.2)
-    spreadsheet_architect (1.4.8)
-      axlsx (>= 2.0)
-      rodf (= 0.3.7)
+    spreadsheet_architect (3.1.0)
+      axlsx (>= 2, < 4)
+      axlsx_styler (>= 0.1.7, < 2)
+      rodf (>= 1.0.0, < 2)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-commands-rspec (1.0.4)
@@ -809,6 +814,7 @@ DEPENDENCIES
   administrate
   after_party
   apipie-rails
+  axlsx (~> 3.0.0.pre)
   bootstrap-sass (~> 3.3.5)
   bootstrap-wysihtml5-rails (~> 0.3.3.8)
   brakeman
@@ -885,7 +891,7 @@ DEPENDENCIES
   simple_form
   skylight
   smart_listing
-  spreadsheet_architect (~> 1.4.8)
+  spreadsheet_architect
   spring
   spring-commands-rspec
   therubyracer
@@ -902,4 +908,4 @@ DEPENDENCIES
   xray-rails
 
 BUNDLED WITH
-   1.16.2
+   1.16.3
