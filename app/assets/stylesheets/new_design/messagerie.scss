@@ -24,9 +24,7 @@
   &.from-me {
     margin-left: auto;
   }
-}
 
-.messagerie {
   .person-icon {
     margin-right: $default-spacer;
   }
@@ -52,7 +50,9 @@
   .attachment-link {
     margin-top: $default-spacer;
   }
+}
 
+.messagerie {
   .message-textarea {
     margin-bottom: $default-spacer;
   }
