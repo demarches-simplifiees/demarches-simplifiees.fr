@@ -92,17 +92,7 @@ module NewUser
     def update_brouillon
       @dossier = dossier_with_champs
 
-      errors = PiecesJustificativesService.upload!(@dossier, current_user, params)
-
-      if champs_params[:dossier] && !@dossier.update(champs_params[:dossier])
-        errors += @dossier.errors.full_messages
-      end
-
-      if !save_draft?
-        errors += @dossier.champs.select(&:mandatory_and_blank?)
-          .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
-        errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
-      end
+      errors = update_dossier_and_compute_errors
 
       if errors.present?
         flash.now.alert = errors
@@ -128,15 +118,7 @@ module NewUser
     def update
       @dossier = dossier_with_champs
 
-      errors = PiecesJustificativesService.upload!(@dossier, current_user, params)
-
-      if champs_params[:dossier] && !@dossier.update(champs_params[:dossier])
-        errors += @dossier.errors.full_messages
-      end
-
-      errors += @dossier.champs.select(&:mandatory_and_blank?)
-        .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
-      errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
+      errors = update_dossier_and_compute_errors
 
       if errors.present?
         flash.now.alert = errors
@@ -238,6 +220,22 @@ module NewUser
 
     def dossier_with_champs
       Dossier.with_champs.find(params[:id])
+    end
+
+    def update_dossier_and_compute_errors
+      errors = PiecesJustificativesService.upload!(@dossier, current_user, params)
+
+      if champs_params[:dossier] && !@dossier.update(champs_params[:dossier])
+        errors += @dossier.errors.full_messages
+      end
+
+      if !save_draft?
+        errors += @dossier.champs.select(&:mandatory_and_blank?)
+          .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
+        errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
+      end
+
+      errors
     end
 
     def ensure_ownership!
