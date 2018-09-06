@@ -12,13 +12,13 @@ import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';
 import '../shared/remote-input';
 
+import '../new_design/spinner';
 import '../new_design/buttons';
 import '../new_design/form-validation';
 import '../new_design/carto';
 import '../new_design/select2';
 
 import '../new_design/champs/linked-drop-down-list';
-import '../new_design/champs/siret';
 
 import { toggleCondidentielExplanation } from '../new_design/avis';
 import { togglePrintMenu } from '../new_design/dossier';

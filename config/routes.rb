@@ -110,7 +110,7 @@ Rails.application.routes.draw do
   end
 
   namespace :champs do
-    get ':champ_id/siret' => 'siret#index', as: 'siret'
+    get ':position/siret', to: 'siret#show', as: :siret
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
   end
 
