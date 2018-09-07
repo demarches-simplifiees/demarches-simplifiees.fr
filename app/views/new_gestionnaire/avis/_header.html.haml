@@ -5,6 +5,6 @@
       %li= "#{dossier.procedure.libelle}, dossier nº #{dossier.id}"
 
     %ul.tabs
-      = active_tab_item('Demande', gestionnaire_avis_path(avis))
-      = active_tab_item('Avis', instruction_gestionnaire_avis_path(avis), notification: avis.answer.blank?)
-      = active_tab_item('Messagerie', messagerie_gestionnaire_avis_path(avis))
+      = dynamic_tab_item('Demande', gestionnaire_avis_path(avis))
+      = dynamic_tab_item('Avis', instruction_gestionnaire_avis_path(avis), notification: avis.answer.blank?)
+      = dynamic_tab_item('Messagerie', messagerie_gestionnaire_avis_path(avis))
