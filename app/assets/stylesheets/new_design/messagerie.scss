@@ -12,6 +12,10 @@
 
   .message {
     width: 80%;
+
+    &.from-me {
+      margin-left: auto;
+    }
   }
 }
 
