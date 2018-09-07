@@ -9,7 +9,11 @@ module TabsHelper
     }
   end
 
-  def dynamic_tab_item(label, url, badge: nil, notification: false)
-    tab_item(label, url, active: current_page?(url), badge: badge, notification: notification)
+  def dynamic_tab_item(label, url_or_urls, badge: nil, notification: false)
+    urls = [url_or_urls].flatten
+    url = urls.first
+    active = urls.any? { |u| current_page?(u) }
+
+    tab_item(label, url, active: active, badge: badge, notification: notification)
   end
 end
