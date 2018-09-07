@@ -6,6 +6,13 @@ class ProcedurePath < ApplicationRecord
   belongs_to :procedure
   belongs_to :administrateur
 
+  def self.find_with_path(path)
+    joins(:procedure)
+      .where.not(procedures: { aasm_state: :archivee })
+      .where("path LIKE ?", "%#{path}%")
+      .order(:id)
+  end
+
   def hide!
     destroy!
   end
