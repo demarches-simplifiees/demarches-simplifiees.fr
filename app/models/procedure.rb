@@ -84,6 +84,18 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def publish_with_path!(path)
+    procedure_path = ProcedurePath
+      .where(administrateur: administrateur)
+      .find_by(path: path)
+
+    if procedure_path.present?
+      procedure_path.publish!(self)
+    else
+      create_procedure_path!(administrateur: administrateur, path: path)
+    end
+  end
+
   def reset!
     if locked?
       raise "Can not reset a locked procedure."
