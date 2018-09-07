@@ -362,12 +362,12 @@ class Procedure < ApplicationRecord
   end
 
   def after_archive
-    update(archived_at: Time.now)
+    update!(archived_at: Time.now)
   end
 
   def after_hide
     now = Time.now
-    update(hidden_at: now)
+    update!(hidden_at: now)
     procedure_path&.hide!
     dossiers.update_all(hidden_at: now)
   end
