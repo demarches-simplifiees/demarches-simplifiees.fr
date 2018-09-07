@@ -4,10 +4,11 @@ module NewUser
 
     helper_method :new_demarche_url
 
-    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :modifier, :update, :recherche]
-    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :modifier, :update, :create_commentaire]
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update]
-    before_action :forbid_invite_submission!, only: [:update]
+    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :recherche]
+    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update]
+    before_action :forbid_invite_submission!, only: [:update_brouillon]
+    before_action :forbid_closed_submission!, only: [:update_brouillon]
 
     def index
       @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
@@ -25,7 +26,7 @@ module NewUser
 
     def show
       if dossier.brouillon?
-        redirect_to modifier_dossier_path(dossier)
+        redirect_to brouillon_dossier_path(dossier)
 
       elsif !Flipflop.new_dossier_details?
         redirect_to users_dossier_recapitulatif_path(dossier)
@@ -64,7 +65,7 @@ module NewUser
         if @dossier.procedure.module_api_carto.use_api_carto
           redirect_to users_dossier_carte_path(@dossier.id)
         else
-          redirect_to modifier_dossier_path(@dossier)
+          redirect_to brouillon_dossier_path(@dossier)
         end
       else
         flash.now.alert = @dossier.errors.full_messages
@@ -72,7 +73,7 @@ module NewUser
       end
     end
 
-    def modifier
+    def brouillon
       @dossier = dossier_with_champs
 
       # TODO: remove when the champs are unifed
@@ -85,41 +86,53 @@ module NewUser
       end
     end
 
-    # FIXME: remove PiecesJustificativesService
-    # delegate draft save logic to champ ?
+    # FIXME:
+    # - remove PiecesJustificativesService
+    # - delegate draft save logic to champ ?
+    def update_brouillon
+      @dossier = dossier_with_champs
+
+      errors = update_dossier_and_compute_errors
+
+      if errors.present?
+        flash.now.alert = errors
+        render :brouillon
+      else
+        if save_draft?
+          flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
+          render :brouillon
+        else
+          @dossier.en_construction!
+          NotificationMailer.send_initiated_notification(@dossier).deliver_later
+          redirect_to merci_dossier_path(@dossier)
+        end
+      end
+    end
+
+    def modifier
+      @dossier = dossier_with_champs
+    end
+
+    # FIXME:
+    # - remove PiecesJustificativesService
     def update
       @dossier = dossier_with_champs
 
-      errors = PiecesJustificativesService.upload!(@dossier, current_user, params)
-
-      if champs_params[:dossier] && !@dossier.update(champs_params[:dossier])
-        errors += @dossier.errors.full_messages
-      end
-
-      if !draft?
-        errors += @dossier.champs.select(&:mandatory_and_blank?)
-          .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
-        errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
-      end
+      errors = update_dossier_and_compute_errors
 
       if errors.present?
         flash.now.alert = errors
         render :modifier
-      elsif draft?
-        flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
-        render :modifier
-      elsif @dossier.can_transition_to_en_construction?
-        @dossier.en_construction!
-        NotificationMailer.send_initiated_notification(@dossier).deliver_later
-        redirect_to merci_dossier_path(@dossier)
-      elsif current_user.owns?(dossier)
-        if Flipflop.new_dossier_details?
-          redirect_to demande_dossier_path(@dossier)
-        else
-          redirect_to users_dossier_recapitulatif_path(@dossier)
-        end
       else
-        redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
+        if current_user.owns?(dossier)
+          if Flipflop.new_dossier_details?
+            redirect_to demande_dossier_path(@dossier)
+          else
+            redirect_to users_dossier_recapitulatif_path(@dossier)
+          end
+        else
+          redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
+        end
       end
     end
 
@@ -209,6 +222,22 @@ module NewUser
       Dossier.with_champs.find(params[:id])
     end
 
+    def update_dossier_and_compute_errors
+      errors = PiecesJustificativesService.upload!(@dossier, current_user, params)
+
+      if champs_params[:dossier] && !@dossier.update(champs_params[:dossier])
+        errors += @dossier.errors.full_messages
+      end
+
+      if !save_draft?
+        errors += @dossier.champs.select(&:mandatory_and_blank?)
+          .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
+        errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
+      end
+
+      errors
+    end
+
     def ensure_ownership!
       if !current_user.owns?(dossier)
         forbidden!
@@ -223,6 +252,12 @@ module NewUser
 
     def forbid_invite_submission!
       if passage_en_construction? && !current_user.owns?(dossier)
+        forbidden!
+      end
+    end
+
+    def forbid_closed_submission!
+      if passage_en_construction? && !dossier.can_transition_to_en_construction?
         forbidden!
       end
     end
@@ -245,10 +280,10 @@ module NewUser
     end
 
     def passage_en_construction?
-      dossier.brouillon? && !draft?
+      dossier.brouillon? && !save_draft?
     end
 
-    def draft?
+    def save_draft?
       params[:save_draft]
     end
   end

@@ -31,7 +31,7 @@ describe 'users/recapitulatif/show.html.haml', type: :view do
           end
 
           it 'le lien vers l édition est correct' do
-            expect(rendered).to have_selector("a[id=maj_infos][href='/dossiers/#{dossier_id}/modifier']")
+            expect(rendered).to have_selector("a[id=maj_infos][href='/dossiers/#{dossier_id}/brouillon']")
           end
         end
 

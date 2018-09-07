@@ -105,7 +105,7 @@ shared_examples 'carte_controller_spec' do
       end
 
       it 'Redirection vers le formulaire de la procedure' do
-        expect(response).to redirect_to(modifier_dossier_path(dossier))
+        expect(response).to redirect_to(brouillon_dossier_path(dossier))
       end
     end
 
