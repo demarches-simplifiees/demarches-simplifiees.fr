@@ -28,7 +28,7 @@ feature 'As a User I wanna create a dossier' do
           expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id))
           click_button('Etape suivante')
 
-          expect(page).to have_current_path(modifier_dossier_path(procedure_for_individual.dossiers.last))
+          expect(page).to have_current_path(brouillon_dossier_path(procedure_for_individual.dossiers.last))
 
           expect(user.dossiers.first.individual.birthdate).to eq(Date.new(1987, 10, 14))
         end
@@ -40,7 +40,7 @@ feature 'As a User I wanna create a dossier' do
           expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last.id.to_s))
           click_button('Etape suivante')
 
-          expect(page).to have_current_path(modifier_dossier_path(procedure_for_individual.dossiers.last))
+          expect(page).to have_current_path(brouillon_dossier_path(procedure_for_individual.dossiers.last))
 
           expect(user.dossiers.first.individual.birthdate).to eq(Date.new(1987, 10, 14))
         end
@@ -55,7 +55,7 @@ feature 'As a User I wanna create a dossier' do
           expect(page).to have_current_path(users_dossier_carte_path(procedure_for_individual.dossiers.last))
           click_button('Etape suivante')
 
-          expect(page).to have_current_path(modifier_dossier_path(procedure_for_individual.dossiers.last))
+          expect(page).to have_current_path(brouillon_dossier_path(procedure_for_individual.dossiers.last))
 
           expect(user.dossiers.first.individual.birthdate).to eq(nil)
         end
@@ -85,7 +85,7 @@ feature 'As a User I wanna create a dossier' do
       page.find_by_id('etape_suivante').click
       expect(page).to have_current_path(users_dossier_carte_path(procedure_with_siret.dossiers.last.id.to_s))
       page.find_by_id('etape_suivante').click
-      expect(page).to have_current_path(modifier_dossier_path(procedure_with_siret.dossiers.last))
+      expect(page).to have_current_path(brouillon_dossier_path(procedure_with_siret.dossiers.last))
     end
   end
 end

@@ -64,7 +64,7 @@ feature 'user path for dossier creation' do
             page.find_by_id('etape_suivante').click
           end
           scenario 'user is on edition page' do
-            expect(page).to have_current_path(modifier_dossier_path(Dossier.last))
+            expect(page).to have_current_path(brouillon_dossier_path(Dossier.last))
           end
           context 'user fill and validate description page' do
             before do

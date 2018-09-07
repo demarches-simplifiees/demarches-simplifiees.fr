@@ -10,7 +10,7 @@ class Users::Dossiers::InvitesController < UsersController
     @facade = InviteDossierFacades.new params[:id].to_i, current_user.email
 
     if @facade.dossier.brouillon?
-      redirect_to modifier_dossier_path(@facade.dossier)
+      redirect_to brouillon_dossier_path(@facade.dossier)
     else
       render 'users/recapitulatif/show'
     end

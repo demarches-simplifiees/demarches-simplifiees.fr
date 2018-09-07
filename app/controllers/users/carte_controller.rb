@@ -25,7 +25,7 @@ class Users::CarteController < UsersController
 
     dossier.update(json_latlngs: safe_json_latlngs)
 
-    redirect_to modifier_dossier_path(dossier)
+    redirect_to brouillon_dossier_path(dossier)
   end
 
   def get_position
