@@ -84,33 +84,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def after_publish(path)
-    now = Time.now
-    update(
-      test_started_at: now,
-      archived_at: nil,
-      published_at: now
-    )
-    procedure_path = ProcedurePath.find_by(path: path)
-
-    if procedure_path.present?
-      procedure_path.publish!(self)
-    else
-      ProcedurePath.create(procedure: self, administrateur: administrateur, path: path)
-    end
-  end
-
-  def after_archive
-    update(archived_at: Time.now)
-  end
-
-  def after_hide
-    now = Time.now
-    update(hidden_at: now)
-    procedure_path&.hide!
-    dossiers.update_all(hidden_at: now)
-  end
-
   def reset!
     if locked?
       raise "Can not reset a locked procedure."
@@ -130,15 +103,6 @@ class Procedure < ApplicationRecord
 
   def publiee_ou_archivee?
     publiee? || archivee?
-  end
-
-  def can_publish?(path)
-    procedure_path = ProcedurePath.find_by(path: path)
-    if procedure_path.present?
-      administrateur.owns?(procedure_path)
-    else
-      true
-    end
   end
 
   # Warning: dossier after_save build_default_champs must be removed
@@ -371,6 +335,42 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def can_publish?(path)
+    procedure_path = ProcedurePath.find_by(path: path)
+    if procedure_path.present?
+      administrateur.owns?(procedure_path)
+    else
+      true
+    end
+  end
+
+  def after_publish(path)
+    now = Time.now
+    update(
+      test_started_at: now,
+      archived_at: nil,
+      published_at: now
+    )
+    procedure_path = ProcedurePath.find_by(path: path)
+
+    if procedure_path.present?
+      procedure_path.publish!(self)
+    else
+      ProcedurePath.create(procedure: self, administrateur: administrateur, path: path)
+    end
+  end
+
+  def after_archive
+    update(archived_at: Time.now)
+  end
+
+  def after_hide
+    now = Time.now
+    update(hidden_at: now)
+    procedure_path&.hide!
+    dossiers.update_all(hidden_at: now)
+  end
 
   def update_juridique_required
     self.juridique_required ||= (cadre_juridique.present? || deliberation.attached?)
