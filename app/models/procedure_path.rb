@@ -23,7 +23,7 @@ class ProcedurePath < ApplicationRecord
   end
 
   def publish!(new_procedure)
-    if procedure&.publiee?
+    if procedure&.publiee? && procedure != new_procedure
       procedure.archive!
     end
     update!(procedure: new_procedure)
