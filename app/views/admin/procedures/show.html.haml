@@ -49,14 +49,27 @@
 
     %div
       %h3 Lien démarche
-      %div{ style: 'margin-left: 3%;' }
+      %div{ style: 'margin-top: 30px;' }
         - if @procedure.archivee?
-          %b
+          .alert.alert-info
             Cette démarche est archivée et n’est donc pas accessible par le public.
-        - elsif @procedure.brouillon_avec_lien? || @procedure.publiee?
+        - elsif @procedure.publiee?
           = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
+        - elsif @procedure.brouillon_avec_lien?
+          - if @procedure.gestionnaires.present? && @procedure.service.present?
+            = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
+          - else
+            .alert.alert-info
+              Pour pouvoir tester cette démarche, vous devez d’abord lui affecter
+              - if @procedure.gestionnaires.empty?
+                = link_to("des instructeurs", admin_procedure_instructeurs_path(@procedure))
+              - if @procedure.gestionnaires.empty? && @procedure.service.nil?
+                et
+              - if @procedure.service.nil?
+                = link_to("un service", services_path(procedure_id: @procedure))
+              \.
         - else
-          %b
+          .alert.alert-info
             Cette démarche n’a pas encore de lien, et n’est donc pas accessible par le public.
 
     %br

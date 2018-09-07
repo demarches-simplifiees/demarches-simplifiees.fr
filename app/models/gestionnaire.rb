@@ -18,7 +18,11 @@ class Gestionnaire < ApplicationRecord
   has_many :dossiers_from_avis, through: :avis, source: :dossier
 
   def visible_procedures
-    procedures.publiees_ou_archivees
+    if Flipflop.publish_draft?
+      procedures.avec_lien
+    else
+      procedures.publiees_ou_archivees
+    end
   end
 
   def can_view_dossier?(dossier_id)
