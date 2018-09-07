@@ -39,7 +39,7 @@
                   = dossier.id
               %td
                 = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                  = dossier.procedure.libelle
+                  = procedure_libelle(dossier.procedure)
               %td.status-col
                 = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
