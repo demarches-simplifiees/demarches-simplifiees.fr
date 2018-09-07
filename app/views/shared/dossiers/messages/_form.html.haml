@@ -7,5 +7,5 @@
         .notice
           (taille max : 20 Mo)
 
-    .send-wrapper
-      = f.submit 'Envoyer', class: 'button send', data: { disable: true }
+    %div
+      = f.submit 'Envoyer', class: 'button primary send', data: { disable: true }

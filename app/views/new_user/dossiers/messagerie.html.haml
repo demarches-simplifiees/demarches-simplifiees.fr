@@ -3,4 +3,8 @@
 #dossier-show
   = render partial: 'new_user/dossiers/show/header', locals: { dossier: @dossier }
 
+  .container
+    %p.messagerie-explanation
+      La messagerie vous permet de contacter l’instructeur en charge de votre dossier.
+
   = render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, user_email: current_user.email, messagerie_seen_at: nil, new_commentaire: @commentaire, form_url: commentaire_dossier_path(@dossier) }

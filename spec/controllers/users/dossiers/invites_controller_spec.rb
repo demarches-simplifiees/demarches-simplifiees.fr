@@ -56,7 +56,7 @@ describe Users::Dossiers::InvitesController, type: :controller do
         let(:dossier) { create :dossier, state: Dossier.states.fetch(:brouillon) }
 
         it { is_expected.to have_http_status(302) }
-        it { is_expected.to redirect_to modifier_dossier_path(dossier) }
+        it { is_expected.to redirect_to brouillon_dossier_path(dossier) }
       end
 
       context 'and dossier is not a brouillon' do

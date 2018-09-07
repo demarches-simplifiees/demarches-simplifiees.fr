@@ -16,7 +16,7 @@ feature 'Invitations' do
       fill_in 'Libelle du champ', with: 'Some edited value'
       send_invite_to "user_invite@exemple.fr"
 
-      expect(page).to have_current_path(modifier_dossier_path(dossier))
+      expect(page).to have_current_path(brouillon_dossier_path(dossier))
       expect(page).to have_text("Une invitation a été envoyée à user_invite@exemple.fr.")
       expect(page).to have_text("user_invite@exemple.fr")
 
@@ -29,7 +29,7 @@ feature 'Invitations' do
       expect(page).to have_current_path(new_user_session_path)
 
       submit_login_form(invited_user)
-      expect(page).to have_current_path(modifier_dossier_path(dossier))
+      expect(page).to have_current_path(brouillon_dossier_path(dossier))
       expect(page).to have_no_selector('.button.invite-user-action')
 
       fill_in 'Libelle du champ', with: 'Some edited value'
@@ -43,7 +43,7 @@ feature 'Invitations' do
       expect(page).to have_current_path(new_user_session_path)
 
       submit_login_form(invited_user)
-      expect(page).to have_current_path(modifier_dossier_path(dossier))
+      expect(page).to have_current_path(brouillon_dossier_path(dossier))
 
       expect(page).to have_button('Soumettre le dossier', disabled: true)
       expect(page).to have_selector('.invite-cannot-submit')
@@ -75,10 +75,10 @@ feature 'Invitations' do
 
       # We should be able to just click() the link, but Capybara detects that the
       # enclosing div would be clicked instead.
-      expect(page).to have_link("MODIFIER", href: modifier_dossier_path(dossier))
-      visit modifier_dossier_path(dossier)
+      expect(page).to have_link("MODIFIER", href: brouillon_dossier_path(dossier))
+      visit brouillon_dossier_path(dossier)
 
-      expect(page).to have_current_path(modifier_dossier_path(dossier))
+      expect(page).to have_current_path(brouillon_dossier_path(dossier))
       fill_in "Libelle du champ", with: "Some edited value"
       click_button "Enregistrer les modifications du dossier"
 
@@ -105,7 +105,7 @@ feature 'Invitations' do
   def navigate_to_brouillon(dossier)
     expect(page).to have_current_path(dossiers_path)
     click_on(dossier.id)
-    expect(page).to have_current_path(modifier_dossier_path(dossier))
+    expect(page).to have_current_path(brouillon_dossier_path(dossier))
   end
 
   def navigate_to_recapitulatif(dossier)

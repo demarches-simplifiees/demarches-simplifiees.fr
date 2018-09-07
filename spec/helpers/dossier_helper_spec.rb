@@ -31,7 +31,7 @@ RSpec.describe DossierHelper, type: :helper do
 
     context "when the dossier is in the brouillon state" do
       let(:dossier) { create(:dossier, state: Dossier.states.fetch(:brouillon)) }
-      it { is_expected.to eq "/dossiers/#{dossier.id}/modifier" }
+      it { is_expected.to eq "/dossiers/#{dossier.id}/brouillon" }
     end
 
     context "when the dossier is any other state" do

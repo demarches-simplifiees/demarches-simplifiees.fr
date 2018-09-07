@@ -26,7 +26,7 @@ describe 'new_user/dossiers/index.html.haml', type: :view do
     dossier = user_dossiers.first
     expect(rendered).to have_text(dossier_brouillon.id)
     expect(rendered).to have_text(dossier_brouillon.procedure.libelle)
-    expect(rendered).to have_link(dossier_brouillon.id, href: modifier_dossier_path(dossier_brouillon))
+    expect(rendered).to have_link(dossier_brouillon.id, href: brouillon_dossier_path(dossier_brouillon))
 
     expect(rendered).to have_text(dossier_en_construction.id)
     expect(rendered).to have_text(dossier_en_construction.procedure.libelle)

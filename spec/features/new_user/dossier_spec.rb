@@ -96,12 +96,12 @@ feature 'The user' do
     click_on 'Enregistrer le brouillon'
     expect(user_dossier.reload.brouillon?).to be(true)
     expect(page).to have_content('Votre brouillon a bien été sauvegardé')
-    expect(page).to have_current_path(modifier_dossier_path(user_dossier))
+    expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
 
     # Check an incomplete dossier cannot be submitted when mandatory fields are missing
     click_on 'Soumettre le dossier'
     expect(user_dossier.reload.brouillon?).to be(true)
-    expect(page).to have_current_path(modifier_dossier_path(user_dossier))
+    expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
 
     # Check a dossier can be submitted when all mandatory fields are filled
     fill_in('texte obligatoire', with: 'super texte')
@@ -152,7 +152,7 @@ feature 'The user' do
     fill_in('individual_nom', with: 'nom')
     check 'dossier_autorisation_donnees'
     click_on 'Continuer'
-    expect(page).to have_current_path(modifier_dossier_path(user_dossier))
+    expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end
 
   def select_date_and_time(date, field)

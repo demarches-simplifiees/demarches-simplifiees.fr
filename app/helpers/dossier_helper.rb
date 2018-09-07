@@ -17,7 +17,7 @@ module DossierHelper
 
   def url_for_dossier(dossier)
     if dossier.brouillon?
-      modifier_dossier_path(dossier)
+      brouillon_dossier_path(dossier)
     else
       users_dossier_recapitulatif_path(dossier)
     end

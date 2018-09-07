@@ -61,7 +61,7 @@ feature 'linked dropdown lists' do
     fill_in('individual_nom', with: 'nom')
     check 'dossier_autorisation_donnees'
     click_on 'Continuer'
-    expect(page).to have_current_path(modifier_dossier_path(user_dossier))
+    expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end
 
   def primary_id_for(libelle)

@@ -8,6 +8,6 @@
       %h2 Dossier nº #{dossier.id}
 
     %ul.tabs
-      = active_tab_item('Résumé', dossier_path(dossier))
-      = active_tab_item('Demande', demande_dossier_path(dossier))
-      = active_tab_item('Messagerie', messagerie_dossier_path(dossier))
+      = dynamic_tab_item('Résumé', dossier_path(dossier))
+      = dynamic_tab_item('Demande', [demande_dossier_path(dossier), modifier_dossier_path(dossier)])
+      = dynamic_tab_item('Messagerie', messagerie_dossier_path(dossier))

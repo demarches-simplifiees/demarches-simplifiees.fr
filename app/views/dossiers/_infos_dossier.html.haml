@@ -41,7 +41,7 @@
                 - if champ.type_champ == TypeDeChamp.type_champs.fetch(:dossier_link)
                   - dossier = Dossier.includes(:procedure).find_by(id: champ.decorate.value)
                   - if dossier
-                    = link_to("Dossier #{dossier.id}", modifier_dossier_path(dossier), target: '_blank')
+                    = link_to("Dossier #{dossier.id}", brouillon_dossier_path(dossier), target: '_blank')
                     %br
                     = sanitize(dossier.text_summary)
                   - else
