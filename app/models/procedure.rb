@@ -70,6 +70,9 @@ class Procedure < ApplicationRecord
 
     event :publish, after: :after_publish, guard: :can_publish? do
       transitions from: :brouillon, to: :publiee
+    end
+
+    event :reopen, after: :after_reopen, guard: :can_publish? do
       transitions from: :archivee, to: :publiee
     end
 
@@ -381,6 +384,12 @@ class Procedure < ApplicationRecord
     update!(hidden_at: now)
     procedure_path&.hide!
     dossiers.update_all(hidden_at: now)
+  end
+
+  def after_reopen(path)
+    update!(published_at: Time.now, archived_at: nil)
+
+    publish_with_path!(path)
   end
 
   def update_juridique_required
