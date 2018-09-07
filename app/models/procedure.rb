@@ -84,6 +84,15 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def publish_or_reopen!(path)
+    if archivee? && may_reopen?(path)
+      reopen!(path)
+    elsif may_publish?(path)
+      reset!
+      publish!(path)
+    end
+  end
+
   def publish_with_path!(path)
     procedure_path = ProcedurePath
       .where(administrateur: administrateur)
