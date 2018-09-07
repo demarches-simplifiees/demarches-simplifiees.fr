@@ -1,10 +1,12 @@
 $(document).on('turbolinks:load', init_path_modal);
 
+var PROCEDURE_PATH_SELECTOR = 'input[data-autocomplete=path]';
+
 function init_path_modal() {
   path_modal_action();
   path_validation_action();
   path_type_init();
-  path_validation($("input[id='procedure_path']"));
+  path_validation($(PROCEDURE_PATH_SELECTOR));
 }
 
 function path_modal_action() {
@@ -22,7 +24,7 @@ function path_modal_action() {
 }
 
 function path_validation_action() {
-  $("input[id='procedure_path']").keyup(function (key) {
+  $(PROCEDURE_PATH_SELECTOR).keyup(function (key) {
     if (key.keyCode != 13)
       path_validation(this);
   });
@@ -57,7 +59,7 @@ function validatePath(path) {
 }
 
 function path_type_init() {
-  $('#procedure_path').bind('autocomplete:select', function(ev, suggestion) {
+  $(PROCEDURE_PATH_SELECTOR).bind('autocomplete:select', function(ev, suggestion) {
     togglePathMessage(true, suggestion['mine']);
   });
 }
