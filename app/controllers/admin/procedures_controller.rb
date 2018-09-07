@@ -205,10 +205,7 @@ class Admin::ProceduresController < AdminController
 
   def path_list
     json_path_list = ProcedurePath
-      .joins(:procedure)
-      .where(procedures: { archived_at: nil })
-      .where("path LIKE ?", "%#{params[:request]}%")
-      .order(:id)
+      .find_with_path(params[:request])
       .pluck(:path, :administrateur_id)
       .map do |path, administrateur_id|
         {
