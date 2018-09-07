@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, if: -> { !Rails.env.test? }
   before_action :load_navbar_left_pannel_partial_url
   before_action :set_raven_context
   before_action :authorize_request_for_profiler
