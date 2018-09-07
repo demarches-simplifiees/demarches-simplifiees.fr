@@ -174,7 +174,7 @@ describe NewUser::DossiersController, type: :controller do
       let(:dossier_params) { { autorisation_donnees: true } }
 
       it do
-        expect(response).to redirect_to(modifier_dossier_path(dossier))
+        expect(response).to redirect_to(brouillon_dossier_path(dossier))
       end
 
       context 'on a procedure with carto' do
@@ -208,14 +208,14 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
-  describe '#modifier' do
+  describe '#brouillon' do
     before { sign_in(user) }
     let!(:dossier) { create(:dossier, user: user, autorisation_donnees: true) }
 
-    subject { get :modifier, params: { id: dossier.id } }
+    subject { get :brouillon, params: { id: dossier.id } }
 
     context 'when autorisation_donnees is checked' do
-      it { is_expected.to render_template(:modifier) }
+      it { is_expected.to render_template(:brouillon) }
     end
 
     context 'when autorisation_donnees is not checked' do
@@ -238,12 +238,12 @@ describe NewUser::DossiersController, type: :controller do
     let!(:dossier) { create(:dossier, user: user) }
 
     it 'returns the edit page' do
-      get :modifier, params: { id: dossier.id }
+      get :brouillon, params: { id: dossier.id }
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe '#update' do
+  describe '#update_brouillon' do
     before { sign_in(user) }
     let!(:dossier) { create(:dossier, user: user) }
     let(:first_champ) { dossier.champs.first }
@@ -261,7 +261,7 @@ describe NewUser::DossiersController, type: :controller do
     end
     let(:payload) { submit_payload }
 
-    subject { patch :update, params: payload }
+    subject { patch :update_brouillon, params: payload }
 
     context 'when the dossier cannot be updated by the user' do
       let!(:dossier) { create(:dossier, :en_instruction, user: user) }
@@ -295,7 +295,7 @@ describe NewUser::DossiersController, type: :controller do
       end
     end
 
-    it 'sends an email only on the first #update' do
+    it 'sends an email only on the first #update_brouillon' do
       delivery = double
       expect(delivery).to receive(:deliver_later).with(no_args)
 
@@ -307,6 +307,137 @@ describe NewUser::DossiersController, type: :controller do
       expect(NotificationMailer).not_to receive(:send_initiated_notification)
 
       subject
+    end
+
+    context 'when the update fails' do
+      before do
+        expect_any_instance_of(Dossier).to receive(:save).and_return(false)
+        expect_any_instance_of(Dossier).to receive(:errors)
+          .and_return(double(full_messages: ['nop']))
+
+        subject
+      end
+
+      it { expect(response).to render_template(:brouillon) }
+      it { expect(flash.alert).to eq(['nop']) }
+
+      it 'does not send an email' do
+        expect(NotificationMailer).not_to receive(:send_initiated_notification)
+
+        subject
+      end
+    end
+
+    context 'when the pj service returns an error' do
+      before do
+        expect(PiecesJustificativesService).to receive(:upload!).and_return(['nop'])
+
+        subject
+      end
+
+      it { expect(response).to render_template(:brouillon) }
+      it { expect(flash.alert).to eq(['nop']) }
+    end
+
+    context 'when a mandatory champ is missing' do
+      let(:value) { nil }
+
+      before do
+        first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
+        allow(PiecesJustificativesService).to receive(:missing_pj_error_messages).and_return(['pj'])
+
+        subject
+      end
+
+      it { expect(response).to render_template(:brouillon) }
+      it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
+
+      context 'and the user saves a draft' do
+        let(:payload) { submit_payload.merge(save_draft: true) }
+
+        it { expect(response).to render_template(:brouillon) }
+        it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
+        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
+      end
+    end
+
+    context 'when dossier has no champ' do
+      let(:submit_payload) { { id: dossier.id } }
+
+      it 'does not raise any errors' do
+        subject
+
+        expect(response).to redirect_to(merci_dossier_path(dossier))
+      end
+    end
+
+    context 'when the user has an invitation but is not the owner' do
+      let(:dossier) { create(:dossier) }
+      let!(:invite) { create(:invite, dossier: dossier, user: user, type: 'InviteUser') }
+
+      context 'and the invite saves a draft' do
+        let(:payload) { submit_payload.merge(save_draft: true) }
+
+        before do
+          first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
+          allow(PiecesJustificativesService).to receive(:missing_pj_error_messages).and_return(['pj'])
+
+          subject
+        end
+
+        it { expect(response).to render_template(:brouillon) }
+        it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
+        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
+      end
+
+      context 'and the invite tries to submit the dossier' do
+        before { subject }
+
+        it { expect(response).to redirect_to(root_path) }
+        it { expect(flash.alert).to eq("Vous n'avez pas accès à ce dossier") }
+      end
+    end
+  end
+
+  describe '#update' do
+    before { sign_in(user) }
+    let!(:dossier) { create(:dossier, :en_construction, user: user) }
+    let(:first_champ) { dossier.champs.first }
+    let(:value) { 'beautiful value' }
+    let(:submit_payload) do
+      {
+        id: dossier.id,
+        dossier: {
+          champs_attributes: {
+            id: first_champ.id,
+            value: value
+          }
+        }
+      }
+    end
+    let(:payload) { submit_payload }
+
+    subject { patch :update, params: payload }
+
+    context 'when the dossier cannot be updated by the user' do
+      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+
+      it 'redirects to the dossiers list' do
+        subject
+
+        expect(response).to redirect_to(dossiers_path)
+        expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
+      end
+    end
+
+    context 'when dossier can be updated by the owner' do
+      it 'updates the champs' do
+        subject
+
+        expect(response).to redirect_to(users_dossier_recapitulatif_path(dossier))
+        expect(first_champ.reload.value).to eq('beautiful value')
+        expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
+      end
     end
 
     context 'when the update fails' do
@@ -351,14 +482,6 @@ describe NewUser::DossiersController, type: :controller do
 
       it { expect(response).to render_template(:modifier) }
       it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
-
-      context 'and the user saves a draft' do
-        let(:payload) { submit_payload.merge(save_draft: true) }
-
-        it { expect(response).to render_template(:modifier) }
-        it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
-        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
-      end
     end
 
     context 'when dossier has no champ' do
@@ -367,7 +490,7 @@ describe NewUser::DossiersController, type: :controller do
       it 'does not raise any errors' do
         subject
 
-        expect(response).to redirect_to(merci_dossier_path(dossier))
+        expect(response).to redirect_to(users_dossier_recapitulatif_path(dossier))
       end
     end
 
@@ -375,38 +498,14 @@ describe NewUser::DossiersController, type: :controller do
       let(:dossier) { create(:dossier) }
       let!(:invite) { create(:invite, dossier: dossier, user: user, type: 'InviteUser') }
 
-      context 'and the invite saves a draft' do
-        let(:payload) { submit_payload.merge(save_draft: true) }
-
-        before do
-          first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
-          allow(PiecesJustificativesService).to receive(:missing_pj_error_messages).and_return(['pj'])
-
-          subject
-        end
-
-        it { expect(response).to render_template(:modifier) }
-        it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
-        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
+      before do
+        dossier.en_construction!
+        subject
       end
 
-      context 'and the invite tries to submit the dossier' do
-        before { subject }
-
-        it { expect(response).to redirect_to(root_path) }
-        it { expect(flash.alert).to eq("Vous n'avez pas accès à ce dossier") }
-      end
-
-      context 'and the invite updates a dossier en constructions' do
-        before do
-          dossier.en_construction!
-          subject
-        end
-
-        it { expect(first_champ.reload.value).to eq('beautiful value') }
-        it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
-        it { expect(response).to redirect_to(users_dossiers_invite_path(invite)) }
-      end
+      it { expect(first_champ.reload.value).to eq('beautiful value') }
+      it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
+      it { expect(response).to redirect_to(users_dossiers_invite_path(invite)) }
     end
   end
 
@@ -486,11 +585,15 @@ describe NewUser::DossiersController, type: :controller do
       sign_in(user)
     end
 
+    after do
+      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, false)
+    end
+
     subject! { get(:show, params: { id: dossier.id }) }
 
     context 'when the dossier is a brouillon' do
       let(:dossier) { create(:dossier, user: user) }
-      it { is_expected.to redirect_to(modifier_dossier_path(dossier)) }
+      it { is_expected.to redirect_to(brouillon_dossier_path(dossier)) }
     end
 
     context 'when the dossier has been submitted' do
@@ -515,6 +618,10 @@ describe NewUser::DossiersController, type: :controller do
     before do
       Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
       sign_in(user)
+    end
+
+    after do
+      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, false)
     end
 
     subject! { get(:demande, params: { id: dossier.id }) }

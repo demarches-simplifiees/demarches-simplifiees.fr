@@ -21,23 +21,23 @@
     %ul.tabs
       - notifications_summary = current_gestionnaire.notifications_for_dossier(dossier)
 
-      = active_tab_item('Demande',
+      = dynamic_tab_item('Demande',
         gestionnaire_dossier_path(dossier.procedure, dossier),
         notification: notifications_summary[:demande])
 
-      = active_tab_item('Annotations privées',
+      = dynamic_tab_item('Annotations privées',
         annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier),
         notification: notifications_summary[:annotations_privees])
 
-      = active_tab_item('Avis externes',
+      = dynamic_tab_item('Avis externes',
         avis_gestionnaire_dossier_path(dossier.procedure, dossier),
         notification: notifications_summary[:avis])
 
-      = active_tab_item('Messagerie',
+      = dynamic_tab_item('Messagerie',
         messagerie_gestionnaire_dossier_path(dossier.procedure, dossier),
         notification: notifications_summary[:messagerie])
 
-      = active_tab_item('Personnes impliquées',
+      = dynamic_tab_item('Personnes impliquées',
         personnes_impliquees_gestionnaire_dossier_path(dossier.procedure, dossier))
 
 .container
