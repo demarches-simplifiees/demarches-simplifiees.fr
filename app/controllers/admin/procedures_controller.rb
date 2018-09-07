@@ -94,17 +94,7 @@ class Admin::ProceduresController < AdminController
   def publish
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
-    new_procedure_path = ProcedurePath.new(
-      {
-        path: params[:procedure_path],
-        procedure: procedure,
-        administrateur: procedure.administrateur
-      }
-    )
-
-    if new_procedure_path.validate
-      new_procedure_path.delete
-    else
+    if !ProcedurePath.valid?(procedure, params[:procedure_path])
       flash.alert = 'Lien de la démarche invalide'
       return redirect_to admin_procedures_path
     end

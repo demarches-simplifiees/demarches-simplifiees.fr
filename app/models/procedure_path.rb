@@ -6,6 +6,11 @@ class ProcedurePath < ApplicationRecord
   belongs_to :procedure
   belongs_to :administrateur
 
+  def self.valid?(procedure, path)
+    create_with(procedure: procedure, administrateur: procedure.administrateur)
+      .find_or_initialize_by(path: path).validate
+  end
+
   def self.find_with_path(path)
     joins(:procedure)
       .where.not(procedures: { aasm_state: :archivee })
