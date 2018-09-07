@@ -99,9 +99,7 @@ class Admin::ProceduresController < AdminController
       return redirect_to admin_procedures_path
     end
 
-    if procedure.may_publish?(params[:procedure_path])
-      procedure.publish!(params[:procedure_path])
-
+    if procedure.publish_or_reopen!(params[:procedure_path])
       flash.notice = "Démarche publiée"
       redirect_to admin_procedures_path
     else
