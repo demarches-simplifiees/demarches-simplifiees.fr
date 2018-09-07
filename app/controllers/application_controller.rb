@@ -41,6 +41,16 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def authenticate_logged_user!
+    if gestionnaire_signed_in?
+      authenticate_gestionnaire!
+    elsif administrateur_signed_in?
+      authenticate_administrateur!
+    else
+      authenticate_user!
+    end
+  end
+
   def authenticate_gestionnaire!
     if gestionnaire_signed_in?
       super
@@ -79,6 +89,8 @@ class ApplicationController < ActionController::Base
   def logged_user
     logged_users.first
   end
+
+  helper_method :logged_user
 
   def logged_user_roles
     roles = logged_users.map { |logged_user| logged_user.class.name }
