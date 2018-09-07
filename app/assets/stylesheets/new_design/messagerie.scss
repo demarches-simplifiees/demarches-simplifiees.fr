@@ -9,6 +9,10 @@
   padding: 2 * $default-spacer;
   margin-bottom: $default-spacer;
   border-radius: 4px;
+
+  .message {
+    width: 80%;
+  }
 }
 
 .messagerie {
