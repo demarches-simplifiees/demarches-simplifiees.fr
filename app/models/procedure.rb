@@ -358,19 +358,9 @@ class Procedure < ApplicationRecord
   end
 
   def after_publish(path)
-    now = Time.now
-    update(
-      test_started_at: now,
-      archived_at: nil,
-      published_at: now
-    )
-    procedure_path = ProcedurePath.find_by(path: path)
+    update!(published_at: Time.now)
 
-    if procedure_path.present?
-      procedure_path.publish!(self)
-    else
-      ProcedurePath.create(procedure: self, administrateur: administrateur, path: path)
-    end
+    publish_with_path!(path)
   end
 
   def after_archive
