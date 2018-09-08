@@ -21,7 +21,6 @@ import '../new_design/form-validation';
 import '../new_design/carto';
 import '../new_design/select2';
 
-import '../new_design/champs/dossier-link';
 import '../new_design/champs/linked-drop-down-list';
 import '../new_design/champs/siret';
 
