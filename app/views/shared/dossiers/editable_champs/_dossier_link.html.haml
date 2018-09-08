@@ -1,18 +1,9 @@
-- dossier = Dossier.find_by(id: champ.value)
-- show_text_summary = dossier.present?
-- show_warning = !show_text_summary && champ.value.present?
-- text_summary = sanitize(dossier&.text_summary)
-
 .dossier-link
   = form.number_field :value,
     placeholder: "Numéro de dossier",
     autocomplete: 'off',
-    'data-type': 'dossier-link',
-    required: champ.mandatory?
+    required: champ.mandatory?,
+    data: { remote: true, url: champs_dossier_link_path(form.index) }
 
   .help-block
-    %p.text-info{ style: show_text_summary ? nil : 'display: none;' }
-      %span.dossier-text-summary= text_summary
-
-    %p.text-warning{ style: show_warning ? nil : 'display: none;' }
-      Ce dossier est inconnu
+    = render partial: 'shared/champs/dossier_link/help_block', locals: { id: champ.value }
