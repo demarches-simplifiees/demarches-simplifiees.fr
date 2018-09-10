@@ -2,8 +2,6 @@ module NewUser
   class DossiersController < UserController
     include DossierHelper
 
-    helper_method :new_demarche_url
-
     before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :recherche]
     before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update]
@@ -175,10 +173,6 @@ module NewUser
         flash.alert = "Vous n’avez pas de dossier avec le nº #{@dossier_id}."
         redirect_to dossiers_path
       end
-    end
-
-    def new_demarche_url
-      "https://doc.demarches-simplifiees.fr/listes-des-demarches"
     end
 
     private
