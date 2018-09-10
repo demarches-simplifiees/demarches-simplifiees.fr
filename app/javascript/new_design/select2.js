@@ -13,4 +13,11 @@ addEventListener('turbolinks:load', () => {
     maximumSelectionLength: '5',
     width: '300px'
   });
+
+  $('.recipients-form select.select2-limited').select2({
+    language: 'fr',
+    placeholder: 'Sélectionnez des instructeurs',
+    maximumSelectionLength: '30',
+    width: '300px'
+  });
 });
