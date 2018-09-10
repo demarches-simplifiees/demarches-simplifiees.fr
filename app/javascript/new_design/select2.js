@@ -7,7 +7,7 @@ addEventListener('turbolinks:load', () => {
     width: '100%'
   });
 
-  $('select.select2-limited').select2({
+  $('.columns-form select.select2-limited').select2({
     language: 'fr',
     placeholder: 'Sélectionnez des colonnes',
     maximumSelectionLength: '5',
