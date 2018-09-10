@@ -31,7 +31,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
   end
 
-  describe '#envoyer_a_instructeur' do
+  describe '#send_to_instructeurs' do
     let(:recipient) { create(:gestionnaire) }
     let(:gestionnaires) { [gestionnaire, recipient] }
     let(:mail) { double("mail") }
@@ -45,9 +45,9 @@ describe NewGestionnaire::DossiersController, type: :controller do
         .and_return(mail)
 
       post(
-        :envoyer_a_instructeur,
+        :send_to_instructeurs,
         params: {
-          recipient: recipient,
+          recipients: [recipient],
           procedure_id: procedure.id,
           dossier_id: dossier.id
         }
