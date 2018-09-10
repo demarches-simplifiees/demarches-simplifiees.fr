@@ -145,7 +145,7 @@ class StatsController < ApplicationController
           total = totals[week]
 
           if total > 0
-            [week, (count.to_f / total).round(2)]
+            [week, (count.to_f / total * 100).round(2)]
           else
             0
           end
