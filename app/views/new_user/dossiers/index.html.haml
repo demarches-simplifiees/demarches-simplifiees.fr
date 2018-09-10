@@ -5,7 +5,7 @@
 
 .dossiers-headers.sub-header
   .container
-    = link_to "Commencer une nouvelle démarche", new_demarche_url, class: "button secondary new-demarche"
+    = link_to "Commencer une nouvelle démarche", demarches_url, class: "button secondary new-demarche"
 
     - if @dossiers_invites.count == 0
       %h1.page-title Mes dossiers
@@ -66,4 +66,4 @@
     .dossiers-table-empty
       %h2.empty-text Aucun dossier.
       %p.empty-text-details Vous n’avez pas encore commencé de démarche.
-      = link_to "Commencer une nouvelle démarche", new_demarche_url, class: "button primary"
+      = link_to "Commencer une nouvelle démarche", demarches_url, class: "button primary"
