@@ -1,2 +1,2 @@
-class TypesDeChamp::DossierLinkTypeDeChamp < TypeDeChamp
+class TypesDeChamp::DossierLinkTypeDeChamp < TypesDeChamp::TypeDeChampBase
 end
