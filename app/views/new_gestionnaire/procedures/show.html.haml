@@ -81,7 +81,7 @@
               %span.button.dropdown
                 Personnaliser
                 .dropdown-content.fade-in-down
-                  = form_tag update_displayed_fields_gestionnaire_procedure_path(@procedure), method: :patch, class: 'dropdown-form' do
+                  = form_tag update_displayed_fields_gestionnaire_procedure_path(@procedure), method: :patch, class: 'dropdown-form columns-form' do
                     = select_tag :values,
                       options_for_select(@procedure.fields_for_select,
                         selected: @displayed_fields_values),
