@@ -10,6 +10,7 @@ class Administrateur < ApplicationRecord
   has_many :administrateurs_procedures
   has_many :admin_procedures, through: :administrateurs_procedures, source: :procedure
   has_many :services
+  has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
   before_validation -> { sanitize_email(:email) }
   before_save :ensure_api_token

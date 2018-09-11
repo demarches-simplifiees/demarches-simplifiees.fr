@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, if: -> { !Rails.env.test? }
   before_action :load_navbar_left_pannel_partial_url
   before_action :set_raven_context
   before_action :authorize_request_for_profiler
@@ -40,6 +40,16 @@ class ApplicationController < ActionController::Base
   helper_method :logged_in?
 
   protected
+
+  def authenticate_logged_user!
+    if gestionnaire_signed_in?
+      authenticate_gestionnaire!
+    elsif administrateur_signed_in?
+      authenticate_administrateur!
+    else
+      authenticate_user!
+    end
+  end
 
   def authenticate_gestionnaire!
     if gestionnaire_signed_in?
@@ -79,6 +89,8 @@ class ApplicationController < ActionController::Base
   def logged_user
     logged_users.first
   end
+
+  helper_method :logged_user
 
   def logged_user_roles
     roles = logged_users.map { |logged_user| logged_user.class.name }

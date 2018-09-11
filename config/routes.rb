@@ -111,6 +111,7 @@ Rails.application.routes.draw do
 
   namespace :champs do
     get ':champ_id/siret' => 'siret#index', as: 'siret'
+    get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
   end
 
   namespace :commencer do
@@ -158,8 +159,6 @@ Rails.application.routes.draw do
 
       post '/siret_informations' => 'dossiers#siret_informations'
       put '/change_siret' => 'dossiers#change_siret'
-
-      get 'text_summary' => 'dossiers#text_summary'
     end
 
     resource 'dossiers'
