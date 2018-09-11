@@ -1,9 +1,8 @@
 %footer.dossier-footer
   .container
-    %ul.footer-columns
-
-      - service = dossier.procedure.service
-      - if service.present?
+    - service = dossier.procedure.service
+    - if service.present?
+      %ul.footer-columns
         %li.footer-column
           %h3.footer-header Cette démarche est gérée par :
           %p
@@ -29,12 +28,12 @@
           %p
             Horaires : #{ service.horaires.sub(/\S/, &:downcase) }
 
-      - politiques = politiques_conservation_de_donnees(dossier.procedure)
-      - if politiques.present?
-        %li.footer-column
-          %h3.footer-header Conservation des données :
-          - politiques.each do |politique|
-            %p= politique
+        - politiques = politiques_conservation_de_donnees(dossier.procedure)
+        - if politiques.present?
+          %li.footer-column
+            %h3.footer-header Conservation des données :
+            - politiques.each do |politique|
+              %p= politique
 
     .footer-bottom-line
       = link_to "Accessibilité", accessibilite_index_path, :class => "footer-link"
