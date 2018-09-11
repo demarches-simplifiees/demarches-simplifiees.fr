@@ -43,8 +43,9 @@
 
   .container
     - if @dossiers.present? || @current_filters.count > 0
-      %span.button.dropdown
-        Filtrer
+      %span.dropdown
+        %button.button.dropdown-button
+          Filtrer
         .dropdown-content.left-aligned.fade-in-down
           = form_tag add_filter_gestionnaire_procedure_path(@procedure), method: :post, class: 'dropdown-form large' do
             = label_tag :field,  "Colonne"
@@ -78,8 +79,9 @@
             = render partial: "header_field", locals: { field: { "label" => "Statut", "table" => "self", "column" => "state" },  classname: "status-col" }
 
             %th.follow-col
-              %span.button.dropdown
-                Personnaliser
+              %span.dropdown
+                %button.button.dropdown-button
+                  Personnaliser
                 .dropdown-content.fade-in-down
                   = form_tag update_displayed_fields_gestionnaire_procedure_path(@procedure), method: :patch, class: 'dropdown-form columns-form' do
                     = select_tag :values,
