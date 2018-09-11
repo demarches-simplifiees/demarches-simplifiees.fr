@@ -1,7 +1,7 @@
 describe 'shared/dossiers/messages/message.html.haml', type: :view do
   before { view.extend DossierHelper }
 
-  subject { render 'shared/dossiers/messages/message.html.haml', commentaire: commentaire, messagerie_seen_at: seen_at, user_email: dossier.user.email }
+  subject { render 'shared/dossiers/messages/message.html.haml', commentaire: commentaire, messagerie_seen_at: seen_at, connected_user: dossier.user }
 
   let(:dossier) { create(:dossier) }
   let(:commentaire) { create(:commentaire, dossier: dossier) }
