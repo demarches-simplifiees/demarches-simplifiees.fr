@@ -2,7 +2,7 @@
   .container
     - service = dossier.procedure.service
     - if service.present?
-      %ul.footer-columns
+      %ul.footer-row.footer-columns
         %li.footer-column
           %h3.footer-header Cette démarche est gérée par :
           %p
@@ -35,7 +35,7 @@
             - politiques.each do |politique|
               %p= politique
 
-    .footer-bottom-line
+    .footer-row.footer-bottom-line
       = link_to "Accessibilité", accessibilite_index_path, :class => "footer-link"
       –
       = link_to "CGU", CGU_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
