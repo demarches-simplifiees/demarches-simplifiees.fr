@@ -1,6 +1,6 @@
 module CommentaireHelper
   def commentaire_is_from_me_class(commentaire, connected_user)
-    if commentaire.email == connected_user.email
+    if commentaire_is_from_me(commentaire, connected_user)
       "from-me"
     end
   end
@@ -13,5 +13,11 @@ module CommentaireHelper
     is_current_year = (commentaire.created_at.year == Date.current.year)
     template = is_current_year ? :message_date : :message_date_with_year
     I18n.l(commentaire.created_at.localtime, format: template)
+  end
+
+  private
+
+  def commentaire_is_from_me(commentaire, connected_user)
+    commentaire.email == connected_user.email
   end
 end
