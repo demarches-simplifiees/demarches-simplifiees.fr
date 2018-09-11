@@ -60,7 +60,7 @@ module NewGestionnaire
     end
 
     def create_avis
-      confidentiel = avis.confidentiel || params[:avis][:confidentiel]
+      confidentiel = avis.confidentiel || create_avis_params[:confidentiel]
       @new_avis = Avis.new(create_avis_params.merge(claimant: current_gestionnaire, dossier: avis.dossier, confidentiel: confidentiel))
 
       if @new_avis.save
@@ -143,7 +143,7 @@ module NewGestionnaire
     end
 
     def create_avis_params
-      params.require(:avis).permit(:email, :introduction)
+      params.require(:avis).permit(:email, :introduction, :confidentiel)
     end
   end
 end
