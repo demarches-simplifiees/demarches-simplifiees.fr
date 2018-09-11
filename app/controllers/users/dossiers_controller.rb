@@ -162,13 +162,6 @@ class Users::DossiersController < UsersController
     redirect_to url_for dossiers_path
   end
 
-  def text_summary
-    dossier = Dossier.find(params[:dossier_id])
-    render json: { textSummary: dossier.text_summary }
-  rescue ActiveRecord::RecordNotFound
-    render json: {}, status: 404
-  end
-
   private
 
   def check_siret

@@ -94,24 +94,12 @@ class Admin::ProceduresController < AdminController
   def publish
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
-    new_procedure_path = ProcedurePath.new(
-      {
-        path: params[:procedure_path],
-        procedure: procedure,
-        administrateur: procedure.administrateur
-      }
-    )
-
-    if new_procedure_path.validate
-      new_procedure_path.delete
-    else
+    if !ProcedurePath.valid?(procedure, params[:procedure_path])
       flash.alert = 'Lien de la démarche invalide'
       return redirect_to admin_procedures_path
     end
 
-    if procedure.may_publish?(params[:procedure_path])
-      procedure.publish!(params[:procedure_path])
-
+    if procedure.publish_or_reopen!(params[:procedure_path])
       flash.notice = "Démarche publiée"
       redirect_to admin_procedures_path
     else
@@ -205,10 +193,7 @@ class Admin::ProceduresController < AdminController
 
   def path_list
     json_path_list = ProcedurePath
-      .joins(:procedure)
-      .where(procedures: { archived_at: nil })
-      .where("path LIKE ?", "%#{params[:request]}%")
-      .order(:id)
+      .find_with_path(params[:request])
       .pluck(:path, :administrateur_id)
       .map do |path, administrateur_id|
         {
