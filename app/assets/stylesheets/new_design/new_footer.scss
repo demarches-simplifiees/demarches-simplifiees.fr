@@ -15,7 +15,7 @@ footer {
 }
 
 .dossier-footer {
-  @include vertical-padding(48px);
+  @include vertical-padding(30px);
   line-height: 24px;
 }
 
@@ -32,11 +32,10 @@ footer {
   flex-grow: 1;
   min-width: 280px;
   margin: 0 20px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 
-  @media (max-width: 1000px) {
+  @media (max-width: 550px) {
     width: 100%;
-    margin-bottom: 14px;
   }
 }
 
@@ -98,8 +97,23 @@ footer {
 }
 
 .footer-bottom-line {
-  margin-top: 30px;
-  margin-bottom: -30px;
   text-align: center;
   font-size: small;
+
+  @media (max-width: 550px) {
+    text-align: left;
+  }
+}
+
+.footer-row {
+  margin-bottom: 30px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  // In this case, the bottom margin is defined directly on each individual column
+  &.footer-columns {
+    margin-bottom: 0;
+  }
 }
