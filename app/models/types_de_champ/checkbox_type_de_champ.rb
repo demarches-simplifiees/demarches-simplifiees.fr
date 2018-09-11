@@ -1,2 +1,2 @@
-class TypesDeChamp::CheckboxTypeDeChamp < TypeDeChamp
+class TypesDeChamp::CheckboxTypeDeChamp < TypesDeChamp::TypeDeChampBase
 end
