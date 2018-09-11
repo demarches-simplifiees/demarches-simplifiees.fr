@@ -1,6 +1,6 @@
 module CommentaireHelper
-  def commentaire_is_from_me_class(commentaire, email)
-    if commentaire.email == email
+  def commentaire_is_from_me_class(commentaire, connected_user)
+    if commentaire.email == connected_user.email
       "from-me"
     end
   end
