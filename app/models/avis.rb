@@ -6,6 +6,7 @@ class Avis < ApplicationRecord
   belongs_to :claimant, class_name: 'Gestionnaire'
 
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
+  validates :claimant, presence: true
 
   before_validation -> { sanitize_email(:email) }
   before_create :try_to_assign_gestionnaire
