@@ -1,7 +1,4 @@
 class TypeDeChamp < ApplicationRecord
-  # TODO drop next line when `type` column has been dropped from `types_de_champ` table
-  self.inheritance_column = nil
-
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
