@@ -1,9 +1,9 @@
-= render partial: 'shared/dossiers/messages/message_icon', locals: { commentaire: commentaire, user_email: user_email }
+= render partial: 'shared/dossiers/messages/message_icon', locals: { commentaire: commentaire, connected_user: connected_user }
 
 .width-100
   %h2
     %span.mail
-      = render partial: 'shared/dossiers/messages/message_issuer', locals: { commentaire: commentaire, user_email: user_email }
+      = render partial: 'shared/dossiers/messages/message_issuer', locals: { commentaire: commentaire, connected_user: connected_user }
     - if commentaire_is_from_guest(commentaire)
       %span.guest Invité
     %span.date{ class: highlight_if_unseen_class(messagerie_seen_at, commentaire.created_at) }
