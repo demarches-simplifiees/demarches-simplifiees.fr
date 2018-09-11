@@ -44,10 +44,6 @@ th {
     padding-left: 0;
     max-height: none;
 
-    li {
-      margin-bottom: 40px;
-    }
-
     h2 {
       font-size: 110%;
     }
@@ -56,6 +52,10 @@ th {
       display: none;
     }
   }
+}
+
+.message {
+  margin-bottom: 40px;
 }
 
 .updated-at {
