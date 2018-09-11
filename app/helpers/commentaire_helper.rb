@@ -5,6 +5,14 @@ module CommentaireHelper
     end
   end
 
+  def commentaire_answer_action(commentaire, connected_user)
+    if commentaire_is_from_me(commentaire, connected_user)
+      "Envoyer un message à l’instructeur"
+    else
+      "Répondre dans la messagerie"
+    end
+  end
+
   def commentaire_is_from_guest(commentaire)
     commentaire.dossier.invites.map(&:email).include?(commentaire.email)
   end
