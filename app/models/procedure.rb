@@ -70,6 +70,9 @@ class Procedure < ApplicationRecord
 
     event :publish, after: :after_publish, guard: :can_publish? do
       transitions from: :brouillon, to: :publiee
+    end
+
+    event :reopen, after: :after_reopen, guard: :can_publish? do
       transitions from: :archivee, to: :publiee
     end
 
@@ -84,31 +87,25 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def after_publish(path)
-    now = Time.now
-    update(
-      test_started_at: now,
-      archived_at: nil,
-      published_at: now
-    )
-    procedure_path = ProcedurePath.find_by(path: path)
+  def publish_or_reopen!(path)
+    if archivee? && may_reopen?(path)
+      reopen!(path)
+    elsif may_publish?(path)
+      reset!
+      publish!(path)
+    end
+  end
+
+  def publish_with_path!(path)
+    procedure_path = ProcedurePath
+      .where(administrateur: administrateur)
+      .find_by(path: path)
 
     if procedure_path.present?
       procedure_path.publish!(self)
     else
-      ProcedurePath.create(procedure: self, administrateur: administrateur, path: path)
+      create_procedure_path!(administrateur: administrateur, path: path)
     end
-  end
-
-  def after_archive
-    update(archived_at: Time.now)
-  end
-
-  def after_hide
-    now = Time.now
-    update(hidden_at: now)
-    procedure_path&.hide!
-    dossiers.update_all(hidden_at: now)
   end
 
   def reset!
@@ -130,15 +127,6 @@ class Procedure < ApplicationRecord
 
   def publiee_ou_archivee?
     publiee? || archivee?
-  end
-
-  def can_publish?(path)
-    procedure_path = ProcedurePath.find_by(path: path)
-    if procedure_path.present?
-      administrateur.owns?(procedure_path)
-    else
-      true
-    end
   end
 
   # Warning: dossier after_save build_default_champs must be removed
@@ -371,6 +359,38 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def can_publish?(path)
+    procedure_path = ProcedurePath.find_by(path: path)
+    if procedure_path.present?
+      administrateur.owns?(procedure_path)
+    else
+      true
+    end
+  end
+
+  def after_publish(path)
+    update!(published_at: Time.now)
+
+    publish_with_path!(path)
+  end
+
+  def after_archive
+    update!(archived_at: Time.now)
+  end
+
+  def after_hide
+    now = Time.now
+    update!(hidden_at: now)
+    procedure_path&.hide!
+    dossiers.update_all(hidden_at: now)
+  end
+
+  def after_reopen(path)
+    update!(published_at: Time.now, archived_at: nil)
+
+    publish_with_path!(path)
+  end
 
   def update_juridique_required
     self.juridique_required ||= (cadre_juridique.present? || deliberation.attached?)
