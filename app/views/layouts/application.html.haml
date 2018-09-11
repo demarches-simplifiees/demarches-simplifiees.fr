@@ -21,29 +21,30 @@
         sentry: #{raw(sentry_config)}
       }];
   %body
-    = render partial: 'layouts/outdated_browser_banner'
-    = render partial: 'layouts/pre_maintenance'
-    - if staging?
-      #beta
-        Env Test
+    .page-wrapper
+      = render partial: 'layouts/outdated_browser_banner'
+      = render partial: 'layouts/pre_maintenance'
+      - if staging?
+        #beta
+          Env Test
 
-    #wrap
-      .row
-        #header.navbar
-          = render partial: "layouts/navbar"
-      .row.no-margin
-        - if RenderPartialService.left_panel_exist? @left_pannel_url
-          .col-xs-2#left-panel
-            = render partial: @left_pannel_url
-            - main_container_size = 10
-        - else
-          - main_container_size = 12
+      #wrap
+        .row
+          #header.navbar
+            = render partial: "layouts/navbar"
+        .row.no-margin
+          - if RenderPartialService.left_panel_exist? @left_pannel_url
+            .col-xs-2#left-panel
+              = render partial: @left_pannel_url
+              - main_container_size = 10
+          - else
+            - main_container_size = 12
 
-        = render partial: 'layouts/main_container', locals: { main_container_size: main_container_size }
-    #mask-search
-      %h1
-        %i.fa.fa-times{ style: 'position: fixed; top: 10; right: 30; color: white;' }
+          = render partial: 'layouts/main_container', locals: { main_container_size: main_container_size }
+      #mask-search
+        %h1
+          %i.fa.fa-times{ style: 'position: fixed; top: 10; right: 30; color: white;' }
 
-    = render partial: 'layouts/switch_devise_profile_module'
+      = render partial: 'layouts/switch_devise_profile_module'
 
-    = render partial: 'layouts/footer', locals: { main_container_size: main_container_size }
+      = render partial: 'layouts/footer', locals: { main_container_size: main_container_size }
