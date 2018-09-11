@@ -28,6 +28,7 @@
           %th Démarche
           %th.status-col Statut
           %th.updated-at-col Mis à jour
+          %th.notification-col
         %tbody
           - @dossiers.each do |dossier|
             %tr
@@ -46,6 +47,11 @@
               %td.updated-at-col
                 = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   = dossier.updated_at.localtime.strftime("%d/%m/%Y")
+              %td.folder-col
+                = link_to(procedure_lien(dossier.procedure), class: 'cell-link') do
+                  %span{ :title => "Créer un nouveau dossier pour cette procédure" }
+                    .icon.plus
+
     = paginate(@dossiers)
 
     - if current_user.feedbacks.empty? || current_user.feedbacks.last.created_at < 1.month.ago
