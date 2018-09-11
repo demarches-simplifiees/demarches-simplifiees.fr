@@ -1,9 +1,5 @@
 import $ from 'jquery';
 
-$(document).on('click', 'body', () => {
-  $('.button.dropdown').removeClass('open');
-});
-
 $(document).on('click', '.button.dropdown', event => {
   event.stopPropagation();
   const $target = $(event.target);
