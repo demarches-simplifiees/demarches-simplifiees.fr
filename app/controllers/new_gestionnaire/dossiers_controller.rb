@@ -37,9 +37,13 @@ module NewGestionnaire
       @potential_recipients = procedure.gestionnaires.reject { |g| g == current_gestionnaire }
     end
 
-    def envoyer_a_instructeur
-      recipient = Gestionnaire.find(params[:recipient])
-      GestionnaireMailer.send_dossier(current_gestionnaire, dossier, recipient).deliver_later
+    def send_to_instructeurs
+      recipients = Gestionnaire.find(params[:recipients])
+
+      recipients.each do |recipient|
+        GestionnaireMailer.send_dossier(current_gestionnaire, dossier, recipient).deliver_later
+      end
+
       flash.notice = "Dossier envoyé"
       redirect_to(personnes_impliquees_gestionnaire_dossier_path(procedure, dossier))
     end
