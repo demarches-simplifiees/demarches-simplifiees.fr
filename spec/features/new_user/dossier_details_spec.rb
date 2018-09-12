@@ -4,7 +4,7 @@ describe 'Dossier details:' do
     tdcs = [create(:type_de_champ, libelle: 'texte obligatoire')]
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end
-  let(:dossier) { create(:dossier, :en_construction, :for_individual, user: user, procedure: simple_procedure) }
+  let(:dossier) { create(:dossier, :en_construction, :for_individual, :with_commentaires, user: user, procedure: simple_procedure) }
 
   before do
     Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
@@ -16,6 +16,7 @@ describe 'Dossier details:' do
     expect(page).to have_current_path(dossier_path(dossier))
     expect(page).to have_content(dossier.id)
     expect(page).to have_selector('.status-explanation')
+    expect(page).to have_text(dossier.commentaires.last.body)
   end
 
   scenario 'the user can see and edit dossier before instruction' do

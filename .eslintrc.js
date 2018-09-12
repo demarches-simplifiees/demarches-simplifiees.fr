@@ -14,5 +14,13 @@ module.exports = {
   },
   rules: {
     'prettier/prettier': 'error'
-  }
+  },
+  overrides: [
+    {
+      files: ['config/webpack/*.js'],
+      env: {
+        node: true
+      }
+    }
+  ]
 };
