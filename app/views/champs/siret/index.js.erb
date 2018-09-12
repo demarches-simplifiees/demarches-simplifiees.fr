@@ -1,5 +1,0 @@
-<% if @blank || @error %>
-  <%= render_to_element("#etablissement-for-#{@champ.id}", partial: 'shared/champs/siret/delete_etablissement', locals: { message: @error, position: @champ.order_place, etablissement: @etablissement }) %>
-<% else %>
-  <%= render_to_element("#etablissement-for-#{@champ.id}", partial: 'shared/champs/siret/etablissement', locals: { position: @champ.order_place, etablissement: @etablissement }) %>
-<% end %>
