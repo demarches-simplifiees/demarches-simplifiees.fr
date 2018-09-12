@@ -1,14 +1,10 @@
+import '../shared/polyfills';
 import Turbolinks from 'turbolinks';
 import Rails from 'rails-ujs';
 import ActiveStorage from '../shared/activestorage/ujs';
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
 import jQuery from 'jquery';
-
-// Include runtime-polyfills for older browsers.
-// Due to .babelrc's 'useBuiltIns', only polyfills actually
-// required by the browsers we support will be included.
-import 'babel-polyfill';
 
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
