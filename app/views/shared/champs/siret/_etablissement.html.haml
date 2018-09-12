@@ -1,4 +1,17 @@
-= render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: etablissement }
-- champ_attributes = etablissement.champ.private? ? 'champs_private_attributes' : 'champs_attributes'
-= fields_for "dossier[#{champ_attributes}][#{position}][etablissement_attributes]", etablissement do |form|
-  = render partial: 'shared/dossiers/editable_champs/etablissement', locals: { form: form, signature: etablissement.sign }
+- case siret
+- when :invalid
+  Le numéro de SIRET doit comporter exactement 14 chiffres.
+
+- when :not_found
+  Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.
+  = link_to('Plus d’informations', "https://faq.demarches-simplifiees.fr/article/4-erreur-siret", target: '_blank')
+
+- else
+  - if siret.present? && siret == etablissement&.siret
+    = render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: etablissement }
+    = fields_for attribute, etablissement do |form|
+      = render partial: 'shared/dossiers/editable_champs/etablissement', locals: { form: form, signature: etablissement.sign }
+
+  - elsif etablissement.present?
+    = fields_for attribute, etablissement do |form|
+      = form.hidden_field :_destroy
