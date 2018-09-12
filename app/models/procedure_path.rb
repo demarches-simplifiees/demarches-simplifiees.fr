@@ -11,6 +11,11 @@ class ProcedurePath < ApplicationRecord
       .find_or_initialize_by(path: path).validate
   end
 
+  def self.mine?(administrateur, path)
+    procedure_path = find_by(path: path)
+    procedure_path && administrateur.owns?(procedure_path)
+  end
+
   def self.find_with_path(path)
     joins(:procedure)
       .where.not(procedures: { aasm_state: :archivee })
