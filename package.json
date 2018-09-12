@@ -22,7 +22,7 @@
     "webpack-dev-server": "^3.1.4"
   },
   "scripts": {
-    "lint:js": "eslint ./app/javascript"
+    "lint:js": "eslint ./app/javascript ./config/webpack"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
