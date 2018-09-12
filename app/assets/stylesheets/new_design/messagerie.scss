@@ -23,4 +23,8 @@
   .message-textarea {
     margin-bottom: $default-spacer;
   }
+
+  .form input[type="file"] {
+    margin-bottom: 0;
+  }
 }
