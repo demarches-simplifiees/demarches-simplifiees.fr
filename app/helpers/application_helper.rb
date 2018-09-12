@@ -44,6 +44,18 @@ module ApplicationHelper
     # rubocop:enable Rails/OutputSafety
   end
 
+  def disable_element(selector)
+    # rubocop:disable Rails/OutputSafety
+    raw("document.querySelector('#{selector}').disabled = true;")
+    # rubocop:enable Rails/OutputSafety
+  end
+
+  def enable_element(selector)
+    # rubocop:disable Rails/OutputSafety
+    raw("document.querySelector('#{selector}').disabled = false;")
+    # rubocop:enable Rails/OutputSafety
+  end
+
   def current_email
     current_user&.email ||
       current_gestionnaire&.email ||
