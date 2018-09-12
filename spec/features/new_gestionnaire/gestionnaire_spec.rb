@@ -134,6 +134,32 @@ feature 'The gestionnaire part' do
     expect(page).to have_text(gestionnaire2.email)
   end
 
+  scenario 'A gestionnaire can send a dossier to several instructeurs', js: true do
+    instructeur_2 = FactoryBot.create(:gestionnaire)
+    instructeur_3 = FactoryBot.create(:gestionnaire)
+    procedure.gestionnaires << [instructeur_2, instructeur_3]
+
+    send_dossier = double()
+    expect(GestionnaireMailer).to receive(:send_dossier).and_return(send_dossier).twice
+    expect(send_dossier).to receive(:deliver_later).twice
+
+    log_in(gestionnaire.email, password)
+
+    click_on procedure.libelle
+    click_on dossier.user.email
+
+    click_on 'Personnes impliquées'
+
+    first('.select2-container', minimum: 1).click
+    find('li.select2-results__option[role="treeitem"]', text: instructeur_2.email).click
+    first('.select2-container', minimum: 1).click
+    find('li.select2-results__option[role="treeitem"]', text: instructeur_3.email).click
+
+    click_on 'Envoyer'
+
+    expect(page).to have_text("Dossier envoyé")
+  end
+
   def log_in(email, password)
     visit '/'
     click_on 'Connexion'
