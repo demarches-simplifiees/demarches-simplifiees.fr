@@ -38,4 +38,15 @@
   .messagerie-explanation {
     margin-bottom: $default-padding * 2;
   }
+
+  .latest-message-section {
+    display: flex;
+    flex-direction: column;
+    max-width: 700px;
+    margin-bottom: $default-padding * 2;
+
+    .button.send {
+      align-self: flex-end;
+    }
+  }
 }

@@ -9,6 +9,10 @@
   background: #FFFFFF;
   border-radius: 3px;
 
+  &.inverted-background {
+    background: $light-grey;
+  }
+
   .person-icon {
     margin-right: $default-spacer;
   }
