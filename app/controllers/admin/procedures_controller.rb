@@ -205,6 +205,20 @@ class Admin::ProceduresController < AdminController
     render json: json_path_list
   end
 
+  def check_availability
+    path = params[:procedure][:path]
+    procedure_id = params[:procedure][:id]
+
+    if procedure_id.present?
+      procedure = current_administrateur.procedures.find(procedure_id)
+      @available = procedure.path_available?(path)
+      @mine = procedure.path_is_mine?(path)
+    else
+      @available = !ProcedurePath.exists?(path: path)
+      @mine = ProcedurePath.mine?(current_administrateur, path)
+    end
+  end
+
   def delete_deliberation
     procedure = Procedure.find(params[:id])
 
