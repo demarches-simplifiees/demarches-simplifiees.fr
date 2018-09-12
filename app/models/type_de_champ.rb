@@ -27,6 +27,10 @@ class TypeDeChamp < ApplicationRecord
 
   belongs_to :procedure
 
+  after_initialize :set_dynamic_type
+
+  attr_reader :dynamic_type
+
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
   scope :ordered, -> { order(order_place: :asc) }
@@ -51,6 +55,26 @@ class TypeDeChamp < ApplicationRecord
 
   before_validation :check_mandatory
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
+
+  def valid?(context = nil)
+    super
+    if dynamic_type.present?
+      dynamic_type.valid?
+      errors.merge!(dynamic_type.errors)
+    end
+    errors.empty?
+  end
+
+  alias_method :validate, :valid?
+
+  def set_dynamic_type
+    @dynamic_type = type_champ.present? ? self.class.type_champ_to_class_name(type_champ).constantize.new(self) : nil
+  end
+
+  def type_champ=(value)
+    super(value)
+    set_dynamic_type
+  end
 
   def params_for_champ
     {

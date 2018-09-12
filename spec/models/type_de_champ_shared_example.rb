@@ -21,7 +21,7 @@ shared_examples 'type_de_champ_spec' do
           type_de_champ = create(:"type_de_champ_#{type_champ}")
           champ = type_de_champ.champ.create
 
-          expect(type_de_champ.class.name).to match(/^TypesDeChamp::/)
+          expect(type_de_champ.dynamic_type.class.name).to match(/^TypesDeChamp::/)
           expect(champ.class.name).to match(/^Champs::/)
         end
       end
@@ -77,6 +77,27 @@ shared_examples 'type_de_champ_spec' do
             it { is_expected.not_to have_received(:purge_later) }
           end
         end
+      end
+    end
+
+    context 'delegate validation to dynamic type' do
+      subject { build(:type_de_champ_text) }
+      let(:dynamic_type) do
+        Class.new(TypesDeChamp::TypeDeChampBase) do
+          validate :never_valid
+
+          def never_valid
+            errors.add(:troll, 'always invalid')
+          end
+        end.new(subject)
+      end
+
+      before { subject.instance_variable_set(:@dynamic_type, dynamic_type) }
+
+      it { is_expected.to be_invalid }
+      it do
+        subject.validate
+        expect(subject.errors.full_messages.to_sentence).to eq('Troll always invalid')
       end
     end
   end

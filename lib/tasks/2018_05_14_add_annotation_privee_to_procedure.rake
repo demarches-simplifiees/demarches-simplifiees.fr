@@ -15,7 +15,7 @@ namespace :'2018_05_14_add_annotation_privee_to_procedure' do
         tdc.update_attribute(:order_place, tdc.order_place + 1)
       end
 
-    new_tdc = TypesDeChamp::TextTypeDeChamp.create(
+    new_tdc = TypeDeChamp.create(
       procedure_id: procedure_id,
       private: true,
       libelle: 'URL Espace de consultation',
