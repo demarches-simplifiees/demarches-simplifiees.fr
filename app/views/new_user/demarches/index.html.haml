@@ -1,0 +1,11 @@
+- content_for(:title, "Démarches")
+
+.container
+  %h1.page-title Démarches
+
+  - if @previous_demarches_still_active.present?
+    %h2.list-header SUR LESQUELLES VOUS AVEZ DÉJÀ DÉPOSÉ UN DOSSIER
+    %ul.demarche-links
+      - @previous_demarches_still_active.each do |demarche|
+        %li
+          = link_to(demarche.libelle, commencer_url(procedure_path: demarche.path), class: "demarche-link")
