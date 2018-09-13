@@ -131,7 +131,7 @@ class Procedure < ApplicationRecord
 
   # This method is needed for transition. Eventually this will be the same as brouillon?.
   def brouillon_avec_lien?
-    Flipflop.publish_draft? && brouillon? && procedure_path.present?
+    Flipflop.publish_draft? && brouillon? && path.present?
   end
 
   def publiee_ou_archivee?
@@ -250,7 +250,7 @@ class Procedure < ApplicationRecord
   end
 
   def export_filename
-    procedure_identifier = procedure_path&.path || "procedure-#{id}"
+    procedure_identifier = path || "procedure-#{id}"
     "dossiers_#{procedure_identifier}_#{Time.now.strftime('%Y-%m-%d_%H-%M')}"
   end
 
