@@ -51,6 +51,7 @@ class Procedure < ApplicationRecord
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validate :check_juridique
+  validates :path, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: true, presence: true, allow_blank: false, allow_nil: true
   # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, if: :durees_conservation_required
   validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
@@ -152,7 +153,7 @@ class Procedure < ApplicationRecord
   end
 
   def path
-    procedure_path.path if procedure_path.present?
+    read_attribute(:path) || procedure_path&.path
   end
 
   def default_path
