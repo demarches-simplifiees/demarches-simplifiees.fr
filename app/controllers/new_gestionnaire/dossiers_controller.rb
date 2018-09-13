@@ -77,14 +77,14 @@ module NewGestionnaire
       current_gestionnaire.follow(dossier)
       flash.notice = 'Dossier passé en instruction.'
 
-      redirect_to gestionnaire_dossier_path(procedure, dossier)
+      render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
 
     def repasser_en_construction
       dossier.en_construction!
       flash.notice = 'Dossier repassé en construction.'
 
-      redirect_to gestionnaire_dossier_path(procedure, dossier)
+      render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
 
     def terminer
@@ -113,7 +113,7 @@ module NewGestionnaire
         NotificationMailer.send_closed_notification(dossier).deliver_later
       end
 
-      redirect_to gestionnaire_dossier_path(procedure, dossier)
+      render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
 
     def create_commentaire

@@ -17,7 +17,8 @@
               = link_to "Uniquement cet onglet", "#", onclick: "window.print()", class: "menu-item menu-link"
 
         = render partial: "new_gestionnaire/procedures/dossier_actions", locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: current_gestionnaire&.follow?(dossier) }
-        = render partial: "state_button", locals: { dossier: dossier }
+        %span.state-button
+          = render partial: "state_button", locals: { dossier: dossier }
 
     %ul.tabs
       - notifications_summary = current_gestionnaire.notifications_for_dossier(dossier)

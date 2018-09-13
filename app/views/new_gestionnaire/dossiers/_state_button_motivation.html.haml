@@ -3,7 +3,7 @@
     %span.icon{ class: popup_class }
     #{popup_title}
 
-  = form_tag(terminer_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, class: 'form') do
+  = form_tag(terminer_gestionnaire_dossier_path(dossier.procedure, dossier), remote: true, method: :post, class: 'form') do
     - if title == 'Accepter'
       = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: 'Rédigez votre motivation ici (facultative)', required: false
       %p.help
