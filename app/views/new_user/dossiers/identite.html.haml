@@ -1,7 +1,7 @@
 - content_for(:title, "Nouveau dossier (#{@dossier.procedure.libelle})")
 
 - content_for :footer do
-  = render partial: "new_user/dossiers/footer", locals: { dossier: @dossier }
+  = render partial: "new_user/dossiers/dossier_footer", locals: { dossier: @dossier }
 
 .two-columns
   .columns-container

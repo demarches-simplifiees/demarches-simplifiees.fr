@@ -1,5 +1,8 @@
 - content_for(:title, "Dossiers")
 
+- content_for :footer do
+  = render partial: "new_user/dossiers/index_footer"
+
 .dossiers-headers.sub-header
   .container
     = link_to "Commencer une nouvelle démarche", new_demarche_url, class: "button secondary new-demarche"
