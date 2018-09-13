@@ -1,31 +1,51 @@
 class Champs::SiretController < ApplicationController
-  def index
-    siret, champ_id = params.required([:siret, :champ_id])
-    @champ = Champs::SiretChamp.find(champ_id)
-    @etablissement = @champ.etablissement
-    if siret == 'blank'
-      if @etablissement
-        @etablissement.mark_for_destruction
-      end
-      @blank = true
-    elsif siret == 'invalid'
-      if @etablissement
-        @etablissement.mark_for_destruction
-      end
-      @error = "Le numéro de SIRET doit comporter exactement 14 chiffres."
-    else
-      etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(siret, @champ.dossier.procedure_id)
-      if etablissement_attributes.present?
-        @etablissement = @champ.build_etablissement(etablissement_attributes)
-        @etablissement.champ = @champ
+  before_action :authenticate_logged_user!
+
+  def show
+    @position = params[:position]
+    extract_siret
+    find_etablisement
+
+    if @siret.empty?
+      @etablissement&.mark_for_destruction
+    elsif @siret.present? && @siret.length == 14
+      etablissement = find_etablisement_with_siret
+      if etablissement.present?
+        @etablissement = etablissement
       else
-        message = ['Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.']
-        message << helpers.link_to('Plus d’informations', "https://faq.demarches-simplifiees.fr/article/4-erreur-siret", target: '_blank')
-        @error = helpers.safe_join(message, ' ')
+        @etablissement&.mark_for_destruction
+        @siret = :not_found
       end
+    else
+      @etablissement&.mark_for_destruction
+      @siret = :invalid
     end
-    respond_to do |format|
-      format.js
+  end
+
+  private
+
+  def extract_siret
+    if params[:dossier].key?(:champs_attributes)
+      @siret = params[:dossier][:champs_attributes][@position][:value]
+      @attribute = "dossier[champs_attributes][#{@position}][etablissement_attributes]"
+    else
+      @siret = params[:dossier][:champs_private_attributes][@position][:value]
+      @attribute = "dossier[champs_private_attributes][#{@position}][etablissement_attributes]"
+    end
+  end
+
+  def find_etablisement
+    if params[:champ_id].present?
+      champ = Champ.find_by(dossier_id: logged_user.dossiers, id: params[:champ_id])
+      @etablissement = champ&.etablissement
+    end
+    @procedure_id = champ&.dossier&.procedure_id || 'aperçu'
+  end
+
+  def find_etablisement_with_siret
+    etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(@siret, @procedure_id)
+    if etablissement_attributes.present?
+      Etablissement.new(etablissement_attributes)
     end
   end
 end
