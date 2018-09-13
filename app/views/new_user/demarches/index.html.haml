@@ -1,5 +1,8 @@
 - content_for(:title, "Démarches")
 
+- content_for :footer do
+  = render partial: "new_user/dossiers/index_footer"
+
 .container
   %h1.page-title Démarches
 
