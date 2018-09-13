@@ -9,6 +9,7 @@ import jQuery from 'jquery';
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
+import '../shared/safari-events-bubbling';
 import '../shared/autocomplete';
 import '../shared/remote-input';
 
