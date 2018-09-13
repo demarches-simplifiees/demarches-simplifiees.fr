@@ -19,7 +19,7 @@ class ProcedurePath < ApplicationRecord
   def self.find_with_path(path)
     joins(:procedure)
       .where.not(procedures: { aasm_state: :archivee })
-      .where("path LIKE ?", "%#{path}%")
+      .where("procedure_paths.path LIKE ?", "%#{path}%")
       .order(:id)
   end
 
