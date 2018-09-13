@@ -1,5 +1,5 @@
 namespace :'2018_09_12_ftap' do
-  task :run do
+  task run: :environment do
     procedure = Procedure.find(5812)
     dossiers = procedure.dossiers.all
 

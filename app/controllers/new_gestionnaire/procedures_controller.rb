@@ -221,19 +221,19 @@ module NewGestionnaire
       current_filters.map do |filter|
         case filter['table']
         when 'self'
-          dossiers.where("? LIKE ?", filter['column'], "%#{filter['value']}%")
+          dossiers.where("? ILIKE ?", filter['column'], "%#{filter['value']}%")
 
         when 'france_connect_information'
           dossiers
             .includes(user: :france_connect_information)
-            .where("? LIKE ?", "france_connect_informations.#{filter['column']}", "%#{filter['value']}%")
+            .where("? ILIKE ?", "france_connect_informations.#{filter['column']}", "%#{filter['value']}%")
 
         when 'type_de_champ', 'type_de_champ_private'
           relation = filter['table'] == 'type_de_champ' ? :champs : :champs_private
           dossiers
             .includes(relation)
             .where("champs.type_de_champ_id = ?", filter['column'].to_i)
-            .where("champs.value LIKE ?", "%#{filter['value']}%")
+            .where("champs.value ILIKE ?", "%#{filter['value']}%")
         when 'entreprise'
           table = 'etablissement'
           if filter['column'] == 'date_creation'
@@ -244,12 +244,12 @@ module NewGestionnaire
           else
             dossiers
               .includes(table)
-              .where("#{table.pluralize}.entreprise_#{filter['column']} LIKE ?", "%#{filter['value']}%")
+              .where("#{table.pluralize}.entreprise_#{filter['column']} ILIKE ?", "%#{filter['value']}%")
           end
         when 'user', 'etablissement'
           dossiers
             .includes(filter['table'])
-            .where("#{filter['table'].pluralize}.#{filter['column']} LIKE ?", "%#{filter['value']}%")
+            .where("#{filter['table'].pluralize}.#{filter['column']} ILIKE ?", "%#{filter['value']}%")
         end.pluck(:id)
       end.reduce(:&)
     end
