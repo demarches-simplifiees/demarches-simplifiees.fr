@@ -107,6 +107,7 @@ class Procedure < ApplicationRecord
     else
       create_procedure_path!(administrateur: administrateur, path: path)
     end
+    update!(path: path)
   end
 
   def reset!
@@ -385,12 +386,12 @@ class Procedure < ApplicationRecord
   end
 
   def after_archive
-    update!(archived_at: Time.now)
+    update!(archived_at: Time.now, path: nil)
   end
 
   def after_hide
     now = Time.now
-    update!(hidden_at: now)
+    update!(hidden_at: now, path: nil)
     procedure_path&.hide!
     dossiers.update_all(hidden_at: now)
   end
