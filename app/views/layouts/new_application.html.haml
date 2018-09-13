@@ -25,7 +25,7 @@
       DATA = [{
         sentry: #{raw(sentry_config)}
       }];
-  %body
+  %body{ class: browser.platform.ios? ? 'ios' : nil }
     .page-wrapper
       = render partial: "layouts/outdated_browser_banner"
       = render partial: 'layouts/pre_maintenance'
