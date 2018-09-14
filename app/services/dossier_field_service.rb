@@ -7,38 +7,40 @@ class DossierFieldService
         field_hash('Demandeur', 'user', 'email')
       ]
 
-      fields << [
+      fields.push(
         field_hash('Civilité (FC)', 'france_connect_information', 'gender'),
         field_hash('Prénom (FC)', 'france_connect_information', 'given_name'),
         field_hash('Nom (FC)', 'france_connect_information', 'family_name')
-      ]
+      )
 
       if !procedure.for_individual || (procedure.for_individual && procedure.individual_with_siret)
-        fields << [
+        fields.push(
           field_hash('SIREN', 'etablissement', 'entreprise_siren'),
           field_hash('Forme juridique', 'etablissement', 'entreprise_forme_juridique'),
           field_hash('Nom commercial', 'etablissement', 'entreprise_nom_commercial'),
           field_hash('Raison sociale', 'etablissement', 'entreprise_raison_sociale'),
           field_hash('SIRET siège social', 'etablissement', 'entreprise_siret_siege_social'),
           field_hash('Date de création', 'etablissement', 'entreprise_date_creation')
-        ]
+        )
 
-        fields << [
+        fields.push(
           field_hash('SIRET', 'etablissement', 'siret'),
           field_hash('Libellé NAF', 'etablissement', 'libelle_naf'),
           field_hash('Code postal', 'etablissement', 'code_postal')
-        ]
+        )
       end
 
-      procedure.types_de_champ
-        .reject { |tdc| [TypeDeChamp.type_champs.fetch(:header_section), TypeDeChamp.type_champs.fetch(:explication)].include?(tdc.type_champ) }
-        .each { |type_de_champ| fields << field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.id.to_s) }
+      explanatory_types_de_champ = [:header_section, :explication].map{ |k| TypeDeChamp.type_champs.fetch(k) }
 
-      procedure.types_de_champ_private
-        .reject { |tdc| [TypeDeChamp.type_champs.fetch(:header_section), TypeDeChamp.type_champs.fetch(:explication)].include?(tdc.type_champ) }
-        .each { |type_de_champ| fields << field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.id.to_s) }
+      fields.concat procedure.types_de_champ
+        .reject { |tdc| explanatory_types_de_champ.include?(tdc.type_champ) }
+        .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.id.to_s) }
 
-      fields.flatten
+      fields.concat procedure.types_de_champ_private
+        .reject { |tdc| explanatory_types_de_champ.include?(tdc.type_champ) }
+        .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.id.to_s) }
+
+      fields
     end
 
     def get_value(dossier, table, column)
