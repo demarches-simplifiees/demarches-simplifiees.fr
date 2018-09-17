@@ -19,8 +19,12 @@
 
     - elsif dossier.en_construction?
       .en-construction
-        %p Un accompagnant de l’administration est en train de vérifier que votre dossier est bien complet.
-        %p Si des modifications sont nécessaires, vous recevrez un email avec les modifications à effectuer. Et sinon, dès que votre dossier sera complet, il passera automatiquement en instruction.
+        %p Un instructeur de l’administration est en train de vérifier que votre dossier est bien complet. Si des modifications sont nécessaires, vous recevrez un message avec les modifications à effectuer.
+
+        %p
+          Sinon,
+          = succeed '.' do
+            %strong votre dossier passera directement en instruction
 
     - elsif dossier.en_instruction?
       .en-instruction
