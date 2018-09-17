@@ -1,7 +1,12 @@
-@import "placeholders";
+@import "colors";
 
 .patron {
   p {
     margin-bottom: 20px;
+  }
+
+  .icon.download {
+    background-color: $blue;
+    box-shadow: 0px 0px 1px 2px $blue;
   }
 }

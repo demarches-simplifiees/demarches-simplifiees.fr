@@ -39,7 +39,10 @@
             %blockquote= dossier.motivation
 
           - if dossier.attestation.present?
-            = link_to 'Télécharger l’attestation', attestation_dossier_path(dossier), target: '_blank', class: 'button primary'
+            .action
+              = link_to attestation_dossier_path(dossier), target: '_blank', class: 'button primary' do
+                %span.icon.download
+                Télécharger l’attestation
 
     - elsif dossier.refuse?
       .refuse
