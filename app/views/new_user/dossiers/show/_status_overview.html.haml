@@ -38,6 +38,9 @@
             %h3 Motif de l’acceptation
             %blockquote= dossier.motivation
 
+          - if dossier.attestation.present?
+            = link_to 'Télécharger l’attestation', attestation_dossier_path(dossier), target: '_blank', class: 'button primary'
+
     - elsif dossier.refuse?
       .refuse
         %p
