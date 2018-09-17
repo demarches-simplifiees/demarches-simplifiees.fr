@@ -28,19 +28,25 @@
 
     - elsif dossier.accepte?
       .accepte
-        %p
+        %p.decision
           %span.icon.accept
           Votre dossier a été
           = succeed '.' do
             %strong accepté
 
-          - if dossier.motivation.present?
-            %h3 Motif de l’acceptation
-            %blockquote= dossier.motivation
+        - if dossier.motivation.present?
+          %h3 Motif de l’acceptation
+          %blockquote= dossier.motivation
+
+        - if dossier.attestation.present?
+          .action
+            = link_to attestation_dossier_path(dossier), target: '_blank', class: 'button primary' do
+              %span.icon.download
+              Télécharger l’attestation
 
     - elsif dossier.refuse?
       .refuse
-        %p
+        %p.decision
           %span.icon.refuse
           Nous sommes désolés, votre dossier a malheureusement été
           = succeed '.' do
@@ -50,14 +56,17 @@
           %h3 Motif du refus
           %blockquote= dossier.motivation
 
+        .action
+          = link_to 'Envoyer un message à l’administration', messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button'
+
     - elsif dossier.sans_suite?
       .sans-suite
-        %p
+        %p.decision
           %span.icon.without-continuation
           Votre dossier a été classé
           = succeed '.' do
             %strong sans suite
 
-          - if dossier.motivation.present?
-            %h3 Motif du classement sans suite
-            %blockquote= dossier.motivation
+        - if dossier.motivation.present?
+          %h3 Motif du classement sans suite
+          %blockquote= dossier.motivation

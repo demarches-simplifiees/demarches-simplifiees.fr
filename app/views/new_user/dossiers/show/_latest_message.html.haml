@@ -1,0 +1,9 @@
+- latest_message = dossier.commentaires.last
+- if latest_message.present?
+  .latest-message-section
+    %h3.tab-title Dernier message
+
+    .message.inverted-background
+      = render partial: "shared/dossiers/messages/message", locals: { commentaire: latest_message, connected_user: current_user, messagerie_seen_at: nil }
+
+    = link_to commentaire_answer_action(latest_message, current_user), messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button send'

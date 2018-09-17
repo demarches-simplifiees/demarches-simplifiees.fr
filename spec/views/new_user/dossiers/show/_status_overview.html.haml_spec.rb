@@ -67,6 +67,11 @@ describe 'new_user/dossiers/show/_status_overview.html.haml', type: :view do
     it { is_expected.not_to have_selector('.status-timeline') }
     it { is_expected.to have_selector('.status-explanation .accepte') }
     it { is_expected.to have_text(dossier.motivation) }
+
+    context 'with attestation' do
+      let(:dossier) { create :dossier, :accepte, :with_attestation }
+      it { is_expected.to have_link(nil, href: attestation_dossier_path(dossier)) }
+    end
   end
 
   context 'when refusé' do
@@ -75,6 +80,7 @@ describe 'new_user/dossiers/show/_status_overview.html.haml', type: :view do
     it { is_expected.not_to have_selector('.status-timeline') }
     it { is_expected.to have_selector('.status-explanation .refuse') }
     it { is_expected.to have_text(dossier.motivation) }
+    it { is_expected.to have_link(nil, href: messagerie_dossier_url(dossier, anchor: 'new_commentaire')) }
   end
 
   context 'when classé sans suite' do
