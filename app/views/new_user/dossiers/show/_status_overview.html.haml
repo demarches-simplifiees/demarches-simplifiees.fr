@@ -1,8 +1,9 @@
 .status-overview
   - if !dossier.termine?
     %ul.status-timeline
-      %li.brouillon{ class: dossier.brouillon? ? 'active' : nil }
-        brouillon
+      - if dossier.brouillon?
+        %li.brouillon{ class: dossier.brouillon? ? 'active' : nil }
+          brouillon
       %li.en-construction{ class: dossier.en_construction? ? 'active' : nil }
         en construction
       %li.en-instruction{ class: dossier.en_instruction? ? 'active' : nil }
