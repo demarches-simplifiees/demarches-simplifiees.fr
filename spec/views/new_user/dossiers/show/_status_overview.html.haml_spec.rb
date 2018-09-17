@@ -75,6 +75,7 @@ describe 'new_user/dossiers/show/_status_overview.html.haml', type: :view do
     it { is_expected.not_to have_selector('.status-timeline') }
     it { is_expected.to have_selector('.status-explanation .refuse') }
     it { is_expected.to have_text(dossier.motivation) }
+    it { is_expected.to have_link(nil, href: messagerie_dossier_url(dossier, anchor: 'new_commentaire')) }
   end
 
   context 'when classé sans suite' do
