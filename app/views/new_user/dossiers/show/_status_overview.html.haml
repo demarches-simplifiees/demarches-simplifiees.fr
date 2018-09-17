@@ -50,6 +50,8 @@
           %h3 Motif du refus
           %blockquote= dossier.motivation
 
+        = link_to 'Envoyer un message à l’administration', messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button'
+
     - elsif dossier.sans_suite?
       .sans-suite
         %p
