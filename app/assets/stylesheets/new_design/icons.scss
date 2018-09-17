@@ -53,6 +53,10 @@
     background-image: image-url("icons/attachment.svg");
   }
 
+  &.download {
+    background-image: image-url("icons/download-white.svg");
+  }
+
   &.lock {
     background-image: image-url("icons/lock.svg");
   }
