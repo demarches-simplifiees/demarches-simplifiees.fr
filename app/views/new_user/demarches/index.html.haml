@@ -12,14 +12,22 @@
       %ul.demarche-links
         - @previous_demarches_still_active.each do |demarche|
           %li
-            = link_to(demarche.libelle, commencer_url(procedure_path: demarche.path), class: "demarche-link")
+            = link_to(commencer_url(procedure_path: demarche.path), class: "demarche-link") do
+              = demarche.libelle
+              %br
+              .service-name
+                = demarche&.service&.nom
 
     - if @popular_demarches.present?
       %h2.list-header LES PLUS POPULAIRES
       %ul.demarche-links
         - @popular_demarches.each do |demarche|
           %li
-            = link_to(demarche.libelle, commencer_url(procedure_path: demarche.path), class: "demarche-link")
+            = link_to(commencer_url(procedure_path: demarche.path), class: "demarche-link") do
+              = demarche.libelle
+              %br
+              .service-name
+                = demarche&.service&.nom
 
     %h2.list-header TOUTES LES DÉMARCHES
     = link_to("Voir l'intégralité des démarches disponibles", LISTE_DES_DEMARCHES_URL, class: "button")
