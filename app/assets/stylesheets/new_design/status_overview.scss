@@ -55,18 +55,28 @@
     margin: auto;
   }
 
-  h3 {
-    font-size: 1.1em;
-    font-weight: bold;
-    margin-bottom: $default-spacer;
-  }
-
   p {
     margin-bottom: $default-padding;
   }
 
+  .decision {
+    font-size: 1.2em;
+    margin-top: $default-padding * 3;
+    margin-bottom: $default-padding * 3;
+  }
+
+  .icon {
+    margin-right: $default-spacer;
+  }
+
+  h3 {
+    font-weight: bold;
+    margin-bottom: $default-spacer;
+  }
+
   blockquote {
     quotes: "« " " »" "‘" "’";
+    margin-bottom: $default-padding * 3;
   }
 
   blockquote::before {
@@ -77,7 +87,7 @@
     content: close-quote;
   }
 
-  .icon {
-    margin-right: $default-spacer;
+  .action {
+    margin-bottom: $default-padding * 3;
   }
 }
