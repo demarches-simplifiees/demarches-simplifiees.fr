@@ -1,10 +1,10 @@
 class SiretFormatValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    if !(value =~ /^\d{14}$/)
+    if !value&.match?(/^\d{14}$/)
       record.errors.add(attribute, :format)
     end
 
-    if value.nil? || (luhn_checksum(value) % 10 != 0)
+    if value.present? && (luhn_checksum(value) % 10 != 0)
       record.errors.add(attribute, :checksum)
     end
   end
