@@ -9,6 +9,7 @@ module NewUser
         .select { |p| p.publiee? }
 
       @popular_demarches = Procedure
+        .includes(:service)
         .select("procedures.*, COUNT(*) AS procedures_count")
         .joins(:dossiers)
         .publiees
