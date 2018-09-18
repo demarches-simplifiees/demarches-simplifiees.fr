@@ -49,6 +49,9 @@ gem 'devise-async'
 gem 'openid_connect'
 gem 'omniauth-github'
 
+# Locales par défaut
+gem 'rails-i18n'
+
 gem 'rest-client'
 gem 'typhoeus'
 
