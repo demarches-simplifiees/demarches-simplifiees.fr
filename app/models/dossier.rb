@@ -217,22 +217,7 @@ class Dossier < ApplicationRecord
   end
 
   def get_value(table, column)
-    case table
-    when 'self'
-      self.send(column)
-    when 'user'
-      self.user.send(column)
-    when 'france_connect_information'
-      self.user.france_connect_information&.send(column)
-    when 'entreprise'
-      self.etablissement&.send(:"entreprise_#{column}")
-    when 'etablissement'
-      self.etablissement&.send(column)
-    when 'type_de_champ'
-      self.champs.find { |c| c.type_de_champ_id == column.to_i }.value
-    when 'type_de_champ_private'
-      self.champs_private.find { |c| c.type_de_champ_id == column.to_i }.value
-    end
+    DossierFieldService.get_value(self, table, column)
   end
 
   def self.sanitize_for_order(order)
