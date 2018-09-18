@@ -34,6 +34,10 @@
           %strong
             vous recevrez un email
           avec le résultat.
+        - if dossier.procedure.mean_instruction_time
+          - cache(dossier.procedure, expires_in: 1.week) do
+            %p
+              Le temps moyen d’instruction pour cette démarche est de #{distance_of_time_in_words(dossier.procedure.mean_instruction_time)}.
 
     - elsif dossier.accepte?
       .accepte
