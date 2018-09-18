@@ -754,8 +754,8 @@ describe Admin::ProceduresController, type: :controller do
       let(:path) { procedure_owned.path }
 
       it {
-        expect(response.body).to include('Ce lien est déjà utilisé par une de vos procédure.')
-        expect(response.body).to include('Si vous voulez l’utiliser, l’ancienne procédure sera archivée')
+        expect(response.body).to include('Ce lien est déjà utilisé par une de vos démarche.')
+        expect(response.body).to include('Si vous voulez l’utiliser, l’ancienne démarche sera archivée')
       }
     end
 
@@ -764,7 +764,7 @@ describe Admin::ProceduresController, type: :controller do
       let(:path) { procedure_not_owned.path }
 
       it {
-        expect(response.body).to include('Ce lien est déjà utilisé par une procédure.')
+        expect(response.body).to include('Ce lien est déjà utilisé par une démarche.')
         expect(response.body).to include('Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.')
       }
     end
