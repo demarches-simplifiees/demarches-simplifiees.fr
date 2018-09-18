@@ -326,6 +326,17 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def mean_traitement_time
+    traitement_times = dossiers
+      .state_termine
+      .pluck(:en_construction_at, :processed_at)
+      .map { |times| times[1] - times[0] }
+
+    if traitement_times.present?
+      traitement_times.sum.fdiv(traitement_times.size).ceil
+    end
+  end
+
   def mean_verification_time
     verification_times = dossiers
       .state_termine
