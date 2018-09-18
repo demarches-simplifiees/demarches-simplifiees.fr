@@ -51,6 +51,7 @@ class Procedure < ApplicationRecord
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validate :check_juridique
+  validates :path, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: true, presence: true, allow_blank: false, allow_nil: true
   # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, if: :durees_conservation_required
   validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
@@ -106,6 +107,7 @@ class Procedure < ApplicationRecord
     else
       create_procedure_path!(administrateur: administrateur, path: path)
     end
+    update!(path: path)
   end
 
   def reset!
@@ -130,7 +132,7 @@ class Procedure < ApplicationRecord
 
   # This method is needed for transition. Eventually this will be the same as brouillon?.
   def brouillon_avec_lien?
-    Flipflop.publish_draft? && brouillon? && procedure_path.present?
+    Flipflop.publish_draft? && brouillon? && path.present?
   end
 
   def publiee_ou_archivee?
@@ -152,7 +154,7 @@ class Procedure < ApplicationRecord
   end
 
   def path
-    procedure_path.path if procedure_path.present?
+    read_attribute(:path) || procedure_path&.path
   end
 
   def default_path
@@ -249,7 +251,7 @@ class Procedure < ApplicationRecord
   end
 
   def export_filename
-    procedure_identifier = procedure_path&.path || "procedure-#{id}"
+    procedure_identifier = path || "procedure-#{id}"
     "dossiers_#{procedure_identifier}_#{Time.now.strftime('%Y-%m-%d_%H-%M')}"
   end
 
@@ -384,12 +386,12 @@ class Procedure < ApplicationRecord
   end
 
   def after_archive
-    update!(archived_at: Time.now)
+    update!(archived_at: Time.now, path: nil)
   end
 
   def after_hide
     now = Time.now
-    update!(hidden_at: now)
+    update!(hidden_at: now, path: nil)
     procedure_path&.hide!
     dossiers.update_all(hidden_at: now)
   end
