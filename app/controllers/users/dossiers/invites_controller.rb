@@ -3,7 +3,7 @@ class Users::Dossiers::InvitesController < UsersController
     session["user_return_to"] = request.fullpath
 
     if params[:email].present? && User.find_by(email: params[:email]).nil?
-      return redirect_to new_user_registration_path(user_email: params[:email])
+      return redirect_to new_user_registration_path(user: { email: params[:email] })
     end
 
     super

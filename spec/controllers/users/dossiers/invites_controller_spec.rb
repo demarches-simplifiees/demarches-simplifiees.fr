@@ -33,7 +33,7 @@ describe Users::Dossiers::InvitesController, type: :controller do
 
       context 'when email is not affected at an user' do
         let(:email) { 'new_user@octo.com' }
-        it { is_expected.to redirect_to new_user_registration_path(user_email: email) }
+        it { is_expected.to redirect_to new_user_registration_path(user: { email: email }) }
       end
     end
   end
