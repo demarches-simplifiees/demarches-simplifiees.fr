@@ -326,6 +326,17 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def mean_instruction_time
+    instruction_times = dossiers
+      .state_termine
+      .pluck(:en_instruction_at, :processed_at)
+      .map { |times| times[1] - times[0] }
+
+    if instruction_times.present?
+      instruction_times.sum.fdiv(instruction_times.size).ceil
+    end
+  end
+
   private
 
   def can_publish?(path)
