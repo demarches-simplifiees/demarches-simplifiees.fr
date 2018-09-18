@@ -9,17 +9,17 @@ class WebhookController < ActionController::Base
     html = []
 
     if user
-      url = view_context.manager_user_url(user)
+      url = manager_user_url(user)
       html << link_to_manager(user, url)
     end
 
     if gestionnaire
-      url = view_context.manager_gestionnaire_url(gestionnaire)
+      url = manager_gestionnaire_url(gestionnaire)
       html << link_to_manager(gestionnaire, url)
     end
 
     if administrateur
-      url = view_context.manager_administrateur_url(administrateur)
+      url = manager_administrateur_url(administrateur)
       html << link_to_manager(administrateur, url)
     end
 
