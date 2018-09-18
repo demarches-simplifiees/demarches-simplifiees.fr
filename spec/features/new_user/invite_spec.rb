@@ -28,7 +28,7 @@ feature 'Invitations' do
       visit users_dossiers_invite_path(invite)
       expect(page).to have_current_path(new_user_session_path)
 
-      submit_login_form(invited_user)
+      submit_login_form(invited_user.email, invited_user.password)
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
       expect(page).to have_no_selector('.button.invite-user-action')
 
@@ -42,7 +42,7 @@ feature 'Invitations' do
       visit users_dossiers_invite_path(invite)
       expect(page).to have_current_path(new_user_session_path)
 
-      submit_login_form(invited_user)
+      submit_login_form(invited_user.email, invited_user.password)
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
 
       expect(page).to have_button('Soumettre le dossier', disabled: true)
@@ -68,7 +68,7 @@ feature 'Invitations' do
       visit users_dossiers_invite_path(invite)
       expect(page).to have_current_path(new_user_session_path)
 
-      submit_login_form(invited_user)
+      submit_login_form(invited_user.email, invited_user.password)
       expect(page).to have_current_path(users_dossiers_invite_path(invite))
       expect(page).to have_no_selector('.button.invite-user-action')
       expect(page).to have_text("Dossier nº #{dossier.id}")
@@ -92,13 +92,13 @@ feature 'Invitations' do
   def log_in(user)
     visit '/'
     click_on 'Connexion'
-    submit_login_form(user)
+    submit_login_form(user.email, user.password)
     expect(page).to have_current_path(dossiers_path)
   end
 
-  def submit_login_form(user)
-    fill_in 'user_email', with: user.email
-    fill_in 'user_password', with: user.password
+  def submit_login_form(email, password)
+    fill_in 'user_email', with: email
+    fill_in 'user_password', with: password
     click_on 'Se connecter'
   end
 
