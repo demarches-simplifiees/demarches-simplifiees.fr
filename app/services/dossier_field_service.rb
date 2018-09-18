@@ -62,7 +62,9 @@ class DossierFieldService
 
     def filtered_ids(dossiers, filters)
       filters.map do |filter|
-        case filter['table']
+        table = filter['table']
+        column = sanitized_column(filter)
+        case table
         when 'self'
           dossiers.where("? ILIKE ?", filter['column'], "%#{filter['value']}%")
 
@@ -72,27 +74,26 @@ class DossierFieldService
             .where("? ILIKE ?", "france_connect_informations.#{filter['column']}", "%#{filter['value']}%")
 
         when 'type_de_champ', 'type_de_champ_private'
-          relation = filter['table'] == 'type_de_champ' ? :champs : :champs_private
+          relation = table == 'type_de_champ' ? :champs : :champs_private
           dossiers
             .includes(relation)
             .where("champs.type_de_champ_id = ?", filter['column'].to_i)
             .where("champs.value ILIKE ?", "%#{filter['value']}%")
         when 'etablissement'
-          table = filter['table']
           if filter['column'] == 'entreprise_date_creation'
             date = filter['value'].to_date rescue nil
             dossiers
               .includes(table)
-              .where("#{table.pluralize}.#{filter['column']} = ?", date)
+              .where("#{column} = ?", date)
           else
             dossiers
               .includes(table)
-              .where("#{table.pluralize}.#{filter['column']} ILIKE ?", "%#{filter['value']}%")
+              .where("#{column} ILIKE ?", "%#{filter['value']}%")
           end
         when 'user'
           dossiers
-            .includes(filter['table'])
-            .where("#{filter['table'].pluralize}.#{filter['column']} ILIKE ?", "%#{filter['value']}%")
+            .includes(table)
+            .where("#{column} ILIKE ?", "%#{filter['value']}%")
         end.pluck(:id)
       end.reduce(:&)
     end
@@ -137,6 +138,14 @@ class DossierFieldService
     end
 
     private
+
+    def sanitized_column(field)
+      table = field['table']
+      table = ActiveRecord::Base.connection.quote_column_name((table == 'self' ? 'dossier' : table).pluralize)
+      column = ActiveRecord::Base.connection.quote_column_name(field['column'])
+
+      table + '.' + column
+    end
 
     def field_hash(label, table, column)
       {
