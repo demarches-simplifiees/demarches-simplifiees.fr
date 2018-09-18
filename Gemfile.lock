@@ -599,6 +599,9 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
+    rails-i18n (5.1.1)
+      i18n (>= 0.7, < 2)
+      railties (>= 5.0, < 6)
     railties (5.2.1)
       actionpack (= 5.2.1)
       activesupport (= 5.2.1)
@@ -874,6 +877,7 @@ DEPENDENCIES
   rack-mini-profiler
   rails
   rails-controller-testing
+  rails-i18n
   rbnacl-libsodium
   rest-client
   rgeo-geojson
@@ -908,4 +912,4 @@ DEPENDENCIES
   xray-rails
 
 BUNDLED WITH
-   1.16.3
+   1.16.4
