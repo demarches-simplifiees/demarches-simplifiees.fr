@@ -292,6 +292,7 @@ Rails.application.routes.draw do
       end
     end
     resource :feedback, only: [:create]
+    get 'demarches' => 'demarches#index'
   end
 
   #
