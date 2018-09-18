@@ -20,6 +20,18 @@ describe 'Dossier details:' do
   end
 
   describe "the user can see the mean time they are expected to wait" do
+    context "the dossier is in construction" do
+      before do
+        other_dossier = create(:dossier, :accepte, :for_individual, procedure: simple_procedure, en_construction_at: 10.days.ago, en_instruction_at: Time.now)
+      end
+
+      it "show the proper wait time" do
+        visit_dossier dossier
+
+        expect(page).to have_text("Le temps moyen de vérification pour cette démarche est de 10 jours.")
+      end
+    end
+
     context "the dossier is in instruction" do
       let(:dossier) { create(:dossier, :en_instruction, :for_individual, :with_commentaires, user: user, procedure: simple_procedure) }
 
