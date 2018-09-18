@@ -39,7 +39,7 @@ describe 'new_user/dossiers/show/_status_overview.html.haml', type: :view do
     let(:dossier) { create :dossier, :en_construction }
 
     it 'renders the timeline (without the final states)' do
-      expect(rendered).to have_timeline_item('.brouillon').inactive
+      expect(rendered).not_to have_timeline_item('.brouillon')
       expect(rendered).to have_timeline_item('.en-construction').active
       expect(rendered).to have_timeline_item('.en-instruction').inactive
       expect(rendered).to have_timeline_item('.termine').inactive
@@ -52,7 +52,7 @@ describe 'new_user/dossiers/show/_status_overview.html.haml', type: :view do
     let(:dossier) { create :dossier, :en_instruction }
 
     it 'renders the timeline (without the final states)' do
-      expect(rendered).to have_timeline_item('.brouillon').inactive
+      expect(rendered).not_to have_timeline_item('.brouillon')
       expect(rendered).to have_timeline_item('.en-construction').inactive
       expect(rendered).to have_timeline_item('.en-instruction').active
       expect(rendered).to have_timeline_item('.termine').inactive
