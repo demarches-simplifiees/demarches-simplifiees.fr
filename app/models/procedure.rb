@@ -216,6 +216,7 @@ class Procedure < ApplicationRecord
         types_de_champ: :drop_down_list,
         types_de_champ_private: :drop_down_list
       })
+    procedure.path = nil
     procedure.aasm_state = :brouillon
     procedure.test_started_at = nil
     procedure.archived_at = nil
