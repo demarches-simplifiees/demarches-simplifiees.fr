@@ -33,6 +33,12 @@ describe Siret, type: :model do
     it { is_expected.to be_invalid }
   end
 
+  context 'with a lunh-invalid La Poste siret' do
+    let(:siret) { '35600000018723' }
+
+    it { is_expected.to be_valid }
+  end
+
   context 'with a valid siret' do
     let(:siret) { '41816609600051' }
 
