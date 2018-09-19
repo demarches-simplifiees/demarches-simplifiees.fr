@@ -27,14 +27,9 @@ class SiretFormatValidator < ActiveModel::EachValidator
   end
 
   def luhn_checksum(value)
-    accum = 0
-
-    value.reverse.each_char.map(&:to_i).each_with_index do |digit, index|
+    value.reverse.each_char.map(&:to_i).map.with_index do |digit, index|
       t = index.even? ? digit : digit * 2
-      t = t - 9 if t >= 10
-      accum += t
-    end
-
-    accum
+      t < 10 ? t : t - 9
+    end.sum
   end
 end
