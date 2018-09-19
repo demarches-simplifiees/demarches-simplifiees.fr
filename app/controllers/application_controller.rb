@@ -90,8 +90,6 @@ class ApplicationController < ActionController::Base
     logged_users.first
   end
 
-  helper_method :logged_user
-
   def logged_user_roles
     roles = logged_users.map { |logged_user| logged_user.class.name }
     roles.any? ? roles.join(', ') : 'Guest'
