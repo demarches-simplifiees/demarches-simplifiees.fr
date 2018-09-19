@@ -9,9 +9,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # GET /resource/sign_up
-  # def new
-  #   super
-  # end
+  def new
+    # Allow pre-filling the user email from a query parameter
+    build_resource({ email: sign_up_params[:email] })
+
+    yield resource if block_given?
+    respond_with resource
+  end
 
   # POST /resource
   def create
