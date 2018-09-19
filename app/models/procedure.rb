@@ -114,7 +114,7 @@ class Procedure < ApplicationRecord
     if locked?
       raise "Can not reset a locked procedure."
     else
-      dossiers.delete_all
+      dossiers.destroy_all
     end
   end
 
