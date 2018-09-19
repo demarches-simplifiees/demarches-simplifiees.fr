@@ -11,12 +11,19 @@ class SiretFormatValidator < ActiveModel::EachValidator
 
   private
 
+  LA_POSTE_SIREN = '356000000'
+
   def format_is_valid(value)
     value&.match?(/^\d{14}$/)
   end
 
   def luhn_passed(value)
-    value.present? && (luhn_checksum(value) % 10 == 0)
+    # Do not enforce Luhn for La Poste SIRET numbers, the only exception to this rule
+    value.present? && (siret_is_attached_to_la_poste(value) || (luhn_checksum(value) % 10 == 0))
+  end
+
+  def siret_is_attached_to_la_poste(value)
+    value[0..8] == LA_POSTE_SIREN
   end
 
   def luhn_checksum(value)
