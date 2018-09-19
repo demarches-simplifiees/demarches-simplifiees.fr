@@ -19,6 +19,34 @@ describe 'Dossier details:' do
     expect(page).to have_text(dossier.commentaires.last.body)
   end
 
+  describe "the user can see the mean time they are expected to wait" do
+    context "the dossier is in construction" do
+      before do
+        other_dossier = create(:dossier, :accepte, :for_individual, procedure: simple_procedure, en_construction_at: 10.days.ago, en_instruction_at: Time.now)
+      end
+
+      it "show the proper wait time" do
+        visit_dossier dossier
+
+        expect(page).to have_text("Le temps moyen de vérification pour cette démarche est de 10 jours.")
+      end
+    end
+
+    context "the dossier is in instruction" do
+      let(:dossier) { create(:dossier, :en_instruction, :for_individual, :with_commentaires, user: user, procedure: simple_procedure) }
+
+      before do
+        other_dossier = create(:dossier, :accepte, :for_individual, procedure: simple_procedure, en_instruction_at: 2.months.ago, processed_at: Time.now)
+      end
+
+      it "show the proper wait time" do
+        visit_dossier dossier
+
+        expect(page).to have_text("Le temps moyen d’instruction pour cette démarche est de 2 mois.")
+      end
+    end
+  end
+
   scenario 'the user can see and edit dossier before instruction' do
     visit_dossier dossier
     click_on 'Demande'

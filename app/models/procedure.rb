@@ -326,6 +326,18 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def mean_traitement_time
+    mean_time(:en_construction_at, :processed_at)
+  end
+
+  def mean_verification_time
+    mean_time(:en_construction_at, :en_instruction_at)
+  end
+
+  def mean_instruction_time
+    mean_time(:en_instruction_at, :processed_at)
+  end
+
   private
 
   def can_publish?(path)
@@ -387,5 +399,16 @@ class Procedure < ApplicationRecord
   def update_durees_conservation_required
     self.durees_conservation_required ||= duree_conservation_dossiers_hors_ds.present? && duree_conservation_dossiers_dans_ds.present?
     true
+  end
+
+  def mean_time(start_attribute, end_attribute)
+    times = dossiers
+      .state_termine
+      .pluck(start_attribute, end_attribute)
+      .map { |times| times[1] - times[0] }
+
+    if times.present?
+      times.sum.fdiv(times.size).ceil
+    end
   end
 end
