@@ -3,9 +3,9 @@
 fr:
   devise:
     confirmations:
-      confirmed: "Votre compte a été validé."
-      send_instructions: 'Vous allez recevoir un email avec les instructions nécessaires à la confirmation de votre compte dans quelques minutes.'
-      send_paranoid_instructions: "Si votre adresse email existe dans notre base de données, vous allez bientôt recevoir un email contenant les instructions de confirmation de votre compte."
+      confirmed: "Votre compte a été activé."
+      send_instructions: "Vous allez recevoir un email avec les instructions nécessaires à l'activation de votre compte dans quelques minutes."
+      send_paranoid_instructions: "Si votre adresse email existe dans notre base de données, vous allez bientôt recevoir un email contenant les instructions d'activation de votre compte."
     failure:
       already_authenticated: "Vous êtes déjà connecté"
       inactive: "Votre compte n'est pas encore activé."
@@ -15,10 +15,10 @@ fr:
       not_found_in_database: "adresse email ou mot de passe invalide."
       timeout: "Votre session est expirée. Veuillez vous reconnecter pour continuer."
       unauthenticated: "Vous devez vous connecter ou vous inscrire pour continuer."
-      unconfirmed: "Vous devez valider votre compte pour continuer."
+      unconfirmed: "Vous devez activer votre compte pour continuer."
     mailer:
       confirmation_instructions:
-        subject: "Instructions de confirmation"
+        subject: "Instructions d'activation de votre compte"
       reset_password_instructions:
         subject: "Instructions pour changer le mot de passe"
       unlock_instructions:
@@ -41,8 +41,8 @@ fr:
       signed_up: "Bienvenue, vous êtes connecté."
       signed_up_but_inactive: "Vous êtes bien enregistré. Vous ne pouvez cependant pas vous connecter car votre compte n'est pas encore activé."
       signed_up_but_locked: "Vous êtes bien enregistré. Vous ne pouvez cependant pas vous connecter car votre compte est verrouillé."
-      signed_up_but_unconfirmed: "Un message contenant un lien de confirmation a été envoyé à votre adresse email. Ouvrez ce lien pour activer votre compte."
-      update_needs_confirmation: "Votre compte a bien été mis à jour mais nous devons vérifier votre nouvelle adresse email. Merci de vérifier vos email et de cliquer sur le lien de confirmation pour finaliser la validation de votre nouvelle adresse."
+      signed_up_but_unconfirmed: "Un message contenant un lien d'activation a été envoyé à votre adresse email. Ouvrez ce lien pour activer votre compte."
+      update_needs_confirmation: "Votre compte a bien été mis à jour mais nous devons vérifier votre nouvelle adresse email. Merci de vérifier vos email et de cliquer sur le lien d'activation pour finaliser la validation de votre nouvelle adresse."
       updated: "Votre compte a été modifié avec succès."
     sessions:
       signed_in: "Connecté."
@@ -55,7 +55,7 @@ fr:
   errors:
     messages:
       already_confirmed: "a déjà été validé(e), veuillez essayer de vous connecter"
-      confirmation_period_expired: "à confirmer dans les %{period}, merci de faire une nouvelle demande"
+      confirmation_period_expired: "à activer dans les %{period}, merci de faire une nouvelle demande"
       expired: "a expiré, merci d'en faire une nouvelle demande"
       not_found: "n'a pas été trouvé(e)"
       not_locked: "n'était pas verrouillé(e)"
