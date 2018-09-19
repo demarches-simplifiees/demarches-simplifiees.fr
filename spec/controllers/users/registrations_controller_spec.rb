@@ -8,6 +8,22 @@ describe Users::RegistrationsController, type: :controller do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
 
+  describe '#new' do
+    subject! { get :new }
+
+    it { expect(response).to have_http_status(:ok) }
+    it { expect(response).to render_template(:new) }
+
+    context 'when an email address is provided' do
+      render_views true
+      subject! { get :new, params: { user: { email: 'test@exemple.fr' } } }
+
+      it 'prefills the form with the email address' do
+        expect(response.body).to include('test@exemple.fr')
+      end
+    end
+  end
+
   describe '#create' do
     subject do
       post :create, params: { user: user }

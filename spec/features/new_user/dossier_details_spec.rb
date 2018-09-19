@@ -10,6 +10,10 @@ describe 'Dossier details:' do
     Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
   end
 
+  after do
+    Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, false)
+  end
+
   scenario 'the user can see the summary of the dossier status' do
     visit_dossier dossier
 
