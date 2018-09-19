@@ -9,7 +9,7 @@ class Procedure < ApplicationRecord
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
-  has_one :procedure_path
+  has_one :procedure_path, dependent: :destroy
 
   belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
@@ -158,7 +158,7 @@ class Procedure < ApplicationRecord
   end
 
   def default_path
-    libelle.parameterize.first(50)
+    libelle&.parameterize&.first(50)
   end
 
   def organisation_name
