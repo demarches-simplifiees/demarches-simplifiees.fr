@@ -5,7 +5,7 @@ class Administrateurs::ActivateController < ApplicationController
     @administrateur = Administrateur.find_inactive_by_token(params[:token])
 
     if !@administrateur
-      flash.alert = "Le lien de validation d'administrateur a expiré, #{view_context.contact_link('contactez-nous', tags: 'lien expiré')} pour obtenir un nouveau lien."
+      flash.alert = "Le lien de validation d'administrateur a expiré, #{helpers.contact_link('contactez-nous', tags: 'lien expiré')} pour obtenir un nouveau lien."
       redirect_to root_path
     end
   end
