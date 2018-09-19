@@ -24,6 +24,11 @@ class User < ApplicationRecord
 
   before_validation -> { sanitize_email(:email) }
 
+  # Callback provided by Devise
+  def after_confirmation
+    link_invites!
+  end
+
   def self.find_for_france_connect(email, siret)
     user = User.find_by(email: email)
     if user.nil?
@@ -48,5 +53,11 @@ class User < ApplicationRecord
 
   def owns_or_invite?(dossier)
     owns?(dossier) || invite?(dossier.id)
+  end
+
+  private
+
+  def link_invites!
+    Invite.where(email: email).update_all(user_id: id)
   end
 end
