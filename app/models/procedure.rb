@@ -327,36 +327,15 @@ class Procedure < ApplicationRecord
   end
 
   def mean_traitement_time
-    traitement_times = dossiers
-      .state_termine
-      .pluck(:en_construction_at, :processed_at)
-      .map { |times| times[1] - times[0] }
-
-    if traitement_times.present?
-      traitement_times.sum.fdiv(traitement_times.size).ceil
-    end
+    mean_time(:en_construction_at, :processed_at)
   end
 
   def mean_verification_time
-    verification_times = dossiers
-      .state_termine
-      .pluck(:en_construction_at, :en_instruction_at)
-      .map { |times| times[1] - times[0] }
-
-    if verification_times.present?
-      verification_times.sum.fdiv(verification_times.size).ceil
-    end
+    mean_time(:en_construction_at, :en_instruction_at)
   end
 
   def mean_instruction_time
-    instruction_times = dossiers
-      .state_termine
-      .pluck(:en_instruction_at, :processed_at)
-      .map { |times| times[1] - times[0] }
-
-    if instruction_times.present?
-      instruction_times.sum.fdiv(instruction_times.size).ceil
-    end
+    mean_time(:en_instruction_at, :processed_at)
   end
 
   private
@@ -420,5 +399,16 @@ class Procedure < ApplicationRecord
   def update_durees_conservation_required
     self.durees_conservation_required ||= duree_conservation_dossiers_hors_ds.present? && duree_conservation_dossiers_dans_ds.present?
     true
+  end
+
+  def mean_time(start_attribute, end_attribute)
+    times = dossiers
+      .state_termine
+      .pluck(start_attribute, end_attribute)
+      .map { |times| times[1] - times[0] }
+
+    if times.present?
+      times.sum.fdiv(times.size).ceil
+    end
   end
 end
