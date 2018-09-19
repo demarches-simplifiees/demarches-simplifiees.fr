@@ -67,10 +67,10 @@ module NewGestionnaire
         @archived_dossiers
       end
 
-      sorted_ids = sorted_ids(@dossiers)
+      sorted_ids = DossierFieldService.sorted_ids(@dossiers, procedure_presentation, current_gestionnaire)
 
       if @current_filters.count > 0
-        filtered_ids = filtered_ids(@dossiers)
+        filtered_ids = DossierFieldService.filtered_ids(@dossiers, current_filters)
         filtered_sorted_ids = sorted_ids.select { |id| filtered_ids.include?(id) }
       else
         filtered_sorted_ids = sorted_ids
@@ -215,81 +215,6 @@ module NewGestionnaire
       procedure_presentation.displayed_fields.map do |field|
         "#{field['table']}/#{field['column']}"
       end
-    end
-
-    def filtered_ids(dossiers)
-      current_filters.map do |filter|
-        case filter['table']
-        when 'self'
-          dossiers.where("? ILIKE ?", filter['column'], "%#{filter['value']}%")
-
-        when 'france_connect_information'
-          dossiers
-            .includes(user: :france_connect_information)
-            .where("? ILIKE ?", "france_connect_informations.#{filter['column']}", "%#{filter['value']}%")
-
-        when 'type_de_champ', 'type_de_champ_private'
-          relation = filter['table'] == 'type_de_champ' ? :champs : :champs_private
-          dossiers
-            .includes(relation)
-            .where("champs.type_de_champ_id = ?", filter['column'].to_i)
-            .where("champs.value ILIKE ?", "%#{filter['value']}%")
-        when 'entreprise'
-          table = 'etablissement'
-          if filter['column'] == 'date_creation'
-            date = filter['value'].to_date rescue nil
-            dossiers
-              .includes(table)
-              .where("#{table.pluralize}.entreprise_#{filter['column']} = ?", date)
-          else
-            dossiers
-              .includes(table)
-              .where("#{table.pluralize}.entreprise_#{filter['column']} ILIKE ?", "%#{filter['value']}%")
-          end
-        when 'user', 'etablissement'
-          dossiers
-            .includes(filter['table'])
-            .where("#{filter['table'].pluralize}.#{filter['column']} ILIKE ?", "%#{filter['value']}%")
-        end.pluck(:id)
-      end.reduce(:&)
-    end
-
-    def sorted_ids(dossiers)
-      table = procedure_presentation.sort['table']
-      column = procedure_presentation.sort['column']
-      order = procedure_presentation.sort['order']
-      includes = ''
-      where = ''
-
-      sorted_ids = nil
-
-      case table
-      when 'notifications'
-        dossiers_id_with_notification = current_gestionnaire.notifications_for_procedure(procedure)
-        if order == 'desc'
-          sorted_ids = dossiers_id_with_notification + (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
-        else
-          sorted_ids = (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) + dossiers_id_with_notification
-        end
-      when 'self'
-        order = "dossiers.#{column} #{order}"
-      when 'france_connect_information'
-        includes = { user: :france_connect_information }
-        order = "france_connect_informations.#{column} #{order}"
-      when 'type_de_champ', 'type_de_champ_private'
-        includes = table == 'type_de_champ' ? :champs : :champs_private
-        where = "champs.type_de_champ_id = #{column.to_i}"
-        order = "champs.value #{order}"
-      else
-        includes = table
-        order = "#{table.pluralize}.#{column} #{order}"
-      end
-
-      if sorted_ids.nil?
-        sorted_ids = dossiers.includes(includes).where(where).order(Dossier.sanitize_for_order(order)).pluck(:id)
-      end
-
-      sorted_ids
     end
 
     def current_filters

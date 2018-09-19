@@ -45,7 +45,7 @@ class Admin::ProceduresController < AdminController
     procedure = current_administrateur.procedures.find(params[:id])
     procedure.hide!
 
-    flash.notice = "Démarche supprimée, en cas d'erreur #{view_context.contact_link('contactez nous', tags: 'démarche supprimée')}"
+    flash.notice = "Démarche supprimée, en cas d'erreur #{helpers.contact_link('contactez nous', tags: 'démarche supprimée')}"
     redirect_to admin_procedures_draft_path
   end
 
@@ -194,7 +194,7 @@ class Admin::ProceduresController < AdminController
   def path_list
     json_path_list = ProcedurePath
       .find_with_path(params[:request])
-      .pluck(:path, :administrateur_id)
+      .pluck('procedure_paths.path', :administrateur_id)
       .map do |path, administrateur_id|
         {
           label: path,
