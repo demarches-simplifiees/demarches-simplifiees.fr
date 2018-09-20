@@ -36,6 +36,16 @@ fr:
   apipie:
     api_documentation: "Documentation de l'API demarches-simplifiees.fr"
 
+  mail:
+    administration:
+      dossier_expiration_summary:
+        expired_dossiers:
+          one: "Un dossier a passé sa date limite de conservation"
+          other: "%{count} dossiers ont passé leur date limite de conservation"
+        expiring_dossiers:
+          one: "Un dossier est sur le point de passer sa date limite de conservation"
+          other: "%{count} dossiers sont sur le point de passer leur date limite de conservation"
+
   modal:
     publish:
       title:
