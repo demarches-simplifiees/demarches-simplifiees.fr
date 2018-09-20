@@ -4,10 +4,14 @@ require 'mina/git'
 require 'mina/rbenv'
 
 # Basic settings:
-#   domain       - The hostname to SSH to.
-#   deploy_to    - Path to deploy into.
-#   repository   - Git repo to clone from. (needed by mina/git)
-#   branch       - Branch name to deploy. (needed by mina/git)
+#   domain        - The hostname to SSH to.
+#   deploy_to     - Path to deploy into.
+#   repository    - Git repo to clone from. (needed by mina/git)
+#   branch        - Branch name to deploy. (needed by mina/git)
+#
+# Advanced settings:
+#   forward_agent - SSH forward_agent
+#   user          - Username in the server to SSH to
 
 if !["staging", "production"].include?(ENV['to'])
   raise "missing or incorrect `to` (should be 'staging' or 'production')"
@@ -22,7 +26,7 @@ set :repository, 'https://github.com/betagouv/tps.git'
 set :port, 2200
 set :rails_env, 'production'
 set :rbenv_path, "/usr/local/rbenv/bin/rbenv"
-set :forward_agent, true # SSH forward_agent.
+set :forward_agent, true
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
@@ -42,12 +46,12 @@ case ENV["to"]
 when "staging"
   set :branch, ENV['branch'] || 'dev'
   set :deploy_to, '/var/www/tps_dev'
-  set :user, 'tps_dev' # Username in the server to SSH to.
+  set :user, 'tps_dev'
   appname = 'tps_dev'
 when "production"
   set :branch, ENV['branch'] || 'master'
   set :deploy_to, '/var/www/tps'
-  set :user, 'tps' # Username in the server to SSH to.
+  set :user, 'tps'
   appname = 'tps'
 end
 
