@@ -11,9 +11,13 @@ require 'mina/rbenv' # for rbenv support. (http://rbenv.org)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 ENV['to'] ||= "staging"
-raise "Bad to=#{+ENV['to']}" if !["staging", "production"].include?(ENV['to'])
+if !["staging", "production"].include?(ENV['to'])
+  raise "Bad to=#{+ENV['to']}"
+end
 
-raise "missing domain, run with 'rake deploy domain=37.187.154.237'" if ENV['domain'].nil?
+if ENV['domain'].nil?
+  raise "missing domain, run with 'rake deploy domain=37.187.154.237'"
+end
 
 set :domain, ENV['domain']
 set :repository, 'https://github.com/betagouv/tps.git'
