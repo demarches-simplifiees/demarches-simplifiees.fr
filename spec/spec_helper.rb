@@ -127,6 +127,8 @@ RSpec.configure do |config|
   config.before(:each) do
     allow_any_instance_of(PieceJustificativeUploader).to receive(:generate_secure_token).and_return("3dbb3535-5388-4a37-bc2d-778327b9f997")
     allow_any_instance_of(ProcedureLogoUploader).to receive(:generate_secure_token).and_return("3dbb3535-5388-4a37-bc2d-778327b9f998")
+
+    Flipflop::FeatureSet.current.test!.reset!
   end
 
   config.before(:all) {

@@ -585,10 +585,6 @@ describe NewUser::DossiersController, type: :controller do
       sign_in(user)
     end
 
-    after do
-      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, false)
-    end
-
     subject! { get(:show, params: { id: dossier.id }) }
 
     context 'when the dossier is a brouillon' do
@@ -618,10 +614,6 @@ describe NewUser::DossiersController, type: :controller do
     before do
       Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
       sign_in(user)
-    end
-
-    after do
-      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, false)
     end
 
     subject! { get(:demande, params: { id: dossier.id }) }
