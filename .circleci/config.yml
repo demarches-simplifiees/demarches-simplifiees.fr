@@ -100,15 +100,15 @@ jobs:
       - *bundle_install
       - add_ssh_keys:
           fingerprints:
-            - "0a:67:42:7d:7e:b7:e1:3c:48:8f:bf:68:10:51:a8:44"
+            - "0e:db:db:9c:54:ac:60:1a:d3:ba:28:03:2e:7d:0e:9a"
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "dev" ]; then
-              bundle exec rake deploy_ha
+              bundle exec rake deploy to=staging
             fi
 
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              bundle exec rake deploy_ha to=production
+              bundle exec rake deploy to=production
             fi
 
 workflows:

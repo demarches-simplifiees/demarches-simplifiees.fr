@@ -7,8 +7,8 @@ class GestionnaireMailer < ApplicationMailer
     subject = "Activez votre compte instructeur"
 
     mail(to: gestionnaire.email,
-         subject: subject,
-         reply_to: CONTACT_EMAIL)
+      subject: subject,
+      reply_to: CONTACT_EMAIL)
   end
 
   def user_to_gestionnaire(email)
