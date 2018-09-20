@@ -1,8 +1,7 @@
 require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
-require 'mina/rbenv' # for rbenv support. (http://rbenv.org)
-# require 'mina/rvm'    # for rvm support. (http://rvm.io)
+require 'mina/rbenv'
 
 # Basic settings:
 #   domain       - The hostname to SSH to.
@@ -39,9 +38,6 @@ print "Deploy to #{ENV['to']} environment branch #{branch}\n"
 
 set :rails_env, 'production'
 
-# For system-wide RVM install.
-#   set :rvm_path, '/usr/local/rvm/bin/rvm'
-
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, [
@@ -58,9 +54,6 @@ set :shared_paths, [
 
 set :rbenv_path, "/usr/local/rbenv/bin/rbenv"
 
-# Optional settings:
-#   set :user, 'foobar'    # Username in the server to SSH to.
-#   set :port, '30000'     # SSH port number.
 set :forward_agent, true # SSH forward_agent.
 
 # This task is the environment that is loaded for most commands, such as
@@ -144,9 +137,3 @@ task :deploy => :environment do
     end
   end
 end
-# For help in making your deploy script, see the Mina documentation:
-#
-#  - http://nadarei.co/mina
-#  - http://nadarei.co/mina/tasks
-#  - http://nadarei.co/mina/settings
-#  - http://nadarei.co/mina/helpers
