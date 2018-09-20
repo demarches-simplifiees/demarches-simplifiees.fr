@@ -15,6 +15,7 @@
     "turbolinks": "^5.1.1"
   },
   "devDependencies": {
+    "eclint": "^2.8.0",
     "eslint": "^5.2.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.2",
@@ -22,6 +23,7 @@
     "webpack-dev-server": "^3.1.4"
   },
   "scripts": {
+    "lint:ec": "eclint check $({ git ls-files ; find vendor -type f ; echo 'db/schema.rb' ; } | sort | uniq -u)",
     "lint:js": "eslint ./app/javascript ./config/webpack"
   },
   "engines": {
