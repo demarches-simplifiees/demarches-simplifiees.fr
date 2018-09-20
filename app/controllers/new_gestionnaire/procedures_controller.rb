@@ -102,11 +102,9 @@ module NewGestionnaire
       fields = values.map do |value|
         table, column = value.split("/")
 
-        c = procedure.fields.find do |field|
+        procedure.fields.find do |field|
           field['table'] == table && field['column'] == column
         end
-
-        c.to_json
       end
 
       procedure_presentation.update(displayed_fields: fields)
