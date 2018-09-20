@@ -15,7 +15,6 @@ raise "Bad to=#{+ENV['to']}" if !["staging", "production"].include?(ENV['to'])
 
 raise "missing domain, run with 'rake deploy domain=37.187.154.237'" if ENV['domain'].nil?
 
-# set :domain, '5.135.190.60'
 set :domain, ENV['domain']
 set :repository, 'https://github.com/betagouv/tps.git'
 set :port, 2200
