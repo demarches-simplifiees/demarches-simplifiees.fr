@@ -51,8 +51,6 @@ class DossierFieldService
         dossier.user.send(column)
       when 'france_connect_information'
         dossier.user.france_connect_information&.send(column)
-      when 'entreprise'
-        dossier.etablissement&.send(:"entreprise_#{column}")
       when 'etablissement'
         dossier.etablissement&.send(column)
       when 'type_de_champ'
