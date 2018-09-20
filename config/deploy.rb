@@ -10,11 +10,11 @@ require 'mina/rbenv'
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 if !["staging", "production"].include?(ENV['to'])
-  raise "Bad to=#{+ENV['to']}"
+  raise "missing or incorrect `to` (should be 'staging' or 'production')"
 end
 
 if ENV['domain'].nil?
-  raise "missing domain, run with 'rake deploy domain=37.187.154.237'"
+  raise "missing `domain`"
 end
 
 set :domain, ENV['domain']
