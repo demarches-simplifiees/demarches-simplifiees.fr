@@ -132,7 +132,7 @@ module NewGestionnaire
         'table' => table,
         'column' => column,
         'order' => order
-      }.to_json
+      }
 
       procedure_presentation.update(sort: sort)
 
