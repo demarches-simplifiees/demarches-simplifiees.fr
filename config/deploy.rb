@@ -19,8 +19,6 @@ set :domain, ENV['domain']
 set :repository, 'https://github.com/betagouv/tps.git'
 set :port, 2200
 
-set :deploy_to, '/var/www/tps_dev'
-
 case ENV["to"]
 when "staging"
   set :branch, ENV['branch'] || 'dev'
