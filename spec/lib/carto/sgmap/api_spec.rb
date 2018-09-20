@@ -55,7 +55,7 @@ describe CARTO::SGMAP::API do
     before do
       stub_request(:post, "https://apicarto.sgmap.fr/cadastre/geometrie")
         .with(:body => /.*/,
-             :headers => { 'Content-Type' => 'application/json' })
+          :headers => { 'Content-Type' => 'application/json' })
         .to_return(status: status, body: body)
     end
     context 'when geojson is empty' do

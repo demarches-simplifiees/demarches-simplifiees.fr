@@ -14,17 +14,17 @@ describe TagsSubstitutionConcern, type: :model do
 
   let(:template_concern) do
     (Class.new do
-       include TagsSubstitutionConcern
+      include TagsSubstitutionConcern
 
-       def initialize(p, s)
-         @procedure = p
-         self.class.const_set(:DOSSIER_STATE, s)
-       end
+      def initialize(p, s)
+        @procedure = p
+        self.class.const_set(:DOSSIER_STATE, s)
+      end
 
-       def procedure
-         @procedure
-       end
-     end).new(procedure, state)
+      def procedure
+        @procedure
+      end
+    end).new(procedure, state)
   end
 
   describe 'replace_tags' do
