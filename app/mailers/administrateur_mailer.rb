@@ -8,7 +8,7 @@ class AdministrateurMailer < ApplicationMailer
     @subject = "N'oubliez pas d'activer votre compte administrateur"
 
     mail(to: administrateur.email,
-         subject: @subject,
-         reply_to: CONTACT_EMAIL)
+      subject: @subject,
+      reply_to: CONTACT_EMAIL)
   end
 end

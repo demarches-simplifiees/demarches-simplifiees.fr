@@ -2,21 +2,21 @@ describe EmailSanitizableConcern, type: :model do
   describe 'sanitize_email' do
     let(:email_concern) do
       (Class.new do
-         include EmailSanitizableConcern
-         attr_accessor :email
+        include EmailSanitizableConcern
+        attr_accessor :email
 
-         def initialize(email)
-           self.email = email
-         end
+        def initialize(email)
+          self.email = email
+        end
 
-         def [](key)
-           self.send(key)
-         end
+        def [](key)
+          self.send(key)
+        end
 
-         def []=(key, value)
-           self.send("#{key}=", value)
-         end
-       end).new(email)
+        def []=(key, value)
+          self.send("#{key}=", value)
+        end
+      end).new(email)
     end
 
     before do
