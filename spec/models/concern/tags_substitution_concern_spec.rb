@@ -15,7 +15,6 @@ describe TagsSubstitutionConcern, type: :model do
   let(:template_concern) do
     (Class.new do
        include TagsSubstitutionConcern
-       public :replace_tags
 
        def initialize(p, s)
          @procedure = p
@@ -35,7 +34,7 @@ describe TagsSubstitutionConcern, type: :model do
 
     before { Timecop.freeze(Time.now) }
 
-    subject { template_concern.replace_tags(template, dossier) }
+    subject { template_concern.send(:replace_tags, template, dossier) }
 
     after { Timecop.return }
 
@@ -253,7 +252,7 @@ describe TagsSubstitutionConcern, type: :model do
       let(:template) { '--motivation-- --date de décision--' }
       let(:state) { Dossier.states.fetch(:en_instruction) }
 
-      subject { template_concern.replace_tags(template, dossier) }
+      subject { template_concern.send(:replace_tags, template, dossier) }
 
       it "does not treat motivation or date de décision as tags" do
         is_expected.to eq('--motivation-- --date de décision--')
