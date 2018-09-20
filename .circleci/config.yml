@@ -104,7 +104,7 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "dev" ]; then
-              bundle exec rake deploy
+              bundle exec rake deploy to=staging
             fi
 
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
