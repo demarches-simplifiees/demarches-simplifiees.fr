@@ -10,7 +10,6 @@ require 'mina/rbenv' # for rbenv support. (http://rbenv.org)
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
-ENV['to'] ||= "staging"
 if !["staging", "production"].include?(ENV['to'])
   raise "Bad to=#{+ENV['to']}"
 end
