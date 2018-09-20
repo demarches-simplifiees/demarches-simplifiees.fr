@@ -20,23 +20,9 @@ end
 set :domain, ENV['domain']
 set :repository, 'https://github.com/betagouv/tps.git'
 set :port, 2200
-
-case ENV["to"]
-when "staging"
-  set :branch, ENV['branch'] || 'dev'
-  set :deploy_to, '/var/www/tps_dev'
-  set :user, 'tps_dev' # Username in the server to SSH to.
-  appname = 'tps_dev'
-when "production"
-  set :branch, ENV['branch'] || 'master'
-  set :deploy_to, '/var/www/tps'
-  set :user, 'tps' # Username in the server to SSH to.
-  appname = 'tps'
-end
-
-print "Deploy to #{ENV['to']} environment branch #{branch}\n"
-
 set :rails_env, 'production'
+set :rbenv_path, "/usr/local/rbenv/bin/rbenv"
+set :forward_agent, true # SSH forward_agent.
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
@@ -52,9 +38,20 @@ set :shared_paths, [
   'config/unicorn.rb'
 ]
 
-set :rbenv_path, "/usr/local/rbenv/bin/rbenv"
+case ENV["to"]
+when "staging"
+  set :branch, ENV['branch'] || 'dev'
+  set :deploy_to, '/var/www/tps_dev'
+  set :user, 'tps_dev' # Username in the server to SSH to.
+  appname = 'tps_dev'
+when "production"
+  set :branch, ENV['branch'] || 'master'
+  set :deploy_to, '/var/www/tps'
+  set :user, 'tps' # Username in the server to SSH to.
+  appname = 'tps'
+end
 
-set :forward_agent, true # SSH forward_agent.
+print "Deploy to #{ENV['to']} environment branch #{branch}\n"
 
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
