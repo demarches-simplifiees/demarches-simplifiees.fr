@@ -104,11 +104,11 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "dev" ]; then
-              bundle exec rake deploy_ha
+              bundle exec rake deploy
             fi
 
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              bundle exec rake deploy_ha to=production
+              bundle exec rake deploy to=production
             fi
 
 workflows:
