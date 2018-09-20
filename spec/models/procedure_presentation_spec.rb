@@ -8,7 +8,7 @@ describe ProcedurePresentation do
         { "label" => "test2", "table" => "champs" }
       ],
       sort: { "table" => "user","column" => "email","order" => "asc" },
-      filters: { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "table1", "column" => "column1" }] }.to_json
+      filters: { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "table1", "column" => "column1" }] }
     ).id
   }
   let (:procedure_presentation) { ProcedurePresentation.find(procedure_presentation_id) }
