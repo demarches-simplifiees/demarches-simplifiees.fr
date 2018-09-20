@@ -691,9 +691,9 @@ describe Admin::ProceduresController, type: :controller do
       let(:procedure) { create :procedure, :published, administrateur: admin }
 
       before do
-         subject
-         procedure.reload
-       end
+        subject
+        procedure.reload
+      end
 
       it { expect(procedure.hidden_at).not_to be_nil }
       it { expect(procedure.procedure_path).to be_nil }
