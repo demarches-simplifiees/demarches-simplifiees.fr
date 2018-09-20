@@ -15,6 +15,7 @@
     "turbolinks": "^5.1.1"
   },
   "devDependencies": {
+    "eclint": "^2.8.0",
     "eslint": "^5.2.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.2",
