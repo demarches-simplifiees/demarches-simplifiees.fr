@@ -152,7 +152,9 @@ fr:
               taken: déjà utilisé
             password:
               too_short: ': Le mot de passe est trop court'
-
+    attributes:
+      champs:
+        value: Le champ
   errors:
     messages:
       already_confirmed: "a déjà été validé(e), veuillez essayer de vous connecter"
