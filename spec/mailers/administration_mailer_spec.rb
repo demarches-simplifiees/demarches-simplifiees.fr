@@ -33,4 +33,36 @@ RSpec.describe AdministrationMailer, type: :mailer do
 
     it { expect(subject.subject).not_to be_empty }
   end
+
+  describe '#dossier_expiration_summary' do
+    subject { described_class.dossier_expiration_summary(expiring, expired) }
+
+    context 'with expiring dossiers only' do
+      let(:expiring) { [create(:dossier)] }
+      let(:expired) { [] }
+
+      it { expect(subject.subject).to eq("Des dossiers approchent de la fin de leur délai de conservation") }
+    end
+
+    context 'with expired dossiers only' do
+      let(:expiring) { [] }
+      let(:expired) { [create(:dossier)] }
+
+      it { expect(subject.subject).to eq("Des dossiers ont dépassé leur délai de conservation") }
+    end
+
+    context 'with both expiring and expired dossiers' do
+      let(:expiring) { [create(:dossier)] }
+      let(:expired) { [create(:dossier)] }
+
+      it { expect(subject.subject).to eq("Des dossiers ont dépassé leur délai de conservation, et d’autres en approchent") }
+    end
+
+    context 'with neither expiring nor expired dossiers' do
+      let(:expiring) { [] }
+      let(:expired) { [] }
+
+      it { expect(subject.subject).to eq("Aucun dossier en fin de délai de conservation") }
+    end
+  end
 end
