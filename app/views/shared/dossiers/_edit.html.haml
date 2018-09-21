@@ -17,7 +17,7 @@
         ) sont obligatoires.
 
       - if notice_url(dossier.procedure).present?
-        = link_to notice_url(dossier.procedure), class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
+        = link_to notice_url(dossier.procedure), target: '_blank', class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
           %span.icon.info>
           Guide de la démarche
 
