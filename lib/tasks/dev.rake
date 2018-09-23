@@ -27,6 +27,6 @@ namespace :dev do
   end
 
   task :console do
-    exec("ssh tps@sgmap_production1 -t 'source /etc/profile && cd current && bundle exec rails c production'")
+    exec("ssh tps@sgmap_production1 -t 'source /etc/profile && cd current && bundle exec rails c -e production'")
   end
 end
