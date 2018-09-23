@@ -1,7 +1,8 @@
 @import "constants";
 
 .demande {
-  padding-bottom: $default-padding;
+  padding-top: 3 * $default-padding;
+  padding-bottom: 3 * $default-padding;
 
   h1 {
     margin-bottom: $default-padding;
