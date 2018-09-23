@@ -10,6 +10,8 @@
   %p.intro Pour obtenir un compte administrateur sur demarches-simplifiees.fr, veuillez remplir le formulaire ci-dessous et un membre de notre équipe vous contactera dès que possible.
   %p.intro Tous les champs sont obligatoires.
 
+  %hr
+
   = form_tag({ controller: 'demandes', action: 'create' }, class: 'form') do
 
     = label_tag :organization_name do
