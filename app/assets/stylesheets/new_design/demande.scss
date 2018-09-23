@@ -1,7 +1,9 @@
+@import "colors";
 @import "constants";
 
 .demande {
-  padding-bottom: $default-padding;
+  padding-top: 3 * $default-padding;
+  padding-bottom: 3 * $default-padding;
 
   h1 {
     margin-bottom: $default-padding;
@@ -13,5 +15,13 @@
 
   b {
     font-weight: bold;
+  }
+
+  hr {
+    border: none;
+    height: 1px;
+    background-color: $grey;
+    margin-top: 2 * $default-padding;
+    margin-bottom: 2 * $default-padding;
   }
 }
