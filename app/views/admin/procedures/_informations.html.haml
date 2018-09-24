@@ -16,7 +16,7 @@
     = f.label :duree_conservation_dossiers_dans_ds, "Sur demarches-simplifiees.fr* (durée en mois après le début de l’instruction)"
     = f.number_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6', required: true
 
-    = f.label :duree_conservation_dossiers_hors_ds, "Hors demarches-simplifiees.fr* (durée en mois)"
+    = f.label :duree_conservation_dossiers_hors_ds, "Hors demarches-simplifiees.fr* (durée en mois après la fin de l'instruction)"
     = f.number_field :duree_conservation_dossiers_hors_ds, class: 'form-control', placeholder: '6', required: true
 
 .form-group
@@ -60,6 +60,9 @@
   - else
     %a{ href: url_for(notice), target: '_blank' }
       = notice.filename.to_s
+    \-
+    = link_to 'supprimer', delete_notice_admin_procedure_path(@procedure),
+      method: :delete
     %br
     Modifier :
     = f.file_field :notice,
