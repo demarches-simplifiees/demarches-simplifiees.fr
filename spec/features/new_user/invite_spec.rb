@@ -3,7 +3,7 @@ require 'spec_helper'
 feature 'Invitations' do
   let(:user) { create(:user) }
   let(:invited_user) { create(:user, email: 'user_invite@exemple.fr') }
-  let(:procedure) { create(:procedure, :published, :with_type_de_champ) }
+  let(:procedure) { create(:simple_procedure) }
   let(:invite) { create(:invite_user, user: invited_user, dossier: dossier) }
 
   context 'when the dossier is a brouillon' do
@@ -13,7 +13,7 @@ feature 'Invitations' do
       log_in(user)
       navigate_to_brouillon(dossier)
 
-      fill_in 'Libelle du champ', with: 'Some edited value'
+      fill_in 'Texte obligatoire', with: 'Some edited value'
       send_invite_to "user_invite@exemple.fr"
 
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
@@ -21,7 +21,7 @@ feature 'Invitations' do
       expect(page).to have_text("user_invite@exemple.fr")
 
       # Ensure unsaved edits to the form are not lost
-      expect(page).to have_field('Libelle du champ', with: 'Some edited value')
+      expect(page).to have_field('Texte obligatoire', with: 'Some edited value')
     end
 
     context 'when inviting someone without an existing account' do
@@ -58,10 +58,10 @@ feature 'Invitations' do
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
       expect(page).to have_no_selector('.button.invite-user-action')
 
-      fill_in 'Libelle du champ', with: 'Some edited value'
+      fill_in 'Texte obligatoire', with: 'Some edited value'
       click_button 'Enregistrer le brouillon'
       expect(page).to have_text('Votre brouillon a bien été sauvegardé')
-      expect(page).to have_field('Libelle du champ', with: 'Some edited value')
+      expect(page).to have_field('Texte obligatoire', with: 'Some edited value')
     end
 
     scenario 'an invited user cannot submit the draft' do
@@ -105,7 +105,7 @@ feature 'Invitations' do
       visit brouillon_dossier_path(dossier)
 
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
-      fill_in "Libelle du champ", with: "Some edited value"
+      fill_in "Texte obligatoire", with: "Some edited value"
       click_button "Enregistrer les modifications du dossier"
 
       expect(page).to have_current_path(users_dossiers_invite_path(invite))

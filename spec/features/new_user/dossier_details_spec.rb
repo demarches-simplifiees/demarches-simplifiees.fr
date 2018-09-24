@@ -1,10 +1,7 @@
 describe 'Dossier details:' do
   let(:user) { create(:user) }
-  let(:simple_procedure) do
-    tdcs = [create(:type_de_champ, libelle: 'texte obligatoire')]
-    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
-  end
-  let(:dossier) { create(:dossier, :en_construction, :for_individual, :with_commentaires, user: user, procedure: simple_procedure) }
+  let(:procedure) { create(:simple_procedure) }
+  let(:dossier) { create(:dossier, :en_construction, :for_individual, :with_commentaires, user: user, procedure: procedure) }
 
   before do
     Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
@@ -21,7 +18,7 @@ describe 'Dossier details:' do
   describe "the user can see the mean time they are expected to wait" do
     context "when the dossier is in construction" do
       before do
-        other_dossier = create(:dossier, :accepte, :for_individual, procedure: simple_procedure, en_construction_at: 10.days.ago, en_instruction_at: Time.now)
+        other_dossier = create(:dossier, :accepte, :for_individual, procedure: procedure, en_construction_at: 10.days.ago, en_instruction_at: Time.now)
         visit dossier_path(dossier)
       end
 
@@ -29,10 +26,10 @@ describe 'Dossier details:' do
     end
 
     context "when the dossier is in instruction" do
-      let(:dossier) { create(:dossier, :en_instruction, :for_individual, :with_commentaires, user: user, procedure: simple_procedure) }
+      let(:dossier) { create(:dossier, :en_instruction, :for_individual, :with_commentaires, user: user, procedure: procedure) }
 
       before do
-        other_dossier = create(:dossier, :accepte, :for_individual, procedure: simple_procedure, en_instruction_at: 2.months.ago, processed_at: Time.now)
+        other_dossier = create(:dossier, :accepte, :for_individual, procedure: procedure, en_instruction_at: 2.months.ago, processed_at: Time.now)
         visit dossier_path(dossier)
       end
 
