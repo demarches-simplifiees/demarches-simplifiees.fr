@@ -1,16 +1,16 @@
 require 'spec_helper'
 
 feature 'Invitations' do
-  let(:user) { create(:user) }
+  let(:owner) { create(:user) }
   let(:invited_user) { create(:user, email: 'user_invite@exemple.fr') }
   let(:procedure) { create(:simple_procedure) }
   let(:invite) { create(:invite_user, user: invited_user, dossier: dossier) }
 
   context 'when the dossier is a brouillon' do
-    let!(:dossier) { create(:dossier, :for_individual, state: Dossier.states.fetch(:brouillon), user: user, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :for_individual, state: Dossier.states.fetch(:brouillon), user: owner, procedure: procedure) }
 
-    scenario 'on the form, a user can invite another user to collaborate on the dossier', js: true do
-      log_in(user)
+    scenario 'on the form, the owner of a dossier can invite another user to collaborate on the dossier', js: true do
+      log_in(owner)
       navigate_to_brouillon(dossier)
 
       fill_in 'Texte obligatoire', with: 'Some edited value'
@@ -77,10 +77,10 @@ feature 'Invitations' do
   end
 
   context 'when the dossier is en_construction (legacy UI)' do
-    let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: user, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: owner, procedure: procedure) }
 
     scenario 'on dossier details, a user can invite another user to collaborate on the dossier', js: true do
-      log_in(user)
+      log_in(owner)
       navigate_to_recapitulatif(dossier)
 
       legacy_send_invite_to "user_invite@exemple.fr"
