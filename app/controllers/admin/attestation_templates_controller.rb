@@ -54,6 +54,16 @@ class Admin::AttestationTemplatesController < AdminController
     render 'admin/attestation_templates/show', formats: [:pdf]
   end
 
+  def delete_logo
+    attestation_template = @procedure.attestation_template
+
+    attestation_template.remove_logo!
+    attestation_template.save
+
+    flash.notice = 'le logo a bien été supprimée'
+    redirect_to edit_admin_procedure_attestation_template_path(@procedure)
+  end
+
   def delete_signature
     attestation_template = @procedure.attestation_template
 
