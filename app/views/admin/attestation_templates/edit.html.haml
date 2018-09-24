@@ -17,6 +17,8 @@
         = image_tag @attestation_template.logo.url, class: 'thumbnail'
       .form-group
         = f.label :logo, "Logo de l'attestation"
+        - if @attestation_template.logo.present?
+          = link_to 'Supprimer le logo', admin_procedure_attestation_template_logo_path(@procedure), method: :delete
         = f.file_field :logo, accept: 'image/png, image/jpg, image/jpeg'
         %p.help-block
           Fichier accepté : JPG / JPEG / PNG
