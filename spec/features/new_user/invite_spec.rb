@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'features/new_user/dossier_shared_examples.rb'
 
 feature 'Invitations' do
   let(:owner) { create(:user) }
@@ -71,6 +72,35 @@ feature 'Invitations' do
     end
   end
 
+  context 'when the dossier is en_construction' do
+    let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: owner, procedure: procedure) }
+
+    before do
+      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
+    end
+
+    scenario 'on dossier details, the owner of a dossier can invite another user to collaborate on the dossier', js: true do
+      log_in(owner)
+      navigate_to_dossier(dossier)
+
+      send_invite_to "user_invite@exemple.fr"
+
+      expect(page).to have_current_path(dossier_path(dossier))
+      expect(page).to have_text("Une invitation a été envoyée à user_invite@exemple.fr.")
+      expect(page).to have_text("user_invite@exemple.fr")
+    end
+
+    context 'as an invited user' do
+      before do
+        navigate_to_invited_dossier(invite)
+        expect(page).to have_current_path(dossier_path(invite.dossier))
+      end
+
+      it_behaves_like 'the user can edit the submitted demande'
+      it_behaves_like 'the user can send messages to the instructeur'
+    end
+  end
+
   context 'when the dossier is en_construction (legacy UI)' do
     let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: owner, procedure: procedure) }
 
@@ -127,6 +157,12 @@ feature 'Invitations' do
     expect(page).to have_current_path(dossiers_path)
     click_on(dossier.id)
     expect(page).to have_current_path(brouillon_dossier_path(dossier))
+  end
+
+  def navigate_to_dossier(dossier)
+    expect(page).to have_current_path(dossiers_path)
+    click_on(dossier.id)
+    expect(page).to have_current_path(dossier_path(dossier))
   end
 
   def navigate_to_invited_dossier(invite)
