@@ -690,7 +690,7 @@ describe Procedure do
   end
 
   describe ".default_sort" do
-    it { expect(Procedure.default_sort).to eq("{\"table\":\"self\",\"column\":\"id\",\"order\":\"desc\"}") }
+    it { expect(Procedure.default_sort).to eq({ "table" => "self", "column" => "id", "order" => "desc" }) }
   end
 
   describe "#export_filename" do
