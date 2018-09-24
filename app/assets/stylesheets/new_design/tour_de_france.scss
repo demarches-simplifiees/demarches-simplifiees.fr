@@ -1,0 +1,91 @@
+@import "colors";
+
+$default-space: 15px;
+
+.tour-de-france {
+  .blue-panel {
+    background-color: $blue;
+  }
+
+  .white-panel {
+    padding-top: 2 * $default-space;
+    padding-bottom: 2 * $default-space;
+  }
+
+  .photos-panel {
+    background: linear-gradient(#FFFFFF, #FFFFFF 50%, $light-grey 50%, $light-grey 100%);
+    padding-top: 2 * $default-space;
+    padding-bottom: 2 * $default-space;
+  }
+
+  .grey-panel {
+    background-color: $light-grey;
+    padding-top: 2 * $default-space;
+    padding-bottom: 2 * $default-space;
+  }
+
+  p {
+    margin-bottom: $default-space;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: $default-space;
+  }
+
+  h3 {
+    font-weight: bold;
+  }
+
+  h4 {
+    color: $grey;
+    margin-bottom: $default-space;
+  }
+
+  ul {
+    list-style-type: disc;
+    margin-left: 15px;
+  }
+
+  li {
+    margin-bottom: 5px;
+  }
+
+  .cards {
+    .card:nth-of-type(even) {
+      margin-right: 0px;
+    }
+  }
+
+  $card-margin-bottom: 2 * $default-space;
+
+  .card {
+    padding: 15px;
+    margin-bottom: $card-margin-bottom;
+    border-radius: 5px;
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    min-height: 230px;
+  }
+
+  $card-half-horizontal-spacing: 4 * $default-space;
+
+  .card-half {
+    width: calc((100% - #{$card-half-horizontal-spacing}) / 2);
+    margin-right: 3 * $default-space;
+  }
+
+  .tour-de-france-logo {
+    width: 400px;
+    margin: 0 auto;
+    display: block;
+    padding-top: 2 * $default-space;
+    padding-bottom: 2 * $default-space;
+  }
+
+  .atelier-photo {
+    width: 380px;
+    border-radius: 5px;
+  }
+}
