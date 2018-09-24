@@ -76,7 +76,7 @@ feature 'Invitations' do
     end
   end
 
-  context 'when the dossier is en_construction' do
+  context 'when the dossier is en_construction (legacy UI)' do
     let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: user, procedure: procedure) }
 
     scenario 'on dossier details, a user can invite another user to collaborate on the dossier', js: true do
