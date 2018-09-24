@@ -4,11 +4,11 @@ describe ProcedurePresentation do
   let (:procedure_presentation_id) {
     ProcedurePresentation.create(
       displayed_fields: [
-        { "label" => "test1", "table" => "user" }.to_json,
-        { "label" => "test2", "table" => "champs" }.to_json
+        { "label" => "test1", "table" => "user" },
+        { "label" => "test2", "table" => "champs" }
       ],
-      sort: { "table" => "user","column" => "email","order" => "asc" }.to_json,
-      filters: { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "table1", "column" => "column1" }] }.to_json
+      sort: { "table" => "user","column" => "email","order" => "asc" },
+      filters: { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "table1", "column" => "column1" }] }
     ).id
   }
   let (:procedure_presentation) { ProcedurePresentation.find(procedure_presentation_id) }

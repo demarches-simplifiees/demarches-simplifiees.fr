@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_13_160415) do
+ActiveRecord::Schema.define(version: 2018_09_19_084403) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -444,11 +444,12 @@ ActiveRecord::Schema.define(version: 2018_09_13_160415) do
 
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
-    t.text "displayed_fields", default: ["{\"label\":\"Demandeur\",\"table\":\"user\",\"column\":\"email\"}"], null: false, array: true
-    t.json "sort", default: "{\"table\":\"notifications\",\"column\":\"notifications\",\"order\":\"desc\"}", null: false
-    t.json "filters", default: "{\"a-suivre\":[],\"suivis\":[],\"traites\":[],\"tous\":[],\"archives\":[]}", null: false
+    t.text "old_displayed_fields", default: ["{\"label\":\"Demandeur\",\"table\":\"user\",\"column\":\"email\"}"], null: false, array: true
+    t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
+    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[]}, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
     t.index ["assign_to_id"], name: "index_procedure_presentations_on_assign_to_id", unique: true
   end
 
