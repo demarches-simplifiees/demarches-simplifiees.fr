@@ -5,7 +5,7 @@ describe 'new_user/dossiers/show/header.html.haml', type: :view do
     sign_in dossier.user
   end
 
-  subject! { render 'new_user/dossiers/show/header.html.haml', dossier: dossier, is_dossier_owner: true }
+  subject! { render 'new_user/dossiers/show/header.html.haml', dossier: dossier }
 
   it 'affiche les informations du dossier' do
     expect(rendered).to have_text(dossier.procedure.libelle)
