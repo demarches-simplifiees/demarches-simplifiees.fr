@@ -228,6 +228,15 @@ class Admin::ProceduresController < AdminController
     redirect_to edit_admin_procedure_path(procedure)
   end
 
+  def delete_notice
+    procedure = Procedure.find(params[:id])
+
+    procedure.notice.purge_later
+
+    flash.notice = 'la notice a bien été supprimée'
+    redirect_to edit_admin_procedure_path(procedure)
+  end
+
   private
 
   def cloned_from_library?
