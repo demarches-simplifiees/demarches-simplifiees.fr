@@ -307,7 +307,7 @@ class Procedure < ApplicationRecord
       'table' => 'self',
       'column' => 'id',
       'order' => 'desc'
-    }.to_json
+    }
   end
 
   def whitelist!
