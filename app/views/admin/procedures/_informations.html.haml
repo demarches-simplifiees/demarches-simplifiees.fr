@@ -60,6 +60,9 @@
   - else
     %a{ href: url_for(notice), target: '_blank' }
       = notice.filename.to_s
+    \-
+    = link_to 'supprimer', delete_notice_admin_procedure_path(@procedure),
+      method: :delete
     %br
     Modifier :
     = f.file_field :notice,
