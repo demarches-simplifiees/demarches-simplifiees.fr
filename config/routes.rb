@@ -93,6 +93,7 @@ Rails.application.routes.draw do
   #
 
   root 'root#index'
+  get '/tour-de-france' => 'tour_de_france#index'
   get '/administration' => 'root#administration'
 
   get 'users' => 'users#index'
