@@ -51,11 +51,9 @@ feature 'Invitations' do
     end
 
     scenario 'an invited user can see and edit the draft', js: true do
-      visit users_dossiers_invite_path(invite)
-      expect(page).to have_current_path(new_user_session_path)
-
-      submit_login_form(invited_user.email, invited_user.password)
+      navigate_to_invited_dossier(invite)
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
+
       expect(page).to have_no_selector('.button.invite-user-action')
 
       fill_in 'Texte obligatoire', with: 'Some edited value'
@@ -65,10 +63,7 @@ feature 'Invitations' do
     end
 
     scenario 'an invited user cannot submit the draft' do
-      visit users_dossiers_invite_path(invite)
-      expect(page).to have_current_path(new_user_session_path)
-
-      submit_login_form(invited_user.email, invited_user.password)
+      navigate_to_invited_dossier(invite)
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
 
       expect(page).to have_button('Soumettre le dossier', disabled: true)
@@ -132,6 +127,12 @@ feature 'Invitations' do
     expect(page).to have_current_path(dossiers_path)
     click_on(dossier.id)
     expect(page).to have_current_path(brouillon_dossier_path(dossier))
+  end
+
+  def navigate_to_invited_dossier(invite)
+    visit users_dossiers_invite_path(invite)
+    expect(page).to have_current_path(new_user_session_path)
+    submit_login_form(invited_user.email, invited_user.password)
   end
 
   def navigate_to_recapitulatif(dossier)
