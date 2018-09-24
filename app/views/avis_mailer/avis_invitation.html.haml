@@ -1,3 +1,5 @@
+- avis_link = @avis.gestionnaire.present? ? gestionnaire_avis_url(@avis) : sign_up_gestionnaire_avis_url(@avis.id, @avis.email)
+
 %p
   Bonjour,
 
@@ -12,10 +14,10 @@
 
 - if @avis.gestionnaire.present?
   %p
-    = link_to "Connectez-vous pour donner votre avis", gestionnaire_avis_url(@avis)
+    = link_to "Connectez-vous pour donner votre avis", avis_link
 - else
   %p
-    = link_to "Inscrivez-vous pour donner votre avis", sign_up_gestionnaire_avis_url(@avis.id, @avis.email)
+    = link_to "Inscrivez-vous pour donner votre avis", avis_link
 
 %p
   Bonne journée,
@@ -26,4 +28,8 @@
 %hr
 
 %p
-  Merci de ne pas répondre à cet email. Postez directement vos questions dans votre dossier sur la plateforme.
+  Merci de ne pas répondre à cet email. Donnez votre avis
+  = link_to "sur notre site", avis_link
+  ou
+  = succeed '.' do
+    = mail_to @avis.claimant.email, "contactez la personne qui vous a invité"
