@@ -231,6 +231,9 @@ Rails.application.routes.draw do
 
       post 'attestation_template/preview' => 'attestation_templates#preview'
       patch 'attestation_template/preview' => 'attestation_templates#preview'
+
+      delete 'attestation_template/logo' => 'attestation_templates#delete_logo'
+      delete 'attestation_template/signature' => 'attestation_templates#delete_signature'
     end
 
     namespace :instructeurs do
