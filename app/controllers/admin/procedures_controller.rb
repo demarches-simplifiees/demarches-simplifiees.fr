@@ -219,6 +219,16 @@ class Admin::ProceduresController < AdminController
     end
   end
 
+  def delete_logo
+    procedure = Procedure.find(params[:id])
+
+    procedure.remove_logo!
+    procedure.save
+
+    flash.notice = 'le logo a bien été supprimé'
+    redirect_to edit_admin_procedure_path(procedure)
+  end
+
   def delete_deliberation
     procedure = Procedure.find(params[:id])
 

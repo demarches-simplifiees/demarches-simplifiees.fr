@@ -193,6 +193,7 @@ Rails.application.routes.draw do
 
       member do
         post :hide
+        delete :delete_logo
         delete :delete_deliberation
         delete :delete_notice
       end
