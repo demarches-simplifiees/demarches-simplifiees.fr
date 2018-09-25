@@ -131,7 +131,7 @@ class DossierFieldService
       end
 
       if sorted_ids.nil?
-        sorted_ids = dossiers.includes(includes).where(where).order(Dossier.sanitize_for_order(order)).pluck(:id)
+        sorted_ids = dossiers.includes(includes).where(where).order(order).pluck(:id)
       end
 
       sorted_ids
