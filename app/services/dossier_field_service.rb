@@ -102,6 +102,7 @@ class DossierFieldService
       table = procedure_presentation.sort['table']
       column = procedure_presentation.sort['column']
       order = procedure_presentation.sort['order']
+      assert_valid_order(order)
 
       case table
       when 'notifications'
@@ -145,6 +146,12 @@ class DossierFieldService
       column = ActiveRecord::Base.connection.quote_column_name(field['column'])
 
       table + '.' + column
+    end
+
+    def assert_valid_order(order)
+      if !%w[asc desc].include?(order)
+        raise "Invalid order #{order}"
+      end
     end
 
     def field_hash(label, table, column)
