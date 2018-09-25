@@ -100,7 +100,7 @@ class DossierFieldService
 
     def sorted_ids(dossiers, procedure_presentation, gestionnaire)
       table = procedure_presentation.sort['table']
-      column = procedure_presentation.sort['column']
+      column = sanitized_column(procedure_presentation.sort)
       order = procedure_presentation.sort['order']
       assert_valid_order(order)
 
@@ -117,23 +117,23 @@ class DossierFieldService
         end
       when 'self'
         return dossiers
-            .order("dossiers.#{column} #{order}")
+            .order("#{column} #{order}")
             .pluck(:id)
       when 'france_connect_information'
         return dossiers
             .includes(user: :france_connect_information)
-            .order("france_connect_informations.#{column} #{order}")
+            .order("#{column} #{order}")
             .pluck(:id)
       when 'type_de_champ', 'type_de_champ_private'
         return dossiers
             .includes(table == 'type_de_champ' ? :champs : :champs_private)
-            .where("champs.type_de_champ_id = #{column.to_i}")
+            .where("champs.type_de_champ_id = #{procedure_presentation.sort['column'].to_i}")
             .order("champs.value #{order}")
             .pluck(:id)
       else
         return dossiers
             .includes(table)
-            .order("#{table.pluralize}.#{column} #{order}")
+            .order("#{column} #{order}")
             .pluck(:id)
       end
     end
