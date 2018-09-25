@@ -7,6 +7,7 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
 
     before do
       Timecop.freeze(date)
+      create(:attestation_template, procedure: nouveau_dossier1.procedure)
       AutoReceiveDossiersForProcedureJob.new.perform(procedure_id, state)
     end
 
@@ -41,10 +42,12 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
         it { expect(nouveau_dossier1.reload.accepte?).to be true }
         it { expect(nouveau_dossier1.reload.en_instruction_at).to eq(date) }
         it { expect(nouveau_dossier1.reload.processed_at).to eq(date) }
+        it { expect(nouveau_dossier1.reload.attestation).to be_present }
 
         it { expect(nouveau_dossier2.reload.accepte?).to be true }
         it { expect(nouveau_dossier2.reload.en_instruction_at).to eq(date) }
         it { expect(nouveau_dossier2.reload.processed_at).to eq(date) }
+        it { expect(nouveau_dossier2.reload.attestation).to be_present }
 
         it { expect(dossier_recu.reload.en_instruction?).to be true }
         it { expect(dossier_recu.reload.en_instruction_at).to eq(instruction_date) }
