@@ -1,6 +1,12 @@
 - content_for :footer do
   = render partial: "root/footer"
 
+.tour-de-france-banner
+  .container
+    L'équipe demarches-simplifiees.fr vient à votre rencontre cet automne.
+    = succeed '.' do
+      = link_to "En savoir plus", tour_de_france_path
+
 .landing
   .landing-panel.hero-panel
     .container

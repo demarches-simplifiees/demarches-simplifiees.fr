@@ -424,3 +424,16 @@ $cta-panel-button-border-size: 2px;
     text-decoration: none;
   }
 }
+
+.tour-de-france-banner {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background-color: $blue;
+  color: #FFFFFF;
+  text-align: center;
+
+  a {
+    color: #FFFFFF;
+    text-decoration: underline;
+  }
+}
