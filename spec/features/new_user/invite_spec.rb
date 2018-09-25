@@ -1,19 +1,20 @@
 require 'spec_helper'
+require 'features/new_user/dossier_shared_examples.rb'
 
 feature 'Invitations' do
-  let(:user) { create(:user) }
+  let(:owner) { create(:user) }
   let(:invited_user) { create(:user, email: 'user_invite@exemple.fr') }
-  let(:procedure) { create(:procedure, :published, :with_type_de_champ) }
+  let(:procedure) { create(:simple_procedure) }
   let(:invite) { create(:invite_user, user: invited_user, dossier: dossier) }
 
   context 'when the dossier is a brouillon' do
-    let!(:dossier) { create(:dossier, :for_individual, state: Dossier.states.fetch(:brouillon), user: user, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :for_individual, state: Dossier.states.fetch(:brouillon), user: owner, procedure: procedure) }
 
-    scenario 'on the form, a user can invite another user to collaborate on the dossier', js: true do
-      log_in(user)
+    scenario 'on the form, the owner of a dossier can invite another user to collaborate on the dossier', js: true do
+      log_in(owner)
       navigate_to_brouillon(dossier)
 
-      fill_in 'Libelle du champ', with: 'Some edited value'
+      fill_in 'Texte obligatoire', with: 'Some edited value'
       send_invite_to "user_invite@exemple.fr"
 
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
@@ -21,7 +22,7 @@ feature 'Invitations' do
       expect(page).to have_text("user_invite@exemple.fr")
 
       # Ensure unsaved edits to the form are not lost
-      expect(page).to have_field('Libelle du champ', with: 'Some edited value')
+      expect(page).to have_field('Texte obligatoire', with: 'Some edited value')
     end
 
     context 'when inviting someone without an existing account' do
@@ -51,24 +52,19 @@ feature 'Invitations' do
     end
 
     scenario 'an invited user can see and edit the draft', js: true do
-      visit users_dossiers_invite_path(invite)
-      expect(page).to have_current_path(new_user_session_path)
-
-      submit_login_form(invited_user.email, invited_user.password)
+      navigate_to_invited_dossier(invite)
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
+
       expect(page).to have_no_selector('.button.invite-user-action')
 
-      fill_in 'Libelle du champ', with: 'Some edited value'
+      fill_in 'Texte obligatoire', with: 'Some edited value'
       click_button 'Enregistrer le brouillon'
       expect(page).to have_text('Votre brouillon a bien été sauvegardé')
-      expect(page).to have_field('Libelle du champ', with: 'Some edited value')
+      expect(page).to have_field('Texte obligatoire', with: 'Some edited value')
     end
 
     scenario 'an invited user cannot submit the draft' do
-      visit users_dossiers_invite_path(invite)
-      expect(page).to have_current_path(new_user_session_path)
-
-      submit_login_form(invited_user.email, invited_user.password)
+      navigate_to_invited_dossier(invite)
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
 
       expect(page).to have_button('Soumettre le dossier', disabled: true)
@@ -77,10 +73,39 @@ feature 'Invitations' do
   end
 
   context 'when the dossier is en_construction' do
-    let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: user, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: owner, procedure: procedure) }
+
+    before do
+      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
+    end
+
+    scenario 'on dossier details, the owner of a dossier can invite another user to collaborate on the dossier', js: true do
+      log_in(owner)
+      navigate_to_dossier(dossier)
+
+      send_invite_to "user_invite@exemple.fr"
+
+      expect(page).to have_current_path(dossier_path(dossier))
+      expect(page).to have_text("Une invitation a été envoyée à user_invite@exemple.fr.")
+      expect(page).to have_text("user_invite@exemple.fr")
+    end
+
+    context 'as an invited user' do
+      before do
+        navigate_to_invited_dossier(invite)
+        expect(page).to have_current_path(dossier_path(invite.dossier))
+      end
+
+      it_behaves_like 'the user can edit the submitted demande'
+      it_behaves_like 'the user can send messages to the instructeur'
+    end
+  end
+
+  context 'when the dossier is en_construction (legacy UI)' do
+    let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: owner, procedure: procedure) }
 
     scenario 'on dossier details, a user can invite another user to collaborate on the dossier', js: true do
-      log_in(user)
+      log_in(owner)
       navigate_to_recapitulatif(dossier)
 
       legacy_send_invite_to "user_invite@exemple.fr"
@@ -105,7 +130,7 @@ feature 'Invitations' do
       visit brouillon_dossier_path(dossier)
 
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
-      fill_in "Libelle du champ", with: "Some edited value"
+      fill_in "Texte obligatoire", with: "Some edited value"
       click_button "Enregistrer les modifications du dossier"
 
       expect(page).to have_current_path(users_dossiers_invite_path(invite))
@@ -132,6 +157,18 @@ feature 'Invitations' do
     expect(page).to have_current_path(dossiers_path)
     click_on(dossier.id)
     expect(page).to have_current_path(brouillon_dossier_path(dossier))
+  end
+
+  def navigate_to_dossier(dossier)
+    expect(page).to have_current_path(dossiers_path)
+    click_on(dossier.id)
+    expect(page).to have_current_path(dossier_path(dossier))
+  end
+
+  def navigate_to_invited_dossier(invite)
+    visit users_dossiers_invite_path(invite)
+    expect(page).to have_current_path(new_user_session_path)
+    submit_login_form(invited_user.email, invited_user.password)
   end
 
   def navigate_to_recapitulatif(dossier)
