@@ -8,11 +8,10 @@ describe 'Dossier details:' do
 
   before do
     Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
+    visit_dossier dossier
   end
 
   scenario 'the user can see the summary of the dossier status' do
-    visit_dossier dossier
-
     expect(page).to have_current_path(dossier_path(dossier))
     expect(page).to have_content(dossier.id)
     expect(page).to have_selector('.status-explanation')
@@ -20,30 +19,24 @@ describe 'Dossier details:' do
   end
 
   describe "the user can see the mean time they are expected to wait" do
-    context "the dossier is in construction" do
+    context "when the dossier is in construction" do
       before do
         other_dossier = create(:dossier, :accepte, :for_individual, procedure: simple_procedure, en_construction_at: 10.days.ago, en_instruction_at: Time.now)
+        visit dossier_path(dossier)
       end
 
-      it "show the proper wait time" do
-        visit_dossier dossier
-
-        expect(page).to have_text("Le temps moyen de vérification pour cette démarche est de 10 jours.")
-      end
+      it { expect(page).to have_text("Le temps moyen de vérification pour cette démarche est de 10 jours.") }
     end
 
-    context "the dossier is in instruction" do
+    context "when the dossier is in instruction" do
       let(:dossier) { create(:dossier, :en_instruction, :for_individual, :with_commentaires, user: user, procedure: simple_procedure) }
 
       before do
         other_dossier = create(:dossier, :accepte, :for_individual, procedure: simple_procedure, en_instruction_at: 2.months.ago, processed_at: Time.now)
+        visit dossier_path(dossier)
       end
 
-      it "show the proper wait time" do
-        visit_dossier dossier
-
-        expect(page).to have_text("Le temps moyen d’instruction pour cette démarche est de 2 mois.")
-      end
+      it { expect(page).to have_text("Le temps moyen d’instruction pour cette démarche est de 2 mois.") }
     end
   end
 
