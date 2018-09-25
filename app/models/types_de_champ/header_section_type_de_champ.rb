@@ -1,2 +1,2 @@
-class TypesDeChamp::HeaderSectionTypeDeChamp < TypeDeChamp
+class TypesDeChamp::HeaderSectionTypeDeChamp < TypesDeChamp::TypeDeChampBase
 end

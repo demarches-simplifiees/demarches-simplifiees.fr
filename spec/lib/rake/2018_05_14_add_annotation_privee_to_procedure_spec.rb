@@ -3,7 +3,7 @@ describe '2018_05_14_add_annotation_privee_to_procedure' do
   let!(:procedure) do
     procedure = create(:procedure)
     10.times do |i|
-      TypesDeChamp::NumberTypeDeChamp.create(
+      TypeDeChamp.create(
         procedure: procedure,
         private: false,
         libelle: 'libelle',
@@ -11,7 +11,7 @@ describe '2018_05_14_add_annotation_privee_to_procedure' do
         type_champ: 'number'
       )
 
-      TypesDeChamp::NumberTypeDeChamp.create(
+      TypeDeChamp.create(
         procedure: procedure,
         private: true,
         libelle: 'libelle',

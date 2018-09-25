@@ -1,5 +1,7 @@
-class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypeDeChamp
+class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   PRIMARY_PATTERN = /^--(.*)--$/
+
+  delegate :drop_down_list, to: :@type_de_champ
 
   def primary_options
     primary_options = unpack_options.map(&:first)

@@ -1,2 +1,2 @@
-class TypesDeChamp::DropDownListTypeDeChamp < TypeDeChamp
+class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
 end

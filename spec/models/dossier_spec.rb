@@ -750,7 +750,7 @@ describe Dossier do
     it { expect(dossier.get_value('self', 'created_at')).to eq(dossier.created_at) }
     it { expect(dossier.get_value('user', 'email')).to eq(user.email) }
     it { expect(dossier.get_value('france_connect_information', 'gender')).to eq(user.france_connect_information.gender) }
-    it { expect(dossier.get_value('entreprise', 'siren')).to eq(dossier.etablissement.entreprise_siren) }
+    it { expect(dossier.get_value('etablissement', 'entreprise_siren')).to eq(dossier.etablissement.entreprise_siren) }
     it { expect(dossier.get_value('etablissement', 'siret')).to eq(dossier.etablissement.siret) }
     it { expect(dossier.get_value('type_de_champ', @champ_public.type_de_champ.id.to_s)).to eq(dossier.champs.first.value) }
     it { expect(dossier.get_value('type_de_champ_private', @champ_private.type_de_champ.id.to_s)).to eq(dossier.champs_private.first.value) }

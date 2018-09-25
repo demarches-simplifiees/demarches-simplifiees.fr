@@ -1,5 +1,5 @@
 class Champs::LinkedDropDownListChamp < Champ
-  delegate :primary_options, :secondary_options, to: :type_de_champ
+  delegate :primary_options, :secondary_options, to: 'type_de_champ.dynamic_type'
 
   def primary_value
     if value.present?
