@@ -41,4 +41,30 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
       expect(rendered).to include(individual.birthdate.strftime("%d/%m/%Y"))
     end
   end
+
+  context 'when the dossier has champs' do
+    let(:procedure) { create(:procedure, :published, :with_type_de_champ) }
+
+    it 'renders the champs' do
+      dossier.champs.each do |champ|
+        expect(rendered).to include(champ.libelle)
+      end
+    end
+  end
+
+  context 'when the dossier has pièces justificatives' do
+    let(:procedure) { create(:procedure, :published, :with_two_type_de_piece_justificative) }
+
+    it 'renders the pièces justificatives' do
+      expect(rendered).to have_text('Pièces jointes')
+    end
+  end
+
+  context 'when the dossier uses maps' do
+    let(:procedure) { create(:procedure, :published, :with_api_carto) }
+
+    it 'renders the maps infos' do
+      expect(rendered).to have_text('Cartographie')
+    end
+  end
 end
