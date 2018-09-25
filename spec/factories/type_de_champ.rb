@@ -54,7 +54,7 @@ FactoryBot.define do
     end
     factory :type_de_champ_linked_drop_down_list do
       type_champ { TypeDeChamp.type_champs.fetch(:linked_drop_down_list) }
-      drop_down_list { create(:drop_down_list) }
+      drop_down_list { create(:drop_down_list, value: "--primary--\nsecondary\n") }
     end
     factory :type_de_champ_pays do
       type_champ { TypeDeChamp.type_champs.fetch(:pays) }
