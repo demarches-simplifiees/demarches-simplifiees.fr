@@ -18,6 +18,7 @@ class AutoReceiveDossiersForProcedureJob < ApplicationJob
         )
         dossier.attestation = dossier.build_attestation
         dossier.save
+        NotificationMailer.send_closed_notification(dossier).deliver_later
       end
     else
       raise "Receiving Procedure##{procedure_id} in invalid state \"#{state}\""
