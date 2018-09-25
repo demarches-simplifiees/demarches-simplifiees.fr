@@ -102,39 +102,39 @@ class DossierFieldService
       table = procedure_presentation.sort['table']
       column = procedure_presentation.sort['column']
       order = procedure_presentation.sort['order']
-      includes = ''
-      where = ''
-
-      sorted_ids = nil
 
       case table
       when 'notifications'
         procedure = procedure_presentation.assign_to.procedure
         dossiers_id_with_notification = gestionnaire.notifications_for_procedure(procedure)
         if order == 'desc'
-          sorted_ids = dossiers_id_with_notification + (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
+          return dossiers_id_with_notification +
+              (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
         else
-          sorted_ids = (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) + dossiers_id_with_notification
+          return (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
+              dossiers_id_with_notification
         end
       when 'self'
-        order = "dossiers.#{column} #{order}"
+        return dossiers
+            .order("dossiers.#{column} #{order}")
+            .pluck(:id)
       when 'france_connect_information'
-        includes = { user: :france_connect_information }
-        order = "france_connect_informations.#{column} #{order}"
+        return dossiers
+            .includes(user: :france_connect_information)
+            .order("france_connect_informations.#{column} #{order}")
+            .pluck(:id)
       when 'type_de_champ', 'type_de_champ_private'
-        includes = table == 'type_de_champ' ? :champs : :champs_private
-        where = "champs.type_de_champ_id = #{column.to_i}"
-        order = "champs.value #{order}"
+        return dossiers
+            .includes(table == 'type_de_champ' ? :champs : :champs_private)
+            .where("champs.type_de_champ_id = #{column.to_i}")
+            .order("champs.value #{order}")
+            .pluck(:id)
       else
-        includes = table
-        order = "#{table.pluralize}.#{column} #{order}"
+        return dossiers
+            .includes(table)
+            .order("#{table.pluralize}.#{column} #{order}")
+            .pluck(:id)
       end
-
-      if sorted_ids.nil?
-        sorted_ids = dossiers.includes(includes).where(where).order(order).pluck(:id)
-      end
-
-      sorted_ids
     end
 
     private
