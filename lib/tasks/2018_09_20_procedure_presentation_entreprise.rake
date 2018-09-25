@@ -27,8 +27,8 @@ namespace :'2018_09_20_procedure_presentation_entreprise' do
         ProcedurePresentation.find_by_sql(
           <<~SQL
             SELECT procedure_presentations.*, array_agg(key) as keys
-            FROM procedure_presentations, LATERAL jsonb_each_text(filters)
-            WHERE value::jsonb @> '[{"table": "entreprise"}]'
+            FROM procedure_presentations, LATERAL jsonb_each(filters)
+            WHERE value @> '[{"table": "entreprise"}]'
             GROUP BY id;
           SQL
         ).each do |procedure_presentation|
