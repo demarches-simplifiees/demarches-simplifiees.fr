@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_19_084403) do
+ActiveRecord::Schema.define(version: 2018_09_24_074121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -249,25 +249,6 @@ ActiveRecord::Schema.define(version: 2018_09_19_084403) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id"
-  end
-
-  create_table "entreprises", id: :serial, force: :cascade do |t|
-    t.string "siren"
-    t.bigint "capital_social"
-    t.string "numero_tva_intracommunautaire"
-    t.string "forme_juridique"
-    t.string "forme_juridique_code"
-    t.string "nom_commercial"
-    t.string "raison_sociale"
-    t.string "siret_siege_social"
-    t.string "code_effectif_entreprise"
-    t.datetime "date_creation"
-    t.string "nom"
-    t.string "prenom"
-    t.integer "dossier_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["dossier_id"], name: "index_entreprises_on_dossier_id"
   end
 
   create_table "etablissements", id: :serial, force: :cascade do |t|
