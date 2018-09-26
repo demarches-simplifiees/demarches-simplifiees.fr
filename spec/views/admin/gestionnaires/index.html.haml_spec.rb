@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 describe 'admin/gestionnaires/index.html.haml', type: :view do
-  let(:token) { 'super_token' }
-  let(:admin) { create(:administrateur, api_token: token) }
+  let(:admin) { create(:administrateur) }
 
   before do
     assign(:gestionnaires, (smart_listing_create :gestionnaires,
