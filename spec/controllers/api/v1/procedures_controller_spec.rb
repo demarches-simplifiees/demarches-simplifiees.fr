@@ -13,10 +13,10 @@ describe API::V1::ProceduresController, type: :controller do
       it { is_expected.to have_http_status(404) }
     end
 
-    context 'when procedure does not belong to administrateur' do
+    context 'when procedure belongs to administrateur without token' do
       let(:procedure_id) { create(:procedure).id }
 
-      it { is_expected.to have_http_status(404) }
+      it { is_expected.to have_http_status(401) }
     end
 
     context 'when procedure exist' do
