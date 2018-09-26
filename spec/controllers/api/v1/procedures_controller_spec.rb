@@ -10,19 +10,19 @@ describe API::V1::ProceduresController, type: :controller do
     context 'when procedure does not exist' do
       let(:procedure_id) { 999_999_999 }
 
-      it { expect(subject.status).to eq(404) }
+      it { is_expected.to have_http_status(404) }
     end
 
     context 'when procedure does not belong to administrateur' do
       let(:procedure_id) { create(:procedure).id }
 
-      it { expect(subject.status).to eq(404) }
+      it { is_expected.to have_http_status(404) }
     end
 
     context 'when procedure exist' do
       let(:procedure_id) { create(:procedure, administrateur: admin).id }
 
-      it { expect(subject.status).to eq(200) }
+      it { is_expected.to have_http_status(200) }
 
       describe 'body' do
         let(:module_api_carto) { create(:module_api_carto, use_api_carto: true, quartiers_prioritaires: true, cadastre: true) }
