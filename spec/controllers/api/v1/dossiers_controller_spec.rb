@@ -35,7 +35,7 @@ describe API::V1::DossiersController do
 
     context 'when procedure does not belong to admin' do
       let(:procedure_id) { wrong_procedure.id }
-      it { expect(subject.code).to eq('404') }
+      it { expect(subject.code).to eq('401') }
     end
 
     context 'when procedure is found and belongs to admin' do
@@ -115,7 +115,7 @@ describe API::V1::DossiersController do
     context 'when procedure exists and does not belong to current admin' do
       let(:procedure_id) { wrong_procedure.id }
       let(:dossier_id) { 1 }
-      it { expect(subject.code).to eq('404') }
+      it { expect(subject.code).to eq('401') }
     end
 
     context 'when procedure is found and belongs to current admin' do
