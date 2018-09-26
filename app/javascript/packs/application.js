@@ -24,6 +24,10 @@ import { toggleCondidentielExplanation } from '../new_design/avis';
 import { togglePrintMenu } from '../new_design/dossier';
 import { toggleHeaderMenu } from '../new_design/header';
 import { scrollMessagerie } from '../new_design/messagerie';
+import {
+  checkPasswordStrength,
+  displayPasswordStrength
+} from '../new_design/password-strength';
 import { showMotivation, motivationCancel } from '../new_design/state-button';
 import { toggleChart } from '../new_design/toggle-chart';
 
@@ -33,6 +37,8 @@ const DS = {
   togglePrintMenu,
   toggleHeaderMenu,
   scrollMessagerie,
+  checkPasswordStrength,
+  displayPasswordStrength,
   showMotivation,
   motivationCancel,
   toggleChart
