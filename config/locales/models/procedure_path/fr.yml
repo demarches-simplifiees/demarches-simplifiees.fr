@@ -1,8 +1,12 @@
 fr:
   activerecord:
+    attributes:
+      procedure_path:
+        path: Lien
     errors:
       models:
         procedure_path:
           attributes:
             path:
               format: Ce lien n'est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
+              taken: est déjà utilisé par une procédure.
