@@ -43,6 +43,12 @@ class Administrateur < ApplicationRecord
     api_token
   end
 
+  def valid_api_token?(api_token)
+    BCrypt::Password.new(encrypted_token) == api_token
+  rescue BCrypt::Errors::InvalidHash
+    false
+  end
+
   def registration_state
     if active?
       'Actif'
