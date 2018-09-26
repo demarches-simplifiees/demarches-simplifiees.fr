@@ -6,7 +6,7 @@
 #
 
 default_user = "test@exemple.fr"
-default_password = "testpassword"
+default_password = "this is a very complicated password !"
 
 puts "Create test user '#{default_user}'"
 Administration.create!(email: default_user, password: default_password)
