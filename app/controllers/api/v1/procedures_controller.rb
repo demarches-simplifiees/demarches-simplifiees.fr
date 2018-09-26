@@ -23,8 +23,7 @@ class API::V1::ProceduresController < APIController
       render json: {}, status: :unauthorized
     end
 
-  rescue ActiveRecord::RecordNotFound => e
-    Rails.logger.error(e.message)
+  rescue ActiveRecord::RecordNotFound
     render json: {}, status: :not_found
   end
 end
