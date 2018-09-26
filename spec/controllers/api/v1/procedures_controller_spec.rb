@@ -14,17 +14,15 @@ describe API::V1::ProceduresController, type: :controller do
     end
 
     context 'when procedure does not belong to administrateur' do
-      let(:procedure_id) { create(:procedure, administrateur: create(:administrateur)).id }
+      let(:procedure_id) { create(:procedure).id }
 
       it { expect(subject.status).to eq(404) }
     end
 
     context 'when procedure exist' do
-      let(:procedure_id) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, administrateur: admin).id }
+      let(:procedure_id) { create(:procedure, administrateur: admin).id }
 
-      it 'return REST code 200', :show_in_doc do
-        expect(subject.status).to eq(200)
-      end
+      it { expect(subject.status).to eq(200) }
 
       describe 'body' do
         let(:module_api_carto) { create(:module_api_carto, use_api_carto: true, quartiers_prioritaires: true, cadastre: true) }
