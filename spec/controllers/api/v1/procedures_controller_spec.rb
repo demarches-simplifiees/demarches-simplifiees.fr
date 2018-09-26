@@ -5,24 +5,22 @@ describe API::V1::ProceduresController, type: :controller do
   it { expect(described_class).to be < APIController }
 
   describe 'GET show' do
+    subject { get :show, params: { id: procedure_id, token: token } }
+
     context 'when procedure does not exist' do
-      subject { get :show, params: { id: 999_999_999, token: token } }
+      let(:procedure_id) { 999_999_999 }
 
       it { expect(subject.status).to eq(404) }
     end
 
     context 'when procedure does not belong to administrateur' do
-      let(:procedure) { create(:procedure, administrateur: create(:administrateur)) }
-
-      subject { get :show, params: { id: procedure, token: token } }
+      let(:procedure_id) { create(:procedure, administrateur: create(:administrateur)).id }
 
       it { expect(subject.status).to eq(404) }
     end
 
     context 'when procedure exist' do
-      let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, administrateur: admin) }
-
-      subject { get :show, params: { id: procedure, token: token } }
+      let(:procedure_id) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, administrateur: admin).id }
 
       it 'return REST code 200', :show_in_doc do
         expect(subject.status).to eq(200)
