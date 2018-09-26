@@ -38,6 +38,8 @@ class API::V1::DossiersController < APIController
     render json: {}, status: 404
   end
 
+  private
+
   def pagination(dossiers)
     {
       page: dossiers.current_page,
