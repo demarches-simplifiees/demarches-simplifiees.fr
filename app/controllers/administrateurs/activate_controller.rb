@@ -1,3 +1,5 @@
+require 'zxcvbn'
+
 class Administrateurs::ActivateController < ApplicationController
   layout "new_application"
 
@@ -27,6 +29,11 @@ class Administrateurs::ActivateController < ApplicationController
       flash.alert = administrateur.errors.full_messages
       redirect_to admin_activate_path(token: update_administrateur_params[:reset_password_token])
     end
+  end
+
+  def test_password_strength
+    score = Zxcvbn.test(params[:password], [], ZXCVBN_DICTIONNARIES).score
+    render json: { score: score }
   end
 
   private
