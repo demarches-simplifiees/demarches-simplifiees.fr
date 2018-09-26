@@ -33,21 +33,15 @@ describe Administrateur, type: :model do
   end
 
   describe "#renew_api_token" do
-    let(:administrateur) { create(:administrateur) }
+    let!(:administrateur) { create(:administrateur) }
+    let!(:token) { administrateur.renew_api_token }
 
-    before do
-      administrateur.renew_api_token
-      administrateur.reload
-    end
-
-    it { expect(administrateur.api_token).to be_present }
-    it { expect(administrateur.api_token).not_to eq(administrateur.encrypted_token) }
-    it { expect(BCrypt::Password.new(administrateur.encrypted_token)).to eq(administrateur.api_token) }
+    it { expect(BCrypt::Password.new(administrateur.encrypted_token)).to eq(token) }
 
     context 'when it s called twice' do
-      let!(:previous_token) { administrateur.api_token }
+      let!(:new_token) { administrateur.renew_api_token }
 
-      it { expect(previous_token).not_to eq(administrateur.renew_api_token) }
+      it { expect(new_token).not_to eq(token) }
     end
   end
 
