@@ -15,6 +15,8 @@ class APIController < ApplicationController
     administrateur.valid_api_token?(token)
   end
 
+  private
+
   def default_format_json
     request.format = "json" if !request.params[:format]
   end
