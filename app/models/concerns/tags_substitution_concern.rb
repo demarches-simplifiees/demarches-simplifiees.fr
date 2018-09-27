@@ -47,7 +47,7 @@ module TagsSubstitutionConcern
     {
       libelle: 'lien dossier',
       description: '',
-      lambda: -> (d) { external_link(users_dossier_recapitulatif_url(d)) },
+      lambda: -> (d) { external_link(dossier_url(d)) },
       available_for_states: Dossier::SOUMIS
     },
     {
