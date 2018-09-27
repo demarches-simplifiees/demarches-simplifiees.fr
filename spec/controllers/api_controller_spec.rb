@@ -12,18 +12,43 @@ describe APIController, type: :controller do
   end
 
   describe 'GET index' do
+    let!(:administrateur) { create(:administrateur) }
+    let!(:administrateur_with_token) { create(:administrateur, :with_api_token) }
+
     context 'when token is missing' do
       subject { get :index }
+
       it { expect(subject.status).to eq(401) }
     end
+
+    context 'when token is empty' do
+      subject { get :index, params: { token: nil } }
+
+      it { expect(subject.status).to eq(401) }
+    end
+
     context 'when token does not exist' do
       let(:token) { 'invalid_token' }
+
       subject { get :index, params: { token: token } }
+
       it { expect(subject.status).to eq(401) }
     end
-    context 'when token exist' do
-      let(:administrateur) { create(:administrateur) }
-      subject { get :index, params: { token: administrateur.api_token } }
+
+    context 'when token exist in the params' do
+      subject { get :index, params: { token: administrateur_with_token.api_token } }
+
+      it { expect(subject.status).to eq(200) }
+    end
+
+    context 'when token exist in the header' do
+      before do
+        valid_headers = { 'Authorization' => "Bearer token=#{administrateur_with_token.api_token}" }
+        request.headers.merge!(valid_headers)
+      end
+
+      subject { get(:index) }
+
       it { expect(subject.status).to eq(200) }
     end
   end

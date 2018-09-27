@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe API::V1::ProceduresController, type: :controller do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { create(:administrateur, :with_api_token) }
   it { expect(described_class).to be < APIController }
 
   describe 'GET show' do
