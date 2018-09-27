@@ -13,8 +13,9 @@
             = link_to "Télécharger", pj.content_url, class: "link", target: :blank
             - if pjs.present?
               %br
-              %span.button.dropdown
-                anciennes versions
+              %span.dropdown
+                %button.button.dropdown-button
+                  anciennes versions
                 .dropdown-content.fade-in-down
                   %ul.dropdown-items
                     - pjs.each do |pj|
