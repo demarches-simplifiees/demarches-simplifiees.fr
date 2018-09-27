@@ -175,7 +175,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
-    post 'activate/test_password_strength' => '/administrateurs/activate#test_password_strength'
+    get 'activate/test_password_strength' => '/administrateurs/activate#test_password_strength'
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
