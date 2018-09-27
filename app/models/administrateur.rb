@@ -1,6 +1,7 @@
 class Administrateur < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
+  include ActiveRecord::SecureToken
 
   devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable
@@ -13,7 +14,6 @@ class Administrateur < ApplicationRecord
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
   before_validation -> { sanitize_email(:email) }
-  before_save :ensure_api_token
 
   scope :inactive, -> { where(active: false) }
 
@@ -36,14 +36,11 @@ class Administrateur < ApplicationRecord
     self.inactive.find(id)
   end
 
-  def ensure_api_token
-    if api_token.nil?
-      self.api_token = generate_api_token
-    end
-  end
-
   def renew_api_token
-    update(api_token: generate_api_token)
+    api_token = Administrateur.generate_unique_secure_token
+    encrypted_token = BCrypt::Password.create(api_token)
+    update(api_token: api_token, encrypted_token: encrypted_token)
+    api_token
   end
 
   def registration_state
@@ -115,14 +112,5 @@ class Administrateur < ApplicationRecord
 
   def owns?(procedure)
     id == procedure.administrateur_id
-  end
-
-  private
-
-  def generate_api_token
-    loop do
-      token = SecureRandom.hex(20)
-      break token if !Administrateur.find_by(api_token: token)
-    end
   end
 end
