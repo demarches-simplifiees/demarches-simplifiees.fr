@@ -12,12 +12,10 @@ class Users::Dossiers::InvitesController < UsersController
   def show
     @facade = InviteDossierFacades.new params[:id].to_i, current_user.email
 
-    if Flipflop.new_dossier_details?
-      return redirect_to dossier_path(@facade.dossier)
-    end
-
     if @facade.dossier.brouillon?
       redirect_to brouillon_dossier_path(@facade.dossier)
+    elsif Flipflop.new_dossier_details?
+      return redirect_to dossier_path(@facade.dossier)
     else
       render 'users/recapitulatif/show'
     end
