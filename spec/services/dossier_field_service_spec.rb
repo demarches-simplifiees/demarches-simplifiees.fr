@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe DossierFieldService do
-  describe '#filtered_ids' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
+  let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
 
+  describe '#filtered_ids' do
     context 'for type_de_champ table' do
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
@@ -67,7 +67,6 @@ describe DossierFieldService do
   end
 
   describe '#sorted_ids' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
     let(:gestionnaire) { create(:gestionnaire) }
     let(:assign_to) { create(:assign_to, procedure: procedure, gestionnaire: gestionnaire) }
     let(:sort) { { 'table' => table, 'column' => column, 'order' => order } }
@@ -177,6 +176,72 @@ describe DossierFieldService do
       let!(:vingtieme_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75020')) }
 
       it { is_expected.to eq([huitieme_dossier, vingtieme_dossier].map(&:id)) }
+    end
+  end
+
+  describe '#get_value' do
+    subject { DossierFieldService.get_value(dossier, table, column) }
+
+    context 'for self table' do
+      let(:table) { 'self' }
+      let(:column) { 'updated_at' } # All other columns work the same, no extra test required
+
+      let(:dossier) { create(:dossier, procedure: procedure) }
+
+      before { dossier.touch(time: DateTime.new(2018, 9, 25)) }
+
+      it { is_expected.to eq(DateTime.new(2018, 9, 25)) }
+    end
+
+    context 'for user table' do
+      let(:table) { 'user' }
+      let(:column) { 'email' }
+
+      let(:dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'bla@yopmail.com')) }
+
+      it { is_expected.to eq('bla@yopmail.com') }
+    end
+
+    context 'for france_connect_information table' do
+      let(:table) { 'france_connect_information' }
+      let(:column) { 'given_name' } # All other columns work the same, no extra test required
+
+      let(:dossier) { create(:dossier, procedure: procedure) }
+
+      before { create(:france_connect_information, given_name: 'Anna', user: dossier.user) }
+
+      it { is_expected.to eq('Anna') }
+    end
+
+    context 'for etablissement table' do
+      let(:table) { 'etablissement' }
+      let(:column) { 'code_postal' } # All other columns work the same, no extra test required
+
+      let!(:dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75008')) }
+
+      it { is_expected.to eq('75008') }
+    end
+
+    context 'for type_de_champ table' do
+      let(:table) { 'type_de_champ' }
+      let(:column) { procedure.types_de_champ.first.id.to_s }
+
+      let(:dossier) { create(:dossier, procedure: procedure) }
+
+      before { dossier.champs.first.update(value: 'kale') }
+
+      it { is_expected.to eq('kale') }
+    end
+
+    context 'for type_de_champ_private table' do
+      let(:table) { 'type_de_champ_private' }
+      let(:column) { procedure.types_de_champ_private.first.id.to_s }
+
+      let(:dossier) { create(:dossier, procedure: procedure) }
+
+      before { dossier.champs_private.first.update(value: 'quinoa') }
+
+      it { is_expected.to eq('quinoa') }
     end
   end
 end
