@@ -32,8 +32,7 @@ class Administrateurs::ActivateController < ApplicationController
   end
 
   def test_password_strength
-    score = Zxcvbn.test(params[:password], [], ZXCVBN_DICTIONNARIES).score
-    render json: { score: score }
+    @score = Zxcvbn.test(params[:administrateur][:password], [], ZXCVBN_DICTIONNARIES).score
   end
 
   private
