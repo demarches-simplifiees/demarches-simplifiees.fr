@@ -1,4 +1,6 @@
 class API::V1::ProceduresController < APIController
+  before_action :fetch_procedure_and_check_token
+
   resource_description do
     description AUTHENTICATION_TOKEN_DESCRIPTION
   end
@@ -9,11 +11,19 @@ class API::V1::ProceduresController < APIController
   error code: 404, desc: "Démarche inconnue"
 
   def show
-    procedure = administrateur.procedures.find(params[:id]).decorate
+    render json: { procedure: ProcedureSerializer.new(@procedure.decorate).as_json }
+  end
 
-    render json: { procedure: ProcedureSerializer.new(procedure).as_json }
-  rescue ActiveRecord::RecordNotFound => e
-    Rails.logger.error(e.message)
-    render json: {}, status: 404
+  private
+
+  def fetch_procedure_and_check_token
+    @procedure = Procedure.includes(:administrateur).find(params[:id])
+
+    if !valid_token_for_administrateur?(@procedure.administrateur)
+      render json: {}, status: :unauthorized
+    end
+
+  rescue ActiveRecord::RecordNotFound
+    render json: {}, status: :not_found
   end
 end
