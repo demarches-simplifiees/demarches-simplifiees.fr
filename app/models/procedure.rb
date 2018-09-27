@@ -405,7 +405,7 @@ class Procedure < ApplicationRecord
     times = dossiers
       .state_termine
       .pluck(start_attribute, end_attribute)
-      .map { |times| times[1] - times[0] }
+      .map { |(start_date, end_date)| end_date - start_date }
 
     if times.present?
       times.sum.fdiv(times.size).ceil

@@ -16,7 +16,7 @@
       = f.label :password do
         Mot de passe
 
-      = f.password_field :password, placeholder: 'Mot de passe', onKeyUp: "javascript:DS.checkPasswordStrength(event, 'strength-bar', 'submit-password');"
+      = f.password_field :password, placeholder: 'Mot de passe', data: { remote: true, url: admin_activate_test_password_strength_path }
 
       #strength-bar.password-strength
         &nbsp;
