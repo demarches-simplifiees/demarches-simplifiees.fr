@@ -134,8 +134,6 @@ Rails.application.routes.draw do
   namespace :users do
     namespace :dossiers do
       resources :invites, only: [:index, :show]
-
-      post '/commentaire' => 'commentaires#create'
     end
 
     resources :dossiers do
@@ -146,7 +144,6 @@ Rails.application.routes.draw do
       # TODO: once these pages will be migrated to the new user design, replace these routes by a redirection
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/initiate' => 'recapitulatif#initiate'
-      post '/commentaire' => 'commentaires#create'
 
       get '/carte/position' => 'carte#get_position'
       post '/carte/qp' => 'carte#get_qp'
