@@ -178,7 +178,7 @@ feature 'Invitations' do
   end
 
   def send_invite_to(invited_email)
-    find('.button.invite-user-action').click()
+    click_on "Inviter une personne à modifier ce dossier"
     expect(page).to have_button("Envoyer une invitation", visible: true)
 
     fill_in 'invite_email', with: invited_email
