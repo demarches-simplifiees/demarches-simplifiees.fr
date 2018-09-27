@@ -20,7 +20,8 @@ Flipflop.configure do
   feature :support_form
 
   feature :new_dossier_details,
-    title: "Nouvelle page « Dossier »"
+    title: "Nouvelle page « Dossier »",
+    default: true
 
   group :production do
     feature :remote_storage,
