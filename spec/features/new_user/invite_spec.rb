@@ -104,6 +104,10 @@ feature 'Invitations' do
   context 'when the dossier is en_construction (legacy UI)' do
     let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: owner, procedure: procedure) }
 
+    before do
+      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, false)
+    end
+
     scenario 'on dossier details, a user can invite another user to collaborate on the dossier', js: true do
       log_in(owner)
       navigate_to_recapitulatif(dossier)

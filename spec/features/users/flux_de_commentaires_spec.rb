@@ -14,6 +14,7 @@ feature 'users: flux de commentaires' do
   let!(:commentaire4) { create(:commentaire, dossier: dossier, champ: champ1) }
 
   before do
+    Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, false)
     login_as user, scope: :user
     visit users_dossier_recapitulatif_path(dossier)
   end

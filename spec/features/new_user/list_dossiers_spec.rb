@@ -48,7 +48,7 @@ describe 'user access to the list of his dossier' do
       page.click_on(dossier1.procedure.libelle)
     end
     scenario 'user is redirected to dossier page' do
-      expect(page).to have_css('#users-recapitulatif-dossier-show')
+      expect(page).to have_current_path(dossier_path(dossier1))
     end
   end
 
@@ -93,7 +93,7 @@ describe 'user access to the list of his dossier' do
       end
 
       it "redirects to the dossier page" do
-        expect(current_path).to eq(users_dossier_recapitulatif_path(dossier1))
+        expect(current_path).to eq(dossier_path(dossier1))
       end
     end
   end

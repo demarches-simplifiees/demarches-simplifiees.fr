@@ -36,7 +36,7 @@ RSpec.describe DossierHelper, type: :helper do
 
     context "when the dossier is any other state" do
       let(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction)) }
-      it { is_expected.to eq "/users/dossiers/#{dossier.id}/recapitulatif" }
+      it { is_expected.to eq "/dossiers/#{dossier.id}" }
     end
   end
 

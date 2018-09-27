@@ -30,7 +30,7 @@ describe 'new_user/dossiers/index.html.haml', type: :view do
 
     expect(rendered).to have_text(dossier_en_construction.id)
     expect(rendered).to have_text(dossier_en_construction.procedure.libelle)
-    expect(rendered).to have_link(dossier_en_construction.id, href: users_dossier_recapitulatif_path(dossier_en_construction))
+    expect(rendered).to have_link(dossier_en_construction.id, href: dossier_path(dossier_en_construction))
   end
 
   context 'quand il n’y a aucun dossier' do

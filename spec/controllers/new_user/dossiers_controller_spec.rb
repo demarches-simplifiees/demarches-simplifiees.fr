@@ -434,7 +434,7 @@ describe NewUser::DossiersController, type: :controller do
       it 'updates the champs' do
         subject
 
-        expect(response).to redirect_to(users_dossier_recapitulatif_path(dossier))
+        expect(response).to redirect_to(demande_dossier_path(dossier))
         expect(first_champ.reload.value).to eq('beautiful value')
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
@@ -490,7 +490,7 @@ describe NewUser::DossiersController, type: :controller do
       it 'does not raise any errors' do
         subject
 
-        expect(response).to redirect_to(users_dossier_recapitulatif_path(dossier))
+        expect(response).to redirect_to(demande_dossier_path(dossier))
       end
     end
 
@@ -505,7 +505,7 @@ describe NewUser::DossiersController, type: :controller do
 
       it { expect(first_champ.reload.value).to eq('beautiful value') }
       it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
-      it { expect(response).to redirect_to(users_dossiers_invite_path(invite)) }
+      it { expect(response).to redirect_to(demande_dossier_path(dossier)) }
     end
   end
 
