@@ -773,4 +773,23 @@ describe Procedure do
       expect(p.juridique_required).to be_truthy
     end
   end
+
+  describe '#mean_instruction_time' do
+    let(:procedure) { create(:procedure) }
+
+    context 'when there is only one dossier' do
+      let(:dossier) { create(:dossier, procedure: procedure) }
+
+      context 'which is termine' do
+        before do
+          dossier.accepte!
+          processed_date = DateTime.parse('12/12/2012')
+          instruction_date = processed_date - 1.day
+          dossier.update(en_instruction_at: instruction_date, processed_at: processed_date)
+        end
+
+        it { expect(procedure.mean_instruction_time).to eq(1.day.to_i) }
+      end
+    end
+  end
 end
