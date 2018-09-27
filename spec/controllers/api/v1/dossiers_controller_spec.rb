@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe API::V1::DossiersController do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { create(:administrateur, :with_api_token) }
   let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
   let(:wrong_procedure) { create(:procedure) }
 

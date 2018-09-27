@@ -61,6 +61,7 @@ gem 'fog-openstack'
 gem 'pg'
 
 gem 'rbnacl-libsodium'
+gem 'bcrypt'
 
 gem 'rgeo-geojson'
 gem 'leaflet-rails'
