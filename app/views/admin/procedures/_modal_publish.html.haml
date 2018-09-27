@@ -21,7 +21,7 @@
             %h4 Lien de la démarche
             %p.center
               = commencer_url(procedure_path: '')
-              = text_field_tag('procedure_path', @procedure.default_path,
+              = text_field_tag('procedure_path', @procedure.path || @procedure.default_path,
                                 id: 'procedure_path',
                                 placeholder: 'Chemin vers la démarche',
                                 data: { autocomplete: 'path' },

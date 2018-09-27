@@ -8,27 +8,6 @@ describe Administrateur, type: :model do
     it { is_expected.to have_many(:procedures) }
   end
 
-  describe 'after_save' do
-    subject { create(:administrateur) }
-    before do
-      subject.save
-    end
-    it { expect(subject.api_token).not_to be_blank }
-  end
-
-  describe 'generate_api_token' do
-    let(:token) { 'bullshit' }
-    let(:new_token) { 'pocket_master' }
-    let!(:admin_1) { create(:administrateur, api_token: token) }
-    before do
-      allow(SecureRandom).to receive(:hex).and_return(token, new_token)
-      admin_1.renew_api_token
-    end
-    it 'generate a token who does not already exist' do
-      expect(admin_1.api_token).to eq(new_token)
-    end
-  end
-
   context 'unified login' do
     it 'syncs credentials to associated user' do
       administrateur = create(:administrateur)
@@ -50,6 +29,25 @@ describe Administrateur, type: :model do
       gestionnaire.reload
       expect(gestionnaire.email).to eq('whoami@plop.com')
       expect(gestionnaire.valid_password?('et encore un autre mdp')).to be(true)
+    end
+  end
+
+  describe "#renew_api_token" do
+    let(:administrateur) { create(:administrateur) }
+
+    before do
+      administrateur.renew_api_token
+      administrateur.reload
+    end
+
+    it { expect(administrateur.api_token).to be_present }
+    it { expect(administrateur.api_token).not_to eq(administrateur.encrypted_token) }
+    it { expect(BCrypt::Password.new(administrateur.encrypted_token)).to eq(administrateur.api_token) }
+
+    context 'when it s called twice' do
+      let!(:previous_token) { administrateur.api_token }
+
+      it { expect(previous_token).not_to eq(administrateur.renew_api_token) }
     end
   end
 

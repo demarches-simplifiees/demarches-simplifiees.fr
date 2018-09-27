@@ -812,6 +812,7 @@ DEPENDENCIES
   after_party
   apipie-rails
   axlsx (~> 3.0.0.pre)
+  bcrypt
   bootstrap-sass (~> 3.3.5)
   bootstrap-wysihtml5-rails (~> 0.3.3.8)
   brakeman
