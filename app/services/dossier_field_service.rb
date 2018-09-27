@@ -1,4 +1,6 @@
 class DossierFieldService
+  @@column_whitelist = {}
+
   class << self
     def fields(procedure)
       fields = [
@@ -44,6 +46,8 @@ class DossierFieldService
     end
 
     def get_value(dossier, table, column)
+      assert_valid_column(dossier.procedure, table, column)
+
       case table
       when 'self'
         dossier.send(column)
@@ -58,6 +62,16 @@ class DossierFieldService
       when 'type_de_champ_private'
         dossier.champs_private.find { |c| c.type_de_champ_id == column.to_i }.value
       end
+    end
+
+    def assert_valid_column(procedure, table, column)
+      if !valid_column?(procedure, table, column)
+        raise "Invalid column #{table}.#{column}"
+      end
+    end
+
+    def valid_column?(procedure, table, column)
+      valid_columns_for_table(procedure, table).include?(column)
     end
 
     def filtered_ids(dossiers, filters)
@@ -139,6 +153,17 @@ class DossierFieldService
     end
 
     private
+
+    def valid_columns_for_table(procedure, table)
+      if !@@column_whitelist.key?(procedure.id)
+        @@column_whitelist[procedure.id] = fields(procedure)
+          .group_by { |field| field['table'] }
+          .map { |table, fields| [table, Set.new(fields.map { |field| field['column'] }) ] }
+          .to_h
+      end
+
+      @@column_whitelist[procedure.id][table] || []
+    end
 
     def sanitized_column(field)
       table = field['table']
