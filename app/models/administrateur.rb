@@ -39,8 +39,14 @@ class Administrateur < ApplicationRecord
   def renew_api_token
     api_token = Administrateur.generate_unique_secure_token
     encrypted_token = BCrypt::Password.create(api_token)
-    update(api_token: api_token, encrypted_token: encrypted_token)
+    update(encrypted_token: encrypted_token)
     api_token
+  end
+
+  def valid_api_token?(api_token)
+    BCrypt::Password.new(encrypted_token) == api_token
+  rescue BCrypt::Errors::InvalidHash
+    false
   end
 
   def registration_state
