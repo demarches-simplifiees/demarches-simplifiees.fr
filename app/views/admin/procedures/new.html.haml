@@ -5,4 +5,8 @@
   #procedure_new.section.section-label
     = form_for @procedure, url: { controller: 'admin/procedures', action: :create }, multipart: true do |f|
       = render partial: 'informations', locals: { f: f }
-      = f.submit 'Valider', class: 'btn btn-info', id: 'save-procedure', style: 'float: right;'
+      .text-right
+        - if !Flipflop.publish_draft? || (@available || @mine)
+          = f.button 'Valider', class: 'btn btn-info', id: 'save-procedure'
+        - else
+          = f.button 'Valider', class: 'btn btn-info', id: 'save-procedure', disabled: true

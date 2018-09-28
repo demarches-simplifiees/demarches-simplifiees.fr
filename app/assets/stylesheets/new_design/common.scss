@@ -45,8 +45,22 @@ a {
   color: $blue;
 }
 
+em {
+  font-style: italic;
+}
+
+strong {
+  font-weight: bold;
+}
+
 .container {
   @include horizontal-padding($default-padding);
   max-width: $page-width + 2 * $default-padding;
+  margin: 0 auto;
+}
+
+.small-container {
+  @include horizontal-padding($default-padding);
+  max-width: $small-page-width + 2 * $default-padding;
   margin: 0 auto;
 }

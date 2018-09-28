@@ -27,6 +27,32 @@ describe Dossier do
     end
   end
 
+  describe 'nearing_end_of_retention' do
+    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:young_dossier) { create(:dossier, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, :en_instruction, en_instruction_at: 170.days.ago, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: (6.months + 1.second).ago, procedure: procedure) }
+    let!(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
+
+    context 'with default delay to end of retention' do
+      subject { Dossier.nearing_end_of_retention }
+
+      it { is_expected.not_to include(young_dossier) }
+      it { is_expected.to include(expiring_dossier) }
+      it { is_expected.to include(just_expired_dossier) }
+      it { is_expected.to include(long_expired_dossier) }
+    end
+
+    context 'with custom delay to end of retention' do
+      subject { Dossier.nearing_end_of_retention('0') }
+
+      it { is_expected.not_to include(young_dossier) }
+      it { is_expected.not_to include(expiring_dossier) }
+      it { is_expected.to include(just_expired_dossier) }
+      it { is_expected.to include(long_expired_dossier) }
+    end
+  end
+
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
     let(:etablissement) { dossier.etablissement }
@@ -724,7 +750,7 @@ describe Dossier do
     it { expect(dossier.get_value('self', 'created_at')).to eq(dossier.created_at) }
     it { expect(dossier.get_value('user', 'email')).to eq(user.email) }
     it { expect(dossier.get_value('france_connect_information', 'gender')).to eq(user.france_connect_information.gender) }
-    it { expect(dossier.get_value('entreprise', 'siren')).to eq(dossier.etablissement.entreprise_siren) }
+    it { expect(dossier.get_value('etablissement', 'entreprise_siren')).to eq(dossier.etablissement.entreprise_siren) }
     it { expect(dossier.get_value('etablissement', 'siret')).to eq(dossier.etablissement.siret) }
     it { expect(dossier.get_value('type_de_champ', @champ_public.type_de_champ.id.to_s)).to eq(dossier.champs.first.value) }
     it { expect(dossier.get_value('type_de_champ_private', @champ_private.type_de_champ.id.to_s)).to eq(dossier.champs_private.first.value) }
@@ -974,6 +1000,32 @@ describe Dossier do
     context "dossier state is en_instruction" do
       let(:state) { Dossier.states.fetch(:sans_suite) }
       it { is_expected.to be false }
+    end
+  end
+
+  context "retention date" do
+    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let(:uninstructed_dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let(:young_dossier) { create(:dossier, :en_instruction, en_instruction_at: DateTime.now, procedure: procedure) }
+    let(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 6.months.ago, procedure: procedure) }
+    let(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
+    let(:modif_date) { DateTime.parse('01/01/2100') }
+
+    before { Timecop.freeze(modif_date) }
+    after { Timecop.return }
+
+    describe "#retention_end_date" do
+      it { expect(uninstructed_dossier.retention_end_date).to be_nil }
+      it { expect(young_dossier.retention_end_date).to eq(6.months.from_now) }
+      it { expect(just_expired_dossier.retention_end_date).to eq(DateTime.now) }
+      it { expect(long_expired_dossier.retention_end_date).to eq(6.months.ago) }
+    end
+
+    describe "#retention_expired?" do
+      it { expect(uninstructed_dossier).not_to be_retention_expired }
+      it { expect(young_dossier).not_to be_retention_expired }
+      it { expect(just_expired_dossier).to be_retention_expired }
+      it { expect(long_expired_dossier).to be_retention_expired }
     end
   end
 end

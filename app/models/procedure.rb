@@ -9,7 +9,7 @@ class Procedure < ApplicationRecord
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
-  has_one :procedure_path
+  has_one :procedure_path, dependent: :destroy
 
   belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
@@ -114,7 +114,7 @@ class Procedure < ApplicationRecord
     if locked?
       raise "Can not reset a locked procedure."
     else
-      dossiers.delete_all
+      dossiers.destroy_all
     end
   end
 
@@ -158,7 +158,7 @@ class Procedure < ApplicationRecord
   end
 
   def default_path
-    libelle.parameterize.first(50)
+    libelle&.parameterize&.first(50)
   end
 
   def organisation_name
@@ -307,7 +307,7 @@ class Procedure < ApplicationRecord
       'table' => 'self',
       'column' => 'id',
       'order' => 'desc'
-    }.to_json
+    }
   end
 
   def whitelist!
@@ -324,6 +324,18 @@ class Procedure < ApplicationRecord
         :extraneous_tag
       end
     end
+  end
+
+  def mean_traitement_time
+    mean_time(:en_construction_at, :processed_at)
+  end
+
+  def mean_verification_time
+    mean_time(:en_construction_at, :en_instruction_at)
+  end
+
+  def mean_instruction_time
+    mean_time(:en_instruction_at, :processed_at)
   end
 
   private
@@ -387,5 +399,16 @@ class Procedure < ApplicationRecord
   def update_durees_conservation_required
     self.durees_conservation_required ||= duree_conservation_dossiers_hors_ds.present? && duree_conservation_dossiers_dans_ds.present?
     true
+  end
+
+  def mean_time(start_attribute, end_attribute)
+    times = dossiers
+      .state_termine
+      .pluck(start_attribute, end_attribute)
+      .map { |(start_date, end_date)| end_date - start_date }
+
+    if times.present?
+      times.sum.fdiv(times.size).ceil
+    end
   end
 end

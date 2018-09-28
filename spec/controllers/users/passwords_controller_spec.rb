@@ -7,9 +7,9 @@ describe Users::PasswordsController, type: :controller do
 
   describe "update" do
     context "unified login" do
-      let(:user) { create(:user, email: 'unique@plop.com', password: 'password') }
-      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'password') }
-      let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'password') }
+      let(:user) { create(:user, email: 'unique@plop.com', password: 'mot de passe complexe') }
+      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'mot de passe complexe') }
+      let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'mot de passe complexe') }
 
       before do
         @token = user.send(:set_reset_password_token)
@@ -21,8 +21,8 @@ describe Users::PasswordsController, type: :controller do
         put :update, params: {
           user: {
             reset_password_token: @token,
-            password: "supersecret",
-            password_confirmation: "supersecret",
+            password: "mot de passe super secret",
+            password_confirmation: "mot de passe super secret",
           }
         }
         expect(subject.current_user).to eq(user)
@@ -33,8 +33,8 @@ describe Users::PasswordsController, type: :controller do
         put :update, params: {
           user: {
             reset_password_token: @token,
-            password: "supersecret",
-            password_confirmation: "supersecret",
+            password: "mot de passe super secret",
+            password_confirmation: "mot de passe super secret",
           }
         }
         expect(subject.current_user).to eq(user)

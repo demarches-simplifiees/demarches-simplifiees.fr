@@ -34,7 +34,7 @@ namespace :'2018_07_31_nutriscore' do
         end
 
         discard_source_champ(
-          TypesDeChamp::TextTypeDeChamp.new(
+          TypeDeChamp.new(
             type_champ: 'text',
             order_place: siret_order_place,
             libelle: 'Numéro SIRET'
@@ -42,7 +42,7 @@ namespace :'2018_07_31_nutriscore' do
         )
 
         discard_source_champ(
-          TypesDeChamp::TextTypeDeChamp.new(
+          TypeDeChamp.new(
             type_champ: 'text',
             order_place: fonction_order_place,
             libelle: 'Fonction'
@@ -50,7 +50,7 @@ namespace :'2018_07_31_nutriscore' do
         )
 
         compute_destination_champ(
-          TypesDeChamp::TextTypeDeChamp.new(
+          TypeDeChamp.new(
             type_champ: 'text',
             order_place: fonction_order_place,
             libelle: 'Fonction',
@@ -66,7 +66,7 @@ namespace :'2018_07_31_nutriscore' do
         end
 
         compute_destination_champ(
-          TypesDeChamp::SiretTypeDeChamp.new(
+          TypeDeChamp.new(
             type_champ: 'siret',
             order_place: siret_order_place,
             libelle: 'Numéro SIRET'
@@ -80,7 +80,7 @@ namespace :'2018_07_31_nutriscore' do
         end
 
         compute_destination_champ(
-          TypesDeChamp::HeaderSectionTypeDeChamp.new(
+          TypeDeChamp.new(
             type_champ: 'header_section',
             order_place: 18,
             libelle: 'PARTIE 3 : ZONE GEOGRAPHIQUE'
@@ -90,7 +90,7 @@ namespace :'2018_07_31_nutriscore' do
         end
 
         compute_destination_champ(
-          TypesDeChamp::MultipleDropDownListTypeDeChamp.new(
+          TypeDeChamp.new(
             type_champ: 'multiple_drop_down_list',
             order_place: 19,
             libelle: 'Pays de commercialisation',

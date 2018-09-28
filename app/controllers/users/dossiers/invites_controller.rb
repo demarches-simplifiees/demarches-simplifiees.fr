@@ -1,7 +1,10 @@
 class Users::Dossiers::InvitesController < UsersController
   def authenticate_user!
     session["user_return_to"] = request.fullpath
-    return redirect_to new_user_registration_path(user_email: params[:email]) if params[:email].present? && User.find_by(email: params[:email]).nil?
+
+    if params[:email].present? && User.find_by(email: params[:email]).nil?
+      return redirect_to new_user_registration_path(user: { email: params[:email] })
+    end
 
     super
   end
@@ -11,6 +14,8 @@ class Users::Dossiers::InvitesController < UsersController
 
     if @facade.dossier.brouillon?
       redirect_to brouillon_dossier_path(@facade.dossier)
+    elsif Flipflop.new_dossier_details?
+      return redirect_to dossier_path(@facade.dossier)
     else
       render 'users/recapitulatif/show'
     end

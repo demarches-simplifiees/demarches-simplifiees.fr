@@ -3,4 +3,7 @@
     = form_for @procedure, url: url_for({ controller: 'admin/procedures', action: :update, id: @procedure.id }), multipart: true do |f|
       = render partial: 'informations', locals: { f: f }
       .text-right
-        = f.button 'Enregistrer', class: 'btn btn-success'
+        - if !Flipflop.publish_draft? || (@available || @mine)
+          = f.button 'Enregistrer', class: 'btn btn-success'
+        - else
+          = f.button 'Enregistrer', class: 'btn btn-success', disabled: true

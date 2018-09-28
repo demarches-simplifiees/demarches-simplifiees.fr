@@ -3,14 +3,26 @@ namespace :after_party do
   task add_path_to_procedures: :environment do
     puts "Running deploy task 'add_path_to_procedures'"
 
-    Procedure.publiees.where(path: nil).find_each do |procedure|
-      procedure.path = procedure.path
-      procedure.save!
+    def print_procedure(procedure)
+      puts "#{procedure.id}##{procedure.path} - #{procedure.errors.full_messages}"
     end
 
-    Procedure.archivees.where(path: nil).find_each do |procedure|
+    puts "Démarches publiées :"
+    Procedure.publiees.where(path: nil).find_each do |procedure|
       procedure.path = procedure.path
-      procedure.save!
+      if !procedure.save
+        print_procedure(procedure)
+      end
+    end
+
+    puts "Démarches archivées :"
+    Procedure.archivees.where(path: nil).find_each do |procedure|
+      if procedure.procedure_path.present?
+        procedure.path = procedure.path
+        if !procedure.save
+          print_procedure(procedure)
+        end
+      end
     end
 
     # Update task as completed. If you remove the line below, the task will

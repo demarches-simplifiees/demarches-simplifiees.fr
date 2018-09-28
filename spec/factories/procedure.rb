@@ -22,6 +22,14 @@ FactoryBot.define do
       end
     end
 
+    factory :simple_procedure do
+      after(:build) do |procedure, _evaluator|
+        procedure.for_individual = true
+        procedure.types_de_champ << create(:type_de_champ, libelle: 'Texte obligatoire', mandatory: true)
+        procedure.publish!(generate(:published_path))
+      end
+    end
+
     after(:build) do |procedure, _evaluator|
       if procedure.module_api_carto.nil?
         module_api_carto = create(:module_api_carto)

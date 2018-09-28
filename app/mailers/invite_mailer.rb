@@ -20,7 +20,7 @@ class InviteMailer < ApplicationMailer
     email = invite.email
 
     mail(to: email,
-         subject: subject,
-         reply_to: reply_to)
+      subject: subject,
+      reply_to: reply_to)
   end
 end

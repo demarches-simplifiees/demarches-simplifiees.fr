@@ -1,6 +1,10 @@
 describe 'new_user/dossiers/show/header.html.haml', type: :view do
   let(:dossier) { create(:dossier, :en_construction, procedure: create(:procedure)) }
 
+  before do
+    sign_in dossier.user
+  end
+
   subject! { render 'new_user/dossiers/show/header.html.haml', dossier: dossier }
 
   it 'affiche les informations du dossier' do

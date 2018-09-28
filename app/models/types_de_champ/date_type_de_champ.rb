@@ -1,2 +1,2 @@
-class TypesDeChamp::DateTypeDeChamp < TypeDeChamp
+class TypesDeChamp::DateTypeDeChamp < TypesDeChamp::TypeDeChampBase
 end

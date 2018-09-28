@@ -102,11 +102,9 @@ module NewGestionnaire
       fields = values.map do |value|
         table, column = value.split("/")
 
-        c = procedure.fields.find do |field|
+        procedure.fields.find do |field|
           field['table'] == table && field['column'] == column
         end
-
-        c.to_json
       end
 
       procedure_presentation.update(displayed_fields: fields)
@@ -134,7 +132,7 @@ module NewGestionnaire
         'table' => table,
         'column' => column,
         'order' => order
-      }.to_json
+      }
 
       procedure_presentation.update(sort: sort)
 
@@ -154,7 +152,7 @@ module NewGestionnaire
           'value' => params[:value]
         }
 
-        procedure_presentation.update(filters: filters.to_json)
+        procedure_presentation.update(filters: filters)
       end
 
       redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
@@ -168,7 +166,7 @@ module NewGestionnaire
 
       filters[statut] = filters[statut] - [filter_to_remove]
 
-      procedure_presentation.update(filters: filters.to_json)
+      procedure_presentation.update(filters: filters)
 
       redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
     end

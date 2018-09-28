@@ -7,36 +7,33 @@ class APIController < ApplicationController
     ```
   EOS
 
-  before_action :authenticate_user
   before_action :default_format_json
-
-  def authenticate_user
-    if !valid_token?
-      request_http_token_authentication
-    end
-  end
 
   protected
 
-  def valid_token?
-    administrateur.present?
+  def valid_token_for_administrateur?(administrateur)
+    administrateur.valid_api_token?(token)
   end
 
-  def administrateur
-    @administrateur ||= (authenticate_with_bearer_token || authenticate_with_param_token)
-  end
-
-  def authenticate_with_bearer_token
-    authenticate_with_http_token do |token, options|
-      Administrateur.find_by(api_token: token)
-    end
-  end
-
-  def authenticate_with_param_token
-    Administrateur.find_by(api_token: params[:token])
-  end
+  private
 
   def default_format_json
     request.format = "json" if !request.params[:format]
+  end
+
+  def token
+    params_token.presence || header_token
+  end
+
+  def header_token
+    received_token = nil
+    authenticate_with_http_token do |token, _options|
+      received_token = token
+    end
+    received_token
+  end
+
+  def params_token
+    params[:token]
   end
 end

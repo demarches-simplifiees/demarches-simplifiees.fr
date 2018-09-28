@@ -53,6 +53,7 @@ L'application tourne à l'adresse `http://localhost:3000`. Un utilisateur de tes
     AutoReceiveDossiersForProcedureJob.set(cron: "* * * * *").perform_later(procedure_declaratoire_id, Dossier.states.fetch(:en_instruction))
     FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
     Administrateurs::ActivateBeforeExpirationJob.set(cron: "0 8 * * *").perform_later
+    WarnExpiringDossiersJob.set(cron: "0 0 1 * *").perform_later
 
 ## Mise à jour de l'application
 

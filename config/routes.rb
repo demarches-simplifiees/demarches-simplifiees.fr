@@ -70,8 +70,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations',
-    passwords: 'users/passwords',
-    confirmations: 'users/confirmations'
+    passwords: 'users/passwords'
   }
 
   devise_scope :user do
@@ -94,6 +93,7 @@ Rails.application.routes.draw do
   #
 
   root 'root#index'
+  get '/tour-de-france' => 'tour_de_france#index'
   get '/administration' => 'root#administration'
 
   get 'users' => 'users#index'
@@ -175,13 +175,12 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
+    get 'activate/test_password_strength' => '/administrateurs/activate#test_password_strength'
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
     get 'procedures/path_list' => 'procedures#path_list'
     get 'procedures/available' => 'procedures#check_availability'
-    get 'profile' => 'profile#show', as: :profile
-    post 'renew_api_token' => 'profile#renew_api_token', as: :renew_api_token
 
     get 'change_dossier_state' => 'change_dossier_state#index'
     post 'change_dossier_state' => 'change_dossier_state#check'
@@ -194,7 +193,9 @@ Rails.application.routes.draw do
 
       member do
         post :hide
+        delete :delete_logo
         delete :delete_deliberation
+        delete :delete_notice
       end
 
       resources :types_de_champ, only: [:destroy]
@@ -232,6 +233,9 @@ Rails.application.routes.draw do
 
       post 'attestation_template/preview' => 'attestation_templates#preview'
       patch 'attestation_template/preview' => 'attestation_templates#preview'
+
+      delete 'attestation_template/logo' => 'attestation_templates#delete_logo'
+      delete 'attestation_template/signature' => 'attestation_templates#delete_signature'
     end
 
     namespace :instructeurs do
@@ -364,6 +368,11 @@ Rails.application.routes.draw do
         patch 'add_to_procedure'
       end
     end
+
+    get 'profil' => 'profil#show'
+    post 'renew-api-token' => 'profil#renew_api_token'
+    # allow refresh 'renew api token' page
+    get 'renew-api-token' => redirect('/profil')
   end
 
   apipie

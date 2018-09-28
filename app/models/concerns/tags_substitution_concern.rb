@@ -47,7 +47,7 @@ module TagsSubstitutionConcern
     {
       libelle: 'lien dossier',
       description: '',
-      lambda: -> (d) { external_link(users_dossier_recapitulatif_url(d)) },
+      lambda: -> (d) { external_link(dossier_url(d)) },
       available_for_states: Dossier::SOUMIS
     },
     {
@@ -193,7 +193,7 @@ module TagsSubstitutionConcern
     tags_and_datas
       .map { |(tags, data)| [filter_tags(tags), data] }
       .inject(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
-   end
+  end
 
   def replace_type_de_champ_tags(text, types_de_champ, dossier_champs)
     types_de_champ.inject(text) do |acc, tag|

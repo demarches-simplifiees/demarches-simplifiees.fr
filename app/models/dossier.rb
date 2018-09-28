@@ -61,6 +61,7 @@ class Dossier < ApplicationRecord
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
+  scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
 
   accepts_nested_attributes_for :individual
 
@@ -180,6 +181,16 @@ class Dossier < ApplicationRecord
 
   def can_be_updated_by_the_user?
     brouillon? || en_construction?
+  end
+
+  def retention_end_date
+    if instruction_commencee?
+      en_instruction_at + procedure.duree_conservation_dossiers_dans_ds.months
+    end
+  end
+
+  def retention_expired?
+    instruction_commencee? && retention_end_date <= DateTime.now
   end
 
   def text_summary

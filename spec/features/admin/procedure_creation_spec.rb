@@ -7,6 +7,9 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   let(:administrateur) { create(:administrateur) }
 
   before do
+    # FIXME: needed to make procedure_path validation work
+    create(:procedure)
+    Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
     login_as administrateur, scope: :administrateur
     visit root_path
   end
@@ -29,21 +32,46 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   end
 
   context 'Creating a new procedure' do
-    scenario 'Finding save button for new procedure, libelle, description and cadre_juridique required' do
-      expect(page).to have_selector('#new-procedure')
-      find('#new-procedure').click
-      click_on 'from-scratch'
+    context "when publish_draft enabled" do
+      scenario 'Finding save button for new procedure, libelle, description and cadre_juridique required' do
+        expect(page).to have_selector('#new-procedure')
+        find('#new-procedure').click
+        click_on 'from-scratch'
 
-      expect(page).to have_current_path(new_admin_procedure_path)
-      fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
-      fill_in 'procedure_duree_conservation_dossiers_hors_ds', with: '6'
-      click_on 'save-procedure'
+        expect(page).to have_current_path(new_admin_procedure_path)
+        fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
+        fill_in 'procedure_duree_conservation_dossiers_hors_ds', with: '6'
+        click_on 'save-procedure'
 
-      expect(page).to have_text('Libelle doit être rempli')
-      fill_in_dummy_procedure_details
-      click_on 'save-procedure'
+        expect(page).to have_text('Libelle doit être rempli')
+        fill_in_dummy_procedure_details
+        click_on 'save-procedure'
 
-      expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.first))
+        expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.last))
+      end
+    end
+
+    context "when publish_draft disabled" do
+      before do
+        Flipflop::FeatureSet.current.test!.switch!(:publish_draft, false)
+      end
+
+      scenario 'Finding save button for new procedure, libelle, description and cadre_juridique required' do
+        expect(page).to have_selector('#new-procedure')
+        find('#new-procedure').click
+        click_on 'from-scratch'
+
+        expect(page).to have_current_path(new_admin_procedure_path)
+        fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
+        fill_in 'procedure_duree_conservation_dossiers_hors_ds', with: '6'
+        click_on 'save-procedure'
+
+        expect(page).to have_text('Libelle doit être rempli')
+        fill_in_dummy_procedure_details(fill_path: false)
+        click_on 'save-procedure'
+
+        expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.last))
+      end
     end
   end
 
@@ -64,20 +92,20 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
     scenario 'Add champ, add file, visualize them in procedure preview' do
       fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
       click_on 'add_type_de_champ'
-      expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.first))
+      expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.last))
       expect(page).to have_selector('#procedure_types_de_champ_attributes_1_libelle')
-      expect(Procedure.first.types_de_champ.first.libelle).to eq('libelle de champ')
+      expect(Procedure.last.types_de_champ.first.libelle).to eq('libelle de champ')
 
       click_on 'onglet-pieces'
-      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.first))
+      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))
       fill_in 'procedure_types_de_piece_justificative_attributes_0_libelle', with: 'libelle de piece'
       click_on 'add_piece_justificative'
-      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.first))
+      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))
       expect(page).to have_selector('#procedure_types_de_piece_justificative_attributes_1_libelle')
 
       preview_window = window_opened_by { click_on 'onglet-preview' }
       within_window(preview_window) do
-        expect(page).to have_current_path(apercu_procedure_path(Procedure.first))
+        expect(page).to have_current_path(apercu_procedure_path(Procedure.last))
         expect(page).to have_field('libelle de champ')
         expect(page).to have_field('libelle de piece')
       end
@@ -88,28 +116,28 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       click_on 'add_type_de_champ'
       click_on 'onglet-pieces'
 
-      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.first))
+      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))
       fill_in 'procedure_types_de_piece_justificative_attributes_0_libelle', with: 'libelle de piece'
       click_on 'add_piece_justificative'
 
       click_on 'onglet-infos'
-      expect(page).to have_current_path(admin_procedure_path(Procedure.first))
+      expect(page).to have_current_path(admin_procedure_path(Procedure.last))
       expect(page).to have_selector('#disabled-publish-procedure')
       expect(page.find_by_id('disabled-publish-procedure')[:disabled]).to eq('true')
 
       click_on 'onglet-instructeurs'
-      expect(page).to have_current_path(admin_procedure_instructeurs_path(Procedure.first))
+      expect(page).to have_current_path(admin_procedure_instructeurs_path(Procedure.last))
       fill_in 'gestionnaire_email', with: 'gestionnaire@apientreprise.fr'
       click_on 'add-gestionnaire-email'
       page.first('.gestionnaire-affectation').click
 
       click_on 'onglet-infos'
-      expect(page).to have_current_path(admin_procedure_path(Procedure.first))
+      expect(page).to have_current_path(admin_procedure_path(Procedure.last))
       expect(page).to have_selector('#publish-procedure', visible: true)
       find('#publish-procedure').click
 
       within '#publish-modal' do
-        expect(page).to have_field('procedure_path', with: 'libelle-de-la-procedure')
+        expect(page).to have_field('procedure_path', with: 'lien-de-la-procedure')
         click_on 'publish'
       end
 

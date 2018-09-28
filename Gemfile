@@ -6,11 +6,6 @@ gem 'rails'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier'
-
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -66,6 +61,7 @@ gem 'fog-openstack'
 gem 'pg'
 
 gem 'rbnacl-libsodium'
+gem 'bcrypt'
 
 gem 'rgeo-geojson'
 gem 'leaflet-rails'
@@ -117,6 +113,8 @@ gem 'aasm'
 gem 'webpacker', '>= 4.0.x'
 
 gem 'after_party'
+
+gem 'zxcvbn-ruby', require: 'zxcvbn'
 
 # Cron jobs
 gem 'delayed_job_active_record'

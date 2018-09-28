@@ -26,6 +26,11 @@
           = succeed '.' do
             %strong votre dossier passera directement en instruction
 
+        - if dossier.procedure.mean_verification_time
+          - cache(dossier.procedure, expires_in: 1.week) do
+            %p
+              Le temps moyen de vérification pour cette démarche est de #{distance_of_time_in_words(dossier.procedure.mean_verification_time)}.
+
     - elsif dossier.en_instruction?
       .en-instruction
         %p Votre dossier est complet. Il est en cours d’examen par les instructeur de l’administration.
@@ -34,6 +39,10 @@
           %strong
             vous recevrez un email
           avec le résultat.
+        - if dossier.procedure.mean_instruction_time
+          - cache(dossier.procedure, expires_in: 1.week) do
+            %p
+              Le temps moyen d’instruction pour cette démarche est de #{distance_of_time_in_words(dossier.procedure.mean_instruction_time)}.
 
     - elsif dossier.accepte?
       .accepte

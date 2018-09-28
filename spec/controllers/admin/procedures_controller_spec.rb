@@ -6,6 +6,7 @@ describe Admin::ProceduresController, type: :controller do
 
   let(:bad_procedure_id) { 100000 }
 
+  let(:path) { 'ma-jolie-demarche' }
   let(:libelle) { 'Démarche de test' }
   let(:description) { 'Description de test' }
   let(:organisation) { 'Organisation de test' }
@@ -20,6 +21,7 @@ describe Admin::ProceduresController, type: :controller do
 
   let(:procedure_params) {
     {
+      path: path,
       libelle: libelle,
       description: description,
       organisation: organisation,
@@ -691,9 +693,9 @@ describe Admin::ProceduresController, type: :controller do
       let(:procedure) { create :procedure, :published, administrateur: admin }
 
       before do
-         subject
-         procedure.reload
-       end
+        subject
+        procedure.reload
+      end
 
       it { expect(procedure.hidden_at).not_to be_nil }
       it { expect(procedure.procedure_path).to be_nil }

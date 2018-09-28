@@ -60,7 +60,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     subject(:subject) { described_class.new_answer(dossier) }
 
     it { expect(subject.body).to match('Un nouveau message est disponible dans votre espace demarches-simplifiees.fr.') }
-    it { expect(subject.body).to include(users_dossier_recapitulatif_url(dossier_id: dossier.id)) }
+    it { expect(subject.body).to include(messagerie_dossier_url(dossier)) }
     it { expect(subject.subject).to eq("Nouveau message pour votre dossier nº #{dossier.id}") }
   end
 end

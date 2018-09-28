@@ -459,7 +459,6 @@ GEM
     leaflet-markercluster-rails (0.7.0)
       railties (>= 3.1)
     leaflet-rails (0.7.7)
-    libv8 (3.16.14.19)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -626,7 +625,6 @@ GEM
       json (>= 1.8)
       nokogiri (~> 1.5)
       trollop (~> 2.1)
-    ref (2.0.0)
     request_store (1.4.1)
       rack (>= 1.4)
     responders (2.4.0)
@@ -750,9 +748,6 @@ GEM
       httpclient (>= 2.4)
     sysexits (1.2.0)
     temple (0.8.0)
-    therubyracer (0.12.3)
-      libv8 (~> 3.16.14.15)
-      ref
     thor (0.20.0)
     thread_safe (0.3.6)
     tilt (2.0.8)
@@ -766,8 +761,6 @@ GEM
       ethon (>= 0.9.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    uglifier (4.1.19)
-      execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.5)
@@ -806,6 +799,7 @@ GEM
       nokogiri (~> 1.8)
     xray-rails (0.3.1)
       rails (>= 3.1.0)
+    zxcvbn-ruby (0.1.2)
 
 PLATFORMS
   ruby
@@ -818,6 +812,7 @@ DEPENDENCIES
   after_party
   apipie-rails
   axlsx (~> 3.0.0.pre)
+  bcrypt
   bootstrap-sass (~> 3.3.5)
   bootstrap-wysihtml5-rails (~> 0.3.3.8)
   brakeman
@@ -898,11 +893,9 @@ DEPENDENCIES
   spreadsheet_architect
   spring
   spring-commands-rspec
-  therubyracer
   timecop
   turbolinks
   typhoeus
-  uglifier
   unicorn
   vcr
   warden!
@@ -910,6 +903,7 @@ DEPENDENCIES
   webmock
   webpacker (>= 4.0.x)
   xray-rails
+  zxcvbn-ruby
 
 BUNDLED WITH
    1.16.4

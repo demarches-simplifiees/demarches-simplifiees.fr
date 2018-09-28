@@ -9,7 +9,7 @@ fr:
           textarea: 'Zone de texte'
           date: 'Date'
           datetime: 'Date et Heure'
-          number: 'Nombre'
+          number: 'Nombre entier'
           checkbox: 'Case à cocher'
           civilite: 'Civilité'
           email: 'Email'

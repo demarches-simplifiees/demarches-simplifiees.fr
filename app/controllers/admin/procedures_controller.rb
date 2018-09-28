@@ -39,6 +39,9 @@ class Admin::ProceduresController < AdminController
   end
 
   def edit
+    @path = @procedure.path || @procedure.default_path
+    @available = @procedure.path_available?(@path)
+    @mine = @procedure.path_is_mine?(@path)
   end
 
   def hide
@@ -63,29 +66,52 @@ class Admin::ProceduresController < AdminController
   def new
     @procedure ||= Procedure.new
     @procedure.module_api_carto ||= ModuleAPICarto.new
+    @available = true
+    @mine = true
   end
 
   def create
     @procedure = Procedure.new(procedure_params)
     @procedure.module_api_carto = ModuleAPICarto.new(create_module_api_carto_params) if @procedure.valid?
+    @path = params.require(:procedure).permit(:path)[:path]
+    @available = !ProcedurePath.exists?(path: @path)
+    @mine = ProcedurePath.mine?(current_administrateur, @path)
 
-    if !@procedure.save
+    if !@procedure.validate
       flash.now.alert = @procedure.errors.full_messages
       return render 'new'
+    elsif Flipflop.publish_draft? && !ProcedurePath.valid?(Procedure.last, @path)
+      # FIXME: The code abow is a horrible hack that we need until we migrated path directly on procedure model
+      flash.now.alert = 'Lien de la démarche invalide.'
+      return render 'new'
+    else
+      @procedure.save!
+      if Flipflop.publish_draft?
+        @procedure.publish_with_path!(@path)
+      end
+      flash.notice = 'Démarche enregistrée.'
     end
 
-    flash.notice = 'Démarche enregistrée'
     redirect_to admin_procedure_types_de_champ_path(procedure_id: @procedure.id)
   end
 
   def update
     @procedure = current_administrateur.procedures.find(params[:id])
+    path = params.require(:procedure).permit(:path)[:path]
 
     if !@procedure.update(procedure_params)
       flash.alert = @procedure.errors.full_messages
+    elsif Flipflop.publish_draft? && @procedure.brouillon?
+      if ProcedurePath.valid?(@procedure, path)
+        @procedure.publish_with_path!(path)
+        reset_procedure
+        flash.notice = 'Démarche modifiée. Tous les brouillons de cette démarche ont été supprimés.'
+      else
+        flash.alert = 'Lien de la démarche invalide.'
+      end
     else
       reset_procedure
-      flash.notice = 'Démarche modifiée'
+      flash.notice = 'Démarche modifiée. Tous les brouillons de cette démarche ont été supprimés.'
     end
 
     redirect_to edit_admin_procedure_path(id: @procedure.id)
@@ -219,12 +245,31 @@ class Admin::ProceduresController < AdminController
     end
   end
 
+  def delete_logo
+    procedure = Procedure.find(params[:id])
+
+    procedure.remove_logo!
+    procedure.save
+
+    flash.notice = 'le logo a bien été supprimé'
+    redirect_to edit_admin_procedure_path(procedure)
+  end
+
   def delete_deliberation
     procedure = Procedure.find(params[:id])
 
     procedure.deliberation.purge_later
 
     flash.notice = 'la délibération a bien été supprimée'
+    redirect_to edit_admin_procedure_path(procedure)
+  end
+
+  def delete_notice
+    procedure = Procedure.find(params[:id])
+
+    procedure.notice.purge_later
+
+    flash.notice = 'la notice a bien été supprimée'
     redirect_to edit_admin_procedure_path(procedure)
   end
 

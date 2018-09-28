@@ -82,23 +82,23 @@ feature "procedure filters" do
   end
 
   def add_filter(column_name, filter_value)
-    find(:xpath, "//span[contains(text(), 'Filtrer')]").click
+    click_on 'Filtrer'
     select column_name, from: "Colonne"
     fill_in "Valeur", with: filter_value
     click_button "Ajouter le filtre"
   end
 
   def add_column(column_name)
-    find(:xpath, "//span[contains(text(), 'Personnaliser')]").click
+    click_on 'Personnaliser'
     find("span.select2-container").click
     find(:xpath, "//li[text()='#{column_name}']").click
     click_button "Enregistrer"
   end
 
   def remove_column(column_name)
-    find(:xpath, "//span[contains(text(), 'Personnaliser')]").click
+    click_on 'Personnaliser'
     find(:xpath, "//li[contains(@title, '#{column_name}')]/span[contains(text(), '×')]").click
-    find(:xpath, "//span[contains(text(), 'Personnaliser')]//span[contains(@class, 'select2-container')]").click
+    find(:xpath, "//form[contains(@class, 'columns-form')]//span[contains(@class, 'select2-container')]").click
     click_button "Enregistrer"
   end
 end

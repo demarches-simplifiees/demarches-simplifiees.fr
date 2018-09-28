@@ -9,7 +9,7 @@ class SupportController < ApplicationController
     if direct_message? && create_commentaire
       flash.notice = "Votre message a été envoyé sur la messagerie de votre dossier."
 
-      redirect_to helpers.url_for_dossier(dossier)
+      redirect_to messagerie_dossier_path(dossier)
     elsif create_conversation
       flash.notice = "Votre message a été envoyé."
 

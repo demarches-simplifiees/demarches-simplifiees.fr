@@ -2,13 +2,15 @@
   %a#title-navbar{ href: root_path }
     .row#home
       .col-lg-6.no-padding
-        = image_tag('marianne_small.png', class: 'logo')
+        = image_tag('marianne.svg', class: 'logo')
       .col-lg-6.no-padding#tps-title
         demarches-simplifiees.fr
 
 .col-xs-10.no-padding
   #navbar-body
     .row
+      -# BEST WTF EVER
+      -# this begin rescue hides potentials bugs by displaying another navbar
       - begin
         = render partial: @navbar_url
       - rescue

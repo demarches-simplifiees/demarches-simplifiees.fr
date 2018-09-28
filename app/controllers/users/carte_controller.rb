@@ -76,5 +76,5 @@ class Users::CarteController < UsersController
         multipolygone.to_json
       end
     end
-   end
+  end
 end

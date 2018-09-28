@@ -80,7 +80,7 @@ FactoryBot.define do
     trait :en_construction do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:en_construction)
-        dossier.en_construction_at = dossier.created_at + 1.minute
+        dossier.en_construction_at ||= dossier.created_at + 1.minute
         dossier.save!
       end
     end
@@ -88,8 +88,8 @@ FactoryBot.define do
     trait :en_instruction do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:en_instruction)
-        dossier.en_construction_at = dossier.created_at + 1.minute
-        dossier.created_at = dossier.created_at + 2.minutes
+        dossier.en_construction_at ||= dossier.created_at + 1.minute
+        dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
         dossier.save!
       end
     end
@@ -97,9 +97,9 @@ FactoryBot.define do
     trait :accepte do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:accepte)
-        dossier.processed_at = dossier.created_at + 1.minute
-        dossier.en_construction_at = dossier.created_at + 2.minutes
-        dossier.created_at = dossier.created_at + 3.minutes
+        dossier.en_construction_at ||= dossier.created_at + 1.minute
+        dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
+        dossier.processed_at ||= dossier.en_instruction_at + 1.minute
         dossier.save!
       end
     end
@@ -107,9 +107,9 @@ FactoryBot.define do
     trait :refuse do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:refuse)
-        dossier.processed_at = dossier.created_at + 1.minute
-        dossier.en_construction_at = dossier.created_at + 2.minutes
-        dossier.created_at = dossier.created_at + 3.minutes
+        dossier.en_construction_at ||= dossier.created_at + 1.minute
+        dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
+        dossier.processed_at ||= dossier.en_instruction_at + 1.minute
         dossier.save!
       end
     end
@@ -117,9 +117,9 @@ FactoryBot.define do
     trait :sans_suite do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:sans_suite)
-        dossier.processed_at = dossier.created_at + 1.minute
-        dossier.en_construction_at = dossier.created_at + 2.minutes
-        dossier.created_at = dossier.created_at + 3.minutes
+        dossier.en_construction_at ||= dossier.created_at + 1.minute
+        dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
+        dossier.processed_at ||= dossier.en_instruction_at + 1.minute
         dossier.save!
       end
     end

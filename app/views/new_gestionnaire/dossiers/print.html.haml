@@ -43,7 +43,7 @@
         %td
           - pj = @dossier.retrieve_last_piece_justificative_by_type(type_de_piece_justificative.id)
           - if pj.present?
-            Pièce fournie
+            #{pj.original_filename}
           - else
             Pièce non fournie
 

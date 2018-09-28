@@ -1,0 +1,15 @@
+@import "constants";
+
+#profil-page {
+  b {
+    font-weight: bold;
+  }
+
+  .card {
+    margin: 3 * $default-spacer 0;
+  }
+
+  p {
+    margin: 16px auto;
+  }
+}

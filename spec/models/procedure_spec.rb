@@ -690,7 +690,7 @@ describe Procedure do
   end
 
   describe ".default_sort" do
-    it { expect(Procedure.default_sort).to eq("{\"table\":\"self\",\"column\":\"id\",\"order\":\"desc\"}") }
+    it { expect(Procedure.default_sort).to eq({ "table" => "self", "column" => "id", "order" => "desc" }) }
   end
 
   describe "#export_filename" do
@@ -771,6 +771,25 @@ describe Procedure do
       allow(p).to receive(:deliberation).and_return(double('attached?': true))
       p.save
       expect(p.juridique_required).to be_truthy
+    end
+  end
+
+  describe '#mean_instruction_time' do
+    let(:procedure) { create(:procedure) }
+
+    context 'when there is only one dossier' do
+      let(:dossier) { create(:dossier, procedure: procedure) }
+
+      context 'which is termine' do
+        before do
+          dossier.accepte!
+          processed_date = DateTime.parse('12/12/2012')
+          instruction_date = processed_date - 1.day
+          dossier.update(en_instruction_at: instruction_date, processed_at: processed_date)
+        end
+
+        it { expect(procedure.mean_instruction_time).to eq(1.day.to_i) }
+      end
     end
   end
 end

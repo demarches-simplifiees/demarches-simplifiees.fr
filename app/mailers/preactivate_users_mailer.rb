@@ -26,8 +26,8 @@ class PreactivateUsersMailer < ApplicationMailer
     END_OF_MAIL
 
     mail(to: model.email,
-         subject: subject,
-         reply_to: CONTACT_EMAIL,
-         body: body)
+      subject: subject,
+      reply_to: CONTACT_EMAIL,
+      body: body)
   end
 end

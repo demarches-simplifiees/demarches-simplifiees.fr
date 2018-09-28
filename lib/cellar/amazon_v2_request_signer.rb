@@ -36,7 +36,7 @@ module Cellar
       canonicalized_amz_headers = ""
       canonicalized_resource = "/#{@bucket}/#{key}"
       string_to_sign = "#{method}\n#{checksum}\n#{content_type}\n#{expires}#{date}\n" +
-                       "#{canonicalized_amz_headers}#{canonicalized_resource}"
+        "#{canonicalized_amz_headers}#{canonicalized_resource}"
       Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), @secret_access_key, string_to_sign)).strip
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_13_160415) do
+ActiveRecord::Schema.define(version: 2018_09_26_145604) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,9 +50,9 @@ ActiveRecord::Schema.define(version: 2018_09_13_160415) do
     t.string "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "api_token"
     t.boolean "active", default: false
     t.jsonb "features", default: {}, null: false
+    t.string "encrypted_token"
     t.index ["email"], name: "index_administrateurs_on_email", unique: true
     t.index ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true
   end
@@ -251,25 +251,6 @@ ActiveRecord::Schema.define(version: 2018_09_13_160415) do
     t.index ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id"
   end
 
-  create_table "entreprises", id: :serial, force: :cascade do |t|
-    t.string "siren"
-    t.bigint "capital_social"
-    t.string "numero_tva_intracommunautaire"
-    t.string "forme_juridique"
-    t.string "forme_juridique_code"
-    t.string "nom_commercial"
-    t.string "raison_sociale"
-    t.string "siret_siege_social"
-    t.string "code_effectif_entreprise"
-    t.datetime "date_creation"
-    t.string "nom"
-    t.string "prenom"
-    t.integer "dossier_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["dossier_id"], name: "index_entreprises_on_dossier_id"
-  end
-
   create_table "etablissements", id: :serial, force: :cascade do |t|
     t.string "siret"
     t.boolean "siege_social"
@@ -444,11 +425,12 @@ ActiveRecord::Schema.define(version: 2018_09_13_160415) do
 
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
-    t.text "displayed_fields", default: ["{\"label\":\"Demandeur\",\"table\":\"user\",\"column\":\"email\"}"], null: false, array: true
-    t.json "sort", default: "{\"table\":\"notifications\",\"column\":\"notifications\",\"order\":\"desc\"}", null: false
-    t.json "filters", default: "{\"a-suivre\":[],\"suivis\":[],\"traites\":[],\"tous\":[],\"archives\":[]}", null: false
+    t.text "old_displayed_fields", default: ["{\"label\":\"Demandeur\",\"table\":\"user\",\"column\":\"email\"}"], null: false, array: true
+    t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
+    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[]}, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
     t.index ["assign_to_id"], name: "index_procedure_presentations_on_assign_to_id", unique: true
   end
 

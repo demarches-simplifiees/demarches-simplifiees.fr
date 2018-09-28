@@ -1,6 +1,7 @@
 class Administrateur < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
+  include ActiveRecord::SecureToken
 
   devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable
@@ -13,9 +14,19 @@ class Administrateur < ApplicationRecord
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
   before_validation -> { sanitize_email(:email) }
-  before_save :ensure_api_token
 
   scope :inactive, -> { where(active: false) }
+
+  validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
+
+  def password_complexity
+    if password.present?
+      score = Zxcvbn.test(password, [], ZXCVBN_DICTIONNARIES).score
+      if score < 4
+        errors.add(:password, :not_strength)
+      end
+    end
+  end
 
   def self.find_inactive_by_token(reset_password_token)
     self.inactive.with_reset_password_token(reset_password_token)
@@ -25,14 +36,17 @@ class Administrateur < ApplicationRecord
     self.inactive.find(id)
   end
 
-  def ensure_api_token
-    if api_token.nil?
-      self.api_token = generate_api_token
-    end
+  def renew_api_token
+    api_token = Administrateur.generate_unique_secure_token
+    encrypted_token = BCrypt::Password.create(api_token)
+    update(encrypted_token: encrypted_token)
+    api_token
   end
 
-  def renew_api_token
-    update(api_token: generate_api_token)
+  def valid_api_token?(api_token)
+    BCrypt::Password.new(encrypted_token) == api_token
+  rescue BCrypt::Errors::InvalidHash
+    false
   end
 
   def registration_state
@@ -104,14 +118,5 @@ class Administrateur < ApplicationRecord
 
   def owns?(procedure)
     id == procedure.administrateur_id
-  end
-
-  private
-
-  def generate_api_token
-    loop do
-      token = SecureRandom.hex(20)
-      break token if !Administrateur.find_by(api_token: token)
-    end
   end
 end

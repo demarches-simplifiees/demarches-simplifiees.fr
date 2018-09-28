@@ -1,8 +1,0 @@
-#profile_page
-%h2 Profil
-%hr
-%p
-  API TOKEN :
-  = @administrateur.api_token
-%p
-  = link_to "Regénérer mon token", admin_renew_api_token_path, method: :post, class: "btn btn-default", data: { confirm: "Confirmez-vous la regénération de votre token ? Les applications qui l'utilisent actuellement seront bloquées.", disable: true }

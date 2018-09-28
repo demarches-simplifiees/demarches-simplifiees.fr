@@ -24,7 +24,7 @@ describe Users::SessionsController, type: :controller do
 
     context "unified login" do
       let(:email) { 'unique@plop.com' }
-      let(:password) { 'password' }
+      let(:password) { 'un super mot de passe' }
 
       let(:user) { create(:user, email: email, password: password) }
       let(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
@@ -80,8 +80,8 @@ describe Users::SessionsController, type: :controller do
       end
 
       context 'with different passwords' do
-        let!(:gestionnaire) { create(:gestionnaire, email: email, password: 'another_password') }
-        let!(:administrateur) { create(:administrateur, email: email, password: 'another_password') }
+        let!(:gestionnaire) { create(:gestionnaire, email: email, password: 'mot de passe complexe') }
+        let!(:administrateur) { create(:administrateur, email: email, password: 'mot de passe complexe') }
 
         before do
           user
@@ -165,7 +165,7 @@ describe Users::SessionsController, type: :controller do
       end
 
       context "when associated administrateur" do
-        let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'password') }
+        let(:administrateur) { create(:administrateur, email: 'unique@plop.com') }
 
         it 'signs user + gestionnaire + administrateur out' do
           sign_in user

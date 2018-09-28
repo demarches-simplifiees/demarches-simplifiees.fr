@@ -5,6 +5,7 @@ describe 'new_user/dossiers/demande.html.haml', type: :view do
   let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
 
   before do
+    sign_in dossier.user
     assign(:dossier, dossier)
   end
 

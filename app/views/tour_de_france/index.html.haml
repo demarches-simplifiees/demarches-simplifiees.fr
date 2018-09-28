@@ -1,0 +1,83 @@
+- content_for(:title, 'Tour de France 2018')
+
+- content_for :footer do
+  = render partial: "root/footer"
+
+.tour-de-france
+  .blue-panel
+    .small-container
+      %img.tour-de-france-logo{ src: image_url("tour-de-france/logo.svg") }
+
+  .white-panel
+    .small-container
+      %h2 Présentation
+
+      %p
+        Cet automne, l’équipe de demarches-simplifiees.fr se lance dans un Tour de France afin de sensibiliser les agents publics aux bénéfices du numérique pour leur métier. Notre mission est de faciliter la mise en ligne de nouveaux services et d’accompagner les administrations d’État et territoriales dans la dématérialisation.
+
+      %p
+        Que vous ayez un profil SI ou métier, ce sera pour vous l’occasion de vous former à l’utilisation de demarches-simplifiees.fr et de mettre en place des services en ligne pour les formulaires que vous traitez encore en papier.
+
+      %p
+        La journée type se déroulera en deux temps :
+
+      .cards
+        .card.card-half.pull-left
+          %h3 Matin
+          %h4 9 h 30 - 12 h 00
+
+          Interventions consacrées aux enjeux généraux de la dématérialisation, à la présentation de demarches-simplifiees.fr et à des retours d’expériences d’agents utilisant déjà cette plateforme sur le territoire.
+
+        .card.card-half.pull-right
+          %h3 Après-midi
+          %h4 13 h 30 - 16 h 30
+          Ateliers de formation avec une réflexion étape par étape sur les problématiques liées au passage à la dématérialisation. Vous pourrez identifier des cas d’usage, apprendre à créer des formulaires en ligne et organiser l’instruction sur demarches-simplifiees.fr.
+
+      %p
+        Ces événements sont une opportunité pour tous les agents publics d’améliorer leur environnement de travail et le service rendu aux usagers, n’hésitez pas à relayer l’information auprès des services déconcentrés et des collectivités.
+
+  .photos-panel
+    .small-container
+      %img.atelier-photo.pull-left{ src: image_url("tour-de-france/atelier1.jpg") }
+      %img.atelier-photo.pull-right{ src: image_url("tour-de-france/atelier2.jpg") }
+      .clearfix
+
+  .grey-panel
+    .small-container
+      %h2.below-photos Inscription
+
+      %p
+        Vous souhaitez participer à l’événement dans votre région ? Inscrivez-vous à l’événement en remplissant le formulaire via le lien correspondant à votre région ci-dessous.
+
+      %p
+        Les places aux ateliers sont restreintes, ainsi si vous faite la demande de participation dans le formulaire d’inscription vous recevrez une confirmation ultérieure par email.
+
+      %ul
+        %li
+          = link_to("Étape Normandie, le 26 septembre à Rouen", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-etape-normandie", target: "_blank")
+        %li
+          = link_to("Étape Occitanie, le 15 octobre à Toulouse", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-fr-occitanie", target: "_blank")
+        %li
+          = link_to("Étape Nouvelle-Aquitaine, le 17 octobre à Bordeaux", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-fr-aquitaine", target: "_blank")
+        %li
+          = link_to("Étape Martinique, le 24 octobre à Fort-de-France", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-fr-martinique", target: "_blank")
+        %li
+          = link_to("Étape PACA, le 6 novembre à Marseille", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-fr-paca", target: "_blank")
+        %li
+          = link_to("Étape Corse, le 8 novembre à Ajaccio", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-fr-corse", target: "_blank")
+        %li
+          = link_to("Étape Ile-de-France, le 13 novembre à Paris", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-iledefrance", target: "_blank")
+        %li
+          = link_to("Étape Bourgogne Franche-Comté, le 14 novembre à Dijon", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-bourgogne-fc", target: "_blank")
+        %li
+          = link_to("Étape Pays de la Loire, le 20 novembre à Nantes", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-fr-paysloire", target: "_blank")
+        %li
+          = link_to("Étape Bretagne, le 22 novembre à Rennes", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-fr-bretagne", target: "_blank")
+        %li
+          = link_to("Étape Hauts-de-France, le 27 novembre à Lille", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-hautsdefrance", target: "_blank")
+        %li
+          = link_to("Étape Grand-Est, le 29 novembre à Metz", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-fr-grand-est", target: "_blank")
+        %li
+          = link_to("Étape Centre Val-de-Loire, le 4 décembre à Orleans", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-centre-vdl", target: "_blank")
+        %li
+          = link_to("Étape Auvergne-Rhone-Alpes, le 7 décembre à Lyon", "https://www.demarches-simplifiees.fr/commencer/tour-de-france-demarches-simplifiees-auvergne-rhon", target: "_blank")

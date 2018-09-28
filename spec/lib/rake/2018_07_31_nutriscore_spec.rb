@@ -95,7 +95,7 @@ describe '2018_07_31_nutriscore' do
     context 'with champ type mismatch' do
       let!(:type_champ_to) { create(:type_de_champ_text, order_place: 1, libelle: 'texte', procedure: proc_to) }
 
-      it { expect { run_task }.to raise_exception(/incorrect type TypesDeChamp::TextareaTypeDeChamp \(expected TypesDeChamp::TextTypeDeChamp\), incorrect type champ textarea \(expected text\)$/) }
+      it { expect { run_task }.to raise_exception(/incorrect type champ textarea \(expected text\)$/) }
     end
 
     context 'with champ mandatoriness mismatch' do
@@ -114,13 +114,13 @@ describe '2018_07_31_nutriscore' do
     context 'with siret mismatch on source' do
       let!(:type_champ_siret_from) { create(:type_de_champ_textarea, order_place: 2, libelle: 'Numéro SIRET', procedure: proc_from) }
 
-      it { expect { run_task }.to raise_exception(/incorrect type TypesDeChamp::TextareaTypeDeChamp \(expected TypesDeChamp::TextTypeDeChamp\), incorrect type champ textarea \(expected text\)$/) }
+      it { expect { run_task }.to raise_exception(/incorrect type champ textarea \(expected text\)$/) }
     end
 
     context 'with siret mismatch on destination' do
       let!(:type_champ_siret_to) { create(:type_de_champ_text, order_place: 2, libelle: 'Numéro SIRET', procedure: proc_to) }
 
-      it { expect { run_task }.to raise_exception(/incorrect type TypesDeChamp::TextTypeDeChamp \(expected TypesDeChamp::SiretTypeDeChamp\), incorrect type champ text \(expected siret\)$/) }
+      it { expect { run_task }.to raise_exception(/incorrect type champ text \(expected siret\)$/) }
     end
   end
 end

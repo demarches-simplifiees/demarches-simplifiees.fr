@@ -1,46 +1,32 @@
 require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
-require 'mina/rbenv' # for rbenv support. (http://rbenv.org)
-# require 'mina/rvm'    # for rvm support. (http://rvm.io)
+require 'mina/rbenv'
 
 # Basic settings:
-#   domain       - The hostname to SSH to.
-#   deploy_to    - Path to deploy into.
-#   repository   - Git repo to clone from. (needed by mina/git)
-#   branch       - Branch name to deploy. (needed by mina/git)
+#   domain        - The hostname to SSH to.
+#   deploy_to     - Path to deploy into.
+#   repository    - Git repo to clone from. (needed by mina/git)
+#   branch        - Branch name to deploy. (needed by mina/git)
+#
+# Advanced settings:
+#   forward_agent - SSH forward_agent
+#   user          - Username in the server to SSH to
 
-ENV['to'] ||= "staging"
-raise "Bad to=#{+ENV['to']}" if !["staging", "production"].include?(ENV['to'])
+if !["staging", "production"].include?(ENV['to'])
+  raise "missing or incorrect `to` (should be 'staging' or 'production')"
+end
 
-raise "missing domain, run with 'rake deploy domain=37.187.154.237'" if ENV['domain'].nil?
+if ENV['domain'].nil?
+  raise "missing `domain`"
+end
 
-# set :domain, '5.135.190.60'
 set :domain, ENV['domain']
 set :repository, 'https://github.com/betagouv/tps.git'
 set :port, 2200
-
-set :deploy_to, '/var/www/tps_dev'
-
-case ENV["to"]
-when "staging"
-  set :branch, ENV['branch'] || 'dev'
-  set :deploy_to, '/var/www/tps_dev'
-  set :user, 'tps_dev' # Username in the server to SSH to.
-  appname = 'tps_dev'
-when "production"
-  set :branch, ENV['branch'] || 'master'
-  set :deploy_to, '/var/www/tps'
-  set :user, 'tps' # Username in the server to SSH to.
-  appname = 'tps'
-end
-
-print "Deploy to #{ENV['to']} environment branch #{branch}\n"
-
 set :rails_env, 'production'
-
-# For system-wide RVM install.
-#   set :rvm_path, '/usr/local/rvm/bin/rvm'
+set :rbenv_path, "/usr/local/rbenv/bin/rbenv"
+set :forward_agent, true
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
@@ -56,12 +42,20 @@ set :shared_paths, [
   'config/unicorn.rb'
 ]
 
-set :rbenv_path, "/usr/local/rbenv/bin/rbenv"
+case ENV["to"]
+when "staging"
+  set :branch, ENV['branch'] || 'dev'
+  set :deploy_to, '/var/www/tps_dev'
+  set :user, 'tps_dev'
+  appname = 'tps_dev'
+when "production"
+  set :branch, ENV['branch'] || 'master'
+  set :deploy_to, '/var/www/tps'
+  set :user, 'tps'
+  appname = 'tps'
+end
 
-# Optional settings:
-#   set :user, 'foobar'    # Username in the server to SSH to.
-#   set :port, '30000'     # SSH port number.
-set :forward_agent, true # SSH forward_agent.
+print "Deploy to #{ENV['to']} environment branch #{branch}\n"
 
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
@@ -144,9 +138,3 @@ task :deploy => :environment do
     end
   end
 end
-# For help in making your deploy script, see the Mina documentation:
-#
-#  - http://nadarei.co/mina
-#  - http://nadarei.co/mina/tasks
-#  - http://nadarei.co/mina/settings
-#  - http://nadarei.co/mina/helpers

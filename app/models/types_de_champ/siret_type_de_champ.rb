@@ -1,2 +1,2 @@
-class TypesDeChamp::SiretTypeDeChamp < TypeDeChamp
+class TypesDeChamp::SiretTypeDeChamp < TypesDeChamp::TypeDeChampBase
 end

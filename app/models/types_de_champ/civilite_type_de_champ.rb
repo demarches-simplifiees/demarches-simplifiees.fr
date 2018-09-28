@@ -1,2 +1,2 @@
-class TypesDeChamp::CiviliteTypeDeChamp < TypeDeChamp
+class TypesDeChamp::CiviliteTypeDeChamp < TypesDeChamp::TypeDeChampBase
 end

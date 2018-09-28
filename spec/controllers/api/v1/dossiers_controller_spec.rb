@@ -2,13 +2,14 @@ require 'spec_helper'
 
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
+  let(:token) { admin.renew_api_token }
   let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
   let(:wrong_procedure) { create(:procedure) }
 
   it { expect(described_class).to be < APIController }
 
   describe 'GET index (with bearer token)' do
-    let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(admin.api_token) }
+    let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(token) }
     let(:retour) do
       request.env['HTTP_AUTHORIZATION'] = authorization_header
       get :index, params: { procedure_id: procedure_id }
@@ -23,7 +24,7 @@ describe API::V1::DossiersController do
   end
 
   describe 'GET index' do
-    let(:retour) { get :index, params: { token: admin.api_token, procedure_id: procedure_id } }
+    let(:retour) { get :index, params: { token: token, procedure_id: procedure_id } }
 
     subject { retour }
 
@@ -34,7 +35,7 @@ describe API::V1::DossiersController do
 
     context 'when procedure does not belong to admin' do
       let(:procedure_id) { wrong_procedure.id }
-      it { expect(subject.code).to eq('404') }
+      it { expect(subject.code).to eq('401') }
     end
 
     context 'when procedure is found and belongs to admin' do
@@ -62,7 +63,7 @@ describe API::V1::DossiersController do
       end
 
       describe 'with custom resultats_par_page' do
-        let(:retour) { get :index, params: { token: admin.api_token, procedure_id: procedure_id, resultats_par_page: 18 } }
+        let(:retour) { get :index, params: { token: token, procedure_id: procedure_id, resultats_par_page: 18 } }
         subject { body[:pagination] }
         it { is_expected.to have_key(:resultats_par_page) }
         it { expect(subject[:resultats_par_page]).to eq(18) }
@@ -81,7 +82,7 @@ describe API::V1::DossiersController do
       end
 
       context 'when there are multiple pages' do
-        let(:retour) { get :index, params: { token: admin.api_token, procedure_id: procedure_id, page: 2 } }
+        let(:retour) { get :index, params: { token: token, procedure_id: procedure_id, page: 2 } }
 
         let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
         let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
@@ -102,7 +103,7 @@ describe API::V1::DossiersController do
   end
 
   describe 'GET show' do
-    let(:retour) { get :show, params: { token: admin.api_token, procedure_id: procedure_id, id: dossier_id } }
+    let(:retour) { get :show, params: { token: token, procedure_id: procedure_id, id: dossier_id } }
     subject { retour }
 
     context 'when procedure is not found' do
@@ -114,7 +115,7 @@ describe API::V1::DossiersController do
     context 'when procedure exists and does not belong to current admin' do
       let(:procedure_id) { wrong_procedure.id }
       let(:dossier_id) { 1 }
-      it { expect(subject.code).to eq('404') }
+      it { expect(subject.code).to eq('401') }
     end
 
     context 'when procedure is found and belongs to current admin' do

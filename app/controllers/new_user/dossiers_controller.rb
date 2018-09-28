@@ -2,8 +2,11 @@ module NewUser
   class DossiersController < UserController
     include DossierHelper
 
-    before_action :ensure_ownership!, except: [:index, :show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :recherche]
-    before_action :ensure_ownership_or_invitation!, only: [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
+    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
+
+    before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
+    before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update]
     before_action :forbid_invite_submission!, only: [:update_brouillon]
     before_action :forbid_closed_submission!, only: [:update_brouillon]
@@ -122,14 +125,14 @@ module NewUser
         flash.now.alert = errors
         render :modifier
       else
-        if current_user.owns?(dossier)
-          if Flipflop.new_dossier_details?
-            redirect_to demande_dossier_path(@dossier)
-          else
-            redirect_to users_dossier_recapitulatif_path(@dossier)
-          end
+        if Flipflop.new_dossier_details?
+          redirect_to demande_dossier_path(@dossier)
         else
-          redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
+          if current_user.owns?(dossier)
+            redirect_to users_dossier_recapitulatif_path(@dossier)
+          else
+            redirect_to users_dossiers_invite_path(@dossier.invite_for_user(current_user))
+          end
         end
       end
     end

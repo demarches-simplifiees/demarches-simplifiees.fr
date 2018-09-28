@@ -7,9 +7,9 @@ describe Gestionnaires::PasswordsController, type: :controller do
 
   describe "update" do
     context "unified login" do
-      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'password') }
-      let(:user) { create(:user, email: 'unique@plop.com', password: 'password') }
-      let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'password') }
+      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'un super mot de passe') }
+      let(:user) { create(:user, email: 'unique@plop.com', password: 'un super mot de passe') }
+      let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'un super mot de passe') }
 
       before do
         @token = gestionnaire.send(:set_reset_password_token)

@@ -10,11 +10,9 @@ module ProcedureHelper
   end
 
   def procedure_libelle(procedure)
-    parts = [procedure.libelle]
-    if procedure.brouillon?
-      parts << '(brouillon)'
-    end
-    parts.join(' ')
+    parts = procedure.brouillon? ? [content_tag(:span, 'démarche non publiée', class: 'badge')] : []
+    parts << procedure.libelle
+    safe_join(parts, ' ')
   end
 
   def procedure_modal_text(procedure, key)

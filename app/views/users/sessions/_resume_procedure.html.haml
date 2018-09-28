@@ -14,7 +14,3 @@
         = @dossier.procedure.libelle
       %p.procedure-description
         = h string_to_html(@dossier.procedure.description)
-
-- else
-  #logo_procedure.flag
-    = image_tag(image_url(LOGO_NAME), { id: 'logo_tps' })

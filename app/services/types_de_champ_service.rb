@@ -19,10 +19,6 @@ class TypesDeChampService
 
     parameters[attributes].each do |index, param|
       param[:private] = private
-      if param[:type_champ]
-        param[:type] = TypeDeChamp.type_champ_to_class_name(param[:type_champ])
-      end
-
       if param[:libelle].empty?
         parameters[attributes].delete(index.to_s)
       end

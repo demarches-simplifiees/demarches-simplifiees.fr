@@ -17,3 +17,17 @@
     }
   }
 }
+
+.procedure-lien {
+  align-items: center;
+  display: flex;
+  margin-bottom: 8px;
+
+  .prefix {
+    flex-shrink: 0;
+  }
+
+  input {
+    margin-left: 8px;
+  }
+}

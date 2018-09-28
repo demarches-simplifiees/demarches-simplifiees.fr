@@ -1,9 +1,16 @@
+- content_for(:title, 'Demande de compte administrateur')
+
+- content_for :footer do
+  = render partial: "root/footer"
+
 .container.demande
   %h1 Demande de compte administrateur
 
   %p.intro Attention, la création de compte administrateur est réservée <b>uniquement aux organismes publics</b>. Elle ne concerne ni les particuliers, ni les entreprises, ni les associations (sauf celles reconnues d'utilité publique), ni les personnes souhaitant remplir un dossier ou faire une démarche en ligne. Ce compte vous permettra de créer des démarches sur demarches-simplifiees.fr, vous pourrez ensuite les diffuser en ligne auprès de vos usagers.
   %p.intro Pour obtenir un compte administrateur sur demarches-simplifiees.fr, veuillez remplir le formulaire ci-dessous et un membre de notre équipe vous contactera dès que possible.
   %p.intro Tous les champs sont obligatoires.
+
+  %hr
 
   = form_tag({ controller: 'demandes', action: 'create' }, class: 'form') do
 
@@ -28,7 +35,7 @@
     = email_field_tag :email, nil, required: true
 
     = label_tag :phone do
-      Quel est votre numéro de téléphone ?
+      Quel est votre numéro de téléphone (ligne directe) ?
       %span.mandatory *
     = text_field_tag :phone, nil, required: true
 
@@ -46,11 +53,7 @@
       Combien de démarches souhaitez-vous dématerialiser ?
       %span.mandatory *
       = select_tag :nb_of_procedures,
-        options_for_select({ 'je ne sais pas' => Pipedrive::DealAdapter::PIPEDRIVE_NB_OF_PROCEDURES_DO_NOT_KNOW_VALUE,
-                             '1'              => Pipedrive::DealAdapter::PIPEDRIVE_NB_OF_PROCEDURES_1_VALUE,
-                             '1 à 10'         => Pipedrive::DealAdapter::PIPEDRIVE_NB_OF_PROCEDURES_1_TO_10_VALUE,
-                             '10 à 100 '      => Pipedrive::DealAdapter::PIPEDRIVE_NB_OF_PROCEDURES_10_TO_100_VALUE,
-                             'plus de 100'    => Pipedrive::DealAdapter::PIPEDRIVE_NB_OF_PROCEDURES_ABOVE_100_VALUE }),
+        options_for_select(nb_of_procedures_options),
         prompt: 'choisir un intervalle',
         required: true
 
@@ -58,11 +61,7 @@
       À quelle échance voudriez-vous dématerialiser ?
       %span.mandatory *
       = select_tag :deadline,
-        options_for_select({ 'le plus vite possible'      => Pipedrive::DealAdapter::PIPEDRIVE_DEADLINE_ASAP_VALUE,
-                             'dans les 3 prochains mois'  => Pipedrive::DealAdapter::PIPEDRIVE_DEADLINE_NEXT_3_MONTHS_VALUE,
-                             'dans les 6 prochains mois'  => Pipedrive::DealAdapter::PIPEDRIVE_DEADLINE_NEXT_6_MONTHS_VALUE,
-                             'dans les 12 prochains mois' => Pipedrive::DealAdapter::PIPEDRIVE_DEADLINE_NEXT_12_MONTHS_VALUE,
-                             'pas de date'                => Pipedrive::DealAdapter::PIPEDRIVE_DEADLINE_NO_DATE_VALUE }),
+        options_for_select(deadline_options),
         prompt: 'choisir une échéance',
         required: true
 

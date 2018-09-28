@@ -36,6 +36,16 @@ fr:
   apipie:
     api_documentation: "Documentation de l'API demarches-simplifiees.fr"
 
+  mail:
+    administration:
+      dossier_expiration_summary:
+        expired_dossiers:
+          one: "Un dossier a passé sa date limite de conservation"
+          other: "%{count} dossiers ont passé leur date limite de conservation"
+        expiring_dossiers:
+          one: "Un dossier est sur le point de passer sa date limite de conservation"
+          other: "%{count} dossiers sont sur le point de passer leur date limite de conservation"
+
   modal:
     publish:
       title:
@@ -47,7 +57,6 @@ fr:
       submit:
         publish: Publier
         reopen: Réactiver
-
   support:
     info demarche: J'ai un problème lors du remplissage de mon dossier
     info instruction: J'ai une question sur l'instruction de mon dossier
@@ -104,6 +113,11 @@ fr:
       format:
         delimiter: ''
   activerecord:
+    attributes:
+      user:
+        password: 'Le mot de passe'
+      gestionnaire:
+        password: 'Le mot de passe'
     errors:
       messages:
         blank: "doit être rempli"
@@ -129,7 +143,7 @@ fr:
               invalid: invalide
               taken: déjà utilisé
             password:
-              too_short: ': Le mot de passe est trop court'
+              too_short: 'est trop court'
             password_confirmation:
               confirmation: ': Les deux mots de passe ne correspondent pas'
         invite:
@@ -142,7 +156,7 @@ fr:
               invalid: invalide
               taken: déjà utilisé
             password:
-              too_short: ': Le mot de passe est trop court'
+              too_short: 'est trop court'
 
   errors:
     messages:
@@ -159,7 +173,7 @@ fr:
       invalid_siret: "Le siret est incorrect"
       procedure_not_found: "La démarche n'existe pas"
       france_connect:
-       connexion: "Erreur lors de la connexion à France Connect."
+        connexion: "Erreur lors de la connexion à France Connect."
       extension_white_list_error: "Le format de fichier de la pièce jointe n'est pas valide."
       procedure_archived: "Cette démarche en ligne a été fermée, il n'est plus possible de déposer de dossier."
 

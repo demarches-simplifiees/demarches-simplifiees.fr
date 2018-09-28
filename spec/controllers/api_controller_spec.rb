@@ -1,30 +1,38 @@
 require 'spec_helper'
 
 describe APIController, type: :controller do
-  controller(APIController) do
-    def show
-      render json: {}, satus: 200
+  describe 'valid_token_for_administrateur?' do
+    let!(:admin) { create(:administrateur) }
+
+    subject { controller.send(:'valid_token_for_administrateur?', admin) }
+
+    context 'when the admin has not any token' do
+      context 'and the token is not given' do
+        it { is_expected.to be false }
+      end
     end
 
-    def index
-      render json: {}, satus: 200
-    end
-  end
+    context 'when the admin has a token' do
+      let!(:token) { admin.renew_api_token }
 
-  describe 'GET index' do
-    context 'when token is missing' do
-      subject { get :index }
-      it { expect(subject.status).to eq(401) }
-    end
-    context 'when token does not exist' do
-      let(:token) { 'invalid_token' }
-      subject { get :index, params: { token: token } }
-      it { expect(subject.status).to eq(401) }
-    end
-    context 'when token exist' do
-      let(:administrateur) { create(:administrateur) }
-      subject { get :index, params: { token: administrateur.api_token } }
-      it { expect(subject.status).to eq(200) }
+      context 'and the token is given by params' do
+        before { controller.params[:token] = token }
+
+        it { is_expected.to be true }
+      end
+
+      context 'and the token is given by header' do
+        before do
+          valid_headers = { 'Authorization' => "Bearer token=#{token}" }
+          request.headers.merge!(valid_headers)
+        end
+
+        it { is_expected.to be true }
+      end
+
+      context 'and the token is not given' do
+        it { is_expected.to be false }
+      end
     end
   end
 end

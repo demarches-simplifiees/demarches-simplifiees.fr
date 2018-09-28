@@ -193,7 +193,7 @@
     // CAUTION: IE hackery ahead
     &::-ms-expand {
       display: none; // remove default arrow in IE 10 and 11 */
-     }
+    }
 
     // target Internet Explorer 9 to undo the custom arrow */
     @media screen and (min-width:0\0) {

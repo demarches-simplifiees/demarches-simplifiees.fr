@@ -1,6 +1,7 @@
 - if dossier.en_construction? || dossier.en_instruction?
-  %span.button.primary.dropdown
-    = dossier.decorate.display_state
+  %span.dropdown
+    %button.button.primary.dropdown-button
+      = dossier.decorate.display_state
     .dropdown-content.fade-in-down
       %ul.dropdown-items
         - if dossier.en_construction?
@@ -49,8 +50,9 @@
 
 - else
   - if dossier.motivation.present? || dossier.attestation.present?
-    %span.button.dropdown{ class: button_or_label_class(dossier) }
-      = dossier.statut
+    %span.dropdown
+      %button.button.dropdown-button{ class: button_or_label_class(dossier) }
+        = dossier.statut
       .dropdown-content.fade-in-down.terminated
         - if dossier.motivation.present?
           %h4 Motivation

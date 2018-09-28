@@ -13,7 +13,7 @@
   Afin de répondre à cette invitation, merci de vous inscrire avec l'adresse email
   = @invite.email
   sur
-  = "#{users_dossiers_invite_url(@invite.id)}?email=#{@invite.email}"
+  = users_dossiers_invite_url(@invite.id, params: { email: @invite.email })
 
 %p
   Bonne journée,

@@ -1,26 +1,47 @@
 require 'spec_helper'
 
 describe Siret, type: :model do
-  let(:valid_siret) { '41816609600051' }
-  let(:invalid_siret) { '111111111' }
+  subject { Siret.new(siret: siret) }
 
   context 'with no siret provided' do
-    it { is_expected.to validate_presence_of(:siret) }
+    let(:siret) { '' }
+
+    it { is_expected.to be_invalid }
   end
 
-  context 'init with valid siret' do
-    it { is_expected.to allow_value(valid_siret).for(:siret) }
+  context 'with a siret that contains letters' do
+    let(:siret) { 'A1B1C6D9E0F0G1' }
+
+    it { is_expected.to be_invalid }
   end
 
-  context 'init with invalid siret' do
-    it { is_expected.not_to allow_value(invalid_siret).for(:siret) }
+  context 'with a siret that is too short' do
+    let(:siret) { '1234567890' }
+
+    it { is_expected.to be_invalid }
   end
 
-  context 'init with bullshit siret' do
-    it { is_expected.not_to allow_value('bullshit').for(:siret) }
+  context 'with a siret that is too long' do
+    let(:siret) { '12345678901234567890' }
+
+    it { is_expected.to be_invalid }
   end
 
-  context 'init with a siret that is too long' do
-    it { is_expected.not_to allow_value('9' * 15).for(:siret) }
+  context 'with a lunh-invalid siret' do
+    let(:siret) { '41816609600052' }
+
+    it { is_expected.to be_invalid }
+  end
+
+  context 'with a lunh-invalid La Poste siret' do
+    let(:siret) { '35600000018723' }
+
+    it { is_expected.to be_valid }
+  end
+
+  context 'with a valid siret' do
+    let(:siret) { '41816609600051' }
+
+    it { is_expected.to be_valid }
   end
 end

@@ -1,0 +1,15 @@
+fr:
+  activerecord:
+    attributes:
+      administrateur:
+        password: Le mot de passe
+    errors:
+      models:
+        administrateur:
+          attributes:
+            email:
+              blank: 'doit être rempli'
+            password:
+              too_short: 'est trop court'
+              blank: 'doit être rempli'
+              not_strength: "n'est pas assez complexe"

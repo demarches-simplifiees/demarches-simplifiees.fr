@@ -8,48 +8,40 @@ describe Administrateur, type: :model do
     it { is_expected.to have_many(:procedures) }
   end
 
-  describe 'after_save' do
-    subject { described_class.new(email: 'toto@tps.com', password: 'password') }
-    before do
-      subject.save
-    end
-    it { expect(subject.api_token).not_to be_blank }
-  end
-
-  describe 'generate_api_token' do
-    let(:token) { 'bullshit' }
-    let(:new_token) { 'pocket_master' }
-    let!(:admin_1) { create(:administrateur, email: 'toto@tps.com', password: 'password', api_token: token) }
-    before do
-      allow(SecureRandom).to receive(:hex).and_return(token, new_token)
-      admin_1.renew_api_token
-    end
-    it 'generate a token who does not already exist' do
-      expect(admin_1.api_token).to eq(new_token)
-    end
-  end
-
   context 'unified login' do
     it 'syncs credentials to associated user' do
       administrateur = create(:administrateur)
       user = create(:user, email: administrateur.email)
 
-      administrateur.update(email: 'whoami@plop.com', password: 'super secret')
+      administrateur.update(email: 'whoami@plop.com', password: 'voilà un super mdp')
 
       user.reload
       expect(user.email).to eq('whoami@plop.com')
-      expect(user.valid_password?('super secret')).to be(true)
+      expect(user.valid_password?('voilà un super mdp')).to be(true)
     end
 
     it 'syncs credentials to associated administrateur' do
       administrateur = create(:administrateur)
       gestionnaire = create(:gestionnaire, email: administrateur.email)
 
-      administrateur.update(email: 'whoami@plop.com', password: 'super secret')
+      administrateur.update(email: 'whoami@plop.com', password: 'et encore un autre mdp')
 
       gestionnaire.reload
       expect(gestionnaire.email).to eq('whoami@plop.com')
-      expect(gestionnaire.valid_password?('super secret')).to be(true)
+      expect(gestionnaire.valid_password?('et encore un autre mdp')).to be(true)
+    end
+  end
+
+  describe "#renew_api_token" do
+    let!(:administrateur) { create(:administrateur) }
+    let!(:token) { administrateur.renew_api_token }
+
+    it { expect(BCrypt::Password.new(administrateur.encrypted_token)).to eq(token) }
+
+    context 'when it s called twice' do
+      let!(:new_token) { administrateur.renew_api_token }
+
+      it { expect(new_token).not_to eq(token) }
     end
   end
 
@@ -64,8 +56,8 @@ describe Administrateur, type: :model do
     let(:administrateur) { create(:administration).invite_admin('paul@tps.fr') }
     let(:reset_password_token) { administrateur.invite!(administration.id) }
 
-    it { expect(Administrateur.reset_password(reset_password_token, '12345678').errors).to be_empty }
-    it { expect(Administrateur.reset_password('123', '12345678').errors).not_to be_empty }
+    it { expect(Administrateur.reset_password(reset_password_token, "j'aime manger des radis").errors).to be_empty }
+    it { expect(Administrateur.reset_password('123', "j'aime manger des radis").errors).not_to be_empty }
     it { expect(Administrateur.reset_password(reset_password_token, '').errors).not_to be_empty }
   end
 
@@ -78,5 +70,31 @@ describe Administrateur, type: :model do
 
     it { expect(administrateur.feature_enabled?(:champ_siret)).to be_falsey }
     it { expect(administrateur.feature_enabled?(:champ_pj)).to be_truthy }
+  end
+
+  describe "#password_complexity" do
+    let(:administrateur) { build(:administrateur, password: password) }
+
+    subject do
+      administrateur.save
+      administrateur.errors[:password]
+    end
+
+    context "with a strong password" do
+      let(:password) { "la démat c'est simple" }
+      it { expect(subject).to eq([]) }
+    end
+
+    context "with a weak password" do
+      let(:password) { "12345678" }
+      it { expect(subject).to include "n'est pas assez complexe" }
+      it { expect(subject).not_to include "est trop court" }
+    end
+
+    context "with a short password" do
+      let(:password) { "1" }
+      it { expect(subject).to include "est trop court" }
+      it { expect(subject).not_to include "n'est pas assez complexe" }
+    end
   end
 end

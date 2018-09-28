@@ -57,7 +57,7 @@ module Tasks
 
       def type_de_champ_to_expectation(tdc)
         if tdc.present?
-          expectation = tdc.as_json(only: [:libelle, :type, :type_champ, :mandatory])
+          expectation = tdc.as_json(only: [:libelle, :type_champ, :mandatory])
           expectation['drop_down'] = tdc.drop_down_list.presence&.options&.presence
           expectation
         else
@@ -106,9 +106,6 @@ module Tasks
       errors = []
       if actual_tdc.libelle != expected_tdc['libelle']
         errors.append("incorrect libelle #{actual_tdc.libelle} (expected #{expected_tdc['libelle']})")
-      end
-      if actual_tdc.type != expected_tdc['type']
-        errors.append("incorrect type #{actual_tdc.type} (expected #{expected_tdc['type']})")
       end
       if actual_tdc.type_champ != expected_tdc['type_champ']
         errors.append("incorrect type champ #{actual_tdc.type_champ} (expected #{expected_tdc['type_champ']})")

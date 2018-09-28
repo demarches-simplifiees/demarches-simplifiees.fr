@@ -11,7 +11,7 @@
 
     .column.auth-form
       = devise_error_messages!
-      = form_for User.new, url: user_registration_path, html: { class: "form" } do |f|
+      = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
         %h1 Créez-vous un compte
 
         = f.label :email, "Email"

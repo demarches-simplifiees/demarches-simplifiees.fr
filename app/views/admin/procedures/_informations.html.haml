@@ -11,12 +11,26 @@
   = f.text_area :description, rows: '6', placeholder: 'Description du projet', class: 'form-control'
 
 - if !@procedure.locked?
+  - if Flipflop.publish_draft?
+    .form-group
+      %h4 Lien public*
+      .procedure-lien
+        %span.prefix
+          = commencer_test_url(procedure_path: '')
+        = f.text_field :path, value: @path, class: 'form-control', data: { remote: true, debounce: true, url: admin_procedures_available_path, params: { id: @procedure.id }.to_query(:procedure) }
+      %p.unavailable-path-message.text-warning
+        - if !@available
+          = render partial: 'unavailable', locals: { mine: @mine }
+      %p.help-block
+        %i.fa.fa-info-circle
+        Afin de faciliter l’accès à la démarche, vous êtes invité à personnaliser l’adresse d'accès public. C'est ce lien qu'il va falloir communiquer aux usagers souhaitant faire la démarche.
+
   .form-group
     %h4 Conservation des données
     = f.label :duree_conservation_dossiers_dans_ds, "Sur demarches-simplifiees.fr* (durée en mois après le début de l’instruction)"
     = f.number_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6', required: true
 
-    = f.label :duree_conservation_dossiers_hors_ds, "Hors demarches-simplifiees.fr* (durée en mois)"
+    = f.label :duree_conservation_dossiers_hors_ds, "Hors demarches-simplifiees.fr* (durée en mois après la fin de l'instruction)"
     = f.number_field :duree_conservation_dossiers_hors_ds, class: 'form-control', placeholder: '6', required: true
 
 .form-group
@@ -26,9 +40,10 @@
 - if  Flipflop.web_hook?
   .form-group
     %h4 Lien de rappel HTTP
-    %p
+    = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
+    %p.help-block
+      %i.fa.fa-info-circle
       Un lien de rappel HTTP (aussi appelé webhook) est utilisé pour notifier un service tiers du changement de l'état d’un dossier sur demarches-simplifiees.fr. À chaque changement d’état d'un dossier, notre site va effectuer une requête sur le lien renseigné avec en paramètres : le nouvel état du dossier, l’identifiant de la démarche, l'identifiant dossier et la date du changement. Vous pourrez alors utiliser notre API pour récupérer les nouvelles informations du dossier concerné.
-      = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 
 .form-group
   %h4 Cadre juridique *
@@ -60,6 +75,9 @@
   - else
     %a{ href: url_for(notice), target: '_blank' }
       = notice.filename.to_s
+    \-
+    = link_to 'supprimer', delete_notice_admin_procedure_path(@procedure),
+      method: :delete
     %br
     Modifier :
     = f.file_field :notice,
@@ -70,6 +88,9 @@
     %h4 Logo de la démarche
     - if @procedure.logo.present?
       = image_tag @procedure.decorate.logo_img, { style: 'height: 40px; display: inline; margin-right: 6px;', id: 'preview_procedure_logo' }
+      \-
+      = link_to 'supprimer', delete_logo_admin_procedure_path(@procedure),
+      method: :delete
     = f.file_field :logo, accept: 'image/png, image/jpg, image/jpeg', style: 'display: inline'
 
     %div{ style: 'margin-top: 5px;' }

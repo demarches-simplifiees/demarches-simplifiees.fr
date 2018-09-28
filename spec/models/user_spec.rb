@@ -1,6 +1,25 @@
 require 'spec_helper'
 
 describe User, type: :model do
+  describe '#after_confirmation' do
+    let(:email) { 'mail@beta.gouv.fr' }
+    let!(:invite)  { create(:invite, email: email) }
+    let!(:invite2) { create(:invite, email: email) }
+    let(:user) do
+      create(:user,
+        email: email,
+        password: 'a good password',
+        confirmation_token: '123',
+        confirmed_at: nil)
+    end
+
+    it 'when confirming a user, it links the pending invitations to this user' do
+      expect(user.invites.size).to eq(0)
+      user.confirm
+      expect(user.reload.invites.size).to eq(2)
+    end
+  end
+
   describe '#find_for_france_connect' do
     let(:siret) { '00000000000000' }
     context 'when user exist' do

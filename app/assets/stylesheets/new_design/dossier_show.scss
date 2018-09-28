@@ -11,7 +11,7 @@
     }
 
     .title-container {
-      margin-bottom: $default-padding * 2;
+      margin-bottom: $default-spacer;
       padding-left: 32px;
 
       .icon.folder {
@@ -30,6 +30,11 @@
     h2 {
       color: $grey;
       font-weight: bold;
+    }
+
+    .header-actions {
+      margin-bottom: $default-spacer;
+      text-align: right;
     }
   }
 
