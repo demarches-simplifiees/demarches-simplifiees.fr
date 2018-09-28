@@ -25,3 +25,7 @@ storage/
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+
+# Vagrant
+CI/Vagrant/.vagrant
+CI/Vagrant/*log
