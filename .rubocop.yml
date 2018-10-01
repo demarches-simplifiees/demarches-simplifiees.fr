@@ -1199,7 +1199,8 @@ Style/StructInheritance:
   Enabled: false
 
 Style/SymbolArray:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: brackets
 
 Style/SymbolLiteral:
   Enabled: true
