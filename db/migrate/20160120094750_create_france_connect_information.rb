@@ -18,15 +18,17 @@ class CreateFranceConnectInformation < ActiveRecord::Migration
     add_reference :france_connect_informations, :user, references: :users
 
     User.all.each do |user|
-      FranceConnectInformation.create({
-        gender: user.gender,
-        given_name: user.given_name,
-        family_name: user.family_name,
-        birthdate: user.birthdate,
-        birthplace: user.birthplace,
-        france_connect_particulier_id: user.france_connect_particulier_id,
-        user_id: user.id
-      }) if user.france_connect_particulier_id.present?
+      if user.france_connect_particulier_id.present?
+        FranceConnectInformation.create({
+          gender: user.gender,
+          given_name: user.given_name,
+          family_name: user.family_name,
+          birthdate: user.birthdate,
+          birthplace: user.birthplace,
+          france_connect_particulier_id: user.france_connect_particulier_id,
+          user_id: user.id
+        })
+      end
     end
 
     remove_column :users, :gender

@@ -36,14 +36,20 @@ class Users::PasswordsController < Devise::PasswordsController
   def try_to_authenticate_gestionnaire
     if user_signed_in?
       gestionnaire = Gestionnaire.find_by(email: current_user.email)
-      sign_in gestionnaire if gestionnaire
+
+      if gestionnaire
+        sign_in gestionnaire
+      end
     end
   end
 
   def try_to_authenticate_administrateur
     if user_signed_in?
       administrateur = Administrateur.find_by(email: current_user.email)
-      sign_in administrateur if administrateur
+
+      if administrateur
+        sign_in administrateur
+      end
     end
   end
 end

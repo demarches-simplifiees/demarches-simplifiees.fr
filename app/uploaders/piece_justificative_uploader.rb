@@ -48,6 +48,8 @@ class PieceJustificativeUploader < BaseUploader
   end
 
   def set_original_filename(file)
-    model.original_filename ||= file.original_filename if file.respond_to?(:original_filename)
+    if file.respond_to?(:original_filename)
+      model.original_filename ||= file.original_filename
+    end
   end
 end

@@ -27,7 +27,7 @@ describe 'users/carte/show.html.haml', type: :view do
       end
     end
 
-    context 'si la page précédente n\'est pas recapitulatif' do
+    context 'si la page précédente n\'est pas la page du dossier' do
       it 'le bouton "Etape suivante" est présent' do
         expect(rendered).to have_selector('#etape_suivante')
       end
@@ -37,7 +37,7 @@ describe 'users/carte/show.html.haml', type: :view do
       # end
     end
 
-    context 'si la page précédente est recapitularif' do
+    context 'si la page précédente est la page du dossier' do
       let(:state) { Dossier.states.fetch(:en_construction) }
 
       it 'le bouton "Etape suivante" n\'est pas présent' do
@@ -52,8 +52,8 @@ describe 'users/carte/show.html.haml', type: :view do
       #   expect(rendered).to have_selector('input[type=submit][id=modification_terminee][onclick=\'submit_check_draw(event)\']')
       # end
 
-      it 'le lien de retour au récapitulatif est présent' do
-        expect(rendered).to have_selector("a[href='/users/dossiers/#{dossier_id}/recapitulatif']")
+      it 'le lien de retour à la page du dossier est présent' do
+        expect(rendered).to have_selector("a[href='/dossiers/#{dossier_id}']")
       end
     end
   end

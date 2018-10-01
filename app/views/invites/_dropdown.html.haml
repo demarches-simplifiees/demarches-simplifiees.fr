@@ -1,10 +1,11 @@
-%span.button.dropdown.invite-user-action
-  %span.icon.person
-  - if dossier.invites.count > 0
-    Voir les personnes invitées
-    %span.badge= dossier.invites.count
-  - else
-    Inviter une personne à modifier ce dossier
+%span.dropdown.invite-user-action
+  %button.button.dropdown-button
+    %span.icon.person
+    - if dossier.invites.count > 0
+      Voir les personnes invitées
+      %span.badge= dossier.invites.count
+    - else
+      Inviter une personne à modifier ce dossier
 
   .dropdown-content.fade-in-down
     = render partial: "invites/form", locals: { dossier: dossier }

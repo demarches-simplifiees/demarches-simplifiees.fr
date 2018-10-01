@@ -7,13 +7,14 @@
         %li
           = "Dossier nº #{dossier.id}"
       .mixed-buttons-bar
-        .button.dropdown.icon-only.print-menu-opener{ onclick: "javascript:DS.togglePrintMenu(event);" }
-          %span.icon.printer
-          %ul.print-menu
+        %span.dropdown.print-menu-opener
+          %button.button.dropdown-button.icon-only
+            %span.icon.printer
+          %ul.print-menu.dropdown-content
             %li
               = link_to "Tout le dossier", print_gestionnaire_dossier_path(dossier.procedure, dossier), target: "_blank", class: "menu-item menu-link"
             %li
-              = link_to "Uniquement cet onglet", "#", onclick: "DS.togglePrintMenu; window.print()", class: "menu-item menu-link"
+              = link_to "Uniquement cet onglet", "#", onclick: "window.print()", class: "menu-item menu-link"
 
         = render partial: "new_gestionnaire/procedures/dossier_actions", locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: current_gestionnaire&.follow?(dossier) }
         = render partial: "state_button", locals: { dossier: dossier }
