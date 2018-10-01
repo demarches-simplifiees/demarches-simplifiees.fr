@@ -1256,7 +1256,7 @@ Style/WhenThen:
   Enabled: false
 
 Style/WhileUntilDo:
-  Enabled: false
+  Enabled: true
 
 # Disabled because we don't want to use modifiers
 Style/WhileUntilModifier:
