@@ -119,7 +119,7 @@ module Cellar
         doc = Nokogiri::XML(bucket_listing_xml)
         doc
           .xpath('//xmlns:Contents/xmlns:Key')
-          .map{ |k| k.text }
+          .map(&:text)
       end
 
       def bulk_deletion_request_body(keys)

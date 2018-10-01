@@ -14,7 +14,7 @@ class ChampsService
     def check_piece_justificative_files(champs)
       champs.select do |champ|
         champ.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative)
-      end.map { |c| c.piece_justificative_file_errors }.flatten
+      end.map(&:piece_justificative_file_errors).flatten
     end
 
     private

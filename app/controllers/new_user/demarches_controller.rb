@@ -6,7 +6,7 @@ module NewUser
         .includes(:procedure)
         .map(&:procedure)
         .uniq
-        .select { |p| p.publiee? }
+        .select(&:publiee?)
 
       @popular_demarches = Procedure
         .includes(:service)

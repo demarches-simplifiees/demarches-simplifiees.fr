@@ -45,7 +45,7 @@ namespace :support do
     if user.dossiers.state_instruction_commencee.any?
       fail "Cannot delete this user because instruction has started for some dossiers"
     end
-    user.dossiers.each { |d| d.delete_and_keep_track }
+    user.dossiers.each(&:delete_and_keep_track)
     user.destroy
   end
 end

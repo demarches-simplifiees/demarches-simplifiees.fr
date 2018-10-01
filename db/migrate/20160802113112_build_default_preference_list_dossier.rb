@@ -124,9 +124,7 @@ class BuildDefaultPreferenceListDossier < ActiveRecord::Migration
   end
 
   def up
-    Gestionnaire.all.each do |gestionnaire|
-      gestionnaire.build_default_preferences_list_dossier
-    end
+    Gestionnaire.all.each(&:build_default_preferences_list_dossier)
   end
 
   def down

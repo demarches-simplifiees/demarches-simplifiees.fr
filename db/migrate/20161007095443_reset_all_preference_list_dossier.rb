@@ -159,8 +159,6 @@ class ResetAllPreferenceListDossier < ActiveRecord::Migration
       end
     end
 
-    Gestionnaire.all.each do |gestionnaire|
-      gestionnaire.build_default_preferences_list_dossier
-    end
+    Gestionnaire.all.each(&:build_default_preferences_list_dossier)
   end
 end

@@ -3,9 +3,7 @@ class AutoArchiveProcedureJob < ApplicationJob
 
   def perform(*args)
     Procedure.publiees.where("auto_archive_on <= ?", Date.today).each do |procedure|
-      procedure.dossiers.state_en_construction.each do |dossier|
-        dossier.en_instruction!
-      end
+      procedure.dossiers.state_en_construction.each(&:en_instruction!)
 
       procedure.archive!
     end
