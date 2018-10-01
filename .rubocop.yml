@@ -1241,7 +1241,7 @@ Style/UnlessElse:
   Enabled: true
 
 Style/UnneededCapitalW:
-  Enabled: false
+  Enabled: true
 
 Style/UnneededInterpolation:
   Enabled: true
