@@ -139,8 +139,6 @@ Rails.application.routes.draw do
     resources :dossiers do
       get '/add_siret' => 'dossiers/add_siret#show'
 
-      patch 'pieces_justificatives' => 'description#pieces_justificatives'
-
       # TODO: once these pages will be migrated to the new user design, replace these routes by a redirection
       get '/recapitulatif' => 'recapitulatif#show'
       post '/recapitulatif/initiate' => 'recapitulatif#initiate'
