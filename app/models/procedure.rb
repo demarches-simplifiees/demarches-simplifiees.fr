@@ -224,7 +224,7 @@ class Procedure < ApplicationRecord
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
 
-    %i(notice deliberation).each { |attachment| clone_attachment(procedure, attachment) }
+    [:notice, :deliberation].each { |attachment| clone_attachment(procedure, attachment) }
 
     procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail&.dup
