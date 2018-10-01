@@ -174,7 +174,7 @@ class DossierFieldService
     end
 
     def assert_valid_order(order)
-      if !%w[asc desc].include?(order)
+      if !["asc", "desc"].include?(order)
         raise "Invalid order #{order}"
       end
     end

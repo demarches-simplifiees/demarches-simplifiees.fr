@@ -14,7 +14,7 @@ class CommentaireFileUploader < BaseUploader
   end
 
   def extension_white_list
-    %w(pdf doc docx xls xlsx ppt pptx odt ods odp jpg jpeg png zip txt)
+    ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'ods', 'odp', 'jpg', 'jpeg', 'png', 'zip', 'txt']
   end
 
   def accept_extension_list

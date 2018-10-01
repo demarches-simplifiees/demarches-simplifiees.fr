@@ -23,7 +23,7 @@ describe Dossier do
     end
 
     it do
-      expect(Dossier.with_champs.find(dossier.id).champs.map(&:libelle)).to match(%w(l1 l2 l3))
+      expect(Dossier.with_champs.find(dossier.id).champs.map(&:libelle)).to match(['l1', 'l2', 'l3'])
     end
   end
 
@@ -379,7 +379,7 @@ describe Dossier do
       create(:type_de_champ, libelle: 'l2', order_place: 2, procedure: procedure)
     end
 
-    it { expect(dossier.champs.pluck(:libelle)).to match(%w(l1 l2 l3)) }
+    it { expect(dossier.champs.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
   end
 
   describe '#champs_private' do
@@ -392,7 +392,7 @@ describe Dossier do
       create :type_de_champ, :private, libelle: 'l2', order_place: 2, procedure: procedure
     end
 
-    it { expect(dossier.champs_private.pluck(:libelle)).to match(%w(l1 l2 l3)) }
+    it { expect(dossier.champs_private.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
   end
 
   describe '#total_follow' do
