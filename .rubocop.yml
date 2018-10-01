@@ -1205,7 +1205,8 @@ Style/SymbolLiteral:
   Enabled: false
 
 Style/SymbolProc:
-  Enabled: false
+  Enabled: true
+  IgnoredMethods: [after]
 
 Style/TernaryParentheses:
   Enabled: false

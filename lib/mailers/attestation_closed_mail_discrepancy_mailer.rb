@@ -13,7 +13,7 @@ module Mailers
       if procedures.count == 1
         procedure_ids = "votre démarche nº #{procedures.first.id}"
       else
-        procedure_ids = 'vos démarches nº ' + procedures.map{ |p| p.id }.join(', ')
+        procedure_ids = 'vos démarches nº ' + procedures.map(&:id).join(', ')
       end
       "demarches-simplifiees.fr – mise à jour nécessaire de l’accusé d’acceptation de #{procedure_ids}"
     end
