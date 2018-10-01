@@ -1250,7 +1250,7 @@ Style/UnneededPercentQ:
   Enabled: false
 
 Style/VariableInterpolation:
-  Enabled: false
+  Enabled: true
 
 Style/WhenThen:
   Enabled: false
