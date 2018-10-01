@@ -10,7 +10,7 @@ describe Champs::SiretController, type: :controller do
       {
         dossier: {
           champs_attributes: {
-            '1' => { value: "#{siret}" }
+            '1' => { value: siret.to_s }
           }
         },
         position: '1'

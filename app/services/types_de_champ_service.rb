@@ -6,7 +6,7 @@ class TypesDeChampService
 
     parameters = params_with_ordered_champs
       .require(:procedure)
-      .permit("#{attributes}" => [
+      .permit(attributes.to_s => [
         :libelle,
         :description,
         :order_place,

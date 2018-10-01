@@ -165,8 +165,8 @@ describe StatsController, type: :controller do
       Dossier.update_all(state: Dossier.states.fetch(:accepte))
 
       @expected_hash = {
-        "#{2.months.ago.beginning_of_month}" => 3.0,
-        "#{1.month.ago.beginning_of_month}" => 5.0
+        (2.months.ago.beginning_of_month).to_s => 3.0,
+        (1.month.ago.beginning_of_month).to_s => 5.0
       }
     end
 
@@ -217,8 +217,8 @@ describe StatsController, type: :controller do
       Dossier.update_all(state: Dossier.states.fetch(:accepte))
 
       @expected_hash = {
-        "#{2.months.ago.beginning_of_month}" => 30.0,
-        "#{1.month.ago.beginning_of_month}" => 50.0
+        (2.months.ago.beginning_of_month).to_s => 30.0,
+        (1.month.ago.beginning_of_month).to_s => 50.0
       }
     end
 
