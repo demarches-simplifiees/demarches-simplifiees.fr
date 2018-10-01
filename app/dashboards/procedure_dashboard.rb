@@ -33,7 +33,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     received_mail_template: MailTemplateField,
     closed_mail_template: MailTemplateField,
     refused_mail_template: MailTemplateField,
-    without_continuation_mail_template: MailTemplateField,
+    without_continuation_mail_template: MailTemplateField
   }.freeze
 
   # COLLECTION_ATTRIBUTES

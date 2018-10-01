@@ -19,7 +19,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     telephone: Field::String,
     horaires: Field::String,
     adresse: Field::String,
-    siret: Field::String,
+    siret: Field::String
   }.freeze
 
   # COLLECTION_ATTRIBUTES
