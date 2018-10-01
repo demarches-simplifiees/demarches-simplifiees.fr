@@ -10,9 +10,15 @@ class FileSizeValidator < ActiveModel::EachValidator
     range = options.delete(:in) || options.delete(:within)
 
     if range.present?
-      raise ArgumentError, ":in and :within must be a Range" if !range.is_a?(Range)
+      if !range.is_a?(Range)
+        raise ArgumentError, ":in and :within must be a Range"
+      end
+
       options[:minimum], options[:maximum] = range.begin, range.end
-      options[:maximum] -= 1 if range.exclude_end?
+
+      if range.exclude_end?
+        options[:maximum] -= 1
+      end
     end
 
     super
@@ -35,12 +41,18 @@ class FileSizeValidator < ActiveModel::EachValidator
   end
 
   def validate_each(record, attribute, value)
-    raise(ArgumentError, "A CarrierWave::Uploader::Base object was expected") if !value.kind_of? CarrierWave::Uploader::Base
+    if !value.kind_of? CarrierWave::Uploader::Base
+      raise(ArgumentError, "A CarrierWave::Uploader::Base object was expected")
+    end
 
-    value = (options[:tokenizer] || DEFAULT_TOKENIZER).call(value) if value.kind_of?(String)
+    if value.kind_of?(String)
+      value = (options[:tokenizer] || DEFAULT_TOKENIZER).call(value)
+    end
 
     CHECKS.each do |key, validity_check|
-      next if !check_value = options[key]
+      if !check_value = options[key]
+        next
+      end
 
       check_value =
         case check_value
@@ -50,16 +62,22 @@ class FileSizeValidator < ActiveModel::EachValidator
           record.send(check_value)
         end
 
-      value ||= [] if key == :maximum
+      if key == :maximum
+        value ||= []
+      end
 
       value_size = value.size
-      next if value_size.send(validity_check, check_value)
+      if value_size.send(validity_check, check_value)
+        next
+      end
 
       errors_options = options.except(*RESERVED_OPTIONS)
       errors_options[:file_size] = help.number_to_human_size check_value
 
       default_message = options[MESSAGES[key]]
-      errors_options[:message] ||= default_message if default_message
+      if default_message
+        errors_options[:message] ||= default_message
+      end
 
       record.errors.add(attribute, MESSAGES[key], errors_options)
     end

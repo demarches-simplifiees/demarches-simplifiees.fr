@@ -55,7 +55,9 @@ class Admin::ProceduresController < AdminController
   def destroy
     procedure = current_administrateur.procedures.find(params[:id])
 
-    return render json: {}, status: 401 if procedure.publiee_ou_archivee?
+    if procedure.publiee_ou_archivee?
+      return render json: {}, status: 401
+    end
 
     procedure.destroy
 
@@ -72,7 +74,11 @@ class Admin::ProceduresController < AdminController
 
   def create
     @procedure = Procedure.new(procedure_params)
-    @procedure.module_api_carto = ModuleAPICarto.new(create_module_api_carto_params) if @procedure.valid?
+
+    if @procedure.valid?
+      @procedure.module_api_carto = ModuleAPICarto.new(create_module_api_carto_params)
+    end
+
     @path = params.require(:procedure).permit(:path)[:path]
     @available = !ProcedurePath.exists?(path: @path)
     @mine = ProcedurePath.mine?(current_administrateur, @path)

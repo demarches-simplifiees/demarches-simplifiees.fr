@@ -6,10 +6,15 @@ class ModuleAPICarto < ApplicationRecord
   validates :cadastre, presence: true, allow_blank: true, allow_nil: false
 
   def classes
-    modules =  ''
+    modules = ''
 
-    modules += 'qp ' if quartiers_prioritaires?
-    modules += 'cadastre ' if cadastre?
+    if quartiers_prioritaires?
+      modules += 'qp '
+    end
+
+    if cadastre?
+      modules += 'cadastre '
+    end
 
     modules
   end

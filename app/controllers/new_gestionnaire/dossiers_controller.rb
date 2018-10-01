@@ -131,7 +131,10 @@ module NewGestionnaire
 
     def position
       etablissement = dossier.etablissement
-      point = Carto::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse) if etablissement.present?
+
+      if etablissement.present?
+        point = Carto::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse)
+      end
 
       lon = "2.428462"
       lat = "46.538192"
