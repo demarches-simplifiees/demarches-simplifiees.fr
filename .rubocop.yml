@@ -1247,7 +1247,7 @@ Style/UnneededInterpolation:
   Enabled: false
 
 Style/UnneededPercentQ:
-  Enabled: false
+  Enabled: true
 
 Style/VariableInterpolation:
   Enabled: true
