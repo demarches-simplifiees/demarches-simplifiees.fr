@@ -19,7 +19,6 @@ class User < ApplicationRecord
   has_many :feedbacks, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
 
-  delegate :email_france_connect, :gender, :birthdate, :birthplace, :france_connect_particulier_id, to: :france_connect_information
   accepts_nested_attributes_for :france_connect_information
 
   before_validation -> { sanitize_email(:email) }
