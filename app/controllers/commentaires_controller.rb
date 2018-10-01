@@ -1,7 +1,10 @@
 class CommentairesController < ApplicationController
   def create
     @commentaire = Commentaire.new
-    @commentaire.champ = @commentaire.dossier.champs.find(params[:champ_id]) if params[:champ_id]
+
+    if params[:champ_id]
+      @commentaire.champ = @commentaire.dossier.champs.find(params[:champ_id])
+    end
 
     dossier_id = params['dossier_id']
     @commentaire.email = current_user.email

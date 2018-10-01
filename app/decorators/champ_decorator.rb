@@ -30,6 +30,8 @@ class ChampDecorator < Draper::Decorator
   end
 
   def description_with_links
-    description.gsub(URI.regexp, '<a target="_blank" href="\0">\0</a>') if description
+    if description
+      description.gsub(URI.regexp, '<a target="_blank" href="\0">\0</a>')
+    end
   end
 end
