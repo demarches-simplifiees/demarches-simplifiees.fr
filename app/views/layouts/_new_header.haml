@@ -57,9 +57,10 @@
 
       - if gestionnaire_signed_in? || user_signed_in?
         %li
-          .header-menu-opener
-            = image_tag "icons/account-circle.svg", onclick: "javascript:DS.toggleHeaderMenu(event);", title: "Mon compte"
-            %ul.header-menu
+          %span.dropdown.header-menu-opener
+            %button.button.dropdown-button.header-menu-button
+              = image_tag "icons/account-circle.svg", title: "Mon compte"
+            %ul.header-menu.dropdown-content
               %li
                 .menu-item{ title: current_email }
                   = current_email

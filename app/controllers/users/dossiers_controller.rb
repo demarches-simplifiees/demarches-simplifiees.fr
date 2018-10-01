@@ -54,7 +54,9 @@ class Users::DossiersController < UsersController
     dossier = Dossier.create!(procedure: procedure, user: current_user, state: Dossier.states.fetch(:brouillon))
     siret = params[:siret] || current_user.siret
 
-    update_current_user_siret! siret if siret.present?
+    if siret.present?
+      update_current_user_siret! siret
+    end
 
     if dossier.procedure.for_individual
       redirect_to identite_dossier_path(dossier)
@@ -67,7 +69,9 @@ class Users::DossiersController < UsersController
 
   def show
     @facade = facade
-    @siret = current_user.siret if current_user.siret.present?
+    if current_user.siret.present?
+      @siret = current_user.siret
+    end
 
     if @facade.procedure.for_individual? && current_user.loged_in_with_france_connect?
       individual = @facade.dossier.individual
@@ -165,7 +169,9 @@ class Users::DossiersController < UsersController
   private
 
   def check_siret
-    errors_valid_siret if !Siret.new(siret: siret).valid?
+    if !Siret.new(siret: siret).valid?
+      errors_valid_siret
+    end
   end
 
   def errors_valid_siret

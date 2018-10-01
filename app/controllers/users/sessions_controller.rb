@@ -39,8 +39,13 @@ class Users::SessionsController < Sessions::SessionsController
 
   # DELETE /resource/sign_out
   def destroy
-    sign_out :gestionnaire if gestionnaire_signed_in?
-    sign_out :administrateur if administrateur_signed_in?
+    if gestionnaire_signed_in?
+      sign_out :gestionnaire
+    end
+
+    if administrateur_signed_in?
+      sign_out :administrateur
+    end
 
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
@@ -72,7 +77,9 @@ class Users::SessionsController < Sessions::SessionsController
   end
 
   def user_return_to_procedure_id
-    return nil if session["user_return_to"].nil?
+    if session["user_return_to"].nil?
+      return nil
+    end
 
     NumberService.to_number session["user_return_to"].split("?procedure_id=").second
   end

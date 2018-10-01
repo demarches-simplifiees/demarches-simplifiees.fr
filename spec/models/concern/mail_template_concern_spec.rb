@@ -26,7 +26,7 @@ describe MailTemplateConcern do
       it do
         expected =
           "[demarches-simplifiees.fr] #{dossier.id} #{dossier.procedure.libelle} " +
-          "<a target=\"_blank\" href=\"http://localhost:3000/users/dossiers/#{dossier.id}/recapitulatif\">http://localhost:3000/users/dossiers/#{dossier.id}/recapitulatif</a>"
+          "<a target=\"_blank\" href=\"http://localhost:3000/dossiers/#{dossier.id}\">http://localhost:3000/dossiers/#{dossier.id}</a>"
 
         is_expected.to eq(expected)
       end

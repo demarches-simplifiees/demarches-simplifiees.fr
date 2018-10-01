@@ -98,7 +98,7 @@ describe SupportController, type: :controller do
             }
 
             expect(flash[:notice]).to match('Votre message a été envoyé sur la messagerie de votre dossier.')
-            expect(response).to redirect_to users_dossier_recapitulatif_path(dossier)
+            expect(response).to redirect_to messagerie_dossier_path(dossier)
           end
         end
       end
