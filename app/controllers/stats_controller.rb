@@ -211,7 +211,7 @@ class StatsController < ApplicationController
     {
       'Une démarche' => count_per_administrateur.select { |count| count == 1 }.count,
       'Entre deux et cinq démarches' => count_per_administrateur.select { |count| count.in?(2..5) }.count,
-      'Plus de cinq démarches' => count_per_administrateur.select { |count| 5 < count }.count
+      'Plus de cinq démarches' => count_per_administrateur.select { |count| count > 5 }.count
     }
   end
 
