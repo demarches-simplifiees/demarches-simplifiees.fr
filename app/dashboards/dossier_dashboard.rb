@@ -15,7 +15,7 @@ class DossierDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     hidden_at: Field::DateTime,
-    types_de_champ: TypesDeChampCollectionField,
+    types_de_champ: TypesDeChampCollectionField
   }.freeze
 
   # COLLECTION_ATTRIBUTES

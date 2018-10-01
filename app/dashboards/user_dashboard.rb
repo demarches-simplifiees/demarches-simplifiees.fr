@@ -14,7 +14,7 @@ class UserDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     current_sign_in_at: Field::DateTime,
-    dossiers: Field::HasMany,
+    dossiers: Field::HasMany
   }.freeze
 
   # COLLECTION_ATTRIBUTES

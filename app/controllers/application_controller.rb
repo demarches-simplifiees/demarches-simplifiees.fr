@@ -123,7 +123,7 @@ class ApplicationController < ActionController::Base
       payload.merge!({
         browser: browser.name,
         browser_version: browser.version.to_s,
-        platform: browser.platform.name,
+        platform: browser.platform.name
       })
     end
 

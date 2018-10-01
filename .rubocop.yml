@@ -1226,7 +1226,7 @@ Style/TrailingCommaInArrayLiteral:
   Enabled: false
 
 Style/TrailingCommaInHashLiteral:
-  Enabled: false
+  Enabled: true
 
 Style/TrailingMethodEndStatement:
   Enabled: true
