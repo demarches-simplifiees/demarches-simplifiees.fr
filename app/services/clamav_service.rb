@@ -1,7 +1,9 @@
 class ClamavService
   def self.safe_file?(file_path)
     if Rails.env == 'development'
-      return CLAMAV[:response] if CLAMAV[:mock?]
+      if CLAMAV[:mock?]
+        return CLAMAV[:response]
+      end
     end
 
     FileUtils.chmod 0666, file_path
@@ -9,7 +11,10 @@ class ClamavService
     client = ClamAV::Client.new
     response = client.execute(ClamAV::Commands::ScanCommand.new(file_path))
 
-    return false if response.first.class == ClamAV::VirusResponse
+    if response.first.class == ClamAV::VirusResponse
+      return false
+    end
+
     true
   end
 end

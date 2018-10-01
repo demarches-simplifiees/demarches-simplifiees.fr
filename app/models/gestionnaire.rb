@@ -31,7 +31,9 @@ class Gestionnaire < ApplicationRecord
   end
 
   def follow(dossier)
-    return if follow?(dossier)
+    if follow?(dossier)
+      return
+    end
 
     followed_dossiers << dossier
   end
