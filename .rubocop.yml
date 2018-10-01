@@ -1202,7 +1202,7 @@ Style/SymbolArray:
   Enabled: false
 
 Style/SymbolLiteral:
-  Enabled: false
+  Enabled: true
 
 Style/SymbolProc:
   Enabled: true
