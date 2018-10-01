@@ -1220,7 +1220,7 @@ Style/TrailingBodyOnModule:
   Enabled: true
 
 Style/TrailingCommaInArguments:
-  Enabled: false
+  Enabled: true
 
 Style/TrailingCommaInArrayLiteral:
   Enabled: true
