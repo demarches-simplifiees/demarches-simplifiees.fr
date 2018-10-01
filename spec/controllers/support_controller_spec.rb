@@ -24,7 +24,7 @@ describe SupportController, type: :controller do
         get :index, params: { dossier_id: dossier.id }
 
         expect(response.status).to eq(200)
-        expect(response.body).to include("#{dossier.id}")
+        expect(response.body).to include((dossier.id).to_s)
       end
     end
 

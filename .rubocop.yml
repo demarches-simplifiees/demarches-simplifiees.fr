@@ -1244,7 +1244,7 @@ Style/UnneededCapitalW:
   Enabled: false
 
 Style/UnneededInterpolation:
-  Enabled: false
+  Enabled: true
 
 Style/UnneededPercentQ:
   Enabled: true
