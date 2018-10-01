@@ -29,7 +29,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
     :nom,
-    :type_organisme,
+    :type_organisme
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -46,7 +46,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     :telephone,
     :horaires,
     :adresse,
-    :siret,
+    :siret
   ].freeze
 
   # FORM_ATTRIBUTES
