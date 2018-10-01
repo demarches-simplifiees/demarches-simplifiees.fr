@@ -1265,7 +1265,7 @@ Style/WordArray:
   Enabled: false
 
 Style/YodaCondition:
-  Enabled: false
+  Enabled: true
 
 Style/ZeroLengthPredicate:
   Enabled: true
