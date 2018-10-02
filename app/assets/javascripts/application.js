@@ -20,7 +20,6 @@
 //= require leaflet.freedraw
 //= require smart_listing
 //= require turf-area
-//= require franceconnect
 //= require bootstrap-wysihtml5
 //= require bootstrap-wysihtml5/locales/fr-FR
 
