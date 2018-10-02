@@ -16,7 +16,7 @@ describe Users::Dossiers::InvitesController, type: :controller do
       context 'and user is connected' do
         let(:invite) { create :invite, dossier: dossier, user: user }
         before { sign_in invite.user }
-        it { is_expected.to have_http_status(:ok) }
+        it { is_expected.to redirect_to(dossier_path(dossier)) }
       end
     end
 
@@ -54,23 +54,17 @@ describe Users::Dossiers::InvitesController, type: :controller do
 
       context 'and dossier is a brouillon' do
         let(:dossier) { create :dossier, state: Dossier.states.fetch(:brouillon) }
-
-        it { is_expected.to have_http_status(302) }
         it { is_expected.to redirect_to brouillon_dossier_path(dossier) }
       end
 
       context 'and dossier is not a brouillon' do
         let(:dossier) { create :dossier, :en_construction }
-
-        it { is_expected.to have_http_status(:ok) }
-        it { is_expected.to render_template('users/recapitulatif/show') }
+        it { is_expected.to redirect_to(dossier_path(dossier)) }
       end
     end
 
     context 'when invitation ID is not attached at the user email account' do
       let(:email) { 'fake@email.com' }
-
-      it { is_expected.to have_http_status(302) }
       it { is_expected.to redirect_to dossiers_path }
       it { expect(flash[:alert]).to be_present }
     end
