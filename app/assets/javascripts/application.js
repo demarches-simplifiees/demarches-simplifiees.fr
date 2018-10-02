@@ -13,13 +13,7 @@
 //= require_tree ./old_design
 //= require bootstrap-sprockets
 
-//= require leaflet.js
-//= require d3.min
-//= require clipper
-//= require concavehull.min
-//= require leaflet.freedraw
 //= require smart_listing
-//= require turf-area
 //= require bootstrap-wysihtml5
 //= require bootstrap-wysihtml5/locales/fr-FR
 
