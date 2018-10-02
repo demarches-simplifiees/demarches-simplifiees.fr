@@ -1,12 +1,14 @@
+/* globals $ */
+
 $(document).on('turbolinks:load', wysihtml5_active);
 
-function wysihtml5_active (){
+function wysihtml5_active() {
   $('.wysihtml5').each(function(i, elem) {
     $(elem).wysihtml5({
       toolbar: {
-        "fa": true,
-        "link": false,
-        "color": false
+        fa: true,
+        link: false,
+        color: false
       },
       parserRules: {
         tags: {
@@ -31,7 +33,7 @@ function wysihtml5_active (){
           }
         }
       },
-      "locale": "fr-FR"
+      locale: 'fr-FR'
     });
   });
 }
