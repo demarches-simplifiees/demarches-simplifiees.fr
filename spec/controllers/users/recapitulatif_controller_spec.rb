@@ -11,7 +11,7 @@ describe Users::RecapitulatifController, type: :controller do
   describe 'GET #show' do
     it 'returns http success' do
       get :show, params: { dossier_id: dossier.id }
-      expect(response).to have_http_status(:success)
+      expect(response).to redirect_to(dossier_path(dossier))
     end
 
     it 'redirection vers siret si mauvais dossier ID' do
