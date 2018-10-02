@@ -27,7 +27,7 @@
   },
   "scripts": {
     "lint:ec": "eclint check $({ git ls-files ; find vendor -type f ; echo 'db/schema.rb' ; } | sort | uniq -u)",
-    "lint:js": "eslint ./app/javascript ./config/webpack"
+    "lint:js": "eslint ./app/javascript ./app/assets/javascripts ./config/webpack"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
