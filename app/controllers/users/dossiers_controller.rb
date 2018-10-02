@@ -132,22 +132,12 @@ class Users::DossiersController < UsersController
 
   def update
     @facade = facade params[:dossier][:id]
+    @facade.dossier.update!(autorisation_donnees: true)
 
-    if individual_errors.any?
-      flash.alert = individual_errors
-      redirect_to users_dossier_path(id: @facade.dossier.id)
+    if @facade.dossier.procedure.module_api_carto.use_api_carto
+      redirect_to url_for(controller: :carte, action: :show, dossier_id: @facade.dossier.id)
     else
-      if !Dossier.find(@facade.dossier.id).update(update_params)
-        flash.alert = @facade.dossier.errors.full_messages
-
-        return redirect_to users_dossier_path(id: @facade.dossier.id)
-      end
-
-      if @facade.dossier.procedure.module_api_carto.use_api_carto
-        redirect_to url_for(controller: :carte, action: :show, dossier_id: @facade.dossier.id)
-      else
-        redirect_to brouillon_dossier_path(@facade.dossier)
-      end
+      redirect_to brouillon_dossier_path(@facade.dossier)
     end
   end
 
@@ -179,20 +169,6 @@ class Users::DossiersController < UsersController
     @facade = facade params[:dossier_id]
 
     render '/dossiers/new_siret', formats: :js, locals: { invalid_siret: siret }
-  end
-
-  def update_params
-    params.require(:dossier).permit(:id, :autorisation_donnees)
-  end
-
-  def individual_errors
-    errors = []
-
-    if update_params[:autorisation_donnees] != "1"
-      errors << "La validation des conditions d'utilisation est obligatoire"
-    end
-
-    errors
   end
 
   def siret
