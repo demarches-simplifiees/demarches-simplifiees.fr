@@ -63,12 +63,3 @@ function path_type_init() {
     togglePathMessage(true, suggestion['mine']);
   });
 }
-
-function transfer_errors_message(show) {
-  if(show){
-    $("#not_found_admin").slideDown(100)
-  }
-  else {
-    $("#not_found_admin").slideUp(100)
-  }
-}
