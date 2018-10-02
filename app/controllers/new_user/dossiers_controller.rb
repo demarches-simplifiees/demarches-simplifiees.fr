@@ -54,10 +54,8 @@ module NewUser
     def update_identite
       @dossier = dossier
 
-      individual_updated = @dossier.individual.update(individual_params)
-      dossier_updated = @dossier.update(dossier_params)
-
-      if individual_updated && dossier_updated
+      if @dossier.individual.update(individual_params)
+        @dossier.update!(autorisation_donnees: true)
         flash.notice = "Identité enregistrée"
 
         if @dossier.procedure.module_api_carto.use_api_carto
@@ -66,7 +64,7 @@ module NewUser
           redirect_to brouillon_dossier_path(@dossier)
         end
       else
-        flash.now.alert = @dossier.errors.full_messages
+        flash.now.alert = @dossier.individual.errors.full_messages
         render :identite
       end
     end
@@ -255,10 +253,6 @@ module NewUser
 
     def individual_params
       params.require(:individual).permit(:gender, :nom, :prenom, :birthdate)
-    end
-
-    def dossier_params
-      params.require(:dossier).permit(:autorisation_donnees)
     end
 
     def commentaire_params
