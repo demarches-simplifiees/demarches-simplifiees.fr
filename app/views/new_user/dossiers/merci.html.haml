@@ -18,7 +18,4 @@
       %b échanger avec un instructeur
       lors de sa construction et de son instruction
 
-    - if Flipflop.new_dossier_details?
-      = link_to 'Accéder à votre dossier', dossier_path(@dossier), class: 'button large primary'
-    - else
-      = link_to 'Accéder à votre dossier', users_dossier_recapitulatif_path(@dossier), class: 'button large primary'
+    = link_to 'Accéder à votre dossier', dossier_path(@dossier), class: 'button large primary'

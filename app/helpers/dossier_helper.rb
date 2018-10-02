@@ -18,10 +18,8 @@ module DossierHelper
   def url_for_dossier(dossier)
     if dossier.brouillon?
       brouillon_dossier_path(dossier)
-    elsif Flipflop.new_dossier_details?
-      dossier_path(dossier)
     else
-      users_dossier_recapitulatif_path(dossier)
+      dossier_path(dossier)
     end
   end
 
