@@ -20,10 +20,7 @@
               = link_to service.email, "mailto:#{service.email}"
             - else
               Directement
-              - if Flipflop.new_dossier_details?
-                = link_to "par la messagerie", messagerie_dossier_path(dossier)
-              - else
-                = link_to "par la messagerie", users_dossier_recapitulatif_path(dossier)
+              = link_to "par la messagerie", messagerie_dossier_path(dossier)
 
           %p
             Par téléphone :

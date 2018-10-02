@@ -4,11 +4,7 @@ class Users::RecapitulatifController < UsersController
   end
 
   def show
-    if Flipflop.new_dossier_details?
-      redirect_to dossier_url(current_user_dossier)
-    else
-      create_dossier_facade
-    end
+    redirect_to dossier_url(current_user_dossier)
   end
 
   def initiate

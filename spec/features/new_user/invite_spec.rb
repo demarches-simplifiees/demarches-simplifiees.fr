@@ -75,10 +75,6 @@ feature 'Invitations' do
   context 'when the dossier is en_construction' do
     let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: owner, procedure: procedure) }
 
-    before do
-      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
-    end
-
     scenario 'on dossier details, the owner of a dossier can invite another user to collaborate on the dossier', js: true do
       log_in(owner)
       navigate_to_dossier(dossier)
@@ -98,47 +94,6 @@ feature 'Invitations' do
 
       it_behaves_like 'the user can edit the submitted demande'
       it_behaves_like 'the user can send messages to the instructeur'
-    end
-  end
-
-  context 'when the dossier is en_construction (legacy UI)' do
-    let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: owner, procedure: procedure) }
-
-    before do
-      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, false)
-    end
-
-    scenario 'on dossier details, a user can invite another user to collaborate on the dossier', js: true do
-      log_in(owner)
-      navigate_to_recapitulatif(dossier)
-
-      legacy_send_invite_to "user_invite@exemple.fr"
-
-      expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier))
-      expect(page).to have_text("Une invitation a été envoyée à user_invite@exemple.fr.")
-      expect(page).to have_text("user_invite@exemple.fr")
-    end
-
-    scenario 'an invited user can see and edit the dossier', js: true do
-      visit users_dossiers_invite_path(invite)
-      expect(page).to have_current_path(new_user_session_path)
-
-      submit_login_form(invited_user.email, invited_user.password)
-      expect(page).to have_current_path(users_dossiers_invite_path(invite))
-      expect(page).to have_no_selector('.button.invite-user-action')
-      expect(page).to have_text("Dossier nº #{dossier.id}")
-
-      # We should be able to just click() the link, but Capybara detects that the
-      # enclosing div would be clicked instead.
-      expect(page).to have_link("MODIFIER", href: brouillon_dossier_path(dossier))
-      visit brouillon_dossier_path(dossier)
-
-      expect(page).to have_current_path(brouillon_dossier_path(dossier))
-      fill_in "Texte obligatoire", with: "Some edited value"
-      click_button "Enregistrer les modifications du dossier"
-
-      expect(page).to have_current_path(users_dossiers_invite_path(invite))
-      expect(page).to have_text("Some edited value")
     end
   end
 
@@ -175,28 +130,11 @@ feature 'Invitations' do
     submit_login_form(invited_user.email, invited_user.password)
   end
 
-  def navigate_to_recapitulatif(dossier)
-    expect(page).to have_current_path(dossiers_path)
-    click_on(dossier.id)
-    expect(page).to have_current_path(users_dossier_recapitulatif_path(dossier))
-  end
-
   def send_invite_to(invited_email)
     click_on "Inviter une personne à modifier ce dossier"
     expect(page).to have_button("Envoyer une invitation", visible: true)
 
     fill_in 'invite_email', with: invited_email
     click_on "Envoyer une invitation"
-  end
-
-  def legacy_send_invite_to(invited_email)
-    find('.dropdown-toggle', text: "Voir les personnes impliquées").click()
-    expect(page).to have_button("Ajouter", visible: true)
-
-    fill_in 'invite_email', with: invited_email
-
-    page.accept_alert "Envoyer l'invitation ?" do
-      click_on "Ajouter"
-    end
   end
 end

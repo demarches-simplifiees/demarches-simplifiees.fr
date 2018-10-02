@@ -19,10 +19,6 @@ Flipflop.configure do
   feature :publish_draft
   feature :support_form
 
-  feature :new_dossier_details,
-    title: "Nouvelle page « Dossier »",
-    default: true
-
   group :production do
     feature :remote_storage,
       default: ENV['FOG_ENABLED'] == 'enabled'
