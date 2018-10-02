@@ -68,24 +68,5 @@ describe UserRoutesAuthorizationService do
         end
       end
     end
-
-    describe 'recapitulatif' do
-      let(:controller) { Users::RecapitulatifController }
-
-      describe 'brouillon' do
-        let(:state) { Dossier.states.fetch(:brouillon) }
-        it { is_expected.to be_falsey }
-      end
-
-      describe 'en_construction' do
-        let(:state) { Dossier.states.fetch(:en_construction) }
-        it { is_expected.to be_truthy }
-      end
-
-      describe 'accepte' do
-        let(:state) { Dossier.states.fetch(:accepte) }
-        it { is_expected.to be_truthy }
-      end
-    end
   end
 end

@@ -139,10 +139,6 @@ Rails.application.routes.draw do
     resources :dossiers do
       get '/add_siret' => 'dossiers/add_siret#show'
 
-      # TODO: once these pages will be migrated to the new user design, replace these routes by a redirection
-      get '/recapitulatif' => 'recapitulatif#show'
-      post '/recapitulatif/initiate' => 'recapitulatif#initiate'
-
       get '/carte/position' => 'carte#get_position'
       post '/carte/qp' => 'carte#get_qp'
       post '/carte/cadastre' => 'carte#get_cadastre'
@@ -160,6 +156,7 @@ Rails.application.routes.draw do
 
     # Redirection of legacy "/users/dossiers" route to "/dossiers"
     get 'dossiers', to: redirect('/dossiers')
+    get 'dossiers/:id/recapitulatif', to: redirect('/dossiers/%{id}')
   end
 
   namespace :gestionnaire do
