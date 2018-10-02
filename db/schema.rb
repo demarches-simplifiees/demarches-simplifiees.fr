@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_02_162757) do
+ActiveRecord::Schema.define(version: 2018_10_02_164310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -425,7 +425,6 @@ ActiveRecord::Schema.define(version: 2018_10_02_162757) do
 
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
-    t.text "old_displayed_fields", default: ["{\"label\":\"Demandeur\",\"table\":\"user\",\"column\":\"email\"}"], null: false, array: true
     t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
     t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[]}, null: false
     t.datetime "created_at"
