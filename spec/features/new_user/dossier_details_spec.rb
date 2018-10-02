@@ -38,6 +38,11 @@ describe 'Dossier details:' do
     end
   end
 
+  scenario 'the user is redirected from old URLs' do
+    visit "/users/dossiers/#{dossier.id}/recapitulatif"
+    expect(page).to have_current_path(dossier_path(dossier))
+  end
+
   it_behaves_like 'the user can edit the submitted demande'
   it_behaves_like 'the user can send messages to the instructeur'
 
