@@ -12,7 +12,7 @@
             locals: { champ: champ, form: champ_form, seen_at: @annotations_privees_seen_at }
 
         .send-wrapper
-          = f.submit 'Sauvegarder', class: 'button send', data: { disable: true }
+          = f.submit 'Sauvegarder', class: 'button primary send', data: { disable: true }
 
   - else
     %h2.empty-text Aucune annotation privée
