@@ -15,7 +15,7 @@ fr:
       not_found_in_database: "adresse email ou mot de passe invalide."
       timeout: "Votre session est expirée. Veuillez vous reconnecter pour continuer."
       unauthenticated: "Vous devez vous connecter ou vous inscrire pour continuer."
-      unconfirmed: "Vous devez activer votre compte pour continuer."
+      unconfirmed: "Vous devez confirmer votre adresse email pour continuer. Cliquez sur le lien qui vous a été envoyé par email."
     mailer:
       confirmation_instructions:
         subject: "Instructions d'activation de votre compte"
