@@ -2,7 +2,7 @@ class Admin::ProceduresController < AdminController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
-  before_action :retrieve_procedure, only: [:show, :edit]
+  before_action :retrieve_procedure, only: [:show, :edit, :delete_logo, :delete_deliberation, :delete_notice]
 
   def index
     @procedures = smart_listing_create :procedures,
@@ -252,31 +252,25 @@ class Admin::ProceduresController < AdminController
   end
 
   def delete_logo
-    procedure = Procedure.find(params[:id])
-
-    procedure.remove_logo!
-    procedure.save
+    @procedure.remove_logo!
+    @procedure.save
 
     flash.notice = 'le logo a bien été supprimé'
-    redirect_to edit_admin_procedure_path(procedure)
+    redirect_to edit_admin_procedure_path(@procedure)
   end
 
   def delete_deliberation
-    procedure = Procedure.find(params[:id])
-
-    procedure.deliberation.purge_later
+    @procedure.deliberation.purge_later
 
     flash.notice = 'la délibération a bien été supprimée'
-    redirect_to edit_admin_procedure_path(procedure)
+    redirect_to edit_admin_procedure_path(@procedure)
   end
 
   def delete_notice
-    procedure = Procedure.find(params[:id])
-
-    procedure.notice.purge_later
+    @procedure.notice.purge_later
 
     flash.notice = 'la notice a bien été supprimée'
-    redirect_to edit_admin_procedure_path(procedure)
+    redirect_to edit_admin_procedure_path(@procedure)
   end
 
   private
