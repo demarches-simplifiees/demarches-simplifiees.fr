@@ -28,6 +28,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     hidden_at: Field::DateTime,
     archived_at: Field::DateTime,
     whitelisted_at: Field::DateTime,
+    service: Field::BelongsTo,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -54,6 +55,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :description,
     :organisation,
     :direction,
+    :service,
     :created_at,
     :updated_at,
     :published_at,
@@ -65,7 +67,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :for_individual,
     :individual_with_siret,
     :auto_archive_on,
-    :gestionnaires
+    :gestionnaires,
   ].freeze
 
   # FORM_ATTRIBUTES

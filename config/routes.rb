@@ -31,6 +31,9 @@ Rails.application.routes.draw do
     resources :dossiers, only: [:show]
 
     resources :demandes, only: [:index]
+
+    resources :services, only: [:index, :show]
+
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
 
