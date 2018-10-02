@@ -713,15 +713,53 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe "DELETE #delete_deliberation" do
-    let(:procedure) { create(:procedure, :with_deliberation) }
+    context "with a demarche the admin owns" do
+      let(:procedure) { create(:procedure, :with_deliberation, administrateur: admin) }
 
-    before do
-      delete :delete_deliberation, params: { id: procedure.id }
-      procedure.reload
+      before do
+        delete :delete_deliberation, params: { id: procedure.id }
+        procedure.reload
+      end
+
+      it { expect(procedure.deliberation.attached?).to eq(false) }
+      it { expect(response).to redirect_to(edit_admin_procedure_path(procedure)) }
     end
 
-    it { expect(procedure.deliberation.attached?).to eq(false) }
-    it { expect(response).to redirect_to(edit_admin_procedure_path(procedure)) }
+    context "with a demarche the admin does not own" do
+      let(:procedure) { create(:procedure, :with_deliberation) }
+
+      before do
+        delete :delete_deliberation, params: { id: procedure.id }
+        procedure.reload
+      end
+
+      it { expect(response.status).to eq(404) }
+    end
+  end
+
+  describe "DELETE #delete_notice" do
+    context "with a demarche the admin owns" do
+      let(:procedure) { create(:procedure, :with_notice, administrateur: admin) }
+
+      before do
+        delete :delete_notice, params: { id: procedure.id }
+        procedure.reload
+      end
+
+      it { expect(procedure.notice.attached?).to eq(false) }
+      it { expect(response).to redirect_to(edit_admin_procedure_path(procedure)) }
+    end
+
+    context "with a demarche the admin does not own" do
+      let(:procedure) { create(:procedure, :with_notice) }
+
+      before do
+        delete :delete_notice, params: { id: procedure.id }
+        procedure.reload
+      end
+
+      it { expect(response.status).to eq(404) }
+    end
   end
 
   describe "GET #check_availability" do

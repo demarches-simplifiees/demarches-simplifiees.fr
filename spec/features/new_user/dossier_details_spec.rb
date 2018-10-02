@@ -6,7 +6,6 @@ describe 'Dossier details:' do
   let(:dossier) { create(:dossier, :en_construction, :for_individual, :with_commentaires, user: user, procedure: procedure) }
 
   before do
-    Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
     visit_dossier dossier
   end
 

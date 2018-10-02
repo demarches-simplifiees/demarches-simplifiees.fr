@@ -434,7 +434,7 @@ describe NewUser::DossiersController, type: :controller do
       it 'updates the champs' do
         subject
 
-        expect(response).to redirect_to(users_dossier_recapitulatif_path(dossier))
+        expect(response).to redirect_to(demande_dossier_path(dossier))
         expect(first_champ.reload.value).to eq('beautiful value')
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
@@ -490,7 +490,7 @@ describe NewUser::DossiersController, type: :controller do
       it 'does not raise any errors' do
         subject
 
-        expect(response).to redirect_to(users_dossier_recapitulatif_path(dossier))
+        expect(response).to redirect_to(demande_dossier_path(dossier))
       end
     end
 
@@ -505,7 +505,7 @@ describe NewUser::DossiersController, type: :controller do
 
       it { expect(first_champ.reload.value).to eq('beautiful value') }
       it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
-      it { expect(response).to redirect_to(users_dossiers_invite_path(invite)) }
+      it { expect(response).to redirect_to(demande_dossier_path(dossier)) }
     end
   end
 
@@ -578,10 +578,7 @@ describe NewUser::DossiersController, type: :controller do
   end
 
   describe '#show' do
-    let(:new_dossier_details_enabled) { false }
-
     before do
-      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, new_dossier_details_enabled)
       sign_in(user)
     end
 
@@ -594,17 +591,8 @@ describe NewUser::DossiersController, type: :controller do
 
     context 'when the dossier has been submitted' do
       let(:dossier) { create(:dossier, :en_construction, user: user) }
-
-      context 'and the new dossier details page is disabled' do
-        let(:new_dossier_details_enabled) { false }
-        it { is_expected.to redirect_to(users_dossier_recapitulatif_path(dossier)) }
-      end
-
-      context 'and the new dossier details page is enabled' do
-        let(:new_dossier_details_enabled) { true }
-        it { expect(assigns(:dossier)).to eq(dossier) }
-        it { is_expected.to render_template(:show) }
-      end
+      it { expect(assigns(:dossier)).to eq(dossier) }
+      it { is_expected.to render_template(:show) }
     end
   end
 
@@ -612,7 +600,6 @@ describe NewUser::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, :en_construction, user: user) }
 
     before do
-      Flipflop::FeatureSet.current.test!.switch!(:new_dossier_details, true)
       sign_in(user)
     end
 
