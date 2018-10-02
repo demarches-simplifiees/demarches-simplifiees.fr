@@ -14,10 +14,8 @@ class Users::Dossiers::InvitesController < UsersController
 
     if @facade.dossier.brouillon?
       redirect_to brouillon_dossier_path(@facade.dossier)
-    elsif Flipflop.new_dossier_details?
-      return redirect_to dossier_path(@facade.dossier)
     else
-      render 'users/recapitulatif/show'
+      return redirect_to dossier_path(@facade.dossier)
     end
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
