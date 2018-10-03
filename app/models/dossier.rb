@@ -229,10 +229,6 @@ class Dossier < ApplicationRecord
     DossierFieldService.get_value(self, table, column)
   end
 
-  def self.sanitize_for_order(order)
-    sanitize_sql_for_order(order)
-  end
-
   def owner_name
     if etablissement.present?
       etablissement.entreprise_raison_sociale
