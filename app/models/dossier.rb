@@ -36,8 +36,6 @@ class Dossier < ApplicationRecord
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_private
 
-  validates :autorisation_donnees, acceptance: { message: 'doit être coché' }, allow_nil: false, on: :update
-
   default_scope { where(hidden_at: nil) }
   scope :state_brouillon,                      -> { where(state: states.fetch(:brouillon)) }
   scope :state_not_brouillon,                  -> { where.not(state: states.fetch(:brouillon)) }
@@ -229,10 +227,6 @@ class Dossier < ApplicationRecord
 
   def get_value(table, column)
     DossierFieldService.get_value(self, table, column)
-  end
-
-  def self.sanitize_for_order(order)
-    sanitize_sql_for_order(order)
   end
 
   def owner_name

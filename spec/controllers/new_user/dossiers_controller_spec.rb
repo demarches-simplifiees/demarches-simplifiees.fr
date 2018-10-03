@@ -162,7 +162,7 @@ describe NewUser::DossiersController, type: :controller do
     let(:procedure) { create(:procedure, :for_individual) }
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
 
-    subject { post :update_identite, params: { id: dossier.id, individual: individual_params, dossier: dossier_params } }
+    subject { post :update_identite, params: { id: dossier.id, individual: individual_params } }
 
     before do
       sign_in(user)
@@ -171,7 +171,6 @@ describe NewUser::DossiersController, type: :controller do
 
     context 'with correct individual and dossier params' do
       let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
-      let(:dossier_params) { { autorisation_donnees: true } }
 
       it do
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
@@ -189,7 +188,6 @@ describe NewUser::DossiersController, type: :controller do
     context 'when the identite cannot be updated by the user' do
       let(:dossier) { create(:dossier, :for_individual, :en_instruction, user: user, procedure: procedure) }
       let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
-      let(:dossier_params) { { autorisation_donnees: true } }
 
       it 'redirects to the dossiers list' do
         expect(response).to redirect_to(dossiers_path)
@@ -199,11 +197,10 @@ describe NewUser::DossiersController, type: :controller do
 
     context 'with incorrect individual and dossier params' do
       let(:individual_params) { { gender: '', nom: '', prenom: '' } }
-      let(:dossier_params) { { autorisation_donnees: nil } }
 
       it do
         expect(response).not_to have_http_status(:redirect)
-        expect(flash[:alert]).to include("Civilité doit être rempli", "Nom doit être rempli", "Prénom doit être rempli", "Acceptation des CGU doit être coché")
+        expect(flash[:alert]).to include("Civilité doit être rempli", "Nom doit être rempli", "Prénom doit être rempli")
       end
     end
   end

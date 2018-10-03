@@ -150,7 +150,6 @@ feature 'The user' do
   def fill_individual
     fill_in('individual_prenom', with: 'prenom')
     fill_in('individual_nom', with: 'nom')
-    check 'dossier_autorisation_donnees'
     click_on 'Continuer'
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end
