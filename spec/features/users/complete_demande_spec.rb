@@ -60,7 +60,6 @@ feature 'user path for dossier creation' do
 
         context 'when validating info entreprise recap page' do
           before do
-            page.check('dossier_autorisation_donnees')
             page.find_by_id('etape_suivante').click
           end
           scenario 'user is on edition page' do
