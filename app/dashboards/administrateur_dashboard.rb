@@ -27,7 +27,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :email,
     :created_at,
     :procedures,
-    :registration_state,
+    :registration_state
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -40,7 +40,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :registration_state,
     :current_sign_in_at,
     :features,
-    :procedures,
+    :procedures
   ].freeze
 
   # FORM_ATTRIBUTES

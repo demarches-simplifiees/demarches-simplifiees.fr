@@ -88,7 +88,7 @@ class BuildDefaultPreferenceListDossier < ActiveRecord::Migration
         nom_commercial: create_column('Nom commercial', table, 'nom_commercial', 'nom_commercial', 3),
         raison_sociale: create_column('Raison sociale', table, 'raison_sociale', 'raison_sociale', 3),
         siret_siege_social: create_column('SIRET siège social', table, 'siret_siege_social', 'siret_siege_social', 2),
-        date_creation: create_column('Date de création', table, 'date_creation', 'date_creation', 2),
+        date_creation: create_column('Date de création', table, 'date_creation', 'date_creation', 2)
       }
     end
 
@@ -124,9 +124,7 @@ class BuildDefaultPreferenceListDossier < ActiveRecord::Migration
   end
 
   def up
-    Gestionnaire.all.each do |gestionnaire|
-      gestionnaire.build_default_preferences_list_dossier
-    end
+    Gestionnaire.all.each(&:build_default_preferences_list_dossier)
   end
 
   def down

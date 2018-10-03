@@ -33,7 +33,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     received_mail_template: MailTemplateField,
     closed_mail_template: MailTemplateField,
     refused_mail_template: MailTemplateField,
-    without_continuation_mail_template: MailTemplateField,
+    without_continuation_mail_template: MailTemplateField
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -47,7 +47,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :libelle,
     :organisation,
     :dossiers,
-    :published_at,
+    :published_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -77,7 +77,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :received_mail_template,
     :closed_mail_template,
     :refused_mail_template,
-    :without_continuation_mail_template,
+    :without_continuation_mail_template
   ].freeze
 
   # FORM_ATTRIBUTES

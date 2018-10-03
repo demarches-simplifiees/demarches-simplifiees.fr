@@ -47,7 +47,7 @@ describe 'CellarService' do
           'Expires' => ['1475366700'],
           'Signature' => ['nzCsB6cip8oofkuOdvvJs6FafkA='],
           'response-content-disposition' => ["attachment; filename=\"toto.png\"; filename*=UTF-8''toto.png"],
-          'response-content-type' => ['image/png'],
+          'response-content-type' => ['image/png']
         }
       )
     end

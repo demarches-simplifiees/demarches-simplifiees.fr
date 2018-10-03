@@ -35,7 +35,7 @@ class Admin::MailTemplatesController < AdminController
     {
       procedure_id: params[:procedure_id],
       subject: params[:mail_template][:subject],
-      body: params[:mail_template][:body],
+      body: params[:mail_template][:body]
     }
   end
 end

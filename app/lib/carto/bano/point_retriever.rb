@@ -19,7 +19,7 @@ module Carto
 
       def convert_driver_result_to_point
         result = JSON.parse(driver.call)
-        if result['features'].size == 0
+        if result['features'].empty?
           Rails.logger.error "unable to find location for address #{@address}"
           return nil
         end
