@@ -55,6 +55,9 @@
             Cette démarche est archivée et n’est donc pas accessible par le public.
         - elsif @procedure.publiee?
           = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
+          %br
+          %br
+          Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers demarches-simplifiees.fr. Ne dites pas non plus aux usagers de se rendre sur le site générique demarches-simplifiees.fr, donnez-leur toujours le lien complet.
         - elsif @procedure.brouillon_avec_lien?
           - if @procedure.gestionnaires.present? && @procedure.service.present?
             = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
