@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_26_145604) do
+ActiveRecord::Schema.define(version: 2018_10_02_162757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -619,18 +619,4 @@ ActiveRecord::Schema.define(version: 2018_09_26_145604) do
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
   add_foreign_key "without_continuation_mails", "procedures"
-
-  create_view "searches",  sql_definition: <<-SQL
-      SELECT dossiers.id AS dossier_id,
-      (((((((((((((((((((((((((((((((((((((((((((((((((((((COALESCE(users.email, ''::character varying))::text || ' '::text) || (COALESCE(france_connect_informations.given_name, ''::character varying))::text) || ' '::text) || (COALESCE(france_connect_informations.family_name, ''::character varying))::text) || ' '::text) || (COALESCE(champs.value, ''::character varying))::text) || ' '::text) || (COALESCE(drop_down_lists.value, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.entreprise_siren, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.entreprise_numero_tva_intracommunautaire, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.entreprise_forme_juridique, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.entreprise_forme_juridique_code, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.entreprise_nom_commercial, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.entreprise_raison_sociale, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.entreprise_siret_siege_social, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.entreprise_nom, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.entreprise_prenom, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.association_rna, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.association_titre, ''::character varying))::text) || ' '::text) || COALESCE(etablissements.association_objet, ''::text)) || ' '::text) || (COALESCE(etablissements.siret, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.naf, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.libelle_naf, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.adresse, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.code_postal, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.localite, ''::character varying))::text) || ' '::text) || (COALESCE(etablissements.code_insee_localite, ''::character varying))::text) || ' '::text) || (COALESCE(individuals.nom, ''::character varying))::text) || ' '::text) || (COALESCE(individuals.prenom, ''::character varying))::text) || ' '::text) || (COALESCE(pieces_justificatives.content, ''::character varying))::text) AS term
-     FROM (((((((dossiers
-       JOIN users ON ((users.id = dossiers.user_id)))
-       LEFT JOIN france_connect_informations ON ((france_connect_informations.user_id = dossiers.user_id)))
-       LEFT JOIN champs ON ((champs.dossier_id = dossiers.id)))
-       LEFT JOIN drop_down_lists ON ((drop_down_lists.type_de_champ_id = champs.type_de_champ_id)))
-       LEFT JOIN etablissements ON ((etablissements.dossier_id = dossiers.id)))
-       LEFT JOIN individuals ON ((individuals.dossier_id = dossiers.id)))
-       LEFT JOIN pieces_justificatives ON ((pieces_justificatives.dossier_id = dossiers.id)));
-  SQL
-
 end
