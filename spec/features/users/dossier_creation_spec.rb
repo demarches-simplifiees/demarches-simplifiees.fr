@@ -15,7 +15,6 @@ feature 'As a User I wanna create a dossier' do
         visit commencer_path(procedure_path: procedure_for_individual.path)
         fill_in 'individual_nom',       with: 'Nom'
         fill_in 'individual_prenom',    with: 'Prenom'
-        check "dossier_autorisation_donnees"
       end
 
       context "when birthday is asked" do
@@ -77,14 +76,13 @@ feature 'As a User I wanna create a dossier' do
         .to_return(status: 404, body: '')
 
       page.find_by_id('dossier-siret').set siret
-      page.find_by_id('submit-siret').click
+      click_on 'Valider'
       wait_for_ajax
 
       expect(page).to have_css('#recap-info-entreprise')
-      check 'dossier_autorisation_donnees'
-      page.find_by_id('etape_suivante').click
+      click_on 'Etape suivante'
       expect(page).to have_current_path(users_dossier_carte_path(procedure_with_siret.dossiers.last.id.to_s))
-      page.find_by_id('etape_suivante').click
+      click_on 'Etape suivante'
       expect(page).to have_current_path(brouillon_dossier_path(procedure_with_siret.dossiers.last))
     end
   end

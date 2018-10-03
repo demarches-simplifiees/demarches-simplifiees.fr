@@ -1,6 +1,6 @@
 <% if flash.empty? %>
 $('.row.etape.etape-2').hide(300, render_new_siret);
-$('.row.etape.etape-2').slideDown(400, the_terms);
+$('.row.etape.etape-2').slideDown(400);
 toggle_etape_1();
 <% else %>
 error_form_siret('<%= invalid_siret %>');
