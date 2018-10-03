@@ -76,49 +76,6 @@
             Cette démarche n’a pas encore de lien, et n’est donc pas accessible par le public.
 
     %br
-    %h3 Détails
-
-    .row{ style: 'margin-right: 3%; margin-left: 3%;' }
-      .description.col-xs-6.col-md-3.procedure-description
-        %h4.text-info
-          = @procedure.libelle
-
-        = h string_to_html(@procedure.description)
-
-      .champs.col-xs-6.col-md-3
-        %h4.text-info
-          Champs
-          .badge.progress-bar-info
-            = @procedure.types_de_champ.size
-        %ul
-          - @procedure.types_de_champ.order(:order_place).each do |champ|
-            %li= champ.libelle
-
-      .champs_private.col-xs-6.col-md-3
-        %h4.text-info
-          Annotations privées
-          .badge.progress-bar-info
-            = @procedure.types_de_champ_private.size
-        %ul
-          - @procedure.types_de_champ_private.order(:order_place).each do |champ|
-            %li= champ.libelle
-
-      .pieces-justificatives.col-xs-6.col-md-3
-        %h4.text-info
-          Pièces jointes
-          .badge.progress-bar-info
-            = @procedure.types_de_piece_justificative.size
-        - @procedure.types_de_piece_justificative.each do |piece_justificative|
-          = piece_justificative.libelle
-          %br
-
-    - durees_de_conservation = politiques_conservation_de_donnees(@procedure)
-    - if durees_de_conservation.present?
-      .row{ style: 'margin-right: 3%; margin-left: 3%;' }
-        .col-xs-6.col-md-3
-          %h4.text-info Conservation des données
-          - durees_de_conservation.each do |text|
-            %p= text
 
     - if @procedure.publiee_ou_archivee?
       %h3 Supprimer la démarche
