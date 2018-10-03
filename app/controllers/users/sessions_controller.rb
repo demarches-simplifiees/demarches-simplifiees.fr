@@ -23,18 +23,26 @@ class Users::SessionsController < Sessions::SessionsController
       current_user.update(loged_in_with_france_connect: '')
     end
 
-    if user_signed_in?
+    if gestionnaire_signed_in?
+      gestionnaire = current_gestionnaire
+
+      login_token = gestionnaire.login_token!
+      GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
+
+      [:user, :gestionnaire, :administrateur].each { |role| sign_out(role) }
+
+      redirect_to link_sent_path(email: gestionnaire.email)
+    elsif user_signed_in?
       redirect_to after_sign_in_path_for(:user)
-    elsif gestionnaire_signed_in?
-      location = stored_location_for(:gestionnaire) || gestionnaire_procedures_path
-      redirect_to location
-    elsif administrateur_signed_in?
-      redirect_to admin_path
     else
       flash.alert = 'Mauvais couple login / mot de passe'
       new
       render :new, status: 401
     end
+  end
+
+  def link_sent
+    @email = params[:email]
   end
 
   # DELETE /resource/sign_out
@@ -66,6 +74,20 @@ class Users::SessionsController < Sessions::SessionsController
   def no_procedure
     session['user_return_to'] = nil
     redirect_to new_user_session_path
+  end
+
+  def sign_in_by_link
+    gestionnaire = Gestionnaire.find(params[:id])
+    if gestionnaire&.login_token_valid?(params[:jeton])
+      user = User.find_by(email: gestionnaire.email)
+      administrateur = Administrateur.find_by(email: gestionnaire.email)
+      [user, gestionnaire, administrateur].compact.each { |resource| sign_in(resource) }
+
+      redirect_to gestionnaire_procedures_path
+    else
+      flash[:alert] = 'Votre lien est invalide ou expiré, veuillez-vous reconnecter.'
+      redirect_to new_user_session_path
+    end
   end
 
   private

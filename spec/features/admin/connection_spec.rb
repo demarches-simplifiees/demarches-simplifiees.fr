@@ -1,23 +1,26 @@
 require 'spec_helper'
 
 feature 'Administrator connection' do
+  include ActiveJob::TestHelper
+
   let(:email) { 'admin1@admin.com' }
   let(:password) { 'mon chien aime les bananes' }
   let!(:admin) { create(:administrateur, email: email, password: password) }
   let!(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
+
   before do
     visit new_administrateur_session_path
   end
+
   scenario 'administrator is on sign in page' do
     expect(page).to have_css('#new_user')
   end
 
   context "admin fills form and log in" do
     before do
-      page.find_by_id('user_email').set admin.email
-      page.find_by_id('user_password').set admin.password
-      page.click_on 'Se connecter'
+      sign_in_with(email, password, true)
     end
+
     scenario 'a menu button is available' do
       expect(page).to have_css('#admin_menu')
     end
