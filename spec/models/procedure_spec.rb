@@ -664,28 +664,6 @@ describe Procedure do
 
     it { expect(subject.fields).to eq(expected) }
   end
-
-  describe "#fields_for_select" do
-    subject { create(:procedure) }
-
-    before do
-      allow(subject).to receive(:fields).and_return([
-        {
-          "label" => "label1",
-          "table" => "table1",
-          "column" => "column1"
-        },
-        {
-          "label" => "label2",
-          "table" => "table2",
-          "column" => "column2"
-        }
-      ])
-    end
-
-    it { expect(subject.fields_for_select).to eq([["label1", "table1/column1"], ["label2", "table2/column2"]]) }
-  end
-
   describe ".default_sort" do
     it { expect(Procedure.default_sort).to eq({ "table" => "self", "column" => "id", "order" => "desc" }) }
   end

@@ -28,7 +28,9 @@ module NewGestionnaire
 
       @current_filters = current_filters
       @available_fields_to_filters = available_fields_to_filters
-      @displayed_fields = procedure_presentation.displayed_fields
+      # Technically, procedure_presentation already sets the attribute.
+      # Setting it here to make clear that it is used by the view
+      @procedure_presentation = procedure_presentation
       @displayed_fields_values = displayed_fields_values
 
       @a_suivre_dossiers = procedure
@@ -225,13 +227,13 @@ module NewGestionnaire
         "#{field['table']}/#{field['column']}"
       end
 
-      procedure.fields_for_select.reject do |field|
+      procedure_presentation.fields_for_select.reject do |field|
         current_filters_fields_ids.include?(field[1])
       end
     end
 
     def eager_load_displayed_fields
-      @displayed_fields
+      procedure_presentation.displayed_fields
         .reject { |field| field['table'] == 'self' }
         .group_by do |field|
           if ['type_de_champ', 'type_de_champ_private'].include?(field['table'])

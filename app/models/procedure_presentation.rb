@@ -42,6 +42,12 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
+  def fields_for_select
+    procedure.fields.map do |field|
+      [field['label'], "#{field['table']}/#{field['column']}"]
+    end
+  end
+
   private
 
   def dossier_field_service
