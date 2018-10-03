@@ -628,42 +628,6 @@ describe Procedure do
     end
   end
 
-  describe "#fields" do
-    subject { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :types_de_champ_count => 4, :types_de_champ_private_count => 4) }
-    let(:tdc_1) { subject.types_de_champ[0] }
-    let(:tdc_2) { subject.types_de_champ[1] }
-    let(:tdc_private_1) { subject.types_de_champ_private[0] }
-    let(:tdc_private_2) { subject.types_de_champ_private[1] }
-    let(:expected) {
-      [
-        { "label" => 'Créé le', "table" => 'self', "column" => 'created_at' },
-        { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
-        { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
-        { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren' },
-        { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique' },
-        { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial' },
-        { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale' },
-        { "label" => 'SIRET siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social' },
-        { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation' },
-        { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret' },
-        { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf' },
-        { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal' },
-        { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.id.to_s },
-        { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.id.to_s },
-        { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.id.to_s },
-        { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.id.to_s }
-      ]
-    }
-
-    before do
-      subject.types_de_champ[2].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:header_section))
-      subject.types_de_champ[3].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:explication))
-      subject.types_de_champ_private[2].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:header_section))
-      subject.types_de_champ_private[3].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:explication))
-    end
-
-    it { expect(subject.fields).to eq(expected) }
-  end
   describe ".default_sort" do
     it { expect(Procedure.default_sort).to eq({ "table" => "self", "column" => "id", "order" => "desc" }) }
   end

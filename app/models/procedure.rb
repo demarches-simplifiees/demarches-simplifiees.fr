@@ -296,10 +296,6 @@ class Procedure < ApplicationRecord
     without_continuation_mail || Mails::WithoutContinuationMail.default_for_procedure(self)
   end
 
-  def fields
-    DossierFieldService.new.fields(self)
-  end
-
   def self.default_sort
     {
       'table' => 'self',

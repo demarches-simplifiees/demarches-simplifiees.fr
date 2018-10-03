@@ -105,7 +105,7 @@ module NewGestionnaire
       fields = values.map do |value|
         table, column = value.split("/")
 
-        procedure.fields.find do |field|
+        procedure_presentation.fields.find do |field|
           field['table'] == table && field['column'] == column
         end
       end
@@ -146,7 +146,7 @@ module NewGestionnaire
       if params[:value].present?
         filters = procedure_presentation.filters
         table, column = params[:field].split('/')
-        label = procedure.fields.find { |c| c['table'] == table && c['column'] == column }['label']
+        label = procedure_presentation.fields.find { |c| c['table'] == table && c['column'] == column }['label']
 
         filters[statut] << {
           'label' => label,
