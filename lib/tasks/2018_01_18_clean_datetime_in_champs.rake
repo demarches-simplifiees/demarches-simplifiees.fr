@@ -2,7 +2,7 @@ require Rails.root.join("lib", "tasks", "task_helper")
 
 namespace :'2018_01_18_clean_datetime_in_champs' do
   task clean: :environment do
-    datetime_champs = TypeDeChamp.where(type_champ: "datetime").flat_map{ |t| t.champ }
+    datetime_champs = TypeDeChamp.where(type_champ: "datetime").flat_map(&:champ)
 
     # Match " HH:MM" => nil a datetime is not valid if not composed by date AND time
     datetime_champs.select { |c| /^\s\d{2}:\d{2}$/.match(c.value) }.each do |c|

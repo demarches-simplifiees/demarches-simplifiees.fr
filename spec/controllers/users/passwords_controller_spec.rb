@@ -22,7 +22,7 @@ describe Users::PasswordsController, type: :controller do
           user: {
             reset_password_token: @token,
             password: "mot de passe super secret",
-            password_confirmation: "mot de passe super secret",
+            password_confirmation: "mot de passe super secret"
           }
         }
         expect(subject.current_user).to eq(user)
@@ -34,7 +34,7 @@ describe Users::PasswordsController, type: :controller do
           user: {
             reset_password_token: @token,
             password: "mot de passe super secret",
-            password_confirmation: "mot de passe super secret",
+            password_confirmation: "mot de passe super secret"
           }
         }
         expect(subject.current_user).to eq(user)

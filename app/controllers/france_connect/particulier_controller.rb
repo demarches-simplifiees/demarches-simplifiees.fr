@@ -10,7 +10,7 @@ class FranceConnect::ParticulierController < ApplicationController
 
     fci = FranceConnectInformation
       .find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) ||
-        fetched_fci.tap { |object| object.save }
+        fetched_fci.tap(&:save)
 
     if fci.user.nil?
       user = User.find_or_create_by(email: fci.email_france_connect) do |new_user|

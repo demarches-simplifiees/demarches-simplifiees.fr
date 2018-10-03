@@ -753,7 +753,7 @@ describe Procedure do
       p = create(
         :procedure,
         juridique_required: false,
-        cadre_juridique: nil,
+        cadre_juridique: nil
       )
 
       expect(p.juridique_required).to be_falsey

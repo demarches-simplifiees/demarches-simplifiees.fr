@@ -113,7 +113,7 @@ describe ApplicationController, type: :controller do
       it { expect(@controller).to have_received(:redirect_to).with(root_path) }
 
       context 'when the path is safe' do
-        %w(/ /manager /administrations).each do |path|
+        ['/', '/manager', '/administrations'].each do |path|
           let(:path_info) { path }
 
           it { expect(@controller).not_to have_received(:sign_out) }
