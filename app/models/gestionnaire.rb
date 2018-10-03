@@ -76,7 +76,7 @@ class Gestionnaire < ApplicationRecord
     else
       {
         start_date: start_date,
-        procedure_overviews: active_procedure_overviews,
+        procedure_overviews: active_procedure_overviews
       }
     end
   end

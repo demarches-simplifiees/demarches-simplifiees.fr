@@ -19,7 +19,7 @@ class PieceJustificativeUploader < BaseUploader
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_white_list
-    %w(pdf doc docx xls xlsx ppt pptx odt ods odp jpg jpeg png)
+    ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'ods', 'odp', 'jpg', 'jpeg', 'png']
   end
 
   def filename

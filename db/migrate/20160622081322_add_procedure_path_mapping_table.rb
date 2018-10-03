@@ -12,7 +12,7 @@ class AddProcedurePathMappingTable < ActiveRecord::Migration
     add_foreign_key :procedure_paths, :administrateurs
 
     Procedure.all.each do |procedure|
-      ProcedurePath.create(path: "#{procedure.id}", procedure_id: procedure.id, administrateur_id: procedure.administrateur.id)
+      ProcedurePath.create(path: (procedure.id).to_s, procedure_id: procedure.id, administrateur_id: procedure.administrateur.id)
     end
   end
 end

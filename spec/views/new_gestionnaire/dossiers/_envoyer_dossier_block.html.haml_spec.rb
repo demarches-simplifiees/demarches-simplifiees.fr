@@ -5,7 +5,7 @@ describe 'new_gestionnaire/dossiers/envoyer_dossier_block.html.haml', type: :vie
     render(
       'new_gestionnaire/dossiers/envoyer_dossier_block.html.haml',
       dossier: dossier,
-      potential_recipients: potential_recipients,
+      potential_recipients: potential_recipients
     )
   end
 

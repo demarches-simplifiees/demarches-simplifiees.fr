@@ -24,7 +24,7 @@ class GestionnaireDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
     :email,
-    :created_at,
+    :created_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -35,7 +35,7 @@ class GestionnaireDashboard < Administrate::BaseDashboard
     :id,
     :email,
     :current_sign_in_at,
-    :created_at,
+    :created_at
   ].freeze
 
   # FORM_ATTRIBUTES

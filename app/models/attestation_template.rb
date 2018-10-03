@@ -61,7 +61,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def logo_signature_file_size
-    %i[logo signature]
+    [:logo, :signature]
       .select { |file_name| send(file_name).present? }
       .each { |file_name| file_size_check(file_name) }
   end

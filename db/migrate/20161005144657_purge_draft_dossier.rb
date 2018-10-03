@@ -1,6 +1,6 @@
 class PurgeDraftDossier < ActiveRecord::Migration
   class Dossier < ApplicationRecord
-    BROUILLON = %w(draft)
+    BROUILLON = ['draft']
 
     def brouillon?
       BROUILLON.include?(state)

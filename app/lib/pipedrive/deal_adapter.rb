@@ -55,7 +55,7 @@ class Pipedrive::DealAdapter
       user_id: Pipedrive::PersonAdapter::PIPEDRIVE_ROBOT_ID,
       "#{PIPEDRIVE_NB_OF_PROCEDURES_ATTRIBUTE_ID}": nb_of_procedures,
       value: nb_of_dossiers,
-      "#{PIPEDRIVE_DEADLINE_ATTRIBUTE_ID}": deadline,
+      "#{PIPEDRIVE_DEADLINE_ATTRIBUTE_ID}": deadline
     }
 
     Pipedrive::API.post_deal(params)

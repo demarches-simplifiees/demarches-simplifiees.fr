@@ -123,7 +123,7 @@ class ApplicationController < ActionController::Base
       payload.merge!({
         browser: browser.name,
         browser_version: browser.version.to_s,
-        platform: browser.platform.name,
+        platform: browser.platform.name
       })
     end
 
@@ -143,7 +143,7 @@ class ApplicationController < ActionController::Base
     elsif api_request
       render json: { error: MAINTENANCE_MESSAGE }.to_json, status: :service_unavailable
     else
-      %i(user gestionnaire administrateur).each { |role| sign_out(role) }
+      [:user, :gestionnaire, :administrateur].each { |role| sign_out(role) }
       flash[:alert] = MAINTENANCE_MESSAGE
       redirect_to root_path
     end
