@@ -12,7 +12,7 @@
   #procedure-list
     %a#onglet-infos{ href: url_for(admin_procedure_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'Informations') }
-        Informations
+        Publication
 
     %a#onglet-services{ href: current_administrateur.services.present? ? url_for(services_path(procedure_id: @procedure.id)) : url_for(new_service_path(procedure_id: @procedure.id)) }
       .procedure-list-element
