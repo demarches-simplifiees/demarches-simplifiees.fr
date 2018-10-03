@@ -44,11 +44,4 @@
             = f.label :birthdate, class: "required"
             = f.date_field :birthdate, value: @dossier.individual.birthdate, placeholder: 'format : AAAA-MM-JJ', required: true, class: "small"
 
-          = fields_for :dossier, @dossier do |df|
-            = label_tag do
-              = df.check_box :autorisation_donnees, required: true
-              J'accepte
-              = link_to "les CGU", CGU_URL, target: :blank
-              %span.mandatory *
-
           = f.submit "Continuer", class: "button large primary expand"

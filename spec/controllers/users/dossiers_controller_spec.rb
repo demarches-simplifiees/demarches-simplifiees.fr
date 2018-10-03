@@ -338,7 +338,7 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe 'PUT #update' do
-    let(:params) { { id: dossier_id, dossier: { id: dossier_id, autorisation_donnees: autorisation_donnees, individual_attributes: individual_params } } }
+    let(:params) { { id: dossier_id, dossier: { id: dossier_id, individual_attributes: individual_params } } }
     let(:individual_params) { { gender: 'M.', nom: 'Julien', prenom: 'Xavier', birthdate: birthdate } }
     let(:birthdate) { '20/01/1991' }
     subject { put :update, params: params }
@@ -351,8 +351,6 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when Checkbox is checked' do
-      let(:autorisation_donnees) { '1' }
-
       context 'procedure not use api carto' do
         it 'redirects to demande' do
           expect(response).to redirect_to(brouillon_dossier_path(dossier))
@@ -374,20 +372,6 @@ describe Users::DossiersController, type: :controller do
         dossier.reload
         expect(dossier.autorisation_donnees).to be_truthy
       end
-    end
-
-    context 'when Checkbox is not checked' do
-      let(:autorisation_donnees) { '0' }
-      it 'uses flash alert to display message' do
-        expect(flash[:alert]).to have_content('La validation des conditions d\'utilisation est obligatoire')
-      end
-
-      it "doesn't update dossier autorisation_donnees" do
-        dossier.reload
-        expect(dossier.autorisation_donnees).to be_falsy
-      end
-
-      it { is_expected.to redirect_to users_dossier_path(id: dossier.id) }
     end
   end
 
