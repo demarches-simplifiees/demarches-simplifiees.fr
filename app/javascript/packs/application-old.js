@@ -11,6 +11,8 @@ import '../shared/autocomplete';
 import '../shared/remote-input';
 import '../shared/franceconnect';
 
+import '../old_design/carto';
+
 // Start Rails helpers
 Rails.start();
 Turbolinks.start();
