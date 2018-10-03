@@ -67,39 +67,6 @@ class DossierFieldService
     valid_columns_for_table(procedure, table).include?(column)
   end
 
-  def filtered_ids(dossiers, filters)
-    filters.map do |filter|
-      table = filter['table']
-      column = sanitized_column(filter)
-      case table
-      when 'self'
-        dossiers.where("? ILIKE ?", filter['column'], "%#{filter['value']}%")
-
-      when 'type_de_champ', 'type_de_champ_private'
-        relation = table == 'type_de_champ' ? :champs : :champs_private
-        dossiers
-          .includes(relation)
-          .where("champs.type_de_champ_id = ?", filter['column'].to_i)
-          .where("champs.value ILIKE ?", "%#{filter['value']}%")
-      when 'etablissement'
-        if filter['column'] == 'entreprise_date_creation'
-          date = filter['value'].to_date rescue nil
-          dossiers
-            .includes(table)
-            .where("#{column} = ?", date)
-        else
-          dossiers
-            .includes(table)
-            .where("#{column} ILIKE ?", "%#{filter['value']}%")
-        end
-      when 'user'
-        dossiers
-          .includes(table)
-          .where("#{column} ILIKE ?", "%#{filter['value']}%")
-      end.pluck(:id)
-    end.reduce(:&)
-  end
-
   def sorted_ids(dossiers, procedure_presentation, gestionnaire)
     table = procedure_presentation.sort['table']
     column = sanitized_column(procedure_presentation.sort)
@@ -135,6 +102,14 @@ class DossierFieldService
     end
   end
 
+  def sanitized_column(field)
+    table = field['table']
+    table = ActiveRecord::Base.connection.quote_column_name((table == 'self' ? 'dossier' : table).pluralize)
+    column = ActiveRecord::Base.connection.quote_column_name(field['column'])
+
+    table + '.' + column
+  end
+
   private
 
   def valid_columns_for_table(procedure, table)
@@ -146,14 +121,6 @@ class DossierFieldService
     end
 
     @column_whitelist[procedure.id][table] || []
-  end
-
-  def sanitized_column(field)
-    table = field['table']
-    table = ActiveRecord::Base.connection.quote_column_name((table == 'self' ? 'dossier' : table).pluralize)
-    column = ActiveRecord::Base.connection.quote_column_name(field['column'])
-
-    table + '.' + column
   end
 
   def assert_valid_order(order)
