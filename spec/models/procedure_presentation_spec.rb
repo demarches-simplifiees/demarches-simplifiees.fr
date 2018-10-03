@@ -106,4 +106,67 @@ describe ProcedurePresentation do
 
     it { expect(subject.fields_for_select).to eq([["label1", "table1/column1"], ["label2", "table2/column2"]]) }
   end
+
+  describe '#filtered_ids' do
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure), filters: { "suivis" => filter }) }
+
+    subject { procedure_presentation.filtered_ids(procedure.dossiers, 'suivis') }
+
+    context 'for type_de_champ table' do
+      let(:kept_dossier) { create(:dossier, procedure: procedure) }
+      let(:discarded_dossier) { create(:dossier, procedure: procedure) }
+      let(:type_de_champ) { procedure.types_de_champ.first }
+      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'keep' }] }
+
+      before do
+        type_de_champ.champ.create(dossier: kept_dossier, value: 'keep me')
+        type_de_champ.champ.create(dossier: discarded_dossier, value: 'discard me')
+      end
+
+      it { is_expected.to contain_exactly(kept_dossier.id) }
+    end
+
+    context 'for type_de_champ_private table' do
+      let(:kept_dossier) { create(:dossier, procedure: procedure) }
+      let(:discarded_dossier) { create(:dossier, procedure: procedure) }
+      let(:type_de_champ_private) { procedure.types_de_champ_private.first }
+      let(:filter) { [{ 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'keep' }] }
+
+      before do
+        type_de_champ_private.champ.create(dossier: kept_dossier, value: 'keep me')
+        type_de_champ_private.champ.create(dossier: discarded_dossier, value: 'discard me')
+      end
+
+      it { is_expected.to contain_exactly(kept_dossier.id) }
+    end
+
+    context 'for etablissement table' do
+      context 'for entreprise_date_creation column' do
+        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: DateTime.new(2018, 6, 21))) }
+        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: DateTime.new(2008, 6, 21))) }
+        let(:filter) { [{ 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'for code_postal column' do
+        # All columns except entreprise_date_creation work exacly the same, just testing one
+
+        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75017')) }
+        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '25000')) }
+        let(:filter) { [{ 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+    end
+
+    context 'for user table' do
+      let!(:kept_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@keepmail.com')) }
+      let!(:discarded_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@discard.com')) }
+      let(:filter) { [{ 'table' => 'user', 'column' => 'email', 'value' => 'keepmail' }] }
+
+      it { is_expected.to contain_exactly(kept_dossier.id) }
+    end
+  end
 end
