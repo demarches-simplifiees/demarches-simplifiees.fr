@@ -46,4 +46,25 @@ describe ProcedurePresentation do
       it { expect(build(:procedure_presentation, filters: { "suivis" => [{ "table" => "user", "column" => "reset_password_token", "order" => "asc" }] })).to be_invalid }
     end
   end
+
+  describe "#fields_for_select" do
+    subject { create(:procedure_presentation) }
+
+    before do
+      allow(subject.procedure).to receive(:fields).and_return([
+        {
+          "label" => "label1",
+          "table" => "table1",
+          "column" => "column1"
+        },
+        {
+          "label" => "label2",
+          "table" => "table2",
+          "column" => "column2"
+        }
+      ])
+    end
+
+    it { expect(subject.fields_for_select).to eq([["label1", "table1/column1"], ["label2", "table2/column2"]]) }
+  end
 end
