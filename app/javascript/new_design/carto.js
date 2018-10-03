@@ -2,16 +2,13 @@ import $ from 'jquery';
 import L from 'leaflet';
 
 import { getData } from '../shared/data';
+import { DEFAULT_POSITION } from '../shared/carto';
 
 import {
   drawCadastre,
   drawQuartiersPrioritaires,
   drawUserSelection
 } from './carto/draw';
-
-const LON = '2.428462';
-const LAT = '46.538192';
-const DEFAULT_POSITION = { lon: LON, lat: LAT, zoom: 5 };
 
 function initialize() {
   if ($('#map').length > 0) {

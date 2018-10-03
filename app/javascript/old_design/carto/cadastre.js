@@ -1,39 +1,44 @@
-function cadastre_active() {
-  return $("#map.cadastre").length > 0
+import L from 'leaflet';
+import $ from 'jquery';
+
+export function cadastreActive() {
+  return $('#map.cadastre').length > 0;
 }
 
-function get_cadastre(coordinates) {
-  if (!cadastre_active())
-    return;
-
-  var cadastre;
-
-  $.ajax({
+export function getCadastre(dossierId, coordinates) {
+  return $.ajax({
     method: 'post',
-    url: '/users/dossiers/' + dossier_id + '/carte/cadastre',
-    data: {coordinates: JSON.stringify(coordinates)},
-    dataType: 'json',
-    async: false
-  }).done(function (data) {
-    cadastre = data
-  });
-
-  return cadastre['cadastres'];
+    url: `/users/dossiers/${dossierId}/carte/cadastre`,
+    data: { coordinates: JSON.stringify(coordinates) },
+    dataType: 'json'
+  }).then(({ cadastres }) => cadastres);
 }
 
-function display_cadastre(cadastre_array) {
-  if (!cadastre_active())
-    return;
+let cadastreItems;
 
-  $("#cadastre.list ul").html('');
-  new_cadastreLayer();
+export function displayCadastre(map, cadastres) {
+  if (!cadastreActive()) return;
 
-  if (cadastre_array.length == 1 && cadastre_array[0]['zoom_error'])
-    $("#cadastre.list ul").html('<li><b>Merci de dessiner une surface plus petite afin de récupérer les parcelles cadastrales.</b></li>');
+  $('#cadastre.list ul').html('');
+  newCadastreLayer(map);
 
-  else if (cadastre_array.length > 0) {
-    cadastre_array.forEach(function (cadastre) {
-      $("#cadastre.list ul").append('<li> Parcelle nº ' + cadastre.numero + ' - Feuille ' + cadastre.code_arr + ' ' + cadastre.section + ' ' + cadastre.feuille+ '</li>');
+  if (cadastres.length == 1 && cadastres[0]['zoom_error']) {
+    $('#cadastre.list ul').html(
+      '<li><b>Merci de dessiner une surface plus petite afin de récupérer les parcelles cadastrales.</b></li>'
+    );
+  } else if (cadastres.length > 0) {
+    cadastres.forEach(function(cadastre) {
+      $('#cadastre.list ul').append(
+        '<li> Parcelle nº ' +
+          cadastre.numero +
+          ' - Feuille ' +
+          cadastre.code_arr +
+          ' ' +
+          cadastre.section +
+          ' ' +
+          cadastre.feuille +
+          '</li>'
+      );
 
       cadastreItems.addData(cadastre.geometry);
     });
@@ -45,15 +50,16 @@ function display_cadastre(cadastre_array) {
       color: 'white',
       dashArray: '3',
       fillOpacity: 0.7
-    })
+    });
+  } else {
+    $('#cadastre.list ul').html('<li>AUCUN</li>');
   }
-  else
-    $("#cadastre.list ul").html('<li>AUCUN</li>');
 }
 
-function new_cadastreLayer() {
-  if (typeof cadastreItems != 'undefined')
+function newCadastreLayer(map) {
+  if (cadastreItems) {
     map.removeLayer(cadastreItems);
+  }
 
   cadastreItems = new L.GeoJSON();
   cadastreItems.addTo(map);
