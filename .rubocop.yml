@@ -1199,13 +1199,15 @@ Style/StructInheritance:
   Enabled: false
 
 Style/SymbolArray:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: brackets
 
 Style/SymbolLiteral:
-  Enabled: false
+  Enabled: true
 
 Style/SymbolProc:
-  Enabled: false
+  Enabled: true
+  IgnoredMethods: [after]
 
 Style/TernaryParentheses:
   Enabled: false
@@ -1220,13 +1222,13 @@ Style/TrailingBodyOnModule:
   Enabled: true
 
 Style/TrailingCommaInArguments:
-  Enabled: false
+  Enabled: true
 
 Style/TrailingCommaInArrayLiteral:
-  Enabled: false
+  Enabled: true
 
 Style/TrailingCommaInHashLiteral:
-  Enabled: false
+  Enabled: true
 
 Style/TrailingMethodEndStatement:
   Enabled: true
@@ -1241,31 +1243,33 @@ Style/UnlessElse:
   Enabled: true
 
 Style/UnneededCapitalW:
-  Enabled: false
+  Enabled: true
 
 Style/UnneededInterpolation:
-  Enabled: false
+  Enabled: true
 
 Style/UnneededPercentQ:
-  Enabled: false
+  Enabled: true
 
 Style/VariableInterpolation:
-  Enabled: false
+  Enabled: true
 
 Style/WhenThen:
   Enabled: false
 
 Style/WhileUntilDo:
-  Enabled: false
+  Enabled: true
 
+# Disabled because we don't want to use modifiers
 Style/WhileUntilModifier:
   Enabled: false
 
 Style/WordArray:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: brackets
 
 Style/YodaCondition:
-  Enabled: false
+  Enabled: true
 
 Style/ZeroLengthPredicate:
-  Enabled: false
+  Enabled: true

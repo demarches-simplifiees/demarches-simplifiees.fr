@@ -1,5 +1,5 @@
 RSpec.configure do |config|
-  expect_list = %w()
+  expect_list = []
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation, except: expect_list)

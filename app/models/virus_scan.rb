@@ -4,7 +4,7 @@ class VirusScan < ApplicationRecord
   enum status: {
     pending: 'pending',
     safe: 'safe',
-    infected: 'infected',
+    infected: 'infected'
   }
 
   validates :champ_id, uniqueness: { scope: :blob_key }

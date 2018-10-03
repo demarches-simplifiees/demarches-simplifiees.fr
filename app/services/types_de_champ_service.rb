@@ -6,7 +6,7 @@ class TypesDeChampService
 
     parameters = params_with_ordered_champs
       .require(:procedure)
-      .permit("#{attributes}" => [
+      .permit(attributes.to_s => [
         :libelle,
         :description,
         :order_place,
@@ -70,6 +70,6 @@ class TypesDeChampService
   end
 
   def self.clean_value(value)
-    value.split("\r\n").map{ |v| v.strip }.join("\r\n")
+    value.split("\r\n").map(&:strip).join("\r\n")
   end
 end

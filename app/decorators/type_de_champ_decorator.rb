@@ -28,7 +28,7 @@ class TypeDeChampDecorator < Draper::Decorator
   end
 
   def base_classes
-    %w(btn btn-default form-control fa)
+    ['btn', 'btn-default', 'form-control', 'fa']
   end
 
   def display_up_button?(index, private)

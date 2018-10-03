@@ -15,7 +15,7 @@ describe Champs::DossierLinkController, type: :controller do
         {
           dossier: {
             champs_attributes: {
-              '1' => { value: "#{dossier_id}" }
+              '1' => { value: dossier_id.to_s }
             }
           },
           position: '1'

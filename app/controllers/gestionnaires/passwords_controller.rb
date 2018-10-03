@@ -1,6 +1,6 @@
 class Gestionnaires::PasswordsController < Devise::PasswordsController
-  after_action :try_to_authenticate_user, only: %i(update)
-  after_action :try_to_authenticate_administrateur, only: %i(update)
+  after_action :try_to_authenticate_user, only: [:update]
+  after_action :try_to_authenticate_administrateur, only: [:update]
 
   # GET /resource/password/new
   # def new
