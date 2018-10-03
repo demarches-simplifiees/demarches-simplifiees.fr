@@ -17,10 +17,21 @@ module FeatureHelpers
     dossier
   end
 
-  def sign_in_with(email, password)
+  def sign_in_with(email, password, sign_in_by_link = false)
     fill_in :user_email, with: email
     fill_in :user_password, with: password
-    click_on 'Se connecter'
+
+    perform_enqueued_jobs do
+      click_on 'Se connecter'
+    end
+
+    if sign_in_by_link
+      mail = ActionMailer::Base.deliveries.last
+      message = mail.body.parts.join(&:to_s)
+      login_token = message[/connexion-par-jeton\/(.*)/, 1]
+
+      visit sign_in_by_link_path(login_token)
+    end
   end
 
   def sign_up_with(email, password = 'testpassword')
