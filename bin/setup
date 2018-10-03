@@ -21,11 +21,18 @@ chdir APP_ROOT do
   system('bundle check') || system!('bundle install')
   system! 'bin/yarn install'
 
-
   puts "\n== Copying sample files =="
-  unless File.exist?('.env')
-    cp 'config/env.example', '.env'
-  end
+  env_file = IO.read 'config/env.example'
+  disclaimer = <<~NOTICE
+    # This file is generated automatically from `config/env.sample`,
+    # and will be overwritten when running `bin/update`.
+    #
+    # To override some environment variables locally, create a `.env.local` file,
+    # and add your custom overrides in it.
+
+  NOTICE
+  env_file = IO.read 'config/env.example'
+  IO.write '.env', disclaimer + env_file
 
   # Create the database, load the schema, and initialize it with the seed data
   puts "\n== Preparing database =="
