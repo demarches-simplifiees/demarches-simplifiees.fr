@@ -15,7 +15,7 @@ fr:
       not_found_in_database: "adresse email ou mot de passe invalide."
       timeout: "Votre session est expirée. Veuillez vous reconnecter pour continuer."
       unauthenticated: "Vous devez vous connecter ou vous inscrire pour continuer."
-      unconfirmed: "Vous devez activer votre compte pour continuer."
+      unconfirmed: "Vous devez confirmer votre adresse email pour continuer. Cliquez sur le lien qui vous a été envoyé par email."
     mailer:
       confirmation_instructions:
         subject: "Instructions d'activation de votre compte"
@@ -34,7 +34,7 @@ fr:
       no_token: "Vous ne pouvez accéder à cette page sans passer par un email de réinitialisation de mot de passe. Si vous êtes passé par un email de ce type, assurez-vous d'utiliser l'URL complète."
       send_instructions: "Vous allez recevoir les instructions de réinitialisation du mot de passe dans quelques instants"
       send_paranoid_instructions: "Si votre adresse email existe dans notre base de données, vous allez recevoir un lien de réinitialisation par email"
-      updated: "Votre mot de passe a été édité avec succès, vous êtes maintenant connecté"
+      updated: "Votre mot de passe a été changé avec succès, vous êtes maintenant connecté"
       updated_not_active: "Votre mot de passe a été changé avec succès."
     registrations:
       destroyed: "Votre compte a été supprimé avec succès. Nous espérons vous revoir bientôt."
