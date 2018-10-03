@@ -17,7 +17,7 @@
         = f.password_field :password, autofocus: true, autocomplete: "off", class: 'form-control'
       %br
       %h4
-        = f.label 'Retaper le mot de passe'
+        = f.label 'Confirmez le nouveau mot de passe'
       .input-group
         .input-group-addon
           %span.fa.fa-asterisk
@@ -25,5 +25,5 @@
       %br
       %br
       .actions
-        = f.submit "Changer", class: 'btn btn-primary'
+        = f.submit 'Changer le mot de passe', class: 'btn btn-primary'
       %br

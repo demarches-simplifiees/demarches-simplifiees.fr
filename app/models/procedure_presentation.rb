@@ -1,4 +1,9 @@
 class ProcedurePresentation < ApplicationRecord
+  EXTRA_SORT_COLUMNS = {
+    'notifications' => Set['notifications'],
+    'self' => Set['id', 'state']
+  }
+
   belongs_to :assign_to
 
   delegate :procedure, to: :assign_to
@@ -40,6 +45,6 @@ class ProcedurePresentation < ApplicationRecord
   private
 
   def valid_sort_column?(procedure, table, column)
-    DossierFieldService.valid_column?(procedure, table, column) || (table == 'notifications' && column == 'notifications')
+    DossierFieldService.valid_column?(procedure, table, column) || EXTRA_SORT_COLUMNS[table]&.include?(column)
   end
 end

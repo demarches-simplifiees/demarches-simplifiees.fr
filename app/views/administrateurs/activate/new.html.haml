@@ -3,7 +3,7 @@
 - content_for :footer do
   = render partial: "root/footer"
 
-.administrateurs-activate.container
+.container.devise-container
   .one-column-centered
     = form_for @administrateur, url: { controller: 'administrateurs/activate', action: :create }, html: { class: "form" } do |f|
       %br
