@@ -16,7 +16,7 @@ class ProcedurePresentation < ApplicationRecord
     displayed_fields.each do |field|
       table = field['table']
       column = field['column']
-      if !DossierFieldService.valid_column?(procedure, table, column)
+      if !dossier_field_service.valid_column?(procedure, table, column)
         errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
       end
     end
@@ -35,7 +35,7 @@ class ProcedurePresentation < ApplicationRecord
       columns.each do |column|
         table = column['table']
         column = column['column']
-        if !DossierFieldService.valid_column?(procedure, table, column)
+        if !dossier_field_service.valid_column?(procedure, table, column)
           errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
         end
       end
@@ -44,7 +44,11 @@ class ProcedurePresentation < ApplicationRecord
 
   private
 
+  def dossier_field_service
+    @dossier_field_service ||= DossierFieldService.new
+  end
+
   def valid_sort_column?(procedure, table, column)
-    DossierFieldService.valid_column?(procedure, table, column) || EXTRA_SORT_COLUMNS[table]&.include?(column)
+    dossier_field_service.valid_column?(procedure, table, column) || EXTRA_SORT_COLUMNS[table]&.include?(column)
   end
 end

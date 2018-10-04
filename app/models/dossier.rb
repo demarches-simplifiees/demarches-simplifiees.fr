@@ -224,7 +224,7 @@ class Dossier < ApplicationRecord
   end
 
   def get_value(table, column)
-    DossierFieldService.get_value(self, table, column)
+    DossierFieldService.new.get_value(self, table, column)
   end
 
   def owner_name
