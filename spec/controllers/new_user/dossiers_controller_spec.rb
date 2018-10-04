@@ -205,6 +205,15 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
+  describe '#siret' do
+    before { sign_in(user) }
+    let!(:dossier) { create(:dossier, user: user) }
+
+    subject { get :siret, params: { id: dossier.id } }
+
+    it { is_expected.to render_template(:siret) }
+  end
+
   describe '#brouillon' do
     before { sign_in(user) }
     let!(:dossier) { create(:dossier, user: user, autorisation_donnees: true) }
@@ -219,7 +228,7 @@ describe NewUser::DossiersController, type: :controller do
       before { dossier.update_columns(autorisation_donnees: false) }
 
       context 'when the dossier is for personne morale' do
-        it { is_expected.to redirect_to(users_dossier_path(dossier)) }
+        it { is_expected.to redirect_to(siret_dossier_path(dossier)) }
       end
 
       context 'when the dossier is for an personne physique' do

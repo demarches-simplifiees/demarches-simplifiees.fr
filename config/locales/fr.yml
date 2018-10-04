@@ -113,6 +113,7 @@ fr:
   activerecord:
     attributes:
       user:
+        siret: 'Numéro SIRET'
         password: 'Le mot de passe'
       gestionnaire:
         password: 'Le mot de passe'
