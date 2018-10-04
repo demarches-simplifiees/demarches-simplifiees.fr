@@ -75,7 +75,7 @@ describe Dossier do
         dossier.update_search_terms
       end
 
-      it { expect(dossier.search_terms).to eq("#{user.email} #{france_connect_information.given_name} #{france_connect_information.family_name} champ public #{etablissement.entreprise_siren} #{etablissement.entreprise_numero_tva_intracommunautaire} #{etablissement.entreprise_forme_juridique} #{etablissement.entreprise_forme_juridique_code} #{etablissement.entreprise_nom_commercial} #{etablissement.entreprise_raison_sociale} #{etablissement.entreprise_siret_siege_social} #{etablissement.entreprise_nom} #{etablissement.entreprise_prenom} #{etablissement.association_rna} #{etablissement.association_titre} #{etablissement.association_objet} #{etablissement.siret} #{etablissement.naf} #{etablissement.libelle_naf} #{etablissement.adresse} #{etablissement.code_postal} #{etablissement.localite} #{etablissement.code_insee_localite}") }
+      it { expect(dossier.search_terms).to eq("#{user.email} champ public #{etablissement.entreprise_siren} #{etablissement.entreprise_numero_tva_intracommunautaire} #{etablissement.entreprise_forme_juridique} #{etablissement.entreprise_forme_juridique_code} #{etablissement.entreprise_nom_commercial} #{etablissement.entreprise_raison_sociale} #{etablissement.entreprise_siret_siege_social} #{etablissement.entreprise_nom} #{etablissement.entreprise_prenom} #{etablissement.association_rna} #{etablissement.association_titre} #{etablissement.association_objet} #{etablissement.siret} #{etablissement.naf} #{etablissement.libelle_naf} #{etablissement.adresse} #{etablissement.code_postal} #{etablissement.localite} #{etablissement.code_insee_localite}") }
       it { expect(dossier.private_search_terms).to eq('champ privé') }
 
       context 'with an update' do
@@ -749,7 +749,6 @@ describe Dossier do
 
     it { expect(dossier.get_value('self', 'created_at')).to eq(dossier.created_at) }
     it { expect(dossier.get_value('user', 'email')).to eq(user.email) }
-    it { expect(dossier.get_value('france_connect_information', 'gender')).to eq(user.france_connect_information.gender) }
     it { expect(dossier.get_value('etablissement', 'entreprise_siren')).to eq(dossier.etablissement.entreprise_siren) }
     it { expect(dossier.get_value('etablissement', 'siret')).to eq(dossier.etablissement.siret) }
     it { expect(dossier.get_value('type_de_champ', @champ_public.type_de_champ.id.to_s)).to eq(dossier.champs.first.value) }

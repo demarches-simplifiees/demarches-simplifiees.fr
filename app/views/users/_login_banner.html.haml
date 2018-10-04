@@ -1,12 +1,3 @@
-- if current_user.loged_in_with_france_connect?
-  #fconnect-profile{ "data-fc-logout-url" => '/users/sign_out" data-method="delete' }
-    %a.text-info{ href: "#" }
-      = "#{current_user.given_name} #{current_user.family_name}"
-  = link_to "/users/sign_out", method: :delete do
-    %span.fa.fa-sign-out
-    Se déconnecter
-
-- else
-  = link_to "/users/sign_out", method: :delete do
-    %span.fa.fa-sign-out
-    Se déconnecter
+= link_to "/users/sign_out", method: :delete do
+  %span.fa.fa-sign-out
+  Se déconnecter
