@@ -1,6 +1,7 @@
 import $ from 'jquery';
 
-export function showMotivation(state) {
+export function showMotivation(event, state) {
+  event.preventDefault();
   $(`.motivation.${state}`).show();
   $('.dropdown-items').hide();
 }
