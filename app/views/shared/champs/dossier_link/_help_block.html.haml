@@ -1,7 +1,5 @@
 - if id.present?
-  - dossier = current_user&.dossiers&.find_by(id: id)
-  - dossier ||= current_gestionnaire&.dossiers&.find_by(id: id)
-  - dossier ||= current_administrateur&.dossiers&.find_by(id: id)
+  - dossier = Dossier.find_by(id: id)
   - if dossier.blank?
     %p.text-warning
       Ce dossier est inconnu
