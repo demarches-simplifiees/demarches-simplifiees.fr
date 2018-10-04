@@ -69,6 +69,10 @@ module NewUser
       end
     end
 
+    def siret
+      @dossier = dossier
+    end
+
     def brouillon
       @dossier = dossier_with_champs
 
@@ -77,7 +81,7 @@ module NewUser
         if dossier.procedure.for_individual
           redirect_to identite_dossier_path(@dossier)
         else
-          redirect_to users_dossier_path(@dossier)
+          redirect_to siret_dossier_path(@dossier)
         end
       end
     end
