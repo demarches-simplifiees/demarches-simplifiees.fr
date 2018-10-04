@@ -61,4 +61,9 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # This is useful to run rails in development with :async queue adapter
+  if ENV['RAILS_QUEUE_ADAPTER']
+    config.active_job.queue_adapter = ENV['RAILS_QUEUE_ADAPTER'].to_sym
+  end
 end
