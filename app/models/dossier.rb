@@ -223,10 +223,6 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def get_value(table, column)
-    DossierFieldService.new.get_value(self, table, column)
-  end
-
   def owner_name
     if etablissement.present?
       etablissement.entreprise_raison_sociale
