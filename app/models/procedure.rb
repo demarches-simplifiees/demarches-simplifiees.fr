@@ -293,7 +293,7 @@ class Procedure < ApplicationRecord
   end
 
   def fields
-    DossierFieldService.fields(self)
+    DossierFieldService.new.fields(self)
   end
 
   def fields_for_select
