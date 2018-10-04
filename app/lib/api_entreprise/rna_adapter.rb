@@ -6,17 +6,20 @@ class ApiEntreprise::RNAAdapter < ApiEntreprise::Adapter
   end
 
   def process_params
-    # Responses with a 206 codes are sometimes not useable,
-    # as the RNA calls often return a 206 with an error message,
-    # not a partial response
+    # Sometimes the associations endpoints responses with a 206,
+    # and these response are often useable as the they only
+    # contain an error message.
+    # Therefore here we make sure that our response seems valid
+    # by checking that there is an association attribute.
     if !data_source.key?(:association)
       {}
     else
+      association_id = data_source[:association][:id]
       params = data_source[:association].slice(*attr_to_fetch)
 
-      if params[:id].present? && valid_params?(params)
-        params[:rna] = params[:id]
-        params.except(:id).transform_keys { |k| :"association_#{k}" }
+      if association_id.present? && valid_params?(params)
+        params[:rna] = association_id
+        params.transform_keys { |k| :"association_#{k}" }
       else
         {}
       end
@@ -25,7 +28,6 @@ class ApiEntreprise::RNAAdapter < ApiEntreprise::Adapter
 
   def attr_to_fetch
     [
-      :id,
       :titre,
       :objet,
       :date_creation,
