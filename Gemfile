@@ -164,6 +164,7 @@ group :development do
   gem 'rubocop-rspec-focused', require: false
   gem 'haml-lint'
   gem 'scss_lint', require: false
+  gem 'letter_opener_web'
 end
 
 group :development, :test do
