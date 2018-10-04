@@ -11,8 +11,10 @@ namespace :support do
 
     new_owner = nil
     if new_owner_id.present?
+      rake_puts("Looking for new owner by id\n")
       new_owner = Administrateur.find(new_owner_id)
     elsif new_owner_email.present?
+      rake_puts("Looking for new owner by email\n")
       new_owner = Administrateur.find_by('LOWER(email) = LOWER(?)', new_owner_email)
     end
 
