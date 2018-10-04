@@ -6,9 +6,11 @@ class ApiEntreprise::RNAAdapter < ApiEntreprise::Adapter
   end
 
   def process_params
-    # Responses with a 206 codes are sometimes not useable,
-    # as the RNA calls often return a 206 with an error message,
-    # not a partial response
+    # Sometimes the associations endpoints responses with a 206,
+    # and these response are often useable as the they only
+    # contain an error message.
+    # Therefore here we make sure that our response seems valid
+    # by checking that there is an association attribute.
     if !data_source.key?(:association)
       {}
     else
