@@ -107,12 +107,12 @@ describe NewGestionnaire::DossiersController, type: :controller do
     before do
       dossier.en_construction!
       sign_in gestionnaire
-      post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }
+      post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js'
       dossier.reload
     end
 
     it { expect(dossier.state).to eq(Dossier.states.fetch(:en_instruction)) }
-    it { is_expected.to redirect_to gestionnaire_dossier_path(procedure, dossier) }
+    it { expect(response.body).to include('.state-button') }
     it { expect(gestionnaire.follow?(dossier)).to be true }
   end
 
@@ -122,7 +122,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       sign_in gestionnaire
     end
 
-    subject { post :repasser_en_construction, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+    subject { post :repasser_en_construction, params: { procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
 
     it 'change state to en_construction' do
       subject
@@ -131,7 +131,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       expect(dossier.state).to eq(Dossier.states.fetch(:en_construction))
     end
 
-    it { is_expected.to redirect_to gestionnaire_dossier_path(procedure, dossier) }
+    it { expect(subject.body).to include('.state-button') }
   end
 
   describe '#terminer' do
@@ -141,7 +141,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         sign_in gestionnaire
       end
 
-      subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id } }
+      subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
 
       it 'change state to refuse' do
         subject
@@ -158,7 +158,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         subject
       end
 
-      it { is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier) }
+      it { expect(subject.body).to include('.state-button') }
     end
 
     context "with classer_sans_suite" do
@@ -167,7 +167,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         sign_in gestionnaire
       end
 
-      subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id } }
+      subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
 
       it 'change state to sans_suite' do
         subject
@@ -184,7 +184,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         subject
       end
 
-      it { is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier) }
+      it { expect(subject.body).to include('.state-button') }
     end
 
     context "with accepter" do
@@ -199,7 +199,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
         expect(NotificationMailer).to receive(:deliver_later)
       end
 
-      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id } }
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
 
       it 'change state to accepte' do
         subject
@@ -223,16 +223,14 @@ describe NewGestionnaire::DossiersController, type: :controller do
         end
 
         it 'The gestionnaire is sent back to the dossier page' do
-          subject
-
-          is_expected.to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
+          expect(subject.body).to include('.state-button')
         end
 
         context 'and the dossier has already an attestation' do
           it 'should not crash' do
             dossier.attestation = Attestation.new
             dossier.save
-            expect(subject).to redirect_to redirect_to gestionnaire_dossier_path(procedure, dossier)
+            expect(subject.body).to include('.state-button')
           end
         end
       end
@@ -248,7 +246,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
             procedure_id: procedure.id,
             dossier_id: dossier.id,
             dossier: { motivation: "Yallah" }
-          }
+          }, format: 'js'
         end
 
         before do

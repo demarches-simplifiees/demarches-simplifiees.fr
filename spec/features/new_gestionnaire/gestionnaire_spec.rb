@@ -9,7 +9,7 @@ feature 'The gestionnaire part' do
   let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
   let!(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure) }
 
-  scenario 'A gestionnaire can accept a dossier' do
+  scenario 'A gestionnaire can accept a dossier', :js do
     log_in(gestionnaire.email, password)
 
     expect(page).to have_current_path(gestionnaire_procedures_path)
@@ -20,14 +20,30 @@ feature 'The gestionnaire part' do
     click_on dossier.user.email
     expect(page).to have_current_path(gestionnaire_dossier_path(procedure, dossier))
 
-    click_on 'Passer en instruction'
+    click_on 'En construction'
+    accept_confirm do
+      click_on 'Passer en instruction'
+    end
+    expect(page).to have_text('En instruction')
+
     dossier.reload
     expect(dossier.state).to eq(Dossier.states.fetch(:en_instruction))
 
+    click_on 'En instruction'
+
+    within('.dropdown-items') do
+      click_on 'Accepter'
+    end
+
     within('.accept.motivation') do
       fill_in('dossier_motivation', with: 'a good reason')
-      click_on 'Valider la décision'
+
+      accept_confirm do
+        click_on 'Valider la décision'
+      end
     end
+
+    expect(page).to have_text('Dossier traité avec succès.')
 
     dossier.reload
     expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
