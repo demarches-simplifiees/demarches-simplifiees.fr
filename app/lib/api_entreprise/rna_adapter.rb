@@ -12,11 +12,12 @@ class ApiEntreprise::RNAAdapter < ApiEntreprise::Adapter
     if !data_source.key?(:association)
       {}
     else
+      association_id = data_source[:association][:id]
       params = data_source[:association].slice(*attr_to_fetch)
 
-      if params[:id].present? && valid_params?(params)
-        params[:rna] = params[:id]
-        params.except(:id).transform_keys { |k| :"association_#{k}" }
+      if association_id.present? && valid_params?(params)
+        params[:rna] = association_id
+        params.transform_keys { |k| :"association_#{k}" }
       else
         {}
       end
@@ -25,7 +26,6 @@ class ApiEntreprise::RNAAdapter < ApiEntreprise::Adapter
 
   def attr_to_fetch
     [
-      :id,
       :titre,
       :objet,
       :date_creation,
