@@ -3,17 +3,17 @@ require Rails.root.join("lib", "tasks", "task_helper")
 namespace :support do
   desc <<~EOD
     Give procedure #PROCEDURE_ID a new owner.
-    The owner can be specified with NEW_OWNER_ID or NEW_OWNER_MAIL.
+    The new owner can be specified with NEW_OWNER_ID or NEW_OWNER_EMAIL.
   EOD
   task transfer_procedure_ownership: :environment do
     new_owner_id = ENV['NEW_OWNER_ID']
-    new_owner_mail = ENV['NEW_OWNER_MAIL']
+    new_owner_email = ENV['NEW_OWNER_EMAIL']
 
     new_owner = nil
     if new_owner_id.present?
       new_owner = Administrateur.find(new_owner_id)
-    elsif new_owner_mail.present?
-      new_owner = Administrateur.find_by(email: new_owner_mail)
+    elsif new_owner_email.present?
+      new_owner = Administrateur.find_by('LOWER(email) = LOWER(?)', new_owner_email)
     end
 
     if new_owner.blank?
@@ -33,15 +33,15 @@ namespace :support do
   end
 
   desc <<~EOD
-    Delete the user account for a given USER_MAIL.
+    Delete the user account for a given USER_EMAIL.
     Only works if the user has no dossier where the instruction has started.
   EOD
   task delete_user_account: :environment do
-    user_mail = ENV['USER_MAIL']
-    if user_mail.nil?
-      fail "Must specify a USER_MAIL"
+    user_email = ENV['USER_EMAIL']
+    if user_email.nil?
+      fail "Must specify a USER_EMAIL"
     end
-    user = User.find_by(email: user_mail)
+    user = User.find_by(email: user_email)
     if user.dossiers.state_instruction_commencee.any?
       fail "Cannot delete this user because instruction has started for some dossiers"
     end
