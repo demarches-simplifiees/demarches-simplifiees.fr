@@ -9,12 +9,6 @@ class DossierFieldService
         field_hash('Demandeur', 'user', 'email')
       ]
 
-      fields.push(
-        field_hash('Civilité (FC)', 'france_connect_information', 'gender'),
-        field_hash('Prénom (FC)', 'france_connect_information', 'given_name'),
-        field_hash('Nom (FC)', 'france_connect_information', 'family_name')
-      )
-
       if !procedure.for_individual || (procedure.for_individual && procedure.individual_with_siret)
         fields.push(
           field_hash('SIREN', 'etablissement', 'entreprise_siren'),
@@ -53,8 +47,6 @@ class DossierFieldService
         dossier.send(column)
       when 'user'
         dossier.user.send(column)
-      when 'france_connect_information'
-        dossier.user.france_connect_information&.send(column)
       when 'etablissement'
         dossier.etablissement&.send(column)
       when 'type_de_champ'
@@ -81,11 +73,6 @@ class DossierFieldService
         case table
         when 'self'
           dossiers.where("? ILIKE ?", filter['column'], "%#{filter['value']}%")
-
-        when 'france_connect_information'
-          dossiers
-            .includes(user: :france_connect_information)
-            .where("? ILIKE ?", "france_connect_informations.#{filter['column']}", "%#{filter['value']}%")
 
         when 'type_de_champ', 'type_de_champ_private'
           relation = table == 'type_de_champ' ? :champs : :champs_private
@@ -131,11 +118,6 @@ class DossierFieldService
         end
       when 'self'
         return dossiers
-            .order("#{column} #{order}")
-            .pluck(:id)
-      when 'france_connect_information'
-        return dossiers
-            .includes(user: :france_connect_information)
             .order("#{column} #{order}")
             .pluck(:id)
       when 'type_de_champ', 'type_de_champ_private'

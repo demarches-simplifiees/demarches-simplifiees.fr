@@ -118,22 +118,6 @@ describe DossierFieldService do
       it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
     end
 
-    context 'for france_connect_information table' do
-      let(:table) { 'france_connect_information' }
-      let(:column) { 'given_name' } # All other columns work the same, no extra test required
-      let(:order) { 'asc' } # Desc works the same, no extra test required
-
-      let(:anna_dossier) { create(:dossier, procedure: procedure) }
-      let(:zacharie_dossier) { create(:dossier, procedure: procedure) }
-
-      before do
-        create(:france_connect_information, given_name: 'Anna', user: anna_dossier.user)
-        create(:france_connect_information, given_name: 'Zacharie', user: zacharie_dossier.user)
-      end
-
-      it { is_expected.to eq([anna_dossier, zacharie_dossier].map(&:id)) }
-    end
-
     context 'for type_de_champ table' do
       let(:table) { 'type_de_champ' }
       let(:column) { procedure.types_de_champ.first.id.to_s }
@@ -200,17 +184,6 @@ describe DossierFieldService do
       let(:dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'bla@yopmail.com')) }
 
       it { is_expected.to eq('bla@yopmail.com') }
-    end
-
-    context 'for france_connect_information table' do
-      let(:table) { 'france_connect_information' }
-      let(:column) { 'given_name' } # All other columns work the same, no extra test required
-
-      let(:dossier) { create(:dossier, procedure: procedure) }
-
-      before { create(:france_connect_information, given_name: 'Anna', user: dossier.user) }
-
-      it { is_expected.to eq('Anna') }
     end
 
     context 'for etablissement table' do

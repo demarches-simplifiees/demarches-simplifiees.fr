@@ -83,8 +83,6 @@ class Dossier < ApplicationRecord
   def update_search_terms
     self.search_terms = [
       user&.email,
-      france_connect_information&.given_name,
-      france_connect_information&.family_name,
       *champs.flat_map(&:search_terms),
       *etablissement&.search_terms,
       individual&.nom,

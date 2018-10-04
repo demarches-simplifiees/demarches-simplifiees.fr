@@ -73,17 +73,6 @@ class Users::DossiersController < UsersController
       @siret = current_user.siret
     end
 
-    if @facade.procedure.for_individual? && current_user.loged_in_with_france_connect?
-      individual = @facade.dossier.individual
-
-      individual.update_column :gender, @facade.dossier.france_connect_information.gender
-      individual.update_column :nom, @facade.dossier.france_connect_information.family_name
-      individual.update_column :prenom, @facade.dossier.france_connect_information.given_name
-
-      individual.birthdate = @facade.dossier.france_connect_information.birthdate
-      individual.save
-    end
-
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
     redirect_to url_for dossiers_path

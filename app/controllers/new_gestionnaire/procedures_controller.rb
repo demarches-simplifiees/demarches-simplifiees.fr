@@ -240,8 +240,6 @@ module NewGestionnaire
           end
         end.each do |group_key, fields|
           case group_key
-          when 'france_connect_information'
-            @dossiers = @dossiers.includes({ user: :france_connect_information })
           when 'type_de_champ_group'
             if fields.any? { |field| field['table'] == 'type_de_champ' }
               @dossiers = @dossiers.includes(:champs).references(:champs)
