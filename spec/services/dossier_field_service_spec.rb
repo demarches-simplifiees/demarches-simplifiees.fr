@@ -14,7 +14,7 @@ describe DossierFieldService do
         type_de_champ.champ.create(dossier: discarded_dossier, value: 'discard me')
       end
 
-      subject { described_class.filtered_ids(procedure.dossiers, [{ 'table' => 'type_de_champ', 'column' => type_de_champ.id, 'value' => 'keep' }]) }
+      subject { described_class.new.filtered_ids(procedure.dossiers, [{ 'table' => 'type_de_champ', 'column' => type_de_champ.id, 'value' => 'keep' }]) }
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
     end
@@ -29,7 +29,7 @@ describe DossierFieldService do
         type_de_champ_private.champ.create(dossier: discarded_dossier, value: 'discard me')
       end
 
-      subject { described_class.filtered_ids(procedure.dossiers, [{ 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id, 'value' => 'keep' }]) }
+      subject { described_class.new.filtered_ids(procedure.dossiers, [{ 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id, 'value' => 'keep' }]) }
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
     end
@@ -39,7 +39,7 @@ describe DossierFieldService do
         let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: DateTime.new(2018, 6, 21))) }
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: DateTime.new(2008, 6, 21))) }
 
-        subject { described_class.filtered_ids(procedure.dossiers, [{ 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }]) }
+        subject { described_class.new.filtered_ids(procedure.dossiers, [{ 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }]) }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
@@ -50,7 +50,7 @@ describe DossierFieldService do
         let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75017')) }
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '25000')) }
 
-        subject { described_class.filtered_ids(procedure.dossiers, [{ 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' }]) }
+        subject { described_class.new.filtered_ids(procedure.dossiers, [{ 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' }]) }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
@@ -60,7 +60,7 @@ describe DossierFieldService do
       let!(:kept_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@keepmail.com')) }
       let!(:discarded_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@discard.com')) }
 
-      subject { described_class.filtered_ids(procedure.dossiers, [{ 'table' => 'user', 'column' => 'email', 'value' => 'keepmail' }]) }
+      subject { described_class.new.filtered_ids(procedure.dossiers, [{ 'table' => 'user', 'column' => 'email', 'value' => 'keepmail' }]) }
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
     end
@@ -72,7 +72,7 @@ describe DossierFieldService do
     let(:sort) { { 'table' => table, 'column' => column, 'order' => order } }
     let(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to, sort: sort) }
 
-    subject { DossierFieldService.sorted_ids(procedure.dossiers, procedure_presentation, gestionnaire) }
+    subject { described_class.new.sorted_ids(procedure.dossiers, procedure_presentation, gestionnaire) }
 
     context 'for notifications table' do
       let(:table) { 'notifications' }
@@ -164,7 +164,7 @@ describe DossierFieldService do
   end
 
   describe '#get_value' do
-    subject { DossierFieldService.get_value(dossier, table, column) }
+    subject { described_class.new.get_value(dossier, table, column) }
 
     context 'for self table' do
       let(:table) { 'self' }
