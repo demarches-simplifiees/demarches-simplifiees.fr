@@ -5,4 +5,5 @@
 .container
   = render partial: "new_gestionnaire/shared/avis/form", locals: { url: avis_gestionnaire_dossier_path(@dossier.procedure, @dossier), must_be_confidentiel: false, avis: @avis }
 
-  = render partial: 'new_gestionnaire/shared/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
+  - if @dossier.avis.present?
+    = render partial: 'new_gestionnaire/shared/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
