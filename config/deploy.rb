@@ -116,7 +116,7 @@ task :deploy => :environment do
     invoke :'bundle:install'
     invoke :'yarn:install'
     invoke :'rails:db_migrate'
-    invoke :'rails:after_party:run'
+    invoke :'rake[after_party:run]'
     invoke :'rails:assets_precompile:force'
 
     to :launch do
