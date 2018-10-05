@@ -70,4 +70,25 @@ namespace :support do
 
     EtablissementUpdateJob.perform_now(dossier, siret_number)
   end
+
+  desc <<~EOD
+    Change a user’s mail from OLD_EMAIL to NEW_EMAIL.
+    Also works for administrateurs and instructeurs.
+  EOD
+  task change_user_email: :environment do
+    old_email = ENV['OLD_EMAIL']
+    new_email = ENV['NEW_EMAIL']
+
+    if User.find_by(email: new_email).present?
+      fail "There is an existing account for #{new_email}, not overwriting"
+    end
+
+    user = User.find_by(email: old_email)
+
+    if user.nil?
+      fail "Couldn’t find existing account for #{old_email}"
+    end
+
+    user.update(email: new_email)
+  end
 end
