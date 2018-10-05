@@ -67,49 +67,6 @@ class DossierFieldService
     valid_columns_for_table(procedure, table).include?(column)
   end
 
-  def sorted_ids(dossiers, procedure_presentation, gestionnaire)
-    table = procedure_presentation.sort['table']
-    column = sanitized_column(procedure_presentation.sort)
-    order = procedure_presentation.sort['order']
-    assert_valid_order(order)
-
-    case table
-    when 'notifications'
-      procedure = procedure_presentation.assign_to.procedure
-      dossiers_id_with_notification = gestionnaire.notifications_for_procedure(procedure)
-      if order == 'desc'
-        return dossiers_id_with_notification +
-            (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
-      else
-        return (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
-            dossiers_id_with_notification
-      end
-    when 'self'
-      return dossiers
-          .order("#{column} #{order}")
-          .pluck(:id)
-    when 'type_de_champ', 'type_de_champ_private'
-      return dossiers
-          .includes(table == 'type_de_champ' ? :champs : :champs_private)
-          .where("champs.type_de_champ_id = #{procedure_presentation.sort['column'].to_i}")
-          .order("champs.value #{order}")
-          .pluck(:id)
-    else
-      return dossiers
-          .includes(table)
-          .order("#{column} #{order}")
-          .pluck(:id)
-    end
-  end
-
-  def sanitized_column(field)
-    table = field['table']
-    table = ActiveRecord::Base.connection.quote_column_name((table == 'self' ? 'dossier' : table).pluralize)
-    column = ActiveRecord::Base.connection.quote_column_name(field['column'])
-
-    table + '.' + column
-  end
-
   private
 
   def valid_columns_for_table(procedure, table)
@@ -121,12 +78,6 @@ class DossierFieldService
     end
 
     @column_whitelist[procedure.id][table] || []
-  end
-
-  def assert_valid_order(order)
-    if !["asc", "desc"].include?(order)
-      raise "Invalid order #{order}"
-    end
   end
 
   def field_hash(label, table, column)
