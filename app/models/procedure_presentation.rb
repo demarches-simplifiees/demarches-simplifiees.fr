@@ -57,10 +57,12 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def displayed_field_values(dossier)
+    assert_matching_procedure(dossier)
     displayed_fields.map { |field| get_value(dossier, field['table'], field['column']) }
   end
 
   def sorted_ids(dossiers, gestionnaire)
+    dossiers.each { |dossier| assert_matching_procedure(dossier) }
     table = sort['table']
     column = sanitized_column(sort)
     order = sort['order']
@@ -94,6 +96,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def filtered_ids(dossiers, statut)
+    dossiers.each { |dossier| assert_matching_procedure(dossier) }
     filters[statut].map do |filter|
       table = filter['table']
       column = sanitized_column(filter)
@@ -167,6 +170,12 @@ class ProcedurePresentation < ApplicationRecord
           errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
         end
       end
+    end
+  end
+
+  def assert_matching_procedure(dossier)
+    if dossier.procedure != procedure
+      raise "Procedure mismatch (expected #{procedure.id}, got #{dossier.procedure.id})"
     end
   end
 
