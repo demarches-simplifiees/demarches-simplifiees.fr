@@ -10,6 +10,7 @@ class ProcedurePresentation < ApplicationRecord
 
   validate :check_allowed_displayed_fields
   validate :check_allowed_sort_column
+  validate :check_allowed_sort_order
   validate :check_allowed_filter_columns
 
   def fields
@@ -63,7 +64,6 @@ class ProcedurePresentation < ApplicationRecord
     table = sort['table']
     column = sanitized_column(sort)
     order = sort['order']
-    assert_valid_order(order)
 
     case table
     when 'notifications'
@@ -151,6 +151,13 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
+  def check_allowed_sort_order
+    order = sort['order']
+    if !["asc", "desc"].include?(order)
+      errors.add(:sort, "#{order} n’est pas une ordre permis")
+    end
+  end
+
   def check_allowed_filter_columns
     filters.each do |_, columns|
       columns.each do |column|
@@ -205,12 +212,6 @@ class ProcedurePresentation < ApplicationRecord
       .to_h
 
     @column_whitelist[table] || []
-  end
-
-  def assert_valid_order(order)
-    if !["asc", "desc"].include?(order)
-      raise "Invalid order #{order}"
-    end
   end
 
   def sanitized_column(field)
