@@ -67,10 +67,11 @@ module NewGestionnaire
         @archived_dossiers
       end
 
-      sorted_ids = DossierFieldService.sorted_ids(@dossiers, procedure_presentation, current_gestionnaire)
+      dossier_field_service = DossierFieldService.new
+      sorted_ids = dossier_field_service.sorted_ids(@dossiers, procedure_presentation, current_gestionnaire)
 
       if @current_filters.count > 0
-        filtered_ids = DossierFieldService.filtered_ids(@dossiers, current_filters)
+        filtered_ids = dossier_field_service.filtered_ids(@dossiers, current_filters)
         filtered_sorted_ids = sorted_ids.select { |id| filtered_ids.include?(id) }
       else
         filtered_sorted_ids = sorted_ids

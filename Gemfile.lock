@@ -459,6 +459,12 @@ GEM
     leaflet-markercluster-rails (0.7.0)
       railties (>= 3.1)
     leaflet-rails (0.7.7)
+    letter_opener (1.6.0)
+      launchy (~> 2.2)
+    letter_opener_web (1.3.4)
+      actionmailer (>= 3.2)
+      letter_opener (~> 1.0)
+      railties (>= 3.2)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -855,6 +861,7 @@ DEPENDENCIES
   leaflet-draw-rails
   leaflet-markercluster-rails (~> 0.7.0)
   leaflet-rails
+  letter_opener_web
   lograge
   logstash-event
   mailjet
@@ -906,4 +913,4 @@ DEPENDENCIES
   zxcvbn-ruby
 
 BUNDLED WITH
-   1.16.4
+   1.16.5

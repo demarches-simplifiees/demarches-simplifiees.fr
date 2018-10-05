@@ -45,17 +45,11 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   # Action Mailer settings
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-  # Config for mailcatcher https://mailcatcher.me/
-  config.action_mailer.smtp_settings = {
-    address: 'localhost',
-    port: 1025,
-    locale: 'fr'
-  }
+  config.action_mailer.delivery_method = :letter_opener_web
 
   Rails.application.routes.default_url_options = {
-    host: 'localhost:3000'
+    host: 'localhost',
+    port: 3000
   }
 
   # Raises error for missing translations
