@@ -13,34 +13,21 @@
 //= require_tree ./old_design
 //= require bootstrap-sprockets
 
-//= require leaflet.js
-//= require d3.min
-//= require clipper
-//= require concavehull.min
-//= require leaflet.freedraw
 //= require smart_listing
-//= require turf-area
-//= require franceconnect
 //= require bootstrap-wysihtml5
 //= require bootstrap-wysihtml5/locales/fr-FR
 
+/* globals $ */
+
 $(document).on('turbolinks:load', application_init);
 
-function application_init(){
+function application_init() {
   tooltip_init();
-  scroll_to();
 }
 
 function tooltip_init() {
-  $('.action_button[data-toggle="tooltip"]').tooltip({delay: { "show": 100, "hide": 100 }});
-  $('[data-toggle="tooltip"]').tooltip({delay: { "show": 800, "hide": 100 }});
-}
-
-function scroll_to() {
-  $('.js-scrollTo').on('click', function () { // Au clic sur un élément
-    var page = $(this).attr('cible'); // Page cible
-    var speed = 600; // Durée de l'animation (en ms)
-    $('html, body').animate({scrollTop: $(page).offset().top - 200}, speed); // Go
-    return false;
+  $('.action_button[data-toggle="tooltip"]').tooltip({
+    delay: { show: 100, hide: 100 }
   });
+  $('[data-toggle="tooltip"]').tooltip({ delay: { show: 800, hide: 100 } });
 }

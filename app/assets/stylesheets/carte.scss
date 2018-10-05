@@ -5,8 +5,6 @@
 
 #carte-page {
   #map {
-    margin-left: 15px;
-    width: 90%;
     height: 600px;
   }
 
@@ -39,22 +37,11 @@
   }
 }
 
-#map section.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  box-shadow: inset -100px 0 100px -100px rgba(0, 0, 0, 0.25);
-  width: 100%;
-  height: 100%;
-  z-index: 2001;
-}
-
 #map.mode-create {
   cursor: url("/assets/pencil.png"), crosshair !important;
 }
 
-#map g path.tracer {
+#map g path.leaflet-polygon {
   transition: all 0.25s;
   stroke-width: 4px;
   stroke-opacity: 1;
@@ -73,7 +60,7 @@
   fill: #4D4D4D !important;
 }
 
-#map div.polygon-elbow {
+#map div.leaflet-edge {
   box-shadow: 0 0 0 2px #FFFFFF, 0 0 10px rgba(0, 0, 0, 0.35);
   border: 5px solid #D7217E;
   border-radius: 10px;
@@ -86,25 +73,9 @@
   height: 0 !important;
 }
 
-#map div.polygon-elbow.non-polygon {
-  opacity: 0 !important;
-  pointer-events: none !important;
-  border: 5px solid #A9A9A9;
-}
-
-#map.mode-edit div.polygon-elbow {
+#map.mode-edit div.leaflet-edge {
   opacity: 1;
   pointer-events: all;
-}
-
-#map svg.tracer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2001;
-  pointer-events: none;
 }
 
 .info {

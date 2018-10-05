@@ -11,6 +11,7 @@ import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';
 import '../shared/remote-input';
+import '../shared/franceconnect';
 
 import '../new_design/spinner';
 import '../new_design/dropdown';

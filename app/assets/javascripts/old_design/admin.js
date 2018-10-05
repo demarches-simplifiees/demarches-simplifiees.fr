@@ -1,3 +1,5 @@
+/* globals $ */
+
 $(document).on('click', '.delete', function() {
   $(this).hide();
   $(this)

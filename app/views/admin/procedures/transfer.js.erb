@@ -1,9 +1,9 @@
 <%- if response.status == 404 %>
-  transfer_errors_message(true);
+  $('#not_found_admin').slideDown(100);
 <%- else %>
   <%= render_flash %>
 
-  transfer_errors_message(false);
+  $('#not_found_admin').slideUp(100);
   $("#email_admin").val('');
 
   $('[role=dialog]').modal('hide');
