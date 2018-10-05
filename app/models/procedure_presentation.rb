@@ -16,7 +16,7 @@ class ProcedurePresentation < ApplicationRecord
     displayed_fields.each do |field|
       table = field['table']
       column = field['column']
-      if !dossier_field_service.valid_column?(procedure, table, column)
+      if !valid_column?(procedure, table, column)
         errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
       end
     end
@@ -35,7 +35,7 @@ class ProcedurePresentation < ApplicationRecord
       columns.each do |column|
         table = column['table']
         column = column['column']
-        if !dossier_field_service.valid_column?(procedure, table, column)
+        if !valid_column?(procedure, table, column)
           errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
         end
       end
@@ -43,7 +43,40 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def fields
-    dossier_field_service.fields(procedure)
+    fields = [
+      field_hash('Créé le', 'self', 'created_at'),
+      field_hash('Mis à jour le', 'self', 'updated_at'),
+      field_hash('Demandeur', 'user', 'email')
+    ]
+
+    if !procedure.for_individual || (procedure.for_individual && procedure.individual_with_siret)
+      fields.push(
+        field_hash('SIREN', 'etablissement', 'entreprise_siren'),
+        field_hash('Forme juridique', 'etablissement', 'entreprise_forme_juridique'),
+        field_hash('Nom commercial', 'etablissement', 'entreprise_nom_commercial'),
+        field_hash('Raison sociale', 'etablissement', 'entreprise_raison_sociale'),
+        field_hash('SIRET siège social', 'etablissement', 'entreprise_siret_siege_social'),
+        field_hash('Date de création', 'etablissement', 'entreprise_date_creation')
+      )
+
+      fields.push(
+        field_hash('SIRET', 'etablissement', 'siret'),
+        field_hash('Libellé NAF', 'etablissement', 'libelle_naf'),
+        field_hash('Code postal', 'etablissement', 'code_postal')
+      )
+    end
+
+    explanatory_types_de_champ = [:header_section, :explication].map{ |k| TypeDeChamp.type_champs.fetch(k) }
+
+    fields.concat procedure.types_de_champ
+      .reject { |tdc| explanatory_types_de_champ.include?(tdc.type_champ) }
+      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.id.to_s) }
+
+    fields.concat procedure.types_de_champ_private
+      .reject { |tdc| explanatory_types_de_champ.include?(tdc.type_champ) }
+      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.id.to_s) }
+
+    fields
   end
 
   def fields_for_select
@@ -53,7 +86,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def get_value(dossier, table, column)
-    dossier_field_service.assert_valid_column(dossier.procedure, table, column)
+    assert_valid_column(dossier.procedure, table, column)
 
     case table
     when 'self'
@@ -143,6 +176,37 @@ class ProcedurePresentation < ApplicationRecord
 
   private
 
+  def field_hash(label, table, column)
+    {
+      'label' => label,
+      'table' => table,
+      'column' => column
+    }
+  end
+
+  def assert_valid_column(procedure, table, column)
+    if !valid_column?(procedure, table, column)
+      raise "Invalid column #{table}.#{column}"
+    end
+  end
+
+  def valid_column?(procedure, table, column)
+    valid_columns_for_table(procedure, table).include?(column)
+  end
+
+  def valid_columns_for_table(procedure, table)
+    @column_whitelist ||= {}
+
+    if !@column_whitelist.key?(procedure.id)
+      @column_whitelist[procedure.id] = fields
+        .group_by { |field| field['table'] }
+        .map { |table, fields| [table, Set.new(fields.map { |field| field['column'] }) ] }
+        .to_h
+    end
+
+    @column_whitelist[procedure.id][table] || []
+  end
+
   def assert_valid_order(order)
     if !["asc", "desc"].include?(order)
       raise "Invalid order #{order}"
@@ -162,6 +226,6 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def valid_sort_column?(procedure, table, column)
-    dossier_field_service.valid_column?(procedure, table, column) || EXTRA_SORT_COLUMNS[table]&.include?(column)
+    valid_column?(procedure, table, column) || EXTRA_SORT_COLUMNS[table]&.include?(column)
   end
 end
