@@ -1,7 +1,66 @@
 {
   "ignored_warnings": [
-
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "030551e51e29561702bcb9760bdeeed15e1936d4a9537f27e5d1d13a0ebb34ef",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/procedure_presentation.rb",
+      "line": 130,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "dossiers.includes(sort[\"table\"]).order(\"#{sanitized_column(sort)} #{sort[\"order\"]}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ProcedurePresentation",
+        "method": "sorted_ids"
+      },
+      "user_input": "sanitized_column(sort)",
+      "confidence": "Weak",
+      "note": "Not an injection because of `sanitized_column`"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "1840f5340630814ea86311e850ebd91b966e6bccd0b6856133528e7745c0695a",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/procedure_presentation.rb",
+      "line": 119,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "dossiers.order(\"#{sanitized_column(sort)} #{sort[\"order\"]}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ProcedurePresentation",
+        "method": "sorted_ids"
+      },
+      "user_input": "sanitized_column(sort)",
+      "confidence": "Weak",
+      "note": "Not an injection because of `sanitized_column`"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "b2feda5e5ae668cdbf0653f134c40bcb9e45499c1b607450e43a0166c4098364",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/procedure_presentation.rb",
+      "line": 125,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "dossiers.includes(((\"type_de_champ\" == \"type_de_champ\") ? (:champs) : (:champs_private))).where(\"champs.type_de_champ_id = #{sort[\"column\"].to_i}\").order(\"champs.value #{sort[\"order\"]}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ProcedurePresentation",
+        "method": "sorted_ids"
+      },
+      "user_input": "sort[\"order\"]",
+      "confidence": "Weak",
+      "note": "Not an injection because `sort[\"order\"]` has passed `check_allowed_sort_order`"
+    }
   ],
-  "updated": "2018-10-05 16:06:03 +0200",
+  "updated": "2018-10-05 16:12:32 +0200",
   "brakeman_version": "4.3.1"
 }
