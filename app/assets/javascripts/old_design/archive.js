@@ -1,3 +1,5 @@
+/* globals $ */
+
 $(document).on('click', 'button#archive-procedure', function() {
   $('button#archive-procedure').hide();
   $('#confirm').show();
