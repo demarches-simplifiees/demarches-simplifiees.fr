@@ -171,8 +171,6 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def get_value(dossier, table, column)
-    assert_valid_column(table, column)
-
     case table
     when 'self'
       dossier.send(column)
@@ -193,12 +191,6 @@ class ProcedurePresentation < ApplicationRecord
       'table' => table,
       'column' => column
     }
-  end
-
-  def assert_valid_column(table, column)
-    if !valid_column?(table, column)
-      raise "Invalid column #{table}.#{column}"
-    end
   end
 
   def valid_column?(table, column)
