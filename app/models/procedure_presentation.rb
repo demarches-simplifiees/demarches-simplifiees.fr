@@ -52,10 +52,44 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
+  def sorted_ids(dossiers, gestionnaire)
+    table = sort['table']
+    column = sanitized_column(sort)
+    order = sort['order']
+    assert_valid_order(order)
+
+    case table
+    when 'notifications'
+      dossiers_id_with_notification = gestionnaire.notifications_for_procedure(procedure)
+      if order == 'desc'
+        return dossiers_id_with_notification +
+            (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
+      else
+        return (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
+            dossiers_id_with_notification
+      end
+    when 'self'
+      return dossiers
+          .order("#{column} #{order}")
+          .pluck(:id)
+    when 'type_de_champ', 'type_de_champ_private'
+      return dossiers
+          .includes(table == 'type_de_champ' ? :champs : :champs_private)
+          .where("champs.type_de_champ_id = #{sort['column'].to_i}")
+          .order("champs.value #{order}")
+          .pluck(:id)
+    else
+      return dossiers
+          .includes(table)
+          .order("#{column} #{order}")
+          .pluck(:id)
+    end
+  end
+
   def filtered_ids(dossiers, statut)
     filters[statut].map do |filter|
       table = filter['table']
-      column = dossier_field_service.sanitized_column(filter)
+      column = sanitized_column(filter)
       case table
       when 'self'
         dossiers.where("? ILIKE ?", filter['column'], "%#{filter['value']}%")
@@ -91,6 +125,20 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   private
+
+  def assert_valid_order(order)
+    if !["asc", "desc"].include?(order)
+      raise "Invalid order #{order}"
+    end
+  end
+
+  def sanitized_column(field)
+    table = field['table']
+    table = ActiveRecord::Base.connection.quote_column_name((table == 'self' ? 'dossier' : table).pluralize)
+    column = ActiveRecord::Base.connection.quote_column_name(field['column'])
+
+    table + '.' + column
+  end
 
   def dossier_field_service
     @dossier_field_service ||= DossierFieldService.new
