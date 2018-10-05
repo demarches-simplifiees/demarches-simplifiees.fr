@@ -92,7 +92,6 @@
                     = submit_tag "Enregistrer", class: 'button'
 
         %tbody
-          - dossier_field_service = DossierFieldService.new
           - @dossiers.each do |dossier|
             %tr
               %td.folder-col
@@ -108,7 +107,7 @@
               - @procedure_presentation.displayed_fields.each do |field|
                 %td
                   = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
-                    = dossier_field_service.get_value(dossier, field['table'], field['column'])
+                    = @procedure_presentation.get_value(dossier, field['table'], field['column'])
 
               %td.status-col
                 = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
