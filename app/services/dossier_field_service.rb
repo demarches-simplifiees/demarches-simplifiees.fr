@@ -40,23 +40,6 @@ class DossierFieldService
     fields
   end
 
-  def get_value(dossier, table, column)
-    assert_valid_column(dossier.procedure, table, column)
-
-    case table
-    when 'self'
-      dossier.send(column)
-    when 'user'
-      dossier.user.send(column)
-    when 'etablissement'
-      dossier.etablissement&.send(column)
-    when 'type_de_champ'
-      dossier.champs.find { |c| c.type_de_champ_id == column.to_i }.value
-    when 'type_de_champ_private'
-      dossier.champs_private.find { |c| c.type_de_champ_id == column.to_i }.value
-    end
-  end
-
   def assert_valid_column(procedure, table, column)
     if !valid_column?(procedure, table, column)
       raise "Invalid column #{table}.#{column}"

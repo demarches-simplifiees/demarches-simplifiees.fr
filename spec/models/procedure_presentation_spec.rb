@@ -108,6 +108,63 @@ describe ProcedurePresentation do
     it { expect(subject.fields_for_select).to eq([["label1", "table1/column1"], ["label2", "table2/column2"]]) }
   end
 
+  describe '#get_value' do
+    let(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to) }
+
+    subject { procedure_presentation.get_value(dossier, table, column) }
+
+    context 'for self table' do
+      let(:table) { 'self' }
+      let(:column) { 'updated_at' } # All other columns work the same, no extra test required
+
+      let(:dossier) { create(:dossier, procedure: procedure) }
+
+      before { dossier.touch(time: DateTime.new(2018, 9, 25)) }
+
+      it { is_expected.to eq(DateTime.new(2018, 9, 25)) }
+    end
+
+    context 'for user table' do
+      let(:table) { 'user' }
+      let(:column) { 'email' }
+
+      let(:dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'bla@yopmail.com')) }
+
+      it { is_expected.to eq('bla@yopmail.com') }
+    end
+
+    context 'for etablissement table' do
+      let(:table) { 'etablissement' }
+      let(:column) { 'code_postal' } # All other columns work the same, no extra test required
+
+      let!(:dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75008')) }
+
+      it { is_expected.to eq('75008') }
+    end
+
+    context 'for type_de_champ table' do
+      let(:table) { 'type_de_champ' }
+      let(:column) { procedure.types_de_champ.first.id.to_s }
+
+      let(:dossier) { create(:dossier, procedure: procedure) }
+
+      before { dossier.champs.first.update(value: 'kale') }
+
+      it { is_expected.to eq('kale') }
+    end
+
+    context 'for type_de_champ_private table' do
+      let(:table) { 'type_de_champ_private' }
+      let(:column) { procedure.types_de_champ_private.first.id.to_s }
+
+      let(:dossier) { create(:dossier, procedure: procedure) }
+
+      before { dossier.champs_private.first.update(value: 'quinoa') }
+
+      it { is_expected.to eq('quinoa') }
+    end
+  end
+
   describe '#sorted_ids' do
     let(:gestionnaire) { create(:gestionnaire) }
     let(:assign_to) { create(:assign_to, procedure: procedure, gestionnaire: gestionnaire) }
