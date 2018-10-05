@@ -1,7 +1,7 @@
 class ProcedurePresentation < ApplicationRecord
   EXTRA_SORT_COLUMNS = {
-    'notifications' => Set['notifications'],
-    'self' => Set['id', 'state']
+    'notifications' => ['notifications'],
+    'self' => ['id', 'state']
   }
 
   belongs_to :assign_to
