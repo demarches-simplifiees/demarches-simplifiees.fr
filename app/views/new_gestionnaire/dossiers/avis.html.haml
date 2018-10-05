@@ -3,6 +3,13 @@
 = render partial: "header", locals: { dossier: @dossier }
 
 .container
-  = render partial: "new_gestionnaire/shared/avis/form", locals: { url: avis_gestionnaire_dossier_path(@dossier.procedure, @dossier), must_be_confidentiel: false, avis: @avis }
+  - if !@dossier.termine?
+    = render partial: "new_gestionnaire/shared/avis/form", locals: { url: avis_gestionnaire_dossier_path(@dossier.procedure, @dossier), must_be_confidentiel: false, avis: @avis }
 
-  = render partial: 'new_gestionnaire/shared/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
+  - if @dossier.avis.present?
+    = render partial: 'new_gestionnaire/shared/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
+
+  - if @dossier.termine? && !@dossier.avis.present?
+    .blank-tab
+      %h2.empty-text Aucun avis.
+      %p.empty-text-details Aucun avis n'a été demandé sur ce dossier.

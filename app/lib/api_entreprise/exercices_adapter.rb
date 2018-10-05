@@ -10,7 +10,11 @@ class ApiEntreprise::ExercicesAdapter < ApiEntreprise::Adapter
       exercice.slice(*attr_to_fetch)
     end
 
-    { exercices_attributes: exercices_array }
+    if exercices_array.all? { |params| valid_params?(params) }
+      { exercices_attributes: exercices_array }
+    else
+      {}
+    end
   end
 
   def attr_to_fetch
