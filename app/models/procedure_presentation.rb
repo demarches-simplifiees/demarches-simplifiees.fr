@@ -16,7 +16,7 @@ class ProcedurePresentation < ApplicationRecord
     displayed_fields.each do |field|
       table = field['table']
       column = field['column']
-      if !valid_column?(procedure, table, column)
+      if !valid_column?(table, column)
         errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
       end
     end
@@ -25,7 +25,7 @@ class ProcedurePresentation < ApplicationRecord
   def check_allowed_sort_column
     table = sort['table']
     column = sort['column']
-    if !valid_sort_column?(procedure, table, column)
+    if !valid_sort_column?(table, column)
       errors.add(:sort, "#{table}.#{column} n’est pas une colonne permise")
     end
   end
@@ -35,7 +35,7 @@ class ProcedurePresentation < ApplicationRecord
       columns.each do |column|
         table = column['table']
         column = column['column']
-        if !valid_column?(procedure, table, column)
+        if !valid_column?(table, column)
           errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
         end
       end
@@ -86,7 +86,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def get_value(dossier, table, column)
-    assert_valid_column(dossier.procedure, table, column)
+    assert_valid_column(table, column)
 
     case table
     when 'self'
@@ -184,27 +184,23 @@ class ProcedurePresentation < ApplicationRecord
     }
   end
 
-  def assert_valid_column(procedure, table, column)
-    if !valid_column?(procedure, table, column)
+  def assert_valid_column(table, column)
+    if !valid_column?(table, column)
       raise "Invalid column #{table}.#{column}"
     end
   end
 
-  def valid_column?(procedure, table, column)
-    valid_columns_for_table(procedure, table).include?(column)
+  def valid_column?(table, column)
+    valid_columns_for_table(table).include?(column)
   end
 
-  def valid_columns_for_table(procedure, table)
-    @column_whitelist ||= {}
+  def valid_columns_for_table(table)
+    @column_whitelist ||= fields
+      .group_by { |field| field['table'] }
+      .map { |table, fields| [table, Set.new(fields.map { |field| field['column'] }) ] }
+      .to_h
 
-    if !@column_whitelist.key?(procedure.id)
-      @column_whitelist[procedure.id] = fields
-        .group_by { |field| field['table'] }
-        .map { |table, fields| [table, Set.new(fields.map { |field| field['column'] }) ] }
-        .to_h
-    end
-
-    @column_whitelist[procedure.id][table] || []
+    @column_whitelist[table] || []
   end
 
   def assert_valid_order(order)
@@ -225,7 +221,7 @@ class ProcedurePresentation < ApplicationRecord
     @dossier_field_service ||= DossierFieldService.new
   end
 
-  def valid_sort_column?(procedure, table, column)
-    valid_column?(procedure, table, column) || EXTRA_SORT_COLUMNS[table]&.include?(column)
+  def valid_sort_column?(table, column)
+    valid_column?(table, column) || EXTRA_SORT_COLUMNS[table]&.include?(column)
   end
 end
