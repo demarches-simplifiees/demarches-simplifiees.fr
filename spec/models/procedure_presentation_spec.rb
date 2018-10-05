@@ -109,9 +109,9 @@ describe ProcedurePresentation do
   end
 
   describe '#get_value' do
-    let(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to) }
+    let(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to, displayed_fields: [{ 'table' => table, 'column' => column }]) }
 
-    subject { procedure_presentation.get_value(dossier, table, column) }
+    subject { procedure_presentation.displayed_field_values(dossier).first }
 
     context 'for self table' do
       let(:table) { 'self' }

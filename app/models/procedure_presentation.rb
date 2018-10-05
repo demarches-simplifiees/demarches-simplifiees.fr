@@ -85,21 +85,8 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def get_value(dossier, table, column)
-    assert_valid_column(table, column)
-
-    case table
-    when 'self'
-      dossier.send(column)
-    when 'user'
-      dossier.user.send(column)
-    when 'etablissement'
-      dossier.etablissement&.send(column)
-    when 'type_de_champ'
-      dossier.champs.find { |c| c.type_de_champ_id == column.to_i }.value
-    when 'type_de_champ_private'
-      dossier.champs_private.find { |c| c.type_de_champ_id == column.to_i }.value
-    end
+  def displayed_field_values(dossier)
+    displayed_fields.map { |field| get_value(dossier, field['table'], field['column']) }
   end
 
   def sorted_ids(dossiers, gestionnaire)
@@ -175,6 +162,23 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   private
+
+  def get_value(dossier, table, column)
+    assert_valid_column(table, column)
+
+    case table
+    when 'self'
+      dossier.send(column)
+    when 'user'
+      dossier.user.send(column)
+    when 'etablissement'
+      dossier.etablissement&.send(column)
+    when 'type_de_champ'
+      dossier.champs.find { |c| c.type_de_champ_id == column.to_i }.value
+    when 'type_de_champ_private'
+      dossier.champs_private.find { |c| c.type_de_champ_id == column.to_i }.value
+    end
+  end
 
   def field_hash(label, table, column)
     {
