@@ -1,26 +1,7 @@
 {
   "ignored_warnings": [
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "a0a4cede6d50308b90bd747efd0a2ebd58947fbd5d100349ccd640c60413b1a9",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/france_connect/particulier_controller.rb",
-      "line": 3,
-      "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(FranceConnectParticulierClient.new.authorization_uri)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "FranceConnect::ParticulierController",
-        "method": "login"
-      },
-      "user_input": "FranceConnectParticulierClient.new.authorization_uri",
-      "confidence": "High",
-      "note": "We trust FC OpenId implem"
-    }
+
   ],
-  "updated": "2018-01-11 15:53:22 +0100",
-  "brakeman_version": "3.7.0"
+  "updated": "2018-10-05 16:06:03 +0200",
+  "brakeman_version": "4.3.1"
 }
