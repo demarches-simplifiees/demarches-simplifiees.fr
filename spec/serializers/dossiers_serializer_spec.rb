@@ -6,6 +6,7 @@ describe DossiersSerializer do
       let(:dossier) { create(:dossier, :en_construction) }
 
       it { is_expected.to include(initiated_at: dossier.en_construction_at) }
+      it { is_expected.to include(state: 'initiated') }
     end
   end
 end
