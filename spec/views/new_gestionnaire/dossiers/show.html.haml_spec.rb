@@ -10,7 +10,7 @@ describe 'new_gestionnaire/dossiers/show.html.haml', type: :view do
   subject! { render }
 
   it 'renders the header' do
-    expect(rendered).to have_text("Dossier nº #{dossier.id}")
+    expect(rendered).to have_text("Dossier nº #{dossier.id}")
   end
 
   it 'renders the dossier infos' do
