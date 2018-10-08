@@ -455,10 +455,6 @@ GEM
     kgio (2.11.2)
     launchy (2.4.3)
       addressable (~> 2.3)
-    leaflet-draw-rails (0.1.0)
-    leaflet-markercluster-rails (0.7.0)
-      railties (>= 3.1)
-    leaflet-rails (0.7.7)
     letter_opener (1.6.0)
       launchy (~> 2.2)
     letter_opener_web (1.3.4)
@@ -858,9 +854,6 @@ DEPENDENCIES
   jquery-rails
   kaminari
   launchy
-  leaflet-draw-rails
-  leaflet-markercluster-rails (~> 0.7.0)
-  leaflet-rails
   letter_opener_web
   lograge
   logstash-event

@@ -2,6 +2,7 @@
   "dependencies": {
     "@rails/webpacker": "4.0.0-pre.2",
     "@sentry/browser": "^4.0.4",
+    "@turf/area": "^6.0.1",
     "activestorage": "^5.2.1",
     "autocomplete.js": "^0.31.0",
     "chartkick": "^3.0.1",
@@ -10,7 +11,9 @@
     "highcharts": "^6.1.2",
     "jquery": "^3.3.1",
     "leaflet": "^1.3.4",
+    "leaflet-freedraw": "^2.9.0",
     "rails-ujs": "^5.2.1",
+    "ramda": "^0.25.0",
     "select2": "^4.0.6-rc.1",
     "turbolinks": "^5.2.0"
   },
@@ -24,7 +27,7 @@
   },
   "scripts": {
     "lint:ec": "eclint check $({ git ls-files ; find vendor -type f ; echo 'db/schema.rb' ; } | sort | uniq -u)",
-    "lint:js": "eslint ./app/javascript ./config/webpack"
+    "lint:js": "eslint ./app/javascript ./app/assets/javascripts ./config/webpack"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"

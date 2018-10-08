@@ -9,6 +9,9 @@ import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';
 import '../shared/remote-input';
+import '../shared/franceconnect';
+
+import '../old_design/carto';
 
 // Start Rails helpers
 Rails.start();
