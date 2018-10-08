@@ -1,5 +1,6 @@
 :javascript
-  var dossier_id = #{dossier.id};
-  addEventListener('turbolinks:load', function() {
-    initCarto();
+  DATA.push({
+    carto: {
+      dossierId: #{dossier.id}
+    }
   });
