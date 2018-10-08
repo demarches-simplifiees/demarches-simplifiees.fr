@@ -77,7 +77,8 @@ describe API::V1::DossiersController do
           it { expect(subject[:id]).to eq(dossier.id) }
           it { expect(subject[:updated_at]).to eq("2008-09-01T10:05:00.000Z") }
           it { expect(subject[:initiated_at]).to eq("2008-09-01T10:06:00.000Z") }
-          it { expect(subject.keys.size).to eq(3) }
+          it { expect(subject[:state]).to eq("initiated") }
+          it { expect(subject.keys.size).to eq(4) }
         end
       end
 
