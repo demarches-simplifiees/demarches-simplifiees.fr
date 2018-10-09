@@ -12,6 +12,8 @@ module Tasks
         @source_to_destination_mapping = {}
         @source_champs_to_discard = Set[]
         @destination_champ_computations = []
+
+        setup_mapping
       end
 
       def check_source_destination_champs_consistency

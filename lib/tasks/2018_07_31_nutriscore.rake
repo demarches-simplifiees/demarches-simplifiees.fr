@@ -9,12 +9,7 @@ namespace :'2018_07_31_nutriscore' do
     destination_procedure = Procedure.find(destination_procedure_id)
 
     mapping = Class.new(Tasks::DossierProcedureMigrator::ChampMapping) do
-      def initialize(source_procedure, destination_procedure)
-        super
-        setup_champ_mapping
-      end
-
-      def setup_champ_mapping
+      def setup_mapping
         siret_order_place = 2
         fonction_order_place = 9
         zone_geographique_header_order_place = 18
