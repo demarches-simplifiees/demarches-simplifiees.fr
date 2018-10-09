@@ -100,7 +100,7 @@ namespace :'2018_07_31_nutriscore' do
           target_tdc.champ.create(dossier: d, value: JSON.unparse(['FRANCE']))
         end
       end
-    end.new(source_procedure, destination_procedure)
+    end
 
     Tasks::DossierProcedureMigrator.new(source_procedure, destination_procedure, mapping).migrate_procedure
     AutoReceiveDossiersForProcedureJob.set(cron: "* * * * *").perform_later(destination_procedure_id, 'accepte')

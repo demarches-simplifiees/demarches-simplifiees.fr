@@ -117,7 +117,7 @@ module Tasks
     def initialize(source_procedure, destination_procedure, champ_mapping)
       @source_procedure = source_procedure
       @destination_procedure = destination_procedure
-      @champ_mapping = champ_mapping
+      @champ_mapping = champ_mapping.new(source_procedure, destination_procedure)
     end
 
     def migrate_procedure
