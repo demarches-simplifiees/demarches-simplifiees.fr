@@ -74,23 +74,3 @@
         - else
           .alert.alert-info
             Cette démarche n’a pas encore de lien, et n’est donc pas accessible par le public.
-
-    %br
-
-    - if @procedure.publiee_ou_archivee?
-      %h3 Supprimer la démarche
-      .alert.alert-danger
-        %p
-          Attention : la suppression d’une démarche est définitive.
-
-        - dossiers_count = @procedure.dossiers.count
-        - if dossiers_count > 0
-          %p
-            = dossiers_deletion_warning(@procedure)
-
-        %p.text-right
-          = link_to "J'ai compris, je supprime la démarche",
-            hide_admin_procedure_path(@procedure),
-            method: :post,
-            class: "btn btn-danger",
-            data: { confirm: "Voulez-vous supprimer la démarche ?", disable: true }
