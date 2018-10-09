@@ -1,3 +1,4 @@
+const path = require('path');
 const { environment } = require('@rails/webpacker');
 
 // By default don't transpile JS files in ./node_modules – except for some specific modules.
@@ -13,5 +14,13 @@ babelLoader.exclude = function(modulePath) {
     )
   );
 };
+
+const resolve = {
+  alias: {
+    '@utils': path.resolve(__dirname, '..', '..', 'app/javascript/shared/utils')
+  }
+};
+
+environment.config.merge({ resolve });
 
 module.exports = environment;
