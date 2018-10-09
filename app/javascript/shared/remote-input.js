@@ -1,7 +1,4 @@
-import Rails from 'rails-ujs';
-import debounce from 'debounce';
-
-const { delegate, fire } = Rails;
+import { delegate, fire, debounce } from '@utils';
 
 const remote = 'data-remote';
 const inputChangeSelector = `input[${remote}], textarea[${remote}]`;
@@ -21,4 +18,4 @@ function isRemote(element) {
   return value && value !== 'false';
 }
 
-delegate(document, inputChangeSelector, 'input', debounce(handleRemote, 200));
+delegate('input', inputChangeSelector, debounce(handleRemote, 200));
