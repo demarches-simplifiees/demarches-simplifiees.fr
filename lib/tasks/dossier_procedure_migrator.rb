@@ -21,6 +21,25 @@ module Tasks
         @source_to_destination_mapping[champ.type_de_champ.order_place]
       end
 
+      def migrate_champs(dossier)
+        # Since we’re going to iterate and change the champs at the same time,
+        # we use to_a to make the list static and avoid nasty surprises
+        original_champs = dossier.champs.to_a
+
+        compute_new_champs(dossier)
+
+        original_champs.each do |c|
+          tdc_to = destination_type_de_champ(c)
+          if tdc_to.present?
+            c.update(type_de_champ: tdc_to)
+          elsif discard_champ?(c)
+            dossier.champs.destroy(c)
+          else
+            fail "Unhandled source type de champ #{c.type_de_champ.order_place}"
+          end
+        end
+      end
+
       def discard_champ?(champ)
         @source_champs_to_discard.member?(champ.type_de_champ.order_place)
       end
@@ -124,22 +143,7 @@ module Tasks
 
     def migrate_dossiers
       @source_procedure.dossiers.find_each(batch_size: 100) do |d|
-        # Since we’re going to iterate and change the champs at the same time,
-        # we use to_a to make the list static and avoid nasty surprises
-        original_champs = d.champs.to_a
-
-        @champ_mapping.compute_new_champs(d)
-
-        original_champs.each do |c|
-          tdc_to = @champ_mapping.destination_type_de_champ(c)
-          if tdc_to.present?
-            c.update(type_de_champ: tdc_to)
-          elsif @champ_mapping.discard_champ?(c)
-            d.champs.destroy(c)
-          else
-            fail "Unhandled source type de champ #{c.type_de_champ.order_place}"
-          end
-        end
+        @champ_mapping.migrate_champs(d)
 
         # Use update_columns to avoid triggering build_default_champs
         d.update_columns(procedure_id: @destination_procedure.id)
