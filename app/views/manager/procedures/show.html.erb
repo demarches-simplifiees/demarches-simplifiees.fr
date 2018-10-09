@@ -36,6 +36,10 @@ as well as a link to its edit page.
     <% if !procedure.whitelisted? %>
       <%= link_to 'whitelister', whitelist_manager_procedure_path(procedure), method: :post, class: 'button' %>
     <% end %>
+
+    <% if procedure.publiee? && procedure.dossiers.empty? %>
+      <%= link_to 'passer en brouillon', draft_manager_procedure_path(procedure), method: :post, class: 'button' %>
+    <% end %>
   <div>
 
 </header>
