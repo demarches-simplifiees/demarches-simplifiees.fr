@@ -23,6 +23,7 @@
         %input#json_latlngs{ type: 'hidden', value: "#{@dossier.json_latlngs}", name: 'json_latlngs' }
         %input#quartier_prioritaires{ type: 'hidden', value: "#{@dossier.quartier_prioritaires.to_json}" }
         %input#cadastres{ type: 'hidden', value: "#{@dossier.cadastres.to_json}" }
+        %input#parcelle_agricoles{ type: 'hidden', value: "#{@dossier.parcelle_agricoles.to_json}" }
 
         - if @dossier.brouillon?
           = render partial: '/layouts/etape_suivante'

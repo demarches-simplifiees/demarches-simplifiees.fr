@@ -23,6 +23,18 @@ class ModuleApiCartoService
     end
   end
 
+  def self.save_pa!(dossier, json_latlngs)
+    if dossier.procedure.module_api_carto.parcelles_agricoles?
+      parcelle_list = generate_pa JSON.parse(json_latlngs)
+
+      parcelle_list.each do |parcelle|
+        parcelle[:dossier_id] = dossier.id
+        parcelle[:geometry] = parcelle[:geometry].to_json
+        ParcelleAgricole.create(parcelle)
+      end
+    end
+  end
+
   def self.generate_qp(coordinates)
     coordinates.inject({}) { |acc, coordinate|
       acc.merge CARTO::SGMAP::QuartiersPrioritaires::Adapter.new(
@@ -34,6 +46,14 @@ class ModuleApiCartoService
   def self.generate_cadastre(coordinates)
     coordinates.flat_map do |coordinate|
       CARTO::SGMAP::Cadastre::Adapter.new(
+        coordinate.map { |element| [element['lng'], element['lat']] }
+      ).to_params
+    end
+  end
+
+  def self.generate_pa(coordinates)
+    coordinates.flat_map do |coordinate|
+      CARTO::SGMAP::ParcellesAgricoles::Adapter.new(
         coordinate.map { |element| [element['lng'], element['lat']] }
       ).to_params
     end

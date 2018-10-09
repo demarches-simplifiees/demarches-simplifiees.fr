@@ -21,6 +21,7 @@ class Users::CarteController < UsersController
     if safe_json_latlngs.present?
       ModuleApiCartoService.save_qp! dossier, safe_json_latlngs
       ModuleApiCartoService.save_cadastre! dossier, safe_json_latlngs
+      ModuleApiCartoService.save_pa! dossier, safe_json_latlngs
     end
 
     dossier.update(json_latlngs: safe_json_latlngs)
@@ -53,6 +54,10 @@ class Users::CarteController < UsersController
 
   def get_qp
     render json: { quartier_prioritaires: ModuleApiCartoService.generate_qp(JSON.parse(params[:coordinates])) }
+  end
+
+  def get_pa
+    render json: { parcelles_agricoles: ModuleApiCartoService.generate_pa(JSON.parse(params[:coordinates])) }
   end
 
   def get_cadastre
