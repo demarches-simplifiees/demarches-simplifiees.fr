@@ -44,14 +44,6 @@ class Admin::ProceduresController < AdminController
     @mine = @procedure.path_is_mine?(@path)
   end
 
-  def hide
-    procedure = current_administrateur.procedures.find(params[:id])
-    procedure.hide!
-
-    flash.notice = "Démarche supprimée, en cas d'erreur #{helpers.contact_link('contactez nous', tags: 'démarche supprimée')}"
-    redirect_to admin_procedures_draft_path
-  end
-
   def destroy
     procedure = current_administrateur.procedures.find(params[:id])
 
