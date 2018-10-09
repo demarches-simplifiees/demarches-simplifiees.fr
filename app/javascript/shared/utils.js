@@ -37,19 +37,24 @@ export function getJSON(url, data, method = 'get') {
 }
 
 export function scrollTo(container, scrollTo) {
-  $(container).scrollTop(
-    $(scrollTo).offset().top -
-      $(container).offset().top +
-      $(container).scrollTop()
-  );
+  container.scrollTop =
+    offset(scrollTo).top - offset(container).top + container.scrollTop;
 }
 
 export function scrollToBottom(container) {
-  $(container).scrollTop(container.scrollHeight);
+  container.scrollTop = container.scrollHeight;
 }
 
 export function on(selector, eventName, fn) {
   [...document.querySelectorAll(selector)].forEach(element =>
     element.addEventListener(eventName, event => fn(event, event.detail))
   );
+}
+
+function offset(element) {
+  const rect = element.getBoundingClientRect();
+  return {
+    top: rect.top + document.body.scrollTop,
+    left: rect.left + document.body.scrollLeft
+  };
 }
