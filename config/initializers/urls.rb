@@ -13,4 +13,5 @@ DOC_URL = "https://doc.demarches-simplifiees.fr"
 LISTE_DES_DEMARCHES_URL = [DOC_URL, "listes-des-demarches"].join("/")
 CGU_URL = [DOC_URL, "cgu"].join("/")
 MENTIONS_LEGALES_URL = [CGU_URL, "4-mentions-legales"].join("#")
+API_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "api"].join("/")
 FAQ_URL = "https://faq.demarches-simplifiees.fr"
