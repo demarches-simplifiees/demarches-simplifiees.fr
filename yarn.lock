@@ -1519,6 +1519,16 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+better-ujs@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/better-ujs/-/better-ujs-0.6.1.tgz#98b8708810ed4c21c912778bbb55d727ca20fd7a"
+  integrity sha512-YGyCFaKkW7gczBBpS82dfHXbzGbw9czY5UUucbbmDXKtop2Ynhgl+DtjQkBHMuV4Njsz7+VmTnlGjwugkvMMxQ==
+  dependencies:
+    debounce "^1.2.0"
+    delegated-events "^1.0.9"
+    jquery-param "^1.0.1"
+    whatwg-fetch "^2.0.4"
+
 big.js@^3.1.3:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-3.2.0.tgz#a5fc298b81b9e0dca2e458824784b65c52ba588e"
@@ -2798,6 +2808,13 @@ delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
   integrity sha1-3zrhmayt+31ECqrgsp4icrJOxhk=
+
+delegated-events@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/delegated-events/-/delegated-events-1.0.9.tgz#52a934dc3ea684111008a1288b590097e520eaa4"
+  integrity sha512-cMWWmVYNpkSmEL2lr1yseDgtp/XlsBiXATs1SUVwKPDVWWMs6avcjk3chCSRqu/7o2TiBG5ffP+CgJYxeQ6dFQ==
+  dependencies:
+    selector-set "^1.1.2"
 
 delegates@^1.0.0:
   version "1.0.0"
@@ -5083,6 +5100,11 @@ jquery-mousewheel@~3.1.13:
   version "3.1.13"
   resolved "https://registry.yarnpkg.com/jquery-mousewheel/-/jquery-mousewheel-3.1.13.tgz#06f0335f16e353a695e7206bf50503cb523a6ee5"
   integrity sha1-BvAzXxbjU6aV5yBr9QUDy1I6buU=
+
+jquery-param@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/jquery-param/-/jquery-param-1.0.1.tgz#fba32ca58a91e8b1d64ac4765d2fe5a25ac46781"
+  integrity sha512-7HN1dLvfweR7lNDtajA8FfhghN+SKsKz/ME7D/PAPQ8eDUr2ub42WqeyrZptWEdslckrpKpp+ZGGiKjE+r7iuQ==
 
 jquery@^3.3.1:
   version "3.3.1"
@@ -7543,11 +7565,6 @@ querystringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.0.0.tgz#fa3ed6e68eb15159457c89b37bc6472833195755"
   integrity sha512-eTPo5t/4bgaMNZxyjWx6N2a6AuE0mq51KWvpc7nU/MAqixcI6v6KrGUKES0HaomdnolQBBXU/++X6/QQ9KL4tw==
 
-rails-ujs@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/rails-ujs/-/rails-ujs-5.2.1.tgz#2869c6d54fdfefac3aaa257f4efe211d8f5a7169"
-  integrity sha512-kOsSdmBATcilfMzBCYgbefQ+5eUG6BAr9rDy+GC09Cvqx0017XBVp1Xu/Ksvwr6r7fHzgNkEUpKnQoOflpNz+A==
-
 ramda@^0.25.0:
   version "0.25.0"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
@@ -8159,6 +8176,11 @@ select2@^4.0.6-rc.1:
   dependencies:
     almond "~0.3.1"
     jquery-mousewheel "~3.1.13"
+
+selector-set@^1.1.2:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/selector-set/-/selector-set-1.1.3.tgz#be886bda6cbaae8b4a7c94b110c15de499d7484f"
+  integrity sha512-l+E0lobC3qAq2flOSNMqXddHlysKFyQL+8OIjb4x5WqgDJGHZos3YXLirq2eunZFIMG8uooXobexLO5C3j1Pwg==
 
 selfsigned@^1.9.1:
   version "1.10.3"
@@ -9512,6 +9534,11 @@ websocket-extensions@>=0.1.1:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.3.tgz#5d2ff22977003ec687a4b87073dfbbac146ccf29"
   integrity sha512-nqHUnMXmBzT0w570r2JpJxfiSD1IzoI+HGVdd3aZ0yNi3ngvQ4jv1dtHt5VGxfI2yj5yqImPhOK4vmIh2xMbGg==
+
+whatwg-fetch@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"
+  integrity sha512-dcQ1GWpOD/eEQ97k66aiEVpNnapVj90/+R+SXTPYGHpYBBypfKJEQjLrvMZ7YXbKm21gXd4NcuxUTjiv1YtLng==
 
 whet.extend@~0.9.9:
   version "0.9.9"

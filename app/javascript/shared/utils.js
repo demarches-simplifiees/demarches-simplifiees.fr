@@ -1,9 +1,7 @@
-import Rails from 'rails-ujs';
-import $ from 'jquery';
+import { fire, getJSON, delegate as _delegate } from 'better-ujs';
 import debounce from 'debounce';
 
-export { debounce };
-export const { fire } = Rails;
+export { debounce, fire, getJSON };
 
 export function show({ classList }) {
   classList.remove('hidden');
@@ -20,20 +18,7 @@ export function toggle({ classList }) {
 export function delegate(eventNames, selector, callback) {
   eventNames
     .split(' ')
-    .forEach(eventName =>
-      Rails.delegate(document, selector, eventName, callback)
-    );
-}
-
-export function getJSON(url, data, method = 'get') {
-  data = method !== 'get' ? JSON.stringify(data) : data;
-  return $.ajax({
-    method,
-    url,
-    data,
-    contentType: 'application/json',
-    dataType: 'json'
-  });
+    .forEach(eventName => _delegate(eventName, selector, callback));
 }
 
 export function scrollTo(container, scrollTo) {

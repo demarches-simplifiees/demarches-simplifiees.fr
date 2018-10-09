@@ -1,15 +1,13 @@
 import '../shared/polyfills';
 import Turbolinks from 'turbolinks';
-import Rails from 'rails-ujs';
-import ActiveStorage from '../shared/activestorage/ujs';
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
+import start from 'better-ujs';
+
+import ActiveStorage from '../shared/activestorage/ujs';
 
 import '../shared/sentry';
-import '../shared/rails-ujs-fix';
-import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';
-import '../shared/remote-input';
 import '../shared/franceconnect';
 
 import '../new_design/spinner';
@@ -36,7 +34,7 @@ const DS = {
 
 // Start Rails helpers
 Chartkick.addAdapter(Highcharts);
-Rails.start();
+start();
 Turbolinks.start();
 ActiveStorage.start();
 

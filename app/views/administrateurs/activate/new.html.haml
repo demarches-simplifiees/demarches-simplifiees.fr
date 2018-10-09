@@ -16,7 +16,7 @@
       = f.label :password do
         Mot de passe
 
-      = f.password_field :password, placeholder: 'Mot de passe', data: { remote: true, url: admin_activate_test_password_strength_path }
+      = f.password_field :password, placeholder: 'Mot de passe', data: { remote: true, debounce: true, url: admin_activate_test_password_strength_path }
 
       #strength-bar.password-strength
         &nbsp;

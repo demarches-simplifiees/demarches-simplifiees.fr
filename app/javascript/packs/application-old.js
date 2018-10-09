@@ -1,20 +1,18 @@
 import '../shared/polyfills';
 import Turbolinks from 'turbolinks';
-import Rails from 'rails-ujs';
-import ActiveStorage from '../shared/activestorage/ujs';
 import jQuery from 'jquery';
+import start from 'better-ujs';
+
+import ActiveStorage from '../shared/activestorage/ujs';
 
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
-import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';
-import '../shared/remote-input';
-import '../shared/franceconnect';
 
 import '../old_design/carto';
 
 // Start Rails helpers
-Rails.start();
+start();
 Turbolinks.start();
 ActiveStorage.start();
 
@@ -24,6 +22,5 @@ if (process.env['RAILS_ENV'] === 'test') {
 }
 
 // Export jQuery globally for legacy Javascript files used in the old design
-jQuery.rails = Rails;
 window.$ = jQuery;
 window.jQuery = jQuery;

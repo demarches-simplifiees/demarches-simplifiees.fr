@@ -3,7 +3,7 @@
     placeholder: "Numéro de dossier",
     autocomplete: 'off',
     required: champ.mandatory?,
-    data: { remote: true, url: champs_dossier_link_path(form.index) }
+    data: { remote: true, debounce: true, url: champs_dossier_link_path(form.index) }
 
   .help-block
     = render partial: 'shared/champs/dossier_link/help_block', locals: { id: champ.value }
