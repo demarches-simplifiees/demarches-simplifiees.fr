@@ -3,9 +3,10 @@ module Tasks
     # Migrates dossiers from an old source procedure to a revised destination procedure.
 
     class ChampMapping
-      def initialize(source_procedure, destination_procedure)
+      def initialize(source_procedure, destination_procedure, is_private)
         @source_procedure = source_procedure
         @destination_procedure = destination_procedure
+        @is_private = is_private
 
         @expected_source_types_de_champ = {}
         @expected_destination_types_de_champ = {}
@@ -17,14 +18,14 @@ module Tasks
       end
 
       def check_source_destination_champs_consistency
-        check_champs_consistency('source', @expected_source_types_de_champ, @source_procedure.types_de_champ)
-        check_champs_consistency('destination', @expected_destination_types_de_champ, @destination_procedure.types_de_champ)
+        check_champs_consistency("#{privacy_label}source", @expected_source_types_de_champ, types_de_champ(@source_procedure))
+        check_champs_consistency("#{privacy_label}destination", @expected_destination_types_de_champ, types_de_champ(@destination_procedure))
       end
 
       def migrate_champs(dossier)
         # Since we’re going to iterate and change the champs at the same time,
         # we use to_a to make the list static and avoid nasty surprises
-        original_champs = dossier.champs.to_a
+        original_champs = champs(dossier).to_a
 
         compute_new_champs(dossier)
 
@@ -33,9 +34,9 @@ module Tasks
           if tdc_to.present?
             c.update(type_de_champ: tdc_to)
           elsif discard_champ?(c)
-            dossier.champs.destroy(c)
+            champs(dossier).destroy(c)
           else
-            fail "Unhandled source type de champ #{c.type_de_champ.order_place}"
+            fail "Unhandled source #{privacy_label}type de champ #{c.type_de_champ.order_place}"
           end
         end
       end
@@ -44,7 +45,7 @@ module Tasks
 
       def compute_new_champs(dossier)
         @destination_champ_computations.each do |tdc, block|
-          dossier.champs << block.call(dossier, tdc)
+          champs(dossier) << block.call(dossier, tdc)
         end
       end
 
@@ -54,6 +55,21 @@ module Tasks
 
       def discard_champ?(champ)
         @source_champs_to_discard.member?(champ.type_de_champ.order_place)
+      end
+
+      def setup_mapping
+      end
+
+      def champs(dossier)
+        @is_private ? dossier.champs_private : dossier.champs
+      end
+
+      def types_de_champ(procedure)
+        @is_private ? procedure.types_de_champ_private : procedure.types_de_champ
+      end
+
+      def privacy_label
+        @is_private ? 'private ' : ''
       end
 
       def check_champs_consistency(label, expected_tdcs, actual_tdcs)
@@ -84,12 +100,12 @@ module Tasks
       end
 
       def map_source_to_destination_champ(source_order_place, destination_order_place, source_overrides: {}, destination_overrides: {})
-        destination_type_de_champ = @destination_procedure.types_de_champ.find_by(order_place: destination_order_place)
+        destination_type_de_champ = types_de_champ(@destination_procedure).find_by(order_place: destination_order_place)
         @expected_source_types_de_champ[source_order_place] =
           type_de_champ_to_expectation(destination_type_de_champ)
           .merge!(source_overrides)
         @expected_destination_types_de_champ[destination_order_place] =
-          type_de_champ_to_expectation(@source_procedure.types_de_champ.find_by(order_place: source_order_place))
+          type_de_champ_to_expectation(types_de_champ(@source_procedure).find_by(order_place: source_order_place))
           .merge!({ "mandatory" => false }) # Even if the source was mandatory, it’s ok for the destination to be optional
           .merge!(destination_overrides)
         @source_to_destination_mapping[source_order_place] = destination_type_de_champ
@@ -102,7 +118,7 @@ module Tasks
 
       def compute_destination_champ(destination_type_de_champ, &block)
         @expected_destination_types_de_champ[destination_type_de_champ.order_place] = type_de_champ_to_expectation(destination_type_de_champ)
-        @destination_champ_computations << [@destination_procedure.types_de_champ.find_by(order_place: destination_type_de_champ.order_place), block]
+        @destination_champ_computations << [types_de_champ(@destination_procedure).find_by(order_place: destination_type_de_champ.order_place), block]
       end
 
       def type_de_champ_to_expectation(tdc)
@@ -116,10 +132,11 @@ module Tasks
       end
     end
 
-    def initialize(source_procedure, destination_procedure, champ_mapping)
+    def initialize(source_procedure, destination_procedure, champ_mapping, private_champ_mapping = ChampMapping)
       @source_procedure = source_procedure
       @destination_procedure = destination_procedure
-      @champ_mapping = champ_mapping.new(source_procedure, destination_procedure)
+      @champ_mapping = champ_mapping.new(source_procedure, destination_procedure, false)
+      @private_champ_mapping = private_champ_mapping.new(source_procedure, destination_procedure, true)
     end
 
     def migrate_procedure
@@ -132,6 +149,7 @@ module Tasks
     def check_consistency
       check_same_administrateur
       @champ_mapping.check_source_destination_champs_consistency
+      @private_champ_mapping.check_source_destination_champs_consistency
     end
 
     def check_same_administrateur
@@ -143,6 +161,7 @@ module Tasks
     def migrate_dossiers
       @source_procedure.dossiers.find_each(batch_size: 100) do |d|
         @champ_mapping.migrate_champs(d)
+        @private_champ_mapping.migrate_champs(d)
 
         # Use update_columns to avoid triggering build_default_champs
         d.update_columns(procedure_id: @destination_procedure.id)
