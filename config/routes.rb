@@ -379,8 +379,6 @@ Rails.application.routes.draw do
     get 'renew-api-token' => redirect('/profil')
   end
 
-  apipie
-
   #
   # Legacy routes
   #

@@ -87,10 +87,6 @@ gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 gem 'spreadsheet_architect'
 gem 'axlsx', '~> 3.0.0.pre' # https://github.com/randym/axlsx/issues/501#issuecomment-373640365
 
-gem 'apipie-rails'
-# For Markdown support in apipie
-gem 'maruku'
-
 gem 'openstack'
 
 gem 'browser'
