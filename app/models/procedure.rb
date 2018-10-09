@@ -86,6 +86,10 @@ class Procedure < ApplicationRecord
       transitions from: :publiee, to: :hidden
       transitions from: :archivee, to: :hidden
     end
+
+    event :draft, after: :after_draft do
+      transitions from: :publiee, to: :brouillon
+    end
   end
 
   def publish_or_reopen!(path)
@@ -370,6 +374,10 @@ class Procedure < ApplicationRecord
     update!(published_at: Time.now, archived_at: nil)
 
     publish_with_path!(path)
+  end
+
+  def after_draft
+    update!(published_at: nil)
   end
 
   def update_juridique_required
