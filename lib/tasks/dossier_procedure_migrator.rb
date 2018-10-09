@@ -3,9 +3,6 @@ module Tasks
     # Migrates dossiers from an old source procedure to a revised destination procedure.
 
     class ChampMapping
-      attr_reader :expected_source_types_de_champ
-      attr_reader :expected_destination_types_de_champ
-
       def initialize(source_procedure, destination_procedure)
         @source_procedure = source_procedure
         @destination_procedure = destination_procedure
@@ -15,6 +12,11 @@ module Tasks
         @source_to_destination_mapping = {}
         @source_champs_to_discard = Set[]
         @destination_champ_computations = []
+      end
+
+      def check_source_destination_champs_consistency
+        check_champs_consistency('source', @expected_source_types_de_champ, @source_procedure.types_de_champ)
+        check_champs_consistency('destination', @expected_destination_types_de_champ, @destination_procedure.types_de_champ)
       end
 
       def migrate_champs(dossier)
@@ -50,6 +52,33 @@ module Tasks
 
       def discard_champ?(champ)
         @source_champs_to_discard.member?(champ.type_de_champ.order_place)
+      end
+
+      def check_champs_consistency(label, expected_tdcs, actual_tdcs)
+        if actual_tdcs.size != expected_tdcs.size
+          raise "Incorrect #{label} size #{actual_tdcs.size} (expected #{expected_tdcs.size})"
+        end
+        actual_tdcs.each { |tdc| check_champ_consistency(label, expected_tdcs[tdc.order_place], tdc) }
+      end
+
+      def check_champ_consistency(label, expected_tdc, actual_tdc)
+        errors = []
+        if actual_tdc.libelle != expected_tdc['libelle']
+          errors.append("incorrect libelle #{actual_tdc.libelle} (expected #{expected_tdc['libelle']})")
+        end
+        if actual_tdc.type_champ != expected_tdc['type_champ']
+          errors.append("incorrect type champ #{actual_tdc.type_champ} (expected #{expected_tdc['type_champ']})")
+        end
+        if (!actual_tdc.mandatory) && expected_tdc['mandatory']
+          errors.append("champ should be mandatory")
+        end
+        drop_down = actual_tdc.drop_down_list.presence&.options&.presence
+        if drop_down != expected_tdc['drop_down']
+          errors.append("incorrect drop down list #{drop_down} (expected #{expected_tdc['drop_down']})")
+        end
+        if errors.present?
+          fail "On #{label} type de champ #{actual_tdc.order_place} (#{actual_tdc.libelle}) " + errors.join(', ')
+        end
       end
 
       def map_source_to_destination_champ(source_order_place, destination_order_place, source_overrides: {}, destination_overrides: {})
@@ -100,44 +129,12 @@ module Tasks
 
     def check_consistency
       check_same_administrateur
-      check_source_destination_champs_consistency
+      @champ_mapping.check_source_destination_champs_consistency
     end
 
     def check_same_administrateur
       if @source_procedure.administrateur != @destination_procedure.administrateur
         raise "Mismatching administrateurs #{@source_procedure.administrateur&.email} → #{@destination_procedure.administrateur&.email}"
-      end
-    end
-
-    def check_source_destination_champs_consistency
-      check_champs_consistency('source', @champ_mapping.expected_source_types_de_champ, @source_procedure.types_de_champ)
-      check_champs_consistency('destination', @champ_mapping.expected_destination_types_de_champ, @destination_procedure.types_de_champ)
-    end
-
-    def check_champs_consistency(label, expected_tdcs, actual_tdcs)
-      if actual_tdcs.size != expected_tdcs.size
-        raise "Incorrect #{label} size #{actual_tdcs.size} (expected #{expected_tdcs.size})"
-      end
-      actual_tdcs.each { |tdc| check_champ_consistency(label, expected_tdcs[tdc.order_place], tdc) }
-    end
-
-    def check_champ_consistency(label, expected_tdc, actual_tdc)
-      errors = []
-      if actual_tdc.libelle != expected_tdc['libelle']
-        errors.append("incorrect libelle #{actual_tdc.libelle} (expected #{expected_tdc['libelle']})")
-      end
-      if actual_tdc.type_champ != expected_tdc['type_champ']
-        errors.append("incorrect type champ #{actual_tdc.type_champ} (expected #{expected_tdc['type_champ']})")
-      end
-      if (!actual_tdc.mandatory) && expected_tdc['mandatory']
-        errors.append("champ should be mandatory")
-      end
-      drop_down = actual_tdc.drop_down_list.presence&.options&.presence
-      if drop_down != expected_tdc['drop_down']
-        errors.append("incorrect drop down list #{drop_down} (expected #{expected_tdc['drop_down']})")
-      end
-      if errors.present?
-        fail "On #{label} type de champ #{actual_tdc.order_place} (#{actual_tdc.libelle}) " + errors.join(', ')
       end
     end
 
