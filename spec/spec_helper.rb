@@ -111,7 +111,6 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = false
 
   config.run_all_when_everything_filtered = true
-  config.filter_run :show_in_doc => true if ENV['APIPIE_RECORD']
   config.filter_run :focus => true
 
   config.order = 'random'
