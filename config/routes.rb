@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   namespace :manager do
     resources :procedures, only: [:index, :show] do
       post 'whitelist', on: :member
+      post 'draft', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do
