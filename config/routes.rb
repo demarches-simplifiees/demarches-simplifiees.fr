@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   namespace :manager do
     resources :procedures, only: [:index, :show] do
       post 'whitelist', on: :member
+      post 'draft', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do
@@ -196,7 +197,6 @@ Rails.application.routes.draw do
       end
 
       member do
-        post :hide
         delete :delete_logo
         delete :delete_deliberation
         delete :delete_notice
@@ -378,8 +378,6 @@ Rails.application.routes.draw do
     # allow refresh 'renew api token' page
     get 'renew-api-token' => redirect('/profil')
   end
-
-  apipie
 
   #
   # Legacy routes

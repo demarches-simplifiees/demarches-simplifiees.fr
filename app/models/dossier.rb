@@ -277,6 +277,23 @@ class Dossier < ApplicationRecord
     DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
   end
 
+  def old_state_value
+    case state
+    when Dossier.states.fetch(:en_construction)
+      'initiated'
+    when Dossier.states.fetch(:en_instruction)
+      'received'
+    when Dossier.states.fetch(:accepte)
+      'closed'
+    when Dossier.states.fetch(:refuse)
+      'refused'
+    when Dossier.states.fetch(:sans_suite)
+      'without_continuation'
+    else
+      state
+    end
+  end
+
   private
 
   def update_state_dates

@@ -1,12 +1,4 @@
 class APIController < ApplicationController
-  AUTHENTICATION_TOKEN_DESCRIPTION = <<-EOS
-    L'authentification de l'API se fait via un header HTTP :
-
-    ```
-      Authorization: Bearer &lt;Token administrateur&gt;
-    ```
-  EOS
-
   before_action :default_format_json
 
   protected

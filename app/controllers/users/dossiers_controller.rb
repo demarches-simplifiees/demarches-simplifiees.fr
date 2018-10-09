@@ -16,7 +16,7 @@ class Users::DossiersController < UsersController
     procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
     procedure = procedure_path&.procedure
 
-    if procedure&.brouillon_avec_lien?
+    if procedure&.brouillon? && procedure&.path.present?
       redirect_to new_users_dossier_path(procedure_id: procedure.id, brouillon: true)
     else
       flash.alert = "La démarche est inconnue."
