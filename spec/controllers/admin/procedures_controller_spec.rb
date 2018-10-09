@@ -680,38 +680,6 @@ describe Admin::ProceduresController, type: :controller do
     end
   end
 
-  describe "POST #hide" do
-    subject { post :hide, params: { id: procedure.id } }
-
-    context "when procedure is not owned by administrateur" do
-      let(:procedure) { create :procedure, administrateur: create(:administrateur) }
-
-      it { expect{ subject }.to raise_error(ActiveRecord::RecordNotFound) }
-    end
-
-    context "when procedure is owned by administrateur" do
-      let(:procedure) { create :procedure, :published, administrateur: admin }
-
-      before do
-        subject
-        procedure.reload
-      end
-
-      it { expect(procedure.hidden_at).not_to be_nil }
-      it { expect(procedure.procedure_path).to be_nil }
-    end
-
-    context "when procedure has no path" do
-      let(:procedure) { create :procedure, administrateur: admin }
-
-      it { expect{ subject }.not_to raise_error }
-      it do
-        subject
-        expect(procedure.reload.hidden_at).not_to be_nil
-      end
-    end
-  end
-
   describe "DELETE #delete_deliberation" do
     context "with a demarche the admin owns" do
       let(:procedure) { create(:procedure, :with_deliberation, administrateur: admin) }
