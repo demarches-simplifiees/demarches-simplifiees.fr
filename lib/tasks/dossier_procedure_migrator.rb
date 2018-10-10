@@ -17,10 +17,6 @@ module Tasks
         @destination_champ_computations = []
       end
 
-      def destination_type_de_champ(champ)
-        @source_to_destination_mapping[champ.type_de_champ.order_place]
-      end
-
       def migrate_champs(dossier)
         # Since we’re going to iterate and change the champs at the same time,
         # we use to_a to make the list static and avoid nasty surprises
@@ -40,9 +36,7 @@ module Tasks
         end
       end
 
-      def discard_champ?(champ)
-        @source_champs_to_discard.member?(champ.type_de_champ.order_place)
-      end
+      private
 
       def compute_new_champs(dossier)
         @destination_champ_computations.each do |tdc, block|
@@ -50,7 +44,13 @@ module Tasks
         end
       end
 
-      private
+      def destination_type_de_champ(champ)
+        @source_to_destination_mapping[champ.type_de_champ.order_place]
+      end
+
+      def discard_champ?(champ)
+        @source_champs_to_discard.member?(champ.type_de_champ.order_place)
+      end
 
       def map_source_to_destination_champ(source_order_place, destination_order_place, source_overrides: {}, destination_overrides: {})
         destination_type_de_champ = @destination_procedure.types_de_champ.find_by(order_place: destination_order_place)
