@@ -16,7 +16,7 @@ class Users::Dossiers::InvitesController < UsersController
     if dossier.brouillon?
       redirect_to brouillon_dossier_path(dossier)
     else
-      return redirect_to dossier_path(dossier)
+      redirect_to dossier_path(dossier)
     end
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
