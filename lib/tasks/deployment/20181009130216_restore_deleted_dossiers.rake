@@ -7,6 +7,7 @@ namespace :after_party do
       def run
         rake_puts "Running deploy task 'restore_deleted_dossiers'"
         restore_candidats_libres_deleted_dossiers
+        restore_neph_deleted_dossiers
         AfterParty::TaskRecord.create version: '20181009130216'
       end
 
@@ -81,6 +82,93 @@ namespace :after_party do
         end
 
         restore_deleted_dossiers(4860, 8603, mapping, private_mapping, pj_mapping)
+      end
+
+      def restore_neph_deleted_dossiers
+        mapping = Class.new(Tasks::DossierProcedureMigrator::ChampMapping) do
+          def can_migrate?(dossier)
+            !(dossier.termine? ||
+              dossier.champs.joins(:type_de_champ).find_by(types_de_champ: { order_place: 3 }).value&.include?('"Demande de duplicata de dossier d\'inscription (suite perte)"'))
+          end
+
+          def setup_mapping
+            champ_opts = {
+              3 => {
+                source_overrides: { 'drop_down' => ["", "Demande de réactualisation du numéro NEPH", "Demande de communication du numéro NEPH", "Demande de duplicata de dossier d'inscription (suite perte)", "Demande de correction sur le Fichier National des Permis de conduire"] },
+                destination_overrides: { 'drop_down' => ["", "Demande de réactualisation du numéro NEPH", "Demande de communication du numéro NEPH", "Demande de correction sur le Fichier National des Permis de conduire"] }
+              }
+            }
+            (0..14).each do |i|
+              map_source_to_destination_champ(i, i, **(champ_opts[i] || {}))
+            end
+            (16..22).each do |i|
+              map_source_to_destination_champ(i, i + 2, **(champ_opts[i] || {}))
+            end
+
+            discard_source_champ(
+              TypeDeChamp.new(
+                type_champ: 'address',
+                order_place: 15,
+                libelle: 'Adresse du candidat'
+              )
+            )
+
+            compute_destination_champ(
+              TypeDeChamp.new(
+                type_champ: 'address',
+                order_place: 15,
+                libelle: 'Adresse du candidat',
+                mandatory: true
+              )
+            ) do |d, target_tdc|
+              value = d.champs.joins(:type_de_champ).find_by(types_de_champ: { order_place: 3 }).value
+              if !d.brouillon?
+                value ||= 'non renseigné'
+              end
+              target_tdc.champ.create(dossier: d, value: value)
+            end
+
+            compute_destination_champ(
+              TypeDeChamp.new(
+                type_champ: 'address',
+                order_place: 16,
+                libelle: 'Code postal',
+                mandatory: true
+              )
+            ) do |d, target_tdc|
+              target_tdc.champ.create(dossier: d, value: d.brouillon? ? nil : 'non renseigné')
+            end
+
+            compute_destination_champ(
+              TypeDeChamp.new(
+                type_champ: 'address',
+                order_place: 17,
+                libelle: 'Ville',
+                mandatory: true
+              )
+            ) do |d, target_tdc|
+              target_tdc.champ.create(dossier: d, value: d.brouillon? ? nil : 'non renseigné')
+            end
+          end
+        end
+
+        private_mapping = Class.new(Tasks::DossierProcedureMigrator::ChampMapping) do
+          def setup_mapping
+            (0..2).each do |i|
+              map_source_to_destination_champ(i, i)
+            end
+          end
+        end
+
+        pj_mapping = Class.new(Tasks::DossierProcedureMigrator::PieceJustificativeMapping) do
+          def setup_mapping
+            (0..3).each do |i|
+              map_source_to_destination_pj(i, i)
+            end
+          end
+        end
+
+        restore_deleted_dossiers(6388, 8770, mapping, private_mapping, pj_mapping)
       end
 
       def restore_deleted_dossiers(deleted_procedure_id, new_procedure_id, champ_mapping, champ_private_mapping, pj_mapping)
