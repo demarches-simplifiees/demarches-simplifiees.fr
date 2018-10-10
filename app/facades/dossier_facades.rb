@@ -17,10 +17,6 @@ class DossierFacades
     @dossier.etablissement
   end
 
-  def pieces_justificatives
-    @dossier.ordered_pieces_justificatives
-  end
-
   def types_de_pieces_justificatives
     @dossier.types_de_piece_justificative.order('order_place ASC')
   end
