@@ -22,6 +22,10 @@ module Tasks
         check_champs_consistency("#{privacy_label}destination", @expected_destination_types_de_champ, types_de_champ(@destination_procedure))
       end
 
+      def can_migrate?(dossier)
+        true
+      end
+
       def migrate_champs(dossier)
         # Since we’re going to iterate and change the champs at the same time,
         # we use to_a to make the list static and avoid nasty surprises
@@ -160,11 +164,13 @@ module Tasks
 
     def migrate_dossiers
       @source_procedure.dossiers.find_each(batch_size: 100) do |d|
-        @champ_mapping.migrate_champs(d)
-        @private_champ_mapping.migrate_champs(d)
+        if @champ_mapping.can_migrate?(d) && @private_champ_mapping.can_migrate?(d)
+          @champ_mapping.migrate_champs(d)
+          @private_champ_mapping.migrate_champs(d)
 
-        # Use update_columns to avoid triggering build_default_champs
-        d.update_columns(procedure_id: @destination_procedure.id)
+          # Use update_columns to avoid triggering build_default_champs
+          d.update_columns(procedure_id: @destination_procedure.id)
+        end
       end
     end
 
