@@ -28,6 +28,28 @@ class Users::CarteController < UsersController
     redirect_to brouillon_dossier_path(dossier)
   end
 
+  def zones
+    @dossier = current_user_dossier
+    @data = {}
+
+    geo_json = JSON.parse(params.required(:selection))
+
+    if geo_json.first == ["error", "TooManyPolygons"]
+      @error = true
+    else
+      if @dossier.procedure.module_api_carto.quartiers_prioritaires?
+        quartiers_prioritaires = ModuleApiCartoService.generate_qp(geo_json).values
+        @dossier.quartier_prioritaires.build(quartiers_prioritaires)
+        @data[:quartiersPrioritaires] = quartiers_prioritaires
+      end
+
+      if @dossier.procedure.module_api_carto.cadastre?
+        cadastres = ModuleApiCartoService.generate_cadastre(geo_json)
+        @dossier.cadastres.build(cadastres)
+        @data[:cadastres] = cadastres
+      end
+    end
+  end
 
   def self.route_authorization
     {

@@ -2,13 +2,7 @@
   .col-md-12.col-lg-12
     #map{ class: dossier.procedure.module_api_carto.classes }
 
-  - if dossier.procedure.module_api_carto.quartiers_prioritaires
-    .col-md-9.col-lg-9#qp.col-md-3.col-lg-3.list
-      %h3.text-info Quartiers prioritaires
-      %ul
+  %span.zones
+    = render partial: 'zones', locals: { dossier: dossier, error: @error }
 
-  - if dossier.procedure.module_api_carto.cadastre
-    .col-md-9.col-lg-9#cadastre.col-md-3.col-lg-3.list
-      %h3.text-warning Cadastres
-      %ul
 = render partial: 'shared/champs/carto/init', locals: { dossier: dossier }
