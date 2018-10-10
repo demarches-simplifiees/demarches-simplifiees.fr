@@ -17,7 +17,7 @@ module Tasks
         setup_mapping
       end
 
-      def check_source_destination_champs_consistency
+      def check_source_destination_consistency
         check_champs_consistency("#{privacy_label}source", @expected_source_types_de_champ, types_de_champ(@source_procedure))
         check_champs_consistency("#{privacy_label}destination", @expected_destination_types_de_champ, types_de_champ(@destination_procedure))
       end
@@ -26,7 +26,7 @@ module Tasks
         true
       end
 
-      def migrate_champs(dossier)
+      def migrate(dossier)
         # Since we’re going to iterate and change the champs at the same time,
         # we use to_a to make the list static and avoid nasty surprises
         original_champs = champs(dossier).to_a
@@ -136,11 +136,109 @@ module Tasks
       end
     end
 
-    def initialize(source_procedure, destination_procedure, champ_mapping, private_champ_mapping = ChampMapping)
+    class PieceJustificativeMapping
+      def initialize(source_procedure, destination_procedure)
+        @source_procedure = source_procedure
+        @destination_procedure = destination_procedure
+
+        @expected_source_pj = {}
+        @expected_destination_pj = {}
+        @source_to_destination_mapping = {}
+
+        setup_mapping
+      end
+
+      def check_source_destination_consistency
+        check_pjs_consistency('source', @expected_source_pj, @source_procedure.types_de_piece_justificative)
+        check_pjs_consistency('destination', @expected_destination_pj, @destination_procedure.types_de_piece_justificative)
+      end
+
+      def can_migrate?(dossier)
+        true
+      end
+
+      def migrate(dossier)
+        # Since we’re going to iterate and change the pjs at the same time,
+        # we use to_a to make the list static and avoid nasty surprises
+        original_pjs = dossier.pieces_justificatives.to_a
+
+        original_pjs.each do |pj|
+          pj_to = destination_pj(pj)
+          if pj_to.present?
+            pj.update_columns(type_de_piece_justificative_id: pj_to.id)
+          elsif discard_pj?(pj)
+            dossier.pieces_justificatives.destroy(pj)
+          else
+            fail "Unhandled source pièce justificative #{c.type_de_piece_justificative.order_place}"
+          end
+        end
+      end
+
+      private
+
+      def destination_pj(pj)
+        @source_to_destination_mapping[pj.order_place]
+      end
+
+      def discard_pj?(champ)
+        @source_pjs_to_discard.member?(pj.order_place)
+      end
+
+      def setup_mapping
+      end
+
+      def map_source_to_destination_pj(source_order_place, destination_order_place, source_overrides: {}, destination_overrides: {})
+        destination_pj = @destination_procedure.types_de_piece_justificative.find_by(order_place: destination_order_place)
+        @expected_source_pj[source_order_place] =
+          pj_to_expectation(destination_pj)
+          .merge!(source_overrides)
+        @expected_destination_pj[destination_order_place] =
+          pj_to_expectation(@source_procedure.types_de_piece_justificative.find_by(order_place: source_order_place))
+          .merge!({ "mandatory" => false }) # Even if the source was mandatory, it’s ok for the destination to be optional
+          .merge!(destination_overrides)
+        @source_to_destination_mapping[source_order_place] = destination_pj
+      end
+
+      def discard_source_pj(source_pj)
+        @expected_source_pj[source_pj.order_place] = pj_to_expectation(source_pj)
+        @source_pjs_to_discard << source_pj.order_place
+      end
+
+      def leave_destination_pj_blank(destination_pj)
+        @expected_destination_pj[destination_pj.order_place] = pj_to_expectation(destination_pj)
+      end
+
+      def pj_to_expectation(pj)
+        pj&.as_json(only: [:libelle, :mandatory]) || {}
+      end
+
+      def check_pjs_consistency(label, expected_pjs, actual_pjs)
+        if actual_pjs.size != expected_pjs.size
+          raise "Incorrect #{label} pièce justificative count #{actual_pjs.size} (expected #{expected_pjs.size})"
+        end
+        actual_pjs.each { |pj| check_pj_consistency(label, expected_pjs[pj.order_place], pj) }
+      end
+
+      def check_pj_consistency(label, expected_pj, actual_pj)
+        errors = []
+        if actual_pj.libelle != expected_pj['libelle']
+          errors.append("incorrect libelle #{actual_pj.libelle} (expected #{expected_pj['libelle']})")
+        end
+        if (!actual_pj.mandatory) && expected_pj['mandatory']
+          errors.append("pj should be mandatory")
+        end
+        if errors.present?
+          fail "On #{label} type de pièce justificative #{actual_pj.order_place} (#{actual_pj.libelle}) " + errors.join(', ')
+        end
+      end
+    end
+
+    def initialize(source_procedure, destination_procedure, champ_mapping, private_champ_mapping = ChampMapping, piece_justificative_mapping = PieceJustificativeMapping)
       @source_procedure = source_procedure
       @destination_procedure = destination_procedure
       @champ_mapping = champ_mapping.new(source_procedure, destination_procedure, false)
       @private_champ_mapping = private_champ_mapping.new(source_procedure, destination_procedure, true)
+      @piece_justificative_mapping = piece_justificative_mapping.new(source_procedure, destination_procedure)
     end
 
     def migrate_procedure
@@ -152,8 +250,9 @@ module Tasks
 
     def check_consistency
       check_same_administrateur
-      @champ_mapping.check_source_destination_champs_consistency
-      @private_champ_mapping.check_source_destination_champs_consistency
+      @champ_mapping.check_source_destination_consistency
+      @private_champ_mapping.check_source_destination_consistency
+      @piece_justificative_mapping.check_source_destination_consistency
     end
 
     def check_same_administrateur
@@ -164,9 +263,10 @@ module Tasks
 
     def migrate_dossiers
       @source_procedure.dossiers.find_each(batch_size: 100) do |d|
-        if @champ_mapping.can_migrate?(d) && @private_champ_mapping.can_migrate?(d)
-          @champ_mapping.migrate_champs(d)
-          @private_champ_mapping.migrate_champs(d)
+        if @champ_mapping.can_migrate?(d) && @private_champ_mapping.can_migrate?(d) && @piece_justificative_mapping.can_migrate?(d)
+          @champ_mapping.migrate(d)
+          @private_champ_mapping.migrate(d)
+          @piece_justificative_mapping.migrate(d)
 
           # Use update_columns to avoid triggering build_default_champs
           d.update_columns(procedure_id: @destination_procedure.id)
