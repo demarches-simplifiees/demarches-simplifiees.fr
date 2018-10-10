@@ -10,12 +10,13 @@ class Users::Dossiers::InvitesController < UsersController
   end
 
   def show
-    @facade = InviteDossierFacades.new params[:id].to_i, current_user.email
+    invite = Invite.where(email: current_user.email, id: params[:id].to_i).first!
+    dossier = invite.dossier
 
-    if @facade.dossier.brouillon?
-      redirect_to brouillon_dossier_path(@facade.dossier)
+    if dossier.brouillon?
+      redirect_to brouillon_dossier_path(dossier)
     else
-      return redirect_to dossier_path(@facade.dossier)
+      return redirect_to dossier_path(dossier)
     end
   rescue ActiveRecord::RecordNotFound
     flash.alert = t('errors.messages.dossier_not_found')
