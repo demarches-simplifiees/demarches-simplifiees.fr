@@ -152,6 +152,7 @@ Rails.application.routes.draw do
     resources :dossiers do
       get '/add_siret' => 'dossiers/add_siret#show'
 
+      post '/carte/zones' => 'carte#zones'
       get '/carte' => 'carte#show'
       post '/carte' => 'carte#save'
 
