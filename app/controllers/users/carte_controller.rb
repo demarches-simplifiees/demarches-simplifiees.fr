@@ -12,18 +12,18 @@ class Users::CarteController < UsersController
   end
 
   def save
-    safe_json_latlngs = clean_json_latlngs(params[:json_latlngs])
+    geo_json = clean_json_latlngs(params[:selection])
     dossier = current_user_dossier
 
     dossier.quartier_prioritaires.each(&:destroy)
     dossier.cadastres.each(&:destroy)
 
-    if safe_json_latlngs.present?
-      ModuleApiCartoService.save_qp! dossier, safe_json_latlngs
-      ModuleApiCartoService.save_cadastre! dossier, safe_json_latlngs
+    if geo_json.present?
+      ModuleApiCartoService.save_qp! dossier, geo_json
+      ModuleApiCartoService.save_cadastre! dossier, geo_json
     end
 
-    dossier.update(json_latlngs: safe_json_latlngs)
+    dossier.update!(json_latlngs: geo_json)
 
     redirect_to brouillon_dossier_path(dossier)
   end
