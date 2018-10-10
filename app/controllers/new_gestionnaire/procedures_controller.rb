@@ -28,7 +28,9 @@ module NewGestionnaire
 
       @current_filters = current_filters
       @available_fields_to_filters = available_fields_to_filters
-      @displayed_fields = procedure_presentation.displayed_fields
+      # Technically, procedure_presentation already sets the attribute.
+      # Setting it here to make clear that it is used by the view
+      @procedure_presentation = procedure_presentation
       @displayed_fields_values = displayed_fields_values
 
       @a_suivre_dossiers = procedure
@@ -67,11 +69,10 @@ module NewGestionnaire
         @archived_dossiers
       end
 
-      dossier_field_service = DossierFieldService.new
-      sorted_ids = dossier_field_service.sorted_ids(@dossiers, procedure_presentation, current_gestionnaire)
+      sorted_ids = procedure_presentation.sorted_ids(@dossiers, current_gestionnaire)
 
       if @current_filters.count > 0
-        filtered_ids = dossier_field_service.filtered_ids(@dossiers, current_filters)
+        filtered_ids = procedure_presentation.filtered_ids(@dossiers, statut)
         filtered_sorted_ids = sorted_ids.select { |id| filtered_ids.include?(id) }
       else
         filtered_sorted_ids = sorted_ids
@@ -103,7 +104,7 @@ module NewGestionnaire
       fields = values.map do |value|
         table, column = value.split("/")
 
-        procedure.fields.find do |field|
+        procedure_presentation.fields.find do |field|
           field['table'] == table && field['column'] == column
         end
       end
@@ -144,7 +145,7 @@ module NewGestionnaire
       if params[:value].present?
         filters = procedure_presentation.filters
         table, column = params[:field].split('/')
-        label = procedure.fields.find { |c| c['table'] == table && c['column'] == column }['label']
+        label = procedure_presentation.fields.find { |c| c['table'] == table && c['column'] == column }['label']
 
         filters[statut] << {
           'label' => label,
@@ -225,13 +226,13 @@ module NewGestionnaire
         "#{field['table']}/#{field['column']}"
       end
 
-      procedure.fields_for_select.reject do |field|
+      procedure_presentation.fields_for_select.reject do |field|
         current_filters_fields_ids.include?(field[1])
       end
     end
 
     def eager_load_displayed_fields
-      @displayed_fields
+      procedure_presentation.displayed_fields
         .reject { |field| field['table'] == 'self' }
         .group_by do |field|
           if ['type_de_champ', 'type_de_champ_private'].include?(field['table'])
