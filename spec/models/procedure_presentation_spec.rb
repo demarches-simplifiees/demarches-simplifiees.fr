@@ -267,6 +267,29 @@ describe ProcedurePresentation do
 
     subject { procedure_presentation.filtered_ids(procedure.dossiers, 'suivis') }
 
+    context 'for self table' do
+      context 'for created_at column' do
+        let!(:kept_dossier) { create(:dossier, procedure: procedure, created_at: DateTime.new(2018, 9, 18, 14, 28)) }
+        let!(:discarded_dossier) { create(:dossier, procedure: procedure, created_at: DateTime.new(2018, 9, 17, 23, 59)) }
+        let(:filter) { [{ 'table' => 'self', 'column' => 'created_at', 'value' => '18/9/2018' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'for updated_at column' do
+        let(:kept_dossier) { create(:dossier, procedure: procedure) }
+        let(:discarded_dossier) { create(:dossier, procedure: procedure) }
+        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => '18/9/2018' }] }
+
+        before do
+          kept_dossier.touch(time: DateTime.new(2018, 9, 18, 14, 28))
+          discarded_dossier.touch(time: DateTime.new(2018, 9, 17, 23, 59))
+        end
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+    end
+
     context 'for type_de_champ table' do
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }

@@ -102,7 +102,8 @@ class ProcedurePresentation < ApplicationRecord
       column = sanitized_column(filter)
       case table
       when 'self'
-        dossiers.where("? ILIKE ?", filter['column'], "%#{filter['value']}%")
+        date = filter['value'].to_date rescue nil
+        dossiers.where("DATE_TRUNC('day', #{column}) = ?", date)
 
       when 'france_connect_information'
         dossiers
