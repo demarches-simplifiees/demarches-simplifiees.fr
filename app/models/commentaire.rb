@@ -35,7 +35,7 @@ class Commentaire < ApplicationRecord
 
   def notify
     dossier_user_email = dossier.user.email
-    invited_users_emails = dossier.invites_user.pluck(:email).to_a
+    invited_users_emails = dossier.invites.pluck(:email).to_a
 
     # - If the email is the contact email, the commentaire is a copy
     #   of an automated notification email we sent to a user, so do nothing.

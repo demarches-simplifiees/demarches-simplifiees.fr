@@ -17,7 +17,7 @@ RSpec.describe Users::CarteController, type: :controller do
   let(:adresse) { etablissement.geo_adresse }
 
   before do
-    create :invite, dossier: dossier, user: invite_by_user, email: invite_by_user.email, type: 'InviteUser'
+    create :invite, dossier: dossier, user: invite_by_user, email: invite_by_user.email
 
     sign_in user
   end

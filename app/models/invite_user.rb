@@ -1,2 +1,0 @@
-class InviteUser < Invite
-end

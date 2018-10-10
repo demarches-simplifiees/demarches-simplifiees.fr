@@ -20,7 +20,7 @@ describe UsersController, type: :controller do
 
     context 'when user is invite by the owner' do
       before do
-        create :invite, email: invite_user.email, dossier: dossier, user: invite_user, type: 'InviteUser'
+        create :invite, email: invite_user.email, dossier: dossier, user: invite_user
         sign_in invite_user
       end
 
