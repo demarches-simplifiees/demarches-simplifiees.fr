@@ -6,10 +6,10 @@
 #carte-page {
   #map {
     height: 600px;
+    z-index: 0;
   }
 
-  #map.qp,
-  #map.cadastre {
+  #map.edit {
     width: 70%;
   }
 
@@ -30,13 +30,6 @@
   cursor: url("/assets/edit.png"), default !important;
 }
 
-#infos-dossiers {
-  #map.mini {
-    height: 300px;
-    width: 100%;
-  }
-}
-
 #map.mode-create {
   cursor: url("/assets/pencil.png"), crosshair !important;
 }
@@ -47,17 +40,17 @@
   stroke-opacity: 1;
   stroke: #D7217E;
   position: absolute;
-  z-index: 1001;
+  z-index: 100;
   fill: #D7217E;
   fill-opacity: 0.75;
 }
 
-#map.mode-delete path {
+#map.mode-delete path.leaflet-polygon {
   cursor: no-drop !important;
-}
 
-#map.mode-delete path:hover {
-  fill: #4D4D4D !important;
+  &:hover {
+    fill: #4D4D4D !important;
+  }
 }
 
 #map div.leaflet-edge {
