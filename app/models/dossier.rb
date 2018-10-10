@@ -241,6 +241,23 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def geo_position
+    if etablissement.present?
+      point = Carto::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse)
+    end
+
+    lon = "2.428462"
+    lat = "46.538192"
+    zoom = "13"
+
+    if point.present?
+      lon = point.x.to_s
+      lat = point.y.to_s
+    end
+
+    { lon: lon, lat: lat, zoom: zoom }
+  end
+
   def unspecified_attestation_champs
     attestation_template = procedure.attestation_template
 
