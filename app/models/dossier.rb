@@ -25,7 +25,6 @@ class Dossier < ApplicationRecord
   has_many :commentaires, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :invites_user, class_name: 'InviteUser', dependent: :destroy
-  has_many :invites_gestionnaires, class_name: 'InviteGestionnaire', dependent: :destroy
   has_many :follows
   has_many :followers_gestionnaires, through: :follows, source: :gestionnaire
   has_many :avis, dependent: :destroy
