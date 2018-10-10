@@ -50,13 +50,13 @@ describe NewUser::DossiersController, type: :controller do
     end
 
     context 'when an invite asks for a dossier where they were invited' do
-      before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
+      before { create(:invite, dossier: asked_dossier, user: user) }
 
       it_behaves_like 'redirects and flashes'
     end
 
     context 'when an invite asks for another dossier' do
-      before { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+      before { create(:invite, dossier: create(:dossier), user: user) }
 
       it_behaves_like 'redirects and flashes'
     end
@@ -84,13 +84,13 @@ describe NewUser::DossiersController, type: :controller do
     end
 
     context 'when an invite asks for a dossier where they were invited' do
-      before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
+      before { create(:invite, dossier: asked_dossier, user: user) }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when an invite asks for another dossier' do
-      before { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+      before { create(:invite, dossier: create(:dossier), user: user) }
 
       it_behaves_like 'redirects and flashes'
     end
@@ -123,14 +123,14 @@ describe NewUser::DossiersController, type: :controller do
     end
 
     context 'when an invite save the draft for a dossier where they where invited' do
-      before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
+      before { create(:invite, dossier: asked_dossier, user: user) }
       let(:draft) { true }
 
       it_behaves_like 'does not redirect nor flash'
     end
 
     context 'when an invite submit a dossier where they where invited' do
-      before { create(:invite, dossier: asked_dossier, user: user, type: 'InviteUser') }
+      before { create(:invite, dossier: asked_dossier, user: user) }
       let(:draft) { false }
 
       it_behaves_like 'redirects and flashes'
@@ -370,7 +370,7 @@ describe NewUser::DossiersController, type: :controller do
 
     context 'when the user has an invitation but is not the owner' do
       let(:dossier) { create(:dossier) }
-      let!(:invite) { create(:invite, dossier: dossier, user: user, type: 'InviteUser') }
+      let!(:invite) { create(:invite, dossier: dossier, user: user) }
 
       context 'and the invite saves a draft' do
         let(:payload) { submit_payload.merge(save_draft: true) }
@@ -493,7 +493,7 @@ describe NewUser::DossiersController, type: :controller do
 
     context 'when the user has an invitation but is not the owner' do
       let(:dossier) { create(:dossier) }
-      let!(:invite) { create(:invite, dossier: dossier, user: user, type: 'InviteUser') }
+      let!(:invite) { create(:invite, dossier: dossier, user: user) }
 
       before do
         dossier.en_construction!
@@ -525,7 +525,7 @@ describe NewUser::DossiersController, type: :controller do
     end
 
     context 'when the user only have some dossiers invites' do
-      let!(:invite) { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+      let!(:invite) { create(:invite, dossier: create(:dossier), user: user) }
 
       before { get(:index) }
 
@@ -535,7 +535,7 @@ describe NewUser::DossiersController, type: :controller do
 
     context 'when the user has both' do
       let!(:own_dossier) { create(:dossier, user: user) }
-      let!(:invite) { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+      let!(:invite) { create(:invite, dossier: create(:dossier), user: user) }
 
       context 'and there is no current_tab param' do
         before { get(:index) }
@@ -560,8 +560,8 @@ describe NewUser::DossiersController, type: :controller do
       before do
         Timecop.freeze(4.days.ago) { create(:dossier, user: user) }
         Timecop.freeze(2.days.ago) { create(:dossier, user: user) }
-        Timecop.freeze(4.days.ago) { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
-        Timecop.freeze(2.days.ago) { create(:invite, dossier: create(:dossier), user: user, type: 'InviteUser') }
+        Timecop.freeze(4.days.ago) { create(:invite, dossier: create(:dossier), user: user) }
+        Timecop.freeze(2.days.ago) { create(:invite, dossier: create(:dossier), user: user) }
         get(:index)
       end
 
