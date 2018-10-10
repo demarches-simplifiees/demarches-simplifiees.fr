@@ -210,68 +210,7 @@ shared_examples 'carte_controller_spec' do
     end
   end
 
-  describe '#get_position' do
-    context 'when etablissement is nil' do
-      before do
-        dossier.update etablissement: nil
 
-        stub_request(:get, /http:\/\/api-adresse[.]data[.]gouv[.]fr\/search[?]limit=1&q=/)
-          .to_return(status: 200, body: '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
-        get :get_position, params: { dossier_id: dossier.id }
-      end
-
-      subject { JSON.parse(response.body) }
-
-      it 'on enregistre des coordonnées lat et lon avec les valeurs par defaut' do
-        expect(subject['lat']).to eq('46.538192')
-        expect(subject['lon']).to eq('2.428462')
-      end
-    end
-
-    context 'Geocodeur renvoie les positions par defaut' do
-      let(:etablissement) { create(:etablissement, adresse: bad_adresse, numero_voie: 'dzj', type_voie: 'fzjfk', nom_voie: 'hdidjkz', complement_adresse: 'fjef', code_postal: 'fjeiefk', localite: 'zjfkfz') }
-      let(:dossier) { create(:dossier, etablissement: etablissement) }
-
-      before do
-        stub_request(:get, /http:\/\/api-adresse[.]data[.]gouv[.]fr\/search[?]limit=1&q=/)
-          .to_return(status: 200, body: '{"query": "babouba", "version": "draft", "licence": "ODbL 1.0", "features": [], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
-        get :get_position, params: { dossier_id: dossier.id }
-      end
-
-      subject { JSON.parse(response.body) }
-
-      it 'on enregistre des coordonnées lat et lon avec les valeurs par defaut' do
-        expect(subject['lat']).to eq('46.538192')
-        expect(subject['lon']).to eq('2.428462')
-      end
-    end
-
-    context 'retour d\'un fichier JSON avec 3 attributs' do
-      before do
-        stub_request(:get, "http://api-adresse.data.gouv.fr/search?limit=1&q=#{adresse}")
-          .to_return(status: 200, body: '{"query": "50 avenue des champs u00e9lysu00e9es Paris 75008", "version": "draft", "licence": "ODbL 1.0", "features": [{"geometry": {"coordinates": [2.306888, 48.870374], "type": "Point"}, "type": "Feature", "properties": {"city": "Paris", "label": "50 Avenue des Champs u00c9lysu00e9es 75008 Paris", "housenumber": "50", "id": "ADRNIVX_0000000270748251", "postcode": "75008", "name": "50 Avenue des Champs u00c9lysu00e9es", "citycode": "75108", "context": "75, u00cele-de-France", "score": 0.9054545454545454, "type": "housenumber"}}], "type": "FeatureCollection", "attribution": "BAN"}', headers: {})
-
-        get :get_position, params: { dossier_id: dossier.id }
-      end
-      subject { JSON.parse(response.body) }
-
-      it 'format JSON valide' do
-        expect(response.content_type).to eq('application/json')
-      end
-
-      it 'latitude' do
-        expect(subject['lat']).to eq('48.870374')
-      end
-
-      it 'longitude' do
-        expect(subject['lon']).to eq('2.306888')
-      end
-
-      it 'dossier_id' do
-        expect(subject['dossier_id']).to eq(dossier.id.to_s)
-      end
-    end
-  end
 
   describe 'POST #get_qp' do
     before do

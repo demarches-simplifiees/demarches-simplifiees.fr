@@ -28,36 +28,6 @@ class Users::CarteController < UsersController
     redirect_to brouillon_dossier_path(dossier)
   end
 
-  def get_position
-    begin
-      etablissement = current_user_dossier.etablissement
-    rescue ActiveRecord::RecordNotFound
-      etablissement = nil
-    end
-
-    if etablissement.present?
-      point = Carto::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse)
-    end
-
-    lon = '2.428462'
-    lat = '46.538192'
-    zoom = '13'
-
-    if point.present?
-      lon = point.x.to_s
-      lat = point.y.to_s
-    end
-
-    render json: { lon: lon, lat: lat, zoom: zoom, dossier_id: params[:dossier_id] }
-  end
-
-  def get_qp
-    render json: { quartier_prioritaires: ModuleApiCartoService.generate_qp(JSON.parse(params[:coordinates])) }
-  end
-
-  def get_cadastre
-    render json: { cadastres: ModuleApiCartoService.generate_cadastre(JSON.parse(params[:coordinates])) }
-  end
 
   def self.route_authorization
     {
