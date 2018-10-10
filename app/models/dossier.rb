@@ -118,10 +118,6 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def ordered_pieces_justificatives
-    champs.joins(', types_de_piece_justificative').where("pieces_justificatives.type_de_piece_justificative_id = types_de_piece_justificative.id AND types_de_piece_justificative.procedure_id = #{procedure.id}").order('order_place ASC')
-  end
-
   def en_construction_ou_instruction?
     EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)
   end
