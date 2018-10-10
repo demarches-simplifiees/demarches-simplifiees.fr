@@ -73,7 +73,7 @@
 
             = render partial: "header_field", locals: { field: { "label" => "Nº dossier", "table" => "self", "column" => "id" }, classname: "number-col" }
 
-            - @displayed_fields.each do |field|
+            - @procedure_presentation.displayed_fields.each do |field|
               = render partial: "header_field", locals: { field: field, classname: "" }
 
             = render partial: "header_field", locals: { field: { "label" => "Statut", "table" => "self", "column" => "state" },  classname: "status-col" }
@@ -85,14 +85,13 @@
                 .dropdown-content.fade-in-down
                   = form_tag update_displayed_fields_gestionnaire_procedure_path(@procedure), method: :patch, class: 'dropdown-form columns-form' do
                     = select_tag :values,
-                      options_for_select(@procedure.fields_for_select,
+                      options_for_select(@procedure_presentation.fields_for_select,
                         selected: @displayed_fields_values),
                       multiple: true,
                       class: 'select2-limited'
                     = submit_tag "Enregistrer", class: 'button'
 
         %tbody
-          - dossier_field_service = DossierFieldService.new
           - @dossiers.each do |dossier|
             %tr
               %td.folder-col
@@ -105,10 +104,9 @@
                 = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
                   = dossier.id
 
-              - @displayed_fields.each do |field|
+              - @procedure_presentation.displayed_field_values(dossier).each do |value|
                 %td
-                  = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
-                    = dossier_field_service.get_value(dossier, field['table'], field['column'])
+                  = link_to(value, gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link')
 
               %td.status-col
                 = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
