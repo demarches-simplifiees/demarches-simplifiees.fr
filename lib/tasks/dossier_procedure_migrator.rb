@@ -233,12 +233,16 @@ module Tasks
       end
     end
 
-    def initialize(source_procedure, destination_procedure, champ_mapping, private_champ_mapping = ChampMapping, piece_justificative_mapping = PieceJustificativeMapping)
+    def initialize(source_procedure, destination_procedure, champ_mapping, private_champ_mapping = ChampMapping, piece_justificative_mapping = PieceJustificativeMapping, &block)
       @source_procedure = source_procedure
       @destination_procedure = destination_procedure
       @champ_mapping = champ_mapping.new(source_procedure, destination_procedure, false)
       @private_champ_mapping = private_champ_mapping.new(source_procedure, destination_procedure, true)
       @piece_justificative_mapping = piece_justificative_mapping.new(source_procedure, destination_procedure)
+
+      if block_given?
+        @on_dossier_migration = block
+      end
     end
 
     def migrate_procedure
@@ -270,6 +274,7 @@ module Tasks
 
           # Use update_columns to avoid triggering build_default_champs
           d.update_columns(procedure_id: @destination_procedure.id)
+          @on_dossier_migration&.call(d)
         end
       end
     end
