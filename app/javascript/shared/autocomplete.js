@@ -1,5 +1,5 @@
-import $ from 'jquery';
 import autocomplete from 'autocomplete.js';
+import { getJSON, fire } from '@utils';
 
 const sources = [
   {
@@ -24,7 +24,7 @@ function selector(type) {
 function source(url) {
   return {
     source(query, callback) {
-      $.getJSON(url, { request: query }).then(callback);
+      getJSON(url, { request: query }).then(callback);
     },
     templates: {
       suggestion({ label, mine }) {
@@ -41,7 +41,7 @@ addEventListener('turbolinks:load', function() {
     for (let target of document.querySelectorAll(selector(type))) {
       let select = autocomplete(target, options, [source(url)]);
       select.on('autocomplete:selected', ({ target }, suggestion) => {
-        $(target).trigger('autocomplete:select', suggestion);
+        fire(target, 'autocomplete:select', suggestion);
         select.autocomplete.setVal(suggestion.label);
       });
     }

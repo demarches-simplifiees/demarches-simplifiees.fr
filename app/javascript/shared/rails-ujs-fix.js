@@ -1,12 +1,13 @@
 import Rails from 'rails-ujs';
 import jQuery from 'jquery';
+import { delegate } from '@utils';
 
 // We use `jQuery.active` in our capybara suit to wait for ajax requests.
 // Newer jQuery-less version of rails-ujs is breaking it.
 // We have to set `ajax:complete` listener on the same element as the one
 // we catch ajax:send on as by the end of the request
 // the old element may be removed from DOM.
-Rails.delegate(document, '[data-remote]', 'ajax:send', ({ target }) => {
+delegate('ajax:send', '[data-remote]', ({ target }) => {
   let callback = () => {
     jQuery.active--;
     target.removeEventListener('ajax:complete', callback);

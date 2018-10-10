@@ -1,7 +1,4 @@
-import Rails from 'rails-ujs';
-import { show, hide } from '../shared/utils';
-
-const { delegate } = Rails;
+import { show, hide, delegate } from '@utils';
 
 function showSpinner() {
   [...document.querySelectorAll('.spinner')].forEach(show);
@@ -11,6 +8,6 @@ function hideSpinner() {
   [...document.querySelectorAll('.spinner')].forEach(hide);
 }
 
-delegate(document, '[data-spinner]', 'ajax:complete', hideSpinner);
-delegate(document, '[data-spinner]', 'ajax:stopped', hideSpinner);
-delegate(document, '[data-spinner]', 'ajax:send', showSpinner);
+delegate('ajax:complete', '[data-spinner]', hideSpinner);
+delegate('ajax:stopped', '[data-spinner]', hideSpinner);
+delegate('ajax:send', '[data-spinner]', showSpinner);
