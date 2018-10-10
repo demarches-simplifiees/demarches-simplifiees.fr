@@ -296,16 +296,6 @@ class Procedure < ApplicationRecord
     without_continuation_mail || Mails::WithoutContinuationMail.default_for_procedure(self)
   end
 
-  def fields
-    DossierFieldService.new.fields(self)
-  end
-
-  def fields_for_select
-    fields.map do |field|
-      [field['label'], "#{field['table']}/#{field['column']}"]
-    end
-  end
-
   def self.default_sort
     {
       'table' => 'self',
