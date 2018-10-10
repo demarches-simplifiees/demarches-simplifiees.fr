@@ -1,2 +1,0 @@
-class InviteGestionnaire < Invite
-end
