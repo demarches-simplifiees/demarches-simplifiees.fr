@@ -66,7 +66,7 @@ describe User, type: :model do
 
     context 'when user was invited by user' do
       before do
-        create(:invite, dossier: dossier, user: invite_user, type: 'InviteUser')
+        create(:invite, dossier: dossier, user: invite_user)
       end
 
       let(:user) { invite_user }
@@ -116,7 +116,7 @@ describe User, type: :model do
 
     context 'when user was invited by user' do
       before do
-        create(:invite, dossier: dossier, user: invite_user, type: 'InviteUser')
+        create(:invite, dossier: dossier, user: invite_user)
       end
 
       let(:user) { invite_user }

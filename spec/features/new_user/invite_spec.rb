@@ -5,7 +5,7 @@ feature 'Invitations' do
   let(:owner) { create(:user) }
   let(:invited_user) { create(:user, email: 'user_invite@exemple.fr') }
   let(:procedure) { create(:simple_procedure) }
-  let(:invite) { create(:invite_user, user: invited_user, dossier: dossier) }
+  let(:invite) { create(:invite, user: invited_user, dossier: dossier) }
 
   context 'when the dossier is a brouillon' do
     let!(:dossier) { create(:dossier, :for_individual, state: Dossier.states.fetch(:brouillon), user: owner, procedure: procedure) }
@@ -26,7 +26,7 @@ feature 'Invitations' do
     end
 
     context 'when inviting someone without an existing account' do
-      let(:invite) { create(:invite_user, dossier: dossier, user: nil) }
+      let(:invite) { create(:invite, dossier: dossier, user: nil) }
       let(:user_password) { 'l33tus3r' }
 
       scenario 'an invited user can register using the registration link sent in the invitation email' do

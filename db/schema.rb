@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_02_164310) do
+ActiveRecord::Schema.define(version: 2018_10_10_070424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -384,7 +384,6 @@ ActiveRecord::Schema.define(version: 2018_10_02_164310) do
     t.string "email_sender"
     t.integer "dossier_id"
     t.integer "user_id"
-    t.string "type", default: "InviteGestionnaire"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
