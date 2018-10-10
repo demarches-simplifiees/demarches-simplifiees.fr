@@ -152,10 +152,6 @@ Rails.application.routes.draw do
     resources :dossiers do
       get '/add_siret' => 'dossiers/add_siret#show'
 
-      get '/carte/position' => 'carte#get_position'
-      post '/carte/qp' => 'carte#get_qp'
-      post '/carte/cadastre' => 'carte#get_cadastre'
-
       get '/carte' => 'carte#show'
       post '/carte' => 'carte#save'
 
@@ -333,9 +329,6 @@ Rails.application.routes.draw do
             post 'repasser-en-construction' => 'dossiers#repasser_en_construction'
             post 'terminer'
             post 'send-to-instructeurs' => 'dossiers#send_to_instructeurs'
-            scope :carte do
-              get 'position'
-            end
             post 'avis' => 'dossiers#create_avis'
             get 'print' => 'dossiers#print'
           end
