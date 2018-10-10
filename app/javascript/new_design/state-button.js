@@ -1,12 +1,12 @@
-import $ from 'jquery';
+import { show, hide } from '@utils';
 
 export function showMotivation(event, state) {
   event.preventDefault();
-  $(`.motivation.${state}`).show();
-  $('.dropdown-items').hide();
+  show(document.querySelector(`.motivation.${state}`));
+  hide(document.querySelector('.dropdown-items'));
 }
 
 export function motivationCancel() {
-  $('.motivation').hide();
-  $('.dropdown-items').show();
+  document.querySelectorAll('.motivation').forEach(hide);
+  show(document.querySelector('.dropdown-items'));
 }

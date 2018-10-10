@@ -17,7 +17,7 @@
         .confidentiel-wrapper
           = f.label :confidentiel, 'Cet avis est'
           = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]], {}, onchange: "javascript:DS.toggleCondidentielExplanation(event);"
-          .confidentiel-explanation
+          .confidentiel-explanation.hidden
             Il ne sera pas affiché aux autres experts consultés mais sera visible par les instructeurs
         .send-wrapper
           = f.submit 'Demander un avis', class: 'button send'
