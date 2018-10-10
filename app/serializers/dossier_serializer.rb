@@ -23,7 +23,7 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :types_de_piece_justificative
 
   has_many :champs do
-    champs = object.champs + object.quartier_prioritaires + object.cadastres
+    champs = object.champs + object.quartier_prioritaires + object.cadastres + object.parcelle_agricoles
     if object.user_geometry.present?
       champs << object.user_geometry
     end

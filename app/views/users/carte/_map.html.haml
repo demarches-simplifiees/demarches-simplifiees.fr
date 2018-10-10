@@ -2,12 +2,17 @@
   .col-md-12.col-lg-12
     #map{ class: dossier.procedure.module_api_carto.classes }
 
-  - if dossier.procedure.module_api_carto.quartiers_prioritaires
+  - if dossier.procedure.module_api_carto.quartiers_prioritaires?
     .col-md-9.col-lg-9#qp.col-md-3.col-lg-3.list
       %h3.text-info Quartiers prioritaires
       %ul
 
-  - if dossier.procedure.module_api_carto.cadastre
+  - if dossier.procedure.module_api_carto.cadastre?
     .col-md-9.col-lg-9#cadastre.col-md-3.col-lg-3.list
       %h3.text-warning Cadastres
+      %ul
+
+  - if dossier.procedure.module_api_carto.parcelles_agricoles?
+    .col-md-9.col-lg-9#pa.col-md-3.col-lg-3.list
+      %h3.text-warning Parcelles Agricoles
       %ul

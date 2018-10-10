@@ -22,6 +22,7 @@ class Dossier < ApplicationRecord
   has_many :champs_private, -> { private_only.ordered }, class_name: 'Champ', dependent: :destroy
   has_many :quartier_prioritaires, dependent: :destroy
   has_many :cadastres, dependent: :destroy
+  has_many :parcelle_agricoles, dependent: :destroy
   has_many :commentaires, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :invites_user, class_name: 'InviteUser', dependent: :destroy

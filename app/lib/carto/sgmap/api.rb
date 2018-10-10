@@ -12,6 +12,11 @@ class CARTO::SGMAP::API
     call(url, { geojson: geojson.to_s })
   end
 
+  def self.search_pa(geojson)
+    url = [API_CARTO_URL, "parcelles-agricoles", "search"].join("/")
+    call(url, { geojson: geojson.to_s })
+  end
+
   private
 
   def self.call(url, params = {})

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_02_164310) do
+ActiveRecord::Schema.define(version: 2018_10_09_151046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -396,7 +396,14 @@ ActiveRecord::Schema.define(version: 2018_10_02_164310) do
     t.boolean "cadastre", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean "parcelles_agricoles"
     t.index ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true
+  end
+
+  create_table "parcelle_agricoles", force: :cascade do |t|
+    t.text "geometry"
+    t.bigint "dossier_id"
+    t.index ["dossier_id"], name: "index_parcelle_agricoles_on_dossier_id"
   end
 
   create_table "pieces_justificatives", id: :serial, force: :cascade do |t|
