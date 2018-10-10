@@ -36,7 +36,7 @@ module Tasks
         original_champs.each do |c|
           tdc_to = destination_type_de_champ(c)
           if tdc_to.present?
-            c.update(type_de_champ: tdc_to)
+            c.update_columns(type_de_champ_id: tdc_to.id)
           elsif discard_champ?(c)
             champs(dossier).destroy(c)
           else
