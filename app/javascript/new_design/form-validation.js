@@ -1,10 +1,19 @@
-import $ from 'jquery';
+import { delegate } from '@utils';
 
-$(document).on('blur keydown', 'input, textarea', () => {
-  $(this).addClass('touched');
+delegate('blur keydown', 'input, textarea', ({ target }) => {
+  touch(target);
 });
 
-$(document).on('click', 'input[type="submit"]:not([formnovalidate])', () => {
-  const $form = $(this).closest('form');
-  $('input, textarea', $form).addClass('touched');
-});
+delegate(
+  'click',
+  'input[type="submit"]:not([formnovalidate])',
+  ({ target }) => {
+    let form = target.closest('form');
+    let inputs = form ? form.querySelectorAll('input, textarea') : [];
+    [...inputs].forEach(touch);
+  }
+);
+
+function touch({ classList }) {
+  classList.add('touched');
+}

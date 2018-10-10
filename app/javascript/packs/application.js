@@ -4,7 +4,6 @@ import Rails from 'rails-ujs';
 import ActiveStorage from '../shared/activestorage/ujs';
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
-import jQuery from 'jquery';
 
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
@@ -40,11 +39,6 @@ Chartkick.addAdapter(Highcharts);
 Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
-
-// Disable jQuery-driven animations during tests
-if (process.env['RAILS_ENV'] === 'test') {
-  jQuery.fx.off = true;
-}
 
 // Expose globals
 window.DS = window.DS || DS;

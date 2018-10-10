@@ -1,5 +1,5 @@
-import $ from 'jquery';
+import { toggle } from '@utils';
 
 export function toggleCondidentielExplanation() {
-  $('.confidentiel-explanation').toggle();
+  toggle(document.querySelector('.confidentiel-explanation'));
 }
