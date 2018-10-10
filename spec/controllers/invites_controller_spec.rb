@@ -44,7 +44,7 @@ describe InvitesController, type: :controller do
             sign_in(user)
           end
 
-          it { expect { subject }.to change(InviteUser, :count).by(1) }
+          it { expect { subject }.to change(Invite, :count).by(1) }
         end
       end
     end
@@ -54,7 +54,7 @@ describe InvitesController, type: :controller do
 
       shared_examples_for "he can not create a invite" do
         it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
-        it { expect { subject rescue nil }.to change(InviteUser, :count).by(0) }
+        it { expect { subject rescue nil }.to change(Invite, :count).by(0) }
       end
 
       context 'when user has no access to dossier' do
@@ -73,7 +73,7 @@ describe InvitesController, type: :controller do
           dossier.update(user: signed_in_profile)
         end
 
-        it { expect { subject }.to change(InviteUser, :count).by(1) }
+        it { expect { subject }.to change(Invite, :count).by(1) }
 
         it "redirects to the previous URL" do
           expect(subject).to redirect_to("/dossiers/#{dossier.id}/brouillon")

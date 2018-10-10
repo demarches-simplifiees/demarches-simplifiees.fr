@@ -33,7 +33,7 @@ RSpec.describe CommentaireHelper, type: :helper do
 
   describe '.commentaire_is_from_guest' do
     let(:dossier) { create(:dossier) }
-    let!(:guest) { create(:invite_user, dossier: dossier) }
+    let!(:guest) { create(:invite, dossier: dossier) }
 
     subject { commentaire_is_from_guest(commentaire) }
 
