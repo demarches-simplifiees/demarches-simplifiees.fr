@@ -4,10 +4,10 @@ class Users::Dossiers::InvitesController < UsersController
     email = params[:email]
 
     if email.present? && User.find_by(email: email).nil?
-      return redirect_to new_user_registration_path(user: { email: email })
+      redirect_to new_user_registration_path(user: { email: email })
+    else
+      super
     end
-
-    super
   end
 
   def show
