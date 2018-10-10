@@ -181,7 +181,9 @@ namespace :after_party do
         source_procedure = Procedure.unscoped.find(deleted_procedure_id)
         destination_procedure = Procedure.find(new_procedure_id)
 
-        migrator = Tasks::DossierProcedureMigrator.new(source_procedure, destination_procedure, champ_mapping, champ_private_mapping, pj_mapping)
+        migrator = Tasks::DossierProcedureMigrator.new(source_procedure, destination_procedure, champ_mapping, champ_private_mapping, pj_mapping) do |dossier|
+          DossierMailer.notify_undelete_to_user(dossier).deliver_later
+        end
         migrator.check_consistency
         migrator.migrate_dossiers
       end

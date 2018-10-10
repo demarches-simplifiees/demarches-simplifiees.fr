@@ -21,4 +21,12 @@ class DossierMailer < ApplicationMailer
 
     mail(to: dossier.user.email, subject: subject)
   end
+
+  def notify_undelete_to_user(dossier)
+    @dossier = dossier
+    @dossier_kind = dossier.brouillon? ? 'brouillon' : 'dossier'
+    @subject = "Votre #{@dossier_kind} n° #{@dossier.id} est à nouveau accessible"
+
+    mail(to: dossier.user.email, subject: @subject)
+  end
 end
