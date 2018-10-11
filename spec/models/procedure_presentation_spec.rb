@@ -382,5 +382,29 @@ describe ProcedurePresentation do
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
     end
+
+    context 'for individual table' do
+      let(:procedure) { create(:procedure, :for_individual) }
+      let!(:kept_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'Mme', prenom: 'Josephine', nom: 'Baker')) }
+      let!(:discarded_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'M', prenom: 'Jean', nom: 'Tremblay')) }
+
+      context 'for gender column' do
+        let(:filter) { [{ 'table' => 'individual', 'column' => 'gender', 'value' => 'Mme' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'for prenom column' do
+        let(:filter) { [{ 'table' => 'individual', 'column' => 'prenom', 'value' => 'Josephine' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'for nom column' do
+        let(:filter) { [{ 'table' => 'individual', 'column' => 'nom', 'value' => 'Baker' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+    end
   end
 end
