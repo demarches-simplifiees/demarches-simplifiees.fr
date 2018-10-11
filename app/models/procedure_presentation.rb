@@ -95,7 +95,7 @@ class ProcedurePresentation < ApplicationRecord
           .where("champs.type_de_champ_id = #{sort['column'].to_i}")
           .order("champs.value #{order}")
           .pluck(:id)
-    else
+    when 'user', 'individual', 'etablissement'
       return dossiers
           .includes(table)
           .order("#{column} #{order}")
