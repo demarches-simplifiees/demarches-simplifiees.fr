@@ -20,6 +20,14 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('Demandeur', 'user', 'email')
     ]
 
+    if procedure.for_individual
+      fields.push(
+        field_hash("Prénom", "individual", "prenom"),
+        field_hash("Nom", "individual", "nom"),
+        field_hash("Civilité", "individual", "gender")
+      )
+    end
+
     if !procedure.for_individual || (procedure.for_individual && procedure.individual_with_siret)
       fields.push(
         field_hash('SIREN', 'etablissement', 'entreprise_siren'),
@@ -87,7 +95,7 @@ class ProcedurePresentation < ApplicationRecord
           .where("champs.type_de_champ_id = #{sort['column'].to_i}")
           .order("champs.value #{order}")
           .pluck(:id)
-    else
+    when 'user', 'individual', 'etablissement'
       return dossiers
           .includes(table)
           .order("#{column} #{order}")
@@ -102,13 +110,8 @@ class ProcedurePresentation < ApplicationRecord
       column = sanitized_column(filter)
       case table
       when 'self'
-        dossiers.where("? ILIKE ?", filter['column'], "%#{filter['value']}%")
-
-      when 'france_connect_information'
-        dossiers
-          .includes(user: :france_connect_information)
-          .where("? ILIKE ?", "france_connect_informations.#{filter['column']}", "%#{filter['value']}%")
-
+        date = filter['value'].to_date rescue nil
+        dossiers.where("DATE_TRUNC('day', #{column}) = ?", date)
       when 'type_de_champ', 'type_de_champ_private'
         relation = table == 'type_de_champ' ? :champs : :champs_private
         dossiers
@@ -126,7 +129,7 @@ class ProcedurePresentation < ApplicationRecord
             .includes(table)
             .where("#{column} ILIKE ?", "%#{filter['value']}%")
         end
-      when 'user'
+      when 'user', 'individual'
         dossiers
           .includes(table)
           .where("#{column} ILIKE ?", "%#{filter['value']}%")
@@ -183,10 +186,8 @@ class ProcedurePresentation < ApplicationRecord
     case table
     when 'self'
       dossier.send(column)
-    when 'user'
-      dossier.user.send(column)
-    when 'etablissement'
-      dossier.etablissement&.send(column)
+    when 'user', 'individual', 'etablissement'
+      dossier.send(table)&.send(column)
     when 'type_de_champ'
       dossier.champs.find { |c| c.type_de_champ_id == column.to_i }.value
     when 'type_de_champ_private'
