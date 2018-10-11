@@ -129,7 +129,7 @@ class ProcedurePresentation < ApplicationRecord
             .includes(table)
             .where("#{column} ILIKE ?", "%#{filter['value']}%")
         end
-      when 'user'
+      when 'user', 'individual'
         dossiers
           .includes(table)
           .where("#{column} ILIKE ?", "%#{filter['value']}%")
