@@ -104,12 +104,6 @@ class ProcedurePresentation < ApplicationRecord
       when 'self'
         date = filter['value'].to_date rescue nil
         dossiers.where("DATE_TRUNC('day', #{column}) = ?", date)
-
-      when 'france_connect_information'
-        dossiers
-          .includes(user: :france_connect_information)
-          .where("? ILIKE ?", "france_connect_informations.#{filter['column']}", "%#{filter['value']}%")
-
       when 'type_de_champ', 'type_de_champ_private'
         relation = table == 'type_de_champ' ? :champs : :champs_private
         dossiers
