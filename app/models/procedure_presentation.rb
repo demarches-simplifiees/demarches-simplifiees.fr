@@ -20,6 +20,14 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('Demandeur', 'user', 'email')
     ]
 
+    if procedure.for_individual
+      fields.push(
+        field_hash("Prénom", "individual", "prenom"),
+        field_hash("Nom", "individual", "nom"),
+        field_hash("Civilité", "individual", "gender")
+      )
+    end
+
     if !procedure.for_individual || (procedure.for_individual && procedure.individual_with_siret)
       fields.push(
         field_hash('SIREN', 'etablissement', 'entreprise_siren'),
