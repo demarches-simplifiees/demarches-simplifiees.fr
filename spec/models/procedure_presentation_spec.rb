@@ -49,42 +49,56 @@ describe ProcedurePresentation do
   end
 
   describe "#fields" do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :types_de_champ_count => 4, :types_de_champ_private_count => 4) }
-    let(:tdc_1) { procedure.types_de_champ[0] }
-    let(:tdc_2) { procedure.types_de_champ[1] }
-    let(:tdc_private_1) { procedure.types_de_champ_private[0] }
-    let(:tdc_private_2) { procedure.types_de_champ_private[1] }
-    let(:expected) {
-      [
-        { "label" => 'Créé le', "table" => 'self', "column" => 'created_at' },
-        { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
-        { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
-        { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren' },
-        { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique' },
-        { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial' },
-        { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale' },
-        { "label" => 'SIRET siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social' },
-        { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation' },
-        { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret' },
-        { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf' },
-        { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal' },
-        { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.id.to_s },
-        { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.id.to_s },
-        { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.id.to_s },
-        { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.id.to_s }
-      ]
-    }
+    context 'when the procedure can have a SIRET number' do
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :types_de_champ_count => 4, :types_de_champ_private_count => 4) }
+      let(:tdc_1) { procedure.types_de_champ[0] }
+      let(:tdc_2) { procedure.types_de_champ[1] }
+      let(:tdc_private_1) { procedure.types_de_champ_private[0] }
+      let(:tdc_private_2) { procedure.types_de_champ_private[1] }
+      let(:expected) {
+        [
+          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at' },
+          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
+          { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
+          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren' },
+          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique' },
+          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial' },
+          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale' },
+          { "label" => 'SIRET siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social' },
+          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation' },
+          { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret' },
+          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf' },
+          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal' },
+          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.id.to_s },
+          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.id.to_s },
+          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.id.to_s },
+          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.id.to_s }
+        ]
+      }
 
-    before do
-      procedure.types_de_champ[2].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:header_section))
-      procedure.types_de_champ[3].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:explication))
-      procedure.types_de_champ_private[2].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:header_section))
-      procedure.types_de_champ_private[3].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:explication))
+      before do
+        procedure.types_de_champ[2].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:header_section))
+        procedure.types_de_champ[3].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:explication))
+        procedure.types_de_champ_private[2].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:header_section))
+        procedure.types_de_champ_private[3].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:explication))
+      end
+
+      subject { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure)) }
+
+      it { expect(subject.fields).to eq(expected) }
     end
 
-    subject { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure)) }
+    context 'when the procedure is for individuals' do
+      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom" } }
+      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom" } }
+      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender" } }
+      let(:procedure) { create(:procedure, :for_individual) }
+      let(:procedure_presentation) { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure)) }
 
-    it { expect(subject.fields).to eq(expected) }
+      subject { procedure_presentation.fields }
+
+      it { is_expected.to include(name_field, surname_field, gender_field) }
+    end
   end
 
   describe "#fields_for_select" do
