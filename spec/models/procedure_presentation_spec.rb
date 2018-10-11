@@ -286,6 +286,34 @@ describe ProcedurePresentation do
       it { is_expected.to eq([biere_dossier, vin_dossier].map(&:id)) }
     end
 
+    context 'for individual table' do
+      let(:table) { 'individual' }
+      let(:order) { 'asc' } # Desc works the same, no extra test required
+
+      let(:procedure) { create(:procedure, :for_individual) }
+
+      let!(:first_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'M', prenom: 'Alain', nom: 'Antonelli')) }
+      let!(:last_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'Mme', prenom: 'Zora', nom: 'Zemmour')) }
+
+      context 'for gender column' do
+        let(:column) { 'gender' }
+
+        it { is_expected.to eq([first_dossier, last_dossier].map(&:id)) }
+      end
+
+      context 'for prenom column' do
+        let(:column) { 'prenom' }
+
+        it { is_expected.to eq([first_dossier, last_dossier].map(&:id)) }
+      end
+
+      context 'for nom column' do
+        let(:column) { 'nom' }
+
+        it { is_expected.to eq([first_dossier, last_dossier].map(&:id)) }
+      end
+    end
+
     context 'for other tables' do
       # All other columns and tables work the same so it’s ok to test only one
       let(:table) { 'etablissement' }
