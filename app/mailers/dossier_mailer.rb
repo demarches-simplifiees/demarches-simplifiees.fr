@@ -29,4 +29,13 @@ class DossierMailer < ApplicationMailer
 
     mail(to: dossier.user.email, subject: @subject)
   end
+
+  def notify_unmigrated_to_user(dossier, new_procedure)
+    @dossier = dossier
+    @dossier_kind = dossier.brouillon? ? 'brouillon' : 'dossier'
+    @subject = "Changement de procédure pour votre #{@dossier_kind} n° #{@dossier.id}"
+    @new_procedure = new_procedure
+
+    mail(to: dossier.user.email, subject: @subject)
+  end
 end
