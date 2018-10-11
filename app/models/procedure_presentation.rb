@@ -186,10 +186,8 @@ class ProcedurePresentation < ApplicationRecord
     case table
     when 'self'
       dossier.send(column)
-    when 'user'
-      dossier.user.send(column)
-    when 'etablissement'
-      dossier.etablissement&.send(column)
+    when 'user', 'individual', 'etablissement'
+      dossier.send(table)&.send(column)
     when 'type_de_champ'
       dossier.champs.find { |c| c.type_de_champ_id == column.to_i }.value
     when 'type_de_champ_private'

@@ -147,6 +147,29 @@ describe ProcedurePresentation do
       it { is_expected.to eq('bla@yopmail.com') }
     end
 
+    context 'for individual table' do
+      let(:table) { 'individual' }
+      let(:dossier) { create(:dossier, procedure: procedure, individual: create(:individual, nom: 'Martin', prenom: 'Jacques', gender: 'M.')) }
+
+      context 'for prenom column' do
+        let(:column) { 'prenom' }
+
+        it { is_expected.to eq('Jacques') }
+      end
+
+      context 'for nom column' do
+        let(:column) { 'nom' }
+
+        it { is_expected.to eq('Martin') }
+      end
+
+      context 'for gender column' do
+        let(:column) { 'gender' }
+
+        it { is_expected.to eq('M.') }
+      end
+    end
+
     context 'for etablissement table' do
       let(:table) { 'etablissement' }
       let(:column) { 'code_postal' } # All other columns work the same, no extra test required
