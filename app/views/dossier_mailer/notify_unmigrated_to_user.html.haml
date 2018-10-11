@@ -1,0 +1,26 @@
+- content_for(:title, @subject)
+
+%h1 Bonjour,
+
+%p
+  Vous avez commencé un #{@dossier_kind},
+  = link_to("n° #{@dossier.id}", dossier_url(@dossier))
+  sur la procédure «&nbsp;#{@dossier.procedure.libelle}&nbsp;».
+  En raison d’un changement dans la procédure, votre #{@dossier_kind} a été inaccessible pendant quelques jours.
+  L’accès est à présent à nouveau possible.
+
+%p
+  Malheureusement, en raison des changements dans le procédure, vous ne pourrez pas mener à terme le #{@dossier_kind} commencé.
+  Si votre démarche est toujours d’actualité, nous vous invitons à la recommencer sur
+  = link_to("la nouvelle procédure", commencer_url(@new_procedure.path))
+  \.
+
+%p
+  Nous avons pris des mesures pour nous assurer qu’un tel désagrément ne se reproduise pas,
+  et vous présentons nos excuses pour la gène occasionnée.
+
+%p
+  Bonne journée,
+
+%p
+  L'équipe demarches-simplifiees.fr

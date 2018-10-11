@@ -172,20 +172,37 @@ namespace :after_party do
       end
 
       def restore_deleted_dossiers(deleted_procedure_id, new_procedure_id, champ_mapping, champ_private_mapping, pj_mapping)
-        Dossier.unscoped
-          .joins('JOIN procedures ON procedures.id = dossiers.procedure_id')
-          .where(procedure_id: deleted_procedure_id)
-          .where('dossiers.hidden_at >= procedures.hidden_at')
-          .update_all(hidden_at: nil)
-
         source_procedure = Procedure.unscoped.find(deleted_procedure_id)
         destination_procedure = Procedure.find(new_procedure_id)
+
+        deleted_dossiers = Dossier.unscoped
+          .where(procedure_id: deleted_procedure_id)
+          .where('dossiers.hidden_at >= ?', source_procedure.hidden_at)
+
+        deleted_dossier_ids = deleted_dossiers.pluck(:id).to_a
+        deleted_dossiers.update_all(hidden_at: nil)
+
+        source_procedure
+          .update_columns(
+            hidden_at: nil,
+            archived_at: source_procedure.hidden_at,
+            aasm_state: :archivee
+          )
 
         migrator = Tasks::DossierProcedureMigrator.new(source_procedure, destination_procedure, champ_mapping, champ_private_mapping, pj_mapping) do |dossier|
           DossierMailer.notify_undelete_to_user(dossier).deliver_later
         end
         migrator.check_consistency
         migrator.migrate_dossiers
+
+        source_procedure.dossiers.where(id: deleted_dossier_ids).find_each do |dossier|
+          if dossier.termine?
+            DossierMailer.notify_undelete_to_user(dossier).deliver_later
+          else
+            rake_puts "Dossier #{dossier.id} non migré\n"
+            DossierMailer.notify_unmigrated_to_user(dossier, destination_procedure).deliver_later
+          end
+        end
       end
     end.new.run
   end
