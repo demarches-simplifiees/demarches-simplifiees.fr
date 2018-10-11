@@ -45,7 +45,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :id,
     :created_at,
     :libelle,
-    :organisation,
+    :service,
     :dossiers,
     :published_at
   ].freeze

@@ -23,6 +23,14 @@
           = h simple_format(@dossier.procedure.description)
 
     .column.auth-form
+      - if resource_name == :user
+        %p.register
+          %span
+            Nouveau sur demarches-simplifiees.fr ?
+          = link_to "Créer un compte", new_registration_path(resource_name), class: "button primary auth-signup-button"
+
+        %hr
+
       = form_for @user, url: user_session_path, html: { class: "form" } do |f|
         %h1 Connectez-vous
 
@@ -51,10 +59,3 @@
 
       .center
         = link_to "Qu’est-ce que FranceConnect ?", "https://app.franceconnect.gouv.fr/en-savoir-plus", target: "_blank", class: "link"
-
-      - if resource_name == :user
-        %hr
-        %p.register
-          %span
-            Nouveau sur demarches-simplifiees.fr ?
-          = link_to "Créer un compte", new_registration_path(resource_name), class: "button auth-signup-button"

@@ -106,7 +106,9 @@
 
               - @procedure_presentation.displayed_field_values(dossier).each do |value|
                 %td
-                  = link_to(value, gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link')
+                  / FIXME: value should automatically fallback to `""` instead of nil
+                  / #get_value should call to_s on the champ
+                  = link_to(value || "", gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link')
 
               %td.status-col
                 = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
