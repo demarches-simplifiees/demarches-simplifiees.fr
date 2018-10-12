@@ -283,6 +283,11 @@ class StatsController < ApplicationController
         processed_at.beginning_of_month.to_s
       end
 
+    procedure_id_type_de_champs_count = TypeDeChamp
+      .where(private: false)
+      .group(:procedure_id)
+      .count
+
     processed_dossiers_by_month.map do |month, dossier_plucks|
       # Group the dossiers for this month by procedure
       dossiers_grouped_by_procedure = dossier_plucks.group_by { |(procedure_id, *_)| procedure_id }
@@ -296,7 +301,7 @@ class StatsController < ApplicationController
         procedure_mean = mean(procedure_dossiers_processing_time)
 
         # We normalize the data for 24 fields
-        procedure_fields_count = Procedure.find(procedure_id).types_de_champ.count
+        procedure_fields_count = procedure_id_type_de_champs_count[procedure_id]
         procedure_mean * (MEAN_NUMBER_OF_CHAMPS_IN_A_FORM / procedure_fields_count)
       end
 
