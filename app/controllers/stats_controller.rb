@@ -279,18 +279,18 @@ class StatsController < ApplicationController
 
     # Group dossiers by month
     processed_dossiers_by_month = processed_dossiers
-      .group_by do |e|
-        e[3].beginning_of_month.to_s
+      .group_by do |(*_, processed_at)|
+        processed_at.beginning_of_month.to_s
       end
 
-    processed_dossiers_by_month.map do |month, value|
+    processed_dossiers_by_month.map do |month, dossier_plucks|
       # Group the dossiers for this month by procedure
-      dossiers_grouped_by_procedure = value.group_by { |dossier| dossier[0] }
+      dossiers_grouped_by_procedure = dossier_plucks.group_by { |(procedure_id, *_)| procedure_id }
 
       # Compute the mean time for this procedure
       procedure_processing_times = dossiers_grouped_by_procedure.map do |procedure_id, procedure_dossiers|
-        procedure_dossiers_processing_time = procedure_dossiers.map do |dossier|
-          (dossier[2] - dossier[1]).to_f / 60
+        procedure_dossiers_processing_time = procedure_dossiers.map do |(_procedure_id, created_at, en_construction_at, _processed_at)|
+          (en_construction_at - created_at).to_f / 60
         end
 
         procedure_mean = mean(procedure_dossiers_processing_time)
