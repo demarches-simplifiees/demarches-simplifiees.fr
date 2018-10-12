@@ -355,6 +355,13 @@ describe NewUser::DossiersController, type: :controller do
         it { expect(response).to render_template(:brouillon) }
         it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
         it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
+
+        context 'and the dossier is in construction' do
+          let!(:dossier) { create(:dossier, :en_construction, user: user) }
+
+          it { expect(response).to render_template(:brouillon) }
+          it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
+        end
       end
     end
 

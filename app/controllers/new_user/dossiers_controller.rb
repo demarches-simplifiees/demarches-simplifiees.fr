@@ -264,7 +264,7 @@ module NewUser
     end
 
     def save_draft?
-      params[:save_draft]
+      dossier.brouillon? && params[:save_draft]
     end
   end
 end
