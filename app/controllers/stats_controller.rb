@@ -275,7 +275,11 @@ class StatsController < ApplicationController
 
     processed_dossiers = dossiers
       .where(:processed_at => min_date..max_date)
-      .pluck(:procedure_id, :created_at, :en_construction_at, :processed_at)
+      .pluck(
+        :procedure_id,
+        Arel.sql('EXTRACT(EPOCH FROM (en_construction_at - created_at)) / 60 AS processing_time'),
+        :processed_at
+      )
 
     # Group dossiers by month
     processed_dossiers_by_month = processed_dossiers
@@ -294,10 +298,7 @@ class StatsController < ApplicationController
 
       # Compute the mean time for this procedure
       procedure_processing_times = dossiers_grouped_by_procedure.map do |procedure_id, procedure_dossiers|
-        procedure_dossiers_processing_time = procedure_dossiers.map do |(_procedure_id, created_at, en_construction_at, _processed_at)|
-          (en_construction_at - created_at).to_f / 60
-        end
-
+        procedure_dossiers_processing_time = procedure_dossiers.map { |_, processing_time, _| processing_time }
         procedure_mean = mean(procedure_dossiers_processing_time)
 
         # We normalize the data for 24 fields
