@@ -33,6 +33,30 @@ export function drawLayer(map, data, style, layerName = 'default') {
   }
 }
 
+export function noEditStyle(style) {
+  return Object.assign({}, style, {
+    opacity: 0.7,
+    fillOpacity: 0.5,
+    color: style.fillColor
+  });
+}
+
+const POLYGON_STYLE = {
+  weight: 2,
+  opacity: 0.3,
+  color: 'white',
+  dashArray: '3',
+  fillOpacity: 0.7
+};
+
+export const CADASTRE_POLYGON_STYLE = Object.assign({}, POLYGON_STYLE, {
+  fillColor: '#8a6d3b'
+});
+
+export const QP_POLYGON_STYLE = Object.assign({}, POLYGON_STYLE, {
+  fillColor: '#31708f'
+});
+
 function createLayer(map, layerName) {
   const layer = (LAYERS[layerName] = new L.GeoJSON(undefined, {
     interactive: false
