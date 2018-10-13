@@ -6,6 +6,20 @@ import L from 'leaflet';
 export { DEFAULT_POSITION, LAT, LON };
 const LAYERS = {};
 
+export function drawLayer(map, data, style, layerName = 'default') {
+  removeLayer(map, layerName);
+
+  if (Array.isArray(data) && data.length > 0) {
+    const layer = createLayer(map, layerName);
+
+    data.forEach(function(item) {
+      layer.addData(item.geometry);
+    });
+
+    layer.setStyle(style).addTo(map);
+  }
+}
+
 function createLayer(map, layerName) {
   const layer = (LAYERS[layerName] = new L.GeoJSON(undefined, {
     interactive: false
