@@ -129,25 +129,6 @@ module NewGestionnaire
       end
     end
 
-    def position
-      etablissement = dossier.etablissement
-
-      if etablissement.present?
-        point = Carto::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse)
-      end
-
-      lon = "2.428462"
-      lat = "46.538192"
-      zoom = "13"
-
-      if point.present?
-        lon = point.x.to_s
-        lat = point.y.to_s
-      end
-
-      render json: { lon: lon, lat: lat, zoom: zoom, dossier_id: params[:dossier_id] }
-    end
-
     def create_avis
       @avis = Avis.new(avis_params.merge(claimant: current_gestionnaire, dossier: dossier))
       if @avis.save

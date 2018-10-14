@@ -23,7 +23,7 @@ describe 'users/carte/show.html.haml', type: :view do
 
     context 'présence des inputs hidden' do
       it 'stockage du json des polygons dessinés' do
-        expect(rendered).to have_selector('input[type=hidden][id=json_latlngs][name=json_latlngs]', visible: false)
+        expect(rendered).to have_selector('input[type=hidden][name=selection]', visible: false)
       end
     end
 
