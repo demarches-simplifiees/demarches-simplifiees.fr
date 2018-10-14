@@ -103,13 +103,13 @@ class Admin::ProceduresController < AdminController
       if ProcedurePath.valid?(@procedure, path)
         @procedure.publish_with_path!(path)
         reset_procedure
-        flash.notice = 'Démarche modifiée. Tous les brouillons de cette démarche ont été supprimés.'
+        flash.notice = 'Démarche modifiée. Tous les dossiers de cette démarche ont été supprimés.'
       else
         flash.alert = 'Lien de la démarche invalide.'
       end
     else
       reset_procedure
-      flash.notice = 'Démarche modifiée. Tous les brouillons de cette démarche ont été supprimés.'
+      flash.notice = 'Démarche modifiée.'
     end
 
     redirect_to edit_admin_procedure_path(id: @procedure.id)
