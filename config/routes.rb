@@ -251,7 +251,7 @@ Rails.application.routes.draw do
   #
 
   get 'address/search' => 'address#get'
-  get 'address/address_point' => 'address#get_address_point'
+  get 'address/geocode' => 'address#get_address_point'
 
   namespace :invites do
     post 'dossier/:dossier_id' => '/invites#create', as: 'dossier'
