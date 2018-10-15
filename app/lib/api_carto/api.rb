@@ -1,7 +1,4 @@
 class ApiCarto::API
-  def initialize
-  end
-
   def self.search_qp(geojson)
     url = [API_CARTO_URL, "quartiers-prioritaires", "search"].join("/")
     call(url, geojson)
