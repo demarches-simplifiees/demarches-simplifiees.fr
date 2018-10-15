@@ -2,7 +2,7 @@ class Ban::SearchController < ApplicationController
   def get
     request = params[:request]
 
-    json = ApiAdresse::AddressRetriever.new(request).list.map do |value|
+    json = ApiAdresse::AddressAdapter.new(request).list.map do |value|
       { label: value }
     end.to_json
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ApiAdresse::AddressRetriever do
+describe ApiAdresse::AddressAdapter do
   describe '#list' do
     let(:request) { 'Paris' }
     let(:response) { File.open('spec/support/files/api_adresse/search_results.json') }
