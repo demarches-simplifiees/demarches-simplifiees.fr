@@ -33,7 +33,7 @@ class ModuleApiCartoService
 
   def self.generate_cadastre(coordinates)
     coordinates.flat_map do |coordinate|
-      ApiCarto::Cadastre::Adapter.new(
+      ApiCarto::CadastreAdapter.new(
         coordinate.map { |element| [element['lng'], element['lat']] }
       ).results
     end
