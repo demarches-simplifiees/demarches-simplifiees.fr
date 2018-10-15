@@ -9,10 +9,7 @@ class CARTO::SGMAP::Cadastre::Adapter
 
   def to_params
     data_source[:features].map do |feature|
-      tmp = filter_properties feature[:properties]
-      tmp[:geometry] = feature[:geometry]
-
-      tmp
+      filter_properties(feature[:properties]).merge({ geometry: feature[:geometry] })
     end
   end
 
