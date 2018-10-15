@@ -8,7 +8,9 @@ module ApiAdresse
     end
 
     def call
-      RestClient.get(API_ADRESSE_URL, params: { q: @address, limit: @limit })
+      search_url = [API_ADRESSE_URL, "search"].join("/")
+
+      RestClient.get(search_url, params: { q: @address, limit: @limit })
     rescue RestClient::ServiceUnavailable
       nil
     end
