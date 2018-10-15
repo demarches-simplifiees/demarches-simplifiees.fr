@@ -3,7 +3,7 @@ class ApiAdresse::PointAdapter
     @address = address
   end
 
-  def point
+  def geocode
     @point ||= convert_api_result_to_point
   end
 
