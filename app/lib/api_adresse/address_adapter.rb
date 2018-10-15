@@ -3,7 +3,7 @@ class ApiAdresse::AddressAdapter
     @address = address
   end
 
-  def list
+  def get_suggestions
     @list ||= convert_api_result_to_full_address
   end
 

@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe ApiAdresse::AddressAdapter do
-  describe '#list' do
+  describe '#get_suggestions' do
     let(:request) { 'Paris' }
     let(:response) { File.open('spec/support/files/api_adresse/search_results.json') }
     let(:status) { 200 }
 
-    subject { described_class.new(request).list }
+    subject { described_class.new(request).get_suggestions }
 
     before do
       stub_request(:get, "https://api-adresse.data.gouv.fr/search?&q=#{request}&limit=5")
