@@ -1,7 +1,7 @@
 class ModuleApiCartoService
   def self.save_qp!(dossier, json_latlngs)
     if dossier.procedure.module_api_carto.quartiers_prioritaires?
-      qp_list = generate_qp JSON.parse(json_latlngs)
+      qp_list = generate_qp(JSON.parse(json_latlngs))
 
       qp_list.each_value do |qp|
         qp[:dossier_id] = dossier.id

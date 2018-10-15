@@ -20,7 +20,7 @@ class CARTO::SGMAP::API
     RestClient::Resource.new(
       url,
       verify_ssl: verify_ssl_mode
-    ).post params[:geojson], content_type: 'application/json'
+    ).post(params[:geojson], content_type: 'application/json')
 
   rescue RestClient::InternalServerError
     raise RestClient::ResourceNotFound
