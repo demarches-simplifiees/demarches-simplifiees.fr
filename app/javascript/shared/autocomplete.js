@@ -32,7 +32,8 @@ function source(url) {
         const openTag = `<div class="aa-suggestion ${mineClass}">`;
         return autocomplete.escapeHighlightedString(label, openTag, '</div>');
       }
-    }
+    },
+    debounce: 300
   };
 }
 
