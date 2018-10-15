@@ -8,15 +8,8 @@ class CARTO::SGMAP::QuartiersPrioritaires::Adapter
   end
 
   def to_params
-    params = {}
-
-    data_source[:features].each do |feature|
-      qp_code = feature[:properties][:code]
-
-      params[qp_code] = feature[:properties]
-      params[qp_code][:geometry] = feature[:geometry]
+    data_source[:features].map do |feature|
+      feature[:properties].merge({ geometry: feature[:geometry] })
     end
-
-    params
   end
 end
