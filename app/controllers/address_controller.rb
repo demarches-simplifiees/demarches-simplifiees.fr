@@ -1,4 +1,4 @@
-class Ban::SearchController < ApplicationController
+class AddressController < ApplicationController
   def get
     request = params[:request]
 
