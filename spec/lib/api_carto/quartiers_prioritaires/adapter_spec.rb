@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CARTO::SGMAP::QuartiersPrioritaires::Adapter do
+describe ApiCarto::QuartiersPrioritaires::Adapter do
   subject { described_class.new(coordinates).results }
 
   before do

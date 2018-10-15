@@ -1,4 +1,4 @@
-class CARTO::SGMAP::API
+class ApiCarto::API
   def initialize
   end
 
