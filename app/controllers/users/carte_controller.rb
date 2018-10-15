@@ -19,8 +19,8 @@ class Users::CarteController < UsersController
     dossier.cadastres.each(&:destroy)
 
     if geo_json.present?
-      ModuleApiCartoService.save_qp! dossier, geo_json
-      ModuleApiCartoService.save_cadastre! dossier, geo_json
+      ModuleApiCartoService.save_qp!(dossier, geo_json)
+      ModuleApiCartoService.save_cadastre!(dossier, geo_json)
     end
 
     dossier.update!(json_latlngs: geo_json)
