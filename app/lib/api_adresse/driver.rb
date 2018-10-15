@@ -8,13 +8,9 @@ module ApiAdresse
     end
 
     def call
-      RestClient.get(api_url, params: { q: @address, limit: @limit })
+      RestClient.get(API_ADRESSE_URL, params: { q: @address, limit: @limit })
     rescue RestClient::ServiceUnavailable
       nil
-    end
-
-    def api_url
-      'http://api-adresse.data.gouv.fr/search'
     end
   end
 end
