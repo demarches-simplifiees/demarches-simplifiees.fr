@@ -1,0 +1,54 @@
+@import "constants";
+@import "colors";
+
+.etablissement {
+  margin-top: $default-padding * 2;
+  margin-bottom: $default-padding * 2;
+
+  h1 {
+    margin-bottom: $default-padding * 2;
+  }
+
+  p {
+    margin-bottom: $default-padding;
+  }
+
+  .etablissement-infos {
+    margin-top: $default-padding * 2;
+    margin-bottom: $default-padding * 2;
+
+    > * {
+      margin-bottom: $default-padding;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    ul {
+      line-height: 28px;
+      list-style-type: disc;
+      list-style-position: inside;
+
+      // Inner lists
+      ul {
+        margin-left: $default-padding;
+        list-style-type: circle;
+      }
+    }
+
+    .etablissement-exercices {
+      font-style: italic;
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: space-between;
+
+    .button {
+      margin-bottom: $default-padding;
+    }
+  }
+}

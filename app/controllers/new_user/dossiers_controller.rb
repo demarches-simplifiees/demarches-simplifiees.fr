@@ -103,6 +103,16 @@ module NewUser
       redirect_to etablissement_dossier_path
     end
 
+    def etablissement
+      @dossier = dossier
+
+      # Redirect if the user attempts to access the page URL directly
+      if !@dossier.etablissement
+        flash.alert = 'Aucun établissement n’est associé à ce dossier'
+        return redirect_to siret_dossier_path(@dossier)
+      end
+    end
+
     def brouillon
       @dossier = dossier_with_champs
 

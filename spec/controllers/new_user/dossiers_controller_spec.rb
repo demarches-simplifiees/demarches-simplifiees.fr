@@ -335,6 +335,21 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
+  describe '#etablissement' do
+    let(:dossier) { create(:dossier, :with_entreprise, user: user) }
+
+    before { sign_in(user) }
+
+    subject { get :etablissement, params: { id: dossier.id } }
+
+    it { is_expected.to render_template(:etablissement) }
+
+    context 'when the dossier has no etablissement yet' do
+      let(:dossier) { create(:dossier, user: user) }
+      it { is_expected.to redirect_to siret_dossier_path(dossier) }
+    end
+  end
+
   describe '#brouillon' do
     before { sign_in(user) }
     let!(:dossier) { create(:dossier, user: user, autorisation_donnees: true) }
