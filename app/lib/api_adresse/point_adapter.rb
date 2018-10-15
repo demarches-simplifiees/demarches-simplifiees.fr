@@ -1,22 +1,15 @@
-class ApiAdresse::PointAdapter
+class ApiAdresse::PointAdapter < ApiAdresse::Adapter
   def initialize(address)
-    @address = address
+    super(address, 1, nil)
   end
 
   def geocode
-    @point ||= convert_api_result_to_point
+    handle_result
   end
 
   private
 
-  def convert_api_result_to_point
-    result = JSON.parse(ApiAdresse::API.call(@address))
-
-    if result['features'].empty?
-      Rails.logger.error "unable to find location for address #{@address}"
-      return nil
-    end
-
-    RGeo::GeoJSON.decode(result['features'][0]['geometry'], json_parser: :json)
+  def process_features
+    RGeo::GeoJSON.decode(features[0]['geometry'], json_parser: :json)
   end
 end
