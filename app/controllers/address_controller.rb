@@ -9,7 +9,7 @@ class AddressController < ApplicationController
     render json: json
   end
 
-  def get_address_point
+  def geocode
     request = params[:request]
 
     point = ApiAdresse::PointAdapter.new(request).geocode
