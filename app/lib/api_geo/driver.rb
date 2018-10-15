@@ -17,7 +17,7 @@ module ApiGeo
     private
 
     def self.call(api_url)
-      RestClient.get api_url, params: { fields: :nom }
+      RestClient.get(api_url, params: { fields: :nom })
     rescue RestClient::ServiceUnavailable
       nil
     end
