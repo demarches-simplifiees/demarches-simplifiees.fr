@@ -115,7 +115,7 @@ shared_examples 'carte_controller_spec' do
       before do
         allow_any_instance_of(CARTO::SGMAP::QuartiersPrioritaires::Adapter)
           .to receive(:to_params)
-          .and_return({ "QPCODE1234" => { :code => "QPCODE1234", :nom => "QP de test", :commune => "Paris", :geometry => { :type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] } } })
+          .and_return([{ :code => "QPCODE1234", :nom => "QP de test", :commune => "Paris", :geometry => { :type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] } }])
 
         post :save, params: { dossier_id: dossier.id, selection: json_latlngs }
       end
@@ -217,7 +217,7 @@ shared_examples 'carte_controller_spec' do
     before do
       allow_any_instance_of(CARTO::SGMAP::QuartiersPrioritaires::Adapter)
         .to receive(:to_params)
-        .and_return({ "QPCODE1234" => { :code => "QPCODE1234", :geometry => { :type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] } } })
+        .and_return([{ :code => "QPCODE1234", :geometry => { :type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] } }])
 
       post :zones, params: { dossier_id: dossier.id, selection: json_latlngs.to_json }, format: 'js'
     end
