@@ -1,10 +1,10 @@
-class CARTO::SGMAP::Cadastre::Adapter
+class ApiCarto::Cadastre::Adapter
   def initialize(coordinates)
     @coordinates = GeojsonService.to_json_polygon_for_cadastre(coordinates)
   end
 
   def data_source
-    @data_source ||= JSON.parse(CARTO::SGMAP::API.search_cadastre(@coordinates), symbolize_names: true)
+    @data_source ||= JSON.parse(ApiCarto::API.search_cadastre(@coordinates), symbolize_names: true)
   end
 
   def results
