@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe AddressController, type: :controller do
-  describe '#GET get' do
-    subject { get :get, params: { request: request } }
+  describe '#GET suggestions' do
+    subject { get :suggestions, params: { request: request } }
 
     before do
       subject

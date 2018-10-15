@@ -1,5 +1,5 @@
 class AddressController < ApplicationController
-  def get
+  def suggestions
     request = params[:request]
 
     json = ApiAdresse::AddressAdapter.new(request).get_suggestions.map do |value|
