@@ -113,7 +113,7 @@ shared_examples 'carte_controller_spec' do
       let(:module_api_carto) { create(:module_api_carto, :with_quartiers_prioritaires) }
 
       before do
-        allow_any_instance_of(ApiCarto::QuartiersPrioritaires::Adapter)
+        allow_any_instance_of(ApiCarto::QuartiersPrioritairesAdapter)
           .to receive(:results)
           .and_return([{ :code => "QPCODE1234", :nom => "QP de test", :commune => "Paris", :geometry => { :type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] } }])
 
@@ -215,7 +215,7 @@ shared_examples 'carte_controller_spec' do
     render_views
 
     before do
-      allow_any_instance_of(ApiCarto::QuartiersPrioritaires::Adapter)
+      allow_any_instance_of(ApiCarto::QuartiersPrioritairesAdapter)
         .to receive(:results)
         .and_return([{ :code => "QPCODE1234", :geometry => { :type => "MultiPolygon", :coordinates => [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] } }])
 

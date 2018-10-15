@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ApiCarto::QuartiersPrioritaires::Adapter do
+describe ApiCarto::QuartiersPrioritairesAdapter do
   subject { described_class.new(coordinates).results }
 
   before do

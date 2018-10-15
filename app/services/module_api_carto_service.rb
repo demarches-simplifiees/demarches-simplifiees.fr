@@ -25,7 +25,7 @@ class ModuleApiCartoService
 
   def self.generate_qp(coordinates)
     coordinates.flat_map do |coordinate|
-      ApiCarto::QuartiersPrioritaires::Adapter.new(
+      ApiCarto::QuartiersPrioritairesAdapter.new(
         coordinate.map { |element| [element['lng'], element['lat']] }
       ).results
     end
