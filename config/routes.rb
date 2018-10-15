@@ -250,7 +250,7 @@ Rails.application.routes.draw do
   # Addresses
   #
 
-  get 'address/search' => 'address#get'
+  get 'address/suggestions' => 'address#get'
   get 'address/geocode' => 'address#geocode'
 
   namespace :invites do
