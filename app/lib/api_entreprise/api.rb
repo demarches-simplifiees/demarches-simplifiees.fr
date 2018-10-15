@@ -27,7 +27,6 @@ class ApiEntreprise::API
     params = params(siret_or_siren, procedure_id)
 
     response = Typhoeus.get(url,
-      ssl_verifypeer: false,
       params: params,
       timeout: TIMEOUT)
 
