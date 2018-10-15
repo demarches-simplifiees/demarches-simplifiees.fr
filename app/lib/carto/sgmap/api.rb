@@ -14,7 +14,7 @@ class CARTO::SGMAP::API
 
   private
 
-  def self.call(url, params = {})
+  def self.call(url, params)
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
 
     RestClient::Resource.new(
