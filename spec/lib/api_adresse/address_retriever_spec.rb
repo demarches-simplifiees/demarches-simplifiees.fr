@@ -9,7 +9,7 @@ describe ApiAdresse::AddressRetriever do
     subject { described_class.new(request).list }
 
     before do
-      stub_request(:get, "http://api-adresse.data.gouv.fr/search?&q=#{request}&limit=5")
+      stub_request(:get, "https://api-adresse.data.gouv.fr/search?&q=#{request}&limit=5")
         .to_return(status: status, body: response, headers: {})
     end
 

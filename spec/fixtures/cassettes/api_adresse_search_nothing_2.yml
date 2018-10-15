@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://api-adresse.data.gouv.fr/search?limit=5&q=je%20recherche%20pas%20grand%20chose
+    uri: https://api-adresse.data.gouv.fr/search?limit=5&q=je%20recherche%20pas%20grand%20chose
     body:
       encoding: US-ASCII
       string: ''

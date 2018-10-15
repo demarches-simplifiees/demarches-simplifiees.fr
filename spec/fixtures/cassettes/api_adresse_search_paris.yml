@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://api-adresse.data.gouv.fr/search?limit=1&q=Paris
+    uri: https://api-adresse.data.gouv.fr/search?limit=1&q=Paris
     body:
       encoding: US-ASCII
       string: ''
