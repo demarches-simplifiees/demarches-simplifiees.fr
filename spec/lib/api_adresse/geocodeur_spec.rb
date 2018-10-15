@@ -16,7 +16,7 @@ describe ApiAdresse::Geocodeur do
     end
     context 'when JSON::ParserError' do
       before do
-        allow_any_instance_of(ApiAdresse::PointAdapter).to receive(:point).and_raise(JSON::ParserError)
+        allow_any_instance_of(ApiAdresse::PointAdapter).to receive(:geocode).and_raise(JSON::ParserError)
       end
       it 'return nil' do
         expect(described_class.convert_adresse_to_point(address)).to be_nil
