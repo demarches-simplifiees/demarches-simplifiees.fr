@@ -345,8 +345,8 @@ describe Procedure do
     let(:from_library) { false }
 
     before do
-      @logo = File.open('spec/fixtures/white.png')
-      @signature = File.open('spec/fixtures/black.png')
+      @logo = File.open('spec/fixtures/files/white.png')
+      @signature = File.open('spec/fixtures/files/black.png')
       @attestation_template = create(:attestation_template, procedure: procedure, logo: @logo, signature: @signature)
       @procedure = procedure.clone(procedure.administrateur, from_library)
       @procedure.save

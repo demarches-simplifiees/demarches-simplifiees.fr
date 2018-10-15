@@ -8,7 +8,7 @@ describe ApiEntreprise::EntrepriseAdapter do
 
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
-      .to_return(body: File.read('spec/support/files/api_entreprise/entreprises.json', status: 200))
+      .to_return(body: File.read('spec/fixtures/files/api_entreprise/entreprises.json', status: 200))
   end
 
   it '#to_params class est une Hash ?' do

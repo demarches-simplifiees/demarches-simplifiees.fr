@@ -57,8 +57,8 @@ describe AttestationTemplate, type: :model do
 
   describe 'dup' do
     before do
-      @logo = File.open('spec/fixtures/white.png')
-      @signature = File.open('spec/fixtures/black.png')
+      @logo = File.open('spec/fixtures/files/white.png')
+      @signature = File.open('spec/fixtures/files/black.png')
     end
 
     after do
@@ -113,8 +113,8 @@ describe AttestationTemplate, type: :model do
     end
 
     before do
-      @logo = File.open('spec/fixtures/white.png')
-      @signature = File.open('spec/fixtures/black.png')
+      @logo = File.open('spec/fixtures/files/white.png')
+      @signature = File.open('spec/fixtures/files/black.png')
       Timecop.freeze(Time.now)
     end
 

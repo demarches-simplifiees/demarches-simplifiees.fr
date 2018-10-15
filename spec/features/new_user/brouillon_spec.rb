@@ -39,7 +39,7 @@ feature 'The user' do
     check('engagement')
     fill_in('dossier_link', with: '123')
     # do not know how to make it work...
-    # find('form input[type="file"]').set(Rails.root.join('spec/fixtures/white.png'))
+    # find('form input[type="file"]').set(Rails.root.join('spec/fixtures/files/white.png'))
 
     click_on 'Enregistrer le brouillon'
 

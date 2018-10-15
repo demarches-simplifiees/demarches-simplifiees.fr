@@ -7,7 +7,7 @@ describe ApiEntreprise::ExercicesAdapter do
 
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/.*token=/)
-      .to_return(body: File.read('spec/support/files/api_entreprise/exercices.json', status: 200))
+      .to_return(body: File.read('spec/fixtures/files/api_entreprise/exercices.json', status: 200))
   end
 
   it '#to_params class est un Hash ?' do
