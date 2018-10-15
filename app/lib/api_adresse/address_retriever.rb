@@ -13,7 +13,7 @@ module ApiAdresse
     private
 
     def driver
-      @driver ||= ApiAdresse::Driver.new @address, 5
+      @driver ||= ApiAdresse::Driver.new(@address, 5)
     end
 
     def convert_driver_result_to_full_address
