@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://api-adresse.data.gouv.fr/search?limit=1&q=50%20av%20des%20champs%20elysees
+    uri: https://api-adresse.data.gouv.fr/search?limit=1&q=50%20av%20des%20champs%20elysees
     body:
       encoding: US-ASCII
       string: ''
