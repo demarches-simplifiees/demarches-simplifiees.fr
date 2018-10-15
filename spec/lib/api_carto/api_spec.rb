@@ -21,7 +21,7 @@ describe ApiCarto::API do
     end
 
     context 'when request return 500' do
-      let(:geojson) { File.read('spec/support/files/geojson/request_qp.json') }
+      let(:geojson) { File.read('spec/support/files/api_carto/request_qp.json') }
       let(:status) { 500 }
       let(:body) { 'toto' }
 
@@ -31,7 +31,7 @@ describe ApiCarto::API do
     end
 
     context 'when geojson exist' do
-      let(:geojson) { File.read('spec/support/files/geojson/request_qp.json') }
+      let(:geojson) { File.read('spec/support/files/api_carto/request_qp.json') }
       let(:status) { 200 }
       let(:body) { 'toto' }
 
@@ -40,7 +40,7 @@ describe ApiCarto::API do
       end
 
       context 'when geojson is at format JSON' do
-        let(:geojson) { JSON.parse(File.read('spec/support/files/geojson/request_qp.json')) }
+        let(:geojson) { JSON.parse(File.read('spec/support/files/api_carto/request_qp.json')) }
 
         it 'returns response body' do
           expect(subject).to eq(body)
@@ -69,7 +69,7 @@ describe ApiCarto::API do
     end
 
     context 'when geojson exist' do
-      let(:geojson) { File.read('spec/support/files/geojson/request_cadastre.json') }
+      let(:geojson) { File.read('spec/support/files/api_carto/request_cadastre.json') }
       let(:status) { 200 }
       let(:body) { 'toto' }
 
@@ -78,7 +78,7 @@ describe ApiCarto::API do
       end
 
       context 'when geojson is at format JSON' do
-        let(:geojson) { JSON.parse(File.read('spec/support/files/geojson/request_cadastre.json')) }
+        let(:geojson) { JSON.parse(File.read('spec/support/files/api_carto/request_cadastre.json')) }
 
         it 'returns response body' do
           expect(subject).to eq(body)
