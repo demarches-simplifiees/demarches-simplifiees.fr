@@ -12,12 +12,8 @@ module ApiAdresse
 
     private
 
-    def api
-      @api ||= ApiAdresse::API.new(@address)
-    end
-
     def convert_api_result_to_point
-      result = JSON.parse(api.call)
+      result = JSON.parse(ApiAdresse::API.call(@address))
       if result['features'].empty?
         Rails.logger.error "unable to find location for address #{@address}"
         return nil
