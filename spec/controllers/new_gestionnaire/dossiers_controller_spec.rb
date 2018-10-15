@@ -267,7 +267,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
   describe "#create_commentaire" do
     let(:saved_commentaire) { dossier.commentaires.first }
     let(:body) { "avant\napres" }
-    let(:file) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
+    let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
     let(:scan_result) { true }
 
     subject {

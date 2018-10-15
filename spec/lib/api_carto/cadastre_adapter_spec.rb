@@ -13,7 +13,7 @@ describe ApiCarto::CadastreAdapter do
   context 'coordinates are filled' do
     let(:coordinates) { '[[2.252728, 43.27151][2.323223, 32.835332]]' }
     let(:status) { 200 }
-    let(:body) { File.read('spec/support/files/api_carto/response_cadastre.json') }
+    let(:body) { File.read('spec/fixtures/files/api_carto/response_cadastre.json') }
 
     it { expect(subject).to be_a_instance_of(Array) }
     it { expect(subject.size).to eq(16) }

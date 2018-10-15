@@ -32,7 +32,7 @@ describe CommentaireService do
     end
 
     context 'when it has a file' do
-      let(:file) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
+      let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
 
       it 'saves the attached file' do
         expect(commentaire.file).to be_present

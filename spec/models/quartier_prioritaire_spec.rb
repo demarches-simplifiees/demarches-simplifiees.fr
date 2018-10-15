@@ -10,7 +10,7 @@ describe QuartierPrioritaire do
 
   describe 'geometry' do
     let(:qp) { create :quartier_prioritaire, geometry: qp_geometry }
-    let(:qp_geometry) { File.open('spec/support/files/qp_geometry_value.txt').read }
+    let(:qp_geometry) { File.open('spec/fixtures/files/qp_geometry_value.txt').read }
 
     subject { qp.geometry }
 
