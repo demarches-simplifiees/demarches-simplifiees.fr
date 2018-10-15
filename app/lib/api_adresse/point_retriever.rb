@@ -7,17 +7,17 @@ module ApiAdresse
     end
 
     def point
-      @point ||= convert_driver_result_to_point
+      @point ||= convert_api_result_to_point
     end
 
     private
 
-    def driver
-      @driver ||= ApiAdresse::Driver.new(@address)
+    def api
+      @api ||= ApiAdresse::API.new(@address)
     end
 
-    def convert_driver_result_to_point
-      result = JSON.parse(driver.call)
+    def convert_api_result_to_point
+      result = JSON.parse(api.call)
       if result['features'].empty?
         Rails.logger.error "unable to find location for address #{@address}"
         return nil
