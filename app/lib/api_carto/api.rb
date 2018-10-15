@@ -12,11 +12,9 @@ class ApiCarto::API
   private
 
   def self.call(url, geojson)
-    verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
     params = geojson.to_s
 
-    client = RestClient::Resource.new(url, verify_ssl: verify_ssl_mode)
-    client.post(params, content_type: 'application/json')
+    RestClient.post(url, params, content_type: 'application/json')
 
   rescue RestClient::InternalServerError
     raise RestClient::ResourceNotFound
