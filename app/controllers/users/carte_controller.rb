@@ -38,7 +38,7 @@ class Users::CarteController < UsersController
       @error = true
     else
       if @dossier.procedure.module_api_carto.quartiers_prioritaires?
-        quartiers_prioritaires = ModuleApiCartoService.generate_qp(geo_json).values
+        quartiers_prioritaires = ModuleApiCartoService.generate_qp(geo_json)
         @dossier.quartier_prioritaires.build(quartiers_prioritaires)
         @data[:quartiersPrioritaires] = quartiers_prioritaires
       end
