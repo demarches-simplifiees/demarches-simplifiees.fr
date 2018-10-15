@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ApiCarto::Cadastre::Adapter do
+describe ApiCarto::CadastreAdapter do
   subject { described_class.new(coordinates).results }
 
   before do
