@@ -18,10 +18,8 @@ class CARTO::SGMAP::API
     verify_ssl_mode = OpenSSL::SSL::VERIFY_NONE
     params = geojson.to_s
 
-    RestClient::Resource.new(
-      url,
-      verify_ssl: verify_ssl_mode
-    ).post(params, content_type: 'application/json')
+    client = RestClient::Resource.new(url, verify_ssl: verify_ssl_mode)
+    client.post(params, content_type: 'application/json')
 
   rescue RestClient::InternalServerError
     raise RestClient::ResourceNotFound
