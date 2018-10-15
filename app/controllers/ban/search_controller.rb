@@ -2,7 +2,7 @@ class Ban::SearchController < ApplicationController
   def get
     request = params[:request]
 
-    json = Carto::Bano::AddressRetriever.new(request).list.map do |value|
+    json = ApiAdresse::AddressRetriever.new(request).list.map do |value|
       { label: value }
     end.to_json
 

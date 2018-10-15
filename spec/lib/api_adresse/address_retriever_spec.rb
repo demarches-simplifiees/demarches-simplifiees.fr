@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Carto::Bano::AddressRetriever do
+describe ApiAdresse::AddressRetriever do
   describe '#list' do
     let(:request) { 'Paris' }
     let(:response) { File.open('spec/support/files/ban_address_search.json') }
