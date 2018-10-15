@@ -1,4 +1,4 @@
-class ApiGeo::Driver
+class ApiGeo::API
   def self.regions
     url = [API_GEO_URL, "regions"].join("/")
     call(url)

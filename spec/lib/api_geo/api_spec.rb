@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ApiGeo::Driver do
+describe ApiGeo::API do
   describe '.regions', vcr: { cassette_name: 'api_geo_regions' } do
     subject { described_class.regions }
 
