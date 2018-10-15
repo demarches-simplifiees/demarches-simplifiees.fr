@@ -1,4 +1,4 @@
-class ApiAdresse::PointRetriever
+class ApiAdresse::PointAdapter
   def initialize(address)
     @address = address
   end
