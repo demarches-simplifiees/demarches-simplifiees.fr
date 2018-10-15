@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Ban::SearchController, type: :controller do
+describe AddressController, type: :controller do
   describe '#GET get' do
     subject { get :get, params: { request: request } }
 
