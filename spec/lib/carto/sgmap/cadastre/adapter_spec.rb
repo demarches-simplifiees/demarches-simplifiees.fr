@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CARTO::SGMAP::Cadastre::Adapter do
-  subject { described_class.new(coordinates).to_params }
+  subject { described_class.new(coordinates).results }
 
   before do
     stub_request(:post, "https://apicarto.sgmap.fr/cadastre/geometrie")

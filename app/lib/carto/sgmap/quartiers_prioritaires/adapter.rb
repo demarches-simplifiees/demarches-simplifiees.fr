@@ -7,7 +7,7 @@ class CARTO::SGMAP::QuartiersPrioritaires::Adapter
     @data_source ||= JSON.parse(CARTO::SGMAP::API.search_qp(@coordinates), symbolize_names: true)
   end
 
-  def to_params
+  def results
     data_source[:features].map do |feature|
       feature[:properties].merge({ geometry: feature[:geometry] })
     end

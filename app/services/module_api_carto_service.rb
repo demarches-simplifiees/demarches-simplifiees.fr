@@ -27,7 +27,7 @@ class ModuleApiCartoService
     coordinates.flat_map do |coordinate|
       CARTO::SGMAP::QuartiersPrioritaires::Adapter.new(
         coordinate.map { |element| [element['lng'], element['lat']] }
-      ).to_params
+      ).results
     end
   end
 
@@ -35,7 +35,7 @@ class ModuleApiCartoService
     coordinates.flat_map do |coordinate|
       CARTO::SGMAP::Cadastre::Adapter.new(
         coordinate.map { |element| [element['lng'], element['lat']] }
-      ).to_params
+      ).results
     end
   end
 end

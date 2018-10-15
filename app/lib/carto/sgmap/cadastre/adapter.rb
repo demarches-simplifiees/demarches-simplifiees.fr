@@ -7,7 +7,7 @@ class CARTO::SGMAP::Cadastre::Adapter
     @data_source ||= JSON.parse(CARTO::SGMAP::API.search_cadastre(@coordinates), symbolize_names: true)
   end
 
-  def to_params
+  def results
     data_source[:features].map do |feature|
       filter_properties(feature[:properties]).merge({ geometry: feature[:geometry] })
     end
