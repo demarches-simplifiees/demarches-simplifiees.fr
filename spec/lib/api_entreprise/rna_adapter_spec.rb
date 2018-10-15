@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ApiEntreprise::RNAAdapter do
   let(:siret) { '50480511000013' }
   let(:procedure_id) { 22 }
-  let(:body) { File.read('spec/support/files/rna.json') }
+  let(:body) { File.read('spec/support/files/api_entreprise/associations.json') }
   let(:status) { 200 }
   let(:adapter) { described_class.new(siret, procedure_id) }
 

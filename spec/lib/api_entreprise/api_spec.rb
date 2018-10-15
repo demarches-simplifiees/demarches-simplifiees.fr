@@ -20,7 +20,7 @@ describe ApiEntreprise::API do
     context 'when siret exist' do
       let(:siren) { '418166096' }
       let(:status) { 200 }
-      let(:body) { File.read('spec/support/files/entreprise.json') }
+      let(:body) { File.read('spec/support/files/api_entreprise/entreprises.json') }
 
       it 'returns response body' do
         expect(subject).to eq(JSON.parse(body, symbolize_names: true))
@@ -48,7 +48,7 @@ describe ApiEntreprise::API do
     context 'when siret exists' do
       let(:siret) { '41816609600051' }
       let(:status) { 200 }
-      let(:body) { File.read('spec/support/files/etablissement.json') }
+      let(:body) { File.read('spec/support/files/api_entreprise/etablissements.json') }
 
       it 'returns body' do
         expect(subject).to eq(JSON.parse(body, symbolize_names: true))
@@ -79,7 +79,7 @@ describe ApiEntreprise::API do
 
       let(:siret) { '41816609600051' }
       let(:status) { 200 }
-      let(:body) { File.read('spec/support/files/exercices.json') }
+      let(:body) { File.read('spec/support/files/api_entreprise/exercices.json') }
 
       it 'raises RestClient::Unauthorized' do
         expect(subject).to eq(JSON.parse(body, symbolize_names: true))
@@ -108,7 +108,7 @@ describe ApiEntreprise::API do
     context 'when siren exists' do
       let(:siren) { '418166096' }
       let(:status) { 200 }
-      let(:body) { File.read('spec/support/files/rna.json') }
+      let(:body) { File.read('spec/support/files/api_entreprise/associations.json') }
 
       it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
     end

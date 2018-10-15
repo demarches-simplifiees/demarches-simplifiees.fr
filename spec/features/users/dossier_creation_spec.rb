@@ -67,11 +67,11 @@ feature 'As a User I wanna create a dossier' do
       expect(page).to have_current_path(users_dossier_path(procedure_with_siret.dossiers.last.id.to_s))
 
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
-        .to_return(status: 200, body: File.read('spec/support/files/etablissement.json'))
+        .to_return(status: 200, body: File.read('spec/support/files/api_entreprise/etablissements.json'))
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
-        .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
+        .to_return(status: 200, body: File.read('spec/support/files/api_entreprise/entreprises.json'))
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/#{siret}?.*token=/)
-        .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
+        .to_return(status: 200, body: File.read('spec/support/files/api_entreprise/exercices.json'))
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/#{siret}?.*token=/)
         .to_return(status: 404, body: '')
 
