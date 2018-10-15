@@ -8,7 +8,7 @@ describe ApiAdresse::Geocodeur do
     end
     context 'when RestClient::Exception' do
       before do
-        allow_any_instance_of(ApiAdresse::Driver).to receive(:call).and_raise(RestClient::Exception)
+        allow_any_instance_of(ApiAdresse::API).to receive(:call).and_raise(RestClient::Exception)
       end
       it 'return nil' do
         expect(described_class.convert_adresse_to_point(address)).to be_nil
