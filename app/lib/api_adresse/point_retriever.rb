@@ -1,6 +1,4 @@
 module ApiAdresse
-  # input : address
-  # output : point RGeo::Cartesian::PointImpl
   class PointRetriever
     def initialize(address)
       @address = address

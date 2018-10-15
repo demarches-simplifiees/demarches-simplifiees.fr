@@ -1,6 +1,4 @@
 class ApiAdresse::API
-  # input : string (address)
-  # output : json
   def self.call(address, limit = 1)
     search_url = [API_ADRESSE_URL, "search"].join("/")
 

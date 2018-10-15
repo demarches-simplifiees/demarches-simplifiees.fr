@@ -1,6 +1,4 @@
 module ApiAdresse
-  # input : address
-  # output : Array List label address
   class AddressRetriever
     def initialize(address)
       @address = address
