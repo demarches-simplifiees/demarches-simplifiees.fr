@@ -15,7 +15,7 @@ describe Users::DossiersController, type: :controller do
   let(:user) { create :user }
 
   let(:exercices_status) { 200 }
-  let(:exercices_body) { File.read('spec/support/files/exercices.json') }
+  let(:exercices_body) { File.read('spec/support/files/api_entreprise/exercices.json') }
 
   let(:siren) { '440117620' }
   let(:siret) { '44011762001530' }
@@ -199,10 +199,10 @@ describe Users::DossiersController, type: :controller do
         .to_return(status: 404, body: 'fake body')
 
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
-        .to_return(status: status_entreprise_call, body: File.read('spec/support/files/etablissement.json'))
+        .to_return(status: status_entreprise_call, body: File.read('spec/support/files/api_entreprise/etablissements.json'))
 
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
-        .to_return(status: status_entreprise_call, body: File.read('spec/support/files/entreprise.json'))
+        .to_return(status: status_entreprise_call, body: File.read('spec/support/files/api_entreprise/entreprises.json'))
 
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/#{siret}?.*token=/)
         .to_return(status: exercices_status, body: exercices_body)
@@ -280,7 +280,7 @@ describe Users::DossiersController, type: :controller do
 
           context 'when siren have rna informations' do
             let(:rna_status) { 200 }
-            let(:rna_body) { File.read('spec/support/files/rna.json') }
+            let(:rna_body) { File.read('spec/support/files/api_entreprise/associations.json') }
 
             it 'creates rna information for entreprise' do
               subject
