@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CARTO::SGMAP::Cadastre::Adapter do
-  subject { described_class.new(coordinates).to_params }
+  subject { described_class.new(coordinates).results }
 
   before do
     stub_request(:post, "https://apicarto.sgmap.fr/cadastre/geometrie")
@@ -16,15 +16,15 @@ describe CARTO::SGMAP::Cadastre::Adapter do
     let(:body) { File.read('spec/support/files/geojson/response_cadastre.json') }
 
     it { expect(subject).to be_a_instance_of(Array) }
-    it { expect(subject.size).to eq 16 }
+    it { expect(subject.size).to eq(16) }
 
     describe 'Attribut filter' do
       let(:adapter) { described_class.new(coordinates) }
-      subject { adapter.filter_properties adapter.data_source }
+      subject { adapter.filter_properties(adapter.data_source[:features].first[:properties]) }
 
-      it { expect(subject.size).to eq 9 }
+      it { expect(subject.size).to eq(9) }
       it do
-        expect(subject.keys).to eq [
+        expect(subject.keys).to eq([
           :surface_intersection,
           :surface_parcelle,
           :numero,
@@ -34,7 +34,7 @@ describe CARTO::SGMAP::Cadastre::Adapter do
           :nom_com,
           :code_com,
           :code_arr
-        ]
+        ])
       end
     end
 
