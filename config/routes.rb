@@ -279,6 +279,7 @@ Rails.application.routes.draw do
         get 'identite'
         patch 'update_identite'
         get 'siret'
+        post 'siret', to: 'dossiers#update_siret'
         get 'brouillon'
         patch 'brouillon', to: 'dossiers#update_brouillon'
         get 'modifier', to: 'dossiers#modifier'

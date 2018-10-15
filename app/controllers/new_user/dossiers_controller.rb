@@ -73,6 +73,36 @@ module NewUser
       @dossier = dossier
     end
 
+    def update_siret
+      @dossier = dossier
+
+      # We use the user as the holder model object for the siret value
+      # (so that we can restore it on the form in case of error).
+      #
+      # This is the only remaining use of User#siret: it could be refactored away.
+      # However some existing users have a siret but no associated etablissement,
+      # so we would need to analyze the legacy data and decide what to do with it.
+      current_user.siret = siret_params[:siret]
+
+      siret_model = Siret.new(siret: siret_params[:siret])
+      if !siret_model.valid?
+        return render_siret_error(siret_model.errors.full_messages)
+      end
+
+      sanitized_siret = siret_model.siret
+      etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id)
+      if etablissement_attributes.blank?
+        return render_siret_error(t('errors.messages.siret_unknown'))
+      end
+
+      etablissement = @dossier.build_etablissement(etablissement_attributes)
+      etablissement.save!
+      current_user.update!(siret: sanitized_siret)
+      @dossier.update!(autorisation_donnees: true)
+
+      redirect_to etablissement_dossier_path
+    end
+
     def brouillon
       @dossier = dossier_with_champs
 
@@ -255,8 +285,17 @@ module NewUser
       redirect_to root_path
     end
 
+    def render_siret_error(error_message)
+      flash.alert = error_message
+      render :siret
+    end
+
     def individual_params
       params.require(:individual).permit(:gender, :nom, :prenom, :birthdate)
+    end
+
+    def siret_params
+      params.require(:user).permit(:siret)
     end
 
     def commentaire_params
