@@ -23,9 +23,9 @@ describe AddressController, type: :controller do
     end
   end
 
-  describe '#GET get_address_point' do
+  describe '#GET geocode' do
     let(:dossier_id) { "1" }
-    subject { get :get_address_point, params: { request: request, dossier_id: dossier_id } }
+    subject { get :geocode, params: { request: request, dossier_id: dossier_id } }
 
     before do
       subject
