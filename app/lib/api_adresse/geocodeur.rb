@@ -1,4 +1,4 @@
-module Carto
+module ApiAdresse
   # this class take a string in input and return a point
   class Geocodeur
     def self.convert_adresse_to_point(address)

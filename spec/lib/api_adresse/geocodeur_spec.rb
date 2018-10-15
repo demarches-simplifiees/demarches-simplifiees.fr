@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Carto::Geocodeur do
+describe ApiAdresse::Geocodeur do
   let(:address) { '50 av des champs elysees' }
   describe '.convert_adresse_to_point', vcr: { cassette_name: 'api_adresse_octo' } do
     it 'return a point' do
