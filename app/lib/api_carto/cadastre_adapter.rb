@@ -1,4 +1,4 @@
-class ApiCarto::Cadastre::Adapter
+class ApiCarto::CadastreAdapter
   def initialize(coordinates)
     @coordinates = GeojsonService.to_json_polygon_for_cadastre(coordinates)
   end

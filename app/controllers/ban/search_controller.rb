@@ -2,7 +2,7 @@ class Ban::SearchController < ApplicationController
   def get
     request = params[:request]
 
-    json = ApiAdresse::AddressRetriever.new(request).list.map do |value|
+    json = ApiAdresse::AddressAdapter.new(request).get_suggestions.map do |value|
       { label: value }
     end.to_json
 
@@ -10,7 +10,9 @@ class Ban::SearchController < ApplicationController
   end
 
   def get_address_point
-    point = ApiAdresse::Geocodeur.convert_adresse_to_point(params[:request])
+    request = params[:request]
+
+    point = ApiAdresse::PointAdapter.new(request).geocode
 
     if point.present?
       lon = point.x.to_s

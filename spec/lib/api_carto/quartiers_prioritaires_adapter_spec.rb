@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ApiCarto::QuartiersPrioritaires::Adapter do
+describe ApiCarto::QuartiersPrioritairesAdapter do
   subject { described_class.new(coordinates).results }
 
   before do
@@ -13,7 +13,7 @@ describe ApiCarto::QuartiersPrioritaires::Adapter do
   context 'coordinates are filled' do
     let(:coordinates) { '[[2.252728, 43.27151][2.323223, 32.835332]]' }
     let(:status) { 200 }
-    let(:body) { File.read('spec/support/files/geojson/response_qp.json') }
+    let(:body) { File.read('spec/support/files/api_carto/response_qp.json') }
 
     it { expect(subject).to be_a_instance_of(Array) }
 
