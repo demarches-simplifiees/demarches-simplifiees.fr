@@ -1,9 +1,5 @@
-import L from 'leaflet';
-import { getJSON } from '@utils';
-
 import { getData } from '../shared/data';
-import { DEFAULT_POSITION } from '../shared/carto';
-
+import { initMap } from '../shared/carto';
 import {
   drawCadastre,
   drawQuartiersPrioritaires,
@@ -12,31 +8,17 @@ import {
 
 function initialize() {
   if (document.getElementById('map')) {
-    getJSON(getData('carto').getPositionUrl).then(
-      position => initializeWithPosition(position),
-      () => initializeWithPosition(DEFAULT_POSITION)
-    );
+    const position = getData('carto').position;
+    const map = initMap(position);
+    const data = getData('carto');
+
+    // draw external polygons
+    drawCadastre(map, data);
+    drawQuartiersPrioritaires(map, data);
+
+    // draw user polygon
+    drawUserSelection(map, data);
   }
 }
 
 addEventListener('turbolinks:load', initialize);
-
-function initializeWithPosition(position) {
-  const map = L.map('map', {
-    scrollWheelZoom: false
-  }).setView([position.lat, position.lon], position.zoom);
-
-  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution:
-      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
-
-  const data = getData('carto');
-
-  // draw external polygons
-  drawCadastre(map, data);
-  drawQuartiersPrioritaires(map, data);
-
-  // draw user polygon
-  drawUserSelection(map, data);
-}
