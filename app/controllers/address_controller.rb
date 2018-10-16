@@ -1,5 +1,5 @@
-class Ban::SearchController < ApplicationController
-  def get
+class AddressController < ApplicationController
+  def suggestions
     request = params[:request]
 
     json = ApiAdresse::AddressAdapter.new(request).get_suggestions.map do |value|
@@ -9,7 +9,7 @@ class Ban::SearchController < ApplicationController
     render json: json
   end
 
-  def get_address_point
+  def geocode
     request = params[:request]
 
     point = ApiAdresse::PointAdapter.new(request).geocode

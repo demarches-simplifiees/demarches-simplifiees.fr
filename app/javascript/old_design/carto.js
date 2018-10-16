@@ -63,7 +63,7 @@ function addEventFreeDraw(freeDraw) {
 }
 
 function getAddressPoint(map, request) {
-  getJSON('/ban/address_point', { request }).then(data => {
+  getJSON('/address/geocode', { request }).then(data => {
     if (data.lat !== null) {
       map.setView(new L.LatLng(data.lat, data.lon), data.zoom);
     }

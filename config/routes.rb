@@ -250,10 +250,8 @@ Rails.application.routes.draw do
   # Addresses
   #
 
-  namespace :ban do
-    get 'search' => 'search#get'
-    get 'address_point' => 'search#get_address_point'
-  end
+  get 'address/suggestions' => 'address#suggestions'
+  get 'address/geocode' => 'address#geocode'
 
   namespace :invites do
     post 'dossier/:dossier_id' => '/invites#create', as: 'dossier'
