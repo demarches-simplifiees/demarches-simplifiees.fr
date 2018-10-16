@@ -12,51 +12,43 @@ class Users::CarteController < UsersController
   end
 
   def save
-    safe_json_latlngs = clean_json_latlngs(params[:json_latlngs])
+    geo_json = clean_json_latlngs(params[:selection])
     dossier = current_user_dossier
 
     dossier.quartier_prioritaires.each(&:destroy)
     dossier.cadastres.each(&:destroy)
 
-    if safe_json_latlngs.present?
-      ModuleApiCartoService.save_qp! dossier, safe_json_latlngs
-      ModuleApiCartoService.save_cadastre! dossier, safe_json_latlngs
+    if geo_json.present?
+      ModuleApiCartoService.save_qp! dossier, geo_json
+      ModuleApiCartoService.save_cadastre! dossier, geo_json
     end
 
-    dossier.update(json_latlngs: safe_json_latlngs)
+    dossier.update!(json_latlngs: geo_json)
 
     redirect_to brouillon_dossier_path(dossier)
   end
 
-  def get_position
-    begin
-      etablissement = current_user_dossier.etablissement
-    rescue ActiveRecord::RecordNotFound
-      etablissement = nil
+  def zones
+    @dossier = current_user_dossier
+    @data = {}
+
+    geo_json = JSON.parse(params.required(:selection))
+
+    if geo_json.first == ["error", "TooManyPolygons"]
+      @error = true
+    else
+      if @dossier.procedure.module_api_carto.quartiers_prioritaires?
+        quartiers_prioritaires = ModuleApiCartoService.generate_qp(geo_json).values
+        @dossier.quartier_prioritaires.build(quartiers_prioritaires)
+        @data[:quartiersPrioritaires] = quartiers_prioritaires
+      end
+
+      if @dossier.procedure.module_api_carto.cadastre?
+        cadastres = ModuleApiCartoService.generate_cadastre(geo_json)
+        @dossier.cadastres.build(cadastres)
+        @data[:cadastres] = cadastres
+      end
     end
-
-    if etablissement.present?
-      point = Carto::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse)
-    end
-
-    lon = '2.428462'
-    lat = '46.538192'
-    zoom = '13'
-
-    if point.present?
-      lon = point.x.to_s
-      lat = point.y.to_s
-    end
-
-    render json: { lon: lon, lat: lat, zoom: zoom, dossier_id: params[:dossier_id] }
-  end
-
-  def get_qp
-    render json: { quartier_prioritaires: ModuleApiCartoService.generate_qp(JSON.parse(params[:coordinates])) }
-  end
-
-  def get_cadastre
-    render json: { cadastres: ModuleApiCartoService.generate_cadastre(JSON.parse(params[:coordinates])) }
   end
 
   def self.route_authorization
