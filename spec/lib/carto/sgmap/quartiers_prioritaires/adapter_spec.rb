@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CARTO::SGMAP::QuartiersPrioritaires::Adapter do
-  subject { described_class.new(coordinates).to_params }
+  subject { described_class.new(coordinates).results }
 
   before do
     stub_request(:post, "https://apicarto.sgmap.fr/quartiers-prioritaires/search")
@@ -15,18 +15,16 @@ describe CARTO::SGMAP::QuartiersPrioritaires::Adapter do
     let(:status) { 200 }
     let(:body) { File.read('spec/support/files/geojson/response_qp.json') }
 
-    it { expect(subject).to be_a_instance_of(Hash) }
+    it { expect(subject).to be_a_instance_of(Array) }
 
     context 'Attributes' do
       let(:qp_code) { 'QP057019' }
 
-      subject { super()[qp_code] }
+      it { expect(subject.first[:code]).to eq(qp_code) }
+      it { expect(subject.first[:nom]).to eq('Hauts De Vallières') }
+      it { expect(subject.first[:commune]).to eq('Metz') }
 
-      it { expect(subject[:code]).to eq(qp_code) }
-      it { expect(subject[:nom]).to eq('Hauts De Vallières') }
-      it { expect(subject[:commune]).to eq('Metz') }
-
-      it { expect(subject[:geometry]).to eq({ :type => "MultiPolygon", :coordinates => [[[[6.2136923480551, 49.1342109827851], [6.21416055031881, 49.1338823553928]]]] }) }
+      it { expect(subject.first[:geometry]).to eq({ :type => "MultiPolygon", :coordinates => [[[[6.2136923480551, 49.1342109827851], [6.21416055031881, 49.1338823553928]]]] }) }
     end
   end
 

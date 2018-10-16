@@ -19,8 +19,8 @@ class Users::CarteController < UsersController
     dossier.cadastres.each(&:destroy)
 
     if geo_json.present?
-      ModuleApiCartoService.save_qp! dossier, geo_json
-      ModuleApiCartoService.save_cadastre! dossier, geo_json
+      ModuleApiCartoService.save_qp!(dossier, geo_json)
+      ModuleApiCartoService.save_cadastre!(dossier, geo_json)
     end
 
     dossier.update!(json_latlngs: geo_json)
@@ -38,7 +38,7 @@ class Users::CarteController < UsersController
       @error = true
     else
       if @dossier.procedure.module_api_carto.quartiers_prioritaires?
-        quartiers_prioritaires = ModuleApiCartoService.generate_qp(geo_json).values
+        quartiers_prioritaires = ModuleApiCartoService.generate_qp(geo_json)
         @dossier.quartier_prioritaires.build(quartiers_prioritaires)
         @data[:quartiersPrioritaires] = quartiers_prioritaires
       end
