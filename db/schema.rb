@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_10_070424) do
+ActiveRecord::Schema.define(version: 2018_10_10_183331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -342,6 +342,15 @@ ActiveRecord::Schema.define(version: 2018_10_10_070424) do
     t.index ["user_id"], name: "index_france_connect_informations_on_user_id"
   end
 
+  create_table "geo_areas", force: :cascade do |t|
+    t.string "source"
+    t.jsonb "geometry"
+    t.jsonb "properties"
+    t.bigint "champ_id"
+    t.index ["champ_id"], name: "index_geo_areas_on_champ_id"
+    t.index ["source"], name: "index_geo_areas_on_source"
+  end
+
   create_table "gestionnaires", id: :serial, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -544,6 +553,7 @@ ActiveRecord::Schema.define(version: 2018_10_10_070424) do
     t.boolean "private", default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.jsonb "options"
     t.index ["private"], name: "index_types_de_champ_on_private"
   end
 
@@ -608,6 +618,7 @@ ActiveRecord::Schema.define(version: 2018_10_10_070424) do
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossiers", "users"
   add_foreign_key "feedbacks", "users"
+  add_foreign_key "geo_areas", "champs"
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "procedure_paths", "administrateurs"
   add_foreign_key "procedure_paths", "procedures"

@@ -84,6 +84,9 @@ FactoryBot.define do
     factory :type_de_champ_siret do
       type_champ { TypeDeChamp.type_champs.fetch(:siret) }
     end
+    factory :type_de_champ_carte do
+      type_champ { TypeDeChamp.type_champs.fetch(:carte) }
+    end
 
     trait :private do
       private { true }
