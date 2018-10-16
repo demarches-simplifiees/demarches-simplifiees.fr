@@ -89,8 +89,9 @@
     - if @procedure.logo.present?
       = image_tag @procedure.decorate.logo_img, { style: 'height: 40px; display: inline; margin-right: 6px;', id: 'preview_procedure_logo' }
       \-
-      = link_to 'supprimer', delete_logo_admin_procedure_path(@procedure),
-      method: :delete
+
+      - if @procedure.persisted?
+        = link_to 'supprimer', delete_logo_admin_procedure_path(@procedure), method: :delete
     = f.file_field :logo, accept: 'image/png, image/jpg, image/jpeg', style: 'display: inline'
 
     %div{ style: 'margin-top: 5px;' }
