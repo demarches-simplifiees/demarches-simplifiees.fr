@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Carto::Bano::AddressRetriever do
+describe ApiAdresse::AddressRetriever do
   describe '#list' do
     let(:request) { 'Paris' }
     let(:response) { File.open('spec/support/files/ban_address_search.json') }
@@ -9,7 +9,7 @@ describe Carto::Bano::AddressRetriever do
     subject { described_class.new(request).list }
 
     before do
-      stub_request(:get, "http://api-adresse.data.gouv.fr/search?&q=#{request}&limit=5")
+      stub_request(:get, "https://api-adresse.data.gouv.fr/search?&q=#{request}&limit=5")
         .to_return(status: status, body: response, headers: {})
     end
 

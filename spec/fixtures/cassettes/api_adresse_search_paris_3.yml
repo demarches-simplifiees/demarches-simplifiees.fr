@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://api-adresse.data.gouv.fr/search?limit=1&q=50%20AV%20DES%20CHAMPS%20ELYSEES%20complement_adresse%2075008%20PARIS%208
+    uri: https://api-adresse.data.gouv.fr/search?limit=1&q=50%20AV%20DES%20CHAMPS%20ELYSEES%20complement_adresse%2075008%20PARIS%208
     body:
       encoding: US-ASCII
       string: ''

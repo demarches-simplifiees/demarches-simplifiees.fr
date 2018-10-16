@@ -1,10 +1,10 @@
-module Carto
+module ApiAdresse
   # this class take a string in input and return a point
   class Geocodeur
     def self.convert_adresse_to_point(address)
-      Carto::Bano::PointRetriever.new(address).point
+      ApiAdresse::PointRetriever.new(address).point
     rescue RestClient::Exception, JSON::ParserError => e
-      Rails.logger.error e.message
+      Rails.logger.error(e.message)
       nil
     end
   end
