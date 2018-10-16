@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Ban::SearchController, type: :controller do
-  describe '#GET get' do
-    subject { get :get, params: { request: request } }
+describe AddressController, type: :controller do
+  describe '#GET suggestions' do
+    subject { get :suggestions, params: { request: request } }
 
     before do
       subject
@@ -23,9 +23,9 @@ describe Ban::SearchController, type: :controller do
     end
   end
 
-  describe '#GET get_address_point' do
+  describe '#GET geocode' do
     let(:dossier_id) { "1" }
-    subject { get :get_address_point, params: { request: request, dossier_id: dossier_id } }
+    subject { get :geocode, params: { request: request, dossier_id: dossier_id } }
 
     before do
       subject
