@@ -617,7 +617,7 @@ describe NewUser::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, :en_construction, user: user) }
     let(:saved_commentaire) { dossier.commentaires.first }
     let(:body) { "avant\napres" }
-    let(:file) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
+    let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
     let(:scan_result) { true }
 
     subject {

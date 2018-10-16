@@ -81,7 +81,7 @@ describe NewGestionnaire::AvisController, type: :controller do
       end
 
       context "with a file" do
-        let(:file) { Rack::Test::UploadedFile.new("./spec/support/files/piece_justificative_0.pdf", 'application/pdf') }
+        let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
 
         it do
           subject
