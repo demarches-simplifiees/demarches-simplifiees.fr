@@ -1,9 +1,9 @@
 class ModuleApiCartoService
   def self.save_qp!(dossier, json_latlngs)
     if dossier.procedure.module_api_carto.quartiers_prioritaires?
-      qp_list = generate_qp JSON.parse(json_latlngs)
+      qp_list = generate_qp(JSON.parse(json_latlngs))
 
-      qp_list.each_value do |qp|
+      qp_list.each do |qp|
         qp[:dossier_id] = dossier.id
         qp[:geometry] = qp[:geometry].to_json
         QuartierPrioritaire.create(qp)
@@ -24,18 +24,18 @@ class ModuleApiCartoService
   end
 
   def self.generate_qp(coordinates)
-    coordinates.inject({}) { |acc, coordinate|
-      acc.merge CARTO::SGMAP::QuartiersPrioritaires::Adapter.new(
+    coordinates.flat_map do |coordinate|
+      CARTO::SGMAP::QuartiersPrioritaires::Adapter.new(
         coordinate.map { |element| [element['lng'], element['lat']] }
-      ).to_params
-    }
+      ).results
+    end
   end
 
   def self.generate_cadastre(coordinates)
     coordinates.flat_map do |coordinate|
       CARTO::SGMAP::Cadastre::Adapter.new(
         coordinate.map { |element| [element['lng'], element['lat']] }
-      ).to_params
+      ).results
     end
   end
 end
