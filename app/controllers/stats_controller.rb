@@ -298,13 +298,19 @@ class StatsController < ApplicationController
 
       # Compute the mean time for this procedure
       procedure_processing_times = dossiers_grouped_by_procedure.map do |procedure_id, procedure_dossiers|
+        procedure_fields_count = procedure_id_type_de_champs_count[procedure_id]
+
+        if (procedure_fields_count == 0 || procedure_fields_count.nil?)
+          next
+        end
+
         procedure_dossiers_processing_time = procedure_dossiers.map { |_, processing_time, _| processing_time }
         procedure_mean = mean(procedure_dossiers_processing_time)
 
         # We normalize the data for 24 fields
-        procedure_fields_count = procedure_id_type_de_champs_count[procedure_id]
         procedure_mean * (MEAN_NUMBER_OF_CHAMPS_IN_A_FORM / procedure_fields_count)
       end
+        .compact
 
       # Compute the average mean time for all the procedures of this month
       month_average = mean(procedure_processing_times)
