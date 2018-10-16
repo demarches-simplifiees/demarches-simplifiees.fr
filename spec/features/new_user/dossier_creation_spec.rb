@@ -62,6 +62,7 @@ feature 'Creating a new dossier:' do
 
     context 'when identifying through SIRET' do
       let(:procedure) { create(:procedure, :published, :with_api_carto, :with_type_de_champ, :with_two_type_de_piece_justificative) }
+      let(:dossier) { procedure.dossiers.last }
 
       before do
         stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
@@ -76,18 +77,31 @@ feature 'Creating a new dossier:' do
 
       scenario 'the user can enter the SIRET of its etablissement and create a new draft', vcr: { cassette_name: 'api_adresse_search_paris_3' }, js: true do
         visit commencer_path(procedure_path: procedure.path)
-        dossier = procedure.dossiers.last
         expect(page).to have_current_path(siret_dossier_path(dossier))
 
-        page.find_by_id('dossier-siret').set siret
+        fill_in 'Numéro SIRET', with: siret
         click_on 'Valider'
-        wait_for_ajax
 
-        expect(page).to have_css('#recap-info-entreprise')
-        click_on 'Etape suivante'
-        expect(page).to have_current_path(users_dossier_carte_path(procedure.dossiers.last.id.to_s))
-        click_on 'Etape suivante'
-        expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
+        expect(page).to have_current_path(etablissement_dossier_path(dossier))
+        expect(page).to have_content('OCTO-TECHNOLOGY')
+        click_on 'Continuer avec ces informations'
+
+        expect(page).to have_current_path(users_dossier_carte_path(dossier))
+        click_button('Etape suivante')
+
+        expect(page).to have_current_path(brouillon_dossier_path(dossier))
+      end
+
+      scenario 'the user is notified when its SIRET is invalid' do
+        visit commencer_path(procedure_path: procedure.path)
+        expect(page).to have_current_path(siret_dossier_path(dossier))
+
+        fill_in 'Numéro SIRET', with: '0000'
+        click_on 'Valider'
+
+        expect(page).to have_current_path(siret_dossier_path(dossier))
+        expect(page).to have_content('Le numéro SIRET doit comporter 14 chiffres')
+        expect(page).to have_field('Numéro SIRET', with: '0000')
       end
     end
   end
