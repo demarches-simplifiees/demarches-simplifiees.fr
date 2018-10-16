@@ -25,10 +25,13 @@ class TypeDeChamp < ApplicationRecord
     explication: 'explication',
     dossier_link: 'dossier_link',
     piece_justificative: 'piece_justificative',
-    siret: 'siret'
+    siret: 'siret',
+    carte: 'carte'
   }
 
   belongs_to :procedure
+
+  store :options, accessors: [:cadastres, :quartiers_prioritaires]
 
   after_initialize :set_dynamic_type
 
