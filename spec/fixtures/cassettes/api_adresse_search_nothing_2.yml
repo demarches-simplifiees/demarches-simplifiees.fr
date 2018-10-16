@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://api-adresse.data.gouv.fr/search?limit=1&q=Paris
+    uri: https://api-adresse.data.gouv.fr/search?limit=5&q=je%20recherche%20pas%20grand%20chose
     body:
       encoding: US-ASCII
       string: ''
@@ -21,11 +21,11 @@ http_interactions:
       Server:
       - nginx/1.11.3
       Date:
-      - Fri, 16 Dec 2016 14:16:43 GMT
+      - Fri, 16 Dec 2016 16:45:53 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '457'
+      - '163'
       Connection:
       - keep-alive
       Access-Control-Allow-Origin:
@@ -34,12 +34,9 @@ http_interactions:
       - X-Requested-With
     body:
       encoding: UTF-8
-      string: '{"limit": 1, "attribution": "BAN", "version": "draft", "licence": "ODbL
-        1.0", "query": "Paris", "type": "FeatureCollection", "features": [{"geometry":
-        {"type": "Point", "coordinates": [2.3469, 48.8589]}, "properties": {"adm_weight":
-        "6", "citycode": "75056", "name": "Paris", "city": "Paris", "postcode": "75000",
-        "context": "75, \u00cele-de-France", "score": 1.0, "label": "Paris", "id":
-        "75056", "type": "city", "population": "2244"}, "type": "Feature"}]}'
+      string: '{"limit": 5, "attribution": "BAN", "version": "draft", "licence": "ODbL
+        1.0", "query": "je recherche pas grand chose", "type": "FeatureCollection",
+        "features": []}'
     http_version:
-  recorded_at: Fri, 16 Dec 2016 14:16:43 GMT
+  recorded_at: Fri, 16 Dec 2016 16:45:53 GMT
 recorded_with: VCR 3.0.3
