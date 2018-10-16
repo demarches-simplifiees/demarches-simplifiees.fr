@@ -243,7 +243,7 @@ class Dossier < ApplicationRecord
 
   def geo_position
     if etablissement.present?
-      point = ApiAdresse::Geocodeur.convert_adresse_to_point(etablissement.geo_adresse)
+      point = ApiAdresse::PointAdapter.new(etablissement.geo_adresse).geocode
     end
 
     lon = "2.428462"
