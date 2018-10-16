@@ -4,7 +4,7 @@ import { getJSON, fire } from '@utils';
 const sources = [
   {
     type: 'address',
-    url: '/ban/search'
+    url: '/address/suggestions'
   },
   {
     type: 'path',
