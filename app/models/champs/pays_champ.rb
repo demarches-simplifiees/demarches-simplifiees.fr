@@ -1,5 +1,5 @@
 class Champs::PaysChamp < Champs::TextChamp
   def self.pays
-    JSON.parse(ApiGeo::Driver.pays).pluck("nom")
+    JSON.parse(ApiGeo::API.pays).pluck("nom")
   end
 end

@@ -6,9 +6,6 @@ class ApiEntreprise::API
 
   TIMEOUT = 15
 
-  def initialize
-  end
-
   def self.entreprise(siren, procedure_id)
     call(ENTREPRISE_RESOURCE_NAME, siren, procedure_id)
   end

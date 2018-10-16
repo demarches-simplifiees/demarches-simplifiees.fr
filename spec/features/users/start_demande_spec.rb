@@ -27,11 +27,11 @@ feature 'user arrive on siret page' do
       context 'when enter a siret', js: true do
         before do
           stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
-            .to_return(status: 200, body: File.read('spec/support/files/etablissement.json'))
+            .to_return(status: 200, body: File.read('spec/support/files/api_entreprise/etablissements.json'))
           stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
-            .to_return(status: 200, body: File.read('spec/support/files/entreprise.json'))
+            .to_return(status: 200, body: File.read('spec/support/files/api_entreprise/entreprises.json'))
           stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/#{siret}?.*token=/)
-            .to_return(status: 200, body: File.read('spec/support/files/exercices.json'))
+            .to_return(status: 200, body: File.read('spec/support/files/api_entreprise/exercices.json'))
           stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/#{siret}?.*token=/)
             .to_return(status: 404, body: '')
 

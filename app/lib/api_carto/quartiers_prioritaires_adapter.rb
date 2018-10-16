@@ -1,4 +1,4 @@
-class ApiCarto::QuartiersPrioritaires::Adapter
+class ApiCarto::QuartiersPrioritairesAdapter
   def initialize(coordinates)
     @coordinates = GeojsonService.to_json_polygon_for_qp(coordinates)
   end
