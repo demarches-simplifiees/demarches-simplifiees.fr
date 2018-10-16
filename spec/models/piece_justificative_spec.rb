@@ -13,7 +13,7 @@ describe PieceJustificative do
     subject { piece_justificative.empty? }
 
     context 'when content exist' do
-      let(:content) { File.open('./spec/support/files/piece_justificative_388.pdf') }
+      let(:content) { File.open('./spec/fixtures/files/piece_justificative_388.pdf') }
       it { is_expected.to be_falsey }
     end
   end

@@ -3,12 +3,12 @@ describe Admin::AttestationTemplatesController, type: :controller do
   let!(:attestation_template) { create(:attestation_template) }
   let(:admin) { create(:administrateur) }
   let!(:procedure) { create :procedure, administrateur: admin, attestation_template: attestation_template }
-  let(:logo) { fixture_file_upload('spec/fixtures/white.png', 'image/png') }
-  let(:logo2) { fixture_file_upload('spec/fixtures/white.png', 'image/png') }
-  let(:signature) { fixture_file_upload('spec/fixtures/black.png', 'image/png') }
-  let(:signature2) { fixture_file_upload('spec/fixtures/black.png', 'image/png') }
-  let(:interlaced_logo) { fixture_file_upload('spec/fixtures/interlaced-black.png', 'image/png') }
-  let(:uninterlaced_logo) { fixture_file_upload('spec/fixtures/uninterlaced-black.png', 'image/png') }
+  let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
+  let(:logo2) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
+  let(:signature) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
+  let(:signature2) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
+  let(:interlaced_logo) { fixture_file_upload('spec/fixtures/files/interlaced-black.png', 'image/png') }
+  let(:uninterlaced_logo) { fixture_file_upload('spec/fixtures/files/uninterlaced-black.png', 'image/png') }
 
   before do
     sign_in admin

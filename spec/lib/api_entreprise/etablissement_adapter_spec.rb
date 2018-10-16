@@ -9,7 +9,7 @@ describe ApiEntreprise::EtablissementAdapter do
 
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
-        .to_return(body: File.read('spec/support/files/api_entreprise/etablissements.json', status: 200))
+        .to_return(body: File.read('spec/fixtures/files/api_entreprise/etablissements.json', status: 200))
     end
 
     it '#to_params class est une Hash ?' do
