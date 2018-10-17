@@ -61,7 +61,7 @@ class Users::DossiersController < UsersController
     if dossier.procedure.for_individual
       redirect_to identite_dossier_path(dossier)
     else
-      redirect_to users_dossier_path(id: dossier.id)
+      redirect_to siret_dossier_path(id: dossier.id)
     end
   rescue ActiveRecord::RecordNotFound
     error_procedure
