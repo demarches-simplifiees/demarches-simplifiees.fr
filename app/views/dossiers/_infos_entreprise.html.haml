@@ -47,11 +47,7 @@
     .row
       .col-xs-4.entreprise-label Exercices :
       .col-xs-8.entreprise-info
-        - @facade.etablissement.exercices.each_with_index do |exercice, index|
-          %strong
-            = "#{exercice.date_fin_exercice.year} : "
-            = number_to_currency(exercice.ca)
-          %br
+        les exercices comptables des trois dernières années sont joints à votre dossier.
 
     .row.split-row
       .col-xs-12.split-hr
