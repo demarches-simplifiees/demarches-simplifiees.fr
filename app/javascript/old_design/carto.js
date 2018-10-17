@@ -8,7 +8,7 @@ import {
   drawCadastre,
   drawQuartiersPrioritaires,
   addFreeDrawEvents
-} from '../shared/carto';
+} from '../shared/carte';
 
 function initialize() {
   const element = document.getElementById('map');
