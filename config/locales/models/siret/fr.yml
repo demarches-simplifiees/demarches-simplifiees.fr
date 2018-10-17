@@ -2,6 +2,9 @@ fr:
   activemodel:
     models:
       siret: 'SIRET'
+      exercices_summary:
+        one: L’exercice comptable de l’année dernière a été joint à votre dossier.
+        other: "Les exercices comptables des %{count} dernières années ont été joints à votre dossier."
     errors:
       models:
         siret:
