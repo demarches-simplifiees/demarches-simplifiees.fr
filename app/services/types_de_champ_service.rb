@@ -14,6 +14,8 @@ class TypesDeChampService
         :id,
         :mandatory,
         :piece_justificative_template,
+        :quartiers_prioritaires,
+        :cadastres,
         drop_down_list_attributes: [:value, :id]
       ])
 

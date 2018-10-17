@@ -38,6 +38,16 @@
         = ff.file_field :piece_justificative_template,
           direct_upload: true
 
+    .form-group.carte-options{ class: (type_champ == TypeDeChamp.type_champs.fetch(:carte)) ? 'show-inline' : nil }
+      %h4 Utilisation de la cartographie
+      %label
+        = ff.check_box :quartiers_prioritaires
+        Quartiers prioritaires
+      %br
+      %label
+        = ff.check_box :cadastres
+        Cadastre
+
     - hide_mandatory = (ff.object.object.private? || type_champ == TypeDeChamp.type_champs.fetch(:explication))
     .form-group.mandatory{ style: hide_mandatory ? 'visibility: hidden;' : nil }
       %h4 Obligatoire ?
