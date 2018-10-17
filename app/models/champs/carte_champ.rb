@@ -34,4 +34,8 @@ class Champs::CarteChamp < Champ
       { lon: lon, lat: lat, zoom: zoom }
     end
   end
+
+  def zones
+    value.blank? ? [] : JSON.parse(value)
+  end
 end

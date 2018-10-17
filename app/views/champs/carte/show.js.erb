@@ -1,0 +1,5 @@
+<%= render_to_element("#{@selector} + .geo-areas",
+  partial: 'shared/champs/carte/geo_areas',
+  locals: { champ: @champ, error: @error }) %>
+
+DS.drawMapData("<%= @selector %>", <%= geo_data(@champ) %>);

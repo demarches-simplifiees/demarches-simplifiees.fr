@@ -125,6 +125,7 @@ Rails.application.routes.draw do
   namespace :champs do
     get ':position/siret', to: 'siret#show', as: :siret
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
+    post ':position/carte', to: 'carte#show', as: :carte
   end
 
   namespace :commencer do

@@ -37,6 +37,10 @@ class ApplicationController < ActionController::Base
     logged_user.present?
   end
 
+  def logged_user_ids
+    logged_users.map(&:id)
+  end
+
   helper_method :logged_in?
 
   protected
