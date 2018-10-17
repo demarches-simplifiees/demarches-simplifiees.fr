@@ -205,6 +205,151 @@ describe NewUser::DossiersController, type: :controller do
     end
   end
 
+  describe '#siret' do
+    before { sign_in(user) }
+    let!(:dossier) { create(:dossier, user: user) }
+
+    subject { get :siret, params: { id: dossier.id } }
+
+    it { is_expected.to render_template(:siret) }
+  end
+
+  describe '#update_siret' do
+    let(:dossier) { create(:dossier, user: user) }
+    let(:siret) { params_siret.delete(' ') }
+    let(:siren) { siret[0..8] }
+
+    let(:api_etablissement_status) { 200 }
+    let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
+
+    let(:api_entreprise_status) { 200 }
+    let(:api_entreprise_body) { File.read('spec/fixtures/files/api_entreprise/entreprises.json') }
+
+    let(:api_exercices_status) { 200 }
+    let(:api_exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
+
+    let(:api_association_status) { 200 }
+    let(:api_association_body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
+
+    def stub_api_entreprise_requests
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+        .to_return(status: api_etablissement_status, body: api_etablissement_body)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
+        .to_return(status: api_entreprise_status, body: api_entreprise_body)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/#{siret}?.*token=/)
+        .to_return(status: api_exercices_status, body: api_exercices_body)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/#{siret}?.*token=/)
+        .to_return(status: api_association_status, body: api_association_body)
+    end
+
+    before do
+      sign_in(user)
+      stub_api_entreprise_requests
+    end
+
+    subject! { post :update_siret, params: { id: dossier.id, user: { siret: params_siret } } }
+
+    shared_examples 'SIRET informations are successfully saved' do
+      it do
+        dossier.reload
+        user.reload
+
+        expect(dossier.etablissement).to be_present
+        expect(dossier.autorisation_donnees).to be(true)
+        expect(user.siret).to eq(siret)
+
+        expect(response).to redirect_to(etablissement_dossier_path)
+      end
+    end
+
+    shared_examples 'the request fails with an error' do |error|
+      it 'doesn’t save an etablissement' do
+        expect(dossier.reload.etablissement).to be_nil
+      end
+
+      it 'displays the SIRET that was sent by the user in the form' do
+        expect(controller.current_user.siret).to eq(siret)
+      end
+
+      it 'renders an error' do
+        expect(flash.alert).to eq(error)
+        expect(response).to render_template(:siret)
+      end
+    end
+
+    context 'with an invalid SIRET' do
+      let(:params_siret) { '000 000' }
+
+      it_behaves_like 'the request fails with an error', ['Siret Le numéro SIRET doit comporter 14 chiffres']
+    end
+
+    context 'with a valid SIRET' do
+      let(:params_siret) { '440 117 620 01530' }
+
+      context 'when API-Entreprise doesn’t know this SIRET' do
+        let(:api_etablissement_status) { 404 }
+        let(:api_body_status) { '' }
+
+        it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
+      end
+
+      context 'when the API returns no Entreprise' do
+        let(:api_entreprise_status) { 404 }
+        let(:api_entreprise_body) { '' }
+
+        it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
+      end
+
+      context 'when the API returns no Exercices' do
+        let(:api_exercices_status) { 404 }
+        let(:api_exercices_body) { '' }
+
+        it_behaves_like 'SIRET informations are successfully saved'
+
+        it 'doesn’t save the etablissement exercices' do
+          expect(dossier.reload.etablissement.exercices).to be_empty
+        end
+      end
+
+      context 'when the RNA doesn’t have informations on the SIRET' do
+        let(:api_association_status) { 404 }
+        let(:api_association_body) { '' }
+
+        it_behaves_like 'SIRET informations are successfully saved'
+
+        it 'doesn’t save the RNA informations' do
+          expect(dossier.reload.etablissement.association?).to be(false)
+        end
+      end
+
+      context 'when all API informations available' do
+        it_behaves_like 'SIRET informations are successfully saved'
+
+        it 'saves the associated informations on the etablissement' do
+          dossier.reload
+          expect(dossier.etablissement.entreprise).to be_present
+          expect(dossier.etablissement.exercices).to be_present
+          expect(dossier.etablissement.association?).to be(true)
+        end
+      end
+    end
+  end
+
+  describe '#etablissement' do
+    let(:dossier) { create(:dossier, :with_entreprise, user: user) }
+
+    before { sign_in(user) }
+
+    subject { get :etablissement, params: { id: dossier.id } }
+
+    it { is_expected.to render_template(:etablissement) }
+
+    context 'when the dossier has no etablissement yet' do
+      let(:dossier) { create(:dossier, user: user) }
+      it { is_expected.to redirect_to siret_dossier_path(dossier) }
+    end
+  end
+
   describe '#brouillon' do
     before { sign_in(user) }
     let!(:dossier) { create(:dossier, user: user, autorisation_donnees: true) }
@@ -219,7 +364,7 @@ describe NewUser::DossiersController, type: :controller do
       before { dossier.update_columns(autorisation_donnees: false) }
 
       context 'when the dossier is for personne morale' do
-        it { is_expected.to redirect_to(users_dossier_path(dossier)) }
+        it { is_expected.to redirect_to(siret_dossier_path(dossier)) }
       end
 
       context 'when the dossier is for an personne physique' do

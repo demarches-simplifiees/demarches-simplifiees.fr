@@ -1,0 +1,24 @@
+%ul.etablissement-infos-association
+  %li
+    Numéro d’enregistrement au Registre National des Associations :
+    = etablissement.association_rna
+
+  %li
+    Titre :
+    = etablissement.association_titre
+
+  %li
+    Objet :
+    = etablissement.association_objet
+
+  %li
+    Date de création :
+    = etablissement.association_date_creation&.strftime('%d/%m/%Y')
+
+  %li
+    Date de déclaration :
+    = etablissement.association_date_declaration&.strftime('%d/%m/%Y')
+
+  %li
+    Date de publication :
+    = etablissement.association_date_publication&.strftime('%d/%m/%Y')

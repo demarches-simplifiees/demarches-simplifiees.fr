@@ -61,7 +61,7 @@ describe Users::DossiersController, type: :controller do
           end
 
           it { is_expected.to have_http_status(302) }
-          it { is_expected.to redirect_to users_dossier_path(id: Dossier.last) }
+          it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
 
           it { expect { subject }.to change(Dossier, :count).by 1 }
 
@@ -152,7 +152,7 @@ describe Users::DossiersController, type: :controller do
           subject { get :new, params: { procedure_id: procedure_id, brouillon: true } }
 
           it { is_expected.to have_http_status(302) }
-          it { is_expected.to redirect_to users_dossier_path(id: Dossier.last) }
+          it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
         end
       end
     end
