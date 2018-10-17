@@ -130,13 +130,29 @@ describe ProcedurePresentation do
 
     context 'for self table' do
       let(:table) { 'self' }
-      let(:column) { 'updated_at' } # All other columns work the same, no extra test required
 
-      let(:dossier) { create(:dossier, procedure: procedure) }
+      context 'for created_at column' do
+        let(:column) { 'created_at' }
+        let(:dossier) { Timecop.freeze(DateTime.new(1992, 3, 22)) { create(:dossier, procedure: procedure) } }
 
-      before { dossier.touch(time: DateTime.new(2018, 9, 25)) }
+        it { is_expected.to eq(DateTime.new(1992, 3, 22)) }
+      end
 
-      it { is_expected.to eq(DateTime.new(2018, 9, 25)) }
+      context 'for en_construction_at column' do
+        let(:column) { 'en_construction_at' }
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2018, 10, 17)) }
+
+        it { is_expected.to eq(DateTime.new(2018, 10, 17)) }
+      end
+
+      context 'for updated_at column' do
+        let(:column) { 'updated_at' }
+        let(:dossier) { create(:dossier, procedure: procedure) }
+
+        before { dossier.touch(time: DateTime.new(2018, 9, 25)) }
+
+        it { is_expected.to eq(DateTime.new(2018, 9, 25)) }
+      end
     end
 
     context 'for user table' do
