@@ -58,6 +58,7 @@ describe ProcedurePresentation do
       let(:expected) {
         [
           { "label" => 'Créé le', "table" => 'self', "column" => 'created_at' },
+          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at' },
           { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
           { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren' },
@@ -129,13 +130,29 @@ describe ProcedurePresentation do
 
     context 'for self table' do
       let(:table) { 'self' }
-      let(:column) { 'updated_at' } # All other columns work the same, no extra test required
 
-      let(:dossier) { create(:dossier, procedure: procedure) }
+      context 'for created_at column' do
+        let(:column) { 'created_at' }
+        let(:dossier) { Timecop.freeze(DateTime.new(1992, 3, 22)) { create(:dossier, procedure: procedure) } }
 
-      before { dossier.touch(time: DateTime.new(2018, 9, 25)) }
+        it { is_expected.to eq(DateTime.new(1992, 3, 22)) }
+      end
 
-      it { is_expected.to eq(DateTime.new(2018, 9, 25)) }
+      context 'for en_construction_at column' do
+        let(:column) { 'en_construction_at' }
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2018, 10, 17)) }
+
+        it { is_expected.to eq(DateTime.new(2018, 10, 17)) }
+      end
+
+      context 'for updated_at column' do
+        let(:column) { 'updated_at' }
+        let(:dossier) { create(:dossier, procedure: procedure) }
+
+        before { dossier.touch(time: DateTime.new(2018, 9, 25)) }
+
+        it { is_expected.to eq(DateTime.new(2018, 9, 25)) }
+      end
     end
 
     context 'for user table' do
@@ -240,18 +257,36 @@ describe ProcedurePresentation do
 
     context 'for self table' do
       let(:table) { 'self' }
-      let(:column) { 'updated_at' } # All other columns work the same, no extra test required
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
-      let(:recent_dossier) { create(:dossier, procedure: procedure) }
-      let(:older_dossier) { create(:dossier, procedure: procedure) }
+      context 'for created_at column' do
+        let(:column) { 'created_at' }
+        let!(:recent_dossier) { Timecop.freeze(DateTime.new(2018, 10, 17)) { create(:dossier, procedure: procedure) } }
+        let!(:older_dossier) { Timecop.freeze(DateTime.new(2003, 11, 11)) { create(:dossier, procedure: procedure) } }
 
-      before do
-        recent_dossier.touch(time: DateTime.new(2018, 9, 25))
-        older_dossier.touch(time: DateTime.new(2018, 5, 13))
+        it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
       end
 
-      it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
+      context 'for en_construction_at column' do
+        let(:column) { 'en_construction_at' }
+        let!(:recent_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2018, 10, 17)) }
+        let!(:older_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2013, 1, 1)) }
+
+        it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
+      end
+
+      context 'for updated_at column' do
+        let(:column) { 'updated_at' }
+        let(:recent_dossier) { create(:dossier, procedure: procedure) }
+        let(:older_dossier) { create(:dossier, procedure: procedure) }
+
+        before do
+          recent_dossier.touch(time: DateTime.new(2018, 9, 25))
+          older_dossier.touch(time: DateTime.new(2018, 5, 13))
+        end
+
+        it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
+      end
     end
 
     context 'for type_de_champ table' do
@@ -337,6 +372,14 @@ describe ProcedurePresentation do
         let!(:kept_dossier) { create(:dossier, procedure: procedure, created_at: DateTime.new(2018, 9, 18, 14, 28)) }
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, created_at: DateTime.new(2018, 9, 17, 23, 59)) }
         let(:filter) { [{ 'table' => 'self', 'column' => 'created_at', 'value' => '18/9/2018' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'for en_construction_at column' do
+        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2018, 10, 17)) }
+        let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2013, 1, 1)) }
+        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
