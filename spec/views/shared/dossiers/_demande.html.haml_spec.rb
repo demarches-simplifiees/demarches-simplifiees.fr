@@ -9,7 +9,7 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
     sign_in current_gestionnaire
   end
 
-  subject! { render 'shared/dossiers/demande.html.haml', dossier: dossier, demande_seen_at: nil }
+  subject! { render 'shared/dossiers/demande.html.haml', dossier: dossier, demande_seen_at: nil, profile: 'usager' }
 
   context 'when dossier was created by an etablissement' do
     let(:etablissement) { create(:etablissement) }
