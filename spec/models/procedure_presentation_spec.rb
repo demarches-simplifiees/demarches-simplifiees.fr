@@ -376,6 +376,14 @@ describe ProcedurePresentation do
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
+      context 'for en_construction_at column' do
+        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2018, 10, 17)) }
+        let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2013, 1, 1)) }
+        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
       context 'for updated_at column' do
         let(:kept_dossier) { create(:dossier, procedure: procedure) }
         let(:discarded_dossier) { create(:dossier, procedure: procedure) }
