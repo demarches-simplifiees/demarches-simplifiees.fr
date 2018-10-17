@@ -44,10 +44,13 @@
     %tr
       %th.libelle Exercices :
       %td
-        - etablissement.exercices.each_with_index do |exercice, index|
-          = "#{exercice.date_fin_exercice.year} : "
-          = pretty_currency(exercice.ca)
-          %br
+        - if profile == 'instructeur'
+          - etablissement.exercices.each_with_index do |exercice, index|
+            = "#{exercice.date_fin_exercice.year} : "
+            = pretty_currency(exercice.ca)
+            %br
+        - elsif etablissement.exercices.present?
+          = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
 
     - if etablissement.association?
       %tr
