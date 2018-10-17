@@ -58,6 +58,7 @@ describe ProcedurePresentation do
       let(:expected) {
         [
           { "label" => 'Créé le', "table" => 'self', "column" => 'created_at' },
+          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at' },
           { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
           { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren' },
