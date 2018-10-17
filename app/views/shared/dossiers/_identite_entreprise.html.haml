@@ -48,6 +48,7 @@
           = "#{exercice.date_fin_exercice.year} : "
           = pretty_currency(exercice.ca)
           %br
+
     - if etablissement.association?
       %tr
         %th.libelle Numéro RNA :
