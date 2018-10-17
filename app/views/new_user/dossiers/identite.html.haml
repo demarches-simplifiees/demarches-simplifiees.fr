@@ -6,15 +6,7 @@
 .two-columns
   .columns-container
     .column.preview
-      .procedure-logos
-        = image_tag @dossier.procedure.decorate.logo_img
-        - if @dossier.procedure.euro_flag
-          = image_tag "flag_of_europe.svg"
-
-      %h2.procedure-title
-        = @dossier.procedure.libelle
-      .procedure-description
-        = h string_to_html(@dossier.procedure.description)
+      = render partial: "new_user/dossiers/demarche_overview", locals: { procedure: @dossier.procedure }
 
     .column.identity-form
       = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
