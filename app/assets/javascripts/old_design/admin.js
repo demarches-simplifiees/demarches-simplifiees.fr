@@ -27,6 +27,7 @@ $(document).on('change', 'select.form-control.type-champ', function() {
   parent.removeClass('header-section');
   parent.children('.drop-down-list').removeClass('show-inline');
   parent.children('.pj-template').removeClass('show-inline');
+  parent.children('.carte-options').removeClass('show-inline');
 
   $('.mandatory', parent).show();
 
@@ -41,6 +42,9 @@ $(document).on('change', 'select.form-control.type-champ', function() {
       break;
     case 'piece_justificative':
       parent.children('.pj-template').addClass('show-inline');
+      break;
+    case 'carte':
+      parent.children('.carte-options').addClass('show-inline');
       break;
     case 'explication':
       $('.mandatory', parent).hide();
