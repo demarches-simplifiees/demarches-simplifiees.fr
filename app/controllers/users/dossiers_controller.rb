@@ -6,7 +6,6 @@ class Users::DossiersController < UsersController
 
   before_action :store_user_location!, only: :new
   before_action :authenticate_user!, except: [:commencer, :commencer_test]
-  before_action :check_siret, only: :siret_informations
 
   before_action only: [:show] do
     authorized_routes? self.class
@@ -52,11 +51,6 @@ class Users::DossiersController < UsersController
     end
 
     dossier = Dossier.create!(procedure: procedure, user: current_user, state: Dossier.states.fetch(:brouillon))
-    siret = params[:siret] || current_user.siret
-
-    if siret.present?
-      update_current_user_siret! siret
-    end
 
     if dossier.procedure.for_individual
       redirect_to identite_dossier_path(dossier)
@@ -67,115 +61,18 @@ class Users::DossiersController < UsersController
     error_procedure
   end
 
-  def show
-    @facade = facade
-    if current_user.siret.present?
-      @siret = current_user.siret
-    end
-
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for dossiers_path
-  end
-
-  def siret_informations
-    @facade = facade params[:dossier_id]
-
-    update_current_user_siret!(siret)
-
-    etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(siret, @facade.dossier.procedure_id)
-
-    if etablissement_attributes.present?
-      etablissement_attributes = ActionController::Parameters.new(etablissement_attributes).permit!
-      etablissement = @facade.dossier.build_etablissement(etablissement_attributes)
-      if !etablissement.save
-        return errors_valid_siret
-      end
-    else
-      return errors_valid_siret
-    end
-
-    @facade = facade params[:dossier_id]
-
-    if @facade.procedure.individual_with_siret?
-      render '/dossiers/add_siret', formats: 'js'
-    else
-      render '/dossiers/new_siret', formats: 'js'
-    end
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = t('errors.messages.dossier_not_found')
-    redirect_to url_for dossiers_path
-  end
-
-  def change_siret
-    Dossier.find(params[:dossier_id]).reset!
-
-    @facade = facade params[:dossier_id]
-
-    if @facade.procedure.individual_with_siret?
-      render '/dossiers/add_siret', formats: 'js'
-    else
-      render '/dossiers/new_siret', formats: 'js'
-    end
-  end
-
-  def update
-    @facade = facade params[:dossier][:id]
-    @facade.dossier.update!(autorisation_donnees: true)
-
-    if @facade.dossier.procedure.module_api_carto.use_api_carto
-      redirect_to url_for(controller: :carte, action: :show, dossier_id: @facade.dossier.id)
-    else
-      redirect_to brouillon_dossier_path(@facade.dossier)
-    end
-  end
-
   def self.route_authorization
     {
       states: [Dossier.states.fetch(:brouillon)]
     }
   end
 
-  def destroy
-    dossier = current_user.dossiers.find(params[:id])
-    if dossier.brouillon?
-      dossier.destroy
-      flash.notice = 'Brouillon supprimé'
-    end
-    redirect_to url_for dossiers_path
-  end
-
   private
-
-  def check_siret
-    if !Siret.new(siret: siret).valid?
-      errors_valid_siret
-    end
-  end
-
-  def errors_valid_siret
-    flash.alert = t('errors.messages.invalid_siret')
-    @facade = facade params[:dossier_id]
-
-    render '/dossiers/new_siret', formats: :js, locals: { invalid_siret: siret }
-  end
-
-  def siret
-    create_params[:siret]
-  end
-
-  def create_params
-    params.require(:dossier).permit(:siret)
-  end
 
   def error_procedure
     flash.alert = t('errors.messages.procedure_not_found')
 
     redirect_to url_for dossiers_path
-  end
-
-  def update_current_user_siret!(siret)
-    current_user.update(siret: siret)
   end
 
   def facade(id = params[:id])
