@@ -2,6 +2,8 @@ module NewUser
   class DossiersController < UserController
     include DossierHelper
 
+    layout 'commencer', only: [:identite, :update_identite, :siret, :update_siret]
+
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche]
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
 

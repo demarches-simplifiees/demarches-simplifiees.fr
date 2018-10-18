@@ -1,0 +1,22 @@
+- content_for :content do
+  .two-columns
+    .columns-container
+
+      .column.preview
+        - procedure = @dossier.procedure
+        .procedure-logos
+          = image_tag procedure.decorate.logo_img
+          - if procedure.euro_flag
+            = image_tag "flag_of_europe.svg"
+        %h2.procedure-title
+          = procedure.libelle
+        .procedure-description
+          = h string_to_html(procedure.description)
+
+      .column.identity-form
+        = yield
+
+- content_for :footer do
+  = render partial: "new_user/dossiers/dossier_footer", locals: { dossier: @dossier }
+
+= render template: 'layouts/new_application'

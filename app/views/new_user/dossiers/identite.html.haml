@@ -1,39 +1,30 @@
 - content_for(:title, "Nouveau dossier (#{@dossier.procedure.libelle})")
 
-- content_for :footer do
-  = render partial: "new_user/dossiers/dossier_footer", locals: { dossier: @dossier }
+= render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
 
-.two-columns
-  .columns-container
-    .column.preview
-      = render partial: "new_user/dossiers/demarche_overview", locals: { procedure: @dossier.procedure }
+- if !dossier_submission_is_closed?(@dossier)
+  = form_for @dossier.individual, url: update_identite_dossier_path(@dossier), html: { class: "form" } do |f|
+    %h1 Données d'identité
 
-    .column.identity-form
-      = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
+    %p.mb-1 Merci de remplir vos informations personnelles pour accéder à la démarche.
 
-      - if !dossier_submission_is_closed?(@dossier)
-        = form_for @dossier.individual, url: update_identite_dossier_path(@dossier), html: { class: "form" } do |f|
-          %h1 Données d'identité
+    %label
+      %span.mandatory *
+      champs requis
 
-          %p.mb-1 Merci de remplir vos informations personnelles pour accéder à la démarche.
+    = f.label :gender, class: "required"
+    = f.select :gender, ['M.', 'Mme'], {}, class: "small"
 
-          %label
-            %span.mandatory *
-            champs requis
+    .flex
+      .inline-champ
+        = f.label :prenom, class: "required"
+        = f.text_field :prenom, class: "small", required: true
+      .inline-champ
+        = f.label :nom, class: "required"
+        = f.text_field :nom, class: "small", required: true
 
-          = f.label :gender, class: "required"
-          = f.select :gender, ['M.', 'Mme'], {}, class: "small"
+    - if @dossier.procedure.ask_birthday?
+      = f.label :birthdate, class: "required"
+      = f.date_field :birthdate, value: @dossier.individual.birthdate, placeholder: 'format : AAAA-MM-JJ', required: true, class: "small"
 
-          .flex
-            .inline-champ
-              = f.label :prenom, class: "required"
-              = f.text_field :prenom, class: "small", required: true
-            .inline-champ
-              = f.label :nom, class: "required"
-              = f.text_field :nom, class: "small", required: true
-
-          - if @dossier.procedure.ask_birthday?
-            = f.label :birthdate, class: "required"
-            = f.date_field :birthdate, value: @dossier.individual.birthdate, placeholder: 'format : AAAA-MM-JJ', required: true, class: "small"
-
-          = f.submit "Continuer", class: "button large primary expand"
+    = f.submit "Continuer", class: "button large primary expand"
