@@ -31,7 +31,7 @@ class Users::DossiersController < UsersController
       if procedure.archivee?
         @dossier = Dossier.new(procedure: procedure)
 
-        render 'commencer/archived'
+        render 'commencer/archived', layout: 'commencer'
       else
         redirect_to new_users_dossier_path(procedure_id: procedure.id)
       end

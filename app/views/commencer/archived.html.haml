@@ -1,15 +1,7 @@
-%br
-%div{ style: 'text-align: center; max-width: 500px; margin-left: auto; margin-right: auto; padding: 20px;' }
-  = render partial: 'users/sessions/resume_procedure'
+%h1
+  La campagne de création de nouveau dossier pour cette démarche en ligne est maintenant terminée.
 
-.center{ style: 'margin-top: -20px;' }
-  %h3
-    La campagne de création de nouveau dossier
-    %br
-    pour cette démarche en ligne est maintenant terminée.
+%p
+  Si vous avez déjà déposé un ou plusieurs dossiers :
 
-  %br
-  %p
-    Si vous avez déjà déposé un ou plusieurs dossiers :
-  %a.btn.btn-lg.btn-info{ href: new_user_session_path }
-    Accéder à mon espace en ligne.
+= link_to 'Accéder à vos dossiers', new_user_session_path, class: 'button expand'

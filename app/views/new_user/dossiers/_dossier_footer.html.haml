@@ -15,7 +15,7 @@
         %li.footer-column
           %h3.footer-header Poser une question sur votre dossier :
           %p
-            - if dossier.brouillon?
+            - if dossier.new_record? || dossier.brouillon?
               Par email :
               = link_to service.email, "mailto:#{service.email}"
             - else
