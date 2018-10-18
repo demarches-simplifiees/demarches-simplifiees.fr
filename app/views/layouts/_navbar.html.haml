@@ -9,6 +9,8 @@
 .col-xs-10.no-padding
   #navbar-body
     .row
+      %div{ style: "vertical-align: middle;float:left;position:absolute;line-height: 60px;z-index:2;" }
+        Besoin d'aide ? <a href="tel:#{CONTACT_PHONE}">#{CONTACT_PHONE}</a> ou <a href="mailto:#{CONTACT_EMAIL}">#{CONTACT_EMAIL}</a>
       -# BEST WTF EVER
       -# this begin rescue hides potentials bugs by displaying another navbar
       - begin
