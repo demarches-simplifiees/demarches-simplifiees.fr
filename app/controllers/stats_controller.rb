@@ -23,22 +23,24 @@ class StatsController < ApplicationController
 
     @procedures_count_per_administrateur = procedures_count_per_administrateur(procedures)
 
-    @dossier_instruction_mean_time = Rails.cache.fetch("dossier_instruction_mean_time", expires_in: 1.day) do
-      dossier_instruction_mean_time(dossiers)
+    if administration_signed_in?
+      @dossier_instruction_mean_time = Rails.cache.fetch("dossier_instruction_mean_time", expires_in: 1.day) do
+        dossier_instruction_mean_time(dossiers)
+      end
+
+      @dossier_filling_mean_time = Rails.cache.fetch("dossier_filling_mean_time", expires_in: 1.day) do
+        dossier_filling_mean_time(dossiers)
+      end
+
+      @avis_usage = avis_usage
+      @avis_average_answer_time = avis_average_answer_time
+      @avis_answer_percentages = avis_answer_percentages
+
+      @motivation_usage_dossier = motivation_usage_dossier
+      @motivation_usage_procedure = motivation_usage_procedure
+
+      @cloned_from_library_procedures_ratio = cloned_from_library_procedures_ratio
     end
-
-    @dossier_filling_mean_time = Rails.cache.fetch("dossier_filling_mean_time", expires_in: 1.day) do
-      dossier_filling_mean_time(dossiers)
-    end
-
-    @avis_usage = avis_usage
-    @avis_average_answer_time = avis_average_answer_time
-    @avis_answer_percentages = avis_answer_percentages
-
-    @motivation_usage_dossier = motivation_usage_dossier
-    @motivation_usage_procedure = motivation_usage_procedure
-
-    @cloned_from_library_procedures_ratio = cloned_from_library_procedures_ratio
   end
 
   def download
