@@ -27,7 +27,7 @@ describe 'layouts/_new_header.html.haml', type: :view do
 
       it "displays the contact infos" do
         expect(rendered).to have_text("Contact")
-        expect(rendered).to have_link(CONTACT_EMAIL, href: contact_url)
+        expect(rendered).to have_link("par email", href: contact_url)
       end
     end
   end
