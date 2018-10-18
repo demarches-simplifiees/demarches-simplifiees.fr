@@ -1,3 +1,7 @@
+- procedure_id_for_which_we_hide_the_time_means = 6547
+- procedure_path_for_which_we_hide_the_time_means = 'deposer-une-offre-de-stage'
+- show_time_means = dossier.procedure.id != procedure_id_for_which_we_hide_the_time_means && dossier.procedure.path != procedure_path_for_which_we_hide_the_time_means
+
 .status-overview
   - if !dossier.termine?
     %ul.status-timeline
@@ -26,7 +30,8 @@
           = succeed '.' do
             %strong votre dossier passera directement en instruction
 
-        - if dossier.procedure.mean_verification_time
+        / FIXME: remove the custom procedure switch at some point
+        - if dossier.procedure.mean_verification_time && show_time_means
           - cache(dossier.procedure, expires_in: 1.week) do
             %p
               Le temps moyen de vérification pour cette démarche est de #{distance_of_time_in_words(dossier.procedure.mean_verification_time)}.
@@ -39,7 +44,9 @@
           %strong
             vous recevrez un email
           avec le résultat.
-        - if dossier.procedure.mean_instruction_time
+
+        / FIXME: remove the custom procedure switch at some point
+        - if dossier.procedure.mean_instruction_time && show_time_means
           - cache(dossier.procedure, expires_in: 1.week) do
             %p
               Le temps moyen d’instruction pour cette démarche est de #{distance_of_time_in_words(dossier.procedure.mean_instruction_time)}.

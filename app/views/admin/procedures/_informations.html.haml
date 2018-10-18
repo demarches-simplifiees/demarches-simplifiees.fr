@@ -47,24 +47,34 @@
 
 .form-group
   %h4 Cadre juridique *
-  %p Indiquez la référence ou l'URL du texte juridique ou chargez la délibération qui justifie cette démarche
-  = f.label :cadre_juridique, 'Référence ou texte de loi'
-  = f.text_field :cadre_juridique, class: 'form-control', placeholder: 'https://www.legifrance.gouv.fr/'
+  %p Texte qui justifie le droit de collecter les données demandées dans votre démarche auprès des usagers, par exemple :
+  %ul
+    %li Texte de loi (loi, décret, circulaire, arrêté,…)
+    %li Texte juridique (statuts, délibération, décision du conseil d'administration…)
+    %li <a href="https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-administrateur#cadre-juridique" target="_blank">En savoir plus</a>
+  %p.help-block
+    %i.fa.fa-info-circle
+    Vous pouvez saisir un lien vers ce texte ou importer celui-ci directement.
 
-  = f.label :deliberation, 'Délibération'
-  - deliberation = @procedure.deliberation
-  - if !deliberation.attached?
-    = f.file_field :deliberation,
-      direct_upload: true
-  - else
-    %a{ href: url_for(deliberation), target: '_blank' }
-      = deliberation.filename.to_s
-    - if @procedure.persisted?
-      = link_to 'supprimer', delete_deliberation_admin_procedure_path(@procedure), method: :delete
-    %br
-    Modifier :
-    = f.file_field :deliberation,
-      direct_upload: true
+  .row
+    .col-md-6
+      = f.label :cadre_juridique, 'Lien vers le texte'
+      = f.text_field :cadre_juridique, class: 'form-control', placeholder: 'https://www.legifrance.gouv.fr/'
+    .col-md-6
+      = f.label :deliberation, 'Importer le texte'
+      - deliberation = @procedure.deliberation
+      - if !deliberation.attached?
+        = f.file_field :deliberation,
+          direct_upload: true
+      - else
+        %a{ href: url_for(deliberation), target: '_blank' }
+          = deliberation.filename.to_s
+        - if @procedure.persisted?
+          = link_to 'supprimer', delete_deliberation_admin_procedure_path(@procedure), method: :delete
+        %br
+        Modifier :
+        = f.file_field :deliberation,
+          direct_upload: true
 
 .form-group
   %h4 Notice explicative de la démarche
