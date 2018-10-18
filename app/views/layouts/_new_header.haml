@@ -25,13 +25,8 @@
             .tab-link.contact-link
               Aide
               .contact-details
-                Vous avez besoin d’aide ? Contactez-nous :
-                %br
-                – par téléphone :
-                = link_to CONTACT_PHONE, "tel:#{CONTACT_PHONE}"
-                %br
-                – par email :
-                = contact_link CONTACT_EMAIL
+                Vous avez besoin d’aide ? Contactez-nous
+                = contact_link("par email")
 
       - if nav_bar_profile == :user
         %ul.header-tabs
