@@ -25,5 +25,5 @@ chdir APP_ROOT do
   system! 'bin/rails log:clear'
 
   puts "\n== Done =="
-  puts "You can now start (or restart) the application server with `overmind start`."
+  puts "You can now start (or restart) the application server with `bin/rails server`."
 end

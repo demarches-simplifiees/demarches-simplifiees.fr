@@ -13,9 +13,6 @@ demarches-simplifiees.fr est un site web conçu afin de répondre au besoin urge
 ### Développement
 
 - Yarn : voir https://yarnpkg.com/en/docs/install
-- Overmind :
-  * Mac : `brew install overmind`
-  * Linux : voir https://github.com/DarthSim/overmind#installation
 
 ### Tests
 
@@ -42,7 +39,7 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 
 ## Lancement de l'application
 
-    overmind start
+    bin/rails server
 
 L'application tourne à l'adresse `http://localhost:3000`. Un utilisateur de test est disponible, avec les identifiants `test@exemple.fr`/`testpassword`.
 
@@ -86,9 +83,7 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
 ## Debug
 
-Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il faut se connecter au process `server` dans un nouveau terminal afin d'intéragir avec byebug :
-
-    overmind connect server
+Insérer une ligne `byebug` dans un fichier source affiche un débogueur dans la console quand la ligne est exécutée.
 
 ## Linting
 
