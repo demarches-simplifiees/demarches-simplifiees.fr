@@ -33,7 +33,7 @@ describe DossierSearchService do
     let!(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', siret: '41816609600051') }
     let!(:dossier_3) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_2, user: create(:user, email: 'peace@clap.fr'), etablissement: etablissement_3) }
 
-    let!(:dossier_archived) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, archived: true, user: create(:user, email: 'brouillonArchived@clap.fr')) }
+    let!(:dossier_archived) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, archived: true, user: create(:user, email: 'archived@clap.fr')) }
 
     describe 'search is empty' do
       let(:terms) { '' }
@@ -45,6 +45,12 @@ describe DossierSearchService do
       let(:terms) { 'brouillon' }
 
       it { expect(subject.size).to eq(0) }
+    end
+
+    describe 'search archived file' do
+      let(:terms) { 'archived' }
+
+      it { expect(subject.size).to eq(1) }
     end
 
     describe 'search on contact email' do
