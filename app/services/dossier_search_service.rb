@@ -32,7 +32,6 @@ class DossierSearchService
 
     gestionnaire
       .dossiers
-      .not_archived
       .state_not_brouillon
       .where("#{ts_vector} @@ #{ts_query}")
       .order("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC")
