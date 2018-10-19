@@ -23,10 +23,9 @@ set :repository, 'https://github.com/betagouv/tps.git'
 deploy_to = '/var/www/ds'
 set :deploy_to, deploy_to
 set :user, 'ds'
-branch = 'puma'
-set :branch, branch
+set :branch, ENV['branch']
 
-print "Deploy to #{ENV['domain']}, branch : #{branch}\n"
+print "Deploy to #{ENV['domain']}, branch : #{ENV['branch']}\n"
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
@@ -103,6 +102,7 @@ task :deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
     invoke :'git:clone'
+
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'yarn:install'
