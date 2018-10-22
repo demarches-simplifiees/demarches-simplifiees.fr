@@ -31,4 +31,8 @@ class ProcedureSerializer < ActiveModel::Serializer
   def state
     object.aasm_state
   end
+
+  def geographic_information
+    object.module_api_carto
+  end
 end
