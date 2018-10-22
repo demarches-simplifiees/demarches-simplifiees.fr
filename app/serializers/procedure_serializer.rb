@@ -10,7 +10,8 @@ class ProcedureSerializer < ActiveModel::Serializer
     :archived_at,
     :geographic_information,
     :total_dossier,
-    :link
+    :link,
+    :state
 
   has_one :geographic_information, serializer: ModuleApiCartoSerializer
   has_many :types_de_champ, serializer: TypeDeChampSerializer
@@ -25,5 +26,9 @@ class ProcedureSerializer < ActiveModel::Serializer
         commencer_url(procedure_path: object.path)
       end
     end
+  end
+
+  def state
+    object.aasm_state
   end
 end
