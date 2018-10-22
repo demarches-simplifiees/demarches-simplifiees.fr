@@ -1,6 +1,7 @@
 class ProcedureSerializer < ActiveModel::Serializer
+  include Rails.application.routes.url_helpers
+
   attribute :libelle, key: :label
-  attribute :lien_demarche, key: :link
 
   attributes :id,
     :description,
@@ -8,10 +9,21 @@ class ProcedureSerializer < ActiveModel::Serializer
     :direction,
     :archived_at,
     :geographic_information,
-    :total_dossier
+    :total_dossier,
+    :link
 
   has_one :geographic_information, serializer: ModuleApiCartoSerializer
   has_many :types_de_champ, serializer: TypeDeChampSerializer
   has_many :types_de_champ_private, serializer: TypeDeChampSerializer
   has_many :types_de_piece_justificative, serializer: TypeDePieceJustificativeSerializer
+
+  def link
+    if object.path.present?
+      if object.brouillon_avec_lien?
+        commencer_test_url(procedure_path: object.path)
+      else
+        commencer_url(procedure_path: object.path)
+      end
+    end
+  end
 end
