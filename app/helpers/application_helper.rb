@@ -91,7 +91,7 @@ module ApplicationHelper
   end
 
   def ensure_safe_json(json)
-    JSON.parse(json).to_json
+    json.present? ? JSON.parse(json).to_json : '[]'
   rescue Exception => e
     Raven.capture_exception(e)
     {}
