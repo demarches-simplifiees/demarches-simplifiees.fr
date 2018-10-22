@@ -97,7 +97,9 @@ export function getCurrentMap(input) {
 export function addFreeDrawEvents(map, selector) {
   const input = findInput(selector);
   map.freeDraw.on('markers', ({ latLngs }) => {
-    if (polygonArea(latLngs) < 300000) {
+    if (latLngs.length === 0) {
+      input.value = '';
+    } else if (polygonArea(latLngs) < 300000) {
       input.value = JSON.stringify(latLngs);
     } else {
       input.value = '{ "error": "TooManyPolygons" }';
