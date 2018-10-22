@@ -65,9 +65,13 @@ class Users::CarteController < UsersController
     # https://tools.ietf.org/html/rfc7946#section-3.1.6
     if json_latlngs.present?
       multipolygone = JSON.parse(json_latlngs)
-      multipolygone.reject! { |polygone| polygone.count < 4 }
-      if multipolygone.present?
-        multipolygone.to_json
+      if multipolygone.first == ["error", "TooManyPolygons"]
+        [].to_json
+      else
+        multipolygone.reject! { |polygone| polygone.count < 4 }
+        if multipolygone.present?
+          multipolygone.to_json
+        end
       end
     end
   end
