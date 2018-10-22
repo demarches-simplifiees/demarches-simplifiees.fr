@@ -26,11 +26,4 @@ describe ProcedureDecorator do
     subject { super().logo_img }
     it { is_expected.to match(/http.*#{ActionController::Base.helpers.image_url("marianne.svg")}/) }
   end
-
-  describe 'geographic_information' do
-    subject { super().geographic_information }
-    it { expect(subject.use_api_carto).to be_falsey }
-    it { expect(subject.quartiers_prioritaires).to be_falsey }
-    it { expect(subject.cadastre).to be_falsey }
-  end
 end
