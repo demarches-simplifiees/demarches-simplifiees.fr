@@ -12,6 +12,7 @@ FOG_BASE_URL = "https://storage.apientreprise.fr"
 # External services URLs
 DOC_URL = "https://doc.demarches-simplifiees.fr"
 ADMINISTRATEUR_TUTORIAL_URL = "https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-administrateur"
+WEBINAIRE_URL = "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/webinaires"
 LISTE_DES_DEMARCHES_URL = [DOC_URL, "listes-des-demarches"].join("/")
 CGU_URL = [DOC_URL, "cgu"].join("/")
 MENTIONS_LEGALES_URL = [CGU_URL, "4-mentions-legales"].join("#")
