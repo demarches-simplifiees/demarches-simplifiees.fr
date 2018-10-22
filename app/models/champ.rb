@@ -17,7 +17,16 @@ class Champ < ApplicationRecord
   end
 
   def mandatory_and_blank?
-    mandatory? && value.blank?
+    if mandatory?
+      case type_de_champ.type_champ
+      when TypeDeChamp.type_champs.fetch(:carte)
+        value.blank? || value == '[]'
+      else
+        value.blank?
+      end
+    else
+      false
+    end
   end
 
   def search_terms

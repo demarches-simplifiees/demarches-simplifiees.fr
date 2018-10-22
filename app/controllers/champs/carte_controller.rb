@@ -26,11 +26,11 @@ class Champs::CarteController < ApplicationController
     end
 
     geo_areas = []
-    geo_json = JSON.parse(geo_json)
+    geo_json = geo_json.blank? ? [] : JSON.parse(geo_json)
 
     if geo_json.first == ["error", "TooManyPolygons"]
       @error = true
-    else
+    elsif geo_json.present?
       if @champ.cadastres?
         cadastres = ModuleApiCartoService.generate_cadastre(geo_json)
         geo_areas += cadastres.map do |cadastre|
