@@ -5,6 +5,7 @@ describe ProcedureSerializer do
 
     it {
       is_expected.to include(link: "http://localhost:3000/commencer/#{procedure.path}")
+      is_expected.to include(state: "publiee")
     }
   end
 end
