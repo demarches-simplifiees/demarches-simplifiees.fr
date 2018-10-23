@@ -57,6 +57,19 @@ export function drawQuartiersPrioritaires(
   );
 }
 
+export function drawParcellesAgricoles(
+  map,
+  { parcellesAgricoles },
+  editable = false
+) {
+  drawLayer(
+    map,
+    parcellesAgricoles,
+    editable ? RPG_POLYGON_STYLE : noEditStyle(RPG_POLYGON_STYLE),
+    'parcellesAgricoles'
+  );
+}
+
 export function drawUserSelection(map, { selection }, editable = false) {
   let hasSelection = selection && selection.length > 0;
 
@@ -167,6 +180,10 @@ const CADASTRE_POLYGON_STYLE = Object.assign({}, POLYGON_STYLE, {
 });
 
 const QP_POLYGON_STYLE = Object.assign({}, POLYGON_STYLE, {
+  fillColor: '#31708f'
+});
+
+const RPG_POLYGON_STYLE = Object.assign({}, POLYGON_STYLE, {
   fillColor: '#31708f'
 });
 
