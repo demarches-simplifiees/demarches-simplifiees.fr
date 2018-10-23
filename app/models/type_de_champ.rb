@@ -31,7 +31,7 @@ class TypeDeChamp < ApplicationRecord
 
   belongs_to :procedure
 
-  store :options, accessors: [:cadastres, :quartiers_prioritaires]
+  store :options, accessors: [:cadastres, :quartiers_prioritaires, :parcelles_agricoles]
 
   after_initialize :set_dynamic_type
 

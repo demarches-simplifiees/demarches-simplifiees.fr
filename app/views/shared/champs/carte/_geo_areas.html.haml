@@ -25,3 +25,17 @@
       %ul
         - champ.cadastres.each do |pc|
           %li Parcelle n° #{pc.numero} - Feuille #{pc.code_arr} #{pc.section} #{pc.feuille}
+
+- if champ.parcelles_agricoles?
+  .areas-title Parcelles agricoles (RPG)
+  .areas
+    - if error.present?
+      .error Merci de dessiner une surface plus petite afin de récupérer les parcelles agricoles.
+    - elsif champ.value.blank?
+      Aucune zone tracée
+    - elsif champ.parcelles_agricoles.blank?
+      = t('errors.messages.parcelles_agricoles_empty', count: champ.zones.size)
+    - else
+      %ul
+        - champ.parcelles_agricoles.each do |pa|
+          %li Culture : #{pa.culture} - Surface : #{pa.surface} ha

@@ -46,6 +46,14 @@ class Champs::CarteController < ApplicationController
           qp
         end
       end
+
+      if @champ.parcelles_agricoles?
+        parcelles_agricoles = ModuleApiCartoService.generate_rpg(geo_json)
+        geo_areas += parcelles_agricoles.map do |parcelle_agricole|
+          parcelle_agricole[:source] = GeoArea.sources.fetch(:parcelle_agricole)
+          parcelle_agricole
+        end
+      end
     end
 
     @champ.geo_areas = geo_areas.map do |geo_area|

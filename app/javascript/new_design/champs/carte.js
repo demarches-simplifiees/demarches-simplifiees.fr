@@ -6,6 +6,7 @@ import {
   geocodeAddress,
   drawCadastre,
   drawQuartiersPrioritaires,
+  drawParcellesAgricoles,
   drawUserSelection,
   addFreeDrawEvents
 } from '../../shared/carte';
@@ -30,6 +31,7 @@ function diplayMap(element, data, initial = false) {
   // draw external polygons
   drawCadastre(map, data, editable);
   drawQuartiersPrioritaires(map, data, editable);
+  drawParcellesAgricoles(map, data, editable);
 
   // draw user polygon
   if (initial) {
