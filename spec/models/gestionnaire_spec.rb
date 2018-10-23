@@ -210,7 +210,7 @@ describe Gestionnaire, type: :model do
     context 'with default presentation' do
       let(:procedure_id) { procedure_2.id }
 
-      it { expect(procedure_presentation.persisted?).to be_falsey }
+      it { expect(procedure_presentation).not_to be_persisted }
     end
   end
 
