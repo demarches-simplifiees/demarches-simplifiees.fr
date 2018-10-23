@@ -16,6 +16,7 @@ class TypesDeChampService
         :piece_justificative_template,
         :quartiers_prioritaires,
         :cadastres,
+        :parcelles_agricoles,
         drop_down_list_attributes: [:value, :id]
       ])
 

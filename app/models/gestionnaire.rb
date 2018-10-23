@@ -81,8 +81,8 @@ class Gestionnaire < ApplicationRecord
     end
   end
 
-  def procedure_presentation_for_procedure_id(procedure_id)
-    assign_to.find_by(procedure_id: procedure_id).procedure_presentation_or_default
+  def procedure_presentation_and_errors_for_procedure_id(procedure_id)
+    assign_to.find_by(procedure_id: procedure_id).procedure_presentation_or_default_and_errors
   end
 
   def notifications_for_dossier(dossier)
