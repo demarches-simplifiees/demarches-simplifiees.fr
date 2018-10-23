@@ -47,6 +47,10 @@
       %label
         = ff.check_box :cadastres
         Cadastre
+      %br
+      %label
+        = ff.check_box :parcelles_agricoles
+        Parcelles Agricoles
 
     - hide_mandatory = (ff.object.object.private? || type_champ == TypeDeChamp.type_champs.fetch(:explication))
     .form-group.mandatory{ style: hide_mandatory ? 'visibility: hidden;' : nil }

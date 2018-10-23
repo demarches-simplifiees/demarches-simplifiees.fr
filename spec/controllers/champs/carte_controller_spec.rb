@@ -36,7 +36,7 @@ describe Champs::CarteController, type: :controller do
     context 'when coordinates are empty' do
       let(:selection) { [] }
 
-      it { expect(response.body).to include("DS.drawMapData(\".carte-1\", {\"position\":{\"lon\":\"2.428462\",\"lat\":\"46.538192\",\"zoom\":\"13\"},\"selection\":[],\"quartiersPrioritaires\":[],\"cadastres\":[]});") }
+      it { expect(response.body).to include("DS.drawMapData(\".carte-1\", {\"position\":{\"lon\":\"2.428462\",\"lat\":\"46.538192\",\"zoom\":\"13\"},\"selection\":[],\"quartiersPrioritaires\":[],\"cadastres\":[],\"parcellesAgricoles\":[]});") }
     end
 
     context 'when coordinates are informed' do

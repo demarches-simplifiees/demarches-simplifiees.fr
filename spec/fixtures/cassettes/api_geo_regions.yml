@@ -7,21 +7,23 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     headers:
+      User-Agent:
+      - demarches-simplifiees.fr
       Accept:
-      - "*/*"
+      - application/json
       Accept-Encoding:
       - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (darwin15.6.0 x86_64) ruby/2.3.1p112
+      Expect:
+      - ''
   response:
     status:
       code: 200
       message: OK
     headers:
       Server:
-      - nginx
+      - nginx/1.10.3 (Ubuntu)
       Date:
-      - Fri, 16 Dec 2016 09:24:28 GMT
+      - Tue, 23 Oct 2018 13:11:36 GMT
       Content-Type:
       - application/json; charset=utf-8
       Transfer-Encoding:
@@ -30,13 +32,12 @@ http_interactions:
       - keep-alive
       Vary:
       - Accept-Encoding
-      - Accept-Encoding
       X-Powered-By:
       - Express
       Access-Control-Allow-Origin:
       - "*"
       Etag:
-      - W/"2dd-2SAFdhiM3SIQ2017gqYxbw"
+      - W/"28d-5OgIzgwL+0K2UaO0foKduqMMBrA"
       Strict-Transport-Security:
       - max-age=15552000
       Content-Encoding:
@@ -44,14 +45,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAA11Ry2rDMBD8FeNLLxE0rybpzTE0F6eYHHopPSyWSASyNllJ
-        Abf0F/ofvucP/GO1aIvXPQm0M7MzO68fqcU6fUx3AaQyGM4qnaQVStX/3U/T
-        z8kfYA/ktdWXwAEzBtiFBiwfztmwgOTQtcFqtEx/MdJv0HvOf2DT7ssoIZV4
-        IrAVA025xVxZT0q8gEmkSgrUxJAzvmyLgY54tL+CJyVyrH3XDt5mK7b9GakG
-        KzWXW4/nUpTgosMcDGgnSl0BjRhzfqzMOKh68AnqM0QfGUll+7dAItD8jgtu
-        vITGxXAG/udbcvktKR9lhzxL3kZ2CdrHLaLQNQanrShRewzREPVXVG5grpaj
-        Hu0xKImVOPQ8p41BK/ZaalE21LW2a0dUXmEWropi1MOpu8XE5syx61FMwqvq
-        i/4Biby7eZXIu+w90GBswyPlSI7F3fRqb99L+pyA3QIAAA==
+        W3sibm9tIjoiR3VhZGVsb3VwZSIsImNvZGUiOiIwMSJ9LHsibm9tIjoiTWFydGluaXF1ZSIsImNvZGUiOiIwMiJ9LHsibm9tIjoiR3V5YW5lIiwiY29kZSI6IjAzIn0seyJub20iOiJMYSBSw6l1bmlvbiIsImNvZGUiOiIwNCJ9LHsibm9tIjoiTWF5b3R0ZSIsImNvZGUiOiIwNiJ9LHsibm9tIjoiw45sZS1kZS1GcmFuY2UiLCJjb2RlIjoiMTEifSx7Im5vbSI6IkNlbnRyZS1WYWwgZGUgTG9pcmUiLCJjb2RlIjoiMjQifSx7Im5vbSI6IkJvdXJnb2duZS1GcmFuY2hlLUNvbXTDqSIsImNvZGUiOiIyNyJ9LHsibm9tIjoiTm9ybWFuZGllIiwiY29kZSI6IjI4In0seyJub20iOiJIYXV0cy1kZS1GcmFuY2UiLCJjb2RlIjoiMzIifSx7Im5vbSI6IkdyYW5kIEVzdCIsImNvZGUiOiI0NCJ9LHsibm9tIjoiUGF5cyBkZSBsYSBMb2lyZSIsImNvZGUiOiI1MiJ9LHsibm9tIjoiQnJldGFnbmUiLCJjb2RlIjoiNTMifSx7Im5vbSI6Ik5vdXZlbGxlLUFxdWl0YWluZSIsImNvZGUiOiI3NSJ9LHsibm9tIjoiT2NjaXRhbmllIiwiY29kZSI6Ijc2In0seyJub20iOiJBdXZlcmduZS1SaMO0bmUtQWxwZXMiLCJjb2RlIjoiODQifSx7Im5vbSI6IlByb3ZlbmNlLUFscGVzLUPDtHRlIGQnQXp1ciIsImNvZGUiOiI5MyJ9LHsibm9tIjoiQ29yc2UiLCJjb2RlIjoiOTQifV0=
     http_version:
-  recorded_at: Fri, 16 Dec 2016 09:24:25 GMT
-recorded_with: VCR 3.0.3
+  recorded_at: Tue, 23 Oct 2018 13:11:36 GMT
+recorded_with: VCR 4.0.0
