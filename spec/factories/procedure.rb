@@ -1,7 +1,6 @@
 FactoryBot.define do
   sequence(:published_path) { |n| "fake_path#{n}" }
   factory :procedure do
-    lien_demarche { 'http://localhost' }
     sequence(:libelle) { |n| "Procedure #{n}" }
     description { "Demande de subvention à l'intention des associations" }
     organisation { "Orga DINSIC" }
