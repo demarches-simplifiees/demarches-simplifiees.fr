@@ -18,6 +18,7 @@ import '../new_design/form-validation';
 import '../new_design/carto';
 import '../new_design/select2';
 
+import '../new_design/champs/carte';
 import '../new_design/champs/linked-drop-down-list';
 
 import { toggleCondidentielExplanation } from '../new_design/avis';

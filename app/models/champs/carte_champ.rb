@@ -15,6 +15,14 @@ class Champs::CarteChamp < Champ
     end
   end
 
+  def cadastres?
+    type_de_champ&.cadastres && type_de_champ.cadastres != '0'
+  end
+
+  def quartiers_prioritaires?
+    type_de_champ&.quartiers_prioritaires && type_de_champ.quartiers_prioritaires != '0'
+  end
+
   def position
     if dossier.present?
       dossier.geo_position
@@ -25,5 +33,9 @@ class Champs::CarteChamp < Champ
 
       { lon: lon, lat: lat, zoom: zoom }
     end
+  end
+
+  def zones
+    value.blank? ? [] : JSON.parse(value)
   end
 end

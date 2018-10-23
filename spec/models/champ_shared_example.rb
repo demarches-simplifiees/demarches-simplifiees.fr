@@ -9,6 +9,12 @@ shared_examples 'champ_spec' do
       it { expect(champ.mandatory_and_blank?).to be(true) }
     end
 
+    context 'when carte mandatory and blank' do
+      let(:type_de_champ) { build(:type_de_champ_carte, mandatory: mandatory) }
+      let(:value) { '[]' }
+      it { expect(champ.mandatory_and_blank?).to be(true) }
+    end
+
     context 'when not blank' do
       let(:value) { 'yop' }
       it { expect(champ.mandatory_and_blank?).to be(false) }

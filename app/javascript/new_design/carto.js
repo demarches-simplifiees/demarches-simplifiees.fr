@@ -1,16 +1,17 @@
 import { getData } from '../shared/data';
-import { initMap } from '../shared/carto';
 import {
+  initMap,
   drawCadastre,
   drawQuartiersPrioritaires,
   drawUserSelection
-} from './carto/draw';
+} from '../shared/carte';
 
 function initialize() {
-  if (document.getElementById('map')) {
-    const position = getData('carto').position;
-    const map = initMap(position);
+  const element = document.getElementById('map');
+
+  if (element) {
     const data = getData('carto');
+    const map = initMap(element, data.position);
 
     // draw external polygons
     drawCadastre(map, data);

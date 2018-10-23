@@ -1,0 +1,27 @@
+- if champ.quartiers_prioritaires?
+  .areas-title Quartiers prioritaires
+  .areas
+    - if error.present?
+      .error Merci de dessiner une surface plus petite afin de récupérer les quartiers prioritaires.
+    - elsif champ.value.blank?
+      Aucune zone tracée
+    - elsif champ.quartiers_prioritaires.blank?
+      = t('errors.messages.quartiers_prioritaires_empty', count: champ.zones.size)
+    - else
+      %ul
+        - champ.quartiers_prioritaires.each do |qp|
+          %li #{qp.commune} : #{qp.nom}
+
+- if champ.cadastres?
+  .areas-title Parcelles cadastrales
+  .areas
+    - if error.present?
+      .error Merci de dessiner une surface plus petite afin de récupérer les parcelles cadastrales.
+    - elsif champ.value.blank?
+      Aucune zone tracée
+    - elsif champ.cadastres.blank?
+      = t('errors.messages.cadastres_empty', count: champ.zones.size)
+    - else
+      %ul
+        - champ.cadastres.each do |pc|
+          %li Parcelle n° #{pc.numero} - Feuille #{pc.code_arr} #{pc.section} #{pc.feuille}
