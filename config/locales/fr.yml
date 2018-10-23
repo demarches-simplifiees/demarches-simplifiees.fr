@@ -183,6 +183,9 @@ fr:
       quartiers_prioritaires_empty:
         one: "Aucun quartier prioritaire sur la zone séléctionnée"
         other: "Aucun quartier prioritaire sur les zones séléctionnées"
+      parcelles_agricoles_empty:
+        one: "Aucune parcelle agricole sur la zone séléctionnée"
+        other: "Aucune parcelle agricole sur les zones séléctionnées"
 
   date:
     abbr_day_names:

@@ -13,14 +13,20 @@ class GeoArea < ApplicationRecord
     :code_arr,
     :code,
     :nom,
-    :commune
+    :commune,
+    :culture,
+    :code_culture,
+    :surface,
+    :bio
   ]
 
   enum source: {
     quartier_prioritaire: 'quartier_prioritaire',
-    cadastre: 'cadastre'
+    cadastre: 'cadastre',
+    parcelle_agricole: 'parcelle_agricole'
   }
 
   scope :quartiers_prioritaires, -> { where(source: sources.fetch(:quartier_prioritaire)) }
   scope :cadastres, -> { where(source: sources.fetch(:cadastre)) }
+  scope :parcelles_agricoles, -> { where(source: sources.fetch(:parcelle_agricole)) }
 end
