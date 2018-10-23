@@ -23,15 +23,10 @@
                   %span.badge.warning= avis_counter
           %li
             .tab-link.contact-link
-              Contact
+              Aide
               .contact-details
-                Vous avez besoin d’aide ? Contactez-nous :
-                %br
-                – par téléphone :
-                = link_to CONTACT_PHONE, "tel:#{CONTACT_PHONE}"
-                %br
-                – par email :
-                = contact_link CONTACT_EMAIL
+                Besoin d’aide technique ? Contactez-nous
+                = contact_link("par email")
 
       - if nav_bar_profile == :user
         %ul.header-tabs

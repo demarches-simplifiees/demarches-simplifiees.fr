@@ -1,4 +1,77 @@
-#map {
+#map,
+.carte {
   height: 400px;
   margin-bottom: 16px;
+  z-index: 0;
+}
+
+.leaflet-container path {
+  cursor: url("/assets/edit.png"), default !important;
+}
+
+.carte {
+  &.edit {
+    g path.leaflet-polygon {
+      transition: all 0.25s;
+      stroke-width: 4px;
+      stroke-opacity: 1;
+      stroke: #D7217E;
+      position: absolute;
+      z-index: 100;
+      fill: #D7217E;
+      fill-opacity: 0.75;
+    }
+
+    div.leaflet-edge {
+      box-shadow: 0 0 0 2px #FFFFFF, 0 0 10px rgba(0, 0, 0, 0.35);
+      border: 5px solid #D7217E;
+      border-radius: 10px;
+      transition: opacity 0.25s;
+      cursor: move;
+      opacity: 0;
+      pointer-events: none;
+      box-sizing: border-box;
+      width: 0 !important;
+      height: 0 !important;
+    }
+  }
+
+  &.mode-create {
+    cursor: url("/assets/pencil.png"), crosshair !important;
+  }
+
+  &.mode-edit div.leaflet-edge {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  &.mode-delete path.leaflet-polygon {
+    cursor: no-drop !important;
+
+    &:hover {
+      fill: #4D4D4D !important;
+    }
+  }
+}
+
+.editable-champ-carte {
+  .toolbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .button {
+      width: 200px;
+      margin-right: 10px;
+    }
+  }
+}
+
+.areas-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.areas {
+  margin-bottom: 10px;
 }
