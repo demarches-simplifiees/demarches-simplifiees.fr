@@ -208,7 +208,15 @@ module NewGestionnaire
     end
 
     def procedure_presentation
-      @procedure_presentation ||= current_gestionnaire.procedure_presentation_for_procedure_id(params[:procedure_id])
+      @procedure_presentation ||= get_procedure_presentation
+    end
+
+    def get_procedure_presentation
+      procedure_presentation, errors = current_gestionnaire.procedure_presentation_and_errors_for_procedure_id(params[:procedure_id])
+      if errors.present?
+        flash[:alert] = "Votre affichage a dû être réinitialisé en raison du problème suivant : " + errors.full_messages.join(', ')
+      end
+      procedure_presentation
     end
 
     def displayed_fields_values
