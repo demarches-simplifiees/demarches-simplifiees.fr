@@ -197,20 +197,24 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe "procedure_presentation_for_procedure_id" do
-    let(:procedure_presentation) { gestionnaire.procedure_presentation_for_procedure_id(procedure_id) }
+  describe "procedure_presentation_and_errors_for_procedure_id" do
+    let(:procedure_presentation_and_errors) { gestionnaire.procedure_presentation_and_errors_for_procedure_id(procedure_id) }
+    let(:procedure_presentation) { procedure_presentation_and_errors.first }
+    let(:errors) { procedure_presentation_and_errors.second }
 
     context 'with explicit presentation' do
       let(:procedure_id) { procedure.id }
       let!(:pp) { ProcedurePresentation.create(assign_to: procedure_assign) }
 
       it { expect(procedure_presentation).to eq(pp) }
+      it { expect(errors).to be_nil }
     end
 
     context 'with default presentation' do
       let(:procedure_id) { procedure_2.id }
 
       it { expect(procedure_presentation).not_to be_persisted }
+      it { expect(errors).to be_nil }
     end
   end
 
