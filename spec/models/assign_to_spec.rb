@@ -6,7 +6,7 @@ describe AssignTo, type: :model do
     let(:procedure_presentation_or_default) { assign_to.procedure_presentation_or_default }
 
     context "without a procedure_presentation" do
-      it { expect(procedure_presentation_or_default.persisted?).to be_falsey }
+      it { expect(procedure_presentation_or_default).not_to be_persisted }
     end
 
     context "with a procedure_presentation" do
