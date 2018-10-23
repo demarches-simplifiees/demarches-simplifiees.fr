@@ -25,4 +25,15 @@ class GeojsonService
 
     polygon.to_json
   end
+
+  def self.to_json_polygon_for_rpg(coordinates)
+    polygon = {
+      polygonIntersects: {
+        type: "Polygon",
+        coordinates: [coordinates]
+      }
+    }
+
+    polygon.to_json
+  end
 end
