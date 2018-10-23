@@ -38,4 +38,12 @@ class ModuleApiCartoService
       ).results
     end
   end
+
+  def self.generate_rpg(coordinates)
+    coordinates.flat_map do |coordinate|
+      ApiGeo::RPGAdapter.new(
+        coordinate.map { |element| [element['lng'], element['lat']] }
+      ).results
+    end
+  end
 end
