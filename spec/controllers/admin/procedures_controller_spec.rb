@@ -11,7 +11,6 @@ describe Admin::ProceduresController, type: :controller do
   let(:description) { 'Description de test' }
   let(:organisation) { 'Organisation de test' }
   let(:direction) { 'Direction de test' }
-  let(:lien_demarche) { 'http://localhost.com' }
   let(:cadre_juridique) { 'cadre juridique' }
   let(:use_api_carto) { '0' }
   let(:quartiers_prioritaires) { '0' }
@@ -26,7 +25,6 @@ describe Admin::ProceduresController, type: :controller do
       description: description,
       organisation: organisation,
       direction: direction,
-      lien_demarche: lien_demarche,
       cadre_juridique: cadre_juridique,
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_hors_ds,
@@ -198,7 +196,6 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.description).to eq(description) }
           it { expect(subject.organisation).to eq(organisation) }
           it { expect(subject.direction).to eq(direction) }
-          it { expect(subject.lien_demarche).to eq(lien_demarche) }
           it { expect(subject.administrateur_id).to eq(admin.id) }
           it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
           it { expect(subject.duree_conservation_dossiers_hors_ds).to eq(duree_conservation_dossiers_hors_ds) }
@@ -270,7 +267,6 @@ describe Admin::ProceduresController, type: :controller do
         let(:description) { 'blabla' }
         let(:organisation) { 'plop' }
         let(:direction) { 'plap' }
-        let(:lien_demarche) { 'http://plip.com' }
         let(:use_api_carto) { '1' }
         let(:cadastre) { '1' }
         let(:duree_conservation_dossiers_dans_ds) { 7 }
@@ -285,7 +281,6 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.description).to eq(description) }
           it { expect(subject.organisation).to eq(organisation) }
           it { expect(subject.direction).to eq(direction) }
-          it { expect(subject.lien_demarche).to eq(lien_demarche) }
           it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
           it { expect(subject.duree_conservation_dossiers_hors_ds).to eq(duree_conservation_dossiers_hors_ds) }
         end
@@ -349,7 +344,6 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.organisation).to eq procedure_params[:organisation] }
           it { expect(subject.direction).to eq procedure_params[:direction] }
 
-          it { expect(subject.lien_demarche).not_to eq procedure_params[:lien_demarche] }
           it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
           it { expect(subject.individual_with_siret).not_to eq procedure_params[:individual_with_siret] }
           it { expect(subject.use_api_carto).not_to eq procedure_params[:module_api_carto_attributes][:use_api_carto] }

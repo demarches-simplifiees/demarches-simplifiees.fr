@@ -1,6 +1,25 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "0d61a1267d264f1e61cc2398a2683703ac60878129dc9515542f246a80ad575b",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/champs/carto/show.js.erb",
+      "line": 5,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "geo_data((Champ.joins(:dossier).where(:dossiers => ({ :user_id => logged_user_ids })).find_by(:id => params.permit(:champ_id)) or CartoChamp.new))",
+      "render_path": [{"type":"controller","class":"Champs::CartoController","method":"show","line":48,"file":"app/controllers/champs/carto_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "champs/carto/show"
+      },
+      "user_input": "Champ.joins(:dossier).where(:dossiers => ({ :user_id => logged_user_ids }))",
+      "confidence": "Weak",
+      "note": "Not an injection because logged_user_ids have no user input"
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "1840f5340630814ea86311e850ebd91b966e6bccd0b6856133528e7745c0695a",
@@ -61,6 +80,6 @@
       "note": "Not an injection because of `sanitized_column`"
     }
   ],
-  "updated": "2018-10-11 12:09:03 +0200",
+  "updated": "2018-10-16 11:28:34 +0300",
   "brakeman_version": "4.3.1"
 }

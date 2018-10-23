@@ -228,8 +228,14 @@
     // scss-lint:enable
   }
 
-  .algolia-autocomplete {
-    margin-bottom: 2 * $default-padding;
+  .editable-champ {
+    &:not(.editable-champ-carte) .algolia-autocomplete {
+      margin-bottom: 2 * $default-padding;
+    }
+
+    .geo-areas {
+      margin-bottom: 2 * $default-padding;
+    }
   }
 
   input.aa-input,

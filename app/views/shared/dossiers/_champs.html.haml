@@ -56,6 +56,13 @@
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
               - if c.etablissement.present?
                 = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: c.etablissement, profile: profile }
+        - when TypeDeChamp.type_champs.fetch(:carte)
+          %th.libelle
+            = "#{c.libelle} :"
+          %td.rich-text
+            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
+              - if c.value.present?
+                = render partial: "shared/champs/carte/show", locals: { champ: c }
         - else
           %th.libelle
             = "#{c.libelle} :"

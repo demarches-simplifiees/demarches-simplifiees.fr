@@ -22,8 +22,4 @@ class ProcedureDecorator < Draper::Decorator
       end
     end
   end
-
-  def geographic_information
-    module_api_carto
-  end
 end
