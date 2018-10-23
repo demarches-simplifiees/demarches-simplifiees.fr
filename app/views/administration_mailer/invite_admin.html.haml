@@ -7,19 +7,29 @@
   Je vous remercie de l’intérêt que vous portez à notre outil de dématérialisation de démarches.
 
 %p
-  Votre compte administrateur a été créé pour l'adresse email #{@admin.email}. Pour l’activer, je vous invite à cliquer sur le lien suivant :
-  = link_to(admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token))
+  Votre compte administrateur a été créé pour l'adresse email #{@admin.email}.
+
+%p
+  %b
+    Pour l’activer, cliquez sur le lien suivant :
+    = link_to(admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token))
 
 %p
   Afin de vous accompagner dans la découverte de demarches-simplifiees.fr, je vous propose de m’appeler pour faire un point sur vos besoins de dématérialisation.
   %br
   Vous pouvez me joindre au numéro suivant :
-  = CONTACT_PHONE
+  = link_to(CONTACT_PHONE, "tel:#{CONTACT_PHONE}")
   \.
 
 %p
-  Je vous invite également à consulter notre site de documentation qui regroupe l'ensemble des informations relatives à demarches-simplifiees.fr ainsi que des tutoriels d’utilisation :
-  = link_to(DOC_URL, DOC_URL)
+  Je vous invite également à prendre quelques minutes pour consulter notre tutoriel à destination des nouveaux administrateurs :
+  = link_to(ADMINISTRATEUR_TUTORIAL_URL, ADMINISTRATEUR_TUTORIAL_URL)
+  \.
+
+%p
+  Enfin, vous pouvez vous inscrire à notre prochain webinaire en ligne pour découvrir les fonctionnalités de notre outil :
+  = link_to(WEBINAIRE_URL, WEBINAIRE_URL)
+  \.
 
 %p
   = render partial: "layouts/mailers/bizdev_signature", locals: { author_name: @author_name }
