@@ -1,8 +1,11 @@
 task :deploy do
-  if ENV['STAGE_NAME'] == 'dev'
-    domains = ['web1.dev', 'web2.dev']
-  elsif ENV['STAGE_NAME'] == 'master'
-    domains = ['web1', 'web2']
+  domains = case ENV['STAGE_NAME']
+  when 'dev'
+    ['web1.dev', 'web2.dev']
+  when 'master'
+    ['web1', 'web2']
+  else
+    raise "STAGE_NAME #{STAGE_NAME} is unknown. It must be either dev or master"
   end
 
   branch = ENV['STAGE_NAME']
