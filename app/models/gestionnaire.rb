@@ -144,29 +144,6 @@ class Gestionnaire < ApplicationRecord
     Dossier.where(id: dossiers_id_with_notifications(dossiers)).group(:procedure_id).count
   end
 
-  def mark_tab_as_seen(dossier, tab)
-    attributes = {}
-    attributes["#{tab}_seen_at"] = DateTime.now
-    Follow.where(gestionnaire: self, dossier: dossier).update_all(attributes)
-  end
-
-  def invite!
-    reset_password_token = set_reset_password_token
-
-    GestionnaireMailer.invite_gestionnaire(self, reset_password_token).deliver_later
-  end
-
-  private
-
-  def annotations_hash(demande, annotations_privees, avis, messagerie)
-    {
-      demande: demande,
-      annotations_privees: annotations_privees,
-      avis: avis,
-      messagerie: messagerie
-    }
-  end
-
   def dossiers_id_with_notifications(dossiers)
     dossiers = dossiers.followed_by(self)
 
@@ -199,5 +176,28 @@ class Gestionnaire < ApplicationRecord
       updated_avis,
       updated_messagerie
     ].flat_map { |query| query.distinct.ids }.uniq
+  end
+
+  def mark_tab_as_seen(dossier, tab)
+    attributes = {}
+    attributes["#{tab}_seen_at"] = DateTime.now
+    Follow.where(gestionnaire: self, dossier: dossier).update_all(attributes)
+  end
+
+  def invite!
+    reset_password_token = set_reset_password_token
+
+    GestionnaireMailer.invite_gestionnaire(self, reset_password_token).deliver_later
+  end
+
+  private
+
+  def annotations_hash(demande, annotations_privees, avis, messagerie)
+    {
+      demande: demande,
+      annotations_privees: annotations_privees,
+      avis: avis,
+      messagerie: messagerie
+    }
   end
 end
