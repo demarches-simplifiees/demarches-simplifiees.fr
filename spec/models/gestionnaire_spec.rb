@@ -198,10 +198,20 @@ describe Gestionnaire, type: :model do
   end
 
   describe "procedure_presentation_for_procedure_id" do
-    let!(:pp) { ProcedurePresentation.create(assign_to: procedure_assign) }
+    let(:procedure_presentation) { gestionnaire.procedure_presentation_for_procedure_id(procedure_id) }
 
-    it { expect(gestionnaire.procedure_presentation_for_procedure_id(procedure.id)).to eq(pp) }
-    it { expect(gestionnaire.procedure_presentation_for_procedure_id(procedure_2.id).persisted?).to be_falsey }
+    context 'with explicit presentation' do
+      let(:procedure_id) { procedure.id }
+      let!(:pp) { ProcedurePresentation.create(assign_to: procedure_assign) }
+
+      it { expect(procedure_presentation).to eq(pp) }
+    end
+
+    context 'with default presentation' do
+      let(:procedure_id) { procedure_2.id }
+
+      it { expect(procedure_presentation.persisted?).to be_falsey }
+    end
   end
 
   describe '#notifications_for_dossier' do
