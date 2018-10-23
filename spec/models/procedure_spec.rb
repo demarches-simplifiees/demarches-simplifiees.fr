@@ -164,12 +164,6 @@ describe Procedure do
       it { is_expected.to allow_value('Description Demande de subvention').for(:description) }
     end
 
-    context 'lien_demarche' do
-      it { is_expected.to allow_value(nil).for(:lien_demarche) }
-      it { is_expected.to allow_value('').for(:lien_demarche) }
-      it { is_expected.to allow_value('http://localhost').for(:lien_demarche) }
-    end
-
     context 'organisation' do
       it { is_expected.to allow_value('URRSAF').for(:organisation) }
     end

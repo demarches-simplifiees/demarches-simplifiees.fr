@@ -2,7 +2,7 @@ class API::V1::ProceduresController < APIController
   before_action :fetch_procedure_and_check_token
 
   def show
-    render json: { procedure: ProcedureSerializer.new(@procedure.decorate).as_json }
+    render json: { procedure: ProcedureSerializer.new(@procedure).as_json }
   end
 
   private
