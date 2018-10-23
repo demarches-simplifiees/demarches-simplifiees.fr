@@ -177,6 +177,12 @@ fr:
         connexion: "Erreur lors de la connexion à France Connect."
       extension_white_list_error: "Le format de fichier de la pièce jointe n'est pas valide."
       procedure_archived: "Cette démarche en ligne a été fermée, il n'est plus possible de déposer de dossier."
+      cadastres_empty:
+        one: "Aucune parcelle cadastrale sur la zone séléctionnée"
+        other: "Aucune parcelle cadastrale sur les zones séléctionnées"
+      quartiers_prioritaires_empty:
+        one: "Aucun quartier prioritaire sur la zone séléctionnée"
+        other: "Aucun quartier prioritaire sur les zones séléctionnées"
 
   date:
     abbr_day_names:
