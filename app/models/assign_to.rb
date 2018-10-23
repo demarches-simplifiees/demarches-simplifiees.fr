@@ -4,6 +4,6 @@ class AssignTo < ApplicationRecord
   has_one :procedure_presentation, dependent: :destroy
 
   def procedure_presentation_or_default
-    self.procedure_presentation || build_procedure_presentation
+    procedure_presentation || build_procedure_presentation
   end
 end
