@@ -126,7 +126,7 @@ class Gestionnaire < ApplicationRecord
       procedure.dossiers.not_archived
     else
       procedure.dossiers.en_cours
-    end.followed_by(self)
+    end
 
     dossiers_id_with_notifications(dossiers)
   end
@@ -139,7 +139,7 @@ class Gestionnaire < ApplicationRecord
       Dossier.not_archived
     else
       Dossier.en_cours
-    end.followed_by(self)
+    end
 
     Dossier.where(id: dossiers_id_with_notifications(dossiers)).group(:procedure_id).count
   end
@@ -168,6 +168,8 @@ class Gestionnaire < ApplicationRecord
   end
 
   def dossiers_id_with_notifications(dossiers)
+    dossiers = dossiers.followed_by(self)
+
     updated_demandes = dossiers
       .joins(:champs)
       .where('champs.updated_at > follows.demande_seen_at')
