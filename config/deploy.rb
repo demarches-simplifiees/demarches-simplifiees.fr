@@ -1,6 +1,6 @@
 require 'mina/bundler'
-require 'mina/rails'
 require 'mina/git'
+require 'mina/rails'
 require 'mina/rbenv'
 
 # Basic settings:
@@ -12,42 +12,35 @@ require 'mina/rbenv'
 # Advanced settings:
 #   forward_agent - SSH forward_agent
 #   user          - Username in the server to SSH to
+#   shared_dirs   - Manually create these paths in shared/ on your server.
+#                   They will be linked in the 'deploy:link_shared_paths' step.
 
-set :domain, ENV.fetch('domain')
-set :repository, 'https://github.com/betagouv/tps.git'
 deploy_to = '/var/www/ds'
-set :deploy_to, deploy_to
-set :user, 'ds'
-set :branch, ENV.fetch('branch')
-
-# Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
-# They will be linked in the 'deploy:link_shared_paths' step.
-set :shared_dirs, [
+shared_dirs = [
   'log',
   'sockets',
-  'tmp/pids',
-  'tmp/cache'
+  'tmp/cache',
+  'tmp/pids'
 ]
 
+set :domain, ENV.fetch('domain')
+set :deploy_to, deploy_to
+set :repository, 'https://github.com/betagouv/tps.git'
+set :branch, ENV.fetch('branch')
+set :forward_agent, true
+set :user, 'ds'
+set :shared_dirs, shared_dirs
 set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
-set :forward_agent, true # SSH forward_agent.
 
 puts "Deploy to #{ENV.fetch('domain')}, branch: #{ENV.fetch('branch')}"
 
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
 task :setup do
-  command %[mkdir -p "#{deploy_to}/shared/log"]
-  command %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
-
-  command %[mkdir -p "#{deploy_to}/shared/tmp/pids"]
-  command %[chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/pids"]
-
-  command %[mkdir -p "#{deploy_to}/shared/tmp/cache"]
-  command %[chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/cache"]
-
-  command %[mkdir -p "#{deploy_to}/shared/sockets"]
-  command %[chmod g+rx,u+rwx "#{deploy_to}/shared/sockets"]
+  shared_dirs.each do |dir|
+    command %[mkdir -p "#{deploy_to}/shared/#{dir}"]
+    command %[chmod g+rx,u+rwx "#{deploy_to}/shared/#{dir}"]
+  end
 end
 
 namespace :yarn do
@@ -76,6 +69,12 @@ namespace :service do
     command %{
       echo "-----> Restarting puma service"
       #{echo_cmd %[sudo systemctl restart puma]}
+    }
+  end
+
+  desc "Reload nginx"
+  task :reload_nginx do
+    command %{
       echo "-----> Reloading nginx service"
       #{echo_cmd %[sudo systemctl reload nginx]}
     }
@@ -94,11 +93,12 @@ desc "Deploys the current version to the server."
 task :deploy do
   command 'export PATH=$PATH:/home/ds/.rbenv/bin:/home/ds/.rbenv/shims'
   command 'source /home/ds/.profile'
+
   deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
-    invoke :'git:clone'
 
+    invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'yarn:install'
@@ -108,6 +108,7 @@ task :deploy do
 
     on :launch do
       invoke :'service:restart_puma'
+      invoke :'service:reload_nginx'
       invoke :'service:restart_delayed_job'
     end
   end
