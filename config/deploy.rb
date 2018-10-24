@@ -30,7 +30,7 @@ set :shared_dirs, [
 ]
 
 set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
-set :forward_agent, true # SSH forward_agent.
+set :forward_agent, true
 
 puts "Deploy to #{ENV.fetch('domain')}, branch: #{ENV.fetch('branch')}"
 
