@@ -2,6 +2,8 @@ class Champs::DossierLinkController < ApplicationController
   before_action :authenticate_logged_user!
 
   def show
+    @position = params[:position]
+
     if params[:dossier].key?(:champs_attributes)
       @dossier_id = params[:dossier][:champs_attributes][params[:position]][:value]
     else
