@@ -14,13 +14,13 @@ require 'mina/rbenv'
 #   user          - Username in the server to SSH to
 
 set :domain, ENV.fetch('domain')
-set :repository, 'https://github.com/betagouv/tps.git'
 deploy_to = '/var/www/ds'
 set :deploy_to, deploy_to
-set :user, 'ds'
+set :repository, 'https://github.com/betagouv/tps.git'
 set :branch, ENV.fetch('branch')
-set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
 set :forward_agent, true
+set :user, 'ds'
+set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
 
 # Manually create these paths in shared/ on your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
