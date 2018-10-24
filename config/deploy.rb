@@ -19,6 +19,8 @@ deploy_to = '/var/www/ds'
 set :deploy_to, deploy_to
 set :user, 'ds'
 set :branch, ENV.fetch('branch')
+set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
+set :forward_agent, true
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
@@ -28,9 +30,6 @@ set :shared_dirs, [
   'tmp/pids',
   'tmp/cache'
 ]
-
-set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
-set :forward_agent, true
 
 puts "Deploy to #{ENV.fetch('domain')}, branch: #{ENV.fetch('branch')}"
 
