@@ -20,7 +20,6 @@ deploy_to = '/var/www/ds'
 set :deploy_to, deploy_to
 set :user, 'ds'
 
-print "Deploy to #{ENV.fetch('domain')}, branch : #{ENV.fetch('branch')}\n"
 set :branch, ENV.fetch('branch')
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
@@ -38,6 +37,9 @@ set :forward_agent, true # SSH forward_agent.
 #
 # # This task is the environment that is loaded for most commands, such as
 # # `mina deploy` or `mina rake`.
+
+puts "Deploy to #{ENV.fetch('domain')}, branch: #{ENV.fetch('branch')}"
+
 task :setup do
   command %[mkdir -p "#{deploy_to}/shared/log"]
   command %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
