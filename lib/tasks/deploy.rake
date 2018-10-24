@@ -1,14 +1,14 @@
 task :deploy do
-  domains = case ENV['STAGE_NAME']
+  domains = case ENV['STAGE']
   when 'dev'
     ['web1.dev', 'web2.dev']
   when 'master'
     ['web1', 'web2']
   else
-    raise "STAGE_NAME #{STAGE_NAME} is unknown. It must be either dev or master"
+    raise "STAGE #{STAGE} is unknown. It must be either dev or master"
   end
 
-  branch = ENV['STAGE_NAME']
+  branch = ENV['STAGE']
 
   domains.each do |domain|
     sh "mina deploy domain=#{domain} branch=#{branch} force_asset_precompile=true"
