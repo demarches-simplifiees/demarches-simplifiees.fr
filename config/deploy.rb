@@ -15,21 +15,22 @@ require 'mina/rbenv'
 #   shared_dirs   - Manually create these paths in shared/ on your server.
 #                   They will be linked in the 'deploy:link_shared_paths' step.
 
-set :domain, ENV.fetch('domain')
 deploy_to = '/var/www/ds'
-set :deploy_to, deploy_to
-set :repository, 'https://github.com/betagouv/tps.git'
-set :branch, ENV.fetch('branch')
-set :forward_agent, true
-set :user, 'ds'
-set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
 shared_dirs = [
   'log',
   'sockets',
   'tmp/pids',
   'tmp/cache'
 ]
+
+set :domain, ENV.fetch('domain')
+set :deploy_to, deploy_to
+set :repository, 'https://github.com/betagouv/tps.git'
+set :branch, ENV.fetch('branch')
+set :forward_agent, true
+set :user, 'ds'
 set :shared_dirs, shared_dirs
+set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
 
 puts "Deploy to #{ENV.fetch('domain')}, branch: #{ENV.fetch('branch')}"
 
