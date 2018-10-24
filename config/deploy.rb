@@ -14,12 +14,10 @@ require 'mina/rbenv'
 #   user          - Username in the server to SSH to
 
 set :domain, ENV.fetch('domain')
-
 set :repository, 'https://github.com/betagouv/tps.git'
 deploy_to = '/var/www/ds'
 set :deploy_to, deploy_to
 set :user, 'ds'
-
 set :branch, ENV.fetch('branch')
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
@@ -32,14 +30,12 @@ set :shared_dirs, [
 ]
 
 set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
-
 set :forward_agent, true # SSH forward_agent.
-#
-# # This task is the environment that is loaded for most commands, such as
-# # `mina deploy` or `mina rake`.
 
 puts "Deploy to #{ENV.fetch('domain')}, branch: #{ENV.fetch('branch')}"
 
+# This task is the environment that is loaded for most commands, such as
+# `mina deploy` or `mina rake`.
 task :setup do
   command %[mkdir -p "#{deploy_to}/shared/log"]
   command %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
@@ -84,6 +80,7 @@ namespace :service do
       #{echo_cmd %[sudo systemctl reload nginx]}
     }
   end
+
   task :restart_delayed_job do
     command %{
       echo "-----> Restarting delayed_job service"
