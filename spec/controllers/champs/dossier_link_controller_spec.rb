@@ -28,10 +28,11 @@ describe Champs::DossierLinkController, type: :controller do
           get :show, params: params, format: 'js'
         }
 
-        it 'returns the procedure name' do
+        it 'renders the procedure name' do
           expect(response.body).to include('Dossier en brouillon')
           expect(response.body).to include(procedure.libelle)
           expect(response.body).to include(procedure.organisation)
+          expect(response.body).to include('.dossier-link-1 .help-block')
         end
       end
 
@@ -41,7 +42,10 @@ describe Champs::DossierLinkController, type: :controller do
           get :show, params: params, format: 'js'
         }
 
-        it { expect(response.body).to include('Ce dossier est inconnu') }
+        it 'renders error message' do
+          expect(response.body).to include('Ce dossier est inconnu')
+          expect(response.body).to include('.dossier-link-1 .help-block')
+        end
       end
     end
 
