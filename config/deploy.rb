@@ -13,6 +13,7 @@ require 'mina/rbenv'
 #   forward_agent - SSH forward_agent
 #   user          - Username in the server to SSH to
 
+
 if ENV['domain'].nil?
   raise "missing `domain`"
 end
