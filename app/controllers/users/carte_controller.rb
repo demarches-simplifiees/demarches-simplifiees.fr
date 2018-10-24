@@ -32,7 +32,7 @@ class Users::CarteController < UsersController
     @dossier = current_user_dossier
     @data = {}
 
-    geo_json = JSON.parse(params.required(:selection))
+    geo_json = JSON.parse(params.fetch(:selection, '[]'))
 
     if geo_json.first == ["error", "TooManyPolygons"]
       @error = true
