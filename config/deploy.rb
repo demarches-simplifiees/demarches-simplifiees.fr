@@ -71,7 +71,7 @@ namespace :after_party do
 end
 
 namespace :service do
-  desc "Manage services."
+  desc "Restart puma"
   task :restart_puma do
     command %{
       echo "-----> Restarting puma service"
@@ -81,6 +81,7 @@ namespace :service do
     }
   end
 
+  desc "Restart delayed_job"
   task :restart_delayed_job do
     command %{
       echo "-----> Restarting delayed_job service"
