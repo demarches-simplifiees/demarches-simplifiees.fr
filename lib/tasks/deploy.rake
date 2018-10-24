@@ -8,7 +8,7 @@ task :deploy do
     raise "STAGE #{STAGE} is unknown. It must be either dev or master"
   end
 
-  branch = ENV['STAGE']
+  branch = ENV['BRANCH'] || 'dev'
 
   domains.each do |domain|
     sh "mina deploy domain=#{domain} branch=#{branch} force_asset_precompile=true"
