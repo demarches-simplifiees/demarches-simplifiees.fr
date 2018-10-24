@@ -93,11 +93,12 @@ desc "Deploys the current version to the server."
 task :deploy do
   command 'export PATH=$PATH:/home/ds/.rbenv/bin:/home/ds/.rbenv/shims'
   command 'source /home/ds/.profile'
+
   deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
-    invoke :'git:clone'
 
+    invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'yarn:install'
