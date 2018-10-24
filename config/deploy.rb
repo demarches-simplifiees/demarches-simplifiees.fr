@@ -39,14 +39,14 @@ task :setup do
   command %[mkdir -p "#{deploy_to}/shared/log"]
   command %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
 
+  command %[mkdir -p "#{deploy_to}/shared/sockets"]
+  command %[chmod g+rx,u+rwx "#{deploy_to}/shared/sockets"]
+
   command %[mkdir -p "#{deploy_to}/shared/tmp/pids"]
   command %[chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/pids"]
 
   command %[mkdir -p "#{deploy_to}/shared/tmp/cache"]
   command %[chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/cache"]
-
-  command %[mkdir -p "#{deploy_to}/shared/sockets"]
-  command %[chmod g+rx,u+rwx "#{deploy_to}/shared/sockets"]
 end
 
 namespace :yarn do
