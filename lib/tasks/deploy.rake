@@ -1,13 +1,16 @@
-task :deploy do
-  domains = case ENV['STAGE']
+def domains_from_env(env)
+  case env
   when 'dev'
     ['web1.dev', 'web2.dev']
   when 'prod'
     ['web1', 'web2']
   else
-    raise "STAGE #{STAGE} is unknown. It must be either dev or master"
+    raise "STAGE #{env} is unknown. It must be either dev or prod"
   end
+end
 
+task :deploy do
+  domains = domains_from_env(ENV['STAGE'])
   branch = ENV['BRANCH'] || 'dev'
 
   domains.each do |domain|
