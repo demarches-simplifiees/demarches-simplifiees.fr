@@ -19,8 +19,8 @@ deploy_to = '/var/www/ds'
 shared_dirs = [
   'log',
   'sockets',
-  'tmp/pids',
-  'tmp/cache'
+  'tmp/cache',
+  'tmp/pids'
 ]
 
 set :domain, ENV.fetch('domain')
