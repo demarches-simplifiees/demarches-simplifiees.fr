@@ -19,14 +19,8 @@ task :deploy do
 end
 
 task :setup do
-  domains = ['web1', 'web2']
-  domains.each do |domain|
-    sh "mina setup domain=#{domain} force_asset_precompile=true"
-  end
-end
+  domains = domains_from_env(ENV['STAGE'])
 
-task :setup_dev do
-  domains = ['web1.dev', 'web2.dev']
   domains.each do |domain|
     sh "mina setup domain=#{domain} force_asset_precompile=true"
   end
