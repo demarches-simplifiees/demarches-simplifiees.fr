@@ -2,7 +2,7 @@ task :deploy do
   domains = case ENV['STAGE']
   when 'dev'
     ['web1.dev', 'web2.dev']
-  when 'master'
+  when 'prod'
     ['web1', 'web2']
   else
     raise "STAGE #{STAGE} is unknown. It must be either dev or master"
