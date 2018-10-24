@@ -10,8 +10,8 @@ def domains_from_env(env)
 end
 
 task :deploy do
-  domains = domains_from_env(ENV['STAGE'])
-  branch = ENV['BRANCH'] || 'dev'
+  domains = domains_from_env(ENV.fetch('STAGE'))
+  branch = ENV.fetch('BRANCH')
 
   domains.each do |domain|
     sh "mina deploy domain=#{domain} branch=#{branch} force_asset_precompile=true"
