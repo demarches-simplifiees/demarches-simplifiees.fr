@@ -12,6 +12,8 @@ require 'mina/rbenv'
 # Advanced settings:
 #   forward_agent - SSH forward_agent
 #   user          - Username in the server to SSH to
+#   shared_dirs   - Manually create these paths in shared/ on your server.
+#                   They will be linked in the 'deploy:link_shared_paths' step.
 
 set :domain, ENV.fetch('domain')
 deploy_to = '/var/www/ds'
@@ -21,9 +23,6 @@ set :branch, ENV.fetch('branch')
 set :forward_agent, true
 set :user, 'ds'
 set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
-
-# Manually create these paths in shared/ on your server.
-# They will be linked in the 'deploy:link_shared_paths' step.
 shared_dirs = [
   'log',
   'sockets',
