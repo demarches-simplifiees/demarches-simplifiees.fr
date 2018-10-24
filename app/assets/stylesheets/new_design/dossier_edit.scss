@@ -45,4 +45,23 @@
     padding: 20px;
     border-radius: 4px;
   }
+
+  .footer {
+    display: flex;
+    margin-bottom: 50px;
+  }
+
+  .send-wrapper {
+    position: fixed;
+    bottom: 0px;
+    margin-bottom: 0 !important;
+    padding-bottom: 10px;
+    background: #FFFFFF;
+    max-width: 1040px;
+  }
+
+  .dossier-last-saved-at {
+    margin-top: 23px;
+    margin-right: 10px;
+  }
 }

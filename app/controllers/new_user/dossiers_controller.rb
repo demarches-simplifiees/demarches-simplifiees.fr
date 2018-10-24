@@ -139,11 +139,9 @@ module NewUser
 
       if errors.present?
         flash.now.alert = errors
-        render :brouillon
       else
         if save_draft?
           flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
-          render :brouillon
         else
           @dossier.en_construction!
           NotificationMailer.send_initiated_notification(@dossier).deliver_later
@@ -300,6 +298,10 @@ module NewUser
         errors += @dossier.champs.select(&:mandatory_and_blank?)
           .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
         errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
+      end
+
+      if errors.empty?
+        @dossier.touch
       end
 
       errors

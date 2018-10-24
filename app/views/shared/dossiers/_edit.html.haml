@@ -4,7 +4,7 @@
   - if apercu
     - form_options = { url: '', method: :get, html: { class: 'form', multipart: true } }
   - elsif dossier.brouillon?
-    - form_options = { url: brouillon_dossier_url(dossier), method: :patch, html: { class: 'form', multipart: true } }
+    - form_options = { url: brouillon_dossier_url(dossier), method: :patch, html: { class: 'form', multipart: true }, remote: true }
   - else
     - form_options = { url: modifier_dossier_url(dossier), method: :patch, html: { class: 'form', multipart: true } }
 
@@ -68,6 +68,7 @@
               required: (tpj.mandatory? && !dossier.was_piece_justificative_uploaded_for_type_id?(tpj.id))
 
     - if !apercu
+      .footer
       .send-wrapper
         - if dossier.brouillon?
           - if current_user.owns?(dossier)
@@ -76,6 +77,9 @@
               class: 'button danger',
               data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" } do
               Supprimer le brouillon
+
+          .dossier-last-saved-at
+            Date de dernière sauvegarde : il y a #{time_ago_in_words(dossier.updated_at)}.
 
           = f.button 'Enregistrer le brouillon',
             formnovalidate: true,

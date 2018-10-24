@@ -18,4 +18,4 @@ function isRemote(element) {
   return value && value !== 'false';
 }
 
-delegate('input', inputChangeSelector, debounce(handleRemote, 200));
+delegate('input', inputChangeSelector, debounce(200, handleRemote));

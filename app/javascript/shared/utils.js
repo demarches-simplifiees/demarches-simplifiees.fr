@@ -1,8 +1,8 @@
 import Rails from 'rails-ujs';
 import $ from 'jquery';
-import debounce from 'debounce';
+import { debounce, throttle } from 'throttle-debounce';
 
-export { debounce };
+export { debounce, throttle };
 export const { fire } = Rails;
 
 export function show({ classList }) {

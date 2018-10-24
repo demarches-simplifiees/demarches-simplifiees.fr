@@ -403,7 +403,7 @@ describe NewUser::DossiersController, type: :controller do
     end
     let(:payload) { submit_payload }
 
-    subject { patch :update_brouillon, params: payload }
+    subject { patch :update_brouillon, params: payload, format: 'js' }
 
     context 'when the dossier cannot be updated by the user' do
       let!(:dossier) { create(:dossier, :en_instruction, user: user) }
@@ -460,7 +460,7 @@ describe NewUser::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(response).to render_template(:brouillon) }
+      it { expect(response).to render_template(:update_brouillon) }
       it { expect(flash.alert).to eq(['nop']) }
 
       it 'does not send an email' do
@@ -477,7 +477,7 @@ describe NewUser::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(response).to render_template(:brouillon) }
+      it { expect(response).to render_template(:update_brouillon) }
       it { expect(flash.alert).to eq(['nop']) }
     end
 
@@ -491,20 +491,20 @@ describe NewUser::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(response).to render_template(:brouillon) }
+      it { expect(response).to render_template(:update_brouillon) }
       it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
 
       context 'and the user saves a draft' do
         let(:payload) { submit_payload.merge(save_draft: true) }
 
-        it { expect(response).to render_template(:brouillon) }
+        it { expect(response).to render_template(:update_brouillon) }
         it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
         it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
 
         context 'and the dossier is in construction' do
           let!(:dossier) { create(:dossier, :en_construction, user: user) }
 
-          it { expect(response).to render_template(:brouillon) }
+          it { expect(response).to render_template(:update_brouillon) }
           it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
         end
       end
@@ -534,7 +534,7 @@ describe NewUser::DossiersController, type: :controller do
           subject
         end
 
-        it { expect(response).to render_template(:brouillon) }
+        it { expect(response).to render_template(:update_brouillon) }
         it { expect(flash.notice).to eq('Votre brouillon a bien été sauvegardé.') }
         it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon)) }
       end
