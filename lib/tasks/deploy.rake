@@ -1,16 +1,16 @@
-def domains_from_env(env)
-  case env
+def domains_for_stage(stage)
+  case stage
   when 'dev'
     ['web1.dev', 'web2.dev']
   when 'prod'
     ['web1', 'web2']
   else
-    raise "STAGE #{env} is unknown. It must be either dev or prod"
+    raise "STAGE #{stage} is unknown. It must be either dev or prod."
   end
 end
 
 task :deploy do
-  domains = domains_from_env(ENV.fetch('STAGE'))
+  domains = domains_for_stage(ENV.fetch('STAGE'))
   branch = ENV.fetch('BRANCH')
 
   domains.each do |domain|
@@ -19,7 +19,7 @@ task :deploy do
 end
 
 task :setup do
-  domains = domains_from_env(ENV['STAGE'])
+  domains = domains_for_stage(ENV.fetch('STAGE'))
 
   domains.each do |domain|
     sh "mina setup domain=#{domain} force_asset_precompile=true"
