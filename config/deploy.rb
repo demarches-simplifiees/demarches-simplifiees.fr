@@ -69,6 +69,12 @@ namespace :service do
     command %{
       echo "-----> Restarting puma service"
       #{echo_cmd %[sudo systemctl restart puma]}
+    }
+  end
+
+  desc "Reload nginx"
+  task :reload_nginx do
+    command %{
       echo "-----> Reloading nginx service"
       #{echo_cmd %[sudo systemctl reload nginx]}
     }
@@ -101,6 +107,7 @@ task :deploy do
 
     on :launch do
       invoke :'service:restart_puma'
+      invoke :'service:reload_nginx'
       invoke :'service:restart_delayed_job'
     end
   end
