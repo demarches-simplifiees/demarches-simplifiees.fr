@@ -22,7 +22,7 @@ set :branch, ENV.fetch('branch')
 set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
 set :forward_agent, true
 
-# Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
+# Manually create these paths in shared/ on your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
 shared_dirs = [
   'log',
