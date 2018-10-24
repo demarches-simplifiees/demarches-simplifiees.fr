@@ -24,29 +24,23 @@ set :forward_agent, true
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
-set :shared_dirs, [
+shared_dirs = [
   'log',
   'sockets',
   'tmp/pids',
   'tmp/cache'
 ]
+set :shared_dirs, shared_dirs
 
 puts "Deploy to #{ENV.fetch('domain')}, branch: #{ENV.fetch('branch')}"
 
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
 task :setup do
-  command %[mkdir -p "#{deploy_to}/shared/log"]
-  command %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
-
-  command %[mkdir -p "#{deploy_to}/shared/sockets"]
-  command %[chmod g+rx,u+rwx "#{deploy_to}/shared/sockets"]
-
-  command %[mkdir -p "#{deploy_to}/shared/tmp/pids"]
-  command %[chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/pids"]
-
-  command %[mkdir -p "#{deploy_to}/shared/tmp/cache"]
-  command %[chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/cache"]
+  shared_dirs.each do |dir|
+    command %[mkdir -p "#{deploy_to}/shared/#{dir}"]
+    command %[chmod g+rx,u+rwx "#{deploy_to}/shared/#{dir}"]
+  end
 end
 
 namespace :yarn do
