@@ -78,7 +78,7 @@ class ProcedurePresentation < ApplicationRecord
 
     case table
     when 'notifications'
-      dossiers_id_with_notification = gestionnaire.notifications_for_procedure(procedure)
+      dossiers_id_with_notification = gestionnaire.dossiers_id_with_notifications(dossiers)
       if order == 'desc'
         return dossiers_id_with_notification +
             (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
