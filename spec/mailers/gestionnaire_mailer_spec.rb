@@ -25,7 +25,7 @@ RSpec.describe GestionnaireMailer, type: :mailer do
         dossiers_en_instruction_description: 'desc')
 
       {
-        start_date: DateTime.now,
+        start_date: Time.zone.now,
         procedure_overviews: [procedure_overview]
       }
     end

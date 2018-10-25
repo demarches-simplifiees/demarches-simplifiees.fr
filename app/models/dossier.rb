@@ -180,7 +180,7 @@ class Dossier < ApplicationRecord
   end
 
   def retention_expired?
-    instruction_commencee? && retention_end_date <= DateTime.now
+    instruction_commencee? && retention_end_date <= Time.zone.now
   end
 
   def text_summary
@@ -309,11 +309,11 @@ class Dossier < ApplicationRecord
 
   def update_state_dates
     if en_construction? && !self.en_construction_at
-      self.en_construction_at = DateTime.now
+      self.en_construction_at = Time.zone.now
     elsif en_instruction? && !self.en_instruction_at
-      self.en_instruction_at = DateTime.now
+      self.en_instruction_at = Time.zone.now
     elsif TERMINE.include?(state)
-      self.processed_at = DateTime.now
+      self.processed_at = Time.zone.now
     end
   end
 

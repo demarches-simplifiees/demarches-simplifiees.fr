@@ -89,7 +89,7 @@ module NewGestionnaire
       if gestionnaire.save
         user = User.find_by(email: email)
         if user.blank?
-          user = User.create(email: email, password: password, confirmed_at: DateTime.now)
+          user = User.create(email: email, password: password, confirmed_at: Time.zone.now)
         end
 
         sign_in(user)
