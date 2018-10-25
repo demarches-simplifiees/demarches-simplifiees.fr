@@ -3,7 +3,6 @@ require 'spec_helper'
 describe ProcedureDecorator do
   let(:published_at) { Time.zone.local(2017, 12, 24, 14, 12) }
   let(:procedure) { create(:procedure, published_at: published_at, created_at: Time.zone.local(2015, 12, 24, 14, 10)) }
-  let!(:procedure_path) { create(:procedure_path, administrateur: create(:administrateur), procedure: procedure) }
 
   subject { procedure.decorate }
 

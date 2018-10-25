@@ -439,9 +439,8 @@ describe Procedure do
 
     it { expect(procedure.archived_at).to eq(nil) }
     it { expect(procedure.published_at).to eq(now) }
-    it { expect(ProcedurePath.find_by(path: "example-path")).to be }
-    it { expect(ProcedurePath.find_by(path: "example-path").procedure).to eq(procedure) }
-    it { expect(ProcedurePath.find_by(path: "example-path").administrateur).to eq(procedure.administrateur) }
+    it { expect(Procedure.find_by(path: "example-path")).to eq(procedure) }
+    it { expect(Procedure.find_by(path: "example-path").administrateur).to eq(procedure.administrateur) }
   end
 
   describe "#brouillon?" do
@@ -486,7 +485,6 @@ describe Procedure do
 
   describe 'archive' do
     let(:procedure) { create(:procedure, :published) }
-    let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
     let(:now) { Time.zone.now.beginning_of_minute }
     before do
       Timecop.freeze(now)
@@ -634,7 +632,7 @@ describe Procedure do
     context "with a path" do
       let(:procedure) { create(:procedure, :published) }
 
-      it { is_expected.to eq("dossiers_#{procedure.procedure_path.path}_2018-01-02_23-11") }
+      it { is_expected.to eq("dossiers_#{procedure.path}_2018-01-02_23-11") }
     end
 
     context "without a path" do

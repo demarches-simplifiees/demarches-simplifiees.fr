@@ -9,7 +9,6 @@ class Procedure < ApplicationRecord
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
-  has_one :procedure_path, dependent: :destroy
 
   belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
