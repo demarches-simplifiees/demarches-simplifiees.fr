@@ -238,6 +238,7 @@ describe ProcedurePresentation do
       before do
         notified_dossier.champs.first.touch(time: DateTime.new(2018, 9, 20))
         create(:follow, gestionnaire: gestionnaire, dossier: notified_dossier, demande_seen_at: DateTime.new(2018, 9, 10))
+        notified_dossier.touch(time: DateTime.new(2018, 9, 20))
         recent_dossier.touch(time: DateTime.new(2018, 9, 25))
         older_dossier.touch(time: DateTime.new(2018, 5, 13))
       end
@@ -249,6 +250,13 @@ describe ProcedurePresentation do
       end
 
       context 'in descending order' do
+        let(:order) { 'desc' }
+
+        it { is_expected.to eq([notified_dossier, recent_dossier, older_dossier].map(&:id)) }
+      end
+
+      context 'with a dossier terminé' do
+        let!(:notified_dossier) { create(:dossier, :accepte, procedure: procedure) }
         let(:order) { 'desc' }
 
         it { is_expected.to eq([notified_dossier, recent_dossier, older_dossier].map(&:id)) }
