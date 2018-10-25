@@ -275,7 +275,7 @@ class Dossier < ApplicationRecord
   end
 
   def delete_and_keep_track
-    now = Time.now
+    now = Time.zone.now
     deleted_dossier = DeletedDossier.create!(dossier_id: id, procedure: procedure, state: state, deleted_at: now)
     update(hidden_at: now)
 

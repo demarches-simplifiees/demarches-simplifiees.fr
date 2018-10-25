@@ -16,12 +16,12 @@ namespace :'2018_09_12_fix_templates' do
 
     dossiers_with_invalid_template_ids = Dossier
       .where(procedure_id: invalid_procedures_ids)
-      .where(processed_at: DEPLOY_DATETIME..Time.now)
+      .where(processed_at: DEPLOY_DATETIME..Time.zone.now)
       .pluck(:id)
 
     Attestation
       .includes(:dossier)
-      .where(created_at: DEPLOY_DATETIME..Time.now)
+      .where(created_at: DEPLOY_DATETIME..Time.zone.now)
       .where(dossier_id: dossiers_with_invalid_template_ids)
       .map(&:dossier)
   end

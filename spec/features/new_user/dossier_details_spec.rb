@@ -19,7 +19,7 @@ describe 'Dossier details:' do
   describe "the user can see the mean time they are expected to wait" do
     context "when the dossier is in construction" do
       before do
-        other_dossier = create(:dossier, :accepte, :for_individual, procedure: procedure, en_construction_at: 10.days.ago, en_instruction_at: Time.now)
+        other_dossier = create(:dossier, :accepte, :for_individual, procedure: procedure, en_construction_at: 10.days.ago, en_instruction_at: Time.zone.now)
         visit dossier_path(dossier)
       end
 
@@ -30,7 +30,7 @@ describe 'Dossier details:' do
       let(:dossier) { create(:dossier, :en_instruction, :for_individual, :with_commentaires, user: user, procedure: procedure) }
 
       before do
-        other_dossier = create(:dossier, :accepte, :for_individual, procedure: procedure, en_instruction_at: 2.months.ago, processed_at: Time.now)
+        other_dossier = create(:dossier, :accepte, :for_individual, procedure: procedure, en_instruction_at: 2.months.ago, processed_at: Time.zone.now)
         visit dossier_path(dossier)
       end
 

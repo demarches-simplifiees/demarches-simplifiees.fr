@@ -257,7 +257,7 @@ class Procedure < ApplicationRecord
 
   def export_filename
     procedure_identifier = path || "procedure-#{id}"
-    "dossiers_#{procedure_identifier}_#{Time.now.strftime('%Y-%m-%d_%H-%M')}"
+    "dossiers_#{procedure_identifier}_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M')}"
   end
 
   def generate_export
@@ -344,24 +344,24 @@ class Procedure < ApplicationRecord
   end
 
   def after_publish(path)
-    update!(published_at: Time.now)
+    update!(published_at: Time.zone.now)
 
     publish_with_path!(path)
   end
 
   def after_archive
-    update!(archived_at: Time.now, path: nil)
+    update!(archived_at: Time.zone.now, path: nil)
   end
 
   def after_hide
-    now = Time.now
+    now = Time.zone.now
     update!(hidden_at: now, path: nil)
     procedure_path&.hide!
     dossiers.update_all(hidden_at: now)
   end
 
   def after_reopen(path)
-    update!(published_at: Time.now, archived_at: nil)
+    update!(published_at: Time.zone.now, archived_at: nil)
 
     publish_with_path!(path)
   end

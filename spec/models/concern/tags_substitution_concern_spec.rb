@@ -32,7 +32,7 @@ describe TagsSubstitutionConcern, type: :model do
     let(:etablissement) { create(:etablissement) }
     let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
 
-    before { Timecop.freeze(Time.now) }
+    before { Timecop.freeze(Time.zone.now) }
 
     subject { template_concern.send(:replace_tags, template, dossier) }
 

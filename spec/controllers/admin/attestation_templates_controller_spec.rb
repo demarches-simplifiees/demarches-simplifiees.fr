@@ -12,7 +12,7 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
   before do
     sign_in admin
-    Timecop.freeze(Time.now)
+    Timecop.freeze(Time.zone.now)
   end
 
   after { Timecop.return }
