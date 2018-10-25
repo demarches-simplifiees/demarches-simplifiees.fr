@@ -139,7 +139,7 @@ describe Gestionnaire, type: :model do
     let!(:gestionnaire2) { create(:gestionnaire) }
     subject { gestionnaire2.last_week_overview }
     let(:friday) { DateTime.new(2017, 5, 12) }
-    let(:monday) { DateTime.now.beginning_of_week }
+    let(:monday) { Time.zone.now.beginning_of_week }
 
     before { Timecop.freeze(friday) }
     after { Timecop.return }
@@ -313,7 +313,7 @@ describe Gestionnaire, type: :model do
       context 'when gestionnaire update it s public champs last seen' do
         let(:follow) { gestionnaire.follows.find_by(dossier: dossier) }
 
-        before { follow.update_attribute('demande_seen_at', DateTime.now) }
+        before { follow.update_attribute('demande_seen_at', Time.zone.now) }
 
         it { is_expected.to match([]) }
         it { expect(gestionnaire_2.notifications_for_procedure(procedure)).to match([dossier.id]) }

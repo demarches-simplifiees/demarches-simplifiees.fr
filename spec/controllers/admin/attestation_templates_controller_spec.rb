@@ -47,7 +47,7 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
         it { expect(subject.status).to eq(200) }
         it { expect(assigns).to include(upload_params.stringify_keys) }
-        it { expect(assigns[:created_at]).to eq(DateTime.now) }
+        it { expect(assigns[:created_at]).to eq(Time.zone.now) }
         it { expect(assigns(:logo).read).to eq(logo.read) }
         it { expect(assigns(:signature).read).to eq(signature.read) }
         after { procedure.attestation_template.destroy }

@@ -305,7 +305,7 @@ class Procedure < ApplicationRecord
   end
 
   def whitelist!
-    update_attribute('whitelisted_at', DateTime.now)
+    update_attribute('whitelisted_at', Time.zone.now)
   end
 
   def closed_mail_template_attestation_inconsistency_state

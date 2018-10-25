@@ -982,7 +982,7 @@ describe Dossier do
   context "retention date" do
     let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
     let(:uninstructed_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let(:young_dossier) { create(:dossier, :en_instruction, en_instruction_at: DateTime.now, procedure: procedure) }
+    let(:young_dossier) { create(:dossier, :en_instruction, en_instruction_at: Time.zone.now, procedure: procedure) }
     let(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 6.months.ago, procedure: procedure) }
     let(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
     let(:modif_date) { DateTime.parse('01/01/2100') }
@@ -993,7 +993,7 @@ describe Dossier do
     describe "#retention_end_date" do
       it { expect(uninstructed_dossier.retention_end_date).to be_nil }
       it { expect(young_dossier.retention_end_date).to eq(6.months.from_now) }
-      it { expect(just_expired_dossier.retention_end_date).to eq(DateTime.now) }
+      it { expect(just_expired_dossier.retention_end_date).to eq(Time.zone.now) }
       it { expect(long_expired_dossier.retention_end_date).to eq(6.months.ago) }
     end
 
