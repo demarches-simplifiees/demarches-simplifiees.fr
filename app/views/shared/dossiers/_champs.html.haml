@@ -73,4 +73,4 @@
           %td.updated-at
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
               modifié le
-              = c.updated_at.localtime.strftime("%d/%m/%Y à %H:%M")
+              = c.updated_at.strftime("%d/%m/%Y à %H:%M")

@@ -48,7 +48,7 @@
                   = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
               %td.updated-at-col
                 = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                  = dossier.updated_at.localtime.strftime("%d/%m/%Y")
+                  = dossier.updated_at.strftime("%d/%m/%Y")
     = paginate(@dossiers)
 
     - if current_user.feedbacks.empty? || current_user.feedbacks.last.created_at < 1.month.ago

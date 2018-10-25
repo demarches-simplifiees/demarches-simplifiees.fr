@@ -8,7 +8,7 @@
     %h2.claimant
       Demandeur :
       %span.email= @avis.claimant.email
-      %span.date Demande d'avis envoyée le #{I18n.l(@avis.created_at.localtime, format: '%d/%m/%y')}
+      %span.date Demande d'avis envoyée le #{I18n.l(@avis.created_at, format: '%d/%m/%y')}
     %p.introduction= @avis.introduction
 
     = form_for @avis, url: gestionnaire_avis_path(@avis), html: { class: 'form' } do |f|
