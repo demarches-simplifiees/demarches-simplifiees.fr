@@ -391,22 +391,6 @@ describe Admin::ProceduresController, type: :controller do
         end
       end
 
-      context 'procedure path exists and has archived procedure' do
-        let(:procedure_path) { procedure2.path }
-        let(:procedure2) { create(:procedure, :archived, administrateur: admin) }
-
-        it 'publish the given procedure' do
-          expect(procedure.publiee?).to be_truthy
-          expect(procedure.path).to eq(procedure_path)
-          expect(response.status).to eq 302
-          expect(flash[:notice]).to have_content 'Démarche publiée'
-        end
-
-        it 'archive previous procedure' do
-          expect(procedure2.archivee?).to be_truthy
-        end
-      end
-
       context 'procedure path exists and is not owned by current administrator' do
         let(:procedure_path) { procedure3.path }
 
