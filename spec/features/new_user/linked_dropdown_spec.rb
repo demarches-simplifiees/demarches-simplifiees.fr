@@ -47,7 +47,7 @@ feature 'linked dropdown lists' do
   private
 
   def log_in(email, password, procedure)
-    visit "/commencer/#{procedure.procedure_path.path}"
+    visit "/commencer/#{procedure.path}"
     expect(page).to have_current_path(new_user_session_path)
 
     fill_in 'user_email', with: email
