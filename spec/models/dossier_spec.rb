@@ -491,7 +491,7 @@ describe Dossier do
   describe '#update_state_dates' do
     let(:state) { Dossier.states.fetch(:brouillon) }
     let(:dossier) { create(:dossier, state: state) }
-    let(:beginning_of_day) { Time.now.beginning_of_day }
+    let(:beginning_of_day) { Time.zone.now.beginning_of_day }
 
     before { Timecop.freeze(beginning_of_day) }
     after { Timecop.return }

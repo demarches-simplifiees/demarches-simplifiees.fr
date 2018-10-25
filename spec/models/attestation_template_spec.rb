@@ -115,7 +115,7 @@ describe AttestationTemplate, type: :model do
     before do
       @logo = File.open('spec/fixtures/files/white.png')
       @signature = File.open('spec/fixtures/files/black.png')
-      Timecop.freeze(Time.now)
+      Timecop.freeze(Time.zone.now)
     end
 
     after do

@@ -429,7 +429,7 @@ describe Procedure do
 
   describe '#publish!' do
     let(:procedure) { create(:procedure) }
-    let(:now) { Time.now.beginning_of_minute }
+    let(:now) { Time.zone.now.beginning_of_minute }
 
     before do
       Timecop.freeze(now)
@@ -446,8 +446,8 @@ describe Procedure do
 
   describe "#brouillon?" do
     let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.now, archived_at: Time.now) }
+    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
+    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
 
     it { expect(procedure_brouillon.brouillon?).to be_truthy }
     it { expect(procedure_publiee.brouillon?).to be_falsey }
@@ -456,8 +456,8 @@ describe Procedure do
 
   describe "#publiee?" do
     let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.now, archived_at: Time.now) }
+    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
+    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
 
     it { expect(procedure_brouillon.publiee?).to be_falsey }
     it { expect(procedure_publiee.publiee?).to be_truthy }
@@ -466,8 +466,8 @@ describe Procedure do
 
   describe "#archivee?" do
     let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.now, archived_at: Time.now) }
+    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
+    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
 
     it { expect(procedure_brouillon.archivee?).to be_falsey }
     it { expect(procedure_publiee.archivee?).to be_falsey }
@@ -476,8 +476,8 @@ describe Procedure do
 
   describe "#publiee_ou_archivee?" do
     let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.now, archived_at: Time.now) }
+    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
+    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
 
     it { expect(procedure_brouillon.publiee_ou_archivee?).to be_falsey }
     it { expect(procedure_publiee.publiee_ou_archivee?).to be_truthy }
@@ -487,7 +487,7 @@ describe Procedure do
   describe 'archive' do
     let(:procedure) { create(:procedure, :published) }
     let(:procedure_path) { ProcedurePath.find(procedure.procedure_path.id) }
-    let(:now) { Time.now.beginning_of_minute }
+    let(:now) { Time.zone.now.beginning_of_minute }
     before do
       Timecop.freeze(now)
       procedure.archive!

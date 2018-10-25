@@ -8,7 +8,7 @@ describe StatsController, type: :controller do
         FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
         FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
         FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => 31.days.ago)
-        FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => Time.now)
+        FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => Time.zone.now)
         @controller = StatsController.new
 
         allow(@controller).to receive(:administration_signed_in?).and_return(false)
@@ -102,18 +102,18 @@ describe StatsController, type: :controller do
 
     before do
       3.times do
-        create(:procedure, published_at: Time.now, administrateur: administrateur_1)
+        create(:procedure, published_at: Time.zone.now, administrateur: administrateur_1)
       end
 
       2.times do
-        create(:procedure, published_at: Time.now, administrateur: administrateur_2)
+        create(:procedure, published_at: Time.zone.now, administrateur: administrateur_2)
       end
 
       8.times do
-        create(:procedure, published_at: Time.now, administrateur: administrateur_3)
+        create(:procedure, published_at: Time.zone.now, administrateur: administrateur_3)
       end
 
-      create(:procedure, published_at: Time.now, administrateur: administrateur_4)
+      create(:procedure, published_at: Time.zone.now, administrateur: administrateur_4)
     end
 
     let(:association){ Procedure.all }
@@ -234,7 +234,7 @@ describe StatsController, type: :controller do
     let!(:avis_with_dossier) { create(:avis) }
     let!(:dossier2) { create(:dossier) }
 
-    before { Timecop.freeze(Time.now) }
+    before { Timecop.freeze(Time.zone.now) }
     after { Timecop.return }
 
     subject { StatsController.new.send(:avis_usage) }
@@ -244,7 +244,7 @@ describe StatsController, type: :controller do
 
   describe "#avis_average_answer_time" do
     before do
-      Timecop.freeze(Time.now)
+      Timecop.freeze(Time.zone.now)
 
       # 1 week ago
       create(:avis, answer: "voila ma réponse", created_at: 1.week.ago + 1.day, updated_at: 1.week.ago + 2.days) # 1 day
@@ -278,7 +278,7 @@ describe StatsController, type: :controller do
 
     subject { StatsController.new.send(:avis_answer_percentages) }
 
-    before { Timecop.freeze(Time.now) }
+    before { Timecop.freeze(Time.zone.now) }
     after { Timecop.return }
 
     it { is_expected.to match [[3.weeks.ago.to_i, 0], [2.weeks.ago.to_i, 0], [1.week.ago.to_i, 66.67]] }
@@ -289,7 +289,7 @@ describe StatsController, type: :controller do
     let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
     let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }
 
-    before { Timecop.freeze(Time.now) }
+    before { Timecop.freeze(Time.zone.now) }
     after { Timecop.return }
 
     subject { StatsController.new.send(:motivation_usage_dossier) }
@@ -303,7 +303,7 @@ describe StatsController, type: :controller do
     let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
     let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }
 
-    before { Timecop.freeze(Time.now) }
+    before { Timecop.freeze(Time.zone.now) }
     after { Timecop.return }
 
     subject { StatsController.new.send(:motivation_usage_procedure) }
@@ -316,7 +316,7 @@ describe StatsController, type: :controller do
     let!(:procedure2) { create(:procedure, created_at: 2.weeks.ago) }
     let!(:procedure3) { create(:procedure, created_at: 2.weeks.ago, cloned_from_library: true) }
 
-    before { Timecop.freeze(Time.now) }
+    before { Timecop.freeze(Time.zone.now) }
     after { Timecop.return }
 
     subject { StatsController.new.send(:cloned_from_library_procedures_ratio) }
