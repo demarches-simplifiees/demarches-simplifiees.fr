@@ -5,4 +5,7 @@
 - when CONTACT_EMAIL
   Email automatique
 - else
-  = commentaire.sender
+  - if connected_user.is_a?(User) && commentaire.dossier.procedure.hide_instructeur_identity?
+    = commentaire.dossier.procedure&.service&.nom
+  - else
+    = commentaire.sender
