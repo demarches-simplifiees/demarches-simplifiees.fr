@@ -10,7 +10,7 @@ class ApiEntreprise::EntrepriseAdapter < ApiEntreprise::Adapter
     params = data_source[:entreprise].slice(*attr_to_fetch)
 
     if valid_params?(params)
-      params[:date_creation] = Time.at(params[:date_creation]).to_datetime
+      params[:date_creation] = Time.zone.at(params[:date_creation]).to_datetime
       params.transform_keys { |k| :"entreprise_#{k}" }
     else
       {}
