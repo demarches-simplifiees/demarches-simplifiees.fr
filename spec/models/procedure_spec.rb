@@ -627,7 +627,7 @@ describe Procedure do
   end
 
   describe "#export_filename" do
-    before { Timecop.freeze(Time.new(2018, 1, 2, 23, 11, 14)) }
+    before { Timecop.freeze(Time.zone.local(2018, 1, 2, 23, 11, 14)) }
 
     subject { procedure.export_filename }
 

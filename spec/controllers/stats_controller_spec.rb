@@ -53,7 +53,7 @@ describe StatsController, type: :controller do
 
   describe '#cumulative_hash' do
     before do
-      Timecop.freeze(Time.new(2016, 10, 2))
+      Timecop.freeze(Time.zone.local(2016, 10, 2))
       FactoryBot.create(:procedure, :created_at => 55.days.ago, :updated_at => 43.days.ago)
       FactoryBot.create(:procedure, :created_at => 45.days.ago, :updated_at => 40.days.ago)
       FactoryBot.create(:procedure, :created_at => 45.days.ago, :updated_at => 20.days.ago)
