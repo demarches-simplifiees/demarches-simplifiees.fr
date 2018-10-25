@@ -82,7 +82,7 @@ describe FranceConnect::ParticulierController, type: :controller do
 
           before { subject }
 
-          it { expect(stored_fci).to have_attributes(user_info.merge(birthdate: Time.zone.parse(birthdate))) }
+          it { expect(stored_fci).to have_attributes(user_info.merge(birthdate: Date.parse(birthdate))) }
         end
 
         it { is_expected.to redirect_to(root_path) }
