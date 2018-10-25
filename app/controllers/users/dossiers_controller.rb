@@ -12,10 +12,9 @@ class Users::DossiersController < UsersController
   end
 
   def commencer_test
-    procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
-    procedure = procedure_path&.procedure
+    procedure = Procedure.brouillons.find_by(path: params[:procedure_path])
 
-    if procedure&.brouillon? && procedure&.path.present?
+    if procedure.present?
       redirect_to new_users_dossier_path(procedure_id: procedure.id, brouillon: true)
     else
       flash.alert = "La démarche est inconnue."
@@ -24,17 +23,10 @@ class Users::DossiersController < UsersController
   end
 
   def commencer
-    procedure_path = ProcedurePath.find_by(path: params[:procedure_path])
-    procedure = procedure_path&.procedure
+    procedure = Procedure.publiees.find_by(path: params[:procedure_path])
 
     if procedure.present?
-      if procedure.archivee?
-        @dossier = Dossier.new(procedure: procedure)
-
-        render 'commencer/archived'
-      else
-        redirect_to new_users_dossier_path(procedure_id: procedure.id)
-      end
+      redirect_to new_users_dossier_path(procedure_id: procedure.id)
     else
       flash.alert = "La démarche est inconnue, ou la création de nouveaux dossiers pour cette démarche est terminée."
       redirect_to root_path
