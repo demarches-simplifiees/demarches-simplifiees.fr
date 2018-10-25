@@ -49,7 +49,7 @@ RSpec.describe CommentaireHelper, type: :helper do
   end
 
   describe '.commentaire_date' do
-    let(:present_date) { Time.local(2018, 9, 2, 10, 5, 0) }
+    let(:present_date) { Time.zone.local(2018, 9, 2, 10, 5, 0) }
     let(:creation_date) { present_date }
     let(:commentaire) do
       Timecop.freeze(creation_date) { create(:commentaire, email: "michel@pref.fr") }
@@ -71,7 +71,7 @@ RSpec.describe CommentaireHelper, type: :helper do
     end
 
     context 'when formatting the first day of the month' do
-      let(:present_date) { Time.local(2018, 9, 1, 10, 5, 0) }
+      let(:present_date) { Time.zone.local(2018, 9, 1, 10, 5, 0) }
       it 'includes the ordinal' do
         expect(subject).to eq 'le 1er septembre à 10 h 05'
       end
