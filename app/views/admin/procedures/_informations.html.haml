@@ -53,7 +53,9 @@
   %ul
     %li Texte de loi (loi, décret, circulaire, arrêté,…)
     %li Texte juridique (statuts, délibération, décision du conseil d'administration…)
-    %li <a href="https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-administrateur#cadre-juridique" target="_blank">En savoir plus</a>
+    %li
+      = link_to("En savoir plus", CADRE_JURIDIQUE_URL, target: "_blank")
+
   %p.help-block
     %i.fa.fa-info-circle
     Vous pouvez saisir un lien vers ce texte ou importer celui-ci directement.
