@@ -10,6 +10,7 @@ module NewUser
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update]
     before_action :forbid_invite_submission!, only: [:update_brouillon]
     before_action :forbid_closed_submission!, only: [:update_brouillon]
+    before_action :show_demarche_en_test_banner
 
     def index
       @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
@@ -210,6 +211,12 @@ module NewUser
     end
 
     private
+
+    def show_demarche_en_test_banner
+      if @dossier.present? && @dossier.procedure.brouillon?
+        flash.now.notice = "Ce dossier est déposé sur une démarche en test. Il sera supprimé lors de la publication de la démarche."
+      end
+    end
 
     def ensure_dossier_can_be_updated
       if !dossier.can_be_updated_by_the_user?
