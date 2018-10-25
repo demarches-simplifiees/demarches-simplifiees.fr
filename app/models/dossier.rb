@@ -194,7 +194,7 @@ class Dossier < ApplicationRecord
     else
       parts = [
         "Dossier déposé le ",
-        en_construction_at.localtime.strftime("%d/%m/%Y"),
+        en_construction_at.strftime("%d/%m/%Y"),
         " sur la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
