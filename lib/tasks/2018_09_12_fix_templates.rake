@@ -7,7 +7,7 @@ namespace :'2018_09_12_fix_templates' do
   end
 
   # 16:15 in Paris -> 14:15 UTC
-  DEPLOY_DATETIME = DateTime.new(2018, 9, 5, 14, 15, 0)
+  DEPLOY_DATETIME = Time.zone.local(2018, 9, 5, 14, 15, 0)
 
   def find_dossiers_with_sent_and_invalid_attestations
     invalid_procedures_ids = AttestationTemplate

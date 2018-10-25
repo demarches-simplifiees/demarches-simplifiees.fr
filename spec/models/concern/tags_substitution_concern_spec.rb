@@ -187,9 +187,9 @@ describe TagsSubstitutionConcern, type: :model do
 
     context "when using a date tag" do
       before do
-        dossier.en_construction_at = DateTime.new(2001, 2, 3)
-        dossier.en_instruction_at = DateTime.new(2004, 5, 6)
-        dossier.processed_at = DateTime.new(2007, 8, 9)
+        dossier.en_construction_at = Time.zone.local(2001, 2, 3)
+        dossier.en_instruction_at = Time.zone.local(2004, 5, 6)
+        dossier.processed_at = Time.zone.local(2007, 8, 9)
       end
 
       context "with date de dépôt" do

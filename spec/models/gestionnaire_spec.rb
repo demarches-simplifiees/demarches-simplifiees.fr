@@ -138,7 +138,7 @@ describe Gestionnaire, type: :model do
   describe 'last_week_overview' do
     let!(:gestionnaire2) { create(:gestionnaire) }
     subject { gestionnaire2.last_week_overview }
-    let(:friday) { DateTime.new(2017, 5, 12) }
+    let(:friday) { Time.zone.local(2017, 5, 12) }
     let(:monday) { Time.zone.now.beginning_of_week }
 
     before { Timecop.freeze(friday) }

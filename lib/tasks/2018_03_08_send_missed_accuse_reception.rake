@@ -8,8 +8,8 @@ namespace :'2018_03_08_send_missing_accuse_reception' do
     # `bug_date` and `fix_date` were determined empirically by looking at the release times,
     # and checking for dossiers with a missing accusé de réception.
 
-    bug_date = DateTime.new(2018, 3, 1, 9, 50)
-    fix_date = DateTime.new(2018, 3, 5, 18, 40)
+    bug_date = Time.zone.local(2018, 3, 1, 9, 50)
+    fix_date = Time.zone.local(2018, 3, 5, 18, 40)
 
     # Only send the accusé for dossiers that are still en construction.
     # For dossiers that have moved on, other mails have been sent since, and a late
