@@ -376,7 +376,7 @@ describe Gestionnaire, type: :model do
   describe '#mark_tab_as_seen' do
     let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
     let(:gestionnaire) { dossier.follows.first.gestionnaire }
-    let(:freeze_date) { DateTime.parse('12/12/2012') }
+    let(:freeze_date) { Time.zone.parse('12/12/2012') }
 
     context 'when demande is acknowledged' do
       let(:follow) { gestionnaire.follows.find_by(dossier: dossier) }

@@ -716,7 +716,7 @@ describe Procedure do
       context 'which is termine' do
         before do
           dossier.accepte!
-          processed_date = DateTime.parse('12/12/2012')
+          processed_date = Time.zone.parse('12/12/2012')
           instruction_date = processed_date - 1.day
           dossier.update(en_instruction_at: instruction_date, processed_at: processed_date)
         end

@@ -24,7 +24,7 @@ class ChampDecorator < Draper::Decorator
       if type_champ == TypeDeChamp.type_champs.fetch(:date)
         object.value
       elsif type_champ == TypeDeChamp.type_champs.fetch(:datetime) && object.value != ' 00:00'
-        DateTime.parse(object.value, "%Y-%m-%d %H:%M").strftime("%Y-%m-%d")
+        Time.zone.parse(object.value, "%Y-%m-%d %H:%M").strftime("%Y-%m-%d")
       end
     end
   end

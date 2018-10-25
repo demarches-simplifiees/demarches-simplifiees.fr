@@ -1,4 +1,4 @@
-- parsed_value = champ.value.present? ? DateTime.parse(champ.value) : Time.zone.now
+- parsed_value = champ.value.present? ? Time.zone.parse(champ.value) : Time.zone.now
 
 .datetime
   = form.datetime_select(:value, selected: parsed_value, start_year: 1950, end_year: 2100, minute_step: 5)
