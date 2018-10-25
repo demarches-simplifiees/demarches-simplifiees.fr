@@ -764,7 +764,7 @@ Rails/SkipsModelValidations:
   Enabled: false
 
 Rails/TimeZone:
-  Enabled: false
+  Enabled: true
 
 Rails/UniqBeforePluck:
   Enabled: true
