@@ -39,11 +39,13 @@
 
 - if  Flipflop.web_hook?
   .form-group
-    %h4 Lien de rappel HTTP
+    %h4 Lien de rappel HTTP (webhook)
     = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
     %p.help-block
       %i.fa.fa-info-circle
-      Un lien de rappel HTTP (aussi appelé webhook) est utilisé pour notifier un service tiers du changement de l'état d’un dossier sur demarches-simplifiees.fr. À chaque changement d’état d'un dossier, notre site va effectuer une requête sur le lien renseigné avec en paramètres : le nouvel état du dossier, l’identifiant de la démarche, l'identifiant dossier et la date du changement. Vous pourrez alors utiliser notre API pour récupérer les nouvelles informations du dossier concerné.
+      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
+      = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank")
+      \.
 
 .form-group
   %h4 Cadre juridique *
