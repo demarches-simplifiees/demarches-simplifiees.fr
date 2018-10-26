@@ -406,8 +406,16 @@ describe ProcedurePresentation do
       end
 
       context 'for a malformed date' do
-        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => 'malformed date' }] }
-        it { is_expected.to match([]) }
+        context 'when its a string' do
+          let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => 'malformed date' }] }
+          it { is_expected.to match([]) }
+        end
+
+        context 'when its a number' do
+          let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => '177500' }] }
+
+          it { is_expected.to match([]) }
+        end
       end
     end
 
