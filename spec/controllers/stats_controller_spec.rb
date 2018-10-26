@@ -72,9 +72,9 @@ describe StatsController, type: :controller do
 
       it do
         expect(subject).to eq({
-          2.months.ago.beginning_of_month => 2,
-          1.month.ago.beginning_of_month => 4,
-          1.hour.ago.beginning_of_month => 5
+          Time.utc(2016, 8, 1) => 2,
+          Time.utc(2016, 9, 1) => 4,
+          Time.utc(2016, 10, 1) => 5
         })
       end
     end
@@ -86,8 +86,8 @@ describe StatsController, type: :controller do
 
       it do
         expect(subject).to eq({
-          2.months.ago.beginning_of_month => 2,
-          1.month.ago.beginning_of_month => 4
+          Time.utc(2016, 8, 1) => 2,
+          Time.utc(2016, 9, 1) => 4
         })
       end
     end

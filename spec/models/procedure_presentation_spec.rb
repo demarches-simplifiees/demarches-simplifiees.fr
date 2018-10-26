@@ -404,6 +404,11 @@ describe ProcedurePresentation do
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
+
+      context 'for a malformed date' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => 'malformed date' }] }
+        it { is_expected.to match([]) }
+      end
     end
 
     context 'for type_de_champ table' do
