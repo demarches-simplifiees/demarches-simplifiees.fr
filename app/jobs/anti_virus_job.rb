@@ -13,7 +13,7 @@ class AntiVirusJob < ApplicationJob
         else
           status = VirusScan.statuses.fetch(:infected)
         end
-        virus_scan.update(scanned_at: Time.now, status: status)
+        virus_scan.update(scanned_at: Time.zone.now, status: status)
       end
     end
   end

@@ -250,11 +250,11 @@ describe NewGestionnaire::DossiersController, type: :controller do
         end
 
         before do
-          Timecop.freeze(DateTime.now)
+          Timecop.freeze(Time.zone.now)
 
           expect_any_instance_of(AttestationTemplate)
             .to receive(:attestation_for)
-            .with(have_attributes(motivation: "Yallah", processed_at: DateTime.now))
+            .with(have_attributes(motivation: "Yallah", processed_at: Time.zone.now))
         end
 
         after { Timecop.return }

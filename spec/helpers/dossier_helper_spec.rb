@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe DossierHelper, type: :helper do
   describe ".highlight_if_unseen_class" do
-    let(:seen_at) { DateTime.now }
+    let(:seen_at) { Time.zone.now }
 
     subject { highlight_if_unseen_class(seen_at, updated_at) }
 
@@ -19,7 +19,7 @@ RSpec.describe DossierHelper, type: :helper do
     end
 
     context "when there is no last seen datetime" do
-      let(:updated_at) { DateTime.now }
+      let(:updated_at) { Time.zone.now }
       let(:seen_at) { nil }
 
       it { is_expected.to eq nil }

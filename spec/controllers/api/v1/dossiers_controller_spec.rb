@@ -40,7 +40,7 @@ describe API::V1::DossiersController do
 
     context 'when procedure is found and belongs to admin' do
       let(:procedure_id) { procedure.id }
-      let(:date_creation) { Time.utc(2008, 9, 1, 10, 5, 0) }
+      let(:date_creation) { Time.zone.local(2008, 9, 1, 10, 5, 0) }
       let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :en_construction, procedure: procedure) } }
       let(:body) { JSON.parse(retour.body, symbolize_names: true) }
 
@@ -75,8 +75,8 @@ describe API::V1::DossiersController do
         describe 'dossier' do
           subject { super().first }
           it { expect(subject[:id]).to eq(dossier.id) }
-          it { expect(subject[:updated_at]).to eq("2008-09-01T10:05:00.000Z") }
-          it { expect(subject[:initiated_at]).to eq("2008-09-01T10:06:00.000Z") }
+          it { expect(subject[:updated_at]).to eq("2008-09-01T10:05:00.000+02:00") }
+          it { expect(subject[:initiated_at]).to eq("2008-09-01T10:06:00.000+02:00") }
           it { expect(subject[:state]).to eq("initiated") }
           it { expect(subject.keys.size).to eq(4) }
         end
@@ -135,7 +135,7 @@ describe API::V1::DossiersController do
 
       context 'when dossier exists and belongs to procedure' do
         let(:procedure_id) { procedure.id }
-        let(:date_creation) { Time.utc(2008, 9, 1, 10, 5, 0) }
+        let(:date_creation) { Time.zone.local(2008, 9, 1, 10, 5, 0) }
         let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, motivation: "Motivation") } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
@@ -148,8 +148,8 @@ describe API::V1::DossiersController do
 
         it { expect(subject[:id]).to eq(dossier.id) }
         it { expect(subject[:state]).to eq(dossier.state) }
-        it { expect(subject[:created_at]).to eq('2008-09-01T10:05:00.000Z') }
-        it { expect(subject[:updated_at]).to eq('2008-09-01T10:05:00.000Z') }
+        it { expect(subject[:created_at]).to eq('2008-09-01T10:05:00.000+02:00') }
+        it { expect(subject[:updated_at]).to eq('2008-09-01T10:05:00.000+02:00') }
         it { expect(subject[:archived]).to eq(dossier.archived) }
 
         it { expect(subject.keys).to match_array(field_list) }
@@ -337,7 +337,7 @@ describe API::V1::DossiersController do
           it { expect(subject.size).to eq 2 }
 
           it { expect(subject.first[:body]).to eq 'plop' }
-          it { expect(subject.first[:created_at]).to eq '2016-03-14T14:00:00.000Z' }
+          it { expect(subject.first[:created_at]).to eq '2016-03-14T14:00:00.000+01:00' }
           it { expect(subject.first[:email]).to eq 'plop@plip.com' }
         end
 

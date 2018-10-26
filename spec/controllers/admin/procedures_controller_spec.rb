@@ -96,8 +96,8 @@ describe Admin::ProceduresController, type: :controller do
 
   describe 'DELETE #destroy' do
     let(:procedure_draft) { create :procedure, administrateur: admin, published_at: nil, archived_at: nil }
-    let(:procedure_published) { create :procedure, administrateur: admin, aasm_state: :publiee, published_at: Time.now, archived_at: nil }
-    let(:procedure_archived) { create :procedure, administrateur: admin, aasm_state: :archivee, published_at: nil, archived_at: Time.now }
+    let(:procedure_published) { create :procedure, administrateur: admin, aasm_state: :publiee, published_at: Time.zone.now, archived_at: nil }
+    let(:procedure_archived) { create :procedure, administrateur: admin, aasm_state: :archivee, published_at: nil, archived_at: Time.zone.now }
 
     subject { delete :destroy, params: { id: procedure.id } }
 
@@ -164,7 +164,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when procedure is published' do
-        let(:published_at) { Time.now }
+        let(:published_at) { Time.zone.now }
         it { is_expected.to have_http_status(:success) }
       end
 

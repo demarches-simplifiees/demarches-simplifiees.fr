@@ -8,7 +8,7 @@ RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
     subject { Administrateurs::ActivateBeforeExpirationJob.perform_now }
 
     before do
-      Timecop.freeze(DateTime.new(2018, 03, 20))
+      Timecop.freeze(Time.zone.local(2018, 03, 20))
       administrateur.reload
       allow(AdministrateurMailer).to receive(:activate_before_expiration).and_return(mailer_double)
     end
@@ -25,7 +25,7 @@ RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
 
       context "created a long time ago" do
         before do
-          administrateur.update_columns(created_at: DateTime.new(2018, 03, 10))
+          administrateur.update_columns(created_at: Time.zone.local(2018, 03, 10))
           subject
         end
 
@@ -34,7 +34,7 @@ RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
 
       context "created 3 days ago" do
         before do
-          administrateur.update_columns(created_at: DateTime.new(2018, 03, 17, 20, 00))
+          administrateur.update_columns(created_at: Time.zone.local(2018, 03, 17, 20, 00))
           subject
         end
 
@@ -52,7 +52,7 @@ RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
 
       context "created a long time ago" do
         before do
-          administrateur.update_columns(created_at: DateTime.new(2018, 03, 10))
+          administrateur.update_columns(created_at: Time.zone.local(2018, 03, 10))
           subject
         end
 
@@ -61,7 +61,7 @@ RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
 
       context "created 2 days ago" do
         before do
-          administrateur.update_columns(created_at: DateTime.new(2018, 03, 18, 20, 00))
+          administrateur.update_columns(created_at: Time.zone.local(2018, 03, 18, 20, 00))
           subject
         end
 

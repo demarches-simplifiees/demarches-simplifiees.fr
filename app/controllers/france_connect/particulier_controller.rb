@@ -15,7 +15,7 @@ class FranceConnect::ParticulierController < ApplicationController
     if fci.user.nil?
       user = User.find_or_create_by(email: fci.email_france_connect) do |new_user|
         new_user.password = Devise.friendly_token[0, 20]
-        new_user.confirmed_at = DateTime.now
+        new_user.confirmed_at = Time.zone.now
       end
 
       fci.update_attribute('user_id', user.id)

@@ -4,8 +4,8 @@ describe '2018_03_06_clean_html_textareas#clean' do
   let(:procedure) { create(:procedure) }
   let(:type_champ) { create(:type_de_champ_textarea, procedure: procedure) }
   let(:champ) { type_champ.champ.create(value: "<p>Gnahar<br>greu bouahaha</p>") }
-  let(:champ_date) { Time.local(1995) }
-  let(:rake_date) { Time.local(2018) }
+  let(:champ_date) { Time.zone.local(1995) }
+  let(:rake_date) { Time.zone.local(2018) }
   let(:rake_task) { Rake::Task['2018_03_06_clean_html_textareas:clean'] }
 
   before do

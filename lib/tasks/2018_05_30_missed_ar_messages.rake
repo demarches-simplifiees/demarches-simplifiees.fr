@@ -7,7 +7,7 @@ namespace :'2018_05_30_missed_ar_messages' do
   end
 
   def create_commentaires(date_name, template_name, dossiers = Dossier)
-    error_range = DateTime.new(2018, 05, 28, 13, 33)..DateTime.new(2018, 05, 30, 15, 39)
+    error_range = Time.zone.local(2018, 05, 28, 13, 33)..Time.zone.local(2018, 05, 30, 15, 39)
 
     dossiers.includes(:procedure).where(date_name => error_range).find_each(batch_size: 100) do |dossier|
       print "#{dossier.id}\n"

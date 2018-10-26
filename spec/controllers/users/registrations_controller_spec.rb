@@ -57,7 +57,7 @@ describe Users::RegistrationsController, type: :controller do
       end
 
       context 'and the user is confirmed' do
-        let(:confirmed_at) { DateTime.now }
+        let(:confirmed_at) { Time.zone.now }
 
         before { subject }
 

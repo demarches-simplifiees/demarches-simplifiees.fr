@@ -79,7 +79,7 @@ class AttestationTemplate < ApplicationRecord
       body: replace_tags(body, dossier),
       signature: signature,
       footer: footer,
-      created_at: Time.now)
+      created_at: Time.zone.now)
 
     attestation_view = action_view.render(file: 'admin/attestation_templates/show',
       formats: [:pdf])
