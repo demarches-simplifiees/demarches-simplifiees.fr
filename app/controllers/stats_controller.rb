@@ -82,7 +82,7 @@ class StatsController < ApplicationController
 
   def procedures_numbers(procedures)
     total = procedures.count
-    last_30_days_count = procedures.where(published_at: 1.month.ago..Time.now).count
+    last_30_days_count = procedures.where(published_at: 1.month.ago..Time.zone.now).count
     previous_count = procedures.where(published_at: 2.months.ago..1.month.ago).count
     if previous_count != 0
       evolution = (((last_30_days_count.to_f / previous_count) - 1) * 100).round(0)
@@ -100,7 +100,7 @@ class StatsController < ApplicationController
 
   def dossiers_numbers(dossiers)
     total = dossiers.count
-    last_30_days_count = dossiers.where(en_construction_at: 1.month.ago..Time.now).count
+    last_30_days_count = dossiers.where(en_construction_at: 1.month.ago..Time.zone.now).count
     previous_count = dossiers.where(en_construction_at: 2.months.ago..1.month.ago).count
     if previous_count != 0
       evolution = (((last_30_days_count.to_f / previous_count) - 1) * 100).round(0)
@@ -178,9 +178,9 @@ class StatsController < ApplicationController
 
   def max_date
     if administration_signed_in?
-      Time.now.to_date
+      Time.zone.now.to_date
     else
-      Time.now.beginning_of_month - 1.second
+      Time.zone.now.beginning_of_month - 1.second
     end
   end
 
@@ -232,7 +232,7 @@ class StatsController < ApplicationController
     # and then computing the average for all the procedures
 
     min_date = 11.months.ago
-    max_date = Time.now.to_date
+    max_date = Time.zone.now.to_date
 
     processed_dossiers = dossiers
       .where(:processed_at => min_date..max_date)
@@ -273,7 +273,7 @@ class StatsController < ApplicationController
     # for a 24 champs form (the current form mean length)
 
     min_date = 11.months.ago
-    max_date = Time.now.to_date
+    max_date = Time.zone.now.to_date
 
     processed_dossiers = dossiers
       .where(:processed_at => min_date..max_date)

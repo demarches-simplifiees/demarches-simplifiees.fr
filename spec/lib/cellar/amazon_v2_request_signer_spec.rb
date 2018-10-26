@@ -36,7 +36,7 @@ describe 'AmazonV2RequestSigner' do
 
       before { request_signer.sign(subject, 'fichier') }
 
-      it { expect(subject['date']).to eq(Time.now.httpdate) }
+      it { expect(subject['date']).to eq(Time.zone.now.httpdate) }
       it { expect(subject['authorization']).to eq('AWS AKIAJFTRSGRH3RXX6D5Q:nkvviwZYb1V9HDrKyJZmY3Z8sSA=') }
     end
   end

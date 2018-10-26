@@ -111,8 +111,12 @@ class ProcedurePresentation < ApplicationRecord
       column = sanitized_column(filter)
       case table
       when 'self'
-        date = filter['value'].to_date rescue nil
-        dossiers.where("DATE_TRUNC('day', #{column}) = ?", date)
+        date = Time.zone.parse(filter['value'])
+        if date.present?
+          dossiers.where("#{column} BETWEEN ? AND ?", date, date + 1.day)
+        else
+          []
+        end
       when 'type_de_champ', 'type_de_champ_private'
         relation = table == 'type_de_champ' ? :champs : :champs_private
         dossiers
@@ -186,7 +190,7 @@ class ProcedurePresentation < ApplicationRecord
   def get_value(dossier, table, column)
     case table
     when 'self'
-      dossier.send(column)
+      dossier.send(column)&.strftime('%d/%m/%Y')
     when 'user', 'individual', 'etablissement'
       dossier.send(table)&.send(column)
     when 'type_de_champ'
