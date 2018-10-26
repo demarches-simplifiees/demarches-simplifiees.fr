@@ -1,4 +1,4 @@
-namespace :dev do
+namespace :prod do
   def run_and_stop_if_error(cmd)
     sh cmd do |ok, res|
       if !ok
