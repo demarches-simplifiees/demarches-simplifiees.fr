@@ -135,14 +135,14 @@ describe ProcedurePresentation do
         let(:column) { 'created_at' }
         let(:dossier) { Timecop.freeze(Time.zone.local(1992, 3, 22)) { create(:dossier, procedure: procedure) } }
 
-        it { is_expected.to eq(Time.zone.local(1992, 3, 22)) }
+        it { is_expected.to eq(Time.zone.local(1992, 3, 22).strftime('%d/%m/%Y')) }
       end
 
       context 'for en_construction_at column' do
         let(:column) { 'en_construction_at' }
         let(:dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
 
-        it { is_expected.to eq(Time.zone.local(2018, 10, 17)) }
+        it { is_expected.to eq(Time.zone.local(2018, 10, 17).strftime('%d/%m/%Y')) }
       end
 
       context 'for updated_at column' do
@@ -151,7 +151,7 @@ describe ProcedurePresentation do
 
         before { dossier.touch(time: Time.zone.local(2018, 9, 25)) }
 
-        it { is_expected.to eq(Time.zone.local(2018, 9, 25)) }
+        it { is_expected.to eq(Time.zone.local(2018, 9, 25).strftime('%d/%m/%Y')) }
       end
     end
 

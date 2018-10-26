@@ -35,7 +35,7 @@ feature "procedure filters" do
     add_column("Créé le")
     within ".dossiers-table" do
       expect(page).to have_link("Créé le")
-      expect(page).to have_link(new_unfollow_dossier.created_at)
+      expect(page).to have_link(new_unfollow_dossier.created_at.strftime('%d/%m/%Y'))
     end
   end
 
