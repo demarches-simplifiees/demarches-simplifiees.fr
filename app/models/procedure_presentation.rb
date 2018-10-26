@@ -111,7 +111,7 @@ class ProcedurePresentation < ApplicationRecord
       column = sanitized_column(filter)
       case table
       when 'self'
-        date = Time.zone.parse(filter['value']) rescue nil
+        date = Time.zone.parse(filter['value']).beginning_of_day rescue nil
         if date.present?
           dossiers.where("#{column} BETWEEN ? AND ?", date, date + 1.day)
         else
