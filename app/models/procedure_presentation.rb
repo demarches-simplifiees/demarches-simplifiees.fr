@@ -190,7 +190,7 @@ class ProcedurePresentation < ApplicationRecord
   def get_value(dossier, table, column)
     case table
     when 'self'
-      dossier.send(column)
+      dossier.send(column)&.strftime('%d/%m/%Y')
     when 'user', 'individual', 'etablissement'
       dossier.send(table)&.send(column)
     when 'type_de_champ'
