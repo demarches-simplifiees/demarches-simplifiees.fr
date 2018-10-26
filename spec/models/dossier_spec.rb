@@ -479,9 +479,9 @@ describe Dossier do
     end
 
     context 'when they are a lot of advice' do
-      let!(:avis_1) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: DateTime.parse('10/01/2010')) }
-      let!(:avis_2) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: DateTime.parse('9/01/2010')) }
-      let!(:avis_3) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: DateTime.parse('11/01/2010')) }
+      let!(:avis_1) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: Time.zone.parse('10/01/2010')) }
+      let!(:avis_2) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010')) }
+      let!(:avis_3) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: Time.zone.parse('11/01/2010')) }
 
       it { expect(dossier.avis_for(gestionnaire)).to match([avis_2, avis_1, avis_3]) }
       it { expect(dossier.avis_for(expert_1)).to match([avis_2, avis_1, avis_3]) }
@@ -491,7 +491,7 @@ describe Dossier do
   describe '#update_state_dates' do
     let(:state) { Dossier.states.fetch(:brouillon) }
     let(:dossier) { create(:dossier, state: state) }
-    let(:beginning_of_day) { Time.now.beginning_of_day }
+    let(:beginning_of_day) { Time.zone.now.beginning_of_day }
 
     before { Timecop.freeze(beginning_of_day) }
     after { Timecop.return }
@@ -566,9 +566,9 @@ describe Dossier do
   describe '.downloadable_sorted' do
     let(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
-    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: DateTime.parse('03/01/2010')) }
-    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), en_construction_at: DateTime.parse('01/01/2010')) }
-    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true, en_construction_at: DateTime.parse('02/01/2010')) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: Time.zone.parse('03/01/2010')) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), en_construction_at: Time.zone.parse('01/01/2010')) }
+    let!(:dossier4) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true, en_construction_at: Time.zone.parse('02/01/2010')) }
 
     subject { procedure.dossiers.downloadable_sorted }
 
@@ -734,7 +734,7 @@ describe Dossier do
 
   describe 'updated_at' do
     let!(:dossier) { create(:dossier) }
-    let(:modif_date) { DateTime.parse('01/01/2100') }
+    let(:modif_date) { Time.zone.parse('01/01/2100') }
 
     before { Timecop.freeze(modif_date) }
     after { Timecop.return }
@@ -982,10 +982,10 @@ describe Dossier do
   context "retention date" do
     let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
     let(:uninstructed_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let(:young_dossier) { create(:dossier, :en_instruction, en_instruction_at: DateTime.now, procedure: procedure) }
+    let(:young_dossier) { create(:dossier, :en_instruction, en_instruction_at: Time.zone.now, procedure: procedure) }
     let(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 6.months.ago, procedure: procedure) }
     let(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
-    let(:modif_date) { DateTime.parse('01/01/2100') }
+    let(:modif_date) { Time.zone.parse('01/01/2100') }
 
     before { Timecop.freeze(modif_date) }
     after { Timecop.return }
@@ -993,7 +993,7 @@ describe Dossier do
     describe "#retention_end_date" do
       it { expect(uninstructed_dossier.retention_end_date).to be_nil }
       it { expect(young_dossier.retention_end_date).to eq(6.months.from_now) }
-      it { expect(just_expired_dossier.retention_end_date).to eq(DateTime.now) }
+      it { expect(just_expired_dossier.retention_end_date).to eq(Time.zone.now) }
       it { expect(long_expired_dossier.retention_end_date).to eq(6.months.ago) }
     end
 

@@ -24,7 +24,7 @@ class ProcedureOverview
 
     @created_dossiers_count = procedure
       .dossiers
-      .where(created_at: start_date..DateTime.now)
+      .where(created_at: start_date..Time.zone.now)
       .state_not_brouillon
       .count
   end

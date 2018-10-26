@@ -155,7 +155,7 @@ FactoryBot.define do
 
     trait :whitelisted do
       after(:build) do |procedure, _evaluator|
-        procedure.update(whitelisted_at: DateTime.now)
+        procedure.update(whitelisted_at: Time.zone.now)
       end
     end
 

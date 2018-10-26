@@ -10,7 +10,7 @@ module Cellar
     end
 
     def sign(request, key)
-      date = Time.now.httpdate
+      date = Time.zone.now.httpdate
       sig = signature(
         method: request.method,
         key: key,

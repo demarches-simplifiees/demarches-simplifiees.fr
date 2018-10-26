@@ -22,7 +22,7 @@ class Administration < ApplicationRecord
       User.create({
         email: email,
         password: password,
-        confirmed_at: DateTime.now
+        confirmed_at: Time.zone.now
       })
     end
 

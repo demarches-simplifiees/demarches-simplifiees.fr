@@ -5,11 +5,11 @@ class DossierDecorator < Draper::Decorator
   delegate_all
 
   def first_creation
-    created_at.localtime.strftime('%d/%m/%Y %H:%M')
+    created_at.strftime('%d/%m/%Y %H:%M')
   end
 
   def last_update
-    updated_at.localtime.strftime('%d/%m/%Y %H:%M')
+    updated_at.strftime('%d/%m/%Y %H:%M')
   end
 
   def display_state

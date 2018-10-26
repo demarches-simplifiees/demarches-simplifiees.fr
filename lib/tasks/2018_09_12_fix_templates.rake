@@ -7,7 +7,11 @@ namespace :'2018_09_12_fix_templates' do
   end
 
   # 16:15 in Paris -> 14:15 UTC
-  DEPLOY_DATETIME = DateTime.new(2018, 9, 5, 14, 15, 0)
+
+  # rubocop:disable Rails/TimeZone
+  # because we are in a ruby context so Time.zone = nil
+  DEPLOY_DATETIME = Time.local(2018, 9, 5, 14, 15, 0)
+  # rubocop:enable Rails/TimeZone
 
   def find_dossiers_with_sent_and_invalid_attestations
     invalid_procedures_ids = AttestationTemplate
@@ -16,12 +20,12 @@ namespace :'2018_09_12_fix_templates' do
 
     dossiers_with_invalid_template_ids = Dossier
       .where(procedure_id: invalid_procedures_ids)
-      .where(processed_at: DEPLOY_DATETIME..Time.now)
+      .where(processed_at: DEPLOY_DATETIME..Time.zone.now)
       .pluck(:id)
 
     Attestation
       .includes(:dossier)
-      .where(created_at: DEPLOY_DATETIME..Time.now)
+      .where(created_at: DEPLOY_DATETIME..Time.zone.now)
       .where(dossier_id: dossiers_with_invalid_template_ids)
       .map(&:dossier)
   end
