@@ -33,7 +33,7 @@ describe FranceConnectService do
       expect(subject).to have_attributes({
         given_name: given_name,
         family_name: family_name,
-        birthdate: DateTime.parse(birthdate),
+        birthdate: Date.parse(birthdate),
         birthplace: birthplace,
         gender: gender,
         email_france_connect: email,

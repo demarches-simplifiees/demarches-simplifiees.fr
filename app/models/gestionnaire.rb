@@ -64,7 +64,7 @@ class Gestionnaire < ApplicationRecord
   end
 
   def last_week_overview
-    start_date = DateTime.now.beginning_of_week
+    start_date = Time.zone.now.beginning_of_week
 
     active_procedure_overviews = procedures
       .publiees
@@ -180,7 +180,7 @@ class Gestionnaire < ApplicationRecord
 
   def mark_tab_as_seen(dossier, tab)
     attributes = {}
-    attributes["#{tab}_seen_at"] = DateTime.now
+    attributes["#{tab}_seen_at"] = Time.zone.now
     Follow.where(gestionnaire: self, dossier: dossier).update_all(attributes)
   end
 

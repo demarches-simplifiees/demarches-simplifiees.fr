@@ -138,8 +138,8 @@ describe Gestionnaire, type: :model do
   describe 'last_week_overview' do
     let!(:gestionnaire2) { create(:gestionnaire) }
     subject { gestionnaire2.last_week_overview }
-    let(:friday) { DateTime.new(2017, 5, 12) }
-    let(:monday) { DateTime.now.beginning_of_week }
+    let(:friday) { Time.zone.local(2017, 5, 12) }
+    let(:monday) { Time.zone.now.beginning_of_week }
 
     before { Timecop.freeze(friday) }
     after { Timecop.return }
@@ -313,7 +313,7 @@ describe Gestionnaire, type: :model do
       context 'when gestionnaire update it s public champs last seen' do
         let(:follow) { gestionnaire.follows.find_by(dossier: dossier) }
 
-        before { follow.update_attribute('demande_seen_at', DateTime.now) }
+        before { follow.update_attribute('demande_seen_at', Time.zone.now) }
 
         it { is_expected.to match([]) }
         it { expect(gestionnaire_2.notifications_for_procedure(procedure)).to match([dossier.id]) }
@@ -376,7 +376,7 @@ describe Gestionnaire, type: :model do
   describe '#mark_tab_as_seen' do
     let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
     let(:gestionnaire) { dossier.follows.first.gestionnaire }
-    let(:freeze_date) { DateTime.parse('12/12/2012') }
+    let(:freeze_date) { Time.zone.parse('12/12/2012') }
 
     context 'when demande is acknowledged' do
       let(:follow) { gestionnaire.follows.find_by(dossier: dossier) }

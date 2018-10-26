@@ -104,8 +104,8 @@ namespace :cloudstorage do
     Rake::Task['cloudstorage:init'].invoke
 
     @cont.objects_detail.each { |object, details|
-      last_modified = DateTime.parse(details[:last_modified])
-      @cont.delete_object(object) if last_modified.utc <= (Time.now - 2.years).utc
+      last_modified = Time.zone.parse(details[:last_modified])
+      @cont.delete_object(object) if last_modified.utc <= (Time.zone.now - 2.years).utc
     }
   end
 end

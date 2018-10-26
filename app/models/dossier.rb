@@ -180,7 +180,7 @@ class Dossier < ApplicationRecord
   end
 
   def retention_expired?
-    instruction_commencee? && retention_end_date <= DateTime.now
+    instruction_commencee? && retention_end_date <= Time.zone.now
   end
 
   def text_summary
@@ -194,7 +194,7 @@ class Dossier < ApplicationRecord
     else
       parts = [
         "Dossier déposé le ",
-        en_construction_at.localtime.strftime("%d/%m/%Y"),
+        en_construction_at.strftime("%d/%m/%Y"),
         " sur la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
@@ -275,7 +275,7 @@ class Dossier < ApplicationRecord
   end
 
   def delete_and_keep_track
-    now = Time.now
+    now = Time.zone.now
     deleted_dossier = DeletedDossier.create!(dossier_id: id, procedure: procedure, state: state, deleted_at: now)
     update(hidden_at: now)
 
@@ -309,11 +309,11 @@ class Dossier < ApplicationRecord
 
   def update_state_dates
     if en_construction? && !self.en_construction_at
-      self.en_construction_at = DateTime.now
+      self.en_construction_at = Time.zone.now
     elsif en_instruction? && !self.en_instruction_at
-      self.en_instruction_at = DateTime.now
+      self.en_instruction_at = Time.zone.now
     elsif TERMINE.include?(state)
-      self.processed_at = DateTime.now
+      self.processed_at = Time.zone.now
     end
   end
 

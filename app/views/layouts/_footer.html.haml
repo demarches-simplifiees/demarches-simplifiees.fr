@@ -1,7 +1,7 @@
 #footer
   %p{ class: "copyright col-md-push-#{12-main_container_size} col-md-#{main_container_size} col-lg-push-#{12-main_container_size} col-lg-#{main_container_size} text-muted small" }
     = link_to 'DINSIC', "http://etatplateforme.modernisation.gouv.fr"
-    = Time.now.year
+    = Time.zone.now.year
     \-
     = link_to 'Nouveautés', 'https://github.com/betagouv/tps/releases', target: '_blank'
     \-

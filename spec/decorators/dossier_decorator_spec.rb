@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe DossierDecorator do
   let(:dossier) do
-    dossier = create(:dossier, created_at: Time.new(2015, 12, 24, 14, 10))
-    dossier.update_column('updated_at', Time.new(2015, 12, 24, 14, 10))
+    dossier = create(:dossier, created_at: Time.zone.local(2015, 12, 24, 14, 10))
+    dossier.update_column('updated_at', Time.zone.local(2015, 12, 24, 14, 10))
     dossier
   end
 

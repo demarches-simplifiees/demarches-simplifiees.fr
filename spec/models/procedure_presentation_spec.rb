@@ -133,25 +133,25 @@ describe ProcedurePresentation do
 
       context 'for created_at column' do
         let(:column) { 'created_at' }
-        let(:dossier) { Timecop.freeze(DateTime.new(1992, 3, 22)) { create(:dossier, procedure: procedure) } }
+        let(:dossier) { Timecop.freeze(Time.zone.local(1992, 3, 22)) { create(:dossier, procedure: procedure) } }
 
-        it { is_expected.to eq(DateTime.new(1992, 3, 22)) }
+        it { is_expected.to eq(Time.zone.local(1992, 3, 22).strftime('%d/%m/%Y')) }
       end
 
       context 'for en_construction_at column' do
         let(:column) { 'en_construction_at' }
-        let(:dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2018, 10, 17)) }
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
 
-        it { is_expected.to eq(DateTime.new(2018, 10, 17)) }
+        it { is_expected.to eq(Time.zone.local(2018, 10, 17).strftime('%d/%m/%Y')) }
       end
 
       context 'for updated_at column' do
         let(:column) { 'updated_at' }
         let(:dossier) { create(:dossier, procedure: procedure) }
 
-        before { dossier.touch(time: DateTime.new(2018, 9, 25)) }
+        before { dossier.touch(time: Time.zone.local(2018, 9, 25)) }
 
-        it { is_expected.to eq(DateTime.new(2018, 9, 25)) }
+        it { is_expected.to eq(Time.zone.local(2018, 9, 25).strftime('%d/%m/%Y')) }
       end
     end
 
@@ -236,11 +236,11 @@ describe ProcedurePresentation do
       let!(:older_dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
       before do
-        notified_dossier.champs.first.touch(time: DateTime.new(2018, 9, 20))
-        create(:follow, gestionnaire: gestionnaire, dossier: notified_dossier, demande_seen_at: DateTime.new(2018, 9, 10))
-        notified_dossier.touch(time: DateTime.new(2018, 9, 20))
-        recent_dossier.touch(time: DateTime.new(2018, 9, 25))
-        older_dossier.touch(time: DateTime.new(2018, 5, 13))
+        notified_dossier.champs.first.touch(time: Time.zone.local(2018, 9, 20))
+        create(:follow, gestionnaire: gestionnaire, dossier: notified_dossier, demande_seen_at: Time.zone.local(2018, 9, 10))
+        notified_dossier.touch(time: Time.zone.local(2018, 9, 20))
+        recent_dossier.touch(time: Time.zone.local(2018, 9, 25))
+        older_dossier.touch(time: Time.zone.local(2018, 5, 13))
       end
 
       context 'in ascending order' do
@@ -269,16 +269,16 @@ describe ProcedurePresentation do
 
       context 'for created_at column' do
         let(:column) { 'created_at' }
-        let!(:recent_dossier) { Timecop.freeze(DateTime.new(2018, 10, 17)) { create(:dossier, procedure: procedure) } }
-        let!(:older_dossier) { Timecop.freeze(DateTime.new(2003, 11, 11)) { create(:dossier, procedure: procedure) } }
+        let!(:recent_dossier) { Timecop.freeze(Time.zone.local(2018, 10, 17)) { create(:dossier, procedure: procedure) } }
+        let!(:older_dossier) { Timecop.freeze(Time.zone.local(2003, 11, 11)) { create(:dossier, procedure: procedure) } }
 
         it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
       end
 
       context 'for en_construction_at column' do
         let(:column) { 'en_construction_at' }
-        let!(:recent_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2018, 10, 17)) }
-        let!(:older_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2013, 1, 1)) }
+        let!(:recent_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
+        let!(:older_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2013, 1, 1)) }
 
         it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
       end
@@ -289,8 +289,8 @@ describe ProcedurePresentation do
         let(:older_dossier) { create(:dossier, procedure: procedure) }
 
         before do
-          recent_dossier.touch(time: DateTime.new(2018, 9, 25))
-          older_dossier.touch(time: DateTime.new(2018, 5, 13))
+          recent_dossier.touch(time: Time.zone.local(2018, 9, 25))
+          older_dossier.touch(time: Time.zone.local(2018, 5, 13))
         end
 
         it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
@@ -377,16 +377,16 @@ describe ProcedurePresentation do
 
     context 'for self table' do
       context 'for created_at column' do
-        let!(:kept_dossier) { create(:dossier, procedure: procedure, created_at: DateTime.new(2018, 9, 18, 14, 28)) }
-        let!(:discarded_dossier) { create(:dossier, procedure: procedure, created_at: DateTime.new(2018, 9, 17, 23, 59)) }
+        let!(:kept_dossier) { create(:dossier, procedure: procedure, created_at: Time.zone.local(2018, 9, 18, 14, 28)) }
+        let!(:discarded_dossier) { create(:dossier, procedure: procedure, created_at: Time.zone.local(2018, 9, 17, 23, 59)) }
         let(:filter) { [{ 'table' => 'self', 'column' => 'created_at', 'value' => '18/9/2018' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
       context 'for en_construction_at column' do
-        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2018, 10, 17)) }
-        let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: DateTime.new(2013, 1, 1)) }
+        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
+        let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2013, 1, 1)) }
         let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
@@ -398,11 +398,16 @@ describe ProcedurePresentation do
         let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => '18/9/2018' }] }
 
         before do
-          kept_dossier.touch(time: DateTime.new(2018, 9, 18, 14, 28))
-          discarded_dossier.touch(time: DateTime.new(2018, 9, 17, 23, 59))
+          kept_dossier.touch(time: Time.zone.local(2018, 9, 18, 14, 28))
+          discarded_dossier.touch(time: Time.zone.local(2018, 9, 17, 23, 59))
         end
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'for a malformed date' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => 'malformed date' }] }
+        it { is_expected.to match([]) }
       end
     end
 
@@ -436,8 +441,8 @@ describe ProcedurePresentation do
 
     context 'for etablissement table' do
       context 'for entreprise_date_creation column' do
-        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: DateTime.new(2018, 6, 21))) }
-        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: DateTime.new(2008, 6, 21))) }
+        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2018, 6, 21))) }
+        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2008, 6, 21))) }
         let(:filter) { [{ 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }

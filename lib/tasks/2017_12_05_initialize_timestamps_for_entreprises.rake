@@ -15,7 +15,7 @@ namespace :'2017_12_05_initialize_timestamps_for_entreprises' do
       entreprise.update_columns(created_at: entreprise.dossier.created_at, updated_at: entreprise.dossier.created_at)
     else
       rake_puts "dossier #{entreprise.dossier_id} is missing for entreprise #{entreprise.id}"
-      entreprise.update_columns(created_at: DateTime.now, updated_at: DateTime.now)
+      entreprise.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now)
     end
   end
 end

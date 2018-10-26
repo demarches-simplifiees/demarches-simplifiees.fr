@@ -7,14 +7,14 @@ class AutoReceiveDossiersForProcedureJob < ApplicationJob
     when Dossier.states.fetch(:en_instruction)
       procedure.dossiers.state_en_construction.update_all(
         state: Dossier.states.fetch(:en_instruction),
-        en_instruction_at: DateTime.now
+        en_instruction_at: Time.zone.now
       )
     when Dossier.states.fetch(:accepte)
       procedure.dossiers.state_en_construction.find_each do |dossier|
         dossier.update(
           state: Dossier.states.fetch(:accepte),
-          en_instruction_at: DateTime.now,
-          processed_at: DateTime.now
+          en_instruction_at: Time.zone.now,
+          processed_at: Time.zone.now
         )
         dossier.attestation = dossier.build_attestation
         dossier.save

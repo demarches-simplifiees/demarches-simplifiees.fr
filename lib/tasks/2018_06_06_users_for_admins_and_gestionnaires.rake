@@ -24,7 +24,7 @@ namespace :'2018_06_06_users_for_admins_and_gestionnaires' do
       User
         .joins("INNER JOIN #{table_name} ON #{table_name}.email = users.email")
         .where(confirmed_at: nil)
-        .update_all(confirmed_at: DateTime.now)
+        .update_all(confirmed_at: Time.zone.now)
 
     rake_puts "Fixed #{count} #{table_name} with unconfirmed user"
   end

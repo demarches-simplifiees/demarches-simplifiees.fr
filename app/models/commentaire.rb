@@ -14,7 +14,7 @@ class Commentaire < ApplicationRecord
   after_create :notify
 
   def header
-    "#{sender}, #{I18n.l(created_at.localtime, format: '%d %b %Y %H:%M')}"
+    "#{sender}, #{I18n.l(created_at, format: '%d %b %Y %H:%M')}"
   end
 
   def sender

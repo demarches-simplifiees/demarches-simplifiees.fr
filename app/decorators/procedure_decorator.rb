@@ -2,12 +2,12 @@ class ProcedureDecorator < Draper::Decorator
   delegate_all
 
   def created_at_fr
-    created_at.localtime.strftime('%d/%m/%Y %H:%M')
+    created_at.strftime('%d/%m/%Y %H:%M')
   end
 
   def published_at_fr
     if published_at.present?
-      published_at.localtime.strftime('%d/%m/%Y %H:%M')
+      published_at.strftime('%d/%m/%Y %H:%M')
     end
   end
 

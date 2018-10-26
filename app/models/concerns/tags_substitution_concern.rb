@@ -126,7 +126,7 @@ module TagsSubstitutionConcern
 
   def format_date(date)
     if date.present?
-      date.localtime.strftime('%d/%m/%Y')
+      date.strftime('%d/%m/%Y')
     else
       ''
     end

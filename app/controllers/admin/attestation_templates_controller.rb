@@ -43,7 +43,7 @@ class Admin::AttestationTemplatesController < AdminController
     @title      = activated_attestation_params[:title]
     @body       = activated_attestation_params[:body]
     @footer     = activated_attestation_params[:footer]
-    @created_at = DateTime.now
+    @created_at = Time.zone.now
 
     # In a case of a preview, when the user does not change its images,
     # the images are not uploaded and thus should be retrieved from previous
