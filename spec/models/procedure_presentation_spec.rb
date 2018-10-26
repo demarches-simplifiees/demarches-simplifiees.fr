@@ -405,6 +405,14 @@ describe ProcedurePresentation do
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
+      context 'ignore time of day' do
+        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17, 15, 56)) }
+        let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 18, 5, 42)) }
+        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018 19:30' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
       context 'for a malformed date' do
         context 'when its a string' do
           let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => 'malformed date' }] }
