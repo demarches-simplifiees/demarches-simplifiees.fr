@@ -9,7 +9,6 @@ class Procedure < ApplicationRecord
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
-  has_one :procedure_path, dependent: :destroy
 
   belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
@@ -46,12 +45,12 @@ class Procedure < ApplicationRecord
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
-  scope :avec_lien,             -> { joins(:procedure_path) }
+  scope :avec_lien,             -> { where.not(path: nil) }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validate :check_juridique
-  validates :path, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: true, presence: true, allow_blank: false, allow_nil: true
+  validates :path, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: :aasm_state, case_sensitive: false }, presence: true, allow_blank: false, allow_nil: true
   # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, if: :durees_conservation_required
   validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
@@ -101,19 +100,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def publish_with_path!(path)
-    procedure_path = ProcedurePath
-      .where(administrateur: administrateur)
-      .find_by(path: path)
-
-    if procedure_path.present?
-      procedure_path.publish!(self)
-    else
-      create_procedure_path!(administrateur: administrateur, path: path)
-    end
-    update!(path: path)
-  end
-
   def reset!
     if locked?
       raise "Can not reset a locked procedure."
@@ -124,14 +110,6 @@ class Procedure < ApplicationRecord
 
   def locked?
     publiee_ou_archivee?
-  end
-
-  def path_available?(path)
-    !ProcedurePath.where.not(procedure: self).exists?(path: path)
-  end
-
-  def path_is_mine?(path)
-    ProcedurePath.where.not(procedure: self).mine?(administrateur, path)
   end
 
   # This method is needed for transition. Eventually this will be the same as brouillon?.
@@ -155,10 +133,6 @@ class Procedure < ApplicationRecord
       .map { |tdc| tdc.champ.build }
 
     Dossier.new(procedure: self, champs: champs, champs_private: champs_private)
-  end
-
-  def path
-    read_attribute(:path) || procedure_path&.path
   end
 
   def default_path
@@ -332,21 +306,48 @@ class Procedure < ApplicationRecord
     mean_time(:en_instruction_at, :processed_at)
   end
 
+  def path_available?(path)
+    !Procedure.where.not(id: id).exists?(path: path)
+  end
+
+  def path_mine?(path)
+    Procedure.path_mine?(administrateur, path)
+  end
+
+  def self.path_mine?(administrateur, path)
+    where(administrateur: administrateur).exists?(path: path)
+  end
+
+  def self.find_with_path(path)
+    where.not(aasm_state: :archivee).where("path LIKE ?", "%#{path}%")
+  end
+
   private
 
-  def can_publish?(path)
-    procedure_path = ProcedurePath.find_by(path: path)
-    if procedure_path.present?
-      administrateur.owns?(procedure_path)
-    else
-      true
+  def claim_path_ownership!(path)
+    procedure = Procedure.where(administrateur: administrateur).find_by(path: path)
+
+    if procedure&.publiee? && procedure != self
+      procedure.archive!
     end
+
+    update!(path: path)
+  end
+
+  def can_publish?(path)
+    path_available?(path) || path_mine?(path)
   end
 
   def after_publish(path)
     update!(published_at: Time.zone.now)
 
-    publish_with_path!(path)
+    claim_path_ownership!(path)
+  end
+
+  def after_reopen(path)
+    update!(published_at: Time.zone.now, archived_at: nil)
+
+    claim_path_ownership!(path)
   end
 
   def after_archive
@@ -356,14 +357,7 @@ class Procedure < ApplicationRecord
   def after_hide
     now = Time.zone.now
     update!(hidden_at: now, path: nil)
-    procedure_path&.hide!
     dossiers.update_all(hidden_at: now)
-  end
-
-  def after_reopen(path)
-    update!(published_at: Time.zone.now, archived_at: nil)
-
-    publish_with_path!(path)
   end
 
   def after_draft
