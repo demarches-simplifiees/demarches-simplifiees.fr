@@ -64,10 +64,7 @@ function validatePath(path) {
 }
 
 function path_type_init() {
-  $(PROCEDURE_PATH_SELECTOR).bind('autocomplete:select', function(
-    ev,
-    suggestion
-  ) {
-    togglePathMessage(true, suggestion['mine']);
+  $(PROCEDURE_PATH_SELECTOR).on('autocomplete:select', function(event) {
+    togglePathMessage(true, event.detail['mine']);
   });
 }
