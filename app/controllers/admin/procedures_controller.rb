@@ -40,8 +40,7 @@ class Admin::ProceduresController < AdminController
 
   def edit
     @path = @procedure.path || @procedure.default_path
-    @available = @procedure.path_available?(@path)
-    @mine = @procedure.path_mine?(@path)
+    @availability = @procedure.path_availability(@path)
   end
 
   def destroy
@@ -60,8 +59,7 @@ class Admin::ProceduresController < AdminController
   def new
     @procedure ||= Procedure.new
     @procedure.module_api_carto ||= ModuleAPICarto.new
-    @available = true
-    @mine = true
+    @availability = Procedure::PATH_AVAILABLE
   end
 
   def create
@@ -72,8 +70,7 @@ class Admin::ProceduresController < AdminController
     end
 
     @path = @procedure.path
-    @available = !Procedure.exists?(path: @path)
-    @mine = Procedure.path_mine?(current_administrateur, @path)
+    @availability = Procedure.path_availability(current_administrateur, @procedure.path)
 
     if !@procedure.save
       flash.now.alert = @procedure.errors.full_messages
@@ -89,6 +86,10 @@ class Admin::ProceduresController < AdminController
 
     if !@procedure.update(procedure_params)
       flash.now.alert = @procedure.errors.full_messages
+      @path = procedure_params[:path]
+      if @path.present?
+        @availability = @procedure.path_availability(@path)
+      end
       render 'edit'
     elsif Flipflop.publish_draft? && @procedure.brouillon?
       reset_procedure
@@ -225,11 +226,9 @@ class Admin::ProceduresController < AdminController
 
     if procedure_id.present?
       procedure = current_administrateur.procedures.find(procedure_id)
-      @available = procedure.path_available?(path)
-      @mine = procedure.path_mine?(path)
+      @availability = procedure.path_availability(path)
     else
-      @available = !Procedure.exists?(path: path)
-      @mine = Procedure.path_mine?(current_administrateur, path)
+      @availability = Procedure.path_availability(current_administrateur, path)
     end
   end
 
