@@ -20,6 +20,12 @@ describe Administration, type: :model do
       expect(user).to be_present
     end
 
+    it 'creates a corresponding gestionnaire account for the email' do
+      subject
+      gestionnaire = Gestionnaire.find_by(email: valid_email)
+      expect(gestionnaire).to be_present
+    end
+
     context 'when there already is a user account with the same email' do
       before { create(:user, email: valid_email) }
       it 'still creates an admin account' do

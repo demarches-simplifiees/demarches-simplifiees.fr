@@ -1,7 +1,10 @@
 require 'spec_helper'
 
 feature 'Administrator connection' do
-  let(:admin) { create(:administrateur) }
+  let(:email) { 'admin1@admin.com' }
+  let(:password) { 'mon chien aime les bananes' }
+  let!(:admin) { create(:administrateur, email: email, password: password) }
+  let!(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
   before do
     visit new_administrateur_session_path
   end
