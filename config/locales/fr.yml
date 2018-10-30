@@ -156,6 +156,10 @@ fr:
               taken: déjà utilisé
             password:
               too_short: 'est trop court'
+        procedure:
+          attributes:
+            path:
+              invalid: n'est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
 
   errors:
     messages:

@@ -77,27 +77,27 @@ class Admin::ProceduresController < AdminController
 
     if !@procedure.save
       flash.now.alert = @procedure.errors.full_messages
-      return render 'new'
+      render 'new'
     else
       flash.notice = 'Démarche enregistrée.'
+      redirect_to admin_procedure_types_de_champ_path(procedure_id: @procedure.id)
     end
-
-    redirect_to admin_procedure_types_de_champ_path(procedure_id: @procedure.id)
   end
 
   def update
     @procedure = current_administrateur.procedures.find(params[:id])
 
     if !@procedure.update(procedure_params)
-      flash.alert = @procedure.errors.full_messages
+      flash.now.alert = @procedure.errors.full_messages
+      render 'edit'
     elsif Flipflop.publish_draft? && @procedure.brouillon?
       reset_procedure
       flash.notice = 'Démarche modifiée. Tous les dossiers de cette démarche ont été supprimés.'
+      redirect_to edit_admin_procedure_path(id: @procedure.id)
     else
       flash.notice = 'Démarche modifiée.'
+      redirect_to edit_admin_procedure_path(id: @procedure.id)
     end
-
-    redirect_to edit_admin_procedure_path(id: @procedure.id)
   end
 
   def publish
