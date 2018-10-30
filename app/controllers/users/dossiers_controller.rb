@@ -12,7 +12,7 @@ class Users::DossiersController < UsersController
   end
 
   def commencer_test
-    procedure = Procedure.brouillons.find_by(path: params[:procedure_path])
+    procedure = Procedure.brouillons.find_by(path: params[:path])
 
     if procedure.present?
       redirect_to new_users_dossier_path(procedure_id: procedure.id, brouillon: true)
@@ -23,7 +23,7 @@ class Users::DossiersController < UsersController
   end
 
   def commencer
-    procedure = Procedure.publiees.find_by(path: params[:procedure_path])
+    procedure = Procedure.publiees.find_by(path: params[:path])
 
     if procedure.present?
       redirect_to new_users_dossier_path(procedure_id: procedure.id)

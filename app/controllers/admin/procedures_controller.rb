@@ -101,7 +101,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def publish
-    path = params[:procedure_path]
+    path = params[:path]
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
     procedure.path = path

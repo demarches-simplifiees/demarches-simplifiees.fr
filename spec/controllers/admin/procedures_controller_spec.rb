@@ -359,28 +359,28 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :publish, params: { procedure_id: procedure.id, procedure_path: procedure_path }
+        put :publish, params: { procedure_id: procedure.id, path: path }
         procedure.reload
         procedure2.reload
       end
 
       context 'procedure path does not exist' do
-        let(:procedure_path) { 'new_path' }
+        let(:path) { 'new_path' }
 
         it 'publish the given procedure' do
           expect(procedure.publiee?).to be_truthy
-          expect(procedure.path).to eq(procedure_path)
+          expect(procedure.path).to eq(path)
           expect(response.status).to eq 302
           expect(flash[:notice]).to have_content 'Démarche publiée'
         end
       end
 
       context 'procedure path exists and is owned by current administrator' do
-        let(:procedure_path) { procedure2.path }
+        let(:path) { procedure2.path }
 
         it 'publish the given procedure' do
           expect(procedure.publiee?).to be_truthy
-          expect(procedure.path).to eq(procedure_path)
+          expect(procedure.path).to eq(path)
           expect(response.status).to eq 302
           expect(flash[:notice]).to have_content 'Démarche publiée'
         end
@@ -392,7 +392,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'procedure path exists and is not owned by current administrator' do
-        let(:procedure_path) { procedure3.path }
+        let(:path) { procedure3.path }
 
         it 'does not publish the given procedure' do
           expect(procedure.publiee?).to be_falsey
@@ -408,7 +408,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'procedure path is invalid' do
-        let(:procedure_path) { 'Invalid Procedure Path' }
+        let(:path) { 'Invalid Procedure Path' }
 
         it 'does not publish the given procedure' do
           expect(procedure.publiee?).to be_falsey
@@ -426,7 +426,7 @@ describe Admin::ProceduresController, type: :controller do
         sign_out admin
         sign_in admin_2
 
-        put :publish, params: { procedure_id: procedure.id, procedure_path: 'fake_path' }
+        put :publish, params: { procedure_id: procedure.id, path: 'fake_path' }
         procedure.reload
       end
 
@@ -454,7 +454,7 @@ describe Admin::ProceduresController, type: :controller do
 
       context 'when owner want to re-enable procedure' do
         before do
-          put :publish, params: { procedure_id: procedure.id, procedure_path: 'fake_path' }
+          put :publish, params: { procedure_id: procedure.id, path: 'fake_path' }
           procedure.reload
         end
 

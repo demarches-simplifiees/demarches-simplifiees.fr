@@ -129,8 +129,8 @@ Rails.application.routes.draw do
   end
 
   namespace :commencer do
-    get '/test/:procedure_path' => '/users/dossiers#commencer_test', as: :test
-    get '/:procedure_path' => '/users/dossiers#commencer'
+    get '/test/:path' => '/users/dossiers#commencer_test', as: :test
+    get '/:path' => '/users/dossiers#commencer'
   end
 
   get "patron" => "root#patron"

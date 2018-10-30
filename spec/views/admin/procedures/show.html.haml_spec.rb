@@ -53,7 +53,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
     end
 
     describe 'procedure link is present' do
-      it { expect(rendered).to have_content(commencer_url(procedure_path: procedure.path)) }
+      it { expect(rendered).to have_content(commencer_url(path: procedure.path)) }
     end
   end
 

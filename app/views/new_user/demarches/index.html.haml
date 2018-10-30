@@ -12,7 +12,7 @@
       %ul.demarche-links
         - @previous_demarches_still_active.each do |demarche|
           %li
-            = link_to(commencer_url(procedure_path: demarche.path), class: "demarche-link") do
+            = link_to(commencer_url(path: demarche.path), class: "demarche-link") do
               = demarche.libelle
               %br
               .service-name
@@ -23,7 +23,7 @@
       %ul.demarche-links
         - @popular_demarches.each do |demarche|
           %li
-            = link_to(commencer_url(procedure_path: demarche.path), class: "demarche-link") do
+            = link_to(commencer_url(path: demarche.path), class: "demarche-link") do
               = demarche.libelle
               %br
               .service-name
