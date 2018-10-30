@@ -7,18 +7,19 @@ module NewAdministrateur
 
     def new
       @procedure = procedure
+      @service = Service.new
     end
 
     def create
-      new_service = Service.new(service_params)
-      new_service.administrateur = current_administrateur
+      @service = Service.new(service_params)
+      @service.administrateur = current_administrateur
 
-      if new_service.save
+      if @service.save
         redirect_to services_path(procedure_id: params[:procedure_id]),
-          notice: "#{new_service.nom} créé"
+          notice: "#{@service.nom} créé"
       else
         @procedure = procedure
-        flash[:alert] = new_service.errors.full_messages
+        flash[:alert] = @service.errors.full_messages
         render :new
       end
     end
