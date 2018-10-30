@@ -6,12 +6,5 @@ module Manager
       flash[:notice] = "L'email d'activation de votre compte a été renvoyé."
       redirect_to manager_user_path(user)
     end
-
-    def confirm
-      user = User.find(params[:id])
-      user.confirm
-      flash[:notice] = "L’adresse email de l’utilisateur a été marquée comme activée."
-      redirect_to manager_user_path(user)
-    end
   end
 end
