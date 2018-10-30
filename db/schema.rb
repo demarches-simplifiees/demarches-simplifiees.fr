@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_10_183331) do
+ActiveRecord::Schema.define(version: 2018_10_30_103913) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -347,6 +347,7 @@ ActiveRecord::Schema.define(version: 2018_10_10_183331) do
     t.jsonb "geometry"
     t.jsonb "properties"
     t.bigint "champ_id"
+    t.string "geo_reference_id"
     t.index ["champ_id"], name: "index_geo_areas_on_champ_id"
     t.index ["source"], name: "index_geo_areas_on_source"
   end
