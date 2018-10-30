@@ -40,8 +40,7 @@ class Admin::ProceduresController < AdminController
 
   def edit
     @path = @procedure.path || @procedure.default_path
-    @available = @procedure.path_available?(@path)
-    @mine = @procedure.path_mine?(@path)
+    @availability = @procedure.path_availability(@path)
   end
 
   def destroy
@@ -60,8 +59,7 @@ class Admin::ProceduresController < AdminController
   def new
     @procedure ||= Procedure.new
     @procedure.module_api_carto ||= ModuleAPICarto.new
-    @available = true
-    @mine = true
+    @availability = Procedure::PATH_AVAILABLE
   end
 
   def create
@@ -72,32 +70,35 @@ class Admin::ProceduresController < AdminController
     end
 
     @path = @procedure.path
-    @available = !Procedure.exists?(path: @path)
-    @mine = Procedure.path_mine?(current_administrateur, @path)
+    @availability = Procedure.path_availability(current_administrateur, @procedure.path)
 
     if !@procedure.save
       flash.now.alert = @procedure.errors.full_messages
-      return render 'new'
+      render 'new'
     else
       flash.notice = 'Démarche enregistrée.'
+      redirect_to admin_procedure_types_de_champ_path(procedure_id: @procedure.id)
     end
-
-    redirect_to admin_procedure_types_de_champ_path(procedure_id: @procedure.id)
   end
 
   def update
     @procedure = current_administrateur.procedures.find(params[:id])
 
     if !@procedure.update(procedure_params)
-      flash.alert = @procedure.errors.full_messages
+      flash.now.alert = @procedure.errors.full_messages
+      @path = procedure_params[:path]
+      if @path.present?
+        @availability = @procedure.path_availability(@path)
+      end
+      render 'edit'
     elsif Flipflop.publish_draft? && @procedure.brouillon?
       reset_procedure
       flash.notice = 'Démarche modifiée. Tous les dossiers de cette démarche ont été supprimés.'
+      redirect_to edit_admin_procedure_path(id: @procedure.id)
     else
       flash.notice = 'Démarche modifiée.'
+      redirect_to edit_admin_procedure_path(id: @procedure.id)
     end
-
-    redirect_to edit_admin_procedure_path(id: @procedure.id)
   end
 
   def publish
@@ -225,11 +226,9 @@ class Admin::ProceduresController < AdminController
 
     if procedure_id.present?
       procedure = current_administrateur.procedures.find(procedure_id)
-      @available = procedure.path_available?(path)
-      @mine = procedure.path_mine?(path)
+      @availability = procedure.path_availability(path)
     else
-      @available = !Procedure.exists?(path: path)
-      @mine = Procedure.path_mine?(current_administrateur, path)
+      @availability = Procedure.path_availability(current_administrateur, path)
     end
   end
 
