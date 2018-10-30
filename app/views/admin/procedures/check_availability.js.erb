@@ -1,11 +1,11 @@
-<% if @available %>
+<% if @availability == Procedure::PATH_AVAILABLE %>
   <%= remove_element('.unavailable-path-message', inner: true) %>
+<% else %>
+  <%= render_to_element('.unavailable-path-message', partial: 'unavailable', locals: { availability: @availability }) %>
+<% end %>
+
+<% if @availability.in?(Procedure::PATH_CAN_PUBLISH) %>
   <%= enable_element('button[type=submit]') %>
 <% else %>
-  <%= render_to_element('.unavailable-path-message', partial: 'unavailable', locals: { mine: @mine }) %>
-  <% if @mine %>
-    <%= enable_element('button[type=submit]') %>
-  <% else %>
-    <%= disable_element('button[type=submit]') %>
-  <% end %>
+  <%= disable_element('button[type=submit]') %>
 <% end %>

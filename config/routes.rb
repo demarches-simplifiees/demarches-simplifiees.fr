@@ -22,7 +22,6 @@ Rails.application.routes.draw do
 
     resources :users, only: [:index, :show] do
       post 'resend_confirmation_instructions', on: :member
-      post 'confirm', on: :member
     end
 
     resources :gestionnaires, only: [:index, :show] do
@@ -129,8 +128,8 @@ Rails.application.routes.draw do
   end
 
   namespace :commencer do
-    get '/test/:procedure_path' => '/users/dossiers#commencer_test', as: :test
-    get '/:procedure_path' => '/users/dossiers#commencer'
+    get '/test/:path' => '/users/dossiers#commencer_test', as: :test
+    get '/:path' => '/users/dossiers#commencer'
   end
 
   get "patron" => "root#patron"
