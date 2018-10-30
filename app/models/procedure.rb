@@ -306,16 +306,34 @@ class Procedure < ApplicationRecord
     mean_time(:en_instruction_at, :processed_at)
   end
 
-  def path_available?(path)
-    !Procedure.where.not(id: id).exists?(path: path)
+  PATH_AVAILABLE = :available
+  PATH_AVAILABLE_PUBLIEE = :available_publiee
+  PATH_NOT_AVAILABLE = :not_available
+  PATH_NOT_AVAILABLE_BROUILLON = :not_available_brouillon
+  PATH_CAN_PUBLISH = [PATH_AVAILABLE, PATH_AVAILABLE_PUBLIEE]
+
+  def path_availability(path)
+    Procedure.path_availability(administrateur, path, id)
   end
 
-  def path_mine?(path)
-    Procedure.path_mine?(administrateur, path)
-  end
+  def self.path_availability(administrateur, path, exclude_id = nil)
+    if exclude_id.present?
+      procedure = where.not(id: exclude_id).find_by(path: path)
+    else
+      procedure = find_by(path: path)
+    end
 
-  def self.path_mine?(administrateur, path)
-    where(administrateur: administrateur).exists?(path: path)
+    if procedure.blank?
+      PATH_AVAILABLE
+    elsif administrateur.owns?(procedure)
+      if procedure.brouillon?
+        PATH_NOT_AVAILABLE_BROUILLON
+      else
+        PATH_AVAILABLE_PUBLIEE
+      end
+    else
+      PATH_NOT_AVAILABLE
+    end
   end
 
   def self.find_with_path(path)
@@ -335,7 +353,7 @@ class Procedure < ApplicationRecord
   end
 
   def can_publish?(path)
-    path_available?(path) || path_mine?(path)
+    path_availability(path).in?(PATH_CAN_PUBLISH)
   end
 
   def after_publish(path)
