@@ -735,8 +735,17 @@ describe Admin::ProceduresController, type: :controller do
       it { expect(response.body).to include("innerHTML = ''") }
     end
 
-    context 'my path' do
+    context 'my path (brouillon)' do
       let(:procedure_owned) { create(:procedure, :with_path, administrateur: admin) }
+      let(:path) { procedure_owned.path }
+
+      it {
+        expect(response.body).to include('Un brouillon de démarche existe déjà avec ce lien.')
+      }
+    end
+
+    context 'my path' do
+      let(:procedure_owned) { create(:procedure, :published, administrateur: admin) }
       let(:path) { procedure_owned.path }
 
       it {

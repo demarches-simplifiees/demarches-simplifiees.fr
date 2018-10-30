@@ -6,7 +6,7 @@
     = form_for @procedure, url: { controller: 'admin/procedures', action: :create }, multipart: true do |f|
       = render partial: 'informations', locals: { f: f }
       .text-right
-        - if !Flipflop.publish_draft? || (@available || @mine)
+        - if !Flipflop.publish_draft? || @availability.in?(Procedure::PATH_CAN_PUBLISH)
           = f.button 'Valider', class: 'btn btn-info', id: 'save-procedure'
         - else
           = f.button 'Valider', class: 'btn btn-info', id: 'save-procedure', disabled: true
