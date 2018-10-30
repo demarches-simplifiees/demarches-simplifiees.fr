@@ -135,14 +135,14 @@ describe ProcedurePresentation do
         let(:column) { 'created_at' }
         let(:dossier) { Timecop.freeze(Time.zone.local(1992, 3, 22)) { create(:dossier, procedure: procedure) } }
 
-        it { is_expected.to eq(Time.zone.local(1992, 3, 22).strftime('%d/%m/%Y')) }
+        it { is_expected.to eq('22/03/1992') }
       end
 
       context 'for en_construction_at column' do
         let(:column) { 'en_construction_at' }
         let(:dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
 
-        it { is_expected.to eq(Time.zone.local(2018, 10, 17).strftime('%d/%m/%Y')) }
+        it { is_expected.to eq('17/10/2018') }
       end
 
       context 'for updated_at column' do
@@ -151,7 +151,7 @@ describe ProcedurePresentation do
 
         before { dossier.touch(time: Time.zone.local(2018, 9, 25)) }
 
-        it { is_expected.to eq(Time.zone.local(2018, 9, 25).strftime('%d/%m/%Y')) }
+        it { is_expected.to eq('25/09/2018') }
       end
     end
 
@@ -401,6 +401,14 @@ describe ProcedurePresentation do
           kept_dossier.touch(time: Time.zone.local(2018, 9, 18, 14, 28))
           discarded_dossier.touch(time: Time.zone.local(2018, 9, 17, 23, 59))
         end
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'ignore time of day' do
+        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17, 15, 56)) }
+        let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 18, 5, 42)) }
+        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018 19:30' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end

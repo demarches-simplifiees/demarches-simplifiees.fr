@@ -18,7 +18,10 @@ class ApiGeo::RPGAdapter
           :code_culture,
           :surface,
           :bio
-        ).merge({ geometry: feature[:geometry] })
+        ).merge({
+          geometry: feature[:geometry],
+          geo_reference_id: feature[:properties][:id]
+        })
     end
   end
 end

@@ -27,11 +27,6 @@ namespace :support do
 
     rake_puts("Changing owner of procedure ##{procedure_id} from ##{procedure.administrateur_id} to ##{new_owner.id}")
     procedure.update(administrateur: new_owner)
-
-    ProcedurePath.where(procedure_id: procedure_id).each do |pp|
-      rake_puts("Changing owner of procedure_path #{pp.path} from ##{pp.administrateur_id} to ##{new_owner.id}")
-      pp.update(administrateur: new_owner)
-    end
   end
 
   desc <<~EOD
@@ -74,13 +69,6 @@ namespace :support do
     end
 
     procedures.update_all(administrateur_id: new_owner.id)
-
-    procedures.pluck(:id).each do |procedure_id|
-      ProcedurePath.where(procedure_id: procedure_id).each do |pp|
-        rake_puts("Changing owner of procedure_path #{pp.path} from ##{pp.administrateur_id} to ##{new_owner.id}")
-        pp.update(administrateur: new_owner)
-      end
-    end
   end
 
   desc <<~EOD

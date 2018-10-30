@@ -1,5 +1,5 @@
 class GeoAreaSerializer < ActiveModel::Serializer
-  attributes :geometry, :source
+  attributes :geometry, :source, :geo_reference_id
 
   attribute :surface_intersection, if: :include_cadastre?
   attribute :surface_parcelle, if: :include_cadastre?

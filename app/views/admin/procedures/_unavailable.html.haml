@@ -1,8 +1,11 @@
-- if mine
+- case availability
+- when Procedure::PATH_AVAILABLE_PUBLIEE
   Ce lien est déjà utilisé par une de vos démarche.
   %br
-  Si vous voulez l’utiliser, l’ancienne démarche sera archivée (plus accessible du public).
-- else
+    Si vous voulez l’utiliser, l’ancienne démarche sera archivée lors de la publication de la démarche (plus accessible du public).
+- when Procedure::PATH_NOT_AVAILABLE_BROUILLON
+  Un brouillon de démarche existe déjà avec ce lien.
+- when Procedure::PATH_NOT_AVAILABLE
   Ce lien est déjà utilisé par une démarche.
   %br
   Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.

@@ -53,7 +53,8 @@ describe ApiGeo::RPGAdapter do
           :code_culture,
           :surface,
           :bio,
-          :geometry
+          :geometry,
+          :geo_reference_id
         ])
       end
     end

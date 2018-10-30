@@ -16,11 +16,11 @@
       %h4 Lien public*
       .procedure-lien
         %span.prefix
-          = commencer_test_url(procedure_path: '')
+          = commencer_test_url(path: '')
         = f.text_field :path, value: @path, class: 'form-control', data: { remote: true, debounce: true, url: admin_procedures_available_path, params: { id: @procedure.id }.to_query(:procedure) }
       %p.unavailable-path-message.text-warning
-        - if !@available
-          = render partial: 'unavailable', locals: { mine: @mine }
+        - if @availability != Procedure::PATH_AVAILABLE
+          = render partial: 'unavailable', locals: { availability: @availability }
       %p.help-block
         %i.fa.fa-info-circle
         Afin de faciliter l’accès à la démarche, vous êtes invité à personnaliser l’adresse d'accès public. C'est ce lien qu'il va falloir communiquer aux usagers souhaitant faire la démarche.
