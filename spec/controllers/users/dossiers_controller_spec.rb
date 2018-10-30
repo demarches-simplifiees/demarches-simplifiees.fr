@@ -65,7 +65,7 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe 'GET #commencer' do
-    subject { get :commencer, params: { procedure_path: path } }
+    subject { get :commencer, params: { path: path } }
     let(:path) { procedure.path }
 
     it { expect(subject.status).to eq 302 }
@@ -83,7 +83,7 @@ describe Users::DossiersController, type: :controller do
       Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
     end
 
-    subject { get :commencer_test, params: { procedure_path: path } }
+    subject { get :commencer_test, params: { path: path } }
     let(:procedure) { create(:procedure, :with_path) }
     let(:path) { procedure.path }
 

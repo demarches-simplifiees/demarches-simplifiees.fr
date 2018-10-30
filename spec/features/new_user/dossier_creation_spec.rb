@@ -16,7 +16,7 @@ feature 'Creating a new dossier:' do
       let(:expected_birthday) { nil }
 
       before do
-        visit commencer_path(procedure_path: procedure.path)
+        visit commencer_path(path: procedure.path)
         fill_in 'individual_nom',    with: 'Nom'
         fill_in 'individual_prenom', with: 'Prenom'
       end
@@ -76,7 +76,7 @@ feature 'Creating a new dossier:' do
       end
 
       scenario 'the user can enter the SIRET of its etablissement and create a new draft', vcr: { cassette_name: 'api_adresse_search_paris_3' }, js: true do
-        visit commencer_path(procedure_path: procedure.path)
+        visit commencer_path(path: procedure.path)
         expect(page).to have_current_path(siret_dossier_path(dossier))
 
         fill_in 'Numéro SIRET', with: siret
@@ -93,7 +93,7 @@ feature 'Creating a new dossier:' do
       end
 
       scenario 'the user is notified when its SIRET is invalid' do
-        visit commencer_path(procedure_path: procedure.path)
+        visit commencer_path(path: procedure.path)
         expect(page).to have_current_path(siret_dossier_path(dossier))
 
         fill_in 'Numéro SIRET', with: '0000'
