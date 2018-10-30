@@ -2,13 +2,7 @@ fr:
   activerecord:
     attributes:
       procedure:
-        path: Lien
+        path: Lien public
         organisation: Organisme
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr
         duree_conservation_dossiers_hors_ds: Durée de conservation des dossiers hors demarches-simplifiees.fr
-    errors:
-      models:
-        procedure:
-          attributes:
-            path:
-              format: Ce lien n'est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
