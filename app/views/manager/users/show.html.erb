@@ -35,7 +35,6 @@ as well as a link to its edit page.
   <div>
     <% if !user.confirmed? %>
       <%= link_to('Renvoyer l’email de confirmation', [:resend_confirmation_instructions, namespace, page.resource], method: :post, class: 'button') %>
-      <%= link_to('Confirmer l’email', confirm_manager_user_path(user), method: :post, class: 'button') %>
     <% end %>
   <div>
 </header>

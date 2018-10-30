@@ -22,7 +22,6 @@ Rails.application.routes.draw do
 
     resources :users, only: [:index, :show] do
       post 'resend_confirmation_instructions', on: :member
-      post 'confirm', on: :member
     end
 
     resources :gestionnaires, only: [:index, :show] do
