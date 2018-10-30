@@ -244,7 +244,7 @@ describe StatsController, type: :controller do
 
   describe "#avis_average_answer_time" do
     before do
-      Timecop.freeze(Time.zone.now)
+      Timecop.freeze(Time.zone.local(2016, 10, 2))
 
       # 1 week ago
       create(:avis, answer: "voila ma réponse", created_at: 1.week.ago + 1.day, updated_at: 1.week.ago + 2.days) # 1 day
