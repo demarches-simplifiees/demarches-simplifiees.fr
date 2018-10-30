@@ -1,10 +1,15 @@
 class Gestionnaires::ActivateController < ApplicationController
+  include TrustedDeviceConcern
+
   layout "new_application"
 
   def new
     @gestionnaire = Gestionnaire.with_reset_password_token(params[:token])
 
-    if !@gestionnaire
+    if @gestionnaire
+      # the gestionnaire activates its account from an email
+      trust_device
+    else
       flash.alert = "Le lien de validation du compte instructeur a expiré, #{helpers.contact_link('contactez-nous', tags: 'lien expiré')} pour obtenir un nouveau lien."
       redirect_to root_path
     end

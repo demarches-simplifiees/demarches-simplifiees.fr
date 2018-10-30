@@ -1,4 +1,7 @@
 class Users::SessionsController < Sessions::SessionsController
+  include TrustedDeviceConcern
+  include ActionView::Helpers::DateHelper
+
   layout "new_application"
 
   # GET /resource/sign_in
@@ -24,14 +27,17 @@ class Users::SessionsController < Sessions::SessionsController
     end
 
     if gestionnaire_signed_in?
-      gestionnaire = current_gestionnaire
+      if trusted_device?
+        redirect_to gestionnaire_procedures_path
+      else
+        gestionnaire = current_gestionnaire
+        login_token = gestionnaire.login_token!
+        GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
 
-      login_token = gestionnaire.login_token!
-      GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
+        [:user, :gestionnaire, :administrateur].each { |role| sign_out(role) }
 
-      [:user, :gestionnaire, :administrateur].each { |role| sign_out(role) }
-
-      redirect_to link_sent_path(email: gestionnaire.email)
+        redirect_to link_sent_path(email: gestionnaire.email)
+      end
     elsif user_signed_in?
       redirect_to after_sign_in_path_for(:user)
     else
@@ -79,6 +85,9 @@ class Users::SessionsController < Sessions::SessionsController
   def sign_in_by_link
     gestionnaire = Gestionnaire.find(params[:id])
     if gestionnaire&.login_token_valid?(params[:jeton])
+      trust_device
+      flash.notice = "Merci d’avoir confirmé votre connexion. Votre navigateur est maintenant authentifié pour #{TRUSTED_DEVICE_PERIOD.to_i / ActiveSupport::Duration::SECONDS_PER_DAY} jours."
+
       user = User.find_by(email: gestionnaire.email)
       administrateur = Administrateur.find_by(email: gestionnaire.email)
       [user, gestionnaire, administrateur].compact.each { |resource| sign_in(resource) }
