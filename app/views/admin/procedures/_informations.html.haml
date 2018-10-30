@@ -16,7 +16,7 @@
       %h4 Lien public*
       .procedure-lien
         %span.prefix
-          = commencer_test_url(procedure_path: '')
+          = commencer_test_url(path: '')
         = f.text_field :path, value: @path, class: 'form-control', data: { remote: true, debounce: true, url: admin_procedures_available_path, params: { id: @procedure.id }.to_query(:procedure) }
       %p.unavailable-path-message.text-warning
         - if !@available

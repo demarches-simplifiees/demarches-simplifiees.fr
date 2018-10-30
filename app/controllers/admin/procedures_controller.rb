@@ -41,7 +41,7 @@ class Admin::ProceduresController < AdminController
   def edit
     @path = @procedure.path || @procedure.default_path
     @available = @procedure.path_available?(@path)
-    @mine = @procedure.path_is_mine?(@path)
+    @mine = @procedure.path_mine?(@path)
   end
 
   def destroy
@@ -71,22 +71,14 @@ class Admin::ProceduresController < AdminController
       @procedure.module_api_carto = ModuleAPICarto.new(create_module_api_carto_params)
     end
 
-    @path = params.require(:procedure).permit(:path)[:path]
-    @available = !ProcedurePath.exists?(path: @path)
-    @mine = ProcedurePath.mine?(current_administrateur, @path)
+    @path = @procedure.path
+    @available = !Procedure.exists?(path: @path)
+    @mine = Procedure.path_mine?(current_administrateur, @path)
 
-    if !@procedure.validate
+    if !@procedure.save
       flash.now.alert = @procedure.errors.full_messages
       return render 'new'
-    elsif Flipflop.publish_draft? && !ProcedurePath.valid?(Procedure.last, @path)
-      # FIXME: The code abow is a horrible hack that we need until we migrated path directly on procedure model
-      flash.now.alert = 'Lien de la démarche invalide.'
-      return render 'new'
     else
-      @procedure.save!
-      if Flipflop.publish_draft?
-        @procedure.publish_with_path!(@path)
-      end
       flash.notice = 'Démarche enregistrée.'
     end
 
@@ -95,20 +87,13 @@ class Admin::ProceduresController < AdminController
 
   def update
     @procedure = current_administrateur.procedures.find(params[:id])
-    path = params.require(:procedure).permit(:path)[:path]
 
     if !@procedure.update(procedure_params)
       flash.alert = @procedure.errors.full_messages
     elsif Flipflop.publish_draft? && @procedure.brouillon?
-      if ProcedurePath.valid?(@procedure, path)
-        @procedure.publish_with_path!(path)
-        reset_procedure
-        flash.notice = 'Démarche modifiée. Tous les dossiers de cette démarche ont été supprimés.'
-      else
-        flash.alert = 'Lien de la démarche invalide.'
-      end
-    else
       reset_procedure
+      flash.notice = 'Démarche modifiée. Tous les dossiers de cette démarche ont été supprimés.'
+    else
       flash.notice = 'Démarche modifiée.'
     end
 
@@ -116,14 +101,18 @@ class Admin::ProceduresController < AdminController
   end
 
   def publish
+    path = params[:path]
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
-    if !ProcedurePath.valid?(procedure, params[:procedure_path])
+    procedure.path = path
+    if !procedure.validate
       flash.alert = 'Lien de la démarche invalide'
       return redirect_to admin_procedures_path
+    else
+      procedure.path = nil
     end
 
-    if procedure.publish_or_reopen!(params[:procedure_path])
+    if procedure.publish_or_reopen!(path)
       flash.notice = "Démarche publiée"
       redirect_to admin_procedures_path
     else
@@ -216,9 +205,10 @@ class Admin::ProceduresController < AdminController
   end
 
   def path_list
-    json_path_list = ProcedurePath
+    json_path_list = Procedure
       .find_with_path(params[:request])
-      .pluck('procedure_paths.path', :administrateur_id)
+      .order(:id)
+      .pluck(:path, :administrateur_id)
       .map do |path, administrateur_id|
         {
           label: path,
@@ -236,10 +226,10 @@ class Admin::ProceduresController < AdminController
     if procedure_id.present?
       procedure = current_administrateur.procedures.find(procedure_id)
       @available = procedure.path_available?(path)
-      @mine = procedure.path_is_mine?(path)
+      @mine = procedure.path_mine?(path)
     else
-      @available = !ProcedurePath.exists?(path: path)
-      @mine = ProcedurePath.mine?(current_administrateur, path)
+      @available = !Procedure.exists?(path: path)
+      @mine = Procedure.path_mine?(current_administrateur, path)
     end
   end
 
@@ -276,6 +266,9 @@ class Admin::ProceduresController < AdminController
     if @procedure&.locked?
       params.require(:procedure).permit(*editable_params)
     else
+      if Flipflop.publish_draft?
+        editable_params << :path
+      end
       params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
     end
   end

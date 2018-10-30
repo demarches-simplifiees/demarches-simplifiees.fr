@@ -20,8 +20,8 @@
             %br
             %h4 Lien de la démarche
             %p.center
-              = commencer_url(procedure_path: '')
-              = text_field_tag('procedure_path', @procedure.path || @procedure.default_path,
+              = commencer_url(path: '')
+              = text_field_tag(:path, @procedure.path || @procedure.default_path,
                                 id: 'procedure_path',
                                 placeholder: 'Chemin vers la démarche',
                                 data: { autocomplete: 'path' },
@@ -41,7 +41,7 @@
                 %br
                 Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               #path_is_invalid.text-danger.center.message
-                = t('activerecord.errors.models.procedure_path.attributes.path.format')
+                = t('activerecord.errors.models.procedure.attributes.path.format')
         .modal-footer
           = submit_tag procedure_modal_text(@procedure, :submit), class: %w(btn btn btn-success), disabled: :disabled, id: 'publish'
           = button_tag "Annuler", class: %w(btn btn btn-default), data: { dismiss: :modal }, id: 'cancel'
