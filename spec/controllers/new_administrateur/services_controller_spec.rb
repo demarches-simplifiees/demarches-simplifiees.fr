@@ -43,6 +43,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
 
       it { expect(flash.alert).not_to be_nil }
       it { expect(response).to render_template(:new) }
+      it { expect(assigns(:service).nom).to eq('super service') }
     end
   end
 
