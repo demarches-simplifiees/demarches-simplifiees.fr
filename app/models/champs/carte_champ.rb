@@ -43,7 +43,7 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def zones
-    value.blank? ? [] : JSON.parse(value)
+  def geo_json
+    @geo_json ||= value.blank? ? [] : JSON.parse(value)
   end
 end
