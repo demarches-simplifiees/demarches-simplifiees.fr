@@ -3,7 +3,7 @@ require 'spec_helper'
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
+  let(:procedure) { create(:procedure, :with_api_carto, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
   let(:wrong_procedure) { create(:procedure) }
 
   it { expect(described_class).to be < APIController }
