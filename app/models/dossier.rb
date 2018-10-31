@@ -245,6 +245,10 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def use_legacy_carto?
+    procedure.use_legacy_carto?
+  end
+
   def user_geometry
     if json_latlngs.present?
       UserGeometry.new(json_latlngs)
