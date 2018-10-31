@@ -308,12 +308,13 @@ describe NewGestionnaire::DossiersController, type: :controller do
 
   describe "#create_avis" do
     let(:saved_avis) { dossier.avis.first }
+    let!(:old_avis_count) { Avis.count }
 
     subject do
       post :create_avis, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id,
-        avis: { emails: [email], introduction: 'intro', confidentiel: true }
+        avis: { emails: emails, introduction: 'intro', confidentiel: true }
       }
     end
 
@@ -321,7 +322,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       subject
     end
 
-    let(:email) { 'email@a.com' }
+    let(:emails) { ['email@a.com'] }
 
     it { expect(saved_avis.email).to eq('email@a.com') }
     it { expect(saved_avis.introduction).to eq('intro') }
@@ -331,11 +332,21 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(response).to redirect_to(avis_gestionnaire_dossier_path(dossier.procedure, dossier)) }
 
     context "with an invalid email" do
-      let(:email) { 'emaila.com' }
+      let(:emails) { ['emaila.com'] }
 
       it { expect(response).to render_template :avis }
-      it { expect(flash.alert).to eq(["Email n'est pas valide"]) }
+      it { expect(flash.alert).to eq(["emaila.com : Email n'est pas valide"]) }
       it { expect { subject }.not_to change(Avis, :count) }
+    end
+
+    context 'with multiple emails' do
+      let(:emails) { ["toto.fr,titi@titimail.com"] }
+
+      it { expect(response).to render_template :avis }
+      it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
+      it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à titi@titimail.com") }
+      it { expect(Avis.count).to eq(old_avis_count + 1) }
+      it { expect(saved_avis.email).to eq("titi@titimail.com") }
     end
   end
 
