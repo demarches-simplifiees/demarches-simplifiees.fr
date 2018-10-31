@@ -408,6 +408,7 @@ ActiveRecord::Schema.define(version: 2018_11_08_151929) do
     t.boolean "cadastre", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean "migrated"
     t.index ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true
   end
 
