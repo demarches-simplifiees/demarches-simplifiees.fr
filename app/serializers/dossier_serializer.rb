@@ -50,15 +50,27 @@ class DossierSerializer < ActiveModel::Serializer
   end
 
   def initiated_at
-    object.en_construction_at
+    object.en_construction_at&.in_time_zone('UTC')
   end
 
   def received_at
-    object.en_instruction_at
+    object.en_instruction_at&.in_time_zone('UTC')
   end
 
   def instructeurs
     object.followers_gestionnaires.pluck(:email)
+  end
+
+  def created_at
+    object.created_at&.in_time_zone('UTC')
+  end
+
+  def updated_at
+    object.updated_at&.in_time_zone('UTC')
+  end
+
+  def processed_at
+    object.processed_at&.in_time_zone('UTC')
   end
 
   private
