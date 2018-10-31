@@ -1,5 +1,7 @@
 module NewGestionnaire
   class AvisController < GestionnaireController
+    include CreateAvisConcern
+
     before_action :authenticate_gestionnaire!, except: [:sign_up, :create_gestionnaire]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up]
     before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_gestionnaire]
@@ -60,14 +62,11 @@ module NewGestionnaire
     end
 
     def create_avis
-      confidentiel = avis.confidentiel || create_avis_params[:confidentiel]
-      @new_avis = Avis.new(create_avis_params.merge(claimant: current_gestionnaire, dossier: avis.dossier, confidentiel: confidentiel))
+      @new_avis = create_avis_from_params(avis.dossier, avis.confidentiel)
 
-      if @new_avis.save
-        flash.notice = "Une demande d'avis a été envoyée à #{@new_avis.email_to_display}"
+      if @new_avis.nil?
         redirect_to instruction_gestionnaire_avis_path(avis)
       else
-        flash.now.alert = @new_avis.errors.full_messages
         set_avis_and_dossier
         render :instruction
       end
@@ -140,10 +139,6 @@ module NewGestionnaire
 
     def commentaire_params
       params.require(:commentaire).permit(:body, :file)
-    end
-
-    def create_avis_params
-      params.require(:avis).permit(:email, :introduction, :confidentiel)
     end
   end
 end
