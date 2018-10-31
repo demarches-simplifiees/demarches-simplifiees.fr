@@ -74,19 +74,4 @@ class DossierSerializer < ActiveModel::Serializer
   def processed_at
     object.processed_at&.in_time_zone('UTC')
   end
-
-  private
-
-  def user_geometry(dossier)
-    {
-      value: dossier.geometry,
-      type_de_champ: {
-        id: -1,
-        libelle: 'user_geometry',
-        type_champ: 'user_geometry',
-        order_place: -1,
-        descripton: ''
-      }
-    }
-  end
 end
