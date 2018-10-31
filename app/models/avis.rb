@@ -19,6 +19,10 @@ class Avis < ApplicationRecord
   scope :by_latest, -> { order(updated_at: :desc) }
   scope :updated_since?, -> (date) { where('avis.updated_at > ?', date) }
 
+  # The form allows subtmitting avis requests to several emails at once,
+  # hence this virtual attribute.
+  attr_accessor :emails
+
   def email_to_display
     gestionnaire&.email || email
   end

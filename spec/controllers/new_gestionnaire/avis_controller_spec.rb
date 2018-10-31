@@ -105,7 +105,7 @@ describe NewGestionnaire::AvisController, type: :controller do
       let(:created_avis) { Avis.last }
 
       before do
-        post :create_avis, params: { id: previous_avis.id, avis: { email: email, introduction: intro, confidentiel: asked_confidentiel } }
+        post :create_avis, params: { id: previous_avis.id, avis: { emails: email, introduction: intro, confidentiel: asked_confidentiel } }
       end
 
       context 'when an invalid email' do
