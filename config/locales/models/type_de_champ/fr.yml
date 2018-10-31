@@ -10,6 +10,7 @@ fr:
           date: 'Date'
           datetime: 'Date et Heure'
           number: 'Nombre entier'
+          decimal_number: 'Nombre décimal'
           checkbox: 'Case à cocher'
           civilite: 'Civilité'
           email: 'Email'
