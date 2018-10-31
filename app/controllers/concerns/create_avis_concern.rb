@@ -24,21 +24,23 @@ module CreateAvisConcern
       end
     )
 
-    if create_results.all?(&:persisted?)
-      sent_emails_addresses = create_results.map(&:email_to_display).join(", ")
-      flash.notice = "Une demande d'avis a été envoyée à #{sent_emails_addresses}"
+    persisted, failed = create_results.partition(&:persisted?)
 
-      nil
-    else
-      flash.now.alert = create_results
-        .map(&:errors)
-        .reject(&:empty?)
-        .map(&:full_messages)
-        .flatten
+    if persisted.any?
+      sent_emails_addresses = persisted.map(&:email_to_display).join(", ")
+      flash.notice = "Une demande d'avis a été envoyée à #{sent_emails_addresses}"
+    end
+
+    if failed.any?
+      flash.now.alert = failed
+        .select { |avis| avis.errors.present? }
+        .map { |avis| "#{avis.email} : #{avis.errors.full_messages.join(', ')}" }
 
       # When an error occurs, return the avis back to the controller
       # to give the user a chance to correct and resubmit
-      Avis.new(create_avis_params)
+      Avis.new(create_avis_params.merge(emails: [failed.map(&:email).join(", ")]))
+    else
+      nil
     end
   end
 
