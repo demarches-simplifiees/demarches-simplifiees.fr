@@ -346,7 +346,7 @@ describe Admin::ProceduresController, type: :controller do
 
           it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
           it { expect(subject.individual_with_siret).not_to eq procedure_params[:individual_with_siret] }
-          it { expect(subject.use_api_carto).not_to eq procedure_params[:module_api_carto_attributes][:use_api_carto] }
+          it { expect(subject.use_legacy_carto?).not_to eq procedure_params[:module_api_carto_attributes][:use_api_carto] }
         end
       end
     end
