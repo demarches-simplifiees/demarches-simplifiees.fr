@@ -18,6 +18,10 @@ class ProcedureSerializer < ActiveModel::Serializer
   has_many :types_de_champ_private, serializer: TypeDeChampSerializer
   has_many :types_de_piece_justificative, serializer: TypeDePieceJustificativeSerializer
 
+  def archived_at
+    object.archived_at&.in_time_zone('UTC')
+  end
+
   def link
     if object.path.present?
       if object.brouillon_avec_lien?
