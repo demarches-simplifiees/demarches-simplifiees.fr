@@ -313,7 +313,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       post :create_avis, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id,
-        avis: { emails: email, introduction: 'intro', confidentiel: true }
+        avis: { emails: [email], introduction: 'intro', confidentiel: true }
       }
     end
 

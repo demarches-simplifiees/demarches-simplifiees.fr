@@ -5,7 +5,12 @@ module CreateAvisConcern
 
   def create_avis_from_params(dossier, confidentiel = false)
     confidentiel ||= create_avis_params[:confidentiel]
-    emails = create_avis_params[:emails].split(',').map(&:strip)
+
+    # Because of a limitation of the email_field rails helper,
+    # the :emails parameter is a 1-element array.
+    # Hence the call to first
+    # https://github.com/rails/rails/issues/17225
+    emails = create_avis_params[:emails].first.split(',').map(&:strip)
 
     create_results = Avis.create(
       emails.map do |email|
@@ -38,6 +43,6 @@ module CreateAvisConcern
   end
 
   def create_avis_params
-    params.require(:avis).permit(:emails, :introduction, :confidentiel)
+    params.require(:avis).permit(:introduction, :confidentiel, emails: [])
   end
 end
