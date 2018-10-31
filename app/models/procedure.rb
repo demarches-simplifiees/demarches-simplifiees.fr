@@ -135,6 +135,10 @@ class Procedure < ApplicationRecord
     module_api_carto.use_api_carto? && !module_api_carto.migrated?
   end
 
+  def expose_legacy_carto_api?
+    module_api_carto.use_api_carto? && module_api_carto.migrated?
+  end
+
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
