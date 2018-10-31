@@ -11,6 +11,7 @@ fr:
           datetime: 'Date et Heure'
           number: 'Nombre entier'
           decimal_number: 'Nombre décimal'
+          integer_number: 'Nombre entier'
           checkbox: 'Case à cocher'
           civilite: 'Civilité'
           email: 'Email'
