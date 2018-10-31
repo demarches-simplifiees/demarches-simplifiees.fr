@@ -8,6 +8,7 @@ class TypeDeChamp < ApplicationRecord
     date: 'date',
     datetime: 'datetime',
     number: 'number',
+    decimal_number: 'decimal_number',
     checkbox: 'checkbox',
     civilite: 'civilite',
     email: 'email',
