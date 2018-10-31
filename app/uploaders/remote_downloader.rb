@@ -4,7 +4,9 @@ class RemoteDownloader
   end
 
   def url
-    @url ||= File.join(base_url, CarrierWave::Uploader::Base.fog_directory, @filename)
+    if @filename.present?
+      @url ||= File.join(base_url, CarrierWave::Uploader::Base.fog_directory, @filename)
+    end
   end
 
   protected
