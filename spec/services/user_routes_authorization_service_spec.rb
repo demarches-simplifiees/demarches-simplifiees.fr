@@ -10,25 +10,6 @@ describe UserRoutesAuthorizationService do
 
     subject { described_class.authorized_route? controller, dossier }
 
-    describe 'Users::DossiersController' do
-      let(:controller) { Users::DossiersController }
-
-      describe 'brouillon' do
-        let(:state) { Dossier.states.fetch(:brouillon) }
-        it { is_expected.to be_truthy }
-      end
-
-      describe 'en_construction' do
-        let(:state) { Dossier.states.fetch(:en_construction) }
-        it { is_expected.to be_falsey }
-      end
-
-      describe 'accepte' do
-        let(:state) { Dossier.states.fetch(:accepte) }
-        it { is_expected.to be_falsey }
-      end
-    end
-
     describe 'carte' do
       let(:controller) { Users::CarteController }
 
