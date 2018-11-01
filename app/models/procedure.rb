@@ -47,6 +47,16 @@ class Procedure < ApplicationRecord
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
   scope :avec_lien,             -> { where.not(path: nil) }
 
+  scope :for_api, -> {
+    includes(
+      :administrateur,
+      :types_de_champ_private,
+      :types_de_champ,
+      :types_de_piece_justificative,
+      :module_api_carto
+    )
+  }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validate :check_juridique

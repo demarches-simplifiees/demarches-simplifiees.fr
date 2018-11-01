@@ -8,7 +8,7 @@ class API::V1::ProceduresController < APIController
   private
 
   def fetch_procedure_and_check_token
-    @procedure = Procedure.includes(:administrateur).find(params[:id])
+    @procedure = Procedure.for_api.find(params[:id])
 
     if !valid_token_for_administrateur?(@procedure.administrateur)
       render json: {}, status: :unauthorized
