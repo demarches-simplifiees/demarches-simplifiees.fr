@@ -843,7 +843,7 @@ describe NewUser::DossiersController, type: :controller do
         let(:dossier) { create(:dossier, :en_instruction, user: user, autorisation_donnees: true) }
 
         it_behaves_like "the dossier can not be deleted"
-        it { is_expected.to redirect_to(users_dossier_path(dossier)) }
+        it { is_expected.to redirect_to(dossier_path(dossier)) }
       end
     end
 
@@ -853,6 +853,65 @@ describe NewUser::DossiersController, type: :controller do
 
       it_behaves_like "the dossier can not be deleted"
       it { is_expected.to redirect_to(root_path) }
+    end
+  end
+
+  describe '#new' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:procedure_id) { procedure.id }
+
+    subject { get :new, params: { procedure_id: procedure_id } }
+
+    context 'when params procedure_id is present' do
+      context 'when procedure_id is valid' do
+        context 'when user is logged in' do
+          before do
+            sign_in user
+          end
+
+          it { is_expected.to have_http_status(302) }
+          it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
+
+          it { expect { subject }.to change(Dossier, :count).by 1 }
+
+          context 'when procedure is archived' do
+            let(:procedure) { create(:procedure, :archived) }
+
+            it { is_expected.to redirect_to dossiers_path }
+          end
+        end
+        context 'when user is not logged' do
+          it { is_expected.to have_http_status(302) }
+          it { is_expected.to redirect_to new_user_session_path }
+        end
+      end
+
+      context 'when procedure_id is not valid' do
+        let(:procedure_id) { 0 }
+
+        before do
+          sign_in user
+        end
+
+        it { is_expected.to redirect_to dossiers_path }
+      end
+
+      context 'when procedure is not published' do
+        let(:procedure) { create(:procedure) }
+
+        before do
+          sign_in user
+        end
+
+        it { is_expected.to redirect_to dossiers_path }
+
+        context 'and brouillon param is passed' do
+          subject { get :new, params: { procedure_id: procedure_id, brouillon: true } }
+
+          it { is_expected.to have_http_status(302) }
+          it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
+        end
+      end
     end
   end
 end
