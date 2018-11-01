@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_30_103913) do
+ActiveRecord::Schema.define(version: 2018_10_30_141238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -421,17 +421,6 @@ ActiveRecord::Schema.define(version: 2018_10_30_103913) do
     t.index ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id"
   end
 
-  create_table "procedure_paths", id: :serial, force: :cascade do |t|
-    t.string "path"
-    t.integer "procedure_id"
-    t.integer "administrateur_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.bigint "test_procedure_id"
-    t.index ["path"], name: "index_procedure_paths_on_path"
-    t.index ["test_procedure_id"], name: "index_procedure_paths_on_test_procedure_id"
-  end
-
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
     t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
@@ -621,8 +610,6 @@ ActiveRecord::Schema.define(version: 2018_10_30_103913) do
   add_foreign_key "feedbacks", "users"
   add_foreign_key "geo_areas", "champs"
   add_foreign_key "initiated_mails", "procedures"
-  add_foreign_key "procedure_paths", "administrateurs"
-  add_foreign_key "procedure_paths", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
   add_foreign_key "procedures", "services"
   add_foreign_key "received_mails", "procedures"
