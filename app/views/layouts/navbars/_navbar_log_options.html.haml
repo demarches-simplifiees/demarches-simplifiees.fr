@@ -1,15 +1,11 @@
-- if user_signed_in?
+- if account_signed_in?
   #sign-out.col-xs-2.no-padding
-    = render partial: 'users/login_banner'
-    = render partial: 'layouts/credentials'
-- elsif gestionnaire_signed_in?
-  #sign-out.col-xs-2.no-padding
-    = render partial: 'gestionnaires/login_banner'
-    = render partial: 'layouts/credentials'
-- elsif administrateur_signed_in?
-  #sign-out.col-xs-2.no-padding
-    = render partial: 'administrateurs/login_banner'
-    = render partial: 'layouts/credentials'
+    = link_to "/users/sign_out", method: :delete do
+      %span.fa.fa-sign-out
+      Se déconnecter
+    .dropdown-menu#credentials
+      .description= t("utils.deconnexion")
+      = current_account.email
 - else
   #sign-in.col-xs-2
-    = link_to "Connexion", new_user_session_path, :class => 'btn btn-lg btn-primary'
+    = link_to "Connexion", new_user_session_path, class: 'btn btn-lg btn-primary'

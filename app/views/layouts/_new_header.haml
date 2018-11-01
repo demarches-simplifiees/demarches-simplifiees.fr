@@ -57,8 +57,8 @@
               = image_tag "icons/account-circle.svg", title: "Mon compte"
             %ul.header-menu.dropdown-content
               %li
-                .menu-item{ title: current_email }
-                  = current_email
+                .menu-item{ title: current_account.email }
+                  = current_account.email
               - if administration_signed_in?
                 %li
                   = link_to manager_root_path, class: "menu-item menu-link" do

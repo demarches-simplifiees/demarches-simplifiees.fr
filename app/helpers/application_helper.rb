@@ -56,12 +56,6 @@ module ApplicationHelper
     # rubocop:enable Rails/OutputSafety
   end
 
-  def current_email
-    current_user&.email ||
-      current_gestionnaire&.email ||
-      current_administrateur&.email
-  end
-
   def staging?
     ENV['APP_NAME'] == 'tps_dev'
   end
@@ -102,8 +96,8 @@ module ApplicationHelper
     if sentry
       {
         dsn: sentry[:browser],
-        id: current_user&.id,
-        email: current_email
+        id: current_account.id,
+        email: current_account.email
       }.to_json
     else
       {}

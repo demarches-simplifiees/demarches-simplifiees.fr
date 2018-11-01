@@ -9,7 +9,7 @@
       Pensez bien à nous donner le plus d'informations possible pour que nous puissions vous aider au mieux.
 
     = form_tag contact_path, method: :post, multipart: true, class: 'form' do |f|
-      - if !logged_in?
+      - if !account_signed_in?
         .contact-champ
           = label_tag :email do
             Email
