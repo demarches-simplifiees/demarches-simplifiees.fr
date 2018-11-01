@@ -1,5 +1,5 @@
 class Champs::CarteController < ApplicationController
-  before_action :authenticate_logged_user!
+  before_action :authenticate_account!
 
   def show
     @selector = ".carte-#{params[:position]}"
@@ -10,10 +10,10 @@ class Champs::CarteController < ApplicationController
       geo_json = params[:dossier][:champs_private_attributes][params[:position]][:value]
     end
 
-    if params[:champ_id].present?
+    if params[:champ_id].present? && current_account.usager?
       @champ = Champ
         .joins(:dossier)
-        .where(dossiers: { user_id: logged_user_ids })
+        .where(dossiers: { user_id: current_account.id })
         .find_by(id: params[:champ_id])
     else
       @champ = Champs::CarteChamp.new(type_de_champ: TypeDeChamp.new(

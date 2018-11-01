@@ -1,5 +1,5 @@
 class Champs::DossierLinkController < ApplicationController
-  before_action :authenticate_logged_user!
+  before_action :authenticate_account!
 
   def show
     @position = params[:position]
