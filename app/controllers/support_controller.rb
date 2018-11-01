@@ -64,14 +64,14 @@ class SupportController < ApplicationController
   end
 
   def direct_message?
-    user_signed_in? && params[:type] == Helpscout::FormAdapter::TYPE_INSTRUCTION && dossier.present? && !dossier.brouillon?
+    usager_signed_in? && params[:type] == Helpscout::FormAdapter::TYPE_INSTRUCTION && dossier.present? && !dossier.brouillon?
   end
 
   def dossier
-    @dossier ||= current_user&.dossiers&.find_by(id: params[:dossier_id])
+    @dossier ||= current_account.usager&.dossiers&.find_by(id: params[:dossier_id])
   end
 
   def email
-    logged_user ? logged_user.email : params[:email]
+    current_account.email || params[:email]
   end
 end
