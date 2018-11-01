@@ -2,7 +2,8 @@ module NewUser
   class DossiersController < UserController
     include DossierHelper
 
-    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche]
+    SESSION_USER_RETURN_LOCATION = 'user_return_to'
+    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new]
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
@@ -11,6 +12,7 @@ module NewUser
     before_action :forbid_invite_submission!, only: [:update_brouillon]
     before_action :forbid_closed_submission!, only: [:update_brouillon]
     before_action :show_demarche_en_test_banner
+    before_action :store_user_location!, only: :new
 
     def index
       @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
@@ -194,7 +196,7 @@ module NewUser
         redirect_to dossiers_path
       else
         flash.notice = "L'instruction de votre dossier a commencé, il n'est plus possible de supprimer votre dossier. Si vous souhaitez annuler l'instruction contactez votre administration par la messagerie de votre dossier."
-        redirect_to users_dossier_path(dossier)
+        redirect_to dossier_path(dossier)
       end
     end
 
@@ -210,7 +212,37 @@ module NewUser
       end
     end
 
+    def new
+      erase_user_location!
+
+      if params[:brouillon]
+        procedure = Procedure.brouillon.find(params[:procedure_id])
+      else
+        procedure = Procedure.publiees.find(params[:procedure_id])
+      end
+
+      dossier = Dossier.create!(procedure: procedure, user: current_user, state: Dossier.states.fetch(:brouillon))
+
+      if dossier.procedure.for_individual
+        redirect_to identite_dossier_path(dossier)
+      else
+        redirect_to siret_dossier_path(id: dossier.id)
+      end
+    rescue ActiveRecord::RecordNotFound
+      flash.alert = t('errors.messages.procedure_not_found')
+
+      redirect_to url_for dossiers_path
+    end
+
     private
+
+    def store_user_location!
+      store_location_for(:user, request.fullpath)
+    end
+
+    def erase_user_location!
+      session.delete(SESSION_USER_RETURN_LOCATION)
+    end
 
     def show_demarche_en_test_banner
       if @dossier.present? && @dossier.procedure.brouillon?

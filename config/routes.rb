@@ -127,11 +127,6 @@ Rails.application.routes.draw do
     post ':position/carte', to: 'carte#show', as: :carte
   end
 
-  namespace :commencer do
-    get '/test/:path' => '/users/dossiers#commencer_test', as: :test
-    get '/:path' => '/users/dossiers#commencer'
-  end
-
   get "patron" => "root#patron"
 
   get "contact", to: "support#index"
@@ -149,7 +144,7 @@ Rails.application.routes.draw do
       resources :invites, only: [:index, :show]
     end
 
-    resources :dossiers do
+    resources :dossiers, only: [] do
       post '/carte/zones' => 'carte#zones'
       get '/carte' => 'carte#show'
       post '/carte' => 'carte#save'
@@ -267,7 +262,12 @@ Rails.application.routes.draw do
   #
 
   scope module: 'new_user' do
-    resources :dossiers, only: [:index, :show] do
+    namespace :commencer do
+      get '/test/:path', action: 'commencer_test', as: :test
+      get '/:path', action: 'commencer'
+    end
+
+    resources :dossiers, only: [:index, :show, :new] do
       member do
         get 'identite'
         patch 'update_identite'
