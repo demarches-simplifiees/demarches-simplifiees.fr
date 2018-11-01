@@ -33,7 +33,7 @@ describe ApplicationController, type: :controller do
     context 'when no one is logged in' do
       it do
         expect(Raven).to have_received(:user_context)
-          .with({ ip_address: '0.0.0.0', roles: 'Guest' })
+          .with({ ip_address: '0.0.0.0', roles: 'Visiteur' })
       end
 
       it do
@@ -42,17 +42,17 @@ describe ApplicationController, type: :controller do
         end
         expect(payload).to eq({
           user_agent: 'Rails Testing',
-          user_roles: 'Guest'
+          user_roles: 'Visiteur'
         })
       end
     end
 
-    context 'when a user is logged in' do
+    context 'when a usager is logged in' do
       let(:current_user) { create(:user) }
 
       it do
         expect(Raven).to have_received(:user_context)
-          .with({ ip_address: '0.0.0.0', email: current_user.email, id: current_user.id, roles: 'User' })
+          .with({ ip_address: '0.0.0.0', email: current_user.email, id: current_user.id, roles: 'Usager' })
       end
 
       it do
@@ -63,12 +63,12 @@ describe ApplicationController, type: :controller do
           user_agent: 'Rails Testing',
           user_id: current_user.id,
           user_email: current_user.email,
-          user_roles: 'User'
+          user_roles: 'Usager'
         })
       end
     end
 
-    context 'when someone is logged as a user, gestionnaire, administrateur and administration' do
+    context 'when someone is logged as a usager, instructeur, administrateur and manager' do
       let(:current_user) { create(:user) }
       let(:current_gestionnaire) { create(:gestionnaire) }
       let(:current_administrateur) { create(:administrateur) }
@@ -76,7 +76,7 @@ describe ApplicationController, type: :controller do
 
       it do
         expect(Raven).to have_received(:user_context)
-          .with({ ip_address: '0.0.0.0', email: current_user.email, id: current_user.id, roles: 'User, Gestionnaire, Administrateur, Administration' })
+          .with({ ip_address: '0.0.0.0', email: current_user.email, id: current_user.id, roles: 'Usager, Instructeur, Administrateur, Manager' })
       end
 
       it do
@@ -87,7 +87,7 @@ describe ApplicationController, type: :controller do
           user_agent: 'Rails Testing',
           user_id: current_user.id,
           user_email: current_user.email,
-          user_roles: 'User, Gestionnaire, Administrateur, Administration'
+          user_roles: 'Usager, Instructeur, Administrateur, Manager'
         })
       end
     end
