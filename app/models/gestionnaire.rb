@@ -222,6 +222,10 @@ class Gestionnaire < ApplicationRecord
     save
   end
 
+  def role_name
+    'Instructeur'
+  end
+
   private
 
   def annotations_hash(demande, annotations_privees, avis, messagerie)

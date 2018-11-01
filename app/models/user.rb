@@ -54,6 +54,10 @@ class User < ApplicationRecord
     owns?(dossier) || invite?(dossier.id)
   end
 
+  def role_name
+    'Usager'
+  end
+
   private
 
   def link_invites!

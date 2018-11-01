@@ -34,4 +34,8 @@ class Administration < ApplicationRecord
 
     administrateur
   end
+
+  def role_name
+    'Manager'
+  end
 end

@@ -119,4 +119,8 @@ class Administrateur < ApplicationRecord
   def owns?(procedure)
     id == procedure.administrateur_id
   end
+
+  def role_name
+    'Administrateur'
+  end
 end
