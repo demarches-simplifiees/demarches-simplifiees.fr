@@ -16,6 +16,19 @@ ActiveRecord::Schema.define(version: 2018_11_08_151929) do
   enable_extension "plpgsql"
   enable_extension "unaccent"
 
+  create_table "accounts", force: :cascade do |t|
+    t.string "email"
+    t.bigint "usager_id"
+    t.bigint "instructeur_id"
+    t.bigint "administrateur_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["administrateur_id"], name: "index_accounts_on_administrateur_id"
+    t.index ["email"], name: "index_accounts_on_email"
+    t.index ["instructeur_id"], name: "index_accounts_on_instructeur_id"
+    t.index ["usager_id"], name: "index_accounts_on_usager_id"
+  end
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -605,6 +618,7 @@ ActiveRecord::Schema.define(version: 2018_11_08_151929) do
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id"
   end
 
+  add_foreign_key "accounts", "administrateurs"
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "gestionnaires", column: "claimant_id"
