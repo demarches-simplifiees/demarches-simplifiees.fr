@@ -16,10 +16,13 @@
     = javascript_include_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
     = csrf_meta_tags
 
+    = render partial: "layouts/matomo"
+
     :javascript
       DATA = [{
         sentry: #{raw(sentry_config)}
       }];
+
   %body{ class: browser.platform.ios? ? 'ios' : nil }
     = render partial: 'layouts/outdated_browser_banner'
     = render partial: 'layouts/pre_maintenance'
