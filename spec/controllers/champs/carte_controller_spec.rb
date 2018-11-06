@@ -43,7 +43,6 @@ describe Champs::CarteController, type: :controller do
       let(:selection) { [[{ "lat": 48.87442541960633, "lng": 2.3859214782714844 }, { "lat": 48.87273183590832, "lng": 2.3850631713867183 }, { "lat": 48.87081237174292, "lng": 2.3809432983398438 }, { "lat": 48.8712640169951, "lng": 2.377510070800781 }, { "lat": 48.87510283703279, "lng": 2.3778533935546875 }, { "lat": 48.87544154230615, "lng": 2.382831573486328 }, { "lat": 48.87442541960633, "lng": 2.3859214782714844 }]] }
 
       it { expect(response.body).not_to be_nil }
-      it { expect(response.body).to include('QPCODE1234') }
       it { expect(response.body).to include('MultiPolygon') }
       it { expect(response.body).to include('[2.38715792094576,48.8723062632126]') }
     end
