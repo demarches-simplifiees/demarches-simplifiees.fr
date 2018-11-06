@@ -1,9 +1,9 @@
 %section.ask-avis
-  %h1.tab-title Inviter une personne à donner son avis
-  %p.avis-notice L'invité pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais il ne pourra le modifier.
+  %h1.tab-title Inviter des personnes à donner leur avis
+  %p.avis-notice Les invités pourront consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais ils ne pourront pas le modifier.
 
   = form_for avis, url: url, html: { class: 'form' } do |f|
-    = f.email_field :email, placeholder: 'Adresse email', required: true
+    = f.email_field :emails, placeholder: 'Adresses email, séparées par des virgules', required: true, multiple: true
     = f.text_area :introduction, rows: 3, value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
     .flex.justify-between.align-baseline
       - if must_be_confidentiel

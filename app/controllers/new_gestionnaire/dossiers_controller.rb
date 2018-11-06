@@ -2,6 +2,7 @@ module NewGestionnaire
   class DossiersController < ProceduresController
     include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
+    include CreateAvisConcern
 
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
@@ -130,12 +131,11 @@ module NewGestionnaire
     end
 
     def create_avis
-      @avis = Avis.new(avis_params.merge(claimant: current_gestionnaire, dossier: dossier))
-      if @avis.save
-        flash.notice = "Une demande d'avis a été envoyée à #{@avis.email_to_display}"
+      @avis = create_avis_from_params(dossier)
+
+      if @avis.nil?
         redirect_to avis_gestionnaire_dossier_path(procedure, dossier)
       else
-        flash.now.alert = @avis.errors.full_messages
         @avis_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.avis_seen_at
         render :avis
       end
@@ -161,10 +161,6 @@ module NewGestionnaire
 
     def commentaire_params
       params.require(:commentaire).permit(:body, :file)
-    end
-
-    def avis_params
-      params.require(:avis).permit(:email, :introduction, :confidentiel)
     end
 
     def champs_private_params
