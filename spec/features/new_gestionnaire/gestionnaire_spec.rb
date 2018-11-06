@@ -73,9 +73,6 @@ feature 'The gestionnaire part' do
   end
 
   scenario 'A gestionnaire can use avis' do
-    ActionMailer::Base.deliveries = []
-    ActiveJob::Base.queue_adapter = :test
-
     log_in(gestionnaire.email, password)
 
     click_on procedure.libelle
