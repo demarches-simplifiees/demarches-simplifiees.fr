@@ -5,6 +5,10 @@ class Champs::YesNoChamp < Champs::CheckboxChamp
     end
   end
 
+  def to_s
+    value_for_export
+  end
+
   private
 
   def value_for_export
