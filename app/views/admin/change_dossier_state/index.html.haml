@@ -1,7 +1,0 @@
-.center
-  %h2 Outil de changement d'état d'un dossier
-
-  = form_for @dossier, url: 'change_dossier_state', action: :post do |f|
-    Dossier ID
-    = f.text_field :id
-    = f.submit 'Vérifier état'
