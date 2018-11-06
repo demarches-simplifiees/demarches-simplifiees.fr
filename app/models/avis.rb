@@ -6,6 +6,7 @@ class Avis < ApplicationRecord
   belongs_to :claimant, class_name: 'Gestionnaire'
 
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
+  validates :claimant, presence: true
 
   before_validation -> { sanitize_email(:email) }
   before_create :try_to_assign_gestionnaire
@@ -17,6 +18,10 @@ class Avis < ApplicationRecord
   scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
   scope :by_latest, -> { order(updated_at: :desc) }
   scope :updated_since?, -> (date) { where('avis.updated_at > ?', date) }
+
+  # The form allows subtmitting avis requests to several emails at once,
+  # hence this virtual attribute.
+  attr_accessor :emails
 
   def email_to_display
     gestionnaire&.email || email
