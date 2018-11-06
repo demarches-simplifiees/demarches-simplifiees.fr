@@ -26,4 +26,9 @@ module DossierHelper
   def dossier_submission_is_closed?(dossier)
     dossier.brouillon? && dossier.procedure.archivee?
   end
+
+  def dossier_display_state(dossier, lower: false)
+    state = I18n.t(dossier.state, scope: [:activerecord, :attributes, :dossier, :state])
+    lower ? state.downcase : state
+  end
 end
