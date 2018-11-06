@@ -13,8 +13,8 @@ Flipflop.configure do
       title: "Champ SIRET"
     feature :champ_linked_dropdown,
       title: "Champ double menu déroulant"
-    feature :champ_carte,
-      title: "Champ Carte"
+    feature :champ_integer_number,
+      title: "Champ nombre entier"
   end
 
   feature :web_hook
