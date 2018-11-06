@@ -600,10 +600,6 @@ describe Dossier do
     let(:procedure) { create(:procedure) }
     let(:user) { create(:user) }
 
-    before do
-      ActionMailer::Base.deliveries.clear
-    end
-
     it "send an email when the dossier is created for the very first time" do
       dossier = nil
       ActiveJob::Base.queue_adapter = :test
