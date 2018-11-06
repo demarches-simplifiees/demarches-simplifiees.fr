@@ -2,10 +2,12 @@ require 'spec_helper'
 
 describe TypesDeChampService do
   let(:params) { ActionController::Parameters.new({ procedure: { types_de_champ_attributes: types_de_champ_attributes } }) }
+  let(:procedure) { create(:procedure) }
+  let(:service) { TypesDeChampService.new(procedure) }
 
-  let(:result) { TypesDeChampService.create_update_procedure_params(params) }
+  describe 'create_update_procedure_params' do
+    let(:result) { service.create_update_procedure_params(params) }
 
-  describe 'self.create_update_procedure_params' do
     describe 'the drop down list attributes' do
       let(:types_de_champ_attributes) do
         {
