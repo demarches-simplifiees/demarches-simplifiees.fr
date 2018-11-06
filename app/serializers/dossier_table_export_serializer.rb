@@ -1,4 +1,6 @@
 class DossierTableExportSerializer < ActiveModel::Serializer
+  include DossierHelper
+
   attributes :id,
     :created_at,
     :updated_at,
@@ -22,20 +24,7 @@ class DossierTableExportSerializer < ActiveModel::Serializer
   end
 
   def state
-    case object.state
-    when Dossier.states.fetch(:en_construction)
-      'initiated'
-    when Dossier.states.fetch(:en_instruction)
-      'received'
-    when Dossier.states.fetch(:accepte)
-      'closed'
-    when Dossier.states.fetch(:refuse)
-      'refused'
-    when Dossier.states.fetch(:sans_suite)
-      'without_continuation'
-    else
-      object.state
-    end
+    dossier_legacy_state(object)
   end
 
   def initiated_at
