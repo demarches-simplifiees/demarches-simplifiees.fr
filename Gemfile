@@ -145,6 +145,8 @@ group :test do
   gem 'capybara-selenium'
   # Save a dump of the page when an integration test fails
   gem 'capybara-screenshot'
+  # Access emails during integration tests
+  gem 'capybara-email'
 end
 
 group :development do
