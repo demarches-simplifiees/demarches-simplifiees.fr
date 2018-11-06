@@ -102,14 +102,8 @@ feature 'Invitations' do
   def log_in(user)
     visit '/'
     click_on 'Connexion'
-    submit_login_form(user.email, user.password)
+    sign_in_with(user.email, user.password)
     expect(page).to have_current_path(dossiers_path)
-  end
-
-  def submit_login_form(email, password)
-    fill_in 'user_email', with: email
-    fill_in 'user_password', with: password
-    click_on 'Se connecter'
   end
 
   def navigate_to_brouillon(dossier)
@@ -127,7 +121,7 @@ feature 'Invitations' do
   def navigate_to_invited_dossier(invite)
     visit users_dossiers_invite_path(invite)
     expect(page).to have_current_path(new_user_session_path)
-    submit_login_form(invited_user.email, invited_user.password)
+    sign_in_with(invited_user.email, invited_user.password)
   end
 
   def send_invite_to(invited_email)
