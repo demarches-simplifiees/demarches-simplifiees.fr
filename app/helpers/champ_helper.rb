@@ -9,9 +9,9 @@ module ChampHelper
     raw({
       position: champ.position,
       selection: champ.value.present? ? JSON.parse(champ.value) : [],
-      quartiersPrioritaires: champ.quartiers_prioritaires? ? champ.quartiers_prioritaires : [],
-      cadastres: champ.cadastres? ? champ.cadastres : [],
-      parcellesAgricoles: champ.parcelles_agricoles? ? champ.parcelles_agricoles : []
+      quartiersPrioritaires: champ.quartiers_prioritaires? ? champ.quartiers_prioritaires.as_json(except: :properties) : [],
+      cadastres: champ.cadastres? ? champ.cadastres.as_json(except: :properties) : [],
+      parcellesAgricoles: champ.parcelles_agricoles? ? champ.parcelles_agricoles.as_json(except: :properties) : []
     }.to_json)
     # rubocop:enable Rails/OutputSafety
   end
