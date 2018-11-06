@@ -290,8 +290,8 @@ describe API::V1::DossiersController do
               super().find { |champ| champ[:type_de_champ][:type_champ] == 'user_geometry' }
             end
 
-            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'user_geometry', type_champ: 'user_geometry', order_place: -1, descripton: '' }) }
-            it { expect(subject[:value]).to match(UserGeometry.new(dossier.json_latlngs).value) }
+            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'user geometry', type_champ: 'user_geometry', order_place: -1, descripton: '' }) }
+            it { expect(subject[:value]).to match(UserGeometry.new(dossier.json_latlngs).geometry) }
           end
         end
 

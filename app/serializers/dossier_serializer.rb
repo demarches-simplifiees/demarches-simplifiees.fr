@@ -23,7 +23,7 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :pieces_justificatives
   has_many :types_de_piece_justificative
 
-  has_many :champs
+  has_many :champs, serializer: ChampSerializer
 
   def champs
     champs = object.champs.to_a
@@ -34,6 +34,16 @@ class DossierSerializer < ActiveModel::Serializer
 
       if object.user_geometry.present?
         champs << object.user_geometry
+      end
+    elsif object.expose_legacy_carto_api?
+      champ_carte = champs.find do |champ|
+        champ.type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:carte)
+      end
+
+      if champ_carte.present?
+        carto_champs = champ_carte.geo_areas.to_a
+        carto_champs << champ_carte.user_geo_area
+        champs += carto_champs.compact
       end
     end
 

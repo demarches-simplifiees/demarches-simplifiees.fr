@@ -841,7 +841,7 @@ describe Dossier do
         }
       end
 
-      subject{ dossier.user_geometry.value }
+      subject{ dossier.user_geometry.geometry }
 
       it { is_expected.to eq(expected) }
     end
