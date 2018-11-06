@@ -1,3 +1,3 @@
 .row.white-back
   #liste-champ
-    = render partial: 'admin/types_de_champ/form'
+    = render partial: 'admin/types_de_champ/form', locals: { procedure: @procedure, type_de_champ_service: @type_de_champ_service }
