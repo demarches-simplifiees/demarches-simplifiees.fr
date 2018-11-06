@@ -44,7 +44,7 @@ class DossierSerializer < ActiveModel::Serializer
   end
 
   def state
-    object.old_state_value
+    dossier_legacy_state(object)
   end
 
   def simplified_state
