@@ -4,8 +4,10 @@ module Manager
     before_action :default_params
 
     def default_params
-      params[:order] ||= "created_at"
-      params[:direction] ||= "desc"
+      params[resource_name] ||= {
+        order: "created_at",
+        direction: "desc"
+      }
     end
 
     protected
