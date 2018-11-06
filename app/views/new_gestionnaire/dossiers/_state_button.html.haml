@@ -1,7 +1,7 @@
 - if dossier.en_construction? || dossier.en_instruction?
   %span.dropdown
     %button.button.primary.dropdown-button
-      = dossier.decorate.display_state
+      = dossier_display_state dossier
     .dropdown-content.fade-in-down
       %ul.dropdown-items
         - if dossier.en_construction?
@@ -55,7 +55,7 @@
   - if dossier.motivation.present? || dossier.attestation.present?
     %span.dropdown
       %button.button.dropdown-button{ class: button_or_label_class(dossier) }
-        = dossier.statut
+        = dossier_display_state(dossier, lower: true)
       .dropdown-content.fade-in-down.terminated
         - if dossier.motivation.present?
           %h4 Motivation
@@ -67,4 +67,4 @@
           = link_to "Voir l'attestation", attestation_gestionnaire_dossier_path(dossier.procedure, dossier), target: '_blank', class: 'button'
   - else
     %span.label{ class: button_or_label_class(dossier) }
-      = dossier.statut
+      = dossier_display_state(dossier, lower: true)
