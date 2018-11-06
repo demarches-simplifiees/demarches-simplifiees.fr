@@ -100,22 +100,35 @@ describe NewGestionnaire::AvisController, type: :controller do
 
     describe '#create_avis' do
       let!(:previous_avis) { Avis.create(dossier: dossier, claimant: claimant, gestionnaire: gestionnaire, confidentiel: previous_avis_confidentiel) }
-      let(:email) { 'a@b.com' }
+      let(:emails) { ['a@b.com'] }
       let(:intro) { 'introduction' }
       let(:created_avis) { Avis.last }
+      let!(:old_avis_count) { Avis.count }
 
       before do
-        post :create_avis, params: { id: previous_avis.id, avis: { email: email, introduction: intro, confidentiel: asked_confidentiel } }
+        post :create_avis, params: { id: previous_avis.id, avis: { emails: emails, introduction: intro, confidentiel: asked_confidentiel } }
       end
 
       context 'when an invalid email' do
         let(:previous_avis_confidentiel) { false }
         let(:asked_confidentiel) { false }
-        let(:email) { "toto.fr" }
+        let(:emails) { ["toto.fr"] }
 
         it { expect(response).to render_template :instruction }
-        it { expect(flash.alert).to eq(["Email n'est pas valide"]) }
+        it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
         it { expect(Avis.last).to eq(previous_avis) }
+      end
+
+      context 'with multiple emails' do
+        let(:asked_confidentiel) { false }
+        let(:previous_avis_confidentiel) { false }
+        let(:emails) { ["toto.fr,titi@titimail.com"] }
+
+        it { expect(response).to render_template :instruction }
+        it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
+        it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à titi@titimail.com") }
+        it { expect(Avis.count).to eq(old_avis_count + 1) }
+        it { expect(created_avis.email).to eq("titi@titimail.com") }
       end
 
       context 'when the previous avis is public' do
@@ -125,7 +138,7 @@ describe NewGestionnaire::AvisController, type: :controller do
           let(:asked_confidentiel) { false }
 
           it { expect(created_avis.confidentiel).to be(false) }
-          it { expect(created_avis.email).to eq(email) }
+          it { expect(created_avis.email).to eq(emails.last) }
           it { expect(created_avis.introduction).to eq(intro) }
           it { expect(created_avis.dossier).to eq(previous_avis.dossier) }
           it { expect(created_avis.claimant).to eq(gestionnaire) }

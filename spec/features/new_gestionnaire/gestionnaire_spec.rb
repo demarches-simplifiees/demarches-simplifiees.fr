@@ -192,7 +192,7 @@ feature 'The gestionnaire part' do
   end
 
   def ask_confidential_avis(to, introduction)
-    fill_in 'avis_email', with: to
+    fill_in 'avis_emails', with: to
     fill_in 'avis_introduction', with: introduction
     select 'confidentiel', from: 'avis_confidentiel'
     click_on 'Demander un avis'
