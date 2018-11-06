@@ -96,4 +96,74 @@ RSpec.describe DossierHelper, type: :helper do
       it_behaves_like "returns false"
     end
   end
+
+  describe '.dossier_display_state' do
+    let(:dossier) { create(:dossier) }
+
+    subject { dossier_display_state(dossier) }
+
+    it 'brouillon is brouillon' do
+      dossier.brouillon!
+      expect(subject).to eq('Brouillon')
+    end
+
+    it 'en_construction is En construction' do
+      dossier.en_construction!
+      expect(subject).to eq('En construction')
+    end
+
+    it 'accepte is traité' do
+      dossier.accepte!
+      expect(subject).to eq('Accepté')
+    end
+
+    it 'en_instruction is reçu' do
+      dossier.en_instruction!
+      expect(subject).to eq('En instruction')
+    end
+
+    it 'sans_suite is traité' do
+      dossier.sans_suite!
+      expect(subject).to eq('Sans suite')
+    end
+
+    it 'refuse is traité' do
+      dossier.refuse!
+      expect(subject).to eq('Refusé')
+    end
+
+    context "lower: true" do
+      subject { dossier_display_state(dossier, lower: true) }
+
+      it 'brouillon is brouillon' do
+        dossier.brouillon!
+        expect(subject).to eq('brouillon')
+      end
+
+      it 'en_construction is En construction' do
+        dossier.en_construction!
+        expect(subject).to eq('en construction')
+      end
+
+      it 'accepte is traité' do
+        dossier.accepte!
+        expect(subject).to eq('accepté')
+      end
+
+      it 'en_instruction is reçu' do
+        dossier.en_instruction!
+        expect(subject).to eq('en instruction')
+      end
+
+      it 'sans_suite is traité' do
+        dossier.sans_suite!
+        expect(subject).to eq('sans suite')
+      end
+
+      it 'refuse is traité' do
+        dossier.refuse!
+        expect(subject).to eq('refusé')
+      end
+    end
+  end
 end
