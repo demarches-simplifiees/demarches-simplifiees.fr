@@ -173,10 +173,6 @@ Rails.application.routes.draw do
     get 'procedures/path_list' => 'procedures#path_list'
     get 'procedures/available' => 'procedures#check_availability'
 
-    get 'change_dossier_state' => 'change_dossier_state#index'
-    post 'change_dossier_state' => 'change_dossier_state#check'
-    patch 'change_dossier_state' => 'change_dossier_state#change'
-
     resources :procedures do
       collection do
         get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
