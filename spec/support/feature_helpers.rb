@@ -14,6 +14,12 @@ module FeatureHelpers
     dossier = FactoryBot.create(:dossier)
     dossier
   end
+
+  def sign_in_with(email, password)
+    fill_in :user_email, with: email
+    fill_in :user_password, with: password
+    click_on 'Se connecter'
+  end
 end
 
 RSpec.configure do |config|
