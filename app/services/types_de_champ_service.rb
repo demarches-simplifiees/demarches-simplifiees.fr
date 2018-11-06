@@ -1,6 +1,24 @@
 class TypesDeChampService
   include Rails.application.routes.url_helpers
 
+  TOGGLES = {
+    TypeDeChamp.type_champs.fetch(:piece_justificative)   => :champ_pj?,
+    TypeDeChamp.type_champs.fetch(:siret)                 => :champ_siret?,
+    TypeDeChamp.type_champs.fetch(:linked_drop_down_list) => :champ_linked_dropdown?,
+    TypeDeChamp.type_champs.fetch(:integer_number)        => :champ_integer_number?
+  }
+
+  def options
+    types_de_champ = TypeDeChamp.type_de_champs_list_fr
+
+    types_de_champ.select! do |tdc|
+      toggle = TOGGLES[tdc.last]
+      toggle.blank? || Flipflop.send(toggle)
+    end
+
+    types_de_champ
+  end
+
   def initialize(procedure, private_type_de_champ = false)
     @procedure = procedure
     @private_type_de_champ = private_type_de_champ
