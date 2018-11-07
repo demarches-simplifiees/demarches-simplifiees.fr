@@ -14,7 +14,7 @@ describe 'admin/types_de_champ/show.html.haml', type: :view do
     before do
       procedure.reload
       assign(:procedure, procedure)
-      assign(:types_de_champ_facade, AdminTypesDeChampFacades.new(false, procedure))
+      assign(:type_de_champ_service, TypesDeChampService.new(procedure))
       render
     end
     it 'sorts by order place' do
@@ -26,7 +26,7 @@ describe 'admin/types_de_champ/show.html.haml', type: :view do
     subject do
       procedure.reload
       assign(:procedure, procedure)
-      assign(:types_de_champ_facade, AdminTypesDeChampFacades.new(false, procedure))
+      assign(:type_de_champ_service, TypesDeChampService.new(procedure))
       render
       rendered
     end
