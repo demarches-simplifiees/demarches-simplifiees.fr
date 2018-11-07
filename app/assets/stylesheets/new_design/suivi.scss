@@ -1,0 +1,27 @@
+$default-space: 15px;
+$new-p-margin-bottom: 3 * $default-space;
+
+.suivi {
+  width: 1040px;
+  margin: 0 auto;
+  padding-top: $default-space * 2;
+  padding-bottom: $default-space * 2;
+
+  ul {
+    list-style-type: disc;
+    margin-top: -($default-space * 2);
+  }
+
+  iframe {
+    border: none;
+    width: 100%;
+  }
+
+  .new-h2 {
+    text-align: left;
+  }
+}
+
+.new-p {
+  margin-bottom: $new-p-margin-bottom;
+}
