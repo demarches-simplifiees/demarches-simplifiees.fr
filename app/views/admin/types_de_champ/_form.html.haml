@@ -1,5 +1,5 @@
-= form_for [:admin, @procedure], url: @types_de_champ_facade.url, remote: true do |f|
-  = render partial: 'admin/types_de_champ/fields', locals: { types_de_champ: @types_de_champ_facade.types_de_champ, f: f }
+= form_for [:admin, procedure], url: type_de_champ_service.url, remote: true do |f|
+  = render partial: 'admin/types_de_champ/fields', locals: { type_de_champ_service: type_de_champ_service, types_de_champ: type_de_champ_service.types_de_champ, f: f }
 
   = f.button 'Enregistrer',
     id: :save,
@@ -8,4 +8,4 @@
 
   %hr
   #new_type_de_champ
-    = render partial: 'admin/types_de_champ/fields', locals: { types_de_champ: @types_de_champ_facade.new_type_de_champ, f: f }
+    = render partial: 'admin/types_de_champ/fields', locals: { type_de_champ_service: type_de_champ_service, types_de_champ: type_de_champ_service.new_type_de_champ, f: f }
