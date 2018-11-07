@@ -31,4 +31,21 @@ module DossierHelper
     state = I18n.t(dossier.state, scope: [:activerecord, :attributes, :dossier, :state])
     lower ? state.downcase : state
   end
+
+  def dossier_legacy_state(dossier)
+    case dossier.state
+    when Dossier.states.fetch(:en_construction)
+      'initiated'
+    when Dossier.states.fetch(:en_instruction)
+      'received'
+    when Dossier.states.fetch(:accepte)
+      'closed'
+    when Dossier.states.fetch(:refuse)
+      'refused'
+    when Dossier.states.fetch(:sans_suite)
+      'without_continuation'
+    else
+      dossier.state
+    end
+  end
 end
