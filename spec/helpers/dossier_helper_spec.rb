@@ -166,4 +166,38 @@ RSpec.describe DossierHelper, type: :helper do
       end
     end
   end
+
+  describe '.dossier_legacy_state' do
+    subject { dossier_legacy_state(dossier) }
+
+    context 'when the dossier is en instruction' do
+      let(:dossier) { create(:dossier) }
+
+      it { is_expected.to eq('brouillon') }
+    end
+
+    context 'when the dossier is en instruction' do
+      let(:dossier) { create(:dossier, :en_instruction) }
+
+      it { is_expected.to eq('received') }
+    end
+
+    context 'when the dossier is accepte' do
+      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:accepte)) }
+
+      it { is_expected.to eq('closed') }
+    end
+
+    context 'when the dossier is refuse' do
+      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:refuse)) }
+
+      it { is_expected.to eq('refused') }
+    end
+
+    context 'when the dossier is sans_suite' do
+      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:sans_suite)) }
+
+      it { is_expected.to eq('without_continuation') }
+    end
+  end
 end
