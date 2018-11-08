@@ -16,7 +16,7 @@ class SupportController < ApplicationController
       redirect_to root_path(formulaire_contact_general_submitted: true)
     else
       setup_context
-      flash.now.alert = "Une erreur est survenue. Vous pouvez nous contactez à #{helpers.mail_to(CONTACT_EMAIL)}."
+      flash.now.alert = "Une erreur est survenue. Vous pouvez nous contacter à #{helpers.mail_to(CONTACT_EMAIL)}."
 
       render :index
     end
