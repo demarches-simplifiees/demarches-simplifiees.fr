@@ -55,4 +55,7 @@ class RootController < ApplicationController
 
     @dossier = Dossier.new(champs: all_champs)
   end
+
+  def suivi
+  end
 end
