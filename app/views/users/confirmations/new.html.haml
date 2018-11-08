@@ -1,17 +1,31 @@
-- content_for(:title, 'Renvoyer les instructions de confirmation de compte')
+- content_for(:title, 'Confirmer votre adresse email')
 
 - content_for :footer do
   = render partial: 'root/footer'
 
-.container.devise-container
+.container.devise-container.devise-confirmations
   .one-column-centered
     = devise_error_messages!
 
-    = form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { class: 'form' }) do |f|
+    %img.confirmation-icon{ src: image_url("user/confirmation-email.svg"), alt: "" }
 
-      %h1 Renvoyer les instructions de confirmation de compte
+    %p.confirmation-preamble
+      = succeed '.' do
+        Avant d’effectuer votre démarche, nous avons besoin de vérifier votre adresse
+        - if resource.email.present?
+          %strong= resource.email
 
-      = f.label :email, 'Email'
-      = f.email_field :email, autofocus: true
+    %p.confirmation-instructions
+      Ouvrez votre boîte email, et
+      %strong cliquez sur le lien d’activation
+      dans le message que vous avez reçu.
 
-      = f.submit 'Renvoyer les instructions de confirmation', class: 'button primary'
+    %hr.confirmation-separator
+
+    .confirmation-resend
+      %p Si vous n’avez pas reçu notre message, nous pouvons vous le renvoyer.
+
+      = form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { class: 'form' }) do |f|
+        = f.label :email, 'Email'
+        = f.email_field :email, placeholder: 'Email', class: 'small', autofocus: true
+        = f.submit 'Renvoyer un email de confirmation', class: 'button'
