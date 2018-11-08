@@ -10,9 +10,12 @@
     id: "champs_#{champ.id}",
     direct_upload: true
 - else
-  = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: champ, user_can_upload: true }
-  %br
-  Modifier :
+  %div{ id: "piece_justificative_#{champ.id}" }
+    = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: champ, user_can_upload: true }
+    %br
+    = link_to 'supprimer', purge_champ_piece_justificative_dossier_path(champ_id: champ.id), remote: true, method: :delete
+    %br
+    Modifier :
   = form.file_field :piece_justificative_file,
     id: "champs_#{champ.id}",
     direct_upload: true

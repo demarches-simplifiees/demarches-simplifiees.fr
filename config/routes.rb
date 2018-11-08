@@ -284,6 +284,7 @@ Rails.application.routes.draw do
         post 'commentaire' => 'dossiers#create_commentaire'
         post 'ask_deletion'
         get 'attestation'
+        delete 'purge_champ_piece_justificative'
       end
 
       collection do
