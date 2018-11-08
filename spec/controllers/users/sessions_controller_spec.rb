@@ -27,7 +27,7 @@ describe Users::SessionsController, type: :controller do
       let(:password) { 'un super mot de passe' }
 
       let(:user) { create(:user, email: email, password: password) }
-      let(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
+      let(:gestionnaire) { create(:gestionnaire, :with_trusted_device, email: email, password: password) }
       let(:administrateur) { create(:administrateur, email: email, password: password) }
 
       it 'signs user in' do

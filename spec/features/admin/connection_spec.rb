@@ -6,7 +6,7 @@ feature 'Administrator connection' do
   let(:email) { 'admin1@admin.com' }
   let(:password) { 'mon chien aime les bananes' }
   let!(:admin) { create(:administrateur, email: email, password: password) }
-  let!(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
+  let!(:gestionnaire) { create(:gestionnaire, :with_trusted_device, email: email, password: password) }
 
   before do
     visit new_administrateur_session_path
