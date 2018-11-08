@@ -28,6 +28,7 @@ class Users::SessionsController < Sessions::SessionsController
 
     if gestionnaire_signed_in?
       if trusted_device?
+        set_flash_message :notice, :signed_in
         redirect_to gestionnaire_procedures_path
       else
         gestionnaire = current_gestionnaire
@@ -39,6 +40,7 @@ class Users::SessionsController < Sessions::SessionsController
         redirect_to link_sent_path(email: gestionnaire.email)
       end
     elsif user_signed_in?
+      set_flash_message :notice, :signed_in
       redirect_to after_sign_in_path_for(:user)
     else
       flash.alert = 'Mauvais couple login / mot de passe'
@@ -127,7 +129,6 @@ class Users::SessionsController < Sessions::SessionsController
         resource.remember_me = remember_me
         sign_in resource
         resource.force_sync_credentials
-        set_flash_message :notice, :signed_in
       end
     end
   end
