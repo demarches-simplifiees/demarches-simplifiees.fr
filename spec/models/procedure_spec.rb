@@ -705,7 +705,7 @@ describe Procedure do
     end
   end
 
-  describe '#mean_instruction_time' do
+  describe '#usual_instruction_time' do
     let(:procedure) { create(:procedure) }
 
     context 'when there is only one dossier' do
@@ -719,7 +719,7 @@ describe Procedure do
           dossier.update(en_instruction_at: instruction_date, processed_at: processed_date)
         end
 
-        it { expect(procedure.mean_instruction_time).to eq(1.day.to_i) }
+        it { expect(procedure.usual_instruction_time).to eq(1.day.to_i) }
       end
     end
   end
