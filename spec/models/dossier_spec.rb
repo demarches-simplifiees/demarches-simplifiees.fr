@@ -600,10 +600,6 @@ describe Dossier do
     let(:procedure) { create(:procedure) }
     let(:user) { create(:user) }
 
-    before do
-      ActionMailer::Base.deliveries.clear
-    end
-
     it "send an email when the dossier is created for the very first time" do
       dossier = nil
       ActiveJob::Base.queue_adapter = :test
@@ -1002,34 +998,6 @@ describe Dossier do
       it { expect(young_dossier).not_to be_retention_expired }
       it { expect(just_expired_dossier).to be_retention_expired }
       it { expect(long_expired_dossier).to be_retention_expired }
-    end
-  end
-
-  describe 'old_state_value' do
-    subject { dossier.old_state_value }
-
-    context 'when the dossier is en instruction' do
-      let(:dossier) { create(:dossier, :en_instruction) }
-
-      it { is_expected.to eq('received') }
-    end
-
-    context 'when the dossier is accepte' do
-      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:accepte)) }
-
-      it { is_expected.to eq('closed') }
-    end
-
-    context 'when the dossier is refuse' do
-      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:refuse)) }
-
-      it { is_expected.to eq('refused') }
-    end
-
-    context 'when the dossier is sans_suite' do
-      let(:dossier) { create(:dossier, state: Dossier.states.fetch(:sans_suite)) }
-
-      it { is_expected.to eq('without_continuation') }
     end
   end
 end

@@ -1,4 +1,4 @@
-= f.fields_for @types_de_champ_facade.fields_for_var, types_de_champ, remote: true do |ff|
+= f.fields_for type_de_champ_service.fields_for_var, types_de_champ, remote: true do |ff|
   - type_champ = ff.object.object.type_champ
 
   .form-inline{ class: (type_champ == TypeDeChamp.type_champs.fetch(:header_section) ? 'header-section' : nil) }
@@ -8,7 +8,7 @@
 
     .form-group.type
       %h4 Type
-      = ff.select :type_champ, tdc_options, {}, { class: 'form-control type-champ' }
+      = ff.select :type_champ, type_de_champ_service.options, {}, { class: 'form-control type-champ' }
 
     .form-group.description
       %h4 Description
@@ -65,8 +65,8 @@
     - if ff.object.id.present?
       .form-group
         %br &nbsp;
-        = ff.object.button_up(index: ff.index, url: @types_de_champ_facade.move_up_url(ff), private: @types_de_champ_facade.private)
-        = ff.object.button_down(index: ff.index, url: @types_de_champ_facade.move_down_url(ff), private: @types_de_champ_facade.private)
+        = ff.object.button_up(index: ff.index, url: type_de_champ_service.move_up_url(ff), private: type_de_champ_service.private?)
+        = ff.object.button_down(index: ff.index, url: type_de_champ_service.move_down_url(ff), private: type_de_champ_service.private?)
 
     .form-group
       %h4 position
@@ -76,10 +76,10 @@
       %br &nbsp;
       - if ff.object.id.nil?
         = f.button 'Ajouter le champ',
-          id: @types_de_champ_facade.add_button_id,
+          id: type_de_champ_service.add_button_id,
           class: 'btn btn-success',
           data: { disable: true }
       - else
-        = link_to("", @types_de_champ_facade.delete_url(ff), method: :delete, remote: true, id: "delete_type_de_champ_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
+        = link_to("", type_de_champ_service.delete_url(ff), method: :delete, remote: true, id: "delete_type_de_champ_#{ff.object.id}", class: %w(form-control btn btn-danger fa fa-trash-o) )
 
     %div{ style: 'background-color: rgb(204, 204, 204); height: 1px; margin: 30px auto;' }

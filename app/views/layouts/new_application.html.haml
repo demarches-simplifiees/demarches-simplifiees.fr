@@ -21,10 +21,14 @@
     - if Rails.env.development?
       = stylesheet_link_tag :xray
 
+    - if !current_user
+      = render partial: "layouts/matomo"
+
     :javascript
       DATA = [{
         sentry: #{raw(sentry_config)}
       }];
+
   %body{ class: browser.platform.ios? ? 'ios' : nil }
     .page-wrapper
       = render partial: "layouts/outdated_browser_banner"

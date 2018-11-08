@@ -67,6 +67,9 @@ namespace :'2018_07_31_nutriscore' do
             libelle: 'Numéro SIRET'
           )
         ) do |d, target_tdc|
+          if d.etablissement.present?
+            d.etablissement.signature = d.etablissement.sign
+          end
           target_tdc.champ.create(
             value: d.etablissement&.siret,
             etablissement: d.etablissement,

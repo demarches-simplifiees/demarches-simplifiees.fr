@@ -4,7 +4,7 @@ class API::V1::DossiersController < APIController
   DEFAULT_PAGE_SIZE = 100
 
   def index
-    dossiers = @procedure.dossiers.state_not_brouillon.page(params[:page]).per(per_page)
+    dossiers = @dossiers.page(params[:page]).per(per_page)
 
     render json: { dossiers: dossiers.map{ |dossier| DossiersSerializer.new(dossier) }, pagination: pagination(dossiers) }, status: 200
   rescue ActiveRecord::RecordNotFound
@@ -12,7 +12,7 @@ class API::V1::DossiersController < APIController
   end
 
   def show
-    dossier = @procedure.dossiers.find(params[:id])
+    dossier = @dossiers.for_api.find(params[:id])
 
     respond_to do |format|
       format.json { render json: { dossier: DossierSerializer.new(dossier).as_json }, status: 200 }
@@ -36,11 +36,13 @@ class API::V1::DossiersController < APIController
   end
 
   def fetch_procedure_and_check_token
-    @procedure = Procedure.includes(:administrateur).find(params[:procedure_id])
+    @procedure = Procedure.for_api.find(params[:procedure_id])
 
     if !valid_token_for_administrateur?(@procedure.administrateur)
       render json: {}, status: :unauthorized
     end
+
+    @dossiers = @procedure.dossiers.state_not_brouillon
 
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: :not_found

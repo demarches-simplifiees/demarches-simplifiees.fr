@@ -4,5 +4,9 @@ FactoryBot.define do
     email { generate(:user_email) }
     password { 'password' }
     confirmed_at { Time.zone.now }
+
+    trait :unconfirmed do
+      confirmed_at { nil }
+    end
   end
 end

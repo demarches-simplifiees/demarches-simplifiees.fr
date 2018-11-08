@@ -32,21 +32,17 @@ feature 'Invitations' do
       scenario 'an invited user can register using the registration link sent in the invitation email' do
         # Click the invitation link
         visit users_dossiers_invite_path(invite.id, params: { email: invite.email })
-
-        # Create the account
         expect(page).to have_current_path(new_user_registration_path, ignore_query: true)
         expect(page).to have_field('user_email', with: invite.email)
-        fill_in 'user_password', with: user_password
-        click_on 'Créer un compte'
 
+        # Create the account
+        sign_up_with invite.email, user_password
         expect(page).to have_content("lien d'activation")
 
-        # Confirm the email
-        user = User.find_by(email: invite.email)
-        visit Rails.application.routes.url_helpers.user_confirmation_path(confirmation_token: user.confirmation_token)
-        submit_login_form(user.email, user_password)
-
-        # The user should be redirected to the dossier they was invited on
+        # Confirm the account
+        # (The user should be redirected to the dossier they was invited on)
+        click_confirmation_link_for invite.email
+        expect(page).to have_content('Votre compte a été activé')
         expect(page).to have_current_path(brouillon_dossier_path(dossier))
       end
     end
@@ -102,14 +98,8 @@ feature 'Invitations' do
   def log_in(user)
     visit '/'
     click_on 'Connexion'
-    submit_login_form(user.email, user.password)
+    sign_in_with(user.email, user.password)
     expect(page).to have_current_path(dossiers_path)
-  end
-
-  def submit_login_form(email, password)
-    fill_in 'user_email', with: email
-    fill_in 'user_password', with: password
-    click_on 'Se connecter'
   end
 
   def navigate_to_brouillon(dossier)
@@ -127,7 +117,7 @@ feature 'Invitations' do
   def navigate_to_invited_dossier(invite)
     visit users_dossiers_invite_path(invite)
     expect(page).to have_current_path(new_user_session_path)
-    submit_login_form(invited_user.email, invited_user.password)
+    sign_in_with(invited_user.email, invited_user.password)
   end
 
   def send_invite_to(invited_email)
