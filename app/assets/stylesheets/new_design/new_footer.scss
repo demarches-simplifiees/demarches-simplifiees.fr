@@ -22,7 +22,7 @@ footer {
 .footer-columns {
   @extend %horizontal-list;
   justify-content: flex-start;
-  margin: 0 -20px;
+  margin: 0 -15px;
 }
 
 .footer-column {
