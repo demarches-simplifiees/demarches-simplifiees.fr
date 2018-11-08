@@ -136,7 +136,7 @@ describe API::V1::DossiersController do
       context 'when dossier exists and belongs to procedure' do
         let(:procedure_id) { procedure.id }
         let(:date_creation) { Time.zone.local(2008, 9, 1, 10, 5, 0) }
-        let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, procedure: procedure, motivation: "Motivation") } }
+        let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :en_construction, procedure: procedure, motivation: "Motivation") } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
         let(:field_list) { [:id, :created_at, :updated_at, :archived, :individual, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :champs_private, :commentaires, :state, :simplified_state, :initiated_at, :processed_at, :received_at, :motivation, :email, :instructeurs] }
@@ -147,7 +147,7 @@ describe API::V1::DossiersController do
         end
 
         it { expect(subject[:id]).to eq(dossier.id) }
-        it { expect(subject[:state]).to eq(dossier.state) }
+        it { expect(subject[:state]).to eq('initiated') }
         it { expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z') }
         it { expect(subject[:updated_at]).to eq('2008-09-01T08:05:00.000Z') }
         it { expect(subject[:archived]).to eq(dossier.archived) }

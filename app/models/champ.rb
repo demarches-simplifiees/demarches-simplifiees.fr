@@ -5,6 +5,11 @@ class Champ < ApplicationRecord
   has_one_attached :piece_justificative_file
   has_one :virus_scan
 
+  # We declare champ specific relationships (Champs::CarteChamp and Champs::SiretChamp)
+  # here because otherwise we can't easily use includes in our queries.
+  has_many :geo_areas, dependent: :destroy
+  belongs_to :etablissement, dependent: :destroy
+
   delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
