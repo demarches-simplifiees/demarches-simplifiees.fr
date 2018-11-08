@@ -1,7 +1,7 @@
 // Include runtime-polyfills for older browsers.
 // Due to .babelrc's 'useBuiltIns', only polyfills actually
 // required by the browsers we support will be included.
-import 'babel-polyfill';
+import '@babel/polyfill';
 
 // This file is copied from mailjet. We serve here a copy of it ourselves
 // to avoid loading javascript files from other domains on the frontpage.
