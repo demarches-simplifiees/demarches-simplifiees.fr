@@ -304,15 +304,15 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def mean_traitement_time
+  def usual_traitement_time
     mean_time(:en_construction_at, :processed_at)
   end
 
-  def mean_verification_time
+  def usual_verification_time
     mean_time(:en_construction_at, :en_instruction_at)
   end
 
-  def mean_instruction_time
+  def usual_instruction_time
     mean_time(:en_instruction_at, :processed_at)
   end
 
