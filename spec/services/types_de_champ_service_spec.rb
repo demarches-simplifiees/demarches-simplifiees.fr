@@ -2,10 +2,12 @@ require 'spec_helper'
 
 describe TypesDeChampService do
   let(:params) { ActionController::Parameters.new({ procedure: { types_de_champ_attributes: types_de_champ_attributes } }) }
+  let(:procedure) { create(:procedure) }
+  let(:service) { TypesDeChampService.new(procedure) }
 
-  let(:result) { TypesDeChampService.create_update_procedure_params(params) }
+  describe 'create_update_procedure_params' do
+    let(:result) { service.create_update_procedure_params(params) }
 
-  describe 'self.create_update_procedure_params' do
     describe 'the drop down list attributes' do
       let(:types_de_champ_attributes) do
         {
@@ -97,6 +99,28 @@ describe TypesDeChampService do
           })
         end
       end
+    end
+  end
+
+  describe ".options" do
+    let(:pj_option) { ["Pièce justificative", TypeDeChamp.type_champs.fetch(:piece_justificative)] }
+
+    subject { service.options }
+
+    context "when the champ_pj is enabled" do
+      before do
+        Flipflop::FeatureSet.current.test!.switch!(:champ_pj, true)
+      end
+
+      it { is_expected.to include(pj_option) }
+    end
+
+    context "when the champ_pj is disabled" do
+      before do
+        Flipflop::FeatureSet.current.test!.switch!(:champ_pj, false)
+      end
+
+      it { is_expected.not_to include(pj_option) }
     end
   end
 end

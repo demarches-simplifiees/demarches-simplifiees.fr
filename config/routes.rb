@@ -128,6 +128,7 @@ Rails.application.routes.draw do
   end
 
   get "patron" => "root#patron"
+  get "suivi" => "root#suivi"
 
   get "contact", to: "support#index"
   post "contact", to: "support#create"
@@ -171,10 +172,6 @@ Rails.application.routes.draw do
     get 'procedures/draft' => 'procedures#draft'
     get 'procedures/path_list' => 'procedures#path_list'
     get 'procedures/available' => 'procedures#check_availability'
-
-    get 'change_dossier_state' => 'change_dossier_state#index'
-    post 'change_dossier_state' => 'change_dossier_state#check'
-    patch 'change_dossier_state' => 'change_dossier_state#change'
 
     resources :procedures do
       collection do

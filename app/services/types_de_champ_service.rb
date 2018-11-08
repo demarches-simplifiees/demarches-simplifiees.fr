@@ -1,7 +1,71 @@
 class TypesDeChampService
-  def self.create_update_procedure_params(params, private = false)
-    attributes = (private ? 'types_de_champ_private_attributes' : 'types_de_champ_attributes')
+  include Rails.application.routes.url_helpers
 
+  TOGGLES = {
+    TypeDeChamp.type_champs.fetch(:piece_justificative)   => :champ_pj?,
+    TypeDeChamp.type_champs.fetch(:siret)                 => :champ_siret?,
+    TypeDeChamp.type_champs.fetch(:linked_drop_down_list) => :champ_linked_dropdown?,
+    TypeDeChamp.type_champs.fetch(:integer_number)        => :champ_integer_number?
+  }
+
+  def options
+    types_de_champ = TypeDeChamp.type_de_champs_list_fr
+
+    types_de_champ.select! do |tdc|
+      toggle = TOGGLES[tdc.last]
+      toggle.blank? || Flipflop.send(toggle)
+    end
+
+    types_de_champ
+  end
+
+  def initialize(procedure, private_type_de_champ = false)
+    @procedure = procedure
+    @private_type_de_champ = private_type_de_champ
+  end
+
+  def private?
+    @private_type_de_champ
+  end
+
+  def active
+    private? ? 'Annotations privées' : 'Champs'
+  end
+
+  def url
+    private? ? admin_procedure_types_de_champ_private_path(@procedure) : admin_procedure_types_de_champ_path(@procedure)
+  end
+
+  def types_de_champ
+    private? ? @procedure.types_de_champ_private_ordered.decorate : @procedure.types_de_champ_ordered.decorate
+  end
+
+  def new_type_de_champ
+    TypeDeChamp.new(private: private?).decorate
+  end
+
+  def fields_for_var
+    private? ? :types_de_champ_private : :types_de_champ
+  end
+
+  def move_up_url(ff)
+    private? ? move_up_admin_procedure_types_de_champ_private_path(@procedure, ff.index) : move_up_admin_procedure_types_de_champ_path(@procedure, ff.index)
+  end
+
+  def move_down_url(ff)
+    private? ? move_down_admin_procedure_types_de_champ_private_path(@procedure, ff.index) : move_down_admin_procedure_types_de_champ_path(@procedure, ff.index)
+  end
+
+  def delete_url(ff)
+    private? ? admin_procedure_type_de_champ_private_path(@procedure, ff.object.id) : admin_procedure_type_de_champ_path(@procedure, ff.object.id)
+  end
+
+  def add_button_id
+    private? ? :add_type_de_champ_private : :add_type_de_champ
+  end
+
+  def create_update_procedure_params(params)
+    attributes = "#{fields_for_var}_attributes"
     params_with_ordered_champs = order_champs(params, attributes)
 
     parameters = params_with_ordered_champs
@@ -21,13 +85,13 @@ class TypesDeChampService
       ])
 
     parameters[attributes].each do |index, param|
-      param[:private] = private
+      param[:private] = private?
       if param[:libelle].empty?
         parameters[attributes].delete(index.to_s)
       end
 
       if param['drop_down_list_attributes'] && param['drop_down_list_attributes']['value']
-        param['drop_down_list_attributes']['value'] = self.clean_value (param['drop_down_list_attributes']['value'])
+        param['drop_down_list_attributes']['value'] = clean_value(param['drop_down_list_attributes']['value'])
       end
     end
 
@@ -36,7 +100,7 @@ class TypesDeChampService
 
   private
 
-  def self.order_champs(params, attributes)
+  def order_champs(params, attributes)
     # It's OK to use an unsafe hash here because the params will then go through
     # require / permit methods in #create_update_procedure_params
     tdcas = params[:procedure][attributes].to_unsafe_hash.to_a
@@ -64,15 +128,15 @@ class TypesDeChampService
     params
   end
 
-  def self.is_number?(value)
+  def is_number?(value)
     (value =~ /^[0-9]+$/) == 0
   end
 
-  def self.tdca_order_changed?(tdca)
+  def tdca_order_changed?(tdca)
     (tdca[:order_place].to_i + 1) != tdca[:custom_order_place].to_i
   end
 
-  def self.clean_value(value)
+  def clean_value(value)
     value.split("\r\n").map(&:strip).join("\r\n")
   end
 end

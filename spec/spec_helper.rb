@@ -23,6 +23,7 @@ require File.expand_path('../config/environment', __dir__)
 require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
+require 'capybara/email/rspec'
 require 'database_cleaner'
 require 'webmock/rspec'
 require 'shoulda-matchers'
@@ -136,6 +137,8 @@ RSpec.configure do |config|
     Warden.test_mode!
 
     Typhoeus::Expectation.clear
+
+    ActionMailer::Base.deliveries.clear
 
     if Flipflop.remote_storage?
       VCR.use_cassette("ovh_storage_init") do

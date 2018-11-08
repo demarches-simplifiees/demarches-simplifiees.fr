@@ -1,4 +1,6 @@
 class DossierSerializer < ActiveModel::Serializer
+  include DossierHelper
+
   attributes :id,
     :created_at,
     :updated_at,
@@ -42,11 +44,11 @@ class DossierSerializer < ActiveModel::Serializer
   end
 
   def state
-    object.old_state_value
+    dossier_legacy_state(object)
   end
 
   def simplified_state
-    object.decorate.display_state
+    dossier_display_state(object)
   end
 
   def initiated_at
