@@ -27,7 +27,7 @@ class Users::SessionsController < Sessions::SessionsController
     end
 
     if gestionnaire_signed_in?
-      if trusted_device?
+      if trusted_device? || !current_gestionnaire.feature_enabled?(:enable_email_login_token)
         set_flash_message :notice, :signed_in
         redirect_to gestionnaire_procedures_path
       else

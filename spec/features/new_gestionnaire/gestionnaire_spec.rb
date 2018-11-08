@@ -4,7 +4,7 @@ feature 'The gestionnaire part' do
   include ActiveJob::TestHelper
 
   let(:password) { 'secret_password' }
-  let!(:gestionnaire) { create(:gestionnaire, password: password) }
+  let!(:gestionnaire) { create(:gestionnaire, :with_trusted_device, password: password) }
 
   let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
   let!(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure) }
