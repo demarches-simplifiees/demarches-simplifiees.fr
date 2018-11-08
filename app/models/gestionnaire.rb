@@ -205,6 +205,23 @@ class Gestionnaire < ApplicationRecord
     GestionnaireMailer.invite_gestionnaire(self, reset_password_token).deliver_later
   end
 
+  def feature_enabled?(feature)
+    Flipflop.feature_set.feature(feature)
+    features[feature.to_s]
+  end
+
+  def disable_feature(feature)
+    Flipflop.feature_set.feature(feature)
+    features.delete(feature.to_s)
+    save
+  end
+
+  def enable_feature(feature)
+    Flipflop.feature_set.feature(feature)
+    features[feature.to_s] = true
+    save
+  end
+
   private
 
   def annotations_hash(demande, annotations_privees, avis, messagerie)

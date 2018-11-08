@@ -26,6 +26,7 @@ Rails.application.routes.draw do
 
     resources :gestionnaires, only: [:index, :show] do
       post 'reinvite', on: :member
+      put 'enable_feature', on: :member
     end
 
     resources :dossiers, only: [:show]
