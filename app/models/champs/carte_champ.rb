@@ -1,6 +1,4 @@
 class Champs::CarteChamp < Champ
-  has_many :geo_areas, foreign_key: :champ_id, dependent: :destroy
-
   # We are not using scopes here as we want to access
   # the following collections on unsaved records.
   def cadastres
