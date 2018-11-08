@@ -128,6 +128,7 @@ Rails.application.routes.draw do
   end
 
   get "patron" => "root#patron"
+  get "suivi" => "root#suivi"
 
   get "contact", to: "support#index"
   post "contact", to: "support#create"
