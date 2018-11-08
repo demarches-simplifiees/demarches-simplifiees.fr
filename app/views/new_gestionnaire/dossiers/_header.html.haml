@@ -46,4 +46,4 @@
   .print-header
     = dossier.procedure.libelle.truncate_words(10)
     >
-    = "Dossier nº #{dossier.id} (#{dossier.statut})"
+    = "Dossier nº #{dossier.id} (#{dossier_display_state(dossier, lower: true)})"
