@@ -74,8 +74,7 @@ describe Users::RegistrationsController, type: :controller do
           subject
         end
 
-        it { expect(response).to redirect_to(root_path) }
-        it { expect(flash.notice).to eq(I18n.t('devise.registrations.signed_up_but_unconfirmed')) }
+        it { expect(response).to redirect_to(new_user_confirmation_path(user: { email: user[:email] })) }
         it { expect(UserMailer).not_to have_received(:new_account_warning) }
       end
     end

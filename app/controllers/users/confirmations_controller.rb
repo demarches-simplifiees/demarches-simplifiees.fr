@@ -4,9 +4,10 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   layout "new_application"
 
   # GET /resource/confirmation/new
-  # def new
-  #   super
-  # end
+  def new
+    # Allow displaying the user email in the message
+    self.resource = resource_class.new(email: user_email_param)
+  end
 
   # POST /resource/confirmation
   # def create
@@ -19,6 +20,10 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   # end
 
   # protected
+
+  def user_email_param
+    params.permit(user: :email).dig(:user, :email)
+  end
 
   # The path used after resending confirmation instructions.
   # def after_resending_confirmation_instructions_path_for(resource_name)
