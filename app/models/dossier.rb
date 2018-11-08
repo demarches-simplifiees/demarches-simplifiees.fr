@@ -59,6 +59,26 @@ class Dossier < ApplicationRecord
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
   scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
 
+  scope :for_api, -> {
+    includes(commentaires: [],
+      champs: [
+        :geo_areas,
+        :etablissement,
+        piece_justificative_file_attachment: :blob
+      ],
+      champs_private: [
+        :geo_areas,
+        :etablissement,
+        piece_justificative_file_attachment: :blob
+      ],
+      pieces_justificatives: [],
+      quartier_prioritaires: [],
+      cadastres: [],
+      etablissement: [],
+      individual: [],
+      user: [])
+  }
+
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
