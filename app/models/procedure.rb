@@ -1,3 +1,5 @@
+require Rails.root.join('lib', 'percentile')
+
 class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
 
@@ -304,16 +306,16 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def mean_traitement_time
-    mean_time(:en_construction_at, :processed_at)
+  def usual_traitement_time
+    percentile_time(:en_construction_at, :processed_at, 90)
   end
 
-  def mean_verification_time
-    mean_time(:en_construction_at, :en_instruction_at)
+  def usual_verification_time
+    percentile_time(:en_construction_at, :en_instruction_at, 90)
   end
 
-  def mean_instruction_time
-    mean_time(:en_instruction_at, :processed_at)
+  def usual_instruction_time
+    percentile_time(:en_instruction_at, :processed_at, 90)
   end
 
   PATH_AVAILABLE = :available
@@ -421,14 +423,14 @@ class Procedure < ApplicationRecord
     true
   end
 
-  def mean_time(start_attribute, end_attribute)
+  def percentile_time(start_attribute, end_attribute, p)
     times = dossiers
       .state_termine
       .pluck(start_attribute, end_attribute)
       .map { |(start_date, end_date)| end_date - start_date }
 
     if times.present?
-      times.sum.fdiv(times.size).ceil
+      times.percentile(p).ceil
     end
   end
 end

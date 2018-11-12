@@ -31,10 +31,10 @@
             %strong votre dossier passera directement en instruction
 
         / FIXME: remove the custom procedure switch at some point
-        - if dossier.procedure.mean_verification_time && show_time_means
+        - if dossier.procedure.usual_verification_time && show_time_means
           - cache(dossier.procedure, expires_in: 1.week) do
             %p
-              Le temps moyen de vérification pour cette démarche est de #{distance_of_time_in_words(dossier.procedure.mean_verification_time)}.
+              Habituellement, les dossiers de cette démarche sont vérifiés dans un délai de #{distance_of_time_in_words(dossier.procedure.usual_verification_time)}.
 
     - elsif dossier.en_instruction?
       .en-instruction
@@ -46,10 +46,10 @@
           avec le résultat.
 
         / FIXME: remove the custom procedure switch at some point
-        - if dossier.procedure.mean_instruction_time && show_time_means
+        - if dossier.procedure.usual_instruction_time && show_time_means
           - cache(dossier.procedure, expires_in: 1.week) do
             %p
-              Le temps moyen d’instruction pour cette démarche est de #{distance_of_time_in_words(dossier.procedure.mean_instruction_time)}.
+              Habituellement, les dossiers de cette démarche sont traités dans un délai de #{distance_of_time_in_words(dossier.procedure.usual_instruction_time)}.
 
     - elsif dossier.accepte?
       .accepte

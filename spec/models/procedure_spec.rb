@@ -705,22 +705,34 @@ describe Procedure do
     end
   end
 
-  describe '#mean_instruction_time' do
+  describe '#usual_instruction_time' do
     let(:procedure) { create(:procedure) }
 
-    context 'when there is only one dossier' do
-      let(:dossier) { create(:dossier, procedure: procedure) }
-
-      context 'which is termine' do
-        before do
-          dossier.accepte!
-          processed_date = Time.zone.parse('12/12/2012')
-          instruction_date = processed_date - 1.day
-          dossier.update(en_instruction_at: instruction_date, processed_at: processed_date)
-        end
-
-        it { expect(procedure.mean_instruction_time).to eq(1.day.to_i) }
+    before do
+      processed_delays.each do |delay|
+        dossier = create :dossier, :accepte, procedure: procedure
+        instruction_date = 1.month.ago
+        processed_date = instruction_date + delay
+        dossier.update!(en_instruction_at: instruction_date, processed_at: processed_date)
       end
+    end
+
+    context 'when there are several processed dossiers' do
+      let(:processed_delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
+
+      it 'returns a time representative of the dossier instruction delay' do
+        expect(procedure.usual_instruction_time).to be_between(3.days, 4.days)
+      end
+    end
+
+    context 'when there is only one processed dossier' do
+      let(:processed_delays) { [1.day] }
+      it { expect(procedure.usual_instruction_time).to eq(1.day) }
+    end
+
+    context 'where there is no processed dossier' do
+      let(:processed_delays) { [] }
+      it { expect(procedure.usual_instruction_time).to be_nil }
     end
   end
 end
