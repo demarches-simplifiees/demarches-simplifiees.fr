@@ -708,12 +708,14 @@ describe Procedure do
   describe '#usual_instruction_time' do
     let(:procedure) { create(:procedure) }
 
+    def create_dossier(instruction_date:, processed_date:)
+      dossier = create(:dossier, :accepte, procedure: procedure)
+      dossier.update!(en_instruction_at: instruction_date, processed_at: processed_date)
+    end
+
     before do
       processed_delays.each do |delay|
-        dossier = create :dossier, :accepte, procedure: procedure
-        instruction_date = 1.month.ago
-        processed_date = instruction_date + delay
-        dossier.update!(en_instruction_at: instruction_date, processed_at: processed_date)
+        create_dossier(instruction_date: 1.week.ago - delay, processed_date: 1.week.ago)
       end
     end
 
@@ -725,9 +727,18 @@ describe Procedure do
       end
     end
 
+    context 'when there are very old dossiers' do
+      let(:processed_delays) { [2.days, 2.days] }
+      let!(:old_dossier) { create_dossier(instruction_date: 3.months.ago, processed_date: 2.months.ago) }
+
+      it 'ignores dossiers older than 1 month' do
+        expect(procedure.usual_instruction_time).to be_within(10.seconds).of(2.days)
+      end
+    end
+
     context 'when there is only one processed dossier' do
       let(:processed_delays) { [1.day] }
-      it { expect(procedure.usual_instruction_time).to eq(1.day) }
+      it { expect(procedure.usual_instruction_time).to be_within(10.seconds).of(1.day) }
     end
 
     context 'where there is no processed dossier' do
