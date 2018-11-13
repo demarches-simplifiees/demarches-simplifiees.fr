@@ -23,7 +23,7 @@ describe 'Dossier details:' do
         visit dossier_path(dossier)
       end
 
-      it { expect(page).to have_text("Le temps moyen de vérification pour cette démarche est de 10 jours.") }
+      it { expect(page).to have_text("Habituellement, les dossiers de cette démarche sont vérifiés dans un délai de 10 jours.") }
     end
 
     context "when the dossier is in instruction" do
@@ -34,7 +34,7 @@ describe 'Dossier details:' do
         visit dossier_path(dossier)
       end
 
-      it { expect(page).to have_text("Le temps moyen d’instruction pour cette démarche est de 2 mois.") }
+      it { expect(page).to have_text("Habituellement, les dossiers de cette démarche sont traités dans un délai de 2 mois.") }
     end
   end
 

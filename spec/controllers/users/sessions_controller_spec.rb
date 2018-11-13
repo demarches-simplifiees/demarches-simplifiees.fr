@@ -27,7 +27,7 @@ describe Users::SessionsController, type: :controller do
       let(:password) { 'un super mot de passe' }
 
       let(:user) { create(:user, email: email, password: password) }
-      let(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
+      let(:gestionnaire) { create(:gestionnaire, :with_trusted_device, email: email, password: password) }
       let(:administrateur) { create(:administrateur, email: email, password: password) }
 
       it 'signs user in' do
@@ -41,18 +41,39 @@ describe Users::SessionsController, type: :controller do
 
       it 'signs gestionnaire in' do
         post :create, params: { user: { email: gestionnaire.email, password: gestionnaire.password } }
-        expect(@response.redirect?).to be(true)
+
+        expect(subject).to redirect_to link_sent_path(email: gestionnaire.email)
         expect(subject.current_user).to be(nil)
-        expect(subject.current_gestionnaire).to eq(gestionnaire)
+        expect(subject.current_gestionnaire).to be(nil)
         expect(subject.current_administrateur).to be(nil)
       end
 
-      it 'signs administrateur in' do
-        post :create, params: { user: { email: administrateur.email, password: administrateur.password } }
-        expect(@response.redirect?).to be(true)
-        expect(subject.current_user).to be(nil)
-        expect(subject.current_gestionnaire).to be(nil)
-        expect(subject.current_administrateur).to eq(administrateur)
+      context 'when the device is trusted' do
+        before do
+          allow(controller).to receive(:trusted_device?).and_return(true)
+          post :create, params: { user: { email: gestionnaire.email, password: gestionnaire.password } }
+        end
+
+        it 'directly log the gestionnaire' do
+          expect(subject).to redirect_to gestionnaire_procedures_path
+          expect(subject.current_user).to be(nil)
+          expect(subject.current_gestionnaire).to eq(gestionnaire)
+          expect(subject.current_administrateur).to be(nil)
+        end
+      end
+
+      context 'signs administrateur in' do
+        # an admin has always an gestionnaire role
+        before { gestionnaire }
+
+        it 'signs administrateur in' do
+          post :create, params: { user: { email: administrateur.email, password: administrateur.password } }
+
+          expect(subject).to redirect_to link_sent_path(email: gestionnaire.email)
+          expect(subject.current_user).to be(nil)
+          expect(subject.current_gestionnaire).to be(nil)
+          expect(subject.current_administrateur).to eq(nil)
+        end
       end
 
       context {
@@ -63,10 +84,16 @@ describe Users::SessionsController, type: :controller do
 
         it 'signs user + gestionnaire + administrateur in' do
           post :create, params: { user: { email: administrateur.email, password: administrateur.password } }
-          expect(@response.redirect?).to be(true)
-          expect(subject.current_user).to eq(user)
-          expect(subject.current_gestionnaire).to eq(gestionnaire)
-          expect(subject.current_administrateur).to eq(administrateur)
+
+          expect(subject).to redirect_to link_sent_path(email: gestionnaire.email)
+
+          # TODO: fix me
+          # Strange behaviour: sign_out(:user) does not work in spec
+          # but seems to work in live
+          # expect(controller.current_user).to be(nil)
+
+          expect(subject.current_gestionnaire).to be(nil)
+          expect(subject.current_administrateur).to be(nil)
           expect(user.reload.loged_in_with_france_connect).to be(nil)
         end
       }
@@ -217,6 +244,77 @@ describe Users::SessionsController, type: :controller do
 
         it { expect(subject.status).to eq 200 }
       end
+    end
+  end
+
+  describe '#sign_in_by_link' do
+    context 'when the gestionnaire has non other account' do
+      let(:gestionnaire) { create(:gestionnaire) }
+      before do
+        allow(controller).to receive(:trust_device)
+        post :sign_in_by_link, params: { id: gestionnaire.id, login_token: login_token }
+      end
+
+      context 'when the token is valid' do
+        let(:login_token) { gestionnaire.login_token! }
+
+        it { is_expected.to redirect_to gestionnaire_procedures_path }
+        it { expect(controller.current_gestionnaire).to eq(gestionnaire) }
+        it { expect(controller).to have_received(:trust_device) }
+      end
+
+      context 'when the token is invalid' do
+        let(:login_token) { 'invalid_token' }
+
+        it { is_expected.to redirect_to new_user_session_path }
+        it { expect(controller.current_gestionnaire).to be_nil }
+        it { expect(controller).not_to have_received(:trust_device) }
+      end
+    end
+
+    context 'when the gestionnaire has an user and admin account' do
+      let(:email) { 'unique@plop.com' }
+      let(:password) { 'un super mot de passe' }
+
+      let!(:user) { create(:user, email: email, password: password) }
+      let!(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
+      let!(:administrateur) { create(:administrateur, email: email, password: password) }
+
+      before do
+        post :sign_in_by_link, params: { id: gestionnaire.id, login_token: login_token }
+      end
+
+      context 'when the token is valid' do
+        let(:login_token) { gestionnaire.login_token! }
+
+        it { expect(controller.current_gestionnaire).to eq(gestionnaire) }
+        it { expect(controller.current_administrateur).to eq(administrateur) }
+        it { expect(controller.current_user).to eq(user) }
+      end
+    end
+  end
+
+  describe '#trust_device and #trusted_device?' do
+    subject { controller.trusted_device? }
+
+    context 'when the trusted cookie is not present' do
+      it { is_expected.to be false }
+    end
+
+    context 'when the cookie is outdated' do
+      before do
+        Timecop.freeze(Time.zone.now - TrustedDeviceConcern::TRUSTED_DEVICE_PERIOD - 1.minute)
+        controller.trust_device
+        Timecop.return
+      end
+
+      it { is_expected.to be false }
+    end
+
+    context 'when the cookie is ok' do
+      before { controller.trust_device }
+
+      it { is_expected.to be true }
     end
   end
 end

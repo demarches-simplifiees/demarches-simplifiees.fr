@@ -14,7 +14,8 @@ class GestionnaireDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     current_sign_in_at: Field::DateTime,
     dossiers: Field::HasMany,
-    procedures: Field::HasMany
+    procedures: Field::HasMany,
+    features: FeaturesField
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -35,7 +36,8 @@ class GestionnaireDashboard < Administrate::BaseDashboard
     :id,
     :email,
     :current_sign_in_at,
-    :created_at
+    :created_at,
+    :features
   ].freeze
 
   # FORM_ATTRIBUTES

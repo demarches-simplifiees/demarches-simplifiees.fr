@@ -1,0 +1,14 @@
+- content_for(:title, 'Lien de connexion par email')
+
+- content_for :footer do
+  = render partial: 'root/footer'
+
+#link-sent.container
+  = image_tag('user/confirmation-email.svg')
+  %h1 Encore une petite étape :)
+
+  %p.mail
+    Ouvrez votre boite email <b>#{@email}</b> puis cliquez sur le lien d'activation du message <b>Connexion sécurisée à demarches-simplifiees.fr</b>.
+
+  %p.help
+    En cas de difficultés, nous restons joignables sur #{link_to 'contact@demarches-simplifiees.fr', 'mailto:contact@demarches-simplifiees.fr'}.

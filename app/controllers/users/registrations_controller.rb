@@ -22,18 +22,20 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    user = User.find_by(email: params[:user][:email])
-    if user.present?
-      if user.confirmed?
-        UserMailer.new_account_warning(user).deliver_later
+    # Handle existing user trying to sign up again
+    existing_user = User.find_by(email: params[:user][:email])
+    if existing_user.present?
+      if existing_user.confirmed?
+        UserMailer.new_account_warning(existing_user).deliver_later
+        flash.notice = t('devise.registrations.signed_up_but_unconfirmed')
+        return redirect_to root_path
       else
-        user.resend_confirmation_instructions
+        existing_user.resend_confirmation_instructions
+        return redirect_to after_inactive_sign_up_path_for(existing_user)
       end
-      flash.notice = t('devise.registrations.signed_up_but_unconfirmed')
-      redirect_to root_path
-    else
-      super
     end
+
+    super
   end
 
   # GET /resource/edit
@@ -78,7 +80,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # The path used after sign up for inactive accounts.
-  # def after_inactive_sign_up_path_for(resource)
-  #   super(resource)
-  # end
+  def after_inactive_sign_up_path_for(resource)
+    flash.discard(:notice) # Remove devise's default message (as we have a custom page to explain it)
+    new_confirmation_path(resource, :user => { email: resource.email })
+  end
 end
