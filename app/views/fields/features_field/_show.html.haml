@@ -1,7 +1,14 @@
+:ruby
+  url = if field.resource.class.name == 'Gestionnaire'
+    enable_feature_manager_gestionnaire_path(field.resource.id)
+  else
+    enable_feature_manager_administrateur_path(field.resource.id)
+  end
+
 %table#features
   - Flipflop.feature_set.features.each do |feature|
     - if !feature.group || feature.group.key != :production
       %tr
         %td= feature.title
         %td
-          = check_box_tag "enable-feature", "enable", field.data[feature.name], data: { url: enable_feature_manager_administrateur_path(field.resource.id), key: feature.key }
+          = check_box_tag "enable-feature", "enable", field.data[feature.name], data: { url: url, key: feature.key }
