@@ -708,12 +708,14 @@ describe Procedure do
   describe '#usual_instruction_time' do
     let(:procedure) { create(:procedure) }
 
+    def create_dossier(instruction_date:, processed_date:)
+      dossier = create(:dossier, :accepte, procedure: procedure)
+      dossier.update!(en_instruction_at: instruction_date, processed_at: processed_date)
+    end
+
     before do
       processed_delays.each do |delay|
-        dossier = create :dossier, :accepte, procedure: procedure
-        instruction_date = 1.month.ago
-        processed_date = instruction_date + delay
-        dossier.update!(en_instruction_at: instruction_date, processed_at: processed_date)
+        create_dossier(instruction_date: 1.week.ago - delay, processed_date: 1.week.ago)
       end
     end
 
