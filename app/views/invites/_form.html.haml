@@ -12,6 +12,6 @@
     %p Vous pouvez inviter quelqu’un à remplir ce dossier avec vous.
     %p Cette personne aura le droit de modifier votre dossier.
 
-  = form_tag invites_dossier_path(dossier_id: dossier.id), remote: true, method: :post, class: 'form' do
+  = form_tag dossier_invites_path(dossier), remote: true, method: :post, class: 'form' do
     = email_field_tag :invite_email, '', class: 'small', placeholder: 'adresse email', required: true
     = submit_tag 'Envoyer une invitation', class: 'button accepted'
