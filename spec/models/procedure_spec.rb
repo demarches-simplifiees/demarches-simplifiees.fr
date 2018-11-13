@@ -729,7 +729,7 @@ describe Procedure do
 
     context 'when there is only one processed dossier' do
       let(:processed_delays) { [1.day] }
-      it { expect(procedure.usual_instruction_time).to eq(1.day) }
+      it { expect(procedure.usual_instruction_time).to be_within(10.seconds).of(1.day) }
     end
 
     context 'where there is no processed dossier' do
