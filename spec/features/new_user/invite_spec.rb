@@ -37,7 +37,7 @@ feature 'Invitations' do
 
         # Create the account
         sign_up_with invite.email, user_password
-        expect(page).to have_content("lien d'activation")
+        expect(page).to have_content('lien d’activation')
 
         # Confirm the account
         # (The user should be redirected to the dossier they was invited on)

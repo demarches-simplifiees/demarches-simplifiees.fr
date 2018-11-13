@@ -1,0 +1,12 @@
+%p
+  Bonjour,
+
+%p
+  Veuillez cliquer sur le lien suivant pour vous connecter sur le site demarches-simplifiees.fr : 
+  = link_to(sign_in_by_link_url(@gestionnaire_id, jeton: @login_token), sign_in_by_link_url(@gestionnaire_id, jeton: @login_token))
+
+%p
+  Bonne journée,
+
+%p
+  L'équipe demarches-simplifiees.fr

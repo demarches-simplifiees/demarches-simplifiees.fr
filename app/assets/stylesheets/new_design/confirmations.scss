@@ -1,0 +1,64 @@
+@import "colors";
+@import "constants";
+
+.devise-confirmations {
+  .one-column-centered {
+    max-width: 600px;
+  }
+
+  .confirmation-icon,
+  .confirmation-preamble,
+  .confirmation-instructions,
+  .confirmation-separator {
+    font-size: 1.15em;
+    margin-bottom: $default-padding * 3;
+  }
+
+  .confirmation-icon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .confirmation-instructions {
+    color: #000000;
+    background-color: $yellow;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 15px 20px 17px 20px;
+  }
+
+  .confirmation-separator {
+    height: 1px;
+    margin-left: -12px;
+    margin-right: -12px;
+    border: none;
+    border-top: 1px solid #DDDDDD;
+  }
+
+  .confirmation-resend {
+    p {
+      margin-bottom: $default-padding;
+    }
+
+    .form {
+      display: flex;
+      flex-wrap: wrap;
+
+      input,
+      button {
+        margin-bottom: $default-spacer;
+      }
+
+      input[type=email] {
+        width: auto;
+        flex-grow: 1;
+        margin-right: $default-spacer;
+      }
+    }
+
+    label {
+      display: none;
+    }
+  }
+}
