@@ -27,8 +27,7 @@ Flipflop.configure do
       default: ENV['FOG_ENABLED'] == 'enabled'
     feature :weekly_overview,
       default: ENV['APP_NAME'] == 'tps'
+    feature :pre_maintenance_mode
+    feature :maintenance_mode
   end
-
-  feature :pre_maintenance_mode
-  feature :maintenance_mode
 end
