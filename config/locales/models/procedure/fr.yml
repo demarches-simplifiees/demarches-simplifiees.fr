@@ -1,5 +1,9 @@
 fr:
   activerecord:
+    models:
+      procedure:
+        one: Démarche
+        other: Démarches
     attributes:
       procedure:
         path: Lien public
