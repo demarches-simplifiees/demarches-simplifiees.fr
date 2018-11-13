@@ -6,9 +6,9 @@
   end
 
 %table#features
-  - Flipflop.feature_set.features.each do |feature|
-    - if !feature.group || feature.group.key != :production
-      %tr
-        %td= feature.title
-        %td
-          = check_box_tag "enable-feature", "enable", field.data[feature.name], data: { url: url, key: feature.key }
+  - admin_features = Flipflop.feature_set.features.reject{ |f| f.group.try(:key) == :production }
+  - admin_features.each do |feature|
+    %tr
+      %td= feature.title
+      %td
+        = check_box_tag "enable-feature", "enable", field.data[feature.name], data: { url: url, key: feature.key }
