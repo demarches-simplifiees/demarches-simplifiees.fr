@@ -1,0 +1,30 @@
+@import "constants";
+@import "colors";
+
+#link-sent {
+  padding-top: 2 * $default-padding;
+  padding-bottom: 2 * $default-padding;
+  text-align: center;
+  max-width: 600px;
+
+  b {
+    font-weight: bold;
+  }
+
+  p {
+    text-align: left;
+    margin: 6 * $default-spacer auto;
+  }
+
+  p.mail {
+    color: #000000;
+    background-color: $yellow;
+    padding: $default-padding;
+  }
+
+  p.help {
+    border-top: 1px solid $grey;
+    padding-top: 6 * $default-spacer;
+    margin-bottom: 2 * $default-spacer;
+  }
+}

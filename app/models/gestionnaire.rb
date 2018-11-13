@@ -1,6 +1,7 @@
 class Gestionnaire < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
+  include ActiveRecord::SecureToken
 
   devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable
@@ -144,6 +145,20 @@ class Gestionnaire < ApplicationRecord
     Dossier.where(id: dossiers_id_with_notifications(dossiers)).group(:procedure_id).count
   end
 
+  def login_token!
+    login_token = Gestionnaire.generate_unique_secure_token
+    encrypted_login_token = BCrypt::Password.create(login_token)
+    update(encrypted_login_token: encrypted_login_token, login_token_created_at: Time.zone.now)
+    login_token
+  end
+
+  def login_token_valid?(login_token)
+    BCrypt::Password.new(encrypted_login_token) == login_token
+    30.minutes.ago < login_token_created_at
+  rescue BCrypt::Errors::InvalidHash
+    false
+  end
+
   def dossiers_id_with_notifications(dossiers)
     dossiers = dossiers.followed_by(self)
 
@@ -188,6 +203,23 @@ class Gestionnaire < ApplicationRecord
     reset_password_token = set_reset_password_token
 
     GestionnaireMailer.invite_gestionnaire(self, reset_password_token).deliver_later
+  end
+
+  def feature_enabled?(feature)
+    Flipflop.feature_set.feature(feature)
+    features[feature.to_s]
+  end
+
+  def disable_feature(feature)
+    Flipflop.feature_set.feature(feature)
+    features.delete(feature.to_s)
+    save
+  end
+
+  def enable_feature(feature)
+    Flipflop.feature_set.feature(feature)
+    features[feature.to_s] = true
+    save
   end
 
   private
