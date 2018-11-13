@@ -5,16 +5,36 @@ class ChampSerializer < ActiveModel::Serializer
 
   has_one :type_de_champ
 
+  has_many :geo_areas, if: :include_geo_areas?
+  has_one :etablissement, if: :include_etablissement?
+  has_one :entreprise, if: :include_etablissement?
+
   def value
     case object
     when GeoArea, UserGeometry, Cadastre, QuartierPrioritaire
       object.geometry
-    else
+    when Champs::CarteChamp
+      if object.value.present?
+        JSON.parse(object.value)
+      end
+    when Champs::DecimalNumberChamp
+      if object.value.present?
+        object.value.to_f
+      end
+    when Champs::IntegerNumberChamp
+      if object.value.present?
+        object.value.to_i
+      end
+    when Champs::LinkedDropDownListChamp
+      if object.value.present?
+        { primary: object.primary_value, secondary: object.secondary_value }
+      end
+    when Champs::PieceJustificativeChamp
       if object.piece_justificative_file.attached?
         url_for(object.piece_justificative_file)
-      else
-        object.value
       end
+    else
+      object.value
     end
   end
 
@@ -25,6 +45,22 @@ class ChampSerializer < ActiveModel::Serializer
     else
       object.type_de_champ
     end
+  end
+
+  def etablissement
+    object.etablissement
+  end
+
+  def entreprise
+    object.etablissement&.entreprise
+  end
+
+  def include_etablissement?
+    object.is_a?(Champs::SiretChamp)
+  end
+
+  def include_geo_areas?
+    object.is_a?(Champs::CarteChamp)
   end
 
   private
