@@ -81,6 +81,7 @@ end
 DatabaseCleaner.strategy = :transaction
 
 TPS::Application.load_tasks
+Rake.application.options.trace = false
 
 include Warden::Test::Helpers
 
