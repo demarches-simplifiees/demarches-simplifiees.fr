@@ -74,11 +74,13 @@ jobs:
             DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
           name: Run Tests, Splitted by Timings
           command: |
-            bundle exec rspec --profile 10 \
+            COMMAND="bundle exec rspec --profile 10 \
               --format RspecJunitFormatter \
               --out ~/test_results/rspec.xml \
               --format progress \
-              $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+              $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            echo $COMMAND
+            eval $COMMAND
       - store_test_results:
           path: ~/test_results/rspec.xml
   lint:
