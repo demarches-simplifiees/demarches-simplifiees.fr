@@ -19,6 +19,7 @@ Flipflop.configure do
   feature :publish_draft
   feature :support_form
   feature :enable_email_login_token
+  feature :new_champs_editor
 
   group :production do
     feature :remote_storage,

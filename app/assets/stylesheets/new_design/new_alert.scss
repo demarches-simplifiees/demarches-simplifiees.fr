@@ -20,3 +20,12 @@
   border-color: $light-green;
   color: $dark-green;
 }
+
+.alert-fixed {
+  position: fixed;
+  left: 50%;
+  margin-left: -100px;
+  width: 200px;
+  top: 10px;
+  border-radius: 10px;
+}

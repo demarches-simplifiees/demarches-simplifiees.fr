@@ -1,7 +1,7 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:update]
-    before_action :procedure_locked?, only: [:update]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :update]
+    before_action :procedure_locked?, only: [:champs, :annotations, :update]
 
     TYPE_DE_CHAMP_ATTRIBUTES = [
       :_destroy,
@@ -25,7 +25,14 @@ module NewAdministrateur
 
     def update
       if @procedure.update(procedure_params)
-        flash.now.notice = 'Démarche enregistrée.'
+        flash.now.notice = if params[:procedure][:types_de_champ_attributes].present?
+          'Champs enregistrés'
+        elsif params[:procedure][:types_de_champ_private_attributes].present?
+          'Annotations enregistrés'
+        else
+          'Démarche enregistrée.'
+        end
+
         reset_procedure
       else
         flash.now.alert = @procedure.errors.full_messages

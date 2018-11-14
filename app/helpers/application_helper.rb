@@ -7,11 +7,20 @@ module ApplicationHelper
     end
   end
 
-  def flash_class(level, sticky = false)
-    case level
-    when "notice" then "alert-success#{sticky ? ' sticky' : ''}"
-    when "alert" then "alert-danger#{sticky ? ' sticky' : ''}"
+  def flash_class(level, sticky: false, fixed: false)
+    class_names = case level
+    when 'notice'
+      ['alert-success']
+    when 'alert'
+      ['alert-danger']
     end
+    if sticky
+      class_names << 'sticky'
+    end
+    if fixed
+      class_names << 'alert-fixed'
+    end
+    class_names.join(' ')
   end
 
   def render_to_element(selector, partial:, outer: false, locals: {})
@@ -22,9 +31,9 @@ module ApplicationHelper
     # rubocop:enable Rails/OutputSafety
   end
 
-  def render_flash(timeout: false, sticky: false)
+  def render_flash(timeout: false, sticky: false, fixed: false)
     if flash.any?
-      html = render_to_element('#flash_messages', partial: 'layouts/flash_messages', locals: { sticky: sticky }, outer: true)
+      html = render_to_element('#flash_messages', partial: 'layouts/flash_messages', locals: { sticky: sticky, fixed: fixed }, outer: true)
       flash.clear
       if timeout
         html += remove_element('#flash_messages', timeout: timeout, inner: true)
@@ -53,6 +62,12 @@ module ApplicationHelper
   def enable_element(selector)
     # rubocop:disable Rails/OutputSafety
     raw("document.querySelector('#{selector}').disabled = false;")
+    # rubocop:enable Rails/OutputSafety
+  end
+
+  def fire_event(event_name, data)
+    # rubocop:disable Rails/OutputSafety
+    raw("DS.fire('#{event_name}', #{raw(data)});")
     # rubocop:enable Rails/OutputSafety
   end
 
