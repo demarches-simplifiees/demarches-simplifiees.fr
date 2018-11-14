@@ -360,6 +360,8 @@ Rails.application.routes.draw do
     resources :procedures, only: [:update] do
       member do
         get 'apercu'
+        get 'champs'
+        get 'annotations'
       end
     end
 

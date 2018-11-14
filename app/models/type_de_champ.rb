@@ -161,6 +161,18 @@ class TypeDeChamp < ApplicationRecord
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
   end
 
+  def piece_justificative_template_url
+    if piece_justificative_template.attached?
+      Rails.application.routes.url_helpers.url_for(piece_justificative_template)
+    end
+  end
+
+  def piece_justificative_template_filename
+    if piece_justificative_template.attached?
+      piece_justificative_template.filename
+    end
+  end
+
   private
 
   def setup_procedure
