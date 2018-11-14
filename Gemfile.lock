@@ -1,4 +1,15 @@
 GIT
+  remote: https://github.com/fredZen/activestorage-openstack.git
+  revision: 8b64c113223e9ec431b220c9350866c4147b88c3
+  branch: frederic/bump-fog-openstack
+  specs:
+    activestorage-openstack (0.5.0)
+      fog-openstack (~> 1.0)
+      marcel
+      mime-types
+      rails (~> 5.2.0)
+
+GIT
   remote: https://github.com/hassox/warden.git
   revision: 5b3cbd5bef67cbe399bb7007537bc4841bbee772
   branch: master
@@ -650,6 +661,7 @@ DEPENDENCIES
   aasm
   active_link_to
   active_model_serializers
+  activestorage-openstack!
   administrate
   after_party
   axlsx (~> 3.0.0.pre)
