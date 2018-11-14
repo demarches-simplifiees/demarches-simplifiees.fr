@@ -83,7 +83,7 @@ class TypeDeChamp < ApplicationRecord
 
   has_one_attached :piece_justificative_template
 
-  accepts_nested_attributes_for :drop_down_list
+  accepts_nested_attributes_for :drop_down_list, update_only: true
   accepts_nested_attributes_for :types_de_champ, allow_destroy: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
