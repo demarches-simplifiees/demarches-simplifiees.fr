@@ -31,7 +31,7 @@ feature 'Invitations' do
 
       scenario 'an invited user can register using the registration link sent in the invitation email' do
         # Click the invitation link
-        visit users_dossiers_invite_path(invite.id, params: { email: invite.email })
+        visit invite_path(invite, params: { email: invite.email })
         expect(page).to have_current_path(new_user_registration_path, ignore_query: true)
         expect(page).to have_field('user_email', with: invite.email)
 
@@ -115,7 +115,7 @@ feature 'Invitations' do
   end
 
   def navigate_to_invited_dossier(invite)
-    visit users_dossiers_invite_path(invite)
+    visit invite_path(invite)
     expect(page).to have_current_path(new_user_session_path)
     sign_in_with(invited_user.email, invited_user.password)
   end

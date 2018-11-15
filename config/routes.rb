@@ -144,10 +144,6 @@ Rails.application.routes.draw do
   #
 
   namespace :users do
-    namespace :dossiers do
-      resources :invites, only: [:index, :show]
-    end
-
     resources :dossiers, only: [] do
       post '/carte/zones' => 'carte#zones'
       get '/carte' => 'carte#show'
@@ -159,6 +155,7 @@ Rails.application.routes.draw do
     # Redirection of legacy "/users/dossiers" route to "/dossiers"
     get 'dossiers', to: redirect('/dossiers')
     get 'dossiers/:id/recapitulatif', to: redirect('/dossiers/%{id}')
+    get 'dossiers/invites/:id', to: redirect(path: '/invites/%{id}')
   end
 
   namespace :gestionnaire do
@@ -241,8 +238,10 @@ Rails.application.routes.draw do
   get 'address/suggestions' => 'address#suggestions'
   get 'address/geocode' => 'address#geocode'
 
-  namespace :invites do
-    post 'dossier/:dossier_id' => '/invites#create', as: 'dossier'
+  resources :invites, only: [:show] do
+    collection do
+      post 'dossier/:dossier_id', to: 'invites#create', as: :dossier
+    end
   end
 
   #
