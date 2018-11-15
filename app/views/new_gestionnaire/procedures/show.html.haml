@@ -59,10 +59,9 @@
 
       - @current_filters.each do |filter|
         %span.filter
-          = "#{filter['label']} : #{filter['value']}"
           = link_to remove_filter_gestionnaire_procedure_path(@procedure, statut: @statut, table: filter['table'], column: filter['column']) do
             %img.close-icon{ src: image_url("close.svg") }
-
+          = "#{filter['label'].truncate(50)} : #{filter['value']}"
       %table.table.dossiers-table.hoverable
         %thead
           %tr

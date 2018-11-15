@@ -1,5 +1,8 @@
 class InvitesController < ApplicationController
-  before_action :ensure_user_signed_in
+  SESSION_USER_RETURN_LOCATION = 'user_return_to'
+
+  before_action :authenticate_user!, only: [:create]
+  before_action :store_user_location!, only: [:show]
 
   def create
     email = params[:invite_email].downcase
@@ -30,11 +33,35 @@ class InvitesController < ApplicationController
     end
   end
 
+  def show
+    if user_signed_in?
+      erase_user_location!
+
+      dossier = Dossier.joins(:invites)
+        .find_by!(invites: { email: current_user.email, id: params[:id] })
+
+      if dossier.brouillon?
+        redirect_to brouillon_dossier_path(dossier)
+      else
+        redirect_to dossier_path(dossier)
+      end
+    elsif params[:email].present? && !User.find_by(email: params[:email])
+      redirect_to new_user_registration_path(user: { email: params[:email] })
+    else
+      authenticate_user!
+    end
+  rescue ActiveRecord::RecordNotFound
+    flash.alert = t('errors.messages.dossier_not_found')
+    redirect_to dossiers_path
+  end
+
   private
 
-  def ensure_user_signed_in
-    if !user_signed_in?
-      return redirect_to root_path
-    end
+  def store_user_location!
+    store_location_for(:user, request.fullpath)
+  end
+
+  def erase_user_location!
+    session.delete(SESSION_USER_RETURN_LOCATION)
   end
 end
