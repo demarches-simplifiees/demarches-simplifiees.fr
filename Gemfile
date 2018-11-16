@@ -59,7 +59,7 @@ gem 'hashie'
 
 gem 'mailjet'
 
-gem "premailer-rails"
+gem 'premailer-rails'
 
 gem 'smart_listing'
 
@@ -93,9 +93,9 @@ gem 'after_party'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
 gem 'delayed_job_active_record'
-gem "daemons"
+gem 'daemons'
 gem 'delayed_cron_job' # Cron jobs
-gem "delayed_job_web"
+gem 'delayed_job_web'
 gem 'select2-rails'
 
 gem 'prawn' # PDF Generation
@@ -104,7 +104,7 @@ gem 'prawn_rails'
 gem 'chunky_png'
 gem 'sentry-raven'
 
-gem "administrate"
+gem 'administrate'
 
 gem 'rack-mini-profiler'
 
