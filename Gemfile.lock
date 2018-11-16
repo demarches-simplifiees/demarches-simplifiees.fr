@@ -10,14 +10,6 @@ GIT
       rails (~> 5.2.0)
 
 GIT
-  remote: https://github.com/hassox/warden.git
-  revision: 5b3cbd5bef67cbe399bb7007537bc4841bbee772
-  branch: master
-  specs:
-    warden (1.2.8)
-      rack (>= 1.0)
-
-GIT
   remote: https://github.com/mina-deploy/mina.git
   revision: 0dd5fdb8bb82a180d35e1fc033de2fac48257e30
   specs:
@@ -56,7 +48,7 @@ GEM
     active_link_to (1.0.5)
       actionpack
       addressable
-    active_model_serializers (0.10.7)
+    active_model_serializers (0.10.8)
       actionpack (>= 4.1, < 6)
       activemodel (>= 4.1, < 6)
       case_transform (>= 0.2)
@@ -241,9 +233,9 @@ GEM
     formatador (0.2.5)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
-    groupdate (4.0.2)
+    groupdate (4.1.0)
       activesupport (>= 4.2)
-    guard (2.14.2)
+    guard (2.15.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
       lumberjack (>= 1.0.12, < 2.0)
@@ -348,7 +340,7 @@ GEM
       rest-client
     marcel (0.3.2)
       mimemagic (~> 0.3.2)
-    method_source (0.9.0)
+    method_source (0.9.2)
     mime-types (3.2.2)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2018.0812)
@@ -400,7 +392,7 @@ GEM
       json
     orm_adapter (0.5.0)
     parallel (1.12.1)
-    parser (2.5.1.2)
+    parser (2.5.3.0)
       ast (~> 2.4.0)
     pdf-core (0.7.0)
     pg (1.1.3)
@@ -418,7 +410,7 @@ GEM
     premailer-rails (1.10.2)
       actionmailer (>= 3, < 6)
       premailer (~> 1.7, >= 1.7.9)
-    pry (0.11.3)
+    pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     pry-byebug (3.6.0)
@@ -426,7 +418,7 @@ GEM
       pry (~> 0.10)
     public_suffix (3.0.2)
     puma (3.12.0)
-    rack (2.0.5)
+    rack (2.0.6)
     rack-handlers (0.7.3)
       rack
     rack-mini-profiler (1.0.0)
@@ -465,7 +457,7 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
-    rails-i18n (5.1.1)
+    rails-i18n (5.1.2)
       i18n (>= 0.7, < 2)
       railties (>= 5.0, < 6)
     railties (5.2.1)
@@ -505,13 +497,13 @@ GEM
       rspec-mocks (~> 3.8.0)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
-    rspec-expectations (3.8.1)
+    rspec-expectations (3.8.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-mocks (3.8.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
-    rspec-rails (3.8.0)
+    rspec-rails (3.8.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
@@ -522,14 +514,14 @@ GEM
     rspec-support (3.8.0)
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (0.59.2)
+    rubocop (0.60.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (~> 1.0, >= 1.0.1)
+      unicode-display_width (~> 1.4.0)
     rubocop-rspec-focused (1.0.0)
       rubocop (>= 0.51)
     ruby-progressbar (1.10.0)
@@ -576,9 +568,9 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.3)
       tilt (~> 2.0)
-    skylight (3.0.0)
-      skylight-core (= 3.0.0)
-    skylight-core (3.0.0)
+    skylight (3.1.1)
+      skylight-core (= 3.1.1)
+    skylight-core (3.1.1)
       activesupport (>= 4.2.0)
     smart_listing (1.2.2)
       coffee-rails
@@ -606,7 +598,7 @@ GEM
       httpclient (>= 2.4)
     sysexits (1.2.0)
     temple (0.8.0)
-    thor (0.20.0)
+    thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.8)
     timecop (0.9.1)
@@ -614,7 +606,7 @@ GEM
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    typhoeus (1.3.0)
+    typhoeus (1.3.1)
       ethon (>= 0.9.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
@@ -629,6 +621,8 @@ GEM
       activemodel (>= 3.0.0)
       addressable
     vcr (4.0.0)
+    warden (1.2.8)
+      rack (>= 2.0.6)
     web-console (3.7.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
@@ -748,7 +742,7 @@ DEPENDENCIES
   turbolinks
   typhoeus
   vcr
-  warden!
+  warden
   web-console
   webmock
   webpacker (>= 4.0.x)
