@@ -15,7 +15,7 @@ gem 'turbolinks'
 # Enable deep clone of active record models
 gem 'deep_cloneable'
 
-gem 'warden', git: 'https://github.com/hassox/warden.git', branch: 'master'
+gem 'warden'
 
 # Use Puma as the app server
 gem 'puma'
