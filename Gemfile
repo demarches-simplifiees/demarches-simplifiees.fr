@@ -55,8 +55,8 @@ gem 'clamav-client', require: 'clamav/client'
 gem 'carrierwave'
 gem 'carrierwave-i18n'
 gem 'copy_carrierwave_file'
-gem 'fog'
 gem 'fog-openstack'
+gem 'activestorage-openstack', git: 'https://github.com/fredZen/activestorage-openstack.git', branch: 'frederic/bump-fog-openstack'
 
 gem 'pg'
 

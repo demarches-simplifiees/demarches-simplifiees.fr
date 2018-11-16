@@ -9,3 +9,14 @@ clever_cloud:
   access_key_id: <%= ENV['CLEVER_CLOUD_ACCESS_KEY_ID'] %>
   secret_access_key: <%= ENV['CLEVER_CLOUD_SECRET_ACCESS_KEY'] %>
   bucket: <%= ENV['CLEVER_CLOUD_BUCKET'] %>
+openstack:
+  service: OpenStack
+  container: "<%= ENV['FOG_DIRECTORY'] %>"
+  credentials:
+    openstack_tenant: "<%= ENV['FOG_OPENSTACK_TENANT'] %>"
+    openstack_api_key: "<%= ENV['FOG_OPENSTACK_API_KEY'] %>"
+    openstack_username: "<%= ENV['FOG_OPENSTACK_USERNAME'] %>"
+    openstack_auth_url: "<%= ENV['FOG_OPENSTACK_URL'] %>"
+    openstack_identity_api_version: "<%= ENV['FOG_OPENSTACK_IDENTITY_API_VERSION'] %>"
+    openstack_region: "<%= ENV['FOG_OPENSTACK_REGION'] %>"
+    openstack_temp_url_key: "<%= ENV['FOG_OPENSTACK_TEMP_URL_KEY'] %>"
