@@ -10,14 +10,6 @@ GIT
       rails (~> 5.2.0)
 
 GIT
-  remote: https://github.com/hassox/warden.git
-  revision: 5b3cbd5bef67cbe399bb7007537bc4841bbee772
-  branch: master
-  specs:
-    warden (1.2.8)
-      rack (>= 1.0)
-
-GIT
   remote: https://github.com/mina-deploy/mina.git
   revision: 0dd5fdb8bb82a180d35e1fc033de2fac48257e30
   specs:
@@ -629,6 +621,8 @@ GEM
       activemodel (>= 3.0.0)
       addressable
     vcr (4.0.0)
+    warden (1.2.8)
+      rack (>= 2.0.6)
     web-console (3.7.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
@@ -748,7 +742,7 @@ DEPENDENCIES
   turbolinks
   typhoeus
   vcr
-  warden!
+  warden
   web-console
   webmock
   webpacker (>= 4.0.x)
