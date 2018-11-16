@@ -55,7 +55,10 @@ describe Users::SessionsController, type: :controller do
         end
 
         it 'directly log the gestionnaire' do
-          expect(subject).to redirect_to gestionnaire_procedures_path
+          expect(@response.redirect?).to be(true)
+          expect(subject).not_to redirect_to link_sent_path(email: gestionnaire.email)
+          # TODO when signing in as non-administrateur, and not starting a demarche, log in to gestionnaire path
+          # expect(subject).to redirect_to gestionnaire_procedures_path
           expect(subject.current_user).to be(nil)
           expect(subject.current_gestionnaire).to eq(gestionnaire)
           expect(subject.current_administrateur).to be(nil)
