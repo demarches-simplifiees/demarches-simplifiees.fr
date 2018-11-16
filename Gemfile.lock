@@ -410,8 +410,6 @@ GEM
     public_suffix (3.0.3)
     puma (3.12.0)
     rack (2.0.6)
-    rack-handlers (0.7.3)
-      rack
     rack-mini-profiler (1.0.1)
       rack (>= 1.2.0)
     rack-oauth2 (1.9.3)
@@ -710,7 +708,6 @@ DEPENDENCIES
   premailer-rails
   pry-byebug
   puma
-  rack-handlers
   rack-mini-profiler
   rails
   rails-controller-testing

@@ -87,7 +87,6 @@ group :development do
   gem 'brakeman', require: false
   gem 'haml-lint'
   gem 'letter_opener_web'
-  gem 'rack-handlers'
   gem 'rubocop', require: false
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
