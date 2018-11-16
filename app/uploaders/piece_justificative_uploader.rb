@@ -33,10 +33,6 @@ class PieceJustificativeUploader < BaseUploader
     filename
   end
 
-  def original_filename
-    model.original_filename
-  end
-
   private
 
   def secure_token

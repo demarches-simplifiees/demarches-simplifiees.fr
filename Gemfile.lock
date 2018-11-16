@@ -1,10 +1,13 @@
 GIT
-  remote: https://github.com/hassox/warden.git
-  revision: 5b3cbd5bef67cbe399bb7007537bc4841bbee772
-  branch: master
+  remote: https://github.com/fredZen/activestorage-openstack.git
+  revision: 8b64c113223e9ec431b220c9350866c4147b88c3
+  branch: frederic/bump-fog-openstack
   specs:
-    warden (1.2.8)
-      rack (>= 1.0)
+    activestorage-openstack (0.5.0)
+      fog-openstack (~> 1.0)
+      marcel
+      mime-types
+      rails (~> 5.2.0)
 
 GIT
   remote: https://github.com/mina-deploy/mina.git
@@ -17,7 +20,6 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    CFPropertyList (2.3.6)
     aasm (5.0.1)
       concurrent-ruby (~> 1.0)
     actioncable (5.2.1)
@@ -46,7 +48,7 @@ GEM
     active_link_to (1.0.5)
       actionpack
       addressable
-    active_model_serializers (0.10.7)
+    active_model_serializers (0.10.8)
       actionpack (>= 4.1, < 6)
       activemodel (>= 4.1, < 6)
       case_transform (>= 0.2)
@@ -129,12 +131,10 @@ GEM
     capybara-selenium (0.0.6)
       capybara
       selenium-webdriver
-    carrierwave (0.11.2)
-      activemodel (>= 3.2.0)
-      activesupport (>= 3.2.0)
-      json (>= 1.7)
+    carrierwave (1.2.3)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
       mime-types (>= 1.16)
-      mimemagic (>= 0.3.0)
     carrierwave-i18n (0.2.0)
     case_transform (0.2)
       activesupport
@@ -151,7 +151,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.0.5)
+    concurrent-ruby (1.1.3)
     copy_carrierwave_file (1.3.0)
       carrierwave (>= 0.9)
     crack (0.4.3)
@@ -214,169 +214,28 @@ GEM
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
-    fission (0.5.0)
-      CFPropertyList (~> 2.2)
     flipflop (2.4.0)
       activesupport (>= 4.0)
-    fog (1.42.0)
-      fog-aliyun (>= 0.1.0)
-      fog-atmos
-      fog-aws (>= 0.6.0)
-      fog-brightbox (~> 0.4)
-      fog-cloudatcost (~> 0.1.0)
-      fog-core (~> 1.45)
-      fog-digitalocean (>= 0.3.0)
-      fog-dnsimple (~> 1.0)
-      fog-dynect (~> 0.0.2)
-      fog-ecloud (~> 0.1)
-      fog-google (<= 0.1.0)
-      fog-internet-archive
-      fog-joyent
-      fog-json
-      fog-local
-      fog-openstack
-      fog-ovirt
-      fog-powerdns (>= 0.1.1)
-      fog-profitbricks
-      fog-rackspace
-      fog-radosgw (>= 0.0.2)
-      fog-riakcs
-      fog-sakuracloud (>= 0.0.4)
-      fog-serverlove
-      fog-softlayer
-      fog-storm_on_demand
-      fog-terremark
-      fog-vmfusion
-      fog-voxel
-      fog-vsphere (>= 0.4.0)
-      fog-xenserver
-      fog-xml (~> 0.1.1)
-      ipaddress (~> 0.5)
-      json (~> 2.0)
-    fog-aliyun (0.2.0)
-      fog-core (~> 1.27)
-      fog-json (~> 1.0)
-      ipaddress (~> 0.8)
-      xml-simple (~> 1.1)
-    fog-atmos (0.1.0)
-      fog-core
-      fog-xml
-    fog-aws (2.0.0)
-      fog-core (~> 1.38)
-      fog-json (~> 1.0)
-      fog-xml (~> 0.1)
-      ipaddress (~> 0.8)
-    fog-brightbox (0.14.0)
-      fog-core (~> 1.22)
-      fog-json
-      inflecto (~> 0.0.2)
-    fog-cloudatcost (0.1.2)
-      fog-core (~> 1.36)
-      fog-json (~> 1.0)
-      fog-xml (~> 0.1)
-      ipaddress (~> 0.8)
-    fog-core (1.45.0)
+    fog-core (2.1.2)
       builder
       excon (~> 0.58)
       formatador (~> 0.2)
-    fog-digitalocean (0.3.0)
-      fog-core (~> 1.42)
-      fog-json (>= 1.0)
-      fog-xml (>= 0.1)
-      ipaddress (>= 0.5)
-    fog-dnsimple (1.0.0)
-      fog-core (~> 1.38)
-      fog-json (~> 1.0)
-    fog-dynect (0.0.3)
-      fog-core
-      fog-json
-      fog-xml
-    fog-ecloud (0.3.0)
-      fog-core
-      fog-xml
-    fog-google (0.1.0)
-      fog-core
-      fog-json
-      fog-xml
-    fog-internet-archive (0.0.1)
-      fog-core
-      fog-json
-      fog-xml
-    fog-joyent (0.0.1)
-      fog-core (~> 1.42)
-      fog-json (>= 1.0)
+      mime-types
     fog-json (1.2.0)
       fog-core
       multi_json (~> 1.10)
-    fog-local (0.4.0)
-      fog-core (~> 1.27)
-    fog-openstack (0.1.27)
-      fog-core (~> 1.45.0)
+    fog-openstack (1.0.6)
+      fog-core (~> 2.1)
       fog-json (>= 1.0)
       ipaddress (>= 0.8)
-    fog-ovirt (0.1.3)
-      fog-core (~> 1.45)
-      fog-json
-      fog-xml (~> 0.1.1)
-      rbovirt (~> 0.1.5)
-    fog-powerdns (0.1.1)
-      fog-core (~> 1.27)
-      fog-json (~> 1.0)
-      fog-xml (~> 0.1)
-    fog-profitbricks (4.1.1)
-      fog-core (~> 1.42)
-      fog-json (~> 1.0)
-    fog-rackspace (0.1.5)
-      fog-core (>= 1.35)
-      fog-json (>= 1.0)
-      fog-xml (>= 0.1)
-      ipaddress (>= 0.8)
-    fog-radosgw (0.0.5)
-      fog-core (>= 1.21.0)
-      fog-json
-      fog-xml (>= 0.0.1)
-    fog-riakcs (0.1.0)
-      fog-core
-      fog-json
-      fog-xml
-    fog-sakuracloud (1.7.5)
-      fog-core
-      fog-json
-    fog-serverlove (0.1.2)
-      fog-core
-      fog-json
-    fog-softlayer (1.1.4)
-      fog-core
-      fog-json
-    fog-storm_on_demand (0.1.1)
-      fog-core
-      fog-json
-    fog-terremark (0.1.0)
-      fog-core
-      fog-xml
-    fog-vmfusion (0.1.0)
-      fission
-      fog-core
-    fog-voxel (0.1.0)
-      fog-core
-      fog-xml
-    fog-vsphere (1.13.1)
-      fog-core
-      rbvmomi (~> 1.9)
-    fog-xenserver (0.3.0)
-      fog-core
-      fog-xml
-    fog-xml (0.1.3)
-      fog-core
-      nokogiri (>= 1.5.11, < 2.0.0)
     font-awesome-rails (4.7.0.4)
       railties (>= 3.2, < 6.0)
     formatador (0.2.5)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
-    groupdate (4.0.2)
+    groupdate (4.1.0)
       activesupport (>= 4.2)
-    guard (2.14.2)
+    guard (2.15.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
       lumberjack (>= 1.0.12, < 2.0)
@@ -426,7 +285,6 @@ GEM
     httpclient (2.8.3)
     i18n (1.1.1)
       concurrent-ruby (~> 1.0)
-    inflecto (0.0.2)
     ipaddress (0.8.3)
     jaro_winkler (1.5.1)
     jquery-rails (4.3.3)
@@ -482,10 +340,10 @@ GEM
       rest-client
     marcel (0.3.2)
       mimemagic (~> 0.3.2)
-    method_source (0.9.0)
-    mime-types (3.1)
+    method_source (0.9.2)
+    mime-types (3.2.2)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2016.0521)
+    mime-types-data (3.2018.0812)
     mimemagic (0.3.2)
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
@@ -534,7 +392,7 @@ GEM
       json
     orm_adapter (0.5.0)
     parallel (1.12.1)
-    parser (2.5.1.2)
+    parser (2.5.3.0)
       ast (~> 2.4.0)
     pdf-core (0.7.0)
     pg (1.1.3)
@@ -552,7 +410,7 @@ GEM
     premailer-rails (1.10.2)
       actionmailer (>= 3, < 6)
       premailer (~> 1.7, >= 1.7.9)
-    pry (0.11.3)
+    pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     pry-byebug (3.6.0)
@@ -560,7 +418,7 @@ GEM
       pry (~> 0.10)
     public_suffix (3.0.2)
     puma (3.12.0)
-    rack (2.0.5)
+    rack (2.0.6)
     rack-handlers (0.7.3)
       rack
     rack-mini-profiler (1.0.0)
@@ -599,7 +457,7 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
-    rails-i18n (5.1.1)
+    rails-i18n (5.1.2)
       i18n (>= 0.7, < 2)
       railties (>= 5.0, < 6)
     railties (5.2.1)
@@ -617,14 +475,6 @@ GEM
       ffi
     rbnacl-libsodium (1.0.16)
       rbnacl (>= 3.0.1)
-    rbovirt (0.1.5)
-      nokogiri
-      rest-client (> 1.7.0)
-    rbvmomi (1.11.6)
-      builder (~> 3.0)
-      json (>= 1.8)
-      nokogiri (~> 1.5)
-      trollop (~> 2.1)
     request_store (1.4.1)
       rack (>= 1.4)
     responders (2.4.0)
@@ -647,13 +497,13 @@ GEM
       rspec-mocks (~> 3.8.0)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
-    rspec-expectations (3.8.1)
+    rspec-expectations (3.8.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-mocks (3.8.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
-    rspec-rails (3.8.0)
+    rspec-rails (3.8.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
@@ -664,14 +514,14 @@ GEM
     rspec-support (3.8.0)
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (0.59.2)
+    rubocop (0.60.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (~> 1.0, >= 1.0.1)
+      unicode-display_width (~> 1.4.0)
     rubocop-rspec-focused (1.0.0)
       rubocop (>= 0.51)
     ruby-progressbar (1.10.0)
@@ -718,9 +568,9 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.3)
       tilt (~> 2.0)
-    skylight (3.0.0)
-      skylight-core (= 3.0.0)
-    skylight-core (3.0.0)
+    skylight (3.1.1)
+      skylight-core (= 3.1.1)
+    skylight-core (3.1.1)
       activesupport (>= 4.2.0)
     smart_listing (1.2.2)
       coffee-rails
@@ -748,16 +598,15 @@ GEM
       httpclient (>= 2.4)
     sysexits (1.2.0)
     temple (0.8.0)
-    thor (0.20.0)
+    thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.8)
     timecop (0.9.1)
-    trollop (2.1.2)
     ttfunk (1.5.1)
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    typhoeus (1.3.0)
+    typhoeus (1.3.1)
       ethon (>= 0.9.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
@@ -772,6 +621,8 @@ GEM
       activemodel (>= 3.0.0)
       addressable
     vcr (4.0.0)
+    warden (1.2.8)
+      rack (>= 2.0.6)
     web-console (3.7.0)
       actionview (>= 5.0)
       activemodel (>= 5.0)
@@ -791,7 +642,6 @@ GEM
     websocket-driver (0.7.0)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
-    xml-simple (1.1.5)
     xpath (3.0.0)
       nokogiri (~> 1.8)
     xray-rails (0.3.1)
@@ -805,6 +655,7 @@ DEPENDENCIES
   aasm
   active_link_to
   active_model_serializers
+  activestorage-openstack!
   administrate
   after_party
   axlsx (~> 3.0.0.pre)
@@ -836,7 +687,6 @@ DEPENDENCIES
   draper
   factory_bot
   flipflop
-  fog
   fog-openstack
   font-awesome-rails
   groupdate
@@ -892,7 +742,7 @@ DEPENDENCIES
   turbolinks
   typhoeus
   vcr
-  warden!
+  warden
   web-console
   webmock
   webpacker (>= 4.0.x)
@@ -900,4 +750,4 @@ DEPENDENCIES
   zxcvbn-ruby
 
 BUNDLED WITH
-   1.16.6
+   1.17.1
