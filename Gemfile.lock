@@ -126,7 +126,7 @@ GEM
     capybara-email (3.0.1)
       capybara (>= 2.4, < 4.0)
       mail
-    capybara-screenshot (1.0.21)
+    capybara-screenshot (1.0.22)
       capybara (>= 1.0, < 4)
       launchy
     capybara-selenium (0.0.6)
