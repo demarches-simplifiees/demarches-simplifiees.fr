@@ -90,7 +90,6 @@ group :development do
   gem 'rubocop', require: false
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
-  gem 'web-console' # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'xray-rails'
 end
 
