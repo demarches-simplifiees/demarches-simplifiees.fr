@@ -84,8 +84,11 @@ Layout/EmptyLines:
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
+# FIXME: private should not be a column name on TypeDeChamp
 Layout/EmptyLinesAroundAccessModifier:
   Enabled: true
+  Exclude:
+    - "spec/factories/type_de_champ.rb"
 
 Layout/EmptyLinesAroundArguments:
   Enabled: true
