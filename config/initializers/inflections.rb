@@ -15,6 +15,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular 'type_de_champ', 'types_de_champ'
   inflect.irregular 'type_de_champ_private', 'types_de_champ_private'
   inflect.irregular 'assign_to', 'assign_tos'
+  inflect.irregular 'demarche', 'demarches'
   inflect.uncountable(['avis', 'pays'])
 end
 
