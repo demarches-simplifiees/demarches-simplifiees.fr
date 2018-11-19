@@ -79,6 +79,20 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
+  scope :with_graph, -> {
+    includes(champs: [
+      type_de_champ: { drop_down_list: [] },
+      piece_justificative_file_attachment: :blob
+    ],
+    champs_private: [
+      type_de_champ: { drop_down_list: [] },
+      piece_justificative_file_attachment: :blob
+    ],
+    procedure: [:administrateur],
+    etablissement: [],
+    individual: [])
+  }
+
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true

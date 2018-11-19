@@ -57,6 +57,14 @@ class Procedure < ApplicationRecord
     )
   }
 
+  scope :with_graph, -> {
+    includes(administrateur: [],
+      types_de_champ: { piece_justificative_template_attachment: :blob },
+      types_de_champ_private: { piece_justificative_template_attachment: :blob },
+      notice_attachment: :blob,
+      deliberation_attachment: :blob)
+  }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validate :check_juridique
