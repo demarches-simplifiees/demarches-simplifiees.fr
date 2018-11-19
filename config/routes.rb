@@ -219,6 +219,10 @@ Rails.application.routes.draw do
   # API
   #
 
+  authenticated :user, lambda { |user| user.administrateur_id } do
+    mount GraphiQL::Rails::Engine, at: "/graphql", graphql_path: "/api/v2/graphql", via: :get
+  end
+
   namespace :api do
     namespace :v1 do
       resources :procedures, only: [:index, :show] do
