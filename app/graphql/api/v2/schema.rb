@@ -3,6 +3,9 @@ class Api::V2::Schema < GraphQL::Schema
   max_complexity 300
   max_depth 10
 
+  query Types::QueryType
+  mutation Types::MutationType
+
   def self.unauthorized_object(error)
     # Add a top-level error to the response instead of returning nil:
     raise GraphQL::ExecutionError, "An object of type #{error.type.graphql_name} was hidden due to permissions", extensions: { code: :unauthorized }
