@@ -253,6 +253,10 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:index, :show]
       end
     end
+
+    namespace :v2 do
+      post :graphql, to: "graphql#execute"
+    end
   end
 
   #
