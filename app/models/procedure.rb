@@ -62,6 +62,10 @@ class Procedure < ApplicationRecord
     accepte:         'accepte'
   }
 
+  scope :for_api_v2, -> {
+    includes(administrateurs: :user)
+  }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
