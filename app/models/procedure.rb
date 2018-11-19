@@ -57,6 +57,10 @@ class Procedure < ApplicationRecord
     )
   }
 
+  scope :for_api_v2, -> {
+    includes(:administrateur, notice_attachment: :blob, deliberation_attachment: :blob)
+  }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true

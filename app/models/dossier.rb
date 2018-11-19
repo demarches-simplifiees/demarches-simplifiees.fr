@@ -81,6 +81,10 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
+  scope :for_api_v2, -> {
+    includes(procedure: [:administrateur], etablissement: [], individual: [])
+  }
+
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
