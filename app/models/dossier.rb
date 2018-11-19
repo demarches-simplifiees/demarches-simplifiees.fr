@@ -306,6 +306,29 @@ class Dossier < ApplicationRecord
     DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
   end
 
+  def change_state_with_motivation(state, motivation)
+    self.motivation = motivation
+    self.en_instruction_at ||= Time.zone.now
+
+    case state
+    when :refuse
+      refuse!
+      save!
+      NotificationMailer.send_refused_notification(self).deliver_later
+    when :sans_suite
+      sans_suite!
+      save!
+      NotificationMailer.send_without_continuation_notification(self).deliver_later
+    when :accepte
+      accepte!
+      if attestation.nil?
+        self.attestation = build_attestation
+      end
+      save!
+      NotificationMailer.send_closed_notification(self).deliver_later
+    end
+  end
+
   private
 
   def update_state_dates

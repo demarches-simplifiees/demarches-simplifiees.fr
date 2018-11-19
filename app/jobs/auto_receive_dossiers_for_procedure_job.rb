@@ -11,14 +11,7 @@ class AutoReceiveDossiersForProcedureJob < ApplicationJob
       )
     when Dossier.states.fetch(:accepte)
       procedure.dossiers.state_en_construction.find_each do |dossier|
-        dossier.update(
-          state: Dossier.states.fetch(:accepte),
-          en_instruction_at: Time.zone.now,
-          processed_at: Time.zone.now
-        )
-        dossier.attestation = dossier.build_attestation
-        dossier.save
-        NotificationMailer.send_closed_notification(dossier).deliver_later
+        dossier.change_state_with_motivation(:accepte, '')
       end
     else
       raise "Receiving Procedure##{procedure_id} in invalid state \"#{state}\""

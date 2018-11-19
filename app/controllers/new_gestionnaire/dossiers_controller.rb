@@ -89,29 +89,18 @@ module NewGestionnaire
     end
 
     def terminer
-      if params[:dossier] && params[:dossier][:motivation].present?
-        dossier.motivation = params[:dossier][:motivation]
-      end
+      motivation = params[:dossier] && params[:dossier][:motivation]
 
       case params[:process_action]
       when "refuser"
-        dossier.refuse!
-        dossier.save
+        dossier.change_state_with_motivation(:refuse, motivation)
         flash.notice = "Dossier considéré comme refusé."
-        NotificationMailer.send_refused_notification(dossier).deliver_later
       when "classer_sans_suite"
-        dossier.sans_suite!
-        dossier.save
+        dossier.change_state_with_motivation(:sans_suite, motivation)
         flash.notice = "Dossier considéré comme sans suite."
-        NotificationMailer.send_without_continuation_notification(dossier).deliver_later
       when "accepter"
-        dossier.accepte!
-        if dossier.attestation.nil?
-          dossier.attestation = dossier.build_attestation
-          dossier.save
-        end
+        dossier.change_state_with_motivation(:accepte, motivation)
         flash.notice = "Dossier traité avec succès."
-        NotificationMailer.send_closed_notification(dossier).deliver_later
       end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
