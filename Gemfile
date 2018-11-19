@@ -50,6 +50,13 @@ gem 'rails-i18n'
 gem 'rest-client'
 gem 'typhoeus'
 
+gem 'graphql'
+gem 'graphql-client'
+gem 'graphiql-rails'
+gem 'graphql-batch'
+gem 'graphql-rails_logger'
+gem 'graphql-docs'
+
 gem 'clamav-client', require: 'clamav/client'
 
 gem 'carrierwave'
