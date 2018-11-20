@@ -1,3 +1,4 @@
+# Preview all emails at http://localhost:3000/rails/mailers/gestionnaire_mailer
 class GestionnaireMailer < ApplicationMailer
   layout 'mailers/layout'
 
