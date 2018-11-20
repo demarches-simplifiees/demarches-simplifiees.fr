@@ -1,3 +1,4 @@
+# Preview all emails at http://localhost:3000/rails/mailers/new_attestation_mailer
 class NewAttestationMailer < ApplicationMailer
   include Rails.application.routes.url_helpers
 

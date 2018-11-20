@@ -3,6 +3,27 @@ require "rails_helper"
 RSpec.describe DossierMailer, type: :mailer do
   let(:to_email) { 'gestionnaire@exemple.gouv.fr' }
 
+  describe '.notify_new_draft' do
+    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+
+    subject { described_class.notify_new_draft(dossier) }
+
+    it { expect(subject.subject).to include("brouillon") }
+    it { expect(subject.subject).to include(dossier.id.to_s) }
+    it { expect(subject.body).to include(dossier.procedure.libelle) }
+    it { expect(subject.body).to include(dossier_url(dossier)) }
+  end
+
+  describe '.notify_new_answer' do
+    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+
+    subject { described_class.notify_new_answer(dossier) }
+
+    it { expect(subject.subject).to include("Nouveau message") }
+    it { expect(subject.subject).to include(dossier.id.to_s) }
+    it { expect(subject.body).to include(messagerie_dossier_url(dossier)) }
+  end
+
   describe '.notify_deletion_to_user' do
     let(:deleted_dossier) { build(:deleted_dossier) }
 
