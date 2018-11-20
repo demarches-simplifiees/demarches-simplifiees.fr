@@ -48,7 +48,7 @@ class Commentaire < ApplicationRecord
   end
 
   def notify_user
-    NotificationMailer.new_answer(dossier).deliver_later
+    DossierMailer.notify_new_answer(dossier).deliver_later
   end
 
   def is_virus_free?
