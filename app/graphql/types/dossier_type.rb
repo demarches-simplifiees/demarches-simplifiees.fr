@@ -1,0 +1,42 @@
+module Types
+  class DossierType < Types::BaseObject
+    class DossierState < Types::BaseEnum
+      Dossier.aasm.states.reject { |state| state.name == :brouillon }.each do |state|
+        value(state.name.to_s, state.display_name, value: state.name.to_s)
+      end
+    end
+
+    description "Un dossier"
+
+    global_id_field :id
+    field :number, ID, "Le numero du dossier.", null: false, method: :id
+    field :state, DossierState, "L'état du dossier.", null: false
+    field :updated_at, GraphQL::Types::ISO8601DateTime, "Date de dernière mise à jour.", null: false
+
+    field :date_passage_en_construction, GraphQL::Types::ISO8601DateTime, "Date de dépôt.", null: false, method: :en_construction_at
+    field :date_passage_en_instruction, GraphQL::Types::ISO8601DateTime, "Date de passage en instruction.", null: true, method: :en_instruction_at
+    field :date_traitement, GraphQL::Types::ISO8601DateTime, "Date de traitement.", null: true, method: :processed_at
+
+    field :archived, Boolean, null: false
+
+    field :motivation, String, null: true
+    field :motivation_attachment_url, Types::URL, null: true, extensions: [
+      { Extensions::Attachment => { attachment: :justificatif_motivation } }
+    ]
+
+    field :usager, Types::ProfileType, null: false
+    field :instructeurs, [Types::ProfileType], null: false
+
+    def state
+      object.state
+    end
+
+    def usager
+      Loaders::Record.for(User).load(object.user_id)
+    end
+
+    def instructeurs
+      Loaders::Association.for(object.class, :followers_instructeurs).load(object)
+    end
+  end
+end
