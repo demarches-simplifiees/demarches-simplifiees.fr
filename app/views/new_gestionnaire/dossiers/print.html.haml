@@ -17,7 +17,7 @@
 - if champs.any?
   = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil, profile: 'instructeur' }
 
-- if @dossier.procedure.use_api_carto
+- if @dossier.use_legacy_carto?
   %h3 Cartographie
   - if @dossier.quartier_prioritaires.any?
     %h4 Quartiers prioritaires

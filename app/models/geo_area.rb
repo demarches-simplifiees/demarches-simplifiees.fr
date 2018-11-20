@@ -23,7 +23,8 @@ class GeoArea < ApplicationRecord
   enum source: {
     quartier_prioritaire: 'quartier_prioritaire',
     cadastre: 'cadastre',
-    parcelle_agricole: 'parcelle_agricole'
+    parcelle_agricole: 'parcelle_agricole',
+    selection_utilisateur: 'selection_utilisateur'
   }
 
   scope :quartiers_prioritaires, -> { where(source: sources.fetch(:quartier_prioritaire)) }

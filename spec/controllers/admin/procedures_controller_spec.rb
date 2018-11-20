@@ -201,18 +201,6 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.duree_conservation_dossiers_hors_ds).to eq(duree_conservation_dossiers_hors_ds) }
         end
 
-        describe 'procedure module api carto attributs in database' do
-          let(:procedure) { Procedure.last }
-          let(:use_api_carto) { '1' }
-          let(:quartiers_prioritaires) { '1' }
-
-          subject { ModuleAPICarto.last }
-
-          it { expect(subject.procedure).to eq(procedure) }
-          it { expect(subject.use_api_carto).to be_truthy }
-          it { expect(subject.quartiers_prioritaires).to be_truthy }
-        end
-
         it { is_expected.to redirect_to(admin_procedure_types_de_champ_path(procedure_id: Procedure.last.id)) }
 
         it { expect(flash[:notice]).to be_present }
@@ -346,7 +334,7 @@ describe Admin::ProceduresController, type: :controller do
 
           it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
           it { expect(subject.individual_with_siret).not_to eq procedure_params[:individual_with_siret] }
-          it { expect(subject.use_api_carto).not_to eq procedure_params[:module_api_carto_attributes][:use_api_carto] }
+          it { expect(subject.use_legacy_carto?).not_to eq procedure_params[:module_api_carto_attributes][:use_api_carto] }
         end
       end
     end

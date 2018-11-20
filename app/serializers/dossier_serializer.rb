@@ -23,11 +23,30 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :pieces_justificatives
   has_many :types_de_piece_justificative
 
-  has_many :champs do
-    champs = object.champs + object.quartier_prioritaires + object.cadastres
-    if object.user_geometry.present?
-      champs << object.user_geometry
+  has_many :champs, serializer: ChampSerializer
+
+  def champs
+    champs = object.champs.to_a
+
+    if object.use_legacy_carto?
+      champs += object.quartier_prioritaires
+      champs += object.cadastres
+
+      if object.user_geometry.present?
+        champs << object.user_geometry
+      end
+    elsif object.expose_legacy_carto_api?
+      champ_carte = champs.find do |champ|
+        champ.type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:carte)
+      end
+
+      if champ_carte.present?
+        carto_champs = champ_carte.geo_areas.to_a
+        carto_champs << champ_carte.user_geo_area
+        champs += carto_champs.compact
+      end
     end
+
     champs
   end
 
@@ -73,20 +92,5 @@ class DossierSerializer < ActiveModel::Serializer
 
   def processed_at
     object.processed_at&.in_time_zone('UTC')
-  end
-
-  private
-
-  def user_geometry(dossier)
-    {
-      value: dossier.geometry,
-      type_de_champ: {
-        id: -1,
-        libelle: 'user_geometry',
-        type_champ: 'user_geometry',
-        order_place: -1,
-        descripton: ''
-      }
-    }
   end
 end

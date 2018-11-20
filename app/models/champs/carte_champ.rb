@@ -43,7 +43,27 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def zones
-    value.blank? ? [] : JSON.parse(value)
+  def geo_json
+    @geo_json ||= value.blank? ? [] : JSON.parse(value)
+  end
+
+  def user_geometry
+    {
+      type: 'Polygon',
+      coordinates: [
+        geo_json[0].map do |polygon|
+          [polygon['lat'], polygon['lng']]
+        end
+      ]
+    }
+  end
+
+  def user_geo_area
+    if geo_json.present?
+      GeoArea.new(
+        geometry: user_geometry,
+        source: GeoArea.sources.fetch(:selection_utilisateur)
+      )
+    end
   end
 end
