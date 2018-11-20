@@ -13,7 +13,9 @@ class DossierMailer < ApplicationMailer
     @dossier = dossier
     subject = "Nouveau message pour votre dossier nº #{dossier.id}"
 
-    mail(to: dossier.user.email, subject: subject)
+    mail(to: dossier.user.email, subject: subject) do |format|
+      format.html { render layout: 'mailers/notification' }
+    end
   end
 
   def notify_deletion_to_user(deleted_dossier, to_email)
