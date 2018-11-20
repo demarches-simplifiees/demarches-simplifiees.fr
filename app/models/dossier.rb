@@ -356,7 +356,7 @@ class Dossier < ApplicationRecord
 
   def send_draft_notification_email
     if brouillon?
-      NotificationMailer.send_draft_notification(self).deliver_later
+      DossierMailer.notify_new_draft(self).deliver_later
     end
   end
 

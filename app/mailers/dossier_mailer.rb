@@ -1,6 +1,20 @@
 class DossierMailer < ApplicationMailer
   layout 'mailers/layout'
 
+  def notify_new_draft(dossier)
+    @dossier = dossier
+    subject = "Retrouvez votre brouillon pour la démarche \"#{dossier.procedure.libelle}\""
+
+    mail(to: dossier.user.email, subject: subject)
+  end
+
+  def notify_new_answer(dossier)
+    @dossier = dossier
+    subject = "Nouveau message pour votre dossier nº #{dossier.id}"
+
+    mail(to: dossier.user.email, subject: subject)
+  end
+
   def notify_deletion_to_user(deleted_dossier, to_email)
     @deleted_dossier = deleted_dossier
     subject = "Votre dossier n° #{@deleted_dossier.dossier_id} a bien été supprimé"
