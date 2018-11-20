@@ -85,6 +85,104 @@ describe API::V2::DossiersController do
       end
     end
   end
+
+  describe 'PATCH state' do
+    let(:gestionnaire) { create(:gestionnaire) }
+    let(:params) do
+      {
+        id: dossier.id,
+        state: state,
+        motivation: 'Avec motivation'
+      }
+    end
+    let(:response) do
+      request.env['HTTP_AUTHORIZATION'] = authorization_header
+      patch :state, params: params
+    end
+
+    context 'passer en instruction' do
+      let(:params) do
+        {
+          id: dossier.id,
+          state: 'EN_INSTRUCTION',
+          instructeur_id: gestionnaire.to_typed_id
+        }
+      end
+
+      it { expect(code).to eq('200') }
+      it do
+        expect(body).to eq({
+          data: {
+            id: dossier.id.to_s,
+            state: 'EN_INSTRUCTION'
+          }
+        })
+      end
+    end
+
+    context 'repasser en construction' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+
+      let(:params) do
+        {
+          id: dossier.id,
+          state: 'EN_CONSTRUCTION'
+        }
+      end
+
+      it { expect(code).to eq('200') }
+      it do
+        expect(body).to eq({
+          data: {
+            id: dossier.id.to_s,
+            state: 'EN_CONSTRUCTION'
+          }
+        })
+      end
+    end
+
+    context 'refuser' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+      let(:state) { 'REFUSE' }
+
+      it { expect(code).to eq('200') }
+      it do
+        expect(body).to eq({
+          data: {
+            id: dossier.id.to_s,
+            state: 'REFUSE'
+          }
+        })
+      end
+    end
+
+    context 'accepter' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+      let(:state) { 'ACCEPTE' }
+
+      it { expect(code).to eq('200') }
+      it do
+        expect(body).to eq({
+          data: {
+            id: dossier.id.to_s,
+            state: 'ACCEPTE'
+          }
+        })
+      end
+    end
+
+    context 'classer sans suite' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+      let(:state) { 'SANS_SUITE' }
+
+      it { expect(code).to eq('200') }
+      it do
+        expect(body).to eq({
+          data: {
+            id: dossier.id.to_s,
+            state: 'SANS_SUITE'
+          }
+        })
       end
     end
   end

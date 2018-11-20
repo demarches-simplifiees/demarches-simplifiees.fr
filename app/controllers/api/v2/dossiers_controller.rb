@@ -25,4 +25,39 @@ class API::V2::DossiersController < API::V2::BaseController
       data.demarche.dossiers.to_h
     end
   end
+
+  def state
+    variables = {
+      dossier_id: params.require(:id),
+      instructeur_id: params[:instructeur_id],
+      motivation: params[:motivation]
+    }
+
+    result = case params.require(:state).downcase
+    when Dossier.states.fetch(:en_instruction)
+      Api::V2::Client.query(Queries::DossierPasserEnInstruction,
+        variables: variables,
+        context: context)
+    when Dossier.states.fetch(:en_construction)
+      Api::V2::Client.query(Queries::DossierRepasserEnConstruction,
+        variables: variables,
+        context: context)
+    when Dossier.states.fetch(:accepte)
+      Api::V2::Client.query(Queries::DossierAccepter,
+        variables: variables,
+        context: context)
+    when Dossier.states.fetch(:sans_suite)
+      Api::V2::Client.query(Queries::DossierClasserSansSuite,
+        variables: variables,
+        context: context)
+    when Dossier.states.fetch(:refuse)
+      Api::V2::Client.query(Queries::DossierRefuser,
+        variables: variables,
+        context: context)
+    end
+
+    render_data(result) do |data|
+      { data: data.payload.dossier.to_h }
+    end
+  end
 end

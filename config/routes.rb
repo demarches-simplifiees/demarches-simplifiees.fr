@@ -265,6 +265,9 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:index]
       end
       resources :dossiers, only: [:show] do
+        member do
+          patch :state
+        end
       end
     end
   end
