@@ -6,6 +6,29 @@ class Api::V2::Schema < GraphQL::Schema
   query Types::QueryType
   mutation Types::MutationType
 
+  def self.id_from_object(object, type_definition, ctx)
+    object.to_typed_id
+  end
+
+  def self.object_from_id(id, query_ctx)
+    ApplicationRecord.record_from_typed_id(id)
+  rescue => e
+    raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
+  end
+
+  def self.resolve_type(type, obj, ctx)
+    case obj
+    when Procedure
+      Types::DemarcheType
+    when Dossier
+      Types::DossierType
+    when Gestionnaire, User
+      Types::ProfileType
+    else
+      raise GraphQL::ExecutionError.new("Unexpected object: #{obj}")
+    end
+  end
+
   def self.unauthorized_object(error)
     # Add a top-level error to the response instead of returning nil:
     raise GraphQL::ExecutionError.new("An object of type #{error.type.graphql_name} was hidden due to permissions", extensions: { code: :unauthorized })
