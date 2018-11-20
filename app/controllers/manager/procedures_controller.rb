@@ -17,5 +17,12 @@ module Manager
       end
       redirect_to manager_procedure_path(procedure)
     end
+
+    def hide
+      procedure = Procedure.find(params[:id])
+      procedure.hide!
+      flash[:notice] = "La démarche a bien été supprimée, en cas d'erreur contactez un développeur."
+      redirect_to manager_procedure_path(procedure)
+    end
   end
 end
