@@ -1,16 +1,11 @@
+# Preview all emails at http://localhost:3000/rails/mailers/notification_mailer
+
+# A Notification is attached as a Comment to the relevant discussion,
+# then sent by email to the user.
+#
+# The subject and body of a Notification can be customized by each demarche.
+#
 class NotificationMailer < ApplicationMailer
-  def new_answer(dossier)
-    subject = "Nouveau message pour votre dossier nº #{dossier.id}"
-
-    send_mail(dossier, subject)
-  end
-
-  def send_draft_notification(dossier)
-    subject = "Retrouvez votre brouillon pour la démarche \"#{dossier.procedure.libelle}\""
-
-    send_mail(dossier, subject)
-  end
-
   def send_dossier_received(dossier)
     send_notification(dossier, dossier.procedure.received_mail_template)
   end
@@ -32,13 +27,6 @@ class NotificationMailer < ApplicationMailer
   end
 
   private
-
-  def send_mail(dossier, subject)
-    @dossier = dossier
-    email = dossier.user.email
-
-    mail(subject: subject, to: email)
-  end
 
   def send_notification(dossier, mail_template)
     email = dossier.user.email

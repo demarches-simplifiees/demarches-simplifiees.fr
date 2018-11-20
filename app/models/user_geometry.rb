@@ -5,7 +5,7 @@ class UserGeometry
     @json_latlngs = json_latlngs
   end
 
-  def value
+  def geometry
     to_geo_json(@json_latlngs)
   end
 

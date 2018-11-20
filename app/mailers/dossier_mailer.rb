@@ -1,5 +1,22 @@
+# Preview all emails at http://localhost:3000/rails/mailers/dossier_mailer
 class DossierMailer < ApplicationMailer
   layout 'mailers/layout'
+
+  def notify_new_draft(dossier)
+    @dossier = dossier
+    subject = "Retrouvez votre brouillon pour la démarche \"#{dossier.procedure.libelle}\""
+
+    mail(to: dossier.user.email, subject: subject)
+  end
+
+  def notify_new_answer(dossier)
+    @dossier = dossier
+    subject = "Nouveau message pour votre dossier nº #{dossier.id}"
+
+    mail(to: dossier.user.email, subject: subject) do |format|
+      format.html { render layout: 'mailers/notification' }
+    end
+  end
 
   def notify_deletion_to_user(deleted_dossier, to_email)
     @deleted_dossier = deleted_dossier

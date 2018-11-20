@@ -121,30 +121,6 @@
 - if !@procedure.locked?
   .row
     .col-md-6
-      %h4 Cartographie
-
-      = f.fields_for :module_api_carto, @procedure.module_api_carto do |ff|
-        .checkbox
-          %label
-            = ff.check_box :use_api_carto, id: "procedure-module-api-carto-use-api-carto"
-            Utilisation de la cartographie
-
-        %ul#modules-api-carto
-          %li
-            .checkbox
-              %label
-                = ff.check_box :quartiers_prioritaires
-                Quartiers prioritaires
-          %li
-            .checkbox
-              %label
-                = ff.check_box :cadastre
-                Cadastre
-
-    .col-md-6
-
-  .row
-    .col-md-6
       %h4 Particuliers
       .checkbox
         %label

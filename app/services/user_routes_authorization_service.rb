@@ -3,6 +3,6 @@ class UserRoutesAuthorizationService
     auth = controller.route_authorization
 
     auth[:states].include?(dossier.state) &&
-        (auth[:api_carto].nil? ? true : auth[:api_carto] == dossier.procedure.use_api_carto)
+        (auth[:api_carto].nil? ? true : auth[:api_carto] == dossier.use_legacy_carto?)
   end
 end
