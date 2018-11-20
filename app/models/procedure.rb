@@ -30,8 +30,6 @@ class Procedure < ApplicationRecord
   has_one_attached :notice
   has_one_attached :deliberation
 
-  delegate :use_api_carto, to: :module_api_carto
-
   accepts_nested_attributes_for :types_de_champ, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :types_de_piece_justificative, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :module_api_carto
@@ -131,6 +129,14 @@ class Procedure < ApplicationRecord
 
   def publiee_ou_archivee?
     publiee? || archivee?
+  end
+
+  def use_legacy_carto?
+    module_api_carto.use_api_carto? && !module_api_carto.migrated?
+  end
+
+  def expose_legacy_carto_api?
+    module_api_carto.use_api_carto? && module_api_carto.migrated?
   end
 
   # Warning: dossier after_save build_default_champs must be removed
