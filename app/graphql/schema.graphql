@@ -1,0 +1,251 @@
+"""
+Une demarche
+"""
+type Demarche {
+  archivedAt: ISO8601DateTime
+  createdAt: ISO8601DateTime!
+
+  """
+  Lien vers le texte qui justifie le droit de collecter les données demandées dans votre démarche auprès des usagers.
+  """
+  deliberationUrl: URL
+
+  """
+  Déscription de la démarche.
+  """
+  description: String!
+
+  """
+  Liste de tous les dossiers d'une démarche.
+  """
+  dossiers(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Filtrer les dossiers par ID.
+    """
+    ids: [ID!]
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+
+    """
+    Dossiers crées depuis la date.
+    """
+    since: ISO8601DateTime
+  ): DossierConnection!
+
+  """
+  L'ID de la démarche.
+  """
+  id: ID!
+  instructeurs: [Profile!]!
+
+  """
+  Lien public de la démarche.
+  """
+  link: URL
+
+  """
+  Lien vers la notice explicative de la démarche.
+  """
+  noticeUrl: URL
+
+  """
+  Lien vers le site internet de la démarche.
+  """
+  siteWebUrl: URL
+  state: DemarcheState!
+  title: String!
+  updatedAt: ISO8601DateTime!
+}
+
+enum DemarcheState {
+  """
+  Archivee
+  """
+  archivee
+
+  """
+  Brouillon
+  """
+  brouillon
+
+  """
+  Hidden
+  """
+  hidden
+
+  """
+  Publiee
+  """
+  publiee
+}
+
+"""
+Un dossier
+"""
+type Dossier {
+  createdAt: ISO8601DateTime!
+
+  """
+  L'ID du dossier.
+  """
+  id: ID!
+  instructeurs: [Profile!]!
+  motivation: String
+
+  """
+  L'état du dossier.
+  """
+  state: DossierState!
+  updatedAt: ISO8601DateTime!
+  usager: Profile!
+}
+
+"""
+The connection type for Dossier.
+"""
+type DossierConnection {
+  """
+  A list of edges.
+  """
+  edges: [DossierEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [Dossier]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type DossierEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: Dossier
+}
+
+enum DossierState {
+  """
+  Accepté
+  """
+  accepte
+
+  """
+  Brouillon
+  """
+  brouillon
+
+  """
+  En construction
+  """
+  en_construction
+
+  """
+  En instruction
+  """
+  en_instruction
+
+  """
+  Refusé
+  """
+  refuse
+
+  """
+  Sans suite
+  """
+  sans_suite
+}
+
+"""
+An ISO 8601-encoded datetime
+"""
+scalar ISO8601DateTime
+
+type Mutation {
+}
+
+"""
+Information about pagination in a connection.
+"""
+type PageInfo {
+  """
+  When paginating forwards, the cursor to continue.
+  """
+  endCursor: String
+
+  """
+  When paginating forwards, are there more items?
+  """
+  hasNextPage: Boolean!
+
+  """
+  When paginating backwards, are there more items?
+  """
+  hasPreviousPage: Boolean!
+
+  """
+  When paginating backwards, the cursor to continue.
+  """
+  startCursor: String
+}
+
+type Profile {
+  email: String!
+  id: ID!
+}
+
+type Query {
+  """
+  Informations concernant une démarche.
+  """
+  demarche(
+    """
+    Numéro de la démarche.
+    """
+    id: ID!
+  ): Demarche!
+
+  """
+  Informations sur un dossier d'une démarche.
+  """
+  dossier(
+    """
+    Numéro du dossier.
+    """
+    id: ID!
+  ): Dossier!
+}
+
+"""
+A valid URL, transported as a string
+"""
+scalar URL
