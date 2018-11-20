@@ -66,7 +66,7 @@ class Admin::ProceduresController < AdminController
     @procedure = Procedure.new(procedure_params)
 
     if @procedure.valid?
-      @procedure.module_api_carto = ModuleAPICarto.new(create_module_api_carto_params)
+      @procedure.module_api_carto = ModuleAPICarto.new
     end
 
     @path = @procedure.path
@@ -270,9 +270,5 @@ class Admin::ProceduresController < AdminController
       end
       params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
     end
-  end
-
-  def create_module_api_carto_params
-    params.require(:procedure).require(:module_api_carto_attributes).permit(:id, :use_api_carto, :quartiers_prioritaires, :cadastre)
   end
 end
