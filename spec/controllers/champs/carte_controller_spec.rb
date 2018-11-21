@@ -15,10 +15,11 @@ describe Champs::CarteController, type: :controller do
       champ_id: champ.id
     }
   end
+  let(:geojson) { [] }
   let(:champ) do
     create(:type_de_champ_carte, options: {
       quartiers_prioritaires: true
-    }).champ.create(dossier: dossier)
+    }).champ.create(dossier: dossier, value: geojson.to_json)
   end
 
   describe 'POST #show' do
@@ -45,6 +46,16 @@ describe Champs::CarteController, type: :controller do
       it { expect(response.body).not_to be_nil }
       it { expect(response.body).to include('MultiPolygon') }
       it { expect(response.body).to include('[2.38715792094576,48.8723062632126]') }
+    end
+
+    context 'when error' do
+      let(:geojson) { [[{ "lat": 48.87442541960633, "lng": 2.3859214782714844 }, { "lat": 48.87273183590832, "lng": 2.3850631713867183 }, { "lat": 48.87081237174292, "lng": 2.3809432983398438 }, { "lat": 48.8712640169951, "lng": 2.377510070800781 }, { "lat": 48.87510283703279, "lng": 2.3778533935546875 }, { "lat": 48.87544154230615, "lng": 2.382831573486328 }, { "lat": 48.87442541960633, "lng": 2.3859214782714844 }]] }
+      let(:selection) { { error: "TooManyPolygons" } }
+
+      it {
+        expect(champ.reload.value).to eq(nil)
+        expect(champ.reload.geo_areas).to eq([])
+      }
     end
   end
 end
