@@ -29,8 +29,28 @@ FactoryBot.define do
     end
   end
 
-  factory :champ_integer_number, class: 'Champs::IntegerNumberChamp' do
-    type_de_champ { create(:type_de_champ_integer_number) }
+  factory :champ_text, class: 'Champs::TextChamp' do
+    type_de_champ { create(:type_de_champ_text) }
+    value { 'text' }
+  end
+
+  factory :champ_textarea, class: 'Champs::TextareaChamp' do
+    type_de_champ { create(:type_de_champ_textarea) }
+    value { 'textarea' }
+  end
+
+  factory :champ_date, class: 'Champs::DateChamp' do
+    type_de_champ { create(:type_de_champ_date) }
+    value { 1.day.ago.iso8601 }
+  end
+
+  factory :champ_datetime, class: 'Champs::DatetimeChamp' do
+    type_de_champ { create(:type_de_champ_datetime) }
+    value { 1.day.ago.iso8601 }
+  end
+
+  factory :champ_number, class: 'Champs::NumberChamp' do
+    type_de_champ { create(:type_de_champ_number) }
     value { '42' }
   end
 
@@ -39,23 +59,89 @@ FactoryBot.define do
     value { '42.1' }
   end
 
+  factory :champ_integer_number, class: 'Champs::IntegerNumberChamp' do
+    type_de_champ { create(:type_de_champ_integer_number) }
+    value { '42' }
+  end
+
+  factory :champ_checkbox, class: 'Champs::CheckboxChamp' do
+    type_de_champ { create(:type_de_champ_checkbox) }
+    value { 'on' }
+  end
+
+  factory :champ_civilite, class: 'Champs::CiviliteChamp' do
+    type_de_champ { create(:type_de_champ_civilite) }
+    value { 'M.' }
+  end
+
+  factory :champ_email, class: 'Champs::EmailChamp' do
+    type_de_champ { create(:type_de_champ_email) }
+    value { 'yoda@beta.gouv.fr' }
+  end
+
+  factory :champ_phone, class: 'Champs::PhoneChamp' do
+    type_de_champ { create(:type_de_champ_phone) }
+    value { '0666666666' }
+  end
+
+  factory :champ_address, class: 'Champs::AddressChamp' do
+    type_de_champ { create(:type_de_champ_address) }
+    value { '2 rue des Démarches' }
+  end
+
+  factory :champ_yes_no, class: 'Champs::YesNoChamp' do
+    type_de_champ { create(:type_de_champ_yes_no) }
+    value { 'true' }
+  end
+
+  factory :champ_drop_down_list, class: 'Champs::DropDownListChamp' do
+    type_de_champ { create(:type_de_champ_drop_down_list) }
+    value { '' }
+  end
+
+  factory :champ_multiple_drop_down_list, class: 'Champs::MultipleDropDownListChamp' do
+    type_de_champ { create(:type_de_champ_multiple_drop_down_list) }
+    value { '' }
+  end
+
   factory :champ_linked_drop_down_list, class: 'Champs::LinkedDropDownListChamp' do
     type_de_champ { create(:type_de_champ_linked_drop_down_list) }
     value { '{}' }
   end
 
-  factory :champ_carte, class: 'Champs::CarteChamp' do
-    type_de_champ { create(:type_de_champ_carte) }
+  factory :champ_pays, class: 'Champs::PaysChamp' do
+    type_de_champ { create(:type_de_champ_pays) }
+    value { 'France' }
   end
 
-  factory :champ_siret, class: 'Champs::SiretChamp' do
-    type_de_champ { create(:type_de_champ_siret) }
-    value { '44011762001530' }
-    etablissement { create(:etablissement) }
+  factory :champ_regions, class: 'Champs::RegionChamp' do
+    type_de_champ { create(:type_de_champ_regions) }
+    value { '' }
+  end
 
-    before(:create) do |champ, evaluator|
-      champ.etablissement.signature = champ.etablissement.sign
-    end
+  factory :champ_departements, class: 'Champs::DepartementChamp' do
+    type_de_champ { create(:type_de_champ_departements) }
+    value { '' }
+  end
+
+  factory :champ_engagement, class: 'Champs::EngagementChamp' do
+    type_de_champ { create(:type_de_champ_engagement) }
+    value { 'true' }
+  end
+
+  factory :champ_header_section, class: 'Champs::HeaderSectionChamp' do
+    type_de_champ { create(:type_de_champ_header_section) }
+    value { 'une section' }
+  end
+
+  factory :champ_explication, class: 'Champs::ExplicationChamp' do
+    type_de_champ { create(:type_de_champ_explication) }
+    value { 'une explication' }
+  end
+
+  factory :champ_dossier_link, class: 'Champs::DossierLinkChamp' do
+    type_de_champ { create(:type_de_champ_dossier_link) }
+    value { create(:dossier).id }
   end
 
   factory :champ_piece_justificative, class: 'Champs::PieceJustificativeChamp' do
@@ -63,6 +149,20 @@ FactoryBot.define do
 
     after(:create) do |champ, evaluator|
       champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+    end
+  end
+
+  factory :champ_carte, class: 'Champs::CarteChamp' do
+    type_de_champ { create(:type_de_champ_carte) }
+  end
+
+  factory :champ_siret, class: 'Champs::SiretChamp' do
+    association :type_de_champ, factory: [:type_de_champ_siret]
+    association :etablissement, factory: [:etablissement]
+    value { '44011762001530' }
+
+    after(:build) do |champ, evaluator|
+      champ.etablissement.signature = champ.etablissement.sign
     end
   end
 end
