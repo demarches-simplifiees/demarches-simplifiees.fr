@@ -109,7 +109,6 @@ Rails.application.routes.draw do
   #
 
   root 'root#index'
-  get '/tour-de-france' => 'tour_de_france#index'
   get '/administration' => 'root#administration'
 
   get 'users' => 'users#index'
@@ -131,6 +130,7 @@ Rails.application.routes.draw do
     post ':position/carte', to: 'carte#show', as: :carte
   end
 
+  get '/tour-de-france' => 'tour_de_france#index'
   get "patron" => "root#patron"
   get "suivi" => "root#suivi"
 
