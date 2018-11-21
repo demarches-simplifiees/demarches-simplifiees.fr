@@ -61,7 +61,7 @@ describe SupportController, type: :controller do
         }
 
         expect(flash[:notice]).to match('Votre message a été envoyé.')
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
       end
 
       context "with dossier" do
@@ -80,7 +80,7 @@ describe SupportController, type: :controller do
           }
 
           expect(flash[:notice]).to match('Votre message a été envoyé.')
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
         end
 
         context "en_construction" do

@@ -18,7 +18,7 @@ class DemandesController < ApplicationController
       demande_params[:deadline]
     )
     flash.notice = 'Votre demande a bien été enregistrée, nous vous contacterons rapidement.'
-    redirect_to administration_path
+    redirect_to administration_path(formulaire_demande_compte_admin_submitted: true)
   end
 
   private
