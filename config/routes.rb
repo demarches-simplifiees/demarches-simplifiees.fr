@@ -149,8 +149,6 @@ Rails.application.routes.draw do
       post '/carte/zones' => 'carte#zones'
       get '/carte' => 'carte#show'
       post '/carte' => 'carte#save'
-
-      put '/archive' => 'dossiers#archive'
     end
 
     # Redirection of legacy "/users/dossiers" route to "/dossiers"
