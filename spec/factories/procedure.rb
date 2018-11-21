@@ -176,28 +176,34 @@ FactoryBot.define do
 
     trait :with_all_champs_mandatory do
       after(:build) do |procedure, _evaluator|
-        tdcs = []
-        tdcs << create(:type_de_champ, mandatory: true, libelle: 'text')
-        tdcs << create(:type_de_champ_textarea, mandatory: true, libelle: 'textarea')
-        tdcs << create(:type_de_champ_date, mandatory: true, libelle: 'date')
-        tdcs << create(:type_de_champ_datetime, mandatory: true, libelle: 'datetime')
-        tdcs << create(:type_de_champ_number, mandatory: true, libelle: 'number')
-        tdcs << create(:type_de_champ_checkbox, mandatory: true, libelle: 'checkbox')
-        tdcs << create(:type_de_champ_civilite, mandatory: true, libelle: 'civilite')
-        tdcs << create(:type_de_champ_email, mandatory: true, libelle: 'email')
-        tdcs << create(:type_de_champ_phone, mandatory: true, libelle: 'phone')
-        tdcs << create(:type_de_champ_yes_no, mandatory: true, libelle: 'yes_no')
-        tdcs << create(:type_de_champ_drop_down_list, mandatory: true, libelle: 'simple_drop_down_list')
-        tdcs << create(:type_de_champ_multiple_drop_down_list, mandatory: true, libelle: 'multiple_drop_down_list')
-        tdcs << create(:type_de_champ_pays, mandatory: true, libelle: 'pays')
-        tdcs << create(:type_de_champ_regions, mandatory: true, libelle: 'regions')
-        tdcs << create(:type_de_champ_departements, mandatory: true, libelle: 'departements')
-        tdcs << create(:type_de_champ_engagement, mandatory: true, libelle: 'engagement')
-        tdcs << create(:type_de_champ_header_section, mandatory: true, libelle: 'header_section')
-        tdcs << create(:type_de_champ_explication, mandatory: true, libelle: 'explication')
-        tdcs << create(:type_de_champ_dossier_link, mandatory: true, libelle: 'dossier_link')
-        tdcs << create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'piece_justificative')
-        procedure.types_de_champ = tdcs
+        procedure.types_de_champ = TypeDeChamp.type_champs.map.with_index do |(libelle, type_champ), index|
+          if libelle == 'drop_down_list'
+            libelle = 'simple_drop_down_list'
+          end
+          build(:"type_de_champ_#{type_champ}", mandatory: true, libelle: libelle, order_place: index)
+        end
+      end
+    end
+
+    trait :with_all_champs do
+      after(:build) do |procedure, _evaluator|
+        procedure.types_de_champ = TypeDeChamp.type_champs.map.with_index do |(libelle, type_champ), index|
+          if libelle == 'drop_down_list'
+            libelle = 'simple_drop_down_list'
+          end
+          build(:"type_de_champ_#{type_champ}", libelle: libelle, order_place: index)
+        end
+      end
+    end
+
+    trait :with_all_annotations do
+      after(:build) do |procedure, _evaluator|
+        procedure.types_de_champ_private = TypeDeChamp.type_champs.map.with_index do |(libelle, type_champ), index|
+          if libelle == 'drop_down_list'
+            libelle = 'simple_drop_down_list'
+          end
+          build(:"type_de_champ_#{type_champ}", private: true, libelle: libelle, order_place: index)
+        end
       end
     end
   end

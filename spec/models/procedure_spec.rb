@@ -515,67 +515,6 @@ describe Procedure do
     it { is_expected.to eq 2 }
   end
 
-  describe '#generate_export' do
-    let(:procedure) { create :procedure }
-    subject { procedure.generate_export }
-
-    shared_examples "export is empty" do
-      it { expect(subject[:data]).to eq([[]]) }
-      it { expect(subject[:headers]).to eq([]) }
-    end
-
-    context 'when there are no dossiers' do
-      it_behaves_like "export is empty"
-    end
-
-    context 'when there are some dossiers' do
-      let!(:dossier){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
-      let!(:dossier2){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) }
-
-      it { expect(subject[:data].size).to eq(2) }
-      it { expect(subject[:headers]).to eq(dossier.export_headers) }
-
-      context 'with ordered champs' do
-        let(:tc_2) { create(:type_de_champ, order_place: 2) }
-        let(:tc_1) { create(:type_de_champ, order_place: 1) }
-        let(:tcp_2) { create(:type_de_champ, :private, order_place: 2) }
-        let(:tcp_1) { create(:type_de_champ, :private, order_place: 1) }
-
-        before do
-          procedure.types_de_champ << tc_2 << tc_1
-          procedure.types_de_champ_private << tcp_2 << tcp_1
-
-          dossier.build_default_champs
-          dossier.champs.find_by(type_de_champ: tc_1).update(value: "value 1")
-          dossier.champs.find_by(type_de_champ: tc_2).update(value: "value 2")
-          dossier.champs_private.find_by(type_de_champ: tcp_1).update(value: "private value 1")
-          dossier.champs_private.find_by(type_de_champ: tcp_2).update(value: "private value 2")
-
-          dossier2.build_default_champs
-          dossier2.champs.find_by(type_de_champ: tc_1).update(value: "value 1")
-          dossier2.champs.find_by(type_de_champ: tc_2).update(value: "value 2")
-          dossier2.champs_private.find_by(type_de_champ: tcp_1).update(value: "private value 1")
-          dossier2.champs_private.find_by(type_de_champ: tcp_2).update(value: "private value 2")
-        end
-
-        it { expect(subject[:headers].index(tc_1.libelle.parameterize.underscore.to_sym)).to be < subject[:headers].index(tc_2.libelle.parameterize.underscore.to_sym) }
-        it { expect(subject[:headers].index(tcp_1.libelle.parameterize.underscore.to_sym)).to be < subject[:headers].index(tcp_2.libelle.parameterize.underscore.to_sym) }
-
-        it { expect(subject[:data][0].index("value 1")).to be < subject[:data].first.index("value 2") }
-        it { expect(subject[:data][0].index("private value 1")).to be < subject[:data].first.index("private value 2") }
-
-        it { expect(subject[:data][1].index("value 1")).to be < subject[:data].first.index("value 2") }
-        it { expect(subject[:data][1].index("private value 1")).to be < subject[:data].first.index("private value 2") }
-      end
-    end
-
-    context 'when there is a brouillon dossier' do
-      let!(:dossier_not_exportable){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
-
-      it_behaves_like "export is empty"
-    end
-  end
-
   describe '#default_path' do
     let(:procedure){ create(:procedure, libelle: 'A long libelle with àccênts, blabla coucou hello un deux trois voila') }
 
@@ -632,18 +571,18 @@ describe Procedure do
     before { Timecop.freeze(Time.zone.local(2018, 1, 2, 23, 11, 14)) }
     after { Timecop.return }
 
-    subject { procedure.export_filename }
+    subject { procedure.export_filename(:csv) }
 
     context "with a path" do
       let(:procedure) { create(:procedure, :published) }
 
-      it { is_expected.to eq("dossiers_#{procedure.path}_2018-01-02_23-11") }
+      it { is_expected.to eq("dossiers_#{procedure.path}_2018-01-02_23-11.csv") }
     end
 
     context "without a path" do
       let(:procedure) { create(:procedure) }
 
-      it { is_expected.to eq("dossiers_procedure-#{procedure.id}_2018-01-02_23-11") }
+      it { is_expected.to eq("dossiers_procedure-#{procedure.id}_2018-01-02_23-11.csv") }
     end
   end
 

@@ -174,13 +174,21 @@ module NewGestionnaire
     end
 
     def download_dossiers
-      export = procedure.generate_export
-      filename = procedure.export_filename
+      options = params.permit(:limit, :since, tables: [])
 
       respond_to do |format|
-        format.csv { send_data(SpreadsheetArchitect.to_csv(data: export[:data], headers: export[:headers]), filename: "#{filename}.csv") }
-        format.xlsx { send_data(SpreadsheetArchitect.to_xlsx(data: export[:data], headers: export[:headers]), filename: "#{filename}.xlsx") }
-        format.ods { send_data(SpreadsheetArchitect.to_ods(data: export[:data], headers: export[:headers]), filename: "#{filename}.ods") }
+        format.csv do
+          send_data(procedure.to_csv(options),
+            filename: procedure.export_filename(:csv))
+        end
+        format.xlsx do
+          send_data(procedure.to_xlsx(options),
+            filename: procedure.export_filename(:xlsx))
+        end
+        format.ods do
+          send_data(procedure.to_ods(options),
+            filename: procedure.export_filename(:ods))
+        end
       end
     end
 

@@ -307,4 +307,33 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe "#download_dossiers" do
+    let(:gestionnaire) { create(:gestionnaire) }
+    let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+
+    context "when logged in" do
+      before do
+        sign_in(gestionnaire)
+      end
+
+      context "csv" do
+        before { get :download_dossiers, params: { procedure_id: procedure.id }, format: 'csv' }
+
+        it { expect(response).to have_http_status(:ok) }
+      end
+
+      context "xlsx" do
+        before { get :download_dossiers, params: { procedure_id: procedure.id }, format: 'xlsx' }
+
+        it { expect(response).to have_http_status(:ok) }
+      end
+
+      context "ods" do
+        before { get :download_dossiers, params: { procedure_id: procedure.id }, format: 'ods' }
+
+        it { expect(response).to have_http_status(:ok) }
+      end
+    end
+  end
 end

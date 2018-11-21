@@ -52,13 +52,13 @@ class Dossier < ApplicationRecord
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
-  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:etablissement, :champs, :champs_private, :user, :individual, :followers_gestionnaires).order(en_construction_at: 'asc') }
+  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:etablissement, :user, :individual, :followers_gestionnaires, champs: { etablissement: [], type_de_champ: :drop_down_list }, champs_private: { etablissement: [], type_de_champ: :drop_down_list }).order(en_construction_at: 'asc') }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
   scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
-
+  scope :since,                       -> (since) { where('dossiers.en_construction_at >= ?', since) }
   scope :for_api, -> {
     includes(commentaires: [],
       champs: [
@@ -144,21 +144,6 @@ class Dossier < ApplicationRecord
 
   def instruction_commencee?
     INSTRUCTION_COMMENCEE.include?(state)
-  end
-
-  def export_headers
-    serialized_dossier = DossierTableExportSerializer.new(self)
-    headers = serialized_dossier.attributes.keys
-    headers += procedure.types_de_champ.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
-    headers += procedure.types_de_champ_private.order(:order_place).map { |types_de_champ| types_de_champ.libelle.parameterize.underscore.to_sym }
-    headers += export_etablissement_data.keys
-    headers
-  end
-
-  def export_values
-    sorted_values.map do |value|
-      serialize_value_for_export(value)
-    end
   end
 
   def reset!
@@ -359,36 +344,6 @@ class Dossier < ApplicationRecord
     elsif TERMINE.include?(state)
       self.processed_at = Time.zone.now
     end
-  end
-
-  def serialize_value_for_export(value)
-    value.nil? || value.kind_of?(Time) ? value : value.to_s
-  end
-
-  def convert_specific_hash_values_to_string(hash_to_convert)
-    hash_to_convert.transform_values do |value|
-      serialize_value_for_export(value)
-    end
-  end
-
-  def export_etablissement_data
-    if etablissement.present?
-      etablissement_attr = EtablissementCsvSerializer.new(etablissement).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
-      entreprise_attr = EntrepriseSerializer.new(etablissement.entreprise).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
-    else
-      etablissement_attr = EtablissementSerializer.new(Etablissement.new).attributes.transform_keys { |k| "etablissement.#{k}".parameterize.underscore.to_sym }
-      entreprise_attr = EntrepriseSerializer.new(Entreprise.new).attributes.transform_keys { |k| "entreprise.#{k}".parameterize.underscore.to_sym }
-    end
-    convert_specific_hash_values_to_string(etablissement_attr.merge(entreprise_attr))
-  end
-
-  def sorted_values
-    serialized_dossier = DossierTableExportSerializer.new(self)
-    values = serialized_dossier.attributes.values
-    values += champs.map(&:for_export)
-    values += champs_private.map(&:for_export)
-    values += export_etablissement_data.values
-    values
   end
 
   def send_dossier_received
