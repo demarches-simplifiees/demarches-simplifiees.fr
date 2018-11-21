@@ -46,6 +46,13 @@ Rails.application.configure do
 
   # Action Mailer settings
   config.action_mailer.delivery_method = :letter_opener_web
+  # Configure default root URL for generating URLs to routes
+  config.action_mailer.default_url_options = {
+    host: 'localhost',
+    port: 3000
+  }
+  # Configure default root URL for email assets
+  config.action_mailer.asset_host = "http://" + ENV['APP_HOST']
 
   Rails.application.routes.default_url_options = {
     host: 'localhost',
