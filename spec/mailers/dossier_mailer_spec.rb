@@ -9,7 +9,7 @@ RSpec.describe DossierMailer, type: :mailer do
     subject { described_class.notify_new_draft(dossier) }
 
     it { expect(subject.subject).to include("brouillon") }
-    it { expect(subject.subject).to include(dossier.id.to_s) }
+    it { expect(subject.subject).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include(dossier_url(dossier)) }
   end

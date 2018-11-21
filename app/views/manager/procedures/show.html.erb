@@ -40,6 +40,8 @@ as well as a link to its edit page.
     <% if procedure.publiee? && procedure.dossiers.empty? %>
       <%= link_to 'passer en brouillon', draft_manager_procedure_path(procedure), method: :post, class: 'button' %>
     <% end %>
+
+    <%= link_to 'supprimer la démarche', hide_manager_procedure_path(procedure), method: :post, class: 'button', data: { confirm: "Confirmez-vous la suppression de la démarche ?" } %>
   <div>
 
 </header>
