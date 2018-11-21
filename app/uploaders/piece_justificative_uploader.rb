@@ -25,9 +25,9 @@ class PieceJustificativeUploader < BaseUploader
   def filename
     if original_filename.present? || model.content_secure_token
       if Flipflop.remote_storage?
-        filename = "#{model.class.to_s.underscore}-#{secure_token}.#{file.extension.downcase}"
+        filename = "#{model.class.to_s.underscore}-#{secure_token}.#{file.extension&.downcase}"
       else
-        filename = "#{model.class.to_s.underscore}.#{file.extension.downcase}"
+        filename = "#{model.class.to_s.underscore}.#{file.extension&.downcase}"
       end
     end
     filename
