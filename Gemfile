@@ -127,6 +127,8 @@ gem "administrate"
 
 gem 'rack-mini-profiler'
 
+gem 'rake-progressbar', require: false
+
 group :test do
   gem 'launchy'
   gem 'factory_bot'
