@@ -58,4 +58,7 @@ class RootController < ApplicationController
 
   def suivi
   end
+
+  def tour_de_france
+  end
 end
