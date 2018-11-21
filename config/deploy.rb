@@ -110,7 +110,6 @@ task :deploy do
       invoke :'service:restart_puma'
       invoke :'service:reload_nginx'
       invoke :'service:restart_delayed_job'
-      invoke :'deploy:cleanup'
     end
   end
 end
