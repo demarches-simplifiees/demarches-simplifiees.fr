@@ -30,6 +30,8 @@ class Champs::CarteController < ApplicationController
 
     if geo_json.first == ["error", "TooManyPolygons"]
       @error = true
+      @champ.value = nil
+      @champ.geo_areas = []
     elsif geo_json.present?
       if @champ.cadastres?
         cadastres = ModuleApiCartoService.generate_cadastre(geo_json)
@@ -54,13 +56,13 @@ class Champs::CarteController < ApplicationController
           parcelle_agricole
         end
       end
-    end
 
-    @champ.geo_areas = geo_areas.map do |geo_area|
-      GeoArea.new(geo_area)
-    end
+      @champ.geo_areas = geo_areas.map do |geo_area|
+        GeoArea.new(geo_area)
+      end
 
-    @champ.value = geo_json.to_json
+      @champ.value = geo_json.to_json
+    end
 
     if @champ.persisted?
       @champ.save
