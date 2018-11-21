@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :procedures, only: [:index, :show] do
       post 'whitelist', on: :member
       post 'draft', on: :member
+      post 'hide', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do
