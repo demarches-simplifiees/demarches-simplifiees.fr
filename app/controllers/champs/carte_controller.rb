@@ -14,7 +14,7 @@ class Champs::CarteController < ApplicationController
       @champ = Champ
         .joins(:dossier)
         .where(dossiers: { user_id: logged_user_ids })
-        .find_by(id: params[:champ_id])
+        .find(params[:champ_id])
     else
       @champ = Champs::CarteChamp.new(type_de_champ: TypeDeChamp.new(
         type_champ: TypeDeChamp.type_champs.fetch(:carte),
