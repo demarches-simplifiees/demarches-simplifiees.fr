@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_08_151929) do
+ActiveRecord::Schema.define(version: 2018_11_21_234008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -188,9 +188,7 @@ ActiveRecord::Schema.define(version: 2018_11_08_151929) do
     t.integer "dossier_id"
     t.datetime "updated_at", null: false
     t.integer "piece_justificative_id"
-    t.integer "champ_id"
     t.string "file"
-    t.index ["champ_id"], name: "index_commentaires_on_champ_id"
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
   end
 
