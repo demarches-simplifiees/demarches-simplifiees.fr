@@ -1,9 +1,7 @@
 class ClamavService
   def self.safe_file?(file_path)
     if Rails.env == 'development'
-      if CLAMAV[:mock?]
-        return CLAMAV[:response]
-      end
+      return true
     end
 
     FileUtils.chmod 0666, file_path
