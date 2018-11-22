@@ -78,6 +78,9 @@ Rails.application.configure do
       authentication: :cram_md5
     }
   else
+    # Note: if you switch to :mailjet_api, the routing of transactional emails
+    # through a specific account will be disabled.
+    # See lib/mailers/interceptors/mailjet_router_interceptor.rb
     config.action_mailer.delivery_method = :mailjet
   end
 
