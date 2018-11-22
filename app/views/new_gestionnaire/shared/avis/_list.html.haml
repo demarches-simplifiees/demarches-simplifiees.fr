@@ -15,7 +15,7 @@
                 confidentiel
                 %span.icon.lock{ title: "Cet avis n'est pas affiché avec les autres experts consultés" }
             %span.date{ class: highlight_if_unseen_class(avis_seen_at, avis.created_at) }
-              Demande d'avis envoyée le #{I18n.l(avis.created_at, format: '%d/%m/%y à %H:%M')}
+              Demande d'avis envoyée le #{l(avis.created_at, format: '%d/%m/%y à %H:%M')}
           %p= avis.introduction
 
           .answer.flex.align-start
@@ -25,7 +25,7 @@
                 = (avis.email_to_display == current_gestionnaire.email) ? 'Vous' : avis.email_to_display
                 - if avis.answer.present?
                   %span.date{ class: highlight_if_unseen_class(avis_seen_at, avis.updated_at) }
-                    Réponse donnée le #{I18n.l(avis.updated_at, format: '%d/%m/%y à %H:%M')}
+                    Réponse donnée le #{l(avis.updated_at, format: '%d/%m/%y à %H:%M')}
                 - else
                   %span.waiting En attente de réponse
               %p= avis.answer

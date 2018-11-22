@@ -13,7 +13,7 @@ class SupportController < ApplicationController
     elsif create_conversation
       flash.notice = "Votre message a été envoyé."
 
-      redirect_to root_path
+      redirect_to root_path(formulaire_contact_general_submitted: true)
     else
       setup_context
       flash.now.alert = "Une erreur est survenue. Vous pouvez nous contactez à #{helpers.mail_to(CONTACT_EMAIL)}."
