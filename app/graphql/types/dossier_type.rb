@@ -38,5 +38,9 @@ module Types
     def instructeurs
       Loaders::Association.for(object.class, :followers_instructeurs).load(object)
     end
+
+    def self.authorized?(object, context)
+      authorized_demarche?(object.procedure, context)
+    end
   end
 end
