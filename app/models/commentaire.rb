@@ -1,6 +1,5 @@
 class Commentaire < ApplicationRecord
   belongs_to :dossier, touch: true
-  belongs_to :champ
   belongs_to :piece_justificative
 
   mount_uploader :file, CommentaireFileUploader
@@ -12,6 +11,10 @@ class Commentaire < ApplicationRecord
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
 
   after_create :notify
+
+  def self.columns
+    super.reject { |c| c.name == "champ" }
+  end
 
   def header
     "#{sender}, #{I18n.l(created_at, format: '%d %b %Y %H:%M')}"
