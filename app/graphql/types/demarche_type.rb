@@ -46,5 +46,9 @@ module Types
 
       dossiers
     end
+
+    def self.authorized?(object, context)
+      authorized_demarche?(object, context)
+    end
   end
 end
