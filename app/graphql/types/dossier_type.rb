@@ -22,5 +22,9 @@ module Types
     def instructeurs
       Loaders::Association.for(Dossier, :followers_gestionnaires).load(object)
     end
+
+    def self.authorized?(object, context)
+      authorized_demarche?(object.procedure, context)
+    end
   end
 end
