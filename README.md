@@ -109,7 +109,6 @@ Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité
 ## Régénérer les binstubs
 
     bundle binstub railties --force
-    bundle binstub unicorn --force
     bin/rake rails:update:bin
 
 ## Tâches Super Admin
