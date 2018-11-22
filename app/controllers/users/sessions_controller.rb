@@ -94,11 +94,9 @@ class Users::SessionsController < Sessions::SessionsController
       administrateur = Administrateur.find_by(email: gestionnaire.email)
       [user, gestionnaire, administrateur].compact.each { |resource| sign_in(resource) }
 
-      if administrateur.present?
-        redirect_to admin_procedures_path
-      else
-        redirect_to gestionnaire_procedures_path
-      end
+      # redirect to procedure'url if stored by store_location_for(:user) in dossiers_controller
+      # redirect to root_path otherwise
+      redirect_to after_sign_in_path_for(:user)
     else
       flash[:alert] = 'Votre lien est invalide ou expiré, veuillez-vous reconnecter.'
       redirect_to new_user_session_path
