@@ -109,7 +109,6 @@ Rails.application.routes.draw do
   #
 
   root 'root#index'
-  get '/tour-de-france' => 'tour_de_france#index'
   get '/administration' => 'root#administration'
 
   get 'users' => 'users#index'
@@ -117,7 +116,6 @@ Rails.application.routes.draw do
 
   get '/stats' => 'stats#index'
   get '/stats/download' => 'stats#download'
-  resources :accessibilite, only: [:index]
   resources :demandes, only: [:new, :create]
 
   namespace :france_connect do
@@ -131,7 +129,9 @@ Rails.application.routes.draw do
     post ':position/carte', to: 'carte#show', as: :carte
   end
 
+  get 'tour-de-france' => 'root#tour_de_france'
   get "patron" => "root#patron"
+  get "accessibilite" => "root#accessibilite"
   get "suivi" => "root#suivi"
 
   get "contact", to: "support#index"

@@ -56,6 +56,12 @@ class RootController < ApplicationController
     @dossier = Dossier.new(champs: all_champs)
   end
 
+  def accessibilite
+  end
+
   def suivi
+  end
+
+  def tour_de_france
   end
 end
