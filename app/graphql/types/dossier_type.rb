@@ -22,5 +22,9 @@ module Types
     def instructeurs
       Loaders::DossierInstructeurs.load(object.id)
     end
+
+    def self.authorized?(object, context)
+      authorized_demarche?(object.procedure, context)
+    end
   end
 end
