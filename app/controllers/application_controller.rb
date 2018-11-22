@@ -30,7 +30,6 @@ class ApplicationController < ActionController::Base
     service = RenderPartialService.new(controller, method)
     @navbar_url = service.navbar
     @left_pannel_url = service.left_panel
-    @facade_data_view = nil
   end
 
   def logged_in?
