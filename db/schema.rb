@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_21_234008) do
+ActiveRecord::Schema.define(version: 2018_11_23_195208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -216,6 +216,16 @@ ActiveRecord::Schema.define(version: 2018_11_21_234008) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
+  end
+
+  create_table "dossier_operation_logs", force: :cascade do |t|
+    t.string "operation", null: false
+    t.bigint "dossier_id"
+    t.bigint "gestionnaire_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
+    t.index ["gestionnaire_id"], name: "index_dossier_operation_logs_on_gestionnaire_id"
   end
 
   create_table "dossiers", id: :serial, force: :cascade do |t|
@@ -608,6 +618,8 @@ ActiveRecord::Schema.define(version: 2018_11_21_234008) do
   add_foreign_key "avis", "gestionnaires", column: "claimant_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
+  add_foreign_key "dossier_operation_logs", "dossiers"
+  add_foreign_key "dossier_operation_logs", "gestionnaires"
   add_foreign_key "dossiers", "users"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "geo_areas", "champs"
