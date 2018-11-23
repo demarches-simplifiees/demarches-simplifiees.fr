@@ -15,9 +15,13 @@
       = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
       .flex.justify-between.align-baseline
         %p.confidentiel.flex
-          %span.icon.lock
-          %span
-            Cet avis est confidentiel et n'est pas affiché aux autres experts consultés
+          - if @avis.confidentiel?
+            %span.icon.lock
+            %span
+              Cet avis est confidentiel et n'est pas affiché aux autres experts consultés
+          - else
+            %span
+              Cet avis est partagé avec les autres experts
         .send-wrapper
           = f.submit 'Envoyer votre avis', class: 'button send'
 
