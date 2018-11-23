@@ -556,7 +556,9 @@ ActiveRecord::Schema.define(version: 2018_11_23_195208) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.jsonb "options"
+    t.bigint "stable_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
+    t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
 
   create_table "types_de_piece_justificative", id: :serial, force: :cascade do |t|
