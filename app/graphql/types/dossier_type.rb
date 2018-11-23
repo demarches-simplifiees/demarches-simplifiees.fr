@@ -27,6 +27,9 @@ module Types
     field :usager, Types::ProfileType, null: false
     field :instructeurs, [Types::ProfileType], null: false
 
+    field :messages, [Types::MessageType], null: false
+    field :avis, [Types::AvisType], null: false
+
     def state
       object.state
     end
@@ -37,6 +40,14 @@ module Types
 
     def instructeurs
       Loaders::Association.for(object.class, :followers_instructeurs).load(object)
+    end
+
+    def messages
+      Loaders::Association.for(object.class, commentaires: [:instructeur, :user]).load(object)
+    end
+
+    def avis
+      Loaders::Association.for(object.class, avis: [:instructeur, :claimant]).load(object)
     end
 
     def self.authorized?(object, context)

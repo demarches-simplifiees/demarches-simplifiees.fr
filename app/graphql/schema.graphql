@@ -1,3 +1,11 @@
+type Avis {
+  answer: String
+  createdAt: ISO8601DateTime!
+  email: String!
+  question: String!
+  updatedAt: ISO8601DateTime!
+}
+
 type ChampInfo {
   description: String
   id: ID!
@@ -111,6 +119,7 @@ enum DemarcheState {
 Un dossier
 """
 type Dossier {
+  avis: [Avis!]!
   createdAt: ISO8601DateTime!
 
   """
@@ -118,6 +127,7 @@ type Dossier {
   """
   id: ID!
   instructeurs: [Profile!]!
+  messages: [Message!]!
   motivation: String
 
   """
@@ -199,6 +209,13 @@ enum DossierState {
 An ISO 8601-encoded datetime
 """
 scalar ISO8601DateTime
+
+type Message {
+  attachment: URL
+  body: String!
+  createdAt: ISO8601DateTime!
+  email: String!
+}
 
 type Mutation {
 }
