@@ -1,8 +1,18 @@
+type ChampInfo {
+  description: String
+  id: ID!
+  label: String!
+  required: Boolean!
+  type: TypeDeChamp!
+}
+
 """
 Une demarche
 """
 type Demarche {
+  annotations: [ChampInfo!]!
   archivedAt: ISO8601DateTime
+  champs: [ChampInfo!]!
   createdAt: ISO8601DateTime!
 
   """
@@ -243,6 +253,143 @@ type Query {
     """
     id: ID!
   ): Dossier!
+}
+
+enum TypeDeChamp {
+  """
+  Adresse
+  """
+  address
+
+  """
+  Carte
+  """
+  carte
+
+  """
+  Case à cocher
+  """
+  checkbox
+
+  """
+  Civilité
+  """
+  civilite
+
+  """
+  Date
+  """
+  date
+
+  """
+  Date et Heure
+  """
+  datetime
+
+  """
+  Nombre décimal
+  """
+  decimal_number
+
+  """
+  Départements
+  """
+  departements
+
+  """
+  Lien vers un autre dossier
+  """
+  dossier_link
+
+  """
+  Menu déroulant
+  """
+  drop_down_list
+
+  """
+  Email
+  """
+  email
+
+  """
+  Engagement
+  """
+  engagement
+
+  """
+  Explication
+  """
+  explication
+
+  """
+  Titre de section
+  """
+  header_section
+
+  """
+  Nombre entier
+  """
+  integer_number
+
+  """
+  Deux menus déroulants liés
+  """
+  linked_drop_down_list
+
+  """
+  Menu déroulant à choix multiples
+  """
+  multiple_drop_down_list
+
+  """
+  Nombre entier
+  """
+  number
+
+  """
+  Pays
+  """
+  pays
+
+  """
+  Téléphone
+  """
+  phone
+
+  """
+  Pièce justificative
+  """
+  piece_justificative
+
+  """
+  Régions
+  """
+  regions
+
+  """
+  Bloc répétable
+  """
+  repetition
+
+  """
+  SIRET
+  """
+  siret
+
+  """
+  Texte
+  """
+  text
+
+  """
+  Zone de texte
+  """
+  textarea
+
+  """
+  Oui/Non
+  """
+  yes_no
 }
 
 """

@@ -25,6 +25,9 @@ module Types
       argument :since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers crées depuis la date."
     end
 
+    field :champ_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ
+    field :annotation_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ_private
+
     def state
       object.aasm.current_state
     end
