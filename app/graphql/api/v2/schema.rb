@@ -22,6 +22,8 @@ class Api::V2::Schema < GraphQL::Schema
       Types::DemarcheType
     when Dossier
       Types::DossierType
+    when Commentaire
+      Types::MessageType
     when Instructeur, User
       Types::ProfileType
     else
