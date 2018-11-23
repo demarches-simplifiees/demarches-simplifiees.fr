@@ -1,5 +1,7 @@
 # Preview all emails at http://localhost:3000/rails/mailers/avis_mailer
 class AvisMailer < ApplicationMailer
+  layout 'mailers/layout'
+
   def avis_invitation(avis)
     @avis = avis
     email = @avis.gestionnaire&.email || @avis.email
