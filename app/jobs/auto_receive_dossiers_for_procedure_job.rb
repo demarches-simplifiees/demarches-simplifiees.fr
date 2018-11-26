@@ -12,7 +12,7 @@ class AutoReceiveDossiersForProcedureJob < ApplicationJob
       end
     when Dossier.states.fetch(:accepte)
       procedure.dossiers.state_en_construction.find_each do |dossier|
-        dossier.accepter!('')
+        dossier.accepter!(gestionnaire, '')
       end
     else
       raise "Receiving Procedure##{procedure_id} in invalid state \"#{state}\""
