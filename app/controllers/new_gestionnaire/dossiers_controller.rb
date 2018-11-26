@@ -74,44 +74,32 @@ module NewGestionnaire
     end
 
     def passer_en_instruction
-      dossier.en_instruction!
-      current_gestionnaire.follow(dossier)
+      dossier.passer_en_instruction!(current_gestionnaire)
       flash.notice = 'Dossier passé en instruction.'
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
 
     def repasser_en_construction
-      dossier.en_construction!
+      dossier.repasser_en_construction!
       flash.notice = 'Dossier repassé en construction.'
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
 
     def terminer
-      if params[:dossier] && params[:dossier][:motivation].present?
-        dossier.motivation = params[:dossier][:motivation]
-      end
+      motivation = params[:dossier] && params[:dossier][:motivation]
 
       case params[:process_action]
       when "refuser"
-        dossier.refuse!
-        dossier.save
+        dossier.refuser!(motivation)
         flash.notice = "Dossier considéré comme refusé."
-        NotificationMailer.send_refused_notification(dossier).deliver_later
       when "classer_sans_suite"
-        dossier.sans_suite!
-        dossier.save
+        dossier.classer_sans_suite!(motivation)
         flash.notice = "Dossier considéré comme sans suite."
-        NotificationMailer.send_without_continuation_notification(dossier).deliver_later
       when "accepter"
-        dossier.accepte!
-        if dossier.attestation.nil?
-          dossier.attestation = dossier.build_attestation
-          dossier.save
-        end
+        dossier.accepter!(motivation)
         flash.notice = "Dossier traité avec succès."
-        NotificationMailer.send_closed_notification(dossier).deliver_later
       end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
