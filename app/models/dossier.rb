@@ -306,6 +306,47 @@ class Dossier < ApplicationRecord
     DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
   end
 
+  def passer_en_instruction!(gestionnaire)
+    en_instruction!
+    gestionnaire.follow(self)
+  end
+
+  def repasser_en_construction!
+    self.en_instruction_at = nil
+    en_construction!
+  end
+
+  def accepter!(motivation)
+    self.motivation = motivation
+    self.en_instruction_at ||= Time.zone.now
+
+    accepte!
+
+    if attestation.nil?
+      update(attestation: build_attestation)
+    end
+
+    NotificationMailer.send_closed_notification(self).deliver_later
+  end
+
+  def refuser!(motivation)
+    self.motivation = motivation
+    self.en_instruction_at ||= Time.zone.now
+
+    refuse!
+
+    NotificationMailer.send_refused_notification(self).deliver_later
+  end
+
+  def classer_sans_suite!(motivation)
+    self.motivation = motivation
+    self.en_instruction_at ||= Time.zone.now
+
+    sans_suite!
+
+    NotificationMailer.send_without_continuation_notification(self).deliver_later
+  end
+
   private
 
   def update_state_dates
