@@ -81,7 +81,7 @@ module NewGestionnaire
     end
 
     def repasser_en_construction
-      dossier.repasser_en_construction!
+      dossier.repasser_en_construction!(current_gestionnaire)
       flash.notice = 'Dossier repassé en construction.'
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
@@ -92,13 +92,13 @@ module NewGestionnaire
 
       case params[:process_action]
       when "refuser"
-        dossier.refuser!(motivation)
+        dossier.refuser!(current_gestionnaire, motivation)
         flash.notice = "Dossier considéré comme refusé."
       when "classer_sans_suite"
-        dossier.classer_sans_suite!(motivation)
+        dossier.classer_sans_suite!(current_gestionnaire, motivation)
         flash.notice = "Dossier considéré comme sans suite."
       when "accepter"
-        dossier.accepter!(motivation)
+        dossier.accepter!(current_gestionnaire, motivation)
         flash.notice = "Dossier traité avec succès."
       end
 
