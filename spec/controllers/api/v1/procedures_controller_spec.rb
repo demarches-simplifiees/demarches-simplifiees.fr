@@ -25,8 +25,7 @@ describe API::V1::ProceduresController, type: :controller do
       it { is_expected.to have_http_status(200) }
 
       describe 'body' do
-        let(:module_api_carto) { create(:module_api_carto, use_api_carto: true, quartiers_prioritaires: true, cadastre: true) }
-        let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, module_api_carto: module_api_carto, administrateur: admin) }
+        let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
         let(:response) { get :show, params: { id: procedure.id, token: token } }
 
         subject { JSON.parse(response.body, symbolize_names: true)[:procedure] }
@@ -64,16 +63,6 @@ describe API::V1::ProceduresController, type: :controller do
           it { expect(subject[:id]).to eq(pj.id) }
           it { expect(subject[:libelle]).to eq(pj.libelle) }
           it { expect(subject[:description]).to eq(pj.description) }
-        end
-
-        it { is_expected.to have_key(:geographic_information) }
-
-        describe 'geographic_information' do
-          subject { super()[:geographic_information] }
-
-          it { expect(subject[:use_api_carto]).to be_truthy }
-          it { expect(subject[:quartiers_prioritaires]).to be_truthy }
-          it { expect(subject[:cadastre]).to be_truthy }
         end
       end
     end
