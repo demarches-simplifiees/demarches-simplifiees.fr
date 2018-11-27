@@ -11,7 +11,7 @@ clever_cloud:
   bucket: <%= ENV['CLEVER_CLOUD_BUCKET'] %>
 openstack:
   service: OpenStack
-  container: "<%= ENV['FOG_DIRECTORY'] %>"
+  container: "<%= ENV['FOG_ACTIVESTORAGE_DIRECTORY'] %>"
   credentials:
     openstack_tenant: "<%= ENV['FOG_OPENSTACK_TENANT'] %>"
     openstack_api_key: "<%= ENV['FOG_OPENSTACK_API_KEY'] %>"
