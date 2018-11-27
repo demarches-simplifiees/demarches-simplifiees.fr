@@ -8,7 +8,7 @@ describe Champs::CarteController, type: :controller do
     {
       dossier: {
         champs_attributes: {
-          '1' => { value: selection.to_json }
+          '1' => { value: value }
         }
       },
       position: '1',
@@ -35,13 +35,18 @@ describe Champs::CarteController, type: :controller do
     end
 
     context 'when coordinates are empty' do
-      let(:selection) { [] }
+      let(:value) { '[]' }
 
-      it { expect(response.body).to include("DS.drawMapData(\".carte-1\", {\"position\":{\"lon\":\"2.428462\",\"lat\":\"46.538192\",\"zoom\":\"13\"},\"selection\":[],\"quartiersPrioritaires\":[],\"cadastres\":[],\"parcellesAgricoles\":[]});") }
+      it {
+        expect(assigns(:error)).to eq(nil)
+        expect(champ.reload.value).to eq(nil)
+        expect(champ.reload.geo_areas).to eq([])
+        expect(response.body).to include("DS.drawMapData(\".carte-1\", {\"position\":{\"lon\":\"2.428462\",\"lat\":\"46.538192\",\"zoom\":\"13\"},\"selection\":[],\"quartiersPrioritaires\":[],\"cadastres\":[],\"parcellesAgricoles\":[]});")
+      }
     end
 
     context 'when coordinates are informed' do
-      let(:selection) { [[{ "lat": 48.87442541960633, "lng": 2.3859214782714844 }, { "lat": 48.87273183590832, "lng": 2.3850631713867183 }, { "lat": 48.87081237174292, "lng": 2.3809432983398438 }, { "lat": 48.8712640169951, "lng": 2.377510070800781 }, { "lat": 48.87510283703279, "lng": 2.3778533935546875 }, { "lat": 48.87544154230615, "lng": 2.382831573486328 }, { "lat": 48.87442541960633, "lng": 2.3859214782714844 }]] }
+      let(:value) { [[{ "lat": 48.87442541960633, "lng": 2.3859214782714844 }, { "lat": 48.87273183590832, "lng": 2.3850631713867183 }, { "lat": 48.87081237174292, "lng": 2.3809432983398438 }, { "lat": 48.8712640169951, "lng": 2.377510070800781 }, { "lat": 48.87510283703279, "lng": 2.3778533935546875 }, { "lat": 48.87544154230615, "lng": 2.382831573486328 }, { "lat": 48.87442541960633, "lng": 2.3859214782714844 }]].to_json }
 
       it { expect(response.body).not_to be_nil }
       it { expect(response.body).to include('MultiPolygon') }
@@ -50,9 +55,10 @@ describe Champs::CarteController, type: :controller do
 
     context 'when error' do
       let(:geojson) { [[{ "lat": 48.87442541960633, "lng": 2.3859214782714844 }, { "lat": 48.87273183590832, "lng": 2.3850631713867183 }, { "lat": 48.87081237174292, "lng": 2.3809432983398438 }, { "lat": 48.8712640169951, "lng": 2.377510070800781 }, { "lat": 48.87510283703279, "lng": 2.3778533935546875 }, { "lat": 48.87544154230615, "lng": 2.382831573486328 }, { "lat": 48.87442541960633, "lng": 2.3859214782714844 }]] }
-      let(:selection) { '' }
+      let(:value) { '' }
 
       it {
+        expect(assigns(:error)).to eq(true)
         expect(champ.reload.value).to eq(nil)
         expect(champ.reload.geo_areas).to eq([])
       }
