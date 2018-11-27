@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe AutoArchiveProcedureJob, type: :job do
-  let!(:procedure) { create(:procedure, :published, auto_archive_on: nil) }
-  let!(:procedure_hier) { create(:procedure, :published, auto_archive_on: 1.day.ago) }
-  let!(:procedure_aujourdhui) { create(:procedure, :published, auto_archive_on: Date.today) }
-  let!(:procedure_demain) { create(:procedure, :published, auto_archive_on: 1.day.from_now) }
+  let!(:procedure) { create(:procedure, :published, :with_gestionnaire, auto_archive_on: nil) }
+  let!(:procedure_hier) { create(:procedure, :published, :with_gestionnaire, auto_archive_on: 1.day.ago) }
+  let!(:procedure_aujourdhui) { create(:procedure, :published, :with_gestionnaire, auto_archive_on: Date.today) }
+  let!(:procedure_demain) { create(:procedure, :published, :with_gestionnaire, auto_archive_on: 1.day.from_now) }
 
   subject { AutoArchiveProcedureJob.new.perform }
 
@@ -37,18 +37,22 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
       procedure_aujourdhui.reload
     end
 
-    it { expect(dossier1.state).to eq Dossier.states.fetch(:brouillon) }
-    it { expect(dossier2.state).to eq Dossier.states.fetch(:en_instruction) }
-    it { expect(dossier3.state).to eq Dossier.states.fetch(:en_instruction) }
-    it { expect(dossier4.state).to eq Dossier.states.fetch(:en_instruction) }
-    it { expect(dossier5.state).to eq Dossier.states.fetch(:en_instruction) }
-    it { expect(dossier6.state).to eq Dossier.states.fetch(:accepte) }
-    it { expect(dossier7.state).to eq Dossier.states.fetch(:refuse) }
-    it { expect(dossier8.state).to eq Dossier.states.fetch(:sans_suite) }
-    it { expect(dossier9.state).to eq Dossier.states.fetch(:en_instruction) }
+    it {
+      expect(dossier1.state).to eq Dossier.states.fetch(:brouillon)
+      expect(dossier2.state).to eq Dossier.states.fetch(:en_instruction)
+      expect(dossier3.state).to eq Dossier.states.fetch(:en_instruction)
+      expect(dossier4.state).to eq Dossier.states.fetch(:en_instruction)
+      expect(dossier5.state).to eq Dossier.states.fetch(:en_instruction)
+      expect(dossier6.state).to eq Dossier.states.fetch(:accepte)
+      expect(dossier7.state).to eq Dossier.states.fetch(:refuse)
+      expect(dossier8.state).to eq Dossier.states.fetch(:sans_suite)
+      expect(dossier9.state).to eq Dossier.states.fetch(:en_instruction)
+    }
 
-    it { expect(procedure_hier.archivee?).to eq true }
-    it { expect(procedure_aujourdhui.archivee?).to eq true }
+    it {
+      expect(procedure_hier.archivee?).to eq true
+      expect(procedure_aujourdhui.archivee?).to eq true
+    }
   end
 
   context "when procedures have auto_archive_on set on future" do
