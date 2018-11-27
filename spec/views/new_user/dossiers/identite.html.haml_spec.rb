@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'new_user/dossiers/identite.html.haml', type: :view do
-  let(:dossier) { create(:dossier, :with_entreprise, :with_service, state: Dossier.states.fetch(:brouillon), procedure: create(:procedure, :with_api_carto, :with_two_type_de_piece_justificative, for_individual: true)) }
+  let(:dossier) { create(:dossier, :with_entreprise, :with_service, state: Dossier.states.fetch(:brouillon), procedure: create(:procedure, :with_two_type_de_piece_justificative, for_individual: true)) }
   let(:footer) { view.content_for(:footer) }
 
   before do
