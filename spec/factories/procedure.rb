@@ -46,6 +46,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_gestionnaire do
+      after(:build) do |procedure, _evaluator|
+        procedure.gestionnaires << create(:gestionnaire)
+      end
+    end
+
     trait :with_api_carto do
       after(:build) do |procedure, _evaluator|
         procedure.module_api_carto.use_api_carto = true

@@ -25,14 +25,16 @@ class ProcedureLogoUploader < BaseUploader
   end
 
   def filename
-    if original_filename.present? || model.logo_secure_token
-      if Flipflop.remote_storage?
-        filename = "#{model.class.to_s.underscore}-#{secure_token}.#{file.extension.downcase}"
-      else
-        filename = "logo-#{secure_token}.#{file.extension.downcase}"
+    if file.present?
+      if original_filename.present? || model.logo_secure_token
+        if Flipflop.remote_storage?
+          filename = "#{model.class.to_s.underscore}-#{secure_token}.#{file.extension.downcase}"
+        else
+          filename = "logo-#{secure_token}.#{file.extension.downcase}"
+        end
       end
+      filename
     end
-    filename
   end
 
   private
