@@ -115,7 +115,7 @@ export function addFreeDrawEvents(map, selector) {
     } else if (polygonArea(latLngs) < 300000) {
       input.value = JSON.stringify(latLngs);
     } else {
-      input.value = '{ "error": "TooManyPolygons" }';
+      input.value = '';
     }
 
     fire(input, 'change');

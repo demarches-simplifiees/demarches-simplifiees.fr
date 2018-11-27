@@ -28,7 +28,7 @@ class Champs::CarteController < ApplicationController
     geo_areas = []
     geo_json = geo_json.blank? ? [] : JSON.parse(geo_json)
 
-    if geo_json.first == ["error", "TooManyPolygons"]
+    if geo_json.empty?
       @error = true
       @champ.value = nil
       @champ.geo_areas = []
