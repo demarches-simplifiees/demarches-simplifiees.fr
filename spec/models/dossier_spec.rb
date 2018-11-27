@@ -754,18 +754,6 @@ describe Dossier do
       it { is_expected.to eq(modif_date) }
     end
 
-    context 'when a quartier_prioritaire is modified' do
-      before { dossier.quartier_prioritaires << create(:quartier_prioritaire) }
-
-      it { is_expected.to eq(modif_date) }
-    end
-
-    context 'when a cadastre is modified' do
-      before { dossier.cadastres << create(:cadastre) }
-
-      it { is_expected.to eq(modif_date) }
-    end
-
     context 'when a commentaire is modified' do
       before { dossier.commentaires << create(:commentaire) }
 
@@ -799,51 +787,6 @@ describe Dossier do
       let(:dossier) { create(:dossier, :for_individual, procedure: procedure) }
 
       it { is_expected.to eq("#{dossier.individual.nom} #{dossier.individual.prenom}") }
-    end
-  end
-
-  describe 'geometry' do
-    let(:dossier) { create(:dossier, json_latlngs: json_latlngs) }
-    let(:json_latlngs) { nil }
-
-    subject{ dossier.user_geometry }
-
-    context 'when there are no map' do
-      it { is_expected.to eq(nil) }
-    end
-
-    context 'when there are 2 polygones' do
-      let(:json_latlngs) do
-        '[[{"lat": 2.0, "lng": 102.0}, {"lat": 3.0, "lng": 103.0}, {"lat": 2.0, "lng": 102.0}],
-          [{"lat": 2.0, "lng": 102.0}, {"lat": 3.0, "lng": 103.0}, {"lat": 2.0, "lng": 102.0}]]'
-      end
-
-      let(:expected) do
-        {
-          "type": "MultiPolygon",
-          "coordinates":
-          [
-            [
-              [
-                [102.0, 2.0],
-                [103.0, 3.0],
-                [102.0, 2.0]
-              ]
-            ],
-            [
-              [
-                [102.0, 2.0],
-                [103.0, 3.0],
-                [102.0, 2.0]
-              ]
-            ]
-          ]
-        }
-      end
-
-      subject{ dossier.user_geometry.geometry }
-
-      it { is_expected.to eq(expected) }
     end
   end
 

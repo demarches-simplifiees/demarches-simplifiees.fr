@@ -15,11 +15,6 @@
     .card
       = render partial: "shared/dossiers/champs", locals: { champs: champs, demande_seen_at: demande_seen_at, profile: profile }
 
-  - if dossier.use_legacy_carto?
-    .tab-title Cartographie
-    .card
-      = render partial: "shared/dossiers/map", locals: { dossier: dossier }
-
   - if dossier.types_de_piece_justificative.any?
     .tab-title Pièces jointes
     .card

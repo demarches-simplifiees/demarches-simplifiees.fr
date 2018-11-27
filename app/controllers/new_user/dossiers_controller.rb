@@ -61,11 +61,7 @@ module NewUser
         @dossier.update!(autorisation_donnees: true)
         flash.notice = "Identité enregistrée"
 
-        if @dossier.use_legacy_carto?
-          redirect_to users_dossier_carte_path(@dossier.id)
-        else
-          redirect_to brouillon_dossier_path(@dossier)
-        end
+        redirect_to brouillon_dossier_path(@dossier)
       else
         flash.now.alert = @dossier.individual.errors.full_messages
         render :identite

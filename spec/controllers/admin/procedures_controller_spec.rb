@@ -12,9 +12,6 @@ describe Admin::ProceduresController, type: :controller do
   let(:organisation) { 'Organisation de test' }
   let(:direction) { 'Direction de test' }
   let(:cadre_juridique) { 'cadre juridique' }
-  let(:use_api_carto) { '0' }
-  let(:quartiers_prioritaires) { '0' }
-  let(:cadastre) { '0' }
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:duree_conservation_dossiers_hors_ds) { 6 }
 
@@ -27,12 +24,7 @@ describe Admin::ProceduresController, type: :controller do
       direction: direction,
       cadre_juridique: cadre_juridique,
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
-      duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_hors_ds,
-      module_api_carto_attributes: {
-        use_api_carto: use_api_carto,
-        quartiers_prioritaires: quartiers_prioritaires,
-        cadastre: cadastre
-      }
+      duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_hors_ds
     }
   }
 
@@ -255,8 +247,6 @@ describe Admin::ProceduresController, type: :controller do
         let(:description) { 'blabla' }
         let(:organisation) { 'plop' }
         let(:direction) { 'plap' }
-        let(:use_api_carto) { '1' }
-        let(:cadastre) { '1' }
         let(:duree_conservation_dossiers_dans_ds) { 7 }
         let(:duree_conservation_dossiers_hors_ds) { 5 }
 
@@ -273,14 +263,6 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.duree_conservation_dossiers_hors_ds).to eq(duree_conservation_dossiers_hors_ds) }
         end
 
-        describe 'procedure module api carto attributs in database' do
-          subject { procedure.module_api_carto }
-
-          it { expect(subject.use_api_carto).to be_truthy }
-          it { expect(subject.quartiers_prioritaires).to be_falsey }
-          it { expect(subject.cadastre).to be_truthy }
-        end
-
         it { is_expected.to redirect_to(edit_admin_procedure_path id: procedure.id) }
         it { expect(flash[:notice]).to be_present }
       end
@@ -292,14 +274,6 @@ describe Admin::ProceduresController, type: :controller do
 
         describe 'flash message is present' do
           it { expect(flash[:alert]).to be_present }
-        end
-
-        describe 'procedure module api carto attributs in database' do
-          subject { procedure.module_api_carto }
-
-          it { expect(subject.use_api_carto).to be_falsey }
-          it { expect(subject.quartiers_prioritaires).to be_falsey }
-          it { expect(subject.cadastre).to be_falsey }
         end
       end
 
@@ -334,7 +308,6 @@ describe Admin::ProceduresController, type: :controller do
 
           it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
           it { expect(subject.individual_with_siret).not_to eq procedure_params[:individual_with_siret] }
-          it { expect(subject.use_legacy_carto?).not_to eq procedure_params[:module_api_carto_attributes][:use_api_carto] }
         end
       end
     end

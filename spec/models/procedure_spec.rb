@@ -357,7 +357,6 @@ describe Procedure do
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
-      expect(subject.module_api_carto).to have_same_attributes_as(procedure.module_api_carto)
 
       expect(subject.types_de_piece_justificative.size).to eq procedure.types_de_piece_justificative.size
       expect(subject.types_de_champ.size).to eq procedure.types_de_champ.size

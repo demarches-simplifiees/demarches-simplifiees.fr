@@ -32,7 +32,6 @@ class Procedure < ApplicationRecord
 
   accepts_nested_attributes_for :types_de_champ, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :types_de_piece_justificative, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
-  accepts_nested_attributes_for :module_api_carto
   accepts_nested_attributes_for :types_de_champ_private
 
   mount_uploader :logo, ProcedureLogoUploader
@@ -131,12 +130,8 @@ class Procedure < ApplicationRecord
     publiee? || archivee?
   end
 
-  def use_legacy_carto?
-    module_api_carto.use_api_carto? && !module_api_carto.migrated?
-  end
-
   def expose_legacy_carto_api?
-    module_api_carto.use_api_carto? && module_api_carto.migrated?
+    module_api_carto&.use_api_carto? && module_api_carto&.migrated?
   end
 
   # Warning: dossier after_save build_default_champs must be removed
@@ -207,7 +202,6 @@ class Procedure < ApplicationRecord
     procedure = self.deep_clone(include:
       {
         types_de_piece_justificative: nil,
-        module_api_carto: nil,
         attestation_template: nil,
         types_de_champ: :drop_down_list,
         types_de_champ_private: :drop_down_list
