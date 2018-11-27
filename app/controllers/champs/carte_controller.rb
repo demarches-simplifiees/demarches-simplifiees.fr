@@ -1,6 +1,9 @@
 class Champs::CarteController < ApplicationController
   before_action :authenticate_logged_user!
 
+  EMPTY_GEO_JSON = '[]'
+  ERROR_GEO_JSON = ''
+
   def show
     @selector = ".carte-#{params[:position]}"
 
@@ -26,13 +29,17 @@ class Champs::CarteController < ApplicationController
     end
 
     geo_areas = []
-    geo_json = geo_json.blank? ? [] : JSON.parse(geo_json)
 
-    if geo_json.empty?
+    if geo_json == EMPTY_GEO_JSON
+      @champ.value = nil
+      @champ.geo_areas = []
+    elsif geo_json == ERROR_GEO_JSON
       @error = true
       @champ.value = nil
       @champ.geo_areas = []
-    elsif geo_json.present?
+    else
+      geo_json = JSON.parse(geo_json)
+
       if @champ.cadastres?
         cadastres = ModuleApiCartoService.generate_cadastre(geo_json)
         geo_areas += cadastres.map do |cadastre|
