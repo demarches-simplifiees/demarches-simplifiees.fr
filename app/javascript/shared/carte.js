@@ -107,15 +107,18 @@ export function getCurrentMap(input) {
   }
 }
 
+const EMPTY_GEO_JSON = '[]';
+const ERROR_GEO_JSON = '';
+
 export function addFreeDrawEvents(map, selector) {
   const input = findInput(selector);
   map.freeDraw.on('markers', ({ latLngs }) => {
     if (latLngs.length === 0) {
-      input.value = '';
+      input.value = EMPTY_GEO_JSON;
     } else if (polygonArea(latLngs) < 300000) {
       input.value = JSON.stringify(latLngs);
     } else {
-      input.value = '';
+      input.value = ERROR_GEO_JSON;
     }
 
     fire(input, 'change');
