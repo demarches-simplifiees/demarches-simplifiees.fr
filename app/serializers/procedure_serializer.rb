@@ -37,6 +37,10 @@ class ProcedureSerializer < ActiveModel::Serializer
   end
 
   def geographic_information
-    object.module_api_carto
+    if object.expose_legacy_carto_api?
+      object.module_api_carto
+    else
+      ModuleAPICarto.new(procedure: object)
+    end
   end
 end
