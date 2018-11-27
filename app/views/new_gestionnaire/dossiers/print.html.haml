@@ -17,22 +17,6 @@
 - if champs.any?
   = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil, profile: 'instructeur' }
 
-- if @dossier.use_legacy_carto?
-  %h3 Cartographie
-  - if @dossier.quartier_prioritaires.any?
-    %h4 Quartiers prioritaires
-    %table
-      - @dossier.quartier_prioritaires.each do |q|
-        %tr
-          %td= q.nom
-
-  - if @dossier.cadastres.any?
-    %h4 Parcelles cadastrales
-    %table
-      - @dossier.cadastres.each do |p|
-        %tr
-          %td= "Parcelle n° #{p.numero} - Feuille #{p.code_arr} #{p.section} #{p.feuille}"
-
 - if @dossier.types_de_piece_justificative.any?
   %h3 Pièces jointes
 
