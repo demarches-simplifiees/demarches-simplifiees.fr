@@ -1,24 +1,18 @@
 class AutoReceiveDossiersForProcedureJob < ApplicationJob
   queue_as :cron
 
-  def perform(procedure_id, state)
+  def perform(procedure_id, state, gestionnaire_id = nil)
     procedure = Procedure.find(procedure_id)
+    gestionnaire = procedure.gestionnaire_for_cron_job
+
     case state
     when Dossier.states.fetch(:en_instruction)
-      procedure.dossiers.state_en_construction.update_all(
-        state: Dossier.states.fetch(:en_instruction),
-        en_instruction_at: Time.zone.now
-      )
+      procedure.dossiers.state_en_construction.find_each do |dossier|
+        dossier.passer_en_instruction!(gestionnaire)
+      end
     when Dossier.states.fetch(:accepte)
       procedure.dossiers.state_en_construction.find_each do |dossier|
-        dossier.update(
-          state: Dossier.states.fetch(:accepte),
-          en_instruction_at: Time.zone.now,
-          processed_at: Time.zone.now
-        )
-        dossier.attestation = dossier.build_attestation
-        dossier.save
-        NotificationMailer.send_closed_notification(dossier).deliver_later
+        dossier.accepter!(gestionnaire, '')
       end
     else
       raise "Receiving Procedure##{procedure_id} in invalid state \"#{state}\""

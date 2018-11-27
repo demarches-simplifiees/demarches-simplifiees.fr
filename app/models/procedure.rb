@@ -358,6 +358,12 @@ class Procedure < ApplicationRecord
     where.not(aasm_state: :archivee).where("path LIKE ?", "%#{path}%")
   end
 
+  def gestionnaire_for_cron_job
+    administrateur_email = administrateur.email
+    gestionnaire = Gestionnaire.find_by(email: administrateur_email)
+    gestionnaire || gestionnaires.first
+  end
+
   private
 
   def claim_path_ownership!(path)

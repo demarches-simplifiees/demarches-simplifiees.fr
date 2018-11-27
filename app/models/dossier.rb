@@ -28,6 +28,8 @@ class Dossier < ApplicationRecord
   has_many :followers_gestionnaires, through: :follows, source: :gestionnaire
   has_many :avis, dependent: :destroy
 
+  has_many :dossier_operation_logs
+
   belongs_to :procedure
   belongs_to :user
 
@@ -306,7 +308,62 @@ class Dossier < ApplicationRecord
     DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
   end
 
+  def passer_en_instruction!(gestionnaire)
+    en_instruction!
+    gestionnaire.follow(self)
+
+    log_dossier_operation(gestionnaire, :passer_en_instruction)
+  end
+
+  def repasser_en_construction!(gestionnaire)
+    self.en_instruction_at = nil
+    en_construction!
+
+    log_dossier_operation(gestionnaire, :repasser_en_construction)
+  end
+
+  def accepter!(gestionnaire, motivation)
+    self.motivation = motivation
+    self.en_instruction_at ||= Time.zone.now
+
+    accepte!
+
+    if attestation.nil?
+      update(attestation: build_attestation)
+    end
+
+    NotificationMailer.send_closed_notification(self).deliver_later
+    log_dossier_operation(gestionnaire, :accepter)
+  end
+
+  def refuser!(gestionnaire, motivation)
+    self.motivation = motivation
+    self.en_instruction_at ||= Time.zone.now
+
+    refuse!
+
+    NotificationMailer.send_refused_notification(self).deliver_later
+    log_dossier_operation(gestionnaire, :refuser)
+  end
+
+  def classer_sans_suite!(gestionnaire, motivation)
+    self.motivation = motivation
+    self.en_instruction_at ||= Time.zone.now
+
+    sans_suite!
+
+    NotificationMailer.send_without_continuation_notification(self).deliver_later
+    log_dossier_operation(gestionnaire, :classer_sans_suite)
+  end
+
   private
+
+  def log_dossier_operation(gestionnaire, operation)
+    dossier_operation_logs.create(
+      gestionnaire: gestionnaire,
+      operation: DossierOperationLog.operations.fetch(operation)
+    )
+  end
 
   def update_state_dates
     if en_construction? && !self.en_construction_at

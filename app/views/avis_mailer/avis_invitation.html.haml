@@ -1,16 +1,21 @@
+- content_for(:title, 'Vous avez été invité à donner votre avis')
+
 - avis_link = @avis.gestionnaire.present? ? gestionnaire_avis_url(@avis) : sign_up_gestionnaire_avis_url(@avis.id, @avis.email)
 
 %p
   Bonjour,
 
 %p
-  = "Vous avez été invité par #{@avis.claimant.email} à donner votre avis sur le dossier nº #{@avis.dossier.id} de la démarche \"#{@avis.dossier.procedure.libelle}\"."
+  Vous avez été invité par
+  %strong= @avis.claimant.email
+  = "à donner votre avis sur le dossier nº #{@avis.dossier.id} de la démarche :"
+  %strong= @avis.dossier.procedure.libelle
 
 %p
-  Message de votre interlocuteur :
+  = "#{@avis.claimant.email} vous a écrit :"
   %br
-  %span{ style: 'font-style: italic;' }
-    = @avis.introduction
+%p{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 16px;" }
+  = @avis.introduction
 
 - if @avis.gestionnaire.present?
   %p
