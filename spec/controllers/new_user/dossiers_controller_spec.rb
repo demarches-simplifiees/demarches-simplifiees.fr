@@ -175,14 +175,6 @@ describe NewUser::DossiersController, type: :controller do
       it do
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
       end
-
-      context 'on a procedure with carto' do
-        let(:procedure) { create(:procedure, :for_individual, :with_api_carto) }
-
-        it do
-          expect(response).to redirect_to(users_dossier_carte_path(dossier))
-        end
-      end
     end
 
     context 'when the identite cannot be updated by the user' do

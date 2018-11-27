@@ -29,13 +29,6 @@ FactoryBot.define do
       end
     end
 
-    after(:build) do |procedure, _evaluator|
-      if procedure.module_api_carto.nil?
-        module_api_carto = create(:module_api_carto)
-        procedure.module_api_carto = module_api_carto
-      end
-    end
-
     trait :with_path do
       path { generate(:published_path) }
     end
@@ -49,12 +42,6 @@ FactoryBot.define do
     trait :with_gestionnaire do
       after(:build) do |procedure, _evaluator|
         procedure.gestionnaires << create(:gestionnaire)
-      end
-    end
-
-    trait :with_api_carto do
-      after(:build) do |procedure, _evaluator|
-        procedure.module_api_carto.use_api_carto = true
       end
     end
 
