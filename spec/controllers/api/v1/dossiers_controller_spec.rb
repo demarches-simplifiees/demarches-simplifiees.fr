@@ -3,7 +3,7 @@ require 'spec_helper'
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
-  let(:procedure) { create(:procedure, :with_api_carto, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
+  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
   let(:wrong_procedure) { create(:procedure) }
 
   it { expect(described_class).to be < APIController }
@@ -252,46 +252,6 @@ describe API::V1::DossiersController do
               it { expect(subject.key?(:order_place)).to be_truthy }
               it { expect(subject[:type_champ]).to eq('text') }
             end
-          end
-
-          context 'when the dossier includes a quartier prioritaire' do
-            before do
-              dossier.quartier_prioritaires << create(:quartier_prioritaire)
-            end
-
-            subject do
-              super().find { |champ| champ[:type_de_champ][:type_champ] == 'quartier_prioritaire' }
-            end
-
-            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'quartier prioritaire', type_champ: 'quartier_prioritaire', order_place: -1, descripton: '' }) }
-            it { expect(subject[:value]).to match(dossier.quartier_prioritaires.first.geometry.symbolize_keys) }
-          end
-
-          context 'when the dossier includes a cadastre' do
-            before do
-              dossier.cadastres << create(:cadastre)
-            end
-
-            subject do
-              super().find { |champ| champ[:type_de_champ][:type_champ] == 'cadastre' }
-            end
-
-            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'cadastre', type_champ: 'cadastre', order_place: -1, descripton: '' }) }
-            it { expect(subject[:value]).to match(dossier.cadastres.first.geometry.symbolize_keys) }
-          end
-
-          context 'when the dossier includes some user geometry' do
-            before do
-              dossier.json_latlngs = '[[{"lat": 2.0, "lng": 102.0}, {"lat": 3.0, "lng": 103.0}, {"lat": 2.0, "lng": 102.0}]]'
-              dossier.save
-            end
-
-            subject do
-              super().find { |champ| champ[:type_de_champ][:type_champ] == 'user_geometry' }
-            end
-
-            it { expect(subject[:type_de_champ]).to match({ id: -1, libelle: 'user geometry', type_champ: 'user_geometry', order_place: -1, descripton: '' }) }
-            it { expect(subject[:value]).to match(UserGeometry.new(dossier.json_latlngs).geometry) }
           end
         end
 

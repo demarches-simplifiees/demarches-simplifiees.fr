@@ -1,9 +1,0 @@
-:javascript
-  DATA.push({
-    carto: {
-      position: #{raw(dossier.geo_position.to_json)},
-      selection: #{raw(ensure_safe_json(dossier.json_latlngs))},
-      cadastres: #{raw(dossier.cadastres.to_json)},
-      quartiersPrioritaires: #{raw(dossier.quartier_prioritaires.to_json)}
-    }
-  });

@@ -58,17 +58,11 @@ class Admin::ProceduresController < AdminController
 
   def new
     @procedure ||= Procedure.new
-    @procedure.module_api_carto ||= ModuleAPICarto.new
     @availability = Procedure::PATH_AVAILABLE
   end
 
   def create
     @procedure = Procedure.new(procedure_params)
-
-    if @procedure.valid?
-      @procedure.module_api_carto = ModuleAPICarto.new
-    end
-
     @path = @procedure.path
     @availability = Procedure.path_availability(current_administrateur, @procedure.path)
 
@@ -268,7 +262,7 @@ class Admin::ProceduresController < AdminController
       if Flipflop.publish_draft?
         editable_params << :path
       end
-      params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday, module_api_carto_attributes: [:id, :use_api_carto, :quartiers_prioritaires, :cadastre]).merge(administrateur_id: current_administrateur.id)
+      params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday).merge(administrateur_id: current_administrateur.id)
     end
   end
 end

@@ -24,12 +24,4 @@
 
     .actions
       = link_to 'Utiliser un autre numéro SIRET', siret_dossier_path(@dossier), class: 'button'
-
-      - if @dossier.use_legacy_carto?
-        / Until the old layout is gone, we need to disable turbolinks
-        / to avoid the map loading twice (once for the turbolinks preview,
-        / once when turbolinks notices the layout are differents and reloads
-        / the page.)
-        = link_to 'Continuer avec ces informations', users_dossier_carte_path(@dossier), class: 'button primary', data: { turbolinks: false }
-      - else
-        = link_to 'Continuer avec ces informations', brouillon_dossier_path(@dossier), class: 'button primary'
+      = link_to 'Continuer avec ces informations', brouillon_dossier_path(@dossier), class: 'button primary'

@@ -28,14 +28,7 @@ class DossierSerializer < ActiveModel::Serializer
   def champs
     champs = object.champs.to_a
 
-    if object.use_legacy_carto?
-      champs += object.quartier_prioritaires
-      champs += object.cadastres
-
-      if object.user_geometry.present?
-        champs << object.user_geometry
-      end
-    elsif object.expose_legacy_carto_api?
+    if object.expose_legacy_carto_api?
       champ_carte = champs.find do |champ|
         champ.type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:carte)
       end

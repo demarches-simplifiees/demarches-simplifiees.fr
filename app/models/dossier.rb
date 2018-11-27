@@ -20,8 +20,6 @@ class Dossier < ApplicationRecord
   has_many :pieces_justificatives, dependent: :destroy
   has_many :champs, -> { public_only.ordered }, dependent: :destroy
   has_many :champs_private, -> { private_only.ordered }, class_name: 'Champ', dependent: :destroy
-  has_many :quartier_prioritaires, dependent: :destroy
-  has_many :cadastres, dependent: :destroy
   has_many :commentaires, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :follows
@@ -74,8 +72,6 @@ class Dossier < ApplicationRecord
         piece_justificative_file_attachment: :blob
       ],
       pieces_justificatives: [],
-      quartier_prioritaires: [],
-      cadastres: [],
       etablissement: [],
       individual: [],
       user: [])
@@ -247,18 +243,8 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def use_legacy_carto?
-    procedure.use_legacy_carto?
-  end
-
   def expose_legacy_carto_api?
     procedure.expose_legacy_carto_api?
-  end
-
-  def user_geometry
-    if json_latlngs.present?
-      UserGeometry.new(json_latlngs)
-    end
   end
 
   def geo_position
