@@ -57,7 +57,7 @@ L'application tourne à l'adresse `http://localhost:3000`. Un utilisateur de tes
 
 ## Voir les emails envoyés en local
 
-http://localhost:3000/letter_opener
+Ouvrez la page [http://localhost:3000/letter_opener](http://localhost:3000/letter_opener).
 
 ## Mise à jour de l'application
 
