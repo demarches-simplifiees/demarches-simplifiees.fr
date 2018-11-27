@@ -59,12 +59,4 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
       expect(rendered).to have_text('Pièces jointes')
     end
   end
-
-  context 'when the dossier uses maps' do
-    let(:procedure) { create(:procedure, :published, :with_api_carto) }
-
-    it 'renders the maps infos' do
-      expect(rendered).to have_text('Cartographie')
-    end
-  end
 end

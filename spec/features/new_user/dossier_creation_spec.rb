@@ -11,7 +11,7 @@ feature 'Creating a new dossier:' do
     end
 
     context 'when the procedure has identification by individual' do
-      let(:procedure) { create(:procedure, :published, :for_individual, :with_api_carto, :with_type_de_champ, :with_two_type_de_piece_justificative, ask_birthday: ask_birthday) }
+      let(:procedure) { create(:procedure, :published, :for_individual, :with_type_de_champ, :with_two_type_de_piece_justificative, ask_birthday: ask_birthday) }
       let(:ask_birthday) { false }
       let(:expected_birthday) { nil }
 
@@ -24,9 +24,6 @@ feature 'Creating a new dossier:' do
       shared_examples 'the user can create a new draft' do
         it do
           click_button('Continuer')
-
-          expect(page).to have_current_path(users_dossier_carte_path(procedure.dossiers.last.id))
-          click_button('Etape suivante')
 
           expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
 
@@ -61,7 +58,7 @@ feature 'Creating a new dossier:' do
     end
 
     context 'when identifying through SIRET' do
-      let(:procedure) { create(:procedure, :published, :with_api_carto, :with_type_de_champ, :with_two_type_de_piece_justificative) }
+      let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_two_type_de_piece_justificative) }
       let(:dossier) { procedure.dossiers.last }
 
       before do
@@ -85,9 +82,6 @@ feature 'Creating a new dossier:' do
         expect(page).to have_current_path(etablissement_dossier_path(dossier))
         expect(page).to have_content('OCTO-TECHNOLOGY')
         click_on 'Continuer avec ces informations'
-
-        expect(page).to have_current_path(users_dossier_carte_path(dossier))
-        click_button('Etape suivante')
 
         expect(page).to have_current_path(brouillon_dossier_path(dossier))
       end
