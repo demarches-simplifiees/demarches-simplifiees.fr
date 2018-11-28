@@ -26,7 +26,7 @@ class Dossier < ApplicationRecord
   has_many :followers_gestionnaires, through: :follows, source: :gestionnaire
   has_many :avis, dependent: :destroy
 
-  has_many :dossier_operation_logs
+  has_many :dossier_operation_logs, dependent: :destroy
 
   belongs_to :procedure
   belongs_to :user
