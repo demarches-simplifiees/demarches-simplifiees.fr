@@ -13,8 +13,8 @@
       .hero-wrapper
         .hero-text
           %p.hero-tagline
-            %em.hero-tagline-em Dématérialiser et simplifier
-            les démarches administratives
+            %em.hero-tagline-em Dématérialisez et simplifiez
+            vos démarches administratives
 
         .hero-illustration
           %img{ :src => image_url("landing/hero/dematerialiser.svg"), alt: "" }
@@ -26,7 +26,7 @@
           %img.role-image{ :src => image_url("landing/roles/administrations.svg"), alt: "" }
 
         .role-panel-70
-          %h1.role-panel-title Vous êtes une administration et vous souhaitez dématérialiser une démarche papier et réduire vos temps d'instruction ?
+          %h1.role-panel-title Vous êtes une administration et êtes prête pour dématérialiser ?
           %p.role-panel-explanation Créez des formulaires en ligne en quelques minutes et instruisez les demandes des usagers sur une plateforme dédiée
 
           = link_to "Demander un compte administrateur",
@@ -34,11 +34,25 @@
             class: "role-panel-button-primary",
             rel: "noopener noreferrer"
 
-          = link_to "Voir la documentation",
+  .landing-panel.more-info
+    .container
+      .role-panel-wrapper.role-administrations-panel
+        .role-panel-70
+          %h1.role-panel-title Vous voulez en savoir plus ?
+          %p.role-panel-explanation Découvrez notre outil
+
+          = link_to "Contactez-nous",
+            contact_admin_path,
+            rel: "noopener noreferrer",
+            class: "role-panel-button-primary"
+
+          = link_to "Consultez notre documentation",
             DOC_URL,
-            target: "_blank",
             rel: "noopener noreferrer",
             class: "role-panel-button-secondary"
+
+        .role-panel-30.role-more-info-image
+          %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: "" }
 
   .landing-panel.features-panel
     .container
@@ -181,6 +195,24 @@
           = link_to "http://www.lillemetropole.fr/", target: :blank, rel: "noopener noreferrer" do
             %img.user-image{ :src => image_url("landing/users/mel.jpg"), alt: "Métropole Européenne de Lille" }
 
+  .landing-panel.cta-panel-2
+    .container
+      .half.first-half
+        %h1.cta-panel-title Vous êtes prêt pour dématérialiser ?
+        %p.cta-panel-explanation Réduisez vos temps d'instruction de 50 %
+        = link_to "Demander un compte",
+          new_demande_path,
+          class: "cta-panel-button-blue"
+
+      .half
+        %h1.cta-panel-title Vous voulez en savoir plus ?
+        %p.cta-panel-explanation Nous vous faisons découvrir l'outil
+        = link_to "Contactez-nous",
+          contact_admin_path,
+          class: "cta-panel-button-blue"
+
+      .clearfix
+
   .landing-panel.cta-panel
     .container
       .cta-panel-wrapper
@@ -188,19 +220,5 @@
           %h1.cta-panel-title Une question, un problème ?
           %p.cta-panel-explanation Notre équipe est disponible pour vous renseigner et vous aider
         %div
-          = contact_link "Contactez-nous",
-            tags: 'administration',
-            class: "cta-panel-button-white",
-            target: "_blank",
-            rel: "noopener noreferrer"
-
-  .landing-panel
-    .container
-      .cta-panel-wrapper
-        %div
-          %h1.cta-panel-title Vous êtes prêt pour dématérialiser ?
-          %p.cta-panel-explanation Réduisez vos temps d'instruction de 50 %
-        %div
-          = link_to "Demander un compte administrateur",
-            new_demande_path,
-            class: "cta-panel-button-blue"
+          %a.cta-panel-button-white{ rel: 'noopener noreferrer', href:'/contact-admin' }
+            Contactez-nous
