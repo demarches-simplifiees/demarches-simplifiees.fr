@@ -5,6 +5,10 @@ class SupportController < ApplicationController
     setup_context
   end
 
+  def admin
+    setup_context_admin
+  end
+
   def create
     if direct_message? && create_commentaire
       flash.notice = "Votre message a été envoyé sur la messagerie de votre dossier."
@@ -13,12 +17,21 @@ class SupportController < ApplicationController
     elsif create_conversation
       flash.notice = "Votre message a été envoyé."
 
-      redirect_to root_path(formulaire_contact_general_submitted: true)
+      if params[:admin]
+        redirect_to root_path(formulaire_contact_admin_submitted: true)
+      else
+        redirect_to root_path(formulaire_contact_general_submitted: true)
+      end
     else
-      setup_context
-      flash.now.alert = "Une erreur est survenue. Vous pouvez nous contactez à #{helpers.mail_to(CONTACT_EMAIL)}."
+      flash.now.alert = "Une erreur est survenue. Vous pouvez nous contacter à #{helpers.mail_to(CONTACT_EMAIL)}."
 
-      render :index
+      if params[:admin]
+        setup_context_admin
+        render :admin
+      else
+        setup_context
+        render :index
+      end
     end
   end
 
@@ -30,10 +43,16 @@ class SupportController < ApplicationController
     @options = Helpscout::FormAdapter::OPTIONS
   end
 
+  def setup_context_admin
+    @tags = tags
+    @options = Helpscout::FormAdapter::ADMIN_OPTIONS
+  end
+
   def create_conversation
     Helpscout::FormAdapter.new(
       subject: params[:subject],
       email: email,
+      phone: params[:phone],
       text: params[:text],
       file: params[:file],
       dossier_id: dossier&.id,
