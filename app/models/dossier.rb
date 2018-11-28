@@ -15,7 +15,7 @@ class Dossier < ApplicationRecord
 
   has_one :etablissement, dependent: :destroy
   has_one :individual, dependent: :destroy
-  has_one :attestation
+  has_one :attestation, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
   has_many :champs, -> { public_only.ordered }, dependent: :destroy
