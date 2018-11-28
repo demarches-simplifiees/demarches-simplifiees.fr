@@ -15,7 +15,7 @@ class Dossier < ApplicationRecord
 
   has_one :etablissement, dependent: :destroy
   has_one :individual, dependent: :destroy
-  has_one :attestation
+  has_one :attestation, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
   has_many :champs, -> { public_only.ordered }, dependent: :destroy
@@ -26,7 +26,7 @@ class Dossier < ApplicationRecord
   has_many :followers_gestionnaires, through: :follows, source: :gestionnaire
   has_many :avis, dependent: :destroy
 
-  has_many :dossier_operation_logs
+  has_many :dossier_operation_logs, dependent: :destroy
 
   belongs_to :procedure
   belongs_to :user

@@ -159,8 +159,13 @@ $landing-breakpoint: 1040px;
 }
 
 .usagers-panel,
-.numbers-panel {
+.numbers-panel,
+.cta-panel-2 {
   background-color: $light-grey;
+}
+
+.more-info {
+  background-color: #FFFFFF;
 }
 
 .numbers {
@@ -316,6 +321,15 @@ $users-breakpoint: 950px;
   }
 }
 
+.role-more-info-image {
+  text-align: left;
+
+  @media (max-width: $users-breakpoint) {
+    text-align: center;
+    margin-bottom: 45px;
+  }
+}
+
 .role-usagers-image {
   @media (max-width: $users-breakpoint) {
     text-align: center;
@@ -436,4 +450,13 @@ $cta-panel-button-border-size: 2px;
     color: #FFFFFF;
     text-decoration: underline;
   }
+}
+
+.half {
+  width: 45%;
+  float: left;
+}
+
+.first-half {
+  margin-right: 10%;
 }

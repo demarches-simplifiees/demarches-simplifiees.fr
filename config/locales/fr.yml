@@ -61,6 +61,11 @@ fr:
     produit: J'ai une idée d'amélioration pour votre site
     usager perdu: Je ne trouve pas la démarche que je veux faire
     autre: Autre sujet
+  supportadmin:
+    admin demande rdv: Demande de RDV pour une présentation à distance de demarches-simplifiees.fr
+    admin question: J'ai une question sur demarches-simplifiees.fr
+    admin soucis: J'ai un problème technique avec demarches-simplifiees.fr
+    admin autre: Autre sujet
 
   number:
     currency:
