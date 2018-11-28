@@ -3,6 +3,8 @@ class Helpscout::API
   CONVERSATIONS = 'conversations'
   TAGS = 'tags'
   FIELDS = 'fields'
+  CUSTOMERS = 'customers'
+  PHONES = 'phones'
   OAUTH2_TOKEN = 'oauth2/token'
 
   def add_tags(conversation_id, tags)
@@ -40,6 +42,21 @@ class Helpscout::API
     }.compact
 
     call_api(:post, CONVERSATIONS, body)
+  end
+
+  def add_phone_number(email, phone)
+    query = URI.encode("(email:#{email})")
+    response = call_api(:get, "#{CUSTOMERS}?mailbox=#{mailbox_id}&query=#{query}")
+    if response.success?
+      body = parse_response_body(response)
+      if body[:page][:totalElements] > 0
+        customer_id = body[:_embedded][:customers].first[:id]
+        call_api(:post, "#{CUSTOMERS}/#{customer_id}/#{PHONES}", {
+          type: "work",
+          value: phone
+        })
+      end
+    end
   end
 
   private

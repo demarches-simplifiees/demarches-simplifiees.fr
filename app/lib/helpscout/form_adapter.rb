@@ -20,6 +20,18 @@ class Helpscout::FormAdapter
     [I18n.t(TYPE_AUTRE, scope: [:support]), TYPE_AUTRE]
   ]
 
+  ADMIN_TYPE_RDV = 'admin demande rdv'
+  ADMIN_TYPE_QUESTION = 'admin question'
+  ADMIN_TYPE_SOUCIS = 'admin soucis'
+  ADMIN_TYPE_AUTRE = 'admin autre'
+
+  ADMIN_OPTIONS = [
+    [I18n.t(ADMIN_TYPE_QUESTION, scope: [:supportadmin]), ADMIN_TYPE_QUESTION],
+    [I18n.t(ADMIN_TYPE_RDV, scope: [:supportadmin]), ADMIN_TYPE_RDV],
+    [I18n.t(ADMIN_TYPE_SOUCIS, scope: [:supportadmin]), ADMIN_TYPE_SOUCIS],
+    [I18n.t(ADMIN_TYPE_AUTRE, scope: [:supportadmin]), ADMIN_TYPE_AUTRE]
+  ]
+
   def send_form
     conversation_id = create_conversation
 
@@ -51,6 +63,11 @@ class Helpscout::FormAdapter
       params[:file]
     )
 
-    response.success? ? response.headers['Resource-ID'] : nil
+    if response.success?
+      if params[:phone].present?
+        @api.add_phone_number(params[:email], params[:phone])
+      end
+      response.headers['Resource-ID']
+    end
   end
 end

@@ -7,7 +7,7 @@ class BaseUploader < CarrierWave::Uploader::Base
   def remove!
     begin
       super
-    rescue Fog::Storage::OpenStack::NotFound
+    rescue Fog::OpenStack::Storage::NotFound
     end
   end
 end
