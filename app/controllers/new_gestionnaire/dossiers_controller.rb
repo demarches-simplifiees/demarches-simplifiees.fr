@@ -106,7 +106,7 @@ module NewGestionnaire
     end
 
     def create_commentaire
-      @commentaire = CommentaireService.create(current_gestionnaire, dossier, commentaire_params)
+      @commentaire = CommentaireService.build(current_gestionnaire, dossier, commentaire_params)
 
       if @commentaire.save
         current_gestionnaire.follow(dossier)
