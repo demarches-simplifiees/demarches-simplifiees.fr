@@ -8,9 +8,9 @@ class Champs::CarteController < ApplicationController
     @selector = ".carte-#{params[:position]}"
 
     if params[:dossier].key?(:champs_attributes)
-      geo_json = params[:dossier][:champs_attributes][params[:position]][:value]
+      coordinates = params[:dossier][:champs_attributes][params[:position]][:value]
     else
-      geo_json = params[:dossier][:champs_private_attributes][params[:position]][:value]
+      coordinates = params[:dossier][:champs_private_attributes][params[:position]][:value]
     end
 
     if params[:champ_id].present?
@@ -30,18 +30,18 @@ class Champs::CarteController < ApplicationController
 
     geo_areas = []
 
-    if geo_json == EMPTY_GEO_JSON
+    if coordinates == EMPTY_GEO_JSON
       @champ.value = nil
       @champ.geo_areas = []
-    elsif geo_json == ERROR_GEO_JSON
+    elsif coordinates == ERROR_GEO_JSON
       @error = true
       @champ.value = nil
       @champ.geo_areas = []
     else
-      geo_json = JSON.parse(geo_json)
+      coordinates = JSON.parse(coordinates)
 
       if @champ.cadastres?
-        cadastres = ModuleApiCartoService.generate_cadastre(geo_json)
+        cadastres = ModuleApiCartoService.generate_cadastre(coordinates)
         geo_areas += cadastres.map do |cadastre|
           cadastre[:source] = GeoArea.sources.fetch(:cadastre)
           cadastre
@@ -49,7 +49,7 @@ class Champs::CarteController < ApplicationController
       end
 
       if @champ.quartiers_prioritaires?
-        quartiers_prioritaires = ModuleApiCartoService.generate_qp(geo_json)
+        quartiers_prioritaires = ModuleApiCartoService.generate_qp(coordinates)
         geo_areas += quartiers_prioritaires.map do |qp|
           qp[:source] = GeoArea.sources.fetch(:quartier_prioritaire)
           qp
@@ -57,7 +57,7 @@ class Champs::CarteController < ApplicationController
       end
 
       if @champ.parcelles_agricoles?
-        parcelles_agricoles = ModuleApiCartoService.generate_rpg(geo_json)
+        parcelles_agricoles = ModuleApiCartoService.generate_rpg(coordinates)
         geo_areas += parcelles_agricoles.map do |parcelle_agricole|
           parcelle_agricole[:source] = GeoArea.sources.fetch(:parcelle_agricole)
           parcelle_agricole
@@ -68,7 +68,7 @@ class Champs::CarteController < ApplicationController
         GeoArea.new(geo_area)
       end
 
-      @champ.value = geo_json.to_json
+      @champ.value = GeojsonService.to_json_polygon_for_selection_utilisateur(coordinates)
     end
 
     if @champ.persisted?
