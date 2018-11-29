@@ -1,5 +1,5 @@
 class WebhookController < ActionController::Base
-  before_action :verify_signature!, only: :helpscout
+  before_action :verify_helpscout_signature!, only: :helpscout
 
   def helpscout
     email = params[:customer][:email]
@@ -41,13 +41,13 @@ class WebhookController < ActionController::Base
     "<a target='_blank' href='#{url}'>#{model.model_name.human}##{model.id}</a>"
   end
 
-  def verify_signature!
-    if generate_body_signature(request.body.read) != request.headers['X-Helpscout-Signature']
+  def verify_helpscout_signature!
+    if generate_helpscout_body_signature(request.body.read) != request.headers['X-Helpscout-Signature']
       request_http_token_authentication
     end
   end
 
-  def generate_body_signature(body)
+  def generate_helpscout_body_signature(body)
     Base64.strict_encode64(OpenSSL::HMAC.digest('sha1',
       Rails.application.secrets.helpscout[:webhook_secret],
       body))
