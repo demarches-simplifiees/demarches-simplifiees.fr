@@ -29,6 +29,8 @@ class NotificationMailer < ApplicationMailer
   private
 
   def send_notification(dossier, mail_template)
+    @dossier = dossier
+
     email = dossier.user.email
 
     subject = mail_template.subject_for_dossier(dossier)
@@ -36,9 +38,7 @@ class NotificationMailer < ApplicationMailer
 
     create_commentaire_for_notification(dossier, subject, body)
 
-    @dossier = dossier
-
-    mail(subject: subject, to: email) do |format|
+    mail_with_reply_hook(dossier, subject: subject, to: email) do |format|
       # rubocop:disable Rails/OutputSafety
       format.html { render(html: body.html_safe, layout: 'mailers/notification') }
       # rubocop:enable Rails/OutputSafety

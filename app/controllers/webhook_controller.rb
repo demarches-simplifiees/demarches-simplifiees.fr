@@ -30,6 +30,11 @@ class WebhookController < ActionController::Base
     end
   end
 
+  def mailjet
+    puts "Received Mailjet webhook with params #{params}"
+    head :ok
+  end
+
   private
 
   def link_to_manager(model, url)

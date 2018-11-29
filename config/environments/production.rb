@@ -78,7 +78,7 @@ Rails.application.configure do
       authentication: :cram_md5
     }
   else
-    config.action_mailer.delivery_method = :mailjet
+    config.action_mailer.delivery_method = :mailjet_api
   end
 
   # Configure default root URL for generating URLs to routes

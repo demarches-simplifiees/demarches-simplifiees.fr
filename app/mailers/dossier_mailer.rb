@@ -13,7 +13,7 @@ class DossierMailer < ApplicationMailer
     @dossier = dossier
     subject = "Nouveau message pour votre dossier nº #{dossier.id}"
 
-    mail(to: dossier.user.email, subject: subject) do |format|
+    mail_with_reply_hook(dossier, to: dossier.user.email, subject: subject) do |format|
       format.html { render layout: 'mailers/notification' }
     end
   end

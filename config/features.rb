@@ -21,6 +21,7 @@ Flipflop.configure do
   feature :publish_draft
   feature :support_form
   feature :enable_email_login_token
+  feature :email_reply_to_webhook
 
   group :production do
     feature :remote_storage,
