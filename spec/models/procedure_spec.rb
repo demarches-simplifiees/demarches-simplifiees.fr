@@ -424,6 +424,11 @@ describe Procedure do
         expect(subject.path).to be_nil
       end
     end
+
+    it 'should keep types_de_champ ids stable' do
+      expect(subject.types_de_champ_ordered.first.id).not_to eq(procedure.types_de_champ_ordered.first.id)
+      expect(subject.types_de_champ_ordered.first.stable_id).to eq(procedure.types_de_champ_ordered.first.id)
+    end
   end
 
   describe '#publish!' do

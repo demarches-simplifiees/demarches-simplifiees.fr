@@ -36,6 +36,7 @@ class TypeDeChamp < ApplicationRecord
   store :options, accessors: [:cadastres, :quartiers_prioritaires, :parcelles_agricoles]
 
   after_initialize :set_dynamic_type
+  after_create :populate_stable_id
 
   attr_reader :dynamic_type
 
@@ -116,6 +117,12 @@ class TypeDeChamp < ApplicationRecord
   end
 
   private
+
+  def populate_stable_id
+    if !stable_id
+      update_column(:stable_id, id)
+    end
+  end
 
   def remove_piece_justificative_template
     if type_champ != TypeDeChamp.type_champs.fetch(:piece_justificative) && piece_justificative_template.attached?

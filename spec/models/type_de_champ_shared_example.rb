@@ -39,6 +39,15 @@ shared_examples 'type_de_champ_spec' do
       it { is_expected.to allow_value('blabla').for(:description) }
     end
 
+    context 'stable_id' do
+      it {
+        type_de_champ = create(:type_de_champ_text)
+        expect(type_de_champ.id).to eq(type_de_champ.stable_id)
+        cloned_type_de_champ = type_de_champ.clone
+        expect(cloned_type_de_champ.stable_id).to eq(type_de_champ.stable_id)
+      }
+    end
+
     context 'remove piece_justificative_template' do
       context 'when the tdc is piece_justificative' do
         let(:template_double) { double('template', attached?: attached, purge_later: true) }
