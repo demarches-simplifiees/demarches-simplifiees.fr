@@ -199,6 +199,7 @@ class Procedure < ApplicationRecord
   end
 
   def clone(admin, from_library)
+    populate_champ_stable_ids
     procedure = self.deep_clone(include:
       {
         types_de_piece_justificative: nil,
@@ -356,6 +357,12 @@ class Procedure < ApplicationRecord
     administrateur_email = administrateur.email
     gestionnaire = Gestionnaire.find_by(email: administrateur_email)
     gestionnaire || gestionnaires.first
+  end
+
+  def populate_champ_stable_ids
+    TypeDeChamp.where(procedure: self, stable_id: nil).find_each do |type_de_champ|
+      type_de_champ.update_column(:stable_id, type_de_champ.id)
+    end
   end
 
   private

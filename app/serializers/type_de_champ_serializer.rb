@@ -4,4 +4,8 @@ class TypeDeChampSerializer < ActiveModel::Serializer
     :type_champ,
     :order_place,
     :description
+
+  def id
+    object.stable_id || object.id
+  end
 end
