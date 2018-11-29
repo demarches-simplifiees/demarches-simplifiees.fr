@@ -52,7 +52,7 @@ class Champs::CarteChamp < Champ
       type: 'Polygon',
       coordinates: [
         geo_json[0].map do |polygon|
-          [polygon['lat'], polygon['lng']]
+          [polygon['lng'], polygon['lat']]
         end
       ]
     }
