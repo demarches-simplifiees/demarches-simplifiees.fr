@@ -21,5 +21,17 @@ describe Champs::DecimalNumberChamp do
 
       it { is_expected.to_not be_valid }
     end
+
+    context 'when the value is blank' do
+      let(:value) { '' }
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'when the value is nil' do
+      let(:value) { nil }
+
+      it { is_expected.to be_valid }
+    end
   end
 end
