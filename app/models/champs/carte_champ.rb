@@ -51,7 +51,7 @@ class Champs::CarteChamp < Champ
     # We used to store in the value column a json array with coordinates.
     if geo_json.is_a?(Array)
       # If it is a coordinates array, format it as a GEO-JSON
-      GeojsonService.to_json_polygon_for_selection_utilisateur(geo_json)
+      JSON.parse(GeojsonService.to_json_polygon_for_selection_utilisateur(geo_json))
     else
       # It is already a GEO-JSON
       geo_json
