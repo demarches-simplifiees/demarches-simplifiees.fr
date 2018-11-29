@@ -44,18 +44,18 @@ class Champs::CarteChamp < Champ
   end
 
   def geo_json
-    @geo_json ||= value.blank? ? [] : JSON.parse(value)
+    @geo_json ||= value.blank? ? nil : JSON.parse(value)
   end
 
   def user_geometry
-    {
-      type: 'Polygon',
-      coordinates: [
-        geo_json[0].map do |polygon|
-          [polygon['lng'], polygon['lat']]
-        end
-      ]
-    }
+    # We used to store in the value column a json array with coordinates.
+    if geo_json.is_a?(Array)
+      # If it is a coordinates array, format it as a GEO-JSON
+      GeojsonService.to_json_polygon_for_selection_utilisateur(geo_json)
+    else
+      # It is already a GEO-JSON
+      geo_json
+    end
   end
 
   def user_geo_area
