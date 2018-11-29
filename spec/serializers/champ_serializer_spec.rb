@@ -21,7 +21,27 @@ describe ChampSerializer do
 
     context 'when type champ is carte' do
       let(:geo_area) { create(:geo_area) }
-      let(:champ) { create(:type_de_champ_carte).champ.create(geo_areas: [geo_area]) }
+      let(:coordinates) { [[{ "lat": 48.87442541960633, "lng": 2.3859214782714844 }, { "lat": 48.87273183590832, "lng": 2.3850631713867183 }, { "lat": 48.87081237174292, "lng": 2.3809432983398438 }, { "lat": 48.8712640169951, "lng": 2.377510070800781 }, { "lat": 48.87510283703279, "lng": 2.3778533935546875 }, { "lat": 48.87544154230615, "lng": 2.382831573486328 }, { "lat": 48.87442541960633, "lng": 2.3859214782714844 }]] }
+
+      let(:champ_carte) { create(:champ_carte, value: coordinates.to_json, geo_areas: [geo_area]) }
+      let(:champ) { champ_carte }
+
+      context 'legacy champ user_geometry' do
+        let(:champ) { champ_carte.user_geo_area }
+
+        it {
+          expect(subject).to include(
+            type_de_champ: {
+              descripton: "",
+              id: -1,
+              libelle: "user geometry",
+              order_place: -1,
+              type_champ: "user_geometry"
+            },
+            value: champ_carte.user_geometry
+          )
+        }
+      end
 
       context 'and geo_area is cadastre' do
         it {
