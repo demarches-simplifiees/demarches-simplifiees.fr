@@ -50,7 +50,7 @@ module NewGestionnaire
     end
 
     def create_commentaire
-      @commentaire = Commentaire.new(commentaire_params.merge(email: current_gestionnaire.email, dossier: avis.dossier))
+      @commentaire = CommentaireService.build(current_gestionnaire, avis.dossier, commentaire_params)
 
       if @commentaire.save
         flash.notice = "Message envoyé"
