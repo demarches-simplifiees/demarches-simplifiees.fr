@@ -30,23 +30,45 @@ describe ChampSerializer do
 
       let(:serialized_champ) {
         {
-          type_de_champ: {
-            description: serialized_description,
-            id: serialized_id,
-            libelle: serialized_libelle,
-            order_place: serialized_order_place,
-            type_champ: serialized_type_champ
-          },
-          geo_areas: serialized_geo_areas,
-          value: geo_json
-        }.compact
+          type_de_champ: serialized_type_de_champ,
+          value: serialized_value
+        }
+      }
+      let(:serialized_type_de_champ) {
+        {
+          description: serialized_description,
+          id: serialized_id,
+          libelle: serialized_libelle,
+          order_place: serialized_order_place,
+          type_champ: serialized_type_champ
+        }
       }
       let(:serialized_id) { -1 }
       let(:serialized_description) { "" }
       let(:serialized_order_place) { -1 }
-      let(:serialized_geo_areas) { nil }
+      let(:serialized_value) { geo_json }
 
       context 'and geo_area is selection_utilisateur' do
+        context 'value is empty' do
+          context 'when value is nil' do
+            let(:value) { nil }
+
+            it { expect(champ.user_geo_area).to be_nil }
+          end
+
+          context 'when value is empty array' do
+            let(:value) { '[]' }
+
+            it { expect(champ.user_geo_area).to be_nil }
+          end
+
+          context 'when value is blank' do
+            let(:value) { '' }
+
+            it { expect(champ.user_geo_area).to be_nil }
+          end
+        end
+
         context 'old_api' do
           let(:serialized_libelle) { "user geometry" }
           let(:serialized_type_champ) { "user_geometry" }
@@ -68,7 +90,13 @@ describe ChampSerializer do
 
         context 'new_api' do
           let(:geo_area) { nil }
-          let(:serialized_geo_areas) { [] }
+          let(:serialized_champ) {
+            {
+              type_de_champ: serialized_type_de_champ,
+              geo_areas: [],
+              value: serialized_value
+            }
+          }
           let(:serialized_id) { champ.type_de_champ.stable_id }
           let(:serialized_description) { champ.description }
           let(:serialized_order_place) { champ.order_place }
@@ -83,6 +111,27 @@ describe ChampSerializer do
 
           context 'when value is geojson' do
             let(:value) { geo_json }
+
+            it { expect(subject).to eq(serialized_champ) }
+          end
+
+          context 'when value is nil' do
+            let(:value) { nil }
+            let(:serialized_value) { nil }
+
+            it { expect(subject).to eq(serialized_champ) }
+          end
+
+          context 'when value is empty array' do
+            let(:value) { '[]' }
+            let(:serialized_value) { nil }
+
+            it { expect(subject).to eq(serialized_champ) }
+          end
+
+          context 'when value is blank' do
+            let(:value) { '' }
+            let(:serialized_value) { nil }
 
             it { expect(subject).to eq(serialized_champ) }
           end

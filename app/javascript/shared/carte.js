@@ -71,23 +71,23 @@ export function drawParcellesAgricoles(
 }
 
 export function drawUserSelection(map, { selection }, editable = false) {
-  let hasSelection = selection && selection.length > 0;
+  if (selection) {
+    const coordinates = toLatLngs(selection);
 
-  if (editable) {
-    if (hasSelection) {
-      selection.forEach(polygon => map.freeDraw.create(polygon));
-      let polygon = map.freeDraw.all()[0];
+    if (editable) {
+      coordinates.forEach(polygon => map.freeDraw.create(polygon));
+      const polygon = map.freeDraw.all()[0];
       if (polygon) {
         map.fitBounds(polygon.getBounds());
       }
-    }
-  } else if (hasSelection) {
-    const polygon = L.polygon(selection, {
-      color: 'red',
-      zIndex: 3
-    }).addTo(map);
+    } else {
+      const polygon = L.polygon(coordinates, {
+        color: 'red',
+        zIndex: 3
+      }).addTo(map);
 
-    map.fitBounds(polygon.getBounds());
+      map.fitBounds(polygon.getBounds());
+    }
   }
 }
 
@@ -123,6 +123,12 @@ export function addFreeDrawEvents(map, selector) {
 
     fire(input, 'change');
   });
+}
+
+function toLatLngs({ coordinates }) {
+  return coordinates.map(polygon =>
+    polygon[0].map(point => ({ lng: point[0], lat: point[1] }))
+  );
 }
 
 function findInput(selector) {
