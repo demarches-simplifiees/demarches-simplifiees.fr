@@ -14,7 +14,9 @@ class ChampSerializer < ActiveModel::Serializer
     when GeoArea
       object.geometry.to_json
     when Champs::CarteChamp
-      object.user_geometry.to_json
+      if object.geo_json.present?
+        object.geo_json.to_json
+      end
     when Champs::DecimalNumberChamp
       if object.value.present?
         object.value.to_f
