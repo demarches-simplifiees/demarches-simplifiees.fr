@@ -12,10 +12,10 @@ class ChampSerializer < ActiveModel::Serializer
   def value
     case object
     when GeoArea
-      object.geometry
+      object.geometry.to_json
     when Champs::CarteChamp
-      if object.value.present?
-        JSON.parse(object.value)
+      if object.geo_json.present?
+        object.geo_json.to_json
       end
     when Champs::DecimalNumberChamp
       if object.value.present?
@@ -71,7 +71,7 @@ class ChampSerializer < ActiveModel::Serializer
       libelle: legacy_carto_libelle,
       type_champ: legacy_carto_type_champ,
       order_place: -1,
-      descripton: ''
+      description: ''
     }
   end
 

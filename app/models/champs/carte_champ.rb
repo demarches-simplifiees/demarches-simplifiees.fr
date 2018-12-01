@@ -44,24 +44,38 @@ class Champs::CarteChamp < Champ
   end
 
   def geo_json
-    @geo_json ||= value.blank? ? nil : JSON.parse(value)
+    @geo_json ||= begin
+      parsed_value = value.blank? ? nil : JSON.parse(value)
+      # We used to store in the value column a json array with coordinates.
+      if parsed_value.is_a?(Array)
+        # Empty array is sent instead of blank to distinguish between empty and error
+        if parsed_value.empty?
+          nil
+        else
+          # If it is a coordinates array, format it as a GEO-JSON
+          JSON.parse(GeojsonService.to_json_polygon_for_selection_utilisateur(parsed_value))
+        end
+      else
+        # It is already a GEO-JSON
+        parsed_value
+      end
+    end
   end
 
-  def user_geometry
-    # We used to store in the value column a json array with coordinates.
-    if geo_json.is_a?(Array)
-      # If it is a coordinates array, format it as a GEO-JSON
-      GeojsonService.to_json_polygon_for_selection_utilisateur(geo_json)
-    else
-      # It is already a GEO-JSON
-      geo_json
-    end
+  def to_render_data
+    {
+      position: position,
+      selection: geo_json,
+      quartiersPrioritaires: quartiers_prioritaires? ? quartiers_prioritaires.as_json(except: :properties) : [],
+      cadastres: cadastres? ? cadastres.as_json(except: :properties) : [],
+      parcellesAgricoles: parcelles_agricoles? ? parcelles_agricoles.as_json(except: :properties) : []
+    }
   end
 
   def user_geo_area
     if geo_json.present?
       GeoArea.new(
-        geometry: user_geometry,
+        geometry: geo_json,
         source: GeoArea.sources.fetch(:selection_utilisateur)
       )
     end
