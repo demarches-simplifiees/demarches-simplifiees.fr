@@ -103,7 +103,7 @@ task :deploy do
     invoke :'bundle:install'
     invoke :'yarn:install'
     invoke :'rails:db_migrate'
-    invoke :'after_party:run'
+    # invoke :'after_party:run'
     invoke :'rails:assets_precompile'
 
     on :launch do
