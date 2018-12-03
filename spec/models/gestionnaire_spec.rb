@@ -6,10 +6,10 @@ describe Gestionnaire, type: :model do
   let!(:procedure_2) { create :procedure, :published, administrateur: admin }
   let!(:procedure_3) { create :procedure, :published, administrateur: admin }
   let(:gestionnaire) { create :gestionnaire, administrateurs: [admin] }
-  let!(:procedure_assign) { create :assign_to, gestionnaire: gestionnaire, procedure: procedure }
+  let!(:procedure_assign) { assign(procedure) }
 
   before do
-    create :assign_to, gestionnaire: gestionnaire, procedure: procedure_2
+    assign(procedure_2)
   end
 
   describe 'follow' do
@@ -389,5 +389,11 @@ describe Gestionnaire, type: :model do
 
       it { expect(follow.demande_seen_at).to eq(freeze_date) }
     end
+  end
+
+  private
+
+  def assign(procedure_to_assign)
+    create :assign_to, gestionnaire: gestionnaire, procedure: procedure_to_assign
   end
 end
