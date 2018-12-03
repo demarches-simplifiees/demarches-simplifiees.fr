@@ -60,4 +60,38 @@ describe Champs::CarteChamp do
       it { is_expected.to eq(render_data) }
     end
   end
+
+  describe '#selection_utilisateur_size' do
+    subject { champ.selection_utilisateur_size }
+
+    context 'when the value is nil' do
+      let(:value) { nil }
+
+      it { is_expected.to eq(0) }
+    end
+
+    context 'when the value is blank' do
+      let(:value) { '' }
+
+      it { is_expected.to eq(0) }
+    end
+
+    context 'when the value is empty array' do
+      let(:value) { '[]' }
+
+      it { is_expected.to eq(0) }
+    end
+
+    context 'when the value is coordinates' do
+      let(:value) { coordinates.to_json }
+
+      it { is_expected.to eq(1) }
+    end
+
+    context 'when the value is geojson' do
+      let(:value) { geo_json }
+
+      it { is_expected.to eq(1) }
+    end
+  end
 end
