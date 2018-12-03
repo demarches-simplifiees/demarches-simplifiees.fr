@@ -3,6 +3,7 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
     Class.new do
       def run
         notify_dry_run
+        refresh_outdated_files
         fix_openstack_mime_types
         remove_unused_openstack_objects
         notify_dry_run
@@ -30,6 +31,18 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
         @verbose
       end
 
+      def old_pj_adapter
+        if !defined? @old_pj_adapter
+          @old_pj_adapter = Cellar::CellarAdapter.new(
+            ENV['CLEVER_CLOUD_ACCESS_KEY_ID'],
+            ENV['CLEVER_CLOUD_SECRET_ACCESS_KEY'],
+            ENV['CLEVER_CLOUD_BUCKET']
+          )
+        end
+
+        @old_pj_adapter
+      end
+
       def new_pjs
         if !defined? @new_pjs
           fog_credentials = {
@@ -46,6 +59,63 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
         end
 
         @new_pjs
+      end
+
+      # After the initial bulk transfer, but before ActiveStorage is switched to the new storage,
+      # there is a window where new attachments can be added to the old storage.
+      #
+      # This task ports them to the new storage after the switch, while being careful not to
+      # overwrite attachments that may have changed in the new storage after the switch.
+      def refresh_outdated_files
+        rake_puts "Refresh outdated attachments"
+
+        bar = RakeProgressbar.new(ActiveStorage::Blob.count)
+        refreshed_keys = []
+        missing_keys = []
+        old_pj_adapter.session do |old_pjs|
+          ActiveStorage::Blob.find_each do |blob|
+            new_pj_metadata = new_pjs.files.head(blob.key)
+
+            refresh_needed = new_pj_metadata.nil?
+            if !refresh_needed
+              new_pj_last_modified = new_pj_metadata.last_modified.in_time_zone
+              old_pj_last_modified = old_pjs.last_modified(blob.key)
+              if old_pj_last_modified.nil?
+                missing_keys.push(blob.key)
+              else
+                refresh_needed = new_pj_last_modified < old_pj_last_modified
+              end
+            end
+
+            if refresh_needed
+              refreshed_keys.push(blob.key)
+              if force?
+                file = Tempfile.new(blob.key)
+                file.binmode
+                old_pjs.download(blob.key) do |chunk|
+                  file.write(chunk)
+                end
+                file.rewind
+                new_pjs.files.create(
+                  :key    => blob.key,
+                  :body   => file,
+                  :public => false
+                )
+                file.close
+                file.unlink
+              end
+            end
+            bar.inc
+          end
+        end
+        bar.finished
+
+        if verbose?
+          rake_puts "Refreshed #{refreshed_keys.count} attachments\n#{refreshed_keys.join(', ')}"
+        end
+        if missing_keys.present?
+          rake_puts "Failed to refresh #{missing_keys.count} attachments\n#{missing_keys.join(', ')}"
+        end
       end
 
       # For OpenStack, the content type cannot be forced dynamically from a direct download URL.
