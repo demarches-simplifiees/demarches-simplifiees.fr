@@ -4,6 +4,7 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
       def run
         notify_dry_run
         fix_openstack_mime_types
+        remove_unused_openstack_objects
         notify_dry_run
       end
 
@@ -27,6 +28,24 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
         end
 
         @verbose
+      end
+
+      def new_pjs
+        if !defined? @new_pjs
+          fog_credentials = {
+            provider: 'OpenStack',
+            openstack_tenant: Rails.application.secrets.fog[:openstack_tenant],
+            openstack_api_key: Rails.application.secrets.fog[:openstack_api_key],
+            openstack_username: Rails.application.secrets.fog[:openstack_username],
+            openstack_auth_url: Rails.application.secrets.fog[:openstack_auth_url],
+            openstack_region: Rails.application.secrets.fog[:openstack_region],
+            openstack_identity_api_version: Rails.application.secrets.fog[:oopenstack_identity_api_version]
+          }
+          new_pj_storage = Fog::Storage.new(fog_credentials)
+          @new_pjs = new_pj_storage.directories.get(ENV['FOG_ACTIVESTORAGE_DIRECTORY'])
+        end
+
+        @new_pjs
       end
 
       # For OpenStack, the content type cannot be forced dynamically from a direct download URL.
@@ -64,6 +83,29 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
         end
         if failed_keys.present?
           rake_puts "failed to update #{failed_keys.count} keys (dangling blob?)\n#{failed_keys.join(', ')}"
+        end
+      end
+
+      # Garbage collect objects that might have been removed in the meantime
+      def remove_unused_openstack_objects
+        rake_puts "Remove unused files"
+
+        bar = RakeProgressbar.new(new_pjs.count.to_i)
+        removed_keys = []
+        new_pjs.files.each do |file|
+          if !ActiveStorage::Blob.exists?(key: file.key)
+            removed_keys.push(file.key)
+            if force?
+              file.destroy
+            end
+          end
+
+          bar.inc
+        end
+        bar.finished
+
+        if verbose?
+          rake_puts "Removed #{removed_keys.count} unused objects\n#{removed_keys.join(', ')}"
         end
       end
     end.new.run
