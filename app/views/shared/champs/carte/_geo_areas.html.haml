@@ -6,7 +6,7 @@
     - elsif champ.value.blank?
       Aucune zone tracée
     - elsif champ.quartiers_prioritaires.blank?
-      = t('errors.messages.quartiers_prioritaires_empty', count: champ.geo_json.size)
+      = t('errors.messages.quartiers_prioritaires_empty', count: champ.selection_utilisateur_size)
     - else
       %ul
         - champ.quartiers_prioritaires.each do |qp|
@@ -20,7 +20,7 @@
     - elsif champ.value.blank?
       Aucune zone tracée
     - elsif champ.cadastres.blank?
-      = t('errors.messages.cadastres_empty', count: champ.geo_json.size)
+      = t('errors.messages.cadastres_empty', count: champ.selection_utilisateur_size)
     - else
       %ul
         - champ.cadastres.each do |pc|
@@ -34,7 +34,7 @@
     - elsif champ.value.blank?
       Aucune zone tracée
     - elsif champ.parcelles_agricoles.blank?
-      = t('errors.messages.parcelles_agricoles_empty', count: champ.geo_json.size)
+      = t('errors.messages.parcelles_agricoles_empty', count: champ.selection_utilisateur_size)
     - else
       %ul
         - champ.parcelles_agricoles.each do |pa|

@@ -62,6 +62,14 @@ class Champs::CarteChamp < Champ
     end
   end
 
+  def selection_utilisateur_size
+    if geo_json.present?
+      geo_json['coordinates'].size
+    else
+      0
+    end
+  end
+
   def to_render_data
     {
       position: position,
