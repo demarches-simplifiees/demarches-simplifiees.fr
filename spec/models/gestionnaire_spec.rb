@@ -12,6 +12,31 @@ describe Gestionnaire, type: :model do
     assign(procedure_2)
   end
 
+  describe '#visible_procedures' do
+    let(:procedure_not_assigned)           { create :procedure, administrateur: admin }
+    let(:procedure_without_link)           { create :procedure, administrateur: admin }
+    let(:procedure_with_link)              { create :procedure, :with_path, administrateur: admin }
+    let(:procedure_archived_manually)      { create :procedure, :archived, administrateur: admin }
+    let(:procedure_archived_automatically) { create :procedure, :archived_automatically, administrateur: admin }
+
+    before do
+      assign(procedure_without_link)
+      assign(procedure_with_link)
+      assign(procedure_archived_manually)
+      assign(procedure_archived_automatically)
+    end
+
+    subject { gestionnaire.visible_procedures }
+
+    it do
+      expect(subject).not_to include(procedure_not_assigned)
+      expect(subject).not_to include(procedure_without_link)
+      expect(subject).to include(procedure_with_link)
+      expect(subject).to include(procedure_archived_manually)
+      expect(subject).to include(procedure_archived_automatically)
+    end
+  end
+
   describe 'follow' do
     let(:dossier) { create :dossier }
     let(:already_followed_dossier) { create :dossier }
