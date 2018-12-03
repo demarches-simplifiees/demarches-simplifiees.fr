@@ -3,6 +3,7 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
     Class.new do
       def run
         notify_dry_run
+        fix_openstack_mime_types
         notify_dry_run
       end
 
@@ -26,6 +27,44 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
         end
 
         @verbose
+      end
+
+      # For OpenStack, the content type cannot be forced dynamically from a direct download URL.
+      #
+      # The ActiveStorage-OpenStack adapter works around this by monkey patching ActiveStorage
+      # to statically set the correct MIME type on each OpenStack object.
+      #
+      # However, for objects that have been migrated from another storage, the content-type might
+      # be wrong, so we manually fix it.
+      def fix_openstack_mime_types
+        if !ActiveStorage::Blob.service.respond_to?(:change_content_type)
+          rake_puts "Not running on openstack, not fixing MIME types"
+          return
+        end
+        rake_puts "Fix MIME types"
+
+        bar = RakeProgressbar.new(ActiveStorage::Blob.count)
+        failed_keys = []
+        updated_keys = []
+        ActiveStorage::Blob.find_each do |blob|
+          if blob.identified? && blob.content_type.present?
+            updated_keys.push(blob.key)
+            if force?
+              if !blob.service.change_content_type(blob.key, blob.content_type)
+                failed_keys.push(blob.key)
+              end
+            end
+          end
+          bar.inc
+        end
+        bar.finished
+
+        if verbose?
+          rake_puts "Updated MIME Type for #{updated_keys.count} keys\n#{updated_keys.join(', ')}"
+        end
+        if failed_keys.present?
+          rake_puts "failed to update #{failed_keys.count} keys (dangling blob?)\n#{failed_keys.join(', ')}"
+        end
       end
     end.new.run
   end
