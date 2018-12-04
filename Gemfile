@@ -5,7 +5,7 @@ gem 'dotenv-rails', require: 'dotenv/rails-now'
 gem 'rails'
 
 # Use SCSS for stylesheets
-gem 'sass-rails'
+gem 'sassc-rails'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
