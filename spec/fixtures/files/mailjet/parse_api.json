@@ -1,0 +1,51 @@
+{
+    "Sender": "pierre.de_la_morinerie@beta.gouv.fr",
+    "Recipient": "parse@reponse-messagerie.demarches-simplifiees.fr",
+    "Date": "20181129T135258",
+    "From": "Pierre de La Morinerie <pierre.de_la_morinerie@beta.gouv.fr>",
+    "Subject": "Re: Vous avez un nouveau message",
+    "CustomID": "382331",
+    "Headers": {
+        "Return-Path": [
+            "<pierre.de_la_morinerie@beta.gouv.fr>"
+        ],
+        "Received": [
+            "from 8.mo69.mail-out.ovh.net (8.mo69.mail-out.ovh.net [46.105.56.233])\tby parse-in.mailjet.com (Mailjet) with ESMTPS id 9067120368\tfor <parse@reponse-messagerie.demarches-simplifiees.fr>; Thu, 29 Nov 2018 13:53:00 +0000 (UTC)",
+            "from player730.ha.ovh.net (unknown [10.109.159.136])\tby mo69.mail-out.ovh.net (Postfix) with ESMTP id 5877A3406E\tfor <parse@reponse-messagerie.demarches-simplifiees.fr>; Thu, 29 Nov 2018 14:53:00 +0100 (CET)",
+            "from beta.gouv.fr (anantes-658-1-218-184.w90-59.abo.wanadoo.fr [90.59.221.184])\t(Authenticated sender: pmorinerie@beta.gouv.fr)\tby player730.ha.ovh.net (Postfix) with ESMTPSA id 353483C8958\tfor <parse@reponse-messagerie.demarches-simplifiees.fr>; Thu, 29 Nov 2018 13:53:00 +0000 (UTC)"
+        ],
+        "From": "Pierre de La Morinerie <pierre.de_la_morinerie@beta.gouv.fr>",
+        "Mime-Version": [
+            "1.0 (Mac OS X Mail 12.1 \\(3445.101.1\\))"
+        ],
+        "Subject": "Re: Vous avez un nouveau message",
+        "Message-Id": "<D71566D1-841A-40D7-8BB8-C748A30840C7@beta.gouv.fr>",
+        "Date": "Thu, 29 Nov 2018 14:52:58 +0100",
+        "To": "parse@reponse-messagerie.demarches-simplifiees.fr",
+        "X-Mailer": [
+            "Apple Mail (2.3445.101.1)"
+        ],
+        "X-Ovh-Tracer-Id": [
+            "17238653477938742352"
+        ],
+        "X-VR-SPAMSTATE": [
+            "OK"
+        ],
+        "X-VR-SPAMSCORE": [
+            "0"
+        ],
+        "X-VR-SPAMCAUSE": [
+            "gggruggvucftvghtrhhoucdtuddrgedtkedruddvfedgheeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenuc"
+        ],
+        "Content-Type": [
+            "text/plain;\tcharset=utf-8"
+        ],
+        "Content-Transfer-Encoding": [
+            "quoted-printable"
+        ]
+    },
+    "Parts": [],
+    "Text-part": "Bonjour,\n\nJ’ai besoin de passer mon permis rapidement. Savez-vous quand mon dossier sera instruit ?\n\nCordialement,\nPaul Dupont",
+    "Html-part": "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body style=\"word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;\" class=\"\">Bonjour,<div class=\"\"><br class=\"\"></div><div class=\"\">J’ai besoin de passer mon permis rapidement. Savez-vous quand mon dossier sera instruit ?</div><div class=\"\"><br class=\"\"></div><div class=\"\">Cordialement,</div><div class=\"\">Paul Dupont</div></body></html>",
+    "SpamAssassinScore": "0.000"
+}
