@@ -1,0 +1,34 @@
+%p
+  Bonjour,
+
+%p
+  Vous avez récemment répondu à un message envoyé par demarches-simplifiees.fr.
+
+%p
+  Malheureusement,
+  %strong
+    nous n'avons pas réussi à envoyer automatiquement votre réponse
+  à l'administration. Désolé.
+
+%p
+  Pour que l'administration reçoive votre réponse,
+  %strong vous allez devoir l'envoyer à nouveau, en passant par la messagerie
+  de votre dossier.
+
+%p
+  Pour cela :
+
+  %ol
+    %li
+      Ouvrez la liste de vos dossiers :
+      = succeed ',' do
+        = link_to dossiers_url, dossiers_url, target: '_blank'
+    %li Cliquez sur votre dossier, puis sur l’onglet « Messagerie »,
+    %li Tapez à nouveau votre réponse à l’instructeur,
+    %li Cliquez sur le bouton « Envoyer ».
+
+%p
+  Bonne journée,
+
+%p
+  L'équipe demarches-simplifiees.fr

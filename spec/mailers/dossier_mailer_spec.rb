@@ -24,6 +24,13 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include(messagerie_dossier_url(dossier)) }
   end
 
+  describe '.notify_inbound_error' do
+    subject { described_class.notify_inbound_error('user@ds.fr') }
+
+    it { expect(subject.subject).to include("Nous n’avons pas pu enregistrer votre réponse") }
+    it { expect(subject.body).to include(dossiers_url) }
+  end
+
   describe '.notify_deletion_to_user' do
     let(:deleted_dossier) { build(:deleted_dossier) }
 

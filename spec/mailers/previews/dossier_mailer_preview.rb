@@ -8,6 +8,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_new_answer(Dossier.last)
   end
 
+  def notify_inbound_error
+    DossierMailer.notify_inbound_error("user@ds.fr")
+  end
+
   def notify_deletion_to_user
     DossierMailer.notify_deletion_to_user(DeletedDossier.last, "user@ds.fr")
   end

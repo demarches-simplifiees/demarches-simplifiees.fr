@@ -84,6 +84,13 @@ class WebhookController < ActionController::Base
 
   def inbound_email_error(error_message, bounce_to:)
     Raven.capture_message("Inbound email error: #{error_message}")
+
+    if bounce_to
+      DossierMailer.notify_inbound_error(bounce_to).deliver_later
+    else
+      Raven.capture_message("Inbound email error: could not bounce inboud email (no sender found)")
+    end
+
     # Tell Mailjet that we got an error, but that the message was processed successfully
     head :no_content
   end

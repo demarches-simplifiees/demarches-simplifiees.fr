@@ -18,6 +18,11 @@ class DossierMailer < ApplicationMailer
     end
   end
 
+  def notify_inbound_error(to_email)
+    subject = "Nous n’avons pas pu enregistrer votre réponse"
+    mail(to: to_email, subject: subject)
+  end
+
   def notify_deletion_to_user(deleted_dossier, to_email)
     @deleted_dossier = deleted_dossier
     subject = "Votre dossier n° #{@deleted_dossier.dossier_id} a bien été supprimé"

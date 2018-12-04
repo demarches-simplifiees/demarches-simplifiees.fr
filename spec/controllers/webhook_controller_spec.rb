@@ -35,6 +35,13 @@ describe WebhookController, type: :controller do
         expect { subject }.not_to change(Commentaire, :count)
       end
 
+      it 'sends an error email to the sender' do
+        perform_enqueued_jobs do
+          expect { subject }.to change(ActionMailer::Base.deliveries, :count).by(1)
+          expect(ActionMailer::Base.deliveries.last.to).to eq([payload['From']])
+        end
+      end
+
       it 'reports the error to Sentry' do
         expect(Raven).to receive(:capture_message)
         subject
