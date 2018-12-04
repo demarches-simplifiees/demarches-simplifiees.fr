@@ -4,7 +4,13 @@
   %p
     —
     %br
-    %strong
-      Merci de ne pas répondre à cet email. Pour vous adresser à votre administration, passez directement par votre
-      = succeed '.' do
-        = link_to 'messagerie', messagerie_dossier_url(@dossier), target: '_blank'
+    - if @sent_with_reply_hook
+      Pour répondre à ce message, rendez-vous
+      = succeed ',' do
+        = link_to 'messagerie de votre dossier', messagerie_dossier_url(@dossier), target: '_blank'
+      ou répondez à cet email et votre réponse sera automatiquement ajoutée à la messagerie.
+    - else
+      %strong
+        Merci de ne pas répondre à cet email. Pour vous adresser à votre administration, passez directement par votre
+        = succeed '.' do
+          = link_to 'messagerie', messagerie_dossier_url(@dossier), target: '_blank'

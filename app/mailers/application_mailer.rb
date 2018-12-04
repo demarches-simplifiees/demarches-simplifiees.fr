@@ -10,6 +10,7 @@ class ApplicationMailer < ActionMailer::Base
     if reply_hook_enabled?(dossier.procedure)
       headers['reply_to'] = mailjet_reply_to_address
       headers['X-MJ-CustomID'] = dossier.id.to_s
+      @sent_with_reply_hook = true
     end
 
     mail(headers, &block)
