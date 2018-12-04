@@ -111,7 +111,7 @@ describe SupportController, type: :controller do
         get :index
 
         expect(response.status).to eq(200)
-        expect(response.body).to have_content("Email *")
+        expect(response.body).to have_text("Email")
       end
     end
 
