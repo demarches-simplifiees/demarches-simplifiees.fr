@@ -146,7 +146,7 @@
     %h4 Options avancées
 
     %label{ for: :auto_archive_on } Archivage automatique le
-    = f.text_field :auto_archive_on, id: 'auto_archive_on', value: @procedure.auto_archive_on.try{ |d| d.strftime("%d-%m-%Y") }, data: { provide: 'datepicker', 'date-language' => 'fr', 'date-format' => 'dd/mm/yyyy' }
+    = f.date_field :auto_archive_on, id: 'auto_archive_on', value: @procedure.auto_archive_on
     (à 00h00)
     %p.help-block
       %i.fa.fa-info-circle

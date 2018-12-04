@@ -25,6 +25,7 @@ import { toggleCondidentielExplanation } from '../new_design/avis';
 import { scrollMessagerie } from '../new_design/messagerie';
 import { showMotivation, motivationCancel } from '../new_design/state-button';
 import { toggleChart } from '../new_design/toggle-chart';
+import { replaceSemicolonByComma } from '../new_design/avis';
 
 // This is the global application namespace where we expose helpers used from rails views
 const DS = {
@@ -32,7 +33,8 @@ const DS = {
   scrollMessagerie,
   showMotivation,
   motivationCancel,
-  toggleChart
+  toggleChart,
+  replaceSemicolonByComma
 };
 
 // Start Rails helpers

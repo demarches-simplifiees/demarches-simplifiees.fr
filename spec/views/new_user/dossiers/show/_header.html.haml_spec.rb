@@ -9,7 +9,7 @@ describe 'new_user/dossiers/show/header.html.haml', type: :view do
 
   it 'affiche les informations du dossier' do
     expect(rendered).to have_text(dossier.procedure.libelle)
-    expect(rendered).to have_text("Dossier nº #{dossier.id}")
+    expect(rendered).to have_text("Dossier nº #{dossier.id}")
     expect(rendered).to have_text("en construction")
 
     expect(rendered).to have_selector("ul.tabs")
