@@ -1,28 +1,54 @@
 {
   "presets": [
-    ["env", {
-      "modules": false,
-      "targets": {
-        // See config/browser.rb
-        "browsers": [
-          "> 1%",
-          "Chrome >= 50",
-          "IE >= 11",
-          "Edge >= 14",
-          "Firefox >= 50",
-          "Opera >= 40",
-          "Safari >= 8",
-          "iOS >= 8"
-        ],
-        "uglify": true
-      },
-      "useBuiltIns": true
-    }]
+    [
+      "@babel/env",
+      {
+        "modules": false,
+        "targets": {
+          "browsers": [
+            "> 1%",
+            "Chrome >= 50",
+            "IE >= 11",
+            "Edge >= 14",
+            "Firefox >= 50",
+            "Opera >= 40",
+            "Safari >= 8",
+            "iOS >= 8"
+          ],
+          "uglify": true
+        },
+        "forceAllTransforms": true,
+        "useBuiltIns": "entry"
+      }
+    ]
   ],
-
   "plugins": [
-    "syntax-dynamic-import",
-    "transform-object-rest-spread",
-    ["transform-class-properties", { "spec": true }]
+    "@babel/plugin-transform-destructuring",
+    "@babel/plugin-syntax-dynamic-import",
+    [
+      "@babel/plugin-proposal-object-rest-spread",
+      {
+        "useBuiltIns": true
+      }
+    ],
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "helpers": false,
+        "regenerator": true
+      }
+    ],
+    [
+      "@babel/plugin-transform-regenerator",
+      {
+        "async": false
+      }
+    ],
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": true
+      }
+    ]
   ]
 }
