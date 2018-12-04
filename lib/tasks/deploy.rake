@@ -25,3 +25,10 @@ task :deploy do
     sh "mina deploy domain=#{domain} branch=#{branch} force_asset_precompile=true"
   end
 end
+
+task :post_deploy do
+  domains = domains_for_stage(ENV.fetch('STAGE'))
+  branch = ENV.fetch('BRANCH')
+
+  sh "mina post_deploy domain=#{domains.first} branch=#{branch}"
+end
