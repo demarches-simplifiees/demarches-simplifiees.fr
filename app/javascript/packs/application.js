@@ -1,10 +1,11 @@
 import '../shared/polyfills';
 import Turbolinks from 'turbolinks';
 import Rails from 'rails-ujs';
-import ActiveStorage from '../shared/activestorage/ujs';
+import * as ActiveStorage from 'activestorage';
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
 
+import '../shared/activestorage/progress';
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';

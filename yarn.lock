@@ -952,10 +952,10 @@ acorn@^5.0.0, acorn@^5.0.3, acorn@^5.6.0, acorn@^5.6.2:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.1.tgz#f095829297706a7c9776958c0afc8930a9b9d9d8"
   integrity sha512-d+nbxBUGKg7Arpsvbnlq61mc12ek3EY8EQldM3GPAhWJ1UVxC6TDGbIvUMNU6obBX3i1+ptCIzV4vq0gFPEGVQ==
 
-activestorage@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/activestorage/-/activestorage-5.2.1.tgz#b4be57fbedc25c6c361802707fc5e8884766f6a1"
-  integrity sha512-n3LcwiC3EV5zkVAvay5yprXTBb8vzT2Qef1GCfC8feJTVWEadzNW9zYaOweDpshqzJHx+zdaps6uiHDJQbdCdA==
+activestorage@^5.2.2-rc1:
+  version "5.2.2-rc1"
+  resolved "https://registry.yarnpkg.com/activestorage/-/activestorage-5.2.2-rc1.tgz#99c27a08974fd953a66f7c96488cd70f0ecffda5"
+  integrity sha512-HO0oiAfCVSGa80MYVGaNBQaecvWEg5/hsMbqHcmKvxsQVkDfS0TbDYT96nJ8l2t0sZ4lVNeVjOYBn15Bf5Eqig==
   dependencies:
     spark-md5 "^3.0.0"
 

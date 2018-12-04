@@ -3,7 +3,7 @@
     "@rails/webpacker": "4.0.0-pre.3",
     "@sentry/browser": "^4.0.4",
     "@turf/area": "^6.0.1",
-    "activestorage": "^5.2.1",
+    "activestorage": "^5.2.2-rc1",
     "autocomplete.js": "^0.31.0",
     "chartkick": "^3.0.1",
     "debounce": "^1.2.0",
