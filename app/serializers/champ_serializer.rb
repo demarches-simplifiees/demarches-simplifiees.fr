@@ -12,7 +12,7 @@ class ChampSerializer < ActiveModel::Serializer
   def value
     case object
     when GeoArea
-      object.geometry.to_json
+      object.geometry
     when Champs::CarteChamp
       if object.geo_json.present?
         object.geo_json.to_json

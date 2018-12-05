@@ -46,7 +46,7 @@ describe ChampSerializer do
       let(:serialized_id) { -1 }
       let(:serialized_description) { "" }
       let(:serialized_order_place) { -1 }
-      let(:serialized_value) { geo_json }
+      let(:serialized_value) { parsed_geo_json }
 
       context 'and geo_area is selection_utilisateur' do
         context 'value is empty' do
@@ -102,6 +102,7 @@ describe ChampSerializer do
           let(:serialized_order_place) { champ.order_place }
           let(:serialized_libelle) { champ.libelle }
           let(:serialized_type_champ) { champ.type_champ }
+          let(:serialized_value) { geo_json }
 
           context 'when value is coordinates' do
             let(:value) { coordinates.to_json }
