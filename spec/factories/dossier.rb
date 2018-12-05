@@ -131,5 +131,23 @@ FactoryBot.define do
         dossier.attestation = dossier.build_attestation
       end
     end
+
+    trait :with_all_champs do
+      after(:create) do |dossier, _evaluator|
+        dossier.champs = dossier.procedure.types_de_champ.map do |type_de_champ|
+          build(:"champ_#{type_de_champ.type_champ}", type_de_champ: type_de_champ)
+        end
+        dossier.save!
+      end
+    end
+
+    trait :with_all_annotations do
+      after(:create) do |dossier, _evaluator|
+        dossier.champs = dossier.procedure.types_de_champ.map do |type_de_champ|
+          build(:"champ_#{type_de_champ.type_champ}", type_de_champ: type_de_champ)
+        end
+        dossier.save!
+      end
+    end
   end
 end

@@ -8,7 +8,7 @@ describe CommentaireService do
     let(:file) { nil }
     let(:scan_result) { true }
 
-    subject(:commentaire) { CommentaireService.create(sender, dossier, { body: body, file: file }) }
+    subject(:commentaire) { CommentaireService.build(sender, dossier, { body: body, file: file }) }
 
     before do
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
@@ -17,7 +17,7 @@ describe CommentaireService do
     it 'creates a new valid commentaire' do
       expect(commentaire.email).to eq sender.email
       expect(commentaire.dossier).to eq dossier
-      expect(commentaire.body).to eq '<p>Contenu du message.</p>'
+      expect(commentaire.body).to eq 'Contenu du message.'
       expect(commentaire.file).to be_blank
       expect(commentaire).to be_valid
     end

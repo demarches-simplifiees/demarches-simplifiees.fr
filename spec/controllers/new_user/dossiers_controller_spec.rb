@@ -787,7 +787,7 @@ describe NewUser::DossiersController, type: :controller do
 
         expect(response).to render_template :messagerie
         expect(flash.alert).to be_present
-        expect(assigns(:commentaire).body).to eq("<p>avant\n<br />apres</p>")
+        expect(assigns(:commentaire).body).to eq("avant\napres")
       end
     end
   end

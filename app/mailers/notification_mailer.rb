@@ -46,10 +46,8 @@ class NotificationMailer < ApplicationMailer
   end
 
   def create_commentaire_for_notification(dossier, subject, body)
-    Commentaire.create(
-      dossier: dossier,
-      email: CONTACT_EMAIL,
-      body: ["[#{subject}]", body].join("<br><br>")
-    )
+    params = { body: ["[#{subject}]", body].join("<br><br>") }
+    commentaire = CommentaireService.build_with_email(CONTACT_EMAIL, dossier, params)
+    commentaire.save!
   end
 end

@@ -2,6 +2,9 @@ class Commentaire < ApplicationRecord
   belongs_to :dossier, touch: true
   belongs_to :piece_justificative
 
+  belongs_to :user
+  belongs_to :gestionnaire
+
   mount_uploader :file, CommentaireFileUploader
   validates :file, file_size: { maximum: 20.megabytes, message: "La taille du fichier doit être inférieure à 20 Mo" }
   validate :is_virus_free?
@@ -14,6 +17,16 @@ class Commentaire < ApplicationRecord
 
   def self.columns
     super.reject { |c| c.name == "champ" }
+  end
+
+  def email
+    if user
+      user.email
+    elsif gestionnaire
+      gestionnaire.email
+    else
+      read_attribute(:email)
+    end
   end
 
   def header

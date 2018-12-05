@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_23_195208) do
+ActiveRecord::Schema.define(version: 2018_12_04_125101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,7 +189,11 @@ ActiveRecord::Schema.define(version: 2018_11_23_195208) do
     t.datetime "updated_at", null: false
     t.integer "piece_justificative_id"
     t.string "file"
+    t.bigint "user_id"
+    t.bigint "gestionnaire_id"
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
+    t.index ["gestionnaire_id"], name: "index_commentaires_on_gestionnaire_id"
+    t.index ["user_id"], name: "index_commentaires_on_user_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
