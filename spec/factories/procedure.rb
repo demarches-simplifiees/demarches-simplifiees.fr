@@ -134,6 +134,15 @@ FactoryBot.define do
       end
     end
 
+    trait :archived_automatically do
+      # For now the behavior is the same than :archived
+      # (it may be different in the future though)
+      after(:build) do |procedure, _evaluator|
+        procedure.publish!(generate(:published_path))
+        procedure.archive!
+      end
+    end
+
     trait :hidden do
       after(:build) do |procedure, _evaluator|
         procedure.publish!(generate(:published_path))
