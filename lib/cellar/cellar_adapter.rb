@@ -107,6 +107,15 @@ module Cellar
         response.is_a?(Net::HTTPSuccess)
       end
 
+      def last_modified(key)
+        request = Net::HTTP::Head.new("/#{key}")
+        @signer.sign(request, key)
+        response = @http.request(request)
+        if response.is_a?(Net::HTTPSuccess)
+          Time.zone.parse(response['Last-Modified'])
+        end
+      end
+
       private
 
       def add_range_header(request, range)
