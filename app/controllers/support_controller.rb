@@ -62,11 +62,12 @@ class SupportController < ApplicationController
   end
 
   def create_commentaire
-    dossier.commentaires.create(
-      email: email,
+    params = {
       file: params[:file],
       body: "[#{params[:subject]}]<br><br>#{params[:text]}"
-    )
+    }
+    commentaire = CommentaireService.build_with_email(email, dossier, params)
+    commentaire.save!
   end
 
   def tags

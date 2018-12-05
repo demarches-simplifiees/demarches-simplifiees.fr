@@ -172,7 +172,7 @@ module NewUser
     end
 
     def create_commentaire
-      @commentaire = CommentaireService.create(current_user, dossier, commentaire_params)
+      @commentaire = CommentaireService.build(current_user, dossier, commentaire_params)
 
       if @commentaire.save
         flash.notice = "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."

@@ -8,7 +8,7 @@
       %span.guest Invité
     %span.date{ class: highlight_if_unseen_class(messagerie_seen_at, commentaire.created_at) }
       = commentaire_date(commentaire)
-  .rich-text= sanitize(commentaire.body)
+  .rich-text= sanitize(simple_format(commentaire.body))
 
   - if commentaire.piece_justificative
     .attachment-link
