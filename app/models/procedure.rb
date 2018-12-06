@@ -214,6 +214,7 @@ class Procedure < ApplicationRecord
     procedure.published_at = nil
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
+    procedure.lien_notice = nil
 
     [:notice, :deliberation].each { |attachment| clone_attachment(procedure, attachment) }
 
