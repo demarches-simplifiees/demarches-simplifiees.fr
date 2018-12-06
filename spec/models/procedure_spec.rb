@@ -413,6 +413,12 @@ describe Procedure do
       expect(subject.assign_to).to eq([])
     end
 
+    describe 'should not duplicate lien_notice' do
+      let(:procedure) { create(:procedure, lien_notice: "http://toto.com") }
+
+      it { expect(subject.lien_notice).to be_nil }
+    end
+
     describe 'procedure status is reset' do
       let(:procedure) { create(:procedure, :archived, received_mail: received_mail, service: service) }
 
