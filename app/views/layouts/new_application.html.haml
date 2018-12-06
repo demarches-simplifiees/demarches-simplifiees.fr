@@ -21,8 +21,7 @@
     - if Rails.env.development?
       = stylesheet_link_tag :xray
 
-    - if !current_user
-      = render partial: "layouts/matomo"
+    = render partial: "layouts/matomo"
 
     :javascript
       DATA = [{
