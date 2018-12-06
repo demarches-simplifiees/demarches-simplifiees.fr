@@ -69,7 +69,7 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
       def refresh_outdated_files
         rake_puts "Refresh outdated attachments"
 
-        bar = RakeProgressbar.new(ActiveStorage::Blob.count)
+        progress = ProgressReport.new(ActiveStorage::Blob.count)
         refreshed_keys = []
         missing_keys = []
         old_pj_adapter.session do |old_pjs|
@@ -105,10 +105,10 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
                 file.unlink
               end
             end
-            bar.inc
+            progress.inc
           end
         end
-        bar.finished
+        progress.finish
 
         if verbose?
           rake_puts "Refreshed #{refreshed_keys.count} attachments\n#{refreshed_keys.join(', ')}"
@@ -132,7 +132,7 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
         end
         rake_puts "Fix MIME types"
 
-        bar = RakeProgressbar.new(ActiveStorage::Blob.count)
+        progress = ProgressReport.new(ActiveStorage::Blob.count)
         failed_keys = []
         updated_keys = []
         ActiveStorage::Blob.find_each do |blob|
@@ -144,9 +144,9 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
               end
             end
           end
-          bar.inc
+          progress.inc
         end
-        bar.finished
+        progress.finish
 
         if verbose?
           rake_puts "Updated MIME Type for #{updated_keys.count} keys\n#{updated_keys.join(', ')}"
@@ -160,7 +160,7 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
       def remove_unused_openstack_objects
         rake_puts "Remove unused files"
 
-        bar = RakeProgressbar.new(new_pjs.count.to_i)
+        progress = ProgressReport.new(new_pjs.count.to_i)
         removed_keys = []
         new_pjs.files.each do |file|
           if !ActiveStorage::Blob.exists?(key: file.key)
@@ -170,9 +170,9 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
             end
           end
 
-          bar.inc
+          progress.inc
         end
-        bar.finished
+        progress.finish
 
         if verbose?
           rake_puts "Removed #{removed_keys.count} unused objects\n#{removed_keys.join(', ')}"
