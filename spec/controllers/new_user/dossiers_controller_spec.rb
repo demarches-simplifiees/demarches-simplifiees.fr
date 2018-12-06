@@ -906,4 +906,45 @@ describe NewUser::DossiersController, type: :controller do
       end
     end
   end
+
+  describe '#purge_champ_piece_justificative' do
+    before { sign_in(user) }
+
+    subject { delete :purge_champ_piece_justificative, params: { id: champ.dossier.id, champ_id: champ.id }, format: :js }
+
+    context 'when dossier is owned by user' do
+      let(:dossier){ create(:dossier, user: user) }
+      let(:champ){ create(:champ_piece_justificative, dossier_id: dossier.id) }
+
+      it { is_expected.to have_http_status(200) }
+
+      it do
+        subject
+        expect(champ.reload.piece_justificative_file.attached?).to be(false)
+      end
+
+      context 'but champ is not linked to this dossier' do
+        let(:champ){ create(:champ_piece_justificative, dossier: create(:dossier)) }
+
+        it { is_expected.to redirect_to(root_path) }
+
+        it do
+          subject
+          expect(champ.reload.piece_justificative_file.attached?).to be(true)
+        end
+      end
+    end
+
+    context 'when dossier is not owned by user' do
+      let(:dossier){ create(:dossier, user: create(:user)) }
+      let(:champ){ create(:champ_piece_justificative, dossier_id: dossier.id) }
+
+      it { is_expected.to redirect_to(root_path) }
+
+      it do
+        subject
+        expect(champ.reload.piece_justificative_file.attached?).to be(true)
+      end
+    end
+  end
 end
