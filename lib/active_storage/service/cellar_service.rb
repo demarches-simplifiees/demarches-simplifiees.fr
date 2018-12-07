@@ -4,7 +4,7 @@ module ActiveStorage
       @adapter = Cellar::CellarAdapter.new(access_key_id, secret_access_key, bucket)
     end
 
-    def upload(key, io, checksum: nil)
+    def upload(key, io, checksum: nil, **)
       instrument :upload, key: key, checksum: checksum do
         @adapter.session { |s| s.upload(key, io, checksum) }
       end
