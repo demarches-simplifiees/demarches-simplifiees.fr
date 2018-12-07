@@ -69,35 +69,36 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
       def refresh_outdated_files
         rake_puts "Refresh outdated attachments"
 
-        progress = ProgressReport.new(ActiveStorage::Blob.count)
         refreshed_keys = []
         missing_keys = []
         old_pj_adapter.session do |old_pjs|
-          ActiveStorage::Blob.find_each do |blob|
-            new_pj_metadata = new_pjs.files.head(blob.key)
+          keys = old_pjs.list_prefixed('')
+          progress = ProgressReport.new(keys.count)
+          keys.each do |key|
+            new_pj_metadata = new_pjs.files.head(key)
 
             refresh_needed = new_pj_metadata.nil?
             if !refresh_needed
               new_pj_last_modified = new_pj_metadata.last_modified.in_time_zone
-              old_pj_last_modified = old_pjs.last_modified(blob.key)
+              old_pj_last_modified = old_pjs.last_modified(key)
               if old_pj_last_modified.nil?
-                missing_keys.push(blob.key)
+                missing_keys.push(key)
               else
                 refresh_needed = new_pj_last_modified < old_pj_last_modified
               end
             end
 
             if refresh_needed
-              refreshed_keys.push(blob.key)
+              refreshed_keys.push(key)
               if force?
-                file = Tempfile.new(blob.key)
+                file = Tempfile.new(key)
                 file.binmode
-                old_pjs.download(blob.key) do |chunk|
+                old_pjs.download(key) do |chunk|
                   file.write(chunk)
                 end
                 file.rewind
                 new_pjs.files.create(
-                  :key    => blob.key,
+                  :key    => key,
                   :body   => file,
                   :public => false
                 )
@@ -107,8 +108,8 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
             end
             progress.inc
           end
+          progress.finish
         end
-        progress.finish
 
         if verbose?
           rake_puts "Refreshed #{refreshed_keys.count} attachments\n#{refreshed_keys.join(', ')}"
@@ -132,15 +133,18 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
         end
         rake_puts "Fix MIME types"
 
-        progress = ProgressReport.new(ActiveStorage::Blob.count)
+        progress = ProgressReport.new(new_pjs.count.to_i)
         failed_keys = []
         updated_keys = []
-        ActiveStorage::Blob.find_each do |blob|
-          if blob.identified? && blob.content_type.present?
-            updated_keys.push(blob.key)
+        new_pjs.files.each do |file|
+          blob = ActiveStorage::Blob.find_by(key: file.key)
+          if blob.nil?
+            failed_keys.push(file.key)
+          elsif blob.identified? && blob.content_type.present?
+            updated_keys.push(file.key)
             if force?
-              if !blob.service.change_content_type(blob.key, blob.content_type)
-                failed_keys.push(blob.key)
+              if !blob.service.change_content_type(file.key, blob.content_type)
+                failed_keys.push(file.key)
               end
             end
           end
@@ -152,7 +156,7 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
           rake_puts "Updated MIME Type for #{updated_keys.count} keys\n#{updated_keys.join(', ')}"
         end
         if failed_keys.present?
-          rake_puts "failed to update #{failed_keys.count} keys (dangling blob?)\n#{failed_keys.join(', ')}"
+          rake_puts "failed to update #{failed_keys.count} keys\n#{failed_keys.join(', ')}"
         end
       end
 
