@@ -81,12 +81,24 @@ module Cellar
       end
 
       def list_prefixed(prefix)
-        request = Net::HTTP::Get.new("/?prefix=#{prefix}")
-        @signer.sign(request, "")
-        response = @http.request(request)
-        if response.is_a?(Net::HTTPSuccess)
-          parse_bucket_listing(response.body)
-        end
+        result = []
+        marker = ''
+
+        begin
+          request = Net::HTTP::Get.new("/?prefix=#{prefix}&marker=#{marker}")
+          @signer.sign(request, "")
+          response = @http.request(request)
+          if response.is_a?(Net::HTTPSuccess)
+            (listing, truncated) = parse_bucket_listing(response.body)
+            result += listing
+            marker = listing.last
+          else
+            # TODO: error handling
+            return nil
+          end
+        end while truncated
+
+        result
       end
 
       def delete_keys(keys)
@@ -126,9 +138,11 @@ module Cellar
 
       def parse_bucket_listing(bucket_listing_xml)
         doc = Nokogiri::XML(bucket_listing_xml)
-        doc
+        listing = doc
           .xpath('//xmlns:Contents/xmlns:Key')
           .map(&:text)
+        truncated = doc.xpath('//xmlns:IsTruncated').text == 'true'
+        [listing, truncated]
       end
 
       def bulk_deletion_request_body(keys)
