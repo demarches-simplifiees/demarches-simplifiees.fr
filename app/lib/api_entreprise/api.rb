@@ -22,6 +22,8 @@ class ApiEntreprise::API
     call(RNA_RESOURCE_NAME, siret, procedure_id)
   end
 
+  private
+
   def self.call(resource_name, siret_or_siren, procedure_id)
     url = url(resource_name, siret_or_siren)
     params = params(siret_or_siren, procedure_id)
@@ -49,8 +51,6 @@ class ApiEntreprise::API
       token: token
     }
   end
-
-  private
 
   def self.token
     Rails.application.secrets.api_entreprise[:key]
