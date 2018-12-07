@@ -34,7 +34,7 @@ module Cellar
         @signer = signer
       end
 
-      def upload(key, io, checksum)
+      def upload(key, io, checksum: nil, **)
         with_io_length(io) do |io, length|
           request = Net::HTTP::Put.new("/#{key}")
           request.content_type = 'application/octet-stream'

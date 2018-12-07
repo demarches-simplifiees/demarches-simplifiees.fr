@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/fredZen/activestorage-openstack.git
-  revision: 8b64c113223e9ec431b220c9350866c4147b88c3
-  branch: frederic/bump-fog-openstack
+  revision: c71d5107a51701eab9d9267dd0000e6c1cf3e39a
+  branch: frederic/fix_upload_signature
   specs:
     activestorage-openstack (0.5.0)
       fog-openstack (~> 1.0)
