@@ -54,7 +54,7 @@ describe 'CellarAdapter' do
 
     subject { session.send(:parse_bucket_listing, response) }
 
-    it { is_expected.to eq(["sample1.jpg", "sample2.jpg"]) }
+    it { is_expected.to eq([["sample1.jpg", "sample2.jpg"], false]) }
   end
 
   describe 'bulk_deletion_request_body' do
