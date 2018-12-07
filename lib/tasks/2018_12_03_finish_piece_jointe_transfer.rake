@@ -4,8 +4,8 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
       def run
         notify_dry_run
         refresh_outdated_files
-        fix_openstack_mime_types
         remove_unused_openstack_objects
+        fix_openstack_mime_types
         notify_dry_run
       end
 
