@@ -9,6 +9,19 @@ feature 'The gestionnaire part' do
   let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
   let!(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure) }
 
+  context 'when the gestionnaire is also a user' do
+    let!(:user) { create(:user, email: gestionnaire.email, password: password) }
+
+    scenario 'a gestionnaire can fill a dossier' do
+      visit commencer_path(path: procedure.path)
+
+      expect(page).to have_current_path new_user_session_path
+      sign_in_with(gestionnaire.email, password, true)
+
+      expect(page).to have_content(procedure.libelle)
+    end
+  end
+
   scenario 'A gestionnaire can accept a dossier', :js do
     log_in(gestionnaire.email, password)
 

@@ -261,7 +261,9 @@ describe Users::SessionsController, type: :controller do
       context 'when the token is valid' do
         let(:login_token) { gestionnaire.login_token! }
 
-        it { is_expected.to redirect_to gestionnaire_procedures_path }
+        # TODO when the gestionnaire has no other account, and the token is valid, and the user signing in was not starting a demarche,
+        # redirect to root_path, then redirect to gestionnaire_procedures_path (see root_controller)
+        it { is_expected.to redirect_to root_path }
         it { expect(controller.current_gestionnaire).to eq(gestionnaire) }
         it { expect(controller).to have_received(:trust_device) }
       end
