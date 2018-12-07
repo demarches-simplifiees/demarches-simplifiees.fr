@@ -45,7 +45,9 @@ class ProgressReport
       @count = count
       @total = [@count, @total].max
     end
-    @per_10_000 = 10_000 * @count / @total
+    if @total&.nonzero?
+      @per_10_000 = 10_000 * @count / @total
+    end
   end
 
   def print_progress
@@ -53,10 +55,14 @@ class ProgressReport
     percent = sprintf('%5.1f%%', @per_10_000 / 100.0)
     total = @total.to_s
     count = @count.to_s.rjust(total.length)
-    rake_print("\r#{percent} (#{count}/#{total}) [#{format_duration(elapsed)}/#{format_duration(elapsed * 10_000 / @per_10_000)}]")
+    rake_print("\r#{percent} (#{count}/#{total}) [#{format_duration(elapsed)}/#{format_duration(elapsed * 10_000.0 / @per_10_000)}]")
   end
 
   def format_duration(seconds)
-    Time.at(seconds).utc.strftime('%H:%M:%S')
+    if seconds.finite?
+      Time.at(seconds).utc.strftime('%H:%M:%S')
+    else
+      '--:--:--'
+    end
   end
 end
