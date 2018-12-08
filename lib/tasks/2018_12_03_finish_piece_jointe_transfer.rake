@@ -72,15 +72,29 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
           rake_puts "List old PJs"
           old_pj_listing = old_pjs.list_prefixed('')
 
+          rake_puts "List new PJs"
+          new_pj_listing = {}
+          progress = ProgressReport.new(new_pjs.count.to_i)
+          new_pjs.files.each do |f|
+            new_pj_listing[f.key] = f.last_modified.in_time_zone
+            progress.inc
+          end
+          progress.finish
+
           rake_puts "Refresh outdated attachments"
           progress = ProgressReport.new(old_pj_listing.count)
           old_pj_listing.each do |key, old_pj_last_modified|
-            new_pj_metadata = new_pjs.files.head(key)
+            new_pj_last_modified = new_pj_listing[key]
 
-            refresh_needed = new_pj_metadata.nil?
-            if !refresh_needed
-              new_pj_last_modified = new_pj_metadata.last_modified.in_time_zone
-              refresh_needed = new_pj_last_modified < old_pj_last_modified
+            if new_pj_last_modified.nil? || new_pj_last_modified < old_pj_last_modified
+              # Looks like we need to refresh  this PJ.
+              # Fetch fresh metadata to avoid overwriting a last-minute change
+              new_pj_metadata = new_pjs.files.head(key)
+              refresh_needed = new_pj_metadata.nil?
+              if !refresh_needed
+                new_pj_last_modified = new_pj_metadata.last_modified.in_time_zone
+                refresh_needed = new_pj_last_modified < old_pj_last_modified
+              end
             end
 
             if refresh_needed
