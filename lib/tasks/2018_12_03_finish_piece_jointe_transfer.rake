@@ -68,25 +68,19 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
       # overwrite attachments that may have changed in the new storage after the switch.
       def refresh_outdated_files
         refreshed_keys = []
-        missing_keys = []
         old_pj_adapter.session do |old_pjs|
           rake_puts "List old PJs"
-          keys = old_pjs.list_prefixed('')
+          old_pj_listing = old_pjs.list_prefixed('')
 
           rake_puts "Refresh outdated attachments"
-          progress = ProgressReport.new(keys.count)
-          keys.each do |key|
+          progress = ProgressReport.new(old_pj_listing.count)
+          old_pj_listing.each do |key, old_pj_last_modified|
             new_pj_metadata = new_pjs.files.head(key)
 
             refresh_needed = new_pj_metadata.nil?
             if !refresh_needed
               new_pj_last_modified = new_pj_metadata.last_modified.in_time_zone
-              old_pj_last_modified = old_pjs.last_modified(key)
-              if old_pj_last_modified.nil?
-                missing_keys.push(key)
-              else
-                refresh_needed = new_pj_last_modified < old_pj_last_modified
-              end
+              refresh_needed = new_pj_last_modified < old_pj_last_modified
             end
 
             if refresh_needed
@@ -114,9 +108,6 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
 
         if verbose?
           rake_puts "Refreshed #{refreshed_keys.count} attachments\n#{refreshed_keys.join(', ')}"
-        end
-        if missing_keys.present?
-          rake_puts "Failed to refresh #{missing_keys.count} attachments\n#{missing_keys.join(', ')}"
         end
       end
 
