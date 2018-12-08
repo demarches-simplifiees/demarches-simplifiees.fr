@@ -67,12 +67,13 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
       # This task ports them to the new storage after the switch, while being careful not to
       # overwrite attachments that may have changed in the new storage after the switch.
       def refresh_outdated_files
-        rake_puts "Refresh outdated attachments"
-
         refreshed_keys = []
         missing_keys = []
         old_pj_adapter.session do |old_pjs|
+          rake_puts "List old PJs"
           keys = old_pjs.list_prefixed('')
+
+          rake_puts "Refresh outdated attachments"
           progress = ProgressReport.new(keys.count)
           keys.each do |key|
             new_pj_metadata = new_pjs.files.head(key)
