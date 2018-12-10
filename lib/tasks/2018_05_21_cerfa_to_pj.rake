@@ -4,7 +4,6 @@ namespace :'2018_05_21_cerfa_to_pj' do
 
     dossiers.group_by(&:procedure).each do |procedure, dossiers|
       if !procedure.types_de_champ.find_by(libelle: 'CERFA')
-        procedure.administrateur.enable_feature(:champ_pj)
         type_de_champ = procedure.types_de_champ.create(
           type_champ: 'piece_justificative',
           libelle: 'CERFA'
