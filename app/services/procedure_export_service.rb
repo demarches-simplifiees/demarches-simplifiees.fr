@@ -142,10 +142,10 @@ class ProcedureExportService
     headers = ATTRIBUTES.map do |key|
       label_for_export(key.to_s)
     end
-    headers += @procedure.types_de_champ.map do |champ|
+    headers += @procedure.types_de_champ.ordered.map do |champ|
       label_for_export(champ.libelle)
     end
-    headers += @procedure.types_de_champ_private.map do |champ|
+    headers += @procedure.types_de_champ_private.ordered.map do |champ|
       label_for_export(champ.libelle)
     end
     headers += ETABLISSEMENT_ATTRIBUTES.map do |key|
