@@ -11,8 +11,6 @@ Flipflop.configure do
       title: "Champ pièce justificative"
     feature :champ_siret,
       title: "Champ SIRET"
-    feature :champ_linked_dropdown,
-      title: "Champ double menu déroulant"
     feature :champ_integer_number,
       title: "Champ nombre entier"
   end
