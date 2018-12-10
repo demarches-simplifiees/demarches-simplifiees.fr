@@ -9,6 +9,14 @@ describe ProcedureExportService do
     let(:headers) { subject[:headers] }
     let(:data) { subject[:data] }
 
+    before do
+      # change one tdc place to check if the header is ordered
+      tdc_first = procedure.types_de_champ.ordered.first
+      tdc_last = procedure.types_de_champ.ordered.last
+
+      tdc_first.update(order_place: tdc_last.order_place + 1)
+    end
+
     context 'dossiers' do
       it 'should have headers' do
         expect(headers).to eq([
@@ -27,7 +35,7 @@ describe ProcedureExportService do
           :individual_prenom,
           :individual_nom,
           :individual_birthdate,
-          :text,
+
           :textarea,
           :date,
           :datetime,
@@ -53,6 +61,8 @@ describe ProcedureExportService do
           :piece_justificative,
           :siret,
           :carte,
+          :text,
+
           :etablissement_siret,
           :etablissement_siege_social,
           :etablissement_naf,
@@ -113,7 +123,7 @@ describe ProcedureExportService do
         }
 
         let(:champs_data) {
-          dossier.champs.map(&:for_export)
+          dossier.champs.ordered.map(&:for_export)
         }
 
         let(:etablissement_data) {
