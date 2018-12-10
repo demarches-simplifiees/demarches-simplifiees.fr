@@ -7,8 +7,6 @@ Flipflop.configure do
   strategy :default
 
   group :champs do
-    feature :champ_pj,
-      title: "Champ pièce justificative"
     feature :champ_siret,
       title: "Champ SIRET"
     feature :champ_integer_number,
@@ -27,5 +25,13 @@ Flipflop.configure do
       default: ENV['APP_NAME'] == 'tps'
     feature :pre_maintenance_mode
     feature :maintenance_mode
+  end
+
+  if Rails.env.test?
+    # It would be nicer to configure this in administrateur_spec.rb in #feature_enabled?,
+    # but that results in a FrozenError: can't modify frozen Hash
+
+    feature :test_a
+    feature :test_b
   end
 end

@@ -65,11 +65,11 @@ describe Administrateur, type: :model do
     let(:administrateur) { create(:administrateur) }
 
     before do
-      administrateur.enable_feature(:champ_pj)
+      administrateur.enable_feature(:test_a)
     end
 
-    it { expect(administrateur.feature_enabled?(:champ_siret)).to be_falsey }
-    it { expect(administrateur.feature_enabled?(:champ_pj)).to be_truthy }
+    it { expect(administrateur.feature_enabled?(:test_b)).to be_falsey }
+    it { expect(administrateur.feature_enabled?(:test_a)).to be_truthy }
   end
 
   describe "#password_complexity" do
