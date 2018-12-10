@@ -91,7 +91,7 @@ module Cellar
           if response.is_a?(Net::HTTPSuccess)
             (listing, truncated) = parse_bucket_listing(response.body)
             result += listing
-            marker = listing.last
+            marker = listing.last.first
           else
             # TODO: error handling
             return nil
@@ -139,8 +139,13 @@ module Cellar
       def parse_bucket_listing(bucket_listing_xml)
         doc = Nokogiri::XML(bucket_listing_xml)
         listing = doc
-          .xpath('//xmlns:Contents/xmlns:Key')
-          .map(&:text)
+          .xpath('//xmlns:Contents')
+          .map do |node|
+          [
+            node.xpath('xmlns:Key').text,
+            DateTime.iso8601(node.xpath('xmlns:LastModified').text)
+          ]
+        end
         truncated = doc.xpath('//xmlns:IsTruncated').text == 'true'
         [listing, truncated]
       end

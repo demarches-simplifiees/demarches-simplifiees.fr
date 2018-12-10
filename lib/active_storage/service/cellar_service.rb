@@ -37,7 +37,7 @@ module ActiveStorage
     def delete_prefixed(prefix)
       instrument :delete_prefixed, prefix: prefix do
         @adapter.session do |s|
-          keys = s.list_prefixed(prefix)
+          keys = s.list_prefixed(prefix).map(&:first)
           s.delete_keys(keys)
         end
       end
