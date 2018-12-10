@@ -1,5 +1,6 @@
 class ApiGeo::API
   TIMEOUT = 15
+  CACHE_DURATION = 1.day
 
   def self.regions
     url = [API_GEO_URL, "regions"].join("/")
@@ -27,6 +28,11 @@ class ApiGeo::API
   end
 
   def self.call(url, body, method = :get)
+    # The cache engine is stored, because as of Typhoeus 1.3.1 the cache engine instance
+    # is included in the computed `cache_key`.
+    # (Which means that when the cache instance changes, the cache is invalidated.)
+    @typhoeus_cache ||= Typhoeus::Cache::SuccessfulRequestsRailsCache.new
+
     response = Typhoeus::Request.new(
       url,
       method: method,
@@ -37,7 +43,9 @@ class ApiGeo::API
       headers: {
         'Accept' => 'application/json',
         'Accept-Encoding' => 'gzip, deflate'
-      }.merge(method == :post ? { 'Content-Type' => 'application/json' } : {})
+      }.merge(method == :post ? { 'Content-Type' => 'application/json' } : {}),
+      cache: @typhoeus_cache,
+      cache_ttl: CACHE_DURATION
     ).run
 
     if response.success?
