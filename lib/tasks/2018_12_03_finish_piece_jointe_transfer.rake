@@ -67,23 +67,32 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
       # This task ports them to the new storage after the switch, while being careful not to
       # overwrite attachments that may have changed in the new storage after the switch.
       def refresh_outdated_files
-        rake_puts "Refresh outdated attachments"
-
         refreshed_keys = []
-        missing_keys = []
         old_pj_adapter.session do |old_pjs|
-          keys = old_pjs.list_prefixed('')
-          progress = ProgressReport.new(keys.count)
-          keys.each do |key|
-            new_pj_metadata = new_pjs.files.head(key)
+          rake_puts "List old PJs"
+          old_pj_listing = old_pjs.list_prefixed('')
 
-            refresh_needed = new_pj_metadata.nil?
-            if !refresh_needed
-              new_pj_last_modified = new_pj_metadata.last_modified.in_time_zone
-              old_pj_last_modified = old_pjs.last_modified(key)
-              if old_pj_last_modified.nil?
-                missing_keys.push(key)
-              else
+          rake_puts "List new PJs"
+          new_pj_listing = {}
+          progress = ProgressReport.new(new_pjs.count.to_i)
+          new_pjs.files.each do |f|
+            new_pj_listing[f.key] = f.last_modified.in_time_zone
+            progress.inc
+          end
+          progress.finish
+
+          rake_puts "Refresh outdated attachments"
+          progress = ProgressReport.new(old_pj_listing.count)
+          old_pj_listing.each do |key, old_pj_last_modified|
+            new_pj_last_modified = new_pj_listing[key]
+
+            if new_pj_last_modified.nil? || new_pj_last_modified < old_pj_last_modified
+              # Looks like we need to refresh  this PJ.
+              # Fetch fresh metadata to avoid overwriting a last-minute change
+              new_pj_metadata = new_pjs.files.head(key)
+              refresh_needed = new_pj_metadata.nil?
+              if !refresh_needed
+                new_pj_last_modified = new_pj_metadata.last_modified.in_time_zone
                 refresh_needed = new_pj_last_modified < old_pj_last_modified
               end
             end
@@ -113,9 +122,6 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
 
         if verbose?
           rake_puts "Refreshed #{refreshed_keys.count} attachments\n#{refreshed_keys.join(', ')}"
-        end
-        if missing_keys.present?
-          rake_puts "Failed to refresh #{missing_keys.count} attachments\n#{missing_keys.join(', ')}"
         end
       end
 

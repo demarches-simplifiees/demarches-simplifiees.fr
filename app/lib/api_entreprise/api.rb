@@ -22,6 +22,8 @@ class ApiEntreprise::API
     call(RNA_RESOURCE_NAME, siret, procedure_id)
   end
 
+  private
+
   def self.call(resource_name, siret_or_siren, procedure_id)
     url = url(resource_name, siret_or_siren)
     params = params(siret_or_siren, procedure_id)
@@ -38,7 +40,9 @@ class ApiEntreprise::API
   end
 
   def self.url(resource_name, siret_or_siren)
-    [API_ENTREPRISE_URL, resource_name, siret_or_siren].join("/")
+    base_url = [API_ENTREPRISE_URL, resource_name, siret_or_siren].join("/")
+
+    "#{base_url}?with_insee_v3=true"
   end
 
   def self.params(siret_or_siren, procedure_id)
@@ -49,8 +53,6 @@ class ApiEntreprise::API
       token: token
     }
   end
-
-  private
 
   def self.token
     Rails.application.secrets.api_entreprise[:key]

@@ -43,7 +43,7 @@ describe 'CellarAdapter' do
           </Contents>
           <Contents>
             <Key>sample2.jpg</Key>
-            <LastModified>2011-02-26T01:56:20.000Z</LastModified>
+            <LastModified>2014-03-21T17:44:07.000Z</LastModified>
             <ETag>&quot;bf1d737a4d46a19f3bced6905cc8b902&quot;</ETag>
             <Size>142863</Size>
             <StorageClass>STANDARD</StorageClass>
@@ -54,7 +54,17 @@ describe 'CellarAdapter' do
 
     subject { session.send(:parse_bucket_listing, response) }
 
-    it { is_expected.to eq([["sample1.jpg", "sample2.jpg"], false]) }
+    it do
+      is_expected.to eq(
+        [
+          [
+            ["sample1.jpg", DateTime.new(2011, 2, 26, 1, 56, 20, 0)],
+            ["sample2.jpg", DateTime.new(2014, 3, 21, 17, 44, 7, 0)]
+          ],
+          false
+        ]
+      )
+    end
   end
 
   describe 'bulk_deletion_request_body' do
