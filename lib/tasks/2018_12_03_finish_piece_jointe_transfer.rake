@@ -32,15 +32,7 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
       end
 
       def old_pj_adapter
-        if !defined? @old_pj_adapter
-          @old_pj_adapter = Cellar::CellarAdapter.new(
-            ENV['CLEVER_CLOUD_ACCESS_KEY_ID'],
-            ENV['CLEVER_CLOUD_SECRET_ACCESS_KEY'],
-            ENV['CLEVER_CLOUD_BUCKET']
-          )
-        end
-
-        @old_pj_adapter
+        raise NotImplementedError, "No connection adapter for old PJ storage"
       end
 
       def new_pjs
