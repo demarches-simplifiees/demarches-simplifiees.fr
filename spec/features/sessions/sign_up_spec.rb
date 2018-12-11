@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'Signin up:' do
+feature 'Signing up:' do
   let(:user_email) { generate :user_email }
   let(:user_password) { 'testpassword' }
 
@@ -15,6 +15,22 @@ feature 'Signin up:' do
     click_confirmation_link_for user_email
     expect(page).to have_content 'Votre compte a été activé'
     expect(page).to have_current_path dossiers_path
+  end
+
+  scenario 'a new user can’t sign-up with too short password' do
+    visit root_path
+    click_on 'Connexion'
+    click_on 'Créer un compte'
+
+    expect(page).to have_current_path new_user_registration_path
+    sign_up_with user_email, '1234567'
+    expect(page).to have_current_path user_registration_path
+    expect(page).to have_content 'Le mot de passe est trop court'
+
+    # Then with a good password
+    sign_up_with user_email, user_password
+    expect(page).to have_current_path new_user_confirmation_path user: { email: user_email }
+    expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
   end
 
   context 'when visiting a procedure' do
