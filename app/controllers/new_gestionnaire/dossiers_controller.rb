@@ -136,6 +136,13 @@ module NewGestionnaire
       redirect_to annotations_privees_gestionnaire_dossier_path(procedure, dossier)
     end
 
+    def purge_champ_piece_justificative
+      @champ = dossier.champs_private.find(params[:champ_id])
+      @champ.piece_justificative_file.purge
+
+      flash.notice = 'La pièce jointe a bien été supprimée.'
+    end
+
     def print
       @dossier = dossier
       render layout: "print"
