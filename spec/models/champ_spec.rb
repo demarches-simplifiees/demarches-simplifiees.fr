@@ -399,4 +399,24 @@ describe Champ do
       it { expect{ champ.save }.to_not change(VirusScan, :count) }
     end
   end
+
+  describe "repetition" do
+    let(:champ) { create(:champ_repetition) }
+    let(:champ_text) { create(:champ_text) }
+    let(:champ_integer_number) { create(:champ_integer_number) }
+
+    it {
+      group = champ.groups.create(order_place: 0)
+      expect(group.champs.size).to eq(0)
+      group.champs << champ_integer_number
+      expect(group.champs.size).to eq(1)
+      group.champs << champ_text
+      expect(group.champs.size).to eq(2)
+      expect(champ_integer_number.group).to eq(group)
+      expect(champ_text.group).to eq(group)
+      expect(group.parent.groups).to eq([group])
+      expect(group.libelle).to eq(champ.type_de_champ.libelle)
+      expect(group.description).to eq(champ.type_de_champ.description)
+    }
+  end
 end

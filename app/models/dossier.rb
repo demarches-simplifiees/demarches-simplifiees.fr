@@ -18,8 +18,8 @@ class Dossier < ApplicationRecord
   has_one :attestation, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
-  has_many :champs, -> { public_only.ordered }, dependent: :destroy
-  has_many :champs_private, -> { private_only.ordered }, class_name: 'Champ', dependent: :destroy
+  has_many :champs, -> { no_group.public_only.ordered }, dependent: :destroy
+  has_many :champs_private, -> { no_group.private_only.ordered }, class_name: 'Champ', dependent: :destroy
   has_many :commentaires, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :follows

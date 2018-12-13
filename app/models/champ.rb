@@ -10,12 +10,15 @@ class Champ < ApplicationRecord
   has_many :geo_areas, dependent: :destroy
   belongs_to :etablissement, dependent: :destroy
 
-  delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, to: :type_de_champ
+  belongs_to :group, class_name: 'ChampGroup', inverse_of: :champs
+
+  delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, :exclude_from_export?, :exclude_from_view?, to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
   scope :ordered, -> { includes(:type_de_champ).order('types_de_champ.order_place') }
+  scope :no_group, -> { where(group_id: nil) }
 
   def public?
     !private?

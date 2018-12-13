@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_04_125101) do
+ActiveRecord::Schema.define(version: 2018_12_17_125100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -158,6 +158,14 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
     t.datetime "updated_at"
   end
 
+  create_table "champ_groups", force: :cascade do |t|
+    t.bigint "parent_id"
+    t.integer "order_place", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_id"], name: "index_champ_groups_on_parent_id"
+  end
+
   create_table "champs", id: :serial, force: :cascade do |t|
     t.string "value"
     t.integer "type_de_champ_id"
@@ -167,7 +175,9 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
     t.datetime "updated_at"
     t.boolean "private", default: false, null: false
     t.integer "etablissement_id"
+    t.bigint "group_id"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
+    t.index ["group_id"], name: "index_champs_on_group_id"
     t.index ["private"], name: "index_champs_on_private"
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
   end
@@ -561,6 +571,8 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
     t.datetime "updated_at"
     t.jsonb "options"
     t.bigint "stable_id"
+    t.bigint "parent_id"
+    t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
@@ -622,6 +634,8 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "gestionnaires", column: "claimant_id"
+  add_foreign_key "champ_groups", "champs", column: "parent_id"
+  add_foreign_key "champs", "champ_groups", column: "group_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossier_operation_logs", "dossiers"
@@ -635,5 +649,6 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
+  add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "without_continuation_mails", "procedures"
 end
