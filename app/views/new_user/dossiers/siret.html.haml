@@ -22,4 +22,14 @@
 
           = f.hidden_field :dossier_id, value: @dossier.id
 
-          = f.submit "Valider", class: "button large primary expand", data: { disable_with: "Récupération des informations…" }
+          .flex
+            .inline-champ
+              = f.submit "Valider", class: "button primary expand", data: { disable_with: "Récupération des informations…" }
+            .inline-champ
+              - if @dossier.brouillon?
+                - if current_user.owns?(@dossier)
+                  = link_to ask_deletion_dossier_path(@dossier),
+                    method: :post,
+                    class: 'button primary danger',
+                    data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" } do
+                    Supprimer le brouillon
