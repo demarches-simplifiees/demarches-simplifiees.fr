@@ -327,6 +327,10 @@ Rails.application.routes.draw do
             post 'send-to-instructeurs' => 'dossiers#send_to_instructeurs'
             post 'avis' => 'dossiers#create_avis'
             get 'print' => 'dossiers#print'
+
+            resources :champs, only: [] do
+              delete 'purge_champ_piece_justificative' => 'dossiers#purge_champ_piece_justificative'
+            end
           end
         end
       end
