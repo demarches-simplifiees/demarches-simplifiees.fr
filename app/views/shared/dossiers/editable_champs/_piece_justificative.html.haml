@@ -13,7 +13,10 @@
   %div{ id: "piece_justificative_#{champ.id}" }
     = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: champ, user_can_upload: true }
     %br
-    = link_to 'supprimer', purge_champ_piece_justificative_dossier_path(champ_id: champ.id), remote: true, method: :delete
+    - if champ.private?
+      = link_to 'supprimer', gestionnaire_champ_purge_champ_piece_justificative_path(procedure_id: champ.dossier.procedure_id, dossier_id: champ.dossier_id, champ_id: champ.id), remote: true, method: :delete
+    - else
+      = link_to 'supprimer', purge_champ_piece_justificative_dossier_path(champ_id: champ.id), remote: true, method: :delete
     %br
     Modifier :
   = form.file_field :piece_justificative_file,

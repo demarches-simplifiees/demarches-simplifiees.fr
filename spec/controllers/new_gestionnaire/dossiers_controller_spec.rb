@@ -405,4 +405,44 @@ describe NewGestionnaire::DossiersController, type: :controller do
     it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
     it { expect(response).to redirect_to(annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)) }
   end
+
+  describe '#purge_champ_piece_justificative' do
+    before { sign_in(gestionnaire) }
+
+    subject { delete :purge_champ_piece_justificative, params: { procedure_id: champ.dossier.procedure.id, dossier_id: champ.dossier.id, champ_id: champ.id }, format: :js }
+
+    context 'when gestionnaire can process dossier' do
+      let(:champ){ create(:champ_piece_justificative, dossier_id: dossier.id, private: true) }
+
+      it { is_expected.to have_http_status(200) }
+
+      it do
+        subject
+        expect(champ.reload.piece_justificative_file.attached?).to be(false)
+      end
+
+      context 'but champ is not linked to this dossier' do
+        let(:champ){ create(:champ_piece_justificative, dossier: create(:dossier), private: true) }
+
+        it { is_expected.to redirect_to(root_path) }
+
+        it do
+          subject
+          expect(champ.reload.piece_justificative_file.attached?).to be(true)
+        end
+      end
+    end
+
+    context 'when gestionnaire cannot process dossier' do
+      let(:dossier){ create(:dossier, procedure: create(:procedure)) }
+      let(:champ){ create(:champ_piece_justificative, dossier_id: dossier.id, private: true) }
+
+      it { is_expected.to redirect_to(root_path) }
+
+      it do
+        subject
+        expect(champ.reload.piece_justificative_file.attached?).to be(true)
+      end
+    end
+  end
 end
