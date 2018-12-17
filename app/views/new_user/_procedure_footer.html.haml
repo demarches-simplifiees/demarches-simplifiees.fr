@@ -1,6 +1,6 @@
 %footer.procedure-footer
   .container
-    - service = dossier.procedure.service
+    - service = procedure.service
     - if service.present?
       %ul.footer-row.footer-columns
         %li.footer-column
@@ -15,12 +15,12 @@
         %li.footer-column
           %h3.footer-header Poser une question sur votre dossier :
           %p
-            - if dossier.brouillon?
-              Par email :
-              = link_to service.email, "mailto:#{service.email}"
-            - else
+            - if dossier.id && !dossier.brouillon?
               Directement
               = link_to "par la messagerie", messagerie_dossier_path(dossier)
+            - else
+              Par email :
+              = link_to service.email, "mailto:#{service.email}"
 
           %p
             Par téléphone :
@@ -29,7 +29,7 @@
           %p
             Horaires : #{ service.horaires.sub(/\S/, &:downcase) }
 
-        - politiques = politiques_conservation_de_donnees(dossier.procedure)
+        - politiques = politiques_conservation_de_donnees(procedure)
         - if politiques.present?
           %li.footer-column
             %h3.footer-header Conservation des données :
@@ -37,4 +37,4 @@
               %p= politique
 
     .footer-row.footer-bottom-line
-      = render partial: "new_user/general_footer_row", locals: { dossier: @dossier }
+      = render partial: 'new_user/general_footer_row', locals: { dossier: dossier }
