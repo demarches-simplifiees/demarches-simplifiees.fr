@@ -1,4 +1,4 @@
-%footer.dossier-footer
+%footer.procedure-footer
   .container
     - service = dossier.procedure.service
     - if service.present?
@@ -37,4 +37,4 @@
               %p= politique
 
     .footer-row.footer-bottom-line
-      = render partial: "new_user/dossiers/general_footer_row", locals: { dossier: @dossier }
+      = render partial: "new_user/general_footer_row", locals: { dossier: @dossier }
