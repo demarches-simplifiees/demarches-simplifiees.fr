@@ -14,6 +14,6 @@
 - content_for :footer do
   / TODO: display the procedure footer even if there is no dossier yet
   - if @dossier
-    = render partial: 'new_user/procedure_footer', locals: { dossier: @dossier }
+    = render partial: 'new_user/procedure_footer', locals: { procedure: @dossier.procedure, dossier: @dossier }
 
 = render template: 'layouts/application'

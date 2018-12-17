@@ -6,7 +6,7 @@ describe 'new_user/procedure_footer.html.haml', type: :view do
     return dossier
   }
 
-  subject { render 'new_user/procedure_footer.html.haml', dossier: dossier }
+  subject { render 'new_user/procedure_footer.html.haml', procedure: dossier.procedure, dossier: dossier }
 
   it "affiche les informations de contact" do
     expect(subject).to have_text(service.nom)

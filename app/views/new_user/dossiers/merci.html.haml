@@ -1,7 +1,7 @@
 - content_for(:title, "Dossier bien envoyé (#{@dossier.procedure.libelle})")
 
 - content_for :footer do
-  = render partial: "new_user/procedure_footer", locals: { dossier: @dossier }
+  = render partial: "new_user/procedure_footer", locals: { procedure: @dossier.procedure, dossier: @dossier }
 
 .merci
   .container
