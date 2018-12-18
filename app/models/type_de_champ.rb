@@ -28,10 +28,14 @@ class TypeDeChamp < ApplicationRecord
     dossier_link: 'dossier_link',
     piece_justificative: 'piece_justificative',
     siret: 'siret',
-    carte: 'carte'
+    carte: 'carte',
+    repetition: 'repetition'
   }
 
   belongs_to :procedure
+
+  belongs_to :parent, class_name: 'TypeDeChamp'
+  has_many :types_de_champ, foreign_key: :parent_id, class_name: 'TypeDeChamp', dependent: :destroy
 
   store :options, accessors: [:cadastres, :quartiers_prioritaires, :parcelles_agricoles]
 
@@ -105,7 +109,25 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def non_fillable?
-    type_champ.in?([TypeDeChamp.type_champs.fetch(:header_section), TypeDeChamp.type_champs.fetch(:explication)])
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:header_section),
+      TypeDeChamp.type_champs.fetch(:explication)
+    ])
+  end
+
+  def exclude_from_export?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:header_section),
+      TypeDeChamp.type_champs.fetch(:explication),
+      TypeDeChamp.type_champs.fetch(:repetition)
+    ])
+  end
+
+  def exclude_from_view?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:explication),
+      TypeDeChamp.type_champs.fetch(:repetition)
+    ])
   end
 
   def public?
