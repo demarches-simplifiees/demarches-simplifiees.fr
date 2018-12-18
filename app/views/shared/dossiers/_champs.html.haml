@@ -1,6 +1,6 @@
 %table.table.vertical.dossier-champs
   %tbody
-    - champs.reject { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:explication) }.each do |c|
+    - champs.reject(&:exclude_from_view?).each do |c|
       %tr
         - case c.type_champ
         - when TypeDeChamp.type_champs.fetch(:header_section)
