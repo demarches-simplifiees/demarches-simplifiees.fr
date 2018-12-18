@@ -87,60 +87,68 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       procedure.update(service: create(:service))
     end
 
-    scenario 'Add champ, add file, visualize them in procedure preview' do
-      fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
-      click_on 'add_type_de_champ'
-      expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.last))
-      expect(page).to have_selector('#procedure_types_de_champ_attributes_1_libelle')
-      expect(Procedure.last.types_de_champ.first.libelle).to eq('libelle de champ')
-
-      click_on 'onglet-pieces'
-      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))
-      fill_in 'procedure_types_de_piece_justificative_attributes_0_libelle', with: 'libelle de piece'
-      click_on 'add_piece_justificative'
-      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))
-      expect(page).to have_selector('#procedure_types_de_piece_justificative_attributes_1_libelle')
-
-      preview_window = window_opened_by { click_on 'onglet-preview' }
-      within_window(preview_window) do
-        expect(page).to have_current_path(apercu_procedure_path(Procedure.last))
-        expect(page).to have_field('libelle de champ')
-        expect(page).to have_field('libelle de piece')
-      end
-    end
-
-    scenario 'After adding champ and file, check impossibility to publish procedure, add instructeur and make publication' do
-      fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
-      click_on 'add_type_de_champ'
-      click_on 'onglet-pieces'
-
-      expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))
-      fill_in 'procedure_types_de_piece_justificative_attributes_0_libelle', with: 'libelle de piece'
-      click_on 'add_piece_justificative'
-
-      click_on 'onglet-infos'
-      expect(page).to have_current_path(admin_procedure_path(Procedure.last))
-      expect(page).to have_selector('#disabled-publish-procedure')
-      expect(page.find_by_id('disabled-publish-procedure')[:disabled]).to eq('true')
-
-      click_on 'onglet-instructeurs'
-      expect(page).to have_current_path(admin_procedure_instructeurs_path(Procedure.last))
-      fill_in 'gestionnaire_email', with: 'gestionnaire@apientreprise.fr'
-      click_on 'add-gestionnaire-email'
-      page.first('.gestionnaire-affectation').click
-
-      click_on 'onglet-infos'
-      expect(page).to have_current_path(admin_procedure_path(Procedure.last))
-      expect(page).to have_selector('#publish-procedure', visible: true)
-      find('#publish-procedure').click
-
-      within '#publish-modal' do
-        expect(page).to have_field('procedure_path', with: 'lien-de-la-procedure')
-        click_on 'publish'
+    context 'With old PJ' do
+      before do
+        # Create a dummy PJ, because adding PJs is no longer allowed on procedures that
+        # do not already have one
+        Procedure.last.types_de_piece_justificative.create(libelle: "dummy PJ")
       end
 
-      expect(page).to have_text('Démarche publiée')
-      expect(page).to have_selector('.procedure-lien')
+      scenario 'Add champ, add file, visualize them in procedure preview' do
+        fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
+        click_on 'add_type_de_champ'
+        expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.last))
+        expect(page).to have_selector('#procedure_types_de_champ_attributes_1_libelle')
+        expect(Procedure.last.types_de_champ.first.libelle).to eq('libelle de champ')
+
+        click_on 'onglet-pieces'
+        expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))
+        fill_in 'procedure_types_de_piece_justificative_attributes_0_libelle', with: 'libelle de piece'
+        click_on 'add_piece_justificative'
+        expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))
+        expect(page).to have_selector('#procedure_types_de_piece_justificative_attributes_1_libelle')
+
+        preview_window = window_opened_by { click_on 'onglet-preview' }
+        within_window(preview_window) do
+          expect(page).to have_current_path(apercu_procedure_path(Procedure.last))
+          expect(page).to have_field('libelle de champ')
+          expect(page).to have_field('libelle de piece')
+        end
+      end
+
+      scenario 'After adding champ and file, check impossibility to publish procedure, add instructeur and make publication' do
+        fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
+        click_on 'add_type_de_champ'
+        click_on 'onglet-pieces'
+
+        expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))
+        fill_in 'procedure_types_de_piece_justificative_attributes_0_libelle', with: 'libelle de piece'
+        click_on 'add_piece_justificative'
+
+        click_on 'onglet-infos'
+        expect(page).to have_current_path(admin_procedure_path(Procedure.last))
+        expect(page).to have_selector('#disabled-publish-procedure')
+        expect(page.find_by_id('disabled-publish-procedure')[:disabled]).to eq('true')
+
+        click_on 'onglet-instructeurs'
+        expect(page).to have_current_path(admin_procedure_instructeurs_path(Procedure.last))
+        fill_in 'gestionnaire_email', with: 'gestionnaire@apientreprise.fr'
+        click_on 'add-gestionnaire-email'
+        page.first('.gestionnaire-affectation').click
+
+        click_on 'onglet-infos'
+        expect(page).to have_current_path(admin_procedure_path(Procedure.last))
+        expect(page).to have_selector('#publish-procedure', visible: true)
+        find('#publish-procedure').click
+
+        within '#publish-modal' do
+          expect(page).to have_field('procedure_path', with: 'lien-de-la-procedure')
+          click_on 'publish'
+        end
+
+        expect(page).to have_text('Démarche publiée')
+        expect(page).to have_selector('.procedure-lien')
+      end
     end
   end
 end
