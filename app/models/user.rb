@@ -30,6 +30,7 @@ class User < ApplicationRecord
 
   def self.find_for_france_connect(email, siret)
     user = User.find_by(email: email)
+
     if user.nil?
       User.create(email: email, password: Devise.friendly_token[0, 20], siret: siret)
     else
