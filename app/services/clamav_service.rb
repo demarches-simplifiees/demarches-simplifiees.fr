@@ -1,6 +1,6 @@
 class ClamavService
   def self.safe_file?(file_path)
-    if Rails.env == 'development'
+    if Rails.env.development?
       return true
     end
 
