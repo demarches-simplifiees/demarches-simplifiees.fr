@@ -90,13 +90,6 @@ module ApplicationHelper
     end
   end
 
-  def ensure_safe_json(json)
-    json.present? ? JSON.parse(json).to_json : '[]'
-  rescue Exception => e
-    Raven.capture_exception(e)
-    {}
-  end
-
   def sentry_config
     sentry = Rails.application.secrets.sentry
     if sentry

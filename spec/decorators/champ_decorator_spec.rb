@@ -62,36 +62,4 @@ describe ChampDecorator do
       end
     end
   end
-
-  describe '#date_for_input' do
-    subject { decorator.date_for_input }
-
-    describe "for a date" do
-      let(:type_de_champ) { create(:type_de_champ_date) }
-
-      context "when value is an ISO date" do
-        before { champ.update value: "2017-12-31" }
-        it { is_expected.to eq "2017-12-31" }
-      end
-
-      context "when value is empty" do
-        before { champ.update value: nil }
-        it { is_expected.to eq nil }
-      end
-    end
-
-    describe "for a datetime" do
-      let(:type_de_champ) { create(:type_de_champ_date) }
-
-      context "when value is an formatted datetime" do
-        before { champ.update value: "2017-12-30 23:17" }
-        it { is_expected.to eq "2017-12-30" }
-      end
-
-      context "when value is empty" do
-        before { champ.update value: nil }
-        it { is_expected.to eq nil }
-      end
-    end
-  end
 end

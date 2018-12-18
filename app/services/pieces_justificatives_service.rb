@@ -15,23 +15,6 @@ class PiecesJustificativesService
       .compact()
   end
 
-  def self.upload_one!(dossier, user, params)
-    content = params[:piece_justificative][:content]
-    if ClamavService.safe_file?(content.path)
-      pj = PieceJustificative.new(content: content,
-        dossier: dossier,
-        type_de_piece_justificative: nil,
-        user: user)
-
-      pj.save
-    else
-      pj = PieceJustificative.new
-      pj.errors.add(:content, "#{content.original_filename} : <b>Virus détecté !!</b>")
-    end
-
-    pj
-  end
-
   def self.save_pj(content, dossier, tpj, user)
     pj = PieceJustificative.new(content: content,
       dossier: dossier,
