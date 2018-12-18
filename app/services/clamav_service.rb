@@ -9,10 +9,6 @@ class ClamavService
     client = ClamAV::Client.new
     response = client.execute(ClamAV::Commands::ScanCommand.new(file_path))
 
-    if response.first.class == ClamAV::VirusResponse
-      return false
-    end
-
-    true
+    response.first.class != ClamAV::VirusResponse
   end
 end
