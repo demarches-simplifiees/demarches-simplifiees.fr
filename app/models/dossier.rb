@@ -152,20 +152,8 @@ class Dossier < ApplicationRecord
     update_columns(autorisation_donnees: false)
   end
 
-  def total_follow
-    follows.size
-  end
-
   def read_only?
     en_instruction? || accepte? || refuse? || sans_suite?
-  end
-
-  def invite_for_user(user)
-    invites.find_by(user_id: user.id)
-  end
-
-  def can_be_en_construction?
-    !(procedure.archivee? && brouillon?)
   end
 
   def can_transition_to_en_construction?
