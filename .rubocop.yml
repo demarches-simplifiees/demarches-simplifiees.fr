@@ -941,7 +941,7 @@ Style/For:
   Enabled: true
 
 Style/FormatString:
-  Enabled: false
+  Enabled: true
 
 Style/FormatStringToken:
   Enabled: true
