@@ -859,7 +859,7 @@ Style/CollectionMethods:
   Enabled: false
 
 Style/ColonMethodCall:
-  Enabled: false
+  Enabled: true
 
 Style/ColonMethodDefinition:
   Enabled: true
