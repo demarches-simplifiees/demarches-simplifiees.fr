@@ -4,7 +4,7 @@ class ClamavService
       return true
     end
 
-    FileUtils.chmod 0666, file_path
+    FileUtils.chmod(0666, file_path)
 
     client = ClamAV::Client.new
     response = client.execute(ClamAV::Commands::ScanCommand.new(file_path))
