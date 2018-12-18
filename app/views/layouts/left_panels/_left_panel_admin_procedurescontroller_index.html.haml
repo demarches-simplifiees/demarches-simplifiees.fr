@@ -11,21 +11,23 @@
   #procedure-list
     %a#draft-procedures{ :href => "#{url_for :admin_procedures_draft}" }
       .procedure-list-element{ class: @draft_class }
-        Brouillons
-        .badge.progress-bar-default
+        .badge.counter-draft
           = current_administrateur.procedures.brouillons.count
+        Brouillons
+
 
     %a#active-procedures{ :href => "#{url_for :admin_procedures}" }
       .procedure-list-element{ class: @active_class }
-        Actives
-        .badge.progress-bar-success
+        .badge.counter-active
           = current_administrateur.procedures.publiees.count
+        Actives
 
     %a#archived-procedures{ :href => "#{url_for :admin_procedures_archived}" }
       .procedure-list-element{ class: @archived_class }
-        Archivées
-        .badge.progress-bar-purple
+        .badge.counter-archived
           = current_administrateur.procedures.archivees.count
+        Archivées
+
 
   .split-hr-left
 

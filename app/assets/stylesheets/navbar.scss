@@ -1,5 +1,18 @@
 @import "constants";
 
+.header-link {
+  color:$nav-bar-link;
+  background: $nav-bar-bg;
+  &:hover {
+    color:$nav-bar-link;
+  }
+}
+
+.header-text {
+  color:$nav-bar-fg;
+  background: $nav-bar-bg;
+}
+
 #header {
   top: 0;
   left: 0;
@@ -22,9 +35,9 @@
   }
 
   #home {
-    text-align: center;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-    background-color: #003189;
+    text-align: left;
+    box-shadow: 0px 4px 0px 0 rgba(0, 0, 0, 0.3);
+    background-color: $nav-bar-bg;
     height: 60px;
 
     .logo {
@@ -43,9 +56,10 @@
 
   #navbar-body {
     min-height: 60px;
-    background-color: #FFFFFF;
-    box-shadow: 0 1px 2px 0 rgba(50, 50, 50, 0.5);
-    padding-left: 50px;
+    background-color: $nav-bar-bg;
+    color: $nav-bar-fg;
+    //box-shadow: 0 1px 2px 0 rgba(50, 50, 50, 0.5);
+    //padding-left: 50px;
 
     .main-info {
       font-family: Arial;
@@ -53,7 +67,7 @@
       font-weight: bold;
       line-height: 58px;
       min-height: 58px;
-      color: #000000;
+      color: $nav-bar-fg;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -64,7 +78,7 @@
       font-size: 14px;
       text-align: right;
       line-height: 22px;
-      color: #666666;
+      color: $nav-bar-fg;
       padding: 8px;
       border-right: 1px solid #C8C6C8;
       min-height: 60px;
@@ -170,13 +184,13 @@
 }
 
 .button-navbar {
-  color: #666666;
+  color: $nav-bar-link;
   cursor: pointer;
 }
 
 .button-navbar-action {
-  background-color: #E4594F;
-  color: #FFFFFF;
+  background-color: $red;
+  color: $nav-bar-fg;
   cursor: pointer;
   display: block;
   width: 150px;
@@ -185,8 +199,9 @@
   float: right;
 
   .fa {
-    font-size: 20px;
+    font-size: 40px;
     margin-right: 10px;
+    color: $nav-bar-fg
   }
 }
 

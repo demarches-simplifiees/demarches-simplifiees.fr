@@ -1,6 +1,15 @@
 require 'spec_helper'
 
 describe 'layouts/_new_header.html.haml', type: :view do
+
+  describe 'polynesian logo' do
+    before do
+      render
+    end
+    subject { rendered }
+    it { is_expected.to have_css('img[src*="logo-md"]') }
+  end
+
   describe 'logo link' do
     before do
       Flipflop::FeatureSet.current.test!.switch!(:support_form, true)

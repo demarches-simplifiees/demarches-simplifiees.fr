@@ -5,7 +5,7 @@
   display: inline-block;
   padding: 8px 16px;
   border-radius: 30px;
-  border: 1px solid $border-grey;
+  border: 2px solid $border-grey;
   font-family: "Muli";
   font-size: 14px;
   line-height: 20px;
@@ -48,6 +48,17 @@
     &:hover:not(:disabled) {
       color: #FFFFFF;
       background: $light-blue;
+    }
+  }
+
+  &.navbar {
+    color: #FFF;
+    border-color: $yellow;
+    background-color: $red;
+
+    &:hover:not(:disabled) {
+      color: $red;
+      background: $yellow;
     }
   }
 
