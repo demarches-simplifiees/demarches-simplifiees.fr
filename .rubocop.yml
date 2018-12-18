@@ -830,7 +830,9 @@ Style/BlockComments:
   Enabled: true
 
 Style/BlockDelimiters:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - "spec/**/*"
 
 Style/BracesAroundHashParameters:
   Enabled: false

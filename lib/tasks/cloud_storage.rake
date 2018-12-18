@@ -22,8 +22,8 @@ namespace :cloudstorage do
     Rake::Task['cloudstorage:init'].invoke
 
     error_count = 0
-    [Cerfa, PieceJustificative, Procedure].each { |c|
-      c.all.each { |entry|
+    [Cerfa, PieceJustificative, Procedure].each do |c|
+      c.all.each do |entry|
         content = (c == Procedure) ? entry.logo : entry.content
         if !(content.current_path.nil? || File.exist?(File.dirname(content.current_path) + '/uploaded'))
           secure_token = SecureRandom.uuid
@@ -56,8 +56,8 @@ namespace :cloudstorage do
             puts "Skipping #{content.current_path}"
           end
         end
-      }
-    }
+      end
+    end
 
     puts "There were #{error_count} errors while uploading files. See upload_errors.report file for details."
     puts 'Enf of migration'
@@ -67,8 +67,8 @@ namespace :cloudstorage do
   task :revert do
     Rake::Task['cloudstorage:init'].invoke
 
-    [Cerfa, PieceJustificative, Procedure].each { |c|
-      c.all.each { |entry|
+    [Cerfa, PieceJustificative, Procedure].each do |c|
+      c.all.each do |entry|
         content = (c == Procedure) ? entry.logo : entry.content
         if content.current_path.present?
           if File.exist?(File.dirname(content.current_path) + '/uploaded')
@@ -86,26 +86,26 @@ namespace :cloudstorage do
             FileUtils.rm(File.dirname(content.current_path) + '/secure_token_cloudstorage')
           end
         end
-      }
-    }
+      end
+    end
   end
 
   desc 'Clear old documents in tenant'
   task :clear do
     Rake::Task['cloudstorage:init'].invoke
 
-    @cont.objects.each { |object|
+    @cont.objects.each do |object|
       puts "Removing #{object}"
       @cont.delete_object(object)
-    }
+    end
   end
 
   task :clear_old_objects do
     Rake::Task['cloudstorage:init'].invoke
 
-    @cont.objects_detail.each { |object, details|
+    @cont.objects_detail.each do |object, details|
       last_modified = Time.zone.parse(details[:last_modified])
       @cont.delete_object(object) if last_modified.utc <= (Time.zone.now - 2.years).utc
-    }
+    end
   end
 end
