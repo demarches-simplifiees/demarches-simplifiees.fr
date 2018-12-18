@@ -63,6 +63,12 @@ $stat-card-half-horizontal-spacing: 4 * $default-space;
   width: 200px;
 }
 
+.stat-card-details {
+  font-size: 13px;
+  text-align: center;
+  font-style: italic;
+}
+
 $segmented-control-margin-top: $default-space;
 
 .segmented-control {

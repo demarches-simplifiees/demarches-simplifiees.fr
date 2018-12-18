@@ -10,6 +10,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     types_de_piece_justificative: TypesDePieceJustificativeCollectionField,
     types_de_champ: TypesDeChampCollectionField,
+    types_de_champ_private: TypesDeChampCollectionField,
     path: ProcedureLinkField,
     dossiers: Field::HasMany,
     gestionnaires: Field::HasMany,
@@ -68,6 +69,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :hidden_at,
     :archived_at,
     :types_de_champ,
+    :types_de_champ_private,
     :types_de_piece_justificative,
     :for_individual,
     :individual_with_siret,
