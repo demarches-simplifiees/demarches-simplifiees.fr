@@ -59,6 +59,22 @@ class Helpscout::API
     end
   end
 
+  def conversations_report(year, month)
+    Rails.logger.info("[HelpScout API] Retrieving conversations report for #{month}-#{year}…")
+
+    params = {
+      start: Time.utc(year, month).iso8601,
+      end: Time.utc(year, month).next_month.iso8601
+    }
+
+    response = call_api(:get, 'reports/conversations?' + params.to_query)
+    if !response.success?
+      raise StandardError, "Error while fetching conversation report: #{response.status} '#{response.body}'"
+    end
+
+    parse_response_body(response)
+  end
+
   private
 
   def attachments(file)
