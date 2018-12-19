@@ -669,7 +669,12 @@ Rails/BulkChangeTable:
   Enabled: false
 
 Rails/CreateTableWithTimestamps:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - db/migrate/2015*.rb
+    - db/migrate/2016*.rb
+    - db/migrate/2017*.rb
+    - db/migrate/2018*.rb
 
 Rails/Date:
   Enabled: false
@@ -806,37 +811,39 @@ Style/Alias:
   Enabled: false
 
 Style/AndOr:
-  Enabled: false
+  Enabled: true
 
 Style/ArrayJoin:
-  Enabled: false
+  Enabled: true
 
 Style/AsciiComments:
   Enabled: false
 
 Style/Attr:
-  Enabled: false
+  Enabled: true
 
 Style/AutoResourceCleanup:
-  Enabled: false
+  Enabled: true
 
 Style/BarePercentLiterals:
   Enabled: false
 
 Style/BeginBlock:
-  Enabled: false
+  Enabled: true
 
 Style/BlockComments:
-  Enabled: false
+  Enabled: true
 
 Style/BlockDelimiters:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - "spec/**/*"
 
 Style/BracesAroundHashParameters:
   Enabled: false
 
 Style/CaseEquality:
-  Enabled: false
+  Enabled: true
 
 Style/CharacterLiteral:
   Enabled: false
@@ -845,10 +852,10 @@ Style/ClassAndModuleChildren:
   Enabled: false
 
 Style/ClassCheck:
-  Enabled: false
+  Enabled: true
 
 Style/ClassMethods:
-  Enabled: false
+  Enabled: true
 
 Style/ClassVars:
   Enabled: false
@@ -857,7 +864,7 @@ Style/CollectionMethods:
   Enabled: false
 
 Style/ColonMethodCall:
-  Enabled: false
+  Enabled: true
 
 Style/ColonMethodDefinition:
   Enabled: true
@@ -881,7 +888,7 @@ Style/DateTime:
   Enabled: false
 
 Style/DefWithParentheses:
-  Enabled: false
+  Enabled: true
 
 Style/Dir:
   Enabled: true
@@ -896,7 +903,7 @@ Style/DoubleNegation:
   Enabled: false
 
 Style/EachForSimpleLoop:
-  Enabled: false
+  Enabled: true
 
 Style/EachWithObject:
   Enabled: false
@@ -914,43 +921,44 @@ Style/EmptyLambdaParameter:
   Enabled: true
 
 Style/EmptyLiteral:
-  Enabled: false
+  Enabled: true
 
 Style/EmptyMethod:
   Enabled: false
 
 Style/Encoding:
-  Enabled: false
+  Enabled: true
 
 Style/EndBlock:
-  Enabled: false
+  Enabled: true
 
 Style/EvalWithLocation:
   Enabled: false
 
 Style/EvenOdd:
-  Enabled: false
+  Enabled: true
 
 Style/ExpandPathArguments:
   Enabled: true
 
 Style/FlipFlop:
-  Enabled: false
+  Enabled: true
 
 Style/For:
-  Enabled: false
+  Enabled: true
 
 Style/FormatString:
-  Enabled: false
+  Enabled: true
 
 Style/FormatStringToken:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: template
 
 Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/GlobalVars:
-  Enabled: false
+  Enabled: true
 
 Style/GuardClause:
   Enabled: false

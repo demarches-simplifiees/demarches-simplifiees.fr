@@ -1,3 +1,25 @@
 .row.white-back
-  #piece_justificative_form
-    = render 'form'
+  .alert.alert-info
+    .form-group
+      %p
+        Pour vos nouveaux besoins de pièces jointes, nous vous invitons à
+        = link_to(admin_procedure_types_de_champ_path(@procedure)) do
+          rajouter des champs
+        \ <em>pièce justificative</em> à votre formulaire.
+
+      %p
+        Ils offrent les avantages suivants :
+
+      %ul
+        %li Pièces justificatives au fil du formulaire, pour un déroulé plus fluide
+        %li Possibilité de fournir à l’usager un fichier type à remplir et renvoyer
+        %li Possibilité pour l’usager de supprimer les documents joints par erreur
+        %li Support des pièces de grande taille (jusqu’à 200 Mo par pièce)
+        %li Pas de limite de soumission simultanée de plusieurs pièces, pour une expérience usager plus confortable
+
+    = link_to(admin_procedure_types_de_champ_path(@procedure), class: 'btn btn-success') do
+      Ajouter un champ PJ
+
+  - if @procedure.has_old_pjs?
+    #piece_justificative_form
+      = render 'form'

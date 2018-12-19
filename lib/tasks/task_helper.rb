@@ -52,7 +52,7 @@ class ProgressReport
 
   def print_progress
     elapsed = Time.zone.now - @start
-    percent = sprintf('%5.1f%%', @per_10_000 / 100.0)
+    percent = format('%5.1f%%', @per_10_000 / 100.0)
     total = @total.to_s
     count = @count.to_s.rjust(total.length)
     rake_print("\r#{percent} (#{count}/#{total}) [#{format_duration(elapsed)}/#{format_duration(elapsed * 10_000.0 / @per_10_000)}]")
