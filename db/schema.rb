@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_18_103212) do
+ActiveRecord::Schema.define(version: 2018_12_18_204707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,8 @@ ActiveRecord::Schema.define(version: 2018_12_18_103212) do
   create_table "administrateurs_gestionnaires", id: false, force: :cascade do |t|
     t.integer "administrateur_id"
     t.integer "gestionnaire_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["administrateur_id"], name: "index_administrateurs_gestionnaires_on_administrateur_id"
     t.index ["gestionnaire_id", "administrateur_id"], name: "unique_couple_administrateur_gestionnaire", unique: true
     t.index ["gestionnaire_id"], name: "index_administrateurs_gestionnaires_on_gestionnaire_id"
@@ -344,6 +346,8 @@ ActiveRecord::Schema.define(version: 2018_12_18_103212) do
     t.jsonb "properties"
     t.bigint "champ_id"
     t.string "geo_reference_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["champ_id"], name: "index_geo_areas_on_champ_id"
     t.index ["source"], name: "index_geo_areas_on_source"
   end
