@@ -17,7 +17,7 @@ class PiecesJustificativesService
 
   def self.upload_one!(dossier, user, params)
     content = params[:piece_justificative][:content]
-    if ClamavService.safe_file? content.path
+    if ClamavService.safe_file?(content.path)
       pj = PieceJustificative.new(content: content,
         dossier: dossier,
         type_de_piece_justificative: nil,
