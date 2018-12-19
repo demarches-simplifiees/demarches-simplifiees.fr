@@ -93,7 +93,7 @@ class StatsController < ApplicationController
     else
       evolution = 0
     end
-    formatted_evolution = sprintf("%+d", evolution)
+    formatted_evolution = format("%+d", evolution)
 
     {
       total: total.to_s,
@@ -111,7 +111,7 @@ class StatsController < ApplicationController
     else
       evolution = 0
     end
-    formatted_evolution = sprintf("%+d", evolution)
+    formatted_evolution = format("%+d", evolution)
 
     {
       total: total.to_s,
