@@ -42,7 +42,6 @@
 
       - if content_for?(:footer)
         = content_for(:footer)
-      = render partial: "layouts/mailjet_newsletter"
 
       - if Rails.env.development?
         = javascript_include_tag :xray
