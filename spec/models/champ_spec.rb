@@ -399,4 +399,30 @@ describe Champ do
       it { expect{ champ.save }.to_not change(VirusScan, :count) }
     end
   end
+
+  describe "repetition" do
+    let(:champ) { create(:champ_repetition) }
+    let(:champ_text) { create(:champ_text, row: 0) }
+    let(:champ_integer_number) { create(:champ_integer_number, row: 0) }
+    let(:champ_text2) { create(:champ_text, row: 1) }
+
+    it {
+      expect(champ.rows.size).to eq(0)
+
+      champ.champs << champ_text2
+      expect(champ.rows.size).to eq(1)
+
+      champ.champs << champ_integer_number
+      row = champ.reload.rows.first
+      expect(row.size).to eq(1)
+      expect(row.first).to eq(champ_integer_number)
+
+      champ.champs << champ_text
+      row = champ.reload.rows.first
+      expect(row.size).to eq(2)
+      expect(row.second).to eq(champ_text)
+
+      expect(champ.rows.size).to eq(2)
+    }
+  end
 end
