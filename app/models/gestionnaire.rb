@@ -22,11 +22,6 @@ class Gestionnaire < ApplicationRecord
     procedures.merge(Procedure.avec_lien.or(Procedure.archivees))
   end
 
-  def can_view_dossier?(dossier_id)
-    avis.where(dossier_id: dossier_id).any? ||
-      dossiers.where(id: dossier_id).any?
-  end
-
   def follow(dossier)
     if follow?(dossier)
       return
@@ -41,10 +36,6 @@ class Gestionnaire < ApplicationRecord
 
   def follow?(dossier)
     followed_dossiers.include?(dossier)
-  end
-
-  def assigned_on_procedure?(procedure_id)
-    procedures.find_by(id: procedure_id).present?
   end
 
   def assign_to_procedure(procedure)

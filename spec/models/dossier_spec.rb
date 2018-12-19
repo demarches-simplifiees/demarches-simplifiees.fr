@@ -235,29 +235,6 @@ describe Dossier do
     it { expect(dossier.champs_private.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
   end
 
-  describe '#total_follow' do
-    let(:dossier) { create(:dossier, :with_entreprise, user: user) }
-    let(:dossier2) { create(:dossier, :with_entreprise, user: user) }
-
-    subject { dossier.total_follow }
-
-    context 'when no body follow dossier' do
-      it { expect(subject).to eq 0 }
-    end
-
-    context 'when 2 people follow dossier' do
-      before do
-        create :follow, dossier_id: dossier.id, gestionnaire_id: (create :gestionnaire).id
-        create :follow, dossier_id: dossier.id, gestionnaire_id: (create :gestionnaire).id
-
-        create :follow, dossier_id: dossier2.id, gestionnaire_id: (create :gestionnaire).id
-        create :follow, dossier_id: dossier2.id, gestionnaire_id: (create :gestionnaire).id
-      end
-
-      it { expect(subject).to eq 2 }
-    end
-  end
-
   describe "#text_summary" do
     let(:procedure) { create(:procedure, libelle: "Démarche", organisation: "Organisme") }
 

@@ -164,10 +164,6 @@ class Procedure < ApplicationRecord
     types_de_champ_private.order(:order_place)
   end
 
-  def all_types_de_champ
-    types_de_champ + types_de_champ_private
-  end
-
   def self.active(id)
     publiees.find(id)
   end
