@@ -1,16 +1,14 @@
-.col-xs-2
-  %a#title-navbar{ href: root_path }
-    .row#home
-      .col-lg-6.no-padding
-        = image_tag('marianne.svg', class: 'logo')
-      .col-lg-6.no-padding#tps-title
-        demarches-simplifiees.fr
+.col-xs-9
+  .row#home
+    %a#title-navbar{ href: root_path }
+      = image_tag('header/logo-md.svg', class: 'logo')
+    %div{ style: "display:inline; vertical-align: middle;line-height: 60px;" }
+      %span.header-text
+        Besoin d'aide ? <a class="header-link" href="tel:#{CONTACT_PHONE}">#{CONTACT_PHONE}</a> ou <a class="header-link" href="mailto:#{CONTACT_EMAIL}">#{CONTACT_EMAIL}</a>
 
-.col-xs-10.no-padding
+.col-xs-3.no-padding
   #navbar-body
-    .row
-      %div{ style: "vertical-align: middle;float:left;position:absolute;line-height: 60px;z-index:2;" }
-        Besoin d'aide ? <a href="tel:#{CONTACT_PHONE}">#{CONTACT_PHONE}</a> ou <a href="mailto:#{CONTACT_EMAIL}">#{CONTACT_EMAIL}</a>
+    .row#home
       -# BEST WTF EVER
       -# this begin rescue hides potentials bugs by displaying another navbar
       - begin

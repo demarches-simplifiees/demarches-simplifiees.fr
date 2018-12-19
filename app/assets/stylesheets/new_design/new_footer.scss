@@ -77,6 +77,14 @@ footer {
   margin-bottom: 14px;
 }
 
+.footer-logo-netpf {
+  @include ie-compatible-background-image("footer/logo-netpf.svg");
+
+  height: 104px;
+  width: 125px;
+  margin-bottom: 14px;
+}
+
 .footer-logo-beta-gouv-fr {
   @include ie-compatible-background-image("footer/logo-beta-gouv-fr.svg");
 

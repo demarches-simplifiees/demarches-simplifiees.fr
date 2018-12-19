@@ -1,26 +1,26 @@
-.col-xs-7.main-info
-
-.col-xs-3.options
+.col-xs-6.options
   %div{ style: "decorate: none; display: flex; box-shadow: none; float: right; display: flex; margin-top: 5px" }
     %div{ style: "vertical-align: middle; margin-right: 10px; margin-top: auto; margin-bottom: auto;" }
-      = current_administrateur.email
-    .dropdown#admin_menu
-      %button.btn.btn-default.dropdown-toggle#dropdownMenuAdmin{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
-        %i.fa.fa-cog
-        %span.caret
-      %ul.dropdown-menu.dropdown-menu-right
-        %li
-          = link_to(admin_procedures_path, id: :menu_item_procedure) do
-            %i.fa.fa-list{ style: "background-size: 10px;" }
-            &nbsp;
-            = t('dynamics.admin.menu.procedures')
-        %li
-          = link_to(admin_gestionnaires_path) do
-            %i.fa.fa-user
-            &nbsp;
-            = t('dynamics.admin.menu.instructeurs')
-        %li.divider{ role: :separator }
-        %li
-          = link_to(profil_path, id: :profile) do
-            %i.fa.fa-user
-            &nbsp;Profil
+      %span.header-text
+        = current_administrateur.email
+    .header-text
+      .dropdown#admin_menu
+        %button.btn.btn-default.dropdown-toggle#dropdownMenuAdmin{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
+          %i.fa.fa-cog
+          %span.caret
+        %ul.dropdown-menu.dropdown-menu-right
+          %li
+            = link_to(admin_procedures_path, id: :menu_item_procedure) do
+              %i.fa.fa-list{ style: "background-size: 10px;" }
+              &nbsp;
+              = t('dynamics.admin.menu.procedures')
+          %li
+            = link_to(admin_gestionnaires_path) do
+              %i.fa.fa-user
+              &nbsp;
+              = t('dynamics.admin.menu.instructeurs')
+          %li.divider{ role: :separator }
+          %li
+            = link_to(profil_path, id: :profile) do
+              %i.fa.fa-user
+              &nbsp;Profil

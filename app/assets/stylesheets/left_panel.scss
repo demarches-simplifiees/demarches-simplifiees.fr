@@ -1,7 +1,9 @@
+@import "new_design/colors";
+
 #left-panel {
   margin-top: 60px;
   padding: 0;
-  background-color: #003189;
+  background-color: $blue;
   height: calc(100% - 60px);
   position: fixed;
   top: 0;

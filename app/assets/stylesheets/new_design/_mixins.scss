@@ -12,7 +12,7 @@
 // https://connect.microsoft.com/IE/Feedback/Details/1218984
 // we are obliged to use a background-image
 @mixin ie-compatible-background-image($image-url: false) {
-  display: block;
+  display: inline-block;
   background-size: contain;
   background-repeat: no-repeat;
 

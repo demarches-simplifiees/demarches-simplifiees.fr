@@ -6,6 +6,15 @@ describe 'layouts/_navbar.html.haml', type: :view do
 
   let!(:procedure) { create(:procedure, administrateur: administrateur) }
 
+  describe 'polynesian layout' do
+    before do
+      render
+    end
+    subject { rendered }
+    it { is_expected.to have_css('img[src*="logo-md"]') }
+    it { is_expected.to have_css('.col-xs-9') }
+  end
+
   describe 'navbar entries' do
     context 'when disconnected' do
       before do

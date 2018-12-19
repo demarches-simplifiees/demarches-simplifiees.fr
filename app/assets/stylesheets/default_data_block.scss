@@ -32,7 +32,7 @@
   }
 
   .header {
-    background-color: #003C92;
+    background-color: $blue;
     min-height: 40px;
     color: #FFFFFF;
     font-size: 18px;
@@ -63,16 +63,15 @@
     }
 
     .action {
-      background-color: #E45B51;
+      background-color: $yellow;
       text-align: center;
       line-height: 40px;
       font-size: 15px;
       text-decoration: none;
-      color: #FFFFFF;
     }
 
     .action:hover {
-      color: $light-blue;
+      color: $red;
     }
 
     .count {

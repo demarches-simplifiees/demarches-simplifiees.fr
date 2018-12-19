@@ -1,15 +1,15 @@
 - if user_signed_in?
-  #sign-out.col-xs-2.no-padding
+  #sign-out.col-xs-6.no-padding
     = render partial: 'users/login_banner'
     = render partial: 'layouts/credentials'
 - elsif gestionnaire_signed_in?
-  #sign-out.col-xs-2.no-padding
+  #sign-out.col-xs-6.no-padding
     = render partial: 'gestionnaires/login_banner'
     = render partial: 'layouts/credentials'
 - elsif administrateur_signed_in?
-  #sign-out.col-xs-2.no-padding
+  #sign-out.col-xs-6.no-padding
     = render partial: 'administrateurs/login_banner'
     = render partial: 'layouts/credentials'
 - else
-  #sign-in.col-xs-2
+  #sign-in.col-xs-6
     = link_to "Connexion", new_user_session_path, :class => 'btn btn-lg btn-primary'
