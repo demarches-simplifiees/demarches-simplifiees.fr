@@ -47,9 +47,9 @@
               .description
                 %h4 Refuser
                 L'usager sera notifié que son dossier a été refusé
-      = render partial: 'new_gestionnaire/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Accepter le dossier',  popup_class: 'accept', process_action: 'accepter', title: 'Accepter', confirm: "Confirmez-vous l'acceptation ce dossier ?" }
-      = render partial: 'new_gestionnaire/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Classer le dossier sans suite', popup_class: 'without-continuation', process_action: 'classer_sans_suite', title: 'Classer sans suite', confirm: 'Confirmez-vous le classement sans suite de ce dossier ?' }
-      = render partial: 'new_gestionnaire/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Refuser le dossier', popup_class: 'refuse', process_action: 'refuser', title: 'Refuser', confirm: 'Confirmez-vous le refus de ce dossier ?' }
+      = render partial: 'new_gestionnaire/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Accepter le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est accepté (facultatif)', popup_class: 'accept', process_action: 'accepter', title: 'Accepter', confirm: "Confirmez-vous l'acceptation ce dossier ?" }
+      = render partial: 'new_gestionnaire/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Classer le dossier sans suite', placeholder: 'Expliquez au demandeur pourquoi ce dossier est classé sans suite (obligatoire)', popup_class: 'without-continuation', process_action: 'classer_sans_suite', title: 'Classer sans suite', confirm: 'Confirmez-vous le classement sans suite de ce dossier ?' }
+      = render partial: 'new_gestionnaire/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Refuser le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est refusé (obligatoire)', popup_class: 'refuse', process_action: 'refuser', title: 'Refuser', confirm: 'Confirmez-vous le refus de ce dossier ?' }
 
 - else
   - if dossier.motivation.present? || dossier.attestation.present?
