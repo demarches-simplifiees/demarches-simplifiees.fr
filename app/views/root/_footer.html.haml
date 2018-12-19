@@ -5,9 +5,11 @@
       %li.footer-column
         %ul.footer-logos
           %li.footer-text
-            Un service fourni par la <a href="http://www.modernisation.gouv.fr/">DINSIC</a>
+            Un service fourni par la
+            = link_to "DINSIC", "http://www.modernisation.gouv.fr/"
             %br
-            et incubé par <a href="https://beta.gouv.fr">beta.gouv.fr</a>
+            et incubé par
+            = link_to "beta.gouv.fr", "https://beta.gouv.fr"
           %li
             = link_to "http://www.modernisation.gouv.fr/" do
               %span.footer-logo.footer-logo-dinsic{ role: 'img', 'aria-label': 'DINSIC' }
@@ -17,7 +19,7 @@
       %li.footer-column
         %ul.footer-links
           %li.footer-link
-            %a{ href: '#', 'data-token' => '11c89e7ddb46fbcdcb7f8fe5fdfca818', onclick: 'mjOpenPopin(event, this)' } Newsletter
+            = link_to "Newsletter", "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1", :class => "footer-link", :target => "_blank"
           %li.footer-link
             = link_to "Nouveautés", "https://github.com/betagouv/tps/releases", :class => "footer-link"
           %li.footer-link
@@ -25,9 +27,9 @@
           %li.footer-link
             = link_to "CGU", CGU_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "Mentions légales", MENTIONS_LEGALES_URL,  :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
+            = link_to "Mentions légales", MENTIONS_LEGALES_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "Suivi d'audience et vie privée", suivi_path,  :class => "footer-link"
+            = link_to "Suivi d'audience et vie privée", suivi_path, :class => "footer-link"
 
       %li.footer-column
         %ul.footer-links
