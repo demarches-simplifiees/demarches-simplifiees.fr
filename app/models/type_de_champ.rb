@@ -39,11 +39,14 @@ class TypeDeChamp < ApplicationRecord
 
   store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles
 
-  # TODO start: remove after migrating `options` column to (non YAML encoded) JSON
+  # TODO simplify after migrating `options` column to (non YAML encoded) JSON
   class MaybeYaml
     def load(options)
-      if options.is_a?(String)
+      case options
+      when String
         YAML.safe_load(options, [ActiveSupport::HashWithIndifferentAccess])
+      when Hash
+        options.with_indifferent_access
       else
         options
       end
@@ -55,7 +58,6 @@ class TypeDeChamp < ApplicationRecord
   end
 
   serialize :options, MaybeYaml.new
-  # TODO stop: remove after migrating `options` column to (non YAML encoded) JSON
 
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
