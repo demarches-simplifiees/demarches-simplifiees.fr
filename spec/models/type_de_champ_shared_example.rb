@@ -110,4 +110,20 @@ shared_examples 'type_de_champ_spec' do
       end
     end
   end
+
+  describe "repetition" do
+    let(:type_de_champ) { create(:type_de_champ_repetition) }
+    let(:type_de_champ_text) { create(:type_de_champ_text) }
+    let(:type_de_champ_integer_number) { create(:type_de_champ_integer_number) }
+
+    it {
+      expect(type_de_champ.types_de_champ.size).to eq(0)
+      type_de_champ.types_de_champ << type_de_champ_integer_number
+      expect(type_de_champ.types_de_champ.size).to eq(1)
+      type_de_champ.types_de_champ << type_de_champ_text
+      expect(type_de_champ.types_de_champ.size).to eq(2)
+      expect(type_de_champ_integer_number.parent).to eq(type_de_champ)
+      expect(type_de_champ_text.parent).to eq(type_de_champ)
+    }
+  end
 end
