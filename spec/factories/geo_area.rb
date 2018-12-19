@@ -9,5 +9,9 @@ FactoryBot.define do
       nom { 'XYZ' }
       commune { 'Paris' }
     end
+
+    trait :selection_utilisateur do
+      source { GeoArea.sources.fetch(:selection_utilisateur) }
+    end
   end
 end
