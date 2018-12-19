@@ -1,4 +1,4 @@
-class ModuleApiCartoService
+class ApiCartoService
   def self.generate_qp(coordinates)
     coordinates.flat_map do |coordinate|
       ApiCarto::QuartiersPrioritairesAdapter.new(
