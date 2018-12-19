@@ -213,6 +213,8 @@ class Procedure < ApplicationRecord
 
     if from_library
       procedure.service = nil
+    elsif self.service.present? && (self.administrateur_id != admin.id)
+      procedure.service = self.service.clone_and_assign_to_administrateur(admin)
     end
 
     procedure

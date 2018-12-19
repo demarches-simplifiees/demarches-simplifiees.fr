@@ -335,14 +335,15 @@ describe Procedure do
     let!(:type_de_champ_private_2) { create(:type_de_champ_drop_down_list, :private, procedure: procedure, order_place: 2) }
     let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
-    let(:received_mail){ create(:received_mail) }
+    let(:received_mail) { create(:received_mail) }
     let(:from_library) { false }
+    let(:administrateur) { procedure.administrateur }
 
     before do
       @logo = File.open('spec/fixtures/files/white.png')
       @signature = File.open('spec/fixtures/files/black.png')
       @attestation_template = create(:attestation_template, procedure: procedure, logo: @logo, signature: @signature)
-      @procedure = procedure.clone(procedure.administrateur, from_library)
+      @procedure = procedure.clone(administrateur, from_library)
       @procedure.save
     end
 
@@ -389,10 +390,24 @@ describe Procedure do
       let(:from_library) { true }
 
       it { expect(subject.cloned_from_library).to be(true) }
+
+      it 'should set service_id to nil' do
+        expect(subject.service).to eq(nil)
+      end
     end
 
     it 'should keep service_id' do
       expect(subject.service).to eq(service)
+    end
+
+    context 'when the procedure is cloned to another administrateur' do
+      let(:administrateur) { create(:administrateur) }
+
+      it 'should clone service' do
+        expect(subject.service.id).not_to eq(service.id)
+        expect(subject.service.administrateur_id).not_to eq(service.administrateur_id)
+        expect(subject.service.attributes.except("id", "administrateur_id", "created_at", "updated_at")).to eq(service.attributes.except("id", "administrateur_id", "created_at", "updated_at"))
+      end
     end
 
     it 'should duplicate existing mail_templates' do
