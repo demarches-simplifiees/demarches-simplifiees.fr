@@ -5,7 +5,7 @@
 
   = form_tag(terminer_gestionnaire_dossier_path(dossier.procedure, dossier), remote: true, method: :post, class: 'form') do
     - if title == 'Accepter'
-      = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: 'Rédigez votre motivation ici (facultative)', required: false
+      = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: placeholder, required: false
       %p.help
         L'acceptation du dossier envoie automatiquement une attestation à l'usager.
 
@@ -27,7 +27,7 @@
               - unspecified_annotations_privees.each do |unspecified_annotations_privee|
                 %li= unspecified_annotations_privee.libelle
     - else
-      = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: 'Rédigez votre motivation ici (obligatoire)', required: true
+      = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: placeholder, required: true
     .text-right
       %span.button{ onclick: 'DS.motivationCancel();' } Annuler
       = button_tag 'Valider la décision', name: :process_action, value: process_action, class: 'button primary', title: title, data: { confirm: confirm }
