@@ -669,7 +669,12 @@ Rails/BulkChangeTable:
   Enabled: false
 
 Rails/CreateTableWithTimestamps:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - db/migrate/2015*.rb
+    - db/migrate/2016*.rb
+    - db/migrate/2017*.rb
+    - db/migrate/2018*.rb
 
 Rails/Date:
   Enabled: false
