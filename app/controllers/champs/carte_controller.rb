@@ -55,11 +55,15 @@ class Champs::CarteController < ApplicationController
         end
       end
 
+      selection_utilisateur = ApiCartoService.generate_selection_utilisateur(coordinates)
+      selection_utilisateur[:source] = GeoArea.sources.fetch(:selection_utilisateur)
+      geo_areas << selection_utilisateur
+
       @champ.geo_areas = geo_areas.map do |geo_area|
         GeoArea.new(geo_area)
       end
 
-      @champ.value = GeojsonService.to_json_polygon_for_selection_utilisateur(coordinates)
+      @champ.value = coordinates.to_json
     end
 
     if @champ.persisted?
