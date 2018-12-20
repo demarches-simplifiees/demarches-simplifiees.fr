@@ -37,7 +37,27 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :parent, class_name: 'TypeDeChamp'
   has_many :types_de_champ, foreign_key: :parent_id, class_name: 'TypeDeChamp', dependent: :destroy
 
-  store :options, accessors: [:cadastres, :quartiers_prioritaires, :parcelles_agricoles]
+  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles
+
+  # TODO simplify after migrating `options` column to (non YAML encoded) JSON
+  class MaybeYaml
+    def load(options)
+      case options
+      when String
+        YAML.safe_load(options, [ActiveSupport::HashWithIndifferentAccess])
+      when Hash
+        options.with_indifferent_access
+      else
+        options
+      end
+    end
+
+    def dump(options)
+      options
+    end
+  end
+
+  serialize :options, MaybeYaml.new
 
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
