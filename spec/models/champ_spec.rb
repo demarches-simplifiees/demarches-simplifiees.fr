@@ -401,16 +401,30 @@ describe Champ do
   end
 
   describe "repetition" do
-    let(:champ) { create(:champ_repetition) }
+    let(:dossier) { create(:dossier) }
+    let(:champ) { create(:champ_repetition, dossier: dossier) }
     let(:champ_text) { create(:champ_text, row: 0) }
     let(:champ_integer_number) { create(:champ_integer_number, row: 0) }
-    let(:champ_text2) { create(:champ_text, row: 1) }
+    let(:champ_text_attrs) { attributes_for(:champ_text, row: 1) }
 
-    it {
+    it "associates nested champs to the parent dossier" do
       expect(champ.rows.size).to eq(0)
+      dossier.reload
+      expect(dossier.champs.size).to eq(2)
 
-      champ.champs << champ_text2
+      dossier.update(champs_attributes: [
+        {
+          id: champ.id,
+          champs_attributes: [champ_text_attrs]
+        }
+      ])
+
+      champ.reload
+      dossier.reload
+      expect(dossier.champs.size).to eq(2)
       expect(champ.rows.size).to eq(1)
+
+      expect(champ.champs.first.dossier).to eq(dossier)
 
       champ.champs << champ_integer_number
       row = champ.reload.rows.first
@@ -423,6 +437,6 @@ describe Champ do
       expect(row.second).to eq(champ_text)
 
       expect(champ.rows.size).to eq(2)
-    }
+    end
   end
 end

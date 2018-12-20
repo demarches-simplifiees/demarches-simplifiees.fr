@@ -112,18 +112,35 @@ shared_examples 'type_de_champ_spec' do
   end
 
   describe "repetition" do
-    let(:type_de_champ) { create(:type_de_champ_repetition) }
+    let(:procedure) { create(:procedure) }
+    let(:type_de_champ) { create(:type_de_champ_repetition, procedure: procedure) }
     let(:type_de_champ_text) { create(:type_de_champ_text) }
-    let(:type_de_champ_integer_number) { create(:type_de_champ_integer_number) }
+    let(:type_de_champ_integer_number_attrs) { attributes_for(:type_de_champ_integer_number) }
 
-    it {
+    it "associates nested types_de_champ to the parent procedure" do
       expect(type_de_champ.types_de_champ.size).to eq(0)
-      type_de_champ.types_de_champ << type_de_champ_integer_number
+      expect(procedure.types_de_champ.size).to eq(1)
+
+      procedure.update(types_de_champ_attributes: [
+        {
+          id: type_de_champ.id,
+          libelle: type_de_champ.libelle,
+          types_de_champ_attributes: [type_de_champ_integer_number_attrs]
+        }
+      ])
+      procedure.reload
+      type_de_champ.reload
+
+      expect(procedure.types_de_champ.size).to eq(1)
       expect(type_de_champ.types_de_champ.size).to eq(1)
+
+      expect(type_de_champ.types_de_champ.first.parent).to eq(type_de_champ)
+      expect(type_de_champ.types_de_champ.first.procedure).to eq(procedure)
+      expect(type_de_champ.types_de_champ.first.private?).to eq(false)
+
       type_de_champ.types_de_champ << type_de_champ_text
       expect(type_de_champ.types_de_champ.size).to eq(2)
-      expect(type_de_champ_integer_number.parent).to eq(type_de_champ)
       expect(type_de_champ_text.parent).to eq(type_de_champ)
-    }
+    end
   end
 end
