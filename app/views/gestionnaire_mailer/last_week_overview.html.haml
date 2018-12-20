@@ -2,7 +2,7 @@
 
 - @overview[:procedure_overviews].each_with_index do |procedure_overview, index|
 
-  %h2{ style: 'font-size: 20px; font-weight: 300; margin: 25px 0 5px;' }
+  %h2{ style: 'font-size: 16px; font-weight: 300; margin: 25px 0 5px;' }
     #{procedure_overview.procedure.libelle}
     = link_to 'voir', gestionnaire_procedure_url(procedure_overview.procedure), style: 'color: #0069CC; font-size: 14px;'
   %table{ cellpadding: '0', cellspacing: '0', style: 'width: 100%; padding-bottom: 20px;' }
