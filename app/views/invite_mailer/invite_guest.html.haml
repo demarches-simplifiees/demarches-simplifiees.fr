@@ -13,10 +13,7 @@
   Afin de répondre à cette invitation, merci de vous inscrire avec l'adresse email
   = @invite.email
   sur
-  = invite_url(@invite, params: { email: @invite.email })
+  - url_for_link = invite_url(@invite, params: { email: @invite.email })
+  = link_to url_for_link, url_for_link
 
-%p
-  Bonne journée,
-
-%p
-  L'équipe demarches-simplifiees.fr
+= render partial: "layouts/mailers/signature"

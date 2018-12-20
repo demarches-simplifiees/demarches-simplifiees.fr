@@ -142,10 +142,10 @@ class ProcedureExportService
     headers = ATTRIBUTES.map do |key|
       label_for_export(key.to_s)
     end
-    headers += @procedure.types_de_champ.ordered.map do |champ|
+    headers += @procedure.types_de_champ.reject(&:exclude_from_export?).map do |champ|
       label_for_export(champ.libelle)
     end
-    headers += @procedure.types_de_champ_private.ordered.map do |champ|
+    headers += @procedure.types_de_champ_private.reject(&:exclude_from_export?).map do |champ|
       label_for_export(champ.libelle)
     end
     headers += ETABLISSEMENT_ATTRIBUTES.map do |key|
@@ -184,10 +184,10 @@ class ProcedureExportService
         end
       end
       values = normalize_values(values)
-      values += dossier.champs.map do |champ|
+      values += dossier.champs.reject(&:exclude_from_export?).map do |champ|
         value_for_export(champ)
       end
-      values += dossier.champs_private.map do |champ|
+      values += dossier.champs_private.reject(&:exclude_from_export?).map do |champ|
         value_for_export(champ)
       end
       values += etablissement_data(dossier.etablissement)

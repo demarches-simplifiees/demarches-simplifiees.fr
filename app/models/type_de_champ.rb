@@ -28,12 +28,36 @@ class TypeDeChamp < ApplicationRecord
     dossier_link: 'dossier_link',
     piece_justificative: 'piece_justificative',
     siret: 'siret',
-    carte: 'carte'
+    carte: 'carte',
+    repetition: 'repetition'
   }
 
   belongs_to :procedure
 
-  store :options, accessors: [:cadastres, :quartiers_prioritaires, :parcelles_agricoles]
+  belongs_to :parent, class_name: 'TypeDeChamp'
+  has_many :types_de_champ, foreign_key: :parent_id, class_name: 'TypeDeChamp', dependent: :destroy
+
+  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles
+
+  # TODO simplify after migrating `options` column to (non YAML encoded) JSON
+  class MaybeYaml
+    def load(options)
+      case options
+      when String
+        YAML.safe_load(options, [ActiveSupport::HashWithIndifferentAccess])
+      when Hash
+        options.with_indifferent_access
+      else
+        options
+      end
+    end
+
+    def dump(options)
+      options
+    end
+  end
+
+  serialize :options, MaybeYaml.new
 
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
@@ -105,7 +129,25 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def non_fillable?
-    type_champ.in?([TypeDeChamp.type_champs.fetch(:header_section), TypeDeChamp.type_champs.fetch(:explication)])
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:header_section),
+      TypeDeChamp.type_champs.fetch(:explication)
+    ])
+  end
+
+  def exclude_from_export?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:header_section),
+      TypeDeChamp.type_champs.fetch(:explication),
+      TypeDeChamp.type_champs.fetch(:repetition)
+    ])
+  end
+
+  def exclude_from_view?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:explication),
+      TypeDeChamp.type_champs.fetch(:repetition)
+    ])
   end
 
   def public?

@@ -3,7 +3,8 @@ class TypesDeChampService
 
   TOGGLES = {
     TypeDeChamp.type_champs.fetch(:siret)                 => :champ_siret?,
-    TypeDeChamp.type_champs.fetch(:integer_number)        => :champ_integer_number?
+    TypeDeChamp.type_champs.fetch(:integer_number)        => :champ_integer_number?,
+    TypeDeChamp.type_champs.fetch(:repetition)            => :champ_repetition?
   }
 
   def options
@@ -35,7 +36,7 @@ class TypesDeChampService
   end
 
   def types_de_champ
-    private? ? @procedure.types_de_champ_private_ordered.decorate : @procedure.types_de_champ_ordered.decorate
+    private? ? @procedure.types_de_champ_private.decorate : @procedure.types_de_champ.decorate
   end
 
   def new_type_de_champ

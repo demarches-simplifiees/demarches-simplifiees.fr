@@ -5,8 +5,4 @@
   = "#{@sender.email} vous a envoyé le dossier nº #{@dossier.id}, cliquez sur le lien ci-dessous pour y accéder :"
   = link_to(gestionnaire_dossier_url(@dossier.procedure, @dossier), gestionnaire_dossier_url(@dossier.procedure, @dossier))
 
-%p
-  Bonne journée,
-
-%p
-  L'équipe demarches-simplifiees.fr
+= render partial: "layouts/mailers/signature"

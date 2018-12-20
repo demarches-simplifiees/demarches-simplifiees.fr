@@ -18,20 +18,4 @@ class ChampDecorator < Draper::Decorator
       object.value
     end
   end
-
-  def date_for_input
-    if object.value.present?
-      if type_champ == TypeDeChamp.type_champs.fetch(:date)
-        object.value
-      elsif type_champ == TypeDeChamp.type_champs.fetch(:datetime) && object.value != ' 00:00'
-        Time.zone.strptime(object.value, "%Y-%m-%d %H:%M").strftime("%Y-%m-%d")
-      end
-    end
-  end
-
-  def description_with_links
-    if description
-      description.gsub(URI.regexp, '<a target="_blank" href="\0">\0</a>')
-    end
-  end
 end
