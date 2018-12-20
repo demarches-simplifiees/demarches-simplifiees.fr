@@ -14,12 +14,15 @@ namespace :after_party do
 
     service_and_admin_list.each do |service_id, administrateur_id|
       cloned_service = Service.find(service_id).clone_and_assign_to_administrateur(Administrateur.find(administrateur_id))
-      cloned_service.save!
 
-      procedures_to_fix
-        .where(service_id: service_id, administrateur_id: administrateur_id)
-        .update_all(service_id: cloned_service.id)
-
+      if cloned_service.save
+        puts "Fixing Service #{service_id} for Administrateur #{administrateur_id}"
+        procedures_to_fix
+          .where(service_id: service_id, administrateur_id: administrateur_id)
+          .update_all(service_id: cloned_service.id)
+      else
+        puts "Cannot fix Service #{service_id} for Administrateur #{administrateur_id}, it should be fixed manually. Errors : #{cloned_service.errors.full_messages}"
+      end
       progress.inc
     end
 
