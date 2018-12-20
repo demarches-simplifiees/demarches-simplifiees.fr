@@ -34,7 +34,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     it { expect(mail.subject).to eq(email_template.subject_for_dossier) }
     it { expect(mail.body).to include(email_template.body_for_dossier) }
-    it { expect(mail.body).to have_selector('footer') }
+    it { expect(mail.body).to have_link('messagerie') }
 
     it_behaves_like "create a commentaire not notified"
   end
@@ -50,7 +50,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     it do
       expect(mail.subject).to eq(email_template.subject)
       expect(mail.body).to include(email_template.body)
-      expect(mail.body).to have_selector('footer')
+      expect(mail.body).to have_link('messagerie')
     end
 
     it_behaves_like "create a commentaire not notified"
