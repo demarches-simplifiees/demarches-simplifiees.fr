@@ -13,8 +13,4 @@
 
 %p= link_to 'Déverrouiller mon compte', unlock_url(@resource, unlock_token: @token)
 
-%p
-  Bonne journée,
-
-%p
-  L'équipe demarches-simplifiees.fr
+= render partial: "layouts/mailers/signature"

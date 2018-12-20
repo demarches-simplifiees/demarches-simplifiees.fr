@@ -580,7 +580,7 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'POST #transfer' do
-    let!(:procedure) { create :procedure, administrateur: admin }
+    let!(:procedure) { create :procedure, :with_service, administrateur: admin }
 
     subject { post :transfer, params: { email_admin: email_admin, procedure_id: procedure.id } }
 
@@ -597,7 +597,12 @@ describe Admin::ProceduresController, type: :controller do
         let(:email_admin) { 'new_admin@admin.com' }
 
         it { expect(subject.status).to eq 200 }
-        it { expect { subject }.to change(Procedure, :count).by(1) }
+        it { expect { subject }.to change(new_admin.procedures, :count).by(1) }
+
+        it "should create a new service" do
+          subject
+          expect(new_admin.procedures.last.service_id).not_to eq(procedure.service_id)
+        end
       end
 
       context 'when admin is know but its email was not downcased' do

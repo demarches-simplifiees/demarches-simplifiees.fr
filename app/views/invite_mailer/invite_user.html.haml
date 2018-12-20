@@ -8,10 +8,7 @@
 
 %p
   Pour le consulter, merci de suivre ce lien :
-  = invite_url(@invite)
+  - url_for_link = invite_url(@invite)
+  = link_to url_for_link, url_for_link
 
-%p
-  Bonne journée,
-
-%p
-  L'équipe demarches-simplifiees.fr
+= render partial: "layouts/mailers/signature"

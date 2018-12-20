@@ -1,5 +1,7 @@
 # Preview all emails at http://localhost:3000/rails/mailers/invite_mailer
 class InviteMailer < ApplicationMailer
+  layout 'mailers/layout'
+
   def invite_user(invite)
     subject = "Participez à l'élaboration d'un dossier"
 
