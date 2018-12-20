@@ -61,7 +61,7 @@ class Admin::GestionnairesController < AdminController
   end
 
   def assign_gestionnaire!
-    if current_administrateur.gestionnaires.include? @gestionnaire
+    if current_administrateur.gestionnaires.include?(@gestionnaire)
       flash.alert = 'Instructeur déjà ajouté'
     else
       @gestionnaire.administrateurs.push current_administrateur

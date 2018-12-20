@@ -165,4 +165,8 @@ FactoryBot.define do
       champ.etablissement.signature = champ.etablissement.sign
     end
   end
+
+  factory :champ_repetition, class: 'Champs::RepetitionChamp' do
+    type_de_champ { create(:type_de_champ_repetition) }
+  end
 end

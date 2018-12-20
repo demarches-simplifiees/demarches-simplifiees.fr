@@ -18,8 +18,8 @@ class Dossier < ApplicationRecord
   has_one :attestation, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
-  has_many :champs, -> { public_only.ordered }, dependent: :destroy
-  has_many :champs_private, -> { private_only.ordered }, class_name: 'Champ', dependent: :destroy
+  has_many :champs, -> { root.public_only.ordered }, dependent: :destroy
+  has_many :champs_private, -> { root.private_only.ordered }, class_name: 'Champ', dependent: :destroy
   has_many :commentaires, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :follows
@@ -152,20 +152,8 @@ class Dossier < ApplicationRecord
     update_columns(autorisation_donnees: false)
   end
 
-  def total_follow
-    follows.size
-  end
-
   def read_only?
     en_instruction? || accepte? || refuse? || sans_suite?
-  end
-
-  def invite_for_user(user)
-    invites.find_by(user_id: user.id)
-  end
-
-  def can_be_en_construction?
-    !(procedure.archivee? && brouillon?)
   end
 
   def can_transition_to_en_construction?

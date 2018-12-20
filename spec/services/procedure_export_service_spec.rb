@@ -55,8 +55,6 @@ describe ProcedureExportService do
           :regions,
           :departements,
           :engagement,
-          :header_section,
-          :explication,
           :dossier_link,
           :piece_justificative,
           :siret,
@@ -123,7 +121,7 @@ describe ProcedureExportService do
         }
 
         let(:champs_data) {
-          dossier.champs.ordered.map(&:for_export)
+          dossier.reload.champs.reject(&:exclude_from_export?).map(&:for_export)
         }
 
         let(:etablissement_data) {
@@ -132,8 +130,8 @@ describe ProcedureExportService do
 
         it 'should have values' do
           expect(data.first[0..14]).to eq(dossier_data)
-          expect(data.first[15..40]).to eq(champs_data)
-          expect(data.first[41..64]).to eq(etablissement_data)
+          expect(data.first[15..38]).to eq(champs_data)
+          expect(data.first[39..62]).to eq(etablissement_data)
 
           expect(data).to eq([
             dossier_data + champs_data + etablissement_data
@@ -178,8 +176,8 @@ describe ProcedureExportService do
 
           it 'should have values' do
             expect(data.first[0..14]).to eq(dossier_data)
-            expect(data.first[15..40]).to eq(champs_data)
-            expect(data.first[41..64]).to eq(etablissement_data)
+            expect(data.first[15..38]).to eq(champs_data)
+            expect(data.first[39..62]).to eq(etablissement_data)
 
             expect(data).to eq([
               dossier_data + champs_data + etablissement_data

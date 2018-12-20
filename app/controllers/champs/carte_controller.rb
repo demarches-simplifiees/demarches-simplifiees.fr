@@ -41,7 +41,7 @@ class Champs::CarteController < ApplicationController
       coordinates = JSON.parse(coordinates)
 
       if @champ.cadastres?
-        cadastres = ModuleApiCartoService.generate_cadastre(coordinates)
+        cadastres = ApiCartoService.generate_cadastre(coordinates)
         geo_areas += cadastres.map do |cadastre|
           cadastre[:source] = GeoArea.sources.fetch(:cadastre)
           cadastre
@@ -49,7 +49,7 @@ class Champs::CarteController < ApplicationController
       end
 
       if @champ.quartiers_prioritaires?
-        quartiers_prioritaires = ModuleApiCartoService.generate_qp(coordinates)
+        quartiers_prioritaires = ApiCartoService.generate_qp(coordinates)
         geo_areas += quartiers_prioritaires.map do |qp|
           qp[:source] = GeoArea.sources.fetch(:quartier_prioritaire)
           qp
@@ -57,7 +57,7 @@ class Champs::CarteController < ApplicationController
       end
 
       if @champ.parcelles_agricoles?
-        parcelles_agricoles = ModuleApiCartoService.generate_rpg(coordinates)
+        parcelles_agricoles = ApiCartoService.generate_rpg(coordinates)
         geo_areas += parcelles_agricoles.map do |parcelle_agricole|
           parcelle_agricole[:source] = GeoArea.sources.fetch(:parcelle_agricole)
           parcelle_agricole

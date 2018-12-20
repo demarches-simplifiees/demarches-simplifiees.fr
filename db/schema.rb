@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_04_125101) do
+ActiveRecord::Schema.define(version: 2018_12_18_204707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,8 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
   create_table "administrateurs_gestionnaires", id: false, force: :cascade do |t|
     t.integer "administrateur_id"
     t.integer "gestionnaire_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["administrateur_id"], name: "index_administrateurs_gestionnaires_on_administrateur_id"
     t.index ["gestionnaire_id", "administrateur_id"], name: "unique_couple_administrateur_gestionnaire", unique: true
     t.index ["gestionnaire_id"], name: "index_administrateurs_gestionnaires_on_gestionnaire_id"
@@ -142,22 +144,6 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
     t.index ["gestionnaire_id"], name: "index_avis_on_gestionnaire_id"
   end
 
-  create_table "cadastres", id: :serial, force: :cascade do |t|
-    t.string "surface_intersection"
-    t.float "surface_parcelle"
-    t.string "numero"
-    t.integer "feuille"
-    t.string "section"
-    t.string "code_dep"
-    t.string "nom_com"
-    t.string "code_com"
-    t.string "code_arr"
-    t.text "geometry"
-    t.integer "dossier_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "champs", id: :serial, force: :cascade do |t|
     t.string "value"
     t.integer "type_de_champ_id"
@@ -167,8 +153,12 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
     t.datetime "updated_at"
     t.boolean "private", default: false, null: false
     t.integer "etablissement_id"
+    t.bigint "parent_id"
+    t.integer "row"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
+    t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
+    t.index ["row"], name: "index_champs_on_row"
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
   end
 
@@ -360,6 +350,8 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
     t.jsonb "properties"
     t.bigint "champ_id"
     t.string "geo_reference_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["champ_id"], name: "index_geo_areas_on_champ_id"
     t.index ["source"], name: "index_geo_areas_on_source"
   end
@@ -487,16 +479,6 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
     t.index ["service_id"], name: "index_procedures_on_service_id"
   end
 
-  create_table "quartier_prioritaires", id: :serial, force: :cascade do |t|
-    t.string "code"
-    t.string "nom"
-    t.string "commune"
-    t.text "geometry"
-    t.integer "dossier_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "received_mails", id: :serial, force: :cascade do |t|
     t.text "body"
     t.string "subject"
@@ -561,6 +543,8 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
     t.datetime "updated_at"
     t.jsonb "options"
     t.bigint "stable_id"
+    t.bigint "parent_id"
+    t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
@@ -622,6 +606,7 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "gestionnaires", column: "claimant_id"
+  add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossier_operation_logs", "dossiers"
@@ -635,5 +620,6 @@ ActiveRecord::Schema.define(version: 2018_12_04_125101) do
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
+  add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "without_continuation_mails", "procedures"
 end

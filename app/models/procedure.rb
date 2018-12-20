@@ -164,10 +164,6 @@ class Procedure < ApplicationRecord
     types_de_champ_private.order(:order_place)
   end
 
-  def all_types_de_champ
-    types_de_champ + types_de_champ_private
-  end
-
   def self.active(id)
     publiees.find(id)
   end
@@ -237,6 +233,10 @@ class Procedure < ApplicationRecord
 
   def whitelisted?
     whitelisted_at.present?
+  end
+
+  def has_old_pjs?
+    types_de_piece_justificative.any?
   end
 
   def total_dossier
