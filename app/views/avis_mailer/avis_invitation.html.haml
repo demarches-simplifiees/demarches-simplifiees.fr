@@ -1,5 +1,4 @@
-- content_for(:title, 'Vous avez été invité à donner votre avis')
-
+- content_for(:title, 'Invitation à donner votre avis')
 - avis_link = @avis.gestionnaire.present? ? gestionnaire_avis_url(@avis) : sign_up_gestionnaire_avis_url(@avis.id, @avis.email)
 
 - content_for(:footer) do
