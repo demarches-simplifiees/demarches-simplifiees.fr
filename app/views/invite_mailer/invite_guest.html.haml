@@ -15,8 +15,4 @@
   sur
   = invite_url(@invite, params: { email: @invite.email })
 
-%p
-  Bonne journée,
-
-%p
-  L'équipe demarches-simplifiees.fr
+= render partial: "layouts/mailers/signature"
