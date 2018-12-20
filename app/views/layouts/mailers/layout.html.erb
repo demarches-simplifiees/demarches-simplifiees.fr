@@ -116,6 +116,18 @@
                           </div>
                         </td>
                       </tr>
+                      <% if content_for?(:footer) %>
+                        <tr>
+                          <td style="word-wrap:break-word;font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-bottom:0px;" align="left">
+                            <p style="font-size:13px;text-align:left;">
+                              —
+                            </p>
+                            <p style="cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:22px;text-align:left;">
+                              <%= yield(:footer) %>
+                            </p>
+                          </td>
+                        </tr>
+                      <% end %>
                     </tbody>
                   </table>
                 </div>
