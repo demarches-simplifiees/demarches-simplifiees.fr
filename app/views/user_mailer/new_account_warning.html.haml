@@ -1,6 +1,7 @@
 - content_for(:title, @subject)
 
-%h1 Bonjour
+%p
+  Bonjour,
 
 %p
   Une demande de création de compte a été réalisée sur le site demarches-simplifiees.fr pour l'email #{@user.email}.
@@ -12,7 +13,4 @@
 %p
   Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer ce mail.
 
-%p
-  Cordialement,
-  %br
-  L'équipe demarches-simplifiees.fr
+= render partial: "layouts/mailers/signature"
