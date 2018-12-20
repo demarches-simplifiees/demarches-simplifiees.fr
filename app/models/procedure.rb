@@ -3,9 +3,9 @@ require Rails.root.join('lib', 'percentile')
 class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
 
-  has_many :types_de_piece_justificative, -> { order "order_place ASC" }, dependent: :destroy
-  has_many :types_de_champ, -> { public_only }, dependent: :destroy
-  has_many :types_de_champ_private, -> { private_only }, class_name: 'TypeDeChamp', dependent: :destroy
+  has_many :types_de_piece_justificative, -> { ordered }, dependent: :destroy
+  has_many :types_de_champ, -> { public_only.ordered }, dependent: :destroy
+  has_many :types_de_champ_private, -> { private_only.ordered }, class_name: 'TypeDeChamp', dependent: :destroy
   has_many :dossiers
   has_many :deleted_dossiers, dependent: :destroy
 
@@ -137,13 +137,8 @@ class Procedure < ApplicationRecord
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
-    champs = types_de_champ
-      .ordered
-      .map { |tdc| tdc.champ.build }
-
-    champs_private = types_de_champ_private
-      .ordered
-      .map { |tdc| tdc.champ.build }
+    champs = types_de_champ.map { |tdc| tdc.champ.build }
+    champs_private = types_de_champ_private.map { |tdc| tdc.champ.build }
 
     Dossier.new(procedure: self, champs: champs, champs_private: champs_private)
   end
@@ -156,24 +151,16 @@ class Procedure < ApplicationRecord
     service&.nom || organisation
   end
 
-  def types_de_champ_ordered
-    types_de_champ.order(:order_place)
-  end
-
-  def types_de_champ_private_ordered
-    types_de_champ_private.order(:order_place)
-  end
-
   def self.active(id)
     publiees.find(id)
   end
 
   def switch_types_de_champ(index_of_first_element)
-    switch_list_order(types_de_champ_ordered, index_of_first_element)
+    switch_list_order(types_de_champ, index_of_first_element)
   end
 
   def switch_types_de_champ_private(index_of_first_element)
-    switch_list_order(types_de_champ_private_ordered, index_of_first_element)
+    switch_list_order(types_de_champ_private, index_of_first_element)
   end
 
   def switch_types_de_piece_justificative(index_of_first_element)
