@@ -4,7 +4,7 @@
 
 - content_for(:footer) do
   Merci de ne pas répondre à cet email. Donnez votre avis
-  = link_to("sur notre site", avis_link)
+  = link_to("sur demarches-simplifiees.fr", avis_link)
   ou
   = succeed '.' do
     = mail_to(@avis.claimant.email, "contactez la personne qui vous a invité")
