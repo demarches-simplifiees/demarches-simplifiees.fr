@@ -10,6 +10,7 @@ class Pipedrive::PersonAdapter
         nom: datum['name'],
         poste: datum[PIPEDRIVE_POSTE_ATTRIBUTE_ID],
         email: datum.dig('email', 0, 'value'),
+        tel: datum.dig('phone', 0, 'value'),
         organisation: datum['org_name']
       }
     end
