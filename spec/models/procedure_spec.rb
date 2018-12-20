@@ -252,11 +252,11 @@ describe Procedure do
     end
   end
 
-  describe '#types_de_champ_ordered' do
+  describe '#types_de_champ (ordered)' do
     let(:procedure) { create(:procedure) }
     let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 0) }
-    subject { procedure.types_de_champ_ordered }
+    subject { procedure.types_de_champ }
     it { expect(subject.first).to eq(type_de_champ_1) }
     it { expect(subject.last).to eq(type_de_champ_0) }
   end
@@ -432,8 +432,8 @@ describe Procedure do
     end
 
     it 'should keep types_de_champ ids stable' do
-      expect(subject.types_de_champ_ordered.first.id).not_to eq(procedure.types_de_champ_ordered.first.id)
-      expect(subject.types_de_champ_ordered.first.stable_id).to eq(procedure.types_de_champ_ordered.first.id)
+      expect(subject.types_de_champ.first.id).not_to eq(procedure.types_de_champ.first.id)
+      expect(subject.types_de_champ.first.stable_id).to eq(procedure.types_de_champ.first.id)
     end
   end
 
