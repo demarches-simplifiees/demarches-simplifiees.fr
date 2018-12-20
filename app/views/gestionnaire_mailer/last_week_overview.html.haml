@@ -1,5 +1,11 @@
 - content_for(:title, @subject)
 
+%p
+  Bonjour,
+
+%p
+  Voici le résumé de votre activité hebdomadaire :
+
 - @overview[:procedure_overviews].each_with_index do |procedure_overview, index|
 
   %h2{ style: 'font-size: 16px; font-weight: 300; margin: 25px 0 5px;' }
