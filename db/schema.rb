@@ -153,8 +153,12 @@ ActiveRecord::Schema.define(version: 2018_12_18_204707) do
     t.datetime "updated_at"
     t.boolean "private", default: false, null: false
     t.integer "etablissement_id"
+    t.bigint "parent_id"
+    t.integer "row"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
+    t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
+    t.index ["row"], name: "index_champs_on_row"
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
   end
 
@@ -539,6 +543,8 @@ ActiveRecord::Schema.define(version: 2018_12_18_204707) do
     t.datetime "updated_at"
     t.jsonb "options"
     t.bigint "stable_id"
+    t.bigint "parent_id"
+    t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
@@ -600,6 +606,7 @@ ActiveRecord::Schema.define(version: 2018_12_18_204707) do
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "gestionnaires", column: "claimant_id"
+  add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossier_operation_logs", "dossiers"
@@ -613,5 +620,6 @@ ActiveRecord::Schema.define(version: 2018_12_18_204707) do
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
+  add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "without_continuation_mails", "procedures"
 end

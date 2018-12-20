@@ -25,4 +25,10 @@ class Service < ApplicationRecord
   validates :horaires, presence: { message: 'doivent être renseignés' }, allow_nil: false
   validates :adresse, presence: { message: 'doit être renseignée' }, allow_nil: false
   validates :administrateur, presence: { message: 'doit être renseigné' }, allow_nil: false
+
+  def clone_and_assign_to_administrateur(administrateur)
+    service_cloned = self.dup
+    service_cloned.administrateur = administrateur
+    service_cloned
+  end
 end

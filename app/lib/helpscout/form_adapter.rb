@@ -23,12 +23,16 @@ class Helpscout::FormAdapter
   ADMIN_TYPE_RDV = 'admin demande rdv'
   ADMIN_TYPE_QUESTION = 'admin question'
   ADMIN_TYPE_SOUCIS = 'admin soucis'
+  ADMIN_TYPE_PRODUIT = 'admin suggestion produit'
+  ADMIN_TYPE_DEMANDE_COMPTE = 'admin demande compte'
   ADMIN_TYPE_AUTRE = 'admin autre'
 
   ADMIN_OPTIONS = [
     [I18n.t(ADMIN_TYPE_QUESTION, scope: [:supportadmin]), ADMIN_TYPE_QUESTION],
     [I18n.t(ADMIN_TYPE_RDV, scope: [:supportadmin]), ADMIN_TYPE_RDV],
     [I18n.t(ADMIN_TYPE_SOUCIS, scope: [:supportadmin]), ADMIN_TYPE_SOUCIS],
+    [I18n.t(ADMIN_TYPE_PRODUIT, scope: [:supportadmin]), ADMIN_TYPE_PRODUIT],
+    [I18n.t(ADMIN_TYPE_DEMANDE_COMPTE, scope: [:supportadmin]), ADMIN_TYPE_DEMANDE_COMPTE],
     [I18n.t(ADMIN_TYPE_AUTRE, scope: [:supportadmin]), ADMIN_TYPE_AUTRE]
   ]
 

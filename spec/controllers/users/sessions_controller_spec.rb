@@ -17,7 +17,7 @@ describe Users::SessionsController, type: :controller do
         user.reload
       end
 
-      subject { user.loged_in_with_france_connect? }
+      subject { user.loged_in_with_france_connect.present? }
 
       it { is_expected.to be_falsey }
     end
@@ -141,7 +141,7 @@ describe Users::SessionsController, type: :controller do
 
     it 'loged_in_with_france_connect current_user attribut is nil' do
       user.reload
-      expect(user.loged_in_with_france_connect?).to be_falsey
+      expect(user.loged_in_with_france_connect.present?).to be_falsey
     end
 
     context 'when user is connect with france connect particulier' do

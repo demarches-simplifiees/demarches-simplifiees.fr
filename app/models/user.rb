@@ -28,21 +28,6 @@ class User < ApplicationRecord
     link_invites!
   end
 
-  def self.find_for_france_connect(email, siret)
-    user = User.find_by(email: email)
-
-    if user.nil?
-      User.create(email: email, password: Devise.friendly_token[0, 20], siret: siret)
-    else
-      user.update(siret: siret)
-      user
-    end
-  end
-
-  def loged_in_with_france_connect?
-    loged_in_with_france_connect.present?
-  end
-
   def owns?(dossier)
     dossier.user_id == id
   end

@@ -65,6 +65,8 @@ fr:
     admin demande rdv: Demande de RDV pour une présentation à distance de demarches-simplifiees.fr
     admin question: J'ai une question sur demarches-simplifiees.fr
     admin soucis: J'ai un problème technique avec demarches-simplifiees.fr
+    admin suggestion produit: J'ai une proposition d'évolution
+    admin demande compte: Je souhaite ouvrir un compte administrateur avec un email Orange, Wanadoo, etc.
     admin autre: Autre sujet
 
   number:

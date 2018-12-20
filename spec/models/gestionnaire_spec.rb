@@ -199,29 +199,6 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#can_view_dossier?' do
-    subject{ gestionnaire.can_view_dossier?(dossier.id) }
-
-    context 'when gestionnaire is assigned on dossier' do
-      let!(:dossier){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
-
-      it { expect(subject).to be true }
-    end
-
-    context 'when gestionnaire is invited on dossier' do
-      let(:dossier){ create(:dossier) }
-      let!(:avis){ create(:avis, dossier: dossier, gestionnaire: gestionnaire) }
-
-      it { expect(subject).to be true }
-    end
-
-    context 'when gestionnaire is neither assigned nor invited on dossier' do
-      let(:dossier){ create(:dossier) }
-
-      it { expect(subject).to be false }
-    end
-  end
-
   describe "procedure_presentation_and_errors_for_procedure_id" do
     let(:procedure_presentation_and_errors) { gestionnaire.procedure_presentation_and_errors_for_procedure_id(procedure_id) }
     let(:procedure_presentation) { procedure_presentation_and_errors.first }
