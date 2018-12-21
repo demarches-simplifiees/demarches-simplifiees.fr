@@ -1,5 +1,8 @@
 class AdministrateurMailerPreview < ActionMailer::Preview
   def activate_before_expiration
-    AdministrateurMailer.activate_before_expiration(Administrateur.inactive.where.not(reset_password_token: nil).last)
+    administrateur = Administrateur.new
+    administrateur.reset_password_sent_at = Time.now.utc
+
+    AdministrateurMailer.activate_before_expiration(administrateur, "a4d4e4f4b4d445")
   end
 end
