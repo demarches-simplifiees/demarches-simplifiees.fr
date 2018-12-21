@@ -104,7 +104,7 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 
 ### Linting
 
-Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité code.
+Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité du code.
 
 - Faire tourner tous les linters : `bin/rake lint`
 - [AccessLint](http://accesslint.com/) tourne automatiquement sur les PRs
