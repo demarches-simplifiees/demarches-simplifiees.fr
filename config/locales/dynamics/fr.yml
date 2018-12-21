@@ -1,6 +1,6 @@
 fr:
   dynamics:
-    page_title: demarches-simplifiees.fr
+    page_title: #{SITE_NAME}
     users:
       connexion_title: Connexion
       mes_dossiers: 'Mes dossiers'

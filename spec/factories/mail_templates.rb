@@ -10,7 +10,7 @@ FactoryBot.define do
     factory :without_continuation_mail, class: Mails::WithoutContinuationMail
 
     factory :initiated_mail, class: Mails::InitiatedMail do
-      subject { "[demarches-simplifiees.fr] Accusé de réception pour votre dossier nº --numéro du dossier--" }
+      subject { "[#{SITE_NAME}] Accusé de réception pour votre dossier nº --numéro du dossier--" }
       body { "Votre administration vous confirme la bonne réception de votre dossier nº --numéro du dossier--" }
     end
   end
