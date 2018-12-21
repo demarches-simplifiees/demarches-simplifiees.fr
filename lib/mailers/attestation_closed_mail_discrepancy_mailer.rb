@@ -15,7 +15,7 @@ module Mailers
       else
         procedure_ids = 'vos démarches nº ' + procedures.map(&:id).join(', ')
       end
-      "demarches-simplifiees.fr – mise à jour nécessaire de l’accusé d’acceptation de #{procedure_ids}"
+      "#{SITE_NAME} – mise à jour nécessaire de l’accusé d’acceptation de #{procedure_ids}"
     end
 
     def body(procedures)
@@ -24,11 +24,11 @@ module Mailers
 
         Pour des raisons de confidentialité, le mode de transmission des attestations aux usagers évolue.
 
-        À compter du 30 avril, les mails d’accusé d’acceptation émis par demarches-simplifiees.fr ne
+        À compter du 30 avril, les mails d’accusé d’acceptation émis par #{SITE_NAME} ne
         comporteront plus d’attestation en pièce jointe comme c’est le cas aujourd’hui.
 
         À la place, le mail contiendra un lien permettant à l’usager de télécharger son
-        attestation dirctement dans son espace sécurisé sur demarches-simplifiees.fr.
+        attestation dirctement dans son espace sécurisé sur #{SITE_NAME}.
 
         Ce lien de téléchargement est généré par la balise --lien attestation--.
 
@@ -36,7 +36,7 @@ module Mailers
 
         Pour toute question vous pouvez nous joindre par téléphone au #{CONTACT_PHONE}
         ou sur l’adresse email #{CONTACT_EMAIL}.
-        -- \nL’équipe demarches-simplifiees.fr
+        -- \nL’équipe #{SITE_NAME}
       HEREDOC
     end
 

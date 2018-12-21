@@ -4,7 +4,7 @@
   Bonjour,
 
 %p
-  Pour activer votre compte sur demarches-simplifiees.fr, veuillez cliquer sur le lien suivant :
+  Pour activer votre compte sur #{SITE_NAME}, veuillez cliquer sur le lien suivant :
   = link_to(confirmation_url(@user, confirmation_token: @token), confirmation_url(@user, confirmation_token: @token))
 
 = render partial: "layouts/mailers/signature"

@@ -7,13 +7,13 @@
 - if unconfirmed_email.present?
   %p
     Nous avons reçu une demande de changement d’adresse email pour votre
-    compte #{@email} sur demarches-simplifiees.fr.
+    compte #{@email} sur #{SITE_NAME}.
     Une fois la demande prise en compte, la nouvelle adresse email de
     votre compte sera #{unconfirmed_email}.
 - else
   %p
     Le changement d’adresse email de votre compte #{@email} sur
-    demarches-simplifiees.fr a bien été pris en compte.
+    #{SITE_NAME} a bien été pris en compte.
     Vous pouvez désormais vous connecter avec l’adresse #{@resource.email}.
 
 = render partial: "layouts/mailers/signature"

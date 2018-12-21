@@ -2,7 +2,7 @@
   Bonjour,
 
 %p
-  Veuillez cliquer sur le lien suivant pour vous connecter sur le site demarches-simplifiees.fr : 
+  Veuillez cliquer sur le lien suivant pour vous connecter sur le site #{SITE_NAME} : 
   = link_to(sign_in_by_link_url(@gestionnaire_id, jeton: @login_token), sign_in_by_link_url(@gestionnaire_id, jeton: @login_token))
 
 = render partial: "layouts/mailers/signature"
