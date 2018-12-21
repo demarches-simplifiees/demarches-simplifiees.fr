@@ -39,7 +39,7 @@ class GestionnaireMailer < ApplicationMailer
   def send_login_token(gestionnaire, login_token)
     @gestionnaire_id = gestionnaire.id
     @login_token = login_token
-    subject = "Connexion sécurisée à demarches-simplifiees.fr"
+    subject = "Connexion sécurisée à #{SITE_NAME}"
 
     mail(to: gestionnaire.email, subject: subject)
   end

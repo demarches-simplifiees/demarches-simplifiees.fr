@@ -26,7 +26,7 @@ class NewAttestationMailer < ApplicationMailer
 
       Cordialement,
 
-      L’équipe demarches-simplifiees.fr
+      L’équipe #{SITE_NAME}
     HEREDOC
   end
 end

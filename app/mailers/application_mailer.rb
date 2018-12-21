@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "demarches-simplifiees.fr <#{CONTACT_EMAIL}>"
+  default from: "#{SITE_NAME} <#{CONTACT_EMAIL}>"
   layout 'mailer'
 end
