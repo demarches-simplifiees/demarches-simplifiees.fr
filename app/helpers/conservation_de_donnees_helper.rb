@@ -7,7 +7,7 @@ module ConservationDeDonneesHelper
 
   def conservation_dans_ds(procedure)
     if procedure.duree_conservation_dossiers_dans_ds.present?
-      "Dans demarches-simplifiees.fr : #{procedure.duree_conservation_dossiers_dans_ds} mois"
+      "Dans #{SITE_NAME} : #{procedure.duree_conservation_dossiers_dans_ds} mois"
     end
   end
 

@@ -75,7 +75,7 @@ module ApplicationHelper
       link_to title, contact_url(params), options
     else
       mail_to CONTACT_EMAIL, title,
-        options.merge(subject: "Question à propos de demarches-simplifiees.fr")
+        options.merge(subject: "Question à propos de #{SITE_NAME}")
     end
   end
 
