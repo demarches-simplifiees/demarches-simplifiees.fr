@@ -1,4 +1,4 @@
-namespace :admin do
+namespace :superadmin do
   desc <<~EOD
     List all super-admins
   EOD
@@ -12,7 +12,7 @@ namespace :admin do
   desc <<~EOD
     Create a new super-admin account with the #EMAIL email address.
   EOD
-  task :create_admin, [:email] => :environment do |_t, args|
+  task :create, [:email] => :environment do |_t, args|
     email = args[:email]
 
     puts "Creating Administration for #{email}"
@@ -28,7 +28,7 @@ namespace :admin do
   desc <<~EOD
     Delete the #EMAIL super-admin account
   EOD
-  task :delete_admin, [:email] => :environment do |_t, args|
+  task :delete, [:email] => :environment do |_t, args|
     email = args[:email]
     puts "Deleting Administration for #{email}"
     a = Administration.find_by(email: email)
