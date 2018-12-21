@@ -8,7 +8,7 @@
   %h1 Encore une petite étape :)
 
   %p.mail
-    Ouvrez votre boite email <b>#{@email}</b> puis cliquez sur le lien d'activation du message <b>Connexion sécurisée à demarches-simplifiees.fr</b>.
+    Ouvrez votre boite email <b>#{@email}</b> puis cliquez sur le lien d'activation du message <b>Connexion sécurisée à #{SITE_NAME}</b>.
 
   %p.help
-    En cas de difficultés, nous restons joignables sur #{link_to 'contact@demarches-simplifiees.fr', 'mailto:contact@demarches-simplifiees.fr'}.
+    En cas de difficultés, nous restons joignables sur #{link_to '#{SITE_NAME}', 'mailto:#{CONTACT_MAIL}'}.

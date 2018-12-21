@@ -8,7 +8,7 @@
     = csrf_meta_tags
 
     %title
-      = content_for?(:title) ? "#{yield(:title)} · demarches-simplifiees.fr" : "demarches-simplifiees.fr"
+      = content_for?(:title) ? "#{yield(:title)} · #{SITE_NAME}" : "#{SITE_NAME}"
 
     = favicon_link_tag(image_url("favicons/16x16.png"), type: "image/png", sizes: "16x16")
     = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")

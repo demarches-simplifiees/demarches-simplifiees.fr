@@ -6,7 +6,7 @@
 
     .flex.align-center
       = link_to root_path_for_profile(nav_bar_profile), class: "header-logo" do
-        %img{ src: image_url("header/logo-md.svg"), alt: "demarches-simplifiees.fr" }
+        %img{ src: image_url("header/logo-md.svg"), alt: "#{SITE}" }
 
       - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
         - current_url = request.path_info
