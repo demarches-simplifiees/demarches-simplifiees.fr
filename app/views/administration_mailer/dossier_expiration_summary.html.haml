@@ -1,7 +1,7 @@
 - content_for(:title, 'Expiration du délai de conservation des dossiers')
 
 - if @expired_dossiers.present?
-  %h1= t('mail.administration.dossier_expiration_summary.expired_dossiers', count: @expired_dossiers.count)
+  %h2= t('mail.administration.dossier_expiration_summary.expired_dossiers', count: @expired_dossiers.count)
   - @expired_dossiers.group_by(&:procedure).each do |procedure, dossiers|
     %dl
       %dt
@@ -10,7 +10,7 @@
         = dossiers.map { |d| link_to(d.id, manager_dossier_url(d)) }.join(', ').html_safe
 
 - if @expiring_dossiers.present?
-  %h1= t('mail.administration.dossier_expiration_summary.expiring_dossiers', count: @expiring_dossiers.count)
+  %h2= t('mail.administration.dossier_expiration_summary.expiring_dossiers', count: @expiring_dossiers.count)
   - @expiring_dossiers.group_by(&:procedure).each do |procedure, dossiers|
     %dl
       %dt

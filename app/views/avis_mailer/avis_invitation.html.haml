@@ -1,5 +1,4 @@
-- content_for(:title, 'Vous avez été invité à donner votre avis')
-
+- content_for(:title, 'Invitation à donner votre avis')
 - avis_link = @avis.gestionnaire.present? ? gestionnaire_avis_url(@avis) : sign_up_gestionnaire_avis_url(@avis.id, @avis.email)
 
 - content_for(:footer) do
@@ -21,7 +20,7 @@
 %p
   = "#{@avis.claimant.email} vous a écrit :"
   %br
-%p{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 16px;" }
+%p{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 14px;" }
   = @avis.introduction
 
 - if @avis.gestionnaire.present?
