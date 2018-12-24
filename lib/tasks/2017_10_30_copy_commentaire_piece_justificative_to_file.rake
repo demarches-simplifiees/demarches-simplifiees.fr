@@ -22,7 +22,7 @@ namespace :'2017_10_30_copy_commentaire_piece_justificative_to_file' do
   end
 
   def sanitize_name(name) # from https://github.com/carrierwaveuploader/carrierwave/blob/master/lib/carrierwave/sanitized_file.rb#L323
-    name = name.gsub(/[^[:word:]\.\-\+]/,"_")
+    name = name.gsub(/[^[:word:]\.\-\+]/, "_")
     name = "_#{name}" if name.match?(/\A\.+\z/)
     name = "unnamed" if name.empty?
     return name.mb_chars.to_s

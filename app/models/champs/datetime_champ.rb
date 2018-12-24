@@ -12,7 +12,7 @@ class Champs::DatetimeChamp < Champ
       self.value =
         begin
           hash_date = YAML.safe_load(value.gsub('=>', ': '))
-          year, month, day, hour, minute = hash_date.values_at(1,2,3,4,5)
+          year, month, day, hour, minute = hash_date.values_at(1, 2, 3, 4, 5)
           Time.zone.local(year, month, day, hour, minute).strftime("%d/%m/%Y %H:%M")
         rescue
           nil
