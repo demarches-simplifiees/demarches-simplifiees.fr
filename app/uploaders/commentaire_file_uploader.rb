@@ -18,6 +18,6 @@ class CommentaireFileUploader < BaseUploader
   end
 
   def accept_extension_list
-    extension_white_list.map{ |e| ".#{e}" }.join(",")
+    extension_white_list.map { |e| ".#{e}" }.join(",")
   end
 end

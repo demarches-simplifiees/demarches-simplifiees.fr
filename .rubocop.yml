@@ -224,7 +224,7 @@ Layout/SpaceAroundOperators:
   Enabled: true
 
 Layout/SpaceBeforeBlockBraces:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeComma:
   Enabled: true

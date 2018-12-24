@@ -1,5 +1,5 @@
 describe Manager::AdministrateursController, type: :controller do
-  let(:administration){ create(:administration) }
+  let(:administration) { create(:administration) }
 
   describe 'POST #create' do
     let(:email) { 'plop@plop.com' }

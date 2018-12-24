@@ -7,7 +7,7 @@ class DropDownList < ApplicationRecord
   end
 
   def disabled_options
-    options.select{ |v| (v =~ /^--.*--$/).present? }
+    options.select { |v| (v =~ /^--.*--$/).present? }
   end
 
   def selected_options(champ)
