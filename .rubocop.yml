@@ -58,7 +58,7 @@ Layout/CommentIndentation:
   Enabled: true
 
 Layout/ConditionPosition:
-  Enabled: false
+  Enabled: true
 
 Layout/DefEndAlignment:
   Enabled: false
@@ -339,40 +339,40 @@ Lint/EnsureReturn:
   Enabled: false
 
 Lint/FloatOutOfRange:
-  Enabled: false
+  Enabled: true
 
 Lint/FormatParameterMismatch:
-  Enabled: false
+  Enabled: true
 
 Lint/HandleExceptions:
   Enabled: false
 
 Lint/ImplicitStringConcatenation:
-  Enabled: false
+  Enabled: true
 
 Lint/IneffectiveAccessModifier:
   Enabled: false
 
 Lint/InheritException:
-  Enabled: false
+  Enabled: true
 
 Lint/InterpolationCheck:
   Enabled: true
 
 Lint/LiteralAsCondition:
-  Enabled: false
+  Enabled: true
 
 Lint/LiteralInInterpolation:
-  Enabled: false
+  Enabled: true
 
 Lint/Loop:
-  Enabled: false
+  Enabled: true
 
 Lint/MissingCopEnableDirective:
   Enabled: true
 
 Lint/MultipleCompare:
-  Enabled: false
+  Enabled: true
 
 Lint/NestedMethodDefinition:
   Enabled: false
@@ -381,7 +381,7 @@ Lint/NestedPercentLiteral:
   Enabled: true
 
 Lint/NextWithoutAccumulator:
-  Enabled: false
+  Enabled: true
 
 Lint/NonLocalExitFromIterator:
   Enabled: false
@@ -417,16 +417,16 @@ Lint/RequireParentheses:
   Enabled: false
 
 Lint/RescueException:
-  Enabled: false
+  Enabled: true
 
 Lint/RescueType:
-  Enabled: false
+  Enabled: true
 
 Lint/ReturnInVoidContext:
   Enabled: false
 
 Lint/SafeNavigationChain:
-  Enabled: false
+  Enabled: true
 
 Lint/ScriptPermission:
   Enabled: false
@@ -435,7 +435,7 @@ Lint/ShadowedArgument:
   Enabled: true
 
 Lint/ShadowedException:
-  Enabled: false
+  Enabled: true
 
 Lint/ShadowingOuterLocalVariable:
   Enabled: false
@@ -450,10 +450,10 @@ Lint/UnderscorePrefixedVariableName:
   Enabled: false
 
 Lint/UnifiedInteger:
-  Enabled: false
+  Enabled: true
 
 Lint/UnneededCopDisableDirective:
-  Enabled: false
+  Enabled: true
 
 Lint/UnneededCopEnableDirective:
   Enabled: true
@@ -465,7 +465,7 @@ Lint/UnneededSplatExpansion:
   Enabled: false
 
 Lint/UnreachableCode:
-  Enabled: false
+  Enabled: true
 
 Lint/UnusedBlockArgument:
   Enabled: false
@@ -486,16 +486,16 @@ Lint/UselessAssignment:
   Enabled: false
 
 Lint/UselessComparison:
-  Enabled: false
+  Enabled: true
 
 Lint/UselessElseWithoutRescue:
-  Enabled: false
+  Enabled: true
 
 Lint/UselessSetterCall:
-  Enabled: false
+  Enabled: true
 
 Lint/Void:
-  Enabled: false
+  Enabled: true
 
 Metrics/AbcSize:
   Enabled: false
