@@ -13,7 +13,7 @@ describe Invite do
         create(:invite, email: email1, dossier: dossier2)
       end
 
-      it { expect{ subject }.to change(Invite, :count).by(2) }
+      it { expect { subject }.to change(Invite, :count).by(2) }
     end
 
     context 'when an email is invite twice on a dossier' do
@@ -22,7 +22,7 @@ describe Invite do
         create(:invite, email: email1, dossier: dossier1)
       end
 
-      it { expect{ subject }.to raise_error ActiveRecord::RecordInvalid }
+      it { expect { subject }.to raise_error ActiveRecord::RecordInvalid }
     end
 
     context "email validation" do

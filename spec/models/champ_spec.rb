@@ -385,18 +385,18 @@ describe Champ do
       context 'and there is a blob' do
         before { champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain") }
 
-        it { expect{ champ.save }.to change(VirusScan, :count).by(1) }
+        it { expect { champ.save }.to change(VirusScan, :count).by(1) }
       end
 
       context 'and there is no blob' do
-        it { expect{ champ.save }.to_not change(VirusScan, :count) }
+        it { expect { champ.save }.to_not change(VirusScan, :count) }
       end
     end
 
     context 'when type_champ is not type_de_champ_piece_justificative' do
       let(:type_de_champ) { create(:type_de_champ_textarea) }
 
-      it { expect{ champ.save }.to_not change(VirusScan, :count) }
+      it { expect { champ.save }.to_not change(VirusScan, :count) }
     end
   end
 

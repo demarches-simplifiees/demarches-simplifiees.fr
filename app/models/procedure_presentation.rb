@@ -46,7 +46,7 @@ class ProcedurePresentation < ApplicationRecord
       )
     end
 
-    explanatory_types_de_champ = [:header_section, :explication].map{ |k| TypeDeChamp.type_champs.fetch(k) }
+    explanatory_types_de_champ = [:header_section, :explication].map { |k| TypeDeChamp.type_champs.fetch(k) }
 
     fields.concat procedure.types_de_champ
       .reject { |tdc| explanatory_types_de_champ.include?(tdc.type_champ) }

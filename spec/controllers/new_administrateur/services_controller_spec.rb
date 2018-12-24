@@ -118,7 +118,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
         delete :destroy, params: { id: service.id, procedure_id: 12 }
       end
 
-      it { expect{ service.reload }.to raise_error(ActiveRecord::RecordNotFound) }
+      it { expect { service.reload }.to raise_error(ActiveRecord::RecordNotFound) }
       it { expect(flash.alert).to be_nil }
       it { expect(flash.notice).to eq("#{service.nom} est supprimé") }
       it { expect(response).to redirect_to(services_path(procedure_id: 12)) }

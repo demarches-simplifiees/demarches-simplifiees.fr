@@ -537,7 +537,7 @@ describe Procedure do
   end
 
   describe '#default_path' do
-    let(:procedure){ create(:procedure, libelle: 'A long libelle with àccênts, blabla coucou hello un deux trois voila') }
+    let(:procedure) { create(:procedure, libelle: 'A long libelle with àccênts, blabla coucou hello un deux trois voila') }
 
     subject { procedure.default_path }
 

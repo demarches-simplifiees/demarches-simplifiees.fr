@@ -95,14 +95,14 @@ describe Gestionnaire, type: :model do
       let(:procedure_to_assign) { procedure_3 }
 
       it { is_expected.to be_truthy }
-      it { expect{ subject }.to change(gestionnaire.procedures, :count) }
+      it { expect { subject }.to change(gestionnaire.procedures, :count) }
     end
 
     context "with an already assigned procedure" do
       let(:procedure_to_assign) { procedure }
 
       it { is_expected.to be_falsey }
-      it { expect{ subject }.not_to change(gestionnaire.procedures, :count) }
+      it { expect { subject }.not_to change(gestionnaire.procedures, :count) }
     end
   end
 
