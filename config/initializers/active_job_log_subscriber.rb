@@ -33,11 +33,18 @@ class ActiveJobLogSubscriber < ::ActiveJob::Logging::LogSubscriber
   def process_event(event, type)
     data = extract_metadata(event)
     data.merge!(extract_exception(event))
-    data.merge!(extract_scheduled_at(event)) if type == 'enqueue_at'
-    data.merge!(extract_duration(event)) if type == 'perform'
+
+    case type
+    when 'enqueue_at'
+      data.merge!(extract_scheduled_at(event))
+    when 'perform'
+      data.merge!(extract_duration(event))
+    end
 
     tags = ['job', type]
-    tags.push('exception') if data[:exception]
+    if data[:exception]
+      tags.push('exception')
+    end
     data[:tags] = tags
     data[:type] = 'tps'
     data[:source] = ENV['SOURCE']
