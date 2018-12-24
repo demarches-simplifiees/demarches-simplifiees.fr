@@ -394,7 +394,9 @@ Lint/OrderedMagicComments:
   Enabled: true
 
 Lint/ParenthesesAsGroupedExpression:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - "spec/**/*"
 
 Lint/PercentStringArray:
   Enabled: false
