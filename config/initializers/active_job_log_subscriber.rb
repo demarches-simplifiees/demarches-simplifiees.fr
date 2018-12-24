@@ -32,9 +32,9 @@ class ActiveJobLogSubscriber < ::ActiveJob::Logging::LogSubscriber
 
   def process_event(event, type)
     data = extract_metadata(event)
-    data.merge! extract_exception(event)
-    data.merge! extract_scheduled_at(event) if type == 'enqueue_at'
-    data.merge! extract_duration(event) if type == 'perform'
+    data.merge!(extract_exception(event))
+    data.merge!(extract_scheduled_at(event)) if type == 'enqueue_at'
+    data.merge!(extract_duration(event)) if type == 'perform'
 
     tags = ['job', type]
     tags.push('exception') if data[:exception]
