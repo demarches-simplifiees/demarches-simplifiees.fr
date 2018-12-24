@@ -91,6 +91,6 @@ class Etablissement < ApplicationRecord
   def message_for_signature
     JSON.pretty_generate(as_json(include: {
       exercices: { only: [:ca, :date_fin_exercice, :date_fin_exercice_timestamp] }
-    }).delete_if { |k, v| v.blank? })
+    }).delete_if { |_k, v| v.blank? })
   end
 end

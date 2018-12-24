@@ -271,7 +271,7 @@ class StatsController < ApplicationController
       dossiers_grouped_by_procedure = value.group_by { |dossier| dossier[0] }
 
       # Compute the mean time for this procedure
-      procedure_processing_times = dossiers_grouped_by_procedure.map do |procedure_id, procedure_dossiers|
+      procedure_processing_times = dossiers_grouped_by_procedure.map do |_procedure_id, procedure_dossiers|
         procedure_dossiers_processing_time = procedure_dossiers.map do |dossier|
           (dossier[2] - dossier[1]).to_f / (3600 * 24)
         end
