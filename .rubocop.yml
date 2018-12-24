@@ -450,7 +450,7 @@ Lint/Syntax:
   Enabled: true
 
 Lint/UnderscorePrefixedVariableName:
-  Enabled: false
+  Enabled: true
 
 Lint/UnifiedInteger:
   Enabled: true
