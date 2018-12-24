@@ -46,7 +46,7 @@ namespace :'2018_09_12_fix_templates' do
         .each do |instance|
 
         instance.update(body: instance.body.gsub("--libellé procédure--", "--libellé démarche--"))
-        rake_puts "Body mis-à-jour pour #{klass.to_s}##{instance.id}"
+        rake_puts "Body mis-à-jour pour #{klass}##{instance.id}"
       end
     end
   end

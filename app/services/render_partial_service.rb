@@ -31,6 +31,6 @@ class RenderPartialService
   end
 
   def retrieve_name
-    "#{controller.to_s.parameterize.underscore}_#{method.to_s}"
+    "#{controller.to_s.parameterize.underscore}_#{method}"
   end
 end

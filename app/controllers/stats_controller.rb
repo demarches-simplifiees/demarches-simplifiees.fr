@@ -211,7 +211,7 @@ class StatsController < ApplicationController
 
     association
       .where(date_attribute => min_date..max_date)
-      .group("DATE_TRUNC('month', #{date_attribute.to_s})")
+      .group("DATE_TRUNC('month', #{date_attribute})")
       .count
       .to_a
       .sort_by { |a| a[0] }
@@ -221,8 +221,8 @@ class StatsController < ApplicationController
   def cumulative_hash(association, date_attribute)
     sum = 0
     association
-      .where("#{date_attribute.to_s} < ?", max_date)
-      .group("DATE_TRUNC('month', #{date_attribute.to_s})")
+      .where("#{date_attribute} < ?", max_date)
+      .group("DATE_TRUNC('month', #{date_attribute})")
       .count
       .to_a
       .sort_by { |a| a[0] }
