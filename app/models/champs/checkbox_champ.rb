@@ -1,7 +1,7 @@
 class Champs::CheckboxChamp < Champ
   def search_terms
     if value == 'on'
-      [ libelle ]
+      [libelle]
     end
   end
 
