@@ -200,7 +200,7 @@ Layout/SpaceAfterColon:
   Enabled: true
 
 Layout/SpaceAfterComma:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterMethodName:
   Enabled: true
