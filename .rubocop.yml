@@ -444,7 +444,7 @@ Lint/ShadowingOuterLocalVariable:
   Enabled: false
 
 Lint/StringConversionInInterpolation:
-  Enabled: false
+  Enabled: true
 
 Lint/Syntax:
   Enabled: true

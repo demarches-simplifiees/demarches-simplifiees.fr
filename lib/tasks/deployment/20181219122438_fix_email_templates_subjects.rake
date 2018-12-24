@@ -17,7 +17,7 @@ namespace :after_party do
         .each do |instance|
 
         instance.update(subject: instance.subject.gsub("--libellé procédure--", "--libellé démarche--"))
-        rake_puts "Subject mis-à-jour pour #{klass.to_s}##{instance.id}"
+        rake_puts "Subject mis-à-jour pour #{klass}##{instance.id}"
       end
     end
 
