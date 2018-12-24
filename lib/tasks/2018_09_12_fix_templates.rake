@@ -2,7 +2,7 @@ namespace :'2018_09_12_fix_templates' do
   task run: :environment do
     dossiers_with_invalid_attestations = find_dossiers_with_sent_and_invalid_attestations
     fix_templates
-    fixed_attestations = delete_then_regenerate_attestations(dossiers_with_invalid_attestations)
+    delete_then_regenerate_attestations(dossiers_with_invalid_attestations)
     send_regenerated_attestations(dossiers_with_invalid_attestations)
   end
 

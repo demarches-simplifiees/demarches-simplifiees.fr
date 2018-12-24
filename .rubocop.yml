@@ -486,7 +486,9 @@ Lint/UselessAccessModifier:
   Enabled: false
 
 Lint/UselessAssignment:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - "spec/**/*"
 
 Lint/UselessComparison:
   Enabled: true

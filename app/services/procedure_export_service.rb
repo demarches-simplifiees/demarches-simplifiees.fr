@@ -212,7 +212,8 @@ class ProcedureExportService
         etablissement.champ.dossier_id,
         label_for_export(etablissement.champ.libelle).to_s
       ]
-      data += etablissement_data(etablissement)
+
+      data + etablissement_data(etablissement)
     end
   end
 

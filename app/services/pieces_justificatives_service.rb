@@ -10,7 +10,7 @@ class PiecesJustificativesService
     errors = with_virus
       .map { |_, content| "#{content.original_filename} : virus détecté" }
 
-    errors += without_virus
+    errors + without_virus
       .map { |tpj, content| save_pj(content, dossier, tpj, user) }
       .compact()
   end
