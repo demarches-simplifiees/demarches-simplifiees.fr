@@ -1,15 +1,16 @@
 @import "constants";
 
 .header-link {
-  color:$nav-bar-link;
+  color: $nav-bar-link;
   background: $nav-bar-bg;
+
   &:hover {
-    color:$nav-bar-link;
+    color: $nav-bar-link;
   }
 }
 
 .header-text {
-  color:$nav-bar-fg;
+  color: $nav-bar-fg;
   background: $nav-bar-bg;
 }
 
@@ -58,8 +59,8 @@
     min-height: 60px;
     background-color: $nav-bar-bg;
     color: $nav-bar-fg;
-    //box-shadow: 0 1px 2px 0 rgba(50, 50, 50, 0.5);
-    //padding-left: 50px;
+    // box-shadow: 0 1px 2px 0 rgba(50, 50, 50, 0.5);
+    // padding-left: 50px;
 
     .main-info {
       font-family: Arial;
@@ -201,7 +202,7 @@
   .fa {
     font-size: 40px;
     margin-right: 10px;
-    color: $nav-bar-fg
+    color: $nav-bar-fg;
   }
 }
 

@@ -23,15 +23,15 @@ $landing-breakpoint: 1040px;
 
 .header-logo {
   display: inline;
-  //margin-right: 4 * $default-spacer;
+  // margin-right: 4 * $default-spacer;
 
   img {
     width: 100%;
     height: 34px;
 
-  //  @media (max-width: $landing-breakpoint) {
-  //    height: 18px;
-  //  }
+    // @media (max-width: $landing-breakpoint) {
+    // height: 18px;
+    // }
   }
 }
 
@@ -51,6 +51,7 @@ $landing-breakpoint: 1040px;
     &.active {
       border-bottom: 2px solid $nav-bar-fg;
     }
+
     &:hover {
       color: $nav-bar-link;
       border-bottom: 2px solid $nav-bar-link;
@@ -79,7 +80,7 @@ $landing-breakpoint: 1040px;
   color: $black;
   z-index: 100;
   font-size: initial;
-  line-height: 1.6;
+  line-height: 10.6;
 
   &::after,
   &::before {
