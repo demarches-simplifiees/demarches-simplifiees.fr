@@ -255,11 +255,11 @@ describe Users::SessionsController, type: :controller do
       let(:gestionnaire) { create(:gestionnaire) }
       before do
         allow(controller).to receive(:trust_device)
-        post :sign_in_by_link, params: { id: gestionnaire.id, login_token: login_token }
+        post :sign_in_by_link, params: { id: gestionnaire.id, jeton: jeton }
       end
 
       context 'when the token is valid' do
-        let(:login_token) { gestionnaire.login_token! }
+        let(:jeton) { gestionnaire.login_token! }
 
         # TODO when the gestionnaire has no other account, and the token is valid, and the user signing in was not starting a demarche,
         # redirect to root_path, then redirect to gestionnaire_procedures_path (see root_controller)
@@ -269,7 +269,7 @@ describe Users::SessionsController, type: :controller do
       end
 
       context 'when the token is invalid' do
-        let(:login_token) { 'invalid_token' }
+        let(:jeton) { 'invalid_token' }
 
         it { is_expected.to redirect_to new_user_session_path }
         it { expect(controller.current_gestionnaire).to be_nil }
@@ -286,11 +286,11 @@ describe Users::SessionsController, type: :controller do
       let!(:administrateur) { create(:administrateur, email: email, password: password) }
 
       before do
-        post :sign_in_by_link, params: { id: gestionnaire.id, login_token: login_token }
+        post :sign_in_by_link, params: { id: gestionnaire.id, jeton: jeton }
       end
 
       context 'when the token is valid' do
-        let(:login_token) { gestionnaire.login_token! }
+        let(:jeton) { gestionnaire.login_token! }
 
         it { expect(controller.current_gestionnaire).to eq(gestionnaire) }
         it { expect(controller.current_administrateur).to eq(administrateur) }
