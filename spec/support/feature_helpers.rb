@@ -27,10 +27,11 @@ module FeatureHelpers
 
     if sign_in_by_link
       mail = ActionMailer::Base.deliveries.last
-      message = mail.body.parts.join(&:to_s)
-      login_token = message[/connexion-par-jeton\/(.*)/, 1]
+      message = mail.html_part.body.raw_source
+      gestionnaire_id = message[/\".+\/connexion-par-jeton\/(.+)\?jeton=(.*)\"/, 1]
+      jeton = message[/\".+\/connexion-par-jeton\/(.+)\?jeton=(.*)\"/, 2]
 
-      visit sign_in_by_link_path(login_token)
+      visit sign_in_by_link_path(gestionnaire_id, jeton: jeton)
     end
   end
 
