@@ -9,7 +9,7 @@ describe 'layouts/left_panels/_left_panel_admin_procedurescontroller_index.html.
     end
 
     subject { rendered }
-    
+
     it { is_expected.to have_css('.badge.counter-draft') }
     it { is_expected.to have_css('.badge.counter-active') }
     it { is_expected.to have_css('.badge.counter-archived') }

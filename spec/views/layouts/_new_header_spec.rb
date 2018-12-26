@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'layouts/_new_header.html.haml', type: :view do
-
   describe 'polynesian logo' do
     before do
       render

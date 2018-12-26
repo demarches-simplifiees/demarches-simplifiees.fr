@@ -1,7 +1,6 @@
 require 'rspec'
 
 describe 'root/_footer.html.haml', type: :view do
-
   describe 'contains Net.pf logo' do
     before do
       render
@@ -9,6 +8,4 @@ describe 'root/_footer.html.haml', type: :view do
     subject { rendered }
     it { is_expected.to have_css('.footer-logo-netpf') }
   end
-
 end
-
