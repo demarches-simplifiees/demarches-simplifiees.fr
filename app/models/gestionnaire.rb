@@ -140,8 +140,8 @@ class Gestionnaire < ApplicationRecord
   end
 
   def login_token_valid?(login_token)
-    BCrypt::Password.new(encrypted_login_token) == login_token
-    30.minutes.ago < login_token_created_at
+    BCrypt::Password.new(encrypted_login_token) == login_token &&
+      30.minutes.ago < login_token_created_at
   rescue BCrypt::Errors::InvalidHash
     false
   end
