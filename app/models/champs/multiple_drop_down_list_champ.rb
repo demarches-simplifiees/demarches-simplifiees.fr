@@ -2,7 +2,11 @@ class Champs::MultipleDropDownListChamp < Champ
   before_save :format_before_save
 
   def search_terms
-    drop_down_list.selected_options(self)
+    selected_options
+  end
+
+  def selected_options
+    value.blank? ? [] : JSON.parse(value)
   end
 
   private
@@ -20,10 +24,10 @@ class Champs::MultipleDropDownListChamp < Champ
   end
 
   def string_value
-    drop_down_list.selected_options(self).join(', ')
+    selected_options.join(', ')
   end
 
   def value_for_export
-    drop_down_list.selected_options(self).join(', ')
+    selected_options.join(', ')
   end
 end
