@@ -20,8 +20,8 @@
       - if ff.object.id.present?
         .form-group
           %br &nbsp;
-          = ff.object.button_up(index: ff.index, url: move_up_admin_procedure_pieces_justificatives_path(@procedure, ff.index))
-          = ff.object.button_down(index: ff.index, url: move_down_admin_procedure_pieces_justificatives_path(@procedure, ff.index))
+          = button_up(@procedure, "piece_justificative", ff.index, move_up_admin_procedure_pieces_justificatives_path(@procedure, ff.index))
+          = button_down(@procedure, "piece_justificative", ff.index, move_down_admin_procedure_pieces_justificatives_path(@procedure, ff.index))
 
       .form-group
         %h4 Obligatoire ?

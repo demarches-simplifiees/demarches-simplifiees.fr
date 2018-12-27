@@ -1,5 +1,5 @@
 = f.fields_for type_de_champ_service.fields_for_var, types_de_champ, remote: true do |ff|
-  - type_champ = ff.object.object.type_champ
+  - type_champ = ff.object.type_champ
 
   .form-inline{ class: (type_champ == TypeDeChamp.type_champs.fetch(:header_section) ? 'header-section' : nil) }
     .form-group.libelle
@@ -16,14 +16,14 @@
 
     .form-group.drop-down-list{ class: (%w(drop_down_list multiple_drop_down_list linked_drop_down_list).include?(type_champ) ? 'show-inline' : nil), style: 'margin-right: 5px;' }
       %h4 Liste déroulante
-      = ff.fields_for :drop_down_list_attributes, ff.object.object.drop_down_list do |fff|
+      = ff.fields_for :drop_down_list_attributes, ff.object.drop_down_list do |fff|
         ~ fff.text_area :value, class: 'form-control drop_down_list', placeholder: "Ecrire une valeur par ligne et --valeur-- pour un séparateur.", rows: 3, cols: 30
         = fff.hidden_field :id
 
     .form-group.pj-template{ class: (type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative)) ? 'show-inline' : nil }
       %h4 Modèle
       - if type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative)
-        - template = ff.object.object.piece_justificative_template
+        - template = ff.object.piece_justificative_template
 
         - if !template.attached?
           = ff.file_field :piece_justificative_template,
@@ -52,7 +52,7 @@
         = ff.check_box :parcelles_agricoles
         Parcelles Agricoles
 
-    - hide_mandatory = (ff.object.object.private? || type_champ == TypeDeChamp.type_champs.fetch(:explication))
+    - hide_mandatory = (ff.object.private? || type_champ == TypeDeChamp.type_champs.fetch(:explication))
     .form-group.mandatory{ style: hide_mandatory ? 'visibility: hidden;' : nil }
       %h4 Obligatoire ?
       .center
@@ -65,8 +65,9 @@
     - if ff.object.id.present?
       .form-group
         %br &nbsp;
-        = ff.object.button_up(index: ff.index, url: type_de_champ_service.move_up_url(ff), private: type_de_champ_service.private?)
-        = ff.object.button_down(index: ff.index, url: type_de_champ_service.move_down_url(ff), private: type_de_champ_service.private?)
+        - kind = type_de_champ_service.private? ? "private" : "public"
+        = button_up(@procedure, kind, ff.index, type_de_champ_service.move_up_url(ff))
+        = button_down(@procedure, kind, ff.index, type_de_champ_service.move_down_url(ff))
 
     .form-group
       %h4 position

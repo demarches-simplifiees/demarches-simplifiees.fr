@@ -20,7 +20,7 @@
         - if procedure.publiee?
           %td.procedure-lien= link_to(procedure_lien(procedure), procedure_lien(procedure))
         - if procedure.publiee_ou_archivee?
-          %td= link_to(published_at.present? ? published_at.strftime('%d/%m/%Y %H:%M') : "", admin_procedure_href)
+          %td= link_to(procedure.published_at.present? ? procedure.published_at.strftime('%d/%m/%Y %H:%M') : "", admin_procedure_href)
         - else
           %td= link_to(procedure.created_at.strftime('%d/%m/%Y %H:%M'), admin_procedure_href)
         %td

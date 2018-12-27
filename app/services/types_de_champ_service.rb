@@ -36,11 +36,11 @@ class TypesDeChampService
   end
 
   def types_de_champ
-    private? ? @procedure.types_de_champ_private.decorate : @procedure.types_de_champ.decorate
+    private? ? @procedure.types_de_champ_private : @procedure.types_de_champ
   end
 
   def new_type_de_champ
-    TypeDeChamp.new(private: private?).decorate
+    TypeDeChamp.new(private: private?)
   end
 
   def fields_for_var
