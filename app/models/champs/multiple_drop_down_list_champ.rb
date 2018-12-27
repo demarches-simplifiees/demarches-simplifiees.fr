@@ -2,7 +2,7 @@ class Champs::MultipleDropDownListChamp < Champ
   before_save :format_before_save
 
   def search_terms
-    drop_down_list.selected_options_without_decorator(self)
+    drop_down_list.selected_options(self)
   end
 
   private
@@ -20,10 +20,10 @@ class Champs::MultipleDropDownListChamp < Champ
   end
 
   def string_value
-    drop_down_list.selected_options_without_decorator(self).join(', ')
+    drop_down_list.selected_options(self).join(', ')
   end
 
   def value_for_export
-    drop_down_list.selected_options_without_decorator(self).join(', ')
+    drop_down_list.selected_options(self).join(', ')
   end
 end

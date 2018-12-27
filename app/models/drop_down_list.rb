@@ -10,7 +10,7 @@ class DropDownList < ApplicationRecord
     options.select { |v| (v =~ /^--.*--$/).present? }
   end
 
-  def selected_options_without_decorator(champ)
+  def selected_options(champ)
     champ.value.blank? ? [] : multiple ? JSON.parse(champ.value) : [champ.value]
   end
 
