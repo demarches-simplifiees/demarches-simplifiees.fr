@@ -10,7 +10,7 @@
       = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
 
   .tab-title Formulaire
-  - champs = dossier.champs.includes(:type_de_champ).decorate
+  - champs = dossier.champs.includes(:type_de_champ)
   - if champs.any?
     .card
       = render partial: "shared/dossiers/champs", locals: { champs: champs, demande_seen_at: demande_seen_at, profile: profile }

@@ -13,7 +13,7 @@
 
 %h2 Formulaire
 
-- champs = @dossier.champs.decorate
+- champs = @dossier.champs
 - if champs.any?
   = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil, profile: 'instructeur' }
 
