@@ -13,7 +13,7 @@
         .text-right
           = link_to "Fermer", users_no_procedure_url, class: "link close-procedure"
         .procedure-logos
-          = image_tag @dossier.procedure.decorate.logo_img
+          = image_tag logo_img(@dossier.procedure)
           - if @dossier.procedure.euro_flag
             = image_tag "flag_of_europe.svg"
 
