@@ -197,6 +197,19 @@ describe Admin::ProceduresController, type: :controller do
 
         it { expect(flash[:notice]).to be_present }
       end
+
+      context 'when procedure is correctly saved' do
+        let!(:gestionnaire) { create(:gestionnaire, email: admin.email) }
+
+        before do
+          post :create, params: { procedure: procedure_params }
+        end
+
+        describe "admin can also instruct the procedure as a gestionnaire" do
+          subject { Procedure.last }
+          it { expect(subject.gestionnaires).to include(gestionnaire) }
+        end
+      end
     end
 
     context 'when many attributs are not valid' do
