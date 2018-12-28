@@ -12,4 +12,8 @@ class Champs::CheckboxChamp < Champ
   def for_export
     value == 'on' ? 'on' : 'off'
   end
+
+  def for_api
+    value == 'on' ? 'on' : 'off'
+  end
 end

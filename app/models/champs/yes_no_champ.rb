@@ -13,6 +13,10 @@ class Champs::YesNoChamp < Champs::CheckboxChamp
     processed_value
   end
 
+  def for_api
+    processed_value
+  end
+
   private
 
   def processed_value
