@@ -11,11 +11,7 @@
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              - if c.to_s.present?
-                %ul
-                  - c.to_s.split(", ").each do |item|
-                    %li
-                      = item
+              = render partial: "shared/champs/multiple_drop_down_list/show", locals: { champ: c }
         - when TypeDeChamp.type_champs.fetch(:dossier_link)
           %th.libelle
             = "#{c.libelle} :"
