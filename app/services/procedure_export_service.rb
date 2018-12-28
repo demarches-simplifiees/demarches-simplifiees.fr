@@ -184,12 +184,8 @@ class ProcedureExportService
         end
       end
       values = normalize_values(values)
-      values += dossier.champs.reject(&:exclude_from_export?).map do |champ|
-        champ.for_export
-      end
-      values += dossier.champs_private.reject(&:exclude_from_export?).map do |champ|
-        champ.for_export
-      end
+      values += dossier.champs.reject(&:exclude_from_export?).map(&:for_export)
+      values += dossier.champs_private.reject(&:exclude_from_export?).map(&:for_export)
       values += etablissement_data(dossier.etablissement)
       values
     end
