@@ -8,4 +8,8 @@ class Champs::CheckboxChamp < Champ
   def to_s
     value == 'on' ? 'oui' : 'non'
   end
+
+  def for_export
+    value == 'on' ? 'on' : 'off'
+  end
 end
