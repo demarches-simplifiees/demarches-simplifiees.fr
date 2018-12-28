@@ -2,7 +2,7 @@
   %tbody
     - champs.reject(&:exclude_from_view?).each do |c|
       %tr
-        - value = formatted_value(c)
+        - value = c.to_s
         - case c.type_champ
         - when TypeDeChamp.type_champs.fetch(:header_section)
           %th.header-section{ colspan: 3 }
