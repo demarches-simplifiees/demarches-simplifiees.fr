@@ -27,11 +27,7 @@
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              - pj = c.piece_justificative_file
-              - if pj.attached?
-                = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: c, user_can_upload: false }
-              - else
-                Pièce justificative non fournie
+              = render partial: "shared/champs/piece_justificative/show", locals: { champ: c }
         - when TypeDeChamp.type_champs.fetch(:textarea)
           %th.libelle
             = "#{c.libelle} :"
