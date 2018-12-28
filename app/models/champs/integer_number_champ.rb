@@ -4,4 +4,8 @@ class Champs::IntegerNumberChamp < Champ
   def for_export
     value.present? ? value.to_i : nil
   end
+
+  def for_api
+    value.present? ? value.to_i : nil
+  end
 end

@@ -47,6 +47,10 @@ class Champ < ApplicationRecord
     value.presence
   end
 
+  def for_api
+    value
+  end
+
   def main_value_name
     :value
   end

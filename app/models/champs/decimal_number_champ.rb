@@ -4,4 +4,8 @@ class Champs::DecimalNumberChamp < Champ
   def for_export
     value.present? ? value.to_f : nil
   end
+
+  def for_api
+    value.present? ? value.to_f : nil
+  end
 end
