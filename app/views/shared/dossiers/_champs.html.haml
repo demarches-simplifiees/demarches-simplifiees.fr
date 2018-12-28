@@ -41,8 +41,7 @@
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              - if c.to_s.present?
-                = render partial: "shared/champs/carte/show", locals: { champ: c }
+              = render partial: "shared/champs/carte/show", locals: { champ: c }
         - else
           %th.libelle
             = "#{c.libelle} :"
