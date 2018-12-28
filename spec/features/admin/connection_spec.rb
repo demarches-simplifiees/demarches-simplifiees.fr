@@ -9,6 +9,7 @@ feature 'Administrator connection' do
   let!(:gestionnaire) { create(:gestionnaire, :with_trusted_device, email: email, password: password) }
 
   before do
+    admin.procedures << create(:procedure)
     visit new_administrateur_session_path
   end
 

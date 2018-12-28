@@ -9,12 +9,11 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
   before do
     Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
     login_as administrateur, scope: :administrateur
-    visit root_path
+    visit new_from_existing_admin_procedures_path
   end
 
   context 'Cloning procedure' do
     before 'Create procedure' do
-      page.find_by_id('new-procedure').click
       page.find_by_id('from-scratch').click
       fill_in_dummy_procedure_details
       page.find_by_id('save-procedure').click
