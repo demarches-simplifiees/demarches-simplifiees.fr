@@ -6,12 +6,16 @@ class Champs::YesNoChamp < Champs::CheckboxChamp
   end
 
   def to_s
-    value_for_export
+    processed_value
+  end
+
+  def for_export
+    processed_value
   end
 
   private
 
-  def value_for_export
+  def processed_value
     value == 'true' ? 'oui' : 'non'
   end
 end
