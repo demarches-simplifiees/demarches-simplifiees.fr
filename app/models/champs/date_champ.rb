@@ -5,6 +5,10 @@ class Champs::DateChamp < Champ
     # Text search is pretty useless for dates so we’re not including these champs
   end
 
+  def to_s
+    value.present? ? Date.parse(value).strftime('%d/%m/%Y') : ""
+  end
+
   private
 
   def format_before_save
@@ -14,9 +18,5 @@ class Champs::DateChamp < Champ
       rescue
         nil
       end
-  end
-
-  def string_value
-    Date.parse(value).strftime('%d/%m/%Y')
   end
 end

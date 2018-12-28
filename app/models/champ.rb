@@ -41,7 +41,7 @@ class Champ < ApplicationRecord
 
   def to_s
     if value.present?
-      string_value
+      value.to_s
     else
       ''
     end
@@ -60,10 +60,6 @@ class Champ < ApplicationRecord
   end
 
   private
-
-  def string_value
-    value.to_s
-  end
 
   def value_for_export
     value

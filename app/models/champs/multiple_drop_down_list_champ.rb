@@ -9,6 +9,10 @@ class Champs::MultipleDropDownListChamp < Champ
     value.blank? ? [] : JSON.parse(value)
   end
 
+  def to_s
+    value.present? ? selected_options.join(', ') : ''
+  end
+
   private
 
   def format_before_save
@@ -21,10 +25,6 @@ class Champs::MultipleDropDownListChamp < Champ
         self.value = json.to_s
       end
     end
-  end
-
-  def string_value
-    selected_options.join(', ')
   end
 
   def value_for_export
