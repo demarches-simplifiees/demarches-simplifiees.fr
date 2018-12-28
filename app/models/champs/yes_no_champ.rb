@@ -16,6 +16,6 @@ class Champs::YesNoChamp < Champs::CheckboxChamp
   private
 
   def processed_value
-    value == 'true' ? 'oui' : 'non'
+    value == 'true' ? 'Oui' : 'Non'
   end
 end
