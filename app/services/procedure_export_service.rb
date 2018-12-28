@@ -185,10 +185,10 @@ class ProcedureExportService
       end
       values = normalize_values(values)
       values += dossier.champs.reject(&:exclude_from_export?).map do |champ|
-        value_for_export(champ)
+        champ.for_export
       end
       values += dossier.champs_private.reject(&:exclude_from_export?).map do |champ|
-        value_for_export(champ)
+        champ.for_export
       end
       values += etablissement_data(dossier.etablissement)
       values
@@ -243,10 +243,6 @@ class ProcedureExportService
 
   def label_for_export(label)
     label.parameterize.underscore.to_sym
-  end
-
-  def value_for_export(champ)
-    champ.for_export
   end
 
   def normalize_values(values)
