@@ -10,7 +10,7 @@ class Champs::MultipleDropDownListChamp < Champ
   end
 
   def to_s
-    value.present? ? selected_options.join(', ') : ''
+    selected_options.join(', ')
   end
 
   def for_export
