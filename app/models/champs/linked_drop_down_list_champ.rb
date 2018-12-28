@@ -37,6 +37,10 @@ class Champs::LinkedDropDownListChamp < Champ
     value.present? ? "#{primary_value || ''};#{secondary_value || ''}" : nil
   end
 
+  def for_api
+    value.present? ? { primary: primary_value, secondary: secondary_value } : nil
+  end
+
   def mandatory_and_blank?
     mandatory? && (primary_value.blank? || secondary_value.blank?)
   end
