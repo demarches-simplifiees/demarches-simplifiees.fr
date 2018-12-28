@@ -7,6 +7,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   let(:administrateur) { create(:administrateur) }
 
   before do
+    administrateur.procedures << create(:procedure)
     Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
     login_as administrateur, scope: :administrateur
     visit root_path
