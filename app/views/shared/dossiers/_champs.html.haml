@@ -29,7 +29,7 @@
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = simple_format(c.to_s)
+              = render partial: "shared/champs/text_area/show", locals: { champ: c }
         - when TypeDeChamp.type_champs.fetch(:siret)
           %th.libelle
             = "#{c.libelle} :"
