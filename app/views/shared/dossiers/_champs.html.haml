@@ -21,17 +21,7 @@
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              - dossier = Dossier.includes(:procedure).find_by(id: c.to_s)
-              - if dossier
-                - path = dossier_linked_path(current_gestionnaire, dossier)
-                - if path.present?
-                  = link_to("Dossier nº #{dossier.id}", path, target: '_blank')
-                - else
-                  Dossier nº #{dossier.id}
-                %br
-                = sanitize(dossier.text_summary)
-              - else
-                Pas de dossier associé
+               = render partial: "shared/champs/dossier_link/show", locals: { champ: c }
         - when TypeDeChamp.type_champs.fetch(:piece_justificative)
           %th.libelle
             = "#{c.libelle} :"
