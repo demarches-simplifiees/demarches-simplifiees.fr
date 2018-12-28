@@ -29,6 +29,10 @@ class Champs::LinkedDropDownListChamp < Champ
     :primary_value
   end
 
+  def to_s
+    value.present? ? [primary_value, secondary_value].compact.join(' / ') : ""
+  end
+
   def mandatory_and_blank?
     mandatory? && (primary_value.blank? || secondary_value.blank?)
   end
@@ -38,10 +42,6 @@ class Champs::LinkedDropDownListChamp < Champ
   end
 
   private
-
-  def string_value
-    [primary_value, secondary_value].compact.join(' / ')
-  end
 
   def value_for_export
     "#{primary_value || ''};#{secondary_value || ''}"
