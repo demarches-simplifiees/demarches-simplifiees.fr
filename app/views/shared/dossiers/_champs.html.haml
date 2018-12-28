@@ -25,6 +25,7 @@
                 = render partial: "shared/champs/text_area/show", locals: { champ: c }
               - else
                 = sanitize(c.to_s)
+
         - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section)
           %td.updated-at
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
