@@ -40,19 +40,11 @@ class Champ < ApplicationRecord
   end
 
   def to_s
-    if value.present?
-      value.to_s
-    else
-      ''
-    end
+    value.present? ? value.to_s : ''
   end
 
   def for_export
-    if value.present?
-      value
-    else
-      nil
-    end
+    value.presence
   end
 
   def main_value_name
