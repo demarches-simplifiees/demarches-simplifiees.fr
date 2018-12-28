@@ -90,6 +90,6 @@ class Champs::CarteChamp < Champ
   end
 
   def for_api
-    geo_json.present? ? geo_json.to_json : nil
+    geo_json&.to_json
   end
 end

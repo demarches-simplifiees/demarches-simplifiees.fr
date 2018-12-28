@@ -12,6 +12,6 @@ class Champs::DecimalNumberChamp < Champ
   private
 
   def processed_value
-    value.present? ? value.to_f : nil
+    value&.to_f
   end
 end

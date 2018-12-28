@@ -12,6 +12,6 @@ class Champs::IntegerNumberChamp < Champ
   private
 
   def processed_value
-    value.present? ? value.to_i : nil
+    value&.to_i
   end
 end
