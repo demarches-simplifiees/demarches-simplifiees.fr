@@ -29,10 +29,6 @@ class Champs::LinkedDropDownListChamp < Champ
     :primary_value
   end
 
-  def for_display
-    string_value
-  end
-
   def mandatory_and_blank?
     mandatory? && (primary_value.blank? || secondary_value.blank?)
   end
