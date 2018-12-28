@@ -19,7 +19,7 @@
         - when TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
           %th.libelle
             = "#{c.libelle} :"
-          %td= c.for_display
+          %td= c
         - when TypeDeChamp.type_champs.fetch(:dossier_link)
           %th.libelle
             = "#{c.libelle} :"
