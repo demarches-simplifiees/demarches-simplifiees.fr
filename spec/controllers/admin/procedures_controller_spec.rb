@@ -39,6 +39,10 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'GET #index with sorting and pagination' do
+    before do
+      admin.procedures << create(:procedure)
+    end
+
     subject {
       get :index, params: {
         'procedures_smart_listing[page]': 1,
