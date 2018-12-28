@@ -14,18 +14,14 @@ module ChampHelper
     value = champ.value
     type = champ.type_champ
 
-    if type == TypeDeChamp.type_champs.fetch(:date) && value.present?
-      Date.parse(value).strftime("%d/%m/%Y")
+    if type == TypeDeChamp.type_champs.fetch(:date)
+      champ.to_s
     elsif type.in? [TypeDeChamp.type_champs.fetch(:checkbox), TypeDeChamp.type_champs.fetch(:engagement)]
-      value == 'on' ? 'Oui' : 'Non'
+      champ.to_s
     elsif type == TypeDeChamp.type_champs.fetch(:yes_no)
-      if value == 'true'
-        'Oui'
-      elsif value == 'false'
-        'Non'
-      end
-    elsif type == TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) && value.present?
-      JSON.parse(value).join(', ')
+      champ.to_s
+    elsif type == TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
+      champ.to_s
     else
       value
     end

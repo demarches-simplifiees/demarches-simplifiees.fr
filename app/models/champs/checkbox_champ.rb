@@ -6,7 +6,7 @@ class Champs::CheckboxChamp < Champ
   end
 
   def to_s
-    value == 'on' ? 'oui' : 'non'
+    value == 'on' ? 'Oui' : 'Non'
   end
 
   def for_export

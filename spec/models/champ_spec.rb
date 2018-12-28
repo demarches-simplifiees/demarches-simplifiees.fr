@@ -116,7 +116,7 @@ describe Champ do
       context 'if nil' do
         let(:value) { nil }
 
-        it { expect(champ.for_export).to eq('non') }
+        it { expect(champ.for_export).to eq('Non') }
       end
     end
 
