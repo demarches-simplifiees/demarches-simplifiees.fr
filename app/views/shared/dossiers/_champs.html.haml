@@ -2,7 +2,6 @@
   %tbody
     - champs.reject(&:exclude_from_view?).each do |c|
       %tr
-        - value = c.to_s
         - case c.type_champ
         - when TypeDeChamp.type_champs.fetch(:header_section)
           %th.header-section{ colspan: 3 }
@@ -11,9 +10,9 @@
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
-            - if value.present?
+            - if c.to_s.present?
               %ul
-                - value.split(", ").each do |item|
+                - c.to_s.split(", ").each do |item|
                   %li
                     = item
         - when TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
@@ -24,7 +23,7 @@
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
-            - dossier = Dossier.includes(:procedure).find_by(id: value)
+            - dossier = Dossier.includes(:procedure).find_by(id: c.to_s)
             - if dossier
               - path = dossier_linked_path(current_gestionnaire, dossier)
               - if path.present?
@@ -49,7 +48,7 @@
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = simple_format(value)
+              = simple_format(c.to_s)
         - when TypeDeChamp.type_champs.fetch(:siret)
           %th.libelle
             = "#{c.libelle} :"
@@ -62,14 +61,14 @@
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              - if value.present?
+              - if c.to_s.present?
                 = render partial: "shared/champs/carte/show", locals: { champ: c }
         - else
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = sanitize(value)
+              = sanitize(c.to_s)
         - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section)
           %td.updated-at
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
