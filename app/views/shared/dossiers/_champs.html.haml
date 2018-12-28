@@ -2,52 +2,29 @@
   %tbody
     - champs.reject(&:exclude_from_view?).each do |c|
       %tr
-        - case c.type_champ
-        - when TypeDeChamp.type_champs.fetch(:header_section)
+        - if c.type_champ == TypeDeChamp.type_champs.fetch(:header_section)
           %th.header-section{ colspan: 3 }
             = c.libelle
-        - when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = render partial: "shared/champs/multiple_drop_down_list/show", locals: { champ: c }
-        - when TypeDeChamp.type_champs.fetch(:dossier_link)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-               = render partial: "shared/champs/dossier_link/show", locals: { champ: c }
-        - when TypeDeChamp.type_champs.fetch(:piece_justificative)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = render partial: "shared/champs/piece_justificative/show", locals: { champ: c }
-        - when TypeDeChamp.type_champs.fetch(:textarea)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = render partial: "shared/champs/text_area/show", locals: { champ: c }
-        - when TypeDeChamp.type_champs.fetch(:siret)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = render partial: "shared/champs/siret/show", locals: { champ: c, profile: profile }
-        - when TypeDeChamp.type_champs.fetch(:carte)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = render partial: "shared/champs/carte/show", locals: { champ: c }
         - else
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = sanitize(c.to_s)
+              - case c.type_champ
+              - when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
+                = render partial: "shared/champs/multiple_drop_down_list/show", locals: { champ: c }
+              - when TypeDeChamp.type_champs.fetch(:dossier_link)
+                = render partial: "shared/champs/dossier_link/show", locals: { champ: c }
+              - when TypeDeChamp.type_champs.fetch(:piece_justificative)
+                = render partial: "shared/champs/piece_justificative/show", locals: { champ: c }
+              - when TypeDeChamp.type_champs.fetch(:textarea)
+                = render partial: "shared/champs/text_area/show", locals: { champ: c }
+              - when TypeDeChamp.type_champs.fetch(:siret)
+                = render partial: "shared/champs/siret/show", locals: { champ: c, profile: profile }
+              - when TypeDeChamp.type_champs.fetch(:carte)
+                = render partial: "shared/champs/carte/show", locals: { champ: c }
+              - else
+                = sanitize(c.to_s)
         - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section)
           %td.updated-at
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
