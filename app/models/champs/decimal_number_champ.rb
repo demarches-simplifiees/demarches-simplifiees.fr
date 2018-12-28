@@ -1,7 +1,7 @@
 class Champs::DecimalNumberChamp < Champ
   validates :value, numericality: { allow_nil: true, allow_blank: true }
 
-  def value_for_export
-    value.to_f
+  def for_export
+    value.present? ? value.to_f : nil
   end
 end

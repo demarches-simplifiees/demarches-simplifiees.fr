@@ -33,6 +33,10 @@ class Champs::LinkedDropDownListChamp < Champ
     value.present? ? [primary_value, secondary_value].compact.join(' / ') : ""
   end
 
+  def for_export
+    value.present? ? "#{primary_value || ''};#{secondary_value || ''}" : nil
+  end
+
   def mandatory_and_blank?
     mandatory? && (primary_value.blank? || secondary_value.blank?)
   end
@@ -42,10 +46,6 @@ class Champs::LinkedDropDownListChamp < Champ
   end
 
   private
-
-  def value_for_export
-    "#{primary_value || ''};#{secondary_value || ''}"
-  end
 
   def pack_value(primary, secondary)
     self.value = JSON.generate([primary, secondary])

@@ -1,7 +1,5 @@
 class Champs::TextareaChamp < Champs::TextChamp
-  private
-
-  def value_for_export
-    ActionView::Base.full_sanitizer.sanitize(value)
+  def for_export
+    value.present? ? ActionView::Base.full_sanitizer.sanitize(value) : nil
   end
 end

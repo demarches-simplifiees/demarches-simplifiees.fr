@@ -49,7 +49,7 @@ class Champ < ApplicationRecord
 
   def for_export
     if value.present?
-      value_for_export
+      value
     else
       nil
     end
@@ -57,11 +57,5 @@ class Champ < ApplicationRecord
 
   def main_value_name
     :value
-  end
-
-  private
-
-  def value_for_export
-    value
   end
 end
