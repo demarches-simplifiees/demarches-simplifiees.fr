@@ -165,7 +165,7 @@ class StatsController < ApplicationController
   end
 
   def contact_percentage
-    from = Date.new(2017, 10)
+    from = Date.new(2018, 1)
     to = Date.today.prev_month
 
     Helpscout::UserConversationsAdapter.new(from, to)
