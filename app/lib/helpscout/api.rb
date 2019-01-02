@@ -69,7 +69,7 @@ class Helpscout::API
 
     response = call_api(:get, 'reports/conversations?' + params.to_query)
     if !response.success?
-      raise StandardError, "Error while fetching conversation report: #{response.status} '#{response.body}'"
+      raise StandardError, "Error while fetching conversation report: #{response.response_code} '#{response.body}'"
     end
 
     parse_response_body(response)
