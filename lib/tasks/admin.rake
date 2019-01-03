@@ -1,8 +1,8 @@
 namespace :admin do
-  task :create_admin, [:email] => :environment do |t, args|
+  task :create_admin, [:email] => :environment do |_t, args|
     email = args[:email]
     puts "Creating Administration for #{email}"
-    a = Administration.new(email: email, password: Devise.friendly_token[0,20])
+    a = Administration.new(email: email, password: Devise.friendly_token[0, 20])
     if a.save
       puts "#{a.email} created"
     else
@@ -17,7 +17,7 @@ namespace :admin do
     end
   end
 
-  task :delete_admin, [:email] => :environment do |t, args|
+  task :delete_admin, [:email] => :environment do |_t, args|
     email = args[:email]
     puts "Deleting Administration for #{email}"
     a = Administration.find_by(email: email)

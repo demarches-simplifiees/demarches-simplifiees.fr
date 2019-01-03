@@ -47,7 +47,7 @@ namespace :after_party do
   def remove_footer(template)
     matches = template.body.match(FOOTER_REGEXP)
     if matches && FOOTER_EXCEPTIONS.none? { |exception| matches[0].include?(exception) }
-      rake_puts "#{template.model_name.to_s} \##{template.id}: removing footer"
+      rake_puts "#{template.model_name} \##{template.id}: removing footer"
       template.update(body: matches.pre_match)
     end
   end

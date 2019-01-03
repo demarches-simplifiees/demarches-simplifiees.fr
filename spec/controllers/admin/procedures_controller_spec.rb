@@ -134,7 +134,7 @@ describe Admin::ProceduresController, type: :controller do
 
       subject { delete :destroy, params: { id: procedure_not_owned.id } }
 
-      it { expect{ subject }.to raise_error(ActiveRecord::RecordNotFound) }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
 
@@ -511,7 +511,7 @@ describe Admin::ProceduresController, type: :controller do
 
     subject { get :new_from_existing }
     let(:grouped_procedures) { subject; assigns(:grouped_procedures) }
-    let(:response_procedures) { grouped_procedures.map{ |o, procedures| procedures }.flatten }
+    let(:response_procedures) { grouped_procedures.map { |_o, procedures| procedures }.flatten }
 
     describe 'selecting' do
       let!(:large_draft_procedure)     { create(:procedure_with_dossiers, dossiers_count: 2) }
@@ -542,8 +542,8 @@ describe Admin::ProceduresController, type: :controller do
 
       it 'groups procedures with services as well as procedures with organisations' do
         expect(grouped_procedures.length).to eq 2
-        expect(grouped_procedures.find{ |o, p| o == 'DDT des Vosges' }.last).to contain_exactly(procedure_with_service_1)
-        expect(grouped_procedures.find{ |o, p| o == 'DDT du Loiret'  }.last).to contain_exactly(procedure_with_service_2, procedure_without_service)
+        expect(grouped_procedures.find { |o, _p| o == 'DDT des Vosges' }.last).to contain_exactly(procedure_with_service_1)
+        expect(grouped_procedures.find { |o, _p| o == 'DDT du Loiret'  }.last).to contain_exactly(procedure_with_service_2, procedure_without_service)
       end
     end
   end

@@ -44,7 +44,7 @@ describe Service, type: :model do
 
     context 'of type_organisme' do
       it 'should belong to the enum' do
-        expect{ Service.new(params.merge(type_organisme: 'choucroute')) }.to raise_error(ArgumentError)
+        expect { Service.new(params.merge(type_organisme: 'choucroute')) }.to raise_error(ArgumentError)
       end
     end
   end
