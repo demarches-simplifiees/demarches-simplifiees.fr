@@ -19,4 +19,18 @@ module ProcedureHelper
     action = procedure.archivee? ? :reopen : :publish
     t(action, scope: [:modal, :publish, key])
   end
+
+  def logo_img(procedure)
+    logo = procedure.logo
+
+    if logo.blank?
+      ActionController::Base.helpers.image_url("marianne.svg")
+    else
+      if Flipflop.remote_storage?
+        RemoteDownloader.new(logo.filename).url
+      else
+        LocalDownloader.new(logo.path, 'logo').url
+      end
+    end
+  end
 end
