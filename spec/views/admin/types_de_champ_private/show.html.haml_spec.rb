@@ -44,8 +44,8 @@ describe 'admin/types_de_champ/show.html.haml', type: :view do
       end
       context 'when there is only one field in database' do
         let!(:type_de_champ_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
-        it { expect(subject).to have_css('#btn_down_0[style*="visibility: hidden"]') }
-        it { expect(subject).to have_css('#btn_up_0[style*="visibility: hidden"]')   }
+        it { expect(subject).not_to have_css('#btn_down_0') }
+        it { expect(subject).not_to have_css('#btn_up_0') }
         it { expect(subject).not_to have_css('#btn_up_1')   }
         it { expect(subject).not_to have_css('#btn_down_1') }
       end
@@ -53,9 +53,9 @@ describe 'admin/types_de_champ/show.html.haml', type: :view do
         let!(:type_de_champ_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
         let!(:type_de_champ_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
         it { expect(subject).to have_css('#btn_down_0') }
-        it { expect(subject).to have_css('#btn_up_0[style*="visibility: hidden"]') }
+        it { expect(subject).not_to have_css('#btn_up_0') }
         it { expect(subject).to have_css('#btn_up_1') }
-        it { expect(subject).to have_css('#btn_down_1[style*="visibility: hidden"]') }
+        it { expect(subject).not_to have_css('#btn_down_1') }
       end
     end
   end

@@ -101,7 +101,7 @@
   .col-md-6
     %h4 Logo de la démarche
     - if @procedure.logo.present?
-      = image_tag @procedure.decorate.logo_img, { style: 'height: 40px; display: inline; margin-right: 6px;', id: 'preview_procedure_logo' }
+      = image_tag logo_img(@procedure), { style: 'height: 40px; display: inline; margin-right: 6px;', id: 'preview_procedure_logo' }
       \-
 
       - if @procedure.persisted?

@@ -1,7 +1,7 @@
 = form_for [:admin, @procedure], url: admin_procedure_pieces_justificatives_path(@procedure), remote: true do |f|
   #liste_piece_justificative
-    = render partial: 'fields', locals: { types_de_piece_justificative: @procedure.types_de_piece_justificative.decorate, f: f }
+    = render partial: 'fields', locals: { types_de_piece_justificative: @procedure.types_de_piece_justificative, f: f }
     = f.submit "Enregistrer", class: 'btn btn-success', id: :save
     %hr
   #new_type_de_piece_justificative
-    = render partial: 'fields', locals: { types_de_piece_justificative: TypeDePieceJustificative.new.decorate, f: f }
+    = render partial: 'fields', locals: { types_de_piece_justificative: TypeDePieceJustificative.new, f: f }

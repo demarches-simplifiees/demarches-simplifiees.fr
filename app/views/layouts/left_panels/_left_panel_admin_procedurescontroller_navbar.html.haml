@@ -1,7 +1,7 @@
 #first-block
   .en-cours
     - if @procedure.logo.present?
-      = image_tag @procedure.decorate.logo_img, style: 'width: 30px;'
+      = image_tag logo_img(@procedure), style: 'width: 30px;'
     %b
       = @procedure.libelle
 

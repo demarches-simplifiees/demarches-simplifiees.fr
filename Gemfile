@@ -35,9 +35,6 @@ gem 'active_link_to'
 # Pagination
 gem 'kaminari'
 
-# Decorators
-gem 'draper'
-
 # Gestion des comptes utilisateurs
 gem 'devise'
 gem 'devise-async'

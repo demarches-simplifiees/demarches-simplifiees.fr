@@ -176,6 +176,7 @@ class Procedure < ApplicationRecord
     else
       list[index_of_first_element].update(order_place: index_of_first_element + 1)
       list[index_of_first_element + 1].update(order_place: index_of_first_element)
+      reload
 
       true
     end
