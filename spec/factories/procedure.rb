@@ -16,8 +16,8 @@ FactoryBot.define do
         dossiers_count { 1 }
       end
 
-      after(:build) do |procedure, _evaluator|
-        procedure.dossiers << create_list(:dossier, _evaluator.dossiers_count, procedure: procedure)
+      after(:build) do |procedure, evaluator|
+        procedure.dossiers << create_list(:dossier, evaluator.dossiers_count, procedure: procedure)
       end
     end
 

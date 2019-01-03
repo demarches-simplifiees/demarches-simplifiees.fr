@@ -105,7 +105,7 @@ feature 'The gestionnaire part' do
     avis = dossier.avis.first
     test_mail(expert_email, sign_up_gestionnaire_avis_path(avis, expert_email))
 
-    avis_sign_up(avis, expert_email, 'a good password')
+    avis_sign_up(avis, expert_email)
 
     expect(page).to have_current_path(gestionnaire_avis_index_path)
     expect(page).to have_text('avis à donner 1')
@@ -225,7 +225,7 @@ feature 'The gestionnaire part' do
     texts.each { |text| expect(page).to have_text(text) }
   end
 
-  def avis_sign_up(avis, email, password)
+  def avis_sign_up(avis, email)
     visit sign_up_gestionnaire_avis_path(avis, email)
     fill_in 'gestionnaire_password', with: 'a good password'
     click_on 'Créer un compte'

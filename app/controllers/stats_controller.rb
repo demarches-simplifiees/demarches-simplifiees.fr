@@ -211,7 +211,7 @@ class StatsController < ApplicationController
 
     association
       .where(date_attribute => min_date..max_date)
-      .group("DATE_TRUNC('month', #{date_attribute.to_s})")
+      .group("DATE_TRUNC('month', #{date_attribute})")
       .count
       .to_a
       .sort_by { |a| a[0] }
@@ -221,8 +221,8 @@ class StatsController < ApplicationController
   def cumulative_hash(association, date_attribute)
     sum = 0
     association
-      .where("#{date_attribute.to_s} < ?", max_date)
-      .group("DATE_TRUNC('month', #{date_attribute.to_s})")
+      .where("#{date_attribute} < ?", max_date)
+      .group("DATE_TRUNC('month', #{date_attribute})")
       .count
       .to_a
       .sort_by { |a| a[0] }
@@ -271,7 +271,7 @@ class StatsController < ApplicationController
       dossiers_grouped_by_procedure = value.group_by { |dossier| dossier[0] }
 
       # Compute the mean time for this procedure
-      procedure_processing_times = dossiers_grouped_by_procedure.map do |procedure_id, procedure_dossiers|
+      procedure_processing_times = dossiers_grouped_by_procedure.map do |_procedure_id, procedure_dossiers|
         procedure_dossiers_processing_time = procedure_dossiers.map do |dossier|
           (dossier[2] - dossier[1]).to_f / (3600 * 24)
         end

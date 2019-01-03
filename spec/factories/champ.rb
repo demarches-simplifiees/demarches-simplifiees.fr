@@ -23,7 +23,7 @@ FactoryBot.define do
     end
 
     trait :with_piece_justificative_file do
-      after(:create) do |champ, evaluator|
+      after(:create) do |champ, _evaluator|
         champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
       end
     end
@@ -147,7 +147,7 @@ FactoryBot.define do
   factory :champ_piece_justificative, class: 'Champs::PieceJustificativeChamp' do
     type_de_champ { create(:type_de_champ_piece_justificative) }
 
-    after(:create) do |champ, evaluator|
+    after(:create) do |champ, _evaluator|
       champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
     end
   end
@@ -161,7 +161,7 @@ FactoryBot.define do
     association :etablissement, factory: [:etablissement]
     value { '44011762001530' }
 
-    after(:build) do |champ, evaluator|
+    after(:build) do |champ, _evaluator|
       champ.etablissement.signature = champ.etablissement.sign
     end
   end

@@ -38,7 +38,7 @@ class Champs::LinkedDropDownListChamp < Champ
   end
 
   def search_terms
-    [ primary_value, secondary_value ]
+    [primary_value, secondary_value]
   end
 
   private
@@ -52,6 +52,6 @@ class Champs::LinkedDropDownListChamp < Champ
   end
 
   def pack_value(primary, secondary)
-    self.value = JSON.generate([ primary, secondary ])
+    self.value = JSON.generate([primary, secondary])
   end
 end
