@@ -40,7 +40,7 @@ describe Admin::ProceduresController, type: :controller do
 
   describe 'GET #index with sorting and pagination' do
     before do
-      admin.procedures << create(:procedure)
+      admin.procedures << create(:procedure, administrateur: admin)
     end
 
     subject {

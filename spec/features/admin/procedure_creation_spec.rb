@@ -4,10 +4,9 @@ require 'features/admin/procedure_spec_helper'
 feature 'As an administrateur I wanna create a new procedure', js: true do
   include ProcedureSpecHelper
 
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { create(:administrateur, :with_procedure) }
 
   before do
-    administrateur.procedures << create(:procedure)
     Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
     login_as administrateur, scope: :administrateur
     visit root_path
