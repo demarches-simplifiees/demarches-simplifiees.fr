@@ -168,7 +168,12 @@ class StatsController < ApplicationController
     from = Date.new(2018, 1)
     to = Date.today.prev_month
 
-    Helpscout::UserConversationsAdapter.new(from, to)
+    adapter = Helpscout::UserConversationsAdapter.new(from, to)
+    if !adapter.can_fetch_reports?
+      return nil
+    end
+
+    adapter
       .reports
       .map do |monthly_report|
         start_date = monthly_report[:start_date].to_time.localtime

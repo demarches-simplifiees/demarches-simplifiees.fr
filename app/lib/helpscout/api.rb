@@ -7,6 +7,15 @@ class Helpscout::API
   PHONES = 'phones'
   OAUTH2_TOKEN = 'oauth2/token'
 
+  def ready?
+    required_secrets = [
+      Rails.application.secrets.helpscout[:mailbox_id],
+      Rails.application.secrets.helpscout[:client_id],
+      Rails.application.secrets.helpscout[:client_secret]
+    ]
+    required_secrets.all?(&:present?)
+  end
+
   def add_tags(conversation_id, tags)
     call_api(:put, "#{CONVERSATIONS}/#{conversation_id}/#{TAGS}", {
       tags: tags
