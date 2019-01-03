@@ -7,6 +7,10 @@ class Helpscout::UserConversationsAdapter
     @to = to
   end
 
+  def can_fetch_reports?
+    api_client.ready?
+  end
+
   # Return an array of monthly reports
   def reports
     @reports ||= (@from..@to)
@@ -35,15 +39,17 @@ class Helpscout::UserConversationsAdapter
     }
   end
 
+  def api_client
+    @api_client ||= Helpscout::API.new
+  end
+
   def fetch_conversations_report(year, month)
     if year == Date.today.year && month == Date.today.month
       raise ArgumentError, 'The report for the current month will change in the future, and cannot be cached.'
     end
 
-    @helpscout_api ||= Helpscout::API.new
-
     Rails.cache.fetch("helpscout-conversation-report-#{year}-#{month}") do
-      @helpscout_api.conversations_report(year, month)
+      api_client.conversations_report(year, month)
     end
   end
 end
