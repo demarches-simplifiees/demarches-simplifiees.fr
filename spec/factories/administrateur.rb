@@ -10,4 +10,10 @@ FactoryBot.define do
       admin.renew_api_token
     end
   end
+
+  trait :with_procedure do
+    after(:create) do |admin|
+      admin.procedures << create(:simple_procedure, administrateur: admin)
+    end
+  end
 end
