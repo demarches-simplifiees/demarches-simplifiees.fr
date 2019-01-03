@@ -401,7 +401,7 @@ describe Gestionnaire, type: :model do
     it { expect(gestionnaire.login_token_valid?('bad_token')).to be false }
 
     context 'when the token as expired' do
-      before { gestionnaire.update(login_token_created_at: 31.minutes.ago) }
+      before { gestionnaire.update(login_token_created_at: (Gestionnaire::LOGIN_TOKEN_VALIDITY + 1.minute).ago) }
 
       it { expect(gestionnaire.login_token_valid?(good_token)).to be false }
     end
