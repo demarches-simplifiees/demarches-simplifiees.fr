@@ -57,7 +57,6 @@ gem 'activestorage-openstack', git: 'https://github.com/fredZen/activestorage-op
 
 gem 'pg'
 
-gem 'rbnacl-libsodium'
 gem 'bcrypt'
 
 gem 'rgeo-geojson'
