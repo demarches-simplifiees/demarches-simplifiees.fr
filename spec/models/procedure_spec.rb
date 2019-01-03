@@ -264,26 +264,32 @@ describe Procedure do
   describe '#switch_types_de_champ' do
     let(:procedure) { create(:procedure) }
     let(:index) { 0 }
-    subject { procedure.switch_types_de_champ index }
+    subject { procedure.switch_types_de_champ(index) }
 
-    context 'when procedure have no types_de_champ' do
+    context 'when procedure has no types_de_champ' do
       it { expect(subject).to eq(false) }
     end
-    context 'when procedure have 2 types de champ' do
+    context 'when procedure has 3 types de champ' do
       let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
       let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
+      let!(:type_de_champ_2) { create(:type_de_champ, procedure: procedure, order_place: 2) }
       context 'when index is not the last element' do
         it { expect(subject).to eq(true) }
-        it 'switch order place' do
-          procedure.switch_types_de_champ index
-          type_de_champ_0.reload
-          type_de_champ_1.reload
-          expect(type_de_champ_0.order_place).to eq(1)
-          expect(type_de_champ_1.order_place).to eq(0)
+        it 'switches the position of the champ N and N+1' do
+          subject
+          expect(procedure.types_de_champ[0]).to eq(type_de_champ_1)
+          expect(procedure.types_de_champ[0].order_place).to eq(0)
+          expect(procedure.types_de_champ[1]).to eq(type_de_champ_0)
+          expect(procedure.types_de_champ[1].order_place).to eq(1)
+        end
+        it 'doesn’t move other types de champ' do
+          subject
+          expect(procedure.types_de_champ[2]).to eq(type_de_champ_2)
+          expect(procedure.types_de_champ[2].order_place).to eq(2)
         end
       end
       context 'when index is the last element' do
-        let(:index) { 1 }
+        let(:index) { 2 }
         it { expect(subject).to eq(false) }
       end
     end
