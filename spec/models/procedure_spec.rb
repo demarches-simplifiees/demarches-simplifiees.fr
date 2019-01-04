@@ -343,8 +343,7 @@ describe Procedure do
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
     let(:received_mail) { create(:received_mail) }
     let(:from_library) { false }
-    let!(:administrateur) { procedure.administrateur }
-    let!(:gestionnaire) { create(:gestionnaire, email: administrateur.email) }
+    let(:administrateur) { procedure.administrateur }
 
     before do
       @logo = File.open('spec/fixtures/files/white.png')
@@ -362,7 +361,7 @@ describe Procedure do
     subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
-    it { expect(subject.gestionnaires).to eq([gestionnaire]) }
+    it { expect(subject.gestionnaires.pluck(:email)).to eq([administrateur.email]) }
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)

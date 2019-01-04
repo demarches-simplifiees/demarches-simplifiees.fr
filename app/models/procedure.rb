@@ -362,6 +362,20 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def missing_steps
+    result = []
+
+    if service.nil?
+      result << :service
+    end
+
+    if gestionnaires.empty?
+      result << :instructeurs
+    end
+
+    result
+  end
+
   private
 
   def claim_path_ownership!(path)
