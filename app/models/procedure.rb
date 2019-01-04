@@ -218,6 +218,8 @@ class Procedure < ApplicationRecord
       procedure.service = self.service.clone_and_assign_to_administrateur(admin)
     end
 
+    admin.gestionnaire.assign_to_procedure(procedure)
+
     procedure
   end
 
