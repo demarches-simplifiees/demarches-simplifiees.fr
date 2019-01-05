@@ -35,7 +35,7 @@ guard 'livereload' do
     png: :png,
     gif: :gif,
     jpg: :jpg,
-    jpeg: :jpeg,
+    jpeg: :jpeg
     # less: :less, # uncomment if you want LESS stylesheets done in browser
   }
 
