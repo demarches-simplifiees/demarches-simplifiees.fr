@@ -1,48 +1,35 @@
 source 'https://rubygems.org'
 
-# dotenv should always be loaded before rails
-gem 'dotenv-rails', require: 'dotenv/rails-now'
+gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
 gem 'rails'
 
-# Use SCSS for stylesheets
-gem 'sassc-rails'
+gem 'sassc-rails' # Use SCSS for stylesheets
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+gem 'jquery-rails' # Use jquery as the JavaScript library
+gem 'turbolinks' # Turbolinks makes following links in your web application faster
 
-# Enable deep clone of active record models
-gem 'deep_cloneable'
+gem 'deep_cloneable' # Enable deep clone of active record models
 
 gem 'warden'
 
-# Use Puma as the app server
-gem 'puma'
+gem 'puma' # Use Puma as the app server
 
-# serializer
 gem 'active_model_serializers'
 
-# haml
 gem 'haml-rails'
 
-# bootstrap saas
 gem 'bootstrap-sass', '~> 3.3.5'
 
-# Automatically set a class on active links
-gem 'active_link_to'
+gem 'active_link_to' # Automatically set a class on active links
 
-# Pagination
-gem 'kaminari'
+gem 'kaminari' # Pagination
 
-# Gestion des comptes utilisateurs
-gem 'devise'
+gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
 gem 'openid_connect'
 gem 'omniauth-github'
 
-# Locales par défaut
-gem 'rails-i18n'
+gem 'rails-i18n' # Locales par défaut
 
 gem 'rest-client'
 gem 'typhoeus'
@@ -105,15 +92,13 @@ gem 'after_party'
 
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
-# Cron jobs
 gem 'delayed_job_active_record'
 gem "daemons"
-gem 'delayed_cron_job'
+gem 'delayed_cron_job' # Cron jobs
 gem "delayed_job_web"
 gem 'select2-rails'
 
-# PDF Generation
-gem 'prawn'
+gem 'prawn' # PDF Generation
 gem 'prawn_rails'
 
 gem 'chunky_png'
@@ -138,19 +123,15 @@ group :test do
   gem 'vcr'
   gem 'rails-controller-testing'
 
-  # Integration testing
-  gem 'capybara'
+  gem 'capybara' # Integration testing
   gem 'capybara-selenium'
-  # Save a dump of the page when an integration test fails
-  gem 'capybara-screenshot'
-  # Access emails during integration tests
-  gem 'capybara-email'
+  gem 'capybara-screenshot' # Save a dump of the page when an integration test fails
+  gem 'capybara-email' # Access emails during integration tests
 end
 
 group :development do
   gem 'brakeman', require: false
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console'
+  gem 'web-console' # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'rack-handlers'
   gem 'xray-rails'
   gem 'rubocop', require: false
@@ -161,17 +142,14 @@ group :development do
 end
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
+  gem 'byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'pry-byebug'
 
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+  gem 'spring' # Spring speeds up development by keeping your application running in the background
   gem 'spring-commands-rspec'
   gem 'rspec-rails'
 
-  # Deploy
-  gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false
+  gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
 
   gem 'rspec_junit_formatter'
 end
