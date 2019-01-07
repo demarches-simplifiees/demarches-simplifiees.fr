@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Users::ConfirmationsController < Devise::ConfirmationsController
-  layout "new_application"
-
   # GET /resource/confirmation/new
   def new
     # Allow displaying the user email in the message

@@ -2,8 +2,6 @@ class Users::SessionsController < Sessions::SessionsController
   include TrustedDeviceConcern
   include ActionView::Helpers::DateHelper
 
-  layout "new_application"
-
   # GET /resource/sign_in
   def new
     if user_return_to_procedure_id.present? # WTF ?
