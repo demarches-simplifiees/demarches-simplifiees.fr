@@ -76,7 +76,7 @@ module NewGestionnaire
       @email = params[:email]
       @dossier = Avis.includes(:dossier).find(params[:id]).dossier
 
-      render layout: 'new_application'
+      render
     end
 
     def create_gestionnaire
