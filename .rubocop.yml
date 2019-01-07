@@ -14,7 +14,7 @@ Bundler/InsecureProtocolSource:
   Enabled: true
 
 Bundler/OrderedGems:
-  Enabled: false
+  Enabled: true
 
 Gemspec/DuplicatedAssignment:
   Enabled: true
