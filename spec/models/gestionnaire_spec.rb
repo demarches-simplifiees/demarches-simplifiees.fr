@@ -393,6 +393,26 @@ describe Gestionnaire, type: :model do
     end
   end
 
+  describe '#login_token_valid?' do
+    let!(:gestionnaire) { create(:gestionnaire) }
+    let!(:good_token) { gestionnaire.login_token! }
+
+    it { expect(gestionnaire.login_token_valid?(good_token)).to be true }
+    it { expect(gestionnaire.login_token_valid?('bad_token')).to be false }
+
+    context 'when the token as expired' do
+      before { gestionnaire.update(login_token_created_at: (Gestionnaire::LOGIN_TOKEN_VALIDITY + 1.minute).ago) }
+
+      it { expect(gestionnaire.login_token_valid?(good_token)).to be false }
+    end
+
+    context 'when the gestionnaire does not have a token' do
+      before { gestionnaire.update(encrypted_login_token: nil) }
+
+      it { expect(gestionnaire.login_token_valid?(nil)).to be false }
+    end
+  end
+
   private
 
   def assign(procedure_to_assign)
