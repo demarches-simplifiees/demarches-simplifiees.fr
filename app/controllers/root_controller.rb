@@ -1,6 +1,4 @@
 class RootController < ApplicationController
-  layout 'new_application'
-
   def index
     if administrateur_signed_in?
       return redirect_to admin_procedures_path

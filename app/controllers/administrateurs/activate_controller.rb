@@ -3,8 +3,6 @@ require 'zxcvbn'
 class Administrateurs::ActivateController < ApplicationController
   include TrustedDeviceConcern
 
-  layout "new_application"
-
   def new
     @administrateur = Administrateur.find_inactive_by_token(params[:token])
 

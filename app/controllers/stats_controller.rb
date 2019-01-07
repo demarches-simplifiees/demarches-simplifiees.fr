@@ -1,6 +1,4 @@
 class StatsController < ApplicationController
-  layout "new_application"
-
   before_action :authenticate_administration!, only: [:download]
 
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
