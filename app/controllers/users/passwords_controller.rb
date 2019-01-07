@@ -1,6 +1,4 @@
 class Users::PasswordsController < Devise::PasswordsController
-  layout "new_application"
-
   after_action :try_to_authenticate_gestionnaire, only: [:update]
   after_action :try_to_authenticate_administrateur, only: [:update]
 

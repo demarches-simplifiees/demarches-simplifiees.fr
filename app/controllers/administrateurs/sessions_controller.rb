@@ -1,6 +1,4 @@
 class Administrateurs::SessionsController < Sessions::SessionsController
-  layout "new_application"
-
   def new
     redirect_to new_user_session_path
   end
