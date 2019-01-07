@@ -361,7 +361,6 @@ describe Procedure do
     subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
-    it { expect(subject.gestionnaires.pluck(:email)).to eq([administrateur.email]) }
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
@@ -431,6 +430,8 @@ describe Procedure do
 
     it 'should not duplicate specific related objects' do
       expect(subject.dossiers).to eq([])
+      expect(subject.gestionnaires).to eq([])
+      expect(subject.assign_to).to eq([])
     end
 
     describe 'should not duplicate lien_notice' do

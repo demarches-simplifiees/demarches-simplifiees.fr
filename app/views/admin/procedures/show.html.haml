@@ -47,7 +47,7 @@
         .alert.alert-info
           Cette démarche a été publiée, certains éléments ne peuvent plus être modifiés.
 
-    .lien-demarche
+    %div
       %h3 Lien démarche
       %div{ style: 'margin-top: 30px;' }
         - if @procedure.archivee?
@@ -72,15 +72,5 @@
                 = link_to("un service", services_path(procedure_id: @procedure))
               \.
         - else
-          - if @procedure.missing_steps.include?(:service)
-            %p.alert.alert-danger
-              Vous devez renseigner les coordonnées de votre Service administratif avant de pouvoir publier votre démarche.
-              = link_to 'Cliquez ici.', (current_administrateur.services.present? ? url_for(services_path(procedure_id: @procedure.id)) : url_for(new_service_path(procedure_id: @procedure.id)))
-
-          - if @procedure.missing_steps.include?(:instructeurs)
-            %p.alert.alert-danger
-              Vous devez affecter des instructeurs avant de pouvoir publier votre démarche.
-              = link_to 'Cliquez ici.', admin_procedure_instructeurs_path(@procedure)
-
-          %p.alert.alert-info
-            Cette démarche n’a pas encore de lien, et n’est pas accessible par le public.
+          .alert.alert-info
+            Cette démarche n’a pas encore de lien, et n’est donc pas accessible par le public.
