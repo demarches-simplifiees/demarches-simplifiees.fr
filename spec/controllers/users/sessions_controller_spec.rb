@@ -26,42 +26,37 @@ describe Users::SessionsController, type: :controller do
       let(:email) { 'unique@plop.com' }
       let(:password) { 'un super mot de passe' }
 
-      let(:user) { create(:user, email: email, password: password) }
-      let(:gestionnaire) { create(:gestionnaire, :with_trusted_device, email: email, password: password) }
-      let(:administrateur) { create(:administrateur, email: email, password: password) }
+      let!(:user) { create(:user, email: email, password: password) }
+      let!(:administrateur) { create(:administrateur, :with_admin_trusted_device, email: email, password: password) }
+      let(:gestionnaire) { administrateur.gestionnaire }
 
       it 'signs user in' do
-        post :create, params: { user: { email: user.email, password: user.password } }
-        expect(@response.redirect?).to be(true)
+        post :create, params: { user: { email: email, password: password } }
+
+        expect(subject).to redirect_to link_sent_path(email: email)
+
+        # do not know why, should be test related
         expect(subject.current_user).to eq(user)
+
         expect(subject.current_gestionnaire).to be(nil)
         expect(subject.current_administrateur).to be(nil)
         expect(user.reload.loged_in_with_france_connect).to be(nil)
       end
 
-      it 'signs gestionnaire in' do
-        post :create, params: { user: { email: gestionnaire.email, password: gestionnaire.password } }
-
-        expect(subject).to redirect_to link_sent_path(email: gestionnaire.email)
-        expect(subject.current_user).to be(nil)
-        expect(subject.current_gestionnaire).to be(nil)
-        expect(subject.current_administrateur).to be(nil)
-      end
-
       context 'when the device is trusted' do
         before do
           allow(controller).to receive(:trusted_device?).and_return(true)
-          post :create, params: { user: { email: gestionnaire.email, password: gestionnaire.password } }
+          post :create, params: { user: { email: email, password: password } }
         end
 
         it 'directly log the gestionnaire' do
           expect(@response.redirect?).to be(true)
-          expect(subject).not_to redirect_to link_sent_path(email: gestionnaire.email)
+          expect(subject).not_to redirect_to link_sent_path(email: email)
           # TODO when signing in as non-administrateur, and not starting a demarche, log in to gestionnaire path
           # expect(subject).to redirect_to gestionnaire_procedures_path
-          expect(subject.current_user).to be(nil)
+          expect(subject.current_user).to eq(user)
           expect(subject.current_gestionnaire).to eq(gestionnaire)
-          expect(subject.current_administrateur).to be(nil)
+          expect(subject.current_administrateur).to eq(administrateur)
         end
       end
 
@@ -73,7 +68,8 @@ describe Users::SessionsController, type: :controller do
           post :create, params: { user: { email: administrateur.email, password: administrateur.password } }
 
           expect(subject).to redirect_to link_sent_path(email: gestionnaire.email)
-          expect(subject.current_user).to be(nil)
+
+          expect(subject.current_user).to eq(user)
           expect(subject.current_gestionnaire).to be(nil)
           expect(subject.current_administrateur).to eq(nil)
         end
@@ -110,7 +106,6 @@ describe Users::SessionsController, type: :controller do
       end
 
       context 'with different passwords' do
-        let!(:gestionnaire) { create(:gestionnaire, email: email, password: 'mot de passe complexe') }
         let!(:administrateur) { create(:administrateur, email: email, password: 'mot de passe complexe') }
 
         before do
@@ -193,20 +188,20 @@ describe Users::SessionsController, type: :controller do
         delete :destroy
         expect(@response.headers["Location"]).to eq(FRANCE_CONNECT[:particulier][:logout_endpoint])
       end
+    end
 
-      context "when associated administrateur" do
-        let(:administrateur) { create(:administrateur, email: 'unique@plop.com') }
+    context "when associated administrateur" do
+      let(:administrateur) { create(:administrateur, email: 'unique@plop.com') }
 
-        it 'signs user + gestionnaire + administrateur out' do
-          sign_in user
-          sign_in gestionnaire
-          sign_in administrateur
-          delete :destroy
-          expect(@response.redirect?).to be(true)
-          expect(subject.current_user).to be(nil)
-          expect(subject.current_gestionnaire).to be(nil)
-          expect(subject.current_administrateur).to be(nil)
-        end
+      it 'signs user + gestionnaire + administrateur out' do
+        sign_in user
+        sign_in administrateur.gestionnaire
+        sign_in administrateur
+        delete :destroy
+        expect(@response.redirect?).to be(true)
+        expect(subject.current_user).to be(nil)
+        expect(subject.current_gestionnaire).to be(nil)
+        expect(subject.current_administrateur).to be(nil)
       end
     end
   end
@@ -284,8 +279,8 @@ describe Users::SessionsController, type: :controller do
       let(:password) { 'un super mot de passe' }
 
       let!(:user) { create(:user, email: email, password: password) }
-      let!(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
       let!(:administrateur) { create(:administrateur, email: email, password: password) }
+      let(:gestionnaire) { administrateur.gestionnaire }
 
       before do
         post :sign_in_by_link, params: { id: gestionnaire.id, jeton: jeton }
