@@ -35,8 +35,7 @@ guard 'livereload' do
     png: :png,
     gif: :gif,
     jpg: :jpg,
-    jpeg: :jpeg,
-    # less: :less, # uncomment if you want LESS stylesheets done in browser
+    jpeg: :jpeg
   }
 
   rails_view_exts = ['erb', 'haml', 'slim']
