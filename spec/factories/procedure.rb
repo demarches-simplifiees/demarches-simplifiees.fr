@@ -10,6 +10,7 @@ FactoryBot.define do
     administrateur { create(:administrateur) }
     duree_conservation_dossiers_dans_ds { 3 }
     duree_conservation_dossiers_hors_ds { 6 }
+    ask_birthday { false }
 
     factory :procedure_with_dossiers do
       transient do

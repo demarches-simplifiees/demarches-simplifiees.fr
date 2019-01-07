@@ -38,7 +38,7 @@
 
       = render partial: "layouts/new_header"
       = render partial: "layouts/flash_messages"
-      = yield
+      = content_for?(:content) ? yield(:content) : yield
 
       - if content_for?(:footer)
         = content_for(:footer)
