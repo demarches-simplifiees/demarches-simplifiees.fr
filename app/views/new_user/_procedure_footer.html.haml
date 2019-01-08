@@ -15,7 +15,7 @@
         %li.footer-column
           %h3.footer-header Poser une question sur votre dossier :
           %p
-            - if dossier.id && !dossier.brouillon?
+            - if dossier.present? && !dossier.brouillon?
               Directement
               = link_to "par la messagerie", messagerie_dossier_path(dossier)
             - else
